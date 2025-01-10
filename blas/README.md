@@ -64,104 +64,112 @@ Prefixes:
 | Netlib | Stdlib | WASM | Description |
 | ------ | ------ | ---- | ----------- |
 | [SGEMV](https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga0d35d880b663ad18204bb23bd186e380.html#ga0d35d880b663ad18204bb23bd186e380) | [sgemv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/sgemv) |  | matrix vector multiply |
-| [SGBMV]() |  |  | banded matrix vector multiply |
+| [SGBMV](https://www.netlib.org/lapack/explore-html/dd/df4/group__gbmv_ga1ebbea4b808df065391784a1ac125b51.html#ga1ebbea4b808df065391784a1ac125b51) |  |  | banded matrix vector multiply |
 | [SSYMV](https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga8990fe737209f3401522103c85016d27.html#ga8990fe737209f3401522103c85016d27) | [ssymv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/ssymv) |  | symmetric matrix vector multiply |
-| [SSBMV]() |  |  | symmetric banded matrix vector multiply |
+| [SSBMV](https://www.netlib.org/lapack/explore-html/da/dd4/group__hbmv_ga88a3a066357e907495d20d2b75a6f2ea.html#ga88a3a066357e907495d20d2b75a6f2ea) |  |  | symmetric banded matrix vector multiply |
 | [SSPMV](https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_gacdad62873d30076fb56e99100e8a8a6c.html#gacdad62873d30076fb56e99100e8a8a6c) | [sspmv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/sspmv) |  | symmetric packed matrix vector multiply |
 | [STRMV](https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga7b90369d2b2b19f78f168e10dd9eb8ad.html#ga7b90369d2b2b19f78f168e10dd9eb8ad) | [strmv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/strmv) |  | triangular matrix vector multiply |
-| [STBMV]() |  |  | triangular banded matrix vector multiply |
-| [STPMV]() |  |  | triangular packed matrix vector multiply |
+| [STBMV](https://www.netlib.org/lapack/explore-html/d6/d9f/group__tbmv_ga3cad79d81ae947e90925db093c964205.html#ga3cad79d81ae947e90925db093c964205) |  |  | triangular banded matrix vector multiply |
+| [STPMV](https://www.netlib.org/lapack/explore-html/db/d62/group__tpmv_ga6258755ec99e51d23b78bd721af38e8f.html#ga6258755ec99e51d23b78bd721af38e8f) |  |  | triangular packed matrix vector multiply |
 | [STRSV](https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_ga9a68aa7057b7b8b6e1eb404144a7b6a1.html#ga9a68aa7057b7b8b6e1eb404144a7b6a1) | [strsv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/strsv) |  | solving triangular matrix problems |
-| [STBSV]() |  |  | solving triangular banded matrix problems |
-| [STPSV]() |  |  | solving triangular packed matrix problems |
-| [SGER]() |  |  | performs the rank 1 operation `A := alpha*x*y' + A` |
+| [STBSV](https://www.netlib.org/lapack/explore-html/d4/dcd/group__tbsv_ga6df72d74446f35a227ee40d41e9f8240.html#ga6df72d74446f35a227ee40d41e9f8240) |  |  | solving triangular banded matrix problems |
+| [STPSV](https://www.netlib.org/lapack/explore-html/d7/d3b/group__tpsv_gadb3b41066652c8fab89290d2a375e053.html#gadb3b41066652c8fab89290d2a375e053) |  |  | solving triangular packed matrix problems |
+| [SGER](https://www.netlib.org/lapack/explore-html/d8/d75/group__ger_ga95baec6bb0a84393d7bc67212b566ab0.html#ga95baec6bb0a84393d7bc67212b566ab0) |  |  | performs the rank 1 operation `A := alpha*x*y' + A` |
 | [SSYR](https://www.netlib.org/lapack/explore-html/dc/d82/group__her_gad7585662770cdd3001ed08c7a864cd21.html#gad7585662770cdd3001ed08c7a864cd21) | [ssyr](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/ssyr) |  | performs the symmetric rank 1 operation `A := alpha*x*x' + A` |
-| [SSPR]() | [sspr](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/sspr) |  | symmetric packed rank 1 operation  `A := alpha*x*x' + A` |
-| [SSYR2]() | [ssyr2](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/ssyr2) |  | performs the symmetric rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A` |
-| [SSPR2]() |  |  | performs the symmetric packed rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A` |
+| [SSPR](https://www.netlib.org/lapack/explore-html/d5/df9/group__hpr_ga7cacbe603f23f8b0aca186fba51ad490.html#ga7cacbe603f23f8b0aca186fba51ad490) | [sspr](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/sspr) |  | symmetric packed rank 1 operation  `A := alpha*x*x' + A` |
+| [SSYR2](https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_ga6741f2ac8fe025042fd994ccc6625b45.html#ga6741f2ac8fe025042fd994ccc6625b45) | [ssyr2](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/ssyr2) |  | performs the symmetric rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A` |
+| [SSPR2](https://www.netlib.org/lapack/explore-html/de/ddd/group__hpr2_ga3fdac40ba1b26a1a0c1b8a89ae00c1fe.html#ga3fdac40ba1b26a1a0c1b8a89ae00c1fe) |  |  | performs the symmetric packed rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A` |
 | [DGEMV](https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga4ac1b675072d18f902db8a310784d802.html#ga4ac1b675072d18f902db8a310784d802) | [dgemv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dgemv) |  | matrix vector multiply |
-| [DGBMV]() |  |  | banded matrix vector multiply |
+| [DGBMV](https://www.netlib.org/lapack/explore-html/dd/df4/group__gbmv_ga7001c2a185bcc8a3b6731f5d1ea7093e.html#ga7001c2a185bcc8a3b6731f5d1ea7093e) |  |  | banded matrix vector multiply |
 | [DSYMV](https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga0b20bcf6e94079dce2f3d035798e9738.html#ga0b20bcf6e94079dce2f3d035798e9738) | [dsymv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dsymv) |  | symmetric matrix vector multiply |
-| [DSBMV]() |  |  | symmetric banded matrix vector multiply |
+| [DSBMV](https://www.netlib.org/lapack/explore-html/da/dd4/group__hbmv_ga3ddb7bcc544c5881a9365cb78d642228.html#ga3ddb7bcc544c5881a9365cb78d642228) |  |  | symmetric banded matrix vector multiply |
 | [DSPMV](https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_ga739f8dc2316523832bde2b237fcad8a6.html#ga739f8dc2316523832bde2b237fcad8a6) | [dspmv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dspmv) |  | symmetric packed matrix vector multiply |
 | [DTRMV](https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga73370bd6dca01abe05d54ecd1d91ce9a.html#ga73370bd6dca01abe05d54ecd1d91ce9a) | [dtrmv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dtrmv) |  | triangular matrix vector multiply |
-| [DTBMV]() |  |  | triangular banded matrix vector multiply |
-| [DTPMV]() |  |  | triangular packed matrix vector multiply |
+| [DTBMV](https://www.netlib.org/lapack/explore-html/d6/d9f/group__tbmv_ga0d7fd7b684cb64944eee8b29e8809272.html#ga0d7fd7b684cb64944eee8b29e8809272) |  |  | triangular banded matrix vector multiply |
+| [DTPMV](https://www.netlib.org/lapack/explore-html/db/d62/group__tpmv_gaf61fb853f06adfe9c44a0b71a5d505f7.html#gaf61fb853f06adfe9c44a0b71a5d505f7) |  |  | triangular packed matrix vector multiply |
 | [DTRSV](https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_ga7a7dcbb8745b4776ce13063ab031141f.html#ga7a7dcbb8745b4776ce13063ab031141f) | [dtrsv](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dtrsv) |  | solving triangular matrix problems |
-| [DTBSV]() |  |  | solving triangular banded matrix problems |
-| [DTPSV]() |  |  | solving triangular packed matrix problems |
-| [DGER]() | [dger](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dger) |  | performs the rank 1 operation `A := alpha*x*y' + A` |
+| [DTBSV](https://www.netlib.org/lapack/explore-html/d4/dcd/group__tbsv_gaf2fd78c89c68cdbc9f697ea37c075ece.html#gaf2fd78c89c68cdbc9f697ea37c075ece) |  |  | solving triangular banded matrix problems |
+| [DTPSV](https://www.netlib.org/lapack/explore-html/d7/d3b/group__tpsv_gaa7aa06a5635bdd236463a56a889d3aa4.html#gaa7aa06a5635bdd236463a56a889d3aa4) |  |  | solving triangular packed matrix problems |
+| [DGER](https://www.netlib.org/lapack/explore-html/d8/d75/group__ger_gaef5d248da0fdfb62bccb259725935cb8.html#gaef5d248da0fdfb62bccb259725935cb8) | [dger](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dger) |  | performs the rank 1 operation `A := alpha*x*y' + A` |
 | [DSYR](https://www.netlib.org/lapack/explore-html/dc/d82/group__her_ga07f0e3f8592107877f12a554a41c7413.html#ga07f0e3f8592107877f12a554a41c7413) | [dsyr](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dsyr) |  | performs the symmetric rank 1 operation `A := alpha*x*x' + A` |
-| [DSPR]() | [dspr](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dspr) |  | symmetric packed rank 1 operation `A := alpha*x*x' + A` |
+| [DSPR](https://www.netlib.org/lapack/explore-html/d5/df9/group__hpr_gaa5d4297738fb1391709c645a7c2bee5e.html#gaa5d4297738fb1391709c645a7c2bee5e) | [dspr](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dspr) |  | symmetric packed rank 1 operation `A := alpha*x*x' + A` |
 | [DSYR2](https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_ga8e576e9319c25b883b11dc1f39366bcc.html#ga8e576e9319c25b883b11dc1f39366bcc) | [dsyr2](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dsyr2) |  | performs the symmetric rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A` |
-| [DSPR2]() |  |  | performs the symmetric packed rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A` |
+| [DSPR2](https://www.netlib.org/lapack/explore-html/de/ddd/group__hpr2_ga7f23d7e347020947c3dd57f7d6a27e11.html#ga7f23d7e347020947c3dd57f7d6a27e11) |  |  | performs the symmetric packed rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A` |
 | [CGEMV](https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga44c85a0d7ecd60a6bc8ca27b222d7792.html#ga44c85a0d7ecd60a6bc8ca27b222d7792) |  |  | matrix vector multiply |
-| [CGBMV]() |  |  | banded matrix vector multiply |
+| [CGBMV](https://www.netlib.org/lapack/explore-html/dd/df4/group__gbmv_ga2c8ce3cc7f009b8e8dffcb172dec30a9.html#ga2c8ce3cc7f009b8e8dffcb172dec30a9) |  |  | banded matrix vector multiply |
 | [CHEMV](https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga2308ede4c4300ca4cfac83f2531aec22.html#ga2308ede4c4300ca4cfac83f2531aec22) |  |  | hermitian matrix vector multiply |
-| [CHBMV]() |  |  | hermitian banded matrix vector multiply |
+| [CHBMV](https://www.netlib.org/lapack/explore-html/da/dd4/group__hbmv_gaf3753b609f411bbc719b8de9f9606e12.html#gaf3753b609f411bbc719b8de9f9606e12) |  |  | hermitian banded matrix vector multiply |
 | [CHPMV](https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_ga8615e798761db472ab0abb8f67594287.html#ga8615e798761db472ab0abb8f67594287) |  |  | hermitian packed matrix vector multiply |
 | [CTRMV](https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga0adaf80ae1dfe117390bd7030fd865f1.html#ga0adaf80ae1dfe117390bd7030fd865f1) |  |  | triangular matrix vector multiply |
-| [CTBMV]() |  |  | triangular banded matrix vector multiply |
-| [CTPMV]() |  |  | triangular packed matrix vector multiply |
+| [CTBMV](https://www.netlib.org/lapack/explore-html/d6/d9f/group__tbmv_ga6f3fad3e45c4506a0ee0278d95edd6a3.html#ga6f3fad3e45c4506a0ee0278d95edd6a3) |  |  | triangular banded matrix vector multiply |
+| [CTPMV](https://www.netlib.org/lapack/explore-html/db/d62/group__tpmv_ga335745d930cd7eb4003c95dd3a9121bd.html#ga335745d930cd7eb4003c95dd3a9121bd) |  |  | triangular packed matrix vector multiply |
 | [CTRSV](https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_gab8c2d2a6476f67197ba1f92aff4a0b92.html#gab8c2d2a6476f67197ba1f92aff4a0b92) |  |  | solving triangular matrix problems |
-| [CTBSV]() |  |  | solving triangular banded matrix problems |
-| [CTPSV]() |  |  | solving triangular packed matrix problems |
-| [CGERU]() |  |  | performs the rank 1 operation `A := alpha*x*y' + A` |
-| [CGERC]() |  |  | performs the rank 1 operation `A := alpha*x*conjg( y' ) + A` |
+| [CTBSV](https://www.netlib.org/lapack/explore-html/d4/dcd/group__tbsv_gaaac28899b66867490cef87edff06f081.html#gaaac28899b66867490cef87edff06f081) |  |  | solving triangular banded matrix problems |
+| [CTPSV](https://www.netlib.org/lapack/explore-html/d7/d3b/group__tpsv_ga8233358bb440cc921dfa62f89f044386.html#ga8233358bb440cc921dfa62f89f044386) |  |  | solving triangular packed matrix problems |
+| [CGERU](https://www.netlib.org/lapack/explore-html/d8/d75/group__ger_gae4b09e995412b77f425ceccc6a3801e3.html#gae4b09e995412b77f425ceccc6a3801e3) |  |  | performs the rank 1 operation `A := alpha*x*y' + A` |
+| [CGERC](https://www.netlib.org/lapack/explore-html/d8/d75/group__ger_gaba3622eb30d4d084d0d07e336fec382b.html#gaba3622eb30d4d084d0d07e336fec382b) |  |  | performs the rank 1 operation `A := alpha*x*conjg( y' ) + A` |
 | [CHER](https://www.netlib.org/lapack/explore-html/dc/d82/group__her_gae92bde9f7f6f83c0edaa96f4f2bb2bc3.html#gae92bde9f7f6f83c0edaa96f4f2bb2bc3) |  |  | hermitian rank 1 operation `A := alpha*x*conjg(x') + A` |
-| [CHPR]() |  |  | hermitian packed rank 1 operation `A := alpha*x*conjg( x' ) + A` |
+| [CSYMV](https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_gab137e328e44dc1530ab0a93ff65c108a.html#gab137e328e44dc1530ab0a93ff65c108a) |  |  | computes a matrix-vector product for a complex symmetric matrix. |
+| [CSYR](https://www.netlib.org/lapack/explore-html/dc/d82/group__her_ga13f702b332fdcf8ff209539202e80fb5.html#ga13f702b332fdcf8ff209539202e80fb5) |  |  | performs the symmetric rank-1 update of a complex symmetric matrix |
+| [CSPMV](https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_ga5f1724161d63954f5ebb39043655d36c.html#ga5f1724161d63954f5ebb39043655d36c) |  |  | computes a matrix-vector product for complex vectors using a complex symmetric packed matrix |
+| [CSPR](https://www.netlib.org/lapack/explore-html/d5/df9/group__hpr_ga33cf43df47a7b402c114cdefa6fb89c1.html#ga33cf43df47a7b402c114cdefa6fb89c1) |  |  | performs the symmetrical rank-1 update of a complex symmetric packed matrix |
+| [CHPR](https://www.netlib.org/lapack/explore-html/d5/df9/group__hpr_gab24affbc57d008b3d14eb9e792accbc0.html#gab24affbc57d008b3d14eb9e792accbc0) |  |  | hermitian packed rank 1 operation `A := alpha*x*conjg( x' ) + A` |
 | [CHER2](https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_gaf421f493e6422d08e3acfc6d33bfbf46.html#gaf421f493e6422d08e3acfc6d33bfbf46) |  |  | hermitian rank 2 operation |
-| [CHPR2]() |  |  | hermitian packed rank 2 operation |
+| [CHPR2](https://www.netlib.org/lapack/explore-html/de/ddd/group__hpr2_ga766f73a93fc9b8d3a1479c60ef70802e.html#ga766f73a93fc9b8d3a1479c60ef70802e) |  |  | hermitian packed rank 2 operation |
 | [ZGEMV](https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga89e23232eb8a7297e5f15f2b404f6ab9.html#ga89e23232eb8a7297e5f15f2b404f6ab9) |  |  | matrix vector multiply |
-| [ZGBMV]() |  |  | banded matrix vector multiply |
+| [ZGBMV](https://www.netlib.org/lapack/explore-html/dd/df4/group__gbmv_ga1e1f6f5b44fb2c1ce48c2f34e293164a.html#ga1e1f6f5b44fb2c1ce48c2f34e293164a) |  |  | banded matrix vector multiply |
 | [ZHEMV](https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga8e55e480b23945c09c35e09935fce058.html#ga8e55e480b23945c09c35e09935fce058) |  |  | hermitian matrix vector multiply |
-| [ZHBMV]() |  |  | hermitian banded matrix vector multiply |
+| [ZHBMV](https://www.netlib.org/lapack/explore-html/da/dd4/group__hbmv_ga694b0528a7854e8d4a02fc5d2b646d2c.html#ga694b0528a7854e8d4a02fc5d2b646d2c) |  |  | hermitian banded matrix vector multiply |
 | [ZHPMV](https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_gacb6812cc95b64a60f69179b1ca50ead8.html#gacb6812cc95b64a60f69179b1ca50ead8) |  |  | hermitian packed matrix vector multiply |
 | [ZTRMV](https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga1ab0d018131d258a1a3ea755bde73d45.html#ga1ab0d018131d258a1a3ea755bde73d45) |  |  | triangular matrix vector multiply |
-| [ZTBMV]() |  |  | triangular banded matrix vector multiply |
-| [ZTPMV]() |  |  | triangular packed matrix vector multiply |
+| [ZTBMV](https://www.netlib.org/lapack/explore-html/d6/d9f/group__tbmv_gae47112a7f083d5f99bc9836d5e224b39.html#gae47112a7f083d5f99bc9836d5e224b39) |  |  | triangular banded matrix vector multiply |
+| [ZTPMV](https://www.netlib.org/lapack/explore-html/db/d62/group__tpmv_gacbf0ca8bf0b638cc1df58818ae8a5614.html#gacbf0ca8bf0b638cc1df58818ae8a5614) |  |  | triangular packed matrix vector multiply |
 | [ZTRSV](https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_gad76661a1a371429ec99d8b17c38251bc.html#gad76661a1a371429ec99d8b17c38251bc) |  |  | solving triangular matrix problems |
-| [ZTBSV]() |  |  | solving triangular banded matrix problems |
-| [ZTPSV]() |  |  | solving triangular packed matrix problems |
-| [ZGERU]() |  |  | performs the rank 1 operation `A := alpha*x*y' + A` |
-| [ZGERC]() |  |  | performs the rank 1 operation `A := alpha*x*conjg( y' ) + A` |
+| [ZTBSV](https://www.netlib.org/lapack/explore-html/d4/dcd/group__tbsv_ga0f56e4311a965b79cb37fcf86881f925.html#ga0f56e4311a965b79cb37fcf86881f925) |  |  | solving triangular banded matrix problems |
+| [ZTPSV](https://www.netlib.org/lapack/explore-html/d7/d3b/group__tpsv_ga7e56705e037d50b3686d5fbcf4e2e2a8.html#ga7e56705e037d50b3686d5fbcf4e2e2a8) |  |  | solving triangular packed matrix problems |
+| [ZGERU](https://www.netlib.org/lapack/explore-html/d8/d75/group__ger_gabc32c1e7b43b07ef8161951e143c678e.html#gabc32c1e7b43b07ef8161951e143c678e) |  |  | performs the rank 1 operation `A := alpha*x*y' + A` |
+| [ZGERC](https://www.netlib.org/lapack/explore-html/d8/d75/group__ger_gac360d1e3dbe5ce0e0a6e7dbc4ea6a9aa.html#gac360d1e3dbe5ce0e0a6e7dbc4ea6a9aa) |  |  | performs the rank 1 operation `A := alpha*x*conjg( y' ) + A` |
 | [ZHER](https://www.netlib.org/lapack/explore-html/dc/d82/group__her_gaf848c3e119d49365476615e0850bbe5b.html#gaf848c3e119d49365476615e0850bbe5b) |  |  | hermitian rank 1 operation `A := alpha*x*conjg(x') + A` |
-| [ZHPR]() |  |  | hermitian packed rank 1 operation `A := alpha*x*conjg( x' ) + A` |
+| [ZSYMV](https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_gad7631e12c194ae81bf316fcdae40e1f5.html#gad7631e12c194ae81bf316fcdae40e1f5) |  |  | computes a matrix-vector product for a complex symmetric matrix |
+| [ZSYR](https://www.netlib.org/lapack/explore-html/dc/d82/group__her_gaf5172d547b95bea8e44a27d9d962f90b.html#gaf5172d547b95bea8e44a27d9d962f90b) |  |  | performs the symmetric rank-1 update of a complex symmetric matrix |
+| [ZSPMV](https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_gabf4b68a7267c18fb6d62c782b83cb67a.html#gabf4b68a7267c18fb6d62c782b83cb67a) |  |  | computes a matrix-vector product for complex vectors using a complex symmetric packed matrix |
+| [ZSPR](https://www.netlib.org/lapack/explore-html/d5/df9/group__hpr_ga2b62ab512fdc78404f0282e293806a59.html#ga2b62ab512fdc78404f0282e293806a59) |  |  | performs the symmetrical rank-1 update of a complex symmetric packed matrix |
+| [ZHPR](https://www.netlib.org/lapack/explore-html/d5/df9/group__hpr_ga094ef4ecb6c8455a313b9aa67e487da9.html#ga094ef4ecb6c8455a313b9aa67e487da9) |  |  | hermitian packed rank 1 operation `A := alpha*x*conjg( x' ) + A` |
 | [ZHER2](https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_ga565bc80dabd392f5a1cb900768b21db4.html#ga565bc80dabd392f5a1cb900768b21db4) |  |  | hermitian rank 2 operation |
-| [ZHPR2]() |  |  | hermitian packed rank 2 operation |
+| [ZHPR2](https://www.netlib.org/lapack/explore-html/de/ddd/group__hpr2_ga99be0c957449284ccffcfc40925d3774.html#ga99be0c957449284ccffcfc40925d3774) |  |  | hermitian packed rank 2 operation |
 
 
 ## Level 3
 | Netlib | Stdlib | WASM | Description |
 | ------ | ------ | ---- | ----------- |
-| [SGEMM]() | [sgemm](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/sgemm) |  | matrix matrix multiply |
-| [SSYMM]() |  |  | symmetric matrix matrix multiply |
-| [SSYRK]() |  |  | symmetric rank-k update to a matrix |
-| [SSYR2K](https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_ga6741f2ac8fe025042fd994ccc6625b45.html#ga6741f2ac8fe025042fd994ccc6625b45) |  |  | symmetric rank-2k update to a matrix |
-| [STRMM]() |  |  | triangular matrix matrix multiply |
-| [STRSM]() |  |  | solving triangular matrix with multiple right hand sides |
-| [DGEMM]() | [dgemm](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dgemm) |  | matrix matrix multiply |
-| [DSYMM]() |  |  | symmetric matrix matrix multiply |
-| [DSYRK]() |  |  | symmetric rank-k update to a matrix |
-| [DSYR2K]() |  |  | symmetric rank-2k update to a matrix |
-| [DTRMM]() |  |  | triangular matrix matrix multiply |
-| [DTRSM]() |  |  | solving triangular matrix with multiple right hand sides |
-| [CGEMM]() |  |  | matrix matrix multiply |
-| [CSYMM]() |  |  | symmetric matrix matrix multiply |
-| [CHEMM]() |  |  | hermitian matrix matrix multiply |
-| [CSYRK]() |  |  | symmetric rank-k update to a matrix |
-| [CHERK]() |  |  | hermitian rank-k update to a matrix |
-| [CSYR2K]() |  |  | symmetric rank-2k update to a matrix |
-| [CHER2K]() |  |  | hermitian rank-2k update to a matrix |
-| [CTRMM]() |  |  | triangular matrix matrix multiply |
-| [CTRSM]() |  |  | solving triangular matrix with multiple right hand sides |
-| [ZGEMM]() |  |  | matrix matrix multiply |
-| [ZSYMM]() |  |  | symmetric matrix matrix multiply |
-| [ZHEMM]() |  |  | hermitian matrix matrix multiply |
-| [ZSYRK]() |  |  | symmetric rank-k update to a matrix |
-| [ZHERK]() |  |  | hermitian rank-k update to a matrix |
-| [ZSYR2K]() |  |  | symmetric rank-2k update to a matrix |
-| [ZHER2K]() |  |  | hermitian rank-2k update to a matrix |
-| [ZTRMM]() |  |  | triangular matrix matrix multiply |
-| [ZTRSM]() |  |  | solving triangular matrix with multiple right hand sides |
+| [SGEMM](https://www.netlib.org/lapack/explore-html/dd/d09/group__gemm_ga8cad871c590600454d22564eff4fed6b.html#ga8cad871c590600454d22564eff4fed6b) | [sgemm](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/sgemm) |  | matrix matrix multiply |
+| [SSYMM](https://www.netlib.org/lapack/explore-html/d0/d16/group__hemm_ga16b557cd1950240105d7f60d4af2f7ad.html#ga16b557cd1950240105d7f60d4af2f7ad) |  |  | symmetric matrix matrix multiply |
+| [SSYRK](https://www.netlib.org/lapack/explore-html/d4/d6e/group__herk_ga0876e3e659a473758ccf65e925d41fd2.html#ga0876e3e659a473758ccf65e925d41fd2) |  |  | symmetric rank-k update to a matrix |
+| [SSYR2K](https://www.netlib.org/lapack/explore-html/d8/d94/group__her2k_gab7d1214282a056f8476a581cb0c46e91.html#gab7d1214282a056f8476a581cb0c46e91) |  |  | symmetric rank-2k update to a matrix |
+| [STRMM](https://www.netlib.org/lapack/explore-html/dd/dab/group__trmm_gae6343b11d5dff934bf1e461ba6b9e5dc.html#gae6343b11d5dff934bf1e461ba6b9e5dc) |  |  | triangular matrix matrix multiply |
+| [STRSM](https://www.netlib.org/lapack/explore-html/d9/de5/group__trsm_ga38fe63e89a70c896b98dc829d689902e.html#ga38fe63e89a70c896b98dc829d689902e) |  |  | solving triangular matrix with multiple right hand sides |
+| [DGEMM](https://www.netlib.org/lapack/explore-html/dd/d09/group__gemm_ga1e899f8453bcbfde78e91a86a2dab984.html#ga1e899f8453bcbfde78e91a86a2dab984) | [dgemm](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/@stdlib/blas/base/dgemm) |  | matrix matrix multiply |
+| [DSYMM](https://www.netlib.org/lapack/explore-html/d0/d16/group__hemm_ga83617b92d007d90eda87d135bf08175b.html#ga83617b92d007d90eda87d135bf08175b) |  |  | symmetric matrix matrix multiply |
+| [DSYRK](https://www.netlib.org/lapack/explore-html/d4/d6e/group__herk_ga09ec411a6b845c47efb0bc8bd3283b03.html#ga09ec411a6b845c47efb0bc8bd3283b03) |  |  | symmetric rank-k update to a matrix |
+| [DSYR2K](https://www.netlib.org/lapack/explore-html/d8/d94/group__her2k_gacc2bc34b0f9307e3d61382c50a1b9f5a.html#gacc2bc34b0f9307e3d61382c50a1b9f5a) |  |  | symmetric rank-2k update to a matrix |
+| [DTRMM](https://www.netlib.org/lapack/explore-html/dd/dab/group__trmm_ga4d2f76d6726f53c69031a2fe7f999add.html#ga4d2f76d6726f53c69031a2fe7f999add) |  |  | triangular matrix matrix multiply |
+| [DTRSM](https://www.netlib.org/lapack/explore-html/d9/de5/group__trsm_ga7120d931d7b1a15e12d50d328799df8a.html#ga7120d931d7b1a15e12d50d328799df8a) |  |  | solving triangular matrix with multiple right hand sides |
+| [CGEMM](https://www.netlib.org/lapack/explore-html/dd/d09/group__gemm_gaf19371a55b05930b3e88fe52833cb4b3.html#gaf19371a55b05930b3e88fe52833cb4b3) |  |  | matrix matrix multiply |
+| [CSYMM](https://www.netlib.org/lapack/explore-html/d0/d16/group__hemm_gac4867479c09d519e0af81633651be198.html#gac4867479c09d519e0af81633651be198) |  |  | symmetric matrix matrix multiply |
+| [CHEMM](https://www.netlib.org/lapack/explore-html/d0/d16/group__hemm_ga831427fd92f070cf31de0cd3a2b54a90.html#ga831427fd92f070cf31de0cd3a2b54a90) |  |  | hermitian matrix matrix multiply |
+| [CSYRK](https://www.netlib.org/lapack/explore-html/d4/d6e/group__herk_ga5af27929ce8949235a460fda37935405.html#ga5af27929ce8949235a460fda37935405) |  |  | symmetric rank-k update to a matrix |
+| [CHERK](https://www.netlib.org/lapack/explore-html/d4/d6e/group__herk_gaddbca2a917b7f1063155ea34c5d6e18d.html#gaddbca2a917b7f1063155ea34c5d6e18d) |  |  | hermitian rank-k update to a matrix |
+| [CSYR2K](https://www.netlib.org/lapack/explore-html/d8/d94/group__her2k_ga842905358c5be64080e0196b3cd28abc.html#ga842905358c5be64080e0196b3cd28abc) |  |  | symmetric rank-2k update to a matrix |
+| [CHER2K](https://www.netlib.org/lapack/explore-html/d8/d94/group__her2k_gab7200c62ce5f7adca9d3d60965890b99.html#gab7200c62ce5f7adca9d3d60965890b99) |  |  | hermitian rank-2k update to a matrix |
+| [CTRMM](https://www.netlib.org/lapack/explore-html/dd/dab/group__trmm_ga52cfb7cea1ce6b313f60c36314b629b9.html#ga52cfb7cea1ce6b313f60c36314b629b9) |  |  | triangular matrix matrix multiply |
+| [CTRSM](https://www.netlib.org/lapack/explore-html/d9/de5/group__trsm_gac3440cd3495c6712ba246684f58d0000.html#gac3440cd3495c6712ba246684f58d0000) |  |  | solving triangular matrix with multiple right hand sides |
+| [ZGEMM](https://www.netlib.org/lapack/explore-html/dd/d09/group__gemm_ga6c04c90bf399ae5d66a5f7a237bb43e4.html#ga6c04c90bf399ae5d66a5f7a237bb43e4) |  |  | matrix matrix multiply |
+| [ZSYMM](https://www.netlib.org/lapack/explore-html/d0/d16/group__hemm_ga6b84546198199872292fea4a590e7f3e.html#ga6b84546198199872292fea4a590e7f3e) |  |  | symmetric matrix matrix multiply |
+| [ZHEMM](https://www.netlib.org/lapack/explore-html/d0/d16/group__hemm_ga663dafc05062bd8da1df27ed91c84d44.html#ga663dafc05062bd8da1df27ed91c84d44) |  |  | hermitian matrix matrix multiply |
+| [ZSYRK](https://www.netlib.org/lapack/explore-html/d4/d6e/group__herk_ga74b61bab25107b7e728669d471120326.html#ga74b61bab25107b7e728669d471120326) |  |  | symmetric rank-k update to a matrix |
+| [ZHERK](https://www.netlib.org/lapack/explore-html/d4/d6e/group__herk_ga5bd7d028f21ee95764845c1197baa09f.html#ga5bd7d028f21ee95764845c1197baa09f) |  |  | hermitian rank-k update to a matrix |
+| [ZSYR2K](https://www.netlib.org/lapack/explore-html/d8/d94/group__her2k_ga62b3ef33142ef948face3840601b63bc.html#ga62b3ef33142ef948face3840601b63bc) |  |  | symmetric rank-2k update to a matrix |
+| [ZHER2K](https://www.netlib.org/lapack/explore-html/d8/d94/group__her2k_ga9e41d3bfaa0d0eeb02e46477d23f679c.html#ga9e41d3bfaa0d0eeb02e46477d23f679c) |  |  | hermitian rank-2k update to a matrix |
+| [ZTRMM](https://www.netlib.org/lapack/explore-html/dd/dab/group__trmm_ga584a819ca564261d75feb49c8e4f7cf2.html#ga584a819ca564261d75feb49c8e4f7cf2) |  |  | triangular matrix matrix multiply |
+| [ZTRSM](https://www.netlib.org/lapack/explore-html/d9/de5/group__trsm_gae2f041306c394c758eff9b77190617c4.html#gae2f041306c394c758eff9b77190617c4) |  |  | solving triangular matrix with multiple right hand sides |
 

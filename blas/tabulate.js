@@ -64,7 +64,6 @@ function makeTable (funcs) {
     let wasm = '';
     if (foundWasm) {
       wasm = `[wasm](${foundWasm.html_url})`;
-      console.log(stdlib);
     }
     
     lines.push(`| [${func.name}](${func.url}) | ${stdlib} | ${wasm} | ${func.description} |`);
