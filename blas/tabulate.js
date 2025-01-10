@@ -95,7 +95,9 @@ function makeTable (funcs) {
 
 const md = [];
 md.push('# BLAS');
-
+md.push('\n');
+md.push('A quick page to help me parse [BLAS progress in Stdlib](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/blas/base)');
+md.push('\n');
 md.push(`Prefixes:
 - \`S\`: single precision
 - \`D\`: double precision
