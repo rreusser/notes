@@ -85,7 +85,7 @@ function makeTable (funcs) {
       wasm = `[wasm](${foundWasm.html_url})`;
     }
     
-    lines.push(`| [${func.name}](${func.url}) | ${stdlib} | ${wasm} | ${func.description} |`);
+    lines.push(`| [${func.name.toLowerCase()}](${func.url}) | ${stdlib} | ${wasm} | ${func.description} |`);
   }
   lines.push('\n');
 
