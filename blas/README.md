@@ -1,7 +1,7 @@
 # BLAS
 
 
-A quick page to help me parse [BLAS progress in Stdlib](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/blas/base)
+A quick page to help me parse [BLAS progress in Stdlib](https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/blas/base).
 
 
 Prefixes:
