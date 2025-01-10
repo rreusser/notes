@@ -1,0 +1,878 @@
+[
+  {
+    "name": "SROTG",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dc5/group__rotg_ga55d839ab27a662d848390a2bbe3ee9d3.html#ga55d839ab27a662d848390a2bbe3ee9d3",
+    "description": "setup Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "SROTMG",
+    "url": "https://www.netlib.org/lapack/explore-html/d3/dd5/group__rotmg_ga4e2582ebf7f445a7628954183c4cce30.html#ga4e2582ebf7f445a7628954183c4cce30",
+    "description": "setup modified Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "SROT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d45/group__rot_ga432ce08bbcda714c82c7a31552f96937.html#ga432ce08bbcda714c82c7a31552f96937",
+    "description": "apply Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "SROTM",
+    "url": "https://www.netlib.org/lapack/explore-html/dc/d23/group__rotm_ga9b95e7fbcee2aab54d571e3986484808.html#ga9b95e7fbcee2aab54d571e3986484808",
+    "description": "apply modified Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "SSWAP",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/d51/group__swap_ga9aa6d829e36b30c1f4c0e8f5346defa5.html#ga9aa6d829e36b30c1f4c0e8f5346defa5",
+    "description": "swap `x` and `y`",
+    "level": 1
+  },
+  {
+    "name": "SSCAL",
+    "url": "https://www.netlib.org/lapack/explore-html/d2/de8/group__scal_ga3b80044a9dbfcbdcb06e48352ee8d64e.html#ga3b80044a9dbfcbdcb06e48352ee8d64e",
+    "description": "`x = a*x`",
+    "level": 1
+  },
+  {
+    "name": "SCOPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d2b/group__copy_ga7082b747d31963a7c4bcc9a6e488f6cc.html#ga7082b747d31963a7c4bcc9a6e488f6cc",
+    "description": "copy `x` into `y`",
+    "level": 1
+  },
+  {
+    "name": "SAXPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d4b/group__axpy_gabe0745849954ad2106e633fd2ebfc920.html#gabe0745849954ad2106e633fd2ebfc920",
+    "description": "`y = a*x + y`",
+    "level": 1
+  },
+  {
+    "name": "SDOT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_gaa145c21fd5f5b672ac0b4560154682dd.html#gaa145c21fd5f5b672ac0b4560154682dd",
+    "description": "dot product",
+    "level": 1
+  },
+  {
+    "name": "SDSDOT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_ga5e09e98ca27006a197d7c5fa49a9da4b.html#ga5e09e98ca27006a197d7c5fa49a9da4b",
+    "description": "dot product with extended precision accumulation",
+    "level": 1
+  },
+  {
+    "name": "SNRM2",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d2a/group__nrm2_gad179c1611098b5881f147d39afb009b8.html#gad179c1611098b5881f147d39afb009b8",
+    "description": "Euclidean norm",
+    "level": 1
+  },
+  {
+    "name": "SCNRM2",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d2a/group__nrm2_gaee5779d5d216a7cd8cf83488fb6bb175.html#gaee5779d5d216a7cd8cf83488fb6bb175",
+    "description": "Euclidean norm",
+    "level": 1
+  },
+  {
+    "name": "SASUM",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d72/group__asum_ga5fb1932fad7d47868a711867e4f2c804.html#ga5fb1932fad7d47868a711867e4f2c804",
+    "description": "sum of absolute values",
+    "level": 1
+  },
+  {
+    "name": "ISAMAX",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/d52/group__iamax_ga68e936c3ea980ed3916cc159f969b440.html#ga68e936c3ea980ed3916cc159f969b440",
+    "description": "index of max abs value",
+    "level": 1
+  },
+  {
+    "name": "DROTG",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dc5/group__rotg_gaafa91c51f75df6c3f2182032a221c2db.html#gaafa91c51f75df6c3f2182032a221c2db",
+    "description": "setup Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "DROTMG",
+    "url": "https://www.netlib.org/lapack/explore-html/d3/dd5/group__rotmg_gaebf62f1c90f0829a0a762a7f8918213f.html#gaebf62f1c90f0829a0a762a7f8918213f",
+    "description": "setup modified Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "DROT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d45/group__rot_gae48ef017306866ac2d5a8c5a52617858.html#gae48ef017306866ac2d5a8c5a52617858",
+    "description": "apply Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "DROTM",
+    "url": "https://www.netlib.org/lapack/explore-html/dc/d23/group__rotm_ga4ffe410ec9e3ba6d5632fd16500c45c2.html#ga4ffe410ec9e3ba6d5632fd16500c45c2",
+    "description": "apply modified Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "DSWAP",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/d51/group__swap_ga780475990528dce288cf4f7bba36c90f.html#ga780475990528dce288cf4f7bba36c90f",
+    "description": "swap `x` and `y`",
+    "level": 1
+  },
+  {
+    "name": "DSCAL",
+    "url": "https://www.netlib.org/lapack/explore-html/d2/de8/group__scal_ga0590f8db475e11dc2c9137bb13887acf.html#ga0590f8db475e11dc2c9137bb13887acf",
+    "description": "`x = a*x`",
+    "level": 1
+  },
+  {
+    "name": "DCOPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d2b/group__copy_gafc29c83942509cba5f3764115f0471d5.html#gafc29c83942509cba5f3764115f0471d5",
+    "description": "copy `x` into `y`",
+    "level": 1
+  },
+  {
+    "name": "DAXPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d4b/group__axpy_gadb136e14634fe4b772a0b034f52f3939.html#gadb136e14634fe4b772a0b034f52f3939",
+    "description": "`y = a*x + y`",
+    "level": 1
+  },
+  {
+    "name": "DDOT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_ga2a42ecc597403b22ad786715c739196b.html#ga2a42ecc597403b22ad786715c739196b",
+    "description": "dot product",
+    "level": 1
+  },
+  {
+    "name": "DSDOT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_ga17a1bc70455f422325f92943b48c7240.html#ga17a1bc70455f422325f92943b48c7240",
+    "description": "dot product with extended precision accumulation",
+    "level": 1
+  },
+  {
+    "name": "DNRM2",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d2a/group__nrm2_gab5393665c8f0e7d5de9bd1dd2ff0d9d0.html#gab5393665c8f0e7d5de9bd1dd2ff0d9d0",
+    "description": "Euclidean norm",
+    "level": 1
+  },
+  {
+    "name": "DZNRM2",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d2a/group__nrm2_ga7f9f9febc6dc1836c9f5e7c1aa00b743.html#ga7f9f9febc6dc1836c9f5e7c1aa00b743",
+    "description": "Euclidean norm",
+    "level": 1
+  },
+  {
+    "name": "DASUM",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d72/group__asum_ga829029987b14b622f355aacf54a8e4b9.html#ga829029987b14b622f355aacf54a8e4b9",
+    "description": "sum of absolute values",
+    "level": 1
+  },
+  {
+    "name": "IDAMAX",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/d52/group__iamax_gacec03c5109f531c06b4fb301cf1a2d7a.html#gacec03c5109f531c06b4fb301cf1a2d7a",
+    "description": "index of max abs value",
+    "level": 1
+  },
+  {
+    "name": "CROTG",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dc5/group__rotg_ga7a6687e52657bef3d876b03391a06d2c.html#ga7a6687e52657bef3d876b03391a06d2c",
+    "description": "setup Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "CSROT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d45/group__rot_gaddabfc13f57f29e3deb1fad5cd76eb25.html#gaddabfc13f57f29e3deb1fad5cd76eb25",
+    "description": "apply Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "CSWAP",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/d51/group__swap_ga1e8d1bbcbd0307e7a3839d0bd10e4118.html#ga1e8d1bbcbd0307e7a3839d0bd10e4118",
+    "description": "swap `x` and `y`",
+    "level": 1
+  },
+  {
+    "name": "CSCAL",
+    "url": "https://www.netlib.org/lapack/explore-html/d2/de8/group__scal_gacce468103c83fa18bae078d5f49fefe2.html#gacce468103c83fa18bae078d5f49fefe2",
+    "description": "`x = a*x`",
+    "level": 1
+  },
+  {
+    "name": "CSSCAL",
+    "url": "https://www.netlib.org/lapack/explore-html/d2/de8/group__scal_ga38234ecdfde7c9a45753af53d13b0187.html#ga38234ecdfde7c9a45753af53d13b0187",
+    "description": "`x = a*x`",
+    "level": 1
+  },
+  {
+    "name": "CCOPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d2b/group__copy_gab395a30db1137d3deabe520b8e73097d.html#gab395a30db1137d3deabe520b8e73097d",
+    "description": "copy `x` into `y`",
+    "level": 1
+  },
+  {
+    "name": "CAXPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d4b/group__axpy_ga0b7bac1f4d42514074a48f14f5f9caa0.html#ga0b7bac1f4d42514074a48f14f5f9caa0",
+    "description": "`y = a*x + y`",
+    "level": 1
+  },
+  {
+    "name": "CDOTU",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_ga2cce681b6aed3728b893a555b3bee55c.html#ga2cce681b6aed3728b893a555b3bee55c",
+    "description": "dot product",
+    "level": 1
+  },
+  {
+    "name": "CDOTC",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_ga5c189335a4e6130a2206c190579b1571.html#ga5c189335a4e6130a2206c190579b1571",
+    "description": "dot product, conjugating the first vector",
+    "level": 1
+  },
+  {
+    "name": "SCASUM",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d72/group__asum_ga89c76eef329f84ba9ed106b34fedab16.html#ga89c76eef329f84ba9ed106b34fedab16",
+    "description": "sum of absolute values",
+    "level": 1
+  },
+  {
+    "name": "ICAMAX",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/d52/group__iamax_gafdf273dcc3f020e2aa5c716c1b3d7265.html#gafdf273dcc3f020e2aa5c716c1b3d7265",
+    "description": "index of max abs value",
+    "level": 1
+  },
+  {
+    "name": "ZROTG",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dc5/group__rotg_ga97ce56a6808661b36ab62269393ac10e.html#ga97ce56a6808661b36ab62269393ac10e",
+    "description": "setup Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "ZDROT",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/d45/group__rot_ga8d36fce61400cdbfe43c687206397f44.html#ga8d36fce61400cdbfe43c687206397f44",
+    "description": "apply Givens rotation",
+    "level": 1
+  },
+  {
+    "name": "ZSWAP",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/d51/group__swap_ga8e324819e4cd92b6fde3ae40c83a5cb3.html#ga8e324819e4cd92b6fde3ae40c83a5cb3",
+    "description": "swap `x` and `y`",
+    "level": 1
+  },
+  {
+    "name": "ZSCAL",
+    "url": "https://www.netlib.org/lapack/explore-html/d2/de8/group__scal_gafac698034497c3148620e35c316d9ffb.html#gafac698034497c3148620e35c316d9ffb",
+    "description": "`x = a*x`",
+    "level": 1
+  },
+  {
+    "name": "ZDSCAL",
+    "url": "https://www.netlib.org/lapack/explore-html/d2/de8/group__scal_ga40d50a435a5fcf16cf41fa80d746819f.html#ga40d50a435a5fcf16cf41fa80d746819f",
+    "description": "`x = a*x`",
+    "level": 1
+  },
+  {
+    "name": "ZCOPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d2b/group__copy_gaca1a115319081adeb0a9b80ec37ce626.html#gaca1a115319081adeb0a9b80ec37ce626",
+    "description": "copy `x` into `y`",
+    "level": 1
+  },
+  {
+    "name": "ZAXPY",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d4b/group__axpy_gaf603daa00d5c723d0e409d9b2d011bf4.html#gaf603daa00d5c723d0e409d9b2d011bf4",
+    "description": "`y = a*x + y`",
+    "level": 1
+  },
+  {
+    "name": "ZDOTU",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_ga6b0b69474b384d45fc4c7b1f7ec5959f.html#ga6b0b69474b384d45fc4c7b1f7ec5959f",
+    "description": "dot product",
+    "level": 1
+  },
+  {
+    "name": "ZDOTC",
+    "url": "https://www.netlib.org/lapack/explore-html/d1/dcc/group__dot_ga2d59b29ec40fb1bedeb3f10205155ee6.html#ga2d59b29ec40fb1bedeb3f10205155ee6",
+    "description": "dot product, conjugating the first vector",
+    "level": 1
+  },
+  {
+    "name": "DZASUM",
+    "url": "https://www.netlib.org/lapack/explore-html/d5/d72/group__asum_gaf23444d1c822b34db864558d7afc76dd.html#gaf23444d1c822b34db864558d7afc76dd",
+    "description": "sum of absolute values",
+    "level": 1
+  },
+  {
+    "name": "IZAMAX",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/d52/group__iamax_gafef3b8a5f619fccb1f5208f26e084457.html#gafef3b8a5f619fccb1f5208f26e084457",
+    "description": "index of max abs value",
+    "level": 1
+  },
+  {
+    "name": "SGEMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga0d35d880b663ad18204bb23bd186e380.html#ga0d35d880b663ad18204bb23bd186e380",
+    "description": "matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "SGBMV",
+    "url": "",
+    "description": "banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "SSYMV",
+    "url": "https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga8990fe737209f3401522103c85016d27.html#ga8990fe737209f3401522103c85016d27",
+    "description": "symmetric matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "SSBMV",
+    "url": "",
+    "description": "symmetric banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "SSPMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_gacdad62873d30076fb56e99100e8a8a6c.html#gacdad62873d30076fb56e99100e8a8a6c",
+    "description": "symmetric packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "STRMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga7b90369d2b2b19f78f168e10dd9eb8ad.html#ga7b90369d2b2b19f78f168e10dd9eb8ad",
+    "description": "triangular matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "STBMV",
+    "url": "",
+    "description": "triangular banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "STPMV",
+    "url": "",
+    "description": "triangular packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "STRSV",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_ga9a68aa7057b7b8b6e1eb404144a7b6a1.html#ga9a68aa7057b7b8b6e1eb404144a7b6a1",
+    "description": "solving triangular matrix problems",
+    "level": 2
+  },
+  {
+    "name": "STBSV",
+    "url": "",
+    "description": "solving triangular banded matrix problems",
+    "level": 2
+  },
+  {
+    "name": "STPSV",
+    "url": "",
+    "description": "solving triangular packed matrix problems",
+    "level": 2
+  },
+  {
+    "name": "SGER",
+    "url": "",
+    "description": "performs the rank 1 operation `A := alpha*x*y' + A`",
+    "level": 2
+  },
+  {
+    "name": "SSYR",
+    "url": "https://www.netlib.org/lapack/explore-html/dc/d82/group__her_gad7585662770cdd3001ed08c7a864cd21.html#gad7585662770cdd3001ed08c7a864cd21",
+    "description": "performs the symmetric rank 1 operation `A := alpha*x*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "SSPR",
+    "url": "",
+    "description": "symmetric packed rank 1 operation  `A := alpha*x*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "SSYR2",
+    "url": "",
+    "description": "performs the symmetric rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "SSPR2",
+    "url": "",
+    "description": "performs the symmetric packed rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "DGEMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga4ac1b675072d18f902db8a310784d802.html#ga4ac1b675072d18f902db8a310784d802",
+    "description": "matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DGBMV",
+    "url": "",
+    "description": "banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DSYMV",
+    "url": "https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga0b20bcf6e94079dce2f3d035798e9738.html#ga0b20bcf6e94079dce2f3d035798e9738",
+    "description": "symmetric matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DSBMV",
+    "url": "",
+    "description": "symmetric banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DSPMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_ga739f8dc2316523832bde2b237fcad8a6.html#ga739f8dc2316523832bde2b237fcad8a6",
+    "description": "symmetric packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DTRMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga73370bd6dca01abe05d54ecd1d91ce9a.html#ga73370bd6dca01abe05d54ecd1d91ce9a",
+    "description": "triangular matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DTBMV",
+    "url": "",
+    "description": "triangular banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DTPMV",
+    "url": "",
+    "description": "triangular packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "DTRSV",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_ga7a7dcbb8745b4776ce13063ab031141f.html#ga7a7dcbb8745b4776ce13063ab031141f",
+    "description": "solving triangular matrix problems",
+    "level": 2
+  },
+  {
+    "name": "DTBSV",
+    "url": "",
+    "description": "solving triangular banded matrix problems",
+    "level": 2
+  },
+  {
+    "name": "DTPSV",
+    "url": "",
+    "description": "solving triangular packed matrix problems",
+    "level": 2
+  },
+  {
+    "name": "DGER",
+    "url": "",
+    "description": "performs the rank 1 operation `A := alpha*x*y' + A`",
+    "level": 2
+  },
+  {
+    "name": "DSYR",
+    "url": "https://www.netlib.org/lapack/explore-html/dc/d82/group__her_ga07f0e3f8592107877f12a554a41c7413.html#ga07f0e3f8592107877f12a554a41c7413",
+    "description": "performs the symmetric rank 1 operation `A := alpha*x*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "DSPR",
+    "url": "",
+    "description": "symmetric packed rank 1 operation `A := alpha*x*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "DSYR2",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_ga8e576e9319c25b883b11dc1f39366bcc.html#ga8e576e9319c25b883b11dc1f39366bcc",
+    "description": "performs the symmetric rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "DSPR2",
+    "url": "",
+    "description": "performs the symmetric packed rank 2 operation, `A := alpha*x*y' + alpha*y*x' + A`",
+    "level": 2
+  },
+  {
+    "name": "CGEMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga44c85a0d7ecd60a6bc8ca27b222d7792.html#ga44c85a0d7ecd60a6bc8ca27b222d7792",
+    "description": "matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CGBMV",
+    "url": "",
+    "description": "banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CHEMV",
+    "url": "https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga2308ede4c4300ca4cfac83f2531aec22.html#ga2308ede4c4300ca4cfac83f2531aec22",
+    "description": "hermitian matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CHBMV",
+    "url": "",
+    "description": "hermitian banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CHPMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_ga8615e798761db472ab0abb8f67594287.html#ga8615e798761db472ab0abb8f67594287",
+    "description": "hermitian packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CTRMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga0adaf80ae1dfe117390bd7030fd865f1.html#ga0adaf80ae1dfe117390bd7030fd865f1",
+    "description": "triangular matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CTBMV",
+    "url": "",
+    "description": "triangular banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CTPMV",
+    "url": "",
+    "description": "triangular packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "CTRSV",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_gab8c2d2a6476f67197ba1f92aff4a0b92.html#gab8c2d2a6476f67197ba1f92aff4a0b92",
+    "description": "solving triangular matrix problems",
+    "level": 2
+  },
+  {
+    "name": "CTBSV",
+    "url": "",
+    "description": "solving triangular banded matrix problems",
+    "level": 2
+  },
+  {
+    "name": "CTPSV",
+    "url": "",
+    "description": "solving triangular packed matrix problems",
+    "level": 2
+  },
+  {
+    "name": "CGERU",
+    "url": "",
+    "description": "performs the rank 1 operation `A := alpha*x*y' + A`",
+    "level": 2
+  },
+  {
+    "name": "CGERC",
+    "url": "",
+    "description": "performs the rank 1 operation `A := alpha*x*conjg( y' ) + A`",
+    "level": 2
+  },
+  {
+    "name": "CHER",
+    "url": "https://www.netlib.org/lapack/explore-html/dc/d82/group__her_gae92bde9f7f6f83c0edaa96f4f2bb2bc3.html#gae92bde9f7f6f83c0edaa96f4f2bb2bc3",
+    "description": "hermitian rank 1 operation `A := alpha*x*conjg(x') + A`",
+    "level": 2
+  },
+  {
+    "name": "CHPR",
+    "url": "",
+    "description": "hermitian packed rank 1 operation `A := alpha*x*conjg( x' ) + A`",
+    "level": 2
+  },
+  {
+    "name": "CHER2",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_gaf421f493e6422d08e3acfc6d33bfbf46.html#gaf421f493e6422d08e3acfc6d33bfbf46",
+    "description": "hermitian rank 2 operation",
+    "level": 2
+  },
+  {
+    "name": "CHPR2",
+    "url": "",
+    "description": "hermitian packed rank 2 operation",
+    "level": 2
+  },
+  {
+    "name": "ZGEMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d7/dda/group__gemv_ga89e23232eb8a7297e5f15f2b404f6ab9.html#ga89e23232eb8a7297e5f15f2b404f6ab9",
+    "description": "matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZGBMV",
+    "url": "",
+    "description": "banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZHEMV",
+    "url": "https://www.netlib.org/lapack/explore-html/db/d17/group__hemv_ga8e55e480b23945c09c35e09935fce058.html#ga8e55e480b23945c09c35e09935fce058",
+    "description": "hermitian matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZHBMV",
+    "url": "",
+    "description": "hermitian banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZHPMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d0/d4b/group__hpmv_gacb6812cc95b64a60f69179b1ca50ead8.html#gacb6812cc95b64a60f69179b1ca50ead8",
+    "description": "hermitian packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZTRMV",
+    "url": "https://www.netlib.org/lapack/explore-html/d6/d1c/group__trmv_ga1ab0d018131d258a1a3ea755bde73d45.html#ga1ab0d018131d258a1a3ea755bde73d45",
+    "description": "triangular matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZTBMV",
+    "url": "",
+    "description": "triangular banded matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZTPMV",
+    "url": "",
+    "description": "triangular packed matrix vector multiply",
+    "level": 2
+  },
+  {
+    "name": "ZTRSV",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/dc3/group__trsv_gad76661a1a371429ec99d8b17c38251bc.html#gad76661a1a371429ec99d8b17c38251bc",
+    "description": "solving triangular matrix problems",
+    "level": 2
+  },
+  {
+    "name": "ZTBSV",
+    "url": "",
+    "description": "solving triangular banded matrix problems",
+    "level": 2
+  },
+  {
+    "name": "ZTPSV",
+    "url": "",
+    "description": "solving triangular packed matrix problems",
+    "level": 2
+  },
+  {
+    "name": "ZGERU",
+    "url": "",
+    "description": "performs the rank 1 operation `A := alpha*x*y' + A`",
+    "level": 2
+  },
+  {
+    "name": "ZGERC",
+    "url": "",
+    "description": "performs the rank 1 operation `A := alpha*x*conjg( y' ) + A`",
+    "level": 2
+  },
+  {
+    "name": "ZHER",
+    "url": "https://www.netlib.org/lapack/explore-html/dc/d82/group__her_gaf848c3e119d49365476615e0850bbe5b.html#gaf848c3e119d49365476615e0850bbe5b",
+    "description": "hermitian rank 1 operation `A := alpha*x*conjg(x') + A`",
+    "level": 2
+  },
+  {
+    "name": "ZHPR",
+    "url": "",
+    "description": "hermitian packed rank 1 operation `A := alpha*x*conjg( x' ) + A`",
+    "level": 2
+  },
+  {
+    "name": "ZHER2",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_ga565bc80dabd392f5a1cb900768b21db4.html#ga565bc80dabd392f5a1cb900768b21db4",
+    "description": "hermitian rank 2 operation",
+    "level": 2
+  },
+  {
+    "name": "ZHPR2",
+    "url": "",
+    "description": "hermitian packed rank 2 operation",
+    "level": 2
+  },
+  {
+    "name": "SGEMM",
+    "url": "",
+    "description": "matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "SSYMM",
+    "url": "",
+    "description": "symmetric matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "SSYRK",
+    "url": "",
+    "description": "symmetric rank-k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "SSYR2K",
+    "url": "https://www.netlib.org/lapack/explore-html/dd/de5/group__her2_ga6741f2ac8fe025042fd994ccc6625b45.html#ga6741f2ac8fe025042fd994ccc6625b45",
+    "description": "symmetric rank-2k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "STRMM",
+    "url": "",
+    "description": "triangular matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "STRSM",
+    "url": "",
+    "description": "solving triangular matrix with multiple right hand sides",
+    "level": 3
+  },
+  {
+    "name": "DGEMM",
+    "url": "",
+    "description": "matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "DSYMM",
+    "url": "",
+    "description": "symmetric matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "DSYRK",
+    "url": "",
+    "description": "symmetric rank-k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "DSYR2K",
+    "url": "",
+    "description": "symmetric rank-2k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "DTRMM",
+    "url": "",
+    "description": "triangular matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "DTRSM",
+    "url": "",
+    "description": "solving triangular matrix with multiple right hand sides",
+    "level": 3
+  },
+  {
+    "name": "CGEMM",
+    "url": "",
+    "description": "matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "CSYMM",
+    "url": "",
+    "description": "symmetric matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "CHEMM",
+    "url": "",
+    "description": "hermitian matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "CSYRK",
+    "url": "",
+    "description": "symmetric rank-k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "CHERK",
+    "url": "",
+    "description": "hermitian rank-k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "CSYR2K",
+    "url": "",
+    "description": "symmetric rank-2k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "CHER2K",
+    "url": "",
+    "description": "hermitian rank-2k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "CTRMM",
+    "url": "",
+    "description": "triangular matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "CTRSM",
+    "url": "",
+    "description": "solving triangular matrix with multiple right hand sides",
+    "level": 3
+  },
+  {
+    "name": "ZGEMM",
+    "url": "",
+    "description": "matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "ZSYMM",
+    "url": "",
+    "description": "symmetric matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "ZHEMM",
+    "url": "",
+    "description": "hermitian matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "ZSYRK",
+    "url": "",
+    "description": "symmetric rank-k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "ZHERK",
+    "url": "",
+    "description": "hermitian rank-k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "ZSYR2K",
+    "url": "",
+    "description": "symmetric rank-2k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "ZHER2K",
+    "url": "",
+    "description": "hermitian rank-2k update to a matrix",
+    "level": 3
+  },
+  {
+    "name": "ZTRMM",
+    "url": "",
+    "description": "triangular matrix matrix multiply",
+    "level": 3
+  },
+  {
+    "name": "ZTRSM",
+    "url": "",
+    "description": "solving triangular matrix with multiple right hand sides",
+    "level": 3
+  }
+]
