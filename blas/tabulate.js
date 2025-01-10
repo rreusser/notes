@@ -15,11 +15,35 @@ function createPatternTester (patternList) {
   return false;
 }
 
+function parseBLAS (str) {
+  let prefix = '';
+  if (str[0] === 'I') {
+    prefix = 'I';
+    str = str.substr(1);
+  }
+  const type = str[0];
+  const rest = str.substr(1);
+  return [prefix + type, rest];
+}
+
+function blasComparator ({name: str1}, {name: str2}) {
+  const [type1, func1] = parseBLAS(str1);
+  const [type2, func2] = parseBLAS(str2);
+  if (func1 === func2) return type1.localeCompare(type2);
+  return func1.localeCompare(func2);
+}
+
 const { GITHUB_PAT } = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'credentials.json'), 'utf8'));
 const BLAS = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'blas.json'), 'utf8'));
 const LEVEL1 = BLAS.filter(({level}) => level === 1);
 const LEVEL2 = BLAS.filter(({level}) => level === 2);
 const LEVEL3 = BLAS.filter(({level}) => level === 3);
+
+LEVEL1.sort(blasComparator);
+LEVEL2.sort(blasComparator);
+LEVEL3.sort(blasComparator);
+
+//for (const {name} of LEVEL1) console.log(name);
 
 const owner = "stdlib-js";
 const repo = "stdlib";
@@ -41,11 +65,6 @@ const exclude = createPatternTester([
   /^layout/,
   /^operation-side/
 ]);
-
-for (const item of contents) {
-  if (item.type !== 'dir') continue;
-  if (exclude(item.name)) continue;
-}
 
 function makeTable (funcs) {
   const lines = [];
