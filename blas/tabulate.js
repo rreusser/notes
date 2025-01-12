@@ -33,7 +33,7 @@ function blasComparator ({name: str1}, {name: str2}) {
   return func1.localeCompare(func2);
 }
 
-const { GITHUB_PAT } = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'credentials.json'), 'utf8'));
+//const { GITHUB_PAT } = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'credentials.json'), 'utf8'));
 const BLAS = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'blas.json'), 'utf8'));
 const LEVEL1 = BLAS.filter(({level}) => level === 1);
 const LEVEL2 = BLAS.filter(({level}) => level === 2);
@@ -49,7 +49,7 @@ const owner = "stdlib-js";
 const repo = "stdlib";
 const directoryPath = "lib/node_modules/@stdlib/blas/base";
 
-const contents = await fetchDirectoryContents(owner, repo, directoryPath, GITHUB_PAT);
+const contents = await fetchDirectoryContents(owner, repo, directoryPath, null /*GITHUB_PAT*/ );
 
 const exclude = createPatternTester([
   'assert',
