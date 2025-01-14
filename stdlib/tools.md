@@ -10,3 +10,17 @@ See [slash-commands.yml](https://github.com/stdlib-js/stdlib/blob/develop/.githu
 /stdlib [help check-files update-copyright-years 
   lint-autofix merge rebase]
 ```
+
+### Native add-ons
+
+```bash
+make install-node-addons NODE_ADDONS_PATTERN="lapack/base/zlacgv"
+```
+
+### Linting
+
+To run the editorconfig linter:
+
+```bash
+make lint-editorconfig-files FILES="lib/node_modules/@stdlib/blas/base/dscal/src/dscal.f"
+```
