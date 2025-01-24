@@ -33,8 +33,10 @@ from fparser.two.Fortran2003 import (
     Intrinsic_Function_Reference,
     Intrinsic_Name,
     Intrinsic_Type_Spec,
+    Level_1_Expr,
     Level_2_Expr,
     Level_2_Unary_Expr,
+    Level_3_Expr,
     Level_4_Expr,
     Logical_Literal_Constant,
     Loop_Control,
@@ -54,6 +56,11 @@ from fparser.two.Fortran2003 import (
     Subroutine_Stmt,
     Subroutine_Subprogram,
     Type_Declaration_Stmt,
+
+    #Block_Label_Do_Construct,
+    #Continue_Stmt,
+    #Label,
+    #Label_Do_Stmt,
 )
 
 LEVEL_4_OPERATORS = {
@@ -553,7 +560,7 @@ class FortranTranslator:
         elif isinstance(node, Name):
             return {
                 'type': 'Identifier',
-                'name': node.string.lower()
+                'name': node.string
             }
         
         elif isinstance(node, Or_Operand):

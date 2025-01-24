@@ -28,13 +28,8 @@ async function getInput() {
   });
 }
 
-const astText = await getInput();
-
-const ast = JSON.parse(astText);
-//console.log(ast);
-
+const ast = JSON.parse(await getInput());
 const generatedCode = escodegen.generate(ast, { comment: true });
-console.log(generatedCode);
+const formattedCode = await prettier.format(generatedCode, {parser: 'babel'});
 
-//const formattedCode = await prettier.format(generatedCode);
-//console.log(formattedCode);
+console.log(formattedCode);
