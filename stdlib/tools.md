@@ -11,16 +11,43 @@ See [slash-commands.yml](https://github.com/stdlib-js/stdlib/blob/develop/.githu
   lint-autofix merge rebase]
 ```
 
-### Native add-ons
+
+### Things to check when authoring a module
+
+Do tests run?
+
+```bash
+make TESTS_FILTER=".*/lapack/base/zlacgv/.*" test
+```
+
+
+Do examples run?
+
+```bash
+make EXAMPLES_FILTER=".*/lapack/base/zlacgv/.*" examples-c
+make EXAMPLES_FILTER=".*/lapack/base/zlacgv/.*" examples
+```
+
+Do benchmarks run?
+
+```bash
+make BENCHMARKS_FILTER=".*/lapack/base/zlacgv/.*" benchmark
+```
+
+Does it lint?
+
+```bash
+make lint-editorconfig-files FILES="lib/node_modules/@stdlib/lapack/base/zlacgv/src/zlacgv.f"
+```
+
+Do native add-ons build?
 
 ```bash
 make install-node-addons NODE_ADDONS_PATTERN="lapack/base/zlacgv"
 ```
 
-### Linting
-
-To run the editorconfig linter:
+### Compile native add-on with BLAS
 
 ```bash
-make lint-editorconfig-files FILES="lib/node_modules/@stdlib/blas/base/dscal/src/dscal.f"
+BLAS=apple_accelerate make install-node-addons NODE_ADDONS_PATTERN="..."
 ```
