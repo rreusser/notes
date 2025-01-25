@@ -7,11 +7,17 @@ from fparser.two import Fortran2003
 
 from fparser.two.Fortran2003 import (
     Add_Operand,
+    And_Operand,
     Assignment_Stmt,
     Assumed_Size_Spec,
     Actual_Arg_Spec_List,
     Block_Nonlabel_Do_Construct,
+    Block_Label_Do_Construct,
+    Char_Literal_Constant,
+    Call_Stmt,
     Comment,
+    Component_Spec_List,
+    Continue_Stmt,
     Data_Stmt,
     Data_Stmt_Object_List,
     Data_Stmt_Set,
@@ -41,6 +47,8 @@ from fparser.two.Fortran2003 import (
     Intrinsic_Stmt,
     Intrinsic_Name,
     Intrinsic_Type_Spec,
+    Label,
+    Label_Do_Stmt,
     Level_1_Expr,
     Level_2_Expr,
     Level_2_Unary_Expr,
@@ -62,9 +70,11 @@ from fparser.two.Fortran2003 import (
     Return_Stmt,
     Section_Subscript_List,
     Specification_Part,
+    Structure_Constructor,
     Subroutine_Stmt,
     Subroutine_Subprogram,
     Type_Declaration_Stmt,
+    Type_Name,
 )
 
 LEVEL_4_OPERATORS = {
@@ -124,6 +134,7 @@ TYPES = {
     'double precision': 'float64',
     'integer': 'int32',
     'complex*16': 'complex128',
+    'character': 'String',
 }
 
 def index_of (parent, node):
@@ -456,12 +467,14 @@ class Scope:
         return self._to_estree(self.ast)
 
     def _to_estree (self, node):
-        eprint(node.__class__.__name__)
         if isinstance(node, list):
             return filt([self._to_estree(child) for child in node])
 
         elif node is None:
             raise TypeError('Cannot convert None to ESTree')
+        
+        elif isinstance(node, Actual_Arg_Spec_List):
+            return [self._to_estree(child) for child in node.children]
 
         elif isinstance(node, Add_Operand):
             return {
@@ -470,6 +483,41 @@ class Scope:
                 'operator': LEVEL_2_OPERATORS[node.items[1]],
                 'right': self._to_estree(node.items[2])
             }
+
+        elif isinstance(node, And_Operand):
+            return {
+                'type': 'UnaryExpression',
+                'operator': LEVEL_4_OPERATORS[node.items[0]],
+                'argument': self._to_estree(node.items[1]),
+                'prefix': True
+            }
+
+        elif isinstance(node, Block_Label_Do_Construct):
+            if get_child(node, Label_Do_Stmt):
+                label_do_stmt = get_child(node, Label_Do_Stmt)
+                continue_stmt = get_child(node, Continue_Stmt)
+
+                label_do_stmt_idx = index_of(node, label_do_stmt)
+                continue_stmt_idx = index_of(node, continue_stmt)
+
+                start_label = label_do_stmt.get_start_label()
+                end_label = continue_stmt.get_end_label()
+
+                assert start_label == end_label
+
+                if label_do_stmt_idx > -1:
+                    body = node.children[label_do_stmt_idx + 1: continue_stmt_idx]
+                else:
+                    raiseError('Unexpected structure in Block_Nonlabel_Do_Construct')
+
+                loop_control = get_child(label_do_stmt, Loop_Control)
+                assert isinstance(loop_control, Loop_Control)
+
+                expr = self.parse_loop_control(loop_control)
+                expr['body'] = block(self._to_estree(node.children[label_do_stmt_idx + 1: continue_stmt_idx]))
+                return expr
+            else:
+                raise TypeError('Unhandled Block_Nonlabel_Do_Construct')
 
         elif isinstance(node, Block_Nonlabel_Do_Construct):
             if get_child(node, Nonlabel_Do_Stmt):
@@ -504,8 +552,21 @@ class Scope:
                 }
             }
 
-        elif isinstance(node, Execution_Part):
-            return self._to_estree(node.children)
+        elif isinstance(node, Call_Stmt):
+            args = get_one_child(node, Actual_Arg_Spec_List)
+            return {
+                'type': 'CallExpression',
+                'callee': self._to_estree(node.items[0]),
+                'arguments': self._to_estree(args)
+            }
+
+        elif isinstance(node, Char_Literal_Constant):
+            string = node.string.replace("'", '')
+            return {
+                'type': 'Literal',
+                'value': string,
+                'raw': string
+            }
 
         elif isinstance(node, Comment):
             return None
@@ -520,6 +581,9 @@ class Scope:
                 'operator': LEVEL_4_OPERATORS[node.items[1]],
                 'right': self._to_estree(node.items[2])
             }
+
+        elif isinstance(node, Execution_Part):
+            return self._to_estree(node.children)
 
         elif isinstance(node, Function_Subprogram) or isinstance(node, Subroutine_Subprogram):
             if not self.is_root_node(node):
@@ -679,7 +743,7 @@ class Scope:
             assert isinstance(intrinsic_name, Intrinsic_Name)
             func = intrinsic_name.string.lower()
 
-            args = get_child(node, Actual_Arg_Spec_List)
+            args = get_one_child(node, Actual_Arg_Spec_List)
 
             if func == 'mod':
                 lhs = args.items[0]
@@ -820,6 +884,24 @@ class Scope:
                     'object': self._to_estree(name),
                     'property': self._to_estree(subs.items[0])
                 }
+
+        elif isinstance(node, Structure_Constructor):
+            type_name = find_one(node, Type_Name)
+            assert type_name.string.lower() == 'lsame'
+
+            comp_spec_list = get_one_child(node, Component_Spec_List)
+            name = get_one_child(comp_spec_list, Name)
+            char = get_one_child(comp_spec_list, Char_Literal_Constant)
+
+            return {
+                'type': 'BinaryExpression',
+                'operator': '===',
+                'left': self._to_estree(name),
+                'right': self._to_estree(char)
+            }
+
+        else:
+            raise TypeError('Unrecognized node type: %s' % node.__class__.__name__)
 
             
 class FortranTranslator:
