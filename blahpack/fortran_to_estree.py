@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import json
 from fparser.common.readfortran import FortranStringReader
@@ -915,9 +917,17 @@ class FortranTranslator:
     def to_estree(self):
         return Scope(self.ast).to_estree()
 
+if __name__ == '__main__':
+    if len(sys.argv) < 2 and sys.stdin.isatty():
+        eprint('Usage: python fortran_to_estree.py <filename> or pipe input to the script')
+        sys.exit(1)
+    
+    if len(sys.argv) >= 2:
+        with open(sys.argv[1], 'rt') as f:
+            code = f.read()
+    else:
+        code = sys.stdin.read()
 
-# Define your Fortran source code
-with open(sys.argv[1], 'rt') as f:
-    translator = FortranTranslator(f.read())
+    translator = FortranTranslator(code)
 
-print(json.dumps( translator.to_estree(), indent=2 ))
+    print(json.dumps( translator.to_estree(), indent=2 ))
