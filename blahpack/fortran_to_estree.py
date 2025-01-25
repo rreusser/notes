@@ -12,6 +12,10 @@ from fparser.two.Fortran2003 import (
     Actual_Arg_Spec_List,
     Block_Nonlabel_Do_Construct,
     Comment,
+    Data_Stmt,
+    Data_Stmt_Object_List,
+    Data_Stmt_Set,
+    Data_Stmt_Value_List,
     Dummy_Arg_List,
     Else_Stmt,
     Else_If_Stmt,
@@ -31,6 +35,8 @@ from fparser.two.Fortran2003 import (
     Implicit_Part,
     Int_Literal_Constant,
     Intrinsic_Function_Reference,
+    Intrinsic_Procedure_Name_List,
+    Intrinsic_Stmt,
     Intrinsic_Name,
     Intrinsic_Type_Spec,
     Level_1_Expr,
@@ -48,6 +54,7 @@ from fparser.two.Fortran2003 import (
     Or_Operand,
     Parenthesis,
     Part_Ref,
+    Prefix,
     Program,
     Real_Literal_Constant,
     Return_Stmt,
@@ -130,6 +137,13 @@ def index_of (parent, node):
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
+def parse_fortran_float(string):
+    return float(string.replace('d', 'e').replace('D', 'E'))
+
+def parse_dummy_arg_list(node):
+    assert isinstance(node, Dummy_Arg_List)
+    return [arg.string.lower() for arg in node.items]
+
 def filt(lst):
     return [item for item in lst if item is not None]
 
@@ -142,48 +156,166 @@ def flatten(S):
 
 def get_value(node):
     if isinstance(node, Int_Literal_Constant):
-        return int(node.string)
+        return {
+            'type': 'int32',
+            'value': int(node.string)
+        }
     elif isinstance(node, Real_Literal_Constant):
-        return float(node.string.replace('d', 'e').replace('D', 'E'))
+        return {
+            'type': 'float64',
+            'value': parse_fortran_float(node.string)
+        }
     else:
         raise TypeError('Unrecognized node type: %s' % node.__class__.__name__)
 
+def assert_child_types(node, type_list, allow_none=True):
+    for child in node.children:
+        if allow_none and child is None:
+            continue
+        if not any(isinstance(child, t) for t in type_list):
+            raise TypeError('Unexpected child type: %s' % child.__class__.__name__)
+
+def find_one(node, node_type):
+    all = [node for node in walk(node) if isinstance(node, node_type)]
+    assert len(all) == 1, 'Expected one node of type %s, found %d' % (node_type.__name__, len(all))
+    return all[0]
+
+# Use of this function is discouraged, as it silences unhanded types. Instead, iterate
+# over all children and raise an error if a node type is unhandled.
 def find_all(node, node_type):
     return [node for node in walk(node) if isinstance(node, node_type)]
 
-def collect_parameter_defs (specification):
-    def_nodes = find_all(specification, Named_Constant_Def_List)
-    defs = []
-    for node in def_nodes:
-        for defn in find_all(node, Named_Constant_Def):
-            name = get_child(defn, Name)
-            value_node = defn.items[1]
-            defs.append({
-                'name': name.string,
-                'value': get_value(value_node)
-            })
-    return defs
+def get_one_child(node, node_type):
+    all = [child for child in node.children if isinstance(child, node_type)]
+    assert len(all) == 1, 'Expected one child of type %s, found %d' % (node_type.__name__, len(all))
+    return all[0]
+
+def parse_data_stmt(node):
+    assert_child_types(node, (Data_Stmt_Set,))
+    constants = {}
+    for dataset in node.children:
+        assert_child_types(dataset, (Data_Stmt_Object_List, Data_Stmt_Value_List))
+        obj_list = find_one(node, Data_Stmt_Object_List)
+        val_list = find_one(node, Data_Stmt_Value_List)
+
+        assert len(obj_list.items) == len(val_list.items)
+        for i in range(len(obj_list.items)):
+            name = obj_list.items[i].string.lower()
+            constants[name] = get_value(val_list.items[i])
+
+    return constants
+
+
+def parse_type_declaration_stmt (node):
+    assert_child_types(node, (Intrinsic_Type_Spec, Entity_Decl_List))
+
+    variables = {}
+
+    # Implement as needed if not None
+    assert node.children[1] == None
+
+    int_type_spec = find_one(node, Intrinsic_Type_Spec)
+    entity_decl_list = find_one(node, Entity_Decl_List)
+
+    # Implement as needed if not None
+    assert int_type_spec.items[1] == None
+
+    type = TYPES[int_type_spec.string.lower()]
+
+    for decl in entity_decl_list.children:
+        if isinstance(decl, Entity_Decl):
+            # Recall, Fortran is case-insensitive
+            name = decl.get_name().string.lower()
+            variables[name] = {
+                'name': name,
+                'type': type
+            }
+        else:
+            raise TypeError('Unexpected child type in Type_Declaration_Stmt: %s' % entity_decl.__class__.__name__)
+
+    return variables
+
+def merge_dicts (dst, src):
+    for key, value in src.items():
+        if key in dst:
+            raise KeyError(f"Duplicate key '{key}' found while merging dictionaries")
+        dst[key] = value
+    return dst
+
+def parse_intrinsic_stmt (node):
+    intrinsics = {}
+    for child in node.children:
+        if child == 'INTRINSIC':
+            continue
+        elif isinstance(child, Intrinsic_Procedure_Name_List):
+            for name in child.children:
+                _name = name.string.lower()
+                intrinsics[_name] = {
+                    'name': _name
+                }
+        else:
+            raise TypeError('Unexpected child type in Intrinsic_Stmt: %s' % child.__class__.__name__)
+    return intrinsics
+
+def parse_spec (node):
+    declarations = {}
+    constants = {}
+    intrinsics = {}
+    assert isinstance(node, Specification_Part)
+    for child in node.children:
+        if isinstance(child, Type_Declaration_Stmt):
+            merge_dicts(declarations, parse_type_declaration_stmt(child))
+        elif isinstance(child, Intrinsic_Stmt):
+            merge_dicts(intrinsics, parse_intrinsic_stmt(child))
+        elif isinstance(child, Data_Stmt):
+            merge_dicts(constants, parse_data_stmt(child))
+        elif isinstance(child, Implicit_Part):
+            # For now, assume implicit_part may only contain comments
+            assert_child_types(child, (Comment,))
+        else:
+            raise TypeError('Unexpected child type in Specification_Part: %s' % child.__class__.__name__)
+
+    return (declarations, constants, intrinsics)
 
 def block (body):
     if isinstance(body, list):
+        # Wrap in a BlockStatement if multiple statements are present
         return {
             'type': 'BlockStatement',
             'body': body,
         }
     else:
+        # Return the body node directly if it's not a list
         return body
 
-class FortranTranslator:
-    def __init__(self, code):
-        self.code = code
-
-        reader = FortranStringReader(code, ignore_comments=False)
-        parser = ParserFactory().create(std="f2003")
-        self.ast = parser(reader)
+class TypeSpec:
+    def __init__(self, name, type=None, size=None):
+        self.name = name
+        self.size = size
+        self.type = type
     
-    def to_estree(self):
-        return self._to_estree(self.ast)
-
+    def __repr__(self):
+        return f'TypeSpec(name={self.name}, type={self.type}, size={self.size})'
+    
+class Scope:
+    def __init__(self, ast, parent_context=None):
+        self.variables = {}
+        self.ast = ast
+        self.parent_context = parent_context
+        self.type_spec = {}
+        self.return_name = None
+        self.intrinsics = {}
+        self.constants = {}
+    
+    def is_root_node(self, node):
+        return node == self.ast
+    
+    def root_scope(self):
+        if self.parent_context is None:
+            return self
+        else:
+            return self.parent_context.root_scope()
+    
     def parse_loop_control(self, ctrl):
         assert isinstance(ctrl, Loop_Control)
         assert len(ctrl.items) == 3
@@ -197,13 +329,20 @@ class FortranTranslator:
         else:
             var = self._to_estree(ctrl.items[1][0])
             rng = ctrl.items[1][1]
-            start = self._to_estree(rng[0])
+
+            if isinstance(rng[0], Int_Literal_Constant):
+                # If the start value is a literal, convert it to zero-based index
+                start = self._to_estree(Int_Literal_Constant(str(int(rng[0].string) - 1)))
+            else:
+                # If the start value is an expression, use that expression
+                start = self._to_estree(rng[0])
+
             end = self._to_estree(rng[1])
             try:
-                inc = ctrl.items[1][2]
+                inc = rng[2]
             except IndexError:
                 inc = Int_Literal_Constant('1')
-
+            
             return {
                 'type': 'ForStatement',
                 'init': {
@@ -215,7 +354,7 @@ class FortranTranslator:
                 'test': {
                     'type': 'BinaryExpression',
                     'left': var,
-                    'operator': '<=',
+                    'operator': '<',
                     'right': end
                 },
                 'update': {
@@ -253,10 +392,12 @@ class FortranTranslator:
                     name = get_child(decl, Name)
                     assert isinstance(name, Name)
 
-                    spec = get_child(decl, Assumed_Size_Spec)
-                    if spec is not None:
-                        # Handle spec info
-                        pass
+                    kwargs = {'type': type}
+                    size_spec = get_child(decl, Assumed_Size_Spec)
+                    if size_spec is not None:
+                        kwargs['size'] = size_spec
+
+                    spec = TypeSpec(name, **kwargs)
 
                     vars.append({
                         'type': type,
@@ -272,6 +413,9 @@ class FortranTranslator:
         vars.sort(key=lambda x: (-len(x['name']), x['name']))
 
         return vars
+    
+    def to_estree(self):
+        return self._to_estree(self.ast)
 
     def _to_estree (self, node):
         if isinstance(node, list):
@@ -321,27 +465,14 @@ class FortranTranslator:
                 }
             }
 
-        elif isinstance(node, Part_Ref):
-            name = get_child(node, Name)
-            assert isinstance(name, Name)
-
-            subs = get_child(node, Section_Subscript_List)
-            assert isinstance(subs, Section_Subscript_List)
-
-            assert len(subs.items) == 1
-
-            return {
-                'type': 'MemberExpression',
-                'computed': True,
-                'object': self._to_estree(name),
-                'property': self._to_estree(subs.items[0])
-            }
-
         elif isinstance(node, Execution_Part):
             return self._to_estree(node.children)
 
         elif isinstance(node, Comment):
             return None
+        
+        elif isinstance(node, Data_Stmt_Set):
+            raise TypeError('Data_Stmt_Set should not be encountered')
 
         elif isinstance(node, Equiv_Operand):
             return {
@@ -351,40 +482,38 @@ class FortranTranslator:
                 'right': self._to_estree(node.items[2])
             }
 
-
         elif isinstance(node, Function_Subprogram):
-            function_stmt = get_child(node, Function_Stmt)
-            assert isinstance(function_stmt, Function_Stmt)
+            if not self.is_root_node(node):
+                # Create a new scope for subroutines
+                return Scope(node).to_estree()
 
-            dummy_arg_list = function_stmt.items[2]
-            assert isinstance(dummy_arg_list, Dummy_Arg_List)
-            arg_names = [arg.string for arg in dummy_arg_list.items]
+            assert_child_types(node, (Function_Stmt, Specification_Part, Execution_Part, End_Function_Stmt))
 
-            specs = find_all(node, Specification_Part)
-            vars = flatten([self.collect_specification_vars(spec) for spec in specs])
-            var_names = [var['name'] for var in vars]
+            function_stmt = get_one_child(node, Function_Stmt)
+            specification_part = get_one_child(node, Specification_Part)
+            execution_part = get_one_child(node, Execution_Part)
+            end_function_stmt = get_one_child(node, End_Function_Stmt)
 
-            defs = collect_parameter_defs(node)
+            function_name = function_stmt.get_name()
+            assert self.return_name is None
+            self.return_name = function_name
 
-            internal_vars = [var for var in var_names if var not in arg_names]
-
-            execution_part = get_child(node, Execution_Part)
-            assert isinstance(execution_part, Execution_Part)
-
-            end_function_stmt = get_child(node, End_Function_Stmt)
-            assert isinstance(end_function_stmt, End_Function_Stmt)
+            dummy_args = parse_dummy_arg_list(get_one_child(function_stmt, Dummy_Arg_List))
+            (decls, consts, intrinsics) = parse_spec(specification_part)
 
             body = []
+
+            all_vars = list(set(list(decls.keys()) + list(consts.keys())))
+            all_vars = [var for var in all_vars if var not in dummy_args]
+            all_vars.sort(key=lambda x: (-len(x), x))
 
             body.extend([{
                 'type': 'VariableDeclaration',
                 'kind': 'var',
-                'declarations': [
-                    {'type': 'Identifier', 'name': var, "init": None}
-                ]
-            } for var in internal_vars])
+                'declarations': [{'type': 'Identifier', 'name': var, "init": None}]
+            } for var in all_vars])
 
-            for defn in defs:
+            for name, meta in consts.items():
                 body.append({
                     'type': 'ExpressionStatement',
                     'expression': {
@@ -392,12 +521,12 @@ class FortranTranslator:
                         'operator': '=',
                         'left': {
                             'type': 'Identifier',
-                            'name': defn['name']
+                            'name': name
                         },
                         'right': {
                             'type': 'Literal',
-                            'value': defn['value'],
-                            'raw': str(defn['value'])
+                            'value': meta['value'],
+                            'raw': str(meta['value'])
                         }
                     }
                 })
@@ -407,15 +536,24 @@ class FortranTranslator:
 
             return {
                 "type": "FunctionDeclaration",
-                "id": self._to_estree(function_stmt.get_name()),
+                "id": self._to_estree(function_name),
                 "params": filt([{
                     "type": "Identifier",
-                    "name": arg.string
-                } for arg in dummy_arg_list.items]),
+                    "name": arg,
+                } for arg in dummy_args]),
                 "body": {
                     "type": "BlockStatement",
                     "body": body,
                 }
+            }
+        
+        elif isinstance(node, Level_2_Unary_Expr):
+            assert len(node.items) == 2
+            return {
+                'type': 'UnaryExpression',
+                'operator': UNARY_OPERATORS[node.items[0]],
+                'argument': self._to_estree(node.items[1]),
+                'prefix': True
             }
 
         elif isinstance(node, If_Stmt):
@@ -430,7 +568,7 @@ class FortranTranslator:
         elif isinstance(node, If_Construct):
             if get_child(node, If_Then_Stmt):
                 if_then_stmt = get_child(node, If_Then_Stmt)
-                if_stmt_idx = index_of(node, if_then_stmt)
+                #if_stmt_idx = index_of(node, if_then_stmt)
 
                 indices = []
                 for index, child in enumerate(node.children):
@@ -481,10 +619,6 @@ class FortranTranslator:
             else:
                 raise TypeError('Unhandled If_Construct')
 
-        elif isinstance(node, If_Then_Stmt):
-            eprint(node.__repr__())
-            return None
-
         elif isinstance(node, Int_Literal_Constant):
             return {
                 'type': 'Literal',
@@ -521,8 +655,11 @@ class FortranTranslator:
                 raise ValueError('Unhandled intrinsic function: %s' % func)
 
         elif isinstance(node, Intrinsic_Name):
-            eprint('INTRINSIC', node.__repr__())
-            return None
+            raise TypeError('Intrinsic_Name should not be encountered')
+        
+        elif isinstance(node, Intrinsic_Stmt):
+            raise TypeError('Intrinsic_Stmt should not be encountered')
+
 
         elif isinstance(node, Level_2_Expr):
             return {
@@ -560,7 +697,7 @@ class FortranTranslator:
         elif isinstance(node, Name):
             return {
                 'type': 'Identifier',
-                'name': node.string
+                'name': node.string.lower()
             }
         
         elif isinstance(node, Or_Operand):
@@ -572,17 +709,18 @@ class FortranTranslator:
             }
 
         elif isinstance(node, Real_Literal_Constant):
-            string = node.string.replace('d', 'e').replace('D', 'E')
+            num = parse_fortran_float(node.string)
             return {
                 'type': 'Literal',
-                'value': float(string),
-                'raw': node.string
+                'value': num,
+                'raw': str(num)
             }
 
         elif isinstance(node, Return_Stmt):
+            # Fortran, we assume the return value is the function's name
             return {
                 'type': 'ReturnStatement',
-                'argument': None
+                'argument': None if self.return_name is None else self._to_estree(self.return_name)
             }
         
         elif isinstance(node, Parenthesis):
@@ -596,40 +734,60 @@ class FortranTranslator:
                 'type': 'Program',
                 'body': self._to_estree(node.children)
             }
+        
+        elif isinstance(node, Implicit_Part):
+            return self._to_estree(node.children)
 
+        elif isinstance(node, Specification_Part):
+            return self._to_estree(node.children)
+        
+        elif isinstance(node, Type_Declaration_Stmt):
+            raise TypeError('Type_Declaration_Stmt should not be encountered')
+
+        elif isinstance(node, Part_Ref):
+            name = get_child(node, Name)
+            assert isinstance(name, Name)
+
+            subs = get_child(node, Section_Subscript_List)
+            assert isinstance(subs, Section_Subscript_List)
+
+            assert len(subs.items) == 1
+
+            return {
+                'type': 'MemberExpression',
+                'computed': True,
+                'object': self._to_estree(name),
+                'property': self._to_estree(subs.items[0])
+            }
+            
         elif isinstance(node, Subroutine_Subprogram):
-            subroutine_stmt = get_child(node, Subroutine_Stmt)
-            assert isinstance(subroutine_stmt, Subroutine_Stmt)
+            if not self.is_root_node(node):
+                # Create a new scope for subroutines
+                return Scope(node).to_estree()
 
-            dummy_arg_list = subroutine_stmt.items[2]
-            assert isinstance(dummy_arg_list, Dummy_Arg_List)
-            arg_names = [arg.string for arg in dummy_arg_list.items]
+            assert_child_types(node, (Subroutine_Stmt, Specification_Part, Execution_Part, End_Subroutine_Stmt))
 
-            specs = find_all(node, Specification_Part)
-            vars = flatten([self.collect_specification_vars(spec) for spec in specs])
-            var_names = [var['name'] for var in vars]
+            subroutine_stmt = get_one_child(node, Subroutine_Stmt)
+            specification_part = get_one_child(node, Specification_Part)
+            execution_part = get_one_child(node, Execution_Part)
+            end_subroutine_stmt = get_one_child(node, End_Subroutine_Stmt)
 
-            defs = collect_parameter_defs(node)
-
-            internal_vars = [var for var in var_names if var not in arg_names]
-
-            execution_part = get_child(node, Execution_Part)
-            assert isinstance(execution_part, Execution_Part)
-
-            end_subroutine_stmt = get_child(node, End_Subroutine_Stmt)
-            assert isinstance(end_subroutine_stmt, End_Subroutine_Stmt)
+            dummy_args = parse_dummy_arg_list(get_one_child(subroutine_stmt, Dummy_Arg_List))
+            (decls, consts, intrinsics) = parse_spec(specification_part)
 
             body = []
+
+            all_vars = list(set(list(decls.keys()) + list(consts.keys())))
+            all_vars = [var for var in all_vars if var not in dummy_args]
+            all_vars.sort(key=lambda x: (-len(x), x))
 
             body.extend([{
                 'type': 'VariableDeclaration',
                 'kind': 'var',
-                'declarations': [
-                    {'type': 'Identifier', 'name': var, "init": None}
-                ]
-            } for var in internal_vars])
+                'declarations': [{'type': 'Identifier', 'name': var, "init": None}]
+            } for var in all_vars])
 
-            for defn in defs:
+            for name, meta in consts.items():
                 body.append({
                     'type': 'ExpressionStatement',
                     'expression': {
@@ -637,12 +795,12 @@ class FortranTranslator:
                         'operator': '=',
                         'left': {
                             'type': 'Identifier',
-                            'name': defn['name']
+                            'name': name
                         },
                         'right': {
                             'type': 'Literal',
-                            'value': defn['value'],
-                            'raw': str(defn['value'])
+                            'value': meta['value'],
+                            'raw': str(meta['value'])
                         }
                     }
                 })
@@ -655,8 +813,8 @@ class FortranTranslator:
                 "id": self._to_estree(subroutine_stmt.get_name()),
                 "params": filt([{
                     "type": "Identifier",
-                    "name": arg.string
-                } for arg in dummy_arg_list.items]),
+                    "name": arg,
+                } for arg in dummy_args]),
                 "body": {
                     "type": "BlockStatement",
                     "body": body,
@@ -676,14 +834,20 @@ class FortranTranslator:
             raise TypeError('Unrecognized node type: %s' % node.__class__.__name__)
 
 
+class FortranTranslator:
+    def __init__(self, code):
+        self.code = code
+
+        reader = FortranStringReader(code, ignore_comments=False)
+        parser = ParserFactory().create(std="f2003")
+        self.ast = parser(reader)
+    
+    def to_estree(self):
+        return Scope(self.ast).to_estree()
+
+
 # Define your Fortran source code
 with open(sys.argv[1], 'rt') as f:
     translator = FortranTranslator(f.read())
 
-
 print(json.dumps( translator.to_estree(), indent=2 ))
-
-    # Convert AST back to Fortran source code
-    #transformed_code = "".join(str(item) for item in ast.content)
-    #print("Transformed Fortran Code:")
-    #print(transformed_code)
