@@ -27,6 +27,8 @@ from fparser.two.Fortran2003 import (
     Entity_Decl_List,
     Equiv_Operand,
     Execution_Part,
+    External_Stmt,
+    External_Name_List,
     Function_Stmt,
     Function_Subprogram,
     If_Stmt,
@@ -52,9 +54,9 @@ from fparser.two.Fortran2003 import (
     Named_Constant_Def,
     Nonlabel_Do_Stmt,
     Or_Operand,
+    Parameter_Stmt,
     Parenthesis,
     Part_Ref,
-    Prefix,
     Program,
     Real_Literal_Constant,
     Return_Stmt,
@@ -63,11 +65,6 @@ from fparser.two.Fortran2003 import (
     Subroutine_Stmt,
     Subroutine_Subprogram,
     Type_Declaration_Stmt,
-
-    #Block_Label_Do_Construct,
-    #Continue_Stmt,
-    #Label,
-    #Label_Do_Stmt,
 )
 
 LEVEL_4_OPERATORS = {
@@ -126,6 +123,7 @@ TYPES = {
     'real(wp)': 'float64',
     'double precision': 'float64',
     'integer': 'int32',
+    'complex*16': 'complex128',
 }
 
 def index_of (parent, node):
@@ -218,7 +216,7 @@ def parse_type_declaration_stmt (node):
     entity_decl_list = find_one(node, Entity_Decl_List)
 
     # Implement as needed if not None
-    assert int_type_spec.items[1] == None
+    #assert int_type_spec.items[1] == None
 
     type = TYPES[int_type_spec.string.lower()]
 
@@ -257,10 +255,48 @@ def parse_intrinsic_stmt (node):
             raise TypeError('Unexpected child type in Intrinsic_Stmt: %s' % child.__class__.__name__)
     return intrinsics
 
+def parse_implicit_part (node):
+    implicit = {}
+    for child0 in node.children:
+        if isinstance(child0, Comment):
+            pass
+        elif isinstance(child0, Parameter_Stmt):
+            for child1 in child0.children:
+                if isinstance(child1, str) and child1.lower() == 'parameter':
+                    pass
+                elif isinstance(child1, Named_Constant_Def_List):
+                    for child2 in child1.children:
+                        if isinstance(child2, Named_Constant_Def):
+                            name = get_one_child(child2, Name)
+                            implicit[name.string.lower()] = get_value(child2.items[1])
+                        else:
+                            raise TypeError('Unexpected child type in Named_Constant_Def_List: %s' % child2.__class__.__name__)
+                else:
+                    raise TypeError('Unexpected child type in Parameter_Stmt: %s' % child1.__class__.__name__)
+        else:
+            raise TypeError('Unexpected child type in Implicit_Part: %s' % child0.__class__.__name__)
+    return implicit
+
+def parse_external_stmt(node):
+    externals = {}
+    for child in node.children:
+        if child == 'EXTERNAL':
+            continue
+        elif isinstance(child, External_Name_List):
+            for child1 in child.children:
+                assert isinstance
+                externals[child1.string.lower()] = {
+                    'name': child1.string.lower()
+                }
+        else:
+            raise TypeError('Unexpected child type in External_Stmt: %s' % child.__class__.__name__)
+    return externals
+
 def parse_spec (node):
     declarations = {}
     constants = {}
     intrinsics = {}
+    externals = {}
     assert isinstance(node, Specification_Part)
     for child in node.children:
         if isinstance(child, Type_Declaration_Stmt):
@@ -270,12 +306,13 @@ def parse_spec (node):
         elif isinstance(child, Data_Stmt):
             merge_dicts(constants, parse_data_stmt(child))
         elif isinstance(child, Implicit_Part):
-            # For now, assume implicit_part may only contain comments
-            assert_child_types(child, (Comment,))
+            merge_dicts(constants, parse_implicit_part(child))
+        elif isinstance(child, External_Stmt):
+            merge_dicts(externals, parse_external_stmt(child))
         else:
             raise TypeError('Unexpected child type in Specification_Part: %s' % child.__class__.__name__)
-
-    return (declarations, constants, intrinsics)
+    
+    return (declarations, constants, intrinsics, externals)
 
 def block (body):
     if isinstance(body, list):
@@ -306,6 +343,7 @@ class Scope:
         self.return_name = None
         self.intrinsics = {}
         self.constants = {}
+        self.externals = {}
     
     def is_root_node(self, node):
         return node == self.ast
@@ -482,24 +520,33 @@ class Scope:
                 'right': self._to_estree(node.items[2])
             }
 
-        elif isinstance(node, Function_Subprogram):
+        elif isinstance(node, Function_Subprogram) or isinstance(node, Subroutine_Subprogram):
             if not self.is_root_node(node):
                 # Create a new scope for subroutines
                 return Scope(node).to_estree()
 
-            assert_child_types(node, (Function_Stmt, Specification_Part, Execution_Part, End_Function_Stmt))
+            assert_child_types(node, (Subroutine_Stmt, Function_Stmt, Specification_Part, Execution_Part, End_Function_Stmt, End_Subroutine_Stmt))
 
-            function_stmt = get_one_child(node, Function_Stmt)
+            Start_Type = Subroutine_Stmt if isinstance(node, Subroutine_Subprogram) else Function_Stmt
+            End_Type = End_Subroutine_Stmt if isinstance(node, Subroutine_Subprogram) else End_Function_Stmt
+
+            function_stmt = get_one_child(node, Start_Type)
             specification_part = get_one_child(node, Specification_Part)
             execution_part = get_one_child(node, Execution_Part)
-            end_function_stmt = get_one_child(node, End_Function_Stmt)
+            end_function_stmt = get_one_child(node, End_Type)
 
             function_name = function_stmt.get_name()
-            assert self.return_name is None
-            self.return_name = function_name
+            if isinstance(node, Function_Subprogram):
+                assert self.return_name is None
+                self.return_name = function_name
 
             dummy_args = parse_dummy_arg_list(get_one_child(function_stmt, Dummy_Arg_List))
-            (decls, consts, intrinsics) = parse_spec(specification_part)
+            (decls, consts, intrinsics, externals) = parse_spec(specification_part)
+
+            merge_dicts(self.variables, decls)
+            merge_dicts(self.constants, consts)
+            merge_dicts(self.externals, externals)
+            merge_dicts(self.intrinsics, intrinsics)
 
             body = []
 
@@ -568,7 +615,6 @@ class Scope:
         elif isinstance(node, If_Construct):
             if get_child(node, If_Then_Stmt):
                 if_then_stmt = get_child(node, If_Then_Stmt)
-                #if_stmt_idx = index_of(node, if_then_stmt)
 
                 indices = []
                 for index, child in enumerate(node.children):
@@ -751,89 +797,28 @@ class Scope:
             subs = get_child(node, Section_Subscript_List)
             assert isinstance(subs, Section_Subscript_List)
 
-            assert len(subs.items) == 1
+            name_str = name.string.lower()
 
-            return {
-                'type': 'MemberExpression',
-                'computed': True,
-                'object': self._to_estree(name),
-                'property': self._to_estree(subs.items[0])
-            }
-            
-        elif isinstance(node, Subroutine_Subprogram):
-            if not self.is_root_node(node):
-                # Create a new scope for subroutines
-                return Scope(node).to_estree()
-
-            assert_child_types(node, (Subroutine_Stmt, Specification_Part, Execution_Part, End_Subroutine_Stmt))
-
-            subroutine_stmt = get_one_child(node, Subroutine_Stmt)
-            specification_part = get_one_child(node, Specification_Part)
-            execution_part = get_one_child(node, Execution_Part)
-            end_subroutine_stmt = get_one_child(node, End_Subroutine_Stmt)
-
-            dummy_args = parse_dummy_arg_list(get_one_child(subroutine_stmt, Dummy_Arg_List))
-            (decls, consts, intrinsics) = parse_spec(specification_part)
-
-            body = []
-
-            all_vars = list(set(list(decls.keys()) + list(consts.keys())))
-            all_vars = [var for var in all_vars if var not in dummy_args]
-            all_vars.sort(key=lambda x: (-len(x), x))
-
-            body.extend([{
-                'type': 'VariableDeclaration',
-                'kind': 'var',
-                'declarations': [{'type': 'Identifier', 'name': var, "init": None}]
-            } for var in all_vars])
-
-            for name, meta in consts.items():
-                body.append({
-                    'type': 'ExpressionStatement',
-                    'expression': {
-                        'type': 'AssignmentExpression',
-                        'operator': '=',
-                        'left': {
-                            'type': 'Identifier',
-                            'name': name
-                        },
-                        'right': {
-                            'type': 'Literal',
-                            'value': meta['value'],
-                            'raw': str(meta['value'])
-                        }
-                    }
-                })
-
-            # Unwrap the execution part from a BlockStatement to avoid extra nesting
-            body.extend(self._to_estree(execution_part))
-
-            return {
-                "type": "FunctionDeclaration",
-                "id": self._to_estree(subroutine_stmt.get_name()),
-                "params": filt([{
-                    "type": "Identifier",
-                    "name": arg,
-                } for arg in dummy_args]),
-                "body": {
-                    "type": "BlockStatement",
-                    "body": body,
+            if name_str in self.externals:
+                return {
+                    'type': 'CallExpression',
+                    'callee': {
+                        'type': 'Identifier',
+                        'name': name_str
+                    },
+                    'arguments': [self._to_estree(item) for item in subs.items]
                 }
-            }
-        
-        elif isinstance(node, Level_2_Unary_Expr):
-            assert len(node.items) == 2
-            return {
-                'type': 'UnaryExpression',
-                'operator': UNARY_OPERATORS[node.items[0]],
-                'argument': self._to_estree(node.items[1]),
-                'prefix': True
-            }
+            else:
+                # Property access must have a single subscript
+                assert len(subs.items) == 1
 
-        else:
-            raise TypeError('Unrecognized node type: %s' % node.__class__.__name__)
-
-
+                return {
+                    'type': 'MemberExpression',
+                    'computed': True,
+                    'object': self._to_estree(name),
+                    'property': self._to_estree(subs.items[0])
+                }
+            
 class FortranTranslator:
     def __init__(self, code):
         self.code = code
