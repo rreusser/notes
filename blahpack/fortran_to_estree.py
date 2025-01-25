@@ -456,6 +456,7 @@ class Scope:
         return self._to_estree(self.ast)
 
     def _to_estree (self, node):
+        eprint(node.__class__.__name__)
         if isinstance(node, list):
             return filt([self._to_estree(child) for child in node])
 
@@ -540,7 +541,8 @@ class Scope:
                 assert self.return_name is None
                 self.return_name = function_name
 
-            dummy_args = parse_dummy_arg_list(get_one_child(function_stmt, Dummy_Arg_List))
+            dummy_arg_list = get_child(function_stmt, Dummy_Arg_List)
+            dummy_args = parse_dummy_arg_list(dummy_arg_list) if dummy_arg_list is not None else []
             (decls, consts, intrinsics, externals) = parse_spec(specification_part)
 
             merge_dicts(self.variables, decls)
@@ -818,6 +820,7 @@ class Scope:
                     'object': self._to_estree(name),
                     'property': self._to_estree(subs.items[0])
                 }
+
             
 class FortranTranslator:
     def __init__(self, code):
