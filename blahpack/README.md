@@ -6,6 +6,18 @@
 
 For various reasons, there is not a straightforward way to use BLAS/LAPACK in the browser. Cross-compiling to WebAssembly carries memory management issues along with it, and manual translation is extremely labor-intensive and often not straightforward. This project aims for "guided manual translation" in the sense that a watchful eye, careful validation, and manual performance optimization remain imperative. But perhaps, *perhaps* some of the labor can be automated away.
 
+## To do
+
+- Automate generation of ndarray indexing (function parameters and array indexing)
+- Restructure programs to remove GO TO
+  - [x] trivial block label do
+  - [ ] trivial if/else constructs
+  - [ ] restructure heavy LAPACK GO TO usage
+- [ ] complex data types
+- [ ] improve robustness of 0-indexed array access
+- [ ] implement coherent `xerbla` semantics
+- [ ] tests
+
 ## Example
 
 Consider a simplified [DGEMV](https://netlib.org/lapack/explore-html-3.6.1/d7/d15/group__double__blas__level2_gadd421a107a488d524859b4a64c1901a9.html) routine, [sample.f](./sample.f):
