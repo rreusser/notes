@@ -34,6 +34,8 @@ from fparser.two.Fortran2003 import (
     Entity_Decl,
     Entity_Decl_List,
     Equiv_Operand,
+    Explicit_Shape_Spec,
+    Explicit_Shape_Spec_List,
     Execution_Part,
     External_Stmt,
     External_Name_List,
@@ -220,7 +222,7 @@ def parse_data_stmt(node):
 def parse_type_declaration_stmt (node):
     assert_child_types(node, (Intrinsic_Type_Spec, Entity_Decl_List))
 
-    variables = {}
+    declarations = {}
 
     # Implement as needed if not None
     assert node.children[1] == None
@@ -237,14 +239,50 @@ def parse_type_declaration_stmt (node):
         if isinstance(decl, Entity_Decl):
             # Recall, Fortran is case-insensitive
             name = decl.get_name().string.lower()
-            variables[name] = {
+
+            aspec = get_child(decl, Assumed_Size_Spec)
+            shape = None
+
+            if aspec is None:
+                espec = get_child(decl, Explicit_Shape_Spec_List)
+                if espec is not None:
+                    if shape is None:
+                        shape = []
+                    for child0 in espec.children:
+                        if isinstance(child0, Explicit_Shape_Spec):
+                            size = get_one_child(child0, Int_Literal_Constant)
+                            shape.append(get_value(size)['value'])
+                        else:
+                            raise TypeError('Unexpected child type in Explicit_Shape_Spec_List: %s' % child0.__class__.__name__)
+            elif isinstance(aspec, Assumed_Size_Spec):
+                for child0 in aspec.children:
+                    if shape is None:
+                        shape = []
+                    if child0 is None:
+                        pass
+                    elif isinstance(child0, Explicit_Shape_Spec_List):
+                        for child1 in child0.children:
+                            if isinstance(child1, Explicit_Shape_Spec):
+                                _name = get_one_child(child1, Name)
+                                shape.append(_name.string.lower())
+                            else:
+                                raise TypeError('Unexpected child type in Explicit_Shape_Spec_List: %s' % child1.__class__.__name__)
+                    else:
+                        raise TypeError('Unexpected child type in Assumed_Size_Spec: %s' % child0.__class__.__name__)
+                if shape is not None:
+                    shape.append('*')
+            else:
+                raise TypeError('Unexpected child type in Entity_Decl: %s' % aspec.__class__.__name__)
+
+            declarations[name] = {
                 'name': name,
-                'type': type
+                'type': type,
+                'shape': shape
             }
         else:
             raise TypeError('Unexpected child type in Type_Declaration_Stmt: %s' % entity_decl.__class__.__name__)
-
-    return variables
+    
+    return declarations
 
 def merge_dicts (dst, src):
     for key, value in src.items():
@@ -349,7 +387,7 @@ class TypeSpec:
     
 class Scope:
     def __init__(self, ast, parent_context=None):
-        self.variables = {}
+        self.declarations = {}
         self.ast = ast
         self.parent_context = parent_context
         self.type_spec = {}
@@ -367,6 +405,14 @@ class Scope:
         else:
             return self.parent_context.root_scope()
     
+    def get_declaration(self, name):
+        if name in self.declarations:
+            return self.declarations[name]
+        elif self.parent_context is not None:
+            return self.parent_context.get_declaration(name)
+        else:
+            return None
+    
     def parse_loop_control(self, ctrl):
         assert isinstance(ctrl, Loop_Control)
         assert len(ctrl.items) == 3
@@ -381,19 +427,40 @@ class Scope:
             var = self._to_estree(ctrl.items[1][0])
             rng = ctrl.items[1][1]
 
+            op = '<'
+            try:
+                inc = rng[2]
+                if isinstance(inc, Level_2_Unary_Expr) and inc.items[0] == '-':
+                    op = '>='
+            except IndexError:
+                inc = Int_Literal_Constant('1')
+
             if isinstance(rng[0], Int_Literal_Constant):
                 # If the start value is a literal, convert it to zero-based index
                 start = self._to_estree(Int_Literal_Constant(str(int(rng[0].string) - 1)))
             else:
                 # If the start value is an expression, use that expression
                 start = self._to_estree(rng[0])
-
-            end = self._to_estree(rng[1])
-            try:
-                inc = rng[2]
-            except IndexError:
-                inc = Int_Literal_Constant('1')
+                
+                if op == '>=':
+                    start = {
+                        'type': 'BinaryExpression',
+                        'left': start,
+                        'operator': '-',
+                        'right': {
+                            'type': 'Literal',
+                            'value': 1,
+                            'raw': '1'
+                        }
+                    }
             
+            if isinstance(rng[1], Int_Literal_Constant):
+                # If the end value is a literal, convert it to zero-based index
+                end = self._to_estree(Int_Literal_Constant(str(int(rng[1].string) - 1)))
+            else:
+                # If the end value is an expression, use that expression
+                end = self._to_estree(rng[1])
+
             return {
                 'type': 'ForStatement',
                 'init': {
@@ -405,7 +472,7 @@ class Scope:
                 'test': {
                     'type': 'BinaryExpression',
                     'left': var,
-                    'operator': '<',
+                    'operator': op,
                     'right': end
                 },
                 'update': {
@@ -611,7 +678,7 @@ class Scope:
             dummy_args = parse_dummy_arg_list(dummy_arg_list) if dummy_arg_list is not None else []
             (decls, consts, intrinsics, externals) = parse_spec(specification_part)
 
-            merge_dicts(self.variables, decls)
+            merge_dicts(self.declarations, decls)
             merge_dicts(self.constants, consts)
             merge_dicts(self.externals, externals)
             merge_dicts(self.intrinsics, intrinsics)
@@ -748,6 +815,7 @@ class Scope:
             args = get_one_child(node, Actual_Arg_Spec_List)
 
             if func == 'mod':
+                assert len(args.items) == 2
                 lhs = args.items[0]
                 rhs = args.items[1]
                 return {
@@ -756,6 +824,9 @@ class Scope:
                     'operator': '%',
                     'right': self._to_estree(rhs)
                 }
+            if func == 'dble':
+                assert len(args.items) == 1
+                return self._to_estree(args.items[0])
             if func in INTRINSIC_FUNCTIONS:
                 return {
                     'type': 'CallExpression',
@@ -877,14 +948,49 @@ class Scope:
                     'arguments': [self._to_estree(item) for item in subs.items]
                 }
             else:
-                # Property access must have a single subscript
-                assert len(subs.items) == 1
+                decl = self.get_declaration(name_str)
 
+                # Ensure the number of subscripts matches the declared dimensionality
+                assert len(decl['shape']) == len(subs.items)
+
+                idx = None
+                dim = len(decl['shape'])
+
+                # Construct a column-major index expression
+                for i, item in enumerate(reversed(subs.items)):
+                    itree = self._to_estree(item)
+                    if itree['type'] == 'Literal':
+                        itree['value'] -= 1
+                        itree['raw'] = str(itree['value'])
+                    
+                    if idx is None:
+                        idx = itree
+                    else:
+                        idx = {
+                            'type': 'BinaryExpression',
+                            'operator': '+',
+                            'left': idx,
+                            'right': {
+                                'type': 'BinaryExpression',
+                                'operator': '*',
+                                'left': itree,
+                                'right': {
+                                    'type': 'Identifier',
+                                    'name': decl['shape'][dim - i - 1]
+                                }
+                            }
+                        }
+                
+                # Perform simple static bounds checking for one-dimensional arrays
+                if idx['type'] == 'Literal' and len(decl['shape']) == 1:
+                    if idx['value'] > decl['shape'][0] - 1:
+                        raise ValueError("Index out of bounds for %s[%d]: size is %d" % (name_str, idx['value'], decl['shape'][0]))
+                    
                 return {
                     'type': 'MemberExpression',
                     'computed': True,
                     'object': self._to_estree(name),
-                    'property': self._to_estree(subs.items[0])
+                    'property': idx
                 }
 
         elif isinstance(node, Structure_Constructor):
