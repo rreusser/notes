@@ -494,7 +494,10 @@ class Scope:
     
     def node(self, leading=True):
         tree = {}
-        if self.output_comments:
+
+        all_whitespace = all(re.match(r'^\s*$', str(comment)) for comment in self.comments)
+
+        if self.output_comments and not all_whitespace:
             tree['leadingComments' if leading else 'trailingComments'] = [{
                 'type': 'Line',
                 'value': re.sub(r'^\*>|^\*', '', str(node))
