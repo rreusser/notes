@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
+import re
 import sys
 import json
 from fparser.common.readfortran import FortranStringReader
 from fparser.two.parser import ParserFactory
 from fparser.two.utils import walk, get_child
 from fparser.two import Fortran2003
+import argparse
 
 from fparser.two.Fortran2003 import (
     Add_Operand,
@@ -306,11 +308,11 @@ def parse_intrinsic_stmt (node):
             raise TypeError('Unexpected child type in Intrinsic_Stmt: %s' % child.__class__.__name__)
     return intrinsics
 
-def parse_implicit_part (node):
+def parse_implicit_part (node, comments):
     implicit = {}
     for child0 in node.children:
         if isinstance(child0, Comment):
-            pass
+            comments.append(child0)
         elif isinstance(child0, Parameter_Stmt):
             for child1 in child0.children:
                 if isinstance(child1, str) and child1.lower() == 'parameter':
@@ -343,7 +345,7 @@ def parse_external_stmt(node):
             raise TypeError('Unexpected child type in External_Stmt: %s' % child.__class__.__name__)
     return externals
 
-def parse_spec (node):
+def parse_spec (node, comments):
     declarations = {}
     constants = {}
     intrinsics = {}
@@ -357,24 +359,13 @@ def parse_spec (node):
         elif isinstance(child, Data_Stmt):
             merge_dicts(constants, parse_data_stmt(child))
         elif isinstance(child, Implicit_Part):
-            merge_dicts(constants, parse_implicit_part(child))
+            merge_dicts(constants, parse_implicit_part(child, comments))
         elif isinstance(child, External_Stmt):
             merge_dicts(externals, parse_external_stmt(child))
         else:
             raise TypeError('Unexpected child type in Specification_Part: %s' % child.__class__.__name__)
     
     return (declarations, constants, intrinsics, externals)
-
-def block (body):
-    if isinstance(body, list):
-        # Wrap in a BlockStatement if multiple statements are present
-        return {
-            'type': 'BlockStatement',
-            'body': body,
-        }
-    else:
-        # Return the body node directly if it's not a list
-        return body
 
 class TypeSpec:
     def __init__(self, name, type=None, size=None):
@@ -386,7 +377,7 @@ class TypeSpec:
         return f'TypeSpec(name={self.name}, type={self.type}, size={self.size})'
     
 class Scope:
-    def __init__(self, ast, parent_context=None):
+    def __init__(self, ast, parent_context=None, output_comments=True):
         self.declarations = {}
         self.ast = ast
         self.parent_context = parent_context
@@ -395,6 +386,8 @@ class Scope:
         self.intrinsics = {}
         self.constants = {}
         self.externals = {}
+        self.comments = []
+        self.output_comments = output_comments
     
     def is_root_node(self, node):
         return node == self.ast
@@ -412,17 +405,29 @@ class Scope:
             return self.parent_context.get_declaration(name)
         else:
             return None
+
+    def block (self, body):
+        if isinstance(body, list):
+            # Wrap in a BlockStatement if multiple statements are present
+            return merge_dicts(self.node(), {
+                'type': 'BlockStatement',
+                'body': body,
+            })
+        else:
+            # Return the body node directly if it's not a list
+            return body
+
     
     def parse_loop_control(self, ctrl):
         assert isinstance(ctrl, Loop_Control)
         assert len(ctrl.items) == 3
 
         if ctrl.items[0] is not None and ctrl.items[1] is None and ctrl.items[2] is None:
-            return {
+            return merge_dicts(self.node(), {
                 'type': 'WhileStatement',
                 'test': self._to_estree(ctrl.items[0]),
                 'body': None
-            }
+            })
         else:
             var = self._to_estree(ctrl.items[1][0])
             rng = ctrl.items[1][1]
@@ -461,7 +466,7 @@ class Scope:
                 # If the end value is an expression, use that expression
                 end = self._to_estree(rng[1])
 
-            return {
+            return merge_dicts(self.node(), {
                 'type': 'ForStatement',
                 'init': {
                     'type': 'AssignmentExpression',
@@ -482,59 +487,21 @@ class Scope:
                     'right': self._to_estree(inc)
                 },
                 'body': None
-            }
+            })
 
-    def collect_specification_vars (self, specification):
-        assert isinstance(specification, Specification_Part)
-
-        def recurse(node, depth=0):
-            if not node or isinstance(node, str):
-                return None
-            elif isinstance(node, Comment):
-                return None
-            elif isinstance(node, Name):
-                return None
-            elif isinstance(node, Implicit_Part):
-                pass
-            elif isinstance(node, Type_Declaration_Stmt):
-                vars = []
-                its = get_child(node, Intrinsic_Type_Spec)
-                assert isinstance(its, Intrinsic_Type_Spec)
-                type = TYPES[its.string.lower()]
-
-                decl_list = get_child(node, Entity_Decl_List)
-                assert isinstance(decl_list, Entity_Decl_List)
-                for decl in decl_list.children:
-                    assert isinstance(decl, Entity_Decl)
-
-                    name = get_child(decl, Name)
-                    assert isinstance(name, Name)
-
-                    kwargs = {'type': type}
-                    size_spec = get_child(decl, Assumed_Size_Spec)
-                    if size_spec is not None:
-                        kwargs['size'] = size_spec
-
-                    spec = TypeSpec(name, **kwargs)
-
-                    vars.append({
-                        'type': type,
-                        'name': name.string
-                    })
-
-                return vars
-
-            return filt([recurse(child, depth + 1) for child in node.children])
-
-        vars = filt(flatten([recurse(child) for child in specification.children]))
-
-        vars.sort(key=lambda x: (-len(x['name']), x['name']))
-
-        return vars
-    
     def to_estree(self):
         return self._to_estree(self.ast)
-
+    
+    def node(self, leading=True):
+        tree = {}
+        if self.output_comments:
+            tree['leadingComments' if leading else 'trailingComments'] = [{
+                'type': 'Line',
+                'value': re.sub(r'^\*>|^\*', '', str(node))
+            } for node in self.comments]
+        self.comments = []
+        return tree
+    
     def _to_estree (self, node):
         if isinstance(node, list):
             return filt([self._to_estree(child) for child in node])
@@ -583,7 +550,7 @@ class Scope:
                 assert isinstance(loop_control, Loop_Control)
 
                 expr = self.parse_loop_control(loop_control)
-                expr['body'] = block(self._to_estree(node.children[label_do_stmt_idx + 1: continue_stmt_idx]))
+                expr['body'] = self.block(self._to_estree(node.children[label_do_stmt_idx + 1: continue_stmt_idx]))
                 return expr
             else:
                 raise TypeError('Unhandled Block_Nonlabel_Do_Construct')
@@ -605,13 +572,13 @@ class Scope:
                 assert isinstance(loop_control, Loop_Control)
 
                 expr = self.parse_loop_control(loop_control)
-                expr['body'] = block(self._to_estree(node.children[nonlabel_do_stmt_idx + 1: end_do_stmt_idx]))
+                expr['body'] = self.block(self._to_estree(node.children[nonlabel_do_stmt_idx + 1: end_do_stmt_idx]))
                 return expr
             else:
                 raise TypeError('Unhandled Block_Nonlabel_Do_Construct')
 
         elif isinstance(node, Assignment_Stmt):
-            return {
+            return merge_dicts(self.node(), {
                 'type': 'ExpressionStatement',
                 'expression': {
                     'type': 'AssignmentExpression',
@@ -619,7 +586,7 @@ class Scope:
                     'left': self._to_estree(node.items[0]),
                     'right': self._to_estree(node.items[2]),
                 }
-            }
+            })
 
         elif isinstance(node, Call_Stmt):
             args = get_one_child(node, Actual_Arg_Spec_List)
@@ -638,6 +605,7 @@ class Scope:
             }
 
         elif isinstance(node, Comment):
+            self.comments.append(node)
             return None
         
         elif isinstance(node, Data_Stmt_Set):
@@ -657,9 +625,11 @@ class Scope:
         elif isinstance(node, Function_Subprogram) or isinstance(node, Subroutine_Subprogram):
             if not self.is_root_node(node):
                 # Create a new scope for subroutines
-                return Scope(node).to_estree()
+                return Scope(node, output_comments=self.output_comments).to_estree()
 
             assert_child_types(node, (Subroutine_Stmt, Function_Stmt, Specification_Part, Execution_Part, End_Function_Stmt, End_Subroutine_Stmt))
+
+            func_node = self.node()
 
             Start_Type = Subroutine_Stmt if isinstance(node, Subroutine_Subprogram) else Function_Stmt
             End_Type = End_Subroutine_Stmt if isinstance(node, Subroutine_Subprogram) else End_Function_Stmt
@@ -676,7 +646,7 @@ class Scope:
 
             dummy_arg_list = get_child(function_stmt, Dummy_Arg_List)
             dummy_args = parse_dummy_arg_list(dummy_arg_list) if dummy_arg_list is not None else []
-            (decls, consts, intrinsics, externals) = parse_spec(specification_part)
+            (decls, consts, intrinsics, externals) = parse_spec(specification_part, self.comments)
 
             merge_dicts(self.declarations, decls)
             merge_dicts(self.constants, consts)
@@ -689,14 +659,14 @@ class Scope:
             all_vars = [var for var in all_vars if var not in dummy_args]
             all_vars.sort(key=lambda x: (-len(x), x))
 
-            body.extend([{
+            body.extend([merge_dicts(self.node(), {
                 'type': 'VariableDeclaration',
                 'kind': 'var',
                 'declarations': [{'type': 'Identifier', 'name': var, "init": None}]
-            } for var in all_vars])
+            }) for var in all_vars])
 
             for name, meta in consts.items():
-                body.append({
+                body.append(merge_dicts(self.node(), {
                     'type': 'ExpressionStatement',
                     'expression': {
                         'type': 'AssignmentExpression',
@@ -711,12 +681,12 @@ class Scope:
                             'raw': str(meta['value'])
                         }
                     }
-                })
+                }))
 
             # Unwrap the execution part from a BlockStatement to avoid extra nesting
             body.extend(self._to_estree(execution_part))
 
-            return {
+            result = merge_dicts(func_node, {
                 "type": "FunctionDeclaration",
                 "id": self._to_estree(function_name),
                 "params": filt([{
@@ -727,7 +697,11 @@ class Scope:
                     "type": "BlockStatement",
                     "body": body,
                 }
-            }
+            })
+
+            merge_dicts(result['body']['body'][-1], self.node(False))
+            
+            return result
         
         elif isinstance(node, Level_2_Unary_Expr):
             assert len(node.items) == 2
@@ -740,65 +714,64 @@ class Scope:
 
         elif isinstance(node, If_Stmt):
             assert len(node.items) == 2
-            return {
+            return merge_dicts(self.node(), {
                 'type': 'IfStatement',
                 'test': self._to_estree(node.items[0]),
-                'consequent': block(self._to_estree(node.items[1])),
+                'consequent': self.block(self._to_estree(node.items[1])),
                 'alternate': None
-            }
+            })
 
         elif isinstance(node, If_Construct):
-            if get_child(node, If_Then_Stmt):
-                if_then_stmt = get_child(node, If_Then_Stmt)
-
-                indices = []
-                for index, child in enumerate(node.children):
-                    if isinstance(child, (If_Then_Stmt, Else_Stmt, Else_If_Stmt, End_If_Stmt)):
-                        indices.append(index)
+            indices = []
+            for index, child in enumerate(node.children):
+                if isinstance(child, (If_Then_Stmt, Else_Stmt, Else_If_Stmt, End_If_Stmt)):
+                    indices.append(index)
                 
-                # Assert the sequence of if construct nodes is valid
-                assert isinstance(node.children[indices[0]], If_Then_Stmt)
-                assert isinstance(node.children[indices[-1]], End_If_Stmt)
-                if len(indices) > 2:
-                    for idx in indices[1:-2]:
-                        assert isinstance(node.children[idx], Else_If_Stmt)
-                    assert isinstance(node.children[indices[-2]], (If_Stmt, Else_Stmt, Else_If_Stmt))
+            # Process any comments preceeding the initial If_Then_Stmt
+            for i in range(indices[0]):
+                self._to_estree(node.children[i])
+            
+            # Assert the sequence of if construct nodes is valid
+            assert isinstance(node.children[indices[0]], If_Then_Stmt)
+            assert isinstance(node.children[indices[-1]], End_If_Stmt)
+            if len(indices) > 2:
+                for idx in indices[1:-2]:
+                    assert isinstance(node.children[idx], Else_If_Stmt)
+                assert isinstance(node.children[indices[-2]], (If_Stmt, Else_Stmt, Else_If_Stmt))
 
-                tree = None
-                cur_tree = None
+            tree = None
+            cur_tree = None
 
-                for i in range(len(indices) - 1):
-                    start_idx, end_idx = indices[i], indices[i + 1]
-                    ctrl_node = node.children[start_idx]
-                    if isinstance(ctrl_node, If_Then_Stmt):
-                        # Only one If_Then_Stmt should be at the start
-                        assert cur_tree is None
-                        tree = {
-                            'type': 'IfStatement',
-                            'test': self._to_estree(ctrl_node.items[0]),
-                            'consequent': block(self._to_estree(node.children[start_idx + 1: end_idx])),
-                            'alternate': None,
-                        }
-                        cur_tree = tree
-                    elif isinstance(ctrl_node, Else_If_Stmt):
-                        assert cur_tree is not None
-                        new_tree = {
-                            'type': 'IfStatement',
-                            'test': self._to_estree(ctrl_node.items[0]),
-                            'consequent': block(self._to_estree(node.children[start_idx + 1: end_idx])),
-                            'alternate': None
-                        }
-                        cur_tree['alternate'] = new_tree
-                        cur_tree = new_tree
-                    elif isinstance(ctrl_node, Else_Stmt):
-                        assert cur_tree is not None
-                        cur_tree['alternate'] = block(self._to_estree(node.children[start_idx + 1: end_idx]))
-                    else:
-                        raiseError('Unexpected structure in If_Construct')
-                
-                return tree
-            else:
-                raise TypeError('Unhandled If_Construct')
+            for i in range(len(indices) - 1):
+                start_idx, end_idx = indices[i], indices[i + 1]
+                ctrl_node = node.children[start_idx]
+                if isinstance(ctrl_node, If_Then_Stmt):
+                    # Only one If_Then_Stmt should be at the start
+                    assert cur_tree is None
+                    tree = merge_dicts(self.node(), {
+                        'type': 'IfStatement',
+                        'test': self._to_estree(ctrl_node.items[0]),
+                        'consequent': self.block(self._to_estree(node.children[start_idx + 1: end_idx])),
+                        'alternate': None,
+                    })
+                    cur_tree = tree
+                elif isinstance(ctrl_node, Else_If_Stmt):
+                    assert cur_tree is not None
+                    new_tree = merge_dicts(self.node(), {
+                        'type': 'IfStatement',
+                        'test': self._to_estree(ctrl_node.items[0]),
+                        'consequent': self.block(self._to_estree(node.children[start_idx + 1: end_idx])),
+                        'alternate': None
+                    })
+                    cur_tree['alternate'] = new_tree
+                    cur_tree = new_tree
+                elif isinstance(ctrl_node, Else_Stmt):
+                    assert cur_tree is not None
+                    cur_tree['alternate'] = self.block(self._to_estree(node.children[start_idx + 1: end_idx]))
+                else:
+                    raiseError('Unexpected structure in If_Construct')
+            
+            return tree
 
         elif isinstance(node, Int_Literal_Constant):
             return {
@@ -903,10 +876,10 @@ class Scope:
 
         elif isinstance(node, Return_Stmt):
             # Fortran, we assume the return value is the function's name
-            return {
+            return merge_dicts(self.node(), {
                 'type': 'ReturnStatement',
                 'argument': None if self.return_name is None else self._to_estree(self.return_name)
-            }
+            })
         
         elif isinstance(node, Parenthesis):
             assert len(node.items) == 3
@@ -915,10 +888,12 @@ class Scope:
             return self._to_estree(node.items[1])
         
         elif isinstance(node, Program):
-            return {
+            body = self._to_estree(node.children)
+            node = self.node()
+            return merge_dicts(node, {
                 'type': 'Program',
-                'body': self._to_estree(node.children)
-            }
+                'body': body
+            })
         
         elif isinstance(node, Implicit_Part):
             return self._to_estree(node.children)
@@ -949,6 +924,9 @@ class Scope:
                 }
             else:
                 decl = self.get_declaration(name_str)
+
+                if decl is None:
+                    raise ValueError('Variable %s not declared' % name_str)
 
                 # Ensure the number of subscripts matches the declared dimensionality
                 assert len(decl['shape']) == len(subs.items)
@@ -1013,27 +991,33 @@ class Scope:
 
             
 class FortranTranslator:
-    def __init__(self, code):
+    def __init__(self, code, output_comments=True):
         self.code = code
+        self.output_comments = output_comments
 
         reader = FortranStringReader(code, ignore_comments=False)
         parser = ParserFactory().create(std="f2003")
         self.ast = parser(reader)
     
     def to_estree(self):
-        return Scope(self.ast).to_estree()
+        return Scope(self.ast, output_comments=self.output_comments).to_estree()
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2 and sys.stdin.isatty():
+    parser = argparse.ArgumentParser(description='Convert Fortran code to ESTree')
+    parser.add_argument('filename', nargs='?', type=str, help='Fortran source file')
+    parser.add_argument('--no-comments', action='store_true', default=False, help='Exclude comments from the output')
+    args = parser.parse_args()
+
+    if not args.filename and sys.stdin.isatty():
         eprint('Usage: python fortran_to_estree.py <filename> or pipe input to the script')
         sys.exit(1)
     
-    if len(sys.argv) >= 2:
-        with open(sys.argv[1], 'rt') as f:
+    if args.filename:
+        with open(args.filename, 'rt') as f:
             code = f.read()
     else:
         code = sys.stdin.read()
 
-    translator = FortranTranslator(code)
+    translator = FortranTranslator(code, output_comments=not args.no_comments)
 
-    print(json.dumps( translator.to_estree(), indent=2 ))
+    print(json.dumps(translator.to_estree(), indent=2))
