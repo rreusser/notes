@@ -8,8 +8,8 @@ For various reasons, there is not a straightforward way to use BLAS/LAPACK in th
 
 ## To do
 
-- Automate generation of ndarray indexing (function parameters and array indexing)
-- Restructure programs to remove GO TO
+- [ ] Automate generation of ndarray indexing (function parameters and array indexing)
+- [ ] Restructure programs to remove GO TO
   - [x] trivial block label do
   - [ ] trivial if/else constructs
   - [ ] restructure heavy LAPACK GO TO usage
