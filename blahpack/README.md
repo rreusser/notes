@@ -4,7 +4,7 @@
 
 ## Introduction
 
-For various reasons, there is not a straightforward way to use BLAS/LAPACK in the browser. Cross-compiling to WebAssembly carries memory management issues along with it, and manual translation is extremely labor-intensive and often not straightforward. This project aims for "guided manual translation" in the sense that a watchful eye, careful validation, and manual performance optimization remain imperative. But perhaps, *perhaps* some of the labor can be automated away.
+For various reasons, there is not a straightforward way to use BLAS/LAPACK in the browser. Cross-compiling to WebAssembly yields non-idiomatic usage and carries memory management issues along with it, and manual translation is extremely labor-intensive and often not straightforward. This project aims for "guided manual translation" in the sense that a watchful eye, careful validation, and manual performance optimization remain imperative. But perhaps, *perhaps* some of the labor can be automated away.
 
 ## To do
 
