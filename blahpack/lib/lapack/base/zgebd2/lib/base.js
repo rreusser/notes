@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarfg = require( '../../zlarfg/lib/base.js' );
 var zlarf = require( '../../zlarf/lib/base.js' );
@@ -60,6 +61,7 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 */
 function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var conj_tauq;
+	var conj_f64;
 	var tauq_f64;
 	var taup_f64;
 	var tauq_off;
@@ -84,7 +86,8 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	sa2 = strideA2 * 2;
 	oA = offsetA * 2;
 
-	conj_tauq = new Float64Array( 2 );
+	conj_tauq = new Complex128Array( 1 );
+	conj_f64 = reinterpret( conj_tauq, 0 );
 
 	if ( M >= N ) {
 		// Reduce to upper bidiagonal form
@@ -110,8 +113,8 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			// Apply H(i)^H to A(i:M-1, i+1:N-1) from the left
 			if ( i < N - 1 ) {
 				// zlarf uses conj(tau) for left application of H^H
-				conj_tauq[ 0 ] = tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 ];
-				conj_tauq[ 1 ] = -tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 + 1 ];
+				conj_f64[ 0 ] = tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 ];
+				conj_f64[ 1 ] = -tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 + 1 ];
 
 				zlarf( 'L', M - i, N - i - 1, A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					conj_tauq, 0,
@@ -223,8 +226,8 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				Av[ aij + 1 ] = 0.0;
 
 				// Apply H(i)^H to A(i+1:M-1, i+1:N-1) from the left
-				conj_tauq[ 0 ] = tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 ];
-				conj_tauq[ 1 ] = -tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 + 1 ];
+				conj_f64[ 0 ] = tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 ];
+				conj_f64[ 1 ] = -tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 + 1 ];
 
 				zlarf( 'L', M - i - 1, N - i - 1, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					conj_tauq, 0,

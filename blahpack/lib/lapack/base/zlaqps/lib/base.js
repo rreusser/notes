@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
 var zlarfg = require( '../../zlarfg/lib/base.js' );
@@ -45,52 +46,57 @@ var NEGCONE = new Float64Array( [ -1.0, 0.0 ] );
 * submatrix A(OFFSET+1:M, 1:N). The actual number of columns
 * factored is returned as kb.
 *
-* This routine also updates the trailing matrix using level 3 BLAS,
-* accumulating the updates in a panel F.
+* A, TAU, AUXV, F are Complex128Arrays. Strides and offsets are in complex elements.
+* VN1, VN2 are real (Float64Array).
 *
 * @private
 * @param {NonNegativeInteger} M - total rows of A
 * @param {NonNegativeInteger} N - columns of current submatrix
 * @param {NonNegativeInteger} offset - rows already factored
 * @param {NonNegativeInteger} nb - desired block size
-* @param {Float64Array} A - matrix (interleaved complex)
+* @param {Complex128Array} A - matrix
 * @param {integer} strideA1 - first dim stride of A (complex elements)
 * @param {integer} strideA2 - second dim stride of A (complex elements)
-* @param {NonNegativeInteger} offsetA - starting Float64 index for A
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
 * @param {Int32Array} JPVT - column permutation
 * @param {integer} strideJPVT - stride for JPVT
 * @param {NonNegativeInteger} offsetJPVT - starting index for JPVT
-* @param {Float64Array} TAU - reflector scalars (interleaved complex)
+* @param {Complex128Array} TAU - reflector scalars
 * @param {integer} strideTAU - stride for TAU (complex elements)
-* @param {NonNegativeInteger} offsetTAU - starting Float64 index for TAU
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
 * @param {Float64Array} VN1 - partial column norms (real)
 * @param {integer} strideVN1 - stride for VN1
 * @param {NonNegativeInteger} offsetVN1 - starting index for VN1
 * @param {Float64Array} VN2 - original column norms (real)
 * @param {integer} strideVN2 - stride for VN2
 * @param {NonNegativeInteger} offsetVN2 - starting index for VN2
-* @param {Float64Array} AUXV - auxiliary vector (interleaved complex, length >= NB)
+* @param {Complex128Array} AUXV - auxiliary vector (length >= NB)
 * @param {integer} strideAUXV - stride for AUXV (complex elements)
-* @param {NonNegativeInteger} offsetAUXV - starting Float64 index for AUXV
-* @param {Float64Array} F - panel update matrix (interleaved complex, N-by-NB)
+* @param {NonNegativeInteger} offsetAUXV - starting index for AUXV (complex elements)
+* @param {Complex128Array} F - panel update matrix (N-by-NB)
 * @param {integer} strideF1 - first dim stride of F (complex elements)
 * @param {integer} strideF2 - second dim stride of F (complex elements)
-* @param {NonNegativeInteger} offsetF - starting Float64 index for F
+* @param {NonNegativeInteger} offsetF - starting index for F (complex elements)
 * @returns {integer} kb - actual number of columns factored
 */
 function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF ) { // eslint-disable-line max-len, max-params
 	var lastrk;
 	var lsticc;
+	var negTauK;
 	var tol3z;
 	var itemp;
 	var temp2;
 	var temp;
+	var TAUv;
+	var tauK;
 	var pvt;
 	var akk;
 	var sa1;
 	var sa2;
 	var sf1;
 	var sf2;
+	var Av;
+	var Fv;
 	var oA;
 	var oF;
 	var rk;
@@ -101,8 +107,13 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 	sa2 = strideA2;
 	sf1 = strideF1;
 	sf2 = strideF2;
-	oA = offsetA;
-	oF = offsetF;
+
+	// Get Float64Array views for direct element access
+	Av = reinterpret( A, 0 );
+	Fv = reinterpret( F, 0 );
+	TAUv = reinterpret( TAU, 0 );
+	oA = offsetA * 2; // Float64 offset
+	oF = offsetF * 2; // Float64 offset
 
 	lastrk = Math.min( M, N + offset );
 	lsticc = 0;
@@ -119,10 +130,10 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 
 		if ( pvt !== k ) {
 			// Swap columns pvt and k of A (all M rows)
-			zswap( M, A, sa1, oA + 2 * pvt * sa2, A, sa1, oA + 2 * k * sa2 );
+			zswap( M, A, sa1, offsetA + pvt * sa2, A, sa1, offsetA + k * sa2 );
 
 			// Swap rows pvt and k of F (first k columns, using column stride as row traversal)
-			zswap( k, F, sf2, oF + 2 * ( pvt * sf1 ), F, sf2, oF + 2 * ( k * sf1 ) );
+			zswap( k, F, sf2, offsetF + pvt * sf1, F, sf2, offsetF + k * sf1 );
 
 			// Swap JPVT entries
 			itemp = JPVT[ offsetJPVT + pvt * strideJPVT ];
@@ -140,23 +151,22 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			// Conjugate F(k, 0:k-1) in place
 			for ( j = 0; j < k; j++ ) {
 				// F(k, j): conjugate imaginary part
-				F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ] = -F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ];
+				Fv[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ] = -Fv[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ];
 			}
 
 			// A(rk:M-1, k) += -1 * A(rk:M-1, 0:k-1) * F(k, 0:k-1)^T
-			// zgemv('N', M-rk, k, -CONE, A(rk,0), LDA, F(k,0), LDF, CONE, A(rk,k), 1)
 			zgemv(
 				'N', M - rk, k,
 				NEGCONE,
-				A, sa1, sa2, oA + 2 * ( rk * sa1 ),
-				F, sf2, oF + 2 * ( k * sf1 ),
+				A, sa1, sa2, offsetA + rk * sa1,
+				F, sf2, offsetF + k * sf1,
 				CONE,
-				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 )
+				A, sa1, offsetA + rk * sa1 + k * sa2
 			);
 
 			// Un-conjugate F(k, 0:k-1)
 			for ( j = 0; j < k; j++ ) {
-				F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ] = -F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ];
+				Fv[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ] = -Fv[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ];
 			}
 		}
 
@@ -164,57 +174,59 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		if ( rk < M - 1 ) {
 			zlarfg(
 				M - rk,
-				A, oA + 2 * ( rk * sa1 + k * sa2 ),
-				A, sa1, oA + 2 * ( ( rk + 1 ) * sa1 + k * sa2 ),
-				TAU, offsetTAU + 2 * k * strideTAU
+				A, offsetA + rk * sa1 + k * sa2,
+				A, sa1, offsetA + ( rk + 1 ) * sa1 + k * sa2,
+				TAU, offsetTAU + k * strideTAU
 			);
 		} else {
 			zlarfg(
 				1,
-				A, oA + 2 * ( rk * sa1 + k * sa2 ),
-				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 ),
-				TAU, offsetTAU + 2 * k * strideTAU
+				A, offsetA + rk * sa1 + k * sa2,
+				A, sa1, offsetA + rk * sa1 + k * sa2,
+				TAU, offsetTAU + k * strideTAU
 			);
 		}
 
 		// Save A(rk, k) and set to 1 for reflector application
-		akk[ 0 ] = A[ oA + 2 * ( rk * sa1 + k * sa2 ) ];
-		akk[ 1 ] = A[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ];
-		A[ oA + 2 * ( rk * sa1 + k * sa2 ) ] = 1.0;
-		A[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ] = 0.0;
+		akk[ 0 ] = Av[ oA + 2 * ( rk * sa1 + k * sa2 ) ];
+		akk[ 1 ] = Av[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ];
+		Av[ oA + 2 * ( rk * sa1 + k * sa2 ) ] = 1.0;
+		Av[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ] = 0.0;
 
 		// Compute k-th column of F:
 		// F(k+1:N-1, k) = tau(k) * A(rk:M-1, k+1:N-1)^H * A(rk:M-1, k)
 		if ( k < N - 1 ) {
 			// tau(k) as a 2-element array
-			var tauK = TAU.subarray( offsetTAU + 2 * k * strideTAU, offsetTAU + 2 * k * strideTAU + 2 ); // eslint-disable-line no-var
+			tauK = new Float64Array( 2 );
+			tauK[ 0 ] = TAUv[ ( offsetTAU + k * strideTAU ) * 2 ];
+			tauK[ 1 ] = TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ];
 			zgemv(
 				'C', M - rk, N - k - 1,
 				tauK,
-				A, sa1, sa2, oA + 2 * ( rk * sa1 + ( k + 1 ) * sa2 ),
-				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 ),
+				A, sa1, sa2, offsetA + rk * sa1 + ( k + 1 ) * sa2,
+				A, sa1, offsetA + rk * sa1 + k * sa2,
 				CZERO,
-				F, sf1, oF + 2 * ( ( k + 1 ) * sf1 + k * sf2 )
+				F, sf1, offsetF + ( k + 1 ) * sf1 + k * sf2
 			);
 		}
 
 		// Zero out F(0:k, k)
 		for ( j = 0; j <= k; j++ ) {
-			F[ oF + 2 * ( j * sf1 + k * sf2 ) ] = 0.0;
-			F[ oF + 2 * ( j * sf1 + k * sf2 ) + 1 ] = 0.0;
+			Fv[ oF + 2 * ( j * sf1 + k * sf2 ) ] = 0.0;
+			Fv[ oF + 2 * ( j * sf1 + k * sf2 ) + 1 ] = 0.0;
 		}
 
 		// Update F with contribution from previous reflectors
 		if ( k > 0 ) {
 			// AUXV(0:k-1) = -tau(k) * A(rk:M-1, 0:k-1)^H * A(rk:M-1, k)
-			var negTauK = new Float64Array( 2 ); // eslint-disable-line no-var
-			negTauK[ 0 ] = -TAU[ offsetTAU + 2 * k * strideTAU ];
-			negTauK[ 1 ] = -TAU[ offsetTAU + 2 * k * strideTAU + 1 ];
+			negTauK = new Float64Array( 2 );
+			negTauK[ 0 ] = -TAUv[ ( offsetTAU + k * strideTAU ) * 2 ];
+			negTauK[ 1 ] = -TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ];
 			zgemv(
 				'C', M - rk, k,
 				negTauK,
-				A, sa1, sa2, oA + 2 * ( rk * sa1 ),
-				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 ),
+				A, sa1, sa2, offsetA + rk * sa1,
+				A, sa1, offsetA + rk * sa1 + k * sa2,
 				CZERO,
 				AUXV, strideAUXV, offsetAUXV
 			);
@@ -223,27 +235,22 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			zgemv(
 				'N', N, k,
 				CONE,
-				F, sf1, sf2, oF,
+				F, sf1, sf2, offsetF,
 				AUXV, strideAUXV, offsetAUXV,
 				CONE,
-				F, sf1, oF + 2 * k * sf2
+				F, sf1, offsetF + k * sf2
 			);
 		}
 
-		// Update the current row of A:
-		// A(rk, k+1:N-1) -= A(rk, 0:k-1) * conj(F(k+1:N-1, 0:k-1))^T
-		// Done as: A(rk, k+1:N-1) += -1 * A(rk, 0:k) * F(k+1:N-1, 0:k)^H (but only up to k cols)
+		// Update the current row of A
 		if ( k < N - 1 ) {
-			// Use zgemm with 1 row: C = alpha * A * B + beta * C
-			// A(rk, 0:k) is 1 x (k+1), F(k+1:N-1, 0:k)^H is (k+1) x (N-k-1)
-			// We need: A(rk, k+1:N-1) -= A(rk, 0:k) * F(k+1:N-1, 0:k)^H
 			zgemm(
 				'N', 'C', 1, N - k - 1, k + 1,
 				NEGCONE,
-				A, sa1, sa2, oA + 2 * ( rk * sa1 ),
-				F, sf1, sf2, oF + 2 * ( ( k + 1 ) * sf1 ),
+				A, sa1, sa2, offsetA + rk * sa1,
+				F, sf1, sf2, offsetF + ( k + 1 ) * sf1,
 				CONE,
-				A, sa1, sa2, oA + 2 * ( rk * sa1 + ( k + 1 ) * sa2 )
+				A, sa1, sa2, offsetA + rk * sa1 + ( k + 1 ) * sa2
 			);
 		}
 
@@ -252,7 +259,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			for ( j = k + 1; j < N; j++ ) {
 				if ( VN1[ offsetVN1 + j * strideVN1 ] !== 0.0 ) {
 					temp = cmplx.abs(
-						A.subarray(
+						Av.subarray(
 							oA + 2 * ( rk * sa1 + j * sa2 ),
 							oA + 2 * ( rk * sa1 + j * sa2 ) + 2
 						)
@@ -275,8 +282,8 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		}
 
 		// Restore A(rk, k)
-		A[ oA + 2 * ( rk * sa1 + k * sa2 ) ] = akk[ 0 ];
-		A[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ] = akk[ 1 ];
+		Av[ oA + 2 * ( rk * sa1 + k * sa2 ) ] = akk[ 0 ];
+		Av[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ] = akk[ 1 ];
 
 		k += 1;
 	}
@@ -289,10 +296,10 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		zgemm(
 			'N', 'C', M - rk, N - k, k,
 			NEGCONE,
-			A, sa1, sa2, oA + 2 * ( rk * sa1 ),
-			F, sf1, sf2, oF + 2 * ( k * sf1 ),
+			A, sa1, sa2, offsetA + rk * sa1,
+			F, sf1, sf2, offsetF + k * sf1,
 			CONE,
-			A, sa1, sa2, oA + 2 * ( rk * sa1 + k * sa2 )
+			A, sa1, sa2, offsetA + rk * sa1 + k * sa2
 		);
 	}
 
@@ -301,7 +308,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		itemp = Math.round( VN2[ offsetVN2 + lsticc * strideVN2 ] );
 		VN1[ offsetVN1 + lsticc * strideVN1 ] = dznrm2(
 			M - rk,
-			A, sa1, oA + 2 * ( rk * sa1 + lsticc * sa2 )
+			A, sa1, offsetA + rk * sa1 + lsticc * sa2
 		);
 		VN2[ offsetVN2 + lsticc * strideVN2 ] = VN1[ offsetVN1 + lsticc * strideVN1 ];
 		lsticc = itemp;

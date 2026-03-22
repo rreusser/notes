@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zgeqrf = require( '../../zgeqrf/lib/base.js' );
 var zlaqp2 = require( '../../zlaqp2/lib/base.js' );
 var zlaqps = require( '../../zlaqps/lib/base.js' );
@@ -40,33 +41,25 @@ var DEFAULT_NB = 32;
 *   A * P = Q * R
 * using level 3 BLAS.
 *
-* On exit, A is overwritten with the QR factors (R in the upper triangle,
-* reflector vectors below). JPVT records the column permutation:
-* column j of A*P was column JPVT(j) of A.
-*
-* JPVT is 1-based (matching Fortran convention): JPVT(j) in [1..N].
-* On entry, if JPVT(j) != 0, column j is permuted to the front of A*P;
-* if JPVT(j) = 0, column j is free to be pivoted.
-*
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Strides are in complex-element units.
+* A, TAU, WORK are Complex128Arrays. Strides and offsets are in complex elements.
+* RWORK is real (Float64Array).
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input/output matrix (interleaved complex)
+* @param {Complex128Array} A - input/output matrix
 * @param {integer} strideA1 - first dim stride of A (complex elements)
 * @param {integer} strideA2 - second dim stride of A (complex elements)
-* @param {NonNegativeInteger} offsetA - starting Float64 index for A
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
 * @param {Int32Array} JPVT - column permutation (1-based on exit)
 * @param {integer} strideJPVT - stride for JPVT
 * @param {NonNegativeInteger} offsetJPVT - starting index for JPVT
-* @param {Float64Array} TAU - output reflector scalars (interleaved complex)
+* @param {Complex128Array} TAU - output reflector scalars
 * @param {integer} strideTAU - stride for TAU (complex elements)
-* @param {NonNegativeInteger} offsetTAU - starting Float64 index for TAU
-* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
+* @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (complex elements)
-* @param {NonNegativeInteger} offsetWORK - starting Float64 index for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 * @param {integer} lwork - workspace size in complex elements (unused)
 * @param {Float64Array} RWORK - real workspace (length >= 2*N)
 * @param {integer} strideRWORK - stride for RWORK
@@ -76,12 +69,13 @@ var DEFAULT_NB = 32;
 function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
 	var topbmn;
 	var sminmn;
+	var workQR;
 	var minmn;
 	var nbmin;
 	var nfxd;
+	var AUXV;
 	var sa1;
 	var sa2;
-	var oA;
 	var oJ;
 	var oR;
 	var oT;
@@ -91,11 +85,12 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 	var na;
 	var nb;
 	var nx;
+	var jb;
+	var F;
 	var j;
 
 	sa1 = strideA1;
 	sa2 = strideA2;
-	oA = offsetA;
 	oJ = offsetJPVT;
 	oR = offsetRWORK;
 	oT = offsetTAU;
@@ -111,7 +106,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 		if ( JPVT[ oJ + j * strideJPVT ] !== 0 ) {
 			if ( j !== nfxd ) {
 				// Swap columns j and nfxd
-				zswap( M, A, sa1, oA + 2 * j * sa2, A, sa1, oA + 2 * nfxd * sa2 );
+				zswap( M, A, sa1, offsetA + j * sa2, A, sa1, offsetA + nfxd * sa2 );
 				JPVT[ oJ + j * strideJPVT ] = JPVT[ oJ + nfxd * strideJPVT ];
 				JPVT[ oJ + nfxd * strideJPVT ] = j + 1; // 1-based
 			} else {
@@ -128,18 +123,18 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 		na = Math.min( M, nfxd );
 
 		// Allocate internal workspace for zgeqrf
-		var workQR = new Float64Array( 2 * Math.max( N, 1 ) * DEFAULT_NB ); // eslint-disable-line no-var
+		workQR = new Complex128Array( Math.max( N, 1 ) * DEFAULT_NB );
 
-		zgeqrf( M, na, A, sa1, sa2, oA, TAU, strideTAU, oT, workQR, 1, 0 );
+		zgeqrf( M, na, A, sa1, sa2, offsetA, TAU, strideTAU, oT, workQR, 1, 0 );
 
 		if ( na < N ) {
 			// Apply Q^H to remaining columns
 			zunmqr(
 				'Left', 'Conjugate Transpose', M, N - na, na,
-				A, sa1, sa2, oA,
+				A, sa1, sa2, offsetA,
 				TAU, strideTAU, oT,
-				A, sa1, sa2, oA + 2 * na * sa2,
-				workQR, 1, 0, workQR.length / 2
+				A, sa1, sa2, offsetA + na * sa2,
+				workQR, 1, 0, workQR.length
 			);
 		}
 	}
@@ -151,11 +146,9 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 		sminmn = minmn - nfxd;
 
 		// Compute initial column norms for the unfactored submatrix
-		// RWORK(j) = VN1(j), RWORK(N+j) = VN2(j) for j = nfxd..N-1
-		// But we use them starting from index 0 in the subproblem
 		for ( j = nfxd; j < N; j++ ) {
 			RWORK[ oR + j * strideRWORK ] = dznrm2(
-				sm, A, sa1, oA + 2 * ( nfxd * sa1 + j * sa2 )
+				sm, A, sa1, offsetA + nfxd * sa1 + j * sa2
 			);
 			RWORK[ oR + ( N + j ) * strideRWORK ] = RWORK[ oR + j * strideRWORK ];
 		}
@@ -166,10 +159,6 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 
 		if ( nb > 1 && nb < sminmn ) {
 			nx = 0; // crossover point
-			if ( nx < sminmn ) {
-				// Check if workspace is sufficient for blocked code
-				// If not, reduce block size
-			}
 		}
 
 		if ( nb >= nbmin && nb < sminmn && nx < sminmn ) {
@@ -178,19 +167,18 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 			topbmn = minmn - nx;
 
 			// Allocate F matrix and AUXV for blocked panel
-			var F = new Float64Array( 2 * ( sn + 1 ) * nb ); // eslint-disable-line no-var
-			var AUXV = new Float64Array( 2 * nb ); // eslint-disable-line no-var
+			F = new Complex128Array( ( sn + 1 ) * nb );
+			AUXV = new Complex128Array( nb );
 
 			while ( j < topbmn ) {
-				var jb = Math.min( nb, topbmn - j ); // eslint-disable-line no-var
+				jb = Math.min( nb, topbmn - j );
 
 				// Factor panel using zlaqps
-				// zlaqps( M, N-j, j, jb, A(:,j), JPVT(j), TAU(j), RWORK(j), RWORK(N+j), WORK, F, sn+1 )
 				fjb = zlaqps(
 					M, N - j, j, jb,
-					A, sa1, sa2, oA + 2 * j * sa2,
+					A, sa1, sa2, offsetA + j * sa2,
 					JPVT, strideJPVT, oJ + j * strideJPVT,
-					TAU, strideTAU, oT + 2 * j * strideTAU,
+					TAU, strideTAU, oT + j * strideTAU,
 					RWORK, strideRWORK, oR + j * strideRWORK,
 					RWORK, strideRWORK, oR + ( N + j ) * strideRWORK,
 					AUXV, 1, 0,
@@ -206,9 +194,9 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 		if ( j < minmn ) {
 			zlaqp2(
 				M, N - j, j,
-				A, sa1, sa2, oA + 2 * j * sa2,
+				A, sa1, sa2, offsetA + j * sa2,
 				JPVT, strideJPVT, oJ + j * strideJPVT,
-				TAU, strideTAU, oT + 2 * j * strideTAU,
+				TAU, strideTAU, oT + j * strideTAU,
 				RWORK, strideRWORK, oR + j * strideRWORK,
 				RWORK, strideRWORK, oR + ( N + j ) * strideRWORK,
 				WORK, strideWORK, offsetWORK
