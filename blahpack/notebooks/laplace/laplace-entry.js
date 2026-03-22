@@ -153,5 +153,7 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
     evaluate, poles: filteredPoles, allPoles, allZeros,
     smoothCoeffs, singularCoeffs, b0, maxError,
     center: c, imCorr: imCorr[1], N,
+    // AAA barycentric data for stable GPU evaluation
+    bary: { z: approx.z, f: approx.f, w: approx.w },
   };
 }

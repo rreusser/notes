@@ -25,6 +25,7 @@ self.onmessage = function(e) {
         imCorr: result.imCorr,
         maxError: result.maxError,
         N: result.N,
+        bary: result.bary,
       },
       computeTime,
       timings: { svd: timings.svd, cauchy: timings.cauchy, total: timings.total },

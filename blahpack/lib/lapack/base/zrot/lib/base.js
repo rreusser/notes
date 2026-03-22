@@ -68,7 +68,7 @@ function zrot( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s ) {
 	si = s[ 1 ];
 
 	cxv = reinterpret( cx, 0 );
-	cyv = reinterpret( cy, 0 );
+	cyv = ( cy === cx ) ? cxv : reinterpret( cy, 0 );
 
 	// Each complex element spans 2 doubles
 	sx = strideX * 2;

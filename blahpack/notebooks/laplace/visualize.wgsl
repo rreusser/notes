@@ -54,13 +54,12 @@ fn pointInPolygon(p: vec2<f32>, nVerts: u32) -> bool {
 
 @fragment
 fn main(input: VertexOutput) -> @location(0) vec4<f32> {
-  // Map UV [-1,1] to domain coordinates via viewInverse matrix
   let worldPos = params.viewInverse * vec4<f32>(input.uv, 0.0, 1.0);
   let z = worldPos.xy;
 
   let inside = pointInPolygon(z, nVertices);
 
-  // Compute smooth part: Σ a_n (z-c)^n
+  // Smooth part: Σ a_n (z-c)^n
   let dz = z - params.center;
   var power = vec2<f32>(1.0, 0.0);
   var smooth_val = vec2<f32>(0.0, 0.0);
@@ -69,7 +68,7 @@ fn main(input: VertexOutput) -> @location(0) vec4<f32> {
     power = cmul(power, dz);
   }
 
-  // Compute singular part: Σ b_k / (z - p_k) + b0
+  // Singular part: Σ b_k / (z - p_k) + b0
   var sing_val = params.b0;
   for (var k: u32 = 0u; k < params.nPoles; k = k + 1u) {
     let pole_dz = z - poles[k];

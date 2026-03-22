@@ -14454,7 +14454,9 @@ function laplace(boundaryPoints, boundaryValues, polygonVertices, options = {}) 
     maxError,
     center: c,
     imCorr: imCorr[1],
-    N
+    N,
+    // AAA barycentric data for stable GPU evaluation
+    bary: { z: approx.z, f: approx.f, w: approx.w }
   };
 }
 export {

@@ -11,6 +11,38 @@
     - **[C20]** Costa, ["Solving Laplace problems with the AAA algorithm"](https://arxiv.org/abs/2001.09439), 2020.
   </script>
 
+  <script id="method" type="text/markdown">
+    <details><summary><strong>Method details</strong> — polynomial + rational decomposition, SVD variants, least-squares solvers</summary>
+
+    The Laplace solver follows [C20], decomposing the solution ${ tex`u(z)` } into a **smooth polynomial part** and a **singular rational part**:
+
+    ${ tex.block`w(z) = \underbrace{\sum_{n=0}^{N} a_n(z-c)^n}_{\text{smooth}} + \underbrace{\sum_{k=1}^{K} \frac{b_k}{z - p_k} + b_0}_{\text{singular}} + i\gamma` }
+
+    where ${ tex`c` } is the domain centroid, ${ tex`p_k` } are poles outside the domain, and ${ tex`\gamma` } is a constant that zeros the imaginary part at ${ tex`c` }. The physical solution is ${ tex`u = \operatorname{Re}(w)` }.
+
+    **Step 1: Polynomial fit.** Given ${ tex`M \approx 800` } boundary samples ${ tex`(z_j, u_j)` }, fit ${ tex`N + 1` } complex polynomial coefficients via real least squares. Since ${ tex`\operatorname{Re}(\sum a_n(z_j - c)^n) = u_j` } and ${ tex`a_n = \alpha_n + i\beta_n` }, this separates into a real overdetermined system of size ${ tex`M \times (2N+1)` }. We solve this with **Householder QR**, which is the standard approach for dense least squares. MATLAB's `\` operator uses the same method internally for overdetermined systems.
+
+    **Step 2: AAA rational approximation.** The boundary residual ${ tex`r_j = u_j - \operatorname{Re}(s(z_j))` } is approximated by the AAA algorithm [NST18], which builds a rational function in **barycentric form**:
+
+    ${ tex.block`R(z) = \frac{\sum_k w_k f_k / (z - z_k)}{\sum_k w_k / (z - z_k)}` }
+
+    where ${ tex`z_k` } are greedily selected support points, ${ tex`f_k = r(z_k)` }, and ${ tex`w_k` } are barycentric weights computed via **SVD**. At each iteration, the algorithm selects the point of maximum error, forms a Loewner matrix, and takes its smallest right singular vector as the new weights.
+
+    **Our implementation vs. MATLAB.** The reference MATLAB code calls `svd(A, 0)` — a thin SVD via LAPACK's `dgesdd` (divide-and-conquer). Our JavaScript implementation calls `zgesvd` (complex bidiagonal QR iteration), translated from the reference Fortran LAPACK into JavaScript as part of the blahpack project. The key difference is algorithmic: `dgesdd` is typically faster for large matrices but `zgesvd` is simpler and equally accurate. Both compute the same singular values and vectors to machine precision.
+
+    We use the **complex** SVD (`zgesvd`) even though the AAA algorithm as stated in [NST18] operates on real-valued functions. This is because the Loewner matrix ${ tex`A_{ij} = (f_i - f_k) / (z_i - z_k)` } is complex (the sample points ${ tex`z_k` } lie in ${ tex`\mathbb{C}` }), so the SVD must handle complex entries. MATLAB's `svd` dispatches to the complex routine automatically; our code calls `zgesvd` explicitly.
+
+    **Step 3: Pole extraction.** Poles and zeros are extracted from the barycentric form by solving a **generalized eigenvalue problem** on a companion-like matrix pencil ${ tex`(E, B)` } of size ${ tex`(m+1) \times (m+1)` }, using the **QZ algorithm** (`zggev`). This is identical to the MATLAB approach (`eig(E, B)`), again translated from reference LAPACK Fortran.
+
+    **Step 4: Pole filtering.** Only poles exterior to the domain are retained (tested via ray-casting point-in-polygon). Interior poles would create non-physical singularities in the harmonic solution.
+
+    **Step 5: Singular coefficient fit.** With ${ tex`K` } filtered exterior poles, fit complex coefficients ${ tex`b_k` } and constant ${ tex`b_0` } via least squares on the Cauchy system ${ tex`\operatorname{Re}(\sum b_k/(z_j - p_k) + b_0) = r_j` }. This is again a real overdetermined system solved by Householder QR.
+
+    **GPU evaluation.** The final solution is evaluated per-pixel in a WebGPU fragment shader using f32 arithmetic. The polynomial part is evaluated in monomial form (18 terms) and the singular part as a direct partial-fraction sum (40–90 terms depending on `mmax`). At `mmax ≥ 200`, the singular coefficients grow to ${ tex`O(10^4)` } with massive cancellation, exceeding f32's ~7-digit precision. At `mmax = 100`, the evaluation is clean.
+
+    </details>
+  </script>
+
   <script id="imports" type="module">
     import { createElementStack } from '../lib/element-stack.js';
     import { createZoomableAxes } from '../lib/zoomable-axes.js';
@@ -443,16 +475,16 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
       const f32 = new Float32Array(paramsData);
       const u32 = new Uint32Array(paramsData);
 
-      f32.set(axes.viewInverse, 0);
-      u32[16] = ld.smoothCoeffs.length;
-      u32[17] = ld.poles.length;
-      f32[18] = ld.center[0];
-      f32[19] = ld.center[1];
-      f32[20] = ld.b0[0];
-      f32[21] = ld.b0[1];
-      f32[22] = ld.imCorr;
-      f32[23] = rs.valueMin;
-      f32[24] = rs.valueMax;
+      f32.set(axes.viewInverse, 0);          // mat4x4: 64 bytes
+      u32[16] = ld.smoothCoeffs.length;      // nSmooth
+      u32[17] = ld.poles.length;             // nPoles
+      f32[18] = ld.center[0];               // center.x
+      f32[19] = ld.center[1];               // center.y
+      f32[20] = ld.b0[0];                   // b0.x
+      f32[21] = ld.b0[1];                   // b0.y
+      f32[22] = ld.imCorr;                  // imCorr
+      f32[23] = rs.valueMin;                // valueMin
+      f32[24] = rs.valueMax;                // valueMax
 
       device.queue.writeBuffer(paramsBuf, 0, f32);
 

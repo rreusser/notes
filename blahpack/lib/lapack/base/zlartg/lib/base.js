@@ -25,6 +25,9 @@
 // dsafmax = 1/dsafmin = 2^1022
 var SAFMIN = 2.2250738585072014e-308;
 var SAFMAX = 4.49423283715579e+307;
+var RTMIN = Math.sqrt( SAFMIN );
+var RTMAX_HALF = Math.sqrt( SAFMAX / 2.0 );
+var RTMAX_QTR = Math.sqrt( SAFMAX / 4.0 );
 
 // FUNCTIONS //
 
@@ -57,8 +60,6 @@ function abssq( re, im ) {
 * @returns {Float64Array} out
 */
 function zlartg( f, g, out ) {
-	var rtmin;
-	var rtmax;
 	var fr;
 	var fi;
 	var gr;
@@ -90,8 +91,6 @@ function zlartg( f, g, out ) {
 	gr = g[ 0 ];
 	gi = g[ 1 ];
 
-	rtmin = Math.sqrt( SAFMIN );
-
 	// g == 0
 	if ( gr === 0.0 && gi === 0.0 ) {
 		out[ 0 ] = 1.0;
@@ -122,8 +121,7 @@ function zlartg( f, g, out ) {
 		} else {
 			// g is general complex
 			g1 = Math.max( Math.abs( gr ), Math.abs( gi ) );
-			rtmax = Math.sqrt( SAFMAX / 2.0 );
-			if ( g1 > rtmin && g1 < rtmax ) {
+			if ( g1 > RTMIN && g1 < RTMAX_HALF ) {
 				// Unscaled
 				g2 = abssq( gr, gi );
 				d = Math.sqrt( g2 );
@@ -155,9 +153,8 @@ function zlartg( f, g, out ) {
 	// General case: both f and g are nonzero
 	f1 = Math.max( Math.abs( fr ), Math.abs( fi ) );
 	g1 = Math.max( Math.abs( gr ), Math.abs( gi ) );
-	rtmax = Math.sqrt( SAFMAX / 4.0 );
 
-	if ( f1 > rtmin && f1 < rtmax && g1 > rtmin && g1 < rtmax ) {
+	if ( f1 > RTMIN && f1 < RTMAX_QTR && g1 > RTMIN && g1 < RTMAX_QTR ) {
 		// Unscaled algorithm
 		f2 = abssq( fr, fi );
 		g2 = abssq( gr, gi );
@@ -167,8 +164,7 @@ function zlartg( f, g, out ) {
 			c = Math.sqrt( f2 / h2 );
 			rr = fr / c;
 			ri = fi / c;
-			rtmax = rtmax * 2.0;
-			if ( f2 > rtmin && h2 < rtmax ) {
+			if ( f2 > RTMIN && h2 < RTMAX_QTR * 2.0 ) {
 				t0 = Math.sqrt( f2 * h2 );
 				// s = conjg(g) * (f / sqrt(f2*h2))
 				t1 = fr / t0;
@@ -207,7 +203,7 @@ function zlartg( f, g, out ) {
 		gsi = gi / u;
 		g2 = abssq( gsr, gsi );
 
-		if ( f1 / u < rtmin ) {
+		if ( f1 / u < RTMIN ) {
 			// f is not well-scaled when scaled by u.
 			// Use a different scaling for f.
 			v = Math.min( SAFMAX, Math.max( SAFMIN, f1 ) );
@@ -229,8 +225,7 @@ function zlartg( f, g, out ) {
 			c = Math.sqrt( f2 / h2 );
 			rr = fsr / c;
 			ri = fsi / c;
-			rtmax = rtmax * 2.0;
-			if ( f2 > rtmin && h2 < rtmax ) {
+			if ( f2 > RTMIN && h2 < RTMAX_QTR * 2.0 ) {
 				t0 = Math.sqrt( f2 * h2 );
 				t1 = fsr / t0;
 				t2 = fsi / t0;

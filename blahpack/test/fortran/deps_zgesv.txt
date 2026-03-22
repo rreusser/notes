@@ -1,0 +1,9 @@
+dlamch
+ieeeck
+ilaenv
+iparmq
+zgesv
+zgetrf
+zgetrf2
+zgetrs
+zlaswp
