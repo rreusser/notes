@@ -18,6 +18,10 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 // VARIABLES //
 
 // Blue's scaling constants for double precision (IEEE 754):
@@ -36,13 +40,11 @@ var SBIG = Math.pow( 2, -538 );  // scale-down multiplier for big values
 * Returns updated (scale, sumsq) such that:
 *   scale^2 * sumsq = old_scale^2 * old_sumsq + sum(|x_i|^2)
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-*
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {Float64Array} x - complex input vector (interleaved)
+* @param {Complex128Array} x - complex input vector
 * @param {integer} stride - stride in complex elements
-* @param {NonNegativeInteger} offset - starting index in the array
+* @param {NonNegativeInteger} offset - starting index (in complex elements)
 * @param {number} scale - input scale
 * @param {number} sumsq - input sum of squares
 * @returns {Object} object with `scl` and `sumsq` properties
@@ -55,6 +57,7 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 	var ymax;
 	var ymin;
 	var ax;
+	var xv;
 	var sx;
 	var ix;
 	var i;
@@ -74,6 +77,8 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 		return { scl: scale, sumsq: sumsq };
 	}
 
+	xv = reinterpret( x, 0 );
+
 	// Compute the sum of squares in 3 accumulators:
 	//   abig -- sums of squares scaled down to avoid overflow
 	//   asml -- sums of squares scaled up to avoid underflow
@@ -83,17 +88,17 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 	amed = 0.0;
 	abig = 0.0;
 
-	// stride is in complex elements, but data is interleaved [re,im,re,im,...]
+	// stride is in complex elements, convert to Float64 stride
 	sx = stride * 2;
-	ix = offset;
+	ix = offset * 2;
 
 	if ( stride < 0 ) {
-		ix = offset - ( N - 1 ) * sx;
+		ix = offset * 2 - ( N - 1 ) * sx;
 	}
 
 	for ( i = 0; i < N; i++ ) {
 		// Real part
-		ax = Math.abs( x[ ix ] );
+		ax = Math.abs( xv[ ix ] );
 		if ( ax > TBIG ) {
 			abig += ( ax * SBIG ) * ( ax * SBIG );
 			notbig = false;
@@ -106,7 +111,7 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 		}
 
 		// Imaginary part
-		ax = Math.abs( x[ ix + 1 ] );
+		ax = Math.abs( xv[ ix + 1 ] );
 		if ( ax > TBIG ) {
 			abig += ( ax * SBIG ) * ( ax * SBIG );
 			notbig = false;

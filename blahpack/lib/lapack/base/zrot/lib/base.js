@@ -18,6 +18,10 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 // MAIN //
 
 /**
@@ -27,25 +31,23 @@
 *   CX(i) =  C * CX(i) + S * CY(i)
 *   CY(i) = -conjg(S) * CX(i) + C * CY(i)
 *
-* Complex elements are stored as interleaved real/imaginary pairs in a
-* Float64Array. Element k of cx has real part at `offsetX + 2*k*strideX`
-* and imaginary part at `offsetX + 2*k*strideX + 1`.
-*
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {Float64Array} cx - first input/output array (interleaved complex)
+* @param {Complex128Array} cx - first input/output array
 * @param {integer} strideX - stride for `cx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `cx`
-* @param {Float64Array} cy - second input/output array (interleaved complex)
+* @param {NonNegativeInteger} offsetX - starting index for `cx` (in complex elements)
+* @param {Complex128Array} cy - second input/output array
 * @param {integer} strideY - stride for `cy` (in complex elements)
-* @param {NonNegativeInteger} offsetY - starting index for `cy`
+* @param {NonNegativeInteger} offsetY - starting index for `cy` (in complex elements)
 * @param {number} c - cosine of rotation (real)
 * @param {Float64Array} s - sine of rotation (complex, 2-element array [re, im])
-* @returns {Float64Array} cx
+* @returns {Complex128Array} cx
 */
 function zrot( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s ) {
 	var stemp_r;
 	var stemp_i;
+	var cxv;
+	var cyv;
 	var cxr;
 	var cxi;
 	var cyr;
@@ -65,17 +67,20 @@ function zrot( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s ) {
 	sr = s[ 0 ];
 	si = s[ 1 ];
 
+	cxv = reinterpret( cx, 0 );
+	cyv = reinterpret( cy, 0 );
+
 	// Each complex element spans 2 doubles
 	sx = strideX * 2;
 	sy = strideY * 2;
-	ix = offsetX;
-	iy = offsetY;
+	ix = offsetX * 2;
+	iy = offsetY * 2;
 
 	for ( i = 0; i < N; i++ ) {
-		cxr = cx[ ix ];
-		cxi = cx[ ix + 1 ];
-		cyr = cy[ iy ];
-		cyi = cy[ iy + 1 ];
+		cxr = cxv[ ix ];
+		cxi = cxv[ ix + 1 ];
+		cyr = cyv[ iy ];
+		cyi = cyv[ iy + 1 ];
 
 		// stemp = c*cx(i) + s*cy(i)
 		// s*cy(i) = (sr+si*i)*(cyr+cyi*i) = (sr*cyr - si*cyi) + (sr*cyi + si*cyr)*i
@@ -85,11 +90,11 @@ function zrot( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s ) {
 		// cy(i) = c*cy(i) - conjg(s)*cx(i)
 		// conjg(s) = (sr, -si)
 		// conjg(s)*cx(i) = (sr*cxr + si*cxi) + (-si*cxr + sr*cxi)*i
-		cy[ iy ] = c * cyr - ( sr * cxr + si * cxi );
-		cy[ iy + 1 ] = c * cyi - ( -si * cxr + sr * cxi );
+		cyv[ iy ] = c * cyr - ( sr * cxr + si * cxi );
+		cyv[ iy + 1 ] = c * cyi - ( -si * cxr + sr * cxi );
 
-		cx[ ix ] = stemp_r;
-		cx[ ix + 1 ] = stemp_i;
+		cxv[ ix ] = stemp_r;
+		cxv[ ix + 1 ] = stemp_i;
 
 		ix += sx;
 		iy += sy;

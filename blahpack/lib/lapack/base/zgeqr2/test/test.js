@@ -24,6 +24,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgeqr2 = require( './../lib/base.js' );
 
 
@@ -59,51 +61,50 @@ function assertArrayClose( actual, expected, tol, msg ) {
 test( 'zgeqr2: basic 3x2 matrix', function t() {
 	var tc = findCase( 'basic_3x2' );
 	// A = [1+0i 4+1i; 2+0i 5+1i; 3+0i 6+1i] col-major interleaved
-	var a = new Float64Array( [ 1,0, 2,0, 3,0, 4,1, 5,1, 6,1 ] );
-	var tau = new Float64Array( 4 );
-	var work = new Float64Array( 20 );
+	var a = new Complex128Array( [ 1,0, 2,0, 3,0, 4,1, 5,1, 6,1 ] );
+	var tau = new Complex128Array( 2 );
+	var work = new Complex128Array( 10 );
 	var info = zgeqr2( 3, 2, a, 1, 3, 0, tau, 1, 0, work, 1, 0 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( a, tc.a, 1e-10, 'a' );
-	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+	assertArrayClose( reinterpret( a, 0 ), tc.a, 1e-10, 'a' );
+	assertArrayClose( reinterpret( tau, 0 ), tc.tau, 1e-10, 'tau' );
 });
 
 test( 'zgeqr2: square 2x2 matrix', function t() {
 	var tc = findCase( 'square_2x2' );
 	// A = [1+1i 1+0i; 0+1i 1+1i] col-major interleaved
-	var a = new Float64Array( [ 1,1, 0,1, 1,0, 1,1 ] );
-	var tau = new Float64Array( 4 );
-	var work = new Float64Array( 20 );
+	var a = new Complex128Array( [ 1,1, 0,1, 1,0, 1,1 ] );
+	var tau = new Complex128Array( 2 );
+	var work = new Complex128Array( 10 );
 	var info = zgeqr2( 2, 2, a, 1, 2, 0, tau, 1, 0, work, 1, 0 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( a, tc.a, 1e-10, 'a' );
-	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+	assertArrayClose( reinterpret( a, 0 ), tc.a, 1e-10, 'a' );
+	assertArrayClose( reinterpret( tau, 0 ), tc.tau, 1e-10, 'tau' );
 });
 
 test( 'zgeqr2: M=0 quick return', function t() {
-	var a = new Float64Array( 4 );
-	var tau = new Float64Array( 4 );
-	var work = new Float64Array( 4 );
+	var a = new Complex128Array( 2 );
+	var tau = new Complex128Array( 2 );
+	var work = new Complex128Array( 2 );
 	var info = zgeqr2( 0, 2, a, 1, 1, 0, tau, 1, 0, work, 1, 0 );
 	assertClose( info, 0, 1e-14, 'info' );
 });
 
 test( 'zgeqr2: N=0 quick return', function t() {
-	var a = new Float64Array( 12 );
-	var tau = new Float64Array( 4 );
-	var work = new Float64Array( 4 );
+	var a = new Complex128Array( 6 );
+	var tau = new Complex128Array( 2 );
+	var work = new Complex128Array( 2 );
 	var info = zgeqr2( 3, 0, a, 1, 3, 0, tau, 1, 0, work, 1, 0 );
 	assertClose( info, 0, 1e-14, 'info' );
 });
 
 test( 'zgeqr2: 1x1 matrix', function t() {
 	var tc = findCase( 'one_by_one' );
-	var a = new Float64Array( [ 5, 3 ] );
-	var tau = new Float64Array( 2 );
-	var work = new Float64Array( 4 );
+	var a = new Complex128Array( [ 5, 3 ] );
+	var tau = new Complex128Array( 1 );
+	var work = new Complex128Array( 2 );
 	var info = zgeqr2( 1, 1, a, 1, 1, 0, tau, 1, 0, work, 1, 0 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( a, tc.a, 1e-10, 'a' );
-	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+	assertArrayClose( reinterpret( a, 0 ), tc.a, 1e-10, 'a' );
+	assertArrayClose( reinterpret( tau, 0 ), tc.tau, 1e-10, 'tau' );
 });
-

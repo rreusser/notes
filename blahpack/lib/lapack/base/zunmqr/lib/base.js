@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlarfb = require( '../../zlarfb/lib/base.js' );
 var zlarft = require( '../../zlarft/lib/base.js' );
 var zunm2r = require( '../../zunm2r/lib/base.js' );
@@ -38,8 +39,7 @@ var NB = 32; // Hardcoded block size
 * elementary reflectors Q = H(1) * H(2) * ... * H(k) as returned
 * by ZGEQRF. Uses a blocked algorithm with block size NB=32.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Strides are in complex-element units.
+* A, TAU, C, WORK are Complex128Arrays. Strides and offsets are in complex elements.
 *
 * @private
 * @param {string} side - 'L' to apply Q from left, 'R' from right
@@ -47,20 +47,20 @@ var NB = 32; // Hardcoded block size
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {NonNegativeInteger} K - number of elementary reflectors
-* @param {Float64Array} A - reflector vectors from ZGEQRF (interleaved complex)
+* @param {Complex128Array} A - reflector vectors from ZGEQRF
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
 * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
-* @param {NonNegativeInteger} offsetA - starting Float64 index for A
-* @param {Float64Array} TAU - scalar factors of reflectors (interleaved complex)
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+* @param {Complex128Array} TAU - scalar factors of reflectors
 * @param {integer} strideTAU - stride for TAU (complex elements)
-* @param {NonNegativeInteger} offsetTAU - starting Float64 index for TAU
-* @param {Float64Array} C - input/output matrix (interleaved complex)
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
+* @param {Complex128Array} C - input/output matrix
 * @param {integer} strideC1 - stride of the first dimension of C (complex elements)
 * @param {integer} strideC2 - stride of the second dimension of C (complex elements)
-* @param {NonNegativeInteger} offsetC - starting Float64 index for C
-* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {NonNegativeInteger} offsetC - starting index for C (complex elements)
+* @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (complex elements)
-* @param {NonNegativeInteger} offsetWORK - starting Float64 index for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 * @param {integer} lwork - workspace size in complex elements (unused, kept for API compat)
 * @returns {integer} info - 0 if successful
 */
@@ -79,7 +79,6 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var i1;
 	var i2;
 	var i3;
-	var iwt;
 	var ldt;
 	var T;
 	var i;
@@ -112,12 +111,12 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	ldwork = nw;
 	ldt = nb + 1;
 
-	// Allocate T matrix for block reflectors (ldt x nb, interleaved complex)
-	T = new Float64Array( 2 * ldt * nb );
+	// Allocate T matrix for block reflectors (ldt x nb, Complex128Array)
+	T = new Complex128Array( ldt * nb );
 
 	// Ensure WORK is large enough; allocate internally if needed
-	if ( !WORK || WORK.length < 2 * ( nw * nb + ldt * nb ) ) {
-		WORK = new Float64Array( 2 * ( nw * nb + ldt * nb ) );
+	if ( !WORK || WORK.length < ( nw * nb + ldt * nb ) ) {
+		WORK = new Complex128Array( nw * nb + ldt * nb );
 		offsetWORK = 0;
 		strideWORK = 1;
 	}
@@ -148,8 +147,8 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		zlarft(
 			'Forward', 'Columnwise', nq - i, ib,
-			A, strideA1, strideA2, offsetA + 2 * ( i * strideA1 + i * strideA2 ),
-			TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+			TAU, strideTAU, offsetTAU + i * strideTAU,
 			T, 1, ldt, 0
 		);
 
@@ -164,9 +163,9 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Apply H or H^H to C(ic:ic+mi, jc:jc+ni)
 		zlarfb(
 			side, trans, 'Forward', 'Columnwise', mi, ni, ib,
-			A, strideA1, strideA2, offsetA + 2 * ( i * strideA1 + i * strideA2 ),
+			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 			T, 1, ldt, 0,
-			C, strideC1, strideC2, offsetC + 2 * ( ic * strideC1 + jc * strideC2 ),
+			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
 			WORK, 1, ldwork, offsetWORK
 		);
 	}

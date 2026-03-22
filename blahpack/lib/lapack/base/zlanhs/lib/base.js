@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlassq = require( '../../zlassq/lib/base.js' );
 var cmplx = require( '../../../../cmplx.js' );
 
@@ -33,11 +34,11 @@ var cmplx = require( '../../../../cmplx.js' );
 * @private
 * @param {string} norm - 'M' (max), '1'/'O' (one-norm), 'I' (inf-norm), 'F'/'E' (Frobenius)
 * @param {NonNegativeInteger} N - order of the matrix
-* @param {Float64Array} A - upper Hessenberg matrix (interleaved complex)
-* @param {integer} strideA1 - stride of the first dimension of A
-* @param {integer} strideA2 - stride of the second dimension of A
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} WORK - workspace (length >= N, used for inf-norm only)
+* @param {Complex128Array} A - upper Hessenberg matrix
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @param {Float64Array} WORK - workspace (length >= N, used for inf-norm only, real)
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {number} matrix norm value
@@ -46,22 +47,24 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 	var value;
 	var scale;
 	var sum;
+	var Av;
 	var sa1;
 	var sa2;
+	var oA;
 	var lim;
 	var aij;
-	var ar;
-	var ai;
 	var wi;
 	var i;
 	var j;
 
-	sa1 = strideA1;
-	sa2 = strideA2;
-
 	if ( N === 0 ) {
 		return 0.0;
 	}
+
+	Av = reinterpret( A, 0 );
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 
 	var n = norm.charAt( 0 ).toUpperCase();
 
@@ -70,14 +73,13 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
 			lim = Math.min( N, j + 2 ); // upper Hessenberg: rows 0..min(N-1, j+1)
-			aij = offsetA + 2 * j * sa2;
+			aij = oA + j * sa2;
 			for ( i = 0; i < lim; i++ ) {
-				// |A(i,j)| — overflow-safe complex absolute value
-				sum = cmplx.abs( A.subarray( aij, aij + 2 ) );
+				sum = cmplx.abs( Av.subarray( aij, aij + 2 ) );
 				if ( value < sum || sum !== sum ) {
 					value = sum;
 				}
-				aij += 2 * sa1;
+				aij += sa1;
 			}
 		}
 	} else if ( n === 'O' || n === '1' ) {
@@ -86,11 +88,10 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 		for ( j = 0; j < N; j++ ) {
 			sum = 0.0;
 			lim = Math.min( N, j + 2 );
-			aij = offsetA + 2 * j * sa2;
+			aij = oA + j * sa2;
 			for ( i = 0; i < lim; i++ ) {
-				// |A(i,j)|
-				sum += cmplx.abs( A.subarray( aij, aij + 2 ) );
-				aij += 2 * sa1;
+				sum += cmplx.abs( Av.subarray( aij, aij + 2 ) );
+				aij += sa1;
 			}
 			if ( value < sum || sum !== sum ) {
 				value = sum;
@@ -103,12 +104,11 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 		}
 		for ( j = 0; j < N; j++ ) {
 			lim = Math.min( N, j + 2 );
-			aij = offsetA + 2 * j * sa2;
+			aij = oA + j * sa2;
 			wi = offsetWORK;
 			for ( i = 0; i < lim; i++ ) {
-				// |A(i,j)|
-				WORK[ wi ] += cmplx.abs( A.subarray( aij, aij + 2 ) );
-				aij += 2 * sa1;
+				WORK[ wi ] += cmplx.abs( Av.subarray( aij, aij + 2 ) );
+				aij += sa1;
 				wi += strideWORK;
 			}
 		}
@@ -121,11 +121,12 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 		}
 	} else if ( n === 'F' || n === 'E' ) {
 		// Frobenius norm
+		// zlassq now takes Complex128Array with offset in complex elements
 		scale = 0.0;
 		sum = 1.0;
 		for ( j = 0; j < N; j++ ) {
 			lim = Math.min( N, j + 2 );
-			var result = zlassq( lim, A, sa1, offsetA + 2 * j * sa2, scale, sum );
+			var result = zlassq( lim, A, strideA1, offsetA + j * strideA2, scale, sum );
 			scale = result.scl;
 			sum = result.sumsq;
 		}

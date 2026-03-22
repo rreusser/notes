@@ -20,7 +20,9 @@
 
 // MODULES //
 
-var float64view = require( '../../../../float64view.js' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
 
 // MAIN //
 
@@ -29,16 +31,15 @@ var float64view = require( '../../../../float64view.js' );
 *
 * @private
 * @param {PositiveInteger} N - number of complex elements
-* @param {(Complex128|Float64Array)} za - complex scalar
-* @param {(Complex128Array|Float64Array)} zx - complex input vector
+* @param {Complex128} za - complex scalar
+* @param {Complex128Array} zx - complex input vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements for Complex128Array, Float64 index for Float64Array)
-* @returns {(Complex128Array|Float64Array)} `zx`
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @returns {Complex128Array} `zx`
 */
 function zscal( N, za, zx, strideX, offsetX ) {
 	var zaR;
 	var zaI;
-	var tmp;
 	var xv;
 	var sx;
 	var ix;
@@ -49,23 +50,16 @@ function zscal( N, za, zx, strideX, offsetX ) {
 		return zx;
 	}
 
-	// Handle both Complex128 (re/im properties) and Float64Array [re, im]
-	if ( typeof za === 'object' && typeof za.re === 'number' ) {
-		zaR = za.re;
-		zaI = za.im;
-	} else {
-		zaR = za[ 0 ];
-		zaI = za[ 1 ];
-	}
+	zaR = real( za );
+	zaI = imag( za );
 
 	// Early return if za === (1, 0)
 	if ( zaR === 1.0 && zaI === 0.0 ) {
 		return zx;
 	}
 
-	tmp = float64view( zx, offsetX );
-	xv = tmp[ 0 ];
-	ix = tmp[ 1 ];
+	xv = reinterpret( zx, 0 );
+	ix = offsetX * 2;
 
 	// Each complex element spans 2 doubles, so multiply stride by 2
 	sx = strideX * 2;

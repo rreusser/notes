@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarf = require( '../../zlarf/lib/base.js' );
 
 
@@ -31,8 +32,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 * elementary reflectors Q = H(1) * H(2) * ... * H(k) as returned
 * by ZGEQR2.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Strides are in complex-element units.
+* A, TAU, C, WORK are Complex128Arrays. Strides and offsets are in complex elements.
 *
 * @private
 * @param {string} side - 'L' to apply Q from left, 'R' from right
@@ -40,20 +40,20 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {NonNegativeInteger} K - number of elementary reflectors
-* @param {Float64Array} A - reflector vectors from ZGEQR2 (interleaved complex)
+* @param {Complex128Array} A - reflector vectors from ZGEQR2
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
 * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
-* @param {NonNegativeInteger} offsetA - starting index for A (Float64 index)
-* @param {Float64Array} TAU - scalar factors of reflectors (interleaved complex)
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+* @param {Complex128Array} TAU - scalar factors of reflectors
 * @param {integer} strideTAU - stride for TAU (complex elements)
-* @param {NonNegativeInteger} offsetTAU - starting index for TAU (Float64 index)
-* @param {Float64Array} C - input/output matrix (interleaved complex)
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
+* @param {Complex128Array} C - input/output matrix
 * @param {integer} strideC1 - stride of the first dimension of C (complex elements)
 * @param {integer} strideC2 - stride of the second dimension of C (complex elements)
-* @param {NonNegativeInteger} offsetC - starting index for C (Float64 index)
-* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {NonNegativeInteger} offsetC - starting index for C (complex elements)
+* @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (complex elements)
-* @param {NonNegativeInteger} offsetWORK - starting index for WORK (Float64 index)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 * @returns {integer} info - 0 if successful
 */
 function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
@@ -63,6 +63,8 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var idxA;
 	var aii0;
 	var aii1;
+	var TAUv;
+	var Av;
 	var mi;
 	var ni;
 	var ic;
@@ -78,6 +80,10 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 	left = ( side === 'L' || side === 'l' );
 	notran = ( trans === 'N' || trans === 'n' );
+
+	// Get Float64Array views for direct element access
+	Av = reinterpret( A, 0 );
+	TAUv = reinterpret( TAU, 0 );
 
 	// Determine iteration direction
 	if ( ( left && !notran ) || ( !left && notran ) ) {
@@ -112,33 +118,33 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Get tau_i, conjugating if trans='C'
 		if ( notran ) {
-			taui[ 0 ] = TAU[ offsetTAU + i * strideTAU * 2 ];
-			taui[ 1 ] = TAU[ offsetTAU + i * strideTAU * 2 + 1 ];
+			taui[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+			taui[ 1 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 		} else {
-			taui[ 0 ] = TAU[ offsetTAU + i * strideTAU * 2 ];
-			taui[ 1 ] = -TAU[ offsetTAU + i * strideTAU * 2 + 1 ];
+			taui[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+			taui[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 		}
 
 		// Save A(i,i) and set it to 1
-		idxA = offsetA + 2 * ( i * strideA1 + i * strideA2 );
-		aii0 = A[ idxA ];
-		aii1 = A[ idxA + 1 ];
-		A[ idxA ] = 1.0;
-		A[ idxA + 1 ] = 0.0;
+		idxA = ( offsetA + i * strideA1 + i * strideA2 ) * 2;
+		aii0 = Av[ idxA ];
+		aii1 = Av[ idxA + 1 ];
+		Av[ idxA ] = 1.0;
+		Av[ idxA + 1 ] = 0.0;
 
 		// Apply H(i) to C(ic:ic+mi, jc:jc+ni) from the left or right
-		// zlarf expects strides in complex elements
+		// zlarf expects strides/offsets in complex elements
 		zlarf(
 			side, mi, ni,
-			A, strideA1, offsetA + 2 * ( i * strideA1 + i * strideA2 ),
+			A, strideA1, offsetA + i * strideA1 + i * strideA2,
 			taui, 0,
-			C, strideC1, strideC2, offsetC + 2 * ( ic * strideC1 + jc * strideC2 ),
+			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
 			WORK, strideWORK, offsetWORK
 		);
 
 		// Restore A(i,i)
-		A[ idxA ] = aii0;
-		A[ idxA + 1 ] = aii1;
+		Av[ idxA ] = aii0;
+		Av[ idxA + 1 ] = aii1;
 	}
 
 	return 0;

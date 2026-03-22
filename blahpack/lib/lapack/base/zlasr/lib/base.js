@@ -18,6 +18,10 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 // MAIN //
 
 /**
@@ -31,14 +35,6 @@
 * where P is an orthogonal matrix consisting of a sequence of z plane
 * rotations, with z = M-1 when SIDE = 'L' and z = N-1 when SIDE = 'R',
 * and P^T is the transpose of P.
-*
-* Complex elements of A are stored as interleaved real/imaginary pairs in a
-* Float64Array. Element (i, j) has real part at
-* `offsetA + i*strideA1 + j*strideA2` and imaginary part at
-* `offsetA + i*strideA1 + j*strideA2 + 1`.
-*
-* For complex matrices, strideA1 and strideA2 are in units of doubles.
-* For column-major with LDA rows: strideA1 = 2, strideA2 = 2*LDA.
 *
 * C and S are real arrays with simple stride/offset.
 *
@@ -54,11 +50,11 @@
 * @param {Float64Array} s - array of sines (real)
 * @param {integer} strideS - stride for `s`
 * @param {NonNegativeInteger} offsetS - starting index for `s`
-* @param {Float64Array} A - input/output matrix (interleaved complex)
-* @param {integer} strideA1 - stride of the first dimension of A (in doubles)
-* @param {integer} strideA2 - stride of the second dimension of A (in doubles)
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @returns {Float64Array} A
+* @param {Complex128Array} A - input/output matrix
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @returns {Complex128Array} A
 */
 function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
 	var ctemp;
@@ -67,8 +63,10 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 	var tempIm;
 	var aRe;
 	var aIm;
+	var Av;
 	var sa1;
 	var sa2;
+	var oA;
 	var idx1;
 	var idx2;
 	var i;
@@ -78,8 +76,10 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		return A;
 	}
 
-	sa1 = strideA1;
-	sa2 = strideA2;
+	Av = reinterpret( A, 0 );
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 
 	if ( side === 'L' || side === 'l' ) {
 		// Apply rotations from the left (act on rows)
@@ -91,19 +91,16 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							// TEMP = A( J+1, I )
-							idx1 = offsetA + ( j + 1 ) * sa1 + i * sa2;
-							idx2 = offsetA + j * sa1 + i * sa2;
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							// A( J+1, I ) = CTEMP*TEMP - STEMP*A( J, I )
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							// A( J, I ) = STEMP*TEMP + CTEMP*A( J, I )
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + ( j + 1 ) * sa1 + i * sa2;
+							idx2 = oA + j * sa1 + i * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
@@ -114,106 +111,96 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + ( j + 1 ) * sa1 + i * sa2;
-							idx2 = offsetA + j * sa1 + i * sa2;
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + ( j + 1 ) * sa1 + i * sa2;
+							idx2 = oA + j * sa1 + i * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
 			}
 		} else if ( pivot === 'T' || pivot === 't' ) {
 			if ( direct === 'F' || direct === 'f' ) {
-				// Top pivot, forward direction
 				for ( j = 1; j < M; j++ ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							// TEMP = A( J, I )
-							idx1 = offsetA + j * sa1 + i * sa2;
-							idx2 = offsetA + i * sa2; // row 0
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							// A( J, I ) = CTEMP*TEMP - STEMP*A( 1, I )
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							// A( 1, I ) = STEMP*TEMP + CTEMP*A( 1, I )
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + j * sa1 + i * sa2;
+							idx2 = oA + i * sa2; // row 0
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
 			} else {
-				// Top pivot, backward direction
 				for ( j = M - 1; j >= 1; j-- ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + j * sa1 + i * sa2;
-							idx2 = offsetA + i * sa2; // row 0
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + j * sa1 + i * sa2;
+							idx2 = oA + i * sa2; // row 0
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
 			}
 		} else if ( pivot === 'B' || pivot === 'b' ) {
 			if ( direct === 'F' || direct === 'f' ) {
-				// Bottom pivot, forward direction
 				for ( j = 0; j < M - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							// TEMP = A( J, I )
-							idx1 = offsetA + j * sa1 + i * sa2;
-							idx2 = offsetA + ( M - 1 ) * sa1 + i * sa2; // last row
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							// A( J, I ) = STEMP*A( M, I ) + CTEMP*TEMP
-							A[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							A[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							// A( M, I ) = CTEMP*A( M, I ) - STEMP*TEMP
-							A[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							A[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							idx1 = oA + j * sa1 + i * sa2;
+							idx2 = oA + ( M - 1 ) * sa1 + i * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
+							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
+							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
+							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
 						}
 					}
 				}
 			} else {
-				// Bottom pivot, backward direction
 				for ( j = M - 2; j >= 0; j-- ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + j * sa1 + i * sa2;
-							idx2 = offsetA + ( M - 1 ) * sa1 + i * sa2;
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							A[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							A[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							A[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							A[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							idx1 = oA + j * sa1 + i * sa2;
+							idx2 = oA + ( M - 1 ) * sa1 + i * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
+							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
+							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
+							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
 						}
 					}
 				}
@@ -223,135 +210,120 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		// Apply rotations from the right (act on columns)
 		if ( pivot === 'V' || pivot === 'v' ) {
 			if ( direct === 'F' || direct === 'f' ) {
-				// Variable pivot, forward direction
 				for ( j = 0; j < N - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							// TEMP = A( I, J+1 )
-							idx1 = offsetA + i * sa1 + ( j + 1 ) * sa2;
-							idx2 = offsetA + i * sa1 + j * sa2;
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							// A( I, J+1 ) = CTEMP*TEMP - STEMP*A( I, J )
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							// A( I, J ) = STEMP*TEMP + CTEMP*A( I, J )
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + i * sa1 + ( j + 1 ) * sa2;
+							idx2 = oA + i * sa1 + j * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
 			} else {
-				// Variable pivot, backward direction
 				for ( j = N - 2; j >= 0; j-- ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * sa1 + ( j + 1 ) * sa2;
-							idx2 = offsetA + i * sa1 + j * sa2;
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + i * sa1 + ( j + 1 ) * sa2;
+							idx2 = oA + i * sa1 + j * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
 			}
 		} else if ( pivot === 'T' || pivot === 't' ) {
 			if ( direct === 'F' || direct === 'f' ) {
-				// Top pivot, forward direction
 				for ( j = 1; j < N; j++ ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							// TEMP = A( I, J )
-							idx1 = offsetA + i * sa1 + j * sa2;
-							idx2 = offsetA + i * sa1; // col 0
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							// A( I, J ) = CTEMP*TEMP - STEMP*A( I, 1 )
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							// A( I, 1 ) = STEMP*TEMP + CTEMP*A( I, 1 )
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + i * sa1 + j * sa2;
+							idx2 = oA + i * sa1; // col 0
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
 			} else {
-				// Top pivot, backward direction
 				for ( j = N - 1; j >= 1; j-- ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * sa1 + j * sa2;
-							idx2 = offsetA + i * sa1; // col 0
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							A[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							A[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							A[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							A[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							idx1 = oA + i * sa1 + j * sa2;
+							idx2 = oA + i * sa1; // col 0
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
+							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
+							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
+							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
 						}
 					}
 				}
 			}
 		} else if ( pivot === 'B' || pivot === 'b' ) {
 			if ( direct === 'F' || direct === 'f' ) {
-				// Bottom pivot, forward direction
 				for ( j = 0; j < N - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							// TEMP = A( I, J )
-							idx1 = offsetA + i * sa1 + j * sa2;
-							idx2 = offsetA + i * sa1 + ( N - 1 ) * sa2; // last col
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							// A( I, J ) = STEMP*A( I, N ) + CTEMP*TEMP
-							A[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							A[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							// A( I, N ) = CTEMP*A( I, N ) - STEMP*TEMP
-							A[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							A[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							idx1 = oA + i * sa1 + j * sa2;
+							idx2 = oA + i * sa1 + ( N - 1 ) * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
+							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
+							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
+							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
 						}
 					}
 				}
 			} else {
-				// Bottom pivot, backward direction
 				for ( j = N - 2; j >= 0; j-- ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * sa1 + j * sa2;
-							idx2 = offsetA + i * sa1 + ( N - 1 ) * sa2;
-							tempRe = A[ idx1 ];
-							tempIm = A[ idx1 + 1 ];
-							aRe = A[ idx2 ];
-							aIm = A[ idx2 + 1 ];
-							A[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							A[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							A[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							A[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							idx1 = oA + i * sa1 + j * sa2;
+							idx2 = oA + i * sa1 + ( N - 1 ) * sa2;
+							tempRe = Av[ idx1 ];
+							tempIm = Av[ idx1 + 1 ];
+							aRe = Av[ idx2 ];
+							aIm = Av[ idx2 + 1 ];
+							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
+							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
+							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
+							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
 						}
 					}
 				}

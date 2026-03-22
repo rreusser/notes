@@ -20,8 +20,9 @@
 
 // MODULES //
 
-var float64view = require( '../../../../float64view.js' );
-var complexParts = float64view.complexParts;
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
 
 // MAIN //
 
@@ -63,7 +64,6 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	var notb;
 	var conja;
 	var conjb;
-	var tmp;
 	var cR;
 	var cI;
 	var sa1;
@@ -93,12 +93,10 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 		return C;
 	}
 
-	tmp = complexParts( alpha );
-	alphaR = tmp[ 0 ];
-	alphaI = tmp[ 1 ];
-	tmp = complexParts( beta );
-	betaR = tmp[ 0 ];
-	betaI = tmp[ 1 ];
+	alphaR = real( alpha );
+	alphaI = imag( alpha );
+	betaR = real( beta );
+	betaI = imag( beta );
 
 	nota = ( transa === 'N' || transa === 'n' );
 	notb = ( transb === 'N' || transb === 'n' );
@@ -111,9 +109,9 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	}
 
 	// Get Float64Array views and convert offsets
-	tmp = float64view( A, offsetA ); Av = tmp[ 0 ]; oA = tmp[ 1 ];
-	tmp = float64view( B, offsetB ); Bv = tmp[ 0 ]; oB = tmp[ 1 ];
-	tmp = float64view( C, offsetC ); Cv = tmp[ 0 ]; oC = tmp[ 1 ];
+	Av = reinterpret( A, 0 ); oA = offsetA * 2;
+	Bv = reinterpret( B, 0 ); oB = offsetB * 2;
+	Cv = reinterpret( C, 0 ); oC = offsetC * 2;
 
 	// Matrix strides in complex elements, multiply by 2
 	sa1 = strideA1 * 2;

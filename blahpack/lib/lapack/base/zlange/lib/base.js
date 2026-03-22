@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlassq = require( '../../zlassq/lib/base.js' );
 var cmplx = require( '../../../../cmplx.js' );
 
@@ -32,18 +33,15 @@ var cmplx = require( '../../../../cmplx.js' );
 * Supports norms: 'M' (max abs), '1'/'O' (one-norm), 'I' (infinity-norm),
 * 'F'/'E' (Frobenius norm).
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element (i,j) is at offset + 2*(i*strideA1 + j*strideA2).
-*
 * @private
 * @param {string} norm - 'M', '1', 'O', 'I', 'F', or 'E'
 * @param {NonNegativeInteger} M - rows
 * @param {NonNegativeInteger} N - columns
-* @param {Float64Array} A - complex matrix (interleaved)
-* @param {integer} strideA1 - first dimension stride
-* @param {integer} strideA2 - second dimension stride
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} WORK - workspace (length >= M for 'I' norm)
+* @param {Complex128Array} A - complex matrix
+* @param {integer} strideA1 - first dimension stride (in complex elements)
+* @param {integer} strideA2 - second dimension stride (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @param {Float64Array} WORK - workspace (length >= M for 'I' norm, real)
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {number} norm value
@@ -54,11 +52,11 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 	var temp;
 	var sum;
 	var out;
+	var Av;
 	var sa1;
 	var sa2;
+	var oA;
 	var ai;
-	var ar;
-	var im;
 	var wi;
 	var i;
 	var j;
@@ -67,19 +65,19 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		return 0.0;
 	}
 
-	// Matrix strides in complex elements, multiply by 2
+	// Get Float64 view and convert strides/offset
+	Av = reinterpret( A, 0 );
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 
 	if ( norm === 'M' || norm === 'm' ) {
 		// Max absolute value
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
-			ai = offsetA + j * sa2;
+			ai = oA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				ar = A[ ai ];
-				im = A[ ai + 1 ];
-				temp = cmplx.abs( A.subarray( ai, ai + 2 ) );
+				temp = cmplx.abs( Av.subarray( ai, ai + 2 ) );
 				if ( value < temp || temp !== temp ) {
 					value = temp;
 				}
@@ -91,11 +89,9 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
 			sum = 0.0;
-			ai = offsetA + j * sa2;
+			ai = oA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				ar = A[ ai ];
-				im = A[ ai + 1 ];
-				sum += cmplx.abs( A.subarray( ai, ai + 2 ) );
+				sum += cmplx.abs( Av.subarray( ai, ai + 2 ) );
 				ai += sa1;
 			}
 			if ( value < sum || sum !== sum ) {
@@ -109,12 +105,10 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 			WORK[ wi ] = 0.0;
 		}
 		for ( j = 0; j < N; j++ ) {
-			ai = offsetA + j * sa2;
+			ai = oA + j * sa2;
 			wi = offsetWORK;
 			for ( i = 0; i < M; i++ ) {
-				ar = A[ ai ];
-				im = A[ ai + 1 ];
-				WORK[ wi ] += cmplx.abs( A.subarray( ai, ai + 2 ) );
+				WORK[ wi ] += cmplx.abs( Av.subarray( ai, ai + 2 ) );
 				ai += sa1;
 				wi += strideWORK;
 			}
@@ -129,15 +123,11 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		}
 	} else if ( norm === 'F' || norm === 'f' || norm === 'E' || norm === 'e' ) {
 		// Frobenius norm: scale * sqrt(sumsq) using zlassq per column
+		// zlassq now takes Complex128Array with offset in complex elements
 		scale = 0.0;
 		sum = 1.0;
 		for ( j = 0; j < N; j++ ) {
-			// Call zlassq on column j.
-			// Column j of A starts at offsetA + j * sa2
-			// The stride between rows in interleaved storage is sa1
-			// zlassq expects (N, x, stride, offset, scale, sumsq)
-			// where stride is in complex elements and offset is byte index
-			out = zlassq( M, A, strideA1, offsetA + j * sa2, scale, sum );
+			out = zlassq( M, A, strideA1, offsetA + j * strideA2, scale, sum );
 			scale = out.scl;
 			sum = out.sumsq;
 		}

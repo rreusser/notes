@@ -18,32 +18,29 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 // MAIN //
 
 /**
 * Scans a complex matrix for its last non-zero column.
 *
-* Complex elements are stored as interleaved real/imaginary pairs in a
-* Float64Array. Element (i, j) has real part at
-* `offsetA + i*strideA1 + j*strideA2` and imaginary part at
-* `offsetA + i*strideA1 + j*strideA2 + 1`.
-*
-* For complex matrices, strideA1 and strideA2 are in units of doubles
-* (not complex elements). For column-major with LDA rows:
-* strideA1 = 2, strideA2 = 2*LDA.
-*
 * @private
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix (interleaved complex)
-* @param {integer} strideA1 - stride of the first dimension of A (in doubles)
-* @param {integer} strideA2 - stride of the second dimension of A (in doubles)
-* @param {NonNegativeInteger} offsetA - starting index for A
+* @param {Complex128Array} A - input matrix
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
 * @returns {integer} 0-based index of last non-zero column, or -1 if none
 */
 function ilazlc( M, N, A, strideA1, strideA2, offsetA ) {
+	var Av;
 	var sa1;
 	var sa2;
+	var oA;
 	var re;
 	var im;
 	var i;
@@ -53,17 +50,19 @@ function ilazlc( M, N, A, strideA1, strideA2, offsetA ) {
 		return -1;
 	}
 
-	sa1 = strideA1;
-	sa2 = strideA2;
+	Av = reinterpret( A, 0 );
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 
 	// Quick test for the common case where one corner is non-zero.
-	re = A[ offsetA + 0 * sa1 + ( N - 1 ) * sa2 ];
-	im = A[ offsetA + 0 * sa1 + ( N - 1 ) * sa2 + 1 ];
+	re = Av[ oA + 0 * sa1 + ( N - 1 ) * sa2 ];
+	im = Av[ oA + 0 * sa1 + ( N - 1 ) * sa2 + 1 ];
 	if ( re !== 0.0 || im !== 0.0 ) {
 		return N - 1;
 	}
-	re = A[ offsetA + ( M - 1 ) * sa1 + ( N - 1 ) * sa2 ];
-	im = A[ offsetA + ( M - 1 ) * sa1 + ( N - 1 ) * sa2 + 1 ];
+	re = Av[ oA + ( M - 1 ) * sa1 + ( N - 1 ) * sa2 ];
+	im = Av[ oA + ( M - 1 ) * sa1 + ( N - 1 ) * sa2 + 1 ];
 	if ( re !== 0.0 || im !== 0.0 ) {
 		return N - 1;
 	}
@@ -71,8 +70,8 @@ function ilazlc( M, N, A, strideA1, strideA2, offsetA ) {
 	// Scan each column from the end, returning with the first non-zero.
 	for ( j = N - 1; j >= 0; j-- ) {
 		for ( i = 0; i < M; i++ ) {
-			re = A[ offsetA + i * sa1 + j * sa2 ];
-			im = A[ offsetA + i * sa1 + j * sa2 + 1 ];
+			re = Av[ oA + i * sa1 + j * sa2 ];
+			im = Av[ oA + i * sa1 + j * sa2 + 1 ];
 			if ( re !== 0.0 || im !== 0.0 ) {
 				return j;
 			}

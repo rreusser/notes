@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dznrm2 = require( '../../../../blas/base/dznrm2/lib/base.js' );
 var zdscal = require( '../../../../blas/base/zdscal/lib/base.js' );
 var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
@@ -43,18 +44,15 @@ var cmplx = require( '../../../../cmplx.js' );
 *   H = I - tau * ( 1 ) * ( 1 v^H )
 *                 ( v )
 *
-* alpha is a 2-element Float64Array [re, im] passed in as part of the
-* vector or separately. On exit alpha is overwritten with beta.
-*
 * @private
 * @param {NonNegativeInteger} N - order of the reflector
-* @param {Float64Array} alpha - complex scalar [re, im], overwritten with beta
-* @param {NonNegativeInteger} offsetAlpha - starting index for alpha
-* @param {Float64Array} x - complex vector (interleaved re/im), overwritten with v
+* @param {Complex128Array} alpha - complex scalar, overwritten with beta
+* @param {NonNegativeInteger} offsetAlpha - starting index for alpha (in complex elements)
+* @param {Complex128Array} x - complex vector, overwritten with v
 * @param {integer} strideX - stride for x (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for x
-* @param {Float64Array} tau - output complex scalar [re, im]
-* @param {NonNegativeInteger} offsetTau - starting index for tau
+* @param {NonNegativeInteger} offsetX - starting index for x (in complex elements)
+* @param {Complex128Array} tau - output complex scalar
+* @param {NonNegativeInteger} offsetTau - starting index for tau (in complex elements)
 */
 function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 	var rsafmn;
@@ -63,24 +61,34 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 	var alphi;
 	var xnorm;
 	var beta;
+	var tauv;
 	var tmp;
+	var av;
+	var oA;
+	var oT;
 	var knt;
 	var j;
 
+	tauv = reinterpret( tau, 0 );
+	oT = offsetTau * 2;
+
 	if ( N <= 0 ) {
-		tau[ offsetTau ] = 0.0;
-		tau[ offsetTau + 1 ] = 0.0;
+		tauv[ oT ] = 0.0;
+		tauv[ oT + 1 ] = 0.0;
 		return;
 	}
 
+	av = reinterpret( alpha, 0 );
+	oA = offsetAlpha * 2;
+
 	xnorm = dznrm2( N - 1, x, strideX, offsetX );
-	alphr = alpha[ offsetAlpha ];
-	alphi = alpha[ offsetAlpha + 1 ];
+	alphr = av[ oA ];
+	alphi = av[ oA + 1 ];
 
 	if ( xnorm === 0.0 && alphi === 0.0 ) {
 		// H = I
-		tau[ offsetTau ] = 0.0;
-		tau[ offsetTau + 1 ] = 0.0;
+		tauv[ oT ] = 0.0;
+		tauv[ oT + 1 ] = 0.0;
 	} else {
 		// General case
 		// Fortran SIGN(A,B) returns |A|*sign(B); when B=0, result is +|A|.
@@ -102,14 +110,14 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 
 			// New BETA is at most 1, at least SAFMIN
 			xnorm = dznrm2( N - 1, x, strideX, offsetX );
-			alpha[ offsetAlpha ] = alphr;
-			alpha[ offsetAlpha + 1 ] = alphi;
+			av[ oA ] = alphr;
+			av[ oA + 1 ] = alphi;
 			// Fortran SIGN(A,B) returns |A|*sign(B); when B=0, result is +|A|.
 		// Math.sign(0) returns 0, so default to 1.0 for alphr=0.
 		beta = -( Math.sign( alphr ) || 1.0 ) * dlapy3( alphr, alphi, xnorm );
 		}
-		tau[ offsetTau ] = ( beta - alphr ) / beta;
-		tau[ offsetTau + 1 ] = -alphi / beta;
+		tauv[ oT ] = ( beta - alphr ) / beta;
+		tauv[ oT + 1 ] = -alphi / beta;
 
 		// alpha = 1.0 / (alpha - beta)
 		// Use cmplx.div for ZLADIV( DCMPLX(ONE), ALPHA - BETA )
@@ -126,8 +134,8 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		for ( j = 0; j < knt; j++ ) {
 			beta = beta * safmin;
 		}
-		alpha[ offsetAlpha ] = beta;
-		alpha[ offsetAlpha + 1 ] = 0.0;
+		av[ oA ] = beta;
+		av[ oA + 1 ] = 0.0;
 	}
 }
 

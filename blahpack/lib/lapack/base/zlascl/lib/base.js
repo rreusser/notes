@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 
 
@@ -29,13 +30,6 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 * Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow
 * carefully via iterative scaling.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element (i,j) is at offset + 2*(i*strideA1 + j*strideA2).
-*
-* Supports matrix types: 'G' (general), 'L' (lower triangular),
-* 'U' (upper triangular), 'H' (upper Hessenberg),
-* 'B', 'Q', 'Z' (banded).
-*
 * @private
 * @param {string} type - matrix type ('G','L','U','H','B','Q','Z')
 * @param {integer} kl - lower bandwidth (for banded types)
@@ -44,10 +38,10 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 * @param {number} cto - scale numerator
 * @param {NonNegativeInteger} M - rows
 * @param {NonNegativeInteger} N - columns
-* @param {Float64Array} A - complex matrix (interleaved)
-* @param {integer} strideA1 - first dimension stride
-* @param {integer} strideA2 - second dimension stride
-* @param {NonNegativeInteger} offsetA - starting index for A
+* @param {Complex128Array} A - complex matrix
+* @param {integer} strideA1 - first dimension stride (in complex elements)
+* @param {integer} strideA2 - second dimension stride (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
 * @returns {integer} 0 on success
 */
 function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
@@ -60,8 +54,10 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 	var done;
 	var itype;
 	var mul;
+	var Av;
 	var sa1;
 	var sa2;
+	var oA;
 	var ai;
 	var k1;
 	var k2;
@@ -102,9 +98,11 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 	smlnum = dlamch( 'S' );
 	bignum = 1.0 / smlnum;
 
-	// Matrix strides in complex elements, multiply by 2
+	// Get Float64 view and convert strides/offset
+	Av = reinterpret( A, 0 );
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 
 	cfromc = cfrom;
 	ctoc = cto;
@@ -145,18 +143,18 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			// Full matrix
 			for ( j = 0; j < N; j++ ) {
 				for ( i = 0; i < M; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
-					A[ ai ] *= mul;
-					A[ ai + 1 ] *= mul;
+					ai = oA + i * sa1 + j * sa2;
+					Av[ ai ] *= mul;
+					Av[ ai + 1 ] *= mul;
 				}
 			}
 		} else if ( itype === 1 ) {
 			// Lower triangular
 			for ( j = 0; j < N; j++ ) {
 				for ( i = j; i < M; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
-					A[ ai ] *= mul;
-					A[ ai + 1 ] *= mul;
+					ai = oA + i * sa1 + j * sa2;
+					Av[ ai ] *= mul;
+					Av[ ai + 1 ] *= mul;
 				}
 			}
 		} else if ( itype === 2 ) {
@@ -164,9 +162,9 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMax = Math.min( j + 1, M );
 				for ( i = 0; i < iMax; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
-					A[ ai ] *= mul;
-					A[ ai + 1 ] *= mul;
+					ai = oA + i * sa1 + j * sa2;
+					Av[ ai ] *= mul;
+					Av[ ai + 1 ] *= mul;
 				}
 			}
 		} else if ( itype === 3 ) {
@@ -174,9 +172,9 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMax = Math.min( j + 2, M );
 				for ( i = 0; i < iMax; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
-					A[ ai ] *= mul;
-					A[ ai + 1 ] *= mul;
+					ai = oA + i * sa1 + j * sa2;
+					Av[ ai ] *= mul;
+					Av[ ai + 1 ] *= mul;
 				}
 			}
 		} else if ( itype === 4 ) {
@@ -186,9 +184,9 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMax = Math.min( k3, k4 - j - 1 );
 				for ( i = 0; i < iMax; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
-					A[ ai ] *= mul;
-					A[ ai + 1 ] *= mul;
+					ai = oA + i * sa1 + j * sa2;
+					Av[ ai ] *= mul;
+					Av[ ai + 1 ] *= mul;
 				}
 			}
 		} else if ( itype === 5 ) {
@@ -198,9 +196,9 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMin = Math.max( k1 - j - 2, 0 );
 				for ( i = iMin; i < k3; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
-					A[ ai ] *= mul;
-					A[ ai + 1 ] *= mul;
+					ai = oA + i * sa1 + j * sa2;
+					Av[ ai ] *= mul;
+					Av[ ai + 1 ] *= mul;
 				}
 			}
 		} else if ( itype === 6 ) {
@@ -213,9 +211,9 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 				iMin = Math.max( k1 - j - 2, k2 - 1 );
 				iMax = Math.min( k3, k4 - j - 1 );
 				for ( i = iMin; i < iMax; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
-					A[ ai ] *= mul;
-					A[ ai + 1 ] *= mul;
+					ai = oA + i * sa1 + j * sa2;
+					Av[ ai ] *= mul;
+					Av[ ai + 1 ] *= mul;
 				}
 			}
 		}

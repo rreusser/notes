@@ -69,8 +69,7 @@ function sign( a, b ) {
 * ## Notes
 *
 * -   D and E are real arrays containing diagonal and off-diagonal elements.
-* -   VT, U, C are complex matrices stored as interleaved Float64Arrays.
-* -   Strides for VT, U, C are in complex elements (each occupying 2 Float64 slots).
+* -   VT, U, C are Complex128Arrays. Strides and offsets are in complex elements.
 * -   RWORK is a real workspace of length at least max(1, 4*N-4) when NCVT=NRU=NCC=0,
 *     or max(1, 4*N) otherwise.
 *
@@ -86,18 +85,18 @@ function sign( a, b ) {
 * @param {Float64Array} e - off-diagonal elements (length N-1), real
 * @param {integer} strideE - stride for `e`
 * @param {NonNegativeInteger} offsetE - starting index for `e`
-* @param {Float64Array} VT - right singular vectors (complex, interleaved)
+* @param {Complex128Array} VT - right singular vectors
 * @param {integer} strideVT1 - stride of first dimension of VT (complex elements)
 * @param {integer} strideVT2 - stride of second dimension of VT (complex elements)
-* @param {NonNegativeInteger} offsetVT - starting index for VT
-* @param {Float64Array} U - left singular vectors (complex, interleaved)
+* @param {NonNegativeInteger} offsetVT - starting index for VT (complex elements)
+* @param {Complex128Array} U - left singular vectors
 * @param {integer} strideU1 - stride of first dimension of U (complex elements)
 * @param {integer} strideU2 - stride of second dimension of U (complex elements)
-* @param {NonNegativeInteger} offsetU - starting index for U
-* @param {Float64Array} C - matrix C (complex, interleaved)
+* @param {NonNegativeInteger} offsetU - starting index for U (complex elements)
+* @param {Complex128Array} C - matrix C
 * @param {integer} strideC1 - stride of first dimension of C (complex elements)
 * @param {integer} strideC2 - stride of second dimension of C (complex elements)
-* @param {NonNegativeInteger} offsetC - starting index for C
+* @param {NonNegativeInteger} offsetC - starting index for C (complex elements)
 * @param {Float64Array} RWORK - real workspace array
 * @param {integer} strideRWORK - stride for RWORK
 * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
@@ -219,7 +218,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 			zlasr( 'R', 'V', 'F', nru, N,
 				RWORK, strideRWORK, offsetRWORK,
 				RWORK, strideRWORK, offsetRWORK + ( nm1 ) * strideRWORK,
-				U, 2 * strideU1, 2 * strideU2, offsetU
+				U, strideU1, strideU2, offsetU
 			);
 		}
 		// If NCC > 0, apply rotations to C from the left
@@ -228,7 +227,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 			zlasr( 'L', 'V', 'F', N, ncc,
 				RWORK, strideRWORK, offsetRWORK,
 				RWORK, strideRWORK, offsetRWORK + ( nm1 ) * strideRWORK,
-				C, 2 * strideC1, 2 * strideC2, offsetC
+				C, strideC1, strideC2, offsetC
 			);
 		}
 	}
@@ -369,8 +368,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				// ZDROT(NCVT, VT(M-1,1), LDVT, VT(M,1), LDVT, COSR, SINR)
 				// In Fortran 1-based: M-1 and M are rows. In 0-based: m-1 and m
 				zdrot( ncvt,
-					VT, strideVT2, offsetVT + 2 * ( m - 1 ) * strideVT1,
-					VT, strideVT2, offsetVT + 2 * m * strideVT1,
+					VT, strideVT2, offsetVT + ( m - 1 ) * strideVT1,
+					VT, strideVT2, offsetVT + m * strideVT1,
 					cosr, sinr
 				);
 			}
@@ -378,16 +377,16 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				// ZDROT(NRU, U(1,M-1), 1, U(1,M), 1, COSL, SINL)
 				// Columns M-1 and M (0-based: m-1 and m), step through rows with stride 1
 				zdrot( nru,
-					U, strideU1, offsetU + 2 * ( m - 1 ) * strideU2,
-					U, strideU1, offsetU + 2 * m * strideU2,
+					U, strideU1, offsetU + ( m - 1 ) * strideU2,
+					U, strideU1, offsetU + m * strideU2,
 					cosl, sinl
 				);
 			}
 			if ( ncc > 0 ) {
 				// ZDROT(NCC, C(M-1,1), LDC, C(M,1), LDC, COSL, SINL)
 				zdrot( ncc,
-					C, strideC2, offsetC + 2 * ( m - 1 ) * strideC1,
-					C, strideC2, offsetC + 2 * m * strideC1,
+					C, strideC2, offsetC + ( m - 1 ) * strideC1,
+					C, strideC2, offsetC + m * strideC1,
 					cosl, sinl
 				);
 			}
@@ -524,7 +523,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'L', 'V', 'F', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
-						VT, 2 * strideVT1, 2 * strideVT2, offsetVT + 2 * ll * strideVT1
+						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {
@@ -579,7 +578,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'L', 'V', 'B', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
-						VT, 2 * strideVT1, 2 * strideVT2, offsetVT + 2 * ll * strideVT1
+						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {
@@ -645,7 +644,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'L', 'V', 'F', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
-						VT, 2 * strideVT1, 2 * strideVT2, offsetVT + 2 * ll * strideVT1
+						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {
@@ -711,7 +710,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'L', 'V', 'B', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
-						VT, 2 * strideVT1, 2 * strideVT2, offsetVT + 2 * ll * strideVT1
+						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {

@@ -20,7 +20,7 @@
 
 // MODULES //
 
-var float64view = require( '../../../../float64view.js' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 
 // MAIN //
 
@@ -48,7 +48,6 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	var noconj;
 	var nounit;
 	var upper;
-	var tmp;
 	var sa1;
 	var sa2;
 	var sx;
@@ -77,8 +76,8 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	nounit = ( diag === 'N' || diag === 'n' );
 
 	// Get Float64Array views and convert offsets
-	tmp = float64view( A, offsetA ); Av = tmp[ 0 ]; oA = tmp[ 1 ];
-	tmp = float64view( x, offsetX ); xv = tmp[ 0 ]; oX = tmp[ 1 ];
+	Av = reinterpret( A, 0 ); oA = offsetA * 2;
+	xv = reinterpret( x, 0 ); oX = offsetX * 2;
 
 	// Convert strides from complex-element units to double units
 	sx = strideX * 2;

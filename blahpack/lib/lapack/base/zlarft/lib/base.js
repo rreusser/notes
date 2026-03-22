@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
 var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var ztrmv = require( '../../../../blas/base/ztrmv/lib/base.js' );
@@ -37,9 +38,6 @@ var ONE = new Float64Array( [ 1.0, 0.0 ] );
 * If DIRECT = 'F', H = H(1) H(2) ... H(k) and T is upper triangular.
 * If DIRECT = 'B', H = H(k) ... H(2) H(1) and T is lower triangular.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Strides are in complex-element units.
-*
 * Supports both STOREV='C' (columnwise) and STOREV='R' (rowwise).
 *
 * @private
@@ -47,25 +45,29 @@ var ONE = new Float64Array( [ 1.0, 0.0 ] );
 * @param {string} storev - 'C' for columnwise, 'R' for rowwise
 * @param {NonNegativeInteger} N - order of the block reflector
 * @param {NonNegativeInteger} K - number of elementary reflectors
-* @param {Float64Array} V - matrix of reflector vectors (interleaved complex)
+* @param {Complex128Array} V - matrix of reflector vectors
 * @param {integer} strideV1 - stride of first dim of V (complex elements)
 * @param {integer} strideV2 - stride of second dim of V (complex elements)
-* @param {NonNegativeInteger} offsetV - starting index for V
-* @param {Float64Array} TAU - array of scalar factors (interleaved complex)
+* @param {NonNegativeInteger} offsetV - starting index for V (in complex elements)
+* @param {Complex128Array} TAU - array of scalar factors
 * @param {integer} strideTAU - stride for TAU (in complex elements)
-* @param {NonNegativeInteger} offsetTAU - starting index for TAU
-* @param {Float64Array} T - output triangular matrix (interleaved complex)
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (in complex elements)
+* @param {Complex128Array} T - output triangular matrix
 * @param {integer} strideT1 - stride of first dim of T (complex elements)
 * @param {integer} strideT2 - stride of second dim of T (complex elements)
-* @param {NonNegativeInteger} offsetT - starting index for T
+* @param {NonNegativeInteger} offsetT - starting index for T (in complex elements)
 */
 function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT ) { // eslint-disable-line max-len, max-params
 	var prevlastv;
 	var negTauI;
 	var negTauR;
+	var negTau;
 	var lastv;
 	var tauR;
 	var tauI;
+	var TAUv;
+	var Vv;
+	var Tv;
 	var vr;
 	var vi;
 	var sv1;
@@ -73,9 +75,11 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 	var st1;
 	var st2;
 	var stau;
+	var oV;
+	var oTAU;
+	var oT;
 	var it;
 	var iv;
-	var jt;
 	var i;
 	var j;
 	var jj;
@@ -84,26 +88,34 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 		return;
 	}
 
-	// Convert strides to double units
+	// Get Float64 views for element access
+	Vv = reinterpret( V, 0 );
+	TAUv = reinterpret( TAU, 0 );
+	Tv = reinterpret( T, 0 );
+
+	// Convert strides and offsets to Float64 units
 	sv1 = strideV1 * 2;
 	sv2 = strideV2 * 2;
 	st1 = strideT1 * 2;
 	st2 = strideT2 * 2;
 	stau = strideTAU * 2;
+	oV = offsetV * 2;
+	oTAU = offsetTAU * 2;
+	oT = offsetT * 2;
 
 	if ( ( direct === 'F' || direct === 'f' ) ) {
 		prevlastv = N;
 		for ( i = 0; i < K; i++ ) {
 			prevlastv = Math.max( prevlastv, i );
-			tauR = TAU[ offsetTAU + i * stau ];
-			tauI = TAU[ offsetTAU + i * stau + 1 ];
+			tauR = TAUv[ oTAU + i * stau ];
+			tauI = TAUv[ oTAU + i * stau + 1 ];
 
 			if ( tauR === 0.0 && tauI === 0.0 ) {
 				// H(i) = I: set T(:,i) column to zero
 				for ( j = 0; j <= i; j++ ) {
-					it = offsetT + j * st1 + i * st2;
-					T[ it ] = 0.0;
-					T[ it + 1 ] = 0.0;
+					it = oT + j * st1 + i * st2;
+					Tv[ it ] = 0.0;
+					Tv[ it + 1 ] = 0.0;
 				}
 			} else {
 				// General case for columnwise storage
@@ -111,8 +123,8 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					// Skip trailing zeros in V(:,i)
 					lastv = N;
 					for ( jj = N - 1; jj > i; jj-- ) {
-						iv = offsetV + jj * sv1 + i * sv2;
-						if ( V[ iv ] !== 0.0 || V[ iv + 1 ] !== 0.0 ) {
+						iv = oV + jj * sv1 + i * sv2;
+						if ( Vv[ iv ] !== 0.0 || Vv[ iv + 1 ] !== 0.0 ) {
 							break;
 						}
 						lastv = jj;
@@ -122,32 +134,32 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					negTauR = -tauR;
 					negTauI = -tauI;
 					for ( j = 0; j < i; j++ ) {
-						iv = offsetV + i * sv1 + j * sv2;
-						vr = V[ iv ];
-						vi = -V[ iv + 1 ]; // conjugate
+						iv = oV + i * sv1 + j * sv2;
+						vr = Vv[ iv ];
+						vi = -Vv[ iv + 1 ]; // conjugate
 						// -tau * conj(V(i,j))
-						it = offsetT + j * st1 + i * st2;
-						T[ it ] = negTauR * vr - negTauI * vi;
-						T[ it + 1 ] = negTauR * vi + negTauI * vr;
+						it = oT + j * st1 + i * st2;
+						Tv[ it ] = negTauR * vr - negTauI * vi;
+						Tv[ it + 1 ] = negTauR * vi + negTauI * vr;
 					}
 					jj = Math.min( lastv, prevlastv );
 
 					// T(0:i-1, i) += -tau(i) * V(i+1:jj-1, 0:i-1)^H * V(i+1:jj-1, i)
 					if ( jj - i - 1 > 0 ) {
-						var negTau = new Float64Array( [ negTauR, negTauI ] );
+						negTau = new Float64Array( [ negTauR, negTauI ] );
 						zgemv( 'C', jj - i - 1, i, negTau,
-							V, strideV1, strideV2, offsetV + ( i + 1 ) * sv1,
-							V, strideV1, offsetV + ( i + 1 ) * sv1 + i * sv2,
+							V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV1,
+							V, strideV1, offsetV + ( i + 1 ) * strideV1 + i * strideV2,
 							ONE,
-							T, strideT1, offsetT + i * st2 );
+							T, strideT1, offsetT + i * strideT2 );
 					}
 				} else {
 					// Row-wise storage: V(i,:) holds reflector i
 					// Skip trailing zeros in V(i,:)
 					lastv = N;
 					for ( jj = N - 1; jj > i; jj-- ) {
-						iv = offsetV + i * sv1 + jj * sv2;
-						if ( V[ iv ] !== 0.0 || V[ iv + 1 ] !== 0.0 ) {
+						iv = oV + i * sv1 + jj * sv2;
+						if ( Vv[ iv ] !== 0.0 || Vv[ iv + 1 ] !== 0.0 ) {
 							break;
 						}
 						lastv = jj;
@@ -157,12 +169,12 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					negTauR = -tauR;
 					negTauI = -tauI;
 					for ( j = 0; j < i; j++ ) {
-						iv = offsetV + j * sv1 + i * sv2;
-						vr = V[ iv ];
-						vi = V[ iv + 1 ];
-						it = offsetT + j * st1 + i * st2;
-						T[ it ] = negTauR * vr - negTauI * vi;
-						T[ it + 1 ] = negTauR * vi + negTauI * vr;
+						iv = oV + j * sv1 + i * sv2;
+						vr = Vv[ iv ];
+						vi = Vv[ iv + 1 ];
+						it = oT + j * st1 + i * st2;
+						Tv[ it ] = negTauR * vr - negTauI * vi;
+						Tv[ it + 1 ] = negTauR * vi + negTauI * vr;
 					}
 					jj = Math.min( lastv, prevlastv );
 
@@ -170,21 +182,21 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					if ( jj - i - 1 > 0 ) {
 						var negTauR2 = new Float64Array( [ negTauR, negTauI ] ); // eslint-disable-line no-var
 						zgemm( 'N', 'C', i, 1, jj - i - 1, negTauR2,
-							V, strideV1, strideV2, offsetV + ( i + 1 ) * sv2,
-							V, strideV1, strideV2, offsetV + i * sv1 + ( i + 1 ) * sv2,
-							ONE, T, strideT1, strideT2, offsetT + i * st2 );
+							V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV2,
+							V, strideV1, strideV2, offsetV + i * strideV1 + ( i + 1 ) * strideV2,
+							ONE, T, strideT1, strideT2, offsetT + i * strideT2 );
 					}
 				}
 
 				// T(0:i-1, i) := T(0:i-1, 0:i-1) * T(0:i-1, i)
 				if ( i > 0 ) {
 					ztrmv( 'U', 'N', 'N', i, T, strideT1, strideT2, offsetT,
-						T, strideT1, offsetT + i * st2 );
+						T, strideT1, offsetT + i * strideT2 );
 				}
 				// T(i, i) = tau(i)
-				it = offsetT + i * st1 + i * st2;
-				T[ it ] = tauR;
-				T[ it + 1 ] = tauI;
+				it = oT + i * st1 + i * st2;
+				Tv[ it ] = tauR;
+				Tv[ it + 1 ] = tauI;
 
 				if ( i > 0 ) {
 					prevlastv = Math.max( prevlastv, lastv );
@@ -197,15 +209,15 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 		// Backward: T is lower triangular
 		prevlastv = 0;
 		for ( i = K - 1; i >= 0; i-- ) {
-			tauR = TAU[ offsetTAU + i * stau ];
-			tauI = TAU[ offsetTAU + i * stau + 1 ];
+			tauR = TAUv[ oTAU + i * stau ];
+			tauI = TAUv[ oTAU + i * stau + 1 ];
 
 			if ( tauR === 0.0 && tauI === 0.0 ) {
 				// H(i) = I
 				for ( j = i; j < K; j++ ) {
-					it = offsetT + j * st1 + i * st2;
-					T[ it ] = 0.0;
-					T[ it + 1 ] = 0.0;
+					it = oT + j * st1 + i * st2;
+					Tv[ it ] = 0.0;
+					Tv[ it + 1 ] = 0.0;
 				}
 			} else {
 				if ( i < K - 1 ) {
@@ -213,8 +225,8 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						// Skip leading zeros in V(:,i)
 						lastv = 0;
 						for ( jj = 0; jj < i; jj++ ) {
-							iv = offsetV + jj * sv1 + i * sv2;
-							if ( V[ iv ] !== 0.0 || V[ iv + 1 ] !== 0.0 ) {
+							iv = oV + jj * sv1 + i * sv2;
+							if ( Vv[ iv ] !== 0.0 || Vv[ iv + 1 ] !== 0.0 ) {
 								break;
 							}
 							lastv = jj + 1;
@@ -224,31 +236,31 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						negTauR = -tauR;
 						negTauI = -tauI;
 						for ( j = i + 1; j < K; j++ ) {
-							iv = offsetV + ( N - K + i ) * sv1 + j * sv2;
-							vr = V[ iv ];
-							vi = -V[ iv + 1 ]; // conjugate
-							it = offsetT + j * st1 + i * st2;
-							T[ it ] = negTauR * vr - negTauI * vi;
-							T[ it + 1 ] = negTauR * vi + negTauI * vr;
+							iv = oV + ( N - K + i ) * sv1 + j * sv2;
+							vr = Vv[ iv ];
+							vi = -Vv[ iv + 1 ]; // conjugate
+							it = oT + j * st1 + i * st2;
+							Tv[ it ] = negTauR * vr - negTauI * vi;
+							Tv[ it + 1 ] = negTauR * vi + negTauI * vr;
 						}
 						jj = Math.max( lastv, prevlastv );
 
 						// T(i+1:K-1, i) += -tau(i) * V(jj:N-K+i-1, i+1:K-1)^H * V(jj:N-K+i-1, i)
 						if ( N - K + i - jj > 0 ) {
-							var negTauB = new Float64Array( [ negTauR, negTauI ] );
+							var negTauB = new Float64Array( [ negTauR, negTauI ] ); // eslint-disable-line no-var
 							zgemv( 'C', N - K + i - jj, K - i - 1, negTauB,
-								V, strideV1, strideV2, offsetV + jj * sv1 + ( i + 1 ) * sv2,
-								V, strideV1, offsetV + jj * sv1 + i * sv2,
+								V, strideV1, strideV2, offsetV + jj * strideV1 + ( i + 1 ) * strideV2,
+								V, strideV1, offsetV + jj * strideV1 + i * strideV2,
 								ONE,
-								T, strideT1, offsetT + ( i + 1 ) * st1 + i * st2 );
+								T, strideT1, offsetT + ( i + 1 ) * strideT1 + i * strideT2 );
 						}
 					} else {
 						// Row-wise storage: V(i,:) holds reflector i
 						// Skip leading zeros in V(i,:)
 						lastv = 0;
 						for ( jj = 0; jj < i; jj++ ) {
-							iv = offsetV + i * sv1 + jj * sv2;
-							if ( V[ iv ] !== 0.0 || V[ iv + 1 ] !== 0.0 ) {
+							iv = oV + i * sv1 + jj * sv2;
+							if ( Vv[ iv ] !== 0.0 || Vv[ iv + 1 ] !== 0.0 ) {
 								break;
 							}
 							lastv = jj + 1;
@@ -258,12 +270,12 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						negTauR = -tauR;
 						negTauI = -tauI;
 						for ( j = i + 1; j < K; j++ ) {
-							iv = offsetV + j * sv1 + ( N - K + i ) * sv2;
-							vr = V[ iv ];
-							vi = V[ iv + 1 ];
-							it = offsetT + j * st1 + i * st2;
-							T[ it ] = negTauR * vr - negTauI * vi;
-							T[ it + 1 ] = negTauR * vi + negTauI * vr;
+							iv = oV + j * sv1 + ( N - K + i ) * sv2;
+							vr = Vv[ iv ];
+							vi = Vv[ iv + 1 ];
+							it = oT + j * st1 + i * st2;
+							Tv[ it ] = negTauR * vr - negTauI * vi;
+							Tv[ it + 1 ] = negTauR * vi + negTauI * vr;
 						}
 						jj = Math.max( lastv, prevlastv );
 
@@ -271,25 +283,25 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						if ( N - K + i - jj > 0 ) {
 							var negTauB2 = new Float64Array( [ negTauR, negTauI ] ); // eslint-disable-line no-var
 							zgemm( 'N', 'C', K - i - 1, 1, N - K + i - jj, negTauB2,
-								V, strideV1, strideV2, offsetV + ( i + 1 ) * sv1 + jj * sv2,
-								V, strideV1, strideV2, offsetV + i * sv1 + jj * sv2,
-								ONE, T, strideT1, strideT2, offsetT + ( i + 1 ) * st1 + i * st2 );
+								V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV1 + jj * strideV2,
+								V, strideV1, strideV2, offsetV + i * strideV1 + jj * strideV2,
+								ONE, T, strideT1, strideT2, offsetT + ( i + 1 ) * strideT1 + i * strideT2 );
 						}
 					}
 
 					// T(i+1:K-1, i) := T(i+1:K-1, i+1:K-1) * T(i+1:K-1, i)
 					ztrmv( 'L', 'N', 'N', K - i - 1, T, strideT1, strideT2,
-						offsetT + ( i + 1 ) * st1 + ( i + 1 ) * st2,
-						T, strideT1, offsetT + ( i + 1 ) * st1 + i * st2 );
+						offsetT + ( i + 1 ) * strideT1 + ( i + 1 ) * strideT2,
+						T, strideT1, offsetT + ( i + 1 ) * strideT1 + i * strideT2 );
 					if ( i > 0 ) {
 						prevlastv = Math.min( prevlastv, lastv );
 					} else {
 						prevlastv = lastv;
 					}
 				}
-				it = offsetT + i * st1 + i * st2;
-				T[ it ] = tauR;
-				T[ it + 1 ] = tauI;
+				it = oT + i * st1 + i * st2;
+				Tv[ it ] = tauR;
+				Tv[ it + 1 ] = tauI;
 			}
 		}
 	}

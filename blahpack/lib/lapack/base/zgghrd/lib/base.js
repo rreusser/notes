@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlartg = require( '../../zlartg/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
 var zrot = require( '../../zrot/lib/base.js' );
@@ -32,12 +33,7 @@ var zrot = require( '../../zrot/lib/base.js' );
 * where H is upper Hessenberg, T is upper triangular, and Q and Z are
 * unitary.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element (i, j) has real part at `offset + i*stride1 + j*stride2` and
-* imaginary part at `offset + i*stride1 + j*stride2 + 1`.
-*
-* For complex matrices, stride1 and stride2 are in units of doubles.
-* Column-major with LDA rows: stride1 = 2, stride2 = 2*LDA.
+* A, B, Q, Z are Complex128Arrays. Strides and offsets are in complex elements.
 *
 * @private
 * @param {string} compq - 'N': do not compute Q; 'I': initialize Q to identity and compute; 'V': accumulate into Q
@@ -45,22 +41,22 @@ var zrot = require( '../../zrot/lib/base.js' );
 * @param {NonNegativeInteger} N - order of the matrices A and B
 * @param {integer} ilo - ilo (1-based)
 * @param {integer} ihi - ihi (1-based)
-* @param {Float64Array} A - input/output matrix A (interleaved complex)
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} B - input/output matrix B (interleaved complex)
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {Float64Array} Q - input/output matrix Q (interleaved complex)
-* @param {integer} strideQ1 - stride of the first dimension of `Q`
-* @param {integer} strideQ2 - stride of the second dimension of `Q`
-* @param {NonNegativeInteger} offsetQ - starting index for `Q`
-* @param {Float64Array} Z - input/output matrix Z (interleaved complex)
-* @param {integer} strideZ1 - stride of the first dimension of `Z`
-* @param {integer} strideZ2 - stride of the second dimension of `Z`
-* @param {NonNegativeInteger} offsetZ - starting index for `Z`
+* @param {Complex128Array} A - input/output matrix A
+* @param {integer} strideA1 - stride of the first dimension of `A` (complex elements)
+* @param {integer} strideA2 - stride of the second dimension of `A` (complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for `A` (complex elements)
+* @param {Complex128Array} B - input/output matrix B
+* @param {integer} strideB1 - stride of the first dimension of `B` (complex elements)
+* @param {integer} strideB2 - stride of the second dimension of `B` (complex elements)
+* @param {NonNegativeInteger} offsetB - starting index for `B` (complex elements)
+* @param {Complex128Array} Q - input/output matrix Q
+* @param {integer} strideQ1 - stride of the first dimension of `Q` (complex elements)
+* @param {integer} strideQ2 - stride of the second dimension of `Q` (complex elements)
+* @param {NonNegativeInteger} offsetQ - starting index for `Q` (complex elements)
+* @param {Complex128Array} Z - input/output matrix Z
+* @param {integer} strideZ1 - stride of the first dimension of `Z` (complex elements)
+* @param {integer} strideZ2 - stride of the second dimension of `Z` (complex elements)
+* @param {NonNegativeInteger} offsetZ - starting index for `Z` (complex elements)
 * @returns {integer} status code (0 = success)
 */
 function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ ) { // eslint-disable-line max-len, max-params
@@ -73,20 +69,14 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	var ilq;
 	var ilz;
 	var out;
+	var Av;
+	var Bv;
 	var sa1;
 	var sa2;
 	var sb1;
 	var sb2;
-	var sq1;
-	var sq2;
-	var sz1;
-	var sz2;
-	var ra1; // zrot stride for A row-step (in complex elements)
-	var ra2; // zrot stride for A col-step (in complex elements)
-	var rb1;
-	var rb2;
-	var rq1;
-	var rz1;
+	var oA;
+	var oB;
 	var idx;
 	var sr;
 	var si;
@@ -135,32 +125,27 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 		return -3;
 	}
 
-	sa1 = strideA1;
-	sa2 = strideA2;
-	sb1 = strideB1;
-	sb2 = strideB2;
-	sq1 = strideQ1;
-	sq2 = strideQ2;
-	sz1 = strideZ1;
-	sz2 = strideZ2;
+	// Get Float64Array views for direct element access
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	// zrot strides in complex elements (divide doubles-stride by 2)
-	ra1 = sa1 / 2;
-	ra2 = sa2 / 2;
-	rb1 = sb1 / 2;
-	rb2 = sb2 / 2;
-	rq1 = sq1 / 2;
-	rz1 = sz1 / 2;
+	// Convert strides/offsets to Float64 units for element access
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	sb1 = strideB1 * 2;
+	sb2 = strideB2 * 2;
+	oA = offsetA * 2;
+	oB = offsetB * 2;
 
 	// Initialize Q to identity if requested
 	alpha = new Float64Array( [ 0.0, 0.0 ] );
 	beta = new Float64Array( [ 1.0, 0.0 ] );
 	if ( icompq === 3 ) {
-		zlaset( 'Full', N, N, alpha, beta, Q, sq1, sq2, offsetQ );
+		zlaset( 'Full', N, N, alpha, beta, Q, strideQ1, strideQ2, offsetQ );
 	}
 	// Initialize Z to identity if requested
 	if ( icompz === 3 ) {
-		zlaset( 'Full', N, N, alpha, beta, Z, sz1, sz2, offsetZ );
+		zlaset( 'Full', N, N, alpha, beta, Z, strideZ1, strideZ2, offsetZ );
 	}
 
 	// Quick return if N <= 1
@@ -172,9 +157,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	// Fortran: DO JCOL = 1, N-1; DO JROW = JCOL+1, N; B(JROW,JCOL)=0
 	for ( jcol = 0; jcol < N - 1; jcol++ ) {
 		for ( jrow = jcol + 1; jrow < N; jrow++ ) {
-			idx = offsetB + jrow * sb1 + jcol * sb2;
-			B[ idx ] = 0.0;
-			B[ idx + 1 ] = 0.0;
+			idx = oB + jrow * sb1 + jcol * sb2;
+			Bv[ idx ] = 0.0;
+			Bv[ idx + 1 ] = 0.0;
 		}
 	}
 
@@ -197,13 +182,13 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// Fortran: CTEMP = A(JROW-1, JCOL)
 			// JS 0-based: A(jrow-1, jcol)
 			// -------------------------------------------------------
-			idx = offsetA + ( jrow - 1 ) * sa1 + jcol * sa2;
-			f[ 0 ] = A[ idx ];
-			f[ 1 ] = A[ idx + 1 ];
+			idx = oA + ( jrow - 1 ) * sa1 + jcol * sa2;
+			f[ 0 ] = Av[ idx ];
+			f[ 1 ] = Av[ idx + 1 ];
 
-			idx = offsetA + jrow * sa1 + jcol * sa2;
-			g[ 0 ] = A[ idx ];
-			g[ 1 ] = A[ idx + 1 ];
+			idx = oA + jrow * sa1 + jcol * sa2;
+			g[ 0 ] = Av[ idx ];
+			g[ 1 ] = Av[ idx + 1 ];
 
 			zlartg( f, g, out );
 			c = out[ 0 ];
@@ -211,47 +196,47 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			si = out[ 2 ];
 
 			// A(JROW-1, JCOL) = R (the result from zlartg)
-			idx = offsetA + ( jrow - 1 ) * sa1 + jcol * sa2;
-			A[ idx ] = out[ 3 ];
-			A[ idx + 1 ] = out[ 4 ];
+			idx = oA + ( jrow - 1 ) * sa1 + jcol * sa2;
+			Av[ idx ] = out[ 3 ];
+			Av[ idx + 1 ] = out[ 4 ];
 
 			// A(JROW, JCOL) = 0
-			idx = offsetA + jrow * sa1 + jcol * sa2;
-			A[ idx ] = 0.0;
-			A[ idx + 1 ] = 0.0;
+			idx = oA + jrow * sa1 + jcol * sa2;
+			Av[ idx ] = 0.0;
+			Av[ idx + 1 ] = 0.0;
 
 			// Apply rotation to remaining columns of A:
 			// Fortran: CALL ZROT(N-JCOL, A(JROW-1,JCOL+1), LDA, A(JROW,JCOL+1), LDA, C, S)
-			// Iterates over columns (stride=LDA complex elements), N-JCOL elements (1-based)
+			// Iterates over columns (stride=strideA2 complex elements), N-JCOL elements (1-based)
 			s[ 0 ] = sr;
 			s[ 1 ] = si;
 			zrot(
 				N - ( jcol + 1 ),
-				A, ra2, offsetA + ( jrow - 1 ) * sa1 + ( jcol + 1 ) * sa2,
-				A, ra2, offsetA + jrow * sa1 + ( jcol + 1 ) * sa2,
+				A, strideA2, offsetA + ( jrow - 1 ) * strideA1 + ( jcol + 1 ) * strideA2,
+				A, strideA2, offsetA + jrow * strideA1 + ( jcol + 1 ) * strideA2,
 				c, s
 			);
 
 			// Apply rotation to B:
 			// Fortran: CALL ZROT(N+2-JROW, B(JROW-1,JROW-1), LDB, B(JROW,JROW-1), LDB, C, S)
-			// Iterates over columns (stride=LDB complex elements)
+			// Iterates over columns (stride=strideB2 complex elements)
 			zrot(
 				N + 1 - jrow,
-				B, rb2, offsetB + ( jrow - 1 ) * sb1 + ( jrow - 1 ) * sb2,
-				B, rb2, offsetB + jrow * sb1 + ( jrow - 1 ) * sb2,
+				B, strideB2, offsetB + ( jrow - 1 ) * strideB1 + ( jrow - 1 ) * strideB2,
+				B, strideB2, offsetB + jrow * strideB1 + ( jrow - 1 ) * strideB2,
 				c, s
 			);
 
 			// Apply conjugate rotation to Q if needed:
 			// Fortran: CALL ZROT(N, Q(1,JROW-1), 1, Q(1,JROW), 1, C, DCONJG(S))
-			// Iterates over rows (stride=1 complex element)
+			// Iterates over rows (stride=strideQ1 complex elements)
 			if ( ilq ) {
 				s[ 0 ] = sr;
 				s[ 1 ] = -si; // conjugate
 				zrot(
 					N,
-					Q, rq1, offsetQ + ( jrow - 1 ) * sq2,
-					Q, rq1, offsetQ + jrow * sq2,
+					Q, strideQ1, offsetQ + ( jrow - 1 ) * strideQ2,
+					Q, strideQ1, offsetQ + jrow * strideQ2,
 					c, s
 				);
 			}
@@ -261,13 +246,13 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// applied from the right.
 			// Fortran: CTEMP = B(JROW, JROW)
 			// -------------------------------------------------------
-			idx = offsetB + jrow * sb1 + jrow * sb2;
-			f[ 0 ] = B[ idx ];
-			f[ 1 ] = B[ idx + 1 ];
+			idx = oB + jrow * sb1 + jrow * sb2;
+			f[ 0 ] = Bv[ idx ];
+			f[ 1 ] = Bv[ idx + 1 ];
 
-			idx = offsetB + jrow * sb1 + ( jrow - 1 ) * sb2;
-			g[ 0 ] = B[ idx ];
-			g[ 1 ] = B[ idx + 1 ];
+			idx = oB + jrow * sb1 + ( jrow - 1 ) * sb2;
+			g[ 0 ] = Bv[ idx ];
+			g[ 1 ] = Bv[ idx + 1 ];
 
 			zlartg( f, g, out );
 			c = out[ 0 ];
@@ -275,45 +260,45 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			si = out[ 2 ];
 
 			// B(JROW, JROW) = R
-			idx = offsetB + jrow * sb1 + jrow * sb2;
-			B[ idx ] = out[ 3 ];
-			B[ idx + 1 ] = out[ 4 ];
+			idx = oB + jrow * sb1 + jrow * sb2;
+			Bv[ idx ] = out[ 3 ];
+			Bv[ idx + 1 ] = out[ 4 ];
 
 			// B(JROW, JROW-1) = 0
-			idx = offsetB + jrow * sb1 + ( jrow - 1 ) * sb2;
-			B[ idx ] = 0.0;
-			B[ idx + 1 ] = 0.0;
+			idx = oB + jrow * sb1 + ( jrow - 1 ) * sb2;
+			Bv[ idx ] = 0.0;
+			Bv[ idx + 1 ] = 0.0;
 
 			// Apply rotation to A from the right:
 			// Fortran: CALL ZROT(IHI, A(1,JROW), 1, A(1,JROW-1), 1, C, S)
-			// Iterates over rows (stride=1 complex element)
+			// Iterates over rows (stride=strideA1 complex elements)
 			s[ 0 ] = sr;
 			s[ 1 ] = si;
 			zrot(
 				ihi,
-				A, ra1, offsetA + jrow * sa2,
-				A, ra1, offsetA + ( jrow - 1 ) * sa2,
+				A, strideA1, offsetA + jrow * strideA2,
+				A, strideA1, offsetA + ( jrow - 1 ) * strideA2,
 				c, s
 			);
 
 			// Apply rotation to B from the right:
 			// Fortran: CALL ZROT(JROW-1, B(1,JROW), 1, B(1,JROW-1), 1, C, S)
-			// Iterates over rows (stride=1 complex element)
+			// Iterates over rows (stride=strideB1 complex elements)
 			zrot(
 				jrow,
-				B, rb1, offsetB + jrow * sb2,
-				B, rb1, offsetB + ( jrow - 1 ) * sb2,
+				B, strideB1, offsetB + jrow * strideB2,
+				B, strideB1, offsetB + ( jrow - 1 ) * strideB2,
 				c, s
 			);
 
 			// Apply rotation to Z if needed:
 			// Fortran: CALL ZROT(N, Z(1,JROW), 1, Z(1,JROW-1), 1, C, S)
-			// Iterates over rows (stride=1 complex element)
+			// Iterates over rows (stride=strideZ1 complex elements)
 			if ( ilz ) {
 				zrot(
 					N,
-					Z, rz1, offsetZ + jrow * sz2,
-					Z, rz1, offsetZ + ( jrow - 1 ) * sz2,
+					Z, strideZ1, offsetZ + jrow * strideZ2,
+					Z, strideZ1, offsetZ + ( jrow - 1 ) * strideZ2,
 					c, s
 				);
 			}

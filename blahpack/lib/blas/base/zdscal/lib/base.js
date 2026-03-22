@@ -20,7 +20,7 @@
 
 // MODULES //
 
-var float64view = require( '../../../../float64view.js' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 
 // MAIN //
 
@@ -30,13 +30,12 @@ var float64view = require( '../../../../float64view.js' );
 * @private
 * @param {PositiveInteger} N - number of complex elements
 * @param {number} da - real scalar multiplier
-* @param {(Complex128Array|Float64Array)} zx - complex input vector
+* @param {Complex128Array} zx - complex input vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements for Complex128Array, Float64 index for Float64Array)
-* @returns {(Complex128Array|Float64Array)} `zx`
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @returns {Complex128Array} `zx`
 */
 function zdscal( N, da, zx, strideX, offsetX ) {
-	var tmp;
 	var xv;
 	var sx;
 	var ix;
@@ -46,9 +45,8 @@ function zdscal( N, da, zx, strideX, offsetX ) {
 		return zx;
 	}
 
-	tmp = float64view( zx, offsetX );
-	xv = tmp[ 0 ];
-	ix = tmp[ 1 ];
+	xv = reinterpret( zx, 0 );
+	ix = offsetX * 2;
 
 	// Each complex element spans 2 doubles, so multiply stride by 2
 	sx = strideX * 2;

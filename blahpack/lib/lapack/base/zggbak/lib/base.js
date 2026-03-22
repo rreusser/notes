@@ -32,9 +32,7 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 * problem by backward transformation on the computed eigenvectors of
 * the balanced pair of matrices output by ZGGBAL.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element (i, j) has real part at `offsetV + i*strideV1 + j*strideV2` and
-* imaginary part at `offsetV + i*strideV1 + j*strideV2 + 1`.
+* V is a Complex128Array. Strides and offsets are in complex elements.
 *
 * @private
 * @param {string} job - specifies the type of backward transformation:
@@ -50,22 +48,22 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 * @param {integer} strideRSCALE - stride for RSCALE
 * @param {NonNegativeInteger} offsetRSCALE - starting index for RSCALE
 * @param {NonNegativeInteger} M - number of columns of V
-* @param {Float64Array} V - eigenvector matrix (interleaved complex, modified in-place)
-* @param {integer} strideV1 - stride of the first dimension of V (in doubles)
-* @param {integer} strideV2 - stride of the second dimension of V (in doubles)
-* @param {NonNegativeInteger} offsetV - starting index for V
+* @param {Complex128Array} V - eigenvector matrix (modified in-place)
+* @param {integer} strideV1 - stride of the first dimension of V (complex elements)
+* @param {integer} strideV2 - stride of the second dimension of V (complex elements)
+* @param {NonNegativeInteger} offsetV - starting index for V (complex elements)
 * @returns {integer} status code (0 = success)
 */
 function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV ) { // eslint-disable-line max-len, max-params
 	var rightv;
 	var leftv;
-	var rv2; // zrot/zdscal/zswap stride for column step (complex elements)
 	var sv1;
 	var sv2;
 	var sL;
 	var sR;
 	var oL;
 	var oR;
+	var oV;
 	var i;
 	var k;
 
@@ -74,7 +72,7 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 
 	sv1 = strideV1;
 	sv2 = strideV2;
-	rv2 = sv2 / 2; // complex-element stride for column traversal
+	oV = offsetV;
 	sL = strideLSCALE;
 	sR = strideRSCALE;
 	oL = offsetLSCALE;
@@ -99,14 +97,14 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 				// Fortran: DO I = ILO, IHI; CALL ZDSCAL(M, RSCALE(I), V(I,1), LDV)
 				// V(I,1) with stride LDV iterates over columns of row I
 				for ( i = ilo - 1; i <= ihi - 1; i++ ) {
-					zdscal( M, RSCALE[ oR + i * sR ], V, rv2, offsetV + i * sv1 );
+					zdscal( M, RSCALE[ oR + i * sR ], V, sv2, oV + i * sv1 );
 				}
 			}
 
 			// Scale left eigenvectors by LSCALE
 			if ( leftv ) {
 				for ( i = ilo - 1; i <= ihi - 1; i++ ) {
-					zdscal( M, LSCALE[ oL + i * sL ], V, rv2, offsetV + i * sv1 );
+					zdscal( M, LSCALE[ oL + i * sL ], V, sv2, oV + i * sv1 );
 				}
 			}
 		}
@@ -124,7 +122,7 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
 				}
 			}
 
@@ -136,7 +134,7 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
 				}
 			}
 		}
@@ -150,7 +148,7 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
 				}
 			}
 
@@ -161,7 +159,7 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
 				}
 			}
 		}

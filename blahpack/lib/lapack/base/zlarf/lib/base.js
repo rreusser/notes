@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
 var zgerc = require( '../../../../blas/base/zgerc/lib/base.js' );
 var ilazlr = require( '../../ilazlr/lib/base.js' );
@@ -40,26 +41,22 @@ var ZERO = new Float64Array( [ 0.0, 0.0 ] );
 *
 * If tau = 0, then H is taken to be the unit matrix.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Strides are in complex-element units for vectors (strideV, strideWORK)
-* and for matrix dimensions (strideC1, strideC2).
-*
 * @private
 * @param {string} side - 'L' for left, 'R' for right
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
-* @param {Float64Array} v - reflector vector (interleaved complex)
+* @param {Complex128Array} v - reflector vector
 * @param {integer} strideV - stride for v (in complex elements)
-* @param {NonNegativeInteger} offsetV - starting index for v
-* @param {Float64Array} tau - complex scalar [re, im]
-* @param {NonNegativeInteger} offsetTau - starting index for tau
-* @param {Float64Array} C - matrix (interleaved complex)
+* @param {NonNegativeInteger} offsetV - starting index for v (in complex elements)
+* @param {Complex128Array} tau - complex scalar
+* @param {NonNegativeInteger} offsetTau - starting index for tau (in complex elements)
+* @param {Complex128Array} C - matrix, modified in-place
 * @param {integer} strideC1 - stride of the first dimension of C (complex elements)
 * @param {integer} strideC2 - stride of the second dimension of C (complex elements)
-* @param {NonNegativeInteger} offsetC - starting index for C
-* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {NonNegativeInteger} offsetC - starting index for C (in complex elements)
+* @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (in complex elements)
-* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 */
 function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var applyLeft;
@@ -68,11 +65,16 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 	var lastc;
 	var tauR;
 	var tauI;
+	var tauv;
+	var vv;
 	var sv;
 	var ix;
+	var oT;
 
-	tauR = tau[ offsetTau ];
-	tauI = tau[ offsetTau + 1 ];
+	tauv = reinterpret( tau, 0 );
+	oT = offsetTau * 2;
+	tauR = tauv[ oT ];
+	tauI = tauv[ oT + 1 ];
 
 	applyLeft = ( side === 'L' || side === 'l' );
 	lastv = 0;
@@ -85,25 +87,28 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 		} else {
 			lastv = N;
 		}
+
+		vv = reinterpret( v, 0 );
+		sv = strideV * 2;
+
 		if ( strideV > 0 ) {
-			ix = offsetV + ( lastv - 1 ) * strideV * 2;
+			ix = offsetV * 2 + ( lastv - 1 ) * sv;
 		} else {
-			ix = offsetV;
+			ix = offsetV * 2;
 		}
 
 		// Look for the last non-zero element in V (working backward from lastv)
-		sv = strideV * 2;
-		while ( lastv > 0 && v[ ix ] === 0.0 && v[ ix + 1 ] === 0.0 ) {
+		while ( lastv > 0 && vv[ ix ] === 0.0 && vv[ ix + 1 ] === 0.0 ) {
 			lastv -= 1;
 			ix -= sv;
 		}
 
 		if ( applyLeft ) {
 			// Scan for the last non-zero column in C(0:lastv-1, :)
-			lastc = ilazlc( lastv, N, C, strideC1 * 2, strideC2 * 2, offsetC ) + 1;
+			lastc = ilazlc( lastv, N, C, strideC1, strideC2, offsetC ) + 1;
 		} else {
 			// Scan for the last non-zero row in C(:, 0:lastv-1)
-			lastc = ilazlr( M, lastv, C, strideC1 * 2, strideC2 * 2, offsetC ) + 1;
+			lastc = ilazlr( M, lastv, C, strideC1, strideC2, offsetC ) + 1;
 		}
 	}
 

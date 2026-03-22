@@ -20,7 +20,7 @@
 
 // MODULES //
 
-var float64view = require( '../../../../float64view.js' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 
 // MAIN //
 
@@ -34,21 +34,19 @@ var float64view = require( '../../../../float64view.js' );
 *
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {(Complex128Array|Float64Array)} zx - first complex input/output vector
+* @param {Complex128Array} zx - first complex input/output vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements for Complex128Array, Float64 index for Float64Array)
-* @param {(Complex128Array|Float64Array)} zy - second complex input/output vector
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @param {Complex128Array} zy - second complex input/output vector
 * @param {integer} strideY - stride for `zy` (in complex elements)
-* @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements)
 * @param {number} c - cosine of rotation (real)
 * @param {number} s - sine of rotation (real)
-* @returns {(Complex128Array|Float64Array)} `zx`
+* @returns {Complex128Array} `zx`
 */
 function zdrot( N, zx, strideX, offsetX, zy, strideY, offsetY, c, s ) {
 	var tempr;
 	var tempi;
-	var tmpx;
-	var tmpy;
 	var xv;
 	var yv;
 	var sx;
@@ -61,12 +59,10 @@ function zdrot( N, zx, strideX, offsetX, zy, strideY, offsetY, c, s ) {
 		return zx;
 	}
 
-	tmpx = float64view( zx, offsetX );
-	tmpy = float64view( zy, offsetY );
-	xv = tmpx[ 0 ];
-	ix = tmpx[ 1 ];
-	yv = tmpy[ 0 ];
-	iy = tmpy[ 1 ];
+	xv = reinterpret( zx, 0 );
+	yv = reinterpret( zy, 0 );
+	ix = offsetX * 2;
+	iy = offsetY * 2;
 
 	// Each complex element spans 2 doubles, so multiply stride by 2
 	sx = strideX * 2;

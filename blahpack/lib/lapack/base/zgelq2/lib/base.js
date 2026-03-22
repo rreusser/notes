@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlacgv = require( '../../zlacgv/lib/base.js' );
 var zlarfg = require( '../../zlarfg/lib/base.js' );
 var zlarf = require( '../../zlarf/lib/base.js' );
@@ -34,16 +35,16 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 * @private
 * @param {NonNegativeInteger} M - number of rows in A
 * @param {NonNegativeInteger} N - number of columns in A
-* @param {Float64Array} A - input/output matrix (interleaved complex, column-major)
-* @param {integer} strideA1 - stride of the first dimension of A
-* @param {integer} strideA2 - stride of the second dimension of A
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} TAU - output array of scalar factors (interleaved complex)
+* @param {Complex128Array} A - input/output matrix (column-major)
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @param {Complex128Array} TAU - output array of scalar factors
 * @param {integer} strideTAU - stride for TAU (in complex elements)
-* @param {NonNegativeInteger} offsetTAU - starting index for TAU
-* @param {Float64Array} WORK - workspace array (interleaved complex, length >= M)
-* @param {integer} strideWORK - stride for WORK
-* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (in complex elements)
+* @param {Complex128Array} WORK - workspace array (length >= M)
+* @param {integer} strideWORK - stride for WORK (in complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 * @returns {integer} info - 0 if successful
 */
 function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
@@ -52,59 +53,65 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	var tau_off;
 	var sa1;
 	var sa2;
+	var oA;
+	var Av;
 	var aii;
-	var xoff;
 	var K;
 	var i;
 
-	sa1 = strideA1;
-	sa2 = strideA2;
+	/* @complex-arrays A, TAU, WORK */
+
+	// Get Float64 view for direct element access
+	Av = reinterpret( A, 0 );
+
+	// Float64 strides and offsets
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
+
 	K = Math.min( M, N );
 
 	for ( i = 0; i < K; i++ ) {
-		// Index of A(i,i) in the interleaved array
-		aii = offsetA + 2 * ( i * sa1 + i * sa2 );
+		// Float64 index of A(i,i)
+		aii = oA + i * sa1 + i * sa2;
+
+		// Complex-element offset of A(i,i)
+		// caii = offsetA + i * strideA1 + i * strideA2
 
 		// Conjugate the i-th row from column i to N-1
-		// In Fortran: ZLACGV( N-I+1, A(I,I), LDA )
-		// stride along the row = sa2 (column stride)
-		zlacgv( N - i, A, sa2, aii );
+		// zlacgv accepts Complex128Array with complex-element stride/offset
+		zlacgv( N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2 );
 
-		// Index of A(i, min(i+1, N-1)) — the start of the x vector to the right of the diagonal
-		xoff = offsetA + 2 * ( i * sa1 + Math.min( i + 1, N - 1 ) * sa2 );
-
-		// tau(i) offset
-		tau_off = offsetTAU + 2 * i * strideTAU;
+		// tau(i) complex-element offset
+		tau_off = offsetTAU + i * strideTAU;
 
 		// Generate elementary reflector H(i) to annihilate A(i, i+1:N-1)
-		// zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
-		// The reflector works along the row, so stride = sa2 (column stride)
-		// zlarfg overwrites A(i,i) with beta
-		zlarfg( N - i, A, aii, A, sa2, xoff, TAU, tau_off );
+		// zlarfg accepts Complex128Array with complex-element strides/offsets
+		zlarfg( N - i, A, offsetA + i * strideA1 + i * strideA2,
+			A, strideA2, offsetA + i * strideA1 + Math.min( i + 1, N - 1 ) * strideA2,
+			TAU, tau_off );
 
 		if ( i < M - 1 ) {
-			// Save A(i,i) (which now holds beta) and set to 1 for the reflector application
-			alpha_re = A[ aii ];
-			alpha_im = A[ aii + 1 ];
-			A[ aii ] = 1.0;
-			A[ aii + 1 ] = 0.0;
+			// Save A(i,i) (which now holds beta) and set to 1
+			alpha_re = Av[ aii ];
+			alpha_im = Av[ aii + 1 ];
+			Av[ aii ] = 1.0;
+			Av[ aii + 1 ] = 0.0;
 
 			// Apply H(i) to A(i+1:M-1, i:N-1) from the right
-			// In Fortran: ZLARF( 'Right', M-I, N-I+1, A(I,I), LDA, TAU(I), A(I+1,I), LDA, WORK )
-			// v vector is the i-th row starting at column i, stride = sa2
-			// C submatrix starts at A(i+1, i), dimensions (M-i-1) x (N-i)
-			zlarf( 'R', M - i - 1, N - i, A, sa2, aii, TAU, tau_off,
-				A, sa1, sa2, offsetA + 2 * ( ( i + 1 ) * sa1 + i * sa2 ),
+			// zlarf accepts Complex128Array with complex-element strides/offsets
+			zlarf( 'R', M - i - 1, N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2,
+				TAU, tau_off,
+				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 				WORK, strideWORK, offsetWORK );
 
 			// Restore A(i,i)
-			A[ aii ] = alpha_re;
-			A[ aii + 1 ] = alpha_im;
+			Av[ aii ] = alpha_re;
+			Av[ aii + 1 ] = alpha_im;
 		}
 
 		// Unconjugate the i-th row from column i to N-1
-		// In Fortran: ZLACGV( N-I+1, A(I,I), LDA )
-		zlacgv( N - i, A, sa2, aii );
+		zlacgv( N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2 );
 	}
 	return 0;
 }

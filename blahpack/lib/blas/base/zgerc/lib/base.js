@@ -20,8 +20,9 @@
 
 // MODULES //
 
-var float64view = require( '../../../../float64view.js' );
-var complexParts = float64view.complexParts;
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
 
 // MAIN //
 
@@ -49,7 +50,6 @@ var complexParts = float64view.complexParts;
 function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
 	var alphaRe;
 	var alphaIm;
-	var tmp;
 	var sa1;
 	var sa2;
 	var sx;
@@ -74,9 +74,8 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 		return A;
 	}
 
-	tmp = complexParts( alpha );
-	alphaRe = tmp[ 0 ];
-	alphaIm = tmp[ 1 ];
+	alphaRe = real( alpha );
+	alphaIm = imag( alpha );
 
 	// Quick return if alpha is zero
 	if ( alphaRe === 0.0 && alphaIm === 0.0 ) {
@@ -84,9 +83,9 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 	}
 
 	// Get Float64Array views and convert offsets
-	tmp = float64view( A, offsetA ); Av = tmp[ 0 ]; oA = tmp[ 1 ];
-	tmp = float64view( x, offsetX ); xv = tmp[ 0 ]; oX = tmp[ 1 ];
-	tmp = float64view( y, offsetY ); yv = tmp[ 0 ]; oY = tmp[ 1 ];
+	Av = reinterpret( A, 0 ); oA = offsetA * 2;
+	xv = reinterpret( x, 0 ); oX = offsetX * 2;
+	yv = reinterpret( y, 0 ); oY = offsetY * 2;
 
 	// Convert strides from complex-element units to double units
 	sx = strideX * 2;

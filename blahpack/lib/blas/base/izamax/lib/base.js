@@ -20,7 +20,7 @@
 
 // MODULES //
 
-var float64view = require( '../../../../float64view.js' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 
 // MAIN //
 
@@ -29,9 +29,9 @@ var float64view = require( '../../../../float64view.js' );
 * real and imaginary parts in a double-precision complex vector.
 *
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {(Complex128Array|Float64Array)} zx - complex input vector
+* @param {Complex128Array} zx - complex input vector
 * @param {integer} strideX - stride in complex elements
-* @param {NonNegativeInteger} offsetX - starting index (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @param {NonNegativeInteger} offsetX - starting index (in complex elements)
 * @returns {integer} 0-based index of the max element, or -1 if N < 1
 */
 function izamax( N, zx, strideX, offsetX ) {
@@ -39,7 +39,6 @@ function izamax( N, zx, strideX, offsetX ) {
 	var imax;
 	var step;
 	var val;
-	var tmp;
 	var xv;
 	var ix;
 	var i;
@@ -51,9 +50,8 @@ function izamax( N, zx, strideX, offsetX ) {
 		return 0;
 	}
 
-	tmp = float64view( zx, offsetX );
-	xv = tmp[ 0 ];
-	ix = tmp[ 1 ];
+	xv = reinterpret( zx, 0 );
+	ix = offsetX * 2;
 
 	// Step size in Float64 indices for each complex element
 	step = 2 * strideX;

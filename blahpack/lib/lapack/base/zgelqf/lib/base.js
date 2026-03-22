@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zgelq2 = require( '../../zgelq2/lib/base.js' );
 var zlarfb = require( '../../zlarfb/lib/base.js' );
 var zlarft = require( '../../zlarft/lib/base.js' );
@@ -39,23 +40,21 @@ var DEFAULT_NB = 32;
 * @private
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix (interleaved complex, column-major)
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} TAU - output array of scalar factors (interleaved complex)
-* @param {integer} strideTAU - stride length for `TAU`
-* @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
-* @param {Float64Array} WORK - workspace array (interleaved complex)
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {Complex128Array} A - input matrix (column-major)
+* @param {integer} strideA1 - stride of the first dimension of `A` (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of `A` (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for `A` (in complex elements)
+* @param {Complex128Array} TAU - output array of scalar factors
+* @param {integer} strideTAU - stride length for `TAU` (in complex elements)
+* @param {NonNegativeInteger} offsetTAU - starting index for `TAU` (in complex elements)
+* @param {Complex128Array} WORK - workspace array
+* @param {integer} strideWORK - stride length for `WORK` (in complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK` (in complex elements)
 * @returns {integer} status code (0 = success)
 */
 function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var ldwork;
 	var nbmin;
-	var sa1;
-	var sa2;
 	var iws;
 	var ib;
 	var nb;
@@ -64,8 +63,8 @@ function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	var K;
 	var i;
 
-	sa1 = strideA1;
-	sa2 = strideA2;
+	/* @complex-arrays A, TAU, WORK, T */
+
 	K = Math.min( M, N );
 
 	// Quick return if possible
@@ -87,12 +86,12 @@ function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		}
 	}
 
-	// Allocate the T matrix for block reflectors (NB x NB, interleaved complex)
-	T = new Float64Array( 2 * nb * nb );
+	// Allocate the T matrix for block reflectors (NB x NB, complex)
+	T = new Complex128Array( nb * nb );
 
 	// Ensure WORK is large enough; if not provided or too small, allocate internally
-	if ( !WORK || WORK.length < 2 * iws ) {
-		WORK = new Float64Array( 2 * iws );
+	if ( !WORK || WORK.length < iws ) {
+		WORK = new Complex128Array( iws );
 		offsetWORK = 0;
 		strideWORK = 1;
 	}
@@ -107,8 +106,8 @@ function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			// Compute the LQ factorization of the current panel A(i:i+ib-1, i:N-1)
 			zgelq2(
 				ib, N - i,
-				A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
-				TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+				TAU, strideTAU, offsetTAU + i * strideTAU,
 				WORK, strideWORK, offsetWORK
 			);
 
@@ -118,8 +117,8 @@ function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				zlarft(
 					'F', 'R',
 					N - i, ib,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
-					TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+					TAU, strideTAU, offsetTAU + i * strideTAU,
 					T, 1, nb, 0
 				);
 
@@ -127,9 +126,9 @@ function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				zlarfb(
 					'R', 'N', 'F', 'R',
 					M - i - ib, N - i, ib,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
+					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					T, 1, nb, 0,
-					A, sa1, sa2, offsetA + 2 * ( ( i + ib ) * sa1 + i * sa2 ),
+					A, strideA1, strideA2, offsetA + ( i + ib ) * strideA1 + i * strideA2,
 					WORK, 1, ldwork, offsetWORK
 				);
 			}
@@ -143,8 +142,8 @@ function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	if ( i <= K - 1 ) {
 		zgelq2(
 			M - i, N - i,
-			A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
-			TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+			TAU, strideTAU, offsetTAU + i * strideTAU,
 			WORK, strideWORK, offsetWORK
 		);
 	}
