@@ -177,3 +177,139 @@ test( 'zgeqp3: fixed column', function t() {
 	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
 	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
 });
+
+test( 'zgeqp3: fixed column with swap (JPVT[2]=1)', function t() {
+	var A = new Complex128Array( LDA * LDA );
+	var Av = reinterpret( A, 0 );
+	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=0; Av[4]=0; Av[5]=0; Av[6]=1; Av[7]=0;
+	Av[2*LDA]=3; Av[2*LDA+1]=0; Av[2*LDA+2]=0; Av[2*LDA+3]=1; Av[2*LDA+4]=2; Av[2*LDA+5]=0; Av[2*LDA+6]=1; Av[2*LDA+7]=1;
+	Av[4*LDA]=0; Av[4*LDA+1]=1; Av[4*LDA+2]=1; Av[4*LDA+3]=0; Av[4*LDA+4]=3; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=0;
+
+	var JPVT = new Int32Array( [ 0, 0, 1 ] ); // Fix column 3 (index 2) -- requires swap
+	var TAU = new Complex128Array( 3 );
+	var WORK = new Complex128Array( 200 );
+	var RWORK = new Float64Array( 2 * LDA );
+
+	var info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
+
+	assert.equal( info, 0, 'info' );
+	// Column 3 was fixed, so it must appear first in the permutation
+	assert.equal( JPVT[0], 3, 'fixed column 3 is first' );
+	// R(0,0) should be non-zero (the norm of the fixed column)
+	var r00mag = Math.sqrt( Av[0] * Av[0] + Av[1] * Av[1] );
+	assert.ok( r00mag > 0.1, 'R(0,0) magnitude is non-trivial: ' + r00mag );
+});
+
+test( 'zgeqp3: two fixed columns', function t() {
+	var A = new Complex128Array( LDA * LDA );
+	var Av = reinterpret( A, 0 );
+	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=0; Av[4]=0; Av[5]=0; Av[6]=1; Av[7]=0;
+	Av[2*LDA]=3; Av[2*LDA+1]=0; Av[2*LDA+2]=0; Av[2*LDA+3]=1; Av[2*LDA+4]=2; Av[2*LDA+5]=0; Av[2*LDA+6]=1; Av[2*LDA+7]=1;
+	Av[4*LDA]=0; Av[4*LDA+1]=1; Av[4*LDA+2]=1; Av[4*LDA+3]=0; Av[4*LDA+4]=3; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=0;
+
+	var JPVT = new Int32Array( [ 1, 0, 1 ] ); // Fix columns 1 and 3
+	var TAU = new Complex128Array( 3 );
+	var WORK = new Complex128Array( 200 );
+	var RWORK = new Float64Array( 2 * LDA );
+
+	var info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
+
+	assert.equal( info, 0, 'info' );
+	// Fixed columns 1 and 3 should be in positions 1 and 2 (JPVT[0] and JPVT[1])
+	assert.ok( JPVT[0] === 1 || JPVT[0] === 3, 'first pivot is a fixed column: ' + JPVT[0] );
+	assert.ok( JPVT[1] === 1 || JPVT[1] === 3, 'second pivot is a fixed column: ' + JPVT[1] );
+	assert.notEqual( JPVT[0], JPVT[1], 'first two pivots are different' );
+});
+
+test( 'zgeqp3: large matrix 35x36 (blocked zlaqps path, sminmn > 32)', function t() {
+	// Need min(M,N) > 32 to trigger blocked code
+	var BLDA = 40;
+	var M = 35;
+	var N = 36;
+	var A = new Complex128Array( BLDA * N );
+	var Av = reinterpret( A, 0 );
+	var i;
+	var j;
+
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			Av[ 2 * ( i + j * BLDA ) ] = ( ( ( i + 1 ) * ( j + 1 ) + 3 ) % 7 ) - 3.0;
+			Av[ 2 * ( i + j * BLDA ) + 1 ] = ( ( ( i + 1 ) + ( j + 1 ) ) % 5 ) - 2.0;
+		}
+	}
+
+	var JPVT = new Int32Array( N );
+	var TAU = new Complex128Array( Math.min( M, N ) );
+	var WORK = new Complex128Array( 10000 );
+	var RWORK = new Float64Array( 2 * N );
+
+	var info = zgeqp3( M, N, A, 1, BLDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10000, RWORK, 1, 0 );
+
+	assert.equal( info, 0, 'info' );
+
+	// Verify R diagonal has decreasing magnitude
+	var prevMag = Infinity;
+	var re;
+	var im;
+	var mag;
+	var minmn = Math.min( M, N );
+	for ( i = 0; i < minmn; i++ ) {
+		re = Av[ 2 * ( i + i * BLDA ) ];
+		im = Av[ 2 * ( i + i * BLDA ) + 1 ];
+		mag = Math.sqrt( re * re + im * im );
+		assert.ok( mag <= prevMag + 1e-10, 'R diagonal magnitude decreasing at ' + i + ': ' + mag + ' <= ' + prevMag );
+		prevMag = mag;
+	}
+
+	// Verify JPVT is a valid permutation of 1..N
+	var perm = Array.from( JPVT ).sort( function cmp( a, b ) { return a - b; } );
+	for ( i = 0; i < N; i++ ) {
+		assert.equal( perm[ i ], i + 1, 'JPVT is valid permutation at ' + i );
+	}
+});
+
+test( 'zgeqp3: wide matrix 8x36 (blocked zlaqps path)', function t() {
+	var BLDA = 40;
+	var M = 8;
+	var N = 36;
+	var A = new Complex128Array( BLDA * N );
+	var Av = reinterpret( A, 0 );
+	var i;
+	var j;
+
+	// Fill A with same pattern as Fortran: dcmplx(mod(i*j+3,7) - 3, mod(i+j,5) - 2)
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			Av[ 2 * ( i + j * BLDA ) ] = ( ( ( i + 1 ) * ( j + 1 ) + 3 ) % 7 ) - 3.0;
+			Av[ 2 * ( i + j * BLDA ) + 1 ] = ( ( ( i + 1 ) + ( j + 1 ) ) % 5 ) - 2.0;
+		}
+	}
+
+	var JPVT = new Int32Array( N );
+	var TAU = new Complex128Array( M );
+	var WORK = new Complex128Array( 10000 );
+	var RWORK = new Float64Array( 2 * BLDA );
+
+	var info = zgeqp3( M, N, A, 1, BLDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10000, RWORK, 1, 0 );
+
+	assert.equal( info, 0, 'info' );
+
+	// Verify R diagonal has decreasing magnitude (property of QR with pivoting)
+	var prevMag = Infinity;
+	var re;
+	var im;
+	var mag;
+	for ( i = 0; i < M; i++ ) {
+		re = Av[ 2 * ( i + i * BLDA ) ];
+		im = Av[ 2 * ( i + i * BLDA ) + 1 ];
+		mag = Math.sqrt( re * re + im * im );
+		assert.ok( mag <= prevMag + 1e-10, 'R diagonal magnitude decreasing at ' + i + ': ' + mag + ' <= ' + prevMag );
+		prevMag = mag;
+	}
+
+	// Verify JPVT is a valid permutation of 1..N
+	var perm = Array.from( JPVT ).sort( function cmp( a, b ) { return a - b; } );
+	for ( i = 0; i < N; i++ ) {
+		assert.equal( perm[ i ], i + 1, 'JPVT is valid permutation at ' + i );
+	}
+});

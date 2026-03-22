@@ -1,0 +1,14 @@
+dgelq2
+dgemv
+dger
+dlarf
+dlarfg
+dlamch
+dlapy2
+disnan
+dlaisnan
+dnrm2
+dorml2
+dscal
+iladlc
+iladlr

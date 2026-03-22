@@ -8,6 +8,7 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var zgelq2 = require( '../../zgelq2/lib/base.js' );
 var zunglq = require( './../lib/base.js' );
 
 
@@ -157,4 +158,98 @@ test( 'zunglq: 5x8, K=5 (rectangular from LQ)', function t() {
 	info = zunglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
+});
+
+test( 'zunglq: blocked K=35, M=40 (partial-block zero init, covers lines 114-117)', function t() {
+	// K=35 with NB=32 gives kk = min(35, 32+32) = 35, and M=40 > kk=35,
+	// so the zero-init loop for rows kk..M-1 in columns 0..kk-1 executes.
+	// This covers lines 114-117 that are uncovered in the K=40 test.
+	//
+	// Strategy: LQ-factor a 35x40 matrix, copy reflectors into a 40x40 matrix,
+	// then call zunglq(40, 40, 35) and verify Q * Q^H = I.
+	var M = 40;
+	var N = 40;
+	var K = 35;
+	var LDA = M;
+	var seed = 88888;
+	var x = seed;
+	var LQWORK;
+	var Asrc;
+	var Asrcv;
+	var TAU;
+	var WORK;
+	var info;
+	var idx;
+	var Av;
+	var A;
+	var i;
+	var j;
+
+	// Generate a deterministic 35x40 matrix for LQ factorization
+	// LQ needs rows=K, cols=N. In column-major with LDA_src=K.
+	var LDA_src = K;
+	Asrc = new Complex128Array( LDA_src * N );
+	Asrcv = reinterpret( Asrc, 0 );
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < K; i++ ) {
+			idx = 2 * ( i + j * LDA_src );
+			x = ( ( x * 1103515245 ) + 12345 ) & 0x7fffffff;
+			Asrcv[ idx ] = ( ( x % 2000 ) - 1000 ) / 500.0;
+			x = ( ( x * 1103515245 ) + 12345 ) & 0x7fffffff;
+			Asrcv[ idx + 1 ] = ( ( x % 2000 ) - 1000 ) / 500.0;
+		}
+	}
+
+	// LQ factorize in-place
+	TAU = new Complex128Array( K );
+	LQWORK = new Complex128Array( K );
+	zgelq2( K, N, Asrc, 1, LDA_src, 0, TAU, 1, 0, LQWORK, 1, 0 );
+
+	// Copy into a 40x40 matrix (first 35 rows from LQ, last 5 zeroed)
+	A = new Complex128Array( LDA * N );
+	Av = reinterpret( A, 0 );
+	Asrcv = reinterpret( Asrc, 0 );
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < K; i++ ) {
+			var srcIdx = 2 * ( i + j * LDA_src );
+			var dstIdx = 2 * ( i + j * LDA );
+			Av[ dstIdx ] = Asrcv[ srcIdx ];
+			Av[ dstIdx + 1 ] = Asrcv[ srcIdx + 1 ];
+		}
+	}
+
+	// Call zunglq to generate the 40x40 Q matrix
+	WORK = new Complex128Array( M * 64 );
+	info = zunglq( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, M * 64 );
+	assert.equal( info, 0, 'info' );
+
+	// Verify Q is unitary: Q * Q^H should be I_40
+	// result[i][j] = sum_k Q[i][k] * conj(Q[j][k])
+	Av = reinterpret( A, 0 );
+	var maxErr = 0;
+	var expected;
+	var err;
+	var re;
+	var im;
+	var qi;
+	var qj;
+	for ( i = 0; i < M; i++ ) {
+		for ( j = 0; j < M; j++ ) {
+			re = 0;
+			im = 0;
+			for ( var k = 0; k < N; k++ ) {
+				qi = 2 * ( i + k * LDA );
+				qj = 2 * ( j + k * LDA );
+				// Q[i,k] * conj(Q[j,k])
+				re += Av[ qi ] * Av[ qj ] + Av[ qi + 1 ] * Av[ qj + 1 ];
+				im += Av[ qi + 1 ] * Av[ qj ] - Av[ qi ] * Av[ qj + 1 ];
+			}
+			expected = ( i === j ) ? 1.0 : 0.0;
+			err = Math.abs( re - expected ) + Math.abs( im );
+			if ( err > maxErr ) {
+				maxErr = err;
+			}
+		}
+	}
+	assert.ok( maxErr < 1e-10, 'Q*Q^H=I, max error: ' + maxErr );
 });

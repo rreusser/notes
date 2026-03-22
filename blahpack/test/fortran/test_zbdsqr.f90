@@ -476,4 +476,259 @@ program test_zbdsqr
   call print_array('u', u_r, 2*n*n)
   call end_test()
 
+  ! Test 18: Lower bidiagonal with VT, U, and C (triggers lower-bidiag + ncc rotation)
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 2
+  ldvt = 3
+  ldu = 3
+  ldc = 3
+  d(1) = 4.0d0
+  d(2) = 2.0d0
+  d(3) = 1.0d0
+  e(1) = 1.0d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 0.0d0)
+  c(2) = (0.0d0, 1.0d0)
+  c(3) = (1.0d0, 1.0d0)
+  c(4) = (2.0d0, 0.0d0)
+  c(5) = (0.0d0, 2.0d0)
+  c(6) = (2.0d0, 2.0d0)
+
+  call zbdsqr('L', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('lower_3x3_all_vectors')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call print_array('c', c_r, 2*n*ncc)
+  call end_test()
+
+  ! Test 19: Upper bidiag with d=0 entry (triggers sminoa=0 path)
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 0
+  ldvt = 3
+  ldu = 3
+  ldc = 1
+  d(1) = 2.0d0
+  d(2) = 0.0d0
+  d(3) = 3.0d0
+  e(1) = 1.0d0
+  e(2) = 1.0d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_zero_d')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
+  ! Test 20: Upper bidiag idir=2 zero-shift with all vectors (ncvt, nru, ncc > 0)
+  ! d ascending with very small middle element triggers zero shift + idir=2
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 2
+  ldvt = 3
+  ldu = 3
+  ldc = 3
+  d(1) = 1.0d-15
+  d(2) = 1.0d0
+  d(3) = 1.0d0
+  e(1) = 1.0d0
+  e(2) = 1.0d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 0.0d0)
+  c(2) = (0.0d0, 1.0d0)
+  c(3) = (1.0d0, 1.0d0)
+  c(4) = (2.0d0, 0.0d0)
+  c(5) = (0.0d0, 2.0d0)
+  c(6) = (2.0d0, 2.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_zero_shift_all_vecs')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call print_array('c', c_r, 2*n*ncc)
+  call end_test()
+
+  ! Test 21: idir=2 with vectors (ascending singular values, ncvt/nru/ncc > 0)
+  n = 4
+  ncvt = 4
+  nru = 4
+  ncc = 2
+  ldvt = 4
+  ldu = 4
+  ldc = 4
+  d(1) = 0.5d0
+  d(2) = 1.0d0
+  d(3) = 2.0d0
+  d(4) = 4.0d0
+  e(1) = 0.1d0
+  e(2) = 0.1d0
+  e(3) = 0.1d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(6) = (1.0d0, 0.0d0)
+  vt(11) = (1.0d0, 0.0d0)
+  vt(16) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(6) = (1.0d0, 0.0d0)
+  u(11) = (1.0d0, 0.0d0)
+  u(16) = (1.0d0, 0.0d0)
+
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 0.0d0)
+  c(2) = (0.0d0, 1.0d0)
+  c(3) = (1.0d0, 1.0d0)
+  c(4) = (0.5d0, 0.5d0)
+  c(5) = (2.0d0, 0.0d0)
+  c(6) = (0.0d0, 2.0d0)
+  c(7) = (2.0d0, 2.0d0)
+  c(8) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_4x4_idir2_all_vecs')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call print_array('c', c_r, 2*n*ncc)
+  call end_test()
+
+  ! Test 22: idir=1 zero-shift with all vectors
+  ! Descending diagonal (d[0] > d[n-1]) makes idir=1; tiny d[1] makes smin/smax small -> zero shift
+  n = 4
+  ncvt = 4
+  nru = 4
+  ncc = 2
+  ldvt = 4
+  ldu = 4
+  ldc = 4
+  d(1) = 10.0d0
+  d(2) = 1.0d-15
+  d(3) = 5.0d0
+  d(4) = 1.0d0
+  e(1) = 0.1d0
+  e(2) = 0.1d0
+  e(3) = 0.1d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(6) = (1.0d0, 0.0d0)
+  vt(11) = (1.0d0, 0.0d0)
+  vt(16) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(6) = (1.0d0, 0.0d0)
+  u(11) = (1.0d0, 0.0d0)
+  u(16) = (1.0d0, 0.0d0)
+
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 0.0d0)
+  c(2) = (0.0d0, 1.0d0)
+  c(3) = (1.0d0, 1.0d0)
+  c(4) = (0.5d0, 0.5d0)
+  c(5) = (2.0d0, 0.0d0)
+  c(6) = (0.0d0, 2.0d0)
+  c(7) = (2.0d0, 2.0d0)
+  c(8) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_4x4_idir1_zero_shift_all_vecs')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call print_array('c', c_r, 2*n*ncc)
+  call end_test()
+
+  ! Test 23: Trigger (shift/sll)^2 < eps for the near-zero shift
+  ! Large sll relative to shift, with ascending diagonal and small off-diagonal
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 0
+  ldvt = 3
+  ldu = 3
+  ldc = 1
+  d(1) = 1.0d8
+  d(2) = 1.0d0
+  d(3) = 1.0d0
+  e(1) = 0.5d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_near_zero_shift')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
 end program

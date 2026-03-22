@@ -5,19 +5,30 @@
   <script id="intro" type="text/markdown">
     # Laplace Solver — AAA Test Cases
 
-    Visualization of Laplace equation solutions computed via the [AAA rational approximation algorithm](https://arxiv.org/abs/1612.00337). Data is pre-computed from the blahpack test suite using JavaScript BLAS/LAPACK (zgesvd). Method follows [Costa (2020)](https://arxiv.org/abs/2001.09439).
+    Visualization of test cases from two papers, computed using blahpack's JavaScript BLAS/LAPACK (zgesvd → AAA → Laplace solver):
+
+    - **[NST18]** Nakatsukasa, Sète, Trefethen, ["The AAA Algorithm for Rational Approximation"](https://arxiv.org/abs/1612.00337), SIAM J. Sci. Comput. 40(3), 2018.
+    - **[C20]** Costa, ["Solving Laplace problems with the AAA algorithm"](https://arxiv.org/abs/2001.09439), 2020.
+
+    All data is pre-computed via `node notebooks/laplace/generate-data.js` and rendered in WebGPU.
   </script>
 
   <script id="data" type="module">
-    const allCases = await fetch('./data.json').then(r => r.json());
-    const laplaceCases = allCases.filter(c => c.smoothCoeffs);
-    const aaaCases = allCases.filter(c => c.convergence);
+    const allData = await fetch('./data.json').then(r => r.json());
+    const laplaceCases = allData.laplace;
+    const aaaCases = allData.aaa;
+  </script>
+
+  <script id="laplaceHeader" type="text/markdown">
+    ## Laplace Equation on L-shaped Domain
+
+    L-shaped domain ${ tex`[0,2]^2 \setminus [1,2]^2` } with reentrant corner at ${ tex`(1,1)` }, following [C20] §3. The solver decomposes the solution into a smooth polynomial part ${ tex`\sum a_n (z-c)^n` } plus a singular rational part ${ tex`\sum b_k/(z-p_k)` } with poles clustered near the corner singularity.
   </script>
 
   <script id="caseSelector" type="module">
     const caseIndex = view(Inputs.select(
       laplaceCases.map((c, i) => i),
-      { label: 'Test case', format: i => laplaceCases[i].name }
+      { label: 'Boundary condition', format: i => `${laplaceCases[i].name} — ${laplaceCases[i].source}` }
     ));
   </script>
 
@@ -272,8 +283,8 @@
     function createPointBindGroup(positionsBuf, fillColor, strokeColor, radius, strokeWidth) {
       const buf = device.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
       const data = new Float32Array(16);
-      data[0] = -0.15; data[1] = -0.15;  // domainMin
-      data[2] = 2.15; data[3] = 2.15;    // domainMax
+      data[0] = -0.15; data[1] = -0.15;
+      data[2] = 2.15; data[3] = 2.15;
       data[4] = canvas.width; data[5] = canvas.height;
       data[6] = radius; data[7] = strokeWidth;
       data.set(fillColor, 8);
@@ -341,12 +352,10 @@
     pass.setBindGroup(0, bindGroup);
     pass.draw(4);
 
-    // Draw poles (red)
     pass.setPipeline(pointPipeline);
     pass.setBindGroup(0, poleBindGroup);
     pass.draw(6, laplaceData.poles.length);
 
-    // Draw zeros (blue) if present
     if (zeroBindGroup && allZerosLen > 0) {
       pass.setBindGroup(0, zeroBindGroup);
       pass.draw(6, allZerosLen);
@@ -356,64 +365,121 @@
     device.queue.submit([encoder.finish()]);
   </script>
 
-  <script id="info" type="module">
+  <script id="laplaceInfo" type="module">
     display(md`
-**${laplaceData.name}** — ${laplaceData.smoothCoeffs.length} polynomial terms + ${laplaceData.poles.length} poles. Max boundary error: ${laplaceData.maxError.toExponential(2)}.
+**${laplaceData.name}** — *${laplaceData.source}*
+${laplaceData.description}
+${laplaceData.smoothCoeffs.length} polynomial terms, ${laplaceData.poles.length} exterior poles, ${(laplaceData.allPoles || []).length} total poles. Max boundary error: \`${laplaceData.maxError.toExponential(2)}\`.
     `);
   </script>
 
-  <script id="convergenceHeader" type="text/markdown">
-    ## AAA Convergence
+  <script id="aaaHeader" type="text/markdown">
+    ## AAA Rational Approximation — [NST18]
 
-    Convergence of the AAA algorithm on ${ tex`e^z` } sampled at 200 points on the unit circle. The error decreases geometrically, reaching machine precision in 8 iterations.
+    Convergence of the AAA algorithm on test functions from Nakatsukasa, Sète, Trefethen (2018). Each case validates the blahpack JavaScript SVD (zgesvd) against the reference Fortran LAPACK implementation.
+  </script>
+
+  <script id="aaaCaseSelector" type="module">
+    const aaaCaseIndex = view(Inputs.select(
+      aaaCases.map((c, i) => i),
+      { label: 'AAA test case', format: i => `${aaaCases[i].name} — ${aaaCases[i].source}` }
+    ));
+  </script>
+
+  <script id="currentAaaCase" type="module">
+    const aaaData = aaaCases[aaaCaseIndex];
   </script>
 
   <script id="convergencePlot" type="module">
-    if (aaaCases.length > 0) {
-      const conv = aaaCases[0].convergence;
-      const plotData = conv.errvec.map((e, i) => ({ iteration: i + 1, error: e }));
-      display(Plot.plot({
-        height: 300,
-        y: { type: 'log', label: 'Max error', grid: true },
-        x: { label: 'Iteration' },
-        marks: [
-          Plot.line(plotData, { x: 'iteration', y: 'error', stroke: '#4e79a7', strokeWidth: 2 }),
-          Plot.dot(plotData, { x: 'iteration', y: 'error', fill: '#4e79a7', r: 4 }),
-          Plot.ruleY([1e-13], { stroke: '#e15759', strokeDasharray: '4,4' }),
-          Plot.text([{ x: conv.errvec.length, y: 1e-13 }], {
-            x: 'x', y: 'y', text: ['tolerance'], dy: -10, fill: '#e15759'
-          }),
-        ],
-      }));
-    }
+    const plotData = aaaData.convergence.map((e, i) => ({ iteration: i + 1, error: e }));
+
+    // If reference errors exist, overlay them
+    const refData = aaaData.referenceErrors
+      ? aaaData.referenceErrors.map((e, i) => ({ iteration: i + 1, error: e }))
+      : [];
+
+    display(Plot.plot({
+      title: `Convergence: ${aaaData.name}`,
+      height: 300,
+      y: { type: 'log', label: 'Max error', grid: true },
+      x: { label: 'Iteration' },
+      marks: [
+        refData.length > 0
+          ? Plot.line(refData, { x: 'iteration', y: 'error', stroke: '#bbb', strokeWidth: 2, strokeDasharray: '6,3' })
+          : null,
+        refData.length > 0
+          ? Plot.dot(refData, { x: 'iteration', y: 'error', fill: '#bbb', r: 3 })
+          : null,
+        Plot.line(plotData, { x: 'iteration', y: 'error', stroke: '#4e79a7', strokeWidth: 2 }),
+        Plot.dot(plotData, { x: 'iteration', y: 'error', fill: '#4e79a7', r: 4 }),
+        Plot.ruleY([1e-13], { stroke: '#e15759', strokeDasharray: '4,4' }),
+        Plot.text([{ x: plotData.length, y: 1e-13 }], {
+          x: 'x', y: 'y', text: ['tol = 10⁻¹³'], dy: -10, fill: '#e15759',
+        }),
+      ].filter(Boolean),
+    }));
+  </script>
+
+  <script id="convergenceInfo" type="module">
+    const hasRef = !!aaaData.referenceErrors;
+    display(md`
+*${aaaData.source}* — ${aaaData.description}
+${aaaData.convergence.length} iterations, final error \`${aaaData.convergence[aaaData.convergence.length - 1].toExponential(2)}\`. ${aaaData.poles.length} poles, ${aaaData.zeros.length} zeros.${hasRef ? ' Gray dashed line: reference Fortran LAPACK.' : ''}
+    `);
   </script>
 
   <script id="poleZeroPlot" type="module">
-    if (aaaCases.length > 0) {
-      const conv = aaaCases[0].convergence;
-      const poleData = conv.poles.map(([re, im]) => ({ re, im, type: 'pole' }));
-      const zeroData = conv.zeros.map(([re, im]) => ({ re, im, type: 'zero' }));
-      display(md`**Poles and zeros** of the AAA approximant for ${ tex`e^z` } on the unit circle (${conv.nPoles} poles, ${conv.nZeros} zeros):`);
-      display(Plot.plot({
-        height: 400,
-        aspectRatio: 1,
-        x: { label: 'Re(z)' },
-        y: { label: 'Im(z)' },
-        color: { domain: ['pole', 'zero'], range: ['#e15759', '#4e79a7'] },
-        marks: [
-          // Unit circle
-          Plot.line(
-            Array.from({ length: 101 }, (_, i) => {
-              const t = 2 * Math.PI * i / 100;
-              return { x: Math.cos(t), y: Math.sin(t) };
-            }),
-            { x: 'x', y: 'y', stroke: '#ccc', strokeWidth: 1 }
-          ),
-          Plot.dot([...poleData, ...zeroData], {
-            x: 're', y: 'im', fill: 'type', symbol: d => d.type === 'pole' ? 'cross' : 'circle', r: 5,
-          }),
-        ],
-      }));
+    const poleData = aaaData.poles.map(([re, im]) => ({ re, im, type: 'pole' }));
+    const zeroData = aaaData.zeros.map(([re, im]) => ({ re, im, type: 'zero' }));
+    const trueData = (aaaData.truePoles || []).map(([re, im]) => ({ re, im }));
+
+    // Sample points for context
+    const sampleData = (aaaData.samplePoints || []).map(([re, im]) => ({ re, im }));
+
+    // Compute equal-range axes centered on the data
+    const allPts = [...poleData, ...zeroData, ...trueData, ...sampleData];
+    const pad = 0.15;
+    let reMin = Infinity, reMax = -Infinity, imMin = Infinity, imMax = -Infinity;
+    for (const p of allPts) {
+      if (p.re < reMin) reMin = p.re;
+      if (p.re > reMax) reMax = p.re;
+      if (p.im < imMin) imMin = p.im;
+      if (p.im > imMax) imMax = p.im;
+    }
+    const reSpan = reMax - reMin, imSpan = imMax - imMin;
+    const span = Math.max(reSpan, imSpan);
+    const reMid = (reMin + reMax) / 2, imMid = (imMin + imMax) / 2;
+    const halfSpan = span / 2 * (1 + pad);
+
+    const plotSize = Math.min(width, 540);
+
+    display(Plot.plot({
+      title: `Poles and zeros: ${aaaData.name}`,
+      width: plotSize,
+      height: plotSize,
+      x: { label: 'Re(z)', domain: [reMid - halfSpan, reMid + halfSpan] },
+      y: { label: 'Im(z)', domain: [imMid - halfSpan, imMid + halfSpan] },
+      color: { domain: ['pole', 'zero'], range: ['#e15759', '#4e79a7'] },
+      marks: [
+        // Sample points (light gray)
+        sampleData.length <= 1000
+          ? Plot.dot(sampleData, { x: 're', y: 'im', fill: '#eee', r: 1 })
+          : null,
+        // True poles (large open circles)
+        trueData.length > 0
+          ? Plot.dot(trueData, { x: 're', y: 'im', stroke: '#333', fill: 'none', r: 8, strokeWidth: 1.5 })
+          : null,
+        // Computed poles and zeros
+        Plot.dot([...poleData, ...zeroData], {
+          x: 're', y: 'im', fill: 'type',
+          symbol: d => d.type === 'pole' ? 'times' : 'circle',
+          r: 4,
+        }),
+      ].filter(Boolean),
+    }));
+
+    if (trueData.length > 0) {
+      display(md`Open circles: known true pole locations.`);
     }
   </script>
 </notebook>

@@ -150,35 +150,40 @@ test( 'dgemm: beta=1 does not scale C', function t() {
 	assertArrayClose( C, [ 3, 1, 1, 3 ], 1e-14, 'beta_one' );
 });
 
-test( 'dgemm: T,N with beta=0 (lines 130-131)', function t() {
-	// transa='T', transb='N', beta=0 -> exercises the beta===0 branch in T,N path
+test( 'dgemm: T,N with beta!=0 (lines 130-131)', function t() {
+	// transa='T', transb='N', beta=2.0 -> exercises the else (beta!=0) branch in T,N path
 	var A = new Float64Array( [ 1, 2, 3, 4 ] ); // 2x2 col-major
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
-	var C = new Float64Array( [ 999, 999, 999, 999 ] );
-	dgemm( 'T', 'N', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
-	// op(A) = A^T = [1 2; 3 4], B = [5 7; 6 8] (col-major)
-	// C = A^T * B: C[0,0]=1*5+2*6=17, C[1,0]=3*5+4*6=39, C[0,1]=1*7+2*8=23, C[1,1]=3*7+4*8=53
-	assertArrayClose( C, [ 17, 39, 23, 53 ], 1e-14, 'tn_beta0' );
+	var C = new Float64Array( [ 1, 1, 1, 1 ] );
+	dgemm( 'T', 'N', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 2.0, C, 1, 2, 0 );
+	// C = alpha * A^T * B + beta * C_old
+	// A^T*B: [17 23; 39 53]
+	// C = 1*[17 23; 39 53] + 2*[1 1; 1 1] = [19 25; 41 55]
+	assertArrayClose( C, [ 19, 41, 25, 55 ], 1e-14, 'tn_beta_nonzero' );
 });
 
-test( 'dgemm: N,T with beta=0 (lines 146-151)', function t() {
-	// transa='N', transb='T', beta=0 -> exercises the beta===0 branch in N,T path
+test( 'dgemm: N,T with beta!=0,!=1 (lines 146-151)', function t() {
+	// transa='N', transb='T', beta=0.5 -> exercises the else if (beta!==1.0) scaling in N,T path
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
-	var C = new Float64Array( [ 999, 999, 999, 999 ] );
-	dgemm( 'N', 'T', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
-	// A = [1 3; 2 4], op(B) = B^T = [5 6; 7 8]
-	// C = A * B^T: C[0,0]=1*5+3*7=26, C[1,0]=2*5+4*7=38, C[0,1]=1*6+3*8=30, C[1,1]=2*6+4*8=44
-	assertArrayClose( C, [ 26, 38, 30, 44 ], 1e-14, 'nt_beta0' );
+	var C = new Float64Array( [ 10, 10, 10, 10 ] );
+	dgemm( 'N', 'T', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.5, C, 1, 2, 0 );
+	// A*B^T: [1*5+3*6, 2*5+4*6; 1*7+3*8, 2*7+4*8] = [23 34; 31 46]
+	// Wait, B in col-major is [5 7; 6 8], B^T = [5 6; 7 8]
+	// C = A*B^T + 0.5*C_old: A=[1 3;2 4], B^T=[5 6;7 8]
+	// AB^T: [1*5+3*7, 1*6+3*8; 2*5+4*7, 2*6+4*8] = [26 30; 38 44]
+	// C = [26+5, 38+5, 30+5, 44+5] = [31, 43, 35, 49]
+	assertArrayClose( C, [ 31, 43, 35, 49 ], 1e-14, 'nt_beta_half' );
 });
 
-test( 'dgemm: T,T with beta=0 (lines 179-180)', function t() {
-	// transa='T', transb='T', beta=0 -> exercises the beta===0 branch in T,T path
+test( 'dgemm: T,T with beta!=0 (lines 179-180)', function t() {
+	// transa='T', transb='T', beta=3.0 -> exercises the else (beta!=0) branch in T,T path
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
-	var C = new Float64Array( [ 999, 999, 999, 999 ] );
-	dgemm( 'T', 'T', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
-	// op(A) = A^T = [1 2; 3 4], op(B) = B^T = [5 6; 7 8]
-	// C = A^T * B^T: C[0,0]=1*5+2*7=19, C[1,0]=3*5+4*7=43, C[0,1]=1*6+2*8=22, C[1,1]=3*6+4*8=50
-	assertArrayClose( C, [ 19, 43, 22, 50 ], 1e-14, 'tt_beta0' );
+	var C = new Float64Array( [ 1, 1, 1, 1 ] );
+	dgemm( 'T', 'T', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 3.0, C, 1, 2, 0 );
+	// A^T = [1 2; 3 4], B^T = [5 6; 7 8]
+	// A^T*B^T: [1*5+2*7, 1*6+2*8; 3*5+4*7, 3*6+4*8] = [19 22; 43 50]
+	// C = [19+3, 43+3, 22+3, 50+3] = [22, 46, 25, 53]
+	assertArrayClose( C, [ 22, 46, 25, 53 ], 1e-14, 'tt_beta_nonzero' );
 });

@@ -476,3 +476,171 @@ test( 'zbdsqr: lower_3x3_with_vt_and_u', function t() {
 	assertArrayClose( Array.from( reinterpret( vt, 0 ) ), tc.vt, 1e-14, 'vt' );
 	assertArrayClose( Array.from( reinterpret( u, 0 ) ), tc.u, 1e-14, 'u' );
 });
+
+test( 'zbdsqr: lower_3x3_all_vectors (VT, U, and C)', function t() {
+	var rwork = new Float64Array( 40 );
+	var info;
+	var tc = findCase( 'lower_3x3_all_vectors' );
+	var d = new Float64Array( [ 4.0, 2.0, 1.0 ] );
+	var e = new Float64Array( [ 1.0, 0.5 ] );
+	var vt = complexIdentity( 3 );
+	var u = complexIdentity( 3 );
+	var c = new Complex128Array( [
+		1.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+		2.0, 0.0, 0.0, 2.0, 2.0, 2.0
+	] );
+
+	info = zbdsqr( 'L', 3, 3, 3, 2,
+		d, 1, 0,
+		e, 1, 0,
+		vt, 1, 3, 0,
+		u, 1, 3, 0,
+		c, 1, 3, 0,
+		rwork, 1, 0
+	);
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( d, new Float64Array( tc.d ), 1e-14, 'd' );
+	assertArrayClose( Array.from( reinterpret( vt, 0 ) ), tc.vt, 1e-14, 'vt' );
+	assertArrayClose( Array.from( reinterpret( u, 0 ) ), tc.u, 1e-14, 'u' );
+	assertArrayClose( Array.from( reinterpret( c, 0 ) ), tc.c, 1e-14, 'c' );
+});
+
+test( 'zbdsqr: upper_3x3_zero_d (sminoa=0 path)', function t() {
+	var rwork = new Float64Array( 40 );
+	var info;
+	var tc = findCase( 'upper_3x3_zero_d' );
+	var d = new Float64Array( [ 2.0, 0.0, 3.0 ] );
+	var e = new Float64Array( [ 1.0, 1.0 ] );
+	var vt = complexIdentity( 3 );
+	var u = complexIdentity( 3 );
+	var c = new Complex128Array( 0 );
+
+	info = zbdsqr( 'U', 3, 3, 3, 0,
+		d, 1, 0,
+		e, 1, 0,
+		vt, 1, 3, 0,
+		u, 1, 3, 0,
+		c, 1, 1, 0,
+		rwork, 1, 0
+	);
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( d, new Float64Array( tc.d ), 1e-13, 'd' );
+	assertArrayClose( Array.from( reinterpret( vt, 0 ) ), tc.vt, 1e-13, 'vt' );
+	assertArrayClose( Array.from( reinterpret( u, 0 ) ), tc.u, 1e-13, 'u' );
+});
+
+test( 'zbdsqr: upper_3x3_zero_shift_all_vecs (zero shift with NCC > 0)', function t() {
+	var rwork = new Float64Array( 40 );
+	var info;
+	var tc = findCase( 'upper_3x3_zero_shift_all_vecs' );
+	var d = new Float64Array( [ 1e-15, 1.0, 1.0 ] );
+	var e = new Float64Array( [ 1.0, 1.0 ] );
+	var vt = complexIdentity( 3 );
+	var u = complexIdentity( 3 );
+	var c = new Complex128Array( [
+		1.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+		2.0, 0.0, 0.0, 2.0, 2.0, 2.0
+	] );
+
+	info = zbdsqr( 'U', 3, 3, 3, 2,
+		d, 1, 0,
+		e, 1, 0,
+		vt, 1, 3, 0,
+		u, 1, 3, 0,
+		c, 1, 3, 0,
+		rwork, 1, 0
+	);
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( d, new Float64Array( tc.d ), 1e-13, 'd' );
+	assertArrayClose( Array.from( reinterpret( vt, 0 ) ), tc.vt, 1e-13, 'vt' );
+	assertArrayClose( Array.from( reinterpret( u, 0 ) ), tc.u, 1e-13, 'u' );
+	assertArrayClose( Array.from( reinterpret( c, 0 ) ), tc.c, 1e-13, 'c' );
+});
+
+test( 'zbdsqr: upper_4x4_idir2_all_vecs (idir=2 with NCC > 0)', function t() {
+	var rwork = new Float64Array( 80 );
+	var info;
+	var tc = findCase( 'upper_4x4_idir2_all_vecs' );
+	var d = new Float64Array( [ 0.5, 1.0, 2.0, 4.0 ] );
+	var e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
+	var n = 4;
+	var vt = complexIdentity( n );
+	var u = complexIdentity( n );
+	var c = new Complex128Array( [
+		1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.5, 0.5,
+		2.0, 0.0, 0.0, 2.0, 2.0, 2.0, 1.0, 0.0
+	] );
+
+	info = zbdsqr( 'U', n, n, n, 2,
+		d, 1, 0,
+		e, 1, 0,
+		vt, 1, n, 0,
+		u, 1, n, 0,
+		c, 1, n, 0,
+		rwork, 1, 0
+	);
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( d, new Float64Array( tc.d ), 1e-14, 'd' );
+	assertArrayClose( Array.from( reinterpret( vt, 0 ) ), tc.vt, 1e-14, 'vt' );
+	assertArrayClose( Array.from( reinterpret( u, 0 ) ), tc.u, 1e-14, 'u' );
+	assertArrayClose( Array.from( reinterpret( c, 0 ) ), tc.c, 1e-14, 'c' );
+});
+
+test( 'zbdsqr: upper_4x4_idir1_zero_shift_all_vecs (idir=1 zero shift + NCC)', function t() {
+	var rwork = new Float64Array( 80 );
+	var info;
+	var n = 4;
+	var tc = findCase( 'upper_4x4_idir1_zero_shift_all_vecs' );
+	var d = new Float64Array( [ 10.0, 1e-15, 5.0, 1.0 ] );
+	var e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
+	var vt = complexIdentity( n );
+	var u = complexIdentity( n );
+	var c = new Complex128Array( [
+		1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.5, 0.5,
+		2.0, 0.0, 0.0, 2.0, 2.0, 2.0, 1.0, 0.0
+	] );
+
+	info = zbdsqr( 'U', n, n, n, 2,
+		d, 1, 0,
+		e, 1, 0,
+		vt, 1, n, 0,
+		u, 1, n, 0,
+		c, 1, n, 0,
+		rwork, 1, 0
+	);
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( d, new Float64Array( tc.d ), 1e-13, 'd' );
+	assertArrayClose( Array.from( reinterpret( vt, 0 ) ), tc.vt, 1e-13, 'vt' );
+	assertArrayClose( Array.from( reinterpret( u, 0 ) ), tc.u, 1e-13, 'u' );
+	assertArrayClose( Array.from( reinterpret( c, 0 ) ), tc.c, 1e-13, 'c' );
+});
+
+test( 'zbdsqr: upper_3x3_near_zero_shift (shift negligible vs sll)', function t() {
+	var rwork = new Float64Array( 40 );
+	var info;
+	var tc = findCase( 'upper_3x3_near_zero_shift' );
+	var d = new Float64Array( [ 1e8, 1.0, 1.0 ] );
+	var e = new Float64Array( [ 0.5, 0.5 ] );
+	var vt = complexIdentity( 3 );
+	var u = complexIdentity( 3 );
+	var c = new Complex128Array( 0 );
+
+	info = zbdsqr( 'U', 3, 3, 3, 0,
+		d, 1, 0,
+		e, 1, 0,
+		vt, 1, 3, 0,
+		u, 1, 3, 0,
+		c, 1, 1, 0,
+		rwork, 1, 0
+	);
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( d, new Float64Array( tc.d ), 1e-10, 'd' );
+	assertArrayClose( Array.from( reinterpret( vt, 0 ) ), tc.vt, 1e-10, 'vt' );
+	assertArrayClose( Array.from( reinterpret( u, 0 ) ), tc.u, 1e-10, 'u' );
+});

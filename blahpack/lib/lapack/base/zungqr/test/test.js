@@ -157,3 +157,94 @@ test( 'zungqr: 8x5, K=5 (rectangular from QR)', function t() {
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
 });
+
+test( 'zungqr: blocked K=35, N=40 (partial-block zero init, covers lines 117-122)', function t() {
+	// K=35 with NB=32 gives kk = min(35, 32+32) = 35, and N=40 > kk=35,
+	// so the zero-init loop for columns kk..N-1 in rows 0..kk-1 executes.
+	// This covers lines 117-122 that are uncovered in the K=40 test.
+	//
+	// Strategy: QR-factor a 40x35 matrix, copy reflectors into a 40x40 matrix,
+	// then call zungqr(40, 40, 35) and verify Q^H * Q = I.
+	var M = 40;
+	var N = 40;
+	var K = 35;
+	var LDA = M;
+	var seed = 77777;
+	var x = seed;
+	var QRWORK;
+	var Asrc;
+	var Asrcv;
+	var TAU;
+	var WORK;
+	var info;
+	var idx;
+	var Av;
+	var A;
+	var i;
+	var j;
+
+	// Generate a deterministic 40x35 matrix for QR factorization
+	Asrc = new Complex128Array( LDA * K );
+	Asrcv = reinterpret( Asrc, 0 );
+	for ( j = 0; j < K; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			idx = 2 * ( i + j * LDA );
+			x = ( ( x * 1103515245 ) + 12345 ) & 0x7fffffff;
+			Asrcv[ idx ] = ( ( x % 2000 ) - 1000 ) / 500.0;
+			x = ( ( x * 1103515245 ) + 12345 ) & 0x7fffffff;
+			Asrcv[ idx + 1 ] = ( ( x % 2000 ) - 1000 ) / 500.0;
+		}
+	}
+
+	// QR factorize in-place
+	TAU = new Complex128Array( K );
+	QRWORK = new Complex128Array( K );
+	zgeqr2( M, K, Asrc, 1, LDA, 0, TAU, 1, 0, QRWORK, 1, 0 );
+
+	// Copy into a 40x40 matrix (first 35 columns from QR, last 5 zeroed)
+	A = new Complex128Array( LDA * N );
+	Av = reinterpret( A, 0 );
+	Asrcv = reinterpret( Asrc, 0 );
+	for ( j = 0; j < K; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			idx = 2 * ( i + j * LDA );
+			Av[ idx ] = Asrcv[ idx ];
+			Av[ idx + 1 ] = Asrcv[ idx + 1 ];
+		}
+	}
+
+	// Call zungqr to generate the 40x40 Q matrix
+	WORK = new Complex128Array( N * 64 );
+	info = zungqr( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, N * 64 );
+	assert.equal( info, 0, 'info' );
+
+	// Verify Q is unitary: Q^H * Q should be I_40
+	// Compute Q^H * Q manually: result[i][j] = sum_k conj(Q[k][i]) * Q[k][j]
+	Av = reinterpret( A, 0 );
+	var maxErr = 0;
+	var expected;
+	var err;
+	var re;
+	var im;
+	var qi;
+	var qj;
+	for ( i = 0; i < N; i++ ) {
+		for ( j = 0; j < N; j++ ) {
+			re = 0;
+			im = 0;
+			for ( var k = 0; k < M; k++ ) {
+				qi = 2 * ( k + i * LDA );
+				qj = 2 * ( k + j * LDA );
+				// conj(Q[k,i]) * Q[k,j]
+				re += Av[ qi ] * Av[ qj ] + Av[ qi + 1 ] * Av[ qj + 1 ];
+				im += Av[ qi ] * Av[ qj + 1 ] - Av[ qi + 1 ] * Av[ qj ];
+			}
+			expected = ( i === j ) ? 1.0 : 0.0;
+			err = Math.abs( re - expected ) + Math.abs( im );
+			if ( err > maxErr ) {
+				maxErr = err;
+			}
+		}
+	}
+	assert.ok( maxErr < 1e-10, 'Q^H*Q=I, max error: ' + maxErr );
+});

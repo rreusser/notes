@@ -4,3 +4,4 @@ node_modules
 env
 *.mod
 test/build/
+.notebook-kit-debug

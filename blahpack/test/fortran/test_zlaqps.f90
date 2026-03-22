@@ -125,4 +125,40 @@ program test_zlaqps
   call print_int_array('jpvt', JPVT, N)
   call end_test()
 
+  ! Test 5: Nearly collinear columns to trigger norm recomputation (lsticc > 0)
+  ! All columns are nearly the same, so after pivoting the first,
+  ! the remaining column norms degrade severely
+  M = 6; N = 3; NB = 2; OFFSET = 0
+  A = (0.0d0, 0.0d0)
+  ! Column 1: base vector
+  A(1,1) = (1.0d0, 0.0d0); A(2,1) = (2.0d0, 0.0d0); A(3,1) = (3.0d0, 0.0d0)
+  A(4,1) = (4.0d0, 0.0d0); A(5,1) = (5.0d0, 0.0d0); A(6,1) = (6.0d0, 0.0d0)
+  ! Column 2: base + tiny perturbation
+  A(1,2) = (1.0d0, 1.0d-10); A(2,2) = (2.0d0, 1.0d-10); A(3,2) = (3.0d0, 1.0d-10)
+  A(4,2) = (4.0d0, 1.0d-10); A(5,2) = (5.0d0, 1.0d-10); A(6,2) = (6.0d0, 1.0d-10)
+  ! Column 3: base + different tiny perturbation
+  A(1,3) = (1.0d0, 0.0d0); A(2,3) = (2.0d0, 0.0d0); A(3,3) = (3.0d0, 0.0d0)
+  A(4,3) = (4.0d0, 0.0d0); A(5,3) = (5.0d0, 0.0d0); A(6,3) = (6.0000000001d0, 0.0d0)
+  do i = 1, N
+    JPVT(i) = i
+  end do
+  do j = 1, N
+    VN1(j) = 0.0d0
+    do i = 1, M
+      VN1(j) = VN1(j) + dble(A(i,j))**2 + dimag(A(i,j))**2
+    end do
+    VN1(j) = sqrt(VN1(j))
+    VN2(j) = VN1(j)
+  end do
+  F = (0.0d0, 0.0d0)
+  AUXV = (0.0d0, 0.0d0)
+  KB = 0
+  call zlaqps(M, N, OFFSET, NB, KB, A, MAXM, JPVT, TAU, VN1, VN2, AUXV, F, MAXN)
+  call begin_test('collinear_norm_recomp')
+  call print_int('kb', KB)
+  call print_array('a', A_r, 2*MAXM*N)
+  call print_array('tau', TAU_r, 2*N)
+  call print_int_array('jpvt', JPVT, N)
+  call end_test()
+
 end program

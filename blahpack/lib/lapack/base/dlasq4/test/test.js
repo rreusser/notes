@@ -379,3 +379,73 @@ test( 'dlasq4: case10_gap2_neg — Case 10 with gap2<=0', function t() {
 	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 7, 0.5, 0.8, 0.5, 1.0, 0.8, 0.5, 0.0, 0, 0.0 );
 	checkResult( result, tc, 1e-14 );
 });
+
+test( 'dlasq4: case4_dn1_np_return — Case 4 dmin=dn1, Z(np-4)>Z(np-2) return', function t() {
+	// dmin=dn1=0.3, not dn=1.0, not dn2=2.0. dmin1=1.5 != dn1=0.3
+	// Z(np-4)=Z(16)=z[15]=5.0 > Z(np-2)=Z(18)=z[17]=1.0 triggers return
+	var z = filled( 100, 2.0 );
+	z[ 16 ] = 1.0; z[ 14 ] = 1.0; z[ 12 ] = 2.0; z[ 10 ] = 1.0;
+	z[ 15 ] = 5.0; z[ 17 ] = 1.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.3, 1.5, 2.0, 1.0, 0.3, 2.0, 0.0, 0, 0.0 );
+	assert.strictEqual( result.ttype, -4 );
+	assert.strictEqual( result.tau, 0.0 );
+});
+
+test( 'dlasq4: case4_dn1_nn9_return — Case 4 dmin=dn1, Z(nn-9)>Z(nn-11) return', function t() {
+	// Z(np-4)<=Z(np-2) passes, then Z(nn-9)=Z(11)=z[10]=5.0 > Z(nn-11)=Z(9)=z[8]=1.0
+	var z = filled( 100, 2.0 );
+	z[ 16 ] = 1.0; z[ 14 ] = 1.0; z[ 12 ] = 2.0;
+	z[ 15 ] = 1.0; z[ 17 ] = 2.0;
+	z[ 10 ] = 5.0; z[ 8 ] = 1.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.3, 1.5, 2.0, 1.0, 0.3, 2.0, 0.0, 0, 0.0 );
+	assert.strictEqual( result.ttype, -4 );
+	assert.strictEqual( result.tau, 0.0 );
+});
+
+test( 'dlasq4: case4_b2_zero — Case 4 dmin=dn with b2=0 (Z(nn-5)=0)', function t() {
+	// Z(nn-5)=Z(15)=z[14]=0 makes b2=0, triggering the b2===0 break
+	var z = filled( 100, 2.0 );
+	z[ 16 ] = 1.0; z[ 14 ] = 0.0; z[ 12 ] = 2.0; z[ 10 ] = 1.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.3, 1.5, 2.0, 0.3, 1.0, 2.0, 0.0, 0, 0.0 );
+	assert.strictEqual( result.ttype, -4 );
+	assert.ok( result.tau > 0.0, 'tau should be positive (Rayleigh bound used)' );
+});
+
+test( 'dlasq4: case5_b2_zero_loop — Case 5 b2=0 break in approximation loop', function t() {
+	// Z(nn-13)=Z(7)=z[6]=0 makes b2=0 triggering break in loop
+	var z = filled( 100, 4.0 );
+	z[ 19 ] = 1.0; z[ 17 ] = 1.0; z[ 15 ] = 1.0; z[ 14 ] = 1.0;
+	z[ 13 ] = 1.0; z[ 11 ] = 1.0; z[ 9 ] = 1.0; z[ 7 ] = 1.5;
+	z[ 5 ] = 1.0; z[ 4 ] = 1.0; z[ 3 ] = 1.0; z[ 2 ] = 1.0;
+	z[ 1 ] = 1.0; z[ 0 ] = 1.0;
+	z[ 6 ] = 0.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.5, 1.5, 1.0, 1.5, 2.0, 0.5, 0.0, 0, 0.0 );
+	assert.strictEqual( result.ttype, -5 );
+	assert.strictEqual( result.tau, 0.125 );
+});
+
+test( 'dlasq4: case7_convergence_break — Case 7 b2 convergence break', function t() {
+	// n0=30 with ratios Z(i4)/Z(i4-2)=0.5, b2 accumulates geometrically.
+	// After enough steps, HUNDRD*max(b1,a2)<b2 triggers break.
+	var i4;
+	var z = filled( 200, 2.0 );
+	z[ 118 ] = 1.0; z[ 116 ] = 2.0;
+	for ( i4 = 111; i4 >= 3; i4 -= 4 ) {
+		z[ i4 ] = 1.0;
+		z[ i4 - 2 ] = 2.0;
+	}
+	var result = dlasq4.ndarray( 1, 30, z, 1, 0, 0, 31, 0.5, 0.5, 10.0, 1.0, 0.5, 10.0, 0.0, 0, 0.0 );
+	assert.strictEqual( result.ttype, -7 );
+	assert.ok( result.tau > 0.0, 'tau should be positive' );
+});
+
+test( 'dlasq4: case10_true_gap2_neg — Case 10 with truly negative gap2', function t() {
+	// Z(nn-7)=z[12]=0.1, Z(nn-9)=z[10]=0.1, Z(nn-11)=z[8]=4.0
+	// gap2 = 0.1+0.1 - sqrt(4.0)*sqrt(0.1) - a2 < 0
+	var z = filled( 100, 4.0 );
+	z[ 14 ] = 0.01; z[ 12 ] = 0.1; z[ 10 ] = 0.1; z[ 8 ] = 4.0;
+	z[ 6 ] = 1.0; z[ 4 ] = 2.0; z[ 2 ] = 1.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 7, 0.5, 0.8, 0.5, 1.0, 0.8, 0.5, 0.0, 0, 0.0 );
+	assert.strictEqual( result.ttype, -10 );
+	assert.ok( result.tau > 0.0, 'tau should be positive' );
+});

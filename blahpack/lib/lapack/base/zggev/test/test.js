@@ -431,25 +431,11 @@ test( 'zggev: small entries trigger anrm < smlnum scaling', function t() {
 	);
 	assert.strictEqual( info, 0, 'info' );
 
-	// Eigenvalue ratios should be 4/2 = 2 and 6/3 = 2
-	// Verify alpha/beta ~ 2 for both eigenvalues
-	// alpha[0]/beta[0] and alpha[1]/beta[1] should give eigenvalue 2.0
-	var ar0 = ALPHAv[0];
-	var ai0 = ALPHAv[1];
-	var br0 = BETAv[0];
-	var bi0 = BETAv[1];
-	// complex division: (ar+ai*i)/(br+bi*i)
-	var denom0 = br0*br0 + bi0*bi0;
-	var evr0 = (ar0*br0 + ai0*bi0) / denom0;
-	assertClose( evr0, 2.0, tol, 'eigenvalue 0 real' );
-
-	var ar1 = ALPHAv[2];
-	var ai1 = ALPHAv[3];
-	var br1 = BETAv[2];
-	var bi1 = BETAv[3];
-	var denom1 = br1*br1 + bi1*bi1;
-	var evr1 = (ar1*br1 + ai1*bi1) / denom1;
-	assertClose( evr1, 2.0, tol, 'eigenvalue 1 real' );
+	// After unscaling, alpha/beta ratios should be preserved.
+	// alpha[i] and beta[i] should be proportional with ratio 2.
+	// Use ratio of reals since imaginary parts are 0 for diagonal case.
+	assertClose( ALPHAv[0] / BETAv[0], 2.0, tol, 'eigenvalue 0 ratio' );
+	assertClose( ALPHAv[2] / BETAv[2], 2.0, tol, 'eigenvalue 1 ratio' );
 });
 
 test( 'zggev: large entries trigger anrm > bignum scaling', function t() {
@@ -493,21 +479,8 @@ test( 'zggev: large entries trigger anrm > bignum scaling', function t() {
 	assert.strictEqual( info, 0, 'info' );
 
 	// Eigenvalue ratios should be 2 for both
-	var ar0 = ALPHAv[0];
-	var ai0 = ALPHAv[1];
-	var br0 = BETAv[0];
-	var bi0 = BETAv[1];
-	var denom0 = br0*br0 + bi0*bi0;
-	var evr0 = (ar0*br0 + ai0*bi0) / denom0;
-	assertClose( evr0, 2.0, tol, 'eigenvalue 0 real' );
-
-	var ar1 = ALPHAv[2];
-	var ai1 = ALPHAv[3];
-	var br1 = BETAv[2];
-	var bi1 = BETAv[3];
-	var denom1 = br1*br1 + bi1*bi1;
-	var evr1 = (ar1*br1 + ai1*bi1) / denom1;
-	assertClose( evr1, 2.0, tol, 'eigenvalue 1 real' );
+	assertClose( ALPHAv[0] / BETAv[0], 2.0, tol, 'eigenvalue 0 ratio' );
+	assertClose( ALPHAv[2] / BETAv[2], 2.0, tol, 'eigenvalue 1 ratio' );
 });
 
 test( 'zggev: small B entries trigger bnrm < smlnum scaling', function t() {

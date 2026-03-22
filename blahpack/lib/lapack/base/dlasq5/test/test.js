@@ -230,3 +230,182 @@ test( 'dlasq5.ndarray: n=3, IEEE pp=0 (minimal)', function t() {
 	assertApprox( result.dnm1, 1.38101265822784791, 1e-12, 'dnm1' );
 	assertApprox( result.dnm2, 3.89999999999999991, 1e-12, 'dnm2' );
 });
+
+test( 'dlasq5.ndarray: non-IEEE pp=0, d<0 early return in main loop', function t() {
+	// tau=1.0 > Z(1)=0.5, so d = 0.5 - 1.0 = -0.5 on first iteration
+	var z = new Float64Array([
+		0.5, 1.0, 0.5, 1.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 0, 1.0, 1.0, false, EPS );
+
+	assertApprox( result.dmin, -0.5, 1e-12, 'dmin' );
+	assertApprox( result.dmin1, -0.5, 1e-12, 'dmin1' );
+	assertApprox( result.dmin2, 0.0, 1e-14, 'dmin2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+	assertApprox( result.dnm1, 0.0, 1e-14, 'dnm1' );
+	assertApprox( result.dnm2, 0.0, 1e-14, 'dnm2' );
+});
+
+test( 'dlasq5.ndarray: non-IEEE pp=1, d<0 early return in main loop', function t() {
+	// pp=1: j4 = 4*1+1-3 = 2, Z(2) = z[1] = 1.0, d = 1.0-1.0 = 0
+	// In loop d goes negative after division and subtraction of tau
+	var z = new Float64Array([
+		0.5, 1.0, 0.5, 1.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 1, 1.0, 1.0, false, EPS );
+
+	assertApprox( result.dmin, -1.0, 1e-12, 'dmin' );
+	assertApprox( result.dmin1, -1.0, 1e-12, 'dmin1' );
+	assertApprox( result.dmin2, 0.0, 1e-14, 'dmin2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+	assertApprox( result.dnm1, 0.0, 1e-14, 'dnm1' );
+	assertApprox( result.dnm2, 0.0, 1e-14, 'dnm2' );
+});
+
+test( 'dlasq5.ndarray: non-IEEE pp=0, dnm1<0 in unrolled step (n=3)', function t() {
+	// n=3 so no main loop body; dnm1 goes negative in the second unrolled step
+	var z = new Float64Array([
+		0.6, 1.0, 0.6, 1.0,
+		3.0, 0.1, 3.0, 0.1,
+		2.0, 0.0, 2.0, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 3, z, 1, 0, 0, 0.5, 0.5, false, EPS );
+
+	assertApprox( result.dmin, -0.07142857142857151, 1e-12, 'dmin' );
+	assertApprox( result.dmin1, -0.07142857142857151, 1e-12, 'dmin1' );
+	assertApprox( result.dmin2, 0.09999999999999998, 1e-12, 'dmin2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+	assertApprox( result.dnm1, -0.07142857142857151, 1e-12, 'dnm1' );
+	assertApprox( result.dnm2, 0.09999999999999998, 1e-12, 'dnm2' );
+});
+
+test( 'dlasq5.ndarray: tau=0 IEEE pp=0, d<dthresh clamping', function t() {
+	// sigma=1e15 so dthresh = eps*1e15 ~ 0.222; d=0.1 < dthresh triggers d=0
+	var z = new Float64Array([
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 0.0, 0.1, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 0, 0.0, 1e15, true, EPS );
+
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq5.ndarray: tau=0 IEEE pp=1, d<dthresh clamping', function t() {
+	// sigma=1e15 so dthresh = eps*1e15 ~ 0.222; all Z values = 0.01 << dthresh
+	// triggers d=0 clamping in the pp=1 IEEE main loop
+	var z = new Float64Array([
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.0,  0.01, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 1, 0.0, 1e15, true, EPS );
+
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq5.ndarray: tau=0 non-IEEE pp=0, d<dthresh clamping', function t() {
+	// sigma=1e15 so dthresh = eps*1e15 ~ 0.222; d=0.1 < dthresh triggers d=0
+	var z = new Float64Array([
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 1.0, 0.1, 1.0,
+		0.1, 0.0, 0.1, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 0, 0.0, 1e15, false, EPS );
+
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq5.ndarray: tau=0 non-IEEE pp=1, d<dthresh clamping', function t() {
+	// sigma=1e15 so dthresh = eps*1e15 ~ 0.222; all small values trigger d=0
+	var z = new Float64Array([
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.0,  0.01, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 1, 0.0, 1e15, false, EPS );
+
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq5.ndarray: tau=0 non-IEEE pp=0, d<0 guard (negative Z)', function t() {
+	// Z(1) negative makes d start negative, triggering guard clause
+	var z = new Float64Array([
+		-0.1, 1.0, -0.1, 1.0,
+		 3.0, 0.5,  3.0, 0.5,
+		 2.0, 0.3,  2.0, 0.3,
+		 5.0, 0.2,  5.0, 0.2,
+		 1.0, 0.0,  1.0, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 0, 0.0, 1.0, false, EPS );
+
+	assertApprox( result.dmin, -0.1, 1e-12, 'dmin' );
+	assertApprox( result.dmin2, 0.0, 1e-14, 'dmin2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq5.ndarray: tau=0 non-IEEE pp=1, d<0 guard (negative Z)', function t() {
+	// Z(2) negative for pp=1 makes d start negative, triggering guard clause
+	var z = new Float64Array([
+		1.0, -0.1, 1.0, -0.1,
+		3.0,  0.5, 3.0,  0.5,
+		2.0,  0.3, 2.0,  0.3,
+		5.0,  0.2, 5.0,  0.2,
+		1.0,  0.0, 1.0,  0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 1, 0.0, 1.0, false, EPS );
+
+	assertApprox( result.dmin, -0.1, 1e-12, 'dmin' );
+	assertApprox( result.dmin2, 0.0, 1e-14, 'dmin2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq5.ndarray: tau=0 non-IEEE pp=0, dnm2<0 guard', function t() {
+	// n=3 so no main loop. Z(1) negative makes dnm2 = d = Z(1) < 0.
+	var z = new Float64Array([
+		-0.1, 1.0, -0.1, 1.0,
+		 3.0, 0.5,  3.0, 0.5,
+		 2.0, 0.0,  2.0, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 3, z, 1, 0, 0, 0.0, 1.0, false, EPS );
+
+	assertApprox( result.dmin, -0.1, 1e-12, 'dmin' );
+	assertApprox( result.dnm2, -0.1, 1e-12, 'dnm2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+	assertApprox( result.dnm1, 0.0, 1e-14, 'dnm1' );
+});
+
+test( 'dlasq5.ndarray: tau=0 non-IEEE pp=0, dnm1<0 guard', function t() {
+	// n=3 so no main loop. dnm2=0.1>0, but Z(5) negative makes dnm1<0.
+	var z = new Float64Array([
+		0.1,  1.0, 0.1,  1.0,
+		-0.5, 0.5, -0.5, 0.5,
+		2.0,  0.0, 2.0,  0.0
+	]);
+	var result = dlasq5.ndarray( 1, 3, z, 1, 0, 0, 0.0, 1.0, false, EPS );
+
+	assertApprox( result.dmin, -0.25, 1e-12, 'dmin' );
+	assertApprox( result.dnm2, 0.1, 1e-12, 'dnm2' );
+	assertApprox( result.dnm1, -0.25, 1e-12, 'dnm1' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});

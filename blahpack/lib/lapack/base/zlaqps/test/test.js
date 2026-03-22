@@ -154,6 +154,34 @@ test( 'zlaqps: NB=1', function t() {
 	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
 });
 
+test( 'zlaqps: collinear columns (norm recomputation)', function t() {
+	var tc = findCase( 'collinear_norm_recomp' );
+	var LDA = 8;
+	var LDF = 8;
+	var M = 6;
+	var N = 3;
+	var NB = 2;
+	var A = new Complex128Array( LDA * N );
+	var Av = reinterpret( A, 0 );
+
+	// Nearly collinear columns
+	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=0; Av[4]=3; Av[5]=0; Av[6]=4; Av[7]=0; Av[8]=5; Av[9]=0; Av[10]=6; Av[11]=0;
+	Av[2*LDA]=1; Av[2*LDA+1]=1e-10; Av[2*LDA+2]=2; Av[2*LDA+3]=1e-10; Av[2*LDA+4]=3; Av[2*LDA+5]=1e-10; Av[2*LDA+6]=4; Av[2*LDA+7]=1e-10; Av[2*LDA+8]=5; Av[2*LDA+9]=1e-10; Av[2*LDA+10]=6; Av[2*LDA+11]=1e-10;
+	Av[4*LDA]=1; Av[4*LDA+1]=0; Av[4*LDA+2]=2; Av[4*LDA+3]=0; Av[4*LDA+4]=3; Av[4*LDA+5]=0; Av[4*LDA+6]=4; Av[4*LDA+7]=0; Av[4*LDA+8]=5; Av[4*LDA+9]=0; Av[4*LDA+10]=6.0000000001; Av[4*LDA+11]=0;
+
+	var JPVT = new Int32Array( [ 1, 2, 3 ] );
+	var TAU = new Complex128Array( N );
+	var VN1 = colNorms( M, N, 0, A, LDA, 0 );
+	var VN2 = new Float64Array( VN1 );
+	var AUXV = new Complex128Array( NB );
+	var F = new Complex128Array( LDF * N );
+
+	var kb = zlaqps( M, N, 0, NB, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, AUXV, 1, 0, F, 1, LDF, 0 );
+
+	assert.equal( kb, tc.kb, 'kb' );
+	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
+});
+
 test( 'zlaqps: offset=1', function t() {
 	var tc = findCase( 'offset_1' );
 	var LDA = 8;

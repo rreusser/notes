@@ -1,0 +1,129 @@
+program test_dorm2r
+  use test_utils
+  implicit none
+
+  ! QR of a 4x3 matrix A, then apply Q or Q^T to various C matrices
+  double precision :: A(4, 4), C(4, 4), TAU(4), WORK(100)
+  ! Separate C for 2x4 rectangular (right-side) tests
+  double precision :: CR(2, 4)
+  integer :: info
+
+  ! Compute QR of a 4x3 matrix
+  ! A = [1 5 9; 2 6 10; 3 7 11; 4 8 12]
+  A = 0.0d0
+  A(1,1) = 1.0d0; A(2,1) = 2.0d0; A(3,1) = 3.0d0; A(4,1) = 4.0d0
+  A(1,2) = 5.0d0; A(2,2) = 6.0d0; A(3,2) = 7.0d0; A(4,2) = 8.0d0
+  A(1,3) = 9.0d0; A(2,3) = 10.0d0; A(3,3) = 11.0d0; A(4,3) = 12.0d0
+  TAU = 0.0d0
+  call dgeqr2(4, 3, A, 4, TAU, WORK, info)
+
+  ! Test 1: Left, No transpose: C := Q * C where C = I_4
+  C = 0.0d0
+  C(1,1) = 1.0d0; C(2,2) = 1.0d0; C(3,3) = 1.0d0; C(4,4) = 1.0d0
+  call dorm2r('L', 'N', 4, 4, 3, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('left_notrans')
+  call print_int('info', info)
+  call print_array('c', C, 16)
+  call end_test()
+
+  ! Test 2: Left, Transpose: C := Q^T * C where C = I_4
+  C = 0.0d0
+  C(1,1) = 1.0d0; C(2,2) = 1.0d0; C(3,3) = 1.0d0; C(4,4) = 1.0d0
+  call dorm2r('L', 'T', 4, 4, 3, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('left_trans')
+  call print_int('info', info)
+  call print_array('c', C, 16)
+  call end_test()
+
+  ! Test 3: Right, No transpose: C := C * Q where C = I_4
+  C = 0.0d0
+  C(1,1) = 1.0d0; C(2,2) = 1.0d0; C(3,3) = 1.0d0; C(4,4) = 1.0d0
+  call dorm2r('R', 'N', 4, 4, 3, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('right_notrans')
+  call print_int('info', info)
+  call print_array('c', C, 16)
+  call end_test()
+
+  ! Test 4: Right, Transpose: C := C * Q^T where C = I_4
+  C = 0.0d0
+  C(1,1) = 1.0d0; C(2,2) = 1.0d0; C(3,3) = 1.0d0; C(4,4) = 1.0d0
+  call dorm2r('R', 'T', 4, 4, 3, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('right_trans')
+  call print_int('info', info)
+  call print_array('c', C, 16)
+  call end_test()
+
+  ! Test 5: M=0 quick return
+  call dorm2r('L', 'N', 0, 4, 0, A, 1, TAU, C, 1, WORK, info)
+  call begin_test('m_zero')
+  call print_int('info', info)
+  call end_test()
+
+  ! Test 6: N=0 quick return
+  call dorm2r('L', 'N', 4, 0, 0, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('n_zero')
+  call print_int('info', info)
+  call end_test()
+
+  ! Test 7: K=0 quick return
+  call dorm2r('L', 'N', 4, 4, 0, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('k_zero')
+  call print_int('info', info)
+  call end_test()
+
+  ! Test 8: Left, notrans with rectangular C (4x2, non-identity)
+  C = 0.0d0
+  C(1,1) = 1.0d0; C(2,1) = 3.0d0; C(3,1) = -1.0d0; C(4,1) = 2.0d0
+  C(1,2) = 2.0d0; C(2,2) = 0.0d0; C(3,2) = 4.0d0; C(4,2) = -1.0d0
+  call dorm2r('L', 'N', 4, 2, 3, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('left_notrans_rect')
+  call print_int('info', info)
+  call print_array('c', C, 8)
+  call end_test()
+
+  ! Test 9: Left, trans with rectangular C (4x2, non-identity)
+  C = 0.0d0
+  C(1,1) = 1.0d0; C(2,1) = 3.0d0; C(3,1) = -1.0d0; C(4,1) = 2.0d0
+  C(1,2) = 2.0d0; C(2,2) = 0.0d0; C(3,2) = 4.0d0; C(4,2) = -1.0d0
+  call dorm2r('L', 'T', 4, 2, 3, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('left_trans_rect')
+  call print_int('info', info)
+  call print_array('c', C, 8)
+  call end_test()
+
+  ! Test 10: Right, notrans with rectangular C (2x4, non-identity)
+  ! For right side, NQ = N = 4, K=3 reflectors
+  ! Use properly-sized CR(2,4) with LDC=2
+  CR = 0.0d0
+  CR(1,1) = 1.0d0; CR(2,1) = 0.0d0
+  CR(1,2) = 2.0d0; CR(2,2) = 1.0d0
+  CR(1,3) = -1.0d0; CR(2,3) = 3.0d0
+  CR(1,4) = 4.0d0; CR(2,4) = -2.0d0
+  call dorm2r('R', 'N', 2, 4, 3, A, 4, TAU, CR, 2, WORK, info)
+  call begin_test('right_notrans_rect')
+  call print_int('info', info)
+  call print_array('c', CR, 8)
+  call end_test()
+
+  ! Test 11: Right, trans with rectangular C (2x4)
+  CR = 0.0d0
+  CR(1,1) = 1.0d0; CR(2,1) = 0.0d0
+  CR(1,2) = 2.0d0; CR(2,2) = 1.0d0
+  CR(1,3) = -1.0d0; CR(2,3) = 3.0d0
+  CR(1,4) = 4.0d0; CR(2,4) = -2.0d0
+  call dorm2r('R', 'T', 2, 4, 3, A, 4, TAU, CR, 2, WORK, info)
+  call begin_test('right_trans_rect')
+  call print_int('info', info)
+  call print_array('c', CR, 8)
+  call end_test()
+
+  ! Test 12: K=1 (single reflector), left, notrans
+  C = 0.0d0
+  C(1,1) = 1.0d0; C(2,2) = 1.0d0; C(3,3) = 1.0d0; C(4,4) = 1.0d0
+  call dorm2r('L', 'N', 4, 4, 1, A, 4, TAU, C, 4, WORK, info)
+  call begin_test('k_one')
+  call print_int('info', info)
+  call print_array('c', C, 16)
+  call end_test()
+
+end program

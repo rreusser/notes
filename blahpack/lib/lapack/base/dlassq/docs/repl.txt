@@ -1,0 +1,36 @@
+
+    dlassq.ndarray( N, x, stride, offset, scale, sumsq )
+        Return an updated sum of squares represented in scaled form
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        scale: number
+            scale.
+
+        sumsq: number
+            sumsq.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

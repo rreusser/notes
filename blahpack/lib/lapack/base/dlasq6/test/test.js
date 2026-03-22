@@ -191,3 +191,109 @@ test( 'dlasq6.ndarray: zero denominator in unrolled step (n=3)', function t() {
 	assertApprox( result.dnm1, 1.5, 1e-12, 'dnm1' );
 	assertApprox( result.dnm2, 4.0, 1e-12, 'dnm2' );
 });
+
+test( 'dlasq6.ndarray: pp=0 zero denominator in main loop', function t() {
+	// Z(1)=0 and Z(3)=0 so d+Z(j4-1)=0 at j4=4, triggering Z(j4-2)===0
+	var z = new Float64Array([
+		0.0, 1.0, 0.0, 0.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 5, z, 1, 0, 0 );
+
+	assertApprox( result.dmin, 0.25, 1e-12, 'dmin' );
+	assertApprox( result.dn, 0.25, 1e-12, 'dn' );
+});
+
+test( 'dlasq6.ndarray: pp=1 zero denominator in main loop', function t() {
+	// Z(2)=0 and Z(4)=0 so d+Z(j4)=0 at j4=4, triggering Z(j4-3)===0
+	var z = new Float64Array([
+		1.0, 0.0, 1.0, 0.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 5, z, 1, 0, 1 );
+
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq6.ndarray: pp=0 unsafe division branch (subnormal values)', function t() {
+	// Z(1)=5e-324 (subnormal) and Z(3)=0 so Z(j4-2)=5e-324, triggering else
+	var z = new Float64Array([
+		5e-324, 0.0, 5e-324, 0.0,
+		3.0, 1.0, 3.0, 1.0,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 5, z, 1, 0, 0 );
+
+	assertApprox( result.dmin, 5e-324, 1e-10, 'dmin' );
+	assertApprox( result.dn, 0.2, 1e-12, 'dn' );
+});
+
+test( 'dlasq6.ndarray: pp=1 unsafe division branch (subnormal values)', function t() {
+	// Z(2)=5e-324 (subnormal) and Z(4)=0 so Z(j4-3)=5e-324, triggering else
+	var z = new Float64Array([
+		1.0, 5e-324, 1.0, 0.0,
+		3.0, 1.0, 3.0, 1.0,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 5, z, 1, 0, 1 );
+
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+});
+
+test( 'dlasq6.ndarray: unrolled step 1 zero denominator (n=3)', function t() {
+	// n=3 pp=0: no main loop, dnm2=Z(1)=0. Z(3)=0, so Z(j4-2)=0+0=0.
+	var z = new Float64Array([
+		0.0, 1.0, 0.0, 0.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.0, 2.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 3, z, 1, 0, 0 );
+
+	assertApprox( result.dmin, 1.0, 1e-12, 'dmin' );
+	assertApprox( result.dmin1, 3.0, 1e-12, 'dmin1' );
+	assertApprox( result.dnm2, 0.0, 1e-14, 'dnm2' );
+	assertApprox( result.dnm1, 3.0, 1e-12, 'dnm1' );
+	assertApprox( result.dn, 1.0, 1e-12, 'dn' );
+});
+
+test( 'dlasq6.ndarray: unrolled step 2 zero denominator (n=3)', function t() {
+	// Both unrolled steps produce Z(j4-2)=0. Z(1)=0, Z(3)=0, Z(5)=0, Z(7)=0.
+	var z = new Float64Array([
+		0.0, 1.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.5,
+		2.0, 0.0, 2.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 3, z, 1, 0, 0 );
+
+	assertApprox( result.dmin, 2.0, 1e-12, 'dmin' );
+	assertApprox( result.dmin1, 0.0, 1e-14, 'dmin1' );
+	assertApprox( result.dnm2, 0.0, 1e-14, 'dnm2' );
+	assertApprox( result.dnm1, 0.0, 1e-14, 'dnm1' );
+	assertApprox( result.dn, 2.0, 1e-12, 'dn' );
+});
+
+test( 'dlasq6.ndarray: unrolled unsafe division branch (n=3)', function t() {
+	// dnm2=5e-324, Z(j4p2)=z[2]=0 so Z(j4-2)=5e-324 (subnormal), triggering else
+	var z = new Float64Array([
+		5e-324, 1.0, 0.0, 1.0,
+		1.0, 0.5, 1.0, 0.5,
+		2.0, 0.0, 2.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 3, z, 1, 0, 0 );
+
+	assertApprox( result.dmin, 5e-324, 1e-10, 'dmin' );
+	assertApprox( result.dnm2, 5e-324, 1e-10, 'dnm2' );
+	assertApprox( result.dn, 1.0, 1e-12, 'dn' );
+});

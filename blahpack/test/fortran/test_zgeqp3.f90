@@ -3,11 +3,16 @@ program test_zgeqp3
   implicit none
 
   integer, parameter :: MAXMN = 8
+  integer, parameter :: BIGMN = 40
   complex*16 :: A(MAXMN, MAXMN), TAU(MAXMN), WORK(200)
+  complex*16 :: AB(BIGMN, BIGMN), TAUB(BIGMN), WORKB(10000)
   double precision :: A_r(2*MAXMN*MAXMN), TAU_r(2*MAXMN), RWORK(2*MAXMN)
+  double precision :: AB_r(2*BIGMN*BIGMN), TAUB_r(2*BIGMN), RWORKB(2*BIGMN)
   equivalence (A, A_r)
   equivalence (TAU, TAU_r)
-  integer :: JPVT(MAXMN), info, i, j, LWORK
+  equivalence (AB, AB_r)
+  equivalence (TAUB, TAUB_r)
+  integer :: JPVT(MAXMN), JPVTB(BIGMN), info, i, j, LWORK
 
   LWORK = 200
 
@@ -93,6 +98,53 @@ program test_zgeqp3
   call print_array('a', A_r, 2*MAXMN*3)
   call print_array('tau', TAU_r, 2*3)
   call print_int_array('jpvt', JPVT, 3)
+  call end_test()
+
+  ! Test 8: Fixed column at position 3 (swap needed: j=2 > nfxd=0)
+  A = (0.0d0, 0.0d0)
+  A(1,1) = (1.0d0, 0.0d0); A(2,1) = (2.0d0, 0.0d0); A(3,1) = (0.0d0, 0.0d0); A(4,1) = (1.0d0, 0.0d0)
+  A(1,2) = (3.0d0, 0.0d0); A(2,2) = (0.0d0, 1.0d0); A(3,2) = (2.0d0, 0.0d0); A(4,2) = (1.0d0, 1.0d0)
+  A(1,3) = (0.0d0, 1.0d0); A(2,3) = (1.0d0, 0.0d0); A(3,3) = (3.0d0, 0.0d0); A(4,3) = (2.0d0, 0.0d0)
+  JPVT = 0
+  JPVT(3) = 1  ! Fix column 3 (will be swapped to position 1)
+  call zgeqp3(4, 3, A, MAXMN, JPVT, TAU, WORK, LWORK, RWORK, info)
+  call begin_test('fixed_col_swap')
+  call print_int('info', info)
+  call print_array('a', A_r, 2*MAXMN*3)
+  call print_array('tau', TAU_r, 2*3)
+  call print_int_array('jpvt', JPVT, 3)
+  call end_test()
+
+  ! Test 9: Multiple fixed columns (fix col 1 and col 3)
+  A = (0.0d0, 0.0d0)
+  A(1,1) = (1.0d0, 0.0d0); A(2,1) = (2.0d0, 0.0d0); A(3,1) = (0.0d0, 0.0d0); A(4,1) = (1.0d0, 0.0d0)
+  A(1,2) = (3.0d0, 0.0d0); A(2,2) = (0.0d0, 1.0d0); A(3,2) = (2.0d0, 0.0d0); A(4,2) = (1.0d0, 1.0d0)
+  A(1,3) = (0.0d0, 1.0d0); A(2,3) = (1.0d0, 0.0d0); A(3,3) = (3.0d0, 0.0d0); A(4,3) = (2.0d0, 0.0d0)
+  JPVT = 0
+  JPVT(1) = 1
+  JPVT(3) = 1  ! Fix columns 1 and 3
+  call zgeqp3(4, 3, A, MAXMN, JPVT, TAU, WORK, LWORK, RWORK, info)
+  call begin_test('fixed_two_cols')
+  call print_int('info', info)
+  call print_array('a', A_r, 2*MAXMN*3)
+  call print_array('tau', TAU_r, 2*3)
+  call print_int_array('jpvt', JPVT, 3)
+  call end_test()
+
+  ! Test 10: Wide matrix (N=36 > NB=32) to trigger blocked zlaqps path
+  AB = (0.0d0, 0.0d0)
+  do j = 1, 36
+    do i = 1, 8
+      AB(i,j) = dcmplx(dble(mod(i*j+3, 7)) - 3.0d0, dble(mod(i+j, 5)) - 2.0d0)
+    end do
+  end do
+  JPVTB = 0
+  call zgeqp3(8, 36, AB, BIGMN, JPVTB, TAUB, WORKB, 10000, RWORKB, info)
+  call begin_test('wide_8x36_blocked')
+  call print_int('info', info)
+  call print_array('a', AB_r, 2*BIGMN*36)
+  call print_array('tau', TAUB_r, 2*8)
+  call print_int_array('jpvt', JPVTB, 36)
   call end_test()
 
 end program

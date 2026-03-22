@@ -209,3 +209,22 @@ test( 'zlascl: cto=0 (lines 121-124)', function t() {
 	var Av = reinterpret( A, 0 );
 	assertArrayClose( Array.from( Av ), [ 0, 0, 0, 0 ], 'cto_zero a' );
 });
+
+test( 'zlascl: small cfrom, large cto (lines 130-132, mul=bignum path)', function t() {
+	// Need abs(cto1) > abs(cfromc) where cto1 = ctoc/bignum
+	// and NOT cfrom1 === cfromc, NOT cto1 === ctoc, NOT cfrom1 > ctoc
+	// cfrom = 1e-300, cto = 1e300
+	// cfrom1 = 1e-300 * smlnum ~ 1e-300 * 2.2e-308 = 2.2e-608 (not equal to cfrom)
+	// cto1 = 1e300 / bignum ~ 1e300 / 4.5e307 ~ 2.2e-8 (not equal to cto)
+	// cfrom1 > ctoc? 2.2e-608 > 1e300? NO
+	// cto1 > cfromc? 2.2e-8 > 1e-300? YES -> hits lines 130-132
+	var A = c128( new Float64Array( [ 1, 2, 3, 4 ] ) );
+	var info = base( 'G', 0, 0, 1e-300, 1e300, 1, 2, A, 1, 1, 0 );
+	assert.strictEqual( info, 0 );
+	// The iterative scaling should eventually reach the right ratio
+	var Av = reinterpret( A, 0 );
+	// Each element should be multiplied by 1e300/1e-300 = 1e600
+	// But this is done iteratively, so the result should be huge
+	// Just verify they're non-zero and scaled up
+	assert.ok( Av[ 0 ] > 1e100, 'scaled up: ' + Av[ 0 ] );
+});
