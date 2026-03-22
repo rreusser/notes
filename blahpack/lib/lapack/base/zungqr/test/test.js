@@ -110,23 +110,49 @@ test( 'zungqr: 1x1, K=1', function t() {
 });
 
 test( 'zungqr: from QR factorization 4x4', function t() {
-	var tc = findCase( 'zungqr_from_qr_4x4' );
-	// Verify against the fixture
-	assert.ok( tc, 'fixture exists' );
-	assert.equal( tc.info, 0, 'info' );
+	var input = findCase( 'zungqr_from_qr_4x4_input' );
+	var expected = findCase( 'zungqr_from_qr_4x4' );
+	var M = input.M;
+	var N = input.N;
+	var K = input.K;
+	var A = new Complex128Array( input.A );
+	var TAU = new Complex128Array( input.TAU );
+	var WORK = new Complex128Array( N * 32 );
+	var info;
+
+	info = zungqr( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	assert.equal( info, expected.info, 'info' );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
 });
 
-test( 'zungqr: blocked 40x40', function t() {
-	var tc = findCase( 'zungqr_blocked_40x40' );
-	// Verify against the fixture (requires zgeqrf for setup)
-	assert.ok( tc, 'fixture exists' );
-	assert.equal( tc.info, 0, 'info' );
-	assert.equal( tc.M, 40, 'M' );
-	assert.equal( tc.N, 40, 'N' );
+test( 'zungqr: blocked 40x40 (K>NB triggers blocking)', function t() {
+	var input = findCase( 'zungqr_blocked_40x40_input' );
+	var expected = findCase( 'zungqr_blocked_40x40' );
+	var M = input.M;
+	var N = input.N;
+	var K = input.K;
+	var A = new Complex128Array( input.A );
+	var TAU = new Complex128Array( input.TAU );
+	var WORK = new Complex128Array( N * 32 );
+	var info;
+
+	info = zungqr( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	assert.equal( info, expected.info, 'info' );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-10, 'A' );
 });
 
-test( 'zungqr: 8x5, K=5 (rectangular)', function t() {
-	var tc = findCase( 'zungqr_8x5_k5' );
-	assert.ok( tc, 'fixture exists' );
-	assert.equal( tc.info, 0, 'info' );
+test( 'zungqr: 8x5, K=5 (rectangular from QR)', function t() {
+	var input = findCase( 'zungqr_8x5_k5_input' );
+	var expected = findCase( 'zungqr_8x5_k5' );
+	var M = input.M;
+	var N = input.N;
+	var K = input.K;
+	var A = new Complex128Array( input.A );
+	var TAU = new Complex128Array( input.TAU );
+	var WORK = new Complex128Array( N * 32 );
+	var info;
+
+	info = zungqr( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	assert.equal( info, expected.info, 'info' );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
 });

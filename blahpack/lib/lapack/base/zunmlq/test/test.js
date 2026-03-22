@@ -1,13 +1,14 @@
-
-
 'use strict';
 
 // MODULES //
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var zgelq2 = require( '../../zgelq2/lib/base.js' );
 var zunmlq = require( './../lib/base.js' );
 
 
@@ -37,52 +38,128 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
+function extractRaw( C, count ) {
+	var Cv = reinterpret( C, 0 );
+	var result = [];
+	var i;
+	for ( i = 0; i < count; i++ ) {
+		result.push( Cv[ i ] );
+	}
+	return result;
+}
+
+function lq3x5() {
+	var LDA = 6;
+	var A = new Complex128Array( LDA * 6 );
+	var Av = reinterpret( A, 0 );
+	Av[0]=1; Av[1]=0;
+	Av[2*LDA]=2; Av[2*LDA+1]=1;
+	Av[4*LDA]=0; Av[4*LDA+1]=0;
+	Av[6*LDA]=1; Av[6*LDA+1]=1;
+	Av[8*LDA]=3; Av[8*LDA+1]=0;
+	Av[2]=0; Av[3]=2;
+	Av[2*LDA+2]=1; Av[2*LDA+3]=0;
+	Av[4*LDA+2]=3; Av[4*LDA+3]=1;
+	Av[6*LDA+2]=2; Av[6*LDA+3]=0;
+	Av[8*LDA+2]=1; Av[8*LDA+3]=1;
+	Av[4]=3; Av[5]=1;
+	Av[2*LDA+4]=0; Av[2*LDA+5]=0;
+	Av[4*LDA+4]=1; Av[4*LDA+5]=0;
+	Av[6*LDA+4]=2; Av[6*LDA+5]=1;
+	Av[8*LDA+4]=0; Av[8*LDA+5]=2;
+	var TAU = new Complex128Array( 6 );
+	var WORK = new Complex128Array( 20 );
+	zgelq2( 3, 5, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
+	return { A: A, TAU: TAU, LDA: LDA };
+}
+
+function eye5in6() {
+	var LDC = 6;
+	var C = new Complex128Array( LDC * 6 );
+	var Cv = reinterpret( C, 0 );
+	var i;
+	for ( i = 0; i < 5; i++ ) {
+		Cv[ 2 * ( i + i * LDC ) ] = 1.0;
+	}
+	return C;
+}
+
 
 // TESTS //
 
-test( 'zunmlq: left_notrans_5x5', function t() {
+test( 'zunmlq: left, no transpose (Q*I)', function t() {
 	var tc = findCase( 'left_notrans_5x5' );
-	// TODO: set up inputs and call zunmlq(...)
-	// assertArrayClose( result, tc.c, 1e-14, 'c' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
+	var lq = lq3x5();
+	var LDC = 6;
+	var C = eye5in6();
+	var WORK = new Complex128Array( 200 );
+	var info = zunmlq( 'L', 'N', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, tc.info );
+	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
 
-test( 'zunmlq: left_conjtrans_5x5', function t() {
+test( 'zunmlq: left, conjugate transpose (Q^H*I)', function t() {
 	var tc = findCase( 'left_conjtrans_5x5' );
-	// TODO: set up inputs and call zunmlq(...)
-	// assertArrayClose( result, tc.c, 1e-14, 'c' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
+	var lq = lq3x5();
+	var LDC = 6;
+	var C = eye5in6();
+	var WORK = new Complex128Array( 200 );
+	var info = zunmlq( 'L', 'C', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, tc.info );
+	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
 
-test( 'zunmlq: right_notrans_5x5', function t() {
+test( 'zunmlq: right, no transpose (I*Q)', function t() {
 	var tc = findCase( 'right_notrans_5x5' );
-	// TODO: set up inputs and call zunmlq(...)
-	// assertArrayClose( result, tc.c, 1e-14, 'c' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
+	var lq = lq3x5();
+	var LDC = 6;
+	var C = eye5in6();
+	var WORK = new Complex128Array( 200 );
+	var info = zunmlq( 'R', 'N', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, tc.info );
+	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
 
-test( 'zunmlq: m_zero', function t() {
-	var tc = findCase( 'm_zero' );
-	// TODO: set up inputs and call zunmlq(...)
-	// assertClose( result, tc.info, 1e-14, 'info' );
+test( 'zunmlq: M=0 quick return', function t() {
+	var C = new Complex128Array( 1 );
+	var WORK = new Complex128Array( 1 );
+	var A = new Complex128Array( 1 );
+	var TAU = new Complex128Array( 1 );
+	var info = zunmlq( 'L', 'N', 0, 5, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0, 1 );
+	assert.equal( info, 0 );
 });
 
-test( 'zunmlq: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
-	// TODO: set up inputs and call zunmlq(...)
-	// assertClose( result, tc.info, 1e-14, 'info' );
+test( 'zunmlq: N=0 quick return', function t() {
+	var C = new Complex128Array( 1 );
+	var WORK = new Complex128Array( 1 );
+	var A = new Complex128Array( 1 );
+	var TAU = new Complex128Array( 1 );
+	var info = zunmlq( 'L', 'N', 5, 0, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0, 1 );
+	assert.equal( info, 0 );
 });
 
-test( 'zunmlq: k_zero', function t() {
-	var tc = findCase( 'k_zero' );
-	// TODO: set up inputs and call zunmlq(...)
-	// assertClose( result, tc.info, 1e-14, 'info' );
+test( 'zunmlq: K=0 quick return', function t() {
+	var C = new Complex128Array( 1 );
+	var WORK = new Complex128Array( 1 );
+	var A = new Complex128Array( 1 );
+	var TAU = new Complex128Array( 1 );
+	var info = zunmlq( 'L', 'N', 5, 5, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0, 1 );
+	assert.equal( info, 0 );
 });
 
-test( 'zunmlq: right_conjtrans_rect', function t() {
+test( 'zunmlq: right, conjugate transpose on rectangular C', function t() {
 	var tc = findCase( 'right_conjtrans_rect' );
-	// TODO: set up inputs and call zunmlq(...)
-	// assertArrayClose( result, tc.c, 1e-14, 'c' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
+	var lq = lq3x5();
+	var LDC = 6;
+	var C = new Complex128Array( LDC * 6 );
+	var Cv = reinterpret( C, 0 );
+	Cv[0]=1; Cv[1]=1; Cv[2]=3; Cv[3]=0; Cv[4]=-1; Cv[5]=1;
+	Cv[2*LDC]=0; Cv[2*LDC+1]=2; Cv[2*LDC+2]=1; Cv[2*LDC+3]=-1; Cv[2*LDC+4]=4; Cv[2*LDC+5]=0;
+	Cv[4*LDC]=2; Cv[4*LDC+1]=0; Cv[4*LDC+2]=0; Cv[4*LDC+3]=1; Cv[4*LDC+4]=1; Cv[4*LDC+5]=1;
+	Cv[6*LDC]=1; Cv[6*LDC+1]=0; Cv[6*LDC+2]=2; Cv[6*LDC+3]=0; Cv[6*LDC+4]=0; Cv[6*LDC+5]=3;
+	Cv[8*LDC]=0; Cv[8*LDC+1]=1; Cv[8*LDC+2]=1; Cv[8*LDC+3]=1; Cv[8*LDC+4]=2; Cv[8*LDC+5]=0;
+	var WORK = new Complex128Array( 200 );
+	var info = zunmlq( 'R', 'C', 3, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, tc.info );
+	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
-
