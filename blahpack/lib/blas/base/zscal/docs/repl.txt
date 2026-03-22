@@ -1,0 +1,36 @@
+
+    zscal.ndarray( N, za, x, stride, offset, incx )
+        Scale a complex double-precision vector by a complex constant
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        za: Complex128
+            za.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

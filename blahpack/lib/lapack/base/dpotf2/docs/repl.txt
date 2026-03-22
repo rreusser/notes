@@ -1,0 +1,7 @@
+
+    dpotf2.ndarray( uplo, N, A, strideA1, strideA2, offsetA )
+        TODO: Add REPL documentation.
+
+    See Also
+    --------
+

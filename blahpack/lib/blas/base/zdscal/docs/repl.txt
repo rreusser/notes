@@ -1,0 +1,36 @@
+
+    zdscal.ndarray( N, alpha, x, stride, offset, incx )
+        Scale a complex double-precision vector by a double-precision constant.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        alpha: number
+            scalar constant.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

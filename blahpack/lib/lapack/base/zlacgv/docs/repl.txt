@@ -1,0 +1,30 @@
+
+    zlacgv.ndarray( N, x, stride, offset )
+        Conjugate a complex vector in-place
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

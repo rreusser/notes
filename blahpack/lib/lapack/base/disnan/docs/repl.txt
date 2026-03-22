@@ -1,0 +1,21 @@
+
+    disnan.ndarray( din )
+        Test if input is NaN
+
+        Parameters
+        ----------
+        din: number
+            din.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

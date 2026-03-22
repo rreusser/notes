@@ -1,0 +1,33 @@
+
+    izamax.ndarray( N, x, stride, offset, incx )
+        Find the index of the element having the maximum sum of absolute values of real and imaginary parts.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

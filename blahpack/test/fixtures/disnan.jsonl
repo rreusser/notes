@@ -1,0 +1,6 @@
+{"name":"disnan_nan","result":1}
+{"name":"disnan_zero","result":0}
+{"name":"disnan_one","result":0}
+{"name":"disnan_inf","result":0}
+{"name":"disnan_neginf","result":0}
+{"name":"disnan_large","result":0}

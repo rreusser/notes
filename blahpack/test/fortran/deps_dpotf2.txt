@@ -1,0 +1,4 @@
+# LAPACK dependencies for dpotf2
+dpotf2
+disnan
+dlaisnan

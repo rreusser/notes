@@ -1,0 +1,119 @@
+#!/bin/bash
+set -euo pipefail
+
+# Usage: ./test/run_fortran.sh <package> <routine> [--source <file>] [--output <file>]
+# Example: ./test/run_fortran.sh blas daxpy
+#          ./test/run_fortran.sh lapack dpotf2
+#          ./test/run_fortran.sh lapack dpotf2 --source pipeline/dpotf2/step1.f
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+
+PACKAGE="$1"; shift
+ROUTINE="$1"; shift
+
+SOURCE_OVERRIDE=""
+OUTPUT_OVERRIDE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --source) SOURCE_OVERRIDE="$2"; shift 2 ;;
+    --output) OUTPUT_OVERRIDE="$2"; shift 2 ;;
+    *) echo "Unknown option: $1" >&2; exit 1 ;;
+  esac
+done
+
+TEST_SRC="$SCRIPT_DIR/fortran/test_${ROUTINE}.f90"
+UTILS_SRC="$SCRIPT_DIR/fortran/test_utils.f90"
+FIXTURE_OUT="${OUTPUT_OVERRIDE:-$SCRIPT_DIR/fixtures/${ROUTINE}.jsonl}"
+BUILD_DIR="$SCRIPT_DIR/build"
+
+mkdir -p "$BUILD_DIR" "$(dirname "$FIXTURE_OUT")"
+
+if [ ! -f "$TEST_SRC" ]; then
+  echo "Error: Test source not found: $TEST_SRC" >&2
+  exit 1
+fi
+
+# Determine the original source file for this routine
+if [ "$PACKAGE" = "blas" ]; then
+  ORIGINAL_SOURCE="$ROOT_DIR/data/BLAS-3.12.0/${ROUTINE}.f"
+elif [ "$PACKAGE" = "lapack" ]; then
+  ORIGINAL_SOURCE="$ROOT_DIR/data/lapack-3.12.0/SRC/${ROUTINE}.f"
+else
+  echo "Error: Unknown package '$PACKAGE'. Use 'blas' or 'lapack'." >&2
+  exit 1
+fi
+
+# Collect Fortran source files needed for linking
+SOURCES=("$UTILS_SRC" "$TEST_SRC")
+
+if [ "$PACKAGE" = "blas" ]; then
+  BLAS_DIR="$ROOT_DIR/data/BLAS-3.12.0"
+  for f in "$BLAS_DIR"/*.f "$BLAS_DIR"/*.f90; do
+    [ ! -f "$f" ] && continue
+    # If source override, skip the original file for this routine
+    base=$(basename "$f" .f)
+    base=$(basename "$base" .f90)
+    if [ -n "$SOURCE_OVERRIDE" ] && [ "$base" = "$ROUTINE" ]; then
+      continue
+    fi
+    SOURCES+=("$f")
+  done
+elif [ "$PACKAGE" = "lapack" ]; then
+  BLAS_DIR="$ROOT_DIR/data/BLAS-3.12.0"
+  LAPACK_DIR="$ROOT_DIR/data/lapack-3.12.0/SRC"
+  for f in "$BLAS_DIR"/*.f; do
+    SOURCES+=("$f")
+  done
+  # Only link specific LAPACK dependencies (not all of LAPACK, which has
+  # .f90 module issues). The test program defines LAPACK_DEPS if needed.
+  DEPS_FILE="$SCRIPT_DIR/fortran/deps_${ROUTINE}.txt"
+  if [ -f "$DEPS_FILE" ]; then
+    while IFS= read -r dep; do
+      dep=$(echo "$dep" | xargs)  # trim whitespace
+      [ -z "$dep" ] && continue
+      [[ "$dep" == \#* ]] && continue
+      DEP_FILE="$LAPACK_DIR/${dep}.f"
+      if [ -n "$SOURCE_OVERRIDE" ] && [ "$dep" = "$ROUTINE" ]; then
+        continue
+      fi
+      if [ -f "$DEP_FILE" ]; then
+        SOURCES+=("$DEP_FILE")
+      else
+        # Also check INSTALL directory (e.g. dlamch)
+        INSTALL_FILE="$ROOT_DIR/data/lapack-3.12.0/INSTALL/${dep}.f"
+        if [ -f "$INSTALL_FILE" ]; then
+          SOURCES+=("$INSTALL_FILE")
+        else
+          echo "Warning: dependency $dep not found at $DEP_FILE" >&2
+        fi
+      fi
+    done < "$DEPS_FILE"
+  else
+    echo "Warning: No deps file ($DEPS_FILE). Only linking BLAS." >&2
+  fi
+  for f in "$BLAS_DIR"/*.f90; do
+    [ -f "$f" ] && SOURCES+=("$f")
+  done
+fi
+
+# Add source override if provided
+if [ -n "$SOURCE_OVERRIDE" ]; then
+  if [ ! -f "$SOURCE_OVERRIDE" ]; then
+    echo "Error: Source override not found: $SOURCE_OVERRIDE" >&2
+    exit 1
+  fi
+  SOURCES+=("$SOURCE_OVERRIDE")
+  echo "Using source override: $SOURCE_OVERRIDE" >&2
+fi
+
+BINARY="$BUILD_DIR/test_${ROUTINE}"
+
+echo "Compiling test_${ROUTINE}..." >&2
+gfortran -O2 -o "$BINARY" "${SOURCES[@]}" 2>&1 >&2
+
+echo "Running test_${ROUTINE}..." >&2
+"$BINARY" > "$FIXTURE_OUT"
+
+echo "Fixture written to $FIXTURE_OUT" >&2
+echo "Lines: $(wc -l < "$FIXTURE_OUT")" >&2

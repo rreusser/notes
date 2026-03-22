@@ -1,0 +1,2 @@
+dlapy3
+dlamch

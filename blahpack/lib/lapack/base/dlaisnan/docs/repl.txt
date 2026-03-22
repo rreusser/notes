@@ -1,0 +1,24 @@
+
+    dlaisnan.ndarray( din1, din2 )
+        Test for NaN by comparing two arguments for inequality
+
+        Parameters
+        ----------
+        din1: number
+            din1.
+
+        din2: number
+            din2.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

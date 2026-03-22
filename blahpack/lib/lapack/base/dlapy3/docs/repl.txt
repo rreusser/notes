@@ -1,0 +1,27 @@
+
+    dlapy3.ndarray( x, y, z )
+        Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+
+        Parameters
+        ----------
+        x: number
+            x.
+
+        y: number
+            y.
+
+        z: number
+            z.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

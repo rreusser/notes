@@ -4,7 +4,8 @@
   "main": "generate.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test 'lib/**/test/test*.js' 'lib/*.test.js'",
+    "fixtures": "./test/generate_fixtures.sh"
   },
   "keywords": [],
   "author": "",

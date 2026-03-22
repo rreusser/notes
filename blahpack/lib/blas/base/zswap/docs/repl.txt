@@ -1,0 +1,45 @@
+
+    zswap.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy )
+        Interchange two complex double-precision vectors.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        incy: integer
+            incy.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

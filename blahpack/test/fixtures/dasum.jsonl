@@ -1,0 +1,6 @@
+{"name":"basic","result": 1.50000000000000000E+001}
+{"name":"mixed_signs","result": 1.50000000000000000E+001}
+{"name":"n_zero","result": 0.00000000000000000E+000}
+{"name":"n_one","result": 4.20000000000000000E+001}
+{"name":"stride","result": 6.00000000000000000E+000}
+{"name":"unrolled","result": 9.10000000000000000E+001}

@@ -1,0 +1,7 @@
+
+    dlaswp.ndarray( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx )
+        TODO: Add REPL documentation.
+
+    See Also
+    --------
+

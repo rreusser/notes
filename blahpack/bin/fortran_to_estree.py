@@ -20,6 +20,7 @@ from fparser.two.Fortran2003 import (
     Char_Literal_Constant,
     Call_Stmt,
     Comment,
+    Complex_Literal_Constant,
     Component_Spec_List,
     Continue_Stmt,
     Data_Stmt,
@@ -131,6 +132,10 @@ INTRINSIC_FUNCTIONS = {
     'min': 'min',
     'max': 'max',
     'sign': 'sign',
+    'dconjg': 'dconjg',
+    'conjg': 'conjg',
+    'dimag': 'dimag',
+    'aimag': 'aimag',
 }
 
 TYPES = {
@@ -140,6 +145,8 @@ TYPES = {
     'double precision': 'float64',
     'integer': 'int32',
     'complex*16': 'complex128',
+    'complex(wp)': 'complex128',
+    'complex': 'complex128',
     'character': 'String',
 }
 
@@ -222,12 +229,13 @@ def parse_data_stmt(node):
 
 
 def parse_type_declaration_stmt (node):
-    assert_child_types(node, (Intrinsic_Type_Spec, Entity_Decl_List))
+    from fparser.two.Fortran2003 import Attr_Spec_List
+    assert_child_types(node, (Intrinsic_Type_Spec, Entity_Decl_List, Attr_Spec_List))
 
     declarations = {}
 
-    # Implement as needed if not None
-    assert node.children[1] == None
+    # children[1] is Attr_Spec_List (e.g., PARAMETER) or None
+    # We handle PARAMETER attributes below; other attributes are ignored for now
 
     int_type_spec = find_one(node, Intrinsic_Type_Spec)
     entity_decl_list = find_one(node, Entity_Decl_List)
@@ -237,7 +245,7 @@ def parse_type_declaration_stmt (node):
 
     type = TYPES[int_type_spec.string.lower()]
 
-    for decl in entity_decl_list.children:
+    for index, decl in enumerate(entity_decl_list.children):
         if isinstance(decl, Entity_Decl):
             # Recall, Fortran is case-insensitive
             name = decl.get_name().string.lower()
@@ -275,12 +283,31 @@ def parse_type_declaration_stmt (node):
                     shape.append('*')
             else:
                 raise TypeError('Unexpected child type in Entity_Decl: %s' % aspec.__class__.__name__)
+            
+            output_name = name
 
+            ndarray = False
+            ndarray_args = []
+            remove_args = []
+            if shape and len(shape) > 0 and shape[-1] == '*':
+                dim = len(shape)
+                ndarray = True
+                output_name = output_name.upper() if dim > 1 else output_name
+
+                remove_args = [arg for arg in shape if arg != '*']
+                ndarray_args = ['stride%s%s' % (output_name.upper(), i+1 if dim > 1 else '') for i in range(dim)]
+                ndarray_args.append('offset%s' % output_name.upper())
+            
             declarations[name] = {
-                'name': name,
+                'name': output_name,
                 'type': type,
-                'shape': shape
+                'shape': shape,
+                'ndarray': ndarray,
+                'ndarray_args': ndarray_args,
+                'remove_args': remove_args,
             }
+
+            eprint(declarations[name])
         else:
             raise TypeError('Unexpected child type in Type_Declaration_Stmt: %s' % entity_decl.__class__.__name__)
     
@@ -378,16 +405,17 @@ class TypeSpec:
     
 class Scope:
     def __init__(self, ast, parent_context=None, output_comments=True):
-        self.declarations = {}
         self.ast = ast
+        self.output_comments = output_comments
         self.parent_context = parent_context
-        self.type_spec = {}
+
+        self.declarations = {}
         self.return_name = None
         self.intrinsics = {}
         self.constants = {}
         self.externals = {}
         self.comments = []
-        self.output_comments = output_comments
+        self.variable_name_mapping = {}
     
     def is_root_node(self, node):
         return node == self.ast
@@ -417,6 +445,24 @@ class Scope:
             # Return the body node directly if it's not a list
             return body
 
+    def construct_args(self, args):
+        new_args = []
+        i = 0
+        while i < len(args):
+            if args[i] == 'a' and i + 1 < len(args) and args[i + 1] == 'lda':
+                new_args.extend(['a', 'strideA1', 'strideA2', 'offsetA'])
+                self.variable_name_mapping['a'] = 'A'
+                i += 2
+            elif args[i] == 'b' and i + 1 < len(args) and args[i + 1] == 'ldb':
+                new_args.extend(['b', 'strideB1', 'strideB2', 'offsetB'])
+                self.variable_name_mapping['b'] = 'B'
+                i += 2
+            else:
+                new_args.append(args[i])
+                i += 1
+        
+        eprint(new_args)
+        return new_args
     
     def parse_loop_control(self, ctrl):
         assert isinstance(ctrl, Loop_Control)
@@ -432,7 +478,8 @@ class Scope:
             var = self._to_estree(ctrl.items[1][0])
             rng = ctrl.items[1][1]
 
-            op = '<'
+            # Keep 1-based loop bounds (no reindexing). Stage 4 converts to 0-based.
+            op = '<='
             try:
                 inc = rng[2]
                 if isinstance(inc, Level_2_Unary_Expr) and inc.items[0] == '-':
@@ -440,31 +487,8 @@ class Scope:
             except IndexError:
                 inc = Int_Literal_Constant('1')
 
-            if isinstance(rng[0], Int_Literal_Constant):
-                # If the start value is a literal, convert it to zero-based index
-                start = self._to_estree(Int_Literal_Constant(str(int(rng[0].string) - 1)))
-            else:
-                # If the start value is an expression, use that expression
-                start = self._to_estree(rng[0])
-                
-                if op == '>=':
-                    start = {
-                        'type': 'BinaryExpression',
-                        'left': start,
-                        'operator': '-',
-                        'right': {
-                            'type': 'Literal',
-                            'value': 1,
-                            'raw': '1'
-                        }
-                    }
-            
-            if isinstance(rng[1], Int_Literal_Constant):
-                # If the end value is a literal, convert it to zero-based index
-                end = self._to_estree(Int_Literal_Constant(str(int(rng[1].string) - 1)))
-            else:
-                # If the end value is an expression, use that expression
-                end = self._to_estree(rng[1])
+            start = self._to_estree(rng[0])
+            end = self._to_estree(rng[1])
 
             return merge_dicts(self.node(), {
                 'type': 'ForStatement',
@@ -505,6 +529,20 @@ class Scope:
         self.comments = []
         return tree
     
+    def _identifier(self, name, init=None):
+        name = self.variable_name_mapping.get(name, name)
+        output_name = name
+        decl = self.get_declaration(name)
+        if decl is not None and 'name' in decl:
+            output_name = decl['name']
+        tree = {
+            'type': 'Identifier',
+            'name': output_name
+        }
+        if init is not None:
+            tree['init'] = init
+        return tree
+
     def _to_estree (self, node):
         if isinstance(node, list):
             return filt([self._to_estree(child) for child in node])
@@ -610,7 +648,19 @@ class Scope:
         elif isinstance(node, Comment):
             self.comments.append(node)
             return None
-        
+
+        elif isinstance(node, Complex_Literal_Constant):
+            # (re, im) → [re, im] array literal
+            re_part = parse_fortran_float(node.items[0].string)
+            im_part = parse_fortran_float(node.items[1].string)
+            return {
+                'type': 'ArrayExpression',
+                'elements': [
+                    {'type': 'Literal', 'value': re_part, 'raw': str(re_part)},
+                    {'type': 'Literal', 'value': im_part, 'raw': str(im_part)},
+                ]
+            }
+
         elif isinstance(node, Data_Stmt_Set):
             raise TypeError('Data_Stmt_Set should not be encountered')
 
@@ -639,7 +689,7 @@ class Scope:
 
             function_stmt = get_one_child(node, Start_Type)
             specification_part = get_one_child(node, Specification_Part)
-            execution_part = get_one_child(node, Execution_Part)
+            execution_part = get_child(node, Execution_Part)
             end_function_stmt = get_one_child(node, End_Type)
 
             function_name = function_stmt.get_name()
@@ -665,8 +715,31 @@ class Scope:
             body.extend([merge_dicts(self.node(), {
                 'type': 'VariableDeclaration',
                 'kind': 'var',
-                'declarations': [{'type': 'Identifier', 'name': var, "init": None}]
+                'declarations': [self._identifier(var)]
             }) for var in all_vars])
+
+            # Emit @complex directives as leading comments
+            complex_vars = [name for name, d in decls.items() if d.get('type') == 'complex128']
+            complex_scalars = [name for name in complex_vars
+                               if not decls[name].get('shape')]
+            complex_arrays = [name for name in complex_vars
+                              if decls[name].get('shape')]
+            if complex_vars:
+                directives = []
+                if complex_scalars:
+                    directives.append({
+                        'type': 'Block',
+                        'value': ' @complex ' + ', '.join(sorted(complex_scalars)) + ' '
+                    })
+                if complex_arrays:
+                    directives.append({
+                        'type': 'Block',
+                        'value': ' @complex-arrays ' + ', '.join(sorted(complex_arrays)) + ' '
+                    })
+                body.append({
+                    'type': 'EmptyStatement',
+                    'leadingComments': directives
+                })
 
             for name, meta in consts.items():
                 body.append(merge_dicts(self.node(), {
@@ -674,10 +747,7 @@ class Scope:
                     'expression': {
                         'type': 'AssignmentExpression',
                         'operator': '=',
-                        'left': {
-                            'type': 'Identifier',
-                            'name': name
-                        },
+                        'left': self._identifier(name),
                         'right': {
                             'type': 'Literal',
                             'value': meta['value'],
@@ -686,23 +756,24 @@ class Scope:
                     }
                 }))
 
-            # Unwrap the execution part from a BlockStatement to avoid extra nesting
-            body.extend(self._to_estree(execution_part))
-
+            if execution_part is not None:
+                # Unwrap the execution part from a BlockStatement to avoid extra nesting
+                body.extend(self._to_estree(execution_part))
+            
+            args = self.construct_args(dummy_args)
+            
             result = merge_dicts(func_node, {
                 "type": "FunctionDeclaration",
                 "id": self._to_estree(function_name),
-                "params": filt([{
-                    "type": "Identifier",
-                    "name": arg,
-                } for arg in dummy_args]),
+                "params": [self._identifier(arg) for arg in args],
                 "body": {
                     "type": "BlockStatement",
                     "body": body,
                 }
             })
 
-            merge_dicts(result['body']['body'][-1], self.node(False))
+            if len(result['body']['body']) > 0:
+                merge_dicts(result['body']['body'][-1], self.node(False))
             
             return result
         
@@ -800,16 +871,14 @@ class Scope:
                     'operator': '%',
                     'right': self._to_estree(rhs)
                 }
-            if func == 'dble':
-                assert len(args.items) == 1
+            if func in ('dble', 'real', 'dreal'):
+                # Type conversion to real — pass through (JS is already all doubles)
+                assert len(args.items) >= 1
                 return self._to_estree(args.items[0])
             if func in INTRINSIC_FUNCTIONS:
                 return {
                     'type': 'CallExpression',
-                    'callee': {
-                        'type': 'Identifier',
-                        'name': INTRINSIC_FUNCTIONS[func]
-                    },
+                    'callee': self._identifier(INTRINSIC_FUNCTIONS[func]),
                     'arguments': filt([self._to_estree(arg) for arg in args.items])
                 }
             else:
@@ -856,10 +925,7 @@ class Scope:
             }
 
         elif isinstance(node, Name):
-            return {
-                'type': 'Identifier',
-                'name': node.string.lower()
-            }
+            return self._identifier(node.string.lower())
         
         elif isinstance(node, Or_Operand):
             return {
@@ -916,13 +982,12 @@ class Scope:
 
             name_str = name.string.lower()
 
-            if name_str in self.externals:
+            if name_str in self.externals or name_str in self.intrinsics or name_str in INTRINSIC_FUNCTIONS:
+                # Function call (external or intrinsic)
+                func_name = INTRINSIC_FUNCTIONS.get(name_str, name_str)
                 return {
                     'type': 'CallExpression',
-                    'callee': {
-                        'type': 'Identifier',
-                        'name': name_str
-                    },
+                    'callee': self._identifier(func_name),
                     'arguments': [self._to_estree(item) for item in subs.items]
                 }
             else:
@@ -937,13 +1002,30 @@ class Scope:
                 idx = None
                 dim = len(decl['shape'])
 
-                # Construct a column-major index expression
+                # Construct a column-major index expression.
+                # Subtract 1 from each subscript to convert from Fortran 1-based
+                # to JS 0-based memory offsets. The (expr - 1) markers are visible
+                # in stage 3 output; stage 4 simplifies them after converting
+                # loops/variables to 0-based.
                 for i, item in enumerate(reversed(subs.items)):
                     itree = self._to_estree(item)
+
+                    # Subtract 1 from every subscript (literal or variable)
                     if itree['type'] == 'Literal':
                         itree['value'] -= 1
                         itree['raw'] = str(itree['value'])
-                    
+                    else:
+                        itree = {
+                            'type': 'BinaryExpression',
+                            'operator': '-',
+                            'left': itree,
+                            'right': {
+                                'type': 'Literal',
+                                'value': 1,
+                                'raw': '1'
+                            }
+                        }
+
                     if idx is None:
                         idx = itree
                     else:
@@ -955,17 +1037,9 @@ class Scope:
                                 'type': 'BinaryExpression',
                                 'operator': '*',
                                 'left': itree,
-                                'right': {
-                                    'type': 'Identifier',
-                                    'name': decl['shape'][dim - i - 1]
-                                }
+                                'right': self._identifier(decl['shape'][dim - i - 1]),
                             }
                         }
-                
-                # Perform simple static bounds checking for one-dimensional arrays
-                if idx['type'] == 'Literal' and len(decl['shape']) == 1:
-                    if idx['value'] > decl['shape'][0] - 1:
-                        raise ValueError("Index out of bounds for %s[%d]: size is %d" % (name_str, idx['value'], decl['shape'][0]))
                     
                 return {
                     'type': 'MemberExpression',
