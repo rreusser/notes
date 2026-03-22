@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dznrm2 = require( '../../../../blas/base/dznrm2/lib/base.js' );
 var zdscal = require( '../../../../blas/base/zdscal/lib/base.js' );
@@ -120,15 +121,15 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		tauv[ oT + 1 ] = -alphi / beta;
 
 		// alpha = 1.0 / (alpha - beta)
-		// Use cmplx.div for ZLADIV( DCMPLX(ONE), ALPHA - BETA )
+		// Use cmplx.divAt for ZLADIV( DCMPLX(ONE), ALPHA - BETA )
 		tmp = new Float64Array( 4 );
 		tmp[ 0 ] = 1.0;
 		tmp[ 1 ] = 0.0;
 		tmp[ 2 ] = alphr - beta;
 		tmp[ 3 ] = alphi;
-		cmplx.div( tmp, tmp, tmp.subarray( 2, 4 ) );
+		cmplx.divAt( tmp, 0, tmp, 0, tmp, 2 );
 
-		zscal( N - 1, tmp, x, strideX, offsetX );
+		zscal( N - 1, new Complex128( tmp[ 0 ], tmp[ 1 ] ), x, strideX, offsetX );
 
 		// If ALPHA is subnormal, it may lose relative accuracy
 		for ( j = 0; j < knt; j++ ) {

@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
 var zgerc = require( '../../../../blas/base/zgerc/lib/base.js' );
@@ -28,8 +29,8 @@ var ilazlc = require( '../../ilazlc/lib/base.js' );
 
 // VARIABLES //
 
-var ONE = new Float64Array( [ 1.0, 0.0 ] );
-var ZERO = new Float64Array( [ 0.0, 0.0 ] );
+var ONE = new Complex128( 1.0, 0.0 );
+var ZERO = new Complex128( 0.0, 0.0 );
 
 // MAIN //
 
@@ -112,7 +113,7 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 		}
 	}
 
-	negTau = new Float64Array( [ -tauR, -tauI ] );
+	negTau = new Complex128( -tauR, -tauI );
 
 	if ( applyLeft ) {
 		// Form H * C

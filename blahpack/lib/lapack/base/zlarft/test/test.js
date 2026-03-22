@@ -2,6 +2,8 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var zlarft = require( './../lib/base.js' );
@@ -29,15 +31,15 @@ function assertArrayClose( actual, expected, label ) {
 test( 'zlarft: forward, columnwise, n=4, k=2', function t() {
 	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_fwd_col'; });
 	// V is 4x2 (LDV=4), col-major interleaved
-	var V = new Float64Array( [
+	var V = new Complex128Array( [
 		// col 1: V(0,0)=1, V(1,0)=0.3+0.2i, V(2,0)=-0.5+0.1i, V(3,0)=0.4-0.3i
 		1.0, 0.0,  0.3, 0.2,  -0.5, 0.1,  0.4, -0.3,
 		// col 2: V(0,1)=0, V(1,1)=1, V(2,1)=0.6-0.4i, V(3,1)=-0.2+0.5i
 		0.0, 0.0,  1.0, 0.0,  0.6, -0.4,  -0.2, 0.5
 	]);
-	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	// T is 3x2 in Fortran (LDT=3), but only 2x2 is used. We store 3x2 col-major interleaved.
-	var T = new Float64Array( 12 );
+	var T = new Complex128Array( 6 );
 
 	// strideV1=1 (rows), strideV2=4 (cols with LDV=4)
 	// strideT1=1, strideT2=3 (LDT=3)
@@ -45,13 +47,13 @@ test( 'zlarft: forward, columnwise, n=4, k=2', function t() {
 	zlarft( 'F', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	// Compare first 12 doubles (3x2 col-major = 6 complex values)
-	assertArrayClose( Array.from( T ), tc.T, 'T' );
+	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
 test( 'zlarft: forward, columnwise, n=5, k=3', function t() {
 	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_fwd_col_5x3'; });
 	// V is 5x3, LDV=5
-	var V = new Float64Array( [
+	var V = new Complex128Array( [
 		// col 1
 		1.0, 0.0,  0.2, 0.1,  -0.3, 0.4,  0.5, -0.2,  0.1, 0.6,
 		// col 2
@@ -59,112 +61,105 @@ test( 'zlarft: forward, columnwise, n=5, k=3', function t() {
 		// col 3
 		0.0, 0.0,  0.0, 0.0,  1.0, 0.0,  0.3, 0.1,  -0.2, 0.8
 	]);
-	var tau = new Float64Array( [ 1.1, 0.2,  1.3, -0.1,  1.6, 0.5 ] );
+	var tau = new Complex128Array( [ 1.1, 0.2,  1.3, -0.1,  1.6, 0.5 ] );
 	// T is 3x3, LDT=3
-	var T = new Float64Array( 18 );
+	var T = new Complex128Array( 9 );
 
 	zlarft( 'F', 'C', 5, 3, V, 1, 5, 0, tau, 1, 0, T, 1, 3, 0 );
-	assertArrayClose( Array.from( T ), tc.T, 'T' );
+	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
 test( 'zlarft: tau(0)=0 (first reflector is identity)', function t() {
 	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_tau_zero'; });
-	var V = new Float64Array( [
+	var V = new Complex128Array( [
 		1.0, 0.0,  0.3, 0.2,  -0.5, 0.1,  0.4, -0.3,
 		0.0, 0.0,  1.0, 0.0,  0.6, -0.4,  -0.2, 0.5
 	]);
-	var tau = new Float64Array( [ 0.0, 0.0,  1.5, 0.4 ] );
-	var T = new Float64Array( 12 );
+	var tau = new Complex128Array( [ 0.0, 0.0,  1.5, 0.4 ] );
+	var T = new Complex128Array( 6 );
 
 	zlarft( 'F', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
-	assertArrayClose( Array.from( T ), tc.T, 'T' );
+	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
 test( 'zlarft: backward, columnwise, n=4, k=2', function t() {
 	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_bwd_col'; });
 	// V for backward: last K rows have unit upper triangular
-	var V = new Float64Array( [
+	var V = new Complex128Array( [
 		// col 1: V(0,0)=0.3+0.2i, V(1,0)=-0.5+0.1i, V(2,0)=1, V(3,0)=0
 		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
 		// col 2: V(0,1)=0.6-0.4i, V(1,1)=-0.2+0.5i, V(2,1)=0.4-0.3i, V(3,1)=1
 		0.6, -0.4,  -0.2, 0.5,  0.4, -0.3,  1.0, 0.0
 	]);
-	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
-	var T = new Float64Array( 12 );
+	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Complex128Array( 6 );
 
 	zlarft( 'B', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
-	assertArrayClose( Array.from( T ), tc.T, 'T' );
+	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
 test( 'zlarft: N=0 quick return', function t() {
-	var V = new Float64Array( 16 );
-	var tau = new Float64Array( 4 );
-	var T = new Float64Array( 12 );
-	T[ 0 ] = 99.0; // sentinel value
+	var V = new Complex128Array( 8 );
+	var tau = new Complex128Array( 2 );
+	var T = new Complex128Array( 6 );
+	var Tv = reinterpret( T, 0 );
+	Tv[ 0 ] = 99.0; // sentinel value
 	zlarft( 'F', 'C', 0, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 	// T should be unchanged
-	assert.strictEqual( T[ 0 ], 99.0 );
+	Tv = reinterpret( T, 0 );
+	assert.strictEqual( Tv[ 0 ], 99.0 );
 });
 
 test( 'zlarft: forward, rowwise, n=4, k=2', function t() {
 	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_fwd_row'; });
 	// V is 2x4 (LDV=2), row-major reflectors (unit upper triangular in V1)
-	// V = [ 1      0.3+0.2i  -0.5+0.1i  0.4-0.3i ]
-	//     [ 0      1          0.6-0.4i  -0.2+0.5i ]
-	var V = new Float64Array( [
-		// col 1: V(0,0)=1, V(1,0)=0
+	var V = new Complex128Array( [
 		1.0, 0.0,  0.0, 0.0,
-		// col 2: V(0,1)=0.3+0.2i, V(1,1)=1
 		0.3, 0.2,  1.0, 0.0,
-		// col 3: V(0,2)=-0.5+0.1i, V(1,2)=0.6-0.4i
 		-0.5, 0.1,  0.6, -0.4,
-		// col 4: V(0,3)=0.4-0.3i, V(1,3)=-0.2+0.5i
 		0.4, -0.3,  -0.2, 0.5
 	]);
-	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
-	var T = new Float64Array( 12 );
+	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Complex128Array( 6 );
 
-	// strideV1=1, strideV2=2 (LDV=2), strideT1=1, strideT2=3
 	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
-	assertArrayClose( Array.from( T ), tc.T, 'T' );
+	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
 test( 'zlarft: backward, rowwise, n=4, k=2', function t() {
 	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_bwd_row'; });
-	// V is 2x4 (LDV=2), backward: unit lower triangular in V2 (last K cols)
-	// V = [ 0.3+0.2i  -0.5+0.1i  1   0 ]
-	//     [ 0.6-0.4i  -0.2+0.5i  0.4-0.3i  1 ]
-	var V = new Float64Array( [
+	var V = new Complex128Array( [
 		0.3, 0.2,  0.6, -0.4,
 		-0.5, 0.1,  -0.2, 0.5,
 		1.0, 0.0,  0.4, -0.3,
 		0.0, 0.0,  1.0, 0.0
 	]);
-	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
-	var T = new Float64Array( 12 );
+	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Complex128Array( 6 );
 
 	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
-	assertArrayClose( Array.from( T ), tc.T, 'T' );
+	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
 test( 'zlarft: backward, tau(1)=0 (second reflector is identity)', function t() {
 	// Same V as backward test, but tau(1)=0
 	// Expected: T(:,1) column should be all zeros, T(0,0) = tau(0)
-	var V = new Float64Array( [
+	var V = new Complex128Array( [
 		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
 		0.6, -0.4,  -0.2, 0.5,  0.4, -0.3,  1.0, 0.0
 	]);
-	var tau = new Float64Array( [ 1.2, -0.3,  0.0, 0.0 ] );
-	var T = new Float64Array( 12 );
+	var tau = new Complex128Array( [ 1.2, -0.3,  0.0, 0.0 ] );
+	var T = new Complex128Array( 6 );
 
 	zlarft( 'B', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 
+	var Tv = reinterpret( T, 0 );
 	// T(1,1) column should be zero (tau=0 path)
-	assert.strictEqual( T[ 8 ], 0.0, 'T(1,1) re' );  // T[1*st1 + 1*st2] = T[1*2 + 1*6] = T[8]
-	assert.strictEqual( T[ 9 ], 0.0, 'T(1,1) im' );
+	assert.strictEqual( Tv[ 8 ], 0.0, 'T(1,1) re' );  // T[1*st1 + 1*st2] = T[1*2 + 1*6] = T[8]
+	assert.strictEqual( Tv[ 9 ], 0.0, 'T(1,1) im' );
 	// T(0,0) should be tau(0)
-	assert.strictEqual( T[ 0 ], 1.2, 'T(0,0) re' );
-	assert.strictEqual( T[ 1 ], -0.3, 'T(0,0) im' );
+	assert.strictEqual( Tv[ 0 ], 1.2, 'T(0,0) re' );
+	assert.strictEqual( Tv[ 1 ], -0.3, 'T(0,0) im' );
 });
 
 test( 'zlarft: backward, K=3 with leading zeros in V', function t() {
