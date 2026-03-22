@@ -6,3 +6,16 @@ zlarfb
 zlarft
 zungl2
 zunglq
+zgelqf
+zgelq2
+zlarfg
+dlamch
+dlapy3
+ilaenv
+zladiv
+dlapy2
+disnan
+dlaisnan
+dladiv
+ieeeck
+iparmq

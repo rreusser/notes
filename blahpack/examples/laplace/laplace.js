@@ -96,7 +96,7 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
   // ---- Step 3: AAA on residual ----
   const zComplex = boundaryPoints.map(([r, i]) => [r, i]);
   const fComplex = residual.map((r) => [r, 0]);
-  const mmax = options.mmax || 100;
+  const mmax = options.mmax || 1000;
   const approx = aaa(zComplex, fComplex, 1e-13, mmax);
 
   const allPoles = approx.pol || [];
