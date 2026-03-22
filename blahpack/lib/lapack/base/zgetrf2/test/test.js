@@ -174,13 +174,14 @@ test( 'zgetrf2: 1xN row vector', function t() {
 	assert.deepEqual( ipiv, ipivTo0Based( tc.ipiv ), 'ipiv' );
 });
 
-test( 'zgetrf2: 4x4 complex matrix', function t() {
+test( 'zgetrf2: 4x4 well-conditioned complex matrix', function t() {
 	var tc = findCase( '4x4' );
+	// Diagonally dominant 4x4 complex matrix (well-conditioned)
 	var a = new Complex128Array( [
-		1, 2, 5, 6, 9, 10, 13, 14,
-		2, 3, 6, 7, 10, 11, 14, 15,
-		3, 1, 7, 2, 11, 3, 15, 4,
-		4, 0.5, 8, 1.5, 12, 2.5, 16, 3.5
+		10, 1, 1, 2, 2, -1, 3, 0.5,        // col 0
+		1, -1, 12, 2, 1, 3, 2, -0.5,        // col 1
+		2, 0.5, 3, -1, 15, 1, 1, 2,         // col 2
+		1, 1, 2, 0.5, 3, -2, 20, 3          // col 3
 	] );
 	var ipiv = new Int32Array( 4 );
 	var info = zgetrf2( 4, 4, a, 1, 4, 0, ipiv, 1, 0 );

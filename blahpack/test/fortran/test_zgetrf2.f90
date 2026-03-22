@@ -101,12 +101,13 @@ program test_zgetrf2
   call print_int('info', info)
   call end_test()
 
-  ! Test 9: 4x4 for more complex recursion
+  ! Test 9: 4x4 well-conditioned complex matrix
+  ! Use a diagonally dominant matrix to ensure non-trivial A22
   a = (0.0d0, 0.0d0)
-  a(1) = (1.0d0, 2.0d0); a(2) = (5.0d0, 6.0d0); a(3) = (9.0d0, 10.0d0); a(4) = (13.0d0, 14.0d0)
-  a(5) = (2.0d0, 3.0d0); a(6) = (6.0d0, 7.0d0); a(7) = (10.0d0, 11.0d0); a(8) = (14.0d0, 15.0d0)
-  a(9) = (3.0d0, 1.0d0); a(10) = (7.0d0, 2.0d0); a(11) = (11.0d0, 3.0d0); a(12) = (15.0d0, 4.0d0)
-  a(13) = (4.0d0, 0.5d0); a(14) = (8.0d0, 1.5d0); a(15) = (12.0d0, 2.5d0); a(16) = (16.0d0, 3.5d0)
+  a(1) = (10.0d0, 1.0d0); a(2) = (1.0d0, 2.0d0); a(3) = (2.0d0, -1.0d0); a(4) = (3.0d0, 0.5d0)
+  a(5) = (1.0d0, -1.0d0); a(6) = (12.0d0, 2.0d0); a(7) = (1.0d0, 3.0d0); a(8) = (2.0d0, -0.5d0)
+  a(9) = (2.0d0, 0.5d0); a(10) = (3.0d0, -1.0d0); a(11) = (15.0d0, 1.0d0); a(12) = (1.0d0, 2.0d0)
+  a(13) = (1.0d0, 1.0d0); a(14) = (2.0d0, 0.5d0); a(15) = (3.0d0, -2.0d0); a(16) = (20.0d0, 3.0d0)
   ipiv = 0
   call zgetrf2(4, 4, a, 4, ipiv, info)
   call begin_test('4x4')

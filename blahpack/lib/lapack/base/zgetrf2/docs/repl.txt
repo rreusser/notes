@@ -1,0 +1,38 @@
+
+    zgetrf2.ndarray( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV )
+        Computes an LU factorization of a general complex M-by-N matrix using
+        partial pivoting with row interchanges (recursive algorithm).
+
+        Parameters
+        ----------
+        M: integer
+            Number of rows.
+        N: integer
+            Number of columns.
+        A: Complex128Array
+            Input/output complex matrix.
+        strideA1: integer
+            Stride of the first dimension of A.
+        strideA2: integer
+            Stride of the second dimension of A.
+        offsetA: integer
+            Index offset for A (in complex elements).
+        IPIV: Int32Array
+            Pivot index output array (0-based).
+        strideIPIV: integer
+            Stride for IPIV.
+        offsetIPIV: integer
+            Index offset for IPIV.
+
+        Returns
+        -------
+        out: integer
+            Info code (0 = success, k > 0 = singular at column k).
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

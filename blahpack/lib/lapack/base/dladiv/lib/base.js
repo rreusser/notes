@@ -28,6 +28,14 @@ var BS = 2.0;
 var HALF = 0.5;
 var TWO = 2.0;
 
+// Machine constants (invariant — computed once at module load)
+var OV = dlamch( 'O' );                  // overflow threshold (~1.798e+308)
+var UN = dlamch( 'U' );                  // underflow threshold (~2.225e-308)
+var EPS = dlamch( 'E' );                 // machine epsilon (~1.110e-16)
+var BE = BS / ( EPS * EPS );             // rescaling factor
+var HALF_OV = HALF * OV;                 // half of overflow threshold
+var SCALE_THRESH = UN * BS / EPS;        // underflow rescaling threshold
+
 // FUNCTIONS //
 
 /**
@@ -97,10 +105,6 @@ function dladiv( a, b, c, d, out ) {
 	var dd;
 	var ab;
 	var cd;
-	var be;
-	var ov;
-	var un;
-	var eps;
 	var s;
 
 	aa = a;
@@ -111,30 +115,25 @@ function dladiv( a, b, c, d, out ) {
 	cd = Math.max( Math.abs( c ), Math.abs( d ) );
 	s = 1.0;
 
-	ov = dlamch( 'O' );
-	un = dlamch( 'U' );
-	eps = dlamch( 'E' );
-	be = BS / ( eps * eps );
-
-	if ( ab >= HALF * ov ) {
+	if ( ab >= HALF_OV ) {
 		aa = HALF * aa;
 		bb = HALF * bb;
 		s = TWO * s;
 	}
-	if ( cd >= HALF * ov ) {
+	if ( cd >= HALF_OV ) {
 		cc = HALF * cc;
 		dd = HALF * dd;
 		s = HALF * s;
 	}
-	if ( ab <= un * BS / eps ) {
-		aa = aa * be;
-		bb = bb * be;
-		s = s / be;
+	if ( ab <= SCALE_THRESH ) {
+		aa = aa * BE;
+		bb = bb * BE;
+		s = s / BE;
 	}
-	if ( cd <= un * BS / eps ) {
-		cc = cc * be;
-		dd = dd * be;
-		s = s * be;
+	if ( cd <= SCALE_THRESH ) {
+		cc = cc * BE;
+		dd = dd * BE;
+		s = s * BE;
 	}
 	if ( Math.abs( dd ) <= Math.abs( cc ) ) {
 		dladiv1( aa, bb, cc, dd, out );
