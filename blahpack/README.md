@@ -105,4 +105,4 @@ Fortran reference implementations. Covers real (double) and complex
 
 ## License
 
-&copy; 2025 Ricky Reusser. MIT License.
+&copy; 2026 Ricky Reusser. MIT License.
