@@ -7,6 +7,11 @@
 var base = require( './base.js' );
 
 
+// VARIABLES //
+
+var out = new Float64Array( 3 );
+
+
 // MAIN //
 
 /**
@@ -17,7 +22,12 @@ var base = require( './base.js' );
 * @returns {Object} object with properties `c`, `s`, and `r`
 */
 function dlartg( f, g ) {
-	return base( f, g );
+	base( f, g, out );
+	return {
+		'c': out[ 0 ],
+		's': out[ 1 ],
+		'r': out[ 2 ]
+	};
 }
 
 

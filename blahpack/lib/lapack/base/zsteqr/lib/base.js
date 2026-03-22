@@ -1,0 +1,494 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+var dlanst = require( '../../dlanst/lib/base.js' );
+var dlapy2 = require( '../../dlapy2/lib/base.js' );
+var dlae2 = require( '../../dlae2/lib/base.js' );
+var dlaev2 = require( '../../dlaev2/lib/base.js' );
+var dlartg = require( '../../dlartg/lib/base.js' );
+var dlascl = require( '../../dlascl/lib/base.js' );
+var dlasrt = require( '../../dlasrt/lib/base.js' );
+var zlaset = require( '../../zlaset/lib/base.js' );
+var zlasr = require( '../../zlasr/lib/base.js' );
+var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
+
+
+// VARIABLES //
+
+var MAXIT = 30;
+var CZERO = new Complex128( 0.0, 0.0 );
+var CONE = new Complex128( 1.0, 0.0 );
+
+
+// MAIN //
+
+/**
+* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric
+* tridiagonal matrix using the implicit QL or QR method. The eigenvector
+* matrix Z is complex (Complex128Array).
+*
+* The tridiagonal matrix T is defined by its diagonal D and subdiagonal E.
+*
+* ## Notes
+*
+* -   COMPZ = 'N': compute eigenvalues only (Z is not referenced)
+* -   COMPZ = 'V': compute eigenvalues and eigenvectors of the original
+*     symmetric matrix. On entry, Z must contain the unitary matrix used
+*     to reduce the original matrix to tridiagonal form.
+* -   COMPZ = 'I': compute eigenvalues and eigenvectors of the tridiagonal
+*     matrix. Z is initialized to the identity matrix.
+* -   On exit, if INFO = 0, D contains the eigenvalues in ascending order
+*     and Z contains the orthonormal eigenvectors of the matrix.
+*
+* @private
+* @param {string} compz - specifies whether eigenvectors are computed
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} d - diagonal elements of the tridiagonal matrix (length N)
+* @param {integer} strideD - stride length for `d`
+* @param {NonNegativeInteger} offsetD - starting index for `d`
+* @param {Float64Array} e - subdiagonal elements of the tridiagonal matrix (length N-1)
+* @param {integer} strideE - stride length for `e`
+* @param {NonNegativeInteger} offsetE - starting index for `e`
+* @param {Complex128Array} Z - unitary matrix Z (N-by-N)
+* @param {integer} strideZ1 - stride of the first dimension of `Z` (in complex elements)
+* @param {integer} strideZ2 - stride of the second dimension of `Z` (in complex elements)
+* @param {NonNegativeInteger} offsetZ - starting index for `Z` (in complex elements)
+* @param {Float64Array} WORK - workspace array (length >= 2*(N-1))
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @returns {integer} INFO - 0 if successful, >0 if INFO eigenvalues did not converge
+*/
+function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	var nmaxit;
+	var ssfmax;
+	var ssfmin;
+	var safmax;
+	var safmin;
+	var icompz;
+	var lendsv;
+	var anorm;
+	var iscale;
+	var jtot;
+	var lend;
+	var eps2;
+	var eps;
+	var tst;
+	var obj;
+	var lsv;
+	var mm;
+	var l1;
+	var l;
+	var m;
+	var p;
+	var g;
+	var r;
+	var f;
+	var b;
+	var c;
+	var s;
+	var i;
+	var j;
+	var k;
+	var rot;
+	var ii;
+
+	rot = new Float64Array( 3 );
+
+	// Decode COMPZ
+	if ( compz === 'N' || compz === 'n' ) {
+		icompz = 0;
+	} else if ( compz === 'V' || compz === 'v' ) {
+		icompz = 1;
+	} else if ( compz === 'I' || compz === 'i' ) {
+		icompz = 2;
+	} else {
+		return -1;
+	}
+
+	if ( N === 0 ) {
+		return 0;
+	}
+
+	if ( N === 1 ) {
+		if ( icompz === 2 ) {
+			// Set Z(0,0) = 1+0i via zlaset (identity 1x1)
+			zlaset( 'Full', 1, 1, CZERO, CONE, Z, strideZ1, strideZ2, offsetZ );
+		}
+		return 0;
+	}
+
+	// Determine machine parameters
+	eps = dlamch( 'E' );
+	eps2 = eps * eps;
+	safmin = dlamch( 'S' );
+	safmax = 1.0 / safmin;
+	ssfmax = Math.sqrt( safmax ) / 3.0;
+	ssfmin = Math.sqrt( safmin ) / eps2;
+
+	// Initialize Z to the identity matrix if COMPZ = 'I'
+	if ( icompz === 2 ) {
+		zlaset( 'Full', N, N, CZERO, CONE, Z, strideZ1, strideZ2, offsetZ );
+	}
+
+	nmaxit = N * MAXIT;
+	jtot = 0;
+
+	// Determine where the matrix splits and choose QL or QR iteration
+	l1 = 0; // 0-based
+	// Outer loop (label 10): find unreduced blocks
+	outer: // eslint-disable-line no-labels, no-extra-label
+	while ( l1 < N ) { // eslint-disable-line no-labels
+		// Zero out the subdiagonal element below l1 if l1 > 0
+		if ( l1 > 0 ) {
+			e[ offsetE + ( l1 - 1 ) * strideE ] = 0.0;
+		}
+
+		// Find end of unreduced block
+		m = N - 1;
+		if ( l1 <= N - 2 ) {
+			for ( m = l1; m <= N - 2; m++ ) {
+				tst = Math.abs( e[ offsetE + m * strideE ] );
+				if ( tst === 0.0 ) {
+					break;
+				}
+				if ( tst <= ( Math.sqrt( Math.abs( d[ offsetD + m * strideD ] ) ) * Math.sqrt( Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) ) ) * eps ) {
+					e[ offsetE + m * strideE ] = 0.0;
+					break;
+				}
+			}
+		}
+
+		// Set up block [l..lend]
+		l = l1;
+		lsv = l;
+		lend = m;
+		lendsv = lend;
+		l1 = m + 1;
+
+		if ( lend === l ) {
+			continue outer; // eslint-disable-line no-labels
+		}
+
+		// Scale the block if necessary
+		anorm = dlanst( 'M', lend - l + 1, d, strideD, offsetD + l * strideD, e, strideE, offsetE + l * strideE );
+		iscale = 0;
+		if ( anorm === 0.0 ) {
+			continue outer; // eslint-disable-line no-labels
+		}
+		if ( anorm > ssfmax ) {
+			iscale = 1;
+			dlascl( 'G', 0, 0, anorm, ssfmax, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
+			dlascl( 'G', 0, 0, anorm, ssfmax, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
+		} else if ( anorm < ssfmin ) {
+			iscale = 2;
+			dlascl( 'G', 0, 0, anorm, ssfmin, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
+			dlascl( 'G', 0, 0, anorm, ssfmin, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
+		}
+
+		// Choose QL or QR based on which end has smaller |D|
+		if ( Math.abs( d[ offsetD + lend * strideD ] ) < Math.abs( d[ offsetD + l * strideD ] ) ) {
+			lend = lsv;
+			l = lendsv;
+		}
+
+		if ( lend > l ) {
+			// QL iteration
+			while ( true ) {
+				// Find small subdiagonal element
+				if ( l !== lend ) {
+					for ( m = l; m <= lend - 1; m++ ) {
+						tst = Math.abs( e[ offsetE + m * strideE ] );
+						tst = tst * tst;
+						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) + safmin ) {
+							break;
+						}
+					}
+					if ( m > lend - 1 ) {
+						m = lend;
+					}
+				} else {
+					m = lend;
+				}
+
+				if ( m < lend ) {
+					e[ offsetE + m * strideE ] = 0.0;
+				}
+				p = d[ offsetD + l * strideD ];
+
+				// Single eigenvalue converged
+				if ( m === l ) {
+					d[ offsetD + l * strideD ] = p;
+					l += 1;
+					if ( l <= lend ) {
+						continue;
+					}
+					break;
+				}
+
+				// 2x2 block
+				if ( m === l + 1 ) {
+					if ( icompz > 0 ) {
+						obj = dlaev2( d[ offsetD + l * strideD ], e[ offsetE + l * strideE ], d[ offsetD + ( l + 1 ) * strideD ] );
+						WORK[ offsetWORK + l * strideWORK ] = obj.cs1;
+						WORK[ offsetWORK + ( N - 1 + l ) * strideWORK ] = obj.sn1;
+						zlasr( 'R', 'V', 'B', N, 2,
+							WORK, strideWORK, offsetWORK + l * strideWORK,
+							WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
+							Z, strideZ1, strideZ2, offsetZ + l * strideZ2
+						);
+						d[ offsetD + l * strideD ] = obj.rt1;
+						d[ offsetD + ( l + 1 ) * strideD ] = obj.rt2;
+					} else {
+						obj = dlae2( d[ offsetD + l * strideD ], e[ offsetE + l * strideE ], d[ offsetD + ( l + 1 ) * strideD ] );
+						d[ offsetD + l * strideD ] = obj.rt1;
+						d[ offsetD + ( l + 1 ) * strideD ] = obj.rt2;
+					}
+					e[ offsetE + l * strideE ] = 0.0;
+					l += 2;
+					if ( l <= lend ) {
+						continue;
+					}
+					break;
+				}
+
+				if ( jtot === nmaxit ) {
+					break;
+				}
+				jtot += 1;
+
+				// Form shift
+				g = ( d[ offsetD + ( l + 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + l * strideE ] );
+				r = dlapy2( g, 1.0 );
+				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + l * strideE ] / ( g + ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ? r : -r ) ) ); // SIGN(R, G)
+
+				s = 1.0;
+				c = 1.0;
+				p = 0.0;
+
+				// Chase bulge from bottom to top
+				for ( i = m - 1; i >= l; i-- ) {
+					f = s * e[ offsetE + i * strideE ];
+					b = c * e[ offsetE + i * strideE ];
+					dlartg( g, f, rot );
+					c = rot[ 0 ];
+					s = rot[ 1 ];
+					r = rot[ 2 ];
+					if ( i !== m - 1 ) {
+						e[ offsetE + ( i + 1 ) * strideE ] = r;
+					}
+					g = d[ offsetD + ( i + 1 ) * strideD ] - p;
+					r = ( d[ offsetD + i * strideD ] - g ) * s + 2.0 * c * b;
+					p = s * r;
+					d[ offsetD + ( i + 1 ) * strideD ] = g + p;
+					g = c * r - b;
+
+					// Save rotations for eigenvector update
+					if ( icompz > 0 ) {
+						WORK[ offsetWORK + i * strideWORK ] = c;
+						WORK[ offsetWORK + ( N - 1 + i ) * strideWORK ] = -s;
+					}
+				}
+
+				// Apply rotations to Z (complex)
+				if ( icompz > 0 ) {
+					mm = m - l + 1;
+					zlasr( 'R', 'V', 'B', N, mm,
+						WORK, strideWORK, offsetWORK + l * strideWORK,
+						WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
+						Z, strideZ1, strideZ2, offsetZ + l * strideZ2
+					);
+				}
+
+				d[ offsetD + l * strideD ] -= p;
+				e[ offsetE + l * strideE ] = g;
+			}
+		} else {
+			// QR iteration: lend < l
+			while ( true ) {
+				// Find small subdiagonal element
+				if ( l !== lend ) {
+					for ( m = l; m >= lend + 1; m-- ) {
+						tst = Math.abs( e[ offsetE + ( m - 1 ) * strideE ] );
+						tst = tst * tst;
+						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m - 1 ) * strideD ] ) + safmin ) {
+							break;
+						}
+					}
+					if ( m < lend + 1 ) {
+						m = lend;
+					}
+				} else {
+					m = lend;
+				}
+
+				if ( m > lend ) {
+					e[ offsetE + ( m - 1 ) * strideE ] = 0.0;
+				}
+				p = d[ offsetD + l * strideD ];
+
+				// Single eigenvalue converged
+				if ( m === l ) {
+					d[ offsetD + l * strideD ] = p;
+					l -= 1;
+					if ( l >= lend ) {
+						continue;
+					}
+					break;
+				}
+
+				// 2x2 block
+				if ( m === l - 1 ) {
+					if ( icompz > 0 ) {
+						obj = dlaev2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + l * strideD ] );
+						WORK[ offsetWORK + m * strideWORK ] = obj.cs1;
+						WORK[ offsetWORK + ( N - 1 + m ) * strideWORK ] = obj.sn1;
+						zlasr( 'R', 'V', 'F', N, 2,
+							WORK, strideWORK, offsetWORK + m * strideWORK,
+							WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
+							Z, strideZ1, strideZ2, offsetZ + ( l - 1 ) * strideZ2
+						);
+						d[ offsetD + ( l - 1 ) * strideD ] = obj.rt1;
+						d[ offsetD + l * strideD ] = obj.rt2;
+					} else {
+						obj = dlae2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + l * strideD ] );
+						d[ offsetD + ( l - 1 ) * strideD ] = obj.rt1;
+						d[ offsetD + l * strideD ] = obj.rt2;
+					}
+					e[ offsetE + ( l - 1 ) * strideE ] = 0.0;
+					l -= 2;
+					if ( l >= lend ) {
+						continue;
+					}
+					break;
+				}
+
+				if ( jtot === nmaxit ) {
+					break;
+				}
+				jtot += 1;
+
+				// Form shift
+				g = ( d[ offsetD + ( l - 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + ( l - 1 ) * strideE ] );
+				r = dlapy2( g, 1.0 );
+				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ? r : -r ) ) ); // SIGN(R, G)
+
+				s = 1.0;
+				c = 1.0;
+				p = 0.0;
+
+				// Chase bulge from top to bottom
+				for ( i = m; i <= l - 1; i++ ) {
+					f = s * e[ offsetE + i * strideE ];
+					b = c * e[ offsetE + i * strideE ];
+					dlartg( g, f, rot );
+					c = rot[ 0 ];
+					s = rot[ 1 ];
+					r = rot[ 2 ];
+					if ( i !== m ) {
+						e[ offsetE + ( i - 1 ) * strideE ] = r;
+					}
+					g = d[ offsetD + i * strideD ] - p;
+					r = ( d[ offsetD + ( i + 1 ) * strideD ] - g ) * s + 2.0 * c * b;
+					p = s * r;
+					d[ offsetD + i * strideD ] = g + p;
+					g = c * r - b;
+
+					// Save rotations for eigenvector update
+					if ( icompz > 0 ) {
+						WORK[ offsetWORK + i * strideWORK ] = c;
+						WORK[ offsetWORK + ( N - 1 + i ) * strideWORK ] = s;
+					}
+				}
+
+				// Apply rotations to Z (complex)
+				if ( icompz > 0 ) {
+					mm = l - m + 1;
+					zlasr( 'R', 'V', 'F', N, mm,
+						WORK, strideWORK, offsetWORK + m * strideWORK,
+						WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
+						Z, strideZ1, strideZ2, offsetZ + m * strideZ2
+					);
+				}
+
+				d[ offsetD + l * strideD ] -= p;
+				e[ offsetE + ( l - 1 ) * strideE ] = g;
+			}
+		}
+
+		// Undo scaling if necessary
+		if ( iscale === 1 ) {
+			dlascl( 'G', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
+			dlascl( 'G', 0, 0, ssfmax, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
+		} else if ( iscale === 2 ) {
+			dlascl( 'G', 0, 0, ssfmin, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
+			dlascl( 'G', 0, 0, ssfmin, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
+		}
+
+		// Check for convergence failure
+		if ( jtot >= nmaxit ) {
+			break;
+		}
+	}
+
+	// Check for convergence failure: count nonzero off-diagonal elements
+	if ( jtot >= nmaxit ) {
+		var info = 0; // eslint-disable-line no-var
+		for ( i = 0; i < N - 1; i++ ) {
+			if ( e[ offsetE + i * strideE ] !== 0.0 ) {
+				info += 1;
+			}
+		}
+		return info;
+	}
+
+	// Sort eigenvalues (and eigenvectors) in ascending order
+	if ( icompz === 0 ) {
+		dlasrt( 'I', N, d, strideD, offsetD );
+	} else {
+		// Selection sort
+		for ( ii = 1; ii < N; ii++ ) {
+			i = ii - 1;
+			k = i;
+			p = d[ offsetD + i * strideD ];
+			for ( j = ii; j < N; j++ ) {
+				if ( d[ offsetD + j * strideD ] < p ) {
+					k = j;
+					p = d[ offsetD + j * strideD ];
+				}
+			}
+			if ( k !== i ) {
+				d[ offsetD + k * strideD ] = d[ offsetD + i * strideD ];
+				d[ offsetD + i * strideD ] = p;
+				zswap( N, Z, strideZ1, offsetZ + i * strideZ2, Z, strideZ1, offsetZ + k * strideZ2 );
+			}
+		}
+	}
+
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = zsteqr;

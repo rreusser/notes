@@ -1,0 +1,108 @@
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zlatrd = require( './../lib/base.js' );
+
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'zlatrd.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+/**
+* Build the 6x6 Hermitian matrix from the Fortran test.
+*/
+function makeHerm6() {
+	// Column-major interleaved: A(row, col), rows first within each column
+	return new Complex128Array([
+		// col 0
+		10, 0,     1, -2,    0.5, 1,    0.3, -0.4,  0.1, 0.2,   0.2, -0.1,
+		// col 1
+		1, 2,      9, 0,     1.5, -1,   0.7, 0.3,   0.4, -0.5,  0.3, 0.2,
+		// col 2
+		0.5, -1,   1.5, 1,   8, 0,      2, -1.5,    0.6, 0.4,   0.5, -0.3,
+		// col 3
+		0.3, 0.4,  0.7, -0.3, 2, 1.5,   7, 0,       1, -0.8,    0.4, 0.6,
+		// col 4
+		0.1, -0.2, 0.4, 0.5, 0.6, -0.4, 1, 0.8,     6, 0,       1.5, -1,
+		// col 5
+		0.2, 0.1,  0.3, -0.2, 0.5, 0.3, 0.4, -0.6,  1.5, 1,     5, 0
+	]);
+}
+
+
+// TESTS //
+
+test( 'zlatrd: upper_6x6_nb3', function t() {
+	var tc = findCase( 'upper_6x6_nb3' );
+	var A = makeHerm6();
+	var e = new Float64Array( 5 );
+	var TAU = new Complex128Array( 5 );
+	var W = new Complex128Array( 6 * 3 );
+	var Av = reinterpret( A, 0 );
+	var Tv = reinterpret( TAU, 0 );
+	var Wv = reinterpret( W, 0 );
+
+	zlatrd( 'U', 6, 3, A, 1, 6, 0, e, 1, 0, TAU, 1, 0, W, 1, 6, 0 );
+
+	assertArrayClose( Array.from( Av ), tc.A, 1e-13, 'A' );
+	assertArrayClose( Array.from( e ), tc.e, 1e-13, 'e' );
+	assertArrayClose( Array.from( Tv ), tc.tau, 1e-13, 'tau' );
+	assertArrayClose( Array.from( Wv ), tc.W, 1e-13, 'W' );
+});
+
+test( 'zlatrd: lower_6x6_nb3', function t() {
+	var tc = findCase( 'lower_6x6_nb3' );
+	var A = makeHerm6();
+	var e = new Float64Array( 5 );
+	var TAU = new Complex128Array( 5 );
+	var W = new Complex128Array( 6 * 3 );
+	var Av = reinterpret( A, 0 );
+	var Tv = reinterpret( TAU, 0 );
+	var Wv = reinterpret( W, 0 );
+
+	zlatrd( 'L', 6, 3, A, 1, 6, 0, e, 1, 0, TAU, 1, 0, W, 1, 6, 0 );
+
+	assertArrayClose( Array.from( Av ), tc.A, 1e-13, 'A' );
+	assertArrayClose( Array.from( e ), tc.e, 1e-13, 'e' );
+	assertArrayClose( Array.from( Tv ), tc.tau, 1e-13, 'tau' );
+	assertArrayClose( Array.from( Wv ), tc.W, 1e-13, 'W' );
+});
+
+test( 'zlatrd: N=0 quick return', function t() {
+	var A = new Complex128Array( 0 );
+	var e = new Float64Array( 0 );
+	var TAU = new Complex128Array( 0 );
+	var W = new Complex128Array( 0 );
+	// Should not throw
+	zlatrd( 'U', 0, 0, A, 1, 1, 0, e, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
+});

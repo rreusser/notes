@@ -1,0 +1,7 @@
+dladiv
+dlamch
+dlapy3
+zlacgv
+zladiv
+zlarfg
+zlatrd

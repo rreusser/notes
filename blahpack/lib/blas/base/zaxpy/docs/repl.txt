@@ -1,0 +1,48 @@
+
+    zaxpy.ndarray( N, za, x, strideX, offsetX, incx, y, strideY, offsetY, incy )
+        Scale a complex vector and add to another complex vector
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        za: Complex128
+            za.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        incy: integer
+            incy.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

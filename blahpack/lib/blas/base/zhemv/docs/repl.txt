@@ -1,0 +1,60 @@
+
+    zhemv.ndarray( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY )
+        Perform Hermitian matrix-vector multiplication
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        alpha: Complex128
+            scalar constant.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        beta: Complex128
+            scalar constant.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

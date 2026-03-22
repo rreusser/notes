@@ -2,26 +2,22 @@
 // Reference: Xue, Waters, Trefethen, "Computation of 2D Stokes flows via lightning
 // and AAA rational approximation", arXiv:2306.13545v2, 2023.
 //
-// Solves the biharmonic equation ∇⁴ψ = 0 using:
-//   ψ = Im[conj(z) f(z) + g(z)]
-//   u - iv = -conj(f(z)) + conj(z) f'(z) + g'(z)
-//   p/μ - iω = 4 f'(z)
+// Uses Vandermonde with Arnoldi (VA) orthogonalization for the polynomial basis.
+// Reference: Brubeck & Trefethen, "Vandermonde with Arnoldi", SIAM Review 63(2), 2021.
 
 import { lssolve } from '../laplace/lssolve.js';
+import { vaOrthog, vaEval, vaEvalBasis } from '../lib/va-orthog.js';
 
 // ---- Complex arithmetic ----
 const cadd = (a, b) => [a[0] + b[0], a[1] + b[1]];
 const csub = (a, b) => [a[0] - b[0], a[1] - b[1]];
 const cmul = (a, b) => [a[0]*b[0] - a[1]*b[1], a[0]*b[1] + a[1]*b[0]];
-const cconj = (a) => [a[0], -a[1]];
 const cdiv = (a, b) => {
   const d = b[0]*b[0] + b[1]*b[1];
   return [(a[0]*b[0] + a[1]*b[1]) / d, (a[1]*b[0] - a[0]*b[1]) / d];
 };
 
 // ---- Lightning pole placement ----
-// Places N poles along the exterior bisector of a corner.
-// β_kn = w + L * exp(iθ) * exp(-σ(√N - √n)), n = 1..N
 function placeLightningPoles(corner, angle, N, sigma, L) {
   const poles = [];
   const sqrtN = Math.sqrt(N);
@@ -35,213 +31,148 @@ function placeLightningPoles(corner, angle, N, sigma, L) {
   return poles;
 }
 
-// ---- Evaluate rational + polynomial representation ----
-// r(z) = Σ c_k / (z - β_k) + Σ a_n z^n
-// r'(z) = Σ -c_k / (z - β_k)² + Σ n a_n z^(n-1)
-function evalRational(z, poles, ratCoeffs, polyCoeffs) {
-  let val = [0, 0], deriv = [0, 0];
-
-  // Rational part
-  for (let k = 0; k < poles.length; k++) {
-    const dz = csub(z, poles[k]);
-    const inv = cdiv([1, 0], dz);
-    const inv2 = cmul(inv, inv);
-    val = cadd(val, cmul(ratCoeffs[k], inv));
-    deriv = csub(deriv, cmul(ratCoeffs[k], inv2));
-  }
-
-  // Polynomial part
-  let power = [1, 0];
-  for (let n = 0; n < polyCoeffs.length; n++) {
-    val = cadd(val, cmul(polyCoeffs[n], power));
-    if (n >= 1) {
-      // derivative: n * a_n * z^(n-1)
-      let dpow = [1, 0];
-      for (let j = 0; j < n - 1; j++) dpow = cmul(dpow, z);
-      deriv = cadd(deriv, cmul([n * polyCoeffs[n][0], n * polyCoeffs[n][1]], dpow));
-    }
-    power = cmul(power, z);
-  }
-
-  return { val, deriv };
-}
-
 // ---- Main Stokes solver ----
 export function stokes(options = {}) {
   const {
-    N = 24,           // lightning poles per corner
-    nPoly = 20,       // polynomial degree
-    nSample = 100,    // sample points per side
-    sigma = 4,        // clustering parameter
-    L = 2,            // pole distance scale
-    // Lid-driven cavity on [-1,1]^2 by default
+    N = 24,
+    nPoly = 20,
+    nSample = 200,
+    sigma = 4,
+    L = 2,
     corners = [[-1,-1], [1,-1], [1,1], [-1,1]],
-    // Exterior bisector angles for each corner (outward at 45°)
     bisectors = [-3*Math.PI/4, -Math.PI/4, Math.PI/4, 3*Math.PI/4],
-    // Boundary condition: returns [u, v] at point [x, y]
-    velocityBC = ([x, y]) => {
-      // Lid-driven cavity: u=1 on top, 0 elsewhere
-      if (Math.abs(y - 1) < 1e-10) return [1, 0];
-      return [0, 0];
+    // Boundary condition function. Returns { psi, tangent } where:
+    //   psi: stream function value (typically 0 on all walls)
+    //   tangent: tangential velocity component
+    //   tangentDir: 'u' or 'v' (which velocity component is tangential)
+    boundaryBC = ([x, y]) => {
+      if (Math.abs(y - 1) < 1e-10) return { psi: 0, tangent: 1, tangentDir: 'u' };   // top lid
+      if (Math.abs(y + 1) < 1e-10) return { psi: 0, tangent: 0, tangentDir: 'u' };   // bottom
+      if (Math.abs(x - 1) < 1e-10) return { psi: 0, tangent: 0, tangentDir: 'v' };   // right
+      if (Math.abs(x + 1) < 1e-10) return { psi: 0, tangent: 0, tangentDir: 'v' };   // left
+      return { psi: 0, tangent: 0, tangentDir: 'u' };
     },
-    // Boundary segments: arrays of [x, y] points
-    boundarySegments = null,
   } = options;
 
   // ---- Step 1: Place lightning poles ----
   const allPoles = [];
   for (let k = 0; k < corners.length; k++) {
-    const cornerPoles = placeLightningPoles(corners[k], bisectors[k], N, sigma, L);
-    allPoles.push(...cornerPoles);
+    allPoles.push(...placeLightningPoles(corners[k], bisectors[k], N, sigma, L));
   }
   const nPoles = allPoles.length;
 
-  // ---- Step 2: Build boundary sample points ----
-  let boundary;
-  if (boundarySegments) {
-    boundary = boundarySegments.flat();
-  } else {
-    // Default: square [-1,1]^2 with tanh-clustered points near corners
-    boundary = [];
-    const sides = [
-      [[-1,-1], [1,-1]],  // bottom
-      [[1,-1], [1,1]],    // right
-      [[1,1], [-1,1]],    // top
-      [[-1,1], [-1,-1]],  // left
-    ];
-    for (const [start, end] of sides) {
-      for (let i = 1; i <= nSample; i++) {
-        const t = i / (nSample + 1);
-        boundary.push([
-          start[0] + t * (end[0] - start[0]),
-          start[1] + t * (end[1] - start[1]),
-        ]);
-      }
+  // ---- Step 2: Boundary sample points ----
+  const boundary = [];
+  const sides = [
+    [corners[0], corners[1]], [corners[1], corners[2]],
+    [corners[2], corners[3]], [corners[3], corners[0]],
+  ];
+  for (const [start, end] of sides) {
+    for (let i = 1; i <= nSample; i++) {
+      const t = i / (nSample + 1);
+      boundary.push([
+        start[0] + t * (end[0] - start[0]),
+        start[1] + t * (end[1] - start[1]),
+      ]);
     }
   }
-
   const M = boundary.length;
-  const nBasisF = nPoles + nPoly + 1; // basis functions for f (rat + poly 0..nPoly)
-  const nBasisG = nPoles + nPoly;     // basis functions for g (rat + poly 1..nPoly, no constant)
-  // g's constant term is excluded: g appears only through g'(z) in the velocity BC,
-  // and the derivative of a constant is zero. This is a gauge freedom (ψ is defined
-  // up to a constant).
-  const nCols = 2 * nBasisF + 2 * nBasisG; // real+imag for f and g
-  const nRows = 2 * M; // u and v for each point
 
-  // ---- Step 3: Build least-squares system ----
+  // ---- Step 3: VA orthogonalization for polynomial basis ----
+  const va = vaOrthog(boundary, nPoly);
+  const { Q: polyQ, D: polyD } = vaEvalBasis(va, boundary);
+
+  // ---- Step 4: Build least-squares system ----
+  // Basis for each Goursat function: nPoles rational + (nPoly+1) VA polynomial
+  const nBasisRat = nPoles;
+  const nBasisPoly = nPoly + 1;
+  const nBasisF = nBasisRat + nBasisPoly;
+  // g excludes degree-0 polynomial (gauge freedom: g constant doesn't affect velocity)
+  const nBasisG = nBasisRat + nPoly;
+  const nCols = 2 * nBasisF + 2 * nBasisG;
+  const nRows = 2 * M;
+
   const A = new Float64Array(nRows * nCols);
   const b = new Float64Array(nRows);
 
   for (let j = 0; j < M; j++) {
     const z = boundary[j];
     const x = z[0], y = z[1];
-    const [u_bc, v_bc] = velocityBC(z);
-    b[j] = u_bc;
-    b[M + j] = v_bc;
+    const bc = boundaryBC(z);
 
-    // For each basis function, compute phi(z) and phi'(z), then
-    // fill the matrix columns based on the velocity formula:
-    //   u - iv = -conj(f) + conj(z)*f' + g'
-    //   u = Re[-conj(f) + conj(z)*f' + g']
-    //   v = -Im[-conj(f) + conj(z)*f' + g']
+    // Row j: ψ = bc.psi constraint
+    // Row M+j: tangential velocity = bc.tangent
+    b[j] = bc.psi;
+    b[M + j] = bc.tangent;
 
     for (let k = 0; k < nBasisF + nBasisG; k++) {
       const isG = k >= nBasisF;
       const kk = isG ? k - nBasisF : k;
 
-      // Evaluate basis function and derivative
       let pr, pi, dpr, dpi;
-      if (kk < nPoles) {
-        // Rational basis: 1/(z - β_k)
+
+      if (kk < nBasisRat) {
         const dz = [z[0] - allPoles[kk][0], z[1] - allPoles[kk][1]];
         const d = dz[0]*dz[0] + dz[1]*dz[1];
         pr = dz[0] / d;
         pi = -dz[1] / d;
-        // Derivative: -1/(z - β_k)²
         const d2 = d * d;
-        const dz2r = dz[0]*dz[0] - dz[1]*dz[1];
-        const dz2i = 2*dz[0]*dz[1];
-        dpr = -dz2r / d2;
-        dpi = dz2i / d2;
+        dpr = -(dz[0]*dz[0] - dz[1]*dz[1]) / d2;
+        dpi = 2*dz[0]*dz[1] / d2;
       } else {
-        // Polynomial basis: z^n
-        // For g, skip constant (n starts at 1): n = kk - nPoles + (isG ? 1 : 0)
-        const n = kk - nPoles + (isG ? 1 : 0);
-        let powr = 1, powi = 0;
-        for (let i = 0; i < n; i++) {
-          const nr = powr * z[0] - powi * z[1];
-          const ni = powr * z[1] + powi * z[0];
-          powr = nr; powi = ni;
-        }
-        pr = powr; pi = powi;
-        // Derivative: n * z^(n-1)
-        if (n === 0) {
-          dpr = 0; dpi = 0;
-        } else {
-          let dpowr = 1, dpowi = 0;
-          for (let i = 0; i < n - 1; i++) {
-            const nr = dpowr * z[0] - dpowi * z[1];
-            const ni = dpowr * z[1] + dpowi * z[0];
-            dpowr = nr; dpowi = ni;
-          }
-          dpr = n * dpowr; dpi = n * dpowi;
-        }
+        const polyIdx = kk - nBasisRat + (isG ? 1 : 0);
+        pr = polyQ[2 * (j + polyIdx * M)];
+        pi = polyQ[2 * (j + polyIdx * M) + 1];
+        dpr = polyD[2 * (j + polyIdx * M)];
+        dpi = polyD[2 * (j + polyIdx * M) + 1];
       }
 
-      // Column indices: [f_re, f_im, g_re, g_im]
-      // f coefficients: columns 0..2*nBasisF-1
-      // g coefficients: columns 2*nBasisF..nCols-1
       const colRe = isG ? 2*nBasisF + 2*kk : 2*kk;
       const colIm = colRe + 1;
 
+      // ---- Row j: ψ = Im[z̄ f + g] ----
+      // For f basis φ with coeff c = cr+ici:
+      //   Im[z̄ * c * φ] = Im[(x-iy)(cr+ici)(pr+ipi)]
+      //   = x*(cr*pi + ci*pr) - y*(cr*pr - ci*pi)
+      //   ψ from cr: x*pi - y*pr
+      //   ψ from ci: x*pr + y*pi
+      // For g basis φ with coeff d = dr+idi:
+      //   Im[d * φ] = dr*pi + di*pr
+      //   ψ from dr: pi
+      //   ψ from di: pr
       if (isG) {
-        // g contributes g'(z) to velocity: u - iv = ... + g'(z)
-        // u from g_re coeff: Re(phi')  = dpr
-        // u from g_im coeff: -Im(phi') = -dpi
-        // v from g_re coeff: -Im(phi') = -dpi
-        // v from g_im coeff: -Re(phi') = -dpr
-        A[j + colRe * nRows] = dpr;
-        A[j + colIm * nRows] = -dpi;
-        A[M + j + colRe * nRows] = -dpi;
-        A[M + j + colIm * nRows] = -dpr;
+        A[j + colRe * nRows] = pi;
+        A[j + colIm * nRows] = pr;
       } else {
-        // f contributes -conj(f) + conj(z)*f' to velocity
-        // -conj(c * phi) where c = cr + i*ci:
-        //   = -(cr*pr - ci*pi) + i*(cr*pi + ci*pr)
-        // conj(z) * c * phi' where conj(z) = x - iy:
-        //   Real: x*(cr*dpr - ci*dpi) + y*(cr*dpi + ci*dpr)
-        //   Imag: x*(cr*dpi + ci*dpr) - y*(cr*dpr - ci*dpi)
+        A[j + colRe * nRows] = x*pi - y*pr;
+        A[j + colIm * nRows] = x*pr + y*pi;
+      }
 
-        // u = Re[-conj(f)] + Re[conj(z)*f']
-        // u from cr: -pr + x*dpr + y*dpi
-        // u from ci:  pi - x*dpi + y*dpr
-        A[j + colRe * nRows] = -pr + x*dpr + y*dpi;
-        A[j + colIm * nRows] = pi - x*dpi + y*dpr;
+      // ---- Row M+j: tangential velocity ----
+      // u = Re[-conj(f) + z̄ f' + g']
+      // v = -Im[-conj(f) + z̄ f' + g']
+      let u_cr, u_ci, v_cr, v_ci;
+      if (isG) {
+        u_cr = dpr; u_ci = -dpi;
+        v_cr = -dpi; v_ci = -dpr;
+      } else {
+        u_cr = -pr + x*dpr + y*dpi;
+        u_ci = pi - x*dpi + y*dpr;
+        v_cr = -(pi + x*dpi - y*dpr);
+        v_ci = -(pr + x*dpr + y*dpi);
+      }
 
-        // v = -Im[-conj(f) + conj(z)*f']
-        // -v = Im[-conj(f)] + Im[conj(z)*f']
-        // -v from cr: pi + x*dpi - y*dpr
-        // -v from ci: pr + x*dpr + y*dpi  -- wait, need to be careful
-        // v = -Im[...] so:
-        // v from cr: -(pi + x*dpi - y*dpr)
-        // v from ci: -(pr + x*dpr + y*dpi)  -- hmm, let me rederive
-
-        // Im[-conj(c*phi)] = Im[-(cr*pr-ci*pi) + i*(cr*pi+ci*pr)]
-        //   = cr*pi + ci*pr
-        // Im[conj(z)*c*phi'] = x*(cr*dpi+ci*dpr) - y*(cr*dpr-ci*dpi)
-        // So Im[total] from cr: pi + x*dpi - y*dpr
-        //    Im[total] from ci: pr + x*dpr + y*dpi
-        // v = -Im[total]
-        A[M + j + colRe * nRows] = -(pi + x*dpi - y*dpr);
-        A[M + j + colIm * nRows] = -(pr + x*dpr + y*dpi);
+      if (bc.tangentDir === 'u') {
+        A[M + j + colRe * nRows] = u_cr;
+        A[M + j + colIm * nRows] = u_ci;
+      } else {
+        A[M + j + colRe * nRows] = v_cr;
+        A[M + j + colIm * nRows] = v_ci;
       }
     }
   }
 
-  // ---- Step 4: Remove zero columns (gauge freedoms) and solve ----
-  // Known gauge freedom: Re(f's z^1 coeff) produces a zero column because
-  // -conj(c*z) + z̄*c*1 = 0 for real c. Detect and remove all zero columns.
+  // ---- Step 5: Remove zero columns and solve ----
   const colNorms = new Float64Array(nCols);
   for (let c = 0; c < nCols; c++) {
     let norm2 = 0;
@@ -253,8 +184,6 @@ export function stokes(options = {}) {
     if (colNorms[c] > 1e-30) activeCols.push(c);
   }
   const nActive = activeCols.length;
-
-  // Build reduced system
   const Ar = new Float64Array(nRows * nActive);
   for (let j = 0; j < nActive; j++) {
     const c = activeCols[j];
@@ -262,58 +191,93 @@ export function stokes(options = {}) {
   }
   const br = new Float64Array(b);
   const xr = lssolve(Ar, br, nRows, nActive);
-
-  // Map back to full coefficient vector
   const coeffs = new Float64Array(nCols);
   for (let j = 0; j < nActive; j++) coeffs[activeCols[j]] = xr[j];
 
-  // ---- Step 5: Extract coefficients ----
+  // ---- Step 6: Extract coefficients ----
   const fRatCoeffs = [], fPolyCoeffs = [];
   const gRatCoeffs = [], gPolyCoeffs = [];
 
   for (let k = 0; k < nBasisF; k++) {
     const cr = coeffs[2*k], ci = coeffs[2*k + 1];
-    if (k < nPoles) fRatCoeffs.push([cr, ci]);
+    if (k < nBasisRat) fRatCoeffs.push([cr, ci]);
     else fPolyCoeffs.push([cr, ci]);
   }
-  // g polynomial starts at degree 1 (constant excluded)
-  gPolyCoeffs.push([0, 0]); // degree 0 = constant = 0 (gauge choice)
+  gPolyCoeffs.push([0, 0]); // degree 0 = 0 (gauge)
   for (let k = 0; k < nBasisG; k++) {
     const cr = coeffs[2*nBasisF + 2*k], ci = coeffs[2*nBasisF + 2*k + 1];
-    if (k < nPoles) gRatCoeffs.push([cr, ci]);
-    else gPolyCoeffs.push([cr, ci]); // these are degree 1, 2, ..., nPoly
+    if (k < nBasisRat) gRatCoeffs.push([cr, ci]);
+    else gPolyCoeffs.push([cr, ci]);
   }
 
-  // ---- Step 6: Build evaluator ----
+  // ---- Step 7: Build evaluator ----
   function evaluate(z) {
-    const f = evalRational(z, allPoles, fRatCoeffs, fPolyCoeffs);
-    const g = evalRational(z, allPoles, gRatCoeffs, gPolyCoeffs);
+    // Evaluate VA basis at z
+    const { q, dq } = vaEval(va, z);
 
-    // ψ = Im[conj(z) * f(z) + g(z)]
-    const zbar = [z[0], -z[1]];
-    const zbar_f = cmul(zbar, f.val);
-    const psi = zbar_f[1] + g.val[1]; // Im[zbar*f + g]
+    // f(z) = Σ c_k/(z-β_k) + Σ a_n * q_n(z)
+    let fr = 0, fi = 0, fdr = 0, fdi = 0;
+    for (let k = 0; k < nPoles; k++) {
+      const dz = csub(z, allPoles[k]);
+      const d = dz[0]*dz[0] + dz[1]*dz[1];
+      const ir = dz[0]/d, ii = -dz[1]/d;
+      fr += fRatCoeffs[k][0]*ir - fRatCoeffs[k][1]*ii;
+      fi += fRatCoeffs[k][0]*ii + fRatCoeffs[k][1]*ir;
+      const d2 = d*d;
+      const i2r = -(dz[0]*dz[0]-dz[1]*dz[1])/d2;
+      const i2i = 2*dz[0]*dz[1]/d2;
+      fdr += fRatCoeffs[k][0]*i2r - fRatCoeffs[k][1]*i2i;
+      fdi += fRatCoeffs[k][0]*i2i + fRatCoeffs[k][1]*i2r;
+    }
+    for (let n = 0; n < fPolyCoeffs.length; n++) {
+      fr += fPolyCoeffs[n][0]*q[2*n] - fPolyCoeffs[n][1]*q[2*n+1];
+      fi += fPolyCoeffs[n][0]*q[2*n+1] + fPolyCoeffs[n][1]*q[2*n];
+      fdr += fPolyCoeffs[n][0]*dq[2*n] - fPolyCoeffs[n][1]*dq[2*n+1];
+      fdi += fPolyCoeffs[n][0]*dq[2*n+1] + fPolyCoeffs[n][1]*dq[2*n];
+    }
 
+    // g(z) = Σ d_k/(z-β_k) + Σ b_n * q_n(z)
+    let gr = 0, gi = 0, gdr = 0, gdi = 0;
+    for (let k = 0; k < nPoles; k++) {
+      const dz = csub(z, allPoles[k]);
+      const d = dz[0]*dz[0] + dz[1]*dz[1];
+      const ir = dz[0]/d, ii = -dz[1]/d;
+      gr += gRatCoeffs[k][0]*ir - gRatCoeffs[k][1]*ii;
+      gi += gRatCoeffs[k][0]*ii + gRatCoeffs[k][1]*ir;
+      const d2 = d*d;
+      const i2r = -(dz[0]*dz[0]-dz[1]*dz[1])/d2;
+      const i2i = 2*dz[0]*dz[1]/d2;
+      gdr += gRatCoeffs[k][0]*i2r - gRatCoeffs[k][1]*i2i;
+      gdi += gRatCoeffs[k][0]*i2i + gRatCoeffs[k][1]*i2r;
+    }
+    for (let n = 0; n < gPolyCoeffs.length; n++) {
+      gr += gPolyCoeffs[n][0]*q[2*n] - gPolyCoeffs[n][1]*q[2*n+1];
+      gi += gPolyCoeffs[n][0]*q[2*n+1] + gPolyCoeffs[n][1]*q[2*n];
+      gdr += gPolyCoeffs[n][0]*dq[2*n] - gPolyCoeffs[n][1]*dq[2*n+1];
+      gdi += gPolyCoeffs[n][0]*dq[2*n+1] + gPolyCoeffs[n][1]*dq[2*n];
+    }
+
+    // ψ = Im[conj(z) * f + g] = x*fi - y*fr + gi
+    const psi = z[0]*fi - z[1]*fr + gi;
     // u - iv = -conj(f) + conj(z)*f' + g'
-    const neg_fbar = [-f.val[0], f.val[1]]; // -conj(f)
-    const zbar_fp = cmul(zbar, f.deriv);     // conj(z)*f'
-    const vel = cadd(cadd(neg_fbar, zbar_fp), g.deriv);
-    const u = vel[0], v = -vel[1];
-
-    // p/μ - iω = 4f'(z)
-    const pressure = 4 * f.deriv[0];
-    const vorticity = -4 * f.deriv[1];
+    const ur = -fr + z[0]*fdr + z[1]*fdi + gdr;
+    const ui = fi + z[0]*fdi - z[1]*fdr + gdi;
+    const u = ur, v = -ui;
+    const pressure = 4 * fdr;
+    const vorticity = -4 * fdi;
     const speed = Math.sqrt(u*u + v*v);
 
     return { psi, u, v, pressure, vorticity, speed };
   }
 
-  // ---- Step 7: Compute boundary error ----
+  // ---- Step 8: Boundary error ----
   let maxError = 0;
   for (let j = 0; j < M; j++) {
-    const { u, v } = evaluate(boundary[j]);
-    const [u_bc, v_bc] = velocityBC(boundary[j]);
-    const err = Math.hypot(u - u_bc, v - v_bc);
+    const { psi, u, v } = evaluate(boundary[j]);
+    const bc = boundaryBC(boundary[j]);
+    const psiErr = Math.abs(psi - bc.psi);
+    const tanErr = Math.abs((bc.tangentDir === 'u' ? u : v) - bc.tangent);
+    const err = Math.max(psiErr, tanErr);
     if (err > maxError) maxError = err;
   }
 
@@ -323,7 +287,7 @@ export function stokes(options = {}) {
     gRatCoeffs, gPolyCoeffs,
     nPoles, nPoly,
     corners, boundary,
-    maxError,
-    evaluate,
+    maxError, evaluate,
+    va, // Hessenberg data for GPU evaluation
   };
 }

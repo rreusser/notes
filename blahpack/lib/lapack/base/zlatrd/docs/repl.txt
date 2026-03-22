@@ -1,0 +1,69 @@
+
+    zlatrd.ndarray( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW )
+        Reduce NB rows and columns of a Hermitian matrix to tridiagonal form
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        nb: integer
+            nb.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: NonNegativeInteger
+            starting index for `TAU`.
+
+        W: Float64Array
+            output matrix.
+
+        strideW1: integer
+            stride of the first dimension of `W`.
+
+        strideW2: integer
+            stride of the second dimension of `W`.
+
+        offsetW: NonNegativeInteger
+            starting index for `W`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

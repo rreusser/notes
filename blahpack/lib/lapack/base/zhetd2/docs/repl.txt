@@ -1,0 +1,63 @@
+
+    zhetd2.ndarray( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU )
+        Reduce a Hermitian matrix to tridiagonal form (unblocked)
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        TAU: Float64Array
+            output array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: NonNegativeInteger
+            starting index for `TAU`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
