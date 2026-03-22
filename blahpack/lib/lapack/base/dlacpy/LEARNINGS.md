@@ -22,8 +22,8 @@
 
 ## Actionable items for tooling
 
-- [ ] Scaffold should add eslint-disable pragmas for long signatures
-- [ ] Scaffold should generate proper @param types (can be derived from Fortran declarations)
+- [x] Scaffold should add eslint-disable pragmas for long signatures — DONE in scaffold.py
+- [x] Scaffold should generate proper @param types — DONE via signature.py js_arg_meta
 - [ ] Document the helper decomposition pattern in CLAUDE.md for uplo routines
-- [ ] Consider using full uplo strings in base.js (match stdlib convention)
-- [ ] Loop interchange optimization can be deferred (correctness first)
+- [x] uplo string convention decided: single chars in base.js, ndarray.js normalizes — documented in CLAUDE.md
+- [x] Loop interchange optimization deferred — correctness first, noted in CLAUDE.md

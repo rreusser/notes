@@ -1,0 +1,7 @@
+dgetrf
+dgetrf2
+dlamch
+dlaswp
+ieeeck
+ilaenv
+iparmq

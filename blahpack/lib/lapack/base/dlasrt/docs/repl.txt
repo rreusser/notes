@@ -1,0 +1,33 @@
+
+    dlasrt.ndarray( id, N, d, stride, offset )
+        Sort an array of doubles in increasing or decreasing order
+
+        Parameters
+        ----------
+        id: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        d: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `d`.
+
+        offset: NonNegativeInteger
+            starting index for `d`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

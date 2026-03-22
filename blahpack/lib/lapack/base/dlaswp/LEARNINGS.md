@@ -42,8 +42,8 @@ We use a single test file with inline fixture loading from Fortran-generated JSO
 
 ## Actionable items for tooling
 
-- [ ] scaffold should generate `test/test.<routine>.js` and `test/test.ndarray.js`
-- [ ] signature.py: consider `incx` → `inck` rename for LAPACK routines
-- [ ] base.js: add `isRowMajor` detection and row-major fast path (using dswap)
-- [ ] Document 0-based convention for base.js in CLAUDE.md
-- [ ] Consider generating `benchmark/` scaffolds
+- [ ] scaffold should generate `test/test.<routine>.js` and `test/test.ndarray.js` — low priority, single test file works
+- [ ] signature.py: consider `incx` → `inck` rename for LAPACK routines — edge case, deferred
+- [ ] base.js: add `isRowMajor` detection and row-major fast path (using dswap) — perf optimization, deferred
+- [x] Document 0-based convention for base.js in CLAUDE.md — DONE
+- [ ] Consider generating `benchmark/` scaffolds — deferred until perf matters

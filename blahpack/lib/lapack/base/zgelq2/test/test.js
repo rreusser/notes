@@ -1,0 +1,135 @@
+
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var zgelq2 = require( './../lib/base.js' );
+
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'zgelq2.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+
+// TESTS //
+
+test( 'zgelq2: basic 2x3 matrix', function t() {
+	var tc = findCase( 'basic_2x3' );
+	// A = [ (1,0)  (2,1)  (3,0) ]   col-major, LDA=2
+	//     [ (4,1)  (5,0)  (6,-1)]
+	// Col-major interleaved: A(1,1),A(2,1), A(1,2),A(2,2), A(1,3),A(2,3)
+	var a = new Float64Array( [
+		1, 0, 4, 1,   // column 1: (1,0), (4,1)
+		2, 1, 5, 0,   // column 2: (2,1), (5,0)
+		3, 0, 6, -1   // column 3: (3,0), (6,-1)
+	] );
+	var tau = new Float64Array( 4 );
+	var work = new Float64Array( 20 );
+	var info = zgelq2( 2, 3, a, 1, 2, 0, tau, 1, 0, work, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( a, tc.a, 1e-10, 'a' );
+	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+});
+
+test( 'zgelq2: basic 3x4 matrix', function t() {
+	var tc = findCase( 'basic_3x4' );
+	// A = [ (1,1)  (2,0)  (3,-1) (4,0)  ]   col-major, LDA=3
+	//     [ (5,0)  (6,1)  (7,0)  (8,-1) ]
+	//     [ (9,1)  (10,0) (11,1) (12,0) ]
+	var a = new Float64Array( [
+		1, 1, 5, 0, 9, 1,       // column 1
+		2, 0, 6, 1, 10, 0,      // column 2
+		3, -1, 7, 0, 11, 1,     // column 3
+		4, 0, 8, -1, 12, 0      // column 4
+	] );
+	var tau = new Float64Array( 6 );
+	var work = new Float64Array( 20 );
+	var info = zgelq2( 3, 4, a, 1, 3, 0, tau, 1, 0, work, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( a, tc.a, 1e-10, 'a' );
+	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+});
+
+test( 'zgelq2: M=0 quick return', function t() {
+	var a = new Float64Array( 4 );
+	var tau = new Float64Array( 4 );
+	var work = new Float64Array( 4 );
+	var info = zgelq2( 0, 3, a, 1, 1, 0, tau, 1, 0, work, 1, 0 );
+	assertClose( info, 0, 1e-14, 'info' );
+});
+
+test( 'zgelq2: N=0 quick return', function t() {
+	var a = new Float64Array( 12 );
+	var tau = new Float64Array( 4 );
+	var work = new Float64Array( 4 );
+	var info = zgelq2( 2, 0, a, 1, 2, 0, tau, 1, 0, work, 1, 0 );
+	assertClose( info, 0, 1e-14, 'info' );
+});
+
+test( 'zgelq2: 1x1 matrix', function t() {
+	var tc = findCase( 'one_by_one' );
+	var a = new Float64Array( [ 5, 3 ] );
+	var tau = new Float64Array( 2 );
+	var work = new Float64Array( 4 );
+	var info = zgelq2( 1, 1, a, 1, 1, 0, tau, 1, 0, work, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( a, tc.a, 1e-10, 'a' );
+	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+});
+
+test( 'zgelq2: square 2x2 matrix', function t() {
+	var tc = findCase( 'square_2x2' );
+	// A = [1+1i 1+0i; 0+1i 1+1i] col-major, LDA=2
+	var a = new Float64Array( [ 1, 1, 0, 1, 1, 0, 1, 1 ] );
+	var tau = new Float64Array( 4 );
+	var work = new Float64Array( 20 );
+	var info = zgelq2( 2, 2, a, 1, 2, 0, tau, 1, 0, work, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( a, tc.a, 1e-10, 'a' );
+	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+});
+
+test( 'zgelq2: square 3x3 matrix', function t() {
+	var tc = findCase( 'square_3x3' );
+	// A = [ (2,1)   (1,0)   (-1,1)  ]   col-major, LDA=3
+	//     [ (1,-1)  (3,2)   (0,1)   ]
+	//     [ (0,0.5) (1,-1)  (4,0)   ]
+	var a = new Float64Array( [
+		2, 1, 1, -1, 0, 0.5,      // column 1
+		1, 0, 3, 2, 1, -1,        // column 2
+		-1, 1, 0, 1, 4, 0         // column 3
+	] );
+	var tau = new Float64Array( 6 );
+	var work = new Float64Array( 20 );
+	var info = zgelq2( 3, 3, a, 1, 3, 0, tau, 1, 0, work, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( a, tc.a, 1e-10, 'a' );
+	assertArrayClose( tau, tc.tau, 1e-10, 'tau' );
+});

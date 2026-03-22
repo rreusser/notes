@@ -2,13 +2,13 @@
 
 // MODULES //
 
-var zlarfb = require( '../../../../lapack/base/zlarfb/lib/base.js' );
-var zlarft = require( '../../../../lapack/base/zlarft/lib/base.js' );
-var zung2r = require( './zung2r.js' );
+var zunm2r = require( './zunm2r.js' );
+var zlaset = require( '../../../../lapack/base/zlaset/lib/base.js' );
 
 // VARIABLES //
 
-var NB = 32;
+var CZERO = new Float64Array( [ 0.0, 0.0 ] );
+var CONE = new Float64Array( [ 1.0, 0.0 ] );
 
 // MAIN //
 
@@ -17,7 +17,7 @@ var NB = 32;
 * which is defined as the first N columns of a product of K elementary
 * reflectors of order M: Q = H(1)*H(2)*...*H(k).
 *
-* Blocked algorithm (ZUNGQR).
+* Uses zunm2r to apply reflectors to an identity matrix.
 *
 * Complex elements are stored as interleaved real/imaginary pairs.
 * Matrix strides are in doubles.
@@ -38,18 +38,13 @@ var NB = 32;
 * @returns {integer} 0 on success
 */
 function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, lwork ) { // eslint-disable-line max-len, max-params
-	var ldwork;
-	var idx;
+	var reflectors;
 	var sa1;
 	var sa2;
 	var oA;
-	var nb;
-	var kk;
-	var ki;
-	var ib;
+	var idx;
 	var i;
 	var j;
-	var l;
 
 	if ( N <= 0 ) {
 		return 0;
@@ -59,79 +54,28 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	sa2 = strideA2;
 	oA = offsetA;
 
-	nb = NB;
-	if ( nb > K ) {
-		nb = K;
-	}
-
-	// Use unblocked code for small problems
-	if ( nb < 2 || nb >= K ) {
-		return zung2r( M, N, K, A, sa1, sa2, oA, TAU, strideTAU, offsetTAU, WORK );
-	}
-
-	// Use blocked code
-	ki = Math.floor( ( K - 1 ) / nb ) * nb;
-	kk = Math.min( K, ki + nb );
-
-	// Set A(1:kk, kk+1:N) = 0
-	for ( j = kk; j < N; j++ ) {
-		for ( i = 0; i < kk; i++ ) {
+	// Save the reflector vectors (lower triangular of A) before overwriting A
+	// with the identity matrix. The reflectors are in columns 0..K-1, rows i+1..M-1.
+	reflectors = new Float64Array( 2 * M * K );
+	for ( j = 0; j < K; j++ ) {
+		for ( i = 0; i < M; i++ ) {
 			idx = oA + i * sa1 + j * sa2;
-			A[ idx ] = 0.0;
-			A[ idx + 1 ] = 0.0;
+			reflectors[ 2 * ( i + j * M ) ] = A[ idx ];
+			reflectors[ 2 * ( i + j * M ) + 1 ] = A[ idx + 1 ];
 		}
 	}
 
-	// Apply unblocked code to trailing part
-	if ( kk < N ) {
-		zung2r( M - kk, N - kk, K - kk,
-			A, sa1, sa2, oA + kk * sa1 + kk * sa2,
-			TAU, strideTAU, offsetTAU + kk * strideTAU * 2,
-			WORK );
-	}
+	// Set A to identity
+	zlaset( 'Full', M, N, CZERO, CONE, A, sa1, sa2, oA );
 
-	ldwork = N;
-
-	// Apply blocked code
-	for ( i = ki; i >= 0; i -= nb ) {
-		ib = Math.min( nb, K - i );
-
-		if ( i + ib < N ) {
-			// Form the triangular factor T
-			// zlarft expects complex-element strides
-			zlarft(
-				'Forward', 'Columnwise', M - i, ib,
-				A, sa1 / 2, sa2 / 2, oA + i * sa1 + i * sa2,
-				TAU, strideTAU, offsetTAU + i * strideTAU * 2,
-				WORK, 1, ib, ib * 2 * ldwork // T stored after work section
-			);
-
-			// Apply H to A(i:M, i+ib:N) from the left
-			zlarfb(
-				'Left', 'No transpose', 'Forward', 'Columnwise',
-				M - i, N - i - ib, ib,
-				A, sa1 / 2, sa2 / 2, oA + i * sa1 + i * sa2,
-				WORK, 1, ib, ib * 2 * ldwork,
-				A, sa1 / 2, sa2 / 2, oA + i * sa1 + ( i + ib ) * sa2,
-				WORK, 1, ldwork, 0
-			);
-		}
-
-		// Apply unblocked code to current block
-		zung2r( M - i, ib, ib,
-			A, sa1, sa2, oA + i * sa1 + i * sa2,
-			TAU, strideTAU, offsetTAU + i * strideTAU * 2,
-			WORK );
-
-		// Set A(1:i, i:i+ib) = 0
-		for ( j = i; j < i + ib; j++ ) {
-			for ( l = 0; l < i; l++ ) {
-				idx = oA + l * sa1 + j * sa2;
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
-			}
-		}
-	}
+	// Apply Q = H(1)*H(2)*...*H(K) to identity from the left
+	// zunm2r('L', 'N', M, N, K, reflectors, 2, 2*M, 0, TAU, strideTAU, offsetTAU, A, sa1, sa2, oA, WORK)
+	zunm2r( 'L', 'N', M, N, K,
+		reflectors, 2, 2 * M, 0,
+		TAU, strideTAU, offsetTAU,
+		A, sa1, sa2, oA,
+		WORK
+	);
 
 	return 0;
 }

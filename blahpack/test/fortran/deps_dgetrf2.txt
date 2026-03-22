@@ -1,0 +1,3 @@
+dgetrf2
+dlamch
+dlaswp

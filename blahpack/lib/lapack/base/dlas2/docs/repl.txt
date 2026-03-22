@@ -1,0 +1,33 @@
+
+    dlas2.ndarray( f, g, h, ssmin, ssmax )
+        Compute singular values of a 2-by-2 triangular matrix
+
+        Parameters
+        ----------
+        f: number
+            f.
+
+        g: number
+            g.
+
+        h: number
+            h.
+
+        ssmin: number
+            ssmin.
+
+        ssmax: number
+            ssmax.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

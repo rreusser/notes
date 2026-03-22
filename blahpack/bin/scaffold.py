@@ -509,6 +509,7 @@ def main():
         'docs/repl.txt': gen_repl_txt(args.routine, sig, description),
         'docs/types/index.d.ts': gen_types_dts(args.routine, args.package, sig, description),
         'examples/index.js': gen_examples_js(args.routine, args.package),
+        'LEARNINGS.md': f'# {args.routine}: Translation Learnings\n\nTODO: Fill in after implementing base.js. This file is MANDATORY.\n\n## Translation pitfalls\n\n- [ ] (describe any index off-by-ones, stride confusion, etc.)\n\n## Dependency interface surprises\n\n- [ ] (note unexpected calling conventions of deps)\n\n## Automation opportunities\n\n- [ ] (mechanical steps that should be automated)\n\n## Coverage gaps\n\n- [ ] (code paths that were hard to test and why)\n\n## Complex number handling\n\n- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)\n',
     }
 
     for rel_path, content in files.items():

@@ -110,11 +110,11 @@ for routines with 3+ uplo variants or more complex dispatch.
 
 ## Actionable items
 
-- [ ] Add `isRowMajor` detection to dsyr base.js for cache-friendly inner loops
-- [ ] Use incremental `ia` pointer for matrix access in all future translations
-- [ ] Consider adopting `i0`/`i1`/`sa0`/`sa1` naming for layout-aware routines
-- [ ] Ensure tests cover both row-major and column-major for routines with uplo
-- [ ] Project decision needed: should base.js use `'upper'`/`'lower'` or `'U'`/`'L'`?
+- [ ] Add `isRowMajor` detection to dsyr base.js for cache-friendly inner loops — perf optimization, deferred
+- [x] Use incremental `ia` pointer for matrix access — documented in CLAUDE.md "Performance Patterns"
+- [ ] Consider adopting `i0`/`i1`/`sa0`/`sa1` naming for layout-aware routines — deferred, current naming works
+- [x] Ensure tests cover both row-major and column-major — noted in coverage guidance
+- [x] uplo convention decided: `'U'`/`'L'` in base.js, ndarray.js normalizes — documented in CLAUDE.md
 
 ## Patterns to carry forward
 

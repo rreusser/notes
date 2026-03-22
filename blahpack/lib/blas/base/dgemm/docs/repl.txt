@@ -1,0 +1,75 @@
+
+    dgemm.ndarray( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC )
+        Double-precision real matrix-matrix multiply.
+
+        Parameters
+        ----------
+        transa: string
+            specifies the operation type.
+
+        transb: string
+            specifies the operation type.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        alpha: number
+            scalar constant.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        beta: number
+            scalar constant.
+
+        C: Float64Array
+            output matrix.
+
+        strideC1: integer
+            stride of the first dimension of `C`.
+
+        strideC2: integer
+            stride of the second dimension of `C`.
+
+        offsetC: NonNegativeInteger
+            starting index for `C`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

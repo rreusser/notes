@@ -1,0 +1,7 @@
+{"name":"basic","result":4}
+{"name":"n_zero","result":0}
+{"name":"n_one","result":1}
+{"name":"negative","result":2}
+{"name":"stride","result":2}
+{"name":"first_max","result":1}
+{"name":"last_max","result":3}

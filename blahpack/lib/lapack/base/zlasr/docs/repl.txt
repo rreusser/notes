@@ -1,0 +1,63 @@
+
+    zlasr.ndarray( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA )
+        Apply a sequence of plane rotations to a complex matrix
+
+        Parameters
+        ----------
+        side: string
+            specifies the operation type.
+
+        pivot: string
+            specifies the operation type.
+
+        direct: string
+            specifies the operation type.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        c: Float64Array
+            input array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: NonNegativeInteger
+            starting index for `c`.
+
+        s: Float64Array
+            input array.
+
+        strideS: integer
+            stride length for `s`.
+
+        offsetS: NonNegativeInteger
+            starting index for `s`.
+
+        A: Float64Array
+            output matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

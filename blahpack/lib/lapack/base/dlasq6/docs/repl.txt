@@ -1,0 +1,54 @@
+
+    dlasq6.ndarray( i0, n0, z, stride, offset, pp, dmin, dmin1, dmin2, dn, dnm1, dnm2 )
+        Compute one dqds transform without shift
+
+        Parameters
+        ----------
+        i0: integer
+            i0.
+
+        n0: integer
+            n0.
+
+        z: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `z`.
+
+        offset: NonNegativeInteger
+            starting index for `z`.
+
+        pp: integer
+            pp.
+
+        dmin: number
+            dmin.
+
+        dmin1: number
+            dmin1.
+
+        dmin2: number
+            dmin2.
+
+        dn: number
+            dn.
+
+        dnm1: number
+            dnm1.
+
+        dnm2: number
+            dnm2.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,99 @@
+
+    zlabrd.ndarray( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, X, strideX1, strideX2, offsetX, Y, strideY1, strideY2, offsetY )
+        Reduce first NB rows/columns to bidiagonal form
+
+        Parameters
+        ----------
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        nb: integer
+            nb.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        TAUQ: Float64Array
+            input array.
+
+        strideTAUQ: integer
+            stride length for `TAUQ`.
+
+        offsetTAUQ: NonNegativeInteger
+            starting index for `TAUQ`.
+
+        TAUP: Float64Array
+            input array.
+
+        strideTAUP: integer
+            stride length for `TAUP`.
+
+        offsetTAUP: NonNegativeInteger
+            starting index for `TAUP`.
+
+        X: Float64Array
+            input matrix.
+
+        strideX1: integer
+            stride of the first dimension of `X`.
+
+        strideX2: integer
+            stride of the second dimension of `X`.
+
+        offsetX: NonNegativeInteger
+            starting index for `X`.
+
+        Y: Float64Array
+            output matrix.
+
+        strideY1: integer
+            stride of the first dimension of `Y`.
+
+        strideY2: integer
+            stride of the second dimension of `Y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `Y`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

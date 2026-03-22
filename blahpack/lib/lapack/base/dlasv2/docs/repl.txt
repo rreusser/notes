@@ -1,0 +1,45 @@
+
+    dlasv2.ndarray( f, g, h, ssmin, ssmax, snr, csr, snl, csl )
+        Compute SVD of a 2-by-2 triangular matrix
+
+        Parameters
+        ----------
+        f: number
+            f.
+
+        g: number
+            g.
+
+        h: number
+            h.
+
+        ssmin: number
+            ssmin.
+
+        ssmax: number
+            ssmax.
+
+        snr: number
+            snr.
+
+        csr: number
+            csr.
+
+        snl: number
+            snl.
+
+        csl: number
+            csl.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

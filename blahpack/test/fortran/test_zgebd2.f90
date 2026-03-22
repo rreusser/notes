@@ -1,0 +1,107 @@
+program test_zgebd2
+  use test_utils
+  implicit none
+
+  double precision :: a_r(100), tauq_r(20), taup_r(20), work_r(20)
+  complex*16 :: a(50), tauq(10), taup(10), work(10)
+  double precision :: d(10), e(10)
+  equivalence (a, a_r)
+  equivalence (tauq, tauq_r)
+  equivalence (taup, taup_r)
+  integer :: info
+
+  ! Test 1: 4x3 matrix (M > N, upper bidiagonal)
+  a = (0.0d0, 0.0d0)
+  a(1)  = (1.0d0, 2.0d0);  a(2)  = (3.0d0, 4.0d0);  a(3)  = (5.0d0, 6.0d0);  a(4)  = (7.0d0, 8.0d0)
+  a(5)  = (9.0d0, 1.0d0);  a(6)  = (2.0d0, 3.0d0);  a(7)  = (4.0d0, 5.0d0);  a(8)  = (6.0d0, 7.0d0)
+  a(9)  = (8.0d0, 9.0d0);  a(10) = (1.0d0, 2.0d0);  a(11) = (3.0d0, 4.0d0);  a(12) = (5.0d0, 6.0d0)
+  d = 0.0d0; e = 0.0d0
+  tauq = (0.0d0, 0.0d0); taup = (0.0d0, 0.0d0)
+  call zgebd2(4, 3, a, 4, d, e, tauq, taup, work, info)
+  call begin_test('upper_4x3')
+  call print_int('info', info)
+  call print_array('a', a_r, 24)
+  call print_array('d', d, 3)
+  call print_array('e', e, 2)
+  call print_array('tauq', tauq_r, 6)
+  call print_array('taup', taup_r, 6)
+  call end_test()
+
+  ! Test 2: 3x3 square matrix (M >= N, upper bidiagonal)
+  a = (0.0d0, 0.0d0)
+  a(1) = (1.0d0, 1.0d0);  a(2) = (2.0d0, -1.0d0);  a(3) = (0.0d0, 3.0d0)
+  a(4) = (4.0d0, 0.0d0);  a(5) = (5.0d0, 2.0d0);   a(6) = (1.0d0, -1.0d0)
+  a(7) = (3.0d0, 1.0d0);  a(8) = (0.0d0, 4.0d0);   a(9) = (2.0d0, 2.0d0)
+  d = 0.0d0; e = 0.0d0
+  tauq = (0.0d0, 0.0d0); taup = (0.0d0, 0.0d0)
+  call zgebd2(3, 3, a, 3, d, e, tauq, taup, work, info)
+  call begin_test('square_3x3')
+  call print_int('info', info)
+  call print_array('a', a_r, 18)
+  call print_array('d', d, 3)
+  call print_array('e', e, 2)
+  call print_array('tauq', tauq_r, 6)
+  call print_array('taup', taup_r, 6)
+  call end_test()
+
+  ! Test 3: 3x4 matrix (M < N, lower bidiagonal)
+  a = (0.0d0, 0.0d0)
+  a(1)  = (1.0d0, 2.0d0);  a(2)  = (3.0d0, 4.0d0);  a(3)  = (5.0d0, 6.0d0)
+  a(4)  = (7.0d0, 8.0d0);  a(5)  = (9.0d0, 1.0d0);  a(6)  = (2.0d0, 3.0d0)
+  a(7)  = (4.0d0, 5.0d0);  a(8)  = (6.0d0, 7.0d0);  a(9)  = (8.0d0, 9.0d0)
+  a(10) = (1.0d0, 2.0d0);  a(11) = (3.0d0, 4.0d0);  a(12) = (5.0d0, 6.0d0)
+  d = 0.0d0; e = 0.0d0
+  tauq = (0.0d0, 0.0d0); taup = (0.0d0, 0.0d0)
+  call zgebd2(3, 4, a, 3, d, e, tauq, taup, work, info)
+  call begin_test('lower_3x4')
+  call print_int('info', info)
+  call print_array('a', a_r, 24)
+  call print_array('d', d, 3)
+  call print_array('e', e, 2)
+  call print_array('tauq', tauq_r, 6)
+  call print_array('taup', taup_r, 6)
+  call end_test()
+
+  ! Test 4: M=0 (quick return)
+  call zgebd2(0, 3, a, 1, d, e, tauq, taup, work, info)
+  call begin_test('m_zero')
+  call print_int('info', info)
+  call end_test()
+
+  ! Test 5: N=0 (quick return)
+  call zgebd2(3, 0, a, 3, d, e, tauq, taup, work, info)
+  call begin_test('n_zero')
+  call print_int('info', info)
+  call end_test()
+
+  ! Test 6: 1x1 matrix
+  a(1) = (5.0d0, 3.0d0)
+  d = 0.0d0; e = 0.0d0
+  tauq = (0.0d0, 0.0d0); taup = (0.0d0, 0.0d0)
+  call zgebd2(1, 1, a, 1, d, e, tauq, taup, work, info)
+  call begin_test('one_by_one')
+  call print_int('info', info)
+  call print_array('a', a_r, 2)
+  call print_array('d', d, 1)
+  call print_array('tauq', tauq_r, 2)
+  call print_array('taup', taup_r, 2)
+  call end_test()
+
+  ! Test 7: 2x3 matrix (M < N, lower bidiagonal, small)
+  a = (0.0d0, 0.0d0)
+  a(1) = (1.0d0, 0.0d0);  a(2) = (0.0d0, 1.0d0)
+  a(3) = (2.0d0, 1.0d0);  a(4) = (1.0d0, -1.0d0)
+  a(5) = (3.0d0, 0.0d0);  a(6) = (0.0d0, 2.0d0)
+  d = 0.0d0; e = 0.0d0
+  tauq = (0.0d0, 0.0d0); taup = (0.0d0, 0.0d0)
+  call zgebd2(2, 3, a, 2, d, e, tauq, taup, work, info)
+  call begin_test('lower_2x3')
+  call print_int('info', info)
+  call print_array('a', a_r, 12)
+  call print_array('d', d, 2)
+  call print_array('e', e, 1)
+  call print_array('tauq', tauq_r, 4)
+  call print_array('taup', taup_r, 4)
+  call end_test()
+
+end program

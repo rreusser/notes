@@ -263,10 +263,11 @@ If coverage is low, add targeted test cases:
 - Overflow/underflow: test with 1e300 and 1e-300 values
 - Non-unit and negative strides
 
-### Step 7: Write LEARNINGS.md
+### Step 7: Write LEARNINGS.md (MANDATORY — DO NOT SKIP)
 
-**REQUIRED.** After completing every translation, write a `LEARNINGS.md` file
-in the module directory (`lib/<package>/base/<routine>/LEARNINGS.md`).
+**This step is NOT optional.** Every translation MUST produce a `LEARNINGS.md`
+file in the module directory (`lib/<package>/base/<routine>/LEARNINGS.md`).
+A translation is not complete without it.
 
 This file captures anything that would help translate the NEXT routine faster.
 Include:

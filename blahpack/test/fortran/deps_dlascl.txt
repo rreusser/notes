@@ -1,0 +1,4 @@
+disnan
+dlaisnan
+dlamch
+dlascl

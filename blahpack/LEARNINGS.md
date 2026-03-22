@@ -1,5 +1,39 @@
 # Learnings
 
+## zggev: Driver Routine for Generalized Eigenvalues
+
+### Stride Convention Inconsistencies
+
+The most critical finding: **different routines in the codebase use different stride conventions**, and mixing them up causes silent data corruption.
+
+Two conventions coexist:
+1. **Double-based strides** (stride1=2, stride2=2*LDA for column-major complex):
+   Used by: `zgghrd`, `zhgeqz`, `zggbal`, `zggbak`, `zlaset`, `zrot`
+2. **Complex-element strides** (stride1=1, stride2=LDA):
+   Used by: `zgeqrf`, `zgeqr2`, `zlarf`, `zlarfb`, `zlarft`, `zlange`, `zlascl`, all BLAS routines
+
+If a routine's source code contains `sa1 = strideA1 * 2`, it expects complex-element strides. If it directly uses `offset + i * strideA1` for real parts and `+1` for imaginary, it expects double strides.
+
+### Workspace Array Aliasing Bugs
+
+TAU and WORK must not alias. If TAU occupies `WORK[0..K*2-1]` and subsequent operations (zunmqr, zungqr) also use WORK[0..] as scratch, they clobber TAU values. Fix: allocate TAU as separate `new Float64Array(2*N)`.
+
+Similarly, ztgevc uses `RWORK[0..2N-1]` for norms, clobbering the LSCALE/RSCALE data that zggbak needs later. Fix: allocate a separate RWORK for ztgevc.
+
+### zung2r (ZUNGQR unblocked)
+
+The standard ZUNG2R algorithm is fragile due to in-place modification ordering. Workaround: generate Q by applying reflectors to identity via `zunm2r('L', 'N', ...)`, which is more reliable.
+
+### Helper routines implemented as local files
+
+`zunm2r.js`, `zunmqr.js`, `zungqr.js`, `ztgevc.js`, `zlacpy.js` -- all in `lib/lapack/base/zggev/lib/`.
+
+### Fortran test deps for driver routines
+
+Must include: `ilaenv`, `ieeeck`, `iparam2stage`, `iparmq`, `la_constants`, `la_xisnan`, `zunm2r`, `zung2r`, `ztgevc`, `zlacpy`, plus all their transitive deps.
+
+---
+
 ## zgeqrf Implementation
 
 ### Blocked QR factorization algorithm

@@ -2057,6 +2057,11 @@
       "status": "complete",
       "tests": 13,
       "passing": 13
+    },
+    "zggev": {
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
     }
   }
 }

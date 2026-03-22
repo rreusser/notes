@@ -1,7 +1,7 @@
 module test_utils
   implicit none
   private
-  public :: begin_test, end_test, print_scalar, print_int, print_array, print_matrix
+  public :: begin_test, end_test, print_scalar, print_int, print_array, print_int_array, print_matrix
 
 contains
 
@@ -35,6 +35,19 @@ contains
     do i = 1, n
       if (i > 1) write(*, '(A)', advance='no') ','
       write(*, '(ES25.17E3)', advance='no') arr(i)
+    end do
+    write(*, '(A)', advance='no') ']'
+  end subroutine
+
+  subroutine print_int_array(name, arr, n)
+    character(*), intent(in) :: name
+    integer, intent(in) :: n
+    integer, intent(in) :: arr(n)
+    integer :: i
+    write(*, '(A,A,A)', advance='no') ',"', trim(name), '":['
+    do i = 1, n
+      if (i > 1) write(*, '(A)', advance='no') ','
+      write(*, '(I0)', advance='no') arr(i)
     end do
     write(*, '(A)', advance='no') ']'
   end subroutine
