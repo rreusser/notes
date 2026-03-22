@@ -69,7 +69,8 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
   }
 
   // Pre-allocate SVD workspace at maximum sizes to avoid per-iteration allocation.
-  // Complex arrays use Complex128Array; real arrays use Float64Array.
+  // Complex arrays use Complex128Array (strides/offsets in complex elements).
+  // Real arrays (singular values, RWORK) use Float64Array.
   const maxN = mmax;
   const maxM_svd = M;
   const Adata = new Complex128Array(maxM_svd * maxN);
@@ -84,7 +85,6 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
 
   let converged = false;
   let m = 0;
-  let svdAvailable = true;
 
   for (let iter = 0; iter < mmax; iter++) {
     timings.iters++;
@@ -128,7 +128,8 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
 
     // A = SF*C - C*Sf where SF = diag(F), Sf = diag(f)
     // i.e. A(ii, k) = C(J[ii], k) * (F(J[ii]) - f[k])
-    // Pack into column-major Complex128Array for zgesvd
+    // Fill via Float64Array view of Adata (Complex128Array).
+    // Column-major: element (ii, k) at complex index ii + k*nJ.
     t0 = performance.now();
     for (let k = 0; k < m; k++) {
       const fkr = fr[2 * k], fki = fr[2 * k + 1];
@@ -152,36 +153,24 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
     for (let i = 0; i < 2 * m * m; i++) VTv[i] = 0;
 
     t0 = performance.now();
-    // TODO: zgesvd interface is being migrated to Complex128Array.
-    // Once migration is complete, remove the try/catch and this comment.
-    // The strides/offsets below are in complex elements (Complex128Array convention).
-    let info = 0;
-    if (svdAvailable) {
-      try {
-        info = zgesvd(
-          'N', 'A', nJ, m,
-          Adata, 1, nJ, 0,
-          sData, 1, 0,
-          UData, 1, 1, 0,
-          VTData, 1, m, 0,
-          WORK, 1, 0, lwork,
-          RWORK, 1, 0
-        );
-      } catch (e) {
-        if (svdAvailable) {
-          console.warn('zgesvd not yet functional (migration in progress):', e.message);
-          svdAvailable = false;
-        }
-      }
-    }
+    // Strides/offsets in complex elements (Complex128Array convention).
+    const info = zgesvd(
+      'N', 'A', nJ, m,
+      Adata, 1, nJ, 0,
+      sData, 1, 0,
+      UData, 1, 1, 0,
+      VTData, 1, m, 0,
+      WORK, 1, 0, lwork,
+      RWORK, 1, 0
+    );
     timings.svd += performance.now() - t0;
 
-    if (info !== 0 && svdAvailable) {
+    if (info !== 0) {
       console.warn('zgesvd info =', info);
     }
 
     // w = V(:, m) = conj(VT(m-1, :))
-    // VT is m x m column-major. VT(i, j) at 2*(i + j*m).
+    // VT is m x m column-major. VT(i, j) at Float64 index 2*(i + j*m).
     const lastRow = m - 1;
     for (let jj = 0; jj < m; jj++) {
       const idx = 2 * (lastRow + jj * m);
