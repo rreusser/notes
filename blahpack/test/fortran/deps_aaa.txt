@@ -1,0 +1,36 @@
+# ZGESVD and all transitive dependencies
+zgesvd
+zbdsqr
+zgebrd
+zgebd2
+zgelqf
+zgelq2
+zgeqrf
+zgeqr2
+zlacpy
+zlange
+zlascl
+zlaset
+zlarf
+zlarfb
+zlarft
+zlarfg
+zlacgv
+zlasr
+zlabrd
+# BLAS dependencies handled by linking all of BLAS
+# Real LAPACK dependencies
+dlamch
+dlascl
+dlartg
+dlas2
+dlasq1
+dlasq2
+dlasrt
+dlasv2
+dlapy2
+dlapy3
+ieeeck
+iparmq
+ilaenv
+xerbla

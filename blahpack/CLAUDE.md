@@ -194,7 +194,7 @@ The base.js must:
 - Match the signature from Step 0 exactly
 - Use 0-based indexing throughout
 - Use stride/offset parameters for all array access
-- Use `require()` for BLAS/LAPACK dependencies
+- Use `require()` for BLAS/LAPACK dependencies — NEVER inline them (see below)
 - Use `Complex128Array` for complex array parameters, `Complex128` for complex scalars
 - Use `reinterpret()` at function entry for Float64Array views
 - Use `lib/cmplx.js` for complex arithmetic (scalar ops + indexed ops)
@@ -223,6 +223,23 @@ Similarly, tests must cover all parameter combinations:
 The cost of a partial implementation is high: a future routine that calls
 the incomplete path will silently fail or throw at runtime, far from the
 root cause. A complete implementation is verified once and trusted forever.
+
+**Do not inline standard LAPACK/BLAS routines.** If a helper function
+corresponds to a named Fortran routine (has its own source file in the
+reference LAPACK), check how many callers it has:
+
+- **Multiple callers in reference LAPACK** → create a standalone module
+  with its own `lib/`, `test/`, `package.json`. The parent routine
+  `require()`s it. This is the common case.
+- **Single caller only** → MAY be inlined in the parent's `base.js` as
+  a local function. But it MUST still have unit tests (test it via the
+  parent's test file with targeted test cases).
+
+To check callers: `grep -rl "CALL ZFOO" data/lapack-3.12.0/SRC/`
+
+Never duplicate a routine. If a standalone module already exists (e.g.,
+`zunmqr`), always `require()` it — do not copy the implementation into
+a parent routine's base.js.
 
 **Comment inlined operations.** When complex arithmetic or index calculations
 are inlined for performance, add a comment showing the mathematical operation:
