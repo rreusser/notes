@@ -22,6 +22,7 @@
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlascl = require( '../../dlascl/lib/base.js' );
 var zbdsqr = require( '../../zbdsqr/lib/base.js' );
@@ -42,8 +43,8 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 
 // VARIABLES //
 
-var CZERO = new Float64Array( [ 0.0, 0.0 ] );
-var CONE = new Float64Array( [ 1.0, 0.0 ] );
+var CZERO = new Complex128( 0.0, 0.0 );
+var CONE = new Complex128( 1.0, 0.0 );
 var DEFAULT_NB = 32;
 
 
@@ -60,6 +61,11 @@ var DEFAULT_NB = 32;
 */
 function zung2r( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var negTau;
+	var Av;
+	var TAUv;
+	var da1;
+	var da2;
+	var oA;
 	var idx;
 	var i;
 	var j;
@@ -69,48 +75,51 @@ function zung2r( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		return 0;
 	}
 
-	negTau = new Float64Array( 2 );
+	Av = reinterpret( A, 0 );
+	TAUv = reinterpret( TAU, 0 );
+	da1 = sa1 * 2;
+	da2 = sa2 * 2;
+	oA = offsetA * 2;
 
 	// Initialize columns K+1:N to columns of the unit matrix
 	for ( j = K; j < N; j++ ) {
 		for ( l = 0; l < M; l++ ) {
-			idx = offsetA + 2 * ( l * sa1 + j * sa2 );
-			A[ idx ] = 0.0;
-			A[ idx + 1 ] = 0.0;
+			idx = oA + l * da1 + j * da2;
+			Av[ idx ] = 0.0;
+			Av[ idx + 1 ] = 0.0;
 		}
-		idx = offsetA + 2 * ( j * sa1 + j * sa2 );
-		A[ idx ] = 1.0;
-		A[ idx + 1 ] = 0.0;
+		idx = oA + j * da1 + j * da2;
+		Av[ idx ] = 1.0;
+		Av[ idx + 1 ] = 0.0;
 	}
 
 	for ( i = K - 1; i >= 0; i-- ) {
 		// Apply H(i) to A(i:m-1, i:n-1) from the left
 		if ( i < N - 1 ) {
-			idx = offsetA + 2 * ( i * sa1 + i * sa2 );
-			A[ idx ] = 1.0;
-			A[ idx + 1 ] = 0.0;
+			idx = oA + i * da1 + i * da2;
+			Av[ idx ] = 1.0;
+			Av[ idx + 1 ] = 0.0;
 			zlarf(
 				'L', M - i, N - i - 1,
-				A, sa1, offsetA + 2 * ( i * sa1 + i * sa2 ),
-				TAU, offsetTAU + 2 * i * strideTAU,
-				A, sa1, sa2, offsetA + 2 * ( i * sa1 + ( i + 1 ) * sa2 ),
+				A, sa1, offsetA + i * sa1 + i * sa2,
+				TAU, offsetTAU + i * strideTAU,
+				A, sa1, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,
 				WORK, strideWORK, offsetWORK
 			);
 		}
 		if ( i < M - 1 ) {
-			negTau[ 0 ] = -TAU[ offsetTAU + 2 * i * strideTAU ];
-			negTau[ 1 ] = -TAU[ offsetTAU + 2 * i * strideTAU + 1 ];
-			zscal( M - i - 1, negTau, A, sa1, offsetA + 2 * ( ( i + 1 ) * sa1 + i * sa2 ) );
+			negTau = new Complex128( -TAUv[ ( offsetTAU + i * strideTAU ) * 2 ], -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ] );
+			zscal( M - i - 1, negTau, A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2 );
 		}
-		idx = offsetA + 2 * ( i * sa1 + i * sa2 );
-		A[ idx ] = 1.0 - TAU[ offsetTAU + 2 * i * strideTAU ];
-		A[ idx + 1 ] = -TAU[ offsetTAU + 2 * i * strideTAU + 1 ];
+		idx = oA + i * da1 + i * da2;
+		Av[ idx ] = 1.0 - TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+		Av[ idx + 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 
 		// Set A(0:i-1, i) to zero
 		for ( l = 0; l < i; l++ ) {
-			idx = offsetA + 2 * ( l * sa1 + i * sa2 );
-			A[ idx ] = 0.0;
-			A[ idx + 1 ] = 0.0;
+			idx = oA + l * da1 + i * da2;
+			Av[ idx ] = 0.0;
+			Av[ idx + 1 ] = 0.0;
 		}
 	}
 	return 0;
@@ -128,6 +137,11 @@ function zung2r( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 function zungl2( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var negTau;
 	var conjTau;
+	var Av;
+	var TAUv;
+	var da1;
+	var da2;
+	var oA;
 	var idx;
 	var tauR;
 	var tauI;
@@ -139,63 +153,66 @@ function zungl2( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		return 0;
 	}
 
-	negTau = new Float64Array( 2 );
-	conjTau = new Float64Array( 2 );
+	Av = reinterpret( A, 0 );
+	TAUv = reinterpret( TAU, 0 );
+	da1 = sa1 * 2;
+	da2 = sa2 * 2;
+	oA = offsetA * 2;
 
 	// Initialize rows K+1:M to rows of the unit matrix
 	if ( K < M ) {
 		for ( j = 0; j < N; j++ ) {
 			for ( l = K; l < M; l++ ) {
-				idx = offsetA + 2 * ( l * sa1 + j * sa2 );
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + l * da1 + j * da2;
+				Av[ idx ] = 0.0;
+				Av[ idx + 1 ] = 0.0;
 			}
 			if ( j > K - 1 && j < M ) {
-				idx = offsetA + 2 * ( j * sa1 + j * sa2 );
-				A[ idx ] = 1.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + j * da1 + j * da2;
+				Av[ idx ] = 1.0;
+				Av[ idx + 1 ] = 0.0;
 			}
 		}
 	}
 
 	for ( i = K - 1; i >= 0; i-- ) {
-		tauR = TAU[ offsetTAU + 2 * i * strideTAU ];
-		tauI = TAU[ offsetTAU + 2 * i * strideTAU + 1 ];
+		tauR = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+		tauI = TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 
 		// Apply H(i)^H to A(i:m-1, i:n-1) from the right
 		if ( i < N - 1 ) {
 			// Conjugate row i from column i+1 onward
-			zlacgv( N - i - 1, A, sa2, offsetA + 2 * ( i * sa1 + ( i + 1 ) * sa2 ) );
+			zlacgv( N - i - 1, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
 			if ( i < M - 1 ) {
-				idx = offsetA + 2 * ( i * sa1 + i * sa2 );
-				A[ idx ] = 1.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + i * da1 + i * da2;
+				Av[ idx ] = 1.0;
+				Av[ idx + 1 ] = 0.0;
 				// Apply H(i)^H from the right: use conj(tau)
-				conjTau[ 0 ] = tauR;
-				conjTau[ 1 ] = -tauI;
+				conjTau = new Complex128Array( 1 );
+				reinterpret( conjTau, 0 )[ 0 ] = tauR;
+				reinterpret( conjTau, 0 )[ 1 ] = -tauI;
 				zlarf(
 					'R', M - i - 1, N - i,
-					A, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
+					A, sa2, offsetA + i * sa1 + i * sa2,
 					conjTau, 0,
-					A, sa1, sa2, offsetA + 2 * ( ( i + 1 ) * sa1 + i * sa2 ),
+					A, sa1, sa2, offsetA + ( i + 1 ) * sa1 + i * sa2,
 					WORK, strideWORK, offsetWORK
 				);
 			}
-			negTau[ 0 ] = -tauR;
-			negTau[ 1 ] = -tauI;
-			zscal( N - i - 1, negTau, A, sa2, offsetA + 2 * ( i * sa1 + ( i + 1 ) * sa2 ) );
+			negTau = new Complex128( -tauR, -tauI );
+			zscal( N - i - 1, negTau, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
 			// Conjugate back
-			zlacgv( N - i - 1, A, sa2, offsetA + 2 * ( i * sa1 + ( i + 1 ) * sa2 ) );
+			zlacgv( N - i - 1, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
 		}
-		idx = offsetA + 2 * ( i * sa1 + i * sa2 );
-		A[ idx ] = 1.0 - tauR;
-		A[ idx + 1 ] = tauI;
+		idx = oA + i * da1 + i * da2;
+		Av[ idx ] = 1.0 - tauR;
+		Av[ idx + 1 ] = tauI;
 
 		// Set A(i, 0:i-1) to zero
 		for ( l = 0; l < i; l++ ) {
-			idx = offsetA + 2 * ( i * sa1 + l * sa2 );
-			A[ idx ] = 0.0;
-			A[ idx + 1 ] = 0.0;
+			idx = oA + i * da1 + l * da2;
+			Av[ idx ] = 0.0;
+			Av[ idx + 1 ] = 0.0;
 		}
 	}
 	return 0;
@@ -212,6 +229,10 @@ function zungl2( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 */
 function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var ldwork;
+	var Av;
+	var da1;
+	var da2;
+	var oA;
 	var nb;
 	var kk;
 	var ki;
@@ -226,8 +247,13 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		return 0;
 	}
 
+	Av = reinterpret( A, 0 );
+	da1 = sa1 * 2;
+	da2 = sa2 * 2;
+	oA = offsetA * 2;
+
 	nb = DEFAULT_NB;
-	T = new Float64Array( 2 * nb * nb );
+	T = new Complex128Array( nb * nb );
 
 	if ( nb >= 2 && nb < K ) {
 		ki = ( Math.floor( ( K - 1 ) / nb ) ) * nb;
@@ -236,9 +262,9 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		// Set rows 0:kk-1 of columns kk:N-1 to zero
 		for ( j = kk; j < N; j++ ) {
 			for ( i = 0; i < kk; i++ ) {
-				idx = offsetA + 2 * ( i * sa1 + j * sa2 );
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + i * da1 + j * da2;
+				Av[ idx ] = 0.0;
+				Av[ idx + 1 ] = 0.0;
 			}
 		}
 	} else {
@@ -249,8 +275,8 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 	if ( kk < N ) {
 		zung2r(
 			M - kk, N - kk, K - kk,
-			A, sa1, sa2, offsetA + 2 * ( kk * sa1 + kk * sa2 ),
-			TAU, strideTAU, offsetTAU + 2 * kk * strideTAU,
+			A, sa1, sa2, offsetA + kk * sa1 + kk * sa2,
+			TAU, strideTAU, offsetTAU + kk * strideTAU,
 			WORK, strideWORK, offsetWORK
 		);
 	}
@@ -259,8 +285,8 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		ldwork = N;
 
 		// Ensure WORK is large enough
-		if ( !WORK || WORK.length < 2 * ldwork * nb + offsetWORK ) {
-			WORK = new Float64Array( 2 * ldwork * nb + offsetWORK );
+		if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
+			WORK = new Complex128Array( ldwork * nb + offsetWORK );
 		}
 
 		for ( i = ki; i >= 0; i -= nb ) {
@@ -270,8 +296,8 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 				zlarft(
 					'F', 'C',
 					M - i, ib,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
-					TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
+					TAU, strideTAU, offsetTAU + i * strideTAU,
 					T, 1, nb, 0
 				);
 
@@ -279,9 +305,9 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 				zlarfb(
 					'L', 'N', 'F', 'C',
 					M - i, N - i - ib, ib,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
+					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
 					T, 1, nb, 0,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + ( i + ib ) * sa2 ),
+					A, sa1, sa2, offsetA + i * sa1 + ( i + ib ) * sa2,
 					WORK, 1, ldwork, offsetWORK
 				);
 			}
@@ -289,17 +315,17 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 			// Apply H to rows i:m-1 of current block
 			zung2r(
 				M - i, ib, ib,
-				A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
-				TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
+				TAU, strideTAU, offsetTAU + i * strideTAU,
 				WORK, strideWORK, offsetWORK
 			);
 
 			// Set rows 0:i-1 of current block to zero
 			for ( j = i; j < i + ib; j++ ) {
 				for ( l = 0; l < i; l++ ) {
-					idx = offsetA + 2 * ( l * sa1 + j * sa2 );
-					A[ idx ] = 0.0;
-					A[ idx + 1 ] = 0.0;
+					idx = oA + l * da1 + j * da2;
+					Av[ idx ] = 0.0;
+					Av[ idx + 1 ] = 0.0;
 				}
 			}
 		}
@@ -318,6 +344,10 @@ function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 */
 function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var ldwork;
+	var Av;
+	var da1;
+	var da2;
+	var oA;
 	var nb;
 	var kk;
 	var ki;
@@ -332,8 +362,13 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		return 0;
 	}
 
+	Av = reinterpret( A, 0 );
+	da1 = sa1 * 2;
+	da2 = sa2 * 2;
+	oA = offsetA * 2;
+
 	nb = DEFAULT_NB;
-	T = new Float64Array( 2 * nb * nb );
+	T = new Complex128Array( nb * nb );
 
 	if ( nb >= 2 && nb < K ) {
 		ki = ( Math.floor( ( K - 1 ) / nb ) ) * nb;
@@ -342,9 +377,9 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		// Set columns 0:kk-1 of rows kk:M-1 to zero
 		for ( j = 0; j < kk; j++ ) {
 			for ( i = kk; i < M; i++ ) {
-				idx = offsetA + 2 * ( i * sa1 + j * sa2 );
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + i * da1 + j * da2;
+				Av[ idx ] = 0.0;
+				Av[ idx + 1 ] = 0.0;
 			}
 		}
 	} else {
@@ -355,8 +390,8 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 	if ( kk < M ) {
 		zungl2(
 			M - kk, N - kk, K - kk,
-			A, sa1, sa2, offsetA + 2 * ( kk * sa1 + kk * sa2 ),
-			TAU, strideTAU, offsetTAU + 2 * kk * strideTAU,
+			A, sa1, sa2, offsetA + kk * sa1 + kk * sa2,
+			TAU, strideTAU, offsetTAU + kk * strideTAU,
 			WORK, strideWORK, offsetWORK
 		);
 	}
@@ -365,8 +400,8 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 		ldwork = M;
 
 		// Ensure WORK is large enough
-		if ( !WORK || WORK.length < 2 * ldwork * nb + offsetWORK ) {
-			WORK = new Float64Array( 2 * ldwork * nb + offsetWORK );
+		if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
+			WORK = new Complex128Array( ldwork * nb + offsetWORK );
 		}
 
 		for ( i = ki; i >= 0; i -= nb ) {
@@ -376,8 +411,8 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 				zlarft(
 					'F', 'R',
 					N - i, ib,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
-					TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
+					TAU, strideTAU, offsetTAU + i * strideTAU,
 					T, 1, nb, 0
 				);
 
@@ -385,9 +420,9 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 				zlarfb(
 					'R', 'C', 'F', 'R',
 					M - i - ib, N - i, ib,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
+					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
 					T, 1, nb, 0,
-					A, sa1, sa2, offsetA + 2 * ( ( i + ib ) * sa1 + i * sa2 ),
+					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + i * sa2,
 					WORK, 1, ldwork, offsetWORK
 				);
 			}
@@ -395,17 +430,17 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 			// Apply H to rows i:i+ib-1 of current block
 			zungl2(
 				ib, N - i, ib,
-				A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
-				TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
+				TAU, strideTAU, offsetTAU + i * strideTAU,
 				WORK, strideWORK, offsetWORK
 			);
 
 			// Set columns 0:i-1 of rows i:i+ib-1 to zero
 			for ( j = 0; j < i; j++ ) {
 				for ( l = i; l < i + ib; l++ ) {
-					idx = offsetA + 2 * ( l * sa1 + j * sa2 );
-					A[ idx ] = 0.0;
-					A[ idx + 1 ] = 0.0;
+					idx = oA + l * da1 + j * da2;
+					Av[ idx ] = 0.0;
+					Av[ idx + 1 ] = 0.0;
 				}
 			}
 		}
@@ -424,6 +459,10 @@ function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK,
 */
 function zungbr( vect, M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var wantq;
+	var Av;
+	var da1;
+	var da2;
+	var oA;
 	var idx;
 	var i;
 	var j;
@@ -434,6 +473,11 @@ function zungbr( vect, M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU,
 		return 0;
 	}
 
+	Av = reinterpret( A, 0 );
+	da1 = sa1 * 2;
+	da2 = sa2 * 2;
+	oA = offsetA * 2;
+
 	if ( wantq ) {
 		// Form Q: requires M >= N >= min(M, K)
 		if ( M >= K ) {
@@ -443,27 +487,27 @@ function zungbr( vect, M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU,
 			// Q was determined by a call to zgebrd with M < N
 			// Shift columns right to make room, insert identity in first row/col
 			for ( j = M - 1; j >= 1; j-- ) {
-				idx = offsetA + 2 * ( 0 * sa1 + j * sa2 );
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + 0 * da1 + j * da2;
+				Av[ idx ] = 0.0;
+				Av[ idx + 1 ] = 0.0;
 				for ( i = j + 1; i < M; i++ ) {
-					idx = offsetA + 2 * ( i * sa1 + j * sa2 );
-					A[ idx ] = A[ offsetA + 2 * ( i * sa1 + ( j - 1 ) * sa2 ) ];
-					A[ idx + 1 ] = A[ offsetA + 2 * ( i * sa1 + ( j - 1 ) * sa2 ) + 1 ];
+					idx = oA + i * da1 + j * da2;
+					Av[ idx ] = Av[ oA + i * da1 + ( j - 1 ) * da2 ];
+					Av[ idx + 1 ] = Av[ oA + i * da1 + ( j - 1 ) * da2 + 1 ];
 				}
 			}
-			idx = offsetA;
-			A[ idx ] = 1.0;
-			A[ idx + 1 ] = 0.0;
+			idx = oA;
+			Av[ idx ] = 1.0;
+			Av[ idx + 1 ] = 0.0;
 			for ( i = 1; i < M; i++ ) {
-				idx = offsetA + 2 * ( i * sa1 );
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + i * da1;
+				Av[ idx ] = 0.0;
+				Av[ idx + 1 ] = 0.0;
 			}
 			if ( M > 1 ) {
 				zungqr(
 					M - 1, M - 1, M - 1,
-					A, sa1, sa2, offsetA + 2 * ( 1 * sa1 + 1 * sa2 ),
+					A, sa1, sa2, offsetA + 1 * sa1 + 1 * sa2,
 					TAU, strideTAU, offsetTAU,
 					WORK, strideWORK, offsetWORK
 				);
@@ -477,28 +521,28 @@ function zungbr( vect, M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU,
 		} else {
 			// P^H was determined by a call to zgebrd with M < N
 			// Shift rows down to make room, insert identity in first row/col
-			idx = offsetA;
-			A[ idx ] = 1.0;
-			A[ idx + 1 ] = 0.0;
+			idx = oA;
+			Av[ idx ] = 1.0;
+			Av[ idx + 1 ] = 0.0;
 			for ( i = 1; i < N; i++ ) {
-				idx = offsetA + 2 * ( i * sa1 );
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + i * da1;
+				Av[ idx ] = 0.0;
+				Av[ idx + 1 ] = 0.0;
 			}
 			for ( j = 1; j < N; j++ ) {
 				for ( i = j - 1; i >= 1; i-- ) {
-					idx = offsetA + 2 * ( i * sa1 + j * sa2 );
-					A[ idx ] = A[ offsetA + 2 * ( ( i - 1 ) * sa1 + j * sa2 ) ];
-					A[ idx + 1 ] = A[ offsetA + 2 * ( ( i - 1 ) * sa1 + j * sa2 ) + 1 ];
+					idx = oA + i * da1 + j * da2;
+					Av[ idx ] = Av[ oA + ( i - 1 ) * da1 + j * da2 ];
+					Av[ idx + 1 ] = Av[ oA + ( i - 1 ) * da1 + j * da2 + 1 ];
 				}
-				idx = offsetA + 2 * ( 0 * sa1 + j * sa2 );
-				A[ idx ] = 0.0;
-				A[ idx + 1 ] = 0.0;
+				idx = oA + 0 * da1 + j * da2;
+				Av[ idx ] = 0.0;
+				Av[ idx + 1 ] = 0.0;
 			}
 			if ( N > 1 ) {
 				zunglq(
 					N - 1, N - 1, N - 1,
-					A, sa1, sa2, offsetA + 2 * ( 1 * sa1 + 1 * sa2 ),
+					A, sa1, sa2, offsetA + 1 * sa1 + 1 * sa2,
 					TAU, strideTAU, offsetTAU,
 					WORK, strideWORK, offsetWORK
 				);
@@ -542,14 +586,14 @@ function zunmqr( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, o
 	}
 
 	nb = DEFAULT_NB;
-	T = new Float64Array( 2 * nb * nb );
+	T = new Complex128Array( nb * nb );
 
 	nw = left ? N : M;
 	ldwork = nw;
 
 	// Ensure WORK is large enough
-	if ( !WORK || WORK.length < 2 * ldwork * nb + offsetWORK ) {
-		WORK = new Float64Array( 2 * ldwork * nb + offsetWORK );
+	if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
+		WORK = new Complex128Array( ldwork * nb + offsetWORK );
 	}
 
 	if ( ( left && !notran ) || ( !left && notran ) ) {
@@ -569,8 +613,8 @@ function zunmqr( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, o
 		zlarft(
 			'F', 'C',
 			( left ? M - i : N - i ), ib,
-			A, sa1A, sa2A, offsetA + 2 * ( i * sa1A + i * sa2A ),
-			TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
+			TAU, strideTAU, offsetTAU + i * strideTAU,
 			T, 1, nb, 0
 		);
 
@@ -590,9 +634,9 @@ function zunmqr( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, o
 		zlarfb(
 			side, trans, 'F', 'C',
 			mi, ni, ib,
-			A, sa1A, sa2A, offsetA + 2 * ( i * sa1A + i * sa2A ),
+			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
 			T, 1, nb, 0,
-			C, sc1, sc2, offsetC + 2 * ( ic * sc1 + jc * sc2 ),
+			C, sc1, sc2, offsetC + ic * sc1 + jc * sc2,
 			WORK, 1, ldwork, offsetWORK
 		);
 	}
@@ -633,14 +677,14 @@ function zunmlq( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, o
 	}
 
 	nb = DEFAULT_NB;
-	T = new Float64Array( 2 * nb * nb );
+	T = new Complex128Array( nb * nb );
 
 	nw = left ? N : M;
 	ldwork = nw;
 
 	// Ensure WORK is large enough
-	if ( !WORK || WORK.length < 2 * ldwork * nb + offsetWORK ) {
-		WORK = new Float64Array( 2 * ldwork * nb + offsetWORK );
+	if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
+		WORK = new Complex128Array( ldwork * nb + offsetWORK );
 	}
 
 	if ( ( left && notran ) || ( !left && !notran ) ) {
@@ -663,8 +707,8 @@ function zunmlq( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, o
 		zlarft(
 			'F', 'R',
 			( left ? M - i : N - i ), ib,
-			A, sa1A, sa2A, offsetA + 2 * ( i * sa1A + i * sa2A ),
-			TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
+			TAU, strideTAU, offsetTAU + i * strideTAU,
 			T, 1, nb, 0
 		);
 
@@ -684,9 +728,9 @@ function zunmlq( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, o
 		zlarfb(
 			side, transt, 'F', 'R',
 			mi, ni, ib,
-			A, sa1A, sa2A, offsetA + 2 * ( i * sa1A + i * sa2A ),
+			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
 			T, 1, nb, 0,
-			C, sc1, sc2, offsetC + 2 * ( ic * sc1 + jc * sc2 ),
+			C, sc1, sc2, offsetC + ic * sc1 + jc * sc2,
 			WORK, 1, ldwork, offsetWORK
 		);
 	}
@@ -742,9 +786,9 @@ function zunmbr( vect, side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, stride
 			}
 			zunmqr(
 				side, trans, mi, ni, nq - 1,
-				A, sa1A, sa2A, offsetA + 2 * ( 1 * sa1A + 0 * sa2A ),
+				A, sa1A, sa2A, offsetA + 1 * sa1A + 0 * sa2A,
 				TAU, strideTAU, offsetTAU,
-				C, sc1, sc2, offsetC + 2 * ( i1 * sc1 + i2 * sc2 ),
+				C, sc1, sc2, offsetC + i1 * sc1 + i2 * sc2,
 				WORK, strideWORK, offsetWORK
 			);
 		}
@@ -769,9 +813,9 @@ function zunmbr( vect, side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, stride
 			}
 			zunmlq(
 				side, transt, mi, ni, nq - 1,
-				A, sa1A, sa2A, offsetA + 2 * ( 0 * sa1A + 1 * sa2A ),
+				A, sa1A, sa2A, offsetA + 0 * sa1A + 1 * sa2A,
 				TAU, strideTAU, offsetTAU,
-				C, sc1, sc2, offsetC + 2 * ( i1 * sc1 + i2 * sc2 ),
+				C, sc1, sc2, offsetC + i1 * sc1 + i2 * sc2,
 				WORK, strideWORK, offsetWORK
 			);
 		}
@@ -799,24 +843,24 @@ function zunmbr( vect, side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, stride
 * @param {string} jobvt - 'A': all N rows of V^H are returned, 'S': first min(M,N) rows, 'O': overwrite A, 'N': no VT
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
-* @param {Float64Array} A - input/output matrix (interleaved complex, column-major)
+* @param {Complex128Array} A - input/output matrix (column-major)
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
 * @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
-* @param {NonNegativeInteger} offsetA - starting index for A (Float64 index)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
 * @param {Float64Array} s - output array of real singular values (length min(M,N))
 * @param {integer} strideS - stride for s
 * @param {NonNegativeInteger} offsetS - starting index for s
-* @param {Float64Array} U - output matrix for left singular vectors (interleaved complex)
-* @param {integer} strideU1 - stride of the first dimension of U
-* @param {integer} strideU2 - stride of the second dimension of U
-* @param {NonNegativeInteger} offsetU - starting index for U
-* @param {Float64Array} VT - output matrix for right singular vectors (interleaved complex)
-* @param {integer} strideVT1 - stride of the first dimension of VT
-* @param {integer} strideVT2 - stride of the second dimension of VT
-* @param {NonNegativeInteger} offsetVT - starting index for VT
-* @param {Float64Array} WORK - complex workspace array (interleaved)
-* @param {integer} strideWORK - stride for WORK
-* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {Complex128Array} U - output matrix for left singular vectors
+* @param {integer} strideU1 - stride of the first dimension of U (in complex elements)
+* @param {integer} strideU2 - stride of the second dimension of U (in complex elements)
+* @param {NonNegativeInteger} offsetU - starting index for U (in complex elements)
+* @param {Complex128Array} VT - output matrix for right singular vectors
+* @param {integer} strideVT1 - stride of the first dimension of VT (in complex elements)
+* @param {integer} strideVT2 - stride of the second dimension of VT (in complex elements)
+* @param {NonNegativeInteger} offsetVT - starting index for VT (in complex elements)
+* @param {Complex128Array} WORK - complex workspace array
+* @param {integer} strideWORK - stride for WORK (in complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 * @param {integer} lwork - length of WORK array (in complex elements)
 * @param {Float64Array} RWORK - real workspace array (length >= 5*min(M,N))
 * @param {integer} strideRWORK - stride for RWORK
@@ -893,11 +937,9 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		return 0;
 	}
 
-	// Allocate workspace: we use a flat Float64Array for complex workspace.
-	// The work array in the Fortran code uses 1-based complex indices.
-	// We allocate plenty of workspace internally.
-	var wsz = Math.max( 1, 2 * ( 3 * minmn + Math.max( M, N ) + minmn * Math.max( M, N ) ) );
-	WK = new Float64Array( wsz );
+	// Allocate workspace internally
+	var wsz = Math.max( 1, 3 * minmn + Math.max( M, N ) + minmn * Math.max( M, N ) );
+	WK = new Complex128Array( wsz );
 
 	// Compute machine parameters
 	eps = dlamch( 'P' );
@@ -919,45 +961,42 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	if ( M >= N ) {
 		// A has at least as many rows as columns (M >= N)
 		// Path: direct bidiagonal reduction (no initial QR factorization for simplicity)
-		// This handles the case when M is not "much larger" than N.
-		// For the case where M >> N, the optimal algorithm would do QR first,
-		// but the direct path always works correctly.
 
 		ie = 0;           // E in RWORK at offsetRWORK + ie
-		itauq = 0;        // TAUQ in WK at 2*itauq
-		itaup = itauq + N; // TAUP in WK at 2*itaup
-		iwork = itaup + N; // WORK start in WK at 2*iwork
+		itauq = 0;        // TAUQ in WK at itauq
+		itaup = itauq + N; // TAUP in WK at itaup
+		iwork = itaup + N; // WORK start in WK at iwork
 
 		// Bidiagonalize A (reduce to upper bidiagonal)
 		zgebrd(
 			M, N, A, sa1, sa2, offsetA,
 			s, strideS, offsetS,
 			RWORK, strideRWORK, offsetRWORK + ie,
-			WK, 1, 2 * itauq,
-			WK, 1, 2 * itaup,
-			WK, 1, 2 * iwork,
-			wsz - 2 * iwork
+			WK, 1, itauq,
+			WK, 1, itaup,
+			WK, 1, iwork,
+			wsz - iwork
 		);
 
 		if ( wntuas ) {
 			// Copy lower triangle of A to U, then generate Q
-			zlacpy( 'L', M, N, A, 2 * sa1, 2 * sa2, offsetA, U, 2 * su1, 2 * su2, offsetU );
+			zlacpy( 'L', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 			ncu = wntus ? N : M;
 			zungbr(
 				'Q', M, ncu, N,
 				U, su1, su2, offsetU,
-				WK, 1, 2 * itauq,
-				WK, 1, 2 * iwork
+				WK, 1, itauq,
+				WK, 1, iwork
 			);
 		}
 		if ( wntvas ) {
 			// Copy upper triangle of A to VT, then generate P^H
-			zlacpy( 'U', N, N, A, 2 * sa1, 2 * sa2, offsetA, VT, 2 * svt1, 2 * svt2, offsetVT );
+			zlacpy( 'U', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 			zungbr(
 				'P', N, N, N,
 				VT, svt1, svt2, offsetVT,
-				WK, 1, 2 * itaup,
-				WK, 1, 2 * iwork
+				WK, 1, itaup,
+				WK, 1, iwork
 			);
 		}
 		if ( wntuo ) {
@@ -965,8 +1004,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			zungbr(
 				'Q', M, N, N,
 				A, sa1, sa2, offsetA,
-				WK, 1, 2 * itauq,
-				WK, 1, 2 * iwork
+				WK, 1, itauq,
+				WK, 1, iwork
 			);
 		}
 		if ( wntvo ) {
@@ -974,8 +1013,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			zungbr(
 				'P', N, N, N,
 				A, sa1, sa2, offsetA,
-				WK, 1, 2 * itaup,
-				WK, 1, 2 * iwork
+				WK, 1, itaup,
+				WK, 1, iwork
 			);
 		}
 		irwork = ie + N;
@@ -1039,31 +1078,31 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			M, N, A, sa1, sa2, offsetA,
 			s, strideS, offsetS,
 			RWORK, strideRWORK, offsetRWORK + ie,
-			WK, 1, 2 * itauq,
-			WK, 1, 2 * itaup,
-			WK, 1, 2 * iwork,
-			wsz - 2 * iwork
+			WK, 1, itauq,
+			WK, 1, itaup,
+			WK, 1, iwork,
+			wsz - iwork
 		);
 
 		if ( wntuas ) {
 			// Copy lower triangle of A to U, then generate Q
-			zlacpy( 'L', M, M, A, 2 * sa1, 2 * sa2, offsetA, U, 2 * su1, 2 * su2, offsetU );
+			zlacpy( 'L', M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 			zungbr(
 				'Q', M, M, N,
 				U, su1, su2, offsetU,
-				WK, 1, 2 * itauq,
-				WK, 1, 2 * iwork
+				WK, 1, itauq,
+				WK, 1, iwork
 			);
 		}
 		if ( wntvas ) {
 			// Copy upper triangle of A to VT, then generate P^H
-			zlacpy( 'U', M, N, A, 2 * sa1, 2 * sa2, offsetA, VT, 2 * svt1, 2 * svt2, offsetVT );
+			zlacpy( 'U', M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 			nrvt = wntva ? N : M;
 			zungbr(
 				'P', nrvt, N, M,
 				VT, svt1, svt2, offsetVT,
-				WK, 1, 2 * itaup,
-				WK, 1, 2 * iwork
+				WK, 1, itaup,
+				WK, 1, iwork
 			);
 		}
 		if ( wntuo ) {
@@ -1071,8 +1110,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			zungbr(
 				'Q', M, M, N,
 				A, sa1, sa2, offsetA,
-				WK, 1, 2 * itauq,
-				WK, 1, 2 * iwork
+				WK, 1, itauq,
+				WK, 1, iwork
 			);
 		}
 		if ( wntvo ) {
@@ -1080,8 +1119,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			zungbr(
 				'P', M, N, M,
 				A, sa1, sa2, offsetA,
-				WK, 1, 2 * itaup,
-				WK, 1, 2 * iwork
+				WK, 1, itaup,
+				WK, 1, iwork
 			);
 		}
 		irwork = ie + M;

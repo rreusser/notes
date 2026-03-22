@@ -6,6 +6,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgesvd = require( './../lib/base.js' );
 
 
@@ -34,43 +36,47 @@ function assertSingularValuesClose( actual, expected, tol, msg ) {
 	}
 }
 
+function c128( arr ) {
+	return new Complex128Array( new Float64Array( arr ).buffer );
+}
+
 
 // TESTS //
 
 test( 'zgesvd: m_zero (quick return)', function t() {
 	var RWORK = new Float64Array( 10 );
-	var WORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 50 );
 	var s = new Float64Array( 1 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( 2 );
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
+	var A = new Complex128Array( 1 );
 	var info;
 
-	info = zgesvd( 'N', 'N', 0, 3, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 100, RWORK, 1, 0 );
+	info = zgesvd( 'N', 'N', 0, 3, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 50, RWORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
 test( 'zgesvd: n_zero (quick return)', function t() {
 	var RWORK = new Float64Array( 10 );
-	var WORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 50 );
 	var s = new Float64Array( 1 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( 2 );
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
+	var A = new Complex128Array( 1 );
 	var info;
 
-	info = zgesvd( 'N', 'N', 3, 0, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 100, RWORK, 1, 0 );
+	info = zgesvd( 'N', 'N', 3, 0, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 50, RWORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
 test( 'zgesvd: full_1x1', function t() {
 	var tc = findCase( 'full_1x1' );
 	var RWORK = new Float64Array( 50 );
-	var WORK = new Float64Array( 200 );
+	var WORK = new Complex128Array( 100 );
 	var s = new Float64Array( 1 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( [ 5.0, 3.0 ] );
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
+	var A = c128( [ 5.0, 3.0 ] );
 	var info;
 
 	info = zgesvd( 'A', 'A', 1, 1, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 100, RWORK, 1, 0 );
@@ -81,12 +87,12 @@ test( 'zgesvd: full_1x1', function t() {
 test( 'zgesvd: full_2x2', function t() {
 	var tc = findCase( 'full_2x2' );
 	var RWORK = new Float64Array( 50 );
-	var WORK = new Float64Array( 1000 );
+	var WORK = new Complex128Array( 500 );
 	var s = new Float64Array( 2 );
-	var U = new Float64Array( 8 );
-	var VT = new Float64Array( 8 );
+	var U = new Complex128Array( 4 );
+	var VT = new Complex128Array( 4 );
 	// Column-major 2x2: A(1,1)=3+1i, A(2,1)=1+2i, A(1,2)=2+0i, A(2,2)=4+1i
-	var A = new Float64Array( [
+	var A = c128( [
 		3.0, 1.0, 1.0, 2.0,  // column 1: (3+1i), (1+2i)
 		2.0, 0.0, 4.0, 1.0   // column 2: (2+0i), (4+1i)
 	] );
@@ -100,11 +106,11 @@ test( 'zgesvd: full_2x2', function t() {
 test( 'zgesvd: full_3x3', function t() {
 	var tc = findCase( 'full_3x3' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 2000 );
+	var WORK = new Complex128Array( 1000 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 18 );
-	var VT = new Float64Array( 18 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 9 );
+	var VT = new Complex128Array( 9 );
+	var A = c128( [
 		1.0, 2.0, 3.0, 4.0, 5.0, 6.0,  // col 1
 		7.0, 8.0, 9.0, 1.0, 2.0, 3.0,  // col 2
 		4.0, 5.0, 6.0, 7.0, 8.0, 9.0   // col 3
@@ -119,11 +125,11 @@ test( 'zgesvd: full_3x3', function t() {
 test( 'zgesvd: values_only_3x4 (JOBU=N, JOBVT=N)', function t() {
 	var tc = findCase( 'values_only_3x4' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 2000 );
+	var WORK = new Complex128Array( 1000 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
+	var A = c128( [
 		1.0, 2.0, 3.0, 0.0, 0.0, 1.0,  // col 1
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,  // col 2
 		3.0, 0.0, 1.0, 2.0, 0.0, 2.0,  // col 3
@@ -139,11 +145,11 @@ test( 'zgesvd: values_only_3x4 (JOBU=N, JOBVT=N)', function t() {
 test( 'zgesvd: economy_4x3 (JOBU=S, JOBVT=S)', function t() {
 	var tc = findCase( 'economy_4x3' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 24 );
-	var VT = new Float64Array( 18 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 12 );
+	var VT = new Complex128Array( 9 );
+	var A = c128( [
 		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,  // col 1
 		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,  // col 2
 		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0   // col 3
@@ -158,11 +164,11 @@ test( 'zgesvd: economy_4x3 (JOBU=S, JOBVT=S)', function t() {
 test( 'zgesvd: full_3x5 (M < N, JOBU=A, JOBVT=A)', function t() {
 	var tc = findCase( 'full_3x5' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 18 );
-	var VT = new Float64Array( 50 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 9 );
+	var VT = new Complex128Array( 25 );
+	var A = c128( [
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,  // col 1
 		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,  // col 2
 		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,  // col 3
@@ -179,11 +185,11 @@ test( 'zgesvd: full_3x5 (M < N, JOBU=A, JOBVT=A)', function t() {
 test( 'zgesvd: economy_u_full_vt_5x3 (JOBU=S, JOBVT=A)', function t() {
 	var tc = findCase( 'economy_u_full_vt_5x3' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 30 );
-	var VT = new Float64Array( 18 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 15 );
+	var VT = new Complex128Array( 9 );
+	var A = c128( [
 		1.0, 1.0, 2.0, 0.0, 0.0, 1.0, 3.0, 2.0, 1.0, 1.0,  // col 1
 		0.0, 2.0, 1.0, 0.0, 3.0, 1.0, 2.0, 0.0, 0.0, 3.0,  // col 2
 		2.0, 1.0, 0.0, 1.0, 1.0, 2.0, 1.0, 0.0, 2.0, 2.0   // col 3
@@ -195,18 +201,20 @@ test( 'zgesvd: economy_u_full_vt_5x3 (JOBU=S, JOBVT=A)', function t() {
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
 
-test( 'zgesvd: 3x3 reconstruction U*S*VT ≈ A', function t() {
+test( 'zgesvd: 3x3 reconstruction U*S*VT ~ A', function t() {
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 2000 );
+	var WORK = new Complex128Array( 1000 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 18 );
-	var VT = new Float64Array( 18 );
-	var A_orig = new Float64Array( [
+	var U = new Complex128Array( 9 );
+	var VT = new Complex128Array( 9 );
+	var A_orig_f64 = new Float64Array( [
 		1.0, 2.0, 3.0, 4.0, 5.0, 6.0,
 		7.0, 8.0, 9.0, 1.0, 2.0, 3.0,
 		4.0, 5.0, 6.0, 7.0, 8.0, 9.0
 	] );
-	var A = new Float64Array( A_orig );
+	var A = c128( Array.from( A_orig_f64 ) );
+	var Uv;
+	var VTv;
 	var info;
 	var M = 3;
 	var N = 3;
@@ -216,12 +224,20 @@ test( 'zgesvd: 3x3 reconstruction U*S*VT ≈ A', function t() {
 	var errR;
 	var errI;
 	var maxErr;
+	var uR;
+	var uI;
+	var vtR;
+	var vtI;
+	var sk;
 	var i;
 	var j;
 	var k;
 
 	info = zgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
+
+	Uv = reinterpret( U, 0 );
+	VTv = reinterpret( VT, 0 );
 
 	// Reconstruct A = U * diag(S) * VT
 	maxErr = 0.0;
@@ -231,17 +247,17 @@ test( 'zgesvd: 3x3 reconstruction U*S*VT ≈ A', function t() {
 			im = 0.0;
 			for ( k = 0; k < minmn; k++ ) {
 				// U(i,k) * s(k) * VT(k,j)
-				var uR = U[ 2 * ( i + k * M ) ];
-				var uI = U[ 2 * ( i + k * M ) + 1 ];
-				var vtR = VT[ 2 * ( k + j * N ) ];
-				var vtI = VT[ 2 * ( k + j * N ) + 1 ];
-				var sk = s[ k ];
+				uR = Uv[ 2 * ( i + k * M ) ];
+				uI = Uv[ 2 * ( i + k * M ) + 1 ];
+				vtR = VTv[ 2 * ( k + j * N ) ];
+				vtI = VTv[ 2 * ( k + j * N ) + 1 ];
+				sk = s[ k ];
 				// (uR + uI*i) * sk * (vtR + vtI*i)
 				re += sk * ( uR * vtR - uI * vtI );
 				im += sk * ( uR * vtI + uI * vtR );
 			}
-			errR = Math.abs( re - A_orig[ 2 * ( i + j * M ) ] );
-			errI = Math.abs( im - A_orig[ 2 * ( i + j * M ) + 1 ] );
+			errR = Math.abs( re - A_orig_f64[ 2 * ( i + j * M ) ] );
+			errI = Math.abs( im - A_orig_f64[ 2 * ( i + j * M ) + 1 ] );
 			maxErr = Math.max( maxErr, errR, errI );
 		}
 	}
@@ -251,12 +267,12 @@ test( 'zgesvd: 3x3 reconstruction U*S*VT ≈ A', function t() {
 test( 'zgesvd: 3x4 values only, M < N', function t() {
 	var tc = findCase( 'values_only_3x4' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 2000 );
+	var WORK = new Complex128Array( 1000 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 2 );
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
 	// Same matrix but test with JOBU='N', JOBVT='N' (M < N path)
-	var A = new Float64Array( [
+	var A = c128( [
 		1.0, 2.0, 3.0, 0.0, 0.0, 1.0,
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
 		3.0, 0.0, 1.0, 2.0, 0.0, 2.0,
@@ -271,11 +287,11 @@ test( 'zgesvd: 3x4 values only, M < N', function t() {
 
 test( 'zgesvd: 4x3 JOBU=N JOBVT=N (M > N, values only)', function t() {
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 2000 );
+	var WORK = new Complex128Array( 1000 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
+	var A = c128( [
 		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,
 		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,
 		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0
@@ -291,11 +307,11 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=N (M > N, values only)', function t() {
 
 test( 'zgesvd: 4x3 JOBU=A JOBVT=N (M > N, U only)', function t() {
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 32 );   // 4x4 complex
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 16 );   // 4x4 complex
+	var VT = new Complex128Array( 1 );
+	var A = c128( [
 		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,
 		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,
 		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0
@@ -310,11 +326,11 @@ test( 'zgesvd: 4x3 JOBU=A JOBVT=N (M > N, U only)', function t() {
 
 test( 'zgesvd: 4x3 JOBU=N JOBVT=A (M > N, VT only)', function t() {
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 18 );   // 3x3 complex
-	var A = new Float64Array( [
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 9 );   // 3x3 complex
+	var A = c128( [
 		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,
 		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,
 		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0
@@ -330,11 +346,11 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=A (M > N, VT only)', function t() {
 test( 'zgesvd: 3x5 JOBU=N JOBVT=S (M < N, VT economy only)', function t() {
 	var tc = findCase( 'full_3x5' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 30 );   // 3x5 complex
-	var A = new Float64Array( [
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 15 );   // 3x5 complex
+	var A = c128( [
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
 		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
 		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
@@ -351,11 +367,11 @@ test( 'zgesvd: 3x5 JOBU=N JOBVT=S (M < N, VT economy only)', function t() {
 test( 'zgesvd: 3x5 JOBU=S JOBVT=N (M < N, U economy only)', function t() {
 	var tc = findCase( 'full_3x5' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 18 );   // 3x3 complex
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 9 );   // 3x3 complex
+	var VT = new Complex128Array( 1 );
+	var A = c128( [
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
 		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
 		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
@@ -372,11 +388,11 @@ test( 'zgesvd: 3x5 JOBU=S JOBVT=N (M < N, U economy only)', function t() {
 test( 'zgesvd: 3x5 JOBU=A JOBVT=N (M < N, full U only)', function t() {
 	var tc = findCase( 'full_3x5' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 18 );   // 3x3 complex
-	var VT = new Float64Array( 2 );
-	var A = new Float64Array( [
+	var U = new Complex128Array( 9 );   // 3x3 complex
+	var VT = new Complex128Array( 1 );
+	var A = c128( [
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
 		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
 		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
@@ -393,11 +409,11 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=N (M < N, full U only)', function t() {
 test( 'zgesvd: 3x5 JOBU=N JOBVT=A (M < N, full VT only)', function t() {
 	var tc = findCase( 'full_3x5' );
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 2 );
-	var VT = new Float64Array( 50 );   // 5x5 complex
-	var A = new Float64Array( [
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 25 );   // 5x5 complex
+	var A = c128( [
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
 		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
 		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
@@ -413,21 +429,30 @@ test( 'zgesvd: 3x5 JOBU=N JOBVT=A (M < N, full VT only)', function t() {
 
 test( 'zgesvd: 2x2 reconstruction', function t() {
 	var RWORK = new Float64Array( 50 );
-	var WORK = new Float64Array( 1000 );
+	var WORK = new Complex128Array( 500 );
 	var s = new Float64Array( 2 );
-	var U = new Float64Array( 8 );
-	var VT = new Float64Array( 8 );
-	var A_orig = new Float64Array( [
+	var U = new Complex128Array( 4 );
+	var VT = new Complex128Array( 4 );
+	var A_orig_f64 = new Float64Array( [
 		3.0, 1.0, 1.0, 2.0,
 		2.0, 0.0, 4.0, 1.0
 	] );
-	var A = new Float64Array( A_orig );
+	var A = c128( Array.from( A_orig_f64 ) );
+	var Uv;
+	var VTv;
 	var info;
 	var M = 2;
 	var N = 2;
 	var re;
 	var im;
 	var maxErr;
+	var uR;
+	var uI;
+	var vtR;
+	var vtI;
+	var sk;
+	var errR;
+	var errI;
 	var i;
 	var j;
 	var k;
@@ -435,22 +460,25 @@ test( 'zgesvd: 2x2 reconstruction', function t() {
 	info = zgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
+	Uv = reinterpret( U, 0 );
+	VTv = reinterpret( VT, 0 );
+
 	maxErr = 0.0;
 	for ( i = 0; i < M; i++ ) {
 		for ( j = 0; j < N; j++ ) {
 			re = 0.0;
 			im = 0.0;
 			for ( k = 0; k < Math.min( M, N ); k++ ) {
-				var uR = U[ 2 * ( i + k * M ) ];
-				var uI = U[ 2 * ( i + k * M ) + 1 ];
-				var vtR = VT[ 2 * ( k + j * N ) ];
-				var vtI = VT[ 2 * ( k + j * N ) + 1 ];
-				var sk = s[ k ];
+				uR = Uv[ 2 * ( i + k * M ) ];
+				uI = Uv[ 2 * ( i + k * M ) + 1 ];
+				vtR = VTv[ 2 * ( k + j * N ) ];
+				vtI = VTv[ 2 * ( k + j * N ) + 1 ];
+				sk = s[ k ];
 				re += sk * ( uR * vtR - uI * vtI );
 				im += sk * ( uR * vtI + uI * vtR );
 			}
-			var errR = Math.abs( re - A_orig[ 2 * ( i + j * M ) ] );
-			var errI = Math.abs( im - A_orig[ 2 * ( i + j * M ) + 1 ] );
+			errR = Math.abs( re - A_orig_f64[ 2 * ( i + j * M ) ] );
+			errI = Math.abs( im - A_orig_f64[ 2 * ( i + j * M ) + 1 ] );
 			maxErr = Math.max( maxErr, errR, errI );
 		}
 	}
@@ -459,22 +487,31 @@ test( 'zgesvd: 2x2 reconstruction', function t() {
 
 test( 'zgesvd: 4x3 JOBU=A JOBVT=S reconstruction', function t() {
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 32 );   // 4x4 complex
-	var VT = new Float64Array( 18 );  // 3x3 complex
+	var U = new Complex128Array( 16 );   // 4x4 complex
+	var VT = new Complex128Array( 9 );  // 3x3 complex
 	var M = 4;
 	var N = 3;
-	var A_orig = new Float64Array( [
+	var A_orig_f64 = new Float64Array( [
 		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,
 		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,
 		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0
 	] );
-	var A = new Float64Array( A_orig );
+	var A = c128( Array.from( A_orig_f64 ) );
+	var Uv;
+	var VTv;
 	var info;
 	var re;
 	var im;
 	var maxErr;
+	var uR;
+	var uI;
+	var vtR;
+	var vtI;
+	var sk;
+	var errR;
+	var errI;
 	var i;
 	var j;
 	var k;
@@ -483,22 +520,25 @@ test( 'zgesvd: 4x3 JOBU=A JOBVT=S reconstruction', function t() {
 	info = zgesvd( 'A', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
+	Uv = reinterpret( U, 0 );
+	VTv = reinterpret( VT, 0 );
+
 	maxErr = 0.0;
 	for ( i = 0; i < M; i++ ) {
 		for ( j = 0; j < N; j++ ) {
 			re = 0.0;
 			im = 0.0;
 			for ( k = 0; k < minmn; k++ ) {
-				var uR = U[ 2 * ( i + k * M ) ];
-				var uI = U[ 2 * ( i + k * M ) + 1 ];
-				var vtR = VT[ 2 * ( k + j * minmn ) ];
-				var vtI = VT[ 2 * ( k + j * minmn ) + 1 ];
-				var sk = s[ k ];
+				uR = Uv[ 2 * ( i + k * M ) ];
+				uI = Uv[ 2 * ( i + k * M ) + 1 ];
+				vtR = VTv[ 2 * ( k + j * minmn ) ];
+				vtI = VTv[ 2 * ( k + j * minmn ) + 1 ];
+				sk = s[ k ];
 				re += sk * ( uR * vtR - uI * vtI );
 				im += sk * ( uR * vtI + uI * vtR );
 			}
-			var errR = Math.abs( re - A_orig[ 2 * ( i + j * M ) ] );
-			var errI = Math.abs( im - A_orig[ 2 * ( i + j * M ) + 1 ] );
+			errR = Math.abs( re - A_orig_f64[ 2 * ( i + j * M ) ] );
+			errI = Math.abs( im - A_orig_f64[ 2 * ( i + j * M ) + 1 ] );
 			maxErr = Math.max( maxErr, errR, errI );
 		}
 	}
@@ -507,24 +547,33 @@ test( 'zgesvd: 4x3 JOBU=A JOBVT=S reconstruction', function t() {
 
 test( 'zgesvd: 3x5 JOBU=A JOBVT=A reconstruction (M < N)', function t() {
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 18 );   // 3x3 complex
-	var VT = new Float64Array( 50 );  // 5x5 complex
+	var U = new Complex128Array( 9 );   // 3x3 complex
+	var VT = new Complex128Array( 25 );  // 5x5 complex
 	var M = 3;
 	var N = 5;
-	var A_orig = new Float64Array( [
+	var A_orig_f64 = new Float64Array( [
 		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
 		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
 		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
 		0.0, 1.0, 2.0, 0.0, 1.0, 3.0,
 		1.0, 2.0, 0.0, 1.0, 3.0, 1.0
 	] );
-	var A = new Float64Array( A_orig );
+	var A = c128( Array.from( A_orig_f64 ) );
+	var Uv;
+	var VTv;
 	var info;
 	var re;
 	var im;
 	var maxErr;
+	var uR;
+	var uI;
+	var vtR;
+	var vtI;
+	var sk;
+	var errR;
+	var errI;
 	var i;
 	var j;
 	var k;
@@ -533,22 +582,25 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=A reconstruction (M < N)', function t() {
 	info = zgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
+	Uv = reinterpret( U, 0 );
+	VTv = reinterpret( VT, 0 );
+
 	maxErr = 0.0;
 	for ( i = 0; i < M; i++ ) {
 		for ( j = 0; j < N; j++ ) {
 			re = 0.0;
 			im = 0.0;
 			for ( k = 0; k < minmn; k++ ) {
-				var uR = U[ 2 * ( i + k * M ) ];
-				var uI = U[ 2 * ( i + k * M ) + 1 ];
-				var vtR = VT[ 2 * ( k + j * N ) ];
-				var vtI = VT[ 2 * ( k + j * N ) + 1 ];
-				var sk = s[ k ];
+				uR = Uv[ 2 * ( i + k * M ) ];
+				uI = Uv[ 2 * ( i + k * M ) + 1 ];
+				vtR = VTv[ 2 * ( k + j * N ) ];
+				vtI = VTv[ 2 * ( k + j * N ) + 1 ];
+				sk = s[ k ];
 				re += sk * ( uR * vtR - uI * vtI );
 				im += sk * ( uR * vtI + uI * vtR );
 			}
-			var errR = Math.abs( re - A_orig[ 2 * ( i + j * M ) ] );
-			var errI = Math.abs( im - A_orig[ 2 * ( i + j * M ) + 1 ] );
+			errR = Math.abs( re - A_orig_f64[ 2 * ( i + j * M ) ] );
+			errI = Math.abs( im - A_orig_f64[ 2 * ( i + j * M ) + 1 ] );
 			maxErr = Math.max( maxErr, errR, errI );
 		}
 	}
@@ -557,22 +609,31 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=A reconstruction (M < N)', function t() {
 
 test( 'zgesvd: 5x3 JOBU=S JOBVT=S reconstruction', function t() {
 	var RWORK = new Float64Array( 100 );
-	var WORK = new Float64Array( 5000 );
+	var WORK = new Complex128Array( 2500 );
 	var s = new Float64Array( 3 );
-	var U = new Float64Array( 30 );   // 5x3 complex
-	var VT = new Float64Array( 18 );  // 3x3 complex
+	var U = new Complex128Array( 15 );   // 5x3 complex
+	var VT = new Complex128Array( 9 );  // 3x3 complex
 	var M = 5;
 	var N = 3;
-	var A_orig = new Float64Array( [
+	var A_orig_f64 = new Float64Array( [
 		1.0, 1.0, 2.0, 0.0, 0.0, 1.0, 3.0, 2.0, 1.0, 1.0,
 		0.0, 2.0, 1.0, 0.0, 3.0, 1.0, 2.0, 0.0, 0.0, 3.0,
 		2.0, 1.0, 0.0, 1.0, 1.0, 2.0, 1.0, 0.0, 2.0, 2.0
 	] );
-	var A = new Float64Array( A_orig );
+	var A = c128( Array.from( A_orig_f64 ) );
+	var Uv;
+	var VTv;
 	var info;
 	var re;
 	var im;
 	var maxErr;
+	var uR;
+	var uI;
+	var vtR;
+	var vtI;
+	var sk;
+	var errR;
+	var errI;
 	var i;
 	var j;
 	var k;
@@ -581,22 +642,25 @@ test( 'zgesvd: 5x3 JOBU=S JOBVT=S reconstruction', function t() {
 	info = zgesvd( 'S', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
+	Uv = reinterpret( U, 0 );
+	VTv = reinterpret( VT, 0 );
+
 	maxErr = 0.0;
 	for ( i = 0; i < M; i++ ) {
 		for ( j = 0; j < N; j++ ) {
 			re = 0.0;
 			im = 0.0;
 			for ( k = 0; k < minmn; k++ ) {
-				var uR = U[ 2 * ( i + k * M ) ];
-				var uI = U[ 2 * ( i + k * M ) + 1 ];
-				var vtR = VT[ 2 * ( k + j * minmn ) ];
-				var vtI = VT[ 2 * ( k + j * minmn ) + 1 ];
-				var sk = s[ k ];
+				uR = Uv[ 2 * ( i + k * M ) ];
+				uI = Uv[ 2 * ( i + k * M ) + 1 ];
+				vtR = VTv[ 2 * ( k + j * minmn ) ];
+				vtI = VTv[ 2 * ( k + j * minmn ) + 1 ];
+				sk = s[ k ];
 				re += sk * ( uR * vtR - uI * vtI );
 				im += sk * ( uR * vtI + uI * vtR );
 			}
-			var errR = Math.abs( re - A_orig[ 2 * ( i + j * M ) ] );
-			var errI = Math.abs( im - A_orig[ 2 * ( i + j * M ) + 1 ] );
+			errR = Math.abs( re - A_orig_f64[ 2 * ( i + j * M ) ] );
+			errI = Math.abs( im - A_orig_f64[ 2 * ( i + j * M ) + 1 ] );
 			maxErr = Math.max( maxErr, errR, errI );
 		}
 	}

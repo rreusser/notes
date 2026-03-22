@@ -22,6 +22,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zggbak = require( './../lib' );
 var base = require( './../lib/base.js' );
 
@@ -46,7 +48,7 @@ function assertArrayClose( actual, expected, msg ) {
 }
 
 /**
-* Set complex element (i, j) in interleaved matrix.
+* Set complex element (i, j) in interleaved matrix (Float64 view).
 */
 function cset( M, LDV, i, j, re, im ) {
 	var idx = j * 2 * LDV + i * 2;
@@ -58,7 +60,7 @@ function cset( M, LDV, i, j, re, im ) {
 * Extract the complex matrix as a flat interleaved array (column-by-column,
 * matching Fortran fixture output format from print_cmatrix).
 *
-* @param {Float64Array} V - matrix
+* @param {Float64Array} V - Float64 view of matrix
 * @param {integer} LDV - leading dimension (allocated rows)
 * @param {integer} n - number of rows to extract per column
 * @param {integer} m - number of columns
@@ -92,22 +94,23 @@ test( 'zggbak: JOB=N quick return (no transformation)', function t() {
 	var n = 3;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( [ 2.0, 3.0, 4.0 ] );
 	var rscale = new Float64Array( [ 5.0, 6.0, 7.0 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 2.0 );
-	cset( V, LDV, 1, 0, 3.0, 4.0 );
-	cset( V, LDV, 2, 0, 5.0, 6.0 );
-	cset( V, LDV, 0, 1, 7.0, 8.0 );
-	cset( V, LDV, 1, 1, 9.0, 10.0 );
-	cset( V, LDV, 2, 1, 11.0, 12.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 2.0 );
+	cset( Vv, LDV, 1, 0, 3.0, 4.0 );
+	cset( Vv, LDV, 2, 0, 5.0, 6.0 );
+	cset( Vv, LDV, 0, 1, 7.0, 8.0 );
+	cset( Vv, LDV, 1, 1, 9.0, 10.0 );
+	cset( Vv, LDV, 2, 1, 11.0, 12.0 );
 
-	info = base( 'N', 'R', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'N', 'R', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=S, SIDE=R (scale right eigenvectors by RSCALE)', function t() {
@@ -115,22 +118,23 @@ test( 'zggbak: JOB=S, SIDE=R (scale right eigenvectors by RSCALE)', function t()
 	var n = 3;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 3 );
 	var rscale = new Float64Array( [ 2.0, 3.0, 0.5 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 2.0 );
-	cset( V, LDV, 1, 0, 3.0, 4.0 );
-	cset( V, LDV, 2, 0, 5.0, 6.0 );
-	cset( V, LDV, 0, 1, 7.0, 8.0 );
-	cset( V, LDV, 1, 1, 9.0, 10.0 );
-	cset( V, LDV, 2, 1, 11.0, 12.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 2.0 );
+	cset( Vv, LDV, 1, 0, 3.0, 4.0 );
+	cset( Vv, LDV, 2, 0, 5.0, 6.0 );
+	cset( Vv, LDV, 0, 1, 7.0, 8.0 );
+	cset( Vv, LDV, 1, 1, 9.0, 10.0 );
+	cset( Vv, LDV, 2, 1, 11.0, 12.0 );
 
-	info = base( 'S', 'R', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'S', 'R', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=S, SIDE=L (scale left eigenvectors by LSCALE)', function t() {
@@ -138,22 +142,23 @@ test( 'zggbak: JOB=S, SIDE=L (scale left eigenvectors by LSCALE)', function t() 
 	var n = 3;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( [ 2.0, 0.5, 3.0 ] );
 	var rscale = new Float64Array( 3 );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 2.0 );
-	cset( V, LDV, 1, 0, 3.0, 4.0 );
-	cset( V, LDV, 2, 0, 5.0, 6.0 );
-	cset( V, LDV, 0, 1, 7.0, 8.0 );
-	cset( V, LDV, 1, 1, 9.0, 10.0 );
-	cset( V, LDV, 2, 1, 11.0, 12.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 2.0 );
+	cset( Vv, LDV, 1, 0, 3.0, 4.0 );
+	cset( Vv, LDV, 2, 0, 5.0, 6.0 );
+	cset( Vv, LDV, 0, 1, 7.0, 8.0 );
+	cset( Vv, LDV, 1, 1, 9.0, 10.0 );
+	cset( Vv, LDV, 2, 1, 11.0, 12.0 );
 
-	info = base( 'S', 'L', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'S', 'L', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=P, SIDE=R (permute right eigenvectors)', function t() {
@@ -161,24 +166,25 @@ test( 'zggbak: JOB=P, SIDE=R (permute right eigenvectors)', function t() {
 	var n = 4;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 4 );
 	var rscale = new Float64Array( [ 3.0, 0.0, 0.0, 2.0 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 0.0 );
-	cset( V, LDV, 1, 0, 2.0, 0.0 );
-	cset( V, LDV, 2, 0, 3.0, 0.0 );
-	cset( V, LDV, 3, 0, 4.0, 0.0 );
-	cset( V, LDV, 0, 1, 5.0, 0.0 );
-	cset( V, LDV, 1, 1, 6.0, 0.0 );
-	cset( V, LDV, 2, 1, 7.0, 0.0 );
-	cset( V, LDV, 3, 1, 8.0, 0.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
+	cset( Vv, LDV, 3, 0, 4.0, 0.0 );
+	cset( Vv, LDV, 0, 1, 5.0, 0.0 );
+	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
+	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
+	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
 
-	info = base( 'P', 'R', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'P', 'R', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=P, SIDE=L (permute left eigenvectors)', function t() {
@@ -186,24 +192,25 @@ test( 'zggbak: JOB=P, SIDE=L (permute left eigenvectors)', function t() {
 	var n = 4;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( [ 4.0, 0.0, 0.0, 1.0 ] );
 	var rscale = new Float64Array( 4 );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 0.0 );
-	cset( V, LDV, 1, 0, 2.0, 0.0 );
-	cset( V, LDV, 2, 0, 3.0, 0.0 );
-	cset( V, LDV, 3, 0, 4.0, 0.0 );
-	cset( V, LDV, 0, 1, 5.0, 0.0 );
-	cset( V, LDV, 1, 1, 6.0, 0.0 );
-	cset( V, LDV, 2, 1, 7.0, 0.0 );
-	cset( V, LDV, 3, 1, 8.0, 0.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
+	cset( Vv, LDV, 3, 0, 4.0, 0.0 );
+	cset( Vv, LDV, 0, 1, 5.0, 0.0 );
+	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
+	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
+	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
 
-	info = base( 'P', 'L', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'P', 'L', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=B, SIDE=R (both scale and permute, right)', function t() {
@@ -211,24 +218,25 @@ test( 'zggbak: JOB=B, SIDE=R (both scale and permute, right)', function t() {
 	var n = 4;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 4 );
 	var rscale = new Float64Array( [ 3.0, 2.0, 0.5, 2.0 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 1.0 );
-	cset( V, LDV, 1, 0, 2.0, 2.0 );
-	cset( V, LDV, 2, 0, 3.0, 3.0 );
-	cset( V, LDV, 3, 0, 4.0, 4.0 );
-	cset( V, LDV, 0, 1, 5.0, 5.0 );
-	cset( V, LDV, 1, 1, 6.0, 6.0 );
-	cset( V, LDV, 2, 1, 7.0, 7.0 );
-	cset( V, LDV, 3, 1, 8.0, 8.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 1.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 2.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 3.0 );
+	cset( Vv, LDV, 3, 0, 4.0, 4.0 );
+	cset( Vv, LDV, 0, 1, 5.0, 5.0 );
+	cset( Vv, LDV, 1, 1, 6.0, 6.0 );
+	cset( Vv, LDV, 2, 1, 7.0, 7.0 );
+	cset( Vv, LDV, 3, 1, 8.0, 8.0 );
 
-	info = base( 'B', 'R', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'B', 'R', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=B, SIDE=L (both scale and permute, left)', function t() {
@@ -236,46 +244,47 @@ test( 'zggbak: JOB=B, SIDE=L (both scale and permute, left)', function t() {
 	var n = 4;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( [ 4.0, 3.0, 0.25, 1.0 ] );
 	var rscale = new Float64Array( 4 );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 1.0 );
-	cset( V, LDV, 1, 0, 2.0, 2.0 );
-	cset( V, LDV, 2, 0, 3.0, 3.0 );
-	cset( V, LDV, 3, 0, 4.0, 4.0 );
-	cset( V, LDV, 0, 1, 5.0, 5.0 );
-	cset( V, LDV, 1, 1, 6.0, 6.0 );
-	cset( V, LDV, 2, 1, 7.0, 7.0 );
-	cset( V, LDV, 3, 1, 8.0, 8.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 1.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 2.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 3.0 );
+	cset( Vv, LDV, 3, 0, 4.0, 4.0 );
+	cset( Vv, LDV, 0, 1, 5.0, 5.0 );
+	cset( Vv, LDV, 1, 1, 6.0, 6.0 );
+	cset( Vv, LDV, 2, 1, 7.0, 7.0 );
+	cset( Vv, LDV, 3, 1, 8.0, 8.0 );
 
-	info = base( 'B', 'L', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'B', 'L', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: N=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'n_zero'; } );
-	var V = new Float64Array( 4 );
+	var V = new Complex128Array( 2 );
 	var lscale = new Float64Array( 1 );
 	var rscale = new Float64Array( 1 );
 	var info;
 
-	info = base( 'B', 'R', 0, 1, 0, lscale, 1, 0, rscale, 1, 0, 2, V, 2, 2, 0 );
+	info = base( 'B', 'R', 0, 1, 0, lscale, 1, 0, rscale, 1, 0, 2, V, 1, 1, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 });
 
 test( 'zggbak: M=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'm_zero'; } );
-	var V = new Float64Array( 4 );
+	var V = new Complex128Array( 2 );
 	var lscale = new Float64Array( 3 );
 	var rscale = new Float64Array( 3 );
 	var info;
 
-	info = base( 'B', 'R', 3, 1, 3, lscale, 1, 0, rscale, 1, 0, 0, V, 2, 6, 0 );
+	info = base( 'B', 'R', 3, 1, 3, lscale, 1, 0, rscale, 1, 0, 0, V, 1, 3, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 });
@@ -287,28 +296,29 @@ test( 'zggbak: ILO=IHI with valid permutation indices', function t() {
 	var n = 4;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 4 );
 	var rscale = new Float64Array( [ 3.0, 2.0, 3.0, 1.0 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 0.0 );
-	cset( V, LDV, 1, 0, 2.0, 0.0 );
-	cset( V, LDV, 2, 0, 3.0, 0.0 );
-	cset( V, LDV, 3, 0, 4.0, 0.0 );
-	cset( V, LDV, 0, 1, 5.0, 0.0 );
-	cset( V, LDV, 1, 1, 6.0, 0.0 );
-	cset( V, LDV, 2, 1, 7.0, 0.0 );
-	cset( V, LDV, 3, 1, 8.0, 0.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
+	cset( Vv, LDV, 3, 0, 4.0, 0.0 );
+	cset( Vv, LDV, 0, 1, 5.0, 0.0 );
+	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
+	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
+	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
 
-	info = base( 'B', 'R', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'B', 'R', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, 0, 'info' );
 	// Row 1 (index 1) is untouched, verify it
-	assert.strictEqual( V[ 2 ], 2.0, 'row 1 col 0 re' );
-	assert.strictEqual( V[ 3 ], 0.0, 'row 1 col 0 im' );
-	assert.strictEqual( V[ 10 ], 6.0, 'row 1 col 1 re' );
-	assert.strictEqual( V[ 11 ], 0.0, 'row 1 col 1 im' );
+	assert.strictEqual( Vv[ 2 ], 2.0, 'row 1 col 0 re' );
+	assert.strictEqual( Vv[ 3 ], 0.0, 'row 1 col 0 im' );
+	assert.strictEqual( Vv[ 10 ], 6.0, 'row 1 col 1 re' );
+	assert.strictEqual( Vv[ 11 ], 0.0, 'row 1 col 1 im' );
 });
 
 test( 'zggbak: ILO=1 (skip first permutation loop)', function t() {
@@ -316,22 +326,23 @@ test( 'zggbak: ILO=1 (skip first permutation loop)', function t() {
 	var n = 3;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 3 );
 	var rscale = new Float64Array( [ 1.0, 2.0, 1.0 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 0.0 );
-	cset( V, LDV, 1, 0, 2.0, 0.0 );
-	cset( V, LDV, 2, 0, 3.0, 0.0 );
-	cset( V, LDV, 0, 1, 4.0, 0.0 );
-	cset( V, LDV, 1, 1, 5.0, 0.0 );
-	cset( V, LDV, 2, 1, 6.0, 0.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
+	cset( Vv, LDV, 0, 1, 4.0, 0.0 );
+	cset( Vv, LDV, 1, 1, 5.0, 0.0 );
+	cset( Vv, LDV, 2, 1, 6.0, 0.0 );
 
-	info = base( 'P', 'R', n, 1, 2, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'P', 'R', n, 1, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: IHI=N (skip second permutation loop)', function t() {
@@ -339,22 +350,23 @@ test( 'zggbak: IHI=N (skip second permutation loop)', function t() {
 	var n = 3;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 3 );
 	var rscale = new Float64Array( [ 3.0, 2.0, 3.0 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 0.0 );
-	cset( V, LDV, 1, 0, 2.0, 0.0 );
-	cset( V, LDV, 2, 0, 3.0, 0.0 );
-	cset( V, LDV, 0, 1, 4.0, 0.0 );
-	cset( V, LDV, 1, 1, 5.0, 0.0 );
-	cset( V, LDV, 2, 1, 6.0, 0.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
+	cset( Vv, LDV, 0, 1, 4.0, 0.0 );
+	cset( Vv, LDV, 1, 1, 5.0, 0.0 );
+	cset( Vv, LDV, 2, 1, 6.0, 0.0 );
 
-	info = base( 'P', 'R', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'P', 'R', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: K=I (no-swap, continue case)', function t() {
@@ -362,22 +374,23 @@ test( 'zggbak: K=I (no-swap, continue case)', function t() {
 	var n = 3;
 	var m = 2;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 3 );
 	var rscale = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var info;
 
-	cset( V, LDV, 0, 0, 1.0, 0.0 );
-	cset( V, LDV, 1, 0, 2.0, 0.0 );
-	cset( V, LDV, 2, 0, 3.0, 0.0 );
-	cset( V, LDV, 0, 1, 4.0, 0.0 );
-	cset( V, LDV, 1, 1, 5.0, 0.0 );
-	cset( V, LDV, 2, 1, 6.0, 0.0 );
+	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
+	cset( Vv, LDV, 0, 1, 4.0, 0.0 );
+	cset( Vv, LDV, 1, 1, 5.0, 0.0 );
+	cset( Vv, LDV, 2, 1, 6.0, 0.0 );
 
-	info = base( 'P', 'R', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'P', 'R', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: N=1 edge case', function t() {
@@ -385,18 +398,19 @@ test( 'zggbak: N=1 edge case', function t() {
 	var n = 1;
 	var m = 1;
 	var LDV = n;
-	var V = new Float64Array( 2 );
+	var V = new Complex128Array( 1 );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 1 );
 	var rscale = new Float64Array( [ 1.0 ] );
 	var info;
 
-	V[ 0 ] = 5.0;
-	V[ 1 ] = 3.0;
+	Vv[ 0 ] = 5.0;
+	Vv[ 1 ] = 3.0;
 
-	info = base( 'B', 'R', n, 1, 1, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2, 0 );
+	info = base( 'B', 'R', n, 1, 1, lscale, 1, 0, rscale, 1, 0, m, V, 1, 1, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( [ V[ 0 ], V[ 1 ] ], tc.v, 'v' );
+	assertArrayClose( [ Vv[ 0 ], Vv[ 1 ] ], tc.v, 'v' );
 });
 
 test( 'zggbak: larger matrix with complex values, JOB=B, SIDE=R', function t() {
@@ -404,7 +418,8 @@ test( 'zggbak: larger matrix with complex values, JOB=B, SIDE=R', function t() {
 	var n = 5;
 	var m = 3;
 	var LDV = n;
-	var V = new Float64Array( 2 * LDV * m );
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
 	var lscale = new Float64Array( 5 );
 	var rscale = new Float64Array( [ 4.0, 2.0, 0.5, 3.0, 1.0 ] );
 	var info;
@@ -417,11 +432,11 @@ test( 'zggbak: larger matrix with complex values, JOB=B, SIDE=R', function t() {
 	var k;
 	for ( k = 0; k < vals.length; k++ ) {
 		v = vals[ k ];
-		cset( V, LDV, v[ 0 ], v[ 1 ], v[ 2 ], v[ 3 ] );
+		cset( Vv, LDV, v[ 0 ], v[ 1 ], v[ 2 ], v[ 3 ] );
 	}
 
-	info = base( 'B', 'R', n, 2, 4, lscale, 1, 0, rscale, 1, 0, m, V, 2, 2 * LDV, 0 );
+	info = base( 'B', 'R', n, 2, 4, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
-	assertArrayClose( extractCMatrix( V, LDV, n, m ), tc.v, 'v' );
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
