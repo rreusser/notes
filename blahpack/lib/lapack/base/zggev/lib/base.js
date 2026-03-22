@@ -11,10 +11,10 @@ var zgghrd = require( '../../zgghrd/lib/base.js' );
 var zhgeqz = require( '../../zhgeqz/lib/base.js' );
 var zggbak = require( '../../zggbak/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
-var zunmqr = require( './zunmqr.js' );
-var zungqr = require( './zungqr.js' );
+var zunmqr = require( '../../zunmqr/lib/base.js' );
 var ztgevc = require( './ztgevc.js' );
-var zlacpy = require( './zlacpy.js' );
+var zlacpy = require( '../../zlacpy/lib/base.js' );
+var zungqr = require( './zungqr.js' );
 
 // VARIABLES //
 

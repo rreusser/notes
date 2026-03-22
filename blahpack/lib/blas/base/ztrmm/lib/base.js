@@ -20,9 +20,8 @@
 
 // MODULES //
 
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var real = require( '@stdlib/complex/float64/real' );
-var imag = require( '@stdlib/complex/float64/imag' );
+var float64view = require( '../../../../float64view.js' );
+var complexParts = float64view.complexParts;
 
 // MAIN //
 
@@ -61,6 +60,7 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	var alphaI;
 	var tempR;
 	var tempI;
+	var tmp;
 	var sa1;
 	var sa2;
 	var sb1;
@@ -92,16 +92,13 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	noconj = ( transa === 'T' || transa === 't' );
 	nounit = ( diag === 'N' || diag === 'n' );
 
-	alphaR = real( alpha );
-	alphaI = imag( alpha );
+	tmp = complexParts( alpha );
+	alphaR = tmp[ 0 ];
+	alphaI = tmp[ 1 ];
 
-	// Get Float64Array views
-	Av = reinterpret( A, 0 );
-	Bv = reinterpret( B, 0 );
-
-	// Convert offsets from complex elements to Float64
-	oA = offsetA * 2;
-	oB = offsetB * 2;
+	// Get Float64Array views and convert offsets
+	tmp = float64view( A, offsetA ); Av = tmp[ 0 ]; oA = tmp[ 1 ];
+	tmp = float64view( B, offsetB ); Bv = tmp[ 0 ]; oB = tmp[ 1 ];
 
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;

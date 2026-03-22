@@ -2,8 +2,8 @@
 
 // MODULES //
 
-var zunm2r = require( './zunm2r.js' );
-var zlaset = require( '../../../../lapack/base/zlaset/lib/base.js' );
+var zunm2r = require( '../../zunm2r/lib/base.js' );
+var zlaset = require( '../../zlaset/lib/base.js' );
 
 // VARIABLES //
 
