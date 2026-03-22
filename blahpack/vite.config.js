@@ -1,6 +1,25 @@
 import { observable, config } from "@observablehq/notebook-kit/vite";
 import { defineConfig } from "vite";
 import { resolve } from "path";
+import { copyFileSync, mkdirSync } from "fs";
+
+function copyStaticFiles(files) {
+  return {
+    name: "copy-static-files",
+    apply: "build",
+    closeBundle() {
+      for (const { src, dest } of files) {
+        mkdirSync(resolve(import.meta.dirname, "dist", dest, ".."), {
+          recursive: true,
+        });
+        copyFileSync(
+          resolve(import.meta.dirname, src),
+          resolve(import.meta.dirname, "dist", dest)
+        );
+      }
+    },
+  };
+}
 
 export default defineConfig(async ({ command }) => {
   const isDev = command === "serve";
@@ -13,7 +32,11 @@ export default defineConfig(async ({ command }) => {
 
   return {
     ...config(),
-    plugins: [isDev && debugNotebook?.(), observable()],
+    plugins: [
+      isDev && debugNotebook?.(),
+      observable(),
+      copyStaticFiles([{ src: "progress.html", dest: "progress.html" }]),
+    ],
     root: "notebooks",
     build: {
       outDir: resolve(import.meta.dirname, "dist"),

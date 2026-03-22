@@ -9,6 +9,8 @@
 
     The chain of LAPACK dependencies is: **zgesvd** (complex SVD, bidiagonal QR) drives the AAA iteration; **zggev** (QZ algorithm) extracts poles and zeros; **Householder QR** (via a standalone solver) handles the least-squares fits. All computation runs in a web worker; visualizations use WebGPU.
 
+    See also the [translation progress report](../progress.html) for the current status of BLAS/LAPACK routine coverage.
+
     **References:**
     - **[NST18]** Nakatsukasa, Sète, Trefethen, ["The AAA Algorithm for Rational Approximation"](https://arxiv.org/abs/1612.00337), SIAM J. Sci. Comput. 40(3), 2018.
     - **[C20]** Costa, ["Solving Laplace problems with the AAA algorithm"](https://arxiv.org/abs/2001.09439), 2020.

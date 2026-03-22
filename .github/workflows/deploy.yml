@@ -41,6 +41,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Generate progress report
+        run: npm run report
+
       - name: Bundle notebook dependencies
         run: npm run bundle:notebook
 
