@@ -4,6 +4,8 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var zgeqr2 = require( '../../zgeqr2/lib/base.js' );
@@ -41,12 +43,13 @@ function assertArrayClose( actual, expected, tol, msg ) {
 */
 function qr4x3() {
 	var LDA = 6;
-	var A = new Float64Array( 2 * LDA * 6 );
-	A[0]=1; A[1]=0; A[2]=2; A[3]=1; A[4]=0; A[5]=0; A[6]=1; A[7]=1;
-	A[2*LDA]=0; A[2*LDA+1]=2; A[2*LDA+2]=1; A[2*LDA+3]=0; A[2*LDA+4]=3; A[2*LDA+5]=1; A[2*LDA+6]=2; A[2*LDA+7]=0;
-	A[4*LDA]=3; A[4*LDA+1]=1; A[4*LDA+2]=0; A[4*LDA+3]=0; A[4*LDA+4]=1; A[4*LDA+5]=0; A[4*LDA+6]=2; A[4*LDA+7]=1;
-	var TAU = new Float64Array( 6 );
-	var WORK = new Float64Array( 40 );
+	var A = new Complex128Array( LDA * 6 );
+	var Av = reinterpret( A, 0 );
+	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=1; Av[4]=0; Av[5]=0; Av[6]=1; Av[7]=1;
+	Av[2*LDA]=0; Av[2*LDA+1]=2; Av[2*LDA+2]=1; Av[2*LDA+3]=0; Av[2*LDA+4]=3; Av[2*LDA+5]=1; Av[2*LDA+6]=2; Av[2*LDA+7]=0;
+	Av[4*LDA]=3; Av[4*LDA+1]=1; Av[4*LDA+2]=0; Av[4*LDA+3]=0; Av[4*LDA+4]=1; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=1;
+	var TAU = new Complex128Array( 3 );
+	var WORK = new Complex128Array( 20 );
 	zgeqr2( 4, 3, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 	return { A: A, TAU: TAU, LDA: LDA };
 }
@@ -56,11 +59,12 @@ function qr4x3() {
 */
 function eye4in6() {
 	var LDC = 6;
-	var C = new Float64Array( 2 * LDC * 6 );
-	C[ 2 * ( 0 + 0 * LDC ) ] = 1.0;
-	C[ 2 * ( 1 + 1 * LDC ) ] = 1.0;
-	C[ 2 * ( 2 + 2 * LDC ) ] = 1.0;
-	C[ 2 * ( 3 + 3 * LDC ) ] = 1.0;
+	var C = new Complex128Array( LDC * 6 );
+	var Cv = reinterpret( C, 0 );
+	Cv[ 2 * ( 0 + 0 * LDC ) ] = 1.0;
+	Cv[ 2 * ( 1 + 1 * LDC ) ] = 1.0;
+	Cv[ 2 * ( 2 + 2 * LDC ) ] = 1.0;
+	Cv[ 2 * ( 3 + 3 * LDC ) ] = 1.0;
 	return C;
 }
 
@@ -72,11 +76,11 @@ test( 'zunmqr: left, no transpose (Q*I)', function t() {
 	var qr = qr4x3();
 	var LDC = 6;
 	var C = eye4in6();
-	var WORK = new Float64Array( 400 );
+	var WORK = new Complex128Array( 200 );
 	var info = zunmqr( 'L', 'N', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	// Fixture has first 32 doubles of C_r (flat layout of C(6,6))
-	assertArrayClose( Array.from( C.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
+	var Cv = reinterpret( C, 0 );
+	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
 });
 
 test( 'zunmqr: left, conjugate transpose (Q^H*I)', function t() {
@@ -84,10 +88,11 @@ test( 'zunmqr: left, conjugate transpose (Q^H*I)', function t() {
 	var qr = qr4x3();
 	var LDC = 6;
 	var C = eye4in6();
-	var WORK = new Float64Array( 400 );
+	var WORK = new Complex128Array( 200 );
 	var info = zunmqr( 'L', 'C', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( C.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
+	var Cv = reinterpret( C, 0 );
+	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
 });
 
 test( 'zunmqr: right, no transpose (I*Q)', function t() {
@@ -95,38 +100,39 @@ test( 'zunmqr: right, no transpose (I*Q)', function t() {
 	var qr = qr4x3();
 	var LDC = 6;
 	var C = eye4in6();
-	var WORK = new Float64Array( 400 );
+	var WORK = new Complex128Array( 200 );
 	var info = zunmqr( 'R', 'N', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( C.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
+	var Cv = reinterpret( C, 0 );
+	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
 });
 
 test( 'zunmqr: M=0 quick return', function t() {
 	var tc = findCase( 'm_zero' );
-	var A = new Float64Array( 10 );
-	var TAU = new Float64Array( 4 );
-	var C = new Float64Array( 10 );
-	var WORK = new Float64Array( 40 );
+	var A = new Complex128Array( 5 );
+	var TAU = new Complex128Array( 2 );
+	var C = new Complex128Array( 5 );
+	var WORK = new Complex128Array( 20 );
 	var info = zunmqr( 'L', 'N', 0, 4, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0, 20 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
 
 test( 'zunmqr: N=0 quick return', function t() {
 	var tc = findCase( 'n_zero' );
-	var A = new Float64Array( 10 );
-	var TAU = new Float64Array( 4 );
-	var C = new Float64Array( 10 );
-	var WORK = new Float64Array( 40 );
+	var A = new Complex128Array( 5 );
+	var TAU = new Complex128Array( 2 );
+	var C = new Complex128Array( 5 );
+	var WORK = new Complex128Array( 20 );
 	var info = zunmqr( 'L', 'N', 4, 0, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0, 20 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
 
 test( 'zunmqr: K=0 quick return', function t() {
 	var tc = findCase( 'k_zero' );
-	var A = new Float64Array( 10 );
-	var TAU = new Float64Array( 4 );
-	var C = new Float64Array( 10 );
-	var WORK = new Float64Array( 40 );
+	var A = new Complex128Array( 5 );
+	var TAU = new Complex128Array( 2 );
+	var C = new Complex128Array( 5 );
+	var WORK = new Complex128Array( 20 );
 	var info = zunmqr( 'L', 'N', 4, 4, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0, 20 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
@@ -135,13 +141,14 @@ test( 'zunmqr: left, no transpose, rectangular C (4x2)', function t() {
 	var tc = findCase( 'left_notrans_rect' );
 	var qr = qr4x3();
 	var LDC = 6;
-	var C = new Float64Array( 2 * LDC * 6 );
+	var C = new Complex128Array( LDC * 6 );
+	var Cv = reinterpret( C, 0 );
 	// C = [1+1i 0+2i; 3+0i 1-1i; -1+1i 4+0i; 2+0i 0+3i]
-	C[0]=1; C[1]=1; C[2]=3; C[3]=0; C[4]=-1; C[5]=1; C[6]=2; C[7]=0;
-	C[2*LDC]=0; C[2*LDC+1]=2; C[2*LDC+2]=1; C[2*LDC+3]=-1; C[2*LDC+4]=4; C[2*LDC+5]=0; C[2*LDC+6]=0; C[2*LDC+7]=3;
+	Cv[0]=1; Cv[1]=1; Cv[2]=3; Cv[3]=0; Cv[4]=-1; Cv[5]=1; Cv[6]=2; Cv[7]=0;
+	Cv[2*LDC]=0; Cv[2*LDC+1]=2; Cv[2*LDC+2]=1; Cv[2*LDC+3]=-1; Cv[2*LDC+4]=4; Cv[2*LDC+5]=0; Cv[2*LDC+6]=0; Cv[2*LDC+7]=3;
 
-	var WORK = new Float64Array( 400 );
+	var WORK = new Complex128Array( 200 );
 	var info = zunmqr( 'L', 'N', 4, 2, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( C.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
+	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
 });

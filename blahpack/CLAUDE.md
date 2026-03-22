@@ -393,41 +393,77 @@ The `ndarray.js` wrapper normalizes from stdlib's full strings (`'upper'`,
 
 ### Complex Number Support
 
-Complex numbers use `lib/cmplx.js` — a gl-matrix-style library where each
-complex number is a 2-element `Float64Array` slice `[real, imag]`. Functions
-never allocate; the caller provides `out`:
+Complex arrays use `Complex128Array` from `@stdlib/array/complex128`.
+Complex scalars use `Complex128` from `@stdlib/complex/float64/ctor`.
+This matches stdlib-js conventions exactly.
 
+**API boundary convention** (following stdlib):
+- **Complex arrays**: `Complex128Array` — strides and offsets in complex elements
+- **Complex scalars**: `Complex128` objects — extract via `real(z)` / `imag(z)`
+- **Real arrays**: `Float64Array` — strides and offsets in Float64 units (as before)
+
+**Inside routines**, reinterpret to Float64Array for efficient element access:
+```javascript
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
+
+function zfoo( N, alpha, x, strideX, offsetX ) {
+    var xv = reinterpret( x, 0 );   // Float64Array view (zero-copy)
+    var re = real( alpha );           // extract scalar parts
+    var im = imag( alpha );
+    var sx = strideX * 2;             // convert complex stride to Float64
+    var ix = offsetX * 2;             // convert complex offset to Float64
+    for ( var i = 0; i < N; i++ ) {
+        // access: xv[ix] = real, xv[ix+1] = imag
+        xv[ ix ] = re * xv[ ix ] - im * xv[ ix + 1 ];
+        ix += sx;
+    }
+    return x;  // return original Complex128Array
+}
+```
+
+**When calling sub-routines**, pass the original Complex128Array with
+strides/offsets in complex elements (the callee does its own `*2`):
+```javascript
+zscal( N, alpha, A, strideA1, offsetA + j * strideA2 );
+// A is Complex128Array, strides/offsets in complex elements
+```
+
+**Internal workspace** allocation:
+```javascript
+var WORK = new Complex128Array( N );      // complex workspace
+var RWORK = new Float64Array( 5 * N );    // real workspace
+```
+
+**Complex scalar constants**:
+```javascript
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var CZERO = new Complex128( 0.0, 0.0 );
+var CONE = new Complex128( 1.0, 0.0 );
+```
+
+**Complex arithmetic** — two approaches:
+
+1. **Scalar ops** (outside hot loops): use stdlib via `lib/cmplx.js`:
 ```javascript
 var cmplx = require( '../../cmplx.js' );
-var z = new Float64Array( 2 );
-cmplx.mul( z, a, b );          // z = a * b
-cmplx.mmadd( z, z, a, b );     // z = z + a * b
-cmplx.conj( z, a );            // z = conj(a)
-var r = cmplx.abs( a );        // r = |a| (returns scalar)
+var z = cmplx.mul( a, b );     // Complex128 * Complex128 → Complex128
+var z = cmplx.div( a, b );     // robust complex division (Baudin-Smith)
+var r = cmplx.abs( a );        // |a| (overflow-safe)
 ```
 
-**Complex arrays** are interleaved: `[re0, im0, re1, im1, ...]`.
-
-**CRITICAL convention for complex arrays:**
-- **stride** = in complex elements (the routine multiplies by 2 internally)
-- **offset** = Float64 index (direct position into the Float64Array)
-
-This means: to start at the 3rd complex element (0-based index 2), pass
-`offset = 4` (not 2), because each complex element occupies 2 Float64 slots.
-
-Element k of vector zx:
-- real: `zx[ offsetX + 2 * k * strideX ]`
-- imag: `zx[ offsetX + 2 * k * strideX + 1 ]`
-
-Element (i,j) of matrix A:
-- real: `A[ offsetA + 2 * (i * strideA1 + j * strideA2) ]`
-- imag: `A[ offsetA + 2 * (i * strideA1 + j * strideA2) + 1 ]`
-
-Inside routines, the `2×` conversion happens at the top:
+2. **Indexed ops** (in hot inner loops on Float64 views):
 ```javascript
-var sx = 2 * strideX;  // convert complex stride to Float64 stride
-var ix = offsetX;      // already a Float64 index
+var r = cmplx.absAt( view, idx );                      // |view[idx]+view[idx+1]*i|
+cmplx.mulAt( view, outIdx, view, aIdx, view, bIdx );   // view[out] = view[a]*view[b]
+cmplx.divAt( view, outIdx, view, aIdx, view, bIdx );   // robust division at index
 ```
+
+**NEVER inline complex division or absolute value** — they need numerical
+stability (overflow/underflow protection). Use `cmplx.div`/`cmplx.abs` or
+the indexed variants `cmplx.divAt`/`cmplx.absAt`. Complex multiply, add,
+subtract, conjugate, and real-scalar scaling ARE safe to inline.
 
 **Fortran complex test pattern** (use EQUIVALENCE to print interleaved):
 ```fortran
@@ -437,10 +473,15 @@ equivalence (zx, zx_r)
 call print_array('zx', zx_r, 2*n)
 ```
 
-**Translator directives**: The translator emits `@complex` comments:
+**JS test pattern** for complex arrays:
 ```javascript
-/* @complex ztemp */           // scalar complex variables
-/* @complex-arrays zx, zy */   // array complex variables
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
+var x = new Complex128Array( [ 1, 2, 3, 4 ] );  // two complex elements
+var result = zfoo( 2, alpha, x, 1, 0 );
+var view = reinterpret( result, 0 );              // Float64Array for comparison
+assertArrayClose( Array.from( view ), expected );
 ```
 
 ---

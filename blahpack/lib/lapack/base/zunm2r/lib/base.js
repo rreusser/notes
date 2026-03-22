@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarf = require( '../../zlarf/lib/base.js' );
 
@@ -59,6 +60,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var notran;
 	var left;
+	var tauiv;
 	var taui;
 	var idxA;
 	var aii0;
@@ -104,8 +106,9 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		ic = 0;
 	}
 
-	// Temporary 2-element array for tau
-	taui = new Float64Array( 2 );
+	// Temporary complex scalar for tau
+	taui = new Complex128Array( 1 );
+	tauiv = reinterpret( taui, 0 );
 
 	for ( i = i1; i !== i2; i += i3 ) {
 		if ( left ) {
@@ -118,11 +121,11 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Get tau_i, conjugating if trans='C'
 		if ( notran ) {
-			taui[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-			taui[ 1 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
+			tauiv[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+			tauiv[ 1 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 		} else {
-			taui[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-			taui[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
+			tauiv[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+			tauiv[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 		}
 
 		// Save A(i,i) and set it to 1

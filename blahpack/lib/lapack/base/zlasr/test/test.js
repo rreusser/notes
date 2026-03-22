@@ -676,24 +676,26 @@ test( 'works with offset for c, s, and A', function t() {
 	var N = 2;
 	var LDA = M;
 
-	// Prepend 4 doubles of junk before the matrix data
-	var junk = 4;
-	var A = new Float64Array( junk + 2 * LDA * N );
-	A[ 0 ] = 999; A[ 1 ] = 999; A[ 2 ] = 999; A[ 3 ] = 999;
-	// Fill matrix at offset 4:
+	// Prepend 2 complex elements of junk before the matrix data
+	var junk = 2; // in complex elements
+	var A = new Complex128Array( junk + LDA * N );
+	var Av = reinterpret( A, 0 );
+	Av[ 0 ] = 999; Av[ 1 ] = 999; Av[ 2 ] = 999; Av[ 3 ] = 999;
+	// Fill matrix at offset 2 complex elements (= 4 doubles):
 	// col 0: (1,0),(0,0); col 1: (0,0),(1,0)
-	A[ 4 ] = 1; A[ 5 ] = 0;  // A(0,0)
-	A[ 6 ] = 0; A[ 7 ] = 0;  // A(1,0)
-	A[ 8 ] = 0; A[ 9 ] = 0;  // A(0,1)
-	A[ 10 ] = 1; A[ 11 ] = 0; // A(1,1)
+	Av[ 4 ] = 1; Av[ 5 ] = 0;  // A(0,0)
+	Av[ 6 ] = 0; Av[ 7 ] = 0;  // A(1,0)
+	Av[ 8 ] = 0; Av[ 9 ] = 0;  // A(0,1)
+	Av[ 10 ] = 1; Av[ 11 ] = 0; // A(1,1)
 
 	var c = new Float64Array( [ 999, 0.6 ] );
 	var s = new Float64Array( [ 999, 0.8 ] );
 
 	base( 'L', 'V', 'F', M, N, c, 1, 1, s, 1, 1, A, 2, 2 * LDA, junk );
 
-	// Extract from offset
-	var result = extractAll( new Float64Array( A.buffer, junk * 8 ), M, N, LDA );
+	// Extract from offset (using Float64 view starting at junk*2 doubles)
+	Av = reinterpret( A, 0 );
+	var result = extractAll( new Float64Array( Av.buffer, Av.byteOffset + junk * 2 * 8 ), M, N, LDA );
 	var expected = new Float64Array( [
 		0.6, 0, 0.8, 0,
 		-0.8, 0, 0.6, 0
@@ -713,29 +715,29 @@ test( 'skips rotation when c=1 and s=0', function t() {
 		[ 3, 3 ], [ 4, 4 ],
 		[ 5, 5 ], [ 6, 6 ]
 	]);
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 
 	// Both rotations are identity
 	var c = new Float64Array( [ 1, 1 ] );
 	var s = new Float64Array( [ 0, 0 ] );
 
 	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip c=1,s=0' );
+	assertClose( reinterpret( A, 0 ), original, 'skip c=1,s=0' );
 });
 
 // --- 1x1 matrix (edge case) ---
 
 test( 'handles 1x1 matrix (no rotations to apply)', function t() {
-	var A = new Float64Array( [ 3, 4 ] ); // (3+4i)
+	var A = new Complex128Array( [ 3, 4 ] ); // (3+4i)
 	var c = new Float64Array( 0 );
 	var s = new Float64Array( 0 );
 	var expected = new Float64Array( [ 3, 4 ] );
 	base( 'L', 'V', 'F', 1, 1, c, 1, 0, s, 1, 0, A, 2, 2, 0 );
-	assertClose( A, expected, '1x1 L-V-F' );
+	assertClose( reinterpret( A, 0 ), expected, '1x1 L-V-F' );
 
-	A = new Float64Array( [ 3, 4 ] );
+	A = new Complex128Array( [ 3, 4 ] );
 	base( 'R', 'V', 'F', 1, 1, c, 1, 0, s, 1, 0, A, 2, 2, 0 );
-	assertClose( A, expected, '1x1 R-V-F' );
+	assertClose( reinterpret( A, 0 ), expected, '1x1 R-V-F' );
 });
 
 // --- Test that bottom pivot works with complex entries ---
@@ -944,11 +946,11 @@ test( 'skips rotation when c=1, s=0 for L/V/B', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'L', 'V', 'B', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip L-V-B' );
+	assertClose( reinterpret( A, 0 ), original, 'skip L-V-B' );
 });
 
 test( 'skips rotation when c=1, s=0 for L/T/F', function t() {
@@ -956,11 +958,11 @@ test( 'skips rotation when c=1, s=0 for L/T/F', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'L', 'T', 'F', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip L-T-F' );
+	assertClose( reinterpret( A, 0 ), original, 'skip L-T-F' );
 });
 
 test( 'skips rotation when c=1, s=0 for L/T/B', function t() {
@@ -968,11 +970,11 @@ test( 'skips rotation when c=1, s=0 for L/T/B', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'L', 'T', 'B', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip L-T-B' );
+	assertClose( reinterpret( A, 0 ), original, 'skip L-T-B' );
 });
 
 test( 'skips rotation when c=1, s=0 for L/B/F', function t() {
@@ -980,11 +982,11 @@ test( 'skips rotation when c=1, s=0 for L/B/F', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'L', 'B', 'F', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip L-B-F' );
+	assertClose( reinterpret( A, 0 ), original, 'skip L-B-F' );
 });
 
 test( 'skips rotation when c=1, s=0 for L/B/B', function t() {
@@ -992,11 +994,11 @@ test( 'skips rotation when c=1, s=0 for L/B/B', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'L', 'B', 'B', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip L-B-B' );
+	assertClose( reinterpret( A, 0 ), original, 'skip L-B-B' );
 });
 
 test( 'skips rotation when c=1, s=0 for R/V/F', function t() {
@@ -1004,11 +1006,11 @@ test( 'skips rotation when c=1, s=0 for R/V/F', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'R', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip R-V-F' );
+	assertClose( reinterpret( A, 0 ), original, 'skip R-V-F' );
 });
 
 test( 'skips rotation when c=1, s=0 for R/V/B', function t() {
@@ -1016,11 +1018,11 @@ test( 'skips rotation when c=1, s=0 for R/V/B', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'R', 'V', 'B', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip R-V-B' );
+	assertClose( reinterpret( A, 0 ), original, 'skip R-V-B' );
 });
 
 test( 'skips rotation when c=1, s=0 for R/T/F', function t() {
@@ -1028,11 +1030,11 @@ test( 'skips rotation when c=1, s=0 for R/T/F', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'R', 'T', 'F', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip R-T-F' );
+	assertClose( reinterpret( A, 0 ), original, 'skip R-T-F' );
 });
 
 test( 'skips rotation when c=1, s=0 for R/T/B', function t() {
@@ -1040,11 +1042,11 @@ test( 'skips rotation when c=1, s=0 for R/T/B', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'R', 'T', 'B', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip R-T-B' );
+	assertClose( reinterpret( A, 0 ), original, 'skip R-T-B' );
 });
 
 test( 'skips rotation when c=1, s=0 for R/B/F', function t() {
@@ -1052,11 +1054,11 @@ test( 'skips rotation when c=1, s=0 for R/B/F', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'R', 'B', 'F', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip R-B-F' );
+	assertClose( reinterpret( A, 0 ), original, 'skip R-B-F' );
 });
 
 test( 'skips rotation when c=1, s=0 for R/B/B', function t() {
@@ -1064,11 +1066,11 @@ test( 'skips rotation when c=1, s=0 for R/B/B', function t() {
 	var N = 2;
 	var LDA = M;
 	var A = buildMatrix( M, N, [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ] ] );
-	var original = new Float64Array( A );
+	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
 	base( 'R', 'B', 'B', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );
-	assertClose( A, original, 'skip R-B-B' );
+	assertClose( reinterpret( A, 0 ), original, 'skip R-B-B' );
 });
 
 // --- Lowercase parameter tests ---
