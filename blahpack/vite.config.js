@@ -37,6 +37,7 @@ export default defineConfig(async ({ command }) => {
       observable(),
       copyStaticFiles([{ src: "progress.html", dest: "progress.html" }]),
     ],
+    base: process.env.BASE_URL || "/",
     root: "notebooks",
     build: {
       outDir: resolve(import.meta.dirname, "dist"),
