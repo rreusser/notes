@@ -36,9 +36,9 @@ td { padding: 0.4rem 0.75rem; border-top: 1px solid #eee; font-size: 0.875rem; }
 <h1>Blahpack Translation Progress</h1>
 <p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated 2026-03-22</p>
 <div class="stats">
-<div class="stat green"><div class="val">102</div><div class="lbl">Implemented</div></div>
+<div class="stat green"><div class="val">110</div><div class="lbl">Implemented</div></div>
 <div class="stat"><div class="val">0</div><div class="lbl">Stubs</div></div>
-<div class="stat"><div class="val">1179</div><div class="lbl">Tests</div></div>
+<div class="stat"><div class="val">1230</div><div class="lbl">Tests</div></div>
 <div class="stat"><div class="val">151</div><div class="lbl">BLAS Source</div></div>
 <div class="stat"><div class="val">2053</div><div class="lbl">LAPACK Source</div></div>
 </div>
@@ -78,7 +78,7 @@ td { padding: 0.4rem 0.75rem; border-top: 1px solid #eee; font-size: 0.875rem; }
 </table>
 </section>
 <section>
-<h2>LAPACK <span class="count">75/75</span></h2>
+<h2>LAPACK <span class="count">83/83</span></h2>
 <table>
 <thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>
 <tbody>
@@ -155,7 +155,15 @@ td { padding: 0.4rem 0.75rem; border-top: 1px solid #eee; font-size: 0.875rem; }
 <tr><td class="name">zlasr</td><td><span class="badge done">done</span></td><td class="tests">42</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">97%</span></td><td class="desc">Apply a sequence of plane rotations to a complex matrix</td></tr>
 <tr><td class="name">zlassq</td><td><span class="badge done">done</span></td><td class="tests">24</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Update a sum of squares represented in scaled form</td></tr>
 <tr><td class="name">zrot</td><td><span class="badge done">done</span></td><td class="tests">6</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Apply a complex Givens plane rotation</td></tr>
+<tr><td class="name">ztgevc</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-bad">16%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Compute eigenvectors of a pair of complex upper triangular matrices</td></tr>
+<tr><td class="name">zung2r</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Generate unitary matrix Q from QR factorization (unblocked)</td></tr>
+<tr><td class="name">zungbr</td><td><span class="badge done">done</span></td><td class="tests">5</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Generate unitary matrices Q and P^H from bidiagonal reduction</td></tr>
+<tr><td class="name">zungl2</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Generate unitary matrix Q from LQ factorization (unblocked)</td></tr>
+<tr><td class="name">zungqr</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">38%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Generate unitary matrix Q from QR factorization (blocked)</td></tr>
 <tr><td class="name">zunm2r</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Apply orthogonal matrix Q from QR factorization to a matrix (unblocked)</td></tr>
+<tr><td class="name">zunmbr</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-bad">43%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Apply unitary matrices from bidiagonal reduction</td></tr>
+<tr><td class="name">zunml2</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-bad">33%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Apply unitary matrix from LQ factorization (unblocked)</td></tr>
+<tr><td class="name">zunmlq</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-bad">39%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Apply unitary matrix Q from LQ factorization</td></tr>
 <tr><td class="name">zunmqr</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-bad">66%</span></td><td class="cov"><span class="cov-bad">67%</span></td><td class="desc">Apply orthogonal matrix Q from QR factorization to a matrix (blocked)</td></tr>
 </tbody>
 </table>

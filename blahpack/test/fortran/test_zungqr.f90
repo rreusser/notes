@@ -107,6 +107,16 @@ program test_zungqr
   A(15) = (-1.0d0, 4.0d0)
   A(16) = (1.0d0, 1.0d0)
   call zgeqrf(M, N, A, M, TAU, WORK, lwork, info)
+  ! Output the intermediate QR state for JS testing
+  call begin_test('zungqr_from_qr_4x4_input')
+  call print_int('info', info)
+  call print_int('M', M)
+  call print_int('N', N)
+  call print_int('K', K)
+  call print_array('A', A_r, 2*M*N)
+  call print_array('TAU', TAU_r, 2*K)
+  call end_test()
+
   call zungqr(M, N, K, A, M, TAU, WORK, lwork, info)
   call begin_test('zungqr_from_qr_4x4')
   call print_int('info', info)
@@ -117,8 +127,8 @@ program test_zungqr
 
   ! Test 7: Larger matrix to trigger blocking (NB=32 typical, so K>32)
   ! 40x40, K=40 - this should use the blocked path
+  ! First output the QR factored form, then the Q matrix
   M = 40; N = 40; K = 40
-  ! Fill with random-ish reflectors from QR of a known matrix
   A(1:M*N) = (0.0d0, 0.0d0)
   do j = 1, N
     do i = 1, M
@@ -126,6 +136,16 @@ program test_zungqr
     end do
   end do
   call zgeqrf(M, N, A, M, TAU, WORK, lwork, info)
+  ! Output the intermediate QR state for JS testing
+  call begin_test('zungqr_blocked_40x40_input')
+  call print_int('info', info)
+  call print_int('M', M)
+  call print_int('N', N)
+  call print_int('K', K)
+  call print_array('A', A_r, 2*M*N)
+  call print_array('TAU', TAU_r, 2*K)
+  call end_test()
+
   call zungqr(M, N, K, A, M, TAU, WORK, lwork, info)
   call begin_test('zungqr_blocked_40x40')
   call print_int('info', info)
@@ -143,6 +163,16 @@ program test_zungqr
     end do
   end do
   call zgeqrf(M, N, A, M, TAU, WORK, lwork, info)
+  ! Output the intermediate QR state for JS testing
+  call begin_test('zungqr_8x5_k5_input')
+  call print_int('info', info)
+  call print_int('M', M)
+  call print_int('N', N)
+  call print_int('K', K)
+  call print_array('A', A_r, 2*M*N)
+  call print_array('TAU', TAU_r, 2*K)
+  call end_test()
+
   call zungqr(M, N, K, A, M, TAU, WORK, lwork, info)
   call begin_test('zungqr_8x5_k5')
   call print_int('info', info)
