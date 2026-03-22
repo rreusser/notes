@@ -1,66 +1,77 @@
-
-
 'use strict';
 
-// MODULES //
-
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dlarf = require( './../lib/base.js' );
-
-
-// FIXTURES //
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
 var lines = readFileSync( path.join( fixtureDir, 'dlarf.jsonl' ), 'utf8' ).trim().split( '\n' );
 var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
 
-
-// FUNCTIONS //
-
 function findCase( name ) {
 	return fixture.find( function find( t ) { return t.name === name; } );
 }
 
-function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
-}
-
 function assertArrayClose( actual, expected, tol, msg ) {
-	var i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	var i, relErr;
 	for ( i = 0; i < expected.length; i++ ) {
-		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
+		if ( relErr > tol ) {
+			throw new Error( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		}
 	}
 }
 
+// C is 3x3 or 2x3 col-major, LDA=4 in Fortran -> we use LDA=3 or LDA=2 for exact packing
 
-// TESTS //
-
-test( 'dlarf: left_3x3', function t() {
+test( 'dlarf: left 3x3', function t() {
 	var tc = findCase( 'left_3x3' );
-	// TODO: set up inputs and call dlarf(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
+	// LDA=4, but C is stored column major with LDA=4 rows.
+	// We need to match Fortran layout: C stored in col-major with LDA=4
+	// strideC1=1, strideC2=4 but only 3 rows used
+	// Simpler: pack tightly with strideC1=1, strideC2=3
+	// But Fortran uses LDA=4, so fixture has 3x3 values (9 values)
+	var C = new Float64Array( 9 );
+	C[ 0 ] = 1; C[ 1 ] = 4; C[ 2 ] = 7;
+	C[ 3 ] = 2; C[ 4 ] = 5; C[ 5 ] = 8;
+	C[ 6 ] = 3; C[ 7 ] = 6; C[ 8 ] = 9;
+	var v = new Float64Array( [ 1.0, 0.5, 0.25 ] );
+	var WORK = new Float64Array( 3 );
+	dlarf( 'L', 3, 3, v, 1, 0, 1.5, C, 1, 3, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
-test( 'dlarf: right_3x3', function t() {
+test( 'dlarf: right 3x3', function t() {
 	var tc = findCase( 'right_3x3' );
-	// TODO: set up inputs and call dlarf(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
+	var C = new Float64Array( 9 );
+	C[ 0 ] = 1; C[ 1 ] = 4; C[ 2 ] = 7;
+	C[ 3 ] = 2; C[ 4 ] = 5; C[ 5 ] = 8;
+	C[ 6 ] = 3; C[ 7 ] = 6; C[ 8 ] = 9;
+	var v = new Float64Array( [ 1.0, 0.5, 0.25 ] );
+	var WORK = new Float64Array( 3 );
+	dlarf( 'R', 3, 3, v, 1, 0, 1.5, C, 1, 3, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
-test( 'dlarf: tau_zero', function t() {
+test( 'dlarf: tau=0 (identity)', function t() {
 	var tc = findCase( 'tau_zero' );
-	// TODO: set up inputs and call dlarf(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
+	var C = new Float64Array( 4 );
+	C[ 0 ] = 1; C[ 1 ] = 3; C[ 2 ] = 2; C[ 3 ] = 4;
+	var v = new Float64Array( [ 1.0, 0.5 ] );
+	var WORK = new Float64Array( 2 );
+	dlarf( 'L', 2, 2, v, 1, 0, 0.0, C, 1, 2, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
-test( 'dlarf: left_2x3', function t() {
+test( 'dlarf: left 2x3', function t() {
 	var tc = findCase( 'left_2x3' );
-	// TODO: set up inputs and call dlarf(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
+	var C = new Float64Array( 6 );
+	C[ 0 ] = 1; C[ 1 ] = 4;
+	C[ 2 ] = 2; C[ 3 ] = 5;
+	C[ 4 ] = 3; C[ 5 ] = 6;
+	var v = new Float64Array( [ 1.0, 2.0 ] );
+	var WORK = new Float64Array( 3 );
+	dlarf( 'L', 2, 3, v, 1, 0, 0.8, C, 1, 2, 0, WORK, 1, 0 );
+	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
-

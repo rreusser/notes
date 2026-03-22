@@ -18,6 +18,12 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
+
 // MAIN //
 
 /**
@@ -25,31 +31,27 @@
 *   C := alpha*op(A)*op(B) + beta*C
 * where op(X) is one of X, X**T, or X**H.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element (i,j) of a complex matrix has real part at
-*   offset + 2*(i*stride1 + j*stride2) and imag at +1.
-*
 * @private
 * @param {string} transa - 'N', 'T', or 'C'
 * @param {string} transb - 'N', 'T', or 'C'
 * @param {NonNegativeInteger} M - rows of op(A) and C
 * @param {NonNegativeInteger} N - columns of op(B) and C
 * @param {NonNegativeInteger} K - columns of op(A) / rows of op(B)
-* @param {Float64Array} alpha - complex scalar [re, im]
-* @param {Float64Array} A - input matrix (interleaved complex)
+* @param {Complex128} alpha - complex scalar
+* @param {Complex128Array} A - complex input matrix
 * @param {integer} strideA1 - first dimension stride of A
 * @param {integer} strideA2 - second dimension stride of A
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} B - input matrix (interleaved complex)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @param {Complex128Array} B - complex input matrix
 * @param {integer} strideB1 - first dimension stride of B
 * @param {integer} strideB2 - second dimension stride of B
-* @param {NonNegativeInteger} offsetB - starting index for B
-* @param {Float64Array} beta - complex scalar [re, im]
-* @param {Float64Array} C - input/output matrix (interleaved complex)
+* @param {NonNegativeInteger} offsetB - starting index for B (in complex elements)
+* @param {Complex128} beta - complex scalar
+* @param {Complex128Array} C - complex input/output matrix
 * @param {integer} strideC1 - first dimension stride of C
 * @param {integer} strideC2 - second dimension stride of C
-* @param {NonNegativeInteger} offsetC - starting index for C
-* @returns {Float64Array} C
+* @param {NonNegativeInteger} offsetC - starting index for C (in complex elements)
+* @returns {Complex128Array} C
 */
 function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC ) { // eslint-disable-line max-len, max-params
 	var alphaR;
@@ -73,6 +75,12 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	var ci;
 	var ai;
 	var bi;
+	var oA;
+	var oB;
+	var oC;
+	var Av;
+	var Bv;
+	var Cv;
 	var aR;
 	var aI;
 	var bR;
@@ -85,10 +93,10 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 		return C;
 	}
 
-	alphaR = alpha[ 0 ];
-	alphaI = alpha[ 1 ];
-	betaR = beta[ 0 ];
-	betaI = beta[ 1 ];
+	alphaR = real( alpha );
+	alphaI = imag( alpha );
+	betaR = real( beta );
+	betaI = imag( beta );
 
 	nota = ( transa === 'N' || transa === 'n' );
 	notb = ( transb === 'N' || transb === 'n' );
@@ -99,6 +107,16 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	if ( alphaR === 0.0 && alphaI === 0.0 && betaR === 1.0 && betaI === 0.0 ) {
 		return C;
 	}
+
+	// Get Float64Array views
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Cv = reinterpret( C, 0 );
+
+	// Convert offsets from complex elements to Float64
+	oA = offsetA * 2;
+	oB = offsetB * 2;
+	oC = offsetC * 2;
 
 	// Matrix strides in complex elements, multiply by 2
 	sa1 = strideA1 * 2;
@@ -112,21 +130,21 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	if ( alphaR === 0.0 && alphaI === 0.0 ) {
 		if ( betaR === 0.0 && betaI === 0.0 ) {
 			for ( j = 0; j < N; j++ ) {
-				ci = offsetC + j * sc2;
+				ci = oC + j * sc2;
 				for ( i = 0; i < M; i++ ) {
-					C[ ci ] = 0.0;
-					C[ ci + 1 ] = 0.0;
+					Cv[ ci ] = 0.0;
+					Cv[ ci + 1 ] = 0.0;
 					ci += sc1;
 				}
 			}
 		} else {
 			for ( j = 0; j < N; j++ ) {
-				ci = offsetC + j * sc2;
+				ci = oC + j * sc2;
 				for ( i = 0; i < M; i++ ) {
-					tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
-					tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
-					C[ ci ] = tempR;
-					C[ ci + 1 ] = tempI;
+					tempR = betaR * Cv[ ci ] - betaI * Cv[ ci + 1 ];
+					tempI = betaR * Cv[ ci + 1 ] + betaI * Cv[ ci ];
+					Cv[ ci ] = tempR;
+					Cv[ ci + 1 ] = tempI;
 					ci += sc1;
 				}
 			}
@@ -140,37 +158,37 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 			// C := alpha*A*B + beta*C
 			for ( j = 0; j < N; j++ ) {
 				if ( betaR === 0.0 && betaI === 0.0 ) {
-					ci = offsetC + j * sc2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						C[ ci ] = 0.0;
-						C[ ci + 1 ] = 0.0;
+						Cv[ ci ] = 0.0;
+						Cv[ ci + 1 ] = 0.0;
 						ci += sc1;
 					}
 				} else if ( betaR !== 1.0 || betaI !== 0.0 ) {
-					ci = offsetC + j * sc2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
-						tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
-						C[ ci ] = tempR;
-						C[ ci + 1 ] = tempI;
+						tempR = betaR * Cv[ ci ] - betaI * Cv[ ci + 1 ];
+						tempI = betaR * Cv[ ci + 1 ] + betaI * Cv[ ci ];
+						Cv[ ci ] = tempR;
+						Cv[ ci + 1 ] = tempI;
 						ci += sc1;
 					}
 				}
 				for ( l = 0; l < K; l++ ) {
-					bi = offsetB + l * sb1 + j * sb2;
-					bR = B[ bi ];
-					bI = B[ bi + 1 ];
+					bi = oB + l * sb1 + j * sb2;
+					bR = Bv[ bi ];
+					bI = Bv[ bi + 1 ];
 					// temp = alpha * B(l,j)
 					tempR = alphaR * bR - alphaI * bI;
 					tempI = alphaR * bI + alphaI * bR;
-					ai = offsetA + l * sa2;
-					ci = offsetC + j * sc2;
+					ai = oA + l * sa2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						aR = A[ ai ];
-						aI = A[ ai + 1 ];
+						aR = Av[ ai ];
+						aI = Av[ ai + 1 ];
 						// C(i,j) += temp * A(i,l)
-						C[ ci ] += tempR * aR - tempI * aI;
-						C[ ci + 1 ] += tempR * aI + tempI * aR;
+						Cv[ ci ] += tempR * aR - tempI * aI;
+						Cv[ ci + 1 ] += tempR * aI + tempI * aR;
 						ai += sa1;
 						ci += sc1;
 					}
@@ -182,27 +200,27 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 				for ( i = 0; i < M; i++ ) {
 					tempR = 0.0;
 					tempI = 0.0;
-					ai = offsetA + i * sa2;
-					bi = offsetB + j * sb2;
+					ai = oA + i * sa2;
+					bi = oB + j * sb2;
 					for ( l = 0; l < K; l++ ) {
-						aR = A[ ai ];
-						aI = -A[ ai + 1 ]; // conjugate
-						bR = B[ bi ];
-						bI = B[ bi + 1 ];
+						aR = Av[ ai ];
+						aI = -Av[ ai + 1 ]; // conjugate
+						bR = Bv[ bi ];
+						bI = Bv[ bi + 1 ];
 						tempR += aR * bR - aI * bI;
 						tempI += aR * bI + aI * bR;
 						ai += sa1;
 						bi += sb1;
 					}
-					ci = offsetC + i * sc1 + j * sc2;
+					ci = oC + i * sc1 + j * sc2;
 					if ( betaR === 0.0 && betaI === 0.0 ) {
-						C[ ci ] = alphaR * tempR - alphaI * tempI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
 					} else {
-						cR = C[ ci ];
-						cI = C[ ci + 1 ];
-						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+						cR = Cv[ ci ];
+						cI = Cv[ ci + 1 ];
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
 					}
 				}
 			}
@@ -212,27 +230,27 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 				for ( i = 0; i < M; i++ ) {
 					tempR = 0.0;
 					tempI = 0.0;
-					ai = offsetA + i * sa2;
-					bi = offsetB + j * sb2;
+					ai = oA + i * sa2;
+					bi = oB + j * sb2;
 					for ( l = 0; l < K; l++ ) {
-						aR = A[ ai ];
-						aI = A[ ai + 1 ];
-						bR = B[ bi ];
-						bI = B[ bi + 1 ];
+						aR = Av[ ai ];
+						aI = Av[ ai + 1 ];
+						bR = Bv[ bi ];
+						bI = Bv[ bi + 1 ];
 						tempR += aR * bR - aI * bI;
 						tempI += aR * bI + aI * bR;
 						ai += sa1;
 						bi += sb1;
 					}
-					ci = offsetC + i * sc1 + j * sc2;
+					ci = oC + i * sc1 + j * sc2;
 					if ( betaR === 0.0 && betaI === 0.0 ) {
-						C[ ci ] = alphaR * tempR - alphaI * tempI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
 					} else {
-						cR = C[ ci ];
-						cI = C[ ci + 1 ];
-						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+						cR = Cv[ ci ];
+						cI = Cv[ ci + 1 ];
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
 					}
 				}
 			}
@@ -242,36 +260,36 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 			// C := alpha*A*B^H + beta*C
 			for ( j = 0; j < N; j++ ) {
 				if ( betaR === 0.0 && betaI === 0.0 ) {
-					ci = offsetC + j * sc2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						C[ ci ] = 0.0;
-						C[ ci + 1 ] = 0.0;
+						Cv[ ci ] = 0.0;
+						Cv[ ci + 1 ] = 0.0;
 						ci += sc1;
 					}
 				} else if ( betaR !== 1.0 || betaI !== 0.0 ) {
-					ci = offsetC + j * sc2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
-						tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
-						C[ ci ] = tempR;
-						C[ ci + 1 ] = tempI;
+						tempR = betaR * Cv[ ci ] - betaI * Cv[ ci + 1 ];
+						tempI = betaR * Cv[ ci + 1 ] + betaI * Cv[ ci ];
+						Cv[ ci ] = tempR;
+						Cv[ ci + 1 ] = tempI;
 						ci += sc1;
 					}
 				}
 				for ( l = 0; l < K; l++ ) {
-					bi = offsetB + j * sb1 + l * sb2;
-					bR = B[ bi ];
-					bI = -B[ bi + 1 ]; // conjugate
+					bi = oB + j * sb1 + l * sb2;
+					bR = Bv[ bi ];
+					bI = -Bv[ bi + 1 ]; // conjugate
 					// temp = alpha * conj(B(j,l))
 					tempR = alphaR * bR - alphaI * bI;
 					tempI = alphaR * bI + alphaI * bR;
-					ai = offsetA + l * sa2;
-					ci = offsetC + j * sc2;
+					ai = oA + l * sa2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						aR = A[ ai ];
-						aI = A[ ai + 1 ];
-						C[ ci ] += tempR * aR - tempI * aI;
-						C[ ci + 1 ] += tempR * aI + tempI * aR;
+						aR = Av[ ai ];
+						aI = Av[ ai + 1 ];
+						Cv[ ci ] += tempR * aR - tempI * aI;
+						Cv[ ci + 1 ] += tempR * aI + tempI * aR;
 						ai += sa1;
 						ci += sc1;
 					}
@@ -281,36 +299,36 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 			// C := alpha*A*B^T + beta*C
 			for ( j = 0; j < N; j++ ) {
 				if ( betaR === 0.0 && betaI === 0.0 ) {
-					ci = offsetC + j * sc2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						C[ ci ] = 0.0;
-						C[ ci + 1 ] = 0.0;
+						Cv[ ci ] = 0.0;
+						Cv[ ci + 1 ] = 0.0;
 						ci += sc1;
 					}
 				} else if ( betaR !== 1.0 || betaI !== 0.0 ) {
-					ci = offsetC + j * sc2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
-						tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
-						C[ ci ] = tempR;
-						C[ ci + 1 ] = tempI;
+						tempR = betaR * Cv[ ci ] - betaI * Cv[ ci + 1 ];
+						tempI = betaR * Cv[ ci + 1 ] + betaI * Cv[ ci ];
+						Cv[ ci ] = tempR;
+						Cv[ ci + 1 ] = tempI;
 						ci += sc1;
 					}
 				}
 				for ( l = 0; l < K; l++ ) {
-					bi = offsetB + j * sb1 + l * sb2;
-					bR = B[ bi ];
-					bI = B[ bi + 1 ];
+					bi = oB + j * sb1 + l * sb2;
+					bR = Bv[ bi ];
+					bI = Bv[ bi + 1 ];
 					// temp = alpha * B(j,l)
 					tempR = alphaR * bR - alphaI * bI;
 					tempI = alphaR * bI + alphaI * bR;
-					ai = offsetA + l * sa2;
-					ci = offsetC + j * sc2;
+					ai = oA + l * sa2;
+					ci = oC + j * sc2;
 					for ( i = 0; i < M; i++ ) {
-						aR = A[ ai ];
-						aI = A[ ai + 1 ];
-						C[ ci ] += tempR * aR - tempI * aI;
-						C[ ci + 1 ] += tempR * aI + tempI * aR;
+						aR = Av[ ai ];
+						aI = Av[ ai + 1 ];
+						Cv[ ci ] += tempR * aR - tempI * aI;
+						Cv[ ci + 1 ] += tempR * aI + tempI * aR;
 						ai += sa1;
 						ci += sc1;
 					}
@@ -324,27 +342,27 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 				for ( i = 0; i < M; i++ ) {
 					tempR = 0.0;
 					tempI = 0.0;
-					ai = offsetA + i * sa2;
-					bi = offsetB + j * sb1;
+					ai = oA + i * sa2;
+					bi = oB + j * sb1;
 					for ( l = 0; l < K; l++ ) {
-						aR = A[ ai ];
-						aI = -A[ ai + 1 ]; // conj(A)
-						bR = B[ bi ];
-						bI = -B[ bi + 1 ]; // conj(B)
+						aR = Av[ ai ];
+						aI = -Av[ ai + 1 ]; // conj(A)
+						bR = Bv[ bi ];
+						bI = -Bv[ bi + 1 ]; // conj(B)
 						tempR += aR * bR - aI * bI;
 						tempI += aR * bI + aI * bR;
 						ai += sa1;
 						bi += sb2;
 					}
-					ci = offsetC + i * sc1 + j * sc2;
+					ci = oC + i * sc1 + j * sc2;
 					if ( betaR === 0.0 && betaI === 0.0 ) {
-						C[ ci ] = alphaR * tempR - alphaI * tempI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
 					} else {
-						cR = C[ ci ];
-						cI = C[ ci + 1 ];
-						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+						cR = Cv[ ci ];
+						cI = Cv[ ci + 1 ];
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
 					}
 				}
 			}
@@ -354,27 +372,27 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 				for ( i = 0; i < M; i++ ) {
 					tempR = 0.0;
 					tempI = 0.0;
-					ai = offsetA + i * sa2;
-					bi = offsetB + j * sb1;
+					ai = oA + i * sa2;
+					bi = oB + j * sb1;
 					for ( l = 0; l < K; l++ ) {
-						aR = A[ ai ];
-						aI = -A[ ai + 1 ]; // conj(A)
-						bR = B[ bi ];
-						bI = B[ bi + 1 ];
+						aR = Av[ ai ];
+						aI = -Av[ ai + 1 ]; // conj(A)
+						bR = Bv[ bi ];
+						bI = Bv[ bi + 1 ];
 						tempR += aR * bR - aI * bI;
 						tempI += aR * bI + aI * bR;
 						ai += sa1;
 						bi += sb2;
 					}
-					ci = offsetC + i * sc1 + j * sc2;
+					ci = oC + i * sc1 + j * sc2;
 					if ( betaR === 0.0 && betaI === 0.0 ) {
-						C[ ci ] = alphaR * tempR - alphaI * tempI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
 					} else {
-						cR = C[ ci ];
-						cI = C[ ci + 1 ];
-						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+						cR = Cv[ ci ];
+						cI = Cv[ ci + 1 ];
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
 					}
 				}
 			}
@@ -386,27 +404,27 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 				for ( i = 0; i < M; i++ ) {
 					tempR = 0.0;
 					tempI = 0.0;
-					ai = offsetA + i * sa2;
-					bi = offsetB + j * sb1;
+					ai = oA + i * sa2;
+					bi = oB + j * sb1;
 					for ( l = 0; l < K; l++ ) {
-						aR = A[ ai ];
-						aI = A[ ai + 1 ];
-						bR = B[ bi ];
-						bI = -B[ bi + 1 ]; // conj(B)
+						aR = Av[ ai ];
+						aI = Av[ ai + 1 ];
+						bR = Bv[ bi ];
+						bI = -Bv[ bi + 1 ]; // conj(B)
 						tempR += aR * bR - aI * bI;
 						tempI += aR * bI + aI * bR;
 						ai += sa1;
 						bi += sb2;
 					}
-					ci = offsetC + i * sc1 + j * sc2;
+					ci = oC + i * sc1 + j * sc2;
 					if ( betaR === 0.0 && betaI === 0.0 ) {
-						C[ ci ] = alphaR * tempR - alphaI * tempI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
 					} else {
-						cR = C[ ci ];
-						cI = C[ ci + 1 ];
-						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+						cR = Cv[ ci ];
+						cI = Cv[ ci + 1 ];
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
 					}
 				}
 			}
@@ -416,27 +434,27 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 				for ( i = 0; i < M; i++ ) {
 					tempR = 0.0;
 					tempI = 0.0;
-					ai = offsetA + i * sa2;
-					bi = offsetB + j * sb1;
+					ai = oA + i * sa2;
+					bi = oB + j * sb1;
 					for ( l = 0; l < K; l++ ) {
-						aR = A[ ai ];
-						aI = A[ ai + 1 ];
-						bR = B[ bi ];
-						bI = B[ bi + 1 ];
+						aR = Av[ ai ];
+						aI = Av[ ai + 1 ];
+						bR = Bv[ bi ];
+						bI = Bv[ bi + 1 ];
 						tempR += aR * bR - aI * bI;
 						tempI += aR * bI + aI * bR;
 						ai += sa1;
 						bi += sb2;
 					}
-					ci = offsetC + i * sc1 + j * sc2;
+					ci = oC + i * sc1 + j * sc2;
 					if ( betaR === 0.0 && betaI === 0.0 ) {
-						C[ ci ] = alphaR * tempR - alphaI * tempI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
 					} else {
-						cR = C[ ci ];
-						cI = C[ ci + 1 ];
-						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+						cR = Cv[ ci ];
+						cI = Cv[ ci + 1 ];
+						Cv[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						Cv[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
 					}
 				}
 			}

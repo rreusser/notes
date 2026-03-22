@@ -18,6 +18,10 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 // MAIN //
 
 /**
@@ -26,23 +30,19 @@
 * where x is an N element complex vector and A is an N by N unit, or
 * non-unit, upper or lower triangular complex matrix.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element k of x has real part at `offsetX + 2*k*strideX` and
-* imaginary part at `offsetX + 2*k*strideX + 1`.
-*
 * @private
 * @param {string} uplo - 'U' or 'L'
 * @param {string} trans - 'N', 'T', or 'C'
 * @param {string} diag - 'U' or 'N'
 * @param {NonNegativeInteger} N - order of the matrix
-* @param {Float64Array} A - triangular matrix (interleaved complex)
+* @param {Complex128Array} A - complex triangular matrix
 * @param {integer} strideA1 - stride of the first dimension of `A` (complex elements)
 * @param {integer} strideA2 - stride of the second dimension of `A` (complex elements)
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} x - vector (interleaved complex)
+* @param {NonNegativeInteger} offsetA - starting index for `A` (in complex elements)
+* @param {Complex128Array} x - complex vector
 * @param {integer} strideX - stride for `x` (complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `x`
-* @returns {Float64Array} `x`
+* @param {NonNegativeInteger} offsetX - starting index for `x` (in complex elements)
+* @returns {Complex128Array} `x`
 */
 function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX ) { // eslint-disable-line max-len, max-params
 	var noconj;
@@ -54,6 +54,10 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	var ix;
 	var jx;
 	var ia;
+	var oA;
+	var oX;
+	var Av;
+	var xv;
 	var tr;
 	var ti;
 	var ar;
@@ -71,6 +75,14 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	noconj = ( trans === 'T' || trans === 't' );
 	nounit = ( diag === 'N' || diag === 'n' );
 
+	// Get Float64Array views
+	Av = reinterpret( A, 0 );
+	xv = reinterpret( x, 0 );
+
+	// Convert offsets from complex elements to Float64
+	oA = offsetA * 2;
+	oX = offsetX * 2;
+
 	// Convert strides from complex-element units to double units
 	sx = strideX * 2;
 	sa1 = strideA1 * 2;
@@ -79,56 +91,56 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	if ( trans === 'N' || trans === 'n' ) {
 		// Form x := A*x
 		if ( upper ) {
-			jx = offsetX;
+			jx = oX;
 			for ( j = 0; j < N; j++ ) {
-				xr = x[ jx ];
-				xi = x[ jx + 1 ];
+				xr = xv[ jx ];
+				xi = xv[ jx + 1 ];
 				if ( xr !== 0.0 || xi !== 0.0 ) {
-					ix = offsetX;
+					ix = oX;
 					for ( i = 0; i < j; i++ ) {
-						ia = offsetA + i * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
-						x[ ix ] += xr * ar - xi * ai;
-						x[ ix + 1 ] += xr * ai + xi * ar;
+						ia = oA + i * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
+						xv[ ix ] += xr * ar - xi * ai;
+						xv[ ix + 1 ] += xr * ai + xi * ar;
 						ix += sx;
 					}
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						tr = xr * ar - xi * ai;
 						ti = xr * ai + xi * ar;
-						x[ jx ] = tr;
-						x[ jx + 1 ] = ti;
+						xv[ jx ] = tr;
+						xv[ jx + 1 ] = ti;
 					}
 				}
 				jx += sx;
 			}
 		} else {
 			// Lower triangular
-			jx = offsetX + ( N - 1 ) * sx;
+			jx = oX + ( N - 1 ) * sx;
 			for ( j = N - 1; j >= 0; j-- ) {
-				xr = x[ jx ];
-				xi = x[ jx + 1 ];
+				xr = xv[ jx ];
+				xi = xv[ jx + 1 ];
 				if ( xr !== 0.0 || xi !== 0.0 ) {
-					ix = offsetX + ( N - 1 ) * sx;
+					ix = oX + ( N - 1 ) * sx;
 					for ( i = N - 1; i > j; i-- ) {
-						ia = offsetA + i * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
-						x[ ix ] += xr * ar - xi * ai;
-						x[ ix + 1 ] += xr * ai + xi * ar;
+						ia = oA + i * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
+						xv[ ix ] += xr * ar - xi * ai;
+						xv[ ix + 1 ] += xr * ai + xi * ar;
 						ix -= sx;
 					}
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						tr = xr * ar - xi * ai;
 						ti = xr * ai + xi * ar;
-						x[ jx ] = tr;
-						x[ jx + 1 ] = ti;
+						xv[ jx ] = tr;
+						xv[ jx + 1 ] = ti;
 					}
 				}
 				jx -= sx;
@@ -137,103 +149,103 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	} else {
 		// Form x := A**T*x or x := A**H*x
 		if ( upper ) {
-			jx = offsetX + ( N - 1 ) * sx;
+			jx = oX + ( N - 1 ) * sx;
 			for ( j = N - 1; j >= 0; j-- ) {
-				tr = x[ jx ];
-				ti = x[ jx + 1 ];
+				tr = xv[ jx ];
+				ti = xv[ jx + 1 ];
 				if ( noconj ) {
 					// Transpose (no conjugate)
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						xr = tr * ar - ti * ai;
 						xi = tr * ai + ti * ar;
 						tr = xr;
 						ti = xi;
 					}
-					ix = offsetX + ( j - 1 ) * sx;
+					ix = oX + ( j - 1 ) * sx;
 					for ( i = j - 1; i >= 0; i-- ) {
-						ia = offsetA + i * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
-						tr += ar * x[ ix ] - ai * x[ ix + 1 ];
-						ti += ar * x[ ix + 1 ] + ai * x[ ix ];
+						ia = oA + i * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
+						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
+						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix -= sx;
 					}
 				} else {
 					// Conjugate transpose
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = -A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = -Av[ ia + 1 ];
 						xr = tr * ar - ti * ai;
 						xi = tr * ai + ti * ar;
 						tr = xr;
 						ti = xi;
 					}
-					ix = offsetX + ( j - 1 ) * sx;
+					ix = oX + ( j - 1 ) * sx;
 					for ( i = j - 1; i >= 0; i-- ) {
-						ia = offsetA + i * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = -A[ ia + 1 ];
-						tr += ar * x[ ix ] - ai * x[ ix + 1 ];
-						ti += ar * x[ ix + 1 ] + ai * x[ ix ];
+						ia = oA + i * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = -Av[ ia + 1 ];
+						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
+						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix -= sx;
 					}
 				}
-				x[ jx ] = tr;
-				x[ jx + 1 ] = ti;
+				xv[ jx ] = tr;
+				xv[ jx + 1 ] = ti;
 				jx -= sx;
 			}
 		} else {
 			// Lower triangular, transpose/conjugate-transpose
-			jx = offsetX;
+			jx = oX;
 			for ( j = 0; j < N; j++ ) {
-				tr = x[ jx ];
-				ti = x[ jx + 1 ];
+				tr = xv[ jx ];
+				ti = xv[ jx + 1 ];
 				if ( noconj ) {
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						xr = tr * ar - ti * ai;
 						xi = tr * ai + ti * ar;
 						tr = xr;
 						ti = xi;
 					}
-					ix = offsetX + ( j + 1 ) * sx;
+					ix = oX + ( j + 1 ) * sx;
 					for ( i = j + 1; i < N; i++ ) {
-						ia = offsetA + i * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
-						tr += ar * x[ ix ] - ai * x[ ix + 1 ];
-						ti += ar * x[ ix + 1 ] + ai * x[ ix ];
+						ia = oA + i * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
+						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
+						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix += sx;
 					}
 				} else {
 					// Conjugate transpose
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = -A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = -Av[ ia + 1 ];
 						xr = tr * ar - ti * ai;
 						xi = tr * ai + ti * ar;
 						tr = xr;
 						ti = xi;
 					}
-					ix = offsetX + ( j + 1 ) * sx;
+					ix = oX + ( j + 1 ) * sx;
 					for ( i = j + 1; i < N; i++ ) {
-						ia = offsetA + i * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = -A[ ia + 1 ];
-						tr += ar * x[ ix ] - ai * x[ ix + 1 ];
-						ti += ar * x[ ix + 1 ] + ai * x[ ix ];
+						ia = oA + i * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = -Av[ ia + 1 ];
+						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
+						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix += sx;
 					}
 				}
-				x[ jx ] = tr;
-				x[ jx + 1 ] = ti;
+				xv[ jx ] = tr;
+				xv[ jx + 1 ] = ti;
 				jx += sx;
 			}
 		}

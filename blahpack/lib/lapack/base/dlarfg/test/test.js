@@ -1,24 +1,13 @@
-
-
 'use strict';
 
-// MODULES //
-
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dlarfg = require( './../lib/base.js' );
 
-
-// FIXTURES //
-
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
 var lines = readFileSync( path.join( fixtureDir, 'dlarfg.jsonl' ), 'utf8' ).trim().split( '\n' );
 var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-
-// FUNCTIONS //
 
 function findCase( name ) {
 	return fixture.find( function find( t ) { return t.name === name; } );
@@ -26,62 +15,74 @@ function findCase( name ) {
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+	if ( relErr > tol ) {
+		throw new Error( msg + ': expected ' + expected + ', got ' + actual );
+	}
 }
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
 
-
-// TESTS //
-
 test( 'dlarfg: basic', function t() {
 	var tc = findCase( 'basic' );
-	// TODO: set up inputs and call dlarfg(...)
-	// assertClose( result, tc.alpha, 1e-14, 'alpha' );
-	// assertClose( result, tc.tau, 1e-14, 'tau' );
-	// assertArrayClose( result, tc.x, 1e-14, 'x' );
+	var alpha = new Float64Array( [ 3.0 ] );
+	var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
+	var tau = new Float64Array( 1 );
+	dlarfg( 4, alpha, 0, x, 1, 0, tau, 0 );
+	assertClose( alpha[ 0 ], tc.alpha, 1e-14, 'alpha' );
+	assertClose( tau[ 0 ], tc.tau, 1e-14, 'tau' );
+	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
-test( 'dlarfg: alpha_zero', function t() {
+test( 'dlarfg: alpha=0', function t() {
 	var tc = findCase( 'alpha_zero' );
-	// TODO: set up inputs and call dlarfg(...)
-	// assertClose( result, tc.alpha, 1e-14, 'alpha' );
-	// assertClose( result, tc.tau, 1e-14, 'tau' );
-	// assertArrayClose( result, tc.x, 1e-14, 'x' );
+	var alpha = new Float64Array( [ 0.0 ] );
+	var x = new Float64Array( [ 3.0, 4.0 ] );
+	var tau = new Float64Array( 1 );
+	dlarfg( 3, alpha, 0, x, 1, 0, tau, 0 );
+	assertClose( alpha[ 0 ], tc.alpha, 1e-14, 'alpha' );
+	assertClose( tau[ 0 ], tc.tau, 1e-14, 'tau' );
+	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
-test( 'dlarfg: n_one', function t() {
+test( 'dlarfg: n=1 (tau=0)', function t() {
 	var tc = findCase( 'n_one' );
-	// TODO: set up inputs and call dlarfg(...)
-	// assertClose( result, tc.alpha, 1e-14, 'alpha' );
-	// assertClose( result, tc.tau, 1e-14, 'tau' );
+	var alpha = new Float64Array( [ 5.0 ] );
+	var x = new Float64Array( 1 );
+	var tau = new Float64Array( 1 );
+	dlarfg( 1, alpha, 0, x, 1, 0, tau, 0 );
+	assertClose( tau[ 0 ], tc.tau, 1e-14, 'tau' );
 });
 
-test( 'dlarfg: x_all_zero', function t() {
+test( 'dlarfg: x all zero (tau=0)', function t() {
 	var tc = findCase( 'x_all_zero' );
-	// TODO: set up inputs and call dlarfg(...)
-	// assertClose( result, tc.alpha, 1e-14, 'alpha' );
-	// assertClose( result, tc.tau, 1e-14, 'tau' );
+	var alpha = new Float64Array( [ 5.0 ] );
+	var x = new Float64Array( [ 0.0, 0.0 ] );
+	var tau = new Float64Array( 1 );
+	dlarfg( 3, alpha, 0, x, 1, 0, tau, 0 );
+	assertClose( tau[ 0 ], tc.tau, 1e-14, 'tau' );
 });
 
-test( 'dlarfg: negative_alpha', function t() {
+test( 'dlarfg: negative alpha', function t() {
 	var tc = findCase( 'negative_alpha' );
-	// TODO: set up inputs and call dlarfg(...)
-	// assertClose( result, tc.alpha, 1e-14, 'alpha' );
-	// assertClose( result, tc.tau, 1e-14, 'tau' );
-	// assertArrayClose( result, tc.x, 1e-14, 'x' );
+	var alpha = new Float64Array( [ -3.0 ] );
+	var x = new Float64Array( [ 4.0 ] );
+	var tau = new Float64Array( 1 );
+	dlarfg( 2, alpha, 0, x, 1, 0, tau, 0 );
+	assertClose( alpha[ 0 ], tc.alpha, 1e-14, 'alpha' );
+	assertClose( tau[ 0 ], tc.tau, 1e-14, 'tau' );
+	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
-test( 'dlarfg: n_zero', function t() {
+test( 'dlarfg: n=0 (tau=0)', function t() {
 	var tc = findCase( 'n_zero' );
-	// TODO: set up inputs and call dlarfg(...)
-	// assertClose( result, tc.alpha, 1e-14, 'alpha' );
-	// assertClose( result, tc.tau, 1e-14, 'tau' );
+	var alpha = new Float64Array( [ 5.0 ] );
+	var x = new Float64Array( 1 );
+	var tau = new Float64Array( 1 );
+	dlarfg( 0, alpha, 0, x, 1, 0, tau, 0 );
+	assertClose( tau[ 0 ], tc.tau, 1e-14, 'tau' );
 });
-

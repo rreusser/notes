@@ -22,6 +22,9 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgerc = require( './../lib' );
 var base = require( './../lib/base.js' );
 
@@ -53,11 +56,13 @@ function extractCMatrix( arr, M, N, sa1, sa2, offsetA ) {
 	var ia;
 	var i;
 	var j;
+	var v;
+	v = reinterpret( arr, 0 );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
-			ia = offsetA + 2 * ( i * sa1 + j * sa2 );
-			out.push( arr[ ia ] );
-			out.push( arr[ ia + 1 ] );
+			ia = offsetA * 2 + 2 * ( i * sa1 + j * sa2 );
+			out.push( v[ ia ] );
+			out.push( v[ ia + 1 ] );
 		}
 	}
 	return out;
@@ -76,10 +81,10 @@ test( 'zgerc: attached to the main export is an `ndarray` method', function t() 
 test( 'zgerc: basic 2x2 rank-1 update', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgerc_basic'; } );
 	// A is 2x2 col-major: A(0,0)=1+1i, A(1,0)=2+2i, A(0,1)=3+3i, A(1,1)=4+4i
-	var A = new Float64Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
-	var x = new Float64Array( [ 1, 0, 0, 1 ] );
-	var y = new Float64Array( [ 1, 1, 0, 2 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
+	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
+	var y = new Complex128Array( [ 1, 1, 0, 2 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
@@ -87,32 +92,32 @@ test( 'zgerc: basic 2x2 rank-1 update', function t() {
 
 test( 'zgerc: n=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgerc_n_zero'; } );
-	var A = new Float64Array( [ 1, 1, 2, 2 ] );
-	var x = new Float64Array( [ 5, 5 ] );
-	var y = new Float64Array( [ 6, 6 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 1, 1, 2, 2 ] );
+	var x = new Complex128Array( [ 5, 5 ] );
+	var y = new Complex128Array( [ 6, 6 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 2, 0, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
-	assertArrayClose( Array.from( A ), tc.a, 'a' );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'a' );
 });
 
 test( 'zgerc: m=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgerc_m_zero'; } );
-	var A = new Float64Array( [ 1, 1, 2, 2 ] );
-	var x = new Float64Array( [ 5, 5 ] );
-	var y = new Float64Array( [ 6, 6, 7, 7 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 1, 1, 2, 2 ] );
+	var x = new Complex128Array( [ 5, 5 ] );
+	var y = new Complex128Array( [ 6, 6, 7, 7 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 0, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 0, 0 );
 	assert.strictEqual( result, A );
-	assertArrayClose( Array.from( A ), tc.a, 'a' );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'a' );
 });
 
 test( 'zgerc: alpha=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgerc_alpha_zero'; } );
-	var A = new Float64Array( [ 7, 7, 8, 8, 9, 9, 10, 10 ] );
-	var x = new Float64Array( [ 5, 5, 6, 6 ] );
-	var y = new Float64Array( [ 7, 7, 8, 8 ] );
-	var alpha = new Float64Array( [ 0, 0 ] );
+	var A = new Complex128Array( [ 7, 7, 8, 8, 9, 9, 10, 10 ] );
+	var x = new Complex128Array( [ 5, 5, 6, 6 ] );
+	var y = new Complex128Array( [ 7, 7, 8, 8 ] );
+	var alpha = new Complex128( 0, 0 );
 	var result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
@@ -121,10 +126,10 @@ test( 'zgerc: alpha=0 quick return', function t() {
 test( 'zgerc: complex alpha', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgerc_complex_alpha'; } );
 	// identity matrix
-	var A = new Float64Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
-	var x = new Float64Array( [ 1, 0, 0, 1 ] );
-	var y = new Float64Array( [ 1, 0, 0, 1 ] );
-	var alpha = new Float64Array( [ 0, 1 ] );
+	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
+	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
+	var alpha = new Complex128( 0, 1 );
 	var result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
@@ -132,11 +137,11 @@ test( 'zgerc: complex alpha', function t() {
 
 test( 'zgerc: non-unit strides (strideX=2, strideY=2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgerc_stride'; } );
-	var A = new Float64Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
-	// x: elem0=(1,2) at offset 0, elem1=(3,4) at offset 4 (stride=2 complex elts = 4 doubles)
-	var x = new Float64Array( [ 1, 2, 99, 99, 3, 4 ] );
-	var y = new Float64Array( [ 5, 6, 99, 99, 7, 8 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+	// x: elem0=(1,2) at offset 0, elem1=(3,4) at offset 2 (stride=2 complex elts)
+	var x = new Complex128Array( [ 1, 2, 99, 99, 3, 4 ] );
+	var y = new Complex128Array( [ 5, 6, 99, 99, 7, 8 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 2, 2, alpha, x, 2, 0, y, 2, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
@@ -145,10 +150,10 @@ test( 'zgerc: non-unit strides (strideX=2, strideY=2)', function t() {
 test( 'zgerc: 3x2 non-square', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgerc_nonsquare'; } );
 	// 3x2 col-major: col0=[1+0i, 0, 0], col1=[0, 1+0i, 0]
-	var A = new Float64Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] );
-	var x = new Float64Array( [ 1, 0, 2, 0, 3, 0 ] );
-	var y = new Float64Array( [ 1, 1, 2, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
+	var y = new Complex128Array( [ 1, 1, 2, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 3, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 3, 2, 1, 3, 0 ), tc.a, 'a' );

@@ -22,6 +22,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zswap = require( './../lib' );
 var base = require( './../lib/base.js' );
 
@@ -56,58 +58,58 @@ test( 'zswap: attached to the main export is an `ndarray` method', function t() 
 
 test( 'zswap: basic swap (N=3, strideX=1, strideY=1)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'basic'; } );
-	var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
-	var zy = new Float64Array( [ 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 ] );
+	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+	var zy = new Complex128Array( [ 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 ] );
 	var result = base( 3, zx, 1, 0, zy, 1, 0 );
 	assert.strictEqual( result, zx );
-	assertArrayClose( Array.from( zx ), tc.zx, 'zx' );
-	assertArrayClose( Array.from( zy ), tc.zy, 'zy' );
+	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx' );
+	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy' );
 });
 
 test( 'zswap: N=0 is a no-op', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'n_zero'; } );
-	var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-	var zy = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	var zy = new Complex128Array( [ 5.0, 6.0, 7.0, 8.0 ] );
 	var result = base( 0, zx, 1, 0, zy, 1, 0 );
 	assert.strictEqual( result, zx );
-	assertArrayClose( Array.from( zx ), tc.zx, 'zx' );
-	assertArrayClose( Array.from( zy ), tc.zy, 'zy' );
+	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx' );
+	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy' );
 });
 
 test( 'zswap: N=1', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'n_one'; } );
-	var zx = new Float64Array( [ 10.0, 20.0 ] );
-	var zy = new Float64Array( [ 30.0, 40.0 ] );
+	var zx = new Complex128Array( [ 10.0, 20.0 ] );
+	var zy = new Complex128Array( [ 30.0, 40.0 ] );
 	var result = base( 1, zx, 1, 0, zy, 1, 0 );
 	assert.strictEqual( result, zx );
-	assertArrayClose( Array.from( zx ), tc.zx, 'zx' );
-	assertArrayClose( Array.from( zy ), tc.zy, 'zy' );
+	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx' );
+	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy' );
 });
 
 test( 'zswap: non-unit strides (strideX=2, strideY=2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'stride'; } );
-	var zx = new Float64Array( [
+	var zx = new Complex128Array( [
 		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
 	] );
-	var zy = new Float64Array( [
+	var zy = new Complex128Array( [
 		10.0, 20.0, 88.0, 88.0, 30.0, 40.0, 88.0, 88.0, 50.0, 60.0
 	] );
 	var result = base( 3, zx, 2, 0, zy, 2, 0 );
 	assert.strictEqual( result, zx );
-	assertArrayClose( Array.from( zx ), tc.zx, 'zx' );
-	assertArrayClose( Array.from( zy ), tc.zy, 'zy' );
+	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx' );
+	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy' );
 });
 
 test( 'zswap: mixed strides (strideX=1, strideY=2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'mixed_stride'; } );
-	var zx = new Float64Array( [
+	var zx = new Complex128Array( [
 		1.0, 1.0, 2.0, 2.0, 3.0, 3.0
 	] );
-	var zy = new Float64Array( [
+	var zy = new Complex128Array( [
 		10.0, 10.0, 77.0, 77.0, 20.0, 20.0, 77.0, 77.0, 30.0, 30.0
 	] );
 	var result = base( 3, zx, 1, 0, zy, 2, 0 );
 	assert.strictEqual( result, zx );
-	assertArrayClose( Array.from( zx ), tc.zx, 'zx' );
-	assertArrayClose( Array.from( zy ), tc.zy, 'zy' );
+	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx' );
+	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy' );
 });

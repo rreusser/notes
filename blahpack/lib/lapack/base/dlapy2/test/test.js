@@ -48,3 +48,13 @@ test( 'dlapy2: negative values', function t() {
 	var tc = findCase( 'negative' );
 	assertClose( dlapy2( -3.0, -4.0 ), tc.result, 1e-14, 'result' );
 });
+
+test( 'dlapy2: NaN propagation (x=NaN)', function t() {
+	var result = dlapy2( NaN, 3.0 );
+	assert.ok( result !== result, 'expected NaN' );
+});
+
+test( 'dlapy2: NaN propagation (y=NaN)', function t() {
+	var result = dlapy2( 3.0, NaN );
+	assert.ok( result !== result, 'expected NaN' );
+});

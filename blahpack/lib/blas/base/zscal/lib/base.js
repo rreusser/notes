@@ -20,50 +20,60 @@
 
 // MODULES //
 
-var cmplx = require( '../../../../cmplx.js' );
+var float64view = require( '../../../../float64view.js' );
 
 // MAIN //
 
 /**
 * Scale a complex double-precision vector by a complex constant.
 *
-* Complex elements are stored as interleaved real/imaginary pairs in a
-* Float64Array. Element k of zx has real part at `offsetX + 2*k*strideX`
-* and imaginary part at `offsetX + 2*k*strideX + 1`.
-*
 * @private
 * @param {PositiveInteger} N - number of complex elements
-* @param {Float64Array} za - complex scalar (2-element array: [real, imag])
-* @param {Float64Array} zx - input array (interleaved complex)
+* @param {(Complex128|Float64Array)} za - complex scalar
+* @param {(Complex128Array|Float64Array)} zx - complex input vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx`
-* @returns {Float64Array} `zx`
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @returns {(Complex128Array|Float64Array)} `zx`
 */
 function zscal( N, za, zx, strideX, offsetX ) {
+	var zaR;
+	var zaI;
 	var tmp;
+	var xv;
 	var sx;
 	var ix;
+	var tr;
 	var i;
 
 	if ( N <= 0 ) {
 		return zx;
 	}
 
+	// Handle both Complex128 (re/im properties) and Float64Array [re, im]
+	if ( typeof za === 'object' && typeof za.re === 'number' ) {
+		zaR = za.re;
+		zaI = za.im;
+	} else {
+		zaR = za[ 0 ];
+		zaI = za[ 1 ];
+	}
+
 	// Early return if za === (1, 0)
-	if ( za[ 0 ] === 1.0 && za[ 1 ] === 0.0 ) {
+	if ( zaR === 1.0 && zaI === 0.0 ) {
 		return zx;
 	}
 
-	tmp = new Float64Array( 2 );
+	tmp = float64view( zx, offsetX );
+	xv = tmp[ 0 ];
+	ix = tmp[ 1 ];
 
 	// Each complex element spans 2 doubles, so multiply stride by 2
 	sx = strideX * 2;
-	ix = offsetX;
 
 	for ( i = 0; i < N; i++ ) {
-		cmplx.mul( tmp, za, zx.subarray( ix, ix + 2 ) );
-		zx[ ix ] = tmp[ 0 ];
-		zx[ ix + 1 ] = tmp[ 1 ];
+		tr = zaR * xv[ ix ] - zaI * xv[ ix + 1 ];
+		xv[ ix + 1 ] = zaR * xv[ ix + 1 ] + zaI * xv[ ix ];
+		xv[ ix ] = tr;
 		ix += sx;
 	}
 	return zx;

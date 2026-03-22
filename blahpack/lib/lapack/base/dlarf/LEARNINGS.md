@@ -1,23 +1,25 @@
 # dlarf: Translation Learnings
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
-
 ## Translation pitfalls
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+- [x] The real version is simpler than zlarf: tau is a scalar (not a 2-element array), and no conjugation is needed.
+- [x] Uses dgemv with 'T' (transpose) for left application, dger for the rank-1 update. The complex version uses 'C' (conjugate transpose) and zgerc.
+- [x] The trailing zero scan in V uses a while loop that decrements lastv and ix simultaneously. Must ensure correct stride arithmetic.
+- [x] iladlc/iladlr return 0-based values; must add 1 to convert to the 1-based lastc used internally.
 
 ## Dependency interface surprises
 
-- [ ] (note unexpected calling conventions of deps)
+- [x] dgemv takes scalar alpha/beta (not arrays) for the real version. The complex zgemv takes Float64Array pairs.
+- [x] dger signature is (M,N,alpha,x,sx,ox,y,sy,oy,A,sa1,sa2,oA) -- all real scalars.
 
 ## Automation opportunities
 
-- [ ] (mechanical steps that should be automated)
+- [x] The real dlarf is a direct simplification of zlarf: remove complex arithmetic, change zgemv->dgemv, zgerc->dger, remove conjugate pairs.
 
 ## Coverage gaps
 
-- [ ] (code paths that were hard to test and why)
+- [x] All paths covered: left application, right application, tau=0 (identity), non-square matrix.
 
 ## Complex number handling
 
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+- [x] N/A. Real-valued. Complex version zlarf already implemented.

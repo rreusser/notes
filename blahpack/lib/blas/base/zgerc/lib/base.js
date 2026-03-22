@@ -20,7 +20,9 @@
 
 // MODULES //
 
-var cmplx = require( '../../../../cmplx.js' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
 
 // MAIN //
 
@@ -29,30 +31,25 @@ var cmplx = require( '../../../../cmplx.js' );
 * where alpha is a complex scalar, x is an M element complex vector,
 * y is an N element complex vector, and A is an M by N complex matrix.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element k of x has real part at `offsetX + 2*k*strideX` and
-* imaginary part at `offsetX + 2*k*strideX + 1`.
-*
 * @private
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} alpha - complex scalar [re, im]
-* @param {Float64Array} x - first input vector (interleaved complex)
+* @param {Complex128} alpha - complex scalar
+* @param {Complex128Array} x - first complex input vector
 * @param {integer} strideX - stride for `x` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `x`
-* @param {Float64Array} y - second input vector (interleaved complex)
+* @param {NonNegativeInteger} offsetX - starting index for `x` (in complex elements)
+* @param {Complex128Array} y - second complex input vector
 * @param {integer} strideY - stride for `y` (in complex elements)
-* @param {NonNegativeInteger} offsetY - starting index for `y`
-* @param {Float64Array} A - matrix (interleaved complex)
+* @param {NonNegativeInteger} offsetY - starting index for `y` (in complex elements)
+* @param {Complex128Array} A - complex matrix
 * @param {integer} strideA1 - stride of the first dimension of `A` (in complex elements)
 * @param {integer} strideA2 - stride of the second dimension of `A` (in complex elements)
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @returns {Float64Array} `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A` (in complex elements)
+* @returns {Complex128Array} `A`
 */
 function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
 	var alphaRe;
 	var alphaIm;
-	var temp;
 	var sa1;
 	var sa2;
 	var sx;
@@ -60,24 +57,40 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 	var ix;
 	var jy;
 	var ia;
-	var i;
-	var j;
-	var yr;
-	var yi;
+	var oA;
+	var oX;
+	var oY;
+	var Av;
+	var xv;
+	var yv;
 	var tr;
 	var ti;
+	var yr;
+	var yi;
+	var i;
+	var j;
 
 	if ( M <= 0 || N <= 0 ) {
 		return A;
 	}
 
-	alphaRe = alpha[ 0 ];
-	alphaIm = alpha[ 1 ];
+	alphaRe = real( alpha );
+	alphaIm = imag( alpha );
 
 	// Quick return if alpha is zero
 	if ( alphaRe === 0.0 && alphaIm === 0.0 ) {
 		return A;
 	}
+
+	// Get Float64Array views
+	Av = reinterpret( A, 0 );
+	xv = reinterpret( x, 0 );
+	yv = reinterpret( y, 0 );
+
+	// Convert offsets from complex elements to Float64
+	oA = offsetA * 2;
+	oX = offsetX * 2;
+	oY = offsetY * 2;
 
 	// Convert strides from complex-element units to double units
 	sx = strideX * 2;
@@ -85,12 +98,11 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
 
-	temp = new Float64Array( 2 );
-	jy = offsetY;
+	jy = oY;
 
 	for ( j = 0; j < N; j++ ) {
-		yr = y[ jy ];
-		yi = y[ jy + 1 ];
+		yr = yv[ jy ];
+		yi = yv[ jy + 1 ];
 
 		// Check if y(j) is zero
 		if ( yr !== 0.0 || yi !== 0.0 ) {
@@ -101,13 +113,13 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 			tr = alphaRe * yr + alphaIm * yi;
 			ti = alphaIm * yr - alphaRe * yi;
 
-			ix = offsetX;
-			ia = offsetA + j * sa2;
+			ix = oX;
+			ia = oA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
 				// A(i,j) = A(i,j) + x(i) * temp
 				// (xr + xi*i)(tr + ti*i) = (xr*tr - xi*ti) + (xr*ti + xi*tr)*i
-				A[ ia ] += x[ ix ] * tr - x[ ix + 1 ] * ti;
-				A[ ia + 1 ] += x[ ix ] * ti + x[ ix + 1 ] * tr;
+				Av[ ia ] += xv[ ix ] * tr - xv[ ix + 1 ] * ti;
+				Av[ ia + 1 ] += xv[ ix ] * ti + xv[ ix + 1 ] * tr;
 				ix += sx;
 				ia += sa1;
 			}

@@ -139,7 +139,9 @@
       "passing": 8
     },
     "dger": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
     },
     "drot": {
       "status": "unaddressed"
@@ -206,7 +208,9 @@
       "status": "unaddressed"
     },
     "dtrmm": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 12,
+      "passing": 12
     },
     "dtrmv": {
       "status": "unaddressed"
@@ -449,6 +453,11 @@
     },
     "ztrsv": {
       "status": "unaddressed"
+    },
+    "dnrm2": {
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
     }
   },
   "lapack": {
@@ -603,13 +612,17 @@
       "status": "unaddressed"
     },
     "dgeqr2": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 5,
+      "passing": 5
     },
     "dgeqr2p": {
       "status": "unaddressed"
     },
     "dgeqrf": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 4,
+      "passing": 4
     },
     "dgeqrfp": {
       "status": "unaddressed"
@@ -1008,7 +1021,9 @@
       "status": "unaddressed"
     },
     "dlapy2": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
     },
     "dlapy3": {
       "status": "complete",
@@ -1085,22 +1100,30 @@
       "status": "unaddressed"
     },
     "dlarf": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 4,
+      "passing": 4
     },
     "dlarfb": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 4,
+      "passing": 4
     },
     "dlarfb_gett": {
       "status": "unaddressed"
     },
     "dlarfg": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 6,
+      "passing": 6
     },
     "dlarfgp": {
       "status": "unaddressed"
     },
     "dlarft": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 4,
+      "passing": 4
     },
     "dlarfx": {
       "status": "unaddressed"
@@ -2105,6 +2128,16 @@
       "status": "complete",
       "tests": 7,
       "passing": 7
+    },
+    "iladlc": {
+      "status": "complete",
+      "tests": 6,
+      "passing": 6
+    },
+    "iladlr": {
+      "status": "complete",
+      "tests": 6,
+      "passing": 6
     }
   }
 }

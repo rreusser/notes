@@ -111,6 +111,13 @@ test( 'dtrtri: identity 3x3', function t() {
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
 
+test( 'dtrtri: N=1 (unblocked path)', function t() {
+	var A = new Float64Array( [ 4 ] );
+	var info = dtrtri( 'U', 'N', 1, A, 1, 1, 0 );
+	assert.equal( info, 0 );
+	assertClose( A[ 0 ], 0.25, 1e-14, 'a[0]' );
+});
+
 test( 'dtrtri: upper 5x5', function t() {
 	var tc = findCase( 'upper_5x5' );
 	// A upper 5x5 col-major

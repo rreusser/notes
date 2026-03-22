@@ -18,20 +18,20 @@
 
 'use strict';
 
+// MODULES //
+
+var float64view = require( '../../../../float64view.js' );
+
 // MAIN //
 
 /**
 * Finds the index of the element having the maximum sum of absolute values of
 * real and imaginary parts in a double-precision complex vector.
 *
-* Complex elements are stored as interleaved real/imaginary pairs in a
-* Float64Array. The stride is in units of complex elements (each occupying
-* 2 consecutive Float64 values).
-*
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {Float64Array} zx - input complex vector (interleaved real/imag)
+* @param {(Complex128Array|Float64Array)} zx - complex input vector
 * @param {integer} strideX - stride in complex elements
-* @param {NonNegativeInteger} offsetX - starting index in the Float64Array
+* @param {NonNegativeInteger} offsetX - starting index (in complex elements for Complex128Array, Float64 index for Float64Array)
 * @returns {integer} 0-based index of the max element, or -1 if N < 1
 */
 function izamax( N, zx, strideX, offsetX ) {
@@ -39,6 +39,8 @@ function izamax( N, zx, strideX, offsetX ) {
 	var imax;
 	var step;
 	var val;
+	var tmp;
+	var xv;
 	var ix;
 	var i;
 
@@ -49,15 +51,18 @@ function izamax( N, zx, strideX, offsetX ) {
 		return 0;
 	}
 
+	tmp = float64view( zx, offsetX );
+	xv = tmp[ 0 ];
+	ix = tmp[ 1 ];
+
 	// Step size in Float64 indices for each complex element
 	step = 2 * strideX;
-	ix = offsetX;
-	dmax = Math.abs( zx[ ix ] ) + Math.abs( zx[ ix + 1 ] );
+	dmax = Math.abs( xv[ ix ] ) + Math.abs( xv[ ix + 1 ] );
 	imax = 0;
 	ix += step;
 
 	for ( i = 1; i < N; i++ ) {
-		val = Math.abs( zx[ ix ] ) + Math.abs( zx[ ix + 1 ] );
+		val = Math.abs( xv[ ix ] ) + Math.abs( xv[ ix + 1 ] );
 		if ( val > dmax ) {
 			imax = i;
 			dmax = val;

@@ -22,6 +22,9 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrmm = require( './../lib' );
 var base = require( './../lib/base.js' );
 
@@ -53,11 +56,13 @@ function extractCMatrix( arr, M, N, sb1, sb2, offsetB ) {
 	var ib;
 	var i;
 	var j;
+	var v;
+	v = reinterpret( arr, 0 );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
-			ib = offsetB + 2 * ( i * sb1 + j * sb2 );
-			out.push( arr[ ib ] );
-			out.push( arr[ ib + 1 ] );
+			ib = offsetB * 2 + 2 * ( i * sb1 + j * sb2 );
+			out.push( v[ ib ] );
+			out.push( v[ ib + 1 ] );
 		}
 	}
 	return out;
@@ -76,10 +81,10 @@ test( 'ztrmm: attached to the main export is an `ndarray` method', function t() 
 test( 'ztrmm: left, upper, no transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_left_upper_notrans'; } );
 	// A upper 2x2 col-major: [2+1i, 0, 3+1i, 4+2i]
-	var A = new Float64Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	// B 2x2 col-major: [1+0i, 0+1i, 0+1i, 1+0i]
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -87,9 +92,9 @@ test( 'ztrmm: left, upper, no transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: left, lower, no transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_left_lower_notrans'; } );
-	var A = new Float64Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'L', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -97,9 +102,9 @@ test( 'ztrmm: left, lower, no transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: right, upper, no transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_right_upper_notrans'; } );
-	var A = new Float64Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'R', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -107,9 +112,9 @@ test( 'ztrmm: right, upper, no transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: left, upper, conjugate transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_left_upper_conjtrans'; } );
-	var A = new Float64Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'U', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -117,9 +122,9 @@ test( 'ztrmm: left, upper, conjugate transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: alpha=0 zeros B', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_alpha_zero'; } );
-	var A = new Float64Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 0, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 0, 0 );
 	var result = base( 'L', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -128,9 +133,9 @@ test( 'ztrmm: alpha=0 zeros B', function t() {
 test( 'ztrmm: complex alpha', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_complex_alpha'; } );
 	// A = identity (upper)
-	var A = new Float64Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
-	var alpha = new Float64Array( [ 0, 1 ] );
+	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
+	var alpha = new Complex128( 0, 1 );
 	var result = base( 'L', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -138,20 +143,20 @@ test( 'ztrmm: complex alpha', function t() {
 
 test( 'ztrmm: M=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_m_zero'; } );
-	var A = new Float64Array( [ 1, 0 ] );
-	var B = new Float64Array( [ 99, 99 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 1, 0 ] );
+	var B = new Complex128Array( [ 99, 99 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'U', 'N', 'N', 0, 2, alpha, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.strictEqual( result, B );
 	// B should be unchanged
-	assertArrayClose( Array.from( B ), tc.b, 'b' );
+	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.b, 'b' );
 });
 
 test( 'ztrmm: unit diagonal, left, upper', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_unit_diag'; } );
-	var A = new Float64Array( [ 99, 99, 0, 0, 2, 1, 99, 99 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 99, 99, 0, 0, 2, 1, 99, 99 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'U', 'N', 'U', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -159,9 +164,9 @@ test( 'ztrmm: unit diagonal, left, upper', function t() {
 
 test( 'ztrmm: left, upper, transpose (not conjugate), non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_left_upper_trans'; } );
-	var A = new Float64Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'U', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -169,9 +174,9 @@ test( 'ztrmm: left, upper, transpose (not conjugate), non-unit (2x2)', function 
 
 test( 'ztrmm: right, lower, no transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_right_lower_notrans'; } );
-	var A = new Float64Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'R', 'L', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -179,9 +184,9 @@ test( 'ztrmm: right, lower, no transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: left, lower, transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_left_lower_trans'; } );
-	var A = new Float64Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'L', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -189,9 +194,9 @@ test( 'ztrmm: left, lower, transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: left, lower, conjugate transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_left_lower_conjtrans'; } );
-	var A = new Float64Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'L', 'L', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -199,9 +204,9 @@ test( 'ztrmm: left, lower, conjugate transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: right, upper, transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_right_upper_trans'; } );
-	var A = new Float64Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'R', 'U', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -209,9 +214,9 @@ test( 'ztrmm: right, upper, transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: right, upper, conjugate transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_right_upper_conjtrans'; } );
-	var A = new Float64Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'R', 'U', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -219,9 +224,9 @@ test( 'ztrmm: right, upper, conjugate transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: right, lower, transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_right_lower_trans'; } );
-	var A = new Float64Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'R', 'L', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
@@ -229,9 +234,9 @@ test( 'ztrmm: right, lower, transpose, non-unit (2x2)', function t() {
 
 test( 'ztrmm: right, lower, conjugate transpose, non-unit (2x2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'ztrmm_right_lower_conjtrans'; } );
-	var A = new Float64Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
-	var B = new Float64Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
-	var alpha = new Float64Array( [ 1, 0 ] );
+	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	var alpha = new Complex128( 1, 0 );
 	var result = base( 'R', 'L', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );

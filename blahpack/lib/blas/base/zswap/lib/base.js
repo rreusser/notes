@@ -18,28 +18,32 @@
 
 'use strict';
 
+// MODULES //
+
+var float64view = require( '../../../../float64view.js' );
+
 // MAIN //
 
 /**
 * Interchange two complex double-precision vectors.
 *
-* Complex elements are stored as interleaved real/imaginary pairs in a
-* Float64Array. Element k of zx has real part at `offsetX + 2*k*strideX`
-* and imaginary part at `offsetX + 2*k*strideX + 1`.
-*
 * @private
 * @param {PositiveInteger} N - number of complex elements
-* @param {Float64Array} zx - first input array (interleaved complex)
+* @param {(Complex128Array|Float64Array)} zx - first complex input vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx`
-* @param {Float64Array} zy - second input array (interleaved complex)
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @param {(Complex128Array|Float64Array)} zy - second complex input vector
 * @param {integer} strideY - stride for `zy` (in complex elements)
-* @param {NonNegativeInteger} offsetY - starting index for `zy`
-* @returns {Float64Array} `zx`
+* @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @returns {(Complex128Array|Float64Array)} `zx`
 */
 function zswap( N, zx, strideX, offsetX, zy, strideY, offsetY ) {
 	var tmp0;
 	var tmp1;
+	var tmpx;
+	var tmpy;
+	var xv;
+	var yv;
 	var sx;
 	var sy;
 	var ix;
@@ -50,19 +54,24 @@ function zswap( N, zx, strideX, offsetX, zy, strideY, offsetY ) {
 		return zx;
 	}
 
+	tmpx = float64view( zx, offsetX );
+	tmpy = float64view( zy, offsetY );
+	xv = tmpx[ 0 ];
+	ix = tmpx[ 1 ];
+	yv = tmpy[ 0 ];
+	iy = tmpy[ 1 ];
+
 	// Each complex element spans 2 doubles, so multiply stride by 2
 	sx = strideX * 2;
 	sy = strideY * 2;
-	ix = offsetX;
-	iy = offsetY;
 
 	for ( i = 0; i < N; i++ ) {
-		tmp0 = zx[ ix ];
-		tmp1 = zx[ ix + 1 ];
-		zx[ ix ] = zy[ iy ];
-		zx[ ix + 1 ] = zy[ iy + 1 ];
-		zy[ iy ] = tmp0;
-		zy[ iy + 1 ] = tmp1;
+		tmp0 = xv[ ix ];
+		tmp1 = xv[ ix + 1 ];
+		xv[ ix ] = yv[ iy ];
+		xv[ ix + 1 ] = yv[ iy + 1 ];
+		yv[ iy ] = tmp0;
+		yv[ iy + 1 ] = tmp1;
 		ix += sx;
 		iy += sy;
 	}

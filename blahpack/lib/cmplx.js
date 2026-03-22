@@ -285,6 +285,105 @@ function cmmadd( out, a, b, c ) {
 }
 
 
+/**
+* Indexed absolute value: |arr[idx] + arr[idx+1]*i|.
+*
+* Operates directly on a Float64Array at a given index, avoiding subarray
+* allocation. Equivalent to cmplx.abs(arr.subarray(idx, idx+2)).
+*
+* @param {Float64Array} arr - array containing interleaved complex data
+* @param {NonNegativeInteger} idx - Float64 index of the real part
+* @returns {number} absolute value
+*/
+function cabsAt( arr, idx ) {
+	var ar = Math.abs( arr[ idx ] );
+	var ai = Math.abs( arr[ idx + 1 ] );
+	var mx;
+	var mn;
+	var r;
+	if ( ar === 0.0 && ai === 0.0 ) {
+		return 0.0;
+	}
+	if ( ar >= ai ) {
+		mx = ar;
+		mn = ai;
+	} else {
+		mx = ai;
+		mn = ar;
+	}
+	r = mn / mx;
+	return mx * Math.sqrt( 1.0 + r * r );
+}
+
+/**
+* Indexed DCABS1: |arr[idx]| + |arr[idx+1]|.
+*
+* @param {Float64Array} arr - array containing interleaved complex data
+* @param {NonNegativeInteger} idx - Float64 index of the real part
+* @returns {number} sum of absolute values of real and imaginary parts
+*/
+function cabs1At( arr, idx ) {
+	return Math.abs( arr[ idx ] ) + Math.abs( arr[ idx + 1 ] );
+}
+
+/**
+* Indexed complex multiply: out[oi] = a[ai] * b[bi].
+*
+* Reads complex numbers from arrays at the given Float64 indices and writes
+* the product to out at the given index. All arrays can be the same (aliasing
+* is safe as long as out index doesn't overlap inputs).
+*
+* @param {Float64Array} out - output array
+* @param {NonNegativeInteger} oi - Float64 index for output real part
+* @param {Float64Array} a - first operand array
+* @param {NonNegativeInteger} ai - Float64 index for a's real part
+* @param {Float64Array} b - second operand array
+* @param {NonNegativeInteger} bi - Float64 index for b's real part
+* @returns {Float64Array} out
+*/
+function cmulAt( out, oi, a, ai, b, bi ) {
+	var ar = a[ ai ];
+	var aig = a[ ai + 1 ];
+	var br = b[ bi ];
+	var big = b[ bi + 1 ];
+	out[ oi ] = ar * br - aig * big;
+	out[ oi + 1 ] = ar * big + aig * br;
+	return out;
+}
+
+/**
+* Indexed complex divide: out[oi] = a[ai] / b[bi].
+*
+* @param {Float64Array} out - output array
+* @param {NonNegativeInteger} oi - Float64 index for output real part
+* @param {Float64Array} a - numerator array
+* @param {NonNegativeInteger} ai - Float64 index for a's real part
+* @param {Float64Array} b - denominator array
+* @param {NonNegativeInteger} bi - Float64 index for b's real part
+* @returns {Float64Array} out
+*/
+function cdivAt( out, oi, a, ai, b, bi ) {
+	var ar = a[ ai ];
+	var aig = a[ ai + 1 ];
+	var br = b[ bi ];
+	var big = b[ bi + 1 ];
+	var r;
+	var d;
+	if ( Math.abs( big ) <= Math.abs( br ) ) {
+		r = big / br;
+		d = br + big * r;
+		out[ oi ] = ( ar + aig * r ) / d;
+		out[ oi + 1 ] = ( aig - ar * r ) / d;
+	} else {
+		r = br / big;
+		d = big + br * r;
+		out[ oi ] = ( ar * r + aig ) / d;
+		out[ oi + 1 ] = ( aig * r - ar ) / d;
+	}
+	return out;
+}
+
+
 // EXPORTS //
 
 module.exports = {
@@ -304,5 +403,9 @@ module.exports = {
 	eq: ceq,
 	iszero: ciszero,
 	madd: cmadd,
-	mmadd: cmmadd
+	mmadd: cmmadd,
+	absAt: cabsAt,
+	abs1At: cabs1At,
+	mulAt: cmulAt,
+	divAt: cdivAt
 };

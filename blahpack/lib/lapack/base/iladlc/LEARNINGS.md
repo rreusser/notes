@@ -1,23 +1,22 @@
 # iladlc: Translation Learnings
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
-
 ## Translation pitfalls
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+- [x] Fortran returns 1-based column index; JS returns 0-based. N=0 case: Fortran returns N (=0), JS returns -1.
+- [x] The corner test uses A(1,N) and A(M,N) -- must correctly index the (0,N-1) and (M-1,N-1) elements in 0-based.
 
 ## Dependency interface surprises
 
-- [ ] (note unexpected calling conventions of deps)
+- [x] N/A. Self-contained, no dependencies.
 
 ## Automation opportunities
 
-- [ ] (mechanical steps that should be automated)
+- [x] The real version is identical to ilazlc minus the imaginary part checks. Could be generated from a template.
 
 ## Coverage gaps
 
-- [ ] (code paths that were hard to test and why)
+- [x] All paths covered: N=0, quick-return (corner non-zero), full scan finding non-zero, all zeros returning -1.
 
 ## Complex number handling
 
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+- [x] N/A. Real-valued only. No interleaved re/im pairs -- each element is a single double.

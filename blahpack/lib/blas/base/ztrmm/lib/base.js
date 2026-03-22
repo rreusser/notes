@@ -18,6 +18,12 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
+
 // MAIN //
 
 /**
@@ -28,9 +34,6 @@
 * or non-unit, upper or lower triangular matrix, and op(A) is one of
 *   op(A) = A  or  op(A) = A^T  or  op(A) = A^H.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Strides are in complex-element units.
-*
 * @private
 * @param {string} side - 'L' or 'R'
 * @param {string} uplo - 'U' or 'L'
@@ -38,16 +41,16 @@
 * @param {string} diag - 'U' or 'N'
 * @param {NonNegativeInteger} M - number of rows of B
 * @param {NonNegativeInteger} N - number of columns of B
-* @param {Float64Array} alpha - complex scalar [re, im]
-* @param {Float64Array} A - triangular matrix (interleaved complex)
+* @param {Complex128} alpha - complex scalar
+* @param {Complex128Array} A - complex triangular matrix
 * @param {integer} strideA1 - stride of first dim of A (complex elements)
 * @param {integer} strideA2 - stride of second dim of A (complex elements)
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} B - matrix (interleaved complex), modified in-place
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @param {Complex128Array} B - complex matrix, modified in-place
 * @param {integer} strideB1 - stride of first dim of B (complex elements)
 * @param {integer} strideB2 - stride of second dim of B (complex elements)
-* @param {NonNegativeInteger} offsetB - starting index for B
-* @returns {Float64Array} `B`
+* @param {NonNegativeInteger} offsetB - starting index for B (in complex elements)
+* @returns {Complex128Array} `B`
 */
 function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
 	var noconj;
@@ -66,6 +69,10 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	var ib;
 	var jb;
 	var kb;
+	var oA;
+	var oB;
+	var Av;
+	var Bv;
 	var ar;
 	var ai;
 	var br;
@@ -85,8 +92,16 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	noconj = ( transa === 'T' || transa === 't' );
 	nounit = ( diag === 'N' || diag === 'n' );
 
-	alphaR = alpha[ 0 ];
-	alphaI = alpha[ 1 ];
+	alphaR = real( alpha );
+	alphaI = imag( alpha );
+
+	// Get Float64Array views
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+
+	// Convert offsets from complex elements to Float64
+	oA = offsetA * 2;
+	oB = offsetB * 2;
 
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
@@ -96,9 +111,9 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	if ( alphaR === 0.0 && alphaI === 0.0 ) {
 		for ( j = 0; j < N; j++ ) {
 			for ( i = 0; i < M; i++ ) {
-				ib = offsetB + i * sb1 + j * sb2;
-				B[ ib ] = 0.0;
-				B[ ib + 1 ] = 0.0;
+				ib = oB + i * sb1 + j * sb2;
+				Bv[ ib ] = 0.0;
+				Bv[ ib + 1 ] = 0.0;
 			}
 		}
 		return B;
@@ -109,29 +124,29 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			if ( upper ) {
 				for ( j = 0; j < N; j++ ) {
 					for ( k = 0; k < M; k++ ) {
-						kb = offsetB + k * sb1 + j * sb2;
-						br = B[ kb ];
-						bi = B[ kb + 1 ];
+						kb = oB + k * sb1 + j * sb2;
+						br = Bv[ kb ];
+						bi = Bv[ kb + 1 ];
 						if ( br !== 0.0 || bi !== 0.0 ) {
 							tempR = alphaR * br - alphaI * bi;
 							tempI = alphaR * bi + alphaI * br;
 							for ( i = 0; i < k; i++ ) {
-								ib = offsetB + i * sb1 + j * sb2;
-								ia = offsetA + i * sa1 + k * sa2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
-								B[ ib ] += tempR * ar - tempI * ai;
-								B[ ib + 1 ] += tempR * ai + tempI * ar;
+								ib = oB + i * sb1 + j * sb2;
+								ia = oA + i * sa1 + k * sa2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
+								Bv[ ib ] += tempR * ar - tempI * ai;
+								Bv[ ib + 1 ] += tempR * ai + tempI * ar;
 							}
 							if ( nounit ) {
-								ia = offsetA + k * sa1 + k * sa2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
-								B[ kb ] = tempR * ar - tempI * ai;
-								B[ kb + 1 ] = tempR * ai + tempI * ar;
+								ia = oA + k * sa1 + k * sa2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
+								Bv[ kb ] = tempR * ar - tempI * ai;
+								Bv[ kb + 1 ] = tempR * ai + tempI * ar;
 							} else {
-								B[ kb ] = tempR;
-								B[ kb + 1 ] = tempI;
+								Bv[ kb ] = tempR;
+								Bv[ kb + 1 ] = tempI;
 							}
 						}
 					}
@@ -139,28 +154,28 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			} else {
 				for ( j = 0; j < N; j++ ) {
 					for ( k = M - 1; k >= 0; k-- ) {
-						kb = offsetB + k * sb1 + j * sb2;
-						br = B[ kb ];
-						bi = B[ kb + 1 ];
+						kb = oB + k * sb1 + j * sb2;
+						br = Bv[ kb ];
+						bi = Bv[ kb + 1 ];
 						if ( br !== 0.0 || bi !== 0.0 ) {
 							tempR = alphaR * br - alphaI * bi;
 							tempI = alphaR * bi + alphaI * br;
-							B[ kb ] = tempR;
-							B[ kb + 1 ] = tempI;
+							Bv[ kb ] = tempR;
+							Bv[ kb + 1 ] = tempI;
 							if ( nounit ) {
-								ia = offsetA + k * sa1 + k * sa2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
-								B[ kb ] = tempR * ar - tempI * ai;
-								B[ kb + 1 ] = tempR * ai + tempI * ar;
+								ia = oA + k * sa1 + k * sa2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
+								Bv[ kb ] = tempR * ar - tempI * ai;
+								Bv[ kb + 1 ] = tempR * ai + tempI * ar;
 							}
 							for ( i = k + 1; i < M; i++ ) {
-								ib = offsetB + i * sb1 + j * sb2;
-								ia = offsetA + i * sa1 + k * sa2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
-								B[ ib ] += tempR * ar - tempI * ai;
-								B[ ib + 1 ] += tempR * ai + tempI * ar;
+								ib = oB + i * sb1 + j * sb2;
+								ia = oA + i * sa1 + k * sa2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
+								Bv[ ib ] += tempR * ar - tempI * ai;
+								Bv[ ib + 1 ] += tempR * ai + tempI * ar;
 							}
 						}
 					}
@@ -170,95 +185,95 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			if ( upper ) {
 				for ( j = 0; j < N; j++ ) {
 					for ( i = M - 1; i >= 0; i-- ) {
-						ib = offsetB + i * sb1 + j * sb2;
-						tempR = B[ ib ];
-						tempI = B[ ib + 1 ];
+						ib = oB + i * sb1 + j * sb2;
+						tempR = Bv[ ib ];
+						tempI = Bv[ ib + 1 ];
 						if ( noconj ) {
 							if ( nounit ) {
-								ia = offsetA + i * sa1 + i * sa2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
+								ia = oA + i * sa1 + i * sa2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
 								tr = tempR * ar - tempI * ai;
 								ti = tempR * ai + tempI * ar;
 								tempR = tr;
 								tempI = ti;
 							}
 							for ( k = 0; k < i; k++ ) {
-								ia = offsetA + k * sa1 + i * sa2;
-								kb = offsetB + k * sb1 + j * sb2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
-								tempR += ar * B[ kb ] - ai * B[ kb + 1 ];
-								tempI += ar * B[ kb + 1 ] + ai * B[ kb ];
+								ia = oA + k * sa1 + i * sa2;
+								kb = oB + k * sb1 + j * sb2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
+								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
 							}
 						} else {
 							if ( nounit ) {
-								ia = offsetA + i * sa1 + i * sa2;
-								ar = A[ ia ];
-								ai = -A[ ia + 1 ];
+								ia = oA + i * sa1 + i * sa2;
+								ar = Av[ ia ];
+								ai = -Av[ ia + 1 ];
 								tr = tempR * ar - tempI * ai;
 								ti = tempR * ai + tempI * ar;
 								tempR = tr;
 								tempI = ti;
 							}
 							for ( k = 0; k < i; k++ ) {
-								ia = offsetA + k * sa1 + i * sa2;
-								kb = offsetB + k * sb1 + j * sb2;
-								ar = A[ ia ];
-								ai = -A[ ia + 1 ];
-								tempR += ar * B[ kb ] - ai * B[ kb + 1 ];
-								tempI += ar * B[ kb + 1 ] + ai * B[ kb ];
+								ia = oA + k * sa1 + i * sa2;
+								kb = oB + k * sb1 + j * sb2;
+								ar = Av[ ia ];
+								ai = -Av[ ia + 1 ];
+								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
 							}
 						}
-						B[ ib ] = alphaR * tempR - alphaI * tempI;
-						B[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
+						Bv[ ib ] = alphaR * tempR - alphaI * tempI;
+						Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
 					}
 				}
 			} else {
 				for ( j = 0; j < N; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						ib = offsetB + i * sb1 + j * sb2;
-						tempR = B[ ib ];
-						tempI = B[ ib + 1 ];
+						ib = oB + i * sb1 + j * sb2;
+						tempR = Bv[ ib ];
+						tempI = Bv[ ib + 1 ];
 						if ( noconj ) {
 							if ( nounit ) {
-								ia = offsetA + i * sa1 + i * sa2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
+								ia = oA + i * sa1 + i * sa2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
 								tr = tempR * ar - tempI * ai;
 								ti = tempR * ai + tempI * ar;
 								tempR = tr;
 								tempI = ti;
 							}
 							for ( k = i + 1; k < M; k++ ) {
-								ia = offsetA + k * sa1 + i * sa2;
-								kb = offsetB + k * sb1 + j * sb2;
-								ar = A[ ia ];
-								ai = A[ ia + 1 ];
-								tempR += ar * B[ kb ] - ai * B[ kb + 1 ];
-								tempI += ar * B[ kb + 1 ] + ai * B[ kb ];
+								ia = oA + k * sa1 + i * sa2;
+								kb = oB + k * sb1 + j * sb2;
+								ar = Av[ ia ];
+								ai = Av[ ia + 1 ];
+								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
 							}
 						} else {
 							if ( nounit ) {
-								ia = offsetA + i * sa1 + i * sa2;
-								ar = A[ ia ];
-								ai = -A[ ia + 1 ];
+								ia = oA + i * sa1 + i * sa2;
+								ar = Av[ ia ];
+								ai = -Av[ ia + 1 ];
 								tr = tempR * ar - tempI * ai;
 								ti = tempR * ai + tempI * ar;
 								tempR = tr;
 								tempI = ti;
 							}
 							for ( k = i + 1; k < M; k++ ) {
-								ia = offsetA + k * sa1 + i * sa2;
-								kb = offsetB + k * sb1 + j * sb2;
-								ar = A[ ia ];
-								ai = -A[ ia + 1 ];
-								tempR += ar * B[ kb ] - ai * B[ kb + 1 ];
-								tempI += ar * B[ kb + 1 ] + ai * B[ kb ];
+								ia = oA + k * sa1 + i * sa2;
+								kb = oB + k * sb1 + j * sb2;
+								ar = Av[ ia ];
+								ai = -Av[ ia + 1 ];
+								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
 							}
 						}
-						B[ ib ] = alphaR * tempR - alphaI * tempI;
-						B[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
+						Bv[ ib ] = alphaR * tempR - alphaI * tempI;
+						Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
 					}
 				}
 			}
@@ -270,33 +285,33 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					tempR = alphaR;
 					tempI = alphaI;
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						tr = tempR * ar - tempI * ai;
 						ti = tempR * ai + tempI * ar;
 						tempR = tr;
 						tempI = ti;
 					}
 					for ( i = 0; i < M; i++ ) {
-						ib = offsetB + i * sb1 + j * sb2;
-						br = B[ ib ];
-						bi = B[ ib + 1 ];
-						B[ ib ] = tempR * br - tempI * bi;
-						B[ ib + 1 ] = tempR * bi + tempI * br;
+						ib = oB + i * sb1 + j * sb2;
+						br = Bv[ ib ];
+						bi = Bv[ ib + 1 ];
+						Bv[ ib ] = tempR * br - tempI * bi;
+						Bv[ ib + 1 ] = tempR * bi + tempI * br;
 					}
 					for ( k = 0; k < j; k++ ) {
-						ia = offsetA + k * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + k * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						if ( ar !== 0.0 || ai !== 0.0 ) {
 							tr = alphaR * ar - alphaI * ai;
 							ti = alphaR * ai + alphaI * ar;
 							for ( i = 0; i < M; i++ ) {
-								ib = offsetB + i * sb1 + j * sb2;
-								kb = offsetB + i * sb1 + k * sb2;
-								B[ ib ] += tr * B[ kb ] - ti * B[ kb + 1 ];
-								B[ ib + 1 ] += tr * B[ kb + 1 ] + ti * B[ kb ];
+								ib = oB + i * sb1 + j * sb2;
+								kb = oB + i * sb1 + k * sb2;
+								Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+								Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
 							}
 						}
 					}
@@ -306,33 +321,33 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					tempR = alphaR;
 					tempI = alphaI;
 					if ( nounit ) {
-						ia = offsetA + j * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						tr = tempR * ar - tempI * ai;
 						ti = tempR * ai + tempI * ar;
 						tempR = tr;
 						tempI = ti;
 					}
 					for ( i = 0; i < M; i++ ) {
-						ib = offsetB + i * sb1 + j * sb2;
-						br = B[ ib ];
-						bi = B[ ib + 1 ];
-						B[ ib ] = tempR * br - tempI * bi;
-						B[ ib + 1 ] = tempR * bi + tempI * br;
+						ib = oB + i * sb1 + j * sb2;
+						br = Bv[ ib ];
+						bi = Bv[ ib + 1 ];
+						Bv[ ib ] = tempR * br - tempI * bi;
+						Bv[ ib + 1 ] = tempR * bi + tempI * br;
 					}
 					for ( k = j + 1; k < N; k++ ) {
-						ia = offsetA + k * sa1 + j * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + k * sa1 + j * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						if ( ar !== 0.0 || ai !== 0.0 ) {
 							tr = alphaR * ar - alphaI * ai;
 							ti = alphaR * ai + alphaI * ar;
 							for ( i = 0; i < M; i++ ) {
-								ib = offsetB + i * sb1 + j * sb2;
-								kb = offsetB + i * sb1 + k * sb2;
-								B[ ib ] += tr * B[ kb ] - ti * B[ kb + 1 ];
-								B[ ib + 1 ] += tr * B[ kb + 1 ] + ti * B[ kb ];
+								ib = oB + i * sb1 + j * sb2;
+								kb = oB + i * sb1 + k * sb2;
+								Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+								Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
 							}
 						}
 					}
@@ -342,9 +357,9 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			if ( upper ) {
 				for ( k = 0; k < N; k++ ) {
 					for ( j = 0; j < k; j++ ) {
-						ia = offsetA + j * sa1 + k * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + k * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						if ( ar !== 0.0 || ai !== 0.0 ) {
 							if ( !noconj ) {
 								ai = -ai;
@@ -352,19 +367,19 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 							tr = alphaR * ar - alphaI * ai;
 							ti = alphaR * ai + alphaI * ar;
 							for ( i = 0; i < M; i++ ) {
-								jb = offsetB + i * sb1 + j * sb2;
-								kb = offsetB + i * sb1 + k * sb2;
-								B[ jb ] += tr * B[ kb ] - ti * B[ kb + 1 ];
-								B[ jb + 1 ] += tr * B[ kb + 1 ] + ti * B[ kb ];
+								jb = oB + i * sb1 + j * sb2;
+								kb = oB + i * sb1 + k * sb2;
+								Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+								Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
 							}
 						}
 					}
 					tempR = alphaR;
 					tempI = alphaI;
 					if ( nounit ) {
-						ia = offsetA + k * sa1 + k * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + k * sa1 + k * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						if ( !noconj ) {
 							ai = -ai;
 						}
@@ -375,20 +390,20 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					}
 					if ( tempR !== 1.0 || tempI !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							kb = offsetB + i * sb1 + k * sb2;
-							br = B[ kb ];
-							bi = B[ kb + 1 ];
-							B[ kb ] = tempR * br - tempI * bi;
-							B[ kb + 1 ] = tempR * bi + tempI * br;
+							kb = oB + i * sb1 + k * sb2;
+							br = Bv[ kb ];
+							bi = Bv[ kb + 1 ];
+							Bv[ kb ] = tempR * br - tempI * bi;
+							Bv[ kb + 1 ] = tempR * bi + tempI * br;
 						}
 					}
 				}
 			} else {
 				for ( k = N - 1; k >= 0; k-- ) {
 					for ( j = k + 1; j < N; j++ ) {
-						ia = offsetA + j * sa1 + k * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + j * sa1 + k * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						if ( ar !== 0.0 || ai !== 0.0 ) {
 							if ( !noconj ) {
 								ai = -ai;
@@ -396,19 +411,19 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 							tr = alphaR * ar - alphaI * ai;
 							ti = alphaR * ai + alphaI * ar;
 							for ( i = 0; i < M; i++ ) {
-								jb = offsetB + i * sb1 + j * sb2;
-								kb = offsetB + i * sb1 + k * sb2;
-								B[ jb ] += tr * B[ kb ] - ti * B[ kb + 1 ];
-								B[ jb + 1 ] += tr * B[ kb + 1 ] + ti * B[ kb ];
+								jb = oB + i * sb1 + j * sb2;
+								kb = oB + i * sb1 + k * sb2;
+								Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+								Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
 							}
 						}
 					}
 					tempR = alphaR;
 					tempI = alphaI;
 					if ( nounit ) {
-						ia = offsetA + k * sa1 + k * sa2;
-						ar = A[ ia ];
-						ai = A[ ia + 1 ];
+						ia = oA + k * sa1 + k * sa2;
+						ar = Av[ ia ];
+						ai = Av[ ia + 1 ];
 						if ( !noconj ) {
 							ai = -ai;
 						}
@@ -419,11 +434,11 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					}
 					if ( tempR !== 1.0 || tempI !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							kb = offsetB + i * sb1 + k * sb2;
-							br = B[ kb ];
-							bi = B[ kb + 1 ];
-							B[ kb ] = tempR * br - tempI * bi;
-							B[ kb + 1 ] = tempR * bi + tempI * br;
+							kb = oB + i * sb1 + k * sb2;
+							br = Bv[ kb ];
+							bi = Bv[ kb + 1 ];
+							Bv[ kb ] = tempR * br - tempI * bi;
+							Bv[ kb + 1 ] = tempR * bi + tempI * br;
 						}
 					}
 				}

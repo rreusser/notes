@@ -18,23 +18,25 @@
 
 'use strict';
 
+// MODULES //
+
+var float64view = require( '../../../../float64view.js' );
+
 // MAIN //
 
 /**
 * Conjugate a complex vector in-place.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element k has real part at `offset + 2*k*stride` and imaginary part
-* at `offset + 2*k*stride + 1`.
-*
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {Float64Array} x - input array (interleaved complex)
+* @param {(Complex128Array|Float64Array)} x - complex input vector
 * @param {integer} stride - stride for `x` (in complex elements)
-* @param {NonNegativeInteger} offset - starting index for `x`
-* @returns {Float64Array} `x`
+* @param {NonNegativeInteger} offset - starting index for `x` (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @returns {(Complex128Array|Float64Array)} `x`
 */
 function zlacgv( N, x, stride, offset ) {
+	var tmp;
+	var xv;
 	var sx;
 	var ix;
 	var i;
@@ -43,10 +45,13 @@ function zlacgv( N, x, stride, offset ) {
 		return x;
 	}
 
+	tmp = float64view( x, offset );
+	xv = tmp[ 0 ];
+	ix = tmp[ 1 ];
+
 	sx = stride * 2;
-	ix = offset;
 	for ( i = 0; i < N; i++ ) {
-		x[ ix + 1 ] = -x[ ix + 1 ];
+		xv[ ix + 1 ] = -xv[ ix + 1 ];
 		ix += sx;
 	}
 	return x;

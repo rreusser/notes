@@ -18,24 +18,26 @@
 
 'use strict';
 
+// MODULES //
+
+var float64view = require( '../../../../float64view.js' );
+
 // MAIN //
 
 /**
 * Scale a complex double-precision vector by a double-precision constant.
 *
-* Complex elements are stored as interleaved real/imaginary pairs in a
-* Float64Array. Element k of zx has real part at `offsetX + 2*k*strideX`
-* and imaginary part at `offsetX + 2*k*strideX + 1`.
-*
 * @private
 * @param {PositiveInteger} N - number of complex elements
 * @param {number} da - real scalar multiplier
-* @param {Float64Array} zx - input array (interleaved complex)
+* @param {(Complex128Array|Float64Array)} zx - complex input vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx`
-* @returns {Float64Array} `zx`
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @returns {(Complex128Array|Float64Array)} `zx`
 */
 function zdscal( N, da, zx, strideX, offsetX ) {
+	var tmp;
+	var xv;
 	var sx;
 	var ix;
 	var i;
@@ -44,13 +46,16 @@ function zdscal( N, da, zx, strideX, offsetX ) {
 		return zx;
 	}
 
+	tmp = float64view( zx, offsetX );
+	xv = tmp[ 0 ];
+	ix = tmp[ 1 ];
+
 	// Each complex element spans 2 doubles, so multiply stride by 2
 	sx = strideX * 2;
-	ix = offsetX;
 
 	for ( i = 0; i < N; i++ ) {
-		zx[ ix ] *= da;
-		zx[ ix + 1 ] *= da;
+		xv[ ix ] *= da;
+		xv[ ix + 1 ] *= da;
 		ix += sx;
 	}
 	return zx;

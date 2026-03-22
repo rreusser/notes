@@ -18,6 +18,10 @@
 
 'use strict';
 
+// MODULES //
+
+var float64view = require( '../../../../float64view.js' );
+
 // MAIN //
 
 /**
@@ -28,25 +32,25 @@
 *
 * where c and s are real scalars (cosine and sine of a Givens rotation).
 *
-* Complex elements are stored as interleaved real/imaginary pairs in a
-* Float64Array. Element k of zx has real part at `offsetX + 2*k*strideX`
-* and imaginary part at `offsetX + 2*k*strideX + 1`.
-*
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {Float64Array} zx - first input/output array (interleaved complex)
+* @param {(Complex128Array|Float64Array)} zx - first complex input/output vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx`
-* @param {Float64Array} zy - second input/output array (interleaved complex)
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements for Complex128Array, Float64 index for Float64Array)
+* @param {(Complex128Array|Float64Array)} zy - second complex input/output vector
 * @param {integer} strideY - stride for `zy` (in complex elements)
-* @param {NonNegativeInteger} offsetY - starting index for `zy`
+* @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements for Complex128Array, Float64 index for Float64Array)
 * @param {number} c - cosine of rotation (real)
 * @param {number} s - sine of rotation (real)
-* @returns {Float64Array} `zx`
+* @returns {(Complex128Array|Float64Array)} `zx`
 */
 function zdrot( N, zx, strideX, offsetX, zy, strideY, offsetY, c, s ) {
 	var tempr;
 	var tempi;
+	var tmpx;
+	var tmpy;
+	var xv;
+	var yv;
 	var sx;
 	var sy;
 	var ix;
@@ -57,19 +61,24 @@ function zdrot( N, zx, strideX, offsetX, zy, strideY, offsetY, c, s ) {
 		return zx;
 	}
 
+	tmpx = float64view( zx, offsetX );
+	tmpy = float64view( zy, offsetY );
+	xv = tmpx[ 0 ];
+	ix = tmpx[ 1 ];
+	yv = tmpy[ 0 ];
+	iy = tmpy[ 1 ];
+
 	// Each complex element spans 2 doubles, so multiply stride by 2
 	sx = strideX * 2;
 	sy = strideY * 2;
-	ix = offsetX;
-	iy = offsetY;
 
 	for ( i = 0; i < N; i++ ) {
-		tempr = c * zx[ ix ] + s * zy[ iy ];
-		tempi = c * zx[ ix + 1 ] + s * zy[ iy + 1 ];
-		zy[ iy ] = c * zy[ iy ] - s * zx[ ix ];
-		zy[ iy + 1 ] = c * zy[ iy + 1 ] - s * zx[ ix + 1 ];
-		zx[ ix ] = tempr;
-		zx[ ix + 1 ] = tempi;
+		tempr = c * xv[ ix ] + s * yv[ iy ];
+		tempi = c * xv[ ix + 1 ] + s * yv[ iy + 1 ];
+		yv[ iy ] = c * yv[ iy ] - s * xv[ ix ];
+		yv[ iy + 1 ] = c * yv[ iy + 1 ] - s * xv[ ix + 1 ];
+		xv[ ix ] = tempr;
+		xv[ ix + 1 ] = tempi;
 		ix += sx;
 		iy += sy;
 	}
