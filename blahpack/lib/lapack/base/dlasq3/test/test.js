@@ -255,3 +255,53 @@ test( 'dlasq3: n3_minimal — minimal 3-element problem', function t() {
 	assertClose( result.tau, tc.tau, 1e-12, 'tau' );
 	assertArrayClose( z, tc.z, 1e-12, 'z' );
 });
+
+test( 'dlasq3: 2eig_swap — 2-eigenvalue deflation with swap', function t() {
+	// n0=2, i0=1 enters label 40 directly. Z(nn-3)=3.0 > Z(nn-7)=1.0 triggers swap.
+	var z = new Float64Array([
+		1.0, 0.5, 1.0, 0.5,
+		3.0, 0.0, 3.0, 0.0
+	]);
+	var result = dlasq3( 1, 2, z, 1, 0, 0, 0.5, 1.0, 0.0, 4.0, 0, 0, 0, true, 0, 0.5, 0.5, 3.0, 4.0, 0.5, 0.0, 0.0 );
+	assert.equal( result.n0, 0 );
+	assertClose( result.sigma, 1.0, 1e-14, 'sigma' );
+});
+
+test( 'dlasq3: 2eig_s_le_t — 2-eigenvalue deflation s<=t branch', function t() {
+	// n0=2, Z(nn-3)=2.0 < Z(nn-7)=4.0 (no swap). s=0.8 <= t=1.25.
+	var z = new Float64Array([
+		4.0, 0.5, 4.0, 0.5,
+		2.0, 0.0, 2.0, 0.0
+	]);
+	var result = dlasq3( 1, 2, z, 1, 0, 0, 0.5, 1.0, 0.0, 4.0, 0, 0, 0, true, 0, 0.5, 0.5, 2.0, 4.0, 0.5, 0.0, 0.0 );
+	assert.equal( result.n0, 0 );
+	assertClose( result.sigma, 1.0, 1e-14, 'sigma' );
+});
+
+test( 'dlasq3: tau_lt_sigma — tau < sigma path in sigma update', function t() {
+	// With sigma=5.0, dlasq4 produces a small shift, tau < sigma.
+	var z = new Float64Array([
+		4.0, 1.0, 4.0, 1.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.3, 2.0, 0.3,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq3( 1, 4, z, 1, 0, 0, 1.0, 5.0, 0.0, 4.0, 0, 0, 0, true, 0, 1.0, 2.0, 1.0, 2.0, 3.0, 0.0, 0.0 );
+	assert.ok( result.tau < result.sigma, 'tau should be less than sigma' );
+	assert.ok( result.dmin >= 0, 'dmin should be non-negative' );
+});
+
+test( 'dlasq3: ttype_lt_neg22 — tau set to zero after repeated failures', function t() {
+	// Very small Z values with dmin=-1.0 forcing large initial tau.
+	// dlasq5 fails repeatedly, driving ttype below -22.
+	var z = new Float64Array([
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.01, 0.01, 0.01,
+		0.01, 0.0,  0.01, 0.0
+	]);
+	var result = dlasq3( 1, 4, z, 1, 0, 0, -1.0, 0.0, 0.0, 0.01, 0, 0, 0, true, 0, 0.01, 0.01, 0.01, 0.01, 0.01, 0.0, 0.0 );
+	assert.ok( result.nfail >= 3, 'should have at least 3 failures' );
+	assert.ok( result.dmin >= 0, 'dmin should converge to non-negative' );
+	assertClose( result.tau, 0.0, 1e-14, 'tau should be zero after safe fallback' );
+});

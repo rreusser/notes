@@ -200,6 +200,28 @@ test( 'zlaqp2: square collinear (offpi == M-1 norm zero path)', function t() {
 	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
 });
 
+test( 'zlaqp2: offset collinear last row (offpi=M-1 zero norm path)', function t() {
+	var LDA = 6;
+	var A = new Complex128Array( LDA * 6 );
+	var Av = reinterpret( A, 0 );
+
+	Av[0]=5; Av[1]=0; Av[2]=4; Av[3]=0; Av[4]=1; Av[5]=0; Av[6]=2; Av[7]=0;
+	Av[2*LDA]=3; Av[2*LDA+1]=0; Av[2*LDA+2]=2; Av[2*LDA+3]=0; Av[2*LDA+4]=1; Av[2*LDA+5]=1e-15; Av[2*LDA+6]=2; Av[2*LDA+7]=1e-15;
+	Av[4*LDA]=1; Av[4*LDA+1]=0; Av[4*LDA+2]=0; Av[4*LDA+3]=0; Av[4*LDA+4]=1; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=1e-15;
+
+	var JPVT = new Int32Array( [ 1, 2, 3 ] );
+	var TAU = new Complex128Array( 3 );
+	var VN1 = colNorms( 4, 3, 2, A, LDA, 0 );
+	var VN2 = new Float64Array( VN1 );
+	var WORK = new Complex128Array( 20 );
+
+	zlaqp2( 4, 3, 2, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
+
+	// Just verify it completes without error and JPVT is a valid permutation
+	var perm = Array.from( JPVT ).sort( function cmp( a, b ) { return a - b; } );
+	assert.deepStrictEqual( perm, [ 1, 2, 3 ], 'JPVT is valid permutation' );
+});
+
 test( 'zlaqp2: N=0 quick return', function t() {
 	var A = new Complex128Array( 10 );
 	var JPVT = new Int32Array( 1 );
