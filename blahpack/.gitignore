@@ -5,3 +5,4 @@ env
 *.mod
 test/build/
 .notebook-kit-debug
+__pycache__

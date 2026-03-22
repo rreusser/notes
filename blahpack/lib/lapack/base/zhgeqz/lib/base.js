@@ -1020,8 +1020,16 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	function doQZSweep() {
 		var idx1;
 		var idx2;
-		var cr;
-		var ci;
+		var v1r;
+		var v1i;
+		var v2r;
+		var v2i;
+		var sr;
+		var si;
+		var p1;
+		var p2;
+		var p3;
+		var p4;
 		var jj;
 		var kk;
 		var mn;
@@ -1050,43 +1058,48 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				Hv[ idx2 + 1 ] = ZERO;
 			}
 
-			// Apply from left to H: DO 100 JC = J, ILASTM
+			// Apply rotation from left to H and T (columns jj..ilastm)
+			// new_row_jj = c * row_jj + s * row_{jj+1}
+			// new_row_{jj+1} = -conj(s) * row_jj + c * row_{jj+1}
+			sr = s[ 0 ];
+			si = s[ 1 ];
+			p1 = oH + jj * sh1 + jj * sh2;
+			p2 = p1 + sh1;
+			p3 = oT + jj * st1 + jj * st2;
+			p4 = p3 + st1;
 			for ( kk = jj; kk <= ilastm; kk++ ) {
-				idx1 = oH + jj * sh1 + kk * sh2;
-				idx2 = oH + ( jj + 1 ) * sh1 + kk * sh2;
-				// CTEMP = C*H(J,JC) + S*H(J+1,JC)
-				cr = c * Hv[ idx1 ] + s[ 0 ] * Hv[ idx2 ] - s[ 1 ] * Hv[ idx2 + 1 ];
-				ci = c * Hv[ idx1 + 1 ] + s[ 0 ] * Hv[ idx2 + 1 ] + s[ 1 ] * Hv[ idx2 ];
-				// H(J+1,JC) = -conj(S)*H(J,JC) + C*H(J+1,JC)
-				Hv[ idx2 ] = -s[ 0 ] * Hv[ idx1 ] - s[ 1 ] * Hv[ idx1 + 1 ] + c * Hv[ idx2 ];
-				Hv[ idx2 + 1 ] = -s[ 0 ] * Hv[ idx1 + 1 ] + s[ 1 ] * Hv[ idx1 ] + c * Hv[ idx2 + 1 ];
-				Hv[ idx1 ] = cr;
-				Hv[ idx1 + 1 ] = ci;
+				v1r = Hv[ p1 ]; v1i = Hv[ p1 + 1 ];
+				v2r = Hv[ p2 ]; v2i = Hv[ p2 + 1 ];
+				Hv[ p1 ] = c * v1r + sr * v2r - si * v2i;
+				Hv[ p1 + 1 ] = c * v1i + sr * v2i + si * v2r;
+				Hv[ p2 ] = c * v2r - sr * v1r - si * v1i;
+				Hv[ p2 + 1 ] = c * v2i - sr * v1i + si * v1r;
 
-				// Same for T
-				idx1 = oT + jj * st1 + kk * st2;
-				idx2 = oT + ( jj + 1 ) * st1 + kk * st2;
-				cr = c * Tv[ idx1 ] + s[ 0 ] * Tv[ idx2 ] - s[ 1 ] * Tv[ idx2 + 1 ];
-				ci = c * Tv[ idx1 + 1 ] + s[ 0 ] * Tv[ idx2 + 1 ] + s[ 1 ] * Tv[ idx2 ];
-				Tv[ idx2 ] = -s[ 0 ] * Tv[ idx1 ] - s[ 1 ] * Tv[ idx1 + 1 ] + c * Tv[ idx2 ];
-				Tv[ idx2 + 1 ] = -s[ 0 ] * Tv[ idx1 + 1 ] + s[ 1 ] * Tv[ idx1 ] + c * Tv[ idx2 + 1 ];
-				Tv[ idx1 ] = cr;
-				Tv[ idx1 + 1 ] = ci;
+				v1r = Tv[ p3 ]; v1i = Tv[ p3 + 1 ];
+				v2r = Tv[ p4 ]; v2i = Tv[ p4 + 1 ];
+				Tv[ p3 ] = c * v1r + sr * v2r - si * v2i;
+				Tv[ p3 + 1 ] = c * v1i + sr * v2i + si * v2r;
+				Tv[ p4 ] = c * v2r - sr * v1r - si * v1i;
+				Tv[ p4 + 1 ] = c * v2i - sr * v1i + si * v1r;
+
+				p1 += sh2; p2 += sh2; p3 += st2; p4 += st2;
 			}
 
-			// Q rotation: IF(ILQ) DO 110 JR = 1, N
+			// Q rotation: apply conj(s) from right to columns jj, jj+1
+			// new_col_jj = c * col_jj + conj(s) * col_{jj+1}
+			// new_col_{jj+1} = -s * col_jj + c * col_{jj+1}
 			if ( ilq ) {
+				p1 = offsetQ * 2 + jj * sq2;
+				p2 = p1 + sq2;
 				for ( kk = 0; kk < N; kk++ ) {
-					idx1 = offsetQ * 2 + kk * sq1 + jj * sq2;
-					idx2 = offsetQ * 2 + kk * sq1 + ( jj + 1 ) * sq2;
-					// CTEMP = C*Q(JR,J) + conj(S)*Q(JR,J+1)
-					cr = c * Qv[ idx1 ] + s[ 0 ] * Qv[ idx2 ] + s[ 1 ] * Qv[ idx2 + 1 ];
-					ci = c * Qv[ idx1 + 1 ] + s[ 0 ] * Qv[ idx2 + 1 ] - s[ 1 ] * Qv[ idx2 ];
-					// Q(JR,J+1) = -S*Q(JR,J) + C*Q(JR,J+1)
-					Qv[ idx2 ] = -s[ 0 ] * Qv[ idx1 ] + s[ 1 ] * Qv[ idx1 + 1 ] + c * Qv[ idx2 ];
-					Qv[ idx2 + 1 ] = -s[ 0 ] * Qv[ idx1 + 1 ] - s[ 1 ] * Qv[ idx1 ] + c * Qv[ idx2 + 1 ];
-					Qv[ idx1 ] = cr;
-					Qv[ idx1 + 1 ] = ci;
+					v1r = Qv[ p1 ]; v1i = Qv[ p1 + 1 ];
+					v2r = Qv[ p2 ]; v2i = Qv[ p2 + 1 ];
+					Qv[ p1 ] = c * v1r + sr * v2r + si * v2i;
+					Qv[ p1 + 1 ] = c * v1i + sr * v2i - si * v2r;
+					Qv[ p2 ] = c * v2r - sr * v1r + si * v1i;
+					Qv[ p2 + 1 ] = c * v2i - sr * v1i - si * v1r;
+					p1 += sq1;
+					p2 += sq1;
 				}
 			}
 
@@ -1112,46 +1125,49 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			Tv[ idx2 ] = ZERO;
 			Tv[ idx2 + 1 ] = ZERO;
 
-			// Apply from right to H: DO 120 JR = IFRSTM, MIN(J+2, ILAST)
-			// Fortran 1-based: JR from IFRSTM to MIN(J+2, ILAST)
-			// 0-based: kk from ifrstm to min(jj+2, ilast)
+			// Apply rotation from right to H (rows ifrstm..min(jj+2, ilast))
+			// new_col_{jj+1} = c * col_{jj+1} + s * col_jj
+			// new_col_jj = -conj(s) * col_{jj+1} + c * col_jj
 			mn = Math.min( jj + 2, ilast );
+			sr = s[ 0 ];
+			si = s[ 1 ];
+			p1 = oH + ifrstm * sh1 + ( jj + 1 ) * sh2;
+			p2 = p1 - sh2;
 			for ( kk = ifrstm; kk <= mn; kk++ ) {
-				idx1 = oH + kk * sh1 + ( jj + 1 ) * sh2;
-				idx2 = oH + kk * sh1 + jj * sh2;
-				// CTEMP = C*H(JR,J+1) + S*H(JR,J)
-				cr = c * Hv[ idx1 ] + s[ 0 ] * Hv[ idx2 ] - s[ 1 ] * Hv[ idx2 + 1 ];
-				ci = c * Hv[ idx1 + 1 ] + s[ 0 ] * Hv[ idx2 + 1 ] + s[ 1 ] * Hv[ idx2 ];
-				// H(JR,J) = -conj(S)*H(JR,J+1) + C*H(JR,J)
-				Hv[ idx2 ] = -s[ 0 ] * Hv[ idx1 ] - s[ 1 ] * Hv[ idx1 + 1 ] + c * Hv[ idx2 ];
-				Hv[ idx2 + 1 ] = -s[ 0 ] * Hv[ idx1 + 1 ] + s[ 1 ] * Hv[ idx1 ] + c * Hv[ idx2 + 1 ];
-				Hv[ idx1 ] = cr;
-				Hv[ idx1 + 1 ] = ci;
+				v1r = Hv[ p1 ]; v1i = Hv[ p1 + 1 ];
+				v2r = Hv[ p2 ]; v2i = Hv[ p2 + 1 ];
+				Hv[ p1 ] = c * v1r + sr * v2r - si * v2i;
+				Hv[ p1 + 1 ] = c * v1i + sr * v2i + si * v2r;
+				Hv[ p2 ] = c * v2r - sr * v1r - si * v1i;
+				Hv[ p2 + 1 ] = c * v2i - sr * v1i + si * v1r;
+				p1 += sh1; p2 += sh1;
 			}
 
-			// Apply from right to T: DO 130 JR = IFRSTM, J
+			// Apply rotation from right to T (rows ifrstm..jj)
+			p1 = oT + ifrstm * st1 + ( jj + 1 ) * st2;
+			p2 = p1 - st2;
 			for ( kk = ifrstm; kk <= jj; kk++ ) {
-				idx1 = oT + kk * st1 + ( jj + 1 ) * st2;
-				idx2 = oT + kk * st1 + jj * st2;
-				cr = c * Tv[ idx1 ] + s[ 0 ] * Tv[ idx2 ] - s[ 1 ] * Tv[ idx2 + 1 ];
-				ci = c * Tv[ idx1 + 1 ] + s[ 0 ] * Tv[ idx2 + 1 ] + s[ 1 ] * Tv[ idx2 ];
-				Tv[ idx2 ] = -s[ 0 ] * Tv[ idx1 ] - s[ 1 ] * Tv[ idx1 + 1 ] + c * Tv[ idx2 ];
-				Tv[ idx2 + 1 ] = -s[ 0 ] * Tv[ idx1 + 1 ] + s[ 1 ] * Tv[ idx1 ] + c * Tv[ idx2 + 1 ];
-				Tv[ idx1 ] = cr;
-				Tv[ idx1 + 1 ] = ci;
+				v1r = Tv[ p1 ]; v1i = Tv[ p1 + 1 ];
+				v2r = Tv[ p2 ]; v2i = Tv[ p2 + 1 ];
+				Tv[ p1 ] = c * v1r + sr * v2r - si * v2i;
+				Tv[ p1 + 1 ] = c * v1i + sr * v2i + si * v2r;
+				Tv[ p2 ] = c * v2r - sr * v1r - si * v1i;
+				Tv[ p2 + 1 ] = c * v2i - sr * v1i + si * v1r;
+				p1 += st1; p2 += st1;
 			}
 
-			// Z rotation: IF(ILZ) DO 140 JR = 1, N
+			// Z rotation: apply s from right to columns jj+1, jj
 			if ( ilz ) {
+				p1 = offsetZ * 2 + ( jj + 1 ) * sz2;
+				p2 = p1 - sz2;
 				for ( kk = 0; kk < N; kk++ ) {
-					idx1 = offsetZ * 2 + kk * sz1 + ( jj + 1 ) * sz2;
-					idx2 = offsetZ * 2 + kk * sz1 + jj * sz2;
-					cr = c * Zv[ idx1 ] + s[ 0 ] * Zv[ idx2 ] - s[ 1 ] * Zv[ idx2 + 1 ];
-					ci = c * Zv[ idx1 + 1 ] + s[ 0 ] * Zv[ idx2 + 1 ] + s[ 1 ] * Zv[ idx2 ];
-					Zv[ idx2 ] = -s[ 0 ] * Zv[ idx1 ] - s[ 1 ] * Zv[ idx1 + 1 ] + c * Zv[ idx2 ];
-					Zv[ idx2 + 1 ] = -s[ 0 ] * Zv[ idx1 + 1 ] + s[ 1 ] * Zv[ idx1 ] + c * Zv[ idx2 + 1 ];
-					Zv[ idx1 ] = cr;
-					Zv[ idx1 + 1 ] = ci;
+					v1r = Zv[ p1 ]; v1i = Zv[ p1 + 1 ];
+					v2r = Zv[ p2 ]; v2i = Zv[ p2 + 1 ];
+					Zv[ p1 ] = c * v1r + sr * v2r - si * v2i;
+					Zv[ p1 + 1 ] = c * v1i + sr * v2i + si * v2r;
+					Zv[ p2 ] = c * v2r - sr * v1r - si * v1i;
+					Zv[ p2 + 1 ] = c * v2i - sr * v1i + si * v1r;
+					p1 += sz1; p2 += sz1;
 				}
 			}
 		}

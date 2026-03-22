@@ -10,8 +10,7 @@ struct VertexOutput {
 };
 
 struct Params {
-  domainMin: vec2<f32>,
-  domainMax: vec2<f32>,
+  viewInverse: mat4x4<f32>,
   nSmooth: u32,
   nPoles: u32,
   center: vec2<f32>,
@@ -36,12 +35,6 @@ fn cmul(a: vec2<f32>, b: vec2<f32>) -> vec2<f32> {
   return vec2<f32>(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
 }
 
-// Complex divide: a / b
-fn cdiv(a: vec2<f32>, b: vec2<f32>) -> vec2<f32> {
-  let d = b.x * b.x + b.y * b.y;
-  return vec2<f32>((a.x * b.x + a.y * b.y) / d, (a.y * b.x - a.x * b.y) / d);
-}
-
 // Point-in-polygon (ray casting)
 fn pointInPolygon(p: vec2<f32>, nVerts: u32) -> bool {
   var crossings: u32 = 0u;
@@ -61,11 +54,9 @@ fn pointInPolygon(p: vec2<f32>, nVerts: u32) -> bool {
 
 @fragment
 fn main(input: VertexOutput) -> @location(0) vec4<f32> {
-  // Map UV to domain coordinates
-  let z = vec2<f32>(
-    mix(params.domainMin.x, params.domainMax.x, input.uv.x),
-    mix(params.domainMin.y, params.domainMax.y, input.uv.y)
-  );
+  // Map UV [-1,1] to domain coordinates via viewInverse matrix
+  let worldPos = params.viewInverse * vec4<f32>(input.uv, 0.0, 1.0);
+  let z = worldPos.xy;
 
   let inside = pointInPolygon(z, nVertices);
 
@@ -91,21 +82,19 @@ fn main(input: VertexOutput) -> @location(0) vec4<f32> {
   let w = smooth_val + sing_val + vec2<f32>(0.0, params.imCorr);
   let value = w.x; // Re(w)
 
-  // Map to colorscale (must be in uniform control flow)
+  // Map to colorscale
   let t = clamp((value - params.valueMin) / (params.valueMax - params.valueMin), 0.0, 1.0);
   let color = textureSample(colorscale_texture, colorscale_sampler, vec2<f32>(t, 0.5));
 
   // Contour lines using screen-space derivatives
   let contourInterval = 0.25;
 
-  // Value contours (u)
   let du_dx = dpdx(value);
   let du_dy = dpdy(value);
   let u_grad = length(vec2<f32>(du_dx, du_dy));
   let u_dist = abs(fract(value / contourInterval - 0.5) - 0.5) * contourInterval / u_grad;
   let u_alpha = 1.0 - smoothstep(0.5, 1.5, u_dist);
 
-  // Transverse contours (v = Im(w), the conjugate harmonic function)
   let v = w.y;
   let dv_dx = dpdx(v);
   let dv_dy = dpdy(v);

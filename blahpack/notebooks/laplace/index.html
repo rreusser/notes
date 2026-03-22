@@ -5,59 +5,284 @@
   <script id="intro" type="text/markdown">
     # Laplace Solver — AAA Test Cases
 
-    Visualization of test cases from two papers, computed using blahpack's JavaScript BLAS/LAPACK (zgesvd → AAA → Laplace solver):
+    Live computation using blahpack's JavaScript BLAS/LAPACK (zgesvd → AAA → Laplace), running in a web worker. Zoom and pan the domain plot with the mouse.
 
     - **[NST18]** Nakatsukasa, Sète, Trefethen, ["The AAA Algorithm for Rational Approximation"](https://arxiv.org/abs/1612.00337), SIAM J. Sci. Comput. 40(3), 2018.
     - **[C20]** Costa, ["Solving Laplace problems with the AAA algorithm"](https://arxiv.org/abs/2001.09439), 2020.
-
-    All data is pre-computed via `node notebooks/laplace/generate-data.js` and rendered in WebGPU.
   </script>
 
-  <script id="data" type="module">
-    const allData = await fetch('./data.json').then(r => r.json());
-    const laplaceCases = allData.laplace;
-    const aaaCases = allData.aaa;
+  <script id="imports" type="module">
+    import { createElementStack } from '../lib/element-stack.js';
+    import { createZoomableAxes } from '../lib/zoomable-axes.js';
+    import { createWebGPUContext, webgpuAxesViewport } from '../lib/webgpu-canvas.js';
+  </script>
+
+  <script id="worker" type="module">
+    const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
+    let _nextId = 0;
+    const _pending = new Map();
+
+    worker.onmessage = (e) => {
+      const { id } = e.data;
+      const resolve = _pending.get(id);
+      if (resolve) { _pending.delete(id); resolve(e.data); }
+    };
+
+    function workerCall(msg) {
+      return new Promise(resolve => {
+        const id = _nextId++;
+        _pending.set(id, resolve);
+        worker.postMessage({ ...msg, id });
+      });
+    }
+
+    invalidation.then(() => worker.terminate());
+  </script>
+
+  <script id="helpers" type="module">
+    function linspace(a, b, step) {
+      const arr = [];
+      if (a <= b) for (let x = a; x <= b + step / 2; x += step) arr.push(x);
+      else for (let x = a; x >= b - step / 2; x -= step) arr.push(x);
+      return arr;
+    }
+
+    function buildLShapedBoundary(stp) {
+      const boundary = [];
+      for (const x of linspace(0, 2, stp)) boundary.push([x, 0]);
+      for (const y of linspace(0, 1, stp)) boundary.push([2, y]);
+      for (const x of linspace(2, 1, stp)) boundary.push([x, 1]);
+      for (const y of linspace(1, 2, stp)) boundary.push([1, y]);
+      for (const x of linspace(1, 0, stp)) boundary.push([x, 2]);
+      for (const y of linspace(2, 0, stp)) boundary.push([0, y]);
+      return boundary;
+    }
   </script>
 
   <script id="laplaceHeader" type="text/markdown">
     ## Laplace Equation on L-shaped Domain
 
-    L-shaped domain ${ tex`[0,2]^2 \setminus [1,2]^2` } with reentrant corner at ${ tex`(1,1)` }, following [C20] §3. The solver decomposes the solution into a smooth polynomial part ${ tex`\sum a_n (z-c)^n` } plus a singular rational part ${ tex`\sum b_k/(z-p_k)` } with poles clustered near the corner singularity.
+    L-shaped domain ${ tex`[0,2]^2 \setminus [1,2]^2` } with reentrant corner at ${ tex`(1,1)` }, following [C20] §3.
   </script>
 
-  <script id="caseSelector" type="module">
-    const caseIndex = view(Inputs.select(
-      laplaceCases.map((c, i) => i),
-      { label: 'Boundary condition', format: i => `${laplaceCases[i].name} — ${laplaceCases[i].source}` }
+  <script id="laplaceControls" type="module">
+    const bcChoice = view(Inputs.select(
+      ['x2', 'rez2', 'reexp'],
+      {
+        label: 'Boundary condition',
+        format: v => ({
+          x2: 'u = x² — [C20] §3, non-harmonic BC (test.js:255)',
+          rez2: 'u = Re(z²) = x²−y² — harmonic polynomial BC',
+          reexp: 'u = Re(eᶻ) — entire-function BC',
+        })[v],
+      }
+    ));
+
+    const mmaxChoice = view(Inputs.select(
+      [50, 100, 150, 200],
+      { label: 'mmax (AAA iterations)', value: 100 }
     ));
   </script>
 
-  <script id="currentCase" type="module">
-    const laplaceData = laplaceCases[caseIndex];
+  <script id="compute" type="module">
+    const vertices = [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]];
+    const boundary = buildLShapedBoundary(0.01);
+
+    let bv, valueRange, bcName, bcSource;
+    if (bcChoice === 'x2') {
+      bv = boundary.map(([x]) => x * x);
+      valueRange = [0, 4];
+      bcName = 'u = x²';
+      bcSource = '[C20] §3, non-harmonic BC (test.js:255)';
+    } else if (bcChoice === 'rez2') {
+      bv = boundary.map(([x, y]) => x * x - y * y);
+      valueRange = [-4, 4];
+      bcName = 'u = Re(z²)';
+      bcSource = '[C20] §3, harmonic polynomial BC';
+    } else {
+      bv = boundary.map(([x, y]) => Math.exp(x) * Math.cos(y));
+      valueRange = [Math.min(...bv), Math.max(...bv)];
+      bcName = 'u = Re(eᶻ)';
+      bcSource = '[C20] §3, entire-function BC';
+    }
+
+    const response = await workerCall({
+      type: 'laplace',
+      boundary, boundaryValues: bv, vertices,
+      options: { center: [0.5, 0.5], interior: true, mmax: mmaxChoice },
+    });
+
+    const laplaceData = response.result;
+    const computeTime = response.computeTime;
+    const svdTime = response.timings.svd;
+  </script>
+
+  <script id="computeInfo" type="module">
+    display(md`
+**${bcName}** — *${bcSource}*
+${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${laplaceData.poles.length} exterior poles (${(laplaceData.allPoles || []).length} total). Max boundary error: \`${laplaceData.maxError.toExponential(2)}\`. Computed in ${(computeTime / 1000).toFixed(1)}s (SVD: ${(svdTime / 1000).toFixed(1)}s).
+    `);
   </script>
 
   <script id="gpu" type="module">
-    const adapter = await navigator.gpu?.requestAdapter();
-    if (!adapter) throw new Error('WebGPU not supported');
-    const device = await adapter.requestDevice();
-    const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
+    const { device, canvasFormat } = await createWebGPUContext();
+  </script>
 
-    device.lost.then(info => console.error('[WebGPU] Device lost:', info.message));
-
-    const origCreateShaderModule = device.createShaderModule.bind(device);
-    device.createShaderModule = function(desc) {
-      const mod = origCreateShaderModule(desc);
-      const label = desc.label || 'unnamed';
-      mod.getCompilationInfo().then(info => {
-        for (const msg of info.messages) {
-          const loc = msg.lineNum ? ` at line ${msg.lineNum}:${msg.linePos}` : '';
-          const full = `[Shader "${label}"${loc}] ${msg.type}: ${msg.message}`;
-          if (msg.type === 'error') console.error(full);
-          else if (msg.type === 'warning') console.warn(full);
-        }
+  <script id="createPlot" type="module">
+    function createPlot(width, height, xDomain = [-0.15, 2.15], yDomain = [-0.15, 2.15]) {
+      return Plot.plot({
+        width,
+        height,
+        marginTop: 10,
+        marginRight: 10,
+        marginLeft: 40,
+        marginBottom: 30,
+        style: { backgroundColor: "transparent", maxWidth: "none", position: "absolute" },
+        x: { domain: xDomain, tickSpacing: 80, label: "Re(z)" },
+        y: { domain: yDomain, tickSpacing: 80, label: "Im(z)" },
+        marks: [
+          Plot.ruleX([0], { stroke: "#0003" }),
+          Plot.ruleY([0], { stroke: "#0003" }),
+        ],
       });
-      return mod;
-    };
+    }
+  </script>
+
+  <script id="stack" type="module">
+    const pixelRatio = devicePixelRatio;
+
+    const stack = createElementStack({
+      layers: [{
+        id: 'webgpu',
+        element: ({ current, width, height }) => {
+          let canvas, gpuContext;
+          if (current) {
+            canvas = current;
+            gpuContext = canvas._gpuContext;
+          } else {
+            canvas = document.createElement('canvas');
+            gpuContext = canvas.getContext('webgpu');
+            canvas._gpuContext = gpuContext;
+            gpuContext.configure({ device, format: canvasFormat });
+            canvas.value = { device, context: gpuContext, format: canvasFormat };
+          }
+          canvas.width = Math.floor(width * pixelRatio);
+          canvas.height = Math.floor(height * pixelRatio);
+          canvas.style.width = `${width}px`;
+          canvas.style.height = `${height}px`;
+          canvas.style.position = 'absolute';
+          canvas.style.top = '0';
+          canvas.style.left = '0';
+          gpuContext.configure({ device, format: canvasFormat });
+          return canvas;
+        }
+      }, {
+        id: 'plot',
+        element: ({ width, height }) => createPlot(width, height)
+      }, {
+        id: 'svg',
+        element: ({ current, width, height }) =>
+          (current ? d3.select(current) : d3.create("svg"))
+            .attr("width", width)
+            .attr("height", height)
+            .style("position", "absolute")
+            .style("top", "0")
+            .style("left", "0")
+            .node()
+      }],
+      width: Math.min(width, 640),
+      height: Math.min(width, 640),
+    });
+  </script>
+
+  <script id="axes" type="module">
+    const renderDirty = { value: true };
+
+    const axes = createZoomableAxes({
+      d3,
+      element: stack.elements.svg,
+      xScale: stack.elements.plot.scale("x"),
+      yScale: stack.elements.plot.scale("y"),
+      aspectRatio: 1,
+      onChange: ({ xDomain, yDomain }) => {
+        renderDirty.value = true;
+        const newPlot = createPlot(stack.width, stack.height, xDomain, yDomain);
+        stack.elements.plot.replaceWith(newPlot);
+        stack.elements.plot = newPlot;
+        stack.dispatchEvent(new CustomEvent('update'));
+      }
+    });
+  </script>
+
+  <script id="figure" type="module">
+    const w = Math.min(width, 640);
+    const h = w;
+
+    const figure = html`<figure style="position:relative">
+      ${stack.element}
+      <figcaption>Scroll to zoom, drag to pan.</figcaption>
+    </figure>`;
+
+    stack.resize(w, h);
+    axes.updateScales(
+      stack.elements.plot.scale("x"),
+      stack.elements.plot.scale("y")
+    );
+    renderDirty.value = true;
+
+    display(figure);
+  </script>
+
+  <script id="poleOverlay" type="module">
+    const svg = d3.select(stack.elements.svg);
+
+    // Clip to plot area
+    const defs = svg.selectAll('defs').data([0]).join('defs');
+    defs.selectAll('clipPath#vp-clip')
+      .data([0])
+      .join('clipPath')
+      .attr('id', 'vp-clip')
+      .selectAll('rect')
+      .data([0])
+      .join('rect');
+
+    const clipped = svg.selectAll('g.clipped')
+      .data([0])
+      .join('g')
+      .attr('class', 'clipped')
+      .attr('clip-path', 'url(#vp-clip)');
+
+    // Pole markers (red)
+    const poleMarkers = laplaceData.poles.map(([re, im]) => ({ re, im, type: 'pole' }));
+    // Zero markers (blue)
+    const zeroMarkers = (laplaceData.allZeros || []).map(([re, im]) => ({ re, im, type: 'zero' }));
+    const allMarkers = [...poleMarkers, ...zeroMarkers];
+
+    const dots = clipped.selectAll('circle.marker')
+      .data(allMarkers)
+      .join('circle')
+      .attr('class', 'marker')
+      .attr('r', d => d.type === 'pole' ? 3 : 2.5)
+      .attr('fill', d => d.type === 'pole' ? 'rgba(220,50,50,0.85)' : 'rgba(50,120,220,0.85)')
+      .attr('stroke', d => d.type === 'pole' ? '#800' : '#036')
+      .attr('stroke-width', 1);
+
+    function updatePositions() {
+      const [x0, x1] = axes.xRange;
+      const [y0, y1] = axes.yRange;
+      defs.select('#vp-clip rect')
+        .attr('x', Math.min(x0, x1))
+        .attr('y', Math.min(y0, y1))
+        .attr('width', Math.abs(x1 - x0))
+        .attr('height', Math.abs(y1 - y0));
+
+      dots
+        .attr('cx', d => axes.xScale(d.re))
+        .attr('cy', d => axes.yScale(d.im));
+    }
+
+    updatePositions();
+    stack.addEventListener('update', updatePositions);
   </script>
 
   <script id="colorscale" type="module">
@@ -92,22 +317,6 @@
     });
   </script>
 
-  <script id="canvas" type="module">
-    const w = Math.min(width, 640);
-    const h = w;
-    const pixelRatio = devicePixelRatio;
-    const canvas = document.createElement('canvas');
-    canvas.width = w * pixelRatio;
-    canvas.height = h * pixelRatio;
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-
-    const gpuContext = canvas.getContext('webgpu');
-    gpuContext.configure({ device, format: canvasFormat });
-
-    display(canvas);
-  </script>
-
   <script id="buffers" type="module">
     function f32buf(data, usage) {
       const arr = new Float32Array(data.flat());
@@ -122,17 +331,17 @@
     const smoothBuf = f32buf(laplaceData.smoothCoeffs);
     const polesBuf = f32buf(laplaceData.poles);
     const singBuf = f32buf(laplaceData.singularCoeffs);
-    const vertsBuf = f32buf(laplaceData.vertices);
-    const allZerosBuf = f32buf(laplaceData.allZeros || []);
+    const vertsBuf = f32buf(vertices);
 
     const nVertsBuf = device.createBuffer({
       size: 4,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
-    device.queue.writeBuffer(nVertsBuf, 0, new Uint32Array([laplaceData.vertices.length]));
+    device.queue.writeBuffer(nVertsBuf, 0, new Uint32Array([vertices.length]));
 
+    // Params: mat4x4 (64) + u32×2 (8) + vec2×2 (16) + f32×4 (16) = 104, padded to 112
     const paramsBuf = device.createBuffer({
-      size: 64,
+      size: 112,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
   </script>
@@ -152,8 +361,8 @@
           vec2<f32>(-1, 1), vec2<f32>(1, 1)
         );
         var uv = array<vec2<f32>, 4>(
-          vec2<f32>(0, 1), vec2<f32>(1, 1),
-          vec2<f32>(0, 0), vec2<f32>(1, 0)
+          vec2<f32>(-1, -1), vec2<f32>(1, -1),
+          vec2<f32>(-1, 1), vec2<f32>(1, 1)
         );
         var out: VertexOutput;
         out.position = vec4<f32>(pos[i], 0, 1);
@@ -204,202 +413,182 @@
     });
   </script>
 
-  <script id="pointPipeline" type="module">
-    const pointWGSL = `
-      struct PointParams {
-        domainMin: vec2<f32>,
-        domainMax: vec2<f32>,
-        canvasSize: vec2<f32>,
-        radius: f32,
-        strokeWidth: f32,
-        fillColor: vec4<f32>,
-        strokeColor: vec4<f32>,
-      };
+  <script id="renderLoop" type="module">
+    // Store current render state in a mutable object so the render loop
+    // (which persists) can pick up new data without being recreated.
+    const gpuContext = stack.elements.webgpu._gpuContext;
+    const gpuCanvas = stack.elements.webgpu;
 
-      @group(0) @binding(0) var<uniform> params: PointParams;
-      @group(0) @binding(1) var<storage, read> positions: array<vec2<f32>>;
+    // Mutable render state — updated by downstream cells
+    if (!stack._renderState) {
+      stack._renderState = { bindGroup: null, valueMin: 0, valueMax: 4, laplaceData: null };
+    }
+    const rs = stack._renderState;
+    rs.bindGroup = bindGroup;
+    rs.valueMin = valueRange[0];
+    rs.valueMax = valueRange[1];
+    rs.laplaceData = laplaceData;
 
-      struct VSOut {
-        @builtin(position) pos: vec4<f32>,
-        @location(0) uv: vec2<f32>,
-      };
+    // Signal a redraw since data changed
+    renderDirty.value = true;
 
-      @vertex
-      fn vs(@builtin(vertex_index) vid: u32, @builtin(instance_index) iid: u32) -> VSOut {
-        const corners = array<vec2<f32>, 6>(
-          vec2<f32>(-1, -1), vec2<f32>(1, -1), vec2<f32>(-1, 1),
-          vec2<f32>(-1, 1), vec2<f32>(1, -1), vec2<f32>(1, 1),
-        );
-        let p = positions[iid];
-        let t = (p - params.domainMin) / (params.domainMax - params.domainMin);
-        let center = vec2<f32>(t.x * 2.0 - 1.0, 1.0 - 2.0 * t.y);
-        let totalR = params.radius + params.strokeWidth + 1.0;
-        let corner = corners[vid];
-        let offset = corner * totalR * 2.0 / params.canvasSize;
-        var out: VSOut;
-        out.pos = vec4<f32>(center + offset, 0.0, 1.0);
-        out.uv = corner * totalR;
-        return out;
-      }
+    function render() {
+      if (!renderDirty.value) return;
+      if (!rs.laplaceData || !rs.bindGroup) return;
+      renderDirty.value = false;
 
-      @fragment
-      fn fs(in: VSOut) -> @location(0) vec4<f32> {
-        let d = length(in.uv);
-        let outerR = params.radius + params.strokeWidth;
-        let outerA = 1.0 - smoothstep(outerR - 0.5, outerR + 0.5, d);
-        if (outerA < 0.001) { discard; }
-        let strokeMix = smoothstep(params.radius - 0.5, params.radius + 0.5, d);
-        let color = mix(params.fillColor, params.strokeColor, strokeMix);
-        return vec4<f32>(color.rgb, color.a * outerA);
-      }
-    `;
+      const ld = rs.laplaceData;
 
-    const pointModule = device.createShaderModule({ label: 'points', code: pointWGSL });
+      const paramsData = new ArrayBuffer(112);
+      const f32 = new Float32Array(paramsData);
+      const u32 = new Uint32Array(paramsData);
 
-    const pointBGL = device.createBindGroupLayout({
-      entries: [
-        { binding: 0, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
-        { binding: 1, visibility: GPUShaderStage.VERTEX, buffer: { type: 'read-only-storage' } },
-      ],
-    });
+      f32.set(axes.viewInverse, 0);
+      u32[16] = ld.smoothCoeffs.length;
+      u32[17] = ld.poles.length;
+      f32[18] = ld.center[0];
+      f32[19] = ld.center[1];
+      f32[20] = ld.b0[0];
+      f32[21] = ld.b0[1];
+      f32[22] = ld.imCorr;
+      f32[23] = rs.valueMin;
+      f32[24] = rs.valueMax;
 
-    const pointPipeline = device.createRenderPipeline({
-      layout: device.createPipelineLayout({ bindGroupLayouts: [pointBGL] }),
-      vertex: { module: pointModule, entryPoint: 'vs' },
-      fragment: {
-        module: pointModule,
-        entryPoint: 'fs',
-        targets: [{
-          format: canvasFormat,
-          blend: {
-            color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha' },
-            alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha' },
-          },
+      device.queue.writeBuffer(paramsBuf, 0, f32);
+
+      const vp = webgpuAxesViewport(axes, pixelRatio, gpuCanvas.height);
+
+      const encoder = device.createCommandEncoder();
+      const pass = encoder.beginRenderPass({
+        colorAttachments: [{
+          view: gpuContext.getCurrentTexture().createView(),
+          clearValue: { r: 1, g: 1, b: 1, a: 1 },
+          loadOp: 'clear',
+          storeOp: 'store',
         }],
-      },
-      primitive: { topology: 'triangle-list' },
-    });
+      });
 
-    function createPointBindGroup(positionsBuf, fillColor, strokeColor, radius, strokeWidth) {
-      const buf = device.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
-      const data = new Float32Array(16);
-      data[0] = -0.15; data[1] = -0.15;
-      data[2] = 2.15; data[3] = 2.15;
-      data[4] = canvas.width; data[5] = canvas.height;
-      data[6] = radius; data[7] = strokeWidth;
-      data.set(fillColor, 8);
-      data.set(strokeColor, 12);
-      device.queue.writeBuffer(buf, 0, data);
-      return device.createBindGroup({
-        layout: pointBGL,
-        entries: [
-          { binding: 0, resource: { buffer: buf } },
-          { binding: 1, resource: { buffer: positionsBuf } },
-        ],
+      pass.setViewport(vp.x, vp.y, vp.width, vp.height, 0, 1);
+      pass.setScissorRect(
+        Math.round(vp.x), Math.round(vp.y),
+        Math.round(vp.width), Math.round(vp.height)
+      );
+      pass.setPipeline(renderPipeline);
+      pass.setBindGroup(0, rs.bindGroup);
+      pass.draw(4);
+
+      pass.end();
+      device.queue.submit([encoder.finish()]);
+    }
+
+    // Persistent render loop — only created once via stack._animLoop
+    if (!stack._animLoop) {
+      function loop() {
+        render();
+        stack._animLoop = requestAnimationFrame(loop);
+      }
+      loop();
+      invalidation.then(() => {
+        cancelAnimationFrame(stack._animLoop);
+        stack._animLoop = null;
       });
     }
-
-    const pr = devicePixelRatio;
-    const poleBindGroup = createPointBindGroup(
-      polesBuf,
-      [1, 0.2, 0.2, 1],
-      [0.5, 0, 0, 1],
-      3 * pr, 1.5 * pr,
-    );
-
-    const allZerosLen = (laplaceData.allZeros || []).length;
-    const zeroBindGroup = allZerosLen > 0 ? createPointBindGroup(
-      allZerosBuf,
-      [0.2, 0.5, 1, 1],
-      [0, 0.15, 0.5, 1],
-      3 * pr, 1.5 * pr,
-    ) : null;
-  </script>
-
-  <script id="render" type="module">
-    const margin = 0.15;
-    const domainMin = [0 - margin, 0 - margin];
-    const domainMax = [2 + margin, 2 + margin];
-
-    const [valueMin, valueMax] = laplaceData.valueRange;
-
-    const paramsData = new ArrayBuffer(64);
-    const f32 = new Float32Array(paramsData);
-    const u32 = new Uint32Array(paramsData);
-    f32[0] = domainMin[0]; f32[1] = domainMin[1];
-    f32[2] = domainMax[0]; f32[3] = domainMax[1];
-    u32[4] = laplaceData.smoothCoeffs.length;
-    u32[5] = laplaceData.poles.length;
-    f32[6] = laplaceData.center[0];
-    f32[7] = laplaceData.center[1];
-    f32[8] = laplaceData.b0[0];
-    f32[9] = laplaceData.b0[1];
-    f32[10] = laplaceData.imCorr;
-    f32[11] = valueMin;
-    f32[12] = valueMax;
-    device.queue.writeBuffer(paramsBuf, 0, new Float32Array(paramsData));
-
-    const encoder = device.createCommandEncoder();
-    const pass = encoder.beginRenderPass({
-      colorAttachments: [{
-        view: gpuContext.getCurrentTexture().createView(),
-        clearValue: { r: 1, g: 1, b: 1, a: 1 },
-        loadOp: 'clear',
-        storeOp: 'store',
-      }],
-    });
-    pass.setPipeline(renderPipeline);
-    pass.setBindGroup(0, bindGroup);
-    pass.draw(4);
-
-    pass.setPipeline(pointPipeline);
-    pass.setBindGroup(0, poleBindGroup);
-    pass.draw(6, laplaceData.poles.length);
-
-    if (zeroBindGroup && allZerosLen > 0) {
-      pass.setBindGroup(0, zeroBindGroup);
-      pass.draw(6, allZerosLen);
-    }
-
-    pass.end();
-    device.queue.submit([encoder.finish()]);
-  </script>
-
-  <script id="laplaceInfo" type="module">
-    display(md`
-**${laplaceData.name}** — *${laplaceData.source}*
-${laplaceData.description}
-${laplaceData.smoothCoeffs.length} polynomial terms, ${laplaceData.poles.length} exterior poles, ${(laplaceData.allPoles || []).length} total poles. Max boundary error: \`${laplaceData.maxError.toExponential(2)}\`.
-    `);
   </script>
 
   <script id="aaaHeader" type="text/markdown">
     ## AAA Rational Approximation — [NST18]
 
-    Convergence of the AAA algorithm on test functions from Nakatsukasa, Sète, Trefethen (2018). Each case validates the blahpack JavaScript SVD (zgesvd) against the reference Fortran LAPACK implementation.
+    Convergence of the AAA algorithm on test functions from Nakatsukasa, Sète, Trefethen (2018). Each case validates the blahpack JavaScript SVD (zgesvd) against the reference Fortran LAPACK.
   </script>
 
   <script id="aaaCaseSelector" type="module">
-    const aaaCaseIndex = view(Inputs.select(
-      aaaCases.map((c, i) => i),
-      { label: 'AAA test case', format: i => `${aaaCases[i].name} — ${aaaCases[i].source}` }
+    const aaaCaseChoice = view(Inputs.select(
+      ['exp', 'spiral', 'tan', 'mero'],
+      {
+        label: 'AAA test case',
+        format: v => ({
+          exp: 'exp(z) on unit circle — [NST18] §3, Fig. 1 (test.js:93)',
+          spiral: 'tan(πz/2) on spiral — [NST18] §3, Fig. 1 (test.js:111)',
+          tan: 'tan(z) on unit circle — [NST18] §7.1, App 1 (test.js:153)',
+          mero: 'log(2+z⁴)/(1−16z⁴) — [NST18] §7.3, App 3 (test.js:180)',
+        })[v],
+      }
     ));
   </script>
 
-  <script id="currentAaaCase" type="module">
-    const aaaData = aaaCases[aaaCaseIndex];
+  <script id="aaaCompute" type="module">
+    let Z = [], F = [], aaaSource, aaaDesc, truePoles = [];
+
+    if (aaaCaseChoice === 'exp') {
+      aaaSource = '[NST18] §3, Fig. 1; test.js:93';
+      aaaDesc = '200 equispaced points on unit circle. Reference: 8 iterations, geometric convergence.';
+      for (let i = 0; i < 200; i++) {
+        const theta = 2 * Math.PI * i / 200;
+        const cr = Math.cos(theta), ci = Math.sin(theta);
+        Z.push([cr, ci]);
+        F.push([Math.exp(cr) * Math.cos(ci), Math.exp(cr) * Math.sin(ci)]);
+      }
+    } else if (aaaCaseChoice === 'spiral') {
+      aaaSource = '[NST18] §3, Fig. 1; test.js:111';
+      aaaDesc = '1000 points on spiral winding 7½ times. Paper: m=12, poles ±1 to 15 digits.';
+      truePoles = [[1, 0], [-1, 0], [3, 0], [-3, 0]];
+      for (let i = 0; i < 1000; i++) {
+        const t = i / 999;
+        const lr = -0.5 + t, li = t * 15 * Math.PI;
+        Z.push([Math.exp(lr) * Math.cos(li), Math.exp(lr) * Math.sin(li)]);
+        const zr = Z[i][0], zi = Z[i][1];
+        const a = Math.PI * zr / 2, b = Math.PI * zi / 2;
+        const sinR = Math.sin(a) * Math.cosh(b), sinI = Math.cos(a) * Math.sinh(b);
+        const cosR = Math.cos(a) * Math.cosh(b), cosI = -Math.sin(a) * Math.sinh(b);
+        const d = cosR * cosR + cosI * cosI;
+        F.push([(sinR * cosR + sinI * cosI) / d, (sinI * cosR - sinR * cosI) / d]);
+      }
+    } else if (aaaCaseChoice === 'tan') {
+      aaaSource = '[NST18] §7.1, App 1; test.js:153';
+      aaaDesc = '128 equispaced points on unit circle. Rational (7,7) beats degree-52 polynomial.';
+      truePoles = [[Math.PI / 2, 0], [-Math.PI / 2, 0]];
+      for (let i = 0; i < 128; i++) {
+        const theta = 2 * Math.PI * i / 128;
+        const zr = Math.cos(theta), zi = Math.sin(theta);
+        Z.push([zr, zi]);
+        const sinR = Math.sin(zr) * Math.cosh(zi), sinI = Math.cos(zr) * Math.sinh(zi);
+        const cosR = Math.cos(zr) * Math.cosh(zi), cosI = -Math.sin(zr) * Math.sinh(zi);
+        const d = cosR * cosR + cosI * cosI;
+        F.push([(sinR * cosR + sinI * cosI) / d, (sinI * cosR - sinR * cosI) / d]);
+      }
+    } else {
+      aaaSource = '[NST18] §7.3, App 3; test.js:180';
+      aaaDesc = '1000 roots of unity. Meromorphic on unit disk. 4 poles at ±0.5, ±0.5i.';
+      truePoles = [[0.5, 0], [-0.5, 0], [0, 0.5], [0, -0.5]];
+      for (let i = 0; i < 1000; i++) {
+        const theta = 2 * Math.PI * i / 1000;
+        const zr = Math.cos(theta), zi = Math.sin(theta);
+        Z.push([zr, zi]);
+        const z2r = zr * zr - zi * zi, z2i = 2 * zr * zi;
+        const z4r = z2r * z2r - z2i * z2i, z4i = 2 * z2r * z2i;
+        const ar = 2 + z4r, ai = z4i;
+        const logMag = Math.log(Math.hypot(ar, ai)), logArg = Math.atan2(ai, ar);
+        const denR = 1 - 16 * z4r, denI = -16 * z4i;
+        const d = denR * denR + denI * denI;
+        F.push([(logMag * denR + logArg * denI) / d, (logArg * denR - logMag * denI) / d]);
+      }
+    }
+
+    const aaaResponse = await workerCall({ type: 'aaa', Z, F, tol: 1e-13, mmax: 100 });
+    const aaaResult = aaaResponse.result;
+    const aaaComputeTime = aaaResponse.computeTime;
   </script>
 
   <script id="convergencePlot" type="module">
-    const plotData = aaaData.convergence.map((e, i) => ({ iteration: i + 1, error: e }));
+    const plotData = aaaResult.errvec.map((e, i) => ({ iteration: i + 1, error: e }));
 
-    // If reference errors exist, overlay them
-    const refData = aaaData.referenceErrors
-      ? aaaData.referenceErrors.map((e, i) => ({ iteration: i + 1, error: e }))
-      : [];
+    const refErrors = aaaCaseChoice === 'exp'
+      ? [2.371e+0, 2.118e-1, 3.279e-3, 3.954e-5, 1.340e-7, 3.848e-10, 5.684e-13, 1.861e-15]
+      : null;
+    const refData = refErrors ? refErrors.map((e, i) => ({ iteration: i + 1, error: e })) : [];
 
     display(Plot.plot({
-      title: `Convergence: ${aaaData.name}`,
+      title: `Convergence`,
       height: 300,
       y: { type: 'log', label: 'Max error', grid: true },
       x: { label: 'Iteration' },
@@ -421,22 +610,18 @@ ${laplaceData.smoothCoeffs.length} polynomial terms, ${laplaceData.poles.length}
   </script>
 
   <script id="convergenceInfo" type="module">
-    const hasRef = !!aaaData.referenceErrors;
     display(md`
-*${aaaData.source}* — ${aaaData.description}
-${aaaData.convergence.length} iterations, final error \`${aaaData.convergence[aaaData.convergence.length - 1].toExponential(2)}\`. ${aaaData.poles.length} poles, ${aaaData.zeros.length} zeros.${hasRef ? ' Gray dashed line: reference Fortran LAPACK.' : ''}
+*${aaaSource}* — ${aaaDesc}
+${aaaResult.errvec.length} iterations, final error \`${aaaResult.errvec[aaaResult.errvec.length - 1].toExponential(2)}\`. ${aaaResult.pol.length} poles, ${aaaResult.zer.length} zeros. Computed in ${(aaaComputeTime / 1000).toFixed(1)}s.${refErrors ? ' Gray dashed: reference Fortran LAPACK.' : ''}
     `);
   </script>
 
   <script id="poleZeroPlot" type="module">
-    const poleData = aaaData.poles.map(([re, im]) => ({ re, im, type: 'pole' }));
-    const zeroData = aaaData.zeros.map(([re, im]) => ({ re, im, type: 'zero' }));
-    const trueData = (aaaData.truePoles || []).map(([re, im]) => ({ re, im }));
+    const poleData = aaaResult.pol.map(([re, im]) => ({ re, im, type: 'pole' }));
+    const zeroData = aaaResult.zer.map(([re, im]) => ({ re, im, type: 'zero' }));
+    const trueData = truePoles.map(([re, im]) => ({ re, im }));
+    const sampleData = Z.map(([re, im]) => ({ re, im }));
 
-    // Sample points for context
-    const sampleData = (aaaData.samplePoints || []).map(([re, im]) => ({ re, im }));
-
-    // Compute equal-range axes centered on the data
     const allPts = [...poleData, ...zeroData, ...trueData, ...sampleData];
     const pad = 0.15;
     let reMin = Infinity, reMax = -Infinity, imMin = Infinity, imMax = -Infinity;
@@ -446,30 +631,26 @@ ${aaaData.convergence.length} iterations, final error \`${aaaData.convergence[aa
       if (p.im < imMin) imMin = p.im;
       if (p.im > imMax) imMax = p.im;
     }
-    const reSpan = reMax - reMin, imSpan = imMax - imMin;
-    const span = Math.max(reSpan, imSpan);
+    const span = Math.max(reMax - reMin, imMax - imMin);
     const reMid = (reMin + reMax) / 2, imMid = (imMin + imMax) / 2;
     const halfSpan = span / 2 * (1 + pad);
 
     const plotSize = Math.min(width, 540);
 
     display(Plot.plot({
-      title: `Poles and zeros: ${aaaData.name}`,
+      title: `Poles and zeros`,
       width: plotSize,
       height: plotSize,
       x: { label: 'Re(z)', domain: [reMid - halfSpan, reMid + halfSpan] },
       y: { label: 'Im(z)', domain: [imMid - halfSpan, imMid + halfSpan] },
       color: { domain: ['pole', 'zero'], range: ['#e15759', '#4e79a7'] },
       marks: [
-        // Sample points (light gray)
         sampleData.length <= 1000
           ? Plot.dot(sampleData, { x: 're', y: 'im', fill: '#eee', r: 1 })
           : null,
-        // True poles (large open circles)
         trueData.length > 0
           ? Plot.dot(trueData, { x: 're', y: 'im', stroke: '#333', fill: 'none', r: 8, strokeWidth: 1.5 })
           : null,
-        // Computed poles and zeros
         Plot.dot([...poleData, ...zeroData], {
           x: 're', y: 'im', fill: 'type',
           symbol: d => d.type === 'pole' ? 'times' : 'circle',

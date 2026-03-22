@@ -1,0 +1,239 @@
+'use strict';
+
+// MODULES //
+
+var Float64Array = require( '@stdlib/array/float64' );
+var dgeqrf = require( '../../dgeqrf/lib/base.js' );
+var dgelqf = require( '../../dgelqf/lib/base.js' );
+var dormqr = require( '../../dormqr/lib/base.js' );
+var dormlq = require( '../../dormlq/lib/base.js' );
+var dlange = require( '../../dlange/lib/base.js' );
+var dlascl = require( '../../dlascl/lib/base.js' );
+var dlaset = require( '../../dlaset/lib/base.js' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+var dtrtrs = require( '../../dtrtrs/lib/base.js' );
+
+
+// VARIABLES //
+
+var NB = 32; // Hardcoded block size (replaces ILAENV queries)
+
+
+// MAIN //
+
+/**
+* Solves overdetermined or underdetermined real linear systems involving an
+* M-by-N matrix A, or its transpose, using a QR or LQ factorization of A.
+*
+* It is assumed that A has full rank.
+*
+* The following options are provided:
+*
+* 1. If TRANS = 'N' and M >= N: find the least squares solution of an
+*    overdetermined system, i.e., solve the least squares problem:
+*      minimize || B - A*X ||
+*
+* 2. If TRANS = 'N' and M < N: find the minimum norm solution of an
+*    underdetermined system A * X = B.
+*
+* 3. If TRANS = 'T' and M >= N: find the minimum norm solution of an
+*    underdetermined system A^T * X = B.
+*
+* 4. If TRANS = 'T' and M < N: find the least squares solution of an
+*    overdetermined system, i.e., solve the least squares problem:
+*      minimize || B - A^T * X ||
+*
+* Several right hand side vectors b and solution vectors x can be handled
+* in a single call; they are stored as columns of the M-by-NRHS right
+* hand side matrix B and the N-by-NRHS solution matrix X.
+*
+* @private
+* @param {string} trans - 'N' for no transpose, 'T' for transpose
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
+* @param {Float64Array} A - M-by-N matrix, overwritten with factorization on exit
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - starting index for A
+* @param {Float64Array} B - on entry, M-by-NRHS (or N-by-NRHS) RHS matrix; on exit, solution
+* @param {integer} strideB1 - stride of the first dimension of B
+* @param {integer} strideB2 - stride of the second dimension of B
+* @param {NonNegativeInteger} offsetB - starting index for B
+* @returns {integer} info - 0 if successful, >0 if the i-th diagonal element of the triangular factor is zero (matrix not full rank)
+*/
+function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
+	var scllen;
+	var bignum;
+	var smlnum;
+	var iascl;
+	var ibscl;
+	var brow;
+	var anrm;
+	var bnrm;
+	var tpsd;
+	var info;
+	var wsize;
+	var WORK;
+	var TAU;
+	var MN;
+	var i;
+	var j;
+	var bi;
+
+	MN = Math.min( M, N );
+
+	tpsd = ( trans === 'T' || trans === 't' );
+
+	// Quick return if dimensions are zero
+	if ( MN === 0 || nrhs === 0 ) {
+		dlaset( 'F', Math.max( M, N ), nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
+		return 0;
+	}
+
+	// Allocate TAU array (length MN)
+	TAU = new Float64Array( MN );
+
+	// Compute workspace size: MN + max(MN, NRHS) * NB
+	wsize = MN + Math.max( MN, nrhs ) * NB;
+	wsize = Math.max( 1, wsize );
+	WORK = new Float64Array( wsize );
+
+	// Get machine parameters
+	smlnum = dlamch( 'S' ) / dlamch( 'P' );
+	bignum = 1.0 / smlnum;
+
+	// Scale A if max element is outside [smlnum, bignum]
+	anrm = dlange( 'M', M, N, A, strideA1, strideA2, offsetA, WORK, 1, 0 );
+	iascl = 0;
+	if ( anrm > 0.0 && anrm < smlnum ) {
+		// Scale matrix norm up to smlnum
+		dlascl( 'G', 0, 0, anrm, smlnum, M, N, A, strideA1, strideA2, offsetA );
+		iascl = 1;
+	} else if ( anrm > bignum ) {
+		// Scale matrix norm down to bignum
+		dlascl( 'G', 0, 0, anrm, bignum, M, N, A, strideA1, strideA2, offsetA );
+		iascl = 2;
+	} else if ( anrm === 0.0 ) {
+		// Matrix all zero. Return zero solution.
+		dlaset( 'F', Math.max( M, N ), nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
+		return 0;
+	}
+
+	// Scale B
+	brow = tpsd ? N : M;
+	bnrm = dlange( 'M', brow, nrhs, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
+	ibscl = 0;
+	if ( bnrm > 0.0 && bnrm < smlnum ) {
+		// Scale matrix norm up to smlnum
+		dlascl( 'G', 0, 0, bnrm, smlnum, brow, nrhs, B, strideB1, strideB2, offsetB );
+		ibscl = 1;
+	} else if ( bnrm > bignum ) {
+		// Scale matrix norm down to bignum
+		dlascl( 'G', 0, 0, bnrm, bignum, brow, nrhs, B, strideB1, strideB2, offsetB );
+		ibscl = 2;
+	}
+
+	if ( M >= N ) {
+		// M >= N: QR factorization of A
+		// A = Q * R
+		dgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, WORK, 1, 0 );
+
+		if ( !tpsd ) {
+			// Least squares problem: minimize || b - A*x ||
+			//
+			// B(1:M,1:NRHS) := Q^T * B(1:M,1:NRHS)
+			dormqr( 'L', 'T', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+
+			// Solve R*X = B(1:N,1:NRHS)
+			info = dtrtrs( 'U', 'N', 'N', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			if ( info > 0 ) {
+				return info;
+			}
+
+			scllen = N;
+		} else {
+			// Minimum norm problem: min || X || s.t. A^T * X = B
+			//
+			// Solve R^T * Y = B(1:N,1:NRHS)
+			info = dtrtrs( 'U', 'T', 'N', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			if ( info > 0 ) {
+				return info;
+			}
+
+			// Zero out B(N+1:M,1:NRHS)
+			for ( j = 0; j < nrhs; j++ ) {
+				bi = offsetB + j * strideB2 + N * strideB1;
+				for ( i = N; i < M; i++ ) {
+					B[ bi ] = 0.0;
+					bi += strideB1;
+				}
+			}
+
+			// B(1:M,1:NRHS) := Q * B(1:M,1:NRHS)
+			dormqr( 'L', 'N', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+
+			scllen = M;
+		}
+	} else {
+		// M < N: LQ factorization of A
+		// A = L * Q
+		dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, WORK, 1, 0 );
+
+		if ( !tpsd ) {
+			// Minimum norm problem: min || X || s.t. A * X = B
+			//
+			// Solve L * Y = B(1:M,1:NRHS)
+			info = dtrtrs( 'L', 'N', 'N', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			if ( info > 0 ) {
+				return info;
+			}
+
+			// Zero out B(M+1:N,1:NRHS)
+			for ( j = 0; j < nrhs; j++ ) {
+				bi = offsetB + j * strideB2 + M * strideB1;
+				for ( i = M; i < N; i++ ) {
+					B[ bi ] = 0.0;
+					bi += strideB1;
+				}
+			}
+
+			// B(1:N,1:NRHS) := Q^T * B(1:N,1:NRHS)
+			dormlq( 'L', 'T', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+
+			scllen = N;
+		} else {
+			// Least squares problem: minimize || b - A^T*x ||
+			//
+			// B(1:N,1:NRHS) := Q * B(1:N,1:NRHS)
+			dormlq( 'L', 'N', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+
+			// Solve L^T * X = B(1:M,1:NRHS)
+			info = dtrtrs( 'L', 'T', 'N', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			if ( info > 0 ) {
+				return info;
+			}
+
+			scllen = M;
+		}
+	}
+
+	// Undo scaling
+	if ( iascl === 1 ) {
+		dlascl( 'G', 0, 0, anrm, smlnum, scllen, nrhs, B, strideB1, strideB2, offsetB );
+	} else if ( iascl === 2 ) {
+		dlascl( 'G', 0, 0, anrm, bignum, scllen, nrhs, B, strideB1, strideB2, offsetB );
+	}
+	if ( ibscl === 1 ) {
+		dlascl( 'G', 0, 0, smlnum, bnrm, scllen, nrhs, B, strideB1, strideB2, offsetB );
+	} else if ( ibscl === 2 ) {
+		dlascl( 'G', 0, 0, bignum, bnrm, scllen, nrhs, B, strideB1, strideB2, offsetB );
+	}
+
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = dgels;

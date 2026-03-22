@@ -1,0 +1,10 @@
+dgelq2
+disnan
+dlaisnan
+dlamch
+dlapy2
+dlarf
+dlarfg
+dorgl2
+iladlc
+iladlr
