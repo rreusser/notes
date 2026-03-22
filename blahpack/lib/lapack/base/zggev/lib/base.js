@@ -2,6 +2,7 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
@@ -22,8 +23,8 @@ var zungqr = require( './zungqr.js' );
 
 var ZERO = 0.0;
 var ONE = 1.0;
-var CZERO = new Float64Array( [ 0.0, 0.0 ] );
-var CONE = new Float64Array( [ 1.0, 0.0 ] );
+var CZERO = new Complex128( 0.0, 0.0 );
+var CONE = new Complex128( 1.0, 0.0 );
 
 // FUNCTIONS //
 

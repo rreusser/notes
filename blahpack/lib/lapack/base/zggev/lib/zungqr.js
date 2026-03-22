@@ -2,13 +2,16 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zunm2r = require( '../../zunm2r/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
 
 // VARIABLES //
 
-var CZERO = new Float64Array( [ 0.0, 0.0 ] );
-var CONE = new Float64Array( [ 1.0, 0.0 ] );
+var CZERO = new Complex128( 0.0, 0.0 );
+var CONE = new Complex128( 1.0, 0.0 );
 
 // MAIN //
 
@@ -19,26 +22,27 @@ var CONE = new Float64Array( [ 1.0, 0.0 ] );
 *
 * Uses zunm2r to apply reflectors to an identity matrix.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Matrix strides are in doubles.
+* A, TAU, WORK are Complex128Arrays. Strides and offsets are in complex elements.
 *
 * @private
 * @param {NonNegativeInteger} M - rows
 * @param {NonNegativeInteger} N - columns
 * @param {NonNegativeInteger} K - number of reflectors
-* @param {Float64Array} A - input/output matrix (interleaved complex)
-* @param {integer} strideA1 - first dim stride of A (doubles)
-* @param {integer} strideA2 - second dim stride of A (doubles)
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} TAU - scalar factors (interleaved complex)
+* @param {Complex128Array} A - input/output matrix
+* @param {integer} strideA1 - first dim stride of A (complex elements)
+* @param {integer} strideA2 - second dim stride of A (complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+* @param {Complex128Array} TAU - scalar factors
 * @param {integer} strideTAU - stride for TAU (complex elements)
 * @param {NonNegativeInteger} offsetTAU - starting index for TAU
-* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {Complex128Array} WORK - workspace
 * @param {integer} lwork - workspace size in complex elements
 * @returns {integer} 0 on success
 */
 function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, lwork ) { // eslint-disable-line max-len, max-params
 	var reflectors;
+	var refl_v;
+	var Av;
 	var sa1;
 	var sa2;
 	var oA;
@@ -54,14 +58,18 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	sa2 = strideA2;
 	oA = offsetA;
 
+	// Get Float64 view for element access
+	Av = reinterpret( A, 0 );
+
 	// Save the reflector vectors (lower triangular of A) before overwriting A
 	// with the identity matrix. The reflectors are in columns 0..K-1, rows i+1..M-1.
-	reflectors = new Float64Array( 2 * M * K );
+	reflectors = new Complex128Array( M * K );
+	refl_v = reinterpret( reflectors, 0 );
 	for ( j = 0; j < K; j++ ) {
 		for ( i = 0; i < M; i++ ) {
-			idx = oA + i * sa1 + j * sa2;
-			reflectors[ 2 * ( i + j * M ) ] = A[ idx ];
-			reflectors[ 2 * ( i + j * M ) + 1 ] = A[ idx + 1 ];
+			idx = ( oA + i * sa1 + j * sa2 ) * 2;
+			refl_v[ 2 * ( i + j * M ) ] = Av[ idx ];
+			refl_v[ 2 * ( i + j * M ) + 1 ] = Av[ idx + 1 ];
 		}
 	}
 
@@ -69,12 +77,12 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	zlaset( 'Full', M, N, CZERO, CONE, A, sa1, sa2, oA );
 
 	// Apply Q = H(1)*H(2)*...*H(K) to identity from the left
-	// zunm2r('L', 'N', M, N, K, reflectors, 2, 2*M, 0, TAU, strideTAU, offsetTAU, A, sa1, sa2, oA, WORK)
+	// zunm2r expects strides in complex elements
 	zunm2r( 'L', 'N', M, N, K,
-		reflectors, 2, 2 * M, 0,
+		reflectors, 1, M, 0,
 		TAU, strideTAU, offsetTAU,
 		A, sa1, sa2, oA,
-		WORK
+		WORK, 1, 0
 	);
 
 	return 0;
