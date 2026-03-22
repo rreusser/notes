@@ -258,7 +258,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				found = false;
 				for ( j = 0; j < lm1; j++ ) {
 					idx = oA + i * sA1 + j * sA2;
-					if ( !czero( Av, idx ) || !czero( B, oB + i * sB1 + j * sB2 ) ) {
+					if ( !czero( Av, idx ) || !czero( Bv, oB + i * sB1 + j * sB2 ) ) {
 						jp1 = j + 1;
 						found = true;
 						break;
@@ -272,7 +272,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					var allZero = true; // eslint-disable-line no-var
 					for ( var jj = jp1; jj < l; jj++ ) { // eslint-disable-line no-var
 						idx = oA + i * sA1 + jj * sA2;
-						if ( !czero( Av, idx ) || !czero( B, oB + i * sB1 + jj * sB2 ) ) {
+						if ( !czero( Av, idx ) || !czero( Bv, oB + i * sB1 + jj * sB2 ) ) {
 							allZero = false;
 							break;
 						}
@@ -319,7 +319,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					found = false;
 					for ( i = k - 1; i < lm1; i++ ) {
 						idx = oA + i * sA1 + j * sA2;
-						if ( !czero( Av, idx ) || !czero( B, oB + i * sB1 + j * sB2 ) ) {
+						if ( !czero( Av, idx ) || !czero( Bv, oB + i * sB1 + j * sB2 ) ) {
 							ip1 = i + 1;
 							found = true;
 							break;
@@ -333,7 +333,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						var allZeroCol = true; // eslint-disable-line no-var
 						for ( var ii = ip1; ii < l; ii++ ) { // eslint-disable-line no-var
 							idx = oA + ii * sA1 + j * sA2;
-							if ( !czero( Av, idx ) || !czero( B, oB + ii * sB1 + j * sB2 ) ) {
+							if ( !czero( Av, idx ) || !czero( Bv, oB + ii * sB1 + j * sB2 ) ) {
 								allZeroCol = false;
 								break;
 							}
@@ -383,10 +383,10 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			// ZSWAP(N-K+1, A(I,K), LDA, A(M,K), LDA)
 			// Swap rows ri and pm, columns from k-1 to N-1
 			// stride = LDA in complex elements = sA2/2
-			zswap( N - k + 1, A, sA2 / 2, oA + ri * sA1 + ( k - 1 ) * sA2,
-				A, sA2 / 2, oA + pm * sA1 + ( k - 1 ) * sA2 );
-			zswap( N - k + 1, B, sB2 / 2, oB + ri * sB1 + ( k - 1 ) * sB2,
-				B, sB2 / 2, oB + pm * sB1 + ( k - 1 ) * sB2 );
+			zswap( N - k + 1, A, strideA2, offsetA + ri * strideA1 + ( k - 1 ) * strideA2,
+				A, strideA2, offsetA + pm * strideA1 + ( k - 1 ) * strideA2 );
+			zswap( N - k + 1, B, strideB2, offsetB + ri * strideB1 + ( k - 1 ) * strideB2,
+				B, strideB2, offsetB + pm * strideB1 + ( k - 1 ) * strideB2 );
 		}
 
 		// RSCALE(M) = J (1-based)
@@ -397,10 +397,10 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			// ZSWAP(L, A(1,J), 1, A(1,M), 1)
 			// Swap columns cj and pm, rows 0 to l-1
 			// stride = 1 in complex elements = sA1/2
-			zswap( l, A, sA1 / 2, oA + cj * sA2,
-				A, sA1 / 2, oA + pm * sA2 );
-			zswap( l, B, sB1 / 2, oB + cj * sB2,
-				B, sB1 / 2, oB + pm * sB2 );
+			zswap( l, A, strideA1, offsetA + cj * strideA2,
+				A, strideA1, offsetA + pm * strideA2 );
+			zswap( l, B, strideB1, offsetB + cj * strideB2,
+				B, strideB1, offsetB + pm * strideB2 );
 		}
 	}
 
@@ -452,13 +452,13 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				if ( czero( Av, idx ) ) {
 					ta = ZERO;
 				} else {
-					ta = Math.log10( cabs1( A, idx ) ) / basl;
+					ta = Math.log10( cabs1( Av, idx ) ) / basl;
 				}
 				idx = oB + i * sB1 + j * sB2;
-				if ( czero( B, idx ) ) {
+				if ( czero( Bv, idx ) ) {
 					tb = ZERO;
 				} else {
-					tb = Math.log10( cabs1( B, idx ) ) / basl;
+					tb = Math.log10( cabs1( Bv, idx ) ) / basl;
 				}
 				WORK[ oW + ( i + 4 * N ) * sW ] -= ta + tb;
 				WORK[ oW + ( j + 5 * N ) * sW ] -= ta + tb;
@@ -523,7 +523,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						sum += WORK[ oW + j * sW ];
 					}
 					idx = oB + i * sB1 + j * sB2;
-					if ( !czero( B, idx ) ) {
+					if ( !czero( Bv, idx ) ) {
 						kount += 1;
 						sum += WORK[ oW + j * sW ];
 					}
@@ -541,7 +541,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						sum += WORK[ oW + ( i + N ) * sW ];
 					}
 					idx = oB + i * sB1 + j * sB2;
-					if ( !czero( B, idx ) ) {
+					if ( !czero( Bv, idx ) ) {
 						kount += 1;
 						sum += WORK[ oW + ( i + N ) * sW ];
 					}
@@ -595,9 +595,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			// Row scaling: find max element in row i, columns ilo-1..N-1
 			// izamax returns 0-based index into the subvector
 			irab = izamax( N - ilo + 1, A, sA2 / 2, oA + i * sA1 + ( ilo - 1 ) * sA2 );
-			rab = cabs( A, oA + i * sA1 + ( irab + ilo - 1 ) * sA2 );
+			rab = cabs( Av, oA + i * sA1 + ( irab + ilo - 1 ) * sA2 );
 			irab = izamax( N - ilo + 1, B, sB2 / 2, oB + i * sB1 + ( ilo - 1 ) * sB2 );
-			rab = Math.max( rab, cabs( B, oB + i * sB1 + ( irab + ilo - 1 ) * sB2 ) );
+			rab = Math.max( rab, cabs( Bv, oB + i * sB1 + ( irab + ilo - 1 ) * sB2 ) );
 			lrab = Math.trunc( Math.log10( rab + sfmin ) / basl + ONE );
 			ir = Math.trunc( LSCALE[ oL + i * sL ] + Math.sign( LSCALE[ oL + i * sL ] ) * HALF );
 			ir = Math.min( Math.max( ir, lsfmin ), lsfmax, lsfmax - lrab );
@@ -605,9 +605,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 			// Column scaling: find max element in column i, rows 0..ihi-1
 			icab = izamax( ihi, A, sA1 / 2, oA + i * sA2 );
-			cab = cabs( A, oA + icab * sA1 + i * sA2 );
+			cab = cabs( Av, oA + icab * sA1 + i * sA2 );
 			icab = izamax( ihi, B, sB1 / 2, oB + i * sB2 );
-			cab = Math.max( cab, cabs( B, oB + icab * sB1 + i * sB2 ) );
+			cab = Math.max( cab, cabs( Bv, oB + icab * sB1 + i * sB2 ) );
 			lcab = Math.trunc( Math.log10( cab + sfmin ) / basl + ONE );
 			jc = Math.trunc( RSCALE[ oR + i * sR ] + Math.sign( RSCALE[ oR + i * sR ] ) * HALF );
 			jc = Math.min( Math.max( jc, lsfmin ), lsfmax, lsfmax - lcab );
