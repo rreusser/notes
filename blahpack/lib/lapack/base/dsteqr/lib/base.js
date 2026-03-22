@@ -106,7 +106,10 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var i;
 	var j;
 	var k;
+	var rot;
 	var ii;
+
+	rot = new Float64Array( 3 );
 
 	// Decode COMPZ
 	if ( compz === 'N' || compz === 'n' ) {
@@ -287,10 +290,10 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				for ( i = m - 1; i >= l; i-- ) {
 					f = s * e[ offsetE + i * strideE ];
 					b = c * e[ offsetE + i * strideE ];
-					obj = dlartg( g, f );
-					c = obj.c;
-					s = obj.s;
-					r = obj.r;
+					dlartg( g, f, rot );
+					c = rot[ 0 ];
+					s = rot[ 1 ];
+					r = rot[ 2 ];
 					if ( i !== m - 1 ) {
 						e[ offsetE + ( i + 1 ) * strideE ] = r;
 					}
@@ -401,10 +404,10 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				for ( i = m; i <= l - 1; i++ ) {
 					f = s * e[ offsetE + i * strideE ];
 					b = c * e[ offsetE + i * strideE ];
-					obj = dlartg( g, f );
-					c = obj.c;
-					s = obj.s;
-					r = obj.r;
+					dlartg( g, f, rot );
+					c = rot[ 0 ];
+					s = rot[ 1 ];
+					r = rot[ 2 ];
 					if ( i !== m ) {
 						e[ offsetE + ( i - 1 ) * strideE ] = r;
 					}

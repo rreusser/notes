@@ -25,6 +25,8 @@
 // dsafmax = 1/dsafmin = 2^1022
 var SAFMIN = 2.2250738585072014e-308;
 var SAFMAX = 4.49423283715579e+307;
+var RTMIN = Math.sqrt( SAFMIN );
+var RTMAX = Math.sqrt( SAFMAX / 2.0 );
 
 // MAIN //
 
@@ -50,60 +52,43 @@ var SAFMAX = 4.49423283715579e+307;
 * @private
 * @param {number} f - first component of the vector to be rotated
 * @param {number} g - second component of the vector to be rotated
-* @returns {Object} object with properties `c` (cosine), `s` (sine), and `r` (radius)
+* @param {Float64Array} out - output: out[0]=c, out[1]=s, out[2]=r
+* @returns {Float64Array} out
 */
-function dlartg( f, g ) {
-	var rtmin;
-	var rtmax;
+function dlartg( f, g, out ) {
 	var f1;
 	var g1;
 	var fs;
 	var gs;
 	var d;
-	var c;
-	var s;
-	var r;
 	var u;
-
-	rtmin = Math.sqrt( SAFMIN );
-	rtmax = Math.sqrt( SAFMAX / 2.0 );
 
 	f1 = Math.abs( f );
 	g1 = Math.abs( g );
 
 	if ( g === 0.0 ) {
-		// g is zero: rotation is identity
-		c = 1.0;
-		s = 0.0;
-		r = f;
+		out[ 0 ] = 1.0;
+		out[ 1 ] = 0.0;
+		out[ 2 ] = f;
 	} else if ( f === 0.0 ) {
-		// f is zero
-		c = 0.0;
-		s = ( g > 0.0 ) ? 1.0 : -1.0; // sign(1, g)
-		r = g1;
-	} else if ( f1 > rtmin && f1 < rtmax && g1 > rtmin && g1 < rtmax ) {
-		// Both f and g are in a safe range: unscaled algorithm
+		out[ 0 ] = 0.0;
+		out[ 1 ] = ( g > 0.0 ) ? 1.0 : -1.0;
+		out[ 2 ] = g1;
+	} else if ( f1 > RTMIN && f1 < RTMAX && g1 > RTMIN && g1 < RTMAX ) {
 		d = Math.sqrt( f * f + g * g );
-		c = f1 / d;
-		r = ( f > 0.0 ) ? d : -d; // sign(d, f)
-		s = g / r;
+		out[ 0 ] = f1 / d;
+		out[ 2 ] = ( f > 0.0 ) ? d : -d;
+		out[ 1 ] = g / out[ 2 ];
 	} else {
-		// Scaled algorithm to avoid overflow/underflow
 		u = Math.min( SAFMAX, Math.max( SAFMIN, f1, g1 ) );
 		fs = f / u;
 		gs = g / u;
 		d = Math.sqrt( fs * fs + gs * gs );
-		c = Math.abs( fs ) / d;
-		r = ( f > 0.0 ) ? d : -d; // sign(d, f)
-		s = gs / r;
-		r = r * u;
+		out[ 0 ] = Math.abs( fs ) / d;
+		out[ 2 ] = ( f > 0.0 ) ? d * u : -d * u;
+		out[ 1 ] = gs / ( ( f > 0.0 ) ? d : -d );
 	}
-
-	return {
-		'c': c,
-		's': s,
-		'r': r
-	};
+	return out;
 }
 
 

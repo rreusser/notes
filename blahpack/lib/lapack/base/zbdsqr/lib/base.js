@@ -157,6 +157,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 	// Reuse module-level scratch for dlas2 output:
 	dout = DOUT;
+	rot = new Float64Array( 3 );
 
 	info = 0;
 
@@ -204,10 +205,10 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	// If matrix is lower bidiagonal, rotate to upper bidiagonal
 	if ( lower ) {
 		for ( i = 0; i < N - 1; i++ ) {
-			rot = dlartg( d[ offsetD + i * strideD ], e[ offsetE + i * strideE ] );
-			cs = rot.c;
-			sn = rot.s;
-			r = rot.r;
+			dlartg( d[ offsetD + i * strideD ], e[ offsetE + i * strideE ], rot );
+			cs = rot[ 0 ];
+			sn = rot[ 1 ];
+			r = rot[ 2 ];
 			d[ offsetD + i * strideD ] = r;
 			e[ offsetE + i * strideE ] = sn * d[ offsetD + ( i + 1 ) * strideD ];
 			d[ offsetD + ( i + 1 ) * strideD ] = cs * d[ offsetD + ( i + 1 ) * strideD ];
@@ -500,17 +501,17 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				cs = ONE;
 				oldcs = ONE;
 				for ( i = ll; i < m; i++ ) {
-					rot = dlartg( d[ offsetD + i * strideD ] * cs, e[ offsetE + i * strideE ] );
-					cs = rot.c;
-					sn = rot.s;
-					r = rot.r;
+					dlartg( d[ offsetD + i * strideD ] * cs, e[ offsetE + i * strideE ], rot );
+					cs = rot[ 0 ];
+					sn = rot[ 1 ];
+					r = rot[ 2 ];
 					if ( i > ll ) {
 						e[ offsetE + ( i - 1 ) * strideE ] = oldsn * r;
 					}
-					rot = dlartg( oldcs * r, d[ offsetD + ( i + 1 ) * strideD ] * sn );
-					oldcs = rot.c;
-					oldsn = rot.s;
-					d[ offsetD + i * strideD ] = rot.r;
+					dlartg( oldcs * r, d[ offsetD + ( i + 1 ) * strideD ] * sn, rot );
+					oldcs = rot[ 0 ];
+					oldsn = rot[ 1 ];
+					d[ offsetD + i * strideD ] = rot[ 2 ];
 					RWORK[ offsetRWORK + ( i - ll ) * strideRWORK ] = cs;
 					RWORK[ offsetRWORK + ( i - ll + nm1 ) * strideRWORK ] = sn;
 					RWORK[ offsetRWORK + ( i - ll + nm12 ) * strideRWORK ] = oldcs;
@@ -555,17 +556,17 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				cs = ONE;
 				oldcs = ONE;
 				for ( i = m; i >= ll + 1; i-- ) {
-					rot = dlartg( d[ offsetD + i * strideD ] * cs, e[ offsetE + ( i - 1 ) * strideE ] );
-					cs = rot.c;
-					sn = rot.s;
-					r = rot.r;
+					dlartg( d[ offsetD + i * strideD ] * cs, e[ offsetE + ( i - 1 ) * strideE ], rot );
+					cs = rot[ 0 ];
+					sn = rot[ 1 ];
+					r = rot[ 2 ];
 					if ( i < m ) {
 						e[ offsetE + i * strideE ] = oldsn * r;
 					}
-					rot = dlartg( oldcs * r, d[ offsetD + ( i - 1 ) * strideD ] * sn );
-					oldcs = rot.c;
-					oldsn = rot.s;
-					d[ offsetD + i * strideD ] = rot.r;
+					dlartg( oldcs * r, d[ offsetD + ( i - 1 ) * strideD ] * sn, rot );
+					oldcs = rot[ 0 ];
+					oldsn = rot[ 1 ];
+					d[ offsetD + i * strideD ] = rot[ 2 ];
 					RWORK[ offsetRWORK + ( i - ll - 1 ) * strideRWORK ] = cs;
 					RWORK[ offsetRWORK + ( i - ll - 1 + nm1 ) * strideRWORK ] = -sn;
 					RWORK[ offsetRWORK + ( i - ll - 1 + nm12 ) * strideRWORK ] = oldcs;
@@ -614,10 +615,10 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					( sign( ONE, d[ offsetD + ll * strideD ] ) + shift / d[ offsetD + ll * strideD ] );
 				g = e[ offsetE + ll * strideE ];
 				for ( i = ll; i < m; i++ ) {
-					rot = dlartg( f, g );
-					cosr = rot.c;
-					sinr = rot.s;
-					r = rot.r;
+					dlartg( f, g, rot );
+					cosr = rot[ 0 ];
+					sinr = rot[ 1 ];
+					r = rot[ 2 ];
 					if ( i > ll ) {
 						e[ offsetE + ( i - 1 ) * strideE ] = r;
 					}
@@ -625,10 +626,10 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					e[ offsetE + i * strideE ] = cosr * e[ offsetE + i * strideE ] - sinr * d[ offsetD + i * strideD ];
 					g = sinr * d[ offsetD + ( i + 1 ) * strideD ];
 					d[ offsetD + ( i + 1 ) * strideD ] = cosr * d[ offsetD + ( i + 1 ) * strideD ];
-					rot = dlartg( f, g );
-					cosl = rot.c;
-					sinl = rot.s;
-					d[ offsetD + i * strideD ] = rot.r;
+					dlartg( f, g, rot );
+					cosl = rot[ 0 ];
+					sinl = rot[ 1 ];
+					d[ offsetD + i * strideD ] = rot[ 2 ];
 					f = cosl * e[ offsetE + i * strideE ] + sinl * d[ offsetD + ( i + 1 ) * strideD ];
 					d[ offsetD + ( i + 1 ) * strideD ] = cosl * d[ offsetD + ( i + 1 ) * strideD ] - sinl * e[ offsetE + i * strideE ];
 					if ( i < m - 1 ) {
@@ -675,10 +676,10 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					( sign( ONE, d[ offsetD + m * strideD ] ) + shift / d[ offsetD + m * strideD ] );
 				g = e[ offsetE + ( m - 1 ) * strideE ];
 				for ( i = m; i >= ll + 1; i-- ) {
-					rot = dlartg( f, g );
-					cosr = rot.c;
-					sinr = rot.s;
-					r = rot.r;
+					dlartg( f, g, rot );
+					cosr = rot[ 0 ];
+					sinr = rot[ 1 ];
+					r = rot[ 2 ];
 					if ( i < m ) {
 						e[ offsetE + i * strideE ] = r;
 					}
@@ -686,10 +687,10 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					e[ offsetE + ( i - 1 ) * strideE ] = cosr * e[ offsetE + ( i - 1 ) * strideE ] - sinr * d[ offsetD + i * strideD ];
 					g = sinr * d[ offsetD + ( i - 1 ) * strideD ];
 					d[ offsetD + ( i - 1 ) * strideD ] = cosr * d[ offsetD + ( i - 1 ) * strideD ];
-					rot = dlartg( f, g );
-					cosl = rot.c;
-					sinl = rot.s;
-					d[ offsetD + i * strideD ] = rot.r;
+					dlartg( f, g, rot );
+					cosl = rot[ 0 ];
+					sinl = rot[ 1 ];
+					d[ offsetD + i * strideD ] = rot[ 2 ];
 					f = cosl * e[ offsetE + ( i - 1 ) * strideE ] + sinl * d[ offsetD + ( i - 1 ) * strideD ];
 					d[ offsetD + ( i - 1 ) * strideD ] = cosl * d[ offsetD + ( i - 1 ) * strideD ] - sinl * e[ offsetE + ( i - 1 ) * strideE ];
 					if ( i > ll + 1 ) {

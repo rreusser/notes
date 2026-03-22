@@ -384,9 +384,9 @@ test( 'dsteqr: matrix with very small off-diag elements triggers negligible E br
 });
 
 test( 'dsteqr: very large values trigger ssfmax scaling', function t() {
-	// Values large enough to trigger iscale = 1 (anorm > ssfmax)
+	// Values large enough to trigger iscale = 1 (anorm > ssfmax ~ 2.23e153)
 	var N = 3;
-	var bigVal = 1e153;
+	var bigVal = 1e154;
 	var origD = [ 2.0 * bigVal, 2.0 * bigVal, 2.0 * bigVal ];
 	var origE = [ 1.0 * bigVal, 1.0 * bigVal ];
 	var d = new Float64Array( origD );
@@ -407,7 +407,7 @@ test( 'dsteqr: very large values trigger ssfmax scaling', function t() {
 });
 
 test( 'dsteqr: very small values trigger ssfmin scaling', function t() {
-	// Values small enough to trigger iscale = 2 (anorm < ssfmin)
+	// Values small enough to trigger iscale = 2 (anorm < ssfmin ~ 1.21e-122)
 	var N = 3;
 	var smallVal = 1e-200;
 	var origD = [ 2.0 * smallVal, 2.0 * smallVal, 2.0 * smallVal ];
@@ -426,6 +426,23 @@ test( 'dsteqr: very small values trigger ssfmin scaling', function t() {
 	assertClose( d[ 0 ] / smallVal, 2.0 - Math.sqrt( 2.0 ), 1e-10, 'scaled d[0]' );
 	assertClose( d[ 1 ] / smallVal, 2.0, 1e-10, 'scaled d[1]' );
 	assertClose( d[ 2 ] / smallVal, 2.0 + Math.sqrt( 2.0 ), 1e-10, 'scaled d[2]' );
+});
+
+test( 'dsteqr: very large values trigger ssfmax scaling in QR path', function t() {
+	// Same as above but with descending diagonal to trigger QR path
+	var N = 3;
+	var bigVal = 1e154;
+	var origD = [ 10.0 * bigVal, 2.0 * bigVal, 0.1 * bigVal ];
+	var origE = [ 1.0 * bigVal, 1.0 * bigVal ];
+	var d = new Float64Array( origD );
+	var e = new Float64Array( origE );
+	var Z = new Float64Array( N * N );
+	var WORK = new Float64Array( 2 * ( N - 1 ) );
+	var info;
+
+	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	assert.equal( info, 0 );
+	assertOrthogonal( Z, N, 1e-11, 'orthogonality' );
 });
 
 test( 'dsteqr: block splitting - matrix with zero off-diagonal element', function t() {
