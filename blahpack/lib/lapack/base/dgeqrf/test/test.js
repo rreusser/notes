@@ -72,6 +72,33 @@ test( 'dgeqrf: N=0', function t() {
 	assert.strictEqual( info, tc.INFO );
 });
 
+test( 'dgeqrf: 3x3 with WORK=null (internal allocation)', function t() {
+	var tc = findCase( '3x3' );
+	var A = new Float64Array( 3 * 3 );
+	A[ 0 ] = 2; A[ 1 ] = 1; A[ 2 ] = 3;
+	A[ 3 ] = 1; A[ 4 ] = 4; A[ 5 ] = 2;
+	A[ 6 ] = 3; A[ 7 ] = 2; A[ 8 ] = 5;
+	var TAU = new Float64Array( 3 );
+	var info = dgeqrf( 3, 3, A, 1, 3, 0, TAU, 1, 0, null, 1, 0 );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( extractMatrix( A, 3, 3, 3 ), tc.A, 1e-14, 'A' );
+	assertArrayClose( TAU, tc.TAU, 1e-14, 'TAU' );
+});
+
+test( 'dgeqrf: 3x3 with too-small WORK (internal reallocation)', function t() {
+	var tc = findCase( '3x3' );
+	var A = new Float64Array( 3 * 3 );
+	A[ 0 ] = 2; A[ 1 ] = 1; A[ 2 ] = 3;
+	A[ 3 ] = 1; A[ 4 ] = 4; A[ 5 ] = 2;
+	A[ 6 ] = 3; A[ 7 ] = 2; A[ 8 ] = 5;
+	var TAU = new Float64Array( 3 );
+	var WORK = new Float64Array( 1 ); // too small
+	var info = dgeqrf( 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( extractMatrix( A, 3, 3, 3 ), tc.A, 1e-14, 'A' );
+	assertArrayClose( TAU, tc.TAU, 1e-14, 'TAU' );
+});
+
 test( 'dgeqrf: large 65x65 (blocked path)', function t() {
 	var tc = findCase( 'large_65x65' );
 	var M = 65;

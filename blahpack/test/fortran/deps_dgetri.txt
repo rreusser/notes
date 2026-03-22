@@ -1,0 +1,10 @@
+dgetrf
+dgetrf2
+dgetri
+dlamch
+dlaswp
+dtrti2
+dtrtri
+ieeeck
+ilaenv
+iparmq

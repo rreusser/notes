@@ -99,3 +99,19 @@ test( 'dpotrf2: upper_4x4', function t() {
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.U, 1e-14, 'U' );
 });
+
+test( 'dpotrf2: upper_4x4 not posdef in A22 block', function t() {
+	// 4x4 matrix where upper-left 2x2 is PD but the Schur complement
+	// in the lower-right 2x2 block is not positive definite.
+	// A = [4 2 1 1; 2 5 3 3; 1 3 -1 0; 1 3 0 -1] col-major
+	// The top-left 2x2 [4 2; 2 5] is PD but A22 after update will fail.
+	var A = new Float64Array( [
+		4, 2, 1, 1,
+		2, 5, 3, 3,
+		1, 3, -1, 0,
+		1, 3, 0, -1
+	] );
+	var info = dpotrf2( 'U', 4, A, 1, 4, 0 );
+	// n1 = 2, so if A22 fails at position k, info = k + n1
+	assert.ok( info > 2, 'info should be > 2 (failure in A22 block), got ' + info );
+});

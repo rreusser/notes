@@ -19,6 +19,8 @@
     "esprima": "^4.0.1"
   },
   "devDependencies": {
+    "@observablehq/notebook-kit": "^1.5.2",
+    "@rreusser/mcp-observable-notebook-kit-debug": "^1.0.1",
     "prettier": "^3.4.2"
   }
 }

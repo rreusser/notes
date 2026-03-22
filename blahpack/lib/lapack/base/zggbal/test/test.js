@@ -623,6 +623,52 @@ test( 'zggbal: JOB=P, 5x5 — two isolated eigenvalues', function t() {
 	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
+test( 'zggbal: JOB=B, 3x3 — ilo===ihi after permutation', function t() {
+	// Construct a 3x3 where permutation isolates 2 eigenvalues so ilo===ihi.
+	// Row 2 has nonzero only in col 2 → isolated, l goes from 3 to 2.
+	// Then among rows/cols 0..1: column 0 has nonzero only in row 0 → isolated, k goes from 1 to 2.
+	// Result: ilo=2, ihi=2 → triggers lines 427-430.
+	var result;
+	var lscale;
+	var rscale;
+	var work;
+	var Av;
+	var Bv;
+	var n;
+	var A;
+	var B;
+
+	n = 3;
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+
+	// A: row 0 has nonzero in cols 0,1; row 1 has nonzero in col 1 only; row 2 has nonzero in col 2 only
+	cset( Av, n, 0, 0, 1.0, 0.0 );
+	cset( Av, n, 0, 1, 2.0, 0.0 );
+	cset( Av, n, 1, 1, 3.0, 0.0 );
+	cset( Av, n, 2, 2, 4.0, 0.0 );
+	// B: same structure
+	cset( Bv, n, 0, 0, 1.0, 0.0 );
+	cset( Bv, n, 1, 1, 1.0, 0.0 );
+	cset( Bv, n, 2, 2, 1.0, 0.0 );
+
+	lscale = new Float64Array( n );
+	rscale = new Float64Array( n );
+	work = new Float64Array( 6 * n );
+
+	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
+		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
+
+	assert.strictEqual( result.info, 0, 'info' );
+	// After isolating row 2 and column 0, ilo should equal ihi
+	assert.strictEqual( result.ilo, result.ihi, 'ilo === ihi' );
+	// LSCALE and RSCALE for the isolated element should be 1
+	assert.strictEqual( lscale[ result.ilo - 1 ], 1.0, 'lscale at ilo is 1' );
+	assert.strictEqual( rscale[ result.ilo - 1 ], 1.0, 'rscale at ilo is 1' );
+});
+
 test( 'zggbal: JOB=B, 3x3 — fully dense complex', function t() {
 	var result;
 	var lscale;

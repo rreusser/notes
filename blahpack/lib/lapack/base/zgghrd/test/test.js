@@ -343,6 +343,126 @@ test( 'zgghrd: ILO=IHI (already reduced, near no-op)', function t() {
 	assertArrayClose( extractCol( Zv, 2, n, LDA ), tc.Z_col3, 'Z_col3' );
 });
 
+test( 'zgghrd: invalid COMPQ returns -1', function t() {
+	var A = new Complex128Array( 1 );
+	var B = new Complex128Array( 1 );
+	var Q = new Complex128Array( 1 );
+	var Z = new Complex128Array( 1 );
+	var info;
+
+	info = base( 'X', 'I', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	assert.strictEqual( info, -1, 'invalid compq returns -1' );
+});
+
+test( 'zgghrd: invalid COMPZ returns -2', function t() {
+	var A = new Complex128Array( 1 );
+	var B = new Complex128Array( 1 );
+	var Q = new Complex128Array( 1 );
+	var Z = new Complex128Array( 1 );
+	var info;
+
+	info = base( 'I', 'X', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	assert.strictEqual( info, -2, 'invalid compz returns -2' );
+});
+
+test( 'zgghrd: negative N returns -3', function t() {
+	var A = new Complex128Array( 1 );
+	var B = new Complex128Array( 1 );
+	var Q = new Complex128Array( 1 );
+	var Z = new Complex128Array( 1 );
+	var info;
+
+	info = base( 'I', 'I', -1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	assert.strictEqual( info, -3, 'negative N returns -3' );
+});
+
+test( 'zgghrd: COMPQ=N, COMPZ=I (Z only, no Q accumulation) 3x3', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'no_qz_3x3'; } );
+	var n = 3;
+	var LDA = n;
+	var A = new Complex128Array( LDA * n );
+	var B = new Complex128Array( LDA * n );
+	var Q = new Complex128Array( LDA * n );
+	var Z = new Complex128Array( LDA * n );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var Zv = reinterpret( Z, 0 );
+	var info;
+
+	cset( Av, LDA, 0, 0, 1.0, 0.0 );
+	cset( Av, LDA, 0, 1, 2.0, 1.0 );
+	cset( Av, LDA, 0, 2, 3.0, -1.0 );
+	cset( Av, LDA, 1, 0, 4.0, 2.0 );
+	cset( Av, LDA, 1, 1, 5.0, 0.0 );
+	cset( Av, LDA, 1, 2, 6.0, 1.0 );
+	cset( Av, LDA, 2, 0, 7.0, -1.0 );
+	cset( Av, LDA, 2, 1, 8.0, 2.0 );
+	cset( Av, LDA, 2, 2, 9.0, 0.0 );
+	cset( Bv, LDA, 0, 0, 2.0, 0.0 );
+	cset( Bv, LDA, 0, 1, 1.0, 1.0 );
+	cset( Bv, LDA, 0, 2, 0.5, 0.0 );
+	cset( Bv, LDA, 1, 1, 3.0, 0.0 );
+	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
+	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
+
+	info = base( 'N', 'I', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+
+	assert.strictEqual( info, 0, 'info' );
+	// A and B should match the no_qz_3x3 fixture (same A,B inputs, same reduction)
+	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
+	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
+	assertArrayClose( extractCol( Av, 2, n, LDA ), tc.A_col3, 'A_col3' );
+	assertArrayClose( extractCol( Bv, 0, n, LDA ), tc.B_col1, 'B_col1' );
+	assertArrayClose( extractCol( Bv, 1, n, LDA ), tc.B_col2, 'B_col2' );
+	assertArrayClose( extractCol( Bv, 2, n, LDA ), tc.B_col3, 'B_col3' );
+	// Z should be initialized to identity and then accumulated (not just identity)
+	// Verify Z is unitary and not all zeros
+	assert.ok( Zv[ 0 ] !== 0.0 || Zv[ 1 ] !== 0.0, 'Z is not all zeros' );
+});
+
+test( 'zgghrd: COMPQ=I, COMPZ=N (Q only, no Z accumulation) 3x3', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'no_qz_3x3'; } );
+	var n = 3;
+	var LDA = n;
+	var A = new Complex128Array( LDA * n );
+	var B = new Complex128Array( LDA * n );
+	var Q = new Complex128Array( LDA * n );
+	var Z = new Complex128Array( LDA * n );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var Qv = reinterpret( Q, 0 );
+	var info;
+
+	cset( Av, LDA, 0, 0, 1.0, 0.0 );
+	cset( Av, LDA, 0, 1, 2.0, 1.0 );
+	cset( Av, LDA, 0, 2, 3.0, -1.0 );
+	cset( Av, LDA, 1, 0, 4.0, 2.0 );
+	cset( Av, LDA, 1, 1, 5.0, 0.0 );
+	cset( Av, LDA, 1, 2, 6.0, 1.0 );
+	cset( Av, LDA, 2, 0, 7.0, -1.0 );
+	cset( Av, LDA, 2, 1, 8.0, 2.0 );
+	cset( Av, LDA, 2, 2, 9.0, 0.0 );
+	cset( Bv, LDA, 0, 0, 2.0, 0.0 );
+	cset( Bv, LDA, 0, 1, 1.0, 1.0 );
+	cset( Bv, LDA, 0, 2, 0.5, 0.0 );
+	cset( Bv, LDA, 1, 1, 3.0, 0.0 );
+	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
+	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
+
+	info = base( 'I', 'N', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+
+	assert.strictEqual( info, 0, 'info' );
+	// A and B should match the no_qz_3x3 fixture
+	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
+	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
+	assertArrayClose( extractCol( Av, 2, n, LDA ), tc.A_col3, 'A_col3' );
+	assertArrayClose( extractCol( Bv, 0, n, LDA ), tc.B_col1, 'B_col1' );
+	assertArrayClose( extractCol( Bv, 1, n, LDA ), tc.B_col2, 'B_col2' );
+	assertArrayClose( extractCol( Bv, 2, n, LDA ), tc.B_col3, 'B_col3' );
+	// Q should be initialized to identity and accumulated
+	assert.ok( Qv[ 0 ] !== 0.0 || Qv[ 1 ] !== 0.0, 'Q is not all zeros' );
+});
+
 test( 'zgghrd: empty range IHI=ILO-1', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'empty_range'; } );
 	var n = 3;

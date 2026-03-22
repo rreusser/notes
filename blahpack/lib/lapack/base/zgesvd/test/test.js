@@ -607,6 +607,268 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=A reconstruction (M < N)', function t() {
 	assert.ok( maxErr < 1e-10, 'reconstruction error: ' + maxErr );
 });
 
+test( 'zgesvd: 6x3 JOBU=N JOBVT=N (M >= 2N path 1, values only)', function t() {
+	// M=6, N=3 => M >= 2*N path (wntun && M >= 2*N)
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var sRef = new Float64Array( 3 );
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
+	var A_orig_f64 = new Float64Array( [
+		1.0, 0.0, 2.0, 1.0, 0.0, 1.0, 3.0, 2.0, 1.0, 1.0, 0.0, 2.0,
+		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0, 1.0, 1.0, 2.0, 1.0,
+		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0, 3.0, 0.0, 1.0, 2.0
+	] );
+	var A = c128( Array.from( A_orig_f64 ) );
+	var Aref = c128( Array.from( A_orig_f64 ) );
+	var info;
+	var infoRef;
+
+	// Compute reference with full SVD
+	var Uref = new Complex128Array( 36 );
+	var VTref = new Complex128Array( 9 );
+	infoRef = zgesvd( 'A', 'A', 6, 3, Aref, 1, 6, 0, sRef, 1, 0, Uref, 1, 6, 0, VTref, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( infoRef, 0, 'ref info' );
+
+	// Now test the N path (triggers path 1: wntun && M >= 2*N)
+	info = zgesvd( 'N', 'N', 6, 3, A, 1, 6, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), Array.from( sRef ), 1e-12, 's' );
+});
+
+test( 'zgesvd: 6x3 JOBU=N JOBVT=S (M >= 2N path 1, VT economy)', function t() {
+	// M=6, N=3 => M >= 2*N path, with VT requested
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var sRef = new Float64Array( 3 );
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 9 );   // 3x3
+	var A_orig_f64 = new Float64Array( [
+		1.0, 0.0, 2.0, 1.0, 0.0, 1.0, 3.0, 2.0, 1.0, 1.0, 0.0, 2.0,
+		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0, 1.0, 1.0, 2.0, 1.0,
+		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0, 3.0, 0.0, 1.0, 2.0
+	] );
+	var A = c128( Array.from( A_orig_f64 ) );
+	var Aref = c128( Array.from( A_orig_f64 ) );
+	var info;
+
+	// Compute reference
+	var Uref = new Complex128Array( 36 );
+	var VTref = new Complex128Array( 9 );
+	zgesvd( 'A', 'A', 6, 3, Aref, 1, 6, 0, sRef, 1, 0, Uref, 1, 6, 0, VTref, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+
+	info = zgesvd( 'N', 'S', 6, 3, A, 1, 6, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), Array.from( sRef ), 1e-12, 's' );
+});
+
+test( 'zgesvd: 4x3 JOBU=N JOBVT=N (M >= N, values only, path 10)', function t() {
+	var tc = findCase( 'economy_4x3' );
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 1000 );
+	var s = new Float64Array( 3 );
+	var U = new Complex128Array( 1 );
+	var VT = new Complex128Array( 1 );
+	var A = c128( [
+		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,
+		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,
+		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0
+	] );
+	var info;
+
+	info = zgesvd( 'N', 'N', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
+test( 'zgesvd: 4x3 JOBU=O JOBVT=S (M >= N, overwrite A with U)', function t() {
+	var tc = findCase( 'economy_4x3' );
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var U = new Complex128Array( 1 );   // not used when JOBU='O'
+	var VT = new Complex128Array( 9 );  // 3x3
+	var A = c128( [
+		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,
+		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,
+		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0
+	] );
+	var info;
+
+	info = zgesvd( 'O', 'S', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
+test( 'zgesvd: 4x3 JOBU=S JOBVT=O (M >= N, overwrite A with VT)', function t() {
+	var tc = findCase( 'economy_4x3' );
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var U = new Complex128Array( 12 );   // 4x3
+	var VT = new Complex128Array( 1 );   // not used when JOBVT='O'
+	var A = c128( [
+		1.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 2.0,
+		3.0, 1.0, 1.0, 0.0, 0.0, 2.0, 2.0, 0.0,
+		0.0, 3.0, 2.0, 1.0, 1.0, 0.0, 0.0, 1.0
+	] );
+	var info;
+
+	info = zgesvd( 'S', 'O', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
+test( 'zgesvd: 3x5 JOBU=O JOBVT=S (M < N, overwrite A with U)', function t() {
+	var tc = findCase( 'full_3x5' );
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var U = new Complex128Array( 1 );   // not used when JOBU='O'
+	var VT = new Complex128Array( 15 );  // 3x5
+	var A = c128( [
+		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
+		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
+		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
+		0.0, 1.0, 2.0, 0.0, 1.0, 3.0,
+		1.0, 2.0, 0.0, 1.0, 3.0, 1.0
+	] );
+	var info;
+
+	info = zgesvd( 'O', 'S', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
+test( 'zgesvd: 3x5 JOBU=S JOBVT=O (M < N, overwrite A with VT)', function t() {
+	var tc = findCase( 'full_3x5' );
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var U = new Complex128Array( 9 );   // 3x3
+	var VT = new Complex128Array( 1 );  // not used when JOBVT='O'
+	var A = c128( [
+		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
+		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
+		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
+		0.0, 1.0, 2.0, 0.0, 1.0, 3.0,
+		1.0, 2.0, 0.0, 1.0, 3.0, 1.0
+	] );
+	var info;
+
+	info = zgesvd( 'S', 'O', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
+test( 'zgesvd: 3x5 JOBU=S JOBVT=S (M < N, economy SVD)', function t() {
+	var tc = findCase( 'full_3x5' );
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var U = new Complex128Array( 9 );   // 3x3
+	var VT = new Complex128Array( 15 );  // 3x5
+	var A = c128( [
+		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
+		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
+		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
+		0.0, 1.0, 2.0, 0.0, 1.0, 3.0,
+		1.0, 2.0, 0.0, 1.0, 3.0, 1.0
+	] );
+	var info;
+
+	info = zgesvd( 'S', 'S', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
+test( 'zgesvd: 3x5 JOBU=A JOBVT=S (M < N, full U, economy VT)', function t() {
+	var tc = findCase( 'full_3x5' );
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 3 );
+	var U = new Complex128Array( 9 );   // 3x3
+	var VT = new Complex128Array( 15 );  // 3x5
+	var A = c128( [
+		2.0, 1.0, 0.0, 3.0, 1.0, 0.0,
+		1.0, 1.0, 4.0, 0.0, 0.0, 2.0,
+		3.0, 0.0, 1.0, 1.0, 2.0, 2.0,
+		0.0, 1.0, 2.0, 0.0, 1.0, 3.0,
+		1.0, 2.0, 0.0, 1.0, 3.0, 1.0
+	] );
+	var info;
+
+	info = zgesvd( 'A', 'S', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
+test( 'zgesvd: very small matrix triggers scaling path', function t() {
+	// Scale matrix entries to be very small (near underflow) to trigger the anrm < smlnum path
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 2 );
+	var sRef = new Float64Array( 2 );
+	var U = new Complex128Array( 4 );
+	var VT = new Complex128Array( 4 );
+	var scale = 1e-160;
+	var A1 = c128( [ 3.0*scale, 1.0*scale, 1.0*scale, 2.0*scale, 2.0*scale, 0.0, 4.0*scale, 1.0*scale ] );
+	var A2 = c128( [ 3.0, 1.0, 1.0, 2.0, 2.0, 0.0, 4.0, 1.0 ] );
+	var info;
+
+	// Get reference singular values at normal scale
+	info = zgesvd( 'A', 'A', 2, 2, A2, 1, 2, 0, sRef, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'ref info' );
+
+	// Now test at very small scale
+	info = zgesvd( 'A', 'A', 2, 2, A1, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+
+	// Singular values should match the reference scaled by the same factor
+	assertSingularValuesClose( [ s[0] / scale, s[1] / scale ], Array.from( sRef ), 1e-8, 'scaled s' );
+});
+
+test( 'zgesvd: very large matrix triggers scaling path', function t() {
+	// Scale matrix entries to be very large (near overflow) to trigger the anrm > bignum path
+	var RWORK = new Float64Array( 100 );
+	var WORK = new Complex128Array( 2500 );
+	var s = new Float64Array( 2 );
+	var sRef = new Float64Array( 2 );
+	var U = new Complex128Array( 4 );
+	var VT = new Complex128Array( 4 );
+	var scale = 1e160;
+	var A1 = c128( [ 3.0*scale, 1.0*scale, 1.0*scale, 2.0*scale, 2.0*scale, 0.0, 4.0*scale, 1.0*scale ] );
+	var A2 = c128( [ 3.0, 1.0, 1.0, 2.0, 2.0, 0.0, 4.0, 1.0 ] );
+	var info;
+
+	// Get reference singular values at normal scale
+	info = zgesvd( 'A', 'A', 2, 2, A2, 1, 2, 0, sRef, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'ref info' );
+
+	// Now test at very large scale
+	info = zgesvd( 'A', 'A', 2, 2, A1, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+
+	assertSingularValuesClose( [ s[0] / scale, s[1] / scale ], Array.from( sRef ), 1e-8, 'scaled s' );
+});
+
+test( 'zgesvd: insufficient lwork triggers internal allocation', function t() {
+	var tc = findCase( 'full_2x2' );
+	var RWORK = new Float64Array( 50 );
+	var WORK = new Complex128Array( 1 );  // intentionally small
+	var s = new Float64Array( 2 );
+	var U = new Complex128Array( 4 );
+	var VT = new Complex128Array( 4 );
+	var A = c128( [ 3.0, 1.0, 1.0, 2.0, 2.0, 0.0, 4.0, 1.0 ] );
+	var info;
+
+	info = zgesvd( 'A', 'A', 2, 2, A, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 1, RWORK, 1, 0 );
+	assert.equal( info, 0, 'info' );
+	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
+});
+
 test( 'zgesvd: 5x3 JOBU=S JOBVT=S reconstruction', function t() {
 	var RWORK = new Float64Array( 100 );
 	var WORK = new Complex128Array( 2500 );

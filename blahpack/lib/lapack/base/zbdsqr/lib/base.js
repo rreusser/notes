@@ -27,6 +27,9 @@ var HNDRD = 100.0;
 var MEIGTH = -0.125;
 var MAXITR = 6;
 
+// Module-level scratch to avoid per-call allocation
+var DOUT = new Float64Array( 2 );
+
 
 // FUNCTIONS //
 
@@ -152,8 +155,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	var i;
 	var j;
 
-	// Output array for dlas2:
-	dout = new Float64Array( 2 );
+	// Reuse module-level scratch for dlas2 output:
+	dout = DOUT;
 
 	info = 0;
 

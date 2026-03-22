@@ -21,6 +21,7 @@
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dznrm2 = require( '../../../../blas/base/dznrm2/lib/base.js' );
 var zdscal = require( '../../../../blas/base/zdscal/lib/base.js' );
@@ -28,6 +29,15 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlapy3 = require( '../../dlapy3/lib/base.js' );
 var cmplx = require( '../../../../cmplx.js' );
+
+
+// VARIABLES //
+
+// Module-level scratch arrays to avoid per-call allocation
+var SCRATCH = new Float64Array( 4 );
+var SCRATCH_CA = new Complex128Array( 1 );
+var SCRATCH_CAv = reinterpret( SCRATCH_CA, 0 );
+
 
 // MAIN //
 
@@ -122,14 +132,15 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 
 		// alpha = 1.0 / (alpha - beta)
 		// Use cmplx.divAt for ZLADIV( DCMPLX(ONE), ALPHA - BETA )
-		tmp = new Float64Array( 4 );
-		tmp[ 0 ] = 1.0;
-		tmp[ 1 ] = 0.0;
-		tmp[ 2 ] = alphr - beta;
-		tmp[ 3 ] = alphi;
-		cmplx.divAt( tmp, 0, tmp, 0, tmp, 2 );
+		SCRATCH[ 0 ] = 1.0;
+		SCRATCH[ 1 ] = 0.0;
+		SCRATCH[ 2 ] = alphr - beta;
+		SCRATCH[ 3 ] = alphi;
+		cmplx.divAt( SCRATCH, 0, SCRATCH, 0, SCRATCH, 2 );
 
-		zscal( N - 1, new Complex128( tmp[ 0 ], tmp[ 1 ] ), x, strideX, offsetX );
+		SCRATCH_CAv[ 0 ] = SCRATCH[ 0 ];
+		SCRATCH_CAv[ 1 ] = SCRATCH[ 1 ];
+		zscal( N - 1, SCRATCH_CA.get( 0 ), x, strideX, offsetX );
 
 		// If ALPHA is subnormal, it may lose relative accuracy
 		for ( j = 0; j < knt; j++ ) {

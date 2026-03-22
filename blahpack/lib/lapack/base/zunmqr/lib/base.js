@@ -146,7 +146,7 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Form the triangular factor of the block reflector
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		zlarft(
-			'Forward', 'Columnwise', nq - i, ib,
+			'F', 'C', nq - i, ib,
 			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 			TAU, strideTAU, offsetTAU + i * strideTAU,
 			T, 1, ldt, 0
@@ -162,7 +162,7 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Apply H or H^H to C(ic:ic+mi, jc:jc+ni)
 		zlarfb(
-			side, trans, 'Forward', 'Columnwise', mi, ni, ib,
+			side, trans, 'F', 'C', mi, ni, ib,
 			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 			T, 1, ldt, 0,
 			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,

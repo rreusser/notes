@@ -179,3 +179,89 @@ test( 'zunmbr: P, left, conjugate transpose', function t() {
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
+
+test( 'zunmbr: Q, left, nq < K (M=3, K=5, truncated Q reflectors)', function t() {
+	// Covers lines 110-129: vect='Q', nq < K path (left branch)
+	// setup3x5() does zgebrd(3,5), K=5 (N of original). nq=M=3 < K=5.
+	// The code adjusts to use nq-1=2 reflectors starting from row 1 of A.
+	var bd = setup3x5();
+	var LDC = 6;
+	var C = eye( 3, LDC );
+	var C2 = eye( 3, LDC );
+	var WORK = new Complex128Array( 200 );
+
+	// Apply Q from left, then Q^H from left => should roundtrip to identity
+	var info = zunmbr( 'Q', 'L', 'N', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after Q*C' );
+
+	info = zunmbr( 'Q', 'L', 'C', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after Q^H*Q*C' );
+
+	// Verify roundtrip: Q^H * Q * I = I
+	var Cv = reinterpret( C, 0 );
+	var C2v = reinterpret( C2, 0 );
+	assertArrayClose( Array.from( Cv.subarray( 0, 2 * 3 * LDC ) ), Array.from( C2v.subarray( 0, 2 * 3 * LDC ) ), 1e-10, 'Q roundtrip' );
+});
+
+test( 'zunmbr: Q, right, nq < K (N=3, K=5, truncated Q reflectors)', function t() {
+	// Covers lines 117-122: vect='Q', nq < K path (right branch: i1=0, i2=1)
+	var bd = setup3x5();
+	var LDC = 6;
+	var C = eye( 3, LDC );
+	var C2 = eye( 3, LDC );
+	var WORK = new Complex128Array( 200 );
+
+	// Apply Q from right, then Q^H from right => roundtrip to identity
+	var info = zunmbr( 'Q', 'R', 'N', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after C*Q' );
+
+	info = zunmbr( 'Q', 'R', 'C', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after C*Q*Q^H' );
+
+	var Cv = reinterpret( C, 0 );
+	var C2v = reinterpret( C2, 0 );
+	assertArrayClose( Array.from( Cv.subarray( 0, 2 * 3 * LDC ) ), Array.from( C2v.subarray( 0, 2 * 3 * LDC ) ), 1e-10, 'Q right roundtrip' );
+});
+
+test( 'zunmbr: P, left, nq <= K (M=3, K=4, truncated P reflectors)', function t() {
+	// Covers lines 148-167: vect='P', nq <= K path (left branch: i1=1, i2=0)
+	// setup4x3() does zgebrd(4,3). K=4 (M of original). nq=M=3 <= K=4.
+	// The code adjusts to use nq-1=2 reflectors starting from col 1 of A.
+	var bd = setup4x3();
+	var LDC = 6;
+	var C = eye( 3, LDC );
+	var C2 = eye( 3, LDC );
+	var WORK = new Complex128Array( 200 );
+
+	// Apply P from left (trans='N' => internally becomes transt='C'), then
+	// undo with P (trans='C' => transt='N') => roundtrip
+	var info = zunmbr( 'P', 'L', 'N', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after P*C' );
+
+	info = zunmbr( 'P', 'L', 'C', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after P^H*P*C' );
+
+	var Cv = reinterpret( C, 0 );
+	var C2v = reinterpret( C2, 0 );
+	assertArrayClose( Array.from( Cv.subarray( 0, 2 * 3 * LDC ) ), Array.from( C2v.subarray( 0, 2 * 3 * LDC ) ), 1e-10, 'P left roundtrip' );
+});
+
+test( 'zunmbr: P, right, nq <= K (N=3, K=4, truncated P reflectors)', function t() {
+	// Covers lines 155-159: vect='P', nq <= K path (right branch: i1=0, i2=1)
+	var bd = setup4x3();
+	var LDC = 6;
+	var C = eye( 3, LDC );
+	var C2 = eye( 3, LDC );
+	var WORK = new Complex128Array( 200 );
+
+	// Apply P from right, then undo => roundtrip
+	var info = zunmbr( 'P', 'R', 'N', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after C*P' );
+
+	info = zunmbr( 'P', 'R', 'C', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	assert.equal( info, 0, 'info after C*P*P^H' );
+
+	var Cv = reinterpret( C, 0 );
+	var C2v = reinterpret( C2, 0 );
+	assertArrayClose( Array.from( Cv.subarray( 0, 2 * 3 * LDC ) ), Array.from( C2v.subarray( 0, 2 * 3 * LDC ) ), 1e-10, 'P right roundtrip' );
+});

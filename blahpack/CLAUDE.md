@@ -241,45 +241,15 @@ Never duplicate a routine. If a standalone module already exists (e.g.,
 `zunmqr`), always `require()` it — do not copy the implementation into
 a parent routine's base.js.
 
-**Comment inlined operations.** When complex arithmetic or index calculations
-are inlined for performance, add a comment showing the mathematical operation:
-```javascript
-// temp += conj(A[i,j]) * x[ix]
-tr += aijR * xr + aijI * xi;   // real part (note: aijI sign flipped for conj)
-ti += aijR * xi - aijI * xr;   // imag part
+**Complex arithmetic rules:** Comment all inlined complex operations with the
+math they represent. **NEVER** inline complex division (`cmplx.div`), absolute
+value (`cmplx.abs`), or square root — these require numerical stability
+algorithms. Addition, subtraction, multiplication, conjugate, and real-scalar
+scaling are safe to inline. See [docs/complex-numbers.md](docs/complex-numbers.md).
 
-// y[iy] += alpha * temp
-yr = A[ iy ];
-yi = A[ iy + 1 ];
-A[ iy ]     = yr + alphaR * tr - alphaI * ti;
-A[ iy + 1 ] = yi + alphaR * ti + alphaI * tr;
-```
-This is especially important for complex multiply-add and conjugate multiply
-— operations where the expanded form obscures the intent. Without these
-comments, the code becomes very difficult to verify.
-
-**NEVER inline complex division, absolute value, or square root.** Naive
-implementations of these are numerically unstable (overflow, underflow,
-catastrophic cancellation). Always use the library functions:
-```javascript
-cmplx.div( a, b );          // DO NOT expand to (ar*br+ai*bi)/(br*br+bi*bi) etc.
-cmplx.abs( a );             // DO NOT expand to Math.sqrt(ar*ar + ai*ai)
-cmplx.divAt( v, oi, v, ai, v, bi );  // indexed version for hot loops
-cmplx.absAt( v, idx );               // indexed version for hot loops
-```
-`cmplx.div` uses stdlib's Baudin-Smith algorithm; `cmplx.abs` uses hypot.
-Inlining these loses numerical safety guarantees. Complex addition,
-subtraction, multiplication, conjugate, and real-scalar scaling are safe
-to inline.
-
-For routines with GOTOs, restructure them during translation:
-
-| Pattern | Fortran | JavaScript |
-|---------|---------|-----------|
-| Loop continue | `IF (cond) GO TO 40` inside DO 40 | `if (cond) continue` |
-| Loop break | `GO TO 30` breaks loop, `30: INFO=J` | `info = j+1; return info` |
-| While-loop | `10: ... IF (cond) GO TO 10` | `do { ... } while (cond)` |
-| Skip-ahead | `IF (cond) GO TO 30` (30 below) | `if (!cond) { ... }` |
+**GOTO restructuring:** See [docs/goto-patterns.md](docs/goto-patterns.md)
+for the full pattern table. Common cases: `GO TO` inside DO → `continue`,
+backward `GO TO` → `while`/`do-while`, forward `GO TO` → `if/else`.
 
 ### Step 5: Fill in JS tests and verify
 
@@ -289,6 +259,24 @@ matching the Fortran test. Run:
 ```bash
 node --test lib/<package>/base/<routine>/test/test.js
 ```
+
+**Testing pitfalls (from experience):**
+
+- **Pivoting routines (dgetrf, dgetrs, dgesv, zgeqp3):** Do NOT compare
+  exact solution vectors against fixtures — pivoting tie-breaks differ
+  between JS (0-based IPIV) and Fortran (1-based IPIV). Instead, verify
+  the mathematical property (e.g., A*x ≈ b, or P*L*U ≈ A).
+- **Blocked code paths (NB=32/64):** Require large matrices for fixtures.
+  Workaround: use NB=2 for testing to exercise blocked paths with small
+  matrices (dtrtri successfully used this approach).
+- **Always test alpha != 1.0:** Initial tests often miss non-trivial
+  scaling branches. Routines with alpha/beta parameters need explicit tests
+  with e.g. alpha=2.0, beta=0.5.
+- **Use well-conditioned matrices:** Near-singular or rank-deficient
+  matrices cause floating-point rounding differences between blocked and
+  unblocked paths. Use diagonally dominant matrices for fixture-based tests.
+- **Reverse-pivot mode (dlaswp with incx<0):** Had a known bug — verify
+  that backward iteration applies swaps in reverse order.
 
 **Gate:** All tests pass against Fortran fixtures.
 
@@ -306,6 +294,12 @@ If coverage is low, add targeted test cases:
 - Overflow/underflow: test with 1e300 and 1e-300 values
 - Non-unit and negative strides
 
+**Systematically hard-to-cover paths:**
+- Exceptional shifts in QZ iteration (require slow convergence)
+- sfmin rescaling paths (require inputs near underflow threshold)
+- STOREV='R' / backward direction in dlarfb/dlarft
+- Iteration-limit-exceeded branches
+
 ### Step 7: Write LEARNINGS.md (MANDATORY — DO NOT SKIP)
 
 **This step is NOT optional.** Every translation MUST produce a `LEARNINGS.md`
@@ -322,9 +316,8 @@ Include:
 - **Translation pitfalls**: Index off-by-ones, stride convention confusion,
   places where the Fortran semantics were non-obvious.
 - **Dependency interface surprises**: If a dependency's calling convention
-  was unexpected (e.g., "zlarf takes tau as array+offset, not a 2-element
-  array"), document it so the next routine that calls it doesn't hit the
-  same issue.
+  was unexpected, document it here AND add it to
+  [docs/dependency-conventions.md](docs/dependency-conventions.md).
 - **Missing automation**: If you performed a mechanical step that should
   be automated, note it here (the automation-first rules apply).
 - **Coverage gaps**: If certain code paths were hard to test and why.
@@ -341,6 +334,68 @@ npm test
 ```
 
 **Gate:** All tests pass, no regressions.
+
+---
+
+## Common Translation Pitfalls (from 40+ translated routines)
+
+These are hard-won lessons extracted from LEARNINGS.md across all completed
+translations. Read before starting any new routine.
+
+### Fortran Idioms → JavaScript
+
+| Fortran | JavaScript | Gotcha |
+|---------|-----------|--------|
+| `SIGN(A, B)` | `Math.abs(a) * (Math.sign(b) \|\| 1.0)` | `Math.sign(0)` returns 0, not +1. Fortran's `SIGN(A,0)` returns `+|A|`. The `\|\| 1.0` fallback is **critical** — omitting it caused a real NaN bug in zlarfg. |
+| `DISNAN(X)` | `x !== x` (or `Number.isNaN(x)`) | Self-comparison NaN test |
+| `DLAMCH('S')` | `Number.MIN_VALUE` or stdlib constant | Replace DLAMCH constants with direct numeric literals |
+| `DLAMCH('E')` | `Number.EPSILON / 2` | Machine epsilon (half-precision) |
+| `ILAENV(1, ...)` | `NB = 32` (hardcoded) | Remove ILAENV/LWORK workspace queries entirely — allocate internally |
+
+### Index Convention Landmines
+
+- **IPIV arrays are 0-based in base.js.** Fortran IPIV is 1-based. If
+  comparing against fixtures, subtract 1 from Fortran values. The ndarray.js
+  wrapper handles conversion from 1-based Fortran convention.
+- **INFO return values remain 1-based** (matching Fortran): 0 = success,
+  k > 0 = algorithmic outcome at position k. In implementation, this means
+  `return j + 1` when the 0-based loop variable finds the problem.
+- **Recursive/blocked INFO offset:** When a recursive or blocked call on a
+  submatrix starting at column j fails, offset the returned info:
+  `if (iinfo > 0) return iinfo + j`.
+- **idamax, iladlc, iladlr** return 0-based indices in JS vs 1-based in
+  Fortran. Tests must subtract 1 from fixture values.
+
+### Quick-Return Conditions Are Subtle
+
+Quick returns are more complex than simple dimension checks:
+```javascript
+// WRONG: if (M === 0 || N === 0) return 0;
+// RIGHT (dgemm): also check compound conditions
+if (M === 0 || N === 0 || ((alpha === 0.0 || K === 0) && beta === 1.0)) return 0;
+```
+When `beta !== 1`, you **must still scale C** even when `alpha === 0` or
+`K === 0`. This pattern applies to dgemm, dsyrk, and similar routines.
+
+### Preserve Fortran Operation Order
+
+Do NOT let linters or formatters reorder statements. In dtrmm, a linter
+moved the diagonal multiply before the off-diagonal loop, causing incorrect
+results. The Fortran operation order is load-bearing — preserve it exactly.
+
+### Workspace Aliasing Bugs
+
+TAU and WORK must NEVER alias. If TAU occupies `WORK[0..K*2-1]` and
+subsequent operations (zunmqr, zungqr) use WORK as scratch, they clobber
+TAU. Fix: always allocate separate arrays. Same for ztgevc's RWORK vs
+LSCALE/RSCALE data.
+
+### Dependency Calling Convention Surprises
+
+Before calling a dependency for the first time, check
+[docs/dependency-conventions.md](docs/dependency-conventions.md) for known
+gotchas (e.g., dlarfg takes alpha as array+offset, not scalar; dlarf vs
+zlarf differ in tau parameter type; zlarfb vs zgeqr2 differ in WORK strides).
 
 ---
 
@@ -396,37 +451,12 @@ With 0-based loop variables: `A[offsetA + i*strideA1 + j*strideA2]`
 For column-major: `strideA1 = 1, strideA2 = LDA`
 For row-major: `strideA1 = N, strideA2 = 1`
 
-### Performance Patterns (from stdlib comparison)
+### Performance Patterns
 
-**1. Incremental matrix pointer** — avoid recomputing offsets in inner loops:
-```javascript
-// GOOD: incremental (one add per element)
-var ia = offsetA + sa1 * j;
-for ( i = 0; i < M; i++ ) {
-    A[ ia ] = ...;
-    ia += sa0;
-}
-
-// AVOID: full recompute (two multiplies per element)
-for ( i = 0; i < M; i++ ) {
-    A[ offsetA + i*sa1 + j*sa2 ] = ...;
-}
-```
-
-**2. Layout-aware triangle dispatch** — for routines with `uplo` parameter,
-stdlib remaps strides so the inner loop always walks contiguous memory:
-```javascript
-var isrm = isRowMajor( [ strideA1, strideA2 ] );
-// (col-major, upper) ↔ (row-major, lower) are same physical pattern
-var sa0 = isrm ? strideA2 : strideA1;  // fast (inner) stride
-var sa1 = isrm ? strideA1 : strideA2;  // slow (outer) stride
-```
-
-**3. Drop Fortran stride-1 specialization** — the general stride/offset loop
-handles unit stride fine. Don't port the `IF (INCX.EQ.1)` branches.
-
-**4. Preserve zero-element guards** — `if (x[jx] !== 0.0)` before column
-updates is a meaningful optimization (skips entire column when x is zero).
+Use incremental pointers (one add per element, not two multiplies). Drop
+Fortran stride-1 specializations. Preserve zero-element guards. For `uplo`
+routines, use layout-aware stride remapping. See
+[docs/performance-patterns.md](docs/performance-patterns.md) for code examples.
 
 ### uplo/trans String Convention
 
@@ -436,112 +466,21 @@ The `ndarray.js` wrapper normalizes from stdlib's full strings (`'upper'`,
 
 ### Complex Number Support
 
-Complex arrays use `Complex128Array` from `@stdlib/array/complex128`.
-Complex scalars use `Complex128` from `@stdlib/complex/float64/ctor`.
-This matches stdlib-js conventions exactly.
+For z-prefix (complex) routines, see [docs/complex-numbers.md](docs/complex-numbers.md)
+for the full reference (reinterpret pattern, arithmetic APIs, test patterns).
 
-**API boundary convention** (following stdlib):
-- **Complex arrays**: `Complex128Array` — strides and offsets in complex elements
-- **Complex scalars**: `Complex128` objects — extract via `real(z)` / `imag(z)`
-- **Real arrays**: `Float64Array` — strides and offsets in Float64 units (as before)
-
-**Inside routines**, reinterpret to Float64Array for efficient element access:
-```javascript
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var real = require( '@stdlib/complex/float64/real' );
-var imag = require( '@stdlib/complex/float64/imag' );
-
-function zfoo( N, alpha, x, strideX, offsetX ) {
-    var xv = reinterpret( x, 0 );   // Float64Array view (zero-copy)
-    var re = real( alpha );           // extract scalar parts
-    var im = imag( alpha );
-    var sx = strideX * 2;             // convert complex stride to Float64
-    var ix = offsetX * 2;             // convert complex offset to Float64
-    for ( var i = 0; i < N; i++ ) {
-        // access: xv[ix] = real, xv[ix+1] = imag
-        xv[ ix ] = re * xv[ ix ] - im * xv[ ix + 1 ];
-        ix += sx;
-    }
-    return x;  // return original Complex128Array
-}
-```
-
-**When calling sub-routines**, pass the original Complex128Array with
-strides/offsets in complex elements (the callee does its own `*2`):
-```javascript
-zscal( N, alpha, A, strideA1, offsetA + j * strideA2 );
-// A is Complex128Array, strides/offsets in complex elements
-```
-
-**Internal workspace** allocation:
-```javascript
-var WORK = new Complex128Array( N );      // complex workspace
-var RWORK = new Float64Array( 5 * N );    // real workspace
-```
-
-**Complex scalar constants**:
-```javascript
-var Complex128 = require( '@stdlib/complex/float64/ctor' );
-var CZERO = new Complex128( 0.0, 0.0 );
-var CONE = new Complex128( 1.0, 0.0 );
-```
-
-**Complex arithmetic** — two approaches:
-
-1. **Scalar ops** (outside hot loops): use stdlib via `lib/cmplx.js`:
-```javascript
-var cmplx = require( '../../cmplx.js' );
-var z = cmplx.mul( a, b );     // Complex128 * Complex128 → Complex128
-var z = cmplx.div( a, b );     // robust complex division (Baudin-Smith)
-var r = cmplx.abs( a );        // |a| (overflow-safe)
-```
-
-2. **Indexed ops** (in hot inner loops on Float64 views):
-```javascript
-var r = cmplx.absAt( view, idx );                      // |view[idx]+view[idx+1]*i|
-cmplx.mulAt( view, outIdx, view, aIdx, view, bIdx );   // view[out] = view[a]*view[b]
-cmplx.divAt( view, outIdx, view, aIdx, view, bIdx );   // robust division at index
-```
-
-**NEVER inline complex division or absolute value** — they need numerical
-stability (overflow/underflow protection). Use `cmplx.div`/`cmplx.abs` or
-the indexed variants `cmplx.divAt`/`cmplx.absAt`. Complex multiply, add,
-subtract, conjugate, and real-scalar scaling ARE safe to inline.
-
-**Fortran complex test pattern** (use EQUIVALENCE to print interleaved):
-```fortran
-double precision :: zx_r(20)
-complex*16 :: zx(10)
-equivalence (zx, zx_r)
-call print_array('zx', zx_r, 2*n)
-```
-
-**JS test pattern** for complex arrays:
-```javascript
-var Complex128Array = require( '@stdlib/array/complex128' );
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-
-var x = new Complex128Array( [ 1, 2, 3, 4 ] );  // two complex elements
-var result = zfoo( 2, alpha, x, 1, 0 );
-var view = reinterpret( result, 0 );              // Float64Array for comparison
-assertArrayClose( Array.from( view ), expected );
-```
+Key rules (always in effect):
+- API boundary uses `Complex128Array` (strides/offsets in complex elements)
+  and `Complex128` scalars. Inside routines, `reinterpret(x, 0)` for Float64
+  views, multiply strides/offsets by 2 for Float64 indexing.
+- **NEVER** inline complex division or absolute value — use `cmplx.div`/`cmplx.abs`.
+- **Stride convention mismatch** — Two conventions coexist and mixing them
+  causes silent corruption. If a routine's source does `sa1 = strideA1 * 2`,
+  it expects complex-element strides. If it directly indexes
+  `offset + i*strideA1`, it expects double-based strides. See the doc for
+  which routines use which convention.
 
 ---
-
-## Composable Code-Mod Pipeline
-
-For routines with GOTOs that benefit from incremental Fortran restructuring:
-
-```bash
-python bin/transform.py --list                              # List transforms
-python bin/transform.py pipeline/<r> --init <pkg> <r>       # Initialize
-python bin/transform.py pipeline/<r> --apply <transform>    # Apply transform
-python bin/transform.py pipeline/<r> --verify <step>        # Verify step
-```
-
-Available transforms: `remove-trivial-goto`, `remove-trivial-if-goto`,
-`free-form`, `translate-to-js`.
 
 ## Known Limitations
 

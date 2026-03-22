@@ -1,0 +1,419 @@
+<!doctype html>
+<notebook>
+  <title>Laplace Solver — AAA Test Cases</title>
+
+  <script id="intro" type="text/markdown">
+    # Laplace Solver — AAA Test Cases
+
+    Visualization of Laplace equation solutions computed via the [AAA rational approximation algorithm](https://arxiv.org/abs/1612.00337). Data is pre-computed from the blahpack test suite using JavaScript BLAS/LAPACK (zgesvd). Method follows [Costa (2020)](https://arxiv.org/abs/2001.09439).
+  </script>
+
+  <script id="data" type="module">
+    const allCases = await fetch('./data.json').then(r => r.json());
+    const laplaceCases = allCases.filter(c => c.smoothCoeffs);
+    const aaaCases = allCases.filter(c => c.convergence);
+  </script>
+
+  <script id="caseSelector" type="module">
+    const caseIndex = view(Inputs.select(
+      laplaceCases.map((c, i) => i),
+      { label: 'Test case', format: i => laplaceCases[i].name }
+    ));
+  </script>
+
+  <script id="currentCase" type="module">
+    const laplaceData = laplaceCases[caseIndex];
+  </script>
+
+  <script id="gpu" type="module">
+    const adapter = await navigator.gpu?.requestAdapter();
+    if (!adapter) throw new Error('WebGPU not supported');
+    const device = await adapter.requestDevice();
+    const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
+
+    device.lost.then(info => console.error('[WebGPU] Device lost:', info.message));
+
+    const origCreateShaderModule = device.createShaderModule.bind(device);
+    device.createShaderModule = function(desc) {
+      const mod = origCreateShaderModule(desc);
+      const label = desc.label || 'unnamed';
+      mod.getCompilationInfo().then(info => {
+        for (const msg of info.messages) {
+          const loc = msg.lineNum ? ` at line ${msg.lineNum}:${msg.linePos}` : '';
+          const full = `[Shader "${label}"${loc}] ${msg.type}: ${msg.message}`;
+          if (msg.type === 'error') console.error(full);
+          else if (msg.type === 'warning') console.warn(full);
+        }
+      });
+      return mod;
+    };
+  </script>
+
+  <script id="colorscale" type="module">
+    const colorscaleSize = 256;
+    const colorscaleData = new Uint8Array(colorscaleSize * 4);
+    for (let i = 0; i < colorscaleSize; i++) {
+      const t = i / (colorscaleSize - 1);
+      const c = d3.color(d3.interpolateViridis(t));
+      colorscaleData[i * 4 + 0] = c.r;
+      colorscaleData[i * 4 + 1] = c.g;
+      colorscaleData[i * 4 + 2] = c.b;
+      colorscaleData[i * 4 + 3] = 255;
+    }
+
+    const colorscaleTexture = device.createTexture({
+      label: 'colorscale',
+      size: [colorscaleSize, 1],
+      format: 'rgba8unorm',
+      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
+    });
+    device.queue.writeTexture(
+      { texture: colorscaleTexture },
+      colorscaleData,
+      { bytesPerRow: colorscaleSize * 4 },
+      [colorscaleSize, 1]
+    );
+
+    const colorscaleSampler = device.createSampler({
+      magFilter: 'linear',
+      minFilter: 'linear',
+      addressModeU: 'clamp-to-edge',
+    });
+  </script>
+
+  <script id="canvas" type="module">
+    const w = Math.min(width, 640);
+    const h = w;
+    const pixelRatio = devicePixelRatio;
+    const canvas = document.createElement('canvas');
+    canvas.width = w * pixelRatio;
+    canvas.height = h * pixelRatio;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+
+    const gpuContext = canvas.getContext('webgpu');
+    gpuContext.configure({ device, format: canvasFormat });
+
+    display(canvas);
+  </script>
+
+  <script id="buffers" type="module">
+    function f32buf(data, usage) {
+      const arr = new Float32Array(data.flat());
+      const buf = device.createBuffer({
+        size: Math.max(arr.byteLength, 4),
+        usage: (usage || GPUBufferUsage.STORAGE) | GPUBufferUsage.COPY_DST,
+      });
+      device.queue.writeBuffer(buf, 0, arr);
+      return buf;
+    }
+
+    const smoothBuf = f32buf(laplaceData.smoothCoeffs);
+    const polesBuf = f32buf(laplaceData.poles);
+    const singBuf = f32buf(laplaceData.singularCoeffs);
+    const vertsBuf = f32buf(laplaceData.vertices);
+    const allZerosBuf = f32buf(laplaceData.allZeros || []);
+
+    const nVertsBuf = device.createBuffer({
+      size: 4,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+    device.queue.writeBuffer(nVertsBuf, 0, new Uint32Array([laplaceData.vertices.length]));
+
+    const paramsBuf = device.createBuffer({
+      size: 64,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+  </script>
+
+  <script id="pipeline" type="module">
+    import visualizeWGSL from './visualize.wgsl?raw';
+
+    const fullscreenVertWGSL = `
+      struct VertexOutput {
+        @builtin(position) position: vec4<f32>,
+        @location(0) uv: vec2<f32>,
+      };
+      @vertex
+      fn main(@builtin(vertex_index) i: u32) -> VertexOutput {
+        var pos = array<vec2<f32>, 4>(
+          vec2<f32>(-1, -1), vec2<f32>(1, -1),
+          vec2<f32>(-1, 1), vec2<f32>(1, 1)
+        );
+        var uv = array<vec2<f32>, 4>(
+          vec2<f32>(0, 1), vec2<f32>(1, 1),
+          vec2<f32>(0, 0), vec2<f32>(1, 0)
+        );
+        var out: VertexOutput;
+        out.position = vec4<f32>(pos[i], 0, 1);
+        out.uv = uv[i];
+        return out;
+      }
+    `;
+
+    const bindGroupLayout = device.createBindGroupLayout({
+      entries: [
+        { binding: 0, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+        { binding: 1, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'read-only-storage' } },
+        { binding: 2, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'read-only-storage' } },
+        { binding: 3, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'read-only-storage' } },
+        { binding: 4, visibility: GPUShaderStage.FRAGMENT, texture: {} },
+        { binding: 5, visibility: GPUShaderStage.FRAGMENT, sampler: {} },
+        { binding: 6, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'read-only-storage' } },
+        { binding: 7, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+      ],
+    });
+
+    const renderPipeline = device.createRenderPipeline({
+      layout: device.createPipelineLayout({ bindGroupLayouts: [bindGroupLayout] }),
+      vertex: {
+        module: device.createShaderModule({ label: 'fullscreen vert', code: fullscreenVertWGSL }),
+        entryPoint: 'main',
+      },
+      fragment: {
+        module: device.createShaderModule({ label: 'visualize frag', code: visualizeWGSL }),
+        entryPoint: 'main',
+        targets: [{ format: canvasFormat }],
+      },
+      primitive: { topology: 'triangle-strip' },
+    });
+
+    const bindGroup = device.createBindGroup({
+      layout: bindGroupLayout,
+      entries: [
+        { binding: 0, resource: { buffer: paramsBuf } },
+        { binding: 1, resource: { buffer: smoothBuf } },
+        { binding: 2, resource: { buffer: polesBuf } },
+        { binding: 3, resource: { buffer: singBuf } },
+        { binding: 4, resource: colorscaleTexture.createView() },
+        { binding: 5, resource: colorscaleSampler },
+        { binding: 6, resource: { buffer: vertsBuf } },
+        { binding: 7, resource: { buffer: nVertsBuf } },
+      ],
+    });
+  </script>
+
+  <script id="pointPipeline" type="module">
+    const pointWGSL = `
+      struct PointParams {
+        domainMin: vec2<f32>,
+        domainMax: vec2<f32>,
+        canvasSize: vec2<f32>,
+        radius: f32,
+        strokeWidth: f32,
+        fillColor: vec4<f32>,
+        strokeColor: vec4<f32>,
+      };
+
+      @group(0) @binding(0) var<uniform> params: PointParams;
+      @group(0) @binding(1) var<storage, read> positions: array<vec2<f32>>;
+
+      struct VSOut {
+        @builtin(position) pos: vec4<f32>,
+        @location(0) uv: vec2<f32>,
+      };
+
+      @vertex
+      fn vs(@builtin(vertex_index) vid: u32, @builtin(instance_index) iid: u32) -> VSOut {
+        const corners = array<vec2<f32>, 6>(
+          vec2<f32>(-1, -1), vec2<f32>(1, -1), vec2<f32>(-1, 1),
+          vec2<f32>(-1, 1), vec2<f32>(1, -1), vec2<f32>(1, 1),
+        );
+        let p = positions[iid];
+        let t = (p - params.domainMin) / (params.domainMax - params.domainMin);
+        let center = vec2<f32>(t.x * 2.0 - 1.0, 1.0 - 2.0 * t.y);
+        let totalR = params.radius + params.strokeWidth + 1.0;
+        let corner = corners[vid];
+        let offset = corner * totalR * 2.0 / params.canvasSize;
+        var out: VSOut;
+        out.pos = vec4<f32>(center + offset, 0.0, 1.0);
+        out.uv = corner * totalR;
+        return out;
+      }
+
+      @fragment
+      fn fs(in: VSOut) -> @location(0) vec4<f32> {
+        let d = length(in.uv);
+        let outerR = params.radius + params.strokeWidth;
+        let outerA = 1.0 - smoothstep(outerR - 0.5, outerR + 0.5, d);
+        if (outerA < 0.001) { discard; }
+        let strokeMix = smoothstep(params.radius - 0.5, params.radius + 0.5, d);
+        let color = mix(params.fillColor, params.strokeColor, strokeMix);
+        return vec4<f32>(color.rgb, color.a * outerA);
+      }
+    `;
+
+    const pointModule = device.createShaderModule({ label: 'points', code: pointWGSL });
+
+    const pointBGL = device.createBindGroupLayout({
+      entries: [
+        { binding: 0, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+        { binding: 1, visibility: GPUShaderStage.VERTEX, buffer: { type: 'read-only-storage' } },
+      ],
+    });
+
+    const pointPipeline = device.createRenderPipeline({
+      layout: device.createPipelineLayout({ bindGroupLayouts: [pointBGL] }),
+      vertex: { module: pointModule, entryPoint: 'vs' },
+      fragment: {
+        module: pointModule,
+        entryPoint: 'fs',
+        targets: [{
+          format: canvasFormat,
+          blend: {
+            color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha' },
+            alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha' },
+          },
+        }],
+      },
+      primitive: { topology: 'triangle-list' },
+    });
+
+    function createPointBindGroup(positionsBuf, fillColor, strokeColor, radius, strokeWidth) {
+      const buf = device.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+      const data = new Float32Array(16);
+      data[0] = -0.15; data[1] = -0.15;  // domainMin
+      data[2] = 2.15; data[3] = 2.15;    // domainMax
+      data[4] = canvas.width; data[5] = canvas.height;
+      data[6] = radius; data[7] = strokeWidth;
+      data.set(fillColor, 8);
+      data.set(strokeColor, 12);
+      device.queue.writeBuffer(buf, 0, data);
+      return device.createBindGroup({
+        layout: pointBGL,
+        entries: [
+          { binding: 0, resource: { buffer: buf } },
+          { binding: 1, resource: { buffer: positionsBuf } },
+        ],
+      });
+    }
+
+    const pr = devicePixelRatio;
+    const poleBindGroup = createPointBindGroup(
+      polesBuf,
+      [1, 0.2, 0.2, 1],
+      [0.5, 0, 0, 1],
+      3 * pr, 1.5 * pr,
+    );
+
+    const allZerosLen = (laplaceData.allZeros || []).length;
+    const zeroBindGroup = allZerosLen > 0 ? createPointBindGroup(
+      allZerosBuf,
+      [0.2, 0.5, 1, 1],
+      [0, 0.15, 0.5, 1],
+      3 * pr, 1.5 * pr,
+    ) : null;
+  </script>
+
+  <script id="render" type="module">
+    const margin = 0.15;
+    const domainMin = [0 - margin, 0 - margin];
+    const domainMax = [2 + margin, 2 + margin];
+
+    const [valueMin, valueMax] = laplaceData.valueRange;
+
+    const paramsData = new ArrayBuffer(64);
+    const f32 = new Float32Array(paramsData);
+    const u32 = new Uint32Array(paramsData);
+    f32[0] = domainMin[0]; f32[1] = domainMin[1];
+    f32[2] = domainMax[0]; f32[3] = domainMax[1];
+    u32[4] = laplaceData.smoothCoeffs.length;
+    u32[5] = laplaceData.poles.length;
+    f32[6] = laplaceData.center[0];
+    f32[7] = laplaceData.center[1];
+    f32[8] = laplaceData.b0[0];
+    f32[9] = laplaceData.b0[1];
+    f32[10] = laplaceData.imCorr;
+    f32[11] = valueMin;
+    f32[12] = valueMax;
+    device.queue.writeBuffer(paramsBuf, 0, new Float32Array(paramsData));
+
+    const encoder = device.createCommandEncoder();
+    const pass = encoder.beginRenderPass({
+      colorAttachments: [{
+        view: gpuContext.getCurrentTexture().createView(),
+        clearValue: { r: 1, g: 1, b: 1, a: 1 },
+        loadOp: 'clear',
+        storeOp: 'store',
+      }],
+    });
+    pass.setPipeline(renderPipeline);
+    pass.setBindGroup(0, bindGroup);
+    pass.draw(4);
+
+    // Draw poles (red)
+    pass.setPipeline(pointPipeline);
+    pass.setBindGroup(0, poleBindGroup);
+    pass.draw(6, laplaceData.poles.length);
+
+    // Draw zeros (blue) if present
+    if (zeroBindGroup && allZerosLen > 0) {
+      pass.setBindGroup(0, zeroBindGroup);
+      pass.draw(6, allZerosLen);
+    }
+
+    pass.end();
+    device.queue.submit([encoder.finish()]);
+  </script>
+
+  <script id="info" type="module">
+    display(md`
+**${laplaceData.name}** — ${laplaceData.smoothCoeffs.length} polynomial terms + ${laplaceData.poles.length} poles. Max boundary error: ${laplaceData.maxError.toExponential(2)}.
+    `);
+  </script>
+
+  <script id="convergenceHeader" type="text/markdown">
+    ## AAA Convergence
+
+    Convergence of the AAA algorithm on ${ tex`e^z` } sampled at 200 points on the unit circle. The error decreases geometrically, reaching machine precision in 8 iterations.
+  </script>
+
+  <script id="convergencePlot" type="module">
+    if (aaaCases.length > 0) {
+      const conv = aaaCases[0].convergence;
+      const plotData = conv.errvec.map((e, i) => ({ iteration: i + 1, error: e }));
+      display(Plot.plot({
+        height: 300,
+        y: { type: 'log', label: 'Max error', grid: true },
+        x: { label: 'Iteration' },
+        marks: [
+          Plot.line(plotData, { x: 'iteration', y: 'error', stroke: '#4e79a7', strokeWidth: 2 }),
+          Plot.dot(plotData, { x: 'iteration', y: 'error', fill: '#4e79a7', r: 4 }),
+          Plot.ruleY([1e-13], { stroke: '#e15759', strokeDasharray: '4,4' }),
+          Plot.text([{ x: conv.errvec.length, y: 1e-13 }], {
+            x: 'x', y: 'y', text: ['tolerance'], dy: -10, fill: '#e15759'
+          }),
+        ],
+      }));
+    }
+  </script>
+
+  <script id="poleZeroPlot" type="module">
+    if (aaaCases.length > 0) {
+      const conv = aaaCases[0].convergence;
+      const poleData = conv.poles.map(([re, im]) => ({ re, im, type: 'pole' }));
+      const zeroData = conv.zeros.map(([re, im]) => ({ re, im, type: 'zero' }));
+      display(md`**Poles and zeros** of the AAA approximant for ${ tex`e^z` } on the unit circle (${conv.nPoles} poles, ${conv.nZeros} zeros):`);
+      display(Plot.plot({
+        height: 400,
+        aspectRatio: 1,
+        x: { label: 'Re(z)' },
+        y: { label: 'Im(z)' },
+        color: { domain: ['pole', 'zero'], range: ['#e15759', '#4e79a7'] },
+        marks: [
+          // Unit circle
+          Plot.line(
+            Array.from({ length: 101 }, (_, i) => {
+              const t = 2 * Math.PI * i / 100;
+              return { x: Math.cos(t), y: Math.sin(t) };
+            }),
+            { x: 'x', y: 'y', stroke: '#ccc', strokeWidth: 1 }
+          ),
+          Plot.dot([...poleData, ...zeroData], {
+            x: 're', y: 'im', fill: 'type', symbol: d => d.type === 'pole' ? 'cross' : 'circle', r: 5,
+          }),
+        ],
+      }));
+    }
+  </script>
+</notebook>

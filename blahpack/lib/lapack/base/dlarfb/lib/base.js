@@ -13,8 +13,9 @@ var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
 * real M-by-N matrix C, from either the left or the right.
 *
 * H = I - V * T * V**T  (for STOREV='C')
+* H = I - V**T * T * V  (for STOREV='R')
 *
-* Only STOREV='C' is supported. STOREV='R' will throw.
+* Supports both STOREV='C' (columnwise) and STOREV='R' (rowwise).
 *
 * @private
 * @param {string} side - 'L' or 'R'
@@ -184,7 +185,153 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 			}
 		}
 	} else {
-		throw new Error( 'dlarfb: STOREV=\'R\' is not supported' );
+		// STOREV = 'R': reflectors stored rowwise
+		// H = I - V**T * T * V (for STOREV='R')
+		if ( direct === 'F' || direct === 'f' ) {
+			// V = (V1 V2)  first K columns, V1 is unit upper triangular
+			if ( side === 'L' || side === 'l' ) {
+				// Form H*C or H**T*C where C = (C1)
+				//                               (C2)
+				// W := C**T * V**T = (C1**T*V1**T + C2**T*V2**T)
+				// W := C1**T
+				for ( j = 0; j < K; j++ ) {
+					dcopy( N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				// W := W * V1**T (V1 is stored in rows of V: upper triangular)
+				dtrmm( 'R', 'U', 'T', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( M > K ) {
+					// W := W + C2**T * V2**T
+					dgemm( 'T', 'T', N, K, M - K, 1.0,
+						C, strideC1, strideC2, offsetC + K * strideC1,
+						V, strideV1, strideV2, offsetV + K * strideV2,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T**T or W * T
+				dtrmm( 'R', 'U', transt, 'N', N, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - V**T * W**T
+				if ( M > K ) {
+					// C2 := C2 - V2**T * W**T
+					dgemm( 'T', 'T', M - K, N, K, -1.0,
+						V, strideV1, strideV2, offsetV + K * strideV2,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						1.0, C, strideC1, strideC2, offsetC + K * strideC1 );
+				}
+				// W := W * V1
+				dtrmm( 'R', 'U', 'N', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C1 := C1 - W**T
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < N; i++ ) {
+						C[ offsetC + j * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			} else if ( side === 'R' || side === 'r' ) {
+				// Form C*H or C*H**T where C = (C1 C2)
+				// W := C * V**T = (C1*V1**T + C2*V2**T)
+				// W := C1
+				for ( j = 0; j < K; j++ ) {
+					dcopy( M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				// W := W * V1**T
+				dtrmm( 'R', 'U', 'T', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( N > K ) {
+					// W := W + C2 * V2**T
+					dgemm( 'N', 'T', M, K, N - K, 1.0,
+						C, strideC1, strideC2, offsetC + K * strideC2,
+						V, strideV1, strideV2, offsetV + K * strideV2,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T or W * T**T
+				dtrmm( 'R', 'U', trans, 'N', M, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - W * V
+				if ( N > K ) {
+					// C2 := C2 - W * V2
+					dgemm( 'N', 'N', M, N - K, K, -1.0,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						V, strideV1, strideV2, offsetV + K * strideV2,
+						1.0, C, strideC1, strideC2, offsetC + K * strideC2 );
+				}
+				// W := W * V1
+				dtrmm( 'R', 'U', 'N', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C1 := C1 - W
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < M; i++ ) {
+						C[ offsetC + i * strideC1 + j * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			}
+		} else {
+			// Backward: V = (V1 V2), last K columns, V2 is unit lower triangular
+			if ( side === 'L' || side === 'l' ) {
+				// Form H*C or H**T*C where C = (C1)
+				//                               (C2)
+				// W := C**T * V**T
+				// W := C2**T
+				for ( j = 0; j < K; j++ ) {
+					dcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				// W := W * V2**T
+				dtrmm( 'R', 'L', 'T', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( M > K ) {
+					// W := W + C1**T * V1**T
+					dgemm( 'T', 'T', N, K, M - K, 1.0,
+						C, strideC1, strideC2, offsetC,
+						V, strideV1, strideV2, offsetV,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T**T or W * T
+				dtrmm( 'R', 'L', transt, 'N', N, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - V**T * W**T
+				if ( M > K ) {
+					// C1 := C1 - V1**T * W**T
+					dgemm( 'T', 'T', M - K, N, K, -1.0,
+						V, strideV1, strideV2, offsetV,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						1.0, C, strideC1, strideC2, offsetC );
+				}
+				// W := W * V2
+				dtrmm( 'R', 'L', 'N', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C2 := C2 - W**T
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < N; i++ ) {
+						C[ offsetC + ( M - K + j ) * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			} else if ( side === 'R' || side === 'r' ) {
+				// Form C*H or C*H**T where C = (C1 C2)
+				// W := C * V**T
+				// W := C2
+				for ( j = 0; j < K; j++ ) {
+					dcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				// W := W * V2**T
+				dtrmm( 'R', 'L', 'T', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( N > K ) {
+					// W := W + C1 * V1**T
+					dgemm( 'N', 'T', M, K, N - K, 1.0,
+						C, strideC1, strideC2, offsetC,
+						V, strideV1, strideV2, offsetV,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T or W * T**T
+				dtrmm( 'R', 'L', trans, 'N', M, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - W * V
+				if ( N > K ) {
+					// C1 := C1 - W * V1
+					dgemm( 'N', 'N', M, N - K, K, -1.0,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						V, strideV1, strideV2, offsetV,
+						1.0, C, strideC1, strideC2, offsetC );
+				}
+				// W := W * V2
+				dtrmm( 'R', 'L', 'N', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C2 := C2 - W
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < M; i++ ) {
+						C[ offsetC + i * strideC1 + ( N - K + j ) * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -149,3 +149,36 @@ test( 'dgemm: beta=1 does not scale C', function t() {
 	dgemm( 'N', 'N', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 2, 0 );
 	assertArrayClose( C, [ 3, 1, 1, 3 ], 1e-14, 'beta_one' );
 });
+
+test( 'dgemm: T,N with beta=0 (lines 130-131)', function t() {
+	// transa='T', transb='N', beta=0 -> exercises the beta===0 branch in T,N path
+	var A = new Float64Array( [ 1, 2, 3, 4 ] ); // 2x2 col-major
+	var B = new Float64Array( [ 5, 6, 7, 8 ] );
+	var C = new Float64Array( [ 999, 999, 999, 999 ] );
+	dgemm( 'T', 'N', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	// op(A) = A^T = [1 2; 3 4], B = [5 7; 6 8] (col-major)
+	// C = A^T * B: C[0,0]=1*5+2*6=17, C[1,0]=3*5+4*6=39, C[0,1]=1*7+2*8=23, C[1,1]=3*7+4*8=53
+	assertArrayClose( C, [ 17, 39, 23, 53 ], 1e-14, 'tn_beta0' );
+});
+
+test( 'dgemm: N,T with beta=0 (lines 146-151)', function t() {
+	// transa='N', transb='T', beta=0 -> exercises the beta===0 branch in N,T path
+	var A = new Float64Array( [ 1, 2, 3, 4 ] );
+	var B = new Float64Array( [ 5, 6, 7, 8 ] );
+	var C = new Float64Array( [ 999, 999, 999, 999 ] );
+	dgemm( 'N', 'T', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	// A = [1 3; 2 4], op(B) = B^T = [5 6; 7 8]
+	// C = A * B^T: C[0,0]=1*5+3*7=26, C[1,0]=2*5+4*7=38, C[0,1]=1*6+3*8=30, C[1,1]=2*6+4*8=44
+	assertArrayClose( C, [ 26, 38, 30, 44 ], 1e-14, 'nt_beta0' );
+});
+
+test( 'dgemm: T,T with beta=0 (lines 179-180)', function t() {
+	// transa='T', transb='T', beta=0 -> exercises the beta===0 branch in T,T path
+	var A = new Float64Array( [ 1, 2, 3, 4 ] );
+	var B = new Float64Array( [ 5, 6, 7, 8 ] );
+	var C = new Float64Array( [ 999, 999, 999, 999 ] );
+	dgemm( 'T', 'T', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	// op(A) = A^T = [1 2; 3 4], op(B) = B^T = [5 6; 7 8]
+	// C = A^T * B^T: C[0,0]=1*5+2*7=19, C[1,0]=3*5+4*7=43, C[0,1]=1*6+2*8=22, C[1,1]=3*6+4*8=50
+	assertArrayClose( C, [ 19, 43, 22, 50 ], 1e-14, 'tt_beta0' );
+});

@@ -390,3 +390,244 @@ test( 'zggev: 2x2 left eigenvectors only', function t() {
 	assertComplexArrayClose( VLv, 0, tc.VL_col1, tol, 'VL_col1' );
 	assertComplexArrayClose( VLv, 2 * N, tc.VL_col2, tol, 'VL_col2' );
 });
+
+test( 'zggev: small entries trigger anrm < smlnum scaling', function t() {
+	// Use 2x2 diagonal with tiny entries to trigger the anrm < smlnum branch
+	var N = 2;
+	var LDA = N;
+	var scale = 1e-300;
+	var A = new Complex128Array( LDA * N );
+	var B = new Complex128Array( LDA * N );
+	var ALPHA = new Complex128Array( N );
+	var BETA = new Complex128Array( N );
+	var VL = new Complex128Array( N * N );
+	var VR = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var ALPHAv = reinterpret( ALPHA, 0 );
+	var BETAv = reinterpret( BETA, 0 );
+	var info;
+	var tol = 1e-10;
+
+	// A = diag( scale*(4+0i), scale*(6+0i) )
+	Av[ 0 ] = 4.0 * scale; Av[ 1 ] = 0.0;
+	Av[ 2 ] = 0.0; Av[ 3 ] = 0.0;
+	Av[ 4 ] = 0.0; Av[ 5 ] = 0.0;
+	Av[ 6 ] = 6.0 * scale; Av[ 7 ] = 0.0;
+
+	// B = diag( scale*(2+0i), scale*(3+0i) )
+	Bv[ 0 ] = 2.0 * scale; Bv[ 1 ] = 0.0;
+	Bv[ 2 ] = 0.0; Bv[ 3 ] = 0.0;
+	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
+	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
+
+	info = zggev( 'N', 'N', N,
+		A, 1, LDA, 0,
+		B, 1, LDA, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
+		VL, 1, N, 0,
+		VR, 1, N, 0
+	);
+	assert.strictEqual( info, 0, 'info' );
+
+	// Eigenvalue ratios should be 4/2 = 2 and 6/3 = 2
+	// Verify alpha/beta ~ 2 for both eigenvalues
+	// alpha[0]/beta[0] and alpha[1]/beta[1] should give eigenvalue 2.0
+	var ar0 = ALPHAv[0];
+	var ai0 = ALPHAv[1];
+	var br0 = BETAv[0];
+	var bi0 = BETAv[1];
+	// complex division: (ar+ai*i)/(br+bi*i)
+	var denom0 = br0*br0 + bi0*bi0;
+	var evr0 = (ar0*br0 + ai0*bi0) / denom0;
+	assertClose( evr0, 2.0, tol, 'eigenvalue 0 real' );
+
+	var ar1 = ALPHAv[2];
+	var ai1 = ALPHAv[3];
+	var br1 = BETAv[2];
+	var bi1 = BETAv[3];
+	var denom1 = br1*br1 + bi1*bi1;
+	var evr1 = (ar1*br1 + ai1*bi1) / denom1;
+	assertClose( evr1, 2.0, tol, 'eigenvalue 1 real' );
+});
+
+test( 'zggev: large entries trigger anrm > bignum scaling', function t() {
+	// Use 2x2 diagonal with huge entries to trigger the anrm > bignum branch
+	var N = 2;
+	var LDA = N;
+	var scale = 1e+300;
+	var A = new Complex128Array( LDA * N );
+	var B = new Complex128Array( LDA * N );
+	var ALPHA = new Complex128Array( N );
+	var BETA = new Complex128Array( N );
+	var VL = new Complex128Array( N * N );
+	var VR = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var ALPHAv = reinterpret( ALPHA, 0 );
+	var BETAv = reinterpret( BETA, 0 );
+	var info;
+	var tol = 1e-10;
+
+	// A = diag( scale*4, scale*6 )
+	Av[ 0 ] = 4.0 * scale; Av[ 1 ] = 0.0;
+	Av[ 2 ] = 0.0; Av[ 3 ] = 0.0;
+	Av[ 4 ] = 0.0; Av[ 5 ] = 0.0;
+	Av[ 6 ] = 6.0 * scale; Av[ 7 ] = 0.0;
+
+	// B = diag( scale*2, scale*3 )
+	Bv[ 0 ] = 2.0 * scale; Bv[ 1 ] = 0.0;
+	Bv[ 2 ] = 0.0; Bv[ 3 ] = 0.0;
+	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
+	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
+
+	info = zggev( 'N', 'N', N,
+		A, 1, LDA, 0,
+		B, 1, LDA, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
+		VL, 1, N, 0,
+		VR, 1, N, 0
+	);
+	assert.strictEqual( info, 0, 'info' );
+
+	// Eigenvalue ratios should be 2 for both
+	var ar0 = ALPHAv[0];
+	var ai0 = ALPHAv[1];
+	var br0 = BETAv[0];
+	var bi0 = BETAv[1];
+	var denom0 = br0*br0 + bi0*bi0;
+	var evr0 = (ar0*br0 + ai0*bi0) / denom0;
+	assertClose( evr0, 2.0, tol, 'eigenvalue 0 real' );
+
+	var ar1 = ALPHAv[2];
+	var ai1 = ALPHAv[3];
+	var br1 = BETAv[2];
+	var bi1 = BETAv[3];
+	var denom1 = br1*br1 + bi1*bi1;
+	var evr1 = (ar1*br1 + ai1*bi1) / denom1;
+	assertClose( evr1, 2.0, tol, 'eigenvalue 1 real' );
+});
+
+test( 'zggev: small B entries trigger bnrm < smlnum scaling', function t() {
+	// Normal A, tiny B to trigger bnrm < smlnum
+	var N = 2;
+	var LDA = N;
+	var scale = 1e-300;
+	var A = new Complex128Array( LDA * N );
+	var B = new Complex128Array( LDA * N );
+	var ALPHA = new Complex128Array( N );
+	var BETA = new Complex128Array( N );
+	var VL = new Complex128Array( N * N );
+	var VR = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var info;
+
+	// A = diag( 4, 6 )
+	Av[ 0 ] = 4.0; Av[ 1 ] = 0.0;
+	Av[ 2 ] = 0.0; Av[ 3 ] = 0.0;
+	Av[ 4 ] = 0.0; Av[ 5 ] = 0.0;
+	Av[ 6 ] = 6.0; Av[ 7 ] = 0.0;
+
+	// B = diag( scale*2, scale*3 )
+	Bv[ 0 ] = 2.0 * scale; Bv[ 1 ] = 0.0;
+	Bv[ 2 ] = 0.0; Bv[ 3 ] = 0.0;
+	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
+	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
+
+	info = zggev( 'N', 'N', N,
+		A, 1, LDA, 0,
+		B, 1, LDA, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
+		VL, 1, N, 0,
+		VR, 1, N, 0
+	);
+	assert.strictEqual( info, 0, 'info' );
+});
+
+test( 'zggev: large B entries trigger bnrm > bignum scaling', function t() {
+	// Normal A, huge B to trigger bnrm > bignum
+	var N = 2;
+	var LDA = N;
+	var scale = 1e+300;
+	var A = new Complex128Array( LDA * N );
+	var B = new Complex128Array( LDA * N );
+	var ALPHA = new Complex128Array( N );
+	var BETA = new Complex128Array( N );
+	var VL = new Complex128Array( N * N );
+	var VR = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var info;
+
+	// A = diag( 4, 6 )
+	Av[ 0 ] = 4.0; Av[ 1 ] = 0.0;
+	Av[ 2 ] = 0.0; Av[ 3 ] = 0.0;
+	Av[ 4 ] = 0.0; Av[ 5 ] = 0.0;
+	Av[ 6 ] = 6.0; Av[ 7 ] = 0.0;
+
+	// B = diag( scale*2, scale*3 )
+	Bv[ 0 ] = 2.0 * scale; Bv[ 1 ] = 0.0;
+	Bv[ 2 ] = 0.0; Bv[ 3 ] = 0.0;
+	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
+	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
+
+	info = zggev( 'N', 'N', N,
+		A, 1, LDA, 0,
+		B, 1, LDA, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
+		VL, 1, N, 0,
+		VR, 1, N, 0
+	);
+	assert.strictEqual( info, 0, 'info' );
+});
+
+test( 'zggev: both A and B scaled (small A, large B) with eigenvectors', function t() {
+	// Both ilascl and ilbscl triggered, with eigenvector computation
+	// This covers the finalize() rescaling of alpha/beta
+	var N = 2;
+	var LDA = N;
+	var A = new Complex128Array( LDA * N );
+	var B = new Complex128Array( LDA * N );
+	var ALPHA = new Complex128Array( N );
+	var BETA = new Complex128Array( N );
+	var VL = new Complex128Array( N * N );
+	var VR = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var Bv = reinterpret( B, 0 );
+	var ALPHAv = reinterpret( ALPHA, 0 );
+	var BETAv = reinterpret( BETA, 0 );
+	var info;
+	var tol = 1e-8;
+
+	// Tiny A = diag( 1e-300, 2e-300 )
+	Av[ 0 ] = 1e-300; Av[ 1 ] = 0.0;
+	Av[ 2 ] = 0.0; Av[ 3 ] = 0.0;
+	Av[ 4 ] = 0.0; Av[ 5 ] = 0.0;
+	Av[ 6 ] = 2e-300; Av[ 7 ] = 0.0;
+
+	// Huge B = diag( 1e+300, 1e+300 )
+	Bv[ 0 ] = 1e+300; Bv[ 1 ] = 0.0;
+	Bv[ 2 ] = 0.0; Bv[ 3 ] = 0.0;
+	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
+	Bv[ 6 ] = 1e+300; Bv[ 7 ] = 0.0;
+
+	info = zggev( 'V', 'V', N,
+		A, 1, LDA, 0,
+		B, 1, LDA, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
+		VL, 1, N, 0,
+		VR, 1, N, 0
+	);
+	assert.strictEqual( info, 0, 'info' );
+
+	// Eigenvalues should be tiny: 1e-300/1e+300 = 1e-600 (or thereabouts)
+	// The important thing is that info=0 (success) and the rescaling worked
+	assert.ok( isFinite( ALPHAv[0] ), 'alpha[0] is finite' );
+	assert.ok( isFinite( BETAv[0] ), 'beta[0] is finite' );
+});

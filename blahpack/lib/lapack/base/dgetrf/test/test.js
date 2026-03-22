@@ -279,3 +279,170 @@ test( 'dgetrf: non-unit stride with offset', function t() {
 	var subOrig = new Float64Array( [ 4.0, 3.0, 6.0, 8.0 ] );
 	assertFactorizationCorrect( subOrig, subA, subIPIV, 2, 2, 1e-14, 'offset' );
 });
+
+test( 'dgetrf: 70x70 blocked path (NB=64, min(M,N) > NB)', function t() {
+	var Aorig;
+	var IPIV;
+	var info;
+	var N;
+	var A;
+	var i;
+	var j;
+
+	// Generate a 70x70 diagonally dominant matrix (well-conditioned, non-singular).
+	// A(i,j) = random in [-1,1], then A(i,i) += 100 to ensure diagonal dominance.
+	N = 70;
+	Aorig = new Float64Array( N * N );
+
+	// Use a simple deterministic pseudo-random sequence for reproducibility
+	// (linear congruential generator)
+	var seed = 12345;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < N; i++ ) {
+			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
+			Aorig[ i + j * N ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+		}
+	}
+	// Make diagonally dominant
+	for ( i = 0; i < N; i++ ) {
+		Aorig[ i + i * N ] += 100.0;
+	}
+
+	A = new Float64Array( Aorig );
+	IPIV = new Int32Array( N );
+
+	info = dgetrf( N, N, A, 1, N, 0, IPIV, 1, 0 );
+
+	assert.equal( info, 0, '70x70 info should be 0 for non-singular matrix' );
+
+	// Verify P*L*U = A
+	assertFactorizationCorrect( Aorig, A, IPIV, N, N, 1e-10, '70x70 blocked' );
+});
+
+test( 'dgetrf: 80x70 tall blocked path', function t() {
+	var Aorig;
+	var IPIV;
+	var info;
+	var minMN;
+	var M;
+	var N;
+	var A;
+	var i;
+	var j;
+
+	// Tall matrix: M > N, both > NB=64, so min(M,N) = 70 > 64 triggers blocking.
+	// Also exercises the j+jb < M path (line 104) in every block iteration.
+	M = 80;
+	N = 70;
+	minMN = Math.min( M, N );
+	Aorig = new Float64Array( M * N );
+
+	var seed = 67890;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
+			Aorig[ i + j * M ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+		}
+	}
+	// Diagonally dominant on the min(M,N) x min(M,N) leading block
+	for ( i = 0; i < minMN; i++ ) {
+		Aorig[ i + i * M ] += 100.0;
+	}
+
+	A = new Float64Array( Aorig );
+	IPIV = new Int32Array( minMN );
+
+	info = dgetrf( M, N, A, 1, M, 0, IPIV, 1, 0 );
+
+	assert.equal( info, 0, '80x70 info should be 0' );
+	assertFactorizationCorrect( Aorig, A, IPIV, M, N, 1e-10, '80x70 blocked' );
+});
+
+test( 'dgetrf: 70x80 wide blocked path', function t() {
+	var Aorig;
+	var IPIV;
+	var info;
+	var minMN;
+	var M;
+	var N;
+	var A;
+	var i;
+	var j;
+
+	// Wide matrix: N > M, both > NB=64, so min(M,N) = 70 > 64 triggers blocking.
+	// Exercises j+jb < N path (line 92) strongly.
+	M = 70;
+	N = 80;
+	minMN = Math.min( M, N );
+	Aorig = new Float64Array( M * N );
+
+	var seed = 11111;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
+			Aorig[ i + j * M ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+		}
+	}
+	for ( i = 0; i < minMN; i++ ) {
+		Aorig[ i + i * M ] += 100.0;
+	}
+
+	A = new Float64Array( Aorig );
+	IPIV = new Int32Array( minMN );
+
+	info = dgetrf( M, N, A, 1, M, 0, IPIV, 1, 0 );
+
+	assert.equal( info, 0, '70x80 info should be 0' );
+	assertFactorizationCorrect( Aorig, A, IPIV, M, N, 1e-10, '70x80 blocked' );
+});
+
+test( 'dgetrf: 70x70 singular matrix in blocked path (iinfo > 0 branch)', function t() {
+	var Aorig;
+	var IPIV;
+	var info;
+	var N;
+	var A;
+	var i;
+	var j;
+
+	// Create a 70x70 matrix that is singular: make the last row a copy of the
+	// first row. The singularity will be detected during the second panel
+	// factorization (after the first 64-column block), triggering iinfo > 0
+	// at line 79.
+	//
+	// Strategy: build a diagonally dominant matrix, then zero out column 65
+	// (index 64) entirely. This ensures U(64,64) = 0 after factoring the
+	// second panel, which triggers info = iinfo + j with j=64.
+	N = 70;
+	Aorig = new Float64Array( N * N );
+
+	var seed = 99999;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < N; i++ ) {
+			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
+			Aorig[ i + j * N ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+		}
+	}
+	for ( i = 0; i < N; i++ ) {
+		Aorig[ i + i * N ] += 100.0;
+	}
+
+	// Make the matrix singular by making row 65 (index 64) equal to row 0.
+	// After the first block panel (cols 0..63), the trailing update will make
+	// row 64 linearly dependent, causing a zero pivot in the second panel.
+	for ( j = 0; j < N; j++ ) {
+		Aorig[ 64 + j * N ] = Aorig[ 0 + j * N ];
+	}
+
+	A = new Float64Array( Aorig );
+	IPIV = new Int32Array( N );
+
+	info = dgetrf( N, N, A, 1, N, 0, IPIV, 1, 0 );
+
+	// The matrix is singular, so info should be > 0.
+	assert.ok( info > 0, '70x70 singular: info > 0 (got ' + info + ')' );
+
+	// Verify P*L*U still reconstructs A (the factorization is valid even for
+	// singular matrices; it just has a zero on the U diagonal).
+	assertFactorizationCorrect( Aorig, A, IPIV, N, N, 1e-8, '70x70 singular blocked' );
+});

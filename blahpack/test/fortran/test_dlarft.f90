@@ -2,7 +2,7 @@ program test_dlarft
   use test_utils
   implicit none
 
-  double precision :: V(6, 3), TAU(3), T(3, 3)
+  double precision :: V(6, 6), TAU(3), T(3, 3)
 
   ! Test 1: Forward, Columnwise, 5x3
   V = 0.0d0
@@ -57,6 +57,60 @@ program test_dlarft
   T = 0.0d0
   call DLARFT('F', 'C', 3, 2, V, 6, TAU, T, 3)
   call begin_test('fwd_col_tau_zero')
+  call print_matrix('T', T, 3, 2, 2)
+  call end_test()
+
+  ! Test 5: Forward, Row-wise, 5x3
+  ! V is K x N = 3 x 5, upper unit triangular in first K columns
+  V = 0.0d0
+  V(1,1) = 1.0d0; V(1,2) = 0.5d0; V(1,3) = 0.25d0; V(1,4) = 0.125d0; V(1,5) = 0.0625d0
+  V(2,2) = 1.0d0; V(2,3) = 0.5d0; V(2,4) = 0.25d0; V(2,5) = 0.125d0
+  V(3,3) = 1.0d0; V(3,4) = 0.5d0; V(3,5) = 0.25d0
+
+  TAU(1) = 1.2d0; TAU(2) = 1.5d0; TAU(3) = 1.1d0
+  T = 0.0d0
+  call DLARFT('F', 'R', 5, 3, V, 6, TAU, T, 3)
+  call begin_test('fwd_row_5x3')
+  call print_matrix('T', T, 3, 3, 3)
+  call end_test()
+
+  ! Test 6: Forward, Row-wise, 3x2
+  V = 0.0d0
+  V(1,1) = 1.0d0; V(1,2) = 2.0d0; V(1,3) = 3.0d0
+  V(2,2) = 1.0d0; V(2,3) = 4.0d0
+
+  TAU(1) = 0.8d0; TAU(2) = 1.2d0
+  T = 0.0d0
+  call DLARFT('F', 'R', 3, 2, V, 6, TAU, T, 3)
+  call begin_test('fwd_row_3x2')
+  call print_matrix('T', T, 3, 2, 2)
+  call end_test()
+
+  ! Test 7: Backward, Row-wise, 5x2
+  ! V is K x N = 2 x 5, unit triangular at right (columns N-K..N-1)
+  V = 0.0d0
+  V(1,1) = 0.5d0; V(1,2) = 0.25d0; V(1,3) = 0.125d0; V(1,4) = 1.0d0; V(1,5) = 0.0d0
+  V(2,1) = 0.25d0; V(2,2) = 0.125d0; V(2,3) = 0.0625d0; V(2,4) = 0.0d0; V(2,5) = 1.0d0
+
+  TAU(1) = 1.5d0; TAU(2) = 0.9d0
+  T = 0.0d0
+  call DLARFT('B', 'R', 5, 2, V, 6, TAU, T, 3)
+  call begin_test('bwd_row_5x2')
+  call print_matrix('T', T, 3, 2, 2)
+  call end_test()
+
+  ! Test 8: Backward, Columnwise, tau=0 for first reflector
+  V = 0.0d0
+  V(1,1) = 0.5d0; V(1,2) = 0.25d0
+  V(2,1) = 0.25d0; V(2,2) = 0.125d0
+  V(3,1) = 0.125d0; V(3,2) = 0.0625d0
+  V(4,1) = 1.0d0; V(4,2) = 0.0d0
+  V(5,1) = 0.0d0; V(5,2) = 1.0d0
+
+  TAU(1) = 0.0d0; TAU(2) = 0.9d0
+  T = 0.0d0
+  call DLARFT('B', 'C', 5, 2, V, 6, TAU, T, 3)
+  call begin_test('bwd_col_tau_zero')
   call print_matrix('T', T, 3, 2, 2)
   call end_test()
 

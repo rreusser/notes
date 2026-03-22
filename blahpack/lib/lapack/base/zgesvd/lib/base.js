@@ -20,808 +20,23 @@
 
 // MODULES //
 
-var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlascl = require( '../../dlascl/lib/base.js' );
 var zbdsqr = require( '../../zbdsqr/lib/base.js' );
 var zgebrd = require( '../../zgebrd/lib/base.js' );
-var zgelqf = require( '../../zgelqf/lib/base.js' );
 var zgeqrf = require( '../../zgeqrf/lib/base.js' );
-var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var zlacpy = require( '../../zlacpy/lib/base.js' );
 var zlange = require( '../../zlange/lib/base.js' );
 var zlascl = require( '../../zlascl/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
-var zlarf = require( '../../zlarf/lib/base.js' );
-var zlarfb = require( '../../zlarfb/lib/base.js' );
-var zlarft = require( '../../zlarft/lib/base.js' );
-var zlacgv = require( '../../zlacgv/lib/base.js' );
-var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
+var zungbr = require( '../../zungbr/lib/base.js' );
 
 
 // VARIABLES //
 
 var CZERO = new Complex128( 0.0, 0.0 );
-var CONE = new Complex128( 1.0, 0.0 );
-var DEFAULT_NB = 32;
-
-
-// FUNCTIONS //
-
-/**
-* ZUNG2R generates an M-by-N complex matrix Q with orthonormal columns,
-* which is defined as the first N columns of a product of K elementary
-* reflectors of order M:  Q = H(1) H(2) ... H(k)
-*
-* Unblocked algorithm using zlarf.
-*
-* @private
-*/
-function zung2r( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var negTau;
-	var Av;
-	var TAUv;
-	var da1;
-	var da2;
-	var oA;
-	var idx;
-	var i;
-	var j;
-	var l;
-
-	if ( N <= 0 ) {
-		return 0;
-	}
-
-	Av = reinterpret( A, 0 );
-	TAUv = reinterpret( TAU, 0 );
-	da1 = sa1 * 2;
-	da2 = sa2 * 2;
-	oA = offsetA * 2;
-
-	// Initialize columns K+1:N to columns of the unit matrix
-	for ( j = K; j < N; j++ ) {
-		for ( l = 0; l < M; l++ ) {
-			idx = oA + l * da1 + j * da2;
-			Av[ idx ] = 0.0;
-			Av[ idx + 1 ] = 0.0;
-		}
-		idx = oA + j * da1 + j * da2;
-		Av[ idx ] = 1.0;
-		Av[ idx + 1 ] = 0.0;
-	}
-
-	for ( i = K - 1; i >= 0; i-- ) {
-		// Apply H(i) to A(i:m-1, i:n-1) from the left
-		if ( i < N - 1 ) {
-			idx = oA + i * da1 + i * da2;
-			Av[ idx ] = 1.0;
-			Av[ idx + 1 ] = 0.0;
-			zlarf(
-				'L', M - i, N - i - 1,
-				A, sa1, offsetA + i * sa1 + i * sa2,
-				TAU, offsetTAU + i * strideTAU,
-				A, sa1, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,
-				WORK, strideWORK, offsetWORK
-			);
-		}
-		if ( i < M - 1 ) {
-			negTau = new Complex128( -TAUv[ ( offsetTAU + i * strideTAU ) * 2 ], -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ] );
-			zscal( M - i - 1, negTau, A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2 );
-		}
-		idx = oA + i * da1 + i * da2;
-		Av[ idx ] = 1.0 - TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-		Av[ idx + 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
-
-		// Set A(0:i-1, i) to zero
-		for ( l = 0; l < i; l++ ) {
-			idx = oA + l * da1 + i * da2;
-			Av[ idx ] = 0.0;
-			Av[ idx + 1 ] = 0.0;
-		}
-	}
-	return 0;
-}
-
-/**
-* ZUNGL2 generates an M-by-N complex matrix Q with orthonormal rows,
-* which is defined as the first M rows of a product of K elementary
-* reflectors of order N:  Q = H(k)^H ... H(2)^H H(1)^H
-*
-* Unblocked algorithm using zlarf.
-*
-* @private
-*/
-function zungl2( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var negTau;
-	var conjTau;
-	var Av;
-	var TAUv;
-	var da1;
-	var da2;
-	var oA;
-	var idx;
-	var tauR;
-	var tauI;
-	var i;
-	var j;
-	var l;
-
-	if ( M <= 0 ) {
-		return 0;
-	}
-
-	Av = reinterpret( A, 0 );
-	TAUv = reinterpret( TAU, 0 );
-	da1 = sa1 * 2;
-	da2 = sa2 * 2;
-	oA = offsetA * 2;
-
-	// Initialize rows K+1:M to rows of the unit matrix
-	if ( K < M ) {
-		for ( j = 0; j < N; j++ ) {
-			for ( l = K; l < M; l++ ) {
-				idx = oA + l * da1 + j * da2;
-				Av[ idx ] = 0.0;
-				Av[ idx + 1 ] = 0.0;
-			}
-			if ( j > K - 1 && j < M ) {
-				idx = oA + j * da1 + j * da2;
-				Av[ idx ] = 1.0;
-				Av[ idx + 1 ] = 0.0;
-			}
-		}
-	}
-
-	for ( i = K - 1; i >= 0; i-- ) {
-		tauR = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-		tauI = TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
-
-		// Apply H(i)^H to A(i:m-1, i:n-1) from the right
-		if ( i < N - 1 ) {
-			// Conjugate row i from column i+1 onward
-			zlacgv( N - i - 1, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
-			if ( i < M - 1 ) {
-				idx = oA + i * da1 + i * da2;
-				Av[ idx ] = 1.0;
-				Av[ idx + 1 ] = 0.0;
-				// Apply H(i)^H from the right: use conj(tau)
-				conjTau = new Complex128Array( 1 );
-				reinterpret( conjTau, 0 )[ 0 ] = tauR;
-				reinterpret( conjTau, 0 )[ 1 ] = -tauI;
-				zlarf(
-					'R', M - i - 1, N - i,
-					A, sa2, offsetA + i * sa1 + i * sa2,
-					conjTau, 0,
-					A, sa1, sa2, offsetA + ( i + 1 ) * sa1 + i * sa2,
-					WORK, strideWORK, offsetWORK
-				);
-			}
-			negTau = new Complex128( -tauR, -tauI );
-			zscal( N - i - 1, negTau, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
-			// Conjugate back
-			zlacgv( N - i - 1, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
-		}
-		idx = oA + i * da1 + i * da2;
-		Av[ idx ] = 1.0 - tauR;
-		Av[ idx + 1 ] = tauI;
-
-		// Set A(i, 0:i-1) to zero
-		for ( l = 0; l < i; l++ ) {
-			idx = oA + i * da1 + l * da2;
-			Av[ idx ] = 0.0;
-			Av[ idx + 1 ] = 0.0;
-		}
-	}
-	return 0;
-}
-
-/**
-* ZUNGQR generates an M-by-N complex matrix Q with orthonormal columns,
-* which is defined as the first N columns of a product of K elementary
-* reflectors of order M:  Q = H(1) H(2) ... H(k)
-*
-* Blocked algorithm using zlarft + zlarfb.
-*
-* @private
-*/
-function zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var ldwork;
-	var Av;
-	var da1;
-	var da2;
-	var oA;
-	var nb;
-	var kk;
-	var ki;
-	var ib;
-	var T;
-	var i;
-	var j;
-	var l;
-	var idx;
-
-	if ( N <= 0 ) {
-		return 0;
-	}
-
-	Av = reinterpret( A, 0 );
-	da1 = sa1 * 2;
-	da2 = sa2 * 2;
-	oA = offsetA * 2;
-
-	nb = DEFAULT_NB;
-	T = new Complex128Array( nb * nb );
-
-	if ( nb >= 2 && nb < K ) {
-		ki = ( Math.floor( ( K - 1 ) / nb ) ) * nb;
-		kk = Math.min( K, ki + nb );
-
-		// Set rows 0:kk-1 of columns kk:N-1 to zero
-		for ( j = kk; j < N; j++ ) {
-			for ( i = 0; i < kk; i++ ) {
-				idx = oA + i * da1 + j * da2;
-				Av[ idx ] = 0.0;
-				Av[ idx + 1 ] = 0.0;
-			}
-		}
-	} else {
-		kk = 0;
-	}
-
-	// Use unblocked code for the last or only block
-	if ( kk < N ) {
-		zung2r(
-			M - kk, N - kk, K - kk,
-			A, sa1, sa2, offsetA + kk * sa1 + kk * sa2,
-			TAU, strideTAU, offsetTAU + kk * strideTAU,
-			WORK, strideWORK, offsetWORK
-		);
-	}
-
-	if ( kk > 0 ) {
-		ldwork = N;
-
-		// Ensure WORK is large enough
-		if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
-			WORK = new Complex128Array( ldwork * nb + offsetWORK );
-		}
-
-		for ( i = ki; i >= 0; i -= nb ) {
-			ib = Math.min( nb, K - i );
-			if ( i + ib < N ) {
-				// Form the triangular factor of the block reflector
-				zlarft(
-					'F', 'C',
-					M - i, ib,
-					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
-					T, 1, nb, 0
-				);
-
-				// Apply H to A(i:m-1, i+ib:n-1) from the left
-				zlarfb(
-					'L', 'N', 'F', 'C',
-					M - i, N - i - ib, ib,
-					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-					T, 1, nb, 0,
-					A, sa1, sa2, offsetA + i * sa1 + ( i + ib ) * sa2,
-					WORK, 1, ldwork, offsetWORK
-				);
-			}
-
-			// Apply H to rows i:m-1 of current block
-			zung2r(
-				M - i, ib, ib,
-				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
-				WORK, strideWORK, offsetWORK
-			);
-
-			// Set rows 0:i-1 of current block to zero
-			for ( j = i; j < i + ib; j++ ) {
-				for ( l = 0; l < i; l++ ) {
-					idx = oA + l * da1 + j * da2;
-					Av[ idx ] = 0.0;
-					Av[ idx + 1 ] = 0.0;
-				}
-			}
-		}
-	}
-	return 0;
-}
-
-/**
-* ZUNGLQ generates an M-by-N complex matrix Q with orthonormal rows,
-* which is defined as the first M rows of a product of K elementary
-* reflectors of order N:  Q = H(k)^H ... H(2)^H H(1)^H
-*
-* Blocked algorithm using zlarft + zlarfb.
-*
-* @private
-*/
-function zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var ldwork;
-	var Av;
-	var da1;
-	var da2;
-	var oA;
-	var nb;
-	var kk;
-	var ki;
-	var ib;
-	var T;
-	var i;
-	var j;
-	var l;
-	var idx;
-
-	if ( M <= 0 ) {
-		return 0;
-	}
-
-	Av = reinterpret( A, 0 );
-	da1 = sa1 * 2;
-	da2 = sa2 * 2;
-	oA = offsetA * 2;
-
-	nb = DEFAULT_NB;
-	T = new Complex128Array( nb * nb );
-
-	if ( nb >= 2 && nb < K ) {
-		ki = ( Math.floor( ( K - 1 ) / nb ) ) * nb;
-		kk = Math.min( K, ki + nb );
-
-		// Set columns 0:kk-1 of rows kk:M-1 to zero
-		for ( j = 0; j < kk; j++ ) {
-			for ( i = kk; i < M; i++ ) {
-				idx = oA + i * da1 + j * da2;
-				Av[ idx ] = 0.0;
-				Av[ idx + 1 ] = 0.0;
-			}
-		}
-	} else {
-		kk = 0;
-	}
-
-	// Use unblocked code for the last or only block
-	if ( kk < M ) {
-		zungl2(
-			M - kk, N - kk, K - kk,
-			A, sa1, sa2, offsetA + kk * sa1 + kk * sa2,
-			TAU, strideTAU, offsetTAU + kk * strideTAU,
-			WORK, strideWORK, offsetWORK
-		);
-	}
-
-	if ( kk > 0 ) {
-		ldwork = M;
-
-		// Ensure WORK is large enough
-		if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
-			WORK = new Complex128Array( ldwork * nb + offsetWORK );
-		}
-
-		for ( i = ki; i >= 0; i -= nb ) {
-			ib = Math.min( nb, K - i );
-			if ( i + ib < M ) {
-				// Form the triangular factor of the block reflector
-				zlarft(
-					'F', 'R',
-					N - i, ib,
-					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
-					T, 1, nb, 0
-				);
-
-				// Apply H^H to A(i+ib:m-1, i:n-1) from the right
-				zlarfb(
-					'R', 'C', 'F', 'R',
-					M - i - ib, N - i, ib,
-					A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-					T, 1, nb, 0,
-					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + i * sa2,
-					WORK, 1, ldwork, offsetWORK
-				);
-			}
-
-			// Apply H to rows i:i+ib-1 of current block
-			zungl2(
-				ib, N - i, ib,
-				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
-				WORK, strideWORK, offsetWORK
-			);
-
-			// Set columns 0:i-1 of rows i:i+ib-1 to zero
-			for ( j = 0; j < i; j++ ) {
-				for ( l = i; l < i + ib; l++ ) {
-					idx = oA + l * da1 + j * da2;
-					Av[ idx ] = 0.0;
-					Av[ idx + 1 ] = 0.0;
-				}
-			}
-		}
-	}
-	return 0;
-}
-
-/**
-* ZUNGBR generates one of the complex unitary matrices Q or P^H
-* determined by ZGEBRD when reducing a complex matrix A to bidiagonal form.
-*
-* If VECT = 'Q', generates the M-by-N matrix Q (left unitary factor).
-* If VECT = 'P', generates the M-by-N matrix P^H (right unitary factor).
-*
-* @private
-*/
-function zungbr( vect, M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var wantq;
-	var Av;
-	var da1;
-	var da2;
-	var oA;
-	var idx;
-	var i;
-	var j;
-
-	wantq = ( vect === 'Q' || vect === 'q' );
-
-	if ( M === 0 || N === 0 ) {
-		return 0;
-	}
-
-	Av = reinterpret( A, 0 );
-	da1 = sa1 * 2;
-	da2 = sa2 * 2;
-	oA = offsetA * 2;
-
-	if ( wantq ) {
-		// Form Q: requires M >= N >= min(M, K)
-		if ( M >= K ) {
-			// Q was determined by a call to zgebrd with M >= N
-			zungqr( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
-		} else {
-			// Q was determined by a call to zgebrd with M < N
-			// Shift columns right to make room, insert identity in first row/col
-			for ( j = M - 1; j >= 1; j-- ) {
-				idx = oA + 0 * da1 + j * da2;
-				Av[ idx ] = 0.0;
-				Av[ idx + 1 ] = 0.0;
-				for ( i = j + 1; i < M; i++ ) {
-					idx = oA + i * da1 + j * da2;
-					Av[ idx ] = Av[ oA + i * da1 + ( j - 1 ) * da2 ];
-					Av[ idx + 1 ] = Av[ oA + i * da1 + ( j - 1 ) * da2 + 1 ];
-				}
-			}
-			idx = oA;
-			Av[ idx ] = 1.0;
-			Av[ idx + 1 ] = 0.0;
-			for ( i = 1; i < M; i++ ) {
-				idx = oA + i * da1;
-				Av[ idx ] = 0.0;
-				Av[ idx + 1 ] = 0.0;
-			}
-			if ( M > 1 ) {
-				zungqr(
-					M - 1, M - 1, M - 1,
-					A, sa1, sa2, offsetA + 1 * sa1 + 1 * sa2,
-					TAU, strideTAU, offsetTAU,
-					WORK, strideWORK, offsetWORK
-				);
-			}
-		}
-	} else {
-		// Form P^H: requires N >= M >= min(N, K)
-		if ( K < N ) {
-			// P^H was determined by a call to zgebrd with M >= N
-			zunglq( M, N, K, A, sa1, sa2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
-		} else {
-			// P^H was determined by a call to zgebrd with M < N
-			// Shift rows down to make room, insert identity in first row/col
-			idx = oA;
-			Av[ idx ] = 1.0;
-			Av[ idx + 1 ] = 0.0;
-			for ( i = 1; i < N; i++ ) {
-				idx = oA + i * da1;
-				Av[ idx ] = 0.0;
-				Av[ idx + 1 ] = 0.0;
-			}
-			for ( j = 1; j < N; j++ ) {
-				for ( i = j - 1; i >= 1; i-- ) {
-					idx = oA + i * da1 + j * da2;
-					Av[ idx ] = Av[ oA + ( i - 1 ) * da1 + j * da2 ];
-					Av[ idx + 1 ] = Av[ oA + ( i - 1 ) * da1 + j * da2 + 1 ];
-				}
-				idx = oA + 0 * da1 + j * da2;
-				Av[ idx ] = 0.0;
-				Av[ idx + 1 ] = 0.0;
-			}
-			if ( N > 1 ) {
-				zunglq(
-					N - 1, N - 1, N - 1,
-					A, sa1, sa2, offsetA + 1 * sa1 + 1 * sa2,
-					TAU, strideTAU, offsetTAU,
-					WORK, strideWORK, offsetWORK
-				);
-			}
-		}
-	}
-	return 0;
-}
-
-/**
-* ZUNMQR applies Q or Q^H from QR factorization to a matrix C.
-*
-* Q is represented as a product of elementary reflectors H(1)...H(k).
-* This is the blocked version using zlarft + zlarfb, with fallback to
-* unblocked (applying each reflector individually via zlarf).
-*
-* @private
-*/
-function zunmqr( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, offsetTAU, C, sc1, sc2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var ldwork;
-	var left;
-	var notran;
-	var nb;
-	var nw;
-	var ib;
-	var ic;
-	var jc;
-	var mi;
-	var ni;
-	var T;
-	var i;
-	var i1;
-	var i2;
-	var i3;
-
-	left = ( side === 'L' || side === 'l' );
-	notran = ( trans === 'N' || trans === 'n' );
-
-	if ( M === 0 || N === 0 || K === 0 ) {
-		return 0;
-	}
-
-	nb = DEFAULT_NB;
-	T = new Complex128Array( nb * nb );
-
-	nw = left ? N : M;
-	ldwork = nw;
-
-	// Ensure WORK is large enough
-	if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
-		WORK = new Complex128Array( ldwork * nb + offsetWORK );
-	}
-
-	if ( ( left && !notran ) || ( !left && notran ) ) {
-		i1 = 0;
-		i2 = K;
-		i3 = nb;
-	} else {
-		i1 = ( Math.floor( ( K - 1 ) / nb ) ) * nb;
-		i2 = -1;
-		i3 = -nb;
-	}
-
-	for ( i = i1; ( i3 > 0 ) ? ( i < i2 ) : ( i > i2 ); i += i3 ) {
-		ib = Math.min( nb, K - i );
-
-		// Form the triangular factor of the block reflector
-		zlarft(
-			'F', 'C',
-			( left ? M - i : N - i ), ib,
-			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
-			TAU, strideTAU, offsetTAU + i * strideTAU,
-			T, 1, nb, 0
-		);
-
-		if ( left ) {
-			mi = M - i;
-			ni = N;
-			ic = i;
-			jc = 0;
-		} else {
-			mi = M;
-			ni = N - i;
-			ic = 0;
-			jc = i;
-		}
-
-		// Apply H or H^H
-		zlarfb(
-			side, trans, 'F', 'C',
-			mi, ni, ib,
-			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
-			T, 1, nb, 0,
-			C, sc1, sc2, offsetC + ic * sc1 + jc * sc2,
-			WORK, 1, ldwork, offsetWORK
-		);
-	}
-	return 0;
-}
-
-/**
-* ZUNMLQ applies Q or Q^H from LQ factorization to a matrix C.
-*
-* Q is represented as a product of elementary reflectors H(1)^H...H(k)^H.
-* This is the blocked version using zlarft + zlarfb.
-*
-* @private
-*/
-function zunmlq( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, offsetTAU, C, sc1, sc2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var ldwork;
-	var left;
-	var notran;
-	var transt;
-	var nb;
-	var nw;
-	var ib;
-	var ic;
-	var jc;
-	var mi;
-	var ni;
-	var T;
-	var i;
-	var i1;
-	var i2;
-	var i3;
-
-	left = ( side === 'L' || side === 'l' );
-	notran = ( trans === 'N' || trans === 'n' );
-
-	if ( M === 0 || N === 0 || K === 0 ) {
-		return 0;
-	}
-
-	nb = DEFAULT_NB;
-	T = new Complex128Array( nb * nb );
-
-	nw = left ? N : M;
-	ldwork = nw;
-
-	// Ensure WORK is large enough
-	if ( !WORK || WORK.length < ldwork * nb + offsetWORK ) {
-		WORK = new Complex128Array( ldwork * nb + offsetWORK );
-	}
-
-	if ( ( left && notran ) || ( !left && !notran ) ) {
-		i1 = 0;
-		i2 = K;
-		i3 = nb;
-	} else {
-		i1 = ( Math.floor( ( K - 1 ) / nb ) ) * nb;
-		i2 = -1;
-		i3 = -nb;
-	}
-
-	// For LQ reflectors, the transpose is flipped compared to QR
-	transt = notran ? 'C' : 'N';
-
-	for ( i = i1; ( i3 > 0 ) ? ( i < i2 ) : ( i > i2 ); i += i3 ) {
-		ib = Math.min( nb, K - i );
-
-		// Form the triangular factor of the block reflector
-		zlarft(
-			'F', 'R',
-			( left ? M - i : N - i ), ib,
-			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
-			TAU, strideTAU, offsetTAU + i * strideTAU,
-			T, 1, nb, 0
-		);
-
-		if ( left ) {
-			mi = M - i;
-			ni = N;
-			ic = i;
-			jc = 0;
-		} else {
-			mi = M;
-			ni = N - i;
-			ic = 0;
-			jc = i;
-		}
-
-		// Apply H or H^H
-		zlarfb(
-			side, transt, 'F', 'R',
-			mi, ni, ib,
-			A, sa1A, sa2A, offsetA + i * sa1A + i * sa2A,
-			T, 1, nb, 0,
-			C, sc1, sc2, offsetC + ic * sc1 + jc * sc2,
-			WORK, 1, ldwork, offsetWORK
-		);
-	}
-	return 0;
-}
-
-/**
-* ZUNMBR applies Q or P^H from bidiagonal reduction (ZGEBRD) to a matrix C.
-*
-* If VECT = 'Q': applies Q or Q^H (using ZUNMQR with column reflectors).
-* If VECT = 'P': applies P or P^H (using ZUNMLQ with row reflectors).
-*
-* @private
-*/
-function zunmbr( vect, side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, offsetTAU, C, sc1, sc2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	var applyq;
-	var left;
-	var notran;
-	var transt;
-	var mi;
-	var ni;
-	var i1;
-	var i2;
-	var nq;
-
-	applyq = ( vect === 'Q' || vect === 'q' );
-	left = ( side === 'L' || side === 'l' );
-	notran = ( trans === 'N' || trans === 'n' );
-
-	if ( M === 0 || N === 0 ) {
-		return 0;
-	}
-
-	nq = left ? M : N;
-
-	if ( applyq ) {
-		// Apply Q or Q^H
-		if ( nq >= K ) {
-			// Q was determined by zgebrd with NQ >= K
-			zunmqr( side, trans, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, offsetTAU, C, sc1, sc2, offsetC, WORK, strideWORK, offsetWORK );
-		} else if ( nq > 1 ) {
-			// Q was determined by zgebrd with NQ < K (M < N case)
-			if ( left ) {
-				mi = M - 1;
-				ni = N;
-				i1 = 1;
-				i2 = 0;
-			} else {
-				mi = M;
-				ni = N - 1;
-				i1 = 0;
-				i2 = 1;
-			}
-			zunmqr(
-				side, trans, mi, ni, nq - 1,
-				A, sa1A, sa2A, offsetA + 1 * sa1A + 0 * sa2A,
-				TAU, strideTAU, offsetTAU,
-				C, sc1, sc2, offsetC + i1 * sc1 + i2 * sc2,
-				WORK, strideWORK, offsetWORK
-			);
-		}
-	} else {
-		// Apply P or P^H (flip transpose)
-		transt = notran ? 'C' : 'N';
-		if ( nq > K ) {
-			// P was determined by zgebrd with NQ > K
-			zunmlq( side, transt, M, N, K, A, sa1A, sa2A, offsetA, TAU, strideTAU, offsetTAU, C, sc1, sc2, offsetC, WORK, strideWORK, offsetWORK );
-		} else if ( nq > 1 ) {
-			// P was determined by zgebrd with NQ <= K (N <= M case)
-			if ( left ) {
-				mi = M - 1;
-				ni = N;
-				i1 = 1;
-				i2 = 0;
-			} else {
-				mi = M;
-				ni = N - 1;
-				i1 = 0;
-				i2 = 1;
-			}
-			zunmlq(
-				side, transt, mi, ni, nq - 1,
-				A, sa1A, sa2A, offsetA + 0 * sa1A + 1 * sa2A,
-				TAU, strideTAU, offsetTAU,
-				C, sc1, sc2, offsetC + i1 * sc1 + i2 * sc2,
-				WORK, strideWORK, offsetWORK
-			);
-		}
-	}
-	return 0;
-}
 
 
 // MAIN //
@@ -937,9 +152,13 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		return 0;
 	}
 
-	// Allocate workspace internally
+	// Use caller-provided WORK if large enough; otherwise allocate internally
 	var wsz = Math.max( 1, 3 * minmn + Math.max( M, N ) + minmn * Math.max( M, N ) );
-	WK = new Complex128Array( wsz );
+	if ( lwork >= wsz ) {
+		WK = WORK;
+	} else {
+		WK = new Complex128Array( wsz );
+	}
 
 	// Compute machine parameters
 	eps = dlamch( 'P' );
@@ -947,8 +166,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	bignum = 1.0 / smlnum;
 
 	// Scale A if max element outside range [smlnum, bignum]
-	var DUM = new Float64Array( Math.max( M, N ) );
-	anrm = zlange( 'M', M, N, A, sa1, sa2, offsetA, DUM, 1, 0 );
+	// zlange('M') does not use the WORK parameter, so pass a minimal dummy
+	anrm = zlange( 'M', M, N, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK );
 	iscl = 0;
 	if ( anrm > 0.0 && anrm < smlnum ) {
 		iscl = 1;
@@ -960,109 +179,184 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 	if ( M >= N ) {
 		// A has at least as many rows as columns (M >= N)
-		// Path: direct bidiagonal reduction (no initial QR factorization for simplicity)
 
-		ie = 0;           // E in RWORK at offsetRWORK + ie
-		itauq = 0;        // TAUQ in WK at itauq
-		itaup = itauq + N; // TAUP in WK at itaup
-		iwork = itaup + N; // WORK start in WK at iwork
+		if ( wntun && M >= 2 * N ) {
+			// Path 1 (M much larger than N, JOBU='N')
+			// No left singular vectors to be computed.
+			// First QR-factorize the tall M×N matrix, then bidiagonalize the
+			// small N×N upper-triangular R. This reduces work by ~40% when M >> N.
 
-		// Bidiagonalize A (reduce to upper bidiagonal)
-		zgebrd(
-			M, N, A, sa1, sa2, offsetA,
-			s, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			WK, 1, itauq,
-			WK, 1, itaup,
-			WK, 1, iwork,
-			wsz - iwork
-		);
+			itau = 0;             // TAU from QR in WK at itau
+			iwork = itau + N;     // WORK start in WK at iwork
 
-		if ( wntuas ) {
-			// Copy lower triangle of A to U, then generate Q
-			zlacpy( 'L', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
-			ncu = wntus ? N : M;
-			zungbr(
-				'Q', M, ncu, N,
-				U, su1, su2, offsetU,
-				WK, 1, itauq,
+			// Compute A = Q * R
+			zgeqrf(
+				M, N, A, sa1, sa2, offsetA,
+				WK, 1, itau,
 				WK, 1, iwork
 			);
-		}
-		if ( wntvas ) {
-			// Copy upper triangle of A to VT, then generate P^H
-			zlacpy( 'U', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
-			zungbr(
-				'P', N, N, N,
-				VT, svt1, svt2, offsetVT,
-				WK, 1, itaup,
-				WK, 1, iwork
-			);
-		}
-		if ( wntuo ) {
-			// Generate Q in A
-			zungbr(
-				'Q', M, N, N,
-				A, sa1, sa2, offsetA,
-				WK, 1, itauq,
-				WK, 1, iwork
-			);
-		}
-		if ( wntvo ) {
-			// Generate P^H in A
-			zungbr(
-				'P', N, N, N,
-				A, sa1, sa2, offsetA,
-				WK, 1, itaup,
-				WK, 1, iwork
-			);
-		}
-		irwork = ie + N;
 
-		// Determine dimensions for ZBDSQR
-		nru = 0;
-		ncvt = 0;
-		if ( wntuas || wntuo ) {
-			nru = M;
-		}
-		if ( wntvas || wntvo ) {
-			ncvt = N;
-		}
+			// Zero out below R (the lower triangle of A(1:N, 0:N))
+			if ( N > 1 ) {
+				// A(2,1) in Fortran → offsetA + 1*sa1 + 0*sa2 in 0-based
+				zlaset( 'L', N - 1, N - 1, CZERO, CZERO, A, sa1, sa2, offsetA + sa1 );
+			}
 
-		// Perform bidiagonal SVD
-		if ( ( !wntuo ) && ( !wntvo ) ) {
-			// Neither U nor VT overwrite A
-			info = zbdsqr(
-				'U', N, ncvt, nru, 0,
+			ie = 0;            // E in RWORK at offsetRWORK + ie
+			itauq = 0;         // TAUQ in WK at itauq
+			itaup = itauq + N; // TAUP in WK at itaup
+			iwork = itaup + N; // WORK start in WK at iwork
+
+			// Bidiagonalize R in A (N×N upper triangle)
+			zgebrd(
+				N, N, A, sa1, sa2, offsetA,
 				s, strideS, offsetS,
 				RWORK, strideRWORK, offsetRWORK + ie,
-				VT, svt1, svt2, offsetVT,
-				U, su1, su2, offsetU,
+				WK, 1, itauq,
+				WK, 1, itaup,
+				WK, 1, iwork,
+				wsz - iwork
+			);
+
+			ncvt = 0;
+			if ( wntvo || wntvas ) {
+				// If right singular vectors desired, generate P^H in A
+				zungbr(
+					'P', N, N, N,
+					A, sa1, sa2, offsetA,
+					WK, 1, itaup,
+					WK, 1, iwork,
+					-1
+				);
+				ncvt = N;
+			}
+			irwork = ie + N;
+
+			// Perform bidiagonal QR iteration, computing right singular
+			// vectors of A in A if desired (NRU=0: no left vectors)
+			info = zbdsqr(
+				'U', N, ncvt, 0, 0,
+				s, strideS, offsetS,
+				RWORK, strideRWORK, offsetRWORK + ie,
+				A, sa1, sa2, offsetA,
+				A, sa1, sa2, offsetA,  // U dummy (NRU=0)
 				A, sa1, sa2, offsetA,  // C dummy (NCC=0)
 				RWORK, strideRWORK, offsetRWORK + irwork
 			);
-		} else if ( ( !wntuo ) && wntvo ) {
-			// VT overwrites A
-			info = zbdsqr(
-				'U', N, ncvt, nru, 0,
-				s, strideS, offsetS,
-				RWORK, strideRWORK, offsetRWORK + ie,
-				A, sa1, sa2, offsetA,
-				U, su1, su2, offsetU,
-				A, sa1, sa2, offsetA, // C dummy (NCC=0)
-				RWORK, strideRWORK, offsetRWORK + irwork
-			);
+
+			// If right singular vectors desired in VT, copy them there
+			if ( wntvas ) {
+				zlacpy( 'F', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
+			}
 		} else {
-			// U overwrites A, or both overwrite A
-			info = zbdsqr(
-				'U', N, ncvt, nru, 0,
+			// Path 10: direct bidiagonal reduction (M >= N, but M not much larger)
+
+			ie = 0;           // E in RWORK at offsetRWORK + ie
+			itauq = 0;        // TAUQ in WK at itauq
+			itaup = itauq + N; // TAUP in WK at itaup
+			iwork = itaup + N; // WORK start in WK at iwork
+
+			// Bidiagonalize A (reduce to upper bidiagonal)
+			zgebrd(
+				M, N, A, sa1, sa2, offsetA,
 				s, strideS, offsetS,
 				RWORK, strideRWORK, offsetRWORK + ie,
-				VT, svt1, svt2, offsetVT,
-				A, sa1, sa2, offsetA,
-				A, sa1, sa2, offsetA, // C dummy (NCC=0)
-				RWORK, strideRWORK, offsetRWORK + irwork
+				WK, 1, itauq,
+				WK, 1, itaup,
+				WK, 1, iwork,
+				wsz - iwork
 			);
+
+			if ( wntuas ) {
+				// Copy lower triangle of A to U, then generate Q
+				zlacpy( 'L', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
+				ncu = wntus ? N : M;
+				zungbr(
+					'Q', M, ncu, N,
+					U, su1, su2, offsetU,
+					WK, 1, itauq,
+					WK, 1, iwork,
+					-1
+				);
+			}
+			if ( wntvas ) {
+				// Copy upper triangle of A to VT, then generate P^H
+				zlacpy( 'U', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
+				zungbr(
+					'P', N, N, N,
+					VT, svt1, svt2, offsetVT,
+					WK, 1, itaup,
+					WK, 1, iwork,
+					-1
+				);
+			}
+			if ( wntuo ) {
+				// Generate Q in A
+				zungbr(
+					'Q', M, N, N,
+					A, sa1, sa2, offsetA,
+					WK, 1, itauq,
+					WK, 1, iwork,
+					-1
+				);
+			}
+			if ( wntvo ) {
+				// Generate P^H in A
+				zungbr(
+					'P', N, N, N,
+					A, sa1, sa2, offsetA,
+					WK, 1, itaup,
+					WK, 1, iwork,
+					-1
+				);
+			}
+			irwork = ie + N;
+
+			// Determine dimensions for ZBDSQR
+			nru = 0;
+			ncvt = 0;
+			if ( wntuas || wntuo ) {
+				nru = M;
+			}
+			if ( wntvas || wntvo ) {
+				ncvt = N;
+			}
+
+			// Perform bidiagonal SVD
+			if ( ( !wntuo ) && ( !wntvo ) ) {
+				// Neither U nor VT overwrite A
+				info = zbdsqr(
+					'U', N, ncvt, nru, 0,
+					s, strideS, offsetS,
+					RWORK, strideRWORK, offsetRWORK + ie,
+					VT, svt1, svt2, offsetVT,
+					U, su1, su2, offsetU,
+					A, sa1, sa2, offsetA,  // C dummy (NCC=0)
+					RWORK, strideRWORK, offsetRWORK + irwork
+				);
+			} else if ( ( !wntuo ) && wntvo ) {
+				// VT overwrites A
+				info = zbdsqr(
+					'U', N, ncvt, nru, 0,
+					s, strideS, offsetS,
+					RWORK, strideRWORK, offsetRWORK + ie,
+					A, sa1, sa2, offsetA,
+					U, su1, su2, offsetU,
+					A, sa1, sa2, offsetA, // C dummy (NCC=0)
+					RWORK, strideRWORK, offsetRWORK + irwork
+				);
+			} else {
+				// U overwrites A, or both overwrite A
+				info = zbdsqr(
+					'U', N, ncvt, nru, 0,
+					s, strideS, offsetS,
+					RWORK, strideRWORK, offsetRWORK + ie,
+					VT, svt1, svt2, offsetVT,
+					A, sa1, sa2, offsetA,
+					A, sa1, sa2, offsetA, // C dummy (NCC=0)
+					RWORK, strideRWORK, offsetRWORK + irwork
+				);
+			}
 		}
 	} else {
 		// M < N: A has more columns than rows
@@ -1091,7 +385,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				'Q', M, M, N,
 				U, su1, su2, offsetU,
 				WK, 1, itauq,
-				WK, 1, iwork
+				WK, 1, iwork,
+				-1
 			);
 		}
 		if ( wntvas ) {
@@ -1102,7 +397,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				'P', nrvt, N, M,
 				VT, svt1, svt2, offsetVT,
 				WK, 1, itaup,
-				WK, 1, iwork
+				WK, 1, iwork,
+				-1
 			);
 		}
 		if ( wntuo ) {
@@ -1111,7 +407,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				'Q', M, M, N,
 				A, sa1, sa2, offsetA,
 				WK, 1, itauq,
-				WK, 1, iwork
+				WK, 1, iwork,
+				-1
 			);
 		}
 		if ( wntvo ) {
@@ -1120,7 +417,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				'P', M, N, M,
 				A, sa1, sa2, offsetA,
 				WK, 1, itaup,
-				WK, 1, iwork
+				WK, 1, iwork,
+				-1
 			);
 		}
 		irwork = ie + M;

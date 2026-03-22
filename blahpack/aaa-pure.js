@@ -79,7 +79,11 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
   const UData = new Complex128Array(1);
   const VTData = new Complex128Array(maxN * maxN);
   const VTv = reinterpret(VTData, 0); // Float64Array view for reading results
-  const lworkMax = Math.max(1, 8 * (maxM_svd + maxN));
+  // Workspace must be large enough for zgesvd's internal needs:
+  // wsz = 3*min(M,N) + max(M,N) + min(M,N)*max(M,N)
+  const minMN = Math.min(maxM_svd, maxN);
+  const maxMN = Math.max(maxM_svd, maxN);
+  const lworkMax = Math.max(1, 3 * minMN + maxMN + minMN * maxMN);
   const WORK = new Complex128Array(lworkMax);
   const RWORK = new Float64Array(5 * maxN);
 

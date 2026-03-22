@@ -1,0 +1,27 @@
+{
+  "instances": {
+    "mcp-1774206068646-t1g2bx": {
+      "pid": 40866,
+      "ws": 9899,
+      "http": 9898,
+      "startedAt": 1774206068652,
+      "notebooks": [
+        "laplace/"
+      ],
+      "isOwner": true
+    },
+    "mcp-1774206096929-zqz9y4": {
+      "pid": 40916,
+      "isClient": true,
+      "ownerHttp": 9898,
+      "startedAt": 1774206096930
+    },
+    "mcp-1774206437489-58oxpz": {
+      "pid": 54051,
+      "isClient": true,
+      "ownerHttp": 9898,
+      "startedAt": 1774206437491
+    }
+  },
+  "owner": "mcp-1774206068646-t1g2bx"
+}

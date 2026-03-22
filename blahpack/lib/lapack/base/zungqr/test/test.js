@@ -8,6 +8,7 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var zgeqr2 = require( '../../zgeqr2/lib/base.js' );
 var zungqr = require( './../lib/base.js' );
 
 

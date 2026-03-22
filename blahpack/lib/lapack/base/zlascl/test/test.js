@@ -190,3 +190,22 @@ test( 'zlascl: invalid type returns -1', function t() {
 	var info = base( 'X', 0, 0, 1.0, 2.0, 1, 1, A, 1, 1, 0 );
 	assert.strictEqual( info, -1 );
 });
+
+test( 'zlascl: cfrom=Infinity (lines 115-117)', function t() {
+	// cfrom is Infinity: cfrom1 = Inf * smlnum = Inf === cfrom, so mul = cto/cfrom
+	var A = c128( new Float64Array( [ 1e100, 2e100, 3e100, 4e100 ] ) );
+	var info = base( 'G', 0, 0, Infinity, 1.0, 1, 2, A, 1, 1, 0 );
+	assert.strictEqual( info, 0 );
+	// mul = 1.0 / Infinity = 0, so everything should be 0
+	var Av = reinterpret( A, 0 );
+	assertArrayClose( Array.from( Av ), [ 0, 0, 0, 0 ], 'cfrom_inf a' );
+});
+
+test( 'zlascl: cto=0 (lines 121-124)', function t() {
+	// cto=0: cto1 = 0/bignum = 0 === ctoc, so mul = 0
+	var A = c128( new Float64Array( [ 5, 6, 7, 8 ] ) );
+	var info = base( 'G', 0, 0, 1.0, 0.0, 1, 2, A, 1, 1, 0 );
+	assert.strictEqual( info, 0 );
+	var Av = reinterpret( A, 0 );
+	assertArrayClose( Array.from( Av ), [ 0, 0, 0, 0 ], 'cto_zero a' );
+});

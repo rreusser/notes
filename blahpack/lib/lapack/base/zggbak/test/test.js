@@ -393,6 +393,39 @@ test( 'zggbak: K=I (no-swap, continue case)', function t() {
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
+test( 'zggbak: JOB=P, SIDE=L, self-permutation (k===i) in both loops', function t() {
+	// Use N=4, ilo=2, ihi=3 so both backward (i from ilo-2 downto 0)
+	// and forward (i from ihi to N-1) loops run for left eigenvectors.
+	// LSCALE contains 1-based self-referencing indices to trigger k===i continues.
+	var n = 4;
+	var m = 2;
+	var LDV = n;
+	var V = new Complex128Array( LDV * m );
+	var Vv = reinterpret( V, 0 );
+	var lscale = new Float64Array( [ 1.0, 0.0, 0.0, 4.0 ] ); // l[0]=1 → k=0=i, l[3]=4 → k=3=i
+	var rscale = new Float64Array( 4 );
+	var info;
+
+	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
+	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
+	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
+	cset( Vv, LDV, 3, 0, 4.0, 0.0 );
+	cset( Vv, LDV, 0, 1, 5.0, 0.0 );
+	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
+	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
+	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
+
+	// Save original V to compare
+	var origV = Array.from( Vv );
+
+	info = base( 'P', 'L', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
+
+	assert.strictEqual( info, 0, 'info' );
+	// Since lscale[0]=1 (→ self-permute row 0) and lscale[3]=4 (→ self-permute row 3),
+	// V should be unchanged
+	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), origV, 'v unchanged' );
+});
+
 test( 'zggbak: N=1 edge case', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'n_one'; } );
 	var n = 1;

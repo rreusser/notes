@@ -15,9 +15,9 @@ var zhgeqz = require( '../../zhgeqz/lib/base.js' );
 var zggbak = require( '../../zggbak/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
 var zunmqr = require( '../../zunmqr/lib/base.js' );
-var ztgevc = require( './ztgevc.js' );
+var ztgevc = require( '../../ztgevc/lib/base.js' );
 var zlacpy = require( '../../zlacpy/lib/base.js' );
-var zungqr = require( './zungqr.js' );
+var zungqr = require( '../../zungqr/lib/base.js' );
 
 // VARIABLES //
 
@@ -224,7 +224,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		zungqr( irows, irows, irows,
 			VL, strideVL1, strideVL2, offsetVL + ( ilo - 1 ) * strideVL1 + ( ilo - 1 ) * strideVL2,
 			TAU, 1, 0,
-			WORK, lwork
+			WORK, 1, 0, lwork
 		);
 	}
 
@@ -295,12 +295,12 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		// Use a separate RWORK for ztgevc so it doesn't clobber
 		// the LSCALE/RSCALE at RWORK[0..2N-1] needed by zggbak
 		ierr = ztgevc(
-			chtemp, 'B', N,
+			chtemp, 'B', null, 0, 0, N,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB,
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR,
-			N, WORK, new Float64Array( 2 * N )
+			N, [ 0 ], WORK, 1, 0, new Float64Array( 2 * N ), 1, 0
 		);
 		if ( ierr !== 0 ) {
 			info = N + 2;

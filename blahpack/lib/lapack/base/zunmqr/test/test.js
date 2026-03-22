@@ -152,3 +152,199 @@ test( 'zunmqr: left, no transpose, rectangular C (4x2)', function t() {
 	assertClose( info, tc.info, 1e-14, 'info' );
 	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
 });
+
+
+// BLOCKED PATH TESTS (K > NB=32) //
+
+/**
+* Generate a deterministic M-by-N complex matrix using a simple LCG.
+* Returns a Complex128Array of size LDA*N (column-major) with the
+* M-by-N data filled in.
+*/
+function deterministicMatrix( M, N, LDA, seed ) {
+	var A = new Complex128Array( LDA * N );
+	var Av = reinterpret( A, 0 );
+	var x = seed || 12345;
+	var i;
+	var j;
+	var idx;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			idx = 2 * ( i + j * LDA );
+			x = ( ( x * 1103515245 ) + 12345 ) & 0x7fffffff;
+			Av[ idx ] = ( ( x % 2000 ) - 1000 ) / 500.0;
+			x = ( ( x * 1103515245 ) + 12345 ) & 0x7fffffff;
+			Av[ idx + 1 ] = ( ( x % 2000 ) - 1000 ) / 500.0;
+		}
+	}
+	return A;
+}
+
+/**
+* Compute QR factorization of an M-by-K matrix (K > 32 to trigger blocked path).
+*/
+function qrLarge( M, K ) {
+	var LDA = M;
+	var A = deterministicMatrix( M, K, LDA, 54321 );
+	var TAU = new Complex128Array( K );
+	var WORK = new Complex128Array( K );
+	zgeqr2( M, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
+	return { A: A, TAU: TAU, LDA: LDA };
+}
+
+/**
+* Create M-by-M identity as Complex128Array in column-major with LDC=M.
+*/
+function eyeComplex( M ) {
+	var C = new Complex128Array( M * M );
+	var Cv = reinterpret( C, 0 );
+	var i;
+	for ( i = 0; i < M; i++ ) {
+		Cv[ 2 * ( i + i * M ) ] = 1.0;
+	}
+	return C;
+}
+
+/**
+* Check that a matrix is approximately equal to the identity.
+* C is M-by-M in column-major with LDC.
+*/
+function assertApproxIdentity( C, M, LDC, tol, msg ) {
+	var Cv = reinterpret( C, 0 );
+	var expected;
+	var actual_re;
+	var actual_im;
+	var idx;
+	var i;
+	var j;
+	for ( j = 0; j < M; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			idx = 2 * ( i + j * LDC );
+			actual_re = Cv[ idx ];
+			actual_im = Cv[ idx + 1 ];
+			expected = ( i === j ) ? 1.0 : 0.0;
+			assert.ok(
+				Math.abs( actual_re - expected ) < tol,
+				msg + ': real(' + i + ',' + j + ') expected ' + expected + ', got ' + actual_re
+			);
+			assert.ok(
+				Math.abs( actual_im ) < tol,
+				msg + ': imag(' + i + ',' + j + ') expected 0, got ' + actual_im
+			);
+		}
+	}
+}
+
+test( 'zunmqr: blocked path, left, no transpose (K=35, forward iteration)', function t() {
+	// K=35 > NB=32, so the blocked path is taken.
+	// Verify: apply Q to I, then apply Q^H to the result => should get I back.
+	var M = 40;
+	var K = 35;
+	var N = M;
+	var LDC = M;
+	var qr = qrLarge( M, K );
+	var WORK = new Complex128Array( N * 64 );
+
+	// Step 1: C = I, apply Q from the left (trans='N') => C = Q*I = Q
+	var C = eyeComplex( M );
+	var info = zunmqr( 'L', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	assert.equal( info, 0, 'info after Q*I' );
+
+	// Step 2: Apply Q^H from the left to Q => C = Q^H * Q = I
+	info = zunmqr( 'L', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	assert.equal( info, 0, 'info after Q^H*Q' );
+
+	// Verify Q^H * Q = I
+	assertApproxIdentity( C, M, LDC, 1e-10, 'Q^H*Q=I (blocked, forward)' );
+});
+
+test( 'zunmqr: blocked path, left, conjugate transpose (K=35, backward iteration)', function t() {
+	// K=35 > NB=32, so the blocked path is taken.
+	// For zunmqr: left+trans='C' uses forward iteration (i3>0),
+	// left+trans='N' uses backward iteration (i3<0).
+	// Verify: apply Q^H to I, then apply Q to the result => should get I back.
+	var M = 40;
+	var K = 35;
+	var N = M;
+	var LDC = M;
+	var qr = qrLarge( M, K );
+	var WORK = new Complex128Array( N * 64 );
+
+	// Step 1: C = I, apply Q^H from the left (trans='C') => C = Q^H
+	var C = eyeComplex( M );
+	var info = zunmqr( 'L', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	assert.equal( info, 0, 'info after Q^H*I' );
+
+	// Step 2: Apply Q from the left to Q^H => C = Q * Q^H = I
+	info = zunmqr( 'L', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	assert.equal( info, 0, 'info after Q*Q^H' );
+
+	// Verify Q * Q^H = I
+	assertApproxIdentity( C, M, LDC, 1e-10, 'Q*Q^H=I (blocked, backward)' );
+});
+
+test( 'zunmqr: blocked path, right, no transpose (K=35, covers side=R blocked)', function t() {
+	// K=35 > NB=32, blocked path. side='R' => nq=N, nw=M.
+	// Covers lines 139-141 (ni/jc set for side=R) and 159-161 (zlarfb from right).
+	// right+notran => forward iteration.
+	// Verify: apply Q from right to I, then apply Q^H from right => I*Q*Q^H = I.
+	var N = 40;
+	var K = 35;
+	var M = N;
+	var LDC = M;
+	var qr = qrLarge( N, K );
+	var WORK = new Complex128Array( M * 64 );
+
+	// Step 1: C = I, apply Q from right (I*Q)
+	var C = eyeComplex( M );
+	var info = zunmqr( 'R', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	assert.equal( info, 0, 'info after I*Q' );
+
+	// Step 2: Apply Q^H from right => C*Q^H = I*Q*Q^H = I
+	info = zunmqr( 'R', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	assert.equal( info, 0, 'info after C*Q^H' );
+
+	assertApproxIdentity( C, M, LDC, 1e-10, 'I*Q*Q^H=I (blocked, right)' );
+});
+
+test( 'zunmqr: blocked path, right, conjugate transpose (K=35, covers side=R blocked backward)', function t() {
+	// K=35 > NB=32, blocked path. side='R', trans='C' => backward iteration.
+	// Verify: apply Q^H from right, then Q from right => I*Q^H*Q = I.
+	var N = 40;
+	var K = 35;
+	var M = N;
+	var LDC = M;
+	var qr = qrLarge( N, K );
+	var WORK = new Complex128Array( M * 64 );
+
+	// Step 1: C = I, apply Q^H from right (I*Q^H)
+	var C = eyeComplex( M );
+	var info = zunmqr( 'R', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	assert.equal( info, 0, 'info after I*Q^H' );
+
+	// Step 2: Apply Q from right => C*Q = I*Q^H*Q = I
+	info = zunmqr( 'R', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	assert.equal( info, 0, 'info after C*Q' );
+
+	assertApproxIdentity( C, M, LDC, 1e-10, 'I*Q^H*Q=I (blocked, right, backward)' );
+});
+
+test( 'zunmqr: blocked path with WORK=null triggers internal allocation', function t() {
+	// Covers lines 119-122: WORK reallocation when WORK is null/too small.
+	var M = 40;
+	var K = 35;
+	var N = M;
+	var LDC = M;
+	var qr = qrLarge( M, K );
+
+	// Step 1: C = I, apply Q from left with WORK=null
+	var C = eyeComplex( M );
+	var info = zunmqr( 'L', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info after Q*I with null WORK' );
+
+	// Step 2: Apply Q^H to verify correctness => Q^H * Q * I = I
+	info = zunmqr( 'L', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info after Q^H*Q with null WORK' );
+
+	assertApproxIdentity( C, M, LDC, 1e-10, 'Q^H*Q=I (null WORK)' );
+});
