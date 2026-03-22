@@ -58,3 +58,8 @@ test( 'dlamch: case-insensitive', function t() {
 	assert.equal( dlamch( 'e' ), dlamch( 'E' ) );
 	assert.equal( dlamch( 's' ), dlamch( 'S' ) );
 });
+
+test( 'dlamch: unrecognized character returns 0', function t() {
+	assert.strictEqual( dlamch( 'X' ), 0.0 );
+	assert.strictEqual( dlamch( 'Z' ), 0.0 );
+});

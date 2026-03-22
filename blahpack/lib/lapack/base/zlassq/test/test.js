@@ -181,6 +181,63 @@ test( 'zlassq: small existing sum with scale < 1', function t() {
 	assertClose( result.sumsq, tc.sumsq, 'zlassq_small_existing_scale_lt1 sumsq' );
 });
 
+test( 'zlassq: scale=0 with nonzero sumsq resets', function t() {
+	// scale=0, sumsq=5 → should reset to scale=1, sumsq=0, then accumulate x
+	// This exercises lines 69-72 (scale===0 reset)
+	var x = new Float64Array( [ 3, 4 ] ); // |z|^2 = 9+16 = 25
+	var result = base( 1, x, 1, 0, 0.0, 5.0 );
+	// After reset: scale=1, sumsq=0. Then accumulates 25 in amed.
+	assert.strictEqual( result.scl, 1.0 );
+	assertClose( result.sumsq, 25.0, 'sumsq should be 25' );
+});
+
+test( 'zlassq: big existing sum with scale <= 1', function t() {
+	// Need scale*sqrt(sumsq) > TBIG with scale <= 1
+	// scale=1, sumsq=1e300 → ax = 1 * sqrt(1e300) = 1e150 > TBIG (~2.5e146)
+	// This exercises lines 131-133 (scale <= 1 in big existing sum path)
+	var x = new Float64Array( [ 1, 0 ] );
+	var result = base( 1, x, 1, 0, 1.0, 1e300 );
+	// Should produce a valid scaled result
+	assert.ok( result.scl > 0, 'scl should be positive' );
+	assert.ok( result.sumsq > 0, 'sumsq should be positive' );
+	assert.ok( isFinite( result.scl ), 'scl should be finite' );
+	assert.ok( isFinite( result.sumsq ), 'sumsq should be finite' );
+});
+
+test( 'zlassq: small existing sum with scale >= 1', function t() {
+	// Need scale*sqrt(sumsq) < TSML with scale >= 1 and notbig=true
+	// scale=1, sumsq=1e-320 → ax = sqrt(1e-320) = 1e-160 < TSML (~1.5e-154)
+	// x value must be small to keep notbig=true
+	var x = new Float64Array( [ 1e-200, 0 ] );
+	var result = base( 1, x, 1, 0, 1.0, 1e-320 );
+	assert.ok( result.scl > 0, 'scl should be positive' );
+	assert.ok( result.sumsq > 0, 'sumsq should be positive' );
+});
+
+test( 'zlassq: asml > amed combination path', function t() {
+	// Need both asml>0 and amed>0, with sqrt(asml_accum)/SSML > sqrt(amed_accum)
+	// This simplifies to sum(x_small^2) > sum(x_med^2)
+	// Use 5 small complex values (re=im=TSML*0.99) and 1 medium (re=TSML*1.01)
+	// sum(x_small^2) = 10*(TSML*0.99)^2 ≈ 9.8*TSML^2
+	// sum(x_med^2)   =  1*(TSML*1.01)^2 ≈ 1.02*TSML^2
+	// → asml ≈ 3.1*TSML > amed ≈ 1.01*TSML
+	var TSML = Math.pow( 2, -511 );
+	var small = TSML * 0.99;
+	var med = TSML * 1.01;
+	var x = new Float64Array( [
+		small, small,
+		small, small,
+		small, small,
+		small, small,
+		small, small,
+		med, 0
+	] );
+	var result = base( 6, x, 1, 0, 1.0, 0.0 );
+	assert.ok( result.scl > 0, 'scl should be positive' );
+	assert.ok( result.sumsq > 0, 'sumsq should be positive' );
+	assert.ok( isFinite( result.scl * Math.sqrt( result.sumsq ) ), 'norm should be finite' );
+});
+
 test( 'zlassq: NaN scale quick return', function t() {
 	var x = new Float64Array( [ 1, 2 ] );
 	var result = base( 1, x, 1, 0, NaN, 1.0 );

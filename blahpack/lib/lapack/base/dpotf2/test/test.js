@@ -104,6 +104,14 @@ test( 'dpotf2: not positive definite returns info > 0', function t() {
 	assertArrayClose( A, tc.a, 'not_posdef' );
 });
 
+test( 'dpotf2: upper triangle, not positive definite', function t() {
+	// A = [1 2; 2 1] col-major — not positive definite, using 'U'
+	// Upper: ajj = A[1,1] - dot(A[0:0,1], A[0:0,1]) = 1 - 4 = -3 → info=2
+	var A = new Float64Array( [ 1, 2, 2, 1 ] );
+	var info = dpotf2base( 'U', 2, A, 1, 2, 0 );
+	assert.strictEqual( info, 2, 'should return info=2' );
+});
+
 test( 'dpotf2: 4x4 identity matrix', function t() {
 	var tc = findCase( 'identity_4x4' );
 	// 4x4 identity in column-major

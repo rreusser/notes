@@ -89,6 +89,24 @@ test( 'dladiv: large values (overflow-safe)', function t() {
 	assertClose( out[ 1 ], tc.q, 'dladiv_large q' );
 });
 
+test( 'dladiv: near-overflow numerator (ab >= HALF*ov)', function t() {
+	// (1e308 + 0i) / (1 + 0i) = 1e308 + 0i
+	// ab = 1e308 >= HALF*ov (~9e307) → triggers numerator scaling
+	var out = new Float64Array( 2 );
+	base( 1.0e308, 0.0, 1.0, 0.0, out );
+	assertClose( out[ 0 ], 1e308, 'near-overflow num p' );
+	assertClose( out[ 1 ], 0.0, 'near-overflow num q' );
+});
+
+test( 'dladiv: near-overflow denominator (cd >= HALF*ov)', function t() {
+	// (1 + 0i) / (1e308 + 0i) = 1e-308 + 0i
+	// cd = 1e308 >= HALF*ov → triggers denominator scaling
+	var out = new Float64Array( 2 );
+	base( 1.0, 0.0, 1.0e308, 0.0, out );
+	assertClose( out[ 0 ], 1e-308, 'near-overflow denom p' );
+	assertClose( out[ 1 ], 0.0, 'near-overflow denom q' );
+});
+
 test( 'dladiv: small values', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'dladiv_small'; } );
 	var out = new Float64Array( 2 );

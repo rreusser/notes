@@ -105,6 +105,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	var ierr;
 	var temp;
 	var WORK;
+	var TAU;
 	var lwork;
 	var sA1;
 	var sA2;
@@ -145,7 +146,14 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	lwork = Math.max( 1, 8 * N );
 	WORK = new Float64Array( 2 * lwork );
 
-	// RWORK: real workspace, at least 8*N for zggbal(6N) + zhgeqz/ztgevc(2N)
+	// TAU: separate array for Householder scalar factors (complex, length N)
+	TAU = new Float64Array( 2 * N );
+
+	// RWORK: real workspace, layout:
+	//   [0..N-1]    = LSCALE from zggbal
+	//   [N..2N-1]   = RSCALE from zggbal
+	//   [2N..8N-1]  = scratch for zggbal, zhgeqz
+	// RWORK2: separate workspace for ztgevc (which clobbers 0..2N-1)
 	RWORK = new Float64Array( 8 * N );
 
 	// Get machine constants
@@ -206,22 +214,21 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 	// QR factorize B(ilo:ihi, ilo:icols) using ZGEQRF
 	// zgeqrf uses complex-element strides, so divide by 2
-	// TAU goes at WORK[0..], scratch at WORK[irows*2..]
+	// TAU stored separately, WORK used for scratch
 	zgeqrf(
 		irows, icols,
 		B, sB1 / 2, sB2 / 2, oB + ( ilo - 1 ) * sB1 + ( ilo - 1 ) * sB2,
-		WORK, 1, 0,
-		WORK, 1, irows * 2
+		TAU, 1, 0,
+		WORK, 1, 0
 	);
 
 	// Apply Q^H to A from the left: A(ilo:ihi, ilo:icols) := Q^H * A(ilo:ihi, ilo:icols)
 	zunmqr(
 		'L', 'C', irows, icols, irows,
 		B, sB1, sB2, oB + ( ilo - 1 ) * sB1 + ( ilo - 1 ) * sB2,
-		WORK, 1, 0,
+		TAU, 1, 0,
 		A, sA1, sA2, oA + ( ilo - 1 ) * sA1 + ( ilo - 1 ) * sA2,
-		WORK, 1, irows * 2,
-		WORK, lwork - irows
+		WORK, lwork
 	);
 
 	// Initialize VL and generate Q
@@ -239,8 +246,8 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		// Generate Q from Householder reflectors
 		zungqr( irows, irows, irows,
 			VL, strideVL1, strideVL2, offsetVL + ( ilo - 1 ) * strideVL1 + ( ilo - 1 ) * strideVL2,
-			WORK, 1, 0,
-			WORK, irows * 2
+			TAU, 1, 0,
+			WORK, lwork
 		);
 	}
 
@@ -311,13 +318,15 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			chtemp = 'R';
 		}
 
+		// Use a separate RWORK for ztgevc so it doesn't clobber
+		// the LSCALE/RSCALE at RWORK[0..2N-1] needed by zggbak
 		ierr = ztgevc(
 			chtemp, 'B', N,
 			A, sA1, sA2, oA,
 			B, sB1, sB2, oB,
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR,
-			N, WORK, RWORK
+			N, WORK, new Float64Array( 2 * N )
 		);
 		if ( ierr !== 0 ) {
 			info = N + 2;
