@@ -512,8 +512,13 @@ def main():
         fortran_path = os.path.join(root_dir, 'data', 'lapack-3.12.0', 'SRC', f'{args.routine}.f')
 
     if not os.path.exists(fortran_path):
-        print(f'Error: {fortran_path} not found', file=sys.stderr)
-        sys.exit(1)
+        # Try .f90 extension
+        fortran_path_f90 = fortran_path.replace('.f', '.f90')
+        if os.path.exists(fortran_path_f90):
+            fortran_path = fortran_path_f90
+        else:
+            print(f'Error: {fortran_path} not found', file=sys.stderr)
+            sys.exit(1)
 
     # Generate signature
     sig = generate_signature(fortran_path)

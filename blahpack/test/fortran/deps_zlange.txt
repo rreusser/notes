@@ -1,0 +1,6 @@
+la_constants
+la_xisnan
+zlange
+zlassq
+disnan
+dlaisnan

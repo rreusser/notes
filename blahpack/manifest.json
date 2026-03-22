@@ -354,13 +354,17 @@
       "status": "unaddressed"
     },
     "zgemm": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
     },
     "zgemv": {
       "status": "unaddressed"
     },
     "zgerc": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 9,
+      "passing": 9
     },
     "zgeru": {
       "status": "unaddressed"
@@ -423,10 +427,14 @@
       "status": "unaddressed"
     },
     "ztrmm": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 12,
+      "passing": 12
     },
     "ztrmv": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 11,
+      "passing": 11
     },
     "ztrsm": {
       "status": "unaddressed"
@@ -755,7 +763,9 @@
       "status": "unaddressed"
     },
     "disnan": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
     },
     "dla_gbamv": {
       "status": "unaddressed"
@@ -824,7 +834,9 @@
       "status": "unaddressed"
     },
     "dladiv": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
     },
     "dlae2": {
       "status": "unaddressed"
@@ -905,7 +917,9 @@
       "status": "unaddressed"
     },
     "dlaisnan": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 6,
+      "passing": 6
     },
     "dlaln2": {
       "status": "unaddressed"
@@ -989,7 +1003,9 @@
       "status": "unaddressed"
     },
     "dlapy3": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 10,
+      "passing": 10
     },
     "dlaqgb": {
       "status": "unaddressed"
@@ -1946,6 +1962,76 @@
     },
     "dzsum1": {
       "status": "unaddressed"
+    },
+    "ilazlc": {
+      "status": "complete",
+      "tests": 10,
+      "passing": 10
+    },
+    "ilazlr": {
+      "status": "complete",
+      "tests": 10,
+      "passing": 10
+    },
+    "zlacgv": {
+      "status": "complete",
+      "tests": 9,
+      "passing": 9
+    },
+    "zlaset": {
+      "status": "complete",
+      "tests": 10,
+      "passing": 10
+    },
+    "zladiv": {
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
+    },
+    "zlartg": {
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
+    },
+    "zrot": {
+      "status": "complete",
+      "tests": 5,
+      "passing": 5
+    },
+    "zlassq": {
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
+    },
+    "zlange": {
+      "status": "complete",
+      "tests": 9,
+      "passing": 9
+    },
+    "zlascl": {
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
+    },
+    "zlarfg": {
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
+    },
+    "zlarf": {
+      "status": "complete",
+      "tests": 5,
+      "passing": 5
+    },
+    "zlarft": {
+      "status": "complete",
+      "tests": 4,
+      "passing": 4
+    },
+    "zlarfb": {
+      "status": "complete",
+      "tests": 5,
+      "passing": 5
     }
   }
 }

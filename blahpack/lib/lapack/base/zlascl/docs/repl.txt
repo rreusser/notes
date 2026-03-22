@@ -1,0 +1,51 @@
+
+    zlascl.ndarray( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA )
+        Multiply a matrix by a real scalar CTO/CFROM
+
+        Parameters
+        ----------
+        type: string
+            specifies the operation type.
+
+        kl: integer
+            kl.
+
+        ku: integer
+            ku.
+
+        cfrom: number
+            cfrom.
+
+        cto: number
+            cto.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

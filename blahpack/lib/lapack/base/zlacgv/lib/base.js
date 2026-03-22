@@ -21,17 +21,35 @@
 // MAIN //
 
 /**
-* Conjugate a complex vector in-place
+* Conjugate a complex vector in-place.
+*
+* Complex elements are stored as interleaved real/imaginary pairs.
+* Element k has real part at `offset + 2*k*stride` and imaginary part
+* at `offset + 2*k*stride + 1`.
 *
 * @private
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} x - input array
-* @param {integer} stride - stride length for `x`
+* @param {NonNegativeInteger} N - number of complex elements
+* @param {Float64Array} x - input array (interleaved complex)
+* @param {integer} stride - stride for `x` (in complex elements)
 * @param {NonNegativeInteger} offset - starting index for `x`
+* @returns {Float64Array} `x`
 */
 function zlacgv( N, x, stride, offset ) {
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+	var sx;
+	var ix;
+	var i;
+
+	if ( N <= 0 ) {
+		return x;
+	}
+
+	sx = stride * 2;
+	ix = offset;
+	for ( i = 0; i < N; i++ ) {
+		x[ ix + 1 ] = -x[ ix + 1 ];
+		ix += sx;
+	}
+	return x;
 }
 
 

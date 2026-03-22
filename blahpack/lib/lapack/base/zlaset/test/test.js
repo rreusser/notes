@@ -20,7 +20,46 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
 var zlaset = require( './../lib' );
+var base = require( './../lib/base.js' );
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'zlaset.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+// HELPERS //
+
+function assertArrayClose( actual, expected, msg ) {
+	var relErr;
+	var i;
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' );
+	for ( i = 0; i < expected.length; i++ ) {
+		if ( expected[ i ] === 0.0 ) {
+			assert.ok( Math.abs( actual[ i ] ) <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		} else {
+			relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
+			assert.ok( relErr <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		}
+	}
+}
+
+// Extract column from interleaved complex array
+// LDA = number of rows allocated, M = number of rows to extract
+// Column j starts at offset j * 2 * LDA in the flat array
+function extractCol( A, j, M, LDA ) {
+	var result = [];
+	var start = j * 2 * LDA;
+	var i;
+	for ( i = 0; i < M; i++ ) {
+		result.push( A[ start + i * 2 ] );     // re
+		result.push( A[ start + i * 2 + 1 ] ); // im
+	}
+	return result;
+}
+
+// TESTS //
 
 test( 'zlaset: main export is a function', function t() {
 	assert.strictEqual( typeof zlaset, 'function' );
@@ -30,4 +69,96 @@ test( 'zlaset: attached to the main export is an `ndarray` method', function t()
 	assert.strictEqual( typeof zlaset.ndarray, 'function' );
 });
 
-// TODO: Add implementation tests
+test( 'zlaset: full 3x3 matrix', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_full'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA * 3 );
+	var alpha = new Float64Array( [ 1.0, 2.0 ] );
+	var beta = new Float64Array( [ 3.0, 4.0 ] );
+	base( 'A', 3, 3, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( A, 2, 3, LDA ), tc.a_col3, 'col3' );
+});
+
+test( 'zlaset: upper triangular 3x3', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_upper'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA * 3 );
+	var alpha = new Float64Array( [ 1.0, 0.0 ] );
+	var beta = new Float64Array( [ 5.0, 0.0 ] );
+	base( 'U', 3, 3, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( A, 2, 3, LDA ), tc.a_col3, 'col3' );
+});
+
+test( 'zlaset: lower triangular 3x3', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_lower'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA * 3 );
+	var alpha = new Float64Array( [ 2.0, 1.0 ] );
+	var beta = new Float64Array( [ 7.0, 3.0 ] );
+	base( 'L', 3, 3, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( A, 2, 3, LDA ), tc.a_col3, 'col3' );
+});
+
+test( 'zlaset: 1x1 matrix (diagonal only)', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_1x1'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA );
+	var alpha = new Float64Array( [ 10.0, 20.0 ] );
+	var beta = new Float64Array( [ 30.0, 40.0 ] );
+	base( 'A', 1, 1, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( [ A[ 0 ], A[ 1 ] ], tc.a, '1x1' );
+});
+
+test( 'zlaset: 0x0 matrix (no-op)', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_0x0'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA );
+	A[ 0 ] = 99.0;
+	A[ 1 ] = 99.0;
+	var alpha = new Float64Array( [ 1.0, 2.0 ] );
+	var beta = new Float64Array( [ 3.0, 4.0 ] );
+	base( 'A', 0, 0, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( [ A[ 0 ], A[ 1 ] ], tc.a, '0x0' );
+});
+
+test( 'zlaset: rectangular 2x3', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_2x3'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA * 3 );
+	var alpha = new Float64Array( [ 1.0, -1.0 ] );
+	var beta = new Float64Array( [ 5.0, -5.0 ] );
+	base( 'A', 2, 3, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( extractCol( A, 0, 2, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( A, 1, 2, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( A, 2, 2, LDA ), tc.a_col3, 'col3' );
+});
+
+test( 'zlaset: rectangular 3x2', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_3x2'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA * 2 );
+	var alpha = new Float64Array( [ 2.0, 3.0 ] );
+	var beta = new Float64Array( [ 8.0, 9.0 ] );
+	base( 'A', 3, 2, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
+});
+
+test( 'zlaset: upper 4x4 identity', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'zlaset_upper_identity'; } );
+	var LDA = 4;
+	var A = new Float64Array( 2 * LDA * 4 );
+	var alpha = new Float64Array( [ 0.0, 0.0 ] );
+	var beta = new Float64Array( [ 1.0, 0.0 ] );
+	base( 'U', 4, 4, alpha, beta, A, 2, 2 * LDA, 0 );
+	assertArrayClose( extractCol( A, 0, 4, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( A, 1, 4, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( A, 2, 4, LDA ), tc.a_col3, 'col3' );
+	assertArrayClose( extractCol( A, 3, 4, LDA ), tc.a_col4, 'col4' );
+});

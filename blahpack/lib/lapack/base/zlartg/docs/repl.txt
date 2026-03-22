@@ -1,0 +1,33 @@
+
+    zlartg.ndarray( f, g, c, s, r )
+        Generate a complex Givens plane rotation
+
+        Parameters
+        ----------
+        f: number
+            f.
+
+        g: number
+            g.
+
+        c: number
+            c.
+
+        s: number
+            s.
+
+        r: number
+            r.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -43,4 +43,56 @@ program test_dznrm2
   call print_scalar('result', result)
   call end_test()
 
+  ! Test 6: large values — triggers abig (overflow-safe) path
+  x(1) = (1.0d300, 1.0d300)
+  x(2) = (1.0d300, 1.0d300)
+  result = dznrm2(2, x, 1)
+  call begin_test('large_values')
+  call print_scalar('result', result)
+  call end_test()
+
+  ! Test 7: small values — triggers asml (underflow-safe) path
+  x(1) = (1.0d-300, 1.0d-300)
+  x(2) = (1.0d-300, 1.0d-300)
+  result = dznrm2(2, x, 1)
+  call begin_test('small_values')
+  call print_scalar('result', result)
+  call end_test()
+
+  ! Test 8: mixed large and medium values — abig > 0 with amed > 0
+  x(1) = (1.0d300, 1.0d300)
+  x(2) = (1.0d0, 1.0d0)
+  result = dznrm2(2, x, 1)
+  call begin_test('large_and_medium')
+  call print_scalar('result', result)
+  call end_test()
+
+  ! Test 9: mixed small and medium values — asml > 0, amed > 0, asml < amed
+  x(1) = (1.0d-300, 1.0d-300)
+  x(2) = (1.0d0, 1.0d0)
+  result = dznrm2(2, x, 1)
+  call begin_test('small_and_medium')
+  call print_scalar('result', result)
+  call end_test()
+
+  ! Test 10: mixed small and medium with small dominant (asml > amed after scaling)
+  ! Need: amed > 0, asml > 0, and sqrt(asml)/SSML > sqrt(amed)
+  ! TSML ~ 1.49e-154. Values below are "small", values above are "medium".
+  ! Use large small values (just below threshold) and a tiny medium value.
+  ! For asml to dominate: need many small contributions to outweigh the medium one.
+  x(1) = (1.0d-154, 1.0d-154)
+  x(2) = (1.0d-154, 1.0d-154)
+  x(3) = (1.0d-154, 1.0d-154)
+  x(4) = (1.0d-154, 1.0d-154)
+  x(5) = (1.0d-154, 1.0d-154)
+  x(6) = (1.0d-154, 1.0d-154)
+  x(7) = (1.0d-154, 1.0d-154)
+  x(8) = (1.0d-154, 1.0d-154)
+  x(9) = (1.0d-154, 1.0d-154)
+  x(10) = (1.5d-154, 0.0d0)
+  result = dznrm2(10, x, 1)
+  call begin_test('small_dominant')
+  call print_scalar('result', result)
+  call end_test()
+
 end program

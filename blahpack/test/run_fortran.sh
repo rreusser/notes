@@ -80,12 +80,24 @@ elif [ "$PACKAGE" = "lapack" ]; then
       if [ -f "$DEP_FILE" ]; then
         SOURCES+=("$DEP_FILE")
       else
-        # Also check INSTALL directory (e.g. dlamch)
-        INSTALL_FILE="$ROOT_DIR/data/lapack-3.12.0/INSTALL/${dep}.f"
-        if [ -f "$INSTALL_FILE" ]; then
-          SOURCES+=("$INSTALL_FILE")
+        # Try .f90 extension
+        DEP_FILE_F90="$LAPACK_DIR/${dep}.f90"
+        if [ -f "$DEP_FILE_F90" ]; then
+          SOURCES+=("$DEP_FILE_F90")
         else
-          echo "Warning: dependency $dep not found at $DEP_FILE" >&2
+          # Try .F90 extension (preprocessed Fortran)
+          DEP_FILE_F90U="$LAPACK_DIR/${dep}.F90"
+          if [ -f "$DEP_FILE_F90U" ]; then
+            SOURCES+=("$DEP_FILE_F90U")
+          else
+            # Also check INSTALL directory (e.g. dlamch)
+            INSTALL_FILE="$ROOT_DIR/data/lapack-3.12.0/INSTALL/${dep}.f"
+            if [ -f "$INSTALL_FILE" ]; then
+              SOURCES+=("$INSTALL_FILE")
+            else
+              echo "Warning: dependency $dep not found at $DEP_FILE" >&2
+            fi
+          fi
         fi
       fi
     done < "$DEPS_FILE"

@@ -78,9 +78,25 @@ test( 'dlaswp.ndarray is a no-op when ipiv(k) == k', function t() {
 	assertArrayClose( a, tc.a, 'no_swap' );
 });
 
-// TODO: Reverse pivots (incx=-1) test — the 0-based/1-based boundary for
-// reverse IPIV application is subtle. The ndarray.js wrapper handles normalization.
-// Skipping until ndarray.js is implemented.
+test( 'dlaswp.ndarray performs reverse row interchanges (incx=-1)', function t() {
+	var tc = findCase( 'reverse_pivots' );
+	// Same matrix as basic_forward: A = [1 4; 2 5; 3 6] col-major (3x2)
+	// Fortran: ipiv=[3,2] k1=1 k2=2 incx=-1
+	//
+	// Fortran reverse trace (1-based):
+	//   IX0 = K1 + (K1-K2)*INCX = 1 + (1-2)*(-1) = 2
+	//   I=2: IPIV(IX0=2)=2, no swap (2==2)
+	//   I=1: IPIV(IX0+INCX=1)=3, swap rows 1 and 3
+	//
+	// JS base.js with incx<0: swaps k1/k2, flips incx to +1.
+	// Pass k1=1, k2=0, incx=-1. After swap: k1=0, k2=1, incx=1.
+	// Loop i=0,k=0: IPIV[0] should match Fortran's last applied (IPIV(1)=3 -> 0-based 2)
+	// Loop i=1,k=1: IPIV[1] should match Fortran's first applied (IPIV(2)=2 -> 0-based 1)
+	var a = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
+	var ipiv = new Int32Array( [ 2, 1 ] );
+	dlaswp.ndarray( 2, a, 1, 3, 0, 1, 0, ipiv, 1, 0, -1 );
+	assertArrayClose( a, tc.a, 'reverse_pivots' );
+});
 
 test( 'dlaswp.ndarray is a no-op when incx=0', function t() {
 	var tc = findCase( 'incx_zero' );
@@ -96,4 +112,19 @@ test( 'dlaswp.ndarray applies sequential swaps', function t() {
 	var ipiv = new Int32Array( [ 1, 2 ] );
 	dlaswp.ndarray( 1, a, 1, 3, 0, 0, 1, ipiv, 1, 0, 1 );
 	assertArrayClose( a, tc.a, 'two_swaps' );
+});
+
+test( 'dlaswp.ndarray exercises block-tiled path (N=40 > 32 columns)', function t() {
+	var tc = findCase( 'block_tiled' );
+	// 3x40 matrix, col-major: A(i,j) = (j-1)*3 + i (1-based Fortran indexing)
+	// In JS 0-based flat: a[j*3 + i] = j*3 + i + 1
+	var a = new Float64Array( 120 );
+	var i;
+	for ( i = 0; i < 120; i++ ) {
+		a[ i ] = i + 1;
+	}
+	// Fortran: ipiv=[3,2] k1=1 k2=2 incx=1 => 0-based: ipiv=[2,1] k1=0 k2=1
+	var ipiv = new Int32Array( [ 2, 1 ] );
+	dlaswp.ndarray( 40, a, 1, 3, 0, 0, 1, ipiv, 1, 0, 1 );
+	assertArrayClose( a, tc.a, 'block_tiled' );
 });

@@ -1,0 +1,428 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MAIN //
+
+/**
+* Perform one of the complex matrix-matrix operations:
+*   C := alpha*op(A)*op(B) + beta*C
+* where op(X) is one of X, X**T, or X**H.
+*
+* Complex elements are stored as interleaved real/imaginary pairs.
+* Element (i,j) of a complex matrix has real part at
+*   offset + 2*(i*stride1 + j*stride2) and imag at +1.
+*
+* @private
+* @param {string} transa - 'N', 'T', or 'C'
+* @param {string} transb - 'N', 'T', or 'C'
+* @param {NonNegativeInteger} M - rows of op(A) and C
+* @param {NonNegativeInteger} N - columns of op(B) and C
+* @param {NonNegativeInteger} K - columns of op(A) / rows of op(B)
+* @param {Float64Array} alpha - complex scalar [re, im]
+* @param {Float64Array} A - input matrix (interleaved complex)
+* @param {integer} strideA1 - first dimension stride of A
+* @param {integer} strideA2 - second dimension stride of A
+* @param {NonNegativeInteger} offsetA - starting index for A
+* @param {Float64Array} B - input matrix (interleaved complex)
+* @param {integer} strideB1 - first dimension stride of B
+* @param {integer} strideB2 - second dimension stride of B
+* @param {NonNegativeInteger} offsetB - starting index for B
+* @param {Float64Array} beta - complex scalar [re, im]
+* @param {Float64Array} C - input/output matrix (interleaved complex)
+* @param {integer} strideC1 - first dimension stride of C
+* @param {integer} strideC2 - second dimension stride of C
+* @param {NonNegativeInteger} offsetC - starting index for C
+* @returns {Float64Array} C
+*/
+function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC ) { // eslint-disable-line max-len, max-params
+	var alphaR;
+	var alphaI;
+	var betaR;
+	var betaI;
+	var tempR;
+	var tempI;
+	var nota;
+	var notb;
+	var conja;
+	var conjb;
+	var cR;
+	var cI;
+	var sa1;
+	var sa2;
+	var sb1;
+	var sb2;
+	var sc1;
+	var sc2;
+	var ci;
+	var ai;
+	var bi;
+	var aR;
+	var aI;
+	var bR;
+	var bI;
+	var i;
+	var j;
+	var l;
+
+	if ( M === 0 || N === 0 ) {
+		return C;
+	}
+
+	alphaR = alpha[ 0 ];
+	alphaI = alpha[ 1 ];
+	betaR = beta[ 0 ];
+	betaI = beta[ 1 ];
+
+	nota = ( transa === 'N' || transa === 'n' );
+	notb = ( transb === 'N' || transb === 'n' );
+	conja = ( transa === 'C' || transa === 'c' );
+	conjb = ( transb === 'C' || transb === 'c' );
+
+	// Quick return if alpha=0 and beta=1
+	if ( alphaR === 0.0 && alphaI === 0.0 && betaR === 1.0 && betaI === 0.0 ) {
+		return C;
+	}
+	if ( K === 0 && alphaR === 0.0 && alphaI === 0.0 && betaR === 1.0 && betaI === 0.0 ) {
+		return C;
+	}
+
+	// Matrix strides in complex elements, multiply by 2
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	sb1 = strideB1 * 2;
+	sb2 = strideB2 * 2;
+	sc1 = strideC1 * 2;
+	sc2 = strideC2 * 2;
+
+	// When alpha=0
+	if ( alphaR === 0.0 && alphaI === 0.0 ) {
+		if ( betaR === 0.0 && betaI === 0.0 ) {
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					ci = offsetC + i * sc1 + j * sc2;
+					C[ ci ] = 0.0;
+					C[ ci + 1 ] = 0.0;
+				}
+			}
+		} else {
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					ci = offsetC + i * sc1 + j * sc2;
+					tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
+					tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
+					C[ ci ] = tempR;
+					C[ ci + 1 ] = tempI;
+				}
+			}
+		}
+		return C;
+	}
+
+	// Start the operations
+	if ( notb ) {
+		if ( nota ) {
+			// C := alpha*A*B + beta*C
+			for ( j = 0; j < N; j++ ) {
+				if ( betaR === 0.0 && betaI === 0.0 ) {
+					for ( i = 0; i < M; i++ ) {
+						ci = offsetC + i * sc1 + j * sc2;
+						C[ ci ] = 0.0;
+						C[ ci + 1 ] = 0.0;
+					}
+				} else if ( betaR !== 1.0 || betaI !== 0.0 ) {
+					for ( i = 0; i < M; i++ ) {
+						ci = offsetC + i * sc1 + j * sc2;
+						tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
+						tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
+						C[ ci ] = tempR;
+						C[ ci + 1 ] = tempI;
+					}
+				}
+				for ( l = 0; l < K; l++ ) {
+					bi = offsetB + l * sb1 + j * sb2;
+					bR = B[ bi ];
+					bI = B[ bi + 1 ];
+					// temp = alpha * B(l,j)
+					tempR = alphaR * bR - alphaI * bI;
+					tempI = alphaR * bI + alphaI * bR;
+					for ( i = 0; i < M; i++ ) {
+						ai = offsetA + i * sa1 + l * sa2;
+						ci = offsetC + i * sc1 + j * sc2;
+						aR = A[ ai ];
+						aI = A[ ai + 1 ];
+						// C(i,j) += temp * A(i,l)
+						C[ ci ] += tempR * aR - tempI * aI;
+						C[ ci + 1 ] += tempR * aI + tempI * aR;
+					}
+				}
+			}
+		} else if ( conja ) {
+			// C := alpha*A^H*B + beta*C
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					tempR = 0.0;
+					tempI = 0.0;
+					for ( l = 0; l < K; l++ ) {
+						ai = offsetA + l * sa1 + i * sa2;
+						bi = offsetB + l * sb1 + j * sb2;
+						aR = A[ ai ];
+						aI = -A[ ai + 1 ]; // conjugate
+						bR = B[ bi ];
+						bI = B[ bi + 1 ];
+						tempR += aR * bR - aI * bI;
+						tempI += aR * bI + aI * bR;
+					}
+					ci = offsetC + i * sc1 + j * sc2;
+					if ( betaR === 0.0 && betaI === 0.0 ) {
+						C[ ci ] = alphaR * tempR - alphaI * tempI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+					} else {
+						cR = C[ ci ];
+						cI = C[ ci + 1 ];
+						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+					}
+				}
+			}
+		} else {
+			// C := alpha*A^T*B + beta*C
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					tempR = 0.0;
+					tempI = 0.0;
+					for ( l = 0; l < K; l++ ) {
+						ai = offsetA + l * sa1 + i * sa2;
+						bi = offsetB + l * sb1 + j * sb2;
+						aR = A[ ai ];
+						aI = A[ ai + 1 ];
+						bR = B[ bi ];
+						bI = B[ bi + 1 ];
+						tempR += aR * bR - aI * bI;
+						tempI += aR * bI + aI * bR;
+					}
+					ci = offsetC + i * sc1 + j * sc2;
+					if ( betaR === 0.0 && betaI === 0.0 ) {
+						C[ ci ] = alphaR * tempR - alphaI * tempI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+					} else {
+						cR = C[ ci ];
+						cI = C[ ci + 1 ];
+						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+					}
+				}
+			}
+		}
+	} else if ( nota ) {
+		if ( conjb ) {
+			// C := alpha*A*B^H + beta*C
+			for ( j = 0; j < N; j++ ) {
+				if ( betaR === 0.0 && betaI === 0.0 ) {
+					for ( i = 0; i < M; i++ ) {
+						ci = offsetC + i * sc1 + j * sc2;
+						C[ ci ] = 0.0;
+						C[ ci + 1 ] = 0.0;
+					}
+				} else if ( betaR !== 1.0 || betaI !== 0.0 ) {
+					for ( i = 0; i < M; i++ ) {
+						ci = offsetC + i * sc1 + j * sc2;
+						tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
+						tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
+						C[ ci ] = tempR;
+						C[ ci + 1 ] = tempI;
+					}
+				}
+				for ( l = 0; l < K; l++ ) {
+					bi = offsetB + j * sb1 + l * sb2;
+					bR = B[ bi ];
+					bI = -B[ bi + 1 ]; // conjugate
+					// temp = alpha * conj(B(j,l))
+					tempR = alphaR * bR - alphaI * bI;
+					tempI = alphaR * bI + alphaI * bR;
+					for ( i = 0; i < M; i++ ) {
+						ai = offsetA + i * sa1 + l * sa2;
+						ci = offsetC + i * sc1 + j * sc2;
+						aR = A[ ai ];
+						aI = A[ ai + 1 ];
+						C[ ci ] += tempR * aR - tempI * aI;
+						C[ ci + 1 ] += tempR * aI + tempI * aR;
+					}
+				}
+			}
+		} else {
+			// C := alpha*A*B^T + beta*C
+			for ( j = 0; j < N; j++ ) {
+				if ( betaR === 0.0 && betaI === 0.0 ) {
+					for ( i = 0; i < M; i++ ) {
+						ci = offsetC + i * sc1 + j * sc2;
+						C[ ci ] = 0.0;
+						C[ ci + 1 ] = 0.0;
+					}
+				} else if ( betaR !== 1.0 || betaI !== 0.0 ) {
+					for ( i = 0; i < M; i++ ) {
+						ci = offsetC + i * sc1 + j * sc2;
+						tempR = betaR * C[ ci ] - betaI * C[ ci + 1 ];
+						tempI = betaR * C[ ci + 1 ] + betaI * C[ ci ];
+						C[ ci ] = tempR;
+						C[ ci + 1 ] = tempI;
+					}
+				}
+				for ( l = 0; l < K; l++ ) {
+					bi = offsetB + j * sb1 + l * sb2;
+					bR = B[ bi ];
+					bI = B[ bi + 1 ];
+					// temp = alpha * B(j,l)
+					tempR = alphaR * bR - alphaI * bI;
+					tempI = alphaR * bI + alphaI * bR;
+					for ( i = 0; i < M; i++ ) {
+						ai = offsetA + i * sa1 + l * sa2;
+						ci = offsetC + i * sc1 + j * sc2;
+						aR = A[ ai ];
+						aI = A[ ai + 1 ];
+						C[ ci ] += tempR * aR - tempI * aI;
+						C[ ci + 1 ] += tempR * aI + tempI * aR;
+					}
+				}
+			}
+		}
+	} else if ( conja ) {
+		if ( conjb ) {
+			// C := alpha*A^H*B^H + beta*C
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					tempR = 0.0;
+					tempI = 0.0;
+					for ( l = 0; l < K; l++ ) {
+						ai = offsetA + l * sa1 + i * sa2;
+						bi = offsetB + j * sb1 + l * sb2;
+						aR = A[ ai ];
+						aI = -A[ ai + 1 ]; // conj(A)
+						bR = B[ bi ];
+						bI = -B[ bi + 1 ]; // conj(B)
+						tempR += aR * bR - aI * bI;
+						tempI += aR * bI + aI * bR;
+					}
+					ci = offsetC + i * sc1 + j * sc2;
+					if ( betaR === 0.0 && betaI === 0.0 ) {
+						C[ ci ] = alphaR * tempR - alphaI * tempI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+					} else {
+						cR = C[ ci ];
+						cI = C[ ci + 1 ];
+						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+					}
+				}
+			}
+		} else {
+			// C := alpha*A^H*B^T + beta*C
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					tempR = 0.0;
+					tempI = 0.0;
+					for ( l = 0; l < K; l++ ) {
+						ai = offsetA + l * sa1 + i * sa2;
+						bi = offsetB + j * sb1 + l * sb2;
+						aR = A[ ai ];
+						aI = -A[ ai + 1 ]; // conj(A)
+						bR = B[ bi ];
+						bI = B[ bi + 1 ];
+						tempR += aR * bR - aI * bI;
+						tempI += aR * bI + aI * bR;
+					}
+					ci = offsetC + i * sc1 + j * sc2;
+					if ( betaR === 0.0 && betaI === 0.0 ) {
+						C[ ci ] = alphaR * tempR - alphaI * tempI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+					} else {
+						cR = C[ ci ];
+						cI = C[ ci + 1 ];
+						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+					}
+				}
+			}
+		}
+	} else {
+		if ( conjb ) {
+			// C := alpha*A^T*B^H + beta*C
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					tempR = 0.0;
+					tempI = 0.0;
+					for ( l = 0; l < K; l++ ) {
+						ai = offsetA + l * sa1 + i * sa2;
+						bi = offsetB + j * sb1 + l * sb2;
+						aR = A[ ai ];
+						aI = A[ ai + 1 ];
+						bR = B[ bi ];
+						bI = -B[ bi + 1 ]; // conj(B)
+						tempR += aR * bR - aI * bI;
+						tempI += aR * bI + aI * bR;
+					}
+					ci = offsetC + i * sc1 + j * sc2;
+					if ( betaR === 0.0 && betaI === 0.0 ) {
+						C[ ci ] = alphaR * tempR - alphaI * tempI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+					} else {
+						cR = C[ ci ];
+						cI = C[ ci + 1 ];
+						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+					}
+				}
+			}
+		} else {
+			// C := alpha*A^T*B^T + beta*C
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					tempR = 0.0;
+					tempI = 0.0;
+					for ( l = 0; l < K; l++ ) {
+						ai = offsetA + l * sa1 + i * sa2;
+						bi = offsetB + j * sb1 + l * sb2;
+						aR = A[ ai ];
+						aI = A[ ai + 1 ];
+						bR = B[ bi ];
+						bI = B[ bi + 1 ];
+						tempR += aR * bR - aI * bI;
+						tempI += aR * bI + aI * bR;
+					}
+					ci = offsetC + i * sc1 + j * sc2;
+					if ( betaR === 0.0 && betaI === 0.0 ) {
+						C[ ci ] = alphaR * tempR - alphaI * tempI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR;
+					} else {
+						cR = C[ ci ];
+						cI = C[ ci + 1 ];
+						C[ ci ] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+						C[ ci + 1 ] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
+					}
+				}
+			}
+		}
+	}
+	return C;
+}
+
+
+// EXPORTS //
+
+module.exports = zgemm;

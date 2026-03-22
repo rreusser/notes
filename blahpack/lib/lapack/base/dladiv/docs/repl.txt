@@ -1,0 +1,36 @@
+
+    dladiv.ndarray( a, b, c, d, p, q )
+        Perform safe complex division in real arithmetic
+
+        Parameters
+        ----------
+        a: number
+            a.
+
+        b: number
+            b.
+
+        c: number
+            c.
+
+        d: number
+            d.
+
+        p: number
+            p.
+
+        q: number
+            q.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,140 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
+var zgerc = require( '../../../../blas/base/zgerc/lib/base.js' );
+var ilazlr = require( '../../ilazlr/lib/base.js' );
+var ilazlc = require( '../../ilazlc/lib/base.js' );
+
+// VARIABLES //
+
+var ONE = new Float64Array( [ 1.0, 0.0 ] );
+var ZERO = new Float64Array( [ 0.0, 0.0 ] );
+
+// MAIN //
+
+/**
+* Apply a complex elementary reflector H to a complex M-by-N matrix C,
+* from either the left or the right.
+*
+*   H = I - tau * v * v^H
+*
+* If tau = 0, then H is taken to be the unit matrix.
+*
+* Complex elements are stored as interleaved real/imaginary pairs.
+* Strides are in complex-element units for vectors (strideV, strideWORK)
+* and for matrix dimensions (strideC1, strideC2).
+*
+* @private
+* @param {string} side - 'L' for left, 'R' for right
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {Float64Array} v - reflector vector (interleaved complex)
+* @param {integer} strideV - stride for v (in complex elements)
+* @param {NonNegativeInteger} offsetV - starting index for v
+* @param {Float64Array} tau - complex scalar [re, im]
+* @param {NonNegativeInteger} offsetTau - starting index for tau
+* @param {Float64Array} C - matrix (interleaved complex)
+* @param {integer} strideC1 - stride of the first dimension of C (complex elements)
+* @param {integer} strideC2 - stride of the second dimension of C (complex elements)
+* @param {NonNegativeInteger} offsetC - starting index for C
+* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {integer} strideWORK - stride for WORK (in complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+*/
+function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	var applyLeft;
+	var negTau;
+	var lastv;
+	var lastc;
+	var tauR;
+	var tauI;
+	var sv;
+	var ix;
+
+	tauR = tau[ offsetTau ];
+	tauI = tau[ offsetTau + 1 ];
+
+	applyLeft = ( side === 'L' || side === 'l' );
+	lastv = 0;
+	lastc = 0;
+
+	if ( tauR !== 0.0 || tauI !== 0.0 ) {
+		// Set up variables for scanning V
+		if ( applyLeft ) {
+			lastv = M;
+		} else {
+			lastv = N;
+		}
+		if ( strideV > 0 ) {
+			ix = offsetV + ( lastv - 1 ) * strideV * 2;
+		} else {
+			ix = offsetV;
+		}
+
+		// Look for the last non-zero element in V (working backward from lastv)
+		sv = strideV * 2;
+		while ( lastv > 0 && v[ ix ] === 0.0 && v[ ix + 1 ] === 0.0 ) {
+			lastv -= 1;
+			ix -= sv;
+		}
+
+		if ( applyLeft ) {
+			// Scan for the last non-zero column in C(0:lastv-1, :)
+			lastc = ilazlc( lastv, N, C, strideC1 * 2, strideC2 * 2, offsetC ) + 1;
+		} else {
+			// Scan for the last non-zero row in C(:, 0:lastv-1)
+			lastc = ilazlr( M, lastv, C, strideC1 * 2, strideC2 * 2, offsetC ) + 1;
+		}
+	}
+
+	negTau = new Float64Array( [ -tauR, -tauI ] );
+
+	if ( applyLeft ) {
+		// Form H * C
+		if ( lastv > 0 ) {
+			// w(1:lastc) := C(1:lastv, 1:lastc)^H * v(1:lastv)
+			zgemv( 'C', lastv, lastc, ONE, C, strideC1, strideC2, offsetC,
+				v, strideV, offsetV, ZERO, WORK, strideWORK, offsetWORK );
+
+			// C(1:lastv, 1:lastc) := C(...) - tau * v(1:lastv) * w(1:lastc)^H
+			zgerc( lastv, lastc, negTau, v, strideV, offsetV,
+				WORK, strideWORK, offsetWORK, C, strideC1, strideC2, offsetC );
+		}
+	} else {
+		// Form C * H
+		if ( lastv > 0 ) {
+			// w(1:lastc) := C(1:lastc, 1:lastv) * v(1:lastv)
+			zgemv( 'N', lastc, lastv, ONE, C, strideC1, strideC2, offsetC,
+				v, strideV, offsetV, ZERO, WORK, strideWORK, offsetWORK );
+
+			// C(1:lastc, 1:lastv) := C(...) - tau * w(1:lastc) * v(1:lastv)^H
+			zgerc( lastc, lastv, negTau, WORK, strideWORK, offsetWORK,
+				v, strideV, offsetV, C, strideC1, strideC2, offsetC );
+		}
+	}
+}
+
+
+// EXPORTS //
+
+module.exports = zlarf;

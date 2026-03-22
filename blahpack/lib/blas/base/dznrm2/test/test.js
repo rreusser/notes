@@ -48,3 +48,46 @@ test( 'dznrm2: stride=2', function t() {
 	var zx = new Float64Array( [ 1, 0, 99, 99, 0, 1 ] );
 	assertClose( dznrm2( 2, zx, 2, 0 ), tc.result, 1e-14, 'stride_2' );
 });
+
+test( 'dznrm2: large values trigger overflow-safe (abig) path', function t() {
+	var tc = findCase( 'large_values' );
+	var zx = new Float64Array( [ 1e300, 1e300, 1e300, 1e300 ] );
+	assertClose( dznrm2( 2, zx, 1, 0 ), tc.result, 1e-14, 'large_values' );
+});
+
+test( 'dznrm2: small values trigger underflow-safe (asml) path', function t() {
+	var tc = findCase( 'small_values' );
+	var zx = new Float64Array( [ 1e-300, 1e-300, 1e-300, 1e-300 ] );
+	assertClose( dznrm2( 2, zx, 1, 0 ), tc.result, 1e-14, 'small_values' );
+});
+
+test( 'dznrm2: large and medium values (abig > 0, amed > 0)', function t() {
+	var tc = findCase( 'large_and_medium' );
+	var zx = new Float64Array( [ 1e300, 1e300, 1, 1 ] );
+	assertClose( dznrm2( 2, zx, 1, 0 ), tc.result, 1e-14, 'large_and_medium' );
+});
+
+test( 'dznrm2: small and medium values (asml > 0, amed > 0, asml < amed)', function t() {
+	var tc = findCase( 'small_and_medium' );
+	var zx = new Float64Array( [ 1e-300, 1e-300, 1, 1 ] );
+	assertClose( dznrm2( 2, zx, 1, 0 ), tc.result, 1e-14, 'small_and_medium' );
+});
+
+test( 'dznrm2: small dominant with medium (asml > amed branch)', function t() {
+	var tc = findCase( 'small_dominant' );
+	// Many small complex values (just below TSML ~1.49e-154) plus one tiny medium value
+	// (just above TSML). After scaling, small contribution dominates medium.
+	var zx = new Float64Array( [
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1e-154, 1e-154,  // small
+		1.5e-154, 0      // medium (just above TSML)
+	] );
+	assertClose( dznrm2( 10, zx, 1, 0 ), tc.result, 1e-14, 'small_dominant' );
+});

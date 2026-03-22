@@ -1,0 +1,87 @@
+
+    zlarfb.ndarray( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK )
+        Apply a block Householder reflector
+
+        Parameters
+        ----------
+        side: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        direct: string
+            specifies the operation type.
+
+        storev: string
+            specifies the operation type.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of the first dimension of `V`.
+
+        strideV2: integer
+            stride of the second dimension of `V`.
+
+        offsetV: NonNegativeInteger
+            starting index for `V`.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of the first dimension of `T`.
+
+        strideT2: integer
+            stride of the second dimension of `T`.
+
+        offsetT: NonNegativeInteger
+            starting index for `T`.
+
+        C: Float64Array
+            input matrix.
+
+        strideC1: integer
+            stride of the first dimension of `C`.
+
+        strideC2: integer
+            stride of the second dimension of `C`.
+
+        offsetC: NonNegativeInteger
+            starting index for `C`.
+
+        WORK: Float64Array
+            output matrix.
+
+        strideWORK1: integer
+            stride of the first dimension of `WORK`.
+
+        strideWORK2: integer
+            stride of the second dimension of `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

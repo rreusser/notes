@@ -2,126 +2,98 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Blahpack Translation Progress</title>
+<title>Blahpack Progress</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f5; color: #333; padding: 2rem; }
-  h1 { margin-bottom: 0.5rem; }
-  .subtitle { color: #666; margin-bottom: 2rem; }
-  .stats { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
-  .stat-card { background: white; border-radius: 8px; padding: 1.5rem; min-width: 150px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-  .stat-card .value { font-size: 2rem; font-weight: 700; }
-  .stat-card .label { color: #666; font-size: 0.875rem; margin-top: 0.25rem; }
-  .stat-card.complete .value { color: #16a34a; }
-  .stat-card.in-progress .value { color: #ca8a04; }
-  .stat-card.unaddressed .value { color: #9ca3af; }
-  .progress-bar { background: #e5e7eb; border-radius: 9999px; height: 12px; margin-bottom: 2rem; overflow: hidden; display: flex; }
-  .progress-bar .complete { background: #16a34a; }
-  .progress-bar .in-progress { background: #eab308; }
-  .section { margin-bottom: 2rem; }
-  .section h2 { margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
-  .section h2 .badge { font-size: 0.875rem; font-weight: 400; color: #666; }
-  .grid { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { padding: 4px 8px; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 0.75rem; cursor: default; }
-  .chip.complete { background: #dcfce7; color: #166534; }
-  .chip.in-progress { background: #fef9c3; color: #854d0e; }
-  .chip.unaddressed { background: #f3f4f6; color: #9ca3af; }
-  .filter-bar { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
-  .filter-bar button { padding: 4px 12px; border-radius: 4px; border: 1px solid #d1d5db; background: white; cursor: pointer; font-size: 0.875rem; }
-  .filter-bar button.active { background: #333; color: white; border-color: #333; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8f9fa; color: #333; padding: 2rem; max-width: 960px; margin: 0 auto; }
+h1 { margin-bottom: 0.25rem; }
+.subtitle { color: #666; margin-bottom: 1.5rem; }
+.stats { display: flex; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.stat { background: white; border-radius: 8px; padding: 1rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.stat .val { font-size: 1.75rem; font-weight: 700; }
+.stat .lbl { font-size: 0.8rem; color: #888; }
+.stat.green .val { color: #16a34a; }
+section { margin-bottom: 2rem; }
+h2 { margin-bottom: 0.5rem; }
+.count { font-weight: 400; color: #888; font-size: 0.9rem; }
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+th { text-align: left; padding: 0.5rem 0.75rem; background: #f1f3f5; font-size: 0.8rem; text-transform: uppercase; color: #666; }
+td { padding: 0.4rem 0.75rem; border-top: 1px solid #eee; font-size: 0.875rem; }
+.name { font-family: ui-monospace, monospace; font-weight: 600; }
+.tests { text-align: center; }
+.desc { color: #555; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+.badge.done { background: #dcfce7; color: #166534; }
+.badge.stub { background: #fef9c3; color: #854d0e; }
+.badge.none { background: #f3f4f6; color: #9ca3af; }
 </style>
 </head>
 <body>
 <h1>Blahpack Translation Progress</h1>
-<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript</p>
-
-<div class="stats" id="stats"></div>
-<div class="progress-bar" id="progress-bar"></div>
-
-<div class="filter-bar">
-  <button class="active" data-filter="all">All</button>
-  <button data-filter="complete">Complete</button>
-  <button data-filter="in-progress">In Progress</button>
-  <button data-filter="unaddressed">Unaddressed</button>
+<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated 2026-03-22</p>
+<div class="stats">
+<div class="stat green"><div class="val">36</div><div class="lbl">Implemented</div></div>
+<div class="stat"><div class="val">5</div><div class="lbl">Stubs</div></div>
+<div class="stat"><div class="val">351</div><div class="lbl">Tests</div></div>
+<div class="stat"><div class="val">151</div><div class="lbl">BLAS Source</div></div>
+<div class="stat"><div class="val">2053</div><div class="lbl">LAPACK Source</div></div>
 </div>
-
-<div id="sections"></div>
-
-<script>
-async function load() {
-  const resp = await fetch('manifest.json');
-  const manifest = await resp.json();
-
-  let totalComplete = 0, totalInProgress = 0, totalUnaddressed = 0, total = 0;
-
-  for (const pkg of Object.keys(manifest)) {
-    for (const routine of Object.keys(manifest[pkg])) {
-      total++;
-      const s = manifest[pkg][routine].status;
-      if (s === 'complete') totalComplete++;
-      else if (s === 'in-progress') totalInProgress++;
-      else totalUnaddressed++;
-    }
-  }
-
-  const pctComplete = total > 0 ? (totalComplete / total * 100) : 0;
-  const pctInProgress = total > 0 ? (totalInProgress / total * 100) : 0;
-
-  document.getElementById('stats').innerHTML = `
-    <div class="stat-card"><div class="value">${total}</div><div class="label">Total Routines</div></div>
-    <div class="stat-card complete"><div class="value">${totalComplete}</div><div class="label">Complete</div></div>
-    <div class="stat-card in-progress"><div class="value">${totalInProgress}</div><div class="label">In Progress</div></div>
-    <div class="stat-card unaddressed"><div class="value">${totalUnaddressed}</div><div class="label">Unaddressed</div></div>
-    <div class="stat-card complete"><div class="value">${pctComplete.toFixed(1)}%</div><div class="label">Done</div></div>
-  `;
-
-  document.getElementById('progress-bar').innerHTML = `
-    <div class="complete" style="width:${pctComplete}%"></div>
-    <div class="in-progress" style="width:${pctInProgress}%"></div>
-  `;
-
-  const sectionsEl = document.getElementById('sections');
-  for (const pkg of Object.keys(manifest)) {
-    const routines = manifest[pkg];
-    const count = Object.keys(routines).length;
-    const completeCount = Object.values(routines).filter(r => r.status === 'complete').length;
-
-    const section = document.createElement('div');
-    section.className = 'section';
-    section.innerHTML = `<h2>${pkg.toUpperCase()} <span class="badge">${completeCount}/${count}</span></h2>`;
-
-    const grid = document.createElement('div');
-    grid.className = 'grid';
-
-    for (const [name, info] of Object.entries(routines)) {
-      const chip = document.createElement('span');
-      chip.className = `chip ${info.status}`;
-      chip.textContent = name;
-      chip.dataset.status = info.status;
-      if (info.tests != null) {
-        chip.title = `${info.passing ?? 0}/${info.tests} tests passing`;
-      }
-      grid.appendChild(chip);
-    }
-
-    section.appendChild(grid);
-    sectionsEl.appendChild(section);
-  }
-
-  // Filter buttons
-  document.querySelectorAll('.filter-bar button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-bar button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      document.querySelectorAll('.chip').forEach(chip => {
-        chip.style.display = (filter === 'all' || chip.dataset.status === filter) ? '' : 'none';
-      });
-    });
-  });
-}
-
-load();
-</script>
+<section>
+<h2>BLAS <span class="count">16/16</span></h2>
+<table>
+<thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="name">daxpy</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Multiply a vector x by a constant and add the result to y.</td></tr>
+<tr><td class="name">dcabs1</td><td><span class="badge done">done</span></td><td class="tests">5</td><td class="desc">Compute the sum of the absolute values of the real and imaginary parts of a double-precision complex number.</td></tr>
+<tr><td class="name">ddot</td><td><span class="badge done">done</span></td><td class="tests">—</td><td class="desc"></td></tr>
+<tr><td class="name">dgemv</td><td><span class="badge done">done</span></td><td class="tests">—</td><td class="desc"></td></tr>
+<tr><td class="name">dscal</td><td><span class="badge done">done</span></td><td class="tests">—</td><td class="desc"></td></tr>
+<tr><td class="name">dznrm2</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="desc"></td></tr>
+<tr><td class="name">izamax</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Find the index of the element having the maximum sum of absolute values of real and imaginary parts.</td></tr>
+<tr><td class="name">zcopy</td><td><span class="badge done">done</span></td><td class="tests">6</td><td class="desc">Copy a complex double-precision vector</td></tr>
+<tr><td class="name">zdscal</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Scale a complex double-precision vector by a double-precision constant.</td></tr>
+<tr><td class="name">zgemm</td><td><span class="badge done">done</span></td><td class="tests">24</td><td class="desc">Perform complex matrix-matrix operations</td></tr>
+<tr><td class="name">zgemv</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="desc">Perform complex matrix-vector multiplication</td></tr>
+<tr><td class="name">zgerc</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Perform the rank 1 operation A := alpha*x*y**H + A</td></tr>
+<tr><td class="name">zscal</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="desc">Scale a complex double-precision vector by a complex constant</td></tr>
+<tr><td class="name">zswap</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="desc">Interchange two complex double-precision vectors.</td></tr>
+<tr><td class="name">ztrmm</td><td><span class="badge done">done</span></td><td class="tests">18</td><td class="desc">Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A)</td></tr>
+<tr><td class="name">ztrmv</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="desc">Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x</td></tr>
+</tbody>
+</table>
+</section>
+<section>
+<h2>LAPACK <span class="count">20/25</span></h2>
+<table>
+<thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="name">disnan</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="desc">Test if input is NaN</td></tr>
+<tr><td class="name">dlacpy</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Copy all or part of a matrix A to another matrix B.</td></tr>
+<tr><td class="name">dladiv</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="desc">Perform safe complex division in real arithmetic</td></tr>
+<tr><td class="name">dlaisnan</td><td><span class="badge done">done</span></td><td class="tests">6</td><td class="desc">Test for NaN by comparing two arguments for inequality</td></tr>
+<tr><td class="name">dlamch</td><td><span class="badge done">done</span></td><td class="tests">12</td><td class="desc"></td></tr>
+<tr><td class="name">dlapy3</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="desc">Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow</td></tr>
+<tr><td class="name">dlaswp</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="desc">Perform a series of row interchanges on a matrix A using pivot indices stored in IPIV.</td></tr>
+<tr><td class="name">dpotf2</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="desc">Compute the Cholesky factorization of a real symmetric positive definite matrix (unblocked algorithm).</td></tr>
+<tr><td class="name">ilazlc</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="desc">Scan a complex matrix for its last non-zero column</td></tr>
+<tr><td class="name">ilazlr</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="desc">Scan a complex matrix for its last non-zero row</td></tr>
+<tr><td class="name">zggbak</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="desc">Back-transform eigenvectors of a balanced pair of matrices.</td></tr>
+<tr><td class="name">zgghrd</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="desc">Reduce a pair of complex matrices to generalized upper Hessenberg form.</td></tr>
+<tr><td class="name">zlacgv</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Conjugate a complex vector in-place</td></tr>
+<tr><td class="name">zladiv</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="desc">Perform complex division using dladiv</td></tr>
+<tr><td class="name">zlange</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Compute the value of a matrix norm</td></tr>
+<tr><td class="name">zlanhs</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="desc">Return the value of the one norm, Frobenius norm, infinity norm, or max absolute value of an upper Hessenberg complex matrix</td></tr>
+<tr><td class="name">zlarf</td><td><span class="badge done">done</span></td><td class="tests">5</td><td class="desc">Apply a complex Householder reflector</td></tr>
+<tr><td class="name">zlarfb</td><td><span class="badge stub">stub</span></td><td class="tests">5</td><td class="desc">Apply a block Householder reflector</td></tr>
+<tr><td class="name">zlarfg</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="desc">Generate a complex Householder reflector</td></tr>
+<tr><td class="name">zlarft</td><td><span class="badge stub">stub</span></td><td class="tests">4</td><td class="desc">Form the triangular factor T of a block reflector</td></tr>
+<tr><td class="name">zlartg</td><td><span class="badge done">done</span></td><td class="tests">22</td><td class="desc">Generate a complex Givens plane rotation</td></tr>
+<tr><td class="name">zlascl</td><td><span class="badge done">done</span></td><td class="tests">15</td><td class="desc">Multiply a matrix by a real scalar CTO/CFROM</td></tr>
+<tr><td class="name">zlaset</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="desc">Initialize a complex matrix to given values</td></tr>
+<tr><td class="name">zlassq</td><td><span class="badge done">done</span></td><td class="tests">20</td><td class="desc">Update a sum of squares represented in scaled form</td></tr>
+<tr><td class="name">zrot</td><td><span class="badge done">done</span></td><td class="tests">6</td><td class="desc">Apply a complex Givens plane rotation</td></tr>
+</tbody>
+</table>
+</section>
 </body>
 </html>

@@ -1,0 +1,36 @@
+
+    zlarfg.ndarray( N, alpha, x, stride, offset, tau )
+        Generate a complex Householder reflector
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        alpha: Complex128
+            scalar constant.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        tau: Complex128
+            tau.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

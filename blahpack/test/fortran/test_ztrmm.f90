@@ -180,6 +180,114 @@ program test_ztrmm
   call print_cmatrix('b', b_r, ldb, m, n)
   call end_test()
 
+  ! Test 11: left, lower, transpose, non-unit, 2x2
+  m = 2
+  n = 2
+  a = (0.0d0, 0.0d0)
+  b = (0.0d0, 0.0d0)
+  a(1,1) = (2.0d0, 1.0d0)
+  a(2,1) = (3.0d0, 1.0d0)
+  a(2,2) = (4.0d0, 2.0d0)
+  b(1,1) = (1.0d0, 0.0d0)
+  b(2,1) = (0.0d0, 1.0d0)
+  b(1,2) = (0.0d0, 1.0d0)
+  b(2,2) = (1.0d0, 0.0d0)
+  alpha = (1.0d0, 0.0d0)
+  call ztrmm('L', 'L', 'T', 'N', m, n, alpha, a, lda, b, ldb)
+  call begin_test('ztrmm_left_lower_trans')
+  call print_cmatrix('b', b_r, ldb, m, n)
+  call end_test()
+
+  ! Test 12: left, lower, conjugate transpose, non-unit, 2x2
+  m = 2
+  n = 2
+  a = (0.0d0, 0.0d0)
+  b = (0.0d0, 0.0d0)
+  a(1,1) = (2.0d0, 1.0d0)
+  a(2,1) = (3.0d0, 1.0d0)
+  a(2,2) = (4.0d0, 2.0d0)
+  b(1,1) = (1.0d0, 0.0d0)
+  b(2,1) = (0.0d0, 1.0d0)
+  b(1,2) = (0.0d0, 1.0d0)
+  b(2,2) = (1.0d0, 0.0d0)
+  alpha = (1.0d0, 0.0d0)
+  call ztrmm('L', 'L', 'C', 'N', m, n, alpha, a, lda, b, ldb)
+  call begin_test('ztrmm_left_lower_conjtrans')
+  call print_cmatrix('b', b_r, ldb, m, n)
+  call end_test()
+
+  ! Test 13: right, upper, transpose, non-unit, 2x2
+  m = 2
+  n = 2
+  a = (0.0d0, 0.0d0)
+  b = (0.0d0, 0.0d0)
+  a(1,1) = (2.0d0, 1.0d0)
+  a(1,2) = (3.0d0, 1.0d0)
+  a(2,2) = (4.0d0, 2.0d0)
+  b(1,1) = (1.0d0, 0.0d0)
+  b(2,1) = (0.0d0, 1.0d0)
+  b(1,2) = (0.0d0, 1.0d0)
+  b(2,2) = (1.0d0, 0.0d0)
+  alpha = (1.0d0, 0.0d0)
+  call ztrmm('R', 'U', 'T', 'N', m, n, alpha, a, lda, b, ldb)
+  call begin_test('ztrmm_right_upper_trans')
+  call print_cmatrix('b', b_r, ldb, m, n)
+  call end_test()
+
+  ! Test 14: right, upper, conjugate transpose, non-unit, 2x2
+  m = 2
+  n = 2
+  a = (0.0d0, 0.0d0)
+  b = (0.0d0, 0.0d0)
+  a(1,1) = (2.0d0, 1.0d0)
+  a(1,2) = (3.0d0, 1.0d0)
+  a(2,2) = (4.0d0, 2.0d0)
+  b(1,1) = (1.0d0, 0.0d0)
+  b(2,1) = (0.0d0, 1.0d0)
+  b(1,2) = (0.0d0, 1.0d0)
+  b(2,2) = (1.0d0, 0.0d0)
+  alpha = (1.0d0, 0.0d0)
+  call ztrmm('R', 'U', 'C', 'N', m, n, alpha, a, lda, b, ldb)
+  call begin_test('ztrmm_right_upper_conjtrans')
+  call print_cmatrix('b', b_r, ldb, m, n)
+  call end_test()
+
+  ! Test 15: right, lower, transpose, non-unit, 2x2
+  m = 2
+  n = 2
+  a = (0.0d0, 0.0d0)
+  b = (0.0d0, 0.0d0)
+  a(1,1) = (2.0d0, 1.0d0)
+  a(2,1) = (3.0d0, 1.0d0)
+  a(2,2) = (4.0d0, 2.0d0)
+  b(1,1) = (1.0d0, 0.0d0)
+  b(2,1) = (0.0d0, 1.0d0)
+  b(1,2) = (0.0d0, 1.0d0)
+  b(2,2) = (1.0d0, 0.0d0)
+  alpha = (1.0d0, 0.0d0)
+  call ztrmm('R', 'L', 'T', 'N', m, n, alpha, a, lda, b, ldb)
+  call begin_test('ztrmm_right_lower_trans')
+  call print_cmatrix('b', b_r, ldb, m, n)
+  call end_test()
+
+  ! Test 16: right, lower, conjugate transpose, non-unit, 2x2
+  m = 2
+  n = 2
+  a = (0.0d0, 0.0d0)
+  b = (0.0d0, 0.0d0)
+  a(1,1) = (2.0d0, 1.0d0)
+  a(2,1) = (3.0d0, 1.0d0)
+  a(2,2) = (4.0d0, 2.0d0)
+  b(1,1) = (1.0d0, 0.0d0)
+  b(2,1) = (0.0d0, 1.0d0)
+  b(1,2) = (0.0d0, 1.0d0)
+  b(2,2) = (1.0d0, 0.0d0)
+  alpha = (1.0d0, 0.0d0)
+  call ztrmm('R', 'L', 'C', 'N', m, n, alpha, a, lda, b, ldb)
+  call begin_test('ztrmm_right_lower_conjtrans')
+  call print_cmatrix('b', b_r, ldb, m, n)
+  call end_test()
+
 contains
   subroutine print_cmatrix(name, arr, lda_val, m_val, n_val)
     character(*), intent(in) :: name

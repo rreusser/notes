@@ -1,0 +1,7 @@
+{"name":"zlange_max","result": 1.06301458127346500E+001}
+{"name":"zlange_one","result": 1.84403954886413040E+001}
+{"name":"zlange_inf","result": 1.56301458127346500E+001}
+{"name":"zlange_frob","result": 1.42828568570857009E+001}
+{"name":"zlange_m_zero","result": 0.00000000000000000E+000}
+{"name":"zlange_n_zero","result": 0.00000000000000000E+000}
+{"name":"zlange_1x1","result": 5.00000000000000000E+000}

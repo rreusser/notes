@@ -1,0 +1,16 @@
+{"name":"zlassq_basic","scl": 1.00000000000000000E+000,"sumsq": 3.00000000000000000E+001}
+{"name":"zlassq_accumulate","scl": 1.00000000000000000E+000,"sumsq": 1.30000000000000000E+001}
+{"name":"zlassq_n_zero","scl": 2.00000000000000000E+000,"sumsq": 5.00000000000000000E+000}
+{"name":"zlassq_stride","scl": 1.00000000000000000E+000,"sumsq": 2.50000000000000000E+001}
+{"name":"zlassq_imag","scl": 1.00000000000000000E+000,"sumsq": 2.50000000000000000E+001}
+{"name":"zlassq_big","scl": 8.99782758908639277E+161,"sumsq": 7.41098468761869906E+276}
+{"name":"zlassq_small","scl": 2.22275874948507748E-162,"sumsq": 1.21441351984386374E-276}
+{"name":"zlassq_big_normal","scl": 8.99782758908639277E+161,"sumsq": 1.23516411460311651E+276}
+{"name":"zlassq_small_normal","scl": 1.00000000000000000E+000,"sumsq": 1.00000000000000000E+000}
+{"name":"zlassq_neg_stride","scl": 1.00000000000000000E+000,"sumsq": 2.50000000000000000E+001}
+{"name":"zlassq_big_existing","scl": 8.99782758908639277E+161,"sumsq": 1.23516411460311651E+276}
+{"name":"zlassq_small_existing","scl": 2.22275874948507748E-162,"sumsq": 2.02402253307310604E-077}
+{"name":"zlassq_pure_small","scl": 2.22275874948507748E-162,"sumsq": 1.01201126653655311E-276}
+{"name":"zlassq_scale_zero","scl": 1.00000000000000000E+000,"sumsq": 2.50000000000000000E+001}
+{"name":"zlassq_big_existing_scale_gt1","scl": 8.99782758908639277E+161,"sumsq": 1.23516411460311651E+276}
+{"name":"zlassq_small_existing_scale_lt1","scl": 1.00000000000000000E+000,"sumsq": 2.50000000000000006E-301}

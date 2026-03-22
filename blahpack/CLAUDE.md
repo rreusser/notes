@@ -13,6 +13,8 @@ bin/                           # Pipeline scripts
   signature.py                 #   Fortran → stdlib-js signature generator
   scaffold.py                  #   Module scaffold generator (stdlib-js structure)
   deps.py                      #   Dependency tree analyzer
+  fortran_body.py              #   Strip Fortran to executable body only
+  gen_test.py                  #   Generate JS test scaffold from fixtures
   fortran_to_estree.py         #   Fortran parser → ESTree AST (outputs 1-based JS)
   estree_to_js.js              #   ESTree → formatted JavaScript
   remove_goto.py               #   GOTO restructuring (imported by transform.py)
@@ -295,36 +297,38 @@ and `lib/<package>/base/package.json` (empty `{}`) to override the root
 
 ### Step 6: Write the JS test
 
-Create `lib/<package>/base/<routine>/test/test.js` using CommonJS:
+Generate the test scaffold, then fill in the test bodies:
 
-```javascript
-'use strict';
-var test = require('node:test');
-var assert = require('node:assert/strict');
-var readFileSync = require('fs').readFileSync;
-var path = require('path');
-var routine = require('../lib/base.js');
-
-// Load fixture
-var fixtureDir = path.join(__dirname, '..', '..', '..', '..', '..', 'test', 'fixtures');
-var lines = readFileSync(path.join(fixtureDir, '<routine>.jsonl'), 'utf8').trim().split('\n');
-var fixture = lines.map(function(line) { return JSON.parse(line); });
-
-// Helper
-function assertClose(actual, expected, msg) {
-  var relErr = Math.abs(actual - expected) / Math.max(Math.abs(expected), 1.0);
-  assert.ok(relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual);
-}
-
-test('<routine>: basic', function() {
-  var tc = fixture.find(function(t) { return t.name === 'basic'; });
-  // Set up inputs matching Fortran test...
-  // Call routine with stride/offset params (strideA1=1, strideA2=N, offsetA=0 for col-major)...
-  // Assert results match fixture...
-});
+```bash
+python bin/gen_test.py <package> <routine> > lib/<package>/base/<routine>/test/test.js
 ```
 
+This generates fixture loading, assertClose/assertArrayClose helpers, and
+one test stub per fixture case. Fill in the input setup and assertion calls.
+
 **Gate:** `node --test lib/<package>/base/<routine>/test/test.js` → all pass.
+
+### Step 6b: Verify test coverage
+
+```bash
+node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.js
+```
+
+Check the coverage report for `base.js`. Target: **≥90% line coverage, ≥85% branch coverage**.
+
+If coverage is low, identify the uncovered lines and add targeted test cases:
+
+- **Uncovered branches in if/else chains**: Add test cases that exercise each branch.
+  For routines with `uplo`, `trans`, `side`, `diag` parameters, test ALL valid
+  combinations (U/L, N/T/C, L/R, U/N).
+- **Uncovered quick-return paths**: Test edge cases (N=0, M=0, alpha=0, etc.).
+- **Uncovered scaling/overflow paths**: Test with very large (1e300) and very small
+  (1e-300) values to exercise safe-scaling code.
+- **Uncovered stride paths**: Test non-unit strides and negative strides.
+
+Do NOT add tests solely to hit coverage numbers. Every test should verify a
+meaningful behavioral property. But low coverage usually indicates genuinely
+untested code paths — branches that could contain bugs.
 
 ### Step 7: Update manifest and verify
 
@@ -390,6 +394,11 @@ added later following the stdlib-js patterns in the reference clone.
 
 `A(i, j)` in Fortran (1-based) → `A[offsetA + (i-1)*strideA1 + (j-1)*strideA2]`
 
+With 0-based loop variables: `A[offsetA + i*strideA1 + j*strideA2]`
+
+For column-major: `strideA1 = 1, strideA2 = LDA`
+For row-major: `strideA1 = N, strideA2 = 1`
+
 ### Complex Number Support
 
 Complex numbers use `lib/cmplx.js` — a gl-matrix-style library where each
@@ -405,33 +414,28 @@ cmplx.conj( z, a );            // z = conj(a)
 var r = cmplx.abs( a );        // r = |a| (returns scalar)
 ```
 
-Complex arrays are interleaved: element k of a complex vector is at
-`x.subarray(2*k, 2*k+2)`. Complex strides are 2x the real stride.
+**Complex arrays** are interleaved: `[re0, im0, re1, im1, ...]`.
+Stride is in complex elements. Element k of vector zx:
+- real: `zx[ offsetX + 2 * k * strideX ]`
+- imag: `zx[ offsetX + 2 * k * strideX + 1 ]`
 
-**Translator directives**: The translator emits comments identifying complex
-variables from the Fortran type declarations:
+**Complex matrices**: Element (i,j) of matrix A:
+- real: `A[ offsetA + 2 * (i * strideA1 + j * strideA2) ]`
+- imag: `A[ offsetA + 2 * (i * strideA1 + j * strideA2) + 1 ]`
 
-```javascript
-/* @complex ztemp */           // scalar complex variables (need Float64Array(2))
-/* @complex-arrays zx, zy */   // array complex variables (interleaved re/im pairs)
+**Fortran complex test pattern** (use EQUIVALENCE to print interleaved):
+```fortran
+double precision :: zx_r(20)
+complex*16 :: zx(10)
+equivalence (zx, zx_r)
+call print_array('zx', zx_r, 2*n)
 ```
 
-**Fortran → JS mapping for complex operations**:
-
-| Fortran | JS |
-|---------|-----|
-| `ZTEMP = (0.0d0, 0.0d0)` | `cmplx.set(ztemp, 0, 0)` |
-| `ZTEMP = ZA` | `cmplx.copy(ztemp, za)` |
-| `ZY(I) = ZY(I) + ZA*ZX(I)` | `cmplx.mmadd(zy_i, zy_i, za, zx_i)` |
-| `ZTEMP = DCONJG(ZX(I))` | `cmplx.conj(ztemp, zx_i)` |
-| `DCABS1(ZA)` | `cmplx.abs1(za)` |
-| `DIMAG(Z)` | `cmplx.imag(z)` |
-| `DBLE(Z)` | `cmplx.real(z)` |
-
-With 0-based loop variables: `A[offsetA + i*strideA1 + j*strideA2]`
-
-For column-major: `strideA1 = 1, strideA2 = LDA`
-For row-major: `strideA1 = N, strideA2 = 1`
+**Translator directives**: The translator emits `@complex` comments:
+```javascript
+/* @complex ztemp */           // scalar complex variables
+/* @complex-arrays zx, zy */   // array complex variables
+```
 
 ---
 
