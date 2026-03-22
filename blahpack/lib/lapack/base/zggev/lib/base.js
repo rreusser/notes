@@ -129,8 +129,11 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		return info;
 	}
 
-	// Allocate workspace
-	lwork = Math.max( 1, 8 * N );
+	// Allocate workspace — sized for the largest consumer:
+	// zunmqr needs nw*nb + ldt*nb where nw=N, nb=32, ldt=33 → N*32+33*32
+	// zgeqrf needs N*nb + nb*nb → N*32+1024
+	// zhgeqz allocates its own internally
+	lwork = Math.max( 1, N * 32 + 33 * 32 );
 	WORK = new Complex128Array( lwork );
 
 	// TAU: Householder scalar factors (complex, length N)

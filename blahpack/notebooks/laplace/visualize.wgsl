@@ -18,7 +18,7 @@ struct Params {
   imCorr: f32,
   valueMin: f32,
   valueMax: f32,
-  _pad: f32,
+  interior: f32,  // 1.0 = render inside polygon, 0.0 = render outside
 }
 
 @group(0) @binding(0) var<uniform> params: Params;
@@ -101,7 +101,8 @@ fn main(input: VertexOutput) -> @location(0) vec4<f32> {
   let v_dist = abs(fract(v / contourInterval - 0.5) - 0.5) * contourInterval / v_grad;
   let v_alpha = 1.0 - smoothstep(0.5, 1.5, v_dist);
 
-  if (!inside) {
+  let render = select(!inside, inside, params.interior > 0.5);
+  if (!render) {
     return vec4<f32>(1.0, 1.0, 1.0, 1.0);
   }
   let contour_alpha = max(u_alpha, v_alpha);

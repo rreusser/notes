@@ -1,0 +1,129 @@
+'use strict';
+
+// MODULES //
+
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var zpotrf2 = require( '../../zpotrf2/lib/base.js' );
+var zherk = require( '../../../../blas/base/zherk/lib/base.js' );
+var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
+var ztrsm = require( '../../../../blas/base/ztrsm/lib/base.js' );
+
+
+// VARIABLES //
+
+var NB = 64; // Block size (hardcoded, replaces ILAENV query)
+var CONE = new Complex128( 1.0, 0.0 );
+var MCONE = new Complex128( -1.0, 0.0 );
+
+
+// MAIN //
+
+/**
+* Computes the Cholesky factorization of a complex Hermitian positive definite
+* matrix A using a blocked algorithm.
+*
+* The factorization has the form:
+*   A = U^H * U,  if uplo = 'U', or
+*   A = L * L^H,  if uplo = 'L',
+* where U is upper triangular and L is lower triangular.
+*
+* This is the blocked version of the algorithm, calling Level 3 BLAS.
+* For small matrices (N <= NB), it delegates to zpotrf2.
+*
+* @private
+* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
+* @param {NonNegativeInteger} N - order of matrix A
+* @param {Complex128Array} A - input/output Hermitian positive definite matrix
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - index offset for A (in complex elements)
+* @returns {integer} info - 0 if successful, k>0 if the leading minor of order k is not positive definite
+*/
+function zpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
+	var upper;
+	var info;
+	var sa1;
+	var sa2;
+	var jb;
+	var j;
+
+	upper = ( uplo === 'U' || uplo === 'u' );
+
+	if ( N === 0 ) {
+		return 0;
+	}
+
+	sa1 = strideA1;
+	sa2 = strideA2;
+
+	// Use unblocked code for small matrices or block size >= N
+	if ( NB <= 1 || NB >= N ) {
+		return zpotrf2( uplo, N, A, sa1, sa2, offsetA );
+	}
+
+	if ( upper ) {
+		// Compute the Cholesky factorization A = U^H * U
+		for ( j = 0; j < N; j += NB ) {
+			// Update and factorize the current diagonal block
+			jb = Math.min( NB, N - j );
+
+			zherk( 'U', 'C', jb, j, -1.0,
+				A, sa1, sa2, offsetA + j * sa2,
+				1.0,
+				A, sa1, sa2, offsetA + j * sa1 + j * sa2
+			);
+			info = zpotrf2( 'U', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+			if ( info !== 0 ) {
+				return info + j;
+			}
+			if ( j + jb < N ) {
+				// Update the off-diagonal block
+				zgemm( 'C', 'N', jb, N - j - jb, j, MCONE,
+					A, sa1, sa2, offsetA + j * sa2,
+					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
+					CONE,
+					A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2
+				);
+				ztrsm( 'L', 'U', 'C', 'N', jb, N - j - jb, CONE,
+					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
+					A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2
+				);
+			}
+		}
+	} else {
+		// Compute the Cholesky factorization A = L * L^H
+		for ( j = 0; j < N; j += NB ) {
+			// Update and factorize the current diagonal block
+			jb = Math.min( NB, N - j );
+
+			zherk( 'L', 'N', jb, j, -1.0,
+				A, sa1, sa2, offsetA + j * sa1,
+				1.0,
+				A, sa1, sa2, offsetA + j * sa1 + j * sa2
+			);
+			info = zpotrf2( 'L', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+			if ( info !== 0 ) {
+				return info + j;
+			}
+			if ( j + jb < N ) {
+				// Update the off-diagonal block
+				zgemm( 'N', 'C', N - j - jb, jb, j, MCONE,
+					A, sa1, sa2, offsetA + ( j + jb ) * sa1,
+					A, sa1, sa2, offsetA + j * sa1,
+					CONE,
+					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2
+				);
+				ztrsm( 'R', 'L', 'C', 'N', N - j - jb, jb, CONE,
+					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
+					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2
+				);
+			}
+		}
+	}
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = zpotrf;

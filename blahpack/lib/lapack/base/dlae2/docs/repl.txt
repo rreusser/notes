@@ -1,0 +1,33 @@
+
+    dlae2.ndarray( a, b, c, rt1, rt2 )
+        Compute eigenvalues of a 2-by-2 symmetric matrix
+
+        Parameters
+        ----------
+        a: number
+            a.
+
+        b: number
+            b.
+
+        c: number
+            c.
+
+        rt1: number
+            rt1.
+
+        rt2: number
+            rt2.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

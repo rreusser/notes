@@ -111,15 +111,15 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	ldwork = nw;
 	ldt = nb + 1;
 
-	// Allocate T matrix for block reflectors (ldt x nb, Complex128Array)
-	T = new Complex128Array( ldt * nb );
-
-	// Ensure WORK is large enough; allocate internally if needed
+	// Ensure WORK is large enough; allocate internally if needed.
+	// T (ldt x nb block reflector) is carved from the tail of WORK.
 	if ( !WORK || WORK.length < ( nw * nb + ldt * nb ) ) {
 		WORK = new Complex128Array( nw * nb + ldt * nb );
 		offsetWORK = 0;
 		strideWORK = 1;
 	}
+	T = WORK;
+	var offsetT = offsetWORK + nw * nb; // eslint-disable-line no-var
 
 	// Determine iteration direction
 	if ( ( left && !notran ) || ( !left && notran ) ) {
@@ -149,7 +149,7 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 			'F', 'C', nq - i, ib,
 			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 			TAU, strideTAU, offsetTAU + i * strideTAU,
-			T, 1, ldt, 0
+			T, 1, ldt, offsetT
 		);
 
 		if ( left ) {
@@ -164,7 +164,7 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		zlarfb(
 			side, trans, 'F', 'C', mi, ni, ib,
 			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-			T, 1, ldt, 0,
+			T, 1, ldt, offsetT,
 			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
 			WORK, 1, ldwork, offsetWORK
 		);

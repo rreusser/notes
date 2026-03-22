@@ -89,23 +89,47 @@
       for (const y of linspace(2, 0, stp)) boundary.push([0, y]);
       return boundary;
     }
+
+    // [C20] §3.2: blade-shaped domain γ = 2cos(θ) + i(sin(θ) + 2cos³(θ))
+    function buildBladeBoundary(n) {
+      const boundary = [];
+      for (let i = 0; i < n; i++) {
+        const theta = 2 * Math.PI * i / n;
+        const x = 2 * Math.cos(theta);
+        const y = Math.sin(theta) + 2 * Math.pow(Math.cos(theta), 3);
+        boundary.push([x, y]);
+      }
+      return boundary;
+    }
+
+    // Square domain [0, 2] × [0, 2]
+    function buildSquareBoundary(stp) {
+      const boundary = [];
+      for (const x of linspace(0, 2, stp)) boundary.push([x, 0]);
+      for (const y of linspace(0, 2, stp)) boundary.push([2, y]);
+      for (const x of linspace(2, 0, stp)) boundary.push([x, 2]);
+      for (const y of linspace(2, 0, stp)) boundary.push([0, y]);
+      return boundary;
+    }
   </script>
 
   <script id="laplaceHeader" type="text/markdown">
-    ## Laplace Equation on L-shaped Domain
+    ## Laplace Equation — Dirichlet Problems
 
-    L-shaped domain ${ tex`[0,2]^2 \setminus [1,2]^2` } with reentrant corner at ${ tex`(1,1)` }, following [C20] §3.
+    Domains and boundary conditions from [C20] §3. The solver decomposes the solution into a smooth polynomial part plus a singular rational part with poles clustered near corner singularities.
   </script>
 
   <script id="laplaceControls" type="module">
-    const bcChoice = view(Inputs.select(
-      ['x2', 'rez2', 'reexp'],
+    const caseChoice = view(Inputs.select(
+      ['blade_x2', 'l_x2', 'l_rez2', 'l_reexp', 'square_x2'],
       {
-        label: 'Boundary condition',
+        label: 'Test case',
         format: v => ({
-          x2: 'u = x² — [C20] §3, non-harmonic BC (test.js:255)',
-          rez2: 'u = Re(z²) = x²−y² — harmonic polynomial BC',
-          reexp: 'u = Re(eᶻ) — entire-function BC',
+          blade_x2: 'Blade, u = x² — [C20] §3.2',
+          l_x2: 'L-shaped, u = x² — [C20] §3.1',
+          l_rez2: 'L-shaped, u = Re(z²) — harmonic polynomial',
+          l_reexp: 'L-shaped, u = Re(eᶻ) — entire function',
+          square_x2: 'Square, u = x² — smooth domain',
         })[v],
       }
     ));
@@ -117,31 +141,54 @@
   </script>
 
   <script id="compute" type="module">
-    const vertices = [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]];
-    const boundary = buildLShapedBoundary(0.01);
+    let vertices, boundary, bv, valueRange, bcName, bcSource, center;
 
-    let bv, valueRange, bcName, bcSource;
-    if (bcChoice === 'x2') {
+    let interior = true;
+
+    if (caseChoice === 'l_x2' || caseChoice === 'l_rez2' || caseChoice === 'l_reexp') {
+      vertices = [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]];
+      boundary = buildLShapedBoundary(0.01);
+      center = [0.5, 0.5];
+      if (caseChoice === 'l_x2') {
+        bv = boundary.map(([x]) => x * x);
+        valueRange = [0, 4];
+        bcName = 'u = x²';
+        bcSource = '[C20] §3.1, L-shaped interior, u = x²';
+      } else if (caseChoice === 'l_rez2') {
+        bv = boundary.map(([x, y]) => x * x - y * y);
+        valueRange = [-4, 4];
+        bcName = 'u = Re(z²)';
+        bcSource = 'L-shaped interior, harmonic polynomial BC';
+      } else {
+        bv = boundary.map(([x, y]) => Math.exp(x) * Math.cos(y));
+        valueRange = [Math.min(...bv), Math.max(...bv)];
+        bcName = 'u = Re(eᶻ)';
+        bcSource = 'L-shaped interior, entire-function BC';
+      }
+    } else if (caseChoice === 'blade_x2') {
+      // [C20] §3.2: blade-shaped domain, 500 points
+      boundary = buildBladeBoundary(500);
+      vertices = boundary;
+      center = [0, 0];
       bv = boundary.map(([x]) => x * x);
       valueRange = [0, 4];
       bcName = 'u = x²';
-      bcSource = '[C20] §3, non-harmonic BC (test.js:255)';
-    } else if (bcChoice === 'rez2') {
-      bv = boundary.map(([x, y]) => x * x - y * y);
-      valueRange = [-4, 4];
-      bcName = 'u = Re(z²)';
-      bcSource = '[C20] §3, harmonic polynomial BC';
+      bcSource = '[C20] §3.2, blade γ = 2cos(θ) + i(sin(θ) + 2cos³(θ))';
     } else {
-      bv = boundary.map(([x, y]) => Math.exp(x) * Math.cos(y));
-      valueRange = [Math.min(...bv), Math.max(...bv)];
-      bcName = 'u = Re(eᶻ)';
-      bcSource = '[C20] §3, entire-function BC';
+      // Square domain
+      vertices = [[0, 0], [2, 0], [2, 2], [0, 2]];
+      boundary = buildSquareBoundary(0.01);
+      center = [1, 1];
+      bv = boundary.map(([x]) => x * x);
+      valueRange = [0, 4];
+      bcName = 'u = x²';
+      bcSource = 'Square [0,2]², smooth domain (no corner singularity)';
     }
 
     const response = await workerCall({
       type: 'laplace',
       boundary, boundaryValues: bv, vertices,
-      options: { center: [0.5, 0.5], interior: true, mmax: mmaxChoice },
+      options: { center, interior, mmax: mmaxChoice },
     });
 
     const laplaceData = response.result;
@@ -161,7 +208,7 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
   </script>
 
   <script id="createPlot" type="module">
-    function createPlot(width, height, xDomain = [-0.15, 2.15], yDomain = [-0.15, 2.15]) {
+    function createPlot(width, height, xDomain = [-2.5, 2.5], yDomain = [-3.5, 3.5]) {
       return Plot.plot({
         width,
         height,
@@ -460,6 +507,7 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
     rs.valueMin = valueRange[0];
     rs.valueMax = valueRange[1];
     rs.laplaceData = laplaceData;
+    rs.interior = interior;
 
     // Signal a redraw since data changed
     renderDirty.value = true;
@@ -485,6 +533,7 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
       f32[22] = ld.imCorr;                  // imCorr
       f32[23] = rs.valueMin;                // valueMin
       f32[24] = rs.valueMax;                // valueMax
+      f32[25] = rs.interior ? 1.0 : 0.0;   // interior flag
 
       device.queue.writeBuffer(paramsBuf, 0, f32);
 
@@ -676,24 +725,21 @@ ${aaaResult.errvec.length} iterations, final error \`${aaaResult.errvec[aaaResul
       height: plotSize,
       x: { label: 'Re(z)', domain: [reMid - halfSpan, reMid + halfSpan] },
       y: { label: 'Im(z)', domain: [imMid - halfSpan, imMid + halfSpan] },
-      color: { domain: ['pole', 'zero'], range: ['#e15759', '#4e79a7'] },
       marks: [
         sampleData.length <= 1000
-          ? Plot.dot(sampleData, { x: 're', y: 'im', fill: '#eee', r: 1 })
+          ? Plot.dot(sampleData, { x: 're', y: 'im', fill: '#ccc', r: 2, stroke: '#aaa', strokeWidth: 0.5 })
           : null,
-        trueData.length > 0
-          ? Plot.dot(trueData, { x: 're', y: 'im', stroke: '#333', fill: 'none', r: 8, strokeWidth: 1.5 })
-          : null,
-        Plot.dot([...poleData, ...zeroData], {
-          x: 're', y: 'im', fill: 'type',
-          symbol: d => d.type === 'pole' ? 'times' : 'circle',
-          r: 4,
+        Plot.dot(poleData, {
+          x: 're', y: 'im',
+          fill: 'rgba(220,50,50,0.85)', stroke: '#800', strokeWidth: 1, r: 3,
+        }),
+        Plot.dot(zeroData, {
+          x: 're', y: 'im',
+          fill: 'rgba(50,120,220,0.85)', stroke: '#036', strokeWidth: 1, r: 3,
         }),
       ].filter(Boolean),
     }));
 
-    if (trueData.length > 0) {
-      display(md`Open circles: known true pole locations.`);
-    }
+    display(md`Red: poles. Blue: zeros.`);
   </script>
 </notebook>

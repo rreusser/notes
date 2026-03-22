@@ -1,0 +1,39 @@
+
+    dlaev2.ndarray( a, b, c, rt1, rt2, cs1, sn1 )
+        Compute eigendecomposition of a 2-by-2 symmetric matrix
+
+        Parameters
+        ----------
+        a: number
+            a.
+
+        b: number
+            b.
+
+        c: number
+            c.
+
+        rt1: number
+            rt1.
+
+        rt2: number
+            rt2.
+
+        cs1: number
+            cs1.
+
+        sn1: number
+            sn1.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

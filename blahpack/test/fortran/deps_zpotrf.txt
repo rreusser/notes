@@ -1,0 +1,8 @@
+zpotrf
+zpotrf2
+disnan
+dlaisnan
+ilaenv
+ieeeck
+iparmq
+iparam2stage

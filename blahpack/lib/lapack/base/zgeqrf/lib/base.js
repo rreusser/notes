@@ -86,15 +86,15 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		}
 	}
 
-	// Allocate the T matrix for block reflectors (NB x NB, complex)
-	T = new Complex128Array( nb * nb );
-
-	// Ensure WORK is large enough; if not provided or too small, allocate internally
-	if ( !WORK || WORK.length < iws ) {
-		WORK = new Complex128Array( iws );
+	// Ensure WORK is large enough; if not provided or too small, allocate internally.
+	// T (nb x nb block reflector) is carved from the tail of WORK.
+	if ( !WORK || WORK.length < iws + nb * nb ) {
+		WORK = new Complex128Array( iws + nb * nb );
 		offsetWORK = 0;
 		strideWORK = 1;
 	}
+	T = WORK;
+	var offsetT = offsetWORK + iws; // eslint-disable-line no-var
 	ldwork = N;
 
 	if ( nb >= nbmin && nb < K && nx < K ) {
@@ -119,7 +119,7 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 					M - i, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					TAU, strideTAU, offsetTAU + i * strideTAU,
-					T, 1, nb, 0
+					T, 1, nb, offsetT
 				);
 
 				// Apply H^H to A(i:M-1, i+ib:N-1) from the left
@@ -127,7 +127,7 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 					'L', 'C', 'F', 'C',
 					M - i, N - i - ib, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-					T, 1, nb, 0,
+					T, 1, nb, offsetT,
 					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + ib ) * strideA2,
 					WORK, 1, ldwork, offsetWORK
 				);

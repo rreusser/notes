@@ -51,6 +51,10 @@ dscal
 dswap
 dtrmm
 dtrmv
+ieeeck
 iladlc
 iladlr
 ilaenv
+iparmq
+la_constants
+la_xisnan
