@@ -11529,12 +11529,13 @@ var require_base40 = __commonJS({
           iws = ldwork * nb;
         }
       }
-      T = new Complex128Array2(nb * nb);
-      if (!WORK || WORK.length < iws) {
-        WORK = new Complex128Array2(iws);
+      if (!WORK || WORK.length < iws + nb * nb) {
+        WORK = new Complex128Array2(iws + nb * nb);
         offsetWORK = 0;
         strideWORK = 1;
       }
+      T = WORK;
+      var offsetT = offsetWORK + iws;
       ldwork = N;
       if (nb >= nbmin && nb < K && nx < K) {
         i = 0;
@@ -11570,7 +11571,7 @@ var require_base40 = __commonJS({
               T,
               1,
               nb,
-              0
+              offsetT
             );
             zlarfb(
               "L",
@@ -11587,7 +11588,7 @@ var require_base40 = __commonJS({
               T,
               1,
               nb,
-              0,
+              offsetT,
               A,
               strideA1,
               strideA2,
@@ -14340,13 +14341,20 @@ function pointInPolygon([px, py], vertices) {
   }
   return crossings % 2 === 1;
 }
-function evalPoly(z, c, coeffs) {
-  const dz = csub2(z, c);
+function evalPoly(z, c, coeffs, exterior = false) {
+  let base;
+  if (exterior) {
+    const dz = csub2(z, c);
+    const d = dz[0] * dz[0] + dz[1] * dz[1];
+    base = [dz[0] / d, -dz[1] / d];
+  } else {
+    base = csub2(z, c);
+  }
   let power = [1, 0];
   let sum = [0, 0];
   for (let n = 0; n < coeffs.length; n++) {
     sum = cadd2(sum, cmul2(coeffs[n], power));
-    power = cmul2(power, dz);
+    power = cmul2(power, base);
   }
   return sum;
 }
@@ -14378,21 +14386,29 @@ function laplace(boundaryPoints, boundaryValues, polygonVertices, options = {}) 
   const Asmooth = new Float64Array(M * ncolsLS);
   const bsmooth = new Float64Array(M);
   for (let j = 0; j < M; j++) {
-    const dz = csub2(boundaryPoints[j], c);
+    let base;
+    if (interior) {
+      base = csub2(boundaryPoints[j], c);
+    } else {
+      const dz = csub2(boundaryPoints[j], c);
+      const d = dz[0] * dz[0] + dz[1] * dz[1];
+      base = [dz[0] / d, -dz[1] / d];
+    }
     let power = [1, 0];
     for (let n = 0; n <= N; n++) {
       Asmooth[j + n * M] = power[0];
       if (n >= 1) Asmooth[j + (ncols + n - 1) * M] = -power[1];
-      power = cmul2(power, dz);
+      power = cmul2(power, base);
     }
     bsmooth[j] = boundaryValues[j];
   }
   const xsmooth = lssolve(Asmooth, bsmooth, M, ncolsLS);
   const smoothCoeffs = [[xsmooth[0], 0]];
   for (let n = 1; n <= N; n++) smoothCoeffs.push([xsmooth[n], xsmooth[ncols + n - 1]]);
+  const exterior = !interior;
   const residual = new Array(M);
   for (let j = 0; j < M; j++) {
-    residual[j] = boundaryValues[j] - evalPoly(boundaryPoints[j], c, smoothCoeffs)[0];
+    residual[j] = boundaryValues[j] - evalPoly(boundaryPoints[j], c, smoothCoeffs, exterior)[0];
   }
   const zComplex = boundaryPoints.map(([r, i]) => [r, i]);
   const fComplex = residual.map((r) => [r, 0]);
@@ -14423,12 +14439,18 @@ function laplace(boundaryPoints, boundaryValues, polygonVertices, options = {}) 
   const singularCoeffs = [];
   for (let k = 0; k < K; k++) singularCoeffs.push([xsing[k], xsing[k + K]]);
   const b0 = [xsing[2 * K], 0];
-  const kz = evalPoly(c, c, smoothCoeffs)[1];
-  const kp = evalSingular(c, filteredPoles, singularCoeffs, b0)[1];
+  let kz, kp;
+  if (interior) {
+    kz = evalPoly(c, c, smoothCoeffs)[1];
+    kp = evalSingular(c, filteredPoles, singularCoeffs, b0)[1];
+  } else {
+    kz = smoothCoeffs[0][1];
+    kp = b0[1];
+  }
   const imCorr = [0, -(kz + kp)];
   let maxError = 0;
   for (let j = 0; j < M; j++) {
-    const wSmooth = evalPoly(boundaryPoints[j], c, smoothCoeffs);
+    const wSmooth = evalPoly(boundaryPoints[j], c, smoothCoeffs, exterior);
     const wSing = evalSingular(boundaryPoints[j], filteredPoles, singularCoeffs, b0);
     const w = cadd2(cadd2(wSmooth, wSing), imCorr);
     const err = Math.abs(boundaryValues[j] - w[0]);
@@ -14436,7 +14458,7 @@ function laplace(boundaryPoints, boundaryValues, polygonVertices, options = {}) 
   }
   function evaluate(z) {
     if (typeof z[0] === "number") {
-      const wS = evalPoly(z, c, smoothCoeffs);
+      const wS = evalPoly(z, c, smoothCoeffs, exterior);
       const wP = evalSingular(z, filteredPoles, singularCoeffs, b0);
       const w = cadd2(cadd2(wS, wP), imCorr);
       return w[0];
@@ -14455,6 +14477,7 @@ function laplace(boundaryPoints, boundaryValues, polygonVertices, options = {}) 
     center: c,
     imCorr: imCorr[1],
     N,
+    exterior,
     // AAA barycentric data for stable GPU evaluation
     bary: { z: approx.z, f: approx.f, w: approx.w }
   };

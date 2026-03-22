@@ -46,13 +46,37 @@ function assertArrayClose( actual, expected, tol, msg ) {
 }
 
 /**
+* Load fixture matrix (dense M*N column-major) into a Float64Array with LDA stride.
+*
+* Fixture stores M elements per column (no padding). This function
+* unpacks into a buffer with row stride 1 and column stride LDA.
+*
+* @param {Array} data - dense column-major data (M*N elements)
+* @param {number} M - number of rows
+* @param {number} N - number of columns
+* @param {number} LDA - leading dimension (>= M)
+* @returns {Float64Array} buffer of size LDA*N
+*/
+function loadMatrix( data, M, N, LDA ) {
+	var A = new Float64Array( LDA * N );
+	var i;
+	var j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			A[ j * LDA + i ] = data[ j * M + i ];
+		}
+	}
+	return A;
+}
+
+/**
 * Extract M-by-N submatrix from column-major flat array with leading dim LDA.
 *
 * @param {Float64Array} A - flat column-major array
 * @param {number} LDA - leading dimension (row stride)
 * @param {number} M - number of rows
 * @param {number} N - number of columns
-* @returns {Array} extracted values in column-major order
+* @returns {Array} extracted values in column-major order (M*N elements)
 */
 function extractMatrix( A, LDA, M, N ) {
 	var out = [];
@@ -73,18 +97,16 @@ test( 'dorg2l: 4x3, K=3 (M > N, full K)', function t() {
 	var expected = findOutput( '4x3_k3' );
 	var inp = findInput( '4x3_ql' );
 	var WORK = new Float64Array( 4 );
+	var LDA = 6;
 	var info;
 	var out;
 	var A;
 
-	// Copy QL factorization result into 6-row leading dimension array (col-major)
-	A = new Float64Array( 6 * 3 );
-	A.set( inp.A );
-
-	info = dorg2l( 4, 3, 3, A, 1, 6, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
+	A = loadMatrix( inp.A, 4, 3, LDA );
+	info = dorg2l( 4, 3, 3, A, 1, LDA, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
-	out = extractMatrix( A, 6, 4, 3 );
+	out = extractMatrix( A, LDA, 4, 3 );
 	assertArrayClose( out, expected.Q, 1e-14, 'Q' );
 });
 
@@ -92,17 +114,16 @@ test( 'dorg2l: 3x3, K=3 (square)', function t() {
 	var expected = findOutput( '3x3_k3' );
 	var inp = findInput( '3x3_ql' );
 	var WORK = new Float64Array( 4 );
+	var LDA = 6;
 	var info;
 	var out;
 	var A;
 
-	A = new Float64Array( 6 * 3 );
-	A.set( inp.A );
-
-	info = dorg2l( 3, 3, 3, A, 1, 6, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
+	A = loadMatrix( inp.A, 3, 3, LDA );
+	info = dorg2l( 3, 3, 3, A, 1, LDA, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
-	out = extractMatrix( A, 6, 3, 3 );
+	out = extractMatrix( A, LDA, 3, 3 );
 	assertArrayClose( out, expected.Q, 1e-14, 'Q' );
 });
 
@@ -110,17 +131,18 @@ test( 'dorg2l: 4x2, K=1 (K < N, partial reflectors)', function t() {
 	var expected = findOutput( '4x2_k1' );
 	var inp = findInput( '4x2_ql' );
 	var WORK = new Float64Array( 4 );
+	var LDA = 6;
 	var info;
 	var out;
 	var A;
 
-	A = new Float64Array( 6 * 2 );
-	A.set( inp.A );
+	A = loadMatrix( inp.A, 4, 2, LDA );
 
-	info = dorg2l( 4, 2, 1, A, 1, 6, 0, new Float64Array( [ inp.TAU[1] ] ), 1, 0, WORK, 1, 0 );
+	// Fortran test passes the raw TAU array from DGEQL2; with K=1, DORG2L uses TAU(1)
+	info = dorg2l( 4, 2, 1, A, 1, LDA, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
-	out = extractMatrix( A, 6, 4, 2 );
+	out = extractMatrix( A, LDA, 4, 2 );
 	assertArrayClose( out, expected.Q, 1e-14, 'Q' );
 });
 
@@ -128,20 +150,21 @@ test( 'dorg2l: K=0 (identity columns)', function t() {
 	var expected = findOutput( 'k_zero' );
 	var WORK = new Float64Array( 4 );
 	var TAU = new Float64Array( 1 );
+	var LDA = 6;
 	var info;
 	var out;
 	var A;
 
 	// K=0 means all columns are identity columns; input A content is irrelevant
-	A = new Float64Array( 6 * 2 );
-	A[ 0 ] = 99.0; A[ 6 ] = 88.0;
-	A[ 1 ] = 77.0; A[ 7 ] = 66.0;
-	A[ 2 ] = 55.0; A[ 8 ] = 44.0;
+	A = new Float64Array( LDA * 2 );
+	A[ 0 ] = 99.0; A[ LDA ] = 88.0;
+	A[ 1 ] = 77.0; A[ LDA + 1 ] = 66.0;
+	A[ 2 ] = 55.0; A[ LDA + 2 ] = 44.0;
 
-	info = dorg2l( 3, 2, 0, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
+	info = dorg2l( 3, 2, 0, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
-	out = extractMatrix( A, 6, 3, 2 );
+	out = extractMatrix( A, LDA, 3, 2 );
 	assertArrayClose( out, expected.Q, 1e-14, 'Q' );
 });
 
@@ -169,9 +192,11 @@ test( 'dorg2l: 5x3, K=3 (verify orthogonality Q^T * Q = I)', function t() {
 	var expected = findOutput( '5x3_orthogonal' );
 	var inp = findInput( '5x3_ql' );
 	var WORK = new Float64Array( 4 );
+	var LDA = 6;
 	var QtQ;
 	var info;
 	var out;
+	var sum;
 	var A;
 	var i;
 	var j;
@@ -179,22 +204,20 @@ test( 'dorg2l: 5x3, K=3 (verify orthogonality Q^T * Q = I)', function t() {
 	var M = 5;
 	var N = 3;
 
-	A = new Float64Array( 6 * 3 );
-	A.set( inp.A );
-
-	info = dorg2l( M, N, 3, A, 1, 6, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
+	A = loadMatrix( inp.A, M, N, LDA );
+	info = dorg2l( M, N, 3, A, 1, LDA, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
-	out = extractMatrix( A, 6, M, N );
+	out = extractMatrix( A, LDA, M, N );
 	assertArrayClose( out, expected.Q, 1e-14, 'Q' );
 
 	// Verify Q^T * Q = I (orthogonality)
 	QtQ = [];
 	for ( i = 0; i < N; i++ ) {
 		for ( j = 0; j < N; j++ ) {
-			var sum = 0.0;
+			sum = 0.0;
 			for ( k = 0; k < M; k++ ) {
-				sum += A[ i * 6 + k ] * A[ j * 6 + k ];
+				sum += A[ i * LDA + k ] * A[ j * LDA + k ];
 			}
 			QtQ.push( sum );
 		}
@@ -206,17 +229,16 @@ test( 'dorg2l: 6x4, K=4 (larger matrix)', function t() {
 	var expected = findOutput( '6x4_k4' );
 	var inp = findInput( '6x4_ql' );
 	var WORK = new Float64Array( 4 );
+	var LDA = 6;
 	var info;
 	var out;
 	var A;
 
-	A = new Float64Array( 6 * 4 );
-	A.set( inp.A );
-
-	info = dorg2l( 6, 4, 4, A, 1, 6, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
+	A = loadMatrix( inp.A, 6, 4, LDA );
+	info = dorg2l( 6, 4, 4, A, 1, LDA, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
-	out = extractMatrix( A, 6, 6, 4 );
+	out = extractMatrix( A, LDA, 6, 4 );
 	assertArrayClose( out, expected.Q, 1e-14, 'Q' );
 });
 
@@ -225,31 +247,30 @@ test( 'dorg2l: non-unit strides', function t() {
 	var inp = findInput( '3x3_ql' );
 	var expected = findOutput( '3x3_k3' );
 	var WORK = new Float64Array( 4 );
+	var strideA1 = 2;
+	var strideA2 = strideA1 * 3; // 6, needs M*strideA1 = 3*2 = 6
 	var info;
 	var out;
 	var A;
 	var i;
 	var j;
 
-	// Pack with row stride = 2, col stride = 2*3 = 6
-	// A has 3 rows, 3 cols => need 2*3 * 3 = 18 elements with stride
-	A = new Float64Array( 6 * 3 );
-	// Copy from inp.A (col-major, LDA=6) into strided layout (strideA1=2, strideA2=6)
-	// inp.A is [col0_row0, col0_row1, col0_row2, ..., col0_row5, col1_row0, ...]
+	// Dense fixture is [col0_r0..col0_r2, col1_r0..col1_r2, col2_r0..col2_r2]
+	A = new Float64Array( strideA2 * 3 );
 	for ( j = 0; j < 3; j++ ) {
 		for ( i = 0; i < 3; i++ ) {
-			A[ i * 2 + j * 6 ] = inp.A[ j * 6 + i ];
+			A[ i * strideA1 + j * strideA2 ] = inp.A[ j * 3 + i ];
 		}
 	}
 
-	info = dorg2l( 3, 3, 3, A, 2, 6, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
+	info = dorg2l( 3, 3, 3, A, strideA1, strideA2, 0, new Float64Array( inp.TAU ), 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
 	// Extract with stride
 	out = [];
 	for ( j = 0; j < 3; j++ ) {
 		for ( i = 0; i < 3; i++ ) {
-			out.push( A[ i * 2 + j * 6 ] );
+			out.push( A[ i * strideA1 + j * strideA2 ] );
 		}
 	}
 	assertArrayClose( out, expected.Q, 1e-14, 'Q strided' );
@@ -260,6 +281,7 @@ test( 'dorg2l: non-zero offset', function t() {
 	var inp = findInput( '3x3_ql' );
 	var expected = findOutput( '3x3_k3' );
 	var WORK = new Float64Array( 4 );
+	var LDA = 6;
 	var off = 5;
 	var info;
 	var out;
@@ -268,10 +290,10 @@ test( 'dorg2l: non-zero offset', function t() {
 	var j;
 
 	// Allocate with extra space at the beginning
-	A = new Float64Array( off + 6 * 3 );
+	A = new Float64Array( off + LDA * 3 );
 	for ( j = 0; j < 3; j++ ) {
 		for ( i = 0; i < 3; i++ ) {
-			A[ off + j * 6 + i ] = inp.A[ j * 6 + i ];
+			A[ off + j * LDA + i ] = inp.A[ j * 3 + i ];
 		}
 	}
 
@@ -280,13 +302,13 @@ test( 'dorg2l: non-zero offset', function t() {
 	TAU_arr[ 2 ] = inp.TAU[ 1 ];
 	TAU_arr[ 3 ] = inp.TAU[ 2 ];
 
-	info = dorg2l( 3, 3, 3, A, 1, 6, off, TAU_arr, 1, 1, WORK, 1, 0 );
+	info = dorg2l( 3, 3, 3, A, 1, LDA, off, TAU_arr, 1, 1, WORK, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 
 	out = [];
 	for ( j = 0; j < 3; j++ ) {
 		for ( i = 0; i < 3; i++ ) {
-			out.push( A[ off + j * 6 + i ] );
+			out.push( A[ off + j * LDA + i ] );
 		}
 	}
 	assertArrayClose( out, expected.Q, 1e-14, 'Q with offset' );

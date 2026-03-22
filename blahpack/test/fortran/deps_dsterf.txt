@@ -1,0 +1,12 @@
+la_constants
+la_xisnan
+disnan
+dlae2
+dlaisnan
+dlamch
+dlanst
+dlapy2
+dlascl
+dlasrt
+dlassq
+dsterf

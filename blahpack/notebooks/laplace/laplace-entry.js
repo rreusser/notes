@@ -32,13 +32,21 @@ export function pointInPolygon([px, py], vertices) {
   return crossings % 2 === 1;
 }
 
-function evalPoly(z, c, coeffs) {
-  const dz = csub(z, c);
+function evalPoly(z, c, coeffs, exterior = false) {
+  let base;
+  if (exterior) {
+    // Exterior: basis is 1/(z-c)
+    const dz = csub(z, c);
+    const d = dz[0] * dz[0] + dz[1] * dz[1];
+    base = [dz[0] / d, -dz[1] / d];
+  } else {
+    base = csub(z, c);
+  }
   let power = [1, 0];
   let sum = [0, 0];
   for (let n = 0; n < coeffs.length; n++) {
     sum = cadd(sum, cmul(coeffs[n], power));
-    power = cmul(power, dz);
+    power = cmul(power, base);
   }
   return sum;
 }
@@ -72,12 +80,20 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
   const bsmooth = new Float64Array(M);
 
   for (let j = 0; j < M; j++) {
-    const dz = csub(boundaryPoints[j], c);
+    let base;
+    if (interior) {
+      base = csub(boundaryPoints[j], c);
+    } else {
+      // Exterior: basis is 1/(z-c), decays at infinity
+      const dz = csub(boundaryPoints[j], c);
+      const d = dz[0] * dz[0] + dz[1] * dz[1];
+      base = [dz[0] / d, -dz[1] / d];
+    }
     let power = [1, 0];
     for (let n = 0; n <= N; n++) {
       Asmooth[j + n * M] = power[0];
       if (n >= 1) Asmooth[j + (ncols + n - 1) * M] = -power[1];
-      power = cmul(power, dz);
+      power = cmul(power, base);
     }
     bsmooth[j] = boundaryValues[j];
   }
@@ -86,9 +102,10 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
   const smoothCoeffs = [[xsmooth[0], 0]];
   for (let n = 1; n <= N; n++) smoothCoeffs.push([xsmooth[n], xsmooth[ncols + n - 1]]);
 
+  const exterior = !interior;
   const residual = new Array(M);
   for (let j = 0; j < M; j++) {
-    residual[j] = boundaryValues[j] - evalPoly(boundaryPoints[j], c, smoothCoeffs)[0];
+    residual[j] = boundaryValues[j] - evalPoly(boundaryPoints[j], c, smoothCoeffs, exterior)[0];
   }
 
   const zComplex = boundaryPoints.map(([r, i]) => [r, i]);
@@ -126,13 +143,24 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
   for (let k = 0; k < K; k++) singularCoeffs.push([xsing[k], xsing[k + K]]);
   const b0 = [xsing[2 * K], 0];
 
-  const kz = evalPoly(c, c, smoothCoeffs)[1];
-  const kp = evalSingular(c, filteredPoles, singularCoeffs, b0)[1];
+  // imCorr: zero the imaginary part at a reference point.
+  // Interior: evaluate at center c (where (z-c)^n = 0 for n>0, so smooth(c) = a_0).
+  // Exterior: evaluate at infinity (where 1/(z-c)^n → 0 for n>0, so smooth(∞) = a_0,
+  //           and singular(∞) = b_0 since all 1/(z-p_k) → 0).
+  let kz, kp;
+  if (interior) {
+    kz = evalPoly(c, c, smoothCoeffs)[1];
+    kp = evalSingular(c, filteredPoles, singularCoeffs, b0)[1];
+  } else {
+    // At infinity: smooth → a_0, singular → b_0
+    kz = smoothCoeffs[0][1]; // Im(a_0)
+    kp = b0[1];              // Im(b_0)
+  }
   const imCorr = [0, -(kz + kp)];
 
   let maxError = 0;
   for (let j = 0; j < M; j++) {
-    const wSmooth = evalPoly(boundaryPoints[j], c, smoothCoeffs);
+    const wSmooth = evalPoly(boundaryPoints[j], c, smoothCoeffs, exterior);
     const wSing = evalSingular(boundaryPoints[j], filteredPoles, singularCoeffs, b0);
     const w = cadd(cadd(wSmooth, wSing), imCorr);
     const err = Math.abs(boundaryValues[j] - w[0]);
@@ -141,7 +169,7 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
 
   function evaluate(z) {
     if (typeof z[0] === 'number') {
-      const wS = evalPoly(z, c, smoothCoeffs);
+      const wS = evalPoly(z, c, smoothCoeffs, exterior);
       const wP = evalSingular(z, filteredPoles, singularCoeffs, b0);
       const w = cadd(cadd(wS, wP), imCorr);
       return w[0];
@@ -152,7 +180,7 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
   return {
     evaluate, poles: filteredPoles, allPoles, allZeros,
     smoothCoeffs, singularCoeffs, b0, maxError,
-    center: c, imCorr: imCorr[1], N,
+    center: c, imCorr: imCorr[1], N, exterior,
     // AAA barycentric data for stable GPU evaluation
     bary: { z: approx.z, f: approx.f, w: approx.w },
   };

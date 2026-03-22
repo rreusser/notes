@@ -6,3 +6,5 @@ env
 test/build/
 .notebook-kit-debug
 __pycache__
+.DS_Store
+papers

@@ -59,13 +59,21 @@ fn main(input: VertexOutput) -> @location(0) vec4<f32> {
 
   let inside = pointInPolygon(z, nVertices);
 
-  // Smooth part: Σ a_n (z-c)^n
-  let dz = z - params.center;
+  // Smooth part: Σ a_n * base^n
+  // Interior: base = (z-c),  Exterior: base = 1/(z-c) (decays at infinity)
+  let raw_dz = z - params.center;
+  var base: vec2<f32>;
+  if (params.interior > 0.5) {
+    base = raw_dz;
+  } else {
+    let d = dot(raw_dz, raw_dz);
+    base = vec2<f32>(raw_dz.x / d, -raw_dz.y / d);
+  }
   var power = vec2<f32>(1.0, 0.0);
   var smooth_val = vec2<f32>(0.0, 0.0);
   for (var n: u32 = 0u; n < params.nSmooth; n = n + 1u) {
     smooth_val = smooth_val + cmul(smoothCoeffs[n], power);
-    power = cmul(power, dz);
+    power = cmul(power, base);
   }
 
   // Singular part: Σ b_k / (z - p_k) + b0

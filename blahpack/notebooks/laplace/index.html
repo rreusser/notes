@@ -121,7 +121,7 @@
 
   <script id="laplaceControls" type="module">
     const caseChoice = view(Inputs.select(
-      ['blade_x2', 'l_x2', 'l_rez2', 'l_reexp', 'square_x2'],
+      ['blade_x2', 'l_x2', 'l_rez2', 'l_reexp', 'l_ext_x2', 'square_x2'],
       {
         label: 'Test case',
         format: v => ({
@@ -129,6 +129,7 @@
           l_x2: 'L-shaped, u = x² — [C20] §3.1',
           l_rez2: 'L-shaped, u = Re(z²) — harmonic polynomial',
           l_reexp: 'L-shaped, u = Re(eᶻ) — entire function',
+          l_ext_x2: 'L-shaped exterior, u = x² — [C20] §3.3',
           square_x2: 'Square, u = x² — smooth domain',
         })[v],
       }
@@ -165,6 +166,16 @@
         bcName = 'u = Re(eᶻ)';
         bcSource = 'L-shaped interior, entire-function BC';
       }
+    } else if (caseChoice === 'l_ext_x2') {
+      // [C20] §3.3: L-shaped exterior — smooth part uses 1/(z-c)^n
+      vertices = [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]];
+      boundary = buildLShapedBoundary(0.01);
+      center = [0.5, 0.5];
+      interior = false;
+      bv = boundary.map(([x]) => x * x);
+      valueRange = [0, 4];
+      bcName = 'u = x²';
+      bcSource = '[C20] §3.3, L-shaped exterior, smooth = Σ aₙ/(z−c)ⁿ';
     } else if (caseChoice === 'blade_x2') {
       // [C20] §3.2: blade-shaped domain, 500 points
       boundary = buildBladeBoundary(500);
@@ -507,7 +518,7 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
     rs.valueMin = valueRange[0];
     rs.valueMax = valueRange[1];
     rs.laplaceData = laplaceData;
-    rs.interior = interior;
+    rs.interior = !laplaceData.exterior;
 
     // Signal a redraw since data changed
     renderDirty.value = true;
@@ -584,7 +595,7 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
 
   <script id="aaaCaseSelector" type="module">
     const aaaCaseChoice = view(Inputs.select(
-      ['exp', 'spiral', 'tan', 'mero'],
+      ['spiral', 'exp', 'tan', 'mero'],
       {
         label: 'AAA test case',
         format: v => ({

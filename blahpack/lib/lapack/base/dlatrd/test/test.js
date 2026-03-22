@@ -1,0 +1,178 @@
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var dlatrd = require( './../lib/base.js' );
+
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'dlatrd.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+
+// TESTS //
+
+test( 'dlatrd: uplo_u_6x6_nb3', function t() {
+	var tc = findCase( 'uplo_u_6x6_nb3' );
+	var N = 6;
+	var nb = 3;
+	var A = new Float64Array([
+		 2.0,  0.5, -0.3,  0.7,  1.0, -0.2,
+		 0.5, -1.0,  0.6,  0.4, -0.8,  0.3,
+		-0.3,  0.6,  1.5, -0.5,  0.2,  0.9,
+		 0.7,  0.4, -0.5,  0.8,  1.2, -0.6,
+		 1.0, -0.8,  0.2,  1.2, -0.4,  0.7,
+		-0.2,  0.3,  0.9, -0.6,  0.7,  1.0
+	]);
+	var E = new Float64Array( N );
+	var TAU = new Float64Array( N );
+	var W = new Float64Array( N * nb );
+
+	dlatrd( 'U', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+
+	assertArrayClose( A, tc.A, 1e-14, 'A' );
+	assertArrayClose( E, tc.E, 1e-14, 'E' );
+	assertArrayClose( TAU, tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( W, tc.W, 1e-14, 'W' );
+});
+
+test( 'dlatrd: uplo_l_6x6_nb3', function t() {
+	var tc = findCase( 'uplo_l_6x6_nb3' );
+	var N = 6;
+	var nb = 3;
+	var A = new Float64Array([
+		 2.0,  0.5, -0.3,  0.7,  1.0, -0.2,
+		 0.5, -1.0,  0.6,  0.4, -0.8,  0.3,
+		-0.3,  0.6,  1.5, -0.5,  0.2,  0.9,
+		 0.7,  0.4, -0.5,  0.8,  1.2, -0.6,
+		 1.0, -0.8,  0.2,  1.2, -0.4,  0.7,
+		-0.2,  0.3,  0.9, -0.6,  0.7,  1.0
+	]);
+	var E = new Float64Array( N );
+	var TAU = new Float64Array( N );
+	var W = new Float64Array( N * nb );
+
+	dlatrd( 'L', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+
+	assertArrayClose( A, tc.A, 1e-14, 'A' );
+	assertArrayClose( E, tc.E, 1e-14, 'E' );
+	assertArrayClose( TAU, tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( W, tc.W, 1e-14, 'W' );
+});
+
+test( 'dlatrd: nb0_quick_return', function t() {
+	var tc = findCase( 'nb0_quick_return' );
+	var A = new Float64Array([
+		 2.0,  0.5,
+		 0.5, -1.0
+	]);
+
+	dlatrd( 'U', 2, 0, A, 1, 2, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
+
+	assertArrayClose( A, tc.A, 1e-14, 'A' );
+});
+
+test( 'dlatrd: uplo_u_4x4_nb2', function t() {
+	var tc = findCase( 'uplo_u_4x4_nb2' );
+	var N = 4;
+	var nb = 2;
+	var A = new Float64Array([
+		 3.0,  1.0, -0.5,  0.8,
+		 1.0,  2.0,  0.7, -0.4,
+		-0.5,  0.7,  1.5,  0.6,
+		 0.8, -0.4,  0.6, -1.0
+	]);
+	var E = new Float64Array( N );
+	var TAU = new Float64Array( N );
+	var W = new Float64Array( N * nb );
+
+	dlatrd( 'U', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+
+	assertArrayClose( A, tc.A, 1e-14, 'A' );
+	assertArrayClose( E, tc.E, 1e-14, 'E' );
+	assertArrayClose( TAU, tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( W, tc.W, 1e-14, 'W' );
+});
+
+test( 'dlatrd: uplo_l_4x4_nb2', function t() {
+	var tc = findCase( 'uplo_l_4x4_nb2' );
+	var N = 4;
+	var nb = 2;
+	var A = new Float64Array([
+		 3.0,  1.0, -0.5,  0.8,
+		 1.0,  2.0,  0.7, -0.4,
+		-0.5,  0.7,  1.5,  0.6,
+		 0.8, -0.4,  0.6, -1.0
+	]);
+	var E = new Float64Array( N );
+	var TAU = new Float64Array( N );
+	var W = new Float64Array( N * nb );
+
+	dlatrd( 'L', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+
+	assertArrayClose( A, tc.A, 1e-14, 'A' );
+	assertArrayClose( E, tc.E, 1e-14, 'E' );
+	assertArrayClose( TAU, tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( W, tc.W, 1e-14, 'W' );
+});
+
+test( 'dlatrd: N=0 quick return', function t() {
+	var A = new Float64Array( 0 );
+	// Should not throw
+	dlatrd( 'U', 0, 0, A, 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0 );
+});
+
+test( 'dlatrd: N=1 quick return (nb=1, uplo=U)', function t() {
+	// N=1, nb=1: loop runs once but i=0, i>0 is false, so only update (no-op for first col)
+	var A = new Float64Array([ 5.0 ]);
+	var E = new Float64Array( 1 );
+	var TAU = new Float64Array( 1 );
+	var W = new Float64Array( 1 );
+
+	dlatrd( 'U', 1, 1, A, 1, 1, 0, E, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
+
+	// A unchanged (diagonal only), no reflectors
+	assert.equal( A[ 0 ], 5.0 );
+	assert.equal( E[ 0 ], 0.0 );
+	assert.equal( TAU[ 0 ], 0.0 );
+});
+
+test( 'dlatrd: N=1 quick return (nb=1, uplo=L)', function t() {
+	var A = new Float64Array([ 5.0 ]);
+	var E = new Float64Array( 1 );
+	var TAU = new Float64Array( 1 );
+	var W = new Float64Array( 1 );
+
+	dlatrd( 'L', 1, 1, A, 1, 1, 0, E, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
+
+	assert.equal( A[ 0 ], 5.0 );
+	assert.equal( E[ 0 ], 0.0 );
+	assert.equal( TAU[ 0 ], 0.0 );
+});

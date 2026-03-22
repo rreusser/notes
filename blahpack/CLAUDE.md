@@ -488,6 +488,15 @@ routines, use layout-aware stride remapping. See
    overhead is amplified. Consider inlining critical inner rotations as
    zhgeqz does in doQZSweep.
 
+5. **Size WORK buffers correctly and carve sub-allocations from them.**
+   Driver routines (zggev, zgesvd) must allocate WORK large enough for
+   all subroutines. Blocked routines (zgeqrf, zunmqr) need `N*NB+NB*NB`
+   or more — check the actual formulas. If WORK is undersized, the callee
+   silently allocates its own, wasting the caller's buffer. Similarly,
+   carve the block reflector `T` from the tail of WORK instead of
+   allocating a separate Complex128Array per call. This eliminated ~35%
+   of per-call heap allocation in zggev (1.4MB → 0.9MB at N=100).
+
 **Profiling workflow:** Use `bin/instrument.js` (Module._load hook) for
 subroutine-level profiling, then `bin/profile-zhgeqz.js` (V8 inspector API)
 for per-line breakdown. Run `bin/bench-blas.js` for leaf-node throughput.
