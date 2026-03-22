@@ -165,6 +165,17 @@ test( 'zgemm: alpha=0, non-trivial beta (C := beta*C)', function t() {
 	assertArrayClose( Array.from( C ), tc.c, 'zgemm_alpha_zero_beta_scale c' );
 });
 
+test( 'zgemm: alpha=0, beta=1 quick return (C unchanged)', function t() {
+	var A = new Float64Array( [ 1, 1, 0, 0, 0, 0, 0, 0 ] );
+	var B = new Float64Array( [ 1, 0, 0, 0, 0, 0, 0, 0 ] );
+	var C = new Float64Array( [ 2, 1, 3, 2, 4, 3, 5, 4 ] );
+	var alpha = new Float64Array( [ 0, 0 ] );
+	var beta = new Float64Array( [ 1, 0 ] );
+	var result = base( 'N', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	assert.strictEqual( result, C );
+	assert.deepStrictEqual( Array.from( C ), [ 2, 1, 3, 2, 4, 3, 5, 4 ] );
+});
+
 test( 'zgemm: conjugate A, conjugate B (C=A^H*B^H)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgemm_conjA_conjB'; } );
 	var A = new Float64Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );

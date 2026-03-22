@@ -15,6 +15,7 @@ bin/                           # Pipeline scripts
   deps.py                      #   Dependency tree analyzer
   fortran_body.py              #   Strip Fortran to executable body only
   gen_test.py                  #   Generate JS test scaffold from fixtures
+  init_routine.py              #   Single command: scaffold + deps + test scaffold
   fortran_to_estree.py         #   Fortran parser → ESTree AST (outputs 1-based JS)
   estree_to_js.js              #   ESTree → formatted JavaScript
   remove_goto.py               #   GOTO restructuring (imported by transform.py)
@@ -87,35 +88,8 @@ d. Register it: add to `python bin/transform.py --list` if it's a code-mod.
 e. Document it: update this file's "Available transforms" list.
 f. Then re-run the checklist using the new automation.
 
-**4. Ruthlessly question the boundary between automated and manual steps.**
-
-The current Step 4 (translate to JS) has 5 sub-steps (4a–4e) that are
-described as "manual." Challenge each one:
-
-- Can 4a (remove INFO, remove XERBLA block) be automated? Probably yes.
-- Can 4b (naming: lda→strideA2, max→Math.max) be automated? Likely yes.
-- Can 4c (1-based → 0-based loop conversion) be automated? For simple loops, yes.
-- Can 4d (BLAS calls → require + offset) be automated? Partially.
-- Can 4e (CommonJS boilerplate) be automated? Absolutely yes.
-
-Each time you successfully automate one of these, update Step 4 to reflect
-that it is now handled by a transform, and remove it from the manual checklist.
-
-**5. The end state is: the human types one command, reviews the output, and
+**4. The end state is: the human types one command, reviews the output, and
 approves or requests changes.** Every manual step is a waypoint, not a destination.
-
-### Examples of transforms that should exist but don't yet
-
-These are patterns that have been identified as mechanical. Implement them
-as transforms in `bin/transform.py` when the time comes:
-
-- `commonjs-boilerplate` — Wrap JS output in `'use strict'; ... module.exports = fn;`
-- `reindex-loops` — Convert `for (i = 1; i <= n` → `for (i = 0; i < N`
-- `remove-xerbla-block` — Strip the parameter validation + XERBLA call block
-- `rename-intrinsics` — `max(` → `Math.max(`, `sqrt(` → `Math.sqrt(`
-- `add-require-imports` — Detect bare BLAS/LAPACK calls → add require() statements
-- `generate-test-scaffold` — From fixture JSONL + signature, generate test/test.js
-- `generate-package-json` — From routine name + package, generate package.json
 
 ---
 
@@ -146,7 +120,19 @@ python bin/signature.py data/lapack-3.12.0/SRC/<routine>.f
 This outputs the target `base.js` function signature in stdlib-js convention.
 Save this — it defines the API contract for the final JS implementation.
 
-### Step 1: Write the Fortran test
+### Step 1: Initialize the module
+
+```bash
+python bin/init_routine.py <package> <routine> -d "<one-line description>"
+```
+
+This single command:
+- Generates the complete stdlib-js module scaffold (package.json, index.js, etc.)
+- Auto-generates the Fortran deps file from the dependency tree
+- Generates a JS test scaffold if a fixture already exists
+- Prints a summary with the exact commands for remaining steps
+
+### Step 2: Write the Fortran test
 
 Create `test/fortran/test_<routine>.f90` using the `test_utils` module.
 
@@ -177,173 +163,136 @@ end program
 - Non-unit strides: incx=2, incy=-1 (for BLAS with stride params)
 - For LAPACK with INFO: test a case that returns INFO > 0
 
-**For LAPACK routines:** also create `test/fortran/deps_<routine>.txt` listing
-LAPACK source files needed for compilation (without .f extension, one per line):
-```
-<routine>
-<dependency1>
-<dependency2>
+**For complex arrays**, use EQUIVALENCE to print interleaved re/im pairs:
+```fortran
+double precision :: zx_r(20)
+complex*16 :: zx(10)
+equivalence (zx, zx_r)
+call print_array('zx', zx_r, 2*n)
 ```
 
-**Gate:** `./test/run_fortran.sh <package> <routine>` compiles and runs successfully.
+**Gate:** `./test/run_fortran.sh <package> <routine>` compiles and runs.
 
-### Step 2: Generate the reference fixture
+### Step 3: Generate fixture and JS test scaffold
 
 ```bash
-./test/run_fortran.sh blas <routine>
-# or
-./test/run_fortran.sh lapack <routine>
-```
-
-This writes `test/fixtures/<routine>.jsonl` — the ground truth for all JS tests.
-
-**Gate:** Fixture file exists and contains one JSON line per test case.
-
-### Step 3: Fortran restructuring (LAPACK only, skip for BLAS)
-
-BLAS routines have no GOTOs — skip to Step 4.
-
-For LAPACK routines with GOTOs:
-
-```bash
-# Initialize pipeline
-python bin/transform.py pipeline/<routine> --init lapack <routine>
-
-# Apply automated transforms
-python bin/transform.py pipeline/<routine> --apply remove-trivial-goto
-python bin/transform.py pipeline/<routine> --apply free-form
-
-# Verify each Fortran stage
-python bin/transform.py pipeline/<routine> --verify <step_number>
-```
-
-Then manually restructure remaining GOTOs into the highest-numbered `.f90` file.
-Apply these patterns:
-
-| Pattern | Fortran | Restructured |
-|---------|---------|-------------|
-| Loop continue | `IF (cond) GO TO 40` inside DO 40 | `IF (cond) CYCLE` |
-| Loop break + cleanup | `GO TO 30` breaks loop, `30: INFO=J` | Inline: `INFO=J; RETURN` |
-| While-loop | `10: ... IF (cond) GO TO 10` | `DO WHILE (cond) ... END DO` |
-| Skip-ahead | `IF (cond) GO TO 30` (30 is below) | `IF (.NOT. cond) THEN ... END IF` |
-
-**Gate:** `python bin/transform.py pipeline/<routine> --verify <step>` → PASS
-
-### Step 4: Translate to JavaScript
-
-For BLAS (no GOTOs): translate directly from original source.
-For LAPACK: translate from the restructured Fortran in the pipeline dir.
-
-The automated translator (`fortran_to_estree.py | estree_to_js.js`) produces
-raw 1-based JS. This raw output requires manual transformation to produce
-the final `base.js`. The following changes are needed:
-
-#### 4a: Structural changes
-- Remove INFO from parameter list → return it instead
-- Remove XERBLA calls → validation goes in ndarray.js, not base.js
-- Remove parameter validation block (the IF/THEN/XERBLA/RETURN block)
-- Remove LDA/LDB from params → they become strideA2/strideB2
-- Match the signature from Step 0 exactly
-
-#### 4b: Naming
-- Dimension params uppercase: `n` → `N`, `m` → `M`
-- Use stride/offset names from signature: `strideA1, strideA2, offsetA`
-- Replace `lda` references with `strideA2` (or `sa2` local alias)
-- Replace bare `lsame(x, 'U')` with `uplo === 'U' || uplo === 'u'`
-- Replace `max(...)` with `Math.max(...)`
-- Replace `sqrt(...)` with `Math.sqrt(...)`
-
-#### 4c: Indexing (1-based → 0-based)
-- Convert loops: `for (j = 1; j <= n; j++)` → `for (j = 0; j < N; j++)`
-- Array subscripts already have `- 1` markers from the translator:
-  `a[j - 1 + (i - 1) * lda]` → simplify to `A[offsetA + j*sa1 + i*sa2]`
-  once j, i are 0-based
-- Index variable inits: `ix = 1` → `ix = 0`
-- Adjust BLAS call arguments: pass computed offsets instead of subarray refs
-
-#### 4d: BLAS/LAPACK calls → require() with offset arithmetic
-```javascript
-// Fortran: CALL DDOT(J-1, A(1, J), 1, A(1, J), 1)
-// JS:
-var ddot = require('../../../../blas/base/ddot/lib/base.js');
-ddot(j, A, strideA1, offsetA + j*strideA2, A, strideA1, offsetA + j*strideA2);
-```
-
-#### 4e: CommonJS boilerplate
-```javascript
-'use strict';
-// require() imports at top
-// ... implementation ...
-module.exports = <routine>;
-```
-
-### Step 5: Scaffold the module
-
-```bash
-python bin/scaffold.py <package> <routine> -d "<one-line description>"
-```
-
-This generates the complete stdlib-js module structure:
-- `package.json`, `lib/index.js`, `lib/main.js`, `lib/<routine>.js`, `lib/ndarray.js`
-- `test/test.js`, `README.md`, `docs/`, `examples/`
-- If `lib/base.js` already exists, it is NOT overwritten
-
-The scaffold produces stubs with correct signatures (from `signature.py`).
-Copy your translated `base.js` into `lib/base.js`.
-
-Intermediate `package.json` files are needed at `lib/<package>/package.json`
-and `lib/<package>/base/package.json` (empty `{}`) to override the root
-`"type": "module"` for CommonJS compatibility.
-
-### Step 6: Write the JS test
-
-Generate the test scaffold, then fill in the test bodies:
-
-```bash
+./test/run_fortran.sh <package> <routine>
 python bin/gen_test.py <package> <routine> > lib/<package>/base/<routine>/test/test.js
 ```
 
-This generates fixture loading, assertClose/assertArrayClose helpers, and
-one test stub per fixture case. Fill in the input setup and assertion calls.
+**Gate:** Fixture exists, JS test scaffold has one stub per case.
 
-**Gate:** `node --test lib/<package>/base/<routine>/test/test.js` → all pass.
+### Step 4: Implement base.js
 
-### Step 6b: Verify test coverage
+Read the stripped Fortran source and translate to JavaScript:
+
+```bash
+python bin/fortran_body.py data/<source-path>/<routine>.f
+```
+
+The base.js must:
+- Match the signature from Step 0 exactly
+- Use 0-based indexing throughout
+- Use stride/offset parameters for all array access
+- Use `require()` for BLAS/LAPACK dependencies
+- Use `lib/cmplx.js` for complex arithmetic
+- Follow CommonJS format with stdlib-js section comments
+- NOT include parameter validation (that goes in ndarray.js)
+
+**Comment inlined operations.** When complex arithmetic or index calculations
+are inlined for performance, add a comment showing the mathematical operation:
+```javascript
+// temp += conj(A[i,j]) * x[ix]
+tr += aijR * xr + aijI * xi;   // real part (note: aijI sign flipped for conj)
+ti += aijR * xi - aijI * xr;   // imag part
+
+// y[iy] += alpha * temp
+yr = A[ iy ];
+yi = A[ iy + 1 ];
+A[ iy ]     = yr + alphaR * tr - alphaI * ti;
+A[ iy + 1 ] = yi + alphaR * ti + alphaI * tr;
+```
+This is especially important for complex multiply-add and conjugate multiply
+— operations where the expanded form obscures the intent. Without these
+comments, the code becomes very difficult to verify.
+
+**NEVER inline complex division, absolute value, or square root.** Naive
+implementations of these are numerically unstable (overflow, underflow,
+catastrophic cancellation). Always use the library functions:
+```javascript
+cmplx.div( out, a, b );    // DO NOT expand to (ar*br+ai*bi)/(br*br+bi*bi) etc.
+cmplx.abs( a );             // DO NOT expand to Math.sqrt(ar*ar + ai*ai)
+Math.sqrt( cmplx.abs(a) );  // safe chained calls are fine
+```
+`cmplx.div` uses Smith's formula; `cmplx.abs` uses the `max/min` scaling
+trick. Inlining these loses the numerical safety guarantees. Complex
+addition, subtraction, multiplication, conjugate, and real-scalar scaling
+are safe to inline.
+
+For routines with GOTOs, restructure them during translation:
+
+| Pattern | Fortran | JavaScript |
+|---------|---------|-----------|
+| Loop continue | `IF (cond) GO TO 40` inside DO 40 | `if (cond) continue` |
+| Loop break | `GO TO 30` breaks loop, `30: INFO=J` | `info = j+1; return info` |
+| While-loop | `10: ... IF (cond) GO TO 10` | `do { ... } while (cond)` |
+| Skip-ahead | `IF (cond) GO TO 30` (30 below) | `if (!cond) { ... }` |
+
+### Step 5: Fill in JS tests and verify
+
+Fill in the test stubs generated in Step 3 with actual input values
+matching the Fortran test. Run:
+
+```bash
+node --test lib/<package>/base/<routine>/test/test.js
+```
+
+**Gate:** All tests pass against Fortran fixtures.
+
+### Step 6: Verify test coverage
 
 ```bash
 node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.js
 ```
 
-Check the coverage report for `base.js`. Target: **≥90% line coverage, ≥85% branch coverage**.
+Target: **≥90% line coverage, ≥85% branch coverage** on `base.js`.
 
-If coverage is low, identify the uncovered lines and add targeted test cases:
+If coverage is low, add targeted test cases:
+- For `uplo`/`trans`/`side`/`diag` params: test ALL valid combinations
+- Edge cases: N=0, M=0, alpha=0
+- Overflow/underflow: test with 1e300 and 1e-300 values
+- Non-unit and negative strides
 
-- **Uncovered branches in if/else chains**: Add test cases that exercise each branch.
-  For routines with `uplo`, `trans`, `side`, `diag` parameters, test ALL valid
-  combinations (U/L, N/T/C, L/R, U/N).
-- **Uncovered quick-return paths**: Test edge cases (N=0, M=0, alpha=0, etc.).
-- **Uncovered scaling/overflow paths**: Test with very large (1e300) and very small
-  (1e-300) values to exercise safe-scaling code.
-- **Uncovered stride paths**: Test non-unit strides and negative strides.
+### Step 7: Write LEARNINGS.md
 
-Do NOT add tests solely to hit coverage numbers. Every test should verify a
-meaningful behavioral property. But low coverage usually indicates genuinely
-untested code paths — branches that could contain bugs.
+**REQUIRED.** After completing every translation, write a `LEARNINGS.md` file
+in the module directory (`lib/<package>/base/<routine>/LEARNINGS.md`).
 
-### Step 7: Update manifest and verify
+This file captures anything that would help translate the NEXT routine faster.
+Include:
+
+- **Translation pitfalls**: Index off-by-ones, stride convention confusion,
+  places where the Fortran semantics were non-obvious.
+- **Dependency interface surprises**: If a dependency's calling convention
+  was unexpected (e.g., "zlarf takes tau as array+offset, not a 2-element
+  array"), document it so the next routine that calls it doesn't hit the
+  same issue.
+- **Missing automation**: If you performed a mechanical step that should
+  be automated, note it here (the automation-first rules apply).
+- **Coverage gaps**: If certain code paths were hard to test and why.
+- **Complex number handling**: Any subtleties in how complex arithmetic
+  was handled (e.g., "inlined cmplx.mul to avoid allocation in hot loop").
+
+Keep it concise — bullet points, not prose. This file is read by future
+sessions to avoid repeating mistakes.
+
+### Step 8: Verify full suite
 
 ```bash
-# Update manifest.json
-node -e "
-var fs = require('fs');
-var m = JSON.parse(fs.readFileSync('manifest.json','utf8'));
-m.<package>.<routine> = {status:'complete', tests:N, passing:N};
-fs.writeFileSync('manifest.json', JSON.stringify(m,null,2));
-"
-
-# Run full test suite
 npm test
 ```
+
+**Gate:** All tests pass, no regressions.
 
 ---
 
@@ -399,6 +348,44 @@ With 0-based loop variables: `A[offsetA + i*strideA1 + j*strideA2]`
 For column-major: `strideA1 = 1, strideA2 = LDA`
 For row-major: `strideA1 = N, strideA2 = 1`
 
+### Performance Patterns (from stdlib comparison)
+
+**1. Incremental matrix pointer** — avoid recomputing offsets in inner loops:
+```javascript
+// GOOD: incremental (one add per element)
+var ia = offsetA + sa1 * j;
+for ( i = 0; i < M; i++ ) {
+    A[ ia ] = ...;
+    ia += sa0;
+}
+
+// AVOID: full recompute (two multiplies per element)
+for ( i = 0; i < M; i++ ) {
+    A[ offsetA + i*sa1 + j*sa2 ] = ...;
+}
+```
+
+**2. Layout-aware triangle dispatch** — for routines with `uplo` parameter,
+stdlib remaps strides so the inner loop always walks contiguous memory:
+```javascript
+var isrm = isRowMajor( [ strideA1, strideA2 ] );
+// (col-major, upper) ↔ (row-major, lower) are same physical pattern
+var sa0 = isrm ? strideA2 : strideA1;  // fast (inner) stride
+var sa1 = isrm ? strideA1 : strideA2;  // slow (outer) stride
+```
+
+**3. Drop Fortran stride-1 specialization** — the general stride/offset loop
+handles unit stride fine. Don't port the `IF (INCX.EQ.1)` branches.
+
+**4. Preserve zero-element guards** — `if (x[jx] !== 0.0)` before column
+updates is a meaningful optimization (skips entire column when x is zero).
+
+### uplo/trans String Convention
+
+In `base.js`, use single chars matching Fortran: `'U'`, `'L'`, `'N'`, `'T'`, `'C'`.
+The `ndarray.js` wrapper normalizes from stdlib's full strings (`'upper'`,
+`'lower'`, `'no-transpose'`, etc.).
+
 ### Complex Number Support
 
 Complex numbers use `lib/cmplx.js` — a gl-matrix-style library where each
@@ -415,13 +402,27 @@ var r = cmplx.abs( a );        // r = |a| (returns scalar)
 ```
 
 **Complex arrays** are interleaved: `[re0, im0, re1, im1, ...]`.
-Stride is in complex elements. Element k of vector zx:
+
+**CRITICAL convention for complex arrays:**
+- **stride** = in complex elements (the routine multiplies by 2 internally)
+- **offset** = Float64 index (direct position into the Float64Array)
+
+This means: to start at the 3rd complex element (0-based index 2), pass
+`offset = 4` (not 2), because each complex element occupies 2 Float64 slots.
+
+Element k of vector zx:
 - real: `zx[ offsetX + 2 * k * strideX ]`
 - imag: `zx[ offsetX + 2 * k * strideX + 1 ]`
 
-**Complex matrices**: Element (i,j) of matrix A:
+Element (i,j) of matrix A:
 - real: `A[ offsetA + 2 * (i * strideA1 + j * strideA2) ]`
 - imag: `A[ offsetA + 2 * (i * strideA1 + j * strideA2) + 1 ]`
+
+Inside routines, the `2×` conversion happens at the top:
+```javascript
+var sx = 2 * strideX;  // convert complex stride to Float64 stride
+var ix = offsetX;      // already a Float64 index
+```
 
 **Fortran complex test pattern** (use EQUIVALENCE to print interleaved):
 ```fortran
@@ -441,15 +442,14 @@ call print_array('zx', zx_r, 2*n)
 
 ## Composable Code-Mod Pipeline
 
+For routines with GOTOs that benefit from incremental Fortran restructuring:
+
 ```bash
 python bin/transform.py --list                              # List transforms
 python bin/transform.py pipeline/<r> --init <pkg> <r>       # Initialize
 python bin/transform.py pipeline/<r> --apply <transform>    # Apply transform
 python bin/transform.py pipeline/<r> --verify <step>        # Verify step
 ```
-
-Each transform reads the highest-numbered file and writes the next:
-`<routine>.00.f → <routine>.01.f90 → <routine>.02.f90 → <routine>.03.js`
 
 Available transforms: `remove-trivial-goto`, `remove-trivial-if-goto`,
 `free-form`, `translate-to-js`.
@@ -459,7 +459,6 @@ Available transforms: `remove-trivial-goto`, `remove-trivial-if-goto`,
 - `translate-to-js` transform cannot parse fparser's free-form output for
   some routines. Work around: translate from original `.f` source, or from
   manually written `.f90`.
-- The automated translator's output requires significant manual work (Steps 4a-4e).
-  This is by design — the translator handles syntax, the human/AI handles semantics.
-- `ndarray.js`, `index.js`, `main.js` wrapper files are not yet generated
-  automatically. Only `base.js` and `test/test.js` are produced per routine.
+- Fortran `.f90` files that use modules (`USE la_constants`) cannot be
+  compiled by `run_fortran.sh` without module compilation ordering.
+  Work around: write JS tests with hand-computed expected values.

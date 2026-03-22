@@ -145,14 +145,15 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 			tempR = alphaR * x[ jx ] - alphaI * x[ jx + 1 ];
 			tempI = alphaR * x[ jx + 1 ] + alphaI * x[ jx ];
 			iy = offsetY;
+			ai = offsetA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				ai = offsetA + i * sa1 + j * sa2;
 				aijR = A[ ai ];
 				aijI = A[ ai + 1 ];
 				// y[iy] += temp * A[i,j]
 				y[ iy ] += tempR * aijR - tempI * aijI;
 				y[ iy + 1 ] += tempR * aijI + tempI * aijR;
 				iy += sy;
+				ai += sa1;
 			}
 			jx += sx;
 		}
@@ -163,27 +164,28 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 			tempR = 0.0;
 			tempI = 0.0;
 			ix = offsetX;
+			ai = offsetA + j * sa2;
 			if ( noConj ) {
 				// Transpose (no conjugate)
 				for ( i = 0; i < M; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
 					aijR = A[ ai ];
 					aijI = A[ ai + 1 ];
 					// temp += A[i,j] * x[ix]
 					tempR += aijR * x[ ix ] - aijI * x[ ix + 1 ];
 					tempI += aijR * x[ ix + 1 ] + aijI * x[ ix ];
 					ix += sx;
+					ai += sa1;
 				}
 			} else {
 				// Conjugate transpose
 				for ( i = 0; i < M; i++ ) {
-					ai = offsetA + i * sa1 + j * sa2;
 					aijR = A[ ai ];
 					aijI = -A[ ai + 1 ]; // conjugate
 					// temp += conj(A[i,j]) * x[ix]
 					tempR += aijR * x[ ix ] - aijI * x[ ix + 1 ];
 					tempI += aijR * x[ ix + 1 ] + aijI * x[ ix ];
 					ix += sx;
+					ai += sa1;
 				}
 			}
 			// y[jy] += alpha * temp

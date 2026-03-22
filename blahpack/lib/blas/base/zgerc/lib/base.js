@@ -102,13 +102,14 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 			ti = alphaIm * yr - alphaRe * yi;
 
 			ix = offsetX;
+			ia = offsetA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				ia = offsetA + i * sa1 + j * sa2;
 				// A(i,j) = A(i,j) + x(i) * temp
 				// (xr + xi*i)(tr + ti*i) = (xr*tr - xi*ti) + (xr*ti + xi*tr)*i
 				A[ ia ] += x[ ix ] * tr - x[ ix + 1 ] * ti;
 				A[ ia + 1 ] += x[ ix ] * ti + x[ ix + 1 ] * tr;
 				ix += sx;
+				ia += sa1;
 			}
 		}
 		jy += sy;

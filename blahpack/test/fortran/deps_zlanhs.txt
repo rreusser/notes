@@ -1,4 +1,4 @@
 zlanhs
-zlassq
 disnan
 dlaisnan
+dlamch

@@ -85,17 +85,23 @@ elif [ "$PACKAGE" = "lapack" ]; then
         if [ -f "$DEP_FILE_F90" ]; then
           SOURCES+=("$DEP_FILE_F90")
         else
-          # Try .F90 extension (preprocessed Fortran)
-          DEP_FILE_F90U="$LAPACK_DIR/${dep}.F90"
-          if [ -f "$DEP_FILE_F90U" ]; then
-            SOURCES+=("$DEP_FILE_F90U")
+          # Try .F extension (preprocessed fixed-form Fortran)
+          DEP_FILE_F_UPPER="$LAPACK_DIR/${dep}.F"
+          if [ -f "$DEP_FILE_F_UPPER" ]; then
+            SOURCES+=("$DEP_FILE_F_UPPER")
           else
-            # Also check INSTALL directory (e.g. dlamch)
-            INSTALL_FILE="$ROOT_DIR/data/lapack-3.12.0/INSTALL/${dep}.f"
-            if [ -f "$INSTALL_FILE" ]; then
-              SOURCES+=("$INSTALL_FILE")
+            # Try .F90 extension (preprocessed Fortran)
+            DEP_FILE_F90U="$LAPACK_DIR/${dep}.F90"
+            if [ -f "$DEP_FILE_F90U" ]; then
+              SOURCES+=("$DEP_FILE_F90U")
             else
-              echo "Warning: dependency $dep not found at $DEP_FILE" >&2
+              # Also check INSTALL directory (e.g. dlamch)
+              INSTALL_FILE="$ROOT_DIR/data/lapack-3.12.0/INSTALL/${dep}.f"
+              if [ -f "$INSTALL_FILE" ]; then
+                SOURCES+=("$INSTALL_FILE")
+              else
+                echo "Warning: dependency $dep not found at $DEP_FILE" >&2
+              fi
             fi
           fi
         fi
@@ -122,7 +128,7 @@ fi
 BINARY="$BUILD_DIR/test_${ROUTINE}"
 
 echo "Compiling test_${ROUTINE}..." >&2
-gfortran -O2 -o "$BINARY" "${SOURCES[@]}" 2>&1 >&2
+gfortran -O2 -cpp -o "$BINARY" "${SOURCES[@]}" 2>&1 >&2
 
 echo "Running test_${ROUTINE}..." >&2
 "$BINARY" > "$FIXTURE_OUT"

@@ -1,0 +1,123 @@
+
+    zhgeqz.ndarray( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+        Implement the single-shift QZ method for computing generalized eigenvalues of a complex matrix pair in Hessenberg-triangular form.
+
+        Parameters
+        ----------
+        job: string
+            specifies the operation type.
+
+        compq: string
+            specifies the operation type.
+
+        compz: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of the first dimension of `H`.
+
+        strideH2: integer
+            stride of the second dimension of `H`.
+
+        offsetH: NonNegativeInteger
+            starting index for `H`.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of the first dimension of `T`.
+
+        strideT2: integer
+            stride of the second dimension of `T`.
+
+        offsetT: NonNegativeInteger
+            starting index for `T`.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        offsetALPHA: NonNegativeInteger
+            starting index for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        offsetBETA: NonNegativeInteger
+            starting index for `BETA`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of the first dimension of `Q`.
+
+        strideQ2: integer
+            stride of the second dimension of `Q`.
+
+        offsetQ: NonNegativeInteger
+            starting index for `Q`.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: NonNegativeInteger
+            starting index for `RWORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

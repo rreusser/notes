@@ -18,33 +18,156 @@
 
 'use strict';
 
+// MODULES //
+
+var zdscal = require( '../../../../blas/base/zdscal/lib/base.js' );
+var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
+
 // MAIN //
 
 /**
-* Back-transform eigenvectors of a balanced pair of matrices.
+* Back-transform eigenvectors of a balanced pair of general real matrices.
+*
+* Forms the right or left eigenvectors of a generalized eigenvalue
+* problem by backward transformation on the computed eigenvectors of
+* the balanced pair of matrices output by ZGGBAL.
+*
+* Complex elements are stored as interleaved real/imaginary pairs.
+* Element (i, j) has real part at `offsetV + i*strideV1 + j*strideV2` and
+* imaginary part at `offsetV + i*strideV1 + j*strideV2 + 1`.
 *
 * @private
-* @param {string} job - specifies the operation type
-* @param {string} side - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ilo - ilo
-* @param {integer} ihi - ihi
-* @param {Float64Array} LSCALE - input array
-* @param {integer} strideLSCALE - stride length for `LSCALE`
-* @param {NonNegativeInteger} offsetLSCALE - starting index for `LSCALE`
-* @param {Float64Array} RSCALE - input array
-* @param {integer} strideRSCALE - stride length for `RSCALE`
-* @param {NonNegativeInteger} offsetRSCALE - starting index for `RSCALE`
-* @param {NonNegativeInteger} M - number of rows
-* @param {Float64Array} V - output matrix
-* @param {integer} strideV1 - stride of the first dimension of `V`
-* @param {integer} strideV2 - stride of the second dimension of `V`
-* @param {NonNegativeInteger} offsetV - starting index for `V`
+* @param {string} job - specifies the type of backward transformation:
+*   'N': do nothing; 'P': permute only; 'S': scale only; 'B': both
+* @param {string} side - 'R' for right eigenvectors, 'L' for left eigenvectors
+* @param {NonNegativeInteger} N - number of rows of V
+* @param {integer} ilo - ilo from balancing (1-based)
+* @param {integer} ihi - ihi from balancing (1-based)
+* @param {Float64Array} LSCALE - left scaling/permutation factors from ZGGBAL
+* @param {integer} strideLSCALE - stride for LSCALE
+* @param {NonNegativeInteger} offsetLSCALE - starting index for LSCALE
+* @param {Float64Array} RSCALE - right scaling/permutation factors from ZGGBAL
+* @param {integer} strideRSCALE - stride for RSCALE
+* @param {NonNegativeInteger} offsetRSCALE - starting index for RSCALE
+* @param {NonNegativeInteger} M - number of columns of V
+* @param {Float64Array} V - eigenvector matrix (interleaved complex, modified in-place)
+* @param {integer} strideV1 - stride of the first dimension of V (in doubles)
+* @param {integer} strideV2 - stride of the second dimension of V (in doubles)
+* @param {NonNegativeInteger} offsetV - starting index for V
 * @returns {integer} status code (0 = success)
 */
 function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV ) { // eslint-disable-line max-len, max-params
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+	var rightv;
+	var leftv;
+	var rv2; // zrot/zdscal/zswap stride for column step (complex elements)
+	var sv1;
+	var sv2;
+	var sL;
+	var sR;
+	var oL;
+	var oR;
+	var i;
+	var k;
+
+	rightv = ( side === 'R' || side === 'r' );
+	leftv = ( side === 'L' || side === 'l' );
+
+	sv1 = strideV1;
+	sv2 = strideV2;
+	rv2 = sv2 / 2; // complex-element stride for column traversal
+	sL = strideLSCALE;
+	sR = strideRSCALE;
+	oL = offsetLSCALE;
+	oR = offsetRSCALE;
+
+	// Quick returns
+	if ( N === 0 ) {
+		return 0;
+	}
+	if ( M === 0 ) {
+		return 0;
+	}
+	if ( job === 'N' || job === 'n' ) {
+		return 0;
+	}
+
+	// Scaling section: apply if JOB='S' or JOB='B', and ILO != IHI
+	if ( ilo !== ihi ) {
+		if ( job === 'S' || job === 's' || job === 'B' || job === 'b' ) {
+			// Scale right eigenvectors by RSCALE
+			if ( rightv ) {
+				// Fortran: DO I = ILO, IHI; CALL ZDSCAL(M, RSCALE(I), V(I,1), LDV)
+				// V(I,1) with stride LDV iterates over columns of row I
+				for ( i = ilo - 1; i <= ihi - 1; i++ ) {
+					zdscal( M, RSCALE[ oR + i * sR ], V, rv2, offsetV + i * sv1 );
+				}
+			}
+
+			// Scale left eigenvectors by LSCALE
+			if ( leftv ) {
+				for ( i = ilo - 1; i <= ihi - 1; i++ ) {
+					zdscal( M, LSCALE[ oL + i * sL ], V, rv2, offsetV + i * sv1 );
+				}
+			}
+		}
+	}
+
+	// Permutation section: apply if JOB='P' or JOB='B'
+	if ( job === 'P' || job === 'p' || job === 'B' || job === 'b' ) {
+		// Right eigenvectors
+		if ( rightv ) {
+			// Backward permutation: rows below ILO
+			// Fortran: DO I = ILO-1, 1, -1; K = INT(RSCALE(I)); IF (K==I) CYCLE; CALL ZSWAP(M, V(I,1), LDV, V(K,1), LDV)
+			if ( ilo !== 1 ) {
+				for ( i = ilo - 2; i >= 0; i-- ) {
+					k = Math.trunc( RSCALE[ oR + i * sR ] ) - 1; // convert to 0-based
+					if ( k === i ) {
+						continue;
+					}
+					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+				}
+			}
+
+			// Forward permutation: rows above IHI
+			// Fortran: DO I = IHI+1, N; K = INT(RSCALE(I)); IF (K==I) CYCLE; CALL ZSWAP(M, V(I,1), LDV, V(K,1), LDV)
+			if ( ihi !== N ) {
+				for ( i = ihi; i < N; i++ ) {
+					k = Math.trunc( RSCALE[ oR + i * sR ] ) - 1; // convert to 0-based
+					if ( k === i ) {
+						continue;
+					}
+					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+				}
+			}
+		}
+
+		// Left eigenvectors
+		if ( leftv ) {
+			// Backward permutation: rows below ILO
+			if ( ilo !== 1 ) {
+				for ( i = ilo - 2; i >= 0; i-- ) {
+					k = Math.trunc( LSCALE[ oL + i * sL ] ) - 1; // convert to 0-based
+					if ( k === i ) {
+						continue;
+					}
+					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+				}
+			}
+
+			// Forward permutation: rows above IHI
+			if ( ihi !== N ) {
+				for ( i = ihi; i < N; i++ ) {
+					k = Math.trunc( LSCALE[ oL + i * sL ] ) - 1; // convert to 0-based
+					if ( k === i ) {
+						continue;
+					}
+					zswap( M, V, rv2, offsetV + i * sv1, V, rv2, offsetV + k * sv1 );
+				}
+			}
+		}
+	}
+
+	return 0;
 }
 
 

@@ -36,24 +36,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signature import generate_signature
 
 YEAR = '2025'
-LICENSE_HEADER = f"""\
-/**
-* @license Apache-2.0
-*
-* Copyright (c) {YEAR} The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/"""
+# License headers omitted during development to reduce context/token cost.
+# Run bin/add_licenses.sh before contributing to stdlib to add them back.
+LICENSE_HEADER = ""
 
 
 def indent(text, prefix='\t'):
@@ -278,27 +263,7 @@ def gen_readme(routine, package, description, sig):
 
     params_str = '\n'.join(param_lines)
 
-    return f"""<!--
-
-@license Apache-2.0
-
-Copyright (c) {YEAR} The Stdlib Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
--->
-
-# {routine}
+    return f"""# {routine}
 
 > {description}
 

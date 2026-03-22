@@ -21,6 +21,7 @@
 // MODULES //
 
 var zlassq = require( '../../zlassq/lib/base.js' );
+var cmplx = require( '../../../../cmplx.js' );
 
 
 // MAIN //
@@ -74,14 +75,15 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		// Max absolute value
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
+			ai = offsetA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				ai = offsetA + i * sa1 + j * sa2;
 				ar = A[ ai ];
 				im = A[ ai + 1 ];
-				temp = Math.sqrt( ar * ar + im * im );
+				temp = cmplx.abs( A.subarray( ai, ai + 2 ) );
 				if ( value < temp || temp !== temp ) {
 					value = temp;
 				}
+				ai += sa1;
 			}
 		}
 	} else if ( norm === 'O' || norm === 'o' || norm === '1' ) {
@@ -89,11 +91,12 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
 			sum = 0.0;
+			ai = offsetA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				ai = offsetA + i * sa1 + j * sa2;
 				ar = A[ ai ];
 				im = A[ ai + 1 ];
-				sum += Math.sqrt( ar * ar + im * im );
+				sum += cmplx.abs( A.subarray( ai, ai + 2 ) );
+				ai += sa1;
 			}
 			if ( value < sum || sum !== sum ) {
 				value = sum;
@@ -106,12 +109,14 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 			WORK[ wi ] = 0.0;
 		}
 		for ( j = 0; j < N; j++ ) {
+			ai = offsetA + j * sa2;
+			wi = offsetWORK;
 			for ( i = 0; i < M; i++ ) {
-				ai = offsetA + i * sa1 + j * sa2;
 				ar = A[ ai ];
 				im = A[ ai + 1 ];
-				wi = offsetWORK + i * strideWORK;
-				WORK[ wi ] += Math.sqrt( ar * ar + im * im );
+				WORK[ wi ] += cmplx.abs( A.subarray( ai, ai + 2 ) );
+				ai += sa1;
+				wi += strideWORK;
 			}
 		}
 		value = 0.0;

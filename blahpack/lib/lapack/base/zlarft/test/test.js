@@ -95,3 +95,111 @@ test( 'zlarft: backward, columnwise, n=4, k=2', function t() {
 	zlarft( 'B', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( Array.from( T ), tc.T, 'T' );
 });
+
+test( 'zlarft: N=0 quick return', function t() {
+	var V = new Float64Array( 16 );
+	var tau = new Float64Array( 4 );
+	var T = new Float64Array( 12 );
+	T[ 0 ] = 99.0; // sentinel value
+	zlarft( 'F', 'C', 0, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	// T should be unchanged
+	assert.strictEqual( T[ 0 ], 99.0 );
+});
+
+test( 'zlarft: STOREV=R throws (forward)', function t() {
+	var V = new Float64Array( 16 );
+	var tau = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+	var T = new Float64Array( 12 );
+	V[ 0 ] = 1.0; V[ 2 ] = 1.0;
+	assert.throws( function() {
+		zlarft( 'F', 'R', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	}, /STOREV=R not yet implemented/ );
+});
+
+test( 'zlarft: STOREV=R throws (backward)', function t() {
+	var V = new Float64Array( 16 );
+	var tau = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+	var T = new Float64Array( 12 );
+	V[ 0 ] = 1.0; V[ 2 ] = 1.0;
+	assert.throws( function() {
+		zlarft( 'B', 'R', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	}, /STOREV=R not yet implemented/ );
+});
+
+test( 'zlarft: backward, tau(1)=0 (second reflector is identity)', function t() {
+	// Same V as backward test, but tau(1)=0
+	// Expected: T(:,1) column should be all zeros, T(0,0) = tau(0)
+	var V = new Float64Array( [
+		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
+		0.6, -0.4,  -0.2, 0.5,  0.4, -0.3,  1.0, 0.0
+	]);
+	var tau = new Float64Array( [ 1.2, -0.3,  0.0, 0.0 ] );
+	var T = new Float64Array( 12 );
+
+	zlarft( 'B', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	// T(1,1) column should be zero (tau=0 path)
+	assert.strictEqual( T[ 8 ], 0.0, 'T(1,1) re' );  // T[1*st1 + 1*st2] = T[1*2 + 1*6] = T[8]
+	assert.strictEqual( T[ 9 ], 0.0, 'T(1,1) im' );
+	// T(0,0) should be tau(0)
+	assert.strictEqual( T[ 0 ], 1.2, 'T(0,0) re' );
+	assert.strictEqual( T[ 1 ], -0.3, 'T(0,0) im' );
+});
+
+test( 'zlarft: backward, K=3 with leading zeros in V', function t() {
+	// V is 6x3, backward direction (unit structure at bottom K rows)
+	// V(:,1) has a leading zero at row 0 → exercises leading-zero skip loop
+	// K=3 with i>0 → exercises prevlastv = Math.min(...) at line 223
+	var V = new Float64Array( [
+		// col 0: V(0,0)=0.2+0.1i, V(1,0)=0.4-0.2i, V(2,0)=-0.3+0.5i, V(3,0)=1, V(4,0)=0, V(5,0)=0
+		0.2, 0.1,  0.4, -0.2,  -0.3, 0.5,  1.0, 0.0,  0.0, 0.0,  0.0, 0.0,
+		// col 1: V(0,1)=0+0i (leading zero!), V(1,1)=0.5+0.3i, V(2,1)=-0.1+0.4i, V(3,1)=0.3-0.1i, V(4,1)=1, V(5,1)=0
+		0.0, 0.0,  0.5, 0.3,  -0.1, 0.4,  0.3, -0.1,  1.0, 0.0,  0.0, 0.0,
+		// col 2: V(0,2)=0.6-0.2i, V(1,2)=-0.2+0.1i, V(2,2)=0.4+0.3i, V(3,2)=-0.5+0.2i, V(4,2)=0.1-0.3i, V(5,2)=1
+		0.6, -0.2,  -0.2, 0.1,  0.4, 0.3,  -0.5, 0.2,  0.1, -0.3,  1.0, 0.0
+	]);
+	var tau = new Float64Array( [ 1.1, 0.2,  1.3, -0.1,  1.6, 0.5 ] );
+	// T is 3x3, LDT=3
+	var T = new Float64Array( 18 );
+
+	zlarft( 'B', 'C', 6, 3, V, 1, 6, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	// Verify T is lower triangular and diagonals are tau values
+	// T(0,0) = tau(0) = 1.1+0.2i
+	assert.strictEqual( T[ 0 ], 1.1, 'T(0,0) re = tau(0) re' );
+	assert.strictEqual( T[ 1 ], 0.2, 'T(0,0) im = tau(0) im' );
+	// T(1,1) = tau(1) = 1.3-0.1i
+	var idx11 = 2 + 6; // 1*st1 + 1*st2 = 1*2 + 1*6 = 8
+	assert.strictEqual( T[ idx11 ], 1.3, 'T(1,1) re = tau(1) re' );
+	assert.strictEqual( T[ idx11 + 1 ], -0.1, 'T(1,1) im = tau(1) im' );
+	// T(2,2) = tau(2) = 1.6+0.5i
+	var idx22 = 4 + 12; // 2*st1 + 2*st2 = 2*2 + 2*6 = 16
+	assert.strictEqual( T[ idx22 ], 1.6, 'T(2,2) re = tau(2) re' );
+	assert.strictEqual( T[ idx22 + 1 ], 0.5, 'T(2,2) im = tau(2) im' );
+	// Upper triangle should be zero (backward → lower triangular T)
+	// T(0,1) should be 0
+	var idx01 = 0 + 6; // 0*st1 + 1*st2 = 6
+	assert.strictEqual( T[ idx01 ], 0.0, 'T(0,1) re = 0' );
+	assert.strictEqual( T[ idx01 + 1 ], 0.0, 'T(0,1) im = 0' );
+});
+
+test( 'zlarft: forward with trailing zeros in V column', function t() {
+	// V is 4x2 where column 0 has trailing zeros (V(3,0)=0)
+	// This should exercise the trailing-zero detection (lastv < N)
+	var V = new Float64Array( [
+		1.0, 0.0,  0.3, 0.2,  -0.5, 0.1,  0.0, 0.0,   // col 0: last elem = 0
+		0.0, 0.0,  1.0, 0.0,  0.6, -0.4,  -0.2, 0.5    // col 1: normal
+	]);
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+
+	zlarft( 'F', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	// T(0,0) should be tau(0)
+	assert.strictEqual( T[ 0 ], 1.2, 'T(0,0) re = tau(0) re' );
+	assert.strictEqual( T[ 1 ], -0.3, 'T(0,0) im = tau(0) im' );
+	// T(1,1) should be tau(1)
+	var t11 = 2 + 6; // index: 1*st1 + 1*st2 = 1*2 + 1*6 = 8
+	assert.strictEqual( T[ t11 ], 1.5, 'T(1,1) re = tau(1) re' );
+	assert.strictEqual( T[ t11 + 1 ], 0.4, 'T(1,1) im = tau(1) im' );
+});

@@ -154,3 +154,91 @@ test( 'zlarfb: left, no-transpose, backward, columnwise', function t() {
 		work, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.C, 'C' );
 });
+
+test( 'zlarfb: right, no-transpose, backward, columnwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_notrans_bwd_col'; });
+	// V for backward: last K rows have unit upper triangular
+	var V = new Float64Array( [
+		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
+		0.6, -0.4,  -0.2, 0.5,  0.4, -0.3,  1.0, 0.0
+	]);
+	// T for backward is lower triangular
+	var T = new Float64Array( 12 );
+	T[ 0 ] = 1.2; T[ 1 ] = -0.3;
+	T[ 2 ] = -1.22; T[ 3 ] = -1.50;
+	T[ 8 ] = 1.5; T[ 9 ] = 0.4;
+
+	// C is 3x4 (M=3, N=4, LDC=3)
+	var C = new Float64Array( [
+		1.0, 0.0,  2.0, 1.0,  3.0, -1.0,
+		0.0, 1.0,  0.5, 0.5,  -1.0, 2.0,
+		1.5, -0.5, -2.0, 1.0,  0.0, 0.0,
+		1.0, 1.0,  -0.5, 0.0,  2.0, -2.0
+	]);
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'R', 'N', 'B', 'C', 3, 4, 2,
+		V, 1, 4, 0,
+		T, 1, 3, 0,
+		C, 1, 3, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: left, conjugate-transpose, backward, columnwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_conjtrans_bwd_col'; });
+	var V = new Float64Array( [
+		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
+		0.6, -0.4,  -0.2, 0.5,  0.4, -0.3,  1.0, 0.0
+	]);
+	var T = new Float64Array( 12 );
+	T[ 0 ] = 1.2; T[ 1 ] = -0.3;
+	T[ 2 ] = -1.22; T[ 3 ] = -1.50;
+	T[ 8 ] = 1.5; T[ 9 ] = 0.4;
+
+	var C = makeC();
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'L', 'C', 'B', 'C', 4, 3, 2,
+		V, 1, 4, 0,
+		T, 1, 3, 0,
+		C, 1, 4, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: right, conjugate-transpose, forward, columnwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_fwd_col'; });
+	var V = makeV();
+	var T = makeT();
+	// C is 3x4 (M=3, N=4, LDC=3)
+	var C = new Float64Array( [
+		1.0, 0.0,  2.0, 1.0,  3.0, -1.0,
+		0.0, 1.0,  0.5, 0.5,  -1.0, 2.0,
+		1.5, -0.5, -2.0, 1.0,  0.0, 0.0,
+		1.0, 1.0,  -0.5, 0.0,  2.0, -2.0
+	]);
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'R', 'C', 'F', 'C', 3, 4, 2,
+		V, 1, 4, 0,
+		T, 1, 3, 0,
+		C, 1, 3, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: STOREV=R throws', function t() {
+	var V = makeV();
+	var T = makeT();
+	var C = makeC();
+	var work = new Float64Array( 60 );
+
+	assert.throws( function() {
+		zlarfb( 'L', 'N', 'F', 'R', 4, 3, 2,
+			V, 1, 4, 0,
+			T, 1, 3, 0,
+			C, 1, 4, 0,
+			work, 1, 3, 0 );
+	}, /STOREV=R not yet implemented/ );
+});

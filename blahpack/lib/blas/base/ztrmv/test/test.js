@@ -148,3 +148,17 @@ test( 'ztrmv: lower, conjugate transpose, non-unit (N=3)', function t() {
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( x ), tc.x, 'x' );
 });
+
+test( 'ztrmv: lower, transpose (no conjugate), non-unit (N=3)', function t() {
+	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_lower_trans'; } );
+	// Same lower 3x3 matrix as above, but trans='T' (no conjugate)
+	var A = new Float64Array( [
+		1, 1, 2, 1, 3, 1,
+		0, 0, 4, 2, 5, 2,
+		0, 0, 0, 0, 6, 3
+	] );
+	var x = new Float64Array( [ 1, 0, 0, 1, 1, 1 ] );
+	var result = base( 'L', 'T', 'N', 3, A, 1, 3, 0, x, 1, 0 );
+	assert.strictEqual( result, x );
+	assertArrayClose( Array.from( x ), tc.x, 'x' );
+});

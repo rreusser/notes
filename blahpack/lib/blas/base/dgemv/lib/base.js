@@ -30,6 +30,7 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	var leny;
 	var sa1;
 	var sa2;
+	var ia;
 	var ix;
 	var iy;
 	var jx;
@@ -78,9 +79,11 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 		for ( j = 0; j < N; j++ ) {
 			temp = alpha * x[ jx ];
 			iy = offsetY;
+			ia = offsetA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				y[ iy ] += temp * A[ offsetA + i*sa1 + j*sa2 ];
+				y[ iy ] += temp * A[ ia ];
 				iy += strideY;
+				ia += sa1;
 			}
 			jx += strideX;
 		}
@@ -90,9 +93,11 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 		for ( j = 0; j < N; j++ ) {
 			temp = 0.0;
 			ix = offsetX;
+			ia = offsetA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				temp += A[ offsetA + i*sa1 + j*sa2 ] * x[ ix ];
+				temp += A[ ia ] * x[ ix ];
 				ix += strideX;
+				ia += sa1;
 			}
 			y[ jy ] += alpha * temp;
 			jy += strideY;

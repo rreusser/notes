@@ -67,46 +67,52 @@ function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) { // 
 	if ( uplo === 'U' || uplo === 'u' ) {
 		// Set the strictly upper triangular part to ALPHA.
 		for ( j = 1; j < N; j++ ) {
+			idx = offsetA + j * sa2;
 			for ( i = 0; i < Math.min( j, M ); i++ ) {
-				idx = offsetA + i * sa1 + j * sa2;
 				A[ idx ] = alphaRe;
 				A[ idx + 1 ] = alphaIm;
+				idx += sa1;
 			}
 		}
 		// Set the diagonal to BETA.
+		idx = offsetA;
 		for ( i = 0; i < mn; i++ ) {
-			idx = offsetA + i * sa1 + i * sa2;
 			A[ idx ] = betaRe;
 			A[ idx + 1 ] = betaIm;
+			idx += sa1 + sa2;
 		}
 	} else if ( uplo === 'L' || uplo === 'l' ) {
 		// Set the strictly lower triangular part to ALPHA.
 		for ( j = 0; j < Math.min( M, N ); j++ ) {
+			idx = offsetA + ( j + 1 ) * sa1 + j * sa2;
 			for ( i = j + 1; i < M; i++ ) {
-				idx = offsetA + i * sa1 + j * sa2;
 				A[ idx ] = alphaRe;
 				A[ idx + 1 ] = alphaIm;
+				idx += sa1;
 			}
 		}
 		// Set the diagonal to BETA.
+		idx = offsetA;
 		for ( i = 0; i < mn; i++ ) {
-			idx = offsetA + i * sa1 + i * sa2;
 			A[ idx ] = betaRe;
 			A[ idx + 1 ] = betaIm;
+			idx += sa1 + sa2;
 		}
 	} else {
 		// Set the full array to ALPHA, then overwrite diagonal with BETA.
 		for ( j = 0; j < N; j++ ) {
+			idx = offsetA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				idx = offsetA + i * sa1 + j * sa2;
 				A[ idx ] = alphaRe;
 				A[ idx + 1 ] = alphaIm;
+				idx += sa1;
 			}
 		}
+		idx = offsetA;
 		for ( i = 0; i < mn; i++ ) {
-			idx = offsetA + i * sa1 + i * sa2;
 			A[ idx ] = betaRe;
 			A[ idx + 1 ] = betaIm;
+			idx += sa1 + sa2;
 		}
 	}
 	return A;

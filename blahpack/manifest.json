@@ -2032,6 +2032,31 @@
       "status": "complete",
       "tests": 5,
       "passing": 5
+    },
+    "zggbak": {
+      "status": "complete",
+      "tests": 17,
+      "passing": 17
+    },
+    "zgghrd": {
+      "status": "complete",
+      "tests": 9,
+      "passing": 9
+    },
+    "zhgeqz": {
+      "status": "complete",
+      "tests": 13,
+      "passing": 13
+    },
+    "zgeqrf": {
+      "status": "complete",
+      "tests": 10,
+      "passing": 10
+    },
+    "zggbal": {
+      "status": "complete",
+      "tests": 13,
+      "passing": 13
     }
   }
 }

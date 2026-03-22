@@ -1,0 +1,11 @@
+disnan
+dladiv
+dlaisnan
+dlamch
+zhgeqz
+zladiv
+zlanhs
+zlartg
+zlaset
+zlassq
+zrot

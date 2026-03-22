@@ -103,3 +103,31 @@ test( 'zlange: 1x1 matrix Frobenius', function t() {
 	var result = base( 'F', 1, 1, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_1x1' );
 });
+
+test( 'zlange: unrecognized norm returns 0', function t() {
+	var A = new Float64Array( [ 1, 2, 3, 4 ] );
+	var work = new Float64Array( 2 );
+	var result = base( 'X', 1, 2, A, 1, 1, 0, work, 1, 0 );
+	assert.strictEqual( result, 0.0 );
+});
+
+test( 'zlange: NaN in matrix propagates through max norm', function t() {
+	var A = new Float64Array( [ NaN, 0, 1, 0 ] );
+	var work = new Float64Array( 2 );
+	var result = base( 'M', 1, 2, A, 1, 1, 0, work, 1, 0 );
+	assert.ok( result !== result, 'expected NaN' );
+});
+
+test( 'zlange: NaN in matrix propagates through one norm', function t() {
+	var A = new Float64Array( [ NaN, 0, 1, 0 ] );
+	var work = new Float64Array( 2 );
+	var result = base( '1', 1, 2, A, 1, 1, 0, work, 1, 0 );
+	assert.ok( result !== result, 'expected NaN' );
+});
+
+test( 'zlange: NaN in matrix propagates through inf norm', function t() {
+	var A = new Float64Array( [ NaN, 0, 1, 0 ] );
+	var work = new Float64Array( 2 );
+	var result = base( 'I', 1, 2, A, 1, 1, 0, work, 1, 0 );
+	assert.ok( result !== result, 'expected NaN' );
+});

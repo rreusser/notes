@@ -118,6 +118,29 @@ test( 'zgemv: transpose (trans=T, no conjugate)', function t() {
 	assertArrayClose( Array.from( y ), tc.y, 'zgemv_trans y' );
 });
 
+test( 'zgemv: alpha=0, beta=1 quick return (y unchanged)', function t() {
+	var A = new Float64Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Float64Array( [ 1, 1, 2, 2 ] );
+	var y = new Float64Array( [ 5, 6, 7, 8 ] );
+	var alpha = new Float64Array( [ 0, 0 ] );
+	var beta = new Float64Array( [ 1, 0 ] );
+	var result = base( 'N', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	assert.strictEqual( result, y );
+	assert.deepStrictEqual( Array.from( y ), [ 5, 6, 7, 8 ] );
+});
+
+test( 'zgemv: alpha=0, non-trivial beta (y := beta*y only)', function t() {
+	var A = new Float64Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Float64Array( [ 1, 1, 2, 2 ] );
+	var y = new Float64Array( [ 1, 0, 0, 1 ] );
+	var alpha = new Float64Array( [ 0, 0 ] );
+	var beta = new Float64Array( [ 2, 0 ] );
+	var result = base( 'N', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	assert.strictEqual( result, y );
+	// y should be scaled by 2: [2, 0, 0, 2]
+	assert.deepStrictEqual( Array.from( y ), [ 2, 0, 0, 2 ] );
+});
+
 test( 'zgemv: non-unit stride (incx=2, incy=2, trans=N)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zgemv_stride'; } );
 	// A = [(1,0), (2,0), (3,0), (4,0)] col-major 2x2

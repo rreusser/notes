@@ -42,7 +42,9 @@ function scanModules( pkg ) {
 		if ( fs.existsSync( baseJs ) ) {
 			hasImpl = true;
 			var src = fs.readFileSync( baseJs, 'utf8' );
-			isStub = /TODO: implement|not yet implemented/.test( src );
+			// Only count as stub if the MAIN function body is a stub,
+			// not STOREV=R "not yet implemented" throws
+			isStub = /^\t(?:\/\/ )?TODO: implement|^\tthrow new Error\( 'not yet implemented' \)/m.test( src );
 		}
 
 		var description = '';
@@ -59,6 +61,43 @@ function scanModules( pkg ) {
 			testCount = ( testSrc.match( /\btest\s*\(/g ) || [] ).length;
 		}
 
+		// Get coverage data if tests exist
+		var lineCov = null;
+		var branchCov = null;
+		if ( hasTests && hasImpl && !isStub ) {
+			try {
+				var covOut = execSync(
+					'node --test --experimental-test-coverage ' + testJs + ' 2>&1',
+					{ timeout: 30000, encoding: 'utf8' }
+				);
+				// Parse coverage for base.js specifically
+				// The module's own base.js appears right after the module
+				// directory header (e.g. "ℹ    zlange       |"). Take the
+				// FIRST base.js line that follows the module name header,
+				// not the last (which may be a dependency's base.js).
+				var covLines = covOut.split( '\n' );
+				var foundDir = false;
+				for ( var li = 0; li < covLines.length; li++ ) {
+					var covLine = covLines[ li ];
+					// Detect the module directory header
+					if ( new RegExp( '\\b' + name + '\\b' ).test( covLine ) && /\|/.test( covLine ) ) {
+						foundDir = true;
+						continue;
+					}
+					if ( foundDir && /base\.js/.test( covLine ) && /\d+\.\d+/.test( covLine ) ) {
+						var nums = covLine.match( /(\d+\.?\d*)/g );
+						if ( nums && nums.length >= 3 ) {
+							lineCov = parseFloat( nums[ 0 ] );
+							branchCov = parseFloat( nums[ 1 ] );
+						}
+						break; // Take the first base.js after the module header
+					}
+				}
+			} catch ( e ) {
+				// Coverage run failed, skip
+			}
+		}
+
 		return {
 			name: name,
 			package: pkg,
@@ -66,7 +105,9 @@ function scanModules( pkg ) {
 			hasImpl: hasImpl && !isStub,
 			isStub: isStub,
 			hasTests: hasTests,
-			testCount: testCount
+			testCount: testCount,
+			lineCov: lineCov,
+			branchCov: branchCov
 		};
 	});
 }
@@ -110,6 +151,12 @@ var implemented = allModules.filter( function( m ) { return m.hasImpl; } );
 var stubs = allModules.filter( function( m ) { return m.isStub; } );
 var totalTests = allModules.reduce( function( s, m ) { return s + m.testCount; }, 0 );
 
+function covBadge( val, threshold ) {
+	if ( val === null ) return '<span class="cov">—</span>';
+	var cls = val >= threshold ? 'cov-good' : val >= threshold - 10 ? 'cov-warn' : 'cov-bad';
+	return '<span class="' + cls + '">' + val.toFixed( 0 ) + '%</span>';
+}
+
 function moduleRow( m ) {
 	var status;
 	if ( m.hasImpl ) {
@@ -128,6 +175,8 @@ function moduleRow( m ) {
 		'<td class="name">' + m.name + '</td>' +
 		'<td>' + status + '</td>' +
 		'<td class="tests">' + tests + '</td>' +
+		'<td class="cov">' + covBadge( m.lineCov, 90 ) + '</td>' +
+		'<td class="cov">' + covBadge( m.branchCov, 85 ) + '</td>' +
 		'<td class="desc">' + desc + '</td>' +
 		'</tr>';
 }
@@ -137,7 +186,7 @@ function sectionHTML( title, modules ) {
 	var rows = modules.map( moduleRow ).join( '\n' );
 	return '<section>\n' +
 		'<h2>' + title + ' <span class="count">' + complete + '/' + modules.length + '</span></h2>\n' +
-		'<table>\n<thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Description</th></tr></thead>\n' +
+		'<table>\n<thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>\n' +
 		'<tbody>\n' + rows + '\n</tbody>\n</table>\n</section>\n';
 }
 
@@ -169,6 +218,10 @@ var html = '<!DOCTYPE html>\n' +
 '.badge.done { background: #dcfce7; color: #166534; }\n' +
 '.badge.stub { background: #fef9c3; color: #854d0e; }\n' +
 '.badge.none { background: #f3f4f6; color: #9ca3af; }\n' +
+'.cov { text-align: center; font-size: 0.8rem; }\n' +
+'.cov-good { color: #16a34a; font-weight: 600; }\n' +
+'.cov-warn { color: #ca8a04; font-weight: 600; }\n' +
+'.cov-bad { color: #dc2626; font-weight: 600; }\n' +
 '</style>\n</head>\n<body>\n' +
 '<h1>Blahpack Translation Progress</h1>\n' +
 '<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated ' + now + '</p>\n' +
