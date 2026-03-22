@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarfg = require( '../../zlarfg/lib/base.js' );
 var zlarf = require( '../../zlarf/lib/base.js' );
@@ -48,6 +49,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 */
 function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var conj_tau;
+	var conj_f64;
 	var alpha_re;
 	var alpha_im;
 	var tau_f64;
@@ -73,7 +75,8 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	oT = offsetTAU * 2;
 
 	K = Math.min( M, N );
-	conj_tau = new Float64Array( 2 );
+	conj_tau = new Complex128Array( 1 );
+	conj_f64 = reinterpret( conj_tau, 0 );
 
 	for ( i = 0; i < K; i++ ) {
 		// Float64 index of A(i,i)
@@ -95,8 +98,8 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 			// Apply H(i)^H to A(i:M-1, i+1:N-1) from the left
 			// zlarf uses conj(tau) for left application of H^H
-			conj_tau[ 0 ] = tau_f64[ oT + i * strideTAU * 2 ];
-			conj_tau[ 1 ] = -tau_f64[ oT + i * strideTAU * 2 + 1 ];
+			conj_f64[ 0 ] = tau_f64[ oT + i * strideTAU * 2 ];
+			conj_f64[ 1 ] = -tau_f64[ oT + i * strideTAU * 2 + 1 ];
 
 			// zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 			// Sub-routines accept Complex128Array with complex-element strides/offsets

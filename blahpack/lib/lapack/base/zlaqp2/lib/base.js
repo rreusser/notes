@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarfg = require( '../../zlarfg/lib/base.js' );
 var zlarf = require( '../../zlarf/lib/base.js' );
 var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
@@ -35,41 +36,32 @@ var cmplx = require( '../../../../cmplx.js' );
 * Computes a QR factorization with column pivoting of the M-by-N matrix A
 * using an unblocked algorithm. The factored form is A*P = Q*R.
 *
-* This is an internal routine called by ZGEQP3. It factors the submatrix
-* A(OFFSET+1:M, 1:N) with MN = min(M-OFFSET, N) reflectors.
-*
-* On entry, JPVT(I) = I (1-based column identity in the Fortran convention).
-* On exit, JPVT records the column permutation.
-*
-* VN1(J) and VN2(J) are the partial and original column norms of the
-* unfactored submatrix A(OFFSET+1:M, J). On exit they are updated.
-*
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Strides are in complex-element units.
+* A, TAU, WORK are Complex128Arrays. Strides and offsets are in complex elements.
+* VN1, VN2 are real (Float64Array).
 *
 * @private
 * @param {NonNegativeInteger} M - total number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {NonNegativeInteger} offset - number of rows already factored
-* @param {Float64Array} A - input/output matrix (interleaved complex, column-major)
+* @param {Complex128Array} A - input/output matrix
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
 * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
-* @param {NonNegativeInteger} offsetA - starting Float64 index for A
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
 * @param {Int32Array} JPVT - column permutation array (length >= N)
 * @param {integer} strideJPVT - stride for JPVT
 * @param {NonNegativeInteger} offsetJPVT - starting index for JPVT
-* @param {Float64Array} TAU - output reflector scalars (interleaved complex)
+* @param {Complex128Array} TAU - output reflector scalars
 * @param {integer} strideTAU - stride for TAU (complex elements)
-* @param {NonNegativeInteger} offsetTAU - starting Float64 index for TAU
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
 * @param {Float64Array} VN1 - partial column norms (real array)
 * @param {integer} strideVN1 - stride for VN1
 * @param {NonNegativeInteger} offsetVN1 - starting index for VN1
 * @param {Float64Array} VN2 - original column norms (real array)
 * @param {integer} strideVN2 - stride for VN2
 * @param {NonNegativeInteger} offsetVN2 - starting index for VN2
-* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (complex elements)
-* @param {NonNegativeInteger} offsetWORK - starting Float64 index for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 */
 function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var conjTau;
@@ -78,10 +70,12 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 	var itemp;
 	var temp2;
 	var temp;
+	var TAUv;
 	var aii;
 	var pvt;
 	var sa1;
 	var sa2;
+	var Av;
 	var oA;
 	var mn;
 	var i;
@@ -89,7 +83,11 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 
 	sa1 = strideA1;
 	sa2 = strideA2;
-	oA = offsetA;
+
+	// Get Float64Array views for direct element access
+	Av = reinterpret( A, 0 );
+	TAUv = reinterpret( TAU, 0 );
+	oA = offsetA * 2; // Float64 offset
 
 	mn = Math.min( M - offset, N );
 	tol3z = Math.sqrt( dlamch( 'Epsilon' ) );
@@ -106,7 +104,7 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 		// Swap columns if needed
 		if ( pvt !== i ) {
 			// Swap columns pvt and i of A (all M rows)
-			zswap( M, A, sa1, oA + 2 * pvt * sa2, A, sa1, oA + 2 * i * sa2 );
+			zswap( M, A, sa1, offsetA + pvt * sa2, A, sa1, offsetA + i * sa2 );
 
 			// Swap JPVT entries
 			itemp = JPVT[ offsetJPVT + pvt * strideJPVT ];
@@ -120,45 +118,45 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 
 		// Generate elementary reflector H(i) to annul A(offpi+1:M-1, i)
 		if ( offpi < M - 1 ) {
-			// zlarfg(N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau)
+			// zlarfg expects Complex128Array with complex-element offsets
 			zlarfg(
 				M - offpi,
-				A, oA + 2 * ( offpi * sa1 + i * sa2 ),
-				A, sa1, oA + 2 * ( ( offpi + 1 ) * sa1 + i * sa2 ),
-				TAU, offsetTAU + 2 * i * strideTAU
+				A, offsetA + offpi * sa1 + i * sa2,
+				A, sa1, offsetA + ( offpi + 1 ) * sa1 + i * sa2,
+				TAU, offsetTAU + i * strideTAU
 			);
 		} else {
 			zlarfg(
 				1,
-				A, oA + 2 * ( ( M - 1 ) * sa1 + i * sa2 ),
-				A, sa1, oA + 2 * ( ( M - 1 ) * sa1 + i * sa2 ),
-				TAU, offsetTAU + 2 * i * strideTAU
+				A, offsetA + ( M - 1 ) * sa1 + i * sa2,
+				A, sa1, offsetA + ( M - 1 ) * sa1 + i * sa2,
+				TAU, offsetTAU + i * strideTAU
 			);
 		}
 
 		if ( i < N - 1 ) {
 			// Apply H(i)^H to A(offpi:M-1, i+1:N-1) from the left
 			// Save A(offpi, i) and set it to 1
-			aii[ 0 ] = A[ oA + 2 * ( offpi * sa1 + i * sa2 ) ];
-			aii[ 1 ] = A[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ];
-			A[ oA + 2 * ( offpi * sa1 + i * sa2 ) ] = 1.0;
-			A[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ] = 0.0;
+			aii[ 0 ] = Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) ];
+			aii[ 1 ] = Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ];
+			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) ] = 1.0;
+			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ] = 0.0;
 
 			// conj(tau(i))
-			conjTau[ 0 ] = TAU[ offsetTAU + 2 * i * strideTAU ];
-			conjTau[ 1 ] = -TAU[ offsetTAU + 2 * i * strideTAU + 1 ];
+			conjTau[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+			conjTau[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 
 			zlarf(
 				'L', M - offpi, N - i - 1,
-				A, sa1, oA + 2 * ( offpi * sa1 + i * sa2 ),
+				A, sa1, offsetA + offpi * sa1 + i * sa2,
 				conjTau, 0,
-				A, sa1, sa2, oA + 2 * ( offpi * sa1 + ( i + 1 ) * sa2 ),
+				A, sa1, sa2, offsetA + offpi * sa1 + ( i + 1 ) * sa2,
 				WORK, strideWORK, offsetWORK
 			);
 
 			// Restore A(offpi, i)
-			A[ oA + 2 * ( offpi * sa1 + i * sa2 ) ] = aii[ 0 ];
-			A[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ] = aii[ 1 ];
+			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) ] = aii[ 0 ];
+			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ] = aii[ 1 ];
 		}
 
 		// Update partial column norms
@@ -166,7 +164,7 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 			if ( VN1[ offsetVN1 + j * strideVN1 ] !== 0.0 ) {
 				// temp = |A(offpi, j)| / VN1(j)
 				temp = cmplx.abs(
-					A.subarray(
+					Av.subarray(
 						oA + 2 * ( offpi * sa1 + j * sa2 ),
 						oA + 2 * ( offpi * sa1 + j * sa2 ) + 2
 					)
@@ -181,7 +179,7 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 					if ( offpi < M - 1 ) {
 						VN1[ offsetVN1 + j * strideVN1 ] = dznrm2(
 							M - offpi - 1,
-							A, sa1, oA + 2 * ( ( offpi + 1 ) * sa1 + j * sa2 )
+							A, sa1, offsetA + ( offpi + 1 ) * sa1 + j * sa2
 						);
 						VN2[ offsetVN2 + j * strideVN2 ] = VN1[ offsetVN1 + j * strideVN1 ];
 					} else {

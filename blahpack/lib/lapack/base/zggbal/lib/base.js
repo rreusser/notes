@@ -594,9 +594,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		for ( i = ilo - 1; i < ihi; i++ ) {
 			// Row scaling: find max element in row i, columns ilo-1..N-1
 			// izamax returns 0-based index into the subvector
-			irab = izamax( N - ilo + 1, A, sA2 / 2, oA + i * sA1 + ( ilo - 1 ) * sA2 );
+			irab = izamax( N - ilo + 1, A, strideA2, offsetA + i * strideA1 + ( ilo - 1 ) * strideA2 );
 			rab = cabs( Av, oA + i * sA1 + ( irab + ilo - 1 ) * sA2 );
-			irab = izamax( N - ilo + 1, B, sB2 / 2, oB + i * sB1 + ( ilo - 1 ) * sB2 );
+			irab = izamax( N - ilo + 1, B, strideB2, offsetB + i * strideB1 + ( ilo - 1 ) * strideB2 );
 			rab = Math.max( rab, cabs( Bv, oB + i * sB1 + ( irab + ilo - 1 ) * sB2 ) );
 			lrab = Math.trunc( Math.log10( rab + sfmin ) / basl + ONE );
 			ir = Math.trunc( LSCALE[ oL + i * sL ] + Math.sign( LSCALE[ oL + i * sL ] ) * HALF );
@@ -604,9 +604,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			LSCALE[ oL + i * sL ] = Math.pow( SCLFAC, ir );
 
 			// Column scaling: find max element in column i, rows 0..ihi-1
-			icab = izamax( ihi, A, sA1 / 2, oA + i * sA2 );
+			icab = izamax( ihi, A, strideA1, offsetA + i * strideA2 );
 			cab = cabs( Av, oA + icab * sA1 + i * sA2 );
-			icab = izamax( ihi, B, sB1 / 2, oB + i * sB2 );
+			icab = izamax( ihi, B, strideB1, offsetB + i * strideB2 );
 			cab = Math.max( cab, cabs( Bv, oB + icab * sB1 + i * sB2 ) );
 			lcab = Math.trunc( Math.log10( cab + sfmin ) / basl + ONE );
 			jc = Math.trunc( RSCALE[ oR + i * sR ] + Math.sign( RSCALE[ oR + i * sR ] ) * HALF );
@@ -616,14 +616,14 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 		// Row scaling of matrices A and B
 		for ( i = ilo - 1; i < ihi; i++ ) {
-			zdscal( N - ilo + 1, LSCALE[ oL + i * sL ], A, sA2 / 2, oA + i * sA1 + ( ilo - 1 ) * sA2 );
-			zdscal( N - ilo + 1, LSCALE[ oL + i * sL ], B, sB2 / 2, oB + i * sB1 + ( ilo - 1 ) * sB2 );
+			zdscal( N - ilo + 1, LSCALE[ oL + i * sL ], A, strideA2, offsetA + i * strideA1 + ( ilo - 1 ) * strideA2 );
+			zdscal( N - ilo + 1, LSCALE[ oL + i * sL ], B, strideB2, offsetB + i * strideB1 + ( ilo - 1 ) * strideB2 );
 		}
 
 		// Column scaling of matrices A and B
 		for ( j = ilo - 1; j < ihi; j++ ) {
-			zdscal( ihi, RSCALE[ oR + j * sR ], A, sA1 / 2, oA + j * sA2 );
-			zdscal( ihi, RSCALE[ oR + j * sR ], B, sB1 / 2, oB + j * sB2 );
+			zdscal( ihi, RSCALE[ oR + j * sR ], A, strideA1, offsetA + j * strideA2 );
+			zdscal( ihi, RSCALE[ oR + j * sR ], B, strideB1, offsetB + j * strideB2 );
 		}
 
 		return { info: 0, ilo: ilo, ihi: ihi };
