@@ -195,9 +195,34 @@ The base.js must:
 - Use 0-based indexing throughout
 - Use stride/offset parameters for all array access
 - Use `require()` for BLAS/LAPACK dependencies
-- Use `lib/cmplx.js` for complex arithmetic
+- Use `Complex128Array` for complex array parameters, `Complex128` for complex scalars
+- Use `reinterpret()` at function entry for Float64Array views
+- Use `lib/cmplx.js` for complex arithmetic (scalar ops + indexed ops)
 - Follow CommonJS format with stdlib-js section comments
 - NOT include parameter validation (that goes in ndarray.js)
+- **Implement ALL parameter combinations and code paths** (see below)
+
+**CRITICAL: Complete implementations, not partial ones.**
+
+Every routine must implement ALL valid parameter combinations from the
+Fortran reference — not just the subset needed by the current caller.
+Each module is a standalone, reusable building block. If the Fortran has
+branches for SIDE='L'/'R', TRANS='N'/'T'/'C', UPLO='U'/'L',
+STOREV='C'/'R', DIRECT='F'/'B', JOB='N'/'P'/'S'/'B', etc., implement
+ALL of them. Do not stub out branches with `throw new Error('not yet
+implemented')` just because the immediate dependency tree only exercises
+one path.
+
+Similarly, tests must cover all parameter combinations:
+- If a routine has SIDE×TRANS×DIRECT×STOREV = 2×2×2×2 = 16 cases,
+  test all 16 (or at minimum, every distinct code path).
+- If a routine handles both M≥N and M<N, test both.
+- Edge cases (N=0, M=0, alpha=0) are required regardless of whether
+  any current caller triggers them.
+
+The cost of a partial implementation is high: a future routine that calls
+the incomplete path will silently fail or throw at runtime, far from the
+root cause. A complete implementation is verified once and trusted forever.
 
 **Comment inlined operations.** When complex arithmetic or index calculations
 are inlined for performance, add a comment showing the mathematical operation:
@@ -220,14 +245,15 @@ comments, the code becomes very difficult to verify.
 implementations of these are numerically unstable (overflow, underflow,
 catastrophic cancellation). Always use the library functions:
 ```javascript
-cmplx.div( out, a, b );    // DO NOT expand to (ar*br+ai*bi)/(br*br+bi*bi) etc.
+cmplx.div( a, b );          // DO NOT expand to (ar*br+ai*bi)/(br*br+bi*bi) etc.
 cmplx.abs( a );             // DO NOT expand to Math.sqrt(ar*ar + ai*ai)
-Math.sqrt( cmplx.abs(a) );  // safe chained calls are fine
+cmplx.divAt( v, oi, v, ai, v, bi );  // indexed version for hot loops
+cmplx.absAt( v, idx );               // indexed version for hot loops
 ```
-`cmplx.div` uses Smith's formula; `cmplx.abs` uses the `max/min` scaling
-trick. Inlining these loses the numerical safety guarantees. Complex
-addition, subtraction, multiplication, conjugate, and real-scalar scaling
-are safe to inline.
+`cmplx.div` uses stdlib's Baudin-Smith algorithm; `cmplx.abs` uses hypot.
+Inlining these loses numerical safety guarantees. Complex addition,
+subtraction, multiplication, conjugate, and real-scalar scaling are safe
+to inline.
 
 For routines with GOTOs, restructure them during translation:
 

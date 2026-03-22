@@ -6,6 +6,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqp2 = require( './../lib/base.js' );
 
 
@@ -40,6 +42,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * A is col-major with strideA1=1, strideA2=LDA (complex elements).
 */
 function colNorms( M, N, startRow, A, LDA, offsetA ) {
+	var buf = reinterpret( A, 0 );
 	var vn = new Float64Array( N );
 	var re;
 	var im;
@@ -49,8 +52,8 @@ function colNorms( M, N, startRow, A, LDA, offsetA ) {
 	for ( j = 0; j < N; j++ ) {
 		s = 0.0;
 		for ( i = startRow; i < M; i++ ) {
-			re = A[ offsetA + 2 * ( i + j * LDA ) ];
-			im = A[ offsetA + 2 * ( i + j * LDA ) + 1 ];
+			re = buf[ offsetA + 2 * ( i + j * LDA ) ];
+			im = buf[ offsetA + 2 * ( i + j * LDA ) + 1 ];
 			s += re * re + im * im;
 		}
 		vn[ j ] = Math.sqrt( s );
@@ -64,95 +67,99 @@ function colNorms( M, N, startRow, A, LDA, offsetA ) {
 test( 'zlaqp2: basic 3x3 matrix', function t() {
 	var tc = findCase( 'basic_3x3' );
 	var LDA = 6;
-	var A = new Float64Array( 2 * LDA * 6 );
+	var A = new Complex128Array( LDA * 6 );
+	var Av = reinterpret( A, 0 );
 	// A = [1+0i 2+1i 3+0i; 0+1i 1+0i 2+1i; 1+1i 0+0i 1+0i] col-major
-	A[0]=1; A[1]=0; A[2]=0; A[3]=1; A[4]=1; A[5]=1;
-	A[2*LDA]=2; A[2*LDA+1]=1; A[2*LDA+2]=1; A[2*LDA+3]=0; A[2*LDA+4]=0; A[2*LDA+5]=0;
-	A[4*LDA]=3; A[4*LDA+1]=0; A[4*LDA+2]=2; A[4*LDA+3]=1; A[4*LDA+4]=1; A[4*LDA+5]=0;
+	Av[0]=1; Av[1]=0; Av[2]=0; Av[3]=1; Av[4]=1; Av[5]=1;
+	Av[2*LDA]=2; Av[2*LDA+1]=1; Av[2*LDA+2]=1; Av[2*LDA+3]=0; Av[2*LDA+4]=0; Av[2*LDA+5]=0;
+	Av[4*LDA]=3; Av[4*LDA+1]=0; Av[4*LDA+2]=2; Av[4*LDA+3]=1; Av[4*LDA+4]=1; Av[4*LDA+5]=0;
 
 	var JPVT = new Int32Array( [ 1, 2, 3 ] );
-	var TAU = new Float64Array( 6 );
+	var TAU = new Complex128Array( 3 );
 	var VN1 = colNorms( 3, 3, 0, A, LDA, 0 );
 	var VN2 = new Float64Array( VN1 );
-	var WORK = new Float64Array( 40 );
+	var WORK = new Complex128Array( 20 );
 
 	zlaqp2( 3, 3, 0, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
 
-	assertArrayClose( Array.from( A.subarray( 0, 36 ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-10, 'tau' );
+	assertArrayClose( Array.from( Av.subarray( 0, 36 ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
 	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zlaqp2: 4x3 matrix', function t() {
 	var tc = findCase( 'rect_4x3' );
 	var LDA = 6;
-	var A = new Float64Array( 2 * LDA * 6 );
+	var A = new Complex128Array( LDA * 6 );
+	var Av = reinterpret( A, 0 );
 	// A = [1+0i 0+2i 3+1i; 2+1i 1+0i 0+0i; 0+0i 3+1i 1+0i; 1+1i 2+0i 2+1i]
-	A[0]=1; A[1]=0; A[2]=2; A[3]=1; A[4]=0; A[5]=0; A[6]=1; A[7]=1;
-	A[2*LDA]=0; A[2*LDA+1]=2; A[2*LDA+2]=1; A[2*LDA+3]=0; A[2*LDA+4]=3; A[2*LDA+5]=1; A[2*LDA+6]=2; A[2*LDA+7]=0;
-	A[4*LDA]=3; A[4*LDA+1]=1; A[4*LDA+2]=0; A[4*LDA+3]=0; A[4*LDA+4]=1; A[4*LDA+5]=0; A[4*LDA+6]=2; A[4*LDA+7]=1;
+	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=1; Av[4]=0; Av[5]=0; Av[6]=1; Av[7]=1;
+	Av[2*LDA]=0; Av[2*LDA+1]=2; Av[2*LDA+2]=1; Av[2*LDA+3]=0; Av[2*LDA+4]=3; Av[2*LDA+5]=1; Av[2*LDA+6]=2; Av[2*LDA+7]=0;
+	Av[4*LDA]=3; Av[4*LDA+1]=1; Av[4*LDA+2]=0; Av[4*LDA+3]=0; Av[4*LDA+4]=1; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=1;
 
 	var JPVT = new Int32Array( [ 1, 2, 3 ] );
-	var TAU = new Float64Array( 6 );
+	var TAU = new Complex128Array( 3 );
 	var VN1 = colNorms( 4, 3, 0, A, LDA, 0 );
 	var VN2 = new Float64Array( VN1 );
-	var WORK = new Float64Array( 40 );
+	var WORK = new Complex128Array( 20 );
 
 	zlaqp2( 4, 3, 0, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
 
-	assertArrayClose( Array.from( A.subarray( 0, 48 ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-10, 'tau' );
+	assertArrayClose( Array.from( Av.subarray( 0, 48 ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
 	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zlaqp2: with offset=1', function t() {
 	var tc = findCase( 'offset_1' );
 	var LDA = 6;
-	var A = new Float64Array( 2 * LDA * 6 );
+	var A = new Complex128Array( LDA * 6 );
+	var Av = reinterpret( A, 0 );
 	// A = [5+0i 1+0i 2+0i; 0+0i 1+1i 2+0i; 0+0i 3+0i 0+1i; 0+0i 2+1i 1+0i]
-	A[0]=5; A[1]=0; A[2]=0; A[3]=0; A[4]=0; A[5]=0; A[6]=0; A[7]=0;
-	A[2*LDA]=1; A[2*LDA+1]=0; A[2*LDA+2]=1; A[2*LDA+3]=1; A[2*LDA+4]=3; A[2*LDA+5]=0; A[2*LDA+6]=2; A[2*LDA+7]=1;
-	A[4*LDA]=2; A[4*LDA+1]=0; A[4*LDA+2]=2; A[4*LDA+3]=0; A[4*LDA+4]=0; A[4*LDA+5]=1; A[4*LDA+6]=1; A[4*LDA+7]=0;
+	Av[0]=5; Av[1]=0; Av[2]=0; Av[3]=0; Av[4]=0; Av[5]=0; Av[6]=0; Av[7]=0;
+	Av[2*LDA]=1; Av[2*LDA+1]=0; Av[2*LDA+2]=1; Av[2*LDA+3]=1; Av[2*LDA+4]=3; Av[2*LDA+5]=0; Av[2*LDA+6]=2; Av[2*LDA+7]=1;
+	Av[4*LDA]=2; Av[4*LDA+1]=0; Av[4*LDA+2]=2; Av[4*LDA+3]=0; Av[4*LDA+4]=0; Av[4*LDA+5]=1; Av[4*LDA+6]=1; Av[4*LDA+7]=0;
 
 	var JPVT = new Int32Array( [ 1, 2, 3 ] );
-	var TAU = new Float64Array( 6 );
+	var TAU = new Complex128Array( 3 );
 	var VN1 = colNorms( 4, 3, 1, A, LDA, 0 );
 	var VN2 = new Float64Array( VN1 );
-	var WORK = new Float64Array( 40 );
+	var WORK = new Complex128Array( 20 );
 
 	zlaqp2( 4, 3, 1, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
 
-	assertArrayClose( Array.from( A.subarray( 0, 48 ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-10, 'tau' );
+	assertArrayClose( Array.from( Av.subarray( 0, 48 ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
 	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zlaqp2: 1x1 matrix', function t() {
 	var tc = findCase( 'one_by_one' );
 	var LDA = 6;
-	var A = new Float64Array( 2 * LDA * 6 );
-	A[0] = 3; A[1] = 4;
+	var A = new Complex128Array( LDA * 6 );
+	var Av = reinterpret( A, 0 );
+	Av[0] = 3; Av[1] = 4;
 
 	var JPVT = new Int32Array( [ 1 ] );
-	var TAU = new Float64Array( 2 );
+	var TAU = new Complex128Array( 1 );
 	var VN1 = new Float64Array( [ 5.0 ] );
 	var VN2 = new Float64Array( [ 5.0 ] );
-	var WORK = new Float64Array( 40 );
+	var WORK = new Complex128Array( 20 );
 
 	zlaqp2( 1, 1, 0, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
 
-	assertArrayClose( Array.from( A.subarray( 0, 2 ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-10, 'tau' );
+	assertArrayClose( Array.from( Av.subarray( 0, 2 ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
 	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zlaqp2: N=0 quick return', function t() {
-	var A = new Float64Array( 20 );
+	var A = new Complex128Array( 10 );
 	var JPVT = new Int32Array( 1 );
-	var TAU = new Float64Array( 2 );
+	var TAU = new Complex128Array( 1 );
 	var VN1 = new Float64Array( 1 );
 	var VN2 = new Float64Array( 1 );
-	var WORK = new Float64Array( 10 );
+	var WORK = new Complex128Array( 5 );
 
 	zlaqp2( 3, 0, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
 	assert.ok( true, 'no crash' );

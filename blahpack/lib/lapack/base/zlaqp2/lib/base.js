@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarfg = require( '../../zlarfg/lib/base.js' );
 var zlarf = require( '../../zlarf/lib/base.js' );
@@ -64,6 +65,7 @@ var cmplx = require( '../../../../cmplx.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 */
 function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	var conjTauv;
 	var conjTau;
 	var tol3z;
 	var offpi;
@@ -92,7 +94,8 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 	mn = Math.min( M - offset, N );
 	tol3z = Math.sqrt( dlamch( 'Epsilon' ) );
 
-	conjTau = new Float64Array( 2 );
+	conjTau = new Complex128Array( 1 );
+	conjTauv = reinterpret( conjTau, 0 );
 	aii = new Float64Array( 2 );
 
 	for ( i = 0; i < mn; i++ ) {
@@ -143,8 +146,8 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ] = 0.0;
 
 			// conj(tau(i))
-			conjTau[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-			conjTau[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
+			conjTauv[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
+			conjTauv[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 
 			zlarf(
 				'L', M - offpi, N - i - 1,

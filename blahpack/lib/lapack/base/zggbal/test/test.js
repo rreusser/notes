@@ -6,6 +6,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zggbal = require( './../lib/base.js' );
 
 
@@ -40,7 +42,7 @@ function assertArrayClose( actual, expected, msg ) {
 }
 
 /**
-* Set complex element (i, j) in interleaved matrix.
+* Set complex element (i, j) in interleaved matrix (Float64 view).
 */
 function cset( M, LDA, i, j, re, im ) {
 	M[ j * 2 * LDA + i * 2 ] = re;
@@ -72,31 +74,35 @@ test( 'zggbal: JOB=N, 4x4 — sets ilo=1, ihi=N, scales=1', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_n' );
 	n = 4;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 2 );
-	cset( A, n, 0, 1, 3, 4 );
-	cset( A, n, 1, 0, 5, 6 );
-	cset( A, n, 1, 1, 7, 8 );
-	cset( A, n, 2, 2, 9, 0 );
-	cset( A, n, 3, 3, 1, 1 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 1, 1, 1, 0 );
-	cset( B, n, 2, 2, 1, 0 );
-	cset( B, n, 3, 3, 1, 0 );
+	cset( Av, n, 0, 0, 1, 2 );
+	cset( Av, n, 0, 1, 3, 4 );
+	cset( Av, n, 1, 0, 5, 6 );
+	cset( Av, n, 1, 1, 7, 8 );
+	cset( Av, n, 2, 2, 9, 0 );
+	cset( Av, n, 3, 3, 1, 1 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
+	cset( Bv, n, 2, 2, 1, 0 );
+	cset( Bv, n, 3, 3, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'N', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'N', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -116,13 +122,13 @@ test( 'zggbal: N=0 — quick return', function t() {
 	var B;
 
 	tc = findCase( 'n_zero' );
-	A = new Float64Array( 4 );
-	B = new Float64Array( 4 );
+	A = new Complex128Array( 2 );
+	B = new Complex128Array( 2 );
 	lscale = new Float64Array( 1 );
 	rscale = new Float64Array( 1 );
 	work = new Float64Array( 6 );
 
-	result = zggbal( 'B', 0, A, 2, 2, 0, B, 2, 2, 0,
+	result = zggbal( 'B', 0, A, 1, 1, 0, B, 1, 1, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -136,24 +142,28 @@ test( 'zggbal: N=1 — quick return with scales=1', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'n_one' );
 	n = 1;
-	A = new Float64Array( 2 );
-	B = new Float64Array( 2 );
-	A[ 0 ] = 5.0;
-	A[ 1 ] = 3.0;
-	B[ 0 ] = 1.0;
-	B[ 1 ] = 0.0;
+	A = new Complex128Array( 1 );
+	B = new Complex128Array( 1 );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Av[ 0 ] = 5.0;
+	Av[ 1 ] = 3.0;
+	Bv[ 0 ] = 1.0;
+	Bv[ 1 ] = 0.0;
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 2, 2, 0, B, 2, 2, 0,
+	result = zggbal( 'B', n, A, 1, 1, 0, B, 1, 1, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -169,33 +179,37 @@ test( 'zggbal: JOB=P, 4x4 — permute only', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_p' );
 	n = 4;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 0 );
-	cset( A, n, 0, 1, 2, 0 );
-	cset( A, n, 1, 1, 3, 0 );
-	cset( A, n, 1, 2, 4, 0 );
-	cset( A, n, 2, 1, 5, 0 );
-	cset( A, n, 2, 2, 6, 0 );
-	cset( A, n, 3, 2, 7, 0 );
-	cset( A, n, 3, 3, 8, 0 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 1, 1, 1, 0 );
-	cset( B, n, 2, 2, 1, 0 );
-	cset( B, n, 3, 3, 1, 0 );
+	cset( Av, n, 0, 0, 1, 0 );
+	cset( Av, n, 0, 1, 2, 0 );
+	cset( Av, n, 1, 1, 3, 0 );
+	cset( Av, n, 1, 2, 4, 0 );
+	cset( Av, n, 2, 1, 5, 0 );
+	cset( Av, n, 2, 2, 6, 0 );
+	cset( Av, n, 3, 2, 7, 0 );
+	cset( Av, n, 3, 3, 8, 0 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
+	cset( Bv, n, 2, 2, 1, 0 );
+	cset( Bv, n, 3, 3, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -203,8 +217,8 @@ test( 'zggbal: JOB=P, 4x4 — permute only', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
 test( 'zggbal: JOB=S, 3x3 — scale only', function t() {
@@ -213,39 +227,43 @@ test( 'zggbal: JOB=S, 3x3 — scale only', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_s' );
 	n = 3;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1e3, 0 );
-	cset( A, n, 0, 1, 1, 0 );
-	cset( A, n, 0, 2, 1e-3, 0 );
-	cset( A, n, 1, 0, 1, 0 );
-	cset( A, n, 1, 1, 1, 0 );
-	cset( A, n, 1, 2, 1, 0 );
-	cset( A, n, 2, 0, 1e-3, 0 );
-	cset( A, n, 2, 1, 1, 0 );
-	cset( A, n, 2, 2, 1e3, 0 );
-	cset( B, n, 0, 0, 1e3, 0 );
-	cset( B, n, 0, 1, 1, 0 );
-	cset( B, n, 0, 2, 1e-3, 0 );
-	cset( B, n, 1, 0, 1, 0 );
-	cset( B, n, 1, 1, 1, 0 );
-	cset( B, n, 1, 2, 1, 0 );
-	cset( B, n, 2, 0, 1e-3, 0 );
-	cset( B, n, 2, 1, 1, 0 );
-	cset( B, n, 2, 2, 1e3, 0 );
+	cset( Av, n, 0, 0, 1e3, 0 );
+	cset( Av, n, 0, 1, 1, 0 );
+	cset( Av, n, 0, 2, 1e-3, 0 );
+	cset( Av, n, 1, 0, 1, 0 );
+	cset( Av, n, 1, 1, 1, 0 );
+	cset( Av, n, 1, 2, 1, 0 );
+	cset( Av, n, 2, 0, 1e-3, 0 );
+	cset( Av, n, 2, 1, 1, 0 );
+	cset( Av, n, 2, 2, 1e3, 0 );
+	cset( Bv, n, 0, 0, 1e3, 0 );
+	cset( Bv, n, 0, 1, 1, 0 );
+	cset( Bv, n, 0, 2, 1e-3, 0 );
+	cset( Bv, n, 1, 0, 1, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
+	cset( Bv, n, 1, 2, 1, 0 );
+	cset( Bv, n, 2, 0, 1e-3, 0 );
+	cset( Bv, n, 2, 1, 1, 0 );
+	cset( Bv, n, 2, 2, 1e3, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'S', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'S', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -253,8 +271,8 @@ test( 'zggbal: JOB=S, 3x3 — scale only', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
 test( 'zggbal: JOB=B, 4x4 — both permute and scale', function t() {
@@ -263,53 +281,57 @@ test( 'zggbal: JOB=B, 4x4 — both permute and scale', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_b' );
 	n = 4;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 2 );
-	cset( A, n, 0, 1, 3, 1 );
-	cset( A, n, 0, 2, 0.1, 0 );
-	cset( A, n, 0, 3, 0.01, 0 );
-	cset( A, n, 1, 0, 4, 0.5 );
-	cset( A, n, 1, 1, 5, 3 );
-	cset( A, n, 1, 2, 2, 1 );
-	cset( A, n, 1, 3, 0.1, 0 );
-	cset( A, n, 2, 0, 0.1, 0 );
-	cset( A, n, 2, 1, 3, 2 );
-	cset( A, n, 2, 2, 6, 1 );
-	cset( A, n, 2, 3, 4, 0.5 );
-	cset( A, n, 3, 0, 0.01, 0 );
-	cset( A, n, 3, 1, 0.1, 0 );
-	cset( A, n, 3, 2, 3, 1 );
-	cset( A, n, 3, 3, 7, 2 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 0, 1, 0.5, 0 );
-	cset( B, n, 0, 2, 0.01, 0 );
-	cset( B, n, 0, 3, 0, 0 );
-	cset( B, n, 1, 0, 0.5, 0 );
-	cset( B, n, 1, 1, 1, 0 );
-	cset( B, n, 1, 2, 0.5, 0 );
-	cset( B, n, 1, 3, 0.01, 0 );
-	cset( B, n, 2, 0, 0.01, 0 );
-	cset( B, n, 2, 1, 0.5, 0 );
-	cset( B, n, 2, 2, 1, 0 );
-	cset( B, n, 2, 3, 0.5, 0 );
-	cset( B, n, 3, 0, 0, 0 );
-	cset( B, n, 3, 1, 0.01, 0 );
-	cset( B, n, 3, 2, 0.5, 0 );
-	cset( B, n, 3, 3, 1, 0 );
+	cset( Av, n, 0, 0, 1, 2 );
+	cset( Av, n, 0, 1, 3, 1 );
+	cset( Av, n, 0, 2, 0.1, 0 );
+	cset( Av, n, 0, 3, 0.01, 0 );
+	cset( Av, n, 1, 0, 4, 0.5 );
+	cset( Av, n, 1, 1, 5, 3 );
+	cset( Av, n, 1, 2, 2, 1 );
+	cset( Av, n, 1, 3, 0.1, 0 );
+	cset( Av, n, 2, 0, 0.1, 0 );
+	cset( Av, n, 2, 1, 3, 2 );
+	cset( Av, n, 2, 2, 6, 1 );
+	cset( Av, n, 2, 3, 4, 0.5 );
+	cset( Av, n, 3, 0, 0.01, 0 );
+	cset( Av, n, 3, 1, 0.1, 0 );
+	cset( Av, n, 3, 2, 3, 1 );
+	cset( Av, n, 3, 3, 7, 2 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 0, 1, 0.5, 0 );
+	cset( Bv, n, 0, 2, 0.01, 0 );
+	cset( Bv, n, 0, 3, 0, 0 );
+	cset( Bv, n, 1, 0, 0.5, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
+	cset( Bv, n, 1, 2, 0.5, 0 );
+	cset( Bv, n, 1, 3, 0.01, 0 );
+	cset( Bv, n, 2, 0, 0.01, 0 );
+	cset( Bv, n, 2, 1, 0.5, 0 );
+	cset( Bv, n, 2, 2, 1, 0 );
+	cset( Bv, n, 2, 3, 0.5, 0 );
+	cset( Bv, n, 3, 0, 0, 0 );
+	cset( Bv, n, 3, 1, 0.01, 0 );
+	cset( Bv, n, 3, 2, 0.5, 0 );
+	cset( Bv, n, 3, 3, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -317,8 +339,8 @@ test( 'zggbal: JOB=B, 4x4 — both permute and scale', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
 test( 'zggbal: JOB=P, 3x3 — isolated eigenvalue', function t() {
@@ -327,31 +349,35 @@ test( 'zggbal: JOB=P, 3x3 — isolated eigenvalue', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_p_isolated' );
 	n = 3;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 0 );
-	cset( A, n, 0, 1, 2, 0 );
-	cset( A, n, 1, 0, 3, 0 );
-	cset( A, n, 1, 1, 4, 0 );
-	cset( A, n, 2, 2, 5, 0 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 0, 1, 0.5, 0 );
-	cset( B, n, 1, 0, 0.5, 0 );
-	cset( B, n, 1, 1, 1, 0 );
-	cset( B, n, 2, 2, 1, 0 );
+	cset( Av, n, 0, 0, 1, 0 );
+	cset( Av, n, 0, 1, 2, 0 );
+	cset( Av, n, 1, 0, 3, 0 );
+	cset( Av, n, 1, 1, 4, 0 );
+	cset( Av, n, 2, 2, 5, 0 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 0, 1, 0.5, 0 );
+	cset( Bv, n, 1, 0, 0.5, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
+	cset( Bv, n, 2, 2, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -359,8 +385,8 @@ test( 'zggbal: JOB=P, 3x3 — isolated eigenvalue', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
 test( 'zggbal: JOB=B, 5x5 — pentadiagonal with scaling', function t() {
@@ -369,45 +395,49 @@ test( 'zggbal: JOB=B, 5x5 — pentadiagonal with scaling', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_b_5x5' );
 	n = 5;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1e2, 1 );
-	cset( A, n, 0, 1, 1, 0.5 );
-	cset( A, n, 0, 2, 1e-2, 0 );
-	cset( A, n, 1, 0, 1, 0 );
-	cset( A, n, 1, 1, 1e2, 2 );
-	cset( A, n, 1, 2, 1, 0.5 );
-	cset( A, n, 1, 3, 1e-2, 0 );
-	cset( A, n, 2, 0, 1e-2, 0 );
-	cset( A, n, 2, 1, 1, 0 );
-	cset( A, n, 2, 2, 1e2, 3 );
-	cset( A, n, 2, 3, 1, 0.5 );
-	cset( A, n, 2, 4, 1e-2, 0 );
-	cset( A, n, 3, 1, 1e-2, 0 );
-	cset( A, n, 3, 2, 1, 0 );
-	cset( A, n, 3, 3, 1e2, 4 );
-	cset( A, n, 3, 4, 1, 0.5 );
-	cset( A, n, 4, 2, 1e-2, 0 );
-	cset( A, n, 4, 3, 1, 0 );
-	cset( A, n, 4, 4, 1e2, 5 );
-	cset( B, n, 0, 0, 1e2, 0 );
-	cset( B, n, 1, 1, 1e2, 0 );
-	cset( B, n, 2, 2, 1e2, 0 );
-	cset( B, n, 3, 3, 1e2, 0 );
-	cset( B, n, 4, 4, 1e2, 0 );
+	cset( Av, n, 0, 0, 1e2, 1 );
+	cset( Av, n, 0, 1, 1, 0.5 );
+	cset( Av, n, 0, 2, 1e-2, 0 );
+	cset( Av, n, 1, 0, 1, 0 );
+	cset( Av, n, 1, 1, 1e2, 2 );
+	cset( Av, n, 1, 2, 1, 0.5 );
+	cset( Av, n, 1, 3, 1e-2, 0 );
+	cset( Av, n, 2, 0, 1e-2, 0 );
+	cset( Av, n, 2, 1, 1, 0 );
+	cset( Av, n, 2, 2, 1e2, 3 );
+	cset( Av, n, 2, 3, 1, 0.5 );
+	cset( Av, n, 2, 4, 1e-2, 0 );
+	cset( Av, n, 3, 1, 1e-2, 0 );
+	cset( Av, n, 3, 2, 1, 0 );
+	cset( Av, n, 3, 3, 1e2, 4 );
+	cset( Av, n, 3, 4, 1, 0.5 );
+	cset( Av, n, 4, 2, 1e-2, 0 );
+	cset( Av, n, 4, 3, 1, 0 );
+	cset( Av, n, 4, 4, 1e2, 5 );
+	cset( Bv, n, 0, 0, 1e2, 0 );
+	cset( Bv, n, 1, 1, 1e2, 0 );
+	cset( Bv, n, 2, 2, 1e2, 0 );
+	cset( Bv, n, 3, 3, 1e2, 0 );
+	cset( Bv, n, 4, 4, 1e2, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -415,8 +445,8 @@ test( 'zggbal: JOB=B, 5x5 — pentadiagonal with scaling', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
 test( 'zggbal: JOB=P, 3x3 diagonal — fully isolated', function t() {
@@ -425,27 +455,31 @@ test( 'zggbal: JOB=P, 3x3 diagonal — fully isolated', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_p_diagonal' );
 	n = 3;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 0 );
-	cset( A, n, 1, 1, 2, 0 );
-	cset( A, n, 2, 2, 3, 0 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 1, 1, 1, 0 );
-	cset( B, n, 2, 2, 1, 0 );
+	cset( Av, n, 0, 0, 1, 0 );
+	cset( Av, n, 1, 1, 2, 0 );
+	cset( Av, n, 2, 2, 3, 0 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
+	cset( Bv, n, 2, 2, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -461,25 +495,29 @@ test( 'zggbal: JOB=S, 2x2 trivial — ilo=ihi quick return from scaling', functi
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_s_trivial' );
 	n = 2;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 0 );
-	cset( A, n, 1, 1, 2, 0 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 1, 1, 1, 0 );
+	cset( Av, n, 0, 0, 1, 0 );
+	cset( Av, n, 1, 1, 2, 0 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'S', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'S', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -495,29 +533,33 @@ test( 'zggbal: JOB=B, 2x2 — complex dense', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_b_2x2' );
 	n = 2;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 1 );
-	cset( A, n, 0, 1, 2, 3 );
-	cset( A, n, 1, 0, 4, 5 );
-	cset( A, n, 1, 1, 6, 7 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 0, 1, 0.5, 0 );
-	cset( B, n, 1, 0, 0.5, 0 );
-	cset( B, n, 1, 1, 1, 0 );
+	cset( Av, n, 0, 0, 1, 1 );
+	cset( Av, n, 0, 1, 2, 3 );
+	cset( Av, n, 1, 0, 4, 5 );
+	cset( Av, n, 1, 1, 6, 7 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 0, 1, 0.5, 0 );
+	cset( Bv, n, 1, 0, 0.5, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -525,8 +567,8 @@ test( 'zggbal: JOB=B, 2x2 — complex dense', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
 test( 'zggbal: JOB=P, 5x5 — two isolated eigenvalues', function t() {
@@ -535,37 +577,41 @@ test( 'zggbal: JOB=P, 5x5 — two isolated eigenvalues', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_p_5x5' );
 	n = 5;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 0 );
-	cset( A, n, 1, 1, 2, 1 );
-	cset( A, n, 1, 2, 3, 0 );
-	cset( A, n, 1, 3, 1, 0 );
-	cset( A, n, 2, 1, 4, 0 );
-	cset( A, n, 2, 2, 5, 2 );
-	cset( A, n, 2, 3, 2, 0 );
-	cset( A, n, 3, 1, 1, 0 );
-	cset( A, n, 3, 2, 3, 0 );
-	cset( A, n, 3, 3, 6, 1 );
-	cset( A, n, 4, 4, 7, 0 );
-	cset( B, n, 0, 0, 1, 0 );
-	cset( B, n, 1, 1, 1, 0 );
-	cset( B, n, 2, 2, 1, 0 );
-	cset( B, n, 3, 3, 1, 0 );
-	cset( B, n, 4, 4, 1, 0 );
+	cset( Av, n, 0, 0, 1, 0 );
+	cset( Av, n, 1, 1, 2, 1 );
+	cset( Av, n, 1, 2, 3, 0 );
+	cset( Av, n, 1, 3, 1, 0 );
+	cset( Av, n, 2, 1, 4, 0 );
+	cset( Av, n, 2, 2, 5, 2 );
+	cset( Av, n, 2, 3, 2, 0 );
+	cset( Av, n, 3, 1, 1, 0 );
+	cset( Av, n, 3, 2, 3, 0 );
+	cset( Av, n, 3, 3, 6, 1 );
+	cset( Av, n, 4, 4, 7, 0 );
+	cset( Bv, n, 0, 0, 1, 0 );
+	cset( Bv, n, 1, 1, 1, 0 );
+	cset( Bv, n, 2, 2, 1, 0 );
+	cset( Bv, n, 3, 3, 1, 0 );
+	cset( Bv, n, 4, 4, 1, 0 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -573,8 +619,8 @@ test( 'zggbal: JOB=P, 5x5 — two isolated eigenvalues', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
 
 test( 'zggbal: JOB=B, 3x3 — fully dense complex', function t() {
@@ -583,39 +629,43 @@ test( 'zggbal: JOB=B, 3x3 — fully dense complex', function t() {
 	var rscale;
 	var work;
 	var tc;
+	var Av;
+	var Bv;
 	var n;
 	var A;
 	var B;
 
 	tc = findCase( 'job_b_dense' );
 	n = 3;
-	A = new Float64Array( 2 * n * n );
-	B = new Float64Array( 2 * n * n );
+	A = new Complex128Array( n * n );
+	B = new Complex128Array( n * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 
-	cset( A, n, 0, 0, 1, 1 );
-	cset( A, n, 0, 1, 2, 3 );
-	cset( A, n, 0, 2, 4, 5 );
-	cset( A, n, 1, 0, 6, 7 );
-	cset( A, n, 1, 1, 8, 9 );
-	cset( A, n, 1, 2, 10, 11 );
-	cset( A, n, 2, 0, 12, 13 );
-	cset( A, n, 2, 1, 14, 15 );
-	cset( A, n, 2, 2, 16, 17 );
-	cset( B, n, 0, 0, 1, 0.5 );
-	cset( B, n, 0, 1, 2, 1 );
-	cset( B, n, 0, 2, 3, 1.5 );
-	cset( B, n, 1, 0, 4, 2 );
-	cset( B, n, 1, 1, 5, 2.5 );
-	cset( B, n, 1, 2, 6, 3 );
-	cset( B, n, 2, 0, 7, 3.5 );
-	cset( B, n, 2, 1, 8, 4 );
-	cset( B, n, 2, 2, 9, 4.5 );
+	cset( Av, n, 0, 0, 1, 1 );
+	cset( Av, n, 0, 1, 2, 3 );
+	cset( Av, n, 0, 2, 4, 5 );
+	cset( Av, n, 1, 0, 6, 7 );
+	cset( Av, n, 1, 1, 8, 9 );
+	cset( Av, n, 1, 2, 10, 11 );
+	cset( Av, n, 2, 0, 12, 13 );
+	cset( Av, n, 2, 1, 14, 15 );
+	cset( Av, n, 2, 2, 16, 17 );
+	cset( Bv, n, 0, 0, 1, 0.5 );
+	cset( Bv, n, 0, 1, 2, 1 );
+	cset( Bv, n, 0, 2, 3, 1.5 );
+	cset( Bv, n, 1, 0, 4, 2 );
+	cset( Bv, n, 1, 1, 5, 2.5 );
+	cset( Bv, n, 1, 2, 6, 3 );
+	cset( Bv, n, 2, 0, 7, 3.5 );
+	cset( Bv, n, 2, 1, 8, 4 );
+	cset( Bv, n, 2, 2, 9, 4.5 );
 
 	lscale = new Float64Array( n );
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 2, 2 * n, 0, B, 2, 2 * n, 0,
+	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -623,6 +673,6 @@ test( 'zggbal: JOB=B, 3x3 — fully dense complex', function t() {
 	assert.strictEqual( result.ihi, tc.ihi, 'ihi' );
 	assertArrayClose( Array.from( lscale ), tc.lscale, 'lscale' );
 	assertArrayClose( Array.from( rscale ), tc.rscale, 'rscale' );
-	assertArrayClose( extractCMatrix( A, n, n, n ), tc.a, 'a' );
-	assertArrayClose( extractCMatrix( B, n, n, n ), tc.b, 'b' );
+	assertArrayClose( extractCMatrix( Av, n, n, n ), tc.a, 'a' );
+	assertArrayClose( extractCMatrix( Bv, n, n, n ), tc.b, 'b' );
 });
