@@ -1,0 +1,69 @@
+
+    zheev.ndarray( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+        Compute eigenvalues and optionally eigenvectors of a complex Hermitian matrix
+
+        Parameters
+        ----------
+        jobz: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: NonNegativeInteger
+            starting index for `w`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: NonNegativeInteger
+            starting index for `RWORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

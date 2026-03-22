@@ -142,10 +142,37 @@ function scanSources( pkg ) {
 
 var blasModules = scanModules( 'blas' );
 var lapackModules = scanModules( 'lapack' );
-var allModules = blasModules.concat( lapackModules );
 
 var blasSources = scanSources( 'blas' );
 var lapackSources = scanSources( 'lapack' );
+
+// Merge: include ALL reference routines, marking unimplemented ones
+function mergeWithSources( modules, sources ) {
+	var byName = {};
+	modules.forEach( function( m ) {
+		byName[ m.name ] = m;
+	});
+	return sources.map( function( name ) {
+		if ( byName[ name ] ) {
+			return byName[ name ];
+		}
+		return {
+			name: name,
+			package: modules.length > 0 ? modules[ 0 ].package : '',
+			description: '',
+			hasImpl: false,
+			isStub: false,
+			hasTests: false,
+			testCount: 0,
+			lineCov: null,
+			branchCov: null
+		};
+	});
+}
+
+blasModules = mergeWithSources( blasModules, blasSources );
+lapackModules = mergeWithSources( lapackModules, lapackSources );
+var allModules = blasModules.concat( lapackModules );
 
 var implemented = allModules.filter( function( m ) { return m.hasImpl; } );
 var stubs = allModules.filter( function( m ) { return m.isStub; } );
@@ -171,7 +198,8 @@ function moduleRow( m ) {
 		.replace( /TODO: Add description for \w+\./, '' )
 		.replace( /&/g, '&amp;' )
 		.replace( /</g, '&lt;' );
-	return '<tr>' +
+	var implAttr = ( m.hasImpl || m.isStub ) ? '' : ' class="unimpl"';
+	return '<tr' + implAttr + '>' +
 		'<td class="name">' + m.name + '</td>' +
 		'<td>' + status + '</td>' +
 		'<td class="tests">' + tests + '</td>' +
@@ -222,18 +250,23 @@ var html = '<!DOCTYPE html>\n' +
 '.cov-good { color: #16a34a; font-weight: 600; }\n' +
 '.cov-warn { color: #ca8a04; font-weight: 600; }\n' +
 '.cov-bad { color: #dc2626; font-weight: 600; }\n' +
+'tr.unimpl { display: none; }\n' +
+'body.show-all tr.unimpl { display: table-row; }\n' +
+'.toggle { margin-bottom: 1.5rem; font-size: 0.9rem; cursor: pointer; user-select: none; }\n' +
+'.toggle input { margin-right: 0.4rem; cursor: pointer; }\n' +
 '</style>\n</head>\n<body>\n' +
 '<h1>Blahpack Translation Progress</h1>\n' +
 '<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated ' + now + '</p>\n' +
 '<div class="stats">\n' +
-'<div class="stat green"><div class="val">' + implemented.length + '</div><div class="lbl">Implemented</div></div>\n' +
-'<div class="stat"><div class="val">' + stubs.length + '</div><div class="lbl">Stubs</div></div>\n' +
+'<div class="stat green"><div class="val">' + implemented.length + '/' + ( blasSources.length + lapackSources.length ) + '</div><div class="lbl">Implemented</div></div>\n' +
 '<div class="stat"><div class="val">' + totalTests + '</div><div class="lbl">Tests</div></div>\n' +
-'<div class="stat"><div class="val">' + blasSources.length + '</div><div class="lbl">BLAS Source</div></div>\n' +
-'<div class="stat"><div class="val">' + lapackSources.length + '</div><div class="lbl">LAPACK Source</div></div>\n' +
+'<div class="stat"><div class="val">' + blasModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + blasSources.length + '</div><div class="lbl">BLAS</div></div>\n' +
+'<div class="stat"><div class="val">' + lapackModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + lapackSources.length + '</div><div class="lbl">LAPACK</div></div>\n' +
 '</div>\n' +
+'<label class="toggle"><input type="checkbox" id="showAll">Show all reference routines (including unimplemented)</label>\n' +
 sectionHTML( 'BLAS', blasModules ) +
 sectionHTML( 'LAPACK', lapackModules ) +
+'<script>document.getElementById("showAll").addEventListener("change",function(){document.body.classList.toggle("show-all",this.checked)});</script>\n' +
 '</body>\n</html>\n';
 
 process.stdout.write( html );
