@@ -1,27 +1,12 @@
-/**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-
 'use strict';
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaset = require( './../lib' );
 var base = require( './../lib/base.js' );
 
@@ -45,16 +30,16 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-// Extract column from interleaved complex array
+// Extract column from interleaved Float64 view of a complex array
 // LDA = number of rows allocated, M = number of rows to extract
 // Column j starts at offset j * 2 * LDA in the flat array
-function extractCol( A, j, M, LDA ) {
+function extractCol( Av, j, M, LDA ) {
 	var result = [];
 	var start = j * 2 * LDA;
 	var i;
 	for ( i = 0; i < M; i++ ) {
-		result.push( A[ start + i * 2 ] );     // re
-		result.push( A[ start + i * 2 + 1 ] ); // im
+		result.push( Av[ start + i * 2 ] );     // re
+		result.push( Av[ start + i * 2 + 1 ] ); // im
 	}
 	return result;
 }
@@ -72,93 +57,101 @@ test( 'zlaset: attached to the main export is an `ndarray` method', function t()
 test( 'zlaset: full 3x3 matrix', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_full'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA * 3 );
-	var alpha = new Float64Array( [ 1.0, 2.0 ] );
-	var beta = new Float64Array( [ 3.0, 4.0 ] );
-	base( 'A', 3, 3, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
-	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
-	assertArrayClose( extractCol( A, 2, 3, LDA ), tc.a_col3, 'col3' );
+	var A = new Complex128Array( LDA * 3 );
+	var Av = reinterpret( A, 0 );
+	var alpha = new Complex128( 1.0, 2.0 );
+	var beta = new Complex128( 3.0, 4.0 );
+	base( 'A', 3, 3, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( Av, 2, 3, LDA ), tc.a_col3, 'col3' );
 });
 
 test( 'zlaset: upper triangular 3x3', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_upper'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA * 3 );
-	var alpha = new Float64Array( [ 1.0, 0.0 ] );
-	var beta = new Float64Array( [ 5.0, 0.0 ] );
-	base( 'U', 3, 3, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
-	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
-	assertArrayClose( extractCol( A, 2, 3, LDA ), tc.a_col3, 'col3' );
+	var A = new Complex128Array( LDA * 3 );
+	var Av = reinterpret( A, 0 );
+	var alpha = new Complex128( 1.0, 0.0 );
+	var beta = new Complex128( 5.0, 0.0 );
+	base( 'U', 3, 3, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( Av, 2, 3, LDA ), tc.a_col3, 'col3' );
 });
 
 test( 'zlaset: lower triangular 3x3', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_lower'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA * 3 );
-	var alpha = new Float64Array( [ 2.0, 1.0 ] );
-	var beta = new Float64Array( [ 7.0, 3.0 ] );
-	base( 'L', 3, 3, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
-	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
-	assertArrayClose( extractCol( A, 2, 3, LDA ), tc.a_col3, 'col3' );
+	var A = new Complex128Array( LDA * 3 );
+	var Av = reinterpret( A, 0 );
+	var alpha = new Complex128( 2.0, 1.0 );
+	var beta = new Complex128( 7.0, 3.0 );
+	base( 'L', 3, 3, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( Av, 2, 3, LDA ), tc.a_col3, 'col3' );
 });
 
 test( 'zlaset: 1x1 matrix (diagonal only)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_1x1'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA );
-	var alpha = new Float64Array( [ 10.0, 20.0 ] );
-	var beta = new Float64Array( [ 30.0, 40.0 ] );
-	base( 'A', 1, 1, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( [ A[ 0 ], A[ 1 ] ], tc.a, '1x1' );
+	var A = new Complex128Array( LDA );
+	var Av = reinterpret( A, 0 );
+	var alpha = new Complex128( 10.0, 20.0 );
+	var beta = new Complex128( 30.0, 40.0 );
+	base( 'A', 1, 1, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( [ Av[ 0 ], Av[ 1 ] ], tc.a, '1x1' );
 });
 
 test( 'zlaset: 0x0 matrix (no-op)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_0x0'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA );
-	A[ 0 ] = 99.0;
-	A[ 1 ] = 99.0;
-	var alpha = new Float64Array( [ 1.0, 2.0 ] );
-	var beta = new Float64Array( [ 3.0, 4.0 ] );
-	base( 'A', 0, 0, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( [ A[ 0 ], A[ 1 ] ], tc.a, '0x0' );
+	var A = new Complex128Array( LDA );
+	var Av = reinterpret( A, 0 );
+	Av[ 0 ] = 99.0;
+	Av[ 1 ] = 99.0;
+	var alpha = new Complex128( 1.0, 2.0 );
+	var beta = new Complex128( 3.0, 4.0 );
+	base( 'A', 0, 0, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( [ Av[ 0 ], Av[ 1 ] ], tc.a, '0x0' );
 });
 
 test( 'zlaset: rectangular 2x3', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_2x3'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA * 3 );
-	var alpha = new Float64Array( [ 1.0, -1.0 ] );
-	var beta = new Float64Array( [ 5.0, -5.0 ] );
-	base( 'A', 2, 3, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( extractCol( A, 0, 2, LDA ), tc.a_col1, 'col1' );
-	assertArrayClose( extractCol( A, 1, 2, LDA ), tc.a_col2, 'col2' );
-	assertArrayClose( extractCol( A, 2, 2, LDA ), tc.a_col3, 'col3' );
+	var A = new Complex128Array( LDA * 3 );
+	var Av = reinterpret( A, 0 );
+	var alpha = new Complex128( 1.0, -1.0 );
+	var beta = new Complex128( 5.0, -5.0 );
+	base( 'A', 2, 3, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( extractCol( Av, 0, 2, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( Av, 1, 2, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( Av, 2, 2, LDA ), tc.a_col3, 'col3' );
 });
 
 test( 'zlaset: rectangular 3x2', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_3x2'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA * 2 );
-	var alpha = new Float64Array( [ 2.0, 3.0 ] );
-	var beta = new Float64Array( [ 8.0, 9.0 ] );
-	base( 'A', 3, 2, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( extractCol( A, 0, 3, LDA ), tc.a_col1, 'col1' );
-	assertArrayClose( extractCol( A, 1, 3, LDA ), tc.a_col2, 'col2' );
+	var A = new Complex128Array( LDA * 2 );
+	var Av = reinterpret( A, 0 );
+	var alpha = new Complex128( 2.0, 3.0 );
+	var beta = new Complex128( 8.0, 9.0 );
+	base( 'A', 3, 2, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
 });
 
 test( 'zlaset: upper 4x4 identity', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlaset_upper_identity'; } );
 	var LDA = 4;
-	var A = new Float64Array( 2 * LDA * 4 );
-	var alpha = new Float64Array( [ 0.0, 0.0 ] );
-	var beta = new Float64Array( [ 1.0, 0.0 ] );
-	base( 'U', 4, 4, alpha, beta, A, 2, 2 * LDA, 0 );
-	assertArrayClose( extractCol( A, 0, 4, LDA ), tc.a_col1, 'col1' );
-	assertArrayClose( extractCol( A, 1, 4, LDA ), tc.a_col2, 'col2' );
-	assertArrayClose( extractCol( A, 2, 4, LDA ), tc.a_col3, 'col3' );
-	assertArrayClose( extractCol( A, 3, 4, LDA ), tc.a_col4, 'col4' );
+	var A = new Complex128Array( LDA * 4 );
+	var Av = reinterpret( A, 0 );
+	var alpha = new Complex128( 0.0, 0.0 );
+	var beta = new Complex128( 1.0, 0.0 );
+	base( 'U', 4, 4, alpha, beta, A, 1, LDA, 0 );
+	assertArrayClose( extractCol( Av, 0, 4, LDA ), tc.a_col1, 'col1' );
+	assertArrayClose( extractCol( Av, 1, 4, LDA ), tc.a_col2, 'col2' );
+	assertArrayClose( extractCol( Av, 2, 4, LDA ), tc.a_col3, 'col3' );
+	assertArrayClose( extractCol( Av, 3, 4, LDA ), tc.a_col4, 'col4' );
 });

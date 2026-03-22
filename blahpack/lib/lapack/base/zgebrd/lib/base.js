@@ -20,6 +20,9 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgebd2 = require( '../../zgebd2/lib/base.js' );
 var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var zlabrd = require( '../../zlabrd/lib/base.js' );
@@ -28,8 +31,8 @@ var zlabrd = require( '../../zlabrd/lib/base.js' );
 // VARIABLES //
 
 var DEFAULT_NB = 32;
-var ONE = new Float64Array( [ 1.0, 0.0 ] );
-var NEGONE = new Float64Array( [ -1.0, 0.0 ] );
+var ONE = new Complex128( 1.0, 0.0 );
+var NEGONE = new Complex128( -1.0, 0.0 );
 
 
 // MAIN //
@@ -47,25 +50,25 @@ var NEGONE = new Float64Array( [ -1.0, 0.0 ] );
 * @private
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
-* @param {Float64Array} A - input/output matrix (interleaved complex, column-major)
+* @param {Complex128Array} A - input/output matrix (column-major)
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
 * @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
-* @param {NonNegativeInteger} offsetA - starting index for A (Float64 index)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
 * @param {Float64Array} d - output array of real diagonal elements of B
 * @param {integer} strideD - stride for d
 * @param {NonNegativeInteger} offsetD - starting index for d
 * @param {Float64Array} e - output array of real off-diagonal elements of B
 * @param {integer} strideE - stride for e
 * @param {NonNegativeInteger} offsetE - starting index for e
-* @param {Float64Array} TAUQ - output array of scalar factors for Q (interleaved complex)
+* @param {Complex128Array} TAUQ - output array of scalar factors for Q
 * @param {integer} strideTAUQ - stride for TAUQ (in complex elements)
-* @param {NonNegativeInteger} offsetTAUQ - starting index for TAUQ
-* @param {Float64Array} TAUP - output array of scalar factors for P (interleaved complex)
+* @param {NonNegativeInteger} offsetTAUQ - starting index for TAUQ (in complex elements)
+* @param {Complex128Array} TAUP - output array of scalar factors for P
 * @param {integer} strideTAUP - stride for TAUP (in complex elements)
-* @param {NonNegativeInteger} offsetTAUP - starting index for TAUP
-* @param {Float64Array} WORK - workspace array (interleaved complex)
+* @param {NonNegativeInteger} offsetTAUP - starting index for TAUP (in complex elements)
+* @param {Complex128Array} WORK - workspace array
 * @param {integer} strideWORK - stride for WORK (in complex elements)
-* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 * @param {integer} lwork - length of WORK array (in complex elements)
 * @returns {integer} info - 0 if successful
 */
@@ -74,18 +77,26 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	var ldwrky;
 	var minmn;
 	var nbmin;
-	var aii;
-	var aij;
 	var sa1;
 	var sa2;
+	var oA;
+	var Av;
+	var aii;
+	var aij;
 	var nb;
 	var nx;
 	var ws;
 	var i;
 	var j;
 
-	sa1 = strideA1;
-	sa2 = strideA2;
+	/* @complex-arrays A, TAUQ, TAUP, WORK */
+
+	// Get Float64 view for element access
+	Av = reinterpret( A, 0 );
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
+
 	minmn = Math.min( M, N );
 
 	// Quick return if possible
@@ -120,8 +131,8 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	}
 
 	// Ensure WORK is large enough; allocate internally if needed
-	if ( !WORK || WORK.length < 2 * ws ) {
-		WORK = new Float64Array( 2 * ws );
+	if ( !WORK || WORK.length < ws ) {
+		WORK = new Complex128Array( ws );
 		offsetWORK = 0;
 		strideWORK = 1;
 	}
@@ -137,50 +148,29 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			// zlabrd( M, N, nb, A, sa1, sa2, oA, d, sD, oD, e, sE, oE,
 			//         TAUQ, sTQ, oTQ, TAUP, sTP, oTP, X, sX1, sX2, oX, Y, sY1, sY2, oY )
 			//
-			// Fortran: ZLABRD( M-I+1, N-I+1, NB, A(I,I), LDA, D(I), E(I),
-			//                  TAUQ(I), TAUP(I), WORK, LDWRKX,
-			//                  WORK(LDWRKX*NB+1), LDWRKY )
-			//
-			// In Fortran, WORK is used as two 2D matrices:
-			//   X = WORK(1..LDWRKX*NB), stored column-major with leading dim LDWRKX
-			//   Y = WORK(LDWRKX*NB+1..), stored column-major with leading dim LDWRKY
-			//
-			// In JS (interleaved complex), X starts at offsetWORK,
-			// Y starts at offsetWORK + 2*ldwrkx*nb.
+			// X starts at offsetWORK, Y starts at offsetWORK + ldwrkx * nb
 			zlabrd(
 				M - i, N - i, nb,
-				A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
+				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 				d, strideD, offsetD + i * strideD,
 				e, strideE, offsetE + i * strideE,
-				TAUQ, strideTAUQ, offsetTAUQ + 2 * i * strideTAUQ,
-				TAUP, strideTAUP, offsetTAUP + 2 * i * strideTAUP,
+				TAUQ, strideTAUQ, offsetTAUQ + i * strideTAUQ,
+				TAUP, strideTAUP, offsetTAUP + i * strideTAUP,
 				WORK, 1, ldwrkx, offsetWORK,
-				WORK, 1, ldwrky, offsetWORK + 2 * ldwrkx * nb
+				WORK, 1, ldwrky, offsetWORK + ldwrkx * nb
 			);
 
 			// Update the trailing submatrix A(i+nb:M-1, i+nb:N-1)
-			// using the matrices X and Y returned by zlabrd.
-			//
-			// Fortran:
-			//   ZGEMM('N', 'C', M-I-NB+1, N-I-NB+1, NB, -ONE,
-			//          A(I+NB,I), LDA,
-			//          WORK(LDWRKX*NB+NB+1), LDWRKY, ONE,
-			//          A(I+NB,I+NB), LDA)
-			//
-			//   ZGEMM('N', 'N', M-I-NB+1, N-I-NB+1, NB, -ONE,
-			//          WORK(NB+1), LDWRKX,
-			//          A(I,I+NB), LDA, ONE,
-			//          A(I+NB,I+NB), LDA)
 			if ( M - i - nb > 0 && N - i - nb > 0 ) {
 				// C := -1 * A(i+nb:,i:i+nb-1) * Y(nb:,:)^H + 1 * A(i+nb:,i+nb:)
 				zgemm(
 					'N', 'C',
 					M - i - nb, N - i - nb, nb,
 					NEGONE,
-					A, sa1, sa2, offsetA + 2 * ( ( i + nb ) * sa1 + i * sa2 ),
-					WORK, 1, ldwrky, offsetWORK + 2 * ( ldwrkx * nb + nb ),
+					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + i * strideA2,
+					WORK, 1, ldwrky, offsetWORK + ldwrkx * nb + nb,
 					ONE,
-					A, sa1, sa2, offsetA + 2 * ( ( i + nb ) * sa1 + ( i + nb ) * sa2 )
+					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
 				);
 
 				// C := -1 * X(nb:,:) * A(i:i+nb-1,i+nb:) + 1 * A(i+nb:,i+nb:)
@@ -188,35 +178,33 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					'N', 'N',
 					M - i - nb, N - i - nb, nb,
 					NEGONE,
-					WORK, 1, ldwrkx, offsetWORK + 2 * nb,
-					A, sa1, sa2, offsetA + 2 * ( i * sa1 + ( i + nb ) * sa2 ),
+					WORK, 1, ldwrkx, offsetWORK + nb,
+					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + nb ) * strideA2,
 					ONE,
-					A, sa1, sa2, offsetA + 2 * ( ( i + nb ) * sa1 + ( i + nb ) * sa2 )
+					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
 				);
 			}
 
 			// Copy diagonal and off-diagonal elements of B back into A
-			// (zlabrd modifies A in place for the reflectors, but D and E
-			// hold the bidiagonal entries that were overwritten)
 			if ( M >= N ) {
 				// Upper bidiagonal: D(j) -> A(j,j), E(j) -> A(j,j+1)
 				for ( j = i; j < i + nb; j++ ) {
-					aii = offsetA + 2 * ( j * sa1 + j * sa2 );
-					A[ aii ] = d[ offsetD + j * strideD ];
-					A[ aii + 1 ] = 0.0;
-					aij = offsetA + 2 * ( j * sa1 + ( j + 1 ) * sa2 );
-					A[ aij ] = e[ offsetE + j * strideE ];
-					A[ aij + 1 ] = 0.0;
+					aii = oA + j * sa1 + j * sa2;
+					Av[ aii ] = d[ offsetD + j * strideD ];
+					Av[ aii + 1 ] = 0.0;
+					aij = oA + j * sa1 + ( j + 1 ) * sa2;
+					Av[ aij ] = e[ offsetE + j * strideE ];
+					Av[ aij + 1 ] = 0.0;
 				}
 			} else {
 				// Lower bidiagonal: D(j) -> A(j,j), E(j) -> A(j+1,j)
 				for ( j = i; j < i + nb; j++ ) {
-					aii = offsetA + 2 * ( j * sa1 + j * sa2 );
-					A[ aii ] = d[ offsetD + j * strideD ];
-					A[ aii + 1 ] = 0.0;
-					aij = offsetA + 2 * ( ( j + 1 ) * sa1 + j * sa2 );
-					A[ aij ] = e[ offsetE + j * strideE ];
-					A[ aij + 1 ] = 0.0;
+					aii = oA + j * sa1 + j * sa2;
+					Av[ aii ] = d[ offsetD + j * strideD ];
+					Av[ aii + 1 ] = 0.0;
+					aij = oA + ( j + 1 ) * sa1 + j * sa2;
+					Av[ aij ] = e[ offsetE + j * strideE ];
+					Av[ aij + 1 ] = 0.0;
 				}
 			}
 
@@ -227,11 +215,11 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	// Use unblocked code to factor the last or only block
 	zgebd2(
 		M - i, N - i,
-		A, sa1, sa2, offsetA + 2 * ( i * sa1 + i * sa2 ),
+		A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 		d, strideD, offsetD + i * strideD,
 		e, strideE, offsetE + i * strideE,
-		TAUQ, strideTAUQ, offsetTAUQ + 2 * i * strideTAUQ,
-		TAUP, strideTAUP, offsetTAUP + 2 * i * strideTAUP,
+		TAUQ, strideTAUQ, offsetTAUQ + i * strideTAUQ,
+		TAUP, strideTAUP, offsetTAUP + i * strideTAUP,
 		WORK, strideWORK, offsetWORK
 	);
 

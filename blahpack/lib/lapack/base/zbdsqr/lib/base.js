@@ -531,7 +531,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'R', 'V', 'F', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
-						U, 2 * strideU1, 2 * strideU2, offsetU + 2 * ll * strideU2
+						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
@@ -539,7 +539,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'L', 'V', 'F', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
-						C, 2 * strideC1, 2 * strideC2, offsetC + 2 * ll * strideC1
+						C, strideC1, strideC2, offsetC + ll * strideC1
 					);
 				}
 
@@ -586,7 +586,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'R', 'V', 'B', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
-						U, 2 * strideU1, 2 * strideU2, offsetU + 2 * ll * strideU2
+						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
@@ -594,7 +594,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'L', 'V', 'B', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
-						C, 2 * strideC1, 2 * strideC2, offsetC + 2 * ll * strideC1
+						C, strideC1, strideC2, offsetC + ll * strideC1
 					);
 				}
 
@@ -651,14 +651,14 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'R', 'V', 'F', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
-						U, 2 * strideU1, 2 * strideU2, offsetU + 2 * ll * strideU2
+						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
 					zlasr( 'L', 'V', 'F', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
-						C, 2 * strideC1, 2 * strideC2, offsetC + 2 * ll * strideC1
+						C, strideC1, strideC2, offsetC + ll * strideC1
 					);
 				}
 
@@ -717,14 +717,14 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					zlasr( 'R', 'V', 'B', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
-						U, 2 * strideU1, 2 * strideU2, offsetU + 2 * ll * strideU2
+						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
 					zlasr( 'L', 'V', 'B', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
-						C, 2 * strideC1, 2 * strideC2, offsetC + 2 * ll * strideC1
+						C, strideC1, strideC2, offsetC + ll * strideC1
 					);
 				}
 			}
@@ -748,20 +748,20 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 * @param {integer} strideD - stride for d
 * @param {NonNegativeInteger} offsetD - offset for d
 * @param {NonNegativeInteger} ncvt - columns of VT
-* @param {Float64Array} VT - right singular vectors
+* @param {Complex128Array} VT - right singular vectors
 * @param {integer} strideVT1 - row stride (complex elements)
 * @param {integer} strideVT2 - column stride (complex elements)
-* @param {NonNegativeInteger} offsetVT - offset for VT
+* @param {NonNegativeInteger} offsetVT - offset for VT (complex elements)
 * @param {NonNegativeInteger} nru - rows of U
-* @param {Float64Array} U - left singular vectors
+* @param {Complex128Array} U - left singular vectors
 * @param {integer} strideU1 - row stride (complex elements)
 * @param {integer} strideU2 - column stride (complex elements)
-* @param {NonNegativeInteger} offsetU - offset for U
+* @param {NonNegativeInteger} offsetU - offset for U (complex elements)
 * @param {NonNegativeInteger} ncc - columns of C
-* @param {Float64Array} C - matrix C
+* @param {Complex128Array} C - matrix C
 * @param {integer} strideC1 - row stride (complex elements)
 * @param {integer} strideC2 - column stride (complex elements)
-* @param {NonNegativeInteger} offsetC - offset for C
+* @param {NonNegativeInteger} offsetC - offset for C (complex elements)
 */
 function sortSingularValues( N, d, strideD, offsetD, ncvt, VT, strideVT1, strideVT2, offsetVT, nru, U, strideU1, strideU2, offsetU, ncc, C, strideC1, strideC2, offsetC ) { // eslint-disable-line max-len, max-params
 	var smin;
@@ -775,7 +775,7 @@ function sortSingularValues( N, d, strideD, offsetD, ncvt, VT, strideVT1, stride
 			d[ offsetD + i * strideD ] = -d[ offsetD + i * strideD ];
 			if ( ncvt > 0 ) {
 				// Negate row i of VT
-				zdscal( ncvt, NEGONE, VT, strideVT2, offsetVT + 2 * i * strideVT1 );
+				zdscal( ncvt, NEGONE, VT, strideVT2, offsetVT + i * strideVT1 );
 			}
 		}
 	}
@@ -797,20 +797,20 @@ function sortSingularValues( N, d, strideD, offsetD, ncvt, VT, strideVT1, stride
 			d[ offsetD + ( N - 1 - i ) * strideD ] = smin;
 			if ( ncvt > 0 ) {
 				zswap( ncvt,
-					VT, strideVT2, offsetVT + 2 * isub * strideVT1,
-					VT, strideVT2, offsetVT + 2 * ( N - 1 - i ) * strideVT1
+					VT, strideVT2, offsetVT + isub * strideVT1,
+					VT, strideVT2, offsetVT + ( N - 1 - i ) * strideVT1
 				);
 			}
 			if ( nru > 0 ) {
 				zswap( nru,
-					U, strideU1, offsetU + 2 * isub * strideU2,
-					U, strideU1, offsetU + 2 * ( N - 1 - i ) * strideU2
+					U, strideU1, offsetU + isub * strideU2,
+					U, strideU1, offsetU + ( N - 1 - i ) * strideU2
 				);
 			}
 			if ( ncc > 0 ) {
 				zswap( ncc,
-					C, strideC2, offsetC + 2 * isub * strideC1,
-					C, strideC2, offsetC + 2 * ( N - 1 - i ) * strideC1
+					C, strideC2, offsetC + isub * strideC1,
+					C, strideC2, offsetC + ( N - 1 - i ) * strideC1
 				);
 			}
 		}

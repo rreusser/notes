@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ddot = require( '../../../../blas/base/ddot/lib/base.js' );
 var daxpy = require( '../../../../blas/base/daxpy/lib/base.js' );
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
@@ -85,9 +86,7 @@ function cabs( arr, idx ) {
 * isolate eigenvalues, and applying diagonal similarity transformations
 * to rows and columns ILO to IHI to equalize norms.
 *
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element (i, j) has real part at `offsetA + i*strideA1 + j*strideA2`
-* and imaginary part at `offsetA + i*strideA1 + j*strideA2 + 1`.
+* A and B are Complex128Arrays. Strides and offsets are in complex elements.
 *
 * ILO and IHI are output parameters. They are returned in the result
 * object along with the info status.
@@ -95,14 +94,14 @@ function cabs( arr, idx ) {
 * @private
 * @param {string} job - 'N' none, 'P' permute, 'S' scale, 'B' both
 * @param {NonNegativeInteger} N - order of matrices A and B
-* @param {Float64Array} A - first complex matrix (interleaved, modified in-place)
-* @param {integer} strideA1 - stride of the first dimension of A
-* @param {integer} strideA2 - stride of the second dimension of A
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} B - second complex matrix (interleaved, modified in-place)
-* @param {integer} strideB1 - stride of the first dimension of B
-* @param {integer} strideB2 - stride of the second dimension of B
-* @param {NonNegativeInteger} offsetB - starting index for B
+* @param {Complex128Array} A - first complex matrix (modified in-place)
+* @param {integer} strideA1 - stride of the first dimension of A (complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+* @param {Complex128Array} B - second complex matrix (modified in-place)
+* @param {integer} strideB1 - stride of the first dimension of B (complex elements)
+* @param {integer} strideB2 - stride of the second dimension of B (complex elements)
+* @param {NonNegativeInteger} offsetB - starting index for B (complex elements)
 * @param {Float64Array} LSCALE - left scaling/permutation factors (length N)
 * @param {integer} strideLSCALE - stride for LSCALE
 * @param {NonNegativeInteger} offsetLSCALE - starting index for LSCALE
@@ -169,28 +168,28 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	var m;
 	var i;
 	var j;
+	var Av;
+	var Bv;
 	var idx;
 	var found;
 
-	// Local aliases for strides and offsets
-	sA1 = strideA1;
-	sA2 = strideA2;
-	sB1 = strideB1;
-	sB2 = strideB2;
-	oA = offsetA;
-	oB = offsetB;
+	// Get Float64Array views for direct element access
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+
+	// Convert strides/offsets to Float64 units for element access
+	sA1 = strideA1 * 2;
+	sA2 = strideA2 * 2;
+	sB1 = strideB1 * 2;
+	sB2 = strideB2 * 2;
+	oA = offsetA * 2;
+	oB = offsetB * 2;
 	sL = strideLSCALE;
 	sR = strideRSCALE;
 	oL = offsetLSCALE;
 	oR = offsetRSCALE;
 	sW = strideWORK;
 	oW = offsetWORK;
-
-	// Complex strides for zswap/zdscal/izamax (in complex elements)
-	// strideA2/2 = LDA (complex stride for row traversal across columns)
-	// strideA1/2 = 1 (complex stride for column traversal down rows)
-	// Actually: for interleaved storage, sA1=2 for col-major, sA2=2*LDA
-	// zswap stride in complex elements: sA2/2 for row stride, sA1/2 for col stride
 
 	// Quick return if possible
 	if ( N === 0 ) {
@@ -259,7 +258,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				found = false;
 				for ( j = 0; j < lm1; j++ ) {
 					idx = oA + i * sA1 + j * sA2;
-					if ( !czero( A, idx ) || !czero( B, oB + i * sB1 + j * sB2 ) ) {
+					if ( !czero( Av, idx ) || !czero( B, oB + i * sB1 + j * sB2 ) ) {
 						jp1 = j + 1;
 						found = true;
 						break;
@@ -273,7 +272,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					var allZero = true; // eslint-disable-line no-var
 					for ( var jj = jp1; jj < l; jj++ ) { // eslint-disable-line no-var
 						idx = oA + i * sA1 + jj * sA2;
-						if ( !czero( A, idx ) || !czero( B, oB + i * sB1 + jj * sB2 ) ) {
+						if ( !czero( Av, idx ) || !czero( B, oB + i * sB1 + jj * sB2 ) ) {
 							allZero = false;
 							break;
 						}
@@ -320,7 +319,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					found = false;
 					for ( i = k - 1; i < lm1; i++ ) {
 						idx = oA + i * sA1 + j * sA2;
-						if ( !czero( A, idx ) || !czero( B, oB + i * sB1 + j * sB2 ) ) {
+						if ( !czero( Av, idx ) || !czero( B, oB + i * sB1 + j * sB2 ) ) {
 							ip1 = i + 1;
 							found = true;
 							break;
@@ -334,7 +333,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						var allZeroCol = true; // eslint-disable-line no-var
 						for ( var ii = ip1; ii < l; ii++ ) { // eslint-disable-line no-var
 							idx = oA + ii * sA1 + j * sA2;
-							if ( !czero( A, idx ) || !czero( B, oB + ii * sB1 + j * sB2 ) ) {
+							if ( !czero( Av, idx ) || !czero( B, oB + ii * sB1 + j * sB2 ) ) {
 								allZeroCol = false;
 								break;
 							}
@@ -450,7 +449,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		for ( i = ilo - 1; i < ihi; i++ ) {
 			for ( j = ilo - 1; j < ihi; j++ ) {
 				idx = oA + i * sA1 + j * sA2;
-				if ( czero( A, idx ) ) {
+				if ( czero( Av, idx ) ) {
 					ta = ZERO;
 				} else {
 					ta = Math.log10( cabs1( A, idx ) ) / basl;
@@ -519,7 +518,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				sum = ZERO;
 				for ( j = ilo - 1; j < ihi; j++ ) {
 					idx = oA + i * sA1 + j * sA2;
-					if ( !czero( A, idx ) ) {
+					if ( !czero( Av, idx ) ) {
 						kount += 1;
 						sum += WORK[ oW + j * sW ];
 					}
@@ -537,7 +536,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				sum = ZERO;
 				for ( i = ilo - 1; i < ihi; i++ ) {
 					idx = oA + i * sA1 + j * sA2;
-					if ( !czero( A, idx ) ) {
+					if ( !czero( Av, idx ) ) {
 						kount += 1;
 						sum += WORK[ oW + ( i + N ) * sW ];
 					}
