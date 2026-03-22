@@ -4,6 +4,8 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var zgeqr2 = require( '../../zgeqr2/lib/base.js' );
@@ -41,9 +43,9 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * A is stored with strideA1=1, strideA2=3 (complex elements).
 */
 function qr3x2() {
-	var A = new Float64Array( [ 1,0, 2,0, 3,0, 4,1, 5,1, 6,1 ] );
-	var TAU = new Float64Array( 4 );
-	var WORK = new Float64Array( 40 );
+	var A = new Complex128Array( [ 1,0, 2,0, 3,0, 4,1, 5,1, 6,1 ] );
+	var TAU = new Complex128Array( 2 );
+	var WORK = new Complex128Array( 20 );
 	zgeqr2( 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	return { A: A, TAU: TAU };
 }
@@ -53,11 +55,12 @@ function qr3x2() {
 * Column 3 is zeros. Matches Fortran A(3,3) declaration.
 */
 function qr3x2in3x3() {
-	var A = new Float64Array( 18 );
-	A[0]=1; A[1]=0; A[2]=2; A[3]=0; A[4]=3; A[5]=0;
-	A[6]=4; A[7]=1; A[8]=5; A[9]=1; A[10]=6; A[11]=1;
-	var TAU = new Float64Array( 4 );
-	var WORK = new Float64Array( 40 );
+	var A = new Complex128Array( 9 );
+	var Av = reinterpret( A, 0 );
+	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=0; Av[4]=3; Av[5]=0;
+	Av[6]=4; Av[7]=1; Av[8]=5; Av[9]=1; Av[10]=6; Av[11]=1;
+	var TAU = new Complex128Array( 2 );
+	var WORK = new Complex128Array( 20 );
 	zgeqr2( 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	return { A: A, TAU: TAU };
 }
@@ -66,7 +69,7 @@ function qr3x2in3x3() {
 * Create a 3x3 complex identity matrix (column-major interleaved, strideC2=3).
 */
 function eye3() {
-	return new Float64Array( [ 1,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0, 1,0 ] );
+	return new Complex128Array( [ 1,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0, 1,0 ] );
 }
 
 
@@ -76,30 +79,30 @@ test( 'zunm2r: left, no transpose (Q*I)', function t() {
 	var tc = findCase( 'left_notrans' );
 	var qr = qr3x2();
 	var C = eye3();
-	var WORK = new Float64Array( 40 );
+	var WORK = new Complex128Array( 20 );
 	var info = zunm2r( 'L', 'N', 3, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 1e-10, 'c' );
 });
 
 test( 'zunm2r: left, conjugate transpose (Q^H*I)', function t() {
 	var tc = findCase( 'left_conjtrans' );
 	var qr = qr3x2();
 	var C = eye3();
-	var WORK = new Float64Array( 40 );
+	var WORK = new Complex128Array( 20 );
 	var info = zunm2r( 'L', 'C', 3, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 1e-10, 'c' );
 });
 
 test( 'zunm2r: right, no transpose (I*Q)', function t() {
 	var tc = findCase( 'right_notrans' );
 	var qr = qr3x2();
 	var C = eye3();
-	var WORK = new Float64Array( 40 );
+	var WORK = new Complex128Array( 20 );
 	var info = zunm2r( 'R', 'N', 3, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 1e-10, 'c' );
 });
 
 test( 'zunm2r: right, conjugate transpose (I*Q^H)', function t() {

@@ -1076,15 +1076,15 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// Q rotation: IF(ILQ) DO 110 JR = 1, N
 			if ( ilq ) {
 				for ( kk = 0; kk < N; kk++ ) {
-					idx1 = offsetQ + kk * sq1 + jj * sq2;
-					idx2 = offsetQ + kk * sq1 + ( jj + 1 ) * sq2;
+					idx1 = offsetQ * 2 + kk * sq1 + jj * sq2;
+					idx2 = offsetQ * 2 + kk * sq1 + ( jj + 1 ) * sq2;
 					// CTEMP = C*Q(JR,J) + conj(S)*Q(JR,J+1)
-					cr = c * Q[ idx1 ] + s[ 0 ] * Q[ idx2 ] + s[ 1 ] * Q[ idx2 + 1 ];
-					ci = c * Q[ idx1 + 1 ] + s[ 0 ] * Q[ idx2 + 1 ] - s[ 1 ] * Q[ idx2 ];
+					cr = c * Qv[ idx1 ] + s[ 0 ] * Qv[ idx2 ] + s[ 1 ] * Q[ idx2 + 1 ];
+					ci = c * Q[ idx1 + 1 ] + s[ 0 ] * Q[ idx2 + 1 ] - s[ 1 ] * Qv[ idx2 ];
 					// Q(JR,J+1) = -S*Q(JR,J) + C*Q(JR,J+1)
-					Q[ idx2 ] = -s[ 0 ] * Q[ idx1 ] + s[ 1 ] * Q[ idx1 + 1 ] + c * Q[ idx2 ];
-					Q[ idx2 + 1 ] = -s[ 0 ] * Q[ idx1 + 1 ] - s[ 1 ] * Q[ idx1 ] + c * Q[ idx2 + 1 ];
-					Q[ idx1 ] = cr;
+					Qv[ idx2 ] = -s[ 0 ] * Qv[ idx1 ] + s[ 1 ] * Q[ idx1 + 1 ] + c * Qv[ idx2 ];
+					Q[ idx2 + 1 ] = -s[ 0 ] * Q[ idx1 + 1 ] - s[ 1 ] * Qv[ idx1 ] + c * Q[ idx2 + 1 ];
+					Qv[ idx1 ] = cr;
 					Q[ idx1 + 1 ] = ci;
 				}
 			}
@@ -1143,13 +1143,13 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// Z rotation: IF(ILZ) DO 140 JR = 1, N
 			if ( ilz ) {
 				for ( kk = 0; kk < N; kk++ ) {
-					idx1 = offsetZ + kk * sz1 + ( jj + 1 ) * sz2;
-					idx2 = offsetZ + kk * sz1 + jj * sz2;
-					cr = c * Z[ idx1 ] + s[ 0 ] * Z[ idx2 ] - s[ 1 ] * Z[ idx2 + 1 ];
-					ci = c * Z[ idx1 + 1 ] + s[ 0 ] * Z[ idx2 + 1 ] + s[ 1 ] * Z[ idx2 ];
-					Z[ idx2 ] = -s[ 0 ] * Z[ idx1 ] - s[ 1 ] * Z[ idx1 + 1 ] + c * Z[ idx2 ];
-					Z[ idx2 + 1 ] = -s[ 0 ] * Z[ idx1 + 1 ] + s[ 1 ] * Z[ idx1 ] + c * Z[ idx2 + 1 ];
-					Z[ idx1 ] = cr;
+					idx1 = offsetZ * 2 + kk * sz1 + ( jj + 1 ) * sz2;
+					idx2 = offsetZ * 2 + kk * sz1 + jj * sz2;
+					cr = c * Zv[ idx1 ] + s[ 0 ] * Zv[ idx2 ] - s[ 1 ] * Z[ idx2 + 1 ];
+					ci = c * Z[ idx1 + 1 ] + s[ 0 ] * Z[ idx2 + 1 ] + s[ 1 ] * Zv[ idx2 ];
+					Zv[ idx2 ] = -s[ 0 ] * Zv[ idx1 ] - s[ 1 ] * Z[ idx1 + 1 ] + c * Zv[ idx2 ];
+					Z[ idx2 + 1 ] = -s[ 0 ] * Z[ idx1 + 1 ] + s[ 1 ] * Zv[ idx1 ] + c * Z[ idx2 + 1 ];
+					Zv[ idx1 ] = cr;
 					Z[ idx1 + 1 ] = ci;
 				}
 			}

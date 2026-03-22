@@ -2,6 +2,8 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlasr = require( './../lib' );
 var base = require( './../lib/base.js' );
 
@@ -30,18 +32,19 @@ function assertClose( actual, expected, msg ) {
 * @param {number} M - rows
 * @param {number} N - cols
 * @param {Array} vals - M*N pairs of [re, im]
-* @returns {Float64Array} interleaved column-major matrix
+* @returns {Complex128Array} interleaved column-major matrix
 */
 function buildMatrix( M, N, vals ) {
-	var A = new Float64Array( 2 * M * N );
+	var A = new Complex128Array( M * N );
+	var Av = reinterpret( A, 0 );
 	var row;
 	var col;
 	var k;
 	k = 0;
 	for ( row = 0; row < M; row++ ) {
 		for ( col = 0; col < N; col++ ) {
-			A[ col * 2 * M + row * 2 ] = vals[ k ][ 0 ];
-			A[ col * 2 * M + row * 2 + 1 ] = vals[ k ][ 1 ];
+			Av[ col * 2 * M + row * 2 ] = vals[ k ][ 0 ];
+			Av[ col * 2 * M + row * 2 + 1 ] = vals[ k ][ 1 ];
 			k++;
 		}
 	}
@@ -53,13 +56,14 @@ function buildMatrix( M, N, vals ) {
 * Float64Array [re00, im00, re01, im01, ...].
 */
 function extractAll( A, M, N, LDA ) {
+	var Av = ( A instanceof Complex128Array ) ? reinterpret( A, 0 ) : A;
 	var result = [];
 	var row;
 	var col;
 	for ( row = 0; row < M; row++ ) {
 		for ( col = 0; col < N; col++ ) {
-			result.push( A[ col * 2 * LDA + row * 2 ] );
-			result.push( A[ col * 2 * LDA + row * 2 + 1 ] );
+			result.push( Av[ col * 2 * LDA + row * 2 ] );
+			result.push( Av[ col * 2 * LDA + row * 2 + 1 ] );
 		}
 	}
 	return new Float64Array( result );
@@ -78,21 +82,21 @@ test( 'attached to the main export is an `ndarray` method', function t() {
 // --- Quick returns ---
 
 test( 'returns early when M=0', function t() {
-	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var c = new Float64Array( [ 0.5 ] );
 	var s = new Float64Array( [ 0.5 ] );
-	var expected = new Float64Array( A );
+	var expected = new Float64Array( reinterpret( A, 0 ) );
 	base( 'L', 'V', 'F', 0, 2, c, 1, 0, s, 1, 0, A, 2, 4, 0 );
-	assertClose( A, expected, 'M=0' );
+	assertClose( reinterpret( A, 0 ), expected, 'M=0' );
 });
 
 test( 'returns early when N=0', function t() {
-	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var c = new Float64Array( [ 0.5 ] );
 	var s = new Float64Array( [ 0.5 ] );
-	var expected = new Float64Array( A );
+	var expected = new Float64Array( reinterpret( A, 0 ) );
 	base( 'L', 'V', 'F', 2, 0, c, 1, 0, s, 1, 0, A, 2, 4, 0 );
-	assertClose( A, expected, 'N=0' );
+	assertClose( reinterpret( A, 0 ), expected, 'N=0' );
 });
 
 // --- Left side, Variable pivot ---
@@ -106,7 +110,7 @@ test( 'left, variable pivot, forward: 2x2 identity rotation', function t() {
 		[ 1, 2 ], [ 3, 4 ],
 		[ 5, 6 ], [ 7, 8 ]
 	]);
-	var expected = new Float64Array( A );
+	var expected = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1.0 ] );
 	var s = new Float64Array( [ 0.0 ] );
 	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 2, 2 * LDA, 0 );

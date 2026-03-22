@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zcopy = require( '../../../../blas/base/zcopy/lib/base.js' );
 var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
@@ -28,8 +29,8 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 
 // VARIABLES //
 
-var ONE = new Float64Array( [ 1.0, 0.0 ] );
-var NEGONE = new Float64Array( [ -1.0, 0.0 ] );
+var ONE = new Complex128( 1.0, 0.0 );
+var NEGONE = new Complex128( -1.0, 0.0 );
 
 // MAIN //
 

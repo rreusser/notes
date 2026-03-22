@@ -20,6 +20,8 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlascl = require( '../../dlascl/lib/base.js' );
 var zbdsqr = require( '../../zbdsqr/lib/base.js' );
