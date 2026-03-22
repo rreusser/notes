@@ -19,6 +19,10 @@ bin/                           # Pipeline scripts
   fortran_to_estree.py         #   Fortran parser → ESTree AST (outputs 1-based JS)
   estree_to_js.js              #   ESTree → formatted JavaScript
   remove_goto.py               #   GOTO restructuring (imported by transform.py)
+  instrument.js                #   Module._load profiler (incl/excl time, call trees)
+  bench-zggev.js               #   zggev profiling benchmark (multi-size, scaling)
+  bench-blas.js                #   Leaf-node BLAS/LAPACK microbenchmarks
+  profile-zhgeqz.js            #   V8 CPU profiler with per-line breakdown
 data/                          # Reference Fortran source
   BLAS-3.12.0/
   lapack-3.12.0/
@@ -457,6 +461,36 @@ Use incremental pointers (one add per element, not two multiplies). Drop
 Fortran stride-1 specializations. Preserve zero-element guards. For `uplo`
 routines, use layout-aware stride remapping. See
 [docs/performance-patterns.md](docs/performance-patterns.md) for code examples.
+
+**Proven optimizations (from zggev profiling):**
+
+1. **Hoist invariant constants to module scope.** `dlamch()` calls, `Math.sqrt()`
+   of constants, and any expression that depends only on machine constants must
+   be computed once at module level, not per call. Example: `dladiv` called
+   `dlamch('O')` 3× per call × 200K calls = 600K wasted function calls at
+   N=200. Fix: move to module-level `var OV = dlamch('O');`.
+
+2. **Cache typed-array element reads into local variables.** In rotation inner
+   loops, read all 4 values (re/im of both elements) into locals before
+   computing. This eliminates aliasing concerns for V8 and reduces bounds
+   checks. Combined with incremental pointers, this gave **16% speedup** on
+   zhgeqz's QZ sweep (the single hottest function at 53% of zggev time).
+
+3. **Avoid redundant `reinterpret()` calls.** When `cx === cy` (same
+   Complex128Array with different offsets — common in LAPACK rotation calls),
+   skip the second `reinterpret()`. Measured 11-34% improvement on zrot at
+   workload-relevant sizes.
+
+4. **Function call overhead matters at high call counts.** Scalar JS BLAS
+   peaks at ~5-6 GFLOPS for complex operations. At N=5, zrot spends more
+   time entering/exiting the function than doing useful work. For routines
+   called >100K times (zlartg, zrot, dladiv), every nanosecond of per-call
+   overhead is amplified. Consider inlining critical inner rotations as
+   zhgeqz does in doQZSweep.
+
+**Profiling workflow:** Use `bin/instrument.js` (Module._load hook) for
+subroutine-level profiling, then `bin/profile-zhgeqz.js` (V8 inspector API)
+for per-line breakdown. Run `bin/bench-blas.js` for leaf-node throughput.
 
 ### uplo/trans String Convention
 

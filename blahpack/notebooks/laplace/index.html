@@ -654,10 +654,11 @@ ${aaaResult.errvec.length} iterations, final error \`${aaaResult.errvec[aaaResul
     const trueData = truePoles.map(([re, im]) => ({ re, im }));
     const sampleData = Z.map(([re, im]) => ({ re, im }));
 
-    const allPts = [...poleData, ...zeroData, ...trueData, ...sampleData];
-    const pad = 0.15;
+    // Base axis range on sample points and true poles only — not outlier computed poles
+    const rangePts = [...sampleData, ...trueData];
+    const pad = 0.3;
     let reMin = Infinity, reMax = -Infinity, imMin = Infinity, imMax = -Infinity;
-    for (const p of allPts) {
+    for (const p of rangePts) {
       if (p.re < reMin) reMin = p.re;
       if (p.re > reMax) reMax = p.re;
       if (p.im < imMin) imMin = p.im;
