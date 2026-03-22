@@ -228,17 +228,260 @@ test( 'zlarfb: right, conjugate-transpose, forward, columnwise', function t() {
 	assertArrayClose( Array.from( C ), tc.C, 'C' );
 });
 
-test( 'zlarfb: STOREV=R throws', function t() {
-	var V = makeV();
-	var T = makeT();
+test( 'zlarfb: left, no-transpose, forward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_fwd_row'; });
+	// V is 2x4 (K=2, M=4), unit upper triangular in V1
+	var V = new Float64Array( [
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0,
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5
+	]);
+	// T computed by zlarft('F','R',4,2,V,2,tau,T,3)
+	var tcT = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_fwd_row'; });
+	// Use pre-computed T from the fixture (we need zlarft output)
+	// Actually, let's compute T ourselves using zlarft
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
 	var C = makeC();
 	var work = new Float64Array( 60 );
 
-	assert.throws( function() {
-		zlarfb( 'L', 'N', 'F', 'R', 4, 3, 2,
-			V, 1, 4, 0,
-			T, 1, 3, 0,
-			C, 1, 4, 0,
-			work, 1, 3, 0 );
-	}, /STOREV=R not yet implemented/ );
+	zlarfb( 'L', 'N', 'F', 'R', 4, 3, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 4, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: right, no-transpose, forward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_notrans_fwd_row'; });
+	// V is 2x4 (K=2, N=4), unit upper triangular in V1
+	var V = new Float64Array( [
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0,
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5
+	]);
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	// C is 3x4 (M=3, N=4, LDC=3)
+	var C = new Float64Array( [
+		1.0, 0.0,  2.0, 1.0,  3.0, -1.0,
+		0.0, 1.0,  0.5, 0.5,  -1.0, 2.0,
+		1.5, -0.5, -2.0, 1.0,  0.0, 0.0,
+		1.0, 1.0,  -0.5, 0.0,  2.0, -2.0
+	]);
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'R', 'N', 'F', 'R', 3, 4, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 3, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: left, conjugate-transpose, forward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_conjtrans_fwd_row'; });
+	// V is 2x4 (K=2, M=4), unit upper triangular in V1
+	var V = new Float64Array( [
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0,
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5
+	]);
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	var C = makeC();
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'L', 'C', 'F', 'R', 4, 3, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 4, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: left, no-transpose, backward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_bwd_row'; });
+	// V is 2x4 (K=2, M=4), last K cols unit lower triangular for backward
+	var V = new Float64Array( [
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5,
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0
+	]);
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	var C = makeC();
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'L', 'N', 'B', 'R', 4, 3, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 4, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: left, conjugate-transpose, backward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_conjtrans_bwd_row'; });
+	// V is 2x4 (K=2, M=4), last K cols unit lower triangular for backward
+	var V = new Float64Array( [
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5,
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0
+	]);
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	var C = makeC();
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'L', 'C', 'B', 'R', 4, 3, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 4, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: right, no-transpose, backward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_notrans_bwd_row'; });
+	// V is 2x4 (K=2, N=4), last K cols unit lower triangular for backward
+	var V = new Float64Array( [
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5,
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0
+	]);
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	// C is 3x4 (M=3, N=4, LDC=3)
+	var C = new Float64Array( [
+		1.0, 0.0,  2.0, 1.0,  3.0, -1.0,
+		0.0, 1.0,  0.5, 0.5,  -1.0, 2.0,
+		1.5, -0.5, -2.0, 1.0,  0.0, 0.0,
+		1.0, 1.0,  -0.5, 0.0,  2.0, -2.0
+	]);
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'R', 'N', 'B', 'R', 3, 4, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 3, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: right, conjugate-transpose, backward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_bwd_row'; });
+	// V is 2x4 (K=2, N=4), last K cols unit lower triangular for backward
+	var V = new Float64Array( [
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5,
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0
+	]);
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	// C is 3x4 (M=3, N=4, LDC=3)
+	var C = new Float64Array( [
+		1.0, 0.0,  2.0, 1.0,  3.0, -1.0,
+		0.0, 1.0,  0.5, 0.5,  -1.0, 2.0,
+		1.5, -0.5, -2.0, 1.0,  0.0, 0.0,
+		1.0, 1.0,  -0.5, 0.0,  2.0, -2.0
+	]);
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'R', 'C', 'B', 'R', 3, 4, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 3, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: right, conjugate-transpose, forward, rowwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_fwd_row'; });
+	// V is 2x4 (K=2, N=4), unit upper triangular in V1
+	var V = new Float64Array( [
+		1.0, 0.0,  0.0, 0.0,
+		0.3, 0.2,  1.0, 0.0,
+		-0.5, 0.1,  0.6, -0.4,
+		0.4, -0.3,  -0.2, 0.5
+	]);
+	var zlarft = require( '../../zlarft/lib/base.js' );
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
+	var T = new Float64Array( 12 );
+	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+
+	// C is 3x4 (M=3, N=4, LDC=3)
+	var C = new Float64Array( [
+		1.0, 0.0,  2.0, 1.0,  3.0, -1.0,
+		0.0, 1.0,  0.5, 0.5,  -1.0, 2.0,
+		1.5, -0.5, -2.0, 1.0,  0.0, 0.0,
+		1.0, 1.0,  -0.5, 0.0,  2.0, -2.0
+	]);
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'R', 'C', 'F', 'R', 3, 4, 2,
+		V, 1, 2, 0,
+		T, 1, 3, 0,
+		C, 1, 3, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
+});
+
+test( 'zlarfb: right, conjugate-transpose, backward, columnwise', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_bwd_col'; });
+	// V is 4x2 (N=4, K=2), last K rows unit upper triangular for backward
+	var V = new Float64Array( [
+		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
+		0.6, -0.4,  -0.2, 0.5,  0.4, -0.3,  1.0, 0.0
+	]);
+	// T for backward is lower triangular
+	var T = new Float64Array( 12 );
+	T[ 0 ] = 1.2; T[ 1 ] = -0.3;
+	T[ 2 ] = -1.22; T[ 3 ] = -1.50;
+	T[ 8 ] = 1.5; T[ 9 ] = 0.4;
+
+	// C is 3x4 (M=3, N=4, LDC=3)
+	var C = new Float64Array( [
+		1.0, 0.0,  2.0, 1.0,  3.0, -1.0,
+		0.0, 1.0,  0.5, 0.5,  -1.0, 2.0,
+		1.5, -0.5, -2.0, 1.0,  0.0, 0.0,
+		1.0, 1.0,  -0.5, 0.0,  2.0, -2.0
+	]);
+	var work = new Float64Array( 60 );
+
+	zlarfb( 'R', 'C', 'B', 'C', 3, 4, 2,
+		V, 1, 4, 0,
+		T, 1, 3, 0,
+		C, 1, 3, 0,
+		work, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 'C' );
 });

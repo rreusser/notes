@@ -269,6 +269,10 @@ If coverage is low, add targeted test cases:
 file in the module directory (`lib/<package>/base/<routine>/LEARNINGS.md`).
 A translation is not complete without it.
 
+**Verification:** `grep -c "TODO: Fill in" lib/<package>/base/<routine>/LEARNINGS.md`
+must return `0`. Replace every template placeholder with a real finding or `N/A`.
+Write at least one concrete bullet per section.
+
 This file captures anything that would help translate the NEXT routine faster.
 Include:
 

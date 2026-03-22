@@ -18,11 +18,12 @@ program test_dgetrf2
   call print_int('info', info)
   call end_test()
 
-  ! Test 2: 4x3 tall matrix (M > N)
+  ! Test 2: 4x3 tall matrix (M > N), full rank
+  ! A = [2 1 0; 0 3 1; 1 0 4; 0 1 2] col-major
   a = 0.0d0
-  a(1) = 1.0d0; a(2) = 2.0d0; a(3) = 3.0d0; a(4) = 4.0d0
-  a(5) = 5.0d0; a(6) = 6.0d0; a(7) = 7.0d0; a(8) = 8.0d0
-  a(9) = 9.0d0; a(10) = 10.0d0; a(11) = 11.0d0; a(12) = 12.0d0
+  a(1) = 2.0d0; a(2) = 0.0d0; a(3) = 1.0d0; a(4) = 0.0d0
+  a(5) = 1.0d0; a(6) = 3.0d0; a(7) = 0.0d0; a(8) = 1.0d0
+  a(9) = 0.0d0; a(10) = 1.0d0; a(11) = 4.0d0; a(12) = 2.0d0
   ipiv = 0
   call dgetrf2(4, 3, a, 4, ipiv, info)
   call begin_test('4x3')
@@ -46,11 +47,11 @@ program test_dgetrf2
   call end_test()
 
   ! Test 4: singular matrix (info > 0)
-  ! A = [1 2 3; 2 4 6; 3 6 9] — rank 1
+  ! A = [1 0 0; 0 0 0; 0 0 1] — zero diagonal at (2,2)
   a = 0.0d0
-  a(1) = 1.0d0; a(2) = 2.0d0; a(3) = 3.0d0
-  a(4) = 2.0d0; a(5) = 4.0d0; a(6) = 6.0d0
-  a(7) = 3.0d0; a(8) = 6.0d0; a(9) = 9.0d0
+  a(1) = 1.0d0; a(2) = 0.0d0; a(3) = 0.0d0
+  a(4) = 0.0d0; a(5) = 0.0d0; a(6) = 0.0d0
+  a(7) = 0.0d0; a(8) = 0.0d0; a(9) = 1.0d0
   ipiv = 0
   call dgetrf2(3, 3, a, 3, ipiv, info)
   call begin_test('singular')

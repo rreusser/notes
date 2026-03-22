@@ -1,0 +1,48 @@
+
+    dlasq1.ndarray( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, offsetWORK )
+        Compute all singular values of a real bidiagonal matrix via dqds
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

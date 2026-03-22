@@ -190,3 +190,37 @@ test( 'zlabrd: nb1_m_lt_n_2x3', function t() {
 	assertArrayClose( Array.from( X ), tc.X, 1e-12, 'X' );
 	assertArrayClose( Array.from( Y ), tc.Y, 1e-12, 'Y' );
 });
+
+test( 'zlabrd: m_lt_n_nb_eq_m_2x4', function t() {
+	var tc = findCase( 'm_lt_n_nb_eq_m_2x4' );
+	var M = 2;
+	var N = 4;
+	var nb = 2;
+	var LDA = M;
+	var LDX = M;
+	var LDY = N;
+
+	// A is 2x4 column-major, interleaved complex => 2*2*4 = 16 Float64s
+	var A = new Float64Array([
+		1.5, 0.5, -0.8, 0.3,                    // col 0
+		0.6, -0.2, 1.0, 0.7,                    // col 1
+		-0.4, 0.9, 0.2, -0.6,                   // col 2
+		0.7, -0.1, -0.3, 0.4                    // col 3
+	]);
+	var d = new Float64Array( nb );
+	var e = new Float64Array( nb );
+	var TAUQ = new Float64Array( 2 * nb );
+	var TAUP = new Float64Array( 2 * nb );
+	var X = new Float64Array( 2 * LDX * nb );
+	var Y = new Float64Array( 2 * LDY * nb );
+
+	zlabrd( M, N, nb, A, 1, LDA, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, X, 1, LDX, 0, Y, 1, LDY, 0 );
+
+	assertArrayClose( Array.from( A ), tc.A, 1e-12, 'A' );
+	assertArrayClose( Array.from( d ), tc.D, 1e-12, 'D' );
+	assertArrayClose( Array.from( e ), tc.E, 1e-12, 'E' );
+	assertArrayClose( Array.from( TAUQ ), tc.TAUQ, 1e-12, 'TAUQ' );
+	assertArrayClose( Array.from( TAUP ), tc.TAUP, 1e-12, 'TAUP' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-12, 'X' );
+	assertArrayClose( Array.from( Y ), tc.Y, 1e-12, 'Y' );
+});

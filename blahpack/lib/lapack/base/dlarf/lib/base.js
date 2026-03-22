@@ -1,0 +1,97 @@
+'use strict';
+
+// MODULES //
+
+var dgemv = require( '../../../../blas/base/dgemv/lib/base.js' );
+var dger = require( '../../../../blas/base/dger/lib/base.js' );
+var iladlr = require( '../../iladlr/lib/base.js' );
+var iladlc = require( '../../iladlc/lib/base.js' );
+
+// MAIN //
+
+/**
+* Applies a real elementary reflector H to a real M-by-N matrix C,
+* from either the left or the right.
+*
+*   H = I - tau * v * v**T
+*
+* @private
+* @param {string} side - 'L' for left, 'R' for right
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {Float64Array} v - reflector vector
+* @param {integer} strideV - stride for v
+* @param {NonNegativeInteger} offsetV - starting index for v
+* @param {number} tau - scalar factor
+* @param {Float64Array} C - matrix, modified in-place
+* @param {integer} strideC1 - stride of first dimension of C
+* @param {integer} strideC2 - stride of second dimension of C
+* @param {NonNegativeInteger} offsetC - starting index for C
+* @param {Float64Array} WORK - workspace array
+* @param {integer} strideWORK - stride for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+*/
+function dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	var applyLeft;
+	var lastv;
+	var lastc;
+	var ix;
+
+	applyLeft = ( side === 'L' || side === 'l' );
+	lastv = 0;
+	lastc = 0;
+
+	if ( tau !== 0.0 ) {
+		if ( applyLeft ) {
+			lastv = M;
+		} else {
+			lastv = N;
+		}
+		if ( strideV > 0 ) {
+			ix = offsetV + ( lastv - 1 ) * strideV;
+		} else {
+			ix = offsetV;
+		}
+
+		// Look for the last non-zero element in V
+		while ( lastv > 0 && v[ ix ] === 0.0 ) {
+			lastv -= 1;
+			ix -= strideV;
+		}
+
+		if ( applyLeft ) {
+			lastc = iladlc( lastv, N, C, strideC1, strideC2, offsetC ) + 1;
+		} else {
+			lastc = iladlr( M, lastv, C, strideC1, strideC2, offsetC ) + 1;
+		}
+	}
+
+	if ( applyLeft ) {
+		// Form H * C
+		if ( lastv > 0 ) {
+			// w(1:lastc) := C(1:lastv, 1:lastc)**T * v(1:lastv)
+			dgemv( 'T', lastv, lastc, 1.0, C, strideC1, strideC2, offsetC,
+				v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
+
+			// C(1:lastv, 1:lastc) := C(...) - tau * v(1:lastv) * w(1:lastc)**T
+			dger( lastv, lastc, -tau, v, strideV, offsetV,
+				WORK, strideWORK, offsetWORK, C, strideC1, strideC2, offsetC );
+		}
+	} else {
+		// Form C * H
+		if ( lastv > 0 ) {
+			// w(1:lastc) := C(1:lastc, 1:lastv) * v(1:lastv)
+			dgemv( 'N', lastc, lastv, 1.0, C, strideC1, strideC2, offsetC,
+				v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
+
+			// C(1:lastc, 1:lastv) := C(...) - tau * w(1:lastc) * v(1:lastv)**T
+			dger( lastc, lastv, -tau, WORK, strideWORK, offsetWORK,
+				v, strideV, offsetV, C, strideC1, strideC2, offsetC );
+		}
+	}
+}
+
+
+// EXPORTS //
+
+module.exports = dlarf;

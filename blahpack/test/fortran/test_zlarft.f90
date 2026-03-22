@@ -102,4 +102,47 @@ program test_zlarft
   call print_array('T', T_real, 12)
   call end_test()
 
+  ! Test 5: Forward, Rowwise, n=4, k=2
+  ! V is 2x4 (unit upper triangular in first k columns):
+  !   V = [ 1   v1  v1  v1 ]
+  !       [ 0    1  v2  v2 ]
+  ! Stored col-major in memory with LDV=2
+  V = (0.0d0, 0.0d0)
+  V(1) = (1.0d0, 0.0d0)  ! V(1,1)
+  V(2) = (0.0d0, 0.0d0)  ! V(2,1)
+  V(3) = (0.3d0, 0.2d0)  ! V(1,2)
+  V(4) = (1.0d0, 0.0d0)  ! V(2,2)
+  V(5) = (-0.5d0, 0.1d0) ! V(1,3)
+  V(6) = (0.6d0, -0.4d0) ! V(2,3)
+  V(7) = (0.4d0, -0.3d0) ! V(1,4)
+  V(8) = (-0.2d0, 0.5d0) ! V(2,4)
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('F', 'R', 4, 2, V, 2, tau, T, 3)
+  call begin_test('zlarft_fwd_row')
+  call print_array('T', T_real, 12)
+  call end_test()
+
+  ! Test 6: Backward, Rowwise, n=4, k=2
+  ! V is 2x4 (unit lower triangular in last k columns):
+  !   V = [ v1  v1  1   0 ]
+  !       [ v2  v2  v2  1 ]
+  V = (0.0d0, 0.0d0)
+  V(1) = (0.3d0, 0.2d0)   ! V(1,1)
+  V(2) = (0.6d0, -0.4d0)  ! V(2,1)
+  V(3) = (-0.5d0, 0.1d0)  ! V(1,2)
+  V(4) = (-0.2d0, 0.5d0)  ! V(2,2)
+  V(5) = (1.0d0, 0.0d0)   ! V(1,3)
+  V(6) = (0.4d0, -0.3d0)  ! V(2,3)
+  V(7) = (0.0d0, 0.0d0)   ! V(1,4)
+  V(8) = (1.0d0, 0.0d0)   ! V(2,4)
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('B', 'R', 4, 2, V, 2, tau, T, 3)
+  call begin_test('zlarft_bwd_row')
+  call print_array('T', T_real, 12)
+  call end_test()
+
 end program

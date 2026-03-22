@@ -1,0 +1,24 @@
+
+    dlapy2.ndarray( x, y )
+        Return sqrt(x**2 + y**2), taking care not to cause unnecessary overflow.
+
+        Parameters
+        ----------
+        x: number
+            x.
+
+        y: number
+            y.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,316 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
+var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
+var zlarfg = require( '../../zlarfg/lib/base.js' );
+var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
+var idamax = require( '../../../../blas/base/idamax/lib/base.js' );
+var dznrm2 = require( '../../../../blas/base/dznrm2/lib/base.js' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+var cmplx = require( '../../../../cmplx.js' );
+
+
+// VARIABLES //
+
+var CZERO = new Float64Array( [ 0.0, 0.0 ] );
+var CONE = new Float64Array( [ 1.0, 0.0 ] );
+var NEGCONE = new Float64Array( [ -1.0, 0.0 ] );
+
+
+// MAIN //
+
+/**
+* Computes a step of QR factorization with column pivoting using a
+* blocked algorithm. It factors at most NB columns of the M-by-N
+* submatrix A(OFFSET+1:M, 1:N). The actual number of columns
+* factored is returned as kb.
+*
+* This routine also updates the trailing matrix using level 3 BLAS,
+* accumulating the updates in a panel F.
+*
+* @private
+* @param {NonNegativeInteger} M - total rows of A
+* @param {NonNegativeInteger} N - columns of current submatrix
+* @param {NonNegativeInteger} offset - rows already factored
+* @param {NonNegativeInteger} nb - desired block size
+* @param {Float64Array} A - matrix (interleaved complex)
+* @param {integer} strideA1 - first dim stride of A (complex elements)
+* @param {integer} strideA2 - second dim stride of A (complex elements)
+* @param {NonNegativeInteger} offsetA - starting Float64 index for A
+* @param {Int32Array} JPVT - column permutation
+* @param {integer} strideJPVT - stride for JPVT
+* @param {NonNegativeInteger} offsetJPVT - starting index for JPVT
+* @param {Float64Array} TAU - reflector scalars (interleaved complex)
+* @param {integer} strideTAU - stride for TAU (complex elements)
+* @param {NonNegativeInteger} offsetTAU - starting Float64 index for TAU
+* @param {Float64Array} VN1 - partial column norms (real)
+* @param {integer} strideVN1 - stride for VN1
+* @param {NonNegativeInteger} offsetVN1 - starting index for VN1
+* @param {Float64Array} VN2 - original column norms (real)
+* @param {integer} strideVN2 - stride for VN2
+* @param {NonNegativeInteger} offsetVN2 - starting index for VN2
+* @param {Float64Array} AUXV - auxiliary vector (interleaved complex, length >= NB)
+* @param {integer} strideAUXV - stride for AUXV (complex elements)
+* @param {NonNegativeInteger} offsetAUXV - starting Float64 index for AUXV
+* @param {Float64Array} F - panel update matrix (interleaved complex, N-by-NB)
+* @param {integer} strideF1 - first dim stride of F (complex elements)
+* @param {integer} strideF2 - second dim stride of F (complex elements)
+* @param {NonNegativeInteger} offsetF - starting Float64 index for F
+* @returns {integer} kb - actual number of columns factored
+*/
+function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF ) { // eslint-disable-line max-len, max-params
+	var lastrk;
+	var lsticc;
+	var tol3z;
+	var itemp;
+	var temp2;
+	var temp;
+	var pvt;
+	var akk;
+	var sa1;
+	var sa2;
+	var sf1;
+	var sf2;
+	var oA;
+	var oF;
+	var rk;
+	var k;
+	var j;
+
+	sa1 = strideA1;
+	sa2 = strideA2;
+	sf1 = strideF1;
+	sf2 = strideF2;
+	oA = offsetA;
+	oF = offsetF;
+
+	lastrk = Math.min( M, N + offset );
+	lsticc = 0;
+	k = 0;
+	tol3z = Math.sqrt( dlamch( 'Epsilon' ) );
+	akk = new Float64Array( 2 );
+
+	// Main loop (Fortran label 10: while k < NB and lsticc == 0)
+	while ( k < nb && lsticc === 0 ) {
+		rk = offset + k;
+
+		// Determine pivot column
+		pvt = k + idamax( N - k, VN1, strideVN1, offsetVN1 + k * strideVN1 );
+
+		if ( pvt !== k ) {
+			// Swap columns pvt and k of A (all M rows)
+			zswap( M, A, sa1, oA + 2 * pvt * sa2, A, sa1, oA + 2 * k * sa2 );
+
+			// Swap rows pvt and k of F (first k columns, using column stride as row traversal)
+			zswap( k, F, sf2, oF + 2 * ( pvt * sf1 ), F, sf2, oF + 2 * ( k * sf1 ) );
+
+			// Swap JPVT entries
+			itemp = JPVT[ offsetJPVT + pvt * strideJPVT ];
+			JPVT[ offsetJPVT + pvt * strideJPVT ] = JPVT[ offsetJPVT + k * strideJPVT ];
+			JPVT[ offsetJPVT + k * strideJPVT ] = itemp;
+
+			// Swap norms
+			VN1[ offsetVN1 + pvt * strideVN1 ] = VN1[ offsetVN1 + k * strideVN1 ];
+			VN2[ offsetVN2 + pvt * strideVN2 ] = VN2[ offsetVN2 + k * strideVN2 ];
+		}
+
+		// Apply previous Householder reflectors to column k:
+		// A(rk:M-1, k) -= A(rk:M-1, 0:k-1) * conj(F(k, 0:k-1))^T
+		if ( k > 0 ) {
+			// Conjugate F(k, 0:k-1) in place
+			for ( j = 0; j < k; j++ ) {
+				// F(k, j): conjugate imaginary part
+				F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ] = -F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ];
+			}
+
+			// A(rk:M-1, k) += -1 * A(rk:M-1, 0:k-1) * F(k, 0:k-1)^T
+			// zgemv('N', M-rk, k, -CONE, A(rk,0), LDA, F(k,0), LDF, CONE, A(rk,k), 1)
+			zgemv(
+				'N', M - rk, k,
+				NEGCONE,
+				A, sa1, sa2, oA + 2 * ( rk * sa1 ),
+				F, sf2, oF + 2 * ( k * sf1 ),
+				CONE,
+				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 )
+			);
+
+			// Un-conjugate F(k, 0:k-1)
+			for ( j = 0; j < k; j++ ) {
+				F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ] = -F[ oF + 2 * ( k * sf1 + j * sf2 ) + 1 ];
+			}
+		}
+
+		// Generate elementary reflector H(k)
+		if ( rk < M - 1 ) {
+			zlarfg(
+				M - rk,
+				A, oA + 2 * ( rk * sa1 + k * sa2 ),
+				A, sa1, oA + 2 * ( ( rk + 1 ) * sa1 + k * sa2 ),
+				TAU, offsetTAU + 2 * k * strideTAU
+			);
+		} else {
+			zlarfg(
+				1,
+				A, oA + 2 * ( rk * sa1 + k * sa2 ),
+				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 ),
+				TAU, offsetTAU + 2 * k * strideTAU
+			);
+		}
+
+		// Save A(rk, k) and set to 1 for reflector application
+		akk[ 0 ] = A[ oA + 2 * ( rk * sa1 + k * sa2 ) ];
+		akk[ 1 ] = A[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ];
+		A[ oA + 2 * ( rk * sa1 + k * sa2 ) ] = 1.0;
+		A[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ] = 0.0;
+
+		// Compute k-th column of F:
+		// F(k+1:N-1, k) = tau(k) * A(rk:M-1, k+1:N-1)^H * A(rk:M-1, k)
+		if ( k < N - 1 ) {
+			// tau(k) as a 2-element array
+			var tauK = TAU.subarray( offsetTAU + 2 * k * strideTAU, offsetTAU + 2 * k * strideTAU + 2 ); // eslint-disable-line no-var
+			zgemv(
+				'C', M - rk, N - k - 1,
+				tauK,
+				A, sa1, sa2, oA + 2 * ( rk * sa1 + ( k + 1 ) * sa2 ),
+				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 ),
+				CZERO,
+				F, sf1, oF + 2 * ( ( k + 1 ) * sf1 + k * sf2 )
+			);
+		}
+
+		// Zero out F(0:k, k)
+		for ( j = 0; j <= k; j++ ) {
+			F[ oF + 2 * ( j * sf1 + k * sf2 ) ] = 0.0;
+			F[ oF + 2 * ( j * sf1 + k * sf2 ) + 1 ] = 0.0;
+		}
+
+		// Update F with contribution from previous reflectors
+		if ( k > 0 ) {
+			// AUXV(0:k-1) = -tau(k) * A(rk:M-1, 0:k-1)^H * A(rk:M-1, k)
+			var negTauK = new Float64Array( 2 ); // eslint-disable-line no-var
+			negTauK[ 0 ] = -TAU[ offsetTAU + 2 * k * strideTAU ];
+			negTauK[ 1 ] = -TAU[ offsetTAU + 2 * k * strideTAU + 1 ];
+			zgemv(
+				'C', M - rk, k,
+				negTauK,
+				A, sa1, sa2, oA + 2 * ( rk * sa1 ),
+				A, sa1, oA + 2 * ( rk * sa1 + k * sa2 ),
+				CZERO,
+				AUXV, strideAUXV, offsetAUXV
+			);
+
+			// F(0:N-1, k) += F(0:N-1, 0:k-1) * AUXV(0:k-1)
+			zgemv(
+				'N', N, k,
+				CONE,
+				F, sf1, sf2, oF,
+				AUXV, strideAUXV, offsetAUXV,
+				CONE,
+				F, sf1, oF + 2 * k * sf2
+			);
+		}
+
+		// Update the current row of A:
+		// A(rk, k+1:N-1) -= A(rk, 0:k-1) * conj(F(k+1:N-1, 0:k-1))^T
+		// Done as: A(rk, k+1:N-1) += -1 * A(rk, 0:k) * F(k+1:N-1, 0:k)^H (but only up to k cols)
+		if ( k < N - 1 ) {
+			// Use zgemm with 1 row: C = alpha * A * B + beta * C
+			// A(rk, 0:k) is 1 x (k+1), F(k+1:N-1, 0:k)^H is (k+1) x (N-k-1)
+			// We need: A(rk, k+1:N-1) -= A(rk, 0:k) * F(k+1:N-1, 0:k)^H
+			zgemm(
+				'N', 'C', 1, N - k - 1, k + 1,
+				NEGCONE,
+				A, sa1, sa2, oA + 2 * ( rk * sa1 ),
+				F, sf1, sf2, oF + 2 * ( ( k + 1 ) * sf1 ),
+				CONE,
+				A, sa1, sa2, oA + 2 * ( rk * sa1 + ( k + 1 ) * sa2 )
+			);
+		}
+
+		// Update partial column norms
+		if ( rk < lastrk ) {
+			for ( j = k + 1; j < N; j++ ) {
+				if ( VN1[ offsetVN1 + j * strideVN1 ] !== 0.0 ) {
+					temp = cmplx.abs(
+						A.subarray(
+							oA + 2 * ( rk * sa1 + j * sa2 ),
+							oA + 2 * ( rk * sa1 + j * sa2 ) + 2
+						)
+					) / VN1[ offsetVN1 + j * strideVN1 ];
+					temp = Math.max( 0.0, ( 1.0 + temp ) * ( 1.0 - temp ) );
+					temp2 = temp * Math.pow(
+						VN1[ offsetVN1 + j * strideVN1 ] /
+						VN2[ offsetVN2 + j * strideVN2 ], 2
+					);
+
+					if ( temp2 <= tol3z ) {
+						// Mark for recomputation using linked-list via VN2
+						VN2[ offsetVN2 + j * strideVN2 ] = lsticc;
+						lsticc = j;
+					} else {
+						VN1[ offsetVN1 + j * strideVN1 ] *= Math.sqrt( temp );
+					}
+				}
+			}
+		}
+
+		// Restore A(rk, k)
+		A[ oA + 2 * ( rk * sa1 + k * sa2 ) ] = akk[ 0 ];
+		A[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ] = akk[ 1 ];
+
+		k += 1;
+	}
+
+	// Set KB = actual number of columns factored
+	rk = offset + k;
+
+	// Apply the block reflector to the rest of the matrix
+	if ( k < Math.min( N, M - offset ) ) {
+		zgemm(
+			'N', 'C', M - rk, N - k, k,
+			NEGCONE,
+			A, sa1, sa2, oA + 2 * ( rk * sa1 ),
+			F, sf1, sf2, oF + 2 * ( k * sf1 ),
+			CONE,
+			A, sa1, sa2, oA + 2 * ( rk * sa1 + k * sa2 )
+		);
+	}
+
+	// Recompute norms for columns flagged in lsticc linked list
+	while ( lsticc > 0 ) {
+		itemp = Math.round( VN2[ offsetVN2 + lsticc * strideVN2 ] );
+		VN1[ offsetVN1 + lsticc * strideVN1 ] = dznrm2(
+			M - rk,
+			A, sa1, oA + 2 * ( rk * sa1 + lsticc * sa2 )
+		);
+		VN2[ offsetVN2 + lsticc * strideVN2 ] = VN1[ offsetVN1 + lsticc * strideVN1 ];
+		lsticc = itemp;
+	}
+
+	return k;
+}
+
+
+// EXPORTS //
+
+module.exports = zlaqps;

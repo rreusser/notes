@@ -1,0 +1,194 @@
+'use strict';
+
+// MODULES //
+
+var dcopy = require( '../../../../blas/base/dcopy/lib/base.js' );
+var dgemm = require( '../../../../blas/base/dgemm/lib/base.js' );
+var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
+
+// MAIN //
+
+/**
+* Applies a real block reflector H or its transpose H**T to a
+* real M-by-N matrix C, from either the left or the right.
+*
+* H = I - V * T * V**T  (for STOREV='C')
+*
+* Only STOREV='C' is supported. STOREV='R' will throw.
+*
+* @private
+* @param {string} side - 'L' or 'R'
+* @param {string} trans - 'N' or 'T'
+* @param {string} direct - 'F' or 'B'
+* @param {string} storev - 'C' or 'R'
+* @param {NonNegativeInteger} M - rows of C
+* @param {NonNegativeInteger} N - columns of C
+* @param {NonNegativeInteger} K - number of elementary reflectors
+* @param {Float64Array} V - matrix of reflector vectors
+* @param {integer} strideV1 - first dim stride of V
+* @param {integer} strideV2 - second dim stride of V
+* @param {NonNegativeInteger} offsetV - starting index for V
+* @param {Float64Array} T - triangular factor
+* @param {integer} strideT1 - first dim stride of T
+* @param {integer} strideT2 - second dim stride of T
+* @param {NonNegativeInteger} offsetT - starting index for T
+* @param {Float64Array} C - matrix, modified in-place
+* @param {integer} strideC1 - first dim stride of C
+* @param {integer} strideC2 - second dim stride of C
+* @param {NonNegativeInteger} offsetC - starting index for C
+* @param {Float64Array} WORK - workspace
+* @param {integer} strideWORK1 - first dim stride of WORK
+* @param {integer} strideWORK2 - second dim stride of WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+*/
+function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK ) { // eslint-disable-line max-len, max-params
+	var transt;
+	var i;
+	var j;
+
+	if ( M <= 0 || N <= 0 ) {
+		return;
+	}
+
+	if ( trans === 'N' || trans === 'n' ) {
+		transt = 'T';
+	} else {
+		transt = 'N';
+	}
+
+	if ( storev === 'C' || storev === 'c' ) {
+		if ( direct === 'F' || direct === 'f' ) {
+			// V = (V1)  first K rows, V1 is unit lower triangular
+			//     (V2)
+			if ( side === 'L' || side === 'l' ) {
+				// Form H*C or H**T*C where C = (C1)
+				//                               (C2)
+				// W := C1**T
+				for ( j = 0; j < K; j++ ) {
+					dcopy( N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				// W := W * V1
+				dtrmm( 'R', 'L', 'N', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( M > K ) {
+					// W := W + C2**T * V2
+					dgemm( 'T', 'N', N, K, M - K, 1.0,
+						C, strideC1, strideC2, offsetC + K * strideC1,
+						V, strideV1, strideV2, offsetV + K * strideV1,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T**T or W * T
+				dtrmm( 'R', 'U', transt, 'N', N, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - V * W**T
+				if ( M > K ) {
+					dgemm( 'N', 'T', M - K, N, K, -1.0,
+						V, strideV1, strideV2, offsetV + K * strideV1,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						1.0, C, strideC1, strideC2, offsetC + K * strideC1 );
+				}
+				// W := W * V1**T
+				dtrmm( 'R', 'L', 'T', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C1 := C1 - W**T
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < N; i++ ) {
+						C[ offsetC + j * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			} else if ( side === 'R' || side === 'r' ) {
+				// Form C*H or C*H**T where C = (C1 C2)
+				// W := C1
+				for ( j = 0; j < K; j++ ) {
+					dcopy( M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				// W := W * V1
+				dtrmm( 'R', 'L', 'N', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( N > K ) {
+					// W := W + C2 * V2
+					dgemm( 'N', 'N', M, K, N - K, 1.0,
+						C, strideC1, strideC2, offsetC + K * strideC2,
+						V, strideV1, strideV2, offsetV + K * strideV1,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T or W * T**T
+				dtrmm( 'R', 'U', trans, 'N', M, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - W * V**T
+				if ( N > K ) {
+					dgemm( 'N', 'T', M, N - K, K, -1.0,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						V, strideV1, strideV2, offsetV + K * strideV1,
+						1.0, C, strideC1, strideC2, offsetC + K * strideC2 );
+				}
+				// W := W * V1**T
+				dtrmm( 'R', 'L', 'T', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C1 := C1 - W
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < M; i++ ) {
+						C[ offsetC + i * strideC1 + j * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			}
+		} else {
+			// Backward: V = (V1)
+			//               (V2)  last K rows, V2 is unit upper triangular
+			if ( side === 'L' || side === 'l' ) {
+				// W := C2**T
+				for ( j = 0; j < K; j++ ) {
+					dcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				// W := W * V2
+				dtrmm( 'R', 'U', 'N', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( M > K ) {
+					dgemm( 'T', 'N', N, K, M - K, 1.0,
+						C, strideC1, strideC2, offsetC,
+						V, strideV1, strideV2, offsetV,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T**T or W * T
+				dtrmm( 'R', 'L', transt, 'N', N, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( M > K ) {
+					dgemm( 'N', 'T', M - K, N, K, -1.0,
+						V, strideV1, strideV2, offsetV,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						1.0, C, strideC1, strideC2, offsetC );
+				}
+				dtrmm( 'R', 'U', 'T', 'U', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < N; i++ ) {
+						C[ offsetC + ( M - K + j ) * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			} else if ( side === 'R' || side === 'r' ) {
+				// W := C2
+				for ( j = 0; j < K; j++ ) {
+					dcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+				}
+				dtrmm( 'R', 'U', 'N', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( N > K ) {
+					dgemm( 'N', 'N', M, K, N - K, 1.0,
+						C, strideC1, strideC2, offsetC,
+						V, strideV1, strideV2, offsetV,
+						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				dtrmm( 'R', 'L', trans, 'N', M, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( N > K ) {
+					dgemm( 'N', 'T', M, N - K, K, -1.0,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						V, strideV1, strideV2, offsetV,
+						1.0, C, strideC1, strideC2, offsetC );
+				}
+				dtrmm( 'R', 'U', 'T', 'U', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < M; i++ ) {
+						C[ offsetC + i * strideC1 + ( N - K + j ) * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+					}
+				}
+			}
+		}
+	} else {
+		throw new Error( 'dlarfb: STOREV=\'R\' is not supported' );
+	}
+}
+
+
+// EXPORTS //
+
+module.exports = dlarfb;

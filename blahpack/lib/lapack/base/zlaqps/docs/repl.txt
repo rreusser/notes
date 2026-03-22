@@ -1,0 +1,102 @@
+
+    zlaqps.ndarray( M, N, offset, nb, kb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF )
+        QR factorization with column pivoting (blocked panel)
+
+        Parameters
+        ----------
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        offset: integer
+            offset.
+
+        nb: integer
+            nb.
+
+        kb: integer
+            kb.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        JPVT: Int32Array
+            input array.
+
+        strideJPVT: integer
+            stride length for `JPVT`.
+
+        offsetJPVT: NonNegativeInteger
+            starting index for `JPVT`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: NonNegativeInteger
+            starting index for `TAU`.
+
+        VN1: Float64Array
+            input array.
+
+        strideVN1: integer
+            stride length for `VN1`.
+
+        offsetVN1: NonNegativeInteger
+            starting index for `VN1`.
+
+        VN2: Float64Array
+            input array.
+
+        strideVN2: integer
+            stride length for `VN2`.
+
+        offsetVN2: NonNegativeInteger
+            starting index for `VN2`.
+
+        AUXV: Float64Array
+            input array.
+
+        strideAUXV: integer
+            stride length for `AUXV`.
+
+        offsetAUXV: NonNegativeInteger
+            starting index for `AUXV`.
+
+        F: Float64Array
+            output matrix.
+
+        strideF1: integer
+            stride of the first dimension of `F`.
+
+        strideF2: integer
+            stride of the second dimension of `F`.
+
+        offsetF: NonNegativeInteger
+            starting index for `F`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

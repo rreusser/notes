@@ -1,0 +1,7 @@
+disnan
+dlaisnan
+dlamch
+dlasq3
+dlasq4
+dlasq5
+dlasq6

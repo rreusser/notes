@@ -59,6 +59,9 @@ var NEGONE = new Float64Array( [ -1.0, 0.0 ] );
 */
 function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, X, strideX1, strideX2, offsetX, Y, strideY1, strideY2, offsetY ) { // eslint-disable-line max-len, max-params
 	/* @complex-arrays A, TAUQ, TAUP, X, Y */
+	var alphaRe;
+	var alphaIm;
+	var alpha;
 	var sa1;
 	var sa2;
 	var sx1;
@@ -67,7 +70,10 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 	var sy2;
 	var stq;
 	var stp;
+	var ia;
 	var i;
+
+	alpha = new Float64Array( 2 );
 
 	if ( M <= 0 || N <= 0 ) {
 		return;
@@ -97,7 +103,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			// A(I,1) => row i, col 0 => offsetA + i*sa1
 			// Y(I,1) => row i, col 0 => offsetY + i*sy1, stride=LDY => strideY2
 			// A(I,I) => row i, col i => offsetA + i*sa1 + i*sa2, stride=1 => strideA1
-			zgemv( 'No transpose', M - i, i, NEGONE,
+			zgemv( 'N', M - i, i, NEGONE,
 				A, strideA1, strideA2, offsetA + i * sa1,
 				Y, strideY2, offsetY + i * sy1,
 				ONE, A, strideA1, offsetA + i * sa1 + i * sa2
@@ -110,7 +116,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			// X(I,1) => row i, col 0 => offsetX + i*sx1
 			// A(1,I) => row 0, col i => offsetA + i*sa2, stride=1 => strideA1
 			// A(I,I) => row i, col i => offsetA + i*sa1 + i*sa2, stride=1 => strideA1
-			zgemv( 'No transpose', M - i, i, NEGONE,
+			zgemv( 'N', M - i, i, NEGONE,
 				X, strideX1, strideX2, offsetX + i * sx1,
 				A, strideA1, offsetA + i * sa2,
 				ONE, A, strideA1, offsetA + i * sa1 + i * sa2
@@ -122,20 +128,22 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			// CALL ZLARFG(M-I+1, ALPHA, A(MIN(I+1,M),I), 1, TAUQ(I))
 			// D(I) = DBLE(ALPHA)
 			//
-			// zlarfg(N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau)
-			// alpha is A(I,I) => offsetA + i*sa1 + i*sa2
-			// x starts at A(MIN(I+1,M), I) => row min(i+1,M-1), col i
-			// In 0-based: min(i+1, M-1) => if i+1 < M then i+1 else M-1
-			zlarfg( M - i, A, offsetA + i * sa1 + i * sa2,
+			// Save A(I,I) before zlarfg (Fortran uses local ALPHA variable)
+			ia = offsetA + i * sa1 + i * sa2;
+			alphaRe = A[ ia ];
+			alphaIm = A[ ia + 1 ];
+			alpha[ 0 ] = alphaRe;
+			alpha[ 1 ] = alphaIm;
+			zlarfg( M - i, alpha, 0,
 				A, strideA1, offsetA + Math.min( i + 1, M - 1 ) * sa1 + i * sa2,
 				TAUQ, offsetTAUQ + i * stq
 			);
-			d[ offsetD + i * strideD ] = A[ offsetA + i * sa1 + i * sa2 ];
+			d[ offsetD + i * strideD ] = alpha[ 0 ];
 
 			if ( i < N - 1 ) {
 				// Set A(i,i) = 1 for use as the reflector vector
-				A[ offsetA + i * sa1 + i * sa2 ] = 1.0;
-				A[ offsetA + i * sa1 + i * sa2 + 1 ] = 0.0;
+				A[ ia ] = 1.0;
+				A[ ia + 1 ] = 0.0;
 
 				// Compute Y(i+1:N-1, i)
 				//
@@ -143,7 +151,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(I,I+1) => row i, col i+1 => offsetA + i*sa1 + (i+1)*sa2
 				// A(I,I) => row i, col i => offsetA + i*sa1 + i*sa2, stride=1 => strideA1
 				// Y(I+1,I) => row i+1, col i => offsetY + (i+1)*sy1 + i*sy2, stride=1 => strideY1
-				zgemv( 'Conjugate transpose', M - i, N - i - 1, ONE,
+				zgemv( 'C', M - i, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + i * sa1 + ( i + 1 ) * sa2,
 					A, strideA1, offsetA + i * sa1 + i * sa2,
 					ZERO, Y, strideY1, offsetY + ( i + 1 ) * sy1 + i * sy2
@@ -153,7 +161,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(I,1) => row i, col 0 => offsetA + i*sa1
 				// A(I,I) => row i, col i => offsetA + i*sa1 + i*sa2, stride=1 => strideA1
 				// Y(1,I) => row 0, col i => offsetY + i*sy2, stride=1 => strideY1
-				zgemv( 'Conjugate transpose', M - i, i, ONE,
+				zgemv( 'C', M - i, i, ONE,
 					A, strideA1, strideA2, offsetA + i * sa1,
 					A, strideA1, offsetA + i * sa1 + i * sa2,
 					ZERO, Y, strideY1, offsetY + i * sy2
@@ -163,14 +171,14 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// Y(I+1,1) => row i+1, col 0 => offsetY + (i+1)*sy1
 				// Y(1,I) => row 0, col i => offsetY + i*sy2, stride=1 => strideY1
 				// Y(I+1,I) => row i+1, col i => offsetY + (i+1)*sy1 + i*sy2, stride=1 => strideY1
-				zgemv( 'No transpose', N - i - 1, i, NEGONE,
+				zgemv( 'N', N - i - 1, i, NEGONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * sy1,
 					Y, strideY1, offsetY + i * sy2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * sy1 + i * sy2
 				);
 
 				// Fortran: CALL ZGEMV('C', M-I+1, I-1, ONE, X(I,1), LDX, A(I,I), 1, ZERO, Y(1,I), 1)
-				zgemv( 'Conjugate transpose', M - i, i, ONE,
+				zgemv( 'C', M - i, i, ONE,
 					X, strideX1, strideX2, offsetX + i * sx1,
 					A, strideA1, offsetA + i * sa1 + i * sa2,
 					ZERO, Y, strideY1, offsetY + i * sy2
@@ -178,7 +186,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 
 				// Fortran: CALL ZGEMV('C', I-1, N-I, -ONE, A(1,I+1), LDA, Y(1,I), 1, ONE, Y(I+1,I), 1)
 				// A(1,I+1) => row 0, col i+1 => offsetA + (i+1)*sa2
-				zgemv( 'Conjugate transpose', i, N - i - 1, NEGONE,
+				zgemv( 'C', i, N - i - 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa2,
 					Y, strideY1, offsetY + i * sy2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * sy1 + i * sy2
@@ -201,7 +209,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 
 				// Fortran: CALL ZGEMV('N', N-I, I, -ONE, Y(I+1,1), LDY, A(I,1), LDA, ONE, A(I,I+1), LDA)
 				// Note: A(I,1) stride=LDA => strideA2, A(I,I+1) stride=LDA => strideA2
-				zgemv( 'No transpose', N - i - 1, i + 1, NEGONE,
+				zgemv( 'N', N - i - 1, i + 1, NEGONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * sy1,
 					A, strideA2, offsetA + i * sa1,
 					ONE, A, strideA2, offsetA + i * sa1 + ( i + 1 ) * sa2
@@ -214,7 +222,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				zlacgv( i, X, strideX2, offsetX + i * sx1 );
 
 				// Fortran: CALL ZGEMV('C', I-1, N-I, -ONE, A(1,I+1), LDA, X(I,1), LDX, ONE, A(I,I+1), LDA)
-				zgemv( 'Conjugate transpose', i, N - i - 1, NEGONE,
+				zgemv( 'C', i, N - i - 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa2,
 					X, strideX2, offsetX + i * sx1,
 					ONE, A, strideA2, offsetA + i * sa1 + ( i + 1 ) * sa2
@@ -246,7 +254,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(I+1,I+1) => row i+1, col i+1
 				// A(I,I+1) => row i, col i+1, stride=LDA => strideA2
 				// X(I+1,I) => row i+1, col i, stride=1 => strideX1
-				zgemv( 'No transpose', M - i - 1, N - i - 1, ONE,
+				zgemv( 'N', M - i - 1, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa1 + ( i + 1 ) * sa2,
 					A, strideA2, offsetA + i * sa1 + ( i + 1 ) * sa2,
 					ZERO, X, strideX1, offsetX + ( i + 1 ) * sx1 + i * sx2
@@ -256,7 +264,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// Y(I+1,1) => row i+1, col 0
 				// A(I,I+1) => row i, col i+1, stride=LDA => strideA2
 				// X(1,I) => row 0, col i, stride=1 => strideX1
-				zgemv( 'Conjugate transpose', N - i - 1, i + 1, ONE,
+				zgemv( 'C', N - i - 1, i + 1, ONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * sy1,
 					A, strideA2, offsetA + i * sa1 + ( i + 1 ) * sa2,
 					ZERO, X, strideX1, offsetX + i * sx2
@@ -266,7 +274,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(I+1,1) => row i+1, col 0
 				// X(1,I) => row 0, col i, stride=1 => strideX1
 				// X(I+1,I) => row i+1, col i, stride=1 => strideX1
-				zgemv( 'No transpose', M - i - 1, i + 1, NEGONE,
+				zgemv( 'N', M - i - 1, i + 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa1,
 					X, strideX1, offsetX + i * sx2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * sx1 + i * sx2
@@ -276,7 +284,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(1,I+1) => row 0, col i+1
 				// A(I,I+1) => row i, col i+1, stride=LDA => strideA2
 				// X(1,I) => row 0, col i, stride=1 => strideX1
-				zgemv( 'No transpose', i, N - i - 1, ONE,
+				zgemv( 'N', i, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa2,
 					A, strideA2, offsetA + i * sa1 + ( i + 1 ) * sa2,
 					ZERO, X, strideX1, offsetX + i * sx2
@@ -286,7 +294,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// X(I+1,1) => row i+1, col 0
 				// X(1,I) => row 0, col i, stride=1 => strideX1
 				// X(I+1,I) => row i+1, col i, stride=1 => strideX1
-				zgemv( 'No transpose', M - i - 1, i, NEGONE,
+				zgemv( 'N', M - i - 1, i, NEGONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * sx1,
 					X, strideX1, offsetX + i * sx2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * sx1 + i * sx2
@@ -316,7 +324,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			// Y(I,1) => row i, col 0 of Y
 			// A(I,1) => row i, col 0, stride=LDA => strideA2
 			// A(I,I) => row i, col i, stride=LDA => strideA2
-			zgemv( 'No transpose', N - i, i, NEGONE,
+			zgemv( 'N', N - i, i, NEGONE,
 				Y, strideY1, strideY2, offsetY + i * sy1,
 				A, strideA2, offsetA + i * sa1,
 				ONE, A, strideA2, offsetA + i * sa1 + i * sa2
@@ -332,7 +340,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			// A(1,I) => row 0, col i
 			// X(I,1) => row i, col 0, stride=LDX => strideX2
 			// A(I,I) => row i, col i, stride=LDA => strideA2
-			zgemv( 'Conjugate transpose', i, N - i, NEGONE,
+			zgemv( 'C', i, N - i, NEGONE,
 				A, strideA1, strideA2, offsetA + i * sa2,
 				X, strideX2, offsetX + i * sx1,
 				ONE, A, strideA2, offsetA + i * sa1 + i * sa2
@@ -346,16 +354,23 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			// Fortran: ALPHA = A(I,I)
 			// CALL ZLARFG(N-I+1, ALPHA, A(I, MIN(I+1,N)), LDA, TAUP(I))
 			// D(I) = DBLE(ALPHA)
-			zlarfg( N - i, A, offsetA + i * sa1 + i * sa2,
+			//
+			// Save A(I,I) before zlarfg (Fortran uses local ALPHA variable)
+			ia = offsetA + i * sa1 + i * sa2;
+			alphaRe = A[ ia ];
+			alphaIm = A[ ia + 1 ];
+			alpha[ 0 ] = alphaRe;
+			alpha[ 1 ] = alphaIm;
+			zlarfg( N - i, alpha, 0,
 				A, strideA2, offsetA + i * sa1 + Math.min( i + 1, N - 1 ) * sa2,
 				TAUP, offsetTAUP + i * stp
 			);
-			d[ offsetD + i * strideD ] = A[ offsetA + i * sa1 + i * sa2 ];
+			d[ offsetD + i * strideD ] = alpha[ 0 ];
 
 			if ( i < M - 1 ) {
 				// Set A(i,i) = 1 for use as reflector vector
-				A[ offsetA + i * sa1 + i * sa2 ] = 1.0;
-				A[ offsetA + i * sa1 + i * sa2 + 1 ] = 0.0;
+				A[ ia ] = 1.0;
+				A[ ia + 1 ] = 0.0;
 
 				// Compute X(i+1:M-1, i)
 				//
@@ -363,7 +378,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(I+1,I) => row i+1, col i
 				// A(I,I) => row i, col i, stride=LDA => strideA2
 				// X(I+1,I) => row i+1, col i, stride=1 => strideX1
-				zgemv( 'No transpose', M - i - 1, N - i, ONE,
+				zgemv( 'N', M - i - 1, N - i, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa1 + i * sa2,
 					A, strideA2, offsetA + i * sa1 + i * sa2,
 					ZERO, X, strideX1, offsetX + ( i + 1 ) * sx1 + i * sx2
@@ -373,14 +388,14 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// Y(I,1) => row i, col 0
 				// A(I,I) => row i, col i, stride=LDA => strideA2
 				// X(1,I) => row 0, col i, stride=1 => strideX1
-				zgemv( 'Conjugate transpose', N - i, i, ONE,
+				zgemv( 'C', N - i, i, ONE,
 					Y, strideY1, strideY2, offsetY + i * sy1,
 					A, strideA2, offsetA + i * sa1 + i * sa2,
 					ZERO, X, strideX1, offsetX + i * sx2
 				);
 
 				// Fortran: CALL ZGEMV('N', M-I, I-1, -ONE, A(I+1,1), LDA, X(1,I), 1, ONE, X(I+1,I), 1)
-				zgemv( 'No transpose', M - i - 1, i, NEGONE,
+				zgemv( 'N', M - i - 1, i, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa1,
 					X, strideX1, offsetX + i * sx2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * sx1 + i * sx2
@@ -390,14 +405,14 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(1,I) => row 0, col i
 				// A(I,I) => row i, col i, stride=LDA => strideA2
 				// X(1,I) => row 0, col i, stride=1 => strideX1
-				zgemv( 'No transpose', i, N - i, ONE,
+				zgemv( 'N', i, N - i, ONE,
 					A, strideA1, strideA2, offsetA + i * sa2,
 					A, strideA2, offsetA + i * sa1 + i * sa2,
 					ZERO, X, strideX1, offsetX + i * sx2
 				);
 
 				// Fortran: CALL ZGEMV('N', M-I, I-1, -ONE, X(I+1,1), LDX, X(1,I), 1, ONE, X(I+1,I), 1)
-				zgemv( 'No transpose', M - i - 1, i, NEGONE,
+				zgemv( 'N', M - i - 1, i, NEGONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * sx1,
 					X, strideX1, offsetX + i * sx2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * sx1 + i * sx2
@@ -420,7 +435,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(I+1,1) => row i+1, col 0
 				// Y(I,1) => row i, col 0, stride=LDY => strideY2
 				// A(I+1,I) => row i+1, col i, stride=1 => strideA1
-				zgemv( 'No transpose', M - i - 1, i, NEGONE,
+				zgemv( 'N', M - i - 1, i, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa1,
 					Y, strideY2, offsetY + i * sy1,
 					ONE, A, strideA1, offsetA + ( i + 1 ) * sa1 + i * sa2
@@ -433,7 +448,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// X(I+1,1) => row i+1, col 0
 				// A(1,I) => row 0, col i, stride=1 => strideA1
 				// A(I+1,I) => row i+1, col i, stride=1 => strideA1
-				zgemv( 'No transpose', M - i - 1, i + 1, NEGONE,
+				zgemv( 'N', M - i - 1, i + 1, NEGONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * sx1,
 					A, strideA1, offsetA + i * sa2,
 					ONE, A, strideA1, offsetA + ( i + 1 ) * sa1 + i * sa2
@@ -459,35 +474,35 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// A(I+1,I+1) => row i+1, col i+1
 				// A(I+1,I) => row i+1, col i, stride=1 => strideA1
 				// Y(I+1,I) => row i+1, col i, stride=1 => strideY1
-				zgemv( 'Conjugate transpose', M - i - 1, N - i - 1, ONE,
+				zgemv( 'C', M - i - 1, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa1 + ( i + 1 ) * sa2,
 					A, strideA1, offsetA + ( i + 1 ) * sa1 + i * sa2,
 					ZERO, Y, strideY1, offsetY + ( i + 1 ) * sy1 + i * sy2
 				);
 
 				// Fortran: CALL ZGEMV('C', M-I, I-1, ONE, A(I+1,1), LDA, A(I+1,I), 1, ZERO, Y(1,I), 1)
-				zgemv( 'Conjugate transpose', M - i - 1, i, ONE,
+				zgemv( 'C', M - i - 1, i, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa1,
 					A, strideA1, offsetA + ( i + 1 ) * sa1 + i * sa2,
 					ZERO, Y, strideY1, offsetY + i * sy2
 				);
 
 				// Fortran: CALL ZGEMV('N', N-I, I-1, -ONE, Y(I+1,1), LDY, Y(1,I), 1, ONE, Y(I+1,I), 1)
-				zgemv( 'No transpose', N - i - 1, i, NEGONE,
+				zgemv( 'N', N - i - 1, i, NEGONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * sy1,
 					Y, strideY1, offsetY + i * sy2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * sy1 + i * sy2
 				);
 
 				// Fortran: CALL ZGEMV('C', M-I, I, ONE, X(I+1,1), LDX, A(I+1,I), 1, ZERO, Y(1,I), 1)
-				zgemv( 'Conjugate transpose', M - i - 1, i + 1, ONE,
+				zgemv( 'C', M - i - 1, i + 1, ONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * sx1,
 					A, strideA1, offsetA + ( i + 1 ) * sa1 + i * sa2,
 					ZERO, Y, strideY1, offsetY + i * sy2
 				);
 
 				// Fortran: CALL ZGEMV('C', I, N-I, -ONE, A(1,I+1), LDA, Y(1,I), 1, ONE, Y(I+1,I), 1)
-				zgemv( 'Conjugate transpose', i + 1, N - i - 1, NEGONE,
+				zgemv( 'C', i + 1, N - i - 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * sa2,
 					Y, strideY1, offsetY + i * sy2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * sy1 + i * sy2

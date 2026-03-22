@@ -1,0 +1,6 @@
+{"name":"basic_3x4","result":3}
+{"name":"all_zeros","result":0}
+{"name":"last_col_nonzero","result":4}
+{"name":"first_col_only","result":1}
+{"name":"n_zero","result":0}
+{"name":"bottom_right","result":4}

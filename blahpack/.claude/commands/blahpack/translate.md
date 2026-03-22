@@ -12,6 +12,7 @@ Determine the package (blas or lapack) by checking if the source exists in `data
 8. Fill in JS test inputs and assertions
 9. Run tests: `node --test lib/<package>/base/<routine>/test/test.js`
 10. Check coverage: `node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.js`
-11. Write `lib/<package>/base/<routine>/LEARNINGS.md` — translation pitfalls, dependency surprises, missing automation, coverage gaps
+11. Fill in `lib/<package>/base/<routine>/LEARNINGS.md` with ACTUAL findings (not the template placeholders)
+12. Verify LEARNINGS.md is filled in: `grep -c "TODO: Fill in" lib/<package>/base/<routine>/LEARNINGS.md` must return 0
 
-CRITICAL: Step 11 (LEARNINGS.md) is REQUIRED, not optional. Follow the automation-first rules in CLAUDE.md. After each manual step, ask yourself if it was mechanical and could be automated.
+CRITICAL: The translation is NOT COMPLETE until step 12 passes. A LEARNINGS.md with "TODO: Fill in" or template placeholders is a failure. Write at least one concrete bullet point per section, even if it's "No issues encountered." If a section truly doesn't apply, replace the placeholder with "N/A — no complex arithmetic in this routine" or similar.

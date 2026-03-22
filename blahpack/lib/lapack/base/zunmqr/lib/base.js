@@ -1,0 +1,180 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var zlarfb = require( '../../zlarfb/lib/base.js' );
+var zlarft = require( '../../zlarft/lib/base.js' );
+var zunm2r = require( '../../zunm2r/lib/base.js' );
+
+
+// VARIABLES //
+
+var NB = 32; // Hardcoded block size
+
+
+// MAIN //
+
+/**
+* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,
+* where Q is a complex unitary matrix defined as the product of K
+* elementary reflectors Q = H(1) * H(2) * ... * H(k) as returned
+* by ZGEQRF. Uses a blocked algorithm with block size NB=32.
+*
+* Complex elements are stored as interleaved real/imaginary pairs.
+* Strides are in complex-element units.
+*
+* @private
+* @param {string} side - 'L' to apply Q from left, 'R' from right
+* @param {string} trans - 'N' for Q, 'C' for Q^H
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {NonNegativeInteger} K - number of elementary reflectors
+* @param {Float64Array} A - reflector vectors from ZGEQRF (interleaved complex)
+* @param {integer} strideA1 - stride of the first dimension of A (complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (complex elements)
+* @param {NonNegativeInteger} offsetA - starting Float64 index for A
+* @param {Float64Array} TAU - scalar factors of reflectors (interleaved complex)
+* @param {integer} strideTAU - stride for TAU (complex elements)
+* @param {NonNegativeInteger} offsetTAU - starting Float64 index for TAU
+* @param {Float64Array} C - input/output matrix (interleaved complex)
+* @param {integer} strideC1 - stride of the first dimension of C (complex elements)
+* @param {integer} strideC2 - stride of the second dimension of C (complex elements)
+* @param {NonNegativeInteger} offsetC - starting Float64 index for C
+* @param {Float64Array} WORK - workspace (interleaved complex)
+* @param {integer} strideWORK - stride for WORK (complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting Float64 index for WORK
+* @param {integer} lwork - workspace size in complex elements (unused, kept for API compat)
+* @returns {integer} info - 0 if successful
+*/
+function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+	var notran;
+	var ldwork;
+	var left;
+	var nw;
+	var nb;
+	var nq;
+	var mi;
+	var ni;
+	var ic;
+	var jc;
+	var ib;
+	var i1;
+	var i2;
+	var i3;
+	var iwt;
+	var ldt;
+	var T;
+	var i;
+
+	if ( M === 0 || N === 0 || K === 0 ) {
+		return 0;
+	}
+
+	left = ( side === 'L' || side === 'l' );
+	notran = ( trans === 'N' || trans === 'n' );
+
+	if ( left ) {
+		nq = M;
+		nw = Math.max( 1, N );
+	} else {
+		nq = N;
+		nw = Math.max( 1, M );
+	}
+
+	nb = NB;
+	if ( nb > K ) {
+		nb = K;
+	}
+
+	// If block size is too small or equals K, use unblocked algorithm
+	if ( nb < 2 || nb >= K ) {
+		return zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
+	}
+
+	ldwork = nw;
+	ldt = nb + 1;
+
+	// Allocate T matrix for block reflectors (ldt x nb, interleaved complex)
+	T = new Float64Array( 2 * ldt * nb );
+
+	// Ensure WORK is large enough; allocate internally if needed
+	if ( !WORK || WORK.length < 2 * ( nw * nb + ldt * nb ) ) {
+		WORK = new Float64Array( 2 * ( nw * nb + ldt * nb ) );
+		offsetWORK = 0;
+		strideWORK = 1;
+	}
+
+	// Determine iteration direction
+	if ( ( left && !notran ) || ( !left && notran ) ) {
+		i1 = 0;
+		i2 = K;
+		i3 = nb;
+	} else {
+		i1 = Math.floor( ( K - 1 ) / nb ) * nb;
+		i2 = -1;
+		i3 = -nb;
+	}
+
+	if ( left ) {
+		ni = N;
+		jc = 0;
+	} else {
+		mi = M;
+		ic = 0;
+	}
+
+	for ( i = i1; ( i3 > 0 ) ? ( i < i2 ) : ( i > i2 ); i += i3 ) {
+		ib = Math.min( nb, K - i );
+
+		// Form the triangular factor of the block reflector
+		// H = H(i) H(i+1) ... H(i+ib-1)
+		zlarft(
+			'Forward', 'Columnwise', nq - i, ib,
+			A, strideA1, strideA2, offsetA + 2 * ( i * strideA1 + i * strideA2 ),
+			TAU, strideTAU, offsetTAU + 2 * i * strideTAU,
+			T, 1, ldt, 0
+		);
+
+		if ( left ) {
+			mi = M - i;
+			ic = i;
+		} else {
+			ni = N - i;
+			jc = i;
+		}
+
+		// Apply H or H^H to C(ic:ic+mi, jc:jc+ni)
+		zlarfb(
+			side, trans, 'Forward', 'Columnwise', mi, ni, ib,
+			A, strideA1, strideA2, offsetA + 2 * ( i * strideA1 + i * strideA2 ),
+			T, 1, ldt, 0,
+			C, strideC1, strideC2, offsetC + 2 * ( ic * strideC1 + jc * strideC2 ),
+			WORK, 1, ldwork, offsetWORK
+		);
+	}
+
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = zunmqr;

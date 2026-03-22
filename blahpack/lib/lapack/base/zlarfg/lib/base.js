@@ -83,7 +83,9 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		tau[ offsetTau + 1 ] = 0.0;
 	} else {
 		// General case
-		beta = -Math.sign( alphr ) * dlapy3( alphr, alphi, xnorm );
+		// Fortran SIGN(A,B) returns |A|*sign(B); when B=0, result is +|A|.
+		// Math.sign(0) returns 0, so default to 1.0 for alphr=0.
+		beta = -( Math.sign( alphr ) || 1.0 ) * dlapy3( alphr, alphi, xnorm );
 		safmin = dlamch( 'S' ) / dlamch( 'E' );
 		rsafmn = 1.0 / safmin;
 
@@ -102,7 +104,9 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 			xnorm = dznrm2( N - 1, x, strideX, offsetX );
 			alpha[ offsetAlpha ] = alphr;
 			alpha[ offsetAlpha + 1 ] = alphi;
-			beta = -Math.sign( alphr ) * dlapy3( alphr, alphi, xnorm );
+			// Fortran SIGN(A,B) returns |A|*sign(B); when B=0, result is +|A|.
+		// Math.sign(0) returns 0, so default to 1.0 for alphr=0.
+		beta = -( Math.sign( alphr ) || 1.0 ) * dlapy3( alphr, alphi, xnorm );
 		}
 		tau[ offsetTau ] = ( beta - alphr ) / beta;
 		tau[ offsetTau + 1 ] = -alphi / beta;

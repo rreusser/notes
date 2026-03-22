@@ -1,0 +1,96 @@
+
+    zgesvd.ndarray( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK )
+        Compute the SVD of a complex matrix
+
+        Parameters
+        ----------
+        jobu: string
+            specifies the operation type.
+
+        jobvt: string
+            specifies the operation type.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        s: Float64Array
+            input array.
+
+        strideS: integer
+            stride length for `s`.
+
+        offsetS: NonNegativeInteger
+            starting index for `s`.
+
+        U: Float64Array
+            input matrix.
+
+        strideU1: integer
+            stride of the first dimension of `U`.
+
+        strideU2: integer
+            stride of the second dimension of `U`.
+
+        offsetU: NonNegativeInteger
+            starting index for `U`.
+
+        VT: Float64Array
+            input matrix.
+
+        strideVT1: integer
+            stride of the first dimension of `VT`.
+
+        strideVT2: integer
+            stride of the second dimension of `VT`.
+
+        offsetVT: NonNegativeInteger
+            starting index for `VT`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: NonNegativeInteger
+            starting index for `RWORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

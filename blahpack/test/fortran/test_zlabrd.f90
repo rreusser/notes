@@ -195,4 +195,36 @@ program test_zlabrd
   call print_array('Y', Y_r, 2*3*1)
   call end_test()
 
+  ! -------------------------------------------------------
+  ! Test 6: M < N, NB = M (2x4, NB=2) - hits else branch
+  ! -------------------------------------------------------
+  A = (0.0d0, 0.0d0)
+  A(1)  = ( 1.5d0,  0.5d0)   ! A(1,1)
+  A(2)  = (-0.8d0,  0.3d0)   ! A(2,1)
+  A(3)  = ( 0.6d0, -0.2d0)   ! A(1,2)
+  A(4)  = ( 1.0d0,  0.7d0)   ! A(2,2)
+  A(5)  = (-0.4d0,  0.9d0)   ! A(1,3)
+  A(6)  = ( 0.2d0, -0.6d0)   ! A(2,3)
+  A(7)  = ( 0.7d0, -0.1d0)   ! A(1,4)
+  A(8)  = (-0.3d0,  0.4d0)   ! A(2,4)
+
+  X(1:2*2) = (0.0d0, 0.0d0)
+  Y(1:4*2) = (0.0d0, 0.0d0)
+  TAUQ = (0.0d0, 0.0d0)
+  TAUP = (0.0d0, 0.0d0)
+  D = 0.0d0
+  E = 0.0d0
+
+  call zlabrd(2, 4, 2, A, 2, D, E, TAUQ, TAUP, X, 2, Y, 4)
+
+  call begin_test('m_lt_n_nb_eq_m_2x4')
+  call print_array('A', A_r, 2*2*4)
+  call print_array('D', D, 2)
+  call print_array('E', E, 2)
+  call print_array('TAUQ', TAUQ_r, 2*2)
+  call print_array('TAUP', TAUP_r, 2*2)
+  call print_array('X', X_r, 2*2*2)
+  call print_array('Y', Y_r, 2*4*2)
+  call end_test()
+
 end program

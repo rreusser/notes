@@ -178,6 +178,43 @@ test( 'dlasq5.ndarray: n=4, IEEE pp=0', function t() {
 	assertApprox( result.dn, 0.619498943555689685, 1e-12, 'dn' );
 });
 
+test( 'dlasq5.ndarray: non-IEEE pp=1 (n=5, tau=0.1, sigma=1.0)', function t() {
+	// Non-IEEE pp=1: d goes negative in unrolled part, triggers early return
+	var z = new Float64Array( [
+		4.0, 1.0, 4.0, 1.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 1, 0.1, 1.0, false, EPS );
+
+	// dnm2 < 0 triggers early return in non-IEEE path
+	assertApprox( result.dmin, -0.0355371900826446235, 1e-12, 'dmin' );
+	assertApprox( result.dmin2, -0.0355371900826446235, 1e-12, 'dmin2' );
+	assertApprox( result.dnm2, -0.0355371900826446235, 1e-12, 'dnm2' );
+});
+
+test( 'dlasq5.ndarray: tau=0 IEEE pp=1 (n=5, sigma=1.0)', function t() {
+	var expected_z = [ 2.0, 1.0, 0.25, 1.0, 0.75, 0.5, 0.199999999999999983, 0.5, 0.399999999999999967, 0.3, 0.150000000000000022, 0.3, 0.25, 0.2, 0.0, 0.2, 0.0, 0.0, 0.199999999999999983, 0.0 ];
+	var z = new Float64Array( [
+		4.0, 1.0, 4.0, 1.0,
+		3.0, 0.5, 3.0, 0.5,
+		2.0, 0.3, 2.0, 0.3,
+		5.0, 0.2, 5.0, 0.2,
+		1.0, 0.0, 1.0, 0.0
+	]);
+	var result = dlasq5.ndarray( 1, 5, z, 1, 0, 1, 0.0, 1.0, true, EPS );
+
+	assertArrayApprox( z, expected_z, 1e-12, 'z' );
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dmin1, 0.0500000000000000028, 1e-12, 'dmin1' );
+	assertApprox( result.dmin2, 0.0999999999999999917, 1e-12, 'dmin2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+	assertApprox( result.dnm1, 0.0500000000000000028, 1e-12, 'dnm1' );
+	assertApprox( result.dnm2, 0.0999999999999999917, 1e-12, 'dnm2' );
+});
+
 test( 'dlasq5.ndarray: n=3, IEEE pp=0 (minimal)', function t() {
 	var expected_z = [ 4.0, 7.9, 4.0, 1.51898734177215156, 3.0, 4.38101265822784747, 3.0, 1.36954637388038170, 2.0, 0.530453626119618660, 2.0, 3.0 ];
 	var z = new Float64Array( [

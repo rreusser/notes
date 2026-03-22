@@ -1,0 +1,17 @@
+dgeqr2
+dgeqrf
+disnan
+dlaisnan
+dlamch
+dlapy2
+dlarf
+dlarfb
+dlarfg
+dlarft
+iladlc
+iladlr
+ilaenv
+ilaver
+iparam2stage
+ieeeck
+iparmq

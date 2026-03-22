@@ -129,7 +129,9 @@
       "status": "unaddressed"
     },
     "dgemm": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 13,
+      "passing": 13
     },
     "dgemv": {
       "status": "complete",
@@ -187,7 +189,9 @@
       "status": "unaddressed"
     },
     "dsyrk": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 14,
+      "passing": 14
     },
     "dtbmv": {
       "status": "unaddressed"
@@ -208,7 +212,9 @@
       "status": "unaddressed"
     },
     "dtrsm": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 18,
+      "passing": 18
     },
     "dtrsv": {
       "status": "unaddressed"
@@ -220,7 +226,9 @@
       "status": "unaddressed"
     },
     "idamax": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 9,
+      "passing": 9
     },
     "isamax": {
       "status": "unaddressed"
@@ -1461,7 +1469,9 @@
       "status": "unaddressed"
     },
     "dposv": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
     },
     "dposvx": {
       "status": "unaddressed"
@@ -1475,16 +1485,22 @@
       "passing": 6
     },
     "dpotrf": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 10,
+      "passing": 10
     },
     "dpotrf2": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
     },
     "dpotri": {
       "status": "unaddressed"
     },
     "dpotrs": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
     },
     "dppcon": {
       "status": "unaddressed"
@@ -1949,7 +1965,9 @@
       "status": "unaddressed"
     },
     "dtrtrs": {
-      "status": "unaddressed"
+      "status": "complete",
+      "tests": 8,
+      "passing": 8
     },
     "dtrttf": {
       "status": "unaddressed"
@@ -2062,6 +2080,31 @@
       "status": "complete",
       "tests": 8,
       "passing": 8
+    },
+    "zunm2r": {
+      "status": "complete",
+      "tests": 9,
+      "passing": 9
+    },
+    "zlaqp2": {
+      "status": "complete",
+      "tests": 5,
+      "passing": 5
+    },
+    "zlaqps": {
+      "status": "complete",
+      "tests": 4,
+      "passing": 4
+    },
+    "zunmqr": {
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
+    },
+    "zgeqp3": {
+      "status": "complete",
+      "tests": 7,
+      "passing": 7
     }
   }
 }

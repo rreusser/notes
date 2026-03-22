@@ -95,7 +95,7 @@ program test_dlasq6
   call print_scalar('dnm2', dnm2)
   call end_test()
 
-  ! Test 6: with a zero element to trigger safmin branch
+  ! Test 6: with a zero element to trigger zero-denominator branch
   z = 0.0d0
   z(1)  = 4.0d0;  z(2)  = 0.0d0;  z(3)  = 4.0d0;  z(4)  = 0.0d0
   z(5)  = 3.0d0;  z(6)  = 0.5d0;  z(7)  = 3.0d0;  z(8)  = 0.5d0
@@ -127,6 +127,45 @@ program test_dlasq6
 
   call begin_test('larger_values_pp0')
   call print_array('z', z, 20)
+  call print_scalar('dmin', dmin)
+  call print_scalar('dmin1', dmin1)
+  call print_scalar('dmin2', dmin2)
+  call print_scalar('dn', dn)
+  call print_scalar('dnm1', dnm1)
+  call print_scalar('dnm2', dnm2)
+  call end_test()
+
+  ! Test 8: very small values to test unsafe computation branch
+  ! When safmin*z(j4+1) >= z(j4-2) (the unsafe branch)
+  z = 0.0d0
+  z(1)  = 1.0d-300;  z(2)  = 1.0d-300;  z(3)  = 1.0d-300;  z(4)  = 1.0d-300
+  z(5)  = 1.0d-300;  z(6)  = 1.0d-300;  z(7)  = 1.0d-300;  z(8)  = 1.0d-300
+  z(9)  = 1.0d-300;  z(10) = 1.0d-300;  z(11) = 1.0d-300;  z(12) = 1.0d-300
+  z(13) = 1.0d-300;  z(14) = 1.0d-300;  z(15) = 1.0d-300;  z(16) = 1.0d-300
+  z(17) = 1.0d-300;  z(18) = 0.0d0;     z(19) = 1.0d-300;  z(20) = 0.0d0
+
+  call dlasq6(1, 5, z, 0, dmin, dmin1, dmin2, dn, dnm1, dnm2)
+
+  call begin_test('very_small_pp0')
+  call print_array('z', z, 20)
+  call print_scalar('dmin', dmin)
+  call print_scalar('dmin1', dmin1)
+  call print_scalar('dmin2', dmin2)
+  call print_scalar('dn', dn)
+  call print_scalar('dnm1', dnm1)
+  call print_scalar('dnm2', dnm2)
+  call end_test()
+
+  ! Test 9: zero denominator in unrolled step
+  z = 0.0d0
+  z(1)  = 4.0d0;  z(2)  = 1.0d0;  z(3)  = 4.0d0;  z(4)  = 1.0d0
+  z(5)  = 3.0d0;  z(6)  = 0.5d0;  z(7)  = 3.0d0;  z(8)  = 0.5d0
+  z(9)  = 0.0d0;  z(10) = 0.0d0;  z(11) = 0.0d0;  z(12) = 0.0d0
+
+  call dlasq6(1, 3, z, 0, dmin, dmin1, dmin2, dn, dnm1, dnm2)
+
+  call begin_test('zero_denom_unrolled')
+  call print_array('z', z, 12)
   call print_scalar('dmin', dmin)
   call print_scalar('dmin1', dmin1)
   call print_scalar('dmin2', dmin2)

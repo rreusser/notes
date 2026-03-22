@@ -28,6 +28,12 @@ var BLOCK_SIZE = 32;
 /**
 * Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV`.
 *
+* When incx > 0, rows k1 through k2 are interchanged in forward order, reading
+* IPIV from offsetIPIV.
+*
+* When incx < 0, rows k1 down to k2 are interchanged in reverse order (k1 > k2),
+* reading IPIV from offsetIPIV + (k1-k2)*strideIPIV backwards.
+*
 * @private
 * @param {PositiveInteger} N - number of columns in `A`
 * @param {Float64Array} A - input matrix
@@ -44,42 +50,52 @@ var BLOCK_SIZE = 32;
 */
 function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx ) { // eslint-disable-line max-len, max-params
 	var nrows;
+	var ix0;
+	var ixinc;
+	var istart;
+	var iinc;
 	var n32;
 	var tmp;
 	var row;
 	var ia1;
 	var ia2;
-	var ip;
+	var ix;
+	var kk;
 	var i;
 	var j;
-	var k;
 	var n;
 	var o;
 
-	// Compute the number of rows to be interchanged:
 	if ( incx > 0 ) {
+		// Forward: iterate from k1 to k2
 		nrows = k2 - k1 + 1;
+		ix0 = offsetIPIV;
+		ixinc = strideIPIV;
+		istart = k1;
+		iinc = 1;
 	} else if ( incx < 0 ) {
+		// Reverse: k1 > k2, iterate from k1 down to k2
 		nrows = k1 - k2 + 1;
-		// Reverse: swap k1 and k2, iterate from k2 down to k1
-		tmp = k1;
-		k1 = k2; // eslint-disable-line no-param-reassign
-		k2 = tmp; // eslint-disable-line no-param-reassign
-		incx = -incx; // eslint-disable-line no-param-reassign
+		// IPIV is read from the last element backwards
+		ix0 = offsetIPIV + ( nrows - 1 ) * strideIPIV;
+		ixinc = -strideIPIV;
+		istart = k1;
+		iinc = -1;
 	} else {
 		return A;
 	}
 
-	// Use loop tiling for cache-efficient column-major access...
-	ip = offsetIPIV;
+	// Use loop tiling for cache-efficient column-major access.
+	// Outer loop: blocks of columns. Inner loop: row swaps.
 	n32 = ( ( N / BLOCK_SIZE ) | 0 ) * BLOCK_SIZE;
 	if ( n32 !== 0 ) {
 		for ( j = 0; j < n32; j += BLOCK_SIZE ) {
-			ip = offsetIPIV;
-			for ( i = 0, k = k1; i < nrows; i++, k += incx ) {
-				row = IPIV[ ip ];
-				if ( row !== k ) {
-					ia1 = offsetA + ( k * strideA1 );
+			ix = ix0;
+			kk = istart;
+			for ( i = 0; i < nrows; i++ ) {
+				row = IPIV[ ix ];
+				if ( row !== kk ) {
+					ia1 = offsetA + ( kk * strideA1 );
 					ia2 = offsetA + ( row * strideA1 );
 					for ( n = j; n < j + BLOCK_SIZE; n++ ) {
 						o = n * strideA2;
@@ -88,16 +104,18 @@ function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 						A[ ia2 + o ] = tmp;
 					}
 				}
-				ip += strideIPIV;
+				ix += ixinc;
+				kk += iinc;
 			}
 		}
 	}
 	if ( n32 !== N ) {
-		ip = offsetIPIV;
-		for ( i = 0, k = k1; i < nrows; i++, k += incx ) {
-			row = IPIV[ ip ];
-			if ( row !== k ) {
-				ia1 = offsetA + ( k * strideA1 );
+		ix = ix0;
+		kk = istart;
+		for ( i = 0; i < nrows; i++ ) {
+			row = IPIV[ ix ];
+			if ( row !== kk ) {
+				ia1 = offsetA + ( kk * strideA1 );
 				ia2 = offsetA + ( row * strideA1 );
 				for ( n = n32; n < N; n++ ) {
 					o = n * strideA2;
@@ -106,7 +124,8 @@ function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 					A[ ia2 + o ] = tmp;
 				}
 			}
-			ip += strideIPIV;
+			ix += ixinc;
+			kk += iinc;
 		}
 	}
 	return A;

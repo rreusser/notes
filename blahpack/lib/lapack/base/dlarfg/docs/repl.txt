@@ -1,0 +1,36 @@
+
+    dlarfg.ndarray( N, alpha, x, stride, offset, tau )
+        Generate a real Householder reflector.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        alpha: number
+            scalar constant.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        tau: number
+            tau.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

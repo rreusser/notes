@@ -41,7 +41,7 @@ var NEGONE = new Float64Array( [ -1.0, 0.0 ] );
 * Complex elements are stored as interleaved real/imaginary pairs.
 * All strides are in complex-element units.
 *
-* Currently only STOREV='C' (columnwise) is supported.
+* Supports both STOREV='C' (columnwise) and STOREV='R' (rowwise).
 *
 * @private
 * @param {string} side - 'L' or 'R'
@@ -260,7 +260,167 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 			}
 		}
 	} else {
-		throw new Error( 'zlarfb: STOREV=R not yet implemented' );
+		// STOREV = 'R': reflectors stored rowwise
+		// H = I - V^H * T * V (for STOREV='R')
+		if ( direct === 'F' || direct === 'f' ) {
+			// V = (V1 V2)  first K columns, V1 is unit upper triangular
+			if ( side === 'L' || side === 'l' ) {
+				// Form H*C or H^H*C where C = (C1)
+				//                              (C2)
+				// W := C^H * V^H = (C1^H*V1^H + C2^H*V2^H)
+				// W := C1^H
+				for ( j = 0; j < K; j++ ) {
+					zcopy( N, C, strideC2, offsetC + j * sc1, WORK, strideWORK1, offsetWORK + j * sw2 );
+					zlacgv( N, WORK, strideWORK1, offsetWORK + j * sw2 );
+				}
+				// W := W * V1^H (V1 is stored in rows of V: upper triangular)
+				ztrmm( 'R', 'U', 'C', 'U', N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( M > K ) {
+					// W := W + C2^H * V2^H
+					zgemm( 'C', 'C', N, K, M - K, ONE,
+						C, strideC1, strideC2, offsetC + K * sc1,
+						V, strideV1, strideV2, offsetV + ( K ) * strideV2 * 2,
+						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T^H or W * T
+				ztrmm( 'R', 'U', transt, 'N', N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - V^H * W^H
+				if ( M > K ) {
+					// C2 := C2 - V2^H * W^H
+					zgemm( 'C', 'C', M - K, N, K, NEGONE,
+						V, strideV1, strideV2, offsetV + ( K ) * strideV2 * 2,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						ONE, C, strideC1, strideC2, offsetC + K * sc1 );
+				}
+				// W := W * V1 (undo triangular part)
+				ztrmm( 'R', 'U', 'N', 'U', N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C1 := C1 - W^H
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < N; i++ ) {
+						ic = offsetC + j * sc1 + i * sc2;
+						iw = offsetWORK + i * sw1 + j * sw2;
+						C[ ic ] -= WORK[ iw ];
+						C[ ic + 1 ] -= ( -WORK[ iw + 1 ] );
+					}
+				}
+			} else if ( side === 'R' || side === 'r' ) {
+				// Form C*H or C*H^H where C = (C1 C2)
+				// W := C * V^H = (C1*V1^H + C2*V2^H)
+				// W := C1
+				for ( j = 0; j < K; j++ ) {
+					zcopy( M, C, strideC1, offsetC + j * sc2, WORK, strideWORK1, offsetWORK + j * sw2 );
+				}
+				// W := W * V1^H
+				ztrmm( 'R', 'U', 'C', 'U', M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( N > K ) {
+					// W := W + C2 * V2^H
+					zgemm( 'N', 'C', M, K, N - K, ONE,
+						C, strideC1, strideC2, offsetC + K * sc2,
+						V, strideV1, strideV2, offsetV + ( K ) * strideV2 * 2,
+						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T or W * T^H
+				ztrmm( 'R', 'U', trans, 'N', M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - W * V
+				if ( N > K ) {
+					// C2 := C2 - W * V2
+					zgemm( 'N', 'N', M, N - K, K, NEGONE,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						V, strideV1, strideV2, offsetV + ( K ) * strideV2 * 2,
+						ONE, C, strideC1, strideC2, offsetC + K * sc2 );
+				}
+				// W := W * V1
+				ztrmm( 'R', 'U', 'N', 'U', M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C1 := C1 - W
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < M; i++ ) {
+						ic = offsetC + i * sc1 + j * sc2;
+						iw = offsetWORK + i * sw1 + j * sw2;
+						C[ ic ] -= WORK[ iw ];
+						C[ ic + 1 ] -= WORK[ iw + 1 ];
+					}
+				}
+			}
+		} else {
+			// Backward: V = (V1 V2), last K columns, V2 is unit lower triangular
+			if ( side === 'L' || side === 'l' ) {
+				// Form H*C or H^H*C where C = (C1)
+				//                              (C2)
+				// W := C^H * V^H
+				// W := C2^H
+				for ( j = 0; j < K; j++ ) {
+					zcopy( N, C, strideC2, offsetC + ( M - K + j ) * sc1, WORK, strideWORK1, offsetWORK + j * sw2 );
+					zlacgv( N, WORK, strideWORK1, offsetWORK + j * sw2 );
+				}
+				// W := W * V2^H
+				ztrmm( 'R', 'L', 'C', 'U', N, K, ONE, V, strideV1, strideV2, offsetV + ( M - K ) * strideV2 * 2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( M > K ) {
+					// W := W + C1^H * V1^H
+					zgemm( 'C', 'C', N, K, M - K, ONE,
+						C, strideC1, strideC2, offsetC,
+						V, strideV1, strideV2, offsetV,
+						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T^H or W * T
+				ztrmm( 'R', 'L', transt, 'N', N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - V^H * W^H
+				if ( M > K ) {
+					// C1 := C1 - V1^H * W^H
+					zgemm( 'C', 'C', M - K, N, K, NEGONE,
+						V, strideV1, strideV2, offsetV,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						ONE, C, strideC1, strideC2, offsetC );
+				}
+				// W := W * V2
+				ztrmm( 'R', 'L', 'N', 'U', N, K, ONE, V, strideV1, strideV2, offsetV + ( M - K ) * strideV2 * 2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C2 := C2 - W^H
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < N; i++ ) {
+						ic = offsetC + ( M - K + j ) * sc1 + i * sc2;
+						iw = offsetWORK + i * sw1 + j * sw2;
+						C[ ic ] -= WORK[ iw ];
+						C[ ic + 1 ] -= ( -WORK[ iw + 1 ] );
+					}
+				}
+			} else if ( side === 'R' || side === 'r' ) {
+				// Form C*H or C*H^H where C = (C1 C2)
+				// W := C * V^H
+				// W := C2
+				for ( j = 0; j < K; j++ ) {
+					zcopy( M, C, strideC1, offsetC + ( N - K + j ) * sc2, WORK, strideWORK1, offsetWORK + j * sw2 );
+				}
+				// W := W * V2^H
+				ztrmm( 'R', 'L', 'C', 'U', M, K, ONE, V, strideV1, strideV2, offsetV + ( N - K ) * strideV2 * 2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				if ( N > K ) {
+					// W := W + C1 * V1^H
+					zgemm( 'N', 'C', M, K, N - K, ONE,
+						C, strideC1, strideC2, offsetC,
+						V, strideV1, strideV2, offsetV,
+						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
+				}
+				// W := W * T or W * T^H
+				ztrmm( 'R', 'L', trans, 'N', M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C := C - W * V
+				if ( N > K ) {
+					// C1 := C1 - W * V1
+					zgemm( 'N', 'N', M, N - K, K, NEGONE,
+						WORK, strideWORK1, strideWORK2, offsetWORK,
+						V, strideV1, strideV2, offsetV,
+						ONE, C, strideC1, strideC2, offsetC );
+				}
+				// W := W * V2
+				ztrmm( 'R', 'L', 'N', 'U', M, K, ONE, V, strideV1, strideV2, offsetV + ( N - K ) * strideV2 * 2, WORK, strideWORK1, strideWORK2, offsetWORK );
+				// C2 := C2 - W
+				for ( j = 0; j < K; j++ ) {
+					for ( i = 0; i < M; i++ ) {
+						ic = offsetC + i * sc1 + ( N - K + j ) * sc2;
+						iw = offsetWORK + i * sw1 + j * sw2;
+						C[ ic ] -= WORK[ iw ];
+						C[ ic + 1 ] -= WORK[ iw + 1 ];
+					}
+				}
+			}
+		}
 	}
 }
 

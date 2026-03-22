@@ -1,0 +1,16 @@
+disnan
+dlaisnan
+dlamch
+dlas2
+dlascl
+dlasq1
+dlasq2
+dlasq3
+dlasq4
+dlasq5
+dlasq6
+dlasrt
+ilaenv
+ieeeck
+iparmq
+iparam2stage

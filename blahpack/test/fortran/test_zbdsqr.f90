@@ -1,0 +1,479 @@
+program test_zbdsqr
+  use test_utils
+  implicit none
+
+  double precision :: d(10), e(10), rwork(100)
+  complex*16 :: vt(100), u(100), c(100)
+  double precision :: vt_r(200), u_r(200), c_r(200)
+  equivalence (vt, vt_r)
+  equivalence (u, u_r)
+  equivalence (c, c_r)
+  integer :: info, n, ncvt, nru, ncc, ldvt, ldu, ldc
+
+  ! Test 1: Upper bidiagonal 4x4, values only (no vectors)
+  n = 4
+  ncvt = 0
+  nru = 0
+  ncc = 0
+  ldvt = 1
+  ldu = 1
+  ldc = 1
+  d(1) = 4.0d0
+  d(2) = 3.0d0
+  d(3) = 2.0d0
+  d(4) = 1.0d0
+  e(1) = 1.0d0
+  e(2) = 1.0d0
+  e(3) = 1.0d0
+  rwork = 0.0d0
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_4x4_values_only')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call end_test()
+
+  ! Test 2: Upper bidiagonal 3x3 with right singular vectors (VT)
+  n = 3
+  ncvt = 3
+  nru = 0
+  ncc = 0
+  ldvt = 3
+  ldu = 1
+  ldc = 1
+  d(1) = 3.0d0
+  d(2) = 2.0d0
+  d(3) = 1.0d0
+  e(1) = 0.5d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  ! Initialize VT to 3x3 complex identity
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_with_vt')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call end_test()
+
+  ! Test 3: Upper bidiagonal 3x3 with both VT and U
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 0
+  ldvt = 3
+  ldu = 3
+  ldc = 1
+  d(1) = 5.0d0
+  d(2) = 3.0d0
+  d(3) = 1.0d0
+  e(1) = 2.0d0
+  e(2) = 1.0d0
+  rwork = 0.0d0
+
+  ! Initialize VT and U to complex identity
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_with_vt_and_u')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
+  ! Test 4: Lower bidiagonal 3x3
+  n = 3
+  ncvt = 0
+  nru = 0
+  ncc = 0
+  ldvt = 1
+  ldu = 1
+  ldc = 1
+  d(1) = 4.0d0
+  d(2) = 3.0d0
+  d(3) = 2.0d0
+  e(1) = 1.5d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  call zbdsqr('L', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('lower_3x3_values_only')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call end_test()
+
+  ! Test 5: Lower bidiagonal 3x3 with U
+  n = 3
+  ncvt = 0
+  nru = 3
+  ncc = 0
+  ldvt = 1
+  ldu = 3
+  ldc = 1
+  d(1) = 4.0d0
+  d(2) = 3.0d0
+  d(3) = 2.0d0
+  e(1) = 1.5d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('L', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('lower_3x3_with_u')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
+  ! Test 6: N=1 edge case
+  n = 1
+  ncvt = 0
+  nru = 0
+  ncc = 0
+  ldvt = 1
+  ldu = 1
+  ldc = 1
+  d(1) = -5.0d0
+  rwork = 0.0d0
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('n_1')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call end_test()
+
+  ! Test 7: N=0 quick return
+  n = 0
+  ncvt = 0
+  nru = 0
+  ncc = 0
+  ldvt = 1
+  ldu = 1
+  ldc = 1
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('n_0')
+  call print_int('info', info)
+  call end_test()
+
+  ! Test 8: N=2 upper bidiagonal with vectors
+  n = 2
+  ncvt = 2
+  nru = 2
+  ncc = 0
+  ldvt = 2
+  ldu = 2
+  ldc = 1
+  d(1) = 3.0d0
+  d(2) = 1.0d0
+  e(1) = 2.0d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(4) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(4) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_2x2_with_vectors')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
+  ! Test 9: N=1 with negative value and VT (tests zdscal path)
+  n = 1
+  ncvt = 2
+  nru = 0
+  ncc = 0
+  ldvt = 1
+  ldu = 1
+  ldc = 1
+  d(1) = -3.0d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 2.0d0)
+  vt(2) = (3.0d0, 4.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('n_1_neg_with_vt')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*ncvt)
+  call end_test()
+
+  ! Test 10: Upper bidiagonal 3x3 with C matrix
+  n = 3
+  ncvt = 0
+  nru = 0
+  ncc = 2
+  ldvt = 1
+  ldu = 1
+  ldc = 3
+  d(1) = 4.0d0
+  d(2) = 2.0d0
+  d(3) = 1.0d0
+  e(1) = 1.0d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  ! Initialize C to a 3x2 complex matrix
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 0.0d0)
+  c(2) = (0.0d0, 1.0d0)
+  c(3) = (1.0d0, 1.0d0)
+  c(4) = (2.0d0, 0.0d0)
+  c(5) = (0.0d0, 2.0d0)
+  c(6) = (2.0d0, 2.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_with_c')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('c', c_r, 2*n*ncc)
+  call end_test()
+
+  ! Test 11: Upper bidiagonal where |d(1)| < |d(n)| to trigger idir=2
+  n = 4
+  ncvt = 0
+  nru = 0
+  ncc = 0
+  ldvt = 1
+  ldu = 1
+  ldc = 1
+  d(1) = 0.5d0
+  d(2) = 1.0d0
+  d(3) = 2.0d0
+  d(4) = 4.0d0
+  e(1) = 0.1d0
+  e(2) = 0.1d0
+  e(3) = 0.1d0
+  rwork = 0.0d0
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_4x4_idir2')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call end_test()
+
+  ! Test 12: Upper bidiagonal with very small off-diag to trigger zero shift
+  ! Make smin/smax very small so the zero-shift path is taken
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 0
+  ldvt = 3
+  ldu = 3
+  ldc = 1
+  d(1) = 1.0d0
+  d(2) = 1.0d-15
+  d(3) = 1.0d0
+  e(1) = 1.0d0
+  e(2) = 1.0d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_zero_shift')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
+  ! Test 13: Lower bidiagonal with C matrix
+  n = 3
+  ncvt = 0
+  nru = 0
+  ncc = 2
+  ldvt = 1
+  ldu = 1
+  ldc = 3
+  d(1) = 3.0d0
+  d(2) = 2.0d0
+  d(3) = 1.0d0
+  e(1) = 0.5d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 0.0d0)
+  c(2) = (0.0d0, 0.0d0)
+  c(3) = (0.0d0, 0.0d0)
+  c(4) = (0.0d0, 0.0d0)
+  c(5) = (1.0d0, 0.0d0)
+  c(6) = (0.0d0, 0.0d0)
+
+  call zbdsqr('L', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('lower_3x3_with_c')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('c', c_r, 2*n*ncc)
+  call end_test()
+
+  ! Test 14: Reverse-ordered (idir=2) with vectors
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 0
+  ldvt = 3
+  ldu = 3
+  ldc = 1
+  d(1) = 0.1d0
+  d(2) = 0.5d0
+  d(3) = 3.0d0
+  e(1) = 0.2d0
+  e(2) = 0.3d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_idir2_with_vectors')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
+  ! Test 15: Negative singular values to test sign flip and VT negate
+  n = 3
+  ncvt = 3
+  nru = 0
+  ncc = 0
+  ldvt = 3
+  ldu = 1
+  ldc = 1
+  d(1) = -3.0d0
+  d(2) = 2.0d0
+  d(3) = -1.0d0
+  e(1) = 0.5d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('upper_3x3_negative_d')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call end_test()
+
+  ! Test 16: Nearly diagonal (very small off-diagonal)
+  n = 4
+  ncvt = 0
+  nru = 0
+  ncc = 0
+  ldvt = 1
+  ldu = 1
+  ldc = 1
+  d(1) = 5.0d0
+  d(2) = 3.0d0
+  d(3) = 2.0d0
+  d(4) = 1.0d0
+  e(1) = 1.0d-16
+  e(2) = 1.0d-16
+  e(3) = 1.0d-16
+  rwork = 0.0d0
+
+  call zbdsqr('U', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('nearly_diagonal')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call end_test()
+
+  ! Test 17: Lower bidiagonal with VT and U
+  n = 3
+  ncvt = 3
+  nru = 3
+  ncc = 0
+  ldvt = 3
+  ldu = 3
+  ldc = 1
+  d(1) = 3.0d0
+  d(2) = 2.0d0
+  d(3) = 1.0d0
+  e(1) = 0.5d0
+  e(2) = 0.5d0
+  rwork = 0.0d0
+
+  vt = (0.0d0, 0.0d0)
+  vt(1) = (1.0d0, 0.0d0)
+  vt(5) = (1.0d0, 0.0d0)
+  vt(9) = (1.0d0, 0.0d0)
+
+  u = (0.0d0, 0.0d0)
+  u(1) = (1.0d0, 0.0d0)
+  u(5) = (1.0d0, 0.0d0)
+  u(9) = (1.0d0, 0.0d0)
+
+  call zbdsqr('L', n, ncvt, nru, ncc, d, e, vt, ldvt, u, ldu, c, ldc, rwork, info)
+
+  call begin_test('lower_3x3_with_vt_and_u')
+  call print_int('info', info)
+  call print_array('d', d, n)
+  call print_array('vt', vt_r, 2*n*n)
+  call print_array('u', u_r, 2*n*n)
+  call end_test()
+
+end program

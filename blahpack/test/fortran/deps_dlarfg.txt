@@ -1,0 +1,5 @@
+disnan
+dlaisnan
+dlamch
+dlapy2
+dlarfg

@@ -1,0 +1,80 @@
+'use strict';
+
+// MODULES //
+
+var dtrmv = require( '../../../../blas/base/dtrmv/lib/base.js' );
+var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
+
+
+// MAIN //
+
+/**
+* Computes the inverse of a real upper or lower triangular matrix
+* using the unblocked algorithm.
+*
+* @private
+* @param {string} uplo - 'U' or 'L'
+* @param {string} diag - 'U' (unit) or 'N' (non-unit)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} A - input/output triangular matrix (overwritten with inverse)
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - starting index for A
+* @returns {integer} info - 0 if successful
+*/
+function dtrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
+	var nounit;
+	var upper;
+	var sa1;
+	var sa2;
+	var ajj;
+	var j;
+
+	if ( N === 0 ) {
+		return 0;
+	}
+
+	upper = ( uplo === 'U' || uplo === 'u' );
+	nounit = ( diag === 'N' || diag === 'n' );
+	sa1 = strideA1;
+	sa2 = strideA2;
+
+	if ( upper ) {
+		// Compute inverse of upper triangular matrix
+		for ( j = 0; j < N; j++ ) {
+			if ( nounit ) {
+				A[ offsetA + j * sa1 + j * sa2 ] = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
+				ajj = -A[ offsetA + j * sa1 + j * sa2 ];
+			} else {
+				ajj = -1.0;
+			}
+
+			// Compute elements 0:j-1 of j-th column
+			dtrmv( 'U', 'N', diag, j, A, sa1, sa2, offsetA, A, sa1, offsetA + j * sa2 );
+			dscal( j, ajj, A, sa1, offsetA + j * sa2 );
+		}
+	} else {
+		// Compute inverse of lower triangular matrix
+		for ( j = N - 1; j >= 0; j-- ) {
+			if ( nounit ) {
+				A[ offsetA + j * sa1 + j * sa2 ] = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
+				ajj = -A[ offsetA + j * sa1 + j * sa2 ];
+			} else {
+				ajj = -1.0;
+			}
+			if ( j < N - 1 ) {
+				// Compute elements j+1:N-1 of j-th column
+				dtrmv( 'L', 'N', diag, N - j - 1,
+					A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + ( j + 1 ) * sa2,
+					A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
+				dscal( N - j - 1, ajj, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
+			}
+		}
+	}
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = dtrti2;

@@ -1,0 +1,30 @@
+
+    dlasq2.ndarray( N, z, stride, offset )
+        Compute all eigenvalues of a symmetric positive definite tridiagonal matrix via dqds
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        z: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `z`.
+
+        offset: NonNegativeInteger
+            starting index for `z`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,84 @@
+
+    dlasq3.ndarray( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, ieee, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau )
+        Check for deflation and compute shift for dqds iteration
+
+        Parameters
+        ----------
+        i0: integer
+            i0.
+
+        n0: integer
+            n0.
+
+        z: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `z`.
+
+        offset: NonNegativeInteger
+            starting index for `z`.
+
+        pp: integer
+            pp.
+
+        dmin: number
+            dmin.
+
+        sigma: number
+            sigma.
+
+        desig: number
+            desig.
+
+        qmax: number
+            qmax.
+
+        nfail: integer
+            nfail.
+
+        iter: integer
+            iter.
+
+        ndiv: integer
+            ndiv.
+
+        ieee: boolean
+            ieee.
+
+        ttype: integer
+            ttype.
+
+        dmin1: number
+            dmin1.
+
+        dmin2: number
+            dmin2.
+
+        dn: number
+            dn.
+
+        dn1: number
+            dn1.
+
+        dn2: number
+            dn2.
+
+        g: number
+            g.
+
+        tau: number
+            tau.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

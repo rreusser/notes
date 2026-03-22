@@ -5,11 +5,12 @@ program test_zlarfb
   ! We test the most common case: side='L', trans='C', direct='F', storev='C'
   ! This is what QR factorization uses.
 
-  complex*16 :: V(25), T(9), C(25), work(25)
-  double precision :: C_real(50), T_real(18), V_real(50)
+  complex*16 :: V(25), T(9), C(25), work(25), tau(5)
+  double precision :: C_real(50), T_real(18), V_real(50), tau_real(10)
   equivalence (V, V_real)
   equivalence (T, T_real)
   equivalence (C, C_real)
+  equivalence (tau, tau_real)
   integer :: i
 
   ! Test 1: side='L', trans='N', direct='F', storev='C'
@@ -260,6 +261,313 @@ program test_zlarfb
   work = (0.0d0, 0.0d0)
   call zlarfb('R', 'C', 'F', 'C', 3, 4, 2, V, 4, T, 3, C, 3, work, 3)
   call begin_test('zlarfb_right_conjtrans_fwd_col')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 9: side='L', trans='N', direct='F', storev='R'
+  ! M=4, N=3, K=2
+  ! V is 2x4 (K-by-M), unit upper triangular in V1 (first K cols)
+  V = (0.0d0, 0.0d0)
+  V(1) = (1.0d0, 0.0d0)   ! V(1,1)
+  V(2) = (0.0d0, 0.0d0)   ! V(2,1)
+  V(3) = (0.3d0, 0.2d0)   ! V(1,2)
+  V(4) = (1.0d0, 0.0d0)   ! V(2,2)
+  V(5) = (-0.5d0, 0.1d0)  ! V(1,3)
+  V(6) = (0.6d0, -0.4d0)  ! V(2,3)
+  V(7) = (0.4d0, -0.3d0)  ! V(1,4)
+  V(8) = (-0.2d0, 0.5d0)  ! V(2,4)
+
+  ! T is 2x2 upper triangular (from zlarft with STOREV='R')
+  ! First compute it
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('F', 'R', 4, 2, V, 2, tau, T, 3)
+
+  ! C is 4x3
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (0.0d0, 1.0d0)
+  C(3)  = (2.0d0, -1.0d0)
+  C(4)  = (3.0d0, 0.5d0)
+  C(5)  = (-1.0d0, 2.0d0)
+  C(6)  = (0.5d0, 0.5d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('L', 'N', 'F', 'R', 4, 3, 2, V, 2, T, 3, C, 4, work, 3)
+  call begin_test('zlarfb_left_notrans_fwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 10: side='R', trans='N', direct='F', storev='R'
+  ! M=3, N=4, K=2
+  ! V is 2x4 (K-by-N), same V as test 9
+  V = (0.0d0, 0.0d0)
+  V(1) = (1.0d0, 0.0d0)
+  V(2) = (0.0d0, 0.0d0)
+  V(3) = (0.3d0, 0.2d0)
+  V(4) = (1.0d0, 0.0d0)
+  V(5) = (-0.5d0, 0.1d0)
+  V(6) = (0.6d0, -0.4d0)
+  V(7) = (0.4d0, -0.3d0)
+  V(8) = (-0.2d0, 0.5d0)
+
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('F', 'R', 4, 2, V, 2, tau, T, 3)
+
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (2.0d0, 1.0d0)
+  C(3)  = (3.0d0, -1.0d0)
+  C(4)  = (0.0d0, 1.0d0)
+  C(5)  = (0.5d0, 0.5d0)
+  C(6)  = (-1.0d0, 2.0d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('R', 'N', 'F', 'R', 3, 4, 2, V, 2, T, 3, C, 3, work, 3)
+  call begin_test('zlarfb_right_notrans_fwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 11: side='L', trans='C', direct='F', storev='R'
+  ! M=4, N=3, K=2
+  ! V is 2x4 (K-by-M), unit upper triangular in first K cols
+  V = (0.0d0, 0.0d0)
+  V(1) = (1.0d0, 0.0d0)   ! V(1,1)
+  V(2) = (0.0d0, 0.0d0)   ! V(2,1)
+  V(3) = (0.3d0, 0.2d0)   ! V(1,2)
+  V(4) = (1.0d0, 0.0d0)   ! V(2,2)
+  V(5) = (-0.5d0, 0.1d0)  ! V(1,3)
+  V(6) = (0.6d0, -0.4d0)  ! V(2,3)
+  V(7) = (0.4d0, -0.3d0)  ! V(1,4)
+  V(8) = (-0.2d0, 0.5d0)  ! V(2,4)
+
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('F', 'R', 4, 2, V, 2, tau, T, 3)
+
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (0.0d0, 1.0d0)
+  C(3)  = (2.0d0, -1.0d0)
+  C(4)  = (3.0d0, 0.5d0)
+  C(5)  = (-1.0d0, 2.0d0)
+  C(6)  = (0.5d0, 0.5d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('L', 'C', 'F', 'R', 4, 3, 2, V, 2, T, 3, C, 4, work, 3)
+  call begin_test('zlarfb_left_conjtrans_fwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 12: side='L', trans='N', direct='B', storev='R'
+  ! M=4, N=3, K=2
+  ! V is 2x4 (K-by-M), last K cols unit lower triangular for backward
+  V = (0.0d0, 0.0d0)
+  V(1) = (-0.5d0, 0.1d0)  ! V(1,1)
+  V(2) = (0.6d0, -0.4d0)  ! V(2,1)
+  V(3) = (0.4d0, -0.3d0)  ! V(1,2)
+  V(4) = (-0.2d0, 0.5d0)  ! V(2,2)
+  V(5) = (1.0d0, 0.0d0)   ! V(1,3)
+  V(6) = (0.0d0, 0.0d0)   ! V(2,3)
+  V(7) = (0.3d0, 0.2d0)   ! V(1,4)
+  V(8) = (1.0d0, 0.0d0)   ! V(2,4)
+
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('B', 'R', 4, 2, V, 2, tau, T, 3)
+
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (0.0d0, 1.0d0)
+  C(3)  = (2.0d0, -1.0d0)
+  C(4)  = (3.0d0, 0.5d0)
+  C(5)  = (-1.0d0, 2.0d0)
+  C(6)  = (0.5d0, 0.5d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('L', 'N', 'B', 'R', 4, 3, 2, V, 2, T, 3, C, 4, work, 3)
+  call begin_test('zlarfb_left_notrans_bwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 13: side='L', trans='C', direct='B', storev='R'
+  ! Same V and T as test 12; reset C
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (0.0d0, 1.0d0)
+  C(3)  = (2.0d0, -1.0d0)
+  C(4)  = (3.0d0, 0.5d0)
+  C(5)  = (-1.0d0, 2.0d0)
+  C(6)  = (0.5d0, 0.5d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('L', 'C', 'B', 'R', 4, 3, 2, V, 2, T, 3, C, 4, work, 3)
+  call begin_test('zlarfb_left_conjtrans_bwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 14: side='R', trans='N', direct='B', storev='R'
+  ! M=3, N=4, K=2
+  ! V is 2x4 (K-by-N), last K cols unit lower triangular for backward
+  V = (0.0d0, 0.0d0)
+  V(1) = (-0.5d0, 0.1d0)  ! V(1,1)
+  V(2) = (0.6d0, -0.4d0)  ! V(2,1)
+  V(3) = (0.4d0, -0.3d0)  ! V(1,2)
+  V(4) = (-0.2d0, 0.5d0)  ! V(2,2)
+  V(5) = (1.0d0, 0.0d0)   ! V(1,3)
+  V(6) = (0.0d0, 0.0d0)   ! V(2,3)
+  V(7) = (0.3d0, 0.2d0)   ! V(1,4)
+  V(8) = (1.0d0, 0.0d0)   ! V(2,4)
+
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('B', 'R', 4, 2, V, 2, tau, T, 3)
+
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (2.0d0, 1.0d0)
+  C(3)  = (3.0d0, -1.0d0)
+  C(4)  = (0.0d0, 1.0d0)
+  C(5)  = (0.5d0, 0.5d0)
+  C(6)  = (-1.0d0, 2.0d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('R', 'N', 'B', 'R', 3, 4, 2, V, 2, T, 3, C, 3, work, 3)
+  call begin_test('zlarfb_right_notrans_bwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 15: side='R', trans='C', direct='B', storev='R'
+  ! Same V and T as test 14; reset C
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (2.0d0, 1.0d0)
+  C(3)  = (3.0d0, -1.0d0)
+  C(4)  = (0.0d0, 1.0d0)
+  C(5)  = (0.5d0, 0.5d0)
+  C(6)  = (-1.0d0, 2.0d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('R', 'C', 'B', 'R', 3, 4, 2, V, 2, T, 3, C, 3, work, 3)
+  call begin_test('zlarfb_right_conjtrans_bwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 16: side='R', trans='C', direct='F', storev='R'
+  ! M=3, N=4, K=2
+  ! V is 2x4 (K-by-N), unit upper triangular in first K cols
+  V = (0.0d0, 0.0d0)
+  V(1) = (1.0d0, 0.0d0)   ! V(1,1)
+  V(2) = (0.0d0, 0.0d0)   ! V(2,1)
+  V(3) = (0.3d0, 0.2d0)   ! V(1,2)
+  V(4) = (1.0d0, 0.0d0)   ! V(2,2)
+  V(5) = (-0.5d0, 0.1d0)  ! V(1,3)
+  V(6) = (0.6d0, -0.4d0)  ! V(2,3)
+  V(7) = (0.4d0, -0.3d0)  ! V(1,4)
+  V(8) = (-0.2d0, 0.5d0)  ! V(2,4)
+
+  tau(1) = (1.2d0, -0.3d0)
+  tau(2) = (1.5d0, 0.4d0)
+  T = (0.0d0, 0.0d0)
+  call zlarft('F', 'R', 4, 2, V, 2, tau, T, 3)
+
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (2.0d0, 1.0d0)
+  C(3)  = (3.0d0, -1.0d0)
+  C(4)  = (0.0d0, 1.0d0)
+  C(5)  = (0.5d0, 0.5d0)
+  C(6)  = (-1.0d0, 2.0d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('R', 'C', 'F', 'R', 3, 4, 2, V, 2, T, 3, C, 3, work, 3)
+  call begin_test('zlarfb_right_conjtrans_fwd_row')
+  call print_array('C', C_real, 24)
+  call end_test()
+
+  ! Test 17: side='R', trans='C', direct='B', storev='C'
+  ! M=3, N=4, K=2
+  ! V is 4x2 (N-by-K), last K rows unit upper triangular for backward
+  V = (0.0d0, 0.0d0)
+  V(1) = (0.3d0, 0.2d0)
+  V(2) = (-0.5d0, 0.1d0)
+  V(3) = (1.0d0, 0.0d0)
+  V(4) = (0.0d0, 0.0d0)
+  V(5) = (0.6d0, -0.4d0)
+  V(6) = (-0.2d0, 0.5d0)
+  V(7) = (0.4d0, -0.3d0)
+  V(8) = (1.0d0, 0.0d0)
+
+  T = (0.0d0, 0.0d0)
+  T(1) = (1.2d0, -0.3d0)
+  T(2) = (-1.22d0, -1.50d0)
+  T(3) = (0.0d0, 0.0d0)
+  T(4) = (0.0d0, 0.0d0)
+  T(5) = (1.5d0, 0.4d0)
+  T(6) = (0.0d0, 0.0d0)
+
+  C(1)  = (1.0d0, 0.0d0)
+  C(2)  = (2.0d0, 1.0d0)
+  C(3)  = (3.0d0, -1.0d0)
+  C(4)  = (0.0d0, 1.0d0)
+  C(5)  = (0.5d0, 0.5d0)
+  C(6)  = (-1.0d0, 2.0d0)
+  C(7)  = (1.5d0, -0.5d0)
+  C(8)  = (-2.0d0, 1.0d0)
+  C(9)  = (0.0d0, 0.0d0)
+  C(10) = (1.0d0, 1.0d0)
+  C(11) = (-0.5d0, 0.0d0)
+  C(12) = (2.0d0, -2.0d0)
+
+  work = (0.0d0, 0.0d0)
+  call zlarfb('R', 'C', 'B', 'C', 3, 4, 2, V, 4, T, 3, C, 3, work, 3)
+  call begin_test('zlarfb_right_conjtrans_bwd_col')
   call print_array('C', C_real, 24)
   call end_test()
 

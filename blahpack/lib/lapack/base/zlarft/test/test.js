@@ -106,24 +106,45 @@ test( 'zlarft: N=0 quick return', function t() {
 	assert.strictEqual( T[ 0 ], 99.0 );
 });
 
-test( 'zlarft: STOREV=R throws (forward)', function t() {
-	var V = new Float64Array( 16 );
-	var tau = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+test( 'zlarft: forward, rowwise, n=4, k=2', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_fwd_row'; });
+	// V is 2x4 (LDV=2), row-major reflectors (unit upper triangular in V1)
+	// V = [ 1      0.3+0.2i  -0.5+0.1i  0.4-0.3i ]
+	//     [ 0      1          0.6-0.4i  -0.2+0.5i ]
+	var V = new Float64Array( [
+		// col 1: V(0,0)=1, V(1,0)=0
+		1.0, 0.0,  0.0, 0.0,
+		// col 2: V(0,1)=0.3+0.2i, V(1,1)=1
+		0.3, 0.2,  1.0, 0.0,
+		// col 3: V(0,2)=-0.5+0.1i, V(1,2)=0.6-0.4i
+		-0.5, 0.1,  0.6, -0.4,
+		// col 4: V(0,3)=0.4-0.3i, V(1,3)=-0.2+0.5i
+		0.4, -0.3,  -0.2, 0.5
+	]);
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Float64Array( 12 );
-	V[ 0 ] = 1.0; V[ 2 ] = 1.0;
-	assert.throws( function() {
-		zlarft( 'F', 'R', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
-	}, /STOREV=R not yet implemented/ );
+
+	// strideV1=1, strideV2=2 (LDV=2), strideT1=1, strideT2=3
+	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	assertArrayClose( Array.from( T ), tc.T, 'T' );
 });
 
-test( 'zlarft: STOREV=R throws (backward)', function t() {
-	var V = new Float64Array( 16 );
-	var tau = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+test( 'zlarft: backward, rowwise, n=4, k=2', function t() {
+	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_bwd_row'; });
+	// V is 2x4 (LDV=2), backward: unit lower triangular in V2 (last K cols)
+	// V = [ 0.3+0.2i  -0.5+0.1i  1   0 ]
+	//     [ 0.6-0.4i  -0.2+0.5i  0.4-0.3i  1 ]
+	var V = new Float64Array( [
+		0.3, 0.2,  0.6, -0.4,
+		-0.5, 0.1,  -0.2, 0.5,
+		1.0, 0.0,  0.4, -0.3,
+		0.0, 0.0,  1.0, 0.0
+	]);
+	var tau = new Float64Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Float64Array( 12 );
-	V[ 0 ] = 1.0; V[ 2 ] = 1.0;
-	assert.throws( function() {
-		zlarft( 'B', 'R', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
-	}, /STOREV=R not yet implemented/ );
+
+	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	assertArrayClose( Array.from( T ), tc.T, 'T' );
 });
 
 test( 'zlarft: backward, tau(1)=0 (second reflector is identity)', function t() {

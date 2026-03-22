@@ -157,3 +157,37 @@ test( 'dlasq6.ndarray: larger values pp=0 (n=5)', function t() {
 	assertApprox( result.dnm1, 1.0, 1e-12, 'dnm1' );
 	assertApprox( result.dnm2, 2.0, 1e-12, 'dnm2' );
 });
+
+test( 'dlasq6.ndarray: very small values pp=0 (unsafe computation branch)', function t() {
+	var expected_z = [ 1e-300, 2e-300, 1e-300, 5e-301, 1e-300, 1.5e-300, 1e-300, 6.66666666666666683e-301, 1e-300, 1.33333333333333337e-300, 1e-300, 7.5e-301, 1e-300, 1.25e-300, 1e-300, 8.00000000000000053e-301, 1e-300, 2.00000000000000013e-301, 1e-300, 5e-301 ];
+	var z = new Float64Array( [
+		1e-300, 1e-300, 1e-300, 1e-300,
+		1e-300, 1e-300, 1e-300, 1e-300,
+		1e-300, 1e-300, 1e-300, 1e-300,
+		1e-300, 1e-300, 1e-300, 1e-300,
+		1e-300, 0.0, 1e-300, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 5, z, 1, 0, 0 );
+
+	assertArrayApprox( z, expected_z, 1e-10, 'z' );
+	assertApprox( result.dmin, 2.00000000000000013e-301, 1e-10, 'dmin' );
+	assertApprox( result.dn, 2.00000000000000013e-301, 1e-10, 'dn' );
+});
+
+test( 'dlasq6.ndarray: zero denominator in unrolled step (n=3)', function t() {
+	var expected_z = [ 4.0, 8.0, 4.0, 1.5, 3.0, 4.5, 3.0, 0.0, 0.0, 0.0, 0.0, 3.0 ];
+	var z = new Float64Array( [
+		4.0, 1.0, 4.0, 1.0,
+		3.0, 0.5, 3.0, 0.5,
+		0.0, 0.0, 0.0, 0.0
+	]);
+	var result = dlasq6.ndarray( 1, 3, z, 1, 0, 0 );
+
+	assertArrayApprox( z, expected_z, 1e-12, 'z' );
+	assertApprox( result.dmin, 0.0, 1e-14, 'dmin' );
+	assertApprox( result.dmin1, 1.5, 1e-12, 'dmin1' );
+	assertApprox( result.dmin2, 4.0, 1e-12, 'dmin2' );
+	assertApprox( result.dn, 0.0, 1e-14, 'dn' );
+	assertApprox( result.dnm1, 1.5, 1e-12, 'dnm1' );
+	assertApprox( result.dnm2, 4.0, 1e-12, 'dnm2' );
+});

@@ -281,3 +281,101 @@ test( 'dlasq4: case5_short_array — Case 5 with n0-i0<=2', function t() {
 	var result = dlasq4.ndarray( 3, 5, z, 1, 0, 0, 5, 0.5, 1.5, 1.0, 1.5, 2.0, 0.5, 0.0, 0, 0.0 );
 	checkResult( result, tc, 1e-14 );
 });
+
+test( 'dlasq4: true_case2 — ttype=-2 with gap1>0 and gap1>b1', function t() {
+	var tc = findCase( 'true_case2' );
+	var z = filled( 100, 4.0 );
+	z[ 16 ] = 0.01; z[ 14 ] = 0.01; z[ 12 ] = 0.01; z[ 10 ] = 0.01;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.005, 0.005, 10.0, 0.005, 0.005, 10.0, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case3_a2_gt_b1b2 — Case 3 with a2 > b1+b2', function t() {
+	var tc = findCase( 'case3_a2_gt_b1b2' );
+	var z = filled( 100, 4.0 );
+	z[ 16 ] = 0.01; z[ 14 ] = 0.01; z[ 12 ] = 0.5; z[ 10 ] = 0.01;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.45, 0.45, 0.6, 0.45, 0.45, 0.6, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case4_dn1_branch — Case 4 via dn1 branch', function t() {
+	var tc = findCase( 'case4_dn1_branch' );
+	var z = filled( 100, 2.0 );
+	z[ 17 ] = 3.0; z[ 15 ] = 1.0; z[ 10 ] = 1.0; z[ 8 ] = 2.0;
+	z[ 6 ] = 1.0; z[ 4 ] = 2.0; z[ 2 ] = 1.0; z[ 0 ] = 2.0;
+	z[ 16 ] = 1.0; z[ 14 ] = 1.0; z[ 12 ] = 2.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.3, 1.5, 2.0, 1.0, 0.3, 2.0, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case4_rayleigh — Case 4 with a2<CNST1 (Rayleigh bound)', function t() {
+	var tc = findCase( 'case4_rayleigh' );
+	var z = filled( 100, 10.0 );
+	z[ 16 ] = 1.0; z[ 14 ] = 0.1; z[ 12 ] = 1.0; z[ 10 ] = 0.1;
+	z[ 8 ] = 10.0; z[ 6 ] = 0.1; z[ 4 ] = 10.0; z[ 2 ] = 0.1;
+	z[ 0 ] = 10.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.1, 1.5, 2.0, 0.1, 1.0, 2.0, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case7_gap2_positive — Case 7 with gap2>0', function t() {
+	var tc = findCase( 'case7_gap2_positive' );
+	var z = filled( 100, 4.0 );
+	z[ 14 ] = 0.5; z[ 12 ] = 4.0; z[ 10 ] = 0.5; z[ 8 ] = 4.0;
+	z[ 6 ] = 0.5; z[ 4 ] = 4.0; z[ 2 ] = 0.5;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 6, 0.5, 0.5, 10.0, 1.0, 0.5, 10.0, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case10_gap2_positive — Case 10 with gap2>0', function t() {
+	var tc = findCase( 'case10_gap2_positive' );
+	var z = filled( 100, 4.0 );
+	z[ 14 ] = 0.1; z[ 12 ] = 4.0; z[ 10 ] = 1.0; z[ 8 ] = 1.0;
+	z[ 6 ] = 0.5; z[ 4 ] = 4.0; z[ 2 ] = 0.5;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 7, 0.5, 0.8, 2.0, 1.0, 0.8, 2.0, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case5_rayleigh — Case 5 with a2<CNST1 (Rayleigh bound)', function t() {
+	var tc = findCase( 'case5_rayleigh' );
+	var z = filled( 100, 10.0 );
+	z[ 17 ] = 10.0; z[ 13 ] = 10.0; z[ 11 ] = 1.0; z[ 15 ] = 1.0;
+	z[ 6 ] = 0.1; z[ 4 ] = 10.0; z[ 2 ] = 0.1; z[ 0 ] = 10.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.3, 5.0, 3.0, 5.0, 8.0, 0.3, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case4_loop_return — Case 4 loop Z(I4)>Z(I4-2) return', function t() {
+	var tc = findCase( 'case4_loop_return' );
+	var z = filled( 100, 2.0 );
+	z[ 16 ] = 1.0; z[ 14 ] = 1.0; z[ 12 ] = 2.0; z[ 10 ] = 1.0;
+	z[ 8 ] = 2.0; z[ 6 ] = 5.0; z[ 4 ] = 2.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.3, 1.5, 2.0, 0.3, 1.0, 2.0, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case5_loop_return — Case 5 loop Z(I4)>Z(I4-2) return', function t() {
+	var tc = findCase( 'case5_loop_return' );
+	var z = filled( 100, 2.0 );
+	z[ 17 ] = 2.0; z[ 13 ] = 2.0; z[ 11 ] = 1.0; z[ 15 ] = 1.0;
+	z[ 6 ] = 1.0; z[ 4 ] = 2.0; z[ 2 ] = 5.0; z[ 0 ] = 2.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.3, 5.0, 3.0, 5.0, 8.0, 0.3, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case10_loop_return — Case 10 loop return', function t() {
+	var tc = findCase( 'case10_loop_return' );
+	var z = filled( 100, 2.0 );
+	z[ 14 ] = 0.1; z[ 12 ] = 2.0; z[ 10 ] = 2.0; z[ 8 ] = 1.0;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 7, 0.5, 0.8, 0.5, 1.0, 0.8, 0.5, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});
+
+test( 'dlasq4: case10_gap2_neg — Case 10 with gap2<=0', function t() {
+	var tc = findCase( 'case10_gap2_neg' );
+	var z = filled( 100, 4.0 );
+	z[ 14 ] = 0.1; z[ 12 ] = 4.0; z[ 10 ] = 0.1; z[ 8 ] = 0.1;
+	z[ 6 ] = 0.5; z[ 4 ] = 4.0; z[ 2 ] = 0.5;
+	var result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 7, 0.5, 0.8, 0.5, 1.0, 0.8, 0.5, 0.0, 0, 0.0 );
+	checkResult( result, tc, 1e-14 );
+});

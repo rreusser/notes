@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 // MODULES //
@@ -24,61 +22,67 @@ function findCase( name ) {
 	return fixture.find( function find( t ) { return t.name === name; } );
 }
 
-function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
-}
-
-function assertArrayClose( actual, expected, tol, msg ) {
-	var i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
-	for ( i = 0; i < expected.length; i++ ) {
-		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
-	}
-}
-
 
 // TESTS //
 
-test( 'idamax: basic', function t() {
+test( 'idamax: basic (n=5, stride=1)', function t() {
 	var tc = findCase( 'basic' );
-	// TODO: set up inputs and call idamax(...)
-	// assertClose( result, tc.result, 1e-14, 'result' );
+	var x = new Float64Array( [ 1.0, -3.0, 2.0, 5.0, -4.0 ] );
+	var result = idamax( 5, x, 1, 0 );
+	// Fortran returns 1-based index 4, JS should return 0-based index 3
+	assert.strictEqual( result, tc.result - 1 );
 });
 
-test( 'idamax: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
-	// TODO: set up inputs and call idamax(...)
-	// assertClose( result, tc.result, 1e-14, 'result' );
+test( 'idamax: n=0 returns -1', function t() {
+	var x = new Float64Array( [ 1.0 ] );
+	var result = idamax( 0, x, 1, 0 );
+	assert.strictEqual( result, -1 );
 });
 
-test( 'idamax: n_one', function t() {
-	var tc = findCase( 'n_one' );
-	// TODO: set up inputs and call idamax(...)
-	// assertClose( result, tc.result, 1e-14, 'result' );
+test( 'idamax: n=1 returns 0', function t() {
+	var x = new Float64Array( [ 42.0 ] );
+	var result = idamax( 1, x, 1, 0 );
+	assert.strictEqual( result, 0 );
 });
 
-test( 'idamax: negative', function t() {
+test( 'idamax: negative values', function t() {
 	var tc = findCase( 'negative' );
-	// TODO: set up inputs and call idamax(...)
-	// assertClose( result, tc.result, 1e-14, 'result' );
+	var x = new Float64Array( [ -2.0, -7.0, -1.0, -3.0 ] );
+	var result = idamax( 4, x, 1, 0 );
+	assert.strictEqual( result, tc.result - 1 );
 });
 
-test( 'idamax: stride', function t() {
+test( 'idamax: non-unit stride=2', function t() {
 	var tc = findCase( 'stride' );
-	// TODO: set up inputs and call idamax(...)
-	// assertClose( result, tc.result, 1e-14, 'result' );
+	var x = new Float64Array( [ 1.0, 99.0, 10.0, 99.0, 2.0 ] );
+	var result = idamax( 3, x, 2, 0 );
+	assert.strictEqual( result, tc.result - 1 );
 });
 
-test( 'idamax: first_max', function t() {
+test( 'idamax: first element is max', function t() {
 	var tc = findCase( 'first_max' );
-	// TODO: set up inputs and call idamax(...)
-	// assertClose( result, tc.result, 1e-14, 'result' );
+	var x = new Float64Array( [ 100.0, 1.0, 2.0 ] );
+	var result = idamax( 3, x, 1, 0 );
+	assert.strictEqual( result, tc.result - 1 );
 });
 
-test( 'idamax: last_max', function t() {
+test( 'idamax: last element is max', function t() {
 	var tc = findCase( 'last_max' );
-	// TODO: set up inputs and call idamax(...)
-	// assertClose( result, tc.result, 1e-14, 'result' );
+	var x = new Float64Array( [ 1.0, 2.0, 100.0 ] );
+	var result = idamax( 3, x, 1, 0 );
+	assert.strictEqual( result, tc.result - 1 );
 });
 
+test( 'idamax: offset parameter', function t() {
+	// Array: [99, 99, 1.0, -3.0, 2.0, 5.0, -4.0], offset=2
+	var x = new Float64Array( [ 99.0, 99.0, 1.0, -3.0, 2.0, 5.0, -4.0 ] );
+	var result = idamax( 5, x, 1, 2 );
+	// Max abs is 5.0 at index 3 (0-based within the view)
+	assert.strictEqual( result, 3 );
+});
+
+test( 'idamax: negative stride returns -1', function t() {
+	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+	var result = idamax( 3, x, -1, 2 );
+	assert.strictEqual( result, -1 );
+});

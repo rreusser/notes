@@ -1,0 +1,173 @@
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var zgeqr2 = require( '../../zgeqr2/lib/base.js' );
+var zunm2r = require( './../lib/base.js' );
+
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'zunm2r.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+/**
+* Compute QR of 3x2 matrix [1 4+i; 2 5+i; 3 6+i] and return {A, TAU}.
+* A is stored with strideA1=1, strideA2=3 (complex elements).
+*/
+function qr3x2() {
+	var A = new Float64Array( [ 1,0, 2,0, 3,0, 4,1, 5,1, 6,1 ] );
+	var TAU = new Float64Array( 4 );
+	var WORK = new Float64Array( 40 );
+	zgeqr2( 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
+	return { A: A, TAU: TAU };
+}
+
+/**
+* Compute QR of 3x2 matrix in a 3x3 container (strideA2=3).
+* Column 3 is zeros. Matches Fortran A(3,3) declaration.
+*/
+function qr3x2in3x3() {
+	var A = new Float64Array( 18 );
+	A[0]=1; A[1]=0; A[2]=2; A[3]=0; A[4]=3; A[5]=0;
+	A[6]=4; A[7]=1; A[8]=5; A[9]=1; A[10]=6; A[11]=1;
+	var TAU = new Float64Array( 4 );
+	var WORK = new Float64Array( 40 );
+	zgeqr2( 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
+	return { A: A, TAU: TAU };
+}
+
+/**
+* Create a 3x3 complex identity matrix (column-major interleaved, strideC2=3).
+*/
+function eye3() {
+	return new Float64Array( [ 1,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0, 1,0 ] );
+}
+
+
+// TESTS //
+
+test( 'zunm2r: left, no transpose (Q*I)', function t() {
+	var tc = findCase( 'left_notrans' );
+	var qr = qr3x2();
+	var C = eye3();
+	var WORK = new Float64Array( 40 );
+	var info = zunm2r( 'L', 'N', 3, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+});
+
+test( 'zunm2r: left, conjugate transpose (Q^H*I)', function t() {
+	var tc = findCase( 'left_conjtrans' );
+	var qr = qr3x2();
+	var C = eye3();
+	var WORK = new Float64Array( 40 );
+	var info = zunm2r( 'L', 'C', 3, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+});
+
+test( 'zunm2r: right, no transpose (I*Q)', function t() {
+	var tc = findCase( 'right_notrans' );
+	var qr = qr3x2();
+	var C = eye3();
+	var WORK = new Float64Array( 40 );
+	var info = zunm2r( 'R', 'N', 3, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+});
+
+test( 'zunm2r: right, conjugate transpose (I*Q^H)', function t() {
+	var tc = findCase( 'right_conjtrans' );
+	var qr = qr3x2();
+	var C = eye3();
+	var WORK = new Float64Array( 40 );
+	var info = zunm2r( 'R', 'C', 3, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+});
+
+test( 'zunm2r: M=0 quick return', function t() {
+	var tc = findCase( 'm_zero' );
+	var WORK = new Float64Array( 10 );
+	var A = new Float64Array( 10 );
+	var TAU = new Float64Array( 4 );
+	var C = new Float64Array( 10 );
+	var info = zunm2r( 'L', 'N', 0, 3, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+});
+
+test( 'zunm2r: N=0 quick return', function t() {
+	var tc = findCase( 'n_zero' );
+	var WORK = new Float64Array( 10 );
+	var A = new Float64Array( 10 );
+	var TAU = new Float64Array( 4 );
+	var C = new Float64Array( 10 );
+	var info = zunm2r( 'L', 'N', 3, 0, 0, A, 1, 3, 0, TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+});
+
+test( 'zunm2r: K=0 quick return', function t() {
+	var tc = findCase( 'k_zero' );
+	var WORK = new Float64Array( 10 );
+	var A = new Float64Array( 20 );
+	var TAU = new Float64Array( 4 );
+	var C = eye3();
+	var info = zunm2r( 'L', 'N', 3, 3, 0, A, 1, 3, 0, TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+});
+
+test( 'zunm2r: left, no transpose, rectangular C (3x2)', function t() {
+	var tc = findCase( 'left_notrans_rect' );
+	var qr = qr3x2in3x3();
+	// C = [1+1i 2-1i; 3+0i 0+2i; -1+1i 4+0i] col-major, LDC=3
+	var C = new Float64Array( [ 1,1, 3,0, -1,1, 2,-1, 0,2, 4,0 ] );
+	var WORK = new Float64Array( 40 );
+	var info = zunm2r( 'L', 'N', 3, 2, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+});
+
+test( 'zunm2r: right, no transpose, rectangular C (2x3)', function t() {
+	var tc = findCase( 'right_notrans_rect' );
+	var qr = qr3x2in3x3();
+	// Fortran test: C(3,3) declared, LDC=2. The memory layout with LDC=2 reinterprets
+	// the column-major C(3,3) data. Effective 2x3 matrix as seen by zunm2r:
+	// Col 0: C(1,1)=1+0i, C(2,1)=0+1i
+	// Col 1: C(3,1)=0+0i, C(1,2)=2+1i
+	// Col 2: C(2,2)=1-1i, C(3,2)=0+0i
+	var C = new Float64Array( [
+		1,0, 0,1,   // col 0
+		0,0, 2,1,   // col 1
+		1,-1, 0,0   // col 2
+	] );
+	var WORK = new Float64Array( 40 );
+	var info = zunm2r( 'R', 'N', 2, 3, 2, qr.A, 1, 3, 0, qr.TAU, 1, 0, C, 1, 2, 0, WORK, 1, 0 );
+	assertClose( info, tc.info, 1e-14, 'info' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-10, 'c' );
+});

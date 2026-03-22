@@ -1,0 +1,6 @@
+{"name":"basic","result": 5.00000000000000000E+000}
+{"name":"x_zero","result": 5.00000000000000000E+000}
+{"name":"y_zero","result": 7.00000000000000000E+000}
+{"name":"both_zero","result": 0.00000000000000000E+000}
+{"name":"large","result": 1.41421356237309534E+154}
+{"name":"negative","result": 5.00000000000000000E+000}

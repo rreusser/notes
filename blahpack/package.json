@@ -6,13 +6,15 @@
   "scripts": {
     "test": "node --test 'lib/**/test/test*.js' 'lib/*.test.js'",
     "fixtures": "./test/generate_fixtures.sh",
-    "report": "node bin/report.js > progress.html"
+    "report": "node bin/report.js > progress.html",
+    "lint:learnings": "! grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md 2>/dev/null | grep . && echo 'All LEARNINGS.md filled in' || (echo 'FAIL: Unfilled LEARNINGS.md found:' && grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md && exit 1)"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@stdlib/stdlib": "^0.3.2",
     "escodegen": "^2.1.0",
     "esprima": "^4.0.1"
   },

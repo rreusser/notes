@@ -1,0 +1,63 @@
+
+    dlarft.ndarray( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT )
+        Form the triangular factor T of a real block reflector.
+
+        Parameters
+        ----------
+        direct: string
+            specifies the operation type.
+
+        storev: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of the first dimension of `V`.
+
+        strideV2: integer
+            stride of the second dimension of `V`.
+
+        offsetV: NonNegativeInteger
+            starting index for `V`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: NonNegativeInteger
+            starting index for `TAU`.
+
+        T: Float64Array
+            output matrix.
+
+        strideT1: integer
+            stride of the first dimension of `T`.
+
+        strideT2: integer
+            stride of the second dimension of `T`.
+
+        offsetT: NonNegativeInteger
+            starting index for `T`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
