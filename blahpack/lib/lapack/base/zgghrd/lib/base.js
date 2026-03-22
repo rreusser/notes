@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlartg = require( '../../zlartg/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
@@ -138,8 +139,8 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	oB = offsetB * 2;
 
 	// Initialize Q to identity if requested
-	alpha = new Float64Array( [ 0.0, 0.0 ] );
-	beta = new Float64Array( [ 1.0, 0.0 ] );
+	alpha = new Complex128( 0.0, 0.0 );
+	beta = new Complex128( 1.0, 0.0 );
 	if ( icompq === 3 ) {
 		zlaset( 'Full', N, N, alpha, beta, Q, strideQ1, strideQ2, offsetQ );
 	}

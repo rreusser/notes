@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var zlanhs = require( '../../zlanhs/lib/base.js' );
@@ -241,16 +242,16 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	// Initialize Q and Z to identity if requested
 	if ( compq === 'I' || compq === 'i' ) {
 		zlaset( 'Full', N, N,
-			new Float64Array( [ 0.0, 0.0 ] ),
-			new Float64Array( [ 1.0, 0.0 ] ),
-			Q, sq1, sq2, offsetQ
+			new Complex128( 0.0, 0.0 ),
+			new Complex128( 1.0, 0.0 ),
+			Q, strideQ1, strideQ2, offsetQ
 		);
 	}
 	if ( compz === 'I' || compz === 'i' ) {
 		zlaset( 'Full', N, N,
-			new Float64Array( [ 0.0, 0.0 ] ),
-			new Float64Array( [ 1.0, 0.0 ] ),
-			Z, sz1, sz2, offsetZ
+			new Complex128( 0.0, 0.0 ),
+			new Complex128( 1.0, 0.0 ),
+			Z, strideZ1, strideZ2, offsetZ
 		);
 	}
 
@@ -281,15 +282,15 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			Tv[ oT + j * st1 + j * st2 + 1 ] = ZERO;
 			if ( ilschr ) {
 				// ZSCAL(j, signbc, T(1,j), 1) -- j elements (0-based: j elements starting from row 0)
-				zscal( j, signbc, T, strideT1, offsetT + j * strideT2 );
+				zscal( j, new Complex128( signbc[ 0 ], signbc[ 1 ] ), T, strideT1, offsetT + j * strideT2 );
 				// ZSCAL(j+1, signbc, H(1,j), 1) -- j+1 elements
-				zscal( j + 1, signbc, H, strideH1, offsetH + j * strideH2 );
+				zscal( j + 1, new Complex128( signbc[ 0 ], signbc[ 1 ] ), H, strideH1, offsetH + j * strideH2 );
 			} else {
 				// ZSCAL(1, signbc, H(j,j), 1)
-				zscal( 1, signbc, H, 1, offsetH + j * strideH1 + j * strideH2 );
+				zscal( 1, new Complex128( signbc[ 0 ], signbc[ 1 ] ), H, 1, offsetH + j * strideH1 + j * strideH2 );
 			}
 			if ( ilz ) {
-				zscal( N, signbc, Z, strideZ1, offsetZ + j * strideZ2 );
+				zscal( N, new Complex128( signbc[ 0 ], signbc[ 1 ] ), Z, strideZ1, offsetZ + j * strideZ2 );
 			}
 		} else {
 			Tv[ oT + j * st1 + j * st2 ] = ZERO;
@@ -388,13 +389,13 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				Tv[ oT + jj * st1 + jj * st2 ] = ab;
 				Tv[ oT + jj * st1 + jj * st2 + 1 ] = ZERO;
 				if ( ilschr ) {
-					zscal( jj, signbc, T, strideT1, offsetT + jj * strideT2 );
-					zscal( jj + 1, signbc, H, strideH1, offsetH + jj * strideH2 );
+					zscal( jj, new Complex128( signbc[ 0 ], signbc[ 1 ] ), T, strideT1, offsetT + jj * strideT2 );
+					zscal( jj + 1, new Complex128( signbc[ 0 ], signbc[ 1 ] ), H, strideH1, offsetH + jj * strideH2 );
 				} else {
-					zscal( 1, signbc, H, 1, offsetH + jj * strideH1 + jj * strideH2 );
+					zscal( 1, new Complex128( signbc[ 0 ], signbc[ 1 ] ), H, 1, offsetH + jj * strideH1 + jj * strideH2 );
 				}
 				if ( ilz ) {
-					zscal( N, signbc, Z, strideZ1, offsetZ + jj * strideZ2 );
+					zscal( N, new Complex128( signbc[ 0 ], signbc[ 1 ] ), Z, strideZ1, offsetZ + jj * strideZ2 );
 				}
 			} else {
 				Tv[ oT + jj * st1 + jj * st2 ] = ZERO;
@@ -480,14 +481,14 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			Tv[ oT + ilast * st1 + ilast * st2 + 1 ] = ZERO;
 			if ( ilschr ) {
 				// ZSCAL(ILAST-IFRSTM, SIGNBC, T(IFRSTM,ILAST), 1)
-				zscal( ilast - ifrstm, signbc, T, strideT1, offsetT + ifrstm * strideT1 + ilast * strideT2 );
+				zscal( ilast - ifrstm, new Complex128( signbc[ 0 ], signbc[ 1 ] ), T, strideT1, offsetT + ifrstm * strideT1 + ilast * strideT2 );
 				// ZSCAL(ILAST+1-IFRSTM, SIGNBC, H(IFRSTM,ILAST), 1)
-				zscal( ilast + 1 - ifrstm, signbc, H, strideH1, offsetH + ifrstm * strideH1 + ilast * strideH2 );
+				zscal( ilast + 1 - ifrstm, new Complex128( signbc[ 0 ], signbc[ 1 ] ), H, strideH1, offsetH + ifrstm * strideH1 + ilast * strideH2 );
 			} else {
-				zscal( 1, signbc, H, 1, offsetH + ilast * strideH1 + ilast * strideH2 );
+				zscal( 1, new Complex128( signbc[ 0 ], signbc[ 1 ] ), H, 1, offsetH + ilast * strideH1 + ilast * strideH2 );
 			}
 			if ( ilz ) {
-				zscal( N, signbc, Z, strideZ1, offsetZ + ilast * strideZ2 );
+				zscal( N, new Complex128( signbc[ 0 ], signbc[ 1 ] ), Z, strideZ1, offsetZ + ilast * strideZ2 );
 			}
 		} else {
 			Tv[ oT + ilast * st1 + ilast * st2 ] = ZERO;
@@ -497,10 +498,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		// ALPHA(ILAST) = H(ILAST,ILAST), BETA(ILAST) = T(ILAST,ILAST)
 		idx = oH + ilast * sh1 + ilast * sh2;
 		ALPHAv[ oAL + ilast * sAL ] = Hv[ idx ];
-		ALPHAv[ oAL + ilast * sAL + 1 ] = H[ idx + 1 ];
+		ALPHAv[ oAL + ilast * sAL + 1 ] = Hv[ idx + 1 ];
 		idx = oT + ilast * st1 + ilast * st2;
 		BETAv[ oBE + ilast * sBE ] = Tv[ idx ];
-		BETAv[ oBE + ilast * sBE + 1 ] = T[ idx + 1 ];
+		BETAv[ oBE + ilast * sBE + 1 ] = Tv[ idx + 1 ];
 
 		// Next block
 		ilast -= 1;

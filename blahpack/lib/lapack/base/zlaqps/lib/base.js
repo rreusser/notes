@@ -20,6 +20,8 @@
 
 // MODULES //
 
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
@@ -33,9 +35,9 @@ var cmplx = require( '../../../../cmplx.js' );
 
 // VARIABLES //
 
-var CZERO = new Float64Array( [ 0.0, 0.0 ] );
-var CONE = new Float64Array( [ 1.0, 0.0 ] );
-var NEGCONE = new Float64Array( [ -1.0, 0.0 ] );
+var CZERO = new Complex128( 0.0, 0.0 );
+var CONE = new Complex128( 1.0, 0.0 );
+var NEGCONE = new Complex128( -1.0, 0.0 );
 
 
 // MAIN //
@@ -196,10 +198,11 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		// Compute k-th column of F:
 		// F(k+1:N-1, k) = tau(k) * A(rk:M-1, k+1:N-1)^H * A(rk:M-1, k)
 		if ( k < N - 1 ) {
-			// tau(k) as a 2-element array
-			tauK = new Float64Array( 2 );
-			tauK[ 0 ] = TAUv[ ( offsetTAU + k * strideTAU ) * 2 ];
-			tauK[ 1 ] = TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ];
+			// tau(k) as Complex128
+			tauK = new Complex128(
+				TAUv[ ( offsetTAU + k * strideTAU ) * 2 ],
+				TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ]
+			);
 			zgemv(
 				'C', M - rk, N - k - 1,
 				tauK,
@@ -219,9 +222,10 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		// Update F with contribution from previous reflectors
 		if ( k > 0 ) {
 			// AUXV(0:k-1) = -tau(k) * A(rk:M-1, 0:k-1)^H * A(rk:M-1, k)
-			negTauK = new Float64Array( 2 );
-			negTauK[ 0 ] = -TAUv[ ( offsetTAU + k * strideTAU ) * 2 ];
-			negTauK[ 1 ] = -TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ];
+			negTauK = new Complex128(
+				-TAUv[ ( offsetTAU + k * strideTAU ) * 2 ],
+				-TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ]
+			);
 			zgemv(
 				'C', M - rk, k,
 				negTauK,
@@ -258,12 +262,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		if ( rk < lastrk ) {
 			for ( j = k + 1; j < N; j++ ) {
 				if ( VN1[ offsetVN1 + j * strideVN1 ] !== 0.0 ) {
-					temp = cmplx.abs(
-						Av.subarray(
-							oA + 2 * ( rk * sa1 + j * sa2 ),
-							oA + 2 * ( rk * sa1 + j * sa2 ) + 2
-						)
-					) / VN1[ offsetVN1 + j * strideVN1 ];
+					temp = cmplx.absAt( Av, oA + 2 * ( rk * sa1 + j * sa2 ) ) / VN1[ offsetVN1 + j * strideVN1 ];
 					temp = Math.max( 0.0, ( 1.0 + temp ) * ( 1.0 - temp ) );
 					temp2 = temp * Math.pow(
 						VN1[ offsetVN1 + j * strideVN1 ] /

@@ -21,7 +21,8 @@
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var complexParts = require( '../../../../float64view.js' ).complexParts;
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
 
 // MAIN //
 
@@ -46,7 +47,6 @@ function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) { // 
 	var alphaIm;
 	var betaRe;
 	var betaIm;
-	var tmp;
 	var Av;
 	var sa1;
 	var sa2;
@@ -56,12 +56,10 @@ function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) { // 
 	var i;
 	var j;
 
-	tmp = complexParts( alpha );
-	alphaRe = tmp[ 0 ];
-	alphaIm = tmp[ 1 ];
-	tmp = complexParts( beta );
-	betaRe = tmp[ 0 ];
-	betaIm = tmp[ 1 ];
+	alphaRe = real( alpha );
+	alphaIm = imag( alpha );
+	betaRe = real( beta );
+	betaIm = imag( beta );
 
 	Av = reinterpret( A, 0 );
 	sa1 = strideA1 * 2;

@@ -166,12 +166,7 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 		for ( j = i + 1; j < N; j++ ) {
 			if ( VN1[ offsetVN1 + j * strideVN1 ] !== 0.0 ) {
 				// temp = |A(offpi, j)| / VN1(j)
-				temp = cmplx.abs(
-					Av.subarray(
-						oA + 2 * ( offpi * sa1 + j * sa2 ),
-						oA + 2 * ( offpi * sa1 + j * sa2 ) + 2
-					)
-				) / VN1[ offsetVN1 + j * strideVN1 ];
+				temp = cmplx.absAt( Av, oA + 2 * ( offpi * sa1 + j * sa2 ) ) / VN1[ offsetVN1 + j * strideVN1 ];
 				temp = Math.max( 0.0, ( 1.0 - temp * temp ) );
 				temp2 = temp * Math.pow(
 					VN1[ offsetVN1 + j * strideVN1 ] /

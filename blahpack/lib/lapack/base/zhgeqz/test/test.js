@@ -4,6 +4,8 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var zhgeqz = require( './../lib/base.js' );
@@ -41,9 +43,9 @@ function assertArrayClose( actual, expected, tol, msg ) {
 */
 function makeMatrix( N ) {
 	return {
-		data: new Float64Array( 2 * N * N ),
-		s1: 2,
-		s2: 2 * N,
+		data: new Complex128Array( N * N ),
+		s1: 1,
+		s2: N,
 		offset: 0
 	};
 }
@@ -52,21 +54,23 @@ function makeMatrix( N ) {
 * Set complex element (i, j) in a matrix (0-based).
 */
 function mset( m, N, i, j, re, im ) {
-	var idx = m.offset + i * m.s1 + j * m.s2;
-	m.data[ idx ] = re;
-	m.data[ idx + 1 ] = im;
+	var mv = reinterpret( m.data, 0 );
+	var idx = ( m.offset + i * m.s1 + j * m.s2 ) * 2;
+	mv[ idx ] = re;
+	mv[ idx + 1 ] = im;
 }
 
 /**
 * Get column j of an NxN matrix as a flat array of 2*N doubles.
 */
 function getCol( m, N, j ) {
+	var mv = reinterpret( m.data, 0 );
 	var col = [];
 	var idx;
 	var i;
 	for ( i = 0; i < N; i++ ) {
-		idx = m.offset + i * m.s1 + j * m.s2;
-		col.push( m.data[ idx ], m.data[ idx + 1 ] );
+		idx = ( m.offset + i * m.s1 + j * m.s2 ) * 2;
+		col.push( mv[ idx ], mv[ idx + 1 ] );
 	}
 	return col;
 }
@@ -76,23 +80,23 @@ function getCol( m, N, j ) {
 
 test( 'zhgeqz: n_eq_0', function t() {
 	var tc = findCase( 'n_eq_0' );
-	var H = new Float64Array( 0 );
-	var T = new Float64Array( 0 );
-	var Q = new Float64Array( 0 );
-	var Z = new Float64Array( 0 );
-	var ALPHA = new Float64Array( 0 );
-	var BETA = new Float64Array( 0 );
-	var WORK = new Float64Array( 2 );
+	var H = new Complex128Array( 0 );
+	var T = new Complex128Array( 0 );
+	var Q = new Complex128Array( 0 );
+	var Z = new Complex128Array( 0 );
+	var ALPHA = new Complex128Array( 0 );
+	var BETA = new Complex128Array( 0 );
+	var WORK = new Complex128Array( 1 );
 	var RWORK = new Float64Array( 1 );
 
 	var info = zhgeqz( 'E', 'N', 'N', 0, 1, 0,
-		H, 2, 0, 0,
-		T, 2, 0, 0,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
-		Q, 2, 0, 0,
-		Z, 2, 0, 0,
-		WORK, 2, 0, 1,
+		H, 1, 0, 0,
+		T, 1, 0, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
+		Q, 1, 0, 0,
+		Z, 1, 0, 0,
+		WORK, 1, 0, 1,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
@@ -105,9 +109,9 @@ test( 'zhgeqz: n_eq_1', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 );
-	var BETA = new Float64Array( 2 );
-	var WORK = new Float64Array( 2 );
+	var ALPHA = new Complex128Array( 1 );
+	var BETA = new Complex128Array( 1 );
+	var WORK = new Complex128Array( 1 );
 	var RWORK = new Float64Array( 1 );
 
 	mset( Hm, n, 0, 0, 3.0, 1.0 );
@@ -116,16 +120,16 @@ test( 'zhgeqz: n_eq_1', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 1, 1,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, 1,
+		WORK, 1, 0, 1,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-13, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-13, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-13, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-13, 'beta' );
 	assertArrayClose( getCol( Hm, n, 0 ), tc.H, 1e-13, 'H' );
 	assertArrayClose( getCol( Tm, n, 0 ), tc.T, 1e-13, 'T' );
 	assertArrayClose( getCol( Qm, n, 0 ), tc.Q, 1e-13, 'Q' );
@@ -139,9 +143,9 @@ test( 'zhgeqz: eig_only_3x3', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 2.0, 1.0 );
@@ -163,16 +167,16 @@ test( 'zhgeqz: eig_only_3x3', function t() {
 	var info = zhgeqz( 'E', 'N', 'N', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 });
 
 test( 'zhgeqz: schur_3x3', function t() {
@@ -182,9 +186,9 @@ test( 'zhgeqz: schur_3x3', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 2.0, 1.0 );
@@ -206,16 +210,16 @@ test( 'zhgeqz: schur_3x3', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 	assertArrayClose( getCol( Hm, n, 0 ), tc.H_col1, 1e-12, 'H_col1' );
 	assertArrayClose( getCol( Hm, n, 1 ), tc.H_col2, 1e-12, 'H_col2' );
 	assertArrayClose( getCol( Hm, n, 2 ), tc.H_col3, 1e-12, 'H_col3' );
@@ -237,9 +241,9 @@ test( 'zhgeqz: schur_4x4', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 1.0, 0.5 );
@@ -270,16 +274,16 @@ test( 'zhgeqz: schur_4x4', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 1, 4,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-11, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-11, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-11, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-11, 'beta' );
 	assertArrayClose( getCol( Hm, n, 0 ), tc.H_col1, 1e-11, 'H_col1' );
 	assertArrayClose( getCol( Hm, n, 1 ), tc.H_col2, 1e-11, 'H_col2' );
 	assertArrayClose( getCol( Hm, n, 2 ), tc.H_col3, 1e-11, 'H_col3' );
@@ -305,9 +309,9 @@ test( 'zhgeqz: ihi_lt_ilo', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 5.0, 1.0 );
@@ -320,16 +324,16 @@ test( 'zhgeqz: ihi_lt_ilo', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 2, 1,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-13, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-13, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-13, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-13, 'beta' );
 });
 
 test( 'zhgeqz: partial_4x4', function t() {
@@ -339,9 +343,9 @@ test( 'zhgeqz: partial_4x4', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 1.0, 0.0 );
@@ -370,16 +374,16 @@ test( 'zhgeqz: partial_4x4', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 2, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 	assertArrayClose( getCol( Hm, n, 0 ), tc.H_col1, 1e-12, 'H_col1' );
 	assertArrayClose( getCol( Hm, n, 1 ), tc.H_col2, 1e-12, 'H_col2' );
 	assertArrayClose( getCol( Hm, n, 2 ), tc.H_col3, 1e-12, 'H_col3' );
@@ -405,9 +409,9 @@ test( 'zhgeqz: eig_only_4x4', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 1.0, 0.5 );
@@ -438,16 +442,16 @@ test( 'zhgeqz: eig_only_4x4', function t() {
 	var info = zhgeqz( 'E', 'N', 'N', n, 1, 4,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-11, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-11, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-11, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-11, 'beta' );
 });
 
 test( 'zhgeqz: schur_2x2', function t() {
@@ -457,9 +461,9 @@ test( 'zhgeqz: schur_2x2', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 1.0, 2.0 );
@@ -474,16 +478,16 @@ test( 'zhgeqz: schur_2x2', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 1, 2,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 	assertArrayClose( getCol( Hm, n, 0 ), tc.H_col1, 1e-12, 'H_col1' );
 	assertArrayClose( getCol( Hm, n, 1 ), tc.H_col2, 1e-12, 'H_col2' );
 	assertArrayClose( getCol( Tm, n, 0 ), tc.T_col1, 1e-12, 'T_col1' );
@@ -501,9 +505,9 @@ test( 'zhgeqz: zero_t_diag_3x3', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 2.0, 1.0 );
@@ -525,16 +529,16 @@ test( 'zhgeqz: zero_t_diag_3x3', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 });
 
 test( 'zhgeqz: zero_t_last_3x3', function t() {
@@ -544,9 +548,9 @@ test( 'zhgeqz: zero_t_last_3x3', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 2.0, 1.0 );
@@ -568,16 +572,16 @@ test( 'zhgeqz: zero_t_last_3x3', function t() {
 	var info = zhgeqz( 'S', 'I', 'I', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 });
 
 test( 'zhgeqz: diagonal_3x3', function t() {
@@ -587,9 +591,9 @@ test( 'zhgeqz: diagonal_3x3', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 1.0, 2.0 );
@@ -609,16 +613,16 @@ test( 'zhgeqz: diagonal_3x3', function t() {
 	var info = zhgeqz( 'E', 'N', 'N', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 });
 
 test( 'zhgeqz: accumulate_qz (COMPQ=V, COMPZ=V)', function t() {
@@ -628,9 +632,9 @@ test( 'zhgeqz: accumulate_qz (COMPQ=V, COMPZ=V)', function t() {
 	var Tm = makeMatrix( n );
 	var Qm = makeMatrix( n );
 	var Zm = makeMatrix( n );
-	var ALPHA = new Float64Array( 2 * n );
-	var BETA = new Float64Array( 2 * n );
-	var WORK = new Float64Array( 2 * n );
+	var ALPHA = new Complex128Array( n );
+	var BETA = new Complex128Array( n );
+	var WORK = new Complex128Array( n );
 	var RWORK = new Float64Array( n );
 
 	mset( Hm, n, 0, 0, 2.0, 1.0 );
@@ -660,16 +664,16 @@ test( 'zhgeqz: accumulate_qz (COMPQ=V, COMPZ=V)', function t() {
 	var info = zhgeqz( 'S', 'V', 'V', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
-		ALPHA, 2, 0,
-		BETA, 2, 0,
+		ALPHA, 1, 0,
+		BETA, 1, 0,
 		Qm.data, Qm.s1, Qm.s2, Qm.offset,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
-		WORK, 2, 0, n,
+		WORK, 1, 0, n,
 		RWORK, 1, 0
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( ALPHA ), tc.alpha, 1e-12, 'alpha' );
-	assertArrayClose( Array.from( BETA ), tc.beta, 1e-12, 'beta' );
+	assertArrayClose( Array.from( reinterpret( ALPHA, 0 ) ), tc.alpha, 1e-12, 'alpha' );
+	assertArrayClose( Array.from( reinterpret( BETA, 0 ) ), tc.beta, 1e-12, 'beta' );
 	assertArrayClose( getCol( Qm, n, 0 ), tc.Q_col1, 1e-12, 'Q_col1' );
 	assertArrayClose( getCol( Qm, n, 1 ), tc.Q_col2, 1e-12, 'Q_col2' );
 	assertArrayClose( getCol( Qm, n, 2 ), tc.Q_col3, 1e-12, 'Q_col3' );

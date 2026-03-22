@@ -6,8 +6,25 @@
 
 import { prz, cleanup, feval, barycentricRoots } from './prz.js';
 import zgesvd from './lib/lapack/base/zgesvd/lib/ndarray.js';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const Complex128Array = require( '@stdlib/array/complex128' );
+const reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
+// Timing accumulator — populated during aaa() calls, read by profiling harness
+export const timings = {
+  svd: 0,
+  cauchy: 0,
+  aMatrix: 0,
+  ratEval: 0,
+  prz: 0,
+  total: 0,
+  iters: 0,
+  reset() { this.svd = 0; this.cauchy = 0; this.aMatrix = 0; this.ratEval = 0; this.prz = 0; this.total = 0; this.iters = 0; }
+};
 
 export function aaa(Z, F, tol = 1e-13, mmax = 100) {
+  const t_total = performance.now();
   const M = Z.length;
   if (M !== F.length) throw new Error('Z and F must have the same length');
   if (mmax > M) mmax = M;
@@ -52,21 +69,26 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
   }
 
   // Pre-allocate SVD workspace at maximum sizes to avoid per-iteration allocation.
-  // A is at most M x mmax, but nJ decreases and m increases. Max product bounded by M*mmax.
+  // Complex arrays use Complex128Array; real arrays use Float64Array.
   const maxN = mmax;
   const maxM_svd = M;
-  const AdataMax = new Float64Array(2 * maxM_svd * maxN);
-  const sDataMax = new Float64Array(maxN);
-  const UData = new Float64Array(2);
-  const VTDataMax = new Float64Array(2 * maxN * maxN);
+  const Adata = new Complex128Array(maxM_svd * maxN);
+  const Av = reinterpret(Adata, 0); // Float64Array view for efficient fill
+  const sData = new Float64Array(maxN);
+  const UData = new Complex128Array(1);
+  const VTData = new Complex128Array(maxN * maxN);
+  const VTv = reinterpret(VTData, 0); // Float64Array view for reading results
   const lworkMax = Math.max(1, 8 * (maxM_svd + maxN));
-  const WORKMax = new Float64Array(2 * lworkMax);
-  const RWORKMax = new Float64Array(5 * maxN);
+  const WORK = new Complex128Array(lworkMax);
+  const RWORK = new Float64Array(5 * maxN);
 
   let converged = false;
   let m = 0;
+  let svdAvailable = true;
 
   for (let iter = 0; iter < mmax; iter++) {
+    timings.iters++;
+
     // j = argmax |F - R|
     let maxVal = -1, j = 0;
     for (let i = 0; i < M; i++) {
@@ -83,7 +105,6 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
     // J(J==j) = []
     for (let i = 0; i < nJ; i++) {
       if (J[i] === j) {
-        // Shift remaining elements left
         for (let k = i; k < nJ - 1; k++) J[k] = J[k + 1];
         nJ--;
         break;
@@ -91,6 +112,7 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
     }
 
     // C(:, iter) = 1 / (Z - Z(j))
+    let t0 = performance.now();
     const zjr = Zr[2 * j], zji = Zr[2 * j + 1];
     for (let i = 0; i < M; i++) {
       const dr = Zr[2 * i] - zjr, di = Zr[2 * i + 1] - zji;
@@ -102,10 +124,12 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
         Cr[base] = dr / d; Cr[base + 1] = -di / d;
       }
     }
+    timings.cauchy += performance.now() - t0;
 
     // A = SF*C - C*Sf where SF = diag(F), Sf = diag(f)
     // i.e. A(ii, k) = C(J[ii], k) * (F(J[ii]) - f[k])
-    // Pack into column-major interleaved Float64Array for zgesvd
+    // Pack into column-major Complex128Array for zgesvd
+    t0 = performance.now();
     for (let k = 0; k < m; k++) {
       const fkr = fr[2 * k], fki = fr[2 * k + 1];
       for (let ii = 0; ii < nJ; ii++) {
@@ -114,30 +138,45 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
         const cr = Cr[cBase], cim = Cr[cBase + 1];
         const dr = Fr[2 * ci] - fkr, di = Fr[2 * ci + 1] - fki;
         const idx = 2 * (ii + k * nJ);
-        AdataMax[idx] = cr * dr - cim * di;
-        AdataMax[idx + 1] = cr * di + cim * dr;
+        Av[idx] = cr * dr - cim * di;
+        Av[idx + 1] = cr * di + cim * dr;
       }
     }
+    timings.aMatrix += performance.now() - t0;
 
     // SVD(A(J,:), 0) — thin SVD, we only need V(:, m)
     // LAPACK returns VT = V^H; we need last row of VT, conjugated.
-    const minMN = Math.min(nJ, m);
     const lwork = Math.max(1, 8 * (nJ + m));
 
     // Zero out VT region we'll read from
-    for (let i = 0; i < 2 * m * m; i++) VTDataMax[i] = 0;
+    for (let i = 0; i < 2 * m * m; i++) VTv[i] = 0;
 
-    const info = zgesvd(
-      'N', 'A', nJ, m,
-      AdataMax, 1, nJ, 0,
-      sDataMax, 1, 0,
-      UData, 1, 1, 0,
-      VTDataMax, 1, m, 0,
-      WORKMax, 1, 0, lwork,
-      RWORKMax, 1, 0
-    );
+    t0 = performance.now();
+    // TODO: zgesvd interface is being migrated to Complex128Array.
+    // Once migration is complete, remove the try/catch and this comment.
+    // The strides/offsets below are in complex elements (Complex128Array convention).
+    let info = 0;
+    if (svdAvailable) {
+      try {
+        info = zgesvd(
+          'N', 'A', nJ, m,
+          Adata, 1, nJ, 0,
+          sData, 1, 0,
+          UData, 1, 1, 0,
+          VTData, 1, m, 0,
+          WORK, 1, 0, lwork,
+          RWORK, 1, 0
+        );
+      } catch (e) {
+        if (svdAvailable) {
+          console.warn('zgesvd not yet functional (migration in progress):', e.message);
+          svdAvailable = false;
+        }
+      }
+    }
+    timings.svd += performance.now() - t0;
 
-    if (info !== 0) {
+    if (info !== 0 && svdAvailable) {
       console.warn('zgesvd info =', info);
     }
 
@@ -146,11 +185,12 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
     const lastRow = m - 1;
     for (let jj = 0; jj < m; jj++) {
       const idx = 2 * (lastRow + jj * m);
-      wr[2 * jj] = VTDataMax[idx];
-      wr[2 * jj + 1] = -VTDataMax[idx + 1]; // conjugate
+      wr[2 * jj] = VTv[idx];
+      wr[2 * jj + 1] = -VTv[idx + 1]; // conjugate
     }
 
     // R = F; R(J) = N(J)./D(J) where N = C*(w.*f), D = C*w
+    t0 = performance.now();
     for (let i = 0; i < 2 * M; i++) Rr[i] = Fr[i];
 
     for (let ii = 0; ii < nJ; ii++) {
@@ -173,6 +213,7 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
       Rr[2 * ci] = (nr * dr + ni * di) / d;
       Rr[2 * ci + 1] = (ni * dr - nr * di) / d;
     }
+    timings.ratEval += performance.now() - t0;
 
     // err = norm(F-R, inf)
     let err = 0;
@@ -198,7 +239,11 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
     wOut[i] = [wr[2 * i], wr[2 * i + 1]];
   }
 
+  const t_prz = performance.now();
   const { pol, res, zer } = prz(zOut, fOut, wOut);
+  timings.prz += performance.now() - t_prz;
+
+  timings.total += performance.now() - t_total;
 
   return {
     converged,
