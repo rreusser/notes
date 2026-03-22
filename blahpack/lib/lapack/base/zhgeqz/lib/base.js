@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var zlanhs = require( '../../zlanhs/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
@@ -53,31 +54,31 @@ var HALF = 0.5;
 * @param {NonNegativeInteger} N - order of matrices H, T, Q, Z
 * @param {integer} ilo - start of active block (1-based)
 * @param {integer} ihi - end of active block (1-based)
-* @param {Float64Array} H - upper Hessenberg matrix (interleaved complex)
-* @param {integer} strideH1 - row stride for H
-* @param {integer} strideH2 - column stride for H
-* @param {NonNegativeInteger} offsetH - starting index for H
-* @param {Float64Array} T - upper triangular matrix (interleaved complex)
-* @param {integer} strideT1 - row stride for T
-* @param {integer} strideT2 - column stride for T
-* @param {NonNegativeInteger} offsetT - starting index for T
-* @param {Float64Array} ALPHA - output eigenvalue numerators (interleaved complex, length >= 2*N)
-* @param {integer} strideALPHA - stride for ALPHA (in complex elements, i.e. 2 doubles)
-* @param {NonNegativeInteger} offsetALPHA - starting index for ALPHA
-* @param {Float64Array} BETA - output eigenvalue denominators (interleaved complex, length >= 2*N)
-* @param {integer} strideBETA - stride for BETA (in complex elements)
-* @param {NonNegativeInteger} offsetBETA - starting index for BETA
-* @param {Float64Array} Q - left Schur vectors (interleaved complex)
-* @param {integer} strideQ1 - row stride for Q
-* @param {integer} strideQ2 - column stride for Q
-* @param {NonNegativeInteger} offsetQ - starting index for Q
-* @param {Float64Array} Z - right Schur vectors (interleaved complex)
-* @param {integer} strideZ1 - row stride for Z
-* @param {integer} strideZ2 - column stride for Z
-* @param {NonNegativeInteger} offsetZ - starting index for Z
-* @param {Float64Array} WORK - workspace (interleaved complex, length >= 2*max(1,N))
-* @param {integer} strideWORK - stride for WORK
-* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {Complex128Array} H - upper Hessenberg matrix
+* @param {integer} strideH1 - row stride for H (complex elements)
+* @param {integer} strideH2 - column stride for H (complex elements)
+* @param {NonNegativeInteger} offsetH - starting index for H (complex elements)
+* @param {Complex128Array} T - upper triangular matrix
+* @param {integer} strideT1 - row stride for T (complex elements)
+* @param {integer} strideT2 - column stride for T (complex elements)
+* @param {NonNegativeInteger} offsetT - starting index for T (complex elements)
+* @param {Complex128Array} ALPHA - output eigenvalue numerators
+* @param {integer} strideALPHA - stride for ALPHA (complex elements)
+* @param {NonNegativeInteger} offsetALPHA - starting index for ALPHA (complex elements)
+* @param {Complex128Array} BETA - output eigenvalue denominators
+* @param {integer} strideBETA - stride for BETA (complex elements)
+* @param {NonNegativeInteger} offsetBETA - starting index for BETA (complex elements)
+* @param {Complex128Array} Q - left Schur vectors
+* @param {integer} strideQ1 - row stride for Q (complex elements)
+* @param {integer} strideQ2 - column stride for Q (complex elements)
+* @param {NonNegativeInteger} offsetQ - starting index for Q (complex elements)
+* @param {Complex128Array} Z - right Schur vectors
+* @param {integer} strideZ1 - row stride for Z (complex elements)
+* @param {integer} strideZ2 - column stride for Z (complex elements)
+* @param {NonNegativeInteger} offsetZ - starting index for Z (complex elements)
+* @param {Complex128Array} WORK - workspace
+* @param {integer} strideWORK - stride for WORK (complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 * @param {integer} lwork - workspace size (in complex elements); -1 for query
 * @param {Float64Array} RWORK - real workspace (length >= N)
 * @param {integer} strideRWORK - stride for RWORK
@@ -186,19 +187,33 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		return 0;
 	}
 
-	// Local stride aliases
-	sh1 = strideH1;
-	sh2 = strideH2;
-	st1 = strideT1;
-	st2 = strideT2;
-	sq1 = strideQ1;
-	sq2 = strideQ2;
-	sz1 = strideZ1;
-	sz2 = strideZ2;
+	// Get Float64Array views for direct element access
+	var Hv = reinterpret( H, 0 ); // eslint-disable-line no-var
+	var Tv = reinterpret( T, 0 ); // eslint-disable-line no-var
+	var ALPHAv = reinterpret( ALPHA, 0 ); // eslint-disable-line no-var
+	var BETAv = reinterpret( BETA, 0 ); // eslint-disable-line no-var
 
-	// zrot strides: in complex elements (divide doubles-stride by 2)
-	rq1 = sq1 / 2;
-	rz1 = sz1 / 2;
+	// Float64 strides and offsets (for direct element access)
+	sh1 = strideH1 * 2;
+	sh2 = strideH2 * 2;
+	st1 = strideT1 * 2;
+	st2 = strideT2 * 2;
+	sq1 = strideQ1 * 2;
+	sq2 = strideQ2 * 2;
+	sz1 = strideZ1 * 2;
+	sz2 = strideZ2 * 2;
+
+	// Float64 base offsets for element access
+	var oH = offsetH * 2; // eslint-disable-line no-var
+	var oT = offsetT * 2; // eslint-disable-line no-var
+	var oAL = offsetALPHA * 2; // eslint-disable-line no-var
+	var oBE = offsetBETA * 2; // eslint-disable-line no-var
+	var sAL = strideALPHA * 2; // eslint-disable-line no-var
+	var sBE = strideBETA * 2; // eslint-disable-line no-var
+
+	// zrot strides: in complex elements (same as input strides now)
+	rq1 = strideQ1;
+	rz1 = strideZ1;
 
 	// Working arrays for zlartg
 	f = new Float64Array( 2 );
@@ -246,8 +261,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	// ZLANHS('F', IN, H(ILO,ILO), LDH, RWORK)
 	// 0-based: H at (ilo-1, ilo-1)
 	// zlanhs expects strides in complex elements (each = 2 doubles)
-	anorm = zlanhs( 'F', in0, H, sh1 / 2, sh2 / 2, offsetH + ( ilo - 1 ) * sh1 + ( ilo - 1 ) * sh2, RWORK, strideRWORK, offsetRWORK );
-	bnorm = zlanhs( 'F', in0, T, st1 / 2, st2 / 2, offsetT + ( ilo - 1 ) * st1 + ( ilo - 1 ) * st2, RWORK, strideRWORK, offsetRWORK );
+	anorm = zlanhs( 'F', in0, H, strideH1, strideH2, offsetH + ( ilo - 1 ) * strideH1 + ( ilo - 1 ) * strideH2, RWORK, strideRWORK, offsetRWORK );
+	bnorm = zlanhs( 'F', in0, T, strideT1, strideT2, offsetT + ( ilo - 1 ) * strideT1 + ( ilo - 1 ) * strideT2, RWORK, strideRWORK, offsetRWORK );
 	atol = Math.max( safmin, ulp * anorm );
 	btol = Math.max( safmin, ulp * bnorm );
 	ascale = ONE / Math.max( safmin, anorm );
@@ -255,34 +270,34 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 	// Set Eigenvalues IHI+1:N (0-based: indices ihi to N-1)
 	for ( j = ihi; j < N; j++ ) {
-		absb = cabs( T, offsetT + j * st1 + j * st2 );
+		absb = cabs( Tv, oT + j * st1 + j * st2 );
 		if ( absb > safmin ) {
 			// signbc = conj(T(j,j) / absb)
-			cscaleConj( signbc, T, offsetT + j * st1 + j * st2, absb );
+			cscaleConj( signbc, Tv, oT + j * st1 + j * st2, absb );
 			// T(j,j) = absb
-			T[ offsetT + j * st1 + j * st2 ] = absb;
-			T[ offsetT + j * st1 + j * st2 + 1 ] = ZERO;
+			Tv[ oT + j * st1 + j * st2 ] = absb;
+			Tv[ oT + j * st1 + j * st2 + 1 ] = ZERO;
 			if ( ilschr ) {
 				// ZSCAL(j, signbc, T(1,j), 1) -- j elements (0-based: j elements starting from row 0)
-				zscal( j, signbc, T, st1 / 2, offsetT + j * st2 );
+				zscal( j, signbc, T, strideT1, offsetT + j * strideT2 );
 				// ZSCAL(j+1, signbc, H(1,j), 1) -- j+1 elements
-				zscal( j + 1, signbc, H, sh1 / 2, offsetH + j * sh2 );
+				zscal( j + 1, signbc, H, strideH1, offsetH + j * strideH2 );
 			} else {
 				// ZSCAL(1, signbc, H(j,j), 1)
-				zscal( 1, signbc, H, 1, offsetH + j * sh1 + j * sh2 );
+				zscal( 1, signbc, H, 1, offsetH + j * strideH1 + j * strideH2 );
 			}
 			if ( ilz ) {
-				zscal( N, signbc, Z, sz1 / 2, offsetZ + j * sz2 );
+				zscal( N, signbc, Z, strideZ1, offsetZ + j * strideZ2 );
 			}
 		} else {
-			T[ offsetT + j * st1 + j * st2 ] = ZERO;
-			T[ offsetT + j * st1 + j * st2 + 1 ] = ZERO;
+			Tv[ oT + j * st1 + j * st2 ] = ZERO;
+			Tv[ oT + j * st1 + j * st2 + 1 ] = ZERO;
 		}
 		// ALPHA(j) = H(j,j), BETA(j) = T(j,j)
-		ALPHA[ offsetALPHA + j * strideALPHA ] = H[ offsetH + j * sh1 + j * sh2 ];
-		ALPHA[ offsetALPHA + j * strideALPHA + 1 ] = H[ offsetH + j * sh1 + j * sh2 + 1 ];
-		BETA[ offsetBETA + j * strideBETA ] = T[ offsetT + j * st1 + j * st2 ];
-		BETA[ offsetBETA + j * strideBETA + 1 ] = T[ offsetT + j * st1 + j * st2 + 1 ];
+		ALPHAv[ oAL + j * sAL ] = Hv[ oH + j * sh1 + j * sh2 ];
+		ALPHAv[ oAL + j * sAL + 1 ] = Hv[ oH + j * sh1 + j * sh2 + 1 ];
+		BETAv[ oBE + j * sBE ] = Tv[ oT + j * st1 + j * st2 ];
+		BETAv[ oBE + j * sBE + 1 ] = Tv[ oT + j * st1 + j * st2 + 1 ];
 	}
 
 	// If IHI < ILO, skip QZ steps
@@ -323,8 +338,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		if ( cabs1At( H, offsetH + ilast * sh1 + ( ilast - 1 ) * sh2 ) <=
 			Math.max( safmin, ulp * ( cabs1At( H, offsetH + ilast * sh1 + ilast * sh2 ) +
 			cabs1At( H, offsetH + ( ilast - 1 ) * sh1 + ( ilast - 1 ) * sh2 ) ) ) ) {
-			H[ offsetH + ilast * sh1 + ( ilast - 1 ) * sh2 ] = ZERO;
-			H[ offsetH + ilast * sh1 + ( ilast - 1 ) * sh2 + 1 ] = ZERO;
+			Hv[ oH + ilast * sh1 + ( ilast - 1 ) * sh2 ] = ZERO;
+			Hv[ oH + ilast * sh1 + ( ilast - 1 ) * sh2 + 1 ] = ZERO;
 			deflateAndExtract();
 			if ( done ) {
 				return info;
@@ -333,9 +348,9 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		}
 
 		// Check if T(ILAST, ILAST) is small
-		if ( cabs( T, offsetT + ilast * st1 + ilast * st2 ) <= btol ) {
-			T[ offsetT + ilast * st1 + ilast * st2 ] = ZERO;
-			T[ offsetT + ilast * st1 + ilast * st2 + 1 ] = ZERO;
+		if ( cabs( Tv, oT + ilast * st1 + ilast * st2 ) <= btol ) {
+			Tv[ oT + ilast * st1 + ilast * st2 ] = ZERO;
+			Tv[ oT + ilast * st1 + ilast * st2 + 1 ] = ZERO;
 			handleZeroTdiag();
 			if ( done ) {
 				return info;
@@ -365,28 +380,28 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		var jj;
 		var ab;
 		for ( jj = 0; jj < ilo - 1; jj++ ) {
-			ab = cabs( T, offsetT + jj * st1 + jj * st2 );
+			ab = cabs( Tv, oT + jj * st1 + jj * st2 );
 			if ( ab > safmin ) {
-				cscaleConj( signbc, T, offsetT + jj * st1 + jj * st2, ab );
-				T[ offsetT + jj * st1 + jj * st2 ] = ab;
-				T[ offsetT + jj * st1 + jj * st2 + 1 ] = ZERO;
+				cscaleConj( signbc, Tv, oT + jj * st1 + jj * st2, ab );
+				Tv[ oT + jj * st1 + jj * st2 ] = ab;
+				Tv[ oT + jj * st1 + jj * st2 + 1 ] = ZERO;
 				if ( ilschr ) {
-					zscal( jj, signbc, T, st1 / 2, offsetT + jj * st2 );
-					zscal( jj + 1, signbc, H, sh1 / 2, offsetH + jj * sh2 );
+					zscal( jj, signbc, T, strideT1, offsetT + jj * strideT2 );
+					zscal( jj + 1, signbc, H, strideH1, offsetH + jj * strideH2 );
 				} else {
-					zscal( 1, signbc, H, 1, offsetH + jj * sh1 + jj * sh2 );
+					zscal( 1, signbc, H, 1, offsetH + jj * strideH1 + jj * strideH2 );
 				}
 				if ( ilz ) {
 					zscal( N, signbc, Z, sz1 / 2, offsetZ + jj * sz2 );
 				}
 			} else {
-				T[ offsetT + jj * st1 + jj * st2 ] = ZERO;
-				T[ offsetT + jj * st1 + jj * st2 + 1 ] = ZERO;
+				Tv[ oT + jj * st1 + jj * st2 ] = ZERO;
+				Tv[ oT + jj * st1 + jj * st2 + 1 ] = ZERO;
 			}
-			ALPHA[ offsetALPHA + jj * strideALPHA ] = H[ offsetH + jj * sh1 + jj * sh2 ];
-			ALPHA[ offsetALPHA + jj * strideALPHA + 1 ] = H[ offsetH + jj * sh1 + jj * sh2 + 1 ];
-			BETA[ offsetBETA + jj * strideBETA ] = T[ offsetT + jj * st1 + jj * st2 ];
-			BETA[ offsetBETA + jj * strideBETA + 1 ] = T[ offsetT + jj * st1 + jj * st2 + 1 ];
+			ALPHAv[ oAL + jj * sAL ] = Hv[ oH + jj * sh1 + jj * sh2 ];
+			ALPHAv[ oAL + jj * sAL + 1 ] = Hv[ oH + jj * sh1 + jj * sh2 + 1 ];
+			BETAv[ oBE + jj * sBE ] = Tv[ oT + jj * st1 + jj * st2 ];
+			BETAv[ oBE + jj * sBE + 1 ] = Tv[ oT + jj * st1 + jj * st2 + 1 ];
 		}
 		return 0;
 	}
@@ -400,11 +415,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		var idx2;
 		// CTEMP = H(ILAST, ILAST)
 		idx1 = offsetH + ilast * sh1 + ilast * sh2;
-		f[ 0 ] = H[ idx1 ];
+		f[ 0 ] = Hv[ idx1 ];
 		f[ 1 ] = H[ idx1 + 1 ];
 		// G = H(ILAST, ILAST-1)
 		idx2 = offsetH + ilast * sh1 + ( ilast - 1 ) * sh2;
-		g[ 0 ] = H[ idx2 ];
+		g[ 0 ] = Hv[ idx2 ];
 		g[ 1 ] = H[ idx2 + 1 ];
 
 		zlartg( f, g, out );
@@ -413,10 +428,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		s[ 1 ] = out[ 2 ];
 
 		// H(ILAST, ILAST) = R
-		H[ idx1 ] = out[ 3 ];
+		Hv[ idx1 ] = out[ 3 ];
 		H[ idx1 + 1 ] = out[ 4 ];
 		// H(ILAST, ILAST-1) = 0
-		H[ idx2 ] = ZERO;
+		Hv[ idx2 ] = ZERO;
 		H[ idx2 + 1 ] = ZERO;
 
 		// ZROT(ILAST-IFRSTM, H(IFRSTM,ILAST), 1, H(IFRSTM,ILAST-1), 1, C, S)
@@ -456,11 +471,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	function deflateAndExtract() {
 		var ab;
 		var idx;
-		ab = cabs( T, offsetT + ilast * st1 + ilast * st2 );
+		ab = cabs( Tv, oT + ilast * st1 + ilast * st2 );
 		if ( ab > safmin ) {
-			cscaleConj( signbc, T, offsetT + ilast * st1 + ilast * st2, ab );
-			T[ offsetT + ilast * st1 + ilast * st2 ] = ab;
-			T[ offsetT + ilast * st1 + ilast * st2 + 1 ] = ZERO;
+			cscaleConj( signbc, Tv, oT + ilast * st1 + ilast * st2, ab );
+			Tv[ oT + ilast * st1 + ilast * st2 ] = ab;
+			Tv[ oT + ilast * st1 + ilast * st2 + 1 ] = ZERO;
 			if ( ilschr ) {
 				// ZSCAL(ILAST-IFRSTM, SIGNBC, T(IFRSTM,ILAST), 1)
 				zscal( ilast - ifrstm, signbc, T, st1 / 2, offsetT + ifrstm * st1 + ilast * st2 );
@@ -473,17 +488,17 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				zscal( N, signbc, Z, sz1 / 2, offsetZ + ilast * sz2 );
 			}
 		} else {
-			T[ offsetT + ilast * st1 + ilast * st2 ] = ZERO;
-			T[ offsetT + ilast * st1 + ilast * st2 + 1 ] = ZERO;
+			Tv[ oT + ilast * st1 + ilast * st2 ] = ZERO;
+			Tv[ oT + ilast * st1 + ilast * st2 + 1 ] = ZERO;
 		}
 
 		// ALPHA(ILAST) = H(ILAST,ILAST), BETA(ILAST) = T(ILAST,ILAST)
 		idx = offsetH + ilast * sh1 + ilast * sh2;
-		ALPHA[ offsetALPHA + ilast * strideALPHA ] = H[ idx ];
-		ALPHA[ offsetALPHA + ilast * strideALPHA + 1 ] = H[ idx + 1 ];
+		ALPHAv[ oAL + ilast * sAL ] = Hv[ idx ];
+		ALPHAv[ oAL + ilast * sAL + 1 ] = H[ idx + 1 ];
 		idx = offsetT + ilast * st1 + ilast * st2;
-		BETA[ offsetBETA + ilast * strideBETA ] = T[ idx ];
-		BETA[ offsetBETA + ilast * strideBETA + 1 ] = T[ idx + 1 ];
+		BETAv[ oBE + ilast * sBE ] = Tv[ idx ];
+		BETAv[ oBE + ilast * sBE + 1 ] = T[ idx + 1 ];
 
 		// Next block
 		ilast -= 1;
@@ -526,8 +541,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				if ( cabs1At( H, offsetH + jj * sh1 + ( jj - 1 ) * sh2 ) <=
 					Math.max( safmin, ulp * ( cabs1At( H, offsetH + jj * sh1 + jj * sh2 ) +
 					cabs1At( H, offsetH + ( jj - 1 ) * sh1 + ( jj - 1 ) * sh2 ) ) ) ) {
-					H[ offsetH + jj * sh1 + ( jj - 1 ) * sh2 ] = ZERO;
-					H[ offsetH + jj * sh1 + ( jj - 1 ) * sh2 + 1 ] = ZERO;
+					Hv[ oH + jj * sh1 + ( jj - 1 ) * sh2 ] = ZERO;
+					Hv[ oH + jj * sh1 + ( jj - 1 ) * sh2 + 1 ] = ZERO;
 					ilazro = true;
 				} else {
 					ilazro = false;
@@ -535,9 +550,9 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			}
 
 			// Test 2: T(j, j) = 0
-			if ( cabs( T, offsetT + jj * st1 + jj * st2 ) < btol ) {
-				T[ offsetT + jj * st1 + jj * st2 ] = ZERO;
-				T[ offsetT + jj * st1 + jj * st2 + 1 ] = ZERO;
+			if ( cabs( Tv, oT + jj * st1 + jj * st2 ) < btol ) {
+				Tv[ oT + jj * st1 + jj * st2 ] = ZERO;
+				Tv[ oT + jj * st1 + jj * st2 + 1 ] = ZERO;
 
 				// Test 1a: two consecutive small subdiags
 				ilazr2 = false;
@@ -586,11 +601,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		for ( kk = jj; kk <= ilast - 1; kk++ ) {
 			// CTEMP = H(JCH, JCH)
 			idx1 = offsetH + kk * sh1 + kk * sh2;
-			f[ 0 ] = H[ idx1 ];
+			f[ 0 ] = Hv[ idx1 ];
 			f[ 1 ] = H[ idx1 + 1 ];
 			// G = H(JCH+1, JCH)
 			idx2 = offsetH + ( kk + 1 ) * sh1 + kk * sh2;
-			g[ 0 ] = H[ idx2 ];
+			g[ 0 ] = Hv[ idx2 ];
 			g[ 1 ] = H[ idx2 + 1 ];
 
 			zlartg( f, g, out );
@@ -599,10 +614,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			s[ 1 ] = out[ 2 ];
 
 			// H(JCH, JCH) = R
-			H[ idx1 ] = out[ 3 ];
+			Hv[ idx1 ] = out[ 3 ];
 			H[ idx1 + 1 ] = out[ 4 ];
 			// H(JCH+1, JCH) = 0
-			H[ idx2 ] = ZERO;
+			Hv[ idx2 ] = ZERO;
 			H[ idx2 + 1 ] = ZERO;
 
 			// ZROT(ILASTM-JCH, H(JCH,JCH+1), LDH, H(JCH+1,JCH+1), LDH, C, S)
@@ -636,7 +651,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// ILAZR2 adjustment
 			if ( ilazr2 ) {
 				idx1 = offsetH + kk * sh1 + ( kk - 1 ) * sh2;
-				H[ idx1 ] = H[ idx1 ] * c;
+				Hv[ idx1 ] = Hv[ idx1 ] * c;
 				H[ idx1 + 1 ] = H[ idx1 + 1 ] * c;
 			}
 			ilazr2 = false;
@@ -652,8 +667,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				doQZStep();
 				return true;
 			}
-			T[ offsetT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2 ] = ZERO;
-			T[ offsetT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2 + 1 ] = ZERO;
+			Tv[ oT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2 ] = ZERO;
+			Tv[ oT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2 + 1 ] = ZERO;
 		}
 		return false; // fall to label 50
 	}
@@ -668,11 +683,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		for ( kk = jj; kk <= ilast - 1; kk++ ) {
 			// CTEMP = T(JCH, JCH+1)
 			idx1 = offsetT + kk * st1 + ( kk + 1 ) * st2;
-			f[ 0 ] = T[ idx1 ];
+			f[ 0 ] = Tv[ idx1 ];
 			f[ 1 ] = T[ idx1 + 1 ];
 			// G = T(JCH+1, JCH+1)
 			idx2 = offsetT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2;
-			g[ 0 ] = T[ idx2 ];
+			g[ 0 ] = Tv[ idx2 ];
 			g[ 1 ] = T[ idx2 + 1 ];
 
 			zlartg( f, g, out );
@@ -681,10 +696,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			s[ 1 ] = out[ 2 ];
 
 			// T(JCH, JCH+1) = R
-			T[ idx1 ] = out[ 3 ];
+			Tv[ idx1 ] = out[ 3 ];
 			T[ idx1 + 1 ] = out[ 4 ];
 			// T(JCH+1, JCH+1) = 0
-			T[ idx2 ] = ZERO;
+			Tv[ idx2 ] = ZERO;
 			T[ idx2 + 1 ] = ZERO;
 
 			// IF(JCH < ILASTM-1) ZROT(ILASTM-JCH-1, T(JCH,JCH+2), LDT, T(JCH+1,JCH+2), LDT, C, S)
@@ -723,11 +738,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// Step 2: eliminate H(JCH+1, JCH-1)
 			// CTEMP = H(JCH+1, JCH)
 			idx1 = offsetH + ( kk + 1 ) * sh1 + kk * sh2;
-			f[ 0 ] = H[ idx1 ];
+			f[ 0 ] = Hv[ idx1 ];
 			f[ 1 ] = H[ idx1 + 1 ];
 			// G = H(JCH+1, JCH-1)
 			idx2 = offsetH + ( kk + 1 ) * sh1 + ( kk - 1 ) * sh2;
-			g[ 0 ] = H[ idx2 ];
+			g[ 0 ] = Hv[ idx2 ];
 			g[ 1 ] = H[ idx2 + 1 ];
 
 			zlartg( f, g, out );
@@ -736,10 +751,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			s[ 1 ] = out[ 2 ];
 
 			// H(JCH+1, JCH) = R
-			H[ idx1 ] = out[ 3 ];
+			Hv[ idx1 ] = out[ 3 ];
 			H[ idx1 + 1 ] = out[ 4 ];
 			// H(JCH+1, JCH-1) = 0
-			H[ idx2 ] = ZERO;
+			Hv[ idx2 ] = ZERO;
 			H[ idx2 + 1 ] = ZERO;
 
 			// ZROT(JCH+1-IFRSTM, H(IFRSTM,JCH), 1, H(IFRSTM,JCH-1), 1, C, S)
@@ -798,19 +813,19 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			if ( ( iiter % 20 ) === 0 &&
 				bscale * cabs1At( T, offsetT + ilast * st1 + ilast * st2 ) > safmin ) {
 				// eshift += (ascale*H(ilast,ilast)) / (bscale*T(ilast,ilast))
-				divr = bscale * T[ offsetT + ilast * st1 + ilast * st2 ];
-				divi = bscale * T[ offsetT + ilast * st1 + ilast * st2 + 1 ];
-				t1r = ascale * H[ offsetH + ilast * sh1 + ilast * sh2 ];
-				t1i = ascale * H[ offsetH + ilast * sh1 + ilast * sh2 + 1 ];
+				divr = bscale * Tv[ oT + ilast * st1 + ilast * st2 ];
+				divi = bscale * Tv[ oT + ilast * st1 + ilast * st2 + 1 ];
+				t1r = ascale * Hv[ oH + ilast * sh1 + ilast * sh2 ];
+				t1i = ascale * Hv[ oH + ilast * sh1 + ilast * sh2 + 1 ];
 				cdivInline( ctemp, t1r, t1i, divr, divi );
 				eshift[ 0 ] += ctemp[ 0 ];
 				eshift[ 1 ] += ctemp[ 1 ];
 			} else {
 				// eshift += (ascale*H(ilast,ilast-1)) / (bscale*T(ilast-1,ilast-1))
-				divr = bscale * T[ offsetT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2 ];
-				divi = bscale * T[ offsetT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2 + 1 ];
-				t1r = ascale * H[ offsetH + ilast * sh1 + ( ilast - 1 ) * sh2 ];
-				t1i = ascale * H[ offsetH + ilast * sh1 + ( ilast - 1 ) * sh2 + 1 ];
+				divr = bscale * Tv[ oT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2 ];
+				divi = bscale * Tv[ oT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2 + 1 ];
+				t1r = ascale * Hv[ oH + ilast * sh1 + ( ilast - 1 ) * sh2 ];
+				t1i = ascale * Hv[ oH + ilast * sh1 + ( ilast - 1 ) * sh2 + 1 ];
 				cdivInline( ctemp, t1r, t1i, divr, divi );
 				eshift[ 0 ] += ctemp[ 0 ];
 				eshift[ 1 ] += ctemp[ 1 ];
@@ -827,8 +842,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			istart = jj;
 			// CTEMP = ASCALE*H(J,J) - SHIFT*(BSCALE*T(J,J))
 			idx = offsetH + jj * sh1 + jj * sh2;
-			t1r = ascale * H[ idx ] - shift[ 0 ] * ( bscale * T[ offsetT + jj * st1 + jj * st2 ] ) + shift[ 1 ] * ( bscale * T[ offsetT + jj * st1 + jj * st2 + 1 ] );
-			t1i = ascale * H[ idx + 1 ] - shift[ 0 ] * ( bscale * T[ offsetT + jj * st1 + jj * st2 + 1 ] ) - shift[ 1 ] * ( bscale * T[ offsetT + jj * st1 + jj * st2 ] );
+			t1r = ascale * Hv[ idx ] - shift[ 0 ] * ( bscale * Tv[ oT + jj * st1 + jj * st2 ] ) + shift[ 1 ] * ( bscale * Tv[ oT + jj * st1 + jj * st2 + 1 ] );
+			t1i = ascale * H[ idx + 1 ] - shift[ 0 ] * ( bscale * Tv[ oT + jj * st1 + jj * st2 + 1 ] ) - shift[ 1 ] * ( bscale * Tv[ oT + jj * st1 + jj * st2 ] );
 			temp = Math.abs( t1r ) + Math.abs( t1i );
 			temp2 = ascale * cabs1At( H, offsetH + ( jj + 1 ) * sh1 + jj * sh2 );
 			tempr = Math.max( temp, temp2 );
@@ -848,12 +863,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 		// Compute CTEMP at ISTART
 		idx = offsetH + istart * sh1 + istart * sh2;
-		ctemp[ 0 ] = ascale * H[ idx ] - shift[ 0 ] * ( bscale * T[ offsetT + istart * st1 + istart * st2 ] ) + shift[ 1 ] * ( bscale * T[ offsetT + istart * st1 + istart * st2 + 1 ] );
-		ctemp[ 1 ] = ascale * H[ idx + 1 ] - shift[ 0 ] * ( bscale * T[ offsetT + istart * st1 + istart * st2 + 1 ] ) - shift[ 1 ] * ( bscale * T[ offsetT + istart * st1 + istart * st2 ] );
+		ctemp[ 0 ] = ascale * Hv[ idx ] - shift[ 0 ] * ( bscale * Tv[ oT + istart * st1 + istart * st2 ] ) + shift[ 1 ] * ( bscale * Tv[ oT + istart * st1 + istart * st2 + 1 ] );
+		ctemp[ 1 ] = ascale * H[ idx + 1 ] - shift[ 0 ] * ( bscale * Tv[ oT + istart * st1 + istart * st2 + 1 ] ) - shift[ 1 ] * ( bscale * Tv[ oT + istart * st1 + istart * st2 ] );
 
 		// Initial Q: CTEMP2 = ASCALE * H(ISTART+1, ISTART)
 		idx = offsetH + ( istart + 1 ) * sh1 + istart * sh2;
-		ctemp2[ 0 ] = ascale * H[ idx ];
+		ctemp2[ 0 ] = ascale * Hv[ idx ];
 		ctemp2[ 1 ] = ascale * H[ idx + 1 ];
 
 		// ZLARTG(CTEMP, CTEMP2, C, S, CTEMP3)
@@ -882,41 +897,41 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 		// U12 = (BSCALE*T(ILAST-1,ILAST)) / (BSCALE*T(ILAST,ILAST))
 		idx = offsetT + ( ilast - 1 ) * st1 + ilast * st2;
-		t1r = bscale * T[ idx ];
+		t1r = bscale * Tv[ idx ];
 		t1i = bscale * T[ idx + 1 ];
 		idx = offsetT + ilast * st1 + ilast * st2;
-		divr = bscale * T[ idx ];
+		divr = bscale * Tv[ idx ];
 		divi = bscale * T[ idx + 1 ];
 		cdivInline( u12, t1r, t1i, divr, divi );
 
 		// AD11 = (ASCALE*H(ILAST-1,ILAST-1)) / (BSCALE*T(ILAST-1,ILAST-1))
 		idx = offsetH + ( ilast - 1 ) * sh1 + ( ilast - 1 ) * sh2;
-		t1r = ascale * H[ idx ];
+		t1r = ascale * Hv[ idx ];
 		t1i = ascale * H[ idx + 1 ];
 		idx = offsetT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2;
-		divr = bscale * T[ idx ];
+		divr = bscale * Tv[ idx ];
 		divi = bscale * T[ idx + 1 ];
 		cdivInline( ad11, t1r, t1i, divr, divi );
 
 		// AD21 = (ASCALE*H(ILAST,ILAST-1)) / (BSCALE*T(ILAST-1,ILAST-1))
 		idx = offsetH + ilast * sh1 + ( ilast - 1 ) * sh2;
-		t1r = ascale * H[ idx ];
+		t1r = ascale * Hv[ idx ];
 		t1i = ascale * H[ idx + 1 ];
 		// denominator same as AD11
 		cdivInline( ad21, t1r, t1i, divr, divi );
 
 		// AD12 = (ASCALE*H(ILAST-1,ILAST)) / (BSCALE*T(ILAST,ILAST))
 		idx = offsetH + ( ilast - 1 ) * sh1 + ilast * sh2;
-		t1r = ascale * H[ idx ];
+		t1r = ascale * Hv[ idx ];
 		t1i = ascale * H[ idx + 1 ];
 		idx = offsetT + ilast * st1 + ilast * st2;
-		divr = bscale * T[ idx ];
+		divr = bscale * Tv[ idx ];
 		divi = bscale * T[ idx + 1 ];
 		cdivInline( ad12, t1r, t1i, divr, divi );
 
 		// AD22 = (ASCALE*H(ILAST,ILAST)) / (BSCALE*T(ILAST,ILAST))
 		idx = offsetH + ilast * sh1 + ilast * sh2;
-		t1r = ascale * H[ idx ];
+		t1r = ascale * Hv[ idx ];
 		t1i = ascale * H[ idx + 1 ];
 		// same denominator
 		cdivInline( ad22, t1r, t1i, divr, divi );
@@ -1012,11 +1027,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			if ( jj > istart ) {
 				// CTEMP = H(J, J-1)
 				idx1 = offsetH + jj * sh1 + ( jj - 1 ) * sh2;
-				f[ 0 ] = H[ idx1 ];
+				f[ 0 ] = Hv[ idx1 ];
 				f[ 1 ] = H[ idx1 + 1 ];
 				// G = H(J+1, J-1)
 				idx2 = offsetH + ( jj + 1 ) * sh1 + ( jj - 1 ) * sh2;
-				g[ 0 ] = H[ idx2 ];
+				g[ 0 ] = Hv[ idx2 ];
 				g[ 1 ] = H[ idx2 + 1 ];
 
 				zlartg( f, g, out );
@@ -1025,10 +1040,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				s[ 1 ] = out[ 2 ];
 
 				// H(J, J-1) = R
-				H[ idx1 ] = out[ 3 ];
+				Hv[ idx1 ] = out[ 3 ];
 				H[ idx1 + 1 ] = out[ 4 ];
 				// H(J+1, J-1) = 0
-				H[ idx2 ] = ZERO;
+				Hv[ idx2 ] = ZERO;
 				H[ idx2 + 1 ] = ZERO;
 			}
 
@@ -1037,22 +1052,22 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				idx1 = offsetH + jj * sh1 + kk * sh2;
 				idx2 = offsetH + ( jj + 1 ) * sh1 + kk * sh2;
 				// CTEMP = C*H(J,JC) + S*H(J+1,JC)
-				cr = c * H[ idx1 ] + s[ 0 ] * H[ idx2 ] - s[ 1 ] * H[ idx2 + 1 ];
-				ci = c * H[ idx1 + 1 ] + s[ 0 ] * H[ idx2 + 1 ] + s[ 1 ] * H[ idx2 ];
+				cr = c * Hv[ idx1 ] + s[ 0 ] * Hv[ idx2 ] - s[ 1 ] * H[ idx2 + 1 ];
+				ci = c * H[ idx1 + 1 ] + s[ 0 ] * H[ idx2 + 1 ] + s[ 1 ] * Hv[ idx2 ];
 				// H(J+1,JC) = -conj(S)*H(J,JC) + C*H(J+1,JC)
-				H[ idx2 ] = -s[ 0 ] * H[ idx1 ] - s[ 1 ] * H[ idx1 + 1 ] + c * H[ idx2 ];
-				H[ idx2 + 1 ] = -s[ 0 ] * H[ idx1 + 1 ] + s[ 1 ] * H[ idx1 ] + c * H[ idx2 + 1 ];
-				H[ idx1 ] = cr;
+				Hv[ idx2 ] = -s[ 0 ] * Hv[ idx1 ] - s[ 1 ] * H[ idx1 + 1 ] + c * Hv[ idx2 ];
+				H[ idx2 + 1 ] = -s[ 0 ] * H[ idx1 + 1 ] + s[ 1 ] * Hv[ idx1 ] + c * H[ idx2 + 1 ];
+				Hv[ idx1 ] = cr;
 				H[ idx1 + 1 ] = ci;
 
 				// Same for T
 				idx1 = offsetT + jj * st1 + kk * st2;
 				idx2 = offsetT + ( jj + 1 ) * st1 + kk * st2;
-				cr = c * T[ idx1 ] + s[ 0 ] * T[ idx2 ] - s[ 1 ] * T[ idx2 + 1 ];
-				ci = c * T[ idx1 + 1 ] + s[ 0 ] * T[ idx2 + 1 ] + s[ 1 ] * T[ idx2 ];
-				T[ idx2 ] = -s[ 0 ] * T[ idx1 ] - s[ 1 ] * T[ idx1 + 1 ] + c * T[ idx2 ];
-				T[ idx2 + 1 ] = -s[ 0 ] * T[ idx1 + 1 ] + s[ 1 ] * T[ idx1 ] + c * T[ idx2 + 1 ];
-				T[ idx1 ] = cr;
+				cr = c * Tv[ idx1 ] + s[ 0 ] * Tv[ idx2 ] - s[ 1 ] * T[ idx2 + 1 ];
+				ci = c * T[ idx1 + 1 ] + s[ 0 ] * T[ idx2 + 1 ] + s[ 1 ] * Tv[ idx2 ];
+				Tv[ idx2 ] = -s[ 0 ] * Tv[ idx1 ] - s[ 1 ] * T[ idx1 + 1 ] + c * Tv[ idx2 ];
+				T[ idx2 + 1 ] = -s[ 0 ] * T[ idx1 + 1 ] + s[ 1 ] * Tv[ idx1 ] + c * T[ idx2 + 1 ];
+				Tv[ idx1 ] = cr;
 				T[ idx1 + 1 ] = ci;
 			}
 
@@ -1075,11 +1090,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// Step 2: eliminate T(J+1, J) with rotation from right
 			// CTEMP = T(J+1, J+1)
 			idx1 = offsetT + ( jj + 1 ) * st1 + ( jj + 1 ) * st2;
-			f[ 0 ] = T[ idx1 ];
+			f[ 0 ] = Tv[ idx1 ];
 			f[ 1 ] = T[ idx1 + 1 ];
 			// G = T(J+1, J)
 			idx2 = offsetT + ( jj + 1 ) * st1 + jj * st2;
-			g[ 0 ] = T[ idx2 ];
+			g[ 0 ] = Tv[ idx2 ];
 			g[ 1 ] = T[ idx2 + 1 ];
 
 			zlartg( f, g, out );
@@ -1088,10 +1103,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			s[ 1 ] = out[ 2 ];
 
 			// T(J+1, J+1) = R
-			T[ idx1 ] = out[ 3 ];
+			Tv[ idx1 ] = out[ 3 ];
 			T[ idx1 + 1 ] = out[ 4 ];
 			// T(J+1, J) = 0
-			T[ idx2 ] = ZERO;
+			Tv[ idx2 ] = ZERO;
 			T[ idx2 + 1 ] = ZERO;
 
 			// Apply from right to H: DO 120 JR = IFRSTM, MIN(J+2, ILAST)
@@ -1102,12 +1117,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				idx1 = offsetH + kk * sh1 + ( jj + 1 ) * sh2;
 				idx2 = offsetH + kk * sh1 + jj * sh2;
 				// CTEMP = C*H(JR,J+1) + S*H(JR,J)
-				cr = c * H[ idx1 ] + s[ 0 ] * H[ idx2 ] - s[ 1 ] * H[ idx2 + 1 ];
-				ci = c * H[ idx1 + 1 ] + s[ 0 ] * H[ idx2 + 1 ] + s[ 1 ] * H[ idx2 ];
+				cr = c * Hv[ idx1 ] + s[ 0 ] * Hv[ idx2 ] - s[ 1 ] * H[ idx2 + 1 ];
+				ci = c * H[ idx1 + 1 ] + s[ 0 ] * H[ idx2 + 1 ] + s[ 1 ] * Hv[ idx2 ];
 				// H(JR,J) = -conj(S)*H(JR,J+1) + C*H(JR,J)
-				H[ idx2 ] = -s[ 0 ] * H[ idx1 ] - s[ 1 ] * H[ idx1 + 1 ] + c * H[ idx2 ];
-				H[ idx2 + 1 ] = -s[ 0 ] * H[ idx1 + 1 ] + s[ 1 ] * H[ idx1 ] + c * H[ idx2 + 1 ];
-				H[ idx1 ] = cr;
+				Hv[ idx2 ] = -s[ 0 ] * Hv[ idx1 ] - s[ 1 ] * H[ idx1 + 1 ] + c * Hv[ idx2 ];
+				H[ idx2 + 1 ] = -s[ 0 ] * H[ idx1 + 1 ] + s[ 1 ] * Hv[ idx1 ] + c * H[ idx2 + 1 ];
+				Hv[ idx1 ] = cr;
 				H[ idx1 + 1 ] = ci;
 			}
 
@@ -1115,11 +1130,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			for ( kk = ifrstm; kk <= jj; kk++ ) {
 				idx1 = offsetT + kk * st1 + ( jj + 1 ) * st2;
 				idx2 = offsetT + kk * st1 + jj * st2;
-				cr = c * T[ idx1 ] + s[ 0 ] * T[ idx2 ] - s[ 1 ] * T[ idx2 + 1 ];
-				ci = c * T[ idx1 + 1 ] + s[ 0 ] * T[ idx2 + 1 ] + s[ 1 ] * T[ idx2 ];
-				T[ idx2 ] = -s[ 0 ] * T[ idx1 ] - s[ 1 ] * T[ idx1 + 1 ] + c * T[ idx2 ];
-				T[ idx2 + 1 ] = -s[ 0 ] * T[ idx1 + 1 ] + s[ 1 ] * T[ idx1 ] + c * T[ idx2 + 1 ];
-				T[ idx1 ] = cr;
+				cr = c * Tv[ idx1 ] + s[ 0 ] * Tv[ idx2 ] - s[ 1 ] * T[ idx2 + 1 ];
+				ci = c * T[ idx1 + 1 ] + s[ 0 ] * T[ idx2 + 1 ] + s[ 1 ] * Tv[ idx2 ];
+				Tv[ idx2 ] = -s[ 0 ] * Tv[ idx1 ] - s[ 1 ] * T[ idx1 + 1 ] + c * Tv[ idx2 ];
+				T[ idx2 + 1 ] = -s[ 0 ] * T[ idx1 + 1 ] + s[ 1 ] * Tv[ idx1 ] + c * T[ idx2 + 1 ];
+				Tv[ idx1 ] = cr;
 				T[ idx1 + 1 ] = ci;
 			}
 

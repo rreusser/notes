@@ -2,6 +2,7 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var zlanhs = require( './../lib/base.js' );
 
 function assertClose( actual, expected, tol, msg ) {
@@ -13,7 +14,7 @@ function assertClose( actual, expected, tol, msg ) {
 // [1+1i  2+0i  3+0i ]
 // [4+2i  5+1i  6+0i ]
 // [  0   7+3i  8+2i ]
-var A = new Float64Array([
+var A = new Complex128Array([
 	1,1,  4,2,  0,0,   // col 0
 	2,0,  5,1,  7,3,   // col 1
 	3,0,  6,0,  8,2    // col 2
@@ -65,7 +66,7 @@ test( 'zlanhs: unrecognized norm returns 0', function t() {
 });
 
 test( 'zlanhs: NaN propagation through max norm', function t() {
-	var B = new Float64Array([
+	var B = new Complex128Array([
 		NaN,0,  1,0,  0,0,
 		0,0,    1,0,  1,0,
 		0,0,    0,0,  1,0
@@ -75,7 +76,7 @@ test( 'zlanhs: NaN propagation through max norm', function t() {
 });
 
 test( 'zlanhs: NaN propagation through one norm', function t() {
-	var B = new Float64Array([
+	var B = new Complex128Array([
 		NaN,0,  1,0,  0,0,
 		0,0,    1,0,  1,0,
 		0,0,    0,0,  1,0
@@ -85,7 +86,7 @@ test( 'zlanhs: NaN propagation through one norm', function t() {
 });
 
 test( 'zlanhs: NaN propagation through inf norm', function t() {
-	var B = new Float64Array([
+	var B = new Complex128Array([
 		NaN,0,  1,0,  0,0,
 		0,0,    1,0,  1,0,
 		0,0,    0,0,  1,0

@@ -2,6 +2,8 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var zlarf = require( './../lib/base.js' );
@@ -29,18 +31,18 @@ function assertArrayClose( actual, expected, label ) {
 test( 'zlarf: left side, 3x2 matrix', function t() {
 	var tc = fixture.find( function f( t ) { return t.name === 'zlarf_left_3x2'; });
 	// v = [1+0i, 0.5+0.5i, -0.3+0.2i]
-	var v = new Float64Array( [ 1.0, 0.0, 0.5, 0.5, -0.3, 0.2 ] );
-	var tau = new Float64Array( [ 1.5, 0.3 ] );
+	var v = new Complex128Array( [ 1.0, 0.0, 0.5, 0.5, -0.3, 0.2 ] );
+	var tau = new Complex128Array( [ 1.5, 0.3 ] );
 	// C is 3x2 col-major: col1=[1+0i,3+1i,5+2i], col2=[2+1i,4-1i,6+0i]
-	var C = new Float64Array( [
+	var C = new Complex128Array( [
 		1.0, 0.0,  3.0, 1.0,  5.0, 2.0,   // col 1
 		2.0, 1.0,  4.0, -1.0, 6.0, 0.0    // col 2
 	]);
-	var work = new Float64Array( 20 );
+	var work = new Complex128Array( 20 );
 
 	// strideC1=1 (row stride in complex elems), strideC2=3 (col stride = LDA=3)
 	zlarf( 'L', 3, 2, v, 1, 0, tau, 0, C, 1, 3, 0, work, 1, 0 );
-	assertArrayClose( Array.from( C ), tc.C, 'C' );
+	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 'C' );
 });
 
 test( 'zlarf: right side, 2x3 matrix', function t() {

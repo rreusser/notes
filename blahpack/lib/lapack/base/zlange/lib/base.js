@@ -77,7 +77,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		for ( j = 0; j < N; j++ ) {
 			ai = oA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				temp = cmplx.abs( Av.subarray( ai, ai + 2 ) );
+				temp = cmplx.absAt( Av, ai );
 				if ( value < temp || temp !== temp ) {
 					value = temp;
 				}
@@ -91,7 +91,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 			sum = 0.0;
 			ai = oA + j * sa2;
 			for ( i = 0; i < M; i++ ) {
-				sum += cmplx.abs( Av.subarray( ai, ai + 2 ) );
+				sum += cmplx.absAt( Av, ai );
 				ai += sa1;
 			}
 			if ( value < sum || sum !== sum ) {
@@ -108,7 +108,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 			ai = oA + j * sa2;
 			wi = offsetWORK;
 			for ( i = 0; i < M; i++ ) {
-				WORK[ wi ] += cmplx.abs( Av.subarray( ai, ai + 2 ) );
+				WORK[ wi ] += cmplx.absAt( Av, ai );
 				ai += sa1;
 				wi += strideWORK;
 			}

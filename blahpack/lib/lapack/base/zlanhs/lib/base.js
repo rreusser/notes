@@ -75,7 +75,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 			lim = Math.min( N, j + 2 ); // upper Hessenberg: rows 0..min(N-1, j+1)
 			aij = oA + j * sa2;
 			for ( i = 0; i < lim; i++ ) {
-				sum = cmplx.abs( Av.subarray( aij, aij + 2 ) );
+				sum = cmplx.absAt( Av, aij );
 				if ( value < sum || sum !== sum ) {
 					value = sum;
 				}
@@ -90,7 +90,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 			lim = Math.min( N, j + 2 );
 			aij = oA + j * sa2;
 			for ( i = 0; i < lim; i++ ) {
-				sum += cmplx.abs( Av.subarray( aij, aij + 2 ) );
+				sum += cmplx.absAt( Av, aij );
 				aij += sa1;
 			}
 			if ( value < sum || sum !== sum ) {
@@ -107,7 +107,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 			aij = oA + j * sa2;
 			wi = offsetWORK;
 			for ( i = 0; i < lim; i++ ) {
-				WORK[ wi ] += cmplx.abs( Av.subarray( aij, aij + 2 ) );
+				WORK[ wi ] += cmplx.absAt( Av, aij );
 				aij += sa1;
 				wi += strideWORK;
 			}

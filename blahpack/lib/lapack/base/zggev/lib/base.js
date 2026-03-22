@@ -2,6 +2,8 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var zlange = require( '../../zlange/lib/base.js' );
 var zlascl = require( '../../zlascl/lib/base.js' );
@@ -29,8 +31,8 @@ var CONE = new Float64Array( [ 1.0, 0.0 ] );
 * ABS1: |re| + |im| (cheap complex absolute value).
 *
 * @private
-* @param {Float64Array} arr - interleaved complex array
-* @param {integer} idx - index of real part
+* @param {Float64Array} arr - Float64 view of complex array
+* @param {integer} idx - Float64 index of real part
 * @returns {number} |re| + |im|
 */
 function abs1( arr, idx ) {
@@ -43,43 +45,35 @@ function abs1( arr, idx ) {
 * Compute the generalized eigenvalues and optionally the left and/or
 * right generalized eigenvectors of a complex matrix pair (A, B).
 *
-* A generalized eigenvalue for a pair of matrices (A,B) is a scalar
-* lambda or a ratio alpha/beta = lambda, such that A - lambda*B is
-* singular.
-*
-* Complex elements are stored as interleaved real/imaginary pairs.
-* Element (i, j) has real part at `offset + i*stride1 + j*stride2`
-* and imaginary part at `offset + i*stride1 + j*stride2 + 1`.
-*
-* WORK and RWORK are allocated internally; the caller does not need
-* to provide them.
+* A, B, ALPHA, BETA, VL, VR are Complex128Arrays.
+* Strides and offsets are in complex elements.
 *
 * @private
 * @param {string} jobvl - 'N' for no left eigenvectors, 'V' for compute
 * @param {string} jobvr - 'N' for no right eigenvectors, 'V' for compute
 * @param {NonNegativeInteger} N - order of matrices A and B
-* @param {Float64Array} A - first complex matrix (interleaved, modified in-place)
-* @param {integer} strideA1 - stride of the first dimension of A
-* @param {integer} strideA2 - stride of the second dimension of A
-* @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} B - second complex matrix (interleaved, modified in-place)
-* @param {integer} strideB1 - stride of the first dimension of B
-* @param {integer} strideB2 - stride of the second dimension of B
-* @param {NonNegativeInteger} offsetB - starting index for B
-* @param {Float64Array} ALPHA - output eigenvalue numerators (interleaved complex, length >= 2*N)
+* @param {Complex128Array} A - first complex matrix (modified in-place)
+* @param {integer} strideA1 - stride of the first dimension of A (complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+* @param {Complex128Array} B - second complex matrix (modified in-place)
+* @param {integer} strideB1 - stride of the first dimension of B (complex elements)
+* @param {integer} strideB2 - stride of the second dimension of B (complex elements)
+* @param {NonNegativeInteger} offsetB - starting index for B (complex elements)
+* @param {Complex128Array} ALPHA - output eigenvalue numerators
 * @param {integer} strideALPHA - stride for ALPHA (complex elements)
-* @param {NonNegativeInteger} offsetALPHA - starting index for ALPHA
-* @param {Float64Array} BETA - output eigenvalue denominators (interleaved complex, length >= 2*N)
+* @param {NonNegativeInteger} offsetALPHA - starting index for ALPHA (complex elements)
+* @param {Complex128Array} BETA - output eigenvalue denominators
 * @param {integer} strideBETA - stride for BETA (complex elements)
-* @param {NonNegativeInteger} offsetBETA - starting index for BETA
-* @param {Float64Array} VL - left eigenvector matrix (interleaved complex)
-* @param {integer} strideVL1 - stride of the first dimension of VL
-* @param {integer} strideVL2 - stride of the second dimension of VL
-* @param {NonNegativeInteger} offsetVL - starting index for VL
-* @param {Float64Array} VR - right eigenvector matrix (interleaved complex)
-* @param {integer} strideVR1 - stride of the first dimension of VR
-* @param {integer} strideVR2 - stride of the second dimension of VR
-* @param {NonNegativeInteger} offsetVR - starting index for VR
+* @param {NonNegativeInteger} offsetBETA - starting index for BETA (complex elements)
+* @param {Complex128Array} VL - left eigenvector matrix
+* @param {integer} strideVL1 - stride of the first dimension of VL (complex elements)
+* @param {integer} strideVL2 - stride of the second dimension of VL (complex elements)
+* @param {NonNegativeInteger} offsetVL - starting index for VL (complex elements)
+* @param {Complex128Array} VR - right eigenvector matrix
+* @param {integer} strideVR1 - stride of the first dimension of VR (complex elements)
+* @param {integer} strideVR2 - stride of the second dimension of VR (complex elements)
+* @param {NonNegativeInteger} offsetVR - starting index for VR (complex elements)
 * @returns {integer} INFO: 0=success, 1..N=QZ iteration failed to converge, N+1=other QZ failure, N+2=ZTGEVC error
 */
 function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR ) { // eslint-disable-line max-len, max-params
@@ -107,12 +101,14 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	var WORK;
 	var TAU;
 	var lwork;
-	var sA1;
-	var sA2;
-	var sB1;
-	var sB2;
-	var oA;
-	var oB;
+	var VLv;
+	var VRv;
+	var sVL1;
+	var sVL2;
+	var oVL;
+	var sVR1;
+	var sVR2;
+	var oVR;
 	var bal;
 	var ilo;
 	var ihi;
@@ -132,28 +128,14 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		return info;
 	}
 
-	// Local aliases for strides and offsets
-	sA1 = strideA1;
-	sA2 = strideA2;
-	sB1 = strideB1;
-	sB2 = strideB2;
-	oA = offsetA;
-	oB = offsetB;
-
 	// Allocate workspace
-	// WORK: complex workspace (interleaved), at least 2*N complex elements = 4*N doubles
-	// We need enough for zgeqrf, zunmqr, zhgeqz, ztgevc
 	lwork = Math.max( 1, 8 * N );
-	WORK = new Float64Array( 2 * lwork );
+	WORK = new Complex128Array( lwork );
 
-	// TAU: separate array for Householder scalar factors (complex, length N)
-	TAU = new Float64Array( 2 * N );
+	// TAU: Householder scalar factors (complex, length N)
+	TAU = new Complex128Array( N );
 
-	// RWORK: real workspace, layout:
-	//   [0..N-1]    = LSCALE from zggbal
-	//   [N..2N-1]   = RSCALE from zggbal
-	//   [2N..8N-1]  = scratch for zggbal, zhgeqz
-	// RWORK2: separate workspace for ztgevc (which clobbers 0..2N-1)
+	// RWORK: real workspace
 	RWORK = new Float64Array( 8 * N );
 
 	// Get machine constants
@@ -164,8 +146,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	bignum = ONE / smlnum;
 
 	// Scale A if max element outside range [SMLNUM, BIGNUM]
-	// zlange and zlascl expect complex-element strides (divide by 2)
-	anrm = zlange( 'M', N, N, A, sA1 / 2, sA2 / 2, oA, RWORK, 1, 0 );
+	anrm = zlange( 'M', N, N, A, strideA1, strideA2, offsetA, RWORK, 1, 0 );
 	ilascl = false;
 	anrmto = 0.0;
 	if ( anrm > ZERO && anrm < smlnum ) {
@@ -176,11 +157,11 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		ilascl = true;
 	}
 	if ( ilascl ) {
-		zlascl( 'G', 0, 0, anrm, anrmto, N, N, A, sA1 / 2, sA2 / 2, oA );
+		zlascl( 'G', 0, 0, anrm, anrmto, N, N, A, strideA1, strideA2, offsetA );
 	}
 
 	// Scale B if max element outside range [SMLNUM, BIGNUM]
-	bnrm = zlange( 'M', N, N, B, sB1 / 2, sB2 / 2, oB, RWORK, 1, 0 );
+	bnrm = zlange( 'M', N, N, B, strideB1, strideB2, offsetB, RWORK, 1, 0 );
 	ilbscl = false;
 	bnrmto = 0.0;
 	if ( bnrm > ZERO && bnrm < smlnum ) {
@@ -191,15 +172,14 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		ilbscl = true;
 	}
 	if ( ilbscl ) {
-		zlascl( 'G', 0, 0, bnrm, bnrmto, N, N, B, sB1 / 2, sB2 / 2, oB );
+		zlascl( 'G', 0, 0, bnrm, bnrmto, N, N, B, strideB1, strideB2, offsetB );
 	}
 
 	// Permute the matrices A, B to isolate eigenvalues
-	// RWORK layout: LSCALE[0..N-1], RSCALE[N..2N-1], work[2N..8N-1]
 	ileft = 0;
 	iright = N;
 	irwrk = 2 * N;
-	bal = zggbal( 'P', N, A, sA1, sA2, oA, B, sB1, sB2, oB,
+	bal = zggbal( 'P', N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB,
 		RWORK, 1, ileft, RWORK, 1, iright, RWORK, 1, irwrk );
 	ilo = bal.ilo;
 	ihi = bal.ihi;
@@ -213,22 +193,20 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	}
 
 	// QR factorize B(ilo:ihi, ilo:icols) using ZGEQRF
-	// zgeqrf uses complex-element strides, so divide by 2
-	// TAU stored separately, WORK used for scratch
 	zgeqrf(
 		irows, icols,
-		B, sB1 / 2, sB2 / 2, oB + ( ilo - 1 ) * sB1 + ( ilo - 1 ) * sB2,
+		B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
 		TAU, 1, 0,
 		WORK, 1, 0
 	);
 
-	// Apply Q^H to A from the left: A(ilo:ihi, ilo:icols) := Q^H * A(ilo:ihi, ilo:icols)
+	// Apply Q^H to A from the left
 	zunmqr(
 		'L', 'C', irows, icols, irows,
-		B, sB1, sB2, oB + ( ilo - 1 ) * sB1 + ( ilo - 1 ) * sB2,
+		B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
 		TAU, 1, 0,
-		A, sA1, sA2, oA + ( ilo - 1 ) * sA1 + ( ilo - 1 ) * sA2,
-		WORK, lwork
+		A, strideA1, strideA2, offsetA + ( ilo - 1 ) * strideA1 + ( ilo - 1 ) * strideA2,
+		WORK, 1, 0, lwork
 	);
 
 	// Initialize VL and generate Q
@@ -236,14 +214,12 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		zlaset( 'Full', N, N, CZERO, CONE, VL, strideVL1, strideVL2, offsetVL );
 
 		if ( irows > 1 ) {
-			// Copy lower triangular part of B(ilo+1:ihi, ilo:ilo+irows-2) to VL
 			zlacpy( 'L', irows - 1, irows - 1,
-				B, sB1, sB2, oB + ilo * sB1 + ( ilo - 1 ) * sB2,
+				B, strideB1, strideB2, offsetB + ilo * strideB1 + ( ilo - 1 ) * strideB2,
 				VL, strideVL1, strideVL2, offsetVL + ilo * strideVL1 + ( ilo - 1 ) * strideVL2
 			);
 		}
 
-		// Generate Q from Householder reflectors
 		zungqr( irows, irows, irows,
 			VL, strideVL1, strideVL2, offsetVL + ( ilo - 1 ) * strideVL1 + ( ilo - 1 ) * strideVL2,
 			TAU, 1, 0,
@@ -258,20 +234,18 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 	// Reduce to generalized Hessenberg form
 	if ( ilv ) {
-		// Eigenvectors requested - work on whole matrix
 		zgghrd(
 			jobvl, jobvr, N, ilo, ihi,
-			A, sA1, sA2, oA,
-			B, sB1, sB2, oB,
+			A, strideA1, strideA2, offsetA,
+			B, strideB1, strideB2, offsetB,
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR
 		);
 	} else {
-		// No eigenvectors - work on active block only
 		zgghrd(
 			'N', 'N', irows, 1, irows,
-			A, sA1, sA2, oA + ( ilo - 1 ) * sA1 + ( ilo - 1 ) * sA2,
-			B, sB1, sB2, oB + ( ilo - 1 ) * sB1 + ( ilo - 1 ) * sB2,
+			A, strideA1, strideA2, offsetA + ( ilo - 1 ) * strideA1 + ( ilo - 1 ) * strideA2,
+			B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR
 		);
@@ -285,10 +259,10 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	}
 	ierr = zhgeqz(
 		chtemp, jobvl, jobvr, N, ilo, ihi,
-		A, sA1, sA2, oA,
-		B, sB1, sB2, oB,
-		ALPHA, strideALPHA * 2, offsetALPHA,
-		BETA, strideBETA * 2, offsetBETA,
+		A, strideA1, strideA2, offsetA,
+		B, strideB1, strideB2, offsetB,
+		ALPHA, strideALPHA, offsetALPHA,
+		BETA, strideBETA, offsetBETA,
 		VL, strideVL1, strideVL2, offsetVL,
 		VR, strideVR1, strideVR2, offsetVR,
 		WORK, 1, 0, lwork,
@@ -302,7 +276,6 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		} else {
 			info = N + 1;
 		}
-		// Jump to unscaling (label 70)
 		return finalize();
 	}
 
@@ -322,8 +295,8 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		// the LSCALE/RSCALE at RWORK[0..2N-1] needed by zggbak
 		ierr = ztgevc(
 			chtemp, 'B', N,
-			A, sA1, sA2, oA,
-			B, sB1, sB2, oB,
+			A, strideA1, strideA2, offsetA,
+			B, strideB1, strideB2, offsetB,
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR,
 			N, WORK, new Float64Array( 2 * N )
@@ -334,7 +307,13 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		}
 
 		// Undo balancing on VL and VR, and normalize
+		// Get Float64Array views for direct element access
 		if ( ilvl ) {
+			VLv = reinterpret( VL, 0 );
+			sVL1 = strideVL1 * 2;
+			sVL2 = strideVL2 * 2;
+			oVL = offsetVL * 2;
+
 			zggbak( 'P', 'L', N, ilo, ihi,
 				RWORK, 1, ileft, RWORK, 1, iright,
 				N, VL, strideVL1, strideVL2, offsetVL
@@ -344,20 +323,25 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			for ( jc = 0; jc < N; jc++ ) {
 				temp = ZERO;
 				for ( jr = 0; jr < N; jr++ ) {
-					temp = Math.max( temp, abs1( VL, offsetVL + jr * strideVL1 + jc * strideVL2 ) );
+					temp = Math.max( temp, abs1( VLv, oVL + jr * sVL1 + jc * sVL2 ) );
 				}
 				if ( temp < smlnum ) {
 					continue;
 				}
 				temp = ONE / temp;
 				for ( jr = 0; jr < N; jr++ ) {
-					VL[ offsetVL + jr * strideVL1 + jc * strideVL2 ] *= temp;
-					VL[ offsetVL + jr * strideVL1 + jc * strideVL2 + 1 ] *= temp;
+					VLv[ oVL + jr * sVL1 + jc * sVL2 ] *= temp;
+					VLv[ oVL + jr * sVL1 + jc * sVL2 + 1 ] *= temp;
 				}
 			}
 		}
 
 		if ( ilvr ) {
+			VRv = reinterpret( VR, 0 );
+			sVR1 = strideVR1 * 2;
+			sVR2 = strideVR2 * 2;
+			oVR = offsetVR * 2;
+
 			zggbak( 'P', 'R', N, ilo, ihi,
 				RWORK, 1, ileft, RWORK, 1, iright,
 				N, VR, strideVR1, strideVR2, offsetVR
@@ -367,15 +351,15 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			for ( jc = 0; jc < N; jc++ ) {
 				temp = ZERO;
 				for ( jr = 0; jr < N; jr++ ) {
-					temp = Math.max( temp, abs1( VR, offsetVR + jr * strideVR1 + jc * strideVR2 ) );
+					temp = Math.max( temp, abs1( VRv, oVR + jr * sVR1 + jc * sVR2 ) );
 				}
 				if ( temp < smlnum ) {
 					continue;
 				}
 				temp = ONE / temp;
 				for ( jr = 0; jr < N; jr++ ) {
-					VR[ offsetVR + jr * strideVR1 + jc * strideVR2 ] *= temp;
-					VR[ offsetVR + jr * strideVR1 + jc * strideVR2 + 1 ] *= temp;
+					VRv[ oVR + jr * sVR1 + jc * sVR2 ] *= temp;
+					VRv[ oVR + jr * sVR1 + jc * sVR2 + 1 ] *= temp;
 				}
 			}
 		}
@@ -391,8 +375,6 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	*/
 	function finalize() {
 		if ( ilascl ) {
-			// ALPHA is treated as an N-by-1 complex matrix for zlascl
-			// zlascl expects complex-element strides
 			zlascl( 'G', 0, 0, anrmto, anrm, N, 1,
 				ALPHA, strideALPHA, 1, offsetALPHA
 			);

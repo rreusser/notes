@@ -18,6 +18,10 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 // VARIABLES //
 
 // Blue's scaling constants for IEEE 754 double precision:
@@ -36,9 +40,9 @@ var SBIG = 1.1113793747425387e-162;  // 2^(-ceil((emax+digits-1)/2)) = 2^-538
 *
 * @private
 * @param {NonNegativeInteger} N - number of indexed elements
-* @param {Float64Array} zx - complex input array (interleaved re/im pairs)
+* @param {Complex128Array} zx - complex input vector
 * @param {integer} strideX - stride in complex elements
-* @param {NonNegativeInteger} offsetX - starting index
+* @param {NonNegativeInteger} offsetX - starting index (in complex elements)
 * @returns {number} Euclidean norm
 */
 function dznrm2( N, zx, strideX, offsetX ) {
@@ -48,6 +52,7 @@ function dznrm2( N, zx, strideX, offsetX ) {
 	var asml;
 	var sumsq;
 	var scl;
+	var xv;
 	var ax;
 	var ix;
 	var i;
@@ -56,6 +61,7 @@ function dznrm2( N, zx, strideX, offsetX ) {
 		return 0.0;
 	}
 
+	xv = reinterpret( zx, 0 );
 	scl = 1.0;
 	sumsq = 0.0;
 	notbig = true;
@@ -63,10 +69,10 @@ function dznrm2( N, zx, strideX, offsetX ) {
 	amed = 0.0;
 	abig = 0.0;
 
-	ix = offsetX;
+	ix = offsetX * 2;
 	for ( i = 0; i < N; i++ ) {
 		// Process real part:
-		ax = Math.abs( zx[ ix ] );
+		ax = Math.abs( xv[ ix ] );
 		if ( ax > TBIG ) {
 			abig += ( ax * SBIG ) * ( ax * SBIG );
 			notbig = false;
@@ -79,7 +85,7 @@ function dznrm2( N, zx, strideX, offsetX ) {
 		}
 
 		// Process imaginary part:
-		ax = Math.abs( zx[ ix + 1 ] );
+		ax = Math.abs( xv[ ix + 1 ] );
 		if ( ax > TBIG ) {
 			abig += ( ax * SBIG ) * ( ax * SBIG );
 			notbig = false;
