@@ -124,29 +124,29 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 		}
 		if ( n0 === i0 ) {
 			// Deflate 1 eigenvalue (label 20)
-			setZ( 4 * n0 - 3, Z( 4 * n0 + pp - 3 ) + sigma );
+			setZ( (4 * n0) - 3, Z( (4 * n0) + pp - 3 ) + sigma );
 			n0 -= 1;
 			continue;
 		}
-		nn = 4 * n0 + pp;
+		nn = (4 * n0) + pp;
 		if ( n0 === ( i0 + 1 ) ) {
 			// 2 eigenvalues (label 40) — skip label 30 check
 			// Fall through to label 40 below
 		} else {
 			// Check whether E(N0-1) is negligible, 1 eigenvalue
 			if ( Z( nn - 5 ) > tol2 * ( sigma + Z( nn - 3 ) ) &&
-				Z( nn - 2 * pp - 4 ) > tol2 * Z( nn - 7 ) ) {
+				Z( nn - (2 * pp) - 4 ) > tol2 * Z( nn - 7 ) ) {
 				// Not negligible, go to label 30
 				// Check whether E(N0-2) is negligible, 2 eigenvalues
 				if ( Z( nn - 9 ) > tol2 * sigma &&
-					Z( nn - 2 * pp - 8 ) > tol2 * Z( nn - 11 ) ) {
+					Z( nn - (2 * pp) - 8 ) > tol2 * Z( nn - 11 ) ) {
 					// Not negligible, go to label 50 — break out of deflation
 					break;
 				}
 				// Fall through to label 40 (2-eigenvalue deflation)
 			} else {
 				// Negligible: deflate 1 eigenvalue (label 20)
-				setZ( 4 * n0 - 3, Z( 4 * n0 + pp - 3 ) + sigma );
+				setZ( (4 * n0) - 3, Z( (4 * n0) + pp - 3 ) + sigma );
 				n0 -= 1;
 				continue;
 			}
@@ -163,7 +163,7 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 			s = Z( nn - 3 ) * ( Z( nn - 5 ) / t );
 			if ( s <= t ) {
 				s = Z( nn - 3 ) * ( Z( nn - 5 ) /
-					( t * ( ONE + Math.sqrt( ONE + s / t ) ) ) );
+					( t * ( ONE + Math.sqrt( ONE + (s / t) ) ) ) );
 			} else {
 				s = Z( nn - 3 ) * ( Z( nn - 5 ) /
 					( t + Math.sqrt( t ) * Math.sqrt( t + s ) ) );
@@ -172,8 +172,8 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 			setZ( nn - 3, Z( nn - 3 ) * ( Z( nn - 7 ) / t ) );
 			setZ( nn - 7, t );
 		}
-		setZ( 4 * n0 - 7, Z( nn - 7 ) + sigma );
-		setZ( 4 * n0 - 3, Z( nn - 3 ) + sigma );
+		setZ( (4 * n0) - 7, Z( nn - 7 ) + sigma );
+		setZ( (4 * n0) - 3, Z( nn - 3 ) + sigma );
 		n0 -= 2;
 		continue;
 	}
@@ -185,7 +185,7 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 
 	// Reverse the qd-array, if warranted
 	if ( dmin <= ZERO || n0 < n0in ) {
-		if ( CBIAS * Z( 4 * i0 + pp - 3 ) < Z( 4 * n0 + pp - 3 ) ) {
+		if ( CBIAS * Z( (4 * i0) + pp - 3 ) < Z( (4 * n0) + pp - 3 ) ) {
 			ipn4 = 4 * ( i0 + n0 );
 			for ( j4 = 4 * i0; j4 <= 2 * ( i0 + n0 - 1 ); j4 += 4 ) {
 				temp = Z( j4 - 3 );
@@ -202,15 +202,15 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 				setZ( ipn4 - j4 - 4, temp );
 			}
 			if ( n0 - i0 <= 4 ) {
-				setZ( 4 * n0 + pp - 1, Z( 4 * i0 + pp - 1 ) );
-				setZ( 4 * n0 - pp, Z( 4 * i0 - pp ) );
+				setZ( (4 * n0) + pp - 1, Z( (4 * i0) + pp - 1 ) );
+				setZ( (4 * n0) - pp, Z( (4 * i0) - pp ) );
 			}
-			dmin2 = Math.min( dmin2, Z( 4 * n0 + pp - 1 ) );
-			setZ( 4 * n0 + pp - 1, Math.min( Z( 4 * n0 + pp - 1 ),
-				Z( 4 * i0 + pp - 1 ), Z( 4 * i0 + pp + 3 ) ) );
-			setZ( 4 * n0 - pp, Math.min( Z( 4 * n0 - pp ),
-				Z( 4 * i0 - pp ), Z( 4 * i0 - pp + 4 ) ) );
-			qmax = Math.max( qmax, Z( 4 * i0 + pp - 3 ), Z( 4 * i0 + pp + 1 ) );
+			dmin2 = Math.min( dmin2, Z( (4 * n0) + pp - 1 ) );
+			setZ( (4 * n0) + pp - 1, Math.min( Z( (4 * n0) + pp - 1 ),
+				Z( (4 * i0) + pp - 1 ), Z( (4 * i0) + pp + 3 ) ) );
+			setZ( (4 * n0) - pp, Math.min( Z( (4 * n0) - pp ),
+				Z( (4 * i0) - pp ), Z( (4 * i0) - pp + 4 ) ) );
+			qmax = Math.max( qmax, Z( (4 * i0) + pp - 3 ), Z( (4 * i0) + pp + 1 ) );
 			dmin = -ZERO;
 		}
 	}
@@ -254,7 +254,7 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 				tau = ZERO;
 			} else if ( dmin1 > ZERO ) {
 				// Late failure. Gives excellent shift.
-				tau = ( tau + dmin ) * ( ONE - TWO * eps );
+				tau = ( tau + dmin ) * ( ONE - (TWO * eps) );
 				ttype -= 11;
 			} else {
 				// Early failure. Divide by 4.

@@ -66,8 +66,8 @@ function zscal( N, za, zx, strideX, offsetX ) {
 	sx = strideX * 2;
 
 	for ( i = 0; i < N; i++ ) {
-		tr = zaR * xv[ ix ] - zaI * xv[ ix + 1 ];
-		xv[ ix + 1 ] = zaR * xv[ ix + 1 ] + zaI * xv[ ix ];
+		tr = (zaR * xv[ ix ]) - (zaI * xv[ ix + 1 ]);
+		xv[ ix + 1 ] = (zaR * xv[ ix + 1 ]) + (zaI * xv[ ix ]);
 		xv[ ix ] = tr;
 		ix += sx;
 	}

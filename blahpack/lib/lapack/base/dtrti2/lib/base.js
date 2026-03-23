@@ -61,22 +61,22 @@ function dtrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 		// Compute inverse of upper triangular matrix
 		for ( j = 0; j < N; j++ ) {
 			if ( nounit ) {
-				A[ offsetA + j * sa1 + j * sa2 ] = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
-				ajj = -A[ offsetA + j * sa1 + j * sa2 ];
+				A[ offsetA + (j * sa1) + (j * sa2) ] = 1.0 / A[ offsetA + (j * sa1) + (j * sa2) ];
+				ajj = -A[ offsetA + (j * sa1) + (j * sa2) ];
 			} else {
 				ajj = -1.0;
 			}
 
 			// Compute elements 0:j-1 of j-th column
-			dtrmv( 'upper', 'no-transpose', diag, j, A, sa1, sa2, offsetA, A, sa1, offsetA + j * sa2 );
-			dscal( j, ajj, A, sa1, offsetA + j * sa2 );
+			dtrmv( 'upper', 'no-transpose', diag, j, A, sa1, sa2, offsetA, A, sa1, offsetA + (j * sa2) );
+			dscal( j, ajj, A, sa1, offsetA + (j * sa2) );
 		}
 	} else {
 		// Compute inverse of lower triangular matrix
 		for ( j = N - 1; j >= 0; j-- ) {
 			if ( nounit ) {
-				A[ offsetA + j * sa1 + j * sa2 ] = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
-				ajj = -A[ offsetA + j * sa1 + j * sa2 ];
+				A[ offsetA + (j * sa1) + (j * sa2) ] = 1.0 / A[ offsetA + (j * sa1) + (j * sa2) ];
+				ajj = -A[ offsetA + (j * sa1) + (j * sa2) ];
 			} else {
 				ajj = -1.0;
 			}
@@ -84,8 +84,8 @@ function dtrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 				// Compute elements j+1:N-1 of j-th column
 				dtrmv( 'lower', 'no-transpose', diag, N - j - 1,
 					A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + ( j + 1 ) * sa2,
-					A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
-				dscal( N - j - 1, ajj, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
+					A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
+				dscal( N - j - 1, ajj, A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
 			}
 		}
 	}

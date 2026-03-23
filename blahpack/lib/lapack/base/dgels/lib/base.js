@@ -183,7 +183,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 			// Zero out B(N+1:M,1:NRHS)
 			for ( j = 0; j < nrhs; j++ ) {
-				bi = offsetB + j * strideB2 + N * strideB1;
+				bi = offsetB + (j * strideB2) + (N * strideB1);
 				for ( i = N; i < M; i++ ) {
 					B[ bi ] = 0.0;
 					bi += strideB1;
@@ -211,7 +211,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 			// Zero out B(M+1:N,1:NRHS)
 			for ( j = 0; j < nrhs; j++ ) {
-				bi = offsetB + j * strideB2 + M * strideB1;
+				bi = offsetB + (j * strideB2) + (M * strideB1);
 				for ( i = M; i < N; i++ ) {
 					B[ bi ] = 0.0;
 					bi += strideB1;

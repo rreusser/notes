@@ -143,7 +143,7 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			// Full matrix
 			for ( j = 0; j < N; j++ ) {
 				for ( i = 0; i < M; i++ ) {
-					ai = oA + i * sa1 + j * sa2;
+					ai = oA + (i * sa1) + (j * sa2);
 					Av[ ai ] *= mul;
 					Av[ ai + 1 ] *= mul;
 				}
@@ -152,7 +152,7 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			// Lower triangular
 			for ( j = 0; j < N; j++ ) {
 				for ( i = j; i < M; i++ ) {
-					ai = oA + i * sa1 + j * sa2;
+					ai = oA + (i * sa1) + (j * sa2);
 					Av[ ai ] *= mul;
 					Av[ ai + 1 ] *= mul;
 				}
@@ -162,7 +162,7 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMax = Math.min( j + 1, M );
 				for ( i = 0; i < iMax; i++ ) {
-					ai = oA + i * sa1 + j * sa2;
+					ai = oA + (i * sa1) + (j * sa2);
 					Av[ ai ] *= mul;
 					Av[ ai + 1 ] *= mul;
 				}
@@ -172,7 +172,7 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMax = Math.min( j + 2, M );
 				for ( i = 0; i < iMax; i++ ) {
-					ai = oA + i * sa1 + j * sa2;
+					ai = oA + (i * sa1) + (j * sa2);
 					Av[ ai ] *= mul;
 					Av[ ai + 1 ] *= mul;
 				}
@@ -184,7 +184,7 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMax = Math.min( k3, k4 - j - 1 );
 				for ( i = 0; i < iMax; i++ ) {
-					ai = oA + i * sa1 + j * sa2;
+					ai = oA + (i * sa1) + (j * sa2);
 					Av[ ai ] *= mul;
 					Av[ ai + 1 ] *= mul;
 				}
@@ -196,7 +196,7 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			for ( j = 0; j < N; j++ ) {
 				iMin = Math.max( k1 - j - 2, 0 );
 				for ( i = iMin; i < k3; i++ ) {
-					ai = oA + i * sa1 + j * sa2;
+					ai = oA + (i * sa1) + (j * sa2);
 					Av[ ai ] *= mul;
 					Av[ ai + 1 ] *= mul;
 				}
@@ -205,13 +205,13 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 			// Band matrix
 			k1 = kl + ku + 2;
 			k2 = kl + 1;
-			k3 = 2 * kl + ku + 1;
+			k3 = (2 * kl) + ku + 1;
 			k4 = kl + ku + 1 + M;
 			for ( j = 0; j < N; j++ ) {
 				iMin = Math.max( k1 - j - 2, k2 - 1 );
 				iMax = Math.min( k3, k4 - j - 1 );
 				for ( i = iMin; i < iMax; i++ ) {
-					ai = oA + i * sa1 + j * sa2;
+					ai = oA + (i * sa1) + (j * sa2);
 					Av[ ai ] *= mul;
 					Av[ ai + 1 ] *= mul;
 				}

@@ -125,7 +125,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Update the unreduced submatrix A(0:i-1, 0:i-1)
 			zher2k(
 				uplo, 'no-transpose', i, nb, CNONE,
-				A, sa1, sa2, offsetA + i * sa2,
+				A, sa1, sa2, offsetA + (i * sa2),
 				work, 1, ldwork, 0,
 				1.0,
 				A, sa1, sa2, offsetA
@@ -134,13 +134,13 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Copy superdiagonal elements back into A, and diagonal to D
 			for ( j = i; j < i + nb; j++ ) {
 				// A(j-1, j) = e[j-1]
-				ai = oA + ( j - 1 ) * sa1 * 2 + j * sa2 * 2;
+				ai = oA + ( j - 1 ) * (sa1 * 2) + (j * sa2) * 2;
 				Av[ ai ] = e[ offsetE + ( j - 1 ) * strideE ];
 				Av[ ai + 1 ] = 0.0;
 
 				// d[j] = real(A(j, j))
-				ai = oA + j * sa1 * 2 + j * sa2 * 2;
-				d[ offsetD + j * strideD ] = Av[ ai ];
+				ai = oA + (j * sa1) * 2 + (j * sa2) * 2;
+				d[ offsetD + (j * strideD) ] = Av[ ai ];
 			}
 		}
 
@@ -153,16 +153,16 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Reduce columns i:i+nb-1
 			zlatrd(
 				uplo, N - i, nb,
-				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-				e, strideE, offsetE + i * strideE,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
+				e, strideE, offsetE + (i * strideE),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				work, 1, ldwork, 0
 			);
 
 			// Update the unreduced submatrix
 			zher2k(
 				uplo, 'no-transpose', N - i - nb, nb, CNONE,
-				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + i * sa2,
+				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + (i * sa2),
 				work, 1, ldwork, nb,
 				1.0,
 				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + ( i + nb ) * sa2
@@ -171,13 +171,13 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Copy subdiagonal elements and diagonal
 			for ( j = i; j < i + nb; j++ ) {
 				// A(j+1, j) = e[j]
-				ai = oA + ( j + 1 ) * sa1 * 2 + j * sa2 * 2;
-				Av[ ai ] = e[ offsetE + j * strideE ];
+				ai = oA + ( j + 1 ) * (sa1 * 2) + (j * sa2) * 2;
+				Av[ ai ] = e[ offsetE + (j * strideE) ];
 				Av[ ai + 1 ] = 0.0;
 
 				// d[j] = real(A(j, j))
-				ai = oA + j * sa1 * 2 + j * sa2 * 2;
-				d[ offsetD + j * strideD ] = Av[ ai ];
+				ai = oA + (j * sa1) * 2 + (j * sa2) * 2;
+				d[ offsetD + (j * strideD) ] = Av[ ai ];
 			}
 
 			i += nb;
@@ -186,10 +186,10 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		// Use unblocked code for remaining
 		zhetd2(
 			uplo, N - i,
-			A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-			d, strideD, offsetD + i * strideD,
-			e, strideE, offsetE + i * strideE,
-			TAU, strideTAU, offsetTAU + i * strideTAU
+			A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
+			d, strideD, offsetD + (i * strideD),
+			e, strideE, offsetE + (i * strideE),
+			TAU, strideTAU, offsetTAU + (i * strideTAU)
 		);
 	}
 

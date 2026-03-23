@@ -128,7 +128,7 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 			beta = -( Math.sign( alphr ) || 1.0 ) * dlapy3( alphr, alphi, xnorm );
 		}
 		tauv[ oT ] = ( beta - alphr ) / beta;
-		tauv[ oT + 1 ] = -alphi / beta;
+		tauv[ oT + 1 ] = - (alphi / beta);
 
 		// alpha = 1.0 / (alpha - beta)
 

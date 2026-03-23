@@ -197,7 +197,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	if ( !ilall ) {
 		im = 0;
 		for ( j = 0; j < N; j++ ) {
-			if ( SELECT[ offsetSELECT + j * strideSELECT ] ) {
+			if ( SELECT[ offsetSELECT + (j * strideSELECT) ] ) {
 				im += 1;
 			}
 		}
@@ -240,16 +240,16 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	anorm = abs1( Sv, oS );
 	bnorm = abs1( Pv, oP );
 	RWORK[ offsetRWORK ] = ZERO;
-	RWORK[ offsetRWORK + N * strideRWORK ] = ZERO;
+	RWORK[ offsetRWORK + (N * strideRWORK) ] = ZERO;
 	for ( j = 1; j < N; j++ ) {
-		RWORK[ offsetRWORK + j * strideRWORK ] = ZERO;
+		RWORK[ offsetRWORK + (j * strideRWORK) ] = ZERO;
 		RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] = ZERO;
 		for ( i = 0; i < j; i++ ) {
-			RWORK[ offsetRWORK + j * strideRWORK ] += abs1( Sv, oS + i * sS1 + j * sS2 );
-			RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] += abs1( Pv, oP + i * sP1 + j * sP2 );
+			RWORK[ offsetRWORK + (j * strideRWORK) ] += abs1( Sv, oS + (i * sS1) + (j * sS2) );
+			RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] += abs1( Pv, oP + (i * sP1) + (j * sP2) );
 		}
-		anorm = Math.max( anorm, RWORK[ offsetRWORK + j * strideRWORK ] + abs1( Sv, oS + j * sS1 + j * sS2 ) );
-		bnorm = Math.max( bnorm, RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] + abs1( Pv, oP + j * sP1 + j * sP2 ) );
+		anorm = Math.max( anorm, RWORK[ offsetRWORK + (j * strideRWORK) ] + abs1( Sv, oS + (j * sS1) + (j * sS2) ) );
+		bnorm = Math.max( bnorm, RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] + abs1( Pv, oP + (j * sP1) + (j * sP2) ) );
 	}
 
 	ascale = ONE / Math.max( anorm, safmin );
@@ -278,21 +278,21 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			if ( ilall ) {
 				ilcomp = true;
 			} else {
-				ilcomp = SELECT[ offsetSELECT + je * strideSELECT ];
+				ilcomp = SELECT[ offsetSELECT + (je * strideSELECT) ];
 			}
 			if ( !ilcomp ) {
 				continue;
 			}
 			ieig++;
 
-			idx = oS + je * sS1 + je * sS2;
-			idx2 = oP + je * sP1 + je * sP2;
+			idx = oS + (je * sS1) + (je * sS2);
+			idx2 = oP + (je * sP1) + (je * sP2);
 
 			if ( abs1( Sv, idx ) <= safmin && Math.abs( Pv[ idx2 ] ) <= safmin ) {
 				// Zero eigenvalue - set eigenvector to unit vector
 				for ( jr = 0; jr < N; jr++ ) {
-					VLv[ oVL + jr * sVL1 + ( ieig - 1 ) * sVL2 ] = 0.0;
-					VLv[ oVL + jr * sVL1 + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
+					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 ] = 0.0;
+					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
 				}
 				VLv[ oVL + ( ieig - 1 ) * sVL1 + ( ieig - 1 ) * sVL2 ] = 1.0;
 				VLv[ oVL + ( ieig - 1 ) * sVL1 + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
@@ -346,10 +346,10 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			// Initialize WORK
 			for ( jr = 0; jr < N; jr++ ) {
 				WORKv[ jr * 2 ] = 0.0;
-				WORKv[ jr * 2 + 1 ] = 0.0;
+				WORKv[ (jr * 2) + 1 ] = 0.0;
 			}
 			WORKv[ je * 2 ] = 1.0;
-			WORKv[ je * 2 + 1 ] = 0.0;
+			WORKv[ (je * 2) + 1 ] = 0.0;
 
 			dmin = Math.max( ulp * acoefa * anorm, ulp * bcoefa * bnorm, safmin );
 
@@ -357,10 +357,10 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			for ( j = je + 1; j < N; j++ ) {
 				// Scale to avoid overflow
 				temp = ONE / xmax;
-				if ( acoefa * RWORK[ offsetRWORK + j * strideRWORK ] + bcoefa * RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] > bignum * temp ) {
+				if ( (acoefa * RWORK[ offsetRWORK + (j * strideRWORK) ]) + (bcoefa * RWORK[ offsetRWORK + ( N + j ) * strideRWORK ]) > bignum * temp ) {
 					for ( jr = je; jr < j; jr++ ) {
 						WORKv[ jr * 2 ] *= temp;
-						WORKv[ jr * 2 + 1 ] *= temp;
+						WORKv[ (jr * 2) + 1 ] *= temp;
 					}
 					xmax = ONE;
 				}
@@ -373,30 +373,30 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 
 				for ( jr = je; jr < j; jr++ ) {
 					// SUMA += CONJG(S(JR,J)) * WORK(JR)
-					sr = Sv[ oS + jr * sS1 + j * sS2 ];
-					si = -Sv[ oS + jr * sS1 + j * sS2 + 1 ]; // conjugate
-					sumaRe += sr * WORKv[ jr * 2 ] - si * WORKv[ jr * 2 + 1 ];
-					sumaIm += sr * WORKv[ jr * 2 + 1 ] + si * WORKv[ jr * 2 ];
+					sr = Sv[ oS + (jr * sS1) + (j * sS2) ];
+					si = -Sv[ oS + (jr * sS1) + (j * sS2) + 1 ]; // conjugate
+					sumaRe += (sr * WORKv[ jr * 2 ]) - (si * WORKv[ (jr * 2) + 1 ]);
+					sumaIm += (sr * WORKv[ (jr * 2) + 1 ]) + (si * WORKv[ jr * 2 ]);
 
 					// SUMB += CONJG(P(JR,J)) * WORK(JR)
-					pr = Pv[ oP + jr * sP1 + j * sP2 ];
-					pi = -Pv[ oP + jr * sP1 + j * sP2 + 1 ]; // conjugate
-					sumbRe += pr * WORKv[ jr * 2 ] - pi * WORKv[ jr * 2 + 1 ];
-					sumbIm += pr * WORKv[ jr * 2 + 1 ] + pi * WORKv[ jr * 2 ];
+					pr = Pv[ oP + (jr * sP1) + (j * sP2) ];
+					pi = -Pv[ oP + (jr * sP1) + (j * sP2) + 1 ]; // conjugate
+					sumbRe += (pr * WORKv[ jr * 2 ]) - (pi * WORKv[ (jr * 2) + 1 ]);
+					sumbIm += (pr * WORKv[ (jr * 2) + 1 ]) + (pi * WORKv[ jr * 2 ]);
 				}
 
 				// SUM = ACOEFF * SUMA - CONJG(BCOEFF) * SUMB
-				sum[ 0 ] = acoeff * sumaRe - ( bcoeff[ 0 ] * sumbRe + bcoeff[ 1 ] * sumbIm );
-				sum[ 1 ] = acoeff * sumaIm - ( bcoeff[ 0 ] * sumbIm - bcoeff[ 1 ] * sumbRe );
+				sum[ 0 ] = (acoeff * sumaRe) - ( (bcoeff[ 0 ] * sumbRe) + (bcoeff[ 1 ] * sumbIm) );
+				sum[ 1 ] = (acoeff * sumaIm) - ( (bcoeff[ 0 ] * sumbIm) - (bcoeff[ 1 ] * sumbRe) );
 
 				// D = CONJG(ACOEFF * S(J,J) - BCOEFF * P(J,J))
-				sjjr = Sv[ oS + j * sS1 + j * sS2 ];
-				sjji = Sv[ oS + j * sS1 + j * sS2 + 1 ];
-				pjjr = Pv[ oP + j * sP1 + j * sP2 ];
-				pjji = Pv[ oP + j * sP1 + j * sP2 + 1 ];
+				sjjr = Sv[ oS + (j * sS1) + (j * sS2) ];
+				sjji = Sv[ oS + (j * sS1) + (j * sS2) + 1 ];
+				pjjr = Pv[ oP + (j * sP1) + (j * sP2) ];
+				pjji = Pv[ oP + (j * sP1) + (j * sP2) + 1 ];
 
-				dr = acoeff * sjjr - ( bcoeff[ 0 ] * pjjr - bcoeff[ 1 ] * pjji );
-				di = acoeff * sjji - ( bcoeff[ 0 ] * pjji + bcoeff[ 1 ] * pjjr );
+				dr = (acoeff * sjjr) - ( (bcoeff[ 0 ] * pjjr) - (bcoeff[ 1 ] * pjji) );
+				di = (acoeff * sjji) - ( (bcoeff[ 0 ] * pjji) + (bcoeff[ 1 ] * pjjr) );
 				d[ 0 ] = dr;
 				d[ 1 ] = -di; // conjugate
 
@@ -410,7 +410,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 						temp = ONE / abs1( sum, 0 );
 						for ( jr = je; jr < j; jr++ ) {
 							WORKv[ jr * 2 ] *= temp;
-							WORKv[ jr * 2 + 1 ] *= temp;
+							WORKv[ (jr * 2) + 1 ] *= temp;
 						}
 						xmax *= temp;
 						sum[ 0 ] *= temp;
@@ -423,7 +423,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 				negSum[ 1 ] = -sum[ 1 ];
 				zladiv( negSum, d, divOut );
 				WORKv[ j * 2 ] = divOut[ 0 ];
-				WORKv[ j * 2 + 1 ] = divOut[ 1 ];
+				WORKv[ (j * 2) + 1 ] = divOut[ 1 ];
 				xmax = Math.max( xmax, abs1( WORKv, j * 2 ) );
 			}
 
@@ -444,22 +444,22 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			// Normalize and store in VL
 			xmax = ZERO;
 			for ( jr = ibeg; jr < N; jr++ ) {
-				xmax = Math.max( xmax, abs1( WORKv, isrc * N * 2 + jr * 2 ) );
+				xmax = Math.max( xmax, abs1( WORKv, isrc * (N * 2) + (jr * 2) ) );
 			}
 
 			if ( xmax > safmin ) {
 				temp = ONE / xmax;
 				for ( jr = ibeg; jr < N; jr++ ) {
-					VLv[ oVL + jr * sVL1 + ( ieig - 1 ) * sVL2 ] = temp * WORKv[ isrc * N * 2 + jr * 2 ];
-					VLv[ oVL + jr * sVL1 + ( ieig - 1 ) * sVL2 + 1 ] = temp * WORKv[ isrc * N * 2 + jr * 2 + 1 ];
+					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) ];
+					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 + 1 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) + 1 ];
 				}
 			} else {
 				ibeg = N;
 			}
 
 			for ( jr = 0; jr < ibeg; jr++ ) {
-				VLv[ oVL + jr * sVL1 + ( ieig - 1 ) * sVL2 ] = 0.0;
-				VLv[ oVL + jr * sVL1 + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
+				VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 ] = 0.0;
+				VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
 			}
 		}
 	}
@@ -474,20 +474,20 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			if ( ilall ) {
 				ilcomp = true;
 			} else {
-				ilcomp = SELECT[ offsetSELECT + je * strideSELECT ];
+				ilcomp = SELECT[ offsetSELECT + (je * strideSELECT) ];
 			}
 			if ( !ilcomp ) {
 				continue;
 			}
 
-			idx = oS + je * sS1 + je * sS2;
-			idx2 = oP + je * sP1 + je * sP2;
+			idx = oS + (je * sS1) + (je * sS2);
+			idx2 = oP + (je * sP1) + (je * sP2);
 
 			if ( abs1( Sv, idx ) <= safmin && Math.abs( Pv[ idx2 ] ) <= safmin ) {
 				// Zero eigenvalue
 				for ( jr = 0; jr < N; jr++ ) {
-					VRv[ oVR + jr * sVR1 + ( ieig - 1 ) * sVR2 ] = 0.0;
-					VRv[ oVR + jr * sVR1 + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
+					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 ] = 0.0;
+					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
 				}
 				VRv[ oVR + ( ieig - 1 ) * sVR1 + ( ieig - 1 ) * sVR2 ] = 1.0;
 				VRv[ oVR + ( ieig - 1 ) * sVR1 + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
@@ -541,33 +541,33 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			// Initialize WORK
 			for ( jr = 0; jr < N; jr++ ) {
 				WORKv[ jr * 2 ] = 0.0;
-				WORKv[ jr * 2 + 1 ] = 0.0;
+				WORKv[ (jr * 2) + 1 ] = 0.0;
 			}
 			WORKv[ je * 2 ] = 1.0;
-			WORKv[ je * 2 + 1 ] = 0.0;
+			WORKv[ (je * 2) + 1 ] = 0.0;
 
 			dmin = Math.max( ulp * acoefa * anorm, ulp * bcoefa * bnorm, safmin );
 
 			// Initialize WORK(1:JE-1) = ACOEFF * S(:,JE) - BCOEFF * P(:,JE)
 			for ( jr = 0; jr < je; jr++ ) {
-				srr = Sv[ oS + jr * sS1 + je * sS2 ];
-				sri = Sv[ oS + jr * sS1 + je * sS2 + 1 ];
-				prr = Pv[ oP + jr * sP1 + je * sP2 ];
-				pri = Pv[ oP + jr * sP1 + je * sP2 + 1 ];
-				WORKv[ jr * 2 ] = acoeff * srr - ( bcoeff[ 0 ] * prr - bcoeff[ 1 ] * pri );
-				WORKv[ jr * 2 + 1 ] = acoeff * sri - ( bcoeff[ 0 ] * pri + bcoeff[ 1 ] * prr );
+				srr = Sv[ oS + (jr * sS1) + (je * sS2) ];
+				sri = Sv[ oS + (jr * sS1) + (je * sS2) + 1 ];
+				prr = Pv[ oP + (jr * sP1) + (je * sP2) ];
+				pri = Pv[ oP + (jr * sP1) + (je * sP2) + 1 ];
+				WORKv[ jr * 2 ] = (acoeff * srr) - ( (bcoeff[ 0 ] * prr) - (bcoeff[ 1 ] * pri) );
+				WORKv[ (jr * 2) + 1 ] = (acoeff * sri) - ( (bcoeff[ 0 ] * pri) + (bcoeff[ 1 ] * prr) );
 			}
 
 			// Back-substitution
 			for ( j = je - 1; j >= 0; j-- ) {
 				// D = ACOEFF * S(J,J) - BCOEFF * P(J,J)
-				sjjr = Sv[ oS + j * sS1 + j * sS2 ];
-				sjji = Sv[ oS + j * sS1 + j * sS2 + 1 ];
-				pjjr = Pv[ oP + j * sP1 + j * sP2 ];
-				pjji = Pv[ oP + j * sP1 + j * sP2 + 1 ];
+				sjjr = Sv[ oS + (j * sS1) + (j * sS2) ];
+				sjji = Sv[ oS + (j * sS1) + (j * sS2) + 1 ];
+				pjjr = Pv[ oP + (j * sP1) + (j * sP2) ];
+				pjji = Pv[ oP + (j * sP1) + (j * sP2) + 1 ];
 
-				d[ 0 ] = acoeff * sjjr - ( bcoeff[ 0 ] * pjjr - bcoeff[ 1 ] * pjji );
-				d[ 1 ] = acoeff * sjji - ( bcoeff[ 0 ] * pjji + bcoeff[ 1 ] * pjjr );
+				d[ 0 ] = (acoeff * sjjr) - ( (bcoeff[ 0 ] * pjjr) - (bcoeff[ 1 ] * pjji) );
+				d[ 1 ] = (acoeff * sjji) - ( (bcoeff[ 0 ] * pjji) + (bcoeff[ 1 ] * pjjr) );
 
 				if ( abs1( d, 0 ) <= dmin ) {
 					d[ 0 ] = dmin;
@@ -579,47 +579,47 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 						temp = ONE / abs1( WORKv, j * 2 );
 						for ( jr = 0; jr <= je; jr++ ) {
 							WORKv[ jr * 2 ] *= temp;
-							WORKv[ jr * 2 + 1 ] *= temp;
+							WORKv[ (jr * 2) + 1 ] *= temp;
 						}
 					}
 				}
 
 				// WORK(J) = ZLADIV(-WORK(J), D)
 				negW[ 0 ] = -WORKv[ j * 2 ];
-				negW[ 1 ] = -WORKv[ j * 2 + 1 ];
+				negW[ 1 ] = -WORKv[ (j * 2) + 1 ];
 				zladiv( negW, d, divOut );
 				WORKv[ j * 2 ] = divOut[ 0 ];
-				WORKv[ j * 2 + 1 ] = divOut[ 1 ];
+				WORKv[ (j * 2) + 1 ] = divOut[ 1 ];
 
 				if ( j > 0 ) {
 					// Scale to avoid overflow and update
 					if ( abs1( WORKv, j * 2 ) > ONE ) {
 						temp = ONE / abs1( WORKv, j * 2 );
-						if ( acoefa * RWORK[ offsetRWORK + j * strideRWORK ] + bcoefa * RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] >= bignum * temp ) {
+						if ( (acoefa * RWORK[ offsetRWORK + (j * strideRWORK) ]) + (bcoefa * RWORK[ offsetRWORK + ( N + j ) * strideRWORK ]) >= bignum * temp ) {
 							for ( jr = 0; jr <= je; jr++ ) {
 								WORKv[ jr * 2 ] *= temp;
-								WORKv[ jr * 2 + 1 ] *= temp;
+								WORKv[ (jr * 2) + 1 ] *= temp;
 							}
 						}
 					}
 
 					// CA = ACOEFF * WORK(J)
 					ca[ 0 ] = acoeff * WORKv[ j * 2 ];
-					ca[ 1 ] = acoeff * WORKv[ j * 2 + 1 ];
+					ca[ 1 ] = acoeff * WORKv[ (j * 2) + 1 ];
 
 					// CB = BCOEFF * WORK(J)
-					cb[ 0 ] = bcoeff[ 0 ] * WORKv[ j * 2 ] - bcoeff[ 1 ] * WORKv[ j * 2 + 1 ];
-					cb[ 1 ] = bcoeff[ 0 ] * WORKv[ j * 2 + 1 ] + bcoeff[ 1 ] * WORKv[ j * 2 ];
+					cb[ 0 ] = (bcoeff[ 0 ] * WORKv[ j * 2 ]) - (bcoeff[ 1 ] * WORKv[ (j * 2) + 1 ]);
+					cb[ 1 ] = (bcoeff[ 0 ] * WORKv[ (j * 2) + 1 ]) + (bcoeff[ 1 ] * WORKv[ j * 2 ]);
 
 					for ( jr = 0; jr < j; jr++ ) {
 						// WORK(JR) += CA * S(JR,J) - CB * P(JR,J)
-						sr = Sv[ oS + jr * sS1 + j * sS2 ];
-						si = Sv[ oS + jr * sS1 + j * sS2 + 1 ];
-						pr = Pv[ oP + jr * sP1 + j * sP2 ];
-						pi = Pv[ oP + jr * sP1 + j * sP2 + 1 ];
+						sr = Sv[ oS + (jr * sS1) + (j * sS2) ];
+						si = Sv[ oS + (jr * sS1) + (j * sS2) + 1 ];
+						pr = Pv[ oP + (jr * sP1) + (j * sP2) ];
+						pi = Pv[ oP + (jr * sP1) + (j * sP2) + 1 ];
 
-						WORKv[ jr * 2 ] += ( ca[ 0 ] * sr - ca[ 1 ] * si ) - ( cb[ 0 ] * pr - cb[ 1 ] * pi );
-						WORKv[ jr * 2 + 1 ] += ( ca[ 0 ] * si + ca[ 1 ] * sr ) - ( cb[ 0 ] * pi + cb[ 1 ] * pr );
+						WORKv[ jr * 2 ] += ( (ca[ 0 ] * sr) - (ca[ 1 ] * si) ) - ( (cb[ 0 ] * pr) - (cb[ 1 ] * pi) );
+						WORKv[ (jr * 2) + 1 ] += ( (ca[ 0 ] * si) + (ca[ 1 ] * sr) ) - ( (cb[ 0 ] * pi) + (cb[ 1 ] * pr) );
 					}
 				}
 			}
@@ -640,22 +640,22 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			// Normalize and store in VR
 			xmax = ZERO;
 			for ( jr = 0; jr < iend; jr++ ) {
-				xmax = Math.max( xmax, abs1( WORKv, isrc * N * 2 + jr * 2 ) );
+				xmax = Math.max( xmax, abs1( WORKv, isrc * (N * 2) + (jr * 2) ) );
 			}
 
 			if ( xmax > safmin ) {
 				temp = ONE / xmax;
 				for ( jr = 0; jr < iend; jr++ ) {
-					VRv[ oVR + jr * sVR1 + ( ieig - 1 ) * sVR2 ] = temp * WORKv[ isrc * N * 2 + jr * 2 ];
-					VRv[ oVR + jr * sVR1 + ( ieig - 1 ) * sVR2 + 1 ] = temp * WORKv[ isrc * N * 2 + jr * 2 + 1 ];
+					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) ];
+					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 + 1 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) + 1 ];
 				}
 			} else {
 				iend = 0;
 			}
 
 			for ( jr = iend; jr < N; jr++ ) {
-				VRv[ oVR + jr * sVR1 + ( ieig - 1 ) * sVR2 ] = 0.0;
-				VRv[ oVR + jr * sVR1 + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
+				VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 ] = 0.0;
+				VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
 			}
 
 			ieig--;

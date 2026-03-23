@@ -82,24 +82,24 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
 				// Temp = alpha * conj(x[j])
 				tempR = alpha * xv[ jx ];
-				tempI = -alpha * xv[ jx + 1 ];
+				tempI = - (alpha * xv[ jx + 1 ]);
 
 				ix = oX;
-				ai = oA + j * sa2; // column j, row 0
+				ai = oA + (j * sa2); // column j, row 0
 				for ( i = 0; i < j; i++ ) {
 					// A[i,j] += x[i] * temp
-					Av[ ai ] += xv[ ix ] * tempR - xv[ ix + 1 ] * tempI;
-					Av[ ai + 1 ] += xv[ ix ] * tempI + xv[ ix + 1 ] * tempR;
+					Av[ ai ] += (xv[ ix ] * tempR) - (xv[ ix + 1 ] * tempI);
+					Av[ ai + 1 ] += (xv[ ix ] * tempI) + (xv[ ix + 1 ] * tempR);
 					ix += sx;
 					ai += sa1;
 				}
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[j] * temp)
 				Av[ ai ] = Av[ ai ] +
-					( xv[ jx ] * tempR - xv[ jx + 1 ] * tempI );
+					( (xv[ jx ] * tempR) - (xv[ jx + 1 ] * tempI) );
 				Av[ ai + 1 ] = 0.0;
 			} else {
 				// Ensure diagonal is real
-				ai = oA + j * sa1 + j * sa2;
+				ai = oA + (j * sa1) + (j * sa2);
 				Av[ ai + 1 ] = 0.0;
 			}
 			jx += sx;
@@ -111,26 +111,26 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
 				// Temp = alpha * conj(x[j])
 				tempR = alpha * xv[ jx ];
-				tempI = -alpha * xv[ jx + 1 ];
+				tempI = - (alpha * xv[ jx + 1 ]);
 
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[j] * temp)
-				ai = oA + j * sa1 + j * sa2;
+				ai = oA + (j * sa1) + (j * sa2);
 				Av[ ai ] = Av[ ai ] +
-					( xv[ jx ] * tempR - xv[ jx + 1 ] * tempI );
+					( (xv[ jx ] * tempR) - (xv[ jx + 1 ] * tempI) );
 				Av[ ai + 1 ] = 0.0;
 
 				ix = jx + sx;
 				ai += sa1; // move to A(j+1, j)
 				for ( i = j + 1; i < N; i++ ) {
 					// A[i,j] += x[i] * temp
-					Av[ ai ] += xv[ ix ] * tempR - xv[ ix + 1 ] * tempI;
-					Av[ ai + 1 ] += xv[ ix ] * tempI + xv[ ix + 1 ] * tempR;
+					Av[ ai ] += (xv[ ix ] * tempR) - (xv[ ix + 1 ] * tempI);
+					Av[ ai + 1 ] += (xv[ ix ] * tempI) + (xv[ ix + 1 ] * tempR);
 					ix += sx;
 					ai += sa1;
 				}
 			} else {
 				// Ensure diagonal is real
-				ai = oA + j * sa1 + j * sa2;
+				ai = oA + (j * sa1) + (j * sa2);
 				Av[ ai + 1 ] = 0.0;
 			}
 			jx += sx;

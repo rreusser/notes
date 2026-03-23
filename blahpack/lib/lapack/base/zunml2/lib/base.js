@@ -138,7 +138,7 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		}
 
 		// Get tau value; if NOTRAN, conjugate it (Fortran: TAUI = DCONJG(TAU(I)))
-		tauIdx = oTAU + i * sTAU;
+		tauIdx = oTAU + (i * sTAU);
 		if ( notran ) {
 			tauR = TAUv[ tauIdx ];
 			tauI = -TAUv[ tauIdx + 1 ]; // conjugate
@@ -149,11 +149,11 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Conjugate the row of A beyond the diagonal: A(i, i+1:nq-1)
 		if ( i < nq - 1 ) {
-			zlacgv( nq - i - 1, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2 );
+			zlacgv( nq - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
 		}
 
 		// Save A(i,i) and set it to ONE
-		aii = oA + i * sA1 + i * sA2;
+		aii = oA + (i * sA1) + (i * sA2);
 		aiiR = Av[ aii ];
 		aiiI = Av[ aii + 1 ];
 		Av[ aii ] = 1.0;
@@ -167,14 +167,14 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// The reflector vector is A(i, i:nq-1) stored rowwise, so strideV = strideA2
 		zlarf( side, mi, ni,
-			A, strideA2, offsetA + i * strideA1 + i * strideA2,
-			TAU, offsetTAU + i * strideTAU,
-			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
+			A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+			TAU, offsetTAU + (i * strideTAU),
+			C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2),
 			WORK, strideWORK, offsetWORK
 		);
 
 		// Restore the original tau value
-		tauIdx = oTAU + i * sTAU;
+		tauIdx = oTAU + (i * sTAU);
 		if ( notran ) {
 			// We conjugated earlier, restore the original
 			TAUv[ tauIdx + 1 ] = -TAUv[ tauIdx + 1 ];
@@ -186,7 +186,7 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Un-conjugate the row of A
 		if ( i < nq - 1 ) {
-			zlacgv( nq - i - 1, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2 );
+			zlacgv( nq - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
 		}
 	}
 

@@ -69,7 +69,7 @@ function dtrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 	// Check for singularity if non-unit diagonal
 	if ( nounit ) {
 		for ( j = 0; j < N; j++ ) {
-			if ( A[ offsetA + j * sa1 + j * sa2 ] === 0.0 ) {
+			if ( A[ offsetA + (j * sa1) + (j * sa2) ] === 0.0 ) {
 				return j + 1;
 			}
 		}
@@ -89,14 +89,14 @@ function dtrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			// Compute rows 0:j-1 of current block column
 			dtrmm( 'left', 'upper', 'no-transpose', diag, j, jb, 1.0,
 				A, sa1, sa2, offsetA,
-				A, sa1, sa2, offsetA + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa2) );
 			dtrsm( 'right', 'upper', 'no-transpose', diag, j, jb, -1.0,
-				A, sa1, sa2, offsetA + j * sa1 + j * sa2,
-				A, sa1, sa2, offsetA + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
+				A, sa1, sa2, offsetA + (j * sa2) );
 
 			// Compute inverse of current diagonal block
 			dtrti2( 'upper', diag, jb,
-				A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa1) + (j * sa2) );
 		}
 	} else {
 		// Compute inverse of lower triangular matrix
@@ -107,15 +107,15 @@ function dtrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 				// Compute rows j+jb:N-1 of current block column
 				dtrmm( 'left', 'lower', 'no-transpose', diag, N - j - jb, jb, 1.0,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + ( j + jb ) * sa2,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2 );
+					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2) );
 				dtrsm( 'right', 'lower', 'no-transpose', diag, N - j - jb, jb, -1.0,
-					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2 );
+					A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
+					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2) );
 			}
 
 			// Compute inverse of current diagonal block
 			dtrti2( 'lower', diag, jb,
-				A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa1) + (j * sa2) );
 		}
 	}
 	return 0;

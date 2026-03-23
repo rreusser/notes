@@ -78,11 +78,11 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	if ( K < M ) {
 		for ( j = 0; j < N; j++ ) {
 			for ( l = K; l < M; l++ ) {
-				A[ offsetA + l * strideA1 + j * strideA2 ] = 0.0;
+				A[ offsetA + (l * strideA1) + (j * strideA2) ] = 0.0;
 			}
 			// If J > K and J <= M (0-based: j >= K and j < M), set A(j,j) = 1
 			if ( j >= K && j < M ) {
-				A[ offsetA + j * strideA1 + j * strideA2 ] = 1.0;
+				A[ offsetA + (j * strideA1) + (j * strideA2) ] = 1.0;
 			}
 		}
 	}
@@ -90,13 +90,13 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	// Apply each reflector in reverse order: i = K, K-1, ..., 1 (1-based)
 	// JS: i goes from K-1 down to 0 (0-based)
 	for ( i = K - 1; i >= 0; i-- ) {
-		it = offsetTAU + i * strideTAU;
+		it = offsetTAU + (i * strideTAU);
 
 		// If i < N-1 (Fortran: I < N), the row extends beyond the diagonal
 		if ( i < N - 1 ) {
 			if ( i < M - 1 ) {
 				// Set A(i,i) = 1
-				A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0;
+				A[ offsetA + (i * strideA1) + (i * strideA2) ] = 1.0;
 
 				// DLARF('Right', M-I, N-I+1, A(I,I), LDA, TAU(I),
 
@@ -107,9 +107,9 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// C is rows i+1..M-1, columns i..N-1
 				dlarf(
 					'right', M - i - 1, N - i,
-					A, strideA2, offsetA + i * strideA1 + i * strideA2,
+					A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					TAU[ it ],
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
 					WORK, strideWORK, offsetWORK
 				);
 			}
@@ -118,18 +118,18 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Scale row i from column i+1 onward by -tau(i), stride = strideA2
 			dscal(
 				N - i - 1, -TAU[ it ],
-				A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2
+				A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2
 			);
 		}
 
 		// A(I,I) = ONE - TAU(I)
-		A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0 - TAU[ it ];
+		A[ offsetA + (i * strideA1) + (i * strideA2) ] = 1.0 - TAU[ it ];
 
 		// Zero out columns 0..i-1 of row i
 
 		// Fortran: DO 30 L = 1, I-1; A(I,L) = ZERO
 		for ( l = 0; l < i; l++ ) {
-			A[ offsetA + i * strideA1 + l * strideA2 ] = 0.0;
+			A[ offsetA + (i * strideA1) + (l * strideA2) ] = 0.0;
 		}
 	}
 	return 0;

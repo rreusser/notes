@@ -349,7 +349,7 @@ function dlasq5( i0, n0, z, stride, offset, pp, tau, sigma, ieee, eps ) {
 	}
 
 	setZ( j4 + 2, dn );
-	setZ( 4 * n0 - pp, emin );
+	setZ( (4 * n0) - pp, emin );
 
 	return {
 		'dmin': dmin,

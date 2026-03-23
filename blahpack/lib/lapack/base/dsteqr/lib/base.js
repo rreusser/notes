@@ -168,12 +168,12 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 		m = N - 1; // default: entire remaining matrix is unreduced
 		if ( l1 <= N - 2 ) {
 			for ( m = l1; m <= N - 2; m++ ) {
-				tst = Math.abs( e[ offsetE + m * strideE ] );
+				tst = Math.abs( e[ offsetE + (m * strideE) ] );
 				if ( tst === 0.0 ) {
 					break;
 				}
-				if ( tst <= ( Math.sqrt( Math.abs( d[ offsetD + m * strideD ] ) ) * Math.sqrt( Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) ) ) * eps ) {
-					e[ offsetE + m * strideE ] = 0.0;
+				if ( tst <= ( Math.sqrt( Math.abs( d[ offsetD + (m * strideD) ] ) ) * Math.sqrt( Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) ) ) * eps ) {
+					e[ offsetE + (m * strideE) ] = 0.0;
 					break;
 				}
 			}
@@ -192,23 +192,23 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 		}
 
 		// Scale the block if necessary
-		anorm = dlanst( 'max', lend - l + 1, d, strideD, offsetD + l * strideD, e, strideE, offsetE + l * strideE );
+		anorm = dlanst( 'max', lend - l + 1, d, strideD, offsetD + (l * strideD), e, strideE, offsetE + (l * strideE) );
 		iscale = 0;
 		if ( anorm === 0.0 ) {
 			continue outer;
 		}
 		if ( anorm > ssfmax ) {
 			iscale = 1;
-			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
-			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
+			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l + 1, 1, d, strideD, 0, offsetD + (l * strideD) );
+			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l, 1, e, strideE, 0, offsetE + (l * strideE) );
 		} else if ( anorm < ssfmin ) {
 			iscale = 2;
-			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
-			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
+			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l + 1, 1, d, strideD, 0, offsetD + (l * strideD) );
+			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l, 1, e, strideE, 0, offsetE + (l * strideE) );
 		}
 
 		// Choose QL or QR iteration based on which end has smaller |D| element
-		if ( Math.abs( d[ offsetD + lend * strideD ] ) < Math.abs( d[ offsetD + l * strideD ] ) ) {
+		if ( Math.abs( d[ offsetD + (lend * strideD) ] ) < Math.abs( d[ offsetD + (l * strideD) ] ) ) {
 			lend = lsv;
 			l = lendsv;
 		}
@@ -221,9 +221,9 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Find small subdiagonal element (label 40 -> 50 -> 60)
 				if ( l !== lend ) {
 					for ( m = l; m <= lend - 1; m++ ) {
-						tst = Math.abs( e[ offsetE + m * strideE ] );
+						tst = Math.abs( e[ offsetE + (m * strideE) ] );
 						tst *= tst;
-						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) + safmin ) {
+						if ( tst <= ( eps2 * Math.abs( d[ offsetD + (m * strideD) ] ) ) * Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) + safmin ) {
 							break;
 						}
 					}
@@ -236,13 +236,13 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				}
 
 				if ( m < lend ) {
-					e[ offsetE + m * strideE ] = 0.0;
+					e[ offsetE + (m * strideE) ] = 0.0;
 				}
-				p = d[ offsetD + l * strideD ];
+				p = d[ offsetD + (l * strideD) ];
 
 				// If m === l, single eigenvalue has converged (label 80)
 				if ( m === l ) {
-					d[ offsetD + l * strideD ] = p;
+					d[ offsetD + (l * strideD) ] = p;
 					l += 1;
 					if ( l <= lend ) {
 						continue; // go to 40
@@ -253,22 +253,22 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// If m === l + 1, use direct 2x2 eigenvalue computation
 				if ( m === l + 1 ) {
 					if ( icompz > 0 ) {
-						obj = dlaev2( d[ offsetD + l * strideD ], e[ offsetE + l * strideE ], d[ offsetD + ( l + 1 ) * strideD ] );
-						WORK[ offsetWORK + l * strideWORK ] = obj.cs1;
+						obj = dlaev2( d[ offsetD + (l * strideD) ], e[ offsetE + (l * strideE) ], d[ offsetD + ( l + 1 ) * strideD ] );
+						WORK[ offsetWORK + (l * strideWORK) ] = obj.cs1;
 						WORK[ offsetWORK + ( N - 1 + l ) * strideWORK ] = obj.sn1;
 						dlasr( 'right', 'variable', 'backward', N, 2,
-							WORK, strideWORK, offsetWORK + l * strideWORK,
+							WORK, strideWORK, offsetWORK + (l * strideWORK),
 							WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
-							Z, strideZ1, strideZ2, offsetZ + l * strideZ2
+							Z, strideZ1, strideZ2, offsetZ + (l * strideZ2)
 						);
-						d[ offsetD + l * strideD ] = obj.rt1;
+						d[ offsetD + (l * strideD) ] = obj.rt1;
 						d[ offsetD + ( l + 1 ) * strideD ] = obj.rt2;
 					} else {
-						obj = dlae2( d[ offsetD + l * strideD ], e[ offsetE + l * strideE ], d[ offsetD + ( l + 1 ) * strideD ] );
-						d[ offsetD + l * strideD ] = obj.rt1;
+						obj = dlae2( d[ offsetD + (l * strideD) ], e[ offsetE + (l * strideE) ], d[ offsetD + ( l + 1 ) * strideD ] );
+						d[ offsetD + (l * strideD) ] = obj.rt1;
 						d[ offsetD + ( l + 1 ) * strideD ] = obj.rt2;
 					}
-					e[ offsetE + l * strideE ] = 0.0;
+					e[ offsetE + (l * strideE) ] = 0.0;
 					l += 2;
 					if ( l <= lend ) {
 						continue; // go to 40
@@ -282,9 +282,9 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				jtot += 1;
 
 				// Form shift
-				g = ( d[ offsetD + ( l + 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + l * strideE ] );
+				g = ( d[ offsetD + ( l + 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + (l * strideE) ] );
 				r = dlapy2( g, 1.0 );
-				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + l * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
+				g = d[ offsetD + (m * strideD) ] - p + ( e[ offsetE + (l * strideE) ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
 				s = 1.0;
 				c = 1.0;
@@ -292,8 +292,8 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 				// Inner loop: chase bulge from bottom to top (label 70)
 				for ( i = m - 1; i >= l; i-- ) {
-					f = s * e[ offsetE + i * strideE ];
-					b = c * e[ offsetE + i * strideE ];
+					f = s * e[ offsetE + (i * strideE) ];
+					b = c * e[ offsetE + (i * strideE) ];
 					dlartg( g, f, rot );
 					c = rot[ 0 ];
 					s = rot[ 1 ];
@@ -302,14 +302,14 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 						e[ offsetE + ( i + 1 ) * strideE ] = r;
 					}
 					g = d[ offsetD + ( i + 1 ) * strideD ] - p;
-					r = ( d[ offsetD + i * strideD ] - g ) * s + 2.0 * c * b;
+					r = ( d[ offsetD + (i * strideD) ] - g ) * s + (2.0 * c) * b;
 					p = s * r;
 					d[ offsetD + ( i + 1 ) * strideD ] = g + p;
-					g = c * r - b;
+					g = (c * r) - b;
 
 					// Save rotations for eigenvector update
 					if ( icompz > 0 ) {
-						WORK[ offsetWORK + i * strideWORK ] = c;
+						WORK[ offsetWORK + (i * strideWORK) ] = c;
 						WORK[ offsetWORK + ( N - 1 + i ) * strideWORK ] = -s;
 					}
 				}
@@ -318,14 +318,14 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				if ( icompz > 0 ) {
 					mm = m - l + 1;
 					dlasr( 'right', 'variable', 'backward', N, mm,
-						WORK, strideWORK, offsetWORK + l * strideWORK,
+						WORK, strideWORK, offsetWORK + (l * strideWORK),
 						WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
-						Z, strideZ1, strideZ2, offsetZ + l * strideZ2
+						Z, strideZ1, strideZ2, offsetZ + (l * strideZ2)
 					);
 				}
 
-				d[ offsetD + l * strideD ] -= p;
-				e[ offsetE + l * strideE ] = g;
+				d[ offsetD + (l * strideD) ] -= p;
+				e[ offsetE + (l * strideE) ] = g;
 
 				// Go to 40 (continue while loop)
 			}
@@ -338,7 +338,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					for ( m = l; m >= lend + 1; m-- ) {
 						tst = Math.abs( e[ offsetE + ( m - 1 ) * strideE ] );
 						tst *= tst;
-						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m - 1 ) * strideD ] ) + safmin ) {
+						if ( tst <= ( eps2 * Math.abs( d[ offsetD + (m * strideD) ] ) ) * Math.abs( d[ offsetD + ( m - 1 ) * strideD ] ) + safmin ) {
 							break;
 						}
 					}
@@ -353,11 +353,11 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				if ( m > lend ) {
 					e[ offsetE + ( m - 1 ) * strideE ] = 0.0;
 				}
-				p = d[ offsetD + l * strideD ];
+				p = d[ offsetD + (l * strideD) ];
 
 				// If m === l, single eigenvalue has converged (label 130)
 				if ( m === l ) {
-					d[ offsetD + l * strideD ] = p;
+					d[ offsetD + (l * strideD) ] = p;
 					l -= 1;
 					if ( l >= lend ) {
 						continue; // go to 90
@@ -368,20 +368,20 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// If m === l - 1, use direct 2x2 eigenvalue computation
 				if ( m === l - 1 ) {
 					if ( icompz > 0 ) {
-						obj = dlaev2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + l * strideD ] );
-						WORK[ offsetWORK + m * strideWORK ] = obj.cs1;
+						obj = dlaev2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + (l * strideD) ] );
+						WORK[ offsetWORK + (m * strideWORK) ] = obj.cs1;
 						WORK[ offsetWORK + ( N - 1 + m ) * strideWORK ] = obj.sn1;
 						dlasr( 'right', 'variable', 'forward', N, 2,
-							WORK, strideWORK, offsetWORK + m * strideWORK,
+							WORK, strideWORK, offsetWORK + (m * strideWORK),
 							WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
 							Z, strideZ1, strideZ2, offsetZ + ( l - 1 ) * strideZ2
 						);
 						d[ offsetD + ( l - 1 ) * strideD ] = obj.rt1;
-						d[ offsetD + l * strideD ] = obj.rt2;
+						d[ offsetD + (l * strideD) ] = obj.rt2;
 					} else {
-						obj = dlae2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + l * strideD ] );
+						obj = dlae2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + (l * strideD) ] );
 						d[ offsetD + ( l - 1 ) * strideD ] = obj.rt1;
-						d[ offsetD + l * strideD ] = obj.rt2;
+						d[ offsetD + (l * strideD) ] = obj.rt2;
 					}
 					e[ offsetE + ( l - 1 ) * strideE ] = 0.0;
 					l -= 2;
@@ -399,7 +399,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Form shift
 				g = ( d[ offsetD + ( l - 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + ( l - 1 ) * strideE ] );
 				r = dlapy2( g, 1.0 );
-				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
+				g = d[ offsetD + (m * strideD) ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
 				s = 1.0;
 				c = 1.0;
@@ -407,8 +407,8 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 				// Inner loop: chase bulge from top to bottom (label 120)
 				for ( i = m; i <= l - 1; i++ ) {
-					f = s * e[ offsetE + i * strideE ];
-					b = c * e[ offsetE + i * strideE ];
+					f = s * e[ offsetE + (i * strideE) ];
+					b = c * e[ offsetE + (i * strideE) ];
 					dlartg( g, f, rot );
 					c = rot[ 0 ];
 					s = rot[ 1 ];
@@ -416,15 +416,15 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					if ( i !== m ) {
 						e[ offsetE + ( i - 1 ) * strideE ] = r;
 					}
-					g = d[ offsetD + i * strideD ] - p;
-					r = ( d[ offsetD + ( i + 1 ) * strideD ] - g ) * s + 2.0 * c * b;
+					g = d[ offsetD + (i * strideD) ] - p;
+					r = ( d[ offsetD + ( i + 1 ) * strideD ] - g ) * s + (2.0 * c) * b;
 					p = s * r;
-					d[ offsetD + i * strideD ] = g + p;
-					g = c * r - b;
+					d[ offsetD + (i * strideD) ] = g + p;
+					g = (c * r) - b;
 
 					// Save rotations for eigenvector update
 					if ( icompz > 0 ) {
-						WORK[ offsetWORK + i * strideWORK ] = c;
+						WORK[ offsetWORK + (i * strideWORK) ] = c;
 						WORK[ offsetWORK + ( N - 1 + i ) * strideWORK ] = s;
 					}
 				}
@@ -433,13 +433,13 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				if ( icompz > 0 ) {
 					mm = l - m + 1;
 					dlasr( 'right', 'variable', 'forward', N, mm,
-						WORK, strideWORK, offsetWORK + m * strideWORK,
+						WORK, strideWORK, offsetWORK + (m * strideWORK),
 						WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
-						Z, strideZ1, strideZ2, offsetZ + m * strideZ2
+						Z, strideZ1, strideZ2, offsetZ + (m * strideZ2)
 					);
 				}
 
-				d[ offsetD + l * strideD ] -= p;
+				d[ offsetD + (l * strideD) ] -= p;
 				e[ offsetE + ( l - 1 ) * strideE ] = g;
 
 				// Go to 90 (continue while loop)
@@ -448,11 +448,11 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 		// Label 140: Undo scaling if necessary
 		if ( iscale === 1 ) {
-			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
-			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
+			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + (lsv * strideD) );
+			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + (lsv * strideE) );
 		} else if ( iscale === 2 ) {
-			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
-			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
+			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + (lsv * strideD) );
+			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + (lsv * strideE) );
 		}
 
 		// Check if any eigenvalues failed to converge
@@ -467,7 +467,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	if ( jtot >= nmaxit ) {
 		var info = 0;
 		for ( i = 0; i < N - 1; i++ ) {
-			if ( e[ offsetE + i * strideE ] !== 0.0 ) {
+			if ( e[ offsetE + (i * strideE) ] !== 0.0 ) {
 				info += 1;
 			}
 		}
@@ -483,17 +483,17 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 		for ( ii = 1; ii < N; ii++ ) {
 			i = ii - 1;
 			k = i;
-			p = d[ offsetD + i * strideD ];
+			p = d[ offsetD + (i * strideD) ];
 			for ( j = ii; j < N; j++ ) {
-				if ( d[ offsetD + j * strideD ] < p ) {
+				if ( d[ offsetD + (j * strideD) ] < p ) {
 					k = j;
-					p = d[ offsetD + j * strideD ];
+					p = d[ offsetD + (j * strideD) ];
 				}
 			}
 			if ( k !== i ) {
-				d[ offsetD + k * strideD ] = d[ offsetD + i * strideD ];
-				d[ offsetD + i * strideD ] = p;
-				dswap( N, Z, strideZ1, offsetZ + i * strideZ2, Z, strideZ1, offsetZ + k * strideZ2 );
+				d[ offsetD + (k * strideD) ] = d[ offsetD + (i * strideD) ];
+				d[ offsetD + (i * strideD) ] = p;
+				dswap( N, Z, strideZ1, offsetZ + (i * strideZ2), Z, strideZ1, offsetZ + (k * strideZ2) );
 			}
 		}
 	}

@@ -353,20 +353,36 @@
         var out: VertexOutput; out.position = vec4<f32>(pos[i],0,1); out.uv = pos[i]; return out;
       }
 
+      // Blue-white-red diverging colormap
+      fn bwr(t: f32) -> vec3<f32> {
+        if (t < 0.5) {
+          let s = t * 2.0;
+          return vec3<f32>(0.2 + 0.8*s, 0.2 + 0.8*s, 1.0);
+        }
+        let s = (t - 0.5) * 2.0;
+        return vec3<f32>(1.0, 1.0 - 0.8*s, 1.0 - 0.8*s);
+      }
+
       @fragment fn fs(input: VertexOutput) -> @location(0) vec4<f32> {
         let world = (params.viewInverse * vec4<f32>(input.uv, 0.0, 1.0)).xy;
         let uv = clamp((world - params.domMin) / (params.domMax - params.domMin), vec2(0.0), vec2(1.0));
         let psi = bilinear(psi_tex, uv);
+        let speed = bilinear(speed_tex, uv);
         let mask = bilinear(mask_tex, uv);
-        let t = clamp((psi - params.psiMin) / (params.psiMax - params.psiMin), 0.0, 1.0);
-        let color = textureSample(color_tex, color_samp, vec2<f32>(t, 0.5));
+
+        // Color by speed: 0→blue, 1→white (freestream), 2→red
+        let st = clamp(speed / 2.0, 0.0, 1.0);
+        let color = bwr(st);
+
+        // Streamline contours from ψ
         let nContours = 40.0;
         let interval = (params.psiMax - params.psiMin) / nContours;
         let grad = length(vec2<f32>(dpdx(psi), dpdy(psi)));
         let dist = abs(fract(psi / interval - 0.5) - 0.5) * interval / max(grad, 1e-8);
         let contour_alpha = 1.0 - smoothstep(0.5, 1.5, dist);
-        let flow_color = mix(color.rgb, vec3(0.0), contour_alpha * 0.5);
-        let body_color = vec3<f32>(0.3, 0.3, 0.35);
+
+        let flow_color = mix(color, vec3(0.15), contour_alpha * 0.6);
+        let body_color = vec3<f32>(0.25, 0.25, 0.3);
         let result = mix(body_color, flow_color, mask);
         let texUV = (world - params.domMin) / (params.domMax - params.domMin);
         let oob = texUV.x < 0.0 || texUV.x > 1.0 || texUV.y < 0.0 || texUV.y > 1.0;
@@ -378,8 +394,9 @@
       {binding:0, visibility:GPUShaderStage.FRAGMENT|GPUShaderStage.VERTEX, buffer:{type:'uniform'}},
       {binding:1, visibility:GPUShaderStage.FRAGMENT, texture:{sampleType:'unfilterable-float'}},
       {binding:2, visibility:GPUShaderStage.FRAGMENT, texture:{sampleType:'unfilterable-float'}},
-      {binding:3, visibility:GPUShaderStage.FRAGMENT, texture:{}},
-      {binding:4, visibility:GPUShaderStage.FRAGMENT, sampler:{}},
+      {binding:3, visibility:GPUShaderStage.FRAGMENT, texture:{sampleType:'unfilterable-float'}},
+      {binding:4, visibility:GPUShaderStage.FRAGMENT, texture:{}},
+      {binding:5, visibility:GPUShaderStage.FRAGMENT, sampler:{}},
     ]});
     const nParamsBuf = device.createBuffer({size:96, usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
     const nModule = device.createShaderModule({label:'naca-shader', code:nShader});
@@ -392,9 +409,10 @@
     const nBindGroup = device.createBindGroup({ layout:nBGL, entries:[
       {binding:0,resource:{buffer:nParamsBuf}},
       {binding:1,resource:nPsiTex.createView()},
-      {binding:2,resource:nMaskTex.createView()},
-      {binding:3,resource:colorscaleTexture.createView()},
-      {binding:4,resource:colorscaleSampler},
+      {binding:2,resource:nSpeedTex.createView()},
+      {binding:3,resource:nMaskTex.createView()},
+      {binding:4,resource:colorscaleTexture.createView()},
+      {binding:5,resource:colorscaleSampler},
     ]});
   </script>
 

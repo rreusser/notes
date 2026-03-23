@@ -43,7 +43,7 @@ var RTMAX_QTR = Math.sqrt( SAFMAX / 4.0 );
 * @returns {number} sum of squares
 */
 function abssq( re, im ) {
-	return re * re + im * im;
+	return (re * re) + (im * im);
 }
 
 
@@ -114,14 +114,14 @@ function zlartg( f, g, out ) {
 			rr = d;
 			ri = 0.0;
 			sr = gr / d;
-			si = -gi / d;
+			si = - (gi / d);
 		} else if ( gi === 0.0 ) {
 			// g is purely real
 			d = Math.abs( gr );
 			rr = d;
 			ri = 0.0;
 			sr = gr / d;
-			si = -gi / d;
+			si = - (gi / d);
 		} else {
 			// g is general complex
 			g1 = Math.max( Math.abs( gr ), Math.abs( gi ) );
@@ -130,7 +130,7 @@ function zlartg( f, g, out ) {
 				g2 = abssq( gr, gi );
 				d = Math.sqrt( g2 );
 				sr = gr / d;
-				si = -gi / d;
+				si = - (gi / d);
 				rr = d;
 				ri = 0.0;
 			} else {
@@ -141,7 +141,7 @@ function zlartg( f, g, out ) {
 				g2 = abssq( gsr, gsi );
 				d = Math.sqrt( g2 );
 				sr = gsr / d;
-				si = -gsi / d;
+				si = - (gsi / d);
 				rr = d * u;
 				ri = 0.0;
 			}
@@ -176,14 +176,14 @@ function zlartg( f, g, out ) {
 				t2 = fi / t0;
 
 				// conjg(g) = (gr, -gi), multiply by (t1, t2):
-				sr = gr * t1 + gi * t2;
-				si = gr * t2 - gi * t1;
+				sr = (gr * t1) + (gi * t2);
+				si = (gr * t2) - (gi * t1);
 			} else {
 				// S = conjg(g) * (r / h2)
 				t0 = rr / h2;
 				t1 = ri / h2;
-				sr = gr * t0 + gi * t1;
-				si = gr * t1 - gi * t0;
+				sr = (gr * t0) + (gi * t1);
+				si = (gr * t1) - (gi * t0);
 			}
 		} else {
 			d = Math.sqrt( f2 * h2 );
@@ -199,8 +199,8 @@ function zlartg( f, g, out ) {
 			// S = conjg(g) * (f / d)
 			t0 = fr / d;
 			t1 = fi / d;
-			sr = gr * t0 + gi * t1;
-			si = gr * t1 - gi * t0;
+			sr = (gr * t0) + (gi * t1);
+			si = (gr * t1) - (gi * t0);
 		}
 	} else {
 		// Scaled algorithm
@@ -217,7 +217,7 @@ function zlartg( f, g, out ) {
 			fsr = fr / v;
 			fsi = fi / v;
 			f2 = abssq( fsr, fsi );
-			h2 = f2 * w * w + g2;
+			h2 = f2 * (w * w) + g2;
 		} else {
 			// Use the same scaling for f and g.
 			w = 1.0;
@@ -235,13 +235,13 @@ function zlartg( f, g, out ) {
 				t0 = Math.sqrt( f2 * h2 );
 				t1 = fsr / t0;
 				t2 = fsi / t0;
-				sr = gsr * t1 + gsi * t2;
-				si = gsr * t2 - gsi * t1;
+				sr = (gsr * t1) + (gsi * t2);
+				si = (gsr * t2) - (gsi * t1);
 			} else {
 				t0 = rr / h2;
 				t1 = ri / h2;
-				sr = gsr * t0 + gsi * t1;
-				si = gsr * t1 - gsi * t0;
+				sr = (gsr * t0) + (gsi * t1);
+				si = (gsr * t1) - (gsi * t0);
 			}
 		} else {
 			d = Math.sqrt( f2 * h2 );
@@ -256,8 +256,8 @@ function zlartg( f, g, out ) {
 			}
 			t0 = fsr / d;
 			t1 = fsi / d;
-			sr = gsr * t0 + gsi * t1;
-			si = gsr * t1 - gsi * t0;
+			sr = (gsr * t0) + (gsi * t1);
+			si = (gsr * t1) - (gsi * t0);
 		}
 		// Rescale c and r
 		c *= w;

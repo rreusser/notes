@@ -136,7 +136,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	// Initialize WORK13 upper triangle to zero
 	for ( j = 0; j < NB; j++ ) {
 		for ( i = 0; i < j; i++ ) {
-			idx = ( i + j * LDWORK ) * 2;
+			idx = ( i + (j * LDWORK) ) * 2;
 			W13v[ idx ] = 0.0;
 			W13v[ idx + 1 ] = 0.0;
 		}
@@ -145,7 +145,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	// Initialize WORK31 lower triangle to zero
 	for ( j = 0; j < NB; j++ ) {
 		for ( i = j + 1; i < NB; i++ ) {
-			idx = ( i + j * LDWORK ) * 2;
+			idx = ( i + (j * LDWORK) ) * 2;
 			W31v[ idx ] = 0.0;
 			W31v[ idx + 1 ] = 0.0;
 		}
@@ -154,7 +154,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	// Zero out the fill-in region
 	for ( j = ku + 1; j < Math.min( kv, N ); j++ ) {
 		for ( i = kv - j; i < kl; i++ ) {
-			idx = ( offsetAB + i * sa1 + j * sa2 ) * 2;
+			idx = ( offsetAB + (i * sa1) + (j * sa2) ) * 2;
 			ABv[ idx ] = 0.0;
 			ABv[ idx + 1 ] = 0.0;
 		}
@@ -182,7 +182,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			// Zero fill-in column
 			if ( jj + kv < N ) {
 				for ( i = 0; i < kl; i++ ) {
-					idx = ( offsetAB + i * sa1 + ( jj + kv ) * sa2 ) * 2;
+					idx = ( offsetAB + (i * sa1) + ( jj + kv ) * sa2 ) * 2;
 					ABv[ idx ] = 0.0;
 					ABv[ idx + 1 ] = 0.0;
 				}
@@ -190,11 +190,11 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 			// Find pivot in column jj
 			km = Math.min( kl, M - jj - 1 );
-			jp = izamax( km + 1, AB, sa1, offsetAB + kv * sa1 + jj * sa2 );
-			IPIV[ offsetIPIV + jj * strideIPIV ] = jp + jj - j;
+			jp = izamax( km + 1, AB, sa1, offsetAB + (kv * sa1) + (jj * sa2) );
+			IPIV[ offsetIPIV + (jj * strideIPIV) ] = jp + jj - j;
 
 			// Check if pivot element is nonzero (both real and imag parts)
-			idx = ( offsetAB + ( kv + jp ) * sa1 + jj * sa2 ) * 2;
+			idx = ( offsetAB + ( kv + jp ) * sa1 + (jj * sa2) ) * 2;
 			if ( ABv[ idx ] !== 0.0 || ABv[ idx + 1 ] !== 0.0 ) {
 				ju = Math.max( ju, Math.min( jj + ku + jp, N - 1 ) );
 
@@ -202,33 +202,33 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				if ( jp !== 0 ) {
 					if ( jp + jj < j + kl ) {
 						// Both rows are within the band
-						zswap( jb, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
-							AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + j * sa2 );
+						zswap( jb, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
+							AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + (j * sa2) );
 					} else {
 						// jp row extends into WORK31
-						zswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
+						zswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
 							WORK31, LDWORK, ( jp + jj - j - kl ) * 1 );
-						zswap( j + jb - jj, AB, sa2 - sa1, offsetAB + kv * sa1 + jj * sa2,
-							AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + jj * sa2 );
+						zswap( j + jb - jj, AB, sa2 - sa1, offsetAB + (kv * sa1) + (jj * sa2),
+							AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + (jj * sa2) );
 					}
 				}
 
 				// Scale multipliers: compute 1/AB(kv, jj) using cmplx.divAt
-				idx = ( offsetAB + kv * sa1 + jj * sa2 ) * 2;
+				idx = ( offsetAB + (kv * sa1) + (jj * sa2) ) * 2;
 				TEMP[ 0 ] = 1.0;
 				TEMP[ 1 ] = 0.0;
 				cmplx.divAt( TEMP, 0, TEMP, 0, ABv, idx );
 				ONE_NEG = new Complex128( TEMP[ 0 ], TEMP[ 1 ] );
 				zscal( km, ONE_NEG,
-					AB, sa1, offsetAB + ( kv + 1 ) * sa1 + jj * sa2 );
+					AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (jj * sa2) );
 
 				// Rank-1 update within the panel
 				jm = Math.min( ju, j + jb - 1 );
 				if ( jm > jj ) {
 					zgeru( km, jm - jj, CNEG_ONE,
-						AB, sa1, offsetAB + ( kv + 1 ) * sa1 + jj * sa2,
+						AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (jj * sa2),
 						AB, sa2 - sa1, offsetAB + ( kv - 1 ) * sa1 + ( jj + 1 ) * sa2,
-						AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + ( jj + 1 ) * sa2 );
+						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + ( jj + 1 ) * sa2 );
 				}
 			} else if ( info === 0 ) {
 				info = jj + 1; // 1-based
@@ -237,7 +237,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			// Copy column of L that wraps below the band into WORK31
 			nw = Math.min( jj - j + 1, i3 );
 			if ( nw > 0 ) {
-				zcopy( nw, AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + jj * sa2,
+				zcopy( nw, AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + (jj * sa2),
 					WORK31, 1, ( jj - j ) * LDWORK );
 			}
 		}
@@ -252,11 +252,11 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 			// Apply row interchanges to columns j+jb..j+jb+j2-1 within the band (zlaswp)
 			zlaswp( j2, AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2,
-				0, jb - 1, IPIV, strideIPIV, offsetIPIV + j * strideIPIV, 1 );
+				0, jb - 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV), 1 );
 
 			// Adjust IPIV to global indices (add j)
 			for ( i = j; i < j + jb; i++ ) {
-				IPIV[ offsetIPIV + i * strideIPIV ] += j;
+				IPIV[ offsetIPIV + (i * strideIPIV) ] += j;
 			}
 
 			// Apply row interchanges to columns beyond the band (j3 columns)
@@ -264,11 +264,11 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			for ( i = 0; i < j3; i++ ) {
 				jj = k2 + i;
 				for ( ii = j + i; ii < j + jb; ii++ ) {
-					ip = IPIV[ offsetIPIV + ii * strideIPIV ];
+					ip = IPIV[ offsetIPIV + (ii * strideIPIV) ];
 					if ( ip !== ii ) {
 						// Swap complex elements: AB(kv+ii-jj, jj) <-> AB(kv+ip-jj, jj)
-						idx = ( offsetAB + ( kv + ii - jj ) * sa1 + jj * sa2 ) * 2;
-						id2 = ( offsetAB + ( kv + ip - jj ) * sa1 + jj * sa2 ) * 2;
+						idx = ( offsetAB + ( kv + ii - jj ) * sa1 + (jj * sa2) ) * 2;
+						id2 = ( offsetAB + ( kv + ip - jj ) * sa1 + (jj * sa2) ) * 2;
 						tr = ABv[ idx ];
 						ti = ABv[ idx + 1 ];
 						ABv[ idx ] = ABv[ id2 ];
@@ -283,16 +283,16 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			if ( j2 > 0 ) {
 				// ztrsm: solve L11 * U12 = AB(..., j+jb)
 				ztrsm( 'left', 'lower', 'no-transpose', 'unit', jb, j2, CONE,
-					AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + j * sa2,
+					AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2),
 					AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2 );
 
 				if ( i2 > 0 ) {
 					// ZGEMM: update A22 within band
 					zgemm( 'no-transpose', 'no-transpose', i2, j2, jb, CNEG_ONE,
-						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + j * sa2,
+						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + (j * sa2),
 						AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2,
 						CONE,
-						AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + ( j + jb ) * sa2 );
+						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + ( j + jb ) * sa2 );
 				}
 
 				if ( i3 > 0 ) {
@@ -309,7 +309,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				// Copy portion from AB into WORK13 for beyond-band columns
 				for ( jj = 0; jj < j3; jj++ ) {
 					for ( ii = jj; ii < jb; ii++ ) {
-						idx = ( ii + jj * LDWORK ) * 2;
+						idx = ( ii + (jj * LDWORK) ) * 2;
 						id2 = ( offsetAB + ( ii - jj ) * sa1 + ( jj + j + kv ) * sa2 ) * 2;
 						W13v[ idx ] = ABv[ id2 ];
 						W13v[ idx + 1 ] = ABv[ id2 + 1 ];
@@ -318,12 +318,12 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 				// Solve L * W13 = WORK13
 				ztrsm( 'left', 'lower', 'no-transpose', 'unit', jb, j3, CONE,
-					AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + j * sa2,
+					AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2),
 					WORK13, 1, LDWORK, 0 );
 
 				if ( i2 > 0 ) {
 					zgemm( 'no-transpose', 'no-transpose', i2, j3, jb, CNEG_ONE,
-						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + j * sa2,
+						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + (j * sa2),
 						WORK13, 1, LDWORK, 0,
 						CONE,
 						AB, sa1, sa2 - sa1, offsetAB + ( jb ) * sa1 + ( j + kv ) * sa2 );
@@ -340,7 +340,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				// Copy WORK13 back to AB
 				for ( jj = 0; jj < j3; jj++ ) {
 					for ( ii = jj; ii < jb; ii++ ) {
-						idx = ( ii + jj * LDWORK ) * 2;
+						idx = ( ii + (jj * LDWORK) ) * 2;
 						id2 = ( offsetAB + ( ii - jj ) * sa1 + ( jj + j + kv ) * sa2 ) * 2;
 						ABv[ id2 ] = W13v[ idx ];
 						ABv[ id2 + 1 ] = W13v[ idx + 1 ];
@@ -350,21 +350,21 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 		} else {
 			// Last panel: just adjust IPIV
 			for ( i = j; i < j + jb; i++ ) {
-				IPIV[ offsetIPIV + i * strideIPIV ] += j;
+				IPIV[ offsetIPIV + (i * strideIPIV) ] += j;
 			}
 		}
 
 		// Undo the panel-local swaps and copy WORK31 back into AB
 		for ( jj = j + jb - 1; jj >= j; jj-- ) {
-			jp = IPIV[ offsetIPIV + jj * strideIPIV ] - jj;
+			jp = IPIV[ offsetIPIV + (jj * strideIPIV) ] - jj;
 			if ( jp !== 0 ) {
 				if ( jp + jj < j + kl ) {
 					// Swap within band
-					zswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
-						AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + j * sa2 );
+					zswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
+						AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + (j * sa2) );
 				} else {
 					// Swap with WORK31
-					zswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
+					zswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
 						WORK31, LDWORK, ( jp + jj - j - kl ) * 1 );
 				}
 			}
@@ -373,7 +373,7 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			nw = Math.min( i3, jj - j + 1 );
 			if ( nw > 0 ) {
 				zcopy( nw, WORK31, 1, ( jj - j ) * LDWORK,
-					AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + jj * sa2 );
+					AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + (jj * sa2) );
 			}
 		}
 	}

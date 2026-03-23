@@ -79,8 +79,8 @@ function zdotc( N, x, strideX, offsetX, y, strideY, offsetY ) {
 		// conj(x) * y = (xr - xi*i) * (yr + yi*i)
 
 		//             = (xr*yr + xi*yi) + (xr*yi - xi*yr)*i
-		tempR += xr * yr + xi * yi;
-		tempI += xr * yi - xi * yr;
+		tempR += (xr * yr) + (xi * yi);
+		tempI += (xr * yi) - (xi * yr);
 		ix += sx;
 		iy += sy;
 	}

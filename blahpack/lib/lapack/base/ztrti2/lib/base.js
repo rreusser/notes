@@ -77,7 +77,7 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 	if ( upper ) {
 		// Compute inverse of upper triangular matrix
 		for ( j = 0; j < N; j++ ) {
-			ia = ( offsetA + j * sa1 + j * sa2 ) * 2;
+			ia = ( offsetA + (j * sa1) + (j * sa2) ) * 2;
 			if ( nounit ) {
 				// A(j,j) = ONE / A(j,j) — use cmplx.divAt for numerical safety
 				scratch[ 2 ] = Av[ ia ];
@@ -95,15 +95,15 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			// Compute elements 0:j-1 of j-th column:
 			// A(0:j-1, j) = A(0:j-1, 0:j-1) * A(0:j-1, j) [triangular matrix-vector multiply]
 			ztrmv( 'upper', 'no-transpose', diag, j, A, sa1, sa2, offsetA,
-				A, sa1, offsetA + j * sa2 );
+				A, sa1, offsetA + (j * sa2) );
 
 			// Scale column by ajj: A(0:j-1, j) = ajj * A(0:j-1, j)
-			zscal( j, new Complex128( ajjR, ajjI ), A, sa1, offsetA + j * sa2 );
+			zscal( j, new Complex128( ajjR, ajjI ), A, sa1, offsetA + (j * sa2) );
 		}
 	} else {
 		// Compute inverse of lower triangular matrix
 		for ( j = N - 1; j >= 0; j-- ) {
-			ia = ( offsetA + j * sa1 + j * sa2 ) * 2;
+			ia = ( offsetA + (j * sa1) + (j * sa2) ) * 2;
 			if ( nounit ) {
 				// A(j,j) = ONE / A(j,j) — use cmplx.divAt for numerical safety
 				scratch[ 2 ] = Av[ ia ];
@@ -122,11 +122,11 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 				// A(j+1:N-1, j) = A(j+1:N-1, j+1:N-1) * A(j+1:N-1, j)
 				ztrmv( 'lower', 'no-transpose', diag, N - j - 1,
 					A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + ( j + 1 ) * sa2,
-					A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
+					A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
 
 				// Scale column by ajj: A(j+1:N-1, j) = ajj * A(j+1:N-1, j)
 				zscal( N - j - 1, new Complex128( ajjR, ajjI ),
-					A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
+					A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
 			}
 		}
 	}

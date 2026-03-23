@@ -74,7 +74,7 @@ function dlasrt( id, N, d, stride, offset ) {
 
 	// Initialize the stack with the full range (using 0-based indices)...
 	stkpnt = 1;
-	stack = new Array( 64 ); // stack[2*k] = start, stack[2*k+1] = end
+	stack = new Array( 64 ); // stack[2*k] = start, stack[(2 * k) +1] = end
 	stack[ 0 ] = 0;
 	stack[ 1 ] = N - 1;
 
@@ -82,7 +82,7 @@ function dlasrt( id, N, d, stride, offset ) {
 		// Pop from stack...
 		stkpnt -= 1;
 		start = stack[ 2 * stkpnt ];
-		endd = stack[ 2 * stkpnt + 1 ];
+		endd = stack[ (2 * stkpnt) + 1 ];
 
 		if ( endd - start <= SELECT && endd - start > 0 ) {
 			// Insertion sort for small partitions...
@@ -90,9 +90,9 @@ function dlasrt( id, N, d, stride, offset ) {
 				// Sort in decreasing order...
 				for ( i = start + 1; i <= endd; i++ ) {
 					for ( j = i; j >= start + 1; j-- ) {
-						if ( d[ offset + j * stride ] > d[ offset + ( j - 1 ) * stride ] ) {
-							dmnmx = d[ offset + j * stride ];
-							d[ offset + j * stride ] = d[ offset + ( j - 1 ) * stride ];
+						if ( d[ offset + (j * stride) ] > d[ offset + ( j - 1 ) * stride ] ) {
+							dmnmx = d[ offset + (j * stride) ];
+							d[ offset + (j * stride) ] = d[ offset + ( j - 1 ) * stride ];
 							d[ offset + ( j - 1 ) * stride ] = dmnmx;
 						} else {
 							break;
@@ -103,9 +103,9 @@ function dlasrt( id, N, d, stride, offset ) {
 				// Sort in increasing order...
 				for ( i = start + 1; i <= endd; i++ ) {
 					for ( j = i; j >= start + 1; j-- ) {
-						if ( d[ offset + j * stride ] < d[ offset + ( j - 1 ) * stride ] ) {
-							dmnmx = d[ offset + j * stride ];
-							d[ offset + j * stride ] = d[ offset + ( j - 1 ) * stride ];
+						if ( d[ offset + (j * stride) ] < d[ offset + ( j - 1 ) * stride ] ) {
+							dmnmx = d[ offset + (j * stride) ];
+							d[ offset + (j * stride) ] = d[ offset + ( j - 1 ) * stride ];
 							d[ offset + ( j - 1 ) * stride ] = dmnmx;
 						} else {
 							break;
@@ -115,10 +115,10 @@ function dlasrt( id, N, d, stride, offset ) {
 			}
 		} else if ( endd - start > SELECT ) {
 			// Quicksort partition using median-of-three pivot...
-			d1 = d[ offset + start * stride ];
-			d2 = d[ offset + endd * stride ];
+			d1 = d[ offset + (start * stride) ];
+			d2 = d[ offset + (endd * stride) ];
 			i = ( ( start + endd ) / 2 ) | 0;
-			d3 = d[ offset + i * stride ];
+			d3 = d[ offset + (i * stride) ];
 
 			// Find median of d1, d2, d3...
 			if ( d1 < d2 ) {
@@ -144,14 +144,14 @@ function dlasrt( id, N, d, stride, offset ) {
 				while ( true ) {
 					do {
 						j -= 1;
-					} while ( d[ offset + j * stride ] < dmnmx );
+					} while ( d[ offset + (j * stride) ] < dmnmx );
 					do {
 						i += 1;
-					} while ( d[ offset + i * stride ] > dmnmx );
+					} while ( d[ offset + (i * stride) ] > dmnmx );
 					if ( i < j ) {
-						tmp = d[ offset + i * stride ];
-						d[ offset + i * stride ] = d[ offset + j * stride ];
-						d[ offset + j * stride ] = tmp;
+						tmp = d[ offset + (i * stride) ];
+						d[ offset + (i * stride) ] = d[ offset + (j * stride) ];
+						d[ offset + (j * stride) ] = tmp;
 					} else {
 						break;
 					}
@@ -163,14 +163,14 @@ function dlasrt( id, N, d, stride, offset ) {
 				while ( true ) {
 					do {
 						j -= 1;
-					} while ( d[ offset + j * stride ] > dmnmx );
+					} while ( d[ offset + (j * stride) ] > dmnmx );
 					do {
 						i += 1;
-					} while ( d[ offset + i * stride ] < dmnmx );
+					} while ( d[ offset + (i * stride) ] < dmnmx );
 					if ( i < j ) {
-						tmp = d[ offset + i * stride ];
-						d[ offset + i * stride ] = d[ offset + j * stride ];
-						d[ offset + j * stride ] = tmp;
+						tmp = d[ offset + (i * stride) ];
+						d[ offset + (i * stride) ] = d[ offset + (j * stride) ];
+						d[ offset + (j * stride) ] = tmp;
 					} else {
 						break;
 					}
@@ -180,17 +180,17 @@ function dlasrt( id, N, d, stride, offset ) {
 			// Push sub-partitions onto stack (larger first for bounded stack depth)...
 			if ( j - start > endd - j - 1 ) {
 				stack[ 2 * stkpnt ] = start;
-				stack[ 2 * stkpnt + 1 ] = j;
+				stack[ (2 * stkpnt) + 1 ] = j;
 				stkpnt += 1;
 				stack[ 2 * stkpnt ] = j + 1;
-				stack[ 2 * stkpnt + 1 ] = endd;
+				stack[ (2 * stkpnt) + 1 ] = endd;
 				stkpnt += 1;
 			} else {
 				stack[ 2 * stkpnt ] = j + 1;
-				stack[ 2 * stkpnt + 1 ] = endd;
+				stack[ (2 * stkpnt) + 1 ] = endd;
 				stkpnt += 1;
 				stack[ 2 * stkpnt ] = start;
-				stack[ 2 * stkpnt + 1 ] = j;
+				stack[ (2 * stkpnt) + 1 ] = j;
 				stkpnt += 1;
 			}
 		}

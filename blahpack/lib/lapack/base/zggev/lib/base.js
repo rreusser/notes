@@ -156,7 +156,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	// Zunmqr needs nw*nb + ldt*nb where nw=N, nb=32, ldt=33 → N*32+33*32
 	// Zgeqrf needs N*nb + nb*nb → N*32+1024
 	// Zhgeqz allocates its own internally
-	lwork = Math.max( 1, N * 32 + 33 * 32 );
+	lwork = Math.max( 1, (N * 32) + (33 * 32) );
 	WORK = new Complex128Array( lwork );
 
 	// TAU: Householder scalar factors (complex, length N)
@@ -242,8 +242,8 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 		if ( irows > 1 ) {
 			zlacpy( 'lower', irows - 1, irows - 1,
-				B, strideB1, strideB2, offsetB + ilo * strideB1 + ( ilo - 1 ) * strideB2,
-				VL, strideVL1, strideVL2, offsetVL + ilo * strideVL1 + ( ilo - 1 ) * strideVL2
+				B, strideB1, strideB2, offsetB + (ilo * strideB1) + ( ilo - 1 ) * strideB2,
+				VL, strideVL1, strideVL2, offsetVL + (ilo * strideVL1) + ( ilo - 1 ) * strideVL2
 			);
 		}
 
@@ -352,15 +352,15 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			for ( jc = 0; jc < N; jc++ ) {
 				temp = ZERO;
 				for ( jr = 0; jr < N; jr++ ) {
-					temp = Math.max( temp, abs1( VLv, oVL + jr * sVL1 + jc * sVL2 ) );
+					temp = Math.max( temp, abs1( VLv, oVL + (jr * sVL1) + (jc * sVL2) ) );
 				}
 				if ( temp < smlnum ) {
 					continue;
 				}
 				temp = ONE / temp;
 				for ( jr = 0; jr < N; jr++ ) {
-					VLv[ oVL + jr * sVL1 + jc * sVL2 ] *= temp;
-					VLv[ oVL + jr * sVL1 + jc * sVL2 + 1 ] *= temp;
+					VLv[ oVL + (jr * sVL1) + (jc * sVL2) ] *= temp;
+					VLv[ oVL + (jr * sVL1) + (jc * sVL2) + 1 ] *= temp;
 				}
 			}
 		}
@@ -380,15 +380,15 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			for ( jc = 0; jc < N; jc++ ) {
 				temp = ZERO;
 				for ( jr = 0; jr < N; jr++ ) {
-					temp = Math.max( temp, abs1( VRv, oVR + jr * sVR1 + jc * sVR2 ) );
+					temp = Math.max( temp, abs1( VRv, oVR + (jr * sVR1) + (jc * sVR2) ) );
 				}
 				if ( temp < smlnum ) {
 					continue;
 				}
 				temp = ONE / temp;
 				for ( jr = 0; jr < N; jr++ ) {
-					VRv[ oVR + jr * sVR1 + jc * sVR2 ] *= temp;
-					VRv[ oVR + jr * sVR1 + jc * sVR2 + 1 ] *= temp;
+					VRv[ oVR + (jr * sVR1) + (jc * sVR2) ] *= temp;
+					VRv[ oVR + (jr * sVR1) + (jc * sVR2) + 1 ] *= temp;
 				}
 			}
 		}

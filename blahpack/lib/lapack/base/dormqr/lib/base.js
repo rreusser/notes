@@ -115,8 +115,8 @@ function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	T = new Float64Array( ldt * nb );
 
 	// Ensure WORK is large enough; allocate internally if needed
-	if ( !WORK || WORK.length < ( nw * nb + ldt * nb ) ) {
-		WORK = new Float64Array( nw * nb + ldt * nb );
+	if ( !WORK || WORK.length < ( (nw * nb) + (ldt * nb) ) ) {
+		WORK = new Float64Array( (nw * nb) + (ldt * nb) );
 		offsetWORK = 0;
 		strideWORK = 1;
 	}
@@ -150,8 +150,8 @@ function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		dlarft(
 			'forward', 'columnwise', nq - i, ib,
-			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-			TAU, strideTAU, offsetTAU + i * strideTAU,
+			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+			TAU, strideTAU, offsetTAU + (i * strideTAU),
 			T, 1, ldt, 0
 		);
 
@@ -168,9 +168,9 @@ function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Apply H or H^T
 		dlarfb(
 			side, trans, 'forward', 'columnwise', mi, ni, ib,
-			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 			T, 1, ldt, 0,
-			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
+			C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2),
 			WORK, 1, ldwork, offsetWORK
 		);
 	}

@@ -87,15 +87,15 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				//                               (C2)
 				// W := C1**T
 				for ( j = 0; j < K; j++ ) {
-					dcopy( N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( N, C, strideC2, offsetC + (j * strideC1), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1
 				dtrmm( 'right', 'lower', 'no-transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( M > K ) {
 					// W := W + C2**T * V2
 					dgemm( 'transpose', 'no-transpose', N, K, M - K, 1.0,
-						C, strideC1, strideC2, offsetC + K * strideC1,
-						V, strideV1, strideV2, offsetV + K * strideV1,
+						C, strideC1, strideC2, offsetC + (K * strideC1),
+						V, strideV1, strideV2, offsetV + (K * strideV1),
 						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T**T or W * T
@@ -104,9 +104,9 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C := C - V * W**T
 				if ( M > K ) {
 					dgemm( 'no-transpose', 'transpose', M - K, N, K, -1.0,
-						V, strideV1, strideV2, offsetV + K * strideV1,
+						V, strideV1, strideV2, offsetV + (K * strideV1),
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						1.0, C, strideC1, strideC2, offsetC + K * strideC1 );
+						1.0, C, strideC1, strideC2, offsetC + (K * strideC1) );
 				}
 				// W := W * V1**T
 				dtrmm( 'right', 'lower', 'transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -114,22 +114,22 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W**T
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						C[ offsetC + j * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + (j * strideC1) + (i * strideC2) ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			} else if ( side === 'right' ) {
 				// Form C*H or C*H**T where C = (C1 C2)
 				// W := C1
 				for ( j = 0; j < K; j++ ) {
-					dcopy( M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( M, C, strideC1, offsetC + (j * strideC2), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1
 				dtrmm( 'right', 'lower', 'no-transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( N > K ) {
 					// W := W + C2 * V2
 					dgemm( 'no-transpose', 'no-transpose', M, K, N - K, 1.0,
-						C, strideC1, strideC2, offsetC + K * strideC2,
-						V, strideV1, strideV2, offsetV + K * strideV1,
+						C, strideC1, strideC2, offsetC + (K * strideC2),
+						V, strideV1, strideV2, offsetV + (K * strideV1),
 						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T or W * T**T
@@ -139,8 +139,8 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				if ( N > K ) {
 					dgemm( 'no-transpose', 'transpose', M, N - K, K, -1.0,
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						V, strideV1, strideV2, offsetV + K * strideV1,
-						1.0, C, strideC1, strideC2, offsetC + K * strideC2 );
+						V, strideV1, strideV2, offsetV + (K * strideV1),
+						1.0, C, strideC1, strideC2, offsetC + (K * strideC2) );
 				}
 				// W := W * V1**T
 				dtrmm( 'right', 'lower', 'transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -148,7 +148,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						C[ offsetC + i * strideC1 + j * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + (i * strideC1) + (j * strideC2) ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			}
@@ -158,7 +158,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 			if ( side === 'left' ) {
 				// W := C2**T
 				for ( j = 0; j < K; j++ ) {
-					dcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V2
 				dtrmm( 'right', 'upper', 'no-transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -179,13 +179,13 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				dtrmm( 'right', 'upper', 'transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						C[ offsetC + ( M - K + j ) * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + ( M - K + j ) * strideC1 + (i * strideC2) ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			} else if ( side === 'right' ) {
 				// W := C2
 				for ( j = 0; j < K; j++ ) {
-					dcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				dtrmm( 'right', 'upper', 'no-transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( N > K ) {
@@ -204,7 +204,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				dtrmm( 'right', 'upper', 'transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						C[ offsetC + i * strideC1 + ( N - K + j ) * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + (i * strideC1) + ( N - K + j ) * strideC2 ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			}
@@ -220,15 +220,15 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C**T * V**T = (C1**T*V1**T + C2**T*V2**T)
 				// W := C1**T
 				for ( j = 0; j < K; j++ ) {
-					dcopy( N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( N, C, strideC2, offsetC + (j * strideC1), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1**T (V1 is stored in rows of V: upper triangular)
 				dtrmm( 'right', 'upper', 'transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( M > K ) {
 					// W := W + C2**T * V2**T
 					dgemm( 'transpose', 'transpose', N, K, M - K, 1.0,
-						C, strideC1, strideC2, offsetC + K * strideC1,
-						V, strideV1, strideV2, offsetV + K * strideV2,
+						C, strideC1, strideC2, offsetC + (K * strideC1),
+						V, strideV1, strideV2, offsetV + (K * strideV2),
 						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T**T or W * T
@@ -238,9 +238,9 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				if ( M > K ) {
 					// C2 := C2 - V2**T * W**T
 					dgemm( 'transpose', 'transpose', M - K, N, K, -1.0,
-						V, strideV1, strideV2, offsetV + K * strideV2,
+						V, strideV1, strideV2, offsetV + (K * strideV2),
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						1.0, C, strideC1, strideC2, offsetC + K * strideC1 );
+						1.0, C, strideC1, strideC2, offsetC + (K * strideC1) );
 				}
 				// W := W * V1
 				dtrmm( 'right', 'upper', 'no-transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -248,7 +248,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W**T
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						C[ offsetC + j * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + (j * strideC1) + (i * strideC2) ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			} else if ( side === 'right' ) {
@@ -256,15 +256,15 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C * V**T = (C1*V1**T + C2*V2**T)
 				// W := C1
 				for ( j = 0; j < K; j++ ) {
-					dcopy( M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( M, C, strideC1, offsetC + (j * strideC2), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1**T
 				dtrmm( 'right', 'upper', 'transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( N > K ) {
 					// W := W + C2 * V2**T
 					dgemm( 'no-transpose', 'transpose', M, K, N - K, 1.0,
-						C, strideC1, strideC2, offsetC + K * strideC2,
-						V, strideV1, strideV2, offsetV + K * strideV2,
+						C, strideC1, strideC2, offsetC + (K * strideC2),
+						V, strideV1, strideV2, offsetV + (K * strideV2),
 						1.0, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T or W * T**T
@@ -275,8 +275,8 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 					// C2 := C2 - W * V2
 					dgemm( 'no-transpose', 'no-transpose', M, N - K, K, -1.0,
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						V, strideV1, strideV2, offsetV + K * strideV2,
-						1.0, C, strideC1, strideC2, offsetC + K * strideC2 );
+						V, strideV1, strideV2, offsetV + (K * strideV2),
+						1.0, C, strideC1, strideC2, offsetC + (K * strideC2) );
 				}
 				// W := W * V1
 				dtrmm( 'right', 'upper', 'no-transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -284,7 +284,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						C[ offsetC + i * strideC1 + j * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + (i * strideC1) + (j * strideC2) ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			}
@@ -296,7 +296,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C**T * V**T
 				// W := C2**T
 				for ( j = 0; j < K; j++ ) {
-					dcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V2**T
 				dtrmm( 'right', 'lower', 'transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -324,7 +324,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C2 := C2 - W**T
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						C[ offsetC + ( M - K + j ) * strideC1 + i * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + ( M - K + j ) * strideC1 + (i * strideC2) ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			} else if ( side === 'right' ) {
@@ -332,7 +332,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C * V**T
 				// W := C2
 				for ( j = 0; j < K; j++ ) {
-					dcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					dcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V2**T
 				dtrmm( 'right', 'lower', 'transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -360,7 +360,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C2 := C2 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						C[ offsetC + i * strideC1 + ( N - K + j ) * strideC2 ] -= WORK[ offsetWORK + i * strideWORK1 + j * strideWORK2 ];
+						C[ offsetC + (i * strideC1) + ( N - K + j ) * strideC2 ] -= WORK[ offsetWORK + (i * strideWORK1) + (j * strideWORK2) ];
 					}
 				}
 			}

@@ -102,7 +102,7 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				if ( xr !== 0.0 || xi !== 0.0 ) {
 					if ( nounit ) {
 						// x(j) = x(j) / A(j,j) — use cmplx.divAt (NEVER inline complex division)
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
 						xr = xv[ jx ];
 						xi = xv[ jx + 1 ];
@@ -110,13 +110,13 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					ix = jx;
 					for ( i = j - 1; i >= 0; i-- ) {
 						ix -= sx;
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
 
 						// x(i) -= x(j) * A(i,j)  — inline complex multiply-subtract
-						xv[ ix ] -= xr * ar - xi * ai;
-						xv[ ix + 1 ] -= xr * ai + xi * ar;
+						xv[ ix ] -= (xr * ar) - (xi * ai);
+						xv[ ix + 1 ] -= (xr * ai) + (xi * ar);
 					}
 				}
 				jx -= sx;
@@ -130,7 +130,7 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				if ( xr !== 0.0 || xi !== 0.0 ) {
 					if ( nounit ) {
 						// x(j) = x(j) / A(j,j)
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
 						xr = xv[ jx ];
 						xi = xv[ jx + 1 ];
@@ -138,13 +138,13 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					ix = jx;
 					for ( i = j + 1; i < N; i++ ) {
 						ix += sx;
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
 
 						// x(i) -= x(j) * A(i,j)
-						xv[ ix ] -= xr * ar - xi * ai;
-						xv[ ix + 1 ] -= xr * ai + xi * ar;
+						xv[ ix ] -= (xr * ar) - (xi * ai);
+						xv[ ix + 1 ] -= (xr * ai) + (xi * ar);
 					}
 				}
 				jx += sx;
@@ -162,18 +162,18 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					// Transpose (no conjugate)
 					ix = oX;
 					for ( i = 0; i < j; i++ ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
 
 						// Temp -= A(i,j) * x(i)  — inline complex multiply-subtract
-						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix += sx;
 					}
 					if ( nounit ) {
 						// Temp = temp / A(j,j) — store temp, divide, read back
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						xv[ jx ] = tr;
 						xv[ jx + 1 ] = ti;
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
@@ -184,18 +184,18 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					// Conjugate transpose
 					ix = oX;
 					for ( i = 0; i < j; i++ ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
 
 						// Temp -= conj(A(i,j)) * x(i)
-						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix += sx;
 					}
 					if ( nounit ) {
 						// Temp = temp / conj(A(j,j))
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
 
@@ -209,14 +209,14 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						xr = tr; xi = ti;
 						if ( Math.abs( ai ) <= Math.abs( ar ) ) {
 							ti = ai / ar;
-							tr = ar + ai * ti;
-							xv[ jx ] = ( xr + xi * ti ) / tr;
-							xv[ jx + 1 ] = ( xi - xr * ti ) / tr;
+							tr = ar + (ai * ti);
+							xv[ jx ] = ( xr + (xi * ti) ) / tr;
+							xv[ jx + 1 ] = ( xi - (xr * ti) ) / tr;
 						} else {
 							ti = ar / ai;
-							tr = ai + ar * ti;
-							xv[ jx ] = ( xr * ti + xi ) / tr;
-							xv[ jx + 1 ] = ( xi * ti - xr ) / tr;
+							tr = ai + (ar * ti);
+							xv[ jx ] = ( (xr * ti) + xi ) / tr;
+							xv[ jx + 1 ] = ( (xi * ti) - xr ) / tr;
 						}
 						tr = xv[ jx ];
 						ti = xv[ jx + 1 ];
@@ -236,18 +236,18 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					// Transpose (no conjugate)
 					ix = oX + ( N - 1 ) * sx;
 					for ( i = N - 1; i > j; i-- ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
 
 						// Temp -= A(i,j) * x(i)
-						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix -= sx;
 					}
 					if ( nounit ) {
 						// Temp = temp / A(j,j)
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						xv[ jx ] = tr;
 						xv[ jx + 1 ] = ti;
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
@@ -258,31 +258,31 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					// Conjugate transpose
 					ix = oX + ( N - 1 ) * sx;
 					for ( i = N - 1; i > j; i-- ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
 
 						// Temp -= conj(A(i,j)) * x(i)
-						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix -= sx;
 					}
 					if ( nounit ) {
 						// Temp = temp / conj(A(j,j))
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
 						xr = tr; xi = ti;
 						if ( Math.abs( ai ) <= Math.abs( ar ) ) {
 							ti = ai / ar;
-							tr = ar + ai * ti;
-							xv[ jx ] = ( xr + xi * ti ) / tr;
-							xv[ jx + 1 ] = ( xi - xr * ti ) / tr;
+							tr = ar + (ai * ti);
+							xv[ jx ] = ( xr + (xi * ti) ) / tr;
+							xv[ jx + 1 ] = ( xi - (xr * ti) ) / tr;
 						} else {
 							ti = ar / ai;
-							tr = ai + ar * ti;
-							xv[ jx ] = ( xr * ti + xi ) / tr;
-							xv[ jx + 1 ] = ( xi * ti - xr ) / tr;
+							tr = ai + (ar * ti);
+							xv[ jx ] = ( (xr * ti) + xi ) / tr;
+							xv[ jx + 1 ] = ( (xi * ti) - xr ) / tr;
 						}
 						tr = xv[ jx ];
 						ti = xv[ jx + 1 ];

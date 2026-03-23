@@ -141,7 +141,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	// Fortran: INDE=1 => E is at RWORK[0..N-1]
 	inde = offsetRWORK;
 	indtau = offsetWORK;
-	indwrk = offsetWORK + N * strideWORK;
+	indwrk = offsetWORK + (N * strideWORK);
 	llwork = lwork - N;
 
 	// Reduce to tridiagonal form: Q^H * A * Q = T
@@ -163,7 +163,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 
 		// Zsteqr needs real workspace of size 2*(N-1), use RWORK starting after E
 		// Fortran: INDWRK=INDE+N => real scratch at RWORK[N..]
-		info = zsteqr( 'update', N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + N * strideRWORK );
+		info = zsteqr( 'update', N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + (N * strideRWORK) );
 	}
 
 	// If matrix was scaled, rescale eigenvalues

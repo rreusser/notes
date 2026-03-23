@@ -121,7 +121,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran: DO 20 J = KK+1, N; DO 10 I = 1, KK; A(I,J)=ZERO
 			for ( j = kk; j < N; j++ ) {
 				for ( i = 0; i < kk; i++ ) {
-					ia = oA + i * sa1 + j * sa2;
+					ia = oA + (i * sa1) + (j * sa2);
 					Av[ ia ] = 0.0;
 					Av[ ia + 1 ] = 0.0;
 				}
@@ -135,8 +135,8 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	if ( kk < N ) {
 		zung2r(
 			M - kk, N - kk, K - kk,
-			A, strideA1, strideA2, offsetA + kk * strideA1 + kk * strideA2,
-			TAU, strideTAU, offsetTAU + kk * strideTAU,
+			A, strideA1, strideA2, offsetA + (kk * strideA1) + (kk * strideA2),
+			TAU, strideTAU, offsetTAU + (kk * strideTAU),
 			WORK, strideWORK, offsetWORK
 		);
 	}
@@ -153,8 +153,8 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// ZLARFT('Forward', 'Columnwise', M-I+1, IB, A(I,I), LDA, TAU(I), WORK, LDWORK)
 				zlarft(
 					'forward', 'columnwise', M - i, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					WORK, 1, ldwork, offsetWORK
 				);
 
@@ -168,9 +168,9 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				zlarfb(
 					'left', 'no-transpose', 'forward', 'columnwise',
 					M - i, N - i - ib, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					WORK, 1, ldwork, offsetWORK,
-					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + ib ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + ib ) * strideA2,
 					WORK, 1, ldwork, offsetWORK + ib
 				);
 			}
@@ -179,8 +179,8 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// ZUNG2R(M-I+1, IB, IB, A(I,I), LDA, TAU(I), WORK, IINFO)
 			zung2r(
 				M - i, ib, ib,
-				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				WORK, strideWORK, offsetWORK
 			);
 
@@ -189,7 +189,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran: DO 40 J = I, I+IB-1; DO 30 L = 1, I-1; A(L,J)=ZERO
 			for ( j = i; j < i + ib; j++ ) {
 				for ( l = 0; l < i; l++ ) {
-					ia = oA + l * sa1 + j * sa2;
+					ia = oA + (l * sa1) + (j * sa2);
 					Av[ ia ] = 0.0;
 					Av[ ia + 1 ] = 0.0;
 				}

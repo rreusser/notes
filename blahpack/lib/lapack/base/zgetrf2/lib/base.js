@@ -118,7 +118,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		IPIV[ offsetIPIV ] = ip;
 
 		// Check if A(ip, 0) is zero
-		ia = oA + ip * sa1 * 2;
+		ia = oA + (ip * sa1) * 2;
 		if ( Av[ ia ] !== 0.0 || Av[ ia + 1 ] !== 0.0 ) {
 			// Swap rows 0 and ip (swap complex elements = swap pairs of doubles)
 			if ( ip !== 0 ) {
@@ -135,7 +135,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 			pivR = Av[ oA ];
 			pivI = Av[ oA + 1 ];
 
-			if ( Math.sqrt( pivR * pivR + pivI * pivI ) >= sfmin ) {
+			if ( Math.sqrt( (pivR * pivR) + (pivI * pivI) ) >= sfmin ) {
 				// Use zscal with 1/A(0,0)
 				// Compute 1/pivot using cmplx.divAt for stability
 				var scratch = new Float64Array( 6 );
@@ -150,7 +150,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 			} else {
 				// Element-wise division for numerical safety with tiny pivot
 				for ( i = 1; i < M; i++ ) {
-					ib = oA + i * sa1 * 2;
+					ib = oA + (i * sa1) * 2;
 					cmplx.divAt( Av, ib, Av, ib, Av, oA );
 				}
 			}
@@ -179,28 +179,28 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Apply row interchanges to [A12; A22]
 		// Reads IPIV at positions 0..n1-1 (offsetIPIV)
-		zlaswp( n2, A, sa1, sa2, offsetA + n1 * sa2, 0, n1 - 1, IPIV, strideIPIV, offsetIPIV, 1 );
+		zlaswp( n2, A, sa1, sa2, offsetA + (n1 * sa2), 0, n1 - 1, IPIV, strideIPIV, offsetIPIV, 1 );
 
 		// Solve A11 * A12_new = A12 (triangular solve)
 
 		// A11 is lower triangular with unit diagonal, n1 x n1
 		ztrsm( 'left', 'lower', 'no-transpose', 'unit', n1, n2, CONE,
 			A, sa1, sa2, offsetA,
-			A, sa1, sa2, offsetA + n1 * sa2
+			A, sa1, sa2, offsetA + (n1 * sa2)
 		);
 
 		// Update A22 = A22 - A21 * A12_new
 		zgemm( 'no-transpose', 'no-transpose', M - n1, n2, n1, CNEGONE,
-			A, sa1, sa2, offsetA + n1 * sa1,
-			A, sa1, sa2, offsetA + n1 * sa2,
+			A, sa1, sa2, offsetA + (n1 * sa1),
+			A, sa1, sa2, offsetA + (n1 * sa2),
 			CONE,
-			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2
+			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2)
 		);
 
 		// Factor A22 (M-n1 x n2)
 		iinfo = zgetrf2( M - n1, n2,
-			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2,
-			IPIV, strideIPIV, offsetIPIV + n1 * strideIPIV
+			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2),
+			IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV)
 		);
 
 		if ( info === 0 && iinfo > 0 ) {
@@ -209,13 +209,13 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Adjust IPIV for the second half: add n1 to each pivot index
 		for ( i = n1; i < minMN; i++ ) {
-			IPIV[ offsetIPIV + i * strideIPIV ] += n1;
+			IPIV[ offsetIPIV + (i * strideIPIV) ] += n1;
 		}
 
 		// Apply the second set of row interchanges to A11 columns
 		// Reads IPIV at positions n1..minMN-1 (offset by n1 from start)
 		zlaswp( n1, A, sa1, sa2, offsetA, n1, minMN - 1,
-			IPIV, strideIPIV, offsetIPIV + n1 * strideIPIV, 1
+			IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV), 1
 		);
 	}
 

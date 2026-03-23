@@ -110,7 +110,7 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	if ( alphaR === 0.0 && alphaI === 0.0 ) {
 		for ( j = 0; j < N; j++ ) {
 			for ( i = 0; i < M; i++ ) {
-				ib = oB + i * sb1 + j * sb2;
+				ib = oB + (i * sb1) + (j * sb2);
 				Bv[ ib ] = 0.0;
 				Bv[ ib + 1 ] = 0.0;
 			}
@@ -123,26 +123,26 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			if ( upper ) {
 				for ( j = 0; j < N; j++ ) {
 					for ( k = 0; k < M; k++ ) {
-						kb = oB + k * sb1 + j * sb2;
+						kb = oB + (k * sb1) + (j * sb2);
 						br = Bv[ kb ];
 						bi = Bv[ kb + 1 ];
 						if ( br !== 0.0 || bi !== 0.0 ) {
-							tempR = alphaR * br - alphaI * bi;
-							tempI = alphaR * bi + alphaI * br;
+							tempR = (alphaR * br) - (alphaI * bi);
+							tempI = (alphaR * bi) + (alphaI * br);
 							for ( i = 0; i < k; i++ ) {
-								ib = oB + i * sb1 + j * sb2;
-								ia = oA + i * sa1 + k * sa2;
+								ib = oB + (i * sb1) + (j * sb2);
+								ia = oA + (i * sa1) + (k * sa2);
 								ar = Av[ ia ];
 								ai = Av[ ia + 1 ];
-								Bv[ ib ] += tempR * ar - tempI * ai;
-								Bv[ ib + 1 ] += tempR * ai + tempI * ar;
+								Bv[ ib ] += (tempR * ar) - (tempI * ai);
+								Bv[ ib + 1 ] += (tempR * ai) + (tempI * ar);
 							}
 							if ( nounit ) {
-								ia = oA + k * sa1 + k * sa2;
+								ia = oA + (k * sa1) + (k * sa2);
 								ar = Av[ ia ];
 								ai = Av[ ia + 1 ];
-								Bv[ kb ] = tempR * ar - tempI * ai;
-								Bv[ kb + 1 ] = tempR * ai + tempI * ar;
+								Bv[ kb ] = (tempR * ar) - (tempI * ai);
+								Bv[ kb + 1 ] = (tempR * ai) + (tempI * ar);
 							} else {
 								Bv[ kb ] = tempR;
 								Bv[ kb + 1 ] = tempI;
@@ -153,28 +153,28 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			} else {
 				for ( j = 0; j < N; j++ ) {
 					for ( k = M - 1; k >= 0; k-- ) {
-						kb = oB + k * sb1 + j * sb2;
+						kb = oB + (k * sb1) + (j * sb2);
 						br = Bv[ kb ];
 						bi = Bv[ kb + 1 ];
 						if ( br !== 0.0 || bi !== 0.0 ) {
-							tempR = alphaR * br - alphaI * bi;
-							tempI = alphaR * bi + alphaI * br;
+							tempR = (alphaR * br) - (alphaI * bi);
+							tempI = (alphaR * bi) + (alphaI * br);
 							Bv[ kb ] = tempR;
 							Bv[ kb + 1 ] = tempI;
 							if ( nounit ) {
-								ia = oA + k * sa1 + k * sa2;
+								ia = oA + (k * sa1) + (k * sa2);
 								ar = Av[ ia ];
 								ai = Av[ ia + 1 ];
-								Bv[ kb ] = tempR * ar - tempI * ai;
-								Bv[ kb + 1 ] = tempR * ai + tempI * ar;
+								Bv[ kb ] = (tempR * ar) - (tempI * ai);
+								Bv[ kb + 1 ] = (tempR * ai) + (tempI * ar);
 							}
 							for ( i = k + 1; i < M; i++ ) {
-								ib = oB + i * sb1 + j * sb2;
-								ia = oA + i * sa1 + k * sa2;
+								ib = oB + (i * sb1) + (j * sb2);
+								ia = oA + (i * sa1) + (k * sa2);
 								ar = Av[ ia ];
 								ai = Av[ ia + 1 ];
-								Bv[ ib ] += tempR * ar - tempI * ai;
-								Bv[ ib + 1 ] += tempR * ai + tempI * ar;
+								Bv[ ib ] += (tempR * ar) - (tempI * ai);
+								Bv[ ib + 1 ] += (tempR * ai) + (tempI * ar);
 							}
 						}
 					}
@@ -183,95 +183,95 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 		} else if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
 				for ( i = M - 1; i >= 0; i-- ) {
-					ib = oB + i * sb1 + j * sb2;
+					ib = oB + (i * sb1) + (j * sb2);
 					tempR = Bv[ ib ];
 					tempI = Bv[ ib + 1 ];
 					if ( noconj ) {
 						if ( nounit ) {
-							ia = oA + i * sa1 + i * sa2;
+							ia = oA + (i * sa1) + (i * sa2);
 							ar = Av[ ia ];
 							ai = Av[ ia + 1 ];
-							tr = tempR * ar - tempI * ai;
-							ti = tempR * ai + tempI * ar;
+							tr = (tempR * ar) - (tempI * ai);
+							ti = (tempR * ai) + (tempI * ar);
 							tempR = tr;
 							tempI = ti;
 						}
 						for ( k = 0; k < i; k++ ) {
-							ia = oA + k * sa1 + i * sa2;
-							kb = oB + k * sb1 + j * sb2;
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
 							ar = Av[ ia ];
 							ai = Av[ ia + 1 ];
-							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+							tempR += (ar * Bv[ kb ]) - (ai * Bv[ kb + 1 ]);
+							tempI += (ar * Bv[ kb + 1 ]) + (ai * Bv[ kb ]);
 						}
 					} else {
 						if ( nounit ) {
-							ia = oA + i * sa1 + i * sa2;
+							ia = oA + (i * sa1) + (i * sa2);
 							ar = Av[ ia ];
 							ai = -Av[ ia + 1 ];
-							tr = tempR * ar - tempI * ai;
-							ti = tempR * ai + tempI * ar;
+							tr = (tempR * ar) - (tempI * ai);
+							ti = (tempR * ai) + (tempI * ar);
 							tempR = tr;
 							tempI = ti;
 						}
 						for ( k = 0; k < i; k++ ) {
-							ia = oA + k * sa1 + i * sa2;
-							kb = oB + k * sb1 + j * sb2;
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
 							ar = Av[ ia ];
 							ai = -Av[ ia + 1 ];
-							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+							tempR += (ar * Bv[ kb ]) - (ai * Bv[ kb + 1 ]);
+							tempI += (ar * Bv[ kb + 1 ]) + (ai * Bv[ kb ]);
 						}
 					}
-					Bv[ ib ] = alphaR * tempR - alphaI * tempI;
-					Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
+					Bv[ ib ] = (alphaR * tempR) - (alphaI * tempI);
+					Bv[ ib + 1 ] = (alphaR * tempI) + (alphaI * tempR);
 				}
 			}
 		} else {
 			for ( j = 0; j < N; j++ ) {
 				for ( i = 0; i < M; i++ ) {
-					ib = oB + i * sb1 + j * sb2;
+					ib = oB + (i * sb1) + (j * sb2);
 					tempR = Bv[ ib ];
 					tempI = Bv[ ib + 1 ];
 					if ( noconj ) {
 						if ( nounit ) {
-							ia = oA + i * sa1 + i * sa2;
+							ia = oA + (i * sa1) + (i * sa2);
 							ar = Av[ ia ];
 							ai = Av[ ia + 1 ];
-							tr = tempR * ar - tempI * ai;
-							ti = tempR * ai + tempI * ar;
+							tr = (tempR * ar) - (tempI * ai);
+							ti = (tempR * ai) + (tempI * ar);
 							tempR = tr;
 							tempI = ti;
 						}
 						for ( k = i + 1; k < M; k++ ) {
-							ia = oA + k * sa1 + i * sa2;
-							kb = oB + k * sb1 + j * sb2;
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
 							ar = Av[ ia ];
 							ai = Av[ ia + 1 ];
-							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+							tempR += (ar * Bv[ kb ]) - (ai * Bv[ kb + 1 ]);
+							tempI += (ar * Bv[ kb + 1 ]) + (ai * Bv[ kb ]);
 						}
 					} else {
 						if ( nounit ) {
-							ia = oA + i * sa1 + i * sa2;
+							ia = oA + (i * sa1) + (i * sa2);
 							ar = Av[ ia ];
 							ai = -Av[ ia + 1 ];
-							tr = tempR * ar - tempI * ai;
-							ti = tempR * ai + tempI * ar;
+							tr = (tempR * ar) - (tempI * ai);
+							ti = (tempR * ai) + (tempI * ar);
 							tempR = tr;
 							tempI = ti;
 						}
 						for ( k = i + 1; k < M; k++ ) {
-							ia = oA + k * sa1 + i * sa2;
-							kb = oB + k * sb1 + j * sb2;
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
 							ar = Av[ ia ];
 							ai = -Av[ ia + 1 ];
-							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+							tempR += (ar * Bv[ kb ]) - (ai * Bv[ kb + 1 ]);
+							tempI += (ar * Bv[ kb + 1 ]) + (ai * Bv[ kb ]);
 						}
 					}
-					Bv[ ib ] = alphaR * tempR - alphaI * tempI;
-					Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
+					Bv[ ib ] = (alphaR * tempR) - (alphaI * tempI);
+					Bv[ ib + 1 ] = (alphaR * tempI) + (alphaI * tempR);
 				}
 			}
 		}
@@ -281,33 +281,33 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 				tempR = alphaR;
 				tempI = alphaI;
 				if ( nounit ) {
-					ia = oA + j * sa1 + j * sa2;
+					ia = oA + (j * sa1) + (j * sa2);
 					ar = Av[ ia ];
 					ai = Av[ ia + 1 ];
-					tr = tempR * ar - tempI * ai;
-					ti = tempR * ai + tempI * ar;
+					tr = (tempR * ar) - (tempI * ai);
+					ti = (tempR * ai) + (tempI * ar);
 					tempR = tr;
 					tempI = ti;
 				}
 				for ( i = 0; i < M; i++ ) {
-					ib = oB + i * sb1 + j * sb2;
+					ib = oB + (i * sb1) + (j * sb2);
 					br = Bv[ ib ];
 					bi = Bv[ ib + 1 ];
-					Bv[ ib ] = tempR * br - tempI * bi;
-					Bv[ ib + 1 ] = tempR * bi + tempI * br;
+					Bv[ ib ] = (tempR * br) - (tempI * bi);
+					Bv[ ib + 1 ] = (tempR * bi) + (tempI * br);
 				}
 				for ( k = 0; k < j; k++ ) {
-					ia = oA + k * sa1 + j * sa2;
+					ia = oA + (k * sa1) + (j * sa2);
 					ar = Av[ ia ];
 					ai = Av[ ia + 1 ];
 					if ( ar !== 0.0 || ai !== 0.0 ) {
-						tr = alphaR * ar - alphaI * ai;
-						ti = alphaR * ai + alphaI * ar;
+						tr = (alphaR * ar) - (alphaI * ai);
+						ti = (alphaR * ai) + (alphaI * ar);
 						for ( i = 0; i < M; i++ ) {
-							ib = oB + i * sb1 + j * sb2;
-							kb = oB + i * sb1 + k * sb2;
-							Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-							Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
+							ib = oB + (i * sb1) + (j * sb2);
+							kb = oB + (i * sb1) + (k * sb2);
+							Bv[ ib ] += (tr * Bv[ kb ]) - (ti * Bv[ kb + 1 ]);
+							Bv[ ib + 1 ] += (tr * Bv[ kb + 1 ]) + (ti * Bv[ kb ]);
 						}
 					}
 				}
@@ -317,33 +317,33 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 				tempR = alphaR;
 				tempI = alphaI;
 				if ( nounit ) {
-					ia = oA + j * sa1 + j * sa2;
+					ia = oA + (j * sa1) + (j * sa2);
 					ar = Av[ ia ];
 					ai = Av[ ia + 1 ];
-					tr = tempR * ar - tempI * ai;
-					ti = tempR * ai + tempI * ar;
+					tr = (tempR * ar) - (tempI * ai);
+					ti = (tempR * ai) + (tempI * ar);
 					tempR = tr;
 					tempI = ti;
 				}
 				for ( i = 0; i < M; i++ ) {
-					ib = oB + i * sb1 + j * sb2;
+					ib = oB + (i * sb1) + (j * sb2);
 					br = Bv[ ib ];
 					bi = Bv[ ib + 1 ];
-					Bv[ ib ] = tempR * br - tempI * bi;
-					Bv[ ib + 1 ] = tempR * bi + tempI * br;
+					Bv[ ib ] = (tempR * br) - (tempI * bi);
+					Bv[ ib + 1 ] = (tempR * bi) + (tempI * br);
 				}
 				for ( k = j + 1; k < N; k++ ) {
-					ia = oA + k * sa1 + j * sa2;
+					ia = oA + (k * sa1) + (j * sa2);
 					ar = Av[ ia ];
 					ai = Av[ ia + 1 ];
 					if ( ar !== 0.0 || ai !== 0.0 ) {
-						tr = alphaR * ar - alphaI * ai;
-						ti = alphaR * ai + alphaI * ar;
+						tr = (alphaR * ar) - (alphaI * ai);
+						ti = (alphaR * ai) + (alphaI * ar);
 						for ( i = 0; i < M; i++ ) {
-							ib = oB + i * sb1 + j * sb2;
-							kb = oB + i * sb1 + k * sb2;
-							Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-							Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
+							ib = oB + (i * sb1) + (j * sb2);
+							kb = oB + (i * sb1) + (k * sb2);
+							Bv[ ib ] += (tr * Bv[ kb ]) - (ti * Bv[ kb + 1 ]);
+							Bv[ ib + 1 ] += (tr * Bv[ kb + 1 ]) + (ti * Bv[ kb ]);
 						}
 					}
 				}
@@ -352,88 +352,88 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	} else if ( upper ) {
 		for ( k = 0; k < N; k++ ) {
 			for ( j = 0; j < k; j++ ) {
-				ia = oA + j * sa1 + k * sa2;
+				ia = oA + (j * sa1) + (k * sa2);
 				ar = Av[ ia ];
 				ai = Av[ ia + 1 ];
 				if ( ar !== 0.0 || ai !== 0.0 ) {
 					if ( !noconj ) {
 						ai = -ai;
 					}
-					tr = alphaR * ar - alphaI * ai;
-					ti = alphaR * ai + alphaI * ar;
+					tr = (alphaR * ar) - (alphaI * ai);
+					ti = (alphaR * ai) + (alphaI * ar);
 					for ( i = 0; i < M; i++ ) {
-						jb = oB + i * sb1 + j * sb2;
-						kb = oB + i * sb1 + k * sb2;
-						Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-						Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
+						jb = oB + (i * sb1) + (j * sb2);
+						kb = oB + (i * sb1) + (k * sb2);
+						Bv[ jb ] += (tr * Bv[ kb ]) - (ti * Bv[ kb + 1 ]);
+						Bv[ jb + 1 ] += (tr * Bv[ kb + 1 ]) + (ti * Bv[ kb ]);
 					}
 				}
 			}
 			tempR = alphaR;
 			tempI = alphaI;
 			if ( nounit ) {
-				ia = oA + k * sa1 + k * sa2;
+				ia = oA + (k * sa1) + (k * sa2);
 				ar = Av[ ia ];
 				ai = Av[ ia + 1 ];
 				if ( !noconj ) {
 					ai = -ai;
 				}
-				tr = tempR * ar - tempI * ai;
-				ti = tempR * ai + tempI * ar;
+				tr = (tempR * ar) - (tempI * ai);
+				ti = (tempR * ai) + (tempI * ar);
 				tempR = tr;
 				tempI = ti;
 			}
 			if ( tempR !== 1.0 || tempI !== 0.0 ) {
 				for ( i = 0; i < M; i++ ) {
-					kb = oB + i * sb1 + k * sb2;
+					kb = oB + (i * sb1) + (k * sb2);
 					br = Bv[ kb ];
 					bi = Bv[ kb + 1 ];
-					Bv[ kb ] = tempR * br - tempI * bi;
-					Bv[ kb + 1 ] = tempR * bi + tempI * br;
+					Bv[ kb ] = (tempR * br) - (tempI * bi);
+					Bv[ kb + 1 ] = (tempR * bi) + (tempI * br);
 				}
 			}
 		}
 	} else {
 		for ( k = N - 1; k >= 0; k-- ) {
 			for ( j = k + 1; j < N; j++ ) {
-				ia = oA + j * sa1 + k * sa2;
+				ia = oA + (j * sa1) + (k * sa2);
 				ar = Av[ ia ];
 				ai = Av[ ia + 1 ];
 				if ( ar !== 0.0 || ai !== 0.0 ) {
 					if ( !noconj ) {
 						ai = -ai;
 					}
-					tr = alphaR * ar - alphaI * ai;
-					ti = alphaR * ai + alphaI * ar;
+					tr = (alphaR * ar) - (alphaI * ai);
+					ti = (alphaR * ai) + (alphaI * ar);
 					for ( i = 0; i < M; i++ ) {
-						jb = oB + i * sb1 + j * sb2;
-						kb = oB + i * sb1 + k * sb2;
-						Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-						Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
+						jb = oB + (i * sb1) + (j * sb2);
+						kb = oB + (i * sb1) + (k * sb2);
+						Bv[ jb ] += (tr * Bv[ kb ]) - (ti * Bv[ kb + 1 ]);
+						Bv[ jb + 1 ] += (tr * Bv[ kb + 1 ]) + (ti * Bv[ kb ]);
 					}
 				}
 			}
 			tempR = alphaR;
 			tempI = alphaI;
 			if ( nounit ) {
-				ia = oA + k * sa1 + k * sa2;
+				ia = oA + (k * sa1) + (k * sa2);
 				ar = Av[ ia ];
 				ai = Av[ ia + 1 ];
 				if ( !noconj ) {
 					ai = -ai;
 				}
-				tr = tempR * ar - tempI * ai;
-				ti = tempR * ai + tempI * ar;
+				tr = (tempR * ar) - (tempI * ai);
+				ti = (tempR * ai) + (tempI * ar);
 				tempR = tr;
 				tempI = ti;
 			}
 			if ( tempR !== 1.0 || tempI !== 0.0 ) {
 				for ( i = 0; i < M; i++ ) {
-					kb = oB + i * sb1 + k * sb2;
+					kb = oB + (i * sb1) + (k * sb2);
 					br = Bv[ kb ];
 					bi = Bv[ kb + 1 ];
-					Bv[ kb ] = tempR * br - tempI * bi;
-					Bv[ kb + 1 ] = tempR * bi + tempI * br;
+					Bv[ kb ] = (tempR * br) - (tempI * bi);
+					Bv[ kb + 1 ] = (tempR * bi) + (tempI * br);
 				}
 			}
 		}

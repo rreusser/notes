@@ -78,8 +78,8 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		for ( j = 0; j < N; j++ ) {
 			// Compute U(j,j) and test for non-positive-definiteness.
 			// AJJ = DBLE(A(J,J)) - DBLE(ZDOTC(J-1, A(1,J), 1, A(1,J), 1))
-			da = oA + j * sa1 + j * sa2;
-			ajj = Av[ da ] - real( zdotc( j, A, strideA1, offsetA + j * strideA2, A, strideA1, offsetA + j * strideA2 ) );
+			da = oA + (j * sa1) + (j * sa2);
+			ajj = Av[ da ] - real( zdotc( j, A, strideA1, offsetA + (j * strideA2), A, strideA1, offsetA + (j * strideA2) ) );
 
 			if ( ajj <= 0.0 || ajj !== ajj ) {
 				Av[ da ] = ajj;
@@ -93,22 +93,22 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// Compute elements j+1:N-1 of row j.
 			if ( j < N - 1 ) {
 				// ZLACGV(J-1, A(1,J), 1)
-				zlacgv( j, A, strideA1, offsetA + j * strideA2 );
+				zlacgv( j, A, strideA1, offsetA + (j * strideA2) );
 
 				// ZGEMV('Transpose', J-1, N-J, -CONE, A(1,J+1), LDA, A(1,J), 1, CONE, A(J,J+1), LDA)
 				zgemv( 'transpose', j, N - j - 1, CMONE,
 					A, strideA1, strideA2, offsetA + ( j + 1 ) * strideA2,
-					A, strideA1, offsetA + j * strideA2,
+					A, strideA1, offsetA + (j * strideA2),
 					CONE,
-					A, strideA2, offsetA + j * strideA1 + ( j + 1 ) * strideA2
+					A, strideA2, offsetA + (j * strideA1) + ( j + 1 ) * strideA2
 				);
 
 				// ZLACGV(J-1, A(1,J), 1) -- undo conjugation
-				zlacgv( j, A, strideA1, offsetA + j * strideA2 );
+				zlacgv( j, A, strideA1, offsetA + (j * strideA2) );
 
 				// ZDSCAL(N-J, 1/AJJ, A(J,J+1), LDA)
 				zdscal( N - j - 1, 1.0 / ajj,
-					A, strideA2, offsetA + j * strideA1 + ( j + 1 ) * strideA2
+					A, strideA2, offsetA + (j * strideA1) + ( j + 1 ) * strideA2
 				);
 			}
 		}
@@ -117,8 +117,8 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		for ( j = 0; j < N; j++ ) {
 			// Compute L(j,j) and test for non-positive-definiteness.
 			// AJJ = DBLE(A(J,J)) - DBLE(ZDOTC(J-1, A(J,1), LDA, A(J,1), LDA))
-			da = oA + j * sa1 + j * sa2;
-			ajj = Av[ da ] - real( zdotc( j, A, strideA2, offsetA + j * strideA1, A, strideA2, offsetA + j * strideA1 ) );
+			da = oA + (j * sa1) + (j * sa2);
+			ajj = Av[ da ] - real( zdotc( j, A, strideA2, offsetA + (j * strideA1), A, strideA2, offsetA + (j * strideA1) ) );
 
 			if ( ajj <= 0.0 || ajj !== ajj ) {
 				Av[ da ] = ajj;
@@ -132,22 +132,22 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// Compute elements j+1:N-1 of column j.
 			if ( j < N - 1 ) {
 				// ZLACGV(J-1, A(J,1), LDA)
-				zlacgv( j, A, strideA2, offsetA + j * strideA1 );
+				zlacgv( j, A, strideA2, offsetA + (j * strideA1) );
 
 				// ZGEMV('No transpose', N-J, J-1, -CONE, A(J+1,1), LDA, A(J,1), LDA, CONE, A(J+1,J), 1)
 				zgemv( 'no-transpose', N - j - 1, j, CMONE,
 					A, strideA1, strideA2, offsetA + ( j + 1 ) * strideA1,
-					A, strideA2, offsetA + j * strideA1,
+					A, strideA2, offsetA + (j * strideA1),
 					CONE,
-					A, strideA1, offsetA + ( j + 1 ) * strideA1 + j * strideA2
+					A, strideA1, offsetA + ( j + 1 ) * strideA1 + (j * strideA2)
 				);
 
 				// ZLACGV(J-1, A(J,1), LDA) -- undo conjugation
-				zlacgv( j, A, strideA2, offsetA + j * strideA1 );
+				zlacgv( j, A, strideA2, offsetA + (j * strideA1) );
 
 				// ZDSCAL(N-J, 1/AJJ, A(J+1,J), 1)
 				zdscal( N - j - 1, 1.0 / ajj,
-					A, strideA1, offsetA + ( j + 1 ) * strideA1 + j * strideA2
+					A, strideA1, offsetA + ( j + 1 ) * strideA1 + (j * strideA2)
 				);
 			}
 		}

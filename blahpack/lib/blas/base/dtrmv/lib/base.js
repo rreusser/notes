@@ -70,14 +70,14 @@ function dtrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				if ( x[ jx ] !== 0.0 ) {
 					temp = x[ jx ];
 					ix = offsetX;
-					ia = offsetA + j * sa2;
+					ia = offsetA + (j * sa2);
 					for ( i = 0; i < j; i++ ) {
 						x[ ix ] += temp * A[ ia ];
 						ix += strideX;
 						ia += sa1;
 					}
 					if ( nounit ) {
-						x[ jx ] *= A[ offsetA + j * sa1 + j * sa2 ];
+						x[ jx ] *= A[ offsetA + (j * sa1) + (j * sa2) ];
 					}
 				}
 				jx += strideX;
@@ -89,14 +89,14 @@ function dtrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				if ( x[ jx ] !== 0.0 ) {
 					temp = x[ jx ];
 					ix = offsetX + ( N - 1 ) * strideX;
-					ia = offsetA + ( N - 1 ) * sa1 + j * sa2;
+					ia = offsetA + ( N - 1 ) * sa1 + (j * sa2);
 					for ( i = N - 1; i > j; i-- ) {
 						x[ ix ] += temp * A[ ia ];
 						ix -= strideX;
 						ia -= sa1;
 					}
 					if ( nounit ) {
-						x[ jx ] *= A[ offsetA + j * sa1 + j * sa2 ];
+						x[ jx ] *= A[ offsetA + (j * sa1) + (j * sa2) ];
 					}
 				}
 				jx -= strideX;
@@ -110,10 +110,10 @@ function dtrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			for ( j = N - 1; j >= 0; j-- ) {
 				temp = x[ jx ];
 				if ( nounit ) {
-					temp *= A[ offsetA + j * sa1 + j * sa2 ];
+					temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
 				}
 				ix = offsetX + ( j - 1 ) * strideX;
-				ia = offsetA + ( j - 1 ) * sa1 + j * sa2;
+				ia = offsetA + ( j - 1 ) * sa1 + (j * sa2);
 				for ( i = j - 1; i >= 0; i-- ) {
 					temp += A[ ia ] * x[ ix ];
 					ix -= strideX;
@@ -128,10 +128,10 @@ function dtrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			for ( j = 0; j < N; j++ ) {
 				temp = x[ jx ];
 				if ( nounit ) {
-					temp *= A[ offsetA + j * sa1 + j * sa2 ];
+					temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
 				}
 				ix = offsetX + ( j + 1 ) * strideX;
-				ia = offsetA + ( j + 1 ) * sa1 + j * sa2;
+				ia = offsetA + ( j + 1 ) * sa1 + (j * sa2);
 				for ( i = j + 1; i < N; i++ ) {
 					temp += A[ ia ] * x[ ix ];
 					ix += strideX;

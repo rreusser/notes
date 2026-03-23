@@ -84,13 +84,13 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		value = 0.0;
 		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
-				ai = oA + j * sa2;
+				ai = oA + (j * sa2);
 
 				// Off-diagonal elements: i = 0..j-1
 				for ( i = 0; i < j; i++ ) {
 					re = Av[ ai ];
 					im = Av[ ai + 1 ];
-					sum = Math.sqrt( re * re + im * im ); // |A(i,j)| for complex
+					sum = Math.sqrt( (re * re) + (im * im) ); // |A(i,j)| for complex
 					if ( value < sum || sum !== sum ) {
 						value = sum;
 					}
@@ -104,7 +104,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 			}
 		} else {
 			for ( j = 0; j < N; j++ ) {
-				ai = oA + j * sa2 + j * sa1;
+				ai = oA + (j * sa2) + (j * sa1);
 
 				// Diagonal element
 				sum = Math.abs( Av[ ai ] );
@@ -117,7 +117,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 				for ( i = j + 1; i < N; i++ ) {
 					re = Av[ ai ];
 					im = Av[ ai + 1 ];
-					sum = Math.sqrt( re * re + im * im ); // |A(i,j)|
+					sum = Math.sqrt( (re * re) + (im * im) ); // |A(i,j)|
 					if ( value < sum || sum !== sum ) {
 						value = sum;
 					}
@@ -132,22 +132,22 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
 				sum = 0.0;
-				ai = oA + j * sa2;
+				ai = oA + (j * sa2);
 
 				// Off-diagonal elements: i = 0..j-1
 				for ( i = 0; i < j; i++ ) {
 					re = Av[ ai ];
 					im = Av[ ai + 1 ];
-					absa = Math.sqrt( re * re + im * im );
+					absa = Math.sqrt( (re * re) + (im * im) );
 					sum += absa;
-					WORK[ offsetWORK + i * strideWORK ] += absa;
+					WORK[ offsetWORK + (i * strideWORK) ] += absa;
 					ai += sa1;
 				}
 				// Diagonal element
-				WORK[ offsetWORK + j * strideWORK ] = sum + Math.abs( Av[ ai ] );
+				WORK[ offsetWORK + (j * strideWORK) ] = sum + Math.abs( Av[ ai ] );
 			}
 			for ( i = 0; i < N; i++ ) {
-				wi = offsetWORK + i * strideWORK;
+				wi = offsetWORK + (i * strideWORK);
 				sum = WORK[ wi ];
 				if ( value < sum || sum !== sum ) {
 					value = sum;
@@ -156,22 +156,22 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		} else {
 			// Lower triangle
 			for ( i = 0; i < N; i++ ) {
-				WORK[ offsetWORK + i * strideWORK ] = 0.0;
+				WORK[ offsetWORK + (i * strideWORK) ] = 0.0;
 			}
 			for ( j = 0; j < N; j++ ) {
-				ai = oA + j * sa2 + j * sa1;
+				ai = oA + (j * sa2) + (j * sa1);
 
 				// Diagonal element
-				sum = WORK[ offsetWORK + j * strideWORK ] + Math.abs( Av[ ai ] );
+				sum = WORK[ offsetWORK + (j * strideWORK) ] + Math.abs( Av[ ai ] );
 				ai += sa1;
 
 				// Off-diagonal elements: i = j+1..N-1
 				for ( i = j + 1; i < N; i++ ) {
 					re = Av[ ai ];
 					im = Av[ ai + 1 ];
-					absa = Math.sqrt( re * re + im * im );
+					absa = Math.sqrt( (re * re) + (im * im) );
 					sum += absa;
-					WORK[ offsetWORK + i * strideWORK ] += absa;
+					WORK[ offsetWORK + (i * strideWORK) ] += absa;
 					ai += sa1;
 				}
 				if ( value < sum || sum !== sum ) {
@@ -187,14 +187,14 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		if ( uplo === 'upper' ) {
 			// Upper triangle off-diagonal: columns j=1..N-1, rows 0..j-1
 			for ( j = 1; j < N; j++ ) {
-				out = zlassq( j, A, strideA1, offsetA + j * strideA2, scale, sum );
+				out = zlassq( j, A, strideA1, offsetA + (j * strideA2), scale, sum );
 				scale = out.scl;
 				sum = out.sumsq;
 			}
 		} else {
 			// Lower triangle off-diagonal: columns j=0..N-2, rows j+1..N-1
 			for ( j = 0; j < N - 1; j++ ) {
-				out = zlassq( N - j - 1, A, strideA1, offsetA + j * strideA2 + ( j + 1 ) * strideA1, scale, sum );
+				out = zlassq( N - j - 1, A, strideA1, offsetA + (j * strideA2) + ( j + 1 ) * strideA1, scale, sum );
 				scale = out.scl;
 				sum = out.sumsq;
 			}
@@ -204,7 +204,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 
 		// Add diagonal elements (real-valued for Hermitian)
 		for ( i = 0; i < N; i++ ) {
-			ai = oA + i * sa1 + i * sa2; // A(i,i) in Float64 index
+			ai = oA + (i * sa1) + (i * sa2); // A(i,i) in Float64 index
 			re = Av[ ai ]; // Real part of diagonal (imaginary part is zero for Hermitian)
 			if ( re !== 0.0 ) {
 				absa = Math.abs( re );

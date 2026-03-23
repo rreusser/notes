@@ -66,7 +66,7 @@ function ddot( N, x, strideX, offsetX, y, strideY, offsetY ) {
 			return dtemp;
 		}
 		for ( i = m; i < N; i += M ) {
-			dtemp += x[ix]*y[iy] + x[ix+1]*y[iy+1] + x[ix+2]*y[iy+2] + x[ix+3]*y[iy+3] + x[ix+4]*y[iy+4];
+			dtemp += (x[ix] * y[iy]) + (x[ix+1] * y[iy+1]) + (x[ix+2] * y[iy+2]) + (x[ix+3] * y[iy+3]) + (x[ix+4] * y[iy+4]);
 			ix += M;
 			iy += M;
 		}

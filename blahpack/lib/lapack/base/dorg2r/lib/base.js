@@ -76,10 +76,10 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	for ( j = K; j < N; j++ ) {
 		// Zero out the entire column
 		for ( l = 0; l < M; l++ ) {
-			A[ offsetA + l * strideA1 + j * strideA2 ] = 0.0;
+			A[ offsetA + (l * strideA1) + (j * strideA2) ] = 0.0;
 		}
 		// Set diagonal element to 1
-		A[ offsetA + j * strideA1 + j * strideA2 ] = 1.0;
+		A[ offsetA + (j * strideA1) + (j * strideA2) ] = 1.0;
 	}
 
 	// Apply each reflector in reverse order: i = K, K-1, ..., 1
@@ -88,7 +88,7 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// If i < N-1 (Fortran: I < N), apply the reflector to A(i:M-1, i+1:N-1)
 		if ( i < N - 1 ) {
 			// Set A(i,i) = 1 before applying the reflector
-			A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0;
+			A[ offsetA + (i * strideA1) + (i * strideA2) ] = 1.0;
 
 			// DLARF('Left', M-I, N-I-1, A(I,I), 1, TAU(I), A(I,I+1), LDA, WORK)
 
@@ -97,9 +97,9 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// JS 0-based: M-i rows from row i, N-i-1 cols from col i+1
 			dlarf(
 				'left', M - i, N - i - 1,
-				A, strideA1, offsetA + i * strideA1 + i * strideA2,
-				TAU[ offsetTAU + i * strideTAU ],
-				A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
+				A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
+				TAU[ offsetTAU + (i * strideTAU) ],
+				A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
 				WORK, strideWORK, offsetWORK
 			);
 		}
@@ -109,19 +109,19 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// DSCAL(M-I, -TAU(I), A(I+1,I), 1)
 			// JS 0-based: M-i-1 elements starting at A(i+1, i)
 			dscal(
-				M - i - 1, -TAU[ offsetTAU + i * strideTAU ],
-				A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2
+				M - i - 1, -TAU[ offsetTAU + (i * strideTAU) ],
+				A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2)
 			);
 		}
 
 		// A(i,i) = 1 - TAU(i)
-		A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0 - TAU[ offsetTAU + i * strideTAU ];
+		A[ offsetA + (i * strideA1) + (i * strideA2) ] = 1.0 - TAU[ offsetTAU + (i * strideTAU) ];
 
 		// Zero out rows 0..i-1 of column i
 
 		// Fortran: DO 30 L = 1, I-1
 		for ( l = 0; l < i; l++ ) {
-			A[ offsetA + l * strideA1 + i * strideA2 ] = 0.0;
+			A[ offsetA + (l * strideA1) + (i * strideA2) ] = 0.0;
 		}
 	}
 	return 0;

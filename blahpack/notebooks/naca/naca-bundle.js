@@ -14059,31 +14059,59 @@ function exteriorFlow(boundaryPoints, polygonVertices, options = {}) {
   const M = boundaryPoints.length;
   const c = options.center || centroid(polygonVertices);
   const N = options.N || 10 + Math.ceil(Math.log(M));
-  const ncols = N + 1;
-  const ncolsLS = 2 * N;
-  const Asmooth = new Float64Array(M * ncolsLS);
-  const bsmooth = new Float64Array(M);
+  const kutta = options.kutta || false;
+  const zTE = options.trailingEdge || null;
+  const kuttaWeight = kutta ? Math.sqrt(M) : 0;
+  const ncolsLS = 2 * N + (kutta ? 1 : 0);
+  const nrowsLS = M + (kutta ? 1 : 0);
+  const Asmooth = new Float64Array(nrowsLS * ncolsLS);
+  const bsmooth = new Float64Array(nrowsLS);
   for (let j = 0; j < M; j++) {
     const dz = csub(boundaryPoints[j], c);
     const d = dz[0] * dz[0] + dz[1] * dz[1];
     const inv = [dz[0] / d, -dz[1] / d];
     let power = [inv[0], inv[1]];
     for (let n = 1; n <= N; n++) {
-      Asmooth[j + 2 * (n - 1) * M] = power[1];
-      Asmooth[j + (2 * (n - 1) + 1) * M] = power[0];
+      Asmooth[j + 2 * (n - 1) * nrowsLS] = power[1];
+      Asmooth[j + (2 * (n - 1) + 1) * nrowsLS] = power[0];
       power = cmul(power, inv);
     }
     bsmooth[j] = -boundaryPoints[j][1];
+    if (kutta) {
+      Asmooth[j + (ncolsLS - 1) * nrowsLS] = -Math.log(Math.sqrt(d)) / (2 * Math.PI);
+    }
   }
-  const xsmooth = lssolve(Asmooth, bsmooth, M, ncolsLS);
+  if (kutta && zTE) {
+    const row = M;
+    bsmooth[row] = 0;
+    const dz = csub(zTE, c);
+    const d = dz[0] * dz[0] + dz[1] * dz[1];
+    const inv = [dz[0] / d, -dz[1] / d];
+    let power = [inv[0], inv[1]];
+    for (let n = 1; n <= N; n++) {
+      const next = cmul(power, inv);
+      const dpR = -n * next[0], dpI = -n * next[1];
+      Asmooth[row + 2 * (n - 1) * nrowsLS] = kuttaWeight * dpI;
+      Asmooth[row + (2 * (n - 1) + 1) * nrowsLS] = kuttaWeight * dpR;
+      power = next;
+    }
+    const dx = zTE[0] - c[0], dy = zTE[1] - c[1];
+    const dd = dx * dx + dy * dy;
+    Asmooth[row + (ncolsLS - 1) * nrowsLS] = kuttaWeight * (-dx / (2 * Math.PI * dd));
+  }
+  const xsmooth = lssolve(Asmooth, bsmooth, nrowsLS, ncolsLS);
   const smoothCoeffs = [[0, 0]];
   for (let n = 1; n <= N; n++) {
     smoothCoeffs.push([xsmooth[2 * (n - 1)], xsmooth[2 * (n - 1) + 1]]);
   }
+  const Gamma = kutta ? xsmooth[ncolsLS - 1] : 0;
   const residual = new Array(M);
   for (let j = 0; j < M; j++) {
     const fSmooth = evalRunge(boundaryPoints[j], c, smoothCoeffs);
-    residual[j] = -boundaryPoints[j][1] - fSmooth[1];
+    const dz = csub(boundaryPoints[j], c);
+    const logR = 0.5 * Math.log(dz[0] * dz[0] + dz[1] * dz[1]);
+    const circIm = -Gamma / (2 * Math.PI) * logR;
+    residual[j] = -boundaryPoints[j][1] - fSmooth[1] - circIm;
   }
   const zComplex = boundaryPoints.map(([r, i]) => [r, i]);
   const fComplex = residual.map((r) => [r, 0]);
@@ -14141,25 +14169,37 @@ function exteriorFlow(boundaryPoints, polygonVertices, options = {}) {
   }
   const b0 = [0, xsing[2 * K]];
   const imCorr = [0, 0];
+  function evalCirc(z) {
+    if (Gamma === 0) return [0, 0];
+    const dz = csub(z, c);
+    const logR = 0.5 * Math.log(dz[0] * dz[0] + dz[1] * dz[1]);
+    const logTheta = Math.atan2(dz[1], dz[0]);
+    return [Gamma / (2 * Math.PI) * logTheta, -Gamma / (2 * Math.PI) * logR];
+  }
   let maxError = 0;
   for (let j = 0; j < M; j++) {
     const fS = evalRunge(boundaryPoints[j], c, smoothCoeffs);
     const fP = evalSingular(boundaryPoints[j], filteredPoles, singularCoeffs, b0);
-    const fIm = fS[1] + fP[1];
+    const fC = evalCirc(boundaryPoints[j]);
+    const fIm = fS[1] + fP[1] + fC[1];
     const err = Math.abs(-boundaryPoints[j][1] - fIm);
     if (err > maxError) maxError = err;
   }
   function evaluate(z) {
     const fS = evalRunge(z, c, smoothCoeffs);
     const fP = evalSingular(z, filteredPoles, singularCoeffs, b0);
-    const fR = fS[0] + fP[0];
-    const fI = fS[1] + fP[1];
+    const fC = evalCirc(z);
+    const fR = fS[0] + fP[0] + fC[0];
+    const fI = fS[1] + fP[1] + fC[1];
     const psi = z[1] + fI;
     const wR = z[0] + fR;
     return { psi, wR, fR, fI };
   }
+  const CL = -2 * Gamma;
   return {
     evaluate,
+    Gamma,
+    CL,
     poles: filteredPoles,
     allPoles,
     smoothCoeffs,

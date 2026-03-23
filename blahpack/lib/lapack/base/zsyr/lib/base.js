@@ -96,15 +96,15 @@ function zsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 			// Check if x[jx] is nonzero
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
 				// Temp = alpha * x[jx] (complex multiply, NO conjugation)
-				tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
-				tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+				tempR = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
+				tempI = (alphaR * xv[ jx + 1 ]) + (alphaI * xv[ jx ]);
 
 				ix = offsetX * 2;
-				ai = oA + j * sa2;
+				ai = oA + (j * sa2);
 				for ( i = 0; i <= j; i++ ) {
 					// A[i,j] += x[ix] * temp (complex multiply, NOT conjugated)
-					Av[ ai ] += xv[ ix ] * tempR - xv[ ix + 1 ] * tempI;
-					Av[ ai + 1 ] += xv[ ix ] * tempI + xv[ ix + 1 ] * tempR;
+					Av[ ai ] += (xv[ ix ] * tempR) - (xv[ ix + 1 ] * tempI);
+					Av[ ai + 1 ] += (xv[ ix ] * tempI) + (xv[ ix + 1 ] * tempR);
 					ix += sx;
 					ai += sa1;
 				}
@@ -117,15 +117,15 @@ function zsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 		for ( j = 0; j < N; j++ ) {
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
 				// Temp = alpha * x[jx] (complex multiply, NO conjugation)
-				tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
-				tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+				tempR = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
+				tempI = (alphaR * xv[ jx + 1 ]) + (alphaI * xv[ jx ]);
 
 				ix = jx;
-				ai = oA + j * sa1 + j * sa2;
+				ai = oA + (j * sa1) + (j * sa2);
 				for ( i = j; i < N; i++ ) {
 					// A[i,j] += x[ix] * temp (complex multiply, NOT conjugated)
-					Av[ ai ] += xv[ ix ] * tempR - xv[ ix + 1 ] * tempI;
-					Av[ ai + 1 ] += xv[ ix ] * tempI + xv[ ix + 1 ] * tempR;
+					Av[ ai ] += (xv[ ix ] * tempR) - (xv[ ix + 1 ] * tempI);
+					Av[ ai + 1 ] += (xv[ ix ] * tempI) + (xv[ ix + 1 ] * tempR);
 					ix += sx;
 					ai += sa1;
 				}

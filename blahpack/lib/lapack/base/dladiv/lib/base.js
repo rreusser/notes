@@ -59,7 +59,7 @@ function dladiv2( a, b, c, d, r, t ) {
 		if ( br !== 0.0 ) {
 			return ( a + br ) * t;
 		}
-		return a * t + ( b * t ) * r;
+		return (a * t) + ( b * t ) * r;
 	}
 	return ( a + d * ( b / c ) ) * t;
 }
@@ -78,7 +78,7 @@ function dladiv1( a, b, c, d, out ) {
 	var r;
 	var t;
 	r = d / c;
-	t = 1.0 / ( c + d * r );
+	t = 1.0 / ( c + (d * r) );
 	out[ 0 ] = dladiv2( a, b, c, d, r, t );
 	out[ 1 ] = dladiv2( b, -a, c, d, r, t );
 }

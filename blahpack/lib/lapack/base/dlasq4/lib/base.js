@@ -91,7 +91,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 		};
 	}
 
-	nn = 4 * n0 + pp;
+	nn = (4 * n0) + pp;
 
 	if ( n0in === n0 ) {
 		// No eigenvalues deflated.
@@ -139,7 +139,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 					b2 = Z( nn - 5 ) / Z( nn - 7 );
 					np = nn - 9;
 				} else {
-					np = nn - 2 * pp;
+					np = nn - (2 * pp);
 					gam = dn1;
 					if ( Z( np - 4 ) > Z( np - 2 ) ) {
 						return {
@@ -162,7 +162,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 
 				// Approximate contribution to norm squared from I < NN-1.
 				a2 += b2;
-				for ( i4 = np; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
+				for ( i4 = np; i4 >= (4 * i0) - 1 + pp; i4 -= 4 ) {
 					if ( b2 === 0.0 ) {
 						break;
 					}
@@ -193,7 +193,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			s = QURTR * dmin;
 
 			// Compute contribution to norm squared from I > NN-2.
-			np = nn - 2 * pp;
+			np = nn - (2 * pp);
 			b1 = Z( np - 2 );
 			b2 = Z( np - 6 );
 			gam = dn2;
@@ -210,7 +210,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			if ( n0 - i0 > 2 ) {
 				b2 = Z( nn - 13 ) / Z( nn - 15 );
 				a2 += b2;
-				for ( i4 = nn - 17; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
+				for ( i4 = nn - 17; i4 >= (4 * i0) - 1 + pp; i4 -= 4 ) {
 					if ( b2 === 0.0 ) {
 						break;
 					}
@@ -262,7 +262,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			b1 = Z( nn - 5 ) / Z( nn - 7 );
 			b2 = b1;
 			if ( b2 !== 0.0 ) {
-				for ( i4 = 4 * n0 - 9 + pp; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
+				for ( i4 = (4 * n0) - 9 + pp; i4 >= (4 * i0) - 1 + pp; i4 -= 4 ) {
 					a2 = b1;
 					if ( Z( i4 ) > Z( i4 - 2 ) ) {
 						return {
@@ -279,12 +279,12 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 				}
 			}
 			b2 = Math.sqrt( CNST3 * b2 );
-			a2 = dmin1 / ( 1.0 + b2 * b2 );
-			gap2 = HALF * dmin2 - a2;
+			a2 = dmin1 / ( 1.0 + (b2 * b2) );
+			gap2 = (HALF * dmin2) - a2;
 			if ( gap2 > 0.0 && gap2 > b2 * a2 ) {
-				s = Math.max( s, a2 * ( 1.0 - CNST2 * a2 * ( b2 / gap2 ) * b2 ) );
+				s = Math.max( s, a2 * ( 1.0 - (CNST2 * a2) * ( b2 / gap2 ) * b2 ) );
 			} else {
-				s = Math.max( s, a2 * ( 1.0 - CNST2 * b2 ) );
+				s = Math.max( s, a2 * ( 1.0 - (CNST2 * b2) ) );
 				ttype = -8;
 			}
 		} else {
@@ -311,7 +311,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			b1 = Z( nn - 5 ) / Z( nn - 7 );
 			b2 = b1;
 			if ( b2 !== 0.0 ) {
-				for ( i4 = 4 * n0 - 9 + pp; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
+				for ( i4 = (4 * n0) - 9 + pp; i4 >= (4 * i0) - 1 + pp; i4 -= 4 ) {
 					if ( Z( i4 ) > Z( i4 - 2 ) ) {
 						return {
 							'tau': tau0,
@@ -327,13 +327,13 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 				}
 			}
 			b2 = Math.sqrt( CNST3 * b2 );
-			a2 = dmin2 / ( 1.0 + b2 * b2 );
+			a2 = dmin2 / ( 1.0 + (b2 * b2) );
 			gap2 = Z( nn - 7 ) + Z( nn - 9 ) -
 				Math.sqrt( Z( nn - 11 ) ) * Math.sqrt( Z( nn - 9 ) ) - a2;
 			if ( gap2 > 0.0 && gap2 > b2 * a2 ) {
-				s = Math.max( s, a2 * ( 1.0 - CNST2 * a2 * ( b2 / gap2 ) * b2 ) );
+				s = Math.max( s, a2 * ( 1.0 - (CNST2 * a2) * ( b2 / gap2 ) * b2 ) );
 			} else {
-				s = Math.max( s, a2 * ( 1.0 - CNST2 * b2 ) );
+				s = Math.max( s, a2 * ( 1.0 - (CNST2 * b2) ) );
 			}
 		} else {
 			s = QURTR * dmin2;

@@ -118,7 +118,7 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	// Dlatrs uses CNORM stored at WORK[2N..3N-1] and WORK[3N..4N-1] for upper/lower
 	while ( true ) {
 		dlacn2( N,
-			WORK, sw, offsetWORK + N * sw, // v
+			WORK, sw, offsetWORK + (N * sw), // v
 			WORK, sw, offsetWORK, // x
 			IWORK, strideIWORK, offsetIWORK, // isgn
 			EST, KASE, ISAVE, 1, 0
@@ -132,26 +132,26 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 			// Multiply by inv(L), then inv(U)
 			dlatrs( 'lower', 'no-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 2 * N * sw
+				scale, WORK, sw, offsetWORK + (2 * N) * sw
 			);
 			sl = scale[ 0 ];
 
 			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 3 * N * sw
+				scale, WORK, sw, offsetWORK + (3 * N) * sw
 			);
 			su = scale[ 0 ];
 		} else {
 			// Multiply by inv(U^T), then inv(L^T)
 			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 3 * N * sw
+				scale, WORK, sw, offsetWORK + (3 * N) * sw
 			);
 			su = scale[ 0 ];
 
 			dlatrs( 'lower', 'transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 2 * N * sw
+				scale, WORK, sw, offsetWORK + (2 * N) * sw
 			);
 			sl = scale[ 0 ];
 		}
@@ -161,7 +161,7 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 		normin = 'Y';
 		if ( scale[ 0 ] !== 1.0 ) {
 			ix = idamax( N, WORK, sw, offsetWORK );
-			if ( scale[ 0 ] < Math.abs( WORK[ offsetWORK + ix * sw ] ) * SMLNUM || scale[ 0 ] === 0.0 ) {
+			if ( scale[ 0 ] < Math.abs( WORK[ offsetWORK + (ix * sw) ] ) * SMLNUM || scale[ 0 ] === 0.0 ) {
 				// Estimate would overflow; bail out
 				KASE[ 0 ] = 0;
 				break;

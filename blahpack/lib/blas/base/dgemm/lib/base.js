@@ -84,7 +84,7 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	if ( alpha === 0.0 ) {
 		if ( beta === 0.0 ) {
 			for ( j = 0; j < N; j++ ) {
-				ic = offsetC + j * sc2;
+				ic = offsetC + (j * sc2);
 				for ( i = 0; i < M; i++ ) {
 					C[ ic ] = 0.0;
 					ic += sc1;
@@ -92,7 +92,7 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 			}
 		} else {
 			for ( j = 0; j < N; j++ ) {
-				ic = offsetC + j * sc2;
+				ic = offsetC + (j * sc2);
 				for ( i = 0; i < M; i++ ) {
 					C[ ic ] *= beta;
 					ic += sc1;
@@ -108,22 +108,22 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 			// C := alpha*A*B + beta*C
 			for ( j = 0; j < N; j++ ) {
 				if ( beta === 0.0 ) {
-					ic = offsetC + j * sc2;
+					ic = offsetC + (j * sc2);
 					for ( i = 0; i < M; i++ ) {
 						C[ ic ] = 0.0;
 						ic += sc1;
 					}
 				} else if ( beta !== 1.0 ) {
-					ic = offsetC + j * sc2;
+					ic = offsetC + (j * sc2);
 					for ( i = 0; i < M; i++ ) {
 						C[ ic ] *= beta;
 						ic += sc1;
 					}
 				}
 				for ( l = 0; l < K; l++ ) {
-					temp = alpha * B[ offsetB + l * sb1 + j * sb2 ];
-					ia = offsetA + l * sa2;
-					ic = offsetC + j * sc2;
+					temp = alpha * B[ offsetB + (l * sb1) + (j * sb2) ];
+					ia = offsetA + (l * sa2);
+					ic = offsetC + (j * sc2);
 					for ( i = 0; i < M; i++ ) {
 						C[ ic ] += temp * A[ ia ];
 						ia += sa1;
@@ -136,18 +136,18 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 			for ( j = 0; j < N; j++ ) {
 				for ( i = 0; i < M; i++ ) {
 					temp = 0.0;
-					ia = offsetA + i * sa2;
-					ib = offsetB + j * sb2;
+					ia = offsetA + (i * sa2);
+					ib = offsetB + (j * sb2);
 					for ( l = 0; l < K; l++ ) {
 						temp += A[ ia ] * B[ ib ];
 						ia += sa1;
 						ib += sb1;
 					}
-					ic = offsetC + i * sc1 + j * sc2;
+					ic = offsetC + (i * sc1) + (j * sc2);
 					if ( beta === 0.0 ) {
 						C[ ic ] = alpha * temp;
 					} else {
-						C[ ic ] = alpha * temp + beta * C[ ic ];
+						C[ ic ] = (alpha * temp) + (beta * C[ ic ]);
 					}
 				}
 			}
@@ -156,22 +156,22 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 		// C := alpha*A*B^T + beta*C
 		for ( j = 0; j < N; j++ ) {
 			if ( beta === 0.0 ) {
-				ic = offsetC + j * sc2;
+				ic = offsetC + (j * sc2);
 				for ( i = 0; i < M; i++ ) {
 					C[ ic ] = 0.0;
 					ic += sc1;
 				}
 			} else if ( beta !== 1.0 ) {
-				ic = offsetC + j * sc2;
+				ic = offsetC + (j * sc2);
 				for ( i = 0; i < M; i++ ) {
 					C[ ic ] *= beta;
 					ic += sc1;
 				}
 			}
 			for ( l = 0; l < K; l++ ) {
-				temp = alpha * B[ offsetB + j * sb1 + l * sb2 ];
-				ia = offsetA + l * sa2;
-				ic = offsetC + j * sc2;
+				temp = alpha * B[ offsetB + (j * sb1) + (l * sb2) ];
+				ia = offsetA + (l * sa2);
+				ic = offsetC + (j * sc2);
 				for ( i = 0; i < M; i++ ) {
 					C[ ic ] += temp * A[ ia ];
 					ia += sa1;
@@ -184,18 +184,18 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 		for ( j = 0; j < N; j++ ) {
 			for ( i = 0; i < M; i++ ) {
 				temp = 0.0;
-				ia = offsetA + i * sa2;
-				ib = offsetB + j * sb1;
+				ia = offsetA + (i * sa2);
+				ib = offsetB + (j * sb1);
 				for ( l = 0; l < K; l++ ) {
 					temp += A[ ia ] * B[ ib ];
 					ia += sa1;
 					ib += sb2;
 				}
-				ic = offsetC + i * sc1 + j * sc2;
+				ic = offsetC + (i * sc1) + (j * sc2);
 				if ( beta === 0.0 ) {
 					C[ ic ] = alpha * temp;
 				} else {
-					C[ ic ] = alpha * temp + beta * C[ ic ];
+					C[ ic ] = (alpha * temp) + (beta * C[ ic ]);
 				}
 			}
 		}

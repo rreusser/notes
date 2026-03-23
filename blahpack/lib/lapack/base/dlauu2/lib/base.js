@@ -61,15 +61,15 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	if ( upper ) {
 		// Compute U * U^T
 		for ( i = 0; i < N; i++ ) {
-			aii = A[ offsetA + i * sa1 + i * sa2 ];
+			aii = A[ offsetA + (i * sa1) + (i * sa2) ];
 			if ( i < N - 1 ) {
 				// A(i,i) = dot product of row i from diagonal onward:
 				// ddot( N-i, A(i,i), LDA, A(i,i), LDA )
 				// In row i, columns i..N-1 are accessed with stride sa2
-				A[ offsetA + i * sa1 + i * sa2 ] = ddot(
+				A[ offsetA + (i * sa1) + (i * sa2) ] = ddot(
 					N - i,
-					A, sa2, offsetA + i * sa1 + i * sa2,
-					A, sa2, offsetA + i * sa1 + i * sa2
+					A, sa2, offsetA + (i * sa1) + (i * sa2),
+					A, sa2, offsetA + (i * sa1) + (i * sa2)
 				);
 
 				// Update rows 0..i-1 of column i:
@@ -79,28 +79,28 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 					'no-transpose', i, N - i - 1,
 					1.0,
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa2,       // A(:, i+1)
-					A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,  // A(i, i+1:) stride=sa2
+					A, sa2, offsetA + (i * sa1) + ( i + 1 ) * sa2,  // A(i, i+1:) stride=sa2
 					aii,
-					A, sa1, offsetA + i * sa2                      // A(:, i) stride=sa1
+					A, sa1, offsetA + (i * sa2)                      // A(:, i) stride=sa1
 				);
 			} else {
 				// Last column: just scale A(:,N-1) by aii
 				// dscal( N, aii, A(0,i), 1 )
-				dscal( N, aii, A, sa1, offsetA + i * sa2 );
+				dscal( N, aii, A, sa1, offsetA + (i * sa2) );
 			}
 		}
 	} else {
 		// Compute L^T * L
 		for ( i = 0; i < N; i++ ) {
-			aii = A[ offsetA + i * sa1 + i * sa2 ];
+			aii = A[ offsetA + (i * sa1) + (i * sa2) ];
 			if ( i < N - 1 ) {
 				// A(i,i) = dot product of column i from diagonal onward:
 				// ddot( N-i, A(i,i), 1, A(i,i), 1 )
 				// In column i, rows i..N-1 are accessed with stride sa1
-				A[ offsetA + i * sa1 + i * sa2 ] = ddot(
+				A[ offsetA + (i * sa1) + (i * sa2) ] = ddot(
 					N - i,
-					A, sa1, offsetA + i * sa1 + i * sa2,
-					A, sa1, offsetA + i * sa1 + i * sa2
+					A, sa1, offsetA + (i * sa1) + (i * sa2),
+					A, sa1, offsetA + (i * sa1) + (i * sa2)
 				);
 
 				// Update columns 0..i-1 of row i:
@@ -110,14 +110,14 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 					'transpose', N - i - 1, i,
 					1.0,
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa1,       // A(i+1, :)
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,  // A(i+1:, i) stride=sa1
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2),  // A(i+1:, i) stride=sa1
 					aii,
-					A, sa2, offsetA + i * sa1                      // A(i, :) stride=sa2
+					A, sa2, offsetA + (i * sa1)                      // A(i, :) stride=sa2
 				);
 			} else {
 				// Last row: just scale A(N-1,:) by aii
 				// dscal( N, aii, A(i,0), LDA )
-				dscal( N, aii, A, sa2, offsetA + i * sa1 );
+				dscal( N, aii, A, sa2, offsetA + (i * sa1) );
 			}
 		}
 	}

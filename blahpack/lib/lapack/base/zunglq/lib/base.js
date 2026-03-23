@@ -116,7 +116,7 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran: DO 20 J = 1, KK; DO 10 I = KK+1, M; A(I,J)=ZERO
 			for ( j = 0; j < kk; j++ ) {
 				for ( i = kk; i < M; i++ ) {
-					ia = oA + i * sa1 + j * sa2;
+					ia = oA + (i * sa1) + (j * sa2);
 					Av[ ia ] = 0.0;
 					Av[ ia + 1 ] = 0.0;
 				}
@@ -130,8 +130,8 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	if ( kk < M ) {
 		zungl2(
 			M - kk, N - kk, K - kk,
-			A, strideA1, strideA2, offsetA + kk * strideA1 + kk * strideA2,
-			TAU, strideTAU, offsetTAU + kk * strideTAU,
+			A, strideA1, strideA2, offsetA + (kk * strideA1) + (kk * strideA2),
+			TAU, strideTAU, offsetTAU + (kk * strideTAU),
 			WORK, strideWORK, offsetWORK
 		);
 	}
@@ -148,8 +148,8 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// ZLARFT('Forward', 'Rowwise', N-I+1, IB, A(I,I), LDA, TAU(I), WORK, LDWORK)
 				zlarft(
 					'forward', 'rowwise', N - i, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					WORK, 1, ldwork, offsetWORK
 				);
 
@@ -163,9 +163,9 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				zlarfb(
 					'right', 'conjugate-transpose', 'forward', 'rowwise',
 					M - i - ib, N - i, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					WORK, 1, ldwork, offsetWORK,
-					A, strideA1, strideA2, offsetA + ( i + ib ) * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + ( i + ib ) * strideA1 + (i * strideA2),
 					WORK, 1, ldwork, offsetWORK + ib
 				);
 			}
@@ -174,8 +174,8 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// ZUNGL2(IB, N-I+1, IB, A(I,I), LDA, TAU(I), WORK, IINFO)
 			zungl2(
 				ib, N - i, ib,
-				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				WORK, strideWORK, offsetWORK
 			);
 
@@ -184,7 +184,7 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran: DO 40 J = 1, I-1; DO 30 L = I, I+IB-1; A(L,J)=ZERO
 			for ( j = 0; j < i; j++ ) {
 				for ( l = i; l < i + ib; l++ ) {
-					ia = oA + l * sa1 + j * sa2;
+					ia = oA + (l * sa1) + (j * sa2);
 					Av[ ia ] = 0.0;
 					Av[ ia + 1 ] = 0.0;
 				}

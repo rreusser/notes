@@ -113,7 +113,7 @@ function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// Fortran: DO 20 J = 1, N-KK; DO 10 I = M-KK+1, M
 		for ( j = 0; j < N - kk; j++ ) {
 			for ( i = M - kk; i < M; i++ ) {
-				ia = oA + i * sa1 + j * sa2;
+				ia = oA + (i * sa1) + (j * sa2);
 				Av[ ia ] = 0.0;
 				Av[ ia + 1 ] = 0.0;
 			}
@@ -153,7 +153,7 @@ function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				zlarft(
 					'backward', 'columnwise', M - K + i + ib, ib,
 					A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					work, 1, ldwork, 0
 				);
 
@@ -178,7 +178,7 @@ function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			zung2l(
 				M - K + i + ib, ib, ib,
 				A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				work, 1, 0
 			);
 
@@ -187,7 +187,7 @@ function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran: DO 40 J = N-K+I, N-K+I+IB-1; DO 30 L = M-K+I+IB, M
 			for ( j = N - K + i; j < N - K + i + ib; j++ ) {
 				for ( l = M - K + i + ib; l < M; l++ ) {
-					ia = oA + l * sa1 + j * sa2;
+					ia = oA + (l * sa1) + (j * sa2);
 					Av[ ia ] = 0.0;
 					Av[ ia + 1 ] = 0.0;
 				}

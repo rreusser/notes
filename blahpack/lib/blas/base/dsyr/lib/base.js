@@ -65,7 +65,7 @@ function dsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 				temp = alpha * x[ jx ];
 				ix = offsetX;
 				for ( i = 0; i <= j; i++ ) {
-					A[ offsetA + i*sa1 + j*sa2 ] += x[ ix ] * temp;
+					A[ offsetA + (i * sa1) + (j * sa2) ] += x[ ix ] * temp;
 					ix += strideX;
 				}
 			}
@@ -79,7 +79,7 @@ function dsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 				temp = alpha * x[ jx ];
 				ix = jx;
 				for ( i = j; i < N; i++ ) {
-					A[ offsetA + i*sa1 + j*sa2 ] += x[ ix ] * temp;
+					A[ offsetA + (i * sa1) + (j * sa2) ] += x[ ix ] * temp;
 					ix += strideX;
 				}
 			}

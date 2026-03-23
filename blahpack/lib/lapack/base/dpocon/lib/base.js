@@ -98,7 +98,7 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	// Estimate norm(inv(A)) using reverse communication with dlacn2
 	while ( true ) {
 		dlacn2( N,
-			WORK, sw, offsetWORK + N * sw, // v
+			WORK, sw, offsetWORK + (N * sw), // v
 			WORK, sw, offsetWORK, // x
 			IWORK, strideIWORK, offsetIWORK, // isgn
 			EST, KASE, ISAVE, 1, 0
@@ -112,28 +112,28 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 			// A = U^T * U: solve U^T * y = x, then U * x = y
 			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 2 * N * sw
+				scale, WORK, sw, offsetWORK + (2 * N) * sw
 			);
 			scalel = scale[ 0 ];
 			normin = 'Y';
 
 			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 2 * N * sw
+				scale, WORK, sw, offsetWORK + (2 * N) * sw
 			);
 			scaleu = scale[ 0 ];
 		} else {
 			// A = L * L^T: solve L * y = x, then L^T * x = y
 			dlatrs( 'lower', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 2 * N * sw
+				scale, WORK, sw, offsetWORK + (2 * N) * sw
 			);
 			scalel = scale[ 0 ];
 			normin = 'Y';
 
 			dlatrs( 'lower', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + 2 * N * sw
+				scale, WORK, sw, offsetWORK + (2 * N) * sw
 			);
 			scaleu = scale[ 0 ];
 		}
@@ -142,7 +142,7 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 		scale[ 0 ] = scalel * scaleu;
 		if ( scale[ 0 ] !== 1.0 ) {
 			ix = idamax( N, WORK, sw, offsetWORK );
-			if ( scale[ 0 ] < Math.abs( WORK[ offsetWORK + ix * sw ] ) * SMLNUM || scale[ 0 ] === 0.0 ) {
+			if ( scale[ 0 ] < Math.abs( WORK[ offsetWORK + (ix * sw) ] ) * SMLNUM || scale[ 0 ] === 0.0 ) {
 				// Estimate would overflow; bail out
 				KASE[ 0 ] = 0;
 				break;

@@ -105,18 +105,18 @@ function zpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		// Solve U11^H * A12 = A12 (update off-diagonal block)
 		ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', n1, n2, CONE,
 			A, sa1, sa2, offsetA,
-			A, sa1, sa2, offsetA + n1 * sa2
+			A, sa1, sa2, offsetA + (n1 * sa2)
 		);
 
 		// Update A22: A22 -= A12^H * A12
 		zherk( uplo, 'conjugate-transpose', n2, n1, -1.0,
-			A, sa1, sa2, offsetA + n1 * sa2,
+			A, sa1, sa2, offsetA + (n1 * sa2),
 			1.0,
-			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2
+			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2)
 		);
 
 		// Factor A22
-		iinfo = zpotrf2( uplo, n2, A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2 );
+		iinfo = zpotrf2( uplo, n2, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2) );
 		if ( iinfo !== 0 ) {
 			return iinfo + n1;
 		}
@@ -125,18 +125,18 @@ function zpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		// Solve A21 * L11^H = A21 (update off-diagonal block)
 		ztrsm( 'right', 'lower', 'conjugate-transpose', 'non-unit', n2, n1, CONE,
 			A, sa1, sa2, offsetA,
-			A, sa1, sa2, offsetA + n1 * sa1
+			A, sa1, sa2, offsetA + (n1 * sa1)
 		);
 
 		// Update A22: A22 -= A21 * A21^H
 		zherk( uplo, 'no-transpose', n2, n1, -1.0,
-			A, sa1, sa2, offsetA + n1 * sa1,
+			A, sa1, sa2, offsetA + (n1 * sa1),
 			1.0,
-			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2
+			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2)
 		);
 
 		// Factor A22
-		iinfo = zpotrf2( uplo, n2, A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2 );
+		iinfo = zpotrf2( uplo, n2, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2) );
 		if ( iinfo !== 0 ) {
 			return iinfo + n1;
 		}

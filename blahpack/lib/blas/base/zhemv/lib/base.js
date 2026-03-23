@@ -118,8 +118,8 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			}
 		} else {
 			for ( i = 0; i < N; i++ ) {
-				temp1R = betaR * yv[ iy ] - betaI * yv[ iy + 1 ];
-				temp1I = betaR * yv[ iy + 1 ] + betaI * yv[ iy ];
+				temp1R = (betaR * yv[ iy ]) - (betaI * yv[ iy + 1 ]);
+				temp1I = (betaR * yv[ iy + 1 ]) + (betaI * yv[ iy ]);
 				yv[ iy ] = temp1R;
 				yv[ iy + 1 ] = temp1I;
 				iy += sy;
@@ -137,24 +137,24 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 		jy = oY;
 		for ( j = 0; j < N; j++ ) {
 			// temp1 = alpha * x[jx]
-			temp1R = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
-			temp1I = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+			temp1R = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
+			temp1I = (alphaR * xv[ jx + 1 ]) + (alphaI * xv[ jx ]);
 			temp2R = 0.0;
 			temp2I = 0.0;
 			ix = oX;
 			iy = oY;
-			ai = oA + j * sa2; // column j starts here
+			ai = oA + (j * sa2); // column j starts here
 			for ( i = 0; i < j; i++ ) {
 				aijR = Av[ ai ];
 				aijI = Av[ ai + 1 ];
 
 				// y[iy] += temp1 * A[i,j]
-				yv[ iy ] += temp1R * aijR - temp1I * aijI;
-				yv[ iy + 1 ] += temp1R * aijI + temp1I * aijR;
+				yv[ iy ] += (temp1R * aijR) - (temp1I * aijI);
+				yv[ iy + 1 ] += (temp1R * aijI) + (temp1I * aijR);
 
 				// temp2 += conj(A[i,j]) * x[ix]
-				temp2R += aijR * xv[ ix ] + aijI * xv[ ix + 1 ];
-				temp2I += aijR * xv[ ix + 1 ] - aijI * xv[ ix ];
+				temp2R += (aijR * xv[ ix ]) + (aijI * xv[ ix + 1 ]);
+				temp2I += (aijR * xv[ ix + 1 ]) - (aijI * xv[ ix ]);
 				ix += sx;
 				iy += sy;
 				ai += sa1;
@@ -163,8 +163,8 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			ajjR = Av[ ai ]; // real part of A(j,j); imag is 0 for Hermitian
 
 			// y[jy] += temp1 * real(A[j,j]) + alpha * temp2
-			yv[ jy ] += temp1R * ajjR + ( alphaR * temp2R - alphaI * temp2I );
-			yv[ jy + 1 ] += temp1I * ajjR + ( alphaR * temp2I + alphaI * temp2R );
+			yv[ jy ] += (temp1R * ajjR) + ( (alphaR * temp2R) - (alphaI * temp2I) );
+			yv[ jy + 1 ] += (temp1I * ajjR) + ( (alphaR * temp2I) + (alphaI * temp2R) );
 			jx += sx;
 			jy += sy;
 		}
@@ -174,13 +174,13 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 		jy = oY;
 		for ( j = 0; j < N; j++ ) {
 			// temp1 = alpha * x[jx]
-			temp1R = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
-			temp1I = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+			temp1R = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
+			temp1I = (alphaR * xv[ jx + 1 ]) + (alphaI * xv[ jx ]);
 			temp2R = 0.0;
 			temp2I = 0.0;
 
 			// Diagonal element: A(j,j) is real for Hermitian matrix
-			ai = oA + j * sa1 + j * sa2;
+			ai = oA + (j * sa1) + (j * sa2);
 			ajjR = Av[ ai ];
 			yv[ jy ] += temp1R * ajjR;
 			yv[ jy + 1 ] += temp1I * ajjR;
@@ -192,19 +192,19 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 				aijI = Av[ ai + 1 ];
 
 				// y[iy] += temp1 * A[i,j]
-				yv[ iy ] += temp1R * aijR - temp1I * aijI;
-				yv[ iy + 1 ] += temp1R * aijI + temp1I * aijR;
+				yv[ iy ] += (temp1R * aijR) - (temp1I * aijI);
+				yv[ iy + 1 ] += (temp1R * aijI) + (temp1I * aijR);
 
 				// temp2 += conj(A[i,j]) * x[ix]
-				temp2R += aijR * xv[ ix ] + aijI * xv[ ix + 1 ];
-				temp2I += aijR * xv[ ix + 1 ] - aijI * xv[ ix ];
+				temp2R += (aijR * xv[ ix ]) + (aijI * xv[ ix + 1 ]);
+				temp2I += (aijR * xv[ ix + 1 ]) - (aijI * xv[ ix ]);
 				ix += sx;
 				iy += sy;
 				ai += sa1;
 			}
 			// y[jy] += alpha * temp2
-			yv[ jy ] += alphaR * temp2R - alphaI * temp2I;
-			yv[ jy + 1 ] += alphaR * temp2I + alphaI * temp2R;
+			yv[ jy ] += (alphaR * temp2R) - (alphaI * temp2I);
+			yv[ jy + 1 ] += (alphaR * temp2I) + (alphaI * temp2R);
 			jx += sx;
 			jy += sy;
 		}

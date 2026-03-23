@@ -101,7 +101,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// Fortran: DO 20 J = 1, N-KK; DO 10 I = M-KK+1, M
 		for ( j = 0; j < N - kk; j++ ) {
 			for ( i = M - kk; i < M; i++ ) {
-				A[ offsetA + i * strideA1 + j * strideA2 ] = 0.0;
+				A[ offsetA + (i * strideA1) + (j * strideA2) ] = 0.0;
 			}
 		}
 	} else {
@@ -141,7 +141,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				dlarft(
 					'backward', 'columnwise', M - K + i + ib, ib,
 					A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					work, 1, ldwork, 0
 				);
 
@@ -174,7 +174,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			dorg2l(
 				M - K + i + ib, ib, ib,
 				A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				work, 1, 0
 			);
 
@@ -185,7 +185,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// 0-based: j = N-K+i..N-K+i+ib-1, l = M-K+i+ib..M-1
 			for ( j = N - K + i; j < N - K + i + ib; j++ ) {
 				for ( l = M - K + i + ib; l < M; l++ ) {
-					A[ offsetA + l * strideA1 + j * strideA2 ] = 0.0;
+					A[ offsetA + (l * strideA1) + (j * strideA2) ] = 0.0;
 				}
 			}
 		}

@@ -74,7 +74,7 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		// Compute U * U^H
 		for ( i = 0; i < N; i++ ) {
 			// aii = real part of A(i,i)
-			ia = 2 * ( offsetA + i * sa1 + i * sa2 );
+			ia = 2 * ( offsetA + (i * sa1) + (i * sa2) );
 			aii = Av[ ia ];
 
 			if ( i < N - 1 ) {
@@ -82,15 +82,15 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// Zdotc returns Complex128, we need real part
 				dot = zdotc(
 					N - i - 1,
-					A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,
-					A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2
+					A, sa2, offsetA + (i * sa1) + ( i + 1 ) * sa2,
+					A, sa2, offsetA + (i * sa1) + ( i + 1 ) * sa2
 				);
 				dotR = real( dot );
-				Av[ ia ] = aii * aii + dotR;
+				Av[ ia ] = (aii * aii) + dotR;
 				Av[ ia + 1 ] = 0.0;
 
 				// Conjugate A(i, i+1:N-1) before ZGEMV
-				zlacgv( N - i - 1, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
+				zlacgv( N - i - 1, A, sa2, offsetA + (i * sa1) + ( i + 1 ) * sa2 );
 
 				// ZGEMV('N', i, N-i-1, ONE, A(0,i+1), LDA, A(i,i+1), LDA, CMPLX(aii), A(0,i), 1)
 				alpha = new Complex128( aii, 0.0 );
@@ -98,38 +98,38 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 					'no-transpose', i, N - i - 1,
 					new Complex128( 1.0, 0.0 ),
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa2,        // A(:, i+1)
-					A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,   // A(i, i+1:) stride=sa2
+					A, sa2, offsetA + (i * sa1) + ( i + 1 ) * sa2,   // A(i, i+1:) stride=sa2
 					alpha,
-					A, sa1, offsetA + i * sa2                       // A(:, i) stride=sa1
+					A, sa1, offsetA + (i * sa2)                       // A(:, i) stride=sa1
 				);
 
 				// Unconjugate A(i, i+1:N-1)
-				zlacgv( N - i - 1, A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2 );
+				zlacgv( N - i - 1, A, sa2, offsetA + (i * sa1) + ( i + 1 ) * sa2 );
 			} else {
 				// Last column: just scale A(:,N-1) by aii
-				zdscal( N, aii, A, sa1, offsetA + i * sa2 );
+				zdscal( N, aii, A, sa1, offsetA + (i * sa2) );
 			}
 		}
 	} else {
 		// Compute L^H * L
 		for ( i = 0; i < N; i++ ) {
 			// aii = real part of A(i,i)
-			ia = 2 * ( offsetA + i * sa1 + i * sa2 );
+			ia = 2 * ( offsetA + (i * sa1) + (i * sa2) );
 			aii = Av[ ia ];
 
 			if ( i < N - 1 ) {
 				// A(i,i) = aii*aii + DBLE( ZDOTC( N-i-1, A(i+1,i), 1, A(i+1,i), 1 ) )
 				dot = zdotc(
 					N - i - 1,
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2),
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2)
 				);
 				dotR = real( dot );
-				Av[ ia ] = aii * aii + dotR;
+				Av[ ia ] = (aii * aii) + dotR;
 				Av[ ia + 1 ] = 0.0;
 
 				// Conjugate A(i, 0:i-1) before ZGEMV
-				zlacgv( i, A, sa2, offsetA + i * sa1 );
+				zlacgv( i, A, sa2, offsetA + (i * sa1) );
 
 				// ZGEMV('C', N-i-1, i, ONE, A(i+1,0), LDA, A(i+1,i), 1, CMPLX(aii), A(i,0), LDA)
 				alpha = new Complex128( aii, 0.0 );
@@ -137,16 +137,16 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 					'conjugate-transpose', N - i - 1, i,
 					new Complex128( 1.0, 0.0 ),
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa1,        // A(i+1, :)
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,   // A(i+1:, i) stride=sa1
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2),   // A(i+1:, i) stride=sa1
 					alpha,
-					A, sa2, offsetA + i * sa1                       // A(i, :) stride=sa2
+					A, sa2, offsetA + (i * sa1)                       // A(i, :) stride=sa2
 				);
 
 				// Unconjugate A(i, 0:i-1)
-				zlacgv( i, A, sa2, offsetA + i * sa1 );
+				zlacgv( i, A, sa2, offsetA + (i * sa1) );
 			} else {
 				// Last row: just scale A(N-1,:) by aii
-				zdscal( N, aii, A, sa2, offsetA + i * sa1 );
+				zdscal( N, aii, A, sa2, offsetA + (i * sa1) );
 			}
 		}
 	}

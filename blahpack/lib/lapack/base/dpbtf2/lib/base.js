@@ -90,13 +90,13 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 		for ( j = 0; j < N; j++ ) {
 			// Diagonal: AB(KD+1, J+1) in Fortran 1-based
 			// 0-based: AB[offset + kd*sa1 + j*sa2]
-			ajj = AB[ offsetAB + kd * sa1 + j * sa2 ];
+			ajj = AB[ offsetAB + (kd * sa1) + (j * sa2) ];
 			if ( ajj <= 0.0 ) {
-				AB[ offsetAB + kd * sa1 + j * sa2 ] = ajj;
+				AB[ offsetAB + (kd * sa1) + (j * sa2) ] = ajj;
 				return j + 1;
 			}
 			ajj = Math.sqrt( ajj );
-			AB[ offsetAB + kd * sa1 + j * sa2 ] = ajj;
+			AB[ offsetAB + (kd * sa1) + (j * sa2) ] = ajj;
 
 			kn = Math.min( kd, N - j - 1 );
 			if ( kn > 0 ) {
@@ -120,7 +120,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				//   strideA2 = kld (step between columns = LDAB-1)
 				dsyr( 'upper', kn, -1.0,
 					AB, kld, offsetAB + ( kd - 1 ) * sa1 + ( j + 1 ) * sa2,
-					AB, sa1, kld, offsetAB + kd * sa1 + ( j + 1 ) * sa2
+					AB, sa1, kld, offsetAB + (kd * sa1) + ( j + 1 ) * sa2
 				);
 			}
 		}
@@ -129,13 +129,13 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 		for ( j = 0; j < N; j++ ) {
 			// Diagonal: AB(1, J+1) in Fortran 1-based
 			// 0-based: AB[offset + j*sa2]
-			ajj = AB[ offsetAB + j * sa2 ];
+			ajj = AB[ offsetAB + (j * sa2) ];
 			if ( ajj <= 0.0 ) {
-				AB[ offsetAB + j * sa2 ] = ajj;
+				AB[ offsetAB + (j * sa2) ] = ajj;
 				return j + 1;
 			}
 			ajj = Math.sqrt( ajj );
-			AB[ offsetAB + j * sa2 ] = ajj;
+			AB[ offsetAB + (j * sa2) ] = ajj;
 
 			kn = Math.min( kd, N - j - 1 );
 			if ( kn > 0 ) {
@@ -143,14 +143,14 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				// AB(2, J+1) in 0-based: sa1 + j*sa2
 				// Stride = sa1 (= 1 for col-major, stepping down rows)
 				dscal( kn, 1.0 / ajj,
-					AB, sa1, offsetAB + sa1 + j * sa2
+					AB, sa1, offsetAB + sa1 + (j * sa2)
 				);
 
 				// DSYR('Lower', KN, -1, AB(2, J+1), 1, AB(1, J+2), KLD)
 
 				// Dsyr matrix: strideA1 = sa1, strideA2 = kld
 				dsyr( 'lower', kn, -1.0,
-					AB, sa1, offsetAB + sa1 + j * sa2,
+					AB, sa1, offsetAB + sa1 + (j * sa2),
 					AB, sa1, kld, offsetAB + ( j + 1 ) * sa2
 				);
 			}

@@ -56,11 +56,11 @@ function dgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 	for ( i = 0; i < K; i++ ) {
 		// Generate elementary reflector H(i) to annihilate A(i+1:M-1, i)
-		aii = offsetA + i * strideA1 + i * strideA2;
+		aii = offsetA + (i * strideA1) + (i * strideA2);
 
 		dlarfg( M - i, A, aii,
-			A, strideA1, offsetA + Math.min( i + 1, M - 1 ) * strideA1 + i * strideA2,
-			TAU, offsetTAU + i * strideTAU );
+			A, strideA1, offsetA + Math.min( i + 1, M - 1 ) * strideA1 + (i * strideA2),
+			TAU, offsetTAU + (i * strideTAU) );
 
 		if ( i < N - 1 ) {
 			// Save A(i,i) and set to 1 for the reflector application
@@ -68,8 +68,8 @@ function dgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			A[ aii ] = 1.0;
 
 			// Apply H(i) to A(i:M-1, i+1:N-1) from the left
-			dlarf( 'left', M - i, N - i - 1, A, strideA1, aii, TAU[ offsetTAU + i * strideTAU ],
-				A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
+			dlarf( 'left', M - i, N - i - 1, A, strideA1, aii, TAU[ offsetTAU + (i * strideTAU) ],
+				A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
 				WORK, strideWORK, offsetWORK );
 
 			// Restore A(i,i)

@@ -125,7 +125,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 		if ( upper ) {
 			if ( beta === 0.0 ) {
 				for ( j = 0; j < N; j++ ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						Cv[ ic ] = 0.0;
 						Cv[ ic + 1 ] = 0.0;
@@ -134,7 +134,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 				}
 			} else {
 				for ( j = 0; j < N; j++ ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i < j; i++ ) {
 						// C[i,j] = beta * C[i,j] (off-diagonal: scale both parts)
 						Cv[ ic ] *= beta;
@@ -148,7 +148,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 			}
 		} else if ( beta === 0.0 ) {
 			for ( j = 0; j < N; j++ ) {
-				ic = oC + j * sc1 + j * sc2;
+				ic = oC + (j * sc1) + (j * sc2);
 				for ( i = j; i < N; i++ ) {
 					Cv[ ic ] = 0.0;
 					Cv[ ic + 1 ] = 0.0;
@@ -158,7 +158,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 		} else {
 			for ( j = 0; j < N; j++ ) {
 				// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
-				ic = oC + j * sc1 + j * sc2;
+				ic = oC + (j * sc1) + (j * sc2);
 				Cv[ ic ] *= beta;
 				Cv[ ic + 1 ] = 0.0;
 				ic += sc1;
@@ -178,14 +178,14 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 		if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
 				if ( beta === 0.0 ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						Cv[ ic ] = 0.0;
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
 				} else if ( beta !== 1.0 ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i < j; i++ ) {
 						Cv[ ic ] *= beta;
 						Cv[ ic + 1 ] *= beta;
@@ -196,31 +196,31 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					Cv[ ic + 1 ] = 0.0;
 				} else {
 					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
-					ia = oA + j * sa1 + l * sa2;
-					ib = oB + j * sb1 + l * sb2;
+					ia = oA + (j * sa1) + (l * sa2);
+					ib = oB + (j * sb1) + (l * sb2);
 					ajR = Av[ ia ];
 					ajI = Av[ ia + 1 ];
 					bjR = Bv[ ib ];
 					bjI = Bv[ ib + 1 ];
 					if ( ajR !== 0.0 || ajI !== 0.0 || bjR !== 0.0 || bjI !== 0.0 ) {
 						// temp1 = alpha * conj(B[j,l])
-						temp1R = alphaR * bjR + alphaI * bjI; // alpha * conj(b): (aR+aI*i)*(bR-bI*i)
-						temp1I = alphaI * bjR - alphaR * bjI;
+						temp1R = (alphaR * bjR) + (alphaI * bjI); // alpha * conj(b): (aR+ (aI * i))*(bR- (bI * i))
+						temp1I = (alphaI * bjR) - (alphaR * bjI);
 
 						// temp2 = conj(alpha * A[j,l]) = conj(alpha) * conj(A[j,l])
 
 						// alpha*A[j,l] = (aR+aI*i)*(ajR+ajI*i) = (aR*ajR - aI*ajI) + (aR*ajI + aI*ajR)*i
 
 						// Conj of that = (aR*ajR - aI*ajI) - (aR*ajI + aI*ajR)*i
-						temp2R = alphaR * ajR - alphaI * ajI;
-						temp2I = -( alphaR * ajI + alphaI * ajR );
-						ic = oC + j * sc2;
-						ia = oA + l * sa2;
-						ib = oB + l * sb2;
+						temp2R = (alphaR * ajR) - (alphaI * ajI);
+						temp2I = -( (alphaR * ajI) + (alphaI * ajR) );
+						ic = oC + (j * sc2);
+						ia = oA + (l * sa2);
+						ib = oB + (l * sb2);
 						for ( i = 0; i < j; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];
@@ -228,8 +228,8 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 							biI = Bv[ ib + 1 ];
 
 							// C[i,j] += A[i,l]*temp1 + B[i,l]*temp2
-							Cv[ ic ] += aiR * temp1R - aiI * temp1I + biR * temp2R - biI * temp2I;
-							Cv[ ic + 1 ] += aiR * temp1I + aiI * temp1R + biR * temp2I + biI * temp2R;
+							Cv[ ic ] += (aiR * temp1R) - (aiI * temp1I) + (biR * temp2R) - (biI * temp2I);
+							Cv[ ic + 1 ] += (aiR * temp1I) + (aiI * temp1R) + (biR * temp2I) + (biI * temp2R);
 							ic += sc1;
 							ia += sa1;
 							ib += sb1;
@@ -239,7 +239,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						aiI = Av[ ia + 1 ];
 						biR = Bv[ ib ];
 						biI = Bv[ ib + 1 ];
-						Cv[ ic ] += aiR * temp1R - aiI * temp1I + biR * temp2R - biI * temp2I;
+						Cv[ ic ] += (aiR * temp1R) - (aiI * temp1I) + (biR * temp2R) - (biI * temp2I);
 
 						// Imaginary part stays zero (Hermitian diagonal is real)
 					}
@@ -249,14 +249,14 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 			// Lower
 			for ( j = 0; j < N; j++ ) {
 				if ( beta === 0.0 ) {
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 					for ( i = j; i < N; i++ ) {
 						Cv[ ic ] = 0.0;
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
 				} else if ( beta !== 1.0 ) {
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 
 					// Diagonal: scale real part only
 					Cv[ ic ] *= beta;
@@ -269,33 +269,33 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					}
 				} else {
 					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
-					ia = oA + j * sa1 + l * sa2;
-					ib = oB + j * sb1 + l * sb2;
+					ia = oA + (j * sa1) + (l * sa2);
+					ib = oB + (j * sb1) + (l * sb2);
 					ajR = Av[ ia ];
 					ajI = Av[ ia + 1 ];
 					bjR = Bv[ ib ];
 					bjI = Bv[ ib + 1 ];
 					if ( ajR !== 0.0 || ajI !== 0.0 || bjR !== 0.0 || bjI !== 0.0 ) {
 						// temp1 = alpha * conj(B[j,l])
-						temp1R = alphaR * bjR + alphaI * bjI;
-						temp1I = alphaI * bjR - alphaR * bjI;
+						temp1R = (alphaR * bjR) + (alphaI * bjI);
+						temp1I = (alphaI * bjR) - (alphaR * bjI);
 
 						// temp2 = conj(alpha * A[j,l])
-						temp2R = alphaR * ajR - alphaI * ajI;
-						temp2I = -( alphaR * ajI + alphaI * ajR );
+						temp2R = (alphaR * ajR) - (alphaI * ajI);
+						temp2I = -( (alphaR * ajI) + (alphaI * ajR) );
 
 						// Diagonal: C[j,j] += Re(A[j,l]*temp1 + B[j,l]*temp2)
-						ic = oC + j * sc1 + j * sc2;
-						Cv[ ic ] += ajR * temp1R - ajI * temp1I + bjR * temp2R - bjI * temp2I;
+						ic = oC + (j * sc1) + (j * sc2);
+						Cv[ ic ] += (ajR * temp1R) - (ajI * temp1I) + (bjR * temp2R) - (bjI * temp2I);
 
 						// Imaginary stays zero
 						ic += sc1;
-						ia = oA + ( j + 1 ) * sa1 + l * sa2;
-						ib = oB + ( j + 1 ) * sb1 + l * sb2;
+						ia = oA + ( j + 1 ) * sa1 + (l * sa2);
+						ib = oB + ( j + 1 ) * sb1 + (l * sb2);
 						for ( i = j + 1; i < N; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];
@@ -303,8 +303,8 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 							biI = Bv[ ib + 1 ];
 
 							// C[i,j] += A[i,l]*temp1 + B[i,l]*temp2
-							Cv[ ic ] += aiR * temp1R - aiI * temp1I + biR * temp2R - biI * temp2I;
-							Cv[ ic + 1 ] += aiR * temp1I + aiI * temp1R + biR * temp2I + biI * temp2R;
+							Cv[ ic ] += (aiR * temp1R) - (aiI * temp1I) + (biR * temp2R) - (biI * temp2I);
+							Cv[ ic + 1 ] += (aiR * temp1I) + (aiI * temp1R) + (biR * temp2I) + (biI * temp2R);
 							ic += sc1;
 							ia += sa1;
 							ib += sb1;
@@ -326,43 +326,43 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					temp2I = 0.0;
 					for ( l = 0; l < K; l++ ) {
 						// conj(A[l,i]) * B[l,j]
-						aiR = Av[ oA + l * sa1 + i * sa2 ];
-						aiI = -Av[ oA + l * sa1 + i * sa2 + 1 ]; // conjugate
-						bjR = Bv[ oB + l * sb1 + j * sb2 ];
-						bjI = Bv[ oB + l * sb1 + j * sb2 + 1 ];
-						temp1R += aiR * bjR - aiI * bjI;
-						temp1I += aiR * bjI + aiI * bjR;
+						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
+						bjR = Bv[ oB + (l * sb1) + (j * sb2) ];
+						bjI = Bv[ oB + (l * sb1) + (j * sb2) + 1 ];
+						temp1R += (aiR * bjR) - (aiI * bjI);
+						temp1I += (aiR * bjI) + (aiI * bjR);
 
 						// conj(B[l,i]) * A[l,j]
-						biR = Bv[ oB + l * sb1 + i * sb2 ];
-						biI = -Bv[ oB + l * sb1 + i * sb2 + 1 ]; // conjugate
-						ajR = Av[ oA + l * sa1 + j * sa2 ];
-						ajI = Av[ oA + l * sa1 + j * sa2 + 1 ];
-						temp2R += biR * ajR - biI * ajI;
-						temp2I += biR * ajI + biI * ajR;
+						biR = Bv[ oB + (l * sb1) + (i * sb2) ];
+						biI = -Bv[ oB + (l * sb1) + (i * sb2) + 1 ]; // conjugate
+						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+						temp2R += (biR * ajR) - (biI * ajI);
+						temp2I += (biR * ajI) + (biI * ajR);
 					}
-					ic = oC + i * sc1 + j * sc2;
+					ic = oC + (i * sc1) + (j * sc2);
 					if ( i === j ) {
 						// Diagonal: result must be real
 						// Re(alpha*temp1 + conj(alpha)*temp2)
-						cR = alphaR * temp1R - alphaI * temp1I + alphaR * temp2R + alphaI * temp2I;
+						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
 						if ( beta === 0.0 ) {
 							Cv[ ic ] = cR;
 						} else {
-							Cv[ ic ] = beta * Cv[ ic ] + cR;
+							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
 						}
 						Cv[ ic + 1 ] = 0.0;
 					} else {
 						// Off-diagonal: alpha*temp1 + conj(alpha)*temp2
 						// alpha*temp1 = (aR*t1R - aI*t1I) + (aR*t1I + aI*t1R)*i
 						// conj(alpha)*temp2 = (aR*t2R + aI*t2I) + (aR*t2I - aI*t2R)*i  [conj(alpha) = aR - aI*i]
-						cR = alphaR * temp1R - alphaI * temp1I + alphaR * temp2R + alphaI * temp2I;
+						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
 						if ( beta === 0.0 ) {
 							Cv[ ic ] = cR;
-							Cv[ ic + 1 ] = alphaR * temp1I + alphaI * temp1R + alphaR * temp2I - alphaI * temp2R;
+							Cv[ ic + 1 ] = (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
 						} else {
-							Cv[ ic ] = beta * Cv[ ic ] + cR;
-							Cv[ ic + 1 ] = beta * Cv[ ic + 1 ] + alphaR * temp1I + alphaI * temp1R + alphaR * temp2I - alphaI * temp2R;
+							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
+							Cv[ ic + 1 ] = (beta * Cv[ ic + 1 ]) + (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
 						}
 					}
 				}
@@ -379,40 +379,40 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					temp2I = 0.0;
 					for ( l = 0; l < K; l++ ) {
 						// conj(A[l,i]) * B[l,j]
-						aiR = Av[ oA + l * sa1 + i * sa2 ];
-						aiI = -Av[ oA + l * sa1 + i * sa2 + 1 ]; // conjugate
-						bjR = Bv[ oB + l * sb1 + j * sb2 ];
-						bjI = Bv[ oB + l * sb1 + j * sb2 + 1 ];
-						temp1R += aiR * bjR - aiI * bjI;
-						temp1I += aiR * bjI + aiI * bjR;
+						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
+						bjR = Bv[ oB + (l * sb1) + (j * sb2) ];
+						bjI = Bv[ oB + (l * sb1) + (j * sb2) + 1 ];
+						temp1R += (aiR * bjR) - (aiI * bjI);
+						temp1I += (aiR * bjI) + (aiI * bjR);
 
 						// conj(B[l,i]) * A[l,j]
-						biR = Bv[ oB + l * sb1 + i * sb2 ];
-						biI = -Bv[ oB + l * sb1 + i * sb2 + 1 ]; // conjugate
-						ajR = Av[ oA + l * sa1 + j * sa2 ];
-						ajI = Av[ oA + l * sa1 + j * sa2 + 1 ];
-						temp2R += biR * ajR - biI * ajI;
-						temp2I += biR * ajI + biI * ajR;
+						biR = Bv[ oB + (l * sb1) + (i * sb2) ];
+						biI = -Bv[ oB + (l * sb1) + (i * sb2) + 1 ]; // conjugate
+						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+						temp2R += (biR * ajR) - (biI * ajI);
+						temp2I += (biR * ajI) + (biI * ajR);
 					}
-					ic = oC + i * sc1 + j * sc2;
+					ic = oC + (i * sc1) + (j * sc2);
 					if ( i === j ) {
 						// Diagonal: result must be real
-						cR = alphaR * temp1R - alphaI * temp1I + alphaR * temp2R + alphaI * temp2I;
+						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
 						if ( beta === 0.0 ) {
 							Cv[ ic ] = cR;
 						} else {
-							Cv[ ic ] = beta * Cv[ ic ] + cR;
+							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
 						}
 						Cv[ ic + 1 ] = 0.0;
 					} else {
 						// Off-diagonal: alpha*temp1 + conj(alpha)*temp2
-						cR = alphaR * temp1R - alphaI * temp1I + alphaR * temp2R + alphaI * temp2I;
+						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
 						if ( beta === 0.0 ) {
 							Cv[ ic ] = cR;
-							Cv[ ic + 1 ] = alphaR * temp1I + alphaI * temp1R + alphaR * temp2I - alphaI * temp2R;
+							Cv[ ic + 1 ] = (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
 						} else {
-							Cv[ ic ] = beta * Cv[ ic ] + cR;
-							Cv[ ic + 1 ] = beta * Cv[ ic + 1 ] + alphaR * temp1I + alphaI * temp1R + alphaR * temp2I - alphaI * temp2R;
+							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
+							Cv[ ic + 1 ] = (beta * Cv[ ic + 1 ]) + (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
 						}
 					}
 				}

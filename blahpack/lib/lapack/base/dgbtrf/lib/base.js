@@ -120,21 +120,21 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	// Initialize WORK13 upper triangle to zero
 	for ( j = 0; j < NB; j++ ) {
 		for ( i = 0; i < j; i++ ) {
-			WORK13[ i + j * LDWORK ] = 0.0;
+			WORK13[ i + (j * LDWORK) ] = 0.0;
 		}
 	}
 
 	// Initialize WORK31 lower triangle to zero
 	for ( j = 0; j < NB; j++ ) {
 		for ( i = j + 1; i < NB; i++ ) {
-			WORK31[ i + j * LDWORK ] = 0.0;
+			WORK31[ i + (j * LDWORK) ] = 0.0;
 		}
 	}
 
 	// Zero out the fill-in region
 	for ( j = ku + 1; j < Math.min( kv, N ); j++ ) {
 		for ( i = kv - j; i < kl; i++ ) {
-			AB[ offsetAB + i * sa1 + j * sa2 ] = 0.0;
+			AB[ offsetAB + (i * sa1) + (j * sa2) ] = 0.0;
 		}
 	}
 
@@ -162,44 +162,44 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			// Zero fill-in column
 			if ( jj + kv < N ) {
 				for ( i = 0; i < kl; i++ ) {
-					AB[ offsetAB + i * sa1 + ( jj + kv ) * sa2 ] = 0.0;
+					AB[ offsetAB + (i * sa1) + ( jj + kv ) * sa2 ] = 0.0;
 				}
 			}
 
 			// Find pivot in column jj
 			km = Math.min( kl, M - jj - 1 );
-			jp = idamax( km + 1, AB, sa1, offsetAB + kv * sa1 + jj * sa2 );
-			IPIV[ offsetIPIV + jj * strideIPIV ] = jp + jj - j;
+			jp = idamax( km + 1, AB, sa1, offsetAB + (kv * sa1) + (jj * sa2) );
+			IPIV[ offsetIPIV + (jj * strideIPIV) ] = jp + jj - j;
 
-			if ( AB[ offsetAB + ( kv + jp ) * sa1 + jj * sa2 ] !== 0.0 ) {
+			if ( AB[ offsetAB + ( kv + jp ) * sa1 + (jj * sa2) ] !== 0.0 ) {
 				ju = Math.max( ju, Math.min( jj + ku + jp, N - 1 ) );
 
 				// Swap rows
 				if ( jp !== 0 ) {
 					if ( jp + jj < j + kl ) {
 						// Both rows are within the band
-						dswap( jb, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
-							AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + j * sa2 );
+						dswap( jb, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
+							AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + (j * sa2) );
 					} else {
 						// jp row extends into WORK31
-						dswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
+						dswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
 							WORK31, LDWORK, ( jp + jj - j - kl ) * 1 );
-						dswap( j + jb - jj, AB, sa2 - sa1, offsetAB + kv * sa1 + jj * sa2,
-							AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + jj * sa2 );
+						dswap( j + jb - jj, AB, sa2 - sa1, offsetAB + (kv * sa1) + (jj * sa2),
+							AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + (jj * sa2) );
 					}
 				}
 
 				// Scale multipliers
-				dscal( km, 1.0 / AB[ offsetAB + kv * sa1 + jj * sa2 ],
-					AB, sa1, offsetAB + ( kv + 1 ) * sa1 + jj * sa2 );
+				dscal( km, 1.0 / AB[ offsetAB + (kv * sa1) + (jj * sa2) ],
+					AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (jj * sa2) );
 
 				// Rank-1 update within the panel
 				jm = Math.min( ju, j + jb - 1 );
 				if ( jm > jj ) {
 					dger( km, jm - jj, -1.0,
-						AB, sa1, offsetAB + ( kv + 1 ) * sa1 + jj * sa2,
+						AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (jj * sa2),
 						AB, sa2 - sa1, offsetAB + ( kv - 1 ) * sa1 + ( jj + 1 ) * sa2,
-						AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + ( jj + 1 ) * sa2 );
+						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + ( jj + 1 ) * sa2 );
 				}
 			} else if ( info === 0 ) {
 				info = jj + 1; // 1-based
@@ -208,7 +208,7 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			// Copy column of L that wraps below the band into WORK31
 			nw = Math.min( jj - j + 1, i3 );
 			if ( nw > 0 ) {
-				dcopy( nw, AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + jj * sa2,
+				dcopy( nw, AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + (jj * sa2),
 					WORK31, 1, ( jj - j ) * LDWORK );
 			}
 		}
@@ -227,11 +227,11 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 			// Dlaswp uses 0-based indices; IPIV values are relative to panel
 			dlaswp( j2, AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2,
-				0, jb - 1, IPIV, strideIPIV, offsetIPIV + j * strideIPIV, 1 );
+				0, jb - 1, IPIV, strideIPIV, offsetIPIV + (j * strideIPIV), 1 );
 
 			// Adjust IPIV to global indices (add j)
 			for ( i = j; i < j + jb; i++ ) {
-				IPIV[ offsetIPIV + i * strideIPIV ] += j;
+				IPIV[ offsetIPIV + (i * strideIPIV) ] += j;
 			}
 
 			// Apply row interchanges to columns beyond the band (j3 columns)
@@ -239,11 +239,11 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			for ( i = 0; i < j3; i++ ) {
 				jj = k2 + i;
 				for ( ii = j + i; ii < j + jb; ii++ ) {
-					ip = IPIV[ offsetIPIV + ii * strideIPIV ];
+					ip = IPIV[ offsetIPIV + (ii * strideIPIV) ];
 					if ( ip !== ii ) {
-						temp = AB[ offsetAB + ( kv + ii - jj ) * sa1 + jj * sa2 ];
-						AB[ offsetAB + ( kv + ii - jj ) * sa1 + jj * sa2 ] = AB[ offsetAB + ( kv + ip - jj ) * sa1 + jj * sa2 ];
-						AB[ offsetAB + ( kv + ip - jj ) * sa1 + jj * sa2 ] = temp;
+						temp = AB[ offsetAB + ( kv + ii - jj ) * sa1 + (jj * sa2) ];
+						AB[ offsetAB + ( kv + ii - jj ) * sa1 + (jj * sa2) ] = AB[ offsetAB + ( kv + ip - jj ) * sa1 + (jj * sa2) ];
+						AB[ offsetAB + ( kv + ip - jj ) * sa1 + (jj * sa2) ] = temp;
 					}
 				}
 			}
@@ -252,16 +252,16 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			if ( j2 > 0 ) {
 				// dtrsm: solve L11 * U12 = AB(..., j+jb)
 				dtrsm( 'left', 'lower', 'no-transpose', 'unit', jb, j2, 1.0,
-					AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + j * sa2,
+					AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2),
 					AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2 );
 
 				if ( i2 > 0 ) {
 					// DGEMM: update A22 within band
 					dgemm( 'no-transpose', 'no-transpose', i2, j2, jb, -1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + j * sa2,
+						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + (j * sa2),
 						AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2,
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + ( j + jb ) * sa2 );
+						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + ( j + jb ) * sa2 );
 				}
 
 				if ( i3 > 0 ) {
@@ -278,18 +278,18 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				// Copy portion from AB into WORK13 for beyond-band columns
 				for ( jj = 0; jj < j3; jj++ ) {
 					for ( ii = jj; ii < jb; ii++ ) {
-						WORK13[ ii + jj * LDWORK ] = AB[ offsetAB + ( ii - jj ) * sa1 + ( jj + j + kv ) * sa2 ];
+						WORK13[ ii + (jj * LDWORK) ] = AB[ offsetAB + ( ii - jj ) * sa1 + ( jj + j + kv ) * sa2 ];
 					}
 				}
 
 				// Solve L * W13 = WORK13
 				dtrsm( 'left', 'lower', 'no-transpose', 'unit', jb, j3, 1.0,
-					AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + j * sa2,
+					AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2),
 					WORK13, 1, LDWORK, 0 );
 
 				if ( i2 > 0 ) {
 					dgemm( 'no-transpose', 'no-transpose', i2, j3, jb, -1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + j * sa2,
+						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + (j * sa2),
 						WORK13, 1, LDWORK, 0,
 						1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( jb ) * sa1 + ( j + kv ) * sa2 );
@@ -306,28 +306,28 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				// Copy WORK13 back to AB
 				for ( jj = 0; jj < j3; jj++ ) {
 					for ( ii = jj; ii < jb; ii++ ) {
-						AB[ offsetAB + ( ii - jj ) * sa1 + ( jj + j + kv ) * sa2 ] = WORK13[ ii + jj * LDWORK ];
+						AB[ offsetAB + ( ii - jj ) * sa1 + ( jj + j + kv ) * sa2 ] = WORK13[ ii + (jj * LDWORK) ];
 					}
 				}
 			}
 		} else {
 			// Last panel: just adjust IPIV
 			for ( i = j; i < j + jb; i++ ) {
-				IPIV[ offsetIPIV + i * strideIPIV ] += j;
+				IPIV[ offsetIPIV + (i * strideIPIV) ] += j;
 			}
 		}
 
 		// Undo the panel-local swaps and copy WORK31 back into AB
 		for ( jj = j + jb - 1; jj >= j; jj-- ) {
-			jp = IPIV[ offsetIPIV + jj * strideIPIV ] - jj;
+			jp = IPIV[ offsetIPIV + (jj * strideIPIV) ] - jj;
 			if ( jp !== 0 ) {
 				if ( jp + jj < j + kl ) {
 					// Swap within band
-					dswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
-						AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + j * sa2 );
+					dswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
+						AB, sa2 - sa1, offsetAB + ( kv + jp + jj - j ) * sa1 + (j * sa2) );
 				} else {
 					// Swap with WORK31
-					dswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + j * sa2,
+					dswap( jj - j, AB, sa2 - sa1, offsetAB + ( kv + jj - j ) * sa1 + (j * sa2),
 						WORK31, LDWORK, ( jp + jj - j - kl ) * 1 );
 				}
 			}
@@ -336,7 +336,7 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			nw = Math.min( i3, jj - j + 1 );
 			if ( nw > 0 ) {
 				dcopy( nw, WORK31, 1, ( jj - j ) * LDWORK,
-					AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + jj * sa2 );
+					AB, sa1, offsetAB + ( kv + kl - jj + j ) * sa1 + (jj * sa2) );
 			}
 		}
 	}

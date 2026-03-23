@@ -122,8 +122,8 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 		for ( j = N - 1; j >= 0; j-- ) {
 			// Copy column j of L (below diagonal) into WORK and zero it in A
 			for ( i = j + 1; i < N; i++ ) {
-				ia = ( offsetA + i * sa1 + j * sa2 ) * 2;
-				iw = ( offsetWORK + i * strideWORK ) * 2;
+				ia = ( offsetA + (i * sa1) + (j * sa2) ) * 2;
+				iw = ( offsetWORK + (i * strideWORK) ) * 2;
 
 				// WORK(i) = A(i, j)
 				Wv[ iw ] = Av[ ia ];
@@ -141,7 +141,7 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 					A, sa1, sa2, offsetA + ( j + 1 ) * sa2,
 					WORK, strideWORK, offsetWORK + ( j + 1 ) * strideWORK,
 					CONE,
-					A, sa1, offsetA + j * sa2 );
+					A, sa1, offsetA + (j * sa2) );
 			}
 		}
 	} else {
@@ -155,7 +155,7 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// WORK is used as a column-major N-by-jb matrix with strides (1, ldwork)
 			for ( jj = j; jj < j + jb; jj++ ) {
 				for ( i = jj + 1; i < N; i++ ) {
-					ia = ( offsetA + i * sa1 + jj * sa2 ) * 2;
+					ia = ( offsetA + (i * sa1) + (jj * sa2) ) * 2;
 
 					// WORK(i + (jj-j)*ldwork) in complex elements from offsetWORK
 					iw = ( offsetWORK + i + ( jj - j ) * ldwork ) * 2;
@@ -172,22 +172,22 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
 					WORK, 1, ldwork, offsetWORK + ( j + jb ),
 					CONE,
-					A, sa1, sa2, offsetA + j * sa2 );
+					A, sa1, sa2, offsetA + (j * sa2) );
 			}
 			// Solve with the unit lower triangular block from WORK
 			ztrsm( 'right', 'lower', 'no-transpose', 'unit', N, jb, CONE,
 				WORK, 1, ldwork, offsetWORK + j,
-				A, sa1, sa2, offsetA + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa2) );
 		}
 	}
 
 	// Step 3: Apply column permutations from IPIV in reverse order
 	for ( j = N - 2; j >= 0; j-- ) {
-		jp = IPIV[ offsetIPIV + j * strideIPIV ];
+		jp = IPIV[ offsetIPIV + (j * strideIPIV) ];
 		if ( jp !== j ) {
 			zswap( N,
-				A, sa1, offsetA + j * sa2,
-				A, sa1, offsetA + jp * sa2 );
+				A, sa1, offsetA + (j * sa2),
+				A, sa1, offsetA + (jp * sa2) );
 		}
 	}
 

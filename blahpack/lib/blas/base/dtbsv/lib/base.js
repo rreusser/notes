@@ -86,14 +86,14 @@ function dtbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					// L = kplus1 - j (Fortran: KPLUS1 - J, 0-based offset for band row)
 					l = kplus1 - j;
 					if ( nounit ) {
-						x[ jx ] /= A[ offsetA + kplus1 * sa1 + j * sa2 ];
+						x[ jx ] /= A[ offsetA + (kplus1 * sa1) + (j * sa2) ];
 					}
 					temp = x[ jx ];
 					ix = jx - strideX;
 					for ( i = j - 1; i >= Math.max( 0, j - K ); i-- ) {
 						// A(l+i, j) in Fortran 1-based = A_band[(l+i)*sa1 + j*sa2] 0-based
 						// l = kplus1 - j, so (l + i) = kplus1 - j + i = K + i - j
-						ia = offsetA + ( l + i ) * sa1 + j * sa2;
+						ia = offsetA + ( l + i ) * sa1 + (j * sa2);
 						x[ ix ] -= temp * A[ ia ];
 						ix -= strideX;
 					}
@@ -108,13 +108,13 @@ function dtbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				if ( x[ jx ] !== 0.0 ) {
 					l = -j; // Fortran: L = 1 - J (1-based), 0-based: L = -j
 					if ( nounit ) {
-						x[ jx ] /= A[ offsetA + j * sa2 ];
+						x[ jx ] /= A[ offsetA + (j * sa2) ];
 					}
 					temp = x[ jx ];
 					ix = jx + strideX;
 					for ( i = j + 1; i < Math.min( N, j + K + 1 ); i++ ) {
 						// Band row = l + i = i - j
-						ia = offsetA + ( l + i ) * sa1 + j * sa2;
+						ia = offsetA + ( l + i ) * sa1 + (j * sa2);
 						x[ ix ] -= temp * A[ ia ];
 						ix += strideX;
 					}
@@ -133,12 +133,12 @@ function dtbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				l = kplus1 - j;
 				ix = kx;
 				for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-					ia = offsetA + ( l + i ) * sa1 + j * sa2;
+					ia = offsetA + ( l + i ) * sa1 + (j * sa2);
 					temp -= A[ ia ] * x[ ix ];
 					ix += strideX;
 				}
 				if ( nounit ) {
-					temp /= A[ offsetA + kplus1 * sa1 + j * sa2 ];
+					temp /= A[ offsetA + (kplus1 * sa1) + (j * sa2) ];
 				}
 				x[ jx ] = temp;
 				jx += strideX;
@@ -154,12 +154,12 @@ function dtbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				l = -j;
 				ix = kx + ( N - 1 ) * strideX;
 				for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-					ia = offsetA + ( l + i ) * sa1 + j * sa2;
+					ia = offsetA + ( l + i ) * sa1 + (j * sa2);
 					temp -= A[ ia ] * x[ ix ];
 					ix -= strideX;
 				}
 				if ( nounit ) {
-					temp /= A[ offsetA + j * sa2 ];
+					temp /= A[ offsetA + (j * sa2) ];
 				}
 				x[ jx ] = temp;
 				jx -= strideX;

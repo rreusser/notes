@@ -123,15 +123,15 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Get tau_i, conjugating if trans = 'conjugate-transpose'
 		if ( notran ) {
-			tauiv[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-			tauiv[ 1 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
+			tauiv[ 0 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 ];
+			tauiv[ 1 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 + 1 ];
 		} else {
-			tauiv[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-			tauiv[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
+			tauiv[ 0 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 ];
+			tauiv[ 1 ] = -TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 + 1 ];
 		}
 
 		// Save A(i,i) and set it to 1
-		idxA = ( offsetA + i * strideA1 + i * strideA2 ) * 2;
+		idxA = ( offsetA + (i * strideA1) + (i * strideA2) ) * 2;
 		aii0 = Av[ idxA ];
 		aii1 = Av[ idxA + 1 ];
 		Av[ idxA ] = 1.0;
@@ -142,9 +142,9 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Zlarf expects strides/offsets in complex elements
 		zlarf(
 			side, mi, ni,
-			A, strideA1, offsetA + i * strideA1 + i * strideA2,
+			A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
 			taui, 0,
-			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
+			C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2),
 			WORK, strideWORK, offsetWORK
 		);
 

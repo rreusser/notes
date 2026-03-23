@@ -78,7 +78,7 @@ function dlartg( f, g, out ) {
 		out[ 1 ] = ( g > 0.0 ) ? 1.0 : -1.0;
 		out[ 2 ] = g1;
 	} else if ( f1 > RTMIN && f1 < RTMAX && g1 > RTMIN && g1 < RTMAX ) {
-		d = Math.sqrt( f * f + g * g );
+		d = Math.sqrt( (f * f) + (g * g) );
 		out[ 0 ] = f1 / d;
 		out[ 2 ] = ( f > 0.0 ) ? d : -d;
 		out[ 1 ] = g / out[ 2 ];
@@ -86,9 +86,9 @@ function dlartg( f, g, out ) {
 		u = Math.min( SAFMAX, Math.max( SAFMIN, f1, g1 ) );
 		fs = f / u;
 		gs = g / u;
-		d = Math.sqrt( fs * fs + gs * gs );
+		d = Math.sqrt( (fs * fs) + (gs * gs) );
 		out[ 0 ] = Math.abs( fs ) / d;
-		out[ 2 ] = ( f > 0.0 ) ? d * u : -d * u;
+		out[ 2 ] = ( f > 0.0 ) ? d * u : - (d * u);
 		out[ 1 ] = gs / ( ( f > 0.0 ) ? d : -d );
 	}
 	return out;

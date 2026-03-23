@@ -96,12 +96,12 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	// Fortran: DO 20 J = 1, N-K; set A(M-N+J, J) = ONE, rest = ZERO
 	for ( j = 0; j < N - K; j++ ) {
 		for ( l = 0; l < M; l++ ) {
-			ia = oA + l * sa1 + j * sa2;
+			ia = oA + (l * sa1) + (j * sa2);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}
 		// Diagonal element at row M-N+j
-		ia = oA + ( M - N + j ) * sa1 + j * sa2;
+		ia = oA + ( M - N + j ) * sa1 + (j * sa2);
 		Av[ ia ] = 1.0;
 		Av[ ia + 1 ] = 0.0;
 	}
@@ -111,10 +111,10 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	for ( i = 0; i < K; i++ ) {
 		// ii = N-K+i (0-based column index)
 		ii = N - K + i;
-		it = offsetTAU * 2 + i * st;
+		it = (offsetTAU * 2) + (i * st);
 
 		// Set A(M-N+ii, ii) = 1 before applying the reflector
-		ia = oA + ( M - N + ii ) * sa1 + ii * sa2;
+		ia = oA + ( M - N + ii ) * sa1 + (ii * sa2);
 		Av[ ia ] = 1.0;
 		Av[ ia + 1 ] = 0.0;
 
@@ -128,8 +128,8 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		if ( ii > 0 ) {
 			zlarf(
 				'left', M - N + ii + 1, ii,
-				A, strideA1, offsetA + ii * strideA2,
-				TAU, offsetTAU + i * strideTAU,
+				A, strideA1, offsetA + (ii * strideA2),
+				TAU, offsetTAU + (i * strideTAU),
 				A, strideA1, strideA2, offsetA,
 				WORK, strideWORK, offsetWORK
 			);
@@ -141,12 +141,12 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			negTau = new Complex128( -tauv[ it ], -tauv[ it + 1 ] );
 			zscal(
 				M - N + ii, negTau,
-				A, strideA1, offsetA + ii * strideA2
+				A, strideA1, offsetA + (ii * strideA2)
 			);
 		}
 
 		// A(M-N+ii, ii) = 1 - TAU(i)  (complex: (1,0) - tau)
-		ia = oA + ( M - N + ii ) * sa1 + ii * sa2;
+		ia = oA + ( M - N + ii ) * sa1 + (ii * sa2);
 		Av[ ia ] = 1.0 - tauv[ it ];
 		Av[ ia + 1 ] = -tauv[ it + 1 ];
 
@@ -154,7 +154,7 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// Fortran: DO 30 L = M-N+II+1, M
 		for ( l = M - N + ii + 1; l < M; l++ ) {
-			ia = oA + l * sa1 + ii * sa2;
+			ia = oA + (l * sa1) + (ii * sa2);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}

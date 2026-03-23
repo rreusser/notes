@@ -122,15 +122,15 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				// Use blocked code
 				W = new Float64Array( ldwork * nb );
 				result = dlasyf( 'lower', N - k, nb,
-					A, sa1, sa2, offsetA + k * sa1 + k * sa2,
-					IPIV, strideIPIV, offsetIPIV + k * strideIPIV,
+					A, sa1, sa2, offsetA + (k * sa1) + (k * sa2),
+					IPIV, strideIPIV, offsetIPIV + (k * strideIPIV),
 					W, 1, ldwork, 0 );
 				kb = result.kb;
 				iinfo = result.info;
 			} else {
 				// Use unblocked code
-				iinfo = dsytf2( 'lower', N - k, A, sa1, sa2, offsetA + k * sa1 + k * sa2,
-					IPIV, strideIPIV, offsetIPIV + k * strideIPIV );
+				iinfo = dsytf2( 'lower', N - k, A, sa1, sa2, offsetA + (k * sa1) + (k * sa2),
+					IPIV, strideIPIV, offsetIPIV + (k * strideIPIV) );
 				kb = N - k;
 			}
 
@@ -141,14 +141,14 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 			// Adjust IPIV for the lower case: add offset k
 			for ( j = k; j < k + kb; j++ ) {
-				if ( IPIV[ offsetIPIV + j * strideIPIV ] >= 0 ) {
-					IPIV[ offsetIPIV + j * strideIPIV ] += k;
+				if ( IPIV[ offsetIPIV + (j * strideIPIV) ] >= 0 ) {
+					IPIV[ offsetIPIV + (j * strideIPIV) ] += k;
 				} else {
 					// 2x2 pivot: ~kp is 0-based relative to submatrix, need to add k
 					// ~kp + k would be wrong. Need: ~(kp + k)
 					// Current value = ~kp_local. kp_local = ~current.
 					// New value = ~(kp_local + k)
-					IPIV[ offsetIPIV + j * strideIPIV ] = ~( ( ~IPIV[ offsetIPIV + j * strideIPIV ] ) + k );
+					IPIV[ offsetIPIV + (j * strideIPIV) ] = ~( ( ~IPIV[ offsetIPIV + (j * strideIPIV) ] ) + k );
 				}
 			}
 

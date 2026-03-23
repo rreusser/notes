@@ -87,7 +87,7 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 		for ( j = 0; j < N; j++ ) {
 			// Diagonal element: AB(KD+1, J+1) in Fortran 1-based
 			// 0-based: AB[offsetAB + kd*strideAB1 + j*strideAB2]
-			da = oA + kd * sa1 + j * sa2;
+			da = oA + (kd * sa1) + (j * sa2);
 			ajj = Av[ da ];
 			if ( ajj <= 0.0 ) {
 				Av[ da ] = ajj;
@@ -113,7 +113,7 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				// zher: strideA1 = strideAB1, strideA2 = kld
 				zher( 'upper', kn, -1.0,
 					AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2,
-					AB, strideAB1, kld, offsetAB + kd * strideAB1 + ( j + 1 ) * strideAB2
+					AB, strideAB1, kld, offsetAB + (kd * strideAB1) + ( j + 1 ) * strideAB2
 				);
 
 				// ZLACGV(KN, AB(KD, J+2), KLD) -- undo
@@ -125,7 +125,7 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 		for ( j = 0; j < N; j++ ) {
 			// Diagonal element: AB(1, J+1) in Fortran 1-based
 			// 0-based: AB[offsetAB + j*strideAB2]
-			da = oA + j * sa2;
+			da = oA + (j * sa2);
 			ajj = Av[ da ];
 			if ( ajj <= 0.0 ) {
 				Av[ da ] = ajj;
@@ -140,14 +140,14 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			if ( kn > 0 ) {
 				// ZDSCAL(KN, 1/AJJ, AB(2, J), 1)
 				zdscal( kn, 1.0 / ajj,
-					AB, strideAB1, offsetAB + strideAB1 + j * strideAB2
+					AB, strideAB1, offsetAB + strideAB1 + (j * strideAB2)
 				);
 
 				// ZHER('Lower', KN, -1, AB(2, J), 1, AB(1, J+1), KLD)
 
 				// zher: strideA1 = strideAB1, strideA2 = kld
 				zher( 'lower', kn, -1.0,
-					AB, strideAB1, offsetAB + strideAB1 + j * strideAB2,
+					AB, strideAB1, offsetAB + strideAB1 + (j * strideAB2),
 					AB, strideAB1, kld, offsetAB + ( j + 1 ) * strideAB2
 				);
 			}

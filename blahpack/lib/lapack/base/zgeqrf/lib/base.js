@@ -76,7 +76,7 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	iws = N;
 	ldwork = N;
 	if ( WORK === null ) {
-		WORK = new Complex128Array( Math.max( 1, N * nb + nb * nb ) );
+		WORK = new Complex128Array( Math.max( 1, (N * nb) + (nb * nb) ) );
 	}
 	T = WORK;
 
@@ -94,8 +94,8 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			// Compute the QR factorization of the current panel A(i:M-1, i:i+ib-1)
 			zgeqr2(
 				M - i, ib,
-				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				WORK, strideWORK, offsetWORK
 			);
 
@@ -105,8 +105,8 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				zlarft(
 					'forward', 'columnwise',
 					M - i, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					T, 1, nb, offsetT
 				);
 
@@ -114,9 +114,9 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				zlarfb(
 					'left', 'conjugate-transpose', 'forward', 'columnwise',
 					M - i, N - i - ib, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					T, 1, nb, offsetT,
-					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + ib ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + ib ) * strideA2,
 					WORK, 1, ldwork, offsetWORK
 				);
 			}
@@ -130,8 +130,8 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	if ( i <= K - 1 ) {
 		zgeqr2(
 			M - i, N - i,
-			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-			TAU, strideTAU, offsetTAU + i * strideTAU,
+			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+			TAU, strideTAU, offsetTAU + (i * strideTAU),
 			WORK, strideWORK, offsetWORK
 		);
 	}

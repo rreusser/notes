@@ -78,7 +78,7 @@ function czero( arr, idx ) {
 function cabs( arr, idx ) {
 	var re = arr[ idx ];
 	var im = arr[ idx + 1 ];
-	return Math.sqrt( re * re + im * im );
+	return Math.sqrt( (re * re) + (im * im) );
 }
 
 
@@ -215,8 +215,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	}
 	if ( job === 'none' ) {
 		for ( i = 0; i < N; i++ ) {
-			LSCALE[ oL + i * sL ] = ONE;
-			RSCALE[ oR + i * sR ] = ONE;
+			LSCALE[ oL + (i * sL) ] = ONE;
+			RSCALE[ oR + (i * sR) ] = ONE;
 		}
 		return {
 			'info': 0,
@@ -280,8 +280,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				jp1 = -1;
 				found = false;
 				for ( j = 0; j < lm1; j++ ) {
-					idx = oA + i * sA1 + j * sA2;
-					if ( !czero( Av, idx ) || !czero( Bv, oB + i * sB1 + j * sB2 ) ) {
+					idx = oA + (i * sA1) + (j * sA2);
+					if ( !czero( Av, idx ) || !czero( Bv, oB + (i * sB1) + (j * sB2) ) ) {
 						jp1 = j + 1;
 						found = true;
 						break;
@@ -294,8 +294,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					// Found first nonzero at column jp1-1, check if rest are zero
 					var allZero = true;
 					for ( var jj = jp1; jj < l; jj++ ) {
-						idx = oA + i * sA1 + jj * sA2;
-						if ( !czero( Av, idx ) || !czero( Bv, oB + i * sB1 + jj * sB2 ) ) {
+						idx = oA + (i * sA1) + (jj * sA2);
+						if ( !czero( Av, idx ) || !czero( Bv, oB + (i * sB1) + (jj * sB2) ) ) {
 							allZero = false;
 							break;
 						}
@@ -342,8 +342,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					ip1 = -1;
 					found = false;
 					for ( i = k - 1; i < lm1; i++ ) {
-						idx = oA + i * sA1 + j * sA2;
-						if ( !czero( Av, idx ) || !czero( Bv, oB + i * sB1 + j * sB2 ) ) {
+						idx = oA + (i * sA1) + (j * sA2);
+						if ( !czero( Av, idx ) || !czero( Bv, oB + (i * sB1) + (j * sB2) ) ) {
 							ip1 = i + 1;
 							found = true;
 							break;
@@ -356,8 +356,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						// Found first nonzero at row ip1-1, check if rest are zero
 						var allZeroCol = true;
 						for ( var ii = ip1; ii < l; ii++ ) {
-							idx = oA + ii * sA1 + j * sA2;
-							if ( !czero( Av, idx ) || !czero( Bv, oB + ii * sB1 + j * sB2 ) ) {
+							idx = oA + (ii * sA1) + (j * sA2);
+							if ( !czero( Av, idx ) || !czero( Bv, oB + (ii * sB1) + (j * sB2) ) ) {
 								allZeroCol = false;
 								break;
 							}
@@ -401,31 +401,31 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		// Cj is 0-based source column
 
 		// LSCALE(M) = I (1-based)
-		LSCALE[ oL + pm * sL ] = ri + 1;
+		LSCALE[ oL + (pm * sL) ] = ri + 1;
 
 		// Permute rows M and I (0-based pm and ri)
 		if ( ri !== pm ) {
 			// ZSWAP(N-K+1, A(I,K), LDA, A(M,K), LDA)
 			// Swap rows ri and pm, columns from k-1 to N-1
 			// Stride = LDA in complex elements = sA2/2
-			zswap( N - k + 1, A, strideA2, offsetA + ri * strideA1 + ( k - 1 ) * strideA2,
-				A, strideA2, offsetA + pm * strideA1 + ( k - 1 ) * strideA2 );
-			zswap( N - k + 1, B, strideB2, offsetB + ri * strideB1 + ( k - 1 ) * strideB2,
-				B, strideB2, offsetB + pm * strideB1 + ( k - 1 ) * strideB2 );
+			zswap( N - k + 1, A, strideA2, offsetA + (ri * strideA1) + ( k - 1 ) * strideA2,
+				A, strideA2, offsetA + (pm * strideA1) + ( k - 1 ) * strideA2 );
+			zswap( N - k + 1, B, strideB2, offsetB + (ri * strideB1) + ( k - 1 ) * strideB2,
+				B, strideB2, offsetB + (pm * strideB1) + ( k - 1 ) * strideB2 );
 		}
 
 		// RSCALE(M) = J (1-based)
-		RSCALE[ oR + pm * sR ] = cj + 1;
+		RSCALE[ oR + (pm * sR) ] = cj + 1;
 
 		// Permute columns M and J (0-based pm and cj)
 		if ( cj !== pm ) {
 			// ZSWAP(L, A(1,J), 1, A(1,M), 1)
 			// Swap columns cj and pm, rows 0 to l-1
 			// Stride = 1 in complex elements = sA1/2
-			zswap( l, A, strideA1, offsetA + cj * strideA2,
-				A, strideA1, offsetA + pm * strideA2 );
-			zswap( l, B, strideB1, offsetB + cj * strideB2,
-				B, strideB1, offsetB + pm * strideB2 );
+			zswap( l, A, strideA1, offsetA + (cj * strideA2),
+				A, strideA1, offsetA + (pm * strideA2) );
+			zswap( l, B, strideB1, offsetB + (cj * strideB2),
+				B, strideB1, offsetB + (pm * strideB2) );
 		}
 	}
 
@@ -442,8 +442,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 		if ( job === 'permute' ) {
 			for ( i = ilo - 1; i < ihi; i++ ) {
-				LSCALE[ oL + i * sL ] = ONE;
-				RSCALE[ oR + i * sR ] = ONE;
+				LSCALE[ oL + (i * sL) ] = ONE;
+				RSCALE[ oR + (i * sR) ] = ONE;
 			}
 			return {
 				'info': 0,
@@ -467,34 +467,34 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 		// Initialize arrays
 		for ( i = ilo - 1; i < ihi; i++ ) {
-			RSCALE[ oR + i * sR ] = ZERO;
-			LSCALE[ oL + i * sL ] = ZERO;
-			WORK[ oW + i * sW ] = ZERO;
+			RSCALE[ oR + (i * sR) ] = ZERO;
+			LSCALE[ oL + (i * sL) ] = ZERO;
+			WORK[ oW + (i * sW) ] = ZERO;
 			WORK[ oW + ( i + N ) * sW ] = ZERO;
-			WORK[ oW + ( i + 2 * N ) * sW ] = ZERO;
-			WORK[ oW + ( i + 3 * N ) * sW ] = ZERO;
-			WORK[ oW + ( i + 4 * N ) * sW ] = ZERO;
-			WORK[ oW + ( i + 5 * N ) * sW ] = ZERO;
+			WORK[ oW + ( i + (2 * N) ) * sW ] = ZERO;
+			WORK[ oW + ( i + (3 * N) ) * sW ] = ZERO;
+			WORK[ oW + ( i + (4 * N) ) * sW ] = ZERO;
+			WORK[ oW + ( i + (5 * N) ) * sW ] = ZERO;
 		}
 
 		// Compute right side vector in resulting linear equations
 		basl = Math.log10( SCLFAC );
 		for ( i = ilo - 1; i < ihi; i++ ) {
 			for ( j = ilo - 1; j < ihi; j++ ) {
-				idx = oA + i * sA1 + j * sA2;
+				idx = oA + (i * sA1) + (j * sA2);
 				if ( czero( Av, idx ) ) {
 					ta = ZERO;
 				} else {
 					ta = Math.log10( cabs1( Av, idx ) ) / basl;
 				}
-				idx = oB + i * sB1 + j * sB2;
+				idx = oB + (i * sB1) + (j * sB2);
 				if ( czero( Bv, idx ) ) {
 					tb = ZERO;
 				} else {
 					tb = Math.log10( cabs1( Bv, idx ) ) / basl;
 				}
-				WORK[ oW + ( i + 4 * N ) * sW ] -= ta + tb;
-				WORK[ oW + ( j + 5 * N ) * sW ] -= ta + tb;
+				WORK[ oW + ( i + (4 * N) ) * sW ] -= ta + tb;
+				WORK[ oW + ( j + (5 * N) ) * sW ] -= ta + tb;
 			}
 		}
 
@@ -510,19 +510,19 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		// eslint-disable-next-line no-constant-condition
 		while ( true ) {
 			// Compute gamma
-			gamma = ddot( nr, WORK, sW, oW + ( ilo - 1 + 4 * N ) * sW,
-				WORK, sW, oW + ( ilo - 1 + 4 * N ) * sW ) +
-				ddot( nr, WORK, sW, oW + ( ilo - 1 + 5 * N ) * sW,
-					WORK, sW, oW + ( ilo - 1 + 5 * N ) * sW );
+			gamma = ddot( nr, WORK, sW, oW + ( ilo - 1 + (4 * N) ) * sW,
+				WORK, sW, oW + ( ilo - 1 + (4 * N) ) * sW ) +
+				ddot( nr, WORK, sW, oW + ( ilo - 1 + (5 * N) ) * sW,
+					WORK, sW, oW + ( ilo - 1 + (5 * N) ) * sW );
 
 			ew = ZERO;
 			ewc = ZERO;
 			for ( i = ilo - 1; i < ihi; i++ ) {
-				ew += WORK[ oW + ( i + 4 * N ) * sW ];
-				ewc += WORK[ oW + ( i + 5 * N ) * sW ];
+				ew += WORK[ oW + ( i + (4 * N) ) * sW ];
+				ewc += WORK[ oW + ( i + (5 * N) ) * sW ];
 			}
 
-			gamma = coef * gamma - coef2 * ( ew * ew + ewc * ewc ) - coef5 * ( ew - ewc ) * ( ew - ewc );
+			gamma = (coef * gamma) - coef2 * ( (ew * ew) + (ewc * ewc) ) - coef5 * ( ew - ewc ) * ( ew - ewc );
 
 			if ( gamma === ZERO ) {
 				break; // go to 350
@@ -530,19 +530,19 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			if ( it !== 1 ) {
 				beta = gamma / pgamma;
 			}
-			t = coef5 * ( ewc - THREE * ew );
-			tc = coef5 * ( ew - THREE * ewc );
+			t = coef5 * ( ewc - (THREE * ew) );
+			tc = coef5 * ( ew - (THREE * ewc) );
 
 			dscal( nr, beta, WORK, sW, oW + ( ilo - 1 ) * sW );
 			dscal( nr, beta, WORK, sW, oW + ( ilo - 1 + N ) * sW );
 
-			daxpy( nr, coef, WORK, sW, oW + ( ilo - 1 + 4 * N ) * sW,
+			daxpy( nr, coef, WORK, sW, oW + ( ilo - 1 + (4 * N) ) * sW,
 				WORK, sW, oW + ( ilo - 1 + N ) * sW );
-			daxpy( nr, coef, WORK, sW, oW + ( ilo - 1 + 5 * N ) * sW,
+			daxpy( nr, coef, WORK, sW, oW + ( ilo - 1 + (5 * N) ) * sW,
 				WORK, sW, oW + ( ilo - 1 ) * sW );
 
 			for ( i = ilo - 1; i < ihi; i++ ) {
-				WORK[ oW + i * sW ] += tc;
+				WORK[ oW + (i * sW) ] += tc;
 				WORK[ oW + ( i + N ) * sW ] += t;
 			}
 
@@ -551,42 +551,42 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				kount = 0;
 				sum = ZERO;
 				for ( j = ilo - 1; j < ihi; j++ ) {
-					idx = oA + i * sA1 + j * sA2;
+					idx = oA + (i * sA1) + (j * sA2);
 					if ( !czero( Av, idx ) ) {
 						kount += 1;
-						sum += WORK[ oW + j * sW ];
+						sum += WORK[ oW + (j * sW) ];
 					}
-					idx = oB + i * sB1 + j * sB2;
+					idx = oB + (i * sB1) + (j * sB2);
 					if ( !czero( Bv, idx ) ) {
 						kount += 1;
-						sum += WORK[ oW + j * sW ];
+						sum += WORK[ oW + (j * sW) ];
 					}
 				}
-				WORK[ oW + ( i + 2 * N ) * sW ] = kount * WORK[ oW + ( i + N ) * sW ] + sum;
+				WORK[ oW + ( i + (2 * N) ) * sW ] = (kount * WORK[ oW + ( i + N ) * sW ]) + sum;
 			}
 
 			for ( j = ilo - 1; j < ihi; j++ ) {
 				kount = 0;
 				sum = ZERO;
 				for ( i = ilo - 1; i < ihi; i++ ) {
-					idx = oA + i * sA1 + j * sA2;
+					idx = oA + (i * sA1) + (j * sA2);
 					if ( !czero( Av, idx ) ) {
 						kount += 1;
 						sum += WORK[ oW + ( i + N ) * sW ];
 					}
-					idx = oB + i * sB1 + j * sB2;
+					idx = oB + (i * sB1) + (j * sB2);
 					if ( !czero( Bv, idx ) ) {
 						kount += 1;
 						sum += WORK[ oW + ( i + N ) * sW ];
 					}
 				}
-				WORK[ oW + ( j + 3 * N ) * sW ] = kount * WORK[ oW + j * sW ] + sum;
+				WORK[ oW + ( j + (3 * N) ) * sW ] = (kount * WORK[ oW + (j * sW) ]) + sum;
 			}
 
 			sum = ddot( nr, WORK, sW, oW + ( ilo - 1 + N ) * sW,
-				WORK, sW, oW + ( ilo - 1 + 2 * N ) * sW ) +
+				WORK, sW, oW + ( ilo - 1 + (2 * N) ) * sW ) +
 				ddot( nr, WORK, sW, oW + ( ilo - 1 ) * sW,
-					WORK, sW, oW + ( ilo - 1 + 3 * N ) * sW );
+					WORK, sW, oW + ( ilo - 1 + (3 * N) ) * sW );
 			alpha = gamma / sum;
 
 			// Determine correction to current iteration
@@ -596,21 +596,21 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				if ( Math.abs( cor ) > cmax ) {
 					cmax = Math.abs( cor );
 				}
-				LSCALE[ oL + i * sL ] += cor;
-				cor = alpha * WORK[ oW + i * sW ];
+				LSCALE[ oL + (i * sL) ] += cor;
+				cor = alpha * WORK[ oW + (i * sW) ];
 				if ( Math.abs( cor ) > cmax ) {
 					cmax = Math.abs( cor );
 				}
-				RSCALE[ oR + i * sR ] += cor;
+				RSCALE[ oR + (i * sR) ] += cor;
 			}
 			if ( cmax < HALF ) {
 				break; // go to 350
 			}
 
-			daxpy( nr, -alpha, WORK, sW, oW + ( ilo - 1 + 2 * N ) * sW,
-				WORK, sW, oW + ( ilo - 1 + 4 * N ) * sW );
-			daxpy( nr, -alpha, WORK, sW, oW + ( ilo - 1 + 3 * N ) * sW,
-				WORK, sW, oW + ( ilo - 1 + 5 * N ) * sW );
+			daxpy( nr, -alpha, WORK, sW, oW + ( ilo - 1 + (2 * N) ) * sW,
+				WORK, sW, oW + ( ilo - 1 + (4 * N) ) * sW );
+			daxpy( nr, -alpha, WORK, sW, oW + ( ilo - 1 + (3 * N) ) * sW,
+				WORK, sW, oW + ( ilo - 1 + (5 * N) ) * sW );
 
 			pgamma = gamma;
 			it += 1;
@@ -628,36 +628,36 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		for ( i = ilo - 1; i < ihi; i++ ) {
 			// Row scaling: find max element in row i, columns ilo-1..N-1
 			// Izamax returns 0-based index into the subvector
-			irab = izamax( N - ilo + 1, A, strideA2, offsetA + i * strideA1 + ( ilo - 1 ) * strideA2 );
-			rab = cabs( Av, oA + i * sA1 + ( irab + ilo - 1 ) * sA2 );
-			irab = izamax( N - ilo + 1, B, strideB2, offsetB + i * strideB1 + ( ilo - 1 ) * strideB2 );
-			rab = Math.max( rab, cabs( Bv, oB + i * sB1 + ( irab + ilo - 1 ) * sB2 ) );
+			irab = izamax( N - ilo + 1, A, strideA2, offsetA + (i * strideA1) + ( ilo - 1 ) * strideA2 );
+			rab = cabs( Av, oA + (i * sA1) + ( irab + ilo - 1 ) * sA2 );
+			irab = izamax( N - ilo + 1, B, strideB2, offsetB + (i * strideB1) + ( ilo - 1 ) * strideB2 );
+			rab = Math.max( rab, cabs( Bv, oB + (i * sB1) + ( irab + ilo - 1 ) * sB2 ) );
 			lrab = Math.trunc( Math.log10( rab + sfmin ) / basl + ONE );
-			ir = Math.trunc( LSCALE[ oL + i * sL ] + Math.sign( LSCALE[ oL + i * sL ] ) * HALF );
+			ir = Math.trunc( LSCALE[ oL + (i * sL) ] + Math.sign( LSCALE[ oL + (i * sL) ] ) * HALF );
 			ir = Math.min( Math.max( ir, lsfmin ), lsfmax, lsfmax - lrab );
-			LSCALE[ oL + i * sL ] = Math.pow( SCLFAC, ir );
+			LSCALE[ oL + (i * sL) ] = Math.pow( SCLFAC, ir );
 
 			// Column scaling: find max element in column i, rows 0..ihi-1
-			icab = izamax( ihi, A, strideA1, offsetA + i * strideA2 );
-			cab = cabs( Av, oA + icab * sA1 + i * sA2 );
-			icab = izamax( ihi, B, strideB1, offsetB + i * strideB2 );
-			cab = Math.max( cab, cabs( Bv, oB + icab * sB1 + i * sB2 ) );
+			icab = izamax( ihi, A, strideA1, offsetA + (i * strideA2) );
+			cab = cabs( Av, oA + (icab * sA1) + (i * sA2) );
+			icab = izamax( ihi, B, strideB1, offsetB + (i * strideB2) );
+			cab = Math.max( cab, cabs( Bv, oB + (icab * sB1) + (i * sB2) ) );
 			lcab = Math.trunc( Math.log10( cab + sfmin ) / basl + ONE );
-			jc = Math.trunc( RSCALE[ oR + i * sR ] + Math.sign( RSCALE[ oR + i * sR ] ) * HALF );
+			jc = Math.trunc( RSCALE[ oR + (i * sR) ] + Math.sign( RSCALE[ oR + (i * sR) ] ) * HALF );
 			jc = Math.min( Math.max( jc, lsfmin ), lsfmax, lsfmax - lcab );
-			RSCALE[ oR + i * sR ] = Math.pow( SCLFAC, jc );
+			RSCALE[ oR + (i * sR) ] = Math.pow( SCLFAC, jc );
 		}
 
 		// Row scaling of matrices A and B
 		for ( i = ilo - 1; i < ihi; i++ ) {
-			zdscal( N - ilo + 1, LSCALE[ oL + i * sL ], A, strideA2, offsetA + i * strideA1 + ( ilo - 1 ) * strideA2 );
-			zdscal( N - ilo + 1, LSCALE[ oL + i * sL ], B, strideB2, offsetB + i * strideB1 + ( ilo - 1 ) * strideB2 );
+			zdscal( N - ilo + 1, LSCALE[ oL + (i * sL) ], A, strideA2, offsetA + (i * strideA1) + ( ilo - 1 ) * strideA2 );
+			zdscal( N - ilo + 1, LSCALE[ oL + (i * sL) ], B, strideB2, offsetB + (i * strideB1) + ( ilo - 1 ) * strideB2 );
 		}
 
 		// Column scaling of matrices A and B
 		for ( j = ilo - 1; j < ihi; j++ ) {
-			zdscal( ihi, RSCALE[ oR + j * sR ], A, strideA1, offsetA + j * strideA2 );
-			zdscal( ihi, RSCALE[ oR + j * sR ], B, strideB1, offsetB + j * strideB2 );
+			zdscal( ihi, RSCALE[ oR + (j * sR) ], A, strideA1, offsetA + (j * strideA2) );
+			zdscal( ihi, RSCALE[ oR + (j * sR) ], B, strideB1, offsetB + (j * strideB2) );
 		}
 
 		return {

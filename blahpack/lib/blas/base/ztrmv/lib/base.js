@@ -97,19 +97,19 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				if ( xr !== 0.0 || xi !== 0.0 ) {
 					ix = oX;
 					for ( i = 0; i < j; i++ ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						xv[ ix ] += xr * ar - xi * ai;
-						xv[ ix + 1 ] += xr * ai + xi * ar;
+						xv[ ix ] += (xr * ar) - (xi * ai);
+						xv[ ix + 1 ] += (xr * ai) + (xi * ar);
 						ix += sx;
 					}
 					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						tr = xr * ar - xi * ai;
-						ti = xr * ai + xi * ar;
+						tr = (xr * ar) - (xi * ai);
+						ti = (xr * ai) + (xi * ar);
 						xv[ jx ] = tr;
 						xv[ jx + 1 ] = ti;
 					}
@@ -125,19 +125,19 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				if ( xr !== 0.0 || xi !== 0.0 ) {
 					ix = oX + ( N - 1 ) * sx;
 					for ( i = N - 1; i > j; i-- ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						xv[ ix ] += xr * ar - xi * ai;
-						xv[ ix + 1 ] += xr * ai + xi * ar;
+						xv[ ix ] += (xr * ar) - (xi * ai);
+						xv[ ix + 1 ] += (xr * ai) + (xi * ar);
 						ix -= sx;
 					}
 					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						tr = xr * ar - xi * ai;
-						ti = xr * ai + xi * ar;
+						tr = (xr * ar) - (xi * ai);
+						ti = (xr * ai) + (xi * ar);
 						xv[ jx ] = tr;
 						xv[ jx + 1 ] = ti;
 					}
@@ -155,41 +155,41 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				if ( noconj ) {
 					// Transpose (no conjugate)
 					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						xr = tr * ar - ti * ai;
-						xi = tr * ai + ti * ar;
+						xr = (tr * ar) - (ti * ai);
+						xi = (tr * ai) + (ti * ar);
 						tr = xr;
 						ti = xi;
 					}
 					ix = oX + ( j - 1 ) * sx;
 					for ( i = j - 1; i >= 0; i-- ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix -= sx;
 					}
 				} else {
 					// Conjugate transpose
 					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ];
-						xr = tr * ar - ti * ai;
-						xi = tr * ai + ti * ar;
+						xr = (tr * ar) - (ti * ai);
+						xi = (tr * ai) + (ti * ar);
 						tr = xr;
 						ti = xi;
 					}
 					ix = oX + ( j - 1 ) * sx;
 					for ( i = j - 1; i >= 0; i-- ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ];
-						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix -= sx;
 					}
 				}
@@ -205,41 +205,41 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				ti = xv[ jx + 1 ];
 				if ( noconj ) {
 					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						xr = tr * ar - ti * ai;
-						xi = tr * ai + ti * ar;
+						xr = (tr * ar) - (ti * ai);
+						xi = (tr * ai) + (ti * ar);
 						tr = xr;
 						ti = xi;
 					}
 					ix = oX + ( j + 1 ) * sx;
 					for ( i = j + 1; i < N; i++ ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix += sx;
 					}
 				} else {
 					// Conjugate transpose
 					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
+						ia = oA + (j * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ];
-						xr = tr * ar - ti * ai;
-						xi = tr * ai + ti * ar;
+						xr = (tr * ar) - (ti * ai);
+						xi = (tr * ai) + (ti * ar);
 						tr = xr;
 						ti = xi;
 					}
 					ix = oX + ( j + 1 ) * sx;
 					for ( i = j + 1; i < N; i++ ) {
-						ia = oA + i * sa1 + j * sa2;
+						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ];
-						tr += ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						ti += ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix += sx;
 					}
 				}

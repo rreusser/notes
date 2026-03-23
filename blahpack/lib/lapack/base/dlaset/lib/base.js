@@ -49,7 +49,7 @@ function dlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
 	if ( uplo === 'upper' ) {
 		// Set the strictly upper triangular part to ALPHA.
 		for ( j = 1; j < N; j++ ) {
-			idx = offsetA + j * strideA2;
+			idx = offsetA + (j * strideA2);
 			for ( i = 0; i < Math.min( j, M ); i++ ) {
 				A[ idx ] = alpha;
 				idx += strideA1;
@@ -58,7 +58,7 @@ function dlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
 	} else if ( uplo === 'lower' ) {
 		// Set the strictly lower triangular part to ALPHA.
 		for ( j = 0; j < mn; j++ ) {
-			idx = offsetA + ( j + 1 ) * strideA1 + j * strideA2;
+			idx = offsetA + ( j + 1 ) * strideA1 + (j * strideA2);
 			for ( i = j + 1; i < M; i++ ) {
 				A[ idx ] = alpha;
 				idx += strideA1;
@@ -67,7 +67,7 @@ function dlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
 	} else {
 		// Set the full matrix to ALPHA.
 		for ( j = 0; j < N; j++ ) {
-			idx = offsetA + j * strideA2;
+			idx = offsetA + (j * strideA2);
 			for ( i = 0; i < M; i++ ) {
 				A[ idx ] = alpha;
 				idx += strideA1;

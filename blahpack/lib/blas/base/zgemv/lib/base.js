@@ -135,8 +135,8 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 			}
 		} else {
 			for ( i = 0; i < leny; i++ ) {
-				tempR = betaR * yv[ iy ] - betaI * yv[ iy + 1 ];
-				tempI = betaR * yv[ iy + 1 ] + betaI * yv[ iy ];
+				tempR = (betaR * yv[ iy ]) - (betaI * yv[ iy + 1 ]);
+				tempI = (betaR * yv[ iy + 1 ]) + (betaI * yv[ iy ]);
 				yv[ iy ] = tempR;
 				yv[ iy + 1 ] = tempI;
 				iy += sy;
@@ -153,17 +153,17 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 		jx = oX;
 		for ( j = 0; j < N; j++ ) {
 			// Temp = alpha * x[jx]
-			tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
-			tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+			tempR = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
+			tempI = (alphaR * xv[ jx + 1 ]) + (alphaI * xv[ jx ]);
 			iy = oY;
-			ai = oA + j * sa2;
+			ai = oA + (j * sa2);
 			for ( i = 0; i < M; i++ ) {
 				aijR = Av[ ai ];
 				aijI = Av[ ai + 1 ];
 
 				// y[iy] += temp * A[i,j]
-				yv[ iy ] += tempR * aijR - tempI * aijI;
-				yv[ iy + 1 ] += tempR * aijI + tempI * aijR;
+				yv[ iy ] += (tempR * aijR) - (tempI * aijI);
+				yv[ iy + 1 ] += (tempR * aijI) + (tempI * aijR);
 				iy += sy;
 				ai += sa1;
 			}
@@ -176,7 +176,7 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 			tempR = 0.0;
 			tempI = 0.0;
 			ix = oX;
-			ai = oA + j * sa2;
+			ai = oA + (j * sa2);
 			if ( noConj ) {
 				// Transpose (no conjugate)
 				for ( i = 0; i < M; i++ ) {
@@ -184,8 +184,8 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 					aijI = Av[ ai + 1 ];
 
 					// Temp += A[i,j] * x[ix]
-					tempR += aijR * xv[ ix ] - aijI * xv[ ix + 1 ];
-					tempI += aijR * xv[ ix + 1 ] + aijI * xv[ ix ];
+					tempR += (aijR * xv[ ix ]) - (aijI * xv[ ix + 1 ]);
+					tempI += (aijR * xv[ ix + 1 ]) + (aijI * xv[ ix ]);
 					ix += sx;
 					ai += sa1;
 				}
@@ -196,15 +196,15 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 					aijI = -Av[ ai + 1 ]; // conjugate
 
 					// Temp += conj(A[i,j]) * x[ix]
-					tempR += aijR * xv[ ix ] - aijI * xv[ ix + 1 ];
-					tempI += aijR * xv[ ix + 1 ] + aijI * xv[ ix ];
+					tempR += (aijR * xv[ ix ]) - (aijI * xv[ ix + 1 ]);
+					tempI += (aijR * xv[ ix + 1 ]) + (aijI * xv[ ix ]);
 					ix += sx;
 					ai += sa1;
 				}
 			}
 			// y[jy] += alpha * temp
-			yv[ jy ] += alphaR * tempR - alphaI * tempI;
-			yv[ jy + 1 ] += alphaR * tempI + alphaI * tempR;
+			yv[ jy ] += (alphaR * tempR) - (alphaI * tempI);
+			yv[ jy + 1 ] += (alphaR * tempI) + (alphaI * tempR);
 			jy += sy;
 		}
 	}

@@ -69,11 +69,11 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			for ( j = N - 1; j >= 0; j-- ) {
 				if ( x[ jx ] !== 0.0 ) {
 					if ( nounit ) {
-						x[ jx ] /= A[ offsetA + j * sa1 + j * sa2 ];
+						x[ jx ] /= A[ offsetA + (j * sa1) + (j * sa2) ];
 					}
 					temp = x[ jx ];
 					ix = jx - strideX;
-					ia = offsetA + ( j - 1 ) * sa1 + j * sa2;
+					ia = offsetA + ( j - 1 ) * sa1 + (j * sa2);
 					for ( i = j - 1; i >= 0; i-- ) {
 						x[ ix ] -= temp * A[ ia ];
 						ix -= strideX;
@@ -88,11 +88,11 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			for ( j = 0; j < N; j++ ) {
 				if ( x[ jx ] !== 0.0 ) {
 					if ( nounit ) {
-						x[ jx ] /= A[ offsetA + j * sa1 + j * sa2 ];
+						x[ jx ] /= A[ offsetA + (j * sa1) + (j * sa2) ];
 					}
 					temp = x[ jx ];
 					ix = jx + strideX;
-					ia = offsetA + ( j + 1 ) * sa1 + j * sa2;
+					ia = offsetA + ( j + 1 ) * sa1 + (j * sa2);
 					for ( i = j + 1; i < N; i++ ) {
 						x[ ix ] -= temp * A[ ia ];
 						ix += strideX;
@@ -110,14 +110,14 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			for ( j = 0; j < N; j++ ) {
 				temp = x[ jx ];
 				ix = offsetX;
-				ia = offsetA + j * sa2;
+				ia = offsetA + (j * sa2);
 				for ( i = 0; i < j; i++ ) {
 					temp -= A[ ia ] * x[ ix ];
 					ix += strideX;
 					ia += sa1;
 				}
 				if ( nounit ) {
-					temp /= A[ offsetA + j * sa1 + j * sa2 ];
+					temp /= A[ offsetA + (j * sa1) + (j * sa2) ];
 				}
 				x[ jx ] = temp;
 				jx += strideX;
@@ -128,14 +128,14 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			for ( j = N - 1; j >= 0; j-- ) {
 				temp = x[ jx ];
 				ix = offsetX + ( N - 1 ) * strideX;
-				ia = offsetA + ( N - 1 ) * sa1 + j * sa2;
+				ia = offsetA + ( N - 1 ) * sa1 + (j * sa2);
 				for ( i = N - 1; i > j; i-- ) {
 					temp -= A[ ia ] * x[ ix ];
 					ix -= strideX;
 					ia -= sa1;
 				}
 				if ( nounit ) {
-					temp /= A[ offsetA + j * sa1 + j * sa2 ];
+					temp /= A[ offsetA + (j * sa1) + (j * sa2) ];
 				}
 				x[ jx ] = temp;
 				jx -= strideX;

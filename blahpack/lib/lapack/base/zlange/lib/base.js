@@ -77,7 +77,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		// Max absolute value
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
-			ai = oA + j * sa2;
+			ai = oA + (j * sa2);
 			for ( i = 0; i < M; i++ ) {
 				temp = cmplx.absAt( Av, ai );
 				if ( value < temp || temp !== temp ) {
@@ -91,7 +91,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
 			sum = 0.0;
-			ai = oA + j * sa2;
+			ai = oA + (j * sa2);
 			for ( i = 0; i < M; i++ ) {
 				sum += cmplx.absAt( Av, ai );
 				ai += sa1;
@@ -103,11 +103,11 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 	} else if ( norm === 'inf-norm' ) {
 		// Infinity-norm: maximum row sum of abs values
 		for ( i = 0; i < M; i++ ) {
-			wi = offsetWORK + i * strideWORK;
+			wi = offsetWORK + (i * strideWORK);
 			WORK[ wi ] = 0.0;
 		}
 		for ( j = 0; j < N; j++ ) {
-			ai = oA + j * sa2;
+			ai = oA + (j * sa2);
 			wi = offsetWORK;
 			for ( i = 0; i < M; i++ ) {
 				WORK[ wi ] += cmplx.absAt( Av, ai );
@@ -117,7 +117,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		}
 		value = 0.0;
 		for ( i = 0; i < M; i++ ) {
-			wi = offsetWORK + i * strideWORK;
+			wi = offsetWORK + (i * strideWORK);
 			temp = WORK[ wi ];
 			if ( value < temp || temp !== temp ) {
 				value = temp;
@@ -129,7 +129,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		scale = 0.0;
 		sum = 1.0;
 		for ( j = 0; j < N; j++ ) {
-			out = zlassq( M, A, strideA1, offsetA + j * strideA2, scale, sum );
+			out = zlassq( M, A, strideA1, offsetA + (j * strideA2), scale, sum );
 			scale = out.scl;
 			sum = out.sumsq;
 		}

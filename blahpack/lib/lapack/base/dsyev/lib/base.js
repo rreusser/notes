@@ -132,9 +132,9 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	// Fortran: INDE=1, INDTAU=INDE+N, INDWRK=INDTAU+N
 	// JS (0-based): inde=0, indtau=N, indwrk=2*N
 	inde = offsetWORK;
-	indtau = inde + N * strideWORK;
-	indwrk = indtau + N * strideWORK;
-	llwork = lwork - 2 * N;
+	indtau = inde + (N * strideWORK);
+	indwrk = indtau + (N * strideWORK);
+	llwork = lwork - (2 * N);
 
 	// Reduce to tridiagonal form: Q^T * A * Q = T
 

@@ -93,14 +93,14 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 		if ( lnoti ) {
 			for ( j = 0; j < N - 1; j++ ) {
 				lm = Math.min( kl, N - j - 1 );
-				l = IPIV[ offsetIPIV + j * strideIPIV ];
+				l = IPIV[ offsetIPIV + (j * strideIPIV) ];
 				if ( l !== j ) {
-					dswap( nrhs, B, sb2, offsetB + l * sb1, B, sb2, offsetB + j * sb1 );
+					dswap( nrhs, B, sb2, offsetB + (l * sb1), B, sb2, offsetB + (j * sb1) );
 				}
 				// B(j+1:j+lm, :) -= L(j+1:j+lm, j) * B(j, :)
 				dger( lm, nrhs, -1.0,
-					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + j * sa2,
-					B, sb2, offsetB + j * sb1,
+					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + (j * sa2),
+					B, sb2, offsetB + (j * sb1),
 					B, sb1, sb2, offsetB + ( j + 1 ) * sb1 );
 			}
 		}
@@ -109,7 +109,7 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 		for ( i = 0; i < nrhs; i++ ) {
 			dtbsv( 'upper', 'no-transpose', 'non-unit', N, kl + ku,
 				AB, sa1, sa2, offsetAB,
-				B, sb1, offsetB + i * sb2 );
+				B, sb1, offsetB + (i * sb2) );
 		}
 	} else {
 		// Solve A^T * X = B
@@ -118,7 +118,7 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 		for ( i = 0; i < nrhs; i++ ) {
 			dtbsv( 'upper', 'transpose', 'non-unit', N, kl + ku,
 				AB, sa1, sa2, offsetAB,
-				B, sb1, offsetB + i * sb2 );
+				B, sb1, offsetB + (i * sb2) );
 		}
 
 		// Apply L^T and row interchanges in reverse (backward elimination)
@@ -129,12 +129,12 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 				// B(j, :) -= L(j+1:j+lm, j)^T * B(j+1:j+lm, :)
 				dgemv( 'transpose', lm, nrhs, -1.0,
 					B, sb1, sb2, offsetB + ( j + 1 ) * sb1,
-					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + j * sa2,
+					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + (j * sa2),
 					1.0,
-					B, sb2, offsetB + j * sb1 );
-				l = IPIV[ offsetIPIV + j * strideIPIV ];
+					B, sb2, offsetB + (j * sb1) );
+				l = IPIV[ offsetIPIV + (j * strideIPIV) ];
 				if ( l !== j ) {
-					dswap( nrhs, B, sb2, offsetB + l * sb1, B, sb2, offsetB + j * sb1 );
+					dswap( nrhs, B, sb2, offsetB + (l * sb1), B, sb2, offsetB + (j * sb1) );
 				}
 			}
 		}

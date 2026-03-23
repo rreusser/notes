@@ -111,7 +111,7 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran: DO 20 J = KK+1, N; DO 10 I = 1, KK; A(I,J) = ZERO
 			for ( j = kk; j < N; j++ ) {
 				for ( i = 0; i < kk; i++ ) {
-					A[ offsetA + i * strideA1 + j * strideA2 ] = 0.0;
+					A[ offsetA + (i * strideA1) + (j * strideA2) ] = 0.0;
 				}
 			}
 		}
@@ -123,8 +123,8 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	if ( kk < N ) {
 		dorg2r(
 			M - kk, N - kk, K - kk,
-			A, strideA1, strideA2, offsetA + kk * strideA1 + kk * strideA2,
-			TAU, strideTAU, offsetTAU + kk * strideTAU,
+			A, strideA1, strideA2, offsetA + (kk * strideA1) + (kk * strideA2),
+			TAU, strideTAU, offsetTAU + (kk * strideTAU),
 			WORK, strideWORK, offsetWORK
 		);
 	}
@@ -148,8 +148,8 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// DLARFT('Forward', 'Columnwise', M-I+1, IB, A(I,I), LDA, TAU(I), WORK, LDWORK)
 				dlarft(
 					'forward', 'columnwise', M - i, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					work, 1, ldwork, 0
 				);
 
@@ -163,9 +163,9 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				dlarfb(
 					'left', 'no-transpose', 'forward', 'columnwise',
 					M - i, N - i - ib, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					work, 1, ldwork, 0,
-					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + ib ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + ib ) * strideA2,
 					work, 1, ldwork, ib
 				);
 			}
@@ -174,8 +174,8 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// DORG2R(M-I+1, IB, IB, A(I,I), LDA, TAU(I), WORK, IINFO)
 			dorg2r(
 				M - i, ib, ib,
-				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				work, 1, 0
 			);
 
@@ -184,7 +184,7 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran: DO 40 J = I, I+IB-1; DO 30 L = 1, I-1; A(L,J) = ZERO
 			for ( j = i; j < i + ib; j++ ) {
 				for ( l = 0; l < i; l++ ) {
-					A[ offsetA + l * strideA1 + j * strideA2 ] = 0.0;
+					A[ offsetA + (l * strideA1) + (j * strideA2) ] = 0.0;
 				}
 			}
 		}

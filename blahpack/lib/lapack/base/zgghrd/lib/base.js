@@ -161,7 +161,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	// Fortran: DO JCOL = 1, N-1; DO JROW = JCOL+1, N; B(JROW,JCOL)=0
 	for ( jcol = 0; jcol < N - 1; jcol++ ) {
 		for ( jrow = jcol + 1; jrow < N; jrow++ ) {
-			idx = oB + jrow * sb1 + jcol * sb2;
+			idx = oB + (jrow * sb1) + (jcol * sb2);
 			Bv[ idx ] = 0.0;
 			Bv[ idx + 1 ] = 0.0;
 		}
@@ -188,11 +188,11 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// Fortran: CTEMP = A(JROW-1, JCOL)
 			// JS 0-based: A(jrow-1, jcol)
 			// -------------------------------------------------------
-			idx = oA + ( jrow - 1 ) * sa1 + jcol * sa2;
+			idx = oA + ( jrow - 1 ) * sa1 + (jcol * sa2);
 			f[ 0 ] = Av[ idx ];
 			f[ 1 ] = Av[ idx + 1 ];
 
-			idx = oA + jrow * sa1 + jcol * sa2;
+			idx = oA + (jrow * sa1) + (jcol * sa2);
 			g[ 0 ] = Av[ idx ];
 			g[ 1 ] = Av[ idx + 1 ];
 
@@ -202,12 +202,12 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			si = out[ 2 ];
 
 			// A(JROW-1, JCOL) = R (the result from zlartg)
-			idx = oA + ( jrow - 1 ) * sa1 + jcol * sa2;
+			idx = oA + ( jrow - 1 ) * sa1 + (jcol * sa2);
 			Av[ idx ] = out[ 3 ];
 			Av[ idx + 1 ] = out[ 4 ];
 
 			// A(JROW, JCOL) = 0
-			idx = oA + jrow * sa1 + jcol * sa2;
+			idx = oA + (jrow * sa1) + (jcol * sa2);
 			Av[ idx ] = 0.0;
 			Av[ idx + 1 ] = 0.0;
 
@@ -221,7 +221,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			zrot(
 				N - ( jcol + 1 ),
 				A, strideA2, offsetA + ( jrow - 1 ) * strideA1 + ( jcol + 1 ) * strideA2,
-				A, strideA2, offsetA + jrow * strideA1 + ( jcol + 1 ) * strideA2,
+				A, strideA2, offsetA + (jrow * strideA1) + ( jcol + 1 ) * strideA2,
 				c, s
 			);
 
@@ -233,7 +233,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			zrot(
 				N + 1 - jrow,
 				B, strideB2, offsetB + ( jrow - 1 ) * strideB1 + ( jrow - 1 ) * strideB2,
-				B, strideB2, offsetB + jrow * strideB1 + ( jrow - 1 ) * strideB2,
+				B, strideB2, offsetB + (jrow * strideB1) + ( jrow - 1 ) * strideB2,
 				c, s
 			);
 
@@ -248,7 +248,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 				zrot(
 					N,
 					Q, strideQ1, offsetQ + ( jrow - 1 ) * strideQ2,
-					Q, strideQ1, offsetQ + jrow * strideQ2,
+					Q, strideQ1, offsetQ + (jrow * strideQ2),
 					c, s
 				);
 			}
@@ -258,11 +258,11 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// Applied from the right.
 			// Fortran: CTEMP = B(JROW, JROW)
 			// -------------------------------------------------------
-			idx = oB + jrow * sb1 + jrow * sb2;
+			idx = oB + (jrow * sb1) + (jrow * sb2);
 			f[ 0 ] = Bv[ idx ];
 			f[ 1 ] = Bv[ idx + 1 ];
 
-			idx = oB + jrow * sb1 + ( jrow - 1 ) * sb2;
+			idx = oB + (jrow * sb1) + ( jrow - 1 ) * sb2;
 			g[ 0 ] = Bv[ idx ];
 			g[ 1 ] = Bv[ idx + 1 ];
 
@@ -272,12 +272,12 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			si = out[ 2 ];
 
 			// B(JROW, JROW) = R
-			idx = oB + jrow * sb1 + jrow * sb2;
+			idx = oB + (jrow * sb1) + (jrow * sb2);
 			Bv[ idx ] = out[ 3 ];
 			Bv[ idx + 1 ] = out[ 4 ];
 
 			// B(JROW, JROW-1) = 0
-			idx = oB + jrow * sb1 + ( jrow - 1 ) * sb2;
+			idx = oB + (jrow * sb1) + ( jrow - 1 ) * sb2;
 			Bv[ idx ] = 0.0;
 			Bv[ idx + 1 ] = 0.0;
 
@@ -290,7 +290,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			s[ 1 ] = si;
 			zrot(
 				ihi,
-				A, strideA1, offsetA + jrow * strideA2,
+				A, strideA1, offsetA + (jrow * strideA2),
 				A, strideA1, offsetA + ( jrow - 1 ) * strideA2,
 				c, s
 			);
@@ -302,7 +302,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// Iterates over rows (stride=strideB1 complex elements)
 			zrot(
 				jrow,
-				B, strideB1, offsetB + jrow * strideB2,
+				B, strideB1, offsetB + (jrow * strideB2),
 				B, strideB1, offsetB + ( jrow - 1 ) * strideB2,
 				c, s
 			);
@@ -315,7 +315,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			if ( ilz ) {
 				zrot(
 					N,
-					Z, strideZ1, offsetZ + jrow * strideZ2,
+					Z, strideZ1, offsetZ + (jrow * strideZ2),
 					Z, strideZ1, offsetZ + ( jrow - 1 ) * strideZ2,
 					c, s
 				);

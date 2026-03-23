@@ -93,12 +93,12 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		ip = idamax( M, A, sa1, offsetA );
 		IPIV[ offsetIPIV ] = ip;
 
-		if ( A[ offsetA + ip * sa1 ] !== 0.0 ) {
+		if ( A[ offsetA + (ip * sa1) ] !== 0.0 ) {
 			// Swap rows 0 and ip
 			if ( ip !== 0 ) {
 				temp = A[ offsetA ];
-				A[ offsetA ] = A[ offsetA + ip * sa1 ];
-				A[ offsetA + ip * sa1 ] = temp;
+				A[ offsetA ] = A[ offsetA + (ip * sa1) ];
+				A[ offsetA + (ip * sa1) ] = temp;
 			}
 
 			// Scale below the pivot
@@ -106,7 +106,7 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 				dscal( M - 1, 1.0 / A[ offsetA ], A, sa1, offsetA + sa1 );
 			} else {
 				for ( i = 1; i < M; i++ ) {
-					A[ offsetA + i * sa1 ] = A[ offsetA + i * sa1 ] / A[ offsetA ];
+					A[ offsetA + (i * sa1) ] = A[ offsetA + (i * sa1) ] / A[ offsetA ];
 				}
 			}
 		} else {
@@ -134,28 +134,28 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Apply row interchanges to [A12; A22]
 		// Reads IPIV at positions 0..n1-1 (offsetIPIV)
-		dlaswp( n2, A, sa1, sa2, offsetA + n1 * sa2, 0, n1 - 1, IPIV, strideIPIV, offsetIPIV, 1 );
+		dlaswp( n2, A, sa1, sa2, offsetA + (n1 * sa2), 0, n1 - 1, IPIV, strideIPIV, offsetIPIV, 1 );
 
 		// Solve A11 * A12_new = A12 (triangular solve)
 
 		// A11 is lower triangular with unit diagonal, n1 x n1
 		dtrsm( 'left', 'lower', 'no-transpose', 'unit', n1, n2, 1.0,
 			A, sa1, sa2, offsetA,
-			A, sa1, sa2, offsetA + n1 * sa2
+			A, sa1, sa2, offsetA + (n1 * sa2)
 		);
 
 		// Update A22 = A22 - A21 * A12_new
 		dgemm( 'no-transpose', 'no-transpose', M - n1, n2, n1, -1.0,
-			A, sa1, sa2, offsetA + n1 * sa1,
-			A, sa1, sa2, offsetA + n1 * sa2,
+			A, sa1, sa2, offsetA + (n1 * sa1),
+			A, sa1, sa2, offsetA + (n1 * sa2),
 			1.0,
-			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2
+			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2)
 		);
 
 		// Factor A22 (M-n1 x n2)
 		iinfo = dgetrf2( M - n1, n2,
-			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2,
-			IPIV, strideIPIV, offsetIPIV + n1 * strideIPIV
+			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2),
+			IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV)
 		);
 
 		if ( info === 0 && iinfo > 0 ) {
@@ -164,13 +164,13 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Adjust IPIV for the second half: add n1 to each pivot index
 		for ( i = n1; i < minMN; i++ ) {
-			IPIV[ offsetIPIV + i * strideIPIV ] += n1;
+			IPIV[ offsetIPIV + (i * strideIPIV) ] += n1;
 		}
 
 		// Apply the second set of row interchanges to A11 columns
 		// Reads IPIV at positions n1..minMN-1 (offset by n1 from start)
 		dlaswp( n1, A, sa1, sa2, offsetA, n1, minMN - 1,
-			IPIV, strideIPIV, offsetIPIV + n1 * strideIPIV, 1
+			IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV), 1
 		);
 	}
 

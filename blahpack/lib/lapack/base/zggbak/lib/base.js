@@ -100,14 +100,14 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 				// Fortran: DO I = ILO, IHI; CALL ZDSCAL(M, RSCALE(I), V(I,1), LDV)
 				// V(I,1) with stride LDV iterates over columns of row I
 				for ( i = ilo - 1; i <= ihi - 1; i++ ) {
-					zdscal( M, RSCALE[ oR + i * sR ], V, sv2, oV + i * sv1 );
+					zdscal( M, RSCALE[ oR + (i * sR) ], V, sv2, oV + (i * sv1) );
 				}
 			}
 
 			// Scale left eigenvectors by LSCALE
 			if ( leftv ) {
 				for ( i = ilo - 1; i <= ihi - 1; i++ ) {
-					zdscal( M, LSCALE[ oL + i * sL ], V, sv2, oV + i * sv1 );
+					zdscal( M, LSCALE[ oL + (i * sL) ], V, sv2, oV + (i * sv1) );
 				}
 			}
 		}
@@ -121,11 +121,11 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 			// Fortran: DO I = ILO-1, 1, -1; K = INT(RSCALE(I)); IF (K==I) CYCLE; CALL ZSWAP(M, V(I,1), LDV, V(K,1), LDV)
 			if ( ilo !== 1 ) {
 				for ( i = ilo - 2; i >= 0; i-- ) {
-					k = Math.trunc( RSCALE[ oR + i * sR ] ) - 1; // convert to 0-based
+					k = Math.trunc( RSCALE[ oR + (i * sR) ] ) - 1; // convert to 0-based
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
+					zswap( M, V, sv2, oV + (i * sv1), V, sv2, oV + (k * sv1) );
 				}
 			}
 
@@ -133,11 +133,11 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 			// Fortran: DO I = IHI+1, N; K = INT(RSCALE(I)); IF (K==I) CYCLE; CALL ZSWAP(M, V(I,1), LDV, V(K,1), LDV)
 			if ( ihi !== N ) {
 				for ( i = ihi; i < N; i++ ) {
-					k = Math.trunc( RSCALE[ oR + i * sR ] ) - 1; // convert to 0-based
+					k = Math.trunc( RSCALE[ oR + (i * sR) ] ) - 1; // convert to 0-based
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
+					zswap( M, V, sv2, oV + (i * sv1), V, sv2, oV + (k * sv1) );
 				}
 			}
 		}
@@ -147,22 +147,22 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 			// Backward permutation: rows below ILO
 			if ( ilo !== 1 ) {
 				for ( i = ilo - 2; i >= 0; i-- ) {
-					k = Math.trunc( LSCALE[ oL + i * sL ] ) - 1; // convert to 0-based
+					k = Math.trunc( LSCALE[ oL + (i * sL) ] ) - 1; // convert to 0-based
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
+					zswap( M, V, sv2, oV + (i * sv1), V, sv2, oV + (k * sv1) );
 				}
 			}
 
 			// Forward permutation: rows above IHI
 			if ( ihi !== N ) {
 				for ( i = ihi; i < N; i++ ) {
-					k = Math.trunc( LSCALE[ oL + i * sL ] ) - 1; // convert to 0-based
+					k = Math.trunc( LSCALE[ oL + (i * sL) ] ) - 1; // convert to 0-based
 					if ( k === i ) {
 						continue;
 					}
-					zswap( M, V, sv2, oV + i * sv1, V, sv2, oV + k * sv1 );
+					zswap( M, V, sv2, oV + (i * sv1), V, sv2, oV + (k * sv1) );
 				}
 			}
 		}

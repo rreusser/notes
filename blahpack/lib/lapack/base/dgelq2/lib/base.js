@@ -61,7 +61,7 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 	for ( i = 0; i < K; i++ ) {
 		// Index of A(i,i) in the flat array
-		aii = offsetA + i * strideA1 + i * strideA2;
+		aii = offsetA + (i * strideA1) + (i * strideA2);
 
 		// Generate elementary reflector H(i) to annihilate A(i, i+1:N-1)
 
@@ -71,8 +71,8 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		dlarfg(
 			N - i,
 			A, aii,
-			A, strideA2, offsetA + i * strideA1 + Math.min( i + 1, N - 1 ) * strideA2,
-			TAU, offsetTAU + i * strideTAU
+			A, strideA2, offsetA + (i * strideA1) + Math.min( i + 1, N - 1 ) * strideA2,
+			TAU, offsetTAU + (i * strideTAU)
 		);
 
 		if ( i < M - 1 ) {
@@ -88,8 +88,8 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				M - i - 1,          // number of rows of sub-matrix
 				N - i,              // number of columns of sub-matrix
 				A, strideA2, aii,   // v = row i from col i onward, stride along columns
-				TAU[ offsetTAU + i * strideTAU ], // tau is a plain scalar for dlarf
-				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2, // C = A(i+1, i)
+				TAU[ offsetTAU + (i * strideTAU) ], // tau is a plain scalar for dlarf
+				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2), // C = A(i+1, i)
 				WORK, strideWORK, offsetWORK
 			);
 

@@ -115,11 +115,11 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 	if ( normin === 'N' || normin === 'n' ) {
 		if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
-				CNORM[ offsetCNORM + j * sc ] = dasum( j, A, sa1, offsetA + j * sa2 );
+				CNORM[ offsetCNORM + (j * sc) ] = dasum( j, A, sa1, offsetA + (j * sa2) );
 			}
 		} else {
 			for ( j = 0; j < N - 1; j++ ) {
-				CNORM[ offsetCNORM + j * sc ] = dasum( N - j - 1, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
+				CNORM[ offsetCNORM + (j * sc) ] = dasum( N - j - 1, A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
 			}
 			CNORM[ offsetCNORM + ( N - 1 ) * sc ] = 0.0;
 		}
@@ -127,7 +127,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 
 	// Scale CNORM if overflow would occur during growth estimation
 	imax = idamax( N, CNORM, sc, offsetCNORM );
-	tmax = CNORM[ offsetCNORM + imax * sc ];
+	tmax = CNORM[ offsetCNORM + (imax * sc) ];
 	if ( tmax <= BIGNUM ) {
 		tscal = 1.0;
 	} else {
@@ -142,14 +142,14 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 			if ( upper ) {
 				for ( j = 1; j < N; j++ ) {
 					tmax = Math.max(
-						dlange( 'max', j, 1, A, sa1, sa2, offsetA + j * sa2, work, 1, 0 ),
+						dlange( 'max', j, 1, A, sa1, sa2, offsetA + (j * sa2), work, 1, 0 ),
 						tmax
 					);
 				}
 			} else {
 				for ( j = 0; j < N - 1; j++ ) {
 					tmax = Math.max(
-						dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + j * sa2, work, 1, 0 ),
+						dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + (j * sa2), work, 1, 0 ),
 						tmax
 					);
 				}
@@ -157,7 +157,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 			if ( tmax <= RMAX ) {
 				tscal = 1.0 / ( SMLNUM * tmax );
 				for ( j = 0; j < N; j++ ) {
-					ci = offsetCNORM + j * sc;
+					ci = offsetCNORM + (j * sc);
 					if ( CNORM[ ci ] <= RMAX ) {
 						CNORM[ ci ] *= tscal;
 					} else {
@@ -165,11 +165,11 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 						CNORM[ ci ] = 0.0;
 						if ( upper ) {
 							for ( i = 0; i < j; i++ ) {
-								CNORM[ ci ] += tscal * Math.abs( A[ offsetA + i * sa1 + j * sa2 ] );
+								CNORM[ ci ] += tscal * Math.abs( A[ offsetA + (i * sa1) + (j * sa2) ] );
 							}
 						} else {
 							for ( i = j + 1; i < N; i++ ) {
-								CNORM[ ci ] += tscal * Math.abs( A[ offsetA + i * sa1 + j * sa2 ] );
+								CNORM[ ci ] += tscal * Math.abs( A[ offsetA + (i * sa1) + (j * sa2) ] );
 							}
 						}
 					}
@@ -184,7 +184,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 
 	// Determine iteration order and compute initial growth bound
 	j = idamax( N, x, strideX, offsetX );
-	xmax = Math.abs( x[ offsetX + j * strideX ] );
+	xmax = Math.abs( x[ offsetX + (j * strideX) ] );
 	xbnd = xmax;
 
 	if ( notran ) {
@@ -208,10 +208,10 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 				if ( grow <= SMLNUM ) {
 					break;
 				}
-				tjj = Math.abs( A[ offsetA + j * sa1 + j * sa2 ] );
+				tjj = Math.abs( A[ offsetA + (j * sa1) + (j * sa2) ] );
 				xbnd = Math.min( xbnd, Math.min( 1.0, tjj ) * grow );
-				if ( tjj + CNORM[ offsetCNORM + j * sc ] >= SMLNUM ) {
-					grow *= ( tjj / ( tjj + CNORM[ offsetCNORM + j * sc ] ) );
+				if ( tjj + CNORM[ offsetCNORM + (j * sc) ] >= SMLNUM ) {
+					grow *= ( tjj / ( tjj + CNORM[ offsetCNORM + (j * sc) ] ) );
 				} else {
 					grow = 0.0;
 				}
@@ -224,7 +224,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 				if ( grow <= SMLNUM ) {
 					break;
 				}
-				grow *= ( 1.0 / ( 1.0 + CNORM[ offsetCNORM + j * sc ] ) );
+				grow *= ( 1.0 / ( 1.0 + CNORM[ offsetCNORM + (j * sc) ] ) );
 			}
 		}
 	} else {
@@ -248,9 +248,9 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 				if ( grow <= SMLNUM ) {
 					break;
 				}
-				xj = 1.0 + CNORM[ offsetCNORM + j * sc ];
+				xj = 1.0 + CNORM[ offsetCNORM + (j * sc) ];
 				grow = Math.min( grow, xbnd / xj );
-				tjj = Math.abs( A[ offsetA + j * sa1 + j * sa2 ] );
+				tjj = Math.abs( A[ offsetA + (j * sa1) + (j * sa2) ] );
 				if ( xj > tjj ) {
 					xbnd *= ( tjj / xj );
 				}
@@ -262,7 +262,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 				if ( grow <= SMLNUM ) {
 					break;
 				}
-				xj = 1.0 + CNORM[ offsetCNORM + j * sc ];
+				xj = 1.0 + CNORM[ offsetCNORM + (j * sc) ];
 				grow /= xj;
 			}
 		}
@@ -282,40 +282,40 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 		if ( notran ) {
 			// Solve A * x = b (non-transpose)
 			for ( j = jfirst; j !== jlast; j += jinc ) {
-				xj = Math.abs( x[ offsetX + j * strideX ] );
+				xj = Math.abs( x[ offsetX + (j * strideX) ] );
 				if ( nounit ) {
-					tjjs = A[ offsetA + j * sa1 + j * sa2 ] * tscal;
+					tjjs = A[ offsetA + (j * sa1) + (j * sa2) ] * tscal;
 				} else {
 					tjjs = tscal;
 					if ( tscal === 1.0 ) {
 						// Skip diagonal division for unit diagonal
 						// (Go to label 100 in Fortran)
 						// Update xj after "division"
-						xj = Math.abs( x[ offsetX + j * strideX ] );
+						xj = Math.abs( x[ offsetX + (j * strideX) ] );
 
 						// Fall through to the off-diagonal update
 						if ( xj > 1.0 ) {
 							rec = 1.0 / xj;
-							if ( CNORM[ offsetCNORM + j * sc ] > ( BIGNUM - xmax ) * rec ) {
+							if ( CNORM[ offsetCNORM + (j * sc) ] > ( BIGNUM - xmax ) * rec ) {
 								rec *= HALF;
 								dscal( N, rec, x, strideX, offsetX );
 								scale[ 0 ] *= rec;
 							}
-						} else if ( xj * CNORM[ offsetCNORM + j * sc ] > ( BIGNUM - xmax ) ) {
+						} else if ( xj * CNORM[ offsetCNORM + (j * sc) ] > ( BIGNUM - xmax ) ) {
 							dscal( N, HALF, x, strideX, offsetX );
 							scale[ 0 ] *= HALF;
 						}
 
 						if ( upper ) {
 							if ( j > 0 ) {
-								daxpy( j, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + j * sa2, x, strideX, offsetX );
+								daxpy( j, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
 								i = idamax( j, x, strideX, offsetX );
-								xmax = Math.abs( x[ offsetX + i * strideX ] );
+								xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 							}
 						} else if ( j < N - 1 ) {
-							daxpy( N - j - 1, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2, x, strideX, offsetX + ( j + 1 ) * strideX );
+							daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2), x, strideX, offsetX + ( j + 1 ) * strideX );
 							i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
-							xmax = Math.abs( x[ offsetX + i * strideX ] );
+							xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 						}
 						continue;
 					}
@@ -330,26 +330,26 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 							xmax *= rec;
 						}
 					}
-					x[ offsetX + j * strideX ] /= tjjs;
-					xj = Math.abs( x[ offsetX + j * strideX ] );
+					x[ offsetX + (j * strideX) ] /= tjjs;
+					xj = Math.abs( x[ offsetX + (j * strideX) ] );
 				} else if ( tjj > 0.0 ) {
 					if ( xj > tjj * BIGNUM ) {
 						rec = ( tjj * BIGNUM ) / xj;
-						if ( CNORM[ offsetCNORM + j * sc ] > 1.0 ) {
-							rec /= CNORM[ offsetCNORM + j * sc ];
+						if ( CNORM[ offsetCNORM + (j * sc) ] > 1.0 ) {
+							rec /= CNORM[ offsetCNORM + (j * sc) ];
 						}
 						dscal( N, rec, x, strideX, offsetX );
 						scale[ 0 ] *= rec;
 						xmax *= rec;
 					}
-					x[ offsetX + j * strideX ] /= tjjs;
-					xj = Math.abs( x[ offsetX + j * strideX ] );
+					x[ offsetX + (j * strideX) ] /= tjjs;
+					xj = Math.abs( x[ offsetX + (j * strideX) ] );
 				} else {
 					// tjj === 0: singular matrix
 					for ( i = 0; i < N; i++ ) {
-						x[ offsetX + i * strideX ] = 0.0;
+						x[ offsetX + (i * strideX) ] = 0.0;
 					}
-					x[ offsetX + j * strideX ] = 1.0;
+					x[ offsetX + (j * strideX) ] = 1.0;
 					xj = 1.0;
 					scale[ 0 ] = 0.0;
 					xmax = 0.0;
@@ -358,38 +358,38 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 				// Update right-hand side with off-diagonal entries
 				if ( xj > 1.0 ) {
 					rec = 1.0 / xj;
-					if ( CNORM[ offsetCNORM + j * sc ] > ( BIGNUM - xmax ) * rec ) {
+					if ( CNORM[ offsetCNORM + (j * sc) ] > ( BIGNUM - xmax ) * rec ) {
 						rec *= HALF;
 						dscal( N, rec, x, strideX, offsetX );
 						scale[ 0 ] *= rec;
 					}
-				} else if ( xj * CNORM[ offsetCNORM + j * sc ] > ( BIGNUM - xmax ) ) {
+				} else if ( xj * CNORM[ offsetCNORM + (j * sc) ] > ( BIGNUM - xmax ) ) {
 					dscal( N, HALF, x, strideX, offsetX );
 					scale[ 0 ] *= HALF;
 				}
 
 				if ( upper ) {
 					if ( j > 0 ) {
-						daxpy( j, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + j * sa2, x, strideX, offsetX );
+						daxpy( j, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
 						i = idamax( j, x, strideX, offsetX );
-						xmax = Math.abs( x[ offsetX + i * strideX ] );
+						xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 					}
 				} else if ( j < N - 1 ) {
-					daxpy( N - j - 1, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2, x, strideX, offsetX + ( j + 1 ) * strideX );
+					daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2), x, strideX, offsetX + ( j + 1 ) * strideX );
 					i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
-					xmax = Math.abs( x[ offsetX + i * strideX ] );
+					xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 				}
 			}
 		} else {
 			// Solve A^T * x = b (transpose)
 			for ( j = jfirst; j !== jlast; j += jinc ) {
-				xj = Math.abs( x[ offsetX + j * strideX ] );
+				xj = Math.abs( x[ offsetX + (j * strideX) ] );
 				uscal = tscal;
 				rec = 1.0 / Math.max( xmax, 1.0 );
-				if ( CNORM[ offsetCNORM + j * sc ] > ( BIGNUM - xj ) * rec ) {
+				if ( CNORM[ offsetCNORM + (j * sc) ] > ( BIGNUM - xj ) * rec ) {
 					rec *= HALF;
 					if ( nounit ) {
-						tjjs = A[ offsetA + j * sa1 + j * sa2 ] * tscal;
+						tjjs = A[ offsetA + (j * sa1) + (j * sa2) ] * tscal;
 					} else {
 						tjjs = tscal;
 					}
@@ -409,34 +409,34 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 				if ( uscal === 1.0 ) {
 					// No scaling needed for off-diagonal
 					if ( upper ) {
-						sumj = ddot( j, A, sa1, offsetA + j * sa2, x, strideX, offsetX );
+						sumj = ddot( j, A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
 					} else if ( j < N - 1 ) {
-						sumj = ddot( N - j - 1, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2, x, strideX, offsetX + ( j + 1 ) * strideX );
+						sumj = ddot( N - j - 1, A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2), x, strideX, offsetX + ( j + 1 ) * strideX );
 					}
 				} else {
 					// Scale each term individually
 					if ( upper ) {
 						for ( i = 0; i < j; i++ ) {
-							sumj += ( A[ offsetA + i * sa1 + j * sa2 ] * uscal ) * x[ offsetX + i * strideX ];
+							sumj += ( A[ offsetA + (i * sa1) + (j * sa2) ] * uscal ) * x[ offsetX + (i * strideX) ];
 						}
 					} else if ( j < N - 1 ) {
 						for ( i = j + 1; i < N; i++ ) {
-							sumj += ( A[ offsetA + i * sa1 + j * sa2 ] * uscal ) * x[ offsetX + i * strideX ];
+							sumj += ( A[ offsetA + (i * sa1) + (j * sa2) ] * uscal ) * x[ offsetX + (i * strideX) ];
 						}
 					}
 				}
 
 				if ( uscal === tscal ) {
 					// No special diagonal scaling
-					x[ offsetX + j * strideX ] -= sumj;
-					xj = Math.abs( x[ offsetX + j * strideX ] );
+					x[ offsetX + (j * strideX) ] -= sumj;
+					xj = Math.abs( x[ offsetX + (j * strideX) ] );
 					if ( nounit ) {
-						tjjs = A[ offsetA + j * sa1 + j * sa2 ] * tscal;
+						tjjs = A[ offsetA + (j * sa1) + (j * sa2) ] * tscal;
 					} else {
 						tjjs = tscal;
 						if ( tscal === 1.0 ) {
 							// Unit diagonal, no division needed (label 150)
-							xmax = Math.max( xmax, Math.abs( x[ offsetX + j * strideX ] ) );
+							xmax = Math.max( xmax, Math.abs( x[ offsetX + (j * strideX) ] ) );
 							continue;
 						}
 					}
@@ -451,7 +451,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 								xmax *= rec;
 							}
 						}
-						x[ offsetX + j * strideX ] /= tjjs;
+						x[ offsetX + (j * strideX) ] /= tjjs;
 					} else if ( tjj > 0.0 ) {
 						if ( xj > tjj * BIGNUM ) {
 							rec = ( tjj * BIGNUM ) / xj;
@@ -459,21 +459,21 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 							scale[ 0 ] *= rec;
 							xmax *= rec;
 						}
-						x[ offsetX + j * strideX ] /= tjjs;
+						x[ offsetX + (j * strideX) ] /= tjjs;
 					} else {
 						// Singular
 						for ( i = 0; i < N; i++ ) {
-							x[ offsetX + i * strideX ] = 0.0;
+							x[ offsetX + (i * strideX) ] = 0.0;
 						}
-						x[ offsetX + j * strideX ] = 1.0;
+						x[ offsetX + (j * strideX) ] = 1.0;
 						scale[ 0 ] = 0.0;
 						xmax = 0.0;
 					}
 				} else {
 					// uscal !== tscal: already divided
-					x[ offsetX + j * strideX ] = x[ offsetX + j * strideX ] / tjjs - sumj;
+					x[ offsetX + (j * strideX) ] = (x[ offsetX + (j * strideX) ] / tjjs) - sumj;
 				}
-				xmax = Math.max( xmax, Math.abs( x[ offsetX + j * strideX ] ) );
+				xmax = Math.max( xmax, Math.abs( x[ offsetX + (j * strideX) ] ) );
 			}
 		}
 		scale[ 0 ] /= tscal;

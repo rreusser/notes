@@ -256,15 +256,15 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		}
 		rank[ 0 ] = 0;
 		for ( i = 0; i < N; i++ ) {
-			if ( S[ offsetS + i * strideS ] > thr ) {
+			if ( S[ offsetS + (i * strideS) ] > thr ) {
 				// Scale the corresponding row of B by 1/S(i)
-				drscl( nrhs, S[ offsetS + i * strideS ],
-					B, strideB2, offsetB + i * strideB1 );
+				drscl( nrhs, S[ offsetS + (i * strideS) ],
+					B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
 				// Zero out the corresponding row of B
 				dlaset( 'F', 1, nrhs, 0.0, 0.0,
-					B, strideB1, strideB2, offsetB + i * strideB1 );
+					B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 
@@ -284,11 +284,11 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				bl = Math.min( nrhs - i, chunk );
 				dgemm( 'transpose', 'no-transpose', N, bl, N, 1.0,
 					A, strideA1, strideA2, offsetA,
-					B, strideB1, strideB2, offsetB + i * strideB2,
+					B, strideB1, strideB2, offsetB + (i * strideB2),
 					0.0, WORK, 1, N, 0 );
 				dlacpy( 'G', N, bl,
 					WORK, 1, N, 0,
-					B, strideB1, strideB2, offsetB + i * strideB2 );
+					B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
 			dgemv( 'transpose', N, N, 1.0,
@@ -297,16 +297,16 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				0.0, WORK, 1, 0 );
 			dcopy( N, WORK, 1, 0, B, strideB1, offsetB );
 		}
-	} else if ( N >= mnthr && lwork >= 4 * M + M * M + Math.max( M, 2 * M - 4, nrhs, N - 3 * M ) ) {
+	} else if ( N >= mnthr && lwork >= (4 * M) + (M * M) + Math.max( M, (2 * M) - 4, nrhs, N - (3 * M) ) ) {
 		// ==========================================
 		// Path 2a: N >> M — LQ factorization with workspace copy
 		// ==========================================
 		ldwork = M;
 
 		// Check if we can use a larger ldwork for better performance
-		if ( lwork >= Math.max( 4 * M + M * M + Math.max( M, 2 * M - 4, nrhs, N - 3 * M ),
-			M * M + M + M * nrhs ) ) {
-			ldwork = Math.max( M, Math.floor( Math.sqrt( lwork - 3 * M ) ) );
+		if ( lwork >= Math.max( (4 * M) + (M * M) + Math.max( M, (2 * M) - 4, nrhs, N - (3 * M) ),
+			(M * M) + M + (M * nrhs) ) ) {
+			ldwork = Math.max( M, Math.floor( Math.sqrt( lwork - (3 * M) ) ) );
 
 			// Cap ldwork to a reasonable value
 			if ( ldwork > M ) {
@@ -331,7 +331,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
 			WORK, 1, ldwork, il + ldwork );
 
-		ie = il + ldwork * M;
+		ie = il + (ldwork * M);
 		itauq = ie + M;
 		itaup = itauq + M;
 		iwork = itaup + M;
@@ -378,19 +378,19 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		}
 		rank[ 0 ] = 0;
 		for ( i = 0; i < M; i++ ) {
-			if ( S[ offsetS + i * strideS ] > thr ) {
-				drscl( nrhs, S[ offsetS + i * strideS ],
-					B, strideB2, offsetB + i * strideB1 );
+			if ( S[ offsetS + (i * strideS) ] > thr ) {
+				drscl( nrhs, S[ offsetS + (i * strideS) ],
+					B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
 				dlaset( 'F', 1, nrhs, 0.0, 0.0,
-					B, strideB1, strideB2, offsetB + i * strideB1 );
+					B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 		iwork = ie;
 
 		// Multiply by right singular vectors of L: X_L = V_L^T * (Sigma^+ * ...)
-		if ( lwork >= iwork + M * nrhs && nrhs > 1 ) {
+		if ( lwork >= iwork + (M * nrhs) && nrhs > 1 ) {
 			dgemm( 'transpose', 'no-transpose', M, nrhs, M, 1.0,
 				WORK, 1, ldwork, il,
 				B, strideB1, strideB2, offsetB,
@@ -404,11 +404,11 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				bl = Math.min( nrhs - i, chunk );
 				dgemm( 'transpose', 'no-transpose', M, bl, M, 1.0,
 					WORK, 1, ldwork, il,
-					B, strideB1, strideB2, offsetB + i * strideB2,
+					B, strideB1, strideB2, offsetB + (i * strideB2),
 					0.0, WORK, 1, M, iwork );
 				dlacpy( 'G', M, bl,
 					WORK, 1, M, iwork,
-					B, strideB1, strideB2, offsetB + i * strideB2 );
+					B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
 			dgemv( 'transpose', M, M, 1.0,
@@ -420,7 +420,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 		// Zero out B(M+1:N, 1:NRHS)
 		dlaset( 'F', N - M, nrhs, 0.0, 0.0,
-			B, strideB1, strideB2, offsetB + M * strideB1 );
+			B, strideB1, strideB2, offsetB + (M * strideB1) );
 
 		// Multiply by Q^T from LQ factorization: X = Q^T * [X_L; 0]
 		iwork = itau + M;
@@ -480,13 +480,13 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		}
 		rank[ 0 ] = 0;
 		for ( i = 0; i < M; i++ ) {
-			if ( S[ offsetS + i * strideS ] > thr ) {
-				drscl( nrhs, S[ offsetS + i * strideS ],
-					B, strideB2, offsetB + i * strideB1 );
+			if ( S[ offsetS + (i * strideS) ] > thr ) {
+				drscl( nrhs, S[ offsetS + (i * strideS) ],
+					B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
 				dlaset( 'F', 1, nrhs, 0.0, 0.0,
-					B, strideB1, strideB2, offsetB + i * strideB1 );
+					B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 
@@ -505,11 +505,11 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				bl = Math.min( nrhs - i, chunk );
 				dgemm( 'transpose', 'no-transpose', N, bl, M, 1.0,
 					A, strideA1, strideA2, offsetA,
-					B, strideB1, strideB2, offsetB + i * strideB2,
+					B, strideB1, strideB2, offsetB + (i * strideB2),
 					0.0, WORK, 1, N, 0 );
 				dlacpy( 'F', N, bl,
 					WORK, 1, N, 0,
-					B, strideB1, strideB2, offsetB + i * strideB2 );
+					B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
 			dgemv( 'transpose', M, N, 1.0,
@@ -568,26 +568,26 @@ function computeWorkSize( M, N, nrhs, mnthr ) {
 			mm = N;
 
 			// QR path workspace: N (TAU) + max(N*NB for QR, N*NB for ORMQR)
-			wsize = Math.max( wsize, N + N * NB );
+			wsize = Math.max( wsize, N + (N * NB) );
 		}
 		// Bidiag workspace: 3*N + max(mm*NB, N*NB)
-		wsize = Math.max( wsize, 3 * N + Math.max( mm, N ) * NB );
-		wsize = Math.max( wsize, 3 * N + nrhs );
+		wsize = Math.max( wsize, (3 * N) + Math.max( mm, N ) * NB );
+		wsize = Math.max( wsize, (3 * N) + nrhs );
 		wsize = Math.max( wsize, bdspac );
 		wsize = Math.max( wsize, N * nrhs );
 	} else {
 		bdspac = Math.max( 1, 5 * M );
 		if ( N >= mnthr ) {
 			// LQ path with workspace copy
-			wsize = M + M * NB; // LQ
-			wsize = Math.max( wsize, M * M + 4 * M + M * NB ); // bidiag of L
-			wsize = Math.max( wsize, M * M + M + bdspac ); // BDSQR
-			wsize = Math.max( wsize, M * M + M + M * nrhs ); // GEMM
-			wsize = Math.max( wsize, M + N * NB ); // ORMLQ
+			wsize = M + (M * NB); // LQ
+			wsize = Math.max( wsize, (M * M) + (4 * M) + (M * NB) ); // bidiag of L
+			wsize = Math.max( wsize, (M * M) + M + bdspac ); // BDSQR
+			wsize = Math.max( wsize, (M * M) + M + (M * nrhs) ); // GEMM
+			wsize = Math.max( wsize, M + (N * NB) ); // ORMLQ
 		} else {
 			// Direct bidiag
-			wsize = Math.max( wsize, 3 * M + N * NB );
-			wsize = Math.max( wsize, 3 * M + nrhs );
+			wsize = Math.max( wsize, (3 * M) + (N * NB) );
+			wsize = Math.max( wsize, (3 * M) + nrhs );
 			wsize = Math.max( wsize, bdspac );
 			wsize = Math.max( wsize, N * nrhs );
 		}

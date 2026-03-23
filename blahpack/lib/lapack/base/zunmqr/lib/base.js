@@ -106,10 +106,10 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	ldwork = nw;
 	ldt = nb + 1;
 	if ( WORK === null ) {
-		WORK = new Complex128Array( Math.max( 1, nw * nb + ldt * nb ) );
+		WORK = new Complex128Array( Math.max( 1, (nw * nb) + (ldt * nb) ) );
 	}
 	T = WORK;
-	offsetT = offsetWORK + nw * nb;
+	offsetT = offsetWORK + (nw * nb);
 
 	// If nb >= K, use unblocked code
 	if ( nb >= K ) {
@@ -149,8 +149,8 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		zlarft(
 			'forward', 'columnwise', nq - i, ib,
-			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-			TAU, strideTAU, offsetTAU + i * strideTAU,
+			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+			TAU, strideTAU, offsetTAU + (i * strideTAU),
 			T, 1, ldt, offsetT
 		);
 
@@ -165,9 +165,9 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Apply H or H^H to C(ic:ic+mi, jc:jc+ni)
 		zlarfb(
 			side, trans, 'forward', 'columnwise', mi, ni, ib,
-			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 			T, 1, ldt, offsetT,
-			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
+			C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2),
 			WORK, 1, ldwork, offsetWORK
 		);
 	}

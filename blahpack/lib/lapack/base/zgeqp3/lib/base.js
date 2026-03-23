@@ -105,18 +105,18 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 	// Phase 1: Move fixed columns to the front
 	nfxd = 0;
 	for ( j = 0; j < N; j++ ) {
-		if ( JPVT[ oJ + j * strideJPVT ] !== 0 ) {
+		if ( JPVT[ oJ + (j * strideJPVT) ] !== 0 ) {
 			if ( j !== nfxd ) {
 				// Swap columns j and nfxd
-				zswap( M, A, sa1, offsetA + j * sa2, A, sa1, offsetA + nfxd * sa2 );
-				JPVT[ oJ + j * strideJPVT ] = JPVT[ oJ + nfxd * strideJPVT ];
-				JPVT[ oJ + nfxd * strideJPVT ] = j + 1; // 1-based
+				zswap( M, A, sa1, offsetA + (j * sa2), A, sa1, offsetA + (nfxd * sa2) );
+				JPVT[ oJ + (j * strideJPVT) ] = JPVT[ oJ + (nfxd * strideJPVT) ];
+				JPVT[ oJ + (nfxd * strideJPVT) ] = j + 1; // 1-based
 			} else {
-				JPVT[ oJ + j * strideJPVT ] = j + 1; // 1-based
+				JPVT[ oJ + (j * strideJPVT) ] = j + 1; // 1-based
 			}
 			nfxd += 1;
 		} else {
-			JPVT[ oJ + j * strideJPVT ] = j + 1; // 1-based
+			JPVT[ oJ + (j * strideJPVT) ] = j + 1; // 1-based
 		}
 	}
 
@@ -135,7 +135,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 				'Left', 'Conjugate Transpose', M, N - na, na,
 				A, sa1, sa2, offsetA,
 				TAU, strideTAU, oT,
-				A, sa1, sa2, offsetA + na * sa2,
+				A, sa1, sa2, offsetA + (na * sa2),
 				workQR, 1, 0, workQR.length
 			);
 		}
@@ -149,10 +149,10 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 
 		// Compute initial column norms for the unfactored submatrix
 		for ( j = nfxd; j < N; j++ ) {
-			RWORK[ oR + j * strideRWORK ] = dznrm2(
-				sm, A, sa1, offsetA + nfxd * sa1 + j * sa2
+			RWORK[ oR + (j * strideRWORK) ] = dznrm2(
+				sm, A, sa1, offsetA + (nfxd * sa1) + (j * sa2)
 			);
-			RWORK[ oR + ( N + j ) * strideRWORK ] = RWORK[ oR + j * strideRWORK ];
+			RWORK[ oR + ( N + j ) * strideRWORK ] = RWORK[ oR + (j * strideRWORK) ];
 		}
 
 		nb = DEFAULT_NB;
@@ -178,10 +178,10 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 				// Factor panel using zlaqps
 				fjb = zlaqps(
 					M, N - j, j, jb,
-					A, sa1, sa2, offsetA + j * sa2,
-					JPVT, strideJPVT, oJ + j * strideJPVT,
-					TAU, strideTAU, oT + j * strideTAU,
-					RWORK, strideRWORK, oR + j * strideRWORK,
+					A, sa1, sa2, offsetA + (j * sa2),
+					JPVT, strideJPVT, oJ + (j * strideJPVT),
+					TAU, strideTAU, oT + (j * strideTAU),
+					RWORK, strideRWORK, oR + (j * strideRWORK),
 					RWORK, strideRWORK, oR + ( N + j ) * strideRWORK,
 					AUXV, 1, 0,
 					F, 1, sn + 1, 0
@@ -196,10 +196,10 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 		if ( j < minmn ) {
 			zlaqp2(
 				M, N - j, j,
-				A, sa1, sa2, offsetA + j * sa2,
-				JPVT, strideJPVT, oJ + j * strideJPVT,
-				TAU, strideTAU, oT + j * strideTAU,
-				RWORK, strideRWORK, oR + j * strideRWORK,
+				A, sa1, sa2, offsetA + (j * sa2),
+				JPVT, strideJPVT, oJ + (j * strideJPVT),
+				TAU, strideTAU, oT + (j * strideTAU),
+				RWORK, strideRWORK, oR + (j * strideRWORK),
 				RWORK, strideRWORK, oR + ( N + j ) * strideRWORK,
 				WORK, strideWORK, offsetWORK
 			);

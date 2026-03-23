@@ -49,7 +49,7 @@ function iladlc( M, N, A, strideA1, strideA2, offsetA ) {
 	// Scan each column from the end, returning with the first non-zero.
 	for ( j = N - 1; j >= 0; j-- ) {
 		for ( i = 0; i < M; i++ ) {
-			if ( A[ offsetA + i * strideA1 + j * strideA2 ] !== 0.0 ) {
+			if ( A[ offsetA + (i * strideA1) + (j * strideA2) ] !== 0.0 ) {
 				return j;
 			}
 		}

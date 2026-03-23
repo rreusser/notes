@@ -90,40 +90,40 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			if ( direct === 'forward' ) {
 				// Variable pivot, forward direction
 				for ( j = 0; j < M - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + ( j + 1 ) * sa1 + i * sa2;
-							idx2 = oA + j * sa1 + i * sa2;
+							idx1 = oA + ( j + 1 ) * sa1 + (i * sa2);
+							idx2 = oA + (j * sa1) + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
 			} else {
 				// Variable pivot, backward direction
 				for ( j = M - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + ( j + 1 ) * sa1 + i * sa2;
-							idx2 = oA + j * sa1 + i * sa2;
+							idx1 = oA + ( j + 1 ) * sa1 + (i * sa2);
+							idx2 = oA + (j * sa1) + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
@@ -135,16 +135,16 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + j * sa1 + i * sa2;
-							idx2 = oA + i * sa2; // row 0
+							idx1 = oA + (j * sa1) + (i * sa2);
+							idx2 = oA + (i * sa2); // row 0
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
@@ -154,16 +154,16 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + j * sa1 + i * sa2;
-							idx2 = oA + i * sa2; // row 0
+							idx1 = oA + (j * sa1) + (i * sa2);
+							idx2 = oA + (i * sa2); // row 0
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
@@ -171,39 +171,39 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		} else if ( pivot === 'bottom' ) {
 			if ( direct === 'forward' ) {
 				for ( j = 0; j < M - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + j * sa1 + i * sa2;
-							idx2 = oA + ( M - 1 ) * sa1 + i * sa2;
+							idx1 = oA + (j * sa1) + (i * sa2);
+							idx2 = oA + ( M - 1 ) * sa1 + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							Av[ idx1 ] = (stemp * aRe) + (ctemp * tempRe);
+							Av[ idx1 + 1 ] = (stemp * aIm) + (ctemp * tempIm);
+							Av[ idx2 ] = (ctemp * aRe) - (stemp * tempRe);
+							Av[ idx2 + 1 ] = (ctemp * aIm) - (stemp * tempIm);
 						}
 					}
 				}
 			} else {
 				for ( j = M - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + j * sa1 + i * sa2;
-							idx2 = oA + ( M - 1 ) * sa1 + i * sa2;
+							idx1 = oA + (j * sa1) + (i * sa2);
+							idx2 = oA + ( M - 1 ) * sa1 + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							Av[ idx1 ] = (stemp * aRe) + (ctemp * tempRe);
+							Av[ idx1 + 1 ] = (stemp * aIm) + (ctemp * tempIm);
+							Av[ idx2 ] = (ctemp * aRe) - (stemp * tempRe);
+							Av[ idx2 + 1 ] = (ctemp * aIm) - (stemp * tempIm);
 						}
 					}
 				}
@@ -214,39 +214,39 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		if ( pivot === 'variable' ) {
 			if ( direct === 'forward' ) {
 				for ( j = 0; j < N - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + i * sa1 + ( j + 1 ) * sa2;
-							idx2 = oA + i * sa1 + j * sa2;
+							idx1 = oA + (i * sa1) + ( j + 1 ) * sa2;
+							idx2 = oA + (i * sa1) + (j * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
 			} else {
 				for ( j = N - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + i * sa1 + ( j + 1 ) * sa2;
-							idx2 = oA + i * sa1 + j * sa2;
+							idx1 = oA + (i * sa1) + ( j + 1 ) * sa2;
+							idx2 = oA + (i * sa1) + (j * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
@@ -258,16 +258,16 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + i * sa1 + j * sa2;
-							idx2 = oA + i * sa1; // col 0
+							idx1 = oA + (i * sa1) + (j * sa2);
+							idx2 = oA + (i * sa1); // col 0
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
@@ -277,16 +277,16 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + i * sa1 + j * sa2;
-							idx2 = oA + i * sa1; // col 0
+							idx1 = oA + (i * sa1) + (j * sa2);
+							idx2 = oA + (i * sa1); // col 0
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = ctemp * tempRe - stemp * aRe;
-							Av[ idx1 + 1 ] = ctemp * tempIm - stemp * aIm;
-							Av[ idx2 ] = stemp * tempRe + ctemp * aRe;
-							Av[ idx2 + 1 ] = stemp * tempIm + ctemp * aIm;
+							Av[ idx1 ] = (ctemp * tempRe) - (stemp * aRe);
+							Av[ idx1 + 1 ] = (ctemp * tempIm) - (stemp * aIm);
+							Av[ idx2 ] = (stemp * tempRe) + (ctemp * aRe);
+							Av[ idx2 + 1 ] = (stemp * tempIm) + (ctemp * aIm);
 						}
 					}
 				}
@@ -294,39 +294,39 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		} else if ( pivot === 'bottom' ) {
 			if ( direct === 'forward' ) {
 				for ( j = 0; j < N - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + i * sa1 + j * sa2;
-							idx2 = oA + i * sa1 + ( N - 1 ) * sa2;
+							idx1 = oA + (i * sa1) + (j * sa2);
+							idx2 = oA + (i * sa1) + ( N - 1 ) * sa2;
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							Av[ idx1 ] = (stemp * aRe) + (ctemp * tempRe);
+							Av[ idx1 + 1 ] = (stemp * aIm) + (ctemp * tempIm);
+							Av[ idx2 ] = (ctemp * aRe) - (stemp * tempRe);
+							Av[ idx2 + 1 ] = (ctemp * aIm) - (stemp * tempIm);
 						}
 					}
 				}
 			} else {
 				for ( j = N - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + i * sa1 + j * sa2;
-							idx2 = oA + i * sa1 + ( N - 1 ) * sa2;
+							idx1 = oA + (i * sa1) + (j * sa2);
+							idx2 = oA + (i * sa1) + ( N - 1 ) * sa2;
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
 							aIm = Av[ idx2 + 1 ];
-							Av[ idx1 ] = stemp * aRe + ctemp * tempRe;
-							Av[ idx1 + 1 ] = stemp * aIm + ctemp * tempIm;
-							Av[ idx2 ] = ctemp * aRe - stemp * tempRe;
-							Av[ idx2 + 1 ] = ctemp * aIm - stemp * tempIm;
+							Av[ idx1 ] = (stemp * aRe) + (ctemp * tempRe);
+							Av[ idx1 + 1 ] = (stemp * aIm) + (ctemp * tempIm);
+							Av[ idx2 ] = (ctemp * aRe) - (stemp * tempRe);
+							Av[ idx2 + 1 ] = (ctemp * aIm) - (stemp * tempIm);
 						}
 					}
 				}

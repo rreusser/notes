@@ -78,7 +78,7 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 		if ( upper ) {
 			if ( beta === 0.0 ) {
 				for ( j = 0; j < N; j++ ) {
-					ic = offsetC + j * sc2;
+					ic = offsetC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						C[ ic ] = 0.0;
 						ic += sc1;
@@ -86,7 +86,7 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 				}
 			} else {
 				for ( j = 0; j < N; j++ ) {
-					ic = offsetC + j * sc2;
+					ic = offsetC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						C[ ic ] *= beta;
 						ic += sc1;
@@ -95,7 +95,7 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 			}
 		} else if ( beta === 0.0 ) {
 			for ( j = 0; j < N; j++ ) {
-				ic = offsetC + j * sc1 + j * sc2;
+				ic = offsetC + (j * sc1) + (j * sc2);
 				for ( i = j; i < N; i++ ) {
 					C[ ic ] = 0.0;
 					ic += sc1;
@@ -103,7 +103,7 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 			}
 		} else {
 			for ( j = 0; j < N; j++ ) {
-				ic = offsetC + j * sc1 + j * sc2;
+				ic = offsetC + (j * sc1) + (j * sc2);
 				for ( i = j; i < N; i++ ) {
 					C[ ic ] *= beta;
 					ic += sc1;
@@ -118,23 +118,23 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 		if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
 				if ( beta === 0.0 ) {
-					ic = offsetC + j * sc2;
+					ic = offsetC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						C[ ic ] = 0.0;
 						ic += sc1;
 					}
 				} else if ( beta !== 1.0 ) {
-					ic = offsetC + j * sc2;
+					ic = offsetC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						C[ ic ] *= beta;
 						ic += sc1;
 					}
 				}
 				for ( l = 0; l < K; l++ ) {
-					if ( A[ offsetA + j * sa1 + l * sa2 ] !== 0.0 ) {
-						temp = alpha * A[ offsetA + j * sa1 + l * sa2 ];
-						ia = offsetA + l * sa2;
-						ic = offsetC + j * sc2;
+					if ( A[ offsetA + (j * sa1) + (l * sa2) ] !== 0.0 ) {
+						temp = alpha * A[ offsetA + (j * sa1) + (l * sa2) ];
+						ia = offsetA + (l * sa2);
+						ic = offsetC + (j * sc2);
 						for ( i = 0; i <= j; i++ ) {
 							C[ ic ] += temp * A[ ia ];
 							ia += sa1;
@@ -146,23 +146,23 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 		} else {
 			for ( j = 0; j < N; j++ ) {
 				if ( beta === 0.0 ) {
-					ic = offsetC + j * sc1 + j * sc2;
+					ic = offsetC + (j * sc1) + (j * sc2);
 					for ( i = j; i < N; i++ ) {
 						C[ ic ] = 0.0;
 						ic += sc1;
 					}
 				} else if ( beta !== 1.0 ) {
-					ic = offsetC + j * sc1 + j * sc2;
+					ic = offsetC + (j * sc1) + (j * sc2);
 					for ( i = j; i < N; i++ ) {
 						C[ ic ] *= beta;
 						ic += sc1;
 					}
 				}
 				for ( l = 0; l < K; l++ ) {
-					if ( A[ offsetA + j * sa1 + l * sa2 ] !== 0.0 ) {
-						temp = alpha * A[ offsetA + j * sa1 + l * sa2 ];
-						ia = offsetA + j * sa1 + l * sa2;
-						ic = offsetC + j * sc1 + j * sc2;
+					if ( A[ offsetA + (j * sa1) + (l * sa2) ] !== 0.0 ) {
+						temp = alpha * A[ offsetA + (j * sa1) + (l * sa2) ];
+						ia = offsetA + (j * sa1) + (l * sa2);
+						ic = offsetC + (j * sc1) + (j * sc2);
 						for ( i = j; i < N; i++ ) {
 							C[ ic ] += temp * A[ ia ];
 							ia += sa1;
@@ -179,12 +179,12 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 				for ( i = 0; i <= j; i++ ) {
 					temp = 0.0;
 					for ( l = 0; l < K; l++ ) {
-						temp += A[ offsetA + l * sa1 + i * sa2 ] * A[ offsetA + l * sa1 + j * sa2 ];
+						temp += A[ offsetA + (l * sa1) + (i * sa2) ] * A[ offsetA + (l * sa1) + (j * sa2) ];
 					}
 					if ( beta === 0.0 ) {
-						C[ offsetC + i * sc1 + j * sc2 ] = alpha * temp;
+						C[ offsetC + (i * sc1) + (j * sc2) ] = alpha * temp;
 					} else {
-						C[ offsetC + i * sc1 + j * sc2 ] = alpha * temp + beta * C[ offsetC + i * sc1 + j * sc2 ];
+						C[ offsetC + (i * sc1) + (j * sc2) ] = (alpha * temp) + (beta * C[ offsetC + (i * sc1) + (j * sc2) ]);
 					}
 				}
 			}
@@ -193,12 +193,12 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 				for ( i = j; i < N; i++ ) {
 					temp = 0.0;
 					for ( l = 0; l < K; l++ ) {
-						temp += A[ offsetA + l * sa1 + i * sa2 ] * A[ offsetA + l * sa1 + j * sa2 ];
+						temp += A[ offsetA + (l * sa1) + (i * sa2) ] * A[ offsetA + (l * sa1) + (j * sa2) ];
 					}
 					if ( beta === 0.0 ) {
-						C[ offsetC + i * sc1 + j * sc2 ] = alpha * temp;
+						C[ offsetC + (i * sc1) + (j * sc2) ] = alpha * temp;
 					} else {
-						C[ offsetC + i * sc1 + j * sc2 ] = alpha * temp + beta * C[ offsetC + i * sc1 + j * sc2 ];
+						C[ offsetC + (i * sc1) + (j * sc2) ] = (alpha * temp) + (beta * C[ offsetC + (i * sc1) + (j * sc2) ]);
 					}
 				}
 			}

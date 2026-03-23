@@ -60,13 +60,13 @@ function zpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strid
 			// Solve U^H * y = b(j), result in B(:,j)
 			ztbsv( 'upper', 'conjugate-transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + j * strideB2
+				B, strideB1, offsetB + (j * strideB2)
 			);
 
 			// Solve U * x = y, result in B(:,j)
 			ztbsv( 'upper', 'no-transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + j * strideB2
+				B, strideB1, offsetB + (j * strideB2)
 			);
 		}
 	} else {
@@ -75,13 +75,13 @@ function zpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strid
 			// Solve L * y = b(j), result in B(:,j)
 			ztbsv( 'lower', 'no-transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + j * strideB2
+				B, strideB1, offsetB + (j * strideB2)
 			);
 
 			// Solve L^H * x = y, result in B(:,j)
 			ztbsv( 'lower', 'conjugate-transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + j * strideB2
+				B, strideB1, offsetB + (j * strideB2)
 			);
 		}
 	}

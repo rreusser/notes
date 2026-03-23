@@ -63,7 +63,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		// Max absolute value
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
-			ai = offsetA + j * strideA2;
+			ai = offsetA + (j * strideA2);
 			for ( i = 0; i < M; i++ ) {
 				temp = Math.abs( A[ ai ] );
 				if ( value < temp || temp !== temp ) {
@@ -77,7 +77,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
 			sum = 0.0;
-			ai = offsetA + j * strideA2;
+			ai = offsetA + (j * strideA2);
 			for ( i = 0; i < M; i++ ) {
 				sum += Math.abs( A[ ai ] );
 				ai += strideA1;
@@ -89,11 +89,11 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 	} else if ( norm === 'inf-norm' ) {
 		// Infinity-norm: maximum row sum of absolute values
 		for ( i = 0; i < M; i++ ) {
-			wi = offsetWORK + i * strideWORK;
+			wi = offsetWORK + (i * strideWORK);
 			WORK[ wi ] = 0.0;
 		}
 		for ( j = 0; j < N; j++ ) {
-			ai = offsetA + j * strideA2;
+			ai = offsetA + (j * strideA2);
 			wi = offsetWORK;
 			for ( i = 0; i < M; i++ ) {
 				WORK[ wi ] += Math.abs( A[ ai ] );
@@ -103,7 +103,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		}
 		value = 0.0;
 		for ( i = 0; i < M; i++ ) {
-			wi = offsetWORK + i * strideWORK;
+			wi = offsetWORK + (i * strideWORK);
 			temp = WORK[ wi ];
 			if ( value < temp || temp !== temp ) {
 				value = temp;
@@ -114,7 +114,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		scale = 0.0;
 		sum = 1.0;
 		for ( j = 0; j < N; j++ ) {
-			out = dlassq( M, A, strideA1, offsetA + j * strideA2, scale, sum );
+			out = dlassq( M, A, strideA1, offsetA + (j * strideA2), scale, sum );
 			scale = out.scl;
 			sum = out.sumsq;
 		}

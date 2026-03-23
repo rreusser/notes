@@ -70,10 +70,10 @@ function zdrot( N, zx, strideX, offsetX, zy, strideY, offsetY, c, s ) {
 	sy = strideY * 2;
 
 	for ( i = 0; i < N; i++ ) {
-		tempr = c * xv[ ix ] + s * yv[ iy ];
-		tempi = c * xv[ ix + 1 ] + s * yv[ iy + 1 ];
-		yv[ iy ] = c * yv[ iy ] - s * xv[ ix ];
-		yv[ iy + 1 ] = c * yv[ iy + 1 ] - s * xv[ ix + 1 ];
+		tempr = (c * xv[ ix ]) + (s * yv[ iy ]);
+		tempi = (c * xv[ ix + 1 ]) + (s * yv[ iy + 1 ]);
+		yv[ iy ] = (c * yv[ iy ]) - (s * xv[ ix ]);
+		yv[ iy + 1 ] = (c * yv[ iy + 1 ]) - (s * xv[ ix + 1 ]);
 		xv[ ix ] = tempr;
 		xv[ ix + 1 ] = tempi;
 		ix += sx;

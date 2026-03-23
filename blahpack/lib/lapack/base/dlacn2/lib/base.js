@@ -74,7 +74,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 	var si;
 	var s0 = offsetISAVE;
 	var s1 = offsetISAVE + strideISAVE;
-	var s2 = offsetISAVE + 2 * strideISAVE;
+	var s2 = offsetISAVE + (2 * strideISAVE);
 	var i;
 
 	if ( KASE[ 0 ] === 0 ) {
@@ -129,7 +129,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 			x[ ix ] = 0.0;
 			ix += strideX;
 		}
-		x[ offsetX + ISAVE[ s1 ] * strideX ] = 1.0;
+		x[ offsetX + (ISAVE[ s1 ] * strideX) ] = 1.0;
 		KASE[ 0 ] = 1;
 		ISAVE[ s0 ] = 3; // jump = 3
 		return;
@@ -209,7 +209,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		jlast = ISAVE[ s1 ];
 		ISAVE[ s1 ] = idamax( N, x, strideX, offsetX ); // 0-based
 
-		if ( ( x[ offsetX + jlast * strideX ] !== Math.abs( x[ offsetX + ISAVE[ s1 ] * strideX ] ) ) && ( ISAVE[ s2 ] < ITMAX ) ) {
+		if ( ( x[ offsetX + (jlast * strideX) ] !== Math.abs( x[ offsetX + (ISAVE[ s1 ] * strideX) ] ) ) && ( ISAVE[ s2 ] < ITMAX ) ) {
 			ISAVE[ s2 ] += 1;
 
 			// Go to label 50: set up unit vector for new column
@@ -218,7 +218,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 				x[ ix ] = 0.0;
 				ix += strideX;
 			}
-			x[ offsetX + ISAVE[ s1 ] * strideX ] = 1.0;
+			x[ offsetX + (ISAVE[ s1 ] * strideX) ] = 1.0;
 			KASE[ 0 ] = 1;
 			ISAVE[ s0 ] = 3; // jump = 3
 			return;

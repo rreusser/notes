@@ -97,12 +97,12 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	for ( j = K; j < N; j++ ) {
 		// Zero out the column
 		for ( l = 0; l < M; l++ ) {
-			ia = oA + l * sa1 + j * sa2;
+			ia = oA + (l * sa1) + (j * sa2);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}
 		// Set diagonal to 1
-		ia = oA + j * sa1 + j * sa2;
+		ia = oA + (j * sa1) + (j * sa2);
 		Av[ ia ] = 1.0;
 		Av[ ia + 1 ] = 0.0;
 	}
@@ -111,12 +111,12 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	// Fortran: DO 40 I = K, 1, -1  (1-based i)
 	// JS: i goes from K-1 down to 0 (0-based)
 	for ( i = K - 1; i >= 0; i-- ) {
-		it = offsetTAU * 2 + i * st;
+		it = (offsetTAU * 2) + (i * st);
 
 		// If i < N-1 (Fortran: I < N), apply the reflector to A(i:M-1, i+1:N-1)
 		if ( i < N - 1 ) {
 			// Set A(i,i) = 1 before applying the reflector
-			ia = oA + i * sa1 + i * sa2;
+			ia = oA + (i * sa1) + (i * sa2);
 			Av[ ia ] = 1.0;
 			Av[ ia + 1 ] = 0.0;
 
@@ -127,9 +127,9 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// In 0-based: M-i rows from row i, N-i-1 cols from col i+1
 			zlarf(
 				'left', M - i, N - i - 1,
-				A, strideA1, offsetA + i * strideA1 + i * strideA2,
-				TAU, offsetTAU + i * strideTAU,
-				A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
+				A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
+				TAU, offsetTAU + (i * strideTAU),
+				A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
 				WORK, strideWORK, offsetWORK
 			);
 		}
@@ -141,12 +141,12 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			negTau = new Complex128( -tauv[ it ], -tauv[ it + 1 ] );
 			zscal(
 				M - i - 1, negTau,
-				A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2
+				A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2)
 			);
 		}
 
 		// A(i,i) = 1 - TAU(i)
-		ia = oA + i * sa1 + i * sa2;
+		ia = oA + (i * sa1) + (i * sa2);
 		Av[ ia ] = 1.0 - tauv[ it ];
 		Av[ ia + 1 ] = -tauv[ it + 1 ];
 
@@ -154,7 +154,7 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// Fortran: DO 30 L = 1, I-1
 		for ( l = 0; l < i; l++ ) {
-			ia = oA + l * sa1 + i * sa2;
+			ia = oA + (l * sa1) + (i * sa2);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}

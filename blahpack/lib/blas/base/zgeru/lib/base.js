@@ -109,16 +109,16 @@ function zgeru( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 			// Temp = alpha * y(j) (NO conjugation, unlike zgerc)
 			// alpha * y = (alphaRe + alphaIm*i)(yr + yi*i)
 			//           = (alphaRe*yr - alphaIm*yi) + (alphaIm*yr + alphaRe*yi)*i
-			tr = alphaRe * yr - alphaIm * yi;
-			ti = alphaIm * yr + alphaRe * yi;
+			tr = (alphaRe * yr) - (alphaIm * yi);
+			ti = (alphaIm * yr) + (alphaRe * yi);
 
 			ix = oX;
-			ia = oA + j * sa2;
+			ia = oA + (j * sa2);
 			for ( i = 0; i < M; i++ ) {
 				// A(i,j) = A(i,j) + x(i) * temp
 				// (xr + xi*i)(tr + ti*i) = (xr*tr - xi*ti) + (xr*ti + xi*tr)*i
-				Av[ ia ] += xv[ ix ] * tr - xv[ ix + 1 ] * ti;
-				Av[ ia + 1 ] += xv[ ix ] * ti + xv[ ix + 1 ] * tr;
+				Av[ ia ] += (xv[ ix ] * tr) - (xv[ ix + 1 ] * ti);
+				Av[ ia + 1 ] += (xv[ ix ] * ti) + (xv[ ix + 1 ] * tr);
 				ix += sx;
 				ia += sa1;
 			}

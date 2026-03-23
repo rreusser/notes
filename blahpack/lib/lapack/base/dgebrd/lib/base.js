@@ -135,13 +135,13 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			// X starts at offsetWORK, Y starts at offsetWORK + ldwrkx * nb
 			dlabrd(
 				M - i, N - i, nb,
-				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-				d, strideD, offsetD + i * strideD,
-				e, strideE, offsetE + i * strideE,
-				TAUQ, strideTAUQ, offsetTAUQ + i * strideTAUQ,
-				TAUP, strideTAUP, offsetTAUP + i * strideTAUP,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+				d, strideD, offsetD + (i * strideD),
+				e, strideE, offsetE + (i * strideE),
+				TAUQ, strideTAUQ, offsetTAUQ + (i * strideTAUQ),
+				TAUP, strideTAUP, offsetTAUP + (i * strideTAUP),
 				WORK, 1, ldwrkx, offsetWORK,
-				WORK, 1, ldwrky, offsetWORK + ldwrkx * nb
+				WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb)
 			);
 
 			// Update the trailing submatrix A(i+nb:M-1, i+nb:N-1)
@@ -151,8 +151,8 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					'no-transpose', 'transpose',
 					M - i - nb, N - i - nb, nb,
 					-1.0,
-					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + i * strideA2,
-					WORK, 1, ldwrky, offsetWORK + ldwrkx * nb + nb,
+					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + (i * strideA2),
+					WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb) + nb,
 					1.0,
 					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
 				);
@@ -163,7 +163,7 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					M - i - nb, N - i - nb, nb,
 					-1.0,
 					WORK, 1, ldwrkx, offsetWORK + nb,
-					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + nb ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + nb ) * strideA2,
 					1.0,
 					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
 				);
@@ -173,14 +173,14 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			if ( M >= N ) {
 				// Upper bidiagonal: D(j) -> A(j,j), E(j) -> A(j,j+1)
 				for ( j = i; j < i + nb; j++ ) {
-					A[ offsetA + j * strideA1 + j * strideA2 ] = d[ offsetD + j * strideD ];
-					A[ offsetA + j * strideA1 + ( j + 1 ) * strideA2 ] = e[ offsetE + j * strideE ];
+					A[ offsetA + (j * strideA1) + (j * strideA2) ] = d[ offsetD + (j * strideD) ];
+					A[ offsetA + (j * strideA1) + ( j + 1 ) * strideA2 ] = e[ offsetE + (j * strideE) ];
 				}
 			} else {
 				// Lower bidiagonal: D(j) -> A(j,j), E(j) -> A(j+1,j)
 				for ( j = i; j < i + nb; j++ ) {
-					A[ offsetA + j * strideA1 + j * strideA2 ] = d[ offsetD + j * strideD ];
-					A[ offsetA + ( j + 1 ) * strideA1 + j * strideA2 ] = e[ offsetE + j * strideE ];
+					A[ offsetA + (j * strideA1) + (j * strideA2) ] = d[ offsetD + (j * strideD) ];
+					A[ offsetA + ( j + 1 ) * strideA1 + (j * strideA2) ] = e[ offsetE + (j * strideE) ];
 				}
 			}
 
@@ -191,11 +191,11 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	// Use unblocked code to factor the last or only block
 	dgebd2(
 		M - i, N - i,
-		A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-		d, strideD, offsetD + i * strideD,
-		e, strideE, offsetE + i * strideE,
-		TAUQ, strideTAUQ, offsetTAUQ + i * strideTAUQ,
-		TAUP, strideTAUP, offsetTAUP + i * strideTAUP,
+		A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+		d, strideD, offsetD + (i * strideD),
+		e, strideE, offsetE + (i * strideE),
+		TAUQ, strideTAUQ, offsetTAUQ + (i * strideTAUQ),
+		TAUP, strideTAUP, offsetTAUP + (i * strideTAUP),
 		WORK, strideWORK, offsetWORK
 	);
 

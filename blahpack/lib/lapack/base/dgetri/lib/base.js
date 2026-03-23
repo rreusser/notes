@@ -109,8 +109,8 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 		for ( j = N - 1; j >= 0; j-- ) {
 			// Copy column j of L (below diagonal) into WORK and zero it in A
 			for ( i = j + 1; i < N; i++ ) {
-				WORK[ offsetWORK + i * strideWORK ] = A[ offsetA + i * sa1 + j * sa2 ];
-				A[ offsetA + i * sa1 + j * sa2 ] = 0.0;
+				WORK[ offsetWORK + (i * strideWORK) ] = A[ offsetA + (i * sa1) + (j * sa2) ];
+				A[ offsetA + (i * sa1) + (j * sa2) ] = 0.0;
 			}
 
 			// Replace column j of A with inv(U)*(-L_j) + e_j
@@ -119,7 +119,7 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 					A, sa1, sa2, offsetA + ( j + 1 ) * sa2,
 					WORK, strideWORK, offsetWORK + ( j + 1 ) * strideWORK,
 					1.0,
-					A, sa1, offsetA + j * sa2 );
+					A, sa1, offsetA + (j * sa2) );
 			}
 		}
 	} else {
@@ -131,8 +131,8 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// Copy block of L (below diagonal) into WORK and zero it in A
 			for ( jj = j; jj < j + jb; jj++ ) {
 				for ( i = jj + 1; i < N; i++ ) {
-					WORK[ offsetWORK + i + ( jj - j ) * ldwork ] = A[ offsetA + i * sa1 + jj * sa2 ];
-					A[ offsetA + i * sa1 + jj * sa2 ] = 0.0;
+					WORK[ offsetWORK + i + ( jj - j ) * ldwork ] = A[ offsetA + (i * sa1) + (jj * sa2) ];
+					A[ offsetA + (i * sa1) + (jj * sa2) ] = 0.0;
 				}
 			}
 
@@ -142,22 +142,22 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
 					WORK, 1, ldwork, offsetWORK + ( j + jb ),
 					1.0,
-					A, sa1, sa2, offsetA + j * sa2 );
+					A, sa1, sa2, offsetA + (j * sa2) );
 			}
 			// Solve with the unit lower triangular block from WORK
 			dtrsm( 'right', 'lower', 'no-transpose', 'unit', N, jb, 1.0,
 				WORK, 1, ldwork, offsetWORK + j,
-				A, sa1, sa2, offsetA + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa2) );
 		}
 	}
 
 	// Step 3: Apply column permutations from IPIV in reverse order
 	for ( j = N - 2; j >= 0; j-- ) {
-		jp = IPIV[ offsetIPIV + j * strideIPIV ];
+		jp = IPIV[ offsetIPIV + (j * strideIPIV) ];
 		if ( jp !== j ) {
 			dswap( N,
-				A, sa1, offsetA + j * sa2,
-				A, sa1, offsetA + jp * sa2 );
+				A, sa1, offsetA + (j * sa2),
+				A, sa1, offsetA + (jp * sa2) );
 		}
 	}
 

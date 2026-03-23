@@ -97,7 +97,7 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 		sv = strideV * 2;
 
 		if ( strideV > 0 ) {
-			ix = offsetV * 2 + ( lastv - 1 ) * sv;
+			ix = (offsetV * 2) + ( lastv - 1 ) * sv;
 		} else {
 			ix = offsetV * 2;
 		}

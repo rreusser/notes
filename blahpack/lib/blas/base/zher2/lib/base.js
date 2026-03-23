@@ -109,36 +109,36 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ||
 				yv[ jy ] !== 0.0 || yv[ jy + 1 ] !== 0.0 ) {
 				// temp1 = alpha * conj(y[jy])
-				temp1R = alphaR * yv[ jy ] + alphaI * yv[ jy + 1 ];
-				temp1I = -alphaR * yv[ jy + 1 ] + alphaI * yv[ jy ];
+				temp1R = (alphaR * yv[ jy ]) + (alphaI * yv[ jy + 1 ]);
+				temp1I = - (alphaR * yv[ jy + 1 ]) + (alphaI * yv[ jy ]);
 
 				// temp2 = conj(alpha * x[jx]) = conj(alpha) * conj(x[jx])
-				tr = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
-				temp2I = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+				tr = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
+				temp2I = (alphaR * xv[ jx + 1 ]) + (alphaI * xv[ jx ]);
 				temp2R = tr;
 				temp2I = -temp2I;
 
 				ix = oX;
 				iy = oY;
-				ai = oA + j * sa2; // column j
+				ai = oA + (j * sa2); // column j
 				for ( i = 0; i < j; i++ ) {
 					// A[i,j] += x[ix] * temp1 + y[iy] * temp2
-					Av[ ai ] += xv[ ix ] * temp1R - xv[ ix + 1 ] * temp1I +
-						yv[ iy ] * temp2R - yv[ iy + 1 ] * temp2I;
-					Av[ ai + 1 ] += xv[ ix ] * temp1I + xv[ ix + 1 ] * temp1R +
-						yv[ iy ] * temp2I + yv[ iy + 1 ] * temp2R;
+					Av[ ai ] += (xv[ ix ] * temp1R) - (xv[ ix + 1 ] * temp1I) +
+						(yv[ iy ] * temp2R) - (yv[ iy + 1 ] * temp2I);
+					Av[ ai + 1 ] += (xv[ ix ] * temp1I) + (xv[ ix + 1 ] * temp1R) +
+						(yv[ iy ] * temp2I) + (yv[ iy + 1 ] * temp2R);
 					ix += sx;
 					iy += sy;
 					ai += sa1;
 				}
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[jx]*temp1 + y[jy]*temp2)
 				Av[ ai ] = Av[ ai ] +
-					( xv[ jx ] * temp1R - xv[ jx + 1 ] * temp1I ) +
-					( yv[ jy ] * temp2R - yv[ jy + 1 ] * temp2I );
+					( (xv[ jx ] * temp1R) - (xv[ jx + 1 ] * temp1I) ) +
+					( (yv[ jy ] * temp2R) - (yv[ jy + 1 ] * temp2I) );
 				Av[ ai + 1 ] = 0.0;
 			} else {
 				// Ensure diagonal is real
-				ai = oA + j * sa1 + j * sa2;
+				ai = oA + (j * sa1) + (j * sa2);
 				Av[ ai + 1 ] = 0.0;
 			}
 			jx += sx;
@@ -152,20 +152,20 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ||
 				yv[ jy ] !== 0.0 || yv[ jy + 1 ] !== 0.0 ) {
 				// temp1 = alpha * conj(y[jy])
-				temp1R = alphaR * yv[ jy ] + alphaI * yv[ jy + 1 ];
-				temp1I = -alphaR * yv[ jy + 1 ] + alphaI * yv[ jy ];
+				temp1R = (alphaR * yv[ jy ]) + (alphaI * yv[ jy + 1 ]);
+				temp1I = - (alphaR * yv[ jy + 1 ]) + (alphaI * yv[ jy ]);
 
 				// temp2 = conj(alpha * x[jx])
-				tr = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
-				temp2I = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+				tr = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
+				temp2I = (alphaR * xv[ jx + 1 ]) + (alphaI * xv[ jx ]);
 				temp2R = tr;
 				temp2I = -temp2I;
 
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[jx]*temp1 + y[jy]*temp2)
-				ai = oA + j * sa1 + j * sa2;
+				ai = oA + (j * sa1) + (j * sa2);
 				Av[ ai ] = Av[ ai ] +
-					( xv[ jx ] * temp1R - xv[ jx + 1 ] * temp1I ) +
-					( yv[ jy ] * temp2R - yv[ jy + 1 ] * temp2I );
+					( (xv[ jx ] * temp1R) - (xv[ jx + 1 ] * temp1I) ) +
+					( (yv[ jy ] * temp2R) - (yv[ jy + 1 ] * temp2I) );
 				Av[ ai + 1 ] = 0.0;
 
 				ix = jx + sx;
@@ -173,17 +173,17 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 				ai += sa1; // move to A(j+1, j)
 				for ( i = j + 1; i < N; i++ ) {
 					// A[i,j] += x[ix] * temp1 + y[iy] * temp2
-					Av[ ai ] += xv[ ix ] * temp1R - xv[ ix + 1 ] * temp1I +
-						yv[ iy ] * temp2R - yv[ iy + 1 ] * temp2I;
-					Av[ ai + 1 ] += xv[ ix ] * temp1I + xv[ ix + 1 ] * temp1R +
-						yv[ iy ] * temp2I + yv[ iy + 1 ] * temp2R;
+					Av[ ai ] += (xv[ ix ] * temp1R) - (xv[ ix + 1 ] * temp1I) +
+						(yv[ iy ] * temp2R) - (yv[ iy + 1 ] * temp2I);
+					Av[ ai + 1 ] += (xv[ ix ] * temp1I) + (xv[ ix + 1 ] * temp1R) +
+						(yv[ iy ] * temp2I) + (yv[ iy + 1 ] * temp2R);
 					ix += sx;
 					iy += sy;
 					ai += sa1;
 				}
 			} else {
 				// Ensure diagonal is real
-				ai = oA + j * sa1 + j * sa2;
+				ai = oA + (j * sa1) + (j * sa2);
 				Av[ ai + 1 ] = 0.0;
 			}
 			jx += sx;

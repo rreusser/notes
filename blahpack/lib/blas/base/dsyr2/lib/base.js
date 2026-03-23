@@ -74,7 +74,7 @@ function dsyr2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 				ix = offsetX;
 				iy = offsetY;
 				for ( i = 0; i <= j; i++ ) {
-					A[ offsetA + i*sa1 + j*sa2 ] += x[ ix ] * temp1 + y[ iy ] * temp2;
+					A[ offsetA + (i * sa1) + (j * sa2) ] += (x[ ix ] * temp1) + (y[ iy ] * temp2);
 					ix += strideX;
 					iy += strideY;
 				}
@@ -93,7 +93,7 @@ function dsyr2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 				ix = jx;
 				iy = jy;
 				for ( i = j; i < N; i++ ) {
-					A[ offsetA + i*sa1 + j*sa2 ] += x[ ix ] * temp1 + y[ iy ] * temp2;
+					A[ offsetA + (i * sa1) + (j * sa2) ] += (x[ ix ] * temp1) + (y[ iy ] * temp2);
 					ix += strideX;
 					iy += strideY;
 				}

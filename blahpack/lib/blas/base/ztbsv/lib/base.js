@@ -105,22 +105,22 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					l = kplus1 - j;
 					if ( nounit ) {
 						// x(j) = x(j) / A(kplus1, j) — use cmplx.divAt (NEVER inline complex division)
-						ia = oA + kplus1 * sa1 + j * sa2;
+						ia = oA + (kplus1 * sa1) + (j * sa2);
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
 					}
 					tempR = xv[ jx ];
 					tempI = xv[ jx + 1 ];
 					ix = jx - sx;
 					for ( i = j - 1; i >= Math.max( 0, j - K ); i-- ) {
-						ia = oA + ( l + i ) * sa1 + j * sa2;
+						ia = oA + ( l + i ) * sa1 + (j * sa2);
 
 						// x(i) = x(i) - temp * A(l+i, j)
 
 						// (tempR + tempI*i)(ar + ai*i) = (tempR*ar - tempI*ai) + (tempR*ai + tempI*ar)*i
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						xv[ ix ] -= tempR * ar - tempI * ai;
-						xv[ ix + 1 ] -= tempR * ai + tempI * ar;
+						xv[ ix ] -= (tempR * ar) - (tempI * ai);
+						xv[ ix + 1 ] -= (tempR * ai) + (tempI * ar);
 						ix -= sx;
 					}
 				}
@@ -134,20 +134,20 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					l = -j;
 					if ( nounit ) {
 						// x(j) = x(j) / A(0, j)
-						ia = oA + j * sa2;
+						ia = oA + (j * sa2);
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
 					}
 					tempR = xv[ jx ];
 					tempI = xv[ jx + 1 ];
 					ix = jx + sx;
 					for ( i = j + 1; i < Math.min( N, j + K + 1 ); i++ ) {
-						ia = oA + ( l + i ) * sa1 + j * sa2;
+						ia = oA + ( l + i ) * sa1 + (j * sa2);
 
 						// x(i) = x(i) - temp * A(l+i, j)
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						xv[ ix ] -= tempR * ar - tempI * ai;
-						xv[ ix + 1 ] -= tempR * ai + tempI * ar;
+						xv[ ix ] -= (tempR * ar) - (tempI * ai);
+						xv[ ix + 1 ] -= (tempR * ai) + (tempI * ar);
 						ix += sx;
 					}
 				}
@@ -168,38 +168,38 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				if ( noconj ) {
 					// Transpose (no conjugation)
 					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-						ia = oA + ( l + i ) * sa1 + j * sa2;
+						ia = oA + ( l + i ) * sa1 + (j * sa2);
 
 						// Temp = temp - A(l+i,j) * x(i)
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						tempR -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						tempI -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix += sx;
 					}
 					xv[ jx ] = tempR;
 					xv[ jx + 1 ] = tempI;
 					if ( nounit ) {
-						ia = oA + kplus1 * sa1 + j * sa2;
+						ia = oA + (kplus1 * sa1) + (j * sa2);
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
 					}
 				} else {
 					// Conjugate transpose
 					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-						ia = oA + ( l + i ) * sa1 + j * sa2;
+						ia = oA + ( l + i ) * sa1 + (j * sa2);
 
 						// Temp = temp - conj(A(l+i,j)) * x(i)
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
-						tempR -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						tempI -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix += sx;
 					}
 					xv[ jx ] = tempR;
 					xv[ jx + 1 ] = tempI;
 					if ( nounit ) {
 						// Divide by conj(A(kplus1, j))
-						ia = oA + kplus1 * sa1 + j * sa2;
+						ia = oA + (kplus1 * sa1) + (j * sa2);
 						ai = Av[ ia + 1 ];
 						Av[ ia + 1 ] = -ai;
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
@@ -222,34 +222,34 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				if ( noconj ) {
 					// Transpose (no conjugation)
 					for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-						ia = oA + ( l + i ) * sa1 + j * sa2;
+						ia = oA + ( l + i ) * sa1 + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						tempR -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						tempI -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix -= sx;
 					}
 					xv[ jx ] = tempR;
 					xv[ jx + 1 ] = tempI;
 					if ( nounit ) {
-						ia = oA + j * sa2;
+						ia = oA + (j * sa2);
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );
 					}
 				} else {
 					// Conjugate transpose
 					for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-						ia = oA + ( l + i ) * sa1 + j * sa2;
+						ia = oA + ( l + i ) * sa1 + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
-						tempR -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
-						tempI -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
+						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
 						ix -= sx;
 					}
 					xv[ jx ] = tempR;
 					xv[ jx + 1 ] = tempI;
 					if ( nounit ) {
 						// Divide by conj(A(0, j))
-						ia = oA + j * sa2;
+						ia = oA + (j * sa2);
 						ai = Av[ ia + 1 ];
 						Av[ ia + 1 ] = -ai;
 						cmplx.divAt( xv, jx, xv, jx, Av, ia );

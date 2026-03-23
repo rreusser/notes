@@ -92,18 +92,18 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		for ( j = 0; j < N - 1; j++ ) {
 			for ( i = 0; i < j; i++ ) {
 				// A(i, j) = A(i, j+1)
-				ia = oA + i * sa1 + j * sa2;
-				Av[ ia ] = Av[ oA + i * sa1 + ( j + 1 ) * sa2 ];
-				Av[ ia + 1 ] = Av[ oA + i * sa1 + ( j + 1 ) * sa2 + 1 ];
+				ia = oA + (i * sa1) + (j * sa2);
+				Av[ ia ] = Av[ oA + (i * sa1) + ( j + 1 ) * sa2 ];
+				Av[ ia + 1 ] = Av[ oA + (i * sa1) + ( j + 1 ) * sa2 + 1 ];
 			}
 			// Set A(N-1, j) = 0
-			ia = oA + ( N - 1 ) * sa1 + j * sa2;
+			ia = oA + ( N - 1 ) * sa1 + (j * sa2);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}
 		// Set last column: A(i, N-1) = 0 for i = 0..N-2, A(N-1, N-1) = 1
 		for ( i = 0; i < N - 1; i++ ) {
-			ia = oA + i * sa1 + ( N - 1 ) * sa2;
+			ia = oA + (i * sa1) + ( N - 1 ) * sa2;
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}
@@ -124,21 +124,21 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// Shift reflectors: for j = N-1 downto 1, copy column j-1 (rows j+1..N-1) into column j
 		for ( j = N - 1; j >= 1; j-- ) {
 			// Set A(0, j) = 0
-			ia = oA + j * sa2;
+			ia = oA + (j * sa2);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 			for ( i = j + 1; i < N; i++ ) {
 				// A(i, j) = A(i, j-1)
-				ia = oA + i * sa1 + j * sa2;
-				Av[ ia ] = Av[ oA + i * sa1 + ( j - 1 ) * sa2 ];
-				Av[ ia + 1 ] = Av[ oA + i * sa1 + ( j - 1 ) * sa2 + 1 ];
+				ia = oA + (i * sa1) + (j * sa2);
+				Av[ ia ] = Av[ oA + (i * sa1) + ( j - 1 ) * sa2 ];
+				Av[ ia + 1 ] = Av[ oA + (i * sa1) + ( j - 1 ) * sa2 + 1 ];
 			}
 		}
 		// Set first column: A(0, 0) = 1, A(i, 0) = 0 for i = 1..N-1
 		Av[ oA ] = 1.0;
 		Av[ oA + 1 ] = 0.0;
 		for ( i = 1; i < N; i++ ) {
-			ia = oA + i * sa1;
+			ia = oA + (i * sa1);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}

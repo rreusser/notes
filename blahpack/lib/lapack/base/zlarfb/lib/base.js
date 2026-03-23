@@ -118,16 +118,16 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C^H * V = (C1^H*V1 + C2^H*V2)  stored in WORK
 				// W := C1^H (copy rows of C1 into columns of WORK, conjugating)
 				for ( j = 0; j < K; j++ ) {
-					zcopy( N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
-					zlacgv( N, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( N, C, strideC2, offsetC + (j * strideC1), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
+					zlacgv( N, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1
 				ztrmm( 'right', 'lower', 'no-transpose', 'unit', N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( M > K ) {
 					// W := W + C2^H * V2
 					zgemm( 'conjugate-transpose', 'no-transpose', N, K, M - K, ONE,
-						C, strideC1, strideC2, offsetC + K * strideC1,
-						V, strideV1, strideV2, offsetV + K * strideV1,
+						C, strideC1, strideC2, offsetC + (K * strideC1),
+						V, strideV1, strideV2, offsetV + (K * strideV1),
 						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T^H or W * T
@@ -137,9 +137,9 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				if ( M > K ) {
 					// C2 := C2 - V2 * W^H
 					zgemm( 'no-transpose', 'conjugate-transpose', M - K, N, K, NEGONE,
-						V, strideV1, strideV2, offsetV + K * strideV1,
+						V, strideV1, strideV2, offsetV + (K * strideV1),
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						ONE, C, strideC1, strideC2, offsetC + K * strideC1 );
+						ONE, C, strideC1, strideC2, offsetC + (K * strideC1) );
 				}
 				// W := W * V1^H
 				ztrmm( 'right', 'lower', 'conjugate-transpose', 'unit', N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -147,8 +147,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W^H
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						ic = oC + j * sc1 + i * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + (j * sc1) + (i * sc2);
+						iw = oW + (i * sw1) + (j * sw2);
 
 						// C(j,i) -= conj(W(i,j))
 						Cv[ ic ] -= Wv[ iw ];
@@ -160,15 +160,15 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C * V = (C1*V1 + C2*V2)
 				// W := C1
 				for ( j = 0; j < K; j++ ) {
-					zcopy( M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( M, C, strideC1, offsetC + (j * strideC2), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1
 				ztrmm( 'right', 'lower', 'no-transpose', 'unit', M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( N > K ) {
 					// W := W + C2 * V2
 					zgemm( 'no-transpose', 'no-transpose', M, K, N - K, ONE,
-						C, strideC1, strideC2, offsetC + K * strideC2,
-						V, strideV1, strideV2, offsetV + K * strideV1,
+						C, strideC1, strideC2, offsetC + (K * strideC2),
+						V, strideV1, strideV2, offsetV + (K * strideV1),
 						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T or W * T^H
@@ -179,8 +179,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 					// C2 := C2 - W * V2^H
 					zgemm( 'no-transpose', 'conjugate-transpose', M, N - K, K, NEGONE,
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						V, strideV1, strideV2, offsetV + K * strideV1,
-						ONE, C, strideC1, strideC2, offsetC + K * strideC2 );
+						V, strideV1, strideV2, offsetV + (K * strideV1),
+						ONE, C, strideC1, strideC2, offsetC + (K * strideC2) );
 				}
 				// W := W * V1^H
 				ztrmm( 'right', 'lower', 'conjugate-transpose', 'unit', M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -188,8 +188,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						ic = oC + i * sc1 + j * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + (i * sc1) + (j * sc2);
+						iw = oW + (i * sw1) + (j * sw2);
 						Cv[ ic ] -= Wv[ iw ];
 						Cv[ ic + 1 ] -= Wv[ iw + 1 ];
 					}
@@ -204,8 +204,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C^H * V = (C1^H*V1 + C2^H*V2)
 				// W := C2^H
 				for ( j = 0; j < K; j++ ) {
-					zcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
-					zlacgv( N, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
+					zlacgv( N, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V2
 				ztrmm( 'right', 'upper', 'no-transpose', 'unit', N, K, ONE, V, strideV1, strideV2, offsetV + ( M - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -233,8 +233,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C2 := C2 - W^H
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						ic = oC + ( M - K + j ) * sc1 + i * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + ( M - K + j ) * sc1 + (i * sc2);
+						iw = oW + (i * sw1) + (j * sw2);
 						Cv[ ic ] -= Wv[ iw ];
 						Cv[ ic + 1 ] -= ( -Wv[ iw + 1 ] );
 					}
@@ -244,7 +244,7 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C * V = (C1*V1 + C2*V2)
 				// W := C2
 				for ( j = 0; j < K; j++ ) {
-					zcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V2
 				ztrmm( 'right', 'upper', 'no-transpose', 'unit', M, K, ONE, V, strideV1, strideV2, offsetV + ( N - K ) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -272,8 +272,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C2 := C2 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						ic = oC + i * sc1 + ( N - K + j ) * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + (i * sc1) + ( N - K + j ) * sc2;
+						iw = oW + (i * sw1) + (j * sw2);
 						Cv[ ic ] -= Wv[ iw ];
 						Cv[ ic + 1 ] -= Wv[ iw + 1 ];
 					}
@@ -291,16 +291,16 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C^H * V^H = (C1^H*V1^H + C2^H*V2^H)
 				// W := C1^H
 				for ( j = 0; j < K; j++ ) {
-					zcopy( N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
-					zlacgv( N, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( N, C, strideC2, offsetC + (j * strideC1), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
+					zlacgv( N, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1^H (V1 is stored in rows of V: upper triangular)
 				ztrmm( 'right', 'upper', 'conjugate-transpose', 'unit', N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( M > K ) {
 					// W := W + C2^H * V2^H
 					zgemm( 'conjugate-transpose', 'conjugate-transpose', N, K, M - K, ONE,
-						C, strideC1, strideC2, offsetC + K * strideC1,
-						V, strideV1, strideV2, offsetV + K * strideV2,
+						C, strideC1, strideC2, offsetC + (K * strideC1),
+						V, strideV1, strideV2, offsetV + (K * strideV2),
 						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T^H or W * T
@@ -310,9 +310,9 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				if ( M > K ) {
 					// C2 := C2 - V2^H * W^H
 					zgemm( 'conjugate-transpose', 'conjugate-transpose', M - K, N, K, NEGONE,
-						V, strideV1, strideV2, offsetV + K * strideV2,
+						V, strideV1, strideV2, offsetV + (K * strideV2),
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						ONE, C, strideC1, strideC2, offsetC + K * strideC1 );
+						ONE, C, strideC1, strideC2, offsetC + (K * strideC1) );
 				}
 				// W := W * V1 (undo triangular part)
 				ztrmm( 'right', 'upper', 'no-transpose', 'unit', N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -320,8 +320,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W^H
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						ic = oC + j * sc1 + i * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + (j * sc1) + (i * sc2);
+						iw = oW + (i * sw1) + (j * sw2);
 						Cv[ ic ] -= Wv[ iw ];
 						Cv[ ic + 1 ] -= ( -Wv[ iw + 1 ] );
 					}
@@ -331,15 +331,15 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C * V^H = (C1*V1^H + C2*V2^H)
 				// W := C1
 				for ( j = 0; j < K; j++ ) {
-					zcopy( M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( M, C, strideC1, offsetC + (j * strideC2), WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V1^H
 				ztrmm( 'right', 'upper', 'conjugate-transpose', 'unit', M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
 				if ( N > K ) {
 					// W := W + C2 * V2^H
 					zgemm( 'no-transpose', 'conjugate-transpose', M, K, N - K, ONE,
-						C, strideC1, strideC2, offsetC + K * strideC2,
-						V, strideV1, strideV2, offsetV + K * strideV2,
+						C, strideC1, strideC2, offsetC + (K * strideC2),
+						V, strideV1, strideV2, offsetV + (K * strideV2),
 						ONE, WORK, strideWORK1, strideWORK2, offsetWORK );
 				}
 				// W := W * T or W * T^H
@@ -350,8 +350,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 					// C2 := C2 - W * V2
 					zgemm( 'no-transpose', 'no-transpose', M, N - K, K, NEGONE,
 						WORK, strideWORK1, strideWORK2, offsetWORK,
-						V, strideV1, strideV2, offsetV + K * strideV2,
-						ONE, C, strideC1, strideC2, offsetC + K * strideC2 );
+						V, strideV1, strideV2, offsetV + (K * strideV2),
+						ONE, C, strideC1, strideC2, offsetC + (K * strideC2) );
 				}
 				// W := W * V1
 				ztrmm( 'right', 'upper', 'no-transpose', 'unit', M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -359,8 +359,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C1 := C1 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						ic = oC + i * sc1 + j * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + (i * sc1) + (j * sc2);
+						iw = oW + (i * sw1) + (j * sw2);
 						Cv[ ic ] -= Wv[ iw ];
 						Cv[ ic + 1 ] -= Wv[ iw + 1 ];
 					}
@@ -374,8 +374,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C^H * V^H
 				// W := C2^H
 				for ( j = 0; j < K; j++ ) {
-					zcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
-					zlacgv( N, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( N, C, strideC2, offsetC + ( M - K + j ) * strideC1, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
+					zlacgv( N, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V2^H
 				ztrmm( 'right', 'lower', 'conjugate-transpose', 'unit', N, K, ONE, V, strideV1, strideV2, offsetV + ( M - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -403,8 +403,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C2 := C2 - W^H
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
-						ic = oC + ( M - K + j ) * sc1 + i * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + ( M - K + j ) * sc1 + (i * sc2);
+						iw = oW + (i * sw1) + (j * sw2);
 						Cv[ ic ] -= Wv[ iw ];
 						Cv[ ic + 1 ] -= ( -Wv[ iw + 1 ] );
 					}
@@ -414,7 +414,7 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// W := C * V^H
 				// W := C2
 				for ( j = 0; j < K; j++ ) {
-					zcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2 );
+					zcopy( M, C, strideC1, offsetC + ( N - K + j ) * strideC2, WORK, strideWORK1, offsetWORK + (j * strideWORK2) );
 				}
 				// W := W * V2^H
 				ztrmm( 'right', 'lower', 'conjugate-transpose', 'unit', M, K, ONE, V, strideV1, strideV2, offsetV + ( N - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
@@ -442,8 +442,8 @@ function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				// C2 := C2 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
-						ic = oC + i * sc1 + ( N - K + j ) * sc2;
-						iw = oW + i * sw1 + j * sw2;
+						ic = oC + (i * sc1) + ( N - K + j ) * sc2;
+						iw = oW + (i * sw1) + (j * sw2);
 						Cv[ ic ] -= Wv[ iw ];
 						Cv[ ic + 1 ] -= Wv[ iw + 1 ];
 					}

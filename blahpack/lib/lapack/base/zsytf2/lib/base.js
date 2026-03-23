@@ -128,13 +128,13 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			// Determine rows and columns to be interchanged
 
 			// CABS1(A(k,k))
-			p1 = offsetA * 2 + k * sa1 + k * sa2;
+			p1 = (offsetA * 2) + (k * sa1) + (k * sa2);
 			absakk = Math.abs( Av[ p1 ] ) + Math.abs( Av[ p1 + 1 ] );
 
 			// IMAX is the row-index of the largest off-diagonal element in column K
 			if ( k > 0 ) {
-				imax = izamax( k, A, strideA1, offsetA + k * strideA2 );
-				p2 = offsetA * 2 + imax * sa1 + k * sa2;
+				imax = izamax( k, A, strideA1, offsetA + (k * strideA2) );
+				p2 = (offsetA * 2) + (imax * sa1) + (k * sa2);
 				colmax = Math.abs( Av[ p2 ] ) + Math.abs( Av[ p2 + 1 ] );
 			} else {
 				colmax = 0.0;
@@ -154,12 +154,12 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					// JMAX is the column-index of the largest off-diagonal
 					// Element in row IMAX, and ROWMAX is its absolute value
 					// Look in row IMAX from column IMAX+1 to K (using LDA stride for row scan)
-					jmax = imax + 1 + izamax( k - imax - 1, A, strideA2, offsetA + imax * strideA1 + ( imax + 1 ) * strideA2 );
-					p3 = offsetA * 2 + imax * sa1 + jmax * sa2;
+					jmax = imax + 1 + izamax( k - imax - 1, A, strideA2, offsetA + (imax * strideA1) + ( imax + 1 ) * strideA2 );
+					p3 = (offsetA * 2) + (imax * sa1) + (jmax * sa2);
 					rowmax = Math.abs( Av[ p3 ] ) + Math.abs( Av[ p3 + 1 ] );
 					if ( imax > 0 ) {
-						jmax = izamax( imax, A, strideA1, offsetA + imax * strideA2 );
-						p4 = offsetA * 2 + jmax * sa1 + imax * sa2;
+						jmax = izamax( imax, A, strideA1, offsetA + (imax * strideA2) );
+						p4 = (offsetA * 2) + (jmax * sa1) + (imax * sa2);
 						rowmax = Math.max( rowmax, Math.abs( Av[ p4 ] ) + Math.abs( Av[ p4 + 1 ] ) );
 					}
 
@@ -167,7 +167,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 						// No interchange, use 1x1 pivot block
 						kp = k;
 					} else {
-						p4 = offsetA * 2 + imax * sa1 + imax * sa2;
+						p4 = (offsetA * 2) + (imax * sa1) + (imax * sa2);
 						if ( ( Math.abs( Av[ p4 ] ) + Math.abs( Av[ p4 + 1 ] ) ) >= ALPHA * rowmax ) {
 							// Interchange rows and columns K and IMAX, use 1x1 pivot
 							kp = imax;
@@ -183,13 +183,13 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				if ( kp !== kk ) {
 					// Interchange rows and columns KP and KK
 					if ( kp > 0 ) {
-						zswap( kp, A, strideA1, offsetA + kk * strideA2, A, strideA1, offsetA + kp * strideA2 );
+						zswap( kp, A, strideA1, offsetA + (kk * strideA2), A, strideA1, offsetA + (kp * strideA2) );
 					}
-					zswap( kk - kp - 1, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + kk * strideA2, A, strideA2, offsetA + kp * strideA1 + ( kp + 1 ) * strideA2 );
+					zswap( kk - kp - 1, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + (kk * strideA2), A, strideA2, offsetA + (kp * strideA1) + ( kp + 1 ) * strideA2 );
 
 					// Swap diagonal elements
-					p1 = offsetA * 2 + kk * sa1 + kk * sa2;
-					p2 = offsetA * 2 + kp * sa1 + kp * sa2;
+					p1 = (offsetA * 2) + (kk * sa1) + (kk * sa2);
+					p2 = (offsetA * 2) + (kp * sa1) + (kp * sa2);
 					tR = Av[ p1 ];
 					tI = Av[ p1 + 1 ];
 					Av[ p1 ] = Av[ p2 ];
@@ -197,8 +197,8 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					Av[ p2 ] = tR;
 					Av[ p2 + 1 ] = tI;
 					if ( kstep === 2 ) {
-						p1 = offsetA * 2 + ( k - 1 ) * sa1 + k * sa2;
-						p2 = offsetA * 2 + kp * sa1 + k * sa2;
+						p1 = (offsetA * 2) + ( k - 1 ) * sa1 + (k * sa2);
+						p2 = (offsetA * 2) + (kp * sa1) + (k * sa2);
 						tR = Av[ p1 ];
 						tI = Av[ p1 + 1 ];
 						Av[ p1 ] = Av[ p2 ];
@@ -212,49 +212,49 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				if ( kstep === 1 ) {
 					// 1x1 pivot block D(k)
 					// R1 = CONE / A(K, K) via Smith's method
-					p1 = offsetA * 2 + k * sa1 + k * sa2;
+					p1 = (offsetA * 2) + (k * sa1) + (k * sa2);
 					tr = Av[ p1 ];
 					ti = Av[ p1 + 1 ];
 					if ( Math.abs( ti ) <= Math.abs( tr ) ) {
 						tR = ti / tr;
-						tI = tr + ti * tR;
+						tI = tr + (ti * tR);
 						r1R = 1.0 / tI;
-						r1I = -tR / tI;
+						r1I = - (tR / tI);
 					} else {
 						tR = tr / ti;
-						tI = ti + tr * tR;
+						tI = ti + (tr * tR);
 						r1R = tR / tI;
-						r1I = -1.0 / tI;
+						r1I = - (1.0 / tI);
 					}
 
 					// zsyr(uplo, k, -R1, A(:,k), 1, A, LDA)
-					zsyr( uplo, k, new Complex128( -r1R, -r1I ), A, strideA1, offsetA + k * strideA2, A, strideA1, strideA2, offsetA );
+					zsyr( uplo, k, new Complex128( -r1R, -r1I ), A, strideA1, offsetA + (k * strideA2), A, strideA1, strideA2, offsetA );
 
 					// zscal(k, R1, A(:,k), 1)
-					zscal( k, new Complex128( r1R, r1I ), A, strideA1, offsetA + k * strideA2 );
+					zscal( k, new Complex128( r1R, r1I ), A, strideA1, offsetA + (k * strideA2) );
 				} else {
 					// 2x2 pivot block
 					if ( k > 1 ) {
 						// D12 = A(K-1, K)
-						p1 = offsetA * 2 + ( k - 1 ) * sa1 + k * sa2;
+						p1 = (offsetA * 2) + ( k - 1 ) * sa1 + (k * sa2);
 						d12R = Av[ p1 ];
 						d12I = Av[ p1 + 1 ];
 
 						// D22 = A(K-1, K-1) / D12
-						p2 = offsetA * 2 + ( k - 1 ) * sa1 + ( k - 1 ) * sa2;
+						p2 = (offsetA * 2) + ( k - 1 ) * sa1 + ( k - 1 ) * sa2;
 						cDiv( Av[ p2 ], Av[ p2 + 1 ], d12R, d12I );
 						d22R = _cdR;
 						d22I = _cdI;
 
 						// D11 = A(K, K) / D12
-						p3 = offsetA * 2 + k * sa1 + k * sa2;
+						p3 = (offsetA * 2) + (k * sa1) + (k * sa2);
 						cDiv( Av[ p3 ], Av[ p3 + 1 ], d12R, d12I );
 						d11R = _cdR;
 						d11I = _cdI;
 
 						// T = 1 / (D11*D22 - 1)
-						tr = d11R * d22R - d11I * d22I - 1.0;
-						ti = d11R * d22I + d11I * d22R;
+						tr = (d11R * d22R) - (d11I * d22I) - 1.0;
+						ti = (d11R * d22I) + (d11I * d22R);
 						cDiv( 1.0, 0.0, tr, ti );
 						r1R = _cdR;
 						r1I = _cdI;
@@ -266,48 +266,48 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 						for ( j = k - 2; j >= 0; j-- ) {
 							// WKM1 = D12 * (D11*A(J,K-1) - A(J,K))
-							p1 = offsetA * 2 + j * sa1 + ( k - 1 ) * sa2;
-							p2 = offsetA * 2 + j * sa1 + k * sa2;
+							p1 = (offsetA * 2) + (j * sa1) + ( k - 1 ) * sa2;
+							p2 = (offsetA * 2) + (j * sa1) + (k * sa2);
 
 							// D11*A(J,K-1): complex multiply
-							tr = d11R * Av[ p1 ] - d11I * Av[ p1 + 1 ];
-							ti = d11R * Av[ p1 + 1 ] + d11I * Av[ p1 ];
+							tr = (d11R * Av[ p1 ]) - (d11I * Av[ p1 + 1 ]);
+							ti = (d11R * Av[ p1 + 1 ]) + (d11I * Av[ p1 ]);
 
 							// D11*A(J,K-1) - A(J,K)
 							tr -= Av[ p2 ];
 							ti -= Av[ p2 + 1 ];
 
 							// WKM1 = D12 * result
-							wkm1R = d12R * tr - d12I * ti;
-							wkm1I = d12R * ti + d12I * tr;
+							wkm1R = (d12R * tr) - (d12I * ti);
+							wkm1I = (d12R * ti) + (d12I * tr);
 
 							// WK = D12 * (D22*A(J,K) - A(J,K-1))
 
 							// D22*A(J,K)
-							tr = d22R * Av[ p2 ] - d22I * Av[ p2 + 1 ];
-							ti = d22R * Av[ p2 + 1 ] + d22I * Av[ p2 ];
+							tr = (d22R * Av[ p2 ]) - (d22I * Av[ p2 + 1 ]);
+							ti = (d22R * Av[ p2 + 1 ]) + (d22I * Av[ p2 ]);
 
 							// D22*A(J,K) - A(J,K-1)
 							tr -= Av[ p1 ];
 							ti -= Av[ p1 + 1 ];
 
 							// WK = D12 * result
-							wkR = d12R * tr - d12I * ti;
-							wkI = d12R * ti + d12I * tr;
+							wkR = (d12R * tr) - (d12I * ti);
+							wkI = (d12R * ti) + (d12I * tr);
 
 							for ( i = j; i >= 0; i-- ) {
 								// A(I,J) -= A(I,K)*WK + A(I,K-1)*WKM1
-								p3 = offsetA * 2 + i * sa1 + j * sa2;
-								p4 = offsetA * 2 + i * sa1 + k * sa2;
-								tR = offsetA * 2 + i * sa1 + ( k - 1 ) * sa2;
+								p3 = (offsetA * 2) + (i * sa1) + (j * sa2);
+								p4 = (offsetA * 2) + (i * sa1) + (k * sa2);
+								tR = (offsetA * 2) + (i * sa1) + ( k - 1 ) * sa2;
 
 								// A(I,K)*WK
-								tr = Av[ p4 ] * wkR - Av[ p4 + 1 ] * wkI;
-								ti = Av[ p4 ] * wkI + Av[ p4 + 1 ] * wkR;
+								tr = (Av[ p4 ] * wkR) - (Av[ p4 + 1 ] * wkI);
+								ti = (Av[ p4 ] * wkI) + (Av[ p4 + 1 ] * wkR);
 
 								// A(I,K-1)*WKM1
-								tr += Av[ tR ] * wkm1R - Av[ tR + 1 ] * wkm1I;
-								ti += Av[ tR ] * wkm1I + Av[ tR + 1 ] * wkm1R;
+								tr += (Av[ tR ] * wkm1R) - (Av[ tR + 1 ] * wkm1I);
+								ti += (Av[ tR ] * wkm1I) + (Av[ tR + 1 ] * wkm1R);
 								Av[ p3 ] -= tr;
 								Av[ p3 + 1 ] -= ti;
 							}
@@ -325,9 +325,9 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 			// Store details of the interchanges in IPIV
 			if ( kstep === 1 ) {
-				IPIV[ offsetIPIV + k * strideIPIV ] = kp;
+				IPIV[ offsetIPIV + (k * strideIPIV) ] = kp;
 			} else {
-				IPIV[ offsetIPIV + k * strideIPIV ] = ~kp;
+				IPIV[ offsetIPIV + (k * strideIPIV) ] = ~kp;
 				IPIV[ offsetIPIV + ( k - 1 ) * strideIPIV ] = ~kp;
 			}
 
@@ -340,12 +340,12 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			kstep = 1;
 
 			// Determine rows and columns to be interchanged
-			p1 = offsetA * 2 + k * sa1 + k * sa2;
+			p1 = (offsetA * 2) + (k * sa1) + (k * sa2);
 			absakk = Math.abs( Av[ p1 ] ) + Math.abs( Av[ p1 + 1 ] );
 
 			if ( k < N - 1 ) {
-				imax = k + 1 + izamax( N - k - 1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2 );
-				p2 = offsetA * 2 + imax * sa1 + k * sa2;
+				imax = k + 1 + izamax( N - k - 1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + (k * strideA2) );
+				p2 = (offsetA * 2) + (imax * sa1) + (k * sa2);
 				colmax = Math.abs( Av[ p2 ] ) + Math.abs( Av[ p2 + 1 ] );
 			} else {
 				colmax = 0.0;
@@ -361,19 +361,19 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					kp = k;
 				} else {
 					// Look in row IMAX from column K to IMAX-1 (using LDA stride)
-					jmax = k + izamax( imax - k, A, strideA2, offsetA + imax * strideA1 + k * strideA2 );
-					p3 = offsetA * 2 + imax * sa1 + jmax * sa2;
+					jmax = k + izamax( imax - k, A, strideA2, offsetA + (imax * strideA1) + (k * strideA2) );
+					p3 = (offsetA * 2) + (imax * sa1) + (jmax * sa2);
 					rowmax = Math.abs( Av[ p3 ] ) + Math.abs( Av[ p3 + 1 ] );
 					if ( imax < N - 1 ) {
-						jmax = imax + 1 + izamax( N - imax - 1, A, strideA1, offsetA + ( imax + 1 ) * strideA1 + imax * strideA2 );
-						p4 = offsetA * 2 + jmax * sa1 + imax * sa2;
+						jmax = imax + 1 + izamax( N - imax - 1, A, strideA1, offsetA + ( imax + 1 ) * strideA1 + (imax * strideA2) );
+						p4 = (offsetA * 2) + (jmax * sa1) + (imax * sa2);
 						rowmax = Math.max( rowmax, Math.abs( Av[ p4 ] ) + Math.abs( Av[ p4 + 1 ] ) );
 					}
 
 					if ( absakk >= ALPHA * colmax * ( colmax / rowmax ) ) {
 						kp = k;
 					} else {
-						p4 = offsetA * 2 + imax * sa1 + imax * sa2;
+						p4 = (offsetA * 2) + (imax * sa1) + (imax * sa2);
 						if ( ( Math.abs( Av[ p4 ] ) + Math.abs( Av[ p4 + 1 ] ) ) >= ALPHA * rowmax ) {
 							kp = imax;
 						} else {
@@ -387,13 +387,13 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				if ( kp !== kk ) {
 					// Interchange rows and columns KP and KK
 					if ( kp < N - 1 ) {
-						zswap( N - kp - 1, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + kk * strideA2, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + kp * strideA2 );
+						zswap( N - kp - 1, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + (kk * strideA2), A, strideA1, offsetA + ( kp + 1 ) * strideA1 + (kp * strideA2) );
 					}
-					zswap( kp - kk - 1, A, strideA1, offsetA + ( kk + 1 ) * strideA1 + kk * strideA2, A, strideA2, offsetA + kp * strideA1 + ( kk + 1 ) * strideA2 );
+					zswap( kp - kk - 1, A, strideA1, offsetA + ( kk + 1 ) * strideA1 + (kk * strideA2), A, strideA2, offsetA + (kp * strideA1) + ( kk + 1 ) * strideA2 );
 
 					// Swap diagonal elements
-					p1 = offsetA * 2 + kk * sa1 + kk * sa2;
-					p2 = offsetA * 2 + kp * sa1 + kp * sa2;
+					p1 = (offsetA * 2) + (kk * sa1) + (kk * sa2);
+					p2 = (offsetA * 2) + (kp * sa1) + (kp * sa2);
 					tR = Av[ p1 ];
 					tI = Av[ p1 + 1 ];
 					Av[ p1 ] = Av[ p2 ];
@@ -401,8 +401,8 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					Av[ p2 ] = tR;
 					Av[ p2 + 1 ] = tI;
 					if ( kstep === 2 ) {
-						p1 = offsetA * 2 + ( k + 1 ) * sa1 + k * sa2;
-						p2 = offsetA * 2 + kp * sa1 + k * sa2;
+						p1 = (offsetA * 2) + ( k + 1 ) * sa1 + (k * sa2);
+						p2 = (offsetA * 2) + (kp * sa1) + (k * sa2);
 						tR = Av[ p1 ];
 						tI = Av[ p1 + 1 ];
 						Av[ p1 ] = Av[ p2 ];
@@ -416,76 +416,76 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				if ( kstep === 1 ) {
 					if ( k < N - 1 ) {
 						// R1 = 1 / A(K, K)
-						p1 = offsetA * 2 + k * sa1 + k * sa2;
+						p1 = (offsetA * 2) + (k * sa1) + (k * sa2);
 						tr = Av[ p1 ];
 						ti = Av[ p1 + 1 ];
 						if ( Math.abs( ti ) <= Math.abs( tr ) ) {
 							tR = ti / tr;
-							tI = tr + ti * tR;
+							tI = tr + (ti * tR);
 							r1R = ( 1.0 ) / tI;
 							r1I = ( -tR ) / tI;
 						} else {
 							tR = tr / ti;
-							tI = ti + tr * tR;
+							tI = ti + (tr * tR);
 							r1R = ( tR ) / tI;
 							r1I = ( -1.0 ) / tI;
 						}
 
-						zsyr( uplo, N - k - 1, new Complex128( -r1R, -r1I ), A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, A, strideA1, strideA2, offsetA + ( k + 1 ) * strideA1 + ( k + 1 ) * strideA2 );
+						zsyr( uplo, N - k - 1, new Complex128( -r1R, -r1I ), A, strideA1, offsetA + ( k + 1 ) * strideA1 + (k * strideA2), A, strideA1, strideA2, offsetA + ( k + 1 ) * strideA1 + ( k + 1 ) * strideA2 );
 
-						zscal( N - k - 1, new Complex128( r1R, r1I ), A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2 );
+						zscal( N - k - 1, new Complex128( r1R, r1I ), A, strideA1, offsetA + ( k + 1 ) * strideA1 + (k * strideA2) );
 					}
 				} else {
 					// 2x2 pivot block
 					if ( k < N - 2 ) {
 						// D21 = A(K+1, K)
-						p1 = offsetA * 2 + ( k + 1 ) * sa1 + k * sa2;
+						p1 = (offsetA * 2) + ( k + 1 ) * sa1 + (k * sa2);
 						d21R = Av[ p1 ];
 						d21I = Av[ p1 + 1 ];
 
 						// D11 = A(K+1, K+1) / D21
-						p2 = offsetA * 2 + ( k + 1 ) * sa1 + ( k + 1 ) * sa2;
+						p2 = (offsetA * 2) + ( k + 1 ) * sa1 + ( k + 1 ) * sa2;
 						tr = Av[ p2 ];
 						ti = Av[ p2 + 1 ];
 						if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
 							tR = d21I / d21R;
-							tI = d21R + d21I * tR;
-							d11R = ( tr + ti * tR ) / tI;
-							d11I = ( ti - tr * tR ) / tI;
+							tI = d21R + (d21I * tR);
+							d11R = ( tr + (ti * tR) ) / tI;
+							d11I = ( ti - (tr * tR) ) / tI;
 						} else {
 							tR = d21R / d21I;
-							tI = d21I + d21R * tR;
-							d11R = ( tr * tR + ti ) / tI;
-							d11I = ( ti * tR - tr ) / tI;
+							tI = d21I + (d21R * tR);
+							d11R = ( (tr * tR) + ti ) / tI;
+							d11I = ( (ti * tR) - tr ) / tI;
 						}
 
 						// D22 = A(K, K) / D21
-						p2 = offsetA * 2 + k * sa1 + k * sa2;
+						p2 = (offsetA * 2) + (k * sa1) + (k * sa2);
 						tr = Av[ p2 ];
 						ti = Av[ p2 + 1 ];
 						if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
 							tR = d21I / d21R;
-							tI = d21R + d21I * tR;
-							d22R = ( tr + ti * tR ) / tI;
-							d22I = ( ti - tr * tR ) / tI;
+							tI = d21R + (d21I * tR);
+							d22R = ( tr + (ti * tR) ) / tI;
+							d22I = ( ti - (tr * tR) ) / tI;
 						} else {
 							tR = d21R / d21I;
-							tI = d21I + d21R * tR;
-							d22R = ( tr * tR + ti ) / tI;
-							d22I = ( ti * tR - tr ) / tI;
+							tI = d21I + (d21R * tR);
+							d22R = ( (tr * tR) + ti ) / tI;
+							d22I = ( (ti * tR) - tr ) / tI;
 						}
 
 						// T = 1 / (D11*D22 - 1)
-						tr = d11R * d22R - d11I * d22I - 1.0;
-						ti = d11R * d22I + d11I * d22R;
+						tr = (d11R * d22R) - (d11I * d22I) - 1.0;
+						ti = (d11R * d22I) + (d11I * d22R);
 						if ( Math.abs( ti ) <= Math.abs( tr ) ) {
 							tR = ti / tr;
-							tI = tr + ti * tR;
+							tI = tr + (ti * tR);
 							r1R = ( 1.0 ) / tI;
 							r1I = ( -tR ) / tI;
 						} else {
 							tR = tr / ti;
-							tI = ti + tr * tR;
+							tI = ti + (tr * tR);
 							r1R = ( tR ) / tI;
 							r1I = ( -1.0 ) / tI;
 						}
@@ -495,47 +495,47 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 						ti = r1I;
 						if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
 							tR = d21I / d21R;
-							tI = d21R + d21I * tR;
-							d21R = ( tr + ti * tR ) / tI;
-							d21I = ( ti - tr * tR ) / tI;
+							tI = d21R + (d21I * tR);
+							d21R = ( tr + (ti * tR) ) / tI;
+							d21I = ( ti - (tr * tR) ) / tI;
 						} else {
 							tR = d21R / d21I;
-							tI = d21I + d21R * tR;
-							d21R = ( tr * tR + ti ) / tI;
-							d21I = ( ti * tR - tr ) / tI;
+							tI = d21I + (d21R * tR);
+							d21R = ( (tr * tR) + ti ) / tI;
+							d21I = ( (ti * tR) - tr ) / tI;
 						}
 
 						for ( j = k + 2; j < N; j++ ) {
-							p1 = offsetA * 2 + j * sa1 + k * sa2;
-							p2 = offsetA * 2 + j * sa1 + ( k + 1 ) * sa2;
+							p1 = (offsetA * 2) + (j * sa1) + (k * sa2);
+							p2 = (offsetA * 2) + (j * sa1) + ( k + 1 ) * sa2;
 
 							// WK = D21 * (D11*A(J,K) - A(J,K+1))
 
 							// D11*A(J,K)
-							tr = d11R * Av[ p1 ] - d11I * Av[ p1 + 1 ];
-							ti = d11R * Av[ p1 + 1 ] + d11I * Av[ p1 ];
+							tr = (d11R * Av[ p1 ]) - (d11I * Av[ p1 + 1 ]);
+							ti = (d11R * Av[ p1 + 1 ]) + (d11I * Av[ p1 ]);
 							tr -= Av[ p2 ];
 							ti -= Av[ p2 + 1 ];
-							wkR = d21R * tr - d21I * ti;
-							wkI = d21R * ti + d21I * tr;
+							wkR = (d21R * tr) - (d21I * ti);
+							wkI = (d21R * ti) + (d21I * tr);
 
 							// WKP1 = D21 * (D22*A(J,K+1) - A(J,K))
-							tr = d22R * Av[ p2 ] - d22I * Av[ p2 + 1 ];
-							ti = d22R * Av[ p2 + 1 ] + d22I * Av[ p2 ];
+							tr = (d22R * Av[ p2 ]) - (d22I * Av[ p2 + 1 ]);
+							ti = (d22R * Av[ p2 + 1 ]) + (d22I * Av[ p2 ]);
 							tr -= Av[ p1 ];
 							ti -= Av[ p1 + 1 ];
-							wkp1R = d21R * tr - d21I * ti;
-							wkp1I = d21R * ti + d21I * tr;
+							wkp1R = (d21R * tr) - (d21I * ti);
+							wkp1I = (d21R * ti) + (d21I * tr);
 
 							for ( i = j; i < N; i++ ) {
 								// A(I,J) -= A(I,K)*WK + A(I,K+1)*WKP1
-								p3 = offsetA * 2 + i * sa1 + j * sa2;
-								p4 = offsetA * 2 + i * sa1 + k * sa2;
-								tR = offsetA * 2 + i * sa1 + ( k + 1 ) * sa2;
-								tr = Av[ p4 ] * wkR - Av[ p4 + 1 ] * wkI;
-								ti = Av[ p4 ] * wkI + Av[ p4 + 1 ] * wkR;
-								tr += Av[ tR ] * wkp1R - Av[ tR + 1 ] * wkp1I;
-								ti += Av[ tR ] * wkp1I + Av[ tR + 1 ] * wkp1R;
+								p3 = (offsetA * 2) + (i * sa1) + (j * sa2);
+								p4 = (offsetA * 2) + (i * sa1) + (k * sa2);
+								tR = (offsetA * 2) + (i * sa1) + ( k + 1 ) * sa2;
+								tr = (Av[ p4 ] * wkR) - (Av[ p4 + 1 ] * wkI);
+								ti = (Av[ p4 ] * wkI) + (Av[ p4 + 1 ] * wkR);
+								tr += (Av[ tR ] * wkp1R) - (Av[ tR + 1 ] * wkp1I);
+								ti += (Av[ tR ] * wkp1I) + (Av[ tR + 1 ] * wkp1R);
 								Av[ p3 ] -= tr;
 								Av[ p3 + 1 ] -= ti;
 							}
@@ -550,9 +550,9 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 			// Store details of the interchanges in IPIV
 			if ( kstep === 1 ) {
-				IPIV[ offsetIPIV + k * strideIPIV ] = kp;
+				IPIV[ offsetIPIV + (k * strideIPIV) ] = kp;
 			} else {
-				IPIV[ offsetIPIV + k * strideIPIV ] = ~kp;
+				IPIV[ offsetIPIV + (k * strideIPIV) ] = ~kp;
 				IPIV[ offsetIPIV + ( k + 1 ) * strideIPIV ] = ~kp;
 			}
 
@@ -572,14 +572,14 @@ function cDiv( ar, ai, br, bi ) {
 	var d;
 	if ( Math.abs( bi ) <= Math.abs( br ) ) {
 		r = bi / br;
-		d = br + bi * r;
-		_cdR = ( ar + ai * r ) / d;
-		_cdI = ( ai - ar * r ) / d;
+		d = br + (bi * r);
+		_cdR = ( ar + (ai * r) ) / d;
+		_cdI = ( ai - (ar * r) ) / d;
 	} else {
 		r = br / bi;
-		d = bi + br * r;
-		_cdR = ( ar * r + ai ) / d;
-		_cdI = ( ai * r - ar ) / d;
+		d = bi + (br * r);
+		_cdR = ( (ar * r) + ai ) / d;
+		_cdI = ( (ai * r) - ar ) / d;
 	}
 }
 

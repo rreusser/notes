@@ -93,7 +93,7 @@ function dlae2( a, b, c ) {
 	} else {
 		// sm === 0: eigenvalues are +/- rt/2
 		rt1 = 0.5 * rt;
-		rt2 = -0.5 * rt;
+		rt2 = - (0.5 * rt);
 	}
 
 	return {

@@ -103,17 +103,17 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Dlarfg signature: dlarfg(N, alpha_arr, offsetAlpha, x, strideX, offsetX, tau, offsetTau)
 			dlarfg(
 				i + 1,                              // N = Fortran I = i+1
-				A, offsetA + i * sa1 + ( i + 1 ) * sa2,  // alpha at A(i, i+1)
+				A, offsetA + (i * sa1) + ( i + 1 ) * sa2,  // alpha at A(i, i+1)
 				A, sa1, offsetA + ( i + 1 ) * sa2,        // x = column i+1 starting at row 0, stride=sa1
-				TAU, offsetTAU + i * strideTAU             // taui output
+				TAU, offsetTAU + (i * strideTAU)             // taui output
 			);
-			e[ offsetE + i * strideE ] = A[ offsetA + i * sa1 + ( i + 1 ) * sa2 ];
+			e[ offsetE + (i * strideE) ] = A[ offsetA + (i * sa1) + ( i + 1 ) * sa2 ];
 
-			taui = TAU[ offsetTAU + i * strideTAU ];
+			taui = TAU[ offsetTAU + (i * strideTAU) ];
 
 			if ( taui !== 0.0 ) {
 				// Set A(i, i+1) = 1 to form the reflector
-				A[ offsetA + i * sa1 + ( i + 1 ) * sa2 ] = 1.0;
+				A[ offsetA + (i * sa1) + ( i + 1 ) * sa2 ] = 1.0;
 
 				// Compute w := tau * A * v, where v is stored in A(0:i, i+1)
 
@@ -131,7 +131,7 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Compute alpha := -0.5 * tau * dot(w, v)
 
 				// Fortran: ALPHA = -HALF*TAUI*DDOT(I, TAU, 1, A(1,I+1), 1)
-				alpha = -HALF * taui * ddot(
+				alpha = - (HALF * taui) * ddot(
 					i + 1,
 					TAU, strideTAU, offsetTAU,
 					A, sa1, offsetA + ( i + 1 ) * sa2
@@ -159,11 +159,11 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				);
 
 				// Restore A(i, i+1) = e(i)
-				A[ offsetA + i * sa1 + ( i + 1 ) * sa2 ] = e[ offsetE + i * strideE ];
+				A[ offsetA + (i * sa1) + ( i + 1 ) * sa2 ] = e[ offsetE + (i * strideE) ];
 			}
 			// D(I+1) = A(I+1, I+1) in Fortran (1-based) → d[i+1] = A[oA + (i+1)*sa1 + (i+1)*sa2]
 			d[ offsetD + ( i + 1 ) * strideD ] = A[ offsetA + ( i + 1 ) * sa1 + ( i + 1 ) * sa2 ];
-			TAU[ offsetTAU + i * strideTAU ] = taui;
+			TAU[ offsetTAU + (i * strideTAU) ] = taui;
 		}
 		// D(1) = A(1,1) in Fortran → d[0] = A[oA]
 		d[ offsetD ] = A[ offsetA ];
@@ -183,17 +183,17 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			//   Stride = 1 = sa1 (for column-major)
 			dlarfg(
 				N - i - 1,                                         // N_reflector
-				A, offsetA + ( i + 1 ) * sa1 + i * sa2,           // alpha at A(i+1, i)
-				A, sa1, offsetA + Math.min( i + 2, N - 1 ) * sa1 + i * sa2,  // x starting at A(min(i+2,N-1), i)
-				TAU, offsetTAU + i * strideTAU                     // taui output
+				A, offsetA + ( i + 1 ) * sa1 + (i * sa2),           // alpha at A(i+1, i)
+				A, sa1, offsetA + Math.min( i + 2, N - 1 ) * sa1 + (i * sa2),  // x starting at A(min(i+2,N-1), i)
+				TAU, offsetTAU + (i * strideTAU)                     // taui output
 			);
-			e[ offsetE + i * strideE ] = A[ offsetA + ( i + 1 ) * sa1 + i * sa2 ];
+			e[ offsetE + (i * strideE) ] = A[ offsetA + ( i + 1 ) * sa1 + (i * sa2) ];
 
-			taui = TAU[ offsetTAU + i * strideTAU ];
+			taui = TAU[ offsetTAU + (i * strideTAU) ];
 
 			if ( taui !== 0.0 ) {
 				// Set A(i+1, i) = 1 to form the reflector
-				A[ offsetA + ( i + 1 ) * sa1 + i * sa2 ] = 1.0;
+				A[ offsetA + ( i + 1 ) * sa1 + (i * sa2) ] = 1.0;
 
 				// Compute w := tau * A * v
 
@@ -209,18 +209,18 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				dsymv(
 					uplo, N - i - 1, taui,
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa1 + ( i + 1 ) * sa2,  // A submatrix at (i+1, i+1)
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,               // v = A(i+1:N-1, i)
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2),               // v = A(i+1:N-1, i)
 					0.0,
-					TAU, strideTAU, offsetTAU + i * strideTAU                   // w = TAU(i:)
+					TAU, strideTAU, offsetTAU + (i * strideTAU)                   // w = TAU(i:)
 				);
 
 				// Compute alpha := -0.5 * tau * dot(w, v)
 
 				// Fortran: ALPHA = -HALF*TAUI*DDOT(N-I, TAU(I), 1, A(I+1,I), 1)
-				alpha = -HALF * taui * ddot(
+				alpha = - (HALF * taui) * ddot(
 					N - i - 1,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2)
 				);
 
 				// Compute w := w + alpha * v
@@ -228,8 +228,8 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Fortran: DAXPY(N-I, ALPHA, A(I+1,I), 1, TAU(I), 1)
 				daxpy(
 					N - i - 1, alpha,
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,
-					TAU, strideTAU, offsetTAU + i * strideTAU
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2),
+					TAU, strideTAU, offsetTAU + (i * strideTAU)
 				);
 
 				// Apply the transformation as a rank-2 update:
@@ -239,17 +239,17 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Fortran: DSYR2(UPLO, N-I, -ONE, A(I+1,I), 1, TAU(I), 1, A(I+1,I+1), LDA)
 				dsyr2(
 					uplo, N - i - 1, -1.0,
-					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2),
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa1 + ( i + 1 ) * sa2
 				);
 
 				// Restore A(i+1, i) = e(i)
-				A[ offsetA + ( i + 1 ) * sa1 + i * sa2 ] = e[ offsetE + i * strideE ];
+				A[ offsetA + ( i + 1 ) * sa1 + (i * sa2) ] = e[ offsetE + (i * strideE) ];
 			}
 			// D(I) = A(I,I) in Fortran (1-based) → d[i] = A[oA + i*sa1 + i*sa2]
-			d[ offsetD + i * strideD ] = A[ offsetA + i * sa1 + i * sa2 ];
-			TAU[ offsetTAU + i * strideTAU ] = taui;
+			d[ offsetD + (i * strideD) ] = A[ offsetA + (i * sa1) + (i * sa2) ];
+			TAU[ offsetTAU + (i * strideTAU) ] = taui;
 		}
 		// D(N) = A(N,N) in Fortran → d[N-1] = A[oA + (N-1)*sa1 + (N-1)*sa2]
 		d[ offsetD + ( N - 1 ) * strideD ] = A[ offsetA + ( N - 1 ) * sa1 + ( N - 1 ) * sa2 ];

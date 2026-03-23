@@ -77,7 +77,7 @@ function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 	if ( nounit ) {
 		Av = reinterpret( A, 0 );
 		for ( j = 0; j < N; j++ ) {
-			ia = ( offsetA + j * sa1 + j * sa2 ) * 2;
+			ia = ( offsetA + (j * sa1) + (j * sa2) ) * 2;
 			if ( Av[ ia ] === 0.0 && Av[ ia + 1 ] === 0.0 ) {
 				return j + 1;
 			}
@@ -98,14 +98,14 @@ function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			// Compute rows 0:j-1 of current block column
 			ztrmm( 'left', 'upper', 'no-transpose', diag, j, jb, CONE,
 				A, sa1, sa2, offsetA,
-				A, sa1, sa2, offsetA + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa2) );
 			ztrsm( 'right', 'upper', 'no-transpose', diag, j, jb, CNEGONE,
-				A, sa1, sa2, offsetA + j * sa1 + j * sa2,
-				A, sa1, sa2, offsetA + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
+				A, sa1, sa2, offsetA + (j * sa2) );
 
 			// Compute inverse of current diagonal block
 			ztrti2( 'upper', diag, jb,
-				A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa1) + (j * sa2) );
 		}
 	} else {
 		// Compute inverse of lower triangular matrix
@@ -116,15 +116,15 @@ function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 				// Compute rows j+jb:N-1 of current block column
 				ztrmm( 'left', 'lower', 'no-transpose', diag, N - j - jb, jb, CONE,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + ( j + jb ) * sa2,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2 );
+					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2) );
 				ztrsm( 'right', 'lower', 'no-transpose', diag, N - j - jb, jb, CNEGONE,
-					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2 );
+					A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
+					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2) );
 			}
 
 			// Compute inverse of current diagonal block
 			ztrti2( 'lower', diag, jb,
-				A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+				A, sa1, sa2, offsetA + (j * sa1) + (j * sa2) );
 		}
 	}
 	return 0;

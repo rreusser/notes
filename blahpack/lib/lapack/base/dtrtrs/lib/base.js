@@ -67,7 +67,7 @@ function dtrtrs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	// Check for singularity.
 	if ( nounit ) {
 		for ( i = 0; i < N; i++ ) {
-			if ( A[ offsetA + i * sa1 + i * sa2 ] === 0.0 ) {
+			if ( A[ offsetA + (i * sa1) + (i * sa2) ] === 0.0 ) {
 				return i + 1;
 			}
 		}

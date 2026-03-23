@@ -71,30 +71,30 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			if ( direct === 'forward' ) {
 				// Variable pivot, forward direction
 				for ( j = 0; j < M - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + ( j + 1 ) * strideA1 + i * strideA2;
-							idx2 = offsetA + j * strideA1 + i * strideA2;
+							idx1 = offsetA + ( j + 1 ) * strideA1 + (i * strideA2);
+							idx2 = offsetA + (j * strideA1) + (i * strideA2);
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
 			} else {
 				// Variable pivot, backward direction
 				for ( j = M - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + ( j + 1 ) * strideA1 + i * strideA2;
-							idx2 = offsetA + j * strideA1 + i * strideA2;
+							idx1 = offsetA + ( j + 1 ) * strideA1 + (i * strideA2);
+							idx2 = offsetA + (j * strideA1) + (i * strideA2);
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
@@ -107,11 +107,11 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + j * strideA1 + i * strideA2;
-							idx2 = offsetA + i * strideA2; // row 0
+							idx1 = offsetA + (j * strideA1) + (i * strideA2);
+							idx2 = offsetA + (i * strideA2); // row 0
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
@@ -122,11 +122,11 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + j * strideA1 + i * strideA2;
-							idx2 = offsetA + i * strideA2; // row 0
+							idx1 = offsetA + (j * strideA1) + (i * strideA2);
+							idx2 = offsetA + (i * strideA2); // row 0
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
@@ -135,30 +135,30 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			if ( direct === 'forward' ) {
 				// Bottom pivot, forward direction
 				for ( j = 0; j < M - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + j * strideA1 + i * strideA2;
-							idx2 = offsetA + ( M - 1 ) * strideA1 + i * strideA2;
+							idx1 = offsetA + (j * strideA1) + (i * strideA2);
+							idx2 = offsetA + ( M - 1 ) * strideA1 + (i * strideA2);
 							temp = A[ idx1 ];
-							A[ idx1 ] = stemp * A[ idx2 ] + ctemp * temp;
-							A[ idx2 ] = ctemp * A[ idx2 ] - stemp * temp;
+							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
+							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);
 						}
 					}
 				}
 			} else {
 				// Bottom pivot, backward direction
 				for ( j = M - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + j * strideA1 + i * strideA2;
-							idx2 = offsetA + ( M - 1 ) * strideA1 + i * strideA2;
+							idx1 = offsetA + (j * strideA1) + (i * strideA2);
+							idx2 = offsetA + ( M - 1 ) * strideA1 + (i * strideA2);
 							temp = A[ idx1 ];
-							A[ idx1 ] = stemp * A[ idx2 ] + ctemp * temp;
-							A[ idx2 ] = ctemp * A[ idx2 ] - stemp * temp;
+							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
+							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);
 						}
 					}
 				}
@@ -170,30 +170,30 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			if ( direct === 'forward' ) {
 				// Variable pivot, forward direction
 				for ( j = 0; j < N - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * strideA1 + ( j + 1 ) * strideA2;
-							idx2 = offsetA + i * strideA1 + j * strideA2;
+							idx1 = offsetA + (i * strideA1) + ( j + 1 ) * strideA2;
+							idx2 = offsetA + (i * strideA1) + (j * strideA2);
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
 			} else {
 				// Variable pivot, backward direction
 				for ( j = N - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * strideA1 + ( j + 1 ) * strideA2;
-							idx2 = offsetA + i * strideA1 + j * strideA2;
+							idx1 = offsetA + (i * strideA1) + ( j + 1 ) * strideA2;
+							idx2 = offsetA + (i * strideA1) + (j * strideA2);
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
@@ -206,11 +206,11 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * strideA1 + j * strideA2;
-							idx2 = offsetA + i * strideA1; // col 0
+							idx1 = offsetA + (i * strideA1) + (j * strideA2);
+							idx2 = offsetA + (i * strideA1); // col 0
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
@@ -221,11 +221,11 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * strideA1 + j * strideA2;
-							idx2 = offsetA + i * strideA1; // col 0
+							idx1 = offsetA + (i * strideA1) + (j * strideA2);
+							idx2 = offsetA + (i * strideA1); // col 0
 							temp = A[ idx1 ];
-							A[ idx1 ] = ctemp * temp - stemp * A[ idx2 ];
-							A[ idx2 ] = stemp * temp + ctemp * A[ idx2 ];
+							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
+							A[ idx2 ] = (stemp * temp) + (ctemp * A[ idx2 ]);
 						}
 					}
 				}
@@ -234,30 +234,30 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			if ( direct === 'forward' ) {
 				// Bottom pivot, forward direction
 				for ( j = 0; j < N - 1; j++ ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * strideA1 + j * strideA2;
-							idx2 = offsetA + i * strideA1 + ( N - 1 ) * strideA2;
+							idx1 = offsetA + (i * strideA1) + (j * strideA2);
+							idx2 = offsetA + (i * strideA1) + ( N - 1 ) * strideA2;
 							temp = A[ idx1 ];
-							A[ idx1 ] = stemp * A[ idx2 ] + ctemp * temp;
-							A[ idx2 ] = ctemp * A[ idx2 ] - stemp * temp;
+							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
+							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);
 						}
 					}
 				}
 			} else {
 				// Bottom pivot, backward direction
 				for ( j = N - 2; j >= 0; j-- ) {
-					ctemp = c[ offsetC + j * strideC ];
-					stemp = s[ offsetS + j * strideS ];
+					ctemp = c[ offsetC + (j * strideC) ];
+					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + i * strideA1 + j * strideA2;
-							idx2 = offsetA + i * strideA1 + ( N - 1 ) * strideA2;
+							idx1 = offsetA + (i * strideA1) + (j * strideA2);
+							idx2 = offsetA + (i * strideA1) + ( N - 1 ) * strideA2;
 							temp = A[ idx1 ];
-							A[ idx1 ] = stemp * A[ idx2 ] + ctemp * temp;
-							A[ idx2 ] = ctemp * A[ idx2 ] - stemp * temp;
+							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
+							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);
 						}
 					}
 				}

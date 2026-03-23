@@ -104,21 +104,21 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 		offpi = offset + i;
 
 		// Determine pivot: find column with largest norm in VN1(i:N-1)
-		pvt = i + idamax( N - i, VN1, strideVN1, offsetVN1 + i * strideVN1 );
+		pvt = i + idamax( N - i, VN1, strideVN1, offsetVN1 + (i * strideVN1) );
 
 		// Swap columns if needed
 		if ( pvt !== i ) {
 			// Swap columns pvt and i of A (all M rows)
-			zswap( M, A, sa1, offsetA + pvt * sa2, A, sa1, offsetA + i * sa2 );
+			zswap( M, A, sa1, offsetA + (pvt * sa2), A, sa1, offsetA + (i * sa2) );
 
 			// Swap JPVT entries
-			itemp = JPVT[ offsetJPVT + pvt * strideJPVT ];
-			JPVT[ offsetJPVT + pvt * strideJPVT ] = JPVT[ offsetJPVT + i * strideJPVT ];
-			JPVT[ offsetJPVT + i * strideJPVT ] = itemp;
+			itemp = JPVT[ offsetJPVT + (pvt * strideJPVT) ];
+			JPVT[ offsetJPVT + (pvt * strideJPVT) ] = JPVT[ offsetJPVT + (i * strideJPVT) ];
+			JPVT[ offsetJPVT + (i * strideJPVT) ] = itemp;
 
 			// Swap norms
-			VN1[ offsetVN1 + pvt * strideVN1 ] = VN1[ offsetVN1 + i * strideVN1 ];
-			VN2[ offsetVN2 + pvt * strideVN2 ] = VN2[ offsetVN2 + i * strideVN2 ];
+			VN1[ offsetVN1 + (pvt * strideVN1) ] = VN1[ offsetVN1 + (i * strideVN1) ];
+			VN2[ offsetVN2 + (pvt * strideVN2) ] = VN2[ offsetVN2 + (i * strideVN2) ];
 		}
 
 		// Generate elementary reflector H(i) to annul A(offpi+1:M-1, i)
@@ -126,68 +126,68 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 			// Zlarfg expects Complex128Array with complex-element offsets
 			zlarfg(
 				M - offpi,
-				A, offsetA + offpi * sa1 + i * sa2,
-				A, sa1, offsetA + ( offpi + 1 ) * sa1 + i * sa2,
-				TAU, offsetTAU + i * strideTAU
+				A, offsetA + (offpi * sa1) + (i * sa2),
+				A, sa1, offsetA + ( offpi + 1 ) * sa1 + (i * sa2),
+				TAU, offsetTAU + (i * strideTAU)
 			);
 		} else {
 			zlarfg(
 				1,
-				A, offsetA + ( M - 1 ) * sa1 + i * sa2,
-				A, sa1, offsetA + ( M - 1 ) * sa1 + i * sa2,
-				TAU, offsetTAU + i * strideTAU
+				A, offsetA + ( M - 1 ) * sa1 + (i * sa2),
+				A, sa1, offsetA + ( M - 1 ) * sa1 + (i * sa2),
+				TAU, offsetTAU + (i * strideTAU)
 			);
 		}
 
 		if ( i < N - 1 ) {
 			// Apply H(i)^H to A(offpi:M-1, i+1:N-1) from the left
 			// Save A(offpi, i) and set it to 1
-			aii[ 0 ] = Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) ];
-			aii[ 1 ] = Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ];
-			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) ] = 1.0;
-			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ] = 0.0;
+			aii[ 0 ] = Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) ];
+			aii[ 1 ] = Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) + 1 ];
+			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) ] = 1.0;
+			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) + 1 ] = 0.0;
 
 			// conj(tau(i))
-			conjTauv[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
-			conjTauv[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
+			conjTauv[ 0 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 ];
+			conjTauv[ 1 ] = -TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 + 1 ];
 
 			zlarf(
 				'left', M - offpi, N - i - 1,
-				A, sa1, offsetA + offpi * sa1 + i * sa2,
+				A, sa1, offsetA + (offpi * sa1) + (i * sa2),
 				conjTau, 0,
-				A, sa1, sa2, offsetA + offpi * sa1 + ( i + 1 ) * sa2,
+				A, sa1, sa2, offsetA + (offpi * sa1) + ( i + 1 ) * sa2,
 				WORK, strideWORK, offsetWORK
 			);
 
 			// Restore A(offpi, i)
-			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) ] = aii[ 0 ];
-			Av[ oA + 2 * ( offpi * sa1 + i * sa2 ) + 1 ] = aii[ 1 ];
+			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) ] = aii[ 0 ];
+			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) + 1 ] = aii[ 1 ];
 		}
 
 		// Update partial column norms
 		for ( j = i + 1; j < N; j++ ) {
-			if ( VN1[ offsetVN1 + j * strideVN1 ] !== 0.0 ) {
+			if ( VN1[ offsetVN1 + (j * strideVN1) ] !== 0.0 ) {
 				// temp = |A(offpi, j)| / VN1(j)
-				temp = cmplx.absAt( Av, oA + 2 * ( offpi * sa1 + j * sa2 ) ) / VN1[ offsetVN1 + j * strideVN1 ];
-				temp = Math.max( 0.0, ( 1.0 - temp * temp ) );
+				temp = cmplx.absAt( Av, oA + 2 * ( (offpi * sa1) + (j * sa2) ) ) / VN1[ offsetVN1 + (j * strideVN1) ];
+				temp = Math.max( 0.0, ( 1.0 - (temp * temp) ) );
 				temp2 = temp * Math.pow(
-					VN1[ offsetVN1 + j * strideVN1 ] /
-					VN2[ offsetVN2 + j * strideVN2 ], 2
+					VN1[ offsetVN1 + (j * strideVN1) ] /
+					VN2[ offsetVN2 + (j * strideVN2) ], 2
 				);
 
 				if ( temp2 <= tol3z ) {
 					if ( offpi < M - 1 ) {
-						VN1[ offsetVN1 + j * strideVN1 ] = dznrm2(
+						VN1[ offsetVN1 + (j * strideVN1) ] = dznrm2(
 							M - offpi - 1,
-							A, sa1, offsetA + ( offpi + 1 ) * sa1 + j * sa2
+							A, sa1, offsetA + ( offpi + 1 ) * sa1 + (j * sa2)
 						);
-						VN2[ offsetVN2 + j * strideVN2 ] = VN1[ offsetVN1 + j * strideVN1 ];
+						VN2[ offsetVN2 + (j * strideVN2) ] = VN1[ offsetVN1 + (j * strideVN1) ];
 					} else {
-						VN1[ offsetVN1 + j * strideVN1 ] = 0.0;
-						VN2[ offsetVN2 + j * strideVN2 ] = 0.0;
+						VN1[ offsetVN1 + (j * strideVN1) ] = 0.0;
+						VN2[ offsetVN2 + (j * strideVN2) ] = 0.0;
 					}
 				} else {
-					VN1[ offsetVN1 + j * strideVN1 ] *= Math.sqrt( temp );
+					VN1[ offsetVN1 + (j * strideVN1) ] *= Math.sqrt( temp );
 				}
 			}
 		}

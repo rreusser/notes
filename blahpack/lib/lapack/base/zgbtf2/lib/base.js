@@ -96,7 +96,7 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	// Zero rows kv-j to kl-1 (0-based) in band storage
 	for ( j = ku + 1; j < Math.min( kv, N ); j++ ) {
 		for ( i = kv - j; i < kl; i++ ) {
-			idx = ( offsetAB + i * sa1 + j * sa2 ) * 2;
+			idx = ( offsetAB + (i * sa1) + (j * sa2) ) * 2;
 			ABv[ idx ] = 0.0;
 			ABv[ idx + 1 ] = 0.0;
 		}
@@ -108,7 +108,7 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 		// Zero out fill-in column: if j + kv < N, zero rows 0..kl-1 of column j+kv
 		if ( j + kv < N ) {
 			for ( i = 0; i < kl; i++ ) {
-				idx = ( offsetAB + i * sa1 + ( j + kv ) * sa2 ) * 2;
+				idx = ( offsetAB + (i * sa1) + ( j + kv ) * sa2 ) * 2;
 				ABv[ idx ] = 0.0;
 				ABv[ idx + 1 ] = 0.0;
 			}
@@ -116,13 +116,13 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 		// Find pivot: search km+1 elements starting at AB(kv, j) in band storage
 		km = Math.min( kl, M - j - 1 );
-		jp = izamax( km + 1, AB, sa1, offsetAB + kv * sa1 + j * sa2 );
+		jp = izamax( km + 1, AB, sa1, offsetAB + (kv * sa1) + (j * sa2) );
 
 		// IPIV[j] = jp + j (0-based: the row that was swapped with row j)
-		IPIV[ offsetIPIV + j * strideIPIV ] = jp + j;
+		IPIV[ offsetIPIV + (j * strideIPIV) ] = jp + j;
 
 		// Check if pivot element is nonzero
-		idx = ( offsetAB + ( kv + jp ) * sa1 + j * sa2 ) * 2;
+		idx = ( offsetAB + ( kv + jp ) * sa1 + (j * sa2) ) * 2;
 		if ( ABv[ idx ] !== 0.0 || ABv[ idx + 1 ] !== 0.0 ) {
 			// Update JU: max column reached by pivot search
 			ju = Math.max( ju, Math.min( j + ku + jp, N - 1 ) );
@@ -131,28 +131,28 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 			// Band stride for moving along a row = sa2 - sa1 (corresponds to LDAB-1)
 			if ( jp !== 0 ) {
-				zswap( ju - j + 1, AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + j * sa2,
-					AB, sa2 - sa1, offsetAB + kv * sa1 + j * sa2 );
+				zswap( ju - j + 1, AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + (j * sa2),
+					AB, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2) );
 			}
 
 			if ( km > 0 ) {
 				// Scale multipliers: L(j+1:j+km, j) = AB(kv+1:kv+km, j) / AB(kv, j)
 				// Compute 1/AB(kv, j) as a Complex128 scalar for zscal
-				idx = ( offsetAB + kv * sa1 + j * sa2 ) * 2;
+				idx = ( offsetAB + (kv * sa1) + (j * sa2) ) * 2;
 				TEMP[ 0 ] = 1.0;
 				TEMP[ 1 ] = 0.0;
 				cmplx.divAt( TEMP, 0, TEMP, 0, ABv, idx );
 				ONE_NEG = new Complex128( TEMP[ 0 ], TEMP[ 1 ] );
 
 				zscal( km, ONE_NEG,
-					AB, sa1, offsetAB + ( kv + 1 ) * sa1 + j * sa2 );
+					AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (j * sa2) );
 
 				// Rank-1 update: A(j+1:j+km, j+1:ju) -= L(j+1:j+km, j) * U(j, j+1:ju)
 				if ( ju > j ) {
 					zgeru( km, ju - j, new Complex128( -1.0, 0.0 ),
-						AB, sa1, offsetAB + ( kv + 1 ) * sa1 + j * sa2,
+						AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (j * sa2),
 						AB, sa2 - sa1, offsetAB + ( kv - 1 ) * sa1 + ( j + 1 ) * sa2,
-						AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + ( j + 1 ) * sa2 );
+						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + ( j + 1 ) * sa2 );
 				}
 			}
 		} else {

@@ -174,7 +174,7 @@ function dlasv2( f, g, h ) {
 			if ( l === 0.0 ) {
 				r = Math.abs( m );
 			} else {
-				r = Math.sqrt( l * l + mm );
+				r = Math.sqrt( (l * l) + mm );
 			}
 
 			// Note that 0 <= R <= 1 + 1/macheps
@@ -189,15 +189,15 @@ function dlasv2( f, g, h ) {
 				if ( l === 0.0 ) {
 					t = sign( 2.0, ft ) * sign( 1.0, gt );
 				} else {
-					t = gt / sign( d, ft ) + m / t;
+					t = gt / sign( d, ft ) + (m / t);
 				}
 			} else {
 				t = ( m / ( s + t ) + m / ( r + l ) ) * ( 1.0 + a );
 			}
-			l = Math.sqrt( t * t + 4.0 );
+			l = Math.sqrt( (t * t) + 4.0 );
 			crt = 2.0 / l;
 			srt = t / l;
-			clt = ( crt + srt * m ) / a;
+			clt = ( crt + (srt * m) ) / a;
 			slt = ( ht / ft ) * srt / a;
 		}
 	}

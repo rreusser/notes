@@ -84,30 +84,30 @@ function zlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 			// A(0:i-1, i:i+ib-1) := A(0:i-1, i:i+ib-1) * U(i:i+ib-1, i:i+ib-1)^H
 			ztrmm( 'right', 'upper', 'conjugate-transpose', 'non-unit', i, ib, CONE,
-				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-				A, sa1, sa2, offsetA + i * sa2 );
+				A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
+				A, sa1, sa2, offsetA + (i * sa2) );
 
 			// Compute the product of the diagonal block:
 
 			// A(i:i+ib-1, i:i+ib-1) := U(i:i+ib-1, i:i+ib-1) * U(i:i+ib-1, i:i+ib-1)^H
-			zlauu2( 'upper', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
+			zlauu2( 'upper', ib, A, sa1, sa2, offsetA + (i * sa1) + (i * sa2) );
 
 			if ( i + ib < N ) {
 				// Update the leading i rows using remaining columns:
 				// A(0:i-1, i:i+ib-1) += A(0:i-1, i+ib:N-1) * A(i:i+ib-1, i+ib:N-1)^H
 				zgemm( 'no-transpose', 'conjugate-transpose', i, ib, N - i - ib, CONE,
 					A, sa1, sa2, offsetA + ( i + ib ) * sa2,
-					A, sa1, sa2, offsetA + i * sa1 + ( i + ib ) * sa2,
+					A, sa1, sa2, offsetA + (i * sa1) + ( i + ib ) * sa2,
 					CONE,
-					A, sa1, sa2, offsetA + i * sa2 );
+					A, sa1, sa2, offsetA + (i * sa2) );
 
 				// Rank-ib update of diagonal block:
 
 				// A(i:i+ib-1, i:i+ib-1) += A(i:i+ib-1, i+ib:N-1) * A(i:i+ib-1, i+ib:N-1)^H
 				zherk( 'upper', 'no-transpose', ib, N - i - ib, 1.0,
-					A, sa1, sa2, offsetA + i * sa1 + ( i + ib ) * sa2,
+					A, sa1, sa2, offsetA + (i * sa1) + ( i + ib ) * sa2,
 					1.0,
-					A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
+					A, sa1, sa2, offsetA + (i * sa1) + (i * sa2) );
 			}
 		}
 	} else {
@@ -119,30 +119,30 @@ function zlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 			// A(i:i+ib-1, 0:i-1) := L(i:i+ib-1, i:i+ib-1)^H * A(i:i+ib-1, 0:i-1)
 			ztrmm( 'left', 'lower', 'conjugate-transpose', 'non-unit', ib, i, CONE,
-				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-				A, sa1, sa2, offsetA + i * sa1 );
+				A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
+				A, sa1, sa2, offsetA + (i * sa1) );
 
 			// Compute the product of the diagonal block:
 
 			// A(i:i+ib-1, i:i+ib-1) := L(i:i+ib-1, i:i+ib-1)^H * L(i:i+ib-1, i:i+ib-1)
-			zlauu2( 'lower', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
+			zlauu2( 'lower', ib, A, sa1, sa2, offsetA + (i * sa1) + (i * sa2) );
 
 			if ( i + ib < N ) {
 				// Update the leading i columns using remaining rows:
 				// A(i:i+ib-1, 0:i-1) += A(i+ib:N-1, i:i+ib-1)^H * A(i+ib:N-1, 0:i-1)
 				zgemm( 'conjugate-transpose', 'no-transpose', ib, i, N - i - ib, CONE,
-					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + i * sa2,
+					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + (i * sa2),
 					A, sa1, sa2, offsetA + ( i + ib ) * sa1,
 					CONE,
-					A, sa1, sa2, offsetA + i * sa1 );
+					A, sa1, sa2, offsetA + (i * sa1) );
 
 				// Rank-ib update of diagonal block:
 
 				// A(i:i+ib-1, i:i+ib-1) += A(i+ib:N-1, i:i+ib-1)^H * A(i+ib:N-1, i:i+ib-1)
 				zherk( 'lower', 'conjugate-transpose', ib, N - i - ib, 1.0,
-					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + i * sa2,
+					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + (i * sa2),
 					1.0,
-					A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
+					A, sa1, sa2, offsetA + (i * sa1) + (i * sa2) );
 			}
 		}
 	}

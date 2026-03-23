@@ -111,8 +111,8 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			// Compute the LQ factorization of the current panel A(i:i+ib-1, i:N-1)
 			dgelq2(
 				ib, N - i,
-				A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				WORK, strideWORK, offsetWORK
 			);
 
@@ -122,8 +122,8 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				dlarft(
 					'forward', 'rowwise',
 					N - i, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-					TAU, strideTAU, offsetTAU + i * strideTAU,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					T, 1, nb, 0
 				);
 
@@ -131,9 +131,9 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				dlarfb(
 					'right', 'no-transpose', 'forward', 'rowwise',
 					M - i - ib, N - i, ib,
-					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					T, 1, nb, 0,
-					A, strideA1, strideA2, offsetA + ( i + ib ) * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + ( i + ib ) * strideA1 + (i * strideA2),
 					WORK, 1, ldwork, offsetWORK
 				);
 			}
@@ -147,8 +147,8 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	if ( i <= K - 1 ) {
 		dgelq2(
 			M - i, N - i,
-			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
-			TAU, strideTAU, offsetTAU + i * strideTAU,
+			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
+			TAU, strideTAU, offsetTAU + (i * strideTAU),
 			WORK, strideWORK, offsetWORK
 		);
 	}

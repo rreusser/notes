@@ -94,14 +94,14 @@ function dsymv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			temp2 = 0.0;
 			ix = offsetX;
 			iy = offsetY;
-			ia = offsetA + j * sa2;
+			ia = offsetA + (j * sa2);
 			for ( i = 0; i < j; i++ ) {
-				y[ iy ] += temp1 * A[ ia + i * sa1 ];
-				temp2 += A[ ia + i * sa1 ] * x[ ix ];
+				y[ iy ] += temp1 * A[ ia + (i * sa1) ];
+				temp2 += A[ ia + (i * sa1) ] * x[ ix ];
 				ix += strideX;
 				iy += strideY;
 			}
-			y[ jy ] += temp1 * A[ ia + j * sa1 ] + alpha * temp2;
+			y[ jy ] += (temp1 * A[ ia + (j * sa1) ]) + (alpha * temp2);
 			jx += strideX;
 			jy += strideY;
 		}
@@ -112,15 +112,15 @@ function dsymv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 		for ( j = 0; j < N; j++ ) {
 			temp1 = alpha * x[ jx ];
 			temp2 = 0.0;
-			ia = offsetA + j * sa2;
-			y[ jy ] += temp1 * A[ ia + j * sa1 ];
+			ia = offsetA + (j * sa2);
+			y[ jy ] += temp1 * A[ ia + (j * sa1) ];
 			ix = jx;
 			iy = jy;
 			for ( i = j + 1; i < N; i++ ) {
 				ix += strideX;
 				iy += strideY;
-				y[ iy ] += temp1 * A[ ia + i * sa1 ];
-				temp2 += A[ ia + i * sa1 ] * x[ ix ];
+				y[ iy ] += temp1 * A[ ia + (i * sa1) ];
+				temp2 += A[ ia + (i * sa1) ] * x[ ix ];
 			}
 			y[ jy ] += alpha * temp2;
 			jx += strideX;

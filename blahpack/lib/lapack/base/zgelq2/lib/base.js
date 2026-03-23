@@ -75,7 +75,7 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 	for ( i = 0; i < K; i++ ) {
 		// Float64 index of A(i,i)
-		aii = oA + i * sa1 + i * sa2;
+		aii = oA + (i * sa1) + (i * sa2);
 
 		// Complex-element offset of A(i,i)
 
@@ -84,16 +84,16 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		// Conjugate the i-th row from column i to N-1
 
 		// Zlacgv accepts Complex128Array with complex-element stride/offset
-		zlacgv( N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2 );
+		zlacgv( N - i, A, strideA2, offsetA + (i * strideA1) + (i * strideA2) );
 
 		// tau(i) complex-element offset
-		tau_off = offsetTAU + i * strideTAU;
+		tau_off = offsetTAU + (i * strideTAU);
 
 		// Generate elementary reflector H(i) to annihilate A(i, i+1:N-1)
 
 		// Zlarfg accepts Complex128Array with complex-element strides/offsets
-		zlarfg( N - i, A, offsetA + i * strideA1 + i * strideA2,
-			A, strideA2, offsetA + i * strideA1 + Math.min( i + 1, N - 1 ) * strideA2,
+		zlarfg( N - i, A, offsetA + (i * strideA1) + (i * strideA2),
+			A, strideA2, offsetA + (i * strideA1) + Math.min( i + 1, N - 1 ) * strideA2,
 			TAU, tau_off );
 
 		if ( i < M - 1 ) {
@@ -106,9 +106,9 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			// Apply H(i) to A(i+1:M-1, i:N-1) from the right
 
 			// Zlarf accepts Complex128Array with complex-element strides/offsets
-			zlarf( 'right', M - i - 1, N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2,
+			zlarf( 'right', M - i - 1, N - i, A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 				TAU, tau_off,
-				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
+				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
 				WORK, strideWORK, offsetWORK );
 
 			// Restore A(i,i)
@@ -117,7 +117,7 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		}
 
 		// Unconjugate the i-th row from column i to N-1
-		zlacgv( N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2 );
+		zlacgv( N - i, A, strideA2, offsetA + (i * strideA1) + (i * strideA2) );
 	}
 	return 0;
 }

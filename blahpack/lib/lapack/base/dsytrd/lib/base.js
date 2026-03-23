@@ -147,7 +147,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// WORK starts at (0,0) with strides (1, ldwork)
 			dsyr2k(
 				uplo, 'no-transpose', i, nb, -1.0,
-				A, sa1, sa2, offsetA + i * sa2,
+				A, sa1, sa2, offsetA + (i * sa2),
 				work, 1, ldwork, 0,
 				1.0,
 				A, sa1, sa2, offsetA
@@ -160,10 +160,10 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// 0-based: j from i to i+nb-1
 			for ( j = i; j < i + nb; j++ ) {
 				// Fortran: A(J-1, J) = E(J-1)  → A(j-1, j) = e[j-1]
-				A[ offsetA + ( j - 1 ) * sa1 + j * sa2 ] = e[ offsetE + ( j - 1 ) * strideE ];
+				A[ offsetA + ( j - 1 ) * sa1 + (j * sa2) ] = e[ offsetE + ( j - 1 ) * strideE ];
 
 				// Fortran: D(J) = A(J, J)  → d[j] = A(j, j)
-				d[ offsetD + j * strideD ] = A[ offsetA + j * sa1 + j * sa2 ];
+				d[ offsetD + (j * strideD) ] = A[ offsetA + (j * sa1) + (j * sa2) ];
 			}
 		}
 
@@ -190,9 +190,9 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// TAU(I) 1-based = TAU[i] 0-based
 			dlatrd(
 				uplo, N - i, nb,
-				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-				e, strideE, offsetE + i * strideE,
-				TAU, strideTAU, offsetTAU + i * strideTAU,
+				A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
+				e, strideE, offsetE + (i * strideE),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				work, 1, ldwork, 0
 			);
 
@@ -211,7 +211,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// A(I+NB, I+NB) 1-based = A(i+nb, i+nb) 0-based
 			dsyr2k(
 				uplo, 'no-transpose', N - i - nb, nb, -1.0,
-				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + i * sa2,
+				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + (i * sa2),
 				work, 1, ldwork, nb,
 				1.0,
 				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + ( i + nb ) * sa2
@@ -224,10 +224,10 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// 0-based: j from i to i+nb-1
 			for ( j = i; j < i + nb; j++ ) {
 				// Fortran: A(J+1, J) = E(J)  → A(j+1, j) = e[j]
-				A[ offsetA + ( j + 1 ) * sa1 + j * sa2 ] = e[ offsetE + j * strideE ];
+				A[ offsetA + ( j + 1 ) * sa1 + (j * sa2) ] = e[ offsetE + (j * strideE) ];
 
 				// Fortran: D(J) = A(J, J)  → d[j] = A(j, j)
-				d[ offsetD + j * strideD ] = A[ offsetA + j * sa1 + j * sa2 ];
+				d[ offsetD + (j * strideD) ] = A[ offsetA + (j * sa1) + (j * sa2) ];
 			}
 
 			i += nb;
@@ -238,10 +238,10 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		// Fortran I = i+1, so N-I+1 = N-i
 		dsytd2(
 			uplo, N - i,
-			A, sa1, sa2, offsetA + i * sa1 + i * sa2,
-			d, strideD, offsetD + i * strideD,
-			e, strideE, offsetE + i * strideE,
-			TAU, strideTAU, offsetTAU + i * strideTAU
+			A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
+			d, strideD, offsetD + (i * strideD),
+			e, strideE, offsetE + (i * strideE),
+			TAU, strideTAU, offsetTAU + (i * strideTAU)
 		);
 	}
 

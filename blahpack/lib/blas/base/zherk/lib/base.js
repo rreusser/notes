@@ -99,7 +99,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 		if ( upper ) {
 			if ( beta === 0.0 ) {
 				for ( j = 0; j < N; j++ ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						Cv[ ic ] = 0.0;
 						Cv[ ic + 1 ] = 0.0;
@@ -108,7 +108,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 				}
 			} else {
 				for ( j = 0; j < N; j++ ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i < j; i++ ) {
 						// C[i,j] = beta * C[i,j] (off-diagonal: scale both parts)
 						Cv[ ic ] *= beta;
@@ -122,7 +122,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 			}
 		} else if ( beta === 0.0 ) {
 			for ( j = 0; j < N; j++ ) {
-				ic = oC + j * sc1 + j * sc2;
+				ic = oC + (j * sc1) + (j * sc2);
 				for ( i = j; i < N; i++ ) {
 					Cv[ ic ] = 0.0;
 					Cv[ ic + 1 ] = 0.0;
@@ -132,7 +132,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 		} else {
 			for ( j = 0; j < N; j++ ) {
 				// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
-				ic = oC + j * sc1 + j * sc2;
+				ic = oC + (j * sc1) + (j * sc2);
 				Cv[ ic ] *= beta;
 				Cv[ ic + 1 ] = 0.0;
 				ic += sc1;
@@ -152,14 +152,14 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 		if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
 				if ( beta === 0.0 ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i <= j; i++ ) {
 						Cv[ ic ] = 0.0;
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
 				} else if ( beta !== 1.0 ) {
-					ic = oC + j * sc2;
+					ic = oC + (j * sc2);
 					for ( i = 0; i < j; i++ ) {
 						Cv[ ic ] *= beta;
 						Cv[ ic + 1 ] *= beta;
@@ -170,33 +170,33 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					Cv[ ic + 1 ] = 0.0;
 				} else {
 					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
-					ia = oA + j * sa1 + l * sa2;
+					ia = oA + (j * sa1) + (l * sa2);
 					ajR = Av[ ia ];
 					ajI = Av[ ia + 1 ];
 					if ( ajR !== 0.0 || ajI !== 0.0 ) {
 						// Temp = alpha * conj(A[j,l])
 						tempR = alpha * ajR;
 						tempI = alpha * ( -ajI ); // conjugate
-						ic = oC + j * sc2;
-						ia = oA + l * sa2;
+						ic = oC + (j * sc2);
+						ia = oA + (l * sa2);
 						for ( i = 0; i < j; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];
 
 							// C[i,j] += temp * A[i,l]
-							Cv[ ic ] += tempR * aiR - tempI * aiI;
-							Cv[ ic + 1 ] += tempR * aiI + tempI * aiR;
+							Cv[ ic ] += (tempR * aiR) - (tempI * aiI);
+							Cv[ ic + 1 ] += (tempR * aiI) + (tempI * aiR);
 							ic += sc1;
 							ia += sa1;
 						}
 						// Diagonal: C[j,j] += Re(temp * A[j,l]) = alpha*(ajR^2 + ajI^2)
 						aiR = Av[ ia ];
 						aiI = Av[ ia + 1 ];
-						Cv[ ic ] += tempR * aiR - tempI * aiI;
+						Cv[ ic ] += (tempR * aiR) - (tempI * aiI);
 
 						// Imag stays zero (Hermitian diagonal is real)
 					}
@@ -206,14 +206,14 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 			// Lower
 			for ( j = 0; j < N; j++ ) {
 				if ( beta === 0.0 ) {
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 					for ( i = j; i < N; i++ ) {
 						Cv[ ic ] = 0.0;
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
 				} else if ( beta !== 1.0 ) {
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 
 					// Diagonal: scale real part only
 					Cv[ ic ] *= beta;
@@ -226,11 +226,11 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					}
 				} else {
 					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + j * sc1 + j * sc2;
+					ic = oC + (j * sc1) + (j * sc2);
 					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
-					ia = oA + j * sa1 + l * sa2;
+					ia = oA + (j * sa1) + (l * sa2);
 					ajR = Av[ ia ];
 					ajI = Av[ ia + 1 ];
 					if ( ajR !== 0.0 || ajI !== 0.0 ) {
@@ -239,19 +239,19 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 						tempI = alpha * ( -ajI ); // conjugate
 
 						// Diagonal: C[j,j] += Re(temp * A[j,l])
-						ic = oC + j * sc1 + j * sc2;
-						Cv[ ic ] += tempR * ajR - tempI * ajI;
+						ic = oC + (j * sc1) + (j * sc2);
+						Cv[ ic ] += (tempR * ajR) - (tempI * ajI);
 
 						// Imag stays zero
 						ic += sc1;
-						ia = oA + ( j + 1 ) * sa1 + l * sa2;
+						ia = oA + ( j + 1 ) * sa1 + (l * sa2);
 						for ( i = j + 1; i < N; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];
 
 							// C[i,j] += temp * A[i,l]
-							Cv[ ic ] += tempR * aiR - tempI * aiI;
-							Cv[ ic + 1 ] += tempR * aiI + tempI * aiR;
+							Cv[ ic ] += (tempR * aiR) - (tempI * aiI);
+							Cv[ ic + 1 ] += (tempR * aiI) + (tempI * aiR);
 							ic += sc1;
 							ia += sa1;
 						}
@@ -268,34 +268,34 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					tempI = 0.0;
 					for ( l = 0; l < K; l++ ) {
 						// conj(A[l,i]) * A[l,j]
-						aiR = Av[ oA + l * sa1 + i * sa2 ];
-						aiI = -Av[ oA + l * sa1 + i * sa2 + 1 ]; // conjugate
-						ajR = Av[ oA + l * sa1 + j * sa2 ];
-						ajI = Av[ oA + l * sa1 + j * sa2 + 1 ];
-						tempR += aiR * ajR - aiI * ajI;
-						tempI += aiR * ajI + aiI * ajR;
+						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
+						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+						tempR += (aiR * ajR) - (aiI * ajI);
+						tempI += (aiR * ajI) + (aiI * ajR);
 					}
-					ic = oC + i * sc1 + j * sc2;
+					ic = oC + (i * sc1) + (j * sc2);
 					if ( beta === 0.0 ) {
 						Cv[ ic ] = alpha * tempR;
 						Cv[ ic + 1 ] = alpha * tempI;
 					} else {
-						Cv[ ic ] = alpha * tempR + beta * Cv[ ic ];
-						Cv[ ic + 1 ] = alpha * tempI + beta * Cv[ ic + 1 ];
+						Cv[ ic ] = (alpha * tempR) + (beta * Cv[ ic ]);
+						Cv[ ic + 1 ] = (alpha * tempI) + (beta * Cv[ ic + 1 ]);
 					}
 				}
 				// Diagonal: sum of |A[l,j]|^2
 				rtemp = 0.0;
 				for ( l = 0; l < K; l++ ) {
-					ajR = Av[ oA + l * sa1 + j * sa2 ];
-					ajI = Av[ oA + l * sa1 + j * sa2 + 1 ];
-					rtemp += ajR * ajR + ajI * ajI;
+					ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+					ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+					rtemp += (ajR * ajR) + (ajI * ajI);
 				}
-				ic = oC + j * sc1 + j * sc2;
+				ic = oC + (j * sc1) + (j * sc2);
 				if ( beta === 0.0 ) {
 					Cv[ ic ] = alpha * rtemp;
 				} else {
-					Cv[ ic ] = alpha * rtemp + beta * Cv[ ic ];
+					Cv[ ic ] = (alpha * rtemp) + (beta * Cv[ ic ]);
 				}
 				Cv[ ic + 1 ] = 0.0;
 			}
@@ -305,15 +305,15 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 				// Diagonal first
 				rtemp = 0.0;
 				for ( l = 0; l < K; l++ ) {
-					ajR = Av[ oA + l * sa1 + j * sa2 ];
-					ajI = Av[ oA + l * sa1 + j * sa2 + 1 ];
-					rtemp += ajR * ajR + ajI * ajI;
+					ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+					ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+					rtemp += (ajR * ajR) + (ajI * ajI);
 				}
-				ic = oC + j * sc1 + j * sc2;
+				ic = oC + (j * sc1) + (j * sc2);
 				if ( beta === 0.0 ) {
 					Cv[ ic ] = alpha * rtemp;
 				} else {
-					Cv[ ic ] = alpha * rtemp + beta * Cv[ ic ];
+					Cv[ ic ] = (alpha * rtemp) + (beta * Cv[ ic ]);
 				}
 				Cv[ ic + 1 ] = 0.0;
 
@@ -323,20 +323,20 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					tempI = 0.0;
 					for ( l = 0; l < K; l++ ) {
 						// conj(A[l,i]) * A[l,j]
-						aiR = Av[ oA + l * sa1 + i * sa2 ];
-						aiI = -Av[ oA + l * sa1 + i * sa2 + 1 ]; // conjugate
-						ajR = Av[ oA + l * sa1 + j * sa2 ];
-						ajI = Av[ oA + l * sa1 + j * sa2 + 1 ];
-						tempR += aiR * ajR - aiI * ajI;
-						tempI += aiR * ajI + aiI * ajR;
+						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
+						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+						tempR += (aiR * ajR) - (aiI * ajI);
+						tempI += (aiR * ajI) + (aiI * ajR);
 					}
-					ic = oC + i * sc1 + j * sc2;
+					ic = oC + (i * sc1) + (j * sc2);
 					if ( beta === 0.0 ) {
 						Cv[ ic ] = alpha * tempR;
 						Cv[ ic + 1 ] = alpha * tempI;
 					} else {
-						Cv[ ic ] = alpha * tempR + beta * Cv[ ic ];
-						Cv[ ic + 1 ] = alpha * tempI + beta * Cv[ ic + 1 ];
+						Cv[ ic ] = (alpha * tempR) + (beta * Cv[ ic ]);
+						Cv[ ic + 1 ] = (alpha * tempI) + (beta * Cv[ ic + 1 ]);
 					}
 				}
 			}

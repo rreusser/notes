@@ -111,7 +111,7 @@ function dorm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		}
 
 		// Save A(i,i) and set it to 1.0
-		idxA = offsetA + i * strideA1 + i * strideA2;
+		idxA = offsetA + (i * strideA1) + (i * strideA2);
 		aii = A[ idxA ];
 		A[ idxA ] = 1.0;
 
@@ -120,9 +120,9 @@ function dorm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Dlarf expects: side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK
 		dlarf(
 			side, mi, ni,
-			A, strideA1, offsetA + i * strideA1 + i * strideA2,
-			TAU[ offsetTAU + i * strideTAU ],
-			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,
+			A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
+			TAU[ offsetTAU + (i * strideTAU) ],
+			C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2),
 			WORK, strideWORK, offsetWORK
 		);
 

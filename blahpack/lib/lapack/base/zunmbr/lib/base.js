@@ -125,7 +125,7 @@ function zunmbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 			zunmqr( side, trans, mi, ni, nq - 1,
 				A, strideA1, strideA2, offsetA + strideA1,
 				TAU, strideTAU, offsetTAU,
-				C, strideC1, strideC2, offsetC + i1 * strideC1 + i2 * strideC2,
+				C, strideC1, strideC2, offsetC + (i1 * strideC1) + (i2 * strideC2),
 				WORK, strideWORK, offsetWORK, lwork
 			);
 		}
@@ -163,7 +163,7 @@ function zunmbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 			zunmlq( side, transt, mi, ni, nq - 1,
 				A, strideA1, strideA2, offsetA + strideA2,
 				TAU, strideTAU, offsetTAU,
-				C, strideC1, strideC2, offsetC + i1 * strideC1 + i2 * strideC2,
+				C, strideC1, strideC2, offsetC + (i1 * strideC1) + (i2 * strideC2),
 				WORK, strideWORK, offsetWORK, lwork
 			);
 		}

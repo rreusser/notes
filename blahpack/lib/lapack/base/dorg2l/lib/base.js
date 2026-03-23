@@ -75,9 +75,9 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	// The diagonal element for column j is at row M-N+j (0-based).
 	for ( j = 0; j < N - K; j++ ) {
 		for ( l = 0; l < M; l++ ) {
-			A[ offsetA + l * strideA1 + j * strideA2 ] = 0.0;
+			A[ offsetA + (l * strideA1) + (j * strideA2) ] = 0.0;
 		}
-		A[ offsetA + ( M - N + j ) * strideA1 + j * strideA2 ] = 1.0;
+		A[ offsetA + ( M - N + j ) * strideA1 + (j * strideA2) ] = 1.0;
 	}
 
 	// Apply each reflector in forward order: i = 0, 1, ..., K-1
@@ -91,7 +91,7 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// Fortran: A(M-N+II, II) = 1
 		// M-N+II (1-based) = M-N+(ii+1) => 0-based row = M-N+ii
-		A[ offsetA + ( M - N + ii ) * strideA1 + ii * strideA2 ] = 1.0;
+		A[ offsetA + ( M - N + ii ) * strideA1 + (ii * strideA2) ] = 1.0;
 
 		// Apply H(i) to A(0:M-N+ii, 0:ii-1) from the left
 
@@ -107,8 +107,8 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		if ( ii > 0 ) {
 			dlarf(
 				'left', M - N + ii + 1, ii,
-				A, strideA1, offsetA + ii * strideA2,
-				TAU[ offsetTAU + i * strideTAU ],
+				A, strideA1, offsetA + (ii * strideA2),
+				TAU[ offsetTAU + (i * strideTAU) ],
 				A, strideA1, strideA2, offsetA,
 				WORK, strideWORK, offsetWORK
 			);
@@ -119,13 +119,13 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// Starts at A(1,II) = A(row=0, col=ii) in 0-based
 		if ( M - N + ii > 0 ) {
 			dscal(
-				M - N + ii, -TAU[ offsetTAU + i * strideTAU ],
-				A, strideA1, offsetA + ii * strideA2
+				M - N + ii, -TAU[ offsetTAU + (i * strideTAU) ],
+				A, strideA1, offsetA + (ii * strideA2)
 			);
 		}
 
 		// A(M-N+ii, ii) = 1 - TAU(i)
-		A[ offsetA + ( M - N + ii ) * strideA1 + ii * strideA2 ] = 1.0 - TAU[ offsetTAU + i * strideTAU ];
+		A[ offsetA + ( M - N + ii ) * strideA1 + (ii * strideA2) ] = 1.0 - TAU[ offsetTAU + (i * strideTAU) ];
 
 		// Zero out rows M-N+ii+1 to M-1 of column ii
 
@@ -133,7 +133,7 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// 0-based: l = M-N+ii+1 to M-1
 		for ( l = M - N + ii + 1; l < M; l++ ) {
-			A[ offsetA + l * strideA1 + ii * strideA2 ] = 0.0;
+			A[ offsetA + (l * strideA1) + (ii * strideA2) ] = 0.0;
 		}
 	}
 	return 0;

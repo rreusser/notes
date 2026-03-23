@@ -27,7 +27,7 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 var CONE = new Complex128( 1.0, 0.0 );
 var NCONE = new Complex128( -1.0, 0.0 );
 var _cdR = 0.0; var _cdI = 0.0;
-function cDiv( ar, ai, br, bi ) { var r; var d; if ( Math.abs( bi ) <= Math.abs( br ) ) { r = bi / br; d = br + bi * r; _cdR = ( ar + ai * r ) / d; _cdI = ( ai - ar * r ) / d; } else { r = br / bi; d = bi + br * r; _cdR = ( ar * r + ai ) / d; _cdI = ( ai * r - ar ) / d; } }
+function cDiv( ar, ai, br, bi ) { var r; var d; if ( Math.abs( bi ) <= Math.abs( br ) ) { r = bi / br; d = br + (bi * r); _cdR = ( ar + (ai * r) ) / d; _cdI = ( ai - (ar * r) ) / d; } else { r = br / bi; d = bi + (br * r); _cdR = ( (ar * r) + ai ) / d; _cdI = ( (ai * r) - ar ) / d; } }
 function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
 	var denomR;
 	var denomI;
@@ -62,65 +62,65 @@ function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 	if ( uplo === 'upper' ) {
 		k = N - 1;
 		while ( k >= 0 ) {
-			if ( IPIV[ offsetIPIV + k * strideIPIV ] >= 0 ) {
-				kp = IPIV[ offsetIPIV + k * strideIPIV ];
-				if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
-				if ( k > 0 ) { zgeru( k, nrhs, NCONE, A, strideA1, offsetA + k * strideA2, B, strideB2, offsetB + k * strideB1, B, strideB1, strideB2, offsetB ); }
-				p1 = offsetA * 2 + k * sa1 + k * sa2; tr = Av[ p1 ]; ti = Av[ p1 + 1 ];
-				cDiv( 1.0, 0.0, tr, ti ); zscal( nrhs, new Complex128( _cdR, _cdI ), B, strideB2, offsetB + k * strideB1 );
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) ); }
+				if ( k > 0 ) { zgeru( k, nrhs, NCONE, A, strideA1, offsetA + (k * strideA2), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB ); }
+				p1 = (offsetA * 2) + (k * sa1) + (k * sa2); tr = Av[ p1 ]; ti = Av[ p1 + 1 ];
+				cDiv( 1.0, 0.0, tr, ti ); zscal( nrhs, new Complex128( _cdR, _cdI ), B, strideB2, offsetB + (k * strideB1) );
 				k -= 1;
 			} else {
-				kp = ~IPIV[ offsetIPIV + k * strideIPIV ];
-				if ( kp !== k - 1 ) { zswap( nrhs, B, strideB2, offsetB + ( k - 1 ) * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
-				if ( k > 1 ) { zgeru( k - 1, nrhs, NCONE, A, strideA1, offsetA + k * strideA2, B, strideB2, offsetB + k * strideB1, B, strideB1, strideB2, offsetB ); zgeru( k - 1, nrhs, NCONE, A, strideA1, offsetA + ( k - 1 ) * strideA2, B, strideB2, offsetB + ( k - 1 ) * strideB1, B, strideB1, strideB2, offsetB ); }
-				p1 = offsetA * 2 + ( k - 1 ) * sa1 + k * sa2; akm1kR = Av[ p1 ]; akm1kI = Av[ p1 + 1 ];
-				p2 = offsetA * 2 + ( k - 1 ) * sa1 + ( k - 1 ) * sa2; cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akm1R = _cdR; akm1I = _cdI;
-				p2 = offsetA * 2 + k * sa1 + k * sa2; cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akR = _cdR; akI = _cdI;
-				denomR = akm1R * akR - akm1I * akI - 1.0; denomI = akm1R * akI + akm1I * akR;
-				for ( j = 0; j < nrhs; j++ ) { p1 = offsetB * 2 + ( k - 1 ) * sb1 + j * sb2; cDiv( Bv[ p1 ], Bv[ p1 + 1 ], akm1kR, akm1kI ); bkm1R = _cdR; bkm1I = _cdI; p2 = offsetB * 2 + k * sb1 + j * sb2; cDiv( Bv[ p2 ], Bv[ p2 + 1 ], akm1kR, akm1kI ); bkR = _cdR; bkI = _cdI; tr = akR * bkm1R - akI * bkm1I - bkR; ti = akR * bkm1I + akI * bkm1R - bkI; cDiv( tr, ti, denomR, denomI ); Bv[ p1 ] = _cdR; Bv[ p1 + 1 ] = _cdI; tr = akm1R * bkR - akm1I * bkI - bkm1R; ti = akm1R * bkI + akm1I * bkR - bkm1I; cDiv( tr, ti, denomR, denomI ); Bv[ p2 ] = _cdR; Bv[ p2 + 1 ] = _cdI; }
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k - 1 ) { zswap( nrhs, B, strideB2, offsetB + ( k - 1 ) * strideB1, B, strideB2, offsetB + (kp * strideB1) ); }
+				if ( k > 1 ) { zgeru( k - 1, nrhs, NCONE, A, strideA1, offsetA + (k * strideA2), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB ); zgeru( k - 1, nrhs, NCONE, A, strideA1, offsetA + ( k - 1 ) * strideA2, B, strideB2, offsetB + ( k - 1 ) * strideB1, B, strideB1, strideB2, offsetB ); }
+				p1 = (offsetA * 2) + ( k - 1 ) * sa1 + (k * sa2); akm1kR = Av[ p1 ]; akm1kI = Av[ p1 + 1 ];
+				p2 = (offsetA * 2) + ( k - 1 ) * sa1 + ( k - 1 ) * sa2; cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akm1R = _cdR; akm1I = _cdI;
+				p2 = (offsetA * 2) + (k * sa1) + (k * sa2); cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akR = _cdR; akI = _cdI;
+				denomR = (akm1R * akR) - (akm1I * akI) - 1.0; denomI = (akm1R * akI) + (akm1I * akR);
+				for ( j = 0; j < nrhs; j++ ) { p1 = (offsetB * 2) + ( k - 1 ) * sb1 + (j * sb2); cDiv( Bv[ p1 ], Bv[ p1 + 1 ], akm1kR, akm1kI ); bkm1R = _cdR; bkm1I = _cdI; p2 = (offsetB * 2) + (k * sb1) + (j * sb2); cDiv( Bv[ p2 ], Bv[ p2 + 1 ], akm1kR, akm1kI ); bkR = _cdR; bkI = _cdI; tr = (akR * bkm1R) - (akI * bkm1I) - bkR; ti = (akR * bkm1I) + (akI * bkm1R) - bkI; cDiv( tr, ti, denomR, denomI ); Bv[ p1 ] = _cdR; Bv[ p1 + 1 ] = _cdI; tr = (akm1R * bkR) - (akm1I * bkI) - bkm1R; ti = (akm1R * bkI) + (akm1I * bkR) - bkm1I; cDiv( tr, ti, denomR, denomI ); Bv[ p2 ] = _cdR; Bv[ p2 + 1 ] = _cdI; }
 				k -= 2;
 			}
 		}
 		k = 0;
 		while ( k < N ) {
-			if ( IPIV[ offsetIPIV + k * strideIPIV ] >= 0 ) {
-				if ( k > 0 ) { zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); }
-				kp = IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				if ( k > 0 ) { zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + (k * strideA2), CONE, B, strideB2, offsetB + (k * strideB1) ); }
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) ); }
 				k += 1;
 			} else {
-				if ( k > 0 ) { zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + ( k + 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k + 1 ) * strideB1 ); }
-				kp = ~IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
+				if ( k > 0 ) { zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + (k * strideA2), CONE, B, strideB2, offsetB + (k * strideB1) ); zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + ( k + 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k + 1 ) * strideB1 ); }
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) ); }
 				k += 2;
 			}
 		}
 	} else {
 		k = 0;
 		while ( k < N ) {
-			if ( IPIV[ offsetIPIV + k * strideIPIV ] >= 0 ) {
-				kp = IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
-				if ( k < N - 1 ) { zgeru( N - k - 1, nrhs, NCONE, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, B, strideB2, offsetB + k * strideB1, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1 ); }
-				p1 = offsetA * 2 + k * sa1 + k * sa2; cDiv( 1.0, 0.0, Av[ p1 ], Av[ p1 + 1 ] ); zscal( nrhs, new Complex128( _cdR, _cdI ), B, strideB2, offsetB + k * strideB1 );
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) ); }
+				if ( k < N - 1 ) { zgeru( N - k - 1, nrhs, NCONE, A, strideA1, offsetA + ( k + 1 ) * strideA1 + (k * strideA2), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1 ); }
+				p1 = (offsetA * 2) + (k * sa1) + (k * sa2); cDiv( 1.0, 0.0, Av[ p1 ], Av[ p1 + 1 ] ); zscal( nrhs, new Complex128( _cdR, _cdI ), B, strideB2, offsetB + (k * strideB1) );
 				k += 1;
 			} else {
-				kp = ~IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k + 1 ) { zswap( nrhs, B, strideB2, offsetB + ( k + 1 ) * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
-				if ( k < N - 2 ) { zgeru( N - k - 2, nrhs, NCONE, A, strideA1, offsetA + ( k + 2 ) * strideA1 + k * strideA2, B, strideB2, offsetB + k * strideB1, B, strideB1, strideB2, offsetB + ( k + 2 ) * strideB1 ); zgeru( N - k - 2, nrhs, NCONE, A, strideA1, offsetA + ( k + 2 ) * strideA1 + ( k + 1 ) * strideA2, B, strideB2, offsetB + ( k + 1 ) * strideB1, B, strideB1, strideB2, offsetB + ( k + 2 ) * strideB1 ); }
-				p1 = offsetA * 2 + ( k + 1 ) * sa1 + k * sa2; akm1kR = Av[ p1 ]; akm1kI = Av[ p1 + 1 ];
-				p2 = offsetA * 2 + k * sa1 + k * sa2; cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akm1R = _cdR; akm1I = _cdI;
-				p2 = offsetA * 2 + ( k + 1 ) * sa1 + ( k + 1 ) * sa2; cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akR = _cdR; akI = _cdI;
-				denomR = akm1R * akR - akm1I * akI - 1.0; denomI = akm1R * akI + akm1I * akR;
-				for ( j = 0; j < nrhs; j++ ) { p1 = offsetB * 2 + k * sb1 + j * sb2; cDiv( Bv[ p1 ], Bv[ p1 + 1 ], akm1kR, akm1kI ); bkm1R = _cdR; bkm1I = _cdI; p2 = offsetB * 2 + ( k + 1 ) * sb1 + j * sb2; cDiv( Bv[ p2 ], Bv[ p2 + 1 ], akm1kR, akm1kI ); bkR = _cdR; bkI = _cdI; tr = akR * bkm1R - akI * bkm1I - bkR; ti = akR * bkm1I + akI * bkm1R - bkI; cDiv( tr, ti, denomR, denomI ); Bv[ p1 ] = _cdR; Bv[ p1 + 1 ] = _cdI; tr = akm1R * bkR - akm1I * bkI - bkm1R; ti = akm1R * bkI + akm1I * bkR - bkm1I; cDiv( tr, ti, denomR, denomI ); Bv[ p2 ] = _cdR; Bv[ p2 + 1 ] = _cdI; }
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ]; if ( kp !== k + 1 ) { zswap( nrhs, B, strideB2, offsetB + ( k + 1 ) * strideB1, B, strideB2, offsetB + (kp * strideB1) ); }
+				if ( k < N - 2 ) { zgeru( N - k - 2, nrhs, NCONE, A, strideA1, offsetA + ( k + 2 ) * strideA1 + (k * strideA2), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB + ( k + 2 ) * strideB1 ); zgeru( N - k - 2, nrhs, NCONE, A, strideA1, offsetA + ( k + 2 ) * strideA1 + ( k + 1 ) * strideA2, B, strideB2, offsetB + ( k + 1 ) * strideB1, B, strideB1, strideB2, offsetB + ( k + 2 ) * strideB1 ); }
+				p1 = (offsetA * 2) + ( k + 1 ) * sa1 + (k * sa2); akm1kR = Av[ p1 ]; akm1kI = Av[ p1 + 1 ];
+				p2 = (offsetA * 2) + (k * sa1) + (k * sa2); cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akm1R = _cdR; akm1I = _cdI;
+				p2 = (offsetA * 2) + ( k + 1 ) * sa1 + ( k + 1 ) * sa2; cDiv( Av[ p2 ], Av[ p2 + 1 ], akm1kR, akm1kI ); akR = _cdR; akI = _cdI;
+				denomR = (akm1R * akR) - (akm1I * akI) - 1.0; denomI = (akm1R * akI) + (akm1I * akR);
+				for ( j = 0; j < nrhs; j++ ) { p1 = (offsetB * 2) + (k * sb1) + (j * sb2); cDiv( Bv[ p1 ], Bv[ p1 + 1 ], akm1kR, akm1kI ); bkm1R = _cdR; bkm1I = _cdI; p2 = (offsetB * 2) + ( k + 1 ) * sb1 + (j * sb2); cDiv( Bv[ p2 ], Bv[ p2 + 1 ], akm1kR, akm1kI ); bkR = _cdR; bkI = _cdI; tr = (akR * bkm1R) - (akI * bkm1I) - bkR; ti = (akR * bkm1I) + (akI * bkm1R) - bkI; cDiv( tr, ti, denomR, denomI ); Bv[ p1 ] = _cdR; Bv[ p1 + 1 ] = _cdI; tr = (akm1R * bkR) - (akm1I * bkI) - bkm1R; ti = (akm1R * bkI) + (akm1I * bkR) - bkm1I; cDiv( tr, ti, denomR, denomI ); Bv[ p2 ] = _cdR; Bv[ p2 + 1 ] = _cdI; }
 				k += 2;
 			}
 		}
 		k = N - 1;
 		while ( k >= 0 ) {
-			if ( IPIV[ offsetIPIV + k * strideIPIV ] >= 0 ) {
-				if ( k < N - 1 ) { zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); }
-				kp = IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				if ( k < N - 1 ) { zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + (k * strideA2), CONE, B, strideB2, offsetB + (k * strideB1) ); }
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) ); }
 				k -= 1;
 			} else {
-				if ( k < N - 1 ) { zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + ( k - 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k - 1 ) * strideB1 ); }
-				kp = ~IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 ); }
+				if ( k < N - 1 ) { zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + (k * strideA2), CONE, B, strideB2, offsetB + (k * strideB1) ); zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + ( k - 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k - 1 ) * strideB1 ); }
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ]; if ( kp !== k ) { zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) ); }
 				k -= 2;
 			}
 		}

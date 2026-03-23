@@ -172,7 +172,7 @@ function dlasq6( i0, n0, z, stride, offset, pp ) {
 	dmin = Math.min( dmin, dn );
 
 	setZ( j4 + 2, dn );
-	setZ( 4 * n0 - pp, emin );
+	setZ( (4 * n0) - pp, emin );
 
 	return {
 		'dmin': dmin,

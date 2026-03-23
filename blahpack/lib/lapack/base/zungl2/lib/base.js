@@ -101,13 +101,13 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	if ( K < M ) {
 		for ( j = 0; j < N; j++ ) {
 			for ( l = K; l < M; l++ ) {
-				ia = oA + l * sa1 + j * sa2;
+				ia = oA + (l * sa1) + (j * sa2);
 				Av[ ia ] = 0.0;
 				Av[ ia + 1 ] = 0.0;
 			}
 			// If J > K and J <= M (0-based: j >= K and j < M), set A(j,j) = 1
 			if ( j >= K && j < M ) {
-				ia = oA + j * sa1 + j * sa2;
+				ia = oA + (j * sa1) + (j * sa2);
 				Av[ ia ] = 1.0;
 				Av[ ia + 1 ] = 0.0;
 			}
@@ -117,17 +117,17 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	// Apply each reflector in reverse order: i = K, K-1, ..., 1 (1-based)
 	// JS: i goes from K-1 down to 0 (0-based)
 	for ( i = K - 1; i >= 0; i-- ) {
-		it = offsetTAU * 2 + i * st;
+		it = (offsetTAU * 2) + (i * st);
 
 		// If i < N-1 (Fortran: I < N), the row extends beyond the diagonal
 		if ( i < N - 1 ) {
 			// Conjugate elements in row i from column i+1 to N-1
 			// ZLACGV(N-I, A(I, I+1), LDA) - but stride is along columns (strideA2)
-			zlacgv( N - i - 1, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2 );
+			zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
 
 			if ( i < M - 1 ) {
 				// Set A(i,i) = 1
-				ia = oA + i * sa1 + i * sa2;
+				ia = oA + (i * sa1) + (i * sa2);
 				Av[ ia ] = 1.0;
 				Av[ ia + 1 ] = 0.0;
 
@@ -139,9 +139,9 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				conjT = new Complex128( tauv[ it ], -tauv[ it + 1 ] );
 				zlarf(
 					'right', M - i - 1, N - i,
-					A, strideA2, offsetA + i * strideA1 + i * strideA2,
+					A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					new Complex128Array( [ tauv[ it ], -tauv[ it + 1 ] ] ), 0,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
+					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
 					WORK, strideWORK, offsetWORK
 				);
 			}
@@ -150,15 +150,15 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			negTau = new Complex128( -tauv[ it ], -tauv[ it + 1 ] );
 			zscal(
 				N - i - 1, negTau,
-				A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2
+				A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2
 			);
 
 			// Conjugate back: ZLACGV(N-I, A(I, I+1), LDA)
-			zlacgv( N - i - 1, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2 );
+			zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
 		}
 
 		// A(I,I) = ONE - DCONJG(TAU(I))
-		ia = oA + i * sa1 + i * sa2;
+		ia = oA + (i * sa1) + (i * sa2);
 		Av[ ia ] = 1.0 - tauv[ it ];
 		Av[ ia + 1 ] = tauv[ it + 1 ];  // negated because conj
 
@@ -166,7 +166,7 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// Fortran: DO 30 L = 1, I-1; A(I,L) = ZERO
 		for ( l = 0; l < i; l++ ) {
-			ia = oA + i * sa1 + l * sa2;
+			ia = oA + (i * sa1) + (l * sa2);
 			Av[ ia ] = 0.0;
 			Av[ ia + 1 ] = 0.0;
 		}
