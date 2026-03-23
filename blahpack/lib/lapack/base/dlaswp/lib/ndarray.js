@@ -16,33 +16,42 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add description.
+* Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV`.
 *
-* @param {TODO} N - TODO
-* @param {TODO} A - TODO
-* @param {TODO} strideA1 - TODO
-* @param {TODO} strideA2 - TODO
-* @param {TODO} offsetA - TODO
-* @param {TODO} k1 - TODO
-* @param {TODO} k2 - TODO
-* @param {TODO} IPIV - TODO
-* @param {TODO} strideIPIV - TODO
-* @param {TODO} offsetIPIV - TODO
-* @param {TODO} incx - TODO
-* @returns {TODO} TODO
+* @param {PositiveInteger} N - number of columns in `A`
+* @param {Float64Array} A - input matrix
+* @param {integer} strideA1 - stride of the first dimension of `A`
+* @param {integer} strideA2 - stride of the second dimension of `A`
+* @param {NonNegativeInteger} offsetA - index offset for `A`
+* @param {NonNegativeInteger} k1 - index of first row to interchange
+* @param {NonNegativeInteger} k2 - index of last row to interchange
+* @param {Int32Array} IPIV - vector of pivot indices
+* @param {integer} strideIPIV - `IPIV` stride length
+* @param {NonNegativeInteger} offsetIPIV - index offset for `IPIV`
+* @param {integer} incx - direction in which to apply pivots (-1 to apply in reverse order; otherwise, apply in provided order)
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Float64Array} permuted matrix `A`
 */
 function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx ) {
-	// TODO: add parameter validation
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return A;
+	}
 	return base( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx );
 }
 

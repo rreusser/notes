@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Build the custom sandbox template and launch Claude Code inside it.
+#
+# Usage:
+#   bin/sandbox          # start sandbox (create if needed)
+#   bin/sandbox --build  # force rebuild the template image
+#   bin/sandbox --reset  # destroy and recreate the sandbox (requires re-login)
+#
+# Prerequisites:
+#   - Docker Desktop 4.58+
+#
+# Authentication:
+#   On first launch, run /login inside Claude Code to authenticate.
+#   Auth persists for the sandbox's lifetime — you only need to re-auth
+#   if you destroy the sandbox with `docker sandbox rm` or `--reset`.
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+IMAGE="blahpack-sandbox:latest"
+SANDBOX_NAME="blahpack"
+
+cd "$ROOT_DIR"
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --build)
+            echo "Building sandbox template..." >&2
+            docker build -t "$IMAGE" -f Dockerfile.sandbox .
+            shift
+            ;;
+        --reset)
+            echo "Destroying sandbox '$SANDBOX_NAME'..." >&2
+            docker sandbox rm "$SANDBOX_NAME" 2>/dev/null || true
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# Build image if it doesn't exist yet
+if ! docker image inspect "$IMAGE" &>/dev/null; then
+    echo "Building sandbox template (first run)..." >&2
+    docker build -t "$IMAGE" -f Dockerfile.sandbox .
+fi
+
+# Check if sandbox already exists
+if docker sandbox ls 2>/dev/null | grep -q "$SANDBOX_NAME"; then
+    echo "Resuming existing sandbox '$SANDBOX_NAME'..." >&2
+    exec docker sandbox run "$SANDBOX_NAME"
+else
+    echo "Creating new sandbox '$SANDBOX_NAME'..." >&2
+    exec docker sandbox run \
+        --name "$SANDBOX_NAME" \
+        -t "$IMAGE" \
+        claude \
+        "$ROOT_DIR" \
+        "${STDLIB_PATH:-$HOME/gh/stdlib-js/stdlib}":ro
+fi

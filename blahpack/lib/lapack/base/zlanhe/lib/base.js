@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -51,7 +53,7 @@ var zlassq = require( '../../zlassq/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {number} norm value
 */
-function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) {
 	var value;
 	var scale;
 	var absa;

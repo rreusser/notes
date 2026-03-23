@@ -11,6 +11,7 @@ var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zher = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -173,4 +174,24 @@ test( 'zher: negative_stride (UPLO=U, N=2, incx=-1)', function t() {
 	var result = zher( 'upper', 2, 1.0, x, -1, 1, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+// ndarray validation tests
+
+test( 'zher: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 2, 1.0, new Complex128Array( 2 ), 1, 0, new Complex128Array( 4 ), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'zher: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, 1.0, new Complex128Array( 2 ), 1, 0, new Complex128Array( 4 ), 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'zher: ndarray throws RangeError for zero strideX', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 2, 1.0, new Complex128Array( 2 ), 0, 0, new Complex128Array( 4 ), 1, 2, 0 );
+	}, RangeError );
 });

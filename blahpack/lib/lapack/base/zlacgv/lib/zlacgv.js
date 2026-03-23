@@ -16,21 +16,29 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Conjugate a complex vector in-place.
+*
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} x - input array
+* @param {integer} stride - `x` stride length
+* @returns {*} result
 */
-function zlacgv() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlacgv( N, x, stride ) {
+	var ox = stride2offset( N, stride );
+	return base( N, x, stride, ox );
 }
 
 

@@ -7,6 +7,7 @@ var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dpotrf = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 var dpotrf2 = require( './../../dpotrf2/lib/base.js' );
 
 
@@ -153,4 +154,18 @@ test( 'dpotrf: large not-posdef upper (blocked path)', function t() {
 	A[ (N - 1) + (N - 1) * N ] = -1000.0;
 	var info = dpotrf( 'upper', N, A, 1, N, 0 );
 	assert.ok( info > 0 );
+});
+
+// ndarray validation tests
+
+test( 'dpotrf: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, new Float64Array( 9 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'dpotrf: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, new Float64Array( 9 ), 1, 3, 0 );
+	}, RangeError );
 });

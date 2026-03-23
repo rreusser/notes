@@ -16,15 +16,20 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Generate a complex Givens plane rotation
+* Generate a complex Givens plane rotation.
 *
 * @module @stdlib/lapack/base/zlartg
 *
 * @example
-* // TODO: Add example
+* var zlartg = require( '@stdlib/lapack/base/zlartg' );
+* 
+* zlartg( 1.0, 1.0, 1.0 );
+*
+* @example
+* var zlartg = require( '@stdlib/lapack/base/zlartg' );
+* 
+* zlartg.ndarray( 1.0, 1.0, 1.0, 1.0, 1.0 );
 */
 
 // MODULES //

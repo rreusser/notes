@@ -8,6 +8,7 @@ var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsymv = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -186,4 +187,30 @@ test( 'dsymv: alpha=0 and beta=1 quick return does not modify y', function t() {
 	dsymv( 'upper', 2, 0.0, A, 1, 2, 0, x, 1, 0, 1.0, y, 1, 0 );
 	assert.equal( y[ 0 ], 99 );
 	assert.equal( y[ 1 ], 88 );
+});
+
+// ndarray validation tests
+
+test( 'dsymv: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 2 ), 1, 0 );
+	}, TypeError );
+});
+
+test( 'dsymv: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 2 ), 1, 0 );
+	}, RangeError );
+});
+
+test( 'dsymv: ndarray throws RangeError for zero strideX', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 0, 0, 0.0, new Float64Array( 2 ), 1, 0 );
+	}, RangeError );
+});
+
+test( 'dsymv: ndarray throws RangeError for zero strideY', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 2 ), 0, 0 );
+	}, RangeError );
 });

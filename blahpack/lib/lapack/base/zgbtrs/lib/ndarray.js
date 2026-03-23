@@ -1,37 +1,78 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Solve a complex banded system using LU factorization
+* Solves a complex banded system using LU factorization.
 *
 * @param {string} trans - specifies the operation type
 * @param {NonNegativeInteger} N - number of columns
-* @param {integer} kl - kl
-* @param {integer} ku - ku
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} AB - input matrix
+* @param {integer} kl - number of subdiagonals
+* @param {integer} ku - number of superdiagonals
+* @param {integer} nrhs - number of right-hand sides
+* @param {Float64Array} AB - input matrix in band storage
 * @param {integer} strideAB1 - stride of the first dimension of `AB`
 * @param {integer} strideAB2 - stride of the second dimension of `AB`
 * @param {NonNegativeInteger} offsetAB - starting index for `AB`
-* @param {Int32Array} IPIV - input array
+* @param {Int32Array} IPIV - pivot indices
 * @param {integer} strideIPIV - stride length for `IPIV`
 * @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
 * @param {Float64Array} B - output matrix
 * @param {integer} strideB1 - stride of the first dimension of `B`
 * @param {integer} strideB2 - stride of the second dimension of `B`
 * @param {NonNegativeInteger} offsetB - starting index for `B`
+* @throws {TypeError} first argument must be a valid transpose operation
+* @throws {RangeError} second argument must be a nonnegative integer
 * @returns {integer} status code (0 = success)
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+*
+* var AB = new Float64Array( 16 );
+* var IPIV = new Int32Array( 4 );
+* var B = new Float64Array( 4 );
+*
+* var info = zgbtrs( 'no-transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+* // info => 0
 */
-function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
-	return base( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 || nrhs === 0 ) {
+		return 0;
+	}
+	return base( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB );
 }
 
 

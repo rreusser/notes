@@ -16,21 +16,54 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Computes a QR factorization of a complex M-by-N matrix A = Q.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {NonNegativeInteger} M - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} A - input matrix
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Complex128Array} TAU - input array
+* @param {integer} strideTAU - `TAU` stride length
+* @param {Complex128Array} WORK - input array
+* @param {integer} strideWORK - `WORK` stride length
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zgeqrf() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zgeqrf( order, M, N, A, LDA, TAU, strideTAU, WORK, strideWORK ) {
+	var sa1;
+	var sa2;
+	var ot;
+	var ow;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+	}
+	ot = stride2offset( N, strideTAU );
+	ow = stride2offset( N, strideWORK );
+	return base( M, N, A, sa1, sa2, 0, TAU, strideTAU, ot, WORK, strideWORK, ow );
 }
 
 

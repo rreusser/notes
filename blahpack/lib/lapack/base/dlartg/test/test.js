@@ -234,10 +234,12 @@ test( 'dlartg: values near rtmax boundary (g1 just above rtmax)', function t() {
 
 test( 'dlartg: ndarray method returns same result', function t() {
 	var result1 = dlartg( 3.0, 4.0 );
-	var result2 = dlartg.ndarray( 3.0, 4.0 );
-	assert.ok( Math.abs( result1.c - result2.c ) < EPS );
-	assert.ok( Math.abs( result1.s - result2.s ) < EPS );
-	assert.ok( Math.abs( result1.r - result2.r ) < EPS );
+	var out = new Float64Array( 3 );
+	var result2 = dlartg.ndarray( 3.0, 4.0, out );
+	assert.strictEqual( result2, out );
+	assert.ok( Math.abs( result1.c - out[ 0 ] ) < EPS );
+	assert.ok( Math.abs( result1.s - out[ 1 ] ) < EPS );
+	assert.ok( Math.abs( result1.r - out[ 2 ] ) < EPS );
 });
 
 test( 'dlartg: small f and g both below rtmin (scaled branch)', function t() {

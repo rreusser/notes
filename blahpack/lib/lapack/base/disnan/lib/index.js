@@ -16,15 +16,20 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Test if input is NaN
+* Test if input is NaN.
 *
 * @module @stdlib/lapack/base/disnan
 *
 * @example
-* // TODO: Add example
+* var disnan = require( '@stdlib/lapack/base/disnan' );
+* 
+* disnan( 1.0 );
+*
+* @example
+* var disnan = require( '@stdlib/lapack/base/disnan' );
+* 
+* disnan.ndarray( 1.0 );
 */
 
 // MODULES //

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-var */
+
 'use strict';
 
 // MODULES //
@@ -64,7 +66,7 @@ var NB = 32; // Hardcoded block size
 * @param {integer} lwork - workspace size in complex elements (unused, kept for API compat)
 * @returns {integer} info - 0 if successful
 */
-function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
 	var notran;
 	var ldwork;
 	var left;
@@ -119,7 +121,7 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		strideWORK = 1;
 	}
 	T = WORK;
-	var offsetT = offsetWORK + nw * nb; // eslint-disable-line no-var
+	var offsetT = offsetWORK + nw * nb;
 
 	// Determine iteration direction
 	if ( ( left && !notran ) || ( !left && notran ) ) {

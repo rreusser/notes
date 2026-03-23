@@ -1,5 +1,24 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 // Copyright (c) 2025 Ricky Reusser. Apache-2.0 License.
+
+/* eslint-disable max-len, max-params, no-param-reassign */
 
 'use strict';
 
@@ -38,7 +57,7 @@ var HUNDRD = 100.0;
 * @param {number} g - damping parameter preserved between calls
 * @returns {Object} object with `tau` (shift), `ttype` (shift type), and `g` (updated damping)
 */
-function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g ) { // eslint-disable-line max-len, max-params
+function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g ) {
 	var tau0;
 	var gap1;
 	var gap2;
@@ -62,8 +81,8 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 	// A negative DMIN forces the shift to take that absolute value.
 	// TTYPE records the type of shift.
 	if ( dmin <= 0.0 ) {
-		tau = -dmin; // eslint-disable-line no-param-reassign
-		ttype = -1; // eslint-disable-line no-param-reassign
+		tau = -dmin;
+		ttype = -1;
 		return { 'tau': tau, 'ttype': ttype, 'g': g };
 	}
 
@@ -86,7 +105,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 				}
 				if ( gap1 > 0.0 && gap1 > b1 ) {
 					s = Math.max( dn - ( ( b1 / gap1 ) * b1 ), HALF * dmin );
-					ttype = -2; // eslint-disable-line no-param-reassign
+					ttype = -2;
 				} else {
 					s = 0.0;
 					if ( dn > b1 ) {
@@ -96,11 +115,11 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 						s = Math.min( s, a2 - ( b1 + b2 ) );
 					}
 					s = Math.max( s, THIRD * dmin );
-					ttype = -3; // eslint-disable-line no-param-reassign
+					ttype = -3;
 				}
 			} else {
 				// Case 4.
-				ttype = -4; // eslint-disable-line no-param-reassign
+				ttype = -4;
 				s = QURTR * dmin;
 				if ( dmin === dn ) {
 					gam = dn;
@@ -149,7 +168,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			}
 		} else if ( dmin === dn2 ) {
 			// Case 5.
-			ttype = -5; // eslint-disable-line no-param-reassign
+			ttype = -5;
 			s = QURTR * dmin;
 
 			// Compute contribution to norm squared from I > NN-2.
@@ -189,20 +208,20 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 		} else {
 			// Case 6, no information to guide us.
 			if ( ttype === -6 ) {
-				g = g + THIRD * ( 1.0 - g ); // eslint-disable-line no-param-reassign
+				g = g + THIRD * ( 1.0 - g );
 			} else if ( ttype === -18 ) {
-				g = QURTR * THIRD; // eslint-disable-line no-param-reassign
+				g = QURTR * THIRD;
 			} else {
-				g = QURTR; // eslint-disable-line no-param-reassign
+				g = QURTR;
 			}
 			s = g * dmin;
-			ttype = -6; // eslint-disable-line no-param-reassign
+			ttype = -6;
 		}
 	} else if ( n0in === n0 + 1 ) {
 		// One eigenvalue just deflated. Use DMIN1, DN1 for DMIN and DN.
 		if ( dmin1 === dn1 && dmin2 === dn2 ) {
 			// Cases 7 and 8.
-			ttype = -7; // eslint-disable-line no-param-reassign
+			ttype = -7;
 			s = THIRD * dmin1;
 			if ( Z( nn - 5 ) > Z( nn - 7 ) ) {
 				return { 'tau': tau0, 'ttype': ttype, 'g': g };
@@ -229,7 +248,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 				s = Math.max( s, a2 * ( 1.0 - CNST2 * a2 * ( b2 / gap2 ) * b2 ) );
 			} else {
 				s = Math.max( s, a2 * ( 1.0 - CNST2 * b2 ) );
-				ttype = -8; // eslint-disable-line no-param-reassign
+				ttype = -8;
 			}
 		} else {
 			// Case 9.
@@ -237,13 +256,13 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			if ( dmin1 === dn1 ) {
 				s = HALF * dmin1;
 			}
-			ttype = -9; // eslint-disable-line no-param-reassign
+			ttype = -9;
 		}
 	} else if ( n0in === n0 + 2 ) {
 		// Two eigenvalues deflated. Use DMIN2, DN2 for DMIN and DN.
 		// Cases 10 and 11.
 		if ( dmin2 === dn2 && 2.0 * Z( nn - 5 ) < Z( nn - 7 ) ) {
-			ttype = -10; // eslint-disable-line no-param-reassign
+			ttype = -10;
 			s = THIRD * dmin2;
 			if ( Z( nn - 5 ) > Z( nn - 7 ) ) {
 				return { 'tau': tau0, 'ttype': ttype, 'g': g };
@@ -273,15 +292,15 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			}
 		} else {
 			s = QURTR * dmin2;
-			ttype = -11; // eslint-disable-line no-param-reassign
+			ttype = -11;
 		}
 	} else if ( n0in > n0 + 2 ) {
 		// Case 12, more than two eigenvalues deflated. No information.
 		s = 0.0;
-		ttype = -12; // eslint-disable-line no-param-reassign
+		ttype = -12;
 	}
 
-	tau = s; // eslint-disable-line no-param-reassign
+	tau = s;
 	return { 'tau': tau, 'ttype': ttype, 'g': g };
 }
 

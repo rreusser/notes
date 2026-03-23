@@ -1,3 +1,23 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params, no-var */
+
 'use strict';
 
 // MODULES //
@@ -44,7 +64,7 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 * @param {NonNegativeInteger} offsetIPIV - index offset for IPIV
 * @returns {integer} info - 0 if successful, k if U(k-1,k-1) is exactly zero (1-based singularity index)
 */
-function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) { // eslint-disable-line max-len, max-params
+function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var sfmin;
 	var iinfo;
 	var info;
@@ -117,7 +137,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 			if ( Math.sqrt( pivR * pivR + pivI * pivI ) >= sfmin ) {
 				// Use zscal with 1/A(0,0)
 				// Compute 1/pivot using cmplx.divAt for stability
-				var scratch = new Float64Array( 6 ); // eslint-disable-line no-var
+				var scratch = new Float64Array( 6 );
 				scratch[ 0 ] = 1.0;
 				scratch[ 1 ] = 0.0;
 				scratch[ 2 ] = pivR;

@@ -16,21 +16,34 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Applies a plane rotation, where the cos (C) is real and the sin (S) is.
+*
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} cx - input array
+* @param {integer} strideX - `cx` stride length
+* @param {Complex128Array} cy - input array
+* @param {integer} strideY - `cy` stride length
+* @param {number} c - TODO
+* @param {Float64Array} s - TODO
+* @returns {*} result
 */
-function zrot() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zrot( N, cx, strideX, cy, strideY, c, s ) {
+	var oc = stride2offset( N, strideX );
+	var oc = stride2offset( N, strideY );
+	return base( N, cx, strideX, oc, cy, strideY, oc, c, s );
 }
 
 

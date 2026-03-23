@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -57,7 +59,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 * @returns {integer} info - 0 if successful
 */
-function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var notran;
 	var left;
 	var tauiv;

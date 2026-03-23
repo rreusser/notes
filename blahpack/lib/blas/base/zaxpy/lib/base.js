@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -41,7 +43,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements)
 * @returns {Complex128Array} `zy`
 */
-function zaxpy( N, za, zx, strideX, offsetX, zy, strideY, offsetY ) { // eslint-disable-line max-len, max-params
+function zaxpy( N, za, zx, strideX, offsetX, zy, strideY, offsetY ) {
 	var zaR;
 	var zaI;
 	var xv;

@@ -26,14 +26,15 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Perform complex division using dladiv
+* Performs complex division: out = X / Y, where X and Y are complex.
 *
-* @param {Complex128} x - x
-* @param {Complex128} y - y
-* @returns {number} result
+* @param {Float64Array} x - numerator complex number [real, imag]
+* @param {Float64Array} y - denominator complex number [real, imag]
+* @param {Float64Array} out - output complex number [real, imag]
+* @returns {Float64Array} out
 */
-function zladiv( x, y ) {
-	return base( x, y );
+function zladiv( x, y, out ) {
+	return base( x, y, out );
 }
 
 

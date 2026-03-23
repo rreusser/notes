@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -54,7 +56,7 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 * @param {NonNegativeInteger} offsetV - starting index for V (complex elements)
 * @returns {integer} status code (0 = success)
 */
-function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV ) { // eslint-disable-line max-len, max-params
+function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV ) {
 	var rightv;
 	var leftv;
 	var sv1;

@@ -1,14 +1,54 @@
-
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
 /**
-* Compute SVD of a real bidiagonal matrix
+* Compute SVD of a real bidiagonal matrix.
 *
 * @module @stdlib/lapack/base/zbdsqr
 *
 * @example
-* // TODO: Add example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
+* 
+* var d = new Float64Array( [ 1.0, 2.0 ] );
+* var e = new Float64Array( [ 1.0, 2.0 ] );
+* var VT = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var U = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var C = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var RWORK = new Float64Array( [ 1.0, 2.0 ] );
+* 
+* zbdsqr( 'row-major', 'upper', 2, 2, 2, 2, d, 1, e, 1, VT, 2, U, 2, C, 2, RWORK, 1 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
+* 
+* var d = new Float64Array( [ 1.0, 2.0 ] );
+* var e = new Float64Array( [ 1.0, 2.0 ] );
+* var VT = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var U = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var C = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var RWORK = new Float64Array( [ 1.0, 2.0 ] );
+* 
+* zbdsqr.ndarray( 'upper', 2, 2, 2, 2, d, 1, 0, e, 1, 0, VT, 1, 2, 0, U, 1, 2, 0, C, 1, 2, 0, RWORK, 1, 0 );
 */
 
 // MODULES //

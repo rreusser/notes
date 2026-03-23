@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -59,7 +61,7 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 * @returns {integer} info - 0 if successful
 */
-function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK ) {
 	var conj_tauq;
 	var conj_f64;
 	var tauq_f64;

@@ -16,21 +16,52 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Performs a series of row interchanges on a matrix `A` using pivot indices stored in `IPIV`.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {PositiveInteger} N - TODO
+* @param {Float64Array} A - input matrix
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {NonNegativeInteger} k1 - TODO
+* @param {NonNegativeInteger} k2 - TODO
+* @param {Int32Array} IPIV - input array
+* @param {integer} strideIPIV - `IPIV` stride length
+* @param {integer} incx - TODO
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function dlaswp() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlaswp( order, N, A, LDA, k1, k2, IPIV, strideIPIV, incx ) {
+	var sa1;
+	var sa2;
+	var oi;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+	}
+	oi = stride2offset( N, strideIPIV );
+	return base( N, A, sa1, sa2, 0, k1, k2, IPIV, strideIPIV, oi, incx );
 }
 
 

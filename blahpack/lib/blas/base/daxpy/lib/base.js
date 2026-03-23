@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // VARIABLES //
@@ -38,7 +40,7 @@ var M = 4;
 * @param {NonNegativeInteger} offsetY - starting `y` index
 * @returns {Float64Array} output array
 */
-function daxpy( N, alpha, x, strideX, offsetX, y, strideY, offsetY ) { // eslint-disable-line max-len, max-params
+function daxpy( N, alpha, x, strideX, offsetX, y, strideY, offsetY ) {
 	var ix;
 	var iy;
 	var m;

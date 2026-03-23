@@ -16,15 +16,26 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Scale a complex double-precision vector by a complex constant
+* Scale a complex double-precision vector by a complex constant.
 *
 * @module @stdlib/blas/base/zscal
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zscal = require( '@stdlib/blas/base/zscal' );
+* 
+* var zx = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* zscal( 2, 1.0, zx, 1 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zscal = require( '@stdlib/blas/base/zscal' );
+* 
+* var x = new Float64Array( [ 1.0, 2.0 ] );
+* 
+* zscal.ndarray( 2, 1.0, x, 1, 0, 2 );
 */
 
 // MODULES //

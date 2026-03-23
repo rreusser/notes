@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -48,7 +50,7 @@ var dorglq = require( '../../dorglq/lib/base.js' );
 *   N-by-N orthogonal matrix.
 *
 * @private
-* @param {string} vect - 'Q' to generate Q, 'P' to generate P^T
+* @param {string} vect - 'q' to generate Q, 'p' to generate P^T
 * @param {NonNegativeInteger} M - number of rows of the matrix Q or P^T
 * @param {NonNegativeInteger} N - number of columns of the matrix Q or P^T
 * @param {NonNegativeInteger} K - number of columns/rows in original matrix
@@ -65,7 +67,7 @@ var dorglq = require( '../../dorglq/lib/base.js' );
 * @param {integer} lwork - workspace size (ignored)
 * @returns {integer} info - 0 if successful
 */
-function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
 	var wantq;
 	var i;
 	var j;
@@ -75,7 +77,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 		return 0;
 	}
 
-	wantq = ( vect === 'Q' );
+	wantq = ( vect === 'q' );
 
 	if ( wantq ) {
 		// Form Q = H(1) H(2) ... H(K)

@@ -9,6 +9,7 @@ var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpotrf = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 var zpotrf2 = require( './../../zpotrf2/lib/base.js' );
 
 
@@ -206,4 +207,18 @@ test( 'zpotrf: large not-posdef upper (blocked path)', function t() {
 	Av[ idx ] = -1000.0;
 	var info = zpotrf( 'upper', N, A, 1, N, 0 );
 	assert.ok( info > 0 );
+});
+
+// ndarray validation tests
+
+test( 'zpotrf: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, new Complex128Array( 9 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'zpotrf: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, new Complex128Array( 9 ), 1, 3, 0 );
+	}, RangeError );
 });

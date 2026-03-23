@@ -16,15 +16,20 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Perform safe complex division in real arithmetic
+* Perform safe complex division in real arithmetic.
 *
 * @module @stdlib/lapack/base/dladiv
 *
 * @example
-* // TODO: Add example
+* var dladiv = require( '@stdlib/lapack/base/dladiv' );
+* 
+* dladiv( 1.0, 1.0, 1.0, 1.0, 1.0 );
+*
+* @example
+* var dladiv = require( '@stdlib/lapack/base/dladiv' );
+* 
+* dladiv.ndarray( 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 );
 */
 
 // MODULES //

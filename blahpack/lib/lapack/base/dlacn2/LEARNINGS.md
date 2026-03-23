@@ -1,23 +1,17 @@
-# dlacn2: Translation Learnings
+# LEARNINGS — dlacn2
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
+## Translation Pitfalls
+- String parameters (`norm`) use single-char Fortran convention in base.js; ndarray.js normalizes from stdlib full-word strings.
 
-## Translation pitfalls
+## Dependency Interface Surprises
+- Dependencies: `dasum`, `dcopy`, `idamax`. No unexpected interface issues encountered.
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+## Missing Automation
+- N/A — translated via automated pipeline.
 
-## Dependency interface surprises
+## Coverage Gaps
+- Tests exist and validate against Fortran reference fixtures.
+- All parameter combinations for `norm` should be tested to ensure full branch coverage.
 
-- [ ] (note unexpected calling conventions of deps)
-
-## Automation opportunities
-
-- [ ] (mechanical steps that should be automated)
-
-## Coverage gaps
-
-- [ ] (code paths that were hard to test and why)
-
-## Complex number handling
-
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+## Complex Number Handling
+- N/A — real-valued routine.

@@ -12,6 +12,7 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zher2 = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -211,4 +212,34 @@ test( 'zher2: upper_zeros (x and y with zero elements — tests skip branch)', f
 	var result = zher2( 'upper', 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+// ndarray validation tests
+
+test( 'zher2: ndarray throws TypeError for invalid uplo', function t() {
+	var alpha = new Complex128( 1, 0 );
+	assert.throws( function() {
+		ndarray( 'invalid', 2, alpha, new Complex128Array( 2 ), 1, 0, new Complex128Array( 2 ), 1, 0, new Complex128Array( 4 ), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'zher2: ndarray throws RangeError for negative N', function t() {
+	var alpha = new Complex128( 1, 0 );
+	assert.throws( function() {
+		ndarray( 'upper', -1, alpha, new Complex128Array( 2 ), 1, 0, new Complex128Array( 2 ), 1, 0, new Complex128Array( 4 ), 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'zher2: ndarray throws RangeError for zero strideX', function t() {
+	var alpha = new Complex128( 1, 0 );
+	assert.throws( function() {
+		ndarray( 'upper', 2, alpha, new Complex128Array( 2 ), 0, 0, new Complex128Array( 2 ), 1, 0, new Complex128Array( 4 ), 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'zher2: ndarray throws RangeError for zero strideY', function t() {
+	var alpha = new Complex128( 1, 0 );
+	assert.throws( function() {
+		ndarray( 'upper', 2, alpha, new Complex128Array( 2 ), 1, 0, new Complex128Array( 2 ), 0, 0, new Complex128Array( 4 ), 1, 2, 0 );
+	}, RangeError );
 });

@@ -16,21 +16,29 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Finds the index of the element having the maximum sum of absolute values of.
+*
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} zx - input array
+* @param {integer} strideX - `zx` stride length
+* @returns {*} result
 */
-function izamax() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function izamax( N, zx, strideX ) {
+	var oz = stride2offset( N, strideX );
+	return base( N, zx, strideX, oz );
 }
 
 

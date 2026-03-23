@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-continue */
+
 'use strict';
 
 // MODULES //
@@ -62,7 +64,7 @@ var scratch = new Float64Array( 6 );
 * @param {NonNegativeInteger} offsetB - index offset for B (in complex elements)
 * @returns {Complex128Array} `B`
 */
-function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
+function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) {
 	var noconj;
 	var nounit;
 	var alphaR;
@@ -234,7 +236,7 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 								Bv[ ib ] = tempR;
 								Bv[ ib + 1 ] = tempI;
 								cmplx.divAt( Bv, ib, Bv, ib, Av, ia );
-								continue; // eslint-disable-line no-continue
+								continue;
 							}
 						} else {
 							// Conjugate transpose
@@ -258,7 +260,7 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 								scratch[ 0 ] = Av[ ia ];
 								scratch[ 1 ] = -Av[ ia + 1 ];
 								cmplx.divAt( Bv, ib, Bv, ib, scratch, 0 );
-								continue; // eslint-disable-line no-continue
+								continue;
 							}
 						}
 						Bv[ ib ] = tempR;
@@ -294,7 +296,7 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 								Bv[ ib ] = tempR;
 								Bv[ ib + 1 ] = tempI;
 								cmplx.divAt( Bv, ib, Bv, ib, Av, ia );
-								continue; // eslint-disable-line no-continue
+								continue;
 							}
 						} else {
 							// Conjugate transpose
@@ -317,7 +319,7 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 								scratch[ 0 ] = Av[ ia ];
 								scratch[ 1 ] = -Av[ ia + 1 ];
 								cmplx.divAt( Bv, ib, Bv, ib, scratch, 0 );
-								continue; // eslint-disable-line no-continue
+								continue;
 							}
 						}
 						Bv[ ib ] = tempR;

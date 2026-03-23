@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -70,7 +72,7 @@ var NB = 32;  // Block size (LAPACK default for DORGLQ)
 * @param {integer} lwork - workspace size (ignored, kept for API compatibility)
 * @returns {integer} status code (0 = success)
 */
-function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
 	var ldwork;
 	var nb;
 	var nx;

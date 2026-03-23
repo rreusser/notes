@@ -9,6 +9,7 @@ var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dsyr2k = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -192,4 +193,42 @@ test( 'dsyr2k: lower_T_beta_zero', function t() {
 	var C = new Float64Array( [ 99, 0, 0, 0, 99, 0, 0, 0, 99 ] );
 	dsyr2k( 'lower', 'transpose', 3, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
+});
+
+// NDARRAY VALIDATION TESTS //
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var A = new Float64Array( 6 );
+	var B = new Float64Array( 6 );
+	var C = new Float64Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'invalid', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid trans', function t() {
+	var A = new Float64Array( 6 );
+	var B = new Float64Array( 6 );
+	var C = new Float64Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'invalid', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var A = new Float64Array( 6 );
+	var B = new Float64Array( 6 );
+	var C = new Float64Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', -1, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for negative K', function t() {
+	var A = new Float64Array( 6 );
+	var B = new Float64Array( 6 );
+	var C = new Float64Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 3, -1, 1.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, RangeError );
 });

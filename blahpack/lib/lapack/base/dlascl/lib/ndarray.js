@@ -1,32 +1,66 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Scale a matrix by CTO/CFROM with overflow protection
+* Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing.
 *
-* @param {string} type - specifies the operation type
-* @param {integer} kl - kl
-* @param {integer} ku - ku
-* @param {number} cfrom - cfrom
-* @param {number} cto - cto
-* @param {NonNegativeInteger} M - number of rows
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @returns {integer} status code (0 = success)
+* @param {string} type - matrix type ('general','L','U','H','B','Q','Z')
+* @param {integer} kl - lower bandwidth (for banded types)
+* @param {integer} ku - upper bandwidth (for banded types)
+* @param {number} cfrom - scale denominator (must be nonzero)
+* @param {number} cto - scale numerator
+* @param {NonNegativeInteger} M - rows
+* @param {NonNegativeInteger} N - columns
+* @param {Float64Array} A - matrix
+* @param {integer} strideA1 - first dimension stride
+* @param {integer} strideA2 - second dimension stride
+* @param {NonNegativeInteger} offsetA - starting index for A
+* @throws {TypeError} first argument must be a valid matrix type
+* @throws {RangeError} sixth argument must be a nonnegative integer
+* @throws {RangeError} seventh argument must be a nonnegative integer
+* @returns {integer} 0 on success
 */
-function dlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
-	return base( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ); // eslint-disable-line max-len
+function dlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ) {
+	if ( type !== 'general' && type !== 'lower' && type !== 'upper' && type !== 'hessenberg' && type !== 'band-lower' && type !== 'band-upper' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix type. Value: `%s`.', type ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+	return base( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA );
 }
 
 

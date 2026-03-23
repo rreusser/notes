@@ -8,6 +8,7 @@ var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dpotrf = require( './../../dpotrf/lib/base.js' );
 var dpotrs = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -104,4 +105,24 @@ test( 'dpotrs: upper_multi_rhs_3', function t() {
 	var info = dpotrs( 'upper', 3, 3, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
+});
+
+// ndarray validation tests
+
+test( 'dpotrs: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, 1, new Float64Array( 9 ), 1, 3, 0, new Float64Array( 3 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'dpotrs: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, 1, new Float64Array( 9 ), 1, 3, 0, new Float64Array( 3 ), 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'dpotrs: ndarray throws RangeError for negative NRHS', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 3, -1, new Float64Array( 9 ), 1, 3, 0, new Float64Array( 3 ), 1, 3, 0 );
+	}, RangeError );
 });

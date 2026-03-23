@@ -16,33 +16,51 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Multiply a matrix by a real scalar CTO/CFROM
+* Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
 *
-* @param {string} type - specifies the operation type
-* @param {integer} kl - kl
-* @param {integer} ku - ku
-* @param {number} cfrom - cfrom
-* @param {number} cto - cto
-* @param {NonNegativeInteger} M - number of rows
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @returns {integer} status code (0 = success)
+* @param {string} type - matrix type ('general','L','U','H','B','Q','Z')
+* @param {integer} kl - lower bandwidth (for banded types)
+* @param {integer} ku - upper bandwidth (for banded types)
+* @param {number} cfrom - scale denominator (must be nonzero)
+* @param {number} cto - scale numerator
+* @param {NonNegativeInteger} M - rows
+* @param {NonNegativeInteger} N - columns
+* @param {Complex128Array} A - complex matrix
+* @param {integer} strideA1 - first dimension stride (in complex elements)
+* @param {integer} strideA2 - second dimension stride (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @throws {TypeError} first argument must be a valid matrix type
+* @throws {RangeError} sixth argument must be a nonnegative integer
+* @throws {RangeError} seventh argument must be a nonnegative integer
+* @returns {integer} 0 on success
 */
-function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
-	return base( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ); // eslint-disable-line max-len
+function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ) {
+	if ( type !== 'general' && type !== 'lower' && type !== 'upper' && type !== 'hessenberg' && type !== 'band-lower' && type !== 'band-upper' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix type. Value: `%s`.', type ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+	return base( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA );
 }
 
 

@@ -16,21 +16,74 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Apply a complex block reflector H or its conjugate-transpose H^H to a.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} side - TODO
+* @param {string} trans - TODO
+* @param {string} direct - TODO
+* @param {string} storev - TODO
+* @param {NonNegativeInteger} M - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} K - TODO
+* @param {Complex128Array} V - input matrix
+* @param {PositiveInteger} LDV - leading dimension of `V`
+* @param {Complex128Array} T - input matrix
+* @param {PositiveInteger} LDT - leading dimension of `T`
+* @param {Complex128Array} C - input matrix
+* @param {PositiveInteger} LDC - leading dimension of `C`
+* @param {Complex128Array} WORK - input matrix
+* @param {PositiveInteger} LDWORK - leading dimension of `WORK`
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zlarfb() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlarfb( order, side, trans, direct, storev, M, N, K, V, LDV, T, LDT, C, LDC, WORK, LDWORK ) {
+	var sv1;
+	var sv2;
+	var st1;
+	var st2;
+	var sc1;
+	var sc2;
+	var sw1;
+	var sw2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sv1 = 1;
+		sv2 = LDV;
+		st1 = 1;
+		st2 = LDT;
+		sc1 = 1;
+		sc2 = LDC;
+		sw1 = 1;
+		sw2 = LDWORK;
+	} else {
+		sv1 = LDV;
+		sv2 = 1;
+		st1 = LDT;
+		st2 = 1;
+		sc1 = LDC;
+		sc2 = 1;
+		sw1 = LDWORK;
+		sw2 = 1;
+	}
+	return base( side, trans, direct, storev, M, N, K, V, sv1, sv2, 0, T, st1, st2, 0, C, sc1, sc2, 0, WORK, sw1, sw2, 0 );
 }
 
 

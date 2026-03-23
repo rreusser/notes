@@ -8,6 +8,7 @@ var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dgels = require( './../lib/base.js' );
+var ndarrayFn = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -600,4 +601,30 @@ test( 'dgels: singular in TRANS=T M<N (dtrtrs on L^T) returns info > 0', functio
 
 	info = dgels( 'transpose', 2, 4, 1, A, 1, 2, 0, B, 1, 4, 0 );
 	assert.ok( info > 0, 'info should be > 0 for singular L in TRANS=T M<N, got ' + info );
+});
+
+// ndarray validation tests
+
+test( 'dgels: ndarray throws TypeError for invalid trans', function t() {
+	var A = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+	var B = new Float64Array( [ 1.0, 1.0 ] );
+	assert.throws( function() {
+		ndarrayFn( 'invalid', 2, 2, 1, A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'dgels: ndarray throws RangeError for negative M', function t() {
+	var A = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+	var B = new Float64Array( [ 1.0, 1.0 ] );
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', -1, 2, 1, A, 1, 2, 0, B, 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'dgels: ndarray throws RangeError for negative N', function t() {
+	var A = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+	var B = new Float64Array( [ 1.0, 1.0 ] );
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', 2, -1, 1, A, 1, 2, 0, B, 1, 2, 0 );
+	}, RangeError );
 });

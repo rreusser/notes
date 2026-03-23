@@ -16,15 +16,20 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
 * Compute the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
 *
 * @module @stdlib/blas/base/dcabs1
 *
 * @example
-* // TODO: Add example
+* var dcabs1 = require( '@stdlib/blas/base/dcabs1' );
+* 
+* dcabs1( 1.0 );
+*
+* @example
+* var dcabs1 = require( '@stdlib/blas/base/dcabs1' );
+* 
+* dcabs1.ndarray( 1.0 );
 */
 
 // MODULES //

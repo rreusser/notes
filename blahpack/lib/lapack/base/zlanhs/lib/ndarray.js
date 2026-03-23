@@ -16,31 +16,45 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Return the value of the one norm, Frobenius norm, infinity norm, or max absolute value of an upper Hessenberg complex matrix
+* Returns the value of the one norm, Frobenius norm, infinity norm, or.
 *
-* @param {string} norm - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @returns {number} result
+* @param {string} norm - 'M' (max), '1'/'O' (one-norm), 'I' (inf-norm), 'F'/'E' (Frobenius)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Complex128Array} A - upper Hessenberg matrix
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @param {Float64Array} WORK - workspace (length >= N, used for inf-norm only, real)
+* @param {integer} strideWORK - stride for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @throws {TypeError} first argument must be a valid norm type
+* @throws {RangeError} second argument must be a nonnegative integer
+* @returns {number} matrix norm value
 */
-function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	return base( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
+function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) {
+	if ( norm !== 'one-norm' && norm !== 'inf-norm' && norm !== 'max' && norm !== 'frobenius' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid norm type. Value: `%s`.', norm ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return 0.0;
+	}
+	return base( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK );
 }
 
 

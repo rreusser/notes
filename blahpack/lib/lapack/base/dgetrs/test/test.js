@@ -10,6 +10,7 @@ var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dgetrf = require( './../../dgetrf/lib/base.js' );
 var dgetrs = require( './../lib/base.js' );
+var ndarrayFn = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -257,6 +258,26 @@ test( 'dgetrs: identity', function t() {
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
+});
+
+// ndarray validation tests
+
+test( 'dgetrs: ndarray throws TypeError for invalid trans', function t() {
+	var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
+	var IPIV = new Int32Array( 3 );
+	var B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+	assert.throws( function() {
+		ndarrayFn( 'invalid', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'dgetrs: ndarray throws RangeError for negative N', function t() {
+	var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
+	var IPIV = new Int32Array( 3 );
+	var B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', -1, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	}, RangeError );
 });
 
 test( 'dgetrs: lowercase trans argument', function t() {

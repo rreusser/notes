@@ -1,3 +1,23 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -71,7 +91,7 @@ var MNTHR_RATIO = 1.6;  // ILAENV(6, 'DGELSS') threshold ratio M/N
 * @param {integer} lwork - length of WORK array (if 0 or WORK is null, auto-sized)
 * @returns {integer} info - 0 if successful, >0 if DBDSQR did not converge
 */
-function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, S, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, S, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork ) {
 	var ldwork;
 	var bignum;
 	var smlnum;
@@ -208,7 +228,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Generate right bidiagonal transformation: P_b^T stored in A
-		dorgbr( 'P', N, N, N,
+		dorgbr( 'p', N, N, N,
 			A, strideA1, strideA2, offsetA,
 			WORK, 1, itaup,
 			WORK, 1, iwork, lwork - iwork );
@@ -329,7 +349,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Generate right bidiagonal transformation of L
-		dorgbr( 'P', M, M, M,
+		dorgbr( 'p', M, M, M,
 			WORK, 1, ldwork, il,
 			WORK, 1, itaup,
 			WORK, 1, iwork, lwork - iwork );
@@ -431,7 +451,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Generate right bidiagonal transformation
-		dorgbr( 'P', M, N, M,
+		dorgbr( 'p', M, N, M,
 			A, strideA1, strideA2, offsetA,
 			WORK, 1, itaup,
 			WORK, 1, iwork, lwork - iwork );

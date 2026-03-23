@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -67,7 +69,7 @@ var NEGONE = new Complex128( -1.0, 0.0 );
 * @param {integer} strideWORK2 - second dim stride of WORK (complex elements)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 */
-function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK ) {
 	var transt;
 	var Cv;
 	var Wv;

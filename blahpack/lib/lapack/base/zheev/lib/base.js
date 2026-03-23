@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -67,7 +69,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
 * @returns {integer} info - 0 if successful, >0 if zsteqr/dsterf did not converge
 */
-function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) {
 	var wantz;
 	var anrm;
 	var safmin;

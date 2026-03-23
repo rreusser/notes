@@ -16,10 +16,13 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -30,12 +33,19 @@ var base = require( './base.js' );
 *
 * @param {PositiveInteger} N - number of complex elements
 * @param {number} da - real scalar multiplier
-* @param {Float64Array} zx - input array (interleaved complex)
+* @param {Complex128Array} zx - complex input vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx`
-* @returns {Float64Array} `zx`
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} `zx`
 */
 function zdscal( N, da, zx, strideX, offsetX ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return zx;
+	}
 	return base( N, da, zx, strideX, offsetX );
 }
 

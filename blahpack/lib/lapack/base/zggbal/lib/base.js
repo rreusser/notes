@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-var */
+
 'use strict';
 
 // MODULES //
@@ -113,7 +115,7 @@ function cabs( arr, idx ) {
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {Object} result with properties: info (0=success), ilo (1-based), ihi (1-based)
 */
-function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, WORK, strideWORK, offsetWORK ) {
 	var lsfmax;
 	var lsfmin;
 	var pgamma;
@@ -269,8 +271,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					j = l - 1;
 				} else {
 					// Found first nonzero at column jp1-1, check if rest are zero
-					var allZero = true; // eslint-disable-line no-var
-					for ( var jj = jp1; jj < l; jj++ ) { // eslint-disable-line no-var
+					var allZero = true;
+					for ( var jj = jp1; jj < l; jj++ ) {
 						idx = oA + i * sA1 + jj * sA2;
 						if ( !czero( Av, idx ) || !czero( Bv, oB + i * sB1 + jj * sB2 ) ) {
 							allZero = false;
@@ -312,7 +314,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			// eslint-disable-next-line no-constant-condition
 			while ( true ) {
 				// Find column with one nonzero in rows k through l
-				var foundCol = false; // eslint-disable-line no-var
+				var foundCol = false;
 				lm1 = l - 1;
 				for ( j = k - 1; j < l; j++ ) {
 					ip1 = -1;
@@ -330,8 +332,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						i = l - 1;
 					} else {
 						// Found first nonzero at row ip1-1, check if rest are zero
-						var allZeroCol = true; // eslint-disable-line no-var
-						for ( var ii = ip1; ii < l; ii++ ) { // eslint-disable-line no-var
+						var allZeroCol = true;
+						for ( var ii = ip1; ii < l; ii++ ) {
 							idx = oA + ii * sA1 + j * sA2;
 							if ( !czero( Av, idx ) || !czero( Bv, oB + ii * sB1 + j * sB2 ) ) {
 								allZeroCol = false;

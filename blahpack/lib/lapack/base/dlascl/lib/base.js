@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -53,7 +55,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 * @param {NonNegativeInteger} offsetA - starting index for A
 * @returns {integer} 0 on success
 */
-function dlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
+function dlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA ) {
 	var smlnum;
 	var bignum;
 	var cfromc;

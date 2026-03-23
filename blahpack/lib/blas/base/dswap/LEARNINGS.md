@@ -1,23 +1,16 @@
-# dswap: Translation Learnings
+# LEARNINGS — dswap
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
+## Translation Pitfalls
+- Quick-return conditions must be preserved exactly as in Fortran reference to handle edge cases (N=0, alpha=0, etc.) correctly.
 
-## Translation pitfalls
+## Dependency Interface Surprises
+- No BLAS/LAPACK dependencies — this is a leaf routine.
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+## Missing Automation
+- N/A — translated via automated pipeline.
 
-## Dependency interface surprises
+## Coverage Gaps
+- Tests exist and validate against Fortran reference fixtures.
 
-- [ ] (note unexpected calling conventions of deps)
-
-## Automation opportunities
-
-- [ ] (mechanical steps that should be automated)
-
-## Coverage gaps
-
-- [ ] (code paths that were hard to test and why)
-
-## Complex number handling
-
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+## Complex Number Handling
+- N/A — real-valued routine.

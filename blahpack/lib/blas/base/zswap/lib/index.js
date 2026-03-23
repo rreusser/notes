@@ -16,15 +16,28 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
 * Interchange two complex double-precision vectors.
 *
 * @module @stdlib/blas/base/zswap
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zswap = require( '@stdlib/blas/base/zswap' );
+* 
+* var zx = new Complex128Array( [ 1.0, 2.0 ] );
+* var zy = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* zswap( 2, zx, 1, zy, 1 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zswap = require( '@stdlib/blas/base/zswap' );
+* 
+* var zx = new Float64Array( [ 1.0, 2.0 ] );
+* var zy = new Float64Array( [ 1.0, 2.0 ] );
+* 
+* zswap.ndarray( 2, zx, 1, 0, zy, 1, 0 );
 */
 
 // MODULES //

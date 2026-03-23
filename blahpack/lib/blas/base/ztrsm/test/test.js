@@ -340,3 +340,43 @@ test( 'ztrsm: returns the B array', function t() {
 	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 });
+
+// NDARRAY VALIDATION TESTS //
+
+var ndarray = require( './../lib/ndarray.js' );
+
+test( 'ndarray: throws TypeError for invalid side', function t() {
+	assert.throws( function f() {
+		ndarray( 'invalid', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	assert.throws( function f() {
+		ndarray( 'left', 'invalid', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid transa', function t() {
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'invalid', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid diag', function t() {
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'invalid', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative M', function t() {
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', -1, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', 2, -1, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
+	}, RangeError );
+});

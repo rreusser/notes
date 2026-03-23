@@ -16,15 +16,26 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Initialize a complex matrix to given values
+* Initialize a complex matrix to given values.
 *
 * @module @stdlib/lapack/base/zlaset
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zlaset = require( '@stdlib/lapack/base/zlaset' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zlaset( 'row-major', 'upper', 2, 2, 1.0, 0.0, A, 2 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zlaset = require( '@stdlib/lapack/base/zlaset' );
+* 
+* var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zlaset.ndarray( 'upper', 2, 2, 1.0, 0.0, A, 1, 2, 0 );
 */
 
 // MODULES //

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // VARIABLES //
@@ -48,7 +50,7 @@ var BLOCK_SIZE = 32;
 * @param {integer} incx - direction in which to apply pivots (-1 to apply in reverse order; otherwise, apply in provided order)
 * @returns {Float64Array} permuted matrix `A`
 */
-function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx ) { // eslint-disable-line max-len, max-params
+function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx ) {
 	var nrows;
 	var ix0;
 	var ixinc;

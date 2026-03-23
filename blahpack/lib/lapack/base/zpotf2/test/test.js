@@ -11,6 +11,7 @@ var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpotf2 = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -124,4 +125,18 @@ test( 'zpotf2: not_hpd_lower (lower, not positive definite)', function t() {
 	] );
 	var info = zpotf2( 'lower', 2, A, 1, 2, 0 );
 	assert.equal( info, tc.info );
+});
+
+// ndarray validation tests
+
+test( 'zpotf2: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, new Complex128Array( 9 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'zpotf2: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, new Complex128Array( 9 ), 1, 3, 0 );
+	}, RangeError );
 });

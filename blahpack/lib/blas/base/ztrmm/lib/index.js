@@ -16,15 +16,28 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A)
+* Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A).
 *
 * @module @stdlib/blas/base/ztrmm
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var ztrmm = require( '@stdlib/blas/base/ztrmm' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* ztrmm( 'row-major', 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 2, B, 2 );
+*
+* @example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var ztrmm = require( '@stdlib/blas/base/ztrmm' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* ztrmm.ndarray( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
 */
 
 // MODULES //

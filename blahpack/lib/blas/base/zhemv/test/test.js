@@ -12,6 +12,7 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhemv = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -199,4 +200,38 @@ test( 'zhemv: beta_zero (beta=0 zeroes y first)', function t() {
 	var result = zhemv( 'upper', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+});
+
+// ndarray validation tests
+
+test( 'zhemv: ndarray throws TypeError for invalid uplo', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		ndarray( 'invalid', 2, alpha, new Complex128Array( 4 ), 1, 2, 0, new Complex128Array( 2 ), 1, 0, beta, new Complex128Array( 2 ), 1, 0 );
+	}, TypeError );
+});
+
+test( 'zhemv: ndarray throws RangeError for negative N', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		ndarray( 'upper', -1, alpha, new Complex128Array( 4 ), 1, 2, 0, new Complex128Array( 2 ), 1, 0, beta, new Complex128Array( 2 ), 1, 0 );
+	}, RangeError );
+});
+
+test( 'zhemv: ndarray throws RangeError for zero strideX', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		ndarray( 'upper', 2, alpha, new Complex128Array( 4 ), 1, 2, 0, new Complex128Array( 2 ), 0, 0, beta, new Complex128Array( 2 ), 1, 0 );
+	}, RangeError );
+});
+
+test( 'zhemv: ndarray throws RangeError for zero strideY', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		ndarray( 'upper', 2, alpha, new Complex128Array( 4 ), 1, 2, 0, new Complex128Array( 2 ), 1, 0, beta, new Complex128Array( 2 ), 0, 0 );
+	}, RangeError );
 });

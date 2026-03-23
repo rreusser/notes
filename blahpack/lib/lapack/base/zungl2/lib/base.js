@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -63,7 +65,7 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
 * @returns {integer} status code (0 = success)
 */
-function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var negTau;
 	var conjT;
 	var tauv;

@@ -16,15 +16,26 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Scan a complex matrix for its last non-zero row
+* Scan a complex matrix for its last non-zero row.
 *
 * @module @stdlib/lapack/base/ilazlr
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var ilazlr = require( '@stdlib/lapack/base/ilazlr' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* ilazlr( 'row-major', 2, 2, A, 2 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var ilazlr = require( '@stdlib/lapack/base/ilazlr' );
+* 
+* var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* ilazlr.ndarray( 2, 2, A, 1, 2, 0 );
 */
 
 // MODULES //

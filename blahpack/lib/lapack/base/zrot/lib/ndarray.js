@@ -16,32 +16,41 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Apply a complex Givens plane rotation
+* Applies a plane rotation, where the cos (C) is real and the sin (S) is.
 *
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} x - input array
-* @param {integer} strideX - stride length for `x`
-* @param {NonNegativeInteger} offsetX - starting index for `x`
-* @param {integer} incx - incx
-* @param {Float64Array} y - output array
-* @param {integer} strideY - stride length for `y`
-* @param {NonNegativeInteger} offsetY - starting index for `y`
-* @param {integer} incy - incy
-* @param {number} c - c
-* @param {Complex128} s - s
+* @param {NonNegativeInteger} N - number of complex elements
+* @param {Complex128Array} cx - first input/output array
+* @param {integer} strideX - stride for `cx` (in complex elements)
+* @param {NonNegativeInteger} offsetX - starting index for `cx` (in complex elements)
+* @param {Complex128Array} cy - second input/output array
+* @param {integer} strideY - stride for `cy` (in complex elements)
+* @param {NonNegativeInteger} offsetY - starting index for `cy` (in complex elements)
+* @param {number} c - cosine of rotation (real)
+* @param {Float64Array} s - sine of rotation (complex, 2-element array [re, im])
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} cx
 */
-function zrot( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy, c, s ) { // eslint-disable-line max-len, max-params
-	return base( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy, c, s ); // eslint-disable-line max-len
+function zrot( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return 0;
+	}
+	return base( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s );
 }
 
 

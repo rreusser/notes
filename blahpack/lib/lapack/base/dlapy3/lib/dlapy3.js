@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -26,11 +28,10 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 */
-function dlapy3() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlapy3( x, y, z ) {
+	return base( x, y, z );
 }
 
 

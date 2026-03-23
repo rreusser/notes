@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -69,7 +71,7 @@ var NB = 32;  // Block size (LAPACK default for DORGQL)
 * @param {integer} lwork - workspace size (ignored)
 * @returns {integer} status code (0 = success)
 */
-function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
 	var ldwork;
 	var work;
 	var nb;

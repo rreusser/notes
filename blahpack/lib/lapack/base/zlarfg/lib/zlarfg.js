@@ -16,21 +16,33 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Generate a complex elementary reflector H of order N, such that.
+*
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} alpha - TODO
+* @param {NonNegativeInteger} offsetAlpha - TODO
+* @param {Complex128Array} x - input array
+* @param {integer} strideX - `x` stride length
+* @param {Complex128Array} tau - TODO
+* @param {NonNegativeInteger} offsetTau - TODO
+* @returns {*} result
 */
-function zlarfg() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlarfg( N, alpha, offsetAlpha, x, strideX, tau, offsetTau ) {
+	var ox = stride2offset( N, strideX );
+	return base( N, alpha, offsetAlpha, x, strideX, ox, tau, offsetTau );
 }
 
 

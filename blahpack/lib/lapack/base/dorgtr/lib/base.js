@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -54,7 +56,7 @@ var dorgql = require( '../../dorgql/lib/base.js' );
 * @param {integer} lwork - length of the workspace array
 * @returns {integer} status code (0 = success)
 */
-function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
 	var upper;
 	var pa;
 	var i;

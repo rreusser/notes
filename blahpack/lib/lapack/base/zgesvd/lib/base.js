@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -82,7 +84,7 @@ var CZERO = new Complex128( 0.0, 0.0 );
 * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
 * @returns {integer} info - 0 if successful, >0 if ZBDSQR did not converge
 */
-function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) {
 	var wntua;
 	var wntus;
 	var wntuas;
@@ -222,7 +224,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			if ( wntvo || wntvas ) {
 				// If right singular vectors desired, generate P^H in A
 				zungbr(
-					'P', N, N, N,
+					'p', N, N, N,
 					A, sa1, sa2, offsetA,
 					WK, 1, itaup,
 					WK, 1, iwork,
@@ -272,7 +274,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				zlacpy( 'lower', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 				ncu = wntus ? N : M;
 				zungbr(
-					'Q', M, ncu, N,
+					'q', M, ncu, N,
 					U, su1, su2, offsetU,
 					WK, 1, itauq,
 					WK, 1, iwork,
@@ -283,7 +285,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// Copy upper triangle of A to VT, then generate P^H
 				zlacpy( 'upper', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 				zungbr(
-					'P', N, N, N,
+					'p', N, N, N,
 					VT, svt1, svt2, offsetVT,
 					WK, 1, itaup,
 					WK, 1, iwork,
@@ -293,7 +295,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			if ( wntuo ) {
 				// Generate Q in A
 				zungbr(
-					'Q', M, N, N,
+					'q', M, N, N,
 					A, sa1, sa2, offsetA,
 					WK, 1, itauq,
 					WK, 1, iwork,
@@ -303,7 +305,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			if ( wntvo ) {
 				// Generate P^H in A
 				zungbr(
-					'P', N, N, N,
+					'p', N, N, N,
 					A, sa1, sa2, offsetA,
 					WK, 1, itaup,
 					WK, 1, iwork,
@@ -382,7 +384,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			// Copy lower triangle of A to U, then generate Q
 			zlacpy( 'lower', M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 			zungbr(
-				'Q', M, M, N,
+				'q', M, M, N,
 				U, su1, su2, offsetU,
 				WK, 1, itauq,
 				WK, 1, iwork,
@@ -394,7 +396,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			zlacpy( 'upper', M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 			nrvt = wntva ? N : M;
 			zungbr(
-				'P', nrvt, N, M,
+				'p', nrvt, N, M,
 				VT, svt1, svt2, offsetVT,
 				WK, 1, itaup,
 				WK, 1, iwork,
@@ -404,7 +406,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		if ( wntuo ) {
 			// Generate Q in A
 			zungbr(
-				'Q', M, M, N,
+				'q', M, M, N,
 				A, sa1, sa2, offsetA,
 				WK, 1, itauq,
 				WK, 1, iwork,
@@ -414,7 +416,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		if ( wntvo ) {
 			// Generate P^H in A
 			zungbr(
-				'P', M, N, M,
+				'p', M, N, M,
 				A, sa1, sa2, offsetA,
 				WK, 1, itaup,
 				WK, 1, iwork,

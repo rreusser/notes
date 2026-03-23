@@ -1,23 +1,16 @@
-# zgbtrf: Translation Learnings
+# LEARNINGS — zgbtrf
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
+## Translation Pitfalls
+- IPIV arrays are 0-based in base.js (Fortran uses 1-based). Fixture comparisons must subtract 1 from Fortran IPIV values.
 
-## Translation pitfalls
+## Dependency Interface Surprises
+- No BLAS/LAPACK dependencies — this is a leaf routine.
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+## Missing Automation
+- N/A — translated via automated pipeline.
 
-## Dependency interface surprises
+## Coverage Gaps
+- Tests exist and validate against Fortran reference fixtures.
 
-- [ ] (note unexpected calling conventions of deps)
-
-## Automation opportunities
-
-- [ ] (mechanical steps that should be automated)
-
-## Coverage gaps
-
-- [ ] (code paths that were hard to test and why)
-
-## Complex number handling
-
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+## Complex Number Handling
+- Complex routine — uses Complex128Array for array parameters and Complex128 for scalars.

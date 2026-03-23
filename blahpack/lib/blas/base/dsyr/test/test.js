@@ -5,6 +5,7 @@
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var dsyr = require( './../lib' );
+var ndarray = require( './../lib/ndarray.js' );
 
 test( 'dsyr: main export is a function', function t() {
 	assert.strictEqual( typeof dsyr, 'function' );
@@ -157,4 +158,24 @@ test( 'dsyr: lower triangle, row-major', function t() {
 
 	dsyr.ndarray( 'lower', 3, 1.0, x, 1, 0, A, 3, 1, 0 );
 	assert.deepStrictEqual( A, expected );
+});
+
+// ndarray validation tests
+
+test( 'dsyr: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, 1.0, new Float64Array( 3 ), 1, 0, new Float64Array( 9 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'dsyr: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, 1.0, new Float64Array( 3 ), 1, 0, new Float64Array( 9 ), 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'dsyr: ndarray throws RangeError for zero strideX', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 3, 1.0, new Float64Array( 3 ), 0, 0, new Float64Array( 9 ), 1, 3, 0 );
+	}, RangeError );
 });

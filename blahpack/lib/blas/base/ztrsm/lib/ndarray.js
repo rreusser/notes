@@ -1,23 +1,47 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Solves one of the complex matrix equations:
-*   op(A)*X = alpha*B,  or  X*op(A) = alpha*B
+* Solves one of the complex matrix equations op(A)*X = alpha*B or X*op(A) = alpha*B, where A is a complex triangular matrix.
 *
-* @param {string} side - 'L' or 'R'
-* @param {string} uplo - 'U' or 'L'
-* @param {string} transa - 'N', 'T', or 'C'
-* @param {string} diag - 'U' or 'N'
-* @param {NonNegativeInteger} M - rows of B
-* @param {NonNegativeInteger} N - columns of B
-* @param {Complex128} alpha - complex scalar
+* @param {string} side - specifies whether op(A) appears on the left or right of X
+* @param {string} uplo - specifies whether A is upper or lower triangular
+* @param {string} transa - specifies the form of op(A)
+* @param {string} diag - specifies whether A is unit or non-unit triangular
+* @param {NonNegativeInteger} M - number of rows of B
+* @param {NonNegativeInteger} N - number of columns of B
+* @param {Complex128} alpha - complex scalar constant
 * @param {Complex128Array} A - complex triangular matrix
 * @param {integer} strideA1 - first dimension stride of A
 * @param {integer} strideA2 - second dimension stride of A
@@ -26,10 +50,46 @@ var base = require( './base.js' );
 * @param {integer} strideB1 - first dimension stride of B
 * @param {integer} strideB2 - second dimension stride of B
 * @param {NonNegativeInteger} offsetB - offset for B (complex elements)
-* @returns {Complex128Array} B
+* @throws {TypeError} first argument must be a valid operation side
+* @throws {TypeError} second argument must be a valid matrix triangle
+* @throws {TypeError} third argument must be a valid transpose operation
+* @throws {TypeError} fourth argument must be a valid diagonal type
+* @throws {RangeError} fifth argument must be a nonnegative integer
+* @throws {RangeError} sixth argument must be a nonnegative integer
+* @returns {Complex128Array} `B`
+*
+* @example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var Complex128 = require( '@stdlib/complex/float64/ctor' );
+*
+* var A = new Complex128Array( [ 2.0, 1.0, 0.0, 0.0, 3.0, 1.0, 4.0, 2.0 ] );
+* var B = new Complex128Array( [ 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0 ] );
+*
+* ztrsm( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1.0, 0.0 ), A, 1, 2, 0, B, 1, 2, 0 );
 */
-function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
-	return base( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) {
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isMatrixTranspose( transa ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid transpose operation. Value: `%s`.', transa ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return B;
+	}
+	return base( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
 }
 
 

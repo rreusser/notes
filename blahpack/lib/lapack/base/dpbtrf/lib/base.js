@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -57,7 +59,7 @@ var LDWORK = NBMAX + 1;
 * @param {NonNegativeInteger} offsetAB - starting index for AB
 * @returns {integer} info - 0 if successful, k>0 if the leading minor of order k is not positive definite
 */
-function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-disable-line max-len, max-params
+function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 	var iinfo;
 	var WORK;
 	var sa1;

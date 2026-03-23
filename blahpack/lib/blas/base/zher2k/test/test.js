@@ -12,6 +12,7 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zher2k = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -269,4 +270,46 @@ test( 'zher2k: upper_N_real_alpha', function t() {
 	var alpha = new Complex128( 1.0, 0.0 );
 	zher2k( 'upper', 'no-transpose', 3, 2, alpha, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 1e-14, 'c' );
+});
+
+// NDARRAY VALIDATION TESTS //
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var A = new Complex128Array( 6 );
+	var B = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	var alpha = new Complex128( 1.0, 0.0 );
+	assert.throws( function f() {
+		ndarray( 'invalid', 'no-transpose', 3, 2, alpha, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid trans', function t() {
+	var A = new Complex128Array( 6 );
+	var B = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	var alpha = new Complex128( 1.0, 0.0 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'invalid', 3, 2, alpha, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var A = new Complex128Array( 6 );
+	var B = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	var alpha = new Complex128( 1.0, 0.0 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', -1, 2, alpha, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for negative K', function t() {
+	var A = new Complex128Array( 6 );
+	var B = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	var alpha = new Complex128( 1.0, 0.0 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 3, -1, alpha, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, RangeError );
 });

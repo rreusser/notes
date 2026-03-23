@@ -7,6 +7,7 @@ var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dtrsv = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -247,4 +248,49 @@ test( 'dtrsv: with offsetX', function t() {
 	var x = new Float64Array([ 0.0, 0.0, 20.0, 28.0, 21.0 ]);
 	dtrsv( 'upper', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 2 );
 	assertArrayClose( [ x[2], x[3], x[4] ], [ 1.0, 2.0, 3.0 ], 1e-14, 'x' );
+});
+
+
+// NDARRAY VALIDATION TESTS //
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var x = new Float64Array( [ 1, 2, 3 ] );
+	assert.throws( function f() {
+		ndarray( 'foo', 'no-transpose', 'non-unit', 3, upperA3(), 1, 3, 0, x, 1, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid trans', function t() {
+	var x = new Float64Array( [ 1, 2, 3 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'foo', 'non-unit', 3, upperA3(), 1, 3, 0, x, 1, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid diag', function t() {
+	var x = new Float64Array( [ 1, 2, 3 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 'foo', 3, upperA3(), 1, 3, 0, x, 1, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var x = new Float64Array( [ 1, 2, 3 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 'non-unit', -1, upperA3(), 1, 3, 0, x, 1, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for strideX=0', function t() {
+	var x = new Float64Array( [ 1, 2, 3 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 'non-unit', 3, upperA3(), 1, 3, 0, x, 0, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: N=0 early return', function t() {
+	var x = new Float64Array( [ 99 ] );
+	var out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, new Float64Array( 1 ), 1, 1, 0, x, 1, 0 );
+	assert.equal( out, x );
+	assert.equal( x[ 0 ], 99 );
 });

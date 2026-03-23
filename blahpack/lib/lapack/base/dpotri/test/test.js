@@ -7,6 +7,7 @@ var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dpotri = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -301,4 +302,18 @@ test( 'dpotri: non-zero offset', function t() {
 	}
 	C = symmMul( 'upper', 3, invA, origA );
 	assertIdentity( C, 3, 1e-13, 'offset' );
+});
+
+// ndarray validation tests
+
+test( 'dpotri: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, new Float64Array( 9 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'dpotri: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, new Float64Array( 9 ), 1, 3, 0 );
+	}, RangeError );
 });

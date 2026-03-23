@@ -16,35 +16,56 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Apply a complex Householder reflector
+* Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 *
-* @param {string} side - specifies the operation type
-* @param {NonNegativeInteger} M - number of rows
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} v - input array
-* @param {integer} strideV - stride length for `v`
-* @param {NonNegativeInteger} offsetV - starting index for `v`
-* @param {Complex128} tau - tau
-* @param {Float64Array} C - input matrix
-* @param {integer} strideC1 - stride of the first dimension of `C`
-* @param {integer} strideC2 - stride of the second dimension of `C`
-* @param {NonNegativeInteger} offsetC - starting index for `C`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {string} side - 'L' for left, 'R' for right
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {Complex128Array} v - reflector vector
+* @param {integer} strideV - stride for v (in complex elements)
+* @param {NonNegativeInteger} offsetV - starting index for v (in complex elements)
+* @param {Complex128Array} tau - complex scalar
+* @param {NonNegativeInteger} offsetTau - starting index for tau (in complex elements)
+* @param {Complex128Array} C - matrix, modified in-place
+* @param {integer} strideC1 - stride of the first dimension of C (complex elements)
+* @param {integer} strideC2 - stride of the second dimension of C (complex elements)
+* @param {NonNegativeInteger} offsetC - starting index for C (in complex elements)
+* @param {Complex128Array} WORK - workspace
+* @param {integer} strideWORK - stride for WORK (in complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
+* @throws {TypeError} first argument must be a valid operation side
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @returns {*} result
 */
-function zlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
-	return base( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
+function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return;
+	}
+	return base( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
 }
 
 

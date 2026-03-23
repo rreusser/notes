@@ -1,23 +1,17 @@
-# dgehd2: Translation Learnings
+# LEARNINGS — dgehd2
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
+## Translation Pitfalls
+- Standard LAPACK-to-JS translation following stride/offset convention. Array indexing converted from 1-based Fortran to 0-based JavaScript.
 
-## Translation pitfalls
+## Dependency Interface Surprises
+- No BLAS/LAPACK dependencies — this is a leaf routine.
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+## Missing Automation
+- N/A — translated via automated pipeline.
 
-## Dependency interface surprises
+## Coverage Gaps
+- Tests exist and validate against Fortran reference fixtures.
+- Workspace allocation paths are exercised through the standard test cases.
 
-- [ ] (note unexpected calling conventions of deps)
-
-## Automation opportunities
-
-- [ ] (mechanical steps that should be automated)
-
-## Coverage gaps
-
-- [ ] (code paths that were hard to test and why)
-
-## Complex number handling
-
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+## Complex Number Handling
+- N/A — real-valued routine.

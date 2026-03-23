@@ -1,48 +1,82 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* QR factorization with column pivoting (blocked panel)
+* Computes a step of QR factorization with column pivoting using a.
 *
-* @param {NonNegativeInteger} M - number of rows
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} offset - offset
-* @param {integer} nb - nb
-* @param {integer} kb - kb
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} JPVT - input array
-* @param {integer} strideJPVT - stride length for `JPVT`
-* @param {NonNegativeInteger} offsetJPVT - starting index for `JPVT`
-* @param {Float64Array} TAU - input array
-* @param {integer} strideTAU - stride length for `TAU`
-* @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
-* @param {Float64Array} VN1 - input array
-* @param {integer} strideVN1 - stride length for `VN1`
-* @param {NonNegativeInteger} offsetVN1 - starting index for `VN1`
-* @param {Float64Array} VN2 - input array
-* @param {integer} strideVN2 - stride length for `VN2`
-* @param {NonNegativeInteger} offsetVN2 - starting index for `VN2`
-* @param {Float64Array} AUXV - input array
-* @param {integer} strideAUXV - stride length for `AUXV`
-* @param {NonNegativeInteger} offsetAUXV - starting index for `AUXV`
-* @param {Float64Array} F - output matrix
-* @param {integer} strideF1 - stride of the first dimension of `F`
-* @param {integer} strideF2 - stride of the second dimension of `F`
-* @param {NonNegativeInteger} offsetF - starting index for `F`
+* @param {NonNegativeInteger} M - total rows of A
+* @param {NonNegativeInteger} N - columns of current submatrix
+* @param {NonNegativeInteger} offset - rows already factored
+* @param {NonNegativeInteger} nb - desired block size
+* @param {Complex128Array} A - matrix
+* @param {integer} strideA1 - first dim stride of A (complex elements)
+* @param {integer} strideA2 - second dim stride of A (complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+* @param {Int32Array} JPVT - column permutation
+* @param {integer} strideJPVT - stride for JPVT
+* @param {NonNegativeInteger} offsetJPVT - starting index for JPVT
+* @param {Complex128Array} TAU - reflector scalars
+* @param {integer} strideTAU - stride for TAU (complex elements)
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
+* @param {Float64Array} VN1 - partial column norms (real)
+* @param {integer} strideVN1 - stride for VN1
+* @param {NonNegativeInteger} offsetVN1 - starting index for VN1
+* @param {Float64Array} VN2 - original column norms (real)
+* @param {integer} strideVN2 - stride for VN2
+* @param {NonNegativeInteger} offsetVN2 - starting index for VN2
+* @param {Complex128Array} AUXV - auxiliary vector (length >= NB)
+* @param {integer} strideAUXV - stride for AUXV (complex elements)
+* @param {NonNegativeInteger} offsetAUXV - starting index for AUXV (complex elements)
+* @param {Complex128Array} F - panel update matrix (N-by-NB)
+* @param {integer} strideF1 - first dim stride of F (complex elements)
+* @param {integer} strideF2 - second dim stride of F (complex elements)
+* @param {NonNegativeInteger} offsetF - starting index for F (complex elements)
+* @throws {RangeError} first argument must be a nonnegative integer
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} fourth argument must be a nonnegative integer
+* @returns {integer} kb - actual number of columns factored
 */
-function zlaqps( M, N, offset, nb, kb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF ) { // eslint-disable-line max-len, max-params
-	return base( M, N, offset, nb, kb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF ); // eslint-disable-line max-len
+function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF ) {
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nb < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nb ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+	return base( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF );
 }
 
 

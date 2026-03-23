@@ -16,10 +16,13 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -29,15 +32,22 @@ var base = require( './base.js' );
 * Interchange two complex double-precision vectors.
 *
 * @param {PositiveInteger} N - number of complex elements
-* @param {Float64Array} zx - first input array (interleaved complex)
+* @param {Complex128Array} zx - first complex input vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx`
-* @param {Float64Array} zy - second input array (interleaved complex)
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @param {Complex128Array} zy - second complex input vector
 * @param {integer} strideY - stride for `zy` (in complex elements)
-* @param {NonNegativeInteger} offsetY - starting index for `zy`
-* @returns {Float64Array} `zx`
+* @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements)
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} `zx`
 */
 function zswap( N, zx, strideX, offsetX, zy, strideY, offsetY ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return zx;
+	}
 	return base( N, zx, strideX, offsetX, zy, strideY, offsetY );
 }
 

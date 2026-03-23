@@ -16,15 +16,28 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Copy a complex double-precision vector
+* Copy a complex double-precision vector.
 *
 * @module @stdlib/blas/base/zcopy
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zcopy = require( '@stdlib/blas/base/zcopy' );
+* 
+* var zx = new Complex128Array( [ 1.0, 2.0 ] );
+* var zy = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* zcopy( 2, zx, 1, zy, 1 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zcopy = require( '@stdlib/blas/base/zcopy' );
+* 
+* var x = new Float64Array( [ 1.0, 2.0 ] );
+* var y = new Float64Array( [ 1.0, 2.0 ] );
+* 
+* zcopy.ndarray( 2, x, 1, 0, 2, y, 1, 0, 2 );
 */
 
 // MODULES //

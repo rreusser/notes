@@ -26,12 +26,12 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+* Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 *
-* @param {number} x - x
-* @param {number} y - y
-* @param {number} z - z
-* @returns {number} result
+* @param {number} x - first value
+* @param {number} y - second value
+* @param {number} z - third value
+* @returns {number} sqrt(x^2 + y^2 + z^2)
 */
 function dlapy3( x, y, z ) {
 	return base( x, y, z );

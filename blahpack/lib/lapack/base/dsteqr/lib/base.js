@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-extra-label, no-labels, no-var */
+
 'use strict';
 
 // MODULES //
@@ -75,7 +77,7 @@ var MAXIT = 30;
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
 * @returns {integer} INFO - 0 if successful, >0 if INFO eigenvalues did not converge
 */
-function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK ) {
 	var nmaxit;
 	var ssfmax;
 	var ssfmin;
@@ -153,8 +155,8 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	// each block.
 	l1 = 0; // 0-based
 	// Outer loop (label 10 in Fortran): find unreduced blocks
-	outer: // eslint-disable-line no-labels, no-extra-label
-	while ( l1 < N ) { // eslint-disable-line no-labels
+	outer:
+	while ( l1 < N ) {
 		// Zero out the subdiagonal element below l1 if l1 > 0
 		if ( l1 > 0 ) {
 			e[ offsetE + ( l1 - 1 ) * strideE ] = 0.0;
@@ -184,14 +186,14 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 		// If block is a single element, nothing to do — go to next block
 		if ( lend === l ) {
-			continue outer; // eslint-disable-line no-labels
+			continue outer;
 		}
 
 		// Scale the block if necessary
 		anorm = dlanst( 'max', lend - l + 1, d, strideD, offsetD + l * strideD, e, strideE, offsetE + l * strideE );
 		iscale = 0;
 		if ( anorm === 0.0 ) {
-			continue outer; // eslint-disable-line no-labels
+			continue outer;
 		}
 		if ( anorm > ssfmax ) {
 			iscale = 1;
@@ -459,7 +461,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 	// Check for convergence failure: count nonzero off-diagonal elements
 	if ( jtot >= nmaxit ) {
-		var info = 0; // eslint-disable-line no-var
+		var info = 0;
 		for ( i = 0; i < N - 1; i++ ) {
 			if ( e[ offsetE + i * strideE ] !== 0.0 ) {
 				info += 1;

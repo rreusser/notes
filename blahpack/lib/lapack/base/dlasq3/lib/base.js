@@ -1,5 +1,24 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 // Copyright (c) 2025 Ricky Reusser. Apache-2.0 License.
+
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
@@ -54,7 +73,7 @@ var ZERO = 0.0;
 * @param {number} tau - shift value
 * @returns {Object} object with updated values
 */
-function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, ieee, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau ) { // eslint-disable-line max-len, max-params
+function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, ieee, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau ) {
 	var n0in;
 	var tol2;
 	var ipn4;

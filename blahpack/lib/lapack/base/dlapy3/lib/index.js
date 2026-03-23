@@ -16,15 +16,20 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow
+* Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow.
 *
 * @module @stdlib/lapack/base/dlapy3
 *
 * @example
-* // TODO: Add example
+* var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
+* 
+* dlapy3( 1.0, 1.0, 1.0 );
+*
+* @example
+* var dlapy3 = require( '@stdlib/lapack/base/dlapy3' );
+* 
+* dlapy3.ndarray( 1.0, 1.0, 1.0 );
 */
 
 // MODULES //

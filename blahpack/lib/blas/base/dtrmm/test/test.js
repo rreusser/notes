@@ -1,9 +1,11 @@
 'use strict';
 
 var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dtrmm = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
 var lines = readFileSync( path.join( fixtureDir, 'dtrmm.jsonl' ), 'utf8' ).trim().split( '\n' );
@@ -130,4 +132,54 @@ test( 'dtrmm: unit diag', function t() {
 	setupB3x2( b );
 	dtrmm( 'left', 'upper', 'no-transpose', 'unit', 3, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
 	assertArrayClose( Array.prototype.slice.call( b, 0, tc.b.length ), tc.b, 1e-14, 'B' );
+});
+
+// NDARRAY VALIDATION TESTS //
+
+test( 'ndarray: throws TypeError for invalid side', function t() {
+	var a = new Float64Array( 16 );
+	var b = new Float64Array( 16 );
+	assert.throws( function f() {
+		ndarray( 'invalid', 'upper', 'no-transpose', 'non-unit', 3, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var a = new Float64Array( 16 );
+	var b = new Float64Array( 16 );
+	assert.throws( function f() {
+		ndarray( 'left', 'invalid', 'no-transpose', 'non-unit', 3, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid transa', function t() {
+	var a = new Float64Array( 16 );
+	var b = new Float64Array( 16 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'invalid', 'non-unit', 3, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid diag', function t() {
+	var a = new Float64Array( 16 );
+	var b = new Float64Array( 16 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'invalid', 3, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative M', function t() {
+	var a = new Float64Array( 16 );
+	var b = new Float64Array( 16 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', -1, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var a = new Float64Array( 16 );
+	var b = new Float64Array( 16 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', 3, -1, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
+	}, RangeError );
 });

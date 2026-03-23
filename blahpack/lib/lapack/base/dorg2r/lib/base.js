@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -58,7 +60,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {integer} status code (0 = success)
 */
-function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var ia;
 	var i;
 	var j;

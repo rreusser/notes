@@ -16,15 +16,25 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
 * Perform a series of row interchanges on a matrix A using pivot indices stored in IPIV.
 *
 * @module @stdlib/lapack/base/dlaswp
 *
 * @example
-* // TODO: Add example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var Int32Array = require( '@stdlib/array/int32' );
+* var dlaswp = require( '@stdlib/lapack/base/dlaswp' );
+* 
+* var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var IPIV = new Int32Array( 2 );
+* 
+* dlaswp( 'row-major', 2, A, 2, 0, 1, IPIV, 1, 2 );
+*
+* @example
+* var dlaswp = require( '@stdlib/lapack/base/dlaswp' );
+* 
+* dlaswp.ndarray( 2, 1.0, 1, 2, 0, 0, 1, 1.0, 1, 0, 1.0 );
 */
 
 // MODULES //

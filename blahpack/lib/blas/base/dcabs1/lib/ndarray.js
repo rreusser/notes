@@ -26,10 +26,10 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Compute the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
+* Computes the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
 *
-* @param {Complex128} z - z
-* @returns {number} result
+* @param {Float64Array} z - complex number [real, imag]
+* @returns {number} |Re(z)| + |Im(z)|
 */
 function dcabs1( z ) {
 	return base( z );

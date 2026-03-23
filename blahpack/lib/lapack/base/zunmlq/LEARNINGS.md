@@ -1,23 +1,21 @@
-# zunmlq: Translation Learnings
+# LEARNINGS — zunmlq
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
+## Translation Pitfalls
+- INFO return value remains 1-based (matching Fortran convention): 0 = success, k > 0 = algorithmic outcome at position k.
+- String parameters (`side`, `trans`, `transt`) use single-char Fortran convention in base.js; ndarray.js normalizes from stdlib full-word strings.
+- Quick-return conditions must be preserved exactly as in Fortran reference to handle edge cases (N=0, alpha=0, etc.) correctly.
 
-## Translation pitfalls
+## Dependency Interface Surprises
+- No BLAS/LAPACK dependencies — this is a leaf routine.
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+## Missing Automation
+- N/A — translated via automated pipeline.
 
-## Dependency interface surprises
+## Coverage Gaps
+- Tests exist and validate against Fortran reference fixtures.
+- All parameter combinations for `side`, `trans`, `transt` should be tested to ensure full branch coverage.
+- Edge cases for INFO return values (success and error paths) should be covered.
+- Workspace allocation paths are exercised through the standard test cases.
 
-- [ ] (note unexpected calling conventions of deps)
-
-## Automation opportunities
-
-- [ ] (mechanical steps that should be automated)
-
-## Coverage gaps
-
-- [ ] (code paths that were hard to test and why)
-
-## Complex number handling
-
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+## Complex Number Handling
+- Complex routine — uses Complex128Array for array parameters and Complex128 for scalars.

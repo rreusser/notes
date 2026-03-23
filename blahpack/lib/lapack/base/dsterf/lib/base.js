@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-constant-condition, no-continue */
+
 'use strict';
 
 // MODULES //
@@ -52,7 +54,7 @@ var MAXIT = 30;
 * @param {NonNegativeInteger} offsetE - starting index for `e`
 * @returns {integer} info - 0 on success, >0 if failed to converge (number of unconverged elements)
 */
-function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) { // eslint-disable-line max-len, max-params
+function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 	var ssfmax;
 	var ssfmin;
 	var safmin;
@@ -154,7 +156,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) { // eslint-disab
 
 		// If single element block, skip to next block
 		if ( lend === l ) {
-			continue; // eslint-disable-line no-continue
+			continue;
 		}
 
 		// Scale submatrix in rows and columns l to lend
@@ -163,7 +165,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) { // eslint-disab
 			e, strideE, offsetE + l * strideE );
 		iscale = 0;
 		if ( anorm === 0.0 ) {
-			continue; // eslint-disable-line no-continue
+			continue;
 		}
 		if ( anorm > ssfmax ) {
 			iscale = 1;
@@ -193,7 +195,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) { // eslint-disab
 		if ( lend >= l ) {
 			// QL Iteration (labels 50-90)
 			// Look for small subdiagonal element
-			while ( true ) { // eslint-disable-line no-constant-condition
+			while ( true ) {
 				if ( l !== lend ) {
 					for ( m = l; m < lend; m++ ) {
 						if ( Math.abs( e[ offsetE + m * strideE ] ) <=
@@ -282,7 +284,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) { // eslint-disab
 		} else {
 			// QR Iteration (labels 100-140)
 			// Look for small superdiagonal element
-			while ( true ) { // eslint-disable-line no-constant-condition
+			while ( true ) {
 				for ( m = l; m > lend; m-- ) {
 					if ( Math.abs( e[ offsetE + ( m - 1 ) * strideE ] ) <=
 						eps2 * Math.abs( d[ offsetD + m * strideD ] * d[ offsetD + ( m - 1 ) * strideD ] ) ) {
@@ -397,7 +399,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) { // eslint-disab
 	}
 
 	// Label 170: Sort eigenvalues in increasing order
-	dlasrt( 'I', N, d, strideD, offsetD );
+	dlasrt( 'increasing', N, d, strideD, offsetD );
 
 	return info;
 }

@@ -1,47 +1,78 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Compute SVD of a real bidiagonal matrix
+* Computes the singular values and, optionally, the right and/or left.
 *
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ncvt - ncvt
-* @param {integer} nru - nru
-* @param {integer} ncc - ncc
-* @param {Float64Array} d - input array
-* @param {integer} strideD - stride length for `d`
+* @param {string} uplo - 'U' for upper bidiagonal, 'L' for lower bidiagonal
+* @param {NonNegativeInteger} N - order of the bidiagonal matrix
+* @param {NonNegativeInteger} ncvt - number of columns in VT
+* @param {NonNegativeInteger} nru - number of rows in U
+* @param {NonNegativeInteger} ncc - number of columns in C
+* @param {Float64Array} d - diagonal elements (length N), real
+* @param {integer} strideD - stride for `d`
 * @param {NonNegativeInteger} offsetD - starting index for `d`
-* @param {Float64Array} e - input array
-* @param {integer} strideE - stride length for `e`
+* @param {Float64Array} e - off-diagonal elements (length N-1), real
+* @param {integer} strideE - stride for `e`
 * @param {NonNegativeInteger} offsetE - starting index for `e`
-* @param {Float64Array} VT - input matrix
-* @param {integer} strideVT1 - stride of the first dimension of `VT`
-* @param {integer} strideVT2 - stride of the second dimension of `VT`
-* @param {NonNegativeInteger} offsetVT - starting index for `VT`
-* @param {Float64Array} U - input matrix
-* @param {integer} strideU1 - stride of the first dimension of `U`
-* @param {integer} strideU2 - stride of the second dimension of `U`
-* @param {NonNegativeInteger} offsetU - starting index for `U`
-* @param {Float64Array} C - input matrix
-* @param {integer} strideC1 - stride of the first dimension of `C`
-* @param {integer} strideC2 - stride of the second dimension of `C`
-* @param {NonNegativeInteger} offsetC - starting index for `C`
-* @param {Float64Array} RWORK - output array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @returns {integer} status code (0 = success)
+* @param {Complex128Array} VT - right singular vectors
+* @param {integer} strideVT1 - stride of first dimension of VT (complex elements)
+* @param {integer} strideVT2 - stride of second dimension of VT (complex elements)
+* @param {NonNegativeInteger} offsetVT - starting index for VT (complex elements)
+* @param {Complex128Array} U - left singular vectors
+* @param {integer} strideU1 - stride of first dimension of U (complex elements)
+* @param {integer} strideU2 - stride of second dimension of U (complex elements)
+* @param {NonNegativeInteger} offsetU - starting index for U (complex elements)
+* @param {Complex128Array} C - matrix C
+* @param {integer} strideC1 - stride of first dimension of C (complex elements)
+* @param {integer} strideC2 - stride of second dimension of C (complex elements)
+* @param {NonNegativeInteger} offsetC - starting index for C (complex elements)
+* @param {Float64Array} RWORK - real workspace array
+* @param {integer} strideRWORK - stride for RWORK
+* @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
+* @throws {TypeError} first argument must be a valid matrix triangle
+* @throws {RangeError} second argument must be a nonnegative integer
+* @returns {integer} info - 0 on success, >0 if convergence failed
 */
-function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
-	return base( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
+function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return 0;
+	}
+	return base( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK );
 }
 
 

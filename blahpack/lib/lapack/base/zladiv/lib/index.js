@@ -16,15 +16,20 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Perform complex division using dladiv
+* Perform complex division using dladiv.
 *
 * @module @stdlib/lapack/base/zladiv
 *
 * @example
-* // TODO: Add example
+* var zladiv = require( '@stdlib/lapack/base/zladiv' );
+* 
+* zladiv( 1.0, 1.0, 1.0 );
+*
+* @example
+* var zladiv = require( '@stdlib/lapack/base/zladiv' );
+* 
+* zladiv.ndarray( 1.0, 1.0 );
 */
 
 // MODULES //

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -59,7 +61,7 @@ var ZERO = new Complex128( 0.0, 0.0 );
 * @param {integer} strideWORK - stride for WORK (in complex elements)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 */
-function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var applyLeft;
 	var negTau;
 	var lastv;

@@ -16,21 +16,60 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Form the triangular factor T of a complex block reflector H of order N,.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} direct - TODO
+* @param {string} storev - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} K - TODO
+* @param {Complex128Array} V - input matrix
+* @param {PositiveInteger} LDV - leading dimension of `V`
+* @param {Complex128Array} TAU - input array
+* @param {integer} strideTAU - `TAU` stride length
+* @param {Complex128Array} T - input matrix
+* @param {PositiveInteger} LDT - leading dimension of `T`
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zlarft() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlarft( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT ) {
+	var sv1;
+	var sv2;
+	var st1;
+	var st2;
+	var ot;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sv1 = 1;
+		sv2 = LDV;
+		st1 = 1;
+		st2 = LDT;
+	} else {
+		sv1 = LDV;
+		sv2 = 1;
+		st1 = LDT;
+		st2 = 1;
+	}
+	ot = stride2offset( N, strideTAU );
+	return base( direct, storev, N, K, V, sv1, sv2, 0, TAU, strideTAU, ot, T, st1, st2, 0 );
 }
 
 

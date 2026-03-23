@@ -9,6 +9,7 @@ var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zherk = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -159,4 +160,38 @@ test( 'zherk: n_zero quick return', function t() {
 	var C = new Complex128Array( 1 );
 	var result = zherk( 'upper', 'no-transpose', 0, 2, 1.0, A, 1, 1, 0, 1.0, C, 1, 1, 0 );
 	assert.ok( result === C );
+});
+
+// NDARRAY VALIDATION TESTS //
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var A = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'invalid', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid trans', function t() {
+	var A = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'invalid', 3, 2, 1.0, A, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var A = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', -1, 2, 1.0, A, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for negative K', function t() {
+	var A = new Complex128Array( 6 );
+	var C = new Complex128Array( 9 );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 3, -1, 1.0, A, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	}, RangeError );
 });

@@ -1,29 +1,55 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Applies a real plane rotation to a pair of complex double-precision vectors.
+* Applies a real plane rotation to a pair of complex double-precision vectors:.
 *
 * @param {NonNegativeInteger} N - number of complex elements
-* @param {Float64Array} zx - first input/output array (interleaved complex)
+* @param {Complex128Array} zx - first complex input/output vector
 * @param {integer} strideX - stride for `zx` (in complex elements)
-* @param {NonNegativeInteger} offsetX - starting index for `zx`
-* @param {Float64Array} zy - second input/output array (interleaved complex)
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @param {Complex128Array} zy - second complex input/output vector
 * @param {integer} strideY - stride for `zy` (in complex elements)
-* @param {NonNegativeInteger} offsetY - starting index for `zy`
+* @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements)
 * @param {number} c - cosine of rotation (real)
 * @param {number} s - sine of rotation (real)
-* @returns {Float64Array} `zx`
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} `zx`
 */
 function zdrot( N, zx, strideX, offsetX, zy, strideY, offsetY, c, s ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return zx;
+	}
 	return base( N, zx, strideX, offsetX, zy, strideY, offsetY, c, s );
 }
 

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-var */
+
 'use strict';
 
 // MODULES //
@@ -52,7 +54,7 @@ var DEFAULT_NB = 32;
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK` (in complex elements)
 * @returns {integer} status code (0 = success)
 */
-function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var ldwork;
 	var nbmin;
 	var iws;
@@ -94,7 +96,7 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		strideWORK = 1;
 	}
 	T = WORK;
-	var offsetT = offsetWORK + iws; // eslint-disable-line no-var
+	var offsetT = offsetWORK + iws;
 	ldwork = N;
 
 	if ( nb >= nbmin && nb < K && nx < K ) {

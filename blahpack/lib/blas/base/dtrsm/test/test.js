@@ -7,6 +7,7 @@ var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dtrsm = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -188,4 +189,54 @@ test( 'dtrsm: right, lower, transpose with alpha=2', function t() {
 	var B = new Float64Array( [ 6, 9, 10, 25 ] );
 	dtrsm( 'right', 'lower', 'transpose', 'non-unit', 2, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.ok( B[ 0 ] !== 6.0, 'B should be modified' );
+});
+
+// NDARRAY VALIDATION TESTS //
+
+test( 'ndarray: throws TypeError for invalid side', function t() {
+	var A = new Float64Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function f() {
+		ndarray( 'invalid', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var A = new Float64Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function f() {
+		ndarray( 'left', 'invalid', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid transa', function t() {
+	var A = new Float64Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'invalid', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid diag', function t() {
+	var A = new Float64Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'invalid', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative M', function t() {
+	var A = new Float64Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', -1, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var A = new Float64Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', 2, -1, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
+	}, RangeError );
 });

@@ -1,56 +1,94 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Implement the single-shift QZ method for computing generalized eigenvalues of a complex matrix pair in Hessenberg-triangular form.
+* Compute the eigenvalues of a complex matrix pair (H, T), where H is.
 *
-* @param {string} job - specifies the operation type
-* @param {string} compq - specifies the operation type
-* @param {string} compz - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ilo - ilo
-* @param {integer} ihi - ihi
-* @param {Float64Array} H - input matrix
-* @param {integer} strideH1 - stride of the first dimension of `H`
-* @param {integer} strideH2 - stride of the second dimension of `H`
-* @param {NonNegativeInteger} offsetH - starting index for `H`
-* @param {Float64Array} T - input matrix
-* @param {integer} strideT1 - stride of the first dimension of `T`
-* @param {integer} strideT2 - stride of the second dimension of `T`
-* @param {NonNegativeInteger} offsetT - starting index for `T`
-* @param {Float64Array} ALPHA - input array
-* @param {integer} strideALPHA - stride length for `ALPHA`
-* @param {NonNegativeInteger} offsetALPHA - starting index for `ALPHA`
-* @param {Float64Array} BETA - input array
-* @param {integer} strideBETA - stride length for `BETA`
-* @param {NonNegativeInteger} offsetBETA - starting index for `BETA`
-* @param {Float64Array} Q - input matrix
-* @param {integer} strideQ1 - stride of the first dimension of `Q`
-* @param {integer} strideQ2 - stride of the second dimension of `Q`
-* @param {NonNegativeInteger} offsetQ - starting index for `Q`
-* @param {Float64Array} Z - input matrix
-* @param {integer} strideZ1 - stride of the first dimension of `Z`
-* @param {integer} strideZ2 - stride of the second dimension of `Z`
-* @param {NonNegativeInteger} offsetZ - starting index for `Z`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @param {Float64Array} RWORK - output array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @returns {integer} status code (0 = success)
+* @param {string} job - 'E': eigenvalues only; 'S': Schur form
+* @param {string} compq - 'N': no Q; 'I': initialize Q to I; 'V': accumulate into Q
+* @param {string} compz - 'N': no Z; 'I': initialize Z to I; 'V': accumulate into Z
+* @param {NonNegativeInteger} N - order of matrices H, T, Q, Z
+* @param {integer} ilo - start of active block (1-based)
+* @param {integer} ihi - end of active block (1-based)
+* @param {Complex128Array} H - upper Hessenberg matrix
+* @param {integer} strideH1 - row stride for H (complex elements)
+* @param {integer} strideH2 - column stride for H (complex elements)
+* @param {NonNegativeInteger} offsetH - starting index for H (complex elements)
+* @param {Complex128Array} T - upper triangular matrix
+* @param {integer} strideT1 - row stride for T (complex elements)
+* @param {integer} strideT2 - column stride for T (complex elements)
+* @param {NonNegativeInteger} offsetT - starting index for T (complex elements)
+* @param {Complex128Array} ALPHA - output eigenvalue numerators
+* @param {integer} strideALPHA - stride for ALPHA (complex elements)
+* @param {NonNegativeInteger} offsetALPHA - starting index for ALPHA (complex elements)
+* @param {Complex128Array} BETA - output eigenvalue denominators
+* @param {integer} strideBETA - stride for BETA (complex elements)
+* @param {NonNegativeInteger} offsetBETA - starting index for BETA (complex elements)
+* @param {Complex128Array} Q - left Schur vectors
+* @param {integer} strideQ1 - row stride for Q (complex elements)
+* @param {integer} strideQ2 - column stride for Q (complex elements)
+* @param {NonNegativeInteger} offsetQ - starting index for Q (complex elements)
+* @param {Complex128Array} Z - right Schur vectors
+* @param {integer} strideZ1 - row stride for Z (complex elements)
+* @param {integer} strideZ2 - column stride for Z (complex elements)
+* @param {NonNegativeInteger} offsetZ - starting index for Z (complex elements)
+* @param {Complex128Array} WORK - workspace
+* @param {integer} strideWORK - stride for WORK (complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+* @param {integer} lwork - workspace size (in complex elements); -1 for query
+* @param {Float64Array} RWORK - real workspace (length >= N)
+* @param {integer} strideRWORK - stride for RWORK
+* @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
+* @throws {TypeError} first argument must be a valid job type
+* @throws {TypeError} second argument must be a valid computation flag
+* @throws {TypeError} third argument must be a valid computation flag
+* @throws {RangeError} fourth argument must be a nonnegative integer
+* @returns {integer} INFO: 0=success, 1..N=QZ did not converge, N+1..2N=shift failed
 */
-function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
-	return base( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
+function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) {
+	if ( job !== 'none' && job !== 'permute' && job !== 'scale' && job !== 'both' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid job type. Value: `%s`.', job ) );
+	}
+	if ( compq !== 'none' && compq !== 'initialize' && compq !== 'compute' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid computation flag. Value: `%s`.', compq ) );
+	}
+	if ( compz !== 'none' && compz !== 'initialize' && compz !== 'compute' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid computation flag. Value: `%s`.', compz ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return 0;
+	}
+	return base( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK );
 }
 
 

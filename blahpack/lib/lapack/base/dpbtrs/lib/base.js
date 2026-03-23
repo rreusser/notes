@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -45,7 +47,7 @@ var dtbsv = require( '../../../../blas/base/dtbsv/lib/base.js' );
 * @param {NonNegativeInteger} offsetB - starting index for B
 * @returns {integer} info - 0 if successful
 */
-function dpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
+function dpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB ) {
 	var upper;
 	var j;
 

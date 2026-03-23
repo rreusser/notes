@@ -24,6 +24,7 @@ var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dpotf2 = require( './../lib' );
 var dpotf2base = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
@@ -141,4 +142,18 @@ test( 'dpotf2: upper with lowercase u', function t() {
 	var info = dpotf2base( 'upper', 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A, tc.a, 'upper_3x3_lowercase' );
+});
+
+// ndarray validation tests
+
+test( 'dpotf2: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, new Float64Array( 9 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'dpotf2: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, new Float64Array( 9 ), 1, 3, 0 );
+	}, RangeError );
 });

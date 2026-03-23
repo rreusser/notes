@@ -1,3 +1,20 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 // Copyright (c) 2025 Ricky Reusser. Apache-2.0 License.
 
@@ -105,7 +122,7 @@ function sign( a, b ) {
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {integer} info - 0 on success, >0 if convergence failed
 */
-function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var maxitdivn;
 	var iterdivn;
 	var rotate;
@@ -280,8 +297,8 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	m = N - 1; // 0-based (Fortran M starts at N, we use N-1)
 
 	// Outer loop (label 60 in Fortran)
-	/* eslint-disable no-labels, no-label-var */
-	outer: // eslint-disable-line no-unused-labels
+/* eslint-disable max-len, max-params, no-label-var, no-labels, no-unused-labels */
+	outer:
 	while ( true ) {
 		// Check if the matrix is split
 		if ( m <= 0 ) {
@@ -767,7 +784,7 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 * @param {integer} strideC2 - column stride
 * @param {NonNegativeInteger} offsetC - offset for C
 */
-function sortSingularValues( N, d, strideD, offsetD, ncvt, VT, strideVT1, strideVT2, offsetVT, nru, U, strideU1, strideU2, offsetU, ncc, C, strideC1, strideC2, offsetC ) { // eslint-disable-line max-len, max-params
+function sortSingularValues( N, d, strideD, offsetD, ncvt, VT, strideVT1, strideVT2, offsetVT, nru, U, strideU1, strideU2, offsetU, ncc, C, strideC1, strideC2, offsetC ) {
 	var smin;
 	var isub;
 	var i;

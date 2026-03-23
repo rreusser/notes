@@ -28,23 +28,23 @@ test( 'dlasrt: attached to the main export is an `ndarray` method', function t()
 	assert.strictEqual( typeof dlasrt.ndarray, 'function' );
 });
 
-test( 'dlasrt.ndarray sorts in increasing order (id=I)', function t() {
+test( 'dlasrt.ndarray sorts in increasing order', function t() {
 	var expected;
 	var d;
 
 	d = new Float64Array( [ 5.0, 3.0, 1.0, 4.0, 2.0 ] );
 	expected = [ 1.0, 2.0, 3.0, 4.0, 5.0 ];
-	dlasrt.ndarray( 'I', 5, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 5, d, 1, 0 );
 	assertArrayEqual( d, expected, 'increasing' );
 });
 
-test( 'dlasrt.ndarray sorts in decreasing order (id=D)', function t() {
+test( 'dlasrt.ndarray sorts in decreasing order', function t() {
 	var expected;
 	var d;
 
 	d = new Float64Array( [ 5.0, 3.0, 1.0, 4.0, 2.0 ] );
 	expected = [ 5.0, 4.0, 3.0, 2.0, 1.0 ];
-	dlasrt.ndarray( 'D', 5, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 5, d, 1, 0 );
 	assertArrayEqual( d, expected, 'decreasing' );
 });
 
@@ -53,26 +53,26 @@ test( 'dlasrt.ndarray returns 0 on success', function t() {
 	var d;
 
 	d = new Float64Array( [ 3.0, 1.0, 2.0 ] );
-	info = dlasrt.ndarray( 'I', 3, d, 1, 0 );
+	info = dlasrt.ndarray( 'increasing', 3, d, 1, 0 );
 	assert.equal( info, 0, 'returns 0 on success' );
 });
 
-test( 'dlasrt.ndarray returns -1 for invalid id', function t() {
-	var info;
+test( 'dlasrt.ndarray throws for invalid id', function t() {
 	var d;
 
 	d = new Float64Array( [ 3.0, 1.0, 2.0 ] );
-	info = dlasrt.ndarray( 'X', 3, d, 1, 0 );
-	assert.equal( info, -1, 'returns -1 for invalid id' );
+	assert.throws( function throws() {
+		dlasrt.ndarray( 'X', 3, d, 1, 0 );
+	}, TypeError, 'throws for invalid id' );
 });
 
-test( 'dlasrt.ndarray returns -2 for negative N', function t() {
-	var info;
+test( 'dlasrt.ndarray throws for negative N', function t() {
 	var d;
 
 	d = new Float64Array( [ 3.0, 1.0, 2.0 ] );
-	info = dlasrt.ndarray( 'I', -1, d, 1, 0 );
-	assert.equal( info, -2, 'returns -2 for negative N' );
+	assert.throws( function throws() {
+		dlasrt.ndarray( 'increasing', -1, d, 1, 0 );
+	}, RangeError, 'throws for negative N' );
 });
 
 test( 'dlasrt.ndarray handles N=0 (quick return)', function t() {
@@ -80,7 +80,7 @@ test( 'dlasrt.ndarray handles N=0 (quick return)', function t() {
 	var d;
 
 	d = new Float64Array( [ 3.0, 1.0, 2.0 ] );
-	info = dlasrt.ndarray( 'I', 0, d, 1, 0 );
+	info = dlasrt.ndarray( 'increasing', 0, d, 1, 0 );
 	assert.equal( info, 0, 'returns 0 for N=0' );
 	// Array should be unchanged:
 	assertArrayEqual( d, [ 3.0, 1.0, 2.0 ], 'unchanged for N=0' );
@@ -91,7 +91,7 @@ test( 'dlasrt.ndarray handles N=1 (quick return)', function t() {
 	var d;
 
 	d = new Float64Array( [ 42.0 ] );
-	info = dlasrt.ndarray( 'I', 1, d, 1, 0 );
+	info = dlasrt.ndarray( 'increasing', 1, d, 1, 0 );
 	assert.equal( info, 0, 'returns 0 for N=1' );
 	assertArrayEqual( d, [ 42.0 ], 'unchanged for N=1' );
 });
@@ -102,7 +102,7 @@ test( 'dlasrt.ndarray handles already sorted array (increasing)', function t() {
 
 	d = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	expected = [ 1.0, 2.0, 3.0, 4.0, 5.0 ];
-	dlasrt.ndarray( 'I', 5, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 5, d, 1, 0 );
 	assertArrayEqual( d, expected, 'already sorted increasing' );
 });
 
@@ -112,7 +112,7 @@ test( 'dlasrt.ndarray handles already sorted array (decreasing)', function t() {
 
 	d = new Float64Array( [ 5.0, 4.0, 3.0, 2.0, 1.0 ] );
 	expected = [ 5.0, 4.0, 3.0, 2.0, 1.0 ];
-	dlasrt.ndarray( 'D', 5, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 5, d, 1, 0 );
 	assertArrayEqual( d, expected, 'already sorted decreasing' );
 });
 
@@ -122,7 +122,7 @@ test( 'dlasrt.ndarray handles reverse sorted (increasing sort)', function t() {
 
 	d = new Float64Array( [ 5.0, 4.0, 3.0, 2.0, 1.0 ] );
 	expected = [ 1.0, 2.0, 3.0, 4.0, 5.0 ];
-	dlasrt.ndarray( 'I', 5, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 5, d, 1, 0 );
 	assertArrayEqual( d, expected, 'reverse sorted increasing' );
 });
 
@@ -132,7 +132,7 @@ test( 'dlasrt.ndarray handles reverse sorted (decreasing sort)', function t() {
 
 	d = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	expected = [ 5.0, 4.0, 3.0, 2.0, 1.0 ];
-	dlasrt.ndarray( 'D', 5, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 5, d, 1, 0 );
 	assertArrayEqual( d, expected, 'reverse sorted decreasing' );
 });
 
@@ -142,7 +142,7 @@ test( 'dlasrt.ndarray handles duplicate values (increasing)', function t() {
 
 	d = new Float64Array( [ 3.0, 1.0, 2.0, 1.0, 3.0, 2.0 ] );
 	expected = [ 1.0, 1.0, 2.0, 2.0, 3.0, 3.0 ];
-	dlasrt.ndarray( 'I', 6, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 6, d, 1, 0 );
 	assertArrayEqual( d, expected, 'duplicates increasing' );
 });
 
@@ -152,7 +152,7 @@ test( 'dlasrt.ndarray handles duplicate values (decreasing)', function t() {
 
 	d = new Float64Array( [ 3.0, 1.0, 2.0, 1.0, 3.0, 2.0 ] );
 	expected = [ 3.0, 3.0, 2.0, 2.0, 1.0, 1.0 ];
-	dlasrt.ndarray( 'D', 6, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 6, d, 1, 0 );
 	assertArrayEqual( d, expected, 'duplicates decreasing' );
 });
 
@@ -162,11 +162,11 @@ test( 'dlasrt.ndarray handles all equal values', function t() {
 
 	d = new Float64Array( [ 7.0, 7.0, 7.0, 7.0 ] );
 	expected = [ 7.0, 7.0, 7.0, 7.0 ];
-	dlasrt.ndarray( 'I', 4, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 4, d, 1, 0 );
 	assertArrayEqual( d, expected, 'all equal increasing' );
 
 	d = new Float64Array( [ 7.0, 7.0, 7.0, 7.0 ] );
-	dlasrt.ndarray( 'D', 4, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 4, d, 1, 0 );
 	assertArrayEqual( d, expected, 'all equal decreasing' );
 });
 
@@ -174,11 +174,11 @@ test( 'dlasrt.ndarray handles N=2', function t() {
 	var d;
 
 	d = new Float64Array( [ 9.0, 1.0 ] );
-	dlasrt.ndarray( 'I', 2, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 2, d, 1, 0 );
 	assertArrayEqual( d, [ 1.0, 9.0 ], 'N=2 increasing' );
 
 	d = new Float64Array( [ 1.0, 9.0 ] );
-	dlasrt.ndarray( 'D', 2, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 2, d, 1, 0 );
 	assertArrayEqual( d, [ 9.0, 1.0 ], 'N=2 decreasing' );
 });
 
@@ -189,7 +189,7 @@ test( 'dlasrt.ndarray supports offset parameter', function t() {
 	// Sort only elements starting at index 2
 	d = new Float64Array( [ 99.0, 88.0, 5.0, 3.0, 1.0, 4.0, 2.0 ] );
 	expected = [ 99.0, 88.0, 1.0, 2.0, 3.0, 4.0, 5.0 ];
-	dlasrt.ndarray( 'I', 5, d, 1, 2 );
+	dlasrt.ndarray( 'increasing', 5, d, 1, 2 );
 	assertArrayEqual( d, expected, 'offset=2 increasing' );
 });
 
@@ -200,7 +200,7 @@ test( 'dlasrt.ndarray supports stride parameter', function t() {
 	// Sort every other element: indices 0, 2, 4
 	d = new Float64Array( [ 5.0, 99.0, 1.0, 88.0, 3.0, 77.0 ] );
 	expected = [ 1.0, 99.0, 3.0, 88.0, 5.0, 77.0 ];
-	dlasrt.ndarray( 'I', 3, d, 2, 0 );
+	dlasrt.ndarray( 'increasing', 3, d, 2, 0 );
 	assertArrayEqual( d, expected, 'stride=2 increasing' );
 });
 
@@ -211,7 +211,7 @@ test( 'dlasrt.ndarray supports stride and offset together', function t() {
 	// Sort every other element starting at index 1: indices 1, 3, 5
 	d = new Float64Array( [ 99.0, 5.0, 88.0, 1.0, 77.0, 3.0 ] );
 	expected = [ 99.0, 1.0, 88.0, 3.0, 77.0, 5.0 ];
-	dlasrt.ndarray( 'I', 3, d, 2, 1 );
+	dlasrt.ndarray( 'increasing', 3, d, 2, 1 );
 	assertArrayEqual( d, expected, 'stride=2 offset=1 increasing' );
 });
 
@@ -221,7 +221,7 @@ test( 'dlasrt.ndarray handles negative values', function t() {
 
 	d = new Float64Array( [ -1.0, -5.0, -3.0, -2.0, -4.0 ] );
 	expected = [ -5.0, -4.0, -3.0, -2.0, -1.0 ];
-	dlasrt.ndarray( 'I', 5, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 5, d, 1, 0 );
 	assertArrayEqual( d, expected, 'negatives increasing' );
 });
 
@@ -231,7 +231,7 @@ test( 'dlasrt.ndarray handles mixed positive and negative values', function t() 
 
 	d = new Float64Array( [ 3.0, -1.0, 0.0, -5.0, 2.0, -3.0 ] );
 	expected = [ -5.0, -3.0, -1.0, 0.0, 2.0, 3.0 ];
-	dlasrt.ndarray( 'I', 6, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 6, d, 1, 0 );
 	assertArrayEqual( d, expected, 'mixed increasing' );
 });
 
@@ -245,7 +245,7 @@ test( 'dlasrt.ndarray handles large array (triggers quicksort, N > 20)', functio
 	for ( i = 0; i < 100; i++ ) {
 		d[ i ] = 100.0 - i;
 	}
-	dlasrt.ndarray( 'I', 100, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 100, d, 1, 0 );
 
 	// Verify sorted in increasing order
 	sorted = true;
@@ -270,7 +270,7 @@ test( 'dlasrt.ndarray handles large array decreasing sort', function t() {
 	for ( i = 0; i < 100; i++ ) {
 		d[ i ] = i + 1.0;
 	}
-	dlasrt.ndarray( 'D', 100, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 100, d, 1, 0 );
 
 	// Verify sorted in decreasing order
 	sorted = true;
@@ -299,7 +299,7 @@ test( 'dlasrt.ndarray handles large random array', function t() {
 		d[ i ] = ( seed / 0x7fffffff ) * 200.0 - 100.0;
 	}
 
-	dlasrt.ndarray( 'I', 200, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 200, d, 1, 0 );
 
 	sorted = true;
 	for ( i = 1; i < 200; i++ ) {
@@ -324,7 +324,7 @@ test( 'dlasrt.ndarray handles large random array (decreasing)', function t() {
 		d[ i ] = ( seed / 0x7fffffff ) * 200.0 - 100.0;
 	}
 
-	dlasrt.ndarray( 'D', 200, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 200, d, 1, 0 );
 
 	sorted = true;
 	for ( i = 1; i < 200; i++ ) {
@@ -340,21 +340,30 @@ test( 'dlasrt.ndarray only sorts first N elements', function t() {
 	var d;
 
 	d = new Float64Array( [ 5.0, 3.0, 1.0, 4.0, 2.0 ] );
-	dlasrt.ndarray( 'I', 3, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 3, d, 1, 0 );
 	// First 3 elements sorted, rest unchanged
 	assertArrayEqual( d, [ 1.0, 3.0, 5.0, 4.0, 2.0 ], 'partial sort N=3' );
 });
 
-test( 'dlasrt.ndarray accepts lowercase id', function t() {
+test( 'dlasrt.ndarray rejects old single-char id values', function t() {
 	var d;
 
 	d = new Float64Array( [ 3.0, 1.0, 2.0 ] );
-	dlasrt.ndarray( 'i', 3, d, 1, 0 );
-	assertArrayEqual( d, [ 1.0, 2.0, 3.0 ], 'lowercase i' );
+	assert.throws( function throws() {
+		dlasrt.ndarray( 'I', 3, d, 1, 0 );
+	}, TypeError, 'rejects uppercase I' );
 
-	d = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-	dlasrt.ndarray( 'd', 3, d, 1, 0 );
-	assertArrayEqual( d, [ 3.0, 2.0, 1.0 ], 'lowercase d' );
+	assert.throws( function throws() {
+		dlasrt.ndarray( 'D', 3, d, 1, 0 );
+	}, TypeError, 'rejects uppercase D' );
+
+	assert.throws( function throws() {
+		dlasrt.ndarray( 'i', 3, d, 1, 0 );
+	}, TypeError, 'rejects lowercase i' );
+
+	assert.throws( function throws() {
+		dlasrt.ndarray( 'd', 3, d, 1, 0 );
+	}, TypeError, 'rejects lowercase d' );
 });
 
 test( 'dlasrt.ndarray handles large array with many duplicates', function t() {
@@ -367,7 +376,7 @@ test( 'dlasrt.ndarray handles large array with many duplicates', function t() {
 		d[ i ] = ( i % 3 ) * 1.0; // values cycle: 0, 1, 2, 0, 1, 2, ...
 	}
 
-	dlasrt.ndarray( 'I', 50, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 50, d, 1, 0 );
 
 	sorted = true;
 	for ( i = 1; i < 50; i++ ) {
@@ -389,7 +398,7 @@ test( 'dlasrt.ndarray handles large array with many duplicates (decreasing)', fu
 		d[ i ] = ( i % 3 ) * 1.0;
 	}
 
-	dlasrt.ndarray( 'D', 50, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 50, d, 1, 0 );
 
 	sorted = true;
 	for ( i = 1; i < 50; i++ ) {
@@ -413,7 +422,7 @@ test( 'dlasrt.ndarray handles exactly SELECT+1 (21) elements', function t() {
 		d[ i ] = 22.0 - i;
 	}
 
-	dlasrt.ndarray( 'I', 22, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 22, d, 1, 0 );
 
 	sorted = true;
 	for ( i = 1; i < 22; i++ ) {
@@ -438,7 +447,7 @@ test( 'dlasrt.ndarray handles exactly 21 elements (boundary for quicksort)', fun
 		d[ i ] = 21.0 - i;
 	}
 
-	dlasrt.ndarray( 'I', 21, d, 1, 0 );
+	dlasrt.ndarray( 'increasing', 21, d, 1, 0 );
 
 	sorted = true;
 	for ( i = 1; i < 21; i++ ) {
@@ -460,7 +469,7 @@ test( 'dlasrt.ndarray handles exactly 21 elements decreasing', function t() {
 		d[ i ] = i + 1.0;
 	}
 
-	dlasrt.ndarray( 'D', 21, d, 1, 0 );
+	dlasrt.ndarray( 'decreasing', 21, d, 1, 0 );
 
 	sorted = true;
 	for ( i = 1; i < 21; i++ ) {

@@ -1,20 +1,73 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} compz - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {Float64Array} d - input array
+* @param {integer} strideD - `d` stride length
+* @param {Float64Array} e - input array
+* @param {integer} strideE - `e` stride length
+* @param {Complex128Array} Z - input matrix
+* @param {PositiveInteger} LDZ - leading dimension of `Z`
+* @param {Float64Array} WORK - input array
+* @param {integer} strideWORK - `WORK` stride length
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zsteqr() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zsteqr( order, compz, N, d, strideD, e, strideE, Z, LDZ, WORK, strideWORK ) {
+	var sz1;
+	var sz2;
+	var od;
+	var oe;
+	var ow;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sz1 = 1;
+		sz2 = LDZ;
+	} else {
+		sz1 = LDZ;
+		sz2 = 1;
+	}
+	od = stride2offset( N, strideD );
+	oe = stride2offset( N, strideE );
+	ow = stride2offset( N, strideWORK );
+	return base( compz, N, d, strideD, od, e, strideE, oe, Z, sz1, sz2, 0, WORK, strideWORK, ow );
 }
 
 

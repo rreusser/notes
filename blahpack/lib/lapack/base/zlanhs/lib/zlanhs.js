@@ -16,21 +16,50 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Returns the value of the one norm, Frobenius norm, infinity norm, or.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} norm - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} A - input matrix
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Float64Array} WORK - input array
+* @param {integer} strideWORK - `WORK` stride length
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zlanhs() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlanhs( order, norm, N, A, LDA, WORK, strideWORK ) {
+	var sa1;
+	var sa2;
+	var ow;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+	}
+	ow = stride2offset( N, strideWORK );
+	return base( norm, N, A, sa1, sa2, 0, WORK, strideWORK, ow );
 }
 
 

@@ -16,15 +16,26 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Conjugate a complex vector in-place
+* Conjugate a complex vector in-place.
 *
 * @module @stdlib/lapack/base/zlacgv
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zlacgv = require( '@stdlib/lapack/base/zlacgv' );
+* 
+* var x = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* zlacgv( 2, x, 1 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zlacgv = require( '@stdlib/lapack/base/zlacgv' );
+* 
+* var x = new Float64Array( [ 1.0, 2.0 ] );
+* 
+* zlacgv.ndarray( 2, x, 1, 0 );
 */
 
 // MODULES //

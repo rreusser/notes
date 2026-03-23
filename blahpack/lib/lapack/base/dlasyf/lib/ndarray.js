@@ -1,36 +1,70 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Compute a partial factorization of a symmetric matrix using Bunch-Kaufman pivoting
+* Computes a partial factorization of a real symmetric matrix A using the.
 *
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nb - nb
-* @param {integer} kb - kb
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {Float64Array} W - output matrix
-* @param {integer} strideW1 - stride of the first dimension of `W`
-* @param {integer} strideW2 - stride of the second dimension of `W`
-* @param {NonNegativeInteger} offsetW - starting index for `W`
-* @returns {integer} status code (0 = success)
+* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} nb - maximum number of columns to factor
+* @param {Float64Array} A - input/output symmetric matrix (column-major)
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - index offset for A
+* @param {Int32Array} IPIV - pivot index output array, length N
+* @param {integer} strideIPIV - stride for IPIV
+* @param {NonNegativeInteger} offsetIPIV - index offset for IPIV
+* @param {Float64Array} W - workspace matrix, dimensions N x NB
+* @param {integer} strideW1 - stride of the first dimension of W
+* @param {integer} strideW2 - stride of the second dimension of W
+* @param {NonNegativeInteger} offsetW - index offset for W
+* @throws {TypeError} first argument must be a valid matrix triangle
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @returns {Object} result - { info, kb } where info=0 on success, kb=columns factored
 */
-function dlasyf( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW ) { // eslint-disable-line max-len, max-params
-	return base( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW ); // eslint-disable-line max-len
+function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nb < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nb ) );
+	}
+	if ( N === 0 ) {
+		return;
+	}
+	return base( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW );
 }
 
 

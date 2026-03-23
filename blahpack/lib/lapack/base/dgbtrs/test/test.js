@@ -8,6 +8,7 @@ var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dgbtrf = require( '../../dgbtrf/lib/base.js' );
 var dgbtrs = require( './../lib/base.js' );
+var ndarrayFn = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -267,4 +268,24 @@ test( 'dgbtrs: KL=0 no-L path', function t() {
 	assert.equal( info, 0 );
 	assertClose( B[ 0 ], 1.5, 1e-14, 'x[0]' );
 	assertClose( B[ 1 ], 2.0, 1e-14, 'x[1]' );
+});
+
+// ndarray validation tests
+
+test( 'dgbtrs: ndarray throws TypeError for invalid trans', function t() {
+	var AB = new Float64Array( 16 );
+	var IPIV = new Int32Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function() {
+		ndarrayFn( 'invalid', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	}, TypeError );
+});
+
+test( 'dgbtrs: ndarray throws RangeError for negative N', function t() {
+	var AB = new Float64Array( 16 );
+	var IPIV = new Int32Array( 4 );
+	var B = new Float64Array( 4 );
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', -1, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	}, RangeError );
 });

@@ -16,21 +16,33 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Multiplies a vector `x` by a constant `alpha` and adds the result to `y`.
+*
+* @param {PositiveInteger} N - TODO
+* @param {number} alpha - TODO
+* @param {Float64Array} x - input array
+* @param {integer} strideX - `x` stride length
+* @param {Float64Array} y - input array
+* @param {integer} strideY - `y` stride length
+* @returns {*} result
 */
-function daxpy() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function daxpy( N, alpha, x, strideX, y, strideY ) {
+	var ox = stride2offset( N, strideX );
+	var oy = stride2offset( N, strideY );
+	return base( N, alpha, x, strideX, ox, y, strideY, oy );
 }
 
 

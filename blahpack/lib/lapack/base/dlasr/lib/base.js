@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MAIN //
@@ -50,7 +52,7 @@
 * @param {NonNegativeInteger} offsetA - starting index for A
 * @returns {Float64Array} A
 */
-function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
+function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA ) {
 	var ctemp;
 	var stemp;
 	var temp;

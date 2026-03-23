@@ -1,20 +1,89 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Applies a real block reflector H or its transpose H.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} side - TODO
+* @param {string} trans - TODO
+* @param {string} direct - TODO
+* @param {string} storev - TODO
+* @param {NonNegativeInteger} M - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} K - TODO
+* @param {Float64Array} V - input matrix
+* @param {PositiveInteger} LDV - leading dimension of `V`
+* @param {Float64Array} T - input matrix
+* @param {PositiveInteger} LDT - leading dimension of `T`
+* @param {Float64Array} C - input matrix
+* @param {PositiveInteger} LDC - leading dimension of `C`
+* @param {Float64Array} WORK - input matrix
+* @param {PositiveInteger} LDWORK - leading dimension of `WORK`
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function dlarfb() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlarfb( order, side, trans, direct, storev, M, N, K, V, LDV, T, LDT, C, LDC, WORK, LDWORK ) {
+	var sv1;
+	var sv2;
+	var st1;
+	var st2;
+	var sc1;
+	var sc2;
+	var sw1;
+	var sw2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sv1 = 1;
+		sv2 = LDV;
+		st1 = 1;
+		st2 = LDT;
+		sc1 = 1;
+		sc2 = LDC;
+		sw1 = 1;
+		sw2 = LDWORK;
+	} else {
+		sv1 = LDV;
+		sv2 = 1;
+		st1 = LDT;
+		st2 = 1;
+		sc1 = LDC;
+		sc2 = 1;
+		sw1 = LDWORK;
+		sw2 = 1;
+	}
+	return base( side, trans, direct, storev, M, N, K, V, sv1, sv2, 0, T, st1, st2, 0, C, sc1, sc2, 0, WORK, sw1, sw2, 0 );
 }
 
 

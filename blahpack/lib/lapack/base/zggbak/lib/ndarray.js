@@ -16,38 +16,61 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Back-transform eigenvectors of a balanced pair of matrices.
+* Back-transform eigenvectors of a balanced pair of general real matrices.
 *
-* @param {string} job - specifies the operation type
-* @param {string} side - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ilo - ilo
-* @param {integer} ihi - ihi
-* @param {Float64Array} LSCALE - input array
-* @param {integer} strideLSCALE - stride length for `LSCALE`
-* @param {NonNegativeInteger} offsetLSCALE - starting index for `LSCALE`
-* @param {Float64Array} RSCALE - input array
-* @param {integer} strideRSCALE - stride length for `RSCALE`
-* @param {NonNegativeInteger} offsetRSCALE - starting index for `RSCALE`
-* @param {NonNegativeInteger} M - number of rows
-* @param {Float64Array} V - output matrix
-* @param {integer} strideV1 - stride of the first dimension of `V`
-* @param {integer} strideV2 - stride of the second dimension of `V`
-* @param {NonNegativeInteger} offsetV - starting index for `V`
+* @param {string} job - specifies the type of backward transformation:
+* @param {string} side - 'R' for right eigenvectors, 'L' for left eigenvectors
+* @param {NonNegativeInteger} N - number of rows of V
+* @param {integer} ilo - ilo from balancing (1-based)
+* @param {integer} ihi - ihi from balancing (1-based)
+* @param {Float64Array} LSCALE - left scaling/permutation factors from ZGGBAL
+* @param {integer} strideLSCALE - stride for LSCALE
+* @param {NonNegativeInteger} offsetLSCALE - starting index for LSCALE
+* @param {Float64Array} RSCALE - right scaling/permutation factors from ZGGBAL
+* @param {integer} strideRSCALE - stride for RSCALE
+* @param {NonNegativeInteger} offsetRSCALE - starting index for RSCALE
+* @param {NonNegativeInteger} M - number of columns of V
+* @param {Complex128Array} V - eigenvector matrix (modified in-place)
+* @param {integer} strideV1 - stride of the first dimension of V (complex elements)
+* @param {integer} strideV2 - stride of the second dimension of V (complex elements)
+* @param {NonNegativeInteger} offsetV - starting index for V (complex elements)
+* @throws {TypeError} first argument must be a valid job type
+* @throws {TypeError} second argument must be a valid operation side
+* @throws {RangeError} third argument must be a nonnegative integer
+* @throws {RangeError} twelfth argument must be a nonnegative integer
 * @returns {integer} status code (0 = success)
 */
-function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV ) { // eslint-disable-line max-len, max-params
-	return base( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV ); // eslint-disable-line max-len
+function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV ) {
+	if ( job !== 'none' && job !== 'permute' && job !== 'scale' && job !== 'both' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid job type. Value: `%s`.', job ) );
+	}
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+	return base( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSCALE, strideRSCALE, offsetRSCALE, M, V, strideV1, strideV2, offsetV );
 }
 
 

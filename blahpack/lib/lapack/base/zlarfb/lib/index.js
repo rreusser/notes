@@ -16,15 +16,32 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Apply a block Householder reflector
+* Apply a block Householder reflector.
 *
 * @module @stdlib/lapack/base/zlarfb
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zlarfb = require( '@stdlib/lapack/base/zlarfb' );
+* 
+* var V = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var T = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var C = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var WORK = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zlarfb( 'row-major', 'left', 'no-transpose', 'forward', 'column-wise', 2, 2, 2, V, 2, T, 2, C, 2, WORK, 2 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zlarfb = require( '@stdlib/lapack/base/zlarfb' );
+* 
+* var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var T = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var C = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zlarfb.ndarray( 'left', 'no-transpose', 'forward', 'column-wise', 2, 2, 2, V, 1, 2, 0, T, 1, 2, 0, C, 1, 2, 0, WORK, 1, 2, 0 );
 */
 
 // MODULES //

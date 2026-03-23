@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -63,7 +65,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {integer} info - 0 if successful
 */
-function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK ) {
 	var aii;
 	var aij;
 	var i;

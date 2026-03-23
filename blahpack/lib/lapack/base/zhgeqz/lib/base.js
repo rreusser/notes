@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-var */
+
 'use strict';
 
 // MODULES //
@@ -86,7 +88,7 @@ var HALF = 0.5;
 * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
 * @returns {integer} INFO: 0=success, 1..N=QZ did not converge, N+1..2N=shift failed
 */
-function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, T, strideT1, strideT2, offsetT, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) {
 	var ilschr;
 	var ilazr2;
 	var ilazro;
@@ -189,12 +191,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	}
 
 	// Get Float64Array views for direct element access
-	var Hv = reinterpret( H, 0 ); // eslint-disable-line no-var
-	var Tv = reinterpret( T, 0 ); // eslint-disable-line no-var
-	var ALPHAv = reinterpret( ALPHA, 0 ); // eslint-disable-line no-var
-	var BETAv = reinterpret( BETA, 0 ); // eslint-disable-line no-var
-	var Qv = reinterpret( Q, 0 ); // eslint-disable-line no-var
-	var Zv = reinterpret( Z, 0 ); // eslint-disable-line no-var
+	var Hv = reinterpret( H, 0 );
+	var Tv = reinterpret( T, 0 );
+	var ALPHAv = reinterpret( ALPHA, 0 );
+	var BETAv = reinterpret( BETA, 0 );
+	var Qv = reinterpret( Q, 0 );
+	var Zv = reinterpret( Z, 0 );
 
 	// Float64 strides and offsets (for direct element access)
 	sh1 = strideH1 * 2;
@@ -207,12 +209,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	sz2 = strideZ2 * 2;
 
 	// Float64 base offsets for element access
-	var oH = offsetH * 2; // eslint-disable-line no-var
-	var oT = offsetT * 2; // eslint-disable-line no-var
-	var oAL = offsetALPHA * 2; // eslint-disable-line no-var
-	var oBE = offsetBETA * 2; // eslint-disable-line no-var
-	var sAL = strideALPHA * 2; // eslint-disable-line no-var
-	var sBE = strideBETA * 2; // eslint-disable-line no-var
+	var oH = offsetH * 2;
+	var oT = offsetT * 2;
+	var oAL = offsetALPHA * 2;
+	var oBE = offsetBETA * 2;
+	var sAL = strideALPHA * 2;
+	var sBE = strideBETA * 2;
 
 	// zrot strides: in complex elements (same as input strides now)
 	rq1 = strideQ1;

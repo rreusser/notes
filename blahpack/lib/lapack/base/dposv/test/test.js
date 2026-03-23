@@ -7,6 +7,7 @@ var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dposv = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -96,4 +97,24 @@ test( 'dposv: nrhs_zero', function t() {
 	var B = new Float64Array( 3 );
 	var info = dposv( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
+});
+
+// ndarray validation tests
+
+test( 'dposv: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, 1, new Float64Array( 9 ), 1, 3, 0, new Float64Array( 3 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'dposv: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, 1, new Float64Array( 9 ), 1, 3, 0, new Float64Array( 3 ), 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'dposv: ndarray throws RangeError for negative NRHS', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 3, -1, new Float64Array( 9 ), 1, 3, 0, new Float64Array( 3 ), 1, 3, 0 );
+	}, RangeError );
 });

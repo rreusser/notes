@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -46,7 +48,7 @@ var cmplx = require( '../../../../cmplx.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {number} norm value
 */
-function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) {
 	var value;
 	var scale;
 	var temp;

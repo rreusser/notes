@@ -1,0 +1,6 @@
+node_modules
+.venv
+test/build
+pipeline
+unused
+*.mod

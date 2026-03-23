@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -47,7 +49,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
 * @returns {integer} info - 0 if successful
 */
-function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var alpha_re;
 	var alpha_im;
 	var tau_off;

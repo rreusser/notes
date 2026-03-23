@@ -9,6 +9,7 @@ var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zposv = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -123,4 +124,24 @@ test( 'zposv: nrhs_zero', function t() {
 	var B = new Complex128Array( 3 );
 	var info = zposv( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
+});
+
+// ndarray validation tests
+
+test( 'zposv: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, 1, new Complex128Array( 9 ), 1, 3, 0, new Complex128Array( 3 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'zposv: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, 1, new Complex128Array( 9 ), 1, 3, 0, new Complex128Array( 3 ), 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'zposv: ndarray throws RangeError for negative NRHS', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 3, -1, new Complex128Array( 9 ), 1, 3, 0, new Complex128Array( 3 ), 1, 3, 0 );
+	}, RangeError );
 });

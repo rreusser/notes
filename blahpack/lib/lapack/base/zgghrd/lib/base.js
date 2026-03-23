@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -60,7 +62,7 @@ var zrot = require( '../../zrot/lib/base.js' );
 * @param {NonNegativeInteger} offsetZ - starting index for `Z` (complex elements)
 * @returns {integer} status code (0 = success)
 */
-function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ ) { // eslint-disable-line max-len, max-params
+function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ ) {
 	var icompq;
 	var icompz;
 	var alpha;

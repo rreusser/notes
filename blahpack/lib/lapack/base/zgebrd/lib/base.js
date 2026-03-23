@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -72,7 +74,7 @@ var NEGONE = new Complex128( -1.0, 0.0 );
 * @param {integer} lwork - length of WORK array (in complex elements)
 * @returns {integer} info - 0 if successful
 */
-function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAUQ, strideTAUQ, offsetTAUQ, TAUP, strideTAUP, offsetTAUP, WORK, strideWORK, offsetWORK, lwork ) {
 	var ldwrkx;
 	var ldwrky;
 	var minmn;

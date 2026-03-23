@@ -16,21 +16,31 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Updates a sum of squares represented in scaled form.
+*
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} x - input array
+* @param {integer} stride - `x` stride length
+* @param {number} scale - TODO
+* @param {number} sumsq - TODO
+* @returns {*} result
 */
-function zlassq() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlassq( N, x, stride, scale, sumsq ) {
+	var ox = stride2offset( N, stride );
+	return base( N, x, stride, ox, scale, sumsq );
 }
 
 

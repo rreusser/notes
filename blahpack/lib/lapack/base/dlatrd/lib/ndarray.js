@@ -1,37 +1,73 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Reduce NB rows and columns of a symmetric matrix to tridiagonal form
+* Reduces NB rows and columns of a real symmetric matrix A to symmetric.
 *
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nb - nb
-* @param {Float64Array} A - input matrix
+* @param {string} uplo - specifies whether the upper or lower triangular part of A is stored ('U' or 'L')
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {integer} nb - number of rows and columns to reduce
+* @param {Float64Array} A - input matrix (N-by-N, symmetric)
 * @param {integer} strideA1 - stride of the first dimension of `A`
 * @param {integer} strideA2 - stride of the second dimension of `A`
 * @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} e - input array
+* @param {Float64Array} e - off-diagonal elements (length N-1)
 * @param {integer} strideE - stride length for `e`
 * @param {NonNegativeInteger} offsetE - starting index for `e`
-* @param {Float64Array} TAU - input array
+* @param {Float64Array} TAU - scalar factors of the elementary reflectors (length N-1)
 * @param {integer} strideTAU - stride length for `TAU`
 * @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
-* @param {Float64Array} W - output matrix
+* @param {Float64Array} W - output matrix (N-by-NB)
 * @param {integer} strideW1 - stride of the first dimension of `W`
 * @param {integer} strideW2 - stride of the second dimension of `W`
 * @param {NonNegativeInteger} offsetW - starting index for `W`
+* @throws {TypeError} first argument must be a valid matrix triangle
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @returns {*} result
 */
-function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW ) { // eslint-disable-line max-len, max-params
-	return base( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW ); // eslint-disable-line max-len
+function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nb < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nb ) );
+	}
+	if ( N === 0 ) {
+		return;
+	}
+	return base( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, W, strideW1, strideW2, offsetW );
 }
 
 

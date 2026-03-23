@@ -16,21 +16,72 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Reduce a pair of complex matrices (A, B) to generalized upper Hessenberg.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} compq - TODO
+* @param {string} compz - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {integer} ilo - TODO
+* @param {integer} ihi - TODO
+* @param {Complex128Array} A - input matrix
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Complex128Array} B - input matrix
+* @param {PositiveInteger} LDB - leading dimension of `B`
+* @param {Complex128Array} Q - input matrix
+* @param {PositiveInteger} LDQ - leading dimension of `Q`
+* @param {Complex128Array} Z - input matrix
+* @param {PositiveInteger} LDZ - leading dimension of `Z`
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zgghrd() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zgghrd( order, compq, compz, N, ilo, ihi, A, LDA, B, LDB, Q, LDQ, Z, LDZ ) {
+	var sa1;
+	var sa2;
+	var sb1;
+	var sb2;
+	var sq1;
+	var sq2;
+	var sz1;
+	var sz2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+		sb1 = 1;
+		sb2 = LDB;
+		sq1 = 1;
+		sq2 = LDQ;
+		sz1 = 1;
+		sz2 = LDZ;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+		sb1 = LDB;
+		sb2 = 1;
+		sq1 = LDQ;
+		sq2 = 1;
+		sz1 = LDZ;
+		sz2 = 1;
+	}
+	return base( compq, compz, N, ilo, ihi, A, sa1, sa2, 0, B, sb1, sb2, 0, Q, sq1, sq2, 0, Z, sz1, sz2, 0 );
 }
 
 

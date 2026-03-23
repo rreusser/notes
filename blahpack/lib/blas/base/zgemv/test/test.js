@@ -158,3 +158,60 @@ test( 'zgemv: non-unit stride (incx=2, incy=2, trans=N)', function t() {
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_stride y' );
 });
+
+// ndarray validation tests
+
+test( 'zgemv: ndarray throws TypeError for invalid trans', function t() {
+	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
+	var y = new Complex128Array( 2 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemv.ndarray( 'invalid', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	}, TypeError );
+});
+
+test( 'zgemv: ndarray throws RangeError for negative M', function t() {
+	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
+	var y = new Complex128Array( 2 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemv.ndarray( 'no-transpose', -1, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	}, RangeError );
+});
+
+test( 'zgemv: ndarray throws RangeError for negative N', function t() {
+	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
+	var y = new Complex128Array( 2 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemv.ndarray( 'no-transpose', 2, -1, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	}, RangeError );
+});
+
+test( 'zgemv: ndarray throws RangeError for zero strideX', function t() {
+	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
+	var y = new Complex128Array( 2 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemv.ndarray( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 0, 0, beta, y, 1, 0 );
+	}, RangeError );
+});
+
+test( 'zgemv: ndarray throws RangeError for zero strideY', function t() {
+	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
+	var y = new Complex128Array( 2 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemv.ndarray( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 0, 0 );
+	}, RangeError );
+});

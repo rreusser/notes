@@ -342,3 +342,60 @@ test( 'zgemm: T,T with non-zero beta', function t() {
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_TT_beta_nonzero c' );
 });
+
+// ndarray validation tests
+
+test( 'zgemm: ndarray throws TypeError for invalid transa', function t() {
+	var A = new Complex128Array( 4 );
+	var B = new Complex128Array( 4 );
+	var C = new Complex128Array( 4 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemm.ndarray( 'invalid', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'zgemm: ndarray throws TypeError for invalid transb', function t() {
+	var A = new Complex128Array( 4 );
+	var B = new Complex128Array( 4 );
+	var C = new Complex128Array( 4 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemm.ndarray( 'no-transpose', 'invalid', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'zgemm: ndarray throws RangeError for negative M', function t() {
+	var A = new Complex128Array( 4 );
+	var B = new Complex128Array( 4 );
+	var C = new Complex128Array( 4 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemm.ndarray( 'no-transpose', 'no-transpose', -1, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'zgemm: ndarray throws RangeError for negative N', function t() {
+	var A = new Complex128Array( 4 );
+	var B = new Complex128Array( 4 );
+	var C = new Complex128Array( 4 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemm.ndarray( 'no-transpose', 'no-transpose', 2, -1, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'zgemm: ndarray throws RangeError for negative K', function t() {
+	var A = new Complex128Array( 4 );
+	var B = new Complex128Array( 4 );
+	var C = new Complex128Array( 4 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	assert.throws( function() {
+		zgemm.ndarray( 'no-transpose', 'no-transpose', 2, 2, -1, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	}, RangeError );
+});

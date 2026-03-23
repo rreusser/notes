@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -51,7 +53,7 @@ var dsyr = require( '../../../../blas/base/dsyr/lib/base.js' );
 * @param {NonNegativeInteger} offsetAB - starting index for AB
 * @returns {integer} info - 0 if successful, k>0 if the leading minor of order k is not positive definite
 */
-function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-disable-line max-len, max-params
+function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 	var sa1;
 	var sa2;
 	var kld;

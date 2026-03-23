@@ -1,4 +1,20 @@
-
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
@@ -10,27 +26,12 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Compute a partial factorization of a complex symmetric matrix using Bunch-Kaufman pivoting
+* Copyright (c) 2025 The Stdlib Authors.
 *
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nb - nb
-* @param {integer} kb - kb
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {Float64Array} W - output matrix
-* @param {integer} strideW1 - stride of the first dimension of `W`
-* @param {integer} strideW2 - stride of the second dimension of `W`
-* @param {NonNegativeInteger} offsetW - starting index for `W`
-* @returns {integer} status code (0 = success)
+* @returns {*} result
 */
-function zlasyf( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW ) { // eslint-disable-line max-len, max-params
-	return base( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW ); // eslint-disable-line max-len
+function zlasyf(  ) {
+	return base(  );
 }
 
 

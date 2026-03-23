@@ -11,6 +11,7 @@ var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrsv = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -231,4 +232,57 @@ test( 'ztrsv: lower, conj-trans, Smith else-branch (|imag|>|real| diagonal)', fu
 	ztrsv( 'lower', 'conjugate-transpose', 'non-unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
+});
+
+
+// NDARRAY VALIDATION TESTS //
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var A = new Complex128Array( 4 );
+	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
+	assert.throws( function f() {
+		ndarray( 'foo', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid trans', function t() {
+	var A = new Complex128Array( 4 );
+	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'foo', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid diag', function t() {
+	var A = new Complex128Array( 4 );
+	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 'foo', 2, A, 1, 2, 0, x, 1, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var A = new Complex128Array( 4 );
+	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 'non-unit', -1, A, 1, 2, 0, x, 1, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for strideX=0', function t() {
+	var A = new Complex128Array( 4 );
+	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
+	assert.throws( function f() {
+		ndarray( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 0, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: N=0 early return', function t() {
+	var A = new Complex128Array( 1 );
+	var x = new Complex128Array( [ 5, 5 ] );
+	var out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
+	assert.strictEqual( out, x );
+	var xv = reinterpret( x, 0 );
+	assert.strictEqual( xv[ 0 ], 5 );
+	assert.strictEqual( xv[ 1 ], 5 );
 });

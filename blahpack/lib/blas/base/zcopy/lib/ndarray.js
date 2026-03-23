@@ -16,30 +16,39 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Copy a complex double-precision vector
+* Copy a complex double-precision vector.
 *
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} x - input array
-* @param {integer} strideX - stride length for `x`
-* @param {NonNegativeInteger} offsetX - starting index for `x`
-* @param {integer} incx - incx
-* @param {Float64Array} y - output array
-* @param {integer} strideY - stride length for `y`
-* @param {NonNegativeInteger} offsetY - starting index for `y`
-* @param {integer} incy - incy
+* @param {PositiveInteger} N - number of complex elements
+* @param {Complex128Array} zx - source complex vector
+* @param {integer} strideX - stride for `zx` (in complex elements)
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @param {Complex128Array} zy - destination complex vector
+* @param {integer} strideY - stride for `zy` (in complex elements)
+* @param {NonNegativeInteger} offsetY - starting index for `zy` (in complex elements)
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} `zy`
 */
-function zcopy( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy ) { // eslint-disable-line max-len, max-params
-	return base( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy ); // eslint-disable-line max-len
+function zcopy( N, zx, strideX, offsetX, zy, strideY, offsetY ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return zy;
+	}
+	return base( N, zx, strideX, offsetX, zy, strideY, offsetY );
 }
 
 

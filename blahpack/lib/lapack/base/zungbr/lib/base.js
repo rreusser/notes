@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -49,7 +51,7 @@ var zunglq = require( '../../zunglq/lib/base.js' );
 *   N-by-N unitary matrix.
 *
 * @private
-* @param {string} vect - 'Q' to generate Q, 'P' to generate P^H
+* @param {string} vect - 'q' to generate Q, 'p' to generate P^H
 * @param {NonNegativeInteger} M - number of rows of the matrix Q or P^H
 * @param {NonNegativeInteger} N - number of columns of the matrix Q or P^H
 * @param {NonNegativeInteger} K - number of columns/rows in original matrix
@@ -66,7 +68,7 @@ var zunglq = require( '../../zunglq/lib/base.js' );
 * @param {integer} lwork - workspace size (unused, kept for API compat)
 * @returns {integer} info - 0 if successful
 */
-function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
 	var wantq;
 	var Av;
 	var sA1;
@@ -81,7 +83,7 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 		return 0;
 	}
 
-	wantq = ( vect === 'Q' );
+	wantq = ( vect === 'q' );
 
 	Av = reinterpret( A, 0 );
 	sA1 = strideA1 * 2;

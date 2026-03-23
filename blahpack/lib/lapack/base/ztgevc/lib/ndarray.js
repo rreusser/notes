@@ -1,51 +1,90 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Compute eigenvectors of a pair of complex upper triangular matrices
+* Compute some or all of the right and/or left eigenvectors of a pair of.
 *
-* @param {string} side - specifies the operation type
-* @param {string} howmny - specifies the operation type
-* @param {Float64Array} SELECT - input array
-* @param {integer} strideSELECT - stride length for `SELECT`
-* @param {NonNegativeInteger} offsetSELECT - starting index for `SELECT`
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} S - input matrix
-* @param {integer} strideS1 - stride of the first dimension of `S`
-* @param {integer} strideS2 - stride of the second dimension of `S`
-* @param {NonNegativeInteger} offsetS - starting index for `S`
-* @param {Float64Array} P - input matrix
-* @param {integer} strideP1 - stride of the first dimension of `P`
-* @param {integer} strideP2 - stride of the second dimension of `P`
-* @param {NonNegativeInteger} offsetP - starting index for `P`
-* @param {Float64Array} VL - input matrix
-* @param {integer} strideVL1 - stride of the first dimension of `VL`
-* @param {integer} strideVL2 - stride of the second dimension of `VL`
-* @param {NonNegativeInteger} offsetVL - starting index for `VL`
-* @param {Float64Array} VR - input matrix
-* @param {integer} strideVR1 - stride of the first dimension of `VR`
-* @param {integer} strideVR2 - stride of the second dimension of `VR`
-* @param {NonNegativeInteger} offsetVR - starting index for `VR`
-* @param {integer} mm - mm
-* @param {NonNegativeInteger} M - number of rows
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {Float64Array} RWORK - output array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @returns {integer} status code (0 = success)
+* @param {string} side - 'R', 'L', or 'B'
+* @param {string} howmny - 'A', 'B', or 'S'
+* @param {BooleanArray} SELECT - logical array of length N (used when HOWMNY='S')
+* @param {integer} strideSELECT - stride for SELECT
+* @param {NonNegativeInteger} offsetSELECT - offset for SELECT
+* @param {NonNegativeInteger} N - order of matrices
+* @param {Complex128Array} S - upper triangular matrix
+* @param {integer} strideS1 - first dim stride of S (complex elements)
+* @param {integer} strideS2 - second dim stride of S (complex elements)
+* @param {NonNegativeInteger} offsetS - starting index for S (complex elements)
+* @param {Complex128Array} P - upper triangular matrix with real diagonal
+* @param {integer} strideP1 - first dim stride of P (complex elements)
+* @param {integer} strideP2 - second dim stride of P (complex elements)
+* @param {NonNegativeInteger} offsetP - starting index for P (complex elements)
+* @param {Complex128Array} VL - left eigenvectors (modified in-place)
+* @param {integer} strideVL1 - first dim stride of VL (complex elements)
+* @param {integer} strideVL2 - second dim stride of VL (complex elements)
+* @param {NonNegativeInteger} offsetVL - starting index for VL (complex elements)
+* @param {Complex128Array} VR - right eigenvectors (modified in-place)
+* @param {integer} strideVR1 - first dim stride of VR (complex elements)
+* @param {integer} strideVR2 - second dim stride of VR (complex elements)
+* @param {NonNegativeInteger} offsetVR - starting index for VR (complex elements)
+* @param {NonNegativeInteger} mm - number of columns in VL/VR
+* @param {Array<integer>} M - output: number of eigenvectors computed (M[0])
+* @param {Complex128Array} WORK - workspace (length >= 2*N)
+* @param {integer} strideWORK - stride for WORK (complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+* @param {Float64Array} RWORK - real workspace (length >= 2*N)
+* @param {integer} strideRWORK - stride for RWORK
+* @param {NonNegativeInteger} offsetRWORK - offset for RWORK
+* @throws {TypeError} first argument must be a valid operation side
+* @throws {TypeError} second argument must be a valid selection type
+* @throws {RangeError} sixth argument must be a nonnegative integer
+* @throws {RangeError} 24th argument must be a nonnegative integer
+* @returns {integer} 0 on success
 */
-function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
-	return base( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
+function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) {
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( howmny !== 'all' && howmny !== 'backtransform' && howmny !== 'select' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid selection type. Value: `%s`.', howmny ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. 24th argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+	return base( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK );
 }
 
 

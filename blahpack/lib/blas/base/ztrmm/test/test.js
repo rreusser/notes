@@ -241,3 +241,55 @@ test( 'ztrmm: right, lower, conjugate transpose, non-unit (2x2)', function t() {
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
+
+// NDARRAY VALIDATION TESTS //
+
+var ndarray = require( './../lib/ndarray.js' );
+
+test( 'ndarray: throws TypeError for invalid side', function t() {
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	assert.throws( function f() {
+		ndarray( 'invalid', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid uplo', function t() {
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	assert.throws( function f() {
+		ndarray( 'left', 'invalid', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid transa', function t() {
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'invalid', 'non-unit', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws TypeError for invalid diag', function t() {
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'invalid', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'ndarray: throws RangeError for negative M', function t() {
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', -1, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'ndarray: throws RangeError for negative N', function t() {
+	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
+	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
+	assert.throws( function f() {
+		ndarray( 'left', 'upper', 'no-transpose', 'non-unit', 2, -1, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0 );
+	}, RangeError );
+});

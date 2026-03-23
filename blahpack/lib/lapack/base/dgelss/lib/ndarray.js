@@ -1,41 +1,75 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Compute the minimum norm solution using SVD
+* Computes the minimum norm solution to a real linear least squares problem:.
 *
-* @param {NonNegativeInteger} M - number of rows
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} B - input matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {Float64Array} s - input array
-* @param {integer} strideS - stride length for `s`
-* @param {NonNegativeInteger} offsetS - starting index for `s`
-* @param {number} rcond - rcond
-* @param {integer} rank - rank
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @returns {integer} status code (0 = success)
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
+* @param {Float64Array} A - M-by-N matrix, overwritten on exit
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - starting index for A
+* @param {Float64Array} B - on entry, M-by-NRHS (or max(M,N)-by-NRHS) RHS matrix;
+* @param {integer} strideB1 - stride of the first dimension of B
+* @param {integer} strideB2 - stride of the second dimension of B
+* @param {NonNegativeInteger} offsetB - starting index for B
+* @param {Float64Array} S - output array of singular values in decreasing order (length min(M,N))
+* @param {integer} strideS - stride length for S
+* @param {NonNegativeInteger} offsetS - starting index for S
+* @param {number} rcond - used to determine the effective rank of A.
+* @param {Array} rank - output array; rank[0] set to the effective rank of A
+* @param {Float64Array} WORK - workspace array (if null, allocated internally)
+* @param {integer} strideWORK - stride length for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {integer} lwork - length of WORK array (if 0 or WORK is null, auto-sized)
+* @throws {RangeError} first argument must be a nonnegative integer
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @returns {integer} info - 0 if successful, >0 if DBDSQR did not converge
 */
-function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, s, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
-	return base( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, s, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
+function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, S, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork ) {
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+	return base( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, S, strideS, offsetS, rcond, rank, WORK, strideWORK, offsetWORK, lwork );
 }
 
 

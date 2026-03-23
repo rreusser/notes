@@ -7,6 +7,7 @@ var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dgemm = require( './../lib/base.js' );
+var ndarrayFn = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -186,4 +187,36 @@ test( 'dgemm: T,T with beta!=0 (lines 179-180)', function t() {
 	// A^T*B^T: [1*5+2*7, 1*6+2*8; 3*5+4*7, 3*6+4*8] = [19 22; 43 50]
 	// C = [19+3, 43+3, 22+3, 50+3] = [22, 46, 25, 53]
 	assertArrayClose( C, [ 22, 46, 25, 53 ], 1e-14, 'tt_beta_nonzero' );
+});
+
+// ndarray validation tests
+
+test( 'dgemm: ndarray throws TypeError for invalid transa', function t() {
+	assert.throws( function() {
+		ndarrayFn( 'invalid', 'no-transpose', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'dgemm: ndarray throws TypeError for invalid transb', function t() {
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', 'invalid', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	}, TypeError );
+});
+
+test( 'dgemm: ndarray throws RangeError for negative M', function t() {
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', 'no-transpose', -1, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'dgemm: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', 'no-transpose', 2, -1, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	}, RangeError );
+});
+
+test( 'dgemm: ndarray throws RangeError for negative K', function t() {
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', 'no-transpose', 2, 2, -1, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	}, RangeError );
 });

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-var */
+
 'use strict';
 
 // MODULES //
@@ -58,7 +60,7 @@ var ONE = new Complex128( 1.0, 0.0 );
 * @param {integer} strideT2 - stride of second dim of T (complex elements)
 * @param {NonNegativeInteger} offsetT - starting index for T (in complex elements)
 */
-function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT ) { // eslint-disable-line max-len, max-params
+function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT ) {
 	var prevlastv;
 	var negTauI;
 	var negTauR;
@@ -181,7 +183,7 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 
 					// T(0:i-1, i) += -tau(i) * V(0:i-1, i+1:jj-1) * V(i, i+1:jj-1)^H
 					if ( jj - i - 1 > 0 ) {
-						var negTauR2 = new Complex128( negTauR, negTauI ); // eslint-disable-line no-var
+						var negTauR2 = new Complex128( negTauR, negTauI );
 						zgemm( 'no-transpose', 'conjugate-transpose', i, 1, jj - i - 1, negTauR2,
 							V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV2,
 							V, strideV1, strideV2, offsetV + i * strideV1 + ( i + 1 ) * strideV2,
@@ -248,7 +250,7 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 
 						// T(i+1:K-1, i) += -tau(i) * V(jj:N-K+i-1, i+1:K-1)^H * V(jj:N-K+i-1, i)
 						if ( N - K + i - jj > 0 ) {
-							var negTauB = new Complex128( negTauR, negTauI ); // eslint-disable-line no-var
+							var negTauB = new Complex128( negTauR, negTauI );
 							zgemv( 'conjugate-transpose', N - K + i - jj, K - i - 1, negTauB,
 								V, strideV1, strideV2, offsetV + jj * strideV1 + ( i + 1 ) * strideV2,
 								V, strideV1, offsetV + jj * strideV1 + i * strideV2,
@@ -282,7 +284,7 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 
 						// T(i+1:K-1, i) += -tau(i) * V(i+1:K-1, jj:N-K+i-1) * V(i, jj:N-K+i-1)^H
 						if ( N - K + i - jj > 0 ) {
-							var negTauB2 = new Complex128( negTauR, negTauI ); // eslint-disable-line no-var
+							var negTauB2 = new Complex128( negTauR, negTauI );
 							zgemm( 'no-transpose', 'conjugate-transpose', K - i - 1, 1, N - K + i - jj, negTauB2,
 								V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV1 + jj * strideV2,
 								V, strideV1, strideV2, offsetV + i * strideV1 + jj * strideV2,

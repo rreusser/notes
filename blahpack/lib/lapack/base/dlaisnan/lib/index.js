@@ -16,15 +16,20 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Test for NaN by comparing two arguments for inequality
+* Test for NaN by comparing two arguments for inequality.
 *
 * @module @stdlib/lapack/base/dlaisnan
 *
 * @example
-* // TODO: Add example
+* var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
+* 
+* dlaisnan( 1.0, 1.0 );
+*
+* @example
+* var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
+* 
+* dlaisnan.ndarray( 1.0, 1.0 );
 */
 
 // MODULES //

@@ -16,15 +16,30 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Perform complex matrix-vector multiplication
+* Perform complex matrix-vector multiplication.
 *
 * @module @stdlib/blas/base/zgemv
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zgemv = require( '@stdlib/blas/base/zgemv' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var x = new Complex128Array( [ 1.0, 2.0 ] );
+* var y = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* zgemv( 'row-major', 'no-transpose', 2, 2, 1.0, A, 2, x, 1, 0.0, y, 1 );
+*
+* @example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zgemv = require( '@stdlib/blas/base/zgemv' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var x = new Complex128Array( [ 1.0, 2.0 ] );
+* var y = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* zgemv.ndarray( 'no-transpose', 2, 2, 1.0, A, 1, 2, 0, x, 1, 0, 0.0, y, 1, 0 );
 */
 
 // MODULES //

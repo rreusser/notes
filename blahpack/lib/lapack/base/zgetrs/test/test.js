@@ -12,6 +12,7 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgetrf2 = require( './../../zgetrf2/lib/base.js' );
 var zgetrs = require( './../lib/base.js' );
+var ndarrayFn = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -459,6 +460,26 @@ test( 'zgetrs: multi_rhs_conj (NRHS=2, conjugate transpose)', function t() {
 	// Verify A^H * X = B_original
 	AHB = zmatmatH( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3, 2 );
 	assertArrayClose( Array.from( AHB ), Array.from( reinterpret( Borig, 0 ) ), 1e-12, 'A^H*X=B' );
+});
+
+// ndarray validation tests
+
+test( 'zgetrs: ndarray throws TypeError for invalid trans', function t() {
+	var A = new Complex128Array( 9 );
+	var IPIV = new Int32Array( 3 );
+	var B = new Complex128Array( 3 );
+	assert.throws( function() {
+		ndarrayFn( 'invalid', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'zgetrs: ndarray throws RangeError for negative N', function t() {
+	var A = new Complex128Array( 9 );
+	var IPIV = new Int32Array( 3 );
+	var B = new Complex128Array( 3 );
+	assert.throws( function() {
+		ndarrayFn( 'no-transpose', -1, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	}, RangeError );
 });
 
 test( 'zgetrs: lowercase trans argument', function t() {

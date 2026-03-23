@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-var */
+
 'use strict';
 
 // MODULES //
@@ -50,7 +52,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {integer} info - 0 if successful
 */
-function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var aii;
 	var K;
 	var i;
@@ -73,7 +75,7 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 		if ( i < M - 1 ) {
 			// Save A(i,i) and set it to 1 for the reflector application
-			var save = A[ aii ]; // eslint-disable-line no-var
+			var save = A[ aii ];
 			A[ aii ] = 1.0;
 
 			// Apply H(i) to A(i+1:M-1, i:N-1) from the right

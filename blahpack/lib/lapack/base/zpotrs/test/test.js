@@ -10,6 +10,7 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpotrf = require( './../../zpotrf/lib/base.js' );
 var zpotrs = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
 
 
 // FIXTURES //
@@ -131,4 +132,24 @@ test( 'zpotrs: upper_multi_rhs_3', function t() {
 	var info = zpotrs( 'upper', 3, 3, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
+});
+
+// ndarray validation tests
+
+test( 'zpotrs: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function() {
+		ndarray( 'invalid', 3, 1, new Complex128Array( 9 ), 1, 3, 0, new Complex128Array( 3 ), 1, 3, 0 );
+	}, TypeError );
+});
+
+test( 'zpotrs: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', -1, 1, new Complex128Array( 9 ), 1, 3, 0, new Complex128Array( 3 ), 1, 3, 0 );
+	}, RangeError );
+});
+
+test( 'zpotrs: ndarray throws RangeError for negative NRHS', function t() {
+	assert.throws( function() {
+		ndarray( 'upper', 3, -1, new Complex128Array( 9 ), 1, 3, 0, new Complex128Array( 3 ), 1, 3, 0 );
+	}, RangeError );
 });

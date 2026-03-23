@@ -16,21 +16,50 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} type - TODO
+* @param {integer} kl - TODO
+* @param {integer} ku - TODO
+* @param {number} cfrom - TODO
+* @param {number} cto - TODO
+* @param {NonNegativeInteger} M - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} A - input matrix
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zlascl() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlascl( order, type, kl, ku, cfrom, cto, M, N, A, LDA ) {
+	var sa1;
+	var sa2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+	}
+	return base( type, kl, ku, cfrom, cto, M, N, A, sa1, sa2, 0 );
 }
 
 

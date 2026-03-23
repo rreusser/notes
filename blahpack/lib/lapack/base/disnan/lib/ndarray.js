@@ -26,10 +26,10 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Test if input is NaN
+* Tests whether a double-precision floating-point number is NaN.
 *
-* @param {number} din - din
-* @returns {number} result
+* @param {number} din - value to test
+* @returns {boolean} true if NaN, false otherwise
 */
 function disnan( din ) {
 	return base( din );

@@ -16,15 +16,26 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
 * Find the index of the element having the maximum sum of absolute values of real and imaginary parts.
 *
 * @module @stdlib/blas/base/izamax
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var izamax = require( '@stdlib/blas/base/izamax' );
+* 
+* var zx = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* izamax( 2, zx, 1 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var izamax = require( '@stdlib/blas/base/izamax' );
+* 
+* var x = new Float64Array( [ 1.0, 2.0 ] );
+* 
+* izamax.ndarray( 2, x, 1, 0, 2 );
 */
 
 // MODULES //

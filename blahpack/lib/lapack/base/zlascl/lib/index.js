@@ -16,15 +16,26 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Multiply a matrix by a real scalar CTO/CFROM
+* Multiply a matrix by a real scalar CTO/CFROM.
 *
 * @module @stdlib/lapack/base/zlascl
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zlascl = require( '@stdlib/lapack/base/zlascl' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zlascl( 'row-major', 'N', 2, 2, 1.0, 1.0, 2, 2, A, 2 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zlascl = require( '@stdlib/lapack/base/zlascl' );
+* 
+* var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zlascl.ndarray( 'N', 2, 2, 1.0, 1.0, 2, 2, A, 1, 2, 0 );
 */
 
 // MODULES //

@@ -16,15 +16,28 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
-* Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x
+* Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x.
 *
 * @module @stdlib/blas/base/ztrmv
 *
 * @example
-* // TODO: Add example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var ztrmv = require( '@stdlib/blas/base/ztrmv' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var x = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* ztrmv( 'row-major', 'upper', 'no-transpose', 'non-unit', 2, A, 2, x, 1 );
+*
+* @example
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var ztrmv = require( '@stdlib/blas/base/ztrmv' );
+* 
+* var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var x = new Complex128Array( [ 1.0, 2.0 ] );
+* 
+* ztrmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
 */
 
 // MODULES //

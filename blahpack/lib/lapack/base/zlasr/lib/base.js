@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -56,7 +58,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
 * @returns {Complex128Array} A
 */
-function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
+function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA ) {
 	var ctemp;
 	var stemp;
 	var tempRe;

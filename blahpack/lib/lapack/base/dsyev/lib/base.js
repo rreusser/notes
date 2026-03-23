@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -69,7 +71,7 @@ var NB = 32; // block size (replaces ILAENV query)
 * @param {integer} lwork - length of WORK array
 * @returns {integer} info - 0 if successful, >0 if dsteqr/dsterf did not converge
 */
-function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork ) {
 	var wantz;
 	var anrm;
 	var safmin;

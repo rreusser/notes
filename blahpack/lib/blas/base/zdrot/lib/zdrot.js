@@ -1,20 +1,49 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Applies a real plane rotation to a pair of complex double-precision vectors:.
+*
+* @param {NonNegativeInteger} N - TODO
+* @param {Complex128Array} zx - input array
+* @param {integer} strideX - `zx` stride length
+* @param {Complex128Array} zy - input array
+* @param {integer} strideY - `zy` stride length
+* @param {number} c - TODO
+* @param {number} s - TODO
+* @returns {*} result
 */
-function zdrot() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zdrot( N, zx, strideX, zy, strideY, c, s ) {
+	var oz = stride2offset( N, strideX );
+	var oz = stride2offset( N, strideY );
+	return base( N, zx, strideX, oz, zy, strideY, oz, c, s );
 }
 
 

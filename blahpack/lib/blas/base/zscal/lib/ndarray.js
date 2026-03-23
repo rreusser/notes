@@ -16,27 +16,37 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Scale a complex double-precision vector by a complex constant
+* Scale a complex double-precision vector by a complex constant.
 *
-* @param {NonNegativeInteger} N - number of columns
-* @param {Complex128} za - za
-* @param {Float64Array} x - input array
-* @param {integer} stride - stride length for `x`
-* @param {NonNegativeInteger} offset - starting index for `x`
-* @param {integer} incx - incx
+* @param {PositiveInteger} N - number of complex elements
+* @param {Complex128} za - complex scalar
+* @param {Complex128Array} zx - complex input vector
+* @param {integer} strideX - stride for `zx` (in complex elements)
+* @param {NonNegativeInteger} offsetX - starting index for `zx` (in complex elements)
+* @throws {RangeError} first argument must be a nonnegative integer
+* @returns {Complex128Array} `zx`
 */
-function zscal( N, za, x, stride, offset, incx ) {
-	return base( N, za, x, stride, offset, incx );
+function zscal( N, za, zx, strideX, offsetX ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( N === 0 ) {
+		return zx;
+	}
+	return base( N, za, zx, strideX, offsetX );
 }
 
 

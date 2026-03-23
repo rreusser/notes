@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, no-shadow */
+
 'use strict';
 
 // MODULES //
@@ -100,7 +102,7 @@ function abs1( arr, idx ) {
 * @param {NonNegativeInteger} offsetRWORK - offset for RWORK
 * @returns {integer} 0 on success
 */
-function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS1, strideS2, offsetS, P, strideP1, strideP2, offsetP, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) {
 	var bignum;
 	var safmin;
 	var acoefa;
@@ -110,7 +112,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	var bscale;
 	var anorm;
 	var bnorm;
-	var compl; // eslint-disable-line no-shadow
+	var compl;
 	var compr;
 	var small;
 	var scale;

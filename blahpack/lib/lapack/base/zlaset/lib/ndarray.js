@@ -16,30 +16,49 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Initialize a complex matrix to given values
+* Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 *
-* @param {string} uplo - specifies the operation type
+* @param {string} uplo - 'U' for upper, 'L' for lower, otherwise full
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
-* @param {Complex128} alpha - scalar constant
-* @param {Complex128} beta - scalar constant
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @param {Complex128} alpha - complex off-diagonal value
+* @param {Complex128} beta - complex diagonal value
+* @param {Complex128Array} A - input/output matrix
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @throws {TypeError} first argument must be a valid matrix triangle
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} third argument must be a nonnegative integer
+* @returns {Complex128Array} A
 */
-function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
-	return base( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ); // eslint-disable-line max-len
+function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
+	if ( uplo !== 'upper' && uplo !== 'lower' && uplo !== 'all' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+	return base( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA );
 }
 
 

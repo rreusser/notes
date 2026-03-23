@@ -26,16 +26,15 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Generate a complex Givens plane rotation
+* Generates a plane rotation so that:.
 *
-* @param {number} f - f
-* @param {number} g - g
-* @param {number} c - c
-* @param {number} s - s
-* @param {number} r - r
+* @param {Float64Array} f - first component [re, im]
+* @param {Float64Array} g - second component [re, im]
+* @param {Float64Array} out - output: out[0]=c, out[1..2]=s (re,im), out[3..4]=r (re,im)
+* @returns {Float64Array} out
 */
-function zlartg( f, g, c, s, r ) {
-	return base( f, g, c, s, r );
+function zlartg( f, g, out ) {
+	return base( f, g, out );
 }
 
 

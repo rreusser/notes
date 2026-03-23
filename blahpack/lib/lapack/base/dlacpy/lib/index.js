@@ -16,15 +16,24 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
 * Copy all or part of a matrix A to another matrix B.
 *
 * @module @stdlib/lapack/base/dlacpy
 *
 * @example
-* // TODO: Add example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var dlacpy = require( '@stdlib/lapack/base/dlacpy' );
+* 
+* var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* dlacpy( 'row-major', 'upper', 2, 2, A, 2, B, 2 );
+*
+* @example
+* var dlacpy = require( '@stdlib/lapack/base/dlacpy' );
+* 
+* dlacpy.ndarray( 1.0, 2, 2, 1.0, 1, 2, 0, 1.0, 1, 2, 0 );
 */
 
 // MODULES //

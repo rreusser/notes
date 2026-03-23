@@ -16,15 +16,31 @@
 * limitations under the License.
 */
 
-'use strict';
-
 /**
 * Back-transform eigenvectors of a balanced pair of matrices.
 *
 * @module @stdlib/lapack/base/zggbak
 *
 * @example
-* // TODO: Add example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var Complex128Array = require( '@stdlib/array/complex128' );
+* var zggbak = require( '@stdlib/lapack/base/zggbak' );
+* 
+* var LSCALE = new Float64Array( [ 1.0, 2.0 ] );
+* var RSCALE = new Float64Array( [ 1.0, 2.0 ] );
+* var V = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zggbak( 'row-major', 'none', 'left', 2, 1, 2, LSCALE, 1, RSCALE, 1, 2, V, 2 );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var zggbak = require( '@stdlib/lapack/base/zggbak' );
+* 
+* var LSCALE = new Float64Array( [ 1.0, 2.0 ] );
+* var RSCALE = new Float64Array( [ 1.0, 2.0 ] );
+* var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+* 
+* zggbak.ndarray( 'none', 'left', 2, 1, 2, LSCALE, 1, 0, RSCALE, 1, 0, 2, V, 1, 2, 0 );
 */
 
 // MODULES //

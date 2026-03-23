@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
@@ -52,7 +54,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * @param {NonNegativeInteger} offsetB - starting index for B (in complex elements)
 * @returns {Complex128Array} `B`
 */
-function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
+function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) {
 	var noconj;
 	var nounit;
 	var lside;

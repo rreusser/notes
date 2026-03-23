@@ -16,21 +16,66 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Perform one of the complex matrix-matrix operations:.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} transa - TODO
+* @param {string} transb - TODO
+* @param {NonNegativeInteger} M - TODO
+* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} K - TODO
+* @param {Complex128} alpha - TODO
+* @param {Complex128Array} A - input matrix
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Complex128Array} B - input matrix
+* @param {PositiveInteger} LDB - leading dimension of `B`
+* @param {Complex128} beta - TODO
+* @param {Complex128Array} C - input matrix
+* @param {PositiveInteger} LDC - leading dimension of `C`
+* @throws {TypeError} first argument must be a valid order
+* @returns {*} result
 */
-function zgemm() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zgemm( order, transa, transb, M, N, K, alpha, A, LDA, B, LDB, beta, C, LDC ) {
+	var sa1;
+	var sa2;
+	var sb1;
+	var sb2;
+	var sc1;
+	var sc2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+		sb1 = 1;
+		sb2 = LDB;
+		sc1 = 1;
+		sc2 = LDC;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+		sb1 = LDB;
+		sb2 = 1;
+		sc1 = LDC;
+		sc2 = 1;
+	}
+	return base( transa, transb, M, N, K, alpha, A, sa1, sa2, 0, B, sb1, sb2, 0, beta, C, sc1, sc2, 0 );
 }
 
 

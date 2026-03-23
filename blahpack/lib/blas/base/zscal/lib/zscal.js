@@ -16,21 +16,30 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Scale a complex double-precision vector by a complex constant.
+*
+* @param {PositiveInteger} N - TODO
+* @param {Complex128} za - TODO
+* @param {Complex128Array} zx - input array
+* @param {integer} strideX - `zx` stride length
+* @returns {*} result
 */
-function zscal() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zscal( N, za, zx, strideX ) {
+	var oz = stride2offset( N, strideX );
+	return base( N, za, zx, strideX, oz );
 }
 
 
