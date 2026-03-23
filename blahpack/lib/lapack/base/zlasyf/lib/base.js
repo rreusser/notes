@@ -130,7 +130,7 @@ function zlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 
 	info = 0;
 
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		// Factorize the trailing columns of A using the upper triangle
 		// K starts at N-1 (0-based) and decreases
 		k = N - 1;

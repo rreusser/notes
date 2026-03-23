@@ -20,6 +20,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 IMAGE="blahpack-sandbox:latest"
 SANDBOX_NAME="blahpack"
+# Docker prefixes the agent name, so the actual sandbox name is:
+FULL_SANDBOX_NAME="claude-${SANDBOX_NAME}"
 
 cd "$ROOT_DIR"
 
@@ -32,8 +34,8 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --reset)
-            echo "Destroying sandbox '$SANDBOX_NAME'..." >&2
-            docker sandbox rm "$SANDBOX_NAME" 2>/dev/null || true
+            echo "Destroying sandbox '$FULL_SANDBOX_NAME'..." >&2
+            docker sandbox rm "$FULL_SANDBOX_NAME" 2>/dev/null || true
             shift
             ;;
         *)
@@ -50,9 +52,9 @@ if ! docker image inspect "$IMAGE" &>/dev/null; then
 fi
 
 # Check if sandbox already exists
-if docker sandbox ls 2>/dev/null | grep -q "$SANDBOX_NAME"; then
-    echo "Resuming existing sandbox '$SANDBOX_NAME'..." >&2
-    exec docker sandbox run "$SANDBOX_NAME"
+if docker sandbox ls 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$FULL_SANDBOX_NAME"; then
+    echo "Resuming existing sandbox '$FULL_SANDBOX_NAME'..." >&2
+    exec docker sandbox run "$FULL_SANDBOX_NAME"
 else
     echo "Creating new sandbox '$SANDBOX_NAME'..." >&2
     exec docker sandbox run \
