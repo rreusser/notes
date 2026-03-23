@@ -181,8 +181,8 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	var pri;
 	var ilcomp;
 
-	compl = ( side === 'left' || side === 'B' || side === 'b' );
-	compr = ( side === 'right' || side === 'B' || side === 'b' );
+	compl = ( side === 'left' || side === 'both' );
+	compr = ( side === 'right' || side === 'both' );
 	ilback = ( howmny === 'backtransform' );
 	ilall = ( howmny === 'all' || howmny === 'backtransform' );
 

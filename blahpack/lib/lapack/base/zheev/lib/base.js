@@ -157,7 +157,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
 		// zsteqr needs real workspace of size 2*(N-1), use RWORK starting after E
 		// Fortran: INDWRK=INDE+N => real scratch at RWORK[N..]
-		info = zsteqr( ( wantz ? 'initialize' : 'none' ), N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + N * strideRWORK );
+		info = zsteqr( 'update', N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + N * strideRWORK );
 	}
 
 	// If matrix was scaled, rescale eigenvalues

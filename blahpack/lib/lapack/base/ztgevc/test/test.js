@@ -133,7 +133,7 @@ test( 'ztgevc: both eigenvectors, all (SIDE=B, HOWMNY=A)', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ false, false, false ];
 	var M = [ 0 ];
-	var info = ztgevc( 'B', 'all', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'both', 'all', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VL, tc.vl.length ), tc.vl, 1e-12, 'vl' );
@@ -199,7 +199,7 @@ test( 'ztgevc: 2x2 system, both', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ false, false ];
 	var M = [ 0 ];
-	var info = ztgevc( 'B', 'all', SELECT, 1, 0, 2, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 2, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'both', 'all', SELECT, 1, 0, 2, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 2, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VL, tc.vl.length ), tc.vl, 1e-12, 'vl' );

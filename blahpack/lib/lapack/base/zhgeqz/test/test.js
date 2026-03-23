@@ -89,7 +89,7 @@ test( 'zhgeqz: n_eq_0', function t() {
 	var WORK = new Complex128Array( 1 );
 	var RWORK = new Float64Array( 1 );
 
-	var info = zhgeqz( 'E', 'none', 'none', 0, 1, 0,
+	var info = zhgeqz( 'eigenvalues', 'none', 'none', 0, 1, 0,
 		H, 1, 0, 0,
 		T, 1, 0, 0,
 		ALPHA, 1, 0,
@@ -117,7 +117,7 @@ test( 'zhgeqz: n_eq_1', function t() {
 	mset( Hm, n, 0, 0, 3.0, 1.0 );
 	mset( Tm, n, 0, 0, 2.0, 0.5 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 1, 1,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 1, 1,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -164,7 +164,7 @@ test( 'zhgeqz: eig_only_3x3', function t() {
 	mset( Tm, n, 1, 2, 1.0, 0.0 );
 	mset( Tm, n, 2, 2, 1.0, 0.5 );
 
-	var info = zhgeqz( 'E', 'none', 'none', n, 1, 3,
+	var info = zhgeqz( 'eigenvalues', 'none', 'none', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -207,7 +207,7 @@ test( 'zhgeqz: schur_3x3', function t() {
 	mset( Tm, n, 1, 2, 1.0, 0.0 );
 	mset( Tm, n, 2, 2, 1.0, 0.5 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 1, 3,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -271,7 +271,7 @@ test( 'zhgeqz: schur_4x4', function t() {
 	mset( Tm, n, 2, 3, 0.5, 0.5 );
 	mset( Tm, n, 3, 3, 2.0, -1.0 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 1, 4,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 1, 4,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -321,7 +321,7 @@ test( 'zhgeqz: ihi_lt_ilo', function t() {
 	mset( Tm, n, 1, 1, 1.0, 0.5 );
 	mset( Tm, n, 2, 2, 3.0, -0.5 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 2, 1,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 2, 1,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -371,7 +371,7 @@ test( 'zhgeqz: partial_4x4', function t() {
 	mset( Tm, n, 2, 3, 1.0, -0.5 );
 	mset( Tm, n, 3, 3, 1.0, 0.0 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 2, 3,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 2, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -439,7 +439,7 @@ test( 'zhgeqz: eig_only_4x4', function t() {
 	mset( Tm, n, 2, 3, 0.5, 0.5 );
 	mset( Tm, n, 3, 3, 2.0, -1.0 );
 
-	var info = zhgeqz( 'E', 'none', 'none', n, 1, 4,
+	var info = zhgeqz( 'eigenvalues', 'none', 'none', n, 1, 4,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -475,7 +475,7 @@ test( 'zhgeqz: schur_2x2', function t() {
 	mset( Tm, n, 0, 1, 1.0, 1.0 );
 	mset( Tm, n, 1, 1, 3.0, -0.5 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 1, 2,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 1, 2,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -526,7 +526,7 @@ test( 'zhgeqz: zero_t_diag_3x3', function t() {
 	mset( Tm, n, 1, 2, 1.0, 0.0 );
 	mset( Tm, n, 2, 2, 1.0, 0.5 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 1, 3,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -569,7 +569,7 @@ test( 'zhgeqz: zero_t_last_3x3', function t() {
 	mset( Tm, n, 1, 2, 1.0, 0.0 );
 	mset( Tm, n, 2, 2, 0.0, 0.0 );
 
-	var info = zhgeqz( 'scale', 'initialize', 'initialize', n, 1, 3,
+	var info = zhgeqz( 'schur', 'initialize', 'initialize', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -610,7 +610,7 @@ test( 'zhgeqz: diagonal_3x3', function t() {
 	mset( Tm, n, 1, 2, 1.0, 0.0 );
 	mset( Tm, n, 2, 2, 3.0, 0.0 );
 
-	var info = zhgeqz( 'E', 'none', 'none', n, 1, 3,
+	var info = zhgeqz( 'eigenvalues', 'none', 'none', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,
@@ -661,7 +661,7 @@ test( 'zhgeqz: accumulate_qz (COMPQ=V, COMPZ=V)', function t() {
 	mset( Zm, n, 1, 1, 1.0, 0.0 );
 	mset( Zm, n, 2, 2, 1.0, 0.0 );
 
-	var info = zhgeqz( 'scale', 'update', 'update', n, 1, 3,
+	var info = zhgeqz( 'schur', 'update', 'update', n, 1, 3,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		Tm.data, Tm.s1, Tm.s2, Tm.offset,
 		ALPHA, 1, 0,

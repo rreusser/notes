@@ -151,9 +151,9 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	var y;
 
 	// Decode JOB
-	if ( job === 'E' || job === 'e' ) {
+	if ( job === 'eigenvalues' ) {
 		ilschr = false;
-	} else if ( job === 'scale' ) {
+	} else if ( job === 'schur' ) {
 		ilschr = true;
 	} else {
 		return -1;

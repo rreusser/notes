@@ -68,7 +68,7 @@ function zsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Upper triangle: A(i,j) for i <= j
 		jx = offsetX * 2;
 		for ( j = 0; j < N; j++ ) {

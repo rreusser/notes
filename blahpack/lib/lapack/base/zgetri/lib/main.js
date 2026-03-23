@@ -4,18 +4,15 @@
 
 // MODULES //
 
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
+
 var zgetri = require( './zgetri.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-Object.defineProperty( zgetri, 'ndarray', {
-	value: ndarray,
-	enumerable: false,
-	writable: false,
-	configurable: false
-});
+setReadOnly( zgetri, 'ndarray', ndarray );
 
 
 // EXPORTS //

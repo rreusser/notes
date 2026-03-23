@@ -149,7 +149,7 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
 		// dsteqr uses WORK[indtau] as its scratch workspace (needs 2*(N-1) space)
-		info = dsteqr( ( wantz ? 'initialize' : 'none' ), N, w, strideW, offsetW, WORK, strideWORK, inde, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau );
+		info = dsteqr( 'update', N, w, strideW, offsetW, WORK, strideWORK, inde, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau );
 	}
 
 	// If matrix was scaled, rescale eigenvalues

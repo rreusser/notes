@@ -98,7 +98,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 		return 0;
 	}
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Factorize A as U * D * U^T using the upper triangle of A
 		k = N - 1;
 		while ( k >= 0 ) {

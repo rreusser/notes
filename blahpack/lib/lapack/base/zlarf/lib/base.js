@@ -77,7 +77,7 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 	tauR = tauv[ oT ];
 	tauI = tauv[ oT + 1 ];
 
-	applyLeft = ( side === 'L' || side === 'l' );
+	applyLeft = ( side === 'left' );
 	lastv = 0;
 	lastc = 0;
 
@@ -119,7 +119,7 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 		// Form H * C
 		if ( lastv > 0 ) {
 			// w(1:lastc) := C(1:lastv, 1:lastc)^H * v(1:lastv)
-			zgemv( 'C', lastv, lastc, ONE, C, strideC1, strideC2, offsetC,
+			zgemv( 'conjugate-transpose', lastv, lastc, ONE, C, strideC1, strideC2, offsetC,
 				v, strideV, offsetV, ZERO, WORK, strideWORK, offsetWORK );
 
 			// C(1:lastv, 1:lastc) := C(...) - tau * v(1:lastv) * w(1:lastc)^H
@@ -130,7 +130,7 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 		// Form C * H
 		if ( lastv > 0 ) {
 			// w(1:lastc) := C(1:lastc, 1:lastv) * v(1:lastv)
-			zgemv( 'N', lastc, lastv, ONE, C, strideC1, strideC2, offsetC,
+			zgemv( 'no-transpose', lastc, lastv, ONE, C, strideC1, strideC2, offsetC,
 				v, strideV, offsetV, ZERO, WORK, strideWORK, offsetWORK );
 
 			// C(1:lastc, 1:lastv) := C(...) - tau * w(1:lastc) * v(1:lastv)^H

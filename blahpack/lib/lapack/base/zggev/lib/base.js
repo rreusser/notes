@@ -237,9 +237,10 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	}
 
 	// Reduce to generalized Hessenberg form
+	// zgghrd expects compq/compz: 'none'/'update'/'initialize'
 	if ( ilv ) {
 		zgghrd(
-			jobvl, jobvr, N, ilo, ihi,
+			( ilvl ? 'update' : 'none' ), ( ilvr ? 'update' : 'none' ), N, ilo, ihi,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB,
 			VL, strideVL1, strideVL2, offsetVL,
@@ -257,12 +258,12 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 	// QZ algorithm: compute eigenvalues and optionally Schur form
 	if ( ilv ) {
-		chtemp = 'S';
+		chtemp = 'schur';
 	} else {
-		chtemp = 'E';
+		chtemp = 'eigenvalues';
 	}
 	ierr = zhgeqz(
-		chtemp, jobvl, jobvr, N, ilo, ihi,
+		chtemp, ( ilvl ? 'update' : 'none' ), ( ilvr ? 'update' : 'none' ), N, ilo, ihi,
 		A, strideA1, strideA2, offsetA,
 		B, strideB1, strideB2, offsetB,
 		ALPHA, strideALPHA, offsetALPHA,
@@ -284,15 +285,16 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	}
 
 	// Compute eigenvectors
+	// ztgevc side: 'left'/'right'/'both'
 	if ( ilv ) {
 		if ( ilvl ) {
 			if ( ilvr ) {
-				chtemp = 'B';
+				chtemp = 'both';
 			} else {
-				chtemp = 'L';
+				chtemp = 'left';
 			}
 		} else {
-			chtemp = 'R';
+			chtemp = 'right';
 		}
 
 		// Use a separate RWORK for ztgevc so it doesn't clobber

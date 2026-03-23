@@ -4,20 +4,15 @@
 
 // MODULES //
 
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
+
 var dorml2 = require( './dorml2.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-// NOTE: In stdlib, this uses setReadOnly from @stdlib/utils.
-// For standalone development, we use Object.defineProperty directly.
-Object.defineProperty( dorml2, 'ndarray', {
-	value: ndarray,
-	enumerable: false,
-	writable: false,
-	configurable: false
-});
+setReadOnly( dorml2, 'ndarray', ndarray );
 
 
 // EXPORTS //

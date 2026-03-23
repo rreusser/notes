@@ -37,9 +37,9 @@ function dlasrt( id, N, d, stride, offset ) {
 
 	// Determine sort direction...
 	dir = -1;
-	if ( id === 'D' || id === 'd' ) {
+	if ( id === 'decreasing' || id === 'D' || id === 'd' ) {
 		dir = 0;
-	} else if ( id === 'I' || id === 'i' ) {
+	} else if ( id === 'increasing' || id === 'I' || id === 'i' ) {
 		dir = 1;
 	}
 

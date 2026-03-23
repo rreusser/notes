@@ -20,20 +20,15 @@
 
 // MODULES //
 
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
+
 var zlacgv = require( './zlacgv.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-// NOTE: In stdlib, this uses setReadOnly from @stdlib/utils.
-// For standalone development, we use Object.defineProperty directly.
-Object.defineProperty( zlacgv, 'ndarray', {
-	value: ndarray,
-	enumerable: false,
-	writable: false,
-	configurable: false
-});
+setReadOnly( zlacgv, 'ndarray', ndarray );
 
 
 // EXPORTS //

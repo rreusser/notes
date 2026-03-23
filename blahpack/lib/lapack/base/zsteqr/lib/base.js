@@ -464,7 +464,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 	// Sort eigenvalues (and eigenvectors) in ascending order
 	if ( icompz === 0 ) {
-		dlasrt( 'initialize', N, d, strideD, offsetD );
+		dlasrt( 'increasing', N, d, strideD, offsetD );
 	} else {
 		// Selection sort
 		for ( ii = 1; ii < N; ii++ ) {

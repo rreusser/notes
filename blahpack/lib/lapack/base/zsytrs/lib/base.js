@@ -16,7 +16,7 @@ function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 	sa1 = strideA1 * 2; sa2 = strideA2 * 2; sb1 = strideB1 * 2; sb2 = strideB2 * 2;
 	Av = reinterpret( A, 0 ); Bv = reinterpret( B, 0 );
 	if ( N === 0 || nrhs === 0 ) return 0;
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		k = N - 1;
 		while ( k >= 0 ) {
 			if ( IPIV[ offsetIPIV + k * strideIPIV ] >= 0 ) {
@@ -41,11 +41,11 @@ function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 		k = 0;
 		while ( k < N ) {
 			if ( IPIV[ offsetIPIV + k * strideIPIV ] >= 0 ) {
-				if ( k > 0 ) zgemv( 'T', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 );
+				if ( k > 0 ) zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 );
 				kp = IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 );
 				k += 1;
 			} else {
-				if ( k > 0 ) { zgemv( 'T', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); zgemv( 'T', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + ( k + 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k + 1 ) * strideB1 ); }
+				if ( k > 0 ) { zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, A, strideA1, offsetA + ( k + 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k + 1 ) * strideB1 ); }
 				kp = ~IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 );
 				k += 2;
 			}
@@ -72,11 +72,11 @@ function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 		k = N - 1;
 		while ( k >= 0 ) {
 			if ( IPIV[ offsetIPIV + k * strideIPIV ] >= 0 ) {
-				if ( k < N - 1 ) zgemv( 'T', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 );
+				if ( k < N - 1 ) zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 );
 				kp = IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 );
 				k -= 1;
 			} else {
-				if ( k < N - 1 ) { zgemv( 'T', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); zgemv( 'T', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + ( k - 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k - 1 ) * strideB1 ); }
+				if ( k < N - 1 ) { zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + k * strideA2, CONE, B, strideB2, offsetB + k * strideB1 ); zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + ( k + 1 ) * strideB1, A, strideA1, offsetA + ( k + 1 ) * strideA1 + ( k - 1 ) * strideA2, CONE, B, strideB2, offsetB + ( k - 1 ) * strideB1 ); }
 				kp = ~IPIV[ offsetIPIV + k * strideIPIV ]; if ( kp !== k ) zswap( nrhs, B, strideB2, offsetB + k * strideB1, B, strideB2, offsetB + kp * strideB1 );
 				k -= 2;
 			}
