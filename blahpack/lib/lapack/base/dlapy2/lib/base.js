@@ -51,7 +51,7 @@ function dlapy2( x, y ) {
 	if ( z === 0.0 || w > 1.7976931348623157e+308 ) {
 		return w;
 	}
-	return w * Math.sqrt( 1.0 + ( z / w ) * ( z / w ) );
+	return w * Math.sqrt( 1.0 + (( z / w ) * ( z / w )) );
 }
 
 

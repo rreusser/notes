@@ -120,7 +120,7 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 							if ( nounit ) {
 								B[ ib ] = temp * A[ offsetA + (k * sa1) + (k * sa2) ];
 							}
-							ia = offsetA + ( k + 1 ) * sa1 + (k * sa2);
+							ia = offsetA + (( k + 1 ) * sa1) + (k * sa2);
 							for ( i = k + 1; i < M; i++ ) {
 								B[ offsetB + (i * sb1) + (j * sb2) ] += temp * A[ ia ];
 								ia += sa1;

@@ -69,7 +69,7 @@ function dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, off
 			lastv = N;
 		}
 		if ( strideV > 0 ) {
-			ix = offsetV + ( lastv - 1 ) * strideV;
+			ix = offsetV + (( lastv - 1 ) * strideV);
 		} else {
 			ix = offsetV;
 		}

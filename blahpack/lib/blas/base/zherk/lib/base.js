@@ -244,7 +244,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 
 						// Imag stays zero
 						ic += sc1;
-						ia = oA + ( j + 1 ) * sa1 + (l * sa2);
+						ia = oA + (( j + 1 ) * sa1) + (l * sa2);
 						for ( i = j + 1; i < N; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];

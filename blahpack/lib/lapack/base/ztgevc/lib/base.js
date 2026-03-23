@@ -328,7 +328,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 				if ( lsa ) {
 					acoeff = ascale * ( scale * sbeta );
 				} else {
-					acoeff = scale * acoeff;
+					acoeff *= scale;
 				}
 				if ( lsb ) {
 					bcoeff[ 0 ] = bscale * ( scale * salpha[ 0 ] );
@@ -523,7 +523,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 				if ( lsa ) {
 					acoeff = ascale * ( scale * sbeta );
 				} else {
-					acoeff = scale * acoeff;
+					acoeff *= scale;
 				}
 				if ( lsb ) {
 					bcoeff[ 0 ] = bscale * ( scale * salpha[ 0 ] );

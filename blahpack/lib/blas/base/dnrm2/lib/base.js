@@ -100,7 +100,7 @@ function dnrm2( N, x, stride, offset ) {
 				ymax = amed;
 			}
 			scl = 1.0;
-			sumsq = ymax * ymax * ( 1.0 + ( ymin / ymax ) * ( ymin / ymax ) );
+			sumsq = ymax * ymax * ( 1.0 + (( ymin / ymax ) * ( ymin / ymax )) );
 		} else {
 			scl = 1.0 / SSML;
 			sumsq = asml;

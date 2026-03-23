@@ -180,7 +180,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 						break;
 					}
 				}
-				a2 = CNST3 * a2;
+				a2 *= CNST3;
 
 				// Rayleigh quotient residual bound.
 				if ( a2 < CNST1 ) {
@@ -228,7 +228,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 						break;
 					}
 				}
-				a2 = CNST3 * a2;
+				a2 *= CNST3;
 			}
 
 			if ( a2 < CNST1 ) {

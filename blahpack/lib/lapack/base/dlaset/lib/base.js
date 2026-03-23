@@ -58,7 +58,7 @@ function dlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
 	} else if ( uplo === 'lower' ) {
 		// Set the strictly lower triangular part to ALPHA.
 		for ( j = 0; j < mn; j++ ) {
-			idx = offsetA + ( j + 1 ) * strideA1 + (j * strideA2);
+			idx = offsetA + (( j + 1 ) * strideA1) + (j * strideA2);
 			for ( i = j + 1; i < M; i++ ) {
 				A[ idx ] = alpha;
 				idx += strideA1;
