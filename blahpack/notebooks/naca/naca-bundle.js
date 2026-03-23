@@ -4195,7 +4195,7 @@ var require_base3 = __commonJS({
         gs = g / u;
         d = Math.sqrt(fs * fs + gs * gs);
         out[0] = Math.abs(fs) / d;
-        out[2] = f > 0 ? d * u : -d * u;
+        out[2] = f > 0 ? d * u : -(d * u);
         out[1] = gs / (f > 0 ? d : -d);
       }
       return out;
@@ -7459,12 +7459,12 @@ var require_main56 = __commonJS({
     var Complex128 = require_lib38();
     var real = require_lib54();
     var imag = require_lib55();
-    function cadd3(z1, z2) {
+    function cadd2(z1, z2) {
       var re = real(z1) + real(z2);
       var im = imag(z1) + imag(z2);
       return new Complex128(re, im);
     }
-    module.exports = cadd3;
+    module.exports = cadd2;
   }
 });
 
@@ -7921,7 +7921,7 @@ var require_cmplx = __commonJS({
   "lib/cmplx.js"(exports, module) {
     "use strict";
     var cmul3 = require_lib61();
-    var cadd3 = require_lib62();
+    var cadd2 = require_lib62();
     var cdiv = require_lib70();
     var csub3 = require_lib71();
     var cneg = require_lib72();
@@ -7982,7 +7982,7 @@ var require_cmplx = __commonJS({
     module.exports = {
       // Scalar operations (stdlib re-exports, operate on Complex128 objects)
       mul: cmul3,
-      add: cadd3,
+      add: cadd2,
       div: cdiv,
       sub: csub3,
       neg: cneg,
@@ -8064,7 +8064,7 @@ var require_base23 = __commonJS({
           beta = -(Math.sign(alphr) || 1) * dlapy3(alphr, alphi, xnorm);
         }
         tauv[oT] = (beta - alphr) / beta;
-        tauv[oT + 1] = -alphi / beta;
+        tauv[oT + 1] = -(alphi / beta);
         SCRATCH[0] = 1;
         SCRATCH[1] = 0;
         SCRATCH[2] = alphr - beta;
@@ -14019,31 +14019,8 @@ function squareFlow(options = {}) {
 }
 
 // examples/naca/exterior-flow.js
-var cadd = ([ar, ai], [br, bi]) => [ar + br, ai + bi];
 var csub = ([ar, ai], [br, bi]) => [ar - br, ai - bi];
 var cmul = ([ar, ai], [br, bi]) => [ar * br - ai * bi, ar * bi + ai * br];
-function evalRunge(z, c, coeffs) {
-  const dz = csub(z, c);
-  const d = dz[0] * dz[0] + dz[1] * dz[1];
-  const inv = [dz[0] / d, -dz[1] / d];
-  let power = [1, 0];
-  let sum = [0, 0];
-  for (let n = 0; n < coeffs.length; n++) {
-    sum = cadd(sum, cmul(coeffs[n], power));
-    power = cmul(power, inv);
-  }
-  return sum;
-}
-function evalSingular(z, poles, coeffs, b0) {
-  let sum = [b0[0], b0[1]];
-  for (let k = 0; k < poles.length; k++) {
-    const dz = csub(z, poles[k]);
-    const d = dz[0] * dz[0] + dz[1] * dz[1];
-    const inv = [dz[0] / d, -dz[1] / d];
-    sum = cadd(sum, cmul(coeffs[k], inv));
-  }
-  return sum;
-}
 function centroid(vertices) {
   let sx = 0, sy = 0;
   for (const [x, y] of vertices) {
@@ -14054,74 +14031,23 @@ function centroid(vertices) {
 }
 function exteriorFlow(boundaryPoints, polygonVertices, options = {}) {
   const { aaa: aaa2, pointInPolygon: pointInPolygon2 } = options;
-  if (!aaa2) throw new Error("exteriorFlow requires options.aaa (AAA algorithm function)");
+  if (!aaa2) throw new Error("exteriorFlow requires options.aaa");
   if (!pointInPolygon2) throw new Error("exteriorFlow requires options.pointInPolygon");
   const M = boundaryPoints.length;
   const c = options.center || centroid(polygonVertices);
-  const N = options.N || 10 + Math.ceil(Math.log(M));
+  const N = options.N || 10;
   const kutta = options.kutta || false;
   const zTE = options.trailingEdge || null;
-  const kuttaWeight = kutta ? Math.sqrt(M) : 0;
-  const ncolsLS = 2 * N + (kutta ? 1 : 0);
-  const nrowsLS = M + (kutta ? 1 : 0);
-  const Asmooth = new Float64Array(nrowsLS * ncolsLS);
-  const bsmooth = new Float64Array(nrowsLS);
-  for (let j = 0; j < M; j++) {
-    const dz = csub(boundaryPoints[j], c);
-    const d = dz[0] * dz[0] + dz[1] * dz[1];
-    const inv = [dz[0] / d, -dz[1] / d];
-    let power = [inv[0], inv[1]];
-    for (let n = 1; n <= N; n++) {
-      Asmooth[j + 2 * (n - 1) * nrowsLS] = power[1];
-      Asmooth[j + (2 * (n - 1) + 1) * nrowsLS] = power[0];
-      power = cmul(power, inv);
-    }
-    bsmooth[j] = -boundaryPoints[j][1];
-    if (kutta) {
-      Asmooth[j + (ncolsLS - 1) * nrowsLS] = -Math.log(Math.sqrt(d)) / (2 * Math.PI);
-    }
-  }
-  if (kutta && zTE) {
-    const row = M;
-    bsmooth[row] = 0;
-    const dz = csub(zTE, c);
-    const d = dz[0] * dz[0] + dz[1] * dz[1];
-    const inv = [dz[0] / d, -dz[1] / d];
-    let power = [inv[0], inv[1]];
-    for (let n = 1; n <= N; n++) {
-      const next = cmul(power, inv);
-      const dpR = -n * next[0], dpI = -n * next[1];
-      Asmooth[row + 2 * (n - 1) * nrowsLS] = kuttaWeight * dpI;
-      Asmooth[row + (2 * (n - 1) + 1) * nrowsLS] = kuttaWeight * dpR;
-      power = next;
-    }
-    const dx = zTE[0] - c[0], dy = zTE[1] - c[1];
-    const dd = dx * dx + dy * dy;
-    Asmooth[row + (ncolsLS - 1) * nrowsLS] = kuttaWeight * (-dx / (2 * Math.PI * dd));
-  }
-  const xsmooth = lssolve(Asmooth, bsmooth, nrowsLS, ncolsLS);
-  const smoothCoeffs = [[0, 0]];
-  for (let n = 1; n <= N; n++) {
-    smoothCoeffs.push([xsmooth[2 * (n - 1)], xsmooth[2 * (n - 1) + 1]]);
-  }
-  const Gamma = kutta ? xsmooth[ncolsLS - 1] : 0;
-  const residual = new Array(M);
-  for (let j = 0; j < M; j++) {
-    const fSmooth = evalRunge(boundaryPoints[j], c, smoothCoeffs);
-    const dz = csub(boundaryPoints[j], c);
-    const logR = 0.5 * Math.log(dz[0] * dz[0] + dz[1] * dz[1]);
-    const circIm = -Gamma / (2 * Math.PI) * logR;
-    residual[j] = -boundaryPoints[j][1] - fSmooth[1] - circIm;
-  }
+  const kuttaWeight = kutta ? options.kuttaWeight || M * M : 0;
   const zComplex = boundaryPoints.map(([r, i]) => [r, i]);
-  const fComplex = residual.map((r) => [r, 0]);
+  const fComplex = boundaryPoints.map(([x, y]) => [-y, 0]);
   const mmax = options.mmax || 200;
   const approx = aaa2(zComplex, fComplex, 1e-13, mmax);
   const allPoles = approx.pol || [];
   const minPoleDist = options.minPoleDist || 5e-3;
   const corners = options.corners || [];
   const cornerRadius = options.cornerRadius || 0.1;
-  const filteredPoles = [];
+  const poles = [];
   for (const pole of allPoles) {
     if (!pointInPolygon2(pole, polygonVertices)) continue;
     let nearCorner = false;
@@ -14133,82 +14059,125 @@ function exteriorFlow(boundaryPoints, polygonVertices, options = {}) {
       }
     }
     if (nearCorner) {
-      filteredPoles.push(pole);
+      poles.push(pole);
       continue;
     }
     let minD2 = Infinity;
     for (let j = 0; j < M; j++) {
-      const dx = pole[0] - boundaryPoints[j][0];
-      const dy = pole[1] - boundaryPoints[j][1];
+      const dx = pole[0] - boundaryPoints[j][0], dy = pole[1] - boundaryPoints[j][1];
       minD2 = Math.min(minD2, dx * dx + dy * dy);
     }
-    if (Math.sqrt(minD2) >= minPoleDist) {
-      filteredPoles.push(pole);
-    }
+    if (Math.sqrt(minD2) >= minPoleDist) poles.push(pole);
   }
-  const K = filteredPoles.length;
-  const singCols = 2 * K + 1;
-  const Asing = new Float64Array(M * singCols);
-  const bsing = new Float64Array(M);
+  const K = poles.length;
+  const nCols = 2 * N + 2 * K + (kutta ? 1 : 0);
+  const nRows = M + (kutta ? 1 : 0);
+  const A = new Float64Array(nRows * nCols);
+  const b = new Float64Array(nRows);
   for (let j = 0; j < M; j++) {
-    for (let k = 0; k < K; k++) {
-      const dz = csub(boundaryPoints[j], filteredPoles[k]);
-      const d = dz[0] * dz[0] + dz[1] * dz[1];
-      const invRe = dz[0] / d;
-      const invIm = -dz[1] / d;
-      Asing[j + k * M] = invIm;
-      Asing[j + (k + K) * M] = invRe;
+    b[j] = -boundaryPoints[j][1];
+    const dz = csub(boundaryPoints[j], c);
+    const d = dz[0] * dz[0] + dz[1] * dz[1];
+    const inv = [dz[0] / d, -dz[1] / d];
+    let power = [inv[0], inv[1]];
+    for (let n = 0; n < N; n++) {
+      A[j + 2 * n * nRows] = power[1];
+      A[j + (2 * n + 1) * nRows] = power[0];
+      power = cmul(power, inv);
     }
-    Asing[j + 2 * K * M] = 1;
-    bsing[j] = residual[j];
+    for (let k = 0; k < K; k++) {
+      const pdz = csub(boundaryPoints[j], poles[k]);
+      const pd = pdz[0] * pdz[0] + pdz[1] * pdz[1];
+      const col = 2 * N + 2 * k;
+      A[j + col * nRows] = -pdz[1] / pd;
+      A[j + (col + 1) * nRows] = pdz[0] / pd;
+    }
+    if (kutta) {
+      A[j + (nCols - 1) * nRows] = -0.5 * Math.log(d) / (2 * Math.PI);
+    }
   }
-  const xsing = lssolve(Asing, bsing, M, singCols);
+  if (kutta && zTE) {
+    const row = M;
+    b[row] = kuttaWeight * -1;
+    const dz = csub(zTE, c);
+    const d = dz[0] * dz[0] + dz[1] * dz[1];
+    const inv = [dz[0] / d, -dz[1] / d];
+    let power = [inv[0], inv[1]];
+    for (let n = 0; n < N; n++) {
+      const next = cmul(power, inv);
+      const dpR = -(n + 1) * next[0], dpI = -(n + 1) * next[1];
+      A[row + 2 * n * nRows] = kuttaWeight * dpR;
+      A[row + (2 * n + 1) * nRows] = kuttaWeight * -dpI;
+      power = next;
+    }
+    for (let k = 0; k < K; k++) {
+      const pdz = csub(zTE, poles[k]);
+      const pd = pdz[0] * pdz[0] + pdz[1] * pdz[1];
+      const pd2 = pd * pd;
+      const dpR = -(pdz[0] * pdz[0] - pdz[1] * pdz[1]) / pd2;
+      const dpI = 2 * pdz[0] * pdz[1] / pd2;
+      const col = 2 * N + 2 * k;
+      A[row + col * nRows] = kuttaWeight * dpR;
+      A[row + (col + 1) * nRows] = kuttaWeight * -dpI;
+    }
+    A[row + (nCols - 1) * nRows] = kuttaWeight * (-dz[1] / (2 * Math.PI * d));
+  }
+  const colNorms = new Float64Array(nCols);
+  const activeCols = [];
+  for (let col = 0; col < nCols; col++) {
+    let norm = 0;
+    for (let r = 0; r < nRows; r++) norm += A[r + col * nRows] ** 2;
+    colNorms[col] = Math.sqrt(norm);
+    if (colNorms[col] > 1e-14) activeCols.push(col);
+  }
+  const nActive = activeCols.length;
+  const Ar = new Float64Array(nRows * nActive);
+  const colScale = new Float64Array(nActive);
+  for (let j = 0; j < nActive; j++) {
+    colScale[j] = 1 / colNorms[activeCols[j]];
+    for (let r = 0; r < nRows; r++) Ar[r + j * nRows] = A[r + activeCols[j] * nRows] * colScale[j];
+  }
+  const xr = lssolve(Ar, new Float64Array(b), nRows, nActive);
+  const allCoeffs = new Float64Array(nCols);
+  for (let j = 0; j < nActive; j++) allCoeffs[activeCols[j]] = xr[j] * colScale[j];
+  const smoothCoeffs = [[0, 0]];
+  for (let n = 0; n < N; n++) smoothCoeffs.push([allCoeffs[2 * n], allCoeffs[2 * n + 1]]);
   const singularCoeffs = [];
-  for (let k = 0; k < K; k++) {
-    singularCoeffs.push([xsing[k], xsing[k + K]]);
-  }
-  const b0 = [0, xsing[2 * K]];
-  const imCorr = [0, 0];
-  function evalCirc(z) {
-    if (Gamma === 0) return [0, 0];
+  for (let k = 0; k < K; k++) singularCoeffs.push([allCoeffs[2 * N + 2 * k], allCoeffs[2 * N + 2 * k + 1]]);
+  const Gamma = kutta ? allCoeffs[nCols - 1] : 0;
+  function evaluate(z) {
     const dz = csub(z, c);
-    const logR = 0.5 * Math.log(dz[0] * dz[0] + dz[1] * dz[1]);
-    const logTheta = Math.atan2(dz[1], dz[0]);
-    return [Gamma / (2 * Math.PI) * logTheta, -Gamma / (2 * Math.PI) * logR];
+    const d = dz[0] * dz[0] + dz[1] * dz[1];
+    const inv = [dz[0] / d, -dz[1] / d];
+    let power = [1, 0];
+    let fR = 0, fI = 0;
+    for (let n = 0; n < smoothCoeffs.length; n++) {
+      fR += smoothCoeffs[n][0] * power[0] - smoothCoeffs[n][1] * power[1];
+      fI += smoothCoeffs[n][0] * power[1] + smoothCoeffs[n][1] * power[0];
+      power = cmul(power, inv);
+    }
+    for (let k = 0; k < K; k++) {
+      const pdz = csub(z, poles[k]);
+      const pd = pdz[0] * pdz[0] + pdz[1] * pdz[1];
+      const cr = singularCoeffs[k][0], ci = singularCoeffs[k][1];
+      fR += cr * pdz[0] / pd + ci * pdz[1] / pd;
+      fI += -cr * pdz[1] / pd + ci * pdz[0] / pd;
+    }
+    if (Gamma !== 0) {
+      const logR = 0.5 * Math.log(d);
+      const theta = Math.atan2(dz[1], dz[0]);
+      fR += Gamma / (2 * Math.PI) * theta;
+      fI += -Gamma / (2 * Math.PI) * logR;
+    }
+    return { psi: z[1] + fI, wR: z[0] + fR, fR, fI };
   }
   let maxError = 0;
   for (let j = 0; j < M; j++) {
-    const fS = evalRunge(boundaryPoints[j], c, smoothCoeffs);
-    const fP = evalSingular(boundaryPoints[j], filteredPoles, singularCoeffs, b0);
-    const fC = evalCirc(boundaryPoints[j]);
-    const fIm = fS[1] + fP[1] + fC[1];
-    const err = Math.abs(-boundaryPoints[j][1] - fIm);
+    const err = Math.abs(evaluate(boundaryPoints[j]).psi);
     if (err > maxError) maxError = err;
   }
-  function evaluate(z) {
-    const fS = evalRunge(z, c, smoothCoeffs);
-    const fP = evalSingular(z, filteredPoles, singularCoeffs, b0);
-    const fC = evalCirc(z);
-    const fR = fS[0] + fP[0] + fC[0];
-    const fI = fS[1] + fP[1] + fC[1];
-    const psi = z[1] + fI;
-    const wR = z[0] + fR;
-    return { psi, wR, fR, fI };
-  }
   const CL = -2 * Gamma;
-  return {
-    evaluate,
-    Gamma,
-    CL,
-    poles: filteredPoles,
-    allPoles,
-    smoothCoeffs,
-    singularCoeffs,
-    b0,
-    maxError,
-    center: c,
-    N
-  };
+  return { evaluate, poles, allPoles, smoothCoeffs, singularCoeffs, Gamma, CL, maxError, center: c, N };
 }
 
 // notebooks/aaa/aaa-entry.js
@@ -14220,7 +14189,7 @@ var SAFMIN = Number.MIN_VALUE * (1 / Number.EPSILON);
 var SAFMAX = 1 / SAFMIN;
 var ULP = Number.EPSILON;
 var BASE = 2;
-function cadd2(out, a, b) {
+function cadd(out, a, b) {
   out[0] = a[0] + b[0];
   out[1] = a[1] + b[1];
   return out;
@@ -14683,7 +14652,7 @@ function zhgeqz(H, T, n, ilo, ihi) {
         cmul2(_t, _t, _t);
         cscale(_u, invMax, _v);
         cmul2(_u, _u, _u);
-        cadd2(_t, _t, _u);
+        cadd(_t, _t, _u);
         csqrt(_t, _t);
         cscale(_t, tempMax, _t);
         if (x_abs1 > 0) {
@@ -14693,7 +14662,7 @@ function zhgeqz(H, T, n, ilo, ihi) {
             _t[1] = -_t[1];
           }
         }
-        cadd2(_t, _w, _t);
+        cadd(_t, _w, _t);
         zladiv(_t, _v, _t);
         cmul2(_t, _v, _t);
         csub2(shift, shift, _t);
@@ -14703,12 +14672,12 @@ function zhgeqz(H, T, n, ilo, ihi) {
         cscale(_t, ascale, H[ilast][ilast]);
         cscale(_u, bscale, T[ilast][ilast]);
         zladiv(_t, _t, _u);
-        cadd2(eshift, eshift, _t);
+        cadd(eshift, eshift, _t);
       } else {
         cscale(_t, ascale, H[ilast][ilast - 1]);
         cscale(_u, bscale, T[ilast - 1][ilast - 1]);
         zladiv(_t, _t, _u);
-        cadd2(eshift, eshift, _t);
+        cadd(eshift, eshift, _t);
       }
       ccopy(shift, eshift);
     }

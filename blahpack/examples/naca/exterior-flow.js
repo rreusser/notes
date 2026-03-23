@@ -98,11 +98,14 @@ export function exteriorFlow(boundaryPoints, polygonVertices, options = {}) {
     }
   }
 
-  // Kutta row: Im[f'(z_TE)] = 0 (total derivative including all basis functions)
+  // Kutta row: Re[f'(z_TE)] = -1 (cancel the free-stream velocity g'=1)
+  // This enforces stagnation at the trailing edge: w'(z_TE) = g'(z_TE) + f'(z_TE) = 0
+  // Since g'(z) = 1 (uniform flow), we need Re[f'(z_TE)] = -1.
   if (kutta && zTE) {
     const row = M;
-    b[row] = 0;
+    b[row] = kuttaWeight * (-1); // Re[f'] = -Re[g'] = -1
 
+    // Re[c * φ'] = Re(c)*Re(φ') - Im(c)*Im(φ')
     const dz = csub(zTE, c);
     const d = dz[0] * dz[0] + dz[1] * dz[1];
     const inv = [dz[0] / d, -dz[1] / d];
@@ -110,8 +113,8 @@ export function exteriorFlow(boundaryPoints, polygonVertices, options = {}) {
     for (let n = 0; n < N; n++) {
       const next = cmul(power, inv);
       const dpR = -(n + 1) * next[0], dpI = -(n + 1) * next[1];
-      A[row + (2 * n) * nRows] = kuttaWeight * dpI;
-      A[row + (2 * n + 1) * nRows] = kuttaWeight * dpR;
+      A[row + (2 * n) * nRows] = kuttaWeight * dpR;       // Re(a_n) * Re(φ')
+      A[row + (2 * n + 1) * nRows] = kuttaWeight * (-dpI); // Im(a_n) * (-Im(φ'))
       power = next;
     }
 
@@ -122,12 +125,14 @@ export function exteriorFlow(boundaryPoints, polygonVertices, options = {}) {
       const dpR = -(pdz[0] * pdz[0] - pdz[1] * pdz[1]) / pd2;
       const dpI = 2 * pdz[0] * pdz[1] / pd2;
       const col = 2 * N + 2 * k;
-      A[row + col * nRows] = kuttaWeight * dpI;
-      A[row + (col + 1) * nRows] = kuttaWeight * dpR;
+      A[row + col * nRows] = kuttaWeight * dpR;
+      A[row + (col + 1) * nRows] = kuttaWeight * (-dpI);
     }
 
-    // Γ derivative: Im[Γ/(2πi(z-c))] = -(Γ/2π)(dx/d)
-    A[row + (nCols - 1) * nRows] = kuttaWeight * (-dz[0] / (2 * Math.PI * d));
+    // Circulation derivative: Re[Γ/(2πi(z-c))]
+    // 1/(i(z-c)) = -i/(z-c) = -(dy + i dx)/d
+    // Re of that = -dy/d. Per unit Γ: -dy/(2πd)
+    A[row + (nCols - 1) * nRows] = kuttaWeight * (-dz[1] / (2 * Math.PI * d));
   }
 
   // ---- Step 4: Column scaling and solve ----

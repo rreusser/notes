@@ -144,16 +144,16 @@ function dlasq1( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, 
 	// This treats WORK as a (2*N-1)-by-1 matrix in column-major order
 
 	// strideA1 = strideWORK, strideA2 = (2*N-1)*strideWORK (column stride, but 1 column so irrelevant)
-	dlascl( 'general', 0, 0, sigmx, scale, (2 * N) - 1, 1, WORK, strideWORK, ( (2 * N) - 1 ) * strideWORK, offsetWORK );
+	dlascl( 'general', 0, 0, sigmx, scale, 2 * N - 1, 1, WORK, strideWORK, ( 2 * N - 1 ) * strideWORK, offsetWORK );
 
 	// Square all elements: WORK(i) = WORK(i)^2
 	iw = offsetWORK;
-	for ( i = 0; i < (2 * N) - 1; i++ ) {
+	for ( i = 0; i < 2 * N - 1; i++ ) {
 		WORK[ iw ] *= WORK[ iw ];
 		iw += strideWORK;
 	}
 	// Set WORK(2*N) = 0
-	WORK[ offsetWORK + ( (2 * N) - 1 ) * strideWORK ] = ZERO;
+	WORK[ offsetWORK + ( 2 * N - 1 ) * strideWORK ] = ZERO;
 
 	// Call dlasq2 to compute eigenvalues of the qd array
 	info = dlasq2( N, WORK, strideWORK, offsetWORK );

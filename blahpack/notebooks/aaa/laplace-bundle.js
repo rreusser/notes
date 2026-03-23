@@ -4195,7 +4195,7 @@ var require_base3 = __commonJS({
         gs = g / u;
         d = Math.sqrt(fs * fs + gs * gs);
         out[0] = Math.abs(fs) / d;
-        out[2] = f > 0 ? d * u : -d * u;
+        out[2] = f > 0 ? d * u : -(d * u);
         out[1] = gs / (f > 0 ? d : -d);
       }
       return out;
@@ -5908,7 +5908,7 @@ var require_base13 = __commonJS({
       dlascl("general", 0, 0, sigmx, scale, 2 * N - 1, 1, WORK, strideWORK, (2 * N - 1) * strideWORK, offsetWORK);
       iw = offsetWORK;
       for (i = 0; i < 2 * N - 1; i++) {
-        WORK[iw] = WORK[iw] * WORK[iw];
+        WORK[iw] *= WORK[iw];
         iw += strideWORK;
       }
       WORK[offsetWORK + (2 * N - 1) * strideWORK] = ZERO;
@@ -8064,7 +8064,7 @@ var require_base23 = __commonJS({
           beta = -(Math.sign(alphr) || 1) * dlapy3(alphr, alphi, xnorm);
         }
         tauv[oT] = (beta - alphr) / beta;
-        tauv[oT + 1] = -alphi / beta;
+        tauv[oT + 1] = -(alphi / beta);
         SCRATCH[0] = 1;
         SCRATCH[1] = 0;
         SCRATCH[2] = alphr - beta;
@@ -12831,14 +12831,14 @@ var require_base51 = __commonJS({
       svt1 = strideVT1;
       svt2 = strideVT2;
       minmn = Math.min(M, N);
-      wntua = jobu === "A";
-      wntus = jobu === "S";
-      wntuo = jobu === "O";
-      wntun = jobu === "N";
-      wntva = jobvt === "A";
-      wntvs = jobvt === "S";
-      wntvo = jobvt === "O";
-      wntvn = jobvt === "N";
+      wntua = jobu === "A" || jobu === "all-columns";
+      wntus = jobu === "S" || jobu === "economy";
+      wntuo = jobu === "O" || jobu === "overwrite";
+      wntun = jobu === "N" || jobu === "none";
+      wntva = jobvt === "A" || jobvt === "all-rows";
+      wntvs = jobvt === "S" || jobvt === "economy";
+      wntvo = jobvt === "O" || jobvt === "overwrite";
+      wntvn = jobvt === "N" || jobvt === "none";
       wntuas = wntua || wntus;
       wntvas = wntva || wntvs;
       info = 0;

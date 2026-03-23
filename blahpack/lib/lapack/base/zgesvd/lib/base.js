@@ -158,7 +158,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		return 0;
 	}
 
-	wsz = Math.max( 1, (3 * minmn) + Math.max( M, N ) + (minmn * Math.max)( M, N ) );
+	wsz = Math.max( 1, 3 * minmn + Math.max( M, N ) + minmn * Math.max( M, N ) );
 	if ( lwork >= wsz ) {
 		WK = WORK;
 	} else {
