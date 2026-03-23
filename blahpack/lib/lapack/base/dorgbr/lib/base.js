@@ -121,47 +121,47 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 				);
 			}
 		}
+	} else if ( K < N ) {
+		// Form P^T = G(1) G(2) ... G(K)
+
+		// P^T was determined by a call to DGEBRD with K < N.
+		// Simply apply DORGLQ to the matrix A.
+		dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
 	} else {
 		// Form P^T = G(1) G(2) ... G(K)
 
-		if ( K < N ) {
-			// P^T was determined by a call to DGEBRD with K < N.
-			// Simply apply DORGLQ to the matrix A.
-			dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
-		} else {
-			// P^T was determined by a call to DGEBRD with K >= N.
-			// Need to shift rows and then apply DORGLQ.
+		// P^T was determined by a call to DGEBRD with K >= N.
+		// Need to shift rows and then apply DORGLQ.
 
-			// Set first row and column appropriately
-			// A(0,0) = 1
-			A[ offsetA ] = 1.0;
+		// Set first row and column appropriately
+		// A(0,0) = 1
+		A[ offsetA ] = 1.0;
 
-			// A(i, 0) = 0 for i >= 1
-			for ( i = 1; i < N; i++ ) {
-				A[ offsetA + (i * strideA1) ] = 0.0;
+		// A(i, 0) = 0 for i >= 1
+		for ( i = 1; i < N; i++ ) {
+			A[ offsetA + (i * strideA1) ] = 0.0;
+		}
+
+		// Shift rows: for columns j from 1 to N-1, shift rows down by 1
+		// Fortran: DO 60 J = 2, N => 0-based: j from 1 to N-1
+		for ( j = 1; j < N; j++ ) {
+			// Shift: A(i, j) = A(i-1, j) for i from j-1 downto 1 (0-based)
+			// Fortran: DO 50 I = J-1, 2, -1 => 0-based: i from j-2 downto 1
+			for ( i = j - 1; i >= 1; i-- ) {
+				A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (( i - 1 ) * strideA1) + (j * strideA2) ];
 			}
+			// A(0, j) = 0
+			A[ offsetA + (j * strideA2) ] = 0.0;
+		}
 
-			// Shift rows: for columns j from 1 to N-1, shift rows down by 1
-			// Fortran: DO 60 J = 2, N => 0-based: j from 1 to N-1
-			for ( j = 1; j < N; j++ ) {
-				// Shift: A(i, j) = A(i-1, j) for i from j-1 downto 1 (0-based)
-				// Fortran: DO 50 I = J-1, 2, -1 => 0-based: i from j-2 downto 1
-				for ( i = j - 1; i >= 1; i-- ) {
-					A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (( i - 1 ) * strideA1) + (j * strideA2) ];
-				}
-				// A(0, j) = 0
-				A[ offsetA + (j * strideA2) ] = 0.0;
-			}
-
-			if ( N > 1 ) {
-				// Form P^T(1:N-1, 1:N-1) using the reflectors
-				// Fortran: CALL DORGLQ( N-1, N-1, N-1, A(2,2), LDA, TAU, WORK, LWORK, IINFO )
-				dorglq( N - 1, N - 1, N - 1,
-					A, strideA1, strideA2, offsetA + strideA1 + strideA2,
-					TAU, strideTAU, offsetTAU,
-					WORK, strideWORK, offsetWORK, lwork
-				);
-			}
+		if ( N > 1 ) {
+			// Form P^T(1:N-1, 1:N-1) using the reflectors
+			// Fortran: CALL DORGLQ( N-1, N-1, N-1, A(2,2), LDA, TAU, WORK, LWORK, IINFO )
+			dorglq( N - 1, N - 1, N - 1,
+				A, strideA1, strideA2, offsetA + strideA1 + strideA2,
+				TAU, strideTAU, offsetTAU,
+				WORK, strideWORK, offsetWORK, lwork
+			);
 		}
 	}
 

@@ -154,112 +154,109 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				jx += sx;
 			}
 		}
-	} else {
-		// Solve A**T*x = b or A**H*x = b
-		if ( uplo === 'upper' ) {
-			// Upper triangular, transpose/conj-transpose: forward-substitution
-			kplus1 = K;
-			jx = kx;
-			for ( j = 0; j < N; j++ ) {
-				tempR = xv[ jx ];
-				tempI = xv[ jx + 1 ];
-				l = kplus1 - j;
-				ix = kx;
-				if ( noconj ) {
-					// Transpose (no conjugation)
-					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-						ia = oA + (( l + i ) * sa1) + (j * sa2);
+	} else if ( uplo === 'upper' ) {
+		// Solve A**T*x = b or A**H*x = b, upper triangular: forward-substitution
+		kplus1 = K;
+		jx = kx;
+		for ( j = 0; j < N; j++ ) {
+			tempR = xv[ jx ];
+			tempI = xv[ jx + 1 ];
+			l = kplus1 - j;
+			ix = kx;
+			if ( noconj ) {
+				// Transpose (no conjugation)
+				for ( i = Math.max( 0, j - K ); i < j; i++ ) {
+					ia = oA + (( l + i ) * sa1) + (j * sa2);
 
-						// Temp = temp - A(l+i,j) * x(i)
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix += sx;
-					}
-					xv[ jx ] = tempR;
-					xv[ jx + 1 ] = tempI;
-					if ( nounit ) {
-						ia = oA + (kplus1 * sa1) + (j * sa2);
-						cmplx.divAt( xv, jx, xv, jx, Av, ia );
-					}
-				} else {
-					// Conjugate transpose
-					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-						ia = oA + (( l + i ) * sa1) + (j * sa2);
-
-						// Temp = temp - conj(A(l+i,j)) * x(i)
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ]; // conjugate
-						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix += sx;
-					}
-					xv[ jx ] = tempR;
-					xv[ jx + 1 ] = tempI;
-					if ( nounit ) {
-						// Divide by conj(A(kplus1, j))
-						ia = oA + (kplus1 * sa1) + (j * sa2);
-						ai = Av[ ia + 1 ];
-						Av[ ia + 1 ] = -ai;
-						cmplx.divAt( xv, jx, xv, jx, Av, ia );
-						Av[ ia + 1 ] = ai; // restore
-					}
+					// Temp = temp - A(l+i,j) * x(i)
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix += sx;
 				}
-				jx += sx;
-				if ( j >= K ) {
-					kx += sx;
+				xv[ jx ] = tempR;
+				xv[ jx + 1 ] = tempI;
+				if ( nounit ) {
+					ia = oA + (kplus1 * sa1) + (j * sa2);
+					cmplx.divAt( xv, jx, xv, jx, Av, ia );
+				}
+			} else {
+				// Conjugate transpose
+				for ( i = Math.max( 0, j - K ); i < j; i++ ) {
+					ia = oA + (( l + i ) * sa1) + (j * sa2);
+
+					// Temp = temp - conj(A(l+i,j)) * x(i)
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ]; // conjugate
+					tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix += sx;
+				}
+				xv[ jx ] = tempR;
+				xv[ jx + 1 ] = tempI;
+				if ( nounit ) {
+					// Divide by conj(A(kplus1, j))
+					ia = oA + (kplus1 * sa1) + (j * sa2);
+					ai = Av[ ia + 1 ];
+					Av[ ia + 1 ] = -ai;
+					cmplx.divAt( xv, jx, xv, jx, Av, ia );
+					Av[ ia + 1 ] = ai; // restore
 				}
 			}
-		} else {
-			// Lower triangular, transpose/conj-transpose: back-substitution
-			jx = kx + (( N - 1 ) * sx);
-			for ( j = N - 1; j >= 0; j-- ) {
-				tempR = xv[ jx ];
-				tempI = xv[ jx + 1 ];
-				l = -j;
-				ix = kx + (( N - 1 ) * sx);
-				if ( noconj ) {
-					// Transpose (no conjugation)
-					for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-						ia = oA + (( l + i ) * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix -= sx;
-					}
-					xv[ jx ] = tempR;
-					xv[ jx + 1 ] = tempI;
-					if ( nounit ) {
-						ia = oA + (j * sa2);
-						cmplx.divAt( xv, jx, xv, jx, Av, ia );
-					}
-				} else {
-					// Conjugate transpose
-					for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-						ia = oA + (( l + i ) * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ]; // conjugate
-						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix -= sx;
-					}
-					xv[ jx ] = tempR;
-					xv[ jx + 1 ] = tempI;
-					if ( nounit ) {
-						// Divide by conj(A(0, j))
-						ia = oA + (j * sa2);
-						ai = Av[ ia + 1 ];
-						Av[ ia + 1 ] = -ai;
-						cmplx.divAt( xv, jx, xv, jx, Av, ia );
-						Av[ ia + 1 ] = ai; // restore
-					}
+			jx += sx;
+			if ( j >= K ) {
+				kx += sx;
+			}
+		}
+	} else {
+		// Lower triangular, transpose/conj-transpose: back-substitution
+		jx = kx + (( N - 1 ) * sx);
+		for ( j = N - 1; j >= 0; j-- ) {
+			tempR = xv[ jx ];
+			tempI = xv[ jx + 1 ];
+			l = -j;
+			ix = kx + (( N - 1 ) * sx);
+			if ( noconj ) {
+				// Transpose (no conjugation)
+				for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
+					ia = oA + (( l + i ) * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix -= sx;
 				}
-				jx -= sx;
-				if ( N - 1 - j >= K ) {
-					kx -= sx;
+				xv[ jx ] = tempR;
+				xv[ jx + 1 ] = tempI;
+				if ( nounit ) {
+					ia = oA + (j * sa2);
+					cmplx.divAt( xv, jx, xv, jx, Av, ia );
 				}
+			} else {
+				// Conjugate transpose
+				for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
+					ia = oA + (( l + i ) * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ]; // conjugate
+					tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					tempI -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix -= sx;
+				}
+				xv[ jx ] = tempR;
+				xv[ jx + 1 ] = tempI;
+				if ( nounit ) {
+					// Divide by conj(A(0, j))
+					ia = oA + (j * sa2);
+					ai = Av[ ia + 1 ];
+					Av[ ia + 1 ] = -ai;
+					cmplx.divAt( xv, jx, xv, jx, Av, ia );
+					Av[ ia + 1 ] = ai; // restore
+				}
+			}
+			jx -= sx;
+			if ( N - 1 - j >= K ) {
+				kx -= sx;
 			}
 		}
 	}

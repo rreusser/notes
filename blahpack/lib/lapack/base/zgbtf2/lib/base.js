@@ -155,11 +155,9 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (( j + 1 ) * sa2) );
 				}
 			}
-		} else {
+		} else if ( info === 0 ) {
 			// Zero pivot found
-			if ( info === 0 ) {
-				info = j + 1; // 1-based info
-			}
+			info = j + 1; // 1-based info
 		}
 	}
 

@@ -158,7 +158,11 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
-				} else if ( beta !== 1.0 ) {
+				} else if ( beta === 1.0 ) {
+					// beta === 1.0: just force diagonal imag to zero
+					ic = oC + (j * sc1) + (j * sc2);
+					Cv[ ic + 1 ] = 0.0;
+				} else {
 					ic = oC + (j * sc2);
 					for ( i = 0; i < j; i++ ) {
 						Cv[ ic ] *= beta;
@@ -167,10 +171,6 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					}
 					// Diagonal: scale real part only
 					Cv[ ic ] *= beta;
-					Cv[ ic + 1 ] = 0.0;
-				} else {
-					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + (j * sc1) + (j * sc2);
 					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
@@ -212,7 +212,11 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
-				} else if ( beta !== 1.0 ) {
+				} else if ( beta === 1.0 ) {
+					// beta === 1.0: just force diagonal imag to zero
+					ic = oC + (j * sc1) + (j * sc2);
+					Cv[ ic + 1 ] = 0.0;
+				} else {
 					ic = oC + (j * sc1) + (j * sc2);
 
 					// Diagonal: scale real part only
@@ -224,10 +228,6 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 						Cv[ ic + 1 ] *= beta;
 						ic += sc1;
 					}
-				} else {
-					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + (j * sc1) + (j * sc2);
-					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
 					ia = oA + (j * sa1) + (l * sa2);
@@ -259,89 +259,88 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 				}
 			}
 		}
-	} else {
+	} else if ( upper ) {
 		// C := alpha*A^H*A + beta*C
-		if ( upper ) {
-			for ( j = 0; j < N; j++ ) {
-				for ( i = 0; i < j; i++ ) {
-					tempR = 0.0;
-					tempI = 0.0;
-					for ( l = 0; l < K; l++ ) {
-						// conj(A[l,i]) * A[l,j]
-						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
-						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
-						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
-						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
-						tempR += (aiR * ajR) - (aiI * ajI);
-						tempI += (aiR * ajI) + (aiI * ajR);
-					}
-					ic = oC + (i * sc1) + (j * sc2);
-					if ( beta === 0.0 ) {
-						Cv[ ic ] = alpha * tempR;
-						Cv[ ic + 1 ] = alpha * tempI;
-					} else {
-						Cv[ ic ] = (alpha * tempR) + (beta * Cv[ ic ]);
-						Cv[ ic + 1 ] = (alpha * tempI) + (beta * Cv[ ic + 1 ]);
-					}
-				}
-				// Diagonal: sum of |A[l,j]|^2
-				rtemp = 0.0;
+		for ( j = 0; j < N; j++ ) {
+			for ( i = 0; i < j; i++ ) {
+				tempR = 0.0;
+				tempI = 0.0;
 				for ( l = 0; l < K; l++ ) {
+					// conj(A[l,i]) * A[l,j]
+					aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+					aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
 					ajR = Av[ oA + (l * sa1) + (j * sa2) ];
 					ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
-					rtemp += (ajR * ajR) + (ajI * ajI);
+					tempR += (aiR * ajR) - (aiI * ajI);
+					tempI += (aiR * ajI) + (aiI * ajR);
 				}
-				ic = oC + (j * sc1) + (j * sc2);
+				ic = oC + (i * sc1) + (j * sc2);
 				if ( beta === 0.0 ) {
-					Cv[ ic ] = alpha * rtemp;
+					Cv[ ic ] = alpha * tempR;
+					Cv[ ic + 1 ] = alpha * tempI;
 				} else {
-					Cv[ ic ] = (alpha * rtemp) + (beta * Cv[ ic ]);
+					Cv[ ic ] = (alpha * tempR) + (beta * Cv[ ic ]);
+					Cv[ ic + 1 ] = (alpha * tempI) + (beta * Cv[ ic + 1 ]);
 				}
-				Cv[ ic + 1 ] = 0.0;
 			}
-		} else {
-			// Lower
-			for ( j = 0; j < N; j++ ) {
-				// Diagonal first
-				rtemp = 0.0;
+			// Diagonal: sum of |A[l,j]|^2
+			rtemp = 0.0;
+			for ( l = 0; l < K; l++ ) {
+				ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+				ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+				rtemp += (ajR * ajR) + (ajI * ajI);
+			}
+			ic = oC + (j * sc1) + (j * sc2);
+			if ( beta === 0.0 ) {
+				Cv[ ic ] = alpha * rtemp;
+			} else {
+				Cv[ ic ] = (alpha * rtemp) + (beta * Cv[ ic ]);
+			}
+			Cv[ ic + 1 ] = 0.0;
+		}
+	} else {
+		// Lower
+		for ( j = 0; j < N; j++ ) {
+			// Diagonal first
+			rtemp = 0.0;
+			for ( l = 0; l < K; l++ ) {
+				ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+				ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+				rtemp += (ajR * ajR) + (ajI * ajI);
+			}
+			ic = oC + (j * sc1) + (j * sc2);
+			if ( beta === 0.0 ) {
+				Cv[ ic ] = alpha * rtemp;
+			} else {
+				Cv[ ic ] = (alpha * rtemp) + (beta * Cv[ ic ]);
+			}
+			Cv[ ic + 1 ] = 0.0;
+
+			// Off-diagonal
+			for ( i = j + 1; i < N; i++ ) {
+				tempR = 0.0;
+				tempI = 0.0;
 				for ( l = 0; l < K; l++ ) {
+					// conj(A[l,i]) * A[l,j]
+					aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+					aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
 					ajR = Av[ oA + (l * sa1) + (j * sa2) ];
 					ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
-					rtemp += (ajR * ajR) + (ajI * ajI);
+					tempR += (aiR * ajR) - (aiI * ajI);
+					tempI += (aiR * ajI) + (aiI * ajR);
 				}
-				ic = oC + (j * sc1) + (j * sc2);
+				ic = oC + (i * sc1) + (j * sc2);
 				if ( beta === 0.0 ) {
-					Cv[ ic ] = alpha * rtemp;
+					Cv[ ic ] = alpha * tempR;
+					Cv[ ic + 1 ] = alpha * tempI;
 				} else {
-					Cv[ ic ] = (alpha * rtemp) + (beta * Cv[ ic ]);
-				}
-				Cv[ ic + 1 ] = 0.0;
-
-				// Off-diagonal
-				for ( i = j + 1; i < N; i++ ) {
-					tempR = 0.0;
-					tempI = 0.0;
-					for ( l = 0; l < K; l++ ) {
-						// conj(A[l,i]) * A[l,j]
-						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
-						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
-						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
-						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
-						tempR += (aiR * ajR) - (aiI * ajI);
-						tempI += (aiR * ajI) + (aiI * ajR);
-					}
-					ic = oC + (i * sc1) + (j * sc2);
-					if ( beta === 0.0 ) {
-						Cv[ ic ] = alpha * tempR;
-						Cv[ ic + 1 ] = alpha * tempI;
-					} else {
-						Cv[ ic ] = (alpha * tempR) + (beta * Cv[ ic ]);
-						Cv[ ic + 1 ] = (alpha * tempI) + (beta * Cv[ ic + 1 ]);
-					}
+					Cv[ ic ] = (alpha * tempR) + (beta * Cv[ ic ]);
+					Cv[ ic + 1 ] = (alpha * tempI) + (beta * Cv[ ic + 1 ]);
 				}
 			}
 		}
 	}
+
 	return C;
 }
 

@@ -625,130 +625,129 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					e[ offsetE + (ll * strideE) ] = ZERO;
 				}
 			}
+		} else if ( idir === 1 ) {
+			// Nonzero shift: shifted QR iteration
+			// Chase bulge from top to bottom (standard direction)
+			f = ( Math.abs( d[ offsetD + (ll * strideD) ] ) - shift ) *
+				( sign( ONE, d[ offsetD + (ll * strideD) ] ) + (shift / d[ offsetD + (ll * strideD) ]) );
+			g = e[ offsetE + (ll * strideE) ];
+			for ( i = ll; i < m; i++ ) {
+				dlartg( f, g, rot );
+				cosr = rot[ 0 ];
+				sinr = rot[ 1 ];
+				r = rot[ 2 ];
+				if ( i > ll ) {
+					e[ offsetE + (( i - 1 ) * strideE) ] = r;
+				}
+				f = (cosr * d[ offsetD + (i * strideD) ]) + (sinr * e[ offsetE + (i * strideE) ]);
+				e[ offsetE + (i * strideE) ] = (cosr * e[ offsetE + (i * strideE) ]) - (sinr * d[ offsetD + (i * strideD) ]);
+				g = sinr * d[ offsetD + (( i + 1 ) * strideD) ];
+				d[ offsetD + (( i + 1 ) * strideD) ] = cosr * d[ offsetD + (( i + 1 ) * strideD) ];
+				dlartg( f, g, rot );
+				cosl = rot[ 0 ];
+				sinl = rot[ 1 ];
+				d[ offsetD + (i * strideD) ] = rot[ 2 ];
+				f = (cosl * e[ offsetE + (i * strideE) ]) + (sinl * d[ offsetD + (( i + 1 ) * strideD) ]);
+				d[ offsetD + (( i + 1 ) * strideD) ] = (cosl * d[ offsetD + (( i + 1 ) * strideD) ]) - (sinl * e[ offsetE + (i * strideE) ]);
+				if ( i < m - 1 ) {
+					g = sinl * e[ offsetE + (( i + 1 ) * strideE) ];
+					e[ offsetE + (( i + 1 ) * strideE) ] = cosl * e[ offsetE + (( i + 1 ) * strideE) ];
+				}
+				WORK[ offsetWORK + (( i - ll ) * strideWORK) ] = cosr;
+				WORK[ offsetWORK + (( i - ll + nm1 ) * strideWORK) ] = sinr;
+				WORK[ offsetWORK + (( i - ll + nm12 ) * strideWORK) ] = cosl;
+				WORK[ offsetWORK + (( i - ll + nm13 ) * strideWORK) ] = sinl;
+			}
+			e[ offsetE + (( m - 1 ) * strideE) ] = f;
+
+			// Update singular vectors
+			if ( ncvt > 0 ) {
+				dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
+					WORK, strideWORK, offsetWORK,
+					WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
+					VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
+				);
+			}
+			if ( nru > 0 ) {
+				dlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
+					WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
+					WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
+					U, strideU1, strideU2, offsetU + (ll * strideU2)
+				);
+			}
+			if ( ncc > 0 ) {
+				dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
+					WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
+					WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
+					C, strideC1, strideC2, offsetC + (ll * strideC1)
+				);
+			}
+
+			// Test convergence
+			if ( Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] ) <= thresh ) {
+				e[ offsetE + (( m - 1 ) * strideE) ] = ZERO;
+			}
 		} else {
 			// Nonzero shift: shifted QR iteration
-			if ( idir === 1 ) {
-				// Chase bulge from top to bottom (standard direction)
-				f = ( Math.abs( d[ offsetD + (ll * strideD) ] ) - shift ) *
-					( sign( ONE, d[ offsetD + (ll * strideD) ] ) + (shift / d[ offsetD + (ll * strideD) ]) );
-				g = e[ offsetE + (ll * strideE) ];
-				for ( i = ll; i < m; i++ ) {
-					dlartg( f, g, rot );
-					cosr = rot[ 0 ];
-					sinr = rot[ 1 ];
-					r = rot[ 2 ];
-					if ( i > ll ) {
-						e[ offsetE + (( i - 1 ) * strideE) ] = r;
-					}
-					f = (cosr * d[ offsetD + (i * strideD) ]) + (sinr * e[ offsetE + (i * strideE) ]);
-					e[ offsetE + (i * strideE) ] = (cosr * e[ offsetE + (i * strideE) ]) - (sinr * d[ offsetD + (i * strideD) ]);
-					g = sinr * d[ offsetD + (( i + 1 ) * strideD) ];
-					d[ offsetD + (( i + 1 ) * strideD) ] = cosr * d[ offsetD + (( i + 1 ) * strideD) ];
-					dlartg( f, g, rot );
-					cosl = rot[ 0 ];
-					sinl = rot[ 1 ];
-					d[ offsetD + (i * strideD) ] = rot[ 2 ];
-					f = (cosl * e[ offsetE + (i * strideE) ]) + (sinl * d[ offsetD + (( i + 1 ) * strideD) ]);
-					d[ offsetD + (( i + 1 ) * strideD) ] = (cosl * d[ offsetD + (( i + 1 ) * strideD) ]) - (sinl * e[ offsetE + (i * strideE) ]);
-					if ( i < m - 1 ) {
-						g = sinl * e[ offsetE + (( i + 1 ) * strideE) ];
-						e[ offsetE + (( i + 1 ) * strideE) ] = cosl * e[ offsetE + (( i + 1 ) * strideE) ];
-					}
-					WORK[ offsetWORK + (( i - ll ) * strideWORK) ] = cosr;
-					WORK[ offsetWORK + (( i - ll + nm1 ) * strideWORK) ] = sinr;
-					WORK[ offsetWORK + (( i - ll + nm12 ) * strideWORK) ] = cosl;
-					WORK[ offsetWORK + (( i - ll + nm13 ) * strideWORK) ] = sinl;
+			// Chase bulge from bottom to top
+			f = ( Math.abs( d[ offsetD + (m * strideD) ] ) - shift ) *
+				( sign( ONE, d[ offsetD + (m * strideD) ] ) + (shift / d[ offsetD + (m * strideD) ]) );
+			g = e[ offsetE + (( m - 1 ) * strideE) ];
+			for ( i = m; i >= ll + 1; i-- ) {
+				dlartg( f, g, rot );
+				cosr = rot[ 0 ];
+				sinr = rot[ 1 ];
+				r = rot[ 2 ];
+				if ( i < m ) {
+					e[ offsetE + (i * strideE) ] = r;
 				}
-				e[ offsetE + (( m - 1 ) * strideE) ] = f;
+				f = (cosr * d[ offsetD + (i * strideD) ]) + (sinr * e[ offsetE + (( i - 1 ) * strideE) ]);
+				e[ offsetE + (( i - 1 ) * strideE) ] = (cosr * e[ offsetE + (( i - 1 ) * strideE) ]) - (sinr * d[ offsetD + (i * strideD) ]);
+				g = sinr * d[ offsetD + (( i - 1 ) * strideD) ];
+				d[ offsetD + (( i - 1 ) * strideD) ] = cosr * d[ offsetD + (( i - 1 ) * strideD) ];
+				dlartg( f, g, rot );
+				cosl = rot[ 0 ];
+				sinl = rot[ 1 ];
+				d[ offsetD + (i * strideD) ] = rot[ 2 ];
+				f = (cosl * e[ offsetE + (( i - 1 ) * strideE) ]) + (sinl * d[ offsetD + (( i - 1 ) * strideD) ]);
+				d[ offsetD + (( i - 1 ) * strideD) ] = (cosl * d[ offsetD + (( i - 1 ) * strideD) ]) - (sinl * e[ offsetE + (( i - 1 ) * strideE) ]);
+				if ( i > ll + 1 ) {
+					g = sinl * e[ offsetE + (( i - 2 ) * strideE) ];
+					e[ offsetE + (( i - 2 ) * strideE) ] = cosl * e[ offsetE + (( i - 2 ) * strideE) ];
+				}
+				WORK[ offsetWORK + (( i - ll - 1 ) * strideWORK) ] = cosr;
+				WORK[ offsetWORK + (( i - ll - 1 + nm1 ) * strideWORK) ] = -sinr;
+				WORK[ offsetWORK + (( i - ll - 1 + nm12 ) * strideWORK) ] = cosl;
+				WORK[ offsetWORK + (( i - ll - 1 + nm13 ) * strideWORK) ] = -sinl;
+			}
+			e[ offsetE + (ll * strideE) ] = f;
 
-				// Update singular vectors
-				if ( ncvt > 0 ) {
-					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
-						WORK, strideWORK, offsetWORK,
-						WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-						VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-					);
-				}
-				if ( nru > 0 ) {
-					dlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
-						WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-						WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-						U, strideU1, strideU2, offsetU + (ll * strideU2)
-					);
-				}
-				if ( ncc > 0 ) {
-					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
-						WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-						WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-						C, strideC1, strideC2, offsetC + (ll * strideC1)
-					);
-				}
+			// Test convergence
+			if ( Math.abs( e[ offsetE + (ll * strideE) ] ) <= thresh ) {
+				e[ offsetE + (ll * strideE) ] = ZERO;
+			}
 
-				// Test convergence
-				if ( Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] ) <= thresh ) {
-					e[ offsetE + (( m - 1 ) * strideE) ] = ZERO;
-				}
-			} else {
-				// Chase bulge from bottom to top
-				f = ( Math.abs( d[ offsetD + (m * strideD) ] ) - shift ) *
-					( sign( ONE, d[ offsetD + (m * strideD) ] ) + (shift / d[ offsetD + (m * strideD) ]) );
-				g = e[ offsetE + (( m - 1 ) * strideE) ];
-				for ( i = m; i >= ll + 1; i-- ) {
-					dlartg( f, g, rot );
-					cosr = rot[ 0 ];
-					sinr = rot[ 1 ];
-					r = rot[ 2 ];
-					if ( i < m ) {
-						e[ offsetE + (i * strideE) ] = r;
-					}
-					f = (cosr * d[ offsetD + (i * strideD) ]) + (sinr * e[ offsetE + (( i - 1 ) * strideE) ]);
-					e[ offsetE + (( i - 1 ) * strideE) ] = (cosr * e[ offsetE + (( i - 1 ) * strideE) ]) - (sinr * d[ offsetD + (i * strideD) ]);
-					g = sinr * d[ offsetD + (( i - 1 ) * strideD) ];
-					d[ offsetD + (( i - 1 ) * strideD) ] = cosr * d[ offsetD + (( i - 1 ) * strideD) ];
-					dlartg( f, g, rot );
-					cosl = rot[ 0 ];
-					sinl = rot[ 1 ];
-					d[ offsetD + (i * strideD) ] = rot[ 2 ];
-					f = (cosl * e[ offsetE + (( i - 1 ) * strideE) ]) + (sinl * d[ offsetD + (( i - 1 ) * strideD) ]);
-					d[ offsetD + (( i - 1 ) * strideD) ] = (cosl * d[ offsetD + (( i - 1 ) * strideD) ]) - (sinl * e[ offsetE + (( i - 1 ) * strideE) ]);
-					if ( i > ll + 1 ) {
-						g = sinl * e[ offsetE + (( i - 2 ) * strideE) ];
-						e[ offsetE + (( i - 2 ) * strideE) ] = cosl * e[ offsetE + (( i - 2 ) * strideE) ];
-					}
-					WORK[ offsetWORK + (( i - ll - 1 ) * strideWORK) ] = cosr;
-					WORK[ offsetWORK + (( i - ll - 1 + nm1 ) * strideWORK) ] = -sinr;
-					WORK[ offsetWORK + (( i - ll - 1 + nm12 ) * strideWORK) ] = cosl;
-					WORK[ offsetWORK + (( i - ll - 1 + nm13 ) * strideWORK) ] = -sinl;
-				}
-				e[ offsetE + (ll * strideE) ] = f;
-
-				// Test convergence
-				if ( Math.abs( e[ offsetE + (ll * strideE) ] ) <= thresh ) {
-					e[ offsetE + (ll * strideE) ] = ZERO;
-				}
-
-				// Update singular vectors
-				if ( ncvt > 0 ) {
-					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
-						WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-						WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-						VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-					);
-				}
-				if ( nru > 0 ) {
-					dlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
-						WORK, strideWORK, offsetWORK,
-						WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-						U, strideU1, strideU2, offsetU + (ll * strideU2)
-					);
-				}
-				if ( ncc > 0 ) {
-					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
-						WORK, strideWORK, offsetWORK,
-						WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-						C, strideC1, strideC2, offsetC + (ll * strideC1)
-					);
-				}
+			// Update singular vectors
+			if ( ncvt > 0 ) {
+				dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
+					WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
+					WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
+					VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
+				);
+			}
+			if ( nru > 0 ) {
+				dlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
+					WORK, strideWORK, offsetWORK,
+					WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
+					U, strideU1, strideU2, offsetU + (ll * strideU2)
+				);
+			}
+			if ( ncc > 0 ) {
+				dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
+					WORK, strideWORK, offsetWORK,
+					WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
+					C, strideC1, strideC2, offsetC + (ll * strideC1)
+				);
 			}
 		}
 	}

@@ -130,17 +130,16 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 			zgerc( lastv, lastc, negTau, v, strideV, offsetV,
 				WORK, strideWORK, offsetWORK, C, strideC1, strideC2, offsetC );
 		}
-	} else {
+	} else if ( lastv > 0 ) {
 		// Form C * H
-		if ( lastv > 0 ) {
-			// w(1:lastc) := C(1:lastc, 1:lastv) * v(1:lastv)
-			zgemv( 'no-transpose', lastc, lastv, ONE, C, strideC1, strideC2, offsetC,
-				v, strideV, offsetV, ZERO, WORK, strideWORK, offsetWORK );
 
-			// C(1:lastc, 1:lastv) := C(...) - tau * w(1:lastc) * v(1:lastv)^H
-			zgerc( lastc, lastv, negTau, WORK, strideWORK, offsetWORK,
-				v, strideV, offsetV, C, strideC1, strideC2, offsetC );
-		}
+		// w(1:lastc) := C(1:lastc, 1:lastv) * v(1:lastv)
+		zgemv( 'no-transpose', lastc, lastv, ONE, C, strideC1, strideC2, offsetC,
+			v, strideV, offsetV, ZERO, WORK, strideWORK, offsetWORK );
+
+		// C(1:lastc, 1:lastv) := C(...) - tau * w(1:lastc) * v(1:lastv)^H
+		zgerc( lastc, lastv, negTau, WORK, strideWORK, offsetWORK,
+			v, strideV, offsetV, C, strideC1, strideC2, offsetC );
 	}
 }
 

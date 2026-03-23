@@ -232,93 +232,91 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 					// zscal(k, R1, A(:,k), 1)
 					zscal( k, new Complex128( r1R, r1I ), A, strideA1, offsetA + (k * strideA2) );
-				} else {
+				} else if ( k > 1 ) {
 					// 2x2 pivot block
-					if ( k > 1 ) {
-						// D12 = A(K-1, K)
-						p1 = (offsetA * 2) + (( k - 1 ) * sa1) + (k * sa2);
-						d12R = Av[ p1 ];
-						d12I = Av[ p1 + 1 ];
+					// D12 = A(K-1, K)
+					p1 = (offsetA * 2) + (( k - 1 ) * sa1) + (k * sa2);
+					d12R = Av[ p1 ];
+					d12I = Av[ p1 + 1 ];
 
-						// D22 = A(K-1, K-1) / D12
-						p2 = (offsetA * 2) + (( k - 1 ) * sa1) + (( k - 1 ) * sa2);
-						cDiv( Av[ p2 ], Av[ p2 + 1 ], d12R, d12I );
-						d22R = _cdR;
-						d22I = _cdI;
+					// D22 = A(K-1, K-1) / D12
+					p2 = (offsetA * 2) + (( k - 1 ) * sa1) + (( k - 1 ) * sa2);
+					cDiv( Av[ p2 ], Av[ p2 + 1 ], d12R, d12I );
+					d22R = _cdR;
+					d22I = _cdI;
 
-						// D11 = A(K, K) / D12
-						p3 = (offsetA * 2) + (k * sa1) + (k * sa2);
-						cDiv( Av[ p3 ], Av[ p3 + 1 ], d12R, d12I );
-						d11R = _cdR;
-						d11I = _cdI;
+					// D11 = A(K, K) / D12
+					p3 = (offsetA * 2) + (k * sa1) + (k * sa2);
+					cDiv( Av[ p3 ], Av[ p3 + 1 ], d12R, d12I );
+					d11R = _cdR;
+					d11I = _cdI;
 
-						// T = 1 / (D11*D22 - 1)
-						tr = (d11R * d22R) - (d11I * d22I) - 1.0;
-						ti = (d11R * d22I) + (d11I * d22R);
-						cDiv( 1.0, 0.0, tr, ti );
-						r1R = _cdR;
-						r1I = _cdI;
+					// T = 1 / (D11*D22 - 1)
+					tr = (d11R * d22R) - (d11I * d22I) - 1.0;
+					ti = (d11R * d22I) + (d11I * d22R);
+					cDiv( 1.0, 0.0, tr, ti );
+					r1R = _cdR;
+					r1I = _cdI;
 
-						// D12 = T / D12
-						cDiv( r1R, r1I, d12R, d12I );
-						d12R = _cdR;
-						d12I = _cdI;
+					// D12 = T / D12
+					cDiv( r1R, r1I, d12R, d12I );
+					d12R = _cdR;
+					d12I = _cdI;
 
-						for ( j = k - 2; j >= 0; j-- ) {
-							// WKM1 = D12 * (D11*A(J,K-1) - A(J,K))
-							p1 = (offsetA * 2) + (j * sa1) + (( k - 1 ) * sa2);
-							p2 = (offsetA * 2) + (j * sa1) + (k * sa2);
+					for ( j = k - 2; j >= 0; j-- ) {
+						// WKM1 = D12 * (D11*A(J,K-1) - A(J,K))
+						p1 = (offsetA * 2) + (j * sa1) + (( k - 1 ) * sa2);
+						p2 = (offsetA * 2) + (j * sa1) + (k * sa2);
 
-							// D11*A(J,K-1): complex multiply
-							tr = (d11R * Av[ p1 ]) - (d11I * Av[ p1 + 1 ]);
-							ti = (d11R * Av[ p1 + 1 ]) + (d11I * Av[ p1 ]);
+						// D11*A(J,K-1): complex multiply
+						tr = (d11R * Av[ p1 ]) - (d11I * Av[ p1 + 1 ]);
+						ti = (d11R * Av[ p1 + 1 ]) + (d11I * Av[ p1 ]);
 
-							// D11*A(J,K-1) - A(J,K)
-							tr -= Av[ p2 ];
-							ti -= Av[ p2 + 1 ];
+						// D11*A(J,K-1) - A(J,K)
+						tr -= Av[ p2 ];
+						ti -= Av[ p2 + 1 ];
 
-							// WKM1 = D12 * result
-							wkm1R = (d12R * tr) - (d12I * ti);
-							wkm1I = (d12R * ti) + (d12I * tr);
+						// WKM1 = D12 * result
+						wkm1R = (d12R * tr) - (d12I * ti);
+						wkm1I = (d12R * ti) + (d12I * tr);
 
-							// WK = D12 * (D22*A(J,K) - A(J,K-1))
+						// WK = D12 * (D22*A(J,K) - A(J,K-1))
 
-							// D22*A(J,K)
-							tr = (d22R * Av[ p2 ]) - (d22I * Av[ p2 + 1 ]);
-							ti = (d22R * Av[ p2 + 1 ]) + (d22I * Av[ p2 ]);
+						// D22*A(J,K)
+						tr = (d22R * Av[ p2 ]) - (d22I * Av[ p2 + 1 ]);
+						ti = (d22R * Av[ p2 + 1 ]) + (d22I * Av[ p2 ]);
 
-							// D22*A(J,K) - A(J,K-1)
-							tr -= Av[ p1 ];
-							ti -= Av[ p1 + 1 ];
+						// D22*A(J,K) - A(J,K-1)
+						tr -= Av[ p1 ];
+						ti -= Av[ p1 + 1 ];
 
-							// WK = D12 * result
-							wkR = (d12R * tr) - (d12I * ti);
-							wkI = (d12R * ti) + (d12I * tr);
+						// WK = D12 * result
+						wkR = (d12R * tr) - (d12I * ti);
+						wkI = (d12R * ti) + (d12I * tr);
 
-							for ( i = j; i >= 0; i-- ) {
-								// A(I,J) -= A(I,K)*WK + A(I,K-1)*WKM1
-								p3 = (offsetA * 2) + (i * sa1) + (j * sa2);
-								p4 = (offsetA * 2) + (i * sa1) + (k * sa2);
-								tR = (offsetA * 2) + (i * sa1) + (( k - 1 ) * sa2);
+						for ( i = j; i >= 0; i-- ) {
+							// A(I,J) -= A(I,K)*WK + A(I,K-1)*WKM1
+							p3 = (offsetA * 2) + (i * sa1) + (j * sa2);
+							p4 = (offsetA * 2) + (i * sa1) + (k * sa2);
+							tR = (offsetA * 2) + (i * sa1) + (( k - 1 ) * sa2);
 
-								// A(I,K)*WK
-								tr = (Av[ p4 ] * wkR) - (Av[ p4 + 1 ] * wkI);
-								ti = (Av[ p4 ] * wkI) + (Av[ p4 + 1 ] * wkR);
+							// A(I,K)*WK
+							tr = (Av[ p4 ] * wkR) - (Av[ p4 + 1 ] * wkI);
+							ti = (Av[ p4 ] * wkI) + (Av[ p4 + 1 ] * wkR);
 
-								// A(I,K-1)*WKM1
-								tr += (Av[ tR ] * wkm1R) - (Av[ tR + 1 ] * wkm1I);
-								ti += (Av[ tR ] * wkm1I) + (Av[ tR + 1 ] * wkm1R);
-								Av[ p3 ] -= tr;
-								Av[ p3 + 1 ] -= ti;
-							}
-							// A(J,K) = WK
-							Av[ p2 ] = wkR;
-							Av[ p2 + 1 ] = wkI;
-
-							// A(J,K-1) = WKM1
-							Av[ p1 ] = wkm1R;
-							Av[ p1 + 1 ] = wkm1I;
+							// A(I,K-1)*WKM1
+							tr += (Av[ tR ] * wkm1R) - (Av[ tR + 1 ] * wkm1I);
+							ti += (Av[ tR ] * wkm1I) + (Av[ tR + 1 ] * wkm1R);
+							Av[ p3 ] -= tr;
+							Av[ p3 + 1 ] -= ti;
 						}
+						// A(J,K) = WK
+						Av[ p2 ] = wkR;
+						Av[ p2 + 1 ] = wkI;
+
+						// A(J,K-1) = WKM1
+						Av[ p1 ] = wkm1R;
+						Av[ p1 + 1 ] = wkm1I;
 					}
 				}
 			}
@@ -435,115 +433,113 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 						zscal( N - k - 1, new Complex128( r1R, r1I ), A, strideA1, offsetA + (( k + 1 ) * strideA1) + (k * strideA2) );
 					}
-				} else {
-					// 2x2 pivot block
-					if ( k < N - 2 ) {
-						// D21 = A(K+1, K)
-						p1 = (offsetA * 2) + (( k + 1 ) * sa1) + (k * sa2);
-						d21R = Av[ p1 ];
-						d21I = Av[ p1 + 1 ];
+				} else if ( k < N - 2 ) {
+				// 2x2 pivot block
+					// D21 = A(K+1, K)
+					p1 = (offsetA * 2) + (( k + 1 ) * sa1) + (k * sa2);
+					d21R = Av[ p1 ];
+					d21I = Av[ p1 + 1 ];
 
-						// D11 = A(K+1, K+1) / D21
-						p2 = (offsetA * 2) + (( k + 1 ) * sa1) + (( k + 1 ) * sa2);
-						tr = Av[ p2 ];
-						ti = Av[ p2 + 1 ];
-						if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
-							tR = d21I / d21R;
-							tI = d21R + (d21I * tR);
-							d11R = ( tr + (ti * tR) ) / tI;
-							d11I = ( ti - (tr * tR) ) / tI;
-						} else {
-							tR = d21R / d21I;
-							tI = d21I + (d21R * tR);
-							d11R = ( (tr * tR) + ti ) / tI;
-							d11I = ( (ti * tR) - tr ) / tI;
+					// D11 = A(K+1, K+1) / D21
+					p2 = (offsetA * 2) + (( k + 1 ) * sa1) + (( k + 1 ) * sa2);
+					tr = Av[ p2 ];
+					ti = Av[ p2 + 1 ];
+					if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
+						tR = d21I / d21R;
+						tI = d21R + (d21I * tR);
+						d11R = ( tr + (ti * tR) ) / tI;
+						d11I = ( ti - (tr * tR) ) / tI;
+					} else {
+						tR = d21R / d21I;
+						tI = d21I + (d21R * tR);
+						d11R = ( (tr * tR) + ti ) / tI;
+						d11I = ( (ti * tR) - tr ) / tI;
+					}
+
+					// D22 = A(K, K) / D21
+					p2 = (offsetA * 2) + (k * sa1) + (k * sa2);
+					tr = Av[ p2 ];
+					ti = Av[ p2 + 1 ];
+					if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
+						tR = d21I / d21R;
+						tI = d21R + (d21I * tR);
+						d22R = ( tr + (ti * tR) ) / tI;
+						d22I = ( ti - (tr * tR) ) / tI;
+					} else {
+						tR = d21R / d21I;
+						tI = d21I + (d21R * tR);
+						d22R = ( (tr * tR) + ti ) / tI;
+						d22I = ( (ti * tR) - tr ) / tI;
+					}
+
+					// T = 1 / (D11*D22 - 1)
+					tr = (d11R * d22R) - (d11I * d22I) - 1.0;
+					ti = (d11R * d22I) + (d11I * d22R);
+					if ( Math.abs( ti ) <= Math.abs( tr ) ) {
+						tR = ti / tr;
+						tI = tr + (ti * tR);
+						r1R = ( 1.0 ) / tI;
+						r1I = ( -tR ) / tI;
+					} else {
+						tR = tr / ti;
+						tI = ti + (tr * tR);
+						r1R = ( tR ) / tI;
+						r1I = ( -1.0 ) / tI;
+					}
+
+					// D21 = T / D21
+					tr = r1R;
+					ti = r1I;
+					if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
+						tR = d21I / d21R;
+						tI = d21R + (d21I * tR);
+						d21R = ( tr + (ti * tR) ) / tI;
+						d21I = ( ti - (tr * tR) ) / tI;
+					} else {
+						tR = d21R / d21I;
+						tI = d21I + (d21R * tR);
+						d21R = ( (tr * tR) + ti ) / tI;
+						d21I = ( (ti * tR) - tr ) / tI;
+					}
+
+					for ( j = k + 2; j < N; j++ ) {
+						p1 = (offsetA * 2) + (j * sa1) + (k * sa2);
+						p2 = (offsetA * 2) + (j * sa1) + (( k + 1 ) * sa2);
+
+						// WK = D21 * (D11*A(J,K) - A(J,K+1))
+
+						// D11*A(J,K)
+						tr = (d11R * Av[ p1 ]) - (d11I * Av[ p1 + 1 ]);
+						ti = (d11R * Av[ p1 + 1 ]) + (d11I * Av[ p1 ]);
+						tr -= Av[ p2 ];
+						ti -= Av[ p2 + 1 ];
+						wkR = (d21R * tr) - (d21I * ti);
+						wkI = (d21R * ti) + (d21I * tr);
+
+						// WKP1 = D21 * (D22*A(J,K+1) - A(J,K))
+						tr = (d22R * Av[ p2 ]) - (d22I * Av[ p2 + 1 ]);
+						ti = (d22R * Av[ p2 + 1 ]) + (d22I * Av[ p2 ]);
+						tr -= Av[ p1 ];
+						ti -= Av[ p1 + 1 ];
+						wkp1R = (d21R * tr) - (d21I * ti);
+						wkp1I = (d21R * ti) + (d21I * tr);
+
+						for ( i = j; i < N; i++ ) {
+							// A(I,J) -= A(I,K)*WK + A(I,K+1)*WKP1
+							p3 = (offsetA * 2) + (i * sa1) + (j * sa2);
+							p4 = (offsetA * 2) + (i * sa1) + (k * sa2);
+							tR = (offsetA * 2) + (i * sa1) + (( k + 1 ) * sa2);
+							tr = (Av[ p4 ] * wkR) - (Av[ p4 + 1 ] * wkI);
+							ti = (Av[ p4 ] * wkI) + (Av[ p4 + 1 ] * wkR);
+							tr += (Av[ tR ] * wkp1R) - (Av[ tR + 1 ] * wkp1I);
+							ti += (Av[ tR ] * wkp1I) + (Av[ tR + 1 ] * wkp1R);
+							Av[ p3 ] -= tr;
+							Av[ p3 + 1 ] -= ti;
 						}
-
-						// D22 = A(K, K) / D21
-						p2 = (offsetA * 2) + (k * sa1) + (k * sa2);
-						tr = Av[ p2 ];
-						ti = Av[ p2 + 1 ];
-						if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
-							tR = d21I / d21R;
-							tI = d21R + (d21I * tR);
-							d22R = ( tr + (ti * tR) ) / tI;
-							d22I = ( ti - (tr * tR) ) / tI;
-						} else {
-							tR = d21R / d21I;
-							tI = d21I + (d21R * tR);
-							d22R = ( (tr * tR) + ti ) / tI;
-							d22I = ( (ti * tR) - tr ) / tI;
-						}
-
-						// T = 1 / (D11*D22 - 1)
-						tr = (d11R * d22R) - (d11I * d22I) - 1.0;
-						ti = (d11R * d22I) + (d11I * d22R);
-						if ( Math.abs( ti ) <= Math.abs( tr ) ) {
-							tR = ti / tr;
-							tI = tr + (ti * tR);
-							r1R = ( 1.0 ) / tI;
-							r1I = ( -tR ) / tI;
-						} else {
-							tR = tr / ti;
-							tI = ti + (tr * tR);
-							r1R = ( tR ) / tI;
-							r1I = ( -1.0 ) / tI;
-						}
-
-						// D21 = T / D21
-						tr = r1R;
-						ti = r1I;
-						if ( Math.abs( d21I ) <= Math.abs( d21R ) ) {
-							tR = d21I / d21R;
-							tI = d21R + (d21I * tR);
-							d21R = ( tr + (ti * tR) ) / tI;
-							d21I = ( ti - (tr * tR) ) / tI;
-						} else {
-							tR = d21R / d21I;
-							tI = d21I + (d21R * tR);
-							d21R = ( (tr * tR) + ti ) / tI;
-							d21I = ( (ti * tR) - tr ) / tI;
-						}
-
-						for ( j = k + 2; j < N; j++ ) {
-							p1 = (offsetA * 2) + (j * sa1) + (k * sa2);
-							p2 = (offsetA * 2) + (j * sa1) + (( k + 1 ) * sa2);
-
-							// WK = D21 * (D11*A(J,K) - A(J,K+1))
-
-							// D11*A(J,K)
-							tr = (d11R * Av[ p1 ]) - (d11I * Av[ p1 + 1 ]);
-							ti = (d11R * Av[ p1 + 1 ]) + (d11I * Av[ p1 ]);
-							tr -= Av[ p2 ];
-							ti -= Av[ p2 + 1 ];
-							wkR = (d21R * tr) - (d21I * ti);
-							wkI = (d21R * ti) + (d21I * tr);
-
-							// WKP1 = D21 * (D22*A(J,K+1) - A(J,K))
-							tr = (d22R * Av[ p2 ]) - (d22I * Av[ p2 + 1 ]);
-							ti = (d22R * Av[ p2 + 1 ]) + (d22I * Av[ p2 ]);
-							tr -= Av[ p1 ];
-							ti -= Av[ p1 + 1 ];
-							wkp1R = (d21R * tr) - (d21I * ti);
-							wkp1I = (d21R * ti) + (d21I * tr);
-
-							for ( i = j; i < N; i++ ) {
-								// A(I,J) -= A(I,K)*WK + A(I,K+1)*WKP1
-								p3 = (offsetA * 2) + (i * sa1) + (j * sa2);
-								p4 = (offsetA * 2) + (i * sa1) + (k * sa2);
-								tR = (offsetA * 2) + (i * sa1) + (( k + 1 ) * sa2);
-								tr = (Av[ p4 ] * wkR) - (Av[ p4 + 1 ] * wkI);
-								ti = (Av[ p4 ] * wkI) + (Av[ p4 + 1 ] * wkR);
-								tr += (Av[ tR ] * wkp1R) - (Av[ tR + 1 ] * wkp1I);
-								ti += (Av[ tR ] * wkp1I) + (Av[ tR + 1 ] * wkp1R);
-								Av[ p3 ] -= tr;
-								Av[ p3 + 1 ] -= ti;
-							}
-							Av[ p1 ] = wkR;
-							Av[ p1 + 1 ] = wkI;
-							Av[ p2 ] = wkp1R;
-							Av[ p2 + 1 ] = wkp1I;
-						}
+						Av[ p1 ] = wkR;
+						Av[ p1 + 1 ] = wkI;
+						Av[ p2 ] = wkp1R;
+						Av[ p2 + 1 ] = wkp1I;
 					}
 				}
 			}

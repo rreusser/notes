@@ -129,130 +129,124 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					}
 				}
 			}
+		} else if ( upper ) {
+			// B := alpha*A**T*B, upper
+			for ( j = 0; j < N; j++ ) {
+				for ( i = M - 1; i >= 0; i-- ) {
+					temp = B[ offsetB + (i * sb1) + (j * sb2) ];
+					if ( nounit ) {
+						temp *= A[ offsetA + (i * sa1) + (i * sa2) ];
+					}
+					ia = offsetA + (i * sa2);
+					for ( k = 0; k < i; k++ ) {
+						temp += A[ ia ] * B[ offsetB + (k * sb1) + (j * sb2) ];
+						ia += sa1;
+					}
+					B[ offsetB + (i * sb1) + (j * sb2) ] = alpha * temp;
+				}
+			}
 		} else {
-			// B := alpha*A**T*B
-			if ( upper ) {
-				for ( j = 0; j < N; j++ ) {
-					for ( i = M - 1; i >= 0; i-- ) {
-						temp = B[ offsetB + (i * sb1) + (j * sb2) ];
-						if ( nounit ) {
-							temp *= A[ offsetA + (i * sa1) + (i * sa2) ];
+			// B := alpha*A**T*B, lower
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					temp = B[ offsetB + (i * sb1) + (j * sb2) ];
+					if ( nounit ) {
+						temp *= A[ offsetA + (i * sa1) + (i * sa2) ];
+					}
+					for ( k = i + 1; k < M; k++ ) {
+						temp += A[ offsetA + (k * sa1) + (i * sa2) ] * B[ offsetB + (k * sb1) + (j * sb2) ];
+					}
+					B[ offsetB + (i * sb1) + (j * sb2) ] = alpha * temp;
+				}
+			}
+		}
+	} else if ( transa === 'no-transpose' ) {
+		// Right side: B := alpha*B*A
+		if ( upper ) {
+			for ( j = N - 1; j >= 0; j-- ) {
+				temp = alpha;
+				if ( nounit ) {
+					temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
+				}
+				ib = offsetB + (j * sb2);
+				for ( i = 0; i < M; i++ ) {
+					B[ ib ] *= temp;
+					ib += sb1;
+				}
+				for ( k = 0; k < j; k++ ) {
+					if ( A[ offsetA + (k * sa1) + (j * sa2) ] !== 0.0 ) {
+						temp = alpha * A[ offsetA + (k * sa1) + (j * sa2) ];
+						for ( i = 0; i < M; i++ ) {
+							B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
 						}
-						ia = offsetA + (i * sa2);
-						for ( k = 0; k < i; k++ ) {
-							temp += A[ ia ] * B[ offsetB + (k * sb1) + (j * sb2) ];
-							ia += sa1;
-						}
-						B[ offsetB + (i * sb1) + (j * sb2) ] = alpha * temp;
 					}
 				}
-			} else {
-				// Lower
-				for ( j = 0; j < N; j++ ) {
-					for ( i = 0; i < M; i++ ) {
-						temp = B[ offsetB + (i * sb1) + (j * sb2) ];
-						if ( nounit ) {
-							temp *= A[ offsetA + (i * sa1) + (i * sa2) ];
+			}
+		} else {
+			// Lower
+			for ( j = 0; j < N; j++ ) {
+				temp = alpha;
+				if ( nounit ) {
+					temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
+				}
+				ib = offsetB + (j * sb2);
+				for ( i = 0; i < M; i++ ) {
+					B[ ib ] *= temp;
+					ib += sb1;
+				}
+				for ( k = j + 1; k < N; k++ ) {
+					if ( A[ offsetA + (k * sa1) + (j * sa2) ] !== 0.0 ) {
+						temp = alpha * A[ offsetA + (k * sa1) + (j * sa2) ];
+						for ( i = 0; i < M; i++ ) {
+							B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
 						}
-						for ( k = i + 1; k < M; k++ ) {
-							temp += A[ offsetA + (k * sa1) + (i * sa2) ] * B[ offsetB + (k * sb1) + (j * sb2) ];
-						}
-						B[ offsetB + (i * sb1) + (j * sb2) ] = alpha * temp;
 					}
 				}
 			}
 		}
-	} else {
-		// Right side: B := alpha*B*op(A)
-		if ( transa === 'no-transpose' ) {
-			if ( upper ) {
-				for ( j = N - 1; j >= 0; j-- ) {
-					temp = alpha;
-					if ( nounit ) {
-						temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
-					}
-					ib = offsetB + (j * sb2);
+	} else if ( upper ) {
+		// B := alpha*B*A**T, upper
+		for ( k = 0; k < N; k++ ) {
+			for ( j = 0; j < k; j++ ) {
+				if ( A[ offsetA + (j * sa1) + (k * sa2) ] !== 0.0 ) {
+					temp = alpha * A[ offsetA + (j * sa1) + (k * sa2) ];
 					for ( i = 0; i < M; i++ ) {
-						B[ ib ] *= temp;
-						ib += sb1;
-					}
-					for ( k = 0; k < j; k++ ) {
-						if ( A[ offsetA + (k * sa1) + (j * sa2) ] !== 0.0 ) {
-							temp = alpha * A[ offsetA + (k * sa1) + (j * sa2) ];
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
-							}
-						}
-					}
-				}
-			} else {
-				// Lower
-				for ( j = 0; j < N; j++ ) {
-					temp = alpha;
-					if ( nounit ) {
-						temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
-					}
-					ib = offsetB + (j * sb2);
-					for ( i = 0; i < M; i++ ) {
-						B[ ib ] *= temp;
-						ib += sb1;
-					}
-					for ( k = j + 1; k < N; k++ ) {
-						if ( A[ offsetA + (k * sa1) + (j * sa2) ] !== 0.0 ) {
-							temp = alpha * A[ offsetA + (k * sa1) + (j * sa2) ];
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
-							}
-						}
+						B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
 					}
 				}
 			}
-		} else {
-			// B := alpha*B*A**T
-			if ( upper ) {
-				for ( k = 0; k < N; k++ ) {
-					for ( j = 0; j < k; j++ ) {
-						if ( A[ offsetA + (j * sa1) + (k * sa2) ] !== 0.0 ) {
-							temp = alpha * A[ offsetA + (j * sa1) + (k * sa2) ];
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
-							}
-						}
-					}
-					temp = alpha;
-					if ( nounit ) {
-						temp *= A[ offsetA + (k * sa1) + (k * sa2) ];
-					}
-					if ( temp !== 1.0 ) {
-						ib = offsetB + (k * sb2);
-						for ( i = 0; i < M; i++ ) {
-							B[ ib ] *= temp;
-							ib += sb1;
-						}
+			temp = alpha;
+			if ( nounit ) {
+				temp *= A[ offsetA + (k * sa1) + (k * sa2) ];
+			}
+			if ( temp !== 1.0 ) {
+				ib = offsetB + (k * sb2);
+				for ( i = 0; i < M; i++ ) {
+					B[ ib ] *= temp;
+					ib += sb1;
+				}
+			}
+		}
+	} else {
+		// B := alpha*B*A**T, lower
+		for ( k = N - 1; k >= 0; k-- ) {
+			for ( j = k + 1; j < N; j++ ) {
+				if ( A[ offsetA + (j * sa1) + (k * sa2) ] !== 0.0 ) {
+					temp = alpha * A[ offsetA + (j * sa1) + (k * sa2) ];
+					for ( i = 0; i < M; i++ ) {
+						B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
 					}
 				}
-			} else {
-				// Lower
-				for ( k = N - 1; k >= 0; k-- ) {
-					for ( j = k + 1; j < N; j++ ) {
-						if ( A[ offsetA + (j * sa1) + (k * sa2) ] !== 0.0 ) {
-							temp = alpha * A[ offsetA + (j * sa1) + (k * sa2) ];
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + (i * sb1) + (j * sb2) ] += temp * B[ offsetB + (i * sb1) + (k * sb2) ];
-							}
-						}
-					}
-					temp = alpha;
-					if ( nounit ) {
-						temp *= A[ offsetA + (k * sa1) + (k * sa2) ];
-					}
-					if ( temp !== 1.0 ) {
-						ib = offsetB + (k * sb2);
-						for ( i = 0; i < M; i++ ) {
-							B[ ib ] *= temp;
-							ib += sb1;
-						}
-					}
+			}
+			temp = alpha;
+			if ( nounit ) {
+				temp *= A[ offsetA + (k * sa1) + (k * sa2) ];
+			}
+			if ( temp !== 1.0 ) {
+				ib = offsetB + (k * sb2);
+				for ( i = 0; i < M; i++ ) {
+					B[ ib ] *= temp;
+					ib += sb1;
 				}
 			}
 		}

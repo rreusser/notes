@@ -102,44 +102,42 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				jx += strideX;
 			}
 		}
+	// Solve A**T*x = b (trans = 'transpose' or 'C')
+	} else if ( uplo === 'upper' ) {
+		// Upper triangular, transpose: forward-substitution from top
+		jx = offsetX;
+		for ( j = 0; j < N; j++ ) {
+			temp = x[ jx ];
+			ix = offsetX;
+			ia = offsetA + (j * sa2);
+			for ( i = 0; i < j; i++ ) {
+				temp -= A[ ia ] * x[ ix ];
+				ix += strideX;
+				ia += sa1;
+			}
+			if ( nounit ) {
+				temp /= A[ offsetA + (j * sa1) + (j * sa2) ];
+			}
+			x[ jx ] = temp;
+			jx += strideX;
+		}
 	} else {
-		// Solve A**T*x = b (trans = 'transpose' or 'C')
-		if ( uplo === 'upper' ) {
-			// Upper triangular, transpose: forward-substitution from top
-			jx = offsetX;
-			for ( j = 0; j < N; j++ ) {
-				temp = x[ jx ];
-				ix = offsetX;
-				ia = offsetA + (j * sa2);
-				for ( i = 0; i < j; i++ ) {
-					temp -= A[ ia ] * x[ ix ];
-					ix += strideX;
-					ia += sa1;
-				}
-				if ( nounit ) {
-					temp /= A[ offsetA + (j * sa1) + (j * sa2) ];
-				}
-				x[ jx ] = temp;
-				jx += strideX;
+		// Lower triangular, transpose: back-substitution from bottom
+		jx = offsetX + (( N - 1 ) * strideX);
+		for ( j = N - 1; j >= 0; j-- ) {
+			temp = x[ jx ];
+			ix = offsetX + (( N - 1 ) * strideX);
+			ia = offsetA + (( N - 1 ) * sa1) + (j * sa2);
+			for ( i = N - 1; i > j; i-- ) {
+				temp -= A[ ia ] * x[ ix ];
+				ix -= strideX;
+				ia -= sa1;
 			}
-		} else {
-			// Lower triangular, transpose: back-substitution from bottom
-			jx = offsetX + (( N - 1 ) * strideX);
-			for ( j = N - 1; j >= 0; j-- ) {
-				temp = x[ jx ];
-				ix = offsetX + (( N - 1 ) * strideX);
-				ia = offsetA + (( N - 1 ) * sa1) + (j * sa2);
-				for ( i = N - 1; i > j; i-- ) {
-					temp -= A[ ia ] * x[ ix ];
-					ix -= strideX;
-					ia -= sa1;
-				}
-				if ( nounit ) {
-					temp /= A[ offsetA + (j * sa1) + (j * sa2) ];
-				}
-				x[ jx ] = temp;
-				jx -= strideX;
+			if ( nounit ) {
+				temp /= A[ offsetA + (j * sa1) + (j * sa2) ];
 			}
+			x[ jx ] = temp;
+			jx -= strideX;
 		}
 	}
 	return x;

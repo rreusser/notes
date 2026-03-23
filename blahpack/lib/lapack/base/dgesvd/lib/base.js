@@ -873,72 +873,211 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, iwork );
 			}
 		}
-	} else {
+	} else if ( N >= mnthr ) {
 		// -------------------------------------------------------------------
 		// M < N: A has more columns than rows
 		// -------------------------------------------------------------------
 
-		if ( N >= mnthr ) {
-			// N is "much larger" than M — use LQ factorization path
 
-			if ( wntvn ) {
+		// N is "much larger" than M — use LQ factorization path
+
+		if ( wntvn ) {
+			// -------------------------------------------------------
+			// Path 1t: JOBVT='N', no right singular vectors
+			// -------------------------------------------------------
+			itau = 0;
+			iwork = itau + M;
+
+			// Compute A = L*Q
+			dgelqf( M, N, A, sa1, sa2, offsetA,
+				WK, 1, itau, WK, 1, iwork, -1 );
+
+			// Zero out above L (upper triangle of first M columns)
+			if ( M > 1 ) {
+				dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
+					A, sa1, sa2, offsetA + sa2 );
+			}
+			ie = 0;
+			itauq = ie + M;
+			itaup = itauq + M;
+			iwork = itaup + M;
+
+			// Bidiagonalize L in A
+			dgebrd( M, M, A, sa1, sa2, offsetA,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				WK, 1, itauq,
+				WK, 1, itaup,
+				WK, 1, iwork, wsz - iwork );
+
+			if ( wntuo || wntuas ) {
+				// Generate Q from bidiag in A
+				dorgbr( 'q', M, M, M, A, sa1, sa2, offsetA,
+					WK, 1, itauq, WK, 1, iwork, -1 );
+			}
+			iwork = ie + M;
+			nru = 0;
+			if ( wntuo || wntuas ) {
+				nru = M;
+			}
+
+			// Perform bidiagonal QR iteration
+			info = dbdsqr( 'upper', M, 0, nru, 0,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				DUM, 1, 1, 0,
+				A, sa1, sa2, offsetA,
+				DUM, 1, 1, 0,
+				WK, 1, iwork );
+
+			// Copy U to the desired location
+			if ( wntuas ) {
+				dlacpy( 'F', M, M, A, sa1, sa2, offsetA,
+					U, su1, su2, offsetU );
+			}
+		} else if ( wntvo && wntun ) {
+			// -------------------------------------------------------
+			// Path 2t: JOBVT='O', JOBU='N'
+			// Right vectors overwrite A, no left vectors
+			// -------------------------------------------------------
+			ir = 0;
+			ldwrkr = M;
+			itau = ir + (ldwrkr * M);
+			iwork = itau + M;
+
+			// Compute A = L*Q
+			dgelqf( M, N, A, sa1, sa2, offsetA,
+				WK, 1, itau, WK, 1, iwork, -1 );
+
+			// Copy L to WORK(IR), zero above
+			dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
+				WK, 1, ldwrkr, ir );
+			dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
+				WK, 1, ldwrkr, ir + ldwrkr );
+
+			// Generate Q in A
+			dorglq( M, N, M, A, sa1, sa2, offsetA,
+				WK, 1, itau, WK, 1, iwork, -1 );
+
+			ie = itau;
+			itauq = ie + M;
+			itaup = itauq + M;
+			iwork = itaup + M;
+
+			// Bidiagonalize L in WORK(IR)
+			dgebrd( M, M, WK, 1, ldwrkr, ir,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				WK, 1, itauq,
+				WK, 1, itaup,
+				WK, 1, iwork, wsz - iwork );
+
+			// Generate right bidiag vectors P^T in WORK(IR)
+			dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
+				WK, 1, itaup, WK, 1, iwork, -1 );
+			iwork = ie + M;
+
+			// Perform bidiagonal QR iteration
+			info = dbdsqr( 'upper', M, M, 0, 0,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				WK, 1, ldwrkr, ir,
+				DUM, 1, 1, 0,
+				DUM, 1, 1, 0,
+				WK, 1, iwork );
+
+			// Multiply right vectors by Q: A = WORK(IR) * Q_stored_in_A
+
+			// Process columns in chunks
+			iu = ie + M;
+			ldwrku = M;
+			chunk = Math.max( 1, Math.floor( ( wsz - iu ) / M ) );
+			for ( i = 0; i < N; i += chunk ) {
+				blk = Math.min( N - i, chunk );
+				dgemm( 'no-transpose', 'no-transpose', M, blk, M, 1.0,
+					WK, 1, ldwrkr, ir,
+					A, sa1, sa2, offsetA + (i * sa2),
+					0.0, WK, 1, ldwrku, iu );
+				dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
+					A, sa1, sa2, offsetA + (i * sa2) );
+			}
+		} else if ( wntvo && wntuas ) {
+			// -------------------------------------------------------
+			// Path 3t: JOBVT='O', JOBU='S' or 'A'
+			// Right vectors overwrite A, left vectors in U
+			// -------------------------------------------------------
+			ir = 0;
+			ldwrkr = M;
+			itau = ir + (ldwrkr * M);
+			iwork = itau + M;
+
+			// Compute A = L*Q
+			dgelqf( M, N, A, sa1, sa2, offsetA,
+				WK, 1, itau, WK, 1, iwork, -1 );
+
+			// Copy L to U, zero above
+			dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
+				U, su1, su2, offsetU );
+			dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
+				U, su1, su2, offsetU + su2 );
+
+			// Generate Q in A
+			dorglq( M, N, M, A, sa1, sa2, offsetA,
+				WK, 1, itau, WK, 1, iwork, -1 );
+
+			ie = itau;
+			itauq = ie + M;
+			itaup = itauq + M;
+			iwork = itaup + M;
+
+			// Bidiagonalize L in U
+			dgebrd( M, M, U, su1, su2, offsetU,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				WK, 1, itauq,
+				WK, 1, itaup,
+				WK, 1, iwork, wsz - iwork );
+
+			// Copy upper bidiag from U to WORK(IR)
+			dlacpy( 'upper', M, M, U, su1, su2, offsetU,
+				WK, 1, ldwrkr, ir );
+
+			// Generate right bidiag vectors P^T in WORK(IR)
+			dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
+				WK, 1, itaup, WK, 1, iwork, -1 );
+
+			// Generate left bidiag vectors Q in U
+			dorgbr( 'q', M, M, M, U, su1, su2, offsetU,
+				WK, 1, itauq, WK, 1, iwork, -1 );
+			iwork = ie + M;
+
+			// Perform bidiagonal QR iteration
+			info = dbdsqr( 'upper', M, M, M, 0,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				WK, 1, ldwrkr, ir,
+				U, su1, su2, offsetU,
+				DUM, 1, 1, 0,
+				WK, 1, iwork );
+
+			// Multiply right vectors by Q in A → A
+			iu = ie + M;
+			ldwrku = M;
+			chunk = Math.max( 1, Math.floor( ( wsz - iu ) / M ) );
+			for ( i = 0; i < N; i += chunk ) {
+				blk = Math.min( N - i, chunk );
+				dgemm( 'no-transpose', 'no-transpose', M, blk, M, 1.0,
+					WK, 1, ldwrkr, ir,
+					A, sa1, sa2, offsetA + (i * sa2),
+					0.0, WK, 1, ldwrku, iu );
+				dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
+					A, sa1, sa2, offsetA + (i * sa2) );
+			}
+		} else if ( wntvs ) {
+			if ( wntun ) {
 				// -------------------------------------------------------
-				// Path 1t: JOBVT='N', no right singular vectors
-				// -------------------------------------------------------
-				itau = 0;
-				iwork = itau + M;
-
-				// Compute A = L*Q
-				dgelqf( M, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
-
-				// Zero out above L (upper triangle of first M columns)
-				if ( M > 1 ) {
-					dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-						A, sa1, sa2, offsetA + sa2 );
-				}
-				ie = 0;
-				itauq = ie + M;
-				itaup = itauq + M;
-				iwork = itaup + M;
-
-				// Bidiagonalize L in A
-				dgebrd( M, M, A, sa1, sa2, offsetA,
-					s, strideS, offsetS,
-					WK, 1, ie,
-					WK, 1, itauq,
-					WK, 1, itaup,
-					WK, 1, iwork, wsz - iwork );
-
-				if ( wntuo || wntuas ) {
-					// Generate Q from bidiag in A
-					dorgbr( 'q', M, M, M, A, sa1, sa2, offsetA,
-						WK, 1, itauq, WK, 1, iwork, -1 );
-				}
-				iwork = ie + M;
-				nru = 0;
-				if ( wntuo || wntuas ) {
-					nru = M;
-				}
-
-				// Perform bidiagonal QR iteration
-				info = dbdsqr( 'upper', M, 0, nru, 0,
-					s, strideS, offsetS,
-					WK, 1, ie,
-					DUM, 1, 1, 0,
-					A, sa1, sa2, offsetA,
-					DUM, 1, 1, 0,
-					WK, 1, iwork );
-
-				// Copy U to the desired location
-				if ( wntuas ) {
-					dlacpy( 'F', M, M, A, sa1, sa2, offsetA,
-						U, su1, su2, offsetU );
-				}
-			} else if ( wntvo && wntun ) {
-				// -------------------------------------------------------
-				// Path 2t: JOBVT='O', JOBU='N'
-				// Right vectors overwrite A, no left vectors
+				// Path 4t: JOBVT='S', JOBU='N'
+				// Right vectors in VT (first M rows), no left vectors
 				// -------------------------------------------------------
 				ir = 0;
 				ldwrkr = M;
@@ -955,7 +1094,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
 					WK, 1, ldwrkr, ir + ldwrkr );
 
-				// Generate Q in A
+				// Generate Q (M rows) in A
 				dorglq( M, N, M, A, sa1, sa2, offsetA,
 					WK, 1, itau, WK, 1, iwork, -1 );
 
@@ -986,27 +1125,19 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					DUM, 1, 1, 0,
 					WK, 1, iwork );
 
-				// Multiply right vectors by Q: A = WORK(IR) * Q_stored_in_A
-
-				// Process columns in chunks
-				iu = ie + M;
+				// Multiply VT = WORK(IR) * Q (in A)
+				dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
+					WK, 1, ldwrkr, ir,
+					A, sa1, sa2, offsetA,
+					0.0, VT, svt1, svt2, offsetVT );
+			} else if ( wntuo ) {
+				// -------------------------------------------------------
+				// Path 5t: JOBVT='S', JOBU='O'
+				// Right vectors in VT, left vectors overwrite A
+				// -------------------------------------------------------
+				iu = 0;
 				ldwrku = M;
-				chunk = Math.max( 1, Math.floor( ( wsz - iu ) / M ) );
-				for ( i = 0; i < N; i += chunk ) {
-					blk = Math.min( N - i, chunk );
-					dgemm( 'no-transpose', 'no-transpose', M, blk, M, 1.0,
-						WK, 1, ldwrkr, ir,
-						A, sa1, sa2, offsetA + (i * sa2),
-						0.0, WK, 1, ldwrku, iu );
-					dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA + (i * sa2) );
-				}
-			} else if ( wntvo && wntuas ) {
-				// -------------------------------------------------------
-				// Path 3t: JOBVT='O', JOBU='S' or 'A'
-				// Right vectors overwrite A, left vectors in U
-				// -------------------------------------------------------
-				ir = 0;
+				ir = iu + (ldwrku * M);
 				ldwrkr = M;
 				itau = ir + (ldwrkr * M);
 				iwork = itau + M;
@@ -1015,11 +1146,11 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				dgelqf( M, N, A, sa1, sa2, offsetA,
 					WK, 1, itau, WK, 1, iwork, -1 );
 
-				// Copy L to U, zero above
+				// Copy L to WORK(IU), zero above
 				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-					U, su1, su2, offsetU );
+					WK, 1, ldwrku, iu );
 				dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-					U, su1, su2, offsetU + su2 );
+					WK, 1, ldwrku, iu + ldwrku );
 
 				// Generate Q in A
 				dorglq( M, N, M, A, sa1, sa2, offsetA,
@@ -1030,20 +1161,88 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				itaup = itauq + M;
 				iwork = itaup + M;
 
-				// Bidiagonalize L in U
-				dgebrd( M, M, U, su1, su2, offsetU,
+				// Bidiagonalize L in WORK(IU)
+				dgebrd( M, M, WK, 1, ldwrku, iu,
 					s, strideS, offsetS,
 					WK, 1, ie,
 					WK, 1, itauq,
 					WK, 1, itaup,
 					WK, 1, iwork, wsz - iwork );
 
-				// Copy upper bidiag from U to WORK(IR)
-				dlacpy( 'upper', M, M, U, su1, su2, offsetU,
+				// Copy lower bidiag to WORK(IR) for left vectors
+				dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
 					WK, 1, ldwrkr, ir );
 
-				// Generate right bidiag vectors P^T in WORK(IR)
-				dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
+				// Generate right bidiag vectors P^T in WORK(IU)
+				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
+					WK, 1, itaup, WK, 1, iwork, -1 );
+
+				// Generate left bidiag vectors Q in WORK(IR)
+				dorgbr( 'q', M, M, M, WK, 1, ldwrkr, ir,
+					WK, 1, itauq, WK, 1, iwork, -1 );
+				iwork = ie + M;
+
+				// Perform bidiagonal QR iteration
+				info = dbdsqr( 'upper', M, M, M, 0,
+					s, strideS, offsetS,
+					WK, 1, ie,
+					WK, 1, ldwrku, iu,
+					WK, 1, ldwrkr, ir,
+					DUM, 1, 1, 0,
+					WK, 1, iwork );
+
+				// Multiply VT = WORK(IU) * Q (in A)
+				dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
+					WK, 1, ldwrku, iu,
+					A, sa1, sa2, offsetA,
+					0.0, VT, svt1, svt2, offsetVT );
+
+				// Copy WORK(IR) to A (left vectors overwrite A)
+				dlacpy( 'F', M, M, WK, 1, ldwrkr, ir,
+					A, sa1, sa2, offsetA );
+			} else if ( wntuas ) {
+				// -------------------------------------------------------
+				// Path 6t: JOBVT='S', JOBU='S' or 'A'
+				// Right vectors in VT, left vectors in U
+				// -------------------------------------------------------
+				iu = 0;
+				ldwrku = M;
+				itau = iu + (ldwrku * M);
+				iwork = itau + M;
+
+				// Compute A = L*Q
+				dgelqf( M, N, A, sa1, sa2, offsetA,
+					WK, 1, itau, WK, 1, iwork, -1 );
+
+				// Copy L to WORK(IU), zero above
+				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
+					WK, 1, ldwrku, iu );
+				dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
+					WK, 1, ldwrku, iu + ldwrku );
+
+				// Generate Q in A
+				dorglq( M, N, M, A, sa1, sa2, offsetA,
+					WK, 1, itau, WK, 1, iwork, -1 );
+
+				ie = itau;
+				itauq = ie + M;
+				itaup = itauq + M;
+				iwork = itaup + M;
+
+				// Bidiagonalize L in WORK(IU)
+				dgebrd( M, M, WK, 1, ldwrku, iu,
+					s, strideS, offsetS,
+					WK, 1, ie,
+					WK, 1, itauq,
+					WK, 1, itaup,
+					WK, 1, iwork, wsz - iwork );
+
+				// Copy lower bidiag to U
+				dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
+					U, su1, su2, offsetU );
+
+				// Generate right bidiag vectors P^T in WORK(IU)
+				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
 					WK, 1, itaup, WK, 1, iwork, -1 );
 
 				// Generate left bidiag vectors Q in U
@@ -1055,508 +1254,308 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				info = dbdsqr( 'upper', M, M, M, 0,
 					s, strideS, offsetS,
 					WK, 1, ie,
-					WK, 1, ldwrkr, ir,
+					WK, 1, ldwrku, iu,
 					U, su1, su2, offsetU,
 					DUM, 1, 1, 0,
 					WK, 1, iwork );
 
-				// Multiply right vectors by Q in A → A
-				iu = ie + M;
-				ldwrku = M;
-				chunk = Math.max( 1, Math.floor( ( wsz - iu ) / M ) );
-				for ( i = 0; i < N; i += chunk ) {
-					blk = Math.min( N - i, chunk );
-					dgemm( 'no-transpose', 'no-transpose', M, blk, M, 1.0,
-						WK, 1, ldwrkr, ir,
-						A, sa1, sa2, offsetA + (i * sa2),
-						0.0, WK, 1, ldwrku, iu );
-					dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA + (i * sa2) );
-				}
-			} else if ( wntvs ) {
-				if ( wntun ) {
-					// -------------------------------------------------------
-					// Path 4t: JOBVT='S', JOBU='N'
-					// Right vectors in VT (first M rows), no left vectors
-					// -------------------------------------------------------
-					ir = 0;
-					ldwrkr = M;
-					itau = ir + (ldwrkr * M);
-					iwork = itau + M;
-
-					// Compute A = L*Q
-					dgelqf( M, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy L to WORK(IR), zero above
-					dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-						WK, 1, ldwrkr, ir );
-					dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-						WK, 1, ldwrkr, ir + ldwrkr );
-
-					// Generate Q (M rows) in A
-					dorglq( M, N, M, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					ie = itau;
-					itauq = ie + M;
-					itaup = itauq + M;
-					iwork = itaup + M;
-
-					// Bidiagonalize L in WORK(IR)
-					dgebrd( M, M, WK, 1, ldwrkr, ir,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, itauq,
-						WK, 1, itaup,
-						WK, 1, iwork, wsz - iwork );
-
-					// Generate right bidiag vectors P^T in WORK(IR)
-					dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
-						WK, 1, itaup, WK, 1, iwork, -1 );
-					iwork = ie + M;
-
-					// Perform bidiagonal QR iteration
-					info = dbdsqr( 'upper', M, M, 0, 0,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, ldwrkr, ir,
-						DUM, 1, 1, 0,
-						DUM, 1, 1, 0,
-						WK, 1, iwork );
-
-					// Multiply VT = WORK(IR) * Q (in A)
-					dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
-						WK, 1, ldwrkr, ir,
-						A, sa1, sa2, offsetA,
-						0.0, VT, svt1, svt2, offsetVT );
-				} else if ( wntuo ) {
-					// -------------------------------------------------------
-					// Path 5t: JOBVT='S', JOBU='O'
-					// Right vectors in VT, left vectors overwrite A
-					// -------------------------------------------------------
-					iu = 0;
-					ldwrku = M;
-					ir = iu + (ldwrku * M);
-					ldwrkr = M;
-					itau = ir + (ldwrkr * M);
-					iwork = itau + M;
-
-					// Compute A = L*Q
-					dgelqf( M, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy L to WORK(IU), zero above
-					dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-						WK, 1, ldwrku, iu );
-					dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-						WK, 1, ldwrku, iu + ldwrku );
-
-					// Generate Q in A
-					dorglq( M, N, M, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					ie = itau;
-					itauq = ie + M;
-					itaup = itauq + M;
-					iwork = itaup + M;
-
-					// Bidiagonalize L in WORK(IU)
-					dgebrd( M, M, WK, 1, ldwrku, iu,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, itauq,
-						WK, 1, itaup,
-						WK, 1, iwork, wsz - iwork );
-
-					// Copy lower bidiag to WORK(IR) for left vectors
-					dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
-						WK, 1, ldwrkr, ir );
-
-					// Generate right bidiag vectors P^T in WORK(IU)
-					dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-						WK, 1, itaup, WK, 1, iwork, -1 );
-
-					// Generate left bidiag vectors Q in WORK(IR)
-					dorgbr( 'q', M, M, M, WK, 1, ldwrkr, ir,
-						WK, 1, itauq, WK, 1, iwork, -1 );
-					iwork = ie + M;
-
-					// Perform bidiagonal QR iteration
-					info = dbdsqr( 'upper', M, M, M, 0,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, ldwrku, iu,
-						WK, 1, ldwrkr, ir,
-						DUM, 1, 1, 0,
-						WK, 1, iwork );
-
-					// Multiply VT = WORK(IU) * Q (in A)
-					dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
-						WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA,
-						0.0, VT, svt1, svt2, offsetVT );
-
-					// Copy WORK(IR) to A (left vectors overwrite A)
-					dlacpy( 'F', M, M, WK, 1, ldwrkr, ir,
-						A, sa1, sa2, offsetA );
-				} else if ( wntuas ) {
-					// -------------------------------------------------------
-					// Path 6t: JOBVT='S', JOBU='S' or 'A'
-					// Right vectors in VT, left vectors in U
-					// -------------------------------------------------------
-					iu = 0;
-					ldwrku = M;
-					itau = iu + (ldwrku * M);
-					iwork = itau + M;
-
-					// Compute A = L*Q
-					dgelqf( M, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy L to WORK(IU), zero above
-					dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-						WK, 1, ldwrku, iu );
-					dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-						WK, 1, ldwrku, iu + ldwrku );
-
-					// Generate Q in A
-					dorglq( M, N, M, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					ie = itau;
-					itauq = ie + M;
-					itaup = itauq + M;
-					iwork = itaup + M;
-
-					// Bidiagonalize L in WORK(IU)
-					dgebrd( M, M, WK, 1, ldwrku, iu,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, itauq,
-						WK, 1, itaup,
-						WK, 1, iwork, wsz - iwork );
-
-					// Copy lower bidiag to U
-					dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
-						U, su1, su2, offsetU );
-
-					// Generate right bidiag vectors P^T in WORK(IU)
-					dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-						WK, 1, itaup, WK, 1, iwork, -1 );
-
-					// Generate left bidiag vectors Q in U
-					dorgbr( 'q', M, M, M, U, su1, su2, offsetU,
-						WK, 1, itauq, WK, 1, iwork, -1 );
-					iwork = ie + M;
-
-					// Perform bidiagonal QR iteration
-					info = dbdsqr( 'upper', M, M, M, 0,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, ldwrku, iu,
-						U, su1, su2, offsetU,
-						DUM, 1, 1, 0,
-						WK, 1, iwork );
-
-					// Multiply VT = WORK(IU) * Q
-					dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
-						WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA,
-						0.0, VT, svt1, svt2, offsetVT );
-				}
-			} else if ( wntva ) {
-				if ( wntun ) {
-					// -------------------------------------------------------
-					// Path 7t: JOBVT='A', JOBU='N'
-					// All N rows of V^T, no left vectors
-					// -------------------------------------------------------
-					ir = 0;
-					ldwrkr = M;
-					itau = ir + (ldwrkr * M);
-					iwork = itau + M;
-
-					// Compute A = L*Q
-					dgelqf( M, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy upper triangle of A to VT
-					dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
-						VT, svt1, svt2, offsetVT );
-
-					// Copy L to WORK(IR), zero above
-					dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-						WK, 1, ldwrkr, ir );
-					dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-						WK, 1, ldwrkr, ir + ldwrkr );
-
-					// Generate Q (N-by-N) in VT
-					dorglq( N, N, M, VT, svt1, svt2, offsetVT,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					ie = itau;
-					itauq = ie + M;
-					itaup = itauq + M;
-					iwork = itaup + M;
-
-					// Bidiagonalize L in WORK(IR)
-					dgebrd( M, M, WK, 1, ldwrkr, ir,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, itauq,
-						WK, 1, itaup,
-						WK, 1, iwork, wsz - iwork );
-
-					// Generate right bidiag vectors P^T in WORK(IR)
-					dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
-						WK, 1, itaup, WK, 1, iwork, -1 );
-					iwork = ie + M;
-
-					// Perform bidiagonal QR iteration
-					info = dbdsqr( 'upper', M, M, 0, 0,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, ldwrkr, ir,
-						DUM, 1, 1, 0,
-						DUM, 1, 1, 0,
-						WK, 1, iwork );
-
-					// Multiply VT = WORK(IR) * VT — use A as temp
-					dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
-						WK, 1, ldwrkr, ir,
-						VT, svt1, svt2, offsetVT,
-						0.0, A, sa1, sa2, offsetA );
-					dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
-						VT, svt1, svt2, offsetVT );
-				} else if ( wntuo ) {
-					// -------------------------------------------------------
-					// Path 8t: JOBVT='A', JOBU='O'
-					// All N rows of V^T, left vectors overwrite A
-					// -------------------------------------------------------
-					iu = 0;
-					ldwrku = M;
-					ir = iu + (ldwrku * M);
-					ldwrkr = M;
-					itau = ir + (ldwrkr * M);
-					iwork = itau + M;
-
-					// Compute A = L*Q
-					dgelqf( M, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy upper triangle to VT
-					dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
-						VT, svt1, svt2, offsetVT );
-
-					// Generate Q (N-by-N) in VT
-					dorglq( N, N, M, VT, svt1, svt2, offsetVT,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy L to WORK(IU), zero above
-					dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-						WK, 1, ldwrku, iu );
-					dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-						WK, 1, ldwrku, iu + ldwrku );
-
-					ie = itau;
-					itauq = ie + M;
-					itaup = itauq + M;
-					iwork = itaup + M;
-
-					// Bidiagonalize L in WORK(IU)
-					dgebrd( M, M, WK, 1, ldwrku, iu,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, itauq,
-						WK, 1, itaup,
-						WK, 1, iwork, wsz - iwork );
-
-					// Copy lower bidiag to WORK(IR)
-					dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
-						WK, 1, ldwrkr, ir );
-
-					// Generate right bidiag vectors P^T in WORK(IU)
-					dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-						WK, 1, itaup, WK, 1, iwork, -1 );
-
-					// Generate left bidiag vectors Q in WORK(IR)
-					dorgbr( 'q', M, M, M, WK, 1, ldwrkr, ir,
-						WK, 1, itauq, WK, 1, iwork, -1 );
-					iwork = ie + M;
-
-					// Perform bidiagonal QR iteration
-					info = dbdsqr( 'upper', M, M, M, 0,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, ldwrku, iu,
-						WK, 1, ldwrkr, ir,
-						DUM, 1, 1, 0,
-						WK, 1, iwork );
-
-					// Multiply VT = WORK(IU) * VT — use A as temp
-					dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
-						WK, 1, ldwrku, iu,
-						VT, svt1, svt2, offsetVT,
-						0.0, A, sa1, sa2, offsetA );
-					dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
-						VT, svt1, svt2, offsetVT );
-
-					// Copy WORK(IR) to A (left vectors overwrite A)
-					dlacpy( 'F', M, M, WK, 1, ldwrkr, ir,
-						A, sa1, sa2, offsetA );
-				} else if ( wntuas ) {
-					// -------------------------------------------------------
-					// Path 9t: JOBVT='A', JOBU='S' or 'A'
-					// All N rows of V^T, left vectors in U
-					// -------------------------------------------------------
-					iu = 0;
-					ldwrku = M;
-					itau = iu + (ldwrku * M);
-					iwork = itau + M;
-
-					// Compute A = L*Q
-					dgelqf( M, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy upper triangle to VT
-					dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
-						VT, svt1, svt2, offsetVT );
-
-					// Generate Q (N-by-N) in VT
-					dorglq( N, N, M, VT, svt1, svt2, offsetVT,
-						WK, 1, itau, WK, 1, iwork, -1 );
-
-					// Copy L to WORK(IU), zero above
-					dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-						WK, 1, ldwrku, iu );
-					dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-						WK, 1, ldwrku, iu + ldwrku );
-
-					ie = itau;
-					itauq = ie + M;
-					itaup = itauq + M;
-					iwork = itaup + M;
-
-					// Bidiagonalize L in WORK(IU)
-					dgebrd( M, M, WK, 1, ldwrku, iu,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, itauq,
-						WK, 1, itaup,
-						WK, 1, iwork, wsz - iwork );
-
-					// Copy lower bidiag to U
-					dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
-						U, su1, su2, offsetU );
-
-					// Generate right bidiag vectors P^T in WORK(IU)
-					dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-						WK, 1, itaup, WK, 1, iwork, -1 );
-
-					// Generate left bidiag vectors Q in U
-					dorgbr( 'q', M, M, M, U, su1, su2, offsetU,
-						WK, 1, itauq, WK, 1, iwork, -1 );
-					iwork = ie + M;
-
-					// Perform bidiagonal QR iteration
-					info = dbdsqr( 'upper', M, M, M, 0,
-						s, strideS, offsetS,
-						WK, 1, ie,
-						WK, 1, ldwrku, iu,
-						U, su1, su2, offsetU,
-						DUM, 1, 1, 0,
-						WK, 1, iwork );
-
-					// Multiply VT = WORK(IU) * VT — use A as temp
-					dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
-						WK, 1, ldwrku, iu,
-						VT, svt1, svt2, offsetVT,
-						0.0, A, sa1, sa2, offsetA );
-					dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
-						VT, svt1, svt2, offsetVT );
-				}
+				// Multiply VT = WORK(IU) * Q
+				dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
+					WK, 1, ldwrku, iu,
+					A, sa1, sa2, offsetA,
+					0.0, VT, svt1, svt2, offsetVT );
 			}
-		} else {
-			// ---------------------------------------------------------------
-			// Path 10t: M < N but N is not much larger than M
-			// Direct bidiagonal reduction without LQ
-			// ---------------------------------------------------------------
-			ie = 0;
-			itauq = ie + M;
-			itaup = itauq + M;
-			iwork = itaup + M;
+		} else if ( wntva ) {
+			if ( wntun ) {
+				// -------------------------------------------------------
+				// Path 7t: JOBVT='A', JOBU='N'
+				// All N rows of V^T, no left vectors
+				// -------------------------------------------------------
+				ir = 0;
+				ldwrkr = M;
+				itau = ir + (ldwrkr * M);
+				iwork = itau + M;
 
-			// Bidiagonalize A (lower bidiagonal when M < N)
-			dgebrd( M, N, A, sa1, sa2, offsetA,
-				s, strideS, offsetS,
-				WK, 1, ie,
-				WK, 1, itauq,
-				WK, 1, itaup,
-				WK, 1, iwork, wsz - iwork );
+				// Compute A = L*Q
+				dgelqf( M, N, A, sa1, sa2, offsetA,
+					WK, 1, itau, WK, 1, iwork, -1 );
 
-			if ( wntuas ) {
-				// Copy lower triangle of A to U, generate Q
-				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
-					U, su1, su2, offsetU );
-				dorgbr( 'q', M, M, N, U, su1, su2, offsetU,
-					WK, 1, itauq, WK, 1, iwork, -1 );
-			}
-			if ( wntvas ) {
-				// Copy upper triangle of A to VT, generate P^T
+				// Copy upper triangle of A to VT
 				dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
-				nrvt = ( wntva ) ? N : M;
-				dorgbr( 'p', nrvt, N, M, VT, svt1, svt2, offsetVT,
+
+				// Copy L to WORK(IR), zero above
+				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
+					WK, 1, ldwrkr, ir );
+				dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
+					WK, 1, ldwrkr, ir + ldwrkr );
+
+				// Generate Q (N-by-N) in VT
+				dorglq( N, N, M, VT, svt1, svt2, offsetVT,
+					WK, 1, itau, WK, 1, iwork, -1 );
+
+				ie = itau;
+				itauq = ie + M;
+				itaup = itauq + M;
+				iwork = itaup + M;
+
+				// Bidiagonalize L in WORK(IR)
+				dgebrd( M, M, WK, 1, ldwrkr, ir,
+					s, strideS, offsetS,
+					WK, 1, ie,
+					WK, 1, itauq,
+					WK, 1, itaup,
+					WK, 1, iwork, wsz - iwork );
+
+				// Generate right bidiag vectors P^T in WORK(IR)
+				dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
 					WK, 1, itaup, WK, 1, iwork, -1 );
-			}
-			if ( wntuo ) {
-				// Generate Q in A
-				dorgbr( 'q', M, M, N, A, sa1, sa2, offsetA,
+				iwork = ie + M;
+
+				// Perform bidiagonal QR iteration
+				info = dbdsqr( 'upper', M, M, 0, 0,
+					s, strideS, offsetS,
+					WK, 1, ie,
+					WK, 1, ldwrkr, ir,
+					DUM, 1, 1, 0,
+					DUM, 1, 1, 0,
+					WK, 1, iwork );
+
+				// Multiply VT = WORK(IR) * VT — use A as temp
+				dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
+					WK, 1, ldwrkr, ir,
+					VT, svt1, svt2, offsetVT,
+					0.0, A, sa1, sa2, offsetA );
+				dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+					VT, svt1, svt2, offsetVT );
+			} else if ( wntuo ) {
+				// -------------------------------------------------------
+				// Path 8t: JOBVT='A', JOBU='O'
+				// All N rows of V^T, left vectors overwrite A
+				// -------------------------------------------------------
+				iu = 0;
+				ldwrku = M;
+				ir = iu + (ldwrku * M);
+				ldwrkr = M;
+				itau = ir + (ldwrkr * M);
+				iwork = itau + M;
+
+				// Compute A = L*Q
+				dgelqf( M, N, A, sa1, sa2, offsetA,
+					WK, 1, itau, WK, 1, iwork, -1 );
+
+				// Copy upper triangle to VT
+				dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
+					VT, svt1, svt2, offsetVT );
+
+				// Generate Q (N-by-N) in VT
+				dorglq( N, N, M, VT, svt1, svt2, offsetVT,
+					WK, 1, itau, WK, 1, iwork, -1 );
+
+				// Copy L to WORK(IU), zero above
+				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
+					WK, 1, ldwrku, iu );
+				dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
+					WK, 1, ldwrku, iu + ldwrku );
+
+				ie = itau;
+				itauq = ie + M;
+				itaup = itauq + M;
+				iwork = itaup + M;
+
+				// Bidiagonalize L in WORK(IU)
+				dgebrd( M, M, WK, 1, ldwrku, iu,
+					s, strideS, offsetS,
+					WK, 1, ie,
+					WK, 1, itauq,
+					WK, 1, itaup,
+					WK, 1, iwork, wsz - iwork );
+
+				// Copy lower bidiag to WORK(IR)
+				dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
+					WK, 1, ldwrkr, ir );
+
+				// Generate right bidiag vectors P^T in WORK(IU)
+				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
+					WK, 1, itaup, WK, 1, iwork, -1 );
+
+				// Generate left bidiag vectors Q in WORK(IR)
+				dorgbr( 'q', M, M, M, WK, 1, ldwrkr, ir,
 					WK, 1, itauq, WK, 1, iwork, -1 );
-			}
-			if ( wntvo ) {
-				// Generate P^T in A
-				dorgbr( 'p', M, N, M, A, sa1, sa2, offsetA,
+				iwork = ie + M;
+
+				// Perform bidiagonal QR iteration
+				info = dbdsqr( 'upper', M, M, M, 0,
+					s, strideS, offsetS,
+					WK, 1, ie,
+					WK, 1, ldwrku, iu,
+					WK, 1, ldwrkr, ir,
+					DUM, 1, 1, 0,
+					WK, 1, iwork );
+
+				// Multiply VT = WORK(IU) * VT — use A as temp
+				dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
+					WK, 1, ldwrku, iu,
+					VT, svt1, svt2, offsetVT,
+					0.0, A, sa1, sa2, offsetA );
+				dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+					VT, svt1, svt2, offsetVT );
+
+				// Copy WORK(IR) to A (left vectors overwrite A)
+				dlacpy( 'F', M, M, WK, 1, ldwrkr, ir,
+					A, sa1, sa2, offsetA );
+			} else if ( wntuas ) {
+				// -------------------------------------------------------
+				// Path 9t: JOBVT='A', JOBU='S' or 'A'
+				// All N rows of V^T, left vectors in U
+				// -------------------------------------------------------
+				iu = 0;
+				ldwrku = M;
+				itau = iu + (ldwrku * M);
+				iwork = itau + M;
+
+				// Compute A = L*Q
+				dgelqf( M, N, A, sa1, sa2, offsetA,
+					WK, 1, itau, WK, 1, iwork, -1 );
+
+				// Copy upper triangle to VT
+				dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
+					VT, svt1, svt2, offsetVT );
+
+				// Generate Q (N-by-N) in VT
+				dorglq( N, N, M, VT, svt1, svt2, offsetVT,
+					WK, 1, itau, WK, 1, iwork, -1 );
+
+				// Copy L to WORK(IU), zero above
+				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
+					WK, 1, ldwrku, iu );
+				dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
+					WK, 1, ldwrku, iu + ldwrku );
+
+				ie = itau;
+				itauq = ie + M;
+				itaup = itauq + M;
+				iwork = itaup + M;
+
+				// Bidiagonalize L in WORK(IU)
+				dgebrd( M, M, WK, 1, ldwrku, iu,
+					s, strideS, offsetS,
+					WK, 1, ie,
+					WK, 1, itauq,
+					WK, 1, itaup,
+					WK, 1, iwork, wsz - iwork );
+
+				// Copy lower bidiag to U
+				dlacpy( 'lower', M, M, WK, 1, ldwrku, iu,
+					U, su1, su2, offsetU );
+
+				// Generate right bidiag vectors P^T in WORK(IU)
+				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
 					WK, 1, itaup, WK, 1, iwork, -1 );
-			}
-			iwork = ie + M;
 
-			// Determine dimensions for DBDSQR
-			nru = 0;
-			ncvt = 0;
-			if ( wntuas || wntuo ) {
-				nru = M;
-			}
-			if ( wntvas || wntvo ) {
-				ncvt = N;
-			}
+				// Generate left bidiag vectors Q in U
+				dorgbr( 'q', M, M, M, U, su1, su2, offsetU,
+					WK, 1, itauq, WK, 1, iwork, -1 );
+				iwork = ie + M;
 
-			// Perform bidiagonal SVD (lower bidiagonal when M < N)
-			if ( !wntuo && !wntvo ) {
-				info = dbdsqr( 'lower', M, ncvt, nru, 0,
+				// Perform bidiagonal QR iteration
+				info = dbdsqr( 'upper', M, M, M, 0,
 					s, strideS, offsetS,
 					WK, 1, ie,
-					VT, svt1, svt2, offsetVT,
+					WK, 1, ldwrku, iu,
 					U, su1, su2, offsetU,
 					DUM, 1, 1, 0,
 					WK, 1, iwork );
-			} else if ( !wntuo && wntvo ) {
-				info = dbdsqr( 'lower', M, ncvt, nru, 0,
-					s, strideS, offsetS,
-					WK, 1, ie,
-					A, sa1, sa2, offsetA,
-					U, su1, su2, offsetU,
-					DUM, 1, 1, 0,
-					WK, 1, iwork );
-			} else {
-				info = dbdsqr( 'lower', M, ncvt, nru, 0,
-					s, strideS, offsetS,
-					WK, 1, ie,
+
+				// Multiply VT = WORK(IU) * VT — use A as temp
+				dgemm( 'no-transpose', 'no-transpose', M, N, M, 1.0,
+					WK, 1, ldwrku, iu,
 					VT, svt1, svt2, offsetVT,
-					A, sa1, sa2, offsetA,
-					DUM, 1, 1, 0,
-					WK, 1, iwork );
+					0.0, A, sa1, sa2, offsetA );
+				dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+					VT, svt1, svt2, offsetVT );
 			}
+		}
+	} else {
+		// ---------------------------------------------------------------
+		// Path 10t: M < N but N is not much larger than M
+		// Direct bidiagonal reduction without LQ
+		// ---------------------------------------------------------------
+		ie = 0;
+		itauq = ie + M;
+		itaup = itauq + M;
+		iwork = itaup + M;
+
+		// Bidiagonalize A (lower bidiagonal when M < N)
+		dgebrd( M, N, A, sa1, sa2, offsetA,
+			s, strideS, offsetS,
+			WK, 1, ie,
+			WK, 1, itauq,
+			WK, 1, itaup,
+			WK, 1, iwork, wsz - iwork );
+
+		if ( wntuas ) {
+			// Copy lower triangle of A to U, generate Q
+			dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
+				U, su1, su2, offsetU );
+			dorgbr( 'q', M, M, N, U, su1, su2, offsetU,
+				WK, 1, itauq, WK, 1, iwork, -1 );
+		}
+		if ( wntvas ) {
+			// Copy upper triangle of A to VT, generate P^T
+			dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
+				VT, svt1, svt2, offsetVT );
+			nrvt = ( wntva ) ? N : M;
+			dorgbr( 'p', nrvt, N, M, VT, svt1, svt2, offsetVT,
+				WK, 1, itaup, WK, 1, iwork, -1 );
+		}
+		if ( wntuo ) {
+			// Generate Q in A
+			dorgbr( 'q', M, M, N, A, sa1, sa2, offsetA,
+				WK, 1, itauq, WK, 1, iwork, -1 );
+		}
+		if ( wntvo ) {
+			// Generate P^T in A
+			dorgbr( 'p', M, N, M, A, sa1, sa2, offsetA,
+				WK, 1, itaup, WK, 1, iwork, -1 );
+		}
+		iwork = ie + M;
+
+		// Determine dimensions for DBDSQR
+		nru = 0;
+		ncvt = 0;
+		if ( wntuas || wntuo ) {
+			nru = M;
+		}
+		if ( wntvas || wntvo ) {
+			ncvt = N;
+		}
+
+		// Perform bidiagonal SVD (lower bidiagonal when M < N)
+		if ( !wntuo && !wntvo ) {
+			info = dbdsqr( 'lower', M, ncvt, nru, 0,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				VT, svt1, svt2, offsetVT,
+				U, su1, su2, offsetU,
+				DUM, 1, 1, 0,
+				WK, 1, iwork );
+		} else if ( !wntuo && wntvo ) {
+			info = dbdsqr( 'lower', M, ncvt, nru, 0,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				A, sa1, sa2, offsetA,
+				U, su1, su2, offsetU,
+				DUM, 1, 1, 0,
+				WK, 1, iwork );
+		} else {
+			info = dbdsqr( 'lower', M, ncvt, nru, 0,
+				s, strideS, offsetS,
+				WK, 1, ie,
+				VT, svt1, svt2, offsetVT,
+				A, sa1, sa2, offsetA,
+				DUM, 1, 1, 0,
+				WK, 1, iwork );
 		}
 	}
 

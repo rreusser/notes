@@ -212,133 +212,130 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					}
 				}
 			}
-		} else {
-			// Form B := alpha*inv(A**T)*B  or  B := alpha*inv(A**H)*B
-			if ( upper ) {
-				// Left, Upper, Transpose/Conj-transpose
-				for ( j = 0; j < N; j++ ) {
-					for ( i = 0; i < M; i++ ) {
-						ib = oB + (i * sb1) + (j * sb2);
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
+		} else if ( upper ) {
+			// Form B := alpha*inv(A**T)*B or B := alpha*inv(A**H)*B; Left, Upper, Transpose/Conj-transpose
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + (i * sb1) + (j * sb2);
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
 
-						// Temp = alpha * B[i,j]
-						tempR = (alphaR * br) - (alphaI * bi);
-						tempI = (alphaR * bi) + (alphaI * br);
-						if ( noconj ) {
-							// Transpose (no conjugate)
-							for ( k = 0; k < i; k++ ) {
-								ia = oA + (k * sa1) + (i * sa2);
-								kb = oB + (k * sb1) + (j * sb2);
-								ar = Av[ ia ];
-								ai = Av[ ia + 1 ];
-								br = Bv[ kb ];
-								bi = Bv[ kb + 1 ];
+					// Temp = alpha * B[i,j]
+					tempR = (alphaR * br) - (alphaI * bi);
+					tempI = (alphaR * bi) + (alphaI * br);
+					if ( noconj ) {
+						// Transpose (no conjugate)
+						for ( k = 0; k < i; k++ ) {
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
+							ar = Av[ ia ];
+							ai = Av[ ia + 1 ];
+							br = Bv[ kb ];
+							bi = Bv[ kb + 1 ];
 
-								// Temp -= A[k,i] * B[k,j]
-								tempR -= (ar * br) - (ai * bi);
-								tempI -= (ar * bi) + (ai * br);
-							}
-							if ( nounit ) {
-								// Temp = temp / A[i,i]
-								ia = oA + (i * sa1) + (i * sa2);
-								Bv[ ib ] = tempR;
-								Bv[ ib + 1 ] = tempI;
-								cmplx.divAt( Bv, ib, Bv, ib, Av, ia );
-								continue;
-							}
-						} else {
-							// Conjugate transpose
-							for ( k = 0; k < i; k++ ) {
-								ia = oA + (k * sa1) + (i * sa2);
-								kb = oB + (k * sb1) + (j * sb2);
-								ar = Av[ ia ];
-								ai = -Av[ ia + 1 ]; // conjugate
-								br = Bv[ kb ];
-								bi = Bv[ kb + 1 ];
-
-								// Temp -= conj(A[k,i]) * B[k,j]
-								tempR -= (ar * br) - (ai * bi);
-								tempI -= (ar * bi) + (ai * br);
-							}
-							if ( nounit ) {
-								// Temp = temp / conj(A[i,i])
-								ia = oA + (i * sa1) + (i * sa2);
-								Bv[ ib ] = tempR;
-								Bv[ ib + 1 ] = tempI;
-
-								// Place conjugated diagonal into scratch for divAt
-								scratch[ 0 ] = Av[ ia ];
-								scratch[ 1 ] = -Av[ ia + 1 ];
-								cmplx.divAt( Bv, ib, Bv, ib, scratch, 0 );
-								continue;
-							}
+							// Temp -= A[k,i] * B[k,j]
+							tempR -= (ar * br) - (ai * bi);
+							tempI -= (ar * bi) + (ai * br);
 						}
-						Bv[ ib ] = tempR;
-						Bv[ ib + 1 ] = tempI;
+						if ( nounit ) {
+							// Temp = temp / A[i,i]
+							ia = oA + (i * sa1) + (i * sa2);
+							Bv[ ib ] = tempR;
+							Bv[ ib + 1 ] = tempI;
+							cmplx.divAt( Bv, ib, Bv, ib, Av, ia );
+							continue;
+						}
+					} else {
+						// Conjugate transpose
+						for ( k = 0; k < i; k++ ) {
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
+							ar = Av[ ia ];
+							ai = -Av[ ia + 1 ]; // conjugate
+							br = Bv[ kb ];
+							bi = Bv[ kb + 1 ];
+
+							// Temp -= conj(A[k,i]) * B[k,j]
+							tempR -= (ar * br) - (ai * bi);
+							tempI -= (ar * bi) + (ai * br);
+						}
+						if ( nounit ) {
+							// Temp = temp / conj(A[i,i])
+							ia = oA + (i * sa1) + (i * sa2);
+							Bv[ ib ] = tempR;
+							Bv[ ib + 1 ] = tempI;
+
+							// Place conjugated diagonal into scratch for divAt
+							scratch[ 0 ] = Av[ ia ];
+							scratch[ 1 ] = -Av[ ia + 1 ];
+							cmplx.divAt( Bv, ib, Bv, ib, scratch, 0 );
+							continue;
+						}
 					}
+					Bv[ ib ] = tempR;
+					Bv[ ib + 1 ] = tempI;
 				}
-			} else {
-				// Left, Lower, Transpose/Conj-transpose
-				for ( j = 0; j < N; j++ ) {
-					for ( i = M - 1; i >= 0; i-- ) {
-						ib = oB + (i * sb1) + (j * sb2);
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
+			}
+		} else {
+			// Left, Lower, Transpose/Conj-transpose
+			for ( j = 0; j < N; j++ ) {
+				for ( i = M - 1; i >= 0; i-- ) {
+					ib = oB + (i * sb1) + (j * sb2);
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
 
-						// Temp = alpha * B[i,j]
-						tempR = (alphaR * br) - (alphaI * bi);
-						tempI = (alphaR * bi) + (alphaI * br);
-						if ( noconj ) {
-							// Transpose (no conjugate)
-							for ( k = i + 1; k < M; k++ ) {
-								ia = oA + (k * sa1) + (i * sa2);
-								kb = oB + (k * sb1) + (j * sb2);
-								ar = Av[ ia ];
-								ai = Av[ ia + 1 ];
-								br = Bv[ kb ];
-								bi = Bv[ kb + 1 ];
+					// Temp = alpha * B[i,j]
+					tempR = (alphaR * br) - (alphaI * bi);
+					tempI = (alphaR * bi) + (alphaI * br);
+					if ( noconj ) {
+						// Transpose (no conjugate)
+						for ( k = i + 1; k < M; k++ ) {
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
+							ar = Av[ ia ];
+							ai = Av[ ia + 1 ];
+							br = Bv[ kb ];
+							bi = Bv[ kb + 1 ];
 
-								// Temp -= A[k,i] * B[k,j]
-								tempR -= (ar * br) - (ai * bi);
-								tempI -= (ar * bi) + (ai * br);
-							}
-							if ( nounit ) {
-								// Temp = temp / A[i,i]
-								ia = oA + (i * sa1) + (i * sa2);
-								Bv[ ib ] = tempR;
-								Bv[ ib + 1 ] = tempI;
-								cmplx.divAt( Bv, ib, Bv, ib, Av, ia );
-								continue;
-							}
-						} else {
-							// Conjugate transpose
-							for ( k = i + 1; k < M; k++ ) {
-								ia = oA + (k * sa1) + (i * sa2);
-								kb = oB + (k * sb1) + (j * sb2);
-								ar = Av[ ia ];
-								ai = -Av[ ia + 1 ]; // conjugate
-								br = Bv[ kb ];
-								bi = Bv[ kb + 1 ];
-
-								// Temp -= conj(A[k,i]) * B[k,j]
-								tempR -= (ar * br) - (ai * bi);
-								tempI -= (ar * bi) + (ai * br);
-							}
-							if ( nounit ) {
-								// Temp = temp / conj(A[i,i])
-								ia = oA + (i * sa1) + (i * sa2);
-								Bv[ ib ] = tempR;
-								Bv[ ib + 1 ] = tempI;
-								scratch[ 0 ] = Av[ ia ];
-								scratch[ 1 ] = -Av[ ia + 1 ];
-								cmplx.divAt( Bv, ib, Bv, ib, scratch, 0 );
-								continue;
-							}
+							// Temp -= A[k,i] * B[k,j]
+							tempR -= (ar * br) - (ai * bi);
+							tempI -= (ar * bi) + (ai * br);
 						}
-						Bv[ ib ] = tempR;
-						Bv[ ib + 1 ] = tempI;
+						if ( nounit ) {
+							// Temp = temp / A[i,i]
+							ia = oA + (i * sa1) + (i * sa2);
+							Bv[ ib ] = tempR;
+							Bv[ ib + 1 ] = tempI;
+							cmplx.divAt( Bv, ib, Bv, ib, Av, ia );
+							continue;
+						}
+					} else {
+						// Conjugate transpose
+						for ( k = i + 1; k < M; k++ ) {
+							ia = oA + (k * sa1) + (i * sa2);
+							kb = oB + (k * sb1) + (j * sb2);
+							ar = Av[ ia ];
+							ai = -Av[ ia + 1 ]; // conjugate
+							br = Bv[ kb ];
+							bi = Bv[ kb + 1 ];
+
+							// Temp -= conj(A[k,i]) * B[k,j]
+							tempR -= (ar * br) - (ai * bi);
+							tempI -= (ar * bi) + (ai * br);
+						}
+						if ( nounit ) {
+							// Temp = temp / conj(A[i,i])
+							ia = oA + (i * sa1) + (i * sa2);
+							Bv[ ib ] = tempR;
+							Bv[ ib + 1 ] = tempI;
+							scratch[ 0 ] = Av[ ia ];
+							scratch[ 1 ] = -Av[ ia + 1 ];
+							cmplx.divAt( Bv, ib, Bv, ib, scratch, 0 );
+							continue;
+						}
 					}
+					Bv[ ib ] = tempR;
+					Bv[ ib + 1 ] = tempI;
 				}
 			}
 		}
@@ -447,138 +444,135 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 				}
 			}
 		}
-	} else {
-		// Form B := alpha*B*inv(A**T) or B := alpha*B*inv(A**H)
-		if ( upper ) {
-			// Right, Upper, Transpose/Conj-transpose
-			for ( k = N - 1; k >= 0; k-- ) {
-				if ( nounit ) {
-					// Temp = (1,0) / A[k,k] or (1,0) / conj(A[k,k])
-					ia = oA + (k * sa1) + (k * sa2);
-					scratch[ 0 ] = 1.0;
-					scratch[ 1 ] = 0.0;
+	} else if ( upper ) {
+		// Form B := alpha*B*inv(A**T) or B := alpha*B*inv(A**H); Right, Upper, Transpose/Conj-transpose
+		for ( k = N - 1; k >= 0; k-- ) {
+			if ( nounit ) {
+				// Temp = (1,0) / A[k,k] or (1,0) / conj(A[k,k])
+				ia = oA + (k * sa1) + (k * sa2);
+				scratch[ 0 ] = 1.0;
+				scratch[ 1 ] = 0.0;
+				if ( noconj ) {
+					scratch[ 2 ] = Av[ ia ];
+					scratch[ 3 ] = Av[ ia + 1 ];
+				} else {
+					scratch[ 2 ] = Av[ ia ];
+					scratch[ 3 ] = -Av[ ia + 1 ];
+				}
+				cmplx.divAt( scratch, 4, scratch, 0, scratch, 2 );
+				tempR = scratch[ 4 ];
+				tempI = scratch[ 5 ];
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + (i * sb1) + (k * sb2);
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
+
+					// B[i,k] = temp * B[i,k]
+					Bv[ ib ] = (tempR * br) - (tempI * bi);
+					Bv[ ib + 1 ] = (tempR * bi) + (tempI * br);
+				}
+			}
+			for ( j = 0; j < k; j++ ) {
+				ia = oA + (j * sa1) + (k * sa2);
+				ar = Av[ ia ];
+				ai = Av[ ia + 1 ];
+				if ( ar !== 0.0 || ai !== 0.0 ) {
 					if ( noconj ) {
-						scratch[ 2 ] = Av[ ia ];
-						scratch[ 3 ] = Av[ ia + 1 ];
+						tempR = ar;
+						tempI = ai;
 					} else {
-						scratch[ 2 ] = Av[ ia ];
-						scratch[ 3 ] = -Av[ ia + 1 ];
+						// conj(A[j,k])
+						tempR = ar;
+						tempI = -ai;
 					}
-					cmplx.divAt( scratch, 4, scratch, 0, scratch, 2 );
-					tempR = scratch[ 4 ];
-					tempI = scratch[ 5 ];
 					for ( i = 0; i < M; i++ ) {
-						ib = oB + (i * sb1) + (k * sb2);
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
+						ib = oB + (i * sb1) + (j * sb2);
+						kb = oB + (i * sb1) + (k * sb2);
+						br = Bv[ kb ];
+						bi = Bv[ kb + 1 ];
 
-						// B[i,k] = temp * B[i,k]
-						Bv[ ib ] = (tempR * br) - (tempI * bi);
-						Bv[ ib + 1 ] = (tempR * bi) + (tempI * br);
-					}
-				}
-				for ( j = 0; j < k; j++ ) {
-					ia = oA + (j * sa1) + (k * sa2);
-					ar = Av[ ia ];
-					ai = Av[ ia + 1 ];
-					if ( ar !== 0.0 || ai !== 0.0 ) {
-						if ( noconj ) {
-							tempR = ar;
-							tempI = ai;
-						} else {
-							// conj(A[j,k])
-							tempR = ar;
-							tempI = -ai;
-						}
-						for ( i = 0; i < M; i++ ) {
-							ib = oB + (i * sb1) + (j * sb2);
-							kb = oB + (i * sb1) + (k * sb2);
-							br = Bv[ kb ];
-							bi = Bv[ kb + 1 ];
-
-							// B[i,j] -= temp * B[i,k]
-							Bv[ ib ] -= (tempR * br) - (tempI * bi);
-							Bv[ ib + 1 ] -= (tempR * bi) + (tempI * br);
-						}
-					}
-				}
-				// Scale column k by alpha
-				if ( alphaR !== 1.0 || alphaI !== 0.0 ) {
-					for ( i = 0; i < M; i++ ) {
-						ib = oB + (i * sb1) + (k * sb2);
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
-
-						// B[i,k] = alpha * B[i,k]
-						Bv[ ib ] = (alphaR * br) - (alphaI * bi);
-						Bv[ ib + 1 ] = (alphaR * bi) + (alphaI * br);
+						// B[i,j] -= temp * B[i,k]
+						Bv[ ib ] -= (tempR * br) - (tempI * bi);
+						Bv[ ib + 1 ] -= (tempR * bi) + (tempI * br);
 					}
 				}
 			}
-		} else {
-			// Right, Lower, Transpose/Conj-transpose
-			for ( k = 0; k < N; k++ ) {
-				if ( nounit ) {
-					// Temp = (1,0) / A[k,k] or (1,0) / conj(A[k,k])
-					ia = oA + (k * sa1) + (k * sa2);
-					scratch[ 0 ] = 1.0;
-					scratch[ 1 ] = 0.0;
+			// Scale column k by alpha
+			if ( alphaR !== 1.0 || alphaI !== 0.0 ) {
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + (i * sb1) + (k * sb2);
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
+
+					// B[i,k] = alpha * B[i,k]
+					Bv[ ib ] = (alphaR * br) - (alphaI * bi);
+					Bv[ ib + 1 ] = (alphaR * bi) + (alphaI * br);
+				}
+			}
+		}
+	} else {
+		// Right, Lower, Transpose/Conj-transpose
+		for ( k = 0; k < N; k++ ) {
+			if ( nounit ) {
+				// Temp = (1,0) / A[k,k] or (1,0) / conj(A[k,k])
+				ia = oA + (k * sa1) + (k * sa2);
+				scratch[ 0 ] = 1.0;
+				scratch[ 1 ] = 0.0;
+				if ( noconj ) {
+					scratch[ 2 ] = Av[ ia ];
+					scratch[ 3 ] = Av[ ia + 1 ];
+				} else {
+					scratch[ 2 ] = Av[ ia ];
+					scratch[ 3 ] = -Av[ ia + 1 ];
+				}
+				cmplx.divAt( scratch, 4, scratch, 0, scratch, 2 );
+				tempR = scratch[ 4 ];
+				tempI = scratch[ 5 ];
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + (i * sb1) + (k * sb2);
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
+
+					// B[i,k] = temp * B[i,k]
+					Bv[ ib ] = (tempR * br) - (tempI * bi);
+					Bv[ ib + 1 ] = (tempR * bi) + (tempI * br);
+				}
+			}
+			for ( j = k + 1; j < N; j++ ) {
+				ia = oA + (j * sa1) + (k * sa2);
+				ar = Av[ ia ];
+				ai = Av[ ia + 1 ];
+				if ( ar !== 0.0 || ai !== 0.0 ) {
 					if ( noconj ) {
-						scratch[ 2 ] = Av[ ia ];
-						scratch[ 3 ] = Av[ ia + 1 ];
+						tempR = ar;
+						tempI = ai;
 					} else {
-						scratch[ 2 ] = Av[ ia ];
-						scratch[ 3 ] = -Av[ ia + 1 ];
+						// conj(A[j,k])
+						tempR = ar;
+						tempI = -ai;
 					}
-					cmplx.divAt( scratch, 4, scratch, 0, scratch, 2 );
-					tempR = scratch[ 4 ];
-					tempI = scratch[ 5 ];
 					for ( i = 0; i < M; i++ ) {
-						ib = oB + (i * sb1) + (k * sb2);
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
+						ib = oB + (i * sb1) + (j * sb2);
+						kb = oB + (i * sb1) + (k * sb2);
+						br = Bv[ kb ];
+						bi = Bv[ kb + 1 ];
 
-						// B[i,k] = temp * B[i,k]
-						Bv[ ib ] = (tempR * br) - (tempI * bi);
-						Bv[ ib + 1 ] = (tempR * bi) + (tempI * br);
+						// B[i,j] -= temp * B[i,k]
+						Bv[ ib ] -= (tempR * br) - (tempI * bi);
+						Bv[ ib + 1 ] -= (tempR * bi) + (tempI * br);
 					}
 				}
-				for ( j = k + 1; j < N; j++ ) {
-					ia = oA + (j * sa1) + (k * sa2);
-					ar = Av[ ia ];
-					ai = Av[ ia + 1 ];
-					if ( ar !== 0.0 || ai !== 0.0 ) {
-						if ( noconj ) {
-							tempR = ar;
-							tempI = ai;
-						} else {
-							// conj(A[j,k])
-							tempR = ar;
-							tempI = -ai;
-						}
-						for ( i = 0; i < M; i++ ) {
-							ib = oB + (i * sb1) + (j * sb2);
-							kb = oB + (i * sb1) + (k * sb2);
-							br = Bv[ kb ];
-							bi = Bv[ kb + 1 ];
+			}
+			// Scale column k by alpha
+			if ( alphaR !== 1.0 || alphaI !== 0.0 ) {
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + (i * sb1) + (k * sb2);
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
 
-							// B[i,j] -= temp * B[i,k]
-							Bv[ ib ] -= (tempR * br) - (tempI * bi);
-							Bv[ ib + 1 ] -= (tempR * bi) + (tempI * br);
-						}
-					}
-				}
-				// Scale column k by alpha
-				if ( alphaR !== 1.0 || alphaI !== 0.0 ) {
-					for ( i = 0; i < M; i++ ) {
-						ib = oB + (i * sb1) + (k * sb2);
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
-
-						// B[i,k] = alpha * B[i,k]
-						Bv[ ib ] = (alphaR * br) - (alphaI * bi);
-						Bv[ ib + 1 ] = (alphaR * bi) + (alphaI * br);
-					}
+					// B[i,k] = alpha * B[i,k]
+					Bv[ ib ] = (alphaR * br) - (alphaI * bi);
+					Bv[ ib + 1 ] = (alphaR * bi) + (alphaI * br);
 				}
 			}
 		}

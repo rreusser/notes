@@ -145,108 +145,106 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				jx -= sx;
 			}
 		}
+	} else if ( upper ) {
+		// Form x := A**T*x or x := A**H*x, upper triangular
+		jx = oX + (( N - 1 ) * sx);
+		for ( j = N - 1; j >= 0; j-- ) {
+			tr = xv[ jx ];
+			ti = xv[ jx + 1 ];
+			if ( noconj ) {
+				// Transpose (no conjugate)
+				if ( nounit ) {
+					ia = oA + (j * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					xr = (tr * ar) - (ti * ai);
+					xi = (tr * ai) + (ti * ar);
+					tr = xr;
+					ti = xi;
+				}
+				ix = oX + (( j - 1 ) * sx);
+				for ( i = j - 1; i >= 0; i-- ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix -= sx;
+				}
+			} else {
+				// Conjugate transpose
+				if ( nounit ) {
+					ia = oA + (j * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ];
+					xr = (tr * ar) - (ti * ai);
+					xi = (tr * ai) + (ti * ar);
+					tr = xr;
+					ti = xi;
+				}
+				ix = oX + (( j - 1 ) * sx);
+				for ( i = j - 1; i >= 0; i-- ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ];
+					tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix -= sx;
+				}
+			}
+			xv[ jx ] = tr;
+			xv[ jx + 1 ] = ti;
+			jx -= sx;
+		}
 	} else {
-		// Form x := A**T*x or x := A**H*x
-		if ( upper ) {
-			jx = oX + (( N - 1 ) * sx);
-			for ( j = N - 1; j >= 0; j-- ) {
-				tr = xv[ jx ];
-				ti = xv[ jx + 1 ];
-				if ( noconj ) {
-					// Transpose (no conjugate)
-					if ( nounit ) {
-						ia = oA + (j * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						xr = (tr * ar) - (ti * ai);
-						xi = (tr * ai) + (ti * ar);
-						tr = xr;
-						ti = xi;
-					}
-					ix = oX + (( j - 1 ) * sx);
-					for ( i = j - 1; i >= 0; i-- ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix -= sx;
-					}
-				} else {
-					// Conjugate transpose
-					if ( nounit ) {
-						ia = oA + (j * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ];
-						xr = (tr * ar) - (ti * ai);
-						xi = (tr * ai) + (ti * ar);
-						tr = xr;
-						ti = xi;
-					}
-					ix = oX + (( j - 1 ) * sx);
-					for ( i = j - 1; i >= 0; i-- ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ];
-						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix -= sx;
-					}
+		// Form x := A**T*x or x := A**H*x, lower triangular
+		jx = oX;
+		for ( j = 0; j < N; j++ ) {
+			tr = xv[ jx ];
+			ti = xv[ jx + 1 ];
+			if ( noconj ) {
+				if ( nounit ) {
+					ia = oA + (j * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					xr = (tr * ar) - (ti * ai);
+					xi = (tr * ai) + (ti * ar);
+					tr = xr;
+					ti = xi;
 				}
-				xv[ jx ] = tr;
-				xv[ jx + 1 ] = ti;
-				jx -= sx;
-			}
-		} else {
-			// Lower triangular, transpose/conjugate-transpose
-			jx = oX;
-			for ( j = 0; j < N; j++ ) {
-				tr = xv[ jx ];
-				ti = xv[ jx + 1 ];
-				if ( noconj ) {
-					if ( nounit ) {
-						ia = oA + (j * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						xr = (tr * ar) - (ti * ai);
-						xi = (tr * ai) + (ti * ar);
-						tr = xr;
-						ti = xi;
-					}
-					ix = oX + (( j + 1 ) * sx);
-					for ( i = j + 1; i < N; i++ ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix += sx;
-					}
-				} else {
-					// Conjugate transpose
-					if ( nounit ) {
-						ia = oA + (j * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ];
-						xr = (tr * ar) - (ti * ai);
-						xi = (tr * ai) + (ti * ar);
-						tr = xr;
-						ti = xi;
-					}
-					ix = oX + (( j + 1 ) * sx);
-					for ( i = j + 1; i < N; i++ ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ];
-						tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix += sx;
-					}
+				ix = oX + (( j + 1 ) * sx);
+				for ( i = j + 1; i < N; i++ ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix += sx;
 				}
-				xv[ jx ] = tr;
-				xv[ jx + 1 ] = ti;
-				jx += sx;
+			} else {
+				// Conjugate transpose
+				if ( nounit ) {
+					ia = oA + (j * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ];
+					xr = (tr * ar) - (ti * ai);
+					xi = (tr * ai) + (ti * ar);
+					tr = xr;
+					ti = xi;
+				}
+				ix = oX + (( j + 1 ) * sx);
+				for ( i = j + 1; i < N; i++ ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ];
+					tr += (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti += (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix += sx;
+				}
 			}
+			xv[ jx ] = tr;
+			xv[ jx + 1 ] = ti;
+			jx += sx;
 		}
 	}
 	return x;

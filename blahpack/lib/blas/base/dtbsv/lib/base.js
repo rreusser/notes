@@ -122,50 +122,48 @@ function dtbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				jx += strideX;
 			}
 		}
-	} else {
+	} else if ( uplo === 'upper' ) {
 		// Solve A**T*x = b (trans = 'transpose' or 'C')
-		if ( uplo === 'upper' ) {
-			// Upper triangular, transpose: forward-substitution from top
-			kplus1 = K;
-			jx = kx;
-			for ( j = 0; j < N; j++ ) {
-				temp = x[ jx ];
-				l = kplus1 - j;
-				ix = kx;
-				for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-					ia = offsetA + (( l + i ) * sa1) + (j * sa2);
-					temp -= A[ ia ] * x[ ix ];
-					ix += strideX;
-				}
-				if ( nounit ) {
-					temp /= A[ offsetA + (kplus1 * sa1) + (j * sa2) ];
-				}
-				x[ jx ] = temp;
-				jx += strideX;
-				if ( j >= K ) {
-					kx += strideX;
-				}
+		// Upper triangular, transpose: forward-substitution from top
+		kplus1 = K;
+		jx = kx;
+		for ( j = 0; j < N; j++ ) {
+			temp = x[ jx ];
+			l = kplus1 - j;
+			ix = kx;
+			for ( i = Math.max( 0, j - K ); i < j; i++ ) {
+				ia = offsetA + (( l + i ) * sa1) + (j * sa2);
+				temp -= A[ ia ] * x[ ix ];
+				ix += strideX;
 			}
-		} else {
-			// Lower triangular, transpose: back-substitution from bottom
-			jx = kx + (( N - 1 ) * strideX);
-			for ( j = N - 1; j >= 0; j-- ) {
-				temp = x[ jx ];
-				l = -j;
-				ix = kx + (( N - 1 ) * strideX);
-				for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-					ia = offsetA + (( l + i ) * sa1) + (j * sa2);
-					temp -= A[ ia ] * x[ ix ];
-					ix -= strideX;
-				}
-				if ( nounit ) {
-					temp /= A[ offsetA + (j * sa2) ];
-				}
-				x[ jx ] = temp;
-				jx -= strideX;
-				if ( N - 1 - j >= K ) {
-					kx -= strideX;
-				}
+			if ( nounit ) {
+				temp /= A[ offsetA + (kplus1 * sa1) + (j * sa2) ];
+			}
+			x[ jx ] = temp;
+			jx += strideX;
+			if ( j >= K ) {
+				kx += strideX;
+			}
+		}
+	} else {
+		// Lower triangular, transpose: back-substitution from bottom
+		jx = kx + (( N - 1 ) * strideX);
+		for ( j = N - 1; j >= 0; j-- ) {
+			temp = x[ jx ];
+			l = -j;
+			ix = kx + (( N - 1 ) * strideX);
+			for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
+				ia = offsetA + (( l + i ) * sa1) + (j * sa2);
+				temp -= A[ ia ] * x[ ix ];
+				ix -= strideX;
+			}
+			if ( nounit ) {
+				temp /= A[ offsetA + (j * sa2) ];
+			}
+			x[ jx ] = temp;
+			jx -= strideX;
+			if ( N - 1 - j >= K ) {
+				kx -= strideX;
 			}
 		}
 	}

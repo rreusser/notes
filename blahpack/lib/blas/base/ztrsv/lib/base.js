@@ -150,148 +150,145 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				jx += sx;
 			}
 		}
+	} else if ( upper ) {
+		// Solve A**T*x = b or A**H*x = b — forward substitution on transposed upper
+		jx = oX;
+		for ( j = 0; j < N; j++ ) {
+			tr = xv[ jx ];
+			ti = xv[ jx + 1 ];
+			if ( noconj ) {
+				// Transpose (no conjugate)
+				ix = oX;
+				for ( i = 0; i < j; i++ ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+
+					// Temp -= A(i,j) * x(i)  — inline complex multiply-subtract
+					tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix += sx;
+				}
+				if ( nounit ) {
+					// Temp = temp / A(j,j) — store temp, divide, read back
+					ia = oA + (j * sa1) + (j * sa2);
+					xv[ jx ] = tr;
+					xv[ jx + 1 ] = ti;
+					cmplx.divAt( xv, jx, xv, jx, Av, ia );
+					tr = xv[ jx ];
+					ti = xv[ jx + 1 ];
+				}
+			} else {
+				// Conjugate transpose
+				ix = oX;
+				for ( i = 0; i < j; i++ ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ]; // conjugate
+
+					// Temp -= conj(A(i,j)) * x(i)
+					tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix += sx;
+				}
+				if ( nounit ) {
+					// Temp = temp / conj(A(j,j))
+					ia = oA + (j * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ]; // conjugate
+
+					// Divide temp by conj(A(j,j)) using Smith's formula
+					xv[ jx ] = tr;
+					xv[ jx + 1 ] = ti;
+
+					// Need to divide by conjugated diagonal — write conj into temp storage
+
+					// We store conj value, divide, then proceed
+					xr = tr; xi = ti;
+					if ( Math.abs( ai ) <= Math.abs( ar ) ) {
+						ti = ai / ar;
+						tr = ar + (ai * ti);
+						xv[ jx ] = ( xr + (xi * ti) ) / tr;
+						xv[ jx + 1 ] = ( xi - (xr * ti) ) / tr;
+					} else {
+						ti = ar / ai;
+						tr = ai + (ar * ti);
+						xv[ jx ] = ( (xr * ti) + xi ) / tr;
+						xv[ jx + 1 ] = ( (xi * ti) - xr ) / tr;
+					}
+					tr = xv[ jx ];
+					ti = xv[ jx + 1 ];
+				}
+			}
+			xv[ jx ] = tr;
+			xv[ jx + 1 ] = ti;
+			jx += sx;
+		}
 	} else {
-		// Solve A**T*x = b or A**H*x = b
-		if ( upper ) {
-			// Forward substitution on transposed upper
-			jx = oX;
-			for ( j = 0; j < N; j++ ) {
-				tr = xv[ jx ];
-				ti = xv[ jx + 1 ];
-				if ( noconj ) {
-					// Transpose (no conjugate)
-					ix = oX;
-					for ( i = 0; i < j; i++ ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
+		// Back substitution on transposed lower
+		jx = oX + (( N - 1 ) * sx);
+		for ( j = N - 1; j >= 0; j-- ) {
+			tr = xv[ jx ];
+			ti = xv[ jx + 1 ];
+			if ( noconj ) {
+				// Transpose (no conjugate)
+				ix = oX + (( N - 1 ) * sx);
+				for ( i = N - 1; i > j; i-- ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
 
-						// Temp -= A(i,j) * x(i)  — inline complex multiply-subtract
-						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix += sx;
-					}
-					if ( nounit ) {
-						// Temp = temp / A(j,j) — store temp, divide, read back
-						ia = oA + (j * sa1) + (j * sa2);
-						xv[ jx ] = tr;
-						xv[ jx + 1 ] = ti;
-						cmplx.divAt( xv, jx, xv, jx, Av, ia );
-						tr = xv[ jx ];
-						ti = xv[ jx + 1 ];
-					}
-				} else {
-					// Conjugate transpose
-					ix = oX;
-					for ( i = 0; i < j; i++ ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ]; // conjugate
-
-						// Temp -= conj(A(i,j)) * x(i)
-						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix += sx;
-					}
-					if ( nounit ) {
-						// Temp = temp / conj(A(j,j))
-						ia = oA + (j * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ]; // conjugate
-
-						// Divide temp by conj(A(j,j)) using Smith's formula
-						xv[ jx ] = tr;
-						xv[ jx + 1 ] = ti;
-
-						// Need to divide by conjugated diagonal — write conj into temp storage
-
-						// We store conj value, divide, then proceed
-						xr = tr; xi = ti;
-						if ( Math.abs( ai ) <= Math.abs( ar ) ) {
-							ti = ai / ar;
-							tr = ar + (ai * ti);
-							xv[ jx ] = ( xr + (xi * ti) ) / tr;
-							xv[ jx + 1 ] = ( xi - (xr * ti) ) / tr;
-						} else {
-							ti = ar / ai;
-							tr = ai + (ar * ti);
-							xv[ jx ] = ( (xr * ti) + xi ) / tr;
-							xv[ jx + 1 ] = ( (xi * ti) - xr ) / tr;
-						}
-						tr = xv[ jx ];
-						ti = xv[ jx + 1 ];
-					}
+					// Temp -= A(i,j) * x(i)
+					tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix -= sx;
 				}
-				xv[ jx ] = tr;
-				xv[ jx + 1 ] = ti;
-				jx += sx;
-			}
-		} else {
-			// Back substitution on transposed lower
-			jx = oX + (( N - 1 ) * sx);
-			for ( j = N - 1; j >= 0; j-- ) {
-				tr = xv[ jx ];
-				ti = xv[ jx + 1 ];
-				if ( noconj ) {
-					// Transpose (no conjugate)
-					ix = oX + (( N - 1 ) * sx);
-					for ( i = N - 1; i > j; i-- ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-
-						// Temp -= A(i,j) * x(i)
-						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix -= sx;
-					}
-					if ( nounit ) {
-						// Temp = temp / A(j,j)
-						ia = oA + (j * sa1) + (j * sa2);
-						xv[ jx ] = tr;
-						xv[ jx + 1 ] = ti;
-						cmplx.divAt( xv, jx, xv, jx, Av, ia );
-						tr = xv[ jx ];
-						ti = xv[ jx + 1 ];
-					}
-				} else {
-					// Conjugate transpose
-					ix = oX + (( N - 1 ) * sx);
-					for ( i = N - 1; i > j; i-- ) {
-						ia = oA + (i * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ]; // conjugate
-
-						// Temp -= conj(A(i,j)) * x(i)
-						tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
-						ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
-						ix -= sx;
-					}
-					if ( nounit ) {
-						// Temp = temp / conj(A(j,j))
-						ia = oA + (j * sa1) + (j * sa2);
-						ar = Av[ ia ];
-						ai = -Av[ ia + 1 ]; // conjugate
-						xr = tr; xi = ti;
-						if ( Math.abs( ai ) <= Math.abs( ar ) ) {
-							ti = ai / ar;
-							tr = ar + (ai * ti);
-							xv[ jx ] = ( xr + (xi * ti) ) / tr;
-							xv[ jx + 1 ] = ( xi - (xr * ti) ) / tr;
-						} else {
-							ti = ar / ai;
-							tr = ai + (ar * ti);
-							xv[ jx ] = ( (xr * ti) + xi ) / tr;
-							xv[ jx + 1 ] = ( (xi * ti) - xr ) / tr;
-						}
-						tr = xv[ jx ];
-						ti = xv[ jx + 1 ];
-					}
+				if ( nounit ) {
+					// Temp = temp / A(j,j)
+					ia = oA + (j * sa1) + (j * sa2);
+					xv[ jx ] = tr;
+					xv[ jx + 1 ] = ti;
+					cmplx.divAt( xv, jx, xv, jx, Av, ia );
+					tr = xv[ jx ];
+					ti = xv[ jx + 1 ];
 				}
-				xv[ jx ] = tr;
-				xv[ jx + 1 ] = ti;
-				jx -= sx;
+			} else {
+				// Conjugate transpose
+				ix = oX + (( N - 1 ) * sx);
+				for ( i = N - 1; i > j; i-- ) {
+					ia = oA + (i * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ]; // conjugate
+
+					// Temp -= conj(A(i,j)) * x(i)
+					tr -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
+					ti -= (ar * xv[ ix + 1 ]) + (ai * xv[ ix ]);
+					ix -= sx;
+				}
+				if ( nounit ) {
+					// Temp = temp / conj(A(j,j))
+					ia = oA + (j * sa1) + (j * sa2);
+					ar = Av[ ia ];
+					ai = -Av[ ia + 1 ]; // conjugate
+					xr = tr; xi = ti;
+					if ( Math.abs( ai ) <= Math.abs( ar ) ) {
+						ti = ai / ar;
+						tr = ar + (ai * ti);
+						xv[ jx ] = ( xr + (xi * ti) ) / tr;
+						xv[ jx + 1 ] = ( xi - (xr * ti) ) / tr;
+					} else {
+						ti = ar / ai;
+						tr = ai + (ar * ti);
+						xv[ jx ] = ( (xr * ti) + xi ) / tr;
+						xv[ jx + 1 ] = ( (xi * ti) - xr ) / tr;
+					}
+					tr = xv[ jx ];
+					ti = xv[ jx + 1 ];
+				}
 			}
+			xv[ jx ] = tr;
+			xv[ jx + 1 ] = ti;
+			jx -= sx;
 		}
 	}
 	return x;

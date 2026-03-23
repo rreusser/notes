@@ -130,55 +130,52 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 	tmax = CNORM[ offsetCNORM + (imax * sc) ];
 	if ( tmax <= BIGNUM ) {
 		tscal = 1.0;
+	} else if ( tmax <= RMAX ) {
+		tscal = 1.0 / ( SMLNUM * tmax );
+		dscal( N, tscal, CNORM, sc, offsetCNORM );
 	} else {
-		// Need to scale CNORM
+		// Overflow even after scaling — recompute using dlange
+		tmax = 0.0;
+		work = new Float64Array( 1 );
+		if ( upper ) {
+			for ( j = 1; j < N; j++ ) {
+				tmax = Math.max(
+					dlange( 'max', j, 1, A, sa1, sa2, offsetA + (j * sa2), work, 1, 0 ),
+					tmax
+				);
+			}
+		} else {
+			for ( j = 0; j < N - 1; j++ ) {
+				tmax = Math.max(
+					dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + (( j + 1 ) * sa1) + (j * sa2), work, 1, 0 ),
+					tmax
+				);
+			}
+		}
 		if ( tmax <= RMAX ) {
 			tscal = 1.0 / ( SMLNUM * tmax );
-			dscal( N, tscal, CNORM, sc, offsetCNORM );
-		} else {
-			// Overflow even after scaling — recompute using dlange
-			tmax = 0.0;
-			work = new Float64Array( 1 );
-			if ( upper ) {
-				for ( j = 1; j < N; j++ ) {
-					tmax = Math.max(
-						dlange( 'max', j, 1, A, sa1, sa2, offsetA + (j * sa2), work, 1, 0 ),
-						tmax
-					);
-				}
-			} else {
-				for ( j = 0; j < N - 1; j++ ) {
-					tmax = Math.max(
-						dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + (( j + 1 ) * sa1) + (j * sa2), work, 1, 0 ),
-						tmax
-					);
-				}
-			}
-			if ( tmax <= RMAX ) {
-				tscal = 1.0 / ( SMLNUM * tmax );
-				for ( j = 0; j < N; j++ ) {
-					ci = offsetCNORM + (j * sc);
-					if ( CNORM[ ci ] <= RMAX ) {
-						CNORM[ ci ] *= tscal;
+			for ( j = 0; j < N; j++ ) {
+				ci = offsetCNORM + (j * sc);
+				if ( CNORM[ ci ] <= RMAX ) {
+					CNORM[ ci ] *= tscal;
+				} else {
+					// Recompute from scratch
+					CNORM[ ci ] = 0.0;
+					if ( upper ) {
+						for ( i = 0; i < j; i++ ) {
+							CNORM[ ci ] += tscal * Math.abs( A[ offsetA + (i * sa1) + (j * sa2) ] );
+						}
 					} else {
-						// Recompute from scratch
-						CNORM[ ci ] = 0.0;
-						if ( upper ) {
-							for ( i = 0; i < j; i++ ) {
-								CNORM[ ci ] += tscal * Math.abs( A[ offsetA + (i * sa1) + (j * sa2) ] );
-							}
-						} else {
-							for ( i = j + 1; i < N; i++ ) {
-								CNORM[ ci ] += tscal * Math.abs( A[ offsetA + (i * sa1) + (j * sa2) ] );
-							}
+						for ( i = j + 1; i < N; i++ ) {
+							CNORM[ ci ] += tscal * Math.abs( A[ offsetA + (i * sa1) + (j * sa2) ] );
 						}
 					}
 				}
-			} else {
-				// tmax is so large we just do a plain dtrsv
-				dtrsv( uplo, trans, diag, N, A, sa1, sa2, offsetA, x, strideX, offsetX );
-				return 0;
 			}
+		} else {
+			// tmax is so large we just do a plain dtrsv
+			dtrsv( uplo, trans, diag, N, A, sa1, sa2, offsetA, x, strideX, offsetX );
+			return 0;
 		}
 	}
 
@@ -413,16 +410,14 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 					} else if ( j < N - 1 ) {
 						sumj = ddot( N - j - 1, A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
 					}
-				} else {
+				} else if ( upper ) {
 					// Scale each term individually
-					if ( upper ) {
-						for ( i = 0; i < j; i++ ) {
-							sumj += ( A[ offsetA + (i * sa1) + (j * sa2) ] * uscal ) * x[ offsetX + (i * strideX) ];
-						}
-					} else if ( j < N - 1 ) {
-						for ( i = j + 1; i < N; i++ ) {
-							sumj += ( A[ offsetA + (i * sa1) + (j * sa2) ] * uscal ) * x[ offsetX + (i * strideX) ];
-						}
+					for ( i = 0; i < j; i++ ) {
+						sumj += ( A[ offsetA + (i * sa1) + (j * sa2) ] * uscal ) * x[ offsetX + (i * strideX) ];
+					}
+				} else if ( j < N - 1 ) {
+					for ( i = j + 1; i < N; i++ ) {
+						sumj += ( A[ offsetA + (i * sa1) + (j * sa2) ] * uscal ) * x[ offsetX + (i * strideX) ];
 					}
 				}
 

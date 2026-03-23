@@ -102,44 +102,41 @@ function dtrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 				jx -= strideX;
 			}
 		}
+	} else if ( uplo === 'upper' ) {
+		// Form x := A**T*x, upper triangular, transpose
+		jx = offsetX + (( N - 1 ) * strideX);
+		for ( j = N - 1; j >= 0; j-- ) {
+			temp = x[ jx ];
+			if ( nounit ) {
+				temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
+			}
+			ix = offsetX + (( j - 1 ) * strideX);
+			ia = offsetA + (( j - 1 ) * sa1) + (j * sa2);
+			for ( i = j - 1; i >= 0; i-- ) {
+				temp += A[ ia ] * x[ ix ];
+				ix -= strideX;
+				ia -= sa1;
+			}
+			x[ jx ] = temp;
+			jx -= strideX;
+		}
 	} else {
-		// Form x := A**T*x
-		if ( uplo === 'upper' ) {
-			// Upper triangular, transpose
-			jx = offsetX + (( N - 1 ) * strideX);
-			for ( j = N - 1; j >= 0; j-- ) {
-				temp = x[ jx ];
-				if ( nounit ) {
-					temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
-				}
-				ix = offsetX + (( j - 1 ) * strideX);
-				ia = offsetA + (( j - 1 ) * sa1) + (j * sa2);
-				for ( i = j - 1; i >= 0; i-- ) {
-					temp += A[ ia ] * x[ ix ];
-					ix -= strideX;
-					ia -= sa1;
-				}
-				x[ jx ] = temp;
-				jx -= strideX;
+		// Form x := A**T*x, lower triangular, transpose
+		jx = offsetX;
+		for ( j = 0; j < N; j++ ) {
+			temp = x[ jx ];
+			if ( nounit ) {
+				temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
 			}
-		} else {
-			// Lower triangular, transpose
-			jx = offsetX;
-			for ( j = 0; j < N; j++ ) {
-				temp = x[ jx ];
-				if ( nounit ) {
-					temp *= A[ offsetA + (j * sa1) + (j * sa2) ];
-				}
-				ix = offsetX + (( j + 1 ) * strideX);
-				ia = offsetA + (( j + 1 ) * sa1) + (j * sa2);
-				for ( i = j + 1; i < N; i++ ) {
-					temp += A[ ia ] * x[ ix ];
-					ix += strideX;
-					ia += sa1;
-				}
-				x[ jx ] = temp;
-				jx += strideX;
+			ix = offsetX + (( j + 1 ) * strideX);
+			ia = offsetA + (( j + 1 ) * sa1) + (j * sa2);
+			for ( i = j + 1; i < N; i++ ) {
+				temp += A[ ia ] * x[ ix ];
+				ix += strideX;
+				ia += sa1;
 			}
+			x[ jx ] = temp;
+			jx += strideX;
 		}
 	}
 	return x;

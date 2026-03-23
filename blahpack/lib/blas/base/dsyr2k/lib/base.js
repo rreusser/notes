@@ -191,38 +191,37 @@ function dsyr2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 				}
 			}
 		}
-	} else {
+	} else if ( upper ) {
 		// C := alpha*A^T*B + alpha*B^T*A + beta*C
-		if ( upper ) {
-			for ( j = 0; j < N; j++ ) {
-				for ( i = 0; i <= j; i++ ) {
-					temp1 = 0.0;
-					temp2 = 0.0;
-					for ( l = 0; l < K; l++ ) {
-						temp1 += A[ offsetA + (l * sa1) + (i * sa2) ] * B[ offsetB + (l * sb1) + (j * sb2) ];
-						temp2 += B[ offsetB + (l * sb1) + (i * sb2) ] * A[ offsetA + (l * sa1) + (j * sa2) ];
-					}
-					if ( beta === 0.0 ) {
-						C[ offsetC + (i * sc1) + (j * sc2) ] = (alpha * temp1) + (alpha * temp2);
-					} else {
-						C[ offsetC + (i * sc1) + (j * sc2) ] = (beta * C[ offsetC + (i * sc1) + (j * sc2) ]) + (alpha * temp1) + (alpha * temp2);
-					}
+		for ( j = 0; j < N; j++ ) {
+			for ( i = 0; i <= j; i++ ) {
+				temp1 = 0.0;
+				temp2 = 0.0;
+				for ( l = 0; l < K; l++ ) {
+					temp1 += A[ offsetA + (l * sa1) + (i * sa2) ] * B[ offsetB + (l * sb1) + (j * sb2) ];
+					temp2 += B[ offsetB + (l * sb1) + (i * sb2) ] * A[ offsetA + (l * sa1) + (j * sa2) ];
+				}
+				if ( beta === 0.0 ) {
+					C[ offsetC + (i * sc1) + (j * sc2) ] = (alpha * temp1) + (alpha * temp2);
+				} else {
+					C[ offsetC + (i * sc1) + (j * sc2) ] = (beta * C[ offsetC + (i * sc1) + (j * sc2) ]) + (alpha * temp1) + (alpha * temp2);
 				}
 			}
-		} else {
-			for ( j = 0; j < N; j++ ) {
-				for ( i = j; i < N; i++ ) {
-					temp1 = 0.0;
-					temp2 = 0.0;
-					for ( l = 0; l < K; l++ ) {
-						temp1 += A[ offsetA + (l * sa1) + (i * sa2) ] * B[ offsetB + (l * sb1) + (j * sb2) ];
-						temp2 += B[ offsetB + (l * sb1) + (i * sb2) ] * A[ offsetA + (l * sa1) + (j * sa2) ];
-					}
-					if ( beta === 0.0 ) {
-						C[ offsetC + (i * sc1) + (j * sc2) ] = (alpha * temp1) + (alpha * temp2);
-					} else {
-						C[ offsetC + (i * sc1) + (j * sc2) ] = (beta * C[ offsetC + (i * sc1) + (j * sc2) ]) + (alpha * temp1) + (alpha * temp2);
-					}
+		}
+	} else {
+		// C := alpha*A^T*B + alpha*B^T*A + beta*C (lower)
+		for ( j = 0; j < N; j++ ) {
+			for ( i = j; i < N; i++ ) {
+				temp1 = 0.0;
+				temp2 = 0.0;
+				for ( l = 0; l < K; l++ ) {
+					temp1 += A[ offsetA + (l * sa1) + (i * sa2) ] * B[ offsetB + (l * sb1) + (j * sb2) ];
+					temp2 += B[ offsetB + (l * sb1) + (i * sb2) ] * A[ offsetA + (l * sa1) + (j * sa2) ];
+				}
+				if ( beta === 0.0 ) {
+					C[ offsetC + (i * sc1) + (j * sc2) ] = (alpha * temp1) + (alpha * temp2);
+				} else {
+					C[ offsetC + (i * sc1) + (j * sc2) ] = (beta * C[ offsetC + (i * sc1) + (j * sc2) ]) + (alpha * temp1) + (alpha * temp2);
 				}
 			}
 		}

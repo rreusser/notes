@@ -180,25 +180,23 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 					// Store U(k) in column k
 					dscal( k, r1, A, sa1, offsetA + (k * sa2) );
-				} else {
+				} else if ( k > 1 ) {
 					// 2x2 pivot block D(k): columns k and k-1 now hold
 					// ( W(k-1) W(k) ) = ( U(k-1) U(k) )*D(k)
-					if ( k > 1 ) {
-						d12 = A[ offsetA + (( k - 1 ) * sa1) + (k * sa2) ];
-						d22 = A[ offsetA + (( k - 1 ) * sa1) + (( k - 1 ) * sa2) ] / d12;
-						d11 = A[ offsetA + (k * sa1) + (k * sa2) ] / d12;
-						t = 1.0 / ( (d11 * d22) - 1.0 );
-						d12 = t / d12;
+					d12 = A[ offsetA + (( k - 1 ) * sa1) + (k * sa2) ];
+					d22 = A[ offsetA + (( k - 1 ) * sa1) + (( k - 1 ) * sa2) ] / d12;
+					d11 = A[ offsetA + (k * sa1) + (k * sa2) ] / d12;
+					t = 1.0 / ( (d11 * d22) - 1.0 );
+					d12 = t / d12;
 
-						for ( j = k - 2; j >= 0; j-- ) {
-							wkm1 = d12 * ( (d11 * A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
-							wk = d12 * ( (d22 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ] );
-							for ( i = j; i >= 0; i-- ) {
-								A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + (( k - 1 ) * sa2) ] * wkm1);
-							}
-							A[ offsetA + (j * sa1) + (k * sa2) ] = wk;
-							A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ] = wkm1;
+					for ( j = k - 2; j >= 0; j-- ) {
+						wkm1 = d12 * ( (d11 * A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
+						wk = d12 * ( (d22 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ] );
+						for ( i = j; i >= 0; i-- ) {
+							A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + (( k - 1 ) * sa2) ] * wkm1);
 						}
+						A[ offsetA + (j * sa1) + (k * sa2) ] = wk;
+						A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ] = wkm1;
 					}
 				}
 			}
@@ -281,24 +279,22 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 						dsyr( uplo, N - k - 1, -d11, A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2), A, sa1, sa2, offsetA + (( k + 1 ) * sa1) + (( k + 1 ) * sa2) );
 						dscal( N - k - 1, d11, A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2) );
 					}
-				} else {
+				} else if ( k < N - 2 ) {
 					// 2x2 pivot block
-					if ( k < N - 2 ) {
-						d21 = A[ offsetA + (( k + 1 ) * sa1) + (k * sa2) ];
-						d11 = A[ offsetA + (( k + 1 ) * sa1) + (( k + 1 ) * sa2) ] / d21;
-						d22 = A[ offsetA + (k * sa1) + (k * sa2) ] / d21;
-						t = 1.0 / ( (d11 * d22) - 1.0 );
-						d21 = t / d21;
+					d21 = A[ offsetA + (( k + 1 ) * sa1) + (k * sa2) ];
+					d11 = A[ offsetA + (( k + 1 ) * sa1) + (( k + 1 ) * sa2) ] / d21;
+					d22 = A[ offsetA + (k * sa1) + (k * sa2) ] / d21;
+					t = 1.0 / ( (d11 * d22) - 1.0 );
+					d21 = t / d21;
 
-						for ( j = k + 2; j < N; j++ ) {
-							wk = d21 * ( (d11 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ] );
-							wkp1 = d21 * ( (d22 * A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
-							for ( i = j; i < N; i++ ) {
-								A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + (( k + 1 ) * sa2) ] * wkp1);
-							}
-							A[ offsetA + (j * sa1) + (k * sa2) ] = wk;
-							A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ] = wkp1;
+					for ( j = k + 2; j < N; j++ ) {
+						wk = d21 * ( (d11 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ] );
+						wkp1 = d21 * ( (d22 * A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
+						for ( i = j; i < N; i++ ) {
+							A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + (( k + 1 ) * sa2) ] * wkp1);
 						}
+						A[ offsetA + (j * sa1) + (k * sa2) ] = wk;
+						A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ] = wkp1;
 					}
 				}
 			}

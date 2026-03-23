@@ -184,7 +184,11 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
-				} else if ( beta !== 1.0 ) {
+				} else if ( beta === 1.0 ) {
+					// beta === 1.0: just force diagonal imag to zero
+					ic = oC + (j * sc1) + (j * sc2);
+					Cv[ ic + 1 ] = 0.0;
+				} else {
 					ic = oC + (j * sc2);
 					for ( i = 0; i < j; i++ ) {
 						Cv[ ic ] *= beta;
@@ -193,10 +197,6 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					}
 					// Diagonal: scale real part only
 					Cv[ ic ] *= beta;
-					Cv[ ic + 1 ] = 0.0;
-				} else {
-					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + (j * sc1) + (j * sc2);
 					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
@@ -255,7 +255,11 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						Cv[ ic + 1 ] = 0.0;
 						ic += sc1;
 					}
-				} else if ( beta !== 1.0 ) {
+				} else if ( beta === 1.0 ) {
+					// beta === 1.0: just force diagonal imag to zero
+					ic = oC + (j * sc1) + (j * sc2);
+					Cv[ ic + 1 ] = 0.0;
+				} else {
 					ic = oC + (j * sc1) + (j * sc2);
 
 					// Diagonal: scale real part only
@@ -267,10 +271,6 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						Cv[ ic + 1 ] *= beta;
 						ic += sc1;
 					}
-				} else {
-					// beta === 1.0: just force diagonal imag to zero
-					ic = oC + (j * sc1) + (j * sc2);
-					Cv[ ic + 1 ] = 0.0;
 				}
 				for ( l = 0; l < K; l++ ) {
 					ia = oA + (j * sa1) + (l * sa2);
@@ -313,9 +313,8 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 				}
 			}
 		}
-	} else {
+	} else if ( upper ) {
 		// C := alpha*A^H*B + conj(alpha)*B^H*A + beta*C
-		if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
 				for ( i = 0; i <= j; i++ ) {
 					// temp1 = sum_l conj(A[l,i]) * B[l,j]
@@ -418,7 +417,6 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 				}
 			}
 		}
-	}
 	return C;
 }
 

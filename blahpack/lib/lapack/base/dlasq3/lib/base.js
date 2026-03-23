@@ -132,24 +132,22 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 		if ( n0 === ( i0 + 1 ) ) {
 			// 2 eigenvalues (label 40) — skip label 30 check
 			// Fall through to label 40 below
-		} else {
+		} else if ( Z( nn - 5 ) > tol2 * ( sigma + Z( nn - 3 ) ) &&
+			Z( nn - (2 * pp) - 4 ) > tol2 * Z( nn - 7 ) ) {
 			// Check whether E(N0-1) is negligible, 1 eigenvalue
-			if ( Z( nn - 5 ) > tol2 * ( sigma + Z( nn - 3 ) ) &&
-				Z( nn - (2 * pp) - 4 ) > tol2 * Z( nn - 7 ) ) {
-				// Not negligible, go to label 30
-				// Check whether E(N0-2) is negligible, 2 eigenvalues
-				if ( Z( nn - 9 ) > tol2 * sigma &&
-					Z( nn - (2 * pp) - 8 ) > tol2 * Z( nn - 11 ) ) {
-					// Not negligible, go to label 50 — break out of deflation
-					break;
-				}
-				// Fall through to label 40 (2-eigenvalue deflation)
-			} else {
-				// Negligible: deflate 1 eigenvalue (label 20)
-				setZ( (4 * n0) - 3, Z( (4 * n0) + pp - 3 ) + sigma );
-				n0 -= 1;
-				continue;
+			// Not negligible, go to label 30
+			// Check whether E(N0-2) is negligible, 2 eigenvalues
+			if ( Z( nn - 9 ) > tol2 * sigma &&
+				Z( nn - (2 * pp) - 8 ) > tol2 * Z( nn - 11 ) ) {
+				// Not negligible, go to label 50 — break out of deflation
+				break;
 			}
+			// Fall through to label 40 (2-eigenvalue deflation)
+		} else {
+			// Negligible: deflate 1 eigenvalue (label 20)
+			setZ( (4 * n0) - 3, Z( (4 * n0) + pp - 3 ) + sigma );
+			n0 -= 1;
+			continue;
 		}
 
 		// Label 40: 2-eigenvalue deflation

@@ -111,7 +111,12 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 		// IPIV[j] = jp + j (0-based: the row that was swapped with row j)
 		IPIV[ offsetIPIV + (j * strideIPIV) ] = jp + j;
 
-		if ( AB[ offsetAB + (( kv + jp ) * sa1) + (j * sa2) ] !== 0.0 ) {
+		if ( AB[ offsetAB + (( kv + jp ) * sa1) + (j * sa2) ] === 0.0 ) {
+			// Zero pivot found
+			if ( info === 0 ) {
+				info = j + 1; // 1-based info
+			}
+		} else {
 			// Update JU: max column reached by pivot search
 			ju = Math.max( ju, Math.min( j + ku + jp, N - 1 ) );
 
@@ -135,11 +140,6 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 						AB, sa2 - sa1, offsetAB + (( kv - 1 ) * sa1) + (( j + 1 ) * sa2),
 						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (( j + 1 ) * sa2) );
 				}
-			}
-		} else {
-			// Zero pivot found
-			if ( info === 0 ) {
-				info = j + 1; // 1-based info
 			}
 		}
 	}
