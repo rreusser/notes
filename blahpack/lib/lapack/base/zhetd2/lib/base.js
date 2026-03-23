@@ -100,7 +100,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	if ( uplo === 'upper' ) {
 		// Reduce the upper triangle of A.
 		// Fortran: A(N,N) = DBLE(A(N,N))
-		ai = oA + ( N - 1 ) * sa1 + ( N - 1 ) * sa2;
+		ai = oA + (( N - 1 ) * sa1) + (( N - 1 ) * sa2);
 		Av[ ai + 1 ] = 0.0;
 
 		// Fortran: DO I = N-1, 1, -1 (1-based)
@@ -115,17 +115,17 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// X is A(0, i+1) = oA + (i+1)*sa2, stride = strideA1
 			zlarfg(
 				i + 1,
-				A, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
-				A, strideA1, offsetA + ( i + 1 ) * strideA2,
+				A, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
+				A, strideA1, offsetA + (( i + 1 ) * strideA2),
 				TAU, offsetTAU + (i * strideTAU)
 			);
 
 			// e[i] = real(alpha) (alpha was overwritten by zlarfg)
-			ai = oA + (i * sa1) + ( i + 1 ) * sa2;
+			ai = oA + (i * sa1) + (( i + 1 ) * sa2);
 			e[ offsetE + (i * strideE) ] = Av[ ai ];
 
-			tauiR = Tv[ oT + (i * strideTAU) * 2 ];
-			tauiI = Tv[ oT + (i * strideTAU) * 2 + 1 ];
+			tauiR = Tv[ oT + ((i * strideTAU) * 2) ];
+			tauiI = Tv[ oT + ((i * strideTAU) * 2) + 1 ];
 
 			if ( tauiR !== 0.0 || tauiI !== 0.0 ) {
 				// Set A(i, i+1) = 1
@@ -140,7 +140,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				zhemv(
 					uplo, i + 1, new Complex128( tauiR, tauiI ),
 					A, strideA1, strideA2, offsetA,
-					A, strideA1, offsetA + ( i + 1 ) * strideA2,
+					A, strideA1, offsetA + (( i + 1 ) * strideA2),
 					CZERO,
 					TAU, strideTAU, offsetTAU
 				);
@@ -151,7 +151,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				var dot = zdotc(
 					i + 1,
 					TAU, strideTAU, offsetTAU,
-					A, strideA1, offsetA + ( i + 1 ) * strideA2
+					A, strideA1, offsetA + (( i + 1 ) * strideA2)
 				);
 				dotR = real( dot );
 				dotI = imag( dot );
@@ -167,7 +167,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Fortran: ZAXPY(I, ALPHA, A(1,I+1), 1, TAU, 1)
 				zaxpy(
 					i + 1, new Complex128( alphaR, alphaI ),
-					A, strideA1, offsetA + ( i + 1 ) * strideA2,
+					A, strideA1, offsetA + (( i + 1 ) * strideA2),
 					TAU, strideTAU, offsetTAU
 				);
 
@@ -176,7 +176,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Fortran: ZHER2(UPLO, I, -ONE, A(1,I+1), 1, TAU, 1, A, LDA)
 				zher2(
 					uplo, i + 1, CNONE,
-					A, strideA1, offsetA + ( i + 1 ) * strideA2,
+					A, strideA1, offsetA + (( i + 1 ) * strideA2),
 					TAU, strideTAU, offsetTAU,
 					A, strideA1, strideA2, offsetA
 				);
@@ -186,17 +186,17 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				Av[ ai + 1 ] = 0.0;
 			}
 			// A(I, I+1) = E(I) (restore)
-			ai = oA + (i * sa1) + ( i + 1 ) * sa2;
+			ai = oA + (i * sa1) + (( i + 1 ) * sa2);
 			Av[ ai ] = e[ offsetE + (i * strideE) ];
 			Av[ ai + 1 ] = 0.0;
 
 			// D(I+1) = DBLE(A(I+1, I+1))
-			ai = oA + ( i + 1 ) * sa1 + ( i + 1 ) * sa2;
-			d[ offsetD + ( i + 1 ) * strideD ] = Av[ ai ];
+			ai = oA + (( i + 1 ) * sa1) + (( i + 1 ) * sa2);
+			d[ offsetD + (( i + 1 ) * strideD) ] = Av[ ai ];
 
 			// TAU(I) = TAUI (restore after workspace use)
-			Tv[ oT + (i * strideTAU) * 2 ] = tauiR;
-			Tv[ oT + (i * strideTAU) * 2 + 1 ] = tauiI;
+			Tv[ oT + ((i * strideTAU) * 2) ] = tauiR;
+			Tv[ oT + ((i * strideTAU) * 2) + 1 ] = tauiI;
 		}
 		// D(1) = DBLE(A(1,1))
 		d[ offsetD ] = Av[ oA ];
@@ -215,17 +215,17 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// JS: zlarfg(N-i-1, alpha at A(i+1,i), x at A(min(i+2,N-1),i), ...)
 			zlarfg(
 				N - i - 1,
-				A, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
-				A, strideA1, offsetA + Math.min( i + 2, N - 1 ) * strideA1 + (i * strideA2),
+				A, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
+				A, strideA1, offsetA + (Math.min( i + 2, N - 1 ) * strideA1) + (i * strideA2),
 				TAU, offsetTAU + (i * strideTAU)
 			);
 
 			// e[i] = real(alpha)
-			ai = oA + ( i + 1 ) * sa1 + (i * sa2);
+			ai = oA + (( i + 1 ) * sa1) + (i * sa2);
 			e[ offsetE + (i * strideE) ] = Av[ ai ];
 
-			tauiR = Tv[ oT + (i * strideTAU) * 2 ];
-			tauiI = Tv[ oT + (i * strideTAU) * 2 + 1 ];
+			tauiR = Tv[ oT + ((i * strideTAU) * 2) ];
+			tauiI = Tv[ oT + ((i * strideTAU) * 2) + 1 ];
 
 			if ( tauiR !== 0.0 || tauiI !== 0.0 ) {
 				// Set A(i+1, i) = 1
@@ -237,8 +237,8 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Fortran: ZHEMV(UPLO, N-I, TAUI, A(I+1,I+1), LDA, A(I+1,I), 1, ZERO, TAU(I), 1)
 				zhemv(
 					uplo, N - i - 1, new Complex128( tauiR, tauiI ),
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
-					A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
+					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					CZERO,
 					TAU, strideTAU, offsetTAU + (i * strideTAU)
 				);
@@ -247,7 +247,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				var dot2 = zdotc(
 					N - i - 1,
 					TAU, strideTAU, offsetTAU + (i * strideTAU),
-					A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2)
+					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2)
 				);
 				dotR = real( dot2 );
 				dotI = imag( dot2 );
@@ -257,24 +257,24 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// W := w + alpha * v
 				zaxpy(
 					N - i - 1, new Complex128( alphaR, alphaI ),
-					A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					TAU, strideTAU, offsetTAU + (i * strideTAU)
 				);
 
 				// Apply rank-2 update: A := A - v*w^H - w*v^H
 				zher2(
 					uplo, N - i - 1, CNONE,
-					A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					TAU, strideTAU, offsetTAU + (i * strideTAU),
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2)
 				);
 			} else {
 				// A(I+1, I+1) = DBLE(A(I+1, I+1))
-				ai = oA + ( i + 1 ) * sa1 + ( i + 1 ) * sa2;
+				ai = oA + (( i + 1 ) * sa1) + (( i + 1 ) * sa2);
 				Av[ ai + 1 ] = 0.0;
 			}
 			// A(I+1, I) = E(I) (restore)
-			ai = oA + ( i + 1 ) * sa1 + (i * sa2);
+			ai = oA + (( i + 1 ) * sa1) + (i * sa2);
 			Av[ ai ] = e[ offsetE + (i * strideE) ];
 			Av[ ai + 1 ] = 0.0;
 
@@ -283,12 +283,12 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			d[ offsetD + (i * strideD) ] = Av[ ai ];
 
 			// TAU(I) = TAUI (restore after workspace use)
-			Tv[ oT + (i * strideTAU) * 2 ] = tauiR;
-			Tv[ oT + (i * strideTAU) * 2 + 1 ] = tauiI;
+			Tv[ oT + ((i * strideTAU) * 2) ] = tauiR;
+			Tv[ oT + ((i * strideTAU) * 2) + 1 ] = tauiI;
 		}
 		// D(N) = DBLE(A(N,N))
-		ai = oA + ( N - 1 ) * sa1 + ( N - 1 ) * sa2;
-		d[ offsetD + ( N - 1 ) * strideD ] = Av[ ai ];
+		ai = oA + (( N - 1 ) * sa1) + (( N - 1 ) * sa2);
+		d[ offsetD + (( N - 1 ) * strideD) ] = Av[ ai ];
 	}
 
 	return 0;

@@ -55,7 +55,7 @@ function dlanst( norm, N, d, strideD, offsetD, e, strideE, offsetE ) {
 
 	if ( norm === 'max' ) {
 		// Max norm: find the element of largest absolute value
-		id = offsetD + ( N - 1 ) * strideD;
+		id = offsetD + (( N - 1 ) * strideD);
 		anorm = Math.abs( d[ id ] );
 		id = offsetD;
 		ie = offsetE;
@@ -80,7 +80,7 @@ function dlanst( norm, N, d, strideD, offsetD, e, strideE, offsetE ) {
 			anorm = Math.abs( d[ offsetD ] ) + Math.abs( e[ offsetE ] );
 
 			// Last row: |e[N-2]| + |d[N-1]|
-			sum = Math.abs( e[ offsetE + ( N - 2 ) * strideE ] ) + Math.abs( d[ offsetD + ( N - 1 ) * strideD ] );
+			sum = Math.abs( e[ offsetE + (( N - 2 ) * strideE) ] ) + Math.abs( d[ offsetD + (( N - 1 ) * strideD) ] );
 			if ( anorm < sum || sum !== sum ) {
 				anorm = sum;
 			}

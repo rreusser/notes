@@ -88,10 +88,10 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 
 	// Helper: access Z using 1-based Fortran index
 	function Z( idx ) {
-		return z[ offset + ( idx - 1 ) * stride ];
+		return z[ offset + (( idx - 1 ) * stride) ];
 	}
 	function setZ( idx, val ) {
-		z[ offset + ( idx - 1 ) * stride ] = val;
+		z[ offset + (( idx - 1 ) * stride) ] = val;
 	}
 
 	n0in = n0;
@@ -166,7 +166,7 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 					( t * ( ONE + Math.sqrt( ONE + (s / t) ) ) ) );
 			} else {
 				s = Z( nn - 3 ) * ( Z( nn - 5 ) /
-					( t + Math.sqrt( t ) * Math.sqrt( t + s ) ) );
+					( t + (Math.sqrt( t ) * Math.sqrt( t + s )) ) );
 			}
 			t = Z( nn - 7 ) + ( s + Z( nn - 5 ) );
 			setZ( nn - 3, Z( nn - 3 ) * ( Z( nn - 7 ) / t ) );
@@ -240,10 +240,10 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 			// Success — go to label 90
 			break;
 		} else if ( dmin < ZERO && dmin1 > ZERO &&
-			Z( 4 * ( n0 - 1 ) - pp ) < tol * ( sigma + dn1 ) &&
+			Z( (4 * ( n0 - 1 )) - pp ) < tol * ( sigma + dn1 ) &&
 			Math.abs( dn ) < tol * sigma ) {
 			// Convergence hidden by negative DN
-			setZ( 4 * ( n0 - 1 ) - pp + 2, ZERO );
+			setZ( (4 * ( n0 - 1 )) - pp + 2, ZERO );
 			dmin = ZERO;
 			break;
 		} else if ( dmin < ZERO ) {

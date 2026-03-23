@@ -113,7 +113,7 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 				// Interchange rows K-1 and -IPIV[K]-1 (0-based)
 				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];
 				if ( kp !== k - 1 ) {
-					dswap( nrhs, B, sb2, offsetB + ( k - 1 ) * sb1, B, sb2, offsetB + (kp * sb1) );
+					dswap( nrhs, B, sb2, offsetB + (( k - 1 ) * sb1), B, sb2, offsetB + (kp * sb1) );
 				}
 
 				// Apply multipliers
@@ -123,20 +123,20 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 						B, sb2, offsetB + (k * sb1),
 						B, sb1, sb2, offsetB );
 					dger( k - 1, nrhs, -1.0,
-						A, sa1, offsetA + ( k - 1 ) * sa2,
-						B, sb2, offsetB + ( k - 1 ) * sb1,
+						A, sa1, offsetA + (( k - 1 ) * sa2),
+						B, sb2, offsetB + (( k - 1 ) * sb1),
 						B, sb1, sb2, offsetB );
 				}
 
 				// Solve 2x2 system: D * [x(k-1); x(k)] = [b(k-1); b(k)]
-				akm1k = A[ offsetA + ( k - 1 ) * sa1 + (k * sa2) ];
-				akm1 = A[ offsetA + ( k - 1 ) * sa1 + ( k - 1 ) * sa2 ] / akm1k;
+				akm1k = A[ offsetA + (( k - 1 ) * sa1) + (k * sa2) ];
+				akm1 = A[ offsetA + (( k - 1 ) * sa1) + (( k - 1 ) * sa2) ] / akm1k;
 				ak = A[ offsetA + (k * sa1) + (k * sa2) ] / akm1k;
 				denom = (akm1 * ak) - 1.0;
 				for ( j = 0; j < nrhs; j++ ) {
-					bkm1 = B[ offsetB + ( k - 1 ) * sb1 + (j * sb2) ] / akm1k;
+					bkm1 = B[ offsetB + (( k - 1 ) * sb1) + (j * sb2) ] / akm1k;
 					bk = B[ offsetB + (k * sb1) + (j * sb2) ] / akm1k;
-					B[ offsetB + ( k - 1 ) * sb1 + (j * sb2) ] = ( (ak * bkm1) - bk ) / denom;
+					B[ offsetB + (( k - 1 ) * sb1) + (j * sb2) ] = ( (ak * bkm1) - bk ) / denom;
 					B[ offsetB + (k * sb1) + (j * sb2) ] = ( (akm1 * bk) - bkm1 ) / denom;
 				}
 				k -= 2;
@@ -174,8 +174,8 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 						1.0, B, sb2, offsetB + (k * sb1) );
 					dgemv( 'transpose', k, nrhs, -1.0,
 						B, sb1, sb2, offsetB,
-						A, sa1, offsetA + ( k + 1 ) * sa2,
-						1.0, B, sb2, offsetB + ( k + 1 ) * sb1 );
+						A, sa1, offsetA + (( k + 1 ) * sa2),
+						1.0, B, sb2, offsetB + (( k + 1 ) * sb1) );
 				}
 
 				// Interchange rows K and -IPIV[K]-1
@@ -204,9 +204,9 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 				// Apply multiplier: B(k+1:N-1,:) -= A(k+1:N-1,k) * B(k,:)
 				if ( k < N - 1 ) {
 					dger( N - k - 1, nrhs, -1.0,
-						A, sa1, offsetA + ( k + 1 ) * sa1 + (k * sa2),
+						A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2),
 						B, sb2, offsetB + (k * sb1),
-						B, sb1, sb2, offsetB + ( k + 1 ) * sb1 );
+						B, sb1, sb2, offsetB + (( k + 1 ) * sb1) );
 				}
 
 				// Divide row k by pivot
@@ -217,31 +217,31 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 
 				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];
 				if ( kp !== k + 1 ) {
-					dswap( nrhs, B, sb2, offsetB + ( k + 1 ) * sb1, B, sb2, offsetB + (kp * sb1) );
+					dswap( nrhs, B, sb2, offsetB + (( k + 1 ) * sb1), B, sb2, offsetB + (kp * sb1) );
 				}
 
 				// Apply multipliers
 				if ( k < N - 2 ) {
 					dger( N - k - 2, nrhs, -1.0,
-						A, sa1, offsetA + ( k + 2 ) * sa1 + (k * sa2),
+						A, sa1, offsetA + (( k + 2 ) * sa1) + (k * sa2),
 						B, sb2, offsetB + (k * sb1),
-						B, sb1, sb2, offsetB + ( k + 2 ) * sb1 );
+						B, sb1, sb2, offsetB + (( k + 2 ) * sb1) );
 					dger( N - k - 2, nrhs, -1.0,
-						A, sa1, offsetA + ( k + 2 ) * sa1 + ( k + 1 ) * sa2,
-						B, sb2, offsetB + ( k + 1 ) * sb1,
-						B, sb1, sb2, offsetB + ( k + 2 ) * sb1 );
+						A, sa1, offsetA + (( k + 2 ) * sa1) + (( k + 1 ) * sa2),
+						B, sb2, offsetB + (( k + 1 ) * sb1),
+						B, sb1, sb2, offsetB + (( k + 2 ) * sb1) );
 				}
 
 				// Solve 2x2 system
-				akm1k = A[ offsetA + ( k + 1 ) * sa1 + (k * sa2) ];
+				akm1k = A[ offsetA + (( k + 1 ) * sa1) + (k * sa2) ];
 				akm1 = A[ offsetA + (k * sa1) + (k * sa2) ] / akm1k;
-				ak = A[ offsetA + ( k + 1 ) * sa1 + ( k + 1 ) * sa2 ] / akm1k;
+				ak = A[ offsetA + (( k + 1 ) * sa1) + (( k + 1 ) * sa2) ] / akm1k;
 				denom = (akm1 * ak) - 1.0;
 				for ( j = 0; j < nrhs; j++ ) {
 					bkm1 = B[ offsetB + (k * sb1) + (j * sb2) ] / akm1k;
-					bk = B[ offsetB + ( k + 1 ) * sb1 + (j * sb2) ] / akm1k;
+					bk = B[ offsetB + (( k + 1 ) * sb1) + (j * sb2) ] / akm1k;
 					B[ offsetB + (k * sb1) + (j * sb2) ] = ( (ak * bkm1) - bk ) / denom;
-					B[ offsetB + ( k + 1 ) * sb1 + (j * sb2) ] = ( (akm1 * bk) - bkm1 ) / denom;
+					B[ offsetB + (( k + 1 ) * sb1) + (j * sb2) ] = ( (akm1 * bk) - bkm1 ) / denom;
 				}
 				k += 2;
 			}
@@ -256,8 +256,8 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 
 				if ( k < N - 1 ) {
 					dgemv( 'transpose', N - k - 1, nrhs, -1.0,
-						B, sb1, sb2, offsetB + ( k + 1 ) * sb1,
-						A, sa1, offsetA + ( k + 1 ) * sa1 + (k * sa2),
+						B, sb1, sb2, offsetB + (( k + 1 ) * sb1),
+						A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2),
 						1.0, B, sb2, offsetB + (k * sb1) );
 				}
 
@@ -271,13 +271,13 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 
 				if ( k < N - 1 ) {
 					dgemv( 'transpose', N - k - 1, nrhs, -1.0,
-						B, sb1, sb2, offsetB + ( k + 1 ) * sb1,
-						A, sa1, offsetA + ( k + 1 ) * sa1 + (k * sa2),
+						B, sb1, sb2, offsetB + (( k + 1 ) * sb1),
+						A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2),
 						1.0, B, sb2, offsetB + (k * sb1) );
 					dgemv( 'transpose', N - k - 1, nrhs, -1.0,
-						B, sb1, sb2, offsetB + ( k + 1 ) * sb1,
-						A, sa1, offsetA + ( k + 1 ) * sa1 + ( k - 1 ) * sa2,
-						1.0, B, sb2, offsetB + ( k - 1 ) * sb1 );
+						B, sb1, sb2, offsetB + (( k + 1 ) * sb1),
+						A, sa1, offsetA + (( k + 1 ) * sa1) + (( k - 1 ) * sa2),
+						1.0, B, sb2, offsetB + (( k - 1 ) * sb1) );
 				}
 
 				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];

@@ -80,16 +80,16 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		for ( j = 0; j < N - 1; j++ ) {
 			for ( i = 0; i < j; i++ ) {
 				// A(i, j) = A(i, j+1)
-				A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (i * strideA1) + ( j + 1 ) * strideA2 ];
+				A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (i * strideA1) + (( j + 1 ) * strideA2) ];
 			}
 			// Set A(N-1, j) = 0
-			A[ offsetA + ( N - 1 ) * strideA1 + (j * strideA2) ] = 0.0;
+			A[ offsetA + (( N - 1 ) * strideA1) + (j * strideA2) ] = 0.0;
 		}
 		// Set last column: A(i, N-1) = 0 for i = 0..N-2, A(N-1, N-1) = 1
 		for ( i = 0; i < N - 1; i++ ) {
-			A[ offsetA + (i * strideA1) + ( N - 1 ) * strideA2 ] = 0.0;
+			A[ offsetA + (i * strideA1) + (( N - 1 ) * strideA2) ] = 0.0;
 		}
-		A[ offsetA + ( N - 1 ) * strideA1 + ( N - 1 ) * strideA2 ] = 1.0;
+		A[ offsetA + (( N - 1 ) * strideA1) + (( N - 1 ) * strideA2) ] = 1.0;
 
 		// Generate Q by calling dorgql on the (N-1)x(N-1) leading submatrix
 		if ( N - 1 > 0 ) {
@@ -108,7 +108,7 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			A[ offsetA + (j * strideA2) ] = 0.0;
 			for ( i = j + 1; i < N; i++ ) {
 				// A(i, j) = A(i, j-1)
-				A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (i * strideA1) + ( j - 1 ) * strideA2 ];
+				A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (i * strideA1) + (( j - 1 ) * strideA2) ];
 			}
 		}
 		// Set first column: A(0, 0) = 1, A(i, 0) = 0 for i = 1..N-1

@@ -131,7 +131,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					// JMAX is the column-index of the largest off-diagonal
 					// Element in row IMAX, and ROWMAX is its absolute value
 					// Look in row IMAX from column IMAX+1 to K-1
-					jmax = imax + 1 + idamax( k - imax, A, sa2, offsetA + (imax * sa1) + ( imax + 1 ) * sa2 );
+					jmax = imax + 1 + idamax( k - imax, A, sa2, offsetA + (imax * sa1) + (( imax + 1 ) * sa2) );
 					rowmax = Math.abs( A[ offsetA + (imax * sa1) + (jmax * sa2) ] );
 					if ( imax > 0 ) {
 						jmax = idamax( imax, A, sa1, offsetA + (imax * sa2) );
@@ -158,13 +158,13 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					if ( kp > 0 ) {
 						dswap( kp, A, sa1, offsetA + (kk * sa2), A, sa1, offsetA + (kp * sa2) );
 					}
-					dswap( kk - kp - 1, A, sa1, offsetA + ( kp + 1 ) * sa1 + (kk * sa2), A, sa2, offsetA + (kp * sa1) + ( kp + 1 ) * sa2 );
+					dswap( kk - kp - 1, A, sa1, offsetA + (( kp + 1 ) * sa1) + (kk * sa2), A, sa2, offsetA + (kp * sa1) + (( kp + 1 ) * sa2) );
 					t = A[ offsetA + (kk * sa1) + (kk * sa2) ];
 					A[ offsetA + (kk * sa1) + (kk * sa2) ] = A[ offsetA + (kp * sa1) + (kp * sa2) ];
 					A[ offsetA + (kp * sa1) + (kp * sa2) ] = t;
 					if ( kstep === 2 ) {
-						t = A[ offsetA + ( k - 1 ) * sa1 + (k * sa2) ];
-						A[ offsetA + ( k - 1 ) * sa1 + (k * sa2) ] = A[ offsetA + (kp * sa1) + (k * sa2) ];
+						t = A[ offsetA + (( k - 1 ) * sa1) + (k * sa2) ];
+						A[ offsetA + (( k - 1 ) * sa1) + (k * sa2) ] = A[ offsetA + (kp * sa1) + (k * sa2) ];
 						A[ offsetA + (kp * sa1) + (k * sa2) ] = t;
 					}
 				}
@@ -184,20 +184,20 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					// 2x2 pivot block D(k): columns k and k-1 now hold
 					// ( W(k-1) W(k) ) = ( U(k-1) U(k) )*D(k)
 					if ( k > 1 ) {
-						d12 = A[ offsetA + ( k - 1 ) * sa1 + (k * sa2) ];
-						d22 = A[ offsetA + ( k - 1 ) * sa1 + ( k - 1 ) * sa2 ] / d12;
+						d12 = A[ offsetA + (( k - 1 ) * sa1) + (k * sa2) ];
+						d22 = A[ offsetA + (( k - 1 ) * sa1) + (( k - 1 ) * sa2) ] / d12;
 						d11 = A[ offsetA + (k * sa1) + (k * sa2) ] / d12;
 						t = 1.0 / ( (d11 * d22) - 1.0 );
 						d12 = t / d12;
 
 						for ( j = k - 2; j >= 0; j-- ) {
-							wkm1 = d12 * ( (d11 * A[ offsetA + (j * sa1) + ( k - 1 ) * sa2 ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
-							wk = d12 * ( (d22 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + ( k - 1 ) * sa2 ] );
+							wkm1 = d12 * ( (d11 * A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
+							wk = d12 * ( (d22 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ] );
 							for ( i = j; i >= 0; i-- ) {
-								A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + ( k - 1 ) * sa2 ] * wkm1);
+								A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + (( k - 1 ) * sa2) ] * wkm1);
 							}
 							A[ offsetA + (j * sa1) + (k * sa2) ] = wk;
-							A[ offsetA + (j * sa1) + ( k - 1 ) * sa2 ] = wkm1;
+							A[ offsetA + (j * sa1) + (( k - 1 ) * sa2) ] = wkm1;
 						}
 					}
 				}
@@ -208,7 +208,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				IPIV[ offsetIPIV + (k * strideIPIV) ] = kp;
 			} else {
 				IPIV[ offsetIPIV + (k * strideIPIV) ] = ~kp; // -(kp+1), encodes 0-based
-				IPIV[ offsetIPIV + ( k - 1 ) * strideIPIV ] = ~kp;
+				IPIV[ offsetIPIV + (( k - 1 ) * strideIPIV) ] = ~kp;
 			}
 
 			k -= kstep;
@@ -224,7 +224,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			absakk = Math.abs( A[ offsetA + (k * sa1) + (k * sa2) ] );
 
 			if ( k < N - 1 ) {
-				imax = k + 1 + idamax( N - k - 1, A, sa1, offsetA + ( k + 1 ) * sa1 + (k * sa2) );
+				imax = k + 1 + idamax( N - k - 1, A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2) );
 				colmax = Math.abs( A[ offsetA + (imax * sa1) + (k * sa2) ] );
 			} else {
 				colmax = 0.0;
@@ -243,7 +243,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					jmax = k + idamax( imax - k, A, sa2, offsetA + (imax * sa1) + (k * sa2) );
 					rowmax = Math.abs( A[ offsetA + (imax * sa1) + (jmax * sa2) ] );
 					if ( imax < N - 1 ) {
-						jmax = imax + 1 + idamax( N - imax - 1, A, sa1, offsetA + ( imax + 1 ) * sa1 + (imax * sa2) );
+						jmax = imax + 1 + idamax( N - imax - 1, A, sa1, offsetA + (( imax + 1 ) * sa1) + (imax * sa2) );
 						rowmax = Math.max( rowmax, Math.abs( A[ offsetA + (jmax * sa1) + (imax * sa2) ] ) );
 					}
 
@@ -261,15 +261,15 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				if ( kp !== kk ) {
 					// Interchange rows and columns KP and KK
 					if ( kp < N - 1 ) {
-						dswap( N - kp - 1, A, sa1, offsetA + ( kp + 1 ) * sa1 + (kk * sa2), A, sa1, offsetA + ( kp + 1 ) * sa1 + (kp * sa2) );
+						dswap( N - kp - 1, A, sa1, offsetA + (( kp + 1 ) * sa1) + (kk * sa2), A, sa1, offsetA + (( kp + 1 ) * sa1) + (kp * sa2) );
 					}
-					dswap( kp - kk - 1, A, sa1, offsetA + ( kk + 1 ) * sa1 + (kk * sa2), A, sa2, offsetA + (kp * sa1) + ( kk + 1 ) * sa2 );
+					dswap( kp - kk - 1, A, sa1, offsetA + (( kk + 1 ) * sa1) + (kk * sa2), A, sa2, offsetA + (kp * sa1) + (( kk + 1 ) * sa2) );
 					t = A[ offsetA + (kk * sa1) + (kk * sa2) ];
 					A[ offsetA + (kk * sa1) + (kk * sa2) ] = A[ offsetA + (kp * sa1) + (kp * sa2) ];
 					A[ offsetA + (kp * sa1) + (kp * sa2) ] = t;
 					if ( kstep === 2 ) {
-						t = A[ offsetA + ( k + 1 ) * sa1 + (k * sa2) ];
-						A[ offsetA + ( k + 1 ) * sa1 + (k * sa2) ] = A[ offsetA + (kp * sa1) + (k * sa2) ];
+						t = A[ offsetA + (( k + 1 ) * sa1) + (k * sa2) ];
+						A[ offsetA + (( k + 1 ) * sa1) + (k * sa2) ] = A[ offsetA + (kp * sa1) + (k * sa2) ];
 						A[ offsetA + (kp * sa1) + (k * sa2) ] = t;
 					}
 				}
@@ -278,26 +278,26 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				if ( kstep === 1 ) {
 					if ( k < N - 1 ) {
 						d11 = 1.0 / A[ offsetA + (k * sa1) + (k * sa2) ];
-						dsyr( uplo, N - k - 1, -d11, A, sa1, offsetA + ( k + 1 ) * sa1 + (k * sa2), A, sa1, sa2, offsetA + ( k + 1 ) * sa1 + ( k + 1 ) * sa2 );
-						dscal( N - k - 1, d11, A, sa1, offsetA + ( k + 1 ) * sa1 + (k * sa2) );
+						dsyr( uplo, N - k - 1, -d11, A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2), A, sa1, sa2, offsetA + (( k + 1 ) * sa1) + (( k + 1 ) * sa2) );
+						dscal( N - k - 1, d11, A, sa1, offsetA + (( k + 1 ) * sa1) + (k * sa2) );
 					}
 				} else {
 					// 2x2 pivot block
 					if ( k < N - 2 ) {
-						d21 = A[ offsetA + ( k + 1 ) * sa1 + (k * sa2) ];
-						d11 = A[ offsetA + ( k + 1 ) * sa1 + ( k + 1 ) * sa2 ] / d21;
+						d21 = A[ offsetA + (( k + 1 ) * sa1) + (k * sa2) ];
+						d11 = A[ offsetA + (( k + 1 ) * sa1) + (( k + 1 ) * sa2) ] / d21;
 						d22 = A[ offsetA + (k * sa1) + (k * sa2) ] / d21;
 						t = 1.0 / ( (d11 * d22) - 1.0 );
 						d21 = t / d21;
 
 						for ( j = k + 2; j < N; j++ ) {
-							wk = d21 * ( (d11 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + ( k + 1 ) * sa2 ] );
-							wkp1 = d21 * ( (d22 * A[ offsetA + (j * sa1) + ( k + 1 ) * sa2 ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
+							wk = d21 * ( (d11 * A[ offsetA + (j * sa1) + (k * sa2) ]) - A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ] );
+							wkp1 = d21 * ( (d22 * A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ]) - A[ offsetA + (j * sa1) + (k * sa2) ] );
 							for ( i = j; i < N; i++ ) {
-								A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + ( k + 1 ) * sa2 ] * wkp1);
+								A[ offsetA + (i * sa1) + (j * sa2) ] = A[ offsetA + (i * sa1) + (j * sa2) ] - (A[ offsetA + (i * sa1) + (k * sa2) ] * wk) - (A[ offsetA + (i * sa1) + (( k + 1 ) * sa2) ] * wkp1);
 							}
 							A[ offsetA + (j * sa1) + (k * sa2) ] = wk;
-							A[ offsetA + (j * sa1) + ( k + 1 ) * sa2 ] = wkp1;
+							A[ offsetA + (j * sa1) + (( k + 1 ) * sa2) ] = wkp1;
 						}
 					}
 				}
@@ -308,7 +308,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				IPIV[ offsetIPIV + (k * strideIPIV) ] = kp;
 			} else {
 				IPIV[ offsetIPIV + (k * strideIPIV) ] = ~kp;
-				IPIV[ offsetIPIV + ( k + 1 ) * strideIPIV ] = ~kp;
+				IPIV[ offsetIPIV + (( k + 1 ) * strideIPIV) ] = ~kp;
 			}
 
 			k += kstep;

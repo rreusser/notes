@@ -54,14 +54,14 @@ function dgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, of
 		IWT = N * NB;
 		for ( i = ilo; i <= ihi - 1 - NX; i += NB ) {
 			IB = Math.min( NB, ihi - i );
-			dlahr2( ihi, i, IB, A, strideA1, strideA2, offsetA + ( i - 1 ) * strideA2, TAU, strideTAU, offsetTAU + ( i - 1 ) * strideTAU, WORK, 1, LDT, offsetWORK + IWT, WORK, 1, LDWORK, offsetWORK );
-			oE = oA + ( i + IB - 1 ) * sa1 + ( i + IB - 2 ) * sa2;
+			dlahr2( ihi, i, IB, A, strideA1, strideA2, offsetA + (( i - 1 ) * strideA2), TAU, strideTAU, offsetTAU + (( i - 1 ) * strideTAU), WORK, 1, LDT, offsetWORK + IWT, WORK, 1, LDWORK, offsetWORK );
+			oE = oA + (( i + IB - 1 ) * sa1) + (( i + IB - 2 ) * sa2);
 			ei = A[ oE ]; A[ oE ] = 1.0;
-			dgemm( 'no-transpose', 'transpose', ihi, ihi - i - IB + 1, IB, -1.0, WORK, 1, LDWORK, offsetWORK, A, strideA1, strideA2, offsetA + ( i + IB - 1 ) * strideA1 + ( i - 1 ) * strideA2, 1.0, A, strideA1, strideA2, offsetA + ( i + IB - 1 ) * strideA2 );
+			dgemm( 'no-transpose', 'transpose', ihi, ihi - i - IB + 1, IB, -1.0, WORK, 1, LDWORK, offsetWORK, A, strideA1, strideA2, offsetA + (( i + IB - 1 ) * strideA1) + (( i - 1 ) * strideA2), 1.0, A, strideA1, strideA2, offsetA + (( i + IB - 1 ) * strideA2) );
 			A[ oE ] = ei;
-			dtrmm( 'right', 'lower', 'transpose', 'unit', i, IB - 1, 1.0, A, strideA1, strideA2, offsetA + (i * strideA1) + ( i - 1 ) * strideA2, WORK, 1, LDWORK, offsetWORK );
-			for ( j = 0; j < IB - 1; j++ ) { daxpy( i, -1.0, WORK, 1, offsetWORK + (LDWORK * j), A, strideA1, offsetA + ( i + j ) * strideA2 ); }
-			dlarfb( 'left', 'transpose', 'forward', 'columnwise', ihi - i, N - i - IB + 1, IB, A, strideA1, strideA2, offsetA + (i * strideA1) + ( i - 1 ) * strideA2, WORK, 1, LDT, offsetWORK + IWT, A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + IB - 1 ) * strideA2, WORK, 1, LDWORK, offsetWORK );
+			dtrmm( 'right', 'lower', 'transpose', 'unit', i, IB - 1, 1.0, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i - 1 ) * strideA2), WORK, 1, LDWORK, offsetWORK );
+			for ( j = 0; j < IB - 1; j++ ) { daxpy( i, -1.0, WORK, 1, offsetWORK + (LDWORK * j), A, strideA1, offsetA + (( i + j ) * strideA2) ); }
+			dlarfb( 'left', 'transpose', 'forward', 'columnwise', ihi - i, N - i - IB + 1, IB, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i - 1 ) * strideA2), WORK, 1, LDT, offsetWORK + IWT, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + IB - 1 ) * strideA2), WORK, 1, LDWORK, offsetWORK );
 		}
 	}
 	dgehd2( N, i, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );

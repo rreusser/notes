@@ -137,7 +137,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					//        AB(KD+1,I), LDAB-1, AB(KD+1-IB,I+IB), LDAB-1)
 					dtrsm( 'left', 'upper', 'transpose', 'non-unit', ib, i2, 1.0,
 						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (i * sa2),
-						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2)
 					);
 
 					// Update A22:
@@ -146,9 +146,9 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 
 					//        AB(KD+1-IB,I+IB), LDAB-1, ONE, AB(KD+1,I+IB), LDAB-1)
 					dsyrk( 'upper', 'transpose', i2, ib, -1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
+						AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2),
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + ( i + ib ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + ib ) * sa2)
 					);
 				}
 
@@ -158,7 +158,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					//   WORK(II,JJ) = AB(II-JJ+1, JJ+I+KD-1)
 					for ( jj = 0; jj < i3; jj++ ) {
 						for ( ii = jj; ii < ib; ii++ ) {
-							WORK[ ii + (jj * LDWORK) ] = AB[ offsetAB + ( ii - jj ) * sa1 + ( jj + i + kd ) * sa2 ];
+							WORK[ ii + (jj * LDWORK) ] = AB[ offsetAB + (( ii - jj ) * sa1) + (( jj + i + kd ) * sa2) ];
 						}
 					}
 
@@ -174,10 +174,10 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 						//        AB(KD+1-IB,I+IB), LDAB-1, WORK, LDWORK, ONE,
 						//        AB(1+IB,I+KD), LDAB-1)
 						dgemm( 'transpose', 'no-transpose', i2, i3, ib, -1.0,
-							AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
+							AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2),
 							WORK, 1, LDWORK, 0,
 							1.0,
-							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + ( i + kd ) * sa2
+							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (( i + kd ) * sa2)
 						);
 					}
 
@@ -186,13 +186,13 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					dsyrk( 'upper', 'transpose', i3, ib, -1.0,
 						WORK, 1, LDWORK, 0,
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + ( i + kd ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + kd ) * sa2)
 					);
 
 					// Copy the result back from WORK to AB
 					for ( jj = 0; jj < i3; jj++ ) {
 						for ( ii = jj; ii < ib; ii++ ) {
-							AB[ offsetAB + ( ii - jj ) * sa1 + ( jj + i + kd ) * sa2 ] = WORK[ ii + (jj * LDWORK) ];
+							AB[ offsetAB + (( ii - jj ) * sa1) + (( jj + i + kd ) * sa2) ] = WORK[ ii + (jj * LDWORK) ];
 						}
 					}
 				}
@@ -238,7 +238,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					dsyrk( 'lower', 'no-transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2),
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( i + ib ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (( i + ib ) * sa2)
 					);
 				}
 
@@ -250,7 +250,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					//   WORK[ii + jj*LDWORK] = AB[offset + (kd-jj+ii)*sa1 + (jj+i)*sa2]
 					for ( jj = 0; jj < ib; jj++ ) {
 						for ( ii = 0; ii < Math.min( jj + 1, i3 ); ii++ ) {
-							WORK[ ii + (jj * LDWORK) ] = AB[ offsetAB + ( kd - jj + ii ) * sa1 + ( jj + i ) * sa2 ];
+							WORK[ ii + (jj * LDWORK) ] = AB[ offsetAB + (( kd - jj + ii ) * sa1) + (( jj + i ) * sa2) ];
 						}
 					}
 
@@ -269,7 +269,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 							WORK, 1, LDWORK, 0,
 							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2),
 							1.0,
-							AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2
+							AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2)
 						);
 					}
 
@@ -278,13 +278,13 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					dsyrk( 'lower', 'no-transpose', i3, ib, -1.0,
 						WORK, 1, LDWORK, 0,
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( i + kd ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (( i + kd ) * sa2)
 					);
 
 					// Copy the result back from WORK to AB
 					for ( jj = 0; jj < ib; jj++ ) {
 						for ( ii = 0; ii < Math.min( jj + 1, i3 ); ii++ ) {
-							AB[ offsetAB + ( kd - jj + ii ) * sa1 + ( jj + i ) * sa2 ] = WORK[ ii + (jj * LDWORK) ];
+							AB[ offsetAB + (( kd - jj + ii ) * sa1) + (( jj + i ) * sa2) ] = WORK[ ii + (jj * LDWORK) ];
 						}
 					}
 				}

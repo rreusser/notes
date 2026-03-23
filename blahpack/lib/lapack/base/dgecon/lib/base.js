@@ -132,26 +132,26 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 			// Multiply by inv(L), then inv(U)
 			dlatrs( 'lower', 'no-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (2 * N) * sw
+				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			sl = scale[ 0 ];
 
 			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (3 * N) * sw
+				scale, WORK, sw, offsetWORK + ((3 * N) * sw)
 			);
 			su = scale[ 0 ];
 		} else {
 			// Multiply by inv(U^T), then inv(L^T)
 			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (3 * N) * sw
+				scale, WORK, sw, offsetWORK + ((3 * N) * sw)
 			);
 			su = scale[ 0 ];
 
 			dlatrs( 'lower', 'transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (2 * N) * sw
+				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			sl = scale[ 0 ];
 		}

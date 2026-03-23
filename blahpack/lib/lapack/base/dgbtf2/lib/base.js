@@ -99,7 +99,7 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 		// Zero out fill-in column: if j + kv < N, zero rows 0..kl-1 of column j+kv
 		if ( j + kv < N ) {
 			for ( i = 0; i < kl; i++ ) {
-				AB[ offsetAB + (i * sa1) + ( j + kv ) * sa2 ] = 0.0;
+				AB[ offsetAB + (i * sa1) + (( j + kv ) * sa2) ] = 0.0;
 			}
 		}
 
@@ -111,7 +111,7 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 		// IPIV[j] = jp + j (0-based: the row that was swapped with row j)
 		IPIV[ offsetIPIV + (j * strideIPIV) ] = jp + j;
 
-		if ( AB[ offsetAB + ( kv + jp ) * sa1 + (j * sa2) ] !== 0.0 ) {
+		if ( AB[ offsetAB + (( kv + jp ) * sa1) + (j * sa2) ] !== 0.0 ) {
 			// Update JU: max column reached by pivot search
 			ju = Math.max( ju, Math.min( j + ku + jp, N - 1 ) );
 
@@ -119,21 +119,21 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 			// Band rows are accessed with stride sa2 - sa1 (corresponds to LDAB-1)
 			if ( jp !== 0 ) {
-				dswap( ju - j + 1, AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + (j * sa2),
+				dswap( ju - j + 1, AB, sa2 - sa1, offsetAB + (( kv + jp ) * sa1) + (j * sa2),
 					AB, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2) );
 			}
 
 			if ( km > 0 ) {
 				// Scale multipliers: L(j+1:j+km, j) = AB(kv+1:kv+km, j) / AB(kv, j)
 				dscal( km, 1.0 / AB[ offsetAB + (kv * sa1) + (j * sa2) ],
-					AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (j * sa2) );
+					AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2) );
 
 				// Rank-1 update: A(j+1:j+km, j+1:ju) -= L(j+1:j+km, j) * U(j, j+1:ju)
 				if ( ju > j ) {
 					dger( km, ju - j, -1.0,
-						AB, sa1, offsetAB + ( kv + 1 ) * sa1 + (j * sa2),
-						AB, sa2 - sa1, offsetAB + ( kv - 1 ) * sa1 + ( j + 1 ) * sa2,
-						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + ( j + 1 ) * sa2 );
+						AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2),
+						AB, sa2 - sa1, offsetAB + (( kv - 1 ) * sa1) + (( j + 1 ) * sa2),
+						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (( j + 1 ) * sa2) );
 				}
 			}
 		} else {

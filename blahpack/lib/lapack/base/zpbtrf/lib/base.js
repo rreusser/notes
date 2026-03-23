@@ -127,7 +127,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					//        AB(KD+1,I), LDAB-1, AB(KD+1-IB,I+IB), LDAB-1)
 					ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', ib, i2, CONE,
 						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (i * sa2),
-						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2)
 					);
 
 					// Update A22:
@@ -136,9 +136,9 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 
 					//        AB(KD+1-IB,I+IB), LDAB-1, ONE, AB(KD+1,I+IB), LDAB-1)
 					zherk( 'upper', 'conjugate-transpose', i2, ib, -1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
+						AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2),
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + ( i + ib ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + ib ) * sa2)
 					);
 				}
 
@@ -146,7 +146,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					// Copy the upper triangle of the IB-by-I3 block from AB to WORK
 					for ( jj = 0; jj < i3; jj++ ) {
 						for ( ii = jj; ii < ib; ii++ ) {
-							WORK.set( AB.get( offsetAB + ( ii - jj ) * sa1 + ( jj + i + kd ) * sa2 ), ii + (jj * LDWORK) );
+							WORK.set( AB.get( offsetAB + (( ii - jj ) * sa1) + (( jj + i + kd ) * sa2) ), ii + (jj * LDWORK) );
 						}
 					}
 
@@ -162,10 +162,10 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 						//        AB(KD+1-IB,I+IB), LDAB-1, WORK, LDWORK, CONE,
 						//        AB(1+IB,I+KD), LDAB-1)
 						zgemm( 'conjugate-transpose', 'no-transpose', i2, i3, ib, CMONE,
-							AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
+							AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2),
 							WORK, 1, LDWORK, 0,
 							CONE,
-							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + ( i + kd ) * sa2
+							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (( i + kd ) * sa2)
 						);
 					}
 
@@ -174,13 +174,13 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					zherk( 'upper', 'conjugate-transpose', i3, ib, -1.0,
 						WORK, 1, LDWORK, 0,
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + ( i + kd ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + kd ) * sa2)
 					);
 
 					// Copy the result back from WORK to AB
 					for ( jj = 0; jj < i3; jj++ ) {
 						for ( ii = jj; ii < ib; ii++ ) {
-							AB.set( WORK.get( ii + (jj * LDWORK) ), offsetAB + ( ii - jj ) * sa1 + ( jj + i + kd ) * sa2 );
+							AB.set( WORK.get( ii + (jj * LDWORK) ), offsetAB + (( ii - jj ) * sa1) + (( jj + i + kd ) * sa2) );
 						}
 					}
 				}
@@ -226,7 +226,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					zherk( 'lower', 'no-transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2),
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( i + ib ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (( i + ib ) * sa2)
 					);
 				}
 
@@ -234,7 +234,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					// Copy the lower triangle of the IB-by-I3 block from AB to WORK
 					for ( jj = 0; jj < ib; jj++ ) {
 						for ( ii = 0; ii < Math.min( jj + 1, i3 ); ii++ ) {
-							WORK.set( AB.get( offsetAB + ( kd - jj + ii ) * sa1 + ( jj + i ) * sa2 ), ii + (jj * LDWORK) );
+							WORK.set( AB.get( offsetAB + (( kd - jj + ii ) * sa1) + (( jj + i ) * sa2) ), ii + (jj * LDWORK) );
 						}
 					}
 
@@ -253,7 +253,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 							WORK, 1, LDWORK, 0,
 							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2),
 							CONE,
-							AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2
+							AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2)
 						);
 					}
 
@@ -262,13 +262,13 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					zherk( 'lower', 'no-transpose', i3, ib, -1.0,
 						WORK, 1, LDWORK, 0,
 						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + ( i + kd ) * sa2
+						AB, sa1, sa2 - sa1, offsetAB + (( i + kd ) * sa2)
 					);
 
 					// Copy the result back from WORK to AB
 					for ( jj = 0; jj < ib; jj++ ) {
 						for ( ii = 0; ii < Math.min( jj + 1, i3 ); ii++ ) {
-							AB.set( WORK.get( ii + (jj * LDWORK) ), offsetAB + ( kd - jj + ii ) * sa1 + ( jj + i ) * sa2 );
+							AB.set( WORK.get( ii + (jj * LDWORK) ), offsetAB + (( kd - jj + ii ) * sa1) + (( jj + i ) * sa2) );
 						}
 					}
 				}

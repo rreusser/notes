@@ -65,7 +65,7 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 		// Solve A*x = b
 		if ( uplo === 'upper' ) {
 			// Upper triangular, no transpose: back-substitution from bottom
-			jx = offsetX + ( N - 1 ) * strideX;
+			jx = offsetX + (( N - 1 ) * strideX);
 			for ( j = N - 1; j >= 0; j-- ) {
 				if ( x[ jx ] !== 0.0 ) {
 					if ( nounit ) {
@@ -73,7 +73,7 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					}
 					temp = x[ jx ];
 					ix = jx - strideX;
-					ia = offsetA + ( j - 1 ) * sa1 + (j * sa2);
+					ia = offsetA + (( j - 1 ) * sa1) + (j * sa2);
 					for ( i = j - 1; i >= 0; i-- ) {
 						x[ ix ] -= temp * A[ ia ];
 						ix -= strideX;
@@ -92,7 +92,7 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					}
 					temp = x[ jx ];
 					ix = jx + strideX;
-					ia = offsetA + ( j + 1 ) * sa1 + (j * sa2);
+					ia = offsetA + (( j + 1 ) * sa1) + (j * sa2);
 					for ( i = j + 1; i < N; i++ ) {
 						x[ ix ] -= temp * A[ ia ];
 						ix += strideX;
@@ -124,11 +124,11 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			}
 		} else {
 			// Lower triangular, transpose: back-substitution from bottom
-			jx = offsetX + ( N - 1 ) * strideX;
+			jx = offsetX + (( N - 1 ) * strideX);
 			for ( j = N - 1; j >= 0; j-- ) {
 				temp = x[ jx ];
-				ix = offsetX + ( N - 1 ) * strideX;
-				ia = offsetA + ( N - 1 ) * sa1 + (j * sa2);
+				ix = offsetX + (( N - 1 ) * strideX);
+				ia = offsetA + (( N - 1 ) * sa1) + (j * sa2);
 				for ( i = N - 1; i > j; i-- ) {
 					temp -= A[ ia ] * x[ ix ];
 					ix -= strideX;

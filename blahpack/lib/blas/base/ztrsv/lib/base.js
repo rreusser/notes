@@ -95,7 +95,7 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 		// Solve A*x = b
 		if ( upper ) {
 			// Back-substitution: j = N-1 down to 0
-			jx = oX + ( N - 1 ) * sx;
+			jx = oX + (( N - 1 ) * sx);
 			for ( j = N - 1; j >= 0; j-- ) {
 				xr = xv[ jx ];
 				xi = xv[ jx + 1 ];
@@ -228,13 +228,13 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			}
 		} else {
 			// Back substitution on transposed lower
-			jx = oX + ( N - 1 ) * sx;
+			jx = oX + (( N - 1 ) * sx);
 			for ( j = N - 1; j >= 0; j-- ) {
 				tr = xv[ jx ];
 				ti = xv[ jx + 1 ];
 				if ( noconj ) {
 					// Transpose (no conjugate)
-					ix = oX + ( N - 1 ) * sx;
+					ix = oX + (( N - 1 ) * sx);
 					for ( i = N - 1; i > j; i-- ) {
 						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
@@ -256,7 +256,7 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					}
 				} else {
 					// Conjugate transpose
-					ix = oX + ( N - 1 ) * sx;
+					ix = oX + (( N - 1 ) * sx);
 					for ( i = N - 1; i > j; i-- ) {
 						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];

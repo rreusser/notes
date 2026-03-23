@@ -70,9 +70,9 @@ function dlae2( a, b, c ) {
 
 	// Compute rt = sqrt( df^2 + (2*b)^2 ) using stable hypot-style formula
 	if ( adf > ab ) {
-		rt = adf * Math.sqrt( 1.0 + ( ab / adf ) * ( ab / adf ) );
+		rt = adf * Math.sqrt( 1.0 + (( ab / adf ) * ( ab / adf )) );
 	} else if ( adf < ab ) {
-		rt = ab * Math.sqrt( 1.0 + ( adf / ab ) * ( adf / ab ) );
+		rt = ab * Math.sqrt( 1.0 + (( adf / ab ) * ( adf / ab )) );
 	} else {
 		// adf === ab (includes adf === ab === 0)
 		rt = ab * Math.sqrt( 2.0 );
@@ -84,12 +84,12 @@ function dlae2( a, b, c ) {
 
 		// Order eigenvalues: |rt1| >= |rt2| guaranteed by rt1 = (sm - rt)/2
 		// When sm < 0, rt1 is the most negative => largest in absolute value
-		rt2 = ( acmx / rt1 ) * acmn - ( b / rt1 ) * b;
+		rt2 = (( acmx / rt1 ) * acmn) - (( b / rt1 ) * b);
 	} else if ( sm > 0.0 ) {
 		rt1 = 0.5 * ( sm + rt );
 
 		// rt2 via stable formula to avoid cancellation
-		rt2 = ( acmx / rt1 ) * acmn - ( b / rt1 ) * b;
+		rt2 = (( acmx / rt1 ) * acmn) - (( b / rt1 ) * b);
 	} else {
 		// sm === 0: eigenvalues are +/- rt/2
 		rt1 = 0.5 * rt;

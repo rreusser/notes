@@ -106,7 +106,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 
 		// Fortran: KK = N - ((N-NX+NB-1)/NB)*NB
 		// This computes how many columns are left for the unblocked part.
-		kk = N - Math.floor( ( N - nx + nb - 1 ) / nb ) * nb;
+		kk = N - ( Math.floor( ( N - nx + nb - 1 ) / nb ) * nb );
 
 		// Fortran loop: DO I = N-NB+1, KK+1, -NB  (1-based)
 
@@ -160,7 +160,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// 0-based: j from i to i+nb-1
 			for ( j = i; j < i + nb; j++ ) {
 				// Fortran: A(J-1, J) = E(J-1)  → A(j-1, j) = e[j-1]
-				A[ offsetA + ( j - 1 ) * sa1 + (j * sa2) ] = e[ offsetE + ( j - 1 ) * strideE ];
+				A[ offsetA + (( j - 1 ) * sa1) + (j * sa2) ] = e[ offsetE + (( j - 1 ) * strideE) ];
 
 				// Fortran: D(J) = A(J, J)  → d[j] = A(j, j)
 				d[ offsetD + (j * strideD) ] = A[ offsetA + (j * sa1) + (j * sa2) ];
@@ -211,10 +211,10 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// A(I+NB, I+NB) 1-based = A(i+nb, i+nb) 0-based
 			dsyr2k(
 				uplo, 'no-transpose', N - i - nb, nb, -1.0,
-				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + (i * sa2),
+				A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (i * sa2),
 				work, 1, ldwork, nb,
 				1.0,
-				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + ( i + nb ) * sa2
+				A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (( i + nb ) * sa2)
 			);
 
 			// Copy subdiagonal elements back into A, and diagonal elements into D
@@ -224,7 +224,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// 0-based: j from i to i+nb-1
 			for ( j = i; j < i + nb; j++ ) {
 				// Fortran: A(J+1, J) = E(J)  → A(j+1, j) = e[j]
-				A[ offsetA + ( j + 1 ) * sa1 + (j * sa2) ] = e[ offsetE + (j * strideE) ];
+				A[ offsetA + (( j + 1 ) * sa1) + (j * sa2) ] = e[ offsetE + (j * strideE) ];
 
 				// Fortran: D(J) = A(J, J)  → d[j] = A(j, j)
 				d[ offsetD + (j * strideD) ] = A[ offsetA + (j * sa1) + (j * sa2) ];

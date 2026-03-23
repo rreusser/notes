@@ -112,8 +112,8 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 			if ( k < N - 1 ) {
 				// W(:,kw) -= A(:,k+1:N-1) * W(k,kw+1:nb-1)^T
 				dgemv( 'no-transpose', k + 1, N - k - 1, -1.0,
-					A, sa1, sa2, offsetA + ( k + 1 ) * sa2,
-					W, sw2, offsetW + (k * sw1) + ( kw + 1 ) * sw2,
+					A, sa1, sa2, offsetA + (( k + 1 ) * sa2),
+					W, sw2, offsetW + (k * sw1) + (( kw + 1 ) * sw2),
 					1.0, W, sw1, offsetW + (kw * sw2) );
 			}
 
@@ -141,31 +141,31 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 					kp = k;
 				} else {
 					// Copy column imax of A into column kw-1 of W and update
-					dcopy( imax + 1, A, sa1, offsetA + (imax * sa2), W, sw1, offsetW + ( kw - 1 ) * sw2 );
-					dcopy( k - imax, A, sa2, offsetA + (imax * sa1) + ( imax + 1 ) * sa2, W, sw1, offsetW + ( imax + 1 ) * sw1 + ( kw - 1 ) * sw2 );
+					dcopy( imax + 1, A, sa1, offsetA + (imax * sa2), W, sw1, offsetW +( (( kw - 1 ) * sw2) ));
+					dcopy( k - imax, A, sa2, offsetA + (imax * sa1) + (( imax + 1 ) * sa2), W, sw1, offsetW +( (( imax + 1 ) * sw1) )+( (( kw - 1 ) * sw2) ));
 					if ( k < N - 1 ) {
 						dgemv( 'no-transpose', k + 1, N - k - 1, -1.0,
-							A, sa1, sa2, offsetA + ( k + 1 ) * sa2,
-							W, sw2, offsetW + (imax * sw1) + ( kw + 1 ) * sw2,
-							1.0, W, sw1, offsetW + ( kw - 1 ) * sw2 );
+							A, sa1, sa2, offsetA + (( k + 1 ) * sa2),
+							W, sw2, offsetW + (imax * sw1) + (( kw + 1 ) * sw2),
+							1.0, W, sw1, offsetW +( (( kw - 1 ) * sw2) ));
 					}
 
 					// JMAX is the column-index of the largest off-diagonal element
 					// In row IMAX, and ROWMAX is its absolute value
-					jmax = imax + 1 + idamax( k - imax, W, sw1, offsetW + ( imax + 1 ) * sw1 + ( kw - 1 ) * sw2 );
-					rowmax = Math.abs( W[ offsetW + (jmax * sw1) + ( kw - 1 ) * sw2 ] );
+					jmax = imax + 1 + idamax( k - imax, W, sw1, offsetW +( (( imax + 1 ) * sw1) )+( (( kw - 1 ) * sw2) ));
+					rowmax = Math.abs( W[ offsetW + (jmax * sw1) +( (( kw - 1 ) * sw2) )] );
 					if ( imax > 0 ) {
-						jmax = idamax( imax, W, sw1, offsetW + ( kw - 1 ) * sw2 );
-						rowmax = Math.max( rowmax, Math.abs( W[ offsetW + (jmax * sw1) + ( kw - 1 ) * sw2 ] ) );
+						jmax = idamax( imax, W, sw1, offsetW +( (( kw - 1 ) * sw2) ));
+						rowmax = Math.max( rowmax, Math.abs( W[ offsetW + (jmax * sw1) +( (( kw - 1 ) * sw2) )] ) );
 					}
 
 					if ( absakk >= ALPHA * colmax * ( colmax / rowmax ) ) {
 						kp = k;
-					} else if ( Math.abs( W[ offsetW + (imax * sw1) + ( kw - 1 ) * sw2 ] ) >= ALPHA * rowmax ) {
+					} else if ( Math.abs( W[ offsetW + (imax * sw1) +( (( kw - 1 ) * sw2) )] ) >= ALPHA * rowmax ) {
 						kp = imax;
 
 						// Copy column kw-1 of W into column kw of W
-						dcopy( k + 1, W, sw1, offsetW + ( kw - 1 ) * sw2, W, sw1, offsetW + (kw * sw2) );
+						dcopy( k + 1, W, sw1, offsetW + (( kw - 1 ) * sw2), W, sw1, offsetW + (kw * sw2) );
 					} else {
 						kp = imax;
 						kstep = 2;
@@ -179,14 +179,14 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 				if ( kp !== kk ) {
 					// Interchange rows kp and kk
 					A[ offsetA + (kp * sa1) + (kp * sa2) ] = A[ offsetA + (kk * sa1) + (kk * sa2) ];
-					dcopy( kk - 1 - kp, A, sa1, offsetA + ( kp + 1 ) * sa1 + (kk * sa2), A, sa2, offsetA + (kp * sa1) + ( kp + 1 ) * sa2 );
+					dcopy( kk - 1 - kp, A, sa1, offsetA +( (( kp + 1 ) * sa1) )+ (kk * sa2), A, sa2, offsetA + (kp * sa1) +( (( kp + 1 ) * sa2) ));
 					if ( kp > 0 ) {
 						dcopy( kp, A, sa1, offsetA + (kk * sa2), A, sa1, offsetA + (kp * sa2) );
 					}
 
 					// Interchange rows kk and kp in trailing columns
 					if ( k < N - 1 ) {
-						dswap( N - k - 1, A, sa2, offsetA + (kk * sa1) + ( k + 1 ) * sa2, A, sa2, offsetA + (kp * sa1) + ( k + 1 ) * sa2 );
+						dswap( N - k - 1, A, sa2, offsetA + (kk * sa1) + (( k + 1 ) * sa2), A, sa2, offsetA + (kp * sa1) +( (( k + 1 ) * sa2) ));
 					}
 					dswap( N - kk, W, sw2, offsetW + (kk * sw1) + (kkw * sw2), W, sw2, offsetW + (kp * sw1) + (kkw * sw2) );
 				}
@@ -199,21 +199,21 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 				} else {
 					// 2x2 pivot block
 					if ( k > 1 ) {
-						d21 = W[ offsetW + ( k - 1 ) * sw1 + (kw * sw2) ];
+						d21 = W[ offsetW +( (( k - 1 ) * sw1) )+ (kw * sw2) ];
 						d11 = W[ offsetW + (k * sw1) + (kw * sw2) ] / d21;
-						d22 = W[ offsetW + ( k - 1 ) * sw1 + ( kw - 1 ) * sw2 ] / d21;
+						d22 = W[ offsetW +( (( k - 1 ) * sw1) )+( (( kw - 1 ) * sw2) )] / d21;
 						t = 1.0 / ( (d11 * d22) - 1.0 );
 						d21 = t / d21;
 
 						for ( j = 0; j <= k - 2; j++ ) {
-							A[ offsetA + (j * sa1) + ( k - 1 ) * sa2 ] = d21 * ( (d11 * W[ offsetW + (j * sw1) + ( kw - 1 ) * sw2 ]) - W[ offsetW + (j * sw1) + (kw * sw2) ] );
-							A[ offsetA + (j * sa1) + (k * sa2) ] = d21 * ( (d22 * W[ offsetW + (j * sw1) + (kw * sw2) ]) - W[ offsetW + (j * sw1) + ( kw - 1 ) * sw2 ] );
+							A[ offsetA + (j * sa1) +( (( k - 1 ) * sa2) )] = d21 * ( (d11 * W[ offsetW + (j * sw1) +( (( kw - 1 ) * sw2) )]) - W[ offsetW + (j * sw1) + (kw * sw2) ] );
+							A[ offsetA + (j * sa1) + (k * sa2) ] = d21 * ( (d22 * W[ offsetW + (j * sw1) + (kw * sw2) ]) - W[ offsetW + (j * sw1) +( (( kw - 1 ) * sw2) )] );
 						}
 					}
 
 					// Copy D(k) back into A
-					A[ offsetA + ( k - 1 ) * sa1 + ( k - 1 ) * sa2 ] = W[ offsetW + ( k - 1 ) * sw1 + ( kw - 1 ) * sw2 ];
-					A[ offsetA + ( k - 1 ) * sa1 + (k * sa2) ] = W[ offsetW + ( k - 1 ) * sw1 + (kw * sw2) ];
+					A[ offsetA +( (( k - 1 ) * sa1) )+( (( k - 1 ) * sa2) )] = W[ offsetW +( (( k - 1 ) * sw1) )+( (( kw - 1 ) * sw2) )];
+					A[ offsetA +( (( k - 1 ) * sa1) )+ (k * sa2) ] = W[ offsetW +( (( k - 1 ) * sw1) )+ (kw * sw2) ];
 					A[ offsetA + (k * sa1) + (k * sa2) ] = W[ offsetW + (k * sw1) + (kw * sw2) ];
 				}
 			}
@@ -223,7 +223,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 				IPIV[ offsetIPIV + (k * strideIPIV) ] = kp;
 			} else {
 				IPIV[ offsetIPIV + (k * strideIPIV) ] = ~kp;
-				IPIV[ offsetIPIV + ( k - 1 ) * strideIPIV ] = ~kp;
+				IPIV[ offsetIPIV +( (( k - 1 ) * strideIPIV) )] = ~kp;
 			}
 
 			k -= kstep;
@@ -236,15 +236,15 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 			// Update the upper triangle of the diagonal block
 			for ( jj = j; jj < j + jb; jj++ ) {
 				dgemv( 'no-transpose', jj - j + 1, N - k - 1, -1.0,
-					A, sa1, sa2, offsetA + (j * sa1) + ( k + 1 ) * sa2,
-					W, sw2, offsetW + (jj * sw1) + ( kw + 1 ) * sw2,
+					A, sa1, sa2, offsetA + (j * sa1) + (( k + 1 ) * sa2),
+					W, sw2, offsetW + (jj * sw1) + (( kw + 1 ) * sw2),
 					1.0, A, sa1, offsetA + (j * sa1) + (jj * sa2) );
 			}
 
 			// Update the rectangular part above the diagonal block
 			dgemm( 'no-transpose', 'transpose', j, jb, N - k - 1, -1.0,
-				A, sa1, sa2, offsetA + ( k + 1 ) * sa2,
-				W, sw1, sw2, offsetW + (j * sw1) + ( kw + 1 ) * sw2,
+				A, sa1, sa2, offsetA + (( k + 1 ) * sa2),
+				W, sw1, sw2, offsetW + (j * sw1) + (( kw + 1 ) * sw2),
 				1.0, A, sa1, sa2, offsetA + (j * sa2) );
 		}
 
@@ -288,7 +288,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 		absakk = Math.abs( W[ offsetW + (k * sw1) + (k * sw2) ] );
 
 		if ( k < N - 1 ) {
-			imax = k + 1 + idamax( N - k - 1, W, sw1, offsetW + ( k + 1 ) * sw1 + (k * sw2) );
+			imax = k + 1 + idamax( N - k - 1, W, sw1, offsetW +( (( k + 1 ) * sw1) )+ (k * sw2) );
 			colmax = Math.abs( W[ offsetW + (imax * sw1) + (k * sw2) ] );
 		} else {
 			colmax = 0.0;
@@ -304,28 +304,28 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 				kp = k;
 			} else {
 				// Copy row imax into column k+1 of W and update
-				dcopy( imax - k, A, sa2, offsetA + (imax * sa1) + (k * sa2), W, sw1, offsetW + (k * sw1) + ( k + 1 ) * sw2 );
-				dcopy( N - imax, A, sa1, offsetA + (imax * sa1) + (imax * sa2), W, sw1, offsetW + (imax * sw1) + ( k + 1 ) * sw2 );
+				dcopy( imax - k, A, sa2, offsetA + (imax * sa1) + (k * sa2), W, sw1, offsetW + (k * sw1) +( (( k + 1 ) * sw2) ));
+				dcopy( N - imax, A, sa1, offsetA + (imax * sa1) + (imax * sa2), W, sw1, offsetW + (imax * sw1) +( (( k + 1 ) * sw2) ));
 				dgemv( 'no-transpose', N - k, k, -1.0,
 					A, sa1, sa2, offsetA + (k * sa1),
 					W, sw2, offsetW + (imax * sw1),
-					1.0, W, sw1, offsetW + (k * sw1) + ( k + 1 ) * sw2 );
+					1.0, W, sw1, offsetW + (k * sw1) +( (( k + 1 ) * sw2) ));
 
 				// Scan row imax for largest off-diagonal
-				jmax = k + idamax( imax - k, W, sw1, offsetW + (k * sw1) + ( k + 1 ) * sw2 );
-				rowmax = Math.abs( W[ offsetW + (jmax * sw1) + ( k + 1 ) * sw2 ] );
+				jmax = k + idamax( imax - k, W, sw1, offsetW + (k * sw1) +( (( k + 1 ) * sw2) ));
+				rowmax = Math.abs( W[ offsetW + (jmax * sw1) +( (( k + 1 ) * sw2) )] );
 				if ( imax < N - 1 ) {
-					jmax = imax + 1 + idamax( N - imax - 1, W, sw1, offsetW + ( imax + 1 ) * sw1 + ( k + 1 ) * sw2 );
-					rowmax = Math.max( rowmax, Math.abs( W[ offsetW + (jmax * sw1) + ( k + 1 ) * sw2 ] ) );
+					jmax = imax + 1 + idamax( N - imax - 1, W, sw1, offsetW +( (( imax + 1 ) * sw1) )+( (( k + 1 ) * sw2) ));
+					rowmax = Math.max( rowmax, Math.abs( W[ offsetW + (jmax * sw1) +( (( k + 1 ) * sw2) )] ) );
 				}
 
 				if ( absakk >= ALPHA * colmax * ( colmax / rowmax ) ) {
 					kp = k;
-				} else if ( Math.abs( W[ offsetW + (imax * sw1) + ( k + 1 ) * sw2 ] ) >= ALPHA * rowmax ) {
+				} else if ( Math.abs( W[ offsetW + (imax * sw1) +( (( k + 1 ) * sw2) )] ) >= ALPHA * rowmax ) {
 					kp = imax;
 
 					// Copy column k+1 of W into column k of W
-					dcopy( N - k, W, sw1, offsetW + (k * sw1) + ( k + 1 ) * sw2, W, sw1, offsetW + (k * sw1) + (k * sw2) );
+					dcopy( N - k, W, sw1, offsetW + (k * sw1) + (( k + 1 ) * sw2), W, sw1, offsetW + (k * sw1) + (k * sw2) );
 				} else {
 					kp = imax;
 					kstep = 2;
@@ -337,9 +337,9 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 			if ( kp !== kk ) {
 				// Interchange rows kp and kk
 				A[ offsetA + (kp * sa1) + (kp * sa2) ] = A[ offsetA + (kk * sa1) + (kk * sa2) ];
-				dcopy( kp - kk - 1, A, sa1, offsetA + ( kk + 1 ) * sa1 + (kk * sa2), A, sa2, offsetA + (kp * sa1) + ( kk + 1 ) * sa2 );
+				dcopy( kp - kk - 1, A, sa1, offsetA +( (( kk + 1 ) * sa1) )+ (kk * sa2), A, sa2, offsetA + (kp * sa1) +( (( kk + 1 ) * sa2) ));
 				if ( kp < N - 1 ) {
-					dcopy( N - kp - 1, A, sa1, offsetA + ( kp + 1 ) * sa1 + (kk * sa2), A, sa1, offsetA + ( kp + 1 ) * sa1 + (kp * sa2) );
+					dcopy( N - kp - 1, A, sa1, offsetA +( (( kp + 1 ) * sa1) )+ (kk * sa2), A, sa1, offsetA +( (( kp + 1 ) * sa1) )+ (kp * sa2) );
 				}
 
 				// Interchange rows kk and kp in columns 0..k-1
@@ -353,26 +353,26 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 				dcopy( N - k, W, sw1, offsetW + (k * sw1) + (k * sw2), A, sa1, offsetA + (k * sa1) + (k * sa2) );
 				if ( k < N - 1 ) {
 					r1 = 1.0 / A[ offsetA + (k * sa1) + (k * sa2) ];
-					dscal( N - k - 1, r1, A, sa1, offsetA + ( k + 1 ) * sa1 + (k * sa2) );
+					dscal( N - k - 1, r1, A, sa1, offsetA +( (( k + 1 ) * sa1) )+ (k * sa2) );
 				}
 			} else {
 				// 2x2 pivot block
 				if ( k < N - 2 ) {
-					d21 = W[ offsetW + ( k + 1 ) * sw1 + (k * sw2) ];
-					d11 = W[ offsetW + ( k + 1 ) * sw1 + ( k + 1 ) * sw2 ] / d21;
+					d21 = W[ offsetW +( (( k + 1 ) * sw1) )+ (k * sw2) ];
+					d11 = W[ offsetW +( (( k + 1 ) * sw1) )+( (( k + 1 ) * sw2) )] / d21;
 					d22 = W[ offsetW + (k * sw1) + (k * sw2) ] / d21;
 					t = 1.0 / ( (d11 * d22) - 1.0 );
 					d21 = t / d21;
 
 					for ( j = k + 2; j < N; j++ ) {
-						A[ offsetA + (j * sa1) + (k * sa2) ] = d21 * ( (d11 * W[ offsetW + (j * sw1) + (k * sw2) ]) - W[ offsetW + (j * sw1) + ( k + 1 ) * sw2 ] );
-						A[ offsetA + (j * sa1) + ( k + 1 ) * sa2 ] = d21 * ( (d22 * W[ offsetW + (j * sw1) + ( k + 1 ) * sw2 ]) - W[ offsetW + (j * sw1) + (k * sw2) ] );
+						A[ offsetA + (j * sa1) + (k * sa2) ] = d21 * ( (d11 * W[ offsetW + (j * sw1) + (k * sw2) ]) - W[ offsetW + (j * sw1) +( (( k + 1 ) * sw2) )] );
+						A[ offsetA + (j * sa1) +( (( k + 1 ) * sa2) )] = d21 * ( (d22 * W[ offsetW + (j * sw1) +( (( k + 1 ) * sw2) )]) - W[ offsetW + (j * sw1) + (k * sw2) ] );
 					}
 				}
 
 				A[ offsetA + (k * sa1) + (k * sa2) ] = W[ offsetW + (k * sw1) + (k * sw2) ];
-				A[ offsetA + ( k + 1 ) * sa1 + (k * sa2) ] = W[ offsetW + ( k + 1 ) * sw1 + (k * sw2) ];
-				A[ offsetA + ( k + 1 ) * sa1 + ( k + 1 ) * sa2 ] = W[ offsetW + ( k + 1 ) * sw1 + ( k + 1 ) * sw2 ];
+				A[ offsetA +( (( k + 1 ) * sa1) )+ (k * sa2) ] = W[ offsetW +( (( k + 1 ) * sw1) )+ (k * sw2) ];
+				A[ offsetA +( (( k + 1 ) * sa1) )+( (( k + 1 ) * sa2) )] = W[ offsetW +( (( k + 1 ) * sw1) )+( (( k + 1 ) * sw2) )];
 			}
 		}
 
@@ -381,7 +381,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 			IPIV[ offsetIPIV + (k * strideIPIV) ] = kp;
 		} else {
 			IPIV[ offsetIPIV + (k * strideIPIV) ] = ~kp;
-			IPIV[ offsetIPIV + ( k + 1 ) * strideIPIV ] = ~kp;
+			IPIV[ offsetIPIV +( (( k + 1 ) * strideIPIV) )] = ~kp;
 		}
 
 		k += kstep;
@@ -402,9 +402,9 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 		// Update the rectangular part below the diagonal block
 		if ( j + jb < N ) {
 			dgemm( 'no-transpose', 'transpose', N - j - jb, jb, k, -1.0,
-				A, sa1, sa2, offsetA + ( j + jb ) * sa1,
+				A, sa1, sa2, offsetA + (( j + jb ) * sa1),
 				W, sw1, sw2, offsetW + (j * sw1),
-				1.0, A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2) );
+				1.0, A, sa1, sa2, offsetA +( (( j + jb ) * sa1) )+ (j * sa2) );
 		}
 	}
 

@@ -57,13 +57,13 @@ function ilazlc( M, N, A, strideA1, strideA2, offsetA ) {
 	oA = offsetA * 2;
 
 	// Quick test for the common case where one corner is non-zero.
-	re = Av[ oA + (0 * sa1) + ( N - 1 ) * sa2 ];
-	im = Av[ oA + (0 * sa1) + ( N - 1 ) * sa2 + 1 ];
+	re = Av[ oA + (0 * sa1) + (( N - 1 ) * sa2) ];
+	im = Av[ oA + (0 * sa1) + (( N - 1 ) * sa2) + 1 ];
 	if ( re !== 0.0 || im !== 0.0 ) {
 		return N - 1;
 	}
-	re = Av[ oA + ( M - 1 ) * sa1 + ( N - 1 ) * sa2 ];
-	im = Av[ oA + ( M - 1 ) * sa1 + ( N - 1 ) * sa2 + 1 ];
+	re = Av[ oA + (( M - 1 ) * sa1) + (( N - 1 ) * sa2) ];
+	im = Av[ oA + (( M - 1 ) * sa1) + (( N - 1 ) * sa2) + 1 ];
 	if ( re !== 0.0 || im !== 0.0 ) {
 		return N - 1;
 	}

@@ -131,7 +131,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			reinterpret( alpha, 0 )[ 0 ] = alphaRe;
 			reinterpret( alpha, 0 )[ 1 ] = alphaIm;
 			zlarfg( M - i, alpha, 0,
-				A, strideA1, offsetA + Math.min( i + 1, M - 1 ) * strideA1 + (i * strideA2),
+				A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2),
 				TAUQ, offsetTAUQ + (i * strideTAUQ)
 			);
 			d[ offsetD + (i * strideD) ] = reinterpret( alpha, 0 )[ 0 ];
@@ -143,9 +143,9 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 
 				// Compute Y(i+1:N-1, i)
 				zgemv( 'conjugate-transpose', M - i, N - i - 1, ONE,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
 					A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
-					ZERO, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					ZERO, Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 
 				zgemv( 'conjugate-transpose', M - i, i, ONE,
@@ -155,9 +155,9 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				);
 
 				zgemv( 'no-transpose', N - i - 1, i, NEGONE,
-					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
+					Y, strideY1, strideY2, offsetY + (( i + 1 ) * strideY1),
 					Y, strideY1, offsetY + (i * strideY2),
-					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					ONE, Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 
 				zgemv( 'conjugate-transpose', M - i, i, ONE,
@@ -167,84 +167,84 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				);
 
 				zgemv( 'conjugate-transpose', i, N - i - 1, NEGONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA2),
 					Y, strideY1, offsetY + (i * strideY2),
-					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					ONE, Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 
 				// ZSCAL(N-I, TAUQ(I), Y(I+1,I), 1)
 				zscal( N - i - 1, TAUQ.get( offsetTAUQ + (i * strideTAUQ) ),
-					Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 
 				// Update A(i, i+1:N-1)
-				zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
+				zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
 				zlacgv( i + 1, A, strideA2, offsetA + (i * strideA1) );
 
 				zgemv( 'no-transpose', N - i - 1, i + 1, NEGONE,
-					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
+					Y, strideY1, strideY2, offsetY + (( i + 1 ) * strideY1),
 					A, strideA2, offsetA + (i * strideA1),
-					ONE, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2
+					ONE, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2)
 				);
 
 				zlacgv( i + 1, A, strideA2, offsetA + (i * strideA1) );
 				zlacgv( i, X, strideX2, offsetX + (i * strideX1) );
 
 				zgemv( 'conjugate-transpose', i, N - i - 1, NEGONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA2),
 					X, strideX2, offsetX + (i * strideX1),
-					ONE, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2
+					ONE, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2)
 				);
 
 				zlacgv( i, X, strideX2, offsetX + (i * strideX1) );
 
 				// Generate elementary reflector G(i) to annihilate A(i, i+2:N-1)
-				zlarfg( N - i - 1, A, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
-					A, strideA2, offsetA + (i * strideA1) + Math.min( i + 2, N - 1 ) * strideA2,
+				zlarfg( N - i - 1, A, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
+					A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 2, N - 1 ) * strideA2),
 					TAUP, offsetTAUP + (i * strideTAUP)
 				);
-				e[ offsetE + (i * strideE) ] = Av[ (offsetA * 2) + (i * sa1) + ( i + 1 ) * sa2 ];
-				Av[ (offsetA * 2) + (i * sa1) + ( i + 1 ) * sa2 ] = 1.0;
-				Av[ (offsetA * 2) + (i * sa1) + ( i + 1 ) * sa2 + 1 ] = 0.0;
+				e[ offsetE + (i * strideE) ] = Av[ (offsetA * 2) + (i * sa1) + (( i + 1 ) * sa2) ];
+				Av[ (offsetA * 2) + (i * sa1) + (( i + 1 ) * sa2) ] = 1.0;
+				Av[ (offsetA * 2) + (i * sa1) + (( i + 1 ) * sa2) + 1 ] = 0.0;
 
 				// Compute X(i+1:M-1, i)
 				zgemv( 'no-transpose', M - i - 1, N - i - 1, ONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
-					A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
-					ZERO, X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
+					A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
+					ZERO, X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				zgemv( 'conjugate-transpose', N - i - 1, i + 1, ONE,
-					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
-					A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
+					Y, strideY1, strideY2, offsetY + (( i + 1 ) * strideY1),
+					A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
 					ZERO, X, strideX1, offsetX + (i * strideX2)
 				);
 
 				zgemv( 'no-transpose', M - i - 1, i + 1, NEGONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1),
 					X, strideX1, offsetX + (i * strideX2),
-					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					ONE, X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				zgemv( 'no-transpose', i, N - i - 1, ONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
-					A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA2),
+					A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
 					ZERO, X, strideX1, offsetX + (i * strideX2)
 				);
 
 				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
-					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
+					X, strideX1, strideX2, offsetX + (( i + 1 ) * strideX1),
 					X, strideX1, offsetX + (i * strideX2),
-					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					ONE, X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				// ZSCAL(M-I, TAUP(I), X(I+1,I), 1)
 				zscal( M - i - 1, TAUP.get( offsetTAUP + (i * strideTAUP) ),
-					X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				// Unconjugate A(I, I+1:N-1)
-				zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
+				zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
 			}
 		}
 	} else {
@@ -278,7 +278,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			reinterpret( alpha, 0 )[ 0 ] = alphaRe;
 			reinterpret( alpha, 0 )[ 1 ] = alphaIm;
 			zlarfg( N - i, alpha, 0,
-				A, strideA2, offsetA + (i * strideA1) + Math.min( i + 1, N - 1 ) * strideA2,
+				A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2),
 				TAUP, offsetTAUP + (i * strideTAUP)
 			);
 			d[ offsetD + (i * strideD) ] = reinterpret( alpha, 0 )[ 0 ];
@@ -290,9 +290,9 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 
 				// Compute X(i+1:M-1, i)
 				zgemv( 'no-transpose', M - i - 1, N - i, ONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					ZERO, X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					ZERO, X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				zgemv( 'conjugate-transpose', N - i, i, ONE,
@@ -302,9 +302,9 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				);
 
 				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1),
 					X, strideX1, offsetX + (i * strideX2),
-					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					ONE, X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				zgemv( 'no-transpose', i, N - i, ONE,
@@ -314,14 +314,14 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				);
 
 				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
-					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
+					X, strideX1, strideX2, offsetX + (( i + 1 ) * strideX1),
 					X, strideX1, offsetX + (i * strideX2),
-					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					ONE, X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				// ZSCAL(M-I, TAUP(I), X(I+1,I), 1)
 				zscal( M - i - 1, TAUP.get( offsetTAUP + (i * strideTAUP) ),
-					X, strideX1, offsetX + ( i + 1 ) * strideX1 + (i * strideX2)
+					X, strideX1, offsetX + (( i + 1 ) * strideX1) + (i * strideX2)
 				);
 
 				// Unconjugate A(I, I:N-1)
@@ -331,62 +331,62 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				zlacgv( i, Y, strideY2, offsetY + (i * strideY1) );
 
 				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1),
 					Y, strideY2, offsetY + (i * strideY1),
-					ONE, A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2)
+					ONE, A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2)
 				);
 
 				zlacgv( i, Y, strideY2, offsetY + (i * strideY1) );
 
 				zgemv( 'no-transpose', M - i - 1, i + 1, NEGONE,
-					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
+					X, strideX1, strideX2, offsetX + (( i + 1 ) * strideX1),
 					A, strideA1, offsetA + (i * strideA2),
-					ONE, A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2)
+					ONE, A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2)
 				);
 
 				// Generate elementary reflector H(i) to annihilate A(i+2:M-1, i)
-				zlarfg( M - i - 1, A, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
-					A, strideA1, offsetA + Math.min( i + 2, M - 1 ) * strideA1 + (i * strideA2),
+				zlarfg( M - i - 1, A, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
+					A, strideA1, offsetA + (Math.min( i + 2, M - 1 ) * strideA1) + (i * strideA2),
 					TAUQ, offsetTAUQ + (i * strideTAUQ)
 				);
-				e[ offsetE + (i * strideE) ] = Av[ (offsetA * 2) + ( i + 1 ) * sa1 + (i * sa2) ];
-				Av[ (offsetA * 2) + ( i + 1 ) * sa1 + (i * sa2) ] = 1.0;
-				Av[ (offsetA * 2) + ( i + 1 ) * sa1 + (i * sa2) + 1 ] = 0.0;
+				e[ offsetE + (i * strideE) ] = Av[ (offsetA * 2) + (( i + 1 ) * sa1) + (i * sa2) ];
+				Av[ (offsetA * 2) + (( i + 1 ) * sa1) + (i * sa2) ] = 1.0;
+				Av[ (offsetA * 2) + (( i + 1 ) * sa1) + (i * sa2) + 1 ] = 0.0;
 
 				// Compute Y(i+1:N-1, i)
 				zgemv( 'conjugate-transpose', M - i - 1, N - i - 1, ONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
-					A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
-					ZERO, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
+					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
+					ZERO, Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 
 				zgemv( 'conjugate-transpose', M - i - 1, i, ONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
-					A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1),
+					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					ZERO, Y, strideY1, offsetY + (i * strideY2)
 				);
 
 				zgemv( 'no-transpose', N - i - 1, i, NEGONE,
-					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
+					Y, strideY1, strideY2, offsetY + (( i + 1 ) * strideY1),
 					Y, strideY1, offsetY + (i * strideY2),
-					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					ONE, Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 
 				zgemv( 'conjugate-transpose', M - i - 1, i + 1, ONE,
-					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
-					A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					X, strideX1, strideX2, offsetX + (( i + 1 ) * strideX1),
+					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					ZERO, Y, strideY1, offsetY + (i * strideY2)
 				);
 
 				zgemv( 'conjugate-transpose', i + 1, N - i - 1, NEGONE,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA2),
 					Y, strideY1, offsetY + (i * strideY2),
-					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					ONE, Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 
 				// ZSCAL(N-I, TAUQ(I), Y(I+1,I), 1)
 				zscal( N - i - 1, TAUQ.get( offsetTAUQ + (i * strideTAUQ) ),
-					Y, strideY1, offsetY + ( i + 1 ) * strideY1 + (i * strideY2)
+					Y, strideY1, offsetY + (( i + 1 ) * strideY1) + (i * strideY2)
 				);
 			} else {
 				// Unconjugate A(I, I:N-1)

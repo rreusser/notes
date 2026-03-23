@@ -112,28 +112,28 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 			// A = U^T * U: solve U^T * y = x, then U * x = y
 			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (2 * N) * sw
+				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scalel = scale[ 0 ];
 			normin = 'Y';
 
 			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (2 * N) * sw
+				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scaleu = scale[ 0 ];
 		} else {
 			// A = L * L^T: solve L * y = x, then L^T * x = y
 			dlatrs( 'lower', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (2 * N) * sw
+				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scalel = scale[ 0 ];
 			normin = 'Y';
 
 			dlatrs( 'lower', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + (2 * N) * sw
+				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scaleu = scale[ 0 ];
 		}

@@ -90,10 +90,10 @@ function dlasrt( id, N, d, stride, offset ) {
 				// Sort in decreasing order...
 				for ( i = start + 1; i <= endd; i++ ) {
 					for ( j = i; j >= start + 1; j-- ) {
-						if ( d[ offset + (j * stride) ] > d[ offset + ( j - 1 ) * stride ] ) {
+						if ( d[ offset + (j * stride) ] > d[ offset + (( j - 1 ) * stride) ] ) {
 							dmnmx = d[ offset + (j * stride) ];
-							d[ offset + (j * stride) ] = d[ offset + ( j - 1 ) * stride ];
-							d[ offset + ( j - 1 ) * stride ] = dmnmx;
+							d[ offset + (j * stride) ] = d[ offset + (( j - 1 ) * stride) ];
+							d[ offset + (( j - 1 ) * stride) ] = dmnmx;
 						} else {
 							break;
 						}
@@ -103,10 +103,10 @@ function dlasrt( id, N, d, stride, offset ) {
 				// Sort in increasing order...
 				for ( i = start + 1; i <= endd; i++ ) {
 					for ( j = i; j >= start + 1; j-- ) {
-						if ( d[ offset + (j * stride) ] < d[ offset + ( j - 1 ) * stride ] ) {
+						if ( d[ offset + (j * stride) ] < d[ offset + (( j - 1 ) * stride) ] ) {
 							dmnmx = d[ offset + (j * stride) ];
-							d[ offset + (j * stride) ] = d[ offset + ( j - 1 ) * stride ];
-							d[ offset + ( j - 1 ) * stride ] = dmnmx;
+							d[ offset + (j * stride) ] = d[ offset + (( j - 1 ) * stride) ];
+							d[ offset + (( j - 1 ) * stride) ] = dmnmx;
 						} else {
 							break;
 						}

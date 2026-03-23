@@ -101,7 +101,7 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			Av[ ia + 1 ] = 0.0;
 		}
 		// Diagonal element at row M-N+j
-		ia = oA + ( M - N + j ) * sa1 + (j * sa2);
+		ia = oA + (( M - N + j ) * sa1) + (j * sa2);
 		Av[ ia ] = 1.0;
 		Av[ ia + 1 ] = 0.0;
 	}
@@ -114,7 +114,7 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		it = (offsetTAU * 2) + (i * st);
 
 		// Set A(M-N+ii, ii) = 1 before applying the reflector
-		ia = oA + ( M - N + ii ) * sa1 + (ii * sa2);
+		ia = oA + (( M - N + ii ) * sa1) + (ii * sa2);
 		Av[ ia ] = 1.0;
 		Av[ ia + 1 ] = 0.0;
 
@@ -146,7 +146,7 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		}
 
 		// A(M-N+ii, ii) = 1 - TAU(i)  (complex: (1,0) - tau)
-		ia = oA + ( M - N + ii ) * sa1 + (ii * sa2);
+		ia = oA + (( M - N + ii ) * sa1) + (ii * sa2);
 		Av[ ia ] = 1.0 - tauv[ it ];
 		Av[ ia + 1 ] = -tauv[ it + 1 ];
 

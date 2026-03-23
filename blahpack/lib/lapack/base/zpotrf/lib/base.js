@@ -98,13 +98,13 @@ function zpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// Update the off-diagonal block
 				zgemm( 'conjugate-transpose', 'no-transpose', jb, N - j - jb, j, MCONE,
 					A, sa1, sa2, offsetA + (j * sa2),
-					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
+					A, sa1, sa2, offsetA + (( j + jb ) * sa2),
 					CONE,
-					A, sa1, sa2, offsetA + (j * sa1) + ( j + jb ) * sa2
+					A, sa1, sa2, offsetA + (j * sa1) + (( j + jb ) * sa2)
 				);
 				ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', jb, N - j - jb, CONE,
 					A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
-					A, sa1, sa2, offsetA + (j * sa1) + ( j + jb ) * sa2
+					A, sa1, sa2, offsetA + (j * sa1) + (( j + jb ) * sa2)
 				);
 			}
 		}
@@ -126,14 +126,14 @@ function zpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 			if ( j + jb < N ) {
 				// Update the off-diagonal block
 				zgemm( 'no-transpose', 'conjugate-transpose', N - j - jb, jb, j, MCONE,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1,
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1),
 					A, sa1, sa2, offsetA + (j * sa1),
 					CONE,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2)
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1) + (j * sa2)
 				);
 				ztrsm( 'right', 'lower', 'conjugate-transpose', 'non-unit', N - j - jb, jb, CONE,
 					A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2)
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1) + (j * sa2)
 				);
 			}
 		}

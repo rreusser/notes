@@ -127,14 +127,14 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 			zlarfg(
 				M - offpi,
 				A, offsetA + (offpi * sa1) + (i * sa2),
-				A, sa1, offsetA + ( offpi + 1 ) * sa1 + (i * sa2),
+				A, sa1, offsetA + (( offpi + 1 ) * sa1) + (i * sa2),
 				TAU, offsetTAU + (i * strideTAU)
 			);
 		} else {
 			zlarfg(
 				1,
-				A, offsetA + ( M - 1 ) * sa1 + (i * sa2),
-				A, sa1, offsetA + ( M - 1 ) * sa1 + (i * sa2),
+				A, offsetA + (( M - 1 ) * sa1) + (i * sa2),
+				A, sa1, offsetA + (( M - 1 ) * sa1) + (i * sa2),
 				TAU, offsetTAU + (i * strideTAU)
 			);
 		}
@@ -142,33 +142,33 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 		if ( i < N - 1 ) {
 			// Apply H(i)^H to A(offpi:M-1, i+1:N-1) from the left
 			// Save A(offpi, i) and set it to 1
-			aii[ 0 ] = Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) ];
-			aii[ 1 ] = Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) + 1 ];
-			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) ] = 1.0;
-			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) + 1 ] = 0.0;
+			aii[ 0 ] = Av[ oA + (2 * ( (offpi * sa1) + (i * sa2) )) ];
+			aii[ 1 ] = Av[ oA + (2 * ( (offpi * sa1) + (i * sa2) )) + 1 ];
+			Av[ oA + (2 * ( (offpi * sa1) + (i * sa2) )) ] = 1.0;
+			Av[ oA + (2 * ( (offpi * sa1) + (i * sa2) )) + 1 ] = 0.0;
 
 			// conj(tau(i))
 			conjTauv[ 0 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 ];
-			conjTauv[ 1 ] = -TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 + 1 ];
+			conjTauv[ 1 ] = -TAUv[ (( offsetTAU + (i * strideTAU) ) * 2) + 1 ];
 
 			zlarf(
 				'left', M - offpi, N - i - 1,
 				A, sa1, offsetA + (offpi * sa1) + (i * sa2),
 				conjTau, 0,
-				A, sa1, sa2, offsetA + (offpi * sa1) + ( i + 1 ) * sa2,
+				A, sa1, sa2, offsetA + (offpi * sa1) + (( i + 1 ) * sa2),
 				WORK, strideWORK, offsetWORK
 			);
 
 			// Restore A(offpi, i)
-			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) ] = aii[ 0 ];
-			Av[ oA + 2 * ( (offpi * sa1) + (i * sa2) ) + 1 ] = aii[ 1 ];
+			Av[ oA + (2 * ( (offpi * sa1) + (i * sa2) )) ] = aii[ 0 ];
+			Av[ oA + (2 * ( (offpi * sa1) + (i * sa2) )) + 1 ] = aii[ 1 ];
 		}
 
 		// Update partial column norms
 		for ( j = i + 1; j < N; j++ ) {
 			if ( VN1[ offsetVN1 + (j * strideVN1) ] !== 0.0 ) {
 				// temp = |A(offpi, j)| / VN1(j)
-				temp = cmplx.absAt( Av, oA + 2 * ( (offpi * sa1) + (j * sa2) ) ) / VN1[ offsetVN1 + (j * strideVN1) ];
+				temp = cmplx.absAt( Av, oA + (2 * ( (offpi * sa1) + (j * sa2) )) ) / VN1[ offsetVN1 + (j * strideVN1) ];
 				temp = Math.max( 0.0, ( 1.0 - (temp * temp) ) );
 				temp2 = temp * Math.pow(
 					VN1[ offsetVN1 + (j * strideVN1) ] /
@@ -179,7 +179,7 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 					if ( offpi < M - 1 ) {
 						VN1[ offsetVN1 + (j * strideVN1) ] = dznrm2(
 							M - offpi - 1,
-							A, sa1, offsetA + ( offpi + 1 ) * sa1 + (j * sa2)
+							A, sa1, offsetA + (( offpi + 1 ) * sa1) + (j * sa2)
 						);
 						VN2[ offsetVN2 + (j * strideVN2) ] = VN1[ offsetVN1 + (j * strideVN1) ];
 					} else {

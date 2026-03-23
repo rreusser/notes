@@ -93,8 +93,8 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// Update the leading i rows using remaining columns:
 				// A(0:i-1, i:i+ib-1) += A(0:i-1, i+ib:N-1) * A(i:i+ib-1, i+ib:N-1)^T
 				dgemm( 'no-transpose', 'transpose', i, ib, N - i - ib, 1.0,
-					A, sa1, sa2, offsetA + ( i + ib ) * sa2,
-					A, sa1, sa2, offsetA + (i * sa1) + ( i + ib ) * sa2,
+					A, sa1, sa2, offsetA + (( i + ib ) * sa2),
+					A, sa1, sa2, offsetA + (i * sa1) + (( i + ib ) * sa2),
 					1.0,
 					A, sa1, sa2, offsetA + (i * sa2) );
 
@@ -102,7 +102,7 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// A(i:i+ib-1, i:i+ib-1) += A(i:i+ib-1, i+ib:N-1) * A(i:i+ib-1, i+ib:N-1)^T
 				dsyrk( 'upper', 'no-transpose', ib, N - i - ib, 1.0,
-					A, sa1, sa2, offsetA + (i * sa1) + ( i + ib ) * sa2,
+					A, sa1, sa2, offsetA + (i * sa1) + (( i + ib ) * sa2),
 					1.0,
 					A, sa1, sa2, offsetA + (i * sa1) + (i * sa2) );
 			}
@@ -128,8 +128,8 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// Update the leading i columns using remaining rows:
 				// A(i:i+ib-1, 0:i-1) += A(i+ib:N-1, i:i+ib-1)^T * A(i+ib:N-1, 0:i-1)
 				dgemm( 'transpose', 'no-transpose', ib, i, N - i - ib, 1.0,
-					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + (i * sa2),
-					A, sa1, sa2, offsetA + ( i + ib ) * sa1,
+					A, sa1, sa2, offsetA + (( i + ib ) * sa1) + (i * sa2),
+					A, sa1, sa2, offsetA + (( i + ib ) * sa1),
 					1.0,
 					A, sa1, sa2, offsetA + (i * sa1) );
 
@@ -137,7 +137,7 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// A(i:i+ib-1, i:i+ib-1) += A(i+ib:N-1, i:i+ib-1)^T * A(i+ib:N-1, i:i+ib-1)
 				dsyrk( 'lower', 'transpose', ib, N - i - ib, 1.0,
-					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + (i * sa2),
+					A, sa1, sa2, offsetA + (( i + ib ) * sa1) + (i * sa2),
 					1.0,
 					A, sa1, sa2, offsetA + (i * sa1) + (i * sa2) );
 			}

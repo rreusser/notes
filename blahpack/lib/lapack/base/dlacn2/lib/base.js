@@ -163,7 +163,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 			altsgn = 1.0;
 			ix = offsetX;
 			for ( i = 0; i < N; i++ ) {
-				x[ ix ] = altsgn * ( 1.0 + i / ( N - 1 ) );
+				x[ ix ] = altsgn * ( 1.0 + ( i / ( N - 1 ) ) );
 				altsgn = -altsgn;
 				ix += strideX;
 			}
@@ -178,7 +178,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 			altsgn = 1.0;
 			ix = offsetX;
 			for ( i = 0; i < N; i++ ) {
-				x[ ix ] = altsgn * ( 1.0 + i / ( N - 1 ) );
+				x[ ix ] = altsgn * ( 1.0 + ( i / ( N - 1 ) ) );
 				altsgn = -altsgn;
 				ix += strideX;
 			}
@@ -228,7 +228,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		altsgn = 1.0;
 		ix = offsetX;
 		for ( i = 0; i < N; i++ ) {
-			x[ ix ] = altsgn * ( 1.0 + i / ( N - 1 ) );
+			x[ ix ] = altsgn * ( 1.0 + ( i / ( N - 1 ) ) );
 			altsgn = -altsgn;
 			ix += strideX;
 		}

@@ -99,7 +99,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 		if ( uplo === 'upper' ) {
 			// Upper triangular: back-substitution from bottom
 			kplus1 = K;
-			jx = kx + ( N - 1 ) * sx;
+			jx = kx + (( N - 1 ) * sx);
 			for ( j = N - 1; j >= 0; j-- ) {
 				if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
 					l = kplus1 - j;
@@ -112,7 +112,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					tempI = xv[ jx + 1 ];
 					ix = jx - sx;
 					for ( i = j - 1; i >= Math.max( 0, j - K ); i-- ) {
-						ia = oA + ( l + i ) * sa1 + (j * sa2);
+						ia = oA + (( l + i ) * sa1) + (j * sa2);
 
 						// x(i) = x(i) - temp * A(l+i, j)
 
@@ -141,7 +141,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					tempI = xv[ jx + 1 ];
 					ix = jx + sx;
 					for ( i = j + 1; i < Math.min( N, j + K + 1 ); i++ ) {
-						ia = oA + ( l + i ) * sa1 + (j * sa2);
+						ia = oA + (( l + i ) * sa1) + (j * sa2);
 
 						// x(i) = x(i) - temp * A(l+i, j)
 						ar = Av[ ia ];
@@ -168,7 +168,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				if ( noconj ) {
 					// Transpose (no conjugation)
 					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-						ia = oA + ( l + i ) * sa1 + (j * sa2);
+						ia = oA + (( l + i ) * sa1) + (j * sa2);
 
 						// Temp = temp - A(l+i,j) * x(i)
 						ar = Av[ ia ];
@@ -186,7 +186,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				} else {
 					// Conjugate transpose
 					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
-						ia = oA + ( l + i ) * sa1 + (j * sa2);
+						ia = oA + (( l + i ) * sa1) + (j * sa2);
 
 						// Temp = temp - conj(A(l+i,j)) * x(i)
 						ar = Av[ ia ];
@@ -213,16 +213,16 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 			}
 		} else {
 			// Lower triangular, transpose/conj-transpose: back-substitution
-			jx = kx + ( N - 1 ) * sx;
+			jx = kx + (( N - 1 ) * sx);
 			for ( j = N - 1; j >= 0; j-- ) {
 				tempR = xv[ jx ];
 				tempI = xv[ jx + 1 ];
 				l = -j;
-				ix = kx + ( N - 1 ) * sx;
+				ix = kx + (( N - 1 ) * sx);
 				if ( noconj ) {
 					// Transpose (no conjugation)
 					for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-						ia = oA + ( l + i ) * sa1 + (j * sa2);
+						ia = oA + (( l + i ) * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
 						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);
@@ -238,7 +238,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 				} else {
 					// Conjugate transpose
 					for ( i = Math.min( N - 1, j + K ); i > j; i-- ) {
-						ia = oA + ( l + i ) * sa1 + (j * sa2);
+						ia = oA + (( l + i ) * sa1) + (j * sa2);
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
 						tempR -= (ar * xv[ ix ]) - (ai * xv[ ix + 1 ]);

@@ -80,9 +80,9 @@ function dlaev2( a, b, c ) {
 
 	// Compute rt = sqrt( df^2 + (2*b)^2 ) using stable hypot-style formula
 	if ( adf > ab ) {
-		rt = adf * Math.sqrt( 1.0 + ( ab / adf ) * ( ab / adf ) );
+		rt = adf * Math.sqrt( 1.0 + (( ab / adf ) * ( ab / adf )) );
 	} else if ( adf < ab ) {
-		rt = ab * Math.sqrt( 1.0 + ( adf / ab ) * ( adf / ab ) );
+		rt = ab * Math.sqrt( 1.0 + (( adf / ab ) * ( adf / ab )) );
 	} else {
 		// adf === ab (includes adf === ab === 0)
 		rt = ab * Math.sqrt( 2.0 );
@@ -94,13 +94,13 @@ function dlaev2( a, b, c ) {
 		sgn1 = -1;
 
 		// rt2 via stable formula
-		rt2 = ( acmx / rt1 ) * acmn - ( b / rt1 ) * b;
+		rt2 = (( acmx / rt1 ) * acmn) - (( b / rt1 ) * b);
 	} else if ( sm > 0.0 ) {
 		rt1 = 0.5 * ( sm + rt );
 		sgn1 = 1;
 
 		// rt2 via stable formula
-		rt2 = ( acmx / rt1 ) * acmn - ( b / rt1 ) * b;
+		rt2 = (( acmx / rt1 ) * acmn) - (( b / rt1 ) * b);
 	} else {
 		// sm === 0: eigenvalues are +/- rt/2
 		rt1 = 0.5 * rt;

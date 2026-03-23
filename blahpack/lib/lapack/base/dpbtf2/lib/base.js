@@ -104,7 +104,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				// AB(KD, J+2) in 0-based: (kd-1)*sa1 + (j+1)*sa2
 				// Stride = KLD (stepping diagonally along the band)
 				dscal( kn, 1.0 / ajj,
-					AB, kld, offsetAB + ( kd - 1 ) * sa1 + ( j + 1 ) * sa2
+					AB, kld, offsetAB + (( kd - 1 ) * sa1) + (( j + 1 ) * sa2)
 				);
 
 				// DSYR('Upper', KN, -1, AB(KD, J+2), KLD, AB(KD+1, J+2), KLD)
@@ -119,8 +119,8 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 
 				//   strideA2 = kld (step between columns = LDAB-1)
 				dsyr( 'upper', kn, -1.0,
-					AB, kld, offsetAB + ( kd - 1 ) * sa1 + ( j + 1 ) * sa2,
-					AB, sa1, kld, offsetAB + (kd * sa1) + ( j + 1 ) * sa2
+					AB, kld, offsetAB + (( kd - 1 ) * sa1) + (( j + 1 ) * sa2),
+					AB, sa1, kld, offsetAB + (kd * sa1) + (( j + 1 ) * sa2)
 				);
 			}
 		}
@@ -151,7 +151,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				// Dsyr matrix: strideA1 = sa1, strideA2 = kld
 				dsyr( 'lower', kn, -1.0,
 					AB, sa1, offsetAB + sa1 + (j * sa2),
-					AB, sa1, kld, offsetAB + ( j + 1 ) * sa2
+					AB, sa1, kld, offsetAB + (( j + 1 ) * sa2)
 				);
 			}
 		}

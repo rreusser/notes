@@ -164,7 +164,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	while ( l1 < N ) {
 		// Zero out the subdiagonal element below l1 if l1 > 0
 		if ( l1 > 0 ) {
-			e[ offsetE + ( l1 - 1 ) * strideE ] = 0.0;
+			e[ offsetE + (( l1 - 1 ) * strideE) ] = 0.0;
 		}
 
 		// Find end of unreduced block
@@ -175,7 +175,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				if ( tst === 0.0 ) {
 					break;
 				}
-				if ( tst <= ( Math.sqrt( Math.abs( d[ offsetD + (m * strideD) ] ) ) * Math.sqrt( Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) ) ) * eps ) {
+				if ( tst <= ( Math.sqrt( Math.abs( d[ offsetD + (m * strideD) ] ) ) * Math.sqrt( Math.abs( d[ offsetD + (( m + 1 ) * strideD) ] ) ) ) * eps ) {
 					e[ offsetE + (m * strideE) ] = 0.0;
 					break;
 				}
@@ -223,7 +223,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					for ( m = l; m <= lend - 1; m++ ) {
 						tst = Math.abs( e[ offsetE + (m * strideE) ] );
 						tst *= tst;
-						if ( tst <= ( eps2 * Math.abs( d[ offsetD + (m * strideD) ] ) ) * Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) + safmin ) {
+						if ( tst <= (eps2 * Math.abs( d[ offsetD + (m * strideD) ] ) * Math.abs( d[ offsetD + (( m + 1 ) * strideD) ] )) + safmin ) {
 							break;
 						}
 					}
@@ -252,20 +252,20 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// 2x2 block
 				if ( m === l + 1 ) {
 					if ( icompz > 0 ) {
-						obj = dlaev2( d[ offsetD + (l * strideD) ], e[ offsetE + (l * strideE) ], d[ offsetD + ( l + 1 ) * strideD ] );
+						obj = dlaev2( d[ offsetD + (l * strideD) ], e[ offsetE + (l * strideE) ], d[ offsetD + (( l + 1 ) * strideD) ] );
 						WORK[ offsetWORK + (l * strideWORK) ] = obj.cs1;
-						WORK[ offsetWORK + ( N - 1 + l ) * strideWORK ] = obj.sn1;
+						WORK[ offsetWORK + (( N - 1 + l ) * strideWORK) ] = obj.sn1;
 						zlasr( 'right', 'variable', 'backward', N, 2,
 							WORK, strideWORK, offsetWORK + (l * strideWORK),
-							WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
+							WORK, strideWORK, offsetWORK + (( N - 1 + l ) * strideWORK),
 							Z, strideZ1, strideZ2, offsetZ + (l * strideZ2)
 						);
 						d[ offsetD + (l * strideD) ] = obj.rt1;
-						d[ offsetD + ( l + 1 ) * strideD ] = obj.rt2;
+						d[ offsetD + (( l + 1 ) * strideD) ] = obj.rt2;
 					} else {
-						obj = dlae2( d[ offsetD + (l * strideD) ], e[ offsetE + (l * strideE) ], d[ offsetD + ( l + 1 ) * strideD ] );
+						obj = dlae2( d[ offsetD + (l * strideD) ], e[ offsetE + (l * strideE) ], d[ offsetD + (( l + 1 ) * strideD) ] );
 						d[ offsetD + (l * strideD) ] = obj.rt1;
-						d[ offsetD + ( l + 1 ) * strideD ] = obj.rt2;
+						d[ offsetD + (( l + 1 ) * strideD) ] = obj.rt2;
 					}
 					e[ offsetE + (l * strideE) ] = 0.0;
 					l += 2;
@@ -281,7 +281,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				jtot += 1;
 
 				// Form shift
-				g = ( d[ offsetD + ( l + 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + (l * strideE) ] );
+				g = ( d[ offsetD + (( l + 1 ) * strideD) ] - p ) / ( 2.0 * e[ offsetE + (l * strideE) ] );
 				r = dlapy2( g, 1.0 );
 				g = d[ offsetD + (m * strideD) ] - p + ( e[ offsetE + (l * strideE) ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
@@ -298,18 +298,18 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					s = rot[ 1 ];
 					r = rot[ 2 ];
 					if ( i !== m - 1 ) {
-						e[ offsetE + ( i + 1 ) * strideE ] = r;
+						e[ offsetE + (( i + 1 ) * strideE) ] = r;
 					}
-					g = d[ offsetD + ( i + 1 ) * strideD ] - p;
-					r = ( d[ offsetD + (i * strideD) ] - g ) * s + (2.0 * c) * b;
+					g = d[ offsetD + (( i + 1 ) * strideD) ] - p;
+					r = (( d[ offsetD + (i * strideD) ] - g ) * s) + ((2.0 * c) * b);
 					p = s * r;
-					d[ offsetD + ( i + 1 ) * strideD ] = g + p;
+					d[ offsetD + (( i + 1 ) * strideD) ] = g + p;
 					g = (c * r) - b;
 
 					// Save rotations for eigenvector update
 					if ( icompz > 0 ) {
 						WORK[ offsetWORK + (i * strideWORK) ] = c;
-						WORK[ offsetWORK + ( N - 1 + i ) * strideWORK ] = -s;
+						WORK[ offsetWORK + (( N - 1 + i ) * strideWORK) ] = -s;
 					}
 				}
 
@@ -318,7 +318,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					mm = m - l + 1;
 					zlasr( 'right', 'variable', 'backward', N, mm,
 						WORK, strideWORK, offsetWORK + (l * strideWORK),
-						WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
+						WORK, strideWORK, offsetWORK + (( N - 1 + l ) * strideWORK),
 						Z, strideZ1, strideZ2, offsetZ + (l * strideZ2)
 					);
 				}
@@ -332,9 +332,9 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Find small subdiagonal element
 				if ( l !== lend ) {
 					for ( m = l; m >= lend + 1; m-- ) {
-						tst = Math.abs( e[ offsetE + ( m - 1 ) * strideE ] );
+						tst = Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] );
 						tst *= tst;
-						if ( tst <= ( eps2 * Math.abs( d[ offsetD + (m * strideD) ] ) ) * Math.abs( d[ offsetD + ( m - 1 ) * strideD ] ) + safmin ) {
+						if ( tst <= (eps2 * Math.abs( d[ offsetD + (m * strideD) ] ) * Math.abs( d[ offsetD + (( m - 1 ) * strideD) ] )) + safmin ) {
 							break;
 						}
 					}
@@ -346,7 +346,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				}
 
 				if ( m > lend ) {
-					e[ offsetE + ( m - 1 ) * strideE ] = 0.0;
+					e[ offsetE + (( m - 1 ) * strideE) ] = 0.0;
 				}
 				p = d[ offsetD + (l * strideD) ];
 
@@ -363,22 +363,22 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// 2x2 block
 				if ( m === l - 1 ) {
 					if ( icompz > 0 ) {
-						obj = dlaev2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + (l * strideD) ] );
+						obj = dlaev2( d[ offsetD + (( l - 1 ) * strideD) ], e[ offsetE + (( l - 1 ) * strideE) ], d[ offsetD + (l * strideD) ] );
 						WORK[ offsetWORK + (m * strideWORK) ] = obj.cs1;
-						WORK[ offsetWORK + ( N - 1 + m ) * strideWORK ] = obj.sn1;
+						WORK[ offsetWORK + (( N - 1 + m ) * strideWORK) ] = obj.sn1;
 						zlasr( 'right', 'variable', 'forward', N, 2,
 							WORK, strideWORK, offsetWORK + (m * strideWORK),
-							WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
-							Z, strideZ1, strideZ2, offsetZ + ( l - 1 ) * strideZ2
+							WORK, strideWORK, offsetWORK + (( N - 1 + m ) * strideWORK),
+							Z, strideZ1, strideZ2, offsetZ + (( l - 1 ) * strideZ2)
 						);
-						d[ offsetD + ( l - 1 ) * strideD ] = obj.rt1;
+						d[ offsetD + (( l - 1 ) * strideD) ] = obj.rt1;
 						d[ offsetD + (l * strideD) ] = obj.rt2;
 					} else {
-						obj = dlae2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + (l * strideD) ] );
-						d[ offsetD + ( l - 1 ) * strideD ] = obj.rt1;
+						obj = dlae2( d[ offsetD + (( l - 1 ) * strideD) ], e[ offsetE + (( l - 1 ) * strideE) ], d[ offsetD + (l * strideD) ] );
+						d[ offsetD + (( l - 1 ) * strideD) ] = obj.rt1;
 						d[ offsetD + (l * strideD) ] = obj.rt2;
 					}
-					e[ offsetE + ( l - 1 ) * strideE ] = 0.0;
+					e[ offsetE + (( l - 1 ) * strideE) ] = 0.0;
 					l -= 2;
 					if ( l >= lend ) {
 						continue;
@@ -392,9 +392,9 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				jtot += 1;
 
 				// Form shift
-				g = ( d[ offsetD + ( l - 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + ( l - 1 ) * strideE ] );
+				g = ( d[ offsetD + (( l - 1 ) * strideD) ] - p ) / ( 2.0 * e[ offsetE + (( l - 1 ) * strideE) ] );
 				r = dlapy2( g, 1.0 );
-				g = d[ offsetD + (m * strideD) ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
+				g = d[ offsetD + (m * strideD) ] - p + ( e[ offsetE + (( l - 1 ) * strideE) ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
 				s = 1.0;
 				c = 1.0;
@@ -409,10 +409,10 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					s = rot[ 1 ];
 					r = rot[ 2 ];
 					if ( i !== m ) {
-						e[ offsetE + ( i - 1 ) * strideE ] = r;
+						e[ offsetE + (( i - 1 ) * strideE) ] = r;
 					}
 					g = d[ offsetD + (i * strideD) ] - p;
-					r = ( d[ offsetD + ( i + 1 ) * strideD ] - g ) * s + (2.0 * c) * b;
+					r = (( d[ offsetD + (( i + 1 ) * strideD) ] - g ) * s) + ((2.0 * c) * b);
 					p = s * r;
 					d[ offsetD + (i * strideD) ] = g + p;
 					g = (c * r) - b;
@@ -420,7 +420,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					// Save rotations for eigenvector update
 					if ( icompz > 0 ) {
 						WORK[ offsetWORK + (i * strideWORK) ] = c;
-						WORK[ offsetWORK + ( N - 1 + i ) * strideWORK ] = s;
+						WORK[ offsetWORK + (( N - 1 + i ) * strideWORK) ] = s;
 					}
 				}
 
@@ -429,13 +429,13 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					mm = l - m + 1;
 					zlasr( 'right', 'variable', 'forward', N, mm,
 						WORK, strideWORK, offsetWORK + (m * strideWORK),
-						WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
+						WORK, strideWORK, offsetWORK + (( N - 1 + m ) * strideWORK),
 						Z, strideZ1, strideZ2, offsetZ + (m * strideZ2)
 					);
 				}
 
 				d[ offsetD + (l * strideD) ] -= p;
-				e[ offsetE + ( l - 1 ) * strideE ] = g;
+				e[ offsetE + (( l - 1 ) * strideE) ] = g;
 			}
 		}
 

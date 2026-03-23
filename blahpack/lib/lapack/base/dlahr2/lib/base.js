@@ -74,52 +74,52 @@ function dlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 		if ( i > 0 ) {
 			// Update A(K+1:N, I) — subtract Y * V^T contribution
 			// Fortran: DGEMV('NO TRANSPOSE', N-K, I-1, -1, Y(K+1,1), LDY, A(K+I-1,1), LDA, 1, A(K+1,I), 1)
-			dgemv( 'no-transpose', N - K, i, -1.0, Y, strideY, ldY, offsetY + (K * strideY), A, strideA2, offsetA + ( K + i - 1 ) * strideA1, 1.0, A, strideA1, offsetA + (K * strideA1) + (i * strideA2) );
+			dgemv( 'no-transpose', N - K, i, -1.0, Y, strideY, ldY, offsetY + (K * strideY), A, strideA2, offsetA + (( K + i - 1 ) * strideA1), 1.0, A, strideA1, offsetA + (K * strideA1) + (i * strideA2) );
 
 			// Compute w := V1^T * b1 — copy first i elements of column i of A(K+1:,:) into T(:,NB)
 			// Fortran: DCOPY(I-1, A(K+1,I), 1, T(1,NB), 1)
-			dcopy( i, A, strideA1, offsetA + (K * strideA1) + (i * strideA2), T, strideT, offsetT + ( nb - 1 ) * ldT );
+			dcopy( i, A, strideA1, offsetA + (K * strideA1) + (i * strideA2), T, strideT, offsetT + (( nb - 1 ) * ldT) );
 
 			// Fortran: DTRMV('Lower', 'Transpose', 'UNIT', I-1, A(K+1,1), LDA, T(1,NB), 1)
-			dtrmv( 'lower', 'transpose', 'unit', i, A, strideA1, strideA2, offsetA + (K * strideA1), T, strideT, offsetT + ( nb - 1 ) * ldT );
+			dtrmv( 'lower', 'transpose', 'unit', i, A, strideA1, strideA2, offsetA + (K * strideA1), T, strideT, offsetT + (( nb - 1 ) * ldT) );
 
 			// Update w := w + V2^T * b2
 			// Fortran: DGEMV('Transpose', N-K-I+1, I-1, 1, A(K+I,1), LDA, A(K+I,I), 1, 1, T(1,NB), 1)
-			dgemv( 'transpose', N - K - i, i, 1.0, A, strideA1, strideA2, offsetA + ( K + i ) * strideA1, A, strideA1, offsetA + ( K + i ) * strideA1 + (i * strideA2), 1.0, T, strideT, offsetT + ( nb - 1 ) * ldT );
+			dgemv( 'transpose', N - K - i, i, 1.0, A, strideA1, strideA2, offsetA + (( K + i ) * strideA1), A, strideA1, offsetA + (( K + i ) * strideA1) + (i * strideA2), 1.0, T, strideT, offsetT + (( nb - 1 ) * ldT) );
 
 			// Apply w := T^T * w
 			// Fortran: DTRMV('Upper', 'Transpose', 'NON-UNIT', I-1, T, LDT, T(1,NB), 1)
-			dtrmv( 'upper', 'transpose', 'non-unit', i, T, strideT, ldT, offsetT, T, strideT, offsetT + ( nb - 1 ) * ldT );
+			dtrmv( 'upper', 'transpose', 'non-unit', i, T, strideT, ldT, offsetT, T, strideT, offsetT + (( nb - 1 ) * ldT) );
 
 			// b2 := b2 - V2*w
 			// Fortran: DGEMV('NO TRANSPOSE', N-K-I+1, I-1, -1, A(K+I,1), LDA, T(1,NB), 1, 1, A(K+I,I), 1)
-			dgemv( 'no-transpose', N - K - i, i, -1.0, A, strideA1, strideA2, offsetA + ( K + i ) * strideA1, T, strideT, offsetT + ( nb - 1 ) * ldT, 1.0, A, strideA1, offsetA + ( K + i ) * strideA1 + (i * strideA2) );
+			dgemv( 'no-transpose', N - K - i, i, -1.0, A, strideA1, strideA2, offsetA + (( K + i ) * strideA1), T, strideT, offsetT + (( nb - 1 ) * ldT), 1.0, A, strideA1, offsetA + (( K + i ) * strideA1) + (i * strideA2) );
 
 			// b1 := b1 - V1*w
 			// Fortran: DTRMV('Lower', 'NO TRANSPOSE', 'UNIT', I-1, A(K+1,1), LDA, T(1,NB), 1)
-			dtrmv( 'lower', 'no-transpose', 'unit', i, A, strideA1, strideA2, offsetA + (K * strideA1), T, strideT, offsetT + ( nb - 1 ) * ldT );
+			dtrmv( 'lower', 'no-transpose', 'unit', i, A, strideA1, strideA2, offsetA + (K * strideA1), T, strideT, offsetT + (( nb - 1 ) * ldT) );
 
 			// Fortran: DAXPY(I-1, -1, T(1,NB), 1, A(K+1,I), 1)
-			daxpy( i, -1.0, T, strideT, offsetT + ( nb - 1 ) * ldT, A, strideA1, offsetA + (K * strideA1) + (i * strideA2) );
+			daxpy( i, -1.0, T, strideT, offsetT + (( nb - 1 ) * ldT), A, strideA1, offsetA + (K * strideA1) + (i * strideA2) );
 
 			// A(K+I-1, I-1) = EI — restore saved subdiagonal element
-			A[ offsetA + ( K + i - 1 ) * strideA1 + ( i - 1 ) * strideA2 ] = ei;
+			A[ offsetA + (( K + i - 1 ) * strideA1) + (( i - 1 ) * strideA2) ] = ei;
 		}
 
 		// Generate elementary reflector H(i) to annihilate A(K+I+1:N, I)
 		// Fortran: DLARFG(N-K-I+1, A(K+I,I), A(MIN(K+I+1,N),I), 1, TAU(I))
-		dlarfg( N - K - i, A, offsetA + ( K + i ) * strideA1 + (i * strideA2), A, strideA1, offsetA + Math.min( K + i + 1, N - 1 ) * strideA1 + (i * strideA2), tau, offsetTAU + (i * strideTAU) );
+		dlarfg( N - K - i, A, offsetA + (( K + i ) * strideA1) + (i * strideA2), A, strideA1, offsetA + (Math.min( K + i + 1, N - 1 ) * strideA1) + (i * strideA2), tau, offsetTAU + (i * strideTAU) );
 
 		// Save subdiagonal element and set to 1 for reflector computation
-		ei = A[ offsetA + ( K + i ) * strideA1 + (i * strideA2) ];
-		A[ offsetA + ( K + i ) * strideA1 + (i * strideA2) ] = 1.0;
+		ei = A[ offsetA + (( K + i ) * strideA1) + (i * strideA2) ];
+		A[ offsetA + (( K + i ) * strideA1) + (i * strideA2) ] = 1.0;
 
 		// Compute Y(K+1:N, I)
 		// Fortran: DGEMV('NO TRANSPOSE', N-K, N-K-I+1, 1, A(K+1,I+1), LDA, A(K+I,I), 1, 0, Y(K+1,I), 1)
-		dgemv( 'no-transpose', N - K, N - K - i, 1.0, A, strideA1, strideA2, offsetA + (K * strideA1) + ( i + 1 ) * strideA2, A, strideA1, offsetA + ( K + i ) * strideA1 + (i * strideA2), 0.0, Y, strideY, offsetY + (K * strideY) + (i * ldY) );
+		dgemv( 'no-transpose', N - K, N - K - i, 1.0, A, strideA1, strideA2, offsetA + (K * strideA1) + (( i + 1 ) * strideA2), A, strideA1, offsetA + (( K + i ) * strideA1) + (i * strideA2), 0.0, Y, strideY, offsetY + (K * strideY) + (i * ldY) );
 
 		// Fortran: DGEMV('Transpose', N-K-I+1, I-1, 1, A(K+I,1), LDA, A(K+I,I), 1, 0, T(1,I), 1)
-		dgemv( 'transpose', N - K - i, i, 1.0, A, strideA1, strideA2, offsetA + ( K + i ) * strideA1, A, strideA1, offsetA + ( K + i ) * strideA1 + (i * strideA2), 0.0, T, strideT, offsetT + (i * ldT) );
+		dgemv( 'transpose', N - K - i, i, 1.0, A, strideA1, strideA2, offsetA + (( K + i ) * strideA1), A, strideA1, offsetA + (( K + i ) * strideA1) + (i * strideA2), 0.0, T, strideT, offsetT + (i * ldT) );
 
 		// Fortran: DGEMV('NO TRANSPOSE', N-K, I-1, -1, Y(K+1,1), LDY, T(1,I), 1, 1, Y(K+1,I), 1)
 		dgemv( 'no-transpose', N - K, i, -1.0, Y, strideY, ldY, offsetY + (K * strideY), T, strideT, offsetT + (i * ldT), 1.0, Y, strideY, offsetY + (K * strideY) + (i * ldY) );
@@ -140,7 +140,7 @@ function dlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 
 	// Restore last saved subdiagonal element
 	// Fortran: A(K+NB, NB) = EI
-	A[ offsetA + ( K + nb - 1 ) * strideA1 + ( nb - 1 ) * strideA2 ] = ei;
+	A[ offsetA + (( K + nb - 1 ) * strideA1) + (( nb - 1 ) * strideA2) ] = ei;
 
 	// Compute Y(1:K, 1:NB)
 	// Fortran: DLACPY('ALL', K, NB, A(1,2), LDA, Y, LDY)
@@ -151,7 +151,7 @@ function dlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 
 	if ( N > K + nb ) {
 		// Fortran: DGEMM('NO TRANSPOSE', 'NO TRANSPOSE', K, NB, N-K-NB, 1, A(1,2+NB), LDA, A(K+1+NB,1), LDA, 1, Y, LDY)
-		dgemm( 'no-transpose', 'no-transpose', K, nb, N - K - nb, 1.0, A, strideA1, strideA2, offsetA + ( 1 + nb ) * strideA2, A, strideA1, strideA2, offsetA + ( K + nb ) * strideA1, 1.0, Y, strideY, ldY, offsetY );
+		dgemm( 'no-transpose', 'no-transpose', K, nb, N - K - nb, 1.0, A, strideA1, strideA2, offsetA + (( 1 + nb ) * strideA2), A, strideA1, strideA2, offsetA + (( K + nb ) * strideA1), 1.0, Y, strideY, ldY, offsetY );
 	}
 
 	// Fortran: DTRMM('RIGHT', 'Upper', 'NO TRANSPOSE', 'NON-UNIT', K, NB, 1, T, LDT, Y, LDY)

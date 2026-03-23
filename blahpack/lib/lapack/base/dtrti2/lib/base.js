@@ -83,9 +83,9 @@ function dtrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			if ( j < N - 1 ) {
 				// Compute elements j+1:N-1 of j-th column
 				dtrmv( 'lower', 'no-transpose', diag, N - j - 1,
-					A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + ( j + 1 ) * sa2,
-					A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
-				dscal( N - j - 1, ajj, A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
+					A, sa1, sa2, offsetA + (( j + 1 ) * sa1) + (( j + 1 ) * sa2),
+					A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2) );
+				dscal( N - j - 1, ajj, A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2) );
 			}
 		}
 	}

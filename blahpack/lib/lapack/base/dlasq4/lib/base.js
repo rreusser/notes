@@ -76,7 +76,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 
 	// Helper: access Z using 1-based Fortran index
 	function Z( idx ) {
-		return z[ offset + ( idx - 1 ) * stride ];
+		return z[ offset + (( idx - 1 ) * stride) ];
 	}
 
 	// A negative DMIN forces the shift to take that absolute value.
@@ -204,7 +204,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 					'g': g
 				};
 			}
-			a2 = ( Z( np - 8 ) / b2 ) * ( 1.0 + Z( np - 4 ) / b1 );
+			a2 = ( Z( np - 8 ) / b2 ) * ( 1.0 + (Z( np - 4 ) / b1) );
 
 			// Approximate contribution to norm squared from I < NN-2.
 			if ( n0 - i0 > 2 ) {
@@ -282,7 +282,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			a2 = dmin1 / ( 1.0 + (b2 * b2) );
 			gap2 = (HALF * dmin2) - a2;
 			if ( gap2 > 0.0 && gap2 > b2 * a2 ) {
-				s = Math.max( s, a2 * ( 1.0 - (CNST2 * a2) * ( b2 / gap2 ) * b2 ) );
+				s = Math.max( s, a2 * ( 1.0 - ((CNST2 * a2) * ( b2 / gap2 ) * b2) ) );
 			} else {
 				s = Math.max( s, a2 * ( 1.0 - (CNST2 * b2) ) );
 				ttype = -8;
@@ -329,9 +329,9 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			b2 = Math.sqrt( CNST3 * b2 );
 			a2 = dmin2 / ( 1.0 + (b2 * b2) );
 			gap2 = Z( nn - 7 ) + Z( nn - 9 ) -
-				Math.sqrt( Z( nn - 11 ) ) * Math.sqrt( Z( nn - 9 ) ) - a2;
+				(Math.sqrt( Z( nn - 11 ) ) * Math.sqrt( Z( nn - 9 ) )) - a2;
 			if ( gap2 > 0.0 && gap2 > b2 * a2 ) {
-				s = Math.max( s, a2 * ( 1.0 - (CNST2 * a2) * ( b2 / gap2 ) * b2 ) );
+				s = Math.max( s, a2 * ( 1.0 - ((CNST2 * a2) * ( b2 / gap2 ) * b2) ) );
 			} else {
 				s = Math.max( s, a2 * ( 1.0 - (CNST2 * b2) ) );
 			}

@@ -42,8 +42,8 @@ function iladlr( M, N, A, strideA1, strideA2, offsetA ) {
 	}
 
 	// Quick test for the common case where one corner is non-zero.
-	if ( A[ offsetA + ( M - 1 ) * strideA1 ] !== 0.0 ||
-		A[ offsetA + ( M - 1 ) * strideA1 + ( N - 1 ) * strideA2 ] !== 0.0 ) {
+	if ( A[ offsetA + (( M - 1 ) * strideA1) ] !== 0.0 ||
+		A[ offsetA + (( M - 1 ) * strideA1) + (( N - 1 ) * strideA2) ] !== 0.0 ) {
 		return M - 1;
 	}
 

@@ -116,8 +116,8 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// Replace column j of A with inv(U)*(-L_j) + e_j
 			if ( j < N - 1 ) {
 				dgemv( 'no-transpose', N, N - j - 1, -1.0,
-					A, sa1, sa2, offsetA + ( j + 1 ) * sa2,
-					WORK, strideWORK, offsetWORK + ( j + 1 ) * strideWORK,
+					A, sa1, sa2, offsetA + (( j + 1 ) * sa2),
+					WORK, strideWORK, offsetWORK + (( j + 1 ) * strideWORK),
 					1.0,
 					A, sa1, offsetA + (j * sa2) );
 			}
@@ -131,7 +131,7 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// Copy block of L (below diagonal) into WORK and zero it in A
 			for ( jj = j; jj < j + jb; jj++ ) {
 				for ( i = jj + 1; i < N; i++ ) {
-					WORK[ offsetWORK + i + ( jj - j ) * ldwork ] = A[ offsetA + (i * sa1) + (jj * sa2) ];
+					WORK[ offsetWORK + i + (( jj - j ) * ldwork) ] = A[ offsetA + (i * sa1) + (jj * sa2) ];
 					A[ offsetA + (i * sa1) + (jj * sa2) ] = 0.0;
 				}
 			}
@@ -139,7 +139,7 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// Update the current block column with trailing columns
 			if ( j + jb < N ) {
 				dgemm( 'no-transpose', 'no-transpose', N, jb, N - j - jb, -1.0,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
+					A, sa1, sa2, offsetA + (( j + jb ) * sa2),
 					WORK, 1, ldwork, offsetWORK + ( j + jb ),
 					1.0,
 					A, sa1, sa2, offsetA + (j * sa2) );

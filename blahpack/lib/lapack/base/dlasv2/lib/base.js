@@ -189,10 +189,10 @@ function dlasv2( f, g, h ) {
 				if ( l === 0.0 ) {
 					t = sign( 2.0, ft ) * sign( 1.0, gt );
 				} else {
-					t = gt / sign( d, ft ) + (m / t);
+					t = (gt / sign( d, ft )) + (m / t);
 				}
 			} else {
-				t = ( m / ( s + t ) + m / ( r + l ) ) * ( 1.0 + a );
+				t = ( (m / ( s + t )) + (m / ( r + l )) ) * ( 1.0 + a );
 			}
 			l = Math.sqrt( (t * t) + 4.0 );
 			crt = 2.0 / l;

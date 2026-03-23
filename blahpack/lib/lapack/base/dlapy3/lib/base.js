@@ -52,7 +52,7 @@ function dlapy3( x, y, z ) {
 		// NaN will not disappear.
 		return xabs + yabs + zabs;
 	}
-	return w * Math.sqrt( ( xabs / w ) * ( xabs / w ) + ( yabs / w ) * ( yabs / w ) + ( zabs / w ) * ( zabs / w ) );
+	return w * Math.sqrt( (( xabs / w ) * ( xabs / w )) + (( yabs / w ) * ( yabs / w )) + (( zabs / w ) * ( zabs / w )) );
 }
 
 

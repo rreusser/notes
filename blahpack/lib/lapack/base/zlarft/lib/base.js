@@ -154,8 +154,8 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					if ( jj - i - 1 > 0 ) {
 						negTau = new Complex128( negTauR, negTauI );
 						zgemv( 'conjugate-transpose', jj - i - 1, i, negTau,
-							V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV1,
-							V, strideV1, offsetV + ( i + 1 ) * strideV1 + (i * strideV2),
+							V, strideV1, strideV2, offsetV + (( i + 1 ) * strideV1),
+							V, strideV1, offsetV + (( i + 1 ) * strideV1) + (i * strideV2),
 							ONE,
 							T, strideT1, offsetT + (i * strideT2) );
 					}
@@ -188,8 +188,8 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					if ( jj - i - 1 > 0 ) {
 						var negTauR2 = new Complex128( negTauR, negTauI );
 						zgemm( 'no-transpose', 'conjugate-transpose', i, 1, jj - i - 1, negTauR2,
-							V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV2,
-							V, strideV1, strideV2, offsetV + (i * strideV1) + ( i + 1 ) * strideV2,
+							V, strideV1, strideV2, offsetV + (( i + 1 ) * strideV2),
+							V, strideV1, strideV2, offsetV + (i * strideV1) + (( i + 1 ) * strideV2),
 							ONE, T, strideT1, strideT2, offsetT + (i * strideT2) );
 					}
 				}
@@ -242,7 +242,7 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						negTauR = -tauR;
 						negTauI = -tauI;
 						for ( j = i + 1; j < K; j++ ) {
-							iv = oV + ( N - K + i ) * sv1 + (j * sv2);
+							iv = oV + (( N - K + i ) * sv1) + (j * sv2);
 							vr = Vv[ iv ];
 							vi = -Vv[ iv + 1 ]; // conjugate
 							it = oT + (j * st1) + (i * st2);
@@ -255,10 +255,10 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						if ( N - K + i - jj > 0 ) {
 							var negTauB = new Complex128( negTauR, negTauI );
 							zgemv( 'conjugate-transpose', N - K + i - jj, K - i - 1, negTauB,
-								V, strideV1, strideV2, offsetV + (jj * strideV1) + ( i + 1 ) * strideV2,
+								V, strideV1, strideV2, offsetV + (jj * strideV1) + (( i + 1 ) * strideV2),
 								V, strideV1, offsetV + (jj * strideV1) + (i * strideV2),
 								ONE,
-								T, strideT1, offsetT + ( i + 1 ) * strideT1 + (i * strideT2) );
+								T, strideT1, offsetT + (( i + 1 ) * strideT1) + (i * strideT2) );
 						}
 					} else {
 						// Row-wise storage: V(i,:) holds reflector i
@@ -276,7 +276,7 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						negTauR = -tauR;
 						negTauI = -tauI;
 						for ( j = i + 1; j < K; j++ ) {
-							iv = oV + (j * sv1) + ( N - K + i ) * sv2;
+							iv = oV + (j * sv1) + (( N - K + i ) * sv2);
 							vr = Vv[ iv ];
 							vi = Vv[ iv + 1 ];
 							it = oT + (j * st1) + (i * st2);
@@ -289,16 +289,16 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						if ( N - K + i - jj > 0 ) {
 							var negTauB2 = new Complex128( negTauR, negTauI );
 							zgemm( 'no-transpose', 'conjugate-transpose', K - i - 1, 1, N - K + i - jj, negTauB2,
-								V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV1 + (jj * strideV2),
+								V, strideV1, strideV2, offsetV + (( i + 1 ) * strideV1) + (jj * strideV2),
 								V, strideV1, strideV2, offsetV + (i * strideV1) + (jj * strideV2),
-								ONE, T, strideT1, strideT2, offsetT + ( i + 1 ) * strideT1 + (i * strideT2) );
+								ONE, T, strideT1, strideT2, offsetT + (( i + 1 ) * strideT1) + (i * strideT2) );
 						}
 					}
 
 					// T(i+1:K-1, i) := T(i+1:K-1, i+1:K-1) * T(i+1:K-1, i)
 					ztrmv( 'lower', 'no-transpose', 'non-unit', K - i - 1, T, strideT1, strideT2,
-						offsetT + ( i + 1 ) * strideT1 + ( i + 1 ) * strideT2,
-						T, strideT1, offsetT + ( i + 1 ) * strideT1 + (i * strideT2) );
+						offsetT + (( i + 1 ) * strideT1) + (( i + 1 ) * strideT2),
+						T, strideT1, offsetT + (( i + 1 ) * strideT1) + (i * strideT2) );
 					if ( i > 0 ) {
 						prevlastv = Math.min( prevlastv, lastv );
 					} else {

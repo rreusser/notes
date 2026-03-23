@@ -155,7 +155,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			// Conjugate F(k, 0:k-1) in place
 			for ( j = 0; j < k; j++ ) {
 				// F(k, j): conjugate imaginary part
-				Fv[ oF + 2 * ( (k * sf1) + (j * sf2) ) + 1 ] = -Fv[ oF + 2 * ( (k * sf1) + (j * sf2) ) + 1 ];
+				Fv[ oF + (2 * ( (k * sf1) + (j * sf2) )) + 1 ] = -Fv[ oF + (2 * ( (k * sf1) + (j * sf2) )) + 1 ];
 			}
 
 			// A(rk:M-1, k) += -1 * A(rk:M-1, 0:k-1) * F(k, 0:k-1)^T
@@ -170,7 +170,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 
 			// Un-conjugate F(k, 0:k-1)
 			for ( j = 0; j < k; j++ ) {
-				Fv[ oF + 2 * ( (k * sf1) + (j * sf2) ) + 1 ] = -Fv[ oF + 2 * ( (k * sf1) + (j * sf2) ) + 1 ];
+				Fv[ oF + (2 * ( (k * sf1) + (j * sf2) )) + 1 ] = -Fv[ oF + (2 * ( (k * sf1) + (j * sf2) )) + 1 ];
 			}
 		}
 
@@ -179,7 +179,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			zlarfg(
 				M - rk,
 				A, offsetA + (rk * sa1) + (k * sa2),
-				A, sa1, offsetA + ( rk + 1 ) * sa1 + (k * sa2),
+				A, sa1, offsetA + (( rk + 1 ) * sa1) + (k * sa2),
 				TAU, offsetTAU + (k * strideTAU)
 			);
 		} else {
@@ -192,10 +192,10 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		}
 
 		// Save A(rk, k) and set to 1 for reflector application
-		akk[ 0 ] = Av[ oA + 2 * ( (rk * sa1) + (k * sa2) ) ];
-		akk[ 1 ] = Av[ oA + 2 * ( (rk * sa1) + (k * sa2) ) + 1 ];
-		Av[ oA + 2 * ( (rk * sa1) + (k * sa2) ) ] = 1.0;
-		Av[ oA + 2 * ( (rk * sa1) + (k * sa2) ) + 1 ] = 0.0;
+		akk[ 0 ] = Av[ oA + (2 * ( (rk * sa1) + (k * sa2) )) ];
+		akk[ 1 ] = Av[ oA + (2 * ( (rk * sa1) + (k * sa2) )) + 1 ];
+		Av[ oA + (2 * ( (rk * sa1) + (k * sa2) )) ] = 1.0;
+		Av[ oA + (2 * ( (rk * sa1) + (k * sa2) )) + 1 ] = 0.0;
 
 		// Compute k-th column of F:
 
@@ -204,22 +204,22 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			// tau(k) as Complex128
 			tauK = new Complex128(
 				TAUv[ ( offsetTAU + (k * strideTAU) ) * 2 ],
-				TAUv[ ( offsetTAU + (k * strideTAU) ) * 2 + 1 ]
+				TAUv[ (( offsetTAU + (k * strideTAU) ) * 2) + 1 ]
 			);
 			zgemv(
 				'conjugate-transpose', M - rk, N - k - 1,
 				tauK,
-				A, sa1, sa2, offsetA + (rk * sa1) + ( k + 1 ) * sa2,
+				A, sa1, sa2, offsetA + (rk * sa1) + (( k + 1 ) * sa2),
 				A, sa1, offsetA + (rk * sa1) + (k * sa2),
 				CZERO,
-				F, sf1, offsetF + ( k + 1 ) * sf1 + (k * sf2)
+				F, sf1, offsetF + (( k + 1 ) * sf1) + (k * sf2)
 			);
 		}
 
 		// Zero out F(0:k, k)
 		for ( j = 0; j <= k; j++ ) {
-			Fv[ oF + 2 * ( (j * sf1) + (k * sf2) ) ] = 0.0;
-			Fv[ oF + 2 * ( (j * sf1) + (k * sf2) ) + 1 ] = 0.0;
+			Fv[ oF + (2 * ( (j * sf1) + (k * sf2) )) ] = 0.0;
+			Fv[ oF + (2 * ( (j * sf1) + (k * sf2) )) + 1 ] = 0.0;
 		}
 
 		// Update F with contribution from previous reflectors
@@ -227,7 +227,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			// AUXV(0:k-1) = -tau(k) * A(rk:M-1, 0:k-1)^H * A(rk:M-1, k)
 			negTauK = new Complex128(
 				-TAUv[ ( offsetTAU + (k * strideTAU) ) * 2 ],
-				-TAUv[ ( offsetTAU + (k * strideTAU) ) * 2 + 1 ]
+				-TAUv[ (( offsetTAU + (k * strideTAU) ) * 2) + 1 ]
 			);
 			zgemv(
 				'conjugate-transpose', M - rk, k,
@@ -255,9 +255,9 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 				'no-transpose', 'conjugate-transpose', 1, N - k - 1, k + 1,
 				NEGCONE,
 				A, sa1, sa2, offsetA + (rk * sa1),
-				F, sf1, sf2, offsetF + ( k + 1 ) * sf1,
+				F, sf1, sf2, offsetF + (( k + 1 ) * sf1),
 				CONE,
-				A, sa1, sa2, offsetA + (rk * sa1) + ( k + 1 ) * sa2
+				A, sa1, sa2, offsetA + (rk * sa1) + (( k + 1 ) * sa2)
 			);
 		}
 
@@ -265,7 +265,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		if ( rk < lastrk ) {
 			for ( j = k + 1; j < N; j++ ) {
 				if ( VN1[ offsetVN1 + (j * strideVN1) ] !== 0.0 ) {
-					temp = cmplx.absAt( Av, oA + 2 * ( (rk * sa1) + (j * sa2) ) ) / VN1[ offsetVN1 + (j * strideVN1) ];
+					temp = cmplx.absAt( Av, oA + (2 * ( (rk * sa1) + (j * sa2) )) ) / VN1[ offsetVN1 + (j * strideVN1) ];
 					temp = Math.max( 0.0, ( 1.0 + temp ) * ( 1.0 - temp ) );
 					temp2 = temp * Math.pow(
 						VN1[ offsetVN1 + (j * strideVN1) ] /
@@ -284,8 +284,8 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		}
 
 		// Restore A(rk, k)
-		Av[ oA + 2 * ( (rk * sa1) + (k * sa2) ) ] = akk[ 0 ];
-		Av[ oA + 2 * ( (rk * sa1) + (k * sa2) ) + 1 ] = akk[ 1 ];
+		Av[ oA + (2 * ( (rk * sa1) + (k * sa2) )) ] = akk[ 0 ];
+		Av[ oA + (2 * ( (rk * sa1) + (k * sa2) )) + 1 ] = akk[ 1 ];
 
 		k += 1;
 	}

@@ -151,10 +151,10 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					'no-transpose', 'transpose',
 					M - i - nb, N - i - nb, nb,
 					-1.0,
-					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (i * strideA2),
 					WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb) + nb,
 					1.0,
-					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
+					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2)
 				);
 
 				// C := -1 * X(nb:,:) * A(i:i+nb-1,i+nb:) + 1 * A(i+nb:,i+nb:)
@@ -163,9 +163,9 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					M - i - nb, N - i - nb, nb,
 					-1.0,
 					WORK, 1, ldwrkx, offsetWORK + nb,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + nb ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + nb ) * strideA2),
 					1.0,
-					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
+					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2)
 				);
 			}
 
@@ -174,13 +174,13 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				// Upper bidiagonal: D(j) -> A(j,j), E(j) -> A(j,j+1)
 				for ( j = i; j < i + nb; j++ ) {
 					A[ offsetA + (j * strideA1) + (j * strideA2) ] = d[ offsetD + (j * strideD) ];
-					A[ offsetA + (j * strideA1) + ( j + 1 ) * strideA2 ] = e[ offsetE + (j * strideE) ];
+					A[ offsetA + (j * strideA1) + (( j + 1 ) * strideA2) ] = e[ offsetE + (j * strideE) ];
 				}
 			} else {
 				// Lower bidiagonal: D(j) -> A(j,j), E(j) -> A(j+1,j)
 				for ( j = i; j < i + nb; j++ ) {
 					A[ offsetA + (j * strideA1) + (j * strideA2) ] = d[ offsetD + (j * strideD) ];
-					A[ offsetA + ( j + 1 ) * strideA1 + (j * strideA2) ] = e[ offsetE + (j * strideE) ];
+					A[ offsetA + (( j + 1 ) * strideA1) + (j * strideA2) ] = e[ offsetE + (j * strideE) ];
 				}
 			}
 

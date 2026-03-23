@@ -75,7 +75,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + ( j + 1 ) * strideA1 + (i * strideA2);
+							idx1 = offsetA + (( j + 1 ) * strideA1) + (i * strideA2);
 							idx2 = offsetA + (j * strideA1) + (i * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
@@ -90,7 +90,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = offsetA + ( j + 1 ) * strideA1 + (i * strideA2);
+							idx1 = offsetA + (( j + 1 ) * strideA1) + (i * strideA2);
 							idx2 = offsetA + (j * strideA1) + (i * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
@@ -103,8 +103,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			if ( direct === 'forward' ) {
 				// Top pivot, forward direction
 				for ( j = 1; j < M; j++ ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = offsetA + (j * strideA1) + (i * strideA2);
@@ -118,8 +118,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			} else {
 				// Top pivot, backward direction
 				for ( j = M - 1; j >= 1; j-- ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = offsetA + (j * strideA1) + (i * strideA2);
@@ -140,7 +140,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = offsetA + (j * strideA1) + (i * strideA2);
-							idx2 = offsetA + ( M - 1 ) * strideA1 + (i * strideA2);
+							idx2 = offsetA + (( M - 1 ) * strideA1) + (i * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
 							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);
@@ -155,7 +155,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = offsetA + (j * strideA1) + (i * strideA2);
-							idx2 = offsetA + ( M - 1 ) * strideA1 + (i * strideA2);
+							idx2 = offsetA + (( M - 1 ) * strideA1) + (i * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
 							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);
@@ -174,7 +174,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + (i * strideA1) + ( j + 1 ) * strideA2;
+							idx1 = offsetA + (i * strideA1) + (( j + 1 ) * strideA2);
 							idx2 = offsetA + (i * strideA1) + (j * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
@@ -189,7 +189,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = offsetA + (i * strideA1) + ( j + 1 ) * strideA2;
+							idx1 = offsetA + (i * strideA1) + (( j + 1 ) * strideA2);
 							idx2 = offsetA + (i * strideA1) + (j * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (ctemp * temp) - (stemp * A[ idx2 ]);
@@ -202,8 +202,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			if ( direct === 'forward' ) {
 				// Top pivot, forward direction
 				for ( j = 1; j < N; j++ ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = offsetA + (i * strideA1) + (j * strideA2);
@@ -217,8 +217,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 			} else {
 				// Top pivot, backward direction
 				for ( j = N - 1; j >= 1; j-- ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = offsetA + (i * strideA1) + (j * strideA2);
@@ -239,7 +239,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = offsetA + (i * strideA1) + (j * strideA2);
-							idx2 = offsetA + (i * strideA1) + ( N - 1 ) * strideA2;
+							idx2 = offsetA + (i * strideA1) + (( N - 1 ) * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
 							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);
@@ -254,7 +254,7 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = offsetA + (i * strideA1) + (j * strideA2);
-							idx2 = offsetA + (i * strideA1) + ( N - 1 ) * strideA2;
+							idx2 = offsetA + (i * strideA1) + (( N - 1 ) * strideA2);
 							temp = A[ idx1 ];
 							A[ idx1 ] = (stemp * A[ idx2 ]) + (ctemp * temp);
 							A[ idx2 ] = (ctemp * A[ idx2 ]) - (stemp * temp);

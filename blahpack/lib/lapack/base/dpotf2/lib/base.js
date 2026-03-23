@@ -73,13 +73,13 @@ function dpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// Compute elements j+1:N-1 of row j.
 			if ( j < N - 1 ) {
 				dgemv( 'transpose', j, N - j - 1, -1.0,
-					A, sa1, sa2, offsetA + (j+1)*sa2,
+					A, sa1, sa2, offsetA + ((j+1)*sa2),
 					A, sa1, offsetA + (j * sa2),
 					1.0,
-					A, sa2, offsetA + (j * sa1) + (j+1)*sa2
+					A, sa2, offsetA + (j * sa1) + ((j+1)*sa2)
 				);
 				dscal( N - j - 1, 1.0 / ajj,
-					A, sa2, offsetA + (j * sa1) + (j+1)*sa2
+					A, sa2, offsetA + (j * sa1) + ((j+1)*sa2)
 				);
 			}
 		}
@@ -98,13 +98,13 @@ function dpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// Compute elements j+1:N-1 of column j.
 			if ( j < N - 1 ) {
 				dgemv( 'no-transpose', N - j - 1, j, -1.0,
-					A, sa1, sa2, offsetA + (j+1)*sa1,
+					A, sa1, sa2, offsetA + ((j+1)*sa1),
 					A, sa2, offsetA + (j * sa1),
 					1.0,
-					A, sa1, offsetA + (j+1)*sa1 + (j * sa2)
+					A, sa1, offsetA + ((j+1)*sa1) + (j * sa2)
 				);
 				dscal( N - j - 1, 1.0 / ajj,
-					A, sa1, offsetA + (j+1)*sa1 + (j * sa2)
+					A, sa1, offsetA + ((j+1)*sa1) + (j * sa2)
 				);
 			}
 		}

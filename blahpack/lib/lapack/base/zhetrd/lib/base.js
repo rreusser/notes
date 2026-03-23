@@ -107,7 +107,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 
 	if ( uplo === 'upper' ) {
 		// Reduce the upper triangle of A.
-		kk = N - Math.floor( ( N - nx + nb - 1 ) / nb ) * nb;
+		kk = N - ( Math.floor( ( N - nx + nb - 1 ) / nb ) * nb );
 
 		// Fortran: DO I = N-NB+1, KK+1, -NB (1-based)
 
@@ -134,12 +134,12 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Copy superdiagonal elements back into A, and diagonal to D
 			for ( j = i; j < i + nb; j++ ) {
 				// A(j-1, j) = e[j-1]
-				ai = oA + ( j - 1 ) * (sa1 * 2) + (j * sa2) * 2;
-				Av[ ai ] = e[ offsetE + ( j - 1 ) * strideE ];
+				ai = oA + (( j - 1 ) * (sa1 * 2)) + ((j * sa2) * 2);
+				Av[ ai ] = e[ offsetE + (( j - 1 ) * strideE) ];
 				Av[ ai + 1 ] = 0.0;
 
 				// d[j] = real(A(j, j))
-				ai = oA + (j * sa1) * 2 + (j * sa2) * 2;
+				ai = oA + ((j * sa1) * 2) + ((j * sa2) * 2);
 				d[ offsetD + (j * strideD) ] = Av[ ai ];
 			}
 		}
@@ -162,21 +162,21 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Update the unreduced submatrix
 			zher2k(
 				uplo, 'no-transpose', N - i - nb, nb, CNONE,
-				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + (i * sa2),
+				A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (i * sa2),
 				work, 1, ldwork, nb,
 				1.0,
-				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + ( i + nb ) * sa2
+				A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (( i + nb ) * sa2)
 			);
 
 			// Copy subdiagonal elements and diagonal
 			for ( j = i; j < i + nb; j++ ) {
 				// A(j+1, j) = e[j]
-				ai = oA + ( j + 1 ) * (sa1 * 2) + (j * sa2) * 2;
+				ai = oA + (( j + 1 ) * (sa1 * 2)) + ((j * sa2) * 2);
 				Av[ ai ] = e[ offsetE + (j * strideE) ];
 				Av[ ai + 1 ] = 0.0;
 
 				// d[j] = real(A(j, j))
-				ai = oA + (j * sa1) * 2 + (j * sa2) * 2;
+				ai = oA + ((j * sa1) * 2) + ((j * sa2) * 2);
 				d[ offsetD + (j * strideD) ] = Av[ ai ];
 			}
 

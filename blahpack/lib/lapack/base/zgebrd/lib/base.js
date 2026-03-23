@@ -169,10 +169,10 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					'no-transpose', 'conjugate-transpose',
 					M - i - nb, N - i - nb, nb,
 					NEGONE,
-					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (i * strideA2),
 					WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb) + nb,
 					ONE,
-					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
+					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2)
 				);
 
 				// C := -1 * X(nb:,:) * A(i:i+nb-1,i+nb:) + 1 * A(i+nb:,i+nb:)
@@ -181,9 +181,9 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					M - i - nb, N - i - nb, nb,
 					NEGONE,
 					WORK, 1, ldwrkx, offsetWORK + nb,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + nb ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + nb ) * strideA2),
 					ONE,
-					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + ( i + nb ) * strideA2
+					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2)
 				);
 			}
 
@@ -194,7 +194,7 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					aii = oA + (j * sa1) + (j * sa2);
 					Av[ aii ] = d[ offsetD + (j * strideD) ];
 					Av[ aii + 1 ] = 0.0;
-					aij = oA + (j * sa1) + ( j + 1 ) * sa2;
+					aij = oA + (j * sa1) + (( j + 1 ) * sa2);
 					Av[ aij ] = e[ offsetE + (j * strideE) ];
 					Av[ aij + 1 ] = 0.0;
 				}
@@ -204,7 +204,7 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 					aii = oA + (j * sa1) + (j * sa2);
 					Av[ aii ] = d[ offsetD + (j * strideD) ];
 					Av[ aii + 1 ] = 0.0;
-					aij = oA + ( j + 1 ) * sa1 + (j * sa2);
+					aij = oA + (( j + 1 ) * sa1) + (j * sa2);
 					Av[ aij ] = e[ offsetE + (j * strideE) ];
 					Av[ aij + 1 ] = 0.0;
 				}

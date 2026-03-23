@@ -123,7 +123,7 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		if ( i < N - 1 ) {
 			// Conjugate elements in row i from column i+1 to N-1
 			// ZLACGV(N-I, A(I, I+1), LDA) - but stride is along columns (strideA2)
-			zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
+			zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
 
 			if ( i < M - 1 ) {
 				// Set A(i,i) = 1
@@ -141,7 +141,7 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 					'right', M - i - 1, N - i,
 					A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					new Complex128Array( [ tauv[ it ], -tauv[ it + 1 ] ] ), 0,
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					WORK, strideWORK, offsetWORK
 				);
 			}
@@ -150,11 +150,11 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			negTau = new Complex128( -tauv[ it ], -tauv[ it + 1 ] );
 			zscal(
 				N - i - 1, negTau,
-				A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2
+				A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2)
 			);
 
 			// Conjugate back: ZLACGV(N-I, A(I, I+1), LDA)
-			zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
+			zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
 		}
 
 		// A(I,I) = ONE - DCONJG(TAU(I))

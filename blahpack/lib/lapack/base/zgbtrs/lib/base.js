@@ -105,9 +105,9 @@ function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 				}
 				// B(j+1:j+lm, :) -= L(j+1:j+lm, j) * B(j, :)
 				zgeru( lm, nrhs, CNONE,
-					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + (j * sa2),
+					AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2),
 					B, sb2, offsetB + (j * sb1),
-					B, sb1, sb2, offsetB + ( j + 1 ) * sb1 );
+					B, sb1, sb2, offsetB + (( j + 1 ) * sb1) );
 			}
 		}
 
@@ -134,8 +134,8 @@ function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 
 				// B(j, :) -= L(j+1:j+lm, j)^T * B(j+1:j+lm, :)
 				zgemv( 'transpose', lm, nrhs, CNONE,
-					B, sb1, sb2, offsetB + ( j + 1 ) * sb1,
-					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + (j * sa2),
+					B, sb1, sb2, offsetB + (( j + 1 ) * sb1),
+					AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2),
 					CONE,
 					B, sb2, offsetB + (j * sb1) );
 				l = IPIV[ offsetIPIV + (j * strideIPIV) ];
@@ -164,8 +164,8 @@ function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 
 				// B(j, :) -= conj(L(j+1:j+lm, j))^T * B(j+1:j+lm, :)
 				zgemv( 'conjugate-transpose', lm, nrhs, CNONE,
-					B, sb1, sb2, offsetB + ( j + 1 ) * sb1,
-					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + (j * sa2),
+					B, sb1, sb2, offsetB + (( j + 1 ) * sb1),
+					AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2),
 					CONE,
 					B, sb2, offsetB + (j * sb1) );
 

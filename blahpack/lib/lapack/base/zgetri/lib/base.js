@@ -138,8 +138,8 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// A(:, j) = A(:, j+1:N-1) * (-WORK(j+1:N-1)) + A(:, j)
 			if ( j < N - 1 ) {
 				zgemv( 'no-transpose', N, N - j - 1, CNEGONE,
-					A, sa1, sa2, offsetA + ( j + 1 ) * sa2,
-					WORK, strideWORK, offsetWORK + ( j + 1 ) * strideWORK,
+					A, sa1, sa2, offsetA + (( j + 1 ) * sa2),
+					WORK, strideWORK, offsetWORK + (( j + 1 ) * strideWORK),
 					CONE,
 					A, sa1, offsetA + (j * sa2) );
 			}
@@ -158,7 +158,7 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 					ia = ( offsetA + (i * sa1) + (jj * sa2) ) * 2;
 
 					// WORK(i + (jj-j)*ldwork) in complex elements from offsetWORK
-					iw = ( offsetWORK + i + ( jj - j ) * ldwork ) * 2;
+					iw = ( offsetWORK + i + (( jj - j ) * ldwork) ) * 2;
 					Wv[ iw ] = Av[ ia ];
 					Wv[ iw + 1 ] = Av[ ia + 1 ];
 					Av[ ia ] = 0.0;
@@ -169,7 +169,7 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// Update the current block column with trailing columns
 			if ( j + jb < N ) {
 				zgemm( 'no-transpose', 'no-transpose', N, jb, N - j - jb, CNEGONE,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
+					A, sa1, sa2, offsetA + (( j + jb ) * sa2),
 					WORK, 1, ldwork, offsetWORK + ( j + jb ),
 					CONE,
 					A, sa1, sa2, offsetA + (j * sa2) );

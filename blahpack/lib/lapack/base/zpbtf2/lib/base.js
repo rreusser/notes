@@ -102,22 +102,22 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			if ( kn > 0 ) {
 				// ZDSCAL(KN, 1/AJJ, AB(KD, J+2), KLD)
 				zdscal( kn, 1.0 / ajj,
-					AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2
+					AB, kld, offsetAB + (( kd - 1 ) * strideAB1) + (( j + 1 ) * strideAB2)
 				);
 
 				// ZLACGV(KN, AB(KD, J+2), KLD)
-				zlacgv( kn, AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2 );
+				zlacgv( kn, AB, kld, offsetAB + (( kd - 1 ) * strideAB1) + (( j + 1 ) * strideAB2) );
 
 				// ZHER('Upper', KN, -1, AB(KD, J+2), KLD, AB(KD+1, J+2), KLD)
 
 				// zher: strideA1 = strideAB1, strideA2 = kld
 				zher( 'upper', kn, -1.0,
-					AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2,
-					AB, strideAB1, kld, offsetAB + (kd * strideAB1) + ( j + 1 ) * strideAB2
+					AB, kld, offsetAB + (( kd - 1 ) * strideAB1) + (( j + 1 ) * strideAB2),
+					AB, strideAB1, kld, offsetAB + (kd * strideAB1) + (( j + 1 ) * strideAB2)
 				);
 
 				// ZLACGV(KN, AB(KD, J+2), KLD) -- undo
-				zlacgv( kn, AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2 );
+				zlacgv( kn, AB, kld, offsetAB + (( kd - 1 ) * strideAB1) + (( j + 1 ) * strideAB2) );
 			}
 		}
 	} else {
@@ -148,7 +148,7 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				// zher: strideA1 = strideAB1, strideA2 = kld
 				zher( 'lower', kn, -1.0,
 					AB, strideAB1, offsetAB + strideAB1 + (j * strideAB2),
-					AB, strideAB1, kld, offsetAB + ( j + 1 ) * strideAB2
+					AB, strideAB1, kld, offsetAB + (( j + 1 ) * strideAB2)
 				);
 			}
 		}

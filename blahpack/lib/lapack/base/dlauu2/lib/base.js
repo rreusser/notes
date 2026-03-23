@@ -78,8 +78,8 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				dgemv(
 					'no-transpose', i, N - i - 1,
 					1.0,
-					A, sa1, sa2, offsetA + ( i + 1 ) * sa2,       // A(:, i+1)
-					A, sa2, offsetA + (i * sa1) + ( i + 1 ) * sa2,  // A(i, i+1:) stride=sa2
+					A, sa1, sa2, offsetA + (( i + 1 ) * sa2),       // A(:, i+1)
+					A, sa2, offsetA + (i * sa1) + (( i + 1 ) * sa2),  // A(i, i+1:) stride=sa2
 					aii,
 					A, sa1, offsetA + (i * sa2)                      // A(:, i) stride=sa1
 				);
@@ -109,8 +109,8 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				dgemv(
 					'transpose', N - i - 1, i,
 					1.0,
-					A, sa1, sa2, offsetA + ( i + 1 ) * sa1,       // A(i+1, :)
-					A, sa1, offsetA + ( i + 1 ) * sa1 + (i * sa2),  // A(i+1:, i) stride=sa1
+					A, sa1, sa2, offsetA + (( i + 1 ) * sa1),       // A(i+1, :)
+					A, sa1, offsetA + (( i + 1 ) * sa1) + (i * sa2),  // A(i+1:, i) stride=sa1
 					aii,
 					A, sa2, offsetA + (i * sa1)                      // A(i, :) stride=sa2
 				);

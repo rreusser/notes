@@ -114,8 +114,8 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 				// Copy column j-1 to column j (rows j+1 to M-1, 0-based: i from j down to M-1)
 				for ( i = j; i < M; i++ ) {
 					idx = oA + (i * sA1) + (j * sA2);
-					Av[ idx ] = Av[ oA + (i * sA1) + ( j - 1 ) * sA2 ];
-					Av[ idx + 1 ] = Av[ oA + (i * sA1) + ( j - 1 ) * sA2 + 1 ];
+					Av[ idx ] = Av[ oA + (i * sA1) + (( j - 1 ) * sA2) ];
+					Av[ idx + 1 ] = Av[ oA + (i * sA1) + (( j - 1 ) * sA2) + 1 ];
 				}
 			}
 			// Set A(0,0) = 1, A(i,0) = 0 for i >= 1
@@ -165,8 +165,8 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 				// Shift row: A(i, j) = A(i-1, j) for i from j-1 downto 1 (0-based)
 				for ( i = j - 1; i >= 1; i-- ) {
 					idx = oA + (i * sA1) + (j * sA2);
-					Av[ idx ] = Av[ oA + ( i - 1 ) * sA1 + (j * sA2) ];
-					Av[ idx + 1 ] = Av[ oA + ( i - 1 ) * sA1 + (j * sA2) + 1 ];
+					Av[ idx ] = Av[ oA + (( i - 1 ) * sA1) + (j * sA2) ];
+					Av[ idx + 1 ] = Av[ oA + (( i - 1 ) * sA1) + (j * sA2) + 1 ];
 				}
 				// A(0, j) = 0
 				idx = oA + (j * sA2);

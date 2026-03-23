@@ -84,7 +84,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// dlarfg: alpha is (array, offset), modifies in-place
 			dlarfg( M - i, A, aii,
-				A, strideA1, offsetA + Math.min( i + 1, M - 1 ) * strideA1 + (i * strideA2),
+				A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2),
 				TAUQ, offsetTAUQ + (i * strideTAUQ) );
 
 			// D(i) = A(i,i) (the computed beta)
@@ -100,7 +100,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				dlarf( 'left', M - i, N - i - 1,
 					A, strideA1, aii,
 					TAUQ[ offsetTAUQ + (i * strideTAUQ) ],
-					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
 					WORK, strideWORK, offsetWORK );
 			}
 
@@ -109,11 +109,11 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			if ( i < N - 1 ) {
 				// Index of A(i, i+1)
-				aij = offsetA + (i * strideA1) + ( i + 1 ) * strideA2;
+				aij = offsetA + (i * strideA1) + (( i + 1 ) * strideA2);
 
 				// Generate elementary reflector G(i) to annihilate A(i, i+2:N-1)
 				dlarfg( N - i - 1, A, aij,
-					A, strideA2, offsetA + (i * strideA1) + Math.min( i + 2, N - 1 ) * strideA2,
+					A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 2, N - 1 ) * strideA2),
 					TAUP, offsetTAUP + (i * strideTAUP) );
 
 				// E(i) = A(i, i+1) (the computed beta)
@@ -126,7 +126,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				dlarf( 'right', M - i - 1, N - i - 1,
 					A, strideA2, aij,
 					TAUP[ offsetTAUP + (i * strideTAUP) ],
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
 					WORK, strideWORK, offsetWORK );
 
 				// Restore A(i, i+1) = E(i)
@@ -143,7 +143,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// Generate elementary reflector G(i) to annihilate A(i, i+1:N-1)
 			dlarfg( N - i, A, aii,
-				A, strideA2, offsetA + (i * strideA1) + Math.min( i + 1, N - 1 ) * strideA2,
+				A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2),
 				TAUP, offsetTAUP + (i * strideTAUP) );
 
 			// D(i) = A(i,i) (the computed beta)
@@ -157,7 +157,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				dlarf( 'right', M - i - 1, N - i,
 					A, strideA2, aii,
 					TAUP[ offsetTAUP + (i * strideTAUP) ],
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					WORK, strideWORK, offsetWORK );
 			}
 
@@ -166,11 +166,11 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			if ( i < M - 1 ) {
 				// Index of A(i+1, i)
-				aij = offsetA + ( i + 1 ) * strideA1 + (i * strideA2);
+				aij = offsetA + (( i + 1 ) * strideA1) + (i * strideA2);
 
 				// Generate elementary reflector H(i) to annihilate A(i+2:M-1, i)
 				dlarfg( M - i - 1, A, aij,
-					A, strideA1, offsetA + Math.min( i + 2, M - 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, offsetA + (Math.min( i + 2, M - 1 ) * strideA1) + (i * strideA2),
 					TAUQ, offsetTAUQ + (i * strideTAUQ) );
 
 				// E(i) = A(i+1, i) (the computed beta)
@@ -183,7 +183,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				dlarf( 'left', M - i - 1, N - i - 1,
 					A, strideA1, aij,
 					TAUQ[ offsetTAUQ + (i * strideTAUQ) ],
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
 					WORK, strideWORK, offsetWORK );
 
 				// Restore A(i+1, i) = E(i)

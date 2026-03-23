@@ -94,7 +94,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + ( j + 1 ) * sa1 + (i * sa2);
+							idx1 = oA + (( j + 1 ) * sa1) + (i * sa2);
 							idx2 = oA + (j * sa1) + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
@@ -114,7 +114,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
-							idx1 = oA + ( j + 1 ) * sa1 + (i * sa2);
+							idx1 = oA + (( j + 1 ) * sa1) + (i * sa2);
 							idx2 = oA + (j * sa1) + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
@@ -131,8 +131,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		} else if ( pivot === 'top' ) {
 			if ( direct === 'forward' ) {
 				for ( j = 1; j < M; j++ ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = oA + (j * sa1) + (i * sa2);
@@ -150,8 +150,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 				}
 			} else {
 				for ( j = M - 1; j >= 1; j-- ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = oA + (j * sa1) + (i * sa2);
@@ -176,7 +176,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = oA + (j * sa1) + (i * sa2);
-							idx2 = oA + ( M - 1 ) * sa1 + (i * sa2);
+							idx2 = oA + (( M - 1 ) * sa1) + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
@@ -195,7 +195,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < N; i++ ) {
 							idx1 = oA + (j * sa1) + (i * sa2);
-							idx2 = oA + ( M - 1 ) * sa1 + (i * sa2);
+							idx2 = oA + (( M - 1 ) * sa1) + (i * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
@@ -218,7 +218,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + (i * sa1) + ( j + 1 ) * sa2;
+							idx1 = oA + (i * sa1) + (( j + 1 ) * sa2);
 							idx2 = oA + (i * sa1) + (j * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
@@ -237,7 +237,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					stemp = s[ offsetS + (j * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							idx1 = oA + (i * sa1) + ( j + 1 ) * sa2;
+							idx1 = oA + (i * sa1) + (( j + 1 ) * sa2);
 							idx2 = oA + (i * sa1) + (j * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
@@ -254,8 +254,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		} else if ( pivot === 'top' ) {
 			if ( direct === 'forward' ) {
 				for ( j = 1; j < N; j++ ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = oA + (i * sa1) + (j * sa2);
@@ -273,8 +273,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 				}
 			} else {
 				for ( j = N - 1; j >= 1; j-- ) {
-					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
-					stemp = s[ offsetS + ( j - 1 ) * strideS ];
+					ctemp = c[ offsetC + (( j - 1 ) * strideC) ];
+					stemp = s[ offsetS + (( j - 1 ) * strideS) ];
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = oA + (i * sa1) + (j * sa2);
@@ -299,7 +299,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = oA + (i * sa1) + (j * sa2);
-							idx2 = oA + (i * sa1) + ( N - 1 ) * sa2;
+							idx2 = oA + (i * sa1) + (( N - 1 ) * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];
@@ -318,7 +318,7 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					if ( ctemp !== 1.0 || stemp !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
 							idx1 = oA + (i * sa1) + (j * sa2);
-							idx2 = oA + (i * sa1) + ( N - 1 ) * sa2;
+							idx2 = oA + (i * sa1) + (( N - 1 ) * sa2);
 							tempRe = Av[ idx1 ];
 							tempIm = Av[ idx1 + 1 ];
 							aRe = Av[ idx2 ];

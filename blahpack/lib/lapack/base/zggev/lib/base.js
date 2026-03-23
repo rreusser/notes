@@ -222,7 +222,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	// QR factorize B(ilo:ihi, ilo:icols) using ZGEQRF
 	zgeqrf(
 		irows, icols,
-		B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
+		B, strideB1, strideB2, offsetB + (( ilo - 1 ) * strideB1) + (( ilo - 1 ) * strideB2),
 		TAU, 1, 0,
 		WORK, 1, 0
 	);
@@ -230,9 +230,9 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	// Apply Q^H to A from the left
 	zunmqr(
 		'left', 'conjugate-transpose', irows, icols, irows,
-		B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
+		B, strideB1, strideB2, offsetB + (( ilo - 1 ) * strideB1) + (( ilo - 1 ) * strideB2),
 		TAU, 1, 0,
-		A, strideA1, strideA2, offsetA + ( ilo - 1 ) * strideA1 + ( ilo - 1 ) * strideA2,
+		A, strideA1, strideA2, offsetA + (( ilo - 1 ) * strideA1) + (( ilo - 1 ) * strideA2),
 		WORK, 1, 0, lwork
 	);
 
@@ -242,13 +242,13 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 		if ( irows > 1 ) {
 			zlacpy( 'lower', irows - 1, irows - 1,
-				B, strideB1, strideB2, offsetB + (ilo * strideB1) + ( ilo - 1 ) * strideB2,
-				VL, strideVL1, strideVL2, offsetVL + (ilo * strideVL1) + ( ilo - 1 ) * strideVL2
+				B, strideB1, strideB2, offsetB + (ilo * strideB1) + (( ilo - 1 ) * strideB2),
+				VL, strideVL1, strideVL2, offsetVL + (ilo * strideVL1) + (( ilo - 1 ) * strideVL2)
 			);
 		}
 
 		zungqr( irows, irows, irows,
-			VL, strideVL1, strideVL2, offsetVL + ( ilo - 1 ) * strideVL1 + ( ilo - 1 ) * strideVL2,
+			VL, strideVL1, strideVL2, offsetVL + (( ilo - 1 ) * strideVL1) + (( ilo - 1 ) * strideVL2),
 			TAU, 1, 0,
 			WORK, 1, 0, lwork
 		);
@@ -272,8 +272,8 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	} else {
 		zgghrd(
 			'none', 'none', irows, 1, irows,
-			A, strideA1, strideA2, offsetA + ( ilo - 1 ) * strideA1 + ( ilo - 1 ) * strideA2,
-			B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
+			A, strideA1, strideA2, offsetA + (( ilo - 1 ) * strideA1) + (( ilo - 1 ) * strideA2),
+			B, strideB1, strideB2, offsetB + (( ilo - 1 ) * strideB1) + (( ilo - 1 ) * strideB2),
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR
 		);

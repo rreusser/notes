@@ -97,10 +97,10 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// ZGEMV('Transpose', J-1, N-J, -CONE, A(1,J+1), LDA, A(1,J), 1, CONE, A(J,J+1), LDA)
 				zgemv( 'transpose', j, N - j - 1, CMONE,
-					A, strideA1, strideA2, offsetA + ( j + 1 ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( j + 1 ) * strideA2),
 					A, strideA1, offsetA + (j * strideA2),
 					CONE,
-					A, strideA2, offsetA + (j * strideA1) + ( j + 1 ) * strideA2
+					A, strideA2, offsetA + (j * strideA1) + (( j + 1 ) * strideA2)
 				);
 
 				// ZLACGV(J-1, A(1,J), 1) -- undo conjugation
@@ -108,7 +108,7 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// ZDSCAL(N-J, 1/AJJ, A(J,J+1), LDA)
 				zdscal( N - j - 1, 1.0 / ajj,
-					A, strideA2, offsetA + (j * strideA1) + ( j + 1 ) * strideA2
+					A, strideA2, offsetA + (j * strideA1) + (( j + 1 ) * strideA2)
 				);
 			}
 		}
@@ -136,10 +136,10 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// ZGEMV('No transpose', N-J, J-1, -CONE, A(J+1,1), LDA, A(J,1), LDA, CONE, A(J+1,J), 1)
 				zgemv( 'no-transpose', N - j - 1, j, CMONE,
-					A, strideA1, strideA2, offsetA + ( j + 1 ) * strideA1,
+					A, strideA1, strideA2, offsetA + (( j + 1 ) * strideA1),
 					A, strideA2, offsetA + (j * strideA1),
 					CONE,
-					A, strideA1, offsetA + ( j + 1 ) * strideA1 + (j * strideA2)
+					A, strideA1, offsetA + (( j + 1 ) * strideA1) + (j * strideA2)
 				);
 
 				// ZLACGV(J-1, A(J,1), LDA) -- undo conjugation
@@ -147,7 +147,7 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// ZDSCAL(N-J, 1/AJJ, A(J+1,J), 1)
 				zdscal( N - j - 1, 1.0 / ajj,
-					A, strideA1, offsetA + ( j + 1 ) * strideA1 + (j * strideA2)
+					A, strideA1, offsetA + (( j + 1 ) * strideA1) + (j * strideA2)
 				);
 			}
 		}

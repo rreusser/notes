@@ -243,13 +243,13 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	RWORK[ offsetRWORK + (N * strideRWORK) ] = ZERO;
 	for ( j = 1; j < N; j++ ) {
 		RWORK[ offsetRWORK + (j * strideRWORK) ] = ZERO;
-		RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] = ZERO;
+		RWORK[ offsetRWORK + (( N + j ) * strideRWORK) ] = ZERO;
 		for ( i = 0; i < j; i++ ) {
 			RWORK[ offsetRWORK + (j * strideRWORK) ] += abs1( Sv, oS + (i * sS1) + (j * sS2) );
-			RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] += abs1( Pv, oP + (i * sP1) + (j * sP2) );
+			RWORK[ offsetRWORK + (( N + j ) * strideRWORK) ] += abs1( Pv, oP + (i * sP1) + (j * sP2) );
 		}
 		anorm = Math.max( anorm, RWORK[ offsetRWORK + (j * strideRWORK) ] + abs1( Sv, oS + (j * sS1) + (j * sS2) ) );
-		bnorm = Math.max( bnorm, RWORK[ offsetRWORK + ( N + j ) * strideRWORK ] + abs1( Pv, oP + (j * sP1) + (j * sP2) ) );
+		bnorm = Math.max( bnorm, RWORK[ offsetRWORK + (( N + j ) * strideRWORK) ] + abs1( Pv, oP + (j * sP1) + (j * sP2) ) );
 	}
 
 	ascale = ONE / Math.max( anorm, safmin );
@@ -291,11 +291,11 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			if ( abs1( Sv, idx ) <= safmin && Math.abs( Pv[ idx2 ] ) <= safmin ) {
 				// Zero eigenvalue - set eigenvector to unit vector
 				for ( jr = 0; jr < N; jr++ ) {
-					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 ] = 0.0;
-					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
+					VLv[ oVL + (jr * sVL1) + (( ieig - 1 ) * sVL2) ] = 0.0;
+					VLv[ oVL + (jr * sVL1) + (( ieig - 1 ) * sVL2) + 1 ] = 0.0;
 				}
-				VLv[ oVL + ( ieig - 1 ) * sVL1 + ( ieig - 1 ) * sVL2 ] = 1.0;
-				VLv[ oVL + ( ieig - 1 ) * sVL1 + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
+				VLv[ oVL + (( ieig - 1 ) * sVL1) + (( ieig - 1 ) * sVL2) ] = 1.0;
+				VLv[ oVL + (( ieig - 1 ) * sVL1) + (( ieig - 1 ) * sVL2) + 1 ] = 0.0;
 				continue;
 			}
 
@@ -357,7 +357,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			for ( j = je + 1; j < N; j++ ) {
 				// Scale to avoid overflow
 				temp = ONE / xmax;
-				if ( (acoefa * RWORK[ offsetRWORK + (j * strideRWORK) ]) + (bcoefa * RWORK[ offsetRWORK + ( N + j ) * strideRWORK ]) > bignum * temp ) {
+				if ( (acoefa * RWORK[ offsetRWORK + (j * strideRWORK) ]) + (bcoefa * RWORK[ offsetRWORK + (( N + j ) * strideRWORK) ]) > (bignum * temp) ) {
 					for ( jr = je; jr < j; jr++ ) {
 						WORKv[ jr * 2 ] *= temp;
 						WORKv[ (jr * 2) + 1 ] *= temp;
@@ -431,7 +431,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			if ( ilback ) {
 				// WORK(N+1:2N) = VL * WORK(JE:N)
 				zgemv(
-					'no-transpose', N, N - je, CONE, VL, strideVL1, strideVL2, offsetVL + je * strideVL2,
+					'no-transpose', N, N - je, CONE, VL, strideVL1, strideVL2, offsetVL + (je * strideVL2),
 					WORK, 1, je, CZERO, WORK, 1, N
 				);
 				isrc = 1; // result in WORKv[N*2..]
@@ -444,22 +444,22 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			// Normalize and store in VL
 			xmax = ZERO;
 			for ( jr = ibeg; jr < N; jr++ ) {
-				xmax = Math.max( xmax, abs1( WORKv, isrc * (N * 2) + (jr * 2) ) );
+				xmax = Math.max( xmax, abs1( WORKv, (isrc * (N * 2)) + (jr * 2) ) );
 			}
 
 			if ( xmax > safmin ) {
 				temp = ONE / xmax;
 				for ( jr = ibeg; jr < N; jr++ ) {
-					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) ];
-					VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 + 1 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) + 1 ];
+					VLv[ oVL + (jr * sVL1) + (( ieig - 1 ) * sVL2) ] = temp * WORKv[ (isrc * (N * 2)) + (jr * 2) ];
+					VLv[ oVL + (jr * sVL1) + (( ieig - 1 ) * sVL2) + 1 ] = temp * WORKv[ (isrc * (N * 2)) + (jr * 2) + 1 ];
 				}
 			} else {
 				ibeg = N;
 			}
 
 			for ( jr = 0; jr < ibeg; jr++ ) {
-				VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 ] = 0.0;
-				VLv[ oVL + (jr * sVL1) + ( ieig - 1 ) * sVL2 + 1 ] = 0.0;
+				VLv[ oVL + (jr * sVL1) + (( ieig - 1 ) * sVL2) ] = 0.0;
+				VLv[ oVL + (jr * sVL1) + (( ieig - 1 ) * sVL2) + 1 ] = 0.0;
 			}
 		}
 	}
@@ -486,11 +486,11 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			if ( abs1( Sv, idx ) <= safmin && Math.abs( Pv[ idx2 ] ) <= safmin ) {
 				// Zero eigenvalue
 				for ( jr = 0; jr < N; jr++ ) {
-					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 ] = 0.0;
-					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
+					VRv[ oVR + (jr * sVR1) + (( ieig - 1 ) * sVR2) ] = 0.0;
+					VRv[ oVR + (jr * sVR1) + (( ieig - 1 ) * sVR2) + 1 ] = 0.0;
 				}
-				VRv[ oVR + ( ieig - 1 ) * sVR1 + ( ieig - 1 ) * sVR2 ] = 1.0;
-				VRv[ oVR + ( ieig - 1 ) * sVR1 + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
+				VRv[ oVR + (( ieig - 1 ) * sVR1) + (( ieig - 1 ) * sVR2) ] = 1.0;
+				VRv[ oVR + (( ieig - 1 ) * sVR1) + (( ieig - 1 ) * sVR2) + 1 ] = 0.0;
 				ieig--;
 				continue;
 			}
@@ -595,7 +595,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 					// Scale to avoid overflow and update
 					if ( abs1( WORKv, j * 2 ) > ONE ) {
 						temp = ONE / abs1( WORKv, j * 2 );
-						if ( (acoefa * RWORK[ offsetRWORK + (j * strideRWORK) ]) + (bcoefa * RWORK[ offsetRWORK + ( N + j ) * strideRWORK ]) >= bignum * temp ) {
+						if ( (acoefa * RWORK[ offsetRWORK + (j * strideRWORK) ]) + (bcoefa * RWORK[ offsetRWORK + (( N + j ) * strideRWORK) ]) >= (bignum * temp) ) {
 							for ( jr = 0; jr <= je; jr++ ) {
 								WORKv[ jr * 2 ] *= temp;
 								WORKv[ (jr * 2) + 1 ] *= temp;
@@ -640,22 +640,22 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			// Normalize and store in VR
 			xmax = ZERO;
 			for ( jr = 0; jr < iend; jr++ ) {
-				xmax = Math.max( xmax, abs1( WORKv, isrc * (N * 2) + (jr * 2) ) );
+				xmax = Math.max( xmax, abs1( WORKv, (isrc * (N * 2)) + (jr * 2) ) );
 			}
 
 			if ( xmax > safmin ) {
 				temp = ONE / xmax;
 				for ( jr = 0; jr < iend; jr++ ) {
-					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) ];
-					VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 + 1 ] = temp * WORKv[ isrc * (N * 2) + (jr * 2) + 1 ];
+					VRv[ oVR + (jr * sVR1) + (( ieig - 1 ) * sVR2) ] = temp * WORKv[ (isrc * (N * 2)) + (jr * 2) ];
+					VRv[ oVR + (jr * sVR1) + (( ieig - 1 ) * sVR2) + 1 ] = temp * WORKv[ (isrc * (N * 2)) + (jr * 2) + 1 ];
 				}
 			} else {
 				iend = 0;
 			}
 
 			for ( jr = iend; jr < N; jr++ ) {
-				VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 ] = 0.0;
-				VRv[ oVR + (jr * sVR1) + ( ieig - 1 ) * sVR2 + 1 ] = 0.0;
+				VRv[ oVR + (jr * sVR1) + (( ieig - 1 ) * sVR2) ] = 0.0;
+				VRv[ oVR + (jr * sVR1) + (( ieig - 1 ) * sVR2) + 1 ] = 0.0;
 			}
 
 			ieig--;

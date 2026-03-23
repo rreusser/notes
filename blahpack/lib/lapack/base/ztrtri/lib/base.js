@@ -115,11 +115,11 @@ function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			if ( j + jb < N ) {
 				// Compute rows j+jb:N-1 of current block column
 				ztrmm( 'left', 'lower', 'no-transpose', diag, N - j - jb, jb, CONE,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + ( j + jb ) * sa2,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2) );
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1) + (( j + jb ) * sa2),
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1) + (j * sa2) );
 				ztrsm( 'right', 'lower', 'no-transpose', diag, N - j - jb, jb, CNEGONE,
 					A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2) );
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1) + (j * sa2) );
 			}
 
 			// Compute inverse of current diagonal block

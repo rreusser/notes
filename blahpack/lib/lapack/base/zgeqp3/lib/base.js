@@ -152,7 +152,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 			RWORK[ oR + (j * strideRWORK) ] = dznrm2(
 				sm, A, sa1, offsetA + (nfxd * sa1) + (j * sa2)
 			);
-			RWORK[ oR + ( N + j ) * strideRWORK ] = RWORK[ oR + (j * strideRWORK) ];
+			RWORK[ oR + (( N + j ) * strideRWORK) ] = RWORK[ oR + (j * strideRWORK) ];
 		}
 
 		nb = DEFAULT_NB;
@@ -182,7 +182,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 					JPVT, strideJPVT, oJ + (j * strideJPVT),
 					TAU, strideTAU, oT + (j * strideTAU),
 					RWORK, strideRWORK, oR + (j * strideRWORK),
-					RWORK, strideRWORK, oR + ( N + j ) * strideRWORK,
+					RWORK, strideRWORK, oR + (( N + j ) * strideRWORK),
 					AUXV, 1, 0,
 					F, 1, sn + 1, 0
 				);
@@ -200,7 +200,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 				JPVT, strideJPVT, oJ + (j * strideJPVT),
 				TAU, strideTAU, oT + (j * strideTAU),
 				RWORK, strideRWORK, oR + (j * strideRWORK),
-				RWORK, strideRWORK, oR + ( N + j ) * strideRWORK,
+				RWORK, strideRWORK, oR + (( N + j ) * strideRWORK),
 				WORK, strideWORK, offsetWORK
 			);
 		}

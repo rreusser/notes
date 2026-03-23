@@ -96,13 +96,13 @@ function dpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// Update the off-diagonal block.
 				dgemm( 'transpose', 'no-transpose', jb, N - j - jb, j, -1.0,
 					A, sa1, sa2, offsetA + (j * sa2),
-					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
+					A, sa1, sa2, offsetA + (( j + jb ) * sa2),
 					1.0,
-					A, sa1, sa2, offsetA + (j * sa1) + ( j + jb ) * sa2
+					A, sa1, sa2, offsetA + (j * sa1) + (( j + jb ) * sa2)
 				);
 				dtrsm( 'left', 'upper', 'transpose', 'non-unit', jb, N - j - jb, 1.0,
 					A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
-					A, sa1, sa2, offsetA + (j * sa1) + ( j + jb ) * sa2
+					A, sa1, sa2, offsetA + (j * sa1) + (( j + jb ) * sa2)
 				);
 			}
 		}
@@ -124,14 +124,14 @@ function dpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 			if ( j + jb < N ) {
 				// Update the off-diagonal block.
 				dgemm( 'no-transpose', 'transpose', N - j - jb, jb, j, -1.0,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1,
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1),
 					A, sa1, sa2, offsetA + (j * sa1),
 					1.0,
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2)
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1) + (j * sa2)
 				);
 				dtrsm( 'right', 'lower', 'transpose', 'non-unit', N - j - jb, jb, 1.0,
 					A, sa1, sa2, offsetA + (j * sa1) + (j * sa2),
-					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + (j * sa2)
+					A, sa1, sa2, offsetA + (( j + jb ) * sa1) + (j * sa2)
 				);
 			}
 		}

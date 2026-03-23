@@ -121,7 +121,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 	while ( l1 < N ) {
 		// Zero out the off-diagonal before the block start
 		if ( l1 > 0 ) {
-			e[ offsetE + ( l1 - 1 ) * strideE ] = 0.0;
+			e[ offsetE + (( l1 - 1 ) * strideE) ] = 0.0;
 		}
 
 		// Find the end of the unreduced block (label 20-30):
@@ -129,7 +129,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 		for ( m = l1; m < N - 1; m++ ) {
 			if ( Math.abs( e[ offsetE + (m * strideE) ] ) <=
 				Math.sqrt( Math.abs( d[ offsetD + (m * strideD) ] ) ) *
-				Math.sqrt( Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) ) *
+				Math.sqrt( Math.abs( d[ offsetD + (( m + 1 ) * strideD) ] ) ) *
 				eps ) {
 				e[ offsetE + (m * strideE) ] = 0.0;
 				break;
@@ -201,7 +201,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 				if ( l !== lend ) {
 					for ( m = l; m < lend; m++ ) {
 						if ( Math.abs( e[ offsetE + (m * strideE) ] ) <=
-							eps2 * Math.abs( d[ offsetD + (m * strideD) ] * d[ offsetD + ( m + 1 ) * strideD ] ) ) {
+							eps2 * Math.abs( d[ offsetD + (m * strideD) ] * d[ offsetD + (( m + 1 ) * strideD) ] ) ) {
 							break;
 						}
 					}
@@ -231,9 +231,9 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 				// If remaining matrix is 2-by-2, use dlae2
 				if ( m === l + 1 ) {
 					rte = Math.sqrt( e[ offsetE + (l * strideE) ] );
-					rt = dlae2( d[ offsetD + (l * strideD) ], rte, d[ offsetD + ( l + 1 ) * strideD ] );
+					rt = dlae2( d[ offsetD + (l * strideD) ], rte, d[ offsetD + (( l + 1 ) * strideD) ] );
 					d[ offsetD + (l * strideD) ] = rt.rt1;
-					d[ offsetD + ( l + 1 ) * strideD ] = rt.rt2;
+					d[ offsetD + (( l + 1 ) * strideD) ] = rt.rt2;
 					e[ offsetE + (l * strideE) ] = 0.0;
 					l += 2;
 					if ( l <= lend ) {
@@ -249,7 +249,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 
 				// Form shift
 				rte = Math.sqrt( e[ offsetE + (l * strideE) ] );
-				sigma = ( d[ offsetD + ( l + 1 ) * strideD ] - p ) / ( 2.0 * rte );
+				sigma = ( d[ offsetD + (( l + 1 ) * strideD) ] - p ) / ( 2.0 * rte );
 				r = dlapy2( sigma, 1.0 );
 				sigma = p - ( rte / ( sigma + ( Math.abs( r ) * ( Math.sign( sigma ) || 1.0 ) ) ) );
 
@@ -263,15 +263,15 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 					bb = e[ offsetE + (i * strideE) ];
 					r = p + bb;
 					if ( i !== m - 1 ) {
-						e[ offsetE + ( i + 1 ) * strideE ] = s * r;
+						e[ offsetE + (( i + 1 ) * strideE) ] = s * r;
 					}
 					oldc = c;
 					c = p / r;
 					s = bb / r;
 					oldgam = gamma;
 					alpha = d[ offsetD + (i * strideD) ];
-					gamma = c * ( alpha - sigma ) - (s * oldgam);
-					d[ offsetD + ( i + 1 ) * strideD ] = oldgam + ( alpha - gamma );
+					gamma = (c * ( alpha - sigma )) - (s * oldgam);
+					d[ offsetD + (( i + 1 ) * strideD) ] = oldgam + ( alpha - gamma );
 					if ( c !== 0.0 ) {
 						p = ( gamma * gamma ) / c;
 					} else {
@@ -289,8 +289,8 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 			// Look for small superdiagonal element
 			while ( true ) {
 				for ( m = l; m > lend; m-- ) {
-					if ( Math.abs( e[ offsetE + ( m - 1 ) * strideE ] ) <=
-						eps2 * Math.abs( d[ offsetD + (m * strideD) ] * d[ offsetD + ( m - 1 ) * strideD ] ) ) {
+					if ( Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] ) <=
+						eps2 * Math.abs( d[ offsetD + (m * strideD) ] * d[ offsetD + (( m - 1 ) * strideD) ] ) ) {
 						break;
 					}
 				}
@@ -307,7 +307,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 				}
 
 				if ( m > lend ) {
-					e[ offsetE + ( m - 1 ) * strideE ] = 0.0;
+					e[ offsetE + (( m - 1 ) * strideE) ] = 0.0;
 				}
 				p = d[ offsetD + (l * strideD) ];
 
@@ -323,11 +323,11 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 
 				// If remaining matrix is 2-by-2, use dlae2
 				if ( m === l - 1 ) {
-					rte = Math.sqrt( e[ offsetE + ( l - 1 ) * strideE ] );
-					rt = dlae2( d[ offsetD + (l * strideD) ], rte, d[ offsetD + ( l - 1 ) * strideD ] );
+					rte = Math.sqrt( e[ offsetE + (( l - 1 ) * strideE) ] );
+					rt = dlae2( d[ offsetD + (l * strideD) ], rte, d[ offsetD + (( l - 1 ) * strideD) ] );
 					d[ offsetD + (l * strideD) ] = rt.rt1;
-					d[ offsetD + ( l - 1 ) * strideD ] = rt.rt2;
-					e[ offsetE + ( l - 1 ) * strideE ] = 0.0;
+					d[ offsetD + (( l - 1 ) * strideD) ] = rt.rt2;
+					e[ offsetE + (( l - 1 ) * strideE) ] = 0.0;
 					l -= 2;
 					if ( l >= lend ) {
 						continue; // GO TO 100
@@ -341,8 +341,8 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 				jtot += 1;
 
 				// Form shift
-				rte = Math.sqrt( e[ offsetE + ( l - 1 ) * strideE ] );
-				sigma = ( d[ offsetD + ( l - 1 ) * strideD ] - p ) / ( 2.0 * rte );
+				rte = Math.sqrt( e[ offsetE + (( l - 1 ) * strideE) ] );
+				sigma = ( d[ offsetD + (( l - 1 ) * strideD) ] - p ) / ( 2.0 * rte );
 				r = dlapy2( sigma, 1.0 );
 				sigma = p - ( rte / ( sigma + ( Math.abs( r ) * ( Math.sign( sigma ) || 1.0 ) ) ) );
 
@@ -356,14 +356,14 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 					bb = e[ offsetE + (i * strideE) ];
 					r = p + bb;
 					if ( i !== m ) {
-						e[ offsetE + ( i - 1 ) * strideE ] = s * r;
+						e[ offsetE + (( i - 1 ) * strideE) ] = s * r;
 					}
 					oldc = c;
 					c = p / r;
 					s = bb / r;
 					oldgam = gamma;
-					alpha = d[ offsetD + ( i + 1 ) * strideD ];
-					gamma = c * ( alpha - sigma ) - (s * oldgam);
+					alpha = d[ offsetD + (( i + 1 ) * strideD) ];
+					gamma = (c * ( alpha - sigma )) - (s * oldgam);
 					d[ offsetD + (i * strideD) ] = oldgam + ( alpha - gamma );
 					if ( c !== 0.0 ) {
 						p = ( gamma * gamma ) / c;
@@ -372,7 +372,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 					}
 				}
 
-				e[ offsetE + ( l - 1 ) * strideE ] = s * p;
+				e[ offsetE + (( l - 1 ) * strideE) ] = s * p;
 				d[ offsetD + (l * strideD) ] = sigma + gamma;
 
 				// GO TO 100 (continue the while loop)

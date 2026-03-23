@@ -92,8 +92,8 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					// T(0:i-1, i) += -tau(i) * V(i+1:jj-1, 0:i-1)**T * V(i+1:jj-1, i)
 					if ( jj - i - 1 > 0 ) {
 						dgemv( 'transpose', jj - i - 1, i, -TAU[ offsetTAU + (i * strideTAU) ],
-							V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV1,
-							V, strideV1, offsetV + ( i + 1 ) * strideV1 + (i * strideV2),
+							V, strideV1, strideV2, offsetV + (( i + 1 ) * strideV1),
+							V, strideV1, offsetV + (( i + 1 ) * strideV1) + (i * strideV2),
 							1.0,
 							T, strideT1, offsetT + (i * strideT2) );
 					}
@@ -116,8 +116,8 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 					// T(0:i-1, i) += -tau(i) * V(0:i-1, i+1:jj-1) * V(i, i+1:jj-1)**T
 					if ( jj - i - 1 > 0 ) {
 						dgemv( 'no-transpose', i, jj - i - 1, -TAU[ offsetTAU + (i * strideTAU) ],
-							V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV2,
-							V, strideV2, offsetV + (i * strideV1) + ( i + 1 ) * strideV2,
+							V, strideV1, strideV2, offsetV + (( i + 1 ) * strideV2),
+							V, strideV2, offsetV + (i * strideV1) + (( i + 1 ) * strideV2),
 							1.0,
 							T, strideT1, offsetT + (i * strideT2) );
 					}
@@ -158,16 +158,16 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						}
 
 						for ( j = i + 1; j < K; j++ ) {
-							T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + ( N - K + i ) * strideV1 + (j * strideV2) ]);
+							T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (( N - K + i ) * strideV1) + (j * strideV2) ]);
 						}
 						jj = Math.max( lastv, prevlastv );
 
 						if ( N - K + i - jj > 0 ) {
 							dgemv( 'transpose', N - K + i - jj, K - i - 1, -TAU[ offsetTAU + (i * strideTAU) ],
-								V, strideV1, strideV2, offsetV + (jj * strideV1) + ( i + 1 ) * strideV2,
+								V, strideV1, strideV2, offsetV + (jj * strideV1) + (( i + 1 ) * strideV2),
 								V, strideV1, offsetV + (jj * strideV1) + (i * strideV2),
 								1.0,
-								T, strideT1, offsetT + ( i + 1 ) * strideT1 + (i * strideT2) );
+								T, strideT1, offsetT + (( i + 1 ) * strideT1) + (i * strideT2) );
 						}
 					} else {
 						// Row-wise storage
@@ -180,22 +180,22 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						}
 
 						for ( j = i + 1; j < K; j++ ) {
-							T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (j * strideV1) + ( N - K + i ) * strideV2 ]);
+							T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (j * strideV1) + (( N - K + i ) * strideV2) ]);
 						}
 						jj = Math.max( lastv, prevlastv );
 
 						if ( N - K + i - jj > 0 ) {
 							dgemv( 'no-transpose', K - i - 1, N - K + i - jj, -TAU[ offsetTAU + (i * strideTAU) ],
-								V, strideV1, strideV2, offsetV + ( i + 1 ) * strideV1 + (jj * strideV2),
+								V, strideV1, strideV2, offsetV + (( i + 1 ) * strideV1) + (jj * strideV2),
 								V, strideV2, offsetV + (i * strideV1) + (jj * strideV2),
 								1.0,
-								T, strideT1, offsetT + ( i + 1 ) * strideT1 + (i * strideT2) );
+								T, strideT1, offsetT + (( i + 1 ) * strideT1) + (i * strideT2) );
 						}
 					}
 
 					dtrmv( 'lower', 'no-transpose', 'non-unit', K - i - 1, T, strideT1, strideT2,
-						offsetT + ( i + 1 ) * strideT1 + ( i + 1 ) * strideT2,
-						T, strideT1, offsetT + ( i + 1 ) * strideT1 + (i * strideT2) );
+						offsetT + (( i + 1 ) * strideT1) + (( i + 1 ) * strideT2),
+						T, strideT1, offsetT + (( i + 1 ) * strideT1) + (i * strideT2) );
 					if ( i > 0 ) {
 						prevlastv = Math.min( prevlastv, lastv );
 					} else {

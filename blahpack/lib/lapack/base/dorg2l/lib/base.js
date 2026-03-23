@@ -77,7 +77,7 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		for ( l = 0; l < M; l++ ) {
 			A[ offsetA + (l * strideA1) + (j * strideA2) ] = 0.0;
 		}
-		A[ offsetA + ( M - N + j ) * strideA1 + (j * strideA2) ] = 1.0;
+		A[ offsetA + (( M - N + j ) * strideA1) + (j * strideA2) ] = 1.0;
 	}
 
 	// Apply each reflector in forward order: i = 0, 1, ..., K-1
@@ -91,7 +91,7 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// Fortran: A(M-N+II, II) = 1
 		// M-N+II (1-based) = M-N+(ii+1) => 0-based row = M-N+ii
-		A[ offsetA + ( M - N + ii ) * strideA1 + (ii * strideA2) ] = 1.0;
+		A[ offsetA + (( M - N + ii ) * strideA1) + (ii * strideA2) ] = 1.0;
 
 		// Apply H(i) to A(0:M-N+ii, 0:ii-1) from the left
 
@@ -125,7 +125,7 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		}
 
 		// A(M-N+ii, ii) = 1 - TAU(i)
-		A[ offsetA + ( M - N + ii ) * strideA1 + (ii * strideA2) ] = 1.0 - TAU[ offsetTAU + (i * strideTAU) ];
+		A[ offsetA + (( M - N + ii ) * strideA1) + (ii * strideA2) ] = 1.0 - TAU[ offsetTAU + (i * strideTAU) ];
 
 		// Zero out rows M-N+ii+1 to M-1 of column ii
 

@@ -152,7 +152,7 @@ function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// M-K+I+IB-1 (Fortran 1-based count) = M-K+i+ib (0-based: rows 0..M-K+i+ib-1)
 				zlarft(
 					'backward', 'columnwise', M - K + i + ib, ib,
-					A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2),
 					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					work, 1, ldwork, 0
 				);
@@ -165,7 +165,7 @@ function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				zlarfb(
 					'left', 'no-transpose', 'backward', 'columnwise',
 					M - K + i + ib, N - K + i, ib,
-					A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
+					A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2),
 					work, 1, ldwork, 0,
 					A, strideA1, strideA2, offsetA,
 					work, 1, ldwork, ib
@@ -177,7 +177,7 @@ function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// M-K+I+IB-1 (1-based) = M-K+i+ib (0-based rows)
 			zung2l(
 				M - K + i + ib, ib, ib,
-				A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
+				A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2),
 				TAU, strideTAU, offsetTAU + (i * strideTAU),
 				work, 1, 0
 			);

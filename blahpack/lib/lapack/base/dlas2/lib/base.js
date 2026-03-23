@@ -61,7 +61,7 @@ function dlas2( f, g, h, out ) {
 		if ( fhmx === 0.0 ) {
 			out[ 1 ] = ga;
 		} else {
-			out[ 1 ] = Math.max( fhmx, ga ) * Math.sqrt( 1.0 + ( Math.min( fhmx, ga ) / Math.max( fhmx, ga ) ) * ( Math.min( fhmx, ga ) / Math.max( fhmx, ga ) ) );
+			out[ 1 ] = Math.max( fhmx, ga ) * Math.sqrt( 1.0 + (( Math.min( fhmx, ga ) / Math.max( fhmx, ga ) ) * ( Math.min( fhmx, ga ) / Math.max( fhmx, ga ) )) );
 		}
 	} else if ( ga < fhmx ) {
 		as = 1.0 + (fhmn / fhmx);
@@ -80,7 +80,7 @@ function dlas2( f, g, h, out ) {
 		} else {
 			as = 1.0 + (fhmn / fhmx);
 			at = ( fhmx - fhmn ) / fhmx;
-			c = 1.0 / ( Math.sqrt( 1.0 + ( as * au ) * ( as * au ) ) + Math.sqrt( 1.0 + ( at * au ) * ( at * au ) ) );
+			c = 1.0 / ( Math.sqrt( 1.0 + (( as * au ) * ( as * au )) ) + Math.sqrt( 1.0 + (( at * au ) * ( at * au )) ) );
 			out[ 0 ] = ( fhmn * c ) * au;
 			out[ 0 ] += out[ 0 ];
 			out[ 1 ] = ga / ( c + c );

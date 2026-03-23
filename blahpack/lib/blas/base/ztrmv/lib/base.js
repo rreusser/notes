@@ -118,12 +118,12 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			}
 		} else {
 			// Lower triangular
-			jx = oX + ( N - 1 ) * sx;
+			jx = oX + (( N - 1 ) * sx);
 			for ( j = N - 1; j >= 0; j-- ) {
 				xr = xv[ jx ];
 				xi = xv[ jx + 1 ];
 				if ( xr !== 0.0 || xi !== 0.0 ) {
-					ix = oX + ( N - 1 ) * sx;
+					ix = oX + (( N - 1 ) * sx);
 					for ( i = N - 1; i > j; i-- ) {
 						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
@@ -148,7 +148,7 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	} else {
 		// Form x := A**T*x or x := A**H*x
 		if ( upper ) {
-			jx = oX + ( N - 1 ) * sx;
+			jx = oX + (( N - 1 ) * sx);
 			for ( j = N - 1; j >= 0; j-- ) {
 				tr = xv[ jx ];
 				ti = xv[ jx + 1 ];
@@ -163,7 +163,7 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						tr = xr;
 						ti = xi;
 					}
-					ix = oX + ( j - 1 ) * sx;
+					ix = oX + (( j - 1 ) * sx);
 					for ( i = j - 1; i >= 0; i-- ) {
 						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
@@ -183,7 +183,7 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						tr = xr;
 						ti = xi;
 					}
-					ix = oX + ( j - 1 ) * sx;
+					ix = oX + (( j - 1 ) * sx);
 					for ( i = j - 1; i >= 0; i-- ) {
 						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
@@ -213,7 +213,7 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						tr = xr;
 						ti = xi;
 					}
-					ix = oX + ( j + 1 ) * sx;
+					ix = oX + (( j + 1 ) * sx);
 					for ( i = j + 1; i < N; i++ ) {
 						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];
@@ -233,7 +233,7 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						tr = xr;
 						ti = xi;
 					}
-					ix = oX + ( j + 1 ) * sx;
+					ix = oX + (( j + 1 ) * sx);
 					for ( i = j + 1; i < N; i++ ) {
 						ia = oA + (i * sa1) + (j * sa2);
 						ar = Av[ ia ];

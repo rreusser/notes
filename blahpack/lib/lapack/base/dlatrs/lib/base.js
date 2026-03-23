@@ -119,9 +119,9 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 			}
 		} else {
 			for ( j = 0; j < N - 1; j++ ) {
-				CNORM[ offsetCNORM + (j * sc) ] = dasum( N - j - 1, A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
+				CNORM[ offsetCNORM + (j * sc) ] = dasum( N - j - 1, A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2) );
 			}
-			CNORM[ offsetCNORM + ( N - 1 ) * sc ] = 0.0;
+			CNORM[ offsetCNORM + (( N - 1 ) * sc) ] = 0.0;
 		}
 	}
 
@@ -149,7 +149,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 			} else {
 				for ( j = 0; j < N - 1; j++ ) {
 					tmax = Math.max(
-						dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + (j * sa2), work, 1, 0 ),
+						dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + (( j + 1 ) * sa1) + (j * sa2), work, 1, 0 ),
 						tmax
 					);
 				}
@@ -313,8 +313,8 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 								xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 							}
 						} else if ( j < N - 1 ) {
-							daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2), x, strideX, offsetX + ( j + 1 ) * strideX );
-							i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
+							daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
+							i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + (( j + 1 ) * strideX) );
 							xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 						}
 						continue;
@@ -375,8 +375,8 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 						xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 					}
 				} else if ( j < N - 1 ) {
-					daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2), x, strideX, offsetX + ( j + 1 ) * strideX );
-					i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
+					daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
+					i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + (( j + 1 ) * strideX) );
 					xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 				}
 			}
@@ -411,7 +411,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 					if ( upper ) {
 						sumj = ddot( j, A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
 					} else if ( j < N - 1 ) {
-						sumj = ddot( N - j - 1, A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2), x, strideX, offsetX + ( j + 1 ) * strideX );
+						sumj = ddot( N - j - 1, A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
 					}
 				} else {
 					// Scale each term individually

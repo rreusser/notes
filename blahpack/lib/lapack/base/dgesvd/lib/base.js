@@ -154,9 +154,9 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	// Maximum needed: workspace for temp matrices + scratch for subroutines.
 	wsz = Math.max( 1,
 		5 * minmn,                                        // bdspac
-		3 * minmn + Math.max( M, N ),                     // general
-		2 * Math.max( M, N ) * Math.max( M, N ) +         // two temp NxN or MxM matrices
-			3 * Math.max( M, N ) + Math.max( M, N )       // + tau + work
+		(3 * minmn) + Math.max( M, N ),                   // general
+		(2 * Math.max( M, N ) * Math.max( M, N )) +       // two temp NxN or MxM matrices
+			(3 * Math.max( M, N )) + Math.max( M, N )     // + tau + work
 	);
 	WK = new Float64Array( wsz );
 	DUM = new Float64Array( 1 );
@@ -250,7 +250,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// Sufficient workspace path: use QR + temp matrix
 				ir = 0;
 				ldwrkr = N;
-				itau = ir + ldwrkr * N;
+				itau = ir + (ldwrkr * N);
 				iwork = itau + N;
 
 				// Compute A = Q*R
@@ -302,11 +302,11 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				for ( i = 0; i < M; i += ldwrku ) {
 					chunk = Math.min( M - i, ldwrku );
 					dgemm( 'no-transpose', 'no-transpose', chunk, N, N, 1.0,
-						A, sa1, sa2, offsetA + i * sa1,
+						A, sa1, sa2, offsetA + (i * sa1),
 						WK, 1, ldwrkr, ir,
 						0.0, WK, 1, ldwrku, iu );
 					dlacpy( 'F', chunk, N, WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA + i * sa1 );
+						A, sa1, sa2, offsetA + (i * sa1) );
 				}
 			} else if ( wntuo && wntvas ) {
 				// -------------------------------------------------------
@@ -315,7 +315,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// -------------------------------------------------------
 				ir = 0;
 				ldwrkr = N;
-				itau = ir + ldwrkr * N;
+				itau = ir + (ldwrkr * N);
 				iwork = itau + N;
 
 				// Compute A = Q*R
@@ -375,11 +375,11 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				for ( i = 0; i < M; i += ldwrku ) {
 					chunk = Math.min( M - i, ldwrku );
 					dgemm( 'no-transpose', 'no-transpose', chunk, N, N, 1.0,
-						A, sa1, sa2, offsetA + i * sa1,
+						A, sa1, sa2, offsetA + (i * sa1),
 						WK, 1, ldwrkr, ir,
 						0.0, WK, 1, ldwrku, iu );
 					dlacpy( 'F', chunk, N, WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA + i * sa1 );
+						A, sa1, sa2, offsetA + (i * sa1) );
 				}
 			} else if ( wntus ) {
 				if ( wntvn ) {
@@ -389,7 +389,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					ir = 0;
 					ldwrkr = N;
-					itau = ir + ldwrkr * N;
+					itau = ir + (ldwrkr * N);
 					iwork = itau + N;
 
 					// Compute A = Q*R
@@ -445,9 +445,9 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = N;
-					ir = iu + ldwrku * N;
+					ir = iu + (ldwrku * N);
 					ldwrkr = N;
-					itau = ir + ldwrkr * N;
+					itau = ir + (ldwrkr * N);
 					iwork = itau + N;
 
 					// Compute A = Q*R
@@ -515,7 +515,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = N;
-					itau = iu + ldwrku * N;
+					itau = iu + (ldwrku * N);
 					iwork = itau + N;
 
 					// Compute A = Q*R
@@ -581,7 +581,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					ir = 0;
 					ldwrkr = N;
-					itau = ir + ldwrkr * N;
+					itau = ir + (ldwrkr * N);
 					iwork = itau + N;
 
 					// Compute A = Q*R
@@ -647,9 +647,9 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = N;
-					ir = iu + ldwrku * N;
+					ir = iu + (ldwrku * N);
 					ldwrkr = N;
-					itau = ir + ldwrkr * N;
+					itau = ir + (ldwrkr * N);
 					iwork = itau + N;
 
 					// Compute A = Q*R
@@ -723,7 +723,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = N;
-					itau = iu + ldwrku * N;
+					itau = iu + (ldwrku * N);
 					iwork = itau + N;
 
 					// Compute A = Q*R
@@ -942,7 +942,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// -------------------------------------------------------
 				ir = 0;
 				ldwrkr = M;
-				itau = ir + ldwrkr * M;
+				itau = ir + (ldwrkr * M);
 				iwork = itau + M;
 
 				// Compute A = L*Q
@@ -996,10 +996,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					blk = Math.min( N - i, chunk );
 					dgemm( 'no-transpose', 'no-transpose', M, blk, M, 1.0,
 						WK, 1, ldwrkr, ir,
-						A, sa1, sa2, offsetA + i * sa2,
+						A, sa1, sa2, offsetA + (i * sa2),
 						0.0, WK, 1, ldwrku, iu );
 					dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA + i * sa2 );
+						A, sa1, sa2, offsetA + (i * sa2) );
 				}
 			} else if ( wntvo && wntuas ) {
 				// -------------------------------------------------------
@@ -1008,7 +1008,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// -------------------------------------------------------
 				ir = 0;
 				ldwrkr = M;
-				itau = ir + ldwrkr * M;
+				itau = ir + (ldwrkr * M);
 				iwork = itau + M;
 
 				// Compute A = L*Q
@@ -1068,10 +1068,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					blk = Math.min( N - i, chunk );
 					dgemm( 'no-transpose', 'no-transpose', M, blk, M, 1.0,
 						WK, 1, ldwrkr, ir,
-						A, sa1, sa2, offsetA + i * sa2,
+						A, sa1, sa2, offsetA + (i * sa2),
 						0.0, WK, 1, ldwrku, iu );
 					dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
-						A, sa1, sa2, offsetA + i * sa2 );
+						A, sa1, sa2, offsetA + (i * sa2) );
 				}
 			} else if ( wntvs ) {
 				if ( wntun ) {
@@ -1081,7 +1081,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					ir = 0;
 					ldwrkr = M;
-					itau = ir + ldwrkr * M;
+					itau = ir + (ldwrkr * M);
 					iwork = itau + M;
 
 					// Compute A = L*Q
@@ -1137,9 +1137,9 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = M;
-					ir = iu + ldwrku * M;
+					ir = iu + (ldwrku * M);
 					ldwrkr = M;
-					itau = ir + ldwrkr * M;
+					itau = ir + (ldwrkr * M);
 					iwork = itau + M;
 
 					// Compute A = L*Q
@@ -1207,7 +1207,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = M;
-					itau = iu + ldwrku * M;
+					itau = iu + (ldwrku * M);
 					iwork = itau + M;
 
 					// Compute A = L*Q
@@ -1273,7 +1273,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					ir = 0;
 					ldwrkr = M;
-					itau = ir + ldwrkr * M;
+					itau = ir + (ldwrkr * M);
 					iwork = itau + M;
 
 					// Compute A = L*Q
@@ -1335,9 +1335,9 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = M;
-					ir = iu + ldwrku * M;
+					ir = iu + (ldwrku * M);
 					ldwrkr = M;
-					itau = ir + ldwrkr * M;
+					itau = ir + (ldwrkr * M);
 					iwork = itau + M;
 
 					// Compute A = L*Q
@@ -1411,7 +1411,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					// -------------------------------------------------------
 					iu = 0;
 					ldwrku = M;
-					itau = iu + ldwrku * M;
+					itau = iu + (ldwrku * M);
 					iwork = itau + M;
 
 					// Compute A = L*Q

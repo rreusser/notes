@@ -234,8 +234,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	// 0-based: H at (ilo-1, ilo-1)
 
 	// Zlanhs expects strides in complex elements (each = 2 doubles)
-	anorm = zlanhs( 'frobenius', in0, H, strideH1, strideH2, offsetH + ( ilo - 1 ) * strideH1 + ( ilo - 1 ) * strideH2, RWORK, strideRWORK, offsetRWORK );
-	bnorm = zlanhs( 'frobenius', in0, T, strideT1, strideT2, offsetT + ( ilo - 1 ) * strideT1 + ( ilo - 1 ) * strideT2, RWORK, strideRWORK, offsetRWORK );
+	anorm = zlanhs( 'frobenius', in0, H, strideH1, strideH2, offsetH + (( ilo - 1 ) * strideH1) + (( ilo - 1 ) * strideH2), RWORK, strideRWORK, offsetRWORK );
+	bnorm = zlanhs( 'frobenius', in0, T, strideT1, strideT2, offsetT + (( ilo - 1 ) * strideT1) + (( ilo - 1 ) * strideT2), RWORK, strideRWORK, offsetRWORK );
 	atol = Math.max( safmin, ulp * anorm );
 	btol = Math.max( safmin, ulp * bnorm );
 	ascale = ONE / Math.max( safmin, anorm );
@@ -310,11 +310,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		}
 
 		// Check if H(ILAST, ILAST-1) is small
-		if ( cabs1At( Hv, oH + (ilast * sh1) + ( ilast - 1 ) * sh2 ) <=
+		if ( cabs1At( Hv, oH + (ilast * sh1) + (( ilast - 1 ) * sh2) ) <=
 			Math.max( safmin, ulp * ( cabs1At( Hv, oH + (ilast * sh1) + (ilast * sh2) ) +
-			cabs1At( Hv, oH + ( ilast - 1 ) * sh1 + ( ilast - 1 ) * sh2 ) ) ) ) {
-			Hv[ oH + (ilast * sh1) + ( ilast - 1 ) * sh2 ] = ZERO;
-			Hv[ oH + (ilast * sh1) + ( ilast - 1 ) * sh2 + 1 ] = ZERO;
+			cabs1At( Hv, oH + (( ilast - 1 ) * sh1) + (( ilast - 1 ) * sh2) ) ) ) ) {
+			Hv[ oH + (ilast * sh1) + (( ilast - 1 ) * sh2) ] = ZERO;
+			Hv[ oH + (ilast * sh1) + (( ilast - 1 ) * sh2) + 1 ] = ZERO;
 			deflateAndExtract();
 			if ( done ) {
 				return info;
@@ -397,7 +397,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		f[ 1 ] = Hv[ idx1 + 1 ];
 
 		// G = H(ILAST, ILAST-1)
-		idx2 = oH + (ilast * sh1) + ( ilast - 1 ) * sh2;
+		idx2 = oH + (ilast * sh1) + (( ilast - 1 ) * sh2);
 		g[ 0 ] = Hv[ idx2 ];
 		g[ 1 ] = Hv[ idx2 + 1 ];
 
@@ -424,7 +424,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		zrot(
 			ilast - ifrstm,
 			H, strideH1, offsetH + (ifrstm * strideH1) + (ilast * strideH2),
-			H, strideH1, offsetH + (ifrstm * strideH1) + ( ilast - 1 ) * strideH2,
+			H, strideH1, offsetH + (ifrstm * strideH1) + (( ilast - 1 ) * strideH2),
 			c, s
 		);
 
@@ -432,14 +432,14 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		zrot(
 			ilast - ifrstm,
 			T, strideT1, offsetT + (ifrstm * strideT1) + (ilast * strideT2),
-			T, strideT1, offsetT + (ifrstm * strideT1) + ( ilast - 1 ) * strideT2,
+			T, strideT1, offsetT + (ifrstm * strideT1) + (( ilast - 1 ) * strideT2),
 			c, s
 		);
 		if ( ilz ) {
 			zrot(
 				N,
 				Z, rz1, offsetZ + (ilast * strideZ2),
-				Z, rz1, offsetZ + ( ilast - 1 ) * strideZ2,
+				Z, rz1, offsetZ + (( ilast - 1 ) * strideZ2),
 				c, s
 			);
 		}
@@ -524,11 +524,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// Test 1: H(j, j-1) = 0 or j = ILO (0-based: jj == ilo-1)
 			if ( jj === ilo - 1 ) {
 				ilazro = true;
-			} else if ( cabs1At( Hv, oH + (jj * sh1) + ( jj - 1 ) * sh2 ) <=
+			} else if ( cabs1At( Hv, oH + (jj * sh1) + (( jj - 1 ) * sh2) ) <=
 					Math.max( safmin, ulp * ( cabs1At( Hv, oH + (jj * sh1) + (jj * sh2) ) +
-					cabs1At( Hv, oH + ( jj - 1 ) * sh1 + ( jj - 1 ) * sh2 ) ) ) ) {
-				Hv[ oH + (jj * sh1) + ( jj - 1 ) * sh2 ] = ZERO;
-				Hv[ oH + (jj * sh1) + ( jj - 1 ) * sh2 + 1 ] = ZERO;
+					cabs1At( Hv, oH + (( jj - 1 ) * sh1) + (( jj - 1 ) * sh2) ) ) ) ) {
+				Hv[ oH + (jj * sh1) + (( jj - 1 ) * sh2) ] = ZERO;
+				Hv[ oH + (jj * sh1) + (( jj - 1 ) * sh2) + 1 ] = ZERO;
 				ilazro = true;
 			} else {
 				ilazro = false;
@@ -542,8 +542,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				// Test 1a: two consecutive small subdiags
 				ilazr2 = false;
 				if ( !ilazro ) {
-					if ( cabs1At( Hv, oH + (jj * sh1) + ( jj - 1 ) * sh2 ) *
-						( ascale * cabs1At( Hv, oH + ( jj + 1 ) * sh1 + (jj * sh2) ) ) <=
+					if ( cabs1At( Hv, oH + (jj * sh1) + (( jj - 1 ) * sh2) ) *
+						( ascale * cabs1At( Hv, oH + (( jj + 1 ) * sh1) + (jj * sh2) ) ) <=
 						cabs1At( Hv, oH + (jj * sh1) + (jj * sh2) ) * ( ascale * atol ) ) {
 						ilazr2 = true;
 					}
@@ -590,7 +590,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			f[ 1 ] = Hv[ idx1 + 1 ];
 
 			// G = H(JCH+1, JCH)
-			idx2 = oH + ( kk + 1 ) * sh1 + (kk * sh2);
+			idx2 = oH + (( kk + 1 ) * sh1) + (kk * sh2);
 			g[ 0 ] = Hv[ idx2 ];
 			g[ 1 ] = Hv[ idx2 + 1 ];
 
@@ -616,16 +616,16 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// 0-based: ilastm - kk elements
 			zrot(
 				ilastm - kk,
-				H, strideH2, offsetH + (kk * strideH1) + ( kk + 1 ) * strideH2,
-				H, strideH2, offsetH + ( kk + 1 ) * strideH1 + ( kk + 1 ) * strideH2,
+				H, strideH2, offsetH + (kk * strideH1) + (( kk + 1 ) * strideH2),
+				H, strideH2, offsetH + (( kk + 1 ) * strideH1) + (( kk + 1 ) * strideH2),
 				c, s
 			);
 
 			// Same for T
 			zrot(
 				ilastm - kk,
-				T, strideT2, offsetT + (kk * strideT1) + ( kk + 1 ) * strideT2,
-				T, strideT2, offsetT + ( kk + 1 ) * strideT1 + ( kk + 1 ) * strideT2,
+				T, strideT2, offsetT + (kk * strideT1) + (( kk + 1 ) * strideT2),
+				T, strideT2, offsetT + (( kk + 1 ) * strideT1) + (( kk + 1 ) * strideT2),
 				c, s
 			);
 
@@ -635,21 +635,21 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				zrot(
 					N,
 					Q, rq1, offsetQ + (kk * strideQ2),
-					Q, rq1, offsetQ + ( kk + 1 ) * strideQ2,
+					Q, rq1, offsetQ + (( kk + 1 ) * strideQ2),
 					c, s
 				);
 				s[ 1 ] = -s[ 1 ]; // restore
 			}
 			// ILAZR2 adjustment
 			if ( ilazr2 ) {
-				idx1 = oH + (kk * sh1) + ( kk - 1 ) * sh2;
+				idx1 = oH + (kk * sh1) + (( kk - 1 ) * sh2);
 				Hv[ idx1 ] *= c;
 				Hv[ idx1 + 1 ] = Hv[ idx1 + 1 ] * c;
 			}
 			ilazr2 = false;
 
 			// Check convergence
-			if ( cabs1At( Tv, oT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2 ) >= btol ) {
+			if ( cabs1At( Tv, oT + (( kk + 1 ) * st1) + (( kk + 1 ) * st2) ) >= btol ) {
 				if ( kk + 1 >= ilast ) {
 					// GO TO 60
 					deflateAndExtract();
@@ -659,8 +659,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				doQZStep();
 				return true;
 			}
-			Tv[ oT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2 ] = ZERO;
-			Tv[ oT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2 + 1 ] = ZERO;
+			Tv[ oT + (( kk + 1 ) * st1) + (( kk + 1 ) * st2) ] = ZERO;
+			Tv[ oT + (( kk + 1 ) * st1) + (( kk + 1 ) * st2) + 1 ] = ZERO;
 		}
 		return false; // fall to label 50
 	}
@@ -674,12 +674,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		var kk;
 		for ( kk = jj; kk <= ilast - 1; kk++ ) {
 			// CTEMP = T(JCH, JCH+1)
-			idx1 = oT + (kk * st1) + ( kk + 1 ) * st2;
+			idx1 = oT + (kk * st1) + (( kk + 1 ) * st2);
 			f[ 0 ] = Tv[ idx1 ];
 			f[ 1 ] = Tv[ idx1 + 1 ];
 
 			// G = T(JCH+1, JCH+1)
-			idx2 = oT + ( kk + 1 ) * st1 + ( kk + 1 ) * st2;
+			idx2 = oT + (( kk + 1 ) * st1) + (( kk + 1 ) * st2);
 			g[ 0 ] = Tv[ idx2 ];
 			g[ 1 ] = Tv[ idx2 + 1 ];
 
@@ -702,8 +702,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			if ( kk < ilastm - 1 ) {
 				zrot(
 					ilastm - kk - 1,
-					T, strideT2, offsetT + (kk * strideT1) + ( kk + 2 ) * strideT2,
-					T, strideT2, offsetT + ( kk + 1 ) * strideT1 + ( kk + 2 ) * strideT2,
+					T, strideT2, offsetT + (kk * strideT1) + (( kk + 2 ) * strideT2),
+					T, strideT2, offsetT + (( kk + 1 ) * strideT1) + (( kk + 2 ) * strideT2),
 					c, s
 				);
 			}
@@ -714,8 +714,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// ILASTM-JCH+2 in 1-based = (ilastm+1) - (kk+1) + 2 = ilastm - kk + 2
 			zrot(
 				ilastm - kk + 2,
-				H, strideH2, offsetH + (kk * strideH1) + ( kk - 1 ) * strideH2,
-				H, strideH2, offsetH + ( kk + 1 ) * strideH1 + ( kk - 1 ) * strideH2,
+				H, strideH2, offsetH + (kk * strideH1) + (( kk - 1 ) * strideH2),
+				H, strideH2, offsetH + (( kk + 1 ) * strideH1) + (( kk - 1 ) * strideH2),
 				c, s
 			);
 
@@ -725,7 +725,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				zrot(
 					N,
 					Q, rq1, offsetQ + (kk * strideQ2),
-					Q, rq1, offsetQ + ( kk + 1 ) * strideQ2,
+					Q, rq1, offsetQ + (( kk + 1 ) * strideQ2),
 					c, s
 				);
 				s[ 1 ] = -s[ 1 ]; // restore
@@ -733,12 +733,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 			// Step 2: eliminate H(JCH+1, JCH-1)
 			// CTEMP = H(JCH+1, JCH)
-			idx1 = oH + ( kk + 1 ) * sh1 + (kk * sh2);
+			idx1 = oH + (( kk + 1 ) * sh1) + (kk * sh2);
 			f[ 0 ] = Hv[ idx1 ];
 			f[ 1 ] = Hv[ idx1 + 1 ];
 
 			// G = H(JCH+1, JCH-1)
-			idx2 = oH + ( kk + 1 ) * sh1 + ( kk - 1 ) * sh2;
+			idx2 = oH + (( kk + 1 ) * sh1) + (( kk - 1 ) * sh2);
 			g[ 0 ] = Hv[ idx2 ];
 			g[ 1 ] = Hv[ idx2 + 1 ];
 
@@ -763,7 +763,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			zrot(
 				kk + 1 - ifrstm,
 				H, strideH1, offsetH + (ifrstm * strideH1) + (kk * strideH2),
-				H, strideH1, offsetH + (ifrstm * strideH1) + ( kk - 1 ) * strideH2,
+				H, strideH1, offsetH + (ifrstm * strideH1) + (( kk - 1 ) * strideH2),
 				c, s
 			);
 
@@ -773,7 +773,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			zrot(
 				kk - ifrstm,
 				T, strideT1, offsetT + (ifrstm * strideT1) + (kk * strideT2),
-				T, strideT1, offsetT + (ifrstm * strideT1) + ( kk - 1 ) * strideT2,
+				T, strideT1, offsetT + (ifrstm * strideT1) + (( kk - 1 ) * strideT2),
 				c, s
 			);
 
@@ -782,7 +782,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				zrot(
 					N,
 					Z, rz1, offsetZ + (kk * strideZ2),
-					Z, rz1, offsetZ + ( kk - 1 ) * strideZ2,
+					Z, rz1, offsetZ + (( kk - 1 ) * strideZ2),
 					c, s
 				);
 			}
@@ -825,10 +825,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				eshift[ 1 ] += ctemp[ 1 ];
 			} else {
 				// eshift += (ascale*H(ilast,ilast-1)) / (bscale*T(ilast-1,ilast-1))
-				divr = bscale * Tv[ oT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2 ];
-				divi = bscale * Tv[ oT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2 + 1 ];
-				t1r = ascale * Hv[ oH + (ilast * sh1) + ( ilast - 1 ) * sh2 ];
-				t1i = ascale * Hv[ oH + (ilast * sh1) + ( ilast - 1 ) * sh2 + 1 ];
+				divr = bscale * Tv[ oT + (( ilast - 1 ) * st1) + (( ilast - 1 ) * st2) ];
+				divi = bscale * Tv[ oT + (( ilast - 1 ) * st1) + (( ilast - 1 ) * st2) + 1 ];
+				t1r = ascale * Hv[ oH + (ilast * sh1) + (( ilast - 1 ) * sh2) ];
+				t1i = ascale * Hv[ oH + (ilast * sh1) + (( ilast - 1 ) * sh2) + 1 ];
 				cdivInline( ctemp, t1r, t1i, divr, divi );
 				eshift[ 0 ] += ctemp[ 0 ];
 				eshift[ 1 ] += ctemp[ 1 ];
@@ -848,16 +848,16 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 			// CTEMP = ASCALE*H(J,J) - SHIFT*(BSCALE*T(J,J))
 			idx = oH + (jj * sh1) + (jj * sh2);
-			t1r = (ascale * Hv[ idx ]) - shift[ 0 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) ] ) + shift[ 1 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) + 1 ] );
-			t1i = (ascale * Hv[ idx + 1 ]) - shift[ 0 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) + 1 ] ) - shift[ 1 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) ] );
+			t1r = (ascale * Hv[ idx ]) - (shift[ 0 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) ] )) + (shift[ 1 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) + 1 ] ));
+			t1i = (ascale * Hv[ idx + 1 ]) - (shift[ 0 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) + 1 ] )) - (shift[ 1 ] * ( bscale * Tv[ oT + (jj * st1) + (jj * st2) ] ));
 			temp = Math.abs( t1r ) + Math.abs( t1i );
-			temp2 = ascale * cabs1At( Hv, oH + ( jj + 1 ) * sh1 + (jj * sh2) );
+			temp2 = ascale * cabs1At( Hv, oH + (( jj + 1 ) * sh1) + (jj * sh2) );
 			tempr = Math.max( temp, temp2 );
 			if ( tempr < ONE && tempr !== ZERO ) {
 				temp /= tempr;
 				temp2 /= tempr;
 			}
-			if ( cabs1At( Hv, oH + (jj * sh1) + ( jj - 1 ) * sh2 ) * temp2 <= temp * atol ) {
+			if ( cabs1At( Hv, oH + (jj * sh1) + (( jj - 1 ) * sh2) ) * temp2 <= temp * atol ) {
 				// GO TO 90
 				break;
 			}
@@ -869,11 +869,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 		// Compute CTEMP at ISTART
 		idx = oH + (istart * sh1) + (istart * sh2);
-		ctemp[ 0 ] = (ascale * Hv[ idx ]) - shift[ 0 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) ] ) + shift[ 1 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) + 1 ] );
-		ctemp[ 1 ] = (ascale * Hv[ idx + 1 ]) - shift[ 0 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) + 1 ] ) - shift[ 1 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) ] );
+		ctemp[ 0 ] = (ascale * Hv[ idx ]) - (shift[ 0 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) ] )) + (shift[ 1 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) + 1 ] ));
+		ctemp[ 1 ] = (ascale * Hv[ idx + 1 ]) - (shift[ 0 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) + 1 ] )) - (shift[ 1 ] * ( bscale * Tv[ oT + (istart * st1) + (istart * st2) ] ));
 
 		// Initial Q: CTEMP2 = ASCALE * H(ISTART+1, ISTART)
-		idx = oH + ( istart + 1 ) * sh1 + (istart * sh2);
+		idx = oH + (( istart + 1 ) * sh1) + (istart * sh2);
 		ctemp2[ 0 ] = ascale * Hv[ idx ];
 		ctemp2[ 1 ] = ascale * Hv[ idx + 1 ];
 
@@ -902,7 +902,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		var ti;
 
 		// U12 = (BSCALE*T(ILAST-1,ILAST)) / (BSCALE*T(ILAST,ILAST))
-		idx = oT + ( ilast - 1 ) * st1 + (ilast * st2);
+		idx = oT + (( ilast - 1 ) * st1) + (ilast * st2);
 		t1r = bscale * Tv[ idx ];
 		t1i = bscale * Tv[ idx + 1 ];
 		idx = oT + (ilast * st1) + (ilast * st2);
@@ -911,16 +911,16 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		cdivInline( u12, t1r, t1i, divr, divi );
 
 		// AD11 = (ASCALE*H(ILAST-1,ILAST-1)) / (BSCALE*T(ILAST-1,ILAST-1))
-		idx = oH + ( ilast - 1 ) * sh1 + ( ilast - 1 ) * sh2;
+		idx = oH + (( ilast - 1 ) * sh1) + (( ilast - 1 ) * sh2);
 		t1r = ascale * Hv[ idx ];
 		t1i = ascale * Hv[ idx + 1 ];
-		idx = oT + ( ilast - 1 ) * st1 + ( ilast - 1 ) * st2;
+		idx = oT + (( ilast - 1 ) * st1) + (( ilast - 1 ) * st2);
 		divr = bscale * Tv[ idx ];
 		divi = bscale * Tv[ idx + 1 ];
 		cdivInline( ad11, t1r, t1i, divr, divi );
 
 		// AD21 = (ASCALE*H(ILAST,ILAST-1)) / (BSCALE*T(ILAST-1,ILAST-1))
-		idx = oH + (ilast * sh1) + ( ilast - 1 ) * sh2;
+		idx = oH + (ilast * sh1) + (( ilast - 1 ) * sh2);
 		t1r = ascale * Hv[ idx ];
 		t1i = ascale * Hv[ idx + 1 ];
 
@@ -928,7 +928,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		cdivInline( ad21, t1r, t1i, divr, divi );
 
 		// AD12 = (ASCALE*H(ILAST-1,ILAST)) / (BSCALE*T(ILAST,ILAST))
-		idx = oH + ( ilast - 1 ) * sh1 + (ilast * sh2);
+		idx = oH + (( ilast - 1 ) * sh1) + (ilast * sh2);
 		t1r = ascale * Hv[ idx ];
 		t1i = ascale * Hv[ idx + 1 ];
 		idx = oT + (ilast * st1) + (ilast * st2);
@@ -1051,12 +1051,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		for ( jj = istart; jj <= ilast - 1; jj++ ) {
 			if ( jj > istart ) {
 				// CTEMP = H(J, J-1)
-				idx1 = oH + (jj * sh1) + ( jj - 1 ) * sh2;
+				idx1 = oH + (jj * sh1) + (( jj - 1 ) * sh2);
 				f[ 0 ] = Hv[ idx1 ];
 				f[ 1 ] = Hv[ idx1 + 1 ];
 
 				// G = H(J+1, J-1)
-				idx2 = oH + ( jj + 1 ) * sh1 + ( jj - 1 ) * sh2;
+				idx2 = oH + (( jj + 1 ) * sh1) + (( jj - 1 ) * sh2);
 				g[ 0 ] = Hv[ idx2 ];
 				g[ 1 ] = Hv[ idx2 + 1 ];
 
@@ -1121,12 +1121,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 			// Step 2: eliminate T(J+1, J) with rotation from right
 			// CTEMP = T(J+1, J+1)
-			idx1 = oT + ( jj + 1 ) * st1 + ( jj + 1 ) * st2;
+			idx1 = oT + (( jj + 1 ) * st1) + (( jj + 1 ) * st2);
 			f[ 0 ] = Tv[ idx1 ];
 			f[ 1 ] = Tv[ idx1 + 1 ];
 
 			// G = T(J+1, J)
-			idx2 = oT + ( jj + 1 ) * st1 + (jj * st2);
+			idx2 = oT + (( jj + 1 ) * st1) + (jj * st2);
 			g[ 0 ] = Tv[ idx2 ];
 			g[ 1 ] = Tv[ idx2 + 1 ];
 
@@ -1151,7 +1151,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			mn = Math.min( jj + 2, ilast );
 			sr = s[ 0 ];
 			si = s[ 1 ];
-			p1 = oH + (ifrstm * sh1) + ( jj + 1 ) * sh2;
+			p1 = oH + (ifrstm * sh1) + (( jj + 1 ) * sh2);
 			p2 = p1 - sh2;
 			for ( kk = ifrstm; kk <= mn; kk++ ) {
 				v1r = Hv[ p1 ]; v1i = Hv[ p1 + 1 ];
@@ -1164,7 +1164,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			}
 
 			// Apply rotation from right to T (rows ifrstm..jj)
-			p1 = oT + (ifrstm * st1) + ( jj + 1 ) * st2;
+			p1 = oT + (ifrstm * st1) + (( jj + 1 ) * st2);
 			p2 = p1 - st2;
 			for ( kk = ifrstm; kk <= jj; kk++ ) {
 				v1r = Tv[ p1 ]; v1i = Tv[ p1 + 1 ];
@@ -1178,7 +1178,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 			// Z rotation: apply s from right to columns jj+1, jj
 			if ( ilz ) {
-				p1 = (offsetZ * 2) + ( jj + 1 ) * sz2;
+				p1 = (offsetZ * 2) + (( jj + 1 ) * sz2);
 				p2 = p1 - sz2;
 				for ( kk = 0; kk < N; kk++ ) {
 					v1r = Zv[ p1 ]; v1i = Zv[ p1 + 1 ];

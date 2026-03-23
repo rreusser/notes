@@ -104,7 +104,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 	alphaR = real( alpha );
 	alphaI = imag( alpha );
 
-	if ( N === 0 || ( ( alphaR === 0.0 && alphaI === 0.0 || K === 0 ) && beta === 1.0 ) ) {
+	if ( N === 0 || ( ( (alphaR === 0.0 && alphaI === 0.0) || K === 0 ) && beta === 1.0 ) ) {
 		return C;
 	}
 
@@ -294,8 +294,8 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 
 						// Imaginary stays zero
 						ic += sc1;
-						ia = oA + ( j + 1 ) * sa1 + (l * sa2);
-						ib = oB + ( j + 1 ) * sb1 + (l * sb2);
+						ia = oA + (( j + 1 ) * sa1) + (l * sa2);
+						ib = oB + (( j + 1 ) * sb1) + (l * sb2);
 						for ( i = j + 1; i < N; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];

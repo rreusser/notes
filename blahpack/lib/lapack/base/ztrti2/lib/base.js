@@ -121,12 +121,12 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 				// Compute elements j+1:N-1 of j-th column:
 				// A(j+1:N-1, j) = A(j+1:N-1, j+1:N-1) * A(j+1:N-1, j)
 				ztrmv( 'lower', 'no-transpose', diag, N - j - 1,
-					A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + ( j + 1 ) * sa2,
-					A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
+					A, sa1, sa2, offsetA + (( j + 1 ) * sa1) + (( j + 1 ) * sa2),
+					A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2) );
 
 				// Scale column by ajj: A(j+1:N-1, j) = ajj * A(j+1:N-1, j)
 				zscal( N - j - 1, new Complex128( ajjR, ajjI ),
-					A, sa1, offsetA + ( j + 1 ) * sa1 + (j * sa2) );
+					A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2) );
 			}
 		}
 	}
