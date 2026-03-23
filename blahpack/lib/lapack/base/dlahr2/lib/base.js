@@ -76,18 +76,18 @@ function dlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 			// Fortran: DGEMV('NO TRANSPOSE', N-K, I-1, -1, Y(K+1,1), LDY, A(K+I-1,1), LDA, 1, A(K+1,I), 1)
 			dgemv( 'no-transpose', N - K, i, -1.0, Y, strideY, ldY, offsetY + K * strideY, A, strideA2, offsetA + ( K + i - 1 ) * strideA1, 1.0, A, strideA1, offsetA + K * strideA1 + i * strideA2 );
 
-			// w := V1^T * b1 — copy first i elements of column i of A(K+1:,:) into T(:,NB)
+			// Compute w := V1^T * b1 — copy first i elements of column i of A(K+1:,:) into T(:,NB)
 			// Fortran: DCOPY(I-1, A(K+1,I), 1, T(1,NB), 1)
 			dcopy( i, A, strideA1, offsetA + K * strideA1 + i * strideA2, T, strideT, offsetT + ( nb - 1 ) * ldT );
 
 			// Fortran: DTRMV('Lower', 'Transpose', 'UNIT', I-1, A(K+1,1), LDA, T(1,NB), 1)
 			dtrmv( 'lower', 'transpose', 'unit', i, A, strideA1, strideA2, offsetA + K * strideA1, T, strideT, offsetT + ( nb - 1 ) * ldT );
 
-			// w := w + V2^T * b2
+			// Update w := w + V2^T * b2
 			// Fortran: DGEMV('Transpose', N-K-I+1, I-1, 1, A(K+I,1), LDA, A(K+I,I), 1, 1, T(1,NB), 1)
 			dgemv( 'transpose', N - K - i, i, 1.0, A, strideA1, strideA2, offsetA + ( K + i ) * strideA1, A, strideA1, offsetA + ( K + i ) * strideA1 + i * strideA2, 1.0, T, strideT, offsetT + ( nb - 1 ) * ldT );
 
-			// w := T^T * w
+			// Apply w := T^T * w
 			// Fortran: DTRMV('Upper', 'Transpose', 'NON-UNIT', I-1, T, LDT, T(1,NB), 1)
 			dtrmv( 'upper', 'transpose', 'non-unit', i, T, strideT, ldT, offsetT, T, strideT, offsetT + ( nb - 1 ) * ldT );
 

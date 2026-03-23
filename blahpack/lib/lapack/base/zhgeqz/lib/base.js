@@ -643,7 +643,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			// ILAZR2 adjustment
 			if ( ilazr2 ) {
 				idx1 = oH + kk * sh1 + ( kk - 1 ) * sh2;
-				Hv[ idx1 ] = Hv[ idx1 ] * c;
+				Hv[ idx1 ] *= c;
 				Hv[ idx1 + 1 ] = Hv[ idx1 + 1 ] * c;
 			}
 			ilazr2 = false;

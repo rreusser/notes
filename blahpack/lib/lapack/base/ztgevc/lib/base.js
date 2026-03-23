@@ -334,8 +334,8 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 					bcoeff[ 0 ] = bscale * ( scale * salpha[ 0 ] );
 					bcoeff[ 1 ] = bscale * ( scale * salpha[ 1 ] );
 				} else {
-					bcoeff[ 0 ] = scale * bcoeff[ 0 ];
-					bcoeff[ 1 ] = scale * bcoeff[ 1 ];
+					bcoeff[ 0 ] *= scale;
+					bcoeff[ 1 ] *= scale;
 				}
 			}
 
@@ -529,8 +529,8 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 					bcoeff[ 0 ] = bscale * ( scale * salpha[ 0 ] );
 					bcoeff[ 1 ] = bscale * ( scale * salpha[ 1 ] );
 				} else {
-					bcoeff[ 0 ] = scale * bcoeff[ 0 ];
-					bcoeff[ 1 ] = scale * bcoeff[ 1 ];
+					bcoeff[ 0 ] *= scale;
+					bcoeff[ 1 ] *= scale;
 				}
 			}
 

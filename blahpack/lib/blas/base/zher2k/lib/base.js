@@ -142,7 +142,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						ic += sc1;
 					}
 					// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
-					Cv[ ic ] = beta * Cv[ ic ];
+					Cv[ ic ] *= beta;
 					Cv[ ic + 1 ] = 0.0;
 				}
 			}
@@ -159,7 +159,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 			for ( j = 0; j < N; j++ ) {
 				// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
 				ic = oC + j * sc1 + j * sc2;
-				Cv[ ic ] = beta * Cv[ ic ];
+				Cv[ ic ] *= beta;
 				Cv[ ic + 1 ] = 0.0;
 				ic += sc1;
 				for ( i = j + 1; i < N; i++ ) {
@@ -192,7 +192,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						ic += sc1;
 					}
 					// Diagonal: scale real part only
-					Cv[ ic ] = beta * Cv[ ic ];
+					Cv[ ic ] *= beta;
 					Cv[ ic + 1 ] = 0.0;
 				} else {
 					// beta === 1.0: just force diagonal imag to zero
@@ -259,7 +259,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					ic = oC + j * sc1 + j * sc2;
 
 					// Diagonal: scale real part only
-					Cv[ ic ] = beta * Cv[ ic ];
+					Cv[ ic ] *= beta;
 					Cv[ ic + 1 ] = 0.0;
 					ic += sc1;
 					for ( i = j + 1; i < N; i++ ) {

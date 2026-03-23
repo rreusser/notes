@@ -173,7 +173,7 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					}
 					ib = offsetB + j * sb2;
 					for ( i = 0; i < M; i++ ) {
-						B[ ib ] = temp * B[ ib ];
+						B[ ib ] *= temp;
 						ib += sb1;
 					}
 					for ( k = 0; k < j; k++ ) {
@@ -194,7 +194,7 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					}
 					ib = offsetB + j * sb2;
 					for ( i = 0; i < M; i++ ) {
-						B[ ib ] = temp * B[ ib ];
+						B[ ib ] *= temp;
 						ib += sb1;
 					}
 					for ( k = j + 1; k < N; k++ ) {
@@ -226,7 +226,7 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					if ( temp !== 1.0 ) {
 						ib = offsetB + k * sb2;
 						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = temp * B[ ib ];
+							B[ ib ] *= temp;
 							ib += sb1;
 						}
 					}
@@ -249,7 +249,7 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					if ( temp !== 1.0 ) {
 						ib = offsetB + k * sb2;
 						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = temp * B[ ib ];
+							B[ ib ] *= temp;
 							ib += sb1;
 						}
 					}

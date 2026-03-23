@@ -1,5 +1,5 @@
-// Web worker: compute NACA potential flow and pre-evaluate grid for GPU rendering.
-import { potentialFlow, nacaAirfoil } from './naca-bundle.js';
+// Web worker: compute potential flow and pre-evaluate grid for GPU rendering.
+import { potentialFlow, nacaAirfoil, squareFlow, exteriorFlow, pointInPolygon as pipFn } from './naca-bundle.js';
 
 // Ray-casting point-in-polygon
 function pointInPolygon(px, py, verts) {
@@ -16,100 +16,110 @@ function pointInPolygon(px, py, verts) {
   return (crossings % 2) === 1;
 }
 
+function evaluateGrid(sol, bodyVerts, options) {
+  const gridN = options.gridN || 512;
+  const xMin = options.xMin || -2;
+  const xMax = options.xMax || 2;
+  const yMin = options.yMin || -2;
+  const yMax = options.yMax || 2;
+
+  const psiGrid = new Float32Array(gridN * gridN);
+  const maskGrid = new Float32Array(gridN * gridN);
+
+  let psiMin = Infinity, psiMax = -Infinity;
+
+  for (let iy = 0; iy < gridN; iy++) {
+    const y = yMin + (yMax - yMin) * iy / (gridN - 1);
+    for (let ix = 0; ix < gridN; ix++) {
+      const x = xMin + (xMax - xMin) * ix / (gridN - 1);
+      const idx = ix + iy * gridN;
+
+      const inside = pointInPolygon(x, y, bodyVerts);
+      maskGrid[idx] = inside ? 0.0 : 1.0;
+
+      if (inside) {
+        psiGrid[idx] = 0;
+        continue;
+      }
+
+      const r = sol.evaluate([x, y]);
+      const psi = isFinite(r.psi) ? r.psi : 0;
+      psiGrid[idx] = psi;
+
+      if (psi < psiMin) psiMin = psi;
+      if (psi > psiMax) psiMax = psi;
+    }
+  }
+
+  return { psiGrid, maskGrid, gridN, psiMin, psiMax, domMin: [xMin, yMin], domMax: [xMax, yMax] };
+}
+
 self.onmessage = function(e) {
   const { id, type, options } = e.data;
+
+  if (type === 'square') {
+    const s = options.halfSide || 0.5;
+    const bodyVerts = [[-s,-s],[s,-s],[s,s],[-s,s]];
+
+    // Build boundary points
+    const nSample = options.nSample || 300;
+    const sides = [[bodyVerts[0],bodyVerts[1]],[bodyVerts[1],bodyVerts[2]],[bodyVerts[2],bodyVerts[3]],[bodyVerts[3],bodyVerts[0]]];
+    const boundary = [];
+    for (const [st, en] of sides) {
+      for (let i = 1; i <= nSample; i++) {
+        const t = i / (nSample + 1);
+        boundary.push([st[0]+t*(en[0]-st[0]), st[1]+t*(en[1]-st[1])]);
+      }
+    }
+
+    const t0 = performance.now();
+    const sol = exteriorFlow(boundary, bodyVerts, { mmax: options.mmax || 200 });
+    const solveTime = performance.now() - t0;
+
+    const t1 = performance.now();
+    const grid = evaluateGrid(sol, bodyVerts, {
+      gridN: options.gridN || 512,
+      xMin: -3, xMax: 3, yMin: -3, yMax: 3,
+    });
+    const gridTime = performance.now() - t1;
+
+    self.postMessage({
+      id, type,
+      result: {
+        ...grid,
+        boundary: bodyVerts.concat([bodyVerts[0]]),
+        poles: sol.poles,
+        maxError: sol.maxError,
+      },
+      solveTime, gridTime,
+    });
+  }
 
   if (type === 'naca') {
     const t0 = performance.now();
     const sol = potentialFlow(options);
     const solveTime = performance.now() - t0;
 
-    const gridN = options.gridN || 512;
-    const pad = 0.5;
-    const xMin = -pad, xMax = 1 + pad;
-    const yMin = -0.8, yMax = 0.8;
-
-    const psiGrid = new Float32Array(gridN * gridN);
-    const speedGrid = new Float32Array(gridN * gridN);
-    const maskGrid = new Float32Array(gridN * gridN); // 1=outside, 0=inside airfoil
-
-    let psiMin = Infinity, psiMax = -Infinity;
-    const U = options.U || 1;
-
-    // Precompute min distance to boundary for each grid point (approximate)
-    // Use a subset of boundary points for speed
-    const bdy = sol.boundary;
-    const bdyStep = Math.max(1, Math.floor(bdy.length / 100));
-
     const t1 = performance.now();
-    for (let iy = 0; iy < gridN; iy++) {
-      const y = yMin + (yMax - yMin) * iy / (gridN - 1);
-      for (let ix = 0; ix < gridN; ix++) {
-        const x = xMin + (xMax - xMin) * ix / (gridN - 1);
-        const idx = ix + iy * gridN;
-
-        const inside = pointInPolygon(x, y, bdy);
-
-        // Approximate distance to boundary
-        let minDist2 = Infinity;
-        for (let k = 0; k < bdy.length; k += bdyStep) {
-          const dx = x - bdy[k][0], dy = y - bdy[k][1];
-          const d2 = dx * dx + dy * dy;
-          if (d2 < minDist2) minDist2 = d2;
-        }
-        const minDist = Math.sqrt(minDist2);
-
-        // Mask: 0 inside, ramp from 0→1 in a thin layer near the surface
-        const margin = 0.015; // mask margin thickness
-        if (inside) {
-          maskGrid[idx] = 0.0;
-        } else {
-          maskGrid[idx] = Math.min(1.0, minDist / margin);
-        }
-
-        if (inside || minDist < margin * 0.5) {
-          psiGrid[idx] = 0;
-          speedGrid[idx] = 0;
-          continue;
-        }
-
-        const r = sol.evaluate([x, y]);
-        const psi = isFinite(r.psi) ? r.psi : 0;
-        const speed = isFinite(r.speed) ? Math.min(r.speed, 5 * U) : 0;
-
-        psiGrid[idx] = psi;
-        speedGrid[idx] = speed;
-
-        if (psi < psiMin) psiMin = psi;
-        if (psi > psiMax) psiMax = psi;
-      }
-    }
+    const grid = evaluateGrid(sol, sol.boundary, {
+      gridN: options.gridN || 512,
+      xMin: -0.5, xMax: 1.5, yMin: -0.8, yMax: 0.8,
+    });
     const gridTime = performance.now() - t1;
-
-    // Clamp psi range symmetrically for nice contours
-    const psiAbsMax = Math.max(Math.abs(psiMin), Math.abs(psiMax));
-    psiMin = -psiAbsMax;
-    psiMax = psiAbsMax;
 
     self.postMessage({
       id, type,
       result: {
-        psiGrid, speedGrid, maskGrid,
-        gridN,
-        domMin: [xMin, yMin],
-        domMax: [xMax, yMax],
-        psiMin, psiMax,
-        speedMax: 2.0 * U, // normalize so freestream is at 0.5
+        ...grid,
         boundary: sol.boundary,
-        poles: sol.poles,
+        poles: sol.poles || [],
+        maxError: sol.maxError,
         CL: sol.CL,
         Gamma: sol.Gamma,
-        maxError: sol.maxError,
         digits: sol.digits,
         alpha: sol.alpha,
       },
-      solveTime,
-      gridTime,
+      solveTime, gridTime,
     });
   }
 };

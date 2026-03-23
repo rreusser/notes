@@ -155,18 +155,22 @@ export function laplace(boundaryPoints, boundaryValues, polygonVertices, options
   }
 
   // ---- Build evaluator ----
+  function evaluateComplex(z) {
+    const wS = evalPoly(z, c, smoothCoeffs);
+    const wP = evalSingular(z, filteredPoles, singularCoeffs, b0);
+    return cadd(cadd(wS, wP), imCorr);
+  }
+
   function evaluate(z) {
     if (typeof z[0] === "number") {
-      const wS = evalPoly(z, c, smoothCoeffs);
-      const wP = evalSingular(z, filteredPoles, singularCoeffs, b0);
-      const w = cadd(cadd(wS, wP), imCorr);
-      return w[0];
+      return evaluateComplex(z)[0];
     }
     return z.map((zi) => evaluate(zi));
   }
 
   return {
     evaluate,
+    evaluateComplex,
     poles: filteredPoles,
     allPoles,
     allZeros,

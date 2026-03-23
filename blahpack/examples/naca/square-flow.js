@@ -24,14 +24,15 @@ export function squareFlow(options = {}) {
     nPoly = 20,       // VA polynomial degree
     nSample = 200,    // boundary points per side
     sigma = 4,
-    L = 2,
+    L = 0.5,            // max pole distance from corner (must stay inside body)
     halfSide = 0.5,   // half-side length of square
   } = options;
 
   const s = halfSide;
   const corners = [[-s, -s], [s, -s], [s, s], [-s, s]];
-  // Bisector angles: point outward from each corner
-  const bisectors = [-3*Math.PI/4, -Math.PI/4, Math.PI/4, 3*Math.PI/4];
+  // Bisector angles: point INWARD (toward body center) for exterior flow.
+  // Poles must be inside the body (outside the flow domain).
+  const bisectors = [Math.PI/4, 3*Math.PI/4, -3*Math.PI/4, -Math.PI/4];
 
   // Place lightning poles at each corner
   const allPoles = [];
@@ -117,29 +118,67 @@ export function squareFlow(options = {}) {
   const allCoeffs = new Float64Array(nCols);
   for (let j = 0; j < nActive; j++) allCoeffs[activeCols[j]] = xr[j] / colScales[j];
 
-  // Extract coefficients
-  const polyCoeffs = [];
-  for (let n = 0; n < nPolyBasis; n++) polyCoeffs.push([allCoeffs[2*n], allCoeffs[2*n+1]]);
+  // Extract VA-basis coefficients
+  const vaCoeffs = [];
+  for (let n = 0; n < nPolyBasis; n++) vaCoeffs.push([allCoeffs[2*n], allCoeffs[2*n+1]]);
   const poleCoeffs = [];
   for (let k = 0; k < nPoles; k++) {
     const col = 2 * nPolyBasis + 2 * k;
     poleCoeffs.push([allCoeffs[col], allCoeffs[col + 1]]);
   }
 
-  // Evaluator: w(z) = z + f(z)
+  // Convert VA coefficients to monomial coefficients via Hessenberg expansion.
+  // Build P[k] = monomial coefficients of q_k(ζ), then
+  // monoCoeffs[m] = Σ_k vaCoeffs[k] * P[k][m].
+  const { H } = va;
+  const stride = nPoly + 1;
+  const P = [new Float64Array([1, 0])]; // q_0 = 1
+  for (let k = 0; k < nPoly; k++) {
+    const nc = new Float64Array(2 * (k + 2));
+    // ζ * q_k: shift up
+    for (let m = 0; m <= k; m++) {
+      nc[2*(m+1)] += P[k][2*m];
+      nc[2*(m+1)+1] += P[k][2*m+1];
+    }
+    // Subtract Σ H(j,k) * q_j
+    for (let j = 0; j <= k; j++) {
+      const hjR = H[2*(j + k*stride)], hjI = H[2*(j + k*stride)+1];
+      for (let m = 0; m <= j; m++) {
+        nc[2*m] -= hjR*P[j][2*m] - hjI*P[j][2*m+1];
+        nc[2*m+1] -= hjR*P[j][2*m+1] + hjI*P[j][2*m];
+      }
+    }
+    // Divide by H(k+1,k) (real)
+    const hkk = H[2*((k+1) + k*stride)];
+    for (let m = 0; m < k + 2; m++) { nc[2*m] /= hkk; nc[2*m+1] /= hkk; }
+    P[k+1] = nc;
+  }
+
+  // monoCoeffs[m] = Σ_n vaCoeffs[n] * P[n][m] for m = 0..nPoly
+  const monoCoeffs = new Float64Array(2 * nPolyBasis); // [re0, im0, re1, im1, ...]
+  for (let n = 0; n < nPolyBasis; n++) {
+    const cR = vaCoeffs[n][0], cI = vaCoeffs[n][1];
+    for (let m = 0; m <= n; m++) {
+      const pmR = P[n][2*m], pmI = P[n][2*m+1];
+      monoCoeffs[2*m] += cR*pmR - cI*pmI;
+      monoCoeffs[2*m+1] += cR*pmI + cI*pmR;
+    }
+  }
+
+  // Evaluator: w(z) = z + f(z) using Horner in ζ = 1/(z-z*)
   function evaluate(z) {
     const zr = z[0], zi = z[1];
-    let fr = 0, fi = 0;
-
-    // VA polynomial part
     const dx = zr - zStar[0], dy = zi - zStar[1];
     const d = dx * dx + dy * dy;
     const zetaR = dx / d, zetaI = -dy / d;
-    const { q } = vaEval(va, [zetaR, zetaI]);
-    for (let n = 0; n < nPolyBasis; n++) {
-      const cr = polyCoeffs[n][0], ci = polyCoeffs[n][1];
-      fr += cr * q[2*n] - ci * q[2*n+1];
-      fi += cr * q[2*n+1] + ci * q[2*n];
+
+    // Horner: f = c_N + ζ(c_{N-1} + ζ(...))  [accumulate from high to low]
+    // Actually for Σ c_m ζ^m: f = c_0 + ζ(c_1 + ζ(c_2 + ... + ζ*c_N))
+    let fr = monoCoeffs[2*nPoly], fi = monoCoeffs[2*nPoly+1];
+    for (let m = nPoly - 1; m >= 0; m--) {
+      const newR = monoCoeffs[2*m] + zetaR*fr - zetaI*fi;
+      const newI = monoCoeffs[2*m+1] + zetaR*fi + zetaI*fr;
+      fr = newR; fi = newI;
     }
 
     // Newman part
@@ -153,7 +192,7 @@ export function squareFlow(options = {}) {
 
     // w = z + f
     const wR = zr + fr;
-    const wI = zi + fi; // ψ = Im(w)
+    const wI = zi + fi;
     return { psi: wI, wR, fr, fi };
   }
 
@@ -165,5 +204,5 @@ export function squareFlow(options = {}) {
     if (err > maxError) maxError = err;
   }
 
-  return { evaluate, boundary, corners, allPoles, polyCoeffs, poleCoeffs, maxError, va, zStar, nPoles, nPoly };
+  return { evaluate, boundary, corners, allPoles, monoCoeffs, poleCoeffs, maxError, va, zStar, nPoles, nPoly };
 }

@@ -149,7 +149,7 @@ function dlasq1( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, 
 	// Square all elements: WORK(i) = WORK(i)^2
 	iw = offsetWORK;
 	for ( i = 0; i < 2 * N - 1; i++ ) {
-		WORK[ iw ] = WORK[ iw ] * WORK[ iw ];
+		WORK[ iw ] *= WORK[ iw ];
 		iw += strideWORK;
 	}
 	// Set WORK(2*N) = 0
