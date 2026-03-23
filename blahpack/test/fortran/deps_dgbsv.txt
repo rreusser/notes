@@ -1,0 +1,8 @@
+dgbsv
+dgbtf2
+dgbtrf
+dgbtrs
+dlaswp
+ilaenv
+ieeeck
+iparmq

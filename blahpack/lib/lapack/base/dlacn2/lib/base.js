@@ -1,0 +1,236 @@
+'use strict';
+
+// MODULES //
+
+var dasum = require( './../../../../blas/base/dasum/lib/base.js' );
+var dcopy = require( './../../../../blas/base/dcopy/lib/base.js' );
+var idamax = require( './../../../../blas/base/idamax/lib/base.js' );
+
+// VARIABLES //
+
+var ITMAX = 5;
+
+// MAIN //
+
+/**
+* Estimates the 1-norm of a square matrix using reverse communication.
+*
+* This is a reverse communication interface routine. The caller must:
+* 1. Set KASE[0] = 0 on the first call.
+* 2. Call dlacn2 in a loop. After each return:
+*    - If KASE[0] = 1: compute x = A * x and call dlacn2 again.
+*    - If KASE[0] = 2: compute x = A^T * x and call dlacn2 again.
+*    - If KASE[0] = 0: the estimate is complete; EST[0] holds the result.
+*
+* ISAVE is used to maintain state between calls (3 elements).
+*
+* @private
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} v - workspace array of length N
+* @param {integer} strideV - stride length for `v`
+* @param {NonNegativeInteger} offsetV - starting index for `v`
+* @param {Float64Array} x - input/output vector of length N
+* @param {integer} strideX - stride length for `x`
+* @param {NonNegativeInteger} offsetX - starting index for `x`
+* @param {Int32Array} ISGN - sign array of length N
+* @param {integer} strideISGN - stride length for `ISGN`
+* @param {NonNegativeInteger} offsetISGN - starting index for `ISGN`
+* @param {Float64Array} EST - in/out: EST[0] is the estimated norm
+* @param {Int32Array} KASE - in/out: KASE[0] is the operation to perform
+* @param {Int32Array} ISAVE - state array of length 3
+* @param {integer} strideISAVE - stride length for `ISAVE`
+* @param {NonNegativeInteger} offsetISAVE - starting index for `ISAVE`
+*/
+function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, offsetISGN, EST, KASE, ISAVE, strideISAVE, offsetISAVE ) { // eslint-disable-line max-len, max-params
+	var altsgn;
+	var estold;
+	var jlast;
+	var temp;
+	var xs;
+	var ix;
+	var ii;
+	var si;
+	var i;
+
+	var s0 = offsetISAVE;
+	var s1 = offsetISAVE + strideISAVE;
+	var s2 = offsetISAVE + 2 * strideISAVE;
+
+	if ( KASE[ 0 ] === 0 ) {
+		ix = offsetX;
+		for ( i = 0; i < N; i++ ) {
+			x[ ix ] = 1.0 / N;
+			ix += strideX;
+		}
+		KASE[ 0 ] = 1;
+		ISAVE[ s0 ] = 1; // jump = 1
+		return;
+	}
+
+	// Computed goto equivalent: dispatch on ISAVE[0]
+	switch ( ISAVE[ s0 ] ) {
+	case 1:
+		// First iteration entry point (label 20)
+		if ( N === 1 ) {
+			v[ offsetV ] = x[ offsetX ];
+			EST[ 0 ] = Math.abs( v[ offsetV ] );
+			// Done
+			KASE[ 0 ] = 0;
+			return;
+		}
+		EST[ 0 ] = dasum( N, x, strideX, offsetX );
+
+		ix = offsetX;
+		si = offsetISGN;
+		for ( i = 0; i < N; i++ ) {
+			if ( x[ ix ] >= 0.0 ) {
+				x[ ix ] = 1.0;
+			} else {
+				x[ ix ] = -1.0;
+			}
+			ISGN[ si ] = Math.round( x[ ix ] );
+			ix += strideX;
+			si += strideISGN;
+		}
+		KASE[ 0 ] = 2;
+		ISAVE[ s0 ] = 2; // jump = 2
+		return;
+
+	case 2:
+		// label 40
+		ISAVE[ s1 ] = idamax( N, x, strideX, offsetX ); // 0-based index
+		ISAVE[ s2 ] = 2; // iteration count
+
+		// Fall through to label 50: set up unit vector for column ISAVE[1]
+		ix = offsetX;
+		for ( i = 0; i < N; i++ ) {
+			x[ ix ] = 0.0;
+			ix += strideX;
+		}
+		x[ offsetX + ISAVE[ s1 ] * strideX ] = 1.0;
+		KASE[ 0 ] = 1;
+		ISAVE[ s0 ] = 3; // jump = 3
+		return;
+
+	case 3:
+		// label 70
+		dcopy( N, x, strideX, offsetX, v, strideV, offsetV );
+		estold = EST[ 0 ];
+		EST[ 0 ] = dasum( N, v, strideV, offsetV );
+
+		// Check for cycling: all signs same as previous iteration
+		ix = offsetX;
+		si = offsetISGN;
+		for ( i = 0; i < N; i++ ) {
+			if ( x[ ix ] >= 0.0 ) {
+				xs = 1.0;
+			} else {
+				xs = -1.0;
+			}
+			ii = Math.round( xs );
+			if ( ii !== ISGN[ si ] ) {
+				// Signs differ — no cycling
+				break;
+			}
+			ix += strideX;
+			si += strideISGN;
+		}
+		// If i === N, all signs are same — go to label 120 (final stage)
+		if ( i === N ) {
+			// label 120: final stage — alternating vector
+			altsgn = 1.0;
+			ix = offsetX;
+			for ( i = 0; i < N; i++ ) {
+				x[ ix ] = altsgn * ( 1.0 + i / ( N - 1 ) );
+				altsgn = -altsgn;
+				ix += strideX;
+			}
+			KASE[ 0 ] = 1;
+			ISAVE[ s0 ] = 5; // jump = 5
+			return;
+		}
+
+		// Check if estimate decreased — if so, go to final stage
+		if ( EST[ 0 ] <= estold ) {
+			// label 120: final stage — alternating vector
+			altsgn = 1.0;
+			ix = offsetX;
+			for ( i = 0; i < N; i++ ) {
+				x[ ix ] = altsgn * ( 1.0 + i / ( N - 1 ) );
+				altsgn = -altsgn;
+				ix += strideX;
+			}
+			KASE[ 0 ] = 1;
+			ISAVE[ s0 ] = 5; // jump = 5
+			return;
+		}
+
+		// Update signs and continue iteration
+		ix = offsetX;
+		si = offsetISGN;
+		for ( i = 0; i < N; i++ ) {
+			if ( x[ ix ] >= 0.0 ) {
+				x[ ix ] = 1.0;
+			} else {
+				x[ ix ] = -1.0;
+			}
+			ISGN[ si ] = Math.round( x[ ix ] );
+			ix += strideX;
+			si += strideISGN;
+		}
+		KASE[ 0 ] = 2;
+		ISAVE[ s0 ] = 4; // jump = 4
+		return;
+
+	case 4:
+		// label 110
+		jlast = ISAVE[ s1 ];
+		ISAVE[ s1 ] = idamax( N, x, strideX, offsetX ); // 0-based
+
+		if ( ( x[ offsetX + jlast * strideX ] !== Math.abs( x[ offsetX + ISAVE[ s1 ] * strideX ] ) ) && ( ISAVE[ s2 ] < ITMAX ) ) {
+			ISAVE[ s2 ] += 1;
+
+			// Go to label 50: set up unit vector for new column
+			ix = offsetX;
+			for ( i = 0; i < N; i++ ) {
+				x[ ix ] = 0.0;
+				ix += strideX;
+			}
+			x[ offsetX + ISAVE[ s1 ] * strideX ] = 1.0;
+			KASE[ 0 ] = 1;
+			ISAVE[ s0 ] = 3; // jump = 3
+			return;
+		}
+
+		// label 120: final stage — alternating vector
+		altsgn = 1.0;
+		ix = offsetX;
+		for ( i = 0; i < N; i++ ) {
+			x[ ix ] = altsgn * ( 1.0 + i / ( N - 1 ) );
+			altsgn = -altsgn;
+			ix += strideX;
+		}
+		KASE[ 0 ] = 1;
+		ISAVE[ s0 ] = 5; // jump = 5
+		return;
+
+	case 5:
+		// label 140
+		temp = 2.0 * ( dasum( N, x, strideX, offsetX ) / ( 3.0 * N ) );
+		if ( temp > EST[ 0 ] ) {
+			dcopy( N, x, strideX, offsetX, v, strideV, offsetV );
+			EST[ 0 ] = temp;
+		}
+		// label 150: done
+		KASE[ 0 ] = 0;
+		return;
+
+	default:
+		return;
+	}
+}
+
+
+// EXPORTS //
+
+module.exports = dlacn2;

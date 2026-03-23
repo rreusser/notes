@@ -1,0 +1,39 @@
+
+    dpbtf2.ndarray( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB )
+        Compute Cholesky factorization of a symmetric positive definite banded matrix (unblocked)
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        kd: integer
+            kd.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

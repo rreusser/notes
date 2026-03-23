@@ -1,0 +1,11 @@
+zlahr2
+zlacpy
+zlacgv
+zlarfg
+xerbla
+disnan
+dlaisnan
+dlamch
+dlapy2
+dlapy3
+dznrm2

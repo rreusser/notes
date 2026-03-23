@@ -1,0 +1,89 @@
+# zlahr2
+
+> Reduce NB columns of a complex matrix in Hessenberg form
+
+<section class="usage">
+
+## Usage
+
+```javascript
+var zlahr2 = require( '@stdlib/lapack/base/zlahr2' );
+```
+
+#### zlahr2.ndarray( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, t, strideT, offsetT, ldt, y, strideY, offsetY, ldy )
+
+Reduce NB columns of a complex matrix in Hessenberg form
+
+```javascript
+var Float64Array = require( '@stdlib/array/float64' );
+
+// TODO: Add usage example
+```
+
+The function has the following parameters:
+
+-   **N**: number of columns.
+-   **K**: number of superdiagonals.
+-   **nb**: nb.
+-   **A**: input matrix.
+-   **strideA1**: stride of the first dimension of `A`.
+-   **strideA2**: stride of the second dimension of `A`.
+-   **offsetA**: starting index for `A`.
+-   **tau**: input array.
+-   **strideTAU**: stride length for `tau`.
+-   **offsetTAU**: starting index for `tau`.
+-   **t**: input array.
+-   **strideT**: stride length for `t`.
+-   **offsetT**: starting index for `t`.
+-   **ldt**: ldt.
+-   **y**: input array.
+-   **strideY**: stride length for `y`.
+-   **offsetY**: starting index for `y`.
+-   **ldy**: ldy.
+
+</section>
+
+<!-- /.usage -->
+
+<section class="notes">
+
+## Notes
+
+-   TODO: Add notes.
+
+</section>
+
+<!-- /.notes -->
+
+<section class="examples">
+
+## Examples
+
+```javascript
+// TODO: Add examples
+```
+
+</section>
+
+<!-- /.examples -->
+
+<!-- Section for related `stdlib` packages. Do not manually edit this section, as it is automatically populated. -->
+
+<section class="related">
+
+</section>
+
+<!-- /.related -->
+
+<!-- Section for all links. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
+
+<section class="links">
+
+[mdn-float64array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array
+[mdn-float32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
+[mdn-int32array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array
+[mdn-typed-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
+
+</section>
+
+<!-- /.links -->

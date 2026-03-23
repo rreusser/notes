@@ -1,0 +1,121 @@
+'use strict';
+
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var real = require( '@stdlib/complex/float64/real' );
+var imag = require( '@stdlib/complex/float64/imag' );
+
+// MAIN //
+
+/**
+* Performs the complex symmetric rank-1 operation:
+*   A := alpha*x*x^T + A
+*
+* where alpha is a complex scalar, x is an N element complex vector, and A is
+* an N by N complex symmetric matrix.
+*
+* NOTE: This is a SYMMETRIC (not Hermitian) update — it uses x*x^T, NOT x*x^H.
+* The difference is that x is NOT conjugated.
+*
+* @private
+* @param {string} uplo - specifies whether the upper ('U') or lower ('L') triangle is stored
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Complex128} alpha - complex scalar multiplier
+* @param {Complex128Array} x - complex input vector
+* @param {integer} strideX - stride for x (in complex elements)
+* @param {NonNegativeInteger} offsetX - starting index for x (in complex elements)
+* @param {Complex128Array} A - complex symmetric matrix (updated in place)
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @returns {Complex128Array} `A`
+*/
+function zsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
+	var alphaR;
+	var alphaI;
+	var tempR;
+	var tempI;
+	var sa1;
+	var sa2;
+	var Av;
+	var xv;
+	var oA;
+	var sx;
+	var ix;
+	var jx;
+	var ai;
+	var i;
+	var j;
+
+	if ( N === 0 ) {
+		return A;
+	}
+
+	alphaR = real( alpha );
+	alphaI = imag( alpha );
+
+	// Quick return if alpha is zero
+	if ( alphaR === 0.0 && alphaI === 0.0 ) {
+		return A;
+	}
+
+	Av = reinterpret( A, 0 );
+	xv = reinterpret( x, 0 );
+
+	oA = offsetA * 2;
+	sx = strideX * 2;
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+
+	if ( uplo === 'U' || uplo === 'u' ) {
+		// Upper triangle: A(i,j) for i <= j
+		jx = offsetX * 2;
+		for ( j = 0; j < N; j++ ) {
+			// Check if x[jx] is nonzero
+			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
+				// temp = alpha * x[jx] (complex multiply, NO conjugation)
+				tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
+				tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+
+				ix = offsetX * 2;
+				ai = oA + j * sa2;
+				for ( i = 0; i <= j; i++ ) {
+					// A[i,j] += x[ix] * temp (complex multiply, NOT conjugated)
+					Av[ ai ] += xv[ ix ] * tempR - xv[ ix + 1 ] * tempI;
+					Av[ ai + 1 ] += xv[ ix ] * tempI + xv[ ix + 1 ] * tempR;
+					ix += sx;
+					ai += sa1;
+				}
+			}
+			jx += sx;
+		}
+	} else {
+		// Lower triangle: A(i,j) for i >= j
+		jx = offsetX * 2;
+		for ( j = 0; j < N; j++ ) {
+			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
+				// temp = alpha * x[jx] (complex multiply, NO conjugation)
+				tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
+				tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
+
+				ix = jx;
+				ai = oA + j * sa1 + j * sa2;
+				for ( i = j; i < N; i++ ) {
+					// A[i,j] += x[ix] * temp (complex multiply, NOT conjugated)
+					Av[ ai ] += xv[ ix ] * tempR - xv[ ix + 1 ] * tempI;
+					Av[ ai + 1 ] += xv[ ix ] * tempI + xv[ ix + 1 ] * tempR;
+					ix += sx;
+					ai += sa1;
+				}
+			}
+			jx += sx;
+		}
+	}
+	return A;
+}
+
+
+// EXPORTS //
+
+module.exports = zsyr;

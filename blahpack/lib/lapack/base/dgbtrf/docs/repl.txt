@@ -1,0 +1,51 @@
+
+    dgbtrf.ndarray( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV )
+        Compute LU factorization of a banded matrix (blocked)
+
+        Parameters
+        ----------
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        kl: integer
+            kl.
+
+        ku: integer
+            ku.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        IPIV: Int32Array
+            output array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

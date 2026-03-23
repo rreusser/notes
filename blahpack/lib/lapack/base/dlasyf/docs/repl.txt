@@ -1,0 +1,63 @@
+
+    dlasyf.ndarray( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW )
+        Compute a partial factorization of a symmetric matrix using Bunch-Kaufman pivoting
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        nb: integer
+            nb.
+
+        kb: integer
+            kb.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        W: Float64Array
+            output matrix.
+
+        strideW1: integer
+            stride of the first dimension of `W`.
+
+        strideW2: integer
+            stride of the second dimension of `W`.
+
+        offsetW: NonNegativeInteger
+            starting index for `W`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

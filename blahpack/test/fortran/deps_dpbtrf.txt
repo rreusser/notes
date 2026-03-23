@@ -1,0 +1,9 @@
+disnan
+dlaisnan
+dpbtf2
+dpbtrf
+dpotf2
+ilaenv
+ieeeck
+iparmq
+iparam2stage

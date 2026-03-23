@@ -1,0 +1,63 @@
+
+    dlacn2.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, offsetISGN, est, kase, isave, strideISAVE, offsetISAVE )
+        Estimate the 1-norm of a square matrix using reverse communication
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        v: Float64Array
+            input array.
+
+        strideV: integer
+            stride length for `v`.
+
+        offsetV: NonNegativeInteger
+            starting index for `v`.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        ISGN: Int32Array
+            output array.
+
+        strideISGN: integer
+            stride length for `ISGN`.
+
+        offsetISGN: NonNegativeInteger
+            starting index for `ISGN`.
+
+        est: number
+            est.
+
+        kase: integer
+            kase.
+
+        isave: Int32Array
+            input array.
+
+        strideISAVE: integer
+            stride length for `isave`.
+
+        offsetISAVE: NonNegativeInteger
+            starting index for `isave`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

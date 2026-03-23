@@ -1,0 +1,36 @@
+
+    drscl.ndarray( N, sa, x, stride, offset, incx )
+        Scale a vector by the reciprocal of a scalar
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        sa: number
+            sa.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

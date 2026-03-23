@@ -1,0 +1,66 @@
+
+    dgbtrs.ndarray( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+        Solve a banded system using the LU factorization from dgbtrf
+
+        Parameters
+        ----------
+        trans: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        kl: integer
+            kl.
+
+        ku: integer
+            ku.
+
+        nrhs: integer
+            nrhs.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
