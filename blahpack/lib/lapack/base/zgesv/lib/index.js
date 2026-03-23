@@ -27,22 +27,22 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zgesv = require( '@stdlib/lapack/base/zgesv' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgesv( 'row-major', 2, 1, A, 2, IPIV, 1, B, 2 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zgesv = require( '@stdlib/lapack/base/zgesv' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgesv.ndarray( 2, 1, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 */
 

@@ -28,7 +28,7 @@ var dlassq = require( '../../dlassq/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the value of the one norm, Frobenius norm, infinity norm, or
+* Computes the value of the one norm, Frobenius norm, infinity norm, or.
 * largest absolute value of a real matrix.
 *
 * @private

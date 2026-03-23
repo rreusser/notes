@@ -21,7 +21,7 @@
 // MAIN //
 
 /**
-* Computes the eigenvalues of a 2-by-2 symmetric matrix:
+* Computes the eigenvalues of a 2-by-2 symmetric matrix:.
 *
 *   [ a  b ]
 *   [ b  c ]
@@ -31,7 +31,7 @@
 *
 * Uses the formula:
 *   rt1 = (sm + rt) / 2   or  (sm - rt) / 2  depending on sign of sm
-*   rt2 = (acmx / rt1) * acmn - (b / rt1) * b
+*   rt2 = (acmx / rt1) _ acmn - (b / rt1) _ b
 * where sm = a + c, df = a - c, and rt = sqrt(df^2 + 4*b^2).
 *
 * @private
@@ -83,7 +83,7 @@ function dlae2( a, b, c ) {
 		rt1 = 0.5 * ( sm - rt );
 
 		// Order eigenvalues: |rt1| >= |rt2| guaranteed by rt1 = (sm - rt)/2
-		// when sm < 0, rt1 is the most negative => largest in absolute value
+		// When sm < 0, rt1 is the most negative => largest in absolute value
 		rt2 = ( acmx / rt1 ) * acmn - ( b / rt1 ) * b;
 	} else if ( sm > 0.0 ) {
 		rt1 = 0.5 * ( sm + rt );

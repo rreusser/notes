@@ -63,7 +63,7 @@ function abs1( arr, idx ) {
 // MAIN //
 
 /**
-* Compute the generalized eigenvalues and optionally the left and/or
+* Compute the generalized eigenvalues and optionally the left and/or.
 * right generalized eigenvectors of a complex matrix pair (A, B).
 *
 * A, B, ALPHA, BETA, VL, VR are Complex128Arrays.
@@ -111,24 +111,24 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	var irows;
 	var icols;
 	var RWORK;
+	var lwork;
 	var anrm;
 	var bnrm;
 	var ilvl;
 	var ilvr;
-	var ilv;
 	var info;
 	var ierr;
 	var temp;
 	var WORK;
-	var TAU;
-	var lwork;
-	var VLv;
-	var VRv;
 	var sVL1;
 	var sVL2;
-	var oVL;
 	var sVR1;
 	var sVR2;
+	var ilv;
+	var TAU;
+	var VLv;
+	var VRv;
+	var oVL;
 	var oVR;
 	var bal;
 	var ilo;
@@ -150,9 +150,9 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	}
 
 	// Allocate workspace — sized for the largest consumer:
-	// zunmqr needs nw*nb + ldt*nb where nw=N, nb=32, ldt=33 → N*32+33*32
-	// zgeqrf needs N*nb + nb*nb → N*32+1024
-	// zhgeqz allocates its own internally
+	// Zunmqr needs nw*nb + ldt*nb where nw=N, nb=32, ldt=33 → N*32+33*32
+	// Zgeqrf needs N*nb + nb*nb → N*32+1024
+	// Zhgeqz allocates its own internally
 	lwork = Math.max( 1, N * 32 + 33 * 32 );
 	WORK = new Complex128Array( lwork );
 
@@ -257,10 +257,10 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	}
 
 	// Reduce to generalized Hessenberg form
-	// zgghrd expects compq/compz: 'none'/'update'/'initialize'
+	// Zgghrd expects compq/compz: 'none'/'update'/'initialize'
 	if ( ilv ) {
 		zgghrd(
-			( ilvl ? 'update' : 'none' ), ( ilvr ? 'update' : 'none' ), N, ilo, ihi,
+			( ( ilvl ) ? 'update' : 'none' ), ( ( ilvr ) ? 'update' : 'none' ), N, ilo, ihi,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB,
 			VL, strideVL1, strideVL2, offsetVL,
@@ -283,7 +283,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		chtemp = 'eigenvalues';
 	}
 	ierr = zhgeqz(
-		chtemp, ( ilvl ? 'update' : 'none' ), ( ilvr ? 'update' : 'none' ), N, ilo, ihi,
+		chtemp, ( ( ilvl ) ? 'update' : 'none' ), ( ( ilvr ) ? 'update' : 'none' ), N, ilo, ihi,
 		A, strideA1, strideA2, offsetA,
 		B, strideB1, strideB2, offsetB,
 		ALPHA, strideALPHA, offsetALPHA,
@@ -305,7 +305,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	}
 
 	// Compute eigenvectors
-	// ztgevc side: 'left'/'right'/'both'
+	// Ztgevc side: 'left'/'right'/'both'
 	if ( ilv ) {
 		if ( ilvl ) {
 			if ( ilvr ) {
@@ -318,7 +318,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		}
 
 		// Use a separate RWORK for ztgevc so it doesn't clobber
-		// the LSCALE/RSCALE at RWORK[0..2N-1] needed by zggbak
+		// The LSCALE/RSCALE at RWORK[0..2N-1] needed by zggbak
 		ierr = ztgevc(
 			chtemp, 'backtransform', null, 0, 0, N,
 			A, strideA1, strideA2, offsetA,

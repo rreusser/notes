@@ -42,7 +42,7 @@ var NB = 32; // Hardcoded block size (replaces ILAENV queries)
 // MAIN //
 
 /**
-* Solves overdetermined or underdetermined real linear systems involving an
+* Solves overdetermined or underdetermined real linear systems involving an.
 * M-by-N matrix A, or its transpose, using a QR or LQ factorization of A.
 *
 * It is assumed that A has full rank.
@@ -88,18 +88,18 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 	var smlnum;
 	var iascl;
 	var ibscl;
+	var wsize;
 	var brow;
 	var anrm;
 	var bnrm;
 	var tpsd;
 	var info;
-	var wsize;
 	var WORK;
 	var TAU;
 	var MN;
+	var bi;
 	var i;
 	var j;
-	var bi;
 
 	MN = Math.min( M, N );
 
@@ -141,7 +141,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 	}
 
 	// Scale B
-	brow = tpsd ? N : M;
+	brow = ( tpsd ) ? N : M;
 	bnrm = dlange( 'max', brow, nrhs, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
 	ibscl = 0;
 	if ( bnrm > 0.0 && bnrm < smlnum ) {
@@ -161,7 +161,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 		if ( !tpsd ) {
 			// Least squares problem: minimize || b - A*x ||
-			//
+
 			// B(1:M,1:NRHS) := Q^T * B(1:M,1:NRHS)
 			dormqr( 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
 
@@ -174,7 +174,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			scllen = N;
 		} else {
 			// Minimum norm problem: min || X || s.t. A^T * X = B
-			//
+
 			// Solve R^T * Y = B(1:N,1:NRHS)
 			info = dtrtrs( 'upper', 'transpose', 'non-unit', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
 			if ( info > 0 ) {
@@ -202,7 +202,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 		if ( !tpsd ) {
 			// Minimum norm problem: min || X || s.t. A * X = B
-			//
+
 			// Solve L * Y = B(1:M,1:NRHS)
 			info = dtrtrs( 'lower', 'no-transpose', 'non-unit', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
 			if ( info > 0 ) {
@@ -224,7 +224,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			scllen = N;
 		} else {
 			// Least squares problem: minimize || b - A^T*x ||
-			//
+
 			// B(1:N,1:NRHS) := Q * B(1:N,1:NRHS)
 			dormlq( 'left', 'no-transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
 

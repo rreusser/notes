@@ -30,8 +30,8 @@ var base = require( './base.js' );
 *
 * @returns {*} result
 */
-function zlasyf(  ) {
-	return base(  );
+function zlasyf( ) {
+	return base( );
 }
 
 

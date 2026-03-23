@@ -26,17 +26,17 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrtri = require( '@stdlib/lapack/base/dtrtri' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dtrtri( 'row-major', 'upper', 'non-unit', 2, A, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrtri = require( '@stdlib/lapack/base/dtrtri' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dtrtri.ndarray( 'upper', 'non-unit', 2, A, 1, 2, 0 );
 */
 

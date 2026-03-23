@@ -36,9 +36,9 @@ var NB = 32; // Hardcoded block size
 // MAIN //
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,
+* Overwrites the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
 * where Q is a complex unitary matrix defined as the product of K
-* elementary reflectors Q = H(1) * H(2) * ... * H(k) as returned
+* elementary reflectors Q = H(1) _ H(2) _ ... * H(k) as returned
 * by ZGEQRF. Uses a blocked algorithm with block size NB=32.
 *
 * A, TAU, C, WORK are Complex128Arrays. Strides and offsets are in complex elements.
@@ -67,9 +67,11 @@ var NB = 32; // Hardcoded block size
 * @returns {integer} info - 0 if successful
 */
 function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
+	var offsetT = offsetWORK + nw * nb;
 	var notran;
 	var ldwork;
 	var left;
+	var ldt;
 	var nw;
 	var nb;
 	var nq;
@@ -81,47 +83,8 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var i1;
 	var i2;
 	var i3;
-	var ldt;
 	var T;
 	var i;
-
-	if ( M === 0 || N === 0 || K === 0 ) {
-		return 0;
-	}
-
-	left = ( side === 'left' );
-	notran = ( trans === 'no-transpose' );
-
-	if ( left ) {
-		nq = M;
-		nw = Math.max( 1, N );
-	} else {
-		nq = N;
-		nw = Math.max( 1, M );
-	}
-
-	nb = NB;
-	if ( nb > K ) {
-		nb = K;
-	}
-
-	// If block size is too small or equals K, use unblocked algorithm
-	if ( nb < 2 || nb >= K ) {
-		return zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
-	}
-
-	ldwork = nw;
-	ldt = nb + 1;
-
-	// Ensure WORK is large enough; allocate internally if needed.
-	// T (ldt x nb block reflector) is carved from the tail of WORK.
-	if ( !WORK || WORK.length < ( nw * nb + ldt * nb ) ) {
-		WORK = new Complex128Array( nw * nb + ldt * nb );
-		offsetWORK = 0;
-		strideWORK = 1;
-	}
-	T = WORK;
-	var offsetT = offsetWORK + nw * nb;
 
 	// Determine iteration direction
 	if ( ( left && !notran ) || ( !left && notran ) ) {
@@ -146,6 +109,7 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		ib = Math.min( nb, K - i );
 
 		// Form the triangular factor of the block reflector
+
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		zlarft(
 			'forward', 'columnwise', nq - i, ib,

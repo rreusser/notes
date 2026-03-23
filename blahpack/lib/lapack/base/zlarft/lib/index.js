@@ -24,21 +24,21 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zlarft = require( '@stdlib/lapack/base/zlarft' );
-* 
+*
 * var V = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var TAU = new Complex128Array( [ 1.0, 2.0 ] );
 * var T = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zlarft( 'row-major', 'forward', 'column-wise', 2, 2, V, 2, TAU, 1, T, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zlarft = require( '@stdlib/lapack/base/zlarft' );
-* 
+*
 * var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var T = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zlarft.ndarray( 'forward', 'column-wise', 2, 2, V, 1, 2, 0, TAU, 1, 0, T, 1, 2, 0 );
 */
 

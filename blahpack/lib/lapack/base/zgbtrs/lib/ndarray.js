@@ -60,7 +60,7 @@ var base = require( './base.js' );
 * var B = new Float64Array( 4 );
 *
 * var info = zgbtrs( 'no-transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
-* // info => 0
+* // ? => 0
 */
 function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
 	if ( !isMatrixTranspose( trans ) ) {

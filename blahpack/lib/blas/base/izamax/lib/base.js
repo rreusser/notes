@@ -25,7 +25,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 // MAIN //
 
 /**
-* Finds the index of the element having the maximum sum of absolute values of
+* Finds the index of the element having the maximum sum of absolute values of.
 * real and imaginary parts in a double-precision complex vector.
 *
 * @param {NonNegativeInteger} N - number of complex elements

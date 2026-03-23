@@ -26,19 +26,19 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgels = require( '@stdlib/lapack/base/dgels' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dgels( 'row-major', 'no-transpose', 2, 2, 1, A, 2, B, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgels = require( '@stdlib/lapack/base/dgels' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dgels.ndarray( 'no-transpose', 2, 2, 1, A, 1, 2, 0, B, 1, 2, 0 );
 */
 

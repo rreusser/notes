@@ -19,26 +19,26 @@
 'use strict';
 
 /**
-* Perform one of the matrix-vector operations x := A*x or x := A**T*x where A is an N by N upper or lower triangular matrix.
+* Perform one of the matrix-vector operations x := A_x or x := A__T_x where A is an N by N upper or lower triangular matrix.
 *
 * @module @stdlib/blas/base/dtrmv
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrmv = require( '@stdlib/blas/base/dtrmv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dtrmv( 'row-major', 'upper', 'no-transpose', 'non-unit', 2, A, 2, x, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrmv = require( '@stdlib/blas/base/dtrmv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dtrmv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
 */
 

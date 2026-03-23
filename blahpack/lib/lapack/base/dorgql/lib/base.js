@@ -33,7 +33,7 @@ var NB = 32;  // Block size (LAPACK default for DORGQL)
 // MAIN //
 
 /**
-* Generates an M-by-N real orthogonal matrix Q with orthonormal columns,
+* Generates an M-by-N real orthogonal matrix Q with orthonormal columns,.
 * which is defined as the last N columns of a product of K elementary
 * reflectors of order M
 *
@@ -95,6 +95,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		kk = Math.min( K, Math.floor( ( K + nb - 1 ) / nb ) * nb );
 
 		// Set A(M-KK:M-1, 0:N-KK-1) to zero
+
 		// Fortran: DO 20 J = 1, N-KK; DO 10 I = M-KK+1, M
 		for ( j = 0; j < N - kk; j++ ) {
 			for ( i = M - kk; i < M; i++ ) {
@@ -120,7 +121,9 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		work = new Float64Array( ldwork * nb );
 
 		// Process blocks from left to right (in terms of TAU index)
+
 		// Fortran: DO 50 I = K-KK+1, K, NB (1-based)
+
 		// 0-based: i goes from K-kk to K-1, step nb
 		for ( i = K - kk; i < K; i += nb ) {
 			ib = Math.min( nb, K - i );
@@ -141,11 +144,17 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				);
 
 				// Apply H to A(0:M-K+i+ib-1, 0:N-K+i-1) from the left
+
 				// Fortran: DLARFB('Left', 'No transpose', 'Backward', 'Columnwise',
+
 				//                  M-K+I+IB-1, N-K+I-1, IB,
+
 				//                  A(1, N-K+I), LDA, WORK, LDWORK,
+
 				//                  A, LDA, WORK(IB+1), LDWORK)
+
 				// M-K+I+IB-1 (1-based count) = M-K+i+ib (0-based rows)
+
 				// N-K+I-1 (1-based count) = N-K+i (0-based cols)
 				dlarfb(
 					'left', 'no-transpose', 'backward', 'columnwise',
@@ -168,7 +177,9 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			);
 
 			// Set rows M-K+i+ib to M-1 of columns N-K+i to N-K+i+ib-1 to zero
+
 			// Fortran: DO 40 J = N-K+I, N-K+I+IB-1; DO 30 L = M-K+I+IB, M
+
 			// 0-based: j = N-K+i..N-K+i+ib-1, l = M-K+i+ib..M-1
 			for ( j = N - K + i; j < N - K + i + ib; j++ ) {
 				for ( l = M - K + i + ib; l < M; l++ ) {

@@ -25,12 +25,12 @@
 *
 * @example
 * var dlapy2 = require( '@stdlib/lapack/base/dlapy2' );
-* 
+*
 * dlapy2( 1.0, 1.0 );
 *
 * @example
 * var dlapy2 = require( '@stdlib/lapack/base/dlapy2' );
-* 
+*
 * dlapy2.ndarray( 1.0, 1.0 );
 */
 

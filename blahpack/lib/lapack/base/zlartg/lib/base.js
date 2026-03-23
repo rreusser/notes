@@ -21,8 +21,10 @@
 // VARIABLES //
 
 // LA_CONSTANTS for double precision:
-// dsafmin = 2^(-1022)
-// dsafmax = 1/dsafmin = 2^1022
+
+// Dsafmin = 2^(-1022)
+
+// Dsafmax = 1/dsafmin = 2^1022
 var SAFMIN = 2.2250738585072014e-308;
 var SAFMAX = 4.49423283715579e+307;
 var RTMIN = Math.sqrt( SAFMIN );
@@ -46,7 +48,7 @@ function abssq( re, im ) {
 // MAIN //
 
 /**
-* Generates a plane rotation so that:
+* Generates a plane rotation so that:.
 *
 *    [  C         S  ] . [ F ]  =  [ R ]
 *    [ -conjg(S)  C  ]   [ G ]     [ 0 ]
@@ -60,6 +62,10 @@ function abssq( re, im ) {
 * @returns {Float64Array} out
 */
 function zlartg( f, g, out ) {
+	var fsr;
+	var fsi;
+	var gsr;
+	var gsi;
 	var fr;
 	var fi;
 	var gr;
@@ -69,22 +75,18 @@ function zlartg( f, g, out ) {
 	var g1;
 	var g2;
 	var h2;
-	var d;
-	var c;
 	var sr;
 	var si;
 	var rr;
 	var ri;
-	var u;
-	var v;
-	var w;
-	var fsr;
-	var fsi;
-	var gsr;
-	var gsi;
 	var t0;
 	var t1;
 	var t2;
+	var d;
+	var c;
+	var u;
+	var v;
+	var w;
 
 	fr = f[ 0 ];
 	fi = f[ 1 ];
@@ -166,14 +168,16 @@ function zlartg( f, g, out ) {
 			ri = fi / c;
 			if ( f2 > RTMIN && h2 < RTMAX_QTR * 2.0 ) {
 				t0 = Math.sqrt( f2 * h2 );
-				// s = conjg(g) * (f / sqrt(f2*h2))
+
+				// S = conjg(g) * (f / sqrt(f2*h2))
 				t1 = fr / t0;
 				t2 = fi / t0;
+
 				// conjg(g) = (gr, -gi), multiply by (t1, t2):
 				sr = gr * t1 + gi * t2;
 				si = gr * t2 - gi * t1;
 			} else {
-				// s = conjg(g) * (r / h2)
+				// S = conjg(g) * (r / h2)
 				t0 = rr / h2;
 				t1 = ri / h2;
 				sr = gr * t0 + gi * t1;
@@ -190,7 +194,7 @@ function zlartg( f, g, out ) {
 				rr = fr * t0;
 				ri = fi * t0;
 			}
-			// s = conjg(g) * (f / d)
+			// S = conjg(g) * (f / d)
 			t0 = fr / d;
 			t1 = fi / d;
 			sr = gr * t0 + gi * t1;
@@ -254,9 +258,9 @@ function zlartg( f, g, out ) {
 			si = gsr * t1 - gsi * t0;
 		}
 		// Rescale c and r
-		c = c * w;
-		rr = rr * u;
-		ri = ri * u;
+		c *= w;
+		rr *= u;
+		ri *= u;
 	}
 
 	out[ 0 ] = c;

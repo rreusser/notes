@@ -28,7 +28,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q^T*C, C*Q, or C*Q^T,
+* Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 * where Q is a real orthogonal matrix defined as the product of K
 * elementary reflectors (from an LQ factorization):
 *
@@ -79,7 +79,9 @@ function dorml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	notran = ( trans === 'no-transpose' );
 
 	// Determine iteration direction:
+
 	// Forward (i=0..K-1) when (LEFT && NOTRAN) or (!LEFT && !NOTRAN)
+
 	// Backward (i=K-1..0) otherwise
 	if ( ( left && notran ) || ( !left && !notran ) ) {
 		i1 = 0;
@@ -115,7 +117,8 @@ function dorml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0;
 
 		// Apply H(i): the reflector vector is row i of A starting at column i,
-		// so v = A(i, i:nq-1), stored with stride strideA2
+
+		// So v = A(i, i:nq-1), stored with stride strideA2
 		dlarf( side, mi, ni,
 			A, strideA2, offsetA + i * strideA1 + i * strideA2,
 			TAU[ offsetTAU + i * strideTAU ],

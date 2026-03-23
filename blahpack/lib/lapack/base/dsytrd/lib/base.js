@@ -33,16 +33,16 @@ var NB = 32; // block size (replaces ILAENV)
 // MAIN //
 
 /**
-* Reduces a real symmetric matrix A to real symmetric tridiagonal form T
-* by an orthogonal similarity transformation: Q**T * A * Q = T.
+* Reduces a real symmetric matrix A to real symmetric tridiagonal form T.
+* by an orthogonal similarity transformation: Q__T _ A _ Q = T.
 *
 * Uses the blocked algorithm: reduces NB columns at a time using dlatrd
 * (panel factorization) and dsyr2k (trailing matrix update), then finishes
 * the remaining block with dsytd2 (unblocked).
 *
 * If UPLO = 'U', the matrix Q is represented as a product of elementary
-* reflectors Q = H(n-1) * ... * H(2) * H(1).
-* If UPLO = 'L', the matrix Q is represented as Q = H(1) * H(2) * ... * H(n-1).
+* reflectors Q = H(n-1) _ ... _ H(2) _ H(1).
+_ If UPLO = 'L', the matrix Q is represented as Q = H(1) _ H(2) _ ... _ H(n-1).
 *
 * @private
 * @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangular part of A is stored
@@ -101,24 +101,29 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	if ( uplo === 'upper' ) {
 		// Reduce the upper triangle of A.
 		// Columns 0:kk-1 (0-based) are handled by unblocked method.
-		//
+
 		// Fortran: KK = N - ((N-NX+NB-1)/NB)*NB
 		// This computes how many columns are left for the unblocked part.
 		kk = N - Math.floor( ( N - nx + nb - 1 ) / nb ) * nb;
 
 		// Fortran loop: DO I = N-NB+1, KK+1, -NB  (1-based)
+
 		// In 0-based: i goes from N-nb down to kk, stepping by -nb
+
 		// Fortran I corresponds to our i+1 (since Fortran is 1-based)
+
 		// Actually let's keep i as the 0-based version of Fortran's I:
+
 		//   Fortran I starts at N-NB+1, so 0-based i = N-NB+1-1 = N-NB
+
 		//   Fortran loop ends at KK+1, so 0-based i >= KK+1-1 = KK
 		for ( i = N - nb; i >= kk; i -= nb ) {
 			// Reduce columns i:i+nb-1 (0-based) to tridiagonal form
-			// and form the matrix W needed to update the unreduced part.
-			//
+			// And form the matrix W needed to update the unreduced part.
+
 			// Fortran: DLATRD(UPLO, I+NB-1, NB, A, LDA, E, TAU, WORK, LDWORK)
 			// Fortran I = i+1, so I+NB-1 = i+1+NB-1 = i+NB
-			// dlatrd signature: (uplo, N, nb, A, sa1, sa2, oA, e, sE, oE, TAU, sTAU, oTAU, W, sw1, sw2, oW)
+			// Dlatrd signature: (uplo, N, nb, A, sa1, sa2, oA, e, sE, oE, TAU, sTAU, oTAU, W, sw1, sw2, oW)
 			dlatrd(
 				uplo, i + nb, nb,
 				A, sa1, sa2, offsetA,
@@ -128,11 +133,15 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			);
 
 			// Update the unreduced submatrix A(0:i-1, 0:i-1):
+
 			//   A := A - V*W^T - W*V^T
-			//
+
 			// Fortran: DSYR2K(UPLO, 'N', I-1, NB, -ONE, A(1,I), LDA, WORK, LDWORK, ONE, A, LDA)
+
 			// Fortran I-1 = i+1-1 = i (the dimension of the submatrix)
+
 			// A(1,I) in Fortran (1-based) = A(0, i) in 0-based = offsetA + i*sa2
+
 			// WORK starts at (0,0) with strides (1, ldwork)
 			dsyr2k(
 				uplo, 'no-transpose', i, nb, -1.0,
@@ -143,11 +152,14 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			);
 
 			// Copy superdiagonal elements back into A, and diagonal elements into D
+
 			// Fortran: DO J = I, I+NB-1  (1-based)
+
 			// 0-based: j from i to i+nb-1
 			for ( j = i; j < i + nb; j++ ) {
 				// Fortran: A(J-1, J) = E(J-1)  → A(j-1, j) = e[j-1]
 				A[ offsetA + ( j - 1 ) * sa1 + j * sa2 ] = e[ offsetE + ( j - 1 ) * strideE ];
+
 				// Fortran: D(J) = A(J, J)  → d[j] = A(j, j)
 				d[ offsetD + j * strideD ] = A[ offsetA + j * sa1 + j * sa2 ];
 			}
@@ -157,7 +169,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		dsytd2( uplo, kk, A, sa1, sa2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU );
 	} else {
 		// Reduce the lower triangle of A.
-		//
+
 		// Fortran loop: DO I = 1, N-NX, NB  (1-based)
 		// 0-based: i from 0 to N-nx-1, stepping by nb
 		// (Fortran I = i+1, upper bound Fortran is N-NX, so i+1 <= N-NX, i.e. i <= N-NX-1)
@@ -168,7 +180,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		i = 0;
 		while ( i <= N - nx - 1 ) {
 			// Reduce columns i:i+nb-1 (0-based) to tridiagonal form
-			//
+
 			// Fortran: DLATRD(UPLO, N-I+1, NB, A(I,I), LDA, E(I), TAU(I), WORK, LDWORK)
 			// Fortran I = i+1, so N-I+1 = N-(i+1)+1 = N-i
 			// A(I,I) 1-based = A(i,i) 0-based = offsetA + i*sa1 + i*sa2
@@ -183,12 +195,17 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			);
 
 			// Update the unreduced submatrix A(i+nb:N-1, i+nb:N-1):
+
 			//   A := A - V*W^T - W*V^T
-			//
+
 			// Fortran: DSYR2K(UPLO, 'N', N-I-NB+1, NB, -ONE, A(I+NB, I), LDA, WORK(NB+1), LDWORK, ONE, A(I+NB, I+NB), LDA)
+
 			// Fortran I = i+1, so N-I-NB+1 = N-(i+1)-NB+1 = N-i-NB
+
 			// A(I+NB, I) 1-based = A(i+nb, i) 0-based = offsetA + (i+nb)*sa1 + i*sa2
+
 			// WORK(NB+1) 1-based = work[nb] 0-based (row nb, col 0)
+
 			// A(I+NB, I+NB) 1-based = A(i+nb, i+nb) 0-based
 			dsyr2k(
 				uplo, 'no-transpose', N - i - nb, nb, -1.0,
@@ -199,11 +216,14 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			);
 
 			// Copy subdiagonal elements back into A, and diagonal elements into D
+
 			// Fortran: DO J = I, I+NB-1  (1-based), J is Fortran 1-based
+
 			// 0-based: j from i to i+nb-1
 			for ( j = i; j < i + nb; j++ ) {
 				// Fortran: A(J+1, J) = E(J)  → A(j+1, j) = e[j]
 				A[ offsetA + ( j + 1 ) * sa1 + j * sa2 ] = e[ offsetE + j * strideE ];
+
 				// Fortran: D(J) = A(J, J)  → d[j] = A(j, j)
 				d[ offsetD + j * strideD ] = A[ offsetA + j * sa1 + j * sa2 ];
 			}

@@ -28,6 +28,7 @@ var izamax = require( '../../../../blas/base/izamax/lib/base.js' );
 var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 var zsyr = require( '../../zsyr/lib/base.js' );
 var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
+
 // NOTE: Do not use cmplx.divAt — it overwrites in-place, corrupting source
 
 
@@ -39,10 +40,10 @@ var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 // MAIN //
 
 /**
-* Computes the factorization of a complex symmetric matrix A using the
+* Computes the factorization of a complex symmetric matrix A using the.
 * Bunch-Kaufman diagonal pivoting method:
 *
-*   A = U * D * U^T  or  A = L * D * L^T
+*   A = U _ D _ U^T  or  A = L _ D _ L^T
 *
 * where U (or L) is a product of permutation and unit upper (lower)
 * triangular matrices, and D is symmetric and block diagonal with
@@ -73,12 +74,13 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	var colmax;
 	var rowmax;
 	var kstep;
+	var wkm1R;
+	var wkm1I;
+	var wkp1R;
+	var wkp1I;
 	var info;
 	var imax;
 	var jmax;
-	var sa1;
-	var sa2;
-	var Av;
 	var d11R;
 	var d11I;
 	var d12R;
@@ -87,27 +89,26 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	var d21I;
 	var d22R;
 	var d22I;
+	var sa1;
+	var sa2;
 	var wkR;
 	var wkI;
-	var wkm1R;
-	var wkm1I;
-	var wkp1R;
-	var wkp1I;
 	var r1R;
 	var r1I;
+	var Av;
 	var tR;
 	var tI;
 	var tr;
 	var ti;
 	var kk;
 	var kp;
-	var k;
-	var i;
-	var j;
 	var p1;
 	var p2;
 	var p3;
 	var p4;
+	var k;
+	var i;
+	var j;
 
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
@@ -125,6 +126,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			kstep = 1;
 
 			// Determine rows and columns to be interchanged
+
 			// CABS1(A(k,k))
 			p1 = offsetA * 2 + k * sa1 + k * sa2;
 			absakk = Math.abs( Av[ p1 ] ) + Math.abs( Av[ p1 + 1 ] );
@@ -150,7 +152,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					kp = k;
 				} else {
 					// JMAX is the column-index of the largest off-diagonal
-					// element in row IMAX, and ROWMAX is its absolute value
+					// Element in row IMAX, and ROWMAX is its absolute value
 					// Look in row IMAX from column IMAX+1 to K (using LDA stride for row scan)
 					jmax = imax + 1 + izamax( k - imax - 1, A, strideA2, offsetA + imax * strideA1 + ( imax + 1 ) * strideA2 );
 					p3 = offsetA * 2 + imax * sa1 + jmax * sa2;
@@ -184,6 +186,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 						zswap( kp, A, strideA1, offsetA + kk * strideA2, A, strideA1, offsetA + kp * strideA2 );
 					}
 					zswap( kk - kp - 1, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + kk * strideA2, A, strideA2, offsetA + kp * strideA1 + ( kp + 1 ) * strideA2 );
+
 					// Swap diagonal elements
 					p1 = offsetA * 2 + kk * sa1 + kk * sa2;
 					p2 = offsetA * 2 + kp * sa1 + kp * sa2;
@@ -265,23 +268,29 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 							// WKM1 = D12 * (D11*A(J,K-1) - A(J,K))
 							p1 = offsetA * 2 + j * sa1 + ( k - 1 ) * sa2;
 							p2 = offsetA * 2 + j * sa1 + k * sa2;
+
 							// D11*A(J,K-1): complex multiply
 							tr = d11R * Av[ p1 ] - d11I * Av[ p1 + 1 ];
 							ti = d11R * Av[ p1 + 1 ] + d11I * Av[ p1 ];
+
 							// D11*A(J,K-1) - A(J,K)
 							tr -= Av[ p2 ];
 							ti -= Av[ p2 + 1 ];
+
 							// WKM1 = D12 * result
 							wkm1R = d12R * tr - d12I * ti;
 							wkm1I = d12R * ti + d12I * tr;
 
 							// WK = D12 * (D22*A(J,K) - A(J,K-1))
+
 							// D22*A(J,K)
 							tr = d22R * Av[ p2 ] - d22I * Av[ p2 + 1 ];
 							ti = d22R * Av[ p2 + 1 ] + d22I * Av[ p2 ];
+
 							// D22*A(J,K) - A(J,K-1)
 							tr -= Av[ p1 ];
 							ti -= Av[ p1 + 1 ];
+
 							// WK = D12 * result
 							wkR = d12R * tr - d12I * ti;
 							wkI = d12R * ti + d12I * tr;
@@ -291,9 +300,11 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 								p3 = offsetA * 2 + i * sa1 + j * sa2;
 								p4 = offsetA * 2 + i * sa1 + k * sa2;
 								tR = offsetA * 2 + i * sa1 + ( k - 1 ) * sa2;
+
 								// A(I,K)*WK
 								tr = Av[ p4 ] * wkR - Av[ p4 + 1 ] * wkI;
 								ti = Av[ p4 ] * wkI + Av[ p4 + 1 ] * wkR;
+
 								// A(I,K-1)*WKM1
 								tr += Av[ tR ] * wkm1R - Av[ tR + 1 ] * wkm1I;
 								ti += Av[ tR ] * wkm1I + Av[ tR + 1 ] * wkm1R;
@@ -303,6 +314,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 							// A(J,K) = WK
 							Av[ p2 ] = wkR;
 							Av[ p2 + 1 ] = wkI;
+
 							// A(J,K-1) = WKM1
 							Av[ p1 ] = wkm1R;
 							Av[ p1 + 1 ] = wkm1I;
@@ -378,6 +390,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 						zswap( N - kp - 1, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + kk * strideA2, A, strideA1, offsetA + ( kp + 1 ) * strideA1 + kp * strideA2 );
 					}
 					zswap( kp - kk - 1, A, strideA1, offsetA + ( kk + 1 ) * strideA1 + kk * strideA2, A, strideA2, offsetA + kp * strideA1 + ( kk + 1 ) * strideA2 );
+
 					// Swap diagonal elements
 					p1 = offsetA * 2 + kk * sa1 + kk * sa2;
 					p2 = offsetA * 2 + kp * sa1 + kp * sa2;
@@ -497,6 +510,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 							p2 = offsetA * 2 + j * sa1 + ( k + 1 ) * sa2;
 
 							// WK = D21 * (D11*A(J,K) - A(J,K+1))
+
 							// D11*A(J,K)
 							tr = d11R * Av[ p1 ] - d11I * Av[ p1 + 1 ];
 							ti = d11R * Av[ p1 + 1 ] + d11I * Av[ p1 ];
@@ -548,7 +562,6 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 	return info;
 }
-
 
 // Module-level vars for cDiv output
 var _cdR = 0.0;

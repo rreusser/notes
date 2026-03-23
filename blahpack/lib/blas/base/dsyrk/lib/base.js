@@ -23,8 +23,8 @@
 // MAIN //
 
 /**
-* Performs one of the symmetric rank-k operations:
-*   C := alpha*A*A^T + beta*C,  or  C := alpha*A^T*A + beta*C
+* Performs one of the symmetric rank-k operations:.
+*   C := alpha_A_A^T + beta_C,  or  C := alpha_A^T_A + beta_C
 * where alpha and beta are scalars, C is an N-by-N symmetric matrix,
 * and A is an N-by-K matrix in the first case and a K-by-N matrix in
 * the second case. Only the upper or lower triangular part of C is
@@ -93,22 +93,20 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					}
 				}
 			}
-		} else {
-			if ( beta === 0.0 ) {
-				for ( j = 0; j < N; j++ ) {
-					ic = offsetC + j * sc1 + j * sc2;
-					for ( i = j; i < N; i++ ) {
-						C[ ic ] = 0.0;
-						ic += sc1;
-					}
+		} else if ( beta === 0.0 ) {
+			for ( j = 0; j < N; j++ ) {
+				ic = offsetC + j * sc1 + j * sc2;
+				for ( i = j; i < N; i++ ) {
+					C[ ic ] = 0.0;
+					ic += sc1;
 				}
-			} else {
-				for ( j = 0; j < N; j++ ) {
-					ic = offsetC + j * sc1 + j * sc2;
-					for ( i = j; i < N; i++ ) {
-						C[ ic ] *= beta;
-						ic += sc1;
-					}
+			}
+		} else {
+			for ( j = 0; j < N; j++ ) {
+				ic = offsetC + j * sc1 + j * sc2;
+				for ( i = j; i < N; i++ ) {
+					C[ ic ] *= beta;
+					ic += sc1;
 				}
 			}
 		}

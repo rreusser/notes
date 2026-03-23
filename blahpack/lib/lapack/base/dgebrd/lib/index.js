@@ -26,27 +26,27 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgebrd = require( '@stdlib/lapack/base/dgebrd' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var TAUQ = new Float64Array( [ 1.0, 2.0 ] );
 * var TAUP = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dgebrd( 'row-major', 2, 2, A, 2, d, 1, e, 1, TAUQ, 1, TAUP, 1, WORK, 1, 8 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgebrd = require( '@stdlib/lapack/base/dgebrd' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var TAUQ = new Float64Array( [ 1.0, 2.0 ] );
 * var TAUP = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dgebrd.ndarray( 2, 2, A, 1, 2, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, WORK, 1, 0, 8 );
 */
 

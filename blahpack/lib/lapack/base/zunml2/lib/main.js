@@ -21,7 +21,6 @@
 // MODULES //
 
 var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
-
 var zunml2 = require( './zunml2.js' );
 var ndarray = require( './ndarray.js' );
 

@@ -23,12 +23,12 @@
 *
 * @example
 * var zlartg = require( '@stdlib/lapack/base/zlartg' );
-* 
+*
 * zlartg( 1.0, 1.0, 1.0 );
 *
 * @example
 * var zlartg = require( '@stdlib/lapack/base/zlartg' );
-* 
+*
 * zlartg.ndarray( 1.0, 1.0, 1.0, 1.0, 1.0 );
 */
 

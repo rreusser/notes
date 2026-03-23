@@ -26,23 +26,23 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dsteqr = require( '@stdlib/lapack/base/dsteqr' );
-* 
+*
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var Z = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dsteqr( 'row-major', 'none', 2, d, 1, e, 1, Z, 2, WORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dsteqr = require( '@stdlib/lapack/base/dsteqr' );
-* 
+*
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var Z = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dsteqr.ndarray( 'none', 2, d, 1, 0, e, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
 */
 

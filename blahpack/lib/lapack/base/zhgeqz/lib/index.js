@@ -27,7 +27,7 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zhgeqz = require( '@stdlib/lapack/base/zhgeqz' );
-* 
+*
 * var H = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var T = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var ALPHA = new Complex128Array( [ 1.0, 2.0 ] );
@@ -36,13 +36,13 @@
 * var Z = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zhgeqz( 'row-major', 'none', 'none', 'none', 2, 1, 2, H, 2, T, 2, ALPHA, 1, BETA, 1, Q, 2, Z, 2, WORK, 1, 8, RWORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zhgeqz = require( '@stdlib/lapack/base/zhgeqz' );
-* 
+*
 * var H = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var T = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var ALPHA = new Float64Array( [ 1.0, 2.0 ] );
@@ -51,7 +51,7 @@
 * var Z = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zhgeqz.ndarray( 'none', 'none', 'none', 2, 1, 2, H, 1, 2, 0, T, 1, 2, 0, ALPHA, 1, 0, BETA, 1, 0, Q, 1, 2, 0, Z, 1, 2, 0, WORK, 1, 0, 8, RWORK, 1, 0 );
 */
 

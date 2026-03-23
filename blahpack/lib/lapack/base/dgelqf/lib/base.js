@@ -35,7 +35,7 @@ var DEFAULT_NB = 32;
 // MAIN //
 
 /**
-* Computes an LQ factorization of a real M-by-N matrix A = L * Q
+* Computes an LQ factorization of a real M-by-N matrix A = L * Q.
 * using blocked Householder reflections.
 *
 * On exit, the elements on and below the diagonal of A contain the

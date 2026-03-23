@@ -38,9 +38,9 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 */
 function ilazlr( M, N, A, strideA1, strideA2, offsetA ) {
 	var result;
-	var Av;
 	var sa1;
 	var sa2;
+	var Av;
 	var oA;
 	var re;
 	var im;

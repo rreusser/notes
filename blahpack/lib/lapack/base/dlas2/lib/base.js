@@ -21,7 +21,7 @@
 // MAIN //
 
 /**
-* Computes the singular values of a 2-by-2 triangular matrix:
+* Computes the singular values of a 2-by-2 triangular matrix:.
 *
 *   [ F  G ]
 *   [ 0  H ]
@@ -63,29 +63,27 @@ function dlas2( f, g, h, out ) {
 		} else {
 			out[ 1 ] = Math.max( fhmx, ga ) * Math.sqrt( 1.0 + ( Math.min( fhmx, ga ) / Math.max( fhmx, ga ) ) * ( Math.min( fhmx, ga ) / Math.max( fhmx, ga ) ) );
 		}
+	} else if ( ga < fhmx ) {
+		as = 1.0 + fhmn / fhmx;
+		at = ( fhmx - fhmn ) / fhmx;
+		au = ( ga / fhmx ) * ( ga / fhmx );
+		c = 2.0 / ( Math.sqrt( as * as + au ) + Math.sqrt( at * at + au ) );
+		out[ 0 ] = fhmn * c;
+		out[ 1 ] = fhmx / c;
 	} else {
-		if ( ga < fhmx ) {
+		au = fhmx / ga;
+		if ( au === 0.0 ) {
+			// Avoid possible harmful underflow if exponent range
+			// Asymmetric (true SSMIN may not underflow even if AU underflows)
+			out[ 0 ] = ( fhmn * fhmx ) / ga;
+			out[ 1 ] = ga;
+		} else {
 			as = 1.0 + fhmn / fhmx;
 			at = ( fhmx - fhmn ) / fhmx;
-			au = ( ga / fhmx ) * ( ga / fhmx );
-			c = 2.0 / ( Math.sqrt( as * as + au ) + Math.sqrt( at * at + au ) );
-			out[ 0 ] = fhmn * c;
-			out[ 1 ] = fhmx / c;
-		} else {
-			au = fhmx / ga;
-			if ( au === 0.0 ) {
-				// Avoid possible harmful underflow if exponent range
-				// asymmetric (true SSMIN may not underflow even if AU underflows)
-				out[ 0 ] = ( fhmn * fhmx ) / ga;
-				out[ 1 ] = ga;
-			} else {
-				as = 1.0 + fhmn / fhmx;
-				at = ( fhmx - fhmn ) / fhmx;
-				c = 1.0 / ( Math.sqrt( 1.0 + ( as * au ) * ( as * au ) ) + Math.sqrt( 1.0 + ( at * au ) * ( at * au ) ) );
-				out[ 0 ] = ( fhmn * c ) * au;
-				out[ 0 ] = out[ 0 ] + out[ 0 ];
-				out[ 1 ] = ga / ( c + c );
-			}
+			c = 1.0 / ( Math.sqrt( 1.0 + ( as * au ) * ( as * au ) ) + Math.sqrt( 1.0 + ( at * au ) * ( at * au ) ) );
+			out[ 0 ] = ( fhmn * c ) * au;
+			out[ 0 ] += out[ 0 ];
+			out[ 1 ] = ga / ( c + c );
 		}
 	}
 	return out;

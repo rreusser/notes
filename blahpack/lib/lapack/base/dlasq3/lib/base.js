@@ -45,7 +45,7 @@ var ZERO = 0.0;
 // MAIN //
 
 /**
-* Checks for deflation, computes a shift (TAU) and calls dqds. In case of
+* Checks for deflation, computes a shift (TAU) and calls dqds. In case of.
 * failure it changes shifts, and tries again until output is positive.
 *
 * @private

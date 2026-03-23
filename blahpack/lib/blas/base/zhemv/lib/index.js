@@ -26,21 +26,21 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zhemv = require( '@stdlib/blas/base/zhemv' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
 * var y = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zhemv( 'row-major', 'upper', 2, 1.0, A, 2, x, 1, 0.0, y, 1 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zhemv = require( '@stdlib/blas/base/zhemv' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
 * var y = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zhemv.ndarray( 'upper', 2, 1.0, A, 1, 2, 0, x, 1, 0, 0.0, y, 1, 0 );
 */
 

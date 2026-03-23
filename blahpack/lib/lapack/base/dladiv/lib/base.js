@@ -84,9 +84,9 @@ function dladiv1( a, b, c, d, out ) {
 // MAIN //
 
 /**
-* Performs complex division in real arithmetic:
+* Performs complex division in real arithmetic:.
 *
-*   p + i*q = (a + i*b) / (c + i*d)
+*   p + i_q = (a + i_b) / (c + i*d)
 *
 * The algorithm is due to Michael Baudin and Robert L. Smith.
 *
@@ -126,14 +126,14 @@ function dladiv( a, b, c, d, out ) {
 		s = HALF * s;
 	}
 	if ( ab <= SCALE_THRESH ) {
-		aa = aa * BE;
-		bb = bb * BE;
-		s = s / BE;
+		aa *= BE;
+		bb *= BE;
+		s /= BE;
 	}
 	if ( cd <= SCALE_THRESH ) {
-		cc = cc * BE;
-		dd = dd * BE;
-		s = s * BE;
+		cc *= BE;
+		dd *= BE;
+		s *= BE;
 	}
 	if ( Math.abs( dd ) <= Math.abs( cc ) ) {
 		dladiv1( aa, bb, cc, dd, out );
@@ -141,8 +141,8 @@ function dladiv( a, b, c, d, out ) {
 		dladiv1( bb, aa, dd, cc, out );
 		out[ 1 ] = -out[ 1 ];
 	}
-	out[ 0 ] = out[ 0 ] * s;
-	out[ 1 ] = out[ 1 ] * s;
+	out[ 0 ] *= s;
+	out[ 1 ] *= s;
 	return out;
 }
 

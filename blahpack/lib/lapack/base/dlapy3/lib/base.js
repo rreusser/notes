@@ -26,7 +26,7 @@ var HUGEVAL = 1.7976931348623157e+308; // Number.MAX_VALUE
 // MAIN //
 
 /**
-* Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow
+* Computes sqrt(x^2 + y^2 + z^2) safely, avoiding unnecessary overflow.
 * and underflow.
 *
 * @private
@@ -48,7 +48,7 @@ function dlapy3( x, y, z ) {
 
 	if ( w === 0.0 || w > HUGEVAL ) {
 		// W can be zero for max(0,nan,0)
-		// adding all three entries together will make sure
+		// Adding all three entries together will make sure
 		// NaN will not disappear.
 		return xabs + yabs + zabs;
 	}

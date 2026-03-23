@@ -27,7 +27,7 @@ var zlauum = require( '../../zlauum/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the inverse of a complex Hermitian positive definite matrix using
+* Computes the inverse of a complex Hermitian positive definite matrix using.
 * its Cholesky factorization computed by zpotrf.
 *
 * The inverse is computed by first inverting the triangular Cholesky factor

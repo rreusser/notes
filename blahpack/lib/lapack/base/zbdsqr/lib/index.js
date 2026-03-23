@@ -27,27 +27,27 @@
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
-* 
+*
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var VT = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var U = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var C = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zbdsqr( 'row-major', 'upper', 2, 2, 2, 2, d, 1, e, 1, VT, 2, U, 2, C, 2, RWORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );
-* 
+*
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var VT = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var U = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var C = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zbdsqr.ndarray( 'upper', 2, 2, 2, 2, d, 1, 0, e, 1, 0, VT, 1, 2, 0, U, 1, 2, 0, C, 1, 2, 0, RWORK, 1, 0 );
 */
 

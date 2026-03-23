@@ -24,19 +24,19 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
-* 
+*
 * var alpha = new Complex128Array( [ 1.0, 2.0 ] );
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
 * var tau = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zlarfg( 2, alpha, 0, x, 1, tau, 0 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zlarfg = require( '@stdlib/lapack/base/zlarfg' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zlarfg.ndarray( 2, 1.0, x, 1, 0, 1.0 );
 */
 

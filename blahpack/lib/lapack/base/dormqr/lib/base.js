@@ -36,9 +36,9 @@ var NB = 32; // Hardcoded block size
 // MAIN //
 
 /**
-* Overwrites the M-by-N real matrix C with Q*C, Q^T*C, C*Q, or C*Q^T,
+* Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 * where Q is a real orthogonal matrix defined as the product of K
-* elementary reflectors Q = H(1) * H(2) * ... * H(k) as returned
+* elementary reflectors Q = H(1) _ H(2) _ ... * H(k) as returned
 * by DGEQRF. Uses a blocked algorithm with block size NB=32.
 *
 * @private
@@ -68,6 +68,7 @@ function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var notran;
 	var ldwork;
 	var left;
+	var ldt;
 	var nw;
 	var nb;
 	var nq;
@@ -79,7 +80,6 @@ function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var i1;
 	var i2;
 	var i3;
-	var ldt;
 	var T;
 	var i;
 
@@ -146,6 +146,7 @@ function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		ib = Math.min( nb, K - i );
 
 		// Form the triangular factor of the block reflector
+
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		dlarft(
 			'forward', 'columnwise', nq - i, ib,

@@ -29,7 +29,7 @@ var zlassq = require( '../../zlassq/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the value of the one-norm, Frobenius norm, infinity-norm, or the
+* Computes the value of the one-norm, Frobenius norm, infinity-norm, or the.
 * largest absolute value of any element of a complex Hermitian matrix.
 *
 * For a Hermitian matrix, the one-norm equals the infinity-norm.
@@ -59,9 +59,9 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 	var absa;
 	var sum;
 	var out;
-	var Av;
 	var sa1;
 	var sa2;
+	var Av;
 	var oA;
 	var ai;
 	var re;
@@ -85,6 +85,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
 				ai = oA + j * sa2;
+
 				// Off-diagonal elements: i = 0..j-1
 				for ( i = 0; i < j; i++ ) {
 					re = Av[ ai ];
@@ -104,12 +105,14 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		} else {
 			for ( j = 0; j < N; j++ ) {
 				ai = oA + j * sa2 + j * sa1;
+
 				// Diagonal element
 				sum = Math.abs( Av[ ai ] );
 				if ( value < sum || sum !== sum ) {
 					value = sum;
 				}
 				ai += sa1;
+
 				// Off-diagonal elements: i = j+1..N-1
 				for ( i = j + 1; i < N; i++ ) {
 					re = Av[ ai ];
@@ -130,6 +133,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 			for ( j = 0; j < N; j++ ) {
 				sum = 0.0;
 				ai = oA + j * sa2;
+
 				// Off-diagonal elements: i = 0..j-1
 				for ( i = 0; i < j; i++ ) {
 					re = Av[ ai ];
@@ -156,9 +160,11 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 			}
 			for ( j = 0; j < N; j++ ) {
 				ai = oA + j * sa2 + j * sa1;
+
 				// Diagonal element
 				sum = WORK[ offsetWORK + j * strideWORK ] + Math.abs( Av[ ai ] );
 				ai += sa1;
+
 				// Off-diagonal elements: i = j+1..N-1
 				for ( i = j + 1; i < N; i++ ) {
 					re = Av[ ai ];
@@ -195,6 +201,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		}
 		// Off-diagonal counted once, but appear twice in full Hermitian matrix
 		sum = 2.0 * sum;
+
 		// Add diagonal elements (real-valued for Hermitian)
 		for ( i = 0; i < N; i++ ) {
 			ai = oA + i * sa1 + i * sa2; // A(i,i) in Float64 index
@@ -205,7 +212,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 					sum = 1.0 + sum * ( scale / absa ) * ( scale / absa );
 					scale = absa;
 				} else {
-					sum = sum + ( absa / scale ) * ( absa / scale );
+					sum += ( absa / scale ) * ( absa / scale );
 				}
 			}
 		}

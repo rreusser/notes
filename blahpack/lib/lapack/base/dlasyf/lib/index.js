@@ -27,22 +27,22 @@
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dlasyf = require( '@stdlib/lapack/base/dlasyf' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
 * var W = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlasyf( 'row-major', 'upper', 2, 2, A, 2, IPIV, 1, W, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dlasyf = require( '@stdlib/lapack/base/dlasyf' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
 * var W = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlasyf.ndarray( 'upper', 2, 2, 2, A, 1, 2, 0, IPIV, 1, 0, W, 1, 2, 0 );
 */
 

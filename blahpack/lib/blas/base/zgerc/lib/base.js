@@ -29,7 +29,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Perform the rank 1 operation A := alpha*x*y**H + A,
+* Perform the rank 1 operation A := alpha_x_y**H + A,.
 * where alpha is a complex scalar, x is an M element complex vector,
 * y is an N element complex vector, and A is an M by N complex matrix.
 *
@@ -103,7 +103,7 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 
 		// Check if y(j) is zero
 		if ( yr !== 0.0 || yi !== 0.0 ) {
-			// temp = alpha * conj(y(j))
+			// Temp = alpha * conj(y(j))
 			// conj(y) = yr - yi*i
 			// alpha * conj(y) = (alphaRe + alphaIm*i)(yr - yi*i)
 			//                 = (alphaRe*yr + alphaIm*yi) + (alphaIm*yr - alphaRe*yi)*i

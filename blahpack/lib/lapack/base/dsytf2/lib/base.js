@@ -36,10 +36,10 @@ var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 // MAIN //
 
 /**
-* Computes the factorization of a real symmetric matrix A using the
+* Computes the factorization of a real symmetric matrix A using the.
 * Bunch-Kaufman diagonal pivoting method:
 *
-*   A = U * D * U^T  or  A = L * D * L^T
+*   A = U _ D _ U^T  or  A = L _ D _ L^T
 *
 * where U (or L) is a product of permutation and unit upper (lower)
 * triangular matrices, and D is symmetric and block diagonal with
@@ -70,14 +70,14 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	var info;
 	var imax;
 	var jmax;
+	var wkm1;
+	var wkp1;
 	var sa1;
 	var sa2;
 	var d11;
 	var d12;
 	var d21;
 	var d22;
-	var wkm1;
-	var wkp1;
 	var wk;
 	var r1;
 	var kk;
@@ -103,11 +103,13 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			kstep = 1;
 
 			// Determine rows and columns to be interchanged and whether
-			// a 1-by-1 or 2-by-2 pivot block will be used
+
+			// A 1-by-1 or 2-by-2 pivot block will be used
 			absakk = Math.abs( A[ offsetA + k * sa1 + k * sa2 ] );
 
 			// IMAX is the row-index of the largest off-diagonal element in
-			// column K, and COLMAX is its absolute value
+
+			// Column K, and COLMAX is its absolute value
 			if ( k > 0 ) {
 				imax = idamax( k, A, sa1, offsetA + k * sa2 );
 				colmax = Math.abs( A[ offsetA + imax * sa1 + k * sa2 ] );
@@ -127,7 +129,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					kp = k;
 				} else {
 					// JMAX is the column-index of the largest off-diagonal
-					// element in row IMAX, and ROWMAX is its absolute value
+					// Element in row IMAX, and ROWMAX is its absolute value
 					// Look in row IMAX from column IMAX+1 to K-1
 					jmax = imax + 1 + idamax( k - imax, A, sa2, offsetA + imax * sa1 + ( imax + 1 ) * sa2 );
 					rowmax = Math.abs( A[ offsetA + imax * sa1 + jmax * sa2 ] );
@@ -152,7 +154,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				kk = k - kstep + 1;
 				if ( kp !== kk ) {
 					// Interchange rows and columns KP and KK in the leading
-					// submatrix A(0:k, 0:k)
+					// Submatrix A(0:k, 0:k)
 					if ( kp > 0 ) {
 						dswap( kp, A, sa1, offsetA + kk * sa2, A, sa1, offsetA + kp * sa2 );
 					}
@@ -175,6 +177,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					// A := A - U(k)*D(k)*U(k)^T = A - W(k)*(1/D(k))*W(k)^T
 					r1 = 1.0 / A[ offsetA + k * sa1 + k * sa2 ];
 					dsyr( uplo, k, -r1, A, sa1, offsetA + k * sa2, A, sa1, sa2, offsetA );
+
 					// Store U(k) in column k
 					dscal( k, r1, A, sa1, offsetA + k * sa2 );
 				} else {

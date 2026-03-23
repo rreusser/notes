@@ -26,17 +26,17 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlauu2 = require( '@stdlib/lapack/base/dlauu2' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlauu2( 'row-major', 'upper', 2, A, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlauu2 = require( '@stdlib/lapack/base/dlauu2' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlauu2.ndarray( 'upper', 2, A, 1, 2, 0 );
 */
 

@@ -21,7 +21,6 @@
 // MODULES //
 
 var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
-
 var dlasyf = require( './dlasyf.js' );
 var ndarray = require( './ndarray.js' );
 

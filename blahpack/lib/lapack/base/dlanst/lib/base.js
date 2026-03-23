@@ -26,7 +26,7 @@ var dlassq = require( './../../dlassq/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the value of the one norm, or the Frobenius norm, or the infinity
+* Computes the value of the one norm, or the Frobenius norm, or the infinity.
 * norm, or the element of largest absolute value of a real symmetric
 * tridiagonal matrix A.
 *

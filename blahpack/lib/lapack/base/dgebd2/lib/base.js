@@ -29,8 +29,8 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Reduces a real M-by-N matrix A to upper or lower bidiagonal form B
-* by an orthogonal transformation: Q**T * A * P = B.
+* Reduces a real M-by-N matrix A to upper or lower bidiagonal form B.
+* by an orthogonal transformation: Q__T _ A _ P = B.
 *
 * If M >= N, B is upper bidiagonal; if M < N, B is lower bidiagonal.
 *
@@ -81,6 +81,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			aii = offsetA + i * strideA1 + i * strideA2;
 
 			// Generate elementary reflector H(i) to annihilate A(i+1:M-1, i)
+
 			// dlarfg: alpha is (array, offset), modifies in-place
 			dlarfg( M - i, A, aii,
 				A, strideA1, offsetA + Math.min( i + 1, M - 1 ) * strideA1 + i * strideA2,
@@ -93,6 +94,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			A[ aii ] = 1.0;
 
 			// Apply H(i) to A(i:M-1, i+1:N-1) from the left
+
 			// dlarf: tau is a plain number
 			if ( i < N - 1 ) {
 				dlarf( 'left', M - i, N - i - 1,

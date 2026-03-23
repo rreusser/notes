@@ -26,17 +26,17 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dnrm2 = require( '@stdlib/blas/base/dnrm2' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dnrm2( 2, x, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dnrm2 = require( '@stdlib/blas/base/dnrm2' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dnrm2.ndarray( 2, x, 1, 0 );
 */
 

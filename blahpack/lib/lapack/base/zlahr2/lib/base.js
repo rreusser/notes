@@ -18,6 +18,7 @@
 
 /* eslint-disable max-len, max-params */
 'use strict';
+
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -35,7 +36,19 @@ var ZERO = new Complex128( 0.0, 0.0 );
 var ONE = new Complex128( 1.0, 0.0 );
 var NEGONE = new Complex128( -1.0, 0.0 );
 function zlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT, Y, strideY1, strideY2, offsetY ) {
-	var negTau, tauv, eiR, eiI, oTau, av, sa1, sa2, oA, oE, tv, oTi, i;
+	var negTau;
+	var tauv;
+	var oTau;
+	var eiR;
+	var eiI;
+	var sa1;
+	var sa2;
+	var oTi;
+	var av;
+	var oA;
+	var oE;
+	var tv;
+	var i;
 	if ( N <= 1 ) { return; }
 	av = reinterpret( A, 0 );
 	sa1 = strideA1 * 2; sa2 = strideA2 * 2; oA = offsetA * 2;

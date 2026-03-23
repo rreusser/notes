@@ -26,21 +26,21 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlatrs = require( '@stdlib/lapack/base/dlatrs' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var CNORM = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlatrs( 'row-major', 'upper', 'no-transpose', 'non-unit', 'N', 2, A, 2, x, 1, 1.0, CNORM, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlatrs = require( '@stdlib/lapack/base/dlatrs' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var CNORM = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlatrs.ndarray( 'upper', 'no-transpose', 'non-unit', 'N', 2, A, 1, 2, 0, x, 1, 0, 1.0, CNORM, 1, 0 );
 */
 

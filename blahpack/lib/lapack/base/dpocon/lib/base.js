@@ -34,9 +34,9 @@ var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a symmetric positive
-* definite matrix A using the Cholesky factorization A = U^T * U or
-* A = L * L^T computed by dpotrf.
+* Estimates the reciprocal of the condition number of a symmetric positive.
+* definite matrix A using the Cholesky factorization A = U^T _ U or
+_ A = L _ L^T computed by dpotrf.
 *
 * An estimate is obtained for norm(inv(A)), and the reciprocal of the
 * condition number is computed as RCOND = 1 / ( norm(A) * norm(inv(A)) ).
@@ -60,10 +60,10 @@ var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 */
 function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) {
 	var normin;
-	var upper;
 	var ainvnm;
 	var scalel;
 	var scaleu;
+	var upper;
 	var scale;
 	var ISAVE;
 	var KASE;

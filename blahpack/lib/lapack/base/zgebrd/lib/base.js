@@ -40,8 +40,8 @@ var NEGONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B
-* by a unitary transformation: Q^H * A * P = B.
+* Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B.
+* by a unitary transformation: Q^H _ A _ P = B.
 *
 * This is the blocked version that processes NB columns at a time using
 * zlabrd for the panel factorization, zgemm for the trailing matrix update,
@@ -81,10 +81,10 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	var nbmin;
 	var sa1;
 	var sa2;
-	var oA;
-	var Av;
 	var aii;
 	var aij;
+	var oA;
+	var Av;
 	var nb;
 	var nx;
 	var ws;
@@ -144,12 +144,12 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	if ( nb >= 2 && nb < minmn && nx < minmn ) {
 		while ( i < minmn - nx ) {
 			// Reduce rows and columns i:i+nb-1 to bidiagonal form and return
-			// the matrices X and Y which are needed to update the unreduced
-			// part of the matrix.
-			//
+			// The matrices X and Y which are needed to update the unreduced
+			// Part of the matrix.
+
 			// zlabrd( M, N, nb, A, sa1, sa2, oA, d, sD, oD, e, sE, oE,
 			//         TAUQ, sTQ, oTQ, TAUP, sTP, oTP, X, sX1, sX2, oX, Y, sY1, sY2, oY )
-			//
+
 			// X starts at offsetWORK, Y starts at offsetWORK + ldwrkx * nb
 			zlabrd(
 				M - i, N - i, nb,

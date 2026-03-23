@@ -27,7 +27,7 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zlabrd = require( '@stdlib/lapack/base/zlabrd' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
@@ -35,13 +35,13 @@
 * var TAUP = new Complex128Array( [ 1.0, 2.0 ] );
 * var X = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var Y = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zlabrd( 'row-major', 2, 2, 2, A, 2, d, 1, e, 1, TAUQ, 1, TAUP, 1, X, 2, Y, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zlabrd = require( '@stdlib/lapack/base/zlabrd' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
@@ -49,7 +49,7 @@
 * var TAUP = new Float64Array( [ 1.0, 2.0 ] );
 * var X = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var Y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zlabrd.ndarray( 2, 2, 2, A, 1, 2, 0, d, 1, 0, e, 1, 0, TAUQ, 1, 0, TAUP, 1, 0, X, 1, 2, 0, Y, 1, 2, 0 );
 */
 

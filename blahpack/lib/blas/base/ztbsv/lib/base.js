@@ -28,8 +28,8 @@ var cmplx = require( '../../../../cmplx.js' );
 // MAIN //
 
 /**
-* Solves one of the systems of equations:
-*   A*x = b,  or  A**T*x = b,  or  A**H*x = b
+* Solves one of the systems of equations:.
+*   A_x = b,  or  A__T_x = b,  or  A*_H_x = b
 * where b and x are N element complex vectors and A is an N by N unit or
 * non-unit, upper or lower triangular band matrix, with (K+1) diagonals.
 *
@@ -112,7 +112,9 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					ix = jx - sx;
 					for ( i = j - 1; i >= Math.max( 0, j - K ); i-- ) {
 						ia = oA + ( l + i ) * sa1 + j * sa2;
+
 						// x(i) = x(i) - temp * A(l+i, j)
+
 						// (tempR + tempI*i)(ar + ai*i) = (tempR*ar - tempI*ai) + (tempR*ai + tempI*ar)*i
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
@@ -139,6 +141,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					ix = jx + sx;
 					for ( i = j + 1; i < Math.min( N, j + K + 1 ); i++ ) {
 						ia = oA + ( l + i ) * sa1 + j * sa2;
+
 						// x(i) = x(i) - temp * A(l+i, j)
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
@@ -165,7 +168,8 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					// Transpose (no conjugation)
 					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
 						ia = oA + ( l + i ) * sa1 + j * sa2;
-						// temp = temp - A(l+i,j) * x(i)
+
+						// Temp = temp - A(l+i,j) * x(i)
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
 						tempR -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
@@ -182,7 +186,8 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 					// Conjugate transpose
 					for ( i = Math.max( 0, j - K ); i < j; i++ ) {
 						ia = oA + ( l + i ) * sa1 + j * sa2;
-						// temp = temp - conj(A(l+i,j)) * x(i)
+
+						// Temp = temp - conj(A(l+i,j)) * x(i)
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
 						tempR -= ar * xv[ ix ] - ai * xv[ ix + 1 ];

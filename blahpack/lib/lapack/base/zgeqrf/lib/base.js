@@ -36,7 +36,7 @@ var DEFAULT_NB = 32;
 // MAIN //
 
 /**
-* Computes a QR factorization of a complex M-by-N matrix A = Q * R
+* Computes a QR factorization of a complex M-by-N matrix A = Q * R.
 * using blocked Householder reflections.
 *
 * @private
@@ -55,6 +55,7 @@ var DEFAULT_NB = 32;
 * @returns {integer} status code (0 = success)
 */
 function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
+	var offsetT = offsetWORK + iws;
 	var ldwork;
 	var nbmin;
 	var iws;
@@ -64,39 +65,6 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	var T;
 	var K;
 	var i;
-
-	/* @complex-arrays A, TAU, WORK, T */
-
-	K = Math.min( M, N );
-
-	// Quick return if possible
-	if ( K === 0 ) {
-		return 0;
-	}
-
-	nb = DEFAULT_NB;
-	nbmin = 2;
-	nx = 0;
-	iws = N;
-
-	if ( nb > 1 && nb < K ) {
-		// Determine crossover point NX (below which unblocked is faster)
-		nx = 0;
-		if ( nx < K ) {
-			ldwork = N;
-			iws = ldwork * nb;
-		}
-	}
-
-	// Ensure WORK is large enough; if not provided or too small, allocate internally.
-	// T (nb x nb block reflector) is carved from the tail of WORK.
-	if ( !WORK || WORK.length < iws + nb * nb ) {
-		WORK = new Complex128Array( iws + nb * nb );
-		offsetWORK = 0;
-		strideWORK = 1;
-	}
-	T = WORK;
-	var offsetT = offsetWORK + iws;
 	ldwork = N;
 
 	if ( nb >= nbmin && nb < K && nx < K ) {

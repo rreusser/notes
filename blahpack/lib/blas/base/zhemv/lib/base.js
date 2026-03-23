@@ -29,8 +29,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Perform Hermitian matrix-vector multiplication:
-*   y := alpha * A * x + beta * y
+* Perform Hermitian matrix-vector multiplication:.
+*   y := alpha _ A _ x + beta * y
 * where A is an N-by-N Hermitian matrix.
 *
 * @private
@@ -53,12 +53,12 @@ var imag = require( '@stdlib/complex/float64/imag' );
 function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY ) {
 	var alphaR;
 	var alphaI;
-	var betaR;
-	var betaI;
 	var temp1R;
 	var temp1I;
 	var temp2R;
 	var temp2I;
+	var betaR;
+	var betaI;
 	var aijR;
 	var aijI;
 	var ajjR;
@@ -146,9 +146,11 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			for ( i = 0; i < j; i++ ) {
 				aijR = Av[ ai ];
 				aijI = Av[ ai + 1 ];
+
 				// y[iy] += temp1 * A[i,j]
 				yv[ iy ] += temp1R * aijR - temp1I * aijI;
 				yv[ iy + 1 ] += temp1R * aijI + temp1I * aijR;
+
 				// temp2 += conj(A[i,j]) * x[ix]
 				temp2R += aijR * xv[ ix ] + aijI * xv[ ix + 1 ];
 				temp2I += aijR * xv[ ix + 1 ] - aijI * xv[ ix ];
@@ -158,6 +160,7 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			}
 			// Diagonal element: A(j,j) is real for Hermitian matrix
 			ajjR = Av[ ai ]; // real part of A(j,j); imag is 0 for Hermitian
+
 			// y[jy] += temp1 * real(A[j,j]) + alpha * temp2
 			yv[ jy ] += temp1R * ajjR + ( alphaR * temp2R - alphaI * temp2I );
 			yv[ jy + 1 ] += temp1I * ajjR + ( alphaR * temp2I + alphaI * temp2R );
@@ -174,6 +177,7 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			temp1I = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
 			temp2R = 0.0;
 			temp2I = 0.0;
+
 			// Diagonal element: A(j,j) is real for Hermitian matrix
 			ai = oA + j * sa1 + j * sa2;
 			ajjR = Av[ ai ];
@@ -185,9 +189,11 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			for ( i = j + 1; i < N; i++ ) {
 				aijR = Av[ ai ];
 				aijI = Av[ ai + 1 ];
+
 				// y[iy] += temp1 * A[i,j]
 				yv[ iy ] += temp1R * aijR - temp1I * aijI;
 				yv[ iy + 1 ] += temp1R * aijI + temp1I * aijR;
+
 				// temp2 += conj(A[i,j]) * x[ix]
 				temp2R += aijR * xv[ ix ] + aijI * xv[ ix + 1 ];
 				temp2I += aijR * xv[ ix + 1 ] - aijI * xv[ ix ];

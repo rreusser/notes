@@ -27,26 +27,26 @@
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dlacn2 = require( '@stdlib/lapack/base/dlacn2' );
-* 
+*
 * var v = new Float64Array( [ 1.0, 2.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var ISGN = new Int32Array( 2 );
 * var EST = new Float64Array( [ 1.0, 2.0 ] );
 * var KASE = new Int32Array( 2 );
 * var ISAVE = new Int32Array( 2 );
-* 
+*
 * dlacn2( 2, v, 1, x, 1, ISGN, 1, EST, KASE, ISAVE, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dlacn2 = require( '@stdlib/lapack/base/dlacn2' );
-* 
+*
 * var v = new Float64Array( [ 1.0, 2.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var ISGN = new Int32Array( 2 );
 * var isave = new Int32Array( 2 );
-* 
+*
 * dlacn2.ndarray( 2, v, 1, 0, x, 1, 0, ISGN, 1, 0, 1.0, 2, isave, 1, 0 );
 */
 

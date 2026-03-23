@@ -24,19 +24,19 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var daxpy = require( '@stdlib/blas/base/daxpy' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * daxpy( 2, 1.0, x, 1, y, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var daxpy = require( '@stdlib/blas/base/daxpy' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * daxpy.ndarray( 2, 1.0, x, 1, 0, y, 1, 0 );
 */
 

@@ -39,10 +39,10 @@ var TEMP = new Float64Array( 2 );
 // MAIN //
 
 /**
-* Computes an LU factorization of a complex M-by-N band matrix A using partial
+* Computes an LU factorization of a complex M-by-N band matrix A using partial.
 * pivoting with row interchanges (unblocked algorithm).
 *
-* The factorization has the form A = P * L * U where P is a permutation
+* The factorization has the form A = P _ L _ U where P is a permutation
 * matrix, L is lower triangular with unit diagonal, and U is upper triangular.
 *
 * The band matrix A is stored in band format:
@@ -66,16 +66,16 @@ var TEMP = new Float64Array( 2 );
 * @returns {integer} info - 0 if successful, k if U(k-1,k-1) is exactly zero (1-based)
 */
 function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV ) {
+	var ONE_NEG;
 	var info;
 	var ABv;
-	var ONE_NEG;
+	var sa1;
+	var sa2;
+	var idx;
 	var kv;
 	var km;
 	var jp;
 	var ju;
-	var sa1;
-	var sa2;
-	var idx;
 	var i;
 	var j;
 
@@ -92,7 +92,8 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	ABv = reinterpret( AB, 0 );
 
 	// Zero out the fill-in region: for columns j = ku+1 to min(kv-1, N-1)
-	// zero rows kv-j to kl-1 (0-based) in band storage
+
+	// Zero rows kv-j to kl-1 (0-based) in band storage
 	for ( j = ku + 1; j < Math.min( kv, N ); j++ ) {
 		for ( i = kv - j; i < kl; i++ ) {
 			idx = ( offsetAB + i * sa1 + j * sa2 ) * 2;
@@ -127,6 +128,7 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			ju = Math.max( ju, Math.min( j + ku + jp, N - 1 ) );
 
 			// Swap rows: if jp != 0, swap row kv+jp with row kv for columns j..ju
+
 			// Band stride for moving along a row = sa2 - sa1 (corresponds to LDAB-1)
 			if ( jp !== 0 ) {
 				zswap( ju - j + 1, AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + j * sa2,

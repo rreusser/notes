@@ -27,7 +27,7 @@ var dlauum = require( '../../dlauum/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the inverse of a real symmetric positive definite matrix using
+* Computes the inverse of a real symmetric positive definite matrix using.
 * its Cholesky factorization computed by dpotrf.
 *
 * The inverse is computed by first inverting the triangular Cholesky factor

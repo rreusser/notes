@@ -31,7 +31,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Computes a QR factorization of a complex M-by-N matrix A = Q * R
+* Computes a QR factorization of a complex M-by-N matrix A = Q * R.
 * using Householder reflections (unblocked algorithm).
 *
 * @private
@@ -57,10 +57,10 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	var tau_f64;
 	var sa1;
 	var sa2;
+	var aii;
 	var oA;
 	var oT;
 	var Av;
-	var aii;
 	var K;
 	var i;
 
@@ -85,7 +85,9 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		aii = oA + i * sa1 + i * sa2;
 
 		// Generate elementary reflector H(i) to annul A(i+1:M-1, i)
+
 		// zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
+
 		// Sub-routines accept Complex128Array with complex-element strides/offsets
 		zlarfg( M - i, A, offsetA + i * strideA1 + i * strideA2,
 			A, strideA1, offsetA + Math.min( i + 1, M - 1 ) * strideA1 + i * strideA2,
@@ -99,11 +101,13 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			Av[ aii + 1 ] = 0.0;
 
 			// Apply H(i)^H to A(i:M-1, i+1:N-1) from the left
-			// zlarf uses conj(tau) for left application of H^H
+
+			// Zlarf uses conj(tau) for left application of H^H
 			conj_f64[ 0 ] = tau_f64[ oT + i * strideTAU * 2 ];
 			conj_f64[ 1 ] = -tau_f64[ oT + i * strideTAU * 2 + 1 ];
 
 			// zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
+
 			// Sub-routines accept Complex128Array with complex-element strides/offsets
 			zlarf( 'left', M - i, N - i - 1, A, strideA1, offsetA + i * strideA1 + i * strideA2,
 				conj_tau, 0,

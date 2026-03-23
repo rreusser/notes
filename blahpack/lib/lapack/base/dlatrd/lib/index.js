@@ -26,23 +26,23 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlatrd = require( '@stdlib/lapack/base/dlatrd' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var W = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlatrd( 'row-major', 'upper', 2, 2, A, 2, e, 1, TAU, 1, W, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlatrd = require( '@stdlib/lapack/base/dlatrd' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var W = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlatrd.ndarray( 'upper', 2, 2, A, 1, 2, 0, e, 1, 0, TAU, 1, 0, W, 1, 2, 0 );
 */
 

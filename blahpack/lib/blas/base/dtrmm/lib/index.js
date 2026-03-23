@@ -19,26 +19,26 @@
 'use strict';
 
 /**
-* Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A) where A is a triangular matrix.
+* Perform one of the matrix-matrix operations B := alpha_op(A)_B or B := alpha_B_op(A) where A is a triangular matrix.
 *
 * @module @stdlib/blas/base/dtrmm
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrmm = require( '@stdlib/blas/base/dtrmm' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dtrmm( 'row-major', 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 2, B, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrmm = require( '@stdlib/blas/base/dtrmm' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dtrmm.ndarray( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
 */
 

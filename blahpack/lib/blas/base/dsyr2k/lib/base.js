@@ -23,9 +23,9 @@
 // MAIN //
 
 /**
-* Performs one of the symmetric rank-2k operations:
-*   C := alpha*A*B^T + alpha*B*A^T + beta*C,  or
-*   C := alpha*A^T*B + alpha*B^T*A + beta*C
+* Performs one of the symmetric rank-2k operations:.
+*   C := alpha_A_B^T + alpha_B_A^T + beta_C,  or
+_   C := alpha_A^T_B + alpha_B^T_A + beta_C
 * where alpha and beta are scalars, C is an N-by-N symmetric matrix,
 * and A and B are N-by-K matrices in the first case and K-by-N matrices
 * in the second case. Only the upper or lower triangular part of C is
@@ -104,22 +104,20 @@ function dsyr2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					}
 				}
 			}
-		} else {
-			if ( beta === 0.0 ) {
-				for ( j = 0; j < N; j++ ) {
-					ic = offsetC + j * sc1 + j * sc2;
-					for ( i = j; i < N; i++ ) {
-						C[ ic ] = 0.0;
-						ic += sc1;
-					}
+		} else if ( beta === 0.0 ) {
+			for ( j = 0; j < N; j++ ) {
+				ic = offsetC + j * sc1 + j * sc2;
+				for ( i = j; i < N; i++ ) {
+					C[ ic ] = 0.0;
+					ic += sc1;
 				}
-			} else {
-				for ( j = 0; j < N; j++ ) {
-					ic = offsetC + j * sc1 + j * sc2;
-					for ( i = j; i < N; i++ ) {
-						C[ ic ] *= beta;
-						ic += sc1;
-					}
+			}
+		} else {
+			for ( j = 0; j < N; j++ ) {
+				ic = offsetC + j * sc1 + j * sc2;
+				for ( i = j; i < N; i++ ) {
+					C[ ic ] *= beta;
+					ic += sc1;
 				}
 			}
 		}

@@ -36,7 +36,7 @@ var NB = 32; // Hardcoded block size
 // MAIN //
 
 /**
-* Overwrite the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,
+* Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
 * where Q is a complex unitary matrix defined as the product of K
 * elementary reflectors (from an LQ factorization):
 *
@@ -74,6 +74,7 @@ function zunmlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var transt;
 	var ldwork;
 	var left;
+	var ldt;
 	var nw;
 	var nb;
 	var nq;
@@ -85,7 +86,6 @@ function zunmlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var i1;
 	var i2;
 	var i3;
-	var ldt;
 	var T;
 	var i;
 
@@ -157,6 +157,7 @@ function zunmlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		ib = Math.min( nb, K - i );
 
 		// Form the triangular factor of the block reflector
+
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		zlarft(
 			'forward', 'rowwise', nq - i, ib,

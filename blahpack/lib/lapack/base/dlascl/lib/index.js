@@ -26,17 +26,17 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlascl = require( '@stdlib/lapack/base/dlascl' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlascl( 'row-major', 'N', 2, 2, 1.0, 1.0, 2, 2, A, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlascl = require( '@stdlib/lapack/base/dlascl' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dlascl.ndarray( 'N', 2, 2, 1.0, 1.0, 2, 2, A, 1, 2, 0 );
 */
 

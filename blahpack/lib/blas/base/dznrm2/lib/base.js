@@ -47,10 +47,10 @@ var SBIG = 1.1113793747425387e-162;  // 2^(-ceil((emax+digits-1)/2)) = 2^-538
 */
 function dznrm2( N, zx, strideX, offsetX ) {
 	var notbig;
+	var sumsq;
 	var abig;
 	var amed;
 	var asml;
-	var sumsq;
 	var scl;
 	var xv;
 	var ax;

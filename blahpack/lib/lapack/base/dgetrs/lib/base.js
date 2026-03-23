@@ -29,7 +29,7 @@ var dtrsm = require( '../../../../blas/base/dtrsm/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a system of linear equations A*X = B or A^T*X = B with a general
+* Solves a system of linear equations A_X = B or A^T_X = B with a general.
 * N-by-N matrix A using the LU factorization computed by dgetrf/dgetrf2.
 *
 * IPIV must contain 0-based pivot indices (as produced by dgetrf/dgetrf2).
@@ -60,7 +60,7 @@ function dgetrs( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 		// Solve A * X = B.
 
 		// Apply row interchanges to the right-hand sides.
-		// dlaswp uses 0-based k1, k2
+		// Dlaswp uses 0-based k1, k2
 		dlaswp( nrhs, B, strideB1, strideB2, offsetB, 0, N - 1, IPIV, strideIPIV, offsetIPIV, 1 );
 
 		// Solve L * Y = P * B (forward substitution, L is unit lower triangular)

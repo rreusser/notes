@@ -26,17 +26,17 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlasq2 = require( '@stdlib/lapack/base/dlasq2' );
-* 
+*
 * var z = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlasq2( 2, z, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlasq2 = require( '@stdlib/lapack/base/dlasq2' );
-* 
+*
 * var z = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlasq2.ndarray( 2, z, 1, 0 );
 */
 

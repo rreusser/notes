@@ -26,7 +26,7 @@ var SELECT = 20;
 // MAIN //
 
 /**
-* Sort an array of doubles in increasing or decreasing order using quicksort
+* Sort an array of doubles in increasing or decreasing order using quicksort.
 * with insertion sort for small partitions.
 *
 * @private
@@ -129,14 +129,12 @@ function dlasrt( id, N, d, stride, offset ) {
 				} else {
 					dmnmx = d2;
 				}
+			} else if ( d3 < d2 ) {
+				dmnmx = d2;
+			} else if ( d3 < d1 ) {
+				dmnmx = d3;
 			} else {
-				if ( d3 < d2 ) {
-					dmnmx = d2;
-				} else if ( d3 < d1 ) {
-					dmnmx = d3;
-				} else {
-					dmnmx = d1;
-				}
+				dmnmx = d1;
 			}
 
 			if ( dir === 0 ) {

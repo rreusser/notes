@@ -32,11 +32,11 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the product of a complex upper or lower triangular matrix with its
+* Computes the product of a complex upper or lower triangular matrix with its.
 * conjugate transpose (unblocked algorithm).
 *
-* If UPLO = 'U', computes U * U^H (upper triangle of result stored in A).
-* If UPLO = 'L', computes L^H * L (lower triangle of result stored in A).
+* If UPLO = 'U', computes U _ U^H (upper triangle of result stored in A).
+_ If UPLO = 'L', computes L^H _ L (lower triangle of result stored in A).
 *
 * @private
 * @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
@@ -52,10 +52,10 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	var alpha;
 	var dotR;
 	var dot;
-	var Av;
 	var aii;
 	var sa1;
 	var sa2;
+	var Av;
 	var ia;
 	var i;
 
@@ -79,7 +79,7 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 			if ( i < N - 1 ) {
 				// A(i,i) = aii*aii + DBLE( ZDOTC( N-i-1, A(i,i+1), LDA, A(i,i+1), LDA ) )
-				// zdotc returns Complex128, we need real part
+				// Zdotc returns Complex128, we need real part
 				dot = zdotc(
 					N - i - 1,
 					A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,

@@ -29,12 +29,12 @@ var dsyr = require( '../../../../blas/base/dsyr/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the Cholesky factorization of a real symmetric positive definite
+* Computes the Cholesky factorization of a real symmetric positive definite.
 * band matrix A.
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'upper', or
-*   A = L * L^T,  if uplo = 'lower',
+*   A = U^T _ U,  if uplo = 'upper', or
+_   A = L _ L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the unblocked version of the algorithm, calling Level 2 BLAS.
@@ -69,12 +69,19 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 	sa2 = strideAB2;
 
 	// KLD = MAX(1, LDAB-1).
+
 	// In Fortran, LDAB is the leading dimension. Steps along the band
+
 	// (one row up, one column right for upper; one row down, one column right
-	// for lower) have flat stride = LDAB-1 = sa2-sa1 (column-major with sa1=1).
+
+	// For lower) have flat stride = LDAB-1 = sa2-sa1 (column-major with sa1=1).
+
 	// In the general stride case, the flat stride corresponding to KLD
-	// is sa2 - sa1 (going from AB(r,c) to AB(r-1,c+1)).
+
+	// Is sa2 - sa1 (going from AB(r,c) to AB(r-1,c+1)).
+
 	// KLD is used as the vector stride in DSCAL and as the leading dimension
+
 	// (i.e. column stride) in DSYR.
 	kld = Math.max( 1, sa2 - sa1 );
 
@@ -95,16 +102,21 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			if ( kn > 0 ) {
 				// DSCAL(KN, 1/AJJ, AB(KD, J+2), KLD)
 				// AB(KD, J+2) in 0-based: (kd-1)*sa1 + (j+1)*sa2
-				// stride = KLD (stepping diagonally along the band)
+				// Stride = KLD (stepping diagonally along the band)
 				dscal( kn, 1.0 / ajj,
 					AB, kld, offsetAB + ( kd - 1 ) * sa1 + ( j + 1 ) * sa2
 				);
 
 				// DSYR('Upper', KN, -1, AB(KD, J+2), KLD, AB(KD+1, J+2), KLD)
+
 				// The matrix argument to dsyr uses LDA = KLD.
+
 				// dsyr(uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offsetA)
+
 				// Here dsyr treats the submatrix with:
+
 				//   strideA1 = sa1 (step within a column = 1 for col-major)
+
 				//   strideA2 = kld (step between columns = LDAB-1)
 				dsyr( 'upper', kn, -1.0,
 					AB, kld, offsetAB + ( kd - 1 ) * sa1 + ( j + 1 ) * sa2,
@@ -129,13 +141,14 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			if ( kn > 0 ) {
 				// DSCAL(KN, 1/AJJ, AB(2, J+1), 1)
 				// AB(2, J+1) in 0-based: sa1 + j*sa2
-				// stride = sa1 (= 1 for col-major, stepping down rows)
+				// Stride = sa1 (= 1 for col-major, stepping down rows)
 				dscal( kn, 1.0 / ajj,
 					AB, sa1, offsetAB + sa1 + j * sa2
 				);
 
 				// DSYR('Lower', KN, -1, AB(2, J+1), 1, AB(1, J+2), KLD)
-				// dsyr matrix: strideA1 = sa1, strideA2 = kld
+
+				// Dsyr matrix: strideA1 = sa1, strideA2 = kld
 				dsyr( 'lower', kn, -1.0,
 					AB, sa1, offsetAB + sa1 + j * sa2,
 					AB, sa1, kld, offsetAB + ( j + 1 ) * sa2

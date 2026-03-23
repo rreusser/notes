@@ -26,21 +26,21 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dsyev = require( '@stdlib/lapack/base/dsyev' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var w = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dsyev( 'row-major', 'none', 'upper', 2, A, 2, w, 1, WORK, 1, 8 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dsyev = require( '@stdlib/lapack/base/dsyev' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var w = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dsyev.ndarray( 'none', 'upper', 2, A, 1, 2, 0, w, 1, 0, WORK, 1, 0, 8 );
 */
 

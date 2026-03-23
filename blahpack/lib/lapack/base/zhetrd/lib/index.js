@@ -27,25 +27,25 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zhetrd = require( '@stdlib/lapack/base/zhetrd' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var TAU = new Complex128Array( [ 1.0, 2.0 ] );
 * var WORK = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * zhetrd( 'row-major', 'upper', 2, A, 2, d, 1, e, 1, TAU, 1, WORK, 1, 8 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zhetrd = require( '@stdlib/lapack/base/zhetrd' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var d = new Float64Array( [ 1.0, 2.0 ] );
 * var e = new Float64Array( [ 1.0, 2.0 ] );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * zhetrd.ndarray( 'upper', 2, A, 1, 2, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 8 );
 */
 

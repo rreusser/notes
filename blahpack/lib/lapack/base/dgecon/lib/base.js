@@ -35,7 +35,7 @@ var HUGEVAL = 1.7976931348623157e+308; // DLAMCH('one-norm')
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a general real matrix A,
+* Estimates the reciprocal of the condition number of a general real matrix A,.
 * in either the 1-norm or the infinity-norm, using the LU factorization
 * computed by dgetrf.
 *
@@ -112,7 +112,8 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	KASE[ 0 ] = 0;
 
 	// dlacn2 uses V = WORK[N..2N-1], X = WORK[0..N-1], ISGN = IWORK[0..N-1]
-	// dlatrs uses CNORM stored at WORK[2N..3N-1] and WORK[3N..4N-1] for upper/lower
+
+	// Dlatrs uses CNORM stored at WORK[2N..3N-1] and WORK[3N..4N-1] for upper/lower
 	while ( true ) {
 		dlacn2( N,
 			WORK, sw, offsetWORK + N * sw, // v

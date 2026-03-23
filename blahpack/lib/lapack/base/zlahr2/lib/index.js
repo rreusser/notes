@@ -25,18 +25,18 @@
 *
 * @example
 * var zlahr2 = require( '@stdlib/lapack/base/zlahr2' );
-* 
+*
 * zlahr2(  );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zlahr2 = require( '@stdlib/lapack/base/zlahr2' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var tau = new Float64Array( [ 1.0, 2.0 ] );
 * var t = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zlahr2.ndarray( 2, 2, 2, A, 1, 2, 0, tau, 1, 0, t, 1, 0, 2, y, 1, 0, 2 );
 */
 

@@ -37,9 +37,9 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * @returns {integer} 0-based index of last non-zero column, or -1 if none
 */
 function ilazlc( M, N, A, strideA1, strideA2, offsetA ) {
-	var Av;
 	var sa1;
 	var sa2;
+	var Av;
 	var oA;
 	var re;
 	var im;

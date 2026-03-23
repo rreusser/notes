@@ -29,11 +29,11 @@ var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
 // MAIN //
 
 /**
-* Applies a real block reflector H or its transpose H**T to a
+* Applies a real block reflector H or its transpose H**T to a.
 * real M-by-N matrix C, from either the left or the right.
 *
-* H = I - V * T * V**T  (for STOREV='C')
-* H = I - V**T * T * V  (for STOREV='R')
+* H = I - V _ T _ V**T  (for STOREV='C')
+* H = I - V**T _ T _ V  (for STOREV='R')
 *
 * Supports both STOREV='C' (columnwise) and STOREV='R' (rowwise).
 *
@@ -99,6 +99,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * T**T or W * T
 				dtrmm( 'right', 'upper', transt, 'non-unit', N, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C := C - V * W**T
 				if ( M > K ) {
 					dgemm( 'no-transpose', 'transpose', M - K, N, K, -1.0,
@@ -108,6 +109,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * V1**T
 				dtrmm( 'right', 'lower', 'transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C1 := C1 - W**T
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
@@ -131,6 +133,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * T or W * T**T
 				dtrmm( 'right', 'upper', trans, 'non-unit', M, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C := C - W * V**T
 				if ( N > K ) {
 					dgemm( 'no-transpose', 'transpose', M, N - K, K, -1.0,
@@ -140,6 +143,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * V1**T
 				dtrmm( 'right', 'lower', 'transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C1 := C1 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
@@ -228,6 +232,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * T**T or W * T
 				dtrmm( 'right', 'upper', transt, 'non-unit', N, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C := C - V**T * W**T
 				if ( M > K ) {
 					// C2 := C2 - V2**T * W**T
@@ -238,6 +243,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * V1
 				dtrmm( 'right', 'upper', 'no-transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C1 := C1 - W**T
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
@@ -262,6 +268,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * T or W * T**T
 				dtrmm( 'right', 'upper', trans, 'non-unit', M, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C := C - W * V
 				if ( N > K ) {
 					// C2 := C2 - W * V2
@@ -272,6 +279,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * V1
 				dtrmm( 'right', 'upper', 'no-transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C1 := C1 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {
@@ -300,6 +308,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * T**T or W * T
 				dtrmm( 'right', 'lower', transt, 'non-unit', N, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C := C - V**T * W**T
 				if ( M > K ) {
 					// C1 := C1 - V1**T * W**T
@@ -310,6 +319,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * V2
 				dtrmm( 'right', 'lower', 'no-transpose', 'unit', N, K, 1.0, V, strideV1, strideV2, offsetV + ( M - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C2 := C2 - W**T
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < N; i++ ) {
@@ -334,6 +344,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * T or W * T**T
 				dtrmm( 'right', 'lower', trans, 'non-unit', M, K, 1.0, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C := C - W * V
 				if ( N > K ) {
 					// C1 := C1 - W * V1
@@ -344,6 +355,7 @@ function dlarfb( side, trans, direct, storev, M, N, K, V, strideV1, strideV2, of
 				}
 				// W := W * V2
 				dtrmm( 'right', 'lower', 'no-transpose', 'unit', M, K, 1.0, V, strideV1, strideV2, offsetV + ( N - K ) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK );
+
 				// C2 := C2 - W
 				for ( j = 0; j < K; j++ ) {
 					for ( i = 0; i < M; i++ ) {

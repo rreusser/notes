@@ -28,7 +28,7 @@ var dlassq = require( '../../dlassq/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the value of the one-norm, Frobenius norm, infinity-norm, or the
+* Computes the value of the one-norm, Frobenius norm, infinity-norm, or the.
 * largest absolute value of any element of a real symmetric matrix.
 *
 * For a symmetric matrix, the one-norm equals the infinity-norm.
@@ -92,16 +92,18 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 	} else if ( norm === 'inf-norm' || norm === 'one-norm' || norm === 'one-norm' ) {
 		// One-norm = infinity-norm for symmetric matrices
 		// Compute column sums, exploiting symmetry: off-diagonal element A(i,j)
-		// contributes to both column i and column j sums.
+		// Contributes to both column i and column j sums.
 		value = 0.0;
 		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
 				sum = 0.0;
 				ai = offsetA + j * strideA2;
+
 				// Off-diagonal elements: i = 0..j-1
 				for ( i = 0; i < j; i++ ) {
 					absa = Math.abs( A[ ai ] );
 					sum += absa;
+
 					// Also add to row i's sum (stored in WORK[i])
 					WORK[ offsetWORK + i * strideWORK ] += absa;
 					ai += strideA1;
@@ -125,6 +127,7 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 				// Diagonal element
 				sum = WORK[ offsetWORK + j * strideWORK ] + Math.abs( A[ offsetA + j * strideA2 + j * strideA1 ] );
 				ai = offsetA + j * strideA2 + ( j + 1 ) * strideA1;
+
 				// Off-diagonal elements: i = j+1..N-1
 				for ( i = j + 1; i < N; i++ ) {
 					absa = Math.abs( A[ ai ] );
@@ -159,6 +162,7 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		}
 		// Off-diagonal elements counted once, but appear twice in the full matrix
 		sum = 2.0 * sum;
+
 		// Add diagonal elements
 		out = dlassq( N, A, strideA1 + strideA2, offsetA, scale, sum );
 		scale = out.scl;

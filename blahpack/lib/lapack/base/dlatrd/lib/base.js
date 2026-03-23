@@ -32,8 +32,8 @@ var daxpy = require( '../../../../blas/base/daxpy/lib/base.js' );
 // MAIN //
 
 /**
-* Reduces NB rows and columns of a real symmetric matrix A to symmetric
-* tridiagonal form by an orthogonal similarity transformation Q**T * A * Q,
+* Reduces NB rows and columns of a real symmetric matrix A to symmetric.
+* tridiagonal form by an orthogonal similarity transformation Q__T _ A _ Q,
 * and returns the matrices V and W which are needed to apply the
 * transformation to the unreduced part of A.
 *
@@ -87,6 +87,7 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 					W, strideW2, offsetW + i * strideW1 + ( iw + 1 ) * strideW2,
 					1.0, A, strideA1, offsetA + i * strideA2
 				);
+
 				// A(1:I,I) := A(1:I,I) - W(1:I,IW+1:NB-1) * A(I,I+1:N)^T
 				dgemv( 'no-transpose', i + 1, N - 1 - i, -1.0,
 					W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
@@ -107,6 +108,7 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 				A[ offsetA + ( i - 1 ) * strideA1 + i * strideA2 ] = 1.0;
 
 				// Compute W(0:i-1, iw)
+
 				// W(1:I-1,IW) := A(1:I-1,1:I-1) * A(1:I-1,I) (symmetric multiply)
 				dsymv( 'upper', i, 1.0,
 					A, strideA1, strideA2, offsetA,
@@ -121,18 +123,21 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 						A, strideA1, offsetA + i * strideA2,
 						0.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2
 					);
+
 					// W(1:I-1,IW) := W(1:I-1,IW) - A(1:I-1,I+1:N) * W(I+1:N,IW)
 					dgemv( 'no-transpose', i, N - 1 - i, -1.0,
 						A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 						W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2,
 						1.0, W, strideW1, offsetW + iw * strideW2
 					);
+
 					// W(I+1:N,IW) := A(1:I-1,I+1:N)^T * A(1:I-1,I)
 					dgemv( 'transpose', i, N - 1 - i, 1.0,
 						A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 						A, strideA1, offsetA + i * strideA2,
 						0.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2
 					);
+
 					// W(1:I-1,IW) := W(1:I-1,IW) - W(1:I-1,IW+1:NB-1) * W(I+1:N,IW)
 					dgemv( 'no-transpose', i, N - 1 - i, -1.0,
 						W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
@@ -145,11 +150,13 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 				dscal( i, TAU[ offsetTAU + ( i - 1 ) * strideTAU ],
 					W, strideW1, offsetW + iw * strideW2
 				);
+
 				// ALPHA := -0.5 * TAU(I-1) * W(1:I-1,IW)^T * A(1:I-1,I)
 				alpha = -0.5 * TAU[ offsetTAU + ( i - 1 ) * strideTAU ] *
 					ddot( i, W, strideW1, offsetW + iw * strideW2,
 						A, strideA1, offsetA + i * strideA2
 					);
+
 				// W(1:I-1,IW) := W(1:I-1,IW) + ALPHA * A(1:I-1,I)
 				daxpy( i, alpha,
 					A, strideA1, offsetA + i * strideA2,
@@ -169,6 +176,7 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 				W, strideW2, offsetW + i * strideW1,
 				1.0, A, strideA1, offsetA + i * strideA1 + i * strideA2
 			);
+
 			// A(I:N,I) := A(I:N,I) - W(I:N,1:I-1) * A(I,1:I-1)^T
 			dgemv( 'no-transpose', N - i, i, -1.0,
 				W, strideW1, strideW2, offsetW + i * strideW1,
@@ -188,45 +196,53 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 				A[ offsetA + ( i + 1 ) * strideA1 + i * strideA2 ] = 1.0;
 
 				// Compute W(i+1:N-1, i)
+
 				// W(I+1:N,I) := A(I+1:N,I+1:N) * A(I+1:N,I) (symmetric multiply)
 				dsymv( 'lower', N - i - 1, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
+
 				// W(1:I-1,I) := W(I+1:N,1:I-1)^T * A(I+1:N,I)
 				dgemv( 'transpose', N - i - 1, i, 1.0,
 					W, strideW1, strideW2, offsetW + ( i + 1 ) * strideW1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, W, strideW1, offsetW + i * strideW2
 				);
+
 				// W(I+1:N,I) := W(I+1:N,I) - A(I+1:N,1:I-1) * W(1:I-1,I)
 				dgemv( 'no-transpose', N - i - 1, i, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					W, strideW1, offsetW + i * strideW2,
 					1.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
+
 				// W(1:I-1,I) := A(I+1:N,1:I-1)^T * A(I+1:N,I)
 				dgemv( 'transpose', N - i - 1, i, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, W, strideW1, offsetW + i * strideW2
 				);
+
 				// W(I+1:N,I) := W(I+1:N,I) - W(I+1:N,1:I-1) * W(1:I-1,I)
 				dgemv( 'no-transpose', N - i - 1, i, -1.0,
 					W, strideW1, strideW2, offsetW + ( i + 1 ) * strideW1,
 					W, strideW1, offsetW + i * strideW2,
 					1.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
+
 				// W(I+1:N,I) := TAU(I) * W(I+1:N,I)
 				dscal( N - i - 1, TAU[ offsetTAU + i * strideTAU ],
 					W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
+
 				// ALPHA := -0.5 * TAU(I) * W(I+1:N,I)^T * A(I+1:N,I)
 				alpha = -0.5 * TAU[ offsetTAU + i * strideTAU ] *
 					ddot( N - i - 1, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2,
 						A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2
 					);
+
 				// W(I+1:N,I) := W(I+1:N,I) + ALPHA * A(I+1:N,I)
 				daxpy( N - i - 1, alpha,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,

@@ -23,12 +23,12 @@
 *
 * @example
 * var zladiv = require( '@stdlib/lapack/base/zladiv' );
-* 
+*
 * zladiv( 1.0, 1.0, 1.0 );
 *
 * @example
 * var zladiv = require( '@stdlib/lapack/base/zladiv' );
-* 
+*
 * zladiv.ndarray( 1.0, 1.0 );
 */
 

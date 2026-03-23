@@ -30,7 +30,7 @@ var cmplx = require( '../../../../cmplx.js' );
 // MAIN //
 
 /**
-* Returns the value of the one norm, Frobenius norm, infinity norm, or
+* Returns the value of the one norm, Frobenius norm, infinity norm, or.
 * max absolute value of an upper Hessenberg complex matrix.
 *
 * @private
@@ -49,25 +49,15 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 	var value;
 	var scale;
 	var sum;
-	var Av;
 	var sa1;
 	var sa2;
-	var oA;
 	var lim;
 	var aij;
+	var Av;
+	var oA;
 	var wi;
 	var i;
 	var j;
-
-	if ( N === 0 ) {
-		return 0.0;
-	}
-
-	Av = reinterpret( A, 0 );
-	sa1 = strideA1 * 2;
-	sa2 = strideA2 * 2;
-	oA = offsetA * 2;
-
 	var n = norm.charAt( 0 ).toUpperCase();
 
 	if ( n === 'M' ) {
@@ -123,7 +113,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 		}
 	} else if ( n === 'F' || n === 'E' ) {
 		// Frobenius norm
-		// zlassq now takes Complex128Array with offset in complex elements
+		// Zlassq now takes Complex128Array with offset in complex elements
 		scale = 0.0;
 		sum = 1.0;
 		for ( j = 0; j < N; j++ ) {

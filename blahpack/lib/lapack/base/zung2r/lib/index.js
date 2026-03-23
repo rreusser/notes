@@ -26,21 +26,21 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zung2r = require( '@stdlib/lapack/base/zung2r' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var TAU = new Complex128Array( [ 1.0, 2.0 ] );
 * var WORK = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * zung2r( 'row-major', 2, 2, 2, A, 2, TAU, 1, WORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zung2r = require( '@stdlib/lapack/base/zung2r' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * zung2r.ndarray( 2, 2, 2, A, 1, 2, 0, TAU, 1, 0, WORK, 1, 0 );
 */
 

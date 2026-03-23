@@ -46,7 +46,7 @@ var CONE = new Complex128( 1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric
+* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 * tridiagonal matrix using the implicit QL or QR method. The eigenvector
 * matrix Z is complex (Complex128Array).
 *
@@ -89,8 +89,8 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var safmin;
 	var icompz;
 	var lendsv;
-	var anorm;
 	var iscale;
+	var anorm;
 	var jtot;
 	var lend;
 	var eps2;
@@ -98,8 +98,10 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var tst;
 	var obj;
 	var lsv;
+	var rot;
 	var mm;
 	var l1;
+	var ii;
 	var l;
 	var m;
 	var p;
@@ -112,8 +114,6 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var i;
 	var j;
 	var k;
-	var rot;
-	var ii;
 
 	rot = new Float64Array( 3 );
 
@@ -158,6 +158,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 	// Determine where the matrix splits and choose QL or QR iteration
 	l1 = 0; // 0-based
+
 	// Outer loop (label 10): find unreduced blocks
 	outer:
 	while ( l1 < N ) {
@@ -221,7 +222,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				if ( l !== lend ) {
 					for ( m = l; m <= lend - 1; m++ ) {
 						tst = Math.abs( e[ offsetE + m * strideE ] );
-						tst = tst * tst;
+						tst *= tst;
 						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) + safmin ) {
 							break;
 						}
@@ -282,7 +283,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Form shift
 				g = ( d[ offsetD + ( l + 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + l * strideE ] );
 				r = dlapy2( g, 1.0 );
-				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + l * strideE ] / ( g + ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ? r : -r ) ) ); // SIGN(R, G)
+				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + l * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
 				s = 1.0;
 				c = 1.0;
@@ -332,7 +333,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				if ( l !== lend ) {
 					for ( m = l; m >= lend + 1; m-- ) {
 						tst = Math.abs( e[ offsetE + ( m - 1 ) * strideE ] );
-						tst = tst * tst;
+						tst *= tst;
 						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m - 1 ) * strideD ] ) + safmin ) {
 							break;
 						}
@@ -393,7 +394,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Form shift
 				g = ( d[ offsetD + ( l - 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + ( l - 1 ) * strideE ] );
 				r = dlapy2( g, 1.0 );
-				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ? r : -r ) ) ); // SIGN(R, G)
+				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
 				s = 1.0;
 				c = 1.0;

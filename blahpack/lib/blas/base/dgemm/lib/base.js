@@ -23,8 +23,8 @@
 // MAIN //
 
 /**
-* Performs one of the matrix-matrix operations:
-*   C := alpha*op(A)*op(B) + beta*C
+* Performs one of the matrix-matrix operations:.
+*   C := alpha_op(A)_op(B) + beta*C
 * where op(X) is one of X or X**T.
 *
 * @private
@@ -152,52 +152,50 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 				}
 			}
 		}
-	} else {
-		if ( nota ) {
-			// C := alpha*A*B^T + beta*C
-			for ( j = 0; j < N; j++ ) {
-				if ( beta === 0.0 ) {
-					ic = offsetC + j * sc2;
-					for ( i = 0; i < M; i++ ) {
-						C[ ic ] = 0.0;
-						ic += sc1;
-					}
-				} else if ( beta !== 1.0 ) {
-					ic = offsetC + j * sc2;
-					for ( i = 0; i < M; i++ ) {
-						C[ ic ] = beta * C[ ic ];
-						ic += sc1;
-					}
+	} else if ( nota ) {
+		// C := alpha*A*B^T + beta*C
+		for ( j = 0; j < N; j++ ) {
+			if ( beta === 0.0 ) {
+				ic = offsetC + j * sc2;
+				for ( i = 0; i < M; i++ ) {
+					C[ ic ] = 0.0;
+					ic += sc1;
 				}
-				for ( l = 0; l < K; l++ ) {
-					temp = alpha * B[ offsetB + j * sb1 + l * sb2 ];
-					ia = offsetA + l * sa2;
-					ic = offsetC + j * sc2;
-					for ( i = 0; i < M; i++ ) {
-						C[ ic ] += temp * A[ ia ];
-						ia += sa1;
-						ic += sc1;
-					}
+			} else if ( beta !== 1.0 ) {
+				ic = offsetC + j * sc2;
+				for ( i = 0; i < M; i++ ) {
+					C[ ic ] = beta * C[ ic ];
+					ic += sc1;
 				}
 			}
-		} else {
-			// C := alpha*A^T*B^T + beta*C
-			for ( j = 0; j < N; j++ ) {
+			for ( l = 0; l < K; l++ ) {
+				temp = alpha * B[ offsetB + j * sb1 + l * sb2 ];
+				ia = offsetA + l * sa2;
+				ic = offsetC + j * sc2;
 				for ( i = 0; i < M; i++ ) {
-					temp = 0.0;
-					ia = offsetA + i * sa2;
-					ib = offsetB + j * sb1;
-					for ( l = 0; l < K; l++ ) {
-						temp += A[ ia ] * B[ ib ];
-						ia += sa1;
-						ib += sb2;
-					}
-					ic = offsetC + i * sc1 + j * sc2;
-					if ( beta === 0.0 ) {
-						C[ ic ] = alpha * temp;
-					} else {
-						C[ ic ] = alpha * temp + beta * C[ ic ];
-					}
+					C[ ic ] += temp * A[ ia ];
+					ia += sa1;
+					ic += sc1;
+				}
+			}
+		}
+	} else {
+		// C := alpha*A^T*B^T + beta*C
+		for ( j = 0; j < N; j++ ) {
+			for ( i = 0; i < M; i++ ) {
+				temp = 0.0;
+				ia = offsetA + i * sa2;
+				ib = offsetB + j * sb1;
+				for ( l = 0; l < K; l++ ) {
+					temp += A[ ia ] * B[ ib ];
+					ia += sa1;
+					ib += sb2;
+				}
+				ic = offsetC + i * sc1 + j * sc2;
+				if ( beta === 0.0 ) {
+					C[ ic ] = alpha * temp;
+				} else {
+					C[ ic ] = alpha * temp + beta * C[ ic ];
 				}
 			}
 		}

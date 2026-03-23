@@ -74,6 +74,7 @@ function dscal( N, da, x, strideX, offsetX ) {
 	return x;
 }
 
+
 // EXPORTS //
 
 module.exports = dscal;

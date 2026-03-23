@@ -29,9 +29,9 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Performs one of the Hermitian rank-2k operations:
-*   C := alpha*A*B^H + conj(alpha)*B*A^H + beta*C,  or
-*   C := alpha*A^H*B + conj(alpha)*B^H*A + beta*C
+* Performs one of the Hermitian rank-2k operations:.
+*   C := alpha_A_B^H + conj(alpha)_B_A^H + beta_C,  or
+_   C := alpha_A^H_B + conj(alpha)_B^H_A + beta_C
 * where alpha is a complex scalar, beta is a REAL scalar, C is an N-by-N
 * Hermitian matrix (stored as Complex128Array), and A and B are N-by-K
 * matrices in the first case and K-by-N matrices in the second case.
@@ -63,27 +63,18 @@ var imag = require( '@stdlib/complex/float64/imag' );
 function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC ) {
 	var alphaR;
 	var alphaI;
-	var upper;
 	var temp1R;
 	var temp1I;
 	var temp2R;
 	var temp2I;
+	var upper;
 	var nota;
-	var Av;
-	var Bv;
-	var Cv;
-	var oA;
-	var oB;
-	var oC;
 	var sa1;
 	var sa2;
 	var sb1;
 	var sb2;
 	var sc1;
 	var sc2;
-	var ic;
-	var ia;
-	var ib;
 	var ajR;
 	var ajI;
 	var bjR;
@@ -92,6 +83,15 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 	var aiI;
 	var biR;
 	var biI;
+	var Av;
+	var Bv;
+	var Cv;
+	var oA;
+	var oB;
+	var oC;
+	var ic;
+	var ia;
+	var ib;
 	var cR;
 	var i;
 	var j;
@@ -145,29 +145,27 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					Cv[ ic + 1 ] = 0.0;
 				}
 			}
-		} else {
-			if ( beta === 0.0 ) {
-				for ( j = 0; j < N; j++ ) {
-					ic = oC + j * sc1 + j * sc2;
-					for ( i = j; i < N; i++ ) {
-						Cv[ ic ] = 0.0;
-						Cv[ ic + 1 ] = 0.0;
-						ic += sc1;
-					}
-				}
-			} else {
-				for ( j = 0; j < N; j++ ) {
-					// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
-					ic = oC + j * sc1 + j * sc2;
-					Cv[ ic ] = beta * Cv[ ic ];
+		} else if ( beta === 0.0 ) {
+			for ( j = 0; j < N; j++ ) {
+				ic = oC + j * sc1 + j * sc2;
+				for ( i = j; i < N; i++ ) {
+					Cv[ ic ] = 0.0;
 					Cv[ ic + 1 ] = 0.0;
 					ic += sc1;
-					for ( i = j + 1; i < N; i++ ) {
-						// Off-diagonal
-						Cv[ ic ] *= beta;
-						Cv[ ic + 1 ] *= beta;
-						ic += sc1;
-					}
+				}
+			}
+		} else {
+			for ( j = 0; j < N; j++ ) {
+				// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
+				ic = oC + j * sc1 + j * sc2;
+				Cv[ ic ] = beta * Cv[ ic ];
+				Cv[ ic + 1 ] = 0.0;
+				ic += sc1;
+				for ( i = j + 1; i < N; i++ ) {
+					// Off-diagonal
+					Cv[ ic ] *= beta;
+					Cv[ ic + 1 ] *= beta;
+					ic += sc1;
 				}
 			}
 		}
@@ -211,9 +209,12 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						// temp1 = alpha * conj(B[j,l])
 						temp1R = alphaR * bjR + alphaI * bjI; // alpha * conj(b): (aR+aI*i)*(bR-bI*i)
 						temp1I = alphaI * bjR - alphaR * bjI;
+
 						// temp2 = conj(alpha * A[j,l]) = conj(alpha) * conj(A[j,l])
+
 						// alpha*A[j,l] = (aR+aI*i)*(ajR+ajI*i) = (aR*ajR - aI*ajI) + (aR*ajI + aI*ajR)*i
-						// conj of that = (aR*ajR - aI*ajI) - (aR*ajI + aI*ajR)*i
+
+						// Conj of that = (aR*ajR - aI*ajI) - (aR*ajI + aI*ajR)*i
 						temp2R = alphaR * ajR - alphaI * ajI;
 						temp2I = -( alphaR * ajI + alphaI * ajR );
 						ic = oC + j * sc2;
@@ -224,6 +225,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 							aiI = Av[ ia + 1 ];
 							biR = Bv[ ib ];
 							biI = Bv[ ib + 1 ];
+
 							// C[i,j] += A[i,l]*temp1 + B[i,l]*temp2
 							Cv[ ic ] += aiR * temp1R - aiI * temp1I + biR * temp2R - biI * temp2I;
 							Cv[ ic + 1 ] += aiR * temp1I + aiI * temp1R + biR * temp2I + biI * temp2R;
@@ -237,6 +239,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						biR = Bv[ ib ];
 						biI = Bv[ ib + 1 ];
 						Cv[ ic ] += aiR * temp1R - aiI * temp1I + biR * temp2R - biI * temp2I;
+
 						// Imaginary part stays zero (Hermitian diagonal is real)
 					}
 				}
@@ -253,6 +256,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 					}
 				} else if ( beta !== 1.0 ) {
 					ic = oC + j * sc1 + j * sc2;
+
 					// Diagonal: scale real part only
 					Cv[ ic ] = beta * Cv[ ic ];
 					Cv[ ic + 1 ] = 0.0;
@@ -278,12 +282,15 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						// temp1 = alpha * conj(B[j,l])
 						temp1R = alphaR * bjR + alphaI * bjI;
 						temp1I = alphaI * bjR - alphaR * bjI;
+
 						// temp2 = conj(alpha * A[j,l])
 						temp2R = alphaR * ajR - alphaI * ajI;
 						temp2I = -( alphaR * ajI + alphaI * ajR );
+
 						// Diagonal: C[j,j] += Re(A[j,l]*temp1 + B[j,l]*temp2)
 						ic = oC + j * sc1 + j * sc2;
 						Cv[ ic ] += ajR * temp1R - ajI * temp1I + bjR * temp2R - bjI * temp2I;
+
 						// Imaginary stays zero
 						ic += sc1;
 						ia = oA + ( j + 1 ) * sa1 + l * sa2;
@@ -293,6 +300,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 							aiI = Av[ ia + 1 ];
 							biR = Bv[ ib ];
 							biI = Bv[ ib + 1 ];
+
 							// C[i,j] += A[i,l]*temp1 + B[i,l]*temp2
 							Cv[ ic ] += aiR * temp1R - aiI * temp1I + biR * temp2R - biI * temp2I;
 							Cv[ ic + 1 ] += aiR * temp1I + aiI * temp1R + biR * temp2I + biI * temp2R;
@@ -323,6 +331,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						bjI = Bv[ oB + l * sb1 + j * sb2 + 1 ];
 						temp1R += aiR * bjR - aiI * bjI;
 						temp1I += aiR * bjI + aiI * bjR;
+
 						// conj(B[l,i]) * A[l,j]
 						biR = Bv[ oB + l * sb1 + i * sb2 ];
 						biI = -Bv[ oB + l * sb1 + i * sb2 + 1 ]; // conjugate
@@ -375,6 +384,7 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 						bjI = Bv[ oB + l * sb1 + j * sb2 + 1 ];
 						temp1R += aiR * bjR - aiI * bjI;
 						temp1I += aiR * bjI + aiI * bjR;
+
 						// conj(B[l,i]) * A[l,j]
 						biR = Bv[ oB + l * sb1 + i * sb2 ];
 						biI = -Bv[ oB + l * sb1 + i * sb2 + 1 ]; // conjugate

@@ -28,11 +28,11 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the product of an upper or lower triangular matrix with its
+* Computes the product of an upper or lower triangular matrix with its.
 * transpose (unblocked algorithm).
 *
-* If UPLO = 'U', computes U * U^T (upper triangle of result stored in A).
-* If UPLO = 'L', computes L^T * L (lower triangle of result stored in A).
+* If UPLO = 'U', computes U _ U^T (upper triangle of result stored in A).
+_ If UPLO = 'L', computes L^T _ L (lower triangle of result stored in A).
 *
 * @private
 * @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
@@ -73,6 +73,7 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				);
 
 				// Update rows 0..i-1 of column i:
+
 				// dgemv('no-transpose', i, N-i-1, 1.0, A(0,i+1), LDA, A(i,i+1), LDA, aii, A(0,i), 1)
 				dgemv(
 					'no-transpose', i, N - i - 1,
@@ -103,6 +104,7 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				);
 
 				// Update columns 0..i-1 of row i:
+
 				// dgemv('transpose', N-i-1, i, 1.0, A(i+1,0), LDA, A(i+1,i), 1, aii, A(i,0), LDA)
 				dgemv(
 					'transpose', N - i - 1, i,

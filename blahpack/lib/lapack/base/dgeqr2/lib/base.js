@@ -28,7 +28,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Computes a QR factorization of a real M-by-N matrix A = Q * R
+* Computes a QR factorization of a real M-by-N matrix A = Q * R.
 * using Householder reflections (unblocked algorithm).
 *
 * @private

@@ -73,6 +73,7 @@ function dlasq6( i0, n0, z, stride, offset, pp ) {
 	safmin = dlamch( 'Safe minimum' );
 
 	// Helper: convert Fortran 1-based index k to JS 0-based array position
+
 	// Fortran Z(k) -> z[ offset + (k-1)*stride ]
 	function Z( k ) {
 		return z[ offset + ( k - 1 ) * stride ];
@@ -98,7 +99,7 @@ function dlasq6( i0, n0, z, stride, offset, pp ) {
 				( safmin * Z( j4 - 2 ) < Z( j4 + 1 ) ) ) {
 				temp = Z( j4 + 1 ) / Z( j4 - 2 );
 				setZ( j4, Z( j4 - 1 ) * temp );
-				d = d * temp;
+				d *= temp;
 			} else {
 				setZ( j4, Z( j4 + 1 ) * ( Z( j4 - 1 ) / Z( j4 - 2 ) ) );
 				d = Z( j4 + 1 ) * ( d / Z( j4 - 2 ) );
@@ -118,7 +119,7 @@ function dlasq6( i0, n0, z, stride, offset, pp ) {
 				( safmin * Z( j4 - 3 ) < Z( j4 + 2 ) ) ) {
 				temp = Z( j4 + 2 ) / Z( j4 - 3 );
 				setZ( j4 - 1, Z( j4 ) * temp );
-				d = d * temp;
+				d *= temp;
 			} else {
 				setZ( j4 - 1, Z( j4 + 2 ) * ( Z( j4 ) / Z( j4 - 3 ) ) );
 				d = Z( j4 + 2 ) * ( d / Z( j4 - 3 ) );

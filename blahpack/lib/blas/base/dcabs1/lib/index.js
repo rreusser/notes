@@ -23,12 +23,12 @@
 *
 * @example
 * var dcabs1 = require( '@stdlib/blas/base/dcabs1' );
-* 
+*
 * dcabs1( 1.0 );
 *
 * @example
 * var dcabs1 = require( '@stdlib/blas/base/dcabs1' );
-* 
+*
 * dcabs1.ndarray( 1.0 );
 */
 

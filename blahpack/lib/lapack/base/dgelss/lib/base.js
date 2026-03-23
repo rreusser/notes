@@ -51,7 +51,7 @@ var MNTHR_RATIO = 1.6;  // ILAENV(6, 'DGELSS') threshold ratio M/N
 // MAIN //
 
 /**
-* Computes the minimum norm solution to a real linear least squares problem:
+* Computes the minimum norm solution to a real linear least squares problem:.
 *
 *   minimize 2-norm(|| b - A*x ||)
 *
@@ -235,6 +235,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = ie + N;
 
 		// Compute SVD of bidiagonal: S = singular values, A = P_b^T (right singular vectors)
+
 		// B is multiplied by Q_b^T on the left
 		info = dbdsqr( 'upper', N, N, 0, nrhs,
 			S, strideS, offsetS,
@@ -301,10 +302,12 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		// Path 2a: N >> M — LQ factorization with workspace copy
 		// ==========================================
 		ldwork = M;
+
 		// Check if we can use a larger ldwork for better performance
 		if ( lwork >= Math.max( 4 * M + M * M + Math.max( M, 2 * M - 4, nrhs, N - 3 * M ),
 			M * M + M + M * nrhs ) ) {
 			ldwork = Math.max( M, Math.floor( Math.sqrt( lwork - 3 * M ) ) );
+
 			// Cap ldwork to a reasonable value
 			if ( ldwork > M ) {
 				ldwork = M; // keep simple — no LDA optimization needed in JS
@@ -563,6 +566,7 @@ function computeWorkSize( M, N, nrhs, mnthr ) {
 	if ( M >= N ) {
 		if ( M >= mnthr ) {
 			mm = N;
+
 			// QR path workspace: N (TAU) + max(N*NB for QR, N*NB for ORMQR)
 			wsize = Math.max( wsize, N + N * NB );
 		}

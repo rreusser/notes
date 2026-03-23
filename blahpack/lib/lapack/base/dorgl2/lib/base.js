@@ -28,14 +28,14 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Generates an M-by-N real orthogonal matrix Q from the elementary
+* Generates an M-by-N real orthogonal matrix Q from the elementary.
 * reflectors returned by DGELQF/DGELQ2 (LQ factorization, unblocked).
 *
 * Q is defined as the product of K elementary reflectors:
 *
 *   Q = H(K) ... H(2) H(1)
 *
-* where each H(i) has the form H(i) = I - tau(i) * v * v^T, and v is
+* where each H(i) has the form H(i) = I - tau(i) _ v _ v^T, and v is
 * stored as row i of the input matrix A.
 *
 * ## Notes
@@ -98,8 +98,11 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0;
 
 				// DLARF('Right', M-I, N-I+1, A(I,I), LDA, TAU(I),
+
 				//        A(I+1,I), LDA, WORK)
-				// v is row i from column i onward, so stride for v = strideA2 (along columns)
+
+				// V is row i from column i onward, so stride for v = strideA2 (along columns)
+
 				// C is rows i+1..M-1, columns i..N-1
 				dlarf(
 					'right', M - i - 1, N - i,
@@ -122,6 +125,7 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0 - TAU[ it ];
 
 		// Zero out columns 0..i-1 of row i
+
 		// Fortran: DO 30 L = 1, I-1; A(I,L) = ZERO
 		for ( l = 0; l < i; l++ ) {
 			A[ offsetA + i * strideA1 + l * strideA2 ] = 0.0;

@@ -26,19 +26,19 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var ztrsm = require( '@stdlib/blas/base/ztrsm' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * ztrsm( 'row-major', 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 2, B, 2 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var ztrsm = require( '@stdlib/blas/base/ztrsm' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * ztrsm.ndarray( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
 */
 

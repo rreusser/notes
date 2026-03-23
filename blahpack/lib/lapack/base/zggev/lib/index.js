@@ -26,20 +26,20 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zggev = require( '@stdlib/lapack/base/zggev' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var ALPHA = new Complex128Array( [ 1.0, 2.0 ] );
 * var BETA = new Complex128Array( [ 1.0, 2.0 ] );
 * var VL = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var VR = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zggev( 'row-major', 'none', 'none', 2, A, 2, B, 2, ALPHA, 1, BETA, 1, VL, 2, VR, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zggev = require( '@stdlib/lapack/base/zggev' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var ALPHA = new Float64Array( [ 1.0, 2.0 ] );
@@ -48,7 +48,7 @@
 * var VR = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zggev.ndarray( 'none', 'none', 2, A, 1, 2, 0, B, 1, 2, 0, ALPHA, 1, 0, BETA, 1, 0, VL, 1, 2, 0, VR, 1, 2, 0, WORK, 1, 0, 8, RWORK, 1, 0 );
 */
 

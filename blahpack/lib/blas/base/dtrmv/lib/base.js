@@ -23,8 +23,8 @@
 // MAIN //
 
 /**
-* Performs one of the matrix-vector operations:
-*   x := A*x,  or  x := A**T*x
+* Performs one of the matrix-vector operations:.
+*   x := A_x,  or  x := A__T_x
 * where x is an N element vector and A is an N by N unit or non-unit,
 * upper or lower triangular matrix.
 *

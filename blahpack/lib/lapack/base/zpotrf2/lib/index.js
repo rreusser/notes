@@ -26,9 +26,9 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zpotrf2 = require( '@stdlib/lapack/base/zpotrf2' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zpotrf2.ndarray( 'upper', 2, A, 1, 2, 0 );
 */
 

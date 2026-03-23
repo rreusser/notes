@@ -34,8 +34,8 @@ var CONE = new Complex128( 1.0, 0.0 );
 // MAIN //
 
 /**
-* Solves a system of linear equations A*X = B with a Hermitian positive
-* definite matrix A using the Cholesky factorization A = U^H*U or A = L*L^H
+* Solves a system of linear equations A_X = B with a Hermitian positive.
+_ definite matrix A using the Cholesky factorization A = U^H_U or A = L*L^H
 * computed by zpotrf.
 *
 * @private

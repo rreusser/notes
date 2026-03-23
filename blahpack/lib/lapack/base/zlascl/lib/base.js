@@ -29,7 +29,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 // MAIN //
 
 /**
-* Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow
+* Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
 * carefully via iterative scaling.
 *
 * @private
@@ -51,22 +51,22 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 	var bignum;
 	var cfromc;
 	var cfrom1;
+	var itype;
 	var ctoc;
 	var cto1;
 	var done;
-	var itype;
+	var iMax;
+	var iMin;
 	var mul;
-	var Av;
 	var sa1;
 	var sa2;
+	var Av;
 	var oA;
 	var ai;
 	var k1;
 	var k2;
 	var k3;
 	var k4;
-	var iMax;
-	var iMin;
 	var i;
 	var j;
 

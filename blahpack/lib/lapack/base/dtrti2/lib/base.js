@@ -27,7 +27,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the inverse of a real upper or lower triangular matrix
+* Computes the inverse of a real upper or lower triangular matrix.
 * using the unblocked algorithm.
 *
 * @private

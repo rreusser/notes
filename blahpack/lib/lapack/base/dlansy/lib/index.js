@@ -26,19 +26,19 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlansy = require( '@stdlib/lapack/base/dlansy' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dlansy( 'row-major', 'one-norm', 'upper', 2, A, 2, WORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlansy = require( '@stdlib/lapack/base/dlansy' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dlansy.ndarray( 'one-norm', 'upper', 2, A, 1, 2, 0, WORK, 1, 0 );
 */
 

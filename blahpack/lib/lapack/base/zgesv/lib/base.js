@@ -29,11 +29,11 @@ var zgetrs = require( '../../zgetrs/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the solution to a complex system of linear equations A * X = B,
+* Computes the solution to a complex system of linear equations A * X = B,.
 * where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
 *
 * The LU decomposition with partial pivoting and row interchanges is
-* used to factor A as A = P * L * U, then the factored form of A is
+* used to factor A as A = P _ L _ U, then the factored form of A is
 * used to solve the system of equations A * X = B.
 *
 * IPIV is an output array that receives 0-based pivot indices from zgetrf.

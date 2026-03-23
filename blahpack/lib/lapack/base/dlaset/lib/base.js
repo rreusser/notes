@@ -23,7 +23,7 @@
 // MAIN //
 
 /**
-* Initializes an M-by-N matrix A to BETA on the diagonal and ALPHA on the
+* Initializes an M-by-N matrix A to BETA on the diagonal and ALPHA on the.
 * off-diagonals.
 *
 * @private
@@ -39,8 +39,8 @@
 * @returns {Float64Array} A
 */
 function dlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
-	var mn;
 	var idx;
+	var mn;
 	var i;
 	var j;
 

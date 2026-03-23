@@ -27,20 +27,20 @@
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dgbtrf = require( '@stdlib/lapack/base/dgbtrf' );
-* 
+*
 * var AB = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
-* 
+*
 * dgbtrf( 'row-major', 2, 2, 2, 2, AB, 2, IPIV, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dgbtrf = require( '@stdlib/lapack/base/dgbtrf' );
-* 
+*
 * var AB = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
-* 
+*
 * dgbtrf.ndarray( 2, 2, 2, 2, AB, 1, 2, 0, IPIV, 1, 0 );
 */
 

@@ -23,8 +23,8 @@
 // MAIN //
 
 /**
-* Solves one of the matrix equations:
-*   op(A)*X = alpha*B,  or  X*op(A) = alpha*B
+* Solves one of the matrix equations:.
+*   op(A)_X = alpha_B,  or  X_op(A) = alpha_B
 * where alpha is a scalar, X and B are M-by-N matrices, A is a unit or
 * non-unit, upper or lower triangular matrix, and op(A) is A or A**T.
 * The matrix X is overwritten on B.
@@ -150,7 +150,7 @@ function dtrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 							ia += sa1;
 						}
 						if ( nounit ) {
-							temp = temp / A[ offsetA + i * sa1 + i * sa2 ];
+							temp /= A[ offsetA + i * sa1 + i * sa2 ];
 						}
 						B[ offsetB + i * sb1 + j * sb2 ] = temp;
 					}
@@ -164,123 +164,121 @@ function dtrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 							temp -= A[ offsetA + k * sa1 + i * sa2 ] * B[ offsetB + k * sb1 + j * sb2 ];
 						}
 						if ( nounit ) {
-							temp = temp / A[ offsetA + i * sa1 + i * sa2 ];
+							temp /= A[ offsetA + i * sa1 + i * sa2 ];
 						}
 						B[ offsetB + i * sb1 + j * sb2 ] = temp;
 					}
 				}
 			}
 		}
-	} else {
-		if ( transa === 'no-transpose' ) {
-			// Solve X*A = alpha*B
-			if ( upper ) {
-				// Right, Upper, No-transpose
-				for ( j = 0; j < N; j++ ) {
-					if ( alpha !== 1.0 ) {
-						ib = offsetB + j * sb2;
-						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = alpha * B[ ib ];
-							ib += sb1;
-						}
+	} else if ( transa === 'no-transpose' ) {
+		// Solve X*A = alpha*B
+		if ( upper ) {
+			// Right, Upper, No-transpose
+			for ( j = 0; j < N; j++ ) {
+				if ( alpha !== 1.0 ) {
+					ib = offsetB + j * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = alpha * B[ ib ];
+						ib += sb1;
 					}
-					for ( k = 0; k < j; k++ ) {
-						if ( A[ offsetA + k * sa1 + j * sa2 ] !== 0.0 ) {
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + i * sb1 + j * sb2 ] -= A[ offsetA + k * sa1 + j * sa2 ] * B[ offsetB + i * sb1 + k * sb2 ];
-							}
-						}
-					}
-					if ( nounit ) {
-						temp = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
-						ib = offsetB + j * sb2;
+				}
+				for ( k = 0; k < j; k++ ) {
+					if ( A[ offsetA + k * sa1 + j * sa2 ] !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = temp * B[ ib ];
-							ib += sb1;
+							B[ offsetB + i * sb1 + j * sb2 ] -= A[ offsetA + k * sa1 + j * sa2 ] * B[ offsetB + i * sb1 + k * sb2 ];
 						}
 					}
 				}
-			} else {
-				// Right, Lower, No-transpose
-				for ( j = N - 1; j >= 0; j-- ) {
-					if ( alpha !== 1.0 ) {
-						ib = offsetB + j * sb2;
-						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = alpha * B[ ib ];
-							ib += sb1;
-						}
-					}
-					for ( k = j + 1; k < N; k++ ) {
-						if ( A[ offsetA + k * sa1 + j * sa2 ] !== 0.0 ) {
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + i * sb1 + j * sb2 ] -= A[ offsetA + k * sa1 + j * sa2 ] * B[ offsetB + i * sb1 + k * sb2 ];
-							}
-						}
-					}
-					if ( nounit ) {
-						temp = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
-						ib = offsetB + j * sb2;
-						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = temp * B[ ib ];
-							ib += sb1;
-						}
+				if ( nounit ) {
+					temp = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
+					ib = offsetB + j * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = temp * B[ ib ];
+						ib += sb1;
 					}
 				}
 			}
 		} else {
-			// Solve X*A^T = alpha*B
-			if ( upper ) {
-				// Right, Upper, Transpose
-				for ( k = N - 1; k >= 0; k-- ) {
-					if ( nounit ) {
-						temp = 1.0 / A[ offsetA + k * sa1 + k * sa2 ];
-						ib = offsetB + k * sb2;
-						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = temp * B[ ib ];
-							ib += sb1;
-						}
+			// Right, Lower, No-transpose
+			for ( j = N - 1; j >= 0; j-- ) {
+				if ( alpha !== 1.0 ) {
+					ib = offsetB + j * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = alpha * B[ ib ];
+						ib += sb1;
 					}
-					for ( j = 0; j < k; j++ ) {
-						if ( A[ offsetA + j * sa1 + k * sa2 ] !== 0.0 ) {
-							temp = A[ offsetA + j * sa1 + k * sa2 ];
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + i * sb1 + j * sb2 ] -= temp * B[ offsetB + i * sb1 + k * sb2 ];
-							}
-						}
-					}
-					if ( alpha !== 1.0 ) {
-						ib = offsetB + k * sb2;
+				}
+				for ( k = j + 1; k < N; k++ ) {
+					if ( A[ offsetA + k * sa1 + j * sa2 ] !== 0.0 ) {
 						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = alpha * B[ ib ];
-							ib += sb1;
+							B[ offsetB + i * sb1 + j * sb2 ] -= A[ offsetA + k * sa1 + j * sa2 ] * B[ offsetB + i * sb1 + k * sb2 ];
 						}
 					}
 				}
-			} else {
-				// Right, Lower, Transpose
-				for ( k = 0; k < N; k++ ) {
-					if ( nounit ) {
-						temp = 1.0 / A[ offsetA + k * sa1 + k * sa2 ];
-						ib = offsetB + k * sb2;
+				if ( nounit ) {
+					temp = 1.0 / A[ offsetA + j * sa1 + j * sa2 ];
+					ib = offsetB + j * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = temp * B[ ib ];
+						ib += sb1;
+					}
+				}
+			}
+		}
+	} else {
+		// Solve X*A^T = alpha*B
+		if ( upper ) {
+			// Right, Upper, Transpose
+			for ( k = N - 1; k >= 0; k-- ) {
+				if ( nounit ) {
+					temp = 1.0 / A[ offsetA + k * sa1 + k * sa2 ];
+					ib = offsetB + k * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = temp * B[ ib ];
+						ib += sb1;
+					}
+				}
+				for ( j = 0; j < k; j++ ) {
+					if ( A[ offsetA + j * sa1 + k * sa2 ] !== 0.0 ) {
+						temp = A[ offsetA + j * sa1 + k * sa2 ];
 						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = temp * B[ ib ];
-							ib += sb1;
+							B[ offsetB + i * sb1 + j * sb2 ] -= temp * B[ offsetB + i * sb1 + k * sb2 ];
 						}
 					}
-					for ( j = k + 1; j < N; j++ ) {
-						if ( A[ offsetA + j * sa1 + k * sa2 ] !== 0.0 ) {
-							temp = A[ offsetA + j * sa1 + k * sa2 ];
-							for ( i = 0; i < M; i++ ) {
-								B[ offsetB + i * sb1 + j * sb2 ] -= temp * B[ offsetB + i * sb1 + k * sb2 ];
-							}
+				}
+				if ( alpha !== 1.0 ) {
+					ib = offsetB + k * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = alpha * B[ ib ];
+						ib += sb1;
+					}
+				}
+			}
+		} else {
+			// Right, Lower, Transpose
+			for ( k = 0; k < N; k++ ) {
+				if ( nounit ) {
+					temp = 1.0 / A[ offsetA + k * sa1 + k * sa2 ];
+					ib = offsetB + k * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = temp * B[ ib ];
+						ib += sb1;
+					}
+				}
+				for ( j = k + 1; j < N; j++ ) {
+					if ( A[ offsetA + j * sa1 + k * sa2 ] !== 0.0 ) {
+						temp = A[ offsetA + j * sa1 + k * sa2 ];
+						for ( i = 0; i < M; i++ ) {
+							B[ offsetB + i * sb1 + j * sb2 ] -= temp * B[ offsetB + i * sb1 + k * sb2 ];
 						}
 					}
-					if ( alpha !== 1.0 ) {
-						ib = offsetB + k * sb2;
-						for ( i = 0; i < M; i++ ) {
-							B[ ib ] = alpha * B[ ib ];
-							ib += sb1;
-						}
+				}
+				if ( alpha !== 1.0 ) {
+					ib = offsetB + k * sb2;
+					for ( i = 0; i < M; i++ ) {
+						B[ ib ] = alpha * B[ ib ];
+						ib += sb1;
 					}
 				}
 			}

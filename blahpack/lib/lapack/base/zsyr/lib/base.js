@@ -29,13 +29,13 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Performs the complex symmetric rank-1 operation:
-*   A := alpha*x*x^T + A
+* Performs the complex symmetric rank-1 operation:.
+*   A := alpha_x_x^T + A
 *
 * where alpha is a complex scalar, x is an N element complex vector, and A is
 * an N by N complex symmetric matrix.
 *
-* NOTE: This is a SYMMETRIC (not Hermitian) update — it uses x*x^T, NOT x*x^H.
+* NOTE: This is a SYMMETRIC (not Hermitian) update — it uses x_x^T, NOT x_x^H.
 * The difference is that x is NOT conjugated.
 *
 * @private
@@ -94,7 +94,7 @@ function zsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 		for ( j = 0; j < N; j++ ) {
 			// Check if x[jx] is nonzero
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
-				// temp = alpha * x[jx] (complex multiply, NO conjugation)
+				// Temp = alpha * x[jx] (complex multiply, NO conjugation)
 				tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
 				tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
 
@@ -115,7 +115,7 @@ function zsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 		jx = offsetX * 2;
 		for ( j = 0; j < N; j++ ) {
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
-				// temp = alpha * x[jx] (complex multiply, NO conjugation)
+				// Temp = alpha * x[jx] (complex multiply, NO conjugation)
 				tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
 				tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
 

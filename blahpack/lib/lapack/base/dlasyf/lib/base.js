@@ -38,7 +38,7 @@ var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 // MAIN //
 
 /**
-* Computes a partial factorization of a real symmetric matrix A using the
+* Computes a partial factorization of a real symmetric matrix A using the.
 * Bunch-Kaufman diagonal pivoting method. This is the blocked panel
 * factorization used by dsytrf.
 *
@@ -151,7 +151,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 					}
 
 					// JMAX is the column-index of the largest off-diagonal element
-					// in row IMAX, and ROWMAX is its absolute value
+					// In row IMAX, and ROWMAX is its absolute value
 					jmax = imax + 1 + idamax( k - imax, W, sw1, offsetW + ( imax + 1 ) * sw1 + ( kw - 1 ) * sw2 );
 					rowmax = Math.abs( W[ offsetW + jmax * sw1 + ( kw - 1 ) * sw2 ] );
 					if ( imax > 0 ) {
@@ -163,6 +163,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 						kp = k;
 					} else if ( Math.abs( W[ offsetW + imax * sw1 + ( kw - 1 ) * sw2 ] ) >= ALPHA * rowmax ) {
 						kp = imax;
+
 						// Copy column kw-1 of W into column kw of W
 						dcopy( k + 1, W, sw1, offsetW + ( kw - 1 ) * sw2, W, sw1, offsetW + kw * sw2 );
 					} else {
@@ -262,7 +263,10 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 			}
 		}
 
-		return { info: info, kb: N - k - 1 };
+		return {
+			'info': info,
+			'kb': N - k - 1
+		};
 	}
 
 	// Lower case: factorize the leading columns of A
@@ -319,6 +323,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 					kp = k;
 				} else if ( Math.abs( W[ offsetW + imax * sw1 + ( k + 1 ) * sw2 ] ) >= ALPHA * rowmax ) {
 					kp = imax;
+
 					// Copy column k+1 of W into column k of W
 					dcopy( N - k, W, sw1, offsetW + k * sw1 + ( k + 1 ) * sw2, W, sw1, offsetW + k * sw1 + k * sw2 );
 				} else {
@@ -418,7 +423,10 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 		}
 	}
 
-	return { info: info, kb: k };
+	return {
+		'info': info,
+		'kb': k
+	};
 }
 
 

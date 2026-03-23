@@ -29,7 +29,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Initializes a complex matrix to BETA on the diagonal and ALPHA on the
+* Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 * off-diagonals.
 *
 * @private
@@ -49,12 +49,12 @@ function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
 	var alphaIm;
 	var betaRe;
 	var betaIm;
-	var Av;
 	var sa1;
 	var sa2;
+	var idx;
+	var Av;
 	var oA;
 	var mn;
-	var idx;
 	var i;
 	var j;
 

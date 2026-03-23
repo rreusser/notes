@@ -18,6 +18,7 @@
 
 /* eslint-disable max-len, max-params */
 'use strict';
+
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -32,7 +33,22 @@ var LDT = NBMAX + 1;
 var ONE = new Complex128( 1.0, 0.0 );
 var NEGONE = new Complex128( -1.0, 0.0 );
 function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
-	var LDWORK, tauv, eiR, eiI, IWT, av, sa1, sa2, oA, oE, NB, NX, NH, IB, i, j;
+	var LDWORK;
+	var tauv;
+	var eiR;
+	var eiI;
+	var IWT;
+	var sa1;
+	var sa2;
+	var av;
+	var oA;
+	var oE;
+	var NB;
+	var NX;
+	var NH;
+	var IB;
+	var i;
+	var j;
 	NB = 32;
 	av = reinterpret( A, 0 ); sa1 = strideA1 * 2; sa2 = strideA2 * 2; oA = offsetA * 2;
 	tauv = reinterpret( TAU, 0 );

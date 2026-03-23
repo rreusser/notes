@@ -26,19 +26,19 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var ztbsv = require( '@stdlib/blas/base/ztbsv' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * ztbsv( 'row-major', 'upper', 'no-transpose', 'non-unit', 2, 2, A, 2, x, 1 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var ztbsv = require( '@stdlib/blas/base/ztbsv' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * ztbsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, 2, A, 1, 2, 0, x, 1, 0 );
 */
 

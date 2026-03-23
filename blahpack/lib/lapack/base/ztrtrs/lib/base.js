@@ -35,8 +35,8 @@ var CONE = new Complex128( 1.0, 0.0 );
 // MAIN //
 
 /**
-* Solves a complex triangular system of the form:
-*   A * X = B,  A^T * X = B,  or  A^H * X = B
+* Solves a complex triangular system of the form:.
+*   A _ X = B,  A^T _ X = B,  or  A^H * X = B
 * where A is a triangular matrix of order N, and B is an N-by-NRHS matrix.
 * A check is made to verify that A is nonsingular.
 *
@@ -79,6 +79,7 @@ function ztrtrs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	if ( nounit ) {
 		for ( i = 0; i < N; i++ ) {
 			ia = ( offsetA * 2 ) + ( i * sa1 ) + ( i * sa2 );
+
 			// A(i,i) == CZERO iff both real and imaginary parts are zero
 			if ( Av[ ia ] === 0.0 && Av[ ia + 1 ] === 0.0 ) {
 				return i + 1; // 1-based INFO
@@ -87,7 +88,7 @@ function ztrtrs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	}
 
 	// Solve A * X = B, A^T * X = B, or A^H * X = B via ztrsm.
-	// ztrsm expects complex-element strides (it does *2 internally).
+	// Ztrsm expects complex-element strides (it does *2 internally).
 	ztrsm( 'left', uplo, trans, diag, N, nrhs, CONE,
 		A, strideA1, strideA2, offsetA,
 		B, strideB1, strideB2, offsetB

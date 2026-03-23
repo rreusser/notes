@@ -29,8 +29,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Perform one of the matrix-matrix operations
-*   B := alpha*op(A)*B,  or  B := alpha*B*op(A)
+* Perform one of the matrix-matrix operations.
+*   B := alpha_op(A)_B,  or  B := alpha_B_op(A)
 *
 * where alpha is a complex scalar, B is an M-by-N matrix, A is a unit
 * or non-unit, upper or lower triangular matrix, and op(A) is one of
@@ -57,10 +57,10 @@ var imag = require( '@stdlib/complex/float64/imag' );
 function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) {
 	var noconj;
 	var nounit;
-	var lside;
-	var upper;
 	var alphaR;
 	var alphaI;
+	var lside;
+	var upper;
 	var tempR;
 	var tempI;
 	var sa1;
@@ -179,266 +179,260 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 					}
 				}
 			}
-		} else {
-			if ( upper ) {
-				for ( j = 0; j < N; j++ ) {
-					for ( i = M - 1; i >= 0; i-- ) {
-						ib = oB + i * sb1 + j * sb2;
-						tempR = Bv[ ib ];
-						tempI = Bv[ ib + 1 ];
-						if ( noconj ) {
-							if ( nounit ) {
-								ia = oA + i * sa1 + i * sa2;
-								ar = Av[ ia ];
-								ai = Av[ ia + 1 ];
-								tr = tempR * ar - tempI * ai;
-								ti = tempR * ai + tempI * ar;
-								tempR = tr;
-								tempI = ti;
-							}
-							for ( k = 0; k < i; k++ ) {
-								ia = oA + k * sa1 + i * sa2;
-								kb = oB + k * sb1 + j * sb2;
-								ar = Av[ ia ];
-								ai = Av[ ia + 1 ];
-								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
-							}
-						} else {
-							if ( nounit ) {
-								ia = oA + i * sa1 + i * sa2;
-								ar = Av[ ia ];
-								ai = -Av[ ia + 1 ];
-								tr = tempR * ar - tempI * ai;
-								ti = tempR * ai + tempI * ar;
-								tempR = tr;
-								tempI = ti;
-							}
-							for ( k = 0; k < i; k++ ) {
-								ia = oA + k * sa1 + i * sa2;
-								kb = oB + k * sb1 + j * sb2;
-								ar = Av[ ia ];
-								ai = -Av[ ia + 1 ];
-								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
-							}
+		} else if ( upper ) {
+			for ( j = 0; j < N; j++ ) {
+				for ( i = M - 1; i >= 0; i-- ) {
+					ib = oB + i * sb1 + j * sb2;
+					tempR = Bv[ ib ];
+					tempI = Bv[ ib + 1 ];
+					if ( noconj ) {
+						if ( nounit ) {
+							ia = oA + i * sa1 + i * sa2;
+							ar = Av[ ia ];
+							ai = Av[ ia + 1 ];
+							tr = tempR * ar - tempI * ai;
+							ti = tempR * ai + tempI * ar;
+							tempR = tr;
+							tempI = ti;
 						}
-						Bv[ ib ] = alphaR * tempR - alphaI * tempI;
-						Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
+						for ( k = 0; k < i; k++ ) {
+							ia = oA + k * sa1 + i * sa2;
+							kb = oB + k * sb1 + j * sb2;
+							ar = Av[ ia ];
+							ai = Av[ ia + 1 ];
+							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+						}
+					} else {
+						if ( nounit ) {
+							ia = oA + i * sa1 + i * sa2;
+							ar = Av[ ia ];
+							ai = -Av[ ia + 1 ];
+							tr = tempR * ar - tempI * ai;
+							ti = tempR * ai + tempI * ar;
+							tempR = tr;
+							tempI = ti;
+						}
+						for ( k = 0; k < i; k++ ) {
+							ia = oA + k * sa1 + i * sa2;
+							kb = oB + k * sb1 + j * sb2;
+							ar = Av[ ia ];
+							ai = -Av[ ia + 1 ];
+							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+						}
+					}
+					Bv[ ib ] = alphaR * tempR - alphaI * tempI;
+					Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
+				}
+			}
+		} else {
+			for ( j = 0; j < N; j++ ) {
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + i * sb1 + j * sb2;
+					tempR = Bv[ ib ];
+					tempI = Bv[ ib + 1 ];
+					if ( noconj ) {
+						if ( nounit ) {
+							ia = oA + i * sa1 + i * sa2;
+							ar = Av[ ia ];
+							ai = Av[ ia + 1 ];
+							tr = tempR * ar - tempI * ai;
+							ti = tempR * ai + tempI * ar;
+							tempR = tr;
+							tempI = ti;
+						}
+						for ( k = i + 1; k < M; k++ ) {
+							ia = oA + k * sa1 + i * sa2;
+							kb = oB + k * sb1 + j * sb2;
+							ar = Av[ ia ];
+							ai = Av[ ia + 1 ];
+							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+						}
+					} else {
+						if ( nounit ) {
+							ia = oA + i * sa1 + i * sa2;
+							ar = Av[ ia ];
+							ai = -Av[ ia + 1 ];
+							tr = tempR * ar - tempI * ai;
+							ti = tempR * ai + tempI * ar;
+							tempR = tr;
+							tempI = ti;
+						}
+						for ( k = i + 1; k < M; k++ ) {
+							ia = oA + k * sa1 + i * sa2;
+							kb = oB + k * sb1 + j * sb2;
+							ar = Av[ ia ];
+							ai = -Av[ ia + 1 ];
+							tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
+							tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
+						}
+					}
+					Bv[ ib ] = alphaR * tempR - alphaI * tempI;
+					Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
+				}
+			}
+		}
+	} else if ( transa === 'no-transpose' ) {
+		if ( upper ) {
+			for ( j = N - 1; j >= 0; j-- ) {
+				tempR = alphaR;
+				tempI = alphaI;
+				if ( nounit ) {
+					ia = oA + j * sa1 + j * sa2;
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					tr = tempR * ar - tempI * ai;
+					ti = tempR * ai + tempI * ar;
+					tempR = tr;
+					tempI = ti;
+				}
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + i * sb1 + j * sb2;
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
+					Bv[ ib ] = tempR * br - tempI * bi;
+					Bv[ ib + 1 ] = tempR * bi + tempI * br;
+				}
+				for ( k = 0; k < j; k++ ) {
+					ia = oA + k * sa1 + j * sa2;
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					if ( ar !== 0.0 || ai !== 0.0 ) {
+						tr = alphaR * ar - alphaI * ai;
+						ti = alphaR * ai + alphaI * ar;
+						for ( i = 0; i < M; i++ ) {
+							ib = oB + i * sb1 + j * sb2;
+							kb = oB + i * sb1 + k * sb2;
+							Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+							Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
+						}
 					}
 				}
-			} else {
-				for ( j = 0; j < N; j++ ) {
-					for ( i = 0; i < M; i++ ) {
-						ib = oB + i * sb1 + j * sb2;
-						tempR = Bv[ ib ];
-						tempI = Bv[ ib + 1 ];
-						if ( noconj ) {
-							if ( nounit ) {
-								ia = oA + i * sa1 + i * sa2;
-								ar = Av[ ia ];
-								ai = Av[ ia + 1 ];
-								tr = tempR * ar - tempI * ai;
-								ti = tempR * ai + tempI * ar;
-								tempR = tr;
-								tempI = ti;
-							}
-							for ( k = i + 1; k < M; k++ ) {
-								ia = oA + k * sa1 + i * sa2;
-								kb = oB + k * sb1 + j * sb2;
-								ar = Av[ ia ];
-								ai = Av[ ia + 1 ];
-								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
-							}
-						} else {
-							if ( nounit ) {
-								ia = oA + i * sa1 + i * sa2;
-								ar = Av[ ia ];
-								ai = -Av[ ia + 1 ];
-								tr = tempR * ar - tempI * ai;
-								ti = tempR * ai + tempI * ar;
-								tempR = tr;
-								tempI = ti;
-							}
-							for ( k = i + 1; k < M; k++ ) {
-								ia = oA + k * sa1 + i * sa2;
-								kb = oB + k * sb1 + j * sb2;
-								ar = Av[ ia ];
-								ai = -Av[ ia + 1 ];
-								tempR += ar * Bv[ kb ] - ai * Bv[ kb + 1 ];
-								tempI += ar * Bv[ kb + 1 ] + ai * Bv[ kb ];
-							}
+			}
+		} else {
+			for ( j = 0; j < N; j++ ) {
+				tempR = alphaR;
+				tempI = alphaI;
+				if ( nounit ) {
+					ia = oA + j * sa1 + j * sa2;
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					tr = tempR * ar - tempI * ai;
+					ti = tempR * ai + tempI * ar;
+					tempR = tr;
+					tempI = ti;
+				}
+				for ( i = 0; i < M; i++ ) {
+					ib = oB + i * sb1 + j * sb2;
+					br = Bv[ ib ];
+					bi = Bv[ ib + 1 ];
+					Bv[ ib ] = tempR * br - tempI * bi;
+					Bv[ ib + 1 ] = tempR * bi + tempI * br;
+				}
+				for ( k = j + 1; k < N; k++ ) {
+					ia = oA + k * sa1 + j * sa2;
+					ar = Av[ ia ];
+					ai = Av[ ia + 1 ];
+					if ( ar !== 0.0 || ai !== 0.0 ) {
+						tr = alphaR * ar - alphaI * ai;
+						ti = alphaR * ai + alphaI * ar;
+						for ( i = 0; i < M; i++ ) {
+							ib = oB + i * sb1 + j * sb2;
+							kb = oB + i * sb1 + k * sb2;
+							Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+							Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
 						}
-						Bv[ ib ] = alphaR * tempR - alphaI * tempI;
-						Bv[ ib + 1 ] = alphaR * tempI + alphaI * tempR;
 					}
 				}
 			}
 		}
-	} else {
-		if ( transa === 'no-transpose' ) {
-			if ( upper ) {
-				for ( j = N - 1; j >= 0; j-- ) {
-					tempR = alphaR;
-					tempI = alphaI;
-					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						tr = tempR * ar - tempI * ai;
-						ti = tempR * ai + tempI * ar;
-						tempR = tr;
-						tempI = ti;
+	} else if ( upper ) {
+		for ( k = 0; k < N; k++ ) {
+			for ( j = 0; j < k; j++ ) {
+				ia = oA + j * sa1 + k * sa2;
+				ar = Av[ ia ];
+				ai = Av[ ia + 1 ];
+				if ( ar !== 0.0 || ai !== 0.0 ) {
+					if ( !noconj ) {
+						ai = -ai;
 					}
+					tr = alphaR * ar - alphaI * ai;
+					ti = alphaR * ai + alphaI * ar;
 					for ( i = 0; i < M; i++ ) {
-						ib = oB + i * sb1 + j * sb2;
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
-						Bv[ ib ] = tempR * br - tempI * bi;
-						Bv[ ib + 1 ] = tempR * bi + tempI * br;
-					}
-					for ( k = 0; k < j; k++ ) {
-						ia = oA + k * sa1 + j * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						if ( ar !== 0.0 || ai !== 0.0 ) {
-							tr = alphaR * ar - alphaI * ai;
-							ti = alphaR * ai + alphaI * ar;
-							for ( i = 0; i < M; i++ ) {
-								ib = oB + i * sb1 + j * sb2;
-								kb = oB + i * sb1 + k * sb2;
-								Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-								Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
-							}
-						}
-					}
-				}
-			} else {
-				for ( j = 0; j < N; j++ ) {
-					tempR = alphaR;
-					tempI = alphaI;
-					if ( nounit ) {
-						ia = oA + j * sa1 + j * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						tr = tempR * ar - tempI * ai;
-						ti = tempR * ai + tempI * ar;
-						tempR = tr;
-						tempI = ti;
-					}
-					for ( i = 0; i < M; i++ ) {
-						ib = oB + i * sb1 + j * sb2;
-						br = Bv[ ib ];
-						bi = Bv[ ib + 1 ];
-						Bv[ ib ] = tempR * br - tempI * bi;
-						Bv[ ib + 1 ] = tempR * bi + tempI * br;
-					}
-					for ( k = j + 1; k < N; k++ ) {
-						ia = oA + k * sa1 + j * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						if ( ar !== 0.0 || ai !== 0.0 ) {
-							tr = alphaR * ar - alphaI * ai;
-							ti = alphaR * ai + alphaI * ar;
-							for ( i = 0; i < M; i++ ) {
-								ib = oB + i * sb1 + j * sb2;
-								kb = oB + i * sb1 + k * sb2;
-								Bv[ ib ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-								Bv[ ib + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
-							}
-						}
+						jb = oB + i * sb1 + j * sb2;
+						kb = oB + i * sb1 + k * sb2;
+						Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+						Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
 					}
 				}
 			}
-		} else {
-			if ( upper ) {
-				for ( k = 0; k < N; k++ ) {
-					for ( j = 0; j < k; j++ ) {
-						ia = oA + j * sa1 + k * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						if ( ar !== 0.0 || ai !== 0.0 ) {
-							if ( !noconj ) {
-								ai = -ai;
-							}
-							tr = alphaR * ar - alphaI * ai;
-							ti = alphaR * ai + alphaI * ar;
-							for ( i = 0; i < M; i++ ) {
-								jb = oB + i * sb1 + j * sb2;
-								kb = oB + i * sb1 + k * sb2;
-								Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-								Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
-							}
-						}
+			tempR = alphaR;
+			tempI = alphaI;
+			if ( nounit ) {
+				ia = oA + k * sa1 + k * sa2;
+				ar = Av[ ia ];
+				ai = Av[ ia + 1 ];
+				if ( !noconj ) {
+					ai = -ai;
+				}
+				tr = tempR * ar - tempI * ai;
+				ti = tempR * ai + tempI * ar;
+				tempR = tr;
+				tempI = ti;
+			}
+			if ( tempR !== 1.0 || tempI !== 0.0 ) {
+				for ( i = 0; i < M; i++ ) {
+					kb = oB + i * sb1 + k * sb2;
+					br = Bv[ kb ];
+					bi = Bv[ kb + 1 ];
+					Bv[ kb ] = tempR * br - tempI * bi;
+					Bv[ kb + 1 ] = tempR * bi + tempI * br;
+				}
+			}
+		}
+	} else {
+		for ( k = N - 1; k >= 0; k-- ) {
+			for ( j = k + 1; j < N; j++ ) {
+				ia = oA + j * sa1 + k * sa2;
+				ar = Av[ ia ];
+				ai = Av[ ia + 1 ];
+				if ( ar !== 0.0 || ai !== 0.0 ) {
+					if ( !noconj ) {
+						ai = -ai;
 					}
-					tempR = alphaR;
-					tempI = alphaI;
-					if ( nounit ) {
-						ia = oA + k * sa1 + k * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						if ( !noconj ) {
-							ai = -ai;
-						}
-						tr = tempR * ar - tempI * ai;
-						ti = tempR * ai + tempI * ar;
-						tempR = tr;
-						tempI = ti;
-					}
-					if ( tempR !== 1.0 || tempI !== 0.0 ) {
-						for ( i = 0; i < M; i++ ) {
-							kb = oB + i * sb1 + k * sb2;
-							br = Bv[ kb ];
-							bi = Bv[ kb + 1 ];
-							Bv[ kb ] = tempR * br - tempI * bi;
-							Bv[ kb + 1 ] = tempR * bi + tempI * br;
-						}
+					tr = alphaR * ar - alphaI * ai;
+					ti = alphaR * ai + alphaI * ar;
+					for ( i = 0; i < M; i++ ) {
+						jb = oB + i * sb1 + j * sb2;
+						kb = oB + i * sb1 + k * sb2;
+						Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
+						Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
 					}
 				}
-			} else {
-				for ( k = N - 1; k >= 0; k-- ) {
-					for ( j = k + 1; j < N; j++ ) {
-						ia = oA + j * sa1 + k * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						if ( ar !== 0.0 || ai !== 0.0 ) {
-							if ( !noconj ) {
-								ai = -ai;
-							}
-							tr = alphaR * ar - alphaI * ai;
-							ti = alphaR * ai + alphaI * ar;
-							for ( i = 0; i < M; i++ ) {
-								jb = oB + i * sb1 + j * sb2;
-								kb = oB + i * sb1 + k * sb2;
-								Bv[ jb ] += tr * Bv[ kb ] - ti * Bv[ kb + 1 ];
-								Bv[ jb + 1 ] += tr * Bv[ kb + 1 ] + ti * Bv[ kb ];
-							}
-						}
-					}
-					tempR = alphaR;
-					tempI = alphaI;
-					if ( nounit ) {
-						ia = oA + k * sa1 + k * sa2;
-						ar = Av[ ia ];
-						ai = Av[ ia + 1 ];
-						if ( !noconj ) {
-							ai = -ai;
-						}
-						tr = tempR * ar - tempI * ai;
-						ti = tempR * ai + tempI * ar;
-						tempR = tr;
-						tempI = ti;
-					}
-					if ( tempR !== 1.0 || tempI !== 0.0 ) {
-						for ( i = 0; i < M; i++ ) {
-							kb = oB + i * sb1 + k * sb2;
-							br = Bv[ kb ];
-							bi = Bv[ kb + 1 ];
-							Bv[ kb ] = tempR * br - tempI * bi;
-							Bv[ kb + 1 ] = tempR * bi + tempI * br;
-						}
-					}
+			}
+			tempR = alphaR;
+			tempI = alphaI;
+			if ( nounit ) {
+				ia = oA + k * sa1 + k * sa2;
+				ar = Av[ ia ];
+				ai = Av[ ia + 1 ];
+				if ( !noconj ) {
+					ai = -ai;
+				}
+				tr = tempR * ar - tempI * ai;
+				ti = tempR * ai + tempI * ar;
+				tempR = tr;
+				tempI = ti;
+			}
+			if ( tempR !== 1.0 || tempI !== 0.0 ) {
+				for ( i = 0; i < M; i++ ) {
+					kb = oB + i * sb1 + k * sb2;
+					br = Bv[ kb ];
+					bi = Bv[ kb + 1 ];
+					Bv[ kb ] = tempR * br - tempI * bi;
+					Bv[ kb + 1 ] = tempR * bi + tempI * br;
 				}
 			}
 		}

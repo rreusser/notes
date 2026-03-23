@@ -28,7 +28,7 @@ var dtrmv = require( '../../../../blas/base/dtrmv/lib/base.js' );
 // MAIN //
 
 /**
-* Forms the triangular factor T of a real block reflector H of order N,
+* Forms the triangular factor T of a real block reflector H of order N,.
 * which is defined as a product of K elementary reflectors.
 *
 * If DIRECT = 'F', H = H(1) H(2) ... H(k) and T is upper triangular.
@@ -54,9 +54,9 @@ var dtrmv = require( '../../../../blas/base/dtrmv/lib/base.js' );
 function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT ) {
 	var prevlastv;
 	var lastv;
+	var jj;
 	var i;
 	var j;
-	var jj;
 
 	if ( N === 0 ) {
 		return;

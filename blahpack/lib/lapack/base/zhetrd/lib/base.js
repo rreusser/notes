@@ -37,8 +37,8 @@ var CNONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T
-* by a unitary similarity transformation: Q**H * A * Q = T.
+* Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T.
+* by a unitary similarity transformation: Q__H _ A _ Q = T.
 *
 * Uses the blocked algorithm: reduces NB columns at a time using zlatrd
 * (panel factorization) and zher2k (trailing matrix update), then finishes
@@ -69,10 +69,10 @@ var CNONE = new Complex128( -1.0, 0.0 );
 function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
 	var ldwork;
 	var work;
-	var Av;
-	var oA;
 	var sa1;
 	var sa2;
+	var Av;
+	var oA;
 	var nb;
 	var nx;
 	var kk;
@@ -108,6 +108,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		kk = N - Math.floor( ( N - nx + nb - 1 ) / nb ) * nb;
 
 		// Fortran: DO I = N-NB+1, KK+1, -NB (1-based)
+
 		// 0-based: i from N-nb down to kk, stepping by -nb
 		for ( i = N - nb; i >= kk; i -= nb ) {
 			// Reduce columns i:i+nb-1 to tridiagonal form
@@ -134,6 +135,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				ai = oA + ( j - 1 ) * sa1 * 2 + j * sa2 * 2;
 				Av[ ai ] = e[ offsetE + ( j - 1 ) * strideE ];
 				Av[ ai + 1 ] = 0.0;
+
 				// d[j] = real(A(j, j))
 				ai = oA + j * sa1 * 2 + j * sa2 * 2;
 				d[ offsetD + j * strideD ] = Av[ ai ];
@@ -170,6 +172,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				ai = oA + ( j + 1 ) * sa1 * 2 + j * sa2 * 2;
 				Av[ ai ] = e[ offsetE + j * strideE ];
 				Av[ ai + 1 ] = 0.0;
+
 				// d[j] = real(A(j, j))
 				ai = oA + j * sa1 * 2 + j * sa2 * 2;
 				d[ offsetD + j * strideD ] = Av[ ai ];

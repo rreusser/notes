@@ -26,17 +26,17 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
-* 
+*
 * var d = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlasrt( 'N', 2, d, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlasrt = require( '@stdlib/lapack/base/dlasrt' );
-* 
+*
 * var d = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlasrt.ndarray( 'N', 2, d, 1, 0 );
 */
 

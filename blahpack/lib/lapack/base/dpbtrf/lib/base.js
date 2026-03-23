@@ -39,12 +39,12 @@ var LDWORK = NBMAX + 1;
 // MAIN //
 
 /**
-* Computes the Cholesky factorization of a real symmetric positive definite
+* Computes the Cholesky factorization of a real symmetric positive definite.
 * band matrix A.
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'upper', or
-*   A = L * L^T,  if uplo = 'lower',
+*   A = U^T _ U,  if uplo = 'upper', or
+_   A = L _ L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.
@@ -80,6 +80,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 	sa2 = strideAB2;
 
 	// Determine block size. In Fortran this comes from ILAENV.
+
 	// We hardcode NB = 32 (matching NBMAX).
 	nb = NBMAX;
 	if ( nb < 1 ) {
@@ -112,9 +113,12 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			ib = Math.min( nb, N - i );
 
 			// Factorize the diagonal block
+
 			// dpotf2('upper', IB, AB(KD+1, I+1), LDAB-1, II)
+
 			// The stride between columns in band storage when treating the
-			// diagonal block as a dense matrix is LDAB-1 = sa2 - sa1 (col-major).
+
+			// Diagonal block as a dense matrix is LDAB-1 = sa2 - sa1 (col-major).
 			iinfo = dpotf2( 'upper', ib, AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + i * sa2 );
 			if ( iinfo !== 0 ) {
 				return i + iinfo;
@@ -123,6 +127,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			if ( i + ib < N ) {
 				// Number of elements in the band to the right of the diagonal block
 				i2 = Math.min( kd - ib, N - i - ib );
+
 				// Number of elements that wrap around (beyond the band)
 				i3 = Math.min( ib, N - i - kd );
 
@@ -136,7 +141,9 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					);
 
 					// Update A22:
+
 					// DSYRK('Upper','Transpose', I2, IB, -ONE,
+
 					//        AB(KD+1-IB,I+IB), LDAB-1, ONE, AB(KD+1,I+IB), LDAB-1)
 					dsyrk( 'upper', 'transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
@@ -206,6 +213,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			ib = Math.min( nb, N - i );
 
 			// Factorize the diagonal block
+
 			// dpotf2('lower', IB, AB(1, I+1), LDAB-1, II)
 			iinfo = dpotf2( 'lower', ib, AB, sa1, sa2 - sa1, offsetAB + i * sa2 );
 			if ( iinfo !== 0 ) {
@@ -225,6 +233,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					);
 
 					// DSYRK('Lower','No Transpose', I2, IB, -ONE,
+
 					//        AB(1+IB,I), LDAB-1, ONE, AB(1,I+IB), LDAB-1)
 					dsyrk( 'lower', 'no-transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ib * sa1 + i * sa2,

@@ -31,7 +31,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Performs the Hermitian rank-k update C := alpha*A*A^H + beta*C or C := alpha*A^H*A + beta*C (complex double-precision).
+* Performs the Hermitian rank-k update C := alpha_A_A^H + beta_C or C := alpha_A^H_A + beta_C (complex double-precision).
 *
 * @param {string} uplo - specifies whether the upper or lower triangle of C is stored
 * @param {string} trans - specifies the operation ('no-transpose' or 'conjugate-transpose')

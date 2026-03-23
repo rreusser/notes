@@ -30,8 +30,8 @@ var zunglq = require( '../../zunglq/lib/base.js' );
 // MAIN //
 
 /**
-* Generate one of the complex unitary matrices Q or P^H determined by ZGEBRD
-* when reducing a complex matrix A to bidiagonal form: A = Q * B * P^H.
+* Generate one of the complex unitary matrices Q or P^H determined by ZGEBRD.
+* when reducing a complex matrix A to bidiagonal form: A = Q _ B _ P^H.
 *
 * Q and P^H are defined as products of elementary reflectors H(i) or G(i)
 * respectively.
@@ -70,11 +70,11 @@ var zunglq = require( '../../zunglq/lib/base.js' );
 */
 function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
 	var wantq;
-	var Av;
 	var sA1;
 	var sA2;
-	var oA;
 	var idx;
+	var Av;
+	var oA;
 	var i;
 	var j;
 
@@ -102,14 +102,15 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 			// Need to shift columns and then apply ZUNGQR.
 
 			// Shift the vectors which define the elementary reflectors one
-			// column to the right, and set the first row and column of Q
-			// to those of the unit matrix.
+			// Column to the right, and set the first row and column of Q
+			// To those of the unit matrix.
 			// Move columns M-1 down to 1, right by one (0-based: j from M-1 downto 1)
 			for ( j = M - 1; j >= 1; j-- ) {
 				// A(0, j) = 0
 				idx = oA + j * sA2;
 				Av[ idx ] = 0.0;
 				Av[ idx + 1 ] = 0.0;
+
 				// Copy column j-1 to column j (rows j+1 to M-1, 0-based: i from j down to M-1)
 				for ( i = j; i < M; i++ ) {
 					idx = oA + i * sA1 + j * sA2;
@@ -150,6 +151,7 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 			// A(0,0) = 1
 			Av[ oA ] = 1.0;
 			Av[ oA + 1 ] = 0.0;
+
 			// A(i, 0) = 0 for i >= 1
 			for ( i = 1; i < N; i++ ) {
 				idx = oA + i * sA1;

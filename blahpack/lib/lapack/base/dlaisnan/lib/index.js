@@ -23,12 +23,12 @@
 *
 * @example
 * var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
-* 
+*
 * dlaisnan( 1.0, 1.0 );
 *
 * @example
 * var dlaisnan = require( '@stdlib/lapack/base/dlaisnan' );
-* 
+*
 * dlaisnan.ndarray( 1.0, 1.0 );
 */
 

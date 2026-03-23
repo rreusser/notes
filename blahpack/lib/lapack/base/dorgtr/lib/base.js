@@ -29,16 +29,16 @@ var dorgql = require( '../../dorgql/lib/base.js' );
 // MAIN //
 
 /**
-* Generates an orthogonal matrix Q which is defined as the product of N-1
+* Generates an orthogonal matrix Q which is defined as the product of N-1.
 * elementary reflectors of order N, as returned by DSYTRD.
 *
 * ## Notes
 *
 * -   If UPLO = 'U', Q is defined as a product of reflectors:
-*     Q = H(n-1) * ... * H(2) * H(1)
+*     Q = H(n-1) _ ... _ H(2) * H(1)
 *
 * -   If UPLO = 'L', Q is defined as a product of reflectors:
-*     Q = H(1) * H(2) * ... * H(n-1)
+*     Q = H(1) _ H(2) _ ... * H(n-1)
 *
 * @private
 * @param {string} uplo - specifies whether the upper or lower triangle was used in DSYTRD ('U' or 'L')
@@ -71,10 +71,10 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 	if ( upper ) {
 		// Q was determined by DSYTRD as a product of N-1 elementary reflectors
-		// stored in the upper triangle of A. The reflectors are in columns
+		// Stored in the upper triangle of A. The reflectors are in columns
 		// 2..N of the upper triangle. We need to shift them left by one column
-		// so they occupy columns 1..N-1, then call dorgql on the (N-1)x(N-1)
-		// leading submatrix.
+		// So they occupy columns 1..N-1, then call dorgql on the (N-1)x(N-1)
+		// Leading submatrix.
 
 		// Shift reflectors: for j = 1..N-1, copy column j+1 (rows 1..j-1) into column j
 		for ( j = 0; j < N - 1; j++ ) {
@@ -97,9 +97,9 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		}
 	} else {
 		// Q was determined by DSYTRD as a product of N-1 elementary reflectors
-		// stored in the lower triangle of A. The reflectors are in columns
+		// Stored in the lower triangle of A. The reflectors are in columns
 		// 1..N-1 of the lower triangle. We need to shift them right by one
-		// column so they occupy columns 2..N, then call dorgqr on the
+		// Column so they occupy columns 2..N, then call dorgqr on the
 		// (N-1)x(N-1) trailing submatrix starting at (1,1) (0-based).
 
 		// Shift reflectors: for j = N-1 downto 1, copy column j-1 (rows j+1..N-1) into column j
@@ -118,7 +118,7 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		}
 
 		// Generate Q by calling dorgqr on the (N-1)x(N-1) trailing submatrix
-		// starting at position (1, 1) (0-based)
+		// Starting at position (1, 1) (0-based)
 		if ( N > 1 ) {
 			pa = offsetA + strideA1 + strideA2; // A(1, 1) in 0-based
 			dorgqr( N - 1, N - 1, N - 1, A, strideA1, strideA2, pa, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );

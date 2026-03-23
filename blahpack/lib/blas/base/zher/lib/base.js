@@ -27,8 +27,8 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 // MAIN //
 
 /**
-* Perform Hermitian rank-1 update:
-*   A := alpha * x * x^H + A
+* Perform Hermitian rank-1 update:.
+*   A := alpha _ x _ x^H + A
 * where A is an N-by-N Hermitian matrix, x is an N-element vector,
 * and alpha is a real scalar.
 *
@@ -79,7 +79,7 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 		jx = oX;
 		for ( j = 0; j < N; j++ ) {
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
-				// temp = alpha * conj(x[j])
+				// Temp = alpha * conj(x[j])
 				tempR = alpha * xv[ jx ];
 				tempI = -alpha * xv[ jx + 1 ];
 
@@ -108,7 +108,7 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 		jx = oX;
 		for ( j = 0; j < N; j++ ) {
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
-				// temp = alpha * conj(x[j])
+				// Temp = alpha * conj(x[j])
 				tempR = alpha * xv[ jx ];
 				tempI = -alpha * xv[ jx + 1 ];
 

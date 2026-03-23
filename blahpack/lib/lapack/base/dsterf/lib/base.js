@@ -38,7 +38,7 @@ var MAXIT = 30;
 // MAIN //
 
 /**
-* Computes all eigenvalues of a real symmetric tridiagonal matrix using the
+* Computes all eigenvalues of a real symmetric tridiagonal matrix using the.
 * Pal-Walker-Kahan variant of the QL or QR algorithm.
 *
 * On exit, the diagonal array `d` contains the eigenvalues in ascending order,
@@ -107,15 +107,17 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 	jtot = 0;
 
 	// Determine where the matrix splits and choose QL or QR iteration
-	// for each block, according to whether top or bottom diagonal
-	// element is smaller.
-	//
+
+	// For each block, according to whether top or bottom diagonal
+
+	// Element is smaller.
+
 	// Outer loop (Fortran label 10): iterate over unreduced blocks.
+
 	// l1 is 0-based index of current block start.
 	l1 = 0;
 
 	// eslint-disable-next-line no-labels
-	outerLoop:
 	while ( l1 < N ) {
 		// Zero out the off-diagonal before the block start
 		if ( l1 > 0 ) {
@@ -134,17 +136,17 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 			}
 		}
 		// If loop didn't break, m = N - 1, but the Fortran sets M = N (1-based),
-		// which is m = N - 1 (0-based). The for-loop already leaves m = N-1 if
-		// no break happened. But if N-1 was the last iteration index and the
-		// condition was met, it broke at N-1. If it wasn't met, the loop exits
-		// with m = N-1 which was the last value tested. If the loop body never
+		// Which is m = N - 1 (0-based). The for-loop already leaves m = N-1 if
+		// No break happened. But if N-1 was the last iteration index and the
+		// Condition was met, it broke at N-1. If it wasn't met, the loop exits
+		// With m = N-1 which was the last value tested. If the loop body never
 		// matched, Fortran sets M=N. In 0-based terms:
 		if ( m === N - 1 ) {
 			// Check: did the loop reach the last index and NOT break?
 			// In Fortran, when DO loop completes without GO TO 30,
 			// M = N. But our for-loop leaves m = N-1 regardless.
 			// We need m = N-1 for a block extending to end. That's correct
-			// since 0-based m = N-1 corresponds to 1-based M = N.
+			// Since 0-based m = N-1 corresponds to 1-based M = N.
 		}
 
 		// (label 30)
@@ -279,6 +281,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 
 				e[ offsetE + l * strideE ] = s * p;
 				d[ offsetD + l * strideD ] = sigma + gamma;
+
 				// GO TO 50 (continue the while loop)
 			}
 		} else {
@@ -293,7 +296,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 				}
 				// If loop completed without break, m = lend+1 then it goes to lend
 				// But actually: for (m = l; m > lend; m--) exits at m = lend+1
-				// if no break. But Fortran sets M = LEND when loop completes.
+				// If no break. But Fortran sets M = LEND when loop completes.
 				// Since our for-loop goes m > lend, it exits with m = lend + 1.
 				// But Fortran: DO 110 M = L, LEND + 1, -1 ... M = LEND
 				// When the loop completes without GO TO 120, Fortran sets M = LEND.
@@ -371,6 +374,7 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 
 				e[ offsetE + ( l - 1 ) * strideE ] = s * p;
 				d[ offsetD + l * strideD ] = sigma + gamma;
+
 				// GO TO 100 (continue the while loop)
 			}
 		}

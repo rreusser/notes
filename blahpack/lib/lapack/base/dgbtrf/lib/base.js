@@ -43,7 +43,7 @@ var LDWORK = NBMAX + 1;
 // MAIN //
 
 /**
-* Computes an LU factorization of a real M-by-N band matrix A using partial
+* Computes an LU factorization of a real M-by-N band matrix A using partial.
 * pivoting with row interchanges (blocked algorithm).
 *
 * This is the blocked version calling Level 3 BLAS. For small bandwidth
@@ -69,9 +69,11 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	var WORK13;
 	var WORK31;
 	var iinfo;
+	var minMN;
 	var info;
 	var temp;
-	var minMN;
+	var sa1;
+	var sa2;
 	var kv;
 	var km;
 	var jp;
@@ -84,8 +86,6 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	var j3;
 	var k2;
 	var nw;
-	var sa1;
-	var sa2;
 	var ip;
 	var ii;
 	var jj;
@@ -110,7 +110,9 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	minMN = Math.min( M, N );
 
 	// Allocate workspace arrays
+
 	// WORK13(LDWORK, NBMAX) - stores portion of L that wraps around
+
 	// WORK31(LDWORK, NBMAX) - stores portion of L below the band
 	WORK13 = new Float64Array( LDWORK * NBMAX );
 	WORK31 = new Float64Array( LDWORK * NBMAX );
@@ -142,7 +144,9 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 		jb = Math.min( NB, minMN - j );
 
 		// Active region sizes below the JB panel:
+
 		// i2 = rows j+jb to j+kl-1 (still within the band)
+
 		// i3 = rows j+kl to j+jb+kl-1 (wrap into WORK31)
 		i2 = Math.min( kl - jb, M - j - jb );
 		if ( i2 < 0 ) {
@@ -197,10 +201,8 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 						AB, sa2 - sa1, offsetAB + ( kv - 1 ) * sa1 + ( jj + 1 ) * sa2,
 						AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + ( jj + 1 ) * sa2 );
 				}
-			} else {
-				if ( info === 0 ) {
-					info = jj + 1; // 1-based
-				}
+			} else if ( info === 0 ) {
+				info = jj + 1; // 1-based
 			}
 
 			// Copy column of L that wraps below the band into WORK31
@@ -220,8 +222,10 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			j3 = Math.max( 0, ju - j - kv );
 
 			// Apply row interchanges to columns j+jb..j+jb+j2-1
-			// within the band (dlaswp)
-			// dlaswp uses 0-based indices; IPIV values are relative to panel
+
+			// Within the band (dlaswp)
+
+			// Dlaswp uses 0-based indices; IPIV values are relative to panel
 			dlaswp( j2, AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2,
 				0, jb - 1, IPIV, strideIPIV, offsetIPIV + j * strideIPIV, 1 );
 

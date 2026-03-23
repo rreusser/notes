@@ -31,10 +31,10 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 // MAIN //
 
 /**
-* Computes an LU factorization of a real M-by-N band matrix A using partial
+* Computes an LU factorization of a real M-by-N band matrix A using partial.
 * pivoting with row interchanges (unblocked algorithm).
 *
-* The factorization has the form A = P * L * U where P is a permutation
+* The factorization has the form A = P _ L _ U where P is a permutation
 * matrix, L is lower triangular with unit diagonal, and U is upper triangular.
 *
 * The band matrix A is stored in band format:
@@ -66,12 +66,12 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV ) {
 	var info;
 	var tmp;
+	var sa1;
+	var sa2;
 	var kv;
 	var km;
 	var jp;
 	var ju;
-	var sa1;
-	var sa2;
 	var i;
 	var j;
 
@@ -86,7 +86,7 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	}
 
 	// Zero out the fill-in region: for columns j = ku+1 to min(kv-1, N-1)
-	// zero rows kv-j to kl-1 (0-based) in band storage
+	// Zero rows kv-j to kl-1 (0-based) in band storage
 	for ( j = ku + 1; j < Math.min( kv, N ); j++ ) {
 		for ( i = kv - j; i < kl; i++ ) {
 			AB[ offsetAB + i * sa1 + j * sa2 ] = 0.0;
@@ -116,6 +116,7 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			ju = Math.max( ju, Math.min( j + ku + jp, N - 1 ) );
 
 			// Swap rows: if jp != 0, swap row kv+jp with row kv for columns j..ju
+
 			// Band rows are accessed with stride sa2 - sa1 (corresponds to LDAB-1)
 			if ( jp !== 0 ) {
 				dswap( ju - j + 1, AB, sa2 - sa1, offsetAB + ( kv + jp ) * sa1 + j * sa2,

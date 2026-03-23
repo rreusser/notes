@@ -42,12 +42,12 @@ var CMONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes the Cholesky factorization of a complex Hermitian positive definite
+* Computes the Cholesky factorization of a complex Hermitian positive definite.
 * band matrix AB.
 *
 * The factorization has the form:
-*   AB = U^H * U,  if uplo = 'upper', or
-*   AB = L * L^H,  if uplo = 'lower',
+*   AB = U^H _ U,  if uplo = 'upper', or
+_   AB = L _ L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.
@@ -110,6 +110,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			ib = Math.min( nb, N - i );
 
 			// Factorize the diagonal block
+
 			// zpotf2('upper', IB, AB(KD+1, I+1), LDAB-1, II)
 			iinfo = zpotf2( 'upper', ib, AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + i * sa2 );
 			if ( iinfo !== 0 ) {
@@ -130,7 +131,9 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					);
 
 					// Update A22:
+
 					// ZHERK('Upper','Conjugate transpose', I2, IB, -ONE,
+
 					//        AB(KD+1-IB,I+IB), LDAB-1, ONE, AB(KD+1,I+IB), LDAB-1)
 					zherk( 'upper', 'conjugate-transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
@@ -198,6 +201,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 			ib = Math.min( nb, N - i );
 
 			// Factorize the diagonal block
+
 			// zpotf2('lower', IB, AB(1, I+1), LDAB-1, II)
 			iinfo = zpotf2( 'lower', ib, AB, sa1, sa2 - sa1, offsetAB + i * sa2 );
 			if ( iinfo !== 0 ) {
@@ -217,6 +221,7 @@ function zpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					);
 
 					// ZHERK('Lower','No transpose', I2, IB, -ONE,
+
 					//        AB(1+IB,I), LDAB-1, ONE, AB(1,I+IB), LDAB-1)
 					zherk( 'lower', 'no-transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ib * sa1 + i * sa2,

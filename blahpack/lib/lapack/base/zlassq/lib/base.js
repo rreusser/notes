@@ -25,6 +25,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 // VARIABLES //
 
 // Blue's scaling constants for double precision (IEEE 754):
+
 //   radix=2, minexponent=-1021, maxexponent=1024, digits=53
 var TSML = Math.pow( 2, -511 );  // threshold: values smaller than this are "small"
 var TBIG = Math.pow( 2, 486 );   // threshold: values bigger than this are "big"
@@ -38,7 +39,7 @@ var SBIG = Math.pow( 2, -538 );  // scale-down multiplier for big values
 * Updates a sum of squares represented in scaled form.
 *
 * Returns updated (scale, sumsq) such that:
-*   scale^2 * sumsq = old_scale^2 * old_sumsq + sum(|x_i|^2)
+*   scale^2 _ sumsq = old_scale^2 _ old_sumsq + sum(|x_i|^2)
 *
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
@@ -64,7 +65,10 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 
 	// Quick return if NaN
 	if ( scale !== scale || sumsq !== sumsq ) {
-		return { scl: scale, sumsq: sumsq };
+		return {
+			'scl': scale,
+			'sumsq': sumsq
+		};
 	}
 	if ( sumsq === 0.0 ) {
 		scale = 1.0;
@@ -74,14 +78,20 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 		sumsq = 0.0;
 	}
 	if ( N <= 0 ) {
-		return { scl: scale, sumsq: sumsq };
+		return {
+			'scl': scale,
+			'sumsq': sumsq
+		};
 	}
 
 	xv = reinterpret( x, 0 );
 
 	// Compute the sum of squares in 3 accumulators:
+
 	//   abig -- sums of squares scaled down to avoid overflow
+
 	//   asml -- sums of squares scaled up to avoid underflow
+
 	//   amed -- sums of squares that do not require scaling
 	notbig = true;
 	asml = 0.0;
@@ -131,7 +141,7 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 		ax = scale * Math.sqrt( sumsq );
 		if ( ax > TBIG ) {
 			if ( scale > 1.0 ) {
-				scale = scale * SBIG;
+				scale *= SBIG;
 				abig += scale * ( scale * sumsq );
 			} else {
 				abig += scale * ( scale * ( SBIG * ( SBIG * sumsq ) ) );
@@ -139,7 +149,7 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 		} else if ( ax < TSML ) {
 			if ( notbig ) {
 				if ( scale < 1.0 ) {
-					scale = scale * SSML;
+					scale *= SSML;
 					asml += scale * ( scale * sumsq );
 				} else {
 					asml += scale * ( scale * ( SSML * ( SSML * sumsq ) ) );
@@ -182,7 +192,10 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 		sumsq = amed;
 	}
 
-	return { scl: scale, sumsq: sumsq };
+	return {
+		'scl': scale,
+		'sumsq': sumsq
+	};
 }
 
 

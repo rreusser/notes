@@ -29,7 +29,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Scales a complex double-precision vector by a complex constant and adds
+* Scales a complex double-precision vector by a complex constant and adds.
 * the result to another complex double-precision vector: y := alpha*x + y.
 *
 * @private
@@ -82,6 +82,7 @@ function zaxpy( N, za, zx, strideX, offsetX, zy, strideY, offsetY ) {
 		xi = xv[ ix + 1 ];
 
 		// y[iy] += za * x[ix]
+
 		// (zaR + zaI*i) * (xr + xi*i) = (zaR*xr - zaI*xi) + (zaR*xi + zaI*xr)*i
 		yv[ iy ] += zaR * xr - zaI * xi;
 		yv[ iy + 1 ] += zaR * xi + zaI * xr;

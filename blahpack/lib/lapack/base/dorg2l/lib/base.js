@@ -28,7 +28,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Generate an M-by-N real orthogonal matrix Q with orthonormal columns,
+* Generate an M-by-N real orthogonal matrix Q with orthonormal columns,.
 * which is defined as the last N columns of a product of K elementary
 * reflectors of order M
 *
@@ -87,15 +87,21 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		ii = N - K + i;
 
 		// Set A(M-N+ii, ii) = 1 before applying the reflector
+
 		// Fortran: A(M-N+II, II) = 1
 		// M-N+II (1-based) = M-N+(ii+1) => 0-based row = M-N+ii
 		A[ offsetA + ( M - N + ii ) * strideA1 + ii * strideA2 ] = 1.0;
 
 		// Apply H(i) to A(0:M-N+ii, 0:ii-1) from the left
+
 		// Fortran: DLARF('Left', M-N+II, II-1, A(1,II), 1, TAU(I), A, LDA, WORK)
+
 		//   M-N+II rows = M-N+ii+1 (converting 1-based count)
+
 		//   II-1 cols = ii (converting 1-based count)
-		//   v starts at A(1,II) = A(row=0, col=ii) in 0-based
+
+		//   V starts at A(1,II) = A(row=0, col=ii) in 0-based
+
 		//   C starts at A(1,1) = A(row=0, col=0) in 0-based
 		if ( ii > 0 ) {
 			dlarf(
@@ -121,7 +127,9 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		A[ offsetA + ( M - N + ii ) * strideA1 + ii * strideA2 ] = 1.0 - TAU[ offsetTAU + i * strideTAU ];
 
 		// Zero out rows M-N+ii+1 to M-1 of column ii
+
 		// Fortran: DO 30 L = M-N+II+1, M
+
 		// 0-based: l = M-N+ii+1 to M-1
 		for ( l = M - N + ii + 1; l < M; l++ ) {
 			A[ offsetA + l * strideA1 + ii * strideA2 ] = 0.0;

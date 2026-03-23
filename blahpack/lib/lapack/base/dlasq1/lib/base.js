@@ -40,7 +40,7 @@ var ZERO = 0.0;
 // MAIN //
 
 /**
-* Computes all the singular values of a real upper bidiagonal matrix of
+* Computes all the singular values of a real upper bidiagonal matrix of.
 * order N. The singular values are computed to high relative accuracy,
 * in the absence of denormalization, underflow, and overflow.
 *
@@ -61,10 +61,10 @@ var ZERO = 0.0;
 * @returns {integer} info - status code (0 = success)
 */
 function dlasq1( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, offsetWORK ) {
+	var safmin;
 	var sigmx;
 	var sigmn;
 	var scale;
-	var safmin;
 	var info;
 	var eps;
 	var out;
@@ -128,15 +128,21 @@ function dlasq1( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, 
 	scale = Math.sqrt( eps / safmin );
 
 	// Copy D into odd positions and E into even positions of WORK
+
 	// Fortran: DCOPY(N, D, 1, WORK(1), 2) — WORK(1), WORK(3), WORK(5), ...
+
 	// Fortran: DCOPY(N-1, E, 1, WORK(2), 2) — WORK(2), WORK(4), WORK(6), ...
+
 	// In 0-based with strides: WORK[offset+0], WORK[offset+2*stride], ...
 	dcopy( N, d, strideD, offsetD, WORK, 2 * strideWORK, offsetWORK );
 	dcopy( N - 1, e, strideE, offsetE, WORK, 2 * strideWORK, offsetWORK + strideWORK );
 
 	// Scale WORK(1:2*N-1) by SCALE/SIGMX
+
 	// dlascl('general', 0, 0, SIGMX, SCALE, 2*N-1, 1, WORK, 2*N-1, IINFO)
+
 	// This treats WORK as a (2*N-1)-by-1 matrix in column-major order
+
 	// strideA1 = strideWORK, strideA2 = (2*N-1)*strideWORK (column stride, but 1 column so irrelevant)
 	dlascl( 'general', 0, 0, sigmx, scale, 2 * N - 1, 1, WORK, strideWORK, ( 2 * N - 1 ) * strideWORK, offsetWORK );
 

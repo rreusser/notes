@@ -70,11 +70,10 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 	var ix;
 	var ii;
 	var si;
-	var i;
-
 	var s0 = offsetISAVE;
 	var s1 = offsetISAVE + strideISAVE;
 	var s2 = offsetISAVE + 2 * strideISAVE;
+	var i;
 
 	if ( KASE[ 0 ] === 0 ) {
 		ix = offsetX;
@@ -94,6 +93,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		if ( N === 1 ) {
 			v[ offsetV ] = x[ offsetX ];
 			EST[ 0 ] = Math.abs( v[ offsetV ] );
+
 			// Done
 			KASE[ 0 ] = 0;
 			return;
@@ -117,7 +117,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		return;
 
 	case 2:
-		// label 40
+		// Label 40
 		ISAVE[ s1 ] = idamax( N, x, strideX, offsetX ); // 0-based index
 		ISAVE[ s2 ] = 2; // iteration count
 
@@ -133,7 +133,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		return;
 
 	case 3:
-		// label 70
+		// Label 70
 		dcopy( N, x, strideX, offsetX, v, strideV, offsetV );
 		estold = EST[ 0 ];
 		EST[ 0 ] = dasum( N, v, strideV, offsetV );
@@ -157,7 +157,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		}
 		// If i === N, all signs are same — go to label 120 (final stage)
 		if ( i === N ) {
-			// label 120: final stage — alternating vector
+			// Label 120: final stage — alternating vector
 			altsgn = 1.0;
 			ix = offsetX;
 			for ( i = 0; i < N; i++ ) {
@@ -172,7 +172,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 
 		// Check if estimate decreased — if so, go to final stage
 		if ( EST[ 0 ] <= estold ) {
-			// label 120: final stage — alternating vector
+			// Label 120: final stage — alternating vector
 			altsgn = 1.0;
 			ix = offsetX;
 			for ( i = 0; i < N; i++ ) {
@@ -203,7 +203,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		return;
 
 	case 4:
-		// label 110
+		// Label 110
 		jlast = ISAVE[ s1 ];
 		ISAVE[ s1 ] = idamax( N, x, strideX, offsetX ); // 0-based
 
@@ -222,7 +222,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 			return;
 		}
 
-		// label 120: final stage — alternating vector
+		// Label 120: final stage — alternating vector
 		altsgn = 1.0;
 		ix = offsetX;
 		for ( i = 0; i < N; i++ ) {
@@ -235,18 +235,16 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		return;
 
 	case 5:
-		// label 140
+		// Label 140
 		temp = 2.0 * ( dasum( N, x, strideX, offsetX ) / ( 3.0 * N ) );
 		if ( temp > EST[ 0 ] ) {
 			dcopy( N, x, strideX, offsetX, v, strideV, offsetV );
 			EST[ 0 ] = temp;
 		}
-		// label 150: done
+		// Label 150: done
 		KASE[ 0 ] = 0;
-		return;
 
 	default:
-		return;
 	}
 }
 

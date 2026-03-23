@@ -51,11 +51,11 @@ var BLOCK_SIZE = 32;
 * @returns {Float64Array} permuted matrix `A`
 */
 function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx ) {
-	var nrows;
-	var ix0;
-	var ixinc;
 	var istart;
+	var nrows;
+	var ixinc;
 	var iinc;
+	var ix0;
 	var n32;
 	var tmp;
 	var row;
@@ -78,6 +78,7 @@ function dlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 	} else if ( incx < 0 ) {
 		// Reverse: k1 > k2, iterate from k1 down to k2
 		nrows = k1 - k2 + 1;
+
 		// IPIV is read from the last element backwards
 		ix0 = offsetIPIV + ( nrows - 1 ) * strideIPIV;
 		ixinc = -strideIPIV;

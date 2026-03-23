@@ -54,7 +54,7 @@ var base = require( './base.js' );
 * var x = new Float64Array( [ 1, 2 ] );
 *
 * dsyr( 'upper', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
-* // A => <Float64Array>[ 2, 2, 0, 5 ]
+* // A => <Float64Array>[ 2, 0, 2, 5 ]
 */
 function dsyr( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offsetA ) {
 	if ( !isMatrixTriangle( uplo ) ) {

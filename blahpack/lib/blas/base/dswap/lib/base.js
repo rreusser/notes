@@ -23,7 +23,7 @@
 // MAIN //
 
 /**
-* Interchange two double-precision floating-point vectors
+* Interchange two double-precision floating-point vectors.
 *
 * @private
 * @param {NonNegativeInteger} N - number of columns

@@ -27,20 +27,20 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zlaswp = require( '@stdlib/lapack/base/zlaswp' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
-* 
+*
 * zlaswp( 'row-major', 2, A, 2, 0, 1, IPIV, 1, 2 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zlaswp = require( '@stdlib/lapack/base/zlaswp' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
-* 
+*
 * zlaswp.ndarray( 2, A, 1, 2, 0, 0, 1, IPIV, 1, 0, 2 );
 */
 

@@ -26,17 +26,17 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dpbtrf = require( '@stdlib/lapack/base/dpbtrf' );
-* 
+*
 * var AB = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dpbtrf( 'row-major', 'upper', 2, 2, AB, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dpbtrf = require( '@stdlib/lapack/base/dpbtrf' );
-* 
+*
 * var AB = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dpbtrf.ndarray( 'upper', 2, 2, AB, 1, 2, 0 );
 */
 

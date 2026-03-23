@@ -31,8 +31,8 @@ var dger = require( '../../../../blas/base/dger/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a system of linear equations:
-*   A * X = B  or  A**T * X = B
+* Solves a system of linear equations:.
+*   A _ X = B  or  A__T _ X = B
 * with a general band matrix A using the LU factorization computed by dgbtrf.
 *
 * IPIV is 0-based (matching dgbtf2/dgbtrf output).
@@ -63,12 +63,12 @@ var dger = require( '../../../../blas/base/dger/lib/base.js' );
 function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
 	var notran;
 	var lnoti;
-	var kd;
-	var lm;
 	var sb1;
 	var sb2;
 	var sa1;
 	var sa2;
+	var kd;
+	var lm;
 	var l;
 	var i;
 	var j;
@@ -125,6 +125,7 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 		if ( lnoti ) {
 			for ( j = N - 2; j >= 0; j-- ) {
 				lm = Math.min( kl, N - j - 1 );
+
 				// B(j, :) -= L(j+1:j+lm, j)^T * B(j+1:j+lm, :)
 				dgemv( 'transpose', lm, nrhs, -1.0,
 					B, sb1, sb2, offsetB + ( j + 1 ) * sb1,

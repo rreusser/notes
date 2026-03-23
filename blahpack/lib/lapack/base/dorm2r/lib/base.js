@@ -28,9 +28,9 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q**T*C, C*Q, or C*Q**T,
-* where Q is a real orthogonal matrix defined as the product of K
-* elementary reflectors Q = H(1) * H(2) * ... * H(k) as returned
+* Overwrites the M-by-N matrix C with Q_C, Q__T_C, C_Q, or C_Q*_T,.
+_ where Q is a real orthogonal matrix defined as the product of K
+_ elementary reflectors Q = H(1) _ H(2) _ ... _ H(k) as returned
 * by DGEQR2.
 *
 * @private
@@ -77,7 +77,9 @@ function dorm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	notran = ( trans === 'no-transpose' );
 
 	// Determine iteration direction:
+
 	// For left+trans or right+notran: iterate forward (i = 0, 1, ..., K-1)
+
 	// For left+notran or right+trans: iterate backward (i = K-1, ..., 1, 0)
 	if ( ( left && !notran ) || ( !left && notran ) ) {
 		i1 = 0;
@@ -114,7 +116,8 @@ function dorm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		A[ idxA ] = 1.0;
 
 		// Apply H(i) to C(ic:ic+mi-1, jc:jc+ni-1) from the left or right
-		// dlarf expects: side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK
+
+		// Dlarf expects: side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK
 		dlarf(
 			side, mi, ni,
 			A, strideA1, offsetA + i * strideA1 + i * strideA2,

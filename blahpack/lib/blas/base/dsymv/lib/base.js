@@ -23,8 +23,8 @@
 // MAIN //
 
 /**
-* Performs the matrix-vector operation:
-*   y := alpha * A * x + beta * y
+* Performs the matrix-vector operation:.
+*   y := alpha _ A _ x + beta * y
 * where A is an N-by-N symmetric matrix, x and y are N-element vectors,
 * and alpha and beta are scalars.
 *
@@ -129,6 +129,7 @@ function dsymv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 	}
 	return y;
 }
+
 
 // EXPORTS //
 

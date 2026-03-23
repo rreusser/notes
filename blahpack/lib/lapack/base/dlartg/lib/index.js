@@ -25,12 +25,12 @@
 *
 * @example
 * var dlartg = require( '@stdlib/lapack/base/dlartg' );
-* 
+*
 * dlartg( 1.0, 1.0 );
 *
 * @example
 * var dlartg = require( '@stdlib/lapack/base/dlartg' );
-* 
+*
 * dlartg.ndarray( 1.0, 1.0 );
 */
 

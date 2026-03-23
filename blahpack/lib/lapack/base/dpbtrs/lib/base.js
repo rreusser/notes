@@ -28,8 +28,8 @@ var dtbsv = require( '../../../../blas/base/dtbsv/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a system of linear equations A*X = B with a symmetric positive
-* definite band matrix A using the Cholesky factorization A = U**T*U or
+* Solves a system of linear equations A_X = B with a symmetric positive.
+_ definite band matrix A using the Cholesky factorization A = U__T_U or
 * A = L*L**T computed by dpbtrf.
 *
 * @private
@@ -66,6 +66,7 @@ function dpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strid
 				AB, strideAB1, strideAB2, offsetAB,
 				B, strideB1, offsetB + j * strideB2
 			);
+
 			// Solve U * X = B, overwriting B with X:
 			dtbsv( 'upper', 'no-transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,
@@ -80,6 +81,7 @@ function dpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strid
 				AB, strideAB1, strideAB2, offsetAB,
 				B, strideB1, offsetB + j * strideB2
 			);
+
 			// Solve L**T * X = B, overwriting B with X:
 			dtbsv( 'lower', 'transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,

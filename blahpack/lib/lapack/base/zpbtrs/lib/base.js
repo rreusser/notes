@@ -28,8 +28,8 @@ var ztbsv = require( '../../../../blas/base/ztbsv/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a complex Hermitian positive definite banded system of equations
-* A*X = B using the Cholesky factorization A = U^H*U or A = L*L^H
+* Solves a complex Hermitian positive definite banded system of equations.
+* A_X = B using the Cholesky factorization A = U^H_U or A = L*L^H
 * computed by zpbtrf.
 *
 * @private
@@ -62,6 +62,7 @@ function zpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strid
 				AB, strideAB1, strideAB2, offsetAB,
 				B, strideB1, offsetB + j * strideB2
 			);
+
 			// Solve U * x = y, result in B(:,j)
 			ztbsv( 'upper', 'no-transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,
@@ -76,6 +77,7 @@ function zpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strid
 				AB, strideAB1, strideAB2, offsetAB,
 				B, strideB1, offsetB + j * strideB2
 			);
+
 			// Solve L^H * x = y, result in B(:,j)
 			ztbsv( 'lower', 'conjugate-transpose', 'non-unit', N, kd,
 				AB, strideAB1, strideAB2, offsetAB,

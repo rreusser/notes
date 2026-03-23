@@ -30,7 +30,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves overdetermined or underdetermined real linear systems involving an
+* Solves overdetermined or underdetermined real linear systems involving an.
 * M-by-N matrix A, or its transpose, using a QR or LQ factorization of A.
 *
 * @param {string} trans - 'no-transpose' or 'transpose'

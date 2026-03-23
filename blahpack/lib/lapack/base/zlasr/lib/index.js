@@ -27,21 +27,21 @@
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zlasr = require( '@stdlib/lapack/base/zlasr' );
-* 
+*
 * var c = new Float64Array( [ 1.0, 2.0 ] );
 * var s = new Float64Array( [ 1.0, 2.0 ] );
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zlasr( 'row-major', 'left', 'N', 'forward', 2, 2, c, 1, s, 1, A, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zlasr = require( '@stdlib/lapack/base/zlasr' );
-* 
+*
 * var c = new Float64Array( [ 1.0, 2.0 ] );
 * var s = new Float64Array( [ 1.0, 2.0 ] );
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zlasr.ndarray( 'left', 'N', 'forward', 2, 2, c, 1, 0, s, 1, 0, A, 1, 2, 0 );
 */
 

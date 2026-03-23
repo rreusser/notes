@@ -27,8 +27,8 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 // MAIN //
 
 /**
-* Performs one of the Hermitian rank-k operations:
-*   C := alpha*A*A^H + beta*C,  or  C := alpha*A^H*A + beta*C
+* Performs one of the Hermitian rank-k operations:.
+*   C := alpha_A_A^H + beta_C,  or  C := alpha_A^H_A + beta_C
 * where alpha and beta are REAL scalars, C is an N-by-N Hermitian matrix
 * (stored as Complex128Array), and A is an N-by-K matrix in the first case
 * and a K-by-N matrix in the second case.
@@ -55,24 +55,24 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 */
 function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, C, strideC1, strideC2, offsetC ) {
 	var upper;
-	var nota;
 	var tempR;
 	var tempI;
 	var rtemp;
-	var Av;
-	var Cv;
-	var oA;
-	var oC;
+	var nota;
 	var sa1;
 	var sa2;
 	var sc1;
 	var sc2;
-	var ic;
-	var ia;
 	var ajR;
 	var ajI;
 	var aiR;
 	var aiI;
+	var Av;
+	var Cv;
+	var oA;
+	var oC;
+	var ic;
+	var ia;
 	var i;
 	var j;
 	var l;
@@ -119,29 +119,27 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					Cv[ ic + 1 ] = 0.0;
 				}
 			}
-		} else {
-			if ( beta === 0.0 ) {
-				for ( j = 0; j < N; j++ ) {
-					ic = oC + j * sc1 + j * sc2;
-					for ( i = j; i < N; i++ ) {
-						Cv[ ic ] = 0.0;
-						Cv[ ic + 1 ] = 0.0;
-						ic += sc1;
-					}
-				}
-			} else {
-				for ( j = 0; j < N; j++ ) {
-					// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
-					ic = oC + j * sc1 + j * sc2;
-					Cv[ ic ] = beta * Cv[ ic ];
+		} else if ( beta === 0.0 ) {
+			for ( j = 0; j < N; j++ ) {
+				ic = oC + j * sc1 + j * sc2;
+				for ( i = j; i < N; i++ ) {
+					Cv[ ic ] = 0.0;
 					Cv[ ic + 1 ] = 0.0;
 					ic += sc1;
-					for ( i = j + 1; i < N; i++ ) {
-						// Off-diagonal
-						Cv[ ic ] *= beta;
-						Cv[ ic + 1 ] *= beta;
-						ic += sc1;
-					}
+				}
+			}
+		} else {
+			for ( j = 0; j < N; j++ ) {
+				// Diagonal: C[j,j] = beta * Re(C[j,j]), Im = 0
+				ic = oC + j * sc1 + j * sc2;
+				Cv[ ic ] = beta * Cv[ ic ];
+				Cv[ ic + 1 ] = 0.0;
+				ic += sc1;
+				for ( i = j + 1; i < N; i++ ) {
+					// Off-diagonal
+					Cv[ ic ] *= beta;
+					Cv[ ic + 1 ] *= beta;
+					ic += sc1;
 				}
 			}
 		}
@@ -179,7 +177,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					ajR = Av[ ia ];
 					ajI = Av[ ia + 1 ];
 					if ( ajR !== 0.0 || ajI !== 0.0 ) {
-						// temp = alpha * conj(A[j,l])
+						// Temp = alpha * conj(A[j,l])
 						tempR = alpha * ajR;
 						tempI = alpha * ( -ajI ); // conjugate
 						ic = oC + j * sc2;
@@ -187,6 +185,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 						for ( i = 0; i < j; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];
+
 							// C[i,j] += temp * A[i,l]
 							Cv[ ic ] += tempR * aiR - tempI * aiI;
 							Cv[ ic + 1 ] += tempR * aiI + tempI * aiR;
@@ -197,6 +196,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 						aiR = Av[ ia ];
 						aiI = Av[ ia + 1 ];
 						Cv[ ic ] += tempR * aiR - tempI * aiI;
+
 						// Imag stays zero (Hermitian diagonal is real)
 					}
 				}
@@ -213,6 +213,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					}
 				} else if ( beta !== 1.0 ) {
 					ic = oC + j * sc1 + j * sc2;
+
 					// Diagonal: scale real part only
 					Cv[ ic ] = beta * Cv[ ic ];
 					Cv[ ic + 1 ] = 0.0;
@@ -232,18 +233,21 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					ajR = Av[ ia ];
 					ajI = Av[ ia + 1 ];
 					if ( ajR !== 0.0 || ajI !== 0.0 ) {
-						// temp = alpha * conj(A[j,l])
+						// Temp = alpha * conj(A[j,l])
 						tempR = alpha * ajR;
 						tempI = alpha * ( -ajI ); // conjugate
+
 						// Diagonal: C[j,j] += Re(temp * A[j,l])
 						ic = oC + j * sc1 + j * sc2;
 						Cv[ ic ] += tempR * ajR - tempI * ajI;
+
 						// Imag stays zero
 						ic += sc1;
 						ia = oA + ( j + 1 ) * sa1 + l * sa2;
 						for ( i = j + 1; i < N; i++ ) {
 							aiR = Av[ ia ];
 							aiI = Av[ ia + 1 ];
+
 							// C[i,j] += temp * A[i,l]
 							Cv[ ic ] += tempR * aiR - tempI * aiI;
 							Cv[ ic + 1 ] += tempR * aiI + tempI * aiR;
@@ -311,6 +315,7 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 					Cv[ ic ] = alpha * rtemp + beta * Cv[ ic ];
 				}
 				Cv[ ic + 1 ] = 0.0;
+
 				// Off-diagonal
 				for ( i = j + 1; i < N; i++ ) {
 					tempR = 0.0;

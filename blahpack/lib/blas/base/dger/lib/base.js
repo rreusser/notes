@@ -23,7 +23,7 @@
 // MAIN //
 
 /**
-* Performs the rank 1 operation A := alpha*x*y**T + A.
+* Performs the rank 1 operation A := alpha_x_y**T + A.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of A

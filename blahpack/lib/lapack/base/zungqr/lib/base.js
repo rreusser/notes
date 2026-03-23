@@ -34,7 +34,7 @@ var NB = 32;  // Block size (LAPACK default for ZUNGQR)
 // MAIN //
 
 /**
-* Generate an M-by-N complex unitary matrix Q from the elementary
+* Generate an M-by-N complex unitary matrix Q from the elementary.
 * reflectors returned by ZGEQRF (QR factorization, blocked algorithm).
 *
 * Q is defined as the product of K elementary reflectors:
@@ -102,6 +102,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	ldwork = N;
 
 	// Determine blocking strategy
+
 	// Use blocked algorithm if NB >= 2 and NB < K
 	if ( nb >= 2 && nb < K ) {
 		// Use crossover point NX = 0 (always use blocked when possible)
@@ -114,6 +115,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			kk = Math.min( K, ki + nb );
 
 			// Zero out first KK rows of columns KK..N-1
+
 			// Fortran: DO 20 J = KK+1, N; DO 10 I = 1, KK; A(I,J)=ZERO
 			for ( j = kk; j < N; j++ ) {
 				for ( i = 0; i < kk; i++ ) {
@@ -155,8 +157,11 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				);
 
 				// Apply H to A(i:M-1, i+ib:N-1) from the left
+
 				// ZLARFB('Left', 'No transpose', 'Forward', 'Columnwise',
+
 				//         M-I+1, N-I-IB+1, IB, A(I,I), LDA, WORK, LDWORK,
+
 				//         A(I,I+IB), LDA, WORK(IB+1), LDWORK)
 				zlarfb(
 					'left', 'no-transpose', 'forward', 'columnwise',
@@ -178,6 +183,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			);
 
 			// Zero out rows 0..i-1 of columns i..i+ib-1
+
 			// Fortran: DO 40 J = I, I+IB-1; DO 30 L = 1, I-1; A(L,J)=ZERO
 			for ( j = i; j < i + ib; j++ ) {
 				for ( l = 0; l < i; l++ ) {

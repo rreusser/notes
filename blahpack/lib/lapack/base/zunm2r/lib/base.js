@@ -30,9 +30,9 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,
+* Overwrites the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
 * where Q is a complex unitary matrix defined as the product of K
-* elementary reflectors Q = H(1) * H(2) * ... * H(k) as returned
+* elementary reflectors Q = H(1) _ H(2) _ ... * H(k) as returned
 * by ZGEQR2.
 *
 * A, TAU, C, WORK are Complex128Arrays. Strides and offsets are in complex elements.
@@ -61,8 +61,8 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 */
 function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var notran;
-	var left;
 	var tauiv;
+	var left;
 	var taui;
 	var idxA;
 	var aii0;
@@ -138,7 +138,8 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		Av[ idxA + 1 ] = 0.0;
 
 		// Apply H(i) to C(ic:ic+mi, jc:jc+ni) from the left or right
-		// zlarf expects strides/offsets in complex elements
+
+		// Zlarf expects strides/offsets in complex elements
 		zlarf(
 			side, mi, ni,
 			A, strideA1, offsetA + i * strideA1 + i * strideA2,

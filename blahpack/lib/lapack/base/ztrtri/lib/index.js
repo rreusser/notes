@@ -26,17 +26,17 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var ztrtri = require( '@stdlib/lapack/base/ztrtri' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * ztrtri( 'row-major', 'upper', 'non-unit', 2, A, 2 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var ztrtri = require( '@stdlib/lapack/base/ztrtri' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * ztrtri.ndarray( 'upper', 'non-unit', 2, A, 1, 2, 0 );
 */
 

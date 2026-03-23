@@ -31,7 +31,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Performs the Hermitian rank-2k update C := alpha*A*B^H + conj(alpha)*B*A^H + beta*C or C := alpha*A^H*B + conj(alpha)*B^H*A + beta*C.
+* Performs the Hermitian rank-2k update C := alpha_A_B^H + conj(alpha)_B_A^H + beta_C or C := alpha_A^H_B + conj(alpha)_B^H_A + beta_C.
 *
 * @param {string} uplo - specifies whether the upper or lower triangle of C is stored
 * @param {string} trans - specifies the operation ('no-transpose' or 'conjugate-transpose')

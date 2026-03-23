@@ -29,7 +29,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Perform the rank 1 operation A := alpha*x*y**T + A (unconjugated),
+* Perform the rank 1 operation A := alpha_x_y**T + A (unconjugated),.
 * where alpha is a complex scalar, x is an M element complex vector,
 * y is an N element complex vector, and A is an M by N complex matrix.
 *
@@ -105,7 +105,7 @@ function zgeru( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 
 		// Check if y(j) is zero
 		if ( yr !== 0.0 || yi !== 0.0 ) {
-			// temp = alpha * y(j) (NO conjugation, unlike zgerc)
+			// Temp = alpha * y(j) (NO conjugation, unlike zgerc)
 			// alpha * y = (alphaRe + alphaIm*i)(yr + yi*i)
 			//           = (alphaRe*yr - alphaIm*yi) + (alphaIm*yr + alphaRe*yi)*i
 			tr = alphaRe * yr - alphaIm * yi;

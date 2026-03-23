@@ -26,19 +26,19 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dpotrs = require( '@stdlib/lapack/base/dpotrs' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dpotrs( 'row-major', 'upper', 2, 1, A, 2, B, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dpotrs = require( '@stdlib/lapack/base/dpotrs' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dpotrs.ndarray( 'upper', 2, 1, A, 1, 2, 0, B, 1, 2, 0 );
 */
 

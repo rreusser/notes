@@ -24,23 +24,23 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zgghrd = require( '@stdlib/lapack/base/zgghrd' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var Q = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var Z = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgghrd( 'row-major', 'none', 'none', 2, 1, 2, A, 2, B, 2, Q, 2, Z, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zgghrd = require( '@stdlib/lapack/base/zgghrd' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var Q = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var Z = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgghrd.ndarray( 'none', 'none', 2, 1, 2, A, 1, 2, 0, B, 1, 2, 0, Q, 1, 2, 0, Z, 1, 2, 0 );
 */
 

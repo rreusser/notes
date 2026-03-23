@@ -34,12 +34,12 @@ var CONE = new Complex128( 1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes the Cholesky factorization of a complex Hermitian positive definite
+* Computes the Cholesky factorization of a complex Hermitian positive definite.
 * matrix A using the recursive algorithm.
 *
 * The factorization has the form:
-*   A = U^H * U,  if uplo = 'upper', or
-*   A = L * L^H,  if uplo = 'lower',
+*   A = U^H _ U,  if uplo = 'upper', or
+_   A = L _ L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the recursive version of the algorithm. It divides the matrix
@@ -57,11 +57,11 @@ var CONE = new Complex128( 1.0, 0.0 );
 function zpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	var upper;
 	var iinfo;
-	var Av;
-	var oA;
 	var sa1;
 	var sa2;
 	var ajj;
+	var Av;
+	var oA;
 	var n1;
 	var n2;
 
@@ -79,6 +79,7 @@ function zpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		Av = reinterpret( A, 0 );
 		oA = offsetA * 2;
 		ajj = Av[ oA ]; // real part of A[0,0]
+
 		// Test for non-positive-definiteness or NaN
 		if ( ajj <= 0.0 || ajj !== ajj ) {
 			return 1;

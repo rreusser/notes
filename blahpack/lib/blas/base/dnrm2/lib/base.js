@@ -43,12 +43,12 @@ var SBIG = 1.1113793747425387e-162;  // 2^(-ceil((emax+digits-1)/2)) = 2^-538
 */
 function dnrm2( N, x, stride, offset ) {
 	var notbig;
+	var sumsq;
 	var abig;
 	var amed;
 	var asml;
 	var ymin;
 	var ymax;
-	var sumsq;
 	var scl;
 	var ax;
 	var ix;

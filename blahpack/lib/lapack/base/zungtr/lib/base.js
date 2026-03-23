@@ -29,16 +29,16 @@ var zungql = require( '../../zungql/lib/base.js' );
 // MAIN //
 
 /**
-* Generates a complex unitary matrix Q which is defined as the product of N-1
+* Generates a complex unitary matrix Q which is defined as the product of N-1.
 * elementary reflectors of order N, as returned by ZHETRD.
 *
 * ## Notes
 *
 * -   If UPLO = 'U', Q is defined as a product of reflectors:
-*     Q = H(n-1) * ... * H(2) * H(1)
+*     Q = H(n-1) _ ... _ H(2) * H(1)
 *
 * -   If UPLO = 'L', Q is defined as a product of reflectors:
-*     Q = H(1) * H(2) * ... * H(n-1)
+*     Q = H(1) _ H(2) _ ... * H(n-1)
 *
 * @private
 * @param {string} uplo - specifies whether the upper or lower triangle was used in ZHETRD ('U' or 'L')
@@ -83,9 +83,9 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 	if ( upper ) {
 		// Q was determined by ZHETRD as a product of N-1 elementary reflectors
-		// stored in the upper triangle of A. Shift them left by one column
-		// so they occupy columns 0..N-2, then call zungql on the (N-1)x(N-1)
-		// leading submatrix.
+		// Stored in the upper triangle of A. Shift them left by one column
+		// So they occupy columns 0..N-2, then call zungql on the (N-1)x(N-1)
+		// Leading submatrix.
 
 		// Shift reflectors: for j = 0..N-2, copy column j+1 (rows 0..j-1) into column j
 		for ( j = 0; j < N - 1; j++ ) {
@@ -116,9 +116,9 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		}
 	} else {
 		// Q was determined by ZHETRD as a product of N-1 elementary reflectors
-		// stored in the lower triangle of A. Shift them right by one column
-		// so they occupy columns 1..N-1, then call zungqr on the (N-1)x(N-1)
-		// trailing submatrix starting at (1,1).
+		// Stored in the lower triangle of A. Shift them right by one column
+		// So they occupy columns 1..N-1, then call zungqr on the (N-1)x(N-1)
+		// Trailing submatrix starting at (1,1).
 
 		// Shift reflectors: for j = N-1 downto 1, copy column j-1 (rows j+1..N-1) into column j
 		for ( j = N - 1; j >= 1; j-- ) {
@@ -143,7 +143,7 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		}
 
 		// Generate Q by calling zungqr on the (N-1)x(N-1) trailing submatrix
-		// starting at position (1, 1) (0-based)
+		// Starting at position (1, 1) (0-based)
 		if ( N > 1 ) {
 			pa = offsetA + strideA1 + strideA2; // A(1, 1) in complex-element addressing
 			zungqr( N - 1, N - 1, N - 1, A, strideA1, strideA2, pa, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );

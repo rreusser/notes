@@ -29,7 +29,7 @@ var dgbtrs = require( '../../dgbtrs/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a system of linear equations A * X = B where A is an N-by-N band
+* Solves a system of linear equations A * X = B where A is an N-by-N band.
 * matrix with KL subdiagonals and KU superdiagonals, using the LU
 * factorization computed by dgbtrf.
 *

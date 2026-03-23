@@ -28,7 +28,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 // MAIN //
 
 /**
-* Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing
+* Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing.
 * the multiplication safely with respect to overflow and underflow via
 * iterative scaling.
 *
@@ -60,10 +60,10 @@ function dlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 	var bignum;
 	var cfromc;
 	var cfrom1;
+	var itype;
 	var ctoc;
 	var cto1;
 	var done;
-	var itype;
 	var iMax;
 	var iMin;
 	var mul;
@@ -72,7 +72,6 @@ function dlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 	var k3;
 	var k4;
 	var ai;
-
 	var i;
 	var j;
 

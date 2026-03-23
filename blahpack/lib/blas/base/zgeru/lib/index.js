@@ -26,21 +26,21 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zgeru = require( '@stdlib/blas/base/zgeru' );
-* 
+*
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
 * var y = new Complex128Array( [ 1.0, 2.0 ] );
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgeru( 'row-major', 2, 2, 1.0, x, 1, y, 1, A, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zgeru = require( '@stdlib/blas/base/zgeru' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgeru.ndarray( 2, 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 */
 

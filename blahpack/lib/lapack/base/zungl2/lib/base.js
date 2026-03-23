@@ -32,14 +32,14 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 // MAIN //
 
 /**
-* Generate an M-by-N complex unitary matrix Q from the elementary
+* Generate an M-by-N complex unitary matrix Q from the elementary.
 * reflectors returned by ZGELQF (LQ factorization, unblocked algorithm).
 *
 * Q is defined as the product of K elementary reflectors:
 *
 *   Q = H(K)^H ... H(2)^H H(1)^H
 *
-* where each H(i) has the form H(i) = I - tau(i) * v * v^H, and v is
+* where each H(i) has the form H(i) = I - tau(i) _ v _ v^H, and v is
 * stored as row i of the input matrix A.
 *
 * ## Notes
@@ -95,6 +95,7 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	st = strideTAU * 2;
 
 	// Initialize rows K+1..M to rows of the unit matrix
+
 	// Fortran: IF (K < M) THEN DO 20 J=1,N; DO 10 L=K+1,M; ...
 	if ( K < M ) {
 		for ( j = 0; j < N; j++ ) {
@@ -130,8 +131,10 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				Av[ ia + 1 ] = 0.0;
 
 				// ZLARF('Right', M-I, N-I+1, A(I,I), LDA, DCONJG(TAU(I)),
+
 				//        A(I+1,I), LDA, WORK)
-				// stride along row = strideA2 (column stride)
+
+				// Stride along row = strideA2 (column stride)
 				conjT = new Complex128( tauv[ it ], -tauv[ it + 1 ] );
 				zlarf(
 					'right', M - i - 1, N - i,
@@ -159,6 +162,7 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		Av[ ia + 1 ] = tauv[ it + 1 ];  // negated because conj
 
 		// Zero out columns 0..i-1 of row i
+
 		// Fortran: DO 30 L = 1, I-1; A(I,L) = ZERO
 		for ( l = 0; l < i; l++ ) {
 			ia = oA + i * sa1 + l * sa2;

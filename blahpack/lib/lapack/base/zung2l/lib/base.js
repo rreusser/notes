@@ -30,7 +30,7 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 // MAIN //
 
 /**
-* Generate an M-by-N complex unitary matrix Q with orthonormal columns,
+* Generate an M-by-N complex unitary matrix Q with orthonormal columns,.
 * which is defined as the last N columns of a product of K elementary
 * reflectors of order M
 *
@@ -91,6 +91,7 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	st = strideTAU * 2;
 
 	// Initialize columns 0..N-K-1 to columns of the unit matrix.
+
 	// Fortran: DO 20 J = 1, N-K; set A(M-N+J, J) = ONE, rest = ZERO
 	for ( j = 0; j < N - K; j++ ) {
 		for ( l = 0; l < M; l++ ) {
@@ -117,8 +118,11 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		Av[ ia + 1 ] = 0.0;
 
 		// Apply H(i) to A(0:M-N+ii, 0:ii-1) from the left
+
 		// Fortran: ZLARF('Left', M-N+II, II-1, A(1,II), 1, TAU(I), A, LDA, WORK)
+
 		// M-N+II (1-based count) = M-N+ii+1 (0-based rows: 0..M-N+ii)
+
 		// II-1 (1-based count) = ii (0-based cols: 0..ii-1)
 		if ( ii > 0 ) {
 			zlarf(
@@ -146,6 +150,7 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		Av[ ia + 1 ] = -tauv[ it + 1 ];
 
 		// Zero out rows M-N+ii+1 to M-1 of column ii
+
 		// Fortran: DO 30 L = M-N+II+1, M
 		for ( l = M - N + ii + 1; l < M; l++ ) {
 			ia = oA + l * sa1 + ii * sa2;

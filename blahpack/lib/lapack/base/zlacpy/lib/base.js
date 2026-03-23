@@ -44,12 +44,12 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * @returns {Complex128Array} `B`
 */
 function zlacpy( uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) {
-	var Av;
-	var Bv;
 	var sa1;
 	var sa2;
 	var sb1;
 	var sb2;
+	var Av;
+	var Bv;
 	var oA;
 	var oB;
 	var ia;

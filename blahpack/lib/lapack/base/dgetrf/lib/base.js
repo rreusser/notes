@@ -36,10 +36,10 @@ var NB = 64; // Block size (hardcoded; Fortran uses ILAENV)
 // MAIN //
 
 /**
-* Computes an LU factorization of a general M-by-N matrix A using partial
+* Computes an LU factorization of a general M-by-N matrix A using partial.
 * pivoting with row interchanges (blocked algorithm).
 *
-* The factorization has the form A = P * L * U where P is a permutation
+* The factorization has the form A = P _ L _ U where P is a permutation
 * matrix, L is lower triangular with unit diagonal elements, and U is upper
 * triangular.
 *
@@ -62,8 +62,8 @@ var NB = 64; // Block size (hardcoded; Fortran uses ILAENV)
 */
 function dgetrf( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var iinfo;
-	var info;
 	var minMN;
+	var info;
 	var sa1;
 	var sa2;
 	var jb;
@@ -101,7 +101,7 @@ function dgetrf( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetI
 		}
 
 		// Adjust IPIV: the panel factored rows j..M-1, so pivot indices
-		// are relative to row j. Add j to make them global.
+		// Are relative to row j. Add j to make them global.
 		for ( i = j; i < Math.min( M, j + jb ); i++ ) {
 			IPIV[ offsetIPIV + i * strideIPIV ] += j;
 		}

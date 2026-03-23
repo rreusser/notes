@@ -27,20 +27,20 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zgbtf2 = require( '@stdlib/lapack/base/zgbtf2' );
-* 
+*
 * var AB = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
-* 
+*
 * zgbtf2( 'row-major', 2, 2, 2, 2, AB, 2, IPIV, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zgbtf2 = require( '@stdlib/lapack/base/zgbtf2' );
-* 
+*
 * var AB = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
-* 
+*
 * zgbtf2.ndarray( 2, 2, 2, 2, AB, 1, 2, 0, IPIV, 1, 0 );
 */
 

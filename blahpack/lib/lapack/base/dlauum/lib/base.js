@@ -36,8 +36,8 @@ var NB = 32; // Block size for blocked algorithm
 /**
 * Computes the product of a triangular matrix with its transpose.
 *
-* If UPLO = 'U', computes U * U^T (upper triangular input, result is upper triangle of symmetric product).
-* If UPLO = 'L', computes L^T * L (lower triangular input, result is upper triangle stored in lower).
+* If UPLO = 'U', computes U _ U^T (upper triangular input, result is upper triangle of symmetric product).
+_ If UPLO = 'L', computes L^T _ L (lower triangular input, result is upper triangle stored in lower).
 *
 * On exit, the upper (or lower) triangle of A is overwritten with the
 * upper (or lower) triangle of the product.
@@ -78,12 +78,14 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 			ib = Math.min( NB, N - i );
 
 			// Update the leading i rows of the current block column:
+
 			// A(0:i-1, i:i+ib-1) := A(0:i-1, i:i+ib-1) * U(i:i+ib-1, i:i+ib-1)^T
 			dtrmm( 'right', 'upper', 'transpose', 'non-unit', i, ib, 1.0,
 				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
 				A, sa1, sa2, offsetA + i * sa2 );
 
 			// Compute the product of the diagonal block:
+
 			// A(i:i+ib-1, i:i+ib-1) := U(i:i+ib-1, i:i+ib-1) * U(i:i+ib-1, i:i+ib-1)^T
 			dlauu2( 'upper', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
 
@@ -97,6 +99,7 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 					A, sa1, sa2, offsetA + i * sa2 );
 
 				// Rank-ib update of diagonal block:
+
 				// A(i:i+ib-1, i:i+ib-1) += A(i:i+ib-1, i+ib:N-1) * A(i:i+ib-1, i+ib:N-1)^T
 				dsyrk( 'upper', 'no-transpose', ib, N - i - ib, 1.0,
 					A, sa1, sa2, offsetA + i * sa1 + ( i + ib ) * sa2,
@@ -110,12 +113,14 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 			ib = Math.min( NB, N - i );
 
 			// Update the leading i columns of the current block row:
+
 			// A(i:i+ib-1, 0:i-1) := L(i:i+ib-1, i:i+ib-1)^T * A(i:i+ib-1, 0:i-1)
 			dtrmm( 'left', 'lower', 'transpose', 'non-unit', ib, i, 1.0,
 				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
 				A, sa1, sa2, offsetA + i * sa1 );
 
 			// Compute the product of the diagonal block:
+
 			// A(i:i+ib-1, i:i+ib-1) := L(i:i+ib-1, i:i+ib-1)^T * L(i:i+ib-1, i:i+ib-1)
 			dlauu2( 'lower', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
 
@@ -129,6 +134,7 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 					A, sa1, sa2, offsetA + i * sa1 );
 
 				// Rank-ib update of diagonal block:
+
 				// A(i:i+ib-1, i:i+ib-1) += A(i+ib:N-1, i:i+ib-1)^T * A(i+ib:N-1, i:i+ib-1)
 				dsyrk( 'lower', 'transpose', ib, N - i - ib, 1.0,
 					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + i * sa2,

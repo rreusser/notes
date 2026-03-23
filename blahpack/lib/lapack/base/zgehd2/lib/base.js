@@ -18,6 +18,7 @@
 
 /* eslint-disable max-len, max-params */
 'use strict';
+
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarf = require( '../../zlarf/lib/base.js' );
@@ -27,7 +28,15 @@ var SCRATCH_TAUv = reinterpret( SCRATCH_TAU, 0 );
 var SCRATCH_ALPHA = new Complex128Array( 1 );
 var SCRATCH_ALPHAv = reinterpret( SCRATCH_ALPHA, 0 );
 function zgehd2( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
-	var xStart, oAlpha, tauv, oTau, av, sa1, sa2, oA, i;
+	var xStart;
+	var oAlpha;
+	var tauv;
+	var oTau;
+	var sa1;
+	var sa2;
+	var av;
+	var oA;
+	var i;
 	av = reinterpret( A, 0 );
 	sa1 = strideA1 * 2; sa2 = strideA2 * 2; oA = offsetA * 2;
 	tauv = reinterpret( TAU, 0 );

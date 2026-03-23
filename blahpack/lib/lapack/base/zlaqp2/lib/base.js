@@ -36,8 +36,8 @@ var cmplx = require( '../../../../cmplx.js' );
 // MAIN //
 
 /**
-* Computes a QR factorization with column pivoting of the M-by-N matrix A
-* using an unblocked algorithm. The factored form is A*P = Q*R.
+* Computes a QR factorization with column pivoting of the M-by-N matrix A.
+* using an unblocked algorithm. The factored form is A_P = Q_R.
 *
 * A, TAU, WORK are Complex128Arrays. Strides and offsets are in complex elements.
 * VN1, VN2 are real (Float64Array).
@@ -123,7 +123,7 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 
 		// Generate elementary reflector H(i) to annul A(offpi+1:M-1, i)
 		if ( offpi < M - 1 ) {
-			// zlarfg expects Complex128Array with complex-element offsets
+			// Zlarfg expects Complex128Array with complex-element offsets
 			zlarfg(
 				M - offpi,
 				A, offsetA + offpi * sa1 + i * sa2,

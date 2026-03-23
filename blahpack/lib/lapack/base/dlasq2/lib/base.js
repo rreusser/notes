@@ -41,7 +41,7 @@ var HUNDRD = 100.0;
 // MAIN //
 
 /**
-* Computes all the eigenvalues of the symmetric positive definite tridiagonal
+* Computes all the eigenvalues of the symmetric positive definite tridiagonal.
 * matrix associated with the qd array Z to high relative accuracy.
 *
 * @private
@@ -251,7 +251,7 @@ function dlasq2( N, z, stride, offset ) {
 			}
 		}
 
-		// dqd maps Z to ZZ plus Li's test
+		// Dqd maps Z to ZZ plus Li's test
 		emin = Z( 4 * i0 + pp + 1 );
 		d = Z( 4 * i0 + pp - 3 );
 		for ( i4 = 4 * i0 + pp; i4 <= 4 * ( n0 - 1 ) + pp; i4 += 4 ) {
@@ -265,7 +265,7 @@ function dlasq2( N, z, stride, offset ) {
 				safmin * Z( i4 - 2 * pp - 2 ) < Z( i4 + 1 ) ) {
 				temp = Z( i4 + 1 ) / Z( i4 - 2 * pp - 2 );
 				setZ( i4 - 2 * pp, Z( i4 - 1 ) * temp );
-				d = d * temp;
+				d *= temp;
 			} else {
 				setZ( i4 - 2 * pp, Z( i4 + 1 ) * ( Z( i4 - 1 ) / Z( i4 - 2 * pp - 2 ) ) );
 				d = Z( i4 + 1 ) * ( d / Z( i4 - 2 * pp - 2 ) );
@@ -325,7 +325,7 @@ function dlasq2( N, z, stride, offset ) {
 		}
 
 		// E(N0) holds the value of SIGMA when submatrix in I0:N0
-		// splits from the rest of the array, but is negated.
+		// Splits from the rest of the array, but is negated.
 		desig = ZERO;
 		if ( n0 === N ) {
 			sigma = ZERO;
@@ -469,7 +469,7 @@ function dlasq2( N, z, stride, offset ) {
 		// If inner loop exhausted without breaking, we have INFO = 2
 		if ( iwhilb > nbig ) {
 			// Maximum number of iterations exceeded, restore the shift SIGMA
-			// and place the new d's and e's in a qd array.
+			// And place the new d's and e's in a qd array.
 			info = 2;
 
 			i1 = i0;
@@ -494,6 +494,7 @@ function dlasq2( N, z, stride, offset ) {
 					}
 					sigma = -Z( 4 * n1 - 1 );
 					i0 = i1;
+
 					// GO TO 145 — continue the while loop
 				} else {
 					break;

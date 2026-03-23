@@ -35,7 +35,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian
+* Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian.
 * matrix A.
 *
 * The eigenvalues are returned in ascending order. If eigenvectors are
@@ -70,22 +70,22 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * @returns {integer} info - 0 if successful, >0 if zsteqr/dsterf did not converge
 */
 function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) {
-	var wantz;
-	var anrm;
 	var safmin;
-	var eps;
 	var smlnum;
 	var bignum;
-	var rmin;
-	var rmax;
-	var sigma;
 	var iscale;
-	var info;
-	var imax;
-	var inde;
 	var indtau;
 	var indwrk;
 	var llwork;
+	var wantz;
+	var sigma;
+	var anrm;
+	var rmin;
+	var rmax;
+	var info;
+	var imax;
+	var inde;
+	var eps;
 	var Av;
 	var oA;
 
@@ -119,7 +119,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	rmax = Math.sqrt( bignum );
 
 	// Scale matrix to allowable range, if necessary
-	// zlanhe returns a real value; RWORK is used as workspace for the norm computation
+	// Zlanhe returns a real value; RWORK is used as workspace for the norm computation
 	anrm = zlanhe( 'max', uplo, N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK );
 	iscale = 0;
 	sigma = 1.0;
@@ -144,8 +144,10 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	llwork = lwork - N;
 
 	// Reduce to tridiagonal form: Q^H * A * Q = T
+
 	// zhetrd(uplo, N, A, sa1, sa2, oA, d, sd, od, e, se, oe, TAU, sTAU, oTAU, WORK, sWORK, oWORK, lwork)
-	// d (diagonal, real) goes into w, e (off-diagonal, real) into RWORK[inde], TAU (complex) into WORK[indtau]
+
+	// D (diagonal, real) goes into w, e (off-diagonal, real) into RWORK[inde], TAU (complex) into WORK[indtau]
 	zhetrd( uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, RWORK, strideRWORK, inde, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
 	info = 0;
@@ -157,7 +159,8 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 		zungtr( uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
-		// zsteqr needs real workspace of size 2*(N-1), use RWORK starting after E
+
+		// Zsteqr needs real workspace of size 2*(N-1), use RWORK starting after E
 		// Fortran: INDWRK=INDE+N => real scratch at RWORK[N..]
 		info = zsteqr( 'update', N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + N * strideRWORK );
 	}

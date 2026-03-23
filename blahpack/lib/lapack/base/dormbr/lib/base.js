@@ -29,22 +29,22 @@ var dormlq = require( '../../dormlq/lib/base.js' );
 // MAIN //
 
 /**
-* If VECT = 'Q', overwrite the matrix C with one of:
+* If VECT = 'Q', overwrite the matrix C with one of:.
 *
 *                 SIDE = 'L'     SIDE = 'R'
-*   TRANS = 'N':  Q * C          C * Q
-*   TRANS = 'T':  Q^T * C        C * Q^T
+*   TRANS = 'N':  Q _ C          C _ Q
+*   TRANS = 'T':  Q^T _ C        C _ Q^T
 *
 * If VECT = 'P', overwrite the matrix C with one of:
 *
 *                 SIDE = 'L'     SIDE = 'R'
-*   TRANS = 'N':  P * C          C * P
-*   TRANS = 'T':  P^T * C        C * P^T
+*   TRANS = 'N':  P _ C          C _ P
+*   TRANS = 'T':  P^T _ C        C _ P^T
 *
 * Here Q and P^T are the orthogonal matrices determined by DGEBRD when
-* reducing a real matrix A to bidiagonal form: A = Q * B * P^T.
-* Q is defined as a product of elementary reflectors H(i) = I - tauq(i)*v(i)*v(i)^T.
-* P is defined as a product of elementary reflectors G(i) = I - taup(i)*u(i)*u(i)^T.
+* reducing a real matrix A to bidiagonal form: A = Q _ B _ P^T.
+* Q is defined as a product of elementary reflectors H(i) = I - tauq(i)_v(i)_v(i)^T.
+* P is defined as a product of elementary reflectors G(i) = I - taup(i)_u(i)_u(i)^T.
 *
 * @private
 * @param {string} vect - 'Q' to apply Q or Q^T, 'P' to apply P or P^T

@@ -79,6 +79,7 @@ function ddot( N, x, strideX, offsetX, y, strideY, offsetY ) {
 	return dtemp;
 }
 
+
 // EXPORTS //
 
 module.exports = ddot;

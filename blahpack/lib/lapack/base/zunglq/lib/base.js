@@ -34,7 +34,7 @@ var NB = 32;  // Block size (LAPACK default for ZUNGLQ)
 // MAIN //
 
 /**
-* Generate an M-by-N complex unitary matrix Q from the elementary
+* Generate an M-by-N complex unitary matrix Q from the elementary.
 * reflectors returned by ZGELQF (LQ factorization, blocked algorithm).
 *
 * Q is defined as the product of K elementary reflectors:
@@ -110,6 +110,7 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			kk = Math.min( K, ki + nb );
 
 			// Zero out rows KK..M-1 of columns 0..KK-1
+
 			// Fortran: DO 20 J = 1, KK; DO 10 I = KK+1, M; A(I,J)=ZERO
 			for ( j = 0; j < kk; j++ ) {
 				for ( i = kk; i < M; i++ ) {
@@ -151,8 +152,11 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				);
 
 				// Apply H to A(i+ib:M-1, i:N-1) from the right
+
 				// ZLARFB('Right', 'Conjugate transpose', 'Forward', 'Rowwise',
+
 				//         M-I-IB+1, N-I+1, IB, A(I,I), LDA, WORK, LDWORK,
+
 				//         A(I+IB,I), LDA, WORK(IB+1), LDWORK)
 				zlarfb(
 					'right', 'conjugate-transpose', 'forward', 'rowwise',
@@ -174,6 +178,7 @@ function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			);
 
 			// Zero out columns 0..i-1 of rows i..i+ib-1
+
 			// Fortran: DO 40 J = 1, I-1; DO 30 L = I, I+IB-1; A(L,J)=ZERO
 			for ( j = 0; j < i; j++ ) {
 				for ( l = i; l < i + ib; l++ ) {

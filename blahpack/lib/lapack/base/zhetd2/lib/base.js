@@ -42,12 +42,12 @@ var CNONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T
-* by a unitary similarity transformation: Q**H * A * Q = T.
+* Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T.
+* by a unitary similarity transformation: Q__H _ A _ Q = T.
 *
 * If UPLO = 'U', the matrix Q is represented as a product of elementary
-* reflectors Q = H(n-1) * ... * H(2) * H(1), and if UPLO = 'L', the matrix
-* Q is represented as Q = H(1) * H(2) * ... * H(n-1).
+* reflectors Q = H(n-1) _ ... _ H(2) _ H(1), and if UPLO = 'L', the matrix
+_ Q is represented as Q = H(1) _ H(2) _ ... _ H(n-1).
 *
 * @private
 * @param {string} uplo - 'U' or 'L'
@@ -74,12 +74,12 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	var tauiI;
 	var dotR;
 	var dotI;
+	var sa1;
+	var sa2;
 	var Av;
 	var Tv;
 	var oA;
 	var oT;
-	var sa1;
-	var sa2;
 	var ai;
 	var i;
 
@@ -102,14 +102,15 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		Av[ ai + 1 ] = 0.0;
 
 		// Fortran: DO I = N-1, 1, -1 (1-based)
+
 		// JS: i = N-2 down to 0 (0-based, Fortran I = i+1)
 		for ( i = N - 2; i >= 0; i-- ) {
 			// Generate elementary reflector H(i+1) to annihilate A(0:i-1, i+1)
 			// Fortran: ALPHA = A(I, I+1)
 			// Fortran: CALL ZLARFG(I, ALPHA, A(1,I+1), 1, TAUI)
 			// JS: zlarfg(i+1, alpha_arr, offsetAlpha, x, strideX, offsetX, tau, offsetTau)
-			// alpha is at A(i, i+1) = oA + i*sa1 + (i+1)*sa2
-			// x is A(0, i+1) = oA + (i+1)*sa2, stride = strideA1
+			// Alpha is at A(i, i+1) = oA + i*sa1 + (i+1)*sa2
+			// X is A(0, i+1) = oA + (i+1)*sa2, stride = strideA1
 			zlarfg(
 				i + 1,
 				A, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
@@ -130,7 +131,9 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				Av[ ai + 1 ] = 0.0;
 
 				// Compute w := tau * A * v, store in TAU
+
 				// Fortran: ZHEMV(UPLO, I, TAUI, A, LDA, A(1,I+1), 1, ZERO, TAU, 1)
+
 				// JS: zhemv(uplo, i+1, taui, A, ..., A_col_i+1, ..., 0, TAU, ...)
 				zhemv(
 					uplo, i + 1, new Complex128( tauiR, tauiI ),
@@ -141,6 +144,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				);
 
 				// Compute alpha := -0.5 * tau * dot(w, v)
+
 				// Fortran: ALPHA = -HALF*TAUI*ZDOTC(I, TAU, 1, A(1,I+1), 1)
 				var dot = zdotc(
 					i + 1,
@@ -149,12 +153,15 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				);
 				dotR = real( dot );
 				dotI = imag( dot );
+
 				// -0.5 * taui * dot
+
 				// (tR + tI*i) * (dR + dI*i) = (tR*dR - tI*dI) + (tR*dI + tI*dR)*i
 				alphaR = -0.5 * ( tauiR * dotR - tauiI * dotI );
 				alphaI = -0.5 * ( tauiR * dotI + tauiI * dotR );
 
-				// w := w + alpha * v
+				// W := w + alpha * v
+
 				// Fortran: ZAXPY(I, ALPHA, A(1,I+1), 1, TAU, 1)
 				zaxpy(
 					i + 1, new Complex128( alphaR, alphaI ),
@@ -163,6 +170,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				);
 
 				// Apply rank-2 update: A := A - v*w^H - w*v^H
+
 				// Fortran: ZHER2(UPLO, I, -ONE, A(1,I+1), 1, TAU, 1, A, LDA)
 				zher2(
 					uplo, i + 1, CNONE,
@@ -196,6 +204,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		Av[ oA + 1 ] = 0.0;
 
 		// Fortran: DO I = 1, N-1 (1-based)
+
 		// JS: i = 0 to N-2 (0-based, Fortran I = i+1)
 		for ( i = 0; i < N - 1; i++ ) {
 			// Generate elementary reflector H(i+1)
@@ -222,6 +231,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				Av[ ai + 1 ] = 0.0;
 
 				// Compute w := tau * A * v
+
 				// Fortran: ZHEMV(UPLO, N-I, TAUI, A(I+1,I+1), LDA, A(I+1,I), 1, ZERO, TAU(I), 1)
 				zhemv(
 					uplo, N - i - 1, new Complex128( tauiR, tauiI ),
@@ -231,7 +241,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 					TAU, strideTAU, offsetTAU + i * strideTAU
 				);
 
-				// alpha := -0.5 * tau * dot(w, v)
+				// Alpha := -0.5 * tau * dot(w, v)
 				var dot2 = zdotc(
 					N - i - 1,
 					TAU, strideTAU, offsetTAU + i * strideTAU,
@@ -242,7 +252,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				alphaR = -0.5 * ( tauiR * dotR - tauiI * dotI );
 				alphaI = -0.5 * ( tauiR * dotI + tauiI * dotR );
 
-				// w := w + alpha * v
+				// W := w + alpha * v
 				zaxpy(
 					N - i - 1, new Complex128( alphaR, alphaI ),
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,

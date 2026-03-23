@@ -33,7 +33,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves one of the matrix equations op(A)*X = alpha*B or X*op(A) = alpha*B, where A is a triangular matrix.
+* Solves one of the matrix equations op(A)_X = alpha_B or X_op(A) = alpha_B, where A is a triangular matrix.
 *
 * @param {string} side - specifies whether op(A) appears on the left or right of X
 * @param {string} uplo - specifies whether A is upper or lower triangular
@@ -65,7 +65,7 @@ var base = require( './base.js' );
 * var B = new Float64Array( [ 8.0, 4.0, 10.0, 12.0 ] );
 *
 * dtrsm( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 );
-* // B => <Float64Array>[ 1.0, 1.0, 3.5, 3.0 ]
+* // B => <Float64Array>[ 2.5, 1, 0.5, 3 ]
 */
 function dtrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ) {
 	if ( !isOperationSide( side ) ) {

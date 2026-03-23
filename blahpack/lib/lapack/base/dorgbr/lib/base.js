@@ -29,8 +29,8 @@ var dorglq = require( '../../dorglq/lib/base.js' );
 // MAIN //
 
 /**
-* Generates one of the real orthogonal matrices Q or P^T determined by DGEBRD
-* when reducing a real matrix A to bidiagonal form: A = Q * B * P^T.
+* Generates one of the real orthogonal matrices Q or P^T determined by DGEBRD.
+* when reducing a real matrix A to bidiagonal form: A = Q _ B _ P^T.
 *
 * Q and P^T are defined as products of elementary reflectors H(i) or G(i)
 * respectively.
@@ -91,13 +91,14 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 			// Need to shift columns and then apply DORGQR.
 
 			// Shift the vectors which define the elementary reflectors one
-			// column to the right, and set the first row and column of Q
-			// to those of the unit matrix.
+			// Column to the right, and set the first row and column of Q
+			// To those of the unit matrix.
 			// Fortran: DO 20 J = M, 2, -1 (1-based)
 			// 0-based: j from M-1 downto 1
 			for ( j = M - 1; j >= 1; j-- ) {
 				// A(0, j) = 0
 				A[ offsetA + j * strideA2 ] = 0.0;
+
 				// Copy column j-1 to column j for rows j..M-1 (0-based)
 				// Fortran: DO 10 I = J+1, M => 0-based: i from j to M-1
 				for ( i = j; i < M; i++ ) {
@@ -134,6 +135,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 			// Set first row and column appropriately
 			// A(0,0) = 1
 			A[ offsetA ] = 1.0;
+
 			// A(i, 0) = 0 for i >= 1
 			for ( i = 1; i < N; i++ ) {
 				A[ offsetA + i * strideA1 ] = 0.0;

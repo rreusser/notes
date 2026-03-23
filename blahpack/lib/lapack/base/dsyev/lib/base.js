@@ -40,7 +40,7 @@ var NB = 32; // block size (replaces ILAENV query)
 // MAIN //
 
 /**
-* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric
+* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 * matrix A.
 *
 * The eigenvalues are returned in ascending order. If eigenvectors are
@@ -72,23 +72,23 @@ var NB = 32; // block size (replaces ILAENV query)
 * @returns {integer} info - 0 if successful, >0 if dsteqr/dsterf did not converge
 */
 function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork ) {
-	var wantz;
-	var anrm;
 	var safmin;
-	var eps;
 	var smlnum;
 	var bignum;
-	var rmin;
-	var rmax;
-	var sigma;
 	var iscale;
-	var info;
-	var iinfo;
-	var imax;
-	var inde;
 	var indtau;
 	var indwrk;
 	var llwork;
+	var wantz;
+	var sigma;
+	var iinfo;
+	var anrm;
+	var rmin;
+	var rmax;
+	var info;
+	var imax;
+	var inde;
+	var eps;
 
 	wantz = ( jobz === 'compute' );
 
@@ -137,8 +137,10 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	llwork = lwork - 2 * N;
 
 	// Reduce to tridiagonal form: Q^T * A * Q = T
+
 	// dsytrd(uplo, N, A, sa1, sa2, oA, d, sd, od, e, se, oe, TAU, sTAU, oTAU, WORK, sWORK, oWORK, lwork)
-	// d (diagonal) goes into w, e (off-diagonal) into WORK[inde], TAU into WORK[indtau]
+
+	// D (diagonal) goes into w, e (off-diagonal) into WORK[inde], TAU into WORK[indtau]
 	dsytrd( uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, inde, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
 	info = 0;
@@ -150,7 +152,8 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 		dorgtr( uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
-		// dsteqr uses WORK[indtau] as its scratch workspace (needs 2*(N-1) space)
+
+		// Dsteqr uses WORK[indtau] as its scratch workspace (needs 2*(N-1) space)
 		info = dsteqr( 'update', N, w, strideW, offsetW, WORK, strideWORK, inde, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau );
 	}
 

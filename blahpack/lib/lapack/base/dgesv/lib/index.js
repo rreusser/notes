@@ -27,22 +27,22 @@
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dgesv = require( '@stdlib/lapack/base/dgesv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dgesv( 'row-major', 2, 1, A, 2, IPIV, 1, B, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dgesv = require( '@stdlib/lapack/base/dgesv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * dgesv.ndarray( 2, 1, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 */
 

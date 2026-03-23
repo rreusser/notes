@@ -33,7 +33,7 @@ var BLOCK_SIZE = 32;
 // MAIN //
 
 /**
-* Performs a series of row interchanges on a complex double-precision matrix `A`
+* Performs a series of row interchanges on a complex double-precision matrix `A`.
 * using pivot indices stored in `IPIV`.
 *
 * When incx > 0, rows k1 through k2 are interchanged in forward order, reading
@@ -57,14 +57,14 @@ var BLOCK_SIZE = 32;
 * @returns {Complex128Array} permuted matrix `A`
 */
 function zlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, offsetIPIV, incx ) {
-	var nrows;
-	var ix0;
-	var ixinc;
 	var istart;
+	var nrows;
+	var ixinc;
 	var iinc;
-	var n32;
 	var tmpR;
 	var tmpI;
+	var ix0;
+	var n32;
 	var row;
 	var ia1;
 	var ia2;
@@ -89,6 +89,7 @@ function zlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 	} else if ( incx < 0 ) {
 		// Reverse: k1 > k2, iterate from k1 down to k2
 		nrows = k1 - k2 + 1;
+
 		// IPIV is read from the last element backwards
 		ix0 = offsetIPIV + ( nrows - 1 ) * strideIPIV;
 		ixinc = -strideIPIV;
@@ -107,6 +108,7 @@ function zlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 	sa2 = strideA2 * 2;
 
 	// Use loop tiling for cache-efficient column-major access.
+
 	// Outer loop: blocks of columns. Inner loop: row swaps.
 	n32 = ( ( N / BLOCK_SIZE ) | 0 ) * BLOCK_SIZE;
 	if ( n32 !== 0 ) {
@@ -120,6 +122,7 @@ function zlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 					ia2 = oA + ( row * sa1 );
 					for ( n = j; n < j + BLOCK_SIZE; n++ ) {
 						o = n * sa2;
+
 						// Swap real parts
 						tmpR = Av[ ia1 + o ];
 						tmpI = Av[ ia1 + o + 1 ];
@@ -144,6 +147,7 @@ function zlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 				ia2 = oA + ( row * sa1 );
 				for ( n = n32; n < N; n++ ) {
 					o = n * sa2;
+
 					// Swap real and imaginary parts
 					tmpR = Av[ ia1 + o ];
 					tmpI = Av[ ia1 + o + 1 ];

@@ -31,8 +31,8 @@ var zrot = require( '../../zrot/lib/base.js' );
 // MAIN //
 
 /**
-* Reduce a pair of complex matrices (A, B) to generalized upper Hessenberg
-* form using unitary transformations: Q^H * A * Z = H, Q^H * B * Z = T,
+* Reduce a pair of complex matrices (A, B) to generalized upper Hessenberg.
+* form using unitary transformations: Q^H _ A _ Z = H, Q^H _ B _ Z = T,
 * where H is upper Hessenberg, T is upper triangular, and Q and Z are
 * unitary.
 *
@@ -72,15 +72,15 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	var ilq;
 	var ilz;
 	var out;
-	var Av;
-	var Bv;
 	var sa1;
 	var sa2;
 	var sb1;
 	var sb2;
+	var idx;
+	var Av;
+	var Bv;
 	var oA;
 	var oB;
-	var idx;
 	var sr;
 	var si;
 	var c;
@@ -173,7 +173,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	s = new Float64Array( 2 );   // complex s for zrot
 
 	// Main reduction loop
+
 	// Fortran: DO JCOL = ILO, IHI-2 (1-based)
+
 	// JS: jcol from ilo-1 to ihi-3 (0-based)
 	for ( jcol = ilo - 1; jcol <= ihi - 3; jcol++ ) {
 		// Fortran: DO JROW = IHI, JCOL+2, -1 (1-based)
@@ -181,7 +183,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 		for ( jrow = ihi - 1; jrow >= jcol + 2; jrow-- ) {
 			// -------------------------------------------------------
 			// Step 1: Eliminate A(jrow, jcol) using a rotation applied
-			// from the left.
+			// From the left.
 			// Fortran: CTEMP = A(JROW-1, JCOL)
 			// JS 0-based: A(jrow-1, jcol)
 			// -------------------------------------------------------
@@ -209,7 +211,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			Av[ idx + 1 ] = 0.0;
 
 			// Apply rotation to remaining columns of A:
+
 			// Fortran: CALL ZROT(N-JCOL, A(JROW-1,JCOL+1), LDA, A(JROW,JCOL+1), LDA, C, S)
+
 			// Iterates over columns (stride=strideA2 complex elements), N-JCOL elements (1-based)
 			s[ 0 ] = sr;
 			s[ 1 ] = si;
@@ -221,7 +225,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			);
 
 			// Apply rotation to B:
+
 			// Fortran: CALL ZROT(N+2-JROW, B(JROW-1,JROW-1), LDB, B(JROW,JROW-1), LDB, C, S)
+
 			// Iterates over columns (stride=strideB2 complex elements)
 			zrot(
 				N + 1 - jrow,
@@ -231,7 +237,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			);
 
 			// Apply conjugate rotation to Q if needed:
+
 			// Fortran: CALL ZROT(N, Q(1,JROW-1), 1, Q(1,JROW), 1, C, DCONJG(S))
+
 			// Iterates over rows (stride=strideQ1 complex elements)
 			if ( ilq ) {
 				s[ 0 ] = sr;
@@ -246,7 +254,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 
 			// -------------------------------------------------------
 			// Step 2: Eliminate B(jrow, jrow-1) using a rotation
-			// applied from the right.
+			// Applied from the right.
 			// Fortran: CTEMP = B(JROW, JROW)
 			// -------------------------------------------------------
 			idx = oB + jrow * sb1 + jrow * sb2;
@@ -273,7 +281,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			Bv[ idx + 1 ] = 0.0;
 
 			// Apply rotation to A from the right:
+
 			// Fortran: CALL ZROT(IHI, A(1,JROW), 1, A(1,JROW-1), 1, C, S)
+
 			// Iterates over rows (stride=strideA1 complex elements)
 			s[ 0 ] = sr;
 			s[ 1 ] = si;
@@ -285,7 +295,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			);
 
 			// Apply rotation to B from the right:
+
 			// Fortran: CALL ZROT(JROW-1, B(1,JROW), 1, B(1,JROW-1), 1, C, S)
+
 			// Iterates over rows (stride=strideB1 complex elements)
 			zrot(
 				jrow,
@@ -295,7 +307,9 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			);
 
 			// Apply rotation to Z if needed:
+
 			// Fortran: CALL ZROT(N, Z(1,JROW), 1, Z(1,JROW-1), 1, C, S)
+
 			// Iterates over rows (stride=strideZ1 complex elements)
 			if ( ilz ) {
 				zrot(

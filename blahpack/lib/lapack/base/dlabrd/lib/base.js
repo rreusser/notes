@@ -29,9 +29,9 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Reduces the first NB rows and columns of a real general M-by-N matrix A
+* Reduces the first NB rows and columns of a real general M-by-N matrix A.
 * to upper or lower bidiagonal form by an orthogonal transformation
-* Q**T * A * P, and returns the matrices X and Y which are needed to apply
+* Q__T _ A _ P, and returns the matrices X and Y which are needed to apply
 * the transformation to the unreduced part of A.
 *
 * If M >= N, A is reduced to upper bidiagonal form; if M < N, to lower
@@ -85,6 +85,7 @@ function dlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				Y, strideY2, offsetY + i * strideY1,
 				1.0, A, strideA1, offsetA + i * strideA1 + i * strideA2
 			);
+
 			// A(i:M-1,i) := A(i:M-1,i) - X(i:M-1,0:i-1) * A(0:i-1,i)
 			dgemv( 'no-transpose', M - i, i, -1.0,
 				X, strideX1, strideX2, offsetX + i * strideX1,
@@ -104,48 +105,56 @@ function dlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0;
 
 				// Compute Y(i+1:N-1, i)
+
 				// Y(i+1:N-1,i) := A(i:M-1,i+1:N-1)^T * A(i:M-1,i)
 				dgemv( 'transpose', M - i, N - i - 1, 1.0,
 					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					0.0, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
+
 				// Y(0:i-1,i) := A(i:M-1,0:i-1)^T * A(i:M-1,i)
 				dgemv( 'transpose', M - i, i, 1.0,
 					A, strideA1, strideA2, offsetA + i * strideA1,
 					A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					0.0, Y, strideY1, offsetY + i * strideY2
 				);
+
 				// Y(i+1:N-1,i) := Y(i+1:N-1,i) - Y(i+1:N-1,0:i-1) * Y(0:i-1,i)
 				dgemv( 'no-transpose', N - i - 1, i, -1.0,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					Y, strideY1, offsetY + i * strideY2,
 					1.0, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
+
 				// Y(0:i-1,i) := X(i:M-1,0:i-1)^T * A(i:M-1,i)
 				dgemv( 'transpose', M - i, i, 1.0,
 					X, strideX1, strideX2, offsetX + i * strideX1,
 					A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					0.0, Y, strideY1, offsetY + i * strideY2
 				);
+
 				// Y(i+1:N-1,i) := Y(i+1:N-1,i) - A(0:i-1,i+1:N-1)^T * Y(0:i-1,i)
 				dgemv( 'transpose', i, N - i - 1, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					Y, strideY1, offsetY + i * strideY2,
 					1.0, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
+
 				// Y(i+1:N-1,i) := TAUQ(i) * Y(i+1:N-1,i)
 				dscal( N - i - 1, TAUQ[ offsetTAUQ + i * strideTAUQ ],
 					Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
 
 				// Update A(i, i+1:N-1)
+
 				// A(i,i+1:N-1) := A(i,i+1:N-1) - Y(i+1:N-1,0:i) * A(i,0:i)^T
 				dgemv( 'no-transpose', N - i - 1, i + 1, -1.0,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					A, strideA2, offsetA + i * strideA1,
 					1.0, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2
 				);
+
 				// A(i,i+1:N-1) := A(i,i+1:N-1) - A(0:i-1,i+1:N-1)^T * X(i,0:i-1)^T
 				dgemv( 'transpose', i, N - i - 1, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
@@ -162,36 +171,42 @@ function dlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				A[ offsetA + i * strideA1 + ( i + 1 ) * strideA2 ] = 1.0;
 
 				// Compute X(i+1:M-1, i)
+
 				// X(i+1:M-1,i) := A(i+1:M-1,i+1:N-1) * A(i,i+1:N-1)^T
 				dgemv( 'no-transpose', M - i - 1, N - i - 1, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					0.0, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
+
 				// X(0:i,i) := Y(i+1:N-1,0:i)^T * A(i,i+1:N-1)^T
 				dgemv( 'transpose', N - i - 1, i + 1, 1.0,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					0.0, X, strideX1, offsetX + i * strideX2
 				);
+
 				// X(i+1:M-1,i) := X(i+1:M-1,i) - A(i+1:M-1,0:i) * X(0:i,i)
 				dgemv( 'no-transpose', M - i - 1, i + 1, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					X, strideX1, offsetX + i * strideX2,
 					1.0, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
+
 				// X(0:i-1,i) := A(0:i-1,i+1:N-1) * A(i,i+1:N-1)^T
 				dgemv( 'no-transpose', i, N - i - 1, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					0.0, X, strideX1, offsetX + i * strideX2
 				);
+
 				// X(i+1:M-1,i) := X(i+1:M-1,i) - X(i+1:M-1,0:i-1) * X(0:i-1,i)
 				dgemv( 'no-transpose', M - i - 1, i, -1.0,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
 					X, strideX1, offsetX + i * strideX2,
 					1.0, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
+
 				// X(i+1:M-1,i) := TAUP(i) * X(i+1:M-1,i)
 				dscal( M - i - 1, TAUP[ offsetTAUP + i * strideTAUP ],
 					X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
@@ -208,6 +223,7 @@ function dlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				A, strideA2, offsetA + i * strideA1,
 				1.0, A, strideA2, offsetA + i * strideA1 + i * strideA2
 			);
+
 			// A(i,i:N-1) := A(i,i:N-1) - A(0:i-1,i:N-1)^T * X(i,0:i-1)^T
 			dgemv( 'transpose', i, N - i, -1.0,
 				A, strideA1, strideA2, offsetA + i * strideA2,
@@ -227,48 +243,56 @@ function dlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				A[ offsetA + i * strideA1 + i * strideA2 ] = 1.0;
 
 				// Compute X(i+1:M-1, i)
+
 				// X(i+1:M-1,i) := A(i+1:M-1,i:N-1) * A(i,i:N-1)^T
 				dgemv( 'no-transpose', M - i - 1, N - i, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					0.0, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
+
 				// X(0:i-1,i) := Y(i:N-1,0:i-1)^T * A(i,i:N-1)^T
 				dgemv( 'transpose', N - i, i, 1.0,
 					Y, strideY1, strideY2, offsetY + i * strideY1,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					0.0, X, strideX1, offsetX + i * strideX2
 				);
+
 				// X(i+1:M-1,i) := X(i+1:M-1,i) - A(i+1:M-1,0:i-1) * X(0:i-1,i)
 				dgemv( 'no-transpose', M - i - 1, i, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					X, strideX1, offsetX + i * strideX2,
 					1.0, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
+
 				// X(0:i-1,i) := A(0:i-1,i:N-1) * A(i,i:N-1)^T
 				dgemv( 'no-transpose', i, N - i, 1.0,
 					A, strideA1, strideA2, offsetA + i * strideA2,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					0.0, X, strideX1, offsetX + i * strideX2
 				);
+
 				// X(i+1:M-1,i) := X(i+1:M-1,i) - X(i+1:M-1,0:i-1) * X(0:i-1,i)
 				dgemv( 'no-transpose', M - i - 1, i, -1.0,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
 					X, strideX1, offsetX + i * strideX2,
 					1.0, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
+
 				// X(i+1:M-1,i) := TAUP(i) * X(i+1:M-1,i)
 				dscal( M - i - 1, TAUP[ offsetTAUP + i * strideTAUP ],
 					X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
 
 				// Update A(i+1:M-1, i)
+
 				// A(i+1:M-1,i) := A(i+1:M-1,i) - A(i+1:M-1,0:i-1) * Y(i,0:i-1)^T
 				dgemv( 'no-transpose', M - i - 1, i, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					Y, strideY2, offsetY + i * strideY1,
 					1.0, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2
 				);
+
 				// A(i+1:M-1,i) := A(i+1:M-1,i) - X(i+1:M-1,0:i) * A(0:i,i)
 				dgemv( 'no-transpose', M - i - 1, i + 1, -1.0,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
@@ -285,36 +309,42 @@ function dlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				A[ offsetA + ( i + 1 ) * strideA1 + i * strideA2 ] = 1.0;
 
 				// Compute Y(i+1:N-1, i)
+
 				// Y(i+1:N-1,i) := A(i+1:M-1,i+1:N-1)^T * A(i+1:M-1,i)
 				dgemv( 'transpose', M - i - 1, N - i - 1, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
+
 				// Y(0:i-1,i) := A(i+1:M-1,0:i-1)^T * A(i+1:M-1,i)
 				dgemv( 'transpose', M - i - 1, i, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, Y, strideY1, offsetY + i * strideY2
 				);
+
 				// Y(i+1:N-1,i) := Y(i+1:N-1,i) - Y(i+1:N-1,0:i-1) * Y(0:i-1,i)
 				dgemv( 'no-transpose', N - i - 1, i, -1.0,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					Y, strideY1, offsetY + i * strideY2,
 					1.0, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
+
 				// Y(0:i,i) := X(i+1:M-1,0:i)^T * A(i+1:M-1,i)
 				dgemv( 'transpose', M - i - 1, i + 1, 1.0,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, Y, strideY1, offsetY + i * strideY2
 				);
+
 				// Y(i+1:N-1,i) := Y(i+1:N-1,i) - A(0:i,i+1:N-1)^T * Y(0:i,i)
 				dgemv( 'transpose', i + 1, N - i - 1, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					Y, strideY1, offsetY + i * strideY2,
 					1.0, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
+
 				// Y(i+1:N-1,i) := TAUQ(i) * Y(i+1:N-1,i)
 				dscal( N - i - 1, TAUQ[ offsetTAUQ + i * strideTAUQ ],
 					Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2

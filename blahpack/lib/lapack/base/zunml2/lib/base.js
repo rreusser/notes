@@ -30,7 +30,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrite the M-by-N matrix C with Q*C, Q^H*C, C*Q, or C*Q^H,
+* Overwrite the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
 * where Q is a complex unitary matrix defined as the product of K
 * elementary reflectors (from an LQ factorization):
 *
@@ -64,9 +64,17 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var notran;
 	var tauIdx;
 	var left;
-	var Av;
+	var aiiR;
+	var aiiI;
+	var tauR;
+	var tauI;
+	var TAUv;
+	var sTAU;
+	var oTAU;
 	var sA1;
 	var sA2;
+	var aii;
+	var Av;
 	var oA;
 	var nq;
 	var mi;
@@ -76,14 +84,6 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var i1;
 	var i2;
 	var i3;
-	var aiiR;
-	var aiiI;
-	var tauR;
-	var tauI;
-	var TAUv;
-	var sTAU;
-	var oTAU;
-	var aii;
 	var i;
 
 	if ( M === 0 || N === 0 || K === 0 ) {
@@ -164,6 +164,7 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		TAUv[ tauIdx + 1 ] = tauI;
 
 		// Apply H(i) or H(i)^H to C(ic:, jc:)
+
 		// The reflector vector is A(i, i:nq-1) stored rowwise, so strideV = strideA2
 		zlarf( side, mi, ni,
 			A, strideA2, offsetA + i * strideA1 + i * strideA2,

@@ -44,10 +44,10 @@ var CZERO = new Complex128( 0.0, 0.0 );
 // MAIN //
 
 /**
-* Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,
+* Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
 * optionally computing the left and/or right singular vectors.
 *
-* The SVD is written: A = U * SIGMA * conjugate-transpose(V)
+* The SVD is written: A = U _ SIGMA _ conjugate-transpose(V)
 *
 * where SIGMA is an M-by-N matrix which is zero except for its min(M,N) diagonal
 * elements, U is an M-by-M unitary matrix, and V is an N-by-N unitary matrix.
@@ -85,77 +85,49 @@ var CZERO = new Complex128( 0.0, 0.0 );
 * @returns {integer} info - 0 if successful, >0 if ZBDSQR did not converge
 */
 function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) {
+	var wntuas;
+	var wntvas;
+	var bignum;
+	var smlnum;
+	var irwork;
+	var ldwrkr;
+	var ldwrku;
 	var wntua;
 	var wntus;
-	var wntuas;
 	var wntuo;
 	var wntun;
 	var wntva;
 	var wntvs;
-	var wntvas;
 	var wntvo;
 	var wntvn;
 	var minmn;
-	var anrm;
-	var bignum;
-	var smlnum;
-	var eps;
-	var iscl;
-	var info;
-	var ierr;
-	var ncu;
-	var ncvt;
-	var nru;
-	var nrvt;
-	var itau;
 	var itauq;
 	var itaup;
 	var iwork;
-	var irwork;
-	var ie;
-	var ir;
-	var iu;
-	var ldwrkr;
-	var ldwrku;
 	var chunk;
+	var anrm;
+	var iscl;
+	var info;
+	var ierr;
+	var ncvt;
+	var nrvt;
+	var itau;
+	var svt1;
+	var svt2;
+	var eps;
+	var ncu;
+	var nru;
 	var blk;
 	var sa1;
 	var sa2;
 	var su1;
 	var su2;
-	var svt1;
-	var svt2;
-	var i;
-	var WK;
-
-	sa1 = strideA1;
-	sa2 = strideA2;
-	su1 = strideU1;
-	su2 = strideU2;
-	svt1 = strideVT1;
-	svt2 = strideVT2;
-
-	info = 0;
-	minmn = Math.min( M, N );
-
-	wntua = ( jobu === 'all-columns' );
-	wntus = ( jobu === 'economy' );
-	wntuas = wntua || wntus;
-	wntuo = ( jobu === 'overwrite' );
-	wntun = ( jobu === 'none' );
-	wntva = ( jobvt === 'all-rows' );
-	wntvs = ( jobvt === 'economy' );
-	wntvas = wntva || wntvs;
-	wntvo = ( jobvt === 'overwrite' );
-	wntvn = ( jobvt === 'none' );
-
-	// Quick return if possible
-	if ( M === 0 || N === 0 ) {
-		return 0;
-	}
-
-	// Use caller-provided WORK if large enough; otherwise allocate internally
 	var wsz = Math.max( 1, 3 * minmn + Math.max( M, N ) + minmn * Math.max( M, N ) );
+	var ie;
+	var ir;
+	var iu;
+	var WK;
+	var i;
 	if ( lwork >= wsz ) {
 		WK = WORK;
 	} else {
@@ -168,6 +140,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	bignum = 1.0 / smlnum;
 
 	// Scale A if max element outside range [smlnum, bignum]
+
 	// zlange('max') does not use the WORK parameter, so pass a minimal dummy
 	anrm = zlange( 'max', M, N, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK );
 	iscl = 0;
@@ -186,7 +159,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			// Path 1 (M much larger than N, JOBU='N')
 			// No left singular vectors to be computed.
 			// First QR-factorize the tall M×N matrix, then bidiagonalize the
-			// small N×N upper-triangular R. This reduces work by ~40% when M >> N.
+			// Small N×N upper-triangular R. This reduces work by ~40% when M >> N.
 
 			itau = 0;             // TAU from QR in WK at itau
 			iwork = itau + N;     // WORK start in WK at iwork
@@ -235,7 +208,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			irwork = ie + N;
 
 			// Perform bidiagonal QR iteration, computing right singular
-			// vectors of A in A if desired (NRU=0: no left vectors)
+
+			// Vectors of A in A if desired (NRU=0: no left vectors)
 			info = zbdsqr(
 				'upper', N, ncvt, 0, 0,
 				s, strideS, offsetS,
@@ -272,7 +246,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			if ( wntuas ) {
 				// Copy lower triangle of A to U, then generate Q
 				zlacpy( 'lower', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
-				ncu = wntus ? N : M;
+				ncu = ( wntus ) ? N : M;
 				zungbr(
 					'q', M, ncu, N,
 					U, su1, su2, offsetU,
@@ -394,7 +368,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		if ( wntvas ) {
 			// Copy upper triangle of A to VT, then generate P^H
 			zlacpy( 'upper', M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
-			nrvt = wntva ? N : M;
+			nrvt = ( wntva ) ? N : M;
 			zungbr(
 				'p', nrvt, N, M,
 				VT, svt1, svt2, offsetVT,

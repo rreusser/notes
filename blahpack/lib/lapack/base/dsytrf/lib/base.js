@@ -34,10 +34,10 @@ var NB = 32; // Block size (hardcoded; Fortran uses ILAENV)
 // MAIN //
 
 /**
-* Computes the factorization of a real symmetric matrix A using the
+* Computes the factorization of a real symmetric matrix A using the.
 * Bunch-Kaufman diagonal pivoting method (blocked algorithm):
 *
-*   A = U * D * U^T  or  A = L * D * L^T
+*   A = U _ D _ U^T  or  A = L _ D _ L^T
 *
 * where U (or L) is a product of permutation and unit upper (lower)
 * triangular matrices, and D is symmetric and block diagonal with
@@ -60,9 +60,9 @@ var NB = 32; // Block size (hardcoded; Fortran uses ILAENV)
 */
 function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var ldwork;
+	var result;
 	var iinfo;
 	var info;
-	var result;
 	var sa1;
 	var sa2;
 	var nb;

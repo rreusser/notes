@@ -24,17 +24,17 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zlassq = require( '@stdlib/lapack/base/zlassq' );
-* 
+*
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zlassq( 2, x, 1, 1.0, 1.0 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zlassq = require( '@stdlib/lapack/base/zlassq' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zlassq.ndarray( 2, x, 1, 0, 1.0, 1.0 );
 */
 

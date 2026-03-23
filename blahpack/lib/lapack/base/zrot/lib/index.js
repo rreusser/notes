@@ -25,20 +25,20 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zrot = require( '@stdlib/lapack/base/zrot' );
-* 
+*
 * var cx = new Complex128Array( [ 1.0, 2.0 ] );
 * var cy = new Complex128Array( [ 1.0, 2.0 ] );
 * var s = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zrot( 2, cx, 1, cy, 1, 1.0, s );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zrot = require( '@stdlib/lapack/base/zrot' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zrot.ndarray( 2, x, 1, 0, 2, y, 1, 0, 2, 1.0, 1.0 );
 */
 

@@ -26,21 +26,21 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zher2k = require( '@stdlib/blas/base/zher2k' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var C = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zher2k( 'row-major', 'upper', 'no-transpose', 2, 2, 1.0, A, 2, B, 2, 0.0, C, 2 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zher2k = require( '@stdlib/blas/base/zher2k' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var C = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zher2k.ndarray( 'upper', 'no-transpose', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
 */
 

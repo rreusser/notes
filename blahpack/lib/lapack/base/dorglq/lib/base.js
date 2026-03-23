@@ -33,14 +33,14 @@ var NB = 32;  // Block size (LAPACK default for DORGLQ)
 // MAIN //
 
 /**
-* Generates an M-by-N real orthogonal matrix Q from the elementary
+* Generates an M-by-N real orthogonal matrix Q from the elementary.
 * reflectors returned by DGELQF (LQ factorization, blocked algorithm).
 *
 * Q is defined as the product of K elementary reflectors:
 *
 *   Q = H(K) ... H(2) H(1)
 *
-* where each H(i) has the form H(i) = I - tau(i) * v * v^T, and v is
+* where each H(i) has the form H(i) = I - tau(i) _ v _ v^T, and v is
 * stored as row i of the input matrix A.
 *
 * This is the blocked version that uses DLARFT + DLARFB for efficiency
@@ -100,6 +100,7 @@ function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			kk = Math.min( K, ki + nb );
 
 			// Zero out rows KK..M-1 of columns 0..KK-1
+
 			// Fortran: DO 20 J = 1, KK; DO 10 I = KK+1, M; A(I,J)=ZERO
 			for ( j = 0; j < kk; j++ ) {
 				for ( i = kk; i < M; i++ ) {
@@ -140,8 +141,11 @@ function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				);
 
 				// Apply H to A(i+ib:M-1, i:N-1) from the right
+
 				// DLARFB('Right', 'Transpose', 'Forward', 'Rowwise',
+
 				//         M-I-IB+1, N-I+1, IB, A(I,I), LDA, WORK, LDWORK,
+
 				//         A(I+IB,I), LDA, WORK(IB+1), LDWORK)
 				dlarfb(
 					'right', 'transpose', 'forward', 'rowwise',
@@ -163,6 +167,7 @@ function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			);
 
 			// Zero out columns 0..i-1 of rows i..i+ib-1
+
 			// Fortran: DO 40 J = 1, I-1; DO 30 L = I, I+IB-1; A(L,J)=ZERO
 			for ( j = 0; j < i; j++ ) {
 				for ( l = i; l < i + ib; l++ ) {

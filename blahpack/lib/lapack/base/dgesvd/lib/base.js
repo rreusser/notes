@@ -46,10 +46,10 @@ var MNTHR_FAC = 1.6; // crossover ratio: if M >= MNTHR_FAC * N, use QR path
 // MAIN //
 
 /**
-* Computes the singular value decomposition (SVD) of a real M-by-N matrix A,
+* Computes the singular value decomposition (SVD) of a real M-by-N matrix A,.
 * optionally computing the left and/or right singular vectors.
 *
-* The SVD is written: A = U * SIGMA * V^T
+* The SVD is written: A = U _ SIGMA _ V^T
 *
 * where SIGMA is an M-by-N matrix which is zero except for its min(M,N) diagonal
 * elements, U is an M-by-M orthogonal matrix, and V is an N-by-N orthogonal matrix.
@@ -80,49 +80,49 @@ var MNTHR_FAC = 1.6; // crossover ratio: if M >= MNTHR_FAC * N, use QR path
 * @returns {integer} info - 0 if successful, >0 if DBDSQR did not converge
 */
 function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT ) {
+	var wntuas;
+	var wntvas;
+	var bignum;
+	var smlnum;
+	var ldwrkr;
+	var ldwrku;
 	var wntua;
 	var wntus;
-	var wntuas;
 	var wntuo;
 	var wntun;
 	var wntva;
 	var wntvs;
-	var wntvas;
 	var wntvo;
 	var wntvn;
 	var minmn;
 	var mnthr;
-	var anrm;
-	var bignum;
-	var smlnum;
-	var eps;
-	var iscl;
-	var info;
-	var ncu;
-	var ncvt;
-	var nru;
-	var nrvt;
-	var itau;
 	var itauq;
 	var itaup;
 	var iwork;
-	var ie;
-	var ir;
-	var iu;
-	var ldwrkr;
-	var ldwrku;
 	var chunk;
+	var anrm;
+	var iscl;
+	var info;
+	var ncvt;
+	var nrvt;
+	var itau;
+	var svt1;
+	var svt2;
+	var eps;
+	var ncu;
+	var nru;
 	var blk;
 	var sa1;
 	var sa2;
 	var su1;
 	var su2;
-	var svt1;
-	var svt2;
-	var i;
-	var WK;
 	var wsz;
 	var DUM;
+	var ie;
+	var ir;
+	var iu;
+	var WK;
+	var i;
 
 	sa1 = strideA1;
 	sa2 = strideA2;
@@ -295,6 +295,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, iwork );
 
 				// Multiply Q by left bidiag vectors: A = Q * WORK(IR)
+
 				// Process in chunks
 				iu = ie + N;
 				ldwrku = N;
@@ -629,6 +630,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, iwork );
 
 					// Multiply Q in U by bidiag vectors WORK(IR)
+
 					// U = U * WORK(IR) — need temp space
 					dgemm( 'no-transpose', 'no-transpose', M, N, N, 1.0,
 						U, su1, su2, offsetU,
@@ -808,7 +810,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// Copy lower triangle of A to U, generate Q
 				dlacpy( 'lower', M, N, A, sa1, sa2, offsetA,
 					U, su1, su2, offsetU );
-				ncu = wntus ? N : M;
+				ncu = ( wntus ) ? N : M;
 				dorgbr( 'q', M, ncu, N, U, su1, su2, offsetU,
 					WK, 1, itauq, WK, 1, iwork, -1 );
 			}
@@ -985,6 +987,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, iwork );
 
 				// Multiply right vectors by Q: A = WORK(IR) * Q_stored_in_A
+
 				// Process columns in chunks
 				iu = ie + M;
 				ldwrku = M;
@@ -1502,7 +1505,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// Copy upper triangle of A to VT, generate P^T
 				dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
-				nrvt = wntva ? N : M;
+				nrvt = ( wntva ) ? N : M;
 				dorgbr( 'p', nrvt, N, M, VT, svt1, svt2, offsetVT,
 					WK, 1, itaup, WK, 1, iwork, -1 );
 			}

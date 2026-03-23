@@ -33,10 +33,10 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 // MAIN //
 
 /**
-* Computes an LU factorization of a general M-by-N matrix A using partial
+* Computes an LU factorization of a general M-by-N matrix A using partial.
 * pivoting with row interchanges (recursive algorithm).
 *
-* The factorization has the form A = P * L * U where P is a permutation
+* The factorization has the form A = P _ L _ U where P is a permutation
 * matrix, L is lower triangular with unit diagonal elements (lower
 * trapezoidal if M > N), and U is upper triangular (upper trapezoidal if
 * M < N).
@@ -58,9 +58,9 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var sfmin;
 	var iinfo;
+	var minMN;
 	var info;
 	var temp;
-	var minMN;
 	var sa1;
 	var sa2;
 	var n1;
@@ -89,7 +89,7 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		// ?x1 column -- find pivot, swap, scale
 		sfmin = dlamch( 'S' );
 
-		// idamax returns 0-based index
+		// Idamax returns 0-based index
 		ip = idamax( M, A, sa1, offsetA );
 		IPIV[ offsetIPIV ] = ip;
 
@@ -118,9 +118,12 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		n2 = N - n1;
 
 		//        [  A11 | A12  ]
+
 		//    A = [ -----|----- ]
+
 		//        [  A21 | A22  ]
-		// where A11 is n1 columns, A22 is n2 columns
+
+		// Where A11 is n1 columns, A22 is n2 columns
 
 		// Factor [A11; A21] (M x n1)
 		iinfo = dgetrf2( M, n1, A, sa1, sa2, offsetA, IPIV, strideIPIV, offsetIPIV );
@@ -134,6 +137,7 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		dlaswp( n2, A, sa1, sa2, offsetA + n1 * sa2, 0, n1 - 1, IPIV, strideIPIV, offsetIPIV, 1 );
 
 		// Solve A11 * A12_new = A12 (triangular solve)
+
 		// A11 is lower triangular with unit diagonal, n1 x n1
 		dtrsm( 'left', 'lower', 'no-transpose', 'unit', n1, n2, 1.0,
 			A, sa1, sa2, offsetA,

@@ -35,7 +35,7 @@ var HUNDRD = 100.0;
 // MAIN //
 
 /**
-* Computes an approximation TAU to the smallest eigenvalue using values of d
+* Computes an approximation TAU to the smallest eigenvalue using values of d.
 * from the previous transform. Used by the dqds algorithm (bidiagonal SVD).
 *
 * @private
@@ -83,7 +83,11 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 	if ( dmin <= 0.0 ) {
 		tau = -dmin;
 		ttype = -1;
-		return { 'tau': tau, 'ttype': ttype, 'g': g };
+		return {
+			'tau': tau,
+			'ttype': ttype,
+			'g': g
+		};
 	}
 
 	nn = 4 * n0 + pp;
@@ -125,7 +129,11 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 					gam = dn;
 					a2 = 0.0;
 					if ( Z( nn - 5 ) > Z( nn - 7 ) ) {
-						return { 'tau': tau0, 'ttype': ttype, 'g': g };
+						return {
+							'tau': tau0,
+							'ttype': ttype,
+							'g': g
+						};
 					}
 					b2 = Z( nn - 5 ) / Z( nn - 7 );
 					np = nn - 9;
@@ -133,28 +141,40 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 					np = nn - 2 * pp;
 					gam = dn1;
 					if ( Z( np - 4 ) > Z( np - 2 ) ) {
-						return { 'tau': tau0, 'ttype': ttype, 'g': g };
+						return {
+							'tau': tau0,
+							'ttype': ttype,
+							'g': g
+						};
 					}
 					a2 = Z( np - 4 ) / Z( np - 2 );
 					if ( Z( nn - 9 ) > Z( nn - 11 ) ) {
-						return { 'tau': tau0, 'ttype': ttype, 'g': g };
+						return {
+							'tau': tau0,
+							'ttype': ttype,
+							'g': g
+						};
 					}
 					b2 = Z( nn - 9 ) / Z( nn - 11 );
 					np = nn - 13;
 				}
 
 				// Approximate contribution to norm squared from I < NN-1.
-				a2 = a2 + b2;
+				a2 += b2;
 				for ( i4 = np; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
 					if ( b2 === 0.0 ) {
 						break;
 					}
 					b1 = b2;
 					if ( Z( i4 ) > Z( i4 - 2 ) ) {
-						return { 'tau': tau0, 'ttype': ttype, 'g': g };
+						return {
+							'tau': tau0,
+							'ttype': ttype,
+							'g': g
+						};
 					}
-					b2 = b2 * ( Z( i4 ) / Z( i4 - 2 ) );
-					a2 = a2 + b2;
+					b2 *= ( Z( i4 ) / Z( i4 - 2 ) );
+					a2 += b2;
 					if ( HUNDRD * Math.max( b2, b1 ) < a2 || CNST1 < a2 ) {
 						break;
 					}
@@ -177,24 +197,32 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			b2 = Z( np - 6 );
 			gam = dn2;
 			if ( Z( np - 8 ) > b2 || Z( np - 4 ) > b1 ) {
-				return { 'tau': tau0, 'ttype': ttype, 'g': g };
+				return {
+					'tau': tau0,
+					'ttype': ttype,
+					'g': g
+				};
 			}
 			a2 = ( Z( np - 8 ) / b2 ) * ( 1.0 + Z( np - 4 ) / b1 );
 
 			// Approximate contribution to norm squared from I < NN-2.
 			if ( n0 - i0 > 2 ) {
 				b2 = Z( nn - 13 ) / Z( nn - 15 );
-				a2 = a2 + b2;
+				a2 += b2;
 				for ( i4 = nn - 17; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
 					if ( b2 === 0.0 ) {
 						break;
 					}
 					b1 = b2;
 					if ( Z( i4 ) > Z( i4 - 2 ) ) {
-						return { 'tau': tau0, 'ttype': ttype, 'g': g };
+						return {
+							'tau': tau0,
+							'ttype': ttype,
+							'g': g
+						};
 					}
-					b2 = b2 * ( Z( i4 ) / Z( i4 - 2 ) );
-					a2 = a2 + b2;
+					b2 *= ( Z( i4 ) / Z( i4 - 2 ) );
+					a2 += b2;
 					if ( HUNDRD * Math.max( b2, b1 ) < a2 || CNST1 < a2 ) {
 						break;
 					}
@@ -208,7 +236,7 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 		} else {
 			// Case 6, no information to guide us.
 			if ( ttype === -6 ) {
-				g = g + THIRD * ( 1.0 - g );
+				g += THIRD * ( 1.0 - g );
 			} else if ( ttype === -18 ) {
 				g = QURTR * THIRD;
 			} else {
@@ -224,7 +252,11 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			ttype = -7;
 			s = THIRD * dmin1;
 			if ( Z( nn - 5 ) > Z( nn - 7 ) ) {
-				return { 'tau': tau0, 'ttype': ttype, 'g': g };
+				return {
+					'tau': tau0,
+					'ttype': ttype,
+					'g': g
+				};
 			}
 			b1 = Z( nn - 5 ) / Z( nn - 7 );
 			b2 = b1;
@@ -232,10 +264,14 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 				for ( i4 = 4 * n0 - 9 + pp; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
 					a2 = b1;
 					if ( Z( i4 ) > Z( i4 - 2 ) ) {
-						return { 'tau': tau0, 'ttype': ttype, 'g': g };
+						return {
+							'tau': tau0,
+							'ttype': ttype,
+							'g': g
+						};
 					}
-					b1 = b1 * ( Z( i4 ) / Z( i4 - 2 ) );
-					b2 = b2 + b1;
+					b1 *= ( Z( i4 ) / Z( i4 - 2 ) );
+					b2 += b1;
 					if ( HUNDRD * Math.max( b1, a2 ) < b2 ) {
 						break;
 					}
@@ -265,17 +301,25 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 			ttype = -10;
 			s = THIRD * dmin2;
 			if ( Z( nn - 5 ) > Z( nn - 7 ) ) {
-				return { 'tau': tau0, 'ttype': ttype, 'g': g };
+				return {
+					'tau': tau0,
+					'ttype': ttype,
+					'g': g
+				};
 			}
 			b1 = Z( nn - 5 ) / Z( nn - 7 );
 			b2 = b1;
 			if ( b2 !== 0.0 ) {
 				for ( i4 = 4 * n0 - 9 + pp; i4 >= 4 * i0 - 1 + pp; i4 -= 4 ) {
 					if ( Z( i4 ) > Z( i4 - 2 ) ) {
-						return { 'tau': tau0, 'ttype': ttype, 'g': g };
+						return {
+							'tau': tau0,
+							'ttype': ttype,
+							'g': g
+						};
 					}
-					b1 = b1 * ( Z( i4 ) / Z( i4 - 2 ) );
-					b2 = b2 + b1;
+					b1 *= ( Z( i4 ) / Z( i4 - 2 ) );
+					b2 += b1;
 					if ( HUNDRD * b1 < b2 ) {
 						break;
 					}
@@ -301,7 +345,11 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 	}
 
 	tau = s;
-	return { 'tau': tau, 'ttype': ttype, 'g': g };
+	return {
+		'tau': tau,
+		'ttype': ttype,
+		'g': g
+	};
 }
 
 

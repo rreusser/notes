@@ -55,7 +55,7 @@ function abs1( arr, idx ) {
 // MAIN //
 
 /**
-* Compute some or all of the right and/or left eigenvectors of a pair of
+* Compute some or all of the right and/or left eigenvectors of a pair of.
 * complex upper triangular matrices (S, P).
 *
 * Matrix pair (S, P) must be in generalized Schur form (both upper triangular).
@@ -110,19 +110,42 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	var ascale;
 	var bcoefa;
 	var bscale;
+	var ilback;
+	var salpha;
+	var bcoeff;
+	var negSum;
+	var divOut;
+	var sumaRe;
+	var sumaIm;
+	var sumbRe;
+	var sumbIm;
+	var ilcomp;
 	var anorm;
 	var bnorm;
 	var compl;
 	var compr;
 	var small;
 	var scale;
-	var ilback;
 	var ilall;
-	var salpha;
 	var sbeta;
+	var WORKv;
 	var dmin;
 	var temp;
 	var xmax;
+	var sVL1;
+	var sVL2;
+	var sVR1;
+	var sVR2;
+	var negW;
+	var ieig;
+	var isrc;
+	var ibeg;
+	var iend;
+	var idx2;
+	var sjjr;
+	var sjji;
+	var pjjr;
+	var pjji;
 	var big;
 	var ulp;
 	var lsa;
@@ -131,57 +154,34 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	var sS2;
 	var sP1;
 	var sP2;
-	var oS;
-	var oP;
-	var sVL1;
-	var sVL2;
 	var oVL;
-	var sVR1;
-	var sVR2;
 	var oVR;
-	var bcoeff;
-	var negSum;
-	var negW;
-	var divOut;
-	var ieig;
-	var isrc;
-	var ibeg;
-	var iend;
 	var sum;
-	var d;
-	var je;
-	var jr;
-	var ca;
-	var cb;
-	var j;
-	var i;
 	var idx;
-	var idx2;
-	var im;
-	var Sv;
-	var Pv;
 	var VLv;
 	var VRv;
-	var WORKv;
-	var sr;
-	var si;
-	var pr;
-	var pi;
-	var sjjr;
-	var sjji;
-	var pjjr;
-	var pjji;
-	var dr;
-	var di;
-	var sumaRe;
-	var sumaIm;
-	var sumbRe;
-	var sumbIm;
 	var srr;
 	var sri;
 	var prr;
 	var pri;
-	var ilcomp;
+	var oS;
+	var oP;
+	var je;
+	var jr;
+	var ca;
+	var cb;
+	var im;
+	var Sv;
+	var Pv;
+	var sr;
+	var si;
+	var pr;
+	var pi;
+	var dr;
+	var di;
+	var d;
+	var j;
+	var i;
 
 	compl = ( side === 'left' || side === 'both' );
 	compr = ( side === 'right' || side === 'both' );
@@ -267,7 +267,9 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	divOut = new Float64Array( 2 );
 
 	// ========================
+
 	// LEFT EIGENVECTORS
+
 	// ========================
 	if ( compl ) {
 		ieig = 0;
@@ -604,6 +606,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 					// CA = ACOEFF * WORK(J)
 					ca[ 0 ] = acoeff * WORKv[ j * 2 ];
 					ca[ 1 ] = acoeff * WORKv[ j * 2 + 1 ];
+
 					// CB = BCOEFF * WORK(J)
 					cb[ 0 ] = bcoeff[ 0 ] * WORKv[ j * 2 ] - bcoeff[ 1 ] * WORKv[ j * 2 + 1 ];
 					cb[ 1 ] = bcoeff[ 0 ] * WORKv[ j * 2 + 1 ] + bcoeff[ 1 ] * WORKv[ j * 2 ];

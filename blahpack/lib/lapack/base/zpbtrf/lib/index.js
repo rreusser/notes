@@ -26,17 +26,17 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zpbtrf = require( '@stdlib/lapack/base/zpbtrf' );
-* 
+*
 * var AB = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zpbtrf( 'row-major', 'upper', 2, 2, AB, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zpbtrf = require( '@stdlib/lapack/base/zpbtrf' );
-* 
+*
 * var AB = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zpbtrf.ndarray( 'upper', 2, 2, AB, 1, 2, 0 );
 */
 

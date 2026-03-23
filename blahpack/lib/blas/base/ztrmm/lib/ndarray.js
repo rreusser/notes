@@ -33,7 +33,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Performs one of the complex matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A), where A is a complex triangular matrix.
+* Performs one of the complex matrix-matrix operations B := alpha_op(A)_B or B := alpha_B_op(A), where A is a complex triangular matrix.
 *
 * @param {string} side - specifies whether op(A) appears on the left or right of B
 * @param {string} uplo - specifies whether A is upper or lower triangular

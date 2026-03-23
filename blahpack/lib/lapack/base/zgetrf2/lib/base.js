@@ -42,10 +42,10 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes an LU factorization of a general complex M-by-N matrix A using
+* Computes an LU factorization of a general complex M-by-N matrix A using.
 * partial pivoting with row interchanges (recursive algorithm).
 *
-* The factorization has the form A = P * L * U where P is a permutation
+* The factorization has the form A = P _ L _ U where P is a permutation
 * matrix, L is lower triangular with unit diagonal elements (lower
 * trapezoidal if M > N), and U is upper triangular (upper trapezoidal if
 * M < N).
@@ -67,18 +67,18 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var sfmin;
 	var iinfo;
-	var info;
 	var minMN;
-	var Av;
-	var oA;
-	var sa1;
-	var sa2;
+	var info;
 	var pivR;
 	var pivI;
 	var invR;
 	var invI;
 	var tmpR;
 	var tmpI;
+	var sa1;
+	var sa2;
+	var Av;
+	var oA;
 	var n1;
 	var n2;
 	var ip;
@@ -104,6 +104,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 	if ( M === 1 ) {
 		// 1x? row -- pivot index is self (0-based)
 		IPIV[ offsetIPIV ] = 0;
+
 		// Check if A(0,0) is zero
 		if ( Av[ oA ] === 0.0 && Av[ oA + 1 ] === 0.0 ) {
 			info = 1;
@@ -112,7 +113,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		// ?x1 column -- find pivot, swap, scale
 		sfmin = dlamch( 'S' );
 
-		// izamax returns 0-based index
+		// Izamax returns 0-based index
 		ip = izamax( M, A, sa1, offsetA );
 		IPIV[ offsetIPIV ] = ip;
 
@@ -162,9 +163,12 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		n2 = N - n1;
 
 		//        [  A11 | A12  ]
+
 		//    A = [ -----|----- ]
+
 		//        [  A21 | A22  ]
-		// where A11 is n1 columns, A22 is n2 columns
+
+		// Where A11 is n1 columns, A22 is n2 columns
 
 		// Factor [A11; A21] (M x n1)
 		iinfo = zgetrf2( M, n1, A, sa1, sa2, offsetA, IPIV, strideIPIV, offsetIPIV );
@@ -178,6 +182,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		zlaswp( n2, A, sa1, sa2, offsetA + n1 * sa2, 0, n1 - 1, IPIV, strideIPIV, offsetIPIV, 1 );
 
 		// Solve A11 * A12_new = A12 (triangular solve)
+
 		// A11 is lower triangular with unit diagonal, n1 x n1
 		ztrsm( 'left', 'lower', 'no-transpose', 'unit', n1, n2, CONE,
 			A, sa1, sa2, offsetA,

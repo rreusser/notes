@@ -26,19 +26,19 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zaxpy = require( '@stdlib/blas/base/zaxpy' );
-* 
+*
 * var zx = new Complex128Array( [ 1.0, 2.0 ] );
 * var zy = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zaxpy( 2, 1.0, zx, 1, zy, 1 );
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zaxpy = require( '@stdlib/blas/base/zaxpy' );
-* 
+*
 * var zx = new Complex128Array( [ 1.0, 2.0 ] );
 * var zy = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zaxpy.ndarray( 2, 1.0, zx, 1, 0, zy, 1, 0 );
 */
 

@@ -42,9 +42,9 @@ var SCRATCH_CAv = reinterpret( SCRATCH_CA, 0 );
 // MAIN //
 
 /**
-* Generate a complex elementary reflector H of order N, such that
+* Generate a complex elementary reflector H of order N, such that.
 *
-*   H^H * ( alpha ) = ( beta ),   H^H * H = I.
+*   H^H _ ( alpha ) = ( beta ),   H^H _ H = I.
 *          (   x   )   (   0  )
 *
 * where alpha and beta are scalars, with beta real, and x is an
@@ -52,7 +52,7 @@ var SCRATCH_CAv = reinterpret( SCRATCH_CA, 0 );
 *
 * H is represented in the form
 *
-*   H = I - tau * ( 1 ) * ( 1 v^H )
+*   H = I - tau _ ( 1 ) _ ( 1 v^H )
 *                 ( v )
 *
 * @private
@@ -74,10 +74,10 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 	var beta;
 	var tauv;
 	var tmp;
+	var knt;
 	var av;
 	var oA;
 	var oT;
-	var knt;
 	var j;
 
 	tauv = reinterpret( tau, 0 );
@@ -112,11 +112,11 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		if ( Math.abs( beta ) < safmin ) {
 			// XNORM, BETA may be inaccurate; scale X and recompute them
 			do {
-				knt = knt + 1;
+				knt += 1;
 				zdscal( N - 1, rsafmn, x, strideX, offsetX );
-				beta = beta * rsafmn;
-				alphi = alphi * rsafmn;
-				alphr = alphr * rsafmn;
+				beta *= rsafmn;
+				alphi *= rsafmn;
+				alphr *= rsafmn;
 			} while ( Math.abs( beta ) < safmin && knt < 20 );
 
 			// New BETA is at most 1, at least SAFMIN
@@ -124,13 +124,14 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 			av[ oA ] = alphr;
 			av[ oA + 1 ] = alphi;
 			// Fortran SIGN(A,B) returns |A|*sign(B); when B=0, result is +|A|.
-		// Math.sign(0) returns 0, so default to 1.0 for alphr=0.
-		beta = -( Math.sign( alphr ) || 1.0 ) * dlapy3( alphr, alphi, xnorm );
+			// Math.sign(0) returns 0, so default to 1.0 for alphr=0.
+			beta = -( Math.sign( alphr ) || 1.0 ) * dlapy3( alphr, alphi, xnorm );
 		}
 		tauv[ oT ] = ( beta - alphr ) / beta;
 		tauv[ oT + 1 ] = -alphi / beta;
 
 		// alpha = 1.0 / (alpha - beta)
+
 		// Use cmplx.divAt for ZLADIV( DCMPLX(ONE), ALPHA - BETA )
 		SCRATCH[ 0 ] = 1.0;
 		SCRATCH[ 1 ] = 0.0;
@@ -144,7 +145,7 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 
 		// If ALPHA is subnormal, it may lose relative accuracy
 		for ( j = 0; j < knt; j++ ) {
-			beta = beta * safmin;
+			beta *= safmin;
 		}
 		av[ oA ] = beta;
 		av[ oA + 1 ] = 0.0;

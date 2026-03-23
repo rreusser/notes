@@ -19,28 +19,28 @@
 'use strict';
 
 /**
-* Perform one of the matrix-vector operations y := alpha*A*x + beta*y or y := alpha*A**T*x + beta*y.
+* Perform one of the matrix-vector operations y := alpha_A_x + beta_y or y := alpha_A__T_x + beta_y.
 *
 * @module @stdlib/blas/base/dgemv
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgemv = require( '@stdlib/blas/base/dgemv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dgemv( 'row-major', 'no-transpose', 2, 2, 1.0, A, 2, x, 1, 0.0, y, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgemv = require( '@stdlib/blas/base/dgemv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dgemv.ndarray( 'no-transpose', 2, 2, 1.0, A, 1, 2, 0, x, 1, 0, 0.0, y, 1, 0 );
 */
 

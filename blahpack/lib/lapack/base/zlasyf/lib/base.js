@@ -422,10 +422,10 @@ function zlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 					CONE, W, strideW1, offsetW + k * strideW1 + ( k + 1 ) * strideW2 );
 
 				// Scan row imax for largest off-diagonal
-				jmax = k + idamaxComplex( imax - k, wv, sw1, oW + k * sw1 + ( k + 1 ) * sw2 );
+				jmax = k + izamax( imax - k, W, strideW1, offsetW + k * strideW1 + ( k + 1 ) * strideW2 );
 				rowmax = cabs1( wv, oW + jmax * sw1 + ( k + 1 ) * sw2 );
 				if ( imax < N - 1 ) {
-					jmax = imax + 1 + idamaxComplex( N - imax - 1, wv, sw1, oW + ( imax + 1 ) * sw1 + ( k + 1 ) * sw2 );
+					jmax = imax + 1 + izamax( N - imax - 1, W, strideW1, offsetW + ( imax + 1 ) * strideW1 + ( k + 1 ) * strideW2 );
 					rowmax = Math.max( rowmax, cabs1( wv, oW + jmax * sw1 + ( k + 1 ) * sw2 ) );
 				}
 

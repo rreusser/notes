@@ -21,8 +21,10 @@
 // VARIABLES //
 
 // LA_CONSTANTS for double precision:
-// dsafmin = 2^(-1022)
-// dsafmax = 1/dsafmin = 2^1022
+
+// Dsafmin = 2^(-1022)
+
+// Dsafmax = 1/dsafmin = 2^1022
 var SAFMIN = 2.2250738585072014e-308;
 var SAFMAX = 4.49423283715579e+307;
 var RTMIN = Math.sqrt( SAFMIN );
@@ -31,7 +33,7 @@ var RTMAX = Math.sqrt( SAFMAX / 2.0 );
 // MAIN //
 
 /**
-* Generates a plane rotation so that:
+* Generates a plane rotation so that:.
 *
 *    [  c  s ] . [ f ] = [ r ]
 *    [ -s  c ]   [ g ]   [ 0 ]

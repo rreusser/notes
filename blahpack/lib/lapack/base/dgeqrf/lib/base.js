@@ -33,7 +33,7 @@ var DEFAULT_NB = 32;
 // MAIN //
 
 /**
-* Computes a QR factorization of a real M-by-N matrix A = Q * R
+* Computes a QR factorization of a real M-by-N matrix A = Q * R.
 * using blocked Householder reflections.
 *
 * @private

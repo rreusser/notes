@@ -28,26 +28,26 @@
 * var Int32Array = require( '@stdlib/array/int32' );
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zgeqp3 = require( '@stdlib/lapack/base/zgeqp3' );
-* 
+*
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var JPVT = new Int32Array( 2 );
 * var TAU = new Complex128Array( [ 1.0, 2.0 ] );
 * var WORK = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zgeqp3( 'row-major', 2, 2, A, 2, JPVT, 1, TAU, 1, WORK, 1, 8, RWORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zgeqp3 = require( '@stdlib/lapack/base/zgeqp3' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var JPVT = new Int32Array( 2 );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zgeqp3.ndarray( 2, 2, A, 1, 2, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 8, RWORK, 1, 0 );
 */
 

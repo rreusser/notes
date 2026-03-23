@@ -21,8 +21,8 @@
 // MAIN //
 
 /**
-* Performs one of the matrix-vector operations:
-*   y := alpha*A*x + beta*y,   or   y := alpha*A^T*x + beta*y
+* Performs one of the matrix-vector operations:.
+*   y := alpha_A_x + beta_y,   or   y := alpha_A^T_x + beta_y
 *
 * @private
 * @param {string} trans - specifies whether A is transposed ('no-transpose', 'T', or 'C')
@@ -43,6 +43,7 @@
 * @returns {Float64Array} `y`
 */
 function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY ) {
+	var noTrans = ( trans === 'no-transpose' || trans === 'no-transpose' );
 	var temp;
 	var lenx;
 	var leny;
@@ -55,15 +56,6 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	var jy;
 	var i;
 	var j;
-
-	sa1 = strideA1;
-	sa2 = strideA2;
-
-	if ( M === 0 || N === 0 || ( alpha === 0.0 && beta === 1.0 ) ) {
-		return y;
-	}
-
-	var noTrans = ( trans === 'no-transpose' || trans === 'no-transpose' );
 	if ( noTrans ) {
 		lenx = N;
 		leny = M;
@@ -123,6 +115,7 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	}
 	return y;
 }
+
 
 // EXPORTS //
 

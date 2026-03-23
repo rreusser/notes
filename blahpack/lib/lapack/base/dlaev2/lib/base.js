@@ -21,7 +21,7 @@
 // MAIN //
 
 /**
-* Computes the eigendecomposition of a 2-by-2 symmetric matrix:
+* Computes the eigendecomposition of a 2-by-2 symmetric matrix:.
 *
 *   [ a  b ]
 *   [ b  c ]
@@ -122,15 +122,13 @@ function dlaev2( a, b, c ) {
 		ct = -tb / cs;
 		sn1 = 1.0 / Math.sqrt( 1.0 + ct * ct );
 		cs1 = ct * sn1;
+	} else if ( ab === 0.0 ) {
+		cs1 = 1.0;
+		sn1 = 0.0;
 	} else {
-		if ( ab === 0.0 ) {
-			cs1 = 1.0;
-			sn1 = 0.0;
-		} else {
-			tn = -cs / tb;
-			cs1 = 1.0 / Math.sqrt( 1.0 + tn * tn );
-			sn1 = tn * cs1;
-		}
+		tn = -cs / tb;
+		cs1 = 1.0 / Math.sqrt( 1.0 + tn * tn );
+		sn1 = tn * cs1;
 	}
 
 	// Correct signs of eigenvector components

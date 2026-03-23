@@ -25,12 +25,12 @@
 *
 * @example
 * var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
-* 
+*
 * dlaev2( 1.0, 1.0, 1.0 );
 *
 * @example
 * var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
-* 
+*
 * dlaev2.ndarray( 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 );
 */
 

@@ -40,7 +40,7 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes the inverse of a complex upper or lower triangular matrix
+* Computes the inverse of a complex upper or lower triangular matrix.
 * using the unblocked (Level 2 BLAS) algorithm.
 *
 * @private
@@ -58,9 +58,9 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 	var upper;
 	var ajjR;
 	var ajjI;
-	var Av;
 	var sa1;
 	var sa2;
+	var Av;
 	var ia;
 	var j;
 
@@ -84,7 +84,7 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 				scratch[ 3 ] = Av[ ia + 1 ];
 				cmplx.divAt( Av, ia, scratch, 0, scratch, 2 );
 
-				// ajj = -A(j,j)
+				// Ajj = -A(j,j)
 				ajjR = -Av[ ia ];
 				ajjI = -Av[ ia + 1 ];
 			} else {
@@ -110,7 +110,7 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 				scratch[ 3 ] = Av[ ia + 1 ];
 				cmplx.divAt( Av, ia, scratch, 0, scratch, 2 );
 
-				// ajj = -A(j,j)
+				// Ajj = -A(j,j)
 				ajjR = -Av[ ia ];
 				ajjI = -Av[ ia + 1 ];
 			} else {

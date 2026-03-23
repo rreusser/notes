@@ -27,20 +27,20 @@
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var Float64Array = require( '@stdlib/array/float64' );
 * var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
-* 
+*
 * var S = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var P = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var VL = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var VR = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * ztgevc( 'row-major', 'left', 'all', 1.0, 1, 0, 2, S, 2, P, 2, VL, 2, VR, 2, 2, 2, WORK, 1, RWORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var ztgevc = require( '@stdlib/lapack/base/ztgevc' );
-* 
+*
 * var SELECT = new Float64Array( [ 1.0, 2.0 ] );
 * var S = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var P = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
@@ -48,7 +48,7 @@
 * var VR = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var RWORK = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * ztgevc.ndarray( 'left', 'all', SELECT, 1, 0, 2, S, 1, 2, 0, P, 1, 2, 0, VL, 1, 2, 0, VR, 1, 2, 0, 2, 2, WORK, 1, 0, RWORK, 1, 0 );
 */
 

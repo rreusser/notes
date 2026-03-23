@@ -29,13 +29,13 @@ var zpotrs = require( '../../zpotrs/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the solution to a complex system of linear equations A*X = B,
+* Computes the solution to a complex system of linear equations A*X = B,.
 * where A is an N-by-N Hermitian positive definite matrix and X and B
 * are N-by-NRHS matrices.
 *
 * The Cholesky decomposition is used to factor A as:
-*   A = U^H * U,  if uplo = 'upper', or
-*   A = L * L^H,  if uplo = 'lower',
+*   A = U^H _ U,  if uplo = 'upper', or
+_   A = L _ L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular. The factored
 * form of A is then used to solve the system A*X = B.
 *

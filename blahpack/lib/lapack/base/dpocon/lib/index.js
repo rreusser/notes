@@ -27,22 +27,22 @@
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dpocon = require( '@stdlib/lapack/base/dpocon' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var IWORK = new Int32Array( 2 );
-* 
+*
 * dpocon( 'row-major', 'upper', 2, A, 2, 1.0, 1.0, WORK, 1, IWORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var dpocon = require( '@stdlib/lapack/base/dpocon' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 * var IWORK = new Int32Array( 2 );
-* 
+*
 * dpocon.ndarray( 'upper', 2, A, 1, 2, 0, 1.0, 1.0, WORK, 1, 0, IWORK, 1, 0 );
 */
 

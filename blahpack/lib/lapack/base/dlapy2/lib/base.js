@@ -21,7 +21,7 @@
 // MAIN //
 
 /**
-* Returns sqrt(x**2 + y**2), taking care not to cause unnecessary
+* Returns sqrt(x**2 + y**2), taking care not to cause unnecessary.
 * overflow and unnecessary underflow.
 *
 * @private

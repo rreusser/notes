@@ -28,12 +28,12 @@ var dlapy2 = require( '../../dlapy2/lib/base.js' );
 // MAIN //
 
 /**
-* Generates a real elementary reflector H of order N, such that
+* Generates a real elementary reflector H of order N, such that.
 *
-*   H * ( alpha ) = ( beta ),   H**T * H = I.
+*   H _ ( alpha ) = ( beta ),   H__T _ H = I.
 *       (   x   )   (   0  )
 *
-* H = I - tau * ( 1 ) * ( 1 v**T )
+* H = I - tau _ ( 1 ) _ ( 1 v**T )
 *               ( v )
 *
 * @private

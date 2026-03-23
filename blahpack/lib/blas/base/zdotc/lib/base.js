@@ -26,8 +26,8 @@ var Complex128 = require( '@stdlib/complex/float64/ctor' );
 // MAIN //
 
 /**
-* Compute the conjugate dot product of two complex vectors:
-*   ZDOTC = conj(X)^T * Y = sum_i conj(x_i) * y_i
+* Compute the conjugate dot product of two complex vectors:.
+*   ZDOTC = conj(X)^T _ Y = sum_i conj(x_i) _ y_i
 *
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
@@ -74,7 +74,9 @@ function zdotc( N, x, strideX, offsetX, y, strideY, offsetY ) {
 		xi = xv[ ix + 1 ];
 		yr = yv[ iy ];
 		yi = yv[ iy + 1 ];
+
 		// conj(x) * y = (xr - xi*i) * (yr + yi*i)
+
 		//             = (xr*yr + xi*yi) + (xr*yi - xi*yr)*i
 		tempR += xr * yr + xi * yi;
 		tempI += xr * yi - xi * yr;

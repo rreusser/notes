@@ -26,19 +26,19 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrsv = require( '@stdlib/blas/base/dtrsv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dtrsv( 'row-major', 'upper', 'no-transpose', 'non-unit', 2, A, 2, x, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dtrsv = require( '@stdlib/blas/base/dtrsv' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dtrsv.ndarray( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
 */
 

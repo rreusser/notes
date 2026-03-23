@@ -26,21 +26,21 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgelq2 = require( '@stdlib/lapack/base/dgelq2' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dgelq2( 'row-major', 2, 2, A, 2, TAU, 1, WORK, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgelq2 = require( '@stdlib/lapack/base/dgelq2' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var TAU = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dgelq2.ndarray( 2, 2, A, 1, 2, 0, TAU, 1, 0, WORK, 1, 0 );
 */
 

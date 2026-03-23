@@ -38,12 +38,12 @@ var CMONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes the Cholesky factorization of a complex Hermitian positive definite
+* Computes the Cholesky factorization of a complex Hermitian positive definite.
 * matrix A using the unblocked algorithm (Level 2 BLAS).
 *
 * The factorization has the form:
-*   A = U^H * U,  if uplo = 'upper', or
-*   A = L * L^H,  if uplo = 'lower',
+*   A = U^H _ U,  if uplo = 'upper', or
+_   A = L _ L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * @private
@@ -58,10 +58,10 @@ var CMONE = new Complex128( -1.0, 0.0 );
 function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	var sa1;
 	var sa2;
+	var ajj;
 	var Av;
 	var oA;
 	var da;
-	var ajj;
 	var j;
 
 	if ( N === 0 ) {
@@ -94,6 +94,7 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 			if ( j < N - 1 ) {
 				// ZLACGV(J-1, A(1,J), 1)
 				zlacgv( j, A, strideA1, offsetA + j * strideA2 );
+
 				// ZGEMV('Transpose', J-1, N-J, -CONE, A(1,J+1), LDA, A(1,J), 1, CONE, A(J,J+1), LDA)
 				zgemv( 'transpose', j, N - j - 1, CMONE,
 					A, strideA1, strideA2, offsetA + ( j + 1 ) * strideA2,
@@ -101,8 +102,10 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 					CONE,
 					A, strideA2, offsetA + j * strideA1 + ( j + 1 ) * strideA2
 				);
+
 				// ZLACGV(J-1, A(1,J), 1) -- undo conjugation
 				zlacgv( j, A, strideA1, offsetA + j * strideA2 );
+
 				// ZDSCAL(N-J, 1/AJJ, A(J,J+1), LDA)
 				zdscal( N - j - 1, 1.0 / ajj,
 					A, strideA2, offsetA + j * strideA1 + ( j + 1 ) * strideA2
@@ -130,6 +133,7 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 			if ( j < N - 1 ) {
 				// ZLACGV(J-1, A(J,1), LDA)
 				zlacgv( j, A, strideA2, offsetA + j * strideA1 );
+
 				// ZGEMV('No transpose', N-J, J-1, -CONE, A(J+1,1), LDA, A(J,1), LDA, CONE, A(J+1,J), 1)
 				zgemv( 'no-transpose', N - j - 1, j, CMONE,
 					A, strideA1, strideA2, offsetA + ( j + 1 ) * strideA1,
@@ -137,8 +141,10 @@ function zpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 					CONE,
 					A, strideA1, offsetA + ( j + 1 ) * strideA1 + j * strideA2
 				);
+
 				// ZLACGV(J-1, A(J,1), LDA) -- undo conjugation
 				zlacgv( j, A, strideA2, offsetA + j * strideA1 );
+
 				// ZDSCAL(N-J, 1/AJJ, A(J+1,J), 1)
 				zdscal( N - j - 1, 1.0 / ajj,
 					A, strideA1, offsetA + ( j + 1 ) * strideA1 + j * strideA2

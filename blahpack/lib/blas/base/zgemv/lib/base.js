@@ -29,9 +29,9 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Perform one of the complex matrix-vector operations:
-*   y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
-*   y := alpha*A**H*x + beta*y
+* Perform one of the complex matrix-vector operations:.
+*   y := alpha_A_x + beta_y,   or   y := alpha_A**T_x + beta_y,   or
+*   y := alpha*A**H_x + beta_y
 *
 * @private
 * @param {string} trans - specifies the operation ('no-transpose', 'T', or 'C')
@@ -151,7 +151,7 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 		// Form y := alpha*A*x + y
 		jx = oX;
 		for ( j = 0; j < N; j++ ) {
-			// temp = alpha * x[jx]
+			// Temp = alpha * x[jx]
 			tempR = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
 			tempI = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
 			iy = oY;
@@ -159,6 +159,7 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 			for ( i = 0; i < M; i++ ) {
 				aijR = Av[ ai ];
 				aijI = Av[ ai + 1 ];
+
 				// y[iy] += temp * A[i,j]
 				yv[ iy ] += tempR * aijR - tempI * aijI;
 				yv[ iy + 1 ] += tempR * aijI + tempI * aijR;
@@ -180,7 +181,8 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 				for ( i = 0; i < M; i++ ) {
 					aijR = Av[ ai ];
 					aijI = Av[ ai + 1 ];
-					// temp += A[i,j] * x[ix]
+
+					// Temp += A[i,j] * x[ix]
 					tempR += aijR * xv[ ix ] - aijI * xv[ ix + 1 ];
 					tempI += aijR * xv[ ix + 1 ] + aijI * xv[ ix ];
 					ix += sx;
@@ -191,7 +193,8 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 				for ( i = 0; i < M; i++ ) {
 					aijR = Av[ ai ];
 					aijI = -Av[ ai + 1 ]; // conjugate
-					// temp += conj(A[i,j]) * x[ix]
+
+					// Temp += conj(A[i,j]) * x[ix]
 					tempR += aijR * xv[ ix ] - aijI * xv[ ix + 1 ];
 					tempI += aijR * xv[ ix + 1 ] + aijI * xv[ ix ];
 					ix += sx;

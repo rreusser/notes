@@ -29,8 +29,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Perform Hermitian rank-2 update:
-*   A := alpha * x * conj(y)^T + conj(alpha) * y * conj(x)^T + A
+* Perform Hermitian rank-2 update:.
+*   A := alpha _ x _ conj(y)^T + conj(alpha) _ y _ conj(x)^T + A
 * where A is an N-by-N Hermitian matrix and x, y are N-element vectors.
 *
 * @private
@@ -110,6 +110,7 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 				// temp1 = alpha * conj(y[jy])
 				temp1R = alphaR * yv[ jy ] + alphaI * yv[ jy + 1 ];
 				temp1I = -alphaR * yv[ jy + 1 ] + alphaI * yv[ jy ];
+
 				// temp2 = conj(alpha * x[jx]) = conj(alpha) * conj(x[jx])
 				tr = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
 				temp2I = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];
@@ -152,6 +153,7 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 				// temp1 = alpha * conj(y[jy])
 				temp1R = alphaR * yv[ jy ] + alphaI * yv[ jy + 1 ];
 				temp1I = -alphaR * yv[ jy + 1 ] + alphaI * yv[ jy ];
+
 				// temp2 = conj(alpha * x[jx])
 				tr = alphaR * xv[ jx ] - alphaI * xv[ jx + 1 ];
 				temp2I = alphaR * xv[ jx + 1 ] + alphaI * xv[ jx ];

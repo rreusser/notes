@@ -26,19 +26,19 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zdotc = require( '@stdlib/blas/base/zdotc' );
-* 
+*
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
 * var y = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zdotc( 2, x, 1, y, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zdotc = require( '@stdlib/blas/base/zdotc' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zdotc.ndarray( 2, x, 1, 0, 2, y, 1, 0, 2 );
 */
 

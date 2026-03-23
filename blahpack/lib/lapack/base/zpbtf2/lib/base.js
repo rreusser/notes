@@ -31,12 +31,12 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the Cholesky factorization of a complex Hermitian positive definite
+* Computes the Cholesky factorization of a complex Hermitian positive definite.
 * band matrix AB.
 *
 * The factorization has the form:
-*   AB = U^H * U,  if uplo = 'upper', or
-*   AB = L * L^H,  if uplo = 'lower',
+*   AB = U^H _ U,  if uplo = 'upper', or
+_   AB = L _ L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the unblocked version of the algorithm, calling Level 2 BLAS.
@@ -58,10 +58,10 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 	var sa1;
 	var sa2;
-	var Av;
-	var oA;
 	var kld;
 	var ajj;
+	var Av;
+	var oA;
 	var kn;
 	var da;
 	var j;
@@ -76,8 +76,10 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 	sa2 = strideAB2 * 2;
 
 	// KLD = MAX(1, LDAB-1) = MAX(1, sa2/2 - sa1/2)
+
 	// In complex-element strides, this is the stride for stepping diagonally
-	// through the band (one row up/down, one column right).
+
+	// Through the band (one row up/down, one column right).
 	kld = Math.max( 1, strideAB2 - strideAB1 );
 
 	if ( uplo === 'upper' ) {
@@ -102,14 +104,18 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				zdscal( kn, 1.0 / ajj,
 					AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2
 				);
+
 				// ZLACGV(KN, AB(KD, J+2), KLD)
 				zlacgv( kn, AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2 );
+
 				// ZHER('Upper', KN, -1, AB(KD, J+2), KLD, AB(KD+1, J+2), KLD)
+
 				// zher: strideA1 = strideAB1, strideA2 = kld
 				zher( 'upper', kn, -1.0,
 					AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2,
 					AB, strideAB1, kld, offsetAB + kd * strideAB1 + ( j + 1 ) * strideAB2
 				);
+
 				// ZLACGV(KN, AB(KD, J+2), KLD) -- undo
 				zlacgv( kn, AB, kld, offsetAB + ( kd - 1 ) * strideAB1 + ( j + 1 ) * strideAB2 );
 			}
@@ -136,7 +142,9 @@ function zpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				zdscal( kn, 1.0 / ajj,
 					AB, strideAB1, offsetAB + strideAB1 + j * strideAB2
 				);
+
 				// ZHER('Lower', KN, -1, AB(2, J), 1, AB(1, J+1), KLD)
+
 				// zher: strideA1 = strideAB1, strideA2 = kld
 				zher( 'lower', kn, -1.0,
 					AB, strideAB1, offsetAB + strideAB1 + j * strideAB2,

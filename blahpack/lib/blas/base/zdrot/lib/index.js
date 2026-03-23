@@ -26,19 +26,19 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zdrot = require( '@stdlib/blas/base/zdrot' );
-* 
+*
 * var zx = new Complex128Array( [ 1.0, 2.0 ] );
 * var zy = new Complex128Array( [ 1.0, 2.0 ] );
-* 
+*
 * zdrot( 2, zx, 1, zy, 1, 1.0, 1.0 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zdrot = require( '@stdlib/blas/base/zdrot' );
-* 
+*
 * var zx = new Float64Array( [ 1.0, 2.0 ] );
 * var zy = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * zdrot.ndarray( 2, zx, 1, 0, zy, 1, 0, 1.0, 1.0 );
 */
 

@@ -34,12 +34,12 @@ var NB = 64; // Block size (hardcoded, replaces ILAENV query)
 // MAIN //
 
 /**
-* Computes the Cholesky factorization of a real symmetric positive definite
+* Computes the Cholesky factorization of a real symmetric positive definite.
 * matrix A using a blocked algorithm.
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'upper', or
-*   A = L * L^T,  if uplo = 'lower',
+*   A = U^T _ U,  if uplo = 'upper', or
+_   A = L _ L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.
@@ -80,7 +80,7 @@ function dpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 		// Compute the Cholesky factorization A = U^T * U.
 		for ( j = 0; j < N; j += NB ) {
 			// Update and factorize the current diagonal block and test
-			// for non-positive-definiteness.
+			// For non-positive-definiteness.
 			jb = Math.min( NB, N - j );
 
 			dsyrk( 'upper', 'transpose', jb, j, -1.0,

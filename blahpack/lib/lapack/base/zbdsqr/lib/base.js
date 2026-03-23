@@ -70,28 +70,28 @@ function sign( a, b ) {
 // MAIN //
 
 /**
-* Computes the singular values and, optionally, the right and/or left
+* Computes the singular values and, optionally, the right and/or left.
 * singular vectors from the singular value decomposition (SVD) of a real
 * N-by-N (upper or lower) bidiagonal matrix B using the implicit
 * zero-shift QR algorithm.
 *
 * The SVD of B has the form:
-*   B = Q * S * P^H
+*   B = Q _ S _ P^H
 * where S is the diagonal matrix of singular values, Q is an orthogonal
 * matrix of left singular vectors, and P is an orthogonal matrix of right
 * singular vectors.
 *
 * If left singular vectors are requested, this subroutine actually returns
-* U*Q instead of Q, and if right singular vectors are requested, this
-* subroutine returns P^H*VT instead of P^H, for given complex input
+* U_Q instead of Q, and if right singular vectors are requested, this
+_ subroutine returns P^H_VT instead of P^H, for given complex input
 * matrices U and VT.
 *
 * ## Notes
 *
 * -   D and E are real arrays containing diagonal and off-diagonal elements.
 * -   VT, U, C are Complex128Arrays. Strides and offsets are in complex elements.
-* -   RWORK is a real workspace of length at least max(1, 4*N-4) when NCVT=NRU=NCC=0,
-*     or max(1, 4*N) otherwise.
+* -   RWORK is a real workspace of length at least max(1, 4_N-4) when NCVT=NRU=NCC=0,
+_     or max(1, 4_N) otherwise.
 *
 * @private
 * @param {string} uplo - 'U' for upper bidiagonal, 'L' for lower bidiagonal
@@ -128,13 +128,13 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	var rotate;
 	var thresh;
 	var sminoa;
+	var tolmul;
 	var lower;
 	var oldcs;
 	var oldsn;
 	var shift;
 	var sigmn;
 	var sigmx;
-	var tolmul;
 	var oldll;
 	var oldm;
 	var smax;
@@ -152,18 +152,18 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	var iter;
 	var dout;
 	var svd2;
+	var nm12;
+	var nm13;
 	var rot;
 	var eps;
 	var nm1;
-	var nm12;
-	var nm13;
 	var tol;
 	var sll;
+	var lll;
 	var cs;
 	var sn;
 	var mu;
 	var ll;
-	var lll;
 	var m;
 	var f;
 	var g;
@@ -280,7 +280,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				}
 			}
 		}
-		sminoa = sminoa / Math.sqrt( N );
+		sminoa /= Math.sqrt( N );
 		thresh = Math.max( tol * sminoa, MAXITR * ( N * ( N * unfl ) ) );
 	} else {
 		thresh = Math.max( Math.abs( tol ) * smax, MAXITR * ( N * ( N * unfl ) ) );
@@ -297,7 +297,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	m = N - 1; // 0-based (Fortran M starts at N, we use N-1)
 
 	// Outer loop (label 60 in Fortran)
-/* eslint-disable max-len, max-params, no-label-var, no-labels, no-unused-labels */
+
+	/* eslint-disable max-len, max-params, no-label-var, no-labels, no-unused-labels */
 	outer:
 	while ( true ) {
 		// Check if the matrix is split
@@ -306,14 +307,14 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		}
 
 		if ( iter >= N ) {
-			iter = iter - N;
-			iterdivn = iterdivn + 1;
+			iter -= N;
+			iterdivn += 1;
 			if ( iterdivn >= maxitdivn ) {
 				// Non-convergence: count remaining non-zero E entries
 				info = 0;
 				for ( i = 0; i < N - 1; i++ ) {
 					if ( e[ offsetE + i * strideE ] !== ZERO ) {
-						info = info + 1;
+						info += 1;
 					}
 				}
 				// Sort singular values and make non-negative before returning
@@ -344,11 +345,11 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				// Matrix splits
 				if ( ll === m - 1 ) {
 					// Bottom singular value found: decrement m and restart
-					m = m - 1;
+					m -= 1;
 					continue outer;
 				}
 				// ll is the index where split occurs
-				ll = ll + 1;
+				ll += 1;
 				break;
 			}
 			smax = Math.max( smax, abss, abse );
@@ -411,7 +412,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 					cosl, sinl
 				);
 			}
-			m = m - 2;
+			m -= 2;
 			continue;
 		}
 
@@ -760,7 +761,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 }
 
 /**
-* Makes all singular values non-negative and sorts them in decreasing order,
+* Makes all singular values non-negative and sorts them in decreasing order,.
 * applying the same permutations to the singular vector matrices.
 *
 * @private

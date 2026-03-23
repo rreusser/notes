@@ -26,23 +26,23 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgelss = require( '@stdlib/lapack/base/dgelss' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var S = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dgelss( 'row-major', 2, 2, 1, A, 2, B, 2, S, 1, 1.0, 1.0, WORK, 1, 8 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dgelss = require( '@stdlib/lapack/base/dgelss' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var s = new Float64Array( [ 1.0, 2.0 ] );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * dgelss.ndarray( 2, 2, 1, A, 1, 2, 0, B, 1, 2, 0, s, 1, 0, 1.0, 2, WORK, 1, 0, 8 );
 */
 

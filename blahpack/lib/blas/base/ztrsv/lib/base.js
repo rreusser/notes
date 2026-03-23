@@ -28,8 +28,8 @@ var cmplx = require( './../../../../cmplx.js' );
 // MAIN //
 
 /**
-* Solve one of the systems of equations
-*   A*x = b,  or  A**T*x = b,  or  A**H*x = b,
+* Solve one of the systems of equations.
+*   A_x = b,  or  A__T_x = b,  or  A*_H_x = b,
 * where b and x are N element complex vectors and A is an N by N unit, or
 * non-unit, upper or lower triangular complex matrix.
 *
@@ -112,6 +112,7 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						ia = oA + i * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
+
 						// x(i) -= x(j) * A(i,j)  — inline complex multiply-subtract
 						xv[ ix ] -= xr * ar - xi * ai;
 						xv[ ix + 1 ] -= xr * ai + xi * ar;
@@ -139,6 +140,7 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						ia = oA + i * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
+
 						// x(i) -= x(j) * A(i,j)
 						xv[ ix ] -= xr * ar - xi * ai;
 						xv[ ix + 1 ] -= xr * ai + xi * ar;
@@ -162,13 +164,14 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						ia = oA + i * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						// temp -= A(i,j) * x(i)  — inline complex multiply-subtract
+
+						// Temp -= A(i,j) * x(i)  — inline complex multiply-subtract
 						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
 						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix += sx;
 					}
 					if ( nounit ) {
-						// temp = temp / A(j,j) — store temp, divide, read back
+						// Temp = temp / A(j,j) — store temp, divide, read back
 						ia = oA + j * sa1 + j * sa2;
 						xv[ jx ] = tr;
 						xv[ jx + 1 ] = ti;
@@ -183,20 +186,24 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						ia = oA + i * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
-						// temp -= conj(A(i,j)) * x(i)
+
+						// Temp -= conj(A(i,j)) * x(i)
 						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
 						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix += sx;
 					}
 					if ( nounit ) {
-						// temp = temp / conj(A(j,j))
+						// Temp = temp / conj(A(j,j))
 						ia = oA + j * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
+
 						// Divide temp by conj(A(j,j)) using Smith's formula
 						xv[ jx ] = tr;
 						xv[ jx + 1 ] = ti;
+
 						// Need to divide by conjugated diagonal — write conj into temp storage
+
 						// We store conj value, divide, then proceed
 						xr = tr; xi = ti;
 						if ( Math.abs( ai ) <= Math.abs( ar ) ) {
@@ -231,13 +238,14 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						ia = oA + i * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = Av[ ia + 1 ];
-						// temp -= A(i,j) * x(i)
+
+						// Temp -= A(i,j) * x(i)
 						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
 						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix -= sx;
 					}
 					if ( nounit ) {
-						// temp = temp / A(j,j)
+						// Temp = temp / A(j,j)
 						ia = oA + j * sa1 + j * sa2;
 						xv[ jx ] = tr;
 						xv[ jx + 1 ] = ti;
@@ -252,13 +260,14 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 						ia = oA + i * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate
-						// temp -= conj(A(i,j)) * x(i)
+
+						// Temp -= conj(A(i,j)) * x(i)
 						tr -= ar * xv[ ix ] - ai * xv[ ix + 1 ];
 						ti -= ar * xv[ ix + 1 ] + ai * xv[ ix ];
 						ix -= sx;
 					}
 					if ( nounit ) {
-						// temp = temp / conj(A(j,j))
+						// Temp = temp / conj(A(j,j))
 						ia = oA + j * sa1 + j * sa2;
 						ar = Av[ ia ];
 						ai = -Av[ ia + 1 ]; // conjugate

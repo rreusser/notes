@@ -39,10 +39,10 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes an LU factorization of a general complex M-by-N matrix A using
+* Computes an LU factorization of a general complex M-by-N matrix A using.
 * partial pivoting with row interchanges (blocked algorithm).
 *
-* The factorization has the form A = P * L * U where P is a permutation
+* The factorization has the form A = P _ L _ U where P is a permutation
 * matrix, L is lower triangular with unit diagonal elements, and U is upper
 * triangular.
 *
@@ -65,8 +65,8 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 */
 function zgetrf( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var iinfo;
-	var info;
 	var minMN;
+	var info;
 	var sa1;
 	var sa2;
 	var jb;
@@ -104,14 +104,14 @@ function zgetrf( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetI
 		}
 
 		// Adjust IPIV: the panel factored rows j..M-1, so pivot indices
-		// are relative to row j. Add j to make them global.
+		// Are relative to row j. Add j to make them global.
 		for ( i = j; i < Math.min( M, j + jb ); i++ ) {
 			IPIV[ offsetIPIV + i * strideIPIV ] += j;
 		}
 
 		// Apply interchanges to columns 0..j-1
 		// NOTE: pass offsetIPIV + j * strideIPIV so dlaswp reads the correct
-		// pivot entries for this block (not from the start of IPIV)
+		// Pivot entries for this block (not from the start of IPIV)
 		zlaswp( j, A, sa1, sa2, offsetA, j, j + jb - 1, IPIV, strideIPIV, offsetIPIV + j * strideIPIV, 1 );
 
 		if ( j + jb < N ) {

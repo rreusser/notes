@@ -23,12 +23,12 @@
 *
 * @example
 * var dladiv = require( '@stdlib/lapack/base/dladiv' );
-* 
+*
 * dladiv( 1.0, 1.0, 1.0, 1.0, 1.0 );
 *
 * @example
 * var dladiv = require( '@stdlib/lapack/base/dladiv' );
-* 
+*
 * dladiv.ndarray( 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 );
 */
 

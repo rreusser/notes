@@ -30,14 +30,14 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 // MAIN //
 
 /**
-* Generate an M-by-N complex unitary matrix Q from the elementary
+* Generate an M-by-N complex unitary matrix Q from the elementary.
 * reflectors returned by ZGEQRF (QR factorization, unblocked algorithm).
 *
 * Q is defined as the product of K elementary reflectors:
 *
 *   Q = H(1) H(2) ... H(K)
 *
-* where each H(i) has the form H(i) = I - tau(i) * v * v^H.
+* where each H(i) has the form H(i) = I - tau(i) _ v _ v^H.
 *
 * ## Notes
 *
@@ -91,6 +91,7 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	st = strideTAU * 2;
 
 	// Initialize columns K+1..N of the matrix to columns of the unit matrix
+
 	// Fortran: DO 20 J = K+1, N
 	for ( j = K; j < N; j++ ) {
 		// Zero out the column
@@ -119,7 +120,9 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			Av[ ia + 1 ] = 0.0;
 
 			// ZLARF('Left', M-I, N-I-1, A(I,I), 1, TAU(I), A(I,I+1), LDA, WORK)
+
 			// In Fortran 1-based: M-I+1 rows from row I, N-I cols from col I+1
+
 			// In 0-based: M-i rows from row i, N-i-1 cols from col i+1
 			zlarf(
 				'left', M - i, N - i - 1,
@@ -147,6 +150,7 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		Av[ ia + 1 ] = -tauv[ it + 1 ];
 
 		// Zero out rows 0..i-1 of column i
+
 		// Fortran: DO 30 L = 1, I-1
 		for ( l = 0; l < i; l++ ) {
 			ia = oA + l * sa1 + i * sa2;

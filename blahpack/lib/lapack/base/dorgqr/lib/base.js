@@ -33,14 +33,14 @@ var NB = 32;  // Block size (LAPACK default for DORGQR)
 // MAIN //
 
 /**
-* Generates an M-by-N real orthogonal matrix Q from the elementary
+* Generates an M-by-N real orthogonal matrix Q from the elementary.
 * reflectors returned by DGEQRF (QR factorization, blocked algorithm).
 *
 * Q is defined as the product of K elementary reflectors:
 *
 *   Q = H(1) H(2) ... H(K)
 *
-* where each H(i) has the form H(i) = I - tau(i) * v * v^T.
+* where each H(i) has the form H(i) = I - tau(i) _ v _ v^T.
 *
 * This is the blocked version that uses DLARFT + DLARFB for efficiency
 * on large matrices, falling back to DORG2R for small ones.
@@ -92,6 +92,7 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	ldwork = N;
 
 	// Determine blocking strategy
+
 	// Use blocked algorithm if NB >= 2 and NB < K
 	if ( nb >= 2 && nb < K ) {
 		// NX = 0: always use blocked when possible
@@ -104,6 +105,7 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			kk = Math.min( K, ki + nb );
 
 			// Zero out first KK rows of columns KK..N-1
+
 			// Fortran: DO 20 J = KK+1, N; DO 10 I = 1, KK; A(I,J) = ZERO
 			for ( j = kk; j < N; j++ ) {
 				for ( i = 0; i < kk; i++ ) {
@@ -132,7 +134,9 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		work = new Float64Array( ldwork * nb );
 
 		// Process blocks in reverse order
+
 		// Fortran: DO 50 I = KI+1, 1, -NB (1-based)
+
 		// In 0-based: i goes from ki down to 0, step -nb
 		for ( i = ki; i >= 0; i -= nb ) {
 			ib = Math.min( nb, K - i );
@@ -148,8 +152,11 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				);
 
 				// Apply H to A(i:M-1, i+ib:N-1) from the left
+
 				// DLARFB('Left', 'No transpose', 'Forward', 'Columnwise',
+
 				//         M-I+1, N-I-IB+1, IB, A(I,I), LDA, WORK, LDWORK,
+
 				//         A(I,I+IB), LDA, WORK(IB+1), LDWORK)
 				dlarfb(
 					'left', 'no-transpose', 'forward', 'columnwise',
@@ -171,6 +178,7 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			);
 
 			// Zero out rows 0..i-1 of columns i..i+ib-1
+
 			// Fortran: DO 40 J = I, I+IB-1; DO 30 L = 1, I-1; A(L,J) = ZERO
 			for ( j = i; j < i + ib; j++ ) {
 				for ( l = 0; l < i; l++ ) {

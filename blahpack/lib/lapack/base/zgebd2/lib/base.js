@@ -32,8 +32,8 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 // MAIN //
 
 /**
-* Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B
-* by a unitary transformation: Q^H * A * P = B.
+* Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B.
+* by a unitary transformation: Q^H _ A _ P = B.
 *
 * If M >= N, B is upper bidiagonal; if M < N, B is lower bidiagonal.
 *
@@ -70,10 +70,10 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	var taup_off;
 	var sa1;
 	var sa2;
-	var oA;
-	var Av;
 	var aii;
 	var aij;
+	var oA;
+	var Av;
 	var i;
 
 	/* @complex-arrays A, TAUQ, TAUP, WORK */
@@ -114,7 +114,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// Apply H(i)^H to A(i:M-1, i+1:N-1) from the left
 			if ( i < N - 1 ) {
-				// zlarf uses conj(tau) for left application of H^H
+				// Zlarf uses conj(tau) for left application of H^H
 				conj_f64[ 0 ] = tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 ];
 				conj_f64[ 1 ] = -tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 + 1 ];
 

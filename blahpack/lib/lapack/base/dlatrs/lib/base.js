@@ -43,8 +43,8 @@ var RMAX = 1.7976931348623157e+308; // DLAMCH('O')
 /**
 * Solves a triangular system with scaling to prevent overflow.
 *
-*   A * x = s * b  (trans = 'no-transpose')
-*   A^T * x = s * b  (trans = 'transpose' or 'C')
+*   A _ x = s _ b  (trans = 'no-transpose')
+*   A^T _ x = s _ b  (trans = 'transpose' or 'C')
 *
 * where A is an N-by-N triangular matrix, x and b are N-vectors, and s is a
 * scaling factor chosen to prevent overflow. The scale factor s is returned
@@ -72,9 +72,11 @@ var RMAX = 1.7976931348623157e+308; // DLAMCH('O')
 function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM ) {
 	var notran;
 	var nounit;
+	var jfirst;
 	var upper;
 	var tscal;
 	var uscal;
+	var jlast;
 	var xbnd;
 	var xmax;
 	var grow;
@@ -82,16 +84,14 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 	var tjjs;
 	var tmax;
 	var imax;
-	var rec;
-	var tjj;
-	var xj;
-	var sa1;
-	var sa2;
-	var sc;
-	var jfirst;
-	var jlast;
 	var jinc;
 	var work;
+	var rec;
+	var tjj;
+	var sa1;
+	var sa2;
+	var xj;
+	var sc;
 	var ci;
 	var j;
 	var i;
@@ -290,6 +290,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 						// (Go to label 100 in Fortran)
 						// Update xj after "division"
 						xj = Math.abs( x[ offsetX + j * strideX ] );
+
 						// Fall through to the off-diagonal update
 						if ( xj > 1.0 ) {
 							rec = 1.0 / xj;
@@ -309,12 +310,10 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 								i = idamax( j, x, strideX, offsetX );
 								xmax = Math.abs( x[ offsetX + i * strideX ] );
 							}
-						} else {
-							if ( j < N - 1 ) {
-								daxpy( N - j - 1, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2, x, strideX, offsetX + ( j + 1 ) * strideX );
-								i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
-								xmax = Math.abs( x[ offsetX + i * strideX ] );
-							}
+						} else if ( j < N - 1 ) {
+							daxpy( N - j - 1, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2, x, strideX, offsetX + ( j + 1 ) * strideX );
+							i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
+							xmax = Math.abs( x[ offsetX + i * strideX ] );
 						}
 						continue;
 					}
@@ -373,12 +372,10 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 						i = idamax( j, x, strideX, offsetX );
 						xmax = Math.abs( x[ offsetX + i * strideX ] );
 					}
-				} else {
-					if ( j < N - 1 ) {
-						daxpy( N - j - 1, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2, x, strideX, offsetX + ( j + 1 ) * strideX );
-						i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
-						xmax = Math.abs( x[ offsetX + i * strideX ] );
-					}
+				} else if ( j < N - 1 ) {
+					daxpy( N - j - 1, -x[ offsetX + j * strideX ] * tscal, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2, x, strideX, offsetX + ( j + 1 ) * strideX );
+					i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + ( j + 1 ) * strideX );
+					xmax = Math.abs( x[ offsetX + i * strideX ] );
 				}
 			}
 		} else {

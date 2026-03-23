@@ -33,7 +33,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves one of the complex matrix equations op(A)*X = alpha*B or X*op(A) = alpha*B, where A is a complex triangular matrix.
+* Solves one of the complex matrix equations op(A)_X = alpha_B or X_op(A) = alpha_B, where A is a complex triangular matrix.
 *
 * @param {string} side - specifies whether op(A) appears on the left or right of X
 * @param {string} uplo - specifies whether A is upper or lower triangular

@@ -30,8 +30,8 @@ var base = require( './base.js' );
 /**
 * Copyright (c) 2025 The Stdlib Authors.
 */
-function zlasyf(  ) {
-	return base(  );
+function zlasyf( ) {
+	return base( );
 }
 
 

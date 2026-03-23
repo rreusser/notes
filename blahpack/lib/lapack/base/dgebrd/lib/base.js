@@ -36,8 +36,8 @@ var DEFAULT_NB = 32;
 // MAIN //
 
 /**
-* Reduces a real M-by-N matrix A to upper or lower real bidiagonal form B
-* by an orthogonal transformation: Q**T * A * P = B.
+* Reduces a real M-by-N matrix A to upper or lower real bidiagonal form B.
+* by an orthogonal transformation: Q__T _ A _ P = B.
 *
 * This is the blocked version that processes NB columns at a time using
 * dlabrd for the panel factorization, dgemm for the trailing matrix update,
@@ -126,12 +126,12 @@ function dgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	if ( nb >= 2 && nb < minmn && nx < minmn ) {
 		while ( i < minmn - nx ) {
 			// Reduce rows and columns i:i+nb-1 to bidiagonal form and return
-			// the matrices X and Y which are needed to update the unreduced
-			// part of the matrix.
-			//
+			// The matrices X and Y which are needed to update the unreduced
+			// Part of the matrix.
+
 			// dlabrd( M, N, nb, A, sA1, sA2, oA, d, sD, oD, e, sE, oE,
 			//         TAUQ, sTQ, oTQ, TAUP, sTP, oTP, X, sX1, sX2, oX, Y, sY1, sY2, oY )
-			//
+
 			// X starts at offsetWORK, Y starts at offsetWORK + ldwrkx * nb
 			dlabrd(
 				M - i, N - i, nb,

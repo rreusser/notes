@@ -30,10 +30,10 @@ var iladlc = require( '../../iladlc/lib/base.js' );
 // MAIN //
 
 /**
-* Applies a real elementary reflector H to a real M-by-N matrix C,
+* Applies a real elementary reflector H to a real M-by-N matrix C,.
 * from either the left or the right.
 *
-*   H = I - tau * v * v**T
+*   H = I - tau _ v _ v**T
 *
 * @private
 * @param {string} side - 'L' for left, 'R' for right

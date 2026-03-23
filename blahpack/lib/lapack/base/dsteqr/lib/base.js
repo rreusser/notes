@@ -43,7 +43,7 @@ var MAXIT = 30;
 // MAIN //
 
 /**
-* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric
+* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 * tridiagonal matrix using the implicit QL or QR method.
 *
 * The tridiagonal matrix T is defined by its diagonal D and subdiagonal E.
@@ -85,8 +85,8 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var safmin;
 	var icompz;
 	var lendsv;
-	var anorm;
 	var iscale;
+	var anorm;
 	var jtot;
 	var lend;
 	var eps2;
@@ -94,8 +94,10 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var tst;
 	var obj;
 	var lsv;
+	var rot;
 	var mm;
 	var l1;
+	var ii;
 	var l;
 	var m;
 	var p;
@@ -108,8 +110,6 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var i;
 	var j;
 	var k;
-	var rot;
-	var ii;
 
 	rot = new Float64Array( 3 );
 
@@ -152,8 +152,10 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	jtot = 0;
 
 	// Determine where the matrix splits and choose QL or QR iteration for
-	// each block.
+
+	// Each block.
 	l1 = 0; // 0-based
+
 	// Outer loop (label 10 in Fortran): find unreduced blocks
 	outer:
 	while ( l1 < N ) {
@@ -177,7 +179,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 			}
 		}
 
-		// label 30: set up the block [l..lend]
+		// Label 30: set up the block [l..lend]
 		l = l1;
 		lsv = l;
 		lend = m;
@@ -214,13 +216,13 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 		if ( lend > l ) {
 			// QL iteration: look for small subdiagonal element from bottom up
 			// (lend > l means we work from top toward bottom)
-			// label 40 loop
+			// Label 40 loop
 			while ( true ) {
 				// Find small subdiagonal element (label 40 -> 50 -> 60)
 				if ( l !== lend ) {
 					for ( m = l; m <= lend - 1; m++ ) {
 						tst = Math.abs( e[ offsetE + m * strideE ] );
-						tst = tst * tst;
+						tst *= tst;
 						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m + 1 ) * strideD ] ) + safmin ) {
 							break;
 						}
@@ -282,7 +284,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Form shift
 				g = ( d[ offsetD + ( l + 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + l * strideE ] );
 				r = dlapy2( g, 1.0 );
-				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + l * strideE ] / ( g + ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ? r : -r ) ) ); // SIGN(R, G)
+				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + l * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
 				s = 1.0;
 				c = 1.0;
@@ -324,17 +326,18 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 				d[ offsetD + l * strideD ] -= p;
 				e[ offsetE + l * strideE ] = g;
-				// go to 40 (continue while loop)
+
+				// Go to 40 (continue while loop)
 			}
 		} else {
 			// QR iteration: lend < l, work from bottom toward top
-			// label 90 loop
+			// Label 90 loop
 			while ( true ) {
 				// Find small subdiagonal element (labels 90 -> 100 -> 110)
 				if ( l !== lend ) {
 					for ( m = l; m >= lend + 1; m-- ) {
 						tst = Math.abs( e[ offsetE + ( m - 1 ) * strideE ] );
-						tst = tst * tst;
+						tst *= tst;
 						if ( tst <= ( eps2 * Math.abs( d[ offsetD + m * strideD ] ) ) * Math.abs( d[ offsetD + ( m - 1 ) * strideD ] ) + safmin ) {
 							break;
 						}
@@ -396,7 +399,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Form shift
 				g = ( d[ offsetD + ( l - 1 ) * strideD ] - p ) / ( 2.0 * e[ offsetE + ( l - 1 ) * strideE ] );
 				r = dlapy2( g, 1.0 );
-				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ? r : -r ) ) ); // SIGN(R, G)
+				g = d[ offsetD + m * strideD ] - p + ( e[ offsetE + ( l - 1 ) * strideE ] / ( g + ( ( Math.abs( g ) * ( Math.sign( g ) || 1.0 ) > 0 ) ? r : -r ) ) ); // SIGN(R, G)
 
 				s = 1.0;
 				c = 1.0;
@@ -438,11 +441,12 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 				d[ offsetD + l * strideD ] -= p;
 				e[ offsetE + ( l - 1 ) * strideE ] = g;
-				// go to 90 (continue while loop)
+
+				// Go to 90 (continue while loop)
 			}
 		}
 
-		// label 140: Undo scaling if necessary
+		// Label 140: Undo scaling if necessary
 		if ( iscale === 1 ) {
 			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
 			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
@@ -456,7 +460,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 			break; // go to convergence failure handling
 		}
 
-		// continue outer loop (go to 10)
+		// Continue outer loop (go to 10)
 	}
 
 	// Check for convergence failure: count nonzero off-diagonal elements
@@ -470,7 +474,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 		return info;
 	}
 
-	// label 160: Sort eigenvalues (and eigenvectors) in ascending order
+	// Label 160: Sort eigenvalues (and eigenvectors) in ascending order
 	if ( icompz === 0 ) {
 		// Eigenvalues only: use dlasrt
 		dlasrt( 'increasing', N, d, strideD, offsetD );

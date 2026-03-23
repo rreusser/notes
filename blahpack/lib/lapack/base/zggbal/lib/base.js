@@ -127,6 +127,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	var iflow;
 	var coef2;
 	var coef5;
+	var found;
 	var irab;
 	var icab;
 	var lcab;
@@ -135,17 +136,21 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	var beta;
 	var cmax;
 	var coef;
+	var nrp2;
 	var cab;
 	var cor;
-	var nrp2;
 	var rab;
 	var sum;
 	var lm1;
-	var nr;
 	var sA1;
 	var sA2;
 	var sB1;
 	var sB2;
+	var ewc;
+	var ip1;
+	var jp1;
+	var idx;
+	var nr;
 	var oA;
 	var oB;
 	var sL;
@@ -154,26 +159,21 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	var oR;
 	var sW;
 	var oW;
-	var ewc;
 	var ew;
-	var ip1;
-	var jp1;
 	var it;
 	var ir;
 	var jc;
 	var tc;
 	var ta;
 	var tb;
+	var Av;
+	var Bv;
 	var t;
 	var k;
 	var l;
 	var m;
 	var i;
 	var j;
-	var Av;
-	var Bv;
-	var idx;
-	var found;
 
 	// Get Float64Array views for direct element access
 	Av = reinterpret( A, 0 );
@@ -195,19 +195,31 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 	// Quick return if possible
 	if ( N === 0 ) {
-		return { info: 0, ilo: 1, ihi: 0 };
+		return {
+			'info': 0,
+			'ilo': 1,
+			'ihi': 0
+		};
 	}
 	if ( N === 1 ) {
 		LSCALE[ oL ] = ONE;
 		RSCALE[ oR ] = ONE;
-		return { info: 0, ilo: 1, ihi: 1 };
+		return {
+			'info': 0,
+			'ilo': 1,
+			'ihi': 1
+		};
 	}
 	if ( job === 'none' ) {
 		for ( i = 0; i < N; i++ ) {
 			LSCALE[ oL + i * sL ] = ONE;
 			RSCALE[ oR + i * sR ] = ONE;
 		}
-		return { info: 0, ilo: 1, ihi: N };
+		return {
+			'info': 0,
+			'ilo': 1,
+			'ihi': N
+		};
 	}
 
 	// Initialize k and l (1-based, as in Fortran)
@@ -227,7 +239,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	//   - Finding rows with single nonzero (labels 20-80, iflow=1)
 	//   - Finding columns with single nonzero (labels 90-150, iflow=2)
 	// After each find, perform the swap (labels 160-180)
-	// and continue based on iflow.
+	// And continue based on iflow.
 
 	// Start: look for row with single nonzero (label 30)
 	l = findAndPermute( k, l );
@@ -236,10 +248,15 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	return doScaling( k, l );
 
 	// ----------------------------------------------------------------
+
 	// findAndPermute: the main permutation loop
+
 	// This replaces the GOTO-based control flow of labels 20-180.
+
 	// Returns the final value of l after all permutations.
+
 	// Also updates k as a side effect via closure.
+
 	// ----------------------------------------------------------------
 	function findAndPermute( kk, ll ) {
 		var foundRow;
@@ -247,6 +264,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		l = ll;
 
 		// Outer loop: alternate between row search and column search
+
 		// eslint-disable-next-line no-constant-condition
 		while ( true ) {
 			// === Row search (labels 30-80) ===
@@ -294,8 +312,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				doPermute( i, j, m );
 
 				// After permute with iflow=1: go to label 20
-				// label 20: l = lm1; if l != 1, go to 30 (continue row search)
-				l = l - 1;
+
+				// Label 20: l = lm1; if l != 1, go to 30 (continue row search)
+				l -= 1;
 				if ( l === 1 ) {
 					// l=1 in 1-based: set scales and go to scaling
 					RSCALE[ oR ] = ONE;
@@ -353,8 +372,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					doPermute( i, j, m );
 
 					// After permute with iflow=2: go to label 90
-					// label 90: k = k + 1
-					k = k + 1;
+
+					// Label 90: k = k + 1
+					k += 1;
 					foundCol = true;
 					break; // Restart column search with new k
 				}
@@ -373,9 +393,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	// i, j, m are 0-based indices
 	// ----------------------------------------------------------------
 	function doPermute( ri, cj, pm ) {
-		// pm is 0-based destination row/column
-		// ri is 0-based source row
-		// cj is 0-based source column
+		// Pm is 0-based destination row/column
+		// Ri is 0-based source row
+		// Cj is 0-based source column
 
 		// LSCALE(M) = I (1-based)
 		LSCALE[ oL + pm * sL ] = ri + 1;
@@ -384,7 +404,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		if ( ri !== pm ) {
 			// ZSWAP(N-K+1, A(I,K), LDA, A(M,K), LDA)
 			// Swap rows ri and pm, columns from k-1 to N-1
-			// stride = LDA in complex elements = sA2/2
+			// Stride = LDA in complex elements = sA2/2
 			zswap( N - k + 1, A, strideA2, offsetA + ri * strideA1 + ( k - 1 ) * strideA2,
 				A, strideA2, offsetA + pm * strideA1 + ( k - 1 ) * strideA2 );
 			zswap( N - k + 1, B, strideB2, offsetB + ri * strideB1 + ( k - 1 ) * strideB2,
@@ -398,7 +418,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		if ( cj !== pm ) {
 			// ZSWAP(L, A(1,J), 1, A(1,M), 1)
 			// Swap columns cj and pm, rows 0 to l-1
-			// stride = 1 in complex elements = sA1/2
+			// Stride = 1 in complex elements = sA1/2
 			zswap( l, A, strideA1, offsetA + cj * strideA2,
 				A, strideA1, offsetA + pm * strideA2 );
 			zswap( l, B, strideB1, offsetB + cj * strideB2,
@@ -408,7 +428,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 	// ----------------------------------------------------------------
 	// doScaling: scaling phase (labels 190 onwards)
-	// kk and ll are the final 1-based k and l values
+	// Kk and ll are the final 1-based k and l values
 	// ----------------------------------------------------------------
 	function doScaling( kk, ll ) {
 		var ilo;
@@ -422,13 +442,21 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				LSCALE[ oL + i * sL ] = ONE;
 				RSCALE[ oR + i * sR ] = ONE;
 			}
-			return { info: 0, ilo: ilo, ihi: ihi };
+			return {
+				'info': 0,
+				'ilo': ilo,
+				'ihi': ihi
+			};
 		}
 
 		if ( ilo === ihi ) {
 			LSCALE[ oL + ( ilo - 1 ) * sL ] = ONE;
 			RSCALE[ oR + ( ilo - 1 ) * sR ] = ONE;
-			return { info: 0, ilo: ilo, ihi: ihi };
+			return {
+				'info': 0,
+				'ilo': ilo,
+				'ihi': ihi
+			};
 		}
 
 		// Balance the submatrix in rows ILO to IHI
@@ -475,6 +503,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		it = 1;
 
 		// Generalized conjugate gradient iteration (label 250)
+
 		// eslint-disable-next-line no-constant-condition
 		while ( true ) {
 			// Compute gamma
@@ -587,7 +616,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			}
 		}
 
-		// label 350: Post-iteration scaling
+		// Label 350: Post-iteration scaling
 		sfmin = dlamch( 'scale' );
 		sfmax = ONE / sfmin;
 		lsfmin = Math.trunc( Math.log10( sfmin ) / basl + ONE );
@@ -595,7 +624,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 		for ( i = ilo - 1; i < ihi; i++ ) {
 			// Row scaling: find max element in row i, columns ilo-1..N-1
-			// izamax returns 0-based index into the subvector
+			// Izamax returns 0-based index into the subvector
 			irab = izamax( N - ilo + 1, A, strideA2, offsetA + i * strideA1 + ( ilo - 1 ) * strideA2 );
 			rab = cabs( Av, oA + i * sA1 + ( irab + ilo - 1 ) * sA2 );
 			irab = izamax( N - ilo + 1, B, strideB2, offsetB + i * strideB1 + ( ilo - 1 ) * strideB2 );
@@ -628,7 +657,11 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			zdscal( ihi, RSCALE[ oR + j * sR ], B, strideB1, offsetB + j * strideB2 );
 		}
 
-		return { info: 0, ilo: ilo, ihi: ihi };
+		return {
+			'info': 0,
+			'ilo': ilo,
+			'ihi': ihi
+		};
 	}
 }
 

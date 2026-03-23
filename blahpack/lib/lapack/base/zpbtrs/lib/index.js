@@ -26,19 +26,19 @@
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zpbtrs = require( '@stdlib/lapack/base/zpbtrs' );
-* 
+*
 * var AB = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zpbtrs( 'row-major', 'upper', 2, 2, 1, AB, 2, B, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zpbtrs = require( '@stdlib/lapack/base/zpbtrs' );
-* 
+*
 * var AB = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zpbtrs.ndarray( 'upper', 2, 2, 1, AB, 1, 2, 0, B, 1, 2, 0 );
 */
 

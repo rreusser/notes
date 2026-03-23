@@ -56,9 +56,9 @@ var CZERO = new Complex128( 0.0, 0.0 );
 function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 	var nounit;
 	var upper;
-	var Av;
 	var sa1;
 	var sa2;
+	var Av;
 	var nn;
 	var jb;
 	var ia;

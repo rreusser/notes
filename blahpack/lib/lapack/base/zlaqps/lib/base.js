@@ -45,7 +45,7 @@ var NEGCONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes a step of QR factorization with column pivoting using a
+* Computes a step of QR factorization with column pivoting using a.
 * blocked algorithm. It factors at most NB columns of the M-by-N
 * submatrix A(OFFSET+1:M, 1:N). The actual number of columns
 * factored is returned as kb.
@@ -84,9 +84,9 @@ var NEGCONE = new Complex128( -1.0, 0.0 );
 * @returns {integer} kb - actual number of columns factored
 */
 function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, AUXV, strideAUXV, offsetAUXV, F, strideF1, strideF2, offsetF ) {
+	var negTauK;
 	var lastrk;
 	var lsticc;
-	var negTauK;
 	var tol3z;
 	var itemp;
 	var temp2;
@@ -198,6 +198,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		Av[ oA + 2 * ( rk * sa1 + k * sa2 ) + 1 ] = 0.0;
 
 		// Compute k-th column of F:
+
 		// F(k+1:N-1, k) = tau(k) * A(rk:M-1, k+1:N-1)^H * A(rk:M-1, k)
 		if ( k < N - 1 ) {
 			// tau(k) as Complex128

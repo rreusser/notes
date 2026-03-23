@@ -68,11 +68,11 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 	var ldwork;
 	var nbmin;
 	var info;
-	var Wv;
-	var Av;
 	var sa1;
 	var sa2;
 	var iws;
+	var Wv;
+	var Av;
 	var nb;
 	var nn;
 	var jb;
@@ -124,9 +124,11 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			for ( i = j + 1; i < N; i++ ) {
 				ia = ( offsetA + i * sa1 + j * sa2 ) * 2;
 				iw = ( offsetWORK + i * strideWORK ) * 2;
+
 				// WORK(i) = A(i, j)
 				Wv[ iw ] = Av[ ia ];
 				Wv[ iw + 1 ] = Av[ ia + 1 ];
+
 				// A(i, j) = ZERO
 				Av[ ia ] = 0.0;
 				Av[ ia + 1 ] = 0.0;
@@ -149,10 +151,12 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			jb = Math.min( nb, N - j );
 
 			// Copy block of L (below diagonal) into WORK and zero it in A
+
 			// WORK is used as a column-major N-by-jb matrix with strides (1, ldwork)
 			for ( jj = j; jj < j + jb; jj++ ) {
 				for ( i = jj + 1; i < N; i++ ) {
 					ia = ( offsetA + i * sa1 + jj * sa2 ) * 2;
+
 					// WORK(i + (jj-j)*ldwork) in complex elements from offsetWORK
 					iw = ( offsetWORK + i + ( jj - j ) * ldwork ) * 2;
 					Wv[ iw ] = Av[ ia ];

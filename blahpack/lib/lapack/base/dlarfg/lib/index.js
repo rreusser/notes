@@ -26,19 +26,19 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlarfg = require( '@stdlib/lapack/base/dlarfg' );
-* 
+*
 * var alpha = new Float64Array( [ 1.0, 2.0 ] );
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var tau = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlarfg( 2, alpha, 0, x, 1, tau, 0 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlarfg = require( '@stdlib/lapack/base/dlarfg' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dlarfg.ndarray( 2, 1.0, x, 1, 0, 1.0 );
 */
 

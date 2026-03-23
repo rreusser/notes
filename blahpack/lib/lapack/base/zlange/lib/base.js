@@ -54,9 +54,9 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 	var temp;
 	var sum;
 	var out;
-	var Av;
 	var sa1;
 	var sa2;
+	var Av;
 	var oA;
 	var ai;
 	var wi;
@@ -125,7 +125,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		}
 	} else if ( norm === 'frobenius' || norm === 'frobenius' ) {
 		// Frobenius norm: scale * sqrt(sumsq) using zlassq per column
-		// zlassq now takes Complex128Array with offset in complex elements
+		// Zlassq now takes Complex128Array with offset in complex elements
 		scale = 0.0;
 		sum = 1.0;
 		for ( j = 0; j < N; j++ ) {

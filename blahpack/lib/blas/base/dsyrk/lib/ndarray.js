@@ -31,7 +31,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Performs the symmetric rank-k update C := alpha*A*A^T + beta*C or C := alpha*A^T*A + beta*C.
+* Performs the symmetric rank-k update C := alpha_A_A^T + beta_C or C := alpha_A^T_A + beta_C.
 *
 * @param {string} uplo - specifies whether the upper or lower triangle of C is stored
 * @param {string} trans - specifies whether to use A or A^T

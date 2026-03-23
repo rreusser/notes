@@ -29,7 +29,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Computes an LQ factorization of a real M-by-N matrix A = L * Q
+* Computes an LQ factorization of a real M-by-N matrix A = L * Q.
 * using Householder reflections (unblocked algorithm).
 *
 * On exit, the elements on and below the diagonal of A contain the
@@ -64,8 +64,10 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		aii = offsetA + i * strideA1 + i * strideA2;
 
 		// Generate elementary reflector H(i) to annihilate A(i, i+1:N-1)
+
 		// dlarfg( N-i, alpha(array,offset), x, strideX, offsetX, tau, offsetTau )
-		// alpha = A(i,i), x = A(i, min(i+1, N-1)), stride along columns = strideA2
+
+		// Alpha = A(i,i), x = A(i, min(i+1, N-1)), stride along columns = strideA2
 		dlarfg(
 			N - i,
 			A, aii,
@@ -79,6 +81,7 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			A[ aii ] = 1.0;
 
 			// Apply H(i) to A(i+1:M-1, i:N-1) from the right
+
 			// dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 			dlarf(
 				'right',

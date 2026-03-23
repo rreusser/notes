@@ -39,8 +39,8 @@ var DEFAULT_NB = 32;
 // MAIN //
 
 /**
-* Computes a QR factorization with column pivoting of an M-by-N matrix:
-*   A * P = Q * R
+* Computes a QR factorization with column pivoting of an M-by-N matrix:.
+*   A _ P = Q _ R
 * using level 3 BLAS.
 *
 * A, TAU, WORK are Complex128Arrays. Strides and offsets are in complex elements.
@@ -78,10 +78,10 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 	var AUXV;
 	var sa1;
 	var sa2;
+	var fjb;
 	var oJ;
 	var oR;
 	var oT;
-	var fjb;
 	var sm;
 	var sn;
 	var na;

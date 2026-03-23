@@ -35,7 +35,7 @@ var ONE = new Complex128( 1.0, 0.0 );
 // MAIN //
 
 /**
-* Form the triangular factor T of a complex block reflector H of order N,
+* Form the triangular factor T of a complex block reflector H of order N,.
 * which is defined as a product of K elementary reflectors.
 *
 * If DIRECT = 'F', H = H(1) H(2) ... H(k) and T is upper triangular.
@@ -69,23 +69,23 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 	var tauR;
 	var tauI;
 	var TAUv;
-	var Vv;
-	var Tv;
-	var vr;
-	var vi;
+	var stau;
+	var oTAU;
 	var sv1;
 	var sv2;
 	var st1;
 	var st2;
-	var stau;
+	var Vv;
+	var Tv;
+	var vr;
+	var vi;
 	var oV;
-	var oTAU;
 	var oT;
 	var it;
 	var iv;
+	var jj;
 	var i;
 	var j;
-	var jj;
 
 	if ( N === 0 ) {
 		return;
@@ -140,6 +140,7 @@ function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						iv = oV + i * sv1 + j * sv2;
 						vr = Vv[ iv ];
 						vi = -Vv[ iv + 1 ]; // conjugate
+
 						// -tau * conj(V(i,j))
 						it = oT + j * st1 + i * st2;
 						Tv[ it ] = negTauR * vr - negTauI * vi;

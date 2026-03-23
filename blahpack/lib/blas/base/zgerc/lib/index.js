@@ -17,28 +17,28 @@
 */
 
 /**
-* Perform the rank 1 operation A := alpha*x*y**H + A.
+* Perform the rank 1 operation A := alpha_x_y**H + A.
 *
 * @module @stdlib/blas/base/zgerc
 *
 * @example
 * var Complex128Array = require( '@stdlib/array/complex128' );
 * var zgerc = require( '@stdlib/blas/base/zgerc' );
-* 
+*
 * var x = new Complex128Array( [ 1.0, 2.0 ] );
 * var y = new Complex128Array( [ 1.0, 2.0 ] );
 * var A = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgerc( 'row-major', 2, 2, 1.0, x, 1, y, 1, A, 2 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var zgerc = require( '@stdlib/blas/base/zgerc' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* 
+*
 * zgerc.ndarray( 2, 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 */
 

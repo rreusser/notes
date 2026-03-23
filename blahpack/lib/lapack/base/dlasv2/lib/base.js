@@ -34,8 +34,10 @@ var EPS = 1.1102230246251565e-16; // DLAMCH('EPS') = 2^-53
 */
 function sign( a, b ) {
 	var mag = Math.abs( a );
+
 	// Fortran SIGN: if b >= 0 return +|a|, if b < 0 return -|a|
 	// Note: SIGN(x, -0.0) returns -|x| in Fortran, but JS doesn't distinguish -0 < 0.
+
 	// We handle -0 via Object.is for correctness:
 	if ( b > 0.0 || ( b === 0.0 && !Object.is( b, -0.0 ) ) ) {
 		return mag;
@@ -46,7 +48,7 @@ function sign( a, b ) {
 // MAIN //
 
 /**
-* Computes the singular value decomposition of a 2-by-2 triangular matrix:
+* Computes the singular value decomposition of a 2-by-2 triangular matrix:.
 *
 *   [ F  G ]
 *   [ 0  H ]
@@ -102,6 +104,7 @@ function dlasv2( f, g, h ) {
 	ha = Math.abs( h );
 
 	// PMAX points to the maximum absolute element of the matrix
+
 	// PMAX = 1 if F largest, 2 if G largest, 3 if H largest
 	pmax = 1;
 	swap = ( ha > fa );

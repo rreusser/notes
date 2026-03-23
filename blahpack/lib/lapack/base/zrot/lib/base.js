@@ -25,11 +25,11 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 // MAIN //
 
 /**
-* Applies a plane rotation, where the cos (C) is real and the sin (S) is
+* Applies a plane rotation, where the cos (C) is real and the sin (S) is.
 * complex, to a pair of complex vectors CX and CY:
 *
-*   CX(i) =  C * CX(i) + S * CY(i)
-*   CY(i) = -conjg(S) * CX(i) + C * CY(i)
+*   CX(i) =  C _ CX(i) + S _ CY(i)
+*   CY(i) = -conjg(S) _ CX(i) + C _ CY(i)
 *
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
@@ -82,13 +82,16 @@ function zrot( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s ) {
 		cyr = cyv[ iy ];
 		cyi = cyv[ iy + 1 ];
 
-		// stemp = c*cx(i) + s*cy(i)
+		// Stemp = c*cx(i) + s*cy(i)
+
 		// s*cy(i) = (sr+si*i)*(cyr+cyi*i) = (sr*cyr - si*cyi) + (sr*cyi + si*cyr)*i
 		stemp_r = c * cxr + ( sr * cyr - si * cyi );
 		stemp_i = c * cxi + ( sr * cyi + si * cyr );
 
 		// cy(i) = c*cy(i) - conjg(s)*cx(i)
+
 		// conjg(s) = (sr, -si)
+
 		// conjg(s)*cx(i) = (sr*cxr + si*cxi) + (-si*cxr + sr*cxi)*i
 		cyv[ iy ] = c * cyr - ( sr * cxr + si * cxi );
 		cyv[ iy + 1 ] = c * cyi - ( -si * cxr + sr * cxi );

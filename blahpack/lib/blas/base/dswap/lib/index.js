@@ -26,19 +26,19 @@
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dswap = require( '@stdlib/blas/base/dswap' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dswap( 2, x, 1, y, 1 );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dswap = require( '@stdlib/blas/base/dswap' );
-* 
+*
 * var x = new Float64Array( [ 1.0, 2.0 ] );
 * var y = new Float64Array( [ 1.0, 2.0 ] );
-* 
+*
 * dswap.ndarray( 2, x, 1, 0, y, 1, 0 );
 */
 

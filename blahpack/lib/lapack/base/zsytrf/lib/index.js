@@ -25,18 +25,18 @@
 *
 * @example
 * var zsytrf = require( '@stdlib/lapack/base/zsytrf' );
-* 
+*
 * zsytrf(  );
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var Int32Array = require( '@stdlib/array/int32' );
 * var zsytrf = require( '@stdlib/lapack/base/zsytrf' );
-* 
+*
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 * var IPIV = new Int32Array( 2 );
 * var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
-* 
+*
 * zsytrf.ndarray( 'upper', 2, A, 1, 2, 0, IPIV, 1, 0, WORK, 1, 0, 8 );
 */
 

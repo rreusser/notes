@@ -21,6 +21,7 @@
 // VARIABLES //
 
 // Blue's scaling constants for double precision (IEEE 754):
+
 //   radix=2, minexponent=-1021, maxexponent=1024, digits=53
 var TSML = Math.pow( 2, -511 );  // threshold: values smaller than this are "small"
 var TBIG = Math.pow( 2, 486 );   // threshold: values bigger than this are "big"
@@ -34,7 +35,7 @@ var SBIG = Math.pow( 2, -538 );  // scale-down multiplier for big values
 * Returns updated scale and sum-of-squares in scaled form.
 *
 * The return value satisfies:
-*   scale_out^2 * sumsq_out = x(1)^2 + ... + x(n)^2 + scale_in^2 * sumsq_in
+*   scale_out^2 _ sumsq_out = x(1)^2 + ... + x(n)^2 + scale_in^2 _ sumsq_in
 *
 * Uses Blue's safe-scaling algorithm to avoid overflow/underflow.
 *
@@ -60,7 +61,10 @@ function dlassq( N, x, stride, offset, scale, sumsq ) {
 
 	// Quick return if NaN
 	if ( scale !== scale || sumsq !== sumsq ) {
-		return { scl: scale, sumsq: sumsq };
+		return {
+			'scl': scale,
+			'sumsq': sumsq
+		};
 	}
 	if ( sumsq === 0.0 ) {
 		scale = 1.0;
@@ -70,7 +74,10 @@ function dlassq( N, x, stride, offset, scale, sumsq ) {
 		sumsq = 0.0;
 	}
 	if ( N <= 0 ) {
-		return { scl: scale, sumsq: sumsq };
+		return {
+			'scl': scale,
+			'sumsq': sumsq
+		};
 	}
 
 	// Compute the sum of squares in 3 accumulators:
@@ -107,7 +114,7 @@ function dlassq( N, x, stride, offset, scale, sumsq ) {
 		ax = scale * Math.sqrt( sumsq );
 		if ( ax > TBIG ) {
 			if ( scale > 1.0 ) {
-				scale = scale * SBIG;
+				scale *= SBIG;
 				abig += scale * ( scale * sumsq );
 			} else {
 				// sumsq > tbig^2 => (sbig * (sbig * sumsq)) is representable
@@ -116,7 +123,7 @@ function dlassq( N, x, stride, offset, scale, sumsq ) {
 		} else if ( ax < TSML ) {
 			if ( notbig ) {
 				if ( scale < 1.0 ) {
-					scale = scale * SSML;
+					scale *= SSML;
 					asml += scale * ( scale * sumsq );
 				} else {
 					// sumsq < tsml^2 => (ssml * (ssml * sumsq)) is representable
@@ -160,7 +167,10 @@ function dlassq( N, x, stride, offset, scale, sumsq ) {
 		sumsq = amed;
 	}
 
-	return { scl: scale, sumsq: sumsq };
+	return {
+		'scl': scale,
+		'sumsq': sumsq
+	};
 }
 
 

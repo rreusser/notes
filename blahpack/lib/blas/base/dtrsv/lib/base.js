@@ -23,8 +23,8 @@
 // MAIN //
 
 /**
-* Solves one of the systems of equations:
-*   A*x = b,  or  A**T*x = b
+* Solves one of the systems of equations:.
+*   A_x = b,  or  A__T_x = b
 * where b is overwritten with the solution x, x is an N element vector,
 * and A is an N by N unit or non-unit, upper or lower triangular matrix.
 *
