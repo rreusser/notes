@@ -115,7 +115,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 	TAU = new Float64Array( MN );
 
 	// Compute workspace size: MN + max(MN, NRHS) * NB
-	wsize = MN + Math.max( MN, nrhs ) * NB;
+	wsize = MN + ( Math.max( MN, nrhs ) * NB );
 	wsize = Math.max( 1, wsize );
 	WORK = new Float64Array( wsize );
 

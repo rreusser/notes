@@ -109,7 +109,7 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 					'right', M - i - 1, N - i,
 					A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					TAU[ it ],
-					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 					WORK, strideWORK, offsetWORK
 				);
 			}
@@ -118,7 +118,7 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Scale row i from column i+1 onward by -tau(i), stride = strideA2
 			dscal(
 				N - i - 1, -TAU[ it ],
-				A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2
+				A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2)
 			);
 		}
 

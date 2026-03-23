@@ -126,7 +126,7 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 			for ( j = 0; j < N; j++ ) {
 				// Diagonal element
 				sum = WORK[ offsetWORK + (j * strideWORK) ] + Math.abs( A[ offsetA + (j * strideA2) + (j * strideA1) ] );
-				ai = offsetA + (j * strideA2) + ( j + 1 ) * strideA1;
+				ai = offsetA + (j * strideA2) + (( j + 1 ) * strideA1);
 
 				// Off-diagonal elements: i = j+1..N-1
 				for ( i = j + 1; i < N; i++ ) {
@@ -155,7 +155,7 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		} else {
 			// Lower triangle off-diagonal: columns j=0..N-2, rows j+1..N-1
 			for ( j = 0; j < N - 1; j++ ) {
-				out = dlassq( N - j - 1, A, strideA1, offsetA + (j * strideA2) + ( j + 1 ) * strideA1, scale, sum );
+				out = dlassq( N - j - 1, A, strideA1, offsetA + (j * strideA2) + (( j + 1 ) * strideA1), scale, sum );
 				scale = out.scl;
 				sum = out.sumsq;
 			}

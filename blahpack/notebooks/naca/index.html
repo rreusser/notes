@@ -297,92 +297,52 @@
   <script id="nacaCompute" type="module">
     const nacaResponse = await workerCall({
       type: 'naca',
-      options: { digits: nacaDigits, nPoints: 400, mmax: nacaMmax, gridN: 2 },
+      options: { digits: nacaDigits, nPoints: 400, mmax: nacaMmax, gridN: 512 },
     });
     const ng = nacaResponse.result;
   </script>
 
   <script id="nacaInfo" type="module">
     display(md`
-**NACA ${ng.digits}** — ${ng.poles.length} AAA poles, ${ng.smoothCoeffs.length} smooth coefficients. Boundary error: \`${ng.maxError.toExponential(2)}\`. Solved in ${(nacaResponse.solveTime/1000).toFixed(2)}s.
+**NACA ${ng.digits}** — ${ng.poles.length} AAA poles. Boundary error: \`${ng.maxError.toExponential(2)}\`. Solved in ${(nacaResponse.solveTime/1000).toFixed(2)}s, grid in ${(nacaResponse.gridTime/1000).toFixed(2)}s.
     `);
   </script>
 
-  <script id="nacaBuffers" type="module">
-    // Upload coefficients as GPU storage buffers for per-pixel evaluation
-    function createStorageBuf(label, data) {
-      const buf = device.createBuffer({ label, size: Math.max(16, data.byteLength), usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST });
-      device.queue.writeBuffer(buf, 0, data);
-      return buf;
+  <script id="nacaVis" type="module">
+    const ngridN = ng.gridN;
+    function createF32Tex(label, buf) {
+      const tex = device.createTexture({label,size:[ngridN,ngridN],format:'r32float',usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST});
+      device.queue.writeTexture({texture:tex},buf,{bytesPerRow:ngridN*4},[ngridN,ngridN]);
+      return tex;
     }
+    const nPsiTex = createF32Tex('naca-psi', ng.psiGrid);
+    const nSpeedTex = createF32Tex('naca-speed', ng.speedGrid);
+    const nMaskTex = createF32Tex('naca-mask', ng.maskGrid);
 
-    // Smooth coefficients as vec2<f32> array (re, im pairs)
-    const smoothData = new Float32Array(ng.smoothCoeffs.length * 2);
-    for (let i = 0; i < ng.smoothCoeffs.length; i++) {
-      smoothData[2*i] = ng.smoothCoeffs[i][0];
-      smoothData[2*i+1] = ng.smoothCoeffs[i][1];
-    }
-    const nSmoothBuf = createStorageBuf('smooth', smoothData);
-
-    // Poles as vec2<f32>
-    const polesData = new Float32Array(Math.max(1, ng.poles.length) * 2);
-    for (let i = 0; i < ng.poles.length; i++) {
-      polesData[2*i] = ng.poles[i][0];
-      polesData[2*i+1] = ng.poles[i][1];
-    }
-    const nPolesBuf = createStorageBuf('poles', polesData);
-
-    // Singular coefficients as vec2<f32>
-    const singData = new Float32Array(Math.max(1, ng.singularCoeffs.length) * 2);
-    for (let i = 0; i < ng.singularCoeffs.length; i++) {
-      singData[2*i] = ng.singularCoeffs[i][0];
-      singData[2*i+1] = ng.singularCoeffs[i][1];
-    }
-    const nSingBuf = createStorageBuf('sing', singData);
-
-    // Boundary vertices for point-in-polygon
-    const bdyData = new Float32Array(ng.boundary.length * 2);
-    for (let i = 0; i < ng.boundary.length; i++) {
-      bdyData[2*i] = ng.boundary[i][0];
-      bdyData[2*i+1] = ng.boundary[i][1];
-    }
-    const nBdyBuf = createStorageBuf('boundary', bdyData);
-  </script>
-
-  <script id="nacaShader" type="module">
     const nShader = `
       struct VertexOutput { @builtin(position) position: vec4<f32>, @location(0) uv: vec2<f32> };
       struct Params {
         viewInverse: mat4x4<f32>,
-        nSmooth: u32, nPoles: u32,
-        center: vec2<f32>,
-        gamma: f32,
-        contourInterval: f32,
-        nVerts: u32,
-        _pad: u32,
+        psiMin: f32, psiMax: f32,
+        domMin: vec2<f32>, domMax: vec2<f32>,
+        _pad: vec2<f32>,
       };
       @group(0) @binding(0) var<uniform> params: Params;
-      @group(0) @binding(1) var<storage, read> smoothCoeffs: array<vec2<f32>>;
-      @group(0) @binding(2) var<storage, read> poles: array<vec2<f32>>;
-      @group(0) @binding(3) var<storage, read> singCoeffs: array<vec2<f32>>;
-      @group(0) @binding(4) var<storage, read> bdyVerts: array<vec2<f32>>;
+      @group(0) @binding(1) var psi_tex: texture_2d<f32>;
+      @group(0) @binding(2) var speed_tex: texture_2d<f32>;
+      @group(0) @binding(3) var mask_tex: texture_2d<f32>;
 
-      fn cmul(a: vec2<f32>, b: vec2<f32>) -> vec2<f32> {
-        return vec2<f32>(a.x*b.x - a.y*b.y, a.x*b.y + a.y*b.x);
-      }
-
-      fn pointInPolygon(p: vec2<f32>) -> bool {
-        var crossings: u32 = 0u;
-        let n = params.nVerts;
-        for (var i: u32 = 0u; i < n; i++) {
-          let v1 = bdyVerts[i];
-          let v2 = bdyVerts[(i+1u) % n];
-          if ((v1.y <= p.y && v2.y > p.y) || (v2.y <= p.y && v1.y > p.y)) {
-            let t = (p.y - v1.y) / (v2.y - v1.y);
-            if (p.x < v1.x + t*(v2.x - v1.x)) { crossings++; }
-          }
-        }
-        return (crossings % 2u) == 1u;
+      fn bilinear(tex: texture_2d<f32>, uv: vec2<f32>) -> f32 {
+        let sz = vec2<f32>(textureDimensions(tex));
+        let tc = uv * sz - 0.5;
+        let tc0 = vec2<i32>(floor(tc));
+        let fr = fract(tc);
+        let mx = vec2<i32>(sz) - 1;
+        let a = textureLoad(tex, clamp(tc0, vec2<i32>(0), mx), 0).r;
+        let b = textureLoad(tex, clamp(tc0+vec2<i32>(1,0), vec2<i32>(0), mx), 0).r;
+        let c = textureLoad(tex, clamp(tc0+vec2<i32>(0,1), vec2<i32>(0), mx), 0).r;
+        let d = textureLoad(tex, clamp(tc0+vec2<i32>(1,1), vec2<i32>(0), mx), 0).r;
+        return mix(mix(a,b,fr.x), mix(c,d,fr.x), fr.y);
       }
 
       @vertex fn vs(@builtin(vertex_index) i: u32) -> VertexOutput {
@@ -391,54 +351,14 @@
       }
 
       @fragment fn fs(input: VertexOutput) -> @location(0) vec4<f32> {
-        let z = (params.viewInverse * vec4<f32>(input.uv, 0.0, 1.0)).xy;
-        let inside = pointInPolygon(z);
+        let world = (params.viewInverse * vec4<f32>(input.uv, 0.0, 1.0)).xy;
+        let uv = clamp((world - params.domMin) / (params.domMax - params.domMin), vec2(0.0), vec2(1.0));
+        let psi = bilinear(psi_tex, uv);
+        let speed = bilinear(speed_tex, uv);
+        let mask = bilinear(mask_tex, uv);
 
-        // f(z) = smooth + singular + circulation
-        let dz = z - params.center;
-        let d = dot(dz, dz);
-
-        // Clamp near center to prevent blow-up (center is off-screen)
-        var f_val = vec2<f32>(0.0, 0.0);
-        if (d > 0.01) {
-          let inv = vec2<f32>(dz.x / d, -dz.y / d);
-
-          // Smooth: Horner in ζ = 1/(z-c)
-          if (params.nSmooth > 0u) {
-            f_val = smoothCoeffs[params.nSmooth - 1u];
-            for (var n: i32 = i32(params.nSmooth) - 2; n >= 0; n--) {
-              f_val = smoothCoeffs[n] + cmul(f_val, inv);
-            }
-          }
-        }
-
-        // Singular: Σ bₖ / (z - pₖ)
-        for (var k: u32 = 0u; k < params.nPoles; k++) {
-          let pdz = z - poles[k];
-          let pd = dot(pdz, pdz);
-          let pinv = vec2<f32>(pdz.x / pd, -pdz.y / pd);
-          f_val += cmul(singCoeffs[k], pinv);
-        }
-
-        // Circulation: (Γ/2πi) log(z-c)
-        //   Re = (Γ/2π) θ      (multivalued — causes branch cut)
-        //   Im = -(Γ/2π) ln|z-c|  (single-valued)
-        // For streamline contouring, use only the single-valued Im part.
-        // The Re (θ) part affects the velocity potential φ but not the
-        // velocity field, so speed is still correct from ∂ψ/∂y and -∂ψ/∂x.
-        let logR = 0.5 * log(d);
-        f_val.y += -params.gamma / 6.2831853 * logR;  // single-valued part only
-
-        // ψ = Im(w) = y + Im(f) — single-valued, safe for contouring
-        let psi = z.y + f_val.y;
-
-        // Speed from screen-space derivatives of ψ
-        let dpsi_dx = dpdx(psi);
-        let dpsi_dy = dpdy(psi);
-        let speed = length(vec2<f32>(dpsi_dy, dpsi_dx));
-
-        // Coolwarm colormap: blue (slow) → white (speed=1) → red (fast)
-        let st = clamp(speed * 0.5, 0.0, 1.0); // 0→blue, 0.5→white, 1→red (speed=2)
+        // Coolwarm: blue (slow) → white (speed≈1) → red (fast)
+        let st = clamp(speed * 0.5, 0.0, 1.0);
         var color: vec3<f32>;
         if (st < 0.5) {
           let s = st * 2.0;
@@ -449,28 +369,29 @@
         }
 
         // Streamline contours
-        let grad = length(vec2<f32>(dpsi_dx, dpsi_dy));
-        let dist = abs(fract(psi / params.contourInterval - 0.5) - 0.5) * params.contourInterval / max(grad, 1e-8);
-        let contour_alpha = 1.0 - smoothstep(0.4, 1.2, dist);
+        let nContours = 40.0;
+        let interval = (params.psiMax - params.psiMin) / nContours;
+        let grad = length(vec2<f32>(dpdx(psi), dpdy(psi)));
+        let dist = abs(fract(psi / interval - 0.5) - 0.5) * interval / max(grad, 1e-8);
+        let contour_alpha = 1.0 - smoothstep(0.5, 1.5, dist);
 
         let flow_color = mix(color, vec3(0.1), contour_alpha * 0.55);
         let body_color = vec3<f32>(0.22, 0.24, 0.28);
-        let result = select(flow_color, body_color, inside);
-        return vec4<f32>(result, 1.0);
+        let result = mix(body_color, flow_color, mask);
+        let texUV = (world - params.domMin) / (params.domMax - params.domMin);
+        let oob = texUV.x < 0.0 || texUV.x > 1.0 || texUV.y < 0.0 || texUV.y > 1.0;
+        return vec4<f32>(select(result, vec3(0.95), oob), 1.0);
       }
     `;
 
     const nBGL = device.createBindGroupLayout({ entries: [
       {binding:0, visibility:GPUShaderStage.FRAGMENT|GPUShaderStage.VERTEX, buffer:{type:'uniform'}},
-      {binding:1, visibility:GPUShaderStage.FRAGMENT, buffer:{type:'read-only-storage'}},
-      {binding:2, visibility:GPUShaderStage.FRAGMENT, buffer:{type:'read-only-storage'}},
-      {binding:3, visibility:GPUShaderStage.FRAGMENT, buffer:{type:'read-only-storage'}},
-      {binding:4, visibility:GPUShaderStage.FRAGMENT, buffer:{type:'read-only-storage'}},
+      {binding:1, visibility:GPUShaderStage.FRAGMENT, texture:{sampleType:'unfilterable-float'}},
+      {binding:2, visibility:GPUShaderStage.FRAGMENT, texture:{sampleType:'unfilterable-float'}},
+      {binding:3, visibility:GPUShaderStage.FRAGMENT, texture:{sampleType:'unfilterable-float'}},
     ]});
-
-    // Params: mat4x4(64) + u32(4) + u32(4) + vec2(8) + f32(4) + f32(4) + u32(4) + u32(4) = 96
     const nParamsBuf = device.createBuffer({size:96, usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
-    const nModule = device.createShaderModule({label:'naca-live', code:nShader});
+    const nModule = device.createShaderModule({label:'naca-tex', code:nShader});
     const nPipeline = device.createRenderPipeline({
       layout: device.createPipelineLayout({bindGroupLayouts:[nBGL]}),
       vertex:{module:nModule, entryPoint:'vs'},
@@ -479,10 +400,9 @@
     });
     const nBindGroup = device.createBindGroup({ layout:nBGL, entries:[
       {binding:0,resource:{buffer:nParamsBuf}},
-      {binding:1,resource:{buffer:nSmoothBuf}},
-      {binding:2,resource:{buffer:nPolesBuf}},
-      {binding:3,resource:{buffer:nSingBuf}},
-      {binding:4,resource:{buffer:nBdyBuf}},
+      {binding:1,resource:nPsiTex.createView()},
+      {binding:2,resource:nSpeedTex.createView()},
+      {binding:3,resource:nMaskTex.createView()},
     ]});
   </script>
 
@@ -535,7 +455,7 @@
     const nAxes = createZoomableAxes({
       d3, element:nStack.elements.svg,
       xScale:nStack.elements.plot.scale("x"), yScale:nStack.elements.plot.scale("y"),
-      aspectRatio:1, // equal x/y scaling
+      aspectRatio:1,
       onChange:({xDomain,yDomain})=>{
         nRenderDirty.value=true;
         const p=createNacaPlot(nStack.width,nStack.height,xDomain,yDomain);
@@ -549,7 +469,7 @@
     nStack.resize(nPlotW,nPlotH);
     nAxes.updateScales(nStack.elements.plot.scale("x"),nStack.elements.plot.scale("y"));
     nRenderDirty.value=true;
-    display(html`<figure style="position:relative">${nStack.element}<figcaption>Scroll to zoom, drag to pan. Per-pixel evaluation on GPU.</figcaption></figure>`);
+    display(html`<figure style="position:relative">${nStack.element}<figcaption>Scroll to zoom, drag to pan. Texture-based rendering (f64 on CPU).</figcaption></figure>`);
   </script>
 
   <script id="nacaRenderLoop" type="module">
@@ -558,20 +478,12 @@
     function nRender(){
       if(!nRenderDirty.value) return;
       nRenderDirty.value=false;
-
-      const p = new ArrayBuffer(96);
-      const f32 = new Float32Array(p);
-      const u32 = new Uint32Array(p);
-      f32.set(nAxes.viewInverse, 0);        // mat4x4 at offset 0
-      u32[16] = ng.smoothCoeffs.length;      // nSmooth
-      u32[17] = ng.poles.length;             // nPoles
-      f32[18] = ng.center[0];               // center.x
-      f32[19] = ng.center[1];               // center.y
-      f32[20] = ng.Gamma || 0;              // gamma
-      f32[21] = 0.04;                       // contourInterval
-      u32[22] = ng.boundary.length;          // nVerts
-      device.queue.writeBuffer(nParamsBuf, 0, f32);
-
+      const p=new Float32Array(24);
+      p.set(nAxes.viewInverse,0);
+      p[16]=ng.psiMin; p[17]=ng.psiMax;
+      p[18]=ng.domMin[0]; p[19]=ng.domMin[1];
+      p[20]=ng.domMax[0]; p[21]=ng.domMax[1];
+      device.queue.writeBuffer(nParamsBuf,0,p);
       const vp=webgpuAxesViewport(nAxes,nPixelRatio,nGpuCanvas.height);
       const enc=device.createCommandEncoder();
       const pass=enc.beginRenderPass({colorAttachments:[{

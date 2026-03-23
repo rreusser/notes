@@ -129,7 +129,7 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				'left', M - i, N - i - 1,
 				A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
 				TAU, offsetTAU + (i * strideTAU),
-				A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
 				WORK, strideWORK, offsetWORK
 			);
 		}
@@ -141,7 +141,7 @@ function zung2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			negTau = new Complex128( -tauv[ it ], -tauv[ it + 1 ] );
 			zscal(
 				M - i - 1, negTau,
-				A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2)
+				A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2)
 			);
 		}
 

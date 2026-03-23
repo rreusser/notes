@@ -59,9 +59,9 @@ function dladiv2( a, b, c, d, r, t ) {
 		if ( br !== 0.0 ) {
 			return ( a + br ) * t;
 		}
-		return (a * t) + ( b * t ) * r;
+		return (a * t) + (( b * t ) * r);
 	}
-	return ( a + d * ( b / c ) ) * t;
+	return ( a + (d * ( b / c )) ) * t;
 }
 
 /**

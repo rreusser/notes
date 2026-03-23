@@ -217,7 +217,7 @@ function zlartg( f, g, out ) {
 			fsr = fr / v;
 			fsi = fi / v;
 			f2 = abssq( fsr, fsi );
-			h2 = f2 * (w * w) + g2;
+			h2 = (f2 * (w * w)) + g2;
 		} else {
 			// Use the same scaling for f and g.
 			w = 1.0;

@@ -571,7 +571,7 @@ function computeWorkSize( M, N, nrhs, mnthr ) {
 			wsize = Math.max( wsize, N + (N * NB) );
 		}
 		// Bidiag workspace: 3*N + max(mm*NB, N*NB)
-		wsize = Math.max( wsize, (3 * N) + Math.max( mm, N ) * NB );
+		wsize = Math.max( wsize, (3 * N) + (Math.max( mm, N ) * NB) );
 		wsize = Math.max( wsize, (3 * N) + nrhs );
 		wsize = Math.max( wsize, bdspac );
 		wsize = Math.max( wsize, N * nrhs );

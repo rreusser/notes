@@ -194,7 +194,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		} else {
 			// Lower triangle off-diagonal: columns j=0..N-2, rows j+1..N-1
 			for ( j = 0; j < N - 1; j++ ) {
-				out = zlassq( N - j - 1, A, strideA1, offsetA + (j * strideA2) + ( j + 1 ) * strideA1, scale, sum );
+				out = zlassq( N - j - 1, A, strideA1, offsetA + (j * strideA2) + (( j + 1 ) * strideA1), scale, sum );
 				scale = out.scl;
 				sum = out.sumsq;
 			}
@@ -209,7 +209,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 			if ( re !== 0.0 ) {
 				absa = Math.abs( re );
 				if ( scale < absa ) {
-					sum = 1.0 + sum * ( scale / absa ) * ( scale / absa );
+					sum = 1.0 + (sum * ( scale / absa ) * ( scale / absa ));
 					scale = absa;
 				} else {
 					sum += ( absa / scale ) * ( absa / scale );

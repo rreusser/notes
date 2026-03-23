@@ -149,7 +149,7 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Conjugate the row of A beyond the diagonal: A(i, i+1:nq-1)
 		if ( i < nq - 1 ) {
-			zlacgv( nq - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
+			zlacgv( nq - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
 		}
 
 		// Save A(i,i) and set it to ONE
@@ -186,7 +186,7 @@ function zunml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Un-conjugate the row of A
 		if ( i < nq - 1 ) {
-			zlacgv( nq - i - 1, A, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2 );
+			zlacgv( nq - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
 		}
 	}
 

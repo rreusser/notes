@@ -93,7 +93,7 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 		// Zlarfg accepts Complex128Array with complex-element strides/offsets
 		zlarfg( N - i, A, offsetA + (i * strideA1) + (i * strideA2),
-			A, strideA2, offsetA + (i * strideA1) + Math.min( i + 1, N - 1 ) * strideA2,
+			A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2),
 			TAU, tau_off );
 
 		if ( i < M - 1 ) {
@@ -108,7 +108,7 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			// Zlarf accepts Complex128Array with complex-element strides/offsets
 			zlarf( 'right', M - i - 1, N - i, A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 				TAU, tau_off,
-				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2),
+				A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
 				WORK, strideWORK, offsetWORK );
 
 			// Restore A(i,i)

@@ -104,7 +104,7 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 	ix = offset * 2;
 
 	if ( stride < 0 ) {
-		ix = (offset * 2) - ( N - 1 ) * sx;
+		ix = (offset * 2) - (( N - 1 ) * sx);
 	}
 
 	for ( i = 0; i < N; i++ ) {
@@ -182,7 +182,7 @@ function zlassq( N, x, stride, offset, scale, sumsq ) {
 				ymax = amed;
 			}
 			scale = 1.0;
-			sumsq = ymax * ymax * ( 1.0 + ( ymin / ymax ) * ( ymin / ymax ) );
+			sumsq = (ymax * ymax) * ( 1.0 + (( ymin / ymax ) * ( ymin / ymax )) );
 		} else {
 			scale = 1.0 / SSML;
 			sumsq = asml;

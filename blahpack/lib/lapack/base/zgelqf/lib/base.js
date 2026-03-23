@@ -130,7 +130,7 @@ function zgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 					M - i - ib, N - i, ib,
 					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					T, 1, nb, 0,
-					A, strideA1, strideA2, offsetA + ( i + ib ) * strideA1 + (i * strideA2),
+					A, strideA1, strideA2, offsetA + (( i + ib ) * strideA1) + (i * strideA2),
 					WORK, 1, ldwork, offsetWORK
 				);
 			}

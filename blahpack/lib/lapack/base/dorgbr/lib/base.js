@@ -102,7 +102,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 				// Copy column j-1 to column j for rows j..M-1 (0-based)
 				// Fortran: DO 10 I = J+1, M => 0-based: i from j to M-1
 				for ( i = j; i < M; i++ ) {
-					A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (i * strideA1) + ( j - 1 ) * strideA2 ];
+					A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (i * strideA1) + (( j - 1 ) * strideA2) ];
 				}
 			}
 			// Set A(0,0) = 1, A(i,0) = 0 for i >= 1
@@ -147,7 +147,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 				// Shift: A(i, j) = A(i-1, j) for i from j-1 downto 1 (0-based)
 				// Fortran: DO 50 I = J-1, 2, -1 => 0-based: i from j-2 downto 1
 				for ( i = j - 1; i >= 1; i-- ) {
-					A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + ( i - 1 ) * strideA1 + (j * strideA2) ];
+					A[ offsetA + (i * strideA1) + (j * strideA2) ] = A[ offsetA + (( i - 1 ) * strideA1) + (j * strideA2) ];
 				}
 				// A(0, j) = 0
 				A[ offsetA + (j * strideA2) ] = 0.0;

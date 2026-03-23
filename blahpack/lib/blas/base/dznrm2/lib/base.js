@@ -115,9 +115,9 @@ function dznrm2( N, zx, strideX, offsetX ) {
 			amed = Math.sqrt( amed );
 			asml = Math.sqrt( asml ) / SSML;
 			if ( asml > amed ) {
-				return asml * Math.sqrt( 1.0 + ( amed / asml ) * ( amed / asml ) );
+				return asml * Math.sqrt( 1.0 + (( amed / asml ) * ( amed / asml )) );
 			}
-			return amed * Math.sqrt( 1.0 + ( asml / amed ) * ( asml / amed ) );
+			return amed * Math.sqrt( 1.0 + (( asml / amed ) * ( asml / amed )) );
 		}
 		return Math.sqrt( asml ) / SSML;
 	}

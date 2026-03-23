@@ -91,7 +91,7 @@ function dlassq( N, x, stride, offset, scale, sumsq ) {
 
 	ix = offset;
 	if ( stride < 0 ) {
-		ix = offset - ( N - 1 ) * stride;
+		ix = offset - (( N - 1 ) * stride);
 	}
 
 	for ( i = 0; i < N; i++ ) {
@@ -156,7 +156,7 @@ function dlassq( N, x, stride, offset, scale, sumsq ) {
 				ymax = amed;
 			}
 			scale = 1.0;
-			sumsq = ymax * ymax * ( 1.0 + ( ymin / ymax ) * ( ymin / ymax ) );
+			sumsq = (ymax * ymax) * ( 1.0 + (( ymin / ymax ) * ( ymin / ymax )) );
 		} else {
 			scale = 1.0 / SSML;
 			sumsq = asml;

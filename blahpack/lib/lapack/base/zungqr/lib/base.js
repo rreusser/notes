@@ -170,7 +170,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 					M - i, N - i - ib, ib,
 					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					WORK, 1, ldwork, offsetWORK,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + ib ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + ib ) * strideA2),
 					WORK, 1, ldwork, offsetWORK + ib
 				);
 			}

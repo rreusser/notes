@@ -71,7 +71,7 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		dlarfg(
 			N - i,
 			A, aii,
-			A, strideA2, offsetA + (i * strideA1) + Math.min( i + 1, N - 1 ) * strideA2,
+			A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2),
 			TAU, offsetTAU + (i * strideTAU)
 		);
 
@@ -89,7 +89,7 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				N - i,              // number of columns of sub-matrix
 				A, strideA2, aii,   // v = row i from col i onward, stride along columns
 				TAU[ offsetTAU + (i * strideTAU) ], // tau is a plain scalar for dlarf
-				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + (i * strideA2), // C = A(i+1, i)
+				A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2), // C = A(i+1, i)
 				WORK, strideWORK, offsetWORK
 			);
 

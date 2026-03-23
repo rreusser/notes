@@ -91,7 +91,7 @@ function zlaswp( N, A, strideA1, strideA2, offsetA, k1, k2, IPIV, strideIPIV, of
 		nrows = k1 - k2 + 1;
 
 		// IPIV is read from the last element backwards
-		ix0 = offsetIPIV + ( nrows - 1 ) * strideIPIV;
+		ix0 = offsetIPIV + ( ( nrows - 1 ) * strideIPIV );
 		ixinc = -strideIPIV;
 		istart = k1;
 		iinc = -1;

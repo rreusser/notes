@@ -90,7 +90,7 @@ function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) {
 	} else if ( uplo === 'lower' ) {
 		// Set the strictly lower triangular part to ALPHA.
 		for ( j = 0; j < Math.min( M, N ); j++ ) {
-			idx = oA + ( j + 1 ) * sa1 + (j * sa2);
+			idx = oA + (( j + 1 ) * sa1) + (j * sa2);
 			for ( i = j + 1; i < M; i++ ) {
 				Av[ idx ] = alphaRe;
 				Av[ idx + 1 ] = alphaIm;

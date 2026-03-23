@@ -124,10 +124,10 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Get tau_i, conjugating if trans = 'conjugate-transpose'
 		if ( notran ) {
 			tauiv[ 0 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 ];
-			tauiv[ 1 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 + 1 ];
+			tauiv[ 1 ] = TAUv[ (( offsetTAU + (i * strideTAU) ) * 2) + 1 ];
 		} else {
 			tauiv[ 0 ] = TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 ];
-			tauiv[ 1 ] = -TAUv[ ( offsetTAU + (i * strideTAU) ) * 2 + 1 ];
+			tauiv[ 1 ] = -TAUv[ (( offsetTAU + (i * strideTAU) ) * 2) + 1 ];
 		}
 
 		// Save A(i,i) and set it to 1

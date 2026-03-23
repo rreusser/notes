@@ -99,7 +99,7 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				'left', M - i, N - i - 1,
 				A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
 				TAU[ offsetTAU + (i * strideTAU) ],
-				A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + 1 ) * strideA2,
+				A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
 				WORK, strideWORK, offsetWORK
 			);
 		}
@@ -110,7 +110,7 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// JS 0-based: M-i-1 elements starting at A(i+1, i)
 			dscal(
 				M - i - 1, -TAU[ offsetTAU + (i * strideTAU) ],
-				A, strideA1, offsetA + ( i + 1 ) * strideA1 + (i * strideA2)
+				A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2)
 			);
 		}
 

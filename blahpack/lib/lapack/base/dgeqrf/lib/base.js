@@ -125,7 +125,7 @@ function dgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 					M - i, N - i - ib, ib,
 					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
 					T, 1, nb, 0,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + ( i + ib ) * strideA2,
+					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + ib ) * strideA2),
 					WORK, 1, ldwork, offsetWORK
 				);
 			}

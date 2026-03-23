@@ -79,10 +79,10 @@ function dlasq5( i0, n0, z, stride, offset, pp, tau, sigma, ieee, eps ) {
 	// Helper: convert Fortran 1-based index k to JS 0-based array position
 	// Fortran Z(k) -> z[ offset + (k-1)*stride ]
 	function Z( k ) {
-		return z[ offset + ( k - 1 ) * stride ];
+		return z[ offset + (( k - 1 ) * stride) ];
 	}
 	function setZ( k, val ) {
-		z[ offset + ( k - 1 ) * stride ] = val;
+		z[ offset + (( k - 1 ) * stride) ] = val;
 	}
 
 	if ( tau !== 0.0 ) {

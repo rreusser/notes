@@ -118,7 +118,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		IPIV[ offsetIPIV ] = ip;
 
 		// Check if A(ip, 0) is zero
-		ia = oA + (ip * sa1) * 2;
+		ia = oA + ((ip * sa1) * 2);
 		if ( Av[ ia ] !== 0.0 || Av[ ia + 1 ] !== 0.0 ) {
 			// Swap rows 0 and ip (swap complex elements = swap pairs of doubles)
 			if ( ip !== 0 ) {
@@ -150,7 +150,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 			} else {
 				// Element-wise division for numerical safety with tiny pivot
 				for ( i = 1; i < M; i++ ) {
-					ib = oA + (i * sa1) * 2;
+					ib = oA + ((i * sa1) * 2);
 					cmplx.divAt( Av, ib, Av, ib, Av, oA );
 				}
 			}

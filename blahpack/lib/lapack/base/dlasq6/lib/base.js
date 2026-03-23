@@ -76,10 +76,10 @@ function dlasq6( i0, n0, z, stride, offset, pp ) {
 
 	// Fortran Z(k) -> z[ offset + (k-1)*stride ]
 	function Z( k ) {
-		return z[ offset + ( k - 1 ) * stride ];
+		return z[ offset + (( k - 1 ) * stride) ];
 	}
 	function setZ( k, val ) {
-		z[ offset + ( k - 1 ) * stride ] = val;
+		z[ offset + (( k - 1 ) * stride) ] = val;
 	}
 
 	j4 = ( 4 * i0 ) + pp - 3;
