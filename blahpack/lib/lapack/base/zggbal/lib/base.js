@@ -262,7 +262,12 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 	// ----------------------------------------------------------------
 	function findAndPermute( kk, ll ) {
+		var allZeroCol;
+		var foundCol;
+		var allZero;
 		var foundRow;
+		var ii;
+		var jj;
 		k = kk;
 		l = ll;
 
@@ -289,8 +294,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				}
 				if ( found ) {
 					// Found first nonzero at column jp1-1, check if rest are zero
-					var allZero = true;
-					for ( var jj = jp1; jj < l; jj++ ) {
+					allZero = true;
+					for ( jj = jp1; jj < l; jj++ ) {
 						idx = oA + (i * sA1) + (jj * sA2);
 						if ( !czero( Av, idx ) || !czero( Bv, oB + (i * sB1) + (jj * sB2) ) ) {
 							allZero = false;
@@ -336,7 +341,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			// eslint-disable-next-line no-constant-condition
 			while ( true ) {
 				// Find column with one nonzero in rows k through l
-				var foundCol = false;
+				foundCol = false;
 				lm1 = l - 1;
 				for ( j = k - 1; j < l; j++ ) {
 					ip1 = -1;
@@ -351,8 +356,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 					}
 					if ( found ) {
 						// Found first nonzero at row ip1-1, check if rest are zero
-						var allZeroCol = true;
-						for ( var ii = ip1; ii < l; ii++ ) {
+						allZeroCol = true;
+						for ( ii = ip1; ii < l; ii++ ) {
 							idx = oA + (ii * sA1) + (j * sA2);
 							if ( !czero( Av, idx ) || !czero( Bv, oB + (ii * sB1) + (j * sB2) ) ) {
 								allZeroCol = false;

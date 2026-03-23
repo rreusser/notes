@@ -563,7 +563,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				chaseZeroToBottom( jj );
 				handleZeroTdiag();
 				return true;
-			} if ( ilazro ) {
+			}
+		if ( ilazro ) {
 				// Only test 1 passed: ifirst = j, go to QZ step
 				ifirst = jj;
 				doQZStep();
@@ -1084,21 +1085,28 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			p3 = oT + (jj * st1) + (jj * st2);
 			p4 = p3 + st1;
 			for ( kk = jj; kk <= ilastm; kk++ ) {
-				v1r = Hv[ p1 ]; v1i = Hv[ p1 + 1 ];
-				v2r = Hv[ p2 ]; v2i = Hv[ p2 + 1 ];
+				v1r = Hv[ p1 ];
+				v1i = Hv[ p1 + 1 ];
+				v2r = Hv[ p2 ];
+				v2i = Hv[ p2 + 1 ];
 				Hv[ p1 ] = (c * v1r) + (sr * v2r) - (si * v2i);
 				Hv[ p1 + 1 ] = (c * v1i) + (sr * v2i) + (si * v2r);
 				Hv[ p2 ] = (c * v2r) - (sr * v1r) - (si * v1i);
 				Hv[ p2 + 1 ] = (c * v2i) - (sr * v1i) + (si * v1r);
 
-				v1r = Tv[ p3 ]; v1i = Tv[ p3 + 1 ];
-				v2r = Tv[ p4 ]; v2i = Tv[ p4 + 1 ];
+				v1r = Tv[ p3 ];
+				v1i = Tv[ p3 + 1 ];
+				v2r = Tv[ p4 ];
+				v2i = Tv[ p4 + 1 ];
 				Tv[ p3 ] = (c * v1r) + (sr * v2r) - (si * v2i);
 				Tv[ p3 + 1 ] = (c * v1i) + (sr * v2i) + (si * v2r);
 				Tv[ p4 ] = (c * v2r) - (sr * v1r) - (si * v1i);
 				Tv[ p4 + 1 ] = (c * v2i) - (sr * v1i) + (si * v1r);
 
-				p1 += sh2; p2 += sh2; p3 += st2; p4 += st2;
+				p1 += sh2;
+				p2 += sh2;
+				p3 += st2;
+				p4 += st2;
 			}
 
 			// Q rotation: apply conj(s) from right to columns jj, jj+1
@@ -1108,8 +1116,10 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				p1 = (offsetQ * 2) + (jj * sq2);
 				p2 = p1 + sq2;
 				for ( kk = 0; kk < N; kk++ ) {
-					v1r = Qv[ p1 ]; v1i = Qv[ p1 + 1 ];
-					v2r = Qv[ p2 ]; v2i = Qv[ p2 + 1 ];
+					v1r = Qv[ p1 ];
+					v1i = Qv[ p1 + 1 ];
+					v2r = Qv[ p2 ];
+					v2i = Qv[ p2 + 1 ];
 					Qv[ p1 ] = (c * v1r) + (sr * v2r) + (si * v2i);
 					Qv[ p1 + 1 ] = (c * v1i) + (sr * v2i) - (si * v2r);
 					Qv[ p2 ] = (c * v2r) - (sr * v1r) + (si * v1i);
@@ -1154,26 +1164,32 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			p1 = oH + (ifrstm * sh1) + (( jj + 1 ) * sh2);
 			p2 = p1 - sh2;
 			for ( kk = ifrstm; kk <= mn; kk++ ) {
-				v1r = Hv[ p1 ]; v1i = Hv[ p1 + 1 ];
-				v2r = Hv[ p2 ]; v2i = Hv[ p2 + 1 ];
+				v1r = Hv[ p1 ];
+				v1i = Hv[ p1 + 1 ];
+				v2r = Hv[ p2 ];
+				v2i = Hv[ p2 + 1 ];
 				Hv[ p1 ] = (c * v1r) + (sr * v2r) - (si * v2i);
 				Hv[ p1 + 1 ] = (c * v1i) + (sr * v2i) + (si * v2r);
 				Hv[ p2 ] = (c * v2r) - (sr * v1r) - (si * v1i);
 				Hv[ p2 + 1 ] = (c * v2i) - (sr * v1i) + (si * v1r);
-				p1 += sh1; p2 += sh1;
+				p1 += sh1;
+				p2 += sh1;
 			}
 
 			// Apply rotation from right to T (rows ifrstm..jj)
 			p1 = oT + (ifrstm * st1) + (( jj + 1 ) * st2);
 			p2 = p1 - st2;
 			for ( kk = ifrstm; kk <= jj; kk++ ) {
-				v1r = Tv[ p1 ]; v1i = Tv[ p1 + 1 ];
-				v2r = Tv[ p2 ]; v2i = Tv[ p2 + 1 ];
+				v1r = Tv[ p1 ];
+				v1i = Tv[ p1 + 1 ];
+				v2r = Tv[ p2 ];
+				v2i = Tv[ p2 + 1 ];
 				Tv[ p1 ] = (c * v1r) + (sr * v2r) - (si * v2i);
 				Tv[ p1 + 1 ] = (c * v1i) + (sr * v2i) + (si * v2r);
 				Tv[ p2 ] = (c * v2r) - (sr * v1r) - (si * v1i);
 				Tv[ p2 + 1 ] = (c * v2i) - (sr * v1i) + (si * v1r);
-				p1 += st1; p2 += st1;
+				p1 += st1;
+				p2 += st1;
 			}
 
 			// Z rotation: apply s from right to columns jj+1, jj
@@ -1181,13 +1197,16 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				p1 = (offsetZ * 2) + (( jj + 1 ) * sz2);
 				p2 = p1 - sz2;
 				for ( kk = 0; kk < N; kk++ ) {
-					v1r = Zv[ p1 ]; v1i = Zv[ p1 + 1 ];
-					v2r = Zv[ p2 ]; v2i = Zv[ p2 + 1 ];
+					v1r = Zv[ p1 ];
+					v1i = Zv[ p1 + 1 ];
+					v2r = Zv[ p2 ];
+					v2i = Zv[ p2 + 1 ];
 					Zv[ p1 ] = (c * v1r) + (sr * v2r) - (si * v2i);
 					Zv[ p1 + 1 ] = (c * v1i) + (sr * v2i) + (si * v2r);
 					Zv[ p2 ] = (c * v2r) - (sr * v1r) - (si * v1i);
 					Zv[ p2 + 1 ] = (c * v2i) - (sr * v1i) + (si * v1r);
-					p1 += sz1; p2 += sz1;
+					p1 += sz1;
+					p2 += sz1;
 				}
 			}
 		}

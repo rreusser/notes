@@ -57,9 +57,11 @@ if [[ ! -d "$WORKTREE_DIR" ]]; then
 fi
 
 # Launch or resume sandbox
-if docker sandbox ls 2>/dev/null | grep -q "$SANDBOX_NAME"; then
-    echo "Resuming sandbox '$SANDBOX_NAME'..." >&2
-    exec docker sandbox run "$SANDBOX_NAME"
+# docker prefixes "claude-" to the sandbox name
+FULL_SANDBOX_NAME="claude-${SANDBOX_NAME}"
+if docker sandbox ls 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$FULL_SANDBOX_NAME"; then
+    echo "Resuming sandbox '$FULL_SANDBOX_NAME'..." >&2
+    exec docker sandbox run "$FULL_SANDBOX_NAME"
 else
     echo "Creating sandbox '$SANDBOX_NAME'..." >&2
     exec docker sandbox run \

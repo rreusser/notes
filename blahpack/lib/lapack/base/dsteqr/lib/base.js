@@ -87,6 +87,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var lendsv;
 	var iscale;
 	var anorm;
+	var info;
 	var jtot;
 	var lend;
 	var eps2;
@@ -465,7 +466,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 	// Check for convergence failure: count nonzero off-diagonal elements
 	if ( jtot >= nmaxit ) {
-		var info = 0;
+		info = 0;
 		for ( i = 0; i < N - 1; i++ ) {
 			if ( e[ offsetE + (i * strideE) ] !== 0.0 ) {
 				info += 1;

@@ -49,11 +49,16 @@ function zlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 	var oE;
 	var tv;
 	var i;
-	if ( N <= 1 ) { return; }
+	if ( N <= 1 ) {
+		return;
+	}
 	av = reinterpret( A, 0 );
-	sa1 = strideA1 * 2; sa2 = strideA2 * 2; oA = offsetA * 2;
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 	tauv = reinterpret( tau, 0 );
-	eiR = 0.0; eiI = 0.0;
+	eiR = 0.0;
+	eiI = 0.0;
 	for ( i = 0; i < nb; i++ ) {
 		if ( i > 0 ) {
 			zlacgv( i, A, strideA2, offsetA + (( K + i - 1 ) * strideA1) );
@@ -67,12 +72,15 @@ function zlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 			ztrmv( 'lower', 'no-transpose', 'unit', i, A, strideA1, strideA2, offsetA + (K * strideA1), T, strideT1, offsetT + (( nb - 1 ) * strideT2) );
 			zaxpy( i, NEGONE, T, strideT1, offsetT + (( nb - 1 ) * strideT2), A, strideA1, offsetA + (K * strideA1) + (i * strideA2) );
 			oE = oA + (( K + i - 1 ) * sa1) + (( i - 1 ) * sa2);
-			av[ oE ] = eiR; av[ oE + 1 ] = eiI;
+			av[ oE ] = eiR;
+			av[ oE + 1 ] = eiI;
 		}
 		zlarfg( N - K - i, A, offsetA + (( K + i ) * strideA1) + (i * strideA2), A, strideA1, offsetA + (Math.min( K + i + 1, N - 1 ) * strideA1) + (i * strideA2), tau, offsetTAU + (i * strideTAU) );
 		oE = oA + (( K + i ) * sa1) + (i * sa2);
-		eiR = av[ oE ]; eiI = av[ oE + 1 ];
-		av[ oE ] = 1.0; av[ oE + 1 ] = 0.0;
+		eiR = av[ oE ];
+		eiI = av[ oE + 1 ];
+		av[ oE ] = 1.0;
+		av[ oE + 1 ] = 0.0;
 		zgemv( 'no-transpose', N - K, N - K - i, ONE, A, strideA1, strideA2, offsetA + (K * strideA1) + (( i + 1 ) * strideA2), A, strideA1, offsetA + (( K + i ) * strideA1) + (i * strideA2), ZERO, Y, strideY1, offsetY + (K * strideY1) + (i * strideY2) );
 		zgemv( 'conjugate-transpose', N - K - i, i, ONE, A, strideA1, strideA2, offsetA + (( K + i ) * strideA1), A, strideA1, offsetA + (( K + i ) * strideA1) + (i * strideA2), ZERO, T, strideT1, offsetT + (i * strideT2) );
 		zgemv( 'no-transpose', N - K, i, NEGONE, Y, strideY1, strideY2, offsetY + (K * strideY1), T, strideT1, offsetT + (i * strideT2), ONE, Y, strideY1, offsetY + (K * strideY1) + (i * strideY2) );
@@ -83,10 +91,12 @@ function zlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 		ztrmv( 'upper', 'no-transpose', 'non-unit', i, T, strideT1, strideT2, offsetT, T, strideT1, offsetT + (i * strideT2) );
 		tv = reinterpret( T, 0 );
 		oTi = ( offsetT + (i * strideT1) + (i * strideT2) ) * 2;
-		tv[ oTi ] = tauv[ oTau ]; tv[ oTi + 1 ] = tauv[ oTau + 1 ];
+		tv[ oTi ] = tauv[ oTau ];
+		tv[ oTi + 1 ] = tauv[ oTau + 1 ];
 	}
 	oE = oA + (( K + nb - 1 ) * sa1) + (( nb - 1 ) * sa2);
-	av[ oE ] = eiR; av[ oE + 1 ] = eiI;
+	av[ oE ] = eiR;
+	av[ oE + 1 ] = eiI;
 	zlacpy( 'all', K, nb, A, strideA1, strideA2, offsetA + (1 * strideA2), Y, strideY1, strideY2, offsetY );
 	ztrmm( 'right', 'lower', 'no-transpose', 'unit', K, nb, ONE, A, strideA1, strideA2, offsetA + (K * strideA1), Y, strideY1, strideY2, offsetY );
 	if ( N > K + nb ) {

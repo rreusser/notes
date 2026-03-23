@@ -112,9 +112,12 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	}
 
 	// Get Float64Array views and convert offsets
-	Av = reinterpret( A, 0 ); oA = offsetA * 2;
-	Bv = reinterpret( B, 0 ); oB = offsetB * 2;
-	Cv = reinterpret( C, 0 ); oC = offsetC * 2;
+	Av = reinterpret( A, 0 );
+	oA = offsetA * 2;
+	Bv = reinterpret( B, 0 );
+	oB = offsetB * 2;
+	Cv = reinterpret( C, 0 );
+	oC = offsetC * 2;
 
 	// Matrix strides in complex elements, multiply by 2
 	sa1 = strideA1 * 2;

@@ -126,7 +126,9 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	ABv = reinterpret( AB, 0 );
 
 	// Allocate complex workspace arrays
+
 	// WORK13(LDWORK, NBMAX) - stores portion of L that wraps around
+
 	// WORK31(LDWORK, NBMAX) - stores portion of L below the band
 	WORK13 = new Complex128Array( LDWORK * NBMAX );
 	WORK31 = new Complex128Array( LDWORK * NBMAX );
@@ -166,7 +168,9 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 		jb = Math.min( NB, minMN - j );
 
 		// Active region sizes below the JB panel:
+
 		// i2 = rows j+jb to j+kl-1 (still within the band)
+
 		// i3 = rows j+kl to j+jb+kl-1 (wrap into WORK31)
 		i2 = Math.min( kl - jb, M - j - jb );
 		if ( i2 < 0 ) {

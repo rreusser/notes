@@ -75,6 +75,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 	var invI;
 	var tmpR;
 	var tmpI;
+	var scratch;
 	var sa1;
 	var sa2;
 	var Av;
@@ -138,7 +139,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 			if ( Math.sqrt( (pivR * pivR) + (pivI * pivI) ) >= sfmin ) {
 				// Use zscal with 1/A(0,0)
 				// Compute 1/pivot using cmplx.divAt for stability
-				var scratch = new Float64Array( 6 );
+				scratch = new Float64Array( 6 );
 				scratch[ 0 ] = 1.0;
 				scratch[ 1 ] = 0.0;
 				scratch[ 2 ] = pivR;

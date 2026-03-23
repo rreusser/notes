@@ -84,8 +84,10 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 	noconj = ( trans === 'transpose' );
 
 	// Get Float64Array views
-	Av = reinterpret( A, 0 ); oA = offsetA * 2;
-	xv = reinterpret( x, 0 ); oX = offsetX * 2;
+	Av = reinterpret( A, 0 );
+	oA = offsetA * 2;
+	xv = reinterpret( x, 0 );
+	oX = offsetX * 2;
 
 	// Convert strides from complex-element units to double units
 	sa1 = strideA1 * 2;

@@ -36,6 +36,10 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 
 var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 
+// Module-level vars for cDiv output
+var _cdR = 0.0;
+var _cdI = 0.0;
+
 
 // MAIN //
 
@@ -558,10 +562,6 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 	return info;
 }
-
-// Module-level vars for cDiv output
-var _cdR = 0.0;
-var _cdI = 0.0;
 
 function cDiv( ar, ai, br, bi ) {
 	var r;

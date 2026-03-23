@@ -88,9 +88,12 @@ function zgeru( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 	}
 
 	// Get Float64Array views and convert offsets
-	Av = reinterpret( A, 0 ); oA = offsetA * 2;
-	xv = reinterpret( x, 0 ); oX = offsetX * 2;
-	yv = reinterpret( y, 0 ); oY = offsetY * 2;
+	Av = reinterpret( A, 0 );
+	oA = offsetA * 2;
+	xv = reinterpret( x, 0 );
+	oX = offsetX * 2;
+	yv = reinterpret( y, 0 );
+	oY = offsetY * 2;
 
 	// Convert strides from complex-element units to double units
 	sx = strideX * 2;

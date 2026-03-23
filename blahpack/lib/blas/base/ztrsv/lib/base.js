@@ -83,8 +83,10 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	nounit = ( diag === 'non-unit' );
 
 	// Get Float64Array views and convert offsets from complex-element to double units
-	Av = reinterpret( A, 0 ); oA = offsetA * 2;
-	xv = reinterpret( x, 0 ); oX = offsetX * 2;
+	Av = reinterpret( A, 0 );
+	oA = offsetA * 2;
+	xv = reinterpret( x, 0 );
+	oX = offsetX * 2;
 
 	// Convert strides from complex-element units to double units
 	sx = strideX * 2;
@@ -204,7 +206,8 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					// Need to divide by conjugated diagonal — write conj into temp storage
 
 					// We store conj value, divide, then proceed
-					xr = tr; xi = ti;
+					xr = tr;
+					xi = ti;
 					if ( Math.abs( ai ) <= Math.abs( ar ) ) {
 						ti = ai / ar;
 						tr = ar + (ai * ti);
@@ -270,7 +273,8 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 					ia = oA + (j * sa1) + (j * sa2);
 					ar = Av[ ia ];
 					ai = -Av[ ia + 1 ]; // conjugate
-					xr = tr; xi = ti;
+					xr = tr;
+					xi = ti;
 					if ( Math.abs( ai ) <= Math.abs( ar ) ) {
 						ti = ai / ar;
 						tr = ar + (ai * ti);

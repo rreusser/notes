@@ -48,6 +48,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 * @returns {integer} info - 0 if successful
 */
 function dgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
+	var alpha;
 	var aii;
 	var K;
 	var i;
@@ -64,7 +65,7 @@ function dgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 		if ( i < N - 1 ) {
 			// Save A(i,i) and set to 1 for the reflector application
-			var alpha = A[ aii ];
+			alpha = A[ aii ];
 			A[ aii ] = 1.0;
 
 			// Apply H(i) to A(i:M-1, i+1:N-1) from the left

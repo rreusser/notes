@@ -86,8 +86,10 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 	}
 
 	// Get Float64Array views and convert offsets/strides to Float64 units
-	Av = reinterpret( A, 0 ); oA = offsetA * 2;
-	Cv = reinterpret( C, 0 ); oC = offsetC * 2;
+	Av = reinterpret( A, 0 );
+	oA = offsetA * 2;
+	Cv = reinterpret( C, 0 );
+	oC = offsetC * 2;
 
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;

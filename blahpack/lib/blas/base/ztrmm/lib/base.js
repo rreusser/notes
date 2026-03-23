@@ -99,8 +99,10 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	alphaI = imag( alpha );
 
 	// Get Float64Array views and convert offsets
-	Av = reinterpret( A, 0 ); oA = offsetA * 2;
-	Bv = reinterpret( B, 0 ); oB = offsetB * 2;
+	Av = reinterpret( A, 0 );
+	oA = offsetA * 2;
+	Bv = reinterpret( B, 0 );
+	oB = offsetB * 2;
 
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;

@@ -31,10 +31,10 @@ var cmplx = require( '../../../../cmplx.js' );
 
 // Scratch buffer for complex division: [0..1]=numerator(1,0), [2..3]=denominator, [4..5]=result
 var scratch = new Float64Array( 6 );
+var CNEGONE = new Complex128( -1.0, 0.0 );
+
 scratch[ 0 ] = 1.0;
 scratch[ 1 ] = 0.0;
-
-var CNEGONE = new Complex128( -1.0, 0.0 );
 
 
 // MAIN //

@@ -82,6 +82,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	var Tv;
 	var oA;
 	var oT;
+	var dot;
 	var ai;
 	var i;
 
@@ -148,7 +149,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Compute alpha := -0.5 * tau * dot(w, v)
 
 				// Fortran: ALPHA = -HALF*TAUI*ZDOTC(I, TAU, 1, A(1,I+1), 1)
-				var dot = zdotc(
+				dot = zdotc(
 					i + 1,
 					TAU, strideTAU, offsetTAU,
 					A, strideA1, offsetA + (( i + 1 ) * strideA2)
@@ -244,13 +245,13 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				);
 
 				// Alpha := -0.5 * tau * dot(w, v)
-				var dot2 = zdotc(
+				dot = zdotc(
 					N - i - 1,
 					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2)
 				);
-				dotR = real( dot2 );
-				dotI = imag( dot2 );
+				dotR = real( dot );
+				dotI = imag( dot );
 				alphaR = -0.5 * ( (tauiR * dotR) - (tauiI * dotI) );
 				alphaI = -0.5 * ( (tauiR * dotI) + (tauiI * dotR) );
 

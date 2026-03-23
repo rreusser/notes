@@ -79,8 +79,10 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	nounit = ( diag === 'non-unit' );
 
 	// Get Float64Array views and convert offsets
-	Av = reinterpret( A, 0 ); oA = offsetA * 2;
-	xv = reinterpret( x, 0 ); oX = offsetX * 2;
+	Av = reinterpret( A, 0 );
+	oA = offsetA * 2;
+	xv = reinterpret( x, 0 );
+	oX = offsetX * 2;
 
 	// Convert strides from complex-element units to double units
 	sx = strideX * 2;

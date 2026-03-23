@@ -113,6 +113,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var s;
 	var i;
 	var j;
+	var info;
 	var k;
 
 	rot = new Float64Array( 3 );
@@ -456,7 +457,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 	// Check for convergence failure: count nonzero off-diagonal elements
 	if ( jtot >= nmaxit ) {
-		var info = 0;
+		info = 0;
 		for ( i = 0; i < N - 1; i++ ) {
 			if ( e[ offsetE + (i * strideE) ] !== 0.0 ) {
 				info += 1;

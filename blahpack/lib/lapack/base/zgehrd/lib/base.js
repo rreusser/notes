@@ -50,13 +50,25 @@ function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, of
 	var i;
 	var j;
 	NB = 32;
-	av = reinterpret( A, 0 ); sa1 = strideA1 * 2; sa2 = strideA2 * 2; oA = offsetA * 2;
+	av = reinterpret( A, 0 );
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 	tauv = reinterpret( TAU, 0 );
-	for ( i = 0; i < ilo - 1; i++ ) { tauv[ (( offsetTAU + (i * strideTAU) ) * 2) ] = 0.0; tauv[ (( offsetTAU + (i * strideTAU) ) * 2) + 1 ] = 0.0; }
-	for ( i = Math.max( 0, ihi - 1 ); i < N - 1; i++ ) { tauv[ (( offsetTAU + (i * strideTAU) ) * 2) ] = 0.0; tauv[ (( offsetTAU + (i * strideTAU) ) * 2) + 1 ] = 0.0; }
+	for ( i = 0; i < ilo - 1; i++ ) {
+		tauv[ (( offsetTAU + (i * strideTAU) ) * 2) ] = 0.0;
+		tauv[ (( offsetTAU + (i * strideTAU) ) * 2) + 1 ] = 0.0;
+	}
+	for ( i = Math.max( 0, ihi - 1 ); i < N - 1; i++ ) {
+		tauv[ (( offsetTAU + (i * strideTAU) ) * 2) ] = 0.0;
+		tauv[ (( offsetTAU + (i * strideTAU) ) * 2) + 1 ] = 0.0;
+	}
 	NH = ihi - ilo + 1;
-	if ( NH <= 1 ) { return 0; }
-	NX = Math.max( NB, NB ); LDWORK = N;
+	if ( NH <= 1 ) {
+		return 0;
+	}
+	NX = Math.max( NB, NB );
+	LDWORK = N;
 	if ( NB < 2 || NB >= NH ) {
 		i = ilo;
 	} else {
@@ -65,11 +77,17 @@ function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, of
 			IB = Math.min( NB, ihi - i );
 			zlahr2( ihi, i, IB, A, strideA1, strideA2, offsetA + (( i - 1 ) * strideA2), TAU, strideTAU, offsetTAU + (( i - 1 ) * strideTAU), WORK, 1, LDT, offsetWORK + IWT, WORK, 1, LDWORK, offsetWORK );
 			oE = oA + (( i + IB - 1 ) * sa1) + (( i + IB - 2 ) * sa2);
-			eiR = av[ oE ]; eiI = av[ oE + 1 ]; av[ oE ] = 1.0; av[ oE + 1 ] = 0.0;
+			eiR = av[ oE ];
+			eiI = av[ oE + 1 ];
+			av[ oE ] = 1.0;
+			av[ oE + 1 ] = 0.0;
 			zgemm( 'no-transpose', 'conjugate-transpose', ihi, ihi - i - IB + 1, IB, NEGONE, WORK, 1, LDWORK, offsetWORK, A, strideA1, strideA2, offsetA + (( i + IB - 1 ) * strideA1) + (( i - 1 ) * strideA2), ONE, A, strideA1, strideA2, offsetA + (( i + IB - 1 ) * strideA2) );
-			av[ oE ] = eiR; av[ oE + 1 ] = eiI;
+			av[ oE ] = eiR;
+			av[ oE + 1 ] = eiI;
 			ztrmm( 'right', 'lower', 'conjugate-transpose', 'unit', i, IB - 1, ONE, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i - 1 ) * strideA2), WORK, 1, LDWORK, offsetWORK );
-			for ( j = 0; j < IB - 1; j++ ) { zaxpy( i, NEGONE, WORK, 1, offsetWORK + (LDWORK * j), A, strideA1, offsetA + (( i + j ) * strideA2) ); }
+			for ( j = 0; j < IB - 1; j++ ) {
+				zaxpy( i, NEGONE, WORK, 1, offsetWORK + (LDWORK * j), A, strideA1, offsetA + (( i + j ) * strideA2) );
+			}
 			zlarfb( 'left', 'conjugate-transpose', 'forward', 'columnwise', ihi - i, N - i - IB + 1, IB, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i - 1 ) * strideA2), WORK, 1, LDT, offsetWORK + IWT, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + IB - 1 ) * strideA2), WORK, 1, LDWORK, offsetWORK );
 		}
 	}

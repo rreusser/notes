@@ -38,20 +38,26 @@ function zgehd2( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, of
 	var oA;
 	var i;
 	av = reinterpret( A, 0 );
-	sa1 = strideA1 * 2; sa2 = strideA2 * 2; oA = offsetA * 2;
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
 	tauv = reinterpret( TAU, 0 );
 	for ( i = ilo - 1; i < ihi - 1; i++ ) {
 		oAlpha = oA + (( i + 1 ) * sa1) + (i * sa2);
-		SCRATCH_ALPHAv[ 0 ] = av[ oAlpha ]; SCRATCH_ALPHAv[ 1 ] = av[ oAlpha + 1 ];
+		SCRATCH_ALPHAv[ 0 ] = av[ oAlpha ];
+		SCRATCH_ALPHAv[ 1 ] = av[ oAlpha + 1 ];
 		xStart = Math.min( i + 2, N - 1 );
 		zlarfg( ihi - i - 1, SCRATCH_ALPHA, 0, A, strideA1, offsetA + (xStart * strideA1) + (i * strideA2), SCRATCH_TAU, 0 );
-		av[ oAlpha ] = 1.0; av[ oAlpha + 1 ] = 0.0;
+		av[ oAlpha ] = 1.0;
+		av[ oAlpha + 1 ] = 0.0;
 		zlarf( 'right', ihi, ihi - i - 1, A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2), SCRATCH_TAU, 0, A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 		SCRATCH_TAUv[ 1 ] = -SCRATCH_TAUv[ 1 ];
 		zlarf( 'left', ihi - i - 1, N - i - 1, A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2), SCRATCH_TAU, 0, A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
-		av[ oAlpha ] = SCRATCH_ALPHAv[ 0 ]; av[ oAlpha + 1 ] = SCRATCH_ALPHAv[ 1 ];
+		av[ oAlpha ] = SCRATCH_ALPHAv[ 0 ];
+		av[ oAlpha + 1 ] = SCRATCH_ALPHAv[ 1 ];
 		oTau = ( offsetTAU + (i * strideTAU) ) * 2;
-		tauv[ oTau ] = SCRATCH_TAUv[ 0 ]; tauv[ oTau + 1 ] = -SCRATCH_TAUv[ 1 ];
+		tauv[ oTau ] = SCRATCH_TAUv[ 0 ];
+		tauv[ oTau + 1 ] = -SCRATCH_TAUv[ 1 ];
 	}
 	return 0;
 }

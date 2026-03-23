@@ -55,6 +55,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 	var aij;
 	var Av;
 	var oA;
+	var result;
 	var wi;
 	var i;
 	var j;
@@ -123,7 +124,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 		sum = 1.0;
 		for ( j = 0; j < N; j++ ) {
 			lim = Math.min( N, j + 2 );
-			var result = zlassq( lim, A, strideA1, offsetA + (j * strideA2), scale, sum );
+			result = zlassq( lim, A, strideA1, offsetA + (j * strideA2), scale, sum );
 			scale = result.scl;
 			sum = result.sumsq;
 		}
