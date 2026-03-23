@@ -57,7 +57,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 		return 0.0;
 	}
 
-	if ( norm === 'M' || norm === 'm' ) {
+	if ( norm === 'max' ) {
 		// Max absolute value
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
@@ -70,7 +70,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				ai += strideA1;
 			}
 		}
-	} else if ( norm === 'O' || norm === 'o' || norm === '1' ) {
+	} else if ( norm === 'one-norm' || norm === 'one-norm' ) {
 		// One-norm: maximum column sum of absolute values
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
@@ -84,7 +84,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				value = sum;
 			}
 		}
-	} else if ( norm === 'I' || norm === 'i' ) {
+	} else if ( norm === 'inf-norm' ) {
 		// Infinity-norm: maximum row sum of absolute values
 		for ( i = 0; i < M; i++ ) {
 			wi = offsetWORK + i * strideWORK;
@@ -107,7 +107,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				value = temp;
 			}
 		}
-	} else if ( norm === 'F' || norm === 'f' || norm === 'E' || norm === 'e' ) {
+	} else if ( norm === 'frobenius' || norm === 'frobenius' ) {
 		// Frobenius norm: scale * sqrt(sumsq) using dlassq per column
 		scale = 0.0;
 		sum = 1.0;

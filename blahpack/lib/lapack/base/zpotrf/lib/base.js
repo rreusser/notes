@@ -23,8 +23,8 @@ var MCONE = new Complex128( -1.0, 0.0 );
 * matrix A using a blocked algorithm.
 *
 * The factorization has the form:
-*   A = U^H * U,  if uplo = 'U', or
-*   A = L * L^H,  if uplo = 'L',
+*   A = U^H * U,  if uplo = 'upper', or
+*   A = L * L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.
@@ -47,7 +47,7 @@ function zpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 	var jb;
 	var j;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 
 	if ( N === 0 ) {
 		return 0;
@@ -67,24 +67,24 @@ function zpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// Update and factorize the current diagonal block
 			jb = Math.min( NB, N - j );
 
-			zherk( 'U', 'C', jb, j, -1.0,
+			zherk( 'upper', 'conjugate-transpose', jb, j, -1.0,
 				A, sa1, sa2, offsetA + j * sa2,
 				1.0,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2
 			);
-			info = zpotrf2( 'U', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+			info = zpotrf2( 'upper', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
 			if ( info !== 0 ) {
 				return info + j;
 			}
 			if ( j + jb < N ) {
 				// Update the off-diagonal block
-				zgemm( 'C', 'N', jb, N - j - jb, j, MCONE,
+				zgemm( 'conjugate-transpose', 'no-transpose', jb, N - j - jb, j, MCONE,
 					A, sa1, sa2, offsetA + j * sa2,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
 					CONE,
 					A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2
 				);
-				ztrsm( 'L', 'U', 'C', 'N', jb, N - j - jb, CONE,
+				ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', jb, N - j - jb, CONE,
 					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
 					A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2
 				);
@@ -96,24 +96,24 @@ function zpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// Update and factorize the current diagonal block
 			jb = Math.min( NB, N - j );
 
-			zherk( 'L', 'N', jb, j, -1.0,
+			zherk( 'lower', 'no-transpose', jb, j, -1.0,
 				A, sa1, sa2, offsetA + j * sa1,
 				1.0,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2
 			);
-			info = zpotrf2( 'L', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+			info = zpotrf2( 'lower', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
 			if ( info !== 0 ) {
 				return info + j;
 			}
 			if ( j + jb < N ) {
 				// Update the off-diagonal block
-				zgemm( 'N', 'C', N - j - jb, jb, j, MCONE,
+				zgemm( 'no-transpose', 'conjugate-transpose', N - j - jb, jb, j, MCONE,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1,
 					A, sa1, sa2, offsetA + j * sa1,
 					CONE,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2
 				);
-				ztrsm( 'R', 'L', 'C', 'N', N - j - jb, jb, CONE,
+				ztrsm( 'right', 'lower', 'conjugate-transpose', 'non-unit', N - j - jb, jb, CONE,
 					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2
 				);

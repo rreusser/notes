@@ -86,7 +86,7 @@ test( 'returns early when M=0', function t() {
 	var c = new Float64Array( [ 0.5 ] );
 	var s = new Float64Array( [ 0.5 ] );
 	var expected = new Float64Array( reinterpret( A, 0 ) );
-	base( 'L', 'V', 'F', 0, 2, c, 1, 0, s, 1, 0, A, 1, 2, 0 );
+	base( 'left', 'variable', 'forward', 0, 2, c, 1, 0, s, 1, 0, A, 1, 2, 0 );
 	assertClose( reinterpret( A, 0 ), expected, 'M=0' );
 });
 
@@ -95,7 +95,7 @@ test( 'returns early when N=0', function t() {
 	var c = new Float64Array( [ 0.5 ] );
 	var s = new Float64Array( [ 0.5 ] );
 	var expected = new Float64Array( reinterpret( A, 0 ) );
-	base( 'L', 'V', 'F', 2, 0, c, 1, 0, s, 1, 0, A, 1, 2, 0 );
+	base( 'left', 'variable', 'forward', 2, 0, c, 1, 0, s, 1, 0, A, 1, 2, 0 );
 	assertClose( reinterpret( A, 0 ), expected, 'N=0' );
 });
 
@@ -113,7 +113,7 @@ test( 'left, variable pivot, forward: 2x2 identity rotation', function t() {
 	var expected = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1.0 ] );
 	var s = new Float64Array( [ 0.0 ] );
-	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( extractAll( A, M, N, LDA ), extractAll( expected, M, N, LDA ), 'L-V-F identity' );
 });
 
@@ -133,7 +133,7 @@ test( 'left, variable pivot, forward: 2x2 with 45-degree rotation', function t()
 	var c = new Float64Array( [ cos45 ] );
 	var s = new Float64Array( [ sin45 ] );
 
-	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// After rotation, new A(1,0) = c*A(1,0) - s*A(0,0) = cos45*0 - sin45*1 = -sin45
 	// new A(0,0) = s*A(1,0) + c*A(0,0) = sin45*0 + cos45*1 = cos45
@@ -160,7 +160,7 @@ test( 'left, variable pivot, backward: 2x2 with rotation', function t() {
 	var c = new Float64Array( [ cos45 ] );
 	var s = new Float64Array( [ sin45 ] );
 
-	base( 'L', 'V', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Same single rotation, backward on M-1=1 rotations gives same result
 	var expected = new Float64Array( [
@@ -186,7 +186,7 @@ test( 'left, variable pivot, forward: 3x2 with complex entries', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Manual computation, rotation j=0: c=0.6, s=0.8, acts on rows 0 and 1
 	// For each column i:
@@ -238,7 +238,7 @@ test( 'left, top pivot, forward: 3x2', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'L', 'T', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'top', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=1 (Fortran j=2, 0-based j=1): c=c[0]=0.6, s=s[0]=0.8
 	//   Rotates row 1 against row 0 (top pivot = row 0)
@@ -273,7 +273,7 @@ test( 'left, top pivot, backward: 3x2', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'L', 'T', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'top', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Backward: iterate j from M-1 down to 1
 	// j=2 (0-based): c=c[1]=0.8, s=s[1]=0.6
@@ -309,7 +309,7 @@ test( 'left, bottom pivot, forward: 3x2', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'L', 'B', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'bottom', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Forward: j=0 then j=1; rotates row j against bottom row (M-1=2)
 	// j=0: c=0.6, s=0.8
@@ -347,7 +347,7 @@ test( 'left, bottom pivot, backward: 3x2', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'L', 'B', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'bottom', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Backward: j from M-2=1 down to 0
 	// j=1: c=0.8, s=0.6
@@ -387,7 +387,7 @@ test( 'right, variable pivot, forward: 2x3', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'R', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=0: c=0.6, s=0.8, rotates cols 0 and 1
 	//   Row 0: temp=A(0,1)=2, A(0,1)=0.6*2-0.8*1=0.4, A(0,0)=0.8*2+0.6*1=2.2
@@ -418,7 +418,7 @@ test( 'right, variable pivot, backward: 2x3', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'R', 'V', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'variable', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Backward: j=1 then j=0
 	// j=1: c=0.8, s=0.6, rotates cols 1 and 2
@@ -452,7 +452,7 @@ test( 'right, top pivot, forward: 2x3', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'R', 'T', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'top', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Forward: j=1 then j=2 (0-based); rotates col j against col 0
 	// j=1 (0-based): c=c[0]=0.6, s=s[0]=0.8
@@ -484,7 +484,7 @@ test( 'right, top pivot, backward: 2x3', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'R', 'T', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'top', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Backward: j from N-1=2 down to 1
 	// j=2 (0-based): c=c[1]=0.8, s=s[1]=0.6
@@ -518,7 +518,7 @@ test( 'right, bottom pivot, forward: 2x3', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'R', 'B', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'bottom', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Forward: j=0 then j=1; rotates col j against last col (N-1=2)
 	// j=0: c=0.6, s=0.8
@@ -554,7 +554,7 @@ test( 'right, bottom pivot, backward: 2x3', function t() {
 	var c = new Float64Array( [ 0.6, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 0.6 ] );
 
-	base( 'R', 'B', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'bottom', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Backward: j from N-2=1 down to 0
 	// j=1: c=0.8, s=0.6
@@ -593,7 +593,7 @@ test( 'left, variable pivot, forward: 2x2 with complex entries', function t() {
 	var c = new Float64Array( [ 0.6 ] );
 	var s = new Float64Array( [ 0.8 ] );
 
-	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=0: c=0.6, s=0.8, acts on rows 0,1
 	// Col 0: temp=A(1,0)=(5,6)
@@ -624,7 +624,7 @@ test( 'right, variable pivot, forward: 2x2 with complex entries', function t() {
 	var c = new Float64Array( [ 0.6 ] );
 	var s = new Float64Array( [ 0.8 ] );
 
-	base( 'R', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=0: c=0.6, s=0.8, rotates cols 0 and 1
 	// Row 0: temp=A(0,1)=(3,4)
@@ -657,7 +657,7 @@ test( 'works with non-unit stride for c and s', function t() {
 	var c = new Float64Array( [ 0.6, 999, 0.8 ] );
 	var s = new Float64Array( [ 0.8, 999, 0.6 ] );
 
-	base( 'L', 'V', 'F', M, N, c, 2, 0, s, 2, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 2, 0, s, 2, 0, A, 1, LDA, 0 );
 
 	// Should use c[0]=0.6, s[0]=0.8 (stride 2, offset 0 => index 0)
 	// Same as the 2x2 45-deg test but with c=0.6, s=0.8
@@ -691,7 +691,7 @@ test( 'works with offset for c, s, and A', function t() {
 	var c = new Float64Array( [ 999, 0.6 ] );
 	var s = new Float64Array( [ 999, 0.8 ] );
 
-	base( 'L', 'V', 'F', M, N, c, 1, 1, s, 1, 1, A, 1, LDA, junk );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 1, s, 1, 1, A, 1, LDA, junk );
 
 	// Extract from offset (using Float64 view starting at junk*2 doubles)
 	Av = reinterpret( A, 0 );
@@ -721,7 +721,7 @@ test( 'skips rotation when c=1 and s=0', function t() {
 	var c = new Float64Array( [ 1, 1 ] );
 	var s = new Float64Array( [ 0, 0 ] );
 
-	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip c=1,s=0' );
 });
 
@@ -732,11 +732,11 @@ test( 'handles 1x1 matrix (no rotations to apply)', function t() {
 	var c = new Float64Array( 0 );
 	var s = new Float64Array( 0 );
 	var expected = new Float64Array( [ 3, 4 ] );
-	base( 'L', 'V', 'F', 1, 1, c, 1, 0, s, 1, 0, A, 1, 1, 0 );
+	base( 'left', 'variable', 'forward', 1, 1, c, 1, 0, s, 1, 0, A, 1, 1, 0 );
 	assertClose( reinterpret( A, 0 ), expected, '1x1 L-V-F' );
 
 	A = new Complex128Array( [ 3, 4 ] );
-	base( 'R', 'V', 'F', 1, 1, c, 1, 0, s, 1, 0, A, 1, 1, 0 );
+	base( 'right', 'variable', 'forward', 1, 1, c, 1, 0, s, 1, 0, A, 1, 1, 0 );
 	assertClose( reinterpret( A, 0 ), expected, '1x1 R-V-F' );
 });
 
@@ -755,7 +755,7 @@ test( 'left, bottom pivot, forward with complex entries', function t() {
 	var c = new Float64Array( [ 0.6 ] );
 	var s = new Float64Array( [ 0.8 ] );
 
-	base( 'L', 'B', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'bottom', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=0: c=0.6, s=0.8, rotates row 0 against bottom row (M-1=1)
 	// Col 0: temp=A(0,0)=(1,2)
@@ -785,7 +785,7 @@ test( 'right, bottom pivot, backward with complex entries', function t() {
 	var c = new Float64Array( [ 0.6 ] );
 	var s = new Float64Array( [ 0.8 ] );
 
-	base( 'R', 'B', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'bottom', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=0 (backward from N-2=0 to 0): c=0.6, s=0.8, rotates col 0 against last col (N-1=1)
 	// Row 0: temp=A(0,0)=(1,2)
@@ -817,7 +817,7 @@ test( 'left, top pivot, forward with complex entries', function t() {
 	var c = new Float64Array( [ 0.6 ] );
 	var s = new Float64Array( [ 0.8 ] );
 
-	base( 'L', 'T', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'top', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=1 (0-based): c=c[0]=0.6, s=s[0]=0.8, rotates row 1 against row 0
 	// Col 0: temp=A(1,0)=(5,6)
@@ -847,7 +847,7 @@ test( 'right, top pivot, backward with complex entries', function t() {
 	var c = new Float64Array( [ 0.6 ] );
 	var s = new Float64Array( [ 0.8 ] );
 
-	base( 'R', 'T', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'top', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// j=1 (backward from N-1=1 down to 1): c=c[0]=0.6, s=s[0]=0.8
 	//   Rotates col 1 against col 0
@@ -882,7 +882,7 @@ test( 'left, variable pivot, forward: 3x3 complex, two rotations', function t() 
 	var s = new Float64Array( [ 0.6, Math.sqrt( 0.75 ) ] );
 	var sq75 = Math.sqrt( 0.75 );
 
-	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 
 	// Rotation j=0: c=0.8, s=0.6 on rows 0,1
 	// Col 0: temp=A(1,0)=(0,-1)
@@ -949,7 +949,7 @@ test( 'skips rotation when c=1, s=0 for L/V/B', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'L', 'V', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'variable', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip L-V-B' );
 });
 
@@ -961,7 +961,7 @@ test( 'skips rotation when c=1, s=0 for L/T/F', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'L', 'T', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'top', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip L-T-F' );
 });
 
@@ -973,7 +973,7 @@ test( 'skips rotation when c=1, s=0 for L/T/B', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'L', 'T', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'top', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip L-T-B' );
 });
 
@@ -985,7 +985,7 @@ test( 'skips rotation when c=1, s=0 for L/B/F', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'L', 'B', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'bottom', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip L-B-F' );
 });
 
@@ -997,7 +997,7 @@ test( 'skips rotation when c=1, s=0 for L/B/B', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'L', 'B', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'left', 'bottom', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip L-B-B' );
 });
 
@@ -1009,7 +1009,7 @@ test( 'skips rotation when c=1, s=0 for R/V/F', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'R', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip R-V-F' );
 });
 
@@ -1021,7 +1021,7 @@ test( 'skips rotation when c=1, s=0 for R/V/B', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'R', 'V', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'variable', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip R-V-B' );
 });
 
@@ -1033,7 +1033,7 @@ test( 'skips rotation when c=1, s=0 for R/T/F', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'R', 'T', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'top', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip R-T-F' );
 });
 
@@ -1045,7 +1045,7 @@ test( 'skips rotation when c=1, s=0 for R/T/B', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'R', 'T', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'top', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip R-T-B' );
 });
 
@@ -1057,7 +1057,7 @@ test( 'skips rotation when c=1, s=0 for R/B/F', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'R', 'B', 'F', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'bottom', 'forward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip R-B-F' );
 });
 
@@ -1069,7 +1069,7 @@ test( 'skips rotation when c=1, s=0 for R/B/B', function t() {
 	var original = new Float64Array( reinterpret( A, 0 ) );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	base( 'R', 'B', 'B', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
+	base( 'right', 'bottom', 'backward', M, N, c, 1, 0, s, 1, 0, A, 1, LDA, 0 );
 	assertClose( reinterpret( A, 0 ), original, 'skip R-B-B' );
 });
 
@@ -1086,8 +1086,8 @@ test( 'accepts lowercase side, pivot, direct', function t() {
 	var c = new Float64Array( [ 0.6 ] );
 	var s = new Float64Array( [ 0.8 ] );
 
-	base( 'L', 'V', 'F', M, N, c, 1, 0, s, 1, 0, A1, 1, LDA, 0 );
-	base( 'l', 'v', 'f', M, N, c, 1, 0, s, 1, 0, A2, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A1, 1, LDA, 0 );
+	base( 'left', 'variable', 'forward', M, N, c, 1, 0, s, 1, 0, A2, 1, LDA, 0 );
 
 	assertClose( extractAll( A1, M, N, LDA ), extractAll( A2, M, N, LDA ), 'lowercase' );
 });
@@ -1098,6 +1098,6 @@ test( 'returns A', function t() {
 	var A = buildMatrix( 2, 2, [ [ 1, 0 ], [ 0, 0 ], [ 0, 0 ], [ 1, 0 ] ] );
 	var c = new Float64Array( [ 1 ] );
 	var s = new Float64Array( [ 0 ] );
-	var result = base( 'L', 'V', 'F', 2, 2, c, 1, 0, s, 1, 0, A, 1, 2, 0 );
+	var result = base( 'left', 'variable', 'forward', 2, 2, c, 1, 0, s, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 });

@@ -89,7 +89,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 
 	/* @complex-arrays A, WORK */
 
-	wantz = ( jobz === 'V' );
+	wantz = ( jobz === 'compute' );
 
 	// Quick return if possible
 	if ( N === 0 ) {
@@ -118,7 +118,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 
 	// Scale matrix to allowable range, if necessary
 	// zlanhe returns a real value; RWORK is used as workspace for the norm computation
-	anrm = zlanhe( 'M', uplo, N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK );
+	anrm = zlanhe( 'max', uplo, N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK );
 	iscale = 0;
 	sigma = 1.0;
 	if ( anrm > 0.0 && anrm < rmin ) {
@@ -157,7 +157,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
 		// zsteqr needs real workspace of size 2*(N-1), use RWORK starting after E
 		// Fortran: INDWRK=INDE+N => real scratch at RWORK[N..]
-		info = zsteqr( jobz, N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + N * strideRWORK );
+		info = zsteqr( ( wantz ? 'initialize' : 'none' ), N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + N * strideRWORK );
 	}
 
 	// If matrix was scaled, rescale eigenvalues

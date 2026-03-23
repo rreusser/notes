@@ -102,7 +102,7 @@ test( 'zggbal: JOB=N, 4x4 — sets ilo=1, ihi=N, scales=1', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'N', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'none', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -128,7 +128,7 @@ test( 'zggbal: N=0 — quick return', function t() {
 	rscale = new Float64Array( 1 );
 	work = new Float64Array( 6 );
 
-	result = zggbal( 'B', 0, A, 1, 1, 0, B, 1, 1, 0,
+	result = zggbal( 'both', 0, A, 1, 1, 0, B, 1, 1, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -163,7 +163,7 @@ test( 'zggbal: N=1 — quick return with scales=1', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 1, 1, 0, B, 1, 1, 0,
+	result = zggbal( 'both', n, A, 1, 1, 0, B, 1, 1, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -209,7 +209,7 @@ test( 'zggbal: JOB=P, 4x4 — permute only', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'permute', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -263,7 +263,7 @@ test( 'zggbal: JOB=S, 3x3 — scale only', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'S', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'scale', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -331,7 +331,7 @@ test( 'zggbal: JOB=B, 4x4 — both permute and scale', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'both', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -377,7 +377,7 @@ test( 'zggbal: JOB=P, 3x3 — isolated eigenvalue', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'permute', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -437,7 +437,7 @@ test( 'zggbal: JOB=B, 5x5 — pentadiagonal with scaling', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'both', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -479,7 +479,7 @@ test( 'zggbal: JOB=P, 3x3 diagonal — fully isolated', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'permute', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -517,7 +517,7 @@ test( 'zggbal: JOB=S, 2x2 trivial — ilo=ihi quick return from scaling', functi
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'S', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'scale', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -559,7 +559,7 @@ test( 'zggbal: JOB=B, 2x2 — complex dense', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'both', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -611,7 +611,7 @@ test( 'zggbal: JOB=P, 5x5 — two isolated eigenvalues', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'P', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'permute', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );
@@ -658,7 +658,7 @@ test( 'zggbal: JOB=B, 3x3 — ilo===ihi after permutation', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'both', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, 0, 'info' );
@@ -711,7 +711,7 @@ test( 'zggbal: JOB=B, 3x3 — fully dense complex', function t() {
 	rscale = new Float64Array( n );
 	work = new Float64Array( 6 * n );
 
-	result = zggbal( 'B', n, A, 1, n, 0, B, 1, n, 0,
+	result = zggbal( 'both', n, A, 1, n, 0, B, 1, n, 0,
 		lscale, 1, 0, rscale, 1, 0, work, 1, 0 );
 
 	assert.strictEqual( result.info, tc.info, 'info' );

@@ -65,7 +65,7 @@ test( 'zhetd2: upper_4x4', function t() {
 	var d = new Float64Array( 4 );
 	var e = new Float64Array( 3 );
 	var TAU = new Complex128Array( 3 );
-	var info = zhetd2( 'U', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zhetd2( 'upper', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	var Av = reinterpret( A, 0 );
 	var Tv = reinterpret( TAU, 0 );
 	assert.equal( info, tc.info );
@@ -81,7 +81,7 @@ test( 'zhetd2: lower_4x4', function t() {
 	var d = new Float64Array( 4 );
 	var e = new Float64Array( 3 );
 	var TAU = new Complex128Array( 3 );
-	var info = zhetd2( 'L', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zhetd2( 'lower', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	var Av = reinterpret( A, 0 );
 	var Tv = reinterpret( TAU, 0 );
 	assert.equal( info, tc.info );
@@ -97,7 +97,7 @@ test( 'zhetd2: n_one_upper', function t() {
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
 	var TAU = new Complex128Array( 0 );
-	var info = zhetd2( 'U', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zhetd2( 'upper', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, tc.info );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
 });
@@ -108,7 +108,7 @@ test( 'zhetd2: n_one_lower', function t() {
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
 	var TAU = new Complex128Array( 0 );
-	var info = zhetd2( 'L', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zhetd2( 'lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, tc.info );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
 });
@@ -118,7 +118,7 @@ test( 'zhetd2: n_zero', function t() {
 	var d = new Float64Array( 0 );
 	var e = new Float64Array( 0 );
 	var TAU = new Complex128Array( 0 );
-	var info = zhetd2( 'U', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zhetd2( 'upper', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -134,7 +134,7 @@ test( 'zhetd2: upper_diagonal (tau=0 path)', function t() {
 	var e = new Float64Array( 2 );
 	var TAU = new Complex128Array( 2 );
 	var Tv = reinterpret( TAU, 0 );
-	var info = zhetd2( 'U', 3, A, 1, 3, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zhetd2( 'upper', 3, A, 1, 3, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 	assertArrayClose( Array.from( e ), tc.e, 1e-14, 'e' );
@@ -152,7 +152,7 @@ test( 'zhetd2: lower_diagonal (tau=0 path)', function t() {
 	var e = new Float64Array( 2 );
 	var TAU = new Complex128Array( 2 );
 	var Tv = reinterpret( TAU, 0 );
-	var info = zhetd2( 'L', 3, A, 1, 3, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zhetd2( 'lower', 3, A, 1, 3, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 	assertArrayClose( Array.from( e ), tc.e, 1e-14, 'e' );

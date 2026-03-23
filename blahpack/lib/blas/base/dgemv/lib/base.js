@@ -7,7 +7,7 @@
 *   y := alpha*A*x + beta*y,   or   y := alpha*A^T*x + beta*y
 *
 * @private
-* @param {string} trans - specifies whether A is transposed ('N', 'T', or 'C')
+* @param {string} trans - specifies whether A is transposed ('no-transpose', 'T', or 'C')
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {number} alpha - scalar multiplier for A*x
@@ -45,7 +45,7 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 		return y;
 	}
 
-	var noTrans = ( trans === 'N' || trans === 'n' || trans === 'no-transpose' );
+	var noTrans = ( trans === 'no-transpose' || trans === 'no-transpose' );
 	if ( noTrans ) {
 		lenx = N;
 		leny = M;

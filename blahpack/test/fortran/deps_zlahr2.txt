@@ -3,7 +3,7 @@ zlacpy
 zlacgv
 zlarfg
 zladiv
-xerbla
+dladiv
 disnan
 dlaisnan
 dlamch

@@ -58,7 +58,7 @@ function extractMatrix( A, M, N, sa1, sa2, offset ) {
 test( 'dlaset: upper_4x4', function t() {
 	var tc = findCase( 'upper_4x4' );
 	var A = filled( 16, -1.0 );
-	dlaset( 'U', 4, 4, 2.0, 5.0, A, 1, 4, 0 );
+	dlaset( 'upper', 4, 4, 2.0, 5.0, A, 1, 4, 0 );
 	var result = extractMatrix( A, 4, 4, 1, 4, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -66,7 +66,7 @@ test( 'dlaset: upper_4x4', function t() {
 test( 'dlaset: lower_4x4', function t() {
 	var tc = findCase( 'lower_4x4' );
 	var A = filled( 16, -1.0 );
-	dlaset( 'L', 4, 4, 3.0, 7.0, A, 1, 4, 0 );
+	dlaset( 'lower', 4, 4, 3.0, 7.0, A, 1, 4, 0 );
 	var result = extractMatrix( A, 4, 4, 1, 4, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -98,7 +98,7 @@ test( 'dlaset: full_3x5', function t() {
 test( 'dlaset: upper_5x3', function t() {
 	var tc = findCase( 'upper_5x3' );
 	var A = filled( 15, -1.0 );
-	dlaset( 'U', 5, 3, 2.0, 5.0, A, 1, 5, 0 );
+	dlaset( 'upper', 5, 3, 2.0, 5.0, A, 1, 5, 0 );
 	var result = extractMatrix( A, 5, 3, 1, 5, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -106,7 +106,7 @@ test( 'dlaset: upper_5x3', function t() {
 test( 'dlaset: lower_3x5', function t() {
 	var tc = findCase( 'lower_3x5' );
 	var A = filled( 15, -1.0 );
-	dlaset( 'L', 3, 5, 3.0, 7.0, A, 1, 3, 0 );
+	dlaset( 'lower', 3, 5, 3.0, 7.0, A, 1, 3, 0 );
 	var result = extractMatrix( A, 3, 5, 1, 3, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -148,7 +148,7 @@ test( 'dlaset: full_4x1', function t() {
 test( 'dlaset: upper_3x5', function t() {
 	var tc = findCase( 'upper_3x5' );
 	var A = filled( 15, -1.0 );
-	dlaset( 'U', 3, 5, 2.0, 5.0, A, 1, 3, 0 );
+	dlaset( 'upper', 3, 5, 2.0, 5.0, A, 1, 3, 0 );
 	var result = extractMatrix( A, 3, 5, 1, 3, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -156,7 +156,7 @@ test( 'dlaset: upper_3x5', function t() {
 test( 'dlaset: lower_5x3', function t() {
 	var tc = findCase( 'lower_5x3' );
 	var A = filled( 15, -1.0 );
-	dlaset( 'L', 5, 3, 3.0, 7.0, A, 1, 5, 0 );
+	dlaset( 'lower', 5, 3, 3.0, 7.0, A, 1, 5, 0 );
 	var result = extractMatrix( A, 5, 3, 1, 5, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });

@@ -42,7 +42,7 @@ test( 'dpotrf2: lower_3x3', function t() {
 	var tc = findCase( 'lower_3x3' );
 	// A = [4 2 1; 2 5 3; 1 3 9] col-major
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
-	var info = dpotrf2( 'L', 3, A, 1, 3, 0 );
+	var info = dpotrf2( 'lower', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.L, 1e-14, 'L' );
 });
@@ -50,7 +50,7 @@ test( 'dpotrf2: lower_3x3', function t() {
 test( 'dpotrf2: upper_3x3', function t() {
 	var tc = findCase( 'upper_3x3' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
-	var info = dpotrf2( 'U', 3, A, 1, 3, 0 );
+	var info = dpotrf2( 'upper', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.U, 1e-14, 'U' );
 });
@@ -58,21 +58,21 @@ test( 'dpotrf2: upper_3x3', function t() {
 test( 'dpotrf2: not_posdef', function t() {
 	var tc = findCase( 'not_posdef' );
 	var A = new Float64Array( [ 1, 2, 3, 2, 1, 4, 3, 4, 1 ] );
-	var info = dpotrf2( 'L', 3, A, 1, 3, 0 );
+	var info = dpotrf2( 'lower', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dpotrf2: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Float64Array( 1 );
-	var info = dpotrf2( 'L', 0, A, 1, 1, 0 );
+	var info = dpotrf2( 'lower', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dpotrf2: n_one', function t() {
 	var tc = findCase( 'n_one' );
 	var A = new Float64Array( [ 9 ] );
-	var info = dpotrf2( 'L', 1, A, 1, 1, 0 );
+	var info = dpotrf2( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });
@@ -80,14 +80,14 @@ test( 'dpotrf2: n_one', function t() {
 test( 'dpotrf2: n_one_notposdef', function t() {
 	var tc = findCase( 'n_one_notposdef' );
 	var A = new Float64Array( [ -4 ] );
-	var info = dpotrf2( 'L', 1, A, 1, 1, 0 );
+	var info = dpotrf2( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dpotrf2: lower_4x4', function t() {
 	var tc = findCase( 'lower_4x4' );
 	var A = new Float64Array( [ 4, 2, 1, 0, 2, 5, 3, 1, 1, 3, 9, 2, 0, 1, 2, 8 ] );
-	var info = dpotrf2( 'L', 4, A, 1, 4, 0 );
+	var info = dpotrf2( 'lower', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.L, 1e-14, 'L' );
 });
@@ -95,7 +95,7 @@ test( 'dpotrf2: lower_4x4', function t() {
 test( 'dpotrf2: upper_4x4', function t() {
 	var tc = findCase( 'upper_4x4' );
 	var A = new Float64Array( [ 4, 2, 1, 0, 2, 5, 3, 1, 1, 3, 9, 2, 0, 1, 2, 8 ] );
-	var info = dpotrf2( 'U', 4, A, 1, 4, 0 );
+	var info = dpotrf2( 'upper', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.U, 1e-14, 'U' );
 });
@@ -111,7 +111,7 @@ test( 'dpotrf2: upper_4x4 not posdef in A22 block', function t() {
 		1, 3, -1, 0,
 		1, 3, 0, -1
 	] );
-	var info = dpotrf2( 'U', 4, A, 1, 4, 0 );
+	var info = dpotrf2( 'upper', 4, A, 1, 4, 0 );
 	// n1 = 2, so if A22 fails at position k, info = k + n1
 	assert.ok( info > 2, 'info should be > 2 (failure in A22 block), got ' + info );
 });

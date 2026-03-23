@@ -118,8 +118,8 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	var jr;
 
 	// Decode input
-	ilvl = ( jobvl === 'V' || jobvl === 'v' );
-	ilvr = ( jobvr === 'V' || jobvr === 'v' );
+	ilvl = ( jobvl === 'compute' );
+	ilvr = ( jobvr === 'compute' );
 	ilv = ilvl || ilvr;
 
 	info = 0;
@@ -150,7 +150,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	bignum = ONE / smlnum;
 
 	// Scale A if max element outside range [SMLNUM, BIGNUM]
-	anrm = zlange( 'M', N, N, A, strideA1, strideA2, offsetA, RWORK, 1, 0 );
+	anrm = zlange( 'max', N, N, A, strideA1, strideA2, offsetA, RWORK, 1, 0 );
 	ilascl = false;
 	anrmto = 0.0;
 	if ( anrm > ZERO && anrm < smlnum ) {
@@ -161,11 +161,11 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		ilascl = true;
 	}
 	if ( ilascl ) {
-		zlascl( 'G', 0, 0, anrm, anrmto, N, N, A, strideA1, strideA2, offsetA );
+		zlascl( 'general', 0, 0, anrm, anrmto, N, N, A, strideA1, strideA2, offsetA );
 	}
 
 	// Scale B if max element outside range [SMLNUM, BIGNUM]
-	bnrm = zlange( 'M', N, N, B, strideB1, strideB2, offsetB, RWORK, 1, 0 );
+	bnrm = zlange( 'max', N, N, B, strideB1, strideB2, offsetB, RWORK, 1, 0 );
 	ilbscl = false;
 	bnrmto = 0.0;
 	if ( bnrm > ZERO && bnrm < smlnum ) {
@@ -176,14 +176,14 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		ilbscl = true;
 	}
 	if ( ilbscl ) {
-		zlascl( 'G', 0, 0, bnrm, bnrmto, N, N, B, strideB1, strideB2, offsetB );
+		zlascl( 'general', 0, 0, bnrm, bnrmto, N, N, B, strideB1, strideB2, offsetB );
 	}
 
 	// Permute the matrices A, B to isolate eigenvalues
 	ileft = 0;
 	iright = N;
 	irwrk = 2 * N;
-	bal = zggbal( 'P', N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB,
+	bal = zggbal( 'permute', N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB,
 		RWORK, 1, ileft, RWORK, 1, iright, RWORK, 1, irwrk );
 	ilo = bal.ilo;
 	ihi = bal.ihi;
@@ -206,7 +206,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 	// Apply Q^H to A from the left
 	zunmqr(
-		'L', 'C', irows, icols, irows,
+		'left', 'conjugate-transpose', irows, icols, irows,
 		B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
 		TAU, 1, 0,
 		A, strideA1, strideA2, offsetA + ( ilo - 1 ) * strideA1 + ( ilo - 1 ) * strideA2,
@@ -218,7 +218,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		zlaset( 'Full', N, N, CZERO, CONE, VL, strideVL1, strideVL2, offsetVL );
 
 		if ( irows > 1 ) {
-			zlacpy( 'L', irows - 1, irows - 1,
+			zlacpy( 'lower', irows - 1, irows - 1,
 				B, strideB1, strideB2, offsetB + ilo * strideB1 + ( ilo - 1 ) * strideB2,
 				VL, strideVL1, strideVL2, offsetVL + ilo * strideVL1 + ( ilo - 1 ) * strideVL2
 			);
@@ -247,7 +247,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		);
 	} else {
 		zgghrd(
-			'N', 'N', irows, 1, irows,
+			'none', 'none', irows, 1, irows,
 			A, strideA1, strideA2, offsetA + ( ilo - 1 ) * strideA1 + ( ilo - 1 ) * strideA2,
 			B, strideB1, strideB2, offsetB + ( ilo - 1 ) * strideB1 + ( ilo - 1 ) * strideB2,
 			VL, strideVL1, strideVL2, offsetVL,
@@ -298,7 +298,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 		// Use a separate RWORK for ztgevc so it doesn't clobber
 		// the LSCALE/RSCALE at RWORK[0..2N-1] needed by zggbak
 		ierr = ztgevc(
-			chtemp, 'B', null, 0, 0, N,
+			chtemp, 'backtransform', null, 0, 0, N,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB,
 			VL, strideVL1, strideVL2, offsetVL,
@@ -318,7 +318,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			sVL2 = strideVL2 * 2;
 			oVL = offsetVL * 2;
 
-			zggbak( 'P', 'L', N, ilo, ihi,
+			zggbak( 'permute', 'left', N, ilo, ihi,
 				RWORK, 1, ileft, RWORK, 1, iright,
 				N, VL, strideVL1, strideVL2, offsetVL
 			);
@@ -346,7 +346,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			sVR2 = strideVR2 * 2;
 			oVR = offsetVR * 2;
 
-			zggbak( 'P', 'R', N, ilo, ihi,
+			zggbak( 'permute', 'right', N, ilo, ihi,
 				RWORK, 1, ileft, RWORK, 1, iright,
 				N, VR, strideVR1, strideVR2, offsetVR
 			);
@@ -379,12 +379,12 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	*/
 	function finalize() {
 		if ( ilascl ) {
-			zlascl( 'G', 0, 0, anrmto, anrm, N, 1,
+			zlascl( 'general', 0, 0, anrmto, anrm, N, 1,
 				ALPHA, strideALPHA, 1, offsetALPHA
 			);
 		}
 		if ( ilbscl ) {
-			zlascl( 'G', 0, 0, bnrmto, bnrm, N, 1,
+			zlascl( 'general', 0, 0, bnrmto, bnrm, N, 1,
 				BETA, strideBETA, 1, offsetBETA
 			);
 		}

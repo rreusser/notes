@@ -52,7 +52,7 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 		return;
 	}
 
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		// Reduce last NB columns of upper triangle
 		// Fortran loop: DO I = N, N-NB+1, -1
 		// 0-based: i goes from N-1 down to N-nb
@@ -62,13 +62,13 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 			if ( i < N - 1 ) {
 				// Update A(0:i, i)
 				// A(1:I,I) := A(1:I,I) - A(1:I,I+1:N) * W(I,IW+1:NB-1)^T
-				dgemv( 'N', i + 1, N - 1 - i, -1.0,
+				dgemv( 'no-transpose', i + 1, N - 1 - i, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					W, strideW2, offsetW + i * strideW1 + ( iw + 1 ) * strideW2,
 					1.0, A, strideA1, offsetA + i * strideA2
 				);
 				// A(1:I,I) := A(1:I,I) - W(1:I,IW+1:NB-1) * A(I,I+1:N)^T
-				dgemv( 'N', i + 1, N - 1 - i, -1.0,
+				dgemv( 'no-transpose', i + 1, N - 1 - i, -1.0,
 					W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					1.0, A, strideA1, offsetA + i * strideA2
@@ -88,7 +88,7 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 
 				// Compute W(0:i-1, iw)
 				// W(1:I-1,IW) := A(1:I-1,1:I-1) * A(1:I-1,I) (symmetric multiply)
-				dsymv( 'U', i, 1.0,
+				dsymv( 'upper', i, 1.0,
 					A, strideA1, strideA2, offsetA,
 					A, strideA1, offsetA + i * strideA2,
 					0.0, W, strideW1, offsetW + iw * strideW2
@@ -96,25 +96,25 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 
 				if ( i < N - 1 ) {
 					// W(I+1:N,IW) := W(1:I-1,IW+1:NB-1)^T * A(1:I-1,I)
-					dgemv( 'T', i, N - 1 - i, 1.0,
+					dgemv( 'transpose', i, N - 1 - i, 1.0,
 						W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
 						A, strideA1, offsetA + i * strideA2,
 						0.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2
 					);
 					// W(1:I-1,IW) := W(1:I-1,IW) - A(1:I-1,I+1:N) * W(I+1:N,IW)
-					dgemv( 'N', i, N - 1 - i, -1.0,
+					dgemv( 'no-transpose', i, N - 1 - i, -1.0,
 						A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 						W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2,
 						1.0, W, strideW1, offsetW + iw * strideW2
 					);
 					// W(I+1:N,IW) := A(1:I-1,I+1:N)^T * A(1:I-1,I)
-					dgemv( 'T', i, N - 1 - i, 1.0,
+					dgemv( 'transpose', i, N - 1 - i, 1.0,
 						A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 						A, strideA1, offsetA + i * strideA2,
 						0.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2
 					);
 					// W(1:I-1,IW) := W(1:I-1,IW) - W(1:I-1,IW+1:NB-1) * W(I+1:N,IW)
-					dgemv( 'N', i, N - 1 - i, -1.0,
+					dgemv( 'no-transpose', i, N - 1 - i, -1.0,
 						W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
 						W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2,
 						1.0, W, strideW1, offsetW + iw * strideW2
@@ -144,13 +144,13 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 		for ( i = 0; i < nb; i++ ) {
 			// Update A(i:N-1, i)
 			// A(I:N,I) := A(I:N,I) - A(I:N,1:I-1) * W(I,1:I-1)^T
-			dgemv( 'N', N - i, i, -1.0,
+			dgemv( 'no-transpose', N - i, i, -1.0,
 				A, strideA1, strideA2, offsetA + i * strideA1,
 				W, strideW2, offsetW + i * strideW1,
 				1.0, A, strideA1, offsetA + i * strideA1 + i * strideA2
 			);
 			// A(I:N,I) := A(I:N,I) - W(I:N,1:I-1) * A(I,1:I-1)^T
-			dgemv( 'N', N - i, i, -1.0,
+			dgemv( 'no-transpose', N - i, i, -1.0,
 				W, strideW1, strideW2, offsetW + i * strideW1,
 				A, strideA2, offsetA + i * strideA1,
 				1.0, A, strideA1, offsetA + i * strideA1 + i * strideA2
@@ -169,31 +169,31 @@ function dlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 
 				// Compute W(i+1:N-1, i)
 				// W(I+1:N,I) := A(I+1:N,I+1:N) * A(I+1:N,I) (symmetric multiply)
-				dsymv( 'L', N - i - 1, 1.0,
+				dsymv( 'lower', N - i - 1, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
 				// W(1:I-1,I) := W(I+1:N,1:I-1)^T * A(I+1:N,I)
-				dgemv( 'T', N - i - 1, i, 1.0,
+				dgemv( 'transpose', N - i - 1, i, 1.0,
 					W, strideW1, strideW2, offsetW + ( i + 1 ) * strideW1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, W, strideW1, offsetW + i * strideW2
 				);
 				// W(I+1:N,I) := W(I+1:N,I) - A(I+1:N,1:I-1) * W(1:I-1,I)
-				dgemv( 'N', N - i - 1, i, -1.0,
+				dgemv( 'no-transpose', N - i - 1, i, -1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					W, strideW1, offsetW + i * strideW2,
 					1.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
 				// W(1:I-1,I) := A(I+1:N,1:I-1)^T * A(I+1:N,I)
-				dgemv( 'T', N - i - 1, i, 1.0,
+				dgemv( 'transpose', N - i - 1, i, 1.0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					0.0, W, strideW1, offsetW + i * strideW2
 				);
 				// W(I+1:N,I) := W(I+1:N,I) - W(I+1:N,1:I-1) * W(1:I-1,I)
-				dgemv( 'N', N - i - 1, i, -1.0,
+				dgemv( 'no-transpose', N - i - 1, i, -1.0,
 					W, strideW1, strideW2, offsetW + ( i + 1 ) * strideW1,
 					W, strideW1, offsetW + i * strideW2,
 					1.0, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2

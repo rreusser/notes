@@ -74,7 +74,7 @@ test( 'dlauum: upper 4x4 (U*U^T)', function t() {
 	                              A[ 10 ] = 5.0; A[ 14 ] = 1.0;
 	                                              A[ 15 ] = 6.0;
 
-	info = dlauum( 'U', N, A, 1, N, 0 );
+	info = dlauum( 'upper', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-14, 'a' );
 });
@@ -91,7 +91,7 @@ test( 'dlauum: lower 4x4 (L^T*L)', function t() {
 	                              A[ 10 ] = 5.0; A[ 11 ] = 1.0;
 	                                              A[ 15 ] = 6.0;
 
-	info = dlauum( 'L', N, A, 1, N, 0 );
+	info = dlauum( 'lower', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-14, 'a' );
 });
@@ -101,7 +101,7 @@ test( 'dlauum: N=1 upper', function t() {
 	var A = new Float64Array( [ 3.0 ] );
 	var info;
 
-	info = dlauum( 'U', 1, A, 1, 1, 0 );
+	info = dlauum( 'upper', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });
@@ -111,7 +111,7 @@ test( 'dlauum: N=1 lower', function t() {
 	var A = new Float64Array( [ 5.0 ] );
 	var info;
 
-	info = dlauum( 'L', 1, A, 1, 1, 0 );
+	info = dlauum( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });
@@ -121,7 +121,7 @@ test( 'dlauum: N=0 quick return', function t() {
 	var A = new Float64Array( 1 );
 	var info;
 
-	info = dlauum( 'U', 0, A, 1, 1, 0 );
+	info = dlauum( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -144,7 +144,7 @@ test( 'dlauum: upper 35x35 (blocked path)', function t() {
 		}
 	}
 
-	info = dlauum( 'U', N, A, 1, N, 0 );
+	info = dlauum( 'upper', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-12, 'a' );
 });
@@ -168,7 +168,7 @@ test( 'dlauum: lower 35x35 (blocked path)', function t() {
 		}
 	}
 
-	info = dlauum( 'L', N, A, 1, N, 0 );
+	info = dlauum( 'lower', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-12, 'a' );
 });

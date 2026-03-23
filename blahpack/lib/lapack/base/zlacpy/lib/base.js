@@ -64,7 +64,7 @@ function zlacpy( uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, stride
 	oA = offsetA * 2;
 	oB = offsetB * 2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		for ( j = 0; j < N; j++ ) {
 			ia = oA + ( j * sa2 );
 			ib = oB + ( j * sb2 );
@@ -73,7 +73,7 @@ function zlacpy( uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				Bv[ ib + ( i * sb1 ) + 1 ] = Av[ ia + ( i * sa1 ) + 1 ];
 			}
 		}
-	} else if ( uplo === 'L' || uplo === 'l' ) {
+	} else if ( uplo === 'lower' ) {
 		for ( j = 0; j < N; j++ ) {
 			ia = oA + ( j * sa2 );
 			ib = oB + ( j * sb2 );

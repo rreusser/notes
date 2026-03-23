@@ -115,7 +115,7 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				// Form the triangular factor of the block reflector
 				// H = H(i) H(i+1) ... H(i+ib-1)
 				zlarft(
-					'F', 'C',
+					'forward', 'columnwise',
 					M - i, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					TAU, strideTAU, offsetTAU + i * strideTAU,
@@ -124,7 +124,7 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 				// Apply H^H to A(i:M-1, i+ib:N-1) from the left
 				zlarfb(
-					'L', 'C', 'F', 'C',
+					'left', 'conjugate-transpose', 'forward', 'columnwise',
 					M - i, N - i - ib, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					T, 1, nb, offsetT,

@@ -25,7 +25,7 @@ var NB = 32; // block size (replaces ILAENV)
 * If UPLO = 'L', the matrix Q is represented as Q = H(1) * H(2) * ... * H(n-1).
 *
 * @private
-* @param {string} uplo - specifies whether the upper ('U') or lower ('L') triangular part of A is stored
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangular part of A is stored
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input/output symmetric matrix; on exit contains tridiagonal form and reflectors
 * @param {integer} strideA1 - stride of the first dimension of `A`
@@ -78,7 +78,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	// Allocate workspace for W matrix (N-by-NB), used by dlatrd
 	work = new Float64Array( ldwork * nb );
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Reduce the upper triangle of A.
 		// Columns 0:kk-1 (0-based) are handled by unblocked method.
 		//
@@ -115,7 +115,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// A(1,I) in Fortran (1-based) = A(0, i) in 0-based = offsetA + i*sa2
 			// WORK starts at (0,0) with strides (1, ldwork)
 			dsyr2k(
-				uplo, 'N', i, nb, -1.0,
+				uplo, 'no-transpose', i, nb, -1.0,
 				A, sa1, sa2, offsetA + i * sa2,
 				work, 1, ldwork, 0,
 				1.0,
@@ -171,7 +171,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// WORK(NB+1) 1-based = work[nb] 0-based (row nb, col 0)
 			// A(I+NB, I+NB) 1-based = A(i+nb, i+nb) 0-based
 			dsyr2k(
-				uplo, 'N', N - i - nb, nb, -1.0,
+				uplo, 'no-transpose', N - i - nb, nb, -1.0,
 				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + i * sa2,
 				work, 1, ldwork, nb,
 				1.0,

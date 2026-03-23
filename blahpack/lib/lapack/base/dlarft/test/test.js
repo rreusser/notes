@@ -36,7 +36,7 @@ test( 'dlarft: fwd col 5x3', function t() {
 	V[ 4 + 0 * 6 ] = 0.0625; V[ 4 + 1 * 6 ] = 0.125; V[ 4 + 2 * 6 ] = 0.25;
 	var TAU = new Float64Array( [ 1.2, 1.5, 1.1 ] );
 	var T = new Float64Array( 3 * 3 );
-	dlarft( 'F', 'C', 5, 3, V, 1, 6, 0, TAU, 1, 0, T, 1, 3, 0 );
+	dlarft( 'forward', 'columnwise', 5, 3, V, 1, 6, 0, TAU, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -49,7 +49,7 @@ test( 'dlarft: fwd col 3x2', function t() {
 	var TAU = new Float64Array( [ 0.8, 1.2 ] );
 	// Use LDT=2 (K=2), so strideT1=1, strideT2=2
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'F', 'C', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'forward', 'columnwise', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -63,7 +63,7 @@ test( 'dlarft: bwd col 5x2', function t() {
 	V[ 4 + 1 * 6 ] = 1.0;
 	var TAU = new Float64Array( [ 1.5, 0.9 ] );
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'B', 'C', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'backward', 'columnwise', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -75,7 +75,7 @@ test( 'dlarft: fwd col tau zero', function t() {
 	V[ 2 + 0 * 6 ] = 0.25; V[ 2 + 1 * 6 ] = 0.5;
 	var TAU = new Float64Array( [ 1.2, 0.0 ] );
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'F', 'C', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'forward', 'columnwise', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -89,7 +89,7 @@ test( 'dlarft: fwd row 5x3', function t() {
 	V[ 2 + 2 * 6 ] = 1; V[ 2 + 3 * 6 ] = 0.5; V[ 2 + 4 * 6 ] = 0.25;
 	var TAU = new Float64Array( [ 1.2, 1.5, 1.1 ] );
 	var T = new Float64Array( 3 * 3 );
-	dlarft( 'F', 'R', 5, 3, V, 1, 6, 0, TAU, 1, 0, T, 1, 3, 0 );
+	dlarft( 'forward', 'rowwise', 5, 3, V, 1, 6, 0, TAU, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -101,7 +101,7 @@ test( 'dlarft: fwd row 3x2', function t() {
 	V[ 1 + 1 * 6 ] = 1; V[ 1 + 2 * 6 ] = 4;
 	var TAU = new Float64Array( [ 0.8, 1.2 ] );
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'F', 'R', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'forward', 'rowwise', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -114,7 +114,7 @@ test( 'dlarft: bwd row 5x2', function t() {
 	V[ 1 + 0 * 6 ] = 0.25; V[ 1 + 1 * 6 ] = 0.125; V[ 1 + 2 * 6 ] = 0.0625; V[ 1 + 3 * 6 ] = 0.0; V[ 1 + 4 * 6 ] = 1.0;
 	var TAU = new Float64Array( [ 1.5, 0.9 ] );
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'B', 'R', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'backward', 'rowwise', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -129,7 +129,7 @@ test( 'dlarft: bwd col tau zero', function t() {
 	V[ 4 + 1 * 6 ] = 1.0;
 	var TAU = new Float64Array( [ 0.0, 0.9 ] );
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'B', 'C', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'backward', 'columnwise', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
@@ -137,7 +137,7 @@ test( 'dlarft: N=0 quick return', function t() {
 	var T = new Float64Array( [ 99 ] );
 	var V = new Float64Array( 1 );
 	var TAU = new Float64Array( [ 1.0 ] );
-	dlarft( 'F', 'C', 0, 1, V, 1, 1, 0, TAU, 1, 0, T, 1, 1, 0 );
+	dlarft( 'forward', 'columnwise', 0, 1, V, 1, 1, 0, TAU, 1, 0, T, 1, 1, 0 );
 	if ( T[ 0 ] !== 99 ) {
 		throw new Error( 'T changed on N=0' );
 	}
@@ -162,7 +162,7 @@ test( 'dlarft: fwd col with trailing zeros in V (exercises lastv assignment, lin
 	V[ 5 + 1 * 8 ] = 0.0625;
 	var TAU = new Float64Array( [ 1.2, 1.5 ] );
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'F', 'C', 6, 2, V, 1, 8, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'forward', 'columnwise', 6, 2, V, 1, 8, 0, TAU, 1, 0, T, 1, 2, 0 );
 	// Verify T is populated (we just need the path to execute)
 	// T[0] should be TAU[0] = 1.2
 	if ( T[ 0 ] !== 1.2 ) {
@@ -184,7 +184,7 @@ test( 'dlarft: fwd row with trailing zeros in V (exercises lastv assignment, lin
 	V[ 1 + 4 * 8 ] = 0.125; V[ 1 + 5 * 8 ] = 0.0625;
 	var TAU = new Float64Array( [ 1.2, 1.5 ] );
 	var T = new Float64Array( 2 * 2 );
-	dlarft( 'F', 'R', 6, 2, V, 1, 8, 0, TAU, 1, 0, T, 1, 2, 0 );
+	dlarft( 'forward', 'rowwise', 6, 2, V, 1, 8, 0, TAU, 1, 0, T, 1, 2, 0 );
 	if ( T[ 0 ] !== 1.2 ) {
 		throw new Error( 'T[0,0] should be TAU[0]=1.2, got ' + T[ 0 ] );
 	}
@@ -213,7 +213,7 @@ test( 'dlarft: bwd col with leading zeros in V (exercises lastv assignment, line
 	V[ 5 + 2 * 8 ] = 1.0; // unit diag at row N-K+2=5
 	var TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
 	var T = new Float64Array( 3 * 3 );
-	dlarft( 'B', 'C', 6, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
+	dlarft( 'backward', 'columnwise', 6, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
 	// T diagonal should hold TAU values
 	if ( T[ 0 ] !== 1.5 ) {
 		throw new Error( 'T[0,0] should be 1.5, got ' + T[ 0 ] );
@@ -239,7 +239,7 @@ test( 'dlarft: bwd row with leading zeros in V (exercises lastv=jj+1, lines 155-
 	V[ 2 + 6 * 8 ] = 1.0;
 	var TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
 	var T = new Float64Array( 3 * 3 );
-	dlarft( 'B', 'R', 7, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
+	dlarft( 'backward', 'rowwise', 7, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
 	if ( T[ 0 ] !== 1.5 ) {
 		throw new Error( 'T[0,0] should be 1.5, got ' + T[ 0 ] );
 	}
@@ -257,7 +257,7 @@ test( 'dlarft: bwd row, non-zero V triggers break (lines 156-157)', function t()
 	V[ 2 + 6 * 8 ] = 1.0;
 	var TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
 	var T = new Float64Array( 3 * 3 );
-	dlarft( 'B', 'R', 7, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
+	dlarft( 'backward', 'rowwise', 7, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
 	if ( T[ 0 ] !== 1.5 ) {
 		throw new Error( 'T[0,0] should be 1.5, got ' + T[ 0 ] );
 	}
@@ -282,7 +282,7 @@ test( 'dlarft: bwd col K=1 (exercises line 179: prevlastv set, i=0 else branch)'
 	V[ 5 + 2 * 8 ] = 1.0;
 	var TAU = new Float64Array( [ 1.2, 0.8, 1.1 ] );
 	var T = new Float64Array( 3 * 3 );
-	dlarft( 'B', 'C', 6, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
+	dlarft( 'backward', 'columnwise', 6, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
 	// T diagonal should hold TAU values
 	if ( T[ 0 ] !== 1.2 ) {
 		throw new Error( 'T[0,0] should be 1.2, got ' + T[ 0 ] );

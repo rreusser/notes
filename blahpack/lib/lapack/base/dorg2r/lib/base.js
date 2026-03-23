@@ -91,7 +91,7 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran 1-based: M-I+1 rows, N-I cols starting at (I, I+1)
 			// JS 0-based: M-i rows from row i, N-i-1 cols from col i+1
 			dlarf(
-				'L', M - i, N - i - 1,
+				'left', M - i, N - i - 1,
 				A, strideA1, offsetA + i * strideA1 + i * strideA2,
 				TAU[ offsetTAU + i * strideTAU ],
 				A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,

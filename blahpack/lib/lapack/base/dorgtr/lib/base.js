@@ -60,7 +60,7 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	var i;
 	var j;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 
 	// Quick return if possible...
 	if ( N === 0 ) {

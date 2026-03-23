@@ -84,70 +84,70 @@ var AL3 = new Complex128Array( [
 test( 'zlanhe: max norm, uplo=U, 4x4', function t() {
 	var tc = findCase( 'zlanhe_max_U' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'M', 'U', 4, AU4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'max', 'upper', 4, AU4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: one norm (1), uplo=U, 4x4', function t() {
 	var tc = findCase( 'zlanhe_one_U' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( '1', 'U', 4, AU4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'one-norm', 'upper', 4, AU4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: one norm (O), uplo=U, 4x4', function t() {
 	var tc = findCase( 'zlanhe_one_O_U' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'O', 'U', 4, AU4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'one-norm', 'upper', 4, AU4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: infinity norm, uplo=U, 4x4', function t() {
 	var tc = findCase( 'zlanhe_inf_U' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'I', 'U', 4, AU4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'inf-norm', 'upper', 4, AU4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: Frobenius norm (F), uplo=U, 4x4', function t() {
 	var tc = findCase( 'zlanhe_frob_U' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'F', 'U', 4, AU4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'frobenius', 'upper', 4, AU4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: Frobenius norm (E), uplo=U, 4x4', function t() {
 	var tc = findCase( 'zlanhe_frob_E_U' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'E', 'U', 4, AU4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'frobenius', 'upper', 4, AU4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: max norm, uplo=L, 4x4', function t() {
 	var tc = findCase( 'zlanhe_max_L' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'M', 'L', 4, AL4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'max', 'lower', 4, AL4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: one norm, uplo=L, 4x4', function t() {
 	var tc = findCase( 'zlanhe_one_L' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( '1', 'L', 4, AL4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'one-norm', 'lower', 4, AL4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: infinity norm, uplo=L, 4x4', function t() {
 	var tc = findCase( 'zlanhe_inf_L' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'I', 'L', 4, AL4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'inf-norm', 'lower', 4, AL4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: Frobenius norm, uplo=L, 4x4', function t() {
 	var tc = findCase( 'zlanhe_frob_L' );
 	var work = new Float64Array( 4 );
-	var result = zlanhe( 'F', 'L', 4, AL4, 1, 4, 0, work, 1, 0 );
+	var result = zlanhe( 'frobenius', 'lower', 4, AL4, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -155,7 +155,7 @@ test( 'zlanhe: N=0 returns 0', function t() {
 	var tc = findCase( 'zlanhe_n_zero' );
 	var work = new Float64Array( 4 );
 	var A = new Complex128Array( 1 );
-	var result = zlanhe( 'M', 'U', 0, A, 1, 1, 0, work, 1, 0 );
+	var result = zlanhe( 'max', 'upper', 0, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -163,7 +163,7 @@ test( 'zlanhe: 1x1 max norm', function t() {
 	var tc = findCase( 'zlanhe_1x1_max' );
 	var work = new Float64Array( 1 );
 	var A = new Complex128Array( [ -5.5, 0 ] );
-	var result = zlanhe( 'M', 'U', 1, A, 1, 1, 0, work, 1, 0 );
+	var result = zlanhe( 'max', 'upper', 1, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -171,7 +171,7 @@ test( 'zlanhe: 1x1 one norm', function t() {
 	var tc = findCase( 'zlanhe_1x1_one' );
 	var work = new Float64Array( 1 );
 	var A = new Complex128Array( [ -5.5, 0 ] );
-	var result = zlanhe( '1', 'U', 1, A, 1, 1, 0, work, 1, 0 );
+	var result = zlanhe( 'one-norm', 'upper', 1, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -179,7 +179,7 @@ test( 'zlanhe: 1x1 inf norm', function t() {
 	var tc = findCase( 'zlanhe_1x1_inf' );
 	var work = new Float64Array( 1 );
 	var A = new Complex128Array( [ -5.5, 0 ] );
-	var result = zlanhe( 'I', 'U', 1, A, 1, 1, 0, work, 1, 0 );
+	var result = zlanhe( 'inf-norm', 'upper', 1, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -187,62 +187,62 @@ test( 'zlanhe: 1x1 Frobenius norm', function t() {
 	var tc = findCase( 'zlanhe_1x1_frob' );
 	var work = new Float64Array( 1 );
 	var A = new Complex128Array( [ -5.5, 0 ] );
-	var result = zlanhe( 'F', 'U', 1, A, 1, 1, 0, work, 1, 0 );
+	var result = zlanhe( 'frobenius', 'upper', 1, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 max norm, uplo=U', function t() {
 	var tc = findCase( 'zlanhe_3x3_max_U' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( 'M', 'U', 3, AU3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'max', 'upper', 3, AU3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 one norm, uplo=U', function t() {
 	var tc = findCase( 'zlanhe_3x3_one_U' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( '1', 'U', 3, AU3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'one-norm', 'upper', 3, AU3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 inf norm, uplo=U', function t() {
 	var tc = findCase( 'zlanhe_3x3_inf_U' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( 'I', 'U', 3, AU3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'inf-norm', 'upper', 3, AU3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 Frobenius norm, uplo=U', function t() {
 	var tc = findCase( 'zlanhe_3x3_frob_U' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( 'F', 'U', 3, AU3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'frobenius', 'upper', 3, AU3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 max norm, uplo=L', function t() {
 	var tc = findCase( 'zlanhe_3x3_max_L' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( 'M', 'L', 3, AL3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'max', 'lower', 3, AL3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 one norm, uplo=L', function t() {
 	var tc = findCase( 'zlanhe_3x3_one_L' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( '1', 'L', 3, AL3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'one-norm', 'lower', 3, AL3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 inf norm, uplo=L', function t() {
 	var tc = findCase( 'zlanhe_3x3_inf_L' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( 'I', 'L', 3, AL3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'inf-norm', 'lower', 3, AL3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'zlanhe: 3x3 Frobenius norm, uplo=L', function t() {
 	var tc = findCase( 'zlanhe_3x3_frob_L' );
 	var work = new Float64Array( 3 );
-	var result = zlanhe( 'F', 'L', 3, AL3, 1, 3, 0, work, 1, 0 );
+	var result = zlanhe( 'frobenius', 'lower', 3, AL3, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });

@@ -75,7 +75,7 @@ function dsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 		return 0;
 	}
 
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		// Factorize A as U * D * U^T using the upper triangle of A
 		// K is the main loop index, decreasing from N-1 to 0 (0-based)
 		k = N - 1;

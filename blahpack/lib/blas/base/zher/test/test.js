@@ -50,7 +50,7 @@ test( 'zher: upper_basic (UPLO=U, N=2, alpha=1)', function t() {
 		1, 1, 3, 0
 	] );
 	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
-	var result = zher( 'U', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
+	var result = zher( 'upper', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -63,7 +63,7 @@ test( 'zher: lower_basic (UPLO=L, N=2, alpha=1)', function t() {
 		0, 0, 3, 0
 	] );
 	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
-	var result = zher( 'L', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
+	var result = zher( 'lower', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -72,7 +72,7 @@ test( 'zher: n_zero (N=0 quick return)', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( [ 99, 88 ] );
 	var x = new Complex128Array( 0 );
-	var result = zher( 'U', 0, 1.0, x, 1, 0, A, 1, 1, 0 );
+	var result = zher( 'upper', 0, 1.0, x, 1, 0, A, 1, 1, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -81,7 +81,7 @@ test( 'zher: alpha_zero (alpha=0 quick return)', function t() {
 	var tc = findCase( 'alpha_zero' );
 	var A = new Complex128Array( [ 99, 88 ] );
 	var x = new Complex128Array( [ 1, 2 ] );
-	var result = zher( 'U', 1, 0.0, x, 1, 0, A, 1, 1, 0 );
+	var result = zher( 'upper', 1, 0.0, x, 1, 0, A, 1, 1, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -90,7 +90,7 @@ test( 'zher: n_one (N=1)', function t() {
 	var tc = findCase( 'n_one' );
 	var A = new Complex128Array( [ 5, 0 ] );
 	var x = new Complex128Array( [ 2, 3 ] );
-	var result = zher( 'U', 1, 1.0, x, 1, 0, A, 1, 1, 0 );
+	var result = zher( 'upper', 1, 1.0, x, 1, 0, A, 1, 1, 0 );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
 
@@ -104,7 +104,7 @@ test( 'zher: upper_stride (UPLO=U, N=3, incx=2, alpha=2)', function t() {
 	] );
 	// x with stride 2: x(1)=(1,0), x(3)=(0,1), x(5)=(1,1)
 	var x = new Complex128Array( [ 1, 0, 0, 0, 0, 1, 0, 0, 1, 1 ] );
-	var result = zher( 'U', 3, 2.0, x, 2, 0, A, 1, 3, 0 );
+	var result = zher( 'upper', 3, 2.0, x, 2, 0, A, 1, 3, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -119,7 +119,7 @@ test( 'zher: lower_stride (UPLO=L, N=3, incx=2, alpha=2)', function t() {
 	] );
 	// x with stride 2: x(1)=(1,0), x(3)=(0,1), x(5)=(1,1)
 	var x = new Complex128Array( [ 1, 0, 0, 0, 0, 1, 0, 0, 1, 1 ] );
-	var result = zher( 'L', 3, 2.0, x, 2, 0, A, 1, 3, 0 );
+	var result = zher( 'lower', 3, 2.0, x, 2, 0, A, 1, 3, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -132,7 +132,7 @@ test( 'zher: upper_alpha2 (UPLO=U, N=3, alpha=2)', function t() {
 		0, -1, 1, 1, 5, 0
 	] );
 	var x = new Complex128Array( [ 1, 1, 2, 0, 0, 3 ] );
-	var result = zher( 'U', 3, 2.0, x, 1, 0, A, 1, 3, 0 );
+	var result = zher( 'upper', 3, 2.0, x, 1, 0, A, 1, 3, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -144,7 +144,7 @@ test( 'zher: upper_zeros (x has zeros, tests skip branch)', function t() {
 		2, 1, 3, 0.7
 	] );
 	var x = new Complex128Array( [ 0, 0, 1, 0 ] );
-	var result = zher( 'U', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
+	var result = zher( 'upper', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -156,7 +156,7 @@ test( 'zher: lower_zeros (x has zeros, tests skip branch)', function t() {
 		0, 0, 3, 0.7
 	] );
 	var x = new Complex128Array( [ 0, 0, 1, 0 ] );
-	var result = zher( 'L', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
+	var result = zher( 'lower', 2, 1.0, x, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -170,7 +170,7 @@ test( 'zher: negative_stride (UPLO=U, N=2, incx=-1)', function t() {
 	// x = [(0,1), (1,0)], incx=-1 so effectively [(1,0), (0,1)]
 	var x = new Complex128Array( [ 0, 1, 1, 0 ] );
 	// Negative stride: strideX=-1, offsetX=1 (start from end)
-	var result = zher( 'U', 2, 1.0, x, -1, 1, A, 1, 2, 0 );
+	var result = zher( 'upper', 2, 1.0, x, -1, 1, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });

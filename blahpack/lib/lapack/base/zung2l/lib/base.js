@@ -120,7 +120,7 @@ function zung2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// II-1 (1-based count) = ii (0-based cols: 0..ii-1)
 		if ( ii > 0 ) {
 			zlarf(
-				'L', M - N + ii + 1, ii,
+				'left', M - N + ii + 1, ii,
 				A, strideA1, offsetA + ii * strideA2,
 				TAU, offsetTAU + i * strideTAU,
 				A, strideA1, strideA2, offsetA,

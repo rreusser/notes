@@ -52,7 +52,7 @@ test( 'zlange: max norm (M)', function t() {
 	// A col-major 2x2: [(1+2i), (3+4i), (5+6i), (7+8i)]
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
-	var result = base( 'M', 2, 2, A, 1, 2, 0, work, 1, 0 );
+	var result = base( 'max', 2, 2, A, 1, 2, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_max' );
 });
 
@@ -60,7 +60,7 @@ test( 'zlange: one norm (1)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlange_one'; } );
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
-	var result = base( '1', 2, 2, A, 1, 2, 0, work, 1, 0 );
+	var result = base( 'one-norm', 2, 2, A, 1, 2, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_one' );
 });
 
@@ -68,7 +68,7 @@ test( 'zlange: infinity norm (I)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlange_inf'; } );
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
-	var result = base( 'I', 2, 2, A, 1, 2, 0, work, 1, 0 );
+	var result = base( 'inf-norm', 2, 2, A, 1, 2, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_inf' );
 });
 
@@ -76,7 +76,7 @@ test( 'zlange: Frobenius norm (F)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlange_frob'; } );
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
-	var result = base( 'F', 2, 2, A, 1, 2, 0, work, 1, 0 );
+	var result = base( 'frobenius', 2, 2, A, 1, 2, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_frob' );
 });
 
@@ -84,7 +84,7 @@ test( 'zlange: M=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlange_m_zero'; } );
 	var A = new Complex128Array( 1 );
 	var work = new Float64Array( 1 );
-	var result = base( 'M', 0, 2, A, 1, 1, 0, work, 1, 0 );
+	var result = base( 'max', 0, 2, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_m_zero' );
 });
 
@@ -92,7 +92,7 @@ test( 'zlange: N=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlange_n_zero'; } );
 	var A = new Complex128Array( 1 );
 	var work = new Float64Array( 1 );
-	var result = base( 'M', 2, 0, A, 1, 1, 0, work, 1, 0 );
+	var result = base( 'max', 2, 0, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_n_zero' );
 });
 
@@ -101,7 +101,7 @@ test( 'zlange: 1x1 matrix Frobenius', function t() {
 	// A = [(3,4)]
 	var A = new Complex128Array( [ 3, 4 ] );
 	var work = new Float64Array( 1 );
-	var result = base( 'F', 1, 1, A, 1, 1, 0, work, 1, 0 );
+	var result = base( 'frobenius', 1, 1, A, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 'zlange_1x1' );
 });
 
@@ -115,20 +115,20 @@ test( 'zlange: unrecognized norm returns 0', function t() {
 test( 'zlange: NaN in matrix propagates through max norm', function t() {
 	var A = new Complex128Array( [ NaN, 0, 1, 0 ] );
 	var work = new Float64Array( 2 );
-	var result = base( 'M', 1, 2, A, 1, 1, 0, work, 1, 0 );
+	var result = base( 'max', 1, 2, A, 1, 1, 0, work, 1, 0 );
 	assert.ok( result !== result, 'expected NaN' );
 });
 
 test( 'zlange: NaN in matrix propagates through one norm', function t() {
 	var A = new Complex128Array( [ NaN, 0, 1, 0 ] );
 	var work = new Float64Array( 2 );
-	var result = base( '1', 1, 2, A, 1, 1, 0, work, 1, 0 );
+	var result = base( 'one-norm', 1, 2, A, 1, 1, 0, work, 1, 0 );
 	assert.ok( result !== result, 'expected NaN' );
 });
 
 test( 'zlange: NaN in matrix propagates through inf norm', function t() {
 	var A = new Complex128Array( [ NaN, 0, 1, 0 ] );
 	var work = new Float64Array( 2 );
-	var result = base( 'I', 1, 2, A, 1, 1, 0, work, 1, 0 );
+	var result = base( 'inf-norm', 1, 2, A, 1, 1, 0, work, 1, 0 );
 	assert.ok( result !== result, 'expected NaN' );
 });

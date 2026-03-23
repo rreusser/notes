@@ -90,7 +90,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			// Update A(i:M-1, i)
 			zlacgv( i, Y, strideY2, offsetY + i * strideY1 );
 
-			zgemv( 'N', M - i, i, NEGONE,
+			zgemv( 'no-transpose', M - i, i, NEGONE,
 				A, strideA1, strideA2, offsetA + i * strideA1,
 				Y, strideY2, offsetY + i * strideY1,
 				ONE, A, strideA1, offsetA + i * strideA1 + i * strideA2
@@ -98,7 +98,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 
 			zlacgv( i, Y, strideY2, offsetY + i * strideY1 );
 
-			zgemv( 'N', M - i, i, NEGONE,
+			zgemv( 'no-transpose', M - i, i, NEGONE,
 				X, strideX1, strideX2, offsetX + i * strideX1,
 				A, strideA1, offsetA + i * strideA2,
 				ONE, A, strideA1, offsetA + i * strideA1 + i * strideA2
@@ -122,31 +122,31 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				Av[ ia + 1 ] = 0.0;
 
 				// Compute Y(i+1:N-1, i)
-				zgemv( 'C', M - i, N - i - 1, ONE,
+				zgemv( 'conjugate-transpose', M - i, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					ZERO, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
 
-				zgemv( 'C', M - i, i, ONE,
+				zgemv( 'conjugate-transpose', M - i, i, ONE,
 					A, strideA1, strideA2, offsetA + i * strideA1,
 					A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					ZERO, Y, strideY1, offsetY + i * strideY2
 				);
 
-				zgemv( 'N', N - i - 1, i, NEGONE,
+				zgemv( 'no-transpose', N - i - 1, i, NEGONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					Y, strideY1, offsetY + i * strideY2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
 
-				zgemv( 'C', M - i, i, ONE,
+				zgemv( 'conjugate-transpose', M - i, i, ONE,
 					X, strideX1, strideX2, offsetX + i * strideX1,
 					A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					ZERO, Y, strideY1, offsetY + i * strideY2
 				);
 
-				zgemv( 'C', i, N - i - 1, NEGONE,
+				zgemv( 'conjugate-transpose', i, N - i - 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					Y, strideY1, offsetY + i * strideY2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
@@ -161,7 +161,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				zlacgv( N - i - 1, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2 );
 				zlacgv( i + 1, A, strideA2, offsetA + i * strideA1 );
 
-				zgemv( 'N', N - i - 1, i + 1, NEGONE,
+				zgemv( 'no-transpose', N - i - 1, i + 1, NEGONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					A, strideA2, offsetA + i * strideA1,
 					ONE, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2
@@ -170,7 +170,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				zlacgv( i + 1, A, strideA2, offsetA + i * strideA1 );
 				zlacgv( i, X, strideX2, offsetX + i * strideX1 );
 
-				zgemv( 'C', i, N - i - 1, NEGONE,
+				zgemv( 'conjugate-transpose', i, N - i - 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					X, strideX2, offsetX + i * strideX1,
 					ONE, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2
@@ -188,31 +188,31 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				Av[ offsetA * 2 + i * sa1 + ( i + 1 ) * sa2 + 1 ] = 0.0;
 
 				// Compute X(i+1:M-1, i)
-				zgemv( 'N', M - i - 1, N - i - 1, ONE,
+				zgemv( 'no-transpose', M - i - 1, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					ZERO, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
 
-				zgemv( 'C', N - i - 1, i + 1, ONE,
+				zgemv( 'conjugate-transpose', N - i - 1, i + 1, ONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					ZERO, X, strideX1, offsetX + i * strideX2
 				);
 
-				zgemv( 'N', M - i - 1, i + 1, NEGONE,
+				zgemv( 'no-transpose', M - i - 1, i + 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					X, strideX1, offsetX + i * strideX2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
 
-				zgemv( 'N', i, N - i - 1, ONE,
+				zgemv( 'no-transpose', i, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					ZERO, X, strideX1, offsetX + i * strideX2
 				);
 
-				zgemv( 'N', M - i - 1, i, NEGONE,
+				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
 					X, strideX1, offsetX + i * strideX2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
@@ -234,7 +234,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			zlacgv( N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2 );
 			zlacgv( i, A, strideA2, offsetA + i * strideA1 );
 
-			zgemv( 'N', N - i, i, NEGONE,
+			zgemv( 'no-transpose', N - i, i, NEGONE,
 				Y, strideY1, strideY2, offsetY + i * strideY1,
 				A, strideA2, offsetA + i * strideA1,
 				ONE, A, strideA2, offsetA + i * strideA1 + i * strideA2
@@ -243,7 +243,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 			zlacgv( i, A, strideA2, offsetA + i * strideA1 );
 			zlacgv( i, X, strideX2, offsetX + i * strideX1 );
 
-			zgemv( 'C', i, N - i, NEGONE,
+			zgemv( 'conjugate-transpose', i, N - i, NEGONE,
 				A, strideA1, strideA2, offsetA + i * strideA2,
 				X, strideX2, offsetX + i * strideX1,
 				ONE, A, strideA2, offsetA + i * strideA1 + i * strideA2
@@ -269,31 +269,31 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				Av[ ia + 1 ] = 0.0;
 
 				// Compute X(i+1:M-1, i)
-				zgemv( 'N', M - i - 1, N - i, ONE,
+				zgemv( 'no-transpose', M - i - 1, N - i, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					ZERO, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
 
-				zgemv( 'C', N - i, i, ONE,
+				zgemv( 'conjugate-transpose', N - i, i, ONE,
 					Y, strideY1, strideY2, offsetY + i * strideY1,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					ZERO, X, strideX1, offsetX + i * strideX2
 				);
 
-				zgemv( 'N', M - i - 1, i, NEGONE,
+				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					X, strideX1, offsetX + i * strideX2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
 				);
 
-				zgemv( 'N', i, N - i, ONE,
+				zgemv( 'no-transpose', i, N - i, ONE,
 					A, strideA1, strideA2, offsetA + i * strideA2,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					ZERO, X, strideX1, offsetX + i * strideX2
 				);
 
-				zgemv( 'N', M - i - 1, i, NEGONE,
+				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
 					X, strideX1, offsetX + i * strideX2,
 					ONE, X, strideX1, offsetX + ( i + 1 ) * strideX1 + i * strideX2
@@ -310,7 +310,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				// Update A(i+1:M-1, i)
 				zlacgv( i, Y, strideY2, offsetY + i * strideY1 );
 
-				zgemv( 'N', M - i - 1, i, NEGONE,
+				zgemv( 'no-transpose', M - i - 1, i, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					Y, strideY2, offsetY + i * strideY1,
 					ONE, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2
@@ -318,7 +318,7 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 
 				zlacgv( i, Y, strideY2, offsetY + i * strideY1 );
 
-				zgemv( 'N', M - i - 1, i + 1, NEGONE,
+				zgemv( 'no-transpose', M - i - 1, i + 1, NEGONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
 					A, strideA1, offsetA + i * strideA2,
 					ONE, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2
@@ -334,31 +334,31 @@ function zlabrd( M, N, nb, A, strideA1, strideA2, offsetA, d, strideD, offsetD, 
 				Av[ offsetA * 2 + ( i + 1 ) * sa1 + i * sa2 + 1 ] = 0.0;
 
 				// Compute Y(i+1:N-1, i)
-				zgemv( 'C', M - i - 1, N - i - 1, ONE,
+				zgemv( 'conjugate-transpose', M - i - 1, N - i - 1, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					ZERO, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
 
-				zgemv( 'C', M - i - 1, i, ONE,
+				zgemv( 'conjugate-transpose', M - i - 1, i, ONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					ZERO, Y, strideY1, offsetY + i * strideY2
 				);
 
-				zgemv( 'N', N - i - 1, i, NEGONE,
+				zgemv( 'no-transpose', N - i - 1, i, NEGONE,
 					Y, strideY1, strideY2, offsetY + ( i + 1 ) * strideY1,
 					Y, strideY1, offsetY + i * strideY2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2
 				);
 
-				zgemv( 'C', M - i - 1, i + 1, ONE,
+				zgemv( 'conjugate-transpose', M - i - 1, i + 1, ONE,
 					X, strideX1, strideX2, offsetX + ( i + 1 ) * strideX1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					ZERO, Y, strideY1, offsetY + i * strideY2
 				);
 
-				zgemv( 'C', i + 1, N - i - 1, NEGONE,
+				zgemv( 'conjugate-transpose', i + 1, N - i - 1, NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					Y, strideY1, offsetY + i * strideY2,
 					ONE, Y, strideY1, offsetY + ( i + 1 ) * strideY1 + i * strideY2

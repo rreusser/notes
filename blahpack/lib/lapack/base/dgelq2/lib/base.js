@@ -79,7 +79,7 @@ function dgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			// Apply H(i) to A(i+1:M-1, i:N-1) from the right
 			// dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 			dlarf(
-				'R',
+				'right',
 				M - i - 1,          // number of rows of sub-matrix
 				N - i,              // number of columns of sub-matrix
 				A, strideA2, aii,   // v = row i from col i onward, stride along columns

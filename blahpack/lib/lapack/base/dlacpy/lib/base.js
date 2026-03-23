@@ -43,7 +43,7 @@ function dlacpy( uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, stride
 	var i;
 	var j;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		for ( j = 0; j < N; j++ ) {
 			da0 = offsetA + ( j * strideA2 );
 			db0 = offsetB + ( j * strideB2 );
@@ -51,7 +51,7 @@ function dlacpy( uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				B[ db0 + ( i * strideB1 ) ] = A[ da0 + ( i * strideA1 ) ];
 			}
 		}
-	} else if ( uplo === 'L' || uplo === 'l' ) {
+	} else if ( uplo === 'lower' ) {
 		for ( j = 0; j < N; j++ ) {
 			da0 = offsetA + ( j * strideA2 );
 			db0 = offsetB + ( j * strideB2 );

@@ -166,7 +166,7 @@ test( 'dgesvd: quick return for M=0', function t() {
 	var s = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
-	var info = dgesvd( 'N', 'N', 0, 3, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'none', 'none', 0, 3, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -175,7 +175,7 @@ test( 'dgesvd: quick return for N=0', function t() {
 	var s = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
-	var info = dgesvd( 'N', 'N', 3, 0, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'none', 'none', 3, 0, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -185,7 +185,7 @@ test( 'dgesvd: 1x1 edge case', function t() {
 	var s = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
-	var info = dgesvd( 'A', 'A', 1, 1, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', 1, 1, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( s ), tc.s, 1e-14, 's' );
 });
@@ -201,7 +201,7 @@ test( 'dgesvd: 4x3 full SVD (JOBU=A, JOBVT=A) — Path 9', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	// Singular values must match fixture exactly
@@ -226,7 +226,7 @@ test( 'dgesvd: 4x3 compact SVD (JOBU=S, JOBVT=S) — Path 6', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'S', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'economy', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -247,7 +247,7 @@ test( 'dgesvd: 4x3 JOBU=O, JOBVT=S — Path 3', function t() {
 	var U = new Float64Array( 1 ); // unused when JOBU='O'
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'O', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'overwrite', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -271,7 +271,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=N — Path 1 (values only)', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'N', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'none', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -288,7 +288,7 @@ test( 'dgesvd: 3x4 full SVD (JOBU=A, JOBVT=A) — Path 9t', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -308,7 +308,7 @@ test( 'dgesvd: 3x4 compact SVD (JOBU=S, JOBVT=S) — Path 6t', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'S', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'economy', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -327,7 +327,7 @@ test( 'dgesvd: 3x3 full SVD (square) — Path 10', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -347,7 +347,7 @@ test( 'dgesvd: 4x3 JOBU=S, JOBVT=O — Path 5', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( 1 ); // unused
 
-	var info = dgesvd( 'S', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'economy', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -375,7 +375,7 @@ test( 'dgesvd: 4x3 JOBU=A, JOBVT=S — Path 9', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'A', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'all-columns', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -393,7 +393,7 @@ test( 'dgesvd: 3x4 JOBU=N, JOBVT=S — Path 4t', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'N', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'none', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -409,7 +409,7 @@ test( 'dgesvd: 3x4 JOBU=S, JOBVT=N — Path 1t (with U)', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'S', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'economy', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -426,7 +426,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=A — Path 1 (with VT)', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'N', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'none', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -443,7 +443,7 @@ test( 'dgesvd: 3x4 JOBU=A, JOBVT=N — Path 1t (with full U)', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'A', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'all-columns', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
@@ -460,7 +460,7 @@ test( 'dgesvd: 4x3 JOBU=O, JOBVT=N — Path 2', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'O', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'overwrite', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	// Singular values should match the known values
@@ -486,7 +486,7 @@ test( 'dgesvd: 4x3 JOBU=A, JOBVT=O — Path 8', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'A', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'all-columns', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '4x3_values_only' );
@@ -515,7 +515,7 @@ test( 'dgesvd: 4x3 JOBU=S, JOBVT=N — Path 4', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'S', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'economy', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '4x3_values_only' );
@@ -532,7 +532,7 @@ test( 'dgesvd: 4x3 JOBU=A, JOBVT=N — Path 7', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'A', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'all-columns', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '4x3_values_only' );
@@ -549,7 +549,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=S — Path 1 (N with S)', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'N', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'none', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '4x3_values_only' );
@@ -565,7 +565,7 @@ test( 'dgesvd: 3x4 JOBU=N, JOBVT=N (values only) — Path 1t', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'N', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'none', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -581,7 +581,7 @@ test( 'dgesvd: 3x4 JOBU=N, JOBVT=A — Path 7t', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	// re-use 3x4 full SVD test
 	assert.equal( info, 0 );
 
@@ -599,7 +599,7 @@ test( 'dgesvd: 3x4 JOBU=O, JOBVT=S — Path 5t', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'O', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'overwrite', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -624,7 +624,7 @@ test( 'dgesvd: 3x4 JOBU=S, JOBVT=A — Path 9t', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'S', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'economy', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -642,7 +642,7 @@ test( 'dgesvd: 3x4 JOBU=A, JOBVT=S — Path 6t', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'A', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'all-columns', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -667,7 +667,7 @@ test( 'dgesvd: larger matrix to exercise direct path 10 (M >= N, M not much larg
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	// Singular values should be positive and in descending order
@@ -694,7 +694,7 @@ test( 'dgesvd: 3x4 JOBU=O, JOBVT=A — Path 8t', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'O', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'overwrite', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -722,7 +722,7 @@ test( 'dgesvd: 3x4 JOBU=A, JOBVT=A with direct path (M < N, not much)', function
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	verifySVD( M, N, A_orig, U, M, s, VT, N, 1e-12, 'reconstruction' );
@@ -738,7 +738,7 @@ test( 'dgesvd: 3x4 JOBU=O, JOBVT=N — Path 1t (U overwrite, no VT)', function t
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'O', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'overwrite', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -757,7 +757,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=O — Path 1 (VT overwrite)', function t() {
 
 	// This is invalid per Fortran (can't have both O), but JOBU='N', JOBVT='O' is valid:
 	// Path 1 with JOBU=N, when wntvo is true, generates P^T in A
-	var info = dgesvd( 'N', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'none', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '4x3_values_only' );
@@ -774,7 +774,7 @@ test( 'dgesvd: 3x4 JOBU=S, JOBVT=O — Path 5t', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'S', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'economy', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -792,7 +792,7 @@ test( 'dgesvd: 3x4 JOBU=A, JOBVT=O — Path 8t (with full U)', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'A', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'all-columns', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x4_full_svd' );
@@ -814,7 +814,7 @@ test( 'dgesvd: 3x3 JOBU=O, JOBVT=N — Path 10, wntuo', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'O', 'N', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'overwrite', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x3_full_svd' );
@@ -839,7 +839,7 @@ test( 'dgesvd: 3x3 JOBU=S, JOBVT=O — Path 10, wntvo', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'S', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'economy', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x3_full_svd' );
@@ -864,7 +864,7 @@ test( 'dgesvd: 3x3 JOBU=O, JOBVT=S — Path 10, wntuo+wntvas', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'O', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'overwrite', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	var tc = findCase( '3x3_full_svd' );
@@ -899,7 +899,7 @@ test( 'dgesvd: 4x5 JOBU=O, JOBVT=S — Path 10t, wntuo', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'O', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'overwrite', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	// Verify singular values are positive and descending
@@ -929,7 +929,7 @@ test( 'dgesvd: 4x5 JOBU=S, JOBVT=O — Path 10t, wntvo', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'S', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'economy', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var i;
@@ -950,7 +950,7 @@ test( 'dgesvd: 4x5 JOBU=A, JOBVT=A — Path 10t full', function t() {
 	var U = new Float64Array( M * M );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	verifySVD( M, N, A_orig, U, M, s, VT, N, 1e-12, 'reconstruction' );
@@ -968,7 +968,7 @@ test( 'dgesvd: 4x5 JOBU=S, JOBVT=S — Path 10t compact', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( minmn * N );
 
-	var info = dgesvd( 'S', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
+	var info = dgesvd( 'economy', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
 	verifySVD( M, N, A_orig, U, minmn, s, VT, minmn, 1e-12, 'reconstruction' );
@@ -992,7 +992,7 @@ test( 'dgesvd: 3x5 JOBU=N, JOBVT=O — Path 2t', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'N', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'none', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var i;
@@ -1014,7 +1014,7 @@ test( 'dgesvd: 3x5 JOBU=S, JOBVT=O — Path 3t', function t() {
 	var U = new Float64Array( M * minmn );
 	var VT = new Float64Array( 1 );
 
-	var info = dgesvd( 'S', 'O', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
+	var info = dgesvd( 'economy', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
 	var i;
@@ -1034,7 +1034,7 @@ test( 'dgesvd: 3x5 JOBU=N, JOBVT=A — Path 7t', function t() {
 	var U = new Float64Array( 1 );
 	var VT = new Float64Array( N * N );
 
-	var info = dgesvd( 'N', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, N, 0 );
+	var info = dgesvd( 'none', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
 	var i;

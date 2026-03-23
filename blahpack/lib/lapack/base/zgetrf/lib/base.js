@@ -101,14 +101,14 @@ function zgetrf( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetI
 			);
 
 			// Compute block row of U: solve L11 * U12 = A12
-			ztrsm( 'L', 'L', 'N', 'U', jb, N - j - jb, CONE,
+			ztrsm( 'left', 'lower', 'no-transpose', 'unit', jb, N - j - jb, CONE,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2,
 				A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2
 			);
 
 			if ( j + jb < M ) {
 				// Update trailing submatrix: A22 = A22 - A21 * U12
-				zgemm( 'N', 'N', M - j - jb, N - j - jb, jb, CNEGONE,
+				zgemm( 'no-transpose', 'no-transpose', M - j - jb, N - j - jb, jb, CNEGONE,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2,
 					A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2,
 					CONE,

@@ -38,7 +38,7 @@ test( 'dlarf: left 3x3', function t() {
 	C[ 6 ] = 3; C[ 7 ] = 6; C[ 8 ] = 9;
 	var v = new Float64Array( [ 1.0, 0.5, 0.25 ] );
 	var WORK = new Float64Array( 3 );
-	dlarf( 'L', 3, 3, v, 1, 0, 1.5, C, 1, 3, 0, WORK, 1, 0 );
+	dlarf( 'left', 3, 3, v, 1, 0, 1.5, C, 1, 3, 0, WORK, 1, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
@@ -50,7 +50,7 @@ test( 'dlarf: right 3x3', function t() {
 	C[ 6 ] = 3; C[ 7 ] = 6; C[ 8 ] = 9;
 	var v = new Float64Array( [ 1.0, 0.5, 0.25 ] );
 	var WORK = new Float64Array( 3 );
-	dlarf( 'R', 3, 3, v, 1, 0, 1.5, C, 1, 3, 0, WORK, 1, 0 );
+	dlarf( 'right', 3, 3, v, 1, 0, 1.5, C, 1, 3, 0, WORK, 1, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
@@ -60,7 +60,7 @@ test( 'dlarf: tau=0 (identity)', function t() {
 	C[ 0 ] = 1; C[ 1 ] = 3; C[ 2 ] = 2; C[ 3 ] = 4;
 	var v = new Float64Array( [ 1.0, 0.5 ] );
 	var WORK = new Float64Array( 2 );
-	dlarf( 'L', 2, 2, v, 1, 0, 0.0, C, 1, 2, 0, WORK, 1, 0 );
+	dlarf( 'left', 2, 2, v, 1, 0, 0.0, C, 1, 2, 0, WORK, 1, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
@@ -72,7 +72,7 @@ test( 'dlarf: left 2x3', function t() {
 	C[ 4 ] = 3; C[ 5 ] = 6;
 	var v = new Float64Array( [ 1.0, 2.0 ] );
 	var WORK = new Float64Array( 3 );
-	dlarf( 'L', 2, 3, v, 1, 0, 0.8, C, 1, 2, 0, WORK, 1, 0 );
+	dlarf( 'left', 2, 3, v, 1, 0, 0.8, C, 1, 2, 0, WORK, 1, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
@@ -86,7 +86,7 @@ test( 'dlarf: left with negative strideV', function t() {
 	var v = new Float64Array( [ 0.25, 0.5, 1.0 ] );
 	var WORK = new Float64Array( 3 );
 	var tc = findCase( 'left_3x3' );
-	dlarf( 'L', 3, 3, v, -1, 2, 1.5, C, 1, 3, 0, WORK, 1, 0 );
+	dlarf( 'left', 3, 3, v, -1, 2, 1.5, C, 1, 3, 0, WORK, 1, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
 
@@ -138,7 +138,7 @@ test( 'dlarf: left with negative strideV and trailing zeros (lines 58-60)', func
 	var C2 = new Float64Array( C );
 	var v2 = new Float64Array( [ 1.0, 0.5, 0.25, 0.0, 0.0 ] );
 	var WORK2 = new Float64Array( 3 );
-	dlarf( 'L', 5, 3, v2, 1, 0, 1.5, C2, 1, 5, 0, WORK2, 1, 0 );
-	dlarf( 'L', 5, 3, v, -1, 4, 1.5, C, 1, 5, 0, WORK, 1, 0 );
+	dlarf( 'left', 5, 3, v2, 1, 0, 1.5, C2, 1, 5, 0, WORK2, 1, 0 );
+	dlarf( 'left', 5, 3, v, -1, 4, 1.5, C, 1, 5, 0, WORK, 1, 0 );
 	assertArrayClose( C, C2, 1e-14, 'C negative stride with trailing zeros' );
 });

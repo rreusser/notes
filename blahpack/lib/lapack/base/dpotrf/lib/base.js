@@ -20,8 +20,8 @@ var NB = 64; // Block size (hardcoded, replaces ILAENV query)
 * matrix A using a blocked algorithm.
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'U', or
-*   A = L * L^T,  if uplo = 'L',
+*   A = U^T * U,  if uplo = 'upper', or
+*   A = L * L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.
@@ -44,7 +44,7 @@ function dpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 	var jb;
 	var j;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 
 	if ( N === 0 ) {
 		return 0;
@@ -65,24 +65,24 @@ function dpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// for non-positive-definiteness.
 			jb = Math.min( NB, N - j );
 
-			dsyrk( 'U', 'T', jb, j, -1.0,
+			dsyrk( 'upper', 'transpose', jb, j, -1.0,
 				A, sa1, sa2, offsetA + j * sa2,
 				1.0,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2
 			);
-			info = dpotrf2( 'U', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+			info = dpotrf2( 'upper', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
 			if ( info !== 0 ) {
 				return info + j;
 			}
 			if ( j + jb < N ) {
 				// Update the off-diagonal block.
-				dgemm( 'T', 'N', jb, N - j - jb, j, -1.0,
+				dgemm( 'transpose', 'no-transpose', jb, N - j - jb, j, -1.0,
 					A, sa1, sa2, offsetA + j * sa2,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
 					1.0,
 					A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2
 				);
-				dtrsm( 'L', 'U', 'T', 'N', jb, N - j - jb, 1.0,
+				dtrsm( 'left', 'upper', 'transpose', 'non-unit', jb, N - j - jb, 1.0,
 					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
 					A, sa1, sa2, offsetA + j * sa1 + ( j + jb ) * sa2
 				);
@@ -94,24 +94,24 @@ function dpotrf( uplo, N, A, strideA1, strideA2, offsetA ) {
 			// Update and factorize the current diagonal block.
 			jb = Math.min( NB, N - j );
 
-			dsyrk( 'L', 'N', jb, j, -1.0,
+			dsyrk( 'lower', 'no-transpose', jb, j, -1.0,
 				A, sa1, sa2, offsetA + j * sa1,
 				1.0,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2
 			);
-			info = dpotrf2( 'L', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
+			info = dpotrf2( 'lower', jb, A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
 			if ( info !== 0 ) {
 				return info + j;
 			}
 			if ( j + jb < N ) {
 				// Update the off-diagonal block.
-				dgemm( 'N', 'T', N - j - jb, jb, j, -1.0,
+				dgemm( 'no-transpose', 'transpose', N - j - jb, jb, j, -1.0,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1,
 					A, sa1, sa2, offsetA + j * sa1,
 					1.0,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2
 				);
-				dtrsm( 'R', 'L', 'T', 'N', N - j - jb, jb, 1.0,
+				dtrsm( 'right', 'lower', 'transpose', 'non-unit', N - j - jb, jb, 1.0,
 					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2
 				);

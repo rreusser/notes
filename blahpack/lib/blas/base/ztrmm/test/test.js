@@ -85,7 +85,7 @@ test( 'ztrmm: left, upper, no transpose, non-unit (2x2)', function t() {
 	// B 2x2 col-major: [1+0i, 0+1i, 0+1i, 1+0i]
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -95,7 +95,7 @@ test( 'ztrmm: left, lower, no transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'L', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'lower', 'no-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -105,7 +105,7 @@ test( 'ztrmm: right, upper, no transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'R', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'right', 'upper', 'no-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -115,7 +115,7 @@ test( 'ztrmm: left, upper, conjugate transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'U', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'upper', 'conjugate-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -125,7 +125,7 @@ test( 'ztrmm: alpha=0 zeros B', function t() {
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 0, 0 );
-	var result = base( 'L', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -136,7 +136,7 @@ test( 'ztrmm: complex alpha', function t() {
 	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
 	var alpha = new Complex128( 0, 1 );
-	var result = base( 'L', 'U', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -146,7 +146,7 @@ test( 'ztrmm: M=0 quick return', function t() {
 	var A = new Complex128Array( [ 1, 0 ] );
 	var B = new Complex128Array( [ 99, 99 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'U', 'N', 'N', 0, 2, alpha, A, 1, 1, 0, B, 1, 1, 0 );
+	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 0, 2, alpha, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.strictEqual( result, B );
 	// B should be unchanged
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.b, 'b' );
@@ -157,7 +157,7 @@ test( 'ztrmm: unit diagonal, left, upper', function t() {
 	var A = new Complex128Array( [ 99, 99, 0, 0, 2, 1, 99, 99 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'U', 'N', 'U', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'upper', 'no-transpose', 'unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -167,7 +167,7 @@ test( 'ztrmm: left, upper, transpose (not conjugate), non-unit (2x2)', function 
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'U', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'upper', 'transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -177,7 +177,7 @@ test( 'ztrmm: right, lower, no transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'R', 'L', 'N', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'right', 'lower', 'no-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -187,7 +187,7 @@ test( 'ztrmm: left, lower, transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'L', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'lower', 'transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -197,7 +197,7 @@ test( 'ztrmm: left, lower, conjugate transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'L', 'L', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'left', 'lower', 'conjugate-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -207,7 +207,7 @@ test( 'ztrmm: right, upper, transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'R', 'U', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'right', 'upper', 'transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -217,7 +217,7 @@ test( 'ztrmm: right, upper, conjugate transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'R', 'U', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'right', 'upper', 'conjugate-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -227,7 +227,7 @@ test( 'ztrmm: right, lower, transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'R', 'L', 'T', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'right', 'lower', 'transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -237,7 +237,7 @@ test( 'ztrmm: right, lower, conjugate transpose, non-unit (2x2)', function t() {
 	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 0, 1, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
-	var result = base( 'R', 'L', 'C', 'N', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
+	var result = base( 'right', 'lower', 'conjugate-transpose', 'non-unit', 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0 );
 	assert.strictEqual( result, B );
 	assertArrayClose( extractCMatrix( B, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });

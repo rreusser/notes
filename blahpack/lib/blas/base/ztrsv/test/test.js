@@ -52,7 +52,7 @@ test( 'ztrsv: upper, no transpose, non-unit diagonal, N=2', function t() {
 	Av[ 8 ] = 3; Av[ 9 ] = 1;   // A(0,1) at col 1 offset = 4*2 = 8
 	Av[ 10 ] = 4; Av[ 11 ] = 2; // A(1,1) at col 1 row 1 = 4*2 + 1*2 = 10
 	var x = new Complex128Array( [ 7, 6, 2, 6 ] );
-	ztrsv( 'U', 'N', 'N', 2, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -66,7 +66,7 @@ test( 'ztrsv: lower, no transpose, non-unit diagonal, N=2', function t() {
 	Av[ 2 ] = 3; Av[ 3 ] = 1;   // A(1,0)
 	Av[ 10 ] = 4; Av[ 11 ] = 2; // A(1,1)
 	var x = new Complex128Array( [ 2, 1, 5, 7 ] );
-	ztrsv( 'L', 'N', 'N', 2, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'lower', 'no-transpose', 'non-unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -79,7 +79,7 @@ test( 'ztrsv: upper, unit diagonal, N=2', function t() {
 	Av[ 8 ] = 3; Av[ 9 ] = 1;
 	Av[ 10 ] = 99; Av[ 11 ] = 99; // ignored
 	var x = new Complex128Array( [ 3, 4, 1, 1 ] );
-	ztrsv( 'U', 'N', 'U', 2, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'upper', 'no-transpose', 'unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -92,7 +92,7 @@ test( 'ztrsv: upper, transpose (no conj), non-unit, N=2', function t() {
 	Av[ 8 ] = 3; Av[ 9 ] = 1;
 	Av[ 10 ] = 4; Av[ 11 ] = 2;
 	var x = new Complex128Array( [ 2, 1, 5, 7 ] );
-	ztrsv( 'U', 'T', 'N', 2, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'upper', 'transpose', 'non-unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -105,7 +105,7 @@ test( 'ztrsv: upper, conjugate transpose, non-unit, N=2', function t() {
 	Av[ 8 ] = 3; Av[ 9 ] = 1;
 	Av[ 10 ] = 4; Av[ 11 ] = 2;
 	var x = new Complex128Array( [ 2, -1, 9, 1 ] );
-	ztrsv( 'U', 'C', 'N', 2, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'upper', 'conjugate-transpose', 'non-unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -114,7 +114,7 @@ test( 'ztrsv: N=0 quick return', function t() {
 	var tc = findCase( 'ztrsv_n_zero' );
 	var A = new Complex128Array( 4 * 4 );
 	var x = new Complex128Array( [ 5, 5 ] );
-	ztrsv( 'U', 'N', 'N', 0, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -125,7 +125,7 @@ test( 'ztrsv: N=1, upper, non-unit', function t() {
 	var Av = reinterpret( A, 0 );
 	Av[ 0 ] = 3; Av[ 1 ] = 2;
 	var x = new Complex128Array( [ 4, 7 ] );
-	ztrsv( 'U', 'N', 'N', 1, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -138,7 +138,7 @@ test( 'ztrsv: non-unit stride incx=2, upper, no transpose, N=2', function t() {
 	Av[ 8 ] = 1; Av[ 9 ] = 1;   // A(0,1)
 	Av[ 10 ] = 3; Av[ 11 ] = 0; // A(1,1)
 	var x = new Complex128Array( [ 3, 1, 99, 99, 0, 3 ] );
-	ztrsv( 'U', 'N', 'N', 2, A, 1, 4, 0, x, 2, 0 );
+	ztrsv( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 4, 0, x, 2, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -155,7 +155,7 @@ test( 'ztrsv: lower, conj-trans, non-unit, N=3', function t() {
 	Av[ 12 ] = 5; Av[ 13 ] = 2; // A(2,1)
 	Av[ 20 ] = 6; Av[ 21 ] = 3; // A(2,2)
 	var x = new Complex128Array( [ 1, 0, 2, 3, 4, 5 ] );
-	ztrsv( 'L', 'C', 'N', 3, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'lower', 'conjugate-transpose', 'non-unit', 3, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -171,7 +171,7 @@ test( 'ztrsv: lower, transpose (no conj), non-unit, N=3', function t() {
 	Av[ 12 ] = 5; Av[ 13 ] = 2;
 	Av[ 20 ] = 6; Av[ 21 ] = 3;
 	var x = new Complex128Array( [ 1, 0, 2, 3, 4, 5 ] );
-	ztrsv( 'L', 'T', 'N', 3, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'lower', 'transpose', 'non-unit', 3, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -186,7 +186,7 @@ test( 'ztrsv: negative stride incx=-1, lower, no transpose, N=2', function t() {
 	// Fortran INCX=-1: KX = 1 - (N-1)*INCX = 1 - (1)*(-1) = 2, so x starts at element 2.
 	// In 0-based: offsetX = 1, strideX = -1
 	var x = new Complex128Array( [ 4, 0, 5, 1 ] );
-	ztrsv( 'L', 'N', 'N', 2, A, 1, 4, 0, x, -1, 1 );
+	ztrsv( 'lower', 'no-transpose', 'non-unit', 2, A, 1, 4, 0, x, -1, 1 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -202,7 +202,7 @@ test( 'ztrsv: lower, unit diag, no transpose, N=3', function t() {
 	Av[ 12 ] = 3; Av[ 13 ] = 0;
 	Av[ 20 ] = 99; Av[ 21 ] = 99; // ignored
 	var x = new Complex128Array( [ 1, 0, 3, 1, 10, 5 ] );
-	ztrsv( 'L', 'N', 'U', 3, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'lower', 'no-transpose', 'unit', 3, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -215,7 +215,7 @@ test( 'ztrsv: upper, conj-trans, Smith else-branch (|imag|>|real| diagonal)', fu
 	Av[ 8 ] = 2; Av[ 9 ] = 1;   // A(0,1)
 	Av[ 10 ] = 1; Av[ 11 ] = 4; // A(1,1) = 1+4i, |imag|>|real|
 	var x = new Complex128Array( [ 3, 2, 1, 1 ] );
-	ztrsv( 'U', 'C', 'N', 2, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'upper', 'conjugate-transpose', 'non-unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });
@@ -228,7 +228,7 @@ test( 'ztrsv: lower, conj-trans, Smith else-branch (|imag|>|real| diagonal)', fu
 	Av[ 2 ] = 2; Av[ 3 ] = 1;   // A(1,0)
 	Av[ 10 ] = 1; Av[ 11 ] = 4; // A(1,1) = 1+4i
 	var x = new Complex128Array( [ 3, 2, 1, 1 ] );
-	ztrsv( 'L', 'C', 'N', 2, A, 1, 4, 0, x, 1, 0 );
+	ztrsv( 'lower', 'conjugate-transpose', 'non-unit', 2, A, 1, 4, 0, x, 1, 0 );
 	var xv = reinterpret( x, 0 );
 	assertArrayClose( Array.from( xv ), tc.x, 1e-14, 'x' );
 });

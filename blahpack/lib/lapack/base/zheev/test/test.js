@@ -293,7 +293,7 @@ test( 'zheev: 4x4 JOBZ=V UPLO=L', function t() {
 	var tc = findCase( 'zheev_4x4_V_L' );
 	var Afull = makeFull4x4();
 	var W = new Float64Array( 4 );
-	var result = callZheev( 'V', 'L', 4, make4x4Lower(), W );
+	var result = callZheev( 'compute', 'lower', 4, make4x4Lower(), W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
@@ -305,7 +305,7 @@ test( 'zheev: 4x4 JOBZ=V UPLO=U', function t() {
 	var tc = findCase( 'zheev_4x4_V_U' );
 	var Afull = makeFull4x4();
 	var W = new Float64Array( 4 );
-	var result = callZheev( 'V', 'U', 4, make4x4Upper(), W );
+	var result = callZheev( 'compute', 'upper', 4, make4x4Upper(), W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
@@ -316,7 +316,7 @@ test( 'zheev: 4x4 JOBZ=V UPLO=U', function t() {
 test( 'zheev: 4x4 JOBZ=N UPLO=L (eigenvalues only)', function t() {
 	var tc = findCase( 'zheev_4x4_N_L' );
 	var W = new Float64Array( 4 );
-	var result = callZheev( 'N', 'L', 4, make4x4Lower(), W );
+	var result = callZheev( 'none', 'lower', 4, make4x4Lower(), W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
@@ -326,7 +326,7 @@ test( 'zheev: 3x3 JOBZ=V UPLO=L', function t() {
 	var tc = findCase( 'zheev_3x3_V_L' );
 	var Afull = makeFull3x3();
 	var W = new Float64Array( 3 );
-	var result = callZheev( 'V', 'L', 3, make3x3Lower(), W );
+	var result = callZheev( 'compute', 'lower', 3, make3x3Lower(), W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
@@ -338,7 +338,7 @@ test( 'zheev: 3x3 JOBZ=V UPLO=U', function t() {
 	var tc = findCase( 'zheev_3x3_V_U' );
 	var Afull = makeFull3x3();
 	var W = new Float64Array( 3 );
-	var result = callZheev( 'V', 'U', 3, make3x3Upper(), W );
+	var result = callZheev( 'compute', 'upper', 3, make3x3Upper(), W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
@@ -350,7 +350,7 @@ test( 'zheev: N=1 JOBZ=V', function t() {
 	var tc = findCase( 'zheev_1x1_V' );
 	var W = new Float64Array( 1 );
 	var Adata = new Float64Array([ 7.5, 0.0 ]);
-	var result = callZheev( 'V', 'L', 1, Adata, W );
+	var result = callZheev( 'compute', 'lower', 1, Adata, W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertClose( result.W[0], 7.5, 1e-15, 'eigenvalue' );
@@ -365,7 +365,7 @@ test( 'zheev: N=0', function t() {
 	var WORK = new Complex128Array( 1 );
 	var RWORK = new Float64Array( 1 );
 
-	var info = zheev( 'V', 'L', 0, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 1, RWORK, 1, 0 );
+	var info = zheev( 'compute', 'lower', 0, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 1, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info=0' );
 });
 
@@ -384,7 +384,7 @@ test( 'zheev: 2x2 diagonal JOBZ=V', function t() {
 		0.0, 0.0,  // (0,1)
 		1.0, 0.0   // (1,1)
 	]);
-	var result = callZheev( 'V', 'L', 2, Adata, W );
+	var result = callZheev( 'compute', 'lower', 2, Adata, W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertArrayClose( Array.from(result.W), tc.w, 1e-14, 'eigenvalues' );
@@ -395,7 +395,7 @@ test( 'zheev: 2x2 diagonal JOBZ=V', function t() {
 test( 'zheev: 3x3 JOBZ=N UPLO=U (eigenvalues only)', function t() {
 	var tc = findCase( 'zheev_3x3_N_U' );
 	var W = new Float64Array( 3 );
-	var result = callZheev( 'N', 'U', 3, make3x3Upper(), W );
+	var result = callZheev( 'none', 'upper', 3, make3x3Upper(), W );
 
 	assert.equal( result.info, 0, 'info=0' );
 	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );

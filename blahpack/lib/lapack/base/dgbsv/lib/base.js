@@ -50,7 +50,7 @@ function dgbsv( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strid
 
 	if ( info === 0 ) {
 		// Solve the system A*X = B using the factored form:
-		info = dgbtrs( 'N', N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB );
+		info = dgbtrs( 'no-transpose', N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB );
 	}
 
 	return info;

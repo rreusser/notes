@@ -44,7 +44,7 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 		return 0;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
@@ -61,18 +61,18 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 			// Update the leading i rows of the current block column:
 			// A(0:i-1, i:i+ib-1) := A(0:i-1, i:i+ib-1) * U(i:i+ib-1, i:i+ib-1)^T
-			dtrmm( 'R', 'U', 'T', 'N', i, ib, 1.0,
+			dtrmm( 'right', 'upper', 'transpose', 'non-unit', i, ib, 1.0,
 				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
 				A, sa1, sa2, offsetA + i * sa2 );
 
 			// Compute the product of the diagonal block:
 			// A(i:i+ib-1, i:i+ib-1) := U(i:i+ib-1, i:i+ib-1) * U(i:i+ib-1, i:i+ib-1)^T
-			dlauu2( 'U', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
+			dlauu2( 'upper', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
 
 			if ( i + ib < N ) {
 				// Update the leading i rows using remaining columns:
 				// A(0:i-1, i:i+ib-1) += A(0:i-1, i+ib:N-1) * A(i:i+ib-1, i+ib:N-1)^T
-				dgemm( 'N', 'T', i, ib, N - i - ib, 1.0,
+				dgemm( 'no-transpose', 'transpose', i, ib, N - i - ib, 1.0,
 					A, sa1, sa2, offsetA + ( i + ib ) * sa2,
 					A, sa1, sa2, offsetA + i * sa1 + ( i + ib ) * sa2,
 					1.0,
@@ -80,7 +80,7 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// Rank-ib update of diagonal block:
 				// A(i:i+ib-1, i:i+ib-1) += A(i:i+ib-1, i+ib:N-1) * A(i:i+ib-1, i+ib:N-1)^T
-				dsyrk( 'U', 'N', ib, N - i - ib, 1.0,
+				dsyrk( 'upper', 'no-transpose', ib, N - i - ib, 1.0,
 					A, sa1, sa2, offsetA + i * sa1 + ( i + ib ) * sa2,
 					1.0,
 					A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
@@ -93,18 +93,18 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 			// Update the leading i columns of the current block row:
 			// A(i:i+ib-1, 0:i-1) := L(i:i+ib-1, i:i+ib-1)^T * A(i:i+ib-1, 0:i-1)
-			dtrmm( 'L', 'L', 'T', 'N', ib, i, 1.0,
+			dtrmm( 'left', 'lower', 'transpose', 'non-unit', ib, i, 1.0,
 				A, sa1, sa2, offsetA + i * sa1 + i * sa2,
 				A, sa1, sa2, offsetA + i * sa1 );
 
 			// Compute the product of the diagonal block:
 			// A(i:i+ib-1, i:i+ib-1) := L(i:i+ib-1, i:i+ib-1)^T * L(i:i+ib-1, i:i+ib-1)
-			dlauu2( 'L', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
+			dlauu2( 'lower', ib, A, sa1, sa2, offsetA + i * sa1 + i * sa2 );
 
 			if ( i + ib < N ) {
 				// Update the leading i columns using remaining rows:
 				// A(i:i+ib-1, 0:i-1) += A(i+ib:N-1, i:i+ib-1)^T * A(i+ib:N-1, 0:i-1)
-				dgemm( 'T', 'N', ib, i, N - i - ib, 1.0,
+				dgemm( 'transpose', 'no-transpose', ib, i, N - i - ib, 1.0,
 					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + i * sa2,
 					A, sa1, sa2, offsetA + ( i + ib ) * sa1,
 					1.0,
@@ -112,7 +112,7 @@ function dlauum( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 				// Rank-ib update of diagonal block:
 				// A(i:i+ib-1, i:i+ib-1) += A(i+ib:N-1, i:i+ib-1)^T * A(i+ib:N-1, i:i+ib-1)
-				dsyrk( 'L', 'T', ib, N - i - ib, 1.0,
+				dsyrk( 'lower', 'transpose', ib, N - i - ib, 1.0,
 					A, sa1, sa2, offsetA + ( i + ib ) * sa1 + i * sa2,
 					1.0,
 					A, sa1, sa2, offsetA + i * sa1 + i * sa2 );

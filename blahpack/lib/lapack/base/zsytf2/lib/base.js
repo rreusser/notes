@@ -8,7 +8,7 @@ var izamax = require( '../../../../blas/base/izamax/lib/base.js' );
 var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 var zsyr = require( '../../zsyr/lib/base.js' );
 var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
-var cmplx = require( '../../../../cmplx.js' );
+// NOTE: Do not use cmplx.divAt — it overwrites in-place, corrupting source
 
 
 // VARIABLES //
@@ -98,7 +98,7 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 		return 0;
 	}
 
-	if ( uplo === 'U' ) {
+	if ( uplo === 'U' || uplo === 'u' ) {
 		// Factorize A as U * D * U^T using the upper triangle of A
 		k = N - 1;
 		while ( k >= 0 ) {
@@ -188,28 +188,21 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				// Update the leading submatrix
 				if ( kstep === 1 ) {
 					// 1x1 pivot block D(k)
-					// R1 = CONE / A(K, K)
+					// R1 = CONE / A(K, K) via Smith's method
 					p1 = offsetA * 2 + k * sa1 + k * sa2;
-					cmplx.divAt( Av, p1, [ 1.0, 0.0 ], 0, Av, p1 ); // temp: store 1/A(k,k) in scratch
-					// Actually we need R1 as a separate value; use divAt into a temp
-					// R1 = 1 / A(k,k)
 					tr = Av[ p1 ];
 					ti = Av[ p1 + 1 ];
-					// Compute 1/(tr+ti*i) using Smith's method
 					if ( Math.abs( ti ) <= Math.abs( tr ) ) {
 						tR = ti / tr;
 						tI = tr + ti * tR;
-						r1R = ( 1.0 + 0.0 * tR ) / tI;
-						r1I = ( 0.0 - 1.0 * tR ) / tI;
+						r1R = 1.0 / tI;
+						r1I = -tR / tI;
 					} else {
 						tR = tr / ti;
 						tI = ti + tr * tR;
-						r1R = ( 1.0 * tR + 0.0 ) / tI;
-						r1I = ( 0.0 * tR - 1.0 ) / tI;
+						r1R = tR / tI;
+						r1I = -1.0 / tI;
 					}
-					// Undo the divAt damage - restore A(k,k)
-					Av[ p1 ] = tr;
-					Av[ p1 + 1 ] = ti;
 
 					// zsyr(uplo, k, -R1, A(:,k), 1, A, LDA)
 					zsyr( uplo, k, new Complex128( -r1R, -r1I ), A, strideA1, offsetA + k * strideA2, A, strideA1, strideA2, offsetA );
@@ -226,65 +219,27 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 
 						// D22 = A(K-1, K-1) / D12
 						p2 = offsetA * 2 + ( k - 1 ) * sa1 + ( k - 1 ) * sa2;
-						cmplx.divAt( Av, p2, Av, p2, Av, p1 ); // d22 = A(k-1,k-1)/d12 stored temporarily
-						d22R = Av[ p2 ];
-						d22I = Av[ p2 + 1 ];
+						cDiv( Av[ p2 ], Av[ p2 + 1 ], d12R, d12I );
+						d22R = _cdR;
+						d22I = _cdI;
 
 						// D11 = A(K, K) / D12
 						p3 = offsetA * 2 + k * sa1 + k * sa2;
-						tr = Av[ p3 ];
-						ti = Av[ p3 + 1 ];
-						// d11 = A(k,k) / d12
-						if ( Math.abs( d12I ) <= Math.abs( d12R ) ) {
-							tR = d12I / d12R;
-							tI = d12R + d12I * tR;
-							d11R = ( tr + ti * tR ) / tI;
-							d11I = ( ti - tr * tR ) / tI;
-						} else {
-							tR = d12R / d12I;
-							tI = d12I + d12R * tR;
-							d11R = ( tr * tR + ti ) / tI;
-							d11I = ( ti * tR - tr ) / tI;
-						}
-
-						// Restore A(K-1,K-1) from before we overwrote it
-						// We need original. Let's recompute: d22 * d12 = original A(k-1,k-1)
-						Av[ p2 ] = d22R * d12R - d22I * d12I;
-						Av[ p2 + 1 ] = d22R * d12I + d22I * d12R;
+						cDiv( Av[ p3 ], Av[ p3 + 1 ], d12R, d12I );
+						d11R = _cdR;
+						d11I = _cdI;
 
 						// T = 1 / (D11*D22 - 1)
-						// D11*D22
-						tr = d11R * d22R - d11I * d22I;
+						tr = d11R * d22R - d11I * d22I - 1.0;
 						ti = d11R * d22I + d11I * d22R;
-						// D11*D22 - 1
-						tr -= 1.0;
-						// 1 / (D11*D22 - 1)
-						if ( Math.abs( ti ) <= Math.abs( tr ) ) {
-							tR = ti / tr;
-							tI = tr + ti * tR;
-							r1R = ( 1.0 ) / tI;
-							r1I = ( -tR ) / tI;
-						} else {
-							tR = tr / ti;
-							tI = ti + tr * tR;
-							r1R = ( tR ) / tI;
-							r1I = ( -1.0 ) / tI;
-						}
+						cDiv( 1.0, 0.0, tr, ti );
+						r1R = _cdR;
+						r1I = _cdI;
+
 						// D12 = T / D12
-						tr = r1R * d12R - r1I * d12I; // t * d12^(-1)... no, T/D12
-						ti = r1R * d12I + r1I * d12R;
-						// Actually: d12_new = T / d12_original
-						if ( Math.abs( d12I ) <= Math.abs( d12R ) ) {
-							tR = d12I / d12R;
-							tI = d12R + d12I * tR;
-							d12R = ( r1R + r1I * tR ) / tI;
-							d12I = ( r1I - r1R * tR ) / tI;
-						} else {
-							tR = d12R / d12I;
-							tI = d12I + d12R * tR;
-							d12R = ( r1R * tR + r1I ) / tI;
-							d12I = ( r1I * tR - r1R ) / tI;
-						}
+						cDiv( r1R, r1I, d12R, d12I );
+						d12R = _cdR;
+						d12I = _cdI;
 
 						for ( j = k - 2; j >= 0; j-- ) {
 							// WKM1 = D12 * (D11*A(J,K-1) - A(J,K))
@@ -572,6 +527,27 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	}
 
 	return info;
+}
+
+
+// Module-level vars for cDiv output
+var _cdR = 0.0;
+var _cdI = 0.0;
+
+function cDiv( ar, ai, br, bi ) {
+	var r;
+	var d;
+	if ( Math.abs( bi ) <= Math.abs( br ) ) {
+		r = bi / br;
+		d = br + bi * r;
+		_cdR = ( ar + ai * r ) / d;
+		_cdI = ( ai - ar * r ) / d;
+	} else {
+		r = br / bi;
+		d = bi + br * r;
+		_cdR = ( ar * r + ai ) / d;
+		_cdI = ( ai * r - ar ) / d;
+	}
 }
 
 

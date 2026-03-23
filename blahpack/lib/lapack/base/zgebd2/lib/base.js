@@ -116,7 +116,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				conj_f64[ 0 ] = tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 ];
 				conj_f64[ 1 ] = -tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 + 1 ];
 
-				zlarf( 'L', M - i, N - i - 1, A, strideA1, offsetA + i * strideA1 + i * strideA2,
+				zlarf( 'left', M - i, N - i - 1, A, strideA1, offsetA + i * strideA1 + i * strideA2,
 					conj_tauq, 0,
 					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					WORK, strideWORK, offsetWORK );
@@ -149,7 +149,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				Av[ aij + 1 ] = 0.0;
 
 				// Apply G(i) to A(i+1:M-1, i+1:N-1) from the right
-				zlarf( 'R', M - i - 1, N - i - 1, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
+				zlarf( 'right', M - i - 1, N - i - 1, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					TAUP, taup_off,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					WORK, strideWORK, offsetWORK );
@@ -193,7 +193,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// Apply G(i) to A(i+1:M-1, i:N-1) from the right
 			if ( i < M - 1 ) {
-				zlarf( 'R', M - i - 1, N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2,
+				zlarf( 'right', M - i - 1, N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					TAUP, taup_off,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					WORK, strideWORK, offsetWORK );
@@ -229,7 +229,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				conj_f64[ 0 ] = tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 ];
 				conj_f64[ 1 ] = -tauq_f64[ ( offsetTAUQ + i * strideTAUQ ) * 2 + 1 ];
 
-				zlarf( 'L', M - i - 1, N - i - 1, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
+				zlarf( 'left', M - i - 1, N - i - 1, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					conj_tauq, 0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					WORK, strideWORK, offsetWORK );

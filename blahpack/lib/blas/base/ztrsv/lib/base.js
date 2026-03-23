@@ -75,9 +75,9 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 		return x;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	noconj = ( trans === 'T' || trans === 't' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	upper = ( uplo === 'upper' );
+	noconj = ( trans === 'transpose' );
+	nounit = ( diag === 'non-unit' );
 
 	// Get Float64Array views and convert offsets from complex-element to double units
 	Av = reinterpret( A, 0 ); oA = offsetA * 2;
@@ -88,7 +88,7 @@ function ztrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
 
-	if ( trans === 'N' || trans === 'n' ) {
+	if ( trans === 'no-transpose' ) {
 		// Solve A*x = b
 		if ( upper ) {
 			// Back-substitution: j = N-1 down to 0

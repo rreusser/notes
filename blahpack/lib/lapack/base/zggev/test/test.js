@@ -48,7 +48,7 @@ test( 'zggev: N=0 quick return', function t() {
 	var B = new Complex128Array( 1 );
 	var info;
 
-	info = zggev( 'N', 'N', 0,
+	info = zggev( 'none', 'none', 0,
 		A, 1, 1, 0,
 		B, 1, 1, 0,
 		ALPHA, 1, 0,
@@ -83,7 +83,7 @@ test( 'zggev: N=1 with eigenvectors', function t() {
 	// B(1,1) = (2, 0.5)
 	Bv[ 0 ] = 2.0; Bv[ 1 ] = 0.5;
 
-	info = zggev( 'V', 'V', N,
+	info = zggev( 'compute', 'compute', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -139,7 +139,7 @@ test( 'zggev: 3x3 right eigenvectors only', function t() {
 	Bv[ 14 ] = 1.0; Bv[ 15 ] = 0.0;
 	Bv[ 16 ] = 1.0; Bv[ 17 ] = 0.5;
 
-	info = zggev( 'N', 'V', N,
+	info = zggev( 'none', 'compute', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -197,7 +197,7 @@ test( 'zggev: 3x3 both eigenvectors', function t() {
 	Bv[ 14 ] = 1.0; Bv[ 15 ] = 0.0;
 	Bv[ 16 ] = 1.0; Bv[ 17 ] = 0.5;
 
-	info = zggev( 'V', 'V', N,
+	info = zggev( 'compute', 'compute', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -254,7 +254,7 @@ test( 'zggev: 3x3 eigenvalues only', function t() {
 	Bv[ 14 ] = 1.0; Bv[ 15 ] = 0.0;
 	Bv[ 16 ] = 1.0; Bv[ 17 ] = 0.5;
 
-	info = zggev( 'N', 'N', N,
+	info = zggev( 'none', 'none', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -296,7 +296,7 @@ test( 'zggev: 2x2 diagonal', function t() {
 	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
 	Bv[ 6 ] = 3.0; Bv[ 7 ] = 0.0;
 
-	info = zggev( 'V', 'V', N,
+	info = zggev( 'compute', 'compute', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -333,7 +333,7 @@ test( 'zggev: N=1 no eigenvectors', function t() {
 	Av[ 0 ] = 5.0; Av[ 1 ] = 2.0;
 	Bv[ 0 ] = 1.0; Bv[ 1 ] = 0.0;
 
-	info = zggev( 'N', 'N', N,
+	info = zggev( 'none', 'none', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -376,7 +376,7 @@ test( 'zggev: 2x2 left eigenvectors only', function t() {
 	Bv[ 4 ] = 1.0; Bv[ 5 ] = 1.0;
 	Bv[ 6 ] = 3.0; Bv[ 7 ] = -0.5;
 
-	info = zggev( 'V', 'N', N,
+	info = zggev( 'compute', 'none', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -421,7 +421,7 @@ test( 'zggev: small entries trigger anrm < smlnum scaling', function t() {
 	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
 	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
 
-	info = zggev( 'N', 'N', N,
+	info = zggev( 'none', 'none', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -468,7 +468,7 @@ test( 'zggev: large entries trigger anrm > bignum scaling', function t() {
 	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
 	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
 
-	info = zggev( 'N', 'N', N,
+	info = zggev( 'none', 'none', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -510,7 +510,7 @@ test( 'zggev: small B entries trigger bnrm < smlnum scaling', function t() {
 	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
 	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
 
-	info = zggev( 'N', 'N', N,
+	info = zggev( 'none', 'none', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -548,7 +548,7 @@ test( 'zggev: large B entries trigger bnrm > bignum scaling', function t() {
 	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
 	Bv[ 6 ] = 3.0 * scale; Bv[ 7 ] = 0.0;
 
-	info = zggev( 'N', 'N', N,
+	info = zggev( 'none', 'none', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,
@@ -589,7 +589,7 @@ test( 'zggev: both A and B scaled (small A, large B) with eigenvectors', functio
 	Bv[ 4 ] = 0.0; Bv[ 5 ] = 0.0;
 	Bv[ 6 ] = 1e+300; Bv[ 7 ] = 0.0;
 
-	info = zggev( 'V', 'V', N,
+	info = zggev( 'compute', 'compute', N,
 		A, 1, LDA, 0,
 		B, 1, LDA, 0,
 		ALPHA, 1, 0,

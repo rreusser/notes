@@ -81,10 +81,10 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 	sa2 = strideA2 * 2;
 	oA = offsetA * 2;
 
-	if ( side === 'L' || side === 'l' ) {
+	if ( side === 'left' ) {
 		// Apply rotations from the left (act on rows)
-		if ( pivot === 'V' || pivot === 'v' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		if ( pivot === 'variable' ) {
+			if ( direct === 'forward' ) {
 				// Variable pivot, forward direction
 				for ( j = 0; j < M - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
@@ -125,8 +125,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'T' || pivot === 't' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'top' ) {
+			if ( direct === 'forward' ) {
 				for ( j = 1; j < M; j++ ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
@@ -165,8 +165,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'B' || pivot === 'b' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'bottom' ) {
+			if ( direct === 'forward' ) {
 				for ( j = 0; j < M - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
@@ -206,10 +206,10 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 				}
 			}
 		}
-	} else if ( side === 'R' || side === 'r' ) {
+	} else if ( side === 'right' ) {
 		// Apply rotations from the right (act on columns)
-		if ( pivot === 'V' || pivot === 'v' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		if ( pivot === 'variable' ) {
+			if ( direct === 'forward' ) {
 				for ( j = 0; j < N - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];
@@ -248,8 +248,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'T' || pivot === 't' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'top' ) {
+			if ( direct === 'forward' ) {
 				for ( j = 1; j < N; j++ ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
 					stemp = s[ offsetS + ( j - 1 ) * strideS ];
@@ -288,8 +288,8 @@ function zlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'B' || pivot === 'b' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'bottom' ) {
+			if ( direct === 'forward' ) {
 				for ( j = 0; j < N - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
 					stemp = s[ offsetS + j * strideS ];

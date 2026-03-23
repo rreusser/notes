@@ -45,7 +45,7 @@ function dsyr2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 	sa1 = strideA1;
 	sa2 = strideA2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Form A when A is stored in the upper triangle
 		jx = offsetX;
 		jy = offsetY;

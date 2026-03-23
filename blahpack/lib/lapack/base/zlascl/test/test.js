@@ -60,7 +60,7 @@ test( 'zlascl: attached to the main export is an `ndarray` method', function t()
 test( 'zlascl: basic scaling (multiply by 2)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlascl_basic'; } );
 	var A = c128( new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] ) );
-	var info = base( 'G', 0, 0, 1.0, 2.0, 2, 2, A, 1, 2, 0 );
+	var info = base( 'general', 0, 0, 1.0, 2.0, 2, 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_basic a' );
 });
@@ -68,7 +68,7 @@ test( 'zlascl: basic scaling (multiply by 2)', function t() {
 test( 'zlascl: scaling by 0.5 (cfrom=2, cto=1)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlascl_half'; } );
 	var A = c128( new Float64Array( [ 2, 4, 6, 8, 10, 12, 14, 16 ] ) );
-	var info = base( 'G', 0, 0, 2.0, 1.0, 2, 2, A, 1, 2, 0 );
+	var info = base( 'general', 0, 0, 2.0, 1.0, 2, 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_half a' );
 });
@@ -76,7 +76,7 @@ test( 'zlascl: scaling by 0.5 (cfrom=2, cto=1)', function t() {
 test( 'zlascl: M=0 quick return', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlascl_m_zero'; } );
 	var A = c128( new Float64Array( [ 99, 88 ] ) );
-	var info = base( 'G', 0, 0, 1.0, 2.0, 0, 2, A, 1, 1, 0 );
+	var info = base( 'general', 0, 0, 1.0, 2.0, 0, 2, A, 1, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_m_zero a' );
 });
@@ -89,7 +89,7 @@ test( 'zlascl: upper triangular', function t() {
 		3, 0,  5, 0,  6, 0
 	] ) );
 	var Av = reinterpret( A, 0 );
-	var info = base( 'U', 0, 0, 1.0, 3.0, 3, 3, A, 1, 3, 0 );
+	var info = base( 'upper', 0, 0, 1.0, 3.0, 3, 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
 	var result = extractCMatrix( Av, 1, 3, 0, 3, 3 );
 	assertArrayClose( result, tc.a, 'zlascl_upper a' );
@@ -103,7 +103,7 @@ test( 'zlascl: lower triangular', function t() {
 		0, 0,  0, 0,  6, 0
 	] ) );
 	var Av = reinterpret( A, 0 );
-	var info = base( 'L', 0, 0, 1.0, 3.0, 3, 3, A, 1, 3, 0 );
+	var info = base( 'lower', 0, 0, 1.0, 3.0, 3, 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
 	var result = extractCMatrix( Av, 1, 3, 0, 3, 3 );
 	assertArrayClose( result, tc.a, 'zlascl_lower a' );
@@ -112,7 +112,7 @@ test( 'zlascl: lower triangular', function t() {
 test( 'zlascl: identity (cfrom=cto)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlascl_identity'; } );
 	var A = c128( new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] ) );
-	var info = base( 'G', 0, 0, 5.0, 5.0, 2, 2, A, 1, 2, 0 );
+	var info = base( 'general', 0, 0, 5.0, 5.0, 2, 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_identity a' );
 });
@@ -125,7 +125,7 @@ test( 'zlascl: upper Hessenberg', function t() {
 		6, 0,  7, 0,  8, 0
 	] ) );
 	var Av = reinterpret( A, 0 );
-	var info = base( 'H', 0, 0, 1.0, 2.0, 3, 3, A, 1, 3, 0 );
+	var info = base( 'upper-hessenberg', 0, 0, 1.0, 2.0, 3, 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
 	var result = extractCMatrix( Av, 1, 3, 0, 3, 3 );
 	assertArrayClose( result, tc.a, 'zlascl_hessenberg a' );
@@ -134,7 +134,7 @@ test( 'zlascl: upper Hessenberg', function t() {
 test( 'zlascl: large cfrom/cto ratio (iterative scaling, mul=smlnum)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlascl_large_ratio'; } );
 	var A = c128( new Float64Array( [ 1, 1, 2, 3 ] ) );
-	var info = base( 'G', 0, 0, 1e300, 1e-300, 2, 1, A, 1, 2, 0 );
+	var info = base( 'general', 0, 0, 1e300, 1e-300, 2, 1, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_large_ratio a' );
 });
@@ -142,7 +142,7 @@ test( 'zlascl: large cfrom/cto ratio (iterative scaling, mul=smlnum)', function 
 test( 'zlascl: large cto/cfrom ratio (iterative scaling, mul=bignum)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlascl_large_ratio_inv'; } );
 	var A = c128( new Float64Array( [ 1e-150, 1e-150, 2e-150, 3e-150 ] ) );
-	var info = base( 'G', 0, 0, 1e-150, 1e150, 2, 1, A, 1, 2, 0 );
+	var info = base( 'general', 0, 0, 1e-150, 1e150, 2, 1, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_large_ratio_inv a' );
 });
@@ -154,7 +154,7 @@ test( 'zlascl: lower band matrix (type B)', function t() {
 		2, 0,  5, 0,
 		3, 0,  0, 0
 	] ) );
-	var info = base( 'B', 1, 1, 1.0, 3.0, 3, 3, A, 1, 2, 0 );
+	var info = base( 'lower-band', 1, 1, 1.0, 3.0, 3, 3, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_lower_band a' );
 });
@@ -166,7 +166,7 @@ test( 'zlascl: upper band matrix (type Q)', function t() {
 		1, 0,  4, 0,
 		2, 0,  5, 0
 	] ) );
-	var info = base( 'Q', 1, 1, 1.0, 3.0, 3, 3, A, 1, 2, 0 );
+	var info = base( 'upper-band', 1, 1, 1.0, 3.0, 3, 3, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'zlascl_upper_band a' );
 });
@@ -179,7 +179,7 @@ test( 'zlascl: full band matrix (type Z)', function t() {
 		2, 0,  5, 0,  8, 0,  0, 0
 	] ) );
 	var Av = reinterpret( A, 0 );
-	var info = base( 'Z', 1, 1, 1.0, 2.0, 3, 3, A, 1, 4, 0 );
+	var info = base( 'band', 1, 1, 1.0, 2.0, 3, 3, A, 1, 4, 0 );
 	assert.strictEqual( info, tc.info );
 	var result = extractCMatrix( Av, 1, 4, 0, 4, 3 );
 	assertArrayClose( result, tc.a, 'zlascl_band a' );
@@ -194,7 +194,7 @@ test( 'zlascl: invalid type returns -1', function t() {
 test( 'zlascl: cfrom=Infinity (lines 115-117)', function t() {
 	// cfrom is Infinity: cfrom1 = Inf * smlnum = Inf === cfrom, so mul = cto/cfrom
 	var A = c128( new Float64Array( [ 1e100, 2e100, 3e100, 4e100 ] ) );
-	var info = base( 'G', 0, 0, Infinity, 1.0, 1, 2, A, 1, 1, 0 );
+	var info = base( 'general', 0, 0, Infinity, 1.0, 1, 2, A, 1, 1, 0 );
 	assert.strictEqual( info, 0 );
 	// mul = 1.0 / Infinity = 0, so everything should be 0
 	var Av = reinterpret( A, 0 );
@@ -204,7 +204,7 @@ test( 'zlascl: cfrom=Infinity (lines 115-117)', function t() {
 test( 'zlascl: cto=0 (lines 121-124)', function t() {
 	// cto=0: cto1 = 0/bignum = 0 === ctoc, so mul = 0
 	var A = c128( new Float64Array( [ 5, 6, 7, 8 ] ) );
-	var info = base( 'G', 0, 0, 1.0, 0.0, 1, 2, A, 1, 1, 0 );
+	var info = base( 'general', 0, 0, 1.0, 0.0, 1, 2, A, 1, 1, 0 );
 	assert.strictEqual( info, 0 );
 	var Av = reinterpret( A, 0 );
 	assertArrayClose( Array.from( Av ), [ 0, 0, 0, 0 ], 'cto_zero a' );
@@ -219,7 +219,7 @@ test( 'zlascl: small cfrom, large cto (lines 130-132, mul=bignum path)', functio
 	// cfrom1 > ctoc? 2.2e-608 > 1e300? NO
 	// cto1 > cfromc? 2.2e-8 > 1e-300? YES -> hits lines 130-132
 	var A = c128( new Float64Array( [ 1, 2, 3, 4 ] ) );
-	var info = base( 'G', 0, 0, 1e-300, 1e300, 1, 2, A, 1, 1, 0 );
+	var info = base( 'general', 0, 0, 1e-300, 1e300, 1, 2, A, 1, 1, 0 );
 	assert.strictEqual( info, 0 );
 	// The iterative scaling should eventually reach the right ratio
 	var Av = reinterpret( A, 0 );

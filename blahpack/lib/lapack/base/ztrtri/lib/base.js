@@ -50,8 +50,8 @@ function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 		return 0;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	upper = ( uplo === 'upper' );
+	nounit = ( diag === 'non-unit' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
@@ -78,15 +78,15 @@ function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			jb = Math.min( NB, N - j );
 
 			// Compute rows 0:j-1 of current block column
-			ztrmm( 'L', 'U', 'N', diag, j, jb, CONE,
+			ztrmm( 'left', 'upper', 'no-transpose', diag, j, jb, CONE,
 				A, sa1, sa2, offsetA,
 				A, sa1, sa2, offsetA + j * sa2 );
-			ztrsm( 'R', 'U', 'N', diag, j, jb, CNEGONE,
+			ztrsm( 'right', 'upper', 'no-transpose', diag, j, jb, CNEGONE,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2,
 				A, sa1, sa2, offsetA + j * sa2 );
 
 			// Compute inverse of current diagonal block
-			ztrti2( 'U', diag, jb,
+			ztrti2( 'upper', diag, jb,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
 		}
 	} else {
@@ -96,16 +96,16 @@ function ztrtri( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			jb = Math.min( NB, N - j );
 			if ( j + jb < N ) {
 				// Compute rows j+jb:N-1 of current block column
-				ztrmm( 'L', 'L', 'N', diag, N - j - jb, jb, CONE,
+				ztrmm( 'left', 'lower', 'no-transpose', diag, N - j - jb, jb, CONE,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + ( j + jb ) * sa2,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2 );
-				ztrsm( 'R', 'L', 'N', diag, N - j - jb, jb, CNEGONE,
+				ztrsm( 'right', 'lower', 'no-transpose', diag, N - j - jb, jb, CNEGONE,
 					A, sa1, sa2, offsetA + j * sa1 + j * sa2,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2 );
 			}
 
 			// Compute inverse of current diagonal block
-			ztrti2( 'L', diag, jb,
+			ztrti2( 'lower', diag, jb,
 				A, sa1, sa2, offsetA + j * sa1 + j * sa2 );
 		}
 	}

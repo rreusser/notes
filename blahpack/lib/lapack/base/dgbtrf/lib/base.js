@@ -227,13 +227,13 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 			// Solve L * U_12 = A_12 for the portion within the band
 			if ( j2 > 0 ) {
 				// dtrsm: solve L11 * U12 = AB(..., j+jb)
-				dtrsm( 'L', 'L', 'N', 'U', jb, j2, 1.0,
+				dtrsm( 'left', 'lower', 'no-transpose', 'unit', jb, j2, 1.0,
 					AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + j * sa2,
 					AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2 );
 
 				if ( i2 > 0 ) {
 					// DGEMM: update A22 within band
-					dgemm( 'N', 'N', i2, j2, jb, -1.0,
+					dgemm( 'no-transpose', 'no-transpose', i2, j2, jb, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + j * sa2,
 						AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2,
 						1.0,
@@ -242,7 +242,7 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 				if ( i3 > 0 ) {
 					// DGEMM: update A32 from WORK31
-					dgemm( 'N', 'N', i3, j2, jb, -1.0,
+					dgemm( 'no-transpose', 'no-transpose', i3, j2, jb, -1.0,
 						WORK31, 1, LDWORK, 0,
 						AB, sa1, sa2 - sa1, offsetAB + ( kv - jb ) * sa1 + ( j + jb ) * sa2,
 						1.0,
@@ -259,12 +259,12 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				}
 
 				// Solve L * W13 = WORK13
-				dtrsm( 'L', 'L', 'N', 'U', jb, j3, 1.0,
+				dtrsm( 'left', 'lower', 'no-transpose', 'unit', jb, j3, 1.0,
 					AB, sa1, sa2 - sa1, offsetAB + kv * sa1 + j * sa2,
 					WORK13, 1, LDWORK, 0 );
 
 				if ( i2 > 0 ) {
-					dgemm( 'N', 'N', i2, j3, jb, -1.0,
+					dgemm( 'no-transpose', 'no-transpose', i2, j3, jb, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( kv + jb ) * sa1 + j * sa2,
 						WORK13, 1, LDWORK, 0,
 						1.0,
@@ -272,7 +272,7 @@ function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				}
 
 				if ( i3 > 0 ) {
-					dgemm( 'N', 'N', i3, j3, jb, -1.0,
+					dgemm( 'no-transpose', 'no-transpose', i3, j3, jb, -1.0,
 						WORK31, 1, LDWORK, 0,
 						WORK13, 1, LDWORK, 0,
 						1.0,

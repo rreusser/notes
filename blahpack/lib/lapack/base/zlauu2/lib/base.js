@@ -45,7 +45,7 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		return 0;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
@@ -77,7 +77,7 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// ZGEMV('N', i, N-i-1, ONE, A(0,i+1), LDA, A(i,i+1), LDA, CMPLX(aii), A(0,i), 1)
 				alpha = new Complex128( aii, 0.0 );
 				zgemv(
-					'N', i, N - i - 1,
+					'no-transpose', i, N - i - 1,
 					new Complex128( 1.0, 0.0 ),
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa2,        // A(:, i+1)
 					A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,   // A(i, i+1:) stride=sa2
@@ -116,7 +116,7 @@ function zlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// ZGEMV('C', N-i-1, i, ONE, A(i+1,0), LDA, A(i+1,i), 1, CMPLX(aii), A(i,0), LDA)
 				alpha = new Complex128( aii, 0.0 );
 				zgemv(
-					'C', N - i - 1, i,
+					'conjugate-transpose', N - i - 1, i,
 					new Complex128( 1.0, 0.0 ),
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa1,        // A(i+1, :)
 					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,   // A(i+1:, i) stride=sa1

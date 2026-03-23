@@ -43,7 +43,7 @@ test( 'dtrtrs: upper_no_trans', function t() {
 	// A = [2 1 3; 0 4 5; 0 0 6] upper triangular, col-major
 	var A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	var info = dtrtrs( 'U', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -53,7 +53,7 @@ test( 'dtrtrs: lower_no_trans', function t() {
 	// L = [2 0 0; 1 4 0; 3 5 6] lower triangular, col-major
 	var A = new Float64Array( [ 2, 1, 3, 0, 4, 5, 0, 0, 6 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	var info = dtrtrs( 'L', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dtrtrs( 'lower', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -62,7 +62,7 @@ test( 'dtrtrs: upper_trans', function t() {
 	var tc = findCase( 'upper_trans' );
 	var A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	var info = dtrtrs( 'U', 'T', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dtrtrs( 'upper', 'transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -72,7 +72,7 @@ test( 'dtrtrs: upper_unit_diag', function t() {
 	// A = [1 2 3; 0 1 4; 0 0 1] unit diagonal, col-major
 	var A = new Float64Array( [ 1, 0, 0, 2, 1, 0, 3, 4, 1 ] );
 	var B = new Float64Array( [ 10, 5, 1 ] );
-	var info = dtrtrs( 'U', 'N', 'U', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dtrtrs( 'upper', 'no-transpose', 'unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -81,7 +81,7 @@ test( 'dtrtrs: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Float64Array( 1 );
 	var B = new Float64Array( 1 );
-	var info = dtrtrs( 'U', 'N', 'N', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -90,7 +90,7 @@ test( 'dtrtrs: singular', function t() {
 	// A with zero on diagonal at (1,1) (0-based)
 	var A = new Float64Array( [ 2, 0, 0, 1, 0, 0, 3, 5, 6 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	var info = dtrtrs( 'U', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -99,7 +99,7 @@ test( 'dtrtrs: multi_rhs', function t() {
 	var A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
 	// B is 3x2 col-major
 	var B = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
-	var info = dtrtrs( 'U', 'N', 'N', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -108,7 +108,7 @@ test( 'dtrtrs: lower_trans', function t() {
 	var tc = findCase( 'lower_trans' );
 	var A = new Float64Array( [ 2, 1, 3, 0, 4, 5, 0, 0, 6 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	var info = dtrtrs( 'L', 'T', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dtrtrs( 'lower', 'transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });

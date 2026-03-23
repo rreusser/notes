@@ -103,7 +103,7 @@ test( 'zpotrf: lower_3x3', function t() {
 		3, -1, 8, 0, 2, 1,
 		1, 2, 2, -1, 6, 0
 	] );
-	var info = zpotrf( 'L', 3, A, 1, 3, 0 );
+	var info = zpotrf( 'lower', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -115,7 +115,7 @@ test( 'zpotrf: upper_3x3', function t() {
 		3, -1, 8, 0, 2, 1,
 		1, 2, 2, -1, 6, 0
 	] );
-	var info = zpotrf( 'U', 3, A, 1, 3, 0 );
+	var info = zpotrf( 'upper', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -128,7 +128,7 @@ test( 'zpotrf: lower_4x4', function t() {
 		2, 1, 3, -1, 10, 0, 1, 1,
 		1, -3, 2, 2, 1, -1, 9, 0
 	] );
-	var info = zpotrf( 'L', 4, A, 1, 4, 0 );
+	var info = zpotrf( 'lower', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -141,7 +141,7 @@ test( 'zpotrf: upper_4x4', function t() {
 		2, 1, 3, -1, 10, 0, 1, 1,
 		1, -3, 2, 2, 1, -1, 9, 0
 	] );
-	var info = zpotrf( 'U', 4, A, 1, 4, 0 );
+	var info = zpotrf( 'upper', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -153,14 +153,14 @@ test( 'zpotrf: not_posdef', function t() {
 		2, -1, 1, 0, 4, 0,
 		3, 0, 4, 0, 1, 0
 	] );
-	var info = zpotrf( 'L', 3, A, 1, 3, 0 );
+	var info = zpotrf( 'lower', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'zpotrf: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
-	var info = zpotrf( 'L', 0, A, 1, 1, 0 );
+	var info = zpotrf( 'lower', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -169,8 +169,8 @@ test( 'zpotrf: large lower (blocked path) matches zpotrf2', function t() {
 	var N = 80;
 	var A1 = randomHPD( N );
 	var A2 = new Complex128Array( A1 );
-	var info1 = zpotrf( 'L', N, A1, 1, N, 0 );
-	var info2 = zpotrf2( 'L', N, A2, 1, N, 0 );
+	var info1 = zpotrf( 'lower', N, A1, 1, N, 0 );
+	var info2 = zpotrf2( 'lower', N, A2, 1, N, 0 );
 	assert.equal( info1, 0 );
 	assert.equal( info2, 0 );
 	assertArrayClose( Array.from( reinterpret( A1, 0 ) ), Array.from( reinterpret( A2, 0 ) ), 1e-10, 'large lower blocked vs unblocked' );
@@ -180,8 +180,8 @@ test( 'zpotrf: large upper (blocked path) matches zpotrf2', function t() {
 	var N = 80;
 	var A1 = randomHPD( N );
 	var A2 = new Complex128Array( A1 );
-	var info1 = zpotrf( 'U', N, A1, 1, N, 0 );
-	var info2 = zpotrf2( 'U', N, A2, 1, N, 0 );
+	var info1 = zpotrf( 'upper', N, A1, 1, N, 0 );
+	var info2 = zpotrf2( 'upper', N, A2, 1, N, 0 );
 	assert.equal( info1, 0 );
 	assert.equal( info2, 0 );
 	assertArrayClose( Array.from( reinterpret( A1, 0 ) ), Array.from( reinterpret( A2, 0 ) ), 1e-10, 'large upper blocked vs unblocked' );
@@ -194,7 +194,7 @@ test( 'zpotrf: large not-posdef (blocked path)', function t() {
 	// Make the last diagonal negative
 	var idx = ( ( N - 1 ) * N + ( N - 1 ) ) * 2;
 	Av[ idx ] = -1000.0;
-	var info = zpotrf( 'L', N, A, 1, N, 0 );
+	var info = zpotrf( 'lower', N, A, 1, N, 0 );
 	assert.ok( info > 0 );
 });
 
@@ -204,6 +204,6 @@ test( 'zpotrf: large not-posdef upper (blocked path)', function t() {
 	var Av = reinterpret( A, 0 );
 	var idx = ( ( N - 1 ) * N + ( N - 1 ) ) * 2;
 	Av[ idx ] = -1000.0;
-	var info = zpotrf( 'U', N, A, 1, N, 0 );
+	var info = zpotrf( 'upper', N, A, 1, N, 0 );
 	assert.ok( info > 0 );
 });

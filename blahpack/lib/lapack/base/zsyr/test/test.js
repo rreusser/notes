@@ -1,17 +1,19 @@
-
-
 'use strict';
-
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var zsyr = require( './../lib' );
-
-test( 'zsyr: main export is a function', function t() {
-	assert.strictEqual( typeof zsyr, 'function' );
-});
-
-test( 'zsyr: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof zsyr.ndarray, 'function' );
-});
-
-// TODO: Add implementation tests
+var fs = require( 'fs' );
+var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zsyr = require( '../lib/base.js' );
+var lines = fs.readFileSync( path.resolve( __dirname, '../../../../../test/fixtures/zsyr.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixtures = {};
+for ( var i = 0; i < lines.length; i++ ) { var obj = JSON.parse( lines[ i ] ); fixtures[ obj.name ] = obj; }
+function assertClose( actual, expected, tol ) { for ( var ii = 0; ii < expected.length; ii++ ) { if ( Math.abs( actual[ii] - expected[ii] ) > tol * ( 1.0 + Math.abs( expected[ii] ) ) ) { assert.fail( 'at ' + ii + ': ' + actual[ii] + ' vs ' + expected[ii] ); } } }
+test( 'zsyr: upper alpha=1', function t() { var fix = fixtures.upper_alpha1; var n = fix.n; var LDA = 4; var A = new Complex128Array( LDA * n ); var Av = reinterpret( A, 0 ); Av[0]=1;Av[1]=0;Av[2*LDA]=2;Av[2*LDA+1]=1;Av[4*LDA]=3;Av[4*LDA+1]=-1;Av[2+2*LDA]=4;Av[3+2*LDA]=0;Av[2+4*LDA]=5;Av[3+4*LDA]=2;Av[4+4*LDA]=6;Av[5+4*LDA]=0; var x = new Complex128Array([1,1,2,-1,0,3]); zsyr('U',n,new Complex128(1,0),x,1,0,A,1,LDA,0); assertClose(Array.from(Av).slice(0,2*LDA*n),fix.A,1e-14); });
+test( 'zsyr: lower alpha=(2,-1)', function t() { var fix = fixtures.lower_alpha2m1; var n = fix.n; var LDA = 4; var A = new Complex128Array( LDA * n ); var Av = reinterpret( A, 0 ); Av[0]=1;Av[1]=0;Av[2]=2;Av[3]=1;Av[2+2*LDA]=4;Av[3+2*LDA]=0;Av[4]=3;Av[5]=-1;Av[4+2*LDA]=5;Av[5+2*LDA]=2;Av[4+4*LDA]=6;Av[5+4*LDA]=0; var x = new Complex128Array([1,1,2,-1,0,3]); zsyr('L',n,new Complex128(2,-1),x,1,0,A,1,LDA,0); assertClose(Array.from(Av).slice(0,2*LDA*n),fix.A,1e-14); });
+test( 'zsyr: N=0', function t() { var A = new Complex128Array(4); zsyr('U',0,new Complex128(1,0),new Complex128Array(1),1,0,A,1,1,0); assert.ok(true); });
+test( 'zsyr: N=1', function t() { var fix = fixtures.n1_upper; var A = new Complex128Array(1); var Av = reinterpret(A,0); Av[0]=3;Av[1]=2; zsyr('U',1,new Complex128(1,0),new Complex128Array([1,-1]),1,0,A,1,1,0); assertClose(Array.from(Av),fix.A,1e-14); });
+test( 'zsyr: alpha=0', function t() { var A = new Complex128Array(9); var Av = reinterpret(A,0); Av[0]=99;Av[1]=88; zsyr('U',3,new Complex128(0,0),new Complex128Array(3),1,0,A,1,3,0); assert.equal(Av[0],99); });
+test( 'zsyr: upper 4x4', function t() { var fix = fixtures.upper_4x4; var n = fix.n; var LDA = 4; var A = new Complex128Array(LDA*n); var Av = reinterpret(A,0); for(var j=0;j<n;j++)for(var ii=0;ii<=j;ii++){var idx=2*ii+2*LDA*j;Av[idx]=(ii+1)+(j+1);Av[idx+1]=(ii+1)-(j+1);} zsyr('U',n,new Complex128(0.5,0.25),new Complex128Array([1,0.5,2,-0.5,-1,1,0.5,0.5]),1,0,A,1,LDA,0); assertClose(Array.from(Av).slice(0,2*LDA*n),fix.A,1e-14); });

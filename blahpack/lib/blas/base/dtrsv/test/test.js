@@ -62,7 +62,7 @@ test( 'dtrsv: upper, no-transpose, non-unit diag (N=3)', function t() {
 	var A = upperA3();
 	// b = A * [1,2,3] = [20, 28, 21]
 	var x = new Float64Array([ 20.0, 28.0, 21.0 ]);
-	dtrsv( 'U', 'N', 'N', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'upper', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -71,7 +71,7 @@ test( 'dtrsv: lower, no-transpose, non-unit diag (N=3)', function t() {
 	var A = lowerA3();
 	// b = A * [1,2,3] = [2, 13, 37]
 	var x = new Float64Array([ 2.0, 13.0, 37.0 ]);
-	dtrsv( 'L', 'N', 'N', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'lower', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -80,7 +80,7 @@ test( 'dtrsv: upper, transpose, non-unit diag (N=3)', function t() {
 	var A = upperA3();
 	// b = A^T * [1,2,3] = [2, 13, 37]
 	var x = new Float64Array([ 2.0, 13.0, 37.0 ]);
-	dtrsv( 'U', 'T', 'N', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'upper', 'transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -89,7 +89,7 @@ test( 'dtrsv: lower, transpose, non-unit diag (N=3)', function t() {
 	var A = lowerA3();
 	// b = A^T * [1,2,3] = [20, 28, 21]
 	var x = new Float64Array([ 20.0, 28.0, 21.0 ]);
-	dtrsv( 'L', 'T', 'N', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'lower', 'transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -103,7 +103,7 @@ test( 'dtrsv: upper, no-transpose, unit diag (N=3)', function t() {
 	]);
 	// b = A*[1,2,3] = [19, 20, 3]
 	var x = new Float64Array([ 19.0, 20.0, 3.0 ]);
-	dtrsv( 'U', 'N', 'U', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'upper', 'no-transpose', 'unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -117,7 +117,7 @@ test( 'dtrsv: lower, no-transpose, unit diag (N=3)', function t() {
 	]);
 	// b = A*[1,2,3] = [1, 5, 19]
 	var x = new Float64Array([ 1.0, 5.0, 19.0 ]);
-	dtrsv( 'L', 'N', 'U', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'lower', 'no-transpose', 'unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -132,7 +132,7 @@ test( 'dtrsv: upper, transpose, unit diag (N=3)', function t() {
 	]);
 	// b = A^T*[1,2,3] = [1, 5, 19]
 	var x = new Float64Array([ 1.0, 5.0, 19.0 ]);
-	dtrsv( 'U', 'T', 'U', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'upper', 'transpose', 'unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -147,14 +147,14 @@ test( 'dtrsv: lower, transpose, unit diag (N=3)', function t() {
 	]);
 	// b = A^T*[1,2,3] = [19, 20, 3]
 	var x = new Float64Array([ 19.0, 20.0, 3.0 ]);
-	dtrsv( 'L', 'T', 'U', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'lower', 'transpose', 'unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrsv: N=0 quick return', function t() {
 	var A = new Float64Array([ 1.0 ]);
 	var x = new Float64Array([ 99.0 ]);
-	var out = dtrsv( 'U', 'N', 'N', 0, A, 1, 1, 0, x, 1, 0 );
+	var out = dtrsv( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
 	assert.equal( x[ 0 ], 99.0 );
 	assert.equal( out, x );
 });
@@ -163,7 +163,7 @@ test( 'dtrsv: N=1, non-unit diag', function t() {
 	var tc = findCase( 'n_one' );
 	var A = new Float64Array([ 5.0 ]);
 	var x = new Float64Array([ 15.0 ]);
-	dtrsv( 'U', 'N', 'N', 1, A, 1, 1, 0, x, 1, 0 );
+	dtrsv( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -172,7 +172,7 @@ test( 'dtrsv: non-unit stride (incx=2)', function t() {
 	var A = upperA3();
 	// b at stride 2: positions 0,2,4 hold [20,28,21]
 	var x = new Float64Array([ 20.0, 0.0, 28.0, 0.0, 21.0, 0.0 ]);
-	dtrsv( 'U', 'N', 'N', 3, A, 1, 3, 0, x, 2, 0 );
+	dtrsv( 'upper', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, 2, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -182,7 +182,7 @@ test( 'dtrsv: negative stride (incx=-1)', function t() {
 	// With incx=-1, x stored in reverse: x[2]=b(1), x[1]=b(2), x[0]=b(3)
 	var x = new Float64Array([ 37.0, 13.0, 2.0 ]);
 	// negative stride: strideX=-1, offsetX = (N-1)*|strideX| = 2
-	dtrsv( 'L', 'N', 'N', 3, A, 1, 3, 0, x, -1, 2 );
+	dtrsv( 'lower', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, -1, 2 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -201,7 +201,7 @@ test( 'dtrsv: upper, no-transpose, non-unit (4x4)', function t() {
 	]);
 	// b = A*[1,1,1,1] = [10, 18, 17, 10]
 	var x = new Float64Array([ 10.0, 18.0, 17.0, 10.0 ]);
-	dtrsv( 'U', 'N', 'N', 4, A, 1, 4, 0, x, 1, 0 );
+	dtrsv( 'upper', 'no-transpose', 'non-unit', 4, A, 1, 4, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -209,7 +209,7 @@ test( 'dtrsv: N=1, unit diag', function t() {
 	var tc = findCase( 'n_one_unit' );
 	var A = new Float64Array([ 99.0 ]);
 	var x = new Float64Array([ 7.0 ]);
-	dtrsv( 'L', 'T', 'U', 1, A, 1, 1, 0, x, 1, 0 );
+	dtrsv( 'lower', 'transpose', 'unit', 1, A, 1, 1, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -218,14 +218,14 @@ test( 'dtrsv: upper, no-transpose with zero RHS entries', function t() {
 	var A = upperA3();
 	// b = [0, 0, 21]
 	var x = new Float64Array([ 0.0, 0.0, 21.0 ]);
-	dtrsv( 'U', 'N', 'N', 3, A, 1, 3, 0, x, 1, 0 );
+	dtrsv( 'upper', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrsv: returns x', function t() {
 	var A = new Float64Array([ 2.0 ]);
 	var x = new Float64Array([ 4.0 ]);
-	var out = dtrsv( 'U', 'N', 'N', 1, A, 1, 1, 0, x, 1, 0 );
+	var out = dtrsv( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
 	assert.equal( out, x );
 });
 
@@ -238,13 +238,13 @@ test( 'dtrsv: with offsetA', function t() {
 		4.0, 6.0, 7.0      // col 2
 	]);
 	var x = new Float64Array([ 20.0, 28.0, 21.0 ]);
-	dtrsv( 'U', 'N', 'N', 3, A, 1, 3, 2, x, 1, 0 );
+	dtrsv( 'upper', 'no-transpose', 'non-unit', 3, A, 1, 3, 2, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 2.0, 3.0 ], 1e-14, 'x' );
 });
 
 test( 'dtrsv: with offsetX', function t() {
 	var A = upperA3();
 	var x = new Float64Array([ 0.0, 0.0, 20.0, 28.0, 21.0 ]);
-	dtrsv( 'U', 'N', 'N', 3, A, 1, 3, 0, x, 1, 2 );
+	dtrsv( 'upper', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 2 );
 	assertArrayClose( [ x[2], x[3], x[4] ], [ 1.0, 2.0, 3.0 ], 1e-14, 'x' );
 });

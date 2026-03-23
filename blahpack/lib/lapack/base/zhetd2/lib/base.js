@@ -75,7 +75,7 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Reduce the upper triangle of A.
 		// Fortran: A(N,N) = DBLE(A(N,N))
 		ai = oA + ( N - 1 ) * sa1 + ( N - 1 ) * sa2;

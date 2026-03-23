@@ -67,8 +67,8 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 	var i;
 	var k;
 
-	rightv = ( side === 'R' || side === 'r' );
-	leftv = ( side === 'L' || side === 'l' );
+	rightv = ( side === 'right' );
+	leftv = ( side === 'left' );
 
 	sv1 = strideV1;
 	sv2 = strideV2;
@@ -85,13 +85,13 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 	if ( M === 0 ) {
 		return 0;
 	}
-	if ( job === 'N' || job === 'n' ) {
+	if ( job === 'none' ) {
 		return 0;
 	}
 
 	// Scaling section: apply if JOB='S' or JOB='B', and ILO != IHI
 	if ( ilo !== ihi ) {
-		if ( job === 'S' || job === 's' || job === 'B' || job === 'b' ) {
+		if ( job === 'scale' || job === 'both' ) {
 			// Scale right eigenvectors by RSCALE
 			if ( rightv ) {
 				// Fortran: DO I = ILO, IHI; CALL ZDSCAL(M, RSCALE(I), V(I,1), LDV)
@@ -111,7 +111,7 @@ function zggbak( job, side, N, ilo, ihi, LSCALE, strideLSCALE, offsetLSCALE, RSC
 	}
 
 	// Permutation section: apply if JOB='P' or JOB='B'
-	if ( job === 'P' || job === 'p' || job === 'B' || job === 'b' ) {
+	if ( job === 'permute' || job === 'both' ) {
 		// Right eigenvectors
 		if ( rightv ) {
 			// Backward permutation: rows below ILO

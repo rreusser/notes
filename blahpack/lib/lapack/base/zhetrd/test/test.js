@@ -88,7 +88,7 @@ test( 'zhetrd: upper_4x4 (unblocked path)', function t() {
 	var e = new Float64Array( 3 );
 	var TAU = new Complex128Array( 3 );
 	var WORK = new Complex128Array( 0 );
-	var info = zhetrd( 'U', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = zhetrd( 'upper', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
 	var Av = reinterpret( A, 0 );
 	var Tv = reinterpret( TAU, 0 );
 	assert.equal( info, tc.info );
@@ -105,7 +105,7 @@ test( 'zhetrd: lower_4x4 (unblocked path)', function t() {
 	var e = new Float64Array( 3 );
 	var TAU = new Complex128Array( 3 );
 	var WORK = new Complex128Array( 0 );
-	var info = zhetrd( 'L', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = zhetrd( 'lower', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
 	var Av = reinterpret( A, 0 );
 	var Tv = reinterpret( TAU, 0 );
 	assert.equal( info, tc.info );
@@ -122,7 +122,7 @@ test( 'zhetrd: N=1', function t() {
 	var e = new Float64Array( 0 );
 	var TAU = new Complex128Array( 0 );
 	var WORK = new Complex128Array( 0 );
-	var info = zhetrd( 'U', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = zhetrd( 'upper', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
 	assert.equal( info, tc.info );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
 });
@@ -133,7 +133,7 @@ test( 'zhetrd: N=0', function t() {
 	var e = new Float64Array( 0 );
 	var TAU = new Complex128Array( 0 );
 	var WORK = new Complex128Array( 0 );
-	var info = zhetrd( 'U', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = zhetrd( 'upper', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -144,7 +144,7 @@ test( 'zhetrd: upper_35x35 (blocked path)', function t() {
 	var e = new Float64Array( 34 );
 	var TAU = new Complex128Array( 34 );
 	var WORK = new Complex128Array( 0 );
-	var info = zhetrd( 'U', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = zhetrd( 'upper', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
 	var Av = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-12, 'd' );
@@ -159,7 +159,7 @@ test( 'zhetrd: lower_35x35 (blocked path)', function t() {
 	var e = new Float64Array( 34 );
 	var TAU = new Complex128Array( 34 );
 	var WORK = new Complex128Array( 0 );
-	var info = zhetrd( 'L', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = zhetrd( 'lower', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 0 );
 	var Av = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-12, 'd' );

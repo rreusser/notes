@@ -165,7 +165,7 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		return 0;
 	}
 
-	lower = ( uplo === 'L' || uplo === 'l' );
+	lower = ( uplo === 'lower' );
 
 	// N=1 case: jump to sorting section
 	if ( N === 1 ) {
@@ -219,16 +219,16 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		// If NRU > 0, apply rotations to U from the right
 		// Fortran: DLASR('R','V','F', NRU, N, WORK(1), WORK(N), U, LDU)
 		if ( nru > 0 ) {
-			dlasr( 'R', 'V', 'F', nru, N,
+			dlasr( 'right', 'variable', 'forward', nru, N,
 				WORK, strideWORK, offsetWORK,
 				WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 				U, strideU1, strideU2, offsetU
 			);
 		}
 		// If NCC > 0, apply rotations to C from the left
-		// Fortran: DLASR('L','V','F', N, NCC, WORK(1), WORK(N), C, LDC)
+		// Fortran: DLASR('lower','V','F', N, NCC, WORK(1), WORK(N), C, LDC)
 		if ( ncc > 0 ) {
-			dlasr( 'L', 'V', 'F', N, ncc,
+			dlasr( 'left', 'variable', 'forward', N, ncc,
 				WORK, strideWORK, offsetWORK,
 				WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 				C, strideC1, strideC2, offsetC
@@ -523,8 +523,8 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					// DLASR('L','V','F', M-LL+1, NCVT, WORK(1), WORK(N), VT(LL,1), LDVT)
-					dlasr( 'L', 'V', 'F', m - ll + 1, ncvt,
+					// DLASR('lower','V','F', M-LL+1, NCVT, WORK(1), WORK(N), VT(LL,1), LDVT)
+					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
 						WORK, strideWORK, offsetWORK,
 						WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
@@ -532,15 +532,15 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				}
 				if ( nru > 0 ) {
 					// DLASR('R','V','F', NRU, M-LL+1, WORK(NM12+1), WORK(NM13+1), U(1,LL), LDU)
-					dlasr( 'R', 'V', 'F', nru, m - ll + 1,
+					dlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
 						WORK, strideWORK, offsetWORK + nm12 * strideWORK,
 						WORK, strideWORK, offsetWORK + nm13 * strideWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					// DLASR('L','V','F', M-LL+1, NCC, WORK(NM12+1), WORK(NM13+1), C(LL,1), LDC)
-					dlasr( 'L', 'V', 'F', m - ll + 1, ncc,
+					// DLASR('lower','V','F', M-LL+1, NCC, WORK(NM12+1), WORK(NM13+1), C(LL,1), LDC)
+					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
 						WORK, strideWORK, offsetWORK + nm12 * strideWORK,
 						WORK, strideWORK, offsetWORK + nm13 * strideWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1
@@ -578,8 +578,8 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					// DLASR('L','V','B', M-LL+1, NCVT, WORK(NM12+1), WORK(NM13+1), VT(LL,1), LDVT)
-					dlasr( 'L', 'V', 'B', m - ll + 1, ncvt,
+					// DLASR('lower','V','B', M-LL+1, NCVT, WORK(NM12+1), WORK(NM13+1), VT(LL,1), LDVT)
+					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
 						WORK, strideWORK, offsetWORK + nm12 * strideWORK,
 						WORK, strideWORK, offsetWORK + nm13 * strideWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
@@ -587,15 +587,15 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				}
 				if ( nru > 0 ) {
 					// DLASR('R','V','B', NRU, M-LL+1, WORK(1), WORK(N), U(1,LL), LDU)
-					dlasr( 'R', 'V', 'B', nru, m - ll + 1,
+					dlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
 						WORK, strideWORK, offsetWORK,
 						WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					// DLASR('L','V','B', M-LL+1, NCC, WORK(1), WORK(N), C(LL,1), LDC)
-					dlasr( 'L', 'V', 'B', m - ll + 1, ncc,
+					// DLASR('lower','V','B', M-LL+1, NCC, WORK(1), WORK(N), C(LL,1), LDC)
+					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
 						WORK, strideWORK, offsetWORK,
 						WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1
@@ -645,21 +645,21 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					dlasr( 'L', 'V', 'F', m - ll + 1, ncvt,
+					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
 						WORK, strideWORK, offsetWORK,
 						WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {
-					dlasr( 'R', 'V', 'F', nru, m - ll + 1,
+					dlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
 						WORK, strideWORK, offsetWORK + nm12 * strideWORK,
 						WORK, strideWORK, offsetWORK + nm13 * strideWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					dlasr( 'L', 'V', 'F', m - ll + 1, ncc,
+					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
 						WORK, strideWORK, offsetWORK + nm12 * strideWORK,
 						WORK, strideWORK, offsetWORK + nm13 * strideWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1
@@ -711,21 +711,21 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					dlasr( 'L', 'V', 'B', m - ll + 1, ncvt,
+					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
 						WORK, strideWORK, offsetWORK + nm12 * strideWORK,
 						WORK, strideWORK, offsetWORK + nm13 * strideWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {
-					dlasr( 'R', 'V', 'B', nru, m - ll + 1,
+					dlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
 						WORK, strideWORK, offsetWORK,
 						WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					dlasr( 'L', 'V', 'B', m - ll + 1, ncc,
+					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
 						WORK, strideWORK, offsetWORK,
 						WORK, strideWORK, offsetWORK + nm1 * strideWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1

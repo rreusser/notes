@@ -44,8 +44,8 @@ test( 'dpotrs: lower_single_rhs', function t() {
 	// A = [4 2 1; 2 5 3; 1 3 9] col-major
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	dpotrf( 'L', 3, A, 1, 3, 0 );
-	var info = dpotrs( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	dpotrf( 'lower', 3, A, 1, 3, 0 );
+	var info = dpotrs( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -54,8 +54,8 @@ test( 'dpotrs: upper_single_rhs', function t() {
 	var tc = findCase( 'upper_single_rhs' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	dpotrf( 'U', 3, A, 1, 3, 0 );
-	var info = dpotrs( 'U', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	dpotrf( 'upper', 3, A, 1, 3, 0 );
+	var info = dpotrs( 'upper', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -64,8 +64,8 @@ test( 'dpotrs: lower_multi_rhs', function t() {
 	var tc = findCase( 'lower_multi_rhs' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	var B = new Float64Array( [ 1, 0, 0, 0, 1, 0 ] );
-	dpotrf( 'L', 3, A, 1, 3, 0 );
-	var info = dpotrs( 'L', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
+	dpotrf( 'lower', 3, A, 1, 3, 0 );
+	var info = dpotrs( 'lower', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -74,7 +74,7 @@ test( 'dpotrs: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Float64Array( 1 );
 	var B = new Float64Array( 1 );
-	var info = dpotrs( 'L', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = dpotrs( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -82,7 +82,7 @@ test( 'dpotrs: nrhs_zero', function t() {
 	var tc = findCase( 'nrhs_zero' );
 	var A = new Float64Array( 9 );
 	var B = new Float64Array( 3 );
-	var info = dpotrs( 'L', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dpotrs( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -91,7 +91,7 @@ test( 'dpotrs: one_by_one', function t() {
 	// L = 2 (so A = L*L^T = 4)
 	var A = new Float64Array( [ 2 ] );
 	var B = new Float64Array( [ 6 ] );
-	var info = dpotrs( 'L', 1, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = dpotrs( 'lower', 1, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -100,8 +100,8 @@ test( 'dpotrs: upper_multi_rhs_3', function t() {
 	var tc = findCase( 'upper_multi_rhs_3' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	var B = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	dpotrf( 'U', 3, A, 1, 3, 0 );
-	var info = dpotrs( 'U', 3, 3, A, 1, 3, 0, B, 1, 3, 0 );
+	dpotrf( 'upper', 3, A, 1, 3, 0 );
+	var info = dpotrs( 'upper', 3, 3, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });

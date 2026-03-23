@@ -66,7 +66,7 @@ test( 'zlacpy: full copy 3x3', function t() {
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
 
-	zlacpy( 'A', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
+	zlacpy( 'all', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
 
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.B, 1e-14, 'B' );
 });
@@ -77,7 +77,7 @@ test( 'zlacpy: upper copy 3x3', function t() {
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
 
-	zlacpy( 'U', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
+	zlacpy( 'upper', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
 
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.B, 1e-14, 'B' );
 });
@@ -88,14 +88,14 @@ test( 'zlacpy: lower copy 3x3', function t() {
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
 
-	zlacpy( 'L', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
+	zlacpy( 'lower', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
 
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.B, 1e-14, 'B' );
 });
 
 test( 'zlacpy: M=0 returns B unchanged', function t() {
 	var B = new Complex128Array( 15 );
-	zlacpy( 'A', 0, 3, new Complex128Array( 15 ), 1, 5, 0, B, 1, 5, 0 );
+	zlacpy( 'all', 0, 3, new Complex128Array( 15 ), 1, 5, 0, B, 1, 5, 0 );
 
 	var expected = new Float64Array( 30 );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), Array.from( expected ), 1e-14, 'B' );
@@ -103,7 +103,7 @@ test( 'zlacpy: M=0 returns B unchanged', function t() {
 
 test( 'zlacpy: N=0 returns B unchanged', function t() {
 	var B = new Complex128Array( 15 );
-	zlacpy( 'A', 3, 0, new Complex128Array( 15 ), 1, 5, 0, B, 1, 5, 0 );
+	zlacpy( 'all', 3, 0, new Complex128Array( 15 ), 1, 5, 0, B, 1, 5, 0 );
 
 	var expected = new Float64Array( 30 );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), Array.from( expected ), 1e-14, 'B' );
@@ -115,7 +115,7 @@ test( 'zlacpy: full copy 2x4 (non-square)', function t() {
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
 
-	zlacpy( 'A', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
+	zlacpy( 'all', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
 
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.B, 1e-14, 'B' );
 });
@@ -126,7 +126,7 @@ test( 'zlacpy: upper copy 4x2 (non-square, M > N)', function t() {
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
 
-	zlacpy( 'U', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
+	zlacpy( 'upper', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
 
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.B, 1e-14, 'B' );
 });
@@ -137,7 +137,7 @@ test( 'zlacpy: lower copy 4x2 (non-square, M > N)', function t() {
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
 
-	zlacpy( 'L', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
+	zlacpy( 'lower', tc.M, tc.N, A, 1, LDA, 0, B, 1, LDA, 0 );
 
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.B, 1e-14, 'B' );
 });
@@ -145,7 +145,7 @@ test( 'zlacpy: lower copy 4x2 (non-square, M > N)', function t() {
 test( 'zlacpy: returns B', function t() {
 	var A = c128( new Float64Array( [ 1, 2, 3, 4 ] ) );
 	var B = new Complex128Array( 2 );
-	var out = zlacpy( 'A', 1, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var out = zlacpy( 'all', 1, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.strictEqual( out, B );
 });
 
@@ -159,14 +159,14 @@ test( 'zlacpy: supports lowercase uplo', function t() {
 
 	// Test lowercase 'u'
 	B = new Complex128Array( 4 );
-	zlacpy( 'u', 2, 2, A, 1, 2, 0, B, 1, 2, 0 );
+	zlacpy( 'upper', 2, 2, A, 1, 2, 0, B, 1, 2, 0 );
 	Bv = reinterpret( B, 0 );
 	// Upper triangle: (0,0)=(1,2), (0,1)=(5,6), (1,1)=(7,8)
 	assert.deepStrictEqual( Array.from( Bv ), [ 1, 2, 0, 0, 5, 6, 7, 8 ] );
 
 	// Test lowercase 'l'
 	B = new Complex128Array( 4 );
-	zlacpy( 'l', 2, 2, A, 1, 2, 0, B, 1, 2, 0 );
+	zlacpy( 'lower', 2, 2, A, 1, 2, 0, B, 1, 2, 0 );
 	Bv = reinterpret( B, 0 );
 	// Lower triangle: (0,0)=(1,2), (1,0)=(3,4), (1,1)=(7,8)
 	assert.deepStrictEqual( Array.from( Bv ), [ 1, 2, 3, 4, 0, 0, 7, 8 ] );
@@ -177,7 +177,7 @@ test( 'zlacpy: supports offset', function t() {
 	var A = c128( new Float64Array( [ 0, 0, 0, 0, 99, 42 ] ) );
 	var B = new Complex128Array( 3 );
 
-	zlacpy( 'A', 1, 1, A, 1, 1, 2, B, 1, 1, 2 );
+	zlacpy( 'all', 1, 1, A, 1, 1, 2, B, 1, 1, 2 );
 
 	var Bv = reinterpret( B, 0 );
 	assert.deepStrictEqual( Array.from( Bv ), [ 0, 0, 0, 0, 99, 42 ] );
@@ -185,24 +185,24 @@ test( 'zlacpy: supports offset', function t() {
 
 test( 'zlacpy: M=0 with upper uplo returns B unchanged', function t() {
 	var B = new Complex128Array( 4 );
-	zlacpy( 'U', 0, 2, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
+	zlacpy( 'upper', 0, 2, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
 	assert.deepStrictEqual( Array.from( reinterpret( B, 0 ) ), [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
 });
 
 test( 'zlacpy: M=0 with lower uplo returns B unchanged', function t() {
 	var B = new Complex128Array( 4 );
-	zlacpy( 'L', 0, 2, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
+	zlacpy( 'lower', 0, 2, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
 	assert.deepStrictEqual( Array.from( reinterpret( B, 0 ) ), [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
 });
 
 test( 'zlacpy: N=0 with upper uplo returns B unchanged', function t() {
 	var B = new Complex128Array( 4 );
-	zlacpy( 'U', 2, 0, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
+	zlacpy( 'upper', 2, 0, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
 	assert.deepStrictEqual( Array.from( reinterpret( B, 0 ) ), [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
 });
 
 test( 'zlacpy: N=0 with lower uplo returns B unchanged', function t() {
 	var B = new Complex128Array( 4 );
-	zlacpy( 'L', 2, 0, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
+	zlacpy( 'lower', 2, 0, new Complex128Array( 4 ), 1, 2, 0, B, 1, 2, 0 );
 	assert.deepStrictEqual( Array.from( reinterpret( B, 0 ) ), [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
 });

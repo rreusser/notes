@@ -43,10 +43,10 @@ function setupB3x2( b ) {
 }
 
 var cases = [
-	{ name: 'left_upper_n', s: 'L', u: 'U', t: 'N', d: 'N', m: 3, n: 2, al: 1, aFn: setupTriUpper3, aLda: 3 },
-	{ name: 'left_lower_n', s: 'L', u: 'L', t: 'N', d: 'N', m: 3, n: 2, al: 1, aFn: setupTriLower3, aLda: 3 },
-	{ name: 'left_upper_t', s: 'L', u: 'U', t: 'T', d: 'N', m: 3, n: 2, al: 1, aFn: setupTriUpper3, aLda: 3 },
-	{ name: 'left_lower_t', s: 'L', u: 'L', t: 'T', d: 'N', m: 3, n: 2, al: 1, aFn: setupTriLower3, aLda: 3 },
+	{ name: 'left_upper_n', s: 'left', u: 'upper', t: 'no-transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriUpper3, aLda: 3 },
+	{ name: 'left_lower_n', s: 'left', u: 'lower', t: 'no-transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriLower3, aLda: 3 },
+	{ name: 'left_upper_t', s: 'left', u: 'upper', t: 'transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriUpper3, aLda: 3 },
+	{ name: 'left_lower_t', s: 'left', u: 'lower', t: 'transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriLower3, aLda: 3 },
 ];
 
 cases.forEach( function( c ) {
@@ -67,7 +67,7 @@ test( 'dtrmm: right upper N', function t() {
 	a[ 0 ] = 2; a[ 2 ] = 3; a[ 3 ] = 5;
 	var b = new Float64Array( 16 );
 	b[ 0 ] = 1; b[ 1 ] = 2; b[ 2 ] = 3; b[ 3 ] = 4; b[ 4 ] = 5; b[ 5 ] = 6;
-	dtrmm( 'R', 'U', 'N', 'N', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
+	dtrmm( 'right', 'upper', 'no-transpose', 'non-unit', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
 	assertArrayClose( Array.prototype.slice.call( b, 0, tc.b.length ), tc.b, 1e-14, 'B' );
 });
 
@@ -77,7 +77,7 @@ test( 'dtrmm: right lower N', function t() {
 	a[ 0 ] = 2; a[ 1 ] = 3; a[ 3 ] = 5;
 	var b = new Float64Array( 16 );
 	b[ 0 ] = 1; b[ 1 ] = 2; b[ 2 ] = 3; b[ 3 ] = 4; b[ 4 ] = 5; b[ 5 ] = 6;
-	dtrmm( 'R', 'L', 'N', 'N', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
+	dtrmm( 'right', 'lower', 'no-transpose', 'non-unit', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
 	assertArrayClose( Array.prototype.slice.call( b, 0, tc.b.length ), tc.b, 1e-14, 'B' );
 });
 
@@ -87,7 +87,7 @@ test( 'dtrmm: right upper T', function t() {
 	a[ 0 ] = 2; a[ 2 ] = 3; a[ 3 ] = 5;
 	var b = new Float64Array( 16 );
 	b[ 0 ] = 1; b[ 1 ] = 2; b[ 2 ] = 3; b[ 3 ] = 4; b[ 4 ] = 5; b[ 5 ] = 6;
-	dtrmm( 'R', 'U', 'T', 'N', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
+	dtrmm( 'right', 'upper', 'transpose', 'non-unit', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
 	assertArrayClose( Array.prototype.slice.call( b, 0, tc.b.length ), tc.b, 1e-14, 'B' );
 });
 
@@ -97,7 +97,7 @@ test( 'dtrmm: right lower T', function t() {
 	a[ 0 ] = 2; a[ 1 ] = 3; a[ 3 ] = 5;
 	var b = new Float64Array( 16 );
 	b[ 0 ] = 1; b[ 1 ] = 2; b[ 2 ] = 3; b[ 3 ] = 4; b[ 4 ] = 5; b[ 5 ] = 6;
-	dtrmm( 'R', 'L', 'T', 'N', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
+	dtrmm( 'right', 'lower', 'transpose', 'non-unit', 3, 2, 1.0, a, 1, 2, 0, b, 1, 3, 0 );
 	assertArrayClose( Array.prototype.slice.call( b, 0, tc.b.length ), tc.b, 1e-14, 'B' );
 });
 
@@ -107,14 +107,14 @@ test( 'dtrmm: alpha=0', function t() {
 	setupTriUpper3( a );
 	var b = new Float64Array( 16 );
 	setupB3x2( b );
-	dtrmm( 'L', 'U', 'N', 'N', 3, 2, 0.0, a, 1, 3, 0, b, 1, 3, 0 );
+	dtrmm( 'left', 'upper', 'no-transpose', 'non-unit', 3, 2, 0.0, a, 1, 3, 0, b, 1, 3, 0 );
 	assertArrayClose( Array.prototype.slice.call( b, 0, tc.b.length ), tc.b, 1e-14, 'B' );
 });
 
 test( 'dtrmm: M=0 quick return', function t() {
 	var a = new Float64Array( 16 );
 	var b = new Float64Array( [ 99 ] );
-	dtrmm( 'L', 'U', 'N', 'N', 0, 2, 1.0, a, 1, 1, 0, b, 1, 1, 0 );
+	dtrmm( 'left', 'upper', 'no-transpose', 'non-unit', 0, 2, 1.0, a, 1, 1, 0, b, 1, 1, 0 );
 	if ( b[ 0 ] !== 99 ) {
 		throw new Error( 'B changed on M=0' );
 	}
@@ -128,6 +128,6 @@ test( 'dtrmm: unit diag', function t() {
 	a[ 8 ] = 99;
 	var b = new Float64Array( 16 );
 	setupB3x2( b );
-	dtrmm( 'L', 'U', 'N', 'U', 3, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
+	dtrmm( 'left', 'upper', 'no-transpose', 'unit', 3, 2, 1.0, a, 1, 3, 0, b, 1, 3, 0 );
 	assertArrayClose( Array.prototype.slice.call( b, 0, tc.b.length ), tc.b, 1e-14, 'B' );
 });

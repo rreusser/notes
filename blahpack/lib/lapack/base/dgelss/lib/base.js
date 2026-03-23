@@ -126,15 +126,15 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 	DUM = new Float64Array( 1 );
 
 	// Scale A if max element is outside [smlnum, bignum]
-	anrm = dlange( 'M', M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK );
+	anrm = dlange( 'max', M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK );
 	iascl = 0;
 	if ( anrm > 0.0 && anrm < smlnum ) {
 		// Scale matrix norm up to smlnum
-		dlascl( 'G', 0, 0, anrm, smlnum, M, N, A, strideA1, strideA2, offsetA );
+		dlascl( 'general', 0, 0, anrm, smlnum, M, N, A, strideA1, strideA2, offsetA );
 		iascl = 1;
 	} else if ( anrm > bignum ) {
 		// Scale matrix norm down to bignum
-		dlascl( 'G', 0, 0, anrm, bignum, M, N, A, strideA1, strideA2, offsetA );
+		dlascl( 'general', 0, 0, anrm, bignum, M, N, A, strideA1, strideA2, offsetA );
 		iascl = 2;
 	} else if ( anrm === 0.0 ) {
 		// Matrix all zero. Return zero solution.
@@ -145,15 +145,15 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 	}
 
 	// Scale B
-	bnrm = dlange( 'M', M, nrhs, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK );
+	bnrm = dlange( 'max', M, nrhs, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK );
 	ibscl = 0;
 	if ( bnrm > 0.0 && bnrm < smlnum ) {
 		// Scale matrix norm up to smlnum
-		dlascl( 'G', 0, 0, bnrm, smlnum, M, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, bnrm, smlnum, M, nrhs, B, strideB1, strideB2, offsetB );
 		ibscl = 1;
 	} else if ( bnrm > bignum ) {
 		// Scale matrix norm down to bignum
-		dlascl( 'G', 0, 0, bnrm, bignum, M, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, bnrm, bignum, M, nrhs, B, strideB1, strideB2, offsetB );
 		ibscl = 2;
 	}
 
@@ -174,7 +174,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				WORK, 1, iwork );
 
 			// Multiply B := Q^T * B
-			dormqr( 'L', 'T', M, nrhs, N,
+			dormqr( 'left', 'transpose', M, nrhs, N,
 				A, strideA1, strideA2, offsetA,
 				WORK, 1, itau,
 				B, strideB1, strideB2, offsetB,
@@ -182,7 +182,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 			// Zero out below-diagonal of R
 			if ( N > 1 ) {
-				dlaset( 'L', N - 1, N - 1, 0.0, 0.0,
+				dlaset( 'lower', N - 1, N - 1, 0.0, 0.0,
 					A, strideA1, strideA2, offsetA + strideA1 );
 			}
 		}
@@ -201,7 +201,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
-		dormbr( 'Q', 'L', 'T', mm, nrhs, N,
+		dormbr( 'Q', 'left', 'transpose', mm, nrhs, N,
 			A, strideA1, strideA2, offsetA,
 			WORK, 1, itauq,
 			B, strideB1, strideB2, offsetB,
@@ -216,7 +216,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 		// Compute SVD of bidiagonal: S = singular values, A = P_b^T (right singular vectors)
 		// B is multiplied by Q_b^T on the left
-		info = dbdsqr( 'U', N, N, 0, nrhs,
+		info = dbdsqr( 'upper', N, N, 0, nrhs,
 			S, strideS, offsetS,
 			WORK, 1, ie,
 			A, strideA1, strideA2, offsetA,
@@ -250,7 +250,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		// Multiply by right singular vectors: X = V^T * (Sigma^+ * Q_b^T * B)
 		// A now contains V^T (the right singular vectors), so X = A^T * B
 		if ( lwork >= strideB2 * nrhs && nrhs > 1 ) {
-			dgemm( 'T', 'N', N, nrhs, N, 1.0,
+			dgemm( 'transpose', 'no-transpose', N, nrhs, N, 1.0,
 				A, strideA1, strideA2, offsetA,
 				B, strideB1, strideB2, offsetB,
 				0.0, WORK, 1, N, 0 );
@@ -261,7 +261,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			chunk = Math.max( 1, Math.floor( lwork / N ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				dgemm( 'T', 'N', N, bl, N, 1.0,
+				dgemm( 'transpose', 'no-transpose', N, bl, N, 1.0,
 					A, strideA1, strideA2, offsetA,
 					B, strideB1, strideB2, offsetB + i * strideB2,
 					0.0, WORK, 1, N, 0 );
@@ -270,7 +270,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					B, strideB1, strideB2, offsetB + i * strideB2 );
 			}
 		} else if ( nrhs === 1 ) {
-			dgemv( 'T', N, N, 1.0,
+			dgemv( 'transpose', N, N, 1.0,
 				A, strideA1, strideA2, offsetA,
 				B, strideB1, offsetB,
 				0.0, WORK, 1, 0 );
@@ -302,10 +302,10 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		il = iwork; // IL: copy of L starts here, ldwork-by-M stored column-major
 
 		// Copy L into workspace and zero it in A
-		dlacpy( 'L', M, M,
+		dlacpy( 'lower', M, M,
 			A, strideA1, strideA2, offsetA,
 			WORK, 1, ldwork, il );
-		dlaset( 'U', M - 1, M - 1, 0.0, 0.0,
+		dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
 			WORK, 1, ldwork, il + ldwork );
 
 		ie = il + ldwork * M;
@@ -322,7 +322,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
-		dormbr( 'Q', 'L', 'T', M, nrhs, M,
+		dormbr( 'Q', 'left', 'transpose', M, nrhs, M,
 			WORK, 1, ldwork, il,
 			WORK, 1, itauq,
 			B, strideB1, strideB2, offsetB,
@@ -336,7 +336,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal of L
-		info = dbdsqr( 'U', M, M, 0, nrhs,
+		info = dbdsqr( 'upper', M, M, 0, nrhs,
 			S, strideS, offsetS,
 			WORK, 1, ie,
 			WORK, 1, ldwork, il,
@@ -368,7 +368,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 		// Multiply by right singular vectors of L: X_L = V_L^T * (Sigma^+ * ...)
 		if ( lwork >= iwork + M * nrhs && nrhs > 1 ) {
-			dgemm( 'T', 'N', M, nrhs, M, 1.0,
+			dgemm( 'transpose', 'no-transpose', M, nrhs, M, 1.0,
 				WORK, 1, ldwork, il,
 				B, strideB1, strideB2, offsetB,
 				0.0, WORK, 1, M, iwork );
@@ -379,7 +379,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			chunk = Math.max( 1, Math.floor( ( lwork - iwork ) / M ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				dgemm( 'T', 'N', M, bl, M, 1.0,
+				dgemm( 'transpose', 'no-transpose', M, bl, M, 1.0,
 					WORK, 1, ldwork, il,
 					B, strideB1, strideB2, offsetB + i * strideB2,
 					0.0, WORK, 1, M, iwork );
@@ -388,7 +388,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					B, strideB1, strideB2, offsetB + i * strideB2 );
 			}
 		} else if ( nrhs === 1 ) {
-			dgemv( 'T', M, M, 1.0,
+			dgemv( 'transpose', M, M, 1.0,
 				WORK, 1, ldwork, il,
 				B, strideB1, offsetB,
 				0.0, WORK, 1, iwork );
@@ -401,7 +401,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 		// Multiply by Q^T from LQ factorization: X = Q^T * [X_L; 0]
 		iwork = itau + M;
-		dormlq( 'L', 'T', N, nrhs, M,
+		dormlq( 'left', 'transpose', N, nrhs, M,
 			A, strideA1, strideA2, offsetA,
 			WORK, 1, itau,
 			B, strideB1, strideB2, offsetB,
@@ -424,7 +424,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation
-		dormbr( 'Q', 'L', 'T', M, nrhs, N,
+		dormbr( 'Q', 'left', 'transpose', M, nrhs, N,
 			A, strideA1, strideA2, offsetA,
 			WORK, 1, itauq,
 			B, strideB1, strideB2, offsetB,
@@ -438,7 +438,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal (lower bidiagonal for M < N)
-		info = dbdsqr( 'L', M, N, 0, nrhs,
+		info = dbdsqr( 'lower', M, N, 0, nrhs,
 			S, strideS, offsetS,
 			WORK, 1, ie,
 			A, strideA1, strideA2, offsetA,
@@ -469,7 +469,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 		// Multiply by right singular vectors: X = V^T * (Sigma^+ * ...)
 		if ( lwork >= strideB2 * nrhs && nrhs > 1 ) {
-			dgemm( 'T', 'N', N, nrhs, M, 1.0,
+			dgemm( 'transpose', 'no-transpose', N, nrhs, M, 1.0,
 				A, strideA1, strideA2, offsetA,
 				B, strideB1, strideB2, offsetB,
 				0.0, WORK, 1, N, 0 );
@@ -480,7 +480,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			chunk = Math.max( 1, Math.floor( lwork / N ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				dgemm( 'T', 'N', N, bl, M, 1.0,
+				dgemm( 'transpose', 'no-transpose', N, bl, M, 1.0,
 					A, strideA1, strideA2, offsetA,
 					B, strideB1, strideB2, offsetB + i * strideB2,
 					0.0, WORK, 1, N, 0 );
@@ -489,7 +489,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					B, strideB1, strideB2, offsetB + i * strideB2 );
 			}
 		} else if ( nrhs === 1 ) {
-			dgemv( 'T', M, N, 1.0,
+			dgemv( 'transpose', M, N, 1.0,
 				A, strideA1, strideA2, offsetA,
 				B, strideB1, offsetB,
 				0.0, WORK, 1, 0 );
@@ -499,16 +499,16 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 	// Undo scaling
 	if ( iascl === 1 ) {
-		dlascl( 'G', 0, 0, anrm, smlnum, N, nrhs, B, strideB1, strideB2, offsetB );
-		dlascl( 'G', 0, 0, smlnum, anrm, minmn, 1, S, strideS, 1, offsetS );
+		dlascl( 'general', 0, 0, anrm, smlnum, N, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, smlnum, anrm, minmn, 1, S, strideS, 1, offsetS );
 	} else if ( iascl === 2 ) {
-		dlascl( 'G', 0, 0, anrm, bignum, N, nrhs, B, strideB1, strideB2, offsetB );
-		dlascl( 'G', 0, 0, bignum, anrm, minmn, 1, S, strideS, 1, offsetS );
+		dlascl( 'general', 0, 0, anrm, bignum, N, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, bignum, anrm, minmn, 1, S, strideS, 1, offsetS );
 	}
 	if ( ibscl === 1 ) {
-		dlascl( 'G', 0, 0, smlnum, bnrm, N, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, smlnum, bnrm, N, nrhs, B, strideB1, strideB2, offsetB );
 	} else if ( ibscl === 2 ) {
-		dlascl( 'G', 0, 0, bignum, bnrm, N, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, bignum, bnrm, N, nrhs, B, strideB1, strideB2, offsetB );
 	}
 
 	return 0;

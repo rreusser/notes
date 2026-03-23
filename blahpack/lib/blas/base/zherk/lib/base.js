@@ -20,7 +20,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
 * @param {string} trans - 'N' for A*A^H, 'C' for A^H*A
 * @param {NonNegativeInteger} N - order of matrix C
-* @param {NonNegativeInteger} K - number of columns of A (if trans='N') or rows (if trans='C')
+* @param {NonNegativeInteger} K - number of columns of A (if trans = 'no-transpose') or rows (if trans = 'conjugate-transpose')
 * @param {number} alpha - real scalar multiplier
 * @param {Complex128Array} A - complex input matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
@@ -57,8 +57,8 @@ function zherk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 	var j;
 	var l;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	nota = ( trans === 'N' || trans === 'n' );
+	upper = ( uplo === 'upper' );
+	nota = ( trans === 'no-transpose' );
 
 	if ( N === 0 || ( ( alpha === 0.0 || K === 0 ) && beta === 1.0 ) ) {
 		return C;

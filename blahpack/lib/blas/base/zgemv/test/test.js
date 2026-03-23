@@ -67,7 +67,7 @@ test( 'zgemv: basic trans=N (M=2, N=2, alpha=(1,0), beta=(0,0))', function t() {
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
 	// Column-major: strideA1=1, strideA2=M=2
-	var result = base( 'N', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_basic y' );
 });
@@ -79,7 +79,7 @@ test( 'zgemv: conjugate transpose (trans=C, M=2, N=2)', function t() {
 	var y = new Complex128Array( 2 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'C', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = base( 'conjugate-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_conj_trans y' );
 });
@@ -92,7 +92,7 @@ test( 'zgemv: alpha and beta scaling (trans=N)', function t() {
 	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
 	var alpha = new Complex128( 2, 1 );
 	var beta = new Complex128( 1, 1 );
-	var result = base( 'N', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_alpha_beta y' );
 });
@@ -104,7 +104,7 @@ test( 'zgemv: zero dimensions (M=0, N=0) — quick return', function t() {
 	var y = new Complex128Array( [ 99, 88 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'N', 0, 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = base( 'no-transpose', 0, 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_zero_dim y' );
 });
@@ -116,7 +116,7 @@ test( 'zgemv: transpose (trans=T, no conjugate)', function t() {
 	var y = new Complex128Array( 2 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'T', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = base( 'transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_trans y' );
 });
@@ -127,7 +127,7 @@ test( 'zgemv: alpha=0, beta=1 quick return (y unchanged)', function t() {
 	var y = new Complex128Array( [ 5, 6, 7, 8 ] );
 	var alpha = new Complex128( 0, 0 );
 	var beta = new Complex128( 1, 0 );
-	var result = base( 'N', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assert.deepStrictEqual( Array.from( reinterpret( y, 0 ) ), [ 5, 6, 7, 8 ] );
 });
@@ -138,7 +138,7 @@ test( 'zgemv: alpha=0, non-trivial beta (y := beta*y only)', function t() {
 	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
 	var alpha = new Complex128( 0, 0 );
 	var beta = new Complex128( 2, 0 );
-	var result = base( 'N', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	// y should be scaled by 2: [2, 0, 0, 2]
 	assert.deepStrictEqual( Array.from( reinterpret( y, 0 ) ), [ 2, 0, 0, 2 ] );
@@ -154,7 +154,7 @@ test( 'zgemv: non-unit stride (incx=2, incy=2, trans=N)', function t() {
 	var y = new Complex128Array( [ 0, 0, 88, 88, 0, 0 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'N', 2, 2, alpha, A, 1, 2, 0, x, 2, 0, beta, y, 2, 0 );
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 2, 0, beta, y, 2, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_stride y' );
 });

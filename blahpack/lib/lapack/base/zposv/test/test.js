@@ -49,7 +49,7 @@ test( 'zposv: lower_3x3', function t() {
 		1, 2, 2, -1, 6, 0
 	] );
 	var B = new Complex128Array( [ 1, 1, 2, -1, 3, 0.5 ] );
-	var info = zposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = zposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -62,7 +62,7 @@ test( 'zposv: upper_3x3', function t() {
 		1, 2, 2, -1, 6, 0
 	] );
 	var B = new Complex128Array( [ 1, 1, 2, -1, 3, 0.5 ] );
-	var info = zposv( 'U', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = zposv( 'upper', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -75,7 +75,7 @@ test( 'zposv: not_posdef', function t() {
 		3, 0, 4, 0, 1, 0
 	] );
 	var B = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
-	var info = zposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = zposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -83,7 +83,7 @@ test( 'zposv: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
-	var info = zposv( 'L', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = zposv( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -95,7 +95,7 @@ test( 'zposv: identity', function t() {
 		0, 0, 0, 0, 1, 0
 	] );
 	var B = new Complex128Array( [ 3, 1, 5, -2, 7, 0.5 ] );
-	var info = zposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = zposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -112,7 +112,7 @@ test( 'zposv: multi_rhs', function t() {
 		1, 0, 0, 0, 0, 0,
 		0, 0, 1, 0, 0, 0
 	] );
-	var info = zposv( 'L', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = zposv( 'lower', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -121,6 +121,6 @@ test( 'zposv: nrhs_zero', function t() {
 	var tc = findCase( 'nrhs_zero' );
 	var A = new Complex128Array( 9 );
 	var B = new Complex128Array( 3 );
-	var info = zposv( 'L', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = zposv( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });

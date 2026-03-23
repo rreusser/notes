@@ -46,9 +46,9 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 		return B;
 	}
 
-	lside = ( side === 'L' || side === 'l' );
-	upper = ( uplo === 'U' || uplo === 'u' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	lside = ( side === 'left' );
+	upper = ( uplo === 'upper' );
+	nounit = ( diag === 'non-unit' );
 
 	sa1 = strideA1;
 	sa2 = strideA2;
@@ -68,7 +68,7 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	}
 
 	if ( lside ) {
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			// B := alpha*A*B
 			if ( upper ) {
 				for ( j = 0; j < N; j++ ) {
@@ -144,7 +144,7 @@ function dtrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 		}
 	} else {
 		// Right side: B := alpha*B*op(A)
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			if ( upper ) {
 				for ( j = N - 1; j >= 0; j-- ) {
 					temp = alpha;

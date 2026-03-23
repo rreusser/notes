@@ -100,7 +100,7 @@ test( 'zungtr: 4x4 UPLO=L', function t() {
 		0.0, 0.0, 0.0, 0.0, 4.0, 0.0, 0.5, 0.5,
 		0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0
 	]);
-	var result = runZungtr( 'L', 4, Adata );
+	var result = runZungtr( 'lower', 4, Adata );
 
 	assert.equal( result.info, 0, 'info=0' );
 	verifyUnitary( result.Q, 4, 1e-12, 'Q unitarity' );
@@ -115,7 +115,7 @@ test( 'zungtr: 4x4 UPLO=U', function t() {
 		0.5, 0.5, 0.0, -2.0, 4.0, 0.0, 0.0, 0.0,
 		0.0, 0.0, 1.0, 1.0, 0.5, -0.5, 5.0, 0.0
 	]);
-	var result = runZungtr( 'U', 4, Adata );
+	var result = runZungtr( 'upper', 4, Adata );
 
 	assert.equal( result.info, 0, 'info=0' );
 	verifyUnitary( result.Q, 4, 1e-12, 'Q unitarity' );
@@ -131,7 +131,7 @@ test( 'zungtr: 3x3 UPLO=L', function t() {
 		0.0, 0.0, 5.0, 0.0, 2.0, 0.0,
 		0.0, 0.0, 0.0, 0.0, 6.0, 0.0
 	]);
-	var result = runZungtr( 'L', 3, Adata );
+	var result = runZungtr( 'lower', 3, Adata );
 
 	assert.equal( result.info, 0, 'info=0' );
 	verifyUnitary( result.Q, 3, 1e-12, 'Q unitarity' );
@@ -160,8 +160,8 @@ test( 'zungtr: N=1', function t() {
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 1 );
 
-	zhetrd( 'L', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
-	var info = zungtr( 'L', 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	zhetrd( 'lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	var info = zungtr( 'lower', 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
 
 	assert.equal( info, 0, 'info=0' );
 	// Q should be identity for N=1
@@ -175,6 +175,6 @@ test( 'zungtr: N=0', function t() {
 	var TAU = new Complex128Array( 0 );
 	var WORK = new Complex128Array( 1 );
 
-	var info = zungtr( 'L', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	var info = zungtr( 'lower', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
 	assert.equal( info, 0, 'info=0' );
 });

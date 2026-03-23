@@ -34,8 +34,8 @@ function dtrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 		return 0;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	upper = ( uplo === 'upper' );
+	nounit = ( diag === 'non-unit' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
@@ -50,7 +50,7 @@ function dtrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			}
 
 			// Compute elements 0:j-1 of j-th column
-			dtrmv( 'U', 'N', diag, j, A, sa1, sa2, offsetA, A, sa1, offsetA + j * sa2 );
+			dtrmv( 'upper', 'no-transpose', diag, j, A, sa1, sa2, offsetA, A, sa1, offsetA + j * sa2 );
 			dscal( j, ajj, A, sa1, offsetA + j * sa2 );
 		}
 	} else {
@@ -64,7 +64,7 @@ function dtrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			}
 			if ( j < N - 1 ) {
 				// Compute elements j+1:N-1 of j-th column
-				dtrmv( 'L', 'N', diag, N - j - 1,
+				dtrmv( 'lower', 'no-transpose', diag, N - j - 1,
 					A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + ( j + 1 ) * sa2,
 					A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
 				dscal( N - j - 1, ajj, A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );

@@ -41,8 +41,8 @@ var LDWORK = NBMAX + 1;
 * band matrix A.
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'U', or
-*   A = L * L^T,  if uplo = 'L',
+*   A = U^T * U,  if uplo = 'upper', or
+*   A = L * L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.
@@ -94,7 +94,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 	// Allocate workspace: WORK(LDWORK, NBMAX) stored column-major
 	WORK = new Float64Array( LDWORK * NBMAX );
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Factorize A = U^T * U
 
 		// Zero out the upper triangle above the band
@@ -110,10 +110,10 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 			ib = Math.min( nb, N - i );
 
 			// Factorize the diagonal block
-			// dpotf2('U', IB, AB(KD+1, I+1), LDAB-1, II)
+			// dpotf2('upper', IB, AB(KD+1, I+1), LDAB-1, II)
 			// The stride between columns in band storage when treating the
 			// diagonal block as a dense matrix is LDAB-1 = sa2 - sa1 (col-major).
-			iinfo = dpotf2( 'U', ib, AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + i * sa2 );
+			iinfo = dpotf2( 'upper', ib, AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + i * sa2 );
 			if ( iinfo !== 0 ) {
 				return i + iinfo;
 			}
@@ -128,7 +128,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 					// Update A12:
 					// DTRSM('Left','Upper','Transpose','Non-unit', IB, I2, ONE,
 					//        AB(KD+1,I), LDAB-1, AB(KD+1-IB,I+IB), LDAB-1)
-					dtrsm( 'L', 'U', 'T', 'N', ib, i2, 1.0,
+					dtrsm( 'left', 'upper', 'transpose', 'non-unit', ib, i2, 1.0,
 						AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + i * sa2,
 						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2
 					);
@@ -136,7 +136,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 					// Update A22:
 					// DSYRK('Upper','Transpose', I2, IB, -ONE,
 					//        AB(KD+1-IB,I+IB), LDAB-1, ONE, AB(KD+1,I+IB), LDAB-1)
-					dsyrk( 'U', 'T', i2, ib, -1.0,
+					dsyrk( 'upper', 'transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
 						1.0,
 						AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + ( i + ib ) * sa2
@@ -155,7 +155,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 
 					// DTRSM('Left','Upper','Transpose','Non-unit', IB, I3, ONE,
 					//        AB(KD+1,I), LDAB-1, WORK, LDWORK)
-					dtrsm( 'L', 'U', 'T', 'N', ib, i3, 1.0,
+					dtrsm( 'left', 'upper', 'transpose', 'non-unit', ib, i3, 1.0,
 						AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + i * sa2,
 						WORK, 1, LDWORK, 0
 					);
@@ -164,7 +164,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 						// DGEMM('Transpose','No Transpose', I2, I3, IB, -ONE,
 						//        AB(KD+1-IB,I+IB), LDAB-1, WORK, LDWORK, ONE,
 						//        AB(1+IB,I+KD), LDAB-1)
-						dgemm( 'T', 'N', i2, i3, ib, -1.0,
+						dgemm( 'transpose', 'no-transpose', i2, i3, ib, -1.0,
 							AB, sa1, sa2 - sa1, offsetAB + ( kd - ib ) * sa1 + ( i + ib ) * sa2,
 							WORK, 1, LDWORK, 0,
 							1.0,
@@ -174,7 +174,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 
 					// DSYRK('Upper','Transpose', I3, IB, -ONE,
 					//        WORK, LDWORK, ONE, AB(KD+1,I+KD), LDAB-1)
-					dsyrk( 'U', 'T', i3, ib, -1.0,
+					dsyrk( 'upper', 'transpose', i3, ib, -1.0,
 						WORK, 1, LDWORK, 0,
 						1.0,
 						AB, sa1, sa2 - sa1, offsetAB + kd * sa1 + ( i + kd ) * sa2
@@ -204,8 +204,8 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 			ib = Math.min( nb, N - i );
 
 			// Factorize the diagonal block
-			// dpotf2('L', IB, AB(1, I+1), LDAB-1, II)
-			iinfo = dpotf2( 'L', ib, AB, sa1, sa2 - sa1, offsetAB + i * sa2 );
+			// dpotf2('lower', IB, AB(1, I+1), LDAB-1, II)
+			iinfo = dpotf2( 'lower', ib, AB, sa1, sa2 - sa1, offsetAB + i * sa2 );
 			if ( iinfo !== 0 ) {
 				return i + iinfo;
 			}
@@ -217,14 +217,14 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 				if ( i2 > 0 ) {
 					// DTRSM('Right','Lower','Transpose','Non-unit', I2, IB, ONE,
 					//        AB(1,I), LDAB-1, AB(1+IB,I), LDAB-1)
-					dtrsm( 'R', 'L', 'T', 'N', i2, ib, 1.0,
+					dtrsm( 'right', 'lower', 'transpose', 'non-unit', i2, ib, 1.0,
 						AB, sa1, sa2 - sa1, offsetAB + i * sa2,
 						AB, sa1, sa2 - sa1, offsetAB + ib * sa1 + i * sa2
 					);
 
 					// DSYRK('Lower','No Transpose', I2, IB, -ONE,
 					//        AB(1+IB,I), LDAB-1, ONE, AB(1,I+IB), LDAB-1)
-					dsyrk( 'L', 'N', i2, ib, -1.0,
+					dsyrk( 'lower', 'no-transpose', i2, ib, -1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ib * sa1 + i * sa2,
 						1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( i + ib ) * sa2
@@ -245,7 +245,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 
 					// DTRSM('Right','Lower','Transpose','Non-unit', I3, IB, ONE,
 					//        AB(1,I), LDAB-1, WORK, LDWORK)
-					dtrsm( 'R', 'L', 'T', 'N', i3, ib, 1.0,
+					dtrsm( 'right', 'lower', 'transpose', 'non-unit', i3, ib, 1.0,
 						AB, sa1, sa2 - sa1, offsetAB + i * sa2,
 						WORK, 1, LDWORK, 0
 					);
@@ -254,7 +254,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 						// DGEMM('No transpose','Transpose', I3, I2, IB, -ONE,
 						//        WORK, LDWORK, AB(1+IB,I), LDAB-1, ONE,
 						//        AB(1+KD-IB,I+IB), LDAB-1)
-						dgemm( 'N', 'T', i3, i2, ib, -1.0,
+						dgemm( 'no-transpose', 'transpose', i3, i2, ib, -1.0,
 							WORK, 1, LDWORK, 0,
 							AB, sa1, sa2 - sa1, offsetAB + ib * sa1 + i * sa2,
 							1.0,
@@ -264,7 +264,7 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 
 					// DSYRK('Lower','No Transpose', I3, IB, -ONE,
 					//        WORK, LDWORK, ONE, AB(1,I+KD), LDAB-1)
-					dsyrk( 'L', 'N', i3, ib, -1.0,
+					dsyrk( 'lower', 'no-transpose', i3, ib, -1.0,
 						WORK, 1, LDWORK, 0,
 						1.0,
 						AB, sa1, sa2 - sa1, offsetAB + ( i + kd ) * sa2

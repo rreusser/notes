@@ -100,7 +100,7 @@ function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// v is row i from column i onward, so stride for v = strideA2 (along columns)
 				// C is rows i+1..M-1, columns i..N-1
 				dlarf(
-					'R', M - i - 1, N - i,
+					'right', M - i - 1, N - i,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					TAU[ it ],
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,

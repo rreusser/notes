@@ -1,0 +1,66 @@
+
+    dlatrs.ndarray( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
+        Solve a triangular system with scaling to prevent overflow
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        normin: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        scale: number
+            scale.
+
+        CNORM: Float64Array
+            output array.
+
+        strideCNORM: integer
+            stride length for `CNORM`.
+
+        offsetCNORM: NonNegativeInteger
+            starting index for `CNORM`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

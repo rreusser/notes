@@ -48,7 +48,7 @@ function symmMul( uplo, N, A, B ) {
 		for ( j = 0; j < N; j++ ) {
 			for ( k = 0; k < N; k++ ) {
 				// Read A(i,k) from the stored triangle
-				if ( uplo === 'U' ) {
+				if ( uplo === 'upper' ) {
 					aij = ( i <= k ) ? A[ i + k * N ] : A[ k + i * N ];
 				} else {
 					aij = ( i >= k ) ? A[ i + k * N ] : A[ k + i * N ];
@@ -94,7 +94,7 @@ test( 'dpotri: UPLO=U, 3x3 SPD matrix', function t() {
 	var info;
 	var C;
 
-	info = dpotri( 'U', 3, A, 1, 3, 0 );
+	info = dpotri( 'upper', 3, A, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info should be 0' );
 
@@ -113,7 +113,7 @@ test( 'dpotri: UPLO=U, 3x3 SPD matrix', function t() {
 		2, 5, 3,
 		1, 3, 6
 	]);
-	C = symmMul( 'U', 3, A, origA );
+	C = symmMul( 'upper', 3, A, origA );
 	assertIdentity( C, 3, 1e-13, 'upper_3x3' );
 });
 
@@ -125,7 +125,7 @@ test( 'dpotri: UPLO=L, 3x3 SPD matrix', function t() {
 	var info;
 	var C;
 
-	info = dpotri( 'L', 3, A, 1, 3, 0 );
+	info = dpotri( 'lower', 3, A, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info should be 0' );
 
@@ -143,7 +143,7 @@ test( 'dpotri: UPLO=L, 3x3 SPD matrix', function t() {
 		2, 5, 3,
 		1, 3, 6
 	]);
-	C = symmMul( 'L', 3, A, origA );
+	C = symmMul( 'lower', 3, A, origA );
 	assertIdentity( C, 3, 1e-13, 'lower_3x3' );
 });
 
@@ -153,7 +153,7 @@ test( 'dpotri: N=1 edge case', function t() {
 	var A = new Float64Array( [ 3.0 ] );
 	var info;
 
-	info = dpotri( 'U', 1, A, 1, 1, 0 );
+	info = dpotri( 'upper', 1, A, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info should be 0' );
 	assertClose( A[0], tc.a[0], 1e-14, 'a[0]' );
@@ -164,7 +164,7 @@ test( 'dpotri: N=0 quick return', function t() {
 	var A = new Float64Array( [ 999.0 ] );
 	var info;
 
-	info = dpotri( 'U', 0, A, 1, 1, 0 );
+	info = dpotri( 'upper', 0, A, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info should be 0' );
 	assert.equal( A[0], 999.0, 'A should be untouched' );
@@ -187,10 +187,10 @@ test( 'dpotri: UPLO=U, 4x4 SPD matrix', function t() {
 	]);
 	origA = new Float64Array( A );
 
-	info = dpotrf( 'U', 4, A, 1, 4, 0 );
+	info = dpotrf( 'upper', 4, A, 1, 4, 0 );
 	assert.equal( info, 0, 'dpotrf should succeed' );
 
-	info = dpotri( 'U', 4, A, 1, 4, 0 );
+	info = dpotri( 'upper', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info, 'dpotri info should be 0' );
 
 	// Compare upper triangle against fixture
@@ -206,7 +206,7 @@ test( 'dpotri: UPLO=U, 4x4 SPD matrix', function t() {
 	assertClose( A[15], tc.a[15], 1e-14, 'a[3,3]' );
 
 	// Verify mathematical property
-	C = symmMul( 'U', 4, A, origA );
+	C = symmMul( 'upper', 4, A, origA );
 	assertIdentity( C, 4, 1e-12, 'upper_4x4' );
 });
 
@@ -226,10 +226,10 @@ test( 'dpotri: UPLO=L, 4x4 SPD matrix', function t() {
 	]);
 	origA = new Float64Array( A );
 
-	info = dpotrf( 'L', 4, A, 1, 4, 0 );
+	info = dpotrf( 'lower', 4, A, 1, 4, 0 );
 	assert.equal( info, 0, 'dpotrf should succeed' );
 
-	info = dpotri( 'L', 4, A, 1, 4, 0 );
+	info = dpotri( 'lower', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info, 'dpotri info should be 0' );
 
 	// Compare lower triangle against fixture
@@ -245,7 +245,7 @@ test( 'dpotri: UPLO=L, 4x4 SPD matrix', function t() {
 	assertClose( A[15], tc.a[15], 1e-14, 'a[3,3]' );
 
 	// Verify mathematical property
-	C = symmMul( 'L', 4, A, origA );
+	C = symmMul( 'lower', 4, A, origA );
 	assertIdentity( C, 4, 1e-12, 'lower_4x4' );
 });
 
@@ -258,7 +258,7 @@ test( 'dpotri: singular matrix returns info > 0', function t() {
 	]);
 	var info;
 
-	info = dpotri( 'U', 3, A, 1, 3, 0 );
+	info = dpotri( 'upper', 3, A, 1, 3, 0 );
 
 	// dtrtri should detect the zero diagonal and return info=2
 	assert.ok( info > 0, 'info should be > 0 for singular matrix' );
@@ -288,10 +288,10 @@ test( 'dpotri: non-zero offset', function t() {
 		1, 3, 6
 	]);
 
-	info = dpotrf( 'U', 3, A, 1, 3, offset );
+	info = dpotrf( 'upper', 3, A, 1, 3, offset );
 	assert.equal( info, 0, 'dpotrf should succeed' );
 
-	info = dpotri( 'U', 3, A, 1, 3, offset );
+	info = dpotri( 'upper', 3, A, 1, 3, offset );
 	assert.equal( info, 0, 'dpotri should succeed' );
 
 	// Verify A_inv * A ≈ I using upper triangle
@@ -299,6 +299,6 @@ test( 'dpotri: non-zero offset', function t() {
 	for ( i = 0; i < 9; i++ ) {
 		invA[ i ] = A[ offset + i ];
 	}
-	C = symmMul( 'U', 3, invA, origA );
+	C = symmMul( 'upper', 3, invA, origA );
 	assertIdentity( C, 3, 1e-13, 'offset' );
 });

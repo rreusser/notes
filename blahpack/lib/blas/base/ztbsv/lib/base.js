@@ -77,8 +77,8 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 		return x;
 	}
 
-	nounit = ( diag === 'N' || diag === 'n' );
-	noconj = ( trans === 'T' || trans === 't' );
+	nounit = ( diag === 'non-unit' );
+	noconj = ( trans === 'transpose' );
 
 	// Get Float64Array views
 	Av = reinterpret( A, 0 ); oA = offsetA * 2;
@@ -91,9 +91,9 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 
 	kx = oX;
 
-	if ( trans === 'N' || trans === 'n' ) {
+	if ( trans === 'no-transpose' ) {
 		// Solve A*x = b (no transpose)
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangular: back-substitution from bottom
 			kplus1 = K;
 			jx = kx + ( N - 1 ) * sx;
@@ -150,7 +150,7 @@ function ztbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 		}
 	} else {
 		// Solve A**T*x = b or A**H*x = b
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangular, transpose/conj-transpose: forward-substitution
 			kplus1 = K;
 			jx = kx;

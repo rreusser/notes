@@ -46,8 +46,8 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	var j;
 	var l;
 
-	nota = ( transa === 'N' || transa === 'n' );
-	notb = ( transb === 'N' || transb === 'n' );
+	nota = ( transa === 'no-transpose' );
+	notb = ( transb === 'no-transpose' );
 
 	if ( M === 0 || N === 0 || ( ( alpha === 0.0 || K === 0 ) && beta === 1.0 ) ) {
 		return C;

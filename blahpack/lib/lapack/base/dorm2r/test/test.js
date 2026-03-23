@@ -82,7 +82,7 @@ test( 'dorm2r: left_notrans (Q*I = Q)', function t() {
 		0, 0, 0, 1
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'L', 'N', 4, 4, 3,
+	var info = dorm2r( 'left', 'no-transpose', 4, 4, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -102,7 +102,7 @@ test( 'dorm2r: left_trans (Q^T*I = Q^T)', function t() {
 		0, 0, 0, 1
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'L', 'T', 4, 4, 3,
+	var info = dorm2r( 'left', 'transpose', 4, 4, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -122,7 +122,7 @@ test( 'dorm2r: right_notrans (I*Q = Q)', function t() {
 		0, 0, 0, 1
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'R', 'N', 4, 4, 3,
+	var info = dorm2r( 'right', 'no-transpose', 4, 4, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -142,7 +142,7 @@ test( 'dorm2r: right_trans (I*Q^T = Q^T)', function t() {
 		0, 0, 0, 1
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'R', 'T', 4, 4, 3,
+	var info = dorm2r( 'right', 'transpose', 4, 4, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -157,7 +157,7 @@ test( 'dorm2r: m_zero (quick return)', function t() {
 	var qr = getQRFactors();
 	var C = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dorm2r( 'L', 'N', 0, 4, 0,
+	var info = dorm2r( 'left', 'no-transpose', 0, 4, 0,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 1, 0,
@@ -171,7 +171,7 @@ test( 'dorm2r: n_zero (quick return)', function t() {
 	var qr = getQRFactors();
 	var C = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dorm2r( 'L', 'N', 4, 0, 0,
+	var info = dorm2r( 'left', 'no-transpose', 4, 0, 0,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -190,7 +190,7 @@ test( 'dorm2r: k_zero (quick return)', function t() {
 		0, 0, 0, 1
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'L', 'N', 4, 4, 0,
+	var info = dorm2r( 'left', 'no-transpose', 4, 4, 0,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -216,7 +216,7 @@ test( 'dorm2r: left_notrans_rect (Q * non-identity 4x2)', function t() {
 		2.0, 0.0, 4.0, -1.0
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'L', 'N', 4, 2, 3,
+	var info = dorm2r( 'left', 'no-transpose', 4, 2, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -234,7 +234,7 @@ test( 'dorm2r: left_trans_rect (Q^T * non-identity 4x2)', function t() {
 		2.0, 0.0, 4.0, -1.0
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'L', 'T', 4, 2, 3,
+	var info = dorm2r( 'left', 'transpose', 4, 2, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -255,7 +255,7 @@ test( 'dorm2r: right_notrans_rect (2x4 * Q)', function t() {
 		4.0, -2.0
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'R', 'N', 2, 4, 3,
+	var info = dorm2r( 'right', 'no-transpose', 2, 4, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 2, 0,
@@ -275,7 +275,7 @@ test( 'dorm2r: right_trans_rect (2x4 * Q^T)', function t() {
 		4.0, -2.0
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'R', 'T', 2, 4, 3,
+	var info = dorm2r( 'right', 'transpose', 2, 4, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 2, 0,
@@ -295,7 +295,7 @@ test( 'dorm2r: k_one (single reflector, left, notrans)', function t() {
 		0, 0, 0, 1
 	]);
 	var WORK = new Float64Array( 100 );
-	var info = dorm2r( 'L', 'N', 4, 4, 1,
+	var info = dorm2r( 'left', 'no-transpose', 4, 4, 1,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		C, 1, 4, 0,
@@ -317,7 +317,7 @@ test( 'dorm2r: Q * Q^T = I (orthogonality check)', function t() {
 		0, 0, 1, 0,
 		0, 0, 0, 1
 	]);
-	dorm2r( 'L', 'N', 4, 4, 3,
+	dorm2r( 'left', 'no-transpose', 4, 4, 3,
 		qr.A, 1, 4, 0,
 		qr.TAU, 1, 0,
 		Q, 1, 4, 0,
@@ -326,7 +326,7 @@ test( 'dorm2r: Q * Q^T = I (orthogonality check)', function t() {
 
 	// Now apply Q^T from the left to Q: result should be I
 	var qr2 = getQRFactors();
-	dorm2r( 'L', 'T', 4, 4, 3,
+	dorm2r( 'left', 'transpose', 4, 4, 3,
 		qr2.A, 1, 4, 0,
 		qr2.TAU, 1, 0,
 		Q, 1, 4, 0,

@@ -23,7 +23,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
 * @param {string} trans - 'N' for no transpose, 'C' for conjugate transpose
 * @param {NonNegativeInteger} N - order of matrix C
-* @param {NonNegativeInteger} K - number of columns of A,B (if trans='N') or rows (if trans='C')
+* @param {NonNegativeInteger} K - number of columns of A,B (if trans = 'no-transpose') or rows (if trans = 'conjugate-transpose')
 * @param {Complex128} alpha - complex scalar multiplier
 * @param {Complex128Array} A - complex input matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
@@ -77,8 +77,8 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 	var j;
 	var l;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	nota = ( trans === 'N' || trans === 'n' );
+	upper = ( uplo === 'upper' );
+	nota = ( trans === 'no-transpose' );
 
 	alphaR = real( alpha );
 	alphaI = imag( alpha );

@@ -66,7 +66,7 @@ test( 'dlasyf: 6x6_lower_nb3', function t() {
 	A[ 35 ] = 2;
 	var ipiv = new Int32Array( 6 );
 	var W = new Float64Array( 36 );
-	var result = dlasyf( 'L', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
+	var result = dlasyf( 'lower', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.kb, tc.kb, 'kb' );
@@ -84,7 +84,7 @@ test( 'dlasyf: 6x6_upper_nb3', function t() {
 	A[ 32 ] = 1; A[ 34 ] = -1; A[ 35 ] = 2;
 	var ipiv = new Int32Array( 6 );
 	var W = new Float64Array( 36 );
-	var result = dlasyf( 'U', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
+	var result = dlasyf( 'upper', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.kb, tc.kb, 'kb' );
@@ -102,7 +102,7 @@ test( 'dlasyf: 6x6_indef_lower_nb3', function t() {
 	A[ 35 ] = 0;
 	var ipiv = new Int32Array( 6 );
 	var W = new Float64Array( 36 );
-	var result = dlasyf( 'L', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
+	var result = dlasyf( 'lower', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.kb, tc.kb, 'kb' );
@@ -120,7 +120,7 @@ test( 'dlasyf: 6x6_indef_upper_nb3', function t() {
 	A[ 30 ] = 1; A[ 31 ] = 0; A[ 32 ] = 3; A[ 33 ] = 2; A[ 34 ] = 1; A[ 35 ] = 0;
 	var ipiv = new Int32Array( 6 );
 	var W = new Float64Array( 36 );
-	var result = dlasyf( 'U', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
+	var result = dlasyf( 'upper', 6, 3, A, 1, 6, 0, ipiv, 1, 0, W, 1, 6, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.kb, tc.kb, 'kb' );

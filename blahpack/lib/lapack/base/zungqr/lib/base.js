@@ -146,7 +146,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// Form the triangular factor of the block reflector
 				// ZLARFT('Forward', 'Columnwise', M-I+1, IB, A(I,I), LDA, TAU(I), WORK, LDWORK)
 				zlarft(
-					'F', 'C', M - i, ib,
+					'forward', 'columnwise', M - i, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					TAU, strideTAU, offsetTAU + i * strideTAU,
 					WORK, 1, ldwork, offsetWORK
@@ -157,7 +157,7 @@ function zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				//         M-I+1, N-I-IB+1, IB, A(I,I), LDA, WORK, LDWORK,
 				//         A(I,I+IB), LDA, WORK(IB+1), LDWORK)
 				zlarfb(
-					'L', 'N', 'F', 'C',
+					'left', 'no-transpose', 'forward', 'columnwise',
 					M - i, N - i - ib, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					WORK, 1, ldwork, offsetWORK,

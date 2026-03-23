@@ -1,6 +1,10 @@
 dladiv
 dlamch
 dlapy3
+disnan
+dlaisnan
+ilaenv
+iparmq
 ilazlc
 ilazlr
 zgehd2
@@ -12,3 +16,5 @@ zlahr2
 zlarf
 zlarfb
 zlarfg
+zlarft
+ieeeck

@@ -113,7 +113,7 @@ test( 'dorgtr: uplo_U_4x4', function t() {
 		2, 1, -2, -1
 	]);
 
-	var result = dsytrdThenDorgtr( 'U', N, A );
+	var result = dsytrdThenDorgtr( 'upper', N, A );
 
 	assert.equal( result.info, 0, 'info' );
 	assertArrayClose( toArray( result.Q, 0, N * N ), tc.Q, 1e-13, 'Q' );
@@ -129,7 +129,7 @@ test( 'dorgtr: uplo_L_4x4', function t() {
 		2, 1, -2, -1
 	]);
 
-	var result = dsytrdThenDorgtr( 'L', N, A );
+	var result = dsytrdThenDorgtr( 'lower', N, A );
 
 	assert.equal( result.info, 0, 'info' );
 	assertArrayClose( toArray( result.Q, 0, N * N ), tc.Q, 1e-13, 'Q' );
@@ -140,7 +140,7 @@ test( 'dorgtr: N1_uplo_U', function t() {
 	var N = 1;
 	var A = new Float64Array([ 5.0 ]);
 
-	var result = dsytrdThenDorgtr( 'U', N, A );
+	var result = dsytrdThenDorgtr( 'upper', N, A );
 
 	assert.equal( result.info, 0, 'info' );
 	assertArrayClose( toArray( result.Q, 0, 1 ), tc.Q, 1e-14, 'Q' );
@@ -151,7 +151,7 @@ test( 'dorgtr: N1_uplo_L', function t() {
 	var N = 1;
 	var A = new Float64Array([ 5.0 ]);
 
-	var result = dsytrdThenDorgtr( 'L', N, A );
+	var result = dsytrdThenDorgtr( 'lower', N, A );
 
 	assert.equal( result.info, 0, 'info' );
 	assertArrayClose( toArray( result.Q, 0, 1 ), tc.Q, 1e-14, 'Q' );
@@ -163,7 +163,7 @@ test( 'dorgtr: N0_uplo_U', function t() {
 	var A = new Float64Array( 1 );
 	var info;
 
-	info = dorgtr( 'U', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr( 'upper', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -173,7 +173,7 @@ test( 'dorgtr: N0_uplo_L', function t() {
 	var A = new Float64Array( 1 );
 	var info;
 
-	info = dorgtr( 'L', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr( 'lower', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -189,7 +189,7 @@ test( 'dorgtr: uplo_U_3x3', function t() {
 		3, -1, 4
 	]);
 
-	var result = dsytrdThenDorgtr( 'U', N, A );
+	var result = dsytrdThenDorgtr( 'upper', N, A );
 
 	assert.equal( result.info, 0, 'info' );
 	assertArrayClose( toArray( result.Q, 0, N * N ), tc.Q, 1e-13, 'Q' );
@@ -204,7 +204,7 @@ test( 'dorgtr: uplo_L_3x3', function t() {
 		3, -1, 4
 	]);
 
-	var result = dsytrdThenDorgtr( 'L', N, A );
+	var result = dsytrdThenDorgtr( 'lower', N, A );
 
 	assert.equal( result.info, 0, 'info' );
 	assertArrayClose( toArray( result.Q, 0, N * N ), tc.Q, 1e-13, 'Q' );
@@ -219,7 +219,7 @@ test( 'dorgtr: Q is orthogonal (uplo_U_4x4)', function t() {
 		2, 1, -2, -1
 	]);
 
-	var result = dsytrdThenDorgtr( 'U', N, A );
+	var result = dsytrdThenDorgtr( 'upper', N, A );
 	var Q = result.Q;
 	var i;
 	var j;
@@ -251,7 +251,7 @@ test( 'dorgtr: Q is orthogonal (uplo_L_4x4)', function t() {
 		2, 1, -2, -1
 	]);
 
-	var result = dsytrdThenDorgtr( 'L', N, A );
+	var result = dsytrdThenDorgtr( 'lower', N, A );
 	var Q = result.Q;
 	var i;
 	var j;
@@ -283,7 +283,7 @@ test( 'dorgtr: Q^T*A*Q is tridiagonal (uplo_U_4x4)', function t() {
 		2, 1, -2, -1
 	]);
 
-	var result = dsytrdThenDorgtr( 'U', N, Aorig );
+	var result = dsytrdThenDorgtr( 'upper', N, Aorig );
 	var Q = result.Q;
 	var i;
 	var j;
@@ -346,7 +346,7 @@ test( 'dorgtr: Q^T*A*Q is tridiagonal (uplo_L_4x4)', function t() {
 		2, 1, -2, -1
 	]);
 
-	var result = dsytrdThenDorgtr( 'L', N, Aorig );
+	var result = dsytrdThenDorgtr( 'lower', N, Aorig );
 	var Q = result.Q;
 	var i;
 	var j;
@@ -409,10 +409,10 @@ test( 'dorgtr: N=2 edge case (uplo_U)', function t() {
 	var j;
 	var k;
 
-	dsytrd( 'U', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	dsytrd( 'upper', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
 	Q = new Float64Array( A );
 	WORK = new Float64Array( 256 );
-	info = dorgtr( 'U', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr( 'upper', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0, 256 );
 
 	assert.equal( info, 0, 'info' );
 
@@ -449,10 +449,10 @@ test( 'dorgtr: N=2 edge case (uplo_L)', function t() {
 	var j;
 	var k;
 
-	dsytrd( 'L', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	dsytrd( 'lower', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
 	Q = new Float64Array( A );
 	WORK = new Float64Array( 256 );
-	info = dorgtr( 'L', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr( 'lower', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0, 256 );
 
 	assert.equal( info, 0, 'info' );
 

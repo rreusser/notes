@@ -37,17 +37,17 @@ function zpotrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, str
 		return 0;
 	}
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Solve A*X = B where A = U^H*U.
 
 		// Solve U^H * Y = B (forward substitution with conjugate transpose)
-		ztrsm( 'L', 'U', 'C', 'N', N, nrhs, CONE,
+		ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', N, nrhs, CONE,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB
 		);
 
 		// Solve U * X = Y (back substitution)
-		ztrsm( 'L', 'U', 'N', 'N', N, nrhs, CONE,
+		ztrsm( 'left', 'upper', 'no-transpose', 'non-unit', N, nrhs, CONE,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB
 		);
@@ -55,13 +55,13 @@ function zpotrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, str
 		// Solve A*X = B where A = L*L^H.
 
 		// Solve L * Y = B (forward substitution)
-		ztrsm( 'L', 'L', 'N', 'N', N, nrhs, CONE,
+		ztrsm( 'left', 'lower', 'no-transpose', 'non-unit', N, nrhs, CONE,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB
 		);
 
 		// Solve L^H * X = Y (back substitution with conjugate transpose)
-		ztrsm( 'L', 'L', 'C', 'N', N, nrhs, CONE,
+		ztrsm( 'left', 'lower', 'conjugate-transpose', 'non-unit', N, nrhs, CONE,
 			A, strideA1, strideA2, offsetA,
 			B, strideB1, strideB2, offsetB
 		);

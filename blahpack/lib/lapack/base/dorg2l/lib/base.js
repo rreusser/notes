@@ -97,7 +97,7 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		//   C starts at A(1,1) = A(row=0, col=0) in 0-based
 		if ( ii > 0 ) {
 			dlarf(
-				'L', M - N + ii + 1, ii,
+				'left', M - N + ii + 1, ii,
 				A, strideA1, offsetA + ii * strideA2,
 				TAU[ offsetTAU + i * strideTAU ],
 				A, strideA1, strideA2, offsetA,

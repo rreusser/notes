@@ -67,7 +67,7 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 	/* @complex-arrays A, TAU, WORK */
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 
 	// Quick return if possible
 	if ( N === 0 ) {

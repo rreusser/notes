@@ -46,28 +46,28 @@ var AL = new Float64Array( [ 2, 3, 4, 0, 5, 6, 0, 0, 7 ] );
 test( 'dtrmv: upper, no-transpose, non-unit diag', function t() {
 	var tc = findCase( 'upper_n_nonunit' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
-	dtrmv( 'U', 'N', 'N', 3, AU, 1, 3, 0, x, 1, 0 );
+	dtrmv( 'upper', 'no-transpose', 'non-unit', 3, AU, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrmv: lower, no-transpose, non-unit diag', function t() {
 	var tc = findCase( 'lower_n_nonunit' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
-	dtrmv( 'L', 'N', 'N', 3, AL, 1, 3, 0, x, 1, 0 );
+	dtrmv( 'lower', 'no-transpose', 'non-unit', 3, AL, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrmv: upper, transpose, non-unit diag', function t() {
 	var tc = findCase( 'upper_t_nonunit' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
-	dtrmv( 'U', 'T', 'N', 3, AU, 1, 3, 0, x, 1, 0 );
+	dtrmv( 'upper', 'transpose', 'non-unit', 3, AU, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrmv: lower, transpose, non-unit diag', function t() {
 	var tc = findCase( 'lower_t_nonunit' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
-	dtrmv( 'L', 'T', 'N', 3, AL, 1, 3, 0, x, 1, 0 );
+	dtrmv( 'lower', 'transpose', 'non-unit', 3, AL, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -76,7 +76,7 @@ test( 'dtrmv: upper, no-transpose, unit diag', function t() {
 	// Diagonal values set to 99 (should be ignored with unit diag)
 	var Aunit = new Float64Array( [ 99, 0, 0, 3, 99, 0, 4, 6, 99 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
-	dtrmv( 'U', 'N', 'U', 3, Aunit, 1, 3, 0, x, 1, 0 );
+	dtrmv( 'upper', 'no-transpose', 'unit', 3, Aunit, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -84,27 +84,27 @@ test( 'dtrmv: lower, transpose, unit diag', function t() {
 	var tc = findCase( 'lower_t_unit' );
 	var Aunit = new Float64Array( [ 99, 3, 4, 0, 99, 6, 0, 0, 99 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
-	dtrmv( 'L', 'T', 'U', 3, Aunit, 1, 3, 0, x, 1, 0 );
+	dtrmv( 'lower', 'transpose', 'unit', 3, Aunit, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrmv: N=0 quick return', function t() {
 	var x = new Float64Array( [ 99 ] );
-	dtrmv( 'U', 'N', 'N', 0, new Float64Array( 0 ), 1, 1, 0, x, 1, 0 );
+	dtrmv( 'upper', 'no-transpose', 'non-unit', 0, new Float64Array( 0 ), 1, 1, 0, x, 1, 0 );
 	assertArrayClose( x, new Float64Array( [ 99 ] ), 1e-14, 'x' );
 });
 
 test( 'dtrmv: N=1', function t() {
 	var tc = findCase( 'n_one' );
 	var x = new Float64Array( [ 3 ] );
-	dtrmv( 'U', 'N', 'N', 1, new Float64Array( [ 5 ] ), 1, 1, 0, x, 1, 0 );
+	dtrmv( 'upper', 'no-transpose', 'non-unit', 1, new Float64Array( [ 5 ] ), 1, 1, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrmv: non-unit stride incx=2', function t() {
 	var tc = findCase( 'stride' );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3, 0 ] );
-	dtrmv( 'U', 'N', 'N', 3, AU, 1, 3, 0, x, 2, 0 );
+	dtrmv( 'upper', 'no-transpose', 'non-unit', 3, AU, 1, 3, 0, x, 2, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
@@ -112,6 +112,6 @@ test( 'dtrmv: negative stride incx=-1', function t() {
 	var tc = findCase( 'neg_stride' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	// With negative stride, start from last element
-	dtrmv( 'L', 'N', 'N', 3, AL, 1, 3, 0, x, -1, 2 );
+	dtrmv( 'lower', 'no-transpose', 'non-unit', 3, AL, 1, 3, 0, x, -1, 2 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });

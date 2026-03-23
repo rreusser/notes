@@ -80,8 +80,8 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		return 0;
 	}
 
-	left = ( side === 'L' || side === 'l' );
-	notran = ( trans === 'N' || trans === 'n' );
+	left = ( side === 'left' );
+	notran = ( trans === 'no-transpose' );
 
 	// Get Float64Array views for direct element access
 	Av = reinterpret( A, 0 );
@@ -119,7 +119,7 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 			jc = i;
 		}
 
-		// Get tau_i, conjugating if trans='C'
+		// Get tau_i, conjugating if trans = 'conjugate-transpose'
 		if ( notran ) {
 			tauiv[ 0 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 ];
 			tauiv[ 1 ] = TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];

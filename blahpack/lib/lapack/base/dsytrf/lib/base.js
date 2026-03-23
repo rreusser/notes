@@ -67,7 +67,7 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 		nb = N; // Use unblocked code for everything
 	}
 
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		// Factorize A as U * D * U^T using the upper triangle
 		// K is the number of remaining rows/columns, starts at N (processes from right to left)
 		k = N;
@@ -75,7 +75,7 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			if ( k > nb ) {
 				// Use blocked code for this panel
 				W = new Float64Array( ldwork * nb );
-				result = dlasyf( 'U', k, nb,
+				result = dlasyf( 'upper', k, nb,
 					A, sa1, sa2, offsetA,
 					IPIV, strideIPIV, offsetIPIV,
 					W, 1, ldwork, 0 );
@@ -83,7 +83,7 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				iinfo = result.info;
 			} else {
 				// Use unblocked code for the remaining columns
-				iinfo = dsytf2( 'U', k, A, sa1, sa2, offsetA, IPIV, strideIPIV, offsetIPIV );
+				iinfo = dsytf2( 'upper', k, A, sa1, sa2, offsetA, IPIV, strideIPIV, offsetIPIV );
 				kb = k;
 			}
 
@@ -101,7 +101,7 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			if ( k <= N - nb - 1 ) {
 				// Use blocked code
 				W = new Float64Array( ldwork * nb );
-				result = dlasyf( 'L', N - k, nb,
+				result = dlasyf( 'lower', N - k, nb,
 					A, sa1, sa2, offsetA + k * sa1 + k * sa2,
 					IPIV, strideIPIV, offsetIPIV + k * strideIPIV,
 					W, 1, ldwork, 0 );
@@ -109,7 +109,7 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				iinfo = result.info;
 			} else {
 				// Use unblocked code
-				iinfo = dsytf2( 'L', N - k, A, sa1, sa2, offsetA + k * sa1 + k * sa2,
+				iinfo = dsytf2( 'lower', N - k, A, sa1, sa2, offsetA + k * sa1 + k * sa2,
 					IPIV, strideIPIV, offsetIPIV + k * strideIPIV );
 				kb = N - k;
 			}

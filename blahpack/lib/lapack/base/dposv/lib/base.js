@@ -14,8 +14,8 @@ var dpotrs = require( '../../dpotrs/lib/base.js' );
 * are N-by-NRHS matrices.
 *
 * The Cholesky decomposition is used to factor A as:
-*   A = U^T * U,  if uplo = 'U', or
-*   A = L * L^T,  if uplo = 'L',
+*   A = U^T * U,  if uplo = 'upper', or
+*   A = L * L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular. The factored
 * form of A is then used to solve the system A*X = B.
 *

@@ -50,7 +50,7 @@ test( 'dpbtrf: upper_tridiag_5', function t() {
 		-1.0, 2.0,
 		-1.0, 2.0
 	]);
-	var info = dpbtrf( 'U', 5, 1, ab, 1, 2, 0 );
+	var info = dpbtrf( 'upper', 5, 1, ab, 1, 2, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -64,7 +64,7 @@ test( 'dpbtrf: lower_tridiag_5', function t() {
 		2.0,  -1.0,
 		2.0,   0.0
 	]);
-	var info = dpbtrf( 'L', 5, 1, ab, 1, 2, 0 );
+	var info = dpbtrf( 'lower', 5, 1, ab, 1, 2, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -72,14 +72,14 @@ test( 'dpbtrf: lower_tridiag_5', function t() {
 test( 'dpbtrf: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var ab = new Float64Array([ 99.0 ]);
-	var info = dpbtrf( 'U', 0, 0, ab, 1, 1, 0 );
+	var info = dpbtrf( 'upper', 0, 0, ab, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dpbtrf: n_one', function t() {
 	var tc = findCase( 'n_one' );
 	var ab = new Float64Array([ 4.0 ]);
-	var info = dpbtrf( 'L', 1, 0, ab, 1, 1, 0 );
+	var info = dpbtrf( 'lower', 1, 0, ab, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -92,7 +92,7 @@ test( 'dpbtrf: upper_penta_4', function t() {
 		0.5, -1.0,  4.0,
 		0.5, -1.0,  4.0
 	]);
-	var info = dpbtrf( 'U', 4, 2, ab, 1, 3, 0 );
+	var info = dpbtrf( 'upper', 4, 2, ab, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -105,7 +105,7 @@ test( 'dpbtrf: lower_penta_4', function t() {
 		4.0, -1.0,  0.0,
 		4.0,  0.0,  0.0
 	]);
-	var info = dpbtrf( 'L', 4, 2, ab, 1, 3, 0 );
+	var info = dpbtrf( 'lower', 4, 2, ab, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -116,7 +116,7 @@ test( 'dpbtrf: not_posdef', function t() {
 		1.0,  2.0,
 		1.0,  0.0
 	]);
-	var info = dpbtrf( 'L', 2, 1, ab, 1, 2, 0 );
+	var info = dpbtrf( 'lower', 2, 1, ab, 1, 2, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -133,7 +133,7 @@ test( 'dpbtrf: upper_banded_8', function t() {
 		0.5, -1.0,  6.0,
 		0.5, -1.0,  6.0
 	]);
-	var info = dpbtrf( 'U', 8, 2, ab, 1, 3, 0 );
+	var info = dpbtrf( 'upper', 8, 2, ab, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -150,7 +150,7 @@ test( 'dpbtrf: lower_banded_8', function t() {
 		6.0, -1.0,  0.0,
 		6.0,  0.0,  0.0
 	]);
-	var info = dpbtrf( 'L', 8, 2, ab, 1, 3, 0 );
+	var info = dpbtrf( 'lower', 8, 2, ab, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -179,7 +179,7 @@ test( 'dpbtrf: blocked path upper (KD >= 32)', function t() {
 		}
 	}
 
-	var info = dpbtrf( 'U', n, kd, ab, 1, ldab, 0 );
+	var info = dpbtrf( 'upper', n, kd, ab, 1, ldab, 0 );
 	assert.equal( info, 0, 'blocked upper factorization should succeed' );
 
 	// Verify: diagonal elements should be positive (Cholesky factor)
@@ -211,7 +211,7 @@ test( 'dpbtrf: blocked path lower (KD >= 32)', function t() {
 		}
 	}
 
-	var info = dpbtrf( 'L', n, kd, ab, 1, ldab, 0 );
+	var info = dpbtrf( 'lower', n, kd, ab, 1, ldab, 0 );
 	assert.equal( info, 0, 'blocked lower factorization should succeed' );
 
 	for ( j = 0; j < n; j++ ) {
@@ -239,7 +239,7 @@ test( 'dpbtrf: blocked path upper with i2>0 (KD=48)', function t() {
 		}
 	}
 
-	var info = dpbtrf( 'U', n, kd, ab, 1, ldab, 0 );
+	var info = dpbtrf( 'upper', n, kd, ab, 1, ldab, 0 );
 	assert.equal( info, 0, 'blocked upper with i2>0 should succeed' );
 
 	for ( j = 0; j < n; j++ ) {
@@ -264,7 +264,7 @@ test( 'dpbtrf: blocked path lower with i2>0 (KD=48)', function t() {
 		}
 	}
 
-	var info = dpbtrf( 'L', n, kd, ab, 1, ldab, 0 );
+	var info = dpbtrf( 'lower', n, kd, ab, 1, ldab, 0 );
 	assert.equal( info, 0, 'blocked lower with i2>0 should succeed' );
 
 	for ( j = 0; j < n; j++ ) {
@@ -288,7 +288,7 @@ test( 'dpbtrf: blocked path not_posdef upper', function t() {
 		}
 	}
 
-	var info = dpbtrf( 'U', n, kd, ab, 1, ldab, 0 );
+	var info = dpbtrf( 'upper', n, kd, ab, 1, ldab, 0 );
 	assert.ok( info > 0, 'should return positive info for non-SPD matrix' );
 });
 
@@ -306,6 +306,6 @@ test( 'dpbtrf: blocked path not_posdef lower', function t() {
 		}
 	}
 
-	var info = dpbtrf( 'L', n, kd, ab, 1, ldab, 0 );
+	var info = dpbtrf( 'lower', n, kd, ab, 1, ldab, 0 );
 	assert.ok( info > 0, 'should return positive info for non-SPD matrix' );
 });

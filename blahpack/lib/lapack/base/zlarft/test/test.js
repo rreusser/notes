@@ -44,7 +44,7 @@ test( 'zlarft: forward, columnwise, n=4, k=2', function t() {
 	// strideV1=1 (rows), strideV2=4 (cols with LDV=4)
 	// strideT1=1, strideT2=3 (LDT=3)
 	// strideTAU=1
-	zlarft( 'F', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'columnwise', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	// Compare first 12 doubles (3x2 col-major = 6 complex values)
 	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
@@ -65,7 +65,7 @@ test( 'zlarft: forward, columnwise, n=5, k=3', function t() {
 	// T is 3x3, LDT=3
 	var T = new Complex128Array( 9 );
 
-	zlarft( 'F', 'C', 5, 3, V, 1, 5, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'columnwise', 5, 3, V, 1, 5, 0, tau, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
@@ -78,7 +78,7 @@ test( 'zlarft: tau(0)=0 (first reflector is identity)', function t() {
 	var tau = new Complex128Array( [ 0.0, 0.0,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
 
-	zlarft( 'F', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'columnwise', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
@@ -94,7 +94,7 @@ test( 'zlarft: backward, columnwise, n=4, k=2', function t() {
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
 
-	zlarft( 'B', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'columnwise', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
@@ -104,7 +104,7 @@ test( 'zlarft: N=0 quick return', function t() {
 	var T = new Complex128Array( 6 );
 	var Tv = reinterpret( T, 0 );
 	Tv[ 0 ] = 99.0; // sentinel value
-	zlarft( 'F', 'C', 0, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'columnwise', 0, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 	// T should be unchanged
 	Tv = reinterpret( T, 0 );
 	assert.strictEqual( Tv[ 0 ], 99.0 );
@@ -122,7 +122,7 @@ test( 'zlarft: forward, rowwise, n=4, k=2', function t() {
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
 
-	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
@@ -137,7 +137,7 @@ test( 'zlarft: backward, rowwise, n=4, k=2', function t() {
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
 
-	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( T, 0 ) ), tc.T, 'T' );
 });
 
@@ -151,7 +151,7 @@ test( 'zlarft: backward, tau(1)=0 (second reflector is identity)', function t() 
 	var tau = new Complex128Array( [ 1.2, -0.3,  0.0, 0.0 ] );
 	var T = new Complex128Array( 6 );
 
-	zlarft( 'B', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'columnwise', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var Tv = reinterpret( T, 0 );
 	// T(1,1) column should be zero (tau=0 path)
@@ -172,7 +172,7 @@ test( 'zlarft: backward, K=3 with leading zeros in V', function t() {
 	// T is 3x3, LDT=3
 	var T = new Complex128Array( 9 );
 
-	zlarft( 'B', 'C', 6, 3, V, 1, 6, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'columnwise', 6, 3, V, 1, 6, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var Tv = reinterpret( T, 0 );
 	// Verify T is lower triangular and diagonals are tau values
@@ -215,7 +215,7 @@ test( 'zlarft: forward, rowwise, n=5, k=3 (trailing zeros in V rows)', function 
 	// T is 3x3, LDT=3
 	var T = new Complex128Array( 9 );
 
-	zlarft( 'F', 'R', 5, 3, V, 1, 3, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'rowwise', 5, 3, V, 1, 3, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var Tv = reinterpret( T, 0 );
 	// Verify T is upper triangular with diag = tau
@@ -251,7 +251,7 @@ test( 'zlarft: backward, columnwise, K=3 with leading nonzero in V', function t(
 	var tau = new Complex128Array( [ 1.1, 0.2,  1.3, -0.1,  1.6, 0.5 ] );
 	var T = new Complex128Array( 9 );
 
-	zlarft( 'B', 'C', 6, 3, V, 1, 6, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'columnwise', 6, 3, V, 1, 6, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var Tv = reinterpret( T, 0 );
 	// Verify T is lower triangular with diag = tau
@@ -296,7 +296,7 @@ test( 'zlarft: backward, rowwise, n=6, k=3 (leading zeros)', function t() {
 	var tau = new Complex128Array( [ 1.1, 0.2,  1.3, -0.1,  1.6, 0.5 ] );
 	var T = new Complex128Array( 9 );
 
-	zlarft( 'B', 'R', 6, 3, V, 1, 3, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'rowwise', 6, 3, V, 1, 3, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var Tv = reinterpret( T, 0 );
 	// Verify T is lower triangular with diag = tau
@@ -339,7 +339,7 @@ test( 'zlarft: backward, rowwise, n=7, k=4 (mixed leading zeros)', function t() 
 	var tau = new Complex128Array( [ 1.1, 0.2,  1.3, -0.1,  1.6, 0.5,  0.8, -0.2 ] );
 	var T = new Complex128Array( 16 );
 
-	zlarft( 'B', 'R', 7, 4, V, 1, 4, 0, tau, 1, 0, T, 1, 4, 0 );
+	zlarft( 'backward', 'rowwise', 7, 4, V, 1, 4, 0, tau, 1, 0, T, 1, 4, 0 );
 
 	var Tv = reinterpret( T, 0 );
 	// Verify T diagonals = tau
@@ -365,7 +365,7 @@ test( 'zlarft: forward with trailing zeros in V column', function t() {
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
 
-	zlarft( 'F', 'C', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'columnwise', 4, 2, V, 1, 4, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var Tv = reinterpret( T, 0 );
 	// T(0,0) should be tau(0)

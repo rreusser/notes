@@ -48,7 +48,7 @@ test( 'ztrti2: upper, non-unit, 3x3', function t() {
 		1, 0.5, 4, 2, 0, 0,
 		3, 1, 5, 1, 6, 3
 	] );
-	var info = ztrti2( 'U', 'N', 3, A, 1, 3, 0 );
+	var info = ztrti2( 'upper', 'non-unit', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -62,7 +62,7 @@ test( 'ztrti2: lower, non-unit, 3x3', function t() {
 		0, 0, 4, 2, 5, 1,
 		0, 0, 0, 0, 6, 3
 	] );
-	var info = ztrti2( 'L', 'N', 3, A, 1, 3, 0 );
+	var info = ztrti2( 'lower', 'non-unit', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -75,7 +75,7 @@ test( 'ztrti2: upper, unit diagonal, 3x3', function t() {
 		1, 0.5, 99, 99, 0, 0,
 		3, 1, 5, 1, 99, 99
 	] );
-	var info = ztrti2( 'U', 'U', 3, A, 1, 3, 0 );
+	var info = ztrti2( 'upper', 'unit', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -88,7 +88,7 @@ test( 'ztrti2: lower, unit diagonal, 3x3', function t() {
 		0, 0, 99, 99, 5, 1,
 		0, 0, 0, 0, 99, 99
 	] );
-	var info = ztrti2( 'L', 'U', 3, A, 1, 3, 0 );
+	var info = ztrti2( 'lower', 'unit', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -98,7 +98,7 @@ test( 'ztrti2: N=1', function t() {
 	var tc = findCase( 'n1' );
 	// A = 3+4i, inverse should be (3-4i)/25 = 0.12-0.16i
 	var A = new Complex128Array( [ 3, 4 ] );
-	var info = ztrti2( 'U', 'N', 1, A, 1, 1, 0 );
+	var info = ztrti2( 'upper', 'non-unit', 1, A, 1, 1, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -106,7 +106,7 @@ test( 'ztrti2: N=1', function t() {
 
 test( 'ztrti2: N=0', function t() {
 	var A = new Complex128Array( 0 );
-	var info = ztrti2( 'U', 'N', 0, A, 1, 1, 0 );
+	var info = ztrti2( 'upper', 'non-unit', 0, A, 1, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -118,7 +118,7 @@ test( 'ztrti2: upper, non-unit, 4x4', function t() {
 		3, 1, 6, 0, 8, 2, 0, 0,
 		4, 2, 7, 3, 9, 1, 10, 0
 	] );
-	var info = ztrti2( 'U', 'N', 4, A, 1, 4, 0 );
+	var info = ztrti2( 'upper', 'non-unit', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-13, 'a' );
@@ -132,7 +132,7 @@ test( 'ztrti2: lower, non-unit, 4x4', function t() {
 		0, 0, 0, 0, 8, 2, 9, 1,
 		0, 0, 0, 0, 0, 0, 10, 0
 	] );
-	var info = ztrti2( 'L', 'N', 4, A, 1, 4, 0 );
+	var info = ztrti2( 'lower', 'non-unit', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-13, 'a' );

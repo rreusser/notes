@@ -55,7 +55,7 @@ test( 'dlatrd: uplo_u_6x6_nb3', function t() {
 	var TAU = new Float64Array( N );
 	var W = new Float64Array( N * nb );
 
-	dlatrd( 'U', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+	dlatrd( 'upper', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
 
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 	assertArrayClose( E, tc.E, 1e-14, 'E' );
@@ -79,7 +79,7 @@ test( 'dlatrd: uplo_l_6x6_nb3', function t() {
 	var TAU = new Float64Array( N );
 	var W = new Float64Array( N * nb );
 
-	dlatrd( 'L', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+	dlatrd( 'lower', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
 
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 	assertArrayClose( E, tc.E, 1e-14, 'E' );
@@ -94,7 +94,7 @@ test( 'dlatrd: nb0_quick_return', function t() {
 		 0.5, -1.0
 	]);
 
-	dlatrd( 'U', 2, 0, A, 1, 2, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
+	dlatrd( 'upper', 2, 0, A, 1, 2, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
 
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
@@ -113,7 +113,7 @@ test( 'dlatrd: uplo_u_4x4_nb2', function t() {
 	var TAU = new Float64Array( N );
 	var W = new Float64Array( N * nb );
 
-	dlatrd( 'U', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+	dlatrd( 'upper', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
 
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 	assertArrayClose( E, tc.E, 1e-14, 'E' );
@@ -135,7 +135,7 @@ test( 'dlatrd: uplo_l_4x4_nb2', function t() {
 	var TAU = new Float64Array( N );
 	var W = new Float64Array( N * nb );
 
-	dlatrd( 'L', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
+	dlatrd( 'lower', N, nb, A, 1, N, 0, E, 1, 0, TAU, 1, 0, W, 1, N, 0 );
 
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 	assertArrayClose( E, tc.E, 1e-14, 'E' );
@@ -146,7 +146,7 @@ test( 'dlatrd: uplo_l_4x4_nb2', function t() {
 test( 'dlatrd: N=0 quick return', function t() {
 	var A = new Float64Array( 0 );
 	// Should not throw
-	dlatrd( 'U', 0, 0, A, 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0 );
+	dlatrd( 'upper', 0, 0, A, 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0 );
 });
 
 test( 'dlatrd: N=1 quick return (nb=1, uplo=U)', function t() {
@@ -156,7 +156,7 @@ test( 'dlatrd: N=1 quick return (nb=1, uplo=U)', function t() {
 	var TAU = new Float64Array( 1 );
 	var W = new Float64Array( 1 );
 
-	dlatrd( 'U', 1, 1, A, 1, 1, 0, E, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
+	dlatrd( 'upper', 1, 1, A, 1, 1, 0, E, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
 
 	// A unchanged (diagonal only), no reflectors
 	assert.equal( A[ 0 ], 5.0 );
@@ -170,7 +170,7 @@ test( 'dlatrd: N=1 quick return (nb=1, uplo=L)', function t() {
 	var TAU = new Float64Array( 1 );
 	var W = new Float64Array( 1 );
 
-	dlatrd( 'L', 1, 1, A, 1, 1, 0, E, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
+	dlatrd( 'lower', 1, 1, A, 1, 1, 0, E, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
 
 	assert.equal( A[ 0 ], 5.0 );
 	assert.equal( E[ 0 ], 0.0 );

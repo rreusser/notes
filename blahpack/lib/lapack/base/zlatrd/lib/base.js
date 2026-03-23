@@ -76,7 +76,7 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Reduce last NB columns of upper triangle
 		// Fortran: DO I = N, N-NB+1, -1
 		// 0-based: i from N-1 down to N-nb
@@ -92,7 +92,7 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 				// Conjugate W(i, iw+1:nb-1) row
 				zlacgv( N - 1 - i, W, strideW2, offsetW + i * strideW1 + ( iw + 1 ) * strideW2 );
 				// A(0:i, i) -= A(0:i, i+1:N-1) * W(i, iw+1:nb-1)^T
-				zgemv( 'N', i + 1, N - 1 - i, CNONE,
+				zgemv( 'no-transpose', i + 1, N - 1 - i, CNONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 					W, strideW2, offsetW + i * strideW1 + ( iw + 1 ) * strideW2,
 					CONE, A, strideA1, offsetA + i * strideA2
@@ -103,7 +103,7 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 				// Conjugate A(i, i+1:N-1) row
 				zlacgv( N - 1 - i, A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2 );
 				// A(0:i, i) -= W(0:i, iw+1:nb-1) * A(i, i+1:N-1)^T
-				zgemv( 'N', i + 1, N - 1 - i, CNONE,
+				zgemv( 'no-transpose', i + 1, N - 1 - i, CNONE,
 					W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
 					A, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 					CONE, A, strideA1, offsetA + i * strideA2
@@ -134,7 +134,7 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 
 				// Compute W(0:i-1, iw)
 				// W(0:i-1, iw) = A(0:i-1, 0:i-1) * A(0:i-1, i) (Hermitian multiply)
-				zhemv( 'U', i, CONE,
+				zhemv( 'upper', i, CONE,
 					A, strideA1, strideA2, offsetA,
 					A, strideA1, offsetA + i * strideA2,
 					CZERO, W, strideW1, offsetW + iw * strideW2
@@ -142,25 +142,25 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 
 				if ( i < N - 1 ) {
 					// W(i+1:N-1, iw) = W(0:i-1, iw+1:nb-1)^H * A(0:i-1, i)
-					zgemv( 'C', i, N - 1 - i, CONE,
+					zgemv( 'conjugate-transpose', i, N - 1 - i, CONE,
 						W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
 						A, strideA1, offsetA + i * strideA2,
 						CZERO, W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2
 					);
 					// W(0:i-1, iw) -= A(0:i-1, i+1:N-1) * W(i+1:N-1, iw)
-					zgemv( 'N', i, N - 1 - i, CNONE,
+					zgemv( 'no-transpose', i, N - 1 - i, CNONE,
 						A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 						W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2,
 						CONE, W, strideW1, offsetW + iw * strideW2
 					);
 					// W(i+1:N-1, iw) = A(0:i-1, i+1:N-1)^H * A(0:i-1, i)
-					zgemv( 'C', i, N - 1 - i, CONE,
+					zgemv( 'conjugate-transpose', i, N - 1 - i, CONE,
 						A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2,
 						A, strideA1, offsetA + i * strideA2,
 						CZERO, W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2
 					);
 					// W(0:i-1, iw) -= W(0:i-1, iw+1:nb-1) * W(i+1:N-1, iw)
-					zgemv( 'N', i, N - 1 - i, CNONE,
+					zgemv( 'no-transpose', i, N - 1 - i, CNONE,
 						W, strideW1, strideW2, offsetW + ( iw + 1 ) * strideW2,
 						W, strideW1, offsetW + ( i + 1 ) * strideW1 + iw * strideW2,
 						CONE, W, strideW1, offsetW + iw * strideW2
@@ -205,7 +205,7 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 			// Conjugate W(i, 0:i-1) row
 			zlacgv( i, W, strideW2, offsetW + i * strideW1 );
 			// A(i:N-1, i) -= A(i:N-1, 0:i-1) * W(i, 0:i-1)^T
-			zgemv( 'N', N - i, i, CNONE,
+			zgemv( 'no-transpose', N - i, i, CNONE,
 				A, strideA1, strideA2, offsetA + i * strideA1,
 				W, strideW2, offsetW + i * strideW1,
 				CONE, A, strideA1, offsetA + i * strideA1 + i * strideA2
@@ -216,7 +216,7 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 			// Conjugate A(i, 0:i-1) row
 			zlacgv( i, A, strideA2, offsetA + i * strideA1 );
 			// A(i:N-1, i) -= W(i:N-1, 0:i-1) * A(i, 0:i-1)^T
-			zgemv( 'N', N - i, i, CNONE,
+			zgemv( 'no-transpose', N - i, i, CNONE,
 				W, strideW1, strideW2, offsetW + i * strideW1,
 				A, strideA2, offsetA + i * strideA1,
 				CONE, A, strideA1, offsetA + i * strideA1 + i * strideA2
@@ -245,33 +245,33 @@ function zlatrd( uplo, N, nb, A, strideA1, strideA2, offsetA, e, strideE, offset
 
 				// Compute W(i+1:N-1, i)
 				// W(i+1:N-1, i) = A(i+1:N-1, i+1:N-1) * A(i+1:N-1, i) (Hermitian)
-				zhemv( 'L', N - i - 1, CONE,
+				zhemv( 'lower', N - i - 1, CONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					CZERO, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
 
 				// W(0:i-1, i) = W(i+1:N-1, 0:i-1)^H * A(i+1:N-1, i)
-				zgemv( 'C', N - i - 1, i, CONE,
+				zgemv( 'conjugate-transpose', N - i - 1, i, CONE,
 					W, strideW1, strideW2, offsetW + ( i + 1 ) * strideW1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					CZERO, W, strideW1, offsetW + i * strideW2
 				);
 				// W(i+1:N-1, i) -= A(i+1:N-1, 0:i-1) * W(0:i-1, i)
-				zgemv( 'N', N - i - 1, i, CNONE,
+				zgemv( 'no-transpose', N - i - 1, i, CNONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					W, strideW1, offsetW + i * strideW2,
 					CONE, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2
 				);
 
 				// W(0:i-1, i) = A(i+1:N-1, 0:i-1)^H * A(i+1:N-1, i)
-				zgemv( 'C', N - i - 1, i, CONE,
+				zgemv( 'conjugate-transpose', N - i - 1, i, CONE,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1,
 					A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 					CZERO, W, strideW1, offsetW + i * strideW2
 				);
 				// W(i+1:N-1, i) -= W(i+1:N-1, 0:i-1) * W(0:i-1, i)
-				zgemv( 'N', N - i - 1, i, CNONE,
+				zgemv( 'no-transpose', N - i - 1, i, CNONE,
 					W, strideW1, strideW2, offsetW + ( i + 1 ) * strideW1,
 					W, strideW1, offsetW + i * strideW2,
 					CONE, W, strideW1, offsetW + ( i + 1 ) * strideW1 + i * strideW2

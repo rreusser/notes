@@ -88,7 +88,7 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	var indwrk;
 	var llwork;
 
-	wantz = ( jobz === 'V' );
+	wantz = ( jobz === 'compute' );
 
 	// Quick return if possible
 	if ( N === 0 ) {
@@ -112,7 +112,7 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	rmax = Math.sqrt( bignum );
 
 	// Scale matrix to allowable range, if necessary
-	anrm = dlansy( 'M', uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK );
+	anrm = dlansy( 'max', uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK );
 	iscale = 0;
 	sigma = 1.0;
 	if ( anrm > 0.0 && anrm < rmin ) {
@@ -149,7 +149,7 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
 		// dsteqr uses WORK[indtau] as its scratch workspace (needs 2*(N-1) space)
-		info = dsteqr( jobz, N, w, strideW, offsetW, WORK, strideWORK, inde, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau );
+		info = dsteqr( ( wantz ? 'initialize' : 'none' ), N, w, strideW, offsetW, WORK, strideWORK, inde, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau );
 	}
 
 	// If matrix was scaled, rescale eigenvalues

@@ -23,7 +23,7 @@ var HALF = 0.5;
 * Q is represented as Q = H(1) * H(2) * ... * H(n-1).
 *
 * @private
-* @param {string} uplo - specifies whether the upper ('U') or lower ('L') triangular part of A is stored
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangular part of A is stored
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input/output symmetric matrix; on exit, contains tridiagonal form and reflectors
 * @param {integer} strideA1 - stride of the first dimension of `A`
@@ -55,7 +55,7 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	sa1 = strideA1;
 	sa2 = strideA2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Reduce the upper triangle of A.
 		// Fortran: DO 10 I = N-1, 1, -1  (1-based, iterating N-1 down to 1)
 		// JS 0-based: i goes from N-2 down to 0

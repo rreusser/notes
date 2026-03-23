@@ -138,7 +138,7 @@ test( 'dsyev: JOBZ=V, UPLO=L, 4x4 SPD — eigenvalues + eigenvectors', function 
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'V', 'L', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'compute', 'lower', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-13, 'eigenvalues' );
@@ -154,7 +154,7 @@ test( 'dsyev: JOBZ=V, UPLO=U, 4x4 SPD — eigenvalues + eigenvectors', function 
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'V', 'U', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'compute', 'upper', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-13, 'eigenvalues' );
@@ -169,7 +169,7 @@ test( 'dsyev: JOBZ=N, UPLO=L, 4x4 — eigenvalues only', function t() {
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'N', 'L', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'none', 'lower', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-13, 'eigenvalues' );
@@ -182,7 +182,7 @@ test( 'dsyev: JOBZ=N, UPLO=U, 4x4 — eigenvalues only', function t() {
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'N', 'U', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'none', 'upper', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-13, 'eigenvalues' );
@@ -196,7 +196,7 @@ test( 'dsyev: JOBZ=V, UPLO=L, 3x3 — eigenvalues + eigenvectors', function t() 
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'V', 'L', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'compute', 'lower', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-13, 'eigenvalues' );
@@ -212,7 +212,7 @@ test( 'dsyev: JOBZ=V, UPLO=U, 3x3 — eigenvalues + eigenvectors', function t() 
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'V', 'U', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'compute', 'upper', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-13, 'eigenvalues' );
@@ -227,7 +227,7 @@ test( 'dsyev: N=1, JOBZ=V — single eigenvalue', function t() {
 	var WORK = new Float64Array( 10 );
 	var info;
 
-	info = dsyev( 'V', 'L', 1, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 10 );
+	info = dsyev( 'compute', 'lower', 1, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 10 );
 
 	assert.equal( info, tc.info );
 	assertClose( W[ 0 ], tc.w1, 1e-15, 'w1' );
@@ -241,7 +241,7 @@ test( 'dsyev: N=1, JOBZ=N — single eigenvalue', function t() {
 	var WORK = new Float64Array( 10 );
 	var info;
 
-	info = dsyev( 'N', 'U', 1, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 10 );
+	info = dsyev( 'none', 'upper', 1, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 10 );
 
 	assert.equal( info, tc.info );
 	assertClose( W[ 0 ], tc.w1, 1e-15, 'w1' );
@@ -254,7 +254,7 @@ test( 'dsyev: N=0 — quick return', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsyev( 'V', 'L', 0, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 1 );
+	info = dsyev( 'compute', 'lower', 0, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 1 );
 
 	assert.equal( info, tc.info );
 });
@@ -272,7 +272,7 @@ test( 'dsyev: JOBZ=V, UPLO=L, diagonal 4x4 — sorted eigenvalues', function t()
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'V', 'L', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'compute', 'lower', 4, A, 1, 4, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-14, 'eigenvalues' );
@@ -287,7 +287,7 @@ test( 'dsyev: JOBZ=N, UPLO=L, 3x3 — eigenvalues only', function t() {
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'N', 'L', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'none', 'lower', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( W ), tc.w, 1e-13, 'eigenvalues' );
@@ -306,7 +306,7 @@ test( 'dsyev: JOBZ=V, scaling path — tiny matrix elements (near underflow)', f
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'V', 'L', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'compute', 'lower', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, 0 );
 	// Eigenvalues should be scale * eigenvalues_of_unscaled
@@ -331,7 +331,7 @@ test( 'dsyev: JOBZ=V, scaling path — large matrix elements (near overflow)', f
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'V', 'L', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'compute', 'lower', 3, A, 1, 3, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, 0 );
 	// Check ascending order
@@ -353,7 +353,7 @@ test( 'dsyev: JOBZ=N, scaling path — tiny matrix elements', function t() {
 	var WORK = new Float64Array( 200 );
 	var info;
 
-	info = dsyev( 'N', 'L', 2, A, 1, 2, 0, W, 1, 0, WORK, 1, 0, 200 );
+	info = dsyev( 'none', 'lower', 2, A, 1, 2, 0, W, 1, 0, WORK, 1, 0, 200 );
 
 	assert.equal( info, 0 );
 	// 2x2 symmetric: eigenvalues are (9 +/- sqrt(5))/2 * scale

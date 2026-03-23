@@ -50,8 +50,8 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 		return 0;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	upper = ( uplo === 'upper' );
+	nounit = ( diag === 'non-unit' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 	Av = reinterpret( A, 0 );
@@ -76,7 +76,7 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 
 			// Compute elements 0:j-1 of j-th column:
 			// A(0:j-1, j) = A(0:j-1, 0:j-1) * A(0:j-1, j) [triangular matrix-vector multiply]
-			ztrmv( 'U', 'N', diag, j, A, sa1, sa2, offsetA,
+			ztrmv( 'upper', 'no-transpose', diag, j, A, sa1, sa2, offsetA,
 				A, sa1, offsetA + j * sa2 );
 
 			// Scale column by ajj: A(0:j-1, j) = ajj * A(0:j-1, j)
@@ -102,7 +102,7 @@ function ztrti2( uplo, diag, N, A, strideA1, strideA2, offsetA ) {
 			if ( j < N - 1 ) {
 				// Compute elements j+1:N-1 of j-th column:
 				// A(j+1:N-1, j) = A(j+1:N-1, j+1:N-1) * A(j+1:N-1, j)
-				ztrmv( 'L', 'N', diag, N - j - 1,
+				ztrmv( 'lower', 'no-transpose', diag, N - j - 1,
 					A, sa1, sa2, offsetA + ( j + 1 ) * sa1 + ( j + 1 ) * sa2,
 					A, sa1, offsetA + ( j + 1 ) * sa1 + j * sa2 );
 

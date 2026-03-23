@@ -37,13 +37,13 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 		return x;
 	}
 
-	nounit = ( diag === 'N' || diag === 'n' );
+	nounit = ( diag === 'non-unit' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
-	if ( trans === 'N' || trans === 'n' ) {
+	if ( trans === 'no-transpose' ) {
 		// Solve A*x = b
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangular, no transpose: back-substitution from bottom
 			jx = offsetX + ( N - 1 ) * strideX;
 			for ( j = N - 1; j >= 0; j-- ) {
@@ -83,8 +83,8 @@ function dtrsv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 			}
 		}
 	} else {
-		// Solve A**T*x = b (trans = 'T' or 'C')
-		if ( uplo === 'U' || uplo === 'u' ) {
+		// Solve A**T*x = b (trans = 'transpose' or 'C')
+		if ( uplo === 'upper' ) {
 			// Upper triangular, transpose: forward-substitution from top
 			jx = offsetX;
 			for ( j = 0; j < N; j++ ) {

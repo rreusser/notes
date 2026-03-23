@@ -63,7 +63,7 @@ test( 'dlarfb: left notrans fwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'N', 'F', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'no-transpose', 'forward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -76,7 +76,7 @@ test( 'dlarfb: left trans fwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'T', 'F', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'transpose', 'forward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -92,7 +92,7 @@ test( 'dlarfb: right notrans fwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'N', 'F', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'no-transpose', 'forward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -108,7 +108,7 @@ test( 'dlarfb: right trans fwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'T', 'F', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'transpose', 'forward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -136,7 +136,7 @@ test( 'dlarfb: left notrans bwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'N', 'B', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'no-transpose', 'backward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -149,7 +149,7 @@ test( 'dlarfb: left trans bwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'T', 'B', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'transpose', 'backward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -165,7 +165,7 @@ test( 'dlarfb: right notrans bwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'N', 'B', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'no-transpose', 'backward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -181,7 +181,7 @@ test( 'dlarfb: right trans bwd col', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'T', 'B', 'C', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'transpose', 'backward', 'columnwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -190,7 +190,7 @@ test( 'dlarfb: M=0 quick return', function t() {
 	var V = new Float64Array( 1 );
 	var T = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	dlarfb( 'L', 'N', 'F', 'C', 0, 3, 2, V, 1, 1, 0, T, 1, 1, 0, C, 1, 1, 0, WORK, 1, 1, 0 );
+	dlarfb( 'left', 'no-transpose', 'forward', 'columnwise', 0, 3, 2, V, 1, 1, 0, T, 1, 1, 0, C, 1, 1, 0, WORK, 1, 1, 0 );
 	if ( C[ 0 ] !== 99 ) {
 		throw new Error( 'C changed on M=0' );
 	}
@@ -216,7 +216,7 @@ test( 'dlarfb: left notrans fwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'N', 'F', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'no-transpose', 'forward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -229,7 +229,7 @@ test( 'dlarfb: left trans fwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'T', 'F', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'transpose', 'forward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -244,7 +244,7 @@ test( 'dlarfb: right notrans fwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'N', 'F', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'no-transpose', 'forward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -258,7 +258,7 @@ test( 'dlarfb: right trans fwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'T', 'F', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'transpose', 'forward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -278,7 +278,7 @@ test( 'dlarfb: left notrans bwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'N', 'B', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'no-transpose', 'backward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -291,7 +291,7 @@ test( 'dlarfb: left trans bwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'L', 'T', 'B', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'left', 'transpose', 'backward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -306,7 +306,7 @@ test( 'dlarfb: right notrans bwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'N', 'B', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'no-transpose', 'backward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 
@@ -320,7 +320,7 @@ test( 'dlarfb: right trans bwd row', function t() {
 	var C = new Float64Array( 6 * 3 );
 	setupC4x3( C );
 	var WORK = new Float64Array( 4 * 2 );
-	dlarfb( 'R', 'T', 'B', 'R', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
+	dlarfb( 'right', 'transpose', 'backward', 'rowwise', 4, 3, 2, V, 1, 6, 0, T, 1, 2, 0, C, 1, 6, 0, WORK, 1, 4, 0 );
 	assertArrayClose( extractC( C, 4, 3, 6 ), tc.C, 1e-14, 'C' );
 });
 

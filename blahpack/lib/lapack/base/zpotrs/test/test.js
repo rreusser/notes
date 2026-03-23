@@ -50,8 +50,8 @@ test( 'zpotrs: lower_single_rhs', function t() {
 		1, 2, 2, -1, 6, 0
 	] );
 	var B = new Complex128Array( [ 1, 1, 2, -1, 3, 0.5 ] );
-	zpotrf( 'L', 3, A, 1, 3, 0 );
-	var info = zpotrs( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	zpotrf( 'lower', 3, A, 1, 3, 0 );
+	var info = zpotrs( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -64,8 +64,8 @@ test( 'zpotrs: upper_single_rhs', function t() {
 		1, 2, 2, -1, 6, 0
 	] );
 	var B = new Complex128Array( [ 1, 1, 2, -1, 3, 0.5 ] );
-	zpotrf( 'U', 3, A, 1, 3, 0 );
-	var info = zpotrs( 'U', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	zpotrf( 'upper', 3, A, 1, 3, 0 );
+	var info = zpotrs( 'upper', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -82,8 +82,8 @@ test( 'zpotrs: lower_multi_rhs', function t() {
 		1, 0, 0, 0, 0, 0,
 		0, 0, 1, 0, 0, 0
 	] );
-	zpotrf( 'L', 3, A, 1, 3, 0 );
-	var info = zpotrs( 'L', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
+	zpotrf( 'lower', 3, A, 1, 3, 0 );
+	var info = zpotrs( 'lower', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -92,7 +92,7 @@ test( 'zpotrs: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
-	var info = zpotrs( 'L', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = zpotrs( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -100,7 +100,7 @@ test( 'zpotrs: nrhs_zero', function t() {
 	var tc = findCase( 'nrhs_zero' );
 	var A = new Complex128Array( 9 );
 	var B = new Complex128Array( 3 );
-	var info = zpotrs( 'L', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = zpotrs( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -109,7 +109,7 @@ test( 'zpotrs: one_by_one', function t() {
 	// L = (2,0), so A = L*L^H = (4,0). Pre-factored: L(1,1) = (2,0)
 	var A = new Complex128Array( [ 2, 0 ] );
 	var B = new Complex128Array( [ 6, 3 ] );
-	var info = zpotrs( 'L', 1, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = zpotrs( 'lower', 1, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
@@ -127,8 +127,8 @@ test( 'zpotrs: upper_multi_rhs_3', function t() {
 		0, 0, 1, 0, 0, 0,
 		0, 0, 0, 0, 1, 0
 	] );
-	zpotrf( 'U', 3, A, 1, 3, 0 );
-	var info = zpotrs( 'U', 3, 3, A, 1, 3, 0, B, 1, 3, 0 );
+	zpotrf( 'upper', 3, A, 1, 3, 0 );
+	var info = zpotrs( 'upper', 3, 3, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });

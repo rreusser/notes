@@ -114,7 +114,7 @@ test( 'dgetrs: solve_3x3', function t() {
 	B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 
 	factorize( 3, A, IPIV );
-	info = dgetrs( 'N', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = dgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 
@@ -141,7 +141,7 @@ test( 'dgetrs: solve_3x3_trans', function t() {
 	B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 
 	factorize( 3, A, IPIV );
-	info = dgetrs( 'T', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = dgetrs( 'transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 
@@ -172,7 +172,7 @@ test( 'dgetrs: multi_rhs', function t() {
 	B = new Float64Array( Borig );
 
 	factorize( 3, A, IPIV );
-	info = dgetrs( 'N', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = dgetrs( 'no-transpose', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 
@@ -194,7 +194,7 @@ test( 'dgetrs: n_zero', function t() {
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( 1 );
 
-	info = dgetrs( 'N', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	info = dgetrs( 'no-transpose', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 });
@@ -212,7 +212,7 @@ test( 'dgetrs: nrhs_zero', function t() {
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( 3 );
 
-	info = dgetrs( 'N', 3, 0, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = dgetrs( 'no-transpose', 3, 0, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 });
@@ -232,7 +232,7 @@ test( 'dgetrs: 1x1', function t() {
 	B = new Float64Array( [ 10.0 ] );
 
 	factorize( 1, A, IPIV );
-	info = dgetrs( 'N', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	info = dgetrs( 'no-transpose', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -253,7 +253,7 @@ test( 'dgetrs: identity', function t() {
 	B = new Float64Array( [ 3.0, 5.0, 7.0 ] );
 
 	factorize( 3, A, IPIV );
-	info = dgetrs( 'N', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = dgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -274,7 +274,7 @@ test( 'dgetrs: lowercase trans argument', function t() {
 	B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 
 	factorize( 3, A, IPIV );
-	info = dgetrs( 'n', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = dgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, 0, 'info' );
 	Ax = matvec( Aorig, B, 3 );

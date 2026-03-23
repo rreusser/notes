@@ -65,7 +65,7 @@ function dsymv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 		return y;
 	}
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Form y when A is stored in upper triangle:
 		jx = offsetX;
 		jy = offsetY;

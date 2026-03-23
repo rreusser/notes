@@ -159,13 +159,13 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Solve A11 * A12_new = A12 (triangular solve)
 		// A11 is lower triangular with unit diagonal, n1 x n1
-		ztrsm( 'L', 'L', 'N', 'U', n1, n2, CONE,
+		ztrsm( 'left', 'lower', 'no-transpose', 'unit', n1, n2, CONE,
 			A, sa1, sa2, offsetA,
 			A, sa1, sa2, offsetA + n1 * sa2
 		);
 
 		// Update A22 = A22 - A21 * A12_new
-		zgemm( 'N', 'N', M - n1, n2, n1, CNEGONE,
+		zgemm( 'no-transpose', 'no-transpose', M - n1, n2, n1, CNEGONE,
 			A, sa1, sa2, offsetA + n1 * sa1,
 			A, sa1, sa2, offsetA + n1 * sa2,
 			CONE,

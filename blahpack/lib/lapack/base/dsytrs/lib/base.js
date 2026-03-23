@@ -60,7 +60,7 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 		return 0;
 	}
 
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		// Solve A*X = B where A = U*D*U^T
 
 		// First solve U*D*X = B, overwriting B with X.
@@ -132,7 +132,7 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 
 				// Apply multiplier: B(k,:) -= A(0:k-1,k)^T * B(0:k-1,:)
 				if ( k > 0 ) {
-					dgemv( 'T', k, nrhs, -1.0,
+					dgemv( 'transpose', k, nrhs, -1.0,
 						B, sb1, sb2, offsetB,
 						A, sa1, offsetA + k * sa2,
 						1.0, B, sb2, offsetB + k * sb1 );
@@ -148,11 +148,11 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 				// 2x2 pivot
 
 				if ( k > 0 ) {
-					dgemv( 'T', k, nrhs, -1.0,
+					dgemv( 'transpose', k, nrhs, -1.0,
 						B, sb1, sb2, offsetB,
 						A, sa1, offsetA + k * sa2,
 						1.0, B, sb2, offsetB + k * sb1 );
-					dgemv( 'T', k, nrhs, -1.0,
+					dgemv( 'transpose', k, nrhs, -1.0,
 						B, sb1, sb2, offsetB,
 						A, sa1, offsetA + ( k + 1 ) * sa2,
 						1.0, B, sb2, offsetB + ( k + 1 ) * sb1 );
@@ -235,7 +235,7 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 				// 1x1 pivot
 
 				if ( k < N - 1 ) {
-					dgemv( 'T', N - k - 1, nrhs, -1.0,
+					dgemv( 'transpose', N - k - 1, nrhs, -1.0,
 						B, sb1, sb2, offsetB + ( k + 1 ) * sb1,
 						A, sa1, offsetA + ( k + 1 ) * sa1 + k * sa2,
 						1.0, B, sb2, offsetB + k * sb1 );
@@ -250,11 +250,11 @@ function dsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 				// 2x2 pivot
 
 				if ( k < N - 1 ) {
-					dgemv( 'T', N - k - 1, nrhs, -1.0,
+					dgemv( 'transpose', N - k - 1, nrhs, -1.0,
 						B, sb1, sb2, offsetB + ( k + 1 ) * sb1,
 						A, sa1, offsetA + ( k + 1 ) * sa1 + k * sa2,
 						1.0, B, sb2, offsetB + k * sb1 );
-					dgemv( 'T', N - k - 1, nrhs, -1.0,
+					dgemv( 'transpose', N - k - 1, nrhs, -1.0,
 						B, sb1, sb2, offsetB + ( k + 1 ) * sb1,
 						A, sa1, offsetA + ( k + 1 ) * sa1 + ( k - 1 ) * sa2,
 						1.0, B, sb2, offsetB + ( k - 1 ) * sb1 );

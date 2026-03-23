@@ -101,7 +101,7 @@ test( 'dorml2: left_notrans_5x5', function t() {
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identity5( LDC );
-	var info = dorml2( 'L', 'N', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = dorml2( 'left', 'no-transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
@@ -112,7 +112,7 @@ test( 'dorml2: left_trans_5x5', function t() {
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identity5( LDC );
-	var info = dorml2( 'L', 'T', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = dorml2( 'left', 'transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
@@ -123,7 +123,7 @@ test( 'dorml2: right_notrans_5x5', function t() {
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identity5( LDC );
-	var info = dorml2( 'R', 'N', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = dorml2( 'right', 'no-transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
@@ -134,7 +134,7 @@ test( 'dorml2: right_trans_5x5', function t() {
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identity5( LDC );
-	var info = dorml2( 'R', 'T', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = dorml2( 'right', 'transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
@@ -144,7 +144,7 @@ test( 'dorml2: m_zero', function t() {
 	var tc = findCase( 'm_zero' );
 	var lq = computeLQ();
 	var C = new Float64Array( 36 );
-	var info = dorml2( 'L', 'N', 0, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
+	var info = dorml2( 'left', 'no-transpose', 0, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -153,7 +153,7 @@ test( 'dorml2: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var lq = computeLQ();
 	var C = new Float64Array( 36 );
-	var info = dorml2( 'L', 'N', 5, 0, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
+	var info = dorml2( 'left', 'no-transpose', 5, 0, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -162,7 +162,7 @@ test( 'dorml2: k_zero', function t() {
 	var tc = findCase( 'k_zero' );
 	var lq = computeLQ();
 	var C = new Float64Array( 36 );
-	var info = dorml2( 'L', 'N', 5, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
+	var info = dorml2( 'left', 'no-transpose', 5, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -178,7 +178,7 @@ test( 'dorml2: right_trans_rect', function t() {
 	C[ 12 ] = 2.0; C[ 13 ] = 0.5; C[ 14 ] = 1.0;
 	C[ 18 ] = 1.0; C[ 19 ] = 2.0; C[ 20 ] = 0.5;
 	C[ 24 ] = 0.5; C[ 25 ] = 1.0; C[ 26 ] = 2.0;
-	var info = dorml2( 'R', 'T', 3, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = dorml2( 'right', 'transpose', 3, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 3, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
@@ -193,7 +193,7 @@ test( 'dorml2: left_notrans_rect', function t() {
 	C[ 0 ] = 1.0; C[ 1 ] = 3.0; C[ 2 ] = -1.0; C[ 3 ] = 2.0; C[ 4 ] = 0.5;
 	C[ 6 ] = 0.5; C[ 7 ] = 1.0; C[ 8 ] = 4.0; C[ 9 ] = -0.5; C[ 10 ] = 1.0;
 	C[ 12 ] = 2.0; C[ 13 ] = 0.5; C[ 14 ] = 1.0; C[ 15 ] = 3.0; C[ 16 ] = -1.0;
-	var info = dorml2( 'L', 'N', 5, 3, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = dorml2( 'left', 'no-transpose', 5, 3, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 3, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });

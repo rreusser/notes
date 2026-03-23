@@ -90,7 +90,7 @@ function dgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			if ( i + ib < N ) {
 				// Form the triangular factor of the block reflector
 				dlarft(
-					'F', 'C',
+					'forward', 'columnwise',
 					M - i, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					TAU, strideTAU, offsetTAU + i * strideTAU,
@@ -99,7 +99,7 @@ function dgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 				// Apply H**T to A(i:M-1, i+ib:N-1) from the left
 				dlarfb(
-					'L', 'T', 'F', 'C',
+					'left', 'transpose', 'forward', 'columnwise',
 					M - i, N - i - ib, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					T, 1, nb, 0,

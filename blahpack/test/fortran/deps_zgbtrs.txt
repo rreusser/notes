@@ -1,2 +1,8 @@
 zgbtrs
 zlacgv
+zgbtrf
+zgbtf2
+zlaswp
+ilaenv
+ieeeck
+iparmq

@@ -52,7 +52,7 @@ test( 'zgesvd: m_zero (quick return)', function t() {
 	var A = new Complex128Array( 1 );
 	var info;
 
-	info = zgesvd( 'N', 'N', 0, 3, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 50, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'none', 0, 3, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 50, RWORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -65,7 +65,7 @@ test( 'zgesvd: n_zero (quick return)', function t() {
 	var A = new Complex128Array( 1 );
 	var info;
 
-	info = zgesvd( 'N', 'N', 3, 0, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 50, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'none', 3, 0, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 50, RWORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -79,7 +79,7 @@ test( 'zgesvd: full_1x1', function t() {
 	var A = c128( [ 5.0, 3.0 ] );
 	var info;
 
-	info = zgesvd( 'A', 'A', 1, 1, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 100, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 1, 1, A, 1, 1, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 100, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -98,7 +98,7 @@ test( 'zgesvd: full_2x2', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'A', 'A', 2, 2, A, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 2, 2, A, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -117,7 +117,7 @@ test( 'zgesvd: full_3x3', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'A', 'A', 3, 3, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 3, 3, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -137,7 +137,7 @@ test( 'zgesvd: values_only_3x4 (JOBU=N, JOBVT=N)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'N', 'N', 3, 4, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'none', 3, 4, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -156,7 +156,7 @@ test( 'zgesvd: economy_4x3 (JOBU=S, JOBVT=S)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'S', 'S', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'economy', 'economy', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -177,7 +177,7 @@ test( 'zgesvd: full_3x5 (M < N, JOBU=A, JOBVT=A)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'A', 'A', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 5, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 5, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -196,7 +196,7 @@ test( 'zgesvd: economy_u_full_vt_5x3 (JOBU=S, JOBVT=A)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'S', 'A', 5, 3, A, 1, 5, 0, s, 1, 0, U, 1, 5, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'economy', 'all-rows', 5, 3, A, 1, 5, 0, s, 1, 0, U, 1, 5, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -233,7 +233,7 @@ test( 'zgesvd: 3x3 reconstruction U*S*VT ~ A', function t() {
 	var j;
 	var k;
 
-	info = zgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	Uv = reinterpret( U, 0 );
@@ -280,7 +280,7 @@ test( 'zgesvd: 3x4 values only, M < N', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'N', 'N', 3, 4, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'none', 3, 4, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -300,7 +300,7 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=N (M > N, values only)', function t() {
 
 	// Use economy_4x3 fixture singular values for comparison
 	var tc = findCase( 'economy_4x3' );
-	info = zgesvd( 'N', 'N', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'none', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -319,7 +319,7 @@ test( 'zgesvd: 4x3 JOBU=A JOBVT=N (M > N, U only)', function t() {
 	var info;
 
 	var tc = findCase( 'economy_4x3' );
-	info = zgesvd( 'A', 'N', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'none', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -338,7 +338,7 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=A (M > N, VT only)', function t() {
 	var info;
 
 	var tc = findCase( 'economy_4x3' );
-	info = zgesvd( 'N', 'A', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'all-rows', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -359,7 +359,7 @@ test( 'zgesvd: 3x5 JOBU=N JOBVT=S (M < N, VT economy only)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'N', 'S', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'economy', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -380,7 +380,7 @@ test( 'zgesvd: 3x5 JOBU=S JOBVT=N (M < N, U economy only)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'S', 'N', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'economy', 'none', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -401,7 +401,7 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=N (M < N, full U only)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'A', 'N', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'none', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -422,7 +422,7 @@ test( 'zgesvd: 3x5 JOBU=N JOBVT=A (M < N, full VT only)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'N', 'A', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 5, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'all-rows', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 5, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -457,7 +457,7 @@ test( 'zgesvd: 2x2 reconstruction', function t() {
 	var j;
 	var k;
 
-	info = zgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	Uv = reinterpret( U, 0 );
@@ -517,7 +517,7 @@ test( 'zgesvd: 4x3 JOBU=A JOBVT=S reconstruction', function t() {
 	var k;
 	var minmn = Math.min( M, N );
 
-	info = zgesvd( 'A', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	Uv = reinterpret( U, 0 );
@@ -579,7 +579,7 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=A reconstruction (M < N)', function t() {
 	var k;
 	var minmn = Math.min( M, N );
 
-	info = zgesvd( 'A', 'A', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	Uv = reinterpret( U, 0 );
@@ -628,11 +628,11 @@ test( 'zgesvd: 6x3 JOBU=N JOBVT=N (M >= 2N path 1, values only)', function t() {
 	// Compute reference with full SVD
 	var Uref = new Complex128Array( 36 );
 	var VTref = new Complex128Array( 9 );
-	infoRef = zgesvd( 'A', 'A', 6, 3, Aref, 1, 6, 0, sRef, 1, 0, Uref, 1, 6, 0, VTref, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	infoRef = zgesvd( 'all-columns', 'all-rows', 6, 3, Aref, 1, 6, 0, sRef, 1, 0, Uref, 1, 6, 0, VTref, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( infoRef, 0, 'ref info' );
 
 	// Now test the N path (triggers path 1: wntun && M >= 2*N)
-	info = zgesvd( 'N', 'N', 6, 3, A, 1, 6, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'none', 6, 3, A, 1, 6, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), Array.from( sRef ), 1e-12, 's' );
 });
@@ -657,9 +657,9 @@ test( 'zgesvd: 6x3 JOBU=N JOBVT=S (M >= 2N path 1, VT economy)', function t() {
 	// Compute reference
 	var Uref = new Complex128Array( 36 );
 	var VTref = new Complex128Array( 9 );
-	zgesvd( 'A', 'A', 6, 3, Aref, 1, 6, 0, sRef, 1, 0, Uref, 1, 6, 0, VTref, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	zgesvd( 'all-columns', 'all-rows', 6, 3, Aref, 1, 6, 0, sRef, 1, 0, Uref, 1, 6, 0, VTref, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 
-	info = zgesvd( 'N', 'S', 6, 3, A, 1, 6, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'economy', 6, 3, A, 1, 6, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), Array.from( sRef ), 1e-12, 's' );
 });
@@ -678,7 +678,7 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=N (M >= N, values only, path 10)', function t() 
 	] );
 	var info;
 
-	info = zgesvd( 'N', 'N', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
+	info = zgesvd( 'none', 'none', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -697,7 +697,7 @@ test( 'zgesvd: 4x3 JOBU=O JOBVT=S (M >= N, overwrite A with U)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'O', 'S', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'overwrite', 'economy', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -716,7 +716,7 @@ test( 'zgesvd: 4x3 JOBU=S JOBVT=O (M >= N, overwrite A with VT)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'S', 'O', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'economy', 'overwrite', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -737,7 +737,7 @@ test( 'zgesvd: 3x5 JOBU=O JOBVT=S (M < N, overwrite A with U)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'O', 'S', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'overwrite', 'economy', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -758,7 +758,7 @@ test( 'zgesvd: 3x5 JOBU=S JOBVT=O (M < N, overwrite A with VT)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'S', 'O', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'economy', 'overwrite', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -779,7 +779,7 @@ test( 'zgesvd: 3x5 JOBU=S JOBVT=S (M < N, economy SVD)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'S', 'S', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'economy', 'economy', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -800,7 +800,7 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=S (M < N, full U, economy VT)', function t() {
 	] );
 	var info;
 
-	info = zgesvd( 'A', 'S', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'economy', 3, 5, A, 1, 3, 0, s, 1, 0, U, 1, 3, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -819,11 +819,11 @@ test( 'zgesvd: very small matrix triggers scaling path', function t() {
 	var info;
 
 	// Get reference singular values at normal scale
-	info = zgesvd( 'A', 'A', 2, 2, A2, 1, 2, 0, sRef, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 2, 2, A2, 1, 2, 0, sRef, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'ref info' );
 
 	// Now test at very small scale
-	info = zgesvd( 'A', 'A', 2, 2, A1, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 2, 2, A1, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	// Singular values should match the reference scaled by the same factor
@@ -844,11 +844,11 @@ test( 'zgesvd: very large matrix triggers scaling path', function t() {
 	var info;
 
 	// Get reference singular values at normal scale
-	info = zgesvd( 'A', 'A', 2, 2, A2, 1, 2, 0, sRef, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 2, 2, A2, 1, 2, 0, sRef, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'ref info' );
 
 	// Now test at very large scale
-	info = zgesvd( 'A', 'A', 2, 2, A1, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 2, 2, A1, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	assertSingularValuesClose( [ s[0] / scale, s[1] / scale ], Array.from( sRef ), 1e-8, 'scaled s' );
@@ -864,7 +864,7 @@ test( 'zgesvd: insufficient lwork triggers internal allocation', function t() {
 	var A = c128( [ 3.0, 1.0, 1.0, 2.0, 2.0, 0.0, 4.0, 1.0 ] );
 	var info;
 
-	info = zgesvd( 'A', 'A', 2, 2, A, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 1, RWORK, 1, 0 );
+	info = zgesvd( 'all-columns', 'all-rows', 2, 2, A, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 1, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( Array.from( s ), tc.s, 1e-12, 's' );
 });
@@ -901,7 +901,7 @@ test( 'zgesvd: 5x3 JOBU=S JOBVT=S reconstruction', function t() {
 	var k;
 	var minmn = Math.min( M, N );
 
-	info = zgesvd( 'S', 'S', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
+	info = zgesvd( 'economy', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0, WORK, 1, 0, 2500, RWORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	Uv = reinterpret( U, 0 );

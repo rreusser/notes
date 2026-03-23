@@ -48,7 +48,7 @@ test( 'zpotrf2: lower_3x3', function t() {
 		3, -1, 8, 0, 2, 1,
 		1, 2, 2, -1, 6, 0
 	] );
-	var info = zpotrf2( 'L', 3, A, 1, 3, 0 );
+	var info = zpotrf2( 'lower', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -60,7 +60,7 @@ test( 'zpotrf2: upper_3x3', function t() {
 		3, -1, 8, 0, 2, 1,
 		1, 2, 2, -1, 6, 0
 	] );
-	var info = zpotrf2( 'U', 3, A, 1, 3, 0 );
+	var info = zpotrf2( 'upper', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -72,21 +72,21 @@ test( 'zpotrf2: not_posdef', function t() {
 		2, -1, 1, 0, 4, 0,
 		3, 0, 4, 0, 1, 0
 	] );
-	var info = zpotrf2( 'L', 3, A, 1, 3, 0 );
+	var info = zpotrf2( 'lower', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'zpotrf2: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
-	var info = zpotrf2( 'L', 0, A, 1, 1, 0 );
+	var info = zpotrf2( 'lower', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'zpotrf2: n_one', function t() {
 	var tc = findCase( 'n_one' );
 	var A = new Complex128Array( [ 9, 0 ] );
-	var info = zpotrf2( 'L', 1, A, 1, 1, 0 );
+	var info = zpotrf2( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -94,7 +94,7 @@ test( 'zpotrf2: n_one', function t() {
 test( 'zpotrf2: n_one_notposdef', function t() {
 	var tc = findCase( 'n_one_notposdef' );
 	var A = new Complex128Array( [ -4, 0 ] );
-	var info = zpotrf2( 'L', 1, A, 1, 1, 0 );
+	var info = zpotrf2( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -106,7 +106,7 @@ test( 'zpotrf2: lower_4x4', function t() {
 		2, 1, 3, -1, 10, 0, 1, 1,
 		1, -3, 2, 2, 1, -1, 9, 0
 	] );
-	var info = zpotrf2( 'L', 4, A, 1, 4, 0 );
+	var info = zpotrf2( 'lower', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -119,7 +119,7 @@ test( 'zpotrf2: upper_4x4', function t() {
 		2, 1, 3, -1, 10, 0, 1, 1,
 		1, -3, 2, 2, 1, -1, 9, 0
 	] );
-	var info = zpotrf2( 'U', 4, A, 1, 4, 0 );
+	var info = zpotrf2( 'upper', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 1e-14, 'a' );
 });
@@ -132,7 +132,7 @@ test( 'zpotrf2: upper_4x4 not posdef in A22 block', function t() {
 		1, 0, 3, 0, -1, 0, 0, 0,
 		1, 0, 3, 0, 0, 0, -1, 0
 	] );
-	var info = zpotrf2( 'U', 4, A, 1, 4, 0 );
+	var info = zpotrf2( 'upper', 4, A, 1, 4, 0 );
 	// n1 = 2, so if A22 fails at position k, info = k + n1
 	assert.ok( info > 2, 'info should be > 2 (failure in A22 block), got ' + info );
 });

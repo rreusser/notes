@@ -66,7 +66,7 @@ test( 'zgemm: basic N,N (M=2, N=2, K=2)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'N', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_basic_nn c' );
 });
@@ -78,7 +78,7 @@ test( 'zgemm: conjugate transpose A (C=A^H*B)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'C', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'conjugate-transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_conjA c' );
 });
@@ -91,7 +91,7 @@ test( 'zgemm: alpha and beta scaling', function t() {
 	var C = new Complex128Array( [ 1, 1, 0, 0, 0, 0, 1, 1 ] );
 	var alpha = new Complex128( 2, 1 );
 	var beta = new Complex128( 1, -1 );
-	var result = base( 'N', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_alpha_beta c' );
 });
@@ -103,7 +103,7 @@ test( 'zgemm: M=0 quick return', function t() {
 	var C = new Complex128Array( [ 99, 88 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 1, 0 );
-	var result = base( 'N', 'N', 0, 2, 2, alpha, A, 1, 1, 0, B, 1, 1, 0, beta, C, 1, 1, 0 );
+	var result = base( 'no-transpose', 'no-transpose', 0, 2, 2, alpha, A, 1, 1, 0, B, 1, 1, 0, beta, C, 1, 1, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_m_zero c' );
 });
@@ -115,7 +115,7 @@ test( 'zgemm: transpose B (C=A*B^T)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'N', 'T', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_transB c' );
 });
@@ -127,7 +127,7 @@ test( 'zgemm: conjugate transpose B (C=A*B^H)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'N', 'C', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'conjugate-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_conjB c' );
 });
@@ -139,7 +139,7 @@ test( 'zgemm: transpose A, no transpose B (C=A^T*B)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'T', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_transA_N c' );
 });
@@ -151,7 +151,7 @@ test( 'zgemm: alpha=0, beta=0 (C should be zeroed)', function t() {
 	var C = new Complex128Array( [ 5, 3, 7, 2, 1, 1, 9, 4 ] );
 	var alpha = new Complex128( 0, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'N', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_alpha_zero_beta_zero c' );
 });
@@ -163,7 +163,7 @@ test( 'zgemm: alpha=0, non-trivial beta (C := beta*C)', function t() {
 	var C = new Complex128Array( [ 2, 1, 3, 2, 4, 3, 5, 4 ] );
 	var alpha = new Complex128( 0, 0 );
 	var beta = new Complex128( 2, 1 );
-	var result = base( 'N', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_alpha_zero_beta_scale c' );
 });
@@ -174,7 +174,7 @@ test( 'zgemm: alpha=0, beta=1 quick return (C unchanged)', function t() {
 	var C = new Complex128Array( [ 2, 1, 3, 2, 4, 3, 5, 4 ] );
 	var alpha = new Complex128( 0, 0 );
 	var beta = new Complex128( 1, 0 );
-	var result = base( 'N', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assert.deepStrictEqual( Array.from( reinterpret( C, 0 ) ), [ 2, 1, 3, 2, 4, 3, 5, 4 ] );
 });
@@ -186,7 +186,7 @@ test( 'zgemm: conjugate A, conjugate B (C=A^H*B^H)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'C', 'C', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'conjugate-transpose', 'conjugate-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_conjA_conjB c' );
 });
@@ -198,7 +198,7 @@ test( 'zgemm: transpose A, transpose B (C=A^T*B^T)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'T', 'T', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'transpose', 'transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_transA_transB c' );
 });
@@ -210,7 +210,7 @@ test( 'zgemm: transpose A, conjugate B (C=A^T*B^H)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'T', 'C', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'transpose', 'conjugate-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_transA_conjB c' );
 });
@@ -222,7 +222,7 @@ test( 'zgemm: conjugate A, transpose B (C=A^H*B^T)', function t() {
 	var C = new Complex128Array( 4 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'C', 'T', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'conjugate-transpose', 'transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_conjA_transB c' );
 });
@@ -234,7 +234,7 @@ test( 'zgemm: K=0 (C := beta*C)', function t() {
 	var C = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 2, 0 );
-	var result = base( 'N', 'N', 2, 2, 0, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'no-transpose', 2, 2, 0, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_k_zero c' );
 });
@@ -247,7 +247,7 @@ test( 'zgemm: N,T with non-trivial beta', function t() {
 	var C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 2, 1 );
-	var result = base( 'N', 'T', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_NT_beta_scale c' );
 });
@@ -260,7 +260,7 @@ test( 'zgemm: C,C with non-zero beta', function t() {
 	var C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0.5, 0.5 );
-	var result = base( 'C', 'C', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'conjugate-transpose', 'conjugate-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_CC_beta_nonzero c' );
 });
@@ -273,7 +273,7 @@ test( 'zgemm: N,C with non-trivial beta', function t() {
 	var C = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 2, 0 );
-	var result = base( 'N', 'C', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'no-transpose', 'conjugate-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_NC_beta_scale c' );
 });
@@ -286,7 +286,7 @@ test( 'zgemm: T,N with non-zero beta', function t() {
 	var C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 1, 1 );
-	var result = base( 'T', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_TN_beta_nonzero c' );
 });
@@ -299,7 +299,7 @@ test( 'zgemm: C,N with non-zero beta', function t() {
 	var C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 1, 1 );
-	var result = base( 'C', 'N', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'conjugate-transpose', 'no-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_CN_beta_nonzero c' );
 });
@@ -312,7 +312,7 @@ test( 'zgemm: C,T with non-zero beta', function t() {
 	var C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0.5, 0 );
-	var result = base( 'C', 'T', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'conjugate-transpose', 'transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_CT_beta_nonzero c' );
 });
@@ -325,7 +325,7 @@ test( 'zgemm: T,C with non-zero beta', function t() {
 	var C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0.5, 0 );
-	var result = base( 'T', 'C', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'transpose', 'conjugate-transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_TC_beta_nonzero c' );
 });
@@ -338,7 +338,7 @@ test( 'zgemm: T,T with non-zero beta', function t() {
 	var C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0.5, 0 );
-	var result = base( 'T', 'T', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
+	var result = base( 'transpose', 'transpose', 2, 2, 2, alpha, A, 1, 2, 0, B, 1, 2, 0, beta, C, 1, 2, 0 );
 	assert.strictEqual( result, C );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.c, 'zgemm_TT_beta_nonzero c' );
 });

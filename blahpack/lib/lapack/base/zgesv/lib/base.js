@@ -46,7 +46,7 @@ function zgesv( N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offse
 
 	if ( info === 0 ) {
 		// Solve the system using the factorization
-		zgetrs( 'N', N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB );
+		zgetrs( 'no-transpose', N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB );
 	}
 
 	return info;

@@ -88,13 +88,13 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	var j;
 
 	// Decode COMPQ
-	if ( compq === 'N' || compq === 'n' ) {
+	if ( compq === 'none' ) {
 		ilq = false;
 		icompq = 1;
-	} else if ( compq === 'V' || compq === 'v' ) {
+	} else if ( compq === 'update' ) {
 		ilq = true;
 		icompq = 2;
-	} else if ( compq === 'I' || compq === 'i' ) {
+	} else if ( compq === 'initialize' ) {
 		ilq = true;
 		icompq = 3;
 	} else {
@@ -102,13 +102,13 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	}
 
 	// Decode COMPZ
-	if ( compz === 'N' || compz === 'n' ) {
+	if ( compz === 'none' ) {
 		ilz = false;
 		icompz = 1;
-	} else if ( compz === 'V' || compz === 'v' ) {
+	} else if ( compz === 'update' ) {
 		ilz = true;
 		icompz = 2;
-	} else if ( compz === 'I' || compz === 'i' ) {
+	} else if ( compz === 'initialize' ) {
 		ilz = true;
 		icompz = 3;
 	} else {

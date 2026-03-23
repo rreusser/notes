@@ -52,7 +52,7 @@ test( 'dpbtf2: upper_tridiag_5', function t() {
 		-1.0, 2.0,   // col 3
 		-1.0, 2.0    // col 4
 	]);
-	var info = dpbtf2( 'U', 5, 1, ab, 1, 2, 0 );
+	var info = dpbtf2( 'upper', 5, 1, ab, 1, 2, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -68,7 +68,7 @@ test( 'dpbtf2: lower_tridiag_5', function t() {
 		2.0,  -1.0,  // col 3
 		2.0,   0.0   // col 4
 	]);
-	var info = dpbtf2( 'L', 5, 1, ab, 1, 2, 0 );
+	var info = dpbtf2( 'lower', 5, 1, ab, 1, 2, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -82,7 +82,7 @@ test( 'dpbtf2: upper_penta_4', function t() {
 		0.5, -1.0,  4.0,   // col 2
 		0.5, -1.0,  4.0    // col 3
 	]);
-	var info = dpbtf2( 'U', 4, 2, ab, 1, 3, 0 );
+	var info = dpbtf2( 'upper', 4, 2, ab, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -96,7 +96,7 @@ test( 'dpbtf2: lower_penta_4', function t() {
 		4.0, -1.0,  0.0,   // col 2
 		4.0,  0.0,  0.0    // col 3
 	]);
-	var info = dpbtf2( 'L', 4, 2, ab, 1, 3, 0 );
+	var info = dpbtf2( 'lower', 4, 2, ab, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -104,7 +104,7 @@ test( 'dpbtf2: lower_penta_4', function t() {
 test( 'dpbtf2: n_one', function t() {
 	var tc = findCase( 'n_one' );
 	var ab = new Float64Array([ 9.0 ]);
-	var info = dpbtf2( 'U', 1, 0, ab, 1, 1, 0 );
+	var info = dpbtf2( 'upper', 1, 0, ab, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -112,7 +112,7 @@ test( 'dpbtf2: n_one', function t() {
 test( 'dpbtf2: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var ab = new Float64Array([ 99.0 ]);
-	var info = dpbtf2( 'L', 0, 0, ab, 1, 1, 0 );
+	var info = dpbtf2( 'lower', 0, 0, ab, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -123,7 +123,7 @@ test( 'dpbtf2: not_posdef', function t() {
 		1.0,  2.0,   // col 0
 		1.0,  0.0    // col 1
 	]);
-	var info = dpbtf2( 'L', 2, 1, ab, 1, 2, 0 );
+	var info = dpbtf2( 'lower', 2, 1, ab, 1, 2, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -137,7 +137,7 @@ test( 'dpbtf2: upper_full_3', function t() {
 		0.0, 2.0, 5.0,   // col 1
 		1.0, 3.0, 6.0    // col 2
 	]);
-	var info = dpbtf2( 'U', 3, 2, ab, 1, 3, 0 );
+	var info = dpbtf2( 'upper', 3, 2, ab, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( ab, tc.ab, 1e-14, 'ab' );
 });
@@ -149,6 +149,6 @@ test( 'dpbtf2: not_posdef upper', function t() {
 		0.0, 1.0,   // col 0: diag=1
 		2.0, 1.0    // col 1: superdiag=2, diag=1
 	]);
-	var info = dpbtf2( 'U', 2, 1, ab, 1, 2, 0 );
+	var info = dpbtf2( 'upper', 2, 1, ab, 1, 2, 0 );
 	assert.equal( info, 2 );
 });

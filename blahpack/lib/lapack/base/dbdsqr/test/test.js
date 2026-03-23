@@ -74,7 +74,7 @@ test( 'dbdsqr: upper_4x4_values_only', function t() {
 	var VT = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
@@ -88,7 +88,7 @@ test( 'dbdsqr: upper_3x3_with_vt', function t() {
 	var VT = eye( 3 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -103,7 +103,7 @@ test( 'dbdsqr: upper_3x3_with_vt_and_u', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -119,7 +119,7 @@ test( 'dbdsqr: lower_3x3_values_only', function t() {
 	var VT = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'L', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'lower', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
@@ -133,7 +133,7 @@ test( 'dbdsqr: lower_3x3_with_u', function t() {
 	var VT = new Float64Array( 1 );
 	var U = eye( 3 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'L', n, 0, 3, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'lower', n, 0, 3, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( U, n * n ), tc.u, 1e-14, 'u' );
@@ -147,7 +147,7 @@ test( 'dbdsqr: n_1', function t() {
 	var VT = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', 1, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', 1, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, 1 ), tc.d, 1e-14, 'd' );
 });
@@ -160,7 +160,7 @@ test( 'dbdsqr: n_0', function t() {
 	var VT = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', 0, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', 0, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -173,7 +173,7 @@ test( 'dbdsqr: upper_2x2_with_vectors', function t() {
 	var VT = eye( 2 );
 	var U = eye( 2 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 2, 2, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 2, 2, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -189,7 +189,7 @@ test( 'dbdsqr: n_1_neg_with_vt', function t() {
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
 	// ncvt=2, LDVT=1 => strideVT2=1 for row access
-	var info = dbdsqr( 'U', 1, 2, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', 1, 2, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, 1 ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, 2 ), tc.vt, 1e-14, 'vt' );
@@ -206,7 +206,7 @@ test( 'dbdsqr: upper_3x3_with_c', function t() {
 	var U = new Float64Array( 1 );
 	// C is 3x2 column-major: C(1,:)=[1,2], C(2,:)=[0.5,0.25], C(3,:)=[1.5,2.5]
 	var C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
-	var info = dbdsqr( 'U', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( C, n * ncc ), tc.c, 1e-14, 'c' );
@@ -221,7 +221,7 @@ test( 'dbdsqr: upper_4x4_idir2', function t() {
 	var VT = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
@@ -235,7 +235,7 @@ test( 'dbdsqr: upper_3x3_zero_shift', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -252,7 +252,7 @@ test( 'dbdsqr: lower_3x3_with_c', function t() {
 	var VT = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
-	var info = dbdsqr( 'L', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 );
+	var info = dbdsqr( 'lower', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( C, n * ncc ), tc.c, 1e-14, 'c' );
@@ -267,7 +267,7 @@ test( 'dbdsqr: upper_3x3_idir2_with_vectors', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -283,7 +283,7 @@ test( 'dbdsqr: upper_3x3_negative_d', function t() {
 	var VT = eye( 3 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -298,7 +298,7 @@ test( 'dbdsqr: nearly_diagonal', function t() {
 	var VT = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
@@ -312,7 +312,7 @@ test( 'dbdsqr: lower_3x3_with_vt_and_u', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'L', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'lower', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -329,7 +329,7 @@ test( 'dbdsqr: lower_3x3_all_vectors', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
-	var info = dbdsqr( 'L', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var info = dbdsqr( 'lower', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -346,7 +346,7 @@ test( 'dbdsqr: upper_3x3_zero_d', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -363,7 +363,7 @@ test( 'dbdsqr: upper_3x3_zero_shift_all_vecs', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
-	var info = dbdsqr( 'U', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -381,7 +381,7 @@ test( 'dbdsqr: upper_4x4_idir2_all_vecs', function t() {
 	var VT = eye( 4 );
 	var U = eye( 4 );
 	var C = new Float64Array( [ 1.0, 0.5, 1.5, 0.25, 2.0, 0.75, 2.5, 1.0 ] );
-	var info = dbdsqr( 'U', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -399,7 +399,7 @@ test( 'dbdsqr: upper_4x4_idir1_zero_shift_all_vecs', function t() {
 	var VT = eye( 4 );
 	var U = eye( 4 );
 	var C = new Float64Array( [ 1.0, 0.5, 1.5, 0.25, 2.0, 0.75, 2.5, 1.0 ] );
-	var info = dbdsqr( 'U', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -416,7 +416,7 @@ test( 'dbdsqr: upper_3x3_near_zero_shift', function t() {
 	var VT = eye( 3 );
 	var U = eye( 3 );
 	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'U', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );

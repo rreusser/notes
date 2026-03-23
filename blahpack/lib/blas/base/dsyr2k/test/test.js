@@ -46,7 +46,7 @@ test( 'dsyr2k: upper_N', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	dsyr2k( 'U', 'N', 3, 2, 2.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'no-transpose', 3, 2, 2.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -55,7 +55,7 @@ test( 'dsyr2k: lower_N', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	dsyr2k( 'L', 'N', 3, 2, 2.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
+	dsyr2k( 'lower', 'no-transpose', 3, 2, 2.0, A, 1, 3, 0, B, 1, 3, 0, 1.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -65,7 +65,7 @@ test( 'dsyr2k: upper_T', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	dsyr2k( 'U', 'T', 3, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'transpose', 3, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -74,7 +74,7 @@ test( 'dsyr2k: lower_T', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	dsyr2k( 'L', 'T', 3, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 3, 0 );
+	dsyr2k( 'lower', 'transpose', 3, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -83,7 +83,7 @@ test( 'dsyr2k: alpha_zero', function t() {
 	var A = new Float64Array( 6 );
 	var B = new Float64Array( 6 );
 	var C = new Float64Array( [ 2, 0, 0, 3, 4, 0, 5, 6, 7 ] );
-	dsyr2k( 'U', 'N', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 2.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'no-transpose', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 2.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -92,7 +92,7 @@ test( 'dsyr2k: beta_zero', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 99, 0, 0, 0, 99, 0, 0, 0, 99 ] );
-	dsyr2k( 'U', 'N', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -100,7 +100,7 @@ test( 'dsyr2k: n_zero', function t() {
 	var A = new Float64Array( 1 );
 	var B = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var result = dsyr2k( 'U', 'N', 0, 2, 1.0, A, 1, 1, 0, B, 1, 1, 0, 1.0, C, 1, 1, 0 );
+	var result = dsyr2k( 'upper', 'no-transpose', 0, 2, 1.0, A, 1, 1, 0, B, 1, 1, 0, 1.0, C, 1, 1, 0 );
 	assert.ok( result === C );
 });
 
@@ -109,7 +109,7 @@ test( 'dsyr2k: alpha_zero_beta_zero', function t() {
 	var A = new Float64Array( 6 );
 	var B = new Float64Array( 6 );
 	var C = new Float64Array( [ 5, 0, 0, 6, 7, 0, 8, 9, 10 ] );
-	dsyr2k( 'U', 'N', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'no-transpose', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -118,7 +118,7 @@ test( 'dsyr2k: alpha_zero_beta_zero_lower', function t() {
 	var A = new Float64Array( 6 );
 	var B = new Float64Array( 6 );
 	var C = new Float64Array( [ 5, 6, 7, 0, 8, 9, 0, 0, 10 ] );
-	dsyr2k( 'L', 'N', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
+	dsyr2k( 'lower', 'no-transpose', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -127,7 +127,7 @@ test( 'dsyr2k: alpha_zero_beta_scale_upper', function t() {
 	var A = new Float64Array( 6 );
 	var B = new Float64Array( 6 );
 	var C = new Float64Array( [ 2, 0, 0, 3, 4, 0, 5, 6, 7 ] );
-	dsyr2k( 'U', 'N', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 3.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'no-transpose', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 3.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -136,7 +136,7 @@ test( 'dsyr2k: alpha_zero_beta_scale_lower', function t() {
 	var A = new Float64Array( 6 );
 	var B = new Float64Array( 6 );
 	var C = new Float64Array( [ 2, 3, 5, 0, 4, 6, 0, 0, 7 ] );
-	dsyr2k( 'L', 'N', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 3.0, C, 1, 3, 0 );
+	dsyr2k( 'lower', 'no-transpose', 3, 2, 0.0, A, 1, 3, 0, B, 1, 3, 0, 3.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -145,7 +145,7 @@ test( 'dsyr2k: upper_N_beta_half', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	dsyr2k( 'U', 'N', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.5, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.5, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -154,7 +154,7 @@ test( 'dsyr2k: lower_N_beta_zero', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 99, 0, 0, 0, 99, 0, 0, 0, 99 ] );
-	dsyr2k( 'L', 'N', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
+	dsyr2k( 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -163,7 +163,7 @@ test( 'dsyr2k: lower_N_beta_half', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	dsyr2k( 'L', 'N', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.5, C, 1, 3, 0 );
+	dsyr2k( 'lower', 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, B, 1, 3, 0, 0.5, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -172,7 +172,7 @@ test( 'dsyr2k: k_zero_beta_scale', function t() {
 	var A = new Float64Array( 6 );
 	var B = new Float64Array( 6 );
 	var C = new Float64Array( [ 2, 0, 0, 3, 4, 0, 5, 6, 7 ] );
-	dsyr2k( 'U', 'N', 3, 0, 1.0, A, 1, 3, 0, B, 1, 3, 0, 2.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'no-transpose', 3, 0, 1.0, A, 1, 3, 0, B, 1, 3, 0, 2.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -181,7 +181,7 @@ test( 'dsyr2k: upper_T_beta_zero', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 99, 0, 0, 0, 99, 0, 0, 0, 99 ] );
-	dsyr2k( 'U', 'T', 3, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 3, 0 );
+	dsyr2k( 'upper', 'transpose', 3, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
 
@@ -190,6 +190,6 @@ test( 'dsyr2k: lower_T_beta_zero', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
 	var C = new Float64Array( [ 99, 0, 0, 0, 99, 0, 0, 0, 99 ] );
-	dsyr2k( 'L', 'T', 3, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 3, 0 );
+	dsyr2k( 'lower', 'transpose', 3, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 3, 0 );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });

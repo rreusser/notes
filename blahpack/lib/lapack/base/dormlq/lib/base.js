@@ -88,8 +88,8 @@ function dormlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		return 0;
 	}
 
-	left = ( side === 'L' || side === 'l' );
-	notran = ( trans === 'N' || trans === 'n' );
+	left = ( side === 'left' );
+	notran = ( trans === 'no-transpose' );
 
 	if ( left ) {
 		nq = M;
@@ -145,9 +145,9 @@ function dormlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	// For LQ reflectors, the transpose relationship is inverted:
 	// Q = H(k)...H(1), so applying Q^T uses forward H, applying Q uses H^T
 	if ( notran ) {
-		transt = 'T';
+		transt = 'transpose';
 	} else {
-		transt = 'N';
+		transt = 'no-transpose';
 	}
 
 	for ( i = i1; ( i3 > 0 ) ? ( i < i2 ) : ( i > i2 ); i += i3 ) {
@@ -156,7 +156,7 @@ function dormlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Form the triangular factor of the block reflector
 		// H = H(i) H(i+1) ... H(i+ib-1)
 		dlarft(
-			'F', 'R', nq - i, ib,
+			'forward', 'rowwise', nq - i, ib,
 			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 			TAU, strideTAU, offsetTAU + i * strideTAU,
 			T, 1, ldt, 0
@@ -172,7 +172,7 @@ function dormlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 
 		// Apply H or H^T to C(ic:ic+mi, jc:jc+ni)
 		dlarfb(
-			side, transt, 'F', 'R', mi, ni, ib,
+			side, transt, 'forward', 'rowwise', mi, ni, ib,
 			A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 			T, 1, ldt, 0,
 			C, strideC1, strideC2, offsetC + ic * strideC1 + jc * strideC2,

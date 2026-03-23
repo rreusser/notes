@@ -94,10 +94,10 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 		return B;
 	}
 
-	lside = ( side === 'L' || side === 'l' );
-	upper = ( uplo === 'U' || uplo === 'u' );
-	noconj = ( transa === 'T' || transa === 't' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	lside = ( side === 'left' );
+	upper = ( uplo === 'upper' );
+	noconj = ( transa === 'transpose' );
+	nounit = ( diag === 'non-unit' );
 
 	alphaR = real( alpha );
 	alphaI = imag( alpha );
@@ -124,7 +124,7 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	}
 
 	if ( lside ) {
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			// Form B := alpha*inv(A)*B
 			if ( upper ) {
 				// Left, Upper, No-transpose
@@ -327,7 +327,7 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			}
 		}
 	} else {
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			// Form B := alpha*B*inv(A)
 			if ( upper ) {
 				// Right, Upper, No-transpose

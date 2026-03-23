@@ -130,70 +130,70 @@ var A5_LOWER = makeMatrix( 5, 5, {
 test( 'dlansy: dlansy_max_U', function t() {
 	var tc = findCase( 'dlansy_max_U' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'M', 'U', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'max', 'upper', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_one_U', function t() {
 	var tc = findCase( 'dlansy_one_U' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( '1', 'U', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'one-norm', 'upper', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_one_O_U', function t() {
 	var tc = findCase( 'dlansy_one_O_U' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'O', 'U', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'one-norm', 'upper', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_inf_U', function t() {
 	var tc = findCase( 'dlansy_inf_U' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'I', 'U', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'inf-norm', 'upper', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_frob_U', function t() {
 	var tc = findCase( 'dlansy_frob_U' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'F', 'U', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'frobenius', 'upper', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_frob_E_U', function t() {
 	var tc = findCase( 'dlansy_frob_E_U' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'E', 'U', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'frobenius', 'upper', 4, A4_UPPER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_max_L', function t() {
 	var tc = findCase( 'dlansy_max_L' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'M', 'L', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'max', 'lower', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_one_L', function t() {
 	var tc = findCase( 'dlansy_one_L' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( '1', 'L', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'one-norm', 'lower', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_inf_L', function t() {
 	var tc = findCase( 'dlansy_inf_L' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'I', 'L', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'inf-norm', 'lower', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_frob_L', function t() {
 	var tc = findCase( 'dlansy_frob_L' );
 	var WORK = new Float64Array( 4 );
-	var result = dlansy( 'F', 'L', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
+	var result = dlansy( 'frobenius', 'lower', 4, A4_LOWER, 1, 4, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -201,7 +201,7 @@ test( 'dlansy: dlansy_n_zero', function t() {
 	var tc = findCase( 'dlansy_n_zero' );
 	var WORK = new Float64Array( 4 );
 	var A = new Float64Array( 1 );
-	var result = dlansy( 'M', 'U', 0, A, 1, 1, 0, WORK, 1, 0 );
+	var result = dlansy( 'max', 'upper', 0, A, 1, 1, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -209,7 +209,7 @@ test( 'dlansy: dlansy_1x1_max', function t() {
 	var tc = findCase( 'dlansy_1x1_max' );
 	var WORK = new Float64Array( 1 );
 	var A = new Float64Array( [ -5.5 ] );
-	var result = dlansy( 'M', 'U', 1, A, 1, 1, 0, WORK, 1, 0 );
+	var result = dlansy( 'max', 'upper', 1, A, 1, 1, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -217,7 +217,7 @@ test( 'dlansy: dlansy_1x1_one', function t() {
 	var tc = findCase( 'dlansy_1x1_one' );
 	var WORK = new Float64Array( 1 );
 	var A = new Float64Array( [ -5.5 ] );
-	var result = dlansy( '1', 'U', 1, A, 1, 1, 0, WORK, 1, 0 );
+	var result = dlansy( 'one-norm', 'upper', 1, A, 1, 1, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -225,7 +225,7 @@ test( 'dlansy: dlansy_1x1_inf', function t() {
 	var tc = findCase( 'dlansy_1x1_inf' );
 	var WORK = new Float64Array( 1 );
 	var A = new Float64Array( [ -5.5 ] );
-	var result = dlansy( 'I', 'U', 1, A, 1, 1, 0, WORK, 1, 0 );
+	var result = dlansy( 'inf-norm', 'upper', 1, A, 1, 1, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -233,62 +233,62 @@ test( 'dlansy: dlansy_1x1_frob', function t() {
 	var tc = findCase( 'dlansy_1x1_frob' );
 	var WORK = new Float64Array( 1 );
 	var A = new Float64Array( [ -5.5 ] );
-	var result = dlansy( 'F', 'U', 1, A, 1, 1, 0, WORK, 1, 0 );
+	var result = dlansy( 'frobenius', 'upper', 1, A, 1, 1, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_max_U', function t() {
 	var tc = findCase( 'dlansy_5x5_max_U' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( 'M', 'U', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'max', 'upper', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_one_U', function t() {
 	var tc = findCase( 'dlansy_5x5_one_U' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( '1', 'U', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'one-norm', 'upper', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_inf_U', function t() {
 	var tc = findCase( 'dlansy_5x5_inf_U' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( 'I', 'U', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'inf-norm', 'upper', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_frob_U', function t() {
 	var tc = findCase( 'dlansy_5x5_frob_U' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( 'F', 'U', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'frobenius', 'upper', 5, A5_UPPER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_max_L', function t() {
 	var tc = findCase( 'dlansy_5x5_max_L' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( 'M', 'L', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'max', 'lower', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_one_L', function t() {
 	var tc = findCase( 'dlansy_5x5_one_L' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( '1', 'L', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'one-norm', 'lower', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_inf_L', function t() {
 	var tc = findCase( 'dlansy_5x5_inf_L' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( 'I', 'L', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'inf-norm', 'lower', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansy: dlansy_5x5_frob_L', function t() {
 	var tc = findCase( 'dlansy_5x5_frob_L' );
 	var WORK = new Float64Array( 5 );
-	var result = dlansy( 'F', 'L', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
+	var result = dlansy( 'frobenius', 'lower', 5, A5_LOWER, 1, 5, 0, WORK, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });

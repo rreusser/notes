@@ -1,35 +1,45 @@
-
-
+/* eslint-disable max-len, max-params */
 'use strict';
-
-// MAIN //
-
-/**
-* Reduce a complex general matrix to upper Hessenberg form (blocked)
-*
-* @private
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ilo - ilo
-* @param {integer} ihi - ihi
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} TAU - input array
-* @param {integer} strideTAU - stride length for `TAU`
-* @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @returns {integer} status code (0 = success)
-*/
-function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zaxpy = require( '../../../../blas/base/zaxpy/lib/base.js' );
+var zgehd2 = require( '../../zgehd2/lib/base.js' );
+var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
+var zlahr2 = require( '../../zlahr2/lib/base.js' );
+var zlarfb = require( '../../zlarfb/lib/base.js' );
+var ztrmm = require( '../../../../blas/base/ztrmm/lib/base.js' );
+var NBMAX = 64;
+var LDT = NBMAX + 1;
+var ONE = new Complex128( 1.0, 0.0 );
+var NEGONE = new Complex128( -1.0, 0.0 );
+function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+	var LDWORK, tauv, eiR, eiI, IWT, av, sa1, sa2, oA, oE, NB, NX, NH, IB, i, j;
+	NB = 32;
+	av = reinterpret( A, 0 ); sa1 = strideA1 * 2; sa2 = strideA2 * 2; oA = offsetA * 2;
+	tauv = reinterpret( TAU, 0 );
+	for ( i = 0; i < ilo - 1; i++ ) { tauv[ ( offsetTAU + i * strideTAU ) * 2 ] = 0.0; tauv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ] = 0.0; }
+	for ( i = Math.max( 0, ihi - 1 ); i < N - 1; i++ ) { tauv[ ( offsetTAU + i * strideTAU ) * 2 ] = 0.0; tauv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ] = 0.0; }
+	NH = ihi - ilo + 1;
+	if ( NH <= 1 ) { return 0; }
+	NX = Math.max( NB, NB ); LDWORK = N;
+	if ( NB < 2 || NB >= NH ) {
+		i = ilo;
+	} else {
+		IWT = N * NB;
+		for ( i = ilo; i <= ihi - 1 - NX; i += NB ) {
+			IB = Math.min( NB, ihi - i );
+			zlahr2( ihi, i, IB, A, strideA1, strideA2, offsetA + ( i - 1 ) * strideA2, TAU, strideTAU, offsetTAU + ( i - 1 ) * strideTAU, WORK, 1, LDT, offsetWORK + IWT, WORK, 1, LDWORK, offsetWORK );
+			oE = oA + ( i + IB - 1 ) * sa1 + ( i + IB - 2 ) * sa2;
+			eiR = av[ oE ]; eiI = av[ oE + 1 ]; av[ oE ] = 1.0; av[ oE + 1 ] = 0.0;
+			zgemm( 'N', 'C', ihi, ihi - i - IB + 1, IB, NEGONE, WORK, 1, LDWORK, offsetWORK, A, strideA1, strideA2, offsetA + ( i + IB - 1 ) * strideA1 + ( i - 1 ) * strideA2, ONE, A, strideA1, strideA2, offsetA + ( i + IB - 1 ) * strideA2 );
+			av[ oE ] = eiR; av[ oE + 1 ] = eiI;
+			ztrmm( 'R', 'L', 'C', 'U', i, IB - 1, ONE, A, strideA1, strideA2, offsetA + i * strideA1 + ( i - 1 ) * strideA2, WORK, 1, LDWORK, offsetWORK );
+			for ( j = 0; j < IB - 1; j++ ) { zaxpy( i, NEGONE, WORK, 1, offsetWORK + LDWORK * j, A, strideA1, offsetA + ( i + j ) * strideA2 ); }
+			zlarfb( 'L', 'C', 'F', 'C', ihi - i, N - i - IB + 1, IB, A, strideA1, strideA2, offsetA + i * strideA1 + ( i - 1 ) * strideA2, WORK, 1, LDT, offsetWORK + IWT, A, strideA1, strideA2, offsetA + i * strideA1 + ( i + IB - 1 ) * strideA2, WORK, 1, LDWORK, offsetWORK );
+		}
+	}
+	zgehd2( N, i, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
+	return 0;
 }
-
-
-// EXPORTS //
-
 module.exports = zgehrd;

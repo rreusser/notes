@@ -34,7 +34,7 @@ function dpotri( uplo, N, A, strideA1, strideA2, offsetA ) {
 	}
 
 	// Invert the triangular Cholesky factor...
-	info = dtrtri( uplo, 'N', N, A, strideA1, strideA2, offsetA );
+	info = dtrtri( uplo, 'non-unit', N, A, strideA1, strideA2, offsetA );
 	if ( info > 0 ) {
 		return info;
 	}

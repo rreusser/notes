@@ -1,17 +1,51 @@
-
-
+/* eslint-disable max-len */
 'use strict';
-
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var zgehd2 = require( './../lib' );
-
-test( 'zgehd2: main export is a function', function t() {
-	assert.strictEqual( typeof zgehd2, 'function' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zgehd2 = require( './../lib/base.js' );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'zgehd2.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+function findCase( name ) { return fixture.find( function find( t ) { return t.name === name; } ); }
+function assertArrayClose( actual, expected, tol, msg ) {
+	var diff, i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		diff = Math.abs( actual[ i ] - expected[ i ] );
+		if ( diff > tol && diff / Math.max( Math.abs( expected[ i ] ), 1.0 ) > tol ) {
+			assert.fail( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] + ' (diff=' + diff + ')' );
+		}
+	}
+}
+function runTest( name, N, ilo, ihi, inputA ) {
+	var tc = findCase( name );
+	var A = new Complex128Array( N * N );
+	var av = reinterpret( A, 0 ); av.set( inputA );
+	var TAU = new Complex128Array( Math.max( 1, N - 1 ) );
+	var WORK = new Complex128Array( N );
+	var info = zgehd2( N, ilo, ihi, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
+	assert.equal( info, tc.INFO, 'INFO' );
+	assertArrayClose( av, new Float64Array( tc.A ), 1e-13, 'A' );
+	if ( tc.TAU ) {
+		var tv = reinterpret( TAU, 0 );
+		var tauSlice = new Float64Array( tc.TAU.length );
+		for ( var i = 0; i < tc.TAU.length; i++ ) { tauSlice[ i ] = tv[ i ]; }
+		assertArrayClose( tauSlice, new Float64Array( tc.TAU ), 1e-13, 'TAU' );
+	}
+}
+test( 'zgehd2: 4x4_full', function () { runTest( '4x4_full', 4, 1, 4, new Float64Array([ 1,0.5, 5,-0.5, 9,1, 13,-1, 2,-1, 6,1, 10,0, 14,2, 3,0, 7,-2, 11,1, 15,0.5, 4,1, 8,0, 12,-1, 16,0 ]) ); });
+test( 'zgehd2: 5x5_full', function () { runTest( '5x5_full', 5, 1, 5, new Float64Array([ 2,1, 1,0.5, 3,-1, 1,0, 4,1, 1,-0.5, 4,0, 1,1, 2,-0.5, 1,0, 3,0, 1,-1, 5,0.5, 1,0, 2,1, 1,1, 2,0, 1,-0.5, 6,1, 1,0.5, 4,-1, 1,0.5, 2,0, 1,-1, 7,0 ]) ); });
+test( 'zgehd2: 4x4_partial', function () { runTest( '4x4_partial_ilo2_ihi3', 4, 2, 3, new Float64Array([ 1,0, 0,0, 0,0, 0,0, 2,0, 5,1, 8,-0.5, 0,0, 3,0, 6,-1, 9,0, 0,0, 4,0, 7,0, 10,1, 11,0 ]) ); });
+test( 'zgehd2: n_one', function () {
+	var tc = findCase( 'n_one' ); var A = new Complex128Array( 1 ); var av = reinterpret( A, 0 );
+	av[ 0 ] = 42.0; av[ 1 ] = 3.0;
+	var TAU = new Complex128Array( 1 ); var WORK = new Complex128Array( 1 );
+	var info = zgehd2( 1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+	assert.equal( info, tc.INFO ); assertArrayClose( av, new Float64Array( tc.A ), 1e-14, 'A' );
 });
-
-test( 'zgehd2: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof zgehd2.ndarray, 'function' );
-});
-
-// TODO: Add implementation tests
+test( 'zgehd2: n_two', function () { runTest( 'n_two', 2, 1, 2, new Float64Array([ 3,1, 4,-2, 1,-1, 2,0.5 ]) ); });
+test( 'zgehd2: 6x6_full', function () { runTest( '6x6_full', 6, 1, 6, new Float64Array([ 1,0, 7,1, 13,-1, 19,0, 25,0.5, 31,-1, 2,1, 8,0, 14,0.5, 20,-1, 26,0, 32,1, 3,-1, 9,0, 15,0, 21,1, 27,-0.5, 33,0, 4,0.5, 10,-1, 16,0, 22,0, 28,1, 34,-0.5, 5,0, 11,1, 17,-1, 23,0, 29,0, 35,0.5, 6,-0.5, 12,0, 18,0.5, 24,-1, 30,0, 36,0 ]) ); });

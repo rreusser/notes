@@ -47,7 +47,7 @@ function dgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			A[ aii ] = 1.0;
 
 			// Apply H(i) to A(i:M-1, i+1:N-1) from the left
-			dlarf( 'L', M - i, N - i - 1, A, strideA1, aii, TAU[ offsetTAU + i * strideTAU ],
+			dlarf( 'left', M - i, N - i - 1, A, strideA1, aii, TAU[ offsetTAU + i * strideTAU ],
 				A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 				WORK, strideWORK, offsetWORK );
 

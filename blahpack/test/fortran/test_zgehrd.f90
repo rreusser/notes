@@ -3,8 +3,8 @@ program test_zgehrd
   implicit none
 
   integer :: INFO, N, LDA, LWORK, i
-  double precision :: a_r(800), tau_r(40), work_r(8000)
-  complex*16 :: A(400), TAU(20), WORK(4000)
+  double precision :: a_r(3200), tau_r(80), work_r(80000)
+  complex*16 :: A(1600), TAU(40), WORK(40000)
   equivalence (A, a_r)
   equivalence (TAU, tau_r)
   equivalence (WORK, work_r)
@@ -106,7 +106,23 @@ program test_zgehrd
   call print_int('INFO', INFO)
   call end_test()
 
-  ! Test 7: 5x5 with ILO=1, IHI=5
+  ! Test 7: 40x40 full range (exercises blocked path with NB=32)
+  N = 40
+  LDA = 40
+  A = (0.0d0, 0.0d0)
+  do i = 1, N*N
+    A(i) = dcmplx(dble(mod(i*13+7, 97)) / 10.0d0, dble(mod(i*7+3, 53) - 26) / 20.0d0)
+  end do
+  TAU = (0.0d0, 0.0d0)
+  WORK = (0.0d0, 0.0d0)
+  call ZGEHRD(N, 1, N, A, LDA, TAU, WORK, LWORK, INFO)
+  call begin_test('40x40_full')
+  call print_array('A', a_r, 2*N*N)
+  call print_array('TAU', tau_r, 2*(N-1))
+  call print_int('INFO', INFO)
+  call end_test()
+
+  ! Test 8: 5x5 with ILO=1, IHI=5
   N = 5
   LDA = 5
   A = (0.0d0, 0.0d0)

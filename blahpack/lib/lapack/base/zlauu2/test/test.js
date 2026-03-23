@@ -48,7 +48,7 @@ test( 'zlauu2: upper 3x3', function t() {
 		1, 0.5,  4, 0,      0, 0,
 		3, 1,    5, 1,      6, 0
 	] );
-	var info = zlauu2( 'U', 3, A, 1, 3, 0 );
+	var info = zlauu2( 'upper', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -62,7 +62,7 @@ test( 'zlauu2: lower 3x3', function t() {
 		0, 0,    4, 0,     5, 1,
 		0, 0,    0, 0,     6, 0
 	] );
-	var info = zlauu2( 'L', 3, A, 1, 3, 0 );
+	var info = zlauu2( 'lower', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -71,7 +71,7 @@ test( 'zlauu2: lower 3x3', function t() {
 test( 'zlauu2: N=1 upper', function t() {
 	var tc = findCase( 'n_one_upper' );
 	var A = new Complex128Array( [ 5, 0 ] );
-	var info = zlauu2( 'U', 1, A, 1, 1, 0 );
+	var info = zlauu2( 'upper', 1, A, 1, 1, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -80,7 +80,7 @@ test( 'zlauu2: N=1 upper', function t() {
 test( 'zlauu2: N=1 lower', function t() {
 	var tc = findCase( 'n_one_lower' );
 	var A = new Complex128Array( [ 3, 0 ] );
-	var info = zlauu2( 'L', 1, A, 1, 1, 0 );
+	var info = zlauu2( 'lower', 1, A, 1, 1, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -89,7 +89,7 @@ test( 'zlauu2: N=1 lower', function t() {
 test( 'zlauu2: N=0 quick return', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
-	var info = zlauu2( 'U', 0, A, 1, 1, 0 );
+	var info = zlauu2( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -101,7 +101,7 @@ test( 'zlauu2: upper 4x4', function t() {
 		3, 0,     6, 0.5,   8, 0,     0, 0,
 		4, 2,     7, 3,     9, 1,    10, 0
 	] );
-	var info = zlauu2( 'U', 4, A, 1, 4, 0 );
+	var info = zlauu2( 'upper', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -115,7 +115,7 @@ test( 'zlauu2: lower 4x4', function t() {
 		0, 0,    0, 0,     8, 0,    9, 1,
 		0, 0,    0, 0,     0, 0,   10, 0
 	] );
-	var info = zlauu2( 'L', 4, A, 1, 4, 0 );
+	var info = zlauu2( 'lower', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -128,7 +128,7 @@ test( 'zlauu2: identity upper', function t() {
 		0, 0,  1, 0,  0, 0,
 		0, 0,  0, 0,  1, 0
 	] );
-	var info = zlauu2( 'U', 3, A, 1, 3, 0 );
+	var info = zlauu2( 'upper', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -141,7 +141,7 @@ test( 'zlauu2: identity lower', function t() {
 		0, 0,  1, 0,  0, 0,
 		0, 0,  0, 0,  1, 0
 	] );
-	var info = zlauu2( 'L', 3, A, 1, 3, 0 );
+	var info = zlauu2( 'lower', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );

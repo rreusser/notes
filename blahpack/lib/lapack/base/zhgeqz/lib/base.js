@@ -153,29 +153,29 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	// Decode JOB
 	if ( job === 'E' || job === 'e' ) {
 		ilschr = false;
-	} else if ( job === 'S' || job === 's' ) {
+	} else if ( job === 'scale' ) {
 		ilschr = true;
 	} else {
 		return -1;
 	}
 
 	// Decode COMPQ
-	if ( compq === 'N' || compq === 'n' ) {
+	if ( compq === 'none' ) {
 		ilq = false;
-	} else if ( compq === 'V' || compq === 'v' ) {
+	} else if ( compq === 'update' ) {
 		ilq = true;
-	} else if ( compq === 'I' || compq === 'i' ) {
+	} else if ( compq === 'initialize' ) {
 		ilq = true;
 	} else {
 		return -2;
 	}
 
 	// Decode COMPZ
-	if ( compz === 'N' || compz === 'n' ) {
+	if ( compz === 'none' ) {
 		ilz = false;
-	} else if ( compz === 'V' || compz === 'v' ) {
+	} else if ( compz === 'update' ) {
 		ilz = true;
-	} else if ( compz === 'I' || compz === 'i' ) {
+	} else if ( compz === 'initialize' ) {
 		ilz = true;
 	} else {
 		return -3;
@@ -240,14 +240,14 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	y = new Float64Array( 2 );
 
 	// Initialize Q and Z to identity if requested
-	if ( compq === 'I' || compq === 'i' ) {
+	if ( compq === 'initialize' ) {
 		zlaset( 'Full', N, N,
 			new Complex128( 0.0, 0.0 ),
 			new Complex128( 1.0, 0.0 ),
 			Q, strideQ1, strideQ2, offsetQ
 		);
 	}
-	if ( compz === 'I' || compz === 'i' ) {
+	if ( compz === 'initialize' ) {
 		zlaset( 'Full', N, N,
 			new Complex128( 0.0, 0.0 ),
 			new Complex128( 1.0, 0.0 ),
@@ -264,8 +264,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	// ZLANHS('F', IN, H(ILO,ILO), LDH, RWORK)
 	// 0-based: H at (ilo-1, ilo-1)
 	// zlanhs expects strides in complex elements (each = 2 doubles)
-	anorm = zlanhs( 'F', in0, H, strideH1, strideH2, offsetH + ( ilo - 1 ) * strideH1 + ( ilo - 1 ) * strideH2, RWORK, strideRWORK, offsetRWORK );
-	bnorm = zlanhs( 'F', in0, T, strideT1, strideT2, offsetT + ( ilo - 1 ) * strideT1 + ( ilo - 1 ) * strideT2, RWORK, strideRWORK, offsetRWORK );
+	anorm = zlanhs( 'frobenius', in0, H, strideH1, strideH2, offsetH + ( ilo - 1 ) * strideH1 + ( ilo - 1 ) * strideH2, RWORK, strideRWORK, offsetRWORK );
+	bnorm = zlanhs( 'frobenius', in0, T, strideT1, strideT2, offsetT + ( ilo - 1 ) * strideT1 + ( ilo - 1 ) * strideT2, RWORK, strideRWORK, offsetRWORK );
 	atol = Math.max( safmin, ulp * anorm );
 	btol = Math.max( safmin, ulp * bnorm );
 	ascale = ONE / Math.max( safmin, anorm );

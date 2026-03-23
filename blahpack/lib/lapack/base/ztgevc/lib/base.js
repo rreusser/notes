@@ -181,10 +181,10 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	var pri;
 	var ilcomp;
 
-	compl = ( side === 'L' || side === 'l' || side === 'B' || side === 'b' );
-	compr = ( side === 'R' || side === 'r' || side === 'B' || side === 'b' );
-	ilback = ( howmny === 'B' || howmny === 'b' );
-	ilall = ( howmny === 'A' || howmny === 'a' || howmny === 'B' || howmny === 'b' );
+	compl = ( side === 'left' || side === 'B' || side === 'b' );
+	compr = ( side === 'right' || side === 'B' || side === 'b' );
+	ilback = ( howmny === 'backtransform' );
+	ilall = ( howmny === 'all' || howmny === 'backtransform' );
 
 	if ( N === 0 ) {
 		M[ 0 ] = 0;
@@ -427,7 +427,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			if ( ilback ) {
 				// WORK(N+1:2N) = VL * WORK(JE:N)
 				zgemv(
-					'N', N, N - je, CONE, VL, strideVL1, strideVL2, offsetVL + je * strideVL2,
+					'no-transpose', N, N - je, CONE, VL, strideVL1, strideVL2, offsetVL + je * strideVL2,
 					WORK, 1, je, CZERO, WORK, 1, N
 				);
 				isrc = 1; // result in WORKv[N*2..]
@@ -622,7 +622,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			// Back-transform or copy result
 			if ( ilback ) {
 				zgemv(
-					'N', N, je + 1, CONE, VR, strideVR1, strideVR2, offsetVR,
+					'no-transpose', N, je + 1, CONE, VR, strideVR1, strideVR2, offsetVR,
 					WORK, 1, 0, CZERO, WORK, 1, N
 				);
 				isrc = 1;

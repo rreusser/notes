@@ -71,9 +71,9 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 		return x;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	noconj = ( trans === 'T' || trans === 't' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	upper = ( uplo === 'upper' );
+	noconj = ( trans === 'transpose' );
+	nounit = ( diag === 'non-unit' );
 
 	// Get Float64Array views and convert offsets
 	Av = reinterpret( A, 0 ); oA = offsetA * 2;
@@ -84,7 +84,7 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
 
-	if ( trans === 'N' || trans === 'n' ) {
+	if ( trans === 'no-transpose' ) {
 		// Form x := A*x
 		if ( upper ) {
 			jx = oX;

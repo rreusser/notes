@@ -1,3 +1,6 @@
 zgbtf2
 zgbtrf
 zlaswp
+ilaenv
+ieeeck
+iparmq

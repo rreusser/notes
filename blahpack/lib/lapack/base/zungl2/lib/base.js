@@ -132,7 +132,7 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// stride along row = strideA2 (column stride)
 				conjT = new Complex128( tauv[ it ], -tauv[ it + 1 ] );
 				zlarf(
-					'R', M - i - 1, N - i,
+					'right', M - i - 1, N - i,
 					A, strideA2, offsetA + i * strideA1 + i * strideA2,
 					new Complex128Array( [ tauv[ it ], -tauv[ it + 1 ] ] ), 0,
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,

@@ -116,10 +116,10 @@ function dlasq1( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, 
 	dcopy( N - 1, e, strideE, offsetE, WORK, 2 * strideWORK, offsetWORK + strideWORK );
 
 	// Scale WORK(1:2*N-1) by SCALE/SIGMX
-	// dlascl('G', 0, 0, SIGMX, SCALE, 2*N-1, 1, WORK, 2*N-1, IINFO)
+	// dlascl('general', 0, 0, SIGMX, SCALE, 2*N-1, 1, WORK, 2*N-1, IINFO)
 	// This treats WORK as a (2*N-1)-by-1 matrix in column-major order
 	// strideA1 = strideWORK, strideA2 = (2*N-1)*strideWORK (column stride, but 1 column so irrelevant)
-	dlascl( 'G', 0, 0, sigmx, scale, 2 * N - 1, 1, WORK, strideWORK, ( 2 * N - 1 ) * strideWORK, offsetWORK );
+	dlascl( 'general', 0, 0, sigmx, scale, 2 * N - 1, 1, WORK, strideWORK, ( 2 * N - 1 ) * strideWORK, offsetWORK );
 
 	// Square all elements: WORK(i) = WORK(i)^2
 	iw = offsetWORK;
@@ -142,8 +142,8 @@ function dlasq1( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, 
 			id += strideD;
 			iw += strideWORK;
 		}
-		// Unscale: dlascl('G', 0, 0, SCALE, SIGMX, N, 1, D, N, IINFO)
-		dlascl( 'G', 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD );
+		// Unscale: dlascl('general', 0, 0, SCALE, SIGMX, N, 1, D, N, IINFO)
+		dlascl( 'general', 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD );
 	} else if ( info === 2 ) {
 		// Convergence not achieved: extract D and E from WORK
 		// D(i) = sqrt(WORK(2*i-1)), E(i) = sqrt(WORK(2*i))  [Fortran 1-based]
@@ -161,8 +161,8 @@ function dlasq1( N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, 
 			iw += 2 * strideWORK;
 		}
 		// Unscale D and E
-		dlascl( 'G', 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD );
-		dlascl( 'G', 0, 0, scale, sigmx, N, 1, e, strideE, N * strideE, offsetE );
+		dlascl( 'general', 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD );
+		dlascl( 'general', 0, 0, scale, sigmx, N, 1, e, strideE, N * strideE, offsetE );
 	}
 
 	return info;

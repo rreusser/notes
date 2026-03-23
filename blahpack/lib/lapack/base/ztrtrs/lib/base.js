@@ -44,7 +44,7 @@ function ztrtrs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	var ia;
 	var i;
 
-	nounit = ( diag === 'N' || diag === 'n' );
+	nounit = ( diag === 'non-unit' );
 
 	if ( N === 0 ) {
 		return 0;
@@ -68,7 +68,7 @@ function ztrtrs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 
 	// Solve A * X = B, A^T * X = B, or A^H * X = B via ztrsm.
 	// ztrsm expects complex-element strides (it does *2 internally).
-	ztrsm( 'L', uplo, trans, diag, N, nrhs, CONE,
+	ztrsm( 'left', uplo, trans, diag, N, nrhs, CONE,
 		A, strideA1, strideA2, offsetA,
 		B, strideB1, strideB2, offsetB
 	);

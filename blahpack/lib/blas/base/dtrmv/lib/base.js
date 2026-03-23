@@ -37,13 +37,13 @@ function dtrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 		return x;
 	}
 
-	nounit = ( diag === 'N' || diag === 'n' );
+	nounit = ( diag === 'non-unit' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
-	if ( trans === 'N' || trans === 'n' ) {
+	if ( trans === 'no-transpose' ) {
 		// Form x := A*x
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangular
 			jx = offsetX;
 			for ( j = 0; j < N; j++ ) {
@@ -84,7 +84,7 @@ function dtrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 		}
 	} else {
 		// Form x := A**T*x
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangular, transpose
 			jx = offsetX + ( N - 1 ) * strideX;
 			for ( j = N - 1; j >= 0; j-- ) {

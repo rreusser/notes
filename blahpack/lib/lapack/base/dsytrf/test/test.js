@@ -63,7 +63,7 @@ test( 'dsytrf: 4x4_lower', function t() {
 		0, 0, 6, 3,
 		0, 0, 0, 8
 	]);
-	var info = dsytrf( 'L', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
 	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
@@ -77,7 +77,7 @@ test( 'dsytrf: 4x4_upper', function t() {
 	A[ 4 ] = 2; A[ 5 ] = 5;
 	A[ 8 ] = 1; A[ 9 ] = 2; A[ 10 ] = 6;
 	A[ 12 ] = 0; A[ 13 ] = 1; A[ 14 ] = 3; A[ 15 ] = 8;
-	var info = dsytrf( 'U', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
 	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
@@ -92,7 +92,7 @@ test( 'dsytrf: 4x4_indef_lower', function t() {
 		0, 0, 0, 6,
 		0, 0, 0, 0
 	]);
-	var info = dsytrf( 'L', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
 	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
@@ -106,7 +106,7 @@ test( 'dsytrf: 4x4_indef_upper', function t() {
 	A[ 4 ] = 1; A[ 5 ] = 0;
 	A[ 8 ] = 2; A[ 9 ] = 4; A[ 10 ] = 0;
 	A[ 12 ] = 3; A[ 13 ] = 5; A[ 14 ] = 6; A[ 15 ] = 0;
-	var info = dsytrf( 'U', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
 	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
@@ -115,7 +115,7 @@ test( 'dsytrf: 4x4_indef_upper', function t() {
 test( 'dsytrf: n_zero', function t() {
 	var ipiv = new Int32Array( 1 );
 	var A = new Float64Array( 1 );
-	var info = dsytrf( 'L', 0, A, 1, 1, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'lower', 0, A, 1, 1, 0, ipiv, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -123,7 +123,7 @@ test( 'dsytrf: n_one', function t() {
 	var ipiv = new Int32Array( 1 );
 	var tc = findCase( 'n_one' );
 	var A = new Float64Array([ 7.0 ]);
-	var info = dsytrf( 'L', 1, A, 1, 1, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'lower', 1, A, 1, 1, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
 	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
@@ -133,7 +133,7 @@ test( 'dsytrf: singular', function t() {
 	var ipiv = new Int32Array( 2 );
 	var tc = findCase( 'singular' );
 	var A = new Float64Array([ 0, 0, 0, 0 ]);
-	var info = dsytrf( 'L', 2, A, 1, 2, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'lower', 2, A, 1, 2, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
 	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
@@ -149,7 +149,7 @@ test( 'dsytrf: 5x5_lower', function t() {
 		0, 0, 0, 1, -2,
 		0, 0, 0, 0, 4
 	]);
-	var info = dsytrf( 'L', 5, A, 1, 5, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'lower', 5, A, 1, 5, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
 	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
@@ -195,10 +195,10 @@ test( 'dsytrf: 40x40 blocked lower (exercise dlasyf)', function t() {
 		b[ i ] = sum;
 	}
 
-	var info = dsytrf( 'L', N, A, 1, N, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'lower', N, A, 1, N, 0, ipiv, 1, 0 );
 	assert.equal( info, 0, 'factor info' );
 
-	var info2 = dsytrs( 'L', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
+	var info2 = dsytrs( 'lower', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
 	assert.equal( info2, 0, 'solve info' );
 
 	// Verify b ≈ x
@@ -245,10 +245,10 @@ test( 'dsytrf: 40x40 blocked upper (exercise dlasyf)', function t() {
 		b[ i ] = sum;
 	}
 
-	var info = dsytrf( 'U', N, A, 1, N, 0, ipiv, 1, 0 );
+	var info = dsytrf( 'upper', N, A, 1, N, 0, ipiv, 1, 0 );
 	assert.equal( info, 0, 'factor info' );
 
-	var info2 = dsytrs( 'U', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
+	var info2 = dsytrs( 'upper', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
 	assert.equal( info2, 0, 'solve info' );
 
 	for ( i = 0; i < N; i++ ) {

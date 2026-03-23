@@ -241,7 +241,7 @@ test( 'zgetrs: solve_3x3 (no-transpose)', function t() {
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
 
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'N', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
@@ -272,7 +272,7 @@ test( 'zgetrs: solve_3x3_trans (transpose)', function t() {
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
 
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'T', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
@@ -303,7 +303,7 @@ test( 'zgetrs: solve_3x3_conj (conjugate transpose)', function t() {
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
 
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'C', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'conjugate-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
@@ -338,7 +338,7 @@ test( 'zgetrs: multi_rhs (NRHS=2, no-transpose)', function t() {
 	B = new Complex128Array( Array.from( reinterpret( Borig, 0 ) ) );
 
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'N', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'no-transpose', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
@@ -361,7 +361,7 @@ test( 'zgetrs: n_zero (quick return)', function t() {
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
 
-	info = zgetrs( 'N', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	info = zgetrs( 'no-transpose', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 });
@@ -379,7 +379,7 @@ test( 'zgetrs: nrhs_zero (quick return)', function t() {
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( 3 );
 
-	info = zgetrs( 'N', 3, 0, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'no-transpose', 3, 0, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 });
@@ -399,7 +399,7 @@ test( 'zgetrs: 1x1', function t() {
 	B = new Complex128Array( [ 10, 6 ] );
 
 	factorize( 1, A, IPIV );
-	info = zgetrs( 'N', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	info = zgetrs( 'no-transpose', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
@@ -420,7 +420,7 @@ test( 'zgetrs: identity', function t() {
 	B = new Complex128Array( [ 3, 1, 5, 2, 7, 3 ] );
 
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'N', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
@@ -451,7 +451,7 @@ test( 'zgetrs: multi_rhs_conj (NRHS=2, conjugate transpose)', function t() {
 	B = new Complex128Array( Array.from( reinterpret( Borig, 0 ) ) );
 
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'C', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'conjugate-transpose', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
@@ -480,7 +480,7 @@ test( 'zgetrs: lowercase trans argument', function t() {
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
 
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'n', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	info = zgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
 	assert.equal( info, 0, 'info' );
 	Ax = zmatvec( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3 );

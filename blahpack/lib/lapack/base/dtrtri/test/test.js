@@ -41,7 +41,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 test( 'dtrtri: upper, non-unit, 3x3', function t() {
 	var tc = findCase( 'upper_nonunit_3' );
 	var A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
-	var info = dtrtri( 'U', 'N', 3, A, 1, 3, 0 );
+	var info = dtrtri( 'upper', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
@@ -49,7 +49,7 @@ test( 'dtrtri: upper, non-unit, 3x3', function t() {
 test( 'dtrtri: lower, non-unit, 3x3', function t() {
 	var tc = findCase( 'lower_nonunit_3' );
 	var A = new Float64Array( [ 2, 1, 3, 0, 4, 5, 0, 0, 6 ] );
-	var info = dtrtri( 'L', 'N', 3, A, 1, 3, 0 );
+	var info = dtrtri( 'lower', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
@@ -63,7 +63,7 @@ test( 'dtrtri: upper, non-unit, 4x4', function t() {
 		3, 6, 8, 0,
 		4, 7, 9, 10
 	] );
-	var info = dtrtri( 'U', 'N', 4, A, 1, 4, 0 );
+	var info = dtrtri( 'upper', 'non-unit', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
@@ -77,13 +77,13 @@ test( 'dtrtri: lower, non-unit, 4x4', function t() {
 		0, 0, 8, 9,
 		0, 0, 0, 10
 	] );
-	var info = dtrtri( 'L', 'N', 4, A, 1, 4, 0 );
+	var info = dtrtri( 'lower', 'non-unit', 4, A, 1, 4, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
 
 test( 'dtrtri: N=0', function t() {
-	var info = dtrtri( 'U', 'N', 0, new Float64Array( 0 ), 1, 1, 0 );
+	var info = dtrtri( 'upper', 'non-unit', 0, new Float64Array( 0 ), 1, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -91,14 +91,14 @@ test( 'dtrtri: singular (zero diagonal)', function t() {
 	var tc = findCase( 'singular' );
 	// A = [2 3 0; 0 0 0; 0 0 6] — zero at (1,1) in 0-based
 	var A = new Float64Array( [ 2, 0, 0, 3, 0, 0, 0, 0, 6 ] );
-	var info = dtrtri( 'U', 'N', 3, A, 1, 3, 0 );
+	var info = dtrtri( 'upper', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dtrtri: upper, unit diag, 3x3', function t() {
 	var tc = findCase( 'upper_unit' );
 	var A = new Float64Array( [ 99, 0, 0, 1, 99, 0, 3, 5, 99 ] );
-	var info = dtrtri( 'U', 'U', 3, A, 1, 3, 0 );
+	var info = dtrtri( 'upper', 'unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
@@ -106,14 +106,14 @@ test( 'dtrtri: upper, unit diag, 3x3', function t() {
 test( 'dtrtri: identity 3x3', function t() {
 	var tc = findCase( 'identity' );
 	var A = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
-	var info = dtrtri( 'U', 'N', 3, A, 1, 3, 0 );
+	var info = dtrtri( 'upper', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
 
 test( 'dtrtri: N=1 (unblocked path)', function t() {
 	var A = new Float64Array( [ 4 ] );
-	var info = dtrtri( 'U', 'N', 1, A, 1, 1, 0 );
+	var info = dtrtri( 'upper', 'non-unit', 1, A, 1, 1, 0 );
 	assert.equal( info, 0 );
 	assertClose( A[ 0 ], 0.25, 1e-14, 'a[0]' );
 });
@@ -128,7 +128,7 @@ test( 'dtrtri: upper 5x5', function t() {
 		2, 3, 1, 6, 0,
 		1, 2, 4, 1, 3
 	] );
-	var info = dtrtri( 'U', 'N', 5, A, 1, 5, 0 );
+	var info = dtrtri( 'upper', 'non-unit', 5, A, 1, 5, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });
@@ -143,7 +143,7 @@ test( 'dtrtri: lower 5x5', function t() {
 		0, 0, 0, 6, 1,
 		0, 0, 0, 0, 3
 	] );
-	var info = dtrtri( 'L', 'N', 5, A, 1, 5, 0 );
+	var info = dtrtri( 'lower', 'non-unit', 5, A, 1, 5, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 });

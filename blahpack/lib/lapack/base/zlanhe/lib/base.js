@@ -77,10 +77,10 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 	sa2 = strideA2 * 2;
 	oA = offsetA * 2;
 
-	if ( norm === 'M' || norm === 'm' ) {
+	if ( norm === 'max' ) {
 		// Max absolute value
 		value = 0.0;
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
 				ai = oA + j * sa2;
 				// Off-diagonal elements: i = 0..j-1
@@ -120,11 +120,11 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 				}
 			}
 		}
-	} else if ( norm === 'I' || norm === 'i' || norm === 'O' || norm === 'o' || norm === '1' ) {
+	} else if ( norm === 'inf-norm' || norm === 'one-norm' || norm === 'one-norm' ) {
 		// One-norm = infinity-norm for Hermitian matrices
 		// Compute column sums of absolute values, exploiting Hermitian symmetry
 		value = 0.0;
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
 				sum = 0.0;
 				ai = oA + j * sa2;
@@ -171,12 +171,12 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 				}
 			}
 		}
-	} else if ( norm === 'F' || norm === 'f' || norm === 'E' || norm === 'e' ) {
+	} else if ( norm === 'frobenius' || norm === 'frobenius' ) {
 		// Frobenius norm
 		// Off-diagonal elements contribute twice (Hermitian symmetry)
 		scale = 0.0;
 		sum = 1.0;
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangle off-diagonal: columns j=1..N-1, rows 0..j-1
 			for ( j = 1; j < N; j++ ) {
 				out = zlassq( j, A, strideA1, offsetA + j * strideA2, scale, sum );

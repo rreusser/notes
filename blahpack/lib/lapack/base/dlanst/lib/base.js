@@ -53,7 +53,7 @@ function dlanst( norm, N, d, strideD, offsetD, e, strideE, offsetE ) {
 		return 0.0;
 	}
 
-	if ( norm === 'M' ) {
+	if ( norm === 'max' ) {
 		// Max norm: find the element of largest absolute value
 		id = offsetD + ( N - 1 ) * strideD;
 		anorm = Math.abs( d[ id ] );
@@ -71,7 +71,7 @@ function dlanst( norm, N, d, strideD, offsetD, e, strideE, offsetE ) {
 			id += strideD;
 			ie += strideE;
 		}
-	} else if ( norm === 'O' || norm === '1' || norm === 'I' ) {
+	} else if ( norm === 'one-norm' || norm === 'one-norm' || norm === 'inf-norm' ) {
 		// One-norm / infinity-norm (same for symmetric tridiagonal)
 		if ( N === 1 ) {
 			anorm = Math.abs( d[ offsetD ] );
@@ -97,7 +97,7 @@ function dlanst( norm, N, d, strideD, offsetD, e, strideE, offsetE ) {
 				ie += strideE;
 			}
 		}
-	} else if ( norm === 'F' || norm === 'E' ) {
+	} else if ( norm === 'frobenius' ) {
 		// Frobenius norm: sqrt( sum of squares of all elements )
 		// For symmetric tridiagonal: sqrt( sum(d[i]^2) + 2*sum(e[i]^2) )
 		// Use dlassq for numerical stability

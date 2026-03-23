@@ -200,7 +200,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		RSCALE[ oR ] = ONE;
 		return { info: 0, ilo: 1, ihi: 1 };
 	}
-	if ( job === 'N' || job === 'n' ) {
+	if ( job === 'none' ) {
 		for ( i = 0; i < N; i++ ) {
 			LSCALE[ oL + i * sL ] = ONE;
 			RSCALE[ oR + i * sR ] = ONE;
@@ -212,7 +212,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	k = 1;
 	l = N;
 
-	if ( job === 'S' || job === 's' ) {
+	if ( job === 'scale' ) {
 		// Skip permutation, go directly to scaling (label 190)
 		return doScaling( k, l );
 	}
@@ -415,7 +415,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		ilo = kk;
 		ihi = ll;
 
-		if ( job === 'P' || job === 'p' ) {
+		if ( job === 'permute' ) {
 			for ( i = ilo - 1; i < ihi; i++ ) {
 				LSCALE[ oL + i * sL ] = ONE;
 				RSCALE[ oR + i * sR ] = ONE;
@@ -586,7 +586,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		}
 
 		// label 350: Post-iteration scaling
-		sfmin = dlamch( 'S' );
+		sfmin = dlamch( 'scale' );
 		sfmax = ONE / sfmin;
 		lsfmin = Math.trunc( Math.log10( sfmin ) / basl + ONE );
 		lsfmax = Math.trunc( Math.log10( sfmax ) / basl );

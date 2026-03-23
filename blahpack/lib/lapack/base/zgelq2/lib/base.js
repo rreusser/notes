@@ -100,7 +100,7 @@ function zgelq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 			// Apply H(i) to A(i+1:M-1, i:N-1) from the right
 			// zlarf accepts Complex128Array with complex-element strides/offsets
-			zlarf( 'R', M - i - 1, N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2,
+			zlarf( 'right', M - i - 1, N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2,
 				TAU, tau_off,
 				A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
 				WORK, strideWORK, offsetWORK );

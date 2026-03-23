@@ -150,7 +150,7 @@ function zlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 			conjTauv[ 1 ] = -TAUv[ ( offsetTAU + i * strideTAU ) * 2 + 1 ];
 
 			zlarf(
-				'L', M - offpi, N - i - 1,
+				'left', M - offpi, N - i - 1,
 				A, sa1, offsetA + offpi * sa1 + i * sa2,
 				conjTau, 0,
 				A, sa1, sa2, offsetA + offpi * sa1 + ( i + 1 ) * sa2,

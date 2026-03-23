@@ -31,7 +31,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 * carefully via iterative scaling.
 *
 * @private
-* @param {string} type - matrix type ('G','L','U','H','B','Q','Z')
+* @param {string} type - matrix type ('general','L','U','H','B','Q','Z')
 * @param {integer} kl - lower bandwidth (for banded types)
 * @param {integer} ku - upper bandwidth (for banded types)
 * @param {number} cfrom - scale denominator (must be nonzero)
@@ -67,23 +67,21 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 	var iMin;
 	var i;
 	var j;
-	var c;
 
 	// Determine itype
-	c = type.charAt( 0 ).toUpperCase();
-	if ( c === 'G' ) {
+	if ( type === 'general' ) {
 		itype = 0;
-	} else if ( c === 'L' ) {
+	} else if ( type === 'lower' ) {
 		itype = 1;
-	} else if ( c === 'U' ) {
+	} else if ( type === 'upper' ) {
 		itype = 2;
-	} else if ( c === 'H' ) {
+	} else if ( type === 'upper-hessenberg' ) {
 		itype = 3;
-	} else if ( c === 'B' ) {
+	} else if ( type === 'lower-band' ) {
 		itype = 4;
-	} else if ( c === 'Q' ) {
+	} else if ( type === 'upper-band' ) {
 		itype = 5;
-	} else if ( c === 'Z' ) {
+	} else if ( type === 'band' ) {
 		itype = 6;
 	} else {
 		return -1;

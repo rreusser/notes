@@ -13,7 +13,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * and alpha is a real scalar.
 *
 * @private
-* @param {string} uplo - specifies whether the upper ('U') or lower ('L') triangle is stored
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {number} alpha - real scalar
 * @param {Complex128Array} x - complex input vector
@@ -54,7 +54,7 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 	sa2 = strideA2 * 2;
 	sx = strideX * 2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Upper triangle
 		jx = oX;
 		for ( j = 0; j < N; j++ ) {

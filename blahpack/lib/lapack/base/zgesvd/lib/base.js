@@ -136,16 +136,16 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	info = 0;
 	minmn = Math.min( M, N );
 
-	wntua = ( jobu === 'A' || jobu === 'a' );
-	wntus = ( jobu === 'S' || jobu === 's' );
+	wntua = ( jobu === 'all-columns' );
+	wntus = ( jobu === 'economy' );
 	wntuas = wntua || wntus;
-	wntuo = ( jobu === 'O' || jobu === 'o' );
-	wntun = ( jobu === 'N' || jobu === 'n' );
-	wntva = ( jobvt === 'A' || jobvt === 'a' );
-	wntvs = ( jobvt === 'S' || jobvt === 's' );
+	wntuo = ( jobu === 'overwrite' );
+	wntun = ( jobu === 'none' );
+	wntva = ( jobvt === 'all-rows' );
+	wntvs = ( jobvt === 'economy' );
 	wntvas = wntva || wntvs;
-	wntvo = ( jobvt === 'O' || jobvt === 'o' );
-	wntvn = ( jobvt === 'N' || jobvt === 'n' );
+	wntvo = ( jobvt === 'overwrite' );
+	wntvn = ( jobvt === 'none' );
 
 	// Quick return if possible
 	if ( M === 0 || N === 0 ) {
@@ -166,15 +166,15 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	bignum = 1.0 / smlnum;
 
 	// Scale A if max element outside range [smlnum, bignum]
-	// zlange('M') does not use the WORK parameter, so pass a minimal dummy
-	anrm = zlange( 'M', M, N, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK );
+	// zlange('max') does not use the WORK parameter, so pass a minimal dummy
+	anrm = zlange( 'max', M, N, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK );
 	iscl = 0;
 	if ( anrm > 0.0 && anrm < smlnum ) {
 		iscl = 1;
-		zlascl( 'G', 0, 0, anrm, smlnum, M, N, A, sa1, sa2, offsetA );
+		zlascl( 'general', 0, 0, anrm, smlnum, M, N, A, sa1, sa2, offsetA );
 	} else if ( anrm > bignum ) {
 		iscl = 1;
-		zlascl( 'G', 0, 0, anrm, bignum, M, N, A, sa1, sa2, offsetA );
+		zlascl( 'general', 0, 0, anrm, bignum, M, N, A, sa1, sa2, offsetA );
 	}
 
 	if ( M >= N ) {
@@ -199,7 +199,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			// Zero out below R (the lower triangle of A(1:N, 0:N))
 			if ( N > 1 ) {
 				// A(2,1) in Fortran → offsetA + 1*sa1 + 0*sa2 in 0-based
-				zlaset( 'L', N - 1, N - 1, CZERO, CZERO, A, sa1, sa2, offsetA + sa1 );
+				zlaset( 'lower', N - 1, N - 1, CZERO, CZERO, A, sa1, sa2, offsetA + sa1 );
 			}
 
 			ie = 0;            // E in RWORK at offsetRWORK + ie
@@ -235,7 +235,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			// Perform bidiagonal QR iteration, computing right singular
 			// vectors of A in A if desired (NRU=0: no left vectors)
 			info = zbdsqr(
-				'U', N, ncvt, 0, 0,
+				'upper', N, ncvt, 0, 0,
 				s, strideS, offsetS,
 				RWORK, strideRWORK, offsetRWORK + ie,
 				A, sa1, sa2, offsetA,
@@ -269,7 +269,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 			if ( wntuas ) {
 				// Copy lower triangle of A to U, then generate Q
-				zlacpy( 'L', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
+				zlacpy( 'lower', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 				ncu = wntus ? N : M;
 				zungbr(
 					'Q', M, ncu, N,
@@ -281,7 +281,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			}
 			if ( wntvas ) {
 				// Copy upper triangle of A to VT, then generate P^H
-				zlacpy( 'U', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
+				zlacpy( 'upper', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 				zungbr(
 					'P', N, N, N,
 					VT, svt1, svt2, offsetVT,
@@ -326,7 +326,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			if ( ( !wntuo ) && ( !wntvo ) ) {
 				// Neither U nor VT overwrite A
 				info = zbdsqr(
-					'U', N, ncvt, nru, 0,
+					'upper', N, ncvt, nru, 0,
 					s, strideS, offsetS,
 					RWORK, strideRWORK, offsetRWORK + ie,
 					VT, svt1, svt2, offsetVT,
@@ -337,7 +337,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			} else if ( ( !wntuo ) && wntvo ) {
 				// VT overwrites A
 				info = zbdsqr(
-					'U', N, ncvt, nru, 0,
+					'upper', N, ncvt, nru, 0,
 					s, strideS, offsetS,
 					RWORK, strideRWORK, offsetRWORK + ie,
 					A, sa1, sa2, offsetA,
@@ -348,7 +348,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			} else {
 				// U overwrites A, or both overwrite A
 				info = zbdsqr(
-					'U', N, ncvt, nru, 0,
+					'upper', N, ncvt, nru, 0,
 					s, strideS, offsetS,
 					RWORK, strideRWORK, offsetRWORK + ie,
 					VT, svt1, svt2, offsetVT,
@@ -380,7 +380,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 		if ( wntuas ) {
 			// Copy lower triangle of A to U, then generate Q
-			zlacpy( 'L', M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
+			zlacpy( 'lower', M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 			zungbr(
 				'Q', M, M, N,
 				U, su1, su2, offsetU,
@@ -391,7 +391,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		}
 		if ( wntvas ) {
 			// Copy upper triangle of A to VT, then generate P^H
-			zlacpy( 'U', M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
+			zlacpy( 'upper', M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 			nrvt = wntva ? N : M;
 			zungbr(
 				'P', nrvt, N, M,
@@ -436,7 +436,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		// Perform bidiagonal SVD (lower bidiagonal when M < N)
 		if ( ( !wntuo ) && ( !wntvo ) ) {
 			info = zbdsqr(
-				'L', M, ncvt, nru, 0,
+				'lower', M, ncvt, nru, 0,
 				s, strideS, offsetS,
 				RWORK, strideRWORK, offsetRWORK + ie,
 				VT, svt1, svt2, offsetVT,
@@ -446,7 +446,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			);
 		} else if ( ( !wntuo ) && wntvo ) {
 			info = zbdsqr(
-				'L', M, ncvt, nru, 0,
+				'lower', M, ncvt, nru, 0,
 				s, strideS, offsetS,
 				RWORK, strideRWORK, offsetRWORK + ie,
 				A, sa1, sa2, offsetA,
@@ -456,7 +456,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			);
 		} else {
 			info = zbdsqr(
-				'L', M, ncvt, nru, 0,
+				'lower', M, ncvt, nru, 0,
 				s, strideS, offsetS,
 				RWORK, strideRWORK, offsetRWORK + ie,
 				VT, svt1, svt2, offsetVT,
@@ -470,16 +470,16 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	// Undo scaling if necessary
 	if ( iscl === 1 ) {
 		if ( anrm > bignum ) {
-			dlascl( 'G', 0, 0, bignum, anrm, minmn, 1, s, strideS, 1, offsetS );
+			dlascl( 'general', 0, 0, bignum, anrm, minmn, 1, s, strideS, 1, offsetS );
 		}
 		if ( info !== 0 && anrm > bignum ) {
-			dlascl( 'G', 0, 0, bignum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie );
+			dlascl( 'general', 0, 0, bignum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie );
 		}
 		if ( anrm < smlnum ) {
-			dlascl( 'G', 0, 0, smlnum, anrm, minmn, 1, s, strideS, 1, offsetS );
+			dlascl( 'general', 0, 0, smlnum, anrm, minmn, 1, s, strideS, 1, offsetS );
 		}
 		if ( info !== 0 && anrm < smlnum ) {
-			dlascl( 'G', 0, 0, smlnum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie );
+			dlascl( 'general', 0, 0, smlnum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie );
 		}
 	}
 

@@ -103,7 +103,7 @@ test( 'zunml2: left, no transpose (Q*I)', function t() {
 	var LDC = 6;
 	var C = eye5in6();
 	var WORK = new Complex128Array( 200 );
-	var info = zunml2( 'L', 'N', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = zunml2( 'left', 'no-transpose', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -114,7 +114,7 @@ test( 'zunml2: left, conjugate transpose (Q^H*I)', function t() {
 	var LDC = 6;
 	var C = eye5in6();
 	var WORK = new Complex128Array( 200 );
-	var info = zunml2( 'L', 'C', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = zunml2( 'left', 'conjugate-transpose', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -125,7 +125,7 @@ test( 'zunml2: right, no transpose (I*Q)', function t() {
 	var LDC = 6;
 	var C = eye5in6();
 	var WORK = new Complex128Array( 200 );
-	var info = zunml2( 'R', 'N', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = zunml2( 'right', 'no-transpose', 5, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -134,7 +134,7 @@ test( 'zunml2: M=0 quick return', function t() {
 	var lq = lq3x5();
 	var C = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
-	var info = zunml2( 'L', 'N', 0, 5, 0, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
+	var info = zunml2( 'left', 'no-transpose', 0, 5, 0, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -142,7 +142,7 @@ test( 'zunml2: N=0 quick return', function t() {
 	var lq = lq3x5();
 	var C = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
-	var info = zunml2( 'L', 'N', 5, 0, 0, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
+	var info = zunml2( 'left', 'no-transpose', 5, 0, 0, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -150,7 +150,7 @@ test( 'zunml2: K=0 quick return', function t() {
 	var lq = lq3x5();
 	var C = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
-	var info = zunml2( 'L', 'N', 5, 5, 0, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
+	var info = zunml2( 'left', 'no-transpose', 5, 5, 0, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -168,7 +168,7 @@ test( 'zunml2: right, conjugate transpose on rectangular C', function t() {
 	Cv[8*LDC]=0; Cv[8*LDC+1]=1; Cv[8*LDC+2]=1; Cv[8*LDC+3]=1; Cv[8*LDC+4]=2; Cv[8*LDC+5]=0;
 
 	var WORK = new Complex128Array( 200 );
-	var info = zunml2( 'R', 'C', 3, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var info = zunml2( 'right', 'conjugate-transpose', 3, 5, 3, lq.A, 1, lq.LDA, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });

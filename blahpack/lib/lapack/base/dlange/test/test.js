@@ -78,122 +78,122 @@ var A1x1 = new Float64Array([ -5.5 ]);
 test( 'dlange: max norm (M) on 3x4 matrix', function t() {
 	var tc = findCase( 'dlange_max' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'M', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'max', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: one norm (1) on 3x4 matrix', function t() {
 	var tc = findCase( 'dlange_one' );
 	var work = new Float64Array( 10 );
-	var result = dlange( '1', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'one-norm', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: one norm (O) on 3x4 matrix', function t() {
 	var tc = findCase( 'dlange_one_O' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'O', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'one-norm', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: infinity norm (I) on 3x4 matrix', function t() {
 	var tc = findCase( 'dlange_inf' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'I', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'inf-norm', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: Frobenius norm (F) on 3x4 matrix', function t() {
 	var tc = findCase( 'dlange_frob' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'F', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'frobenius', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: Frobenius norm (E) on 3x4 matrix', function t() {
 	var tc = findCase( 'dlange_frob_E' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'E', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'frobenius', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: M=0 quick return', function t() {
 	var tc = findCase( 'dlange_m_zero' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'M', 0, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'max', 0, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: N=0 quick return', function t() {
 	var tc = findCase( 'dlange_n_zero' );
 	var work = new Float64Array( 10 );
-	var result = dlange( '1', 3, 0, A3x4, 1, 3, 0, work, 1, 0 );
+	var result = dlange( 'one-norm', 3, 0, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 1x1 max norm', function t() {
 	var tc = findCase( 'dlange_1x1_max' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'M', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
+	var result = dlange( 'max', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 1x1 Frobenius norm', function t() {
 	var tc = findCase( 'dlange_1x1_frob' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'F', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
+	var result = dlange( 'frobenius', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 1x1 one norm', function t() {
 	var tc = findCase( 'dlange_1x1_one' );
 	var work = new Float64Array( 10 );
-	var result = dlange( '1', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
+	var result = dlange( 'one-norm', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 1x1 infinity norm', function t() {
 	var tc = findCase( 'dlange_1x1_inf' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'I', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
+	var result = dlange( 'inf-norm', 1, 1, A1x1, 1, 1, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 4x5 max norm', function t() {
 	var tc = findCase( 'dlange_4x5_max' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'M', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
+	var result = dlange( 'max', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 4x5 one norm', function t() {
 	var tc = findCase( 'dlange_4x5_one' );
 	var work = new Float64Array( 10 );
-	var result = dlange( '1', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
+	var result = dlange( 'one-norm', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 4x5 infinity norm', function t() {
 	var tc = findCase( 'dlange_4x5_inf' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'I', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
+	var result = dlange( 'inf-norm', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: 4x5 Frobenius norm', function t() {
 	var tc = findCase( 'dlange_4x5_frob' );
 	var work = new Float64Array( 10 );
-	var result = dlange( 'F', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
+	var result = dlange( 'frobenius', 4, 5, A4x5, 1, 4, 0, work, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlange: lowercase norm chars work', function t() {
 	var work = new Float64Array( 10 );
-	var resultM = dlange( 'm', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
-	var resultO = dlange( 'o', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
-	var resultI = dlange( 'i', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
-	var resultF = dlange( 'f', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
-	var resultE = dlange( 'e', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var resultM = dlange( 'max', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var resultO = dlange( 'one-norm', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var resultI = dlange( 'inf-norm', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var resultF = dlange( 'frobenius', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
+	var resultE = dlange( 'frobenius', 3, 4, A3x4, 1, 3, 0, work, 1, 0 );
 	assertClose( resultM, 9.0, 1e-14, 'lowercase m' );
 	assertClose( resultO, 24.0, 1e-14, 'lowercase o' );
 	assertClose( resultI, 22.0, 1e-14, 'lowercase i' );
@@ -223,23 +223,23 @@ test( 'dlange: non-unit strides with offset', function t() {
 		}
 	}
 	var work = new Float64Array( 10 );
-	var result = dlange( 'M', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
+	var result = dlange( 'max', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
 	assertClose( result, 9.0, 1e-14, 'max norm with strides' );
 
-	result = dlange( '1', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
+	result = dlange( 'one-norm', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
 	assertClose( result, 24.0, 1e-14, 'one norm with strides' );
 
-	result = dlange( 'I', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
+	result = dlange( 'inf-norm', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
 	assertClose( result, 22.0, 1e-14, 'inf norm with strides' );
 
-	result = dlange( 'F', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
+	result = dlange( 'frobenius', 3, 4, A, sa1, sa2, offset, work, 1, 0 );
 	assertClose( result, Math.sqrt( 299 ), 1e-14, 'frob norm with strides' );
 });
 
 test( 'dlange: work array with offset for infinity norm', function t() {
 	var work = new Float64Array( 20 );
 	var workOffset = 5;
-	var result = dlange( 'I', 3, 4, A3x4, 1, 3, 0, work, 1, workOffset );
+	var result = dlange( 'inf-norm', 3, 4, A3x4, 1, 3, 0, work, 1, workOffset );
 	assertClose( result, 22.0, 1e-14, 'inf norm with work offset' );
 });
 

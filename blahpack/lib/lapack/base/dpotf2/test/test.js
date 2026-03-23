@@ -67,7 +67,7 @@ test( 'dpotf2: lower triangular 3x3 positive definite', function t() {
 	var tc = findCase( 'lower_3x3' );
 	// A = [4 2 1; 2 5 3; 1 3 6] stored column-major
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
-	var info = dpotf2base( 'L', 3, A, 1, 3, 0 );
+	var info = dpotf2base( 'lower', 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A, tc.a, 'lower_3x3' );
 });
@@ -75,7 +75,7 @@ test( 'dpotf2: lower triangular 3x3 positive definite', function t() {
 test( 'dpotf2: upper triangular 3x3 positive definite', function t() {
 	var tc = findCase( 'upper_3x3' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
-	var info = dpotf2base( 'U', 3, A, 1, 3, 0 );
+	var info = dpotf2base( 'upper', 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A, tc.a, 'upper_3x3' );
 });
@@ -83,7 +83,7 @@ test( 'dpotf2: upper triangular 3x3 positive definite', function t() {
 test( 'dpotf2: n=1 matrix', function t() {
 	var tc = findCase( 'n_one' );
 	var A = new Float64Array( [ 9 ] );
-	var info = dpotf2base( 'L', 1, A, 1, 1, 0 );
+	var info = dpotf2base( 'lower', 1, A, 1, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A, tc.a, 'n_one' );
 });
@@ -91,7 +91,7 @@ test( 'dpotf2: n=1 matrix', function t() {
 test( 'dpotf2: n=0 quick return', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Float64Array( 0 );
-	var info = dpotf2base( 'L', 0, A, 1, 1, 0 );
+	var info = dpotf2base( 'lower', 0, A, 1, 1, 0 );
 	assert.strictEqual( info, tc.info );
 });
 
@@ -99,7 +99,7 @@ test( 'dpotf2: not positive definite returns info > 0', function t() {
 	var tc = findCase( 'not_posdef' );
 	// A = [1 2; 2 1] col-major — 2x2 not positive definite
 	var A = new Float64Array( [ 1, 2, 2, 1 ] );
-	var info = dpotf2base( 'L', 2, A, 1, 2, 0 );
+	var info = dpotf2base( 'lower', 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A, tc.a, 'not_posdef' );
 });
@@ -108,7 +108,7 @@ test( 'dpotf2: upper triangle, not positive definite', function t() {
 	// A = [1 2; 2 1] col-major — not positive definite, using 'U'
 	// Upper: ajj = A[1,1] - dot(A[0:0,1], A[0:0,1]) = 1 - 4 = -3 → info=2
 	var A = new Float64Array( [ 1, 2, 2, 1 ] );
-	var info = dpotf2base( 'U', 2, A, 1, 2, 0 );
+	var info = dpotf2base( 'upper', 2, A, 1, 2, 0 );
 	assert.strictEqual( info, 2, 'should return info=2' );
 });
 
@@ -121,7 +121,7 @@ test( 'dpotf2: 4x4 identity matrix', function t() {
 		0, 0, 1, 0,
 		0, 0, 0, 1
 	] );
-	var info = dpotf2base( 'L', 4, A, 1, 4, 0 );
+	var info = dpotf2base( 'lower', 4, A, 1, 4, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A, tc.a, 'identity_4x4' );
 });
@@ -130,7 +130,7 @@ test( 'dpotf2: lower with offsetA > 0', function t() {
 	// Put the 3x3 matrix at offset 2 in a larger buffer
 	var tc = findCase( 'lower_3x3' );
 	var A = new Float64Array( [ 99, 99, 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
-	var info = dpotf2base( 'L', 3, A, 1, 3, 2 );
+	var info = dpotf2base( 'lower', 3, A, 1, 3, 2 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A.subarray( 2 ), tc.a, 'lower_3x3_offset' );
 });
@@ -138,7 +138,7 @@ test( 'dpotf2: lower with offsetA > 0', function t() {
 test( 'dpotf2: upper with lowercase u', function t() {
 	var tc = findCase( 'upper_3x3' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
-	var info = dpotf2base( 'u', 3, A, 1, 3, 0 );
+	var info = dpotf2base( 'upper', 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
 	assertArrayClose( A, tc.a, 'upper_3x3_lowercase' );
 });

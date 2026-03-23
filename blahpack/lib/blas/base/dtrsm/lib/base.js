@@ -42,9 +42,9 @@ function dtrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	var j;
 	var k;
 
-	lside = ( side === 'L' || side === 'l' );
-	nounit = ( diag === 'N' || diag === 'n' );
-	upper = ( uplo === 'U' || uplo === 'u' );
+	lside = ( side === 'left' );
+	nounit = ( diag === 'non-unit' );
+	upper = ( uplo === 'upper' );
 
 	if ( M === 0 || N === 0 ) {
 		return B;
@@ -68,7 +68,7 @@ function dtrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	}
 
 	if ( lside ) {
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			// Solve A*X = alpha*B
 			if ( upper ) {
 				// Left, Upper, No-transpose
@@ -152,7 +152,7 @@ function dtrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			}
 		}
 	} else {
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			// Solve X*A = alpha*B
 			if ( upper ) {
 				// Right, Upper, No-transpose

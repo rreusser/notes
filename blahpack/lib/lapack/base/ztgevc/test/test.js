@@ -103,7 +103,7 @@ test( 'ztgevc: right eigenvectors, all (SIDE=R, HOWMNY=A)', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ false, false, false ];
 	var M = [ 0 ];
-	var info = ztgevc( 'R', 'A', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'right', 'all', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VR, tc.vr.length ), tc.vr, 1e-12, 'vr' );
@@ -118,7 +118,7 @@ test( 'ztgevc: left eigenvectors, all (SIDE=L, HOWMNY=A)', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ false, false, false ];
 	var M = [ 0 ];
-	var info = ztgevc( 'L', 'A', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'left', 'all', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VL, tc.vl.length ), tc.vl, 1e-12, 'vl' );
@@ -133,7 +133,7 @@ test( 'ztgevc: both eigenvectors, all (SIDE=B, HOWMNY=A)', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ false, false, false ];
 	var M = [ 0 ];
-	var info = ztgevc( 'B', 'A', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'B', 'all', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VL, tc.vl.length ), tc.vl, 1e-12, 'vl' );
@@ -149,7 +149,7 @@ test( 'ztgevc: selected right eigenvectors (HOWMNY=S)', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ true, false, true ];
 	var M = [ 0 ];
-	var info = ztgevc( 'R', 'S', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 2, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'right', 'selected', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 2, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VR, tc.vr.length ), tc.vr, 1e-12, 'vr' );
@@ -170,7 +170,7 @@ test( 'ztgevc: right backtransform (HOWMNY=B)', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ false, false, false ];
 	var M = [ 0 ];
-	var info = ztgevc( 'R', 'B', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'right', 'backtransform', SELECT, 1, 0, 3, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 3, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VR, tc.vr.length ), tc.vr, 1e-12, 'vr' );
@@ -185,7 +185,7 @@ test( 'ztgevc: N=0 quick return', function t() {
 	var RWORK = new Float64Array( 1 );
 	var SELECT = [];
 	var M = [ 0 ];
-	var info = ztgevc( 'R', 'A', SELECT, 1, 0, 0, S, 1, 1, 0, P, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 0, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'right', 'all', SELECT, 1, 0, 0, S, 1, 1, 0, P, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 0, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, 0 );
 	assert.equal( M[ 0 ], 0 );
 });
@@ -199,7 +199,7 @@ test( 'ztgevc: 2x2 system, both', function t() {
 	var RWORK = new Float64Array( 20 );
 	var SELECT = [ false, false ];
 	var M = [ 0 ];
-	var info = ztgevc( 'B', 'A', SELECT, 1, 0, 2, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 2, M, WORK, 1, 0, RWORK, 1, 0 );
+	var info = ztgevc( 'B', 'all', SELECT, 1, 0, 2, sp.S, 1, sp.LDS, 0, sp.P, 1, sp.LDS, 0, VL, 1, sp.LDS, 0, VR, 1, sp.LDS, 0, 2, M, WORK, 1, 0, RWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.m );
 	assertArrayClose( extractRaw( VL, tc.vl.length ), tc.vl, 1e-12, 'vl' );

@@ -83,7 +83,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	Av = reinterpret( A, 0 );
 	oA = offsetA * 2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Reduce the upper triangle of A.
 		kk = N - Math.floor( ( N - nx + nb - 1 ) / nb ) * nb;
 
@@ -101,7 +101,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 
 			// Update the unreduced submatrix A(0:i-1, 0:i-1)
 			zher2k(
-				uplo, 'N', i, nb, CNONE,
+				uplo, 'no-transpose', i, nb, CNONE,
 				A, sa1, sa2, offsetA + i * sa2,
 				work, 1, ldwork, 0,
 				1.0,
@@ -137,7 +137,7 @@ function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 
 			// Update the unreduced submatrix
 			zher2k(
-				uplo, 'N', N - i - nb, nb, CNONE,
+				uplo, 'no-transpose', N - i - nb, nb, CNONE,
 				A, sa1, sa2, offsetA + ( i + nb ) * sa1 + i * sa2,
 				work, 1, ldwork, nb,
 				1.0,

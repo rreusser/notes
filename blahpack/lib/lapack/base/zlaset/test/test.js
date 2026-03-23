@@ -61,7 +61,7 @@ test( 'zlaset: full 3x3 matrix', function t() {
 	var Av = reinterpret( A, 0 );
 	var alpha = new Complex128( 1.0, 2.0 );
 	var beta = new Complex128( 3.0, 4.0 );
-	base( 'A', 3, 3, alpha, beta, A, 1, LDA, 0 );
+	base( 'all', 3, 3, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
 	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
 	assertArrayClose( extractCol( Av, 2, 3, LDA ), tc.a_col3, 'col3' );
@@ -74,7 +74,7 @@ test( 'zlaset: upper triangular 3x3', function t() {
 	var Av = reinterpret( A, 0 );
 	var alpha = new Complex128( 1.0, 0.0 );
 	var beta = new Complex128( 5.0, 0.0 );
-	base( 'U', 3, 3, alpha, beta, A, 1, LDA, 0 );
+	base( 'upper', 3, 3, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
 	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
 	assertArrayClose( extractCol( Av, 2, 3, LDA ), tc.a_col3, 'col3' );
@@ -87,7 +87,7 @@ test( 'zlaset: lower triangular 3x3', function t() {
 	var Av = reinterpret( A, 0 );
 	var alpha = new Complex128( 2.0, 1.0 );
 	var beta = new Complex128( 7.0, 3.0 );
-	base( 'L', 3, 3, alpha, beta, A, 1, LDA, 0 );
+	base( 'lower', 3, 3, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
 	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
 	assertArrayClose( extractCol( Av, 2, 3, LDA ), tc.a_col3, 'col3' );
@@ -100,7 +100,7 @@ test( 'zlaset: 1x1 matrix (diagonal only)', function t() {
 	var Av = reinterpret( A, 0 );
 	var alpha = new Complex128( 10.0, 20.0 );
 	var beta = new Complex128( 30.0, 40.0 );
-	base( 'A', 1, 1, alpha, beta, A, 1, LDA, 0 );
+	base( 'all', 1, 1, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( [ Av[ 0 ], Av[ 1 ] ], tc.a, '1x1' );
 });
 
@@ -113,7 +113,7 @@ test( 'zlaset: 0x0 matrix (no-op)', function t() {
 	Av[ 1 ] = 99.0;
 	var alpha = new Complex128( 1.0, 2.0 );
 	var beta = new Complex128( 3.0, 4.0 );
-	base( 'A', 0, 0, alpha, beta, A, 1, LDA, 0 );
+	base( 'all', 0, 0, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( [ Av[ 0 ], Av[ 1 ] ], tc.a, '0x0' );
 });
 
@@ -124,7 +124,7 @@ test( 'zlaset: rectangular 2x3', function t() {
 	var Av = reinterpret( A, 0 );
 	var alpha = new Complex128( 1.0, -1.0 );
 	var beta = new Complex128( 5.0, -5.0 );
-	base( 'A', 2, 3, alpha, beta, A, 1, LDA, 0 );
+	base( 'all', 2, 3, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( extractCol( Av, 0, 2, LDA ), tc.a_col1, 'col1' );
 	assertArrayClose( extractCol( Av, 1, 2, LDA ), tc.a_col2, 'col2' );
 	assertArrayClose( extractCol( Av, 2, 2, LDA ), tc.a_col3, 'col3' );
@@ -137,7 +137,7 @@ test( 'zlaset: rectangular 3x2', function t() {
 	var Av = reinterpret( A, 0 );
 	var alpha = new Complex128( 2.0, 3.0 );
 	var beta = new Complex128( 8.0, 9.0 );
-	base( 'A', 3, 2, alpha, beta, A, 1, LDA, 0 );
+	base( 'all', 3, 2, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( extractCol( Av, 0, 3, LDA ), tc.a_col1, 'col1' );
 	assertArrayClose( extractCol( Av, 1, 3, LDA ), tc.a_col2, 'col2' );
 });
@@ -149,7 +149,7 @@ test( 'zlaset: upper 4x4 identity', function t() {
 	var Av = reinterpret( A, 0 );
 	var alpha = new Complex128( 0.0, 0.0 );
 	var beta = new Complex128( 1.0, 0.0 );
-	base( 'U', 4, 4, alpha, beta, A, 1, LDA, 0 );
+	base( 'upper', 4, 4, alpha, beta, A, 1, LDA, 0 );
 	assertArrayClose( extractCol( Av, 0, 4, LDA ), tc.a_col1, 'col1' );
 	assertArrayClose( extractCol( Av, 1, 4, LDA ), tc.a_col2, 'col2' );
 	assertArrayClose( extractCol( Av, 2, 4, LDA ), tc.a_col3, 'col3' );

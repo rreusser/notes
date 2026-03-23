@@ -51,8 +51,8 @@ test( 'dsytrs: 4x4_lower_1rhs', function t() {
 	]);
 	var b = new Float64Array([ 7, 10, 12, 12 ]);
 	var ipiv = new Int32Array( 4 );
-	dsytrf( 'L', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	var info = dsytrs( 'L', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
+	dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrs( 'lower', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -66,8 +66,8 @@ test( 'dsytrs: 4x4_upper_1rhs', function t() {
 	A[ 12 ] = 0; A[ 13 ] = 1; A[ 14 ] = 3; A[ 15 ] = 8;
 	var b = new Float64Array([ 7, 10, 12, 12 ]);
 	var ipiv = new Int32Array( 4 );
-	dsytrf( 'U', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	var info = dsytrs( 'U', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
+	dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrs( 'upper', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -82,8 +82,8 @@ test( 'dsytrs: 4x4_indef_lower_1rhs', function t() {
 	]);
 	var b = new Float64Array([ 6, 10, 12, 14 ]);
 	var ipiv = new Int32Array( 4 );
-	dsytrf( 'L', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	var info = dsytrs( 'L', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
+	dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrs( 'lower', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -97,8 +97,8 @@ test( 'dsytrs: 4x4_indef_upper_1rhs', function t() {
 	A[ 12 ] = 3; A[ 13 ] = 5; A[ 14 ] = 6; A[ 15 ] = 0;
 	var b = new Float64Array([ 6, 10, 12, 14 ]);
 	var ipiv = new Int32Array( 4 );
-	dsytrf( 'U', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	var info = dsytrs( 'U', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
+	dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	var info = dsytrs( 'upper', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -113,8 +113,8 @@ test( 'dsytrs: 3x3_lower_2rhs', function t() {
 	// B is 3x2, column-major: B(:,1) = [7;9;9], B(:,2) = [14;18;18]
 	var b = new Float64Array([ 7, 9, 9, 14, 18, 18 ]);
 	var ipiv = new Int32Array( 3 );
-	dsytrf( 'L', 3, A, 1, 3, 0, ipiv, 1, 0 );
-	var info = dsytrs( 'L', 3, 2, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0 );
+	dsytrf( 'lower', 3, A, 1, 3, 0, ipiv, 1, 0 );
+	var info = dsytrs( 'lower', 3, 2, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -123,7 +123,7 @@ test( 'dsytrs: n_zero', function t() {
 	var A = new Float64Array( 1 );
 	var b = new Float64Array( 1 );
 	var ipiv = new Int32Array( 1 );
-	var info = dsytrs( 'L', 0, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0 );
+	var info = dsytrs( 'lower', 0, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -131,7 +131,7 @@ test( 'dsytrs: nrhs_zero', function t() {
 	var A = new Float64Array( 9 );
 	var b = new Float64Array( 3 );
 	var ipiv = new Int32Array( 3 );
-	var info = dsytrs( 'L', 3, 0, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0 );
+	var info = dsytrs( 'lower', 3, 0, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -140,7 +140,7 @@ test( 'dsytrs: n_one_lower', function t() {
 	var A = new Float64Array([ 4.0 ]);
 	var b = new Float64Array([ 8.0 ]);
 	var ipiv = new Int32Array([ 0 ]); // 0-based self-pivot
-	var info = dsytrs( 'L', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0 );
+	var info = dsytrs( 'lower', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-14, 'b' );
 });
@@ -157,8 +157,8 @@ test( 'dsytrs: 5x5_lower_solve', function t() {
 	]);
 	var b = new Float64Array([ 14, 16, 7, 1, 17 ]);
 	var ipiv = new Int32Array( 5 );
-	dsytrf( 'L', 5, A, 1, 5, 0, ipiv, 1, 0 );
-	var info = dsytrs( 'L', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0 );
+	dsytrf( 'lower', 5, A, 1, 5, 0, ipiv, 1, 0 );
+	var info = dsytrs( 'lower', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -173,8 +173,8 @@ test( 'dsytrs: 5x5_upper_solve', function t() {
 	A[ 20 ] = 1; A[ 21 ] = 2; A[ 22 ] = 0; A[ 23 ] = -2; A[ 24 ] = 4;
 	var b = new Float64Array([ 14, 16, 7, 1, 17 ]);
 	var ipiv = new Int32Array( 5 );
-	dsytrf( 'U', 5, A, 1, 5, 0, ipiv, 1, 0 );
-	var info = dsytrs( 'U', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0 );
+	dsytrf( 'upper', 5, A, 1, 5, 0, ipiv, 1, 0 );
+	var info = dsytrs( 'upper', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });

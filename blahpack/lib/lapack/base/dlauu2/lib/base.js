@@ -36,7 +36,7 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		return 0;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
@@ -55,9 +55,9 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				);
 
 				// Update rows 0..i-1 of column i:
-				// dgemv('N', i, N-i-1, 1.0, A(0,i+1), LDA, A(i,i+1), LDA, aii, A(0,i), 1)
+				// dgemv('no-transpose', i, N-i-1, 1.0, A(0,i+1), LDA, A(i,i+1), LDA, aii, A(0,i), 1)
 				dgemv(
-					'N', i, N - i - 1,
+					'no-transpose', i, N - i - 1,
 					1.0,
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa2,       // A(:, i+1)
 					A, sa2, offsetA + i * sa1 + ( i + 1 ) * sa2,  // A(i, i+1:) stride=sa2
@@ -85,9 +85,9 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				);
 
 				// Update columns 0..i-1 of row i:
-				// dgemv('T', N-i-1, i, 1.0, A(i+1,0), LDA, A(i+1,i), 1, aii, A(i,0), LDA)
+				// dgemv('transpose', N-i-1, i, 1.0, A(i+1,0), LDA, A(i+1,i), 1, aii, A(i,0), LDA)
 				dgemv(
-					'T', N - i - 1, i,
+					'transpose', N - i - 1, i,
 					1.0,
 					A, sa1, sa2, offsetA + ( i + 1 ) * sa1,       // A(i+1, :)
 					A, sa1, offsetA + ( i + 1 ) * sa1 + i * sa2,  // A(i+1:, i) stride=sa1

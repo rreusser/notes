@@ -118,7 +118,7 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 				// Form the triangular factor of the block reflector
 				// H = H(i) H(i+1) ... H(i+ib-1)
 				dlarft(
-					'F', 'R',
+					'forward', 'rowwise',
 					N - i, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					TAU, strideTAU, offsetTAU + i * strideTAU,
@@ -127,7 +127,7 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 				// Apply H to A(i+ib:M-1, i:N-1) from the right
 				dlarfb(
-					'R', 'N', 'F', 'R',
+					'right', 'no-transpose', 'forward', 'rowwise',
 					M - i - ib, N - i, ib,
 					A, strideA1, strideA2, offsetA + i * strideA1 + i * strideA2,
 					T, 1, nb, 0,

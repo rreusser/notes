@@ -68,7 +68,7 @@ test( 'zbdsqr: upper_4x4_values_only', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 4, 0, 0, 0,
+	info = zbdsqr( 'upper', 4, 0, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -92,7 +92,7 @@ test( 'zbdsqr: upper_3x3_with_vt', function t() {
 	var c = new Complex128Array( 0 );
 
 	// VT: strideVT1=1 (rows), strideVT2=3 (columns) in complex elements
-	info = zbdsqr( 'U', 3, 3, 0, 0,
+	info = zbdsqr( 'upper', 3, 3, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -116,7 +116,7 @@ test( 'zbdsqr: upper_3x3_with_vt_and_u', function t() {
 	var u = complexIdentity( 3 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 3, 3, 3, 0,
+	info = zbdsqr( 'upper', 3, 3, 3, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -141,7 +141,7 @@ test( 'zbdsqr: lower_3x3_values_only', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'L', 3, 0, 0, 0,
+	info = zbdsqr( 'lower', 3, 0, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -164,7 +164,7 @@ test( 'zbdsqr: lower_3x3_with_u', function t() {
 	var u = complexIdentity( 3 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'L', 3, 0, 3, 0,
+	info = zbdsqr( 'lower', 3, 0, 3, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -188,7 +188,7 @@ test( 'zbdsqr: n_1', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 1, 0, 0, 0,
+	info = zbdsqr( 'upper', 1, 0, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -211,7 +211,7 @@ test( 'zbdsqr: n_0', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 0, 0, 0, 0,
+	info = zbdsqr( 'upper', 0, 0, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -233,7 +233,7 @@ test( 'zbdsqr: upper_2x2_with_vectors', function t() {
 	var u = complexIdentity( 2 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 2, 2, 2, 0,
+	info = zbdsqr( 'upper', 2, 2, 2, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 2, 0,
@@ -261,7 +261,7 @@ test( 'zbdsqr: n_1_neg_with_vt', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 1, 2, 0, 0,
+	info = zbdsqr( 'upper', 1, 2, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -290,7 +290,7 @@ test( 'zbdsqr: upper_3x3_with_c', function t() {
 		2.0, 0.0,  0.0, 2.0,  2.0, 2.0    // column 1: 3 complex elements
 	] );
 
-	info = zbdsqr( 'U', 3, 0, 0, 2,
+	info = zbdsqr( 'upper', 3, 0, 0, 2,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -314,7 +314,7 @@ test( 'zbdsqr: upper_4x4_idir2', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 4, 0, 0, 0,
+	info = zbdsqr( 'upper', 4, 0, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -337,7 +337,7 @@ test( 'zbdsqr: upper_3x3_zero_shift', function t() {
 	var u = complexIdentity( 3 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 3, 3, 3, 0,
+	info = zbdsqr( 'upper', 3, 3, 3, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -366,7 +366,7 @@ test( 'zbdsqr: lower_3x3_with_c', function t() {
 		0.0, 0.0,  1.0, 0.0,  0.0, 0.0
 	] );
 
-	info = zbdsqr( 'L', 3, 0, 0, 2,
+	info = zbdsqr( 'lower', 3, 0, 0, 2,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -390,7 +390,7 @@ test( 'zbdsqr: upper_3x3_idir2_with_vectors', function t() {
 	var u = complexIdentity( 3 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 3, 3, 3, 0,
+	info = zbdsqr( 'upper', 3, 3, 3, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -415,7 +415,7 @@ test( 'zbdsqr: upper_3x3_negative_d', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 3, 3, 0, 0,
+	info = zbdsqr( 'upper', 3, 3, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -439,7 +439,7 @@ test( 'zbdsqr: nearly_diagonal', function t() {
 	var u = new Complex128Array( 0 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 4, 0, 0, 0,
+	info = zbdsqr( 'upper', 4, 0, 0, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 1, 0,
@@ -462,7 +462,7 @@ test( 'zbdsqr: lower_3x3_with_vt_and_u', function t() {
 	var u = complexIdentity( 3 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'L', 3, 3, 3, 0,
+	info = zbdsqr( 'lower', 3, 3, 3, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -490,7 +490,7 @@ test( 'zbdsqr: lower_3x3_all_vectors (VT, U, and C)', function t() {
 		2.0, 0.0, 0.0, 2.0, 2.0, 2.0
 	] );
 
-	info = zbdsqr( 'L', 3, 3, 3, 2,
+	info = zbdsqr( 'lower', 3, 3, 3, 2,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -516,7 +516,7 @@ test( 'zbdsqr: upper_3x3_zero_d (sminoa=0 path)', function t() {
 	var u = complexIdentity( 3 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 3, 3, 3, 0,
+	info = zbdsqr( 'upper', 3, 3, 3, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -544,7 +544,7 @@ test( 'zbdsqr: upper_3x3_zero_shift_all_vecs (zero shift with NCC > 0)', functio
 		2.0, 0.0, 0.0, 2.0, 2.0, 2.0
 	] );
 
-	info = zbdsqr( 'U', 3, 3, 3, 2,
+	info = zbdsqr( 'upper', 3, 3, 3, 2,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,
@@ -574,7 +574,7 @@ test( 'zbdsqr: upper_4x4_idir2_all_vecs (idir=2 with NCC > 0)', function t() {
 		2.0, 0.0, 0.0, 2.0, 2.0, 2.0, 1.0, 0.0
 	] );
 
-	info = zbdsqr( 'U', n, n, n, 2,
+	info = zbdsqr( 'upper', n, n, n, 2,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, n, 0,
@@ -604,7 +604,7 @@ test( 'zbdsqr: upper_4x4_idir1_zero_shift_all_vecs (idir=1 zero shift + NCC)', f
 		2.0, 0.0, 0.0, 2.0, 2.0, 2.0, 1.0, 0.0
 	] );
 
-	info = zbdsqr( 'U', n, n, n, 2,
+	info = zbdsqr( 'upper', n, n, n, 2,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, n, 0,
@@ -630,7 +630,7 @@ test( 'zbdsqr: upper_3x3_near_zero_shift (shift negligible vs sll)', function t(
 	var u = complexIdentity( 3 );
 	var c = new Complex128Array( 0 );
 
-	info = zbdsqr( 'U', 3, 3, 3, 0,
+	info = zbdsqr( 'upper', 3, 3, 3, 0,
 		d, 1, 0,
 		e, 1, 0,
 		vt, 1, 3, 0,

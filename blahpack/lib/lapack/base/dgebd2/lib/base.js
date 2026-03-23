@@ -93,7 +93,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			// Apply H(i) to A(i:M-1, i+1:N-1) from the left
 			// dlarf: tau is a plain number
 			if ( i < N - 1 ) {
-				dlarf( 'L', M - i, N - i - 1,
+				dlarf( 'left', M - i, N - i - 1,
 					A, strideA1, aii,
 					TAUQ[ offsetTAUQ + i * strideTAUQ ],
 					A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
@@ -119,7 +119,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				A[ aij ] = 1.0;
 
 				// Apply G(i) to A(i+1:M-1, i+1:N-1) from the right
-				dlarf( 'R', M - i - 1, N - i - 1,
+				dlarf( 'right', M - i - 1, N - i - 1,
 					A, strideA2, aij,
 					TAUP[ offsetTAUP + i * strideTAUP ],
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,
@@ -150,7 +150,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// Apply G(i) to A(i+1:M-1, i:N-1) from the right
 			if ( i < M - 1 ) {
-				dlarf( 'R', M - i - 1, N - i,
+				dlarf( 'right', M - i - 1, N - i,
 					A, strideA2, aii,
 					TAUP[ offsetTAUP + i * strideTAUP ],
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + i * strideA2,
@@ -176,7 +176,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				A[ aij ] = 1.0;
 
 				// Apply H(i) to A(i+1:M-1, i+1:N-1) from the left
-				dlarf( 'L', M - i - 1, N - i - 1,
+				dlarf( 'left', M - i - 1, N - i - 1,
 					A, strideA1, aij,
 					TAUQ[ offsetTAUQ + i * strideTAUQ ],
 					A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2,

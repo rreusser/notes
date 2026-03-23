@@ -117,7 +117,7 @@ test( 'zgghrd: basic 4x4 with COMPQ=I, COMPZ=I', function t() {
 	cset( Bv, LDA, 2, 3, 1.0, 1.0 );
 	cset( Bv, LDA, 3, 3, 1.0, 0.0 );
 
-	info = base( 'I', 'I', n, 1, 4, A, sa1, sa2, 0, B, sa1, sa2, 0, Q, sa1, sa2, 0, Z, sa1, sa2, 0 );
+	info = base( 'initialize', 'initialize', n, 1, 4, A, sa1, sa2, 0, B, sa1, sa2, 0, Q, sa1, sa2, 0, Z, sa1, sa2, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
@@ -153,7 +153,7 @@ test( 'zgghrd: n=1 quick return', function t() {
 	Av[ 0 ] = 5.0; Av[ 1 ] = 3.0;
 	Bv[ 0 ] = 2.0; Bv[ 1 ] = 1.0;
 
-	info = base( 'I', 'I', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	info = base( 'initialize', 'initialize', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( [ Av[ 0 ], Av[ 1 ] ], tc.A, 'A' );
@@ -190,7 +190,7 @@ test( 'zgghrd: no Q/Z accumulation (COMPQ=N, COMPZ=N) 3x3', function t() {
 	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
 	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
 
-	info = base( 'N', 'N', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+	info = base( 'none', 'none', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
@@ -228,7 +228,7 @@ test( 'zgghrd: partial reduction ILO=2, IHI=4 on 5x5', function t() {
 		}
 	}
 
-	info = base( 'I', 'I', n, 2, 4, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+	info = base( 'initialize', 'initialize', n, 2, 4, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
@@ -288,7 +288,7 @@ test( 'zgghrd: accumulate into existing Q, Z (COMPQ=V, COMPZ=V) 3x3', function t
 		cset( Zv, LDA, i, i, 1.0, 0.0 );
 	}
 
-	info = base( 'V', 'V', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+	info = base( 'update', 'update', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
@@ -326,7 +326,7 @@ test( 'zgghrd: ILO=IHI (already reduced, near no-op)', function t() {
 	cset( Bv, LDA, 1, 1, 2.0, 0.0 ); cset( Bv, LDA, 1, 2, 1.0, 0.0 );
 	cset( Bv, LDA, 2, 2, 3.0, 0.0 );
 
-	info = base( 'I', 'I', n, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+	info = base( 'initialize', 'initialize', n, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
@@ -350,7 +350,7 @@ test( 'zgghrd: invalid COMPQ returns -1', function t() {
 	var Z = new Complex128Array( 1 );
 	var info;
 
-	info = base( 'X', 'I', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	info = base( 'X', 'initialize', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
 	assert.strictEqual( info, -1, 'invalid compq returns -1' );
 });
 
@@ -361,7 +361,7 @@ test( 'zgghrd: invalid COMPZ returns -2', function t() {
 	var Z = new Complex128Array( 1 );
 	var info;
 
-	info = base( 'I', 'X', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	info = base( 'initialize', 'X', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
 	assert.strictEqual( info, -2, 'invalid compz returns -2' );
 });
 
@@ -372,7 +372,7 @@ test( 'zgghrd: negative N returns -3', function t() {
 	var Z = new Complex128Array( 1 );
 	var info;
 
-	info = base( 'I', 'I', -1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	info = base( 'initialize', 'initialize', -1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
 	assert.strictEqual( info, -3, 'negative N returns -3' );
 });
 
@@ -405,7 +405,7 @@ test( 'zgghrd: COMPQ=N, COMPZ=I (Z only, no Q accumulation) 3x3', function t() {
 	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
 	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
 
-	info = base( 'N', 'I', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+	info = base( 'none', 'initialize', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
 
 	assert.strictEqual( info, 0, 'info' );
 	// A and B should match the no_qz_3x3 fixture (same A,B inputs, same reduction)
@@ -449,7 +449,7 @@ test( 'zgghrd: COMPQ=I, COMPZ=N (Q only, no Z accumulation) 3x3', function t() {
 	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
 	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
 
-	info = base( 'I', 'N', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+	info = base( 'initialize', 'none', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
 
 	assert.strictEqual( info, 0, 'info' );
 	// A and B should match the no_qz_3x3 fixture
@@ -484,7 +484,7 @@ test( 'zgghrd: empty range IHI=ILO-1', function t() {
 	cset( Bv, LDA, 1, 1, 2.0, 0.0 );
 	cset( Bv, LDA, 2, 2, 3.0, 0.0 );
 
-	info = base( 'I', 'I', n, 2, 1, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
+	info = base( 'initialize', 'initialize', n, 2, 1, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );

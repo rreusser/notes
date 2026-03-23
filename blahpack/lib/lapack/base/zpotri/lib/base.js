@@ -34,7 +34,7 @@ function zpotri( uplo, N, A, strideA1, strideA2, offsetA ) {
 	}
 
 	// Invert the triangular Cholesky factor...
-	info = ztrtri( uplo, 'N', N, A, strideA1, strideA2, offsetA );
+	info = ztrtri( uplo, 'non-unit', N, A, strideA1, strideA2, offsetA );
 	if ( info > 0 ) {
 		return info;
 	}

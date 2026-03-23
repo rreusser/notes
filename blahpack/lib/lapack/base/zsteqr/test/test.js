@@ -149,7 +149,7 @@ test( 'zsteqr: COMPZ=I, 4x4 tridiagonal', function t() {
 	var e = new Float64Array( offdiag );
 	var Z = new Complex128Array( 16 );
 	var WORK = new Float64Array( 6 );
-	var info = zsteqr( 'I', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, tc.info );
@@ -171,7 +171,7 @@ test( 'zsteqr: COMPZ=V, 4x4 with identity initial Z', function t() {
 		zv[ i * 8 + i * 2 ] = 1.0;
 	}
 	var WORK = new Float64Array( 6 );
-	var info = zsteqr( 'V', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
+	var info = zsteqr( 'update', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -185,7 +185,7 @@ test( 'zsteqr: COMPZ=N, 4x4 eigenvalues only', function t() {
 	var e = new Float64Array( [ 1, 1, 1 ] );
 	var Z = new Complex128Array( 1 );
 	var WORK = new Float64Array( 6 );
-	var info = zsteqr( 'N', 4, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	var info = zsteqr( 'none', 4, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -197,7 +197,7 @@ test( 'zsteqr: N=1, COMPZ=I', function t() {
 	var e = new Float64Array( 0 );
 	var Z = new Complex128Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = zsteqr( 'I', 1, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 1, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, tc.info );
@@ -214,7 +214,7 @@ test( 'zsteqr: N=2, COMPZ=I', function t() {
 	var e = new Float64Array( offdiag );
 	var Z = new Complex128Array( 4 );
 	var WORK = new Float64Array( 2 );
-	var info = zsteqr( 'I', 2, d, 1, 0, e, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 2, d, 1, 0, e, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, tc.info );
@@ -229,7 +229,7 @@ test( 'zsteqr: N=0 edge case', function t() {
 	var e = new Float64Array( 0 );
 	var Z = new Complex128Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = zsteqr( 'I', 0, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 0, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -241,7 +241,7 @@ test( 'zsteqr: already-diagonal matrix, COMPZ=I', function t() {
 	var e = new Float64Array( offdiag );
 	var Z = new Complex128Array( 16 );
 	var WORK = new Float64Array( 6 );
-	var info = zsteqr( 'I', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, tc.info );
@@ -261,7 +261,7 @@ test( 'zsteqr: 6x6 matrix, COMPZ=I', function t() {
 	var e = new Float64Array( offdiag );
 	var Z = new Complex128Array( 36 );
 	var WORK = new Float64Array( 10 );
-	var info = zsteqr( 'I', 6, d, 1, 0, e, 1, 0, Z, 1, 6, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 6, d, 1, 0, e, 1, 0, Z, 1, 6, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, tc.info );
@@ -283,7 +283,7 @@ test( 'zsteqr: COMPZ=V, 4x4 with permuted initial Z', function t() {
 	zv[ 2 * 8 + 2 * 2 ] = 1.0; // Z(2,2) = 1
 	zv[ 3 * 8 + 3 * 2 ] = 1.0; // Z(3,3) = 1
 	var WORK = new Float64Array( 6 );
-	var info = zsteqr( 'V', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
+	var info = zsteqr( 'update', 4, d, 1, 0, e, 1, 0, Z, 1, 4, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -297,7 +297,7 @@ test( 'zsteqr: N=2, COMPZ=N', function t() {
 	var e = new Float64Array( [ 2 ] );
 	var Z = new Complex128Array( 1 );
 	var WORK = new Float64Array( 2 );
-	var info = zsteqr( 'N', 2, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	var info = zsteqr( 'none', 2, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -316,7 +316,7 @@ test( 'zsteqr: N=2, COMPZ=V with complex initial Z', function t() {
 	zv[ 1 * 4 + 1 * 2 ] = 0.0;
 	zv[ 1 * 4 + 1 * 2 + 1 ] = 1.0;
 	var WORK = new Float64Array( 2 );
-	var info = zsteqr( 'V', 2, d, 1, 0, e, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
+	var info = zsteqr( 'update', 2, d, 1, 0, e, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -336,7 +336,7 @@ test( 'zsteqr: QR iteration path (|D(end)| < |D(start)|), COMPZ=I', function t()
 	var e = new Float64Array( offdiag );
 	var Z = new Complex128Array( 9 ); // 3x3
 	var WORK = new Float64Array( 4 ); // 2*(N-1) = 4
-	var info = zsteqr( 'I', 3, d, 1, 0, e, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 3, d, 1, 0, e, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, 0 );
@@ -352,7 +352,7 @@ test( 'zsteqr: QR iteration path, COMPZ=N (eigenvalues only)', function t() {
 	var e = new Float64Array( [ 3, 3 ] );
 	var Z = new Complex128Array( 1 );
 	var WORK = new Float64Array( 4 );
-	var info = zsteqr( 'N', 3, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	var info = zsteqr( 'none', 3, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0 );
 	assert.ok( d[ 0 ] <= d[ 1 ] );
@@ -367,7 +367,7 @@ test( 'zsteqr: QR iteration 2x2 block, COMPZ=I', function t() {
 	var e = new Float64Array( offdiag );
 	var Z = new Complex128Array( 4 ); // 2x2
 	var WORK = new Float64Array( 2 );
-	var info = zsteqr( 'I', 2, d, 1, 0, e, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 2, d, 1, 0, e, 1, 0, Z, 1, 2, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, 0 );
@@ -389,7 +389,7 @@ test( 'zsteqr: QR iteration, COMPZ=V with complex initial Z', function t() {
 	zv[ 1 * 6 + 1 * 2 ] = 1.0; // Z(1,1) = 1+0i
 	zv[ 2 * 6 + 2 * 2 ] = 1.0; // Z(2,2) = 1+0i
 	var WORK = new Float64Array( 4 );
-	var info = zsteqr( 'V', 3, d, 1, 0, e, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
+	var info = zsteqr( 'update', 3, d, 1, 0, e, 1, 0, Z, 1, 3, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0 );
 	assert.ok( d[ 0 ] <= d[ 1 ] );
@@ -416,7 +416,7 @@ test( 'zsteqr: 5x5, mixed sizes to exercise both QL and QR paths', function t() 
 	var e = new Float64Array( offdiag );
 	var Z = new Complex128Array( 25 ); // 5x5
 	var WORK = new Float64Array( 8 ); // 2*(N-1) = 8
-	var info = zsteqr( 'I', 5, d, 1, 0, e, 1, 0, Z, 1, 5, 0, WORK, 1, 0 );
+	var info = zsteqr( 'initialize', 5, d, 1, 0, e, 1, 0, Z, 1, 5, 0, WORK, 1, 0 );
 	var zv = reinterpret( Z, 0 );
 
 	assert.equal( info, 0 );

@@ -71,8 +71,8 @@ function dorm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		return 0;
 	}
 
-	left = ( side === 'L' || side === 'l' );
-	notran = ( trans === 'N' || trans === 'n' );
+	left = ( side === 'left' );
+	notran = ( trans === 'no-transpose' );
 
 	// Determine iteration direction:
 	// For left+trans or right+notran: iterate forward (i = 0, 1, ..., K-1)

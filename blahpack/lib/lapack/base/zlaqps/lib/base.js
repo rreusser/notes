@@ -158,7 +158,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 
 			// A(rk:M-1, k) += -1 * A(rk:M-1, 0:k-1) * F(k, 0:k-1)^T
 			zgemv(
-				'N', M - rk, k,
+				'no-transpose', M - rk, k,
 				NEGCONE,
 				A, sa1, sa2, offsetA + rk * sa1,
 				F, sf2, offsetF + k * sf1,
@@ -204,7 +204,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 				TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ]
 			);
 			zgemv(
-				'C', M - rk, N - k - 1,
+				'conjugate-transpose', M - rk, N - k - 1,
 				tauK,
 				A, sa1, sa2, offsetA + rk * sa1 + ( k + 1 ) * sa2,
 				A, sa1, offsetA + rk * sa1 + k * sa2,
@@ -227,7 +227,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 				-TAUv[ ( offsetTAU + k * strideTAU ) * 2 + 1 ]
 			);
 			zgemv(
-				'C', M - rk, k,
+				'conjugate-transpose', M - rk, k,
 				negTauK,
 				A, sa1, sa2, offsetA + rk * sa1,
 				A, sa1, offsetA + rk * sa1 + k * sa2,
@@ -237,7 +237,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 
 			// F(0:N-1, k) += F(0:N-1, 0:k-1) * AUXV(0:k-1)
 			zgemv(
-				'N', N, k,
+				'no-transpose', N, k,
 				CONE,
 				F, sf1, sf2, offsetF,
 				AUXV, strideAUXV, offsetAUXV,
@@ -249,7 +249,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		// Update the current row of A
 		if ( k < N - 1 ) {
 			zgemm(
-				'N', 'C', 1, N - k - 1, k + 1,
+				'no-transpose', 'conjugate-transpose', 1, N - k - 1, k + 1,
 				NEGCONE,
 				A, sa1, sa2, offsetA + rk * sa1,
 				F, sf1, sf2, offsetF + ( k + 1 ) * sf1,
@@ -293,7 +293,7 @@ function zlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 	// Apply the block reflector to the rest of the matrix
 	if ( k < Math.min( N, M - offset ) ) {
 		zgemm(
-			'N', 'C', M - rk, N - k, k,
+			'no-transpose', 'conjugate-transpose', M - rk, N - k, k,
 			NEGCONE,
 			A, sa1, sa2, offsetA + rk * sa1,
 			F, sf1, sf2, offsetF + k * sf1,

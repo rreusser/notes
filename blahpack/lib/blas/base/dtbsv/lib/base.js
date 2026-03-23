@@ -48,15 +48,15 @@ function dtbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 		return x;
 	}
 
-	nounit = ( diag === 'N' || diag === 'n' );
+	nounit = ( diag === 'non-unit' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
 	kx = offsetX;
 
-	if ( trans === 'N' || trans === 'n' ) {
+	if ( trans === 'no-transpose' ) {
 		// Solve A*x = b
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangular, no transpose: back-substitution from bottom
 			// Band storage: diagonal at row K (0-based), element A(i,j) at row K+i-j
 			kplus1 = K;
@@ -103,8 +103,8 @@ function dtbsv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 			}
 		}
 	} else {
-		// Solve A**T*x = b (trans = 'T' or 'C')
-		if ( uplo === 'U' || uplo === 'u' ) {
+		// Solve A**T*x = b (trans = 'transpose' or 'C')
+		if ( uplo === 'upper' ) {
 			// Upper triangular, transpose: forward-substitution from top
 			kplus1 = K;
 			jx = kx;

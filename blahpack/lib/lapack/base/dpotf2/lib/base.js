@@ -32,8 +32,8 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * matrix `A` using the unblocked algorithm (Level 2 BLAS).
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'U', or
-*   A = L * L^T,  if uplo = 'L',
+*   A = U^T * U,  if uplo = 'upper', or
+*   A = L * L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * @private
@@ -58,7 +58,7 @@ function dpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		return 0;
 	}
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Compute the Cholesky factorization A = U^T * U.
 		for ( j = 0; j < N; j++ ) {
 			// Compute U(j,j) and test for non-positive-definiteness.
@@ -72,7 +72,7 @@ function dpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 			// Compute elements j+1:N-1 of row j.
 			if ( j < N - 1 ) {
-				dgemv( 'T', j, N - j - 1, -1.0,
+				dgemv( 'transpose', j, N - j - 1, -1.0,
 					A, sa1, sa2, offsetA + (j+1)*sa2,
 					A, sa1, offsetA + j*sa2,
 					1.0,
@@ -97,7 +97,7 @@ function dpotf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 			// Compute elements j+1:N-1 of column j.
 			if ( j < N - 1 ) {
-				dgemv( 'N', N - j - 1, j, -1.0,
+				dgemv( 'no-transpose', N - j - 1, j, -1.0,
 					A, sa1, sa2, offsetA + (j+1)*sa1,
 					A, sa2, offsetA + j*sa1,
 					1.0,

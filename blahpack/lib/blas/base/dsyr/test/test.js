@@ -23,7 +23,7 @@ test( 'dsyr: upper triangle, basic 3x3 (alpha=1, x=[1,2,3])', function t() {
 	var x = new Float64Array([ 1, 2, 3 ]);
 	var expected = new Float64Array([ 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
 
-	var out = dsyr.ndarray( 'U', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
+	var out = dsyr.ndarray( 'upper', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
 	assert.strictEqual( out, A, 'returns A' );
 	assert.deepStrictEqual( A, expected );
 });
@@ -34,27 +34,27 @@ test( 'dsyr: lower triangle, basic 3x3 (alpha=1, x=[1,2,3])', function t() {
 	var x = new Float64Array([ 1, 2, 3 ]);
 	var expected = new Float64Array([ 2, 2, 3, 0, 5, 6, 0, 0, 10 ]);
 
-	dsyr.ndarray( 'L', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
+	dsyr.ndarray( 'lower', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
 test( 'dsyr: N=0 quick return', function t() {
 	var A = new Float64Array([ 99 ]);
-	dsyr.ndarray( 'U', 0, 1.0, new Float64Array([ 5 ]), 1, 0, A, 1, 1, 0 );
+	dsyr.ndarray( 'upper', 0, 1.0, new Float64Array([ 5 ]), 1, 0, A, 1, 1, 0 );
 	assert.strictEqual( A[ 0 ], 99, 'A unchanged' );
 });
 
 test( 'dsyr: alpha=0 quick return', function t() {
 	var A = new Float64Array([ 1, 0, 0, 1 ]);
 	var expected = new Float64Array([ 1, 0, 0, 1 ]);
-	dsyr.ndarray( 'U', 2, 0.0, new Float64Array([ 5, 6 ]), 1, 0, A, 1, 2, 0 );
+	dsyr.ndarray( 'upper', 2, 0.0, new Float64Array([ 5, 6 ]), 1, 0, A, 1, 2, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
 test( 'dsyr: N=1 edge case', function t() {
 	// A(0,0) += alpha * x[0] * x[0] = 2 * 3 * 3 = 18
 	var A = new Float64Array([ 5 ]);
-	dsyr.ndarray( 'U', 1, 2.0, new Float64Array([ 3 ]), 1, 0, A, 1, 1, 0 );
+	dsyr.ndarray( 'upper', 1, 2.0, new Float64Array([ 3 ]), 1, 0, A, 1, 1, 0 );
 	assert.strictEqual( A[ 0 ], 23 );
 });
 
@@ -64,7 +64,7 @@ test( 'dsyr: upper triangle with alpha=2', function t() {
 	// alpha*x*x^T = 2*[[1,2,3],[2,4,6],[3,6,9]] = [[2,4,6],[4,8,12],[6,12,18]]
 	var expected = new Float64Array([ 3, 0, 0, 4, 9, 0, 6, 12, 19 ]);
 
-	dsyr.ndarray( 'U', 3, 2.0, x, 1, 0, A, 1, 3, 0 );
+	dsyr.ndarray( 'upper', 3, 2.0, x, 1, 0, A, 1, 3, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -77,7 +77,7 @@ test( 'dsyr: x with zeros skips column (upper)', function t() {
 	// j=2: temp=3, A[0,2]+=1*3=3, A[1,2]+=0*3=0, A[2,2]+=3*3=9 → 10
 	var expected = new Float64Array([ 2, 0, 0, 0, 1, 0, 3, 0, 10 ]);
 
-	dsyr.ndarray( 'U', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
+	dsyr.ndarray( 'upper', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -89,7 +89,7 @@ test( 'dsyr: x with zeros skips column (lower)', function t() {
 	// j=2: temp=3, A[2,2]+=9
 	var expected = new Float64Array([ 2, 0, 3, 0, 1, 0, 0, 0, 10 ]);
 
-	dsyr.ndarray( 'L', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
+	dsyr.ndarray( 'lower', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -99,7 +99,7 @@ test( 'dsyr: non-unit stride (strideX=2)', function t() {
 	var x = new Float64Array([ 1, 99, 2, 99, 3 ]);
 	var expected = new Float64Array([ 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
 
-	dsyr.ndarray( 'U', 3, 1.0, x, 2, 0, A, 1, 3, 0 );
+	dsyr.ndarray( 'upper', 3, 1.0, x, 2, 0, A, 1, 3, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -109,7 +109,7 @@ test( 'dsyr: negative stride (strideX=-1)', function t() {
 	var x = new Float64Array([ 3, 2, 1 ]);
 	var expected = new Float64Array([ 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
 
-	dsyr.ndarray( 'U', 3, 1.0, x, -1, 2, A, 1, 3, 0 );
+	dsyr.ndarray( 'upper', 3, 1.0, x, -1, 2, A, 1, 3, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -119,7 +119,7 @@ test( 'dsyr: offsetX non-zero', function t() {
 	var x = new Float64Array([ 99, 1, 2, 3 ]);
 	var expected = new Float64Array([ 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
 
-	dsyr.ndarray( 'U', 3, 1.0, x, 1, 1, A, 1, 3, 0 );
+	dsyr.ndarray( 'upper', 3, 1.0, x, 1, 1, A, 1, 3, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -129,7 +129,7 @@ test( 'dsyr: offsetA non-zero', function t() {
 	var x = new Float64Array([ 1, 2, 3 ]);
 	var expected = new Float64Array([ 99, 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
 
-	dsyr.ndarray( 'U', 3, 1.0, x, 1, 0, A, 1, 3, 1 );
+	dsyr.ndarray( 'upper', 3, 1.0, x, 1, 0, A, 1, 3, 1 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -143,7 +143,7 @@ test( 'dsyr: row-major layout (strideA1=3, strideA2=1)', function t() {
 	var x = new Float64Array([ 1, 2, 3 ]);
 	var expected = new Float64Array([ 2, 2, 3, 0, 5, 6, 0, 0, 10 ]);
 
-	dsyr.ndarray( 'U', 3, 1.0, x, 1, 0, A, 3, 1, 0 );
+	dsyr.ndarray( 'upper', 3, 1.0, x, 1, 0, A, 3, 1, 0 );
 	assert.deepStrictEqual( A, expected );
 });
 
@@ -155,6 +155,6 @@ test( 'dsyr: lower triangle, row-major', function t() {
 	// Row-major indices: (0,0)=0, (1,0)=3, (1,1)=4, (2,0)=6, (2,1)=7, (2,2)=8
 	var expected = new Float64Array([ 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
 
-	dsyr.ndarray( 'L', 3, 1.0, x, 1, 0, A, 3, 1, 0 );
+	dsyr.ndarray( 'lower', 3, 1.0, x, 1, 0, A, 3, 1, 0 );
 	assert.deepStrictEqual( A, expected );
 });

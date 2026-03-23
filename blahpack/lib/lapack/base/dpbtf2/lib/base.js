@@ -31,8 +31,8 @@ var dsyr = require( '../../../../blas/base/dsyr/lib/base.js' );
 * band matrix A.
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'U', or
-*   A = L * L^T,  if uplo = 'L',
+*   A = U^T * U,  if uplo = 'upper', or
+*   A = L * L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the unblocked version of the algorithm, calling Level 2 BLAS.
@@ -76,7 +76,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 	// (i.e. column stride) in DSYR.
 	kld = Math.max( 1, sa2 - sa1 );
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Compute the Cholesky factorization A = U^T * U.
 		for ( j = 0; j < N; j++ ) {
 			// Diagonal: AB(KD+1, J+1) in Fortran 1-based
@@ -104,7 +104,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 				// Here dsyr treats the submatrix with:
 				//   strideA1 = sa1 (step within a column = 1 for col-major)
 				//   strideA2 = kld (step between columns = LDAB-1)
-				dsyr( 'U', kn, -1.0,
+				dsyr( 'upper', kn, -1.0,
 					AB, kld, offsetAB + ( kd - 1 ) * sa1 + ( j + 1 ) * sa2,
 					AB, sa1, kld, offsetAB + kd * sa1 + ( j + 1 ) * sa2
 				);
@@ -134,7 +134,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) { // eslint-d
 
 				// DSYR('Lower', KN, -1, AB(2, J+1), 1, AB(1, J+2), KLD)
 				// dsyr matrix: strideA1 = sa1, strideA2 = kld
-				dsyr( 'L', kn, -1.0,
+				dsyr( 'lower', kn, -1.0,
 					AB, sa1, offsetAB + sa1 + j * sa2,
 					AB, sa1, kld, offsetAB + ( j + 1 ) * sa2
 				);

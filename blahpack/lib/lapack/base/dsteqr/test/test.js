@@ -109,7 +109,7 @@ test( 'dsteqr: COMPZ=I, 4x4 tridiagonal matrix', function t() {
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 	assertOrthogonal( Z, N, 1e-14, 'orthogonality' );
@@ -133,7 +133,7 @@ test( 'dsteqr: COMPZ=V, 4x4 with identity Z', function t() {
 		Z[ i + i * N ] = 1.0;
 	}
 
-	info = dsteqr( 'V', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'update', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 	assertOrthogonal( Z, N, 1e-14, 'orthogonality' );
@@ -149,7 +149,7 @@ test( 'dsteqr: COMPZ=N, eigenvalues only', function t() {
 	var WORK = new Float64Array( 1 ); // not used when COMPZ='N'
 	var info;
 
-	info = dsteqr( 'N', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'none', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 });
@@ -163,7 +163,7 @@ test( 'dsteqr: N=1, COMPZ=I', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 	assertArrayClose( Array.from( Z ), tc.z, 1e-14, 'z' );
@@ -180,7 +180,7 @@ test( 'dsteqr: N=2, COMPZ=I', function t() {
 	var WORK = new Float64Array( 2 );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 	assertOrthogonal( Z, N, 1e-14, 'orthogonality' );
@@ -191,7 +191,7 @@ test( 'dsteqr: N=0 edge case', function t() {
 	var tc = findCase( 'n0' );
 	var info;
 
-	info = dsteqr( 'I', 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0 );
+	info = dsteqr( 'initialize', 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -206,7 +206,7 @@ test( 'dsteqr: already-diagonal matrix, COMPZ=I', function t() {
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 
@@ -227,7 +227,7 @@ test( 'dsteqr: 6x6 matrix, COMPZ=I', function t() {
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-13, 'd' );
 	assertOrthogonal( Z, N, 1e-13, 'orthogonality' );
@@ -252,7 +252,7 @@ test( 'dsteqr: COMPZ=V, 4x4 with permuted Z', function t() {
 	Z[ 2 + 2 * N ] = 1.0; // Z(3,3) = 1
 	Z[ 3 + 3 * N ] = 1.0; // Z(4,4) = 1
 
-	info = dsteqr( 'V', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'update', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 	// For COMPZ='V', Z columns represent the eigenvectors in the original
@@ -270,7 +270,7 @@ test( 'dsteqr: N=2, COMPZ=N', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsteqr( 'N', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'none', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
 });
@@ -293,7 +293,7 @@ test( 'dsteqr: QR iteration path - descending diagonal, COMPZ=I', function t() {
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertOrthogonal( Z, N, 1e-13, 'orthogonality' );
 	assertEigendecomp( Z, d, origD, origE, N, 1e-12, 'eigendecomp' );
@@ -316,7 +316,7 @@ test( 'dsteqr: QR iteration path - descending diagonal, COMPZ=N', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsteqr( 'N', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'none', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 
 	// Eigenvalues should be sorted ascending
@@ -337,7 +337,7 @@ test( 'dsteqr: QR path with 2x2 subproblem, COMPZ=I', function t() {
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertOrthogonal( Z, N, 1e-13, 'orthogonality' );
 	assertEigendecomp( Z, d, origD, origE, N, 1e-11, 'eigendecomp' );
@@ -353,7 +353,7 @@ test( 'dsteqr: QR path with 2x2 subproblem, COMPZ=N', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsteqr( 'N', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'none', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	// Ascending order
 	var i;
@@ -374,7 +374,7 @@ test( 'dsteqr: matrix with very small off-diag elements triggers negligible E br
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	// All eigenvalues should be approximately 1.0
 	var i;
@@ -395,7 +395,7 @@ test( 'dsteqr: very large values trigger ssfmax scaling', function t() {
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertOrthogonal( Z, N, 1e-12, 'orthogonality' );
 
@@ -418,7 +418,7 @@ test( 'dsteqr: very small values trigger ssfmin scaling', function t() {
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertOrthogonal( Z, N, 1e-12, 'orthogonality' );
 
@@ -440,7 +440,7 @@ test( 'dsteqr: very large values trigger ssfmax scaling in QR path', function t(
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertOrthogonal( Z, N, 1e-11, 'orthogonality' );
 });
@@ -456,7 +456,7 @@ test( 'dsteqr: block splitting - matrix with zero off-diagonal element', functio
 	var WORK = new Float64Array( 2 * ( N - 1 ) );
 	var info;
 
-	info = dsteqr( 'I', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dsteqr( 'initialize', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 
 	// Eigenvalues should be sorted ascending

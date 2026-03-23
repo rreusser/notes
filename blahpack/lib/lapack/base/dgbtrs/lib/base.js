@@ -64,7 +64,7 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 
 	kd = ku + kl; // Row index of diagonal in band storage (0-based = KU+KL)
 	lnoti = kl > 0;
-	notran = ( trans === 'N' || trans === 'n' );
+	notran = ( trans === 'no-transpose' );
 
 	if ( notran ) {
 		// Solve A * X = B
@@ -87,7 +87,7 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 
 		// Solve U * X = y using back-substitution
 		for ( i = 0; i < nrhs; i++ ) {
-			dtbsv( 'U', 'N', 'N', N, kl + ku,
+			dtbsv( 'upper', 'no-transpose', 'non-unit', N, kl + ku,
 				AB, sa1, sa2, offsetAB,
 				B, sb1, offsetB + i * sb2 );
 		}
@@ -96,7 +96,7 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 
 		// Solve U^T * y = B using forward substitution
 		for ( i = 0; i < nrhs; i++ ) {
-			dtbsv( 'U', 'T', 'N', N, kl + ku,
+			dtbsv( 'upper', 'transpose', 'non-unit', N, kl + ku,
 				AB, sa1, sa2, offsetAB,
 				B, sb1, offsetB + i * sb2 );
 		}
@@ -106,7 +106,7 @@ function dgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 			for ( j = N - 2; j >= 0; j-- ) {
 				lm = Math.min( kl, N - j - 1 );
 				// B(j, :) -= L(j+1:j+lm, j)^T * B(j+1:j+lm, :)
-				dgemv( 'T', lm, nrhs, -1.0,
+				dgemv( 'transpose', lm, nrhs, -1.0,
 					B, sb1, sb2, offsetB + ( j + 1 ) * sb1,
 					AB, sa1, offsetAB + ( kd + 1 ) * sa1 + j * sa2,
 					1.0,

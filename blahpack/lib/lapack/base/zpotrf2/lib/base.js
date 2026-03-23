@@ -20,8 +20,8 @@ var CONE = new Complex128( 1.0, 0.0 );
 * matrix A using the recursive algorithm.
 *
 * The factorization has the form:
-*   A = U^H * U,  if uplo = 'U', or
-*   A = L * L^H,  if uplo = 'L',
+*   A = U^H * U,  if uplo = 'upper', or
+*   A = L * L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the recursive version of the algorithm. It divides the matrix
@@ -47,7 +47,7 @@ function zpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	var n1;
 	var n2;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
@@ -84,13 +84,13 @@ function zpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	if ( upper ) {
 		// Compute A = U^H * U
 		// Solve U11^H * A12 = A12 (update off-diagonal block)
-		ztrsm( 'L', 'U', 'C', 'N', n1, n2, CONE,
+		ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', n1, n2, CONE,
 			A, sa1, sa2, offsetA,
 			A, sa1, sa2, offsetA + n1 * sa2
 		);
 
 		// Update A22: A22 -= A12^H * A12
-		zherk( uplo, 'C', n2, n1, -1.0,
+		zherk( uplo, 'conjugate-transpose', n2, n1, -1.0,
 			A, sa1, sa2, offsetA + n1 * sa2,
 			1.0,
 			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2
@@ -104,13 +104,13 @@ function zpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	} else {
 		// Compute A = L * L^H
 		// Solve A21 * L11^H = A21 (update off-diagonal block)
-		ztrsm( 'R', 'L', 'C', 'N', n2, n1, CONE,
+		ztrsm( 'right', 'lower', 'conjugate-transpose', 'non-unit', n2, n1, CONE,
 			A, sa1, sa2, offsetA,
 			A, sa1, sa2, offsetA + n1 * sa1
 		);
 
 		// Update A22: A22 -= A21 * A21^H
-		zherk( uplo, 'N', n2, n1, -1.0,
+		zherk( uplo, 'no-transpose', n2, n1, -1.0,
 			A, sa1, sa2, offsetA + n1 * sa1,
 			1.0,
 			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2

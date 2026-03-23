@@ -63,10 +63,10 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 		return A;
 	}
 
-	if ( side === 'L' || side === 'l' ) {
+	if ( side === 'left' ) {
 		// Apply rotations from the left (act on rows)
-		if ( pivot === 'V' || pivot === 'v' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		if ( pivot === 'variable' ) {
+			if ( direct === 'forward' ) {
 				// Variable pivot, forward direction
 				for ( j = 0; j < M - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
@@ -97,8 +97,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'T' || pivot === 't' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'top' ) {
+			if ( direct === 'forward' ) {
 				// Top pivot, forward direction
 				for ( j = 1; j < M; j++ ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
@@ -129,8 +129,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'B' || pivot === 'b' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'bottom' ) {
+			if ( direct === 'forward' ) {
 				// Bottom pivot, forward direction
 				for ( j = 0; j < M - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
@@ -162,10 +162,10 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 				}
 			}
 		}
-	} else if ( side === 'R' || side === 'r' ) {
+	} else if ( side === 'right' ) {
 		// Apply rotations from the right (act on columns)
-		if ( pivot === 'V' || pivot === 'v' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		if ( pivot === 'variable' ) {
+			if ( direct === 'forward' ) {
 				// Variable pivot, forward direction
 				for ( j = 0; j < N - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];
@@ -196,8 +196,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'T' || pivot === 't' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'top' ) {
+			if ( direct === 'forward' ) {
 				// Top pivot, forward direction
 				for ( j = 1; j < N; j++ ) {
 					ctemp = c[ offsetC + ( j - 1 ) * strideC ];
@@ -228,8 +228,8 @@ function dlasr( side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offs
 					}
 				}
 			}
-		} else if ( pivot === 'B' || pivot === 'b' ) {
-			if ( direct === 'F' || direct === 'f' ) {
+		} else if ( pivot === 'bottom' ) {
+			if ( direct === 'forward' ) {
 				// Bottom pivot, forward direction
 				for ( j = 0; j < N - 1; j++ ) {
 					ctemp = c[ offsetC + j * strideC ];

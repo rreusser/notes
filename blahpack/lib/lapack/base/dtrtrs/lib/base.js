@@ -35,7 +35,7 @@ function dtrtrs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	var sa2;
 	var i;
 
-	nounit = ( diag === 'N' || diag === 'n' );
+	nounit = ( diag === 'non-unit' );
 
 	if ( N === 0 ) {
 		return 0;
@@ -54,7 +54,7 @@ function dtrtrs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	}
 
 	// Solve A * X = B, A^T * X = B, or A^H * X = B.
-	dtrsm( 'L', uplo, trans, diag, N, nrhs, 1.0,
+	dtrsm( 'left', uplo, trans, diag, N, nrhs, 1.0,
 		A, strideA1, strideA2, offsetA,
 		B, strideB1, strideB2, offsetB
 	);

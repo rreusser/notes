@@ -70,7 +70,7 @@ test( 'zlarfb: left, no-transpose, forward, columnwise', function t() {
 
 	// strideV1=1, strideV2=4, strideT1=1, strideT2=3, strideC1=1, strideC2=4
 	// strideW1=1, strideW2=3 (LDWORK=3 for N=3)
-	zlarfb( 'L', 'N', 'F', 'C', 4, 3, 2,
+	zlarfb( 'left', 'no-transpose', 'forward', 'columnwise', 4, 3, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -85,7 +85,7 @@ test( 'zlarfb: left, conjugate-transpose, forward, columnwise', function t() {
 	var C = makeC();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'C', 'F', 'C', 4, 3, 2,
+	zlarfb( 'left', 'conjugate-transpose', 'forward', 'columnwise', 4, 3, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -108,7 +108,7 @@ test( 'zlarfb: right, no-transpose, forward, columnwise', function t() {
 
 	// strideC1=1, strideC2=3 (LDC=3)
 	// strideW1=1, strideW2=3 (LDWORK=3 for M=3)
-	zlarfb( 'R', 'N', 'F', 'C', 3, 4, 2,
+	zlarfb( 'right', 'no-transpose', 'forward', 'columnwise', 3, 4, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,
@@ -122,7 +122,7 @@ test( 'zlarfb: M=0 (quick return)', function t() {
 	var T = makeT();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'N', 'F', 'C', 0, 3, 2,
+	zlarfb( 'left', 'no-transpose', 'forward', 'columnwise', 0, 3, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 1, 0,
@@ -152,7 +152,7 @@ test( 'zlarfb: left, no-transpose, backward, columnwise', function t() {
 	var C = makeC();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'N', 'B', 'C', 4, 3, 2,
+	zlarfb( 'left', 'no-transpose', 'backward', 'columnwise', 4, 3, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -183,7 +183,7 @@ test( 'zlarfb: right, no-transpose, backward, columnwise', function t() {
 	]);
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'R', 'N', 'B', 'C', 3, 4, 2,
+	zlarfb( 'right', 'no-transpose', 'backward', 'columnwise', 3, 4, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,
@@ -206,7 +206,7 @@ test( 'zlarfb: left, conjugate-transpose, backward, columnwise', function t() {
 	var C = makeC();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'C', 'B', 'C', 4, 3, 2,
+	zlarfb( 'left', 'conjugate-transpose', 'backward', 'columnwise', 4, 3, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -227,7 +227,7 @@ test( 'zlarfb: right, conjugate-transpose, forward, columnwise', function t() {
 	]);
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'R', 'C', 'F', 'C', 3, 4, 2,
+	zlarfb( 'right', 'conjugate-transpose', 'forward', 'columnwise', 3, 4, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,
@@ -244,19 +244,19 @@ test( 'zlarfb: left, no-transpose, forward, rowwise', function t() {
 		-0.5, 0.1,  0.6, -0.4,
 		0.4, -0.3,  -0.2, 0.5
 	]);
-	// T computed by zlarft('F','R',4,2,V,2,tau,T,3)
+	// T computed by zlarft('forward','rowwise',4,2,V,2,tau,T,3)
 	var tcT = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_fwd_row'; });
 	// Use pre-computed T from the fixture (we need zlarft output)
 	// Actually, let's compute T ourselves using zlarft
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var C = makeC();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'N', 'F', 'R', 4, 3, 2,
+	zlarfb( 'left', 'no-transpose', 'forward', 'rowwise', 4, 3, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -276,7 +276,7 @@ test( 'zlarfb: right, no-transpose, forward, rowwise', function t() {
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	// C is 3x4 (M=3, N=4, LDC=3)
 	var C = new Complex128Array( [
@@ -287,7 +287,7 @@ test( 'zlarfb: right, no-transpose, forward, rowwise', function t() {
 	]);
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'R', 'N', 'F', 'R', 3, 4, 2,
+	zlarfb( 'right', 'no-transpose', 'forward', 'rowwise', 3, 4, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,
@@ -307,12 +307,12 @@ test( 'zlarfb: left, conjugate-transpose, forward, rowwise', function t() {
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var C = makeC();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'C', 'F', 'R', 4, 3, 2,
+	zlarfb( 'left', 'conjugate-transpose', 'forward', 'rowwise', 4, 3, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -332,12 +332,12 @@ test( 'zlarfb: left, no-transpose, backward, rowwise', function t() {
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var C = makeC();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'N', 'B', 'R', 4, 3, 2,
+	zlarfb( 'left', 'no-transpose', 'backward', 'rowwise', 4, 3, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -357,12 +357,12 @@ test( 'zlarfb: left, conjugate-transpose, backward, rowwise', function t() {
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	var C = makeC();
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'L', 'C', 'B', 'R', 4, 3, 2,
+	zlarfb( 'left', 'conjugate-transpose', 'backward', 'rowwise', 4, 3, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 4, 0,
@@ -382,7 +382,7 @@ test( 'zlarfb: right, no-transpose, backward, rowwise', function t() {
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	// C is 3x4 (M=3, N=4, LDC=3)
 	var C = new Complex128Array( [
@@ -393,7 +393,7 @@ test( 'zlarfb: right, no-transpose, backward, rowwise', function t() {
 	]);
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'R', 'N', 'B', 'R', 3, 4, 2,
+	zlarfb( 'right', 'no-transpose', 'backward', 'rowwise', 3, 4, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,
@@ -413,7 +413,7 @@ test( 'zlarfb: right, conjugate-transpose, backward, rowwise', function t() {
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'B', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'backward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	// C is 3x4 (M=3, N=4, LDC=3)
 	var C = new Complex128Array( [
@@ -424,7 +424,7 @@ test( 'zlarfb: right, conjugate-transpose, backward, rowwise', function t() {
 	]);
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'R', 'C', 'B', 'R', 3, 4, 2,
+	zlarfb( 'right', 'conjugate-transpose', 'backward', 'rowwise', 3, 4, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,
@@ -444,7 +444,7 @@ test( 'zlarfb: right, conjugate-transpose, forward, rowwise', function t() {
 	var zlarft = require( '../../zlarft/lib/base.js' );
 	var tau = new Complex128Array( [ 1.2, -0.3,  1.5, 0.4 ] );
 	var T = new Complex128Array( 6 );
-	zlarft( 'F', 'R', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
+	zlarft( 'forward', 'rowwise', 4, 2, V, 1, 2, 0, tau, 1, 0, T, 1, 3, 0 );
 
 	// C is 3x4 (M=3, N=4, LDC=3)
 	var C = new Complex128Array( [
@@ -455,7 +455,7 @@ test( 'zlarfb: right, conjugate-transpose, forward, rowwise', function t() {
 	]);
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'R', 'C', 'F', 'R', 3, 4, 2,
+	zlarfb( 'right', 'conjugate-transpose', 'forward', 'rowwise', 3, 4, 2,
 		V, 1, 2, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,
@@ -486,7 +486,7 @@ test( 'zlarfb: right, conjugate-transpose, backward, columnwise', function t() {
 	]);
 	var work = new Complex128Array( 30 );
 
-	zlarfb( 'R', 'C', 'B', 'C', 3, 4, 2,
+	zlarfb( 'right', 'conjugate-transpose', 'backward', 'columnwise', 3, 4, 2,
 		V, 1, 4, 0,
 		T, 1, 3, 0,
 		C, 1, 3, 0,

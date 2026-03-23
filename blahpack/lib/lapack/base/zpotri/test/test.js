@@ -79,14 +79,14 @@ function verifyInverse( uplo, N, aData, ainvData, tol, msg ) {
 	// Fill in the other triangle (Hermitian symmetry: A(j,i) = conj(A(i,j)))
 	for ( i = 0; i < N; i++ ) {
 		for ( j = 0; j < N; j++ ) {
-			if ( uplo === 'U' && j < i ) {
+			if ( uplo === 'upper' && j < i ) {
 				// Lower triangle from upper: A(i,j) = conj(A(j,i))
 				idx = 2 * ( j * N + i ); // col-major A(i, j) = offset i + j*N
 				view = reinterpret( Ainv, 0 );
 				var srcIdx = 2 * ( i * N + j ); // A(j, i)
 				view[ idx ] = view[ srcIdx ];
 				view[ idx + 1 ] = -view[ srcIdx + 1 ];
-			} else if ( uplo === 'L' && j > i ) {
+			} else if ( uplo === 'lower' && j > i ) {
 				idx = 2 * ( j * N + i );
 				view = reinterpret( Ainv, 0 );
 				var srcIdx2 = 2 * ( i * N + j );
@@ -98,7 +98,7 @@ function verifyInverse( uplo, N, aData, ainvData, tol, msg ) {
 
 	// Compute C = A * Ainv using zgemm
 	C = new Complex128Array( N * N );
-	zgemm( 'N', 'N', N, N, N,
+	zgemm( 'no-transpose', 'no-transpose', N, N, N,
 		new Complex128( 1.0, 0.0 ),
 		A, 1, N, 0,
 		Ainv, 1, N, 0,
@@ -136,16 +136,16 @@ test( 'zpotri: upper 3x3', function t() {
 	// Store original full Hermitian for inverse verification
 	var Aorig = Array.from( reinterpret( A, 0 ) );
 
-	var info = zpotrf( 'U', 3, A, 1, 3, 0 );
+	var info = zpotrf( 'upper', 3, A, 1, 3, 0 );
 	assert.equal( info, 0 );
 
-	info = zpotri( 'U', 3, A, 1, 3, 0 );
+	info = zpotri( 'upper', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-13, 'a' );
 
 	// Verify A * Ainv ~ I
-	verifyInverse( 'U', 3, Aorig, tc.a, 1e-12, 'upper 3x3 inverse' );
+	verifyInverse( 'upper', 3, Aorig, tc.a, 1e-12, 'upper 3x3 inverse' );
 });
 
 test( 'zpotri: lower 3x3', function t() {
@@ -157,25 +157,25 @@ test( 'zpotri: lower 3x3', function t() {
 	] );
 	var Aorig = Array.from( reinterpret( A, 0 ) );
 
-	var info = zpotrf( 'L', 3, A, 1, 3, 0 );
+	var info = zpotrf( 'lower', 3, A, 1, 3, 0 );
 	assert.equal( info, 0 );
 
-	info = zpotri( 'L', 3, A, 1, 3, 0 );
+	info = zpotri( 'lower', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-13, 'a' );
 
 	// Verify A * Ainv ~ I
-	verifyInverse( 'L', 3, Aorig, tc.a, 1e-12, 'lower 3x3 inverse' );
+	verifyInverse( 'lower', 3, Aorig, tc.a, 1e-12, 'lower 3x3 inverse' );
 });
 
 test( 'zpotri: N=1', function t() {
 	var tc = findCase( 'n_one' );
 	// A = [9]; chol = [3]; inv = [1/9]
 	var A = new Complex128Array( [ 9, 0 ] );
-	var info = zpotrf( 'U', 1, A, 1, 1, 0 );
+	var info = zpotrf( 'upper', 1, A, 1, 1, 0 );
 	assert.equal( info, 0 );
-	info = zpotri( 'U', 1, A, 1, 1, 0 );
+	info = zpotri( 'upper', 1, A, 1, 1, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -184,7 +184,7 @@ test( 'zpotri: N=1', function t() {
 test( 'zpotri: N=0 quick return', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
-	var info = zpotri( 'U', 0, A, 1, 1, 0 );
+	var info = zpotri( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -198,9 +198,9 @@ test( 'zpotri: upper 4x4', function t() {
 		1, -3,    2, 2,     1, -1,    9, 0
 	] );
 
-	var info = zpotrf( 'U', 4, A, 1, 4, 0 );
+	var info = zpotrf( 'upper', 4, A, 1, 4, 0 );
 	assert.equal( info, 0 );
-	info = zpotri( 'U', 4, A, 1, 4, 0 );
+	info = zpotri( 'upper', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-12, 'a' );
@@ -215,9 +215,9 @@ test( 'zpotri: lower 4x4', function t() {
 		1, -3,    2, 2,     1, -1,    9, 0
 	] );
 
-	var info = zpotrf( 'L', 4, A, 1, 4, 0 );
+	var info = zpotrf( 'lower', 4, A, 1, 4, 0 );
 	assert.equal( info, 0 );
-	info = zpotri( 'L', 4, A, 1, 4, 0 );
+	info = zpotri( 'lower', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-12, 'a' );
@@ -230,7 +230,7 @@ test( 'zpotri: singular matrix returns info > 0', function t() {
 		2, 1,  0, 0,  0, 0,   // A(1,1) = 0 => singular
 		3, 0,  4, 1,  5, 0
 	] );
-	var info = zpotri( 'U', 3, A, 1, 3, 0 );
+	var info = zpotri( 'upper', 3, A, 1, 3, 0 );
 	assert.ok( info > 0, 'should return info > 0 for singular matrix' );
 	assert.equal( info, 2, 'singular at position 2' );
 });

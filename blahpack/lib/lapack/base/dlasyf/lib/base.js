@@ -75,7 +75,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 	sw2 = strideW2;
 	info = 0;
 
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		// Factorize the trailing columns of A using the upper triangle
 		// K starts at N-1 (0-based) and decreases
 		k = N - 1;
@@ -91,7 +91,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 			dcopy( k + 1, A, sa1, offsetA + k * sa2, W, sw1, offsetW + kw * sw2 );
 			if ( k < N - 1 ) {
 				// W(:,kw) -= A(:,k+1:N-1) * W(k,kw+1:nb-1)^T
-				dgemv( 'N', k + 1, N - k - 1, -1.0,
+				dgemv( 'no-transpose', k + 1, N - k - 1, -1.0,
 					A, sa1, sa2, offsetA + ( k + 1 ) * sa2,
 					W, sw2, offsetW + k * sw1 + ( kw + 1 ) * sw2,
 					1.0, W, sw1, offsetW + kw * sw2 );
@@ -124,7 +124,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 					dcopy( imax + 1, A, sa1, offsetA + imax * sa2, W, sw1, offsetW + ( kw - 1 ) * sw2 );
 					dcopy( k - imax, A, sa2, offsetA + imax * sa1 + ( imax + 1 ) * sa2, W, sw1, offsetW + ( imax + 1 ) * sw1 + ( kw - 1 ) * sw2 );
 					if ( k < N - 1 ) {
-						dgemv( 'N', k + 1, N - k - 1, -1.0,
+						dgemv( 'no-transpose', k + 1, N - k - 1, -1.0,
 							A, sa1, sa2, offsetA + ( k + 1 ) * sa2,
 							W, sw2, offsetW + imax * sw1 + ( kw + 1 ) * sw2,
 							1.0, W, sw1, offsetW + ( kw - 1 ) * sw2 );
@@ -214,14 +214,14 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 
 			// Update the upper triangle of the diagonal block
 			for ( jj = j; jj < j + jb; jj++ ) {
-				dgemv( 'N', jj - j + 1, N - k - 1, -1.0,
+				dgemv( 'no-transpose', jj - j + 1, N - k - 1, -1.0,
 					A, sa1, sa2, offsetA + j * sa1 + ( k + 1 ) * sa2,
 					W, sw2, offsetW + jj * sw1 + ( kw + 1 ) * sw2,
 					1.0, A, sa1, offsetA + j * sa1 + jj * sa2 );
 			}
 
 			// Update the rectangular part above the diagonal block
-			dgemm( 'N', 'T', j, jb, N - k - 1, -1.0,
+			dgemm( 'no-transpose', 'transpose', j, jb, N - k - 1, -1.0,
 				A, sa1, sa2, offsetA + ( k + 1 ) * sa2,
 				W, sw1, sw2, offsetW + j * sw1 + ( kw + 1 ) * sw2,
 				1.0, A, sa1, sa2, offsetA + j * sa2 );
@@ -255,7 +255,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 
 		// Copy column k of A into column k of W and update
 		dcopy( N - k, A, sa1, offsetA + k * sa1 + k * sa2, W, sw1, offsetW + k * sw1 + k * sw2 );
-		dgemv( 'N', N - k, k, -1.0,
+		dgemv( 'no-transpose', N - k, k, -1.0,
 			A, sa1, sa2, offsetA + k * sa1,
 			W, sw2, offsetW + k * sw1,
 			1.0, W, sw1, offsetW + k * sw1 + k * sw2 );
@@ -282,7 +282,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 				// Copy row imax into column k+1 of W and update
 				dcopy( imax - k, A, sa2, offsetA + imax * sa1 + k * sa2, W, sw1, offsetW + k * sw1 + ( k + 1 ) * sw2 );
 				dcopy( N - imax, A, sa1, offsetA + imax * sa1 + imax * sa2, W, sw1, offsetW + imax * sw1 + ( k + 1 ) * sw2 );
-				dgemv( 'N', N - k, k, -1.0,
+				dgemv( 'no-transpose', N - k, k, -1.0,
 					A, sa1, sa2, offsetA + k * sa1,
 					W, sw2, offsetW + imax * sw1,
 					1.0, W, sw1, offsetW + k * sw1 + ( k + 1 ) * sw2 );
@@ -368,7 +368,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 
 		// Update the lower triangle of the diagonal block
 		for ( jj = j; jj < j + jb; jj++ ) {
-			dgemv( 'N', j + jb - jj, k, -1.0,
+			dgemv( 'no-transpose', j + jb - jj, k, -1.0,
 				A, sa1, sa2, offsetA + jj * sa1,
 				W, sw2, offsetW + jj * sw1,
 				1.0, A, sa1, offsetA + jj * sa1 + jj * sa2 );
@@ -376,7 +376,7 @@ function dlasyf( uplo, N, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, 
 
 		// Update the rectangular part below the diagonal block
 		if ( j + jb < N ) {
-			dgemm( 'N', 'T', N - j - jb, jb, k, -1.0,
+			dgemm( 'no-transpose', 'transpose', N - j - jb, jb, k, -1.0,
 				A, sa1, sa2, offsetA + ( j + jb ) * sa1,
 				W, sw1, sw2, offsetW + j * sw1,
 				1.0, A, sa1, sa2, offsetA + ( j + jb ) * sa1 + j * sa2 );

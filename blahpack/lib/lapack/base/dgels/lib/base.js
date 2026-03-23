@@ -83,7 +83,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 	MN = Math.min( M, N );
 
-	tpsd = ( trans === 'T' || trans === 't' );
+	tpsd = ( trans === 'transpose' );
 
 	// Quick return if dimensions are zero
 	if ( MN === 0 || nrhs === 0 ) {
@@ -104,15 +104,15 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 	bignum = 1.0 / smlnum;
 
 	// Scale A if max element is outside [smlnum, bignum]
-	anrm = dlange( 'M', M, N, A, strideA1, strideA2, offsetA, WORK, 1, 0 );
+	anrm = dlange( 'max', M, N, A, strideA1, strideA2, offsetA, WORK, 1, 0 );
 	iascl = 0;
 	if ( anrm > 0.0 && anrm < smlnum ) {
 		// Scale matrix norm up to smlnum
-		dlascl( 'G', 0, 0, anrm, smlnum, M, N, A, strideA1, strideA2, offsetA );
+		dlascl( 'general', 0, 0, anrm, smlnum, M, N, A, strideA1, strideA2, offsetA );
 		iascl = 1;
 	} else if ( anrm > bignum ) {
 		// Scale matrix norm down to bignum
-		dlascl( 'G', 0, 0, anrm, bignum, M, N, A, strideA1, strideA2, offsetA );
+		dlascl( 'general', 0, 0, anrm, bignum, M, N, A, strideA1, strideA2, offsetA );
 		iascl = 2;
 	} else if ( anrm === 0.0 ) {
 		// Matrix all zero. Return zero solution.
@@ -122,15 +122,15 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 	// Scale B
 	brow = tpsd ? N : M;
-	bnrm = dlange( 'M', brow, nrhs, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
+	bnrm = dlange( 'max', brow, nrhs, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
 	ibscl = 0;
 	if ( bnrm > 0.0 && bnrm < smlnum ) {
 		// Scale matrix norm up to smlnum
-		dlascl( 'G', 0, 0, bnrm, smlnum, brow, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, bnrm, smlnum, brow, nrhs, B, strideB1, strideB2, offsetB );
 		ibscl = 1;
 	} else if ( bnrm > bignum ) {
 		// Scale matrix norm down to bignum
-		dlascl( 'G', 0, 0, bnrm, bignum, brow, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, bnrm, bignum, brow, nrhs, B, strideB1, strideB2, offsetB );
 		ibscl = 2;
 	}
 
@@ -143,10 +143,10 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			// Least squares problem: minimize || b - A*x ||
 			//
 			// B(1:M,1:NRHS) := Q^T * B(1:M,1:NRHS)
-			dormqr( 'L', 'T', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+			dormqr( 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
 
 			// Solve R*X = B(1:N,1:NRHS)
-			info = dtrtrs( 'U', 'N', 'N', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			info = dtrtrs( 'upper', 'no-transpose', 'non-unit', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 			if ( info > 0 ) {
 				return info;
 			}
@@ -156,7 +156,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			// Minimum norm problem: min || X || s.t. A^T * X = B
 			//
 			// Solve R^T * Y = B(1:N,1:NRHS)
-			info = dtrtrs( 'U', 'T', 'N', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			info = dtrtrs( 'upper', 'transpose', 'non-unit', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 			if ( info > 0 ) {
 				return info;
 			}
@@ -171,7 +171,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			}
 
 			// B(1:M,1:NRHS) := Q * B(1:M,1:NRHS)
-			dormqr( 'L', 'N', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+			dormqr( 'left', 'no-transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
 
 			scllen = M;
 		}
@@ -184,7 +184,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			// Minimum norm problem: min || X || s.t. A * X = B
 			//
 			// Solve L * Y = B(1:M,1:NRHS)
-			info = dtrtrs( 'L', 'N', 'N', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			info = dtrtrs( 'lower', 'no-transpose', 'non-unit', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 			if ( info > 0 ) {
 				return info;
 			}
@@ -199,17 +199,17 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			}
 
 			// B(1:N,1:NRHS) := Q^T * B(1:N,1:NRHS)
-			dormlq( 'L', 'T', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+			dormlq( 'left', 'transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
 
 			scllen = N;
 		} else {
 			// Least squares problem: minimize || b - A^T*x ||
 			//
 			// B(1:N,1:NRHS) := Q * B(1:N,1:NRHS)
-			dormlq( 'L', 'N', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
+			dormlq( 'left', 'no-transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize ); // eslint-disable-line max-len
 
 			// Solve L^T * X = B(1:M,1:NRHS)
-			info = dtrtrs( 'L', 'T', 'N', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
+			info = dtrtrs( 'lower', 'transpose', 'non-unit', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 			if ( info > 0 ) {
 				return info;
 			}
@@ -220,14 +220,14 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 	// Undo scaling
 	if ( iascl === 1 ) {
-		dlascl( 'G', 0, 0, anrm, smlnum, scllen, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, anrm, smlnum, scllen, nrhs, B, strideB1, strideB2, offsetB );
 	} else if ( iascl === 2 ) {
-		dlascl( 'G', 0, 0, anrm, bignum, scllen, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, anrm, bignum, scllen, nrhs, B, strideB1, strideB2, offsetB );
 	}
 	if ( ibscl === 1 ) {
-		dlascl( 'G', 0, 0, smlnum, bnrm, scllen, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, smlnum, bnrm, scllen, nrhs, B, strideB1, strideB2, offsetB );
 	} else if ( ibscl === 2 ) {
-		dlascl( 'G', 0, 0, bignum, bnrm, scllen, nrhs, B, strideB1, strideB2, offsetB );
+		dlascl( 'general', 0, 0, bignum, bnrm, scllen, nrhs, B, strideB1, strideB2, offsetB );
 	}
 
 	return 0;

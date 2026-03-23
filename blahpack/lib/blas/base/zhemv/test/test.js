@@ -58,7 +58,7 @@ test( 'zhemv: upper_basic (UPLO=U, N=3, alpha=(1,0), beta=(0,0))', function t() 
 	var y = new Complex128Array( 3 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = zhemv( 'U', 3, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'upper', 3, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -78,7 +78,7 @@ test( 'zhemv: lower_basic (UPLO=L, N=3, alpha=(1,0), beta=(0,0))', function t() 
 	var y = new Complex128Array( 3 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = zhemv( 'L', 3, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'lower', 3, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -90,7 +90,7 @@ test( 'zhemv: n_zero (N=0 quick return)', function t() {
 	var y = new Complex128Array( [ 99, 88 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = zhemv( 'U', 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'upper', 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -102,7 +102,7 @@ test( 'zhemv: alpha_zero_beta_one (alpha=0, beta=1 quick return)', function t() 
 	var y = new Complex128Array( [ 5, 6, 7, 8 ] );
 	var alpha = new Complex128( 0, 0 );
 	var beta = new Complex128( 1, 0 );
-	var result = zhemv( 'U', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'upper', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -114,7 +114,7 @@ test( 'zhemv: alpha_zero_beta_scale (alpha=0, beta=(2,1) — scale y only)', fun
 	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
 	var alpha = new Complex128( 0, 0 );
 	var beta = new Complex128( 2, 1 );
-	var result = zhemv( 'U', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'upper', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -127,7 +127,7 @@ test( 'zhemv: n_one (N=1)', function t() {
 	var y = new Complex128Array( [ 1, 1 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 1, 0 );
-	var result = zhemv( 'U', 1, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'upper', 1, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -145,7 +145,7 @@ test( 'zhemv: upper_stride (UPLO=U, incx=2, incy=2)', function t() {
 	var y = new Complex128Array( 5 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = zhemv( 'U', 3, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
+	var result = zhemv( 'upper', 3, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -162,7 +162,7 @@ test( 'zhemv: lower_stride (UPLO=L, incx=2, incy=2)', function t() {
 	var y = new Complex128Array( 5 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = zhemv( 'L', 3, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
+	var result = zhemv( 'lower', 3, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -180,7 +180,7 @@ test( 'zhemv: complex_alpha_beta (alpha=(2,1), beta=(1,-1))', function t() {
 	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
 	var alpha = new Complex128( 2, 1 );
 	var beta = new Complex128( 1, -1 );
-	var result = zhemv( 'U', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'upper', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
@@ -196,7 +196,7 @@ test( 'zhemv: beta_zero (beta=0 zeroes y first)', function t() {
 	var y = new Complex128Array( [ 99, 99, 99, 99 ] );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = zhemv( 'U', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var result = zhemv( 'upper', 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });

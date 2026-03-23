@@ -67,7 +67,7 @@ function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) { // 
 	oA = offsetA * 2;
 	mn = Math.min( M, N );
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Set the strictly upper triangular part to ALPHA.
 		for ( j = 1; j < N; j++ ) {
 			idx = oA + j * sa2;
@@ -84,7 +84,7 @@ function zlaset( uplo, M, N, alpha, beta, A, strideA1, strideA2, offsetA ) { // 
 			Av[ idx + 1 ] = betaIm;
 			idx += sa1 + sa2;
 		}
-	} else if ( uplo === 'L' || uplo === 'l' ) {
+	} else if ( uplo === 'lower' ) {
 		// Set the strictly lower triangular part to ALPHA.
 		for ( j = 0; j < Math.min( M, N ); j++ ) {
 			idx = oA + ( j + 1 ) * sa1 + j * sa2;

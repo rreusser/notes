@@ -72,7 +72,7 @@ test( 'zlatrd: upper_6x6_nb3', function t() {
 	var Tv = reinterpret( TAU, 0 );
 	var Wv = reinterpret( W, 0 );
 
-	zlatrd( 'U', 6, 3, A, 1, 6, 0, e, 1, 0, TAU, 1, 0, W, 1, 6, 0 );
+	zlatrd( 'upper', 6, 3, A, 1, 6, 0, e, 1, 0, TAU, 1, 0, W, 1, 6, 0 );
 
 	assertArrayClose( Array.from( Av ), tc.A, 1e-13, 'A' );
 	assertArrayClose( Array.from( e ), tc.e, 1e-13, 'e' );
@@ -90,7 +90,7 @@ test( 'zlatrd: lower_6x6_nb3', function t() {
 	var Tv = reinterpret( TAU, 0 );
 	var Wv = reinterpret( W, 0 );
 
-	zlatrd( 'L', 6, 3, A, 1, 6, 0, e, 1, 0, TAU, 1, 0, W, 1, 6, 0 );
+	zlatrd( 'lower', 6, 3, A, 1, 6, 0, e, 1, 0, TAU, 1, 0, W, 1, 6, 0 );
 
 	assertArrayClose( Array.from( Av ), tc.A, 1e-13, 'A' );
 	assertArrayClose( Array.from( e ), tc.e, 1e-13, 'e' );
@@ -104,5 +104,5 @@ test( 'zlatrd: N=0 quick return', function t() {
 	var TAU = new Complex128Array( 0 );
 	var W = new Complex128Array( 0 );
 	// Should not throw
-	zlatrd( 'U', 0, 0, A, 1, 1, 0, e, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
+	zlatrd( 'upper', 0, 0, A, 1, 1, 0, e, 1, 0, TAU, 1, 0, W, 1, 1, 0 );
 });

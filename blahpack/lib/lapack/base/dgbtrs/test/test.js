@@ -66,7 +66,7 @@ test( 'dgbtrs: N=0 quick return', function t() {
 	var AB = new Float64Array( 16 );
 	var IPIV = new Int32Array( 4 );
 	var B = new Float64Array( 4 );
-	var info = dgbtrs( 'N', 0, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	var info = dgbtrs( 'no-transpose', 0, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -74,7 +74,7 @@ test( 'dgbtrs: NRHS=0 quick return', function t() {
 	var AB = new Float64Array( 16 );
 	var IPIV = new Int32Array( 4 );
 	var B = new Float64Array( 4 );
-	var info = dgbtrs( 'N', 4, 1, 1, 0, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	var info = dgbtrs( 'no-transpose', 4, 1, 1, 0, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -95,7 +95,7 @@ test( 'dgbtrs: tridiag_4x4_1rhs (verify A*x = b)', function t() {
 
 	// B is stored as a column vector (N x NRHS with LDB=N)
 	var B = new Float64Array( b );
-	var info = dgbtrs( 'N', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	var info = dgbtrs( 'no-transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	assert.equal( info, 0 );
 	// Check fixture
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -123,7 +123,7 @@ test( 'dgbtrs: tridiag_4x4_2rhs', function t() {
 	] );
 	var b0 = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var b1 = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
-	var info = dgbtrs( 'N', 4, 1, 1, 2, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	var info = dgbtrs( 'no-transpose', 4, 1, 1, 2, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 	// Verify A*x = b for both columns
@@ -147,7 +147,7 @@ test( 'dgbtrs: tridiag_4x4_trans (verify A^T*x = b)', function t() {
 
 	var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var b = new Float64Array( B );
-	var info = dgbtrs( 'T', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	var info = dgbtrs( 'transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 	// For symmetric A, A^T = A, so A*x should also = b
@@ -170,7 +170,7 @@ test( 'dgbtrs: pentadiag_5x5_1rhs (verify A*x = b)', function t() {
 
 	var b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var B = new Float64Array( b );
-	var info = dgbtrs( 'N', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 );
+	var info = dgbtrs( 'no-transpose', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 	var Ax = bandMatVec( 5, 2, 2, AB_orig, B );
@@ -191,7 +191,7 @@ test( 'dgbtrs: pentadiag_5x5_trans', function t() {
 
 	var b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var B = new Float64Array( b );
-	var info = dgbtrs( 'T', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 );
+	var info = dgbtrs( 'transpose', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -208,7 +208,7 @@ test( 'dgbtrs: pivot_2x2 (verify A*x = b)', function t() {
 
 	var b = new Float64Array( [ 5.0, 11.0 ] );
 	var B = new Float64Array( b );
-	var info = dgbtrs( 'N', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	var info = dgbtrs( 'no-transpose', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 	// Verify: A*[1,2] = [1*1+2*2, 3*1+4*2] = [5, 11]
@@ -227,7 +227,7 @@ test( 'dgbtrs: pivot_2x2 transpose (verify A^T*x = b)', function t() {
 	dgbtrf( 2, 2, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
 
 	var B = new Float64Array( [ 7.0, 10.0 ] );
-	var info = dgbtrs( 'T', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	var info = dgbtrs( 'transpose', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 );
 	assert.equal( info, 0 );
 	assertClose( B[ 0 ], 1.0, 1e-14, 'x[0]' );
 	assertClose( B[ 1 ], 2.0, 1e-14, 'x[1]' );
@@ -245,7 +245,7 @@ test( 'dgbtrs: KL=0 no-L path transpose', function t() {
 	dgbtrf( 2, 2, 0, 1, AB, 1, 2, 0, IPIV, 1, 0 );
 
 	var B = new Float64Array( [ 4.0, 7.0 ] );
-	var info = dgbtrs( 'T', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	var info = dgbtrs( 'transpose', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 	assert.equal( info, 0 );
 	assertClose( B[ 0 ], 2.0, 1e-14, 'x[0]' );
 	assertClose( B[ 1 ], 5.0 / 3.0, 1e-14, 'x[1]' );
@@ -263,7 +263,7 @@ test( 'dgbtrs: KL=0 no-L path', function t() {
 	dgbtrf( 2, 2, 0, 1, AB, 1, 2, 0, IPIV, 1, 0 );
 
 	var B = new Float64Array( [ 5.0, 6.0 ] );
-	var info = dgbtrs( 'N', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	var info = dgbtrs( 'no-transpose', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 	assert.equal( info, 0 );
 	assertClose( B[ 0 ], 1.5, 1e-14, 'x[0]' );
 	assertClose( B[ 1 ], 2.0, 1e-14, 'x[1]' );

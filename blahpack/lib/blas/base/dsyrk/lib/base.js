@@ -14,7 +14,7 @@
 * @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
 * @param {string} trans - 'N' for A*A^T, 'T' or 'C' for A^T*A
 * @param {NonNegativeInteger} N - order of matrix C
-* @param {NonNegativeInteger} K - number of columns of A (if trans='N') or rows (if trans='T')
+* @param {NonNegativeInteger} K - number of columns of A (if trans = 'no-transpose') or rows (if trans = 'transpose')
 * @param {number} alpha - scalar multiplier for A*A^T or A^T*A
 * @param {Float64Array} A - input matrix
 * @param {integer} strideA1 - stride of the first dimension of A
@@ -41,8 +41,8 @@ function dsyrk( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, 
 	var j;
 	var l;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
-	nota = ( trans === 'N' || trans === 'n' );
+	upper = ( uplo === 'upper' );
+	nota = ( trans === 'no-transpose' );
 
 	if ( N === 0 || ( ( alpha === 0.0 || K === 0 ) && beta === 1.0 ) ) {
 		return C;

@@ -64,7 +64,7 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 	}
 
 	// Step 1: Compute the inverse of the upper triangular factor U
-	info = dtrtri( 'U', 'N', N, A, sa1, sa2, offsetA );
+	info = dtrtri( 'upper', 'non-unit', N, A, sa1, sa2, offsetA );
 	if ( info > 0 ) {
 		return info;
 	}
@@ -95,7 +95,7 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 
 			// Replace column j of A with inv(U)*(-L_j) + e_j
 			if ( j < N - 1 ) {
-				dgemv( 'N', N, N - j - 1, -1.0,
+				dgemv( 'no-transpose', N, N - j - 1, -1.0,
 					A, sa1, sa2, offsetA + ( j + 1 ) * sa2,
 					WORK, strideWORK, offsetWORK + ( j + 1 ) * strideWORK,
 					1.0,
@@ -118,14 +118,14 @@ function dgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 
 			// Update the current block column with trailing columns
 			if ( j + jb < N ) {
-				dgemm( 'N', 'N', N, jb, N - j - jb, -1.0,
+				dgemm( 'no-transpose', 'no-transpose', N, jb, N - j - jb, -1.0,
 					A, sa1, sa2, offsetA + ( j + jb ) * sa2,
 					WORK, 1, ldwork, offsetWORK + ( j + jb ),
 					1.0,
 					A, sa1, sa2, offsetA + j * sa2 );
 			}
 			// Solve with the unit lower triangular block from WORK
-			dtrsm( 'R', 'L', 'N', 'U', N, jb, 1.0,
+			dtrsm( 'right', 'lower', 'no-transpose', 'unit', N, jb, 1.0,
 				WORK, 1, ldwork, offsetWORK + j,
 				A, sa1, sa2, offsetA + j * sa2 );
 		}

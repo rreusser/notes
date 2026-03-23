@@ -28,7 +28,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 test( 'dtbsv: N=0 returns immediately', function t() {
 	var A = new Float64Array( 1 );
 	var x = new Float64Array( [ 42.0 ] );
-	dtbsv( 'U', 'N', 'N', 0, 0, A, 1, 1, 0, x, 1, 0 );
+	dtbsv( 'upper', 'no-transpose', 'non-unit', 0, 0, A, 1, 1, 0, x, 1, 0 );
 	assert.equal( x[ 0 ], 42.0 );
 });
 
@@ -45,7 +45,7 @@ test( 'dtbsv: upper_N_nonunit_k1', function t() {
 	] );
 	// b = A*[1,1,1,1] = [5, 11, 17, 11]
 	var x = new Float64Array( [ 5.0, 11.0, 17.0, 11.0 ] );
-	dtbsv( 'U', 'N', 'N', 4, 1, AB, 1, 2, 0, x, 1, 0 );
+	dtbsv( 'upper', 'no-transpose', 'non-unit', 4, 1, AB, 1, 2, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -61,7 +61,7 @@ test( 'dtbsv: lower_N_nonunit_k1', function t() {
 		11.0, 0.0   // col 3
 	] );
 	var x = new Float64Array( [ 2.0, 6.0, 12.0, 18.0 ] );
-	dtbsv( 'L', 'N', 'N', 4, 1, AB, 1, 2, 0, x, 1, 0 );
+	dtbsv( 'lower', 'no-transpose', 'non-unit', 4, 1, AB, 1, 2, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -73,7 +73,7 @@ test( 'dtbsv: upper_T_nonunit_k1', function t() {
 		0.0, 2.0, 3.0, 5.0, 6.0, 8.0, 9.0, 11.0
 	] );
 	var x = new Float64Array( [ 2.0, 8.0, 14.0, 20.0 ] );
-	dtbsv( 'U', 'T', 'N', 4, 1, AB, 1, 2, 0, x, 1, 0 );
+	dtbsv( 'upper', 'transpose', 'non-unit', 4, 1, AB, 1, 2, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -85,7 +85,7 @@ test( 'dtbsv: lower_T_nonunit_k1', function t() {
 		2.0, 1.0, 5.0, 4.0, 8.0, 7.0, 11.0, 0.0
 	] );
 	var x = new Float64Array( [ 3.0, 9.0, 15.0, 11.0 ] );
-	dtbsv( 'L', 'T', 'N', 4, 1, AB, 1, 2, 0, x, 1, 0 );
+	dtbsv( 'lower', 'transpose', 'non-unit', 4, 1, AB, 1, 2, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -96,7 +96,7 @@ test( 'dtbsv: upper_N_unit_k1', function t() {
 		0.0, 99.0, 3.0, 99.0, 6.0, 99.0, 9.0, 99.0
 	] );
 	var x = new Float64Array( [ 4.0, 7.0, 10.0, 1.0 ] );
-	dtbsv( 'U', 'N', 'U', 4, 1, AB, 1, 2, 0, x, 1, 0 );
+	dtbsv( 'upper', 'no-transpose', 'unit', 4, 1, AB, 1, 2, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -107,7 +107,7 @@ test( 'dtbsv: lower_N_unit_k1', function t() {
 		99.0, 1.0, 99.0, 4.0, 99.0, 7.0, 99.0, 0.0
 	] );
 	var x = new Float64Array( [ 1.0, 2.0, 5.0, 8.0 ] );
-	dtbsv( 'L', 'N', 'U', 4, 1, AB, 1, 2, 0, x, 1, 0 );
+	dtbsv( 'lower', 'no-transpose', 'unit', 4, 1, AB, 1, 2, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -131,14 +131,14 @@ test( 'dtbsv: upper_N_nonunit_k2', function t() {
 	] );
 	// b = A*[1,1,1,1,1] = [6, 15, 24, 21, 12]
 	var x = new Float64Array( [ 6.0, 15.0, 24.0, 21.0, 12.0 ] );
-	dtbsv( 'U', 'N', 'N', 5, 2, AB, 1, 3, 0, x, 1, 0 );
+	dtbsv( 'upper', 'no-transpose', 'non-unit', 5, 2, AB, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
 test( 'dtbsv: n_one', function t() {
 	var AB = new Float64Array( [ 3.0 ] );
 	var x = new Float64Array( [ 9.0 ] );
-	dtbsv( 'U', 'N', 'N', 1, 0, AB, 1, 1, 0, x, 1, 0 );
+	dtbsv( 'upper', 'no-transpose', 'non-unit', 1, 0, AB, 1, 1, 0, x, 1, 0 );
 	assertArrayClose( x, [ 3.0 ], 1e-14, 'x' );
 });
 
@@ -149,7 +149,7 @@ test( 'dtbsv: upper_stride2', function t() {
 		0.0, 2.0, 1.0, 3.0, 1.0, 4.0
 	] );
 	var x = new Float64Array( [ 3.0, 0.0, 4.0, 0.0, 4.0 ] );
-	dtbsv( 'U', 'N', 'N', 3, 1, AB, 1, 2, 0, x, 2, 0 );
+	dtbsv( 'upper', 'no-transpose', 'non-unit', 3, 1, AB, 1, 2, 0, x, 2, 0 );
 	assertArrayClose( x, [ 1.0, 0.0, 1.0, 0.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -162,7 +162,7 @@ test( 'dtbsv: lower_neg_stride', function t() {
 	] );
 	// In JS with strideX=-1 and offsetX=2: x[2]=b[0], x[1]=b[1], x[0]=b[2]
 	var x = new Float64Array( [ 11.0, 7.0, 2.0 ] );
-	dtbsv( 'L', 'N', 'N', 3, 1, AB, 1, 2, 0, x, -1, 2 );
+	dtbsv( 'lower', 'no-transpose', 'non-unit', 3, 1, AB, 1, 2, 0, x, -1, 2 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -181,7 +181,7 @@ test( 'dtbsv: lower_T_nonunit_k2', function t() {
 		10.0, 0.0, 0.0  // col 4
 	] );
 	var x = new Float64Array( [ 6.0, 11.0, 14.0, 11.0, 10.0 ] );
-	dtbsv( 'L', 'T', 'N', 5, 2, AB, 1, 3, 0, x, 1, 0 );
+	dtbsv( 'lower', 'transpose', 'non-unit', 5, 2, AB, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, [ 1.0, 1.0, 1.0, 1.0, 1.0 ], 1e-14, 'x' );
 });
 
@@ -196,6 +196,6 @@ test( 'dtbsv: upper_T_nonunit_k2_stride2', function t() {
 		9.0, 11.0, 12.0
 	] );
 	var x = new Float64Array( [ 1.0, 0.0, 6.0, 0.0, 15.0, 0.0, 24.0, 0.0, 32.0 ] );
-	dtbsv( 'U', 'T', 'N', 5, 2, AB, 1, 3, 0, x, 2, 0 );
+	dtbsv( 'upper', 'transpose', 'non-unit', 5, 2, AB, 1, 3, 0, x, 2, 0 );
 	assertArrayClose( x, [ 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ], 1e-14, 'x' );
 });

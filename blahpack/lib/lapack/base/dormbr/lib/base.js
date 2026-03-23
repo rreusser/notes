@@ -84,9 +84,9 @@ function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 		return 0;
 	}
 
-	applyq = ( vect === 'Q' || vect === 'q' );
-	left = ( side === 'L' || side === 'l' );
-	notran = ( trans === 'N' || trans === 'n' );
+	applyq = ( vect === 'Q' );
+	left = ( side === 'left' );
+	notran = ( trans === 'no-transpose' );
 
 	if ( left ) {
 		nq = M;
@@ -131,9 +131,9 @@ function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 		// Apply P or P^T (reflectors stored rowwise)
 		// Fortran swaps TRANS for the P case: if NOTRAN, use 'T' and vice versa
 		if ( notran ) {
-			transt = 'T';
+			transt = 'transpose';
 		} else {
-			transt = 'N';
+			transt = 'no-transpose';
 		}
 
 		if ( nq > K ) {

@@ -1,34 +1,47 @@
-
-
 'use strict';
-
-// MAIN //
-
-/**
-* Compute complex symmetric indefinite factorization with Bunch-Kaufman pivoting (blocked)
-*
-* @private
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @returns {integer} status code (0 = success)
-*/
-function zsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zsytf2 = require( '../../zsytf2/lib/base.js' );
+var zlasyf = require( '../../zlasyf/lib/base.js' );
+var NB = 32;
+function zsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
+	var ldwork, iinfo, info, result, nb, kb, W, k, j;
+	info = 0;
+	if ( N === 0 ) return 0;
+	nb = NB;
+	if ( nb > 1 && nb < N ) { ldwork = N; } else { nb = N; }
+	if ( uplo === 'U' ) {
+		k = N;
+		while ( k >= 1 ) {
+			if ( k > nb ) {
+				W = new Complex128Array( ldwork * nb );
+				result = zlasyf( 'U', k, nb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, 1, ldwork, 0 );
+				kb = result.kb; iinfo = result.info;
+			} else {
+				iinfo = zsytf2( 'U', k, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV );
+				kb = k;
+			}
+			if ( info === 0 && iinfo > 0 ) info = iinfo;
+			k -= kb;
+		}
+	} else {
+		k = 0;
+		while ( k < N ) {
+			if ( k <= N - nb - 1 ) {
+				W = new Complex128Array( ldwork * nb );
+				result = zlasyf( 'L', N - k, nb, A, strideA1, strideA2, offsetA + k * strideA1 + k * strideA2, IPIV, strideIPIV, offsetIPIV + k * strideIPIV, W, 1, ldwork, 0 );
+				kb = result.kb; iinfo = result.info;
+			} else {
+				iinfo = zsytf2( 'L', N - k, A, strideA1, strideA2, offsetA + k * strideA1 + k * strideA2, IPIV, strideIPIV, offsetIPIV + k * strideIPIV );
+				kb = N - k;
+			}
+			if ( info === 0 && iinfo > 0 ) info = iinfo + k;
+			for ( j = k; j < k + kb; j++ ) {
+				if ( IPIV[ offsetIPIV + j * strideIPIV ] >= 0 ) { IPIV[ offsetIPIV + j * strideIPIV ] += k; }
+				else { IPIV[ offsetIPIV + j * strideIPIV ] = ~( ( ~IPIV[ offsetIPIV + j * strideIPIV ] ) + k ); }
+			}
+			k += kb;
+		}
+	}
+	return info;
 }
-
-
-// EXPORTS //
-
 module.exports = zsytrf;

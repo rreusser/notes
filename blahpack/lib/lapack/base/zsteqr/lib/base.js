@@ -116,11 +116,11 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	rot = new Float64Array( 3 );
 
 	// Decode COMPZ
-	if ( compz === 'N' || compz === 'n' ) {
+	if ( compz === 'none' ) {
 		icompz = 0;
-	} else if ( compz === 'V' || compz === 'v' ) {
+	} else if ( compz === 'update' ) {
 		icompz = 1;
-	} else if ( compz === 'I' || compz === 'i' ) {
+	} else if ( compz === 'initialize' ) {
 		icompz = 2;
 	} else {
 		return -1;
@@ -191,19 +191,19 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 		}
 
 		// Scale the block if necessary
-		anorm = dlanst( 'M', lend - l + 1, d, strideD, offsetD + l * strideD, e, strideE, offsetE + l * strideE );
+		anorm = dlanst( 'max', lend - l + 1, d, strideD, offsetD + l * strideD, e, strideE, offsetE + l * strideE );
 		iscale = 0;
 		if ( anorm === 0.0 ) {
 			continue outer; // eslint-disable-line no-labels
 		}
 		if ( anorm > ssfmax ) {
 			iscale = 1;
-			dlascl( 'G', 0, 0, anorm, ssfmax, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
-			dlascl( 'G', 0, 0, anorm, ssfmax, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
+			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
+			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
 		} else if ( anorm < ssfmin ) {
 			iscale = 2;
-			dlascl( 'G', 0, 0, anorm, ssfmin, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
-			dlascl( 'G', 0, 0, anorm, ssfmin, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
+			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l + 1, 1, d, strideD, 0, offsetD + l * strideD );
+			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l, 1, e, strideE, 0, offsetE + l * strideE );
 		}
 
 		// Choose QL or QR based on which end has smaller |D|
@@ -252,7 +252,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 						obj = dlaev2( d[ offsetD + l * strideD ], e[ offsetE + l * strideE ], d[ offsetD + ( l + 1 ) * strideD ] );
 						WORK[ offsetWORK + l * strideWORK ] = obj.cs1;
 						WORK[ offsetWORK + ( N - 1 + l ) * strideWORK ] = obj.sn1;
-						zlasr( 'R', 'V', 'B', N, 2,
+						zlasr( 'right', 'variable', 'backward', N, 2,
 							WORK, strideWORK, offsetWORK + l * strideWORK,
 							WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
 							Z, strideZ1, strideZ2, offsetZ + l * strideZ2
@@ -313,7 +313,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Apply rotations to Z (complex)
 				if ( icompz > 0 ) {
 					mm = m - l + 1;
-					zlasr( 'R', 'V', 'B', N, mm,
+					zlasr( 'right', 'variable', 'backward', N, mm,
 						WORK, strideWORK, offsetWORK + l * strideWORK,
 						WORK, strideWORK, offsetWORK + ( N - 1 + l ) * strideWORK,
 						Z, strideZ1, strideZ2, offsetZ + l * strideZ2
@@ -363,7 +363,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 						obj = dlaev2( d[ offsetD + ( l - 1 ) * strideD ], e[ offsetE + ( l - 1 ) * strideE ], d[ offsetD + l * strideD ] );
 						WORK[ offsetWORK + m * strideWORK ] = obj.cs1;
 						WORK[ offsetWORK + ( N - 1 + m ) * strideWORK ] = obj.sn1;
-						zlasr( 'R', 'V', 'F', N, 2,
+						zlasr( 'right', 'variable', 'forward', N, 2,
 							WORK, strideWORK, offsetWORK + m * strideWORK,
 							WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
 							Z, strideZ1, strideZ2, offsetZ + ( l - 1 ) * strideZ2
@@ -424,7 +424,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Apply rotations to Z (complex)
 				if ( icompz > 0 ) {
 					mm = l - m + 1;
-					zlasr( 'R', 'V', 'F', N, mm,
+					zlasr( 'right', 'variable', 'forward', N, mm,
 						WORK, strideWORK, offsetWORK + m * strideWORK,
 						WORK, strideWORK, offsetWORK + ( N - 1 + m ) * strideWORK,
 						Z, strideZ1, strideZ2, offsetZ + m * strideZ2
@@ -438,11 +438,11 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 		// Undo scaling if necessary
 		if ( iscale === 1 ) {
-			dlascl( 'G', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
-			dlascl( 'G', 0, 0, ssfmax, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
+			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
+			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
 		} else if ( iscale === 2 ) {
-			dlascl( 'G', 0, 0, ssfmin, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
-			dlascl( 'G', 0, 0, ssfmin, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
+			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv + 1, 1, d, strideD, 0, offsetD + lsv * strideD );
+			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv, 1, e, strideE, 0, offsetE + lsv * strideE );
 		}
 
 		// Check for convergence failure
@@ -464,7 +464,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 	// Sort eigenvalues (and eigenvectors) in ascending order
 	if ( icompz === 0 ) {
-		dlasrt( 'I', N, d, strideD, offsetD );
+		dlasrt( 'initialize', N, d, strideD, offsetD );
 	} else {
 		// Selection sort
 		for ( ii = 1; ii < N; ii++ ) {

@@ -42,7 +42,7 @@ test( 'dposv: lower_3x3', function t() {
 	var tc = findCase( 'lower_3x3' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	var info = dposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -51,7 +51,7 @@ test( 'dposv: upper_3x3', function t() {
 	var tc = findCase( 'upper_3x3' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	var B = new Float64Array( [ 1, 2, 3 ] );
-	var info = dposv( 'U', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dposv( 'upper', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -60,7 +60,7 @@ test( 'dposv: not_posdef', function t() {
 	var tc = findCase( 'not_posdef' );
 	var A = new Float64Array( [ 1, 2, 3, 2, 1, 4, 3, 4, 1 ] );
 	var B = new Float64Array( [ 1, 1, 1 ] );
-	var info = dposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -68,7 +68,7 @@ test( 'dposv: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Float64Array( 1 );
 	var B = new Float64Array( 1 );
-	var info = dposv( 'L', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = dposv( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -76,7 +76,7 @@ test( 'dposv: identity', function t() {
 	var tc = findCase( 'identity' );
 	var A = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
 	var B = new Float64Array( [ 3, 5, 7 ] );
-	var info = dposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -85,7 +85,7 @@ test( 'dposv: multi_rhs', function t() {
 	var tc = findCase( 'multi_rhs' );
 	var A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	var B = new Float64Array( [ 1, 0, 0, 0, 1, 0 ] );
-	var info = dposv( 'L', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dposv( 'lower', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
 });
@@ -94,6 +94,6 @@ test( 'dposv: nrhs_zero', function t() {
 	var tc = findCase( 'nrhs_zero' );
 	var A = new Float64Array( 9 );
 	var B = new Float64Array( 3 );
-	var info = dposv( 'L', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = dposv( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });

@@ -77,7 +77,7 @@ test( 'zunmqr: left, no transpose (Q*I)', function t() {
 	var LDC = 6;
 	var C = eye4in6();
 	var WORK = new Complex128Array( 200 );
-	var info = zunmqr( 'L', 'N', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmqr( 'left', 'no-transpose', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 	var Cv = reinterpret( C, 0 );
 	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
@@ -89,7 +89,7 @@ test( 'zunmqr: left, conjugate transpose (Q^H*I)', function t() {
 	var LDC = 6;
 	var C = eye4in6();
 	var WORK = new Complex128Array( 200 );
-	var info = zunmqr( 'L', 'C', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmqr( 'left', 'conjugate-transpose', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 	var Cv = reinterpret( C, 0 );
 	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
@@ -101,7 +101,7 @@ test( 'zunmqr: right, no transpose (I*Q)', function t() {
 	var LDC = 6;
 	var C = eye4in6();
 	var WORK = new Complex128Array( 200 );
-	var info = zunmqr( 'R', 'N', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmqr( 'right', 'no-transpose', 4, 4, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 	var Cv = reinterpret( C, 0 );
 	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
@@ -113,7 +113,7 @@ test( 'zunmqr: M=0 quick return', function t() {
 	var TAU = new Complex128Array( 2 );
 	var C = new Complex128Array( 5 );
 	var WORK = new Complex128Array( 20 );
-	var info = zunmqr( 'L', 'N', 0, 4, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0, 20 );
+	var info = zunmqr( 'left', 'no-transpose', 0, 4, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0, 20 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
 
@@ -123,7 +123,7 @@ test( 'zunmqr: N=0 quick return', function t() {
 	var TAU = new Complex128Array( 2 );
 	var C = new Complex128Array( 5 );
 	var WORK = new Complex128Array( 20 );
-	var info = zunmqr( 'L', 'N', 4, 0, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0, 20 );
+	var info = zunmqr( 'left', 'no-transpose', 4, 0, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0, 20 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
 
@@ -133,7 +133,7 @@ test( 'zunmqr: K=0 quick return', function t() {
 	var TAU = new Complex128Array( 2 );
 	var C = new Complex128Array( 5 );
 	var WORK = new Complex128Array( 20 );
-	var info = zunmqr( 'L', 'N', 4, 4, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0, 20 );
+	var info = zunmqr( 'left', 'no-transpose', 4, 4, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0, 20 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
 
@@ -148,7 +148,7 @@ test( 'zunmqr: left, no transpose, rectangular C (4x2)', function t() {
 	Cv[2*LDC]=0; Cv[2*LDC+1]=2; Cv[2*LDC+2]=1; Cv[2*LDC+3]=-1; Cv[2*LDC+4]=4; Cv[2*LDC+5]=0; Cv[2*LDC+6]=0; Cv[2*LDC+7]=3;
 
 	var WORK = new Complex128Array( 200 );
-	var info = zunmqr( 'L', 'N', 4, 2, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmqr( 'left', 'no-transpose', 4, 2, 3, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
 	assertClose( info, tc.info, 1e-14, 'info' );
 	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
 });
@@ -245,13 +245,13 @@ test( 'zunmqr: blocked path, left, no transpose (K=35, forward iteration)', func
 	var qr = qrLarge( M, K );
 	var WORK = new Complex128Array( N * 64 );
 
-	// Step 1: C = I, apply Q from the left (trans='N') => C = Q*I = Q
+	// Step 1: C = I, apply Q from the left (trans = 'no-transpose') => C = Q*I = Q
 	var C = eyeComplex( M );
-	var info = zunmqr( 'L', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	var info = zunmqr( 'left', 'no-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
 	assert.equal( info, 0, 'info after Q*I' );
 
 	// Step 2: Apply Q^H from the left to Q => C = Q^H * Q = I
-	info = zunmqr( 'L', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	info = zunmqr( 'left', 'conjugate-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
 	assert.equal( info, 0, 'info after Q^H*Q' );
 
 	// Verify Q^H * Q = I
@@ -260,8 +260,8 @@ test( 'zunmqr: blocked path, left, no transpose (K=35, forward iteration)', func
 
 test( 'zunmqr: blocked path, left, conjugate transpose (K=35, backward iteration)', function t() {
 	// K=35 > NB=32, so the blocked path is taken.
-	// For zunmqr: left+trans='C' uses forward iteration (i3>0),
-	// left+trans='N' uses backward iteration (i3<0).
+	// For zunmqr: left+trans = 'conjugate-transpose' uses forward iteration (i3>0),
+	// left+trans = 'no-transpose' uses backward iteration (i3<0).
 	// Verify: apply Q^H to I, then apply Q to the result => should get I back.
 	var M = 40;
 	var K = 35;
@@ -270,13 +270,13 @@ test( 'zunmqr: blocked path, left, conjugate transpose (K=35, backward iteration
 	var qr = qrLarge( M, K );
 	var WORK = new Complex128Array( N * 64 );
 
-	// Step 1: C = I, apply Q^H from the left (trans='C') => C = Q^H
+	// Step 1: C = I, apply Q^H from the left (trans = 'conjugate-transpose') => C = Q^H
 	var C = eyeComplex( M );
-	var info = zunmqr( 'L', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	var info = zunmqr( 'left', 'conjugate-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
 	assert.equal( info, 0, 'info after Q^H*I' );
 
 	// Step 2: Apply Q from the left to Q^H => C = Q * Q^H = I
-	info = zunmqr( 'L', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
+	info = zunmqr( 'left', 'no-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, N * 64 );
 	assert.equal( info, 0, 'info after Q*Q^H' );
 
 	// Verify Q * Q^H = I
@@ -284,7 +284,7 @@ test( 'zunmqr: blocked path, left, conjugate transpose (K=35, backward iteration
 });
 
 test( 'zunmqr: blocked path, right, no transpose (K=35, covers side=R blocked)', function t() {
-	// K=35 > NB=32, blocked path. side='R' => nq=N, nw=M.
+	// K=35 > NB=32, blocked path. side = 'right' => nq=N, nw=M.
 	// Covers lines 139-141 (ni/jc set for side=R) and 159-161 (zlarfb from right).
 	// right+notran => forward iteration.
 	// Verify: apply Q from right to I, then apply Q^H from right => I*Q*Q^H = I.
@@ -297,18 +297,18 @@ test( 'zunmqr: blocked path, right, no transpose (K=35, covers side=R blocked)',
 
 	// Step 1: C = I, apply Q from right (I*Q)
 	var C = eyeComplex( M );
-	var info = zunmqr( 'R', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	var info = zunmqr( 'right', 'no-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
 	assert.equal( info, 0, 'info after I*Q' );
 
 	// Step 2: Apply Q^H from right => C*Q^H = I*Q*Q^H = I
-	info = zunmqr( 'R', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	info = zunmqr( 'right', 'conjugate-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
 	assert.equal( info, 0, 'info after C*Q^H' );
 
 	assertApproxIdentity( C, M, LDC, 1e-10, 'I*Q*Q^H=I (blocked, right)' );
 });
 
 test( 'zunmqr: blocked path, right, conjugate transpose (K=35, covers side=R blocked backward)', function t() {
-	// K=35 > NB=32, blocked path. side='R', trans='C' => backward iteration.
+	// K=35 > NB=32, blocked path. side = 'right', trans = 'conjugate-transpose' => backward iteration.
 	// Verify: apply Q^H from right, then Q from right => I*Q^H*Q = I.
 	var N = 40;
 	var K = 35;
@@ -319,11 +319,11 @@ test( 'zunmqr: blocked path, right, conjugate transpose (K=35, covers side=R blo
 
 	// Step 1: C = I, apply Q^H from right (I*Q^H)
 	var C = eyeComplex( M );
-	var info = zunmqr( 'R', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	var info = zunmqr( 'right', 'conjugate-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
 	assert.equal( info, 0, 'info after I*Q^H' );
 
 	// Step 2: Apply Q from right => C*Q = I*Q^H*Q = I
-	info = zunmqr( 'R', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
+	info = zunmqr( 'right', 'no-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0, M * 64 );
 	assert.equal( info, 0, 'info after C*Q' );
 
 	assertApproxIdentity( C, M, LDC, 1e-10, 'I*Q^H*Q=I (blocked, right, backward)' );
@@ -339,11 +339,11 @@ test( 'zunmqr: blocked path with WORK=null triggers internal allocation', functi
 
 	// Step 1: C = I, apply Q from left with WORK=null
 	var C = eyeComplex( M );
-	var info = zunmqr( 'L', 'N', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, null, 1, 0, 0 );
+	var info = zunmqr( 'left', 'no-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, null, 1, 0, 0 );
 	assert.equal( info, 0, 'info after Q*I with null WORK' );
 
 	// Step 2: Apply Q^H to verify correctness => Q^H * Q * I = I
-	info = zunmqr( 'L', 'C', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, null, 1, 0, 0 );
+	info = zunmqr( 'left', 'conjugate-transpose', M, N, K, qr.A, 1, qr.LDA, 0, qr.TAU, 1, 0, C, 1, LDC, 0, null, 1, 0, 0 );
 	assert.equal( info, 0, 'info after Q^H*Q with null WORK' );
 
 	assertApproxIdentity( C, M, LDC, 1e-10, 'Q^H*Q=I (null WORK)' );

@@ -13,8 +13,8 @@ var dsyrk = require( '../../../../blas/base/dsyrk/lib/base.js' );
 * matrix A using the recursive algorithm.
 *
 * The factorization has the form:
-*   A = U^T * U,  if uplo = 'U', or
-*   A = L * L^T,  if uplo = 'L',
+*   A = U^T * U,  if uplo = 'upper', or
+*   A = L * L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the recursive version of the algorithm. It divides the matrix
@@ -37,7 +37,7 @@ function dpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 	var n1;
 	var n2;
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 	sa1 = strideA1;
 	sa2 = strideA2;
 
@@ -66,13 +66,13 @@ function dpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 	if ( upper ) {
 		// Solve U11^T * A12 = A12 (update off-diagonal block)
-		dtrsm( 'L', 'U', 'T', 'N', n1, n2, 1.0,
+		dtrsm( 'left', 'upper', 'transpose', 'non-unit', n1, n2, 1.0,
 			A, sa1, sa2, offsetA,
 			A, sa1, sa2, offsetA + n1 * sa2
 		);
 
 		// Update A22: A22 -= A12^T * A12
-		dsyrk( uplo, 'T', n2, n1, -1.0,
+		dsyrk( uplo, 'transpose', n2, n1, -1.0,
 			A, sa1, sa2, offsetA + n1 * sa2,
 			1.0,
 			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2
@@ -85,13 +85,13 @@ function dpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		}
 	} else {
 		// Solve A21 * L11^T = A21 (update off-diagonal block)
-		dtrsm( 'R', 'L', 'T', 'N', n2, n1, 1.0,
+		dtrsm( 'right', 'lower', 'transpose', 'non-unit', n2, n1, 1.0,
 			A, sa1, sa2, offsetA,
 			A, sa1, sa2, offsetA + n1 * sa1
 		);
 
 		// Update A22: A22 -= A21 * A21^T
-		dsyrk( uplo, 'N', n2, n1, -1.0,
+		dsyrk( uplo, 'no-transpose', n2, n1, -1.0,
 			A, sa1, sa2, offsetA + n1 * sa1,
 			1.0,
 			A, sa1, sa2, offsetA + n1 * sa1 + n1 * sa2

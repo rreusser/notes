@@ -19,7 +19,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * The difference is that x is NOT conjugated.
 *
 * @private
-* @param {string} uplo - specifies whether the upper ('U') or lower ('L') triangle is stored
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128} alpha - complex scalar multiplier
 * @param {Complex128Array} x - complex input vector

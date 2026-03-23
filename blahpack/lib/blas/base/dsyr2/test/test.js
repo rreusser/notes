@@ -45,7 +45,7 @@ test( 'dsyr2: upper_basic', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 2, 5, 6, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5, 6 ] );
-	dsyr2( 'U', 3, 1.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
+	dsyr2( 'upper', 3, 1.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -54,7 +54,7 @@ test( 'dsyr2: lower_basic', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 2, 5, 6, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5, 6 ] );
-	dsyr2( 'L', 3, 1.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
+	dsyr2( 'lower', 3, 1.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -64,7 +64,7 @@ test( 'dsyr2: upper_alpha', function t() {
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 0.5, 1.5, 2.5 ] );
-	dsyr2( 'U', 3, 2.5, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
+	dsyr2( 'upper', 3, 2.5, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -74,7 +74,7 @@ test( 'dsyr2: lower_alpha', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 0, 5, 6, 0, 0, 9 ] );
 	var x = new Float64Array( [ 2, 3, 4 ] );
 	var y = new Float64Array( [ 1, -1, 2 ] );
-	dsyr2( 'L', 3, 0.5, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
+	dsyr2( 'lower', 3, 0.5, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -83,7 +83,7 @@ test( 'dsyr2: n_zero', function t() {
 	var A = new Float64Array( [ 99 ] );
 	var x = new Float64Array( [ 1 ] );
 	var y = new Float64Array( [ 1 ] );
-	dsyr2( 'U', 0, 1.0, x, 1, 0, y, 1, 0, A, 1, 1, 0 );
+	dsyr2( 'upper', 0, 1.0, x, 1, 0, y, 1, 0, A, 1, 1, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -92,7 +92,7 @@ test( 'dsyr2: alpha_zero', function t() {
 	var A = new Float64Array( [ 99, 0, 0, 0, 0, 0, 0, 0, 0 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5, 6 ] );
-	dsyr2( 'U', 3, 0.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
+	dsyr2( 'upper', 3, 0.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertClose( A[ 0 ], tc.A[ 0 ], 1e-14, 'A[0]' );
 });
 
@@ -101,7 +101,7 @@ test( 'dsyr2: n_one', function t() {
 	var A = new Float64Array( [ 5 ] );
 	var x = new Float64Array( [ 3 ] );
 	var y = new Float64Array( [ 2 ] );
-	dsyr2( 'U', 1, 1.0, x, 1, 0, y, 1, 0, A, 1, 1, 0 );
+	dsyr2( 'upper', 1, 1.0, x, 1, 0, y, 1, 0, A, 1, 1, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -111,7 +111,7 @@ test( 'dsyr2: upper_stride', function t() {
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3 ] );
 	var y = new Float64Array( [ 4, 0, 5, 0, 6 ] );
-	dsyr2( 'U', 3, 1.0, x, 2, 0, y, 2, 0, A, 1, 3, 0 );
+	dsyr2( 'upper', 3, 1.0, x, 2, 0, y, 2, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -121,7 +121,7 @@ test( 'dsyr2: lower_stride', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 0, 5, 6, 0, 0, 9 ] );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3 ] );
 	var y = new Float64Array( [ 4, 0, 0, 5, 0, 0, 6 ] );
-	dsyr2( 'L', 3, 1.0, x, 2, 0, y, 3, 0, A, 1, 3, 0 );
+	dsyr2( 'lower', 3, 1.0, x, 2, 0, y, 3, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -136,7 +136,7 @@ test( 'dsyr2: upper_4x4', function t() {
 	] );
 	var x = new Float64Array( [ 1, -1, 2, -2 ] );
 	var y = new Float64Array( [ 3, 0.5, -1, 1.5 ] );
-	dsyr2( 'U', 4, 1.0, x, 1, 0, y, 1, 0, A, 1, 4, 0 );
+	dsyr2( 'upper', 4, 1.0, x, 1, 0, y, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -151,7 +151,7 @@ test( 'dsyr2: lower_4x4', function t() {
 	] );
 	var x = new Float64Array( [ 1, -1, 2, -2 ] );
 	var y = new Float64Array( [ 3, 0.5, -1, 1.5 ] );
-	dsyr2( 'L', 4, 1.0, x, 1, 0, y, 1, 0, A, 1, 4, 0 );
+	dsyr2( 'lower', 4, 1.0, x, 1, 0, y, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -161,7 +161,7 @@ test( 'dsyr2: upper_zeros (skip when x[j]==0 && y[j]==0)', function t() {
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
 	var x = new Float64Array( [ 0, 2, 0 ] );
 	var y = new Float64Array( [ 0, 5, 0 ] );
-	dsyr2( 'U', 3, 1.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
+	dsyr2( 'upper', 3, 1.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
@@ -169,7 +169,7 @@ test( 'dsyr2: returns A', function t() {
 	var A = new Float64Array( [ 1, 0, 0, 1 ] );
 	var x = new Float64Array( [ 1, 2 ] );
 	var y = new Float64Array( [ 3, 4 ] );
-	var result = dsyr2( 'U', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
+	var result = dsyr2( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.equal( result, A );
 });
 
@@ -178,7 +178,7 @@ test( 'dsyr2: offset support', function t() {
 	var A = new Float64Array( [ 5 ] );
 	var x = new Float64Array( [ 999, 3 ] );
 	var y = new Float64Array( [ 999, 999, 2 ] );
-	dsyr2( 'U', 1, 1.0, x, 1, 1, y, 1, 2, A, 1, 1, 0 );
+	dsyr2( 'upper', 1, 1.0, x, 1, 1, y, 1, 2, A, 1, 1, 0 );
 	// A[0] = 5 + 1*(3*2 + 2*3) = 5 + 12 = 17
 	assertClose( A[ 0 ], 17.0, 1e-14, 'A[0]' );
 });
@@ -188,7 +188,7 @@ test( 'dsyr2: offsetA support', function t() {
 	var A = new Float64Array( [ 999, 999, 1, 0, 0, 1 ] );
 	var x = new Float64Array( [ 1, 2 ] );
 	var y = new Float64Array( [ 3, 4 ] );
-	dsyr2( 'L', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 2 );
+	dsyr2( 'lower', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 2 );
 	// A(0,0) += 1*3 + 3*1 = 6 → 1+6 = 7
 	// A(1,0) += 2*3 + 4*1 = 10 → 0+10 = 10
 	// A(1,1) += 2*4 + 4*2 = 16 → 1+16 = 17

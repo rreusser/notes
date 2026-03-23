@@ -1,0 +1,7 @@
+disnan
+dlaisnan
+dlamch
+dlange
+dlassq
+dlatrs
+la_xisnan

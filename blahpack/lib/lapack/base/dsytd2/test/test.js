@@ -64,7 +64,7 @@ function run( uplo, N, Aflat ) {
 
 test( 'dsytd2: upper_4x4', function t() {
 	var tc = findCase( 'upper_4x4' );
-	var r = run( 'U', 4, [
+	var r = run( 'upper', 4, [
 		4, 1, 2, 1,
 		1, 5, 1, 2,
 		2, 1, 6, 1,
@@ -79,7 +79,7 @@ test( 'dsytd2: upper_4x4', function t() {
 
 test( 'dsytd2: lower_4x4', function t() {
 	var tc = findCase( 'lower_4x4' );
-	var r = run( 'L', 4, [
+	var r = run( 'lower', 4, [
 		4, 1, 2, 1,
 		1, 5, 1, 2,
 		2, 1, 6, 1,
@@ -98,7 +98,7 @@ test( 'dsytd2: n_one_upper', function t() {
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
 	var tau = new Float64Array( 0 );
-	var info = dsytd2( 'U', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
+	var info = dsytd2( 'upper', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
 	assert.equal( info, tc.info );
 	assertClose( A[ 0 ], tc.A11, 1e-14, 'A11' );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
@@ -110,7 +110,7 @@ test( 'dsytd2: n_one_lower', function t() {
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
 	var tau = new Float64Array( 0 );
-	var info = dsytd2( 'L', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
+	var info = dsytd2( 'lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
 	assert.equal( info, tc.info );
 	assertClose( A[ 0 ], tc.A11, 1e-14, 'A11' );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
@@ -122,13 +122,13 @@ test( 'dsytd2: n_zero', function t() {
 	var d = new Float64Array( 0 );
 	var e = new Float64Array( 0 );
 	var tau = new Float64Array( 0 );
-	var info = dsytd2( 'U', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
+	var info = dsytd2( 'upper', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, tau, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dsytd2: upper_5x5', function t() {
 	var tc = findCase( 'upper_5x5' );
-	var r = run( 'U', 5, [
+	var r = run( 'upper', 5, [
 		10, 3, 1, 0.5, 0.2,
 		3, 8, 2, 1, 0.5,
 		1, 2, 6, 3, 1,
@@ -144,7 +144,7 @@ test( 'dsytd2: upper_5x5', function t() {
 
 test( 'dsytd2: lower_5x5', function t() {
 	var tc = findCase( 'lower_5x5' );
-	var r = run( 'L', 5, [
+	var r = run( 'lower', 5, [
 		10, 3, 1, 0.5, 0.2,
 		3, 8, 2, 1, 0.5,
 		1, 2, 6, 3, 1,
@@ -160,7 +160,7 @@ test( 'dsytd2: lower_5x5', function t() {
 
 test( 'dsytd2: upper_2x2', function t() {
 	var tc = findCase( 'upper_2x2' );
-	var r = run( 'U', 2, [
+	var r = run( 'upper', 2, [
 		4, 3,
 		3, 5
 	]);
@@ -173,7 +173,7 @@ test( 'dsytd2: upper_2x2', function t() {
 
 test( 'dsytd2: lower_2x2', function t() {
 	var tc = findCase( 'lower_2x2' );
-	var r = run( 'L', 2, [
+	var r = run( 'lower', 2, [
 		4, 3,
 		3, 5
 	]);
@@ -186,7 +186,7 @@ test( 'dsytd2: lower_2x2', function t() {
 
 test( 'dsytd2: upper_diagonal', function t() {
 	var tc = findCase( 'upper_diagonal' );
-	var r = run( 'U', 3, [
+	var r = run( 'upper', 3, [
 		2, 0, 0,
 		0, 5, 0,
 		0, 0, 8
@@ -199,7 +199,7 @@ test( 'dsytd2: upper_diagonal', function t() {
 
 test( 'dsytd2: lower_diagonal', function t() {
 	var tc = findCase( 'lower_diagonal' );
-	var r = run( 'L', 3, [
+	var r = run( 'lower', 3, [
 		2, 0, 0,
 		0, 5, 0,
 		0, 0, 8

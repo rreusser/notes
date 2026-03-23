@@ -48,7 +48,7 @@ test( 'zlauum: upper 3x3', function t() {
 		1, 0.5,  4, 0,      0, 0,
 		3, 1,    5, 1,      6, 0
 	] );
-	var info = zlauum( 'U', 3, A, 1, 3, 0 );
+	var info = zlauum( 'upper', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -62,7 +62,7 @@ test( 'zlauum: lower 3x3', function t() {
 		0, 0,    4, 0,     5, 1,
 		0, 0,    0, 0,     6, 0
 	] );
-	var info = zlauum( 'L', 3, A, 1, 3, 0 );
+	var info = zlauum( 'lower', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -71,7 +71,7 @@ test( 'zlauum: lower 3x3', function t() {
 test( 'zlauum: N=1', function t() {
 	var tc = findCase( 'n_one' );
 	var A = new Complex128Array( [ 5, 0 ] );
-	var info = zlauum( 'U', 1, A, 1, 1, 0 );
+	var info = zlauum( 'upper', 1, A, 1, 1, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -80,7 +80,7 @@ test( 'zlauum: N=1', function t() {
 test( 'zlauum: N=0 quick return', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
-	var info = zlauum( 'U', 0, A, 1, 1, 0 );
+	var info = zlauum( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -92,7 +92,7 @@ test( 'zlauum: upper 4x4', function t() {
 		3, 0,     6, 0.5,   8, 0,     0, 0,
 		4, 2,     7, 3,     9, 1,    10, 0
 	] );
-	var info = zlauum( 'U', 4, A, 1, 4, 0 );
+	var info = zlauum( 'upper', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -106,7 +106,7 @@ test( 'zlauum: lower 4x4', function t() {
 		0, 0,    0, 0,     8, 0,    9, 1,
 		0, 0,    0, 0,     0, 0,   10, 0
 	] );
-	var info = zlauum( 'L', 4, A, 1, 4, 0 );
+	var info = zlauum( 'lower', 4, A, 1, 4, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
@@ -119,7 +119,7 @@ test( 'zlauum: identity upper', function t() {
 		0, 0,  1, 0,  0, 0,
 		0, 0,  0, 0,  1, 0
 	] );
-	var info = zlauum( 'U', 3, A, 1, 3, 0 );
+	var info = zlauum( 'upper', 3, A, 1, 3, 0 );
 	var view = reinterpret( A, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );

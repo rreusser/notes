@@ -14,7 +14,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * where A is an N-by-N Hermitian matrix.
 *
 * @private
-* @param {string} uplo - specifies whether the upper ('U') or lower ('L') triangle is stored
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128} alpha - complex scalar
 * @param {Complex128Array} A - Hermitian matrix
@@ -110,7 +110,7 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 		return y;
 	}
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Upper triangle stored
 		jx = oX;
 		jy = oY;

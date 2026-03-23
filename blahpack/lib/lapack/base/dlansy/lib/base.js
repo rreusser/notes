@@ -59,10 +59,10 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		return 0.0;
 	}
 
-	if ( norm === 'M' || norm === 'm' ) {
+	if ( norm === 'max' ) {
 		// Max absolute value
 		value = 0.0;
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangle: iterate j=0..N-1, i=0..j
 			for ( j = 0; j < N; j++ ) {
 				ai = offsetA + j * strideA2;
@@ -87,12 +87,12 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 				}
 			}
 		}
-	} else if ( norm === 'I' || norm === 'i' || norm === 'O' || norm === 'o' || norm === '1' ) {
+	} else if ( norm === 'inf-norm' || norm === 'one-norm' || norm === 'one-norm' ) {
 		// One-norm = infinity-norm for symmetric matrices
 		// Compute column sums, exploiting symmetry: off-diagonal element A(i,j)
 		// contributes to both column i and column j sums.
 		value = 0.0;
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
 				sum = 0.0;
 				ai = offsetA + j * strideA2;
@@ -135,12 +135,12 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 				}
 			}
 		}
-	} else if ( norm === 'F' || norm === 'f' || norm === 'E' || norm === 'e' ) {
+	} else if ( norm === 'frobenius' || norm === 'frobenius' ) {
 		// Frobenius norm
 		// Count off-diagonal elements twice (symmetry), then add diagonal
 		scale = 0.0;
 		sum = 1.0;
-		if ( uplo === 'U' || uplo === 'u' ) {
+		if ( uplo === 'upper' ) {
 			// Upper triangle off-diagonal: columns j=1..N-1, rows 0..j-1
 			for ( j = 1; j < N; j++ ) {
 				out = dlassq( j, A, strideA1, offsetA + j * strideA2, scale, sum );

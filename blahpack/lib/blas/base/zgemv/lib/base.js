@@ -32,7 +32,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 *   y := alpha*A**H*x + beta*y
 *
 * @private
-* @param {string} trans - specifies the operation ('N', 'T', or 'C')
+* @param {string} trans - specifies the operation ('no-transpose', 'T', or 'C')
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {Complex128} alpha - complex scalar
@@ -94,8 +94,8 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 		return y;
 	}
 
-	noTrans = ( trans === 'N' || trans === 'n' );
-	noConj = ( trans === 'T' || trans === 't' );
+	noTrans = ( trans === 'no-transpose' );
+	noConj = ( trans === 'transpose' );
 
 	if ( noTrans ) {
 		lenx = N;

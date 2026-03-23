@@ -103,7 +103,7 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 			// zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 			// Sub-routines accept Complex128Array with complex-element strides/offsets
-			zlarf( 'L', M - i, N - i - 1, A, strideA1, offsetA + i * strideA1 + i * strideA2,
+			zlarf( 'left', M - i, N - i - 1, A, strideA1, offsetA + i * strideA1 + i * strideA2,
 				conj_tau, 0,
 				A, strideA1, strideA2, offsetA + i * strideA1 + ( i + 1 ) * strideA2,
 				WORK, strideWORK, offsetWORK );

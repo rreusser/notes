@@ -87,10 +87,10 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 		return B;
 	}
 
-	lside = ( side === 'L' || side === 'l' );
-	upper = ( uplo === 'U' || uplo === 'u' );
-	noconj = ( transa === 'T' || transa === 't' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	lside = ( side === 'left' );
+	upper = ( uplo === 'upper' );
+	noconj = ( transa === 'transpose' );
+	nounit = ( diag === 'non-unit' );
 
 	alphaR = real( alpha );
 	alphaI = imag( alpha );
@@ -116,7 +116,7 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	}
 
 	if ( lside ) {
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			if ( upper ) {
 				for ( j = 0; j < N; j++ ) {
 					for ( k = 0; k < M; k++ ) {
@@ -275,7 +275,7 @@ function ztrmm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 			}
 		}
 	} else {
-		if ( transa === 'N' || transa === 'n' ) {
+		if ( transa === 'no-transpose' ) {
 			if ( upper ) {
 				for ( j = N - 1; j >= 0; j-- ) {
 					tempR = alphaR;

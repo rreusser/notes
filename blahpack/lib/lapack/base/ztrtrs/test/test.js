@@ -50,7 +50,7 @@ test( 'ztrtrs: upper triangular, no transpose', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 1,  3, 2
 	]);
-	var info = ztrtrs( 'U', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -66,7 +66,7 @@ test( 'ztrtrs: lower triangular, no transpose', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 1,  3, 2
 	]);
-	var info = ztrtrs( 'L', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'lower', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -82,7 +82,7 @@ test( 'ztrtrs: upper triangular, transpose', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 1,  3, 2
 	]);
-	var info = ztrtrs( 'U', 'T', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -98,7 +98,7 @@ test( 'ztrtrs: upper triangular, conjugate transpose', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 1,  3, 2
 	]);
-	var info = ztrtrs( 'U', 'C', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'conjugate-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -114,7 +114,7 @@ test( 'ztrtrs: upper triangular, unit diagonal', function t() {
 	var B = new Complex128Array([
 		10, 5,  5, 3,  1, 1
 	]);
-	var info = ztrtrs( 'U', 'N', 'U', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -124,7 +124,7 @@ test( 'ztrtrs: N=0 quick return', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
-	var info = ztrtrs( 'U', 'N', 'N', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -138,7 +138,7 @@ test( 'ztrtrs: singular diagonal (element 2)', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 1,  3, 2
 	]);
-	var info = ztrtrs( 'U', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -153,7 +153,7 @@ test( 'ztrtrs: multiple right-hand sides (NRHS=2)', function t() {
 		1, 0,  2, 1,  3, 2,
 		4, 1,  5, 2,  6, 3
 	]);
-	var info = ztrtrs( 'U', 'N', 'N', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -169,7 +169,7 @@ test( 'ztrtrs: lower triangular, transpose', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 1,  3, 2
 	]);
-	var info = ztrtrs( 'L', 'T', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'lower', 'transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -185,7 +185,7 @@ test( 'ztrtrs: lower triangular, conjugate transpose', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 1,  3, 2
 	]);
-	var info = ztrtrs( 'L', 'C', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'lower', 'conjugate-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	var Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( Bv ), tc.x, 1e-14, 'x' );
@@ -201,7 +201,7 @@ test( 'ztrtrs: singular at first diagonal element', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 0,  3, 0
 	]);
-	var info = ztrtrs( 'U', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -215,7 +215,7 @@ test( 'ztrtrs: singular at last diagonal element', function t() {
 	var B = new Complex128Array([
 		1, 0,  2, 0,  3, 0
 	]);
-	var info = ztrtrs( 'U', 'N', 'N', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -223,6 +223,6 @@ test( 'ztrtrs: NRHS=0 (no right-hand sides)', function t() {
 	var tc = findCase( 'nrhs_zero' );
 	var A = new Complex128Array([ 2, 1 ]);
 	var B = new Complex128Array( 1 );
-	var info = ztrtrs( 'U', 'N', 'N', 1, 0, A, 1, 1, 0, B, 1, 1, 0 );
+	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 1, 0, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });

@@ -71,7 +71,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 	sa2 = strideA2 * 2;
 	oA = offsetA * 2;
 
-	if ( norm === 'M' || norm === 'm' ) {
+	if ( norm === 'max' ) {
 		// Max absolute value
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
@@ -84,7 +84,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				ai += sa1;
 			}
 		}
-	} else if ( norm === 'O' || norm === 'o' || norm === '1' ) {
+	} else if ( norm === 'one-norm' || norm === 'one-norm' ) {
 		// One-norm: maximum column sum of abs values
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
@@ -98,7 +98,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				value = sum;
 			}
 		}
-	} else if ( norm === 'I' || norm === 'i' ) {
+	} else if ( norm === 'inf-norm' ) {
 		// Infinity-norm: maximum row sum of abs values
 		for ( i = 0; i < M; i++ ) {
 			wi = offsetWORK + i * strideWORK;
@@ -121,7 +121,7 @@ function zlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				value = temp;
 			}
 		}
-	} else if ( norm === 'F' || norm === 'f' || norm === 'E' || norm === 'e' ) {
+	} else if ( norm === 'frobenius' || norm === 'frobenius' ) {
 		// Frobenius norm: scale * sqrt(sumsq) using zlassq per column
 		// zlassq now takes Complex128Array with offset in complex elements
 		scale = 0.0;

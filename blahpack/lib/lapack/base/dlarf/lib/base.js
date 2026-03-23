@@ -37,7 +37,7 @@ function dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, off
 	var lastc;
 	var ix;
 
-	applyLeft = ( side === 'L' || side === 'l' );
+	applyLeft = ( side === 'left' );
 	lastv = 0;
 	lastc = 0;
 
@@ -70,7 +70,7 @@ function dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, off
 		// Form H * C
 		if ( lastv > 0 ) {
 			// w(1:lastc) := C(1:lastv, 1:lastc)**T * v(1:lastv)
-			dgemv( 'T', lastv, lastc, 1.0, C, strideC1, strideC2, offsetC,
+			dgemv( 'transpose', lastv, lastc, 1.0, C, strideC1, strideC2, offsetC,
 				v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
 
 			// C(1:lastv, 1:lastc) := C(...) - tau * v(1:lastv) * w(1:lastc)**T
@@ -81,7 +81,7 @@ function dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, off
 		// Form C * H
 		if ( lastv > 0 ) {
 			// w(1:lastc) := C(1:lastc, 1:lastv) * v(1:lastv)
-			dgemv( 'N', lastc, lastv, 1.0, C, strideC1, strideC2, offsetC,
+			dgemv( 'no-transpose', lastc, lastv, 1.0, C, strideC1, strideC2, offsetC,
 				v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
 
 			// C(1:lastc, 1:lastv) := C(...) - tau * w(1:lastc) * v(1:lastv)**T

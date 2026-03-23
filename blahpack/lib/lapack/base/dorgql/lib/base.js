@@ -132,7 +132,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				//                  A(1, N-K+I), LDA, TAU(I), WORK, LDWORK)
 				// M-K+I+IB-1 (Fortran 1-based count) = M-K+i+ib (0-based: rows 0..M-K+i+ib-1)
 				dlarft(
-					'B', 'C', M - K + i + ib, ib,
+					'backward', 'columnwise', M - K + i + ib, ib,
 					A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
 					TAU, strideTAU, offsetTAU + i * strideTAU,
 					work, 1, ldwork, 0
@@ -146,7 +146,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// M-K+I+IB-1 (1-based count) = M-K+i+ib (0-based rows)
 				// N-K+I-1 (1-based count) = N-K+i (0-based cols)
 				dlarfb(
-					'L', 'N', 'B', 'C',
+					'left', 'no-transpose', 'backward', 'columnwise',
 					M - K + i + ib, N - K + i, ib,
 					A, strideA1, strideA2, offsetA + ( N - K + i ) * strideA2,
 					work, 1, ldwork, 0,

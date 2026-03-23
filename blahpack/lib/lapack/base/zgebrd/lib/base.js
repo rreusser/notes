@@ -164,7 +164,7 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			if ( M - i - nb > 0 && N - i - nb > 0 ) {
 				// C := -1 * A(i+nb:,i:i+nb-1) * Y(nb:,:)^H + 1 * A(i+nb:,i+nb:)
 				zgemm(
-					'N', 'C',
+					'no-transpose', 'conjugate-transpose',
 					M - i - nb, N - i - nb, nb,
 					NEGONE,
 					A, strideA1, strideA2, offsetA + ( i + nb ) * strideA1 + i * strideA2,
@@ -175,7 +175,7 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 				// C := -1 * X(nb:,:) * A(i:i+nb-1,i+nb:) + 1 * A(i+nb:,i+nb:)
 				zgemm(
-					'N', 'N',
+					'no-transpose', 'no-transpose',
 					M - i - nb, N - i - nb, nb,
 					NEGONE,
 					WORK, 1, ldwrkx, offsetWORK + nb,

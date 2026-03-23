@@ -14,7 +14,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * where A is an N-by-N Hermitian matrix and x, y are N-element vectors.
 *
 * @private
-* @param {string} uplo - specifies whether the upper ('U') or lower ('L') triangle is stored
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128} alpha - complex scalar
 * @param {Complex128Array} x - complex input vector
@@ -79,7 +79,7 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 	sx = strideX * 2;
 	sy = strideY * 2;
 
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		// Upper triangle
 		jx = oX;
 		jy = oY;

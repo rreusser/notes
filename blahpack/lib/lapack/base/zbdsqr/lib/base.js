@@ -165,7 +165,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		return 0;
 	}
 
-	lower = ( uplo === 'L' || uplo === 'l' );
+	lower = ( uplo === 'lower' );
 
 	// N=1 case: jump to sorting section
 	if ( N === 1 ) {
@@ -219,16 +219,16 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		// If NRU > 0, apply rotations to U from the right
 		// Fortran: ZLASR('R','V','F', NRU, N, RWORK(1), RWORK(N), U, LDU)
 		if ( nru > 0 ) {
-			zlasr( 'R', 'V', 'F', nru, N,
+			zlasr( 'right', 'variable', 'forward', nru, N,
 				RWORK, strideRWORK, offsetRWORK,
 				RWORK, strideRWORK, offsetRWORK + ( nm1 ) * strideRWORK,
 				U, strideU1, strideU2, offsetU
 			);
 		}
 		// If NCC > 0, apply rotations to C from the left
-		// Fortran: ZLASR('L','V','F', N, NCC, RWORK(1), RWORK(N), C, LDC)
+		// Fortran: ZLASR('lower','V','F', N, NCC, RWORK(1), RWORK(N), C, LDC)
 		if ( ncc > 0 ) {
-			zlasr( 'L', 'V', 'F', N, ncc,
+			zlasr( 'left', 'variable', 'forward', N, ncc,
 				RWORK, strideRWORK, offsetRWORK,
 				RWORK, strideRWORK, offsetRWORK + ( nm1 ) * strideRWORK,
 				C, strideC1, strideC2, offsetC
@@ -523,8 +523,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					// ZLASR('L','V','F', M-LL+1, NCVT, RWORK(1), RWORK(N), VT(LL,1), LDVT)
-					zlasr( 'L', 'V', 'F', m - ll + 1, ncvt,
+					// ZLASR('lower','V','F', M-LL+1, NCVT, RWORK(1), RWORK(N), VT(LL,1), LDVT)
+					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
@@ -532,15 +532,15 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				}
 				if ( nru > 0 ) {
 					// ZLASR('R','V','F', NRU, M-LL+1, RWORK(NM12+1), RWORK(NM13+1), U(1,LL), LDU)
-					zlasr( 'R', 'V', 'F', nru, m - ll + 1,
+					zlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					// ZLASR('L','V','F', M-LL+1, NCC, RWORK(NM12+1), RWORK(NM13+1), C(LL,1), LDC)
-					zlasr( 'L', 'V', 'F', m - ll + 1, ncc,
+					// ZLASR('lower','V','F', M-LL+1, NCC, RWORK(NM12+1), RWORK(NM13+1), C(LL,1), LDC)
+					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1
@@ -578,8 +578,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					// ZLASR('L','V','B', M-LL+1, NCVT, RWORK(NM12+1), RWORK(NM13+1), VT(LL,1), LDVT)
-					zlasr( 'L', 'V', 'B', m - ll + 1, ncvt,
+					// ZLASR('lower','V','B', M-LL+1, NCVT, RWORK(NM12+1), RWORK(NM13+1), VT(LL,1), LDVT)
+					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
@@ -587,15 +587,15 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				}
 				if ( nru > 0 ) {
 					// ZLASR('R','V','B', NRU, M-LL+1, RWORK(1), RWORK(N), U(1,LL), LDU)
-					zlasr( 'R', 'V', 'B', nru, m - ll + 1,
+					zlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					// ZLASR('L','V','B', M-LL+1, NCC, RWORK(1), RWORK(N), C(LL,1), LDC)
-					zlasr( 'L', 'V', 'B', m - ll + 1, ncc,
+					// ZLASR('lower','V','B', M-LL+1, NCC, RWORK(1), RWORK(N), C(LL,1), LDC)
+					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1
@@ -645,21 +645,21 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					zlasr( 'L', 'V', 'F', m - ll + 1, ncvt,
+					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {
-					zlasr( 'R', 'V', 'F', nru, m - ll + 1,
+					zlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					zlasr( 'L', 'V', 'F', m - ll + 1, ncc,
+					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1
@@ -711,21 +711,21 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 				// Update singular vectors
 				if ( ncvt > 0 ) {
-					zlasr( 'L', 'V', 'B', m - ll + 1, ncvt,
+					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
 						RWORK, strideRWORK, offsetRWORK + nm12 * strideRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm13 * strideRWORK,
 						VT, strideVT1, strideVT2, offsetVT + ll * strideVT1
 					);
 				}
 				if ( nru > 0 ) {
-					zlasr( 'R', 'V', 'B', nru, m - ll + 1,
+					zlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
 						U, strideU1, strideU2, offsetU + ll * strideU2
 					);
 				}
 				if ( ncc > 0 ) {
-					zlasr( 'L', 'V', 'B', m - ll + 1, ncc,
+					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
 						RWORK, strideRWORK, offsetRWORK,
 						RWORK, strideRWORK, offsetRWORK + nm1 * strideRWORK,
 						C, strideC1, strideC2, offsetC + ll * strideC1
