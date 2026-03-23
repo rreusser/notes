@@ -94,8 +94,7 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 					ai += sa1;
 				}
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[j] * temp)
-				Av[ ai ] = Av[ ai ] +
-					( (xv[ jx ] * tempR) - (xv[ jx + 1 ] * tempI) );
+				Av[ ai ] += ( (xv[ jx ] * tempR) - (xv[ jx + 1 ] * tempI) );
 				Av[ ai + 1 ] = 0.0;
 			} else {
 				// Ensure diagonal is real
@@ -115,8 +114,7 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[j] * temp)
 				ai = oA + (j * sa1) + (j * sa2);
-				Av[ ai ] = Av[ ai ] +
-					( (xv[ jx ] * tempR) - (xv[ jx + 1 ] * tempI) );
+				Av[ ai ] += ( (xv[ jx ] * tempR) - (xv[ jx + 1 ] * tempI) );
 				Av[ ai + 1 ] = 0.0;
 
 				ix = jx + sx;

@@ -397,15 +397,18 @@
         // f(z) = smooth + singular + circulation
         let dz = z - params.center;
         let d = dot(dz, dz);
-        let inv = vec2<f32>(dz.x / d, -dz.y / d); // 1/(z-c)
 
-        // Smooth: Σ aₙ / (z-c)^n via Horner: a_0 + ζ(a_1 + ζ(a_2 + ... + ζ*a_N))
-        // where ζ = 1/(z-c). Horner reduces f32 cancellation.
+        // Clamp near center to prevent blow-up (center is off-screen)
         var f_val = vec2<f32>(0.0, 0.0);
-        if (params.nSmooth > 0u) {
-          f_val = smoothCoeffs[params.nSmooth - 1u];
-          for (var n: i32 = i32(params.nSmooth) - 2; n >= 0; n--) {
-            f_val = smoothCoeffs[n] + cmul(f_val, inv);
+        if (d > 0.01) {
+          let inv = vec2<f32>(dz.x / d, -dz.y / d);
+
+          // Smooth: Horner in ζ = 1/(z-c)
+          if (params.nSmooth > 0u) {
+            f_val = smoothCoeffs[params.nSmooth - 1u];
+            for (var n: i32 = i32(params.nSmooth) - 2; n >= 0; n--) {
+              f_val = smoothCoeffs[n] + cmul(f_val, inv);
+            }
           }
         }
 
@@ -417,18 +420,22 @@
           f_val += cmul(singCoeffs[k], pinv);
         }
 
-        // Circulation: (Γ/2πi) log(z-c) → Im = -(Γ/2π) ln|z-c|
+        // Circulation: (Γ/2πi) log(z-c)
+        //   Re = (Γ/2π) θ      (multivalued — causes branch cut)
+        //   Im = -(Γ/2π) ln|z-c|  (single-valued)
+        // For streamline contouring, use only the single-valued Im part.
+        // The Re (θ) part affects the velocity potential φ but not the
+        // velocity field, so speed is still correct from ∂ψ/∂y and -∂ψ/∂x.
         let logR = 0.5 * log(d);
-        let theta = atan2(dz.y, dz.x);
-        f_val += vec2<f32>(params.gamma / 6.2831853 * theta, -params.gamma / 6.2831853 * logR);
+        f_val.y += -params.gamma / 6.2831853 * logR;  // single-valued part only
 
-        // w = z + f, ψ = Im(w) = z.y + f.y
+        // ψ = Im(w) = y + Im(f) — single-valued, safe for contouring
         let psi = z.y + f_val.y;
 
-        // Velocity: w'(z) = 1 + f'(z). Use screen-space derivatives of ψ for speed.
+        // Speed from screen-space derivatives of ψ
         let dpsi_dx = dpdx(psi);
         let dpsi_dy = dpdy(psi);
-        let speed = length(vec2<f32>(dpsi_dy, dpsi_dx)); // u=∂ψ/∂y, v=-∂ψ/∂x
+        let speed = length(vec2<f32>(dpsi_dy, dpsi_dx));
 
         // Coolwarm colormap: blue (slow) → white (speed=1) → red (fast)
         let st = clamp(speed * 0.5, 0.0, 1.0); // 0→blue, 0.5→white, 1→red (speed=2)
@@ -480,7 +487,7 @@
   </script>
 
   <script id="nacaPlotFn" type="module">
-    function createNacaPlot(w, h, xDomain=[-0.5,1.5], yDomain=[-0.6,0.6]) {
+    function createNacaPlot(w, h, xDomain=[-0.3,1.3], yDomain=[-0.5,0.5]) {
       return Plot.plot({
         width:w, height:h,
         marginTop:10, marginRight:10, marginLeft:40, marginBottom:30,
@@ -497,7 +504,7 @@
   <script id="nacaStack" type="module">
     const nPixelRatio = devicePixelRatio;
     const nPlotW = Math.min(width, 720);
-    const nDomainAspect = 2.0 / 1.2;
+    const nDomainAspect = 1.6 / 1.0;
     const nPlotH = Math.round(nPlotW / nDomainAspect);
     const nStack = createElementStack({
       layers:[{
@@ -528,7 +535,7 @@
     const nAxes = createZoomableAxes({
       d3, element:nStack.elements.svg,
       xScale:nStack.elements.plot.scale("x"), yScale:nStack.elements.plot.scale("y"),
-      aspectRatio:nPlotW/nPlotH,
+      aspectRatio:1, // equal x/y scaling
       onChange:({xDomain,yDomain})=>{
         nRenderDirty.value=true;
         const p=createNacaPlot(nStack.width,nStack.height,xDomain,yDomain);

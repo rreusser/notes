@@ -200,7 +200,7 @@ function zlanhe( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 			}
 		}
 		// Off-diagonal counted once, but appear twice in full Hermitian matrix
-		sum = 2.0 * sum;
+		sum *= 2.0;
 
 		// Add diagonal elements (real-valued for Hermitian)
 		for ( i = 0; i < N; i++ ) {

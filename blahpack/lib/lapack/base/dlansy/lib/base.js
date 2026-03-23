@@ -161,7 +161,7 @@ function dlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 			}
 		}
 		// Off-diagonal elements counted once, but appear twice in the full matrix
-		sum = 2.0 * sum;
+		sum *= 2.0;
 
 		// Add diagonal elements
 		out = dlassq( N, A, strideA1 + strideA2, offsetA, scale, sum );

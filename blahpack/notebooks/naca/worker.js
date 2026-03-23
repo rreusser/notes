@@ -119,9 +119,11 @@ self.onmessage = function(e) {
     const te = boundary[0];
     const sol = exteriorFlow(boundary, boundary, {
       mmax: options.mmax || 200,
-      N: 3,
+      N: 10,
+      center: [-0.5, 0],
+      kutta: true,
+      trailingEdge: boundary[0],
       minPoleDist: 0.003,
-      kutta: false,
       aaa,
       pointInPolygon: pipFn,
     });

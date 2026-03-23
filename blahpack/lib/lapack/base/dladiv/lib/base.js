@@ -119,14 +119,14 @@ function dladiv( a, b, c, d, out ) {
 	s = 1.0;
 
 	if ( ab >= HALF_OV ) {
-		aa = HALF * aa;
-		bb = HALF * bb;
-		s = TWO * s;
+		aa *= HALF;
+		bb *= HALF;
+		s *= TWO;
 	}
 	if ( cd >= HALF_OV ) {
-		cc = HALF * cc;
-		dd = HALF * dd;
-		s = HALF * s;
+		cc *= HALF;
+		dd *= HALF;
+		s *= HALF;
 	}
 	if ( ab <= SCALE_THRESH ) {
 		aa *= BE;

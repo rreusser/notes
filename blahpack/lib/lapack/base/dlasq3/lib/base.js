@@ -258,7 +258,7 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 				ttype -= 11;
 			} else {
 				// Early failure. Divide by 4.
-				tau = QURTR * tau;
+				tau *= QURTR;
 				ttype -= 12;
 			}
 			continue;
