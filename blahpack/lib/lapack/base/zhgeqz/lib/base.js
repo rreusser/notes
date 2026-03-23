@@ -808,10 +808,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		}
 
 		// Compute shift
-		if ( ( iiter % 10 ) !== 0 ) {
-			// Wilkinson shift
-			computeWilkinsonShift();
-		} else {
+		if ( ( iiter % 10 ) === 0 ) {
 			// Exceptional shift
 			if ( ( iiter % 20 ) === 0 &&
 				bscale * cabs1At( Tv, oT + (ilast * st1) + (ilast * st2) ) > safmin ) {
@@ -835,6 +832,9 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 			}
 			shift[ 0 ] = eshift[ 0 ];
 			shift[ 1 ] = eshift[ 1 ];
+		} else {
+			// Wilkinson shift
+			computeWilkinsonShift();
 		}
 
 		// Check for two consecutive small subdiagonals

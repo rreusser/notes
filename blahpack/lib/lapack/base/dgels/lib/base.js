@@ -159,20 +159,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 		// A = Q * R
 		dgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, WORK, 1, 0 );
 
-		if ( !tpsd ) {
-			// Least squares problem: minimize || b - A*x ||
-
-			// B(1:M,1:NRHS) := Q^T * B(1:M,1:NRHS)
-			dormqr( 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
-
-			// Solve R*X = B(1:N,1:NRHS)
-			info = dtrtrs( 'upper', 'no-transpose', 'non-unit', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
-			if ( info > 0 ) {
-				return info;
-			}
-
-			scllen = N;
-		} else {
+		if ( tpsd ) {
 			// Minimum norm problem: min || X || s.t. A^T * X = B
 
 			// Solve R^T * Y = B(1:N,1:NRHS)
@@ -194,13 +181,39 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			dormqr( 'left', 'no-transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
 
 			scllen = M;
+		} else {
+			// Least squares problem: minimize || b - A*x ||
+
+			// B(1:M,1:NRHS) := Q^T * B(1:M,1:NRHS)
+			dormqr( 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
+
+			// Solve R*X = B(1:N,1:NRHS)
+			info = dtrtrs( 'upper', 'no-transpose', 'non-unit', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
+			if ( info > 0 ) {
+				return info;
+			}
+
+			scllen = N;
 		}
 	} else {
 		// M < N: LQ factorization of A
 		// A = L * Q
 		dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, WORK, 1, 0 );
 
-		if ( !tpsd ) {
+		if ( tpsd ) {
+			// Least squares problem: minimize || b - A^T*x ||
+
+			// B(1:N,1:NRHS) := Q * B(1:N,1:NRHS)
+			dormlq( 'left', 'no-transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
+
+			// Solve L^T * X = B(1:M,1:NRHS)
+			info = dtrtrs( 'lower', 'transpose', 'non-unit', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
+			if ( info > 0 ) {
+				return info;
+			}
+
+			scllen = M;
+		} else {
 			// Minimum norm problem: min || X || s.t. A * X = B
 
 			// Solve L * Y = B(1:M,1:NRHS)
@@ -222,19 +235,6 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			dormlq( 'left', 'transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
 
 			scllen = N;
-		} else {
-			// Least squares problem: minimize || b - A^T*x ||
-
-			// B(1:N,1:NRHS) := Q * B(1:N,1:NRHS)
-			dormlq( 'left', 'no-transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
-
-			// Solve L^T * X = B(1:M,1:NRHS)
-			info = dtrtrs( 'lower', 'transpose', 'non-unit', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
-			if ( info > 0 ) {
-				return info;
-			}
-
-			scllen = M;
 		}
 	}
 

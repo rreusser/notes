@@ -219,7 +219,9 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 			// QL iteration
 			while ( true ) {
 				// Find small subdiagonal element
-				if ( l !== lend ) {
+				if ( l === lend ) {
+					m = lend;
+				} else {
 					for ( m = l; m <= lend - 1; m++ ) {
 						tst = Math.abs( e[ offsetE + (m * strideE) ] );
 						tst *= tst;
@@ -230,8 +232,6 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					if ( m > lend - 1 ) {
 						m = lend;
 					}
-				} else {
-					m = lend;
 				}
 
 				if ( m < lend ) {
@@ -330,7 +330,9 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 			// QR iteration: lend < l
 			while ( true ) {
 				// Find small subdiagonal element
-				if ( l !== lend ) {
+				if ( l === lend ) {
+					m = lend;
+				} else {
 					for ( m = l; m >= lend + 1; m-- ) {
 						tst = Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] );
 						tst *= tst;
@@ -341,8 +343,6 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					if ( m < lend + 1 ) {
 						m = lend;
 					}
-				} else {
-					m = lend;
 				}
 
 				if ( m > lend ) {

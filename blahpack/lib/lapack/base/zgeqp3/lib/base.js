@@ -105,18 +105,18 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 	// Phase 1: Move fixed columns to the front
 	nfxd = 0;
 	for ( j = 0; j < N; j++ ) {
-		if ( JPVT[ oJ + (j * strideJPVT) ] !== 0 ) {
-			if ( j !== nfxd ) {
+		if ( JPVT[ oJ + (j * strideJPVT) ] === 0 ) {
+			JPVT[ oJ + (j * strideJPVT) ] = j + 1; // 1-based
+		} else {
+			if ( j === nfxd ) {
+				JPVT[ oJ + (j * strideJPVT) ] = j + 1; // 1-based
+			} else {
 				// Swap columns j and nfxd
 				zswap( M, A, sa1, offsetA + (j * sa2), A, sa1, offsetA + (nfxd * sa2) );
 				JPVT[ oJ + (j * strideJPVT) ] = JPVT[ oJ + (nfxd * strideJPVT) ];
 				JPVT[ oJ + (nfxd * strideJPVT) ] = j + 1; // 1-based
-			} else {
-				JPVT[ oJ + (j * strideJPVT) ] = j + 1; // 1-based
 			}
 			nfxd += 1;
-		} else {
-			JPVT[ oJ + (j * strideJPVT) ] = j + 1; // 1-based
 		}
 	}
 

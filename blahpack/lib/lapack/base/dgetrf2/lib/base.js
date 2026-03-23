@@ -93,7 +93,9 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		ip = idamax( M, A, sa1, offsetA );
 		IPIV[ offsetIPIV ] = ip;
 
-		if ( A[ offsetA + (ip * sa1) ] !== 0.0 ) {
+		if ( A[ offsetA + (ip * sa1) ] === 0.0 ) {
+			info = 1;
+		} else {
 			// Swap rows 0 and ip
 			if ( ip !== 0 ) {
 				temp = A[ offsetA ];
@@ -109,8 +111,6 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 					A[ offsetA + (i * sa1) ] = A[ offsetA + (i * sa1) ] / A[ offsetA ];
 				}
 			}
-		} else {
-			info = 1;
 		}
 	} else {
 		// General case: recursive split

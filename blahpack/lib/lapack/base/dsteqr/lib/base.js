@@ -219,7 +219,9 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 			// Label 40 loop
 			while ( true ) {
 				// Find small subdiagonal element (label 40 -> 50 -> 60)
-				if ( l !== lend ) {
+				if ( l === lend ) {
+					m = lend;
+				} else {
 					for ( m = l; m <= lend - 1; m++ ) {
 						tst = Math.abs( e[ offsetE + (m * strideE) ] );
 						tst *= tst;
@@ -231,8 +233,6 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					if ( m > lend - 1 ) {
 						m = lend;
 					}
-				} else {
-					m = lend;
 				}
 
 				if ( m < lend ) {
@@ -334,7 +334,9 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 			// Label 90 loop
 			while ( true ) {
 				// Find small subdiagonal element (labels 90 -> 100 -> 110)
-				if ( l !== lend ) {
+				if ( l === lend ) {
+					m = lend;
+				} else {
 					for ( m = l; m >= lend + 1; m-- ) {
 						tst = Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] );
 						tst *= tst;
@@ -346,8 +348,6 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 					if ( m < lend + 1 ) {
 						m = lend;
 					}
-				} else {
-					m = lend;
 				}
 
 				if ( m > lend ) {

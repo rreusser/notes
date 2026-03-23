@@ -194,15 +194,15 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	}
 
 	// Count the number of eigenvectors to compute
-	if ( !ilall ) {
+	if ( ilall ) {
+		im = N;
+	} else {
 		im = 0;
 		for ( j = 0; j < N; j++ ) {
 			if ( SELECT[ offsetSELECT + (j * strideSELECT) ] ) {
 				im += 1;
 			}
 		}
-	} else {
-		im = N;
 	}
 
 	M[ 0 ] = im;

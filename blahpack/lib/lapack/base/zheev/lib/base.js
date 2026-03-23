@@ -152,10 +152,7 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	zhetrd( uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, RWORK, strideRWORK, inde, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
 	info = 0;
-	if ( !wantz ) {
-		// Eigenvalues only - use dsterf on the tridiagonal
-		info = dsterf( N, w, strideW, offsetW, RWORK, strideRWORK, inde );
-	} else {
+	if ( wantz ) {
 		// Generate unitary matrix Q from zhetrd output
 		zungtr( uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
@@ -164,6 +161,9 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 		// Zsteqr needs real workspace of size 2*(N-1), use RWORK starting after E
 		// Fortran: INDWRK=INDE+N => real scratch at RWORK[N..]
 		info = zsteqr( 'update', N, w, strideW, offsetW, RWORK, strideRWORK, inde, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, inde + (N * strideRWORK) );
+	} else {
+		// Eigenvalues only - use dsterf on the tridiagonal
+		info = dsterf( N, w, strideW, offsetW, RWORK, strideRWORK, inde );
 	}
 
 	// If matrix was scaled, rescale eigenvalues

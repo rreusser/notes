@@ -198,7 +198,9 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 			// QL Iteration (labels 50-90)
 			// Look for small subdiagonal element
 			while ( true ) {
-				if ( l !== lend ) {
+				if ( l === lend ) {
+					m = lend;
+				} else {
 					for ( m = l; m < lend; m++ ) {
 						if ( Math.abs( e[ offsetE + (m * strideE) ] ) <=
 							eps2 * Math.abs( d[ offsetD + (m * strideD) ] * d[ offsetD + (( m + 1 ) * strideD) ] ) ) {
@@ -209,8 +211,6 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 					if ( m === lend ) {
 						// Didn't find small element; m stays at lend
 					}
-				} else {
-					m = lend;
 				}
 
 				if ( m < lend ) {
@@ -272,10 +272,10 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 					alpha = d[ offsetD + (i * strideD) ];
 					gamma = (c * ( alpha - sigma )) - (s * oldgam);
 					d[ offsetD + (( i + 1 ) * strideD) ] = oldgam + ( alpha - gamma );
-					if ( c !== 0.0 ) {
-						p = ( gamma * gamma ) / c;
-					} else {
+					if ( c === 0.0 ) {
 						p = oldc * bb;
+					} else {
+						p = ( gamma * gamma ) / c;
 					}
 				}
 
@@ -365,10 +365,10 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 					alpha = d[ offsetD + (( i + 1 ) * strideD) ];
 					gamma = (c * ( alpha - sigma )) - (s * oldgam);
 					d[ offsetD + (i * strideD) ] = oldgam + ( alpha - gamma );
-					if ( c !== 0.0 ) {
-						p = ( gamma * gamma ) / c;
-					} else {
+					if ( c === 0.0 ) {
 						p = oldc * bb;
+					} else {
+						p = ( gamma * gamma ) / c;
 					}
 				}
 

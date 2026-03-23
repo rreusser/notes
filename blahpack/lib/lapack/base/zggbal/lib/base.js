@@ -287,10 +287,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						break;
 					}
 				}
-				if ( !found ) {
-					// All columns 0..lm1-1 are zero → j = l-1 (0-based), single nonzero is in column l
-					j = l - 1;
-				} else {
+				if ( found ) {
 					// Found first nonzero at column jp1-1, check if rest are zero
 					var allZero = true;
 					for ( var jj = jp1; jj < l; jj++ ) {
@@ -304,6 +301,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 						continue; // This row has multiple nonzeros, try next row
 					}
 					j = jp1 - 1;
+				} else {
+					// All columns 0..lm1-1 are zero → j = l-1 (0-based), single nonzero is in column l
+					j = l - 1;
 				}
 
 				// Found isolated row i with single nonzero in column j
@@ -349,10 +349,7 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 							break;
 						}
 					}
-					if ( !found ) {
-						// All rows k..lm1-1 are zero → i = l-1 (0-based)
-						i = l - 1;
-					} else {
+					if ( found ) {
 						// Found first nonzero at row ip1-1, check if rest are zero
 						var allZeroCol = true;
 						for ( var ii = ip1; ii < l; ii++ ) {
@@ -366,6 +363,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 							continue; // This column has multiple nonzeros
 						}
 						i = ip1 - 1;
+					} else {
+						// All rows k..lm1-1 are zero → i = l-1 (0-based)
+						i = l - 1;
 					}
 
 					// Found isolated column j with single nonzero in row i

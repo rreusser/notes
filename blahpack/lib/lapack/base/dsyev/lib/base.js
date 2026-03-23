@@ -144,10 +144,7 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	dsytrd( uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, inde, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
 	info = 0;
-	if ( !wantz ) {
-		// Eigenvalues only — use dsterf on the tridiagonal
-		info = dsterf( N, w, strideW, offsetW, WORK, strideWORK, inde );
-	} else {
+	if ( wantz ) {
 		// Generate orthogonal matrix Q from dsytrd output
 		dorgtr( uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
 
@@ -155,6 +152,9 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 
 		// Dsteqr uses WORK[indtau] as its scratch workspace (needs 2*(N-1) space)
 		info = dsteqr( 'update', N, w, strideW, offsetW, WORK, strideWORK, inde, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau );
+	} else {
+		// Eigenvalues only — use dsterf on the tridiagonal
+		info = dsterf( N, w, strideW, offsetW, WORK, strideWORK, inde );
 	}
 
 	// If matrix was scaled, rescale eigenvalues
