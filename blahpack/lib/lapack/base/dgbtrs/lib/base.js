@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dtbsv = require( '../../../../blas/base/dtbsv/lib/base.js' );

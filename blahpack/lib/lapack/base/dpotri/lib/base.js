@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dtrtri = require( '../../dtrtri/lib/base.js' );

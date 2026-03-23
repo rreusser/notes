@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dpotrf2 = require( '../../dpotrf2/lib/base.js' );

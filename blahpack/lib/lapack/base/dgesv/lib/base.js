@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dgetrf = require( '../../dgetrf/lib/base.js' );

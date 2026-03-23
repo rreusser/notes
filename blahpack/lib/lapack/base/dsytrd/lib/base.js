@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dsytd2 = require( '../../dsytd2/lib/base.js' );

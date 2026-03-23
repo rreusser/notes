@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dlacn2 = require( '../../dlacn2/lib/base.js' );

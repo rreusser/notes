@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var daxpy = require( '../../../../blas/base/daxpy/lib/base.js' );

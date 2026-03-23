@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dgbtrf = require( '../../dgbtrf/lib/base.js' );

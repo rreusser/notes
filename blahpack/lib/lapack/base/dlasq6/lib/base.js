@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dlamch = require( '../../dlamch/lib/base.js' );

@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dorgl2 = require( '../../dorgl2/lib/base.js' );

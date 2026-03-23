@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dgeqr2 = require( '../../dgeqr2/lib/base.js' );

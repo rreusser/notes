@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dasum = require( './../../../../blas/base/dasum/lib/base.js' );

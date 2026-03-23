@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dgemv = require( '../../../../blas/base/dgemv/lib/base.js' );

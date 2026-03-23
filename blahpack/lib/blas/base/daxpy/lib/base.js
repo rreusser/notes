@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // VARIABLES //
 
 var M = 4;

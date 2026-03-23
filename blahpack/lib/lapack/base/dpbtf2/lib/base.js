@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );

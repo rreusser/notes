@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var ddot = require( '../../../../blas/base/ddot/lib/base.js' );

@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var format = require( '@stdlib/string/format' );

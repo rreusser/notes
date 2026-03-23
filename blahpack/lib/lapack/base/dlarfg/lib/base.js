@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dnrm2 = require( '../../../../blas/base/dnrm2/lib/base.js' );

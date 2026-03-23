@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // VARIABLES //
 
 // Blue's scaling constants for IEEE 754 double precision:

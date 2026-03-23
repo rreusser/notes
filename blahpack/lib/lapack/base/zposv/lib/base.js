@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var zpotrf = require( '../../zpotrf/lib/base.js' );

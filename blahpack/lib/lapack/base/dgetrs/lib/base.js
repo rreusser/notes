@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dlaswp = require( '../../dlaswp/lib/base.js' );

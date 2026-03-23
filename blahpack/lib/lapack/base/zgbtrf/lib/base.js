@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );

@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dcopy = require( '../../../../blas/base/dcopy/lib/base.js' );

@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dlauu2 = require( '../../dlauu2/lib/base.js' );

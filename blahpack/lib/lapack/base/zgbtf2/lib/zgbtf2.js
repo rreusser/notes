@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var isLayout = require( '@stdlib/blas/base/assert/is-layout' );

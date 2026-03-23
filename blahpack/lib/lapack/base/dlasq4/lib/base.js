@@ -22,7 +22,6 @@
 
 'use strict';
 
-
 // VARIABLES //
 
 var CNST1 = 0.5630;

@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // VARIABLES //
 
 // LA_CONSTANTS for double precision:

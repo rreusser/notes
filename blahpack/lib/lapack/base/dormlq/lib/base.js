@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dlarfb = require( '../../dlarfb/lib/base.js' );

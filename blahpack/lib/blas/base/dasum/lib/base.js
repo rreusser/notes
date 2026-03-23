@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MAIN //
 
 /**

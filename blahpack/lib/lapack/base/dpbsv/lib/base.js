@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dpbtrf = require( '../../dpbtrf/lib/base.js' );

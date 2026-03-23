@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // VARIABLES //
 
 var BLOCK_SIZE = 32;

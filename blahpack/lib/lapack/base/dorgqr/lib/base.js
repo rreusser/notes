@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var dorg2r = require( '../../dorg2r/lib/base.js' );

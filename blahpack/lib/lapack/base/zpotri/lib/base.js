@@ -18,7 +18,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var ztrtri = require( '../../ztrtri/lib/base.js' );

@@ -20,7 +20,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
