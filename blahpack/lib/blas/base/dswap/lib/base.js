@@ -33,6 +33,7 @@
 * @param {Float64Array} y - output array
 * @param {integer} strideY - stride length for `y`
 * @param {NonNegativeInteger} offsetY - starting index for `y`
+* @returns {Float64Array} `y`
 */
 function dswap( N, x, strideX, offsetX, y, strideY, offsetY ) {
 	var tmp;

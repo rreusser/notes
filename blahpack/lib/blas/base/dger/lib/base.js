@@ -58,7 +58,7 @@ function dger( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, strideA
 			temp = alpha * y[ jy ];
 			ix = offsetX;
 			for ( i = 0; i < M; i++ ) {
-				A[ offsetA + i * strideA1 + j * strideA2 ] += x[ ix ] * temp;
+				A[ offsetA + (i * strideA1) + (j * strideA2) ] += x[ ix ] * temp;
 				ix += strideX;
 			}
 		}

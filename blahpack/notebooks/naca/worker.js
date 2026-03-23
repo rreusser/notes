@@ -1,5 +1,5 @@
 // Web worker: compute potential flow and pre-evaluate grid for GPU rendering.
-import { potentialFlow, nacaAirfoil, squareFlow, exteriorFlow, pointInPolygon as pipFn } from './naca-bundle.js';
+import { potentialFlow, nacaAirfoil, squareFlow, exteriorFlow, aaa, pointInPolygon as pipFn } from './naca-bundle.js';
 
 // Ray-casting point-in-polygon
 function pointInPolygon(px, py, verts) {
@@ -51,7 +51,21 @@ function evaluateGrid(sol, bodyVerts, options) {
     }
   }
 
-  return { psiGrid, maskGrid, gridN, psiMin, psiMax, domMin: [xMin, yMin], domMax: [xMax, yMax] };
+  // Compute speed from finite differences of ψ: u = ∂ψ/∂y, v = -∂ψ/∂x
+  const speedGrid = new Float32Array(gridN * gridN);
+  const dx = (xMax - xMin) / (gridN - 1);
+  const dy = (yMax - yMin) / (gridN - 1);
+  for (let iy = 1; iy < gridN - 1; iy++) {
+    for (let ix = 1; ix < gridN - 1; ix++) {
+      const idx = ix + iy * gridN;
+      if (maskGrid[idx] < 0.5) continue; // inside body
+      const dpsi_dy = (psiGrid[ix + (iy+1)*gridN] - psiGrid[ix + (iy-1)*gridN]) / (2*dy);
+      const dpsi_dx = (psiGrid[(ix+1) + iy*gridN] - psiGrid[(ix-1) + iy*gridN]) / (2*dx);
+      speedGrid[idx] = Math.sqrt(dpsi_dy*dpsi_dy + dpsi_dx*dpsi_dx);
+    }
+  }
+
+  return { psiGrid, speedGrid, maskGrid, gridN, psiMin, psiMax, domMin: [xMin, yMin], domMax: [xMax, yMax] };
 }
 
 self.onmessage = function(e) {
@@ -73,7 +87,7 @@ self.onmessage = function(e) {
     }
 
     const t0 = performance.now();
-    const sol = exteriorFlow(boundary, bodyVerts, { mmax: options.mmax || 200 });
+    const sol = exteriorFlow(boundary, bodyVerts, { mmax: options.mmax || 200, aaa, pointInPolygon: pipFn });
     const solveTime = performance.now() - t0;
 
     const t1 = performance.now();
@@ -96,14 +110,30 @@ self.onmessage = function(e) {
   }
 
   if (type === 'naca') {
+    const digits = options.digits || '2412';
+    const nPoints = options.nPoints || 400;
+    const boundary = nacaAirfoil(digits, nPoints);
+
     const t0 = performance.now();
-    const sol = potentialFlow(options);
+    // Trailing edge is the first boundary point (sharp corner)
+    const te = boundary[0];
+    const sol = exteriorFlow(boundary, boundary, {
+      mmax: options.mmax || 200,
+      N: 10,
+      minPoleDist: 0.005,
+      corners: [te],
+      cornerRadius: 0.15,
+      kutta: true,
+      trailingEdge: te,
+      aaa,
+      pointInPolygon: pipFn,
+    });
     const solveTime = performance.now() - t0;
 
     const t1 = performance.now();
-    const grid = evaluateGrid(sol, sol.boundary, {
+    const grid = evaluateGrid(sol, boundary, {
       gridN: options.gridN || 512,
-      xMin: -0.5, xMax: 1.5, yMin: -0.8, yMax: 0.8,
+      xMin: -0.5, xMax: 1.5, yMin: -0.6, yMax: 0.6,
     });
     const gridTime = performance.now() - t1;
 
@@ -111,13 +141,12 @@ self.onmessage = function(e) {
       id, type,
       result: {
         ...grid,
-        boundary: sol.boundary,
-        poles: sol.poles || [],
+        boundary,
+        poles: sol.poles,
         maxError: sol.maxError,
-        CL: sol.CL,
-        Gamma: sol.Gamma,
-        digits: sol.digits,
-        alpha: sol.alpha,
+        digits,
+        CL: sol.CL || 0,
+        Gamma: sol.Gamma || 0,
       },
       solveTime, gridTime,
     });
