@@ -41,7 +41,7 @@ function dgbsv( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strid
 	var info;
 
 	// Quick return if possible:
-	if ( N === 0 || nrhs === 0 ) {
+	if ( N === 0 ) {
 		return 0;
 	}
 

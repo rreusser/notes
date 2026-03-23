@@ -2,10 +2,10 @@ zlahr2
 zlacpy
 zlacgv
 zlarfg
+zladiv
 xerbla
 disnan
 dlaisnan
 dlamch
 dlapy2
 dlapy3
-dznrm2

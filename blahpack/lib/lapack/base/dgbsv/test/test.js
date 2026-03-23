@@ -155,12 +155,13 @@ test( 'dgbsv: N=0 quick return', function t() {
 	assert.equal( info, tc.info, 'info' );
 });
 
-test( 'dgbsv: NRHS=0 quick return', function t() {
+test( 'dgbsv: NRHS=0 still factorizes AB', function t() {
 	var tc = findCase( 'nrhs_zero' );
 	var IPIV;
 	var info;
 	var AB;
 
+	// Even with nrhs=0, dgbsv calls dgbtrf (factorization still happens)
 	AB = bandMatrix( 4, 4, [
 		[ 2, 0, 4.0 ], [ 3, 0, -1.0 ],
 		[ 1, 1, -1.0 ], [ 2, 1, 4.0 ], [ 3, 1, -1.0 ],
@@ -172,6 +173,20 @@ test( 'dgbsv: NRHS=0 quick return', function t() {
 	info = dgbsv( 4, 1, 1, 0, AB, 1, 4, 0, IPIV, 1, 0, new Float64Array( 1 ), 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
+	// Verify that IPIV was filled (factorization happened)
+	// Fortran IPIV is 1-based, JS is 0-based
+	var i;
+	var anyNonZero = false;
+	for ( i = 0; i < 4; i++ ) {
+		if ( IPIV[ i ] !== 0 ) {
+			anyNonZero = true;
+		}
+	}
+	// With this tridiagonal matrix, no pivoting occurs, so IPIV = [0,1,2,3] (0-based)
+	assert.equal( IPIV[ 0 ], 0, 'IPIV[0]' );
+	assert.equal( IPIV[ 1 ], 1, 'IPIV[1]' );
+	assert.equal( IPIV[ 2 ], 2, 'IPIV[2]' );
+	assert.equal( IPIV[ 3 ], 3, 'IPIV[3]' );
 });
 
 test( 'dgbsv: singular matrix returns info > 0', function t() {
