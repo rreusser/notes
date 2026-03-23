@@ -18,6 +18,11 @@
 
 'use strict';
 
+// MODULES //
+
+var uppercase = require( '@stdlib/string/base/uppercase' );
+
+
 // VARIABLES //
 
 // IEEE 754 double-precision constants:
@@ -43,7 +48,7 @@ var RMAX = 1.7976931348623157e+308;        // Number.MAX_VALUE
 * @returns {number} machine parameter value
 */
 function dlamch( cmach ) {
-	var c = cmach.charAt( 0 ).toUpperCase();
+	var c = uppercase( cmach.charAt( 0 ) );
 	if ( c === 'E' ) {
 		return EPS;
 	}

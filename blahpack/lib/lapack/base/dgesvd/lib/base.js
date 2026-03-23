@@ -878,7 +878,6 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		// M < N: A has more columns than rows
 		// -------------------------------------------------------------------
 
-
 		// N is "much larger" than M — use LQ factorization path
 
 		if ( wntvn ) {

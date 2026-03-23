@@ -51,6 +51,14 @@ if ! docker image inspect "$IMAGE" &>/dev/null; then
     docker build -t "$IMAGE" -f Dockerfile.sandbox .
 fi
 
+# Verify the sandbox runtime is reachable (times out after 10s instead of hanging)
+TIMEOUT=10
+if ! timeout "$TIMEOUT" docker sandbox ls &>/dev/null; then
+    echo "Error: 'docker sandbox ls' did not respond within ${TIMEOUT}s." >&2
+    echo "The Docker sandbox runtime may be down. Try restarting Docker Desktop." >&2
+    exit 1
+fi
+
 # Check if sandbox already exists
 if docker sandbox ls 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$FULL_SANDBOX_NAME"; then
     echo "Resuming existing sandbox '$FULL_SANDBOX_NAME'..." >&2

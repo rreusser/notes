@@ -16,7 +16,7 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params, no-extra-label, no-labels, no-var */
+/* eslint-disable max-len, max-params, no-var */
 
 'use strict';
 
@@ -91,6 +91,7 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var lendsv;
 	var iscale;
 	var anorm;
+	var info;
 	var jtot;
 	var lend;
 	var eps2;
@@ -111,10 +112,9 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	var b;
 	var c;
 	var s;
+	var k;
 	var i;
 	var j;
-	var info;
-	var k;
 
 	rot = new Float64Array( 3 );
 
@@ -161,7 +161,6 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	l1 = 0; // 0-based
 
 	// Outer loop (label 10): find unreduced blocks
-	outer:
 	while ( l1 < N ) {
 		// Zero out the subdiagonal element below l1 if l1 > 0
 		if ( l1 > 0 ) {
@@ -191,14 +190,14 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 		l1 = m + 1;
 
 		if ( lend === l ) {
-			continue outer;
+			continue;
 		}
 
 		// Scale the block if necessary
 		anorm = dlanst( 'max', lend - l + 1, d, strideD, offsetD + (l * strideD), e, strideE, offsetE + (l * strideE) );
 		iscale = 0;
 		if ( anorm === 0.0 ) {
-			continue outer;
+			continue;
 		}
 		if ( anorm > ssfmax ) {
 			iscale = 1;

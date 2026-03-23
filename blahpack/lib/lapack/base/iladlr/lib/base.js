@@ -52,7 +52,7 @@ function iladlr( M, N, A, strideA1, strideA2, offsetA ) {
 	for ( j = 0; j < N; j++ ) {
 		i = M - 1;
 		while ( i >= 0 && A[ offsetA + (i * strideA1) + (j * strideA2) ] === 0.0 ) {
-			i--;
+			i -= 1;
 		}
 		if ( i > result ) {
 			result = i;

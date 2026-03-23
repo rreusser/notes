@@ -37,8 +37,8 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 
 // Module-level vars for cDiv output
-var _cdR = 0.0;
-var _cdI = 0.0;
+var cdR = 0.0;
+var cdI = 0.0;
 
 
 // MAIN //
@@ -246,26 +246,26 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 					// D22 = A(K-1, K-1) / D12
 					p2 = (offsetA * 2) + (( k - 1 ) * sa1) + (( k - 1 ) * sa2);
 					cDiv( Av[ p2 ], Av[ p2 + 1 ], d12R, d12I );
-					d22R = _cdR;
-					d22I = _cdI;
+					d22R = cdR;
+					d22I = cdI;
 
 					// D11 = A(K, K) / D12
 					p3 = (offsetA * 2) + (k * sa1) + (k * sa2);
 					cDiv( Av[ p3 ], Av[ p3 + 1 ], d12R, d12I );
-					d11R = _cdR;
-					d11I = _cdI;
+					d11R = cdR;
+					d11I = cdI;
 
 					// T = 1 / (D11*D22 - 1)
 					tr = (d11R * d22R) - (d11I * d22I) - 1.0;
 					ti = (d11R * d22I) + (d11I * d22R);
 					cDiv( 1.0, 0.0, tr, ti );
-					r1R = _cdR;
-					r1I = _cdI;
+					r1R = cdR;
+					r1I = cdI;
 
 					// D12 = T / D12
 					cDiv( r1R, r1I, d12R, d12I );
-					d12R = _cdR;
-					d12I = _cdI;
+					d12R = cdR;
+					d12I = cdI;
 
 					for ( j = k - 2; j >= 0; j-- ) {
 						// WKM1 = D12 * (D11*A(J,K-1) - A(J,K))
@@ -569,13 +569,13 @@ function cDiv( ar, ai, br, bi ) {
 	if ( Math.abs( bi ) <= Math.abs( br ) ) {
 		r = bi / br;
 		d = br + (bi * r);
-		_cdR = ( ar + (ai * r) ) / d;
-		_cdI = ( ai - (ar * r) ) / d;
+		cdR = ( ar + (ai * r) ) / d;
+		cdI = ( ai - (ar * r) ) / d;
 	} else {
 		r = br / bi;
 		d = bi + (br * r);
-		_cdR = ( (ar * r) + ai ) / d;
-		_cdI = ( (ai * r) - ar ) / d;
+		cdR = ( (ar * r) + ai ) / d;
+		cdI = ( (ai * r) - ar ) / d;
 	}
 }
 

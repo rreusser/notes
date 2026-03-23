@@ -65,6 +65,7 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 * @returns {integer} info - 0 if successful, k if U(k-1,k-1) is exactly zero (1-based singularity index)
 */
 function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
+	var scratch;
 	var sfmin;
 	var iinfo;
 	var minMN;
@@ -75,7 +76,6 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 	var invI;
 	var tmpR;
 	var tmpI;
-	var scratch;
 	var sa1;
 	var sa2;
 	var Av;

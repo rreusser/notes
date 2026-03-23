@@ -74,7 +74,7 @@ function dlasrt( id, N, d, stride, offset ) {
 
 	// Initialize the stack with the full range (using 0-based indices)...
 	stkpnt = 1;
-	stack = new Array( 64 ); // stack[2*k] = start, stack[(2 * k) +1] = end
+	stack = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]; // stack[2*k] = start, stack[(2 * k) +1] = end
 	stack[ 0 ] = 0;
 	stack[ 1 ] = N - 1;
 

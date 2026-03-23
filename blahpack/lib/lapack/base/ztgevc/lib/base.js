@@ -283,7 +283,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 			if ( !ilcomp ) {
 				continue;
 			}
-			ieig++;
+			ieig += 1;
 
 			idx = oS + (je * sS1) + (je * sS2);
 			idx2 = oP + (je * sP1) + (je * sP2);
@@ -491,7 +491,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 				}
 				VRv[ oVR + (( ieig - 1 ) * sVR1) + (( ieig - 1 ) * sVR2) ] = 1.0;
 				VRv[ oVR + (( ieig - 1 ) * sVR1) + (( ieig - 1 ) * sVR2) + 1 ] = 0.0;
-				ieig--;
+				ieig -= 1;
 				continue;
 			}
 
@@ -658,7 +658,7 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 				VRv[ oVR + (jr * sVR1) + (( ieig - 1 ) * sVR2) + 1 ] = 0.0;
 			}
 
-			ieig--;
+			ieig -= 1;
 		}
 	}
 

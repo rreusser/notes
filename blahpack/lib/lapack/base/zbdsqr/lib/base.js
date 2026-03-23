@@ -151,6 +151,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	var isub;
 	var iter;
 	var dout;
+	var splitFound;
+	var converged;
 	var svd2;
 	var nm12;
 	var nm13;
@@ -298,9 +300,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 	// Outer loop (label 60 in Fortran)
 
-	/* eslint-disable max-len, max-params, no-label-var, no-labels, no-unused-labels */
-	outer:
-	while ( true ) {
+	/* eslint-disable max-len, max-params */
+	while ( true ) { // eslint-disable-line no-constant-condition
 		// Check if the matrix is split
 		if ( m <= 0 ) {
 			break;
@@ -331,6 +332,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		smax = Math.abs( d[ offsetD + (m * strideD) ] );
 
 		ll = -1; // will be set below
+		splitFound = false;
 		for ( lll = 0; lll < m; lll++ ) {
 			ll = m - 1 - lll; // scanning from m-1 down to 0
 			abss = Math.abs( d[ offsetD + (ll * strideD) ] );
@@ -346,7 +348,8 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				if ( ll === m - 1 ) {
 					// Bottom singular value found: decrement m and restart
 					m -= 1;
-					continue outer;
+					splitFound = true;
+					break;
 				}
 				// ll is the index where split occurs
 				ll += 1;
@@ -358,6 +361,9 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				ll = 0;
 				break;
 			}
+		}
+		if ( splitFound ) {
+			continue;
 		}
 		if ( m === 0 ) {
 			// Edge case: single element
@@ -426,22 +432,24 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		}
 
 		// Apply convergence tests
+		converged = false;
 		if ( idir === 1 ) {
 			// Run convergence test in top-to-bottom direction
 			if ( Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] ) <= Math.abs( tol ) * Math.abs( d[ offsetD + (m * strideD) ] ) ||
 				( tol < ZERO && Math.abs( e[ offsetE + (( m - 1 ) * strideE) ] ) <= thresh ) ) {
 				e[ offsetE + (( m - 1 ) * strideE) ] = ZERO;
-				continue;
+				converged = true;
 			}
 
-			if ( tol >= ZERO ) {
+			if ( !converged && tol >= ZERO ) {
 				// If relative accuracy desired, apply relative convergence criterion forward
 				mu = Math.abs( d[ offsetD + (ll * strideD) ] );
 				smin = mu;
 				for ( lll = ll; lll < m; lll++ ) {
 					if ( Math.abs( e[ offsetE + (lll * strideE) ] ) <= tol * mu ) {
 						e[ offsetE + (lll * strideE) ] = ZERO;
-						continue outer;
+						converged = true;
+						break;
 					}
 					mu = Math.abs( d[ offsetD + (( lll + 1 ) * strideD) ] ) * ( mu / ( mu + Math.abs( e[ offsetE + (lll * strideE) ] ) ) );
 					smin = Math.min( smin, mu );
@@ -452,22 +460,26 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 			if ( Math.abs( e[ offsetE + (ll * strideE) ] ) <= Math.abs( tol ) * Math.abs( d[ offsetD + (ll * strideD) ] ) ||
 				( tol < ZERO && Math.abs( e[ offsetE + (ll * strideE) ] ) <= thresh ) ) {
 				e[ offsetE + (ll * strideE) ] = ZERO;
-				continue;
+				converged = true;
 			}
 
-			if ( tol >= ZERO ) {
+			if ( !converged && tol >= ZERO ) {
 				// If relative accuracy desired, apply relative convergence criterion backward
 				mu = Math.abs( d[ offsetD + (m * strideD) ] );
 				smin = mu;
 				for ( lll = m - 1; lll >= ll; lll-- ) {
 					if ( Math.abs( e[ offsetE + (lll * strideE) ] ) <= tol * mu ) {
 						e[ offsetE + (lll * strideE) ] = ZERO;
-						continue outer;
+						converged = true;
+						break;
 					}
 					mu = Math.abs( d[ offsetD + (lll * strideD) ] ) * ( mu / ( mu + Math.abs( e[ offsetE + (lll * strideE) ] ) ) );
 					smin = Math.min( smin, mu );
 				}
 			}
+		}
+		if ( converged ) {
+			continue;
 		}
 		oldll = ll;
 		oldm = m;

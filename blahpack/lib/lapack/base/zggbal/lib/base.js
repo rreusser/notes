@@ -263,9 +263,9 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	// ----------------------------------------------------------------
 	function findAndPermute( kk, ll ) {
 		var allZeroCol;
+		var foundRow;
 		var foundCol;
 		var allZero;
-		var foundRow;
 		var ii;
 		var jj;
 		k = kk;

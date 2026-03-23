@@ -245,7 +245,7 @@ function dlacn2( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, 
 		}
 		// Label 150: done
 		KASE[ 0 ] = 0;
-
+		break;
 	default:
 	}
 }

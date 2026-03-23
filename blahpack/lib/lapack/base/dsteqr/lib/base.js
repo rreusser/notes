@@ -16,7 +16,7 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params, no-extra-label, no-labels, no-var */
+/* eslint-disable max-len, max-params, no-var */
 
 'use strict';
 
@@ -158,7 +158,6 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	l1 = 0; // 0-based
 
 	// Outer loop (label 10 in Fortran): find unreduced blocks
-	outer:
 	while ( l1 < N ) {
 		// Zero out the subdiagonal element below l1 if l1 > 0
 		if ( l1 > 0 ) {
@@ -189,14 +188,14 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 
 		// If block is a single element, nothing to do — go to next block
 		if ( lend === l ) {
-			continue outer;
+			continue;
 		}
 
 		// Scale the block if necessary
 		anorm = dlanst( 'max', lend - l + 1, d, strideD, offsetD + (l * strideD), e, strideE, offsetE + (l * strideE) );
 		iscale = 0;
 		if ( anorm === 0.0 ) {
-			continue outer;
+			continue;
 		}
 		if ( anorm > ssfmax ) {
 			iscale = 1;

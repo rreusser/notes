@@ -63,8 +63,8 @@ var ONE = new Complex128( 1.0, 0.0 );
 * @param {NonNegativeInteger} offsetT - starting index for T (in complex elements)
 */
 function zlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT ) {
-	var negTauCx;
 	var prevlastv;
+	var negTauCx;
 	var negTauI;
 	var negTauR;
 	var negTau;

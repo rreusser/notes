@@ -79,7 +79,7 @@ function ilazlr( M, N, A, strideA1, strideA2, offsetA ) {
 			if ( re !== 0.0 || im !== 0.0 ) {
 				break;
 			}
-			i--;
+			i -= 1;
 		}
 		if ( i > result ) {
 			result = i;

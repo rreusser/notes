@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var uppercase = require( '@stdlib/string/base/uppercase' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlassq = require( '../../zlassq/lib/base.js' );
 var cmplx = require( '../../../../cmplx.js' );
@@ -46,6 +47,7 @@ var cmplx = require( '../../../../cmplx.js' );
 * @returns {number} matrix norm value
 */
 function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) {
+	var result;
 	var value;
 	var scale;
 	var sum;
@@ -55,11 +57,10 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 	var aij;
 	var Av;
 	var oA;
-	var result;
 	var wi;
 	var i;
 	var j;
-	var n = norm.charAt( 0 ).toUpperCase();
+	var n = uppercase( norm.charAt( 0 ) );
 
 	Av = reinterpret( A, 0 );
 	sa1 = strideA1 * 2;

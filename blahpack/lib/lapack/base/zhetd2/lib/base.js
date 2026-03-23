@@ -76,13 +76,13 @@ function zhetd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	var tauiI;
 	var dotR;
 	var dotI;
+	var dot;
 	var sa1;
 	var sa2;
 	var Av;
 	var Tv;
 	var oA;
 	var oT;
-	var dot;
 	var ai;
 	var i;
 

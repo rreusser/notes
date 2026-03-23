@@ -72,14 +72,14 @@ function zsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 				kb = N - k;
 			}
 			if ( info === 0 && iinfo > 0 ) {
-			info = iinfo + k;
-		}
+				info = iinfo + k;
+			}
 			for ( j = k; j < k + kb; j++ ) {
 				if ( IPIV[ offsetIPIV + (j * strideIPIV) ] >= 0 ) {
-				IPIV[ offsetIPIV + (j * strideIPIV) ] += k;
-			} else {
-				IPIV[ offsetIPIV + (j * strideIPIV) ] = ~( ( ~IPIV[ offsetIPIV + (j * strideIPIV) ] ) + k );
-			}
+					IPIV[ offsetIPIV + (j * strideIPIV) ] += k;
+				} else {
+					IPIV[ offsetIPIV + (j * strideIPIV) ] = ~( ( ~IPIV[ offsetIPIV + (j * strideIPIV) ] ) + k );
+				}
 			}
 			k += kb;
 		}

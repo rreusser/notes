@@ -564,7 +564,7 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 				handleZeroTdiag();
 				return true;
 			}
-		if ( ilazro ) {
+			if ( ilazro ) {
 				// Only test 1 passed: ifirst = j, go to QZ step
 				ifirst = jj;
 				doQZStep();

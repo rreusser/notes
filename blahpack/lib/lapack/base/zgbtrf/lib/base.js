@@ -76,10 +76,10 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	var ONE_NEG;
 	var WORK13;
 	var WORK31;
-	var W13v;
-	var W31v;
 	var iinfo;
 	var minMN;
+	var W13v;
+	var W31v;
 	var info;
 	var ABv;
 	var sa1;
