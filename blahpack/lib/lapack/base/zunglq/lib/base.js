@@ -69,10 +69,9 @@ var NB = 32;  // Block size (LAPACK default for ZUNGLQ)
 * @param {Complex128Array} WORK - workspace (length >= M*NB)
 * @param {integer} strideWORK - stride for WORK (complex elements)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
-* @param {integer} lwork - workspace size (ignored, kept for API compatibility)
 * @returns {integer} status code (0 = success)
 */
-function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var ldwork;
 	var sa1;
 	var sa2;

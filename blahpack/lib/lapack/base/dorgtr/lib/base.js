@@ -53,10 +53,9 @@ var dorgql = require( '../../dorgql/lib/base.js' );
 * @param {Float64Array} WORK - workspace array
 * @param {integer} strideWORK - stride length for `WORK`
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - length of the workspace array
 * @returns {integer} status code (0 = success)
 */
-function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var upper;
 	var pa;
 	var i;
@@ -93,7 +92,7 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// Generate Q by calling dorgql on the (N-1)x(N-1) leading submatrix
 		if ( N - 1 > 0 ) {
-			dorgql( N - 1, N - 1, N - 1, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+			dorgql(N - 1, N - 1, N - 1, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		}
 	} else {
 		// Q was determined by DSYTRD as a product of N-1 elementary reflectors
@@ -121,7 +120,7 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// Starting at position (1, 1) (0-based)
 		if ( N > 1 ) {
 			pa = offsetA + strideA1 + strideA2; // A(1, 1) in 0-based
-			dorgqr( N - 1, N - 1, N - 1, A, strideA1, strideA2, pa, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+			dorgqr(N - 1, N - 1, N - 1, A, strideA1, strideA2, pa, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		}
 	}
 	return 0;

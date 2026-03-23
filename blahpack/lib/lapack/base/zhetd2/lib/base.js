@@ -23,7 +23,6 @@
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var real = require( '@stdlib/complex/float64/real' );
 var imag = require( '@stdlib/complex/float64/imag' );
@@ -37,7 +36,6 @@ var zaxpy = require( '../../../../blas/base/zaxpy/lib/base.js' );
 // VARIABLES //
 
 var CZERO = new Complex128( 0.0, 0.0 );
-var CONE = new Complex128( 1.0, 0.0 );
 var CNONE = new Complex128( -1.0, 0.0 );
 
 

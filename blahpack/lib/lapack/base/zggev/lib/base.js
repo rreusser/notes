@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -228,13 +229,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	);
 
 	// Apply Q^H to A from the left
-	zunmqr(
-		'left', 'conjugate-transpose', irows, icols, irows,
-		B, strideB1, strideB2, offsetB + (( ilo - 1 ) * strideB1) + (( ilo - 1 ) * strideB2),
-		TAU, 1, 0,
-		A, strideA1, strideA2, offsetA + (( ilo - 1 ) * strideA1) + (( ilo - 1 ) * strideA2),
-		WORK, 1, 0, lwork
-	);
+	zunmqr('left', 'conjugate-transpose', irows, icols, irows, B, strideB1, strideB2, offsetB + (( ilo - 1 ) * strideB1) + (( ilo - 1 ) * strideB2), TAU, 1, 0, A, strideA1, strideA2, offsetA + (( ilo - 1 ) * strideA1) + (( ilo - 1 ) * strideA2), WORK, 1, 0 );
 
 	// Initialize VL and generate Q
 	if ( ilvl ) {
@@ -247,11 +242,7 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 			);
 		}
 
-		zungqr( irows, irows, irows,
-			VL, strideVL1, strideVL2, offsetVL + (( ilo - 1 ) * strideVL1) + (( ilo - 1 ) * strideVL2),
-			TAU, 1, 0,
-			WORK, 1, 0, lwork
-		);
+		zungqr(irows, irows, irows, VL, strideVL1, strideVL2, offsetVL + (( ilo - 1 ) * strideVL1) + (( ilo - 1 ) * strideVL2), TAU, 1, 0, WORK, 1, 0 );
 	}
 
 	// Initialize VR

@@ -53,7 +53,6 @@ var base = require( './base.js' );
 * @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (complex elements)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
-* @param {integer} lwork - workspace size (unused, kept for API compat)
 * @throws {TypeError} first argument must be a valid vector type
 * @throws {TypeError} second argument must be a valid operation side
 * @throws {TypeError} third argument must be a valid transpose operation
@@ -62,7 +61,7 @@ var base = require( './base.js' );
 * @throws {RangeError} sixth argument must be a nonnegative integer
 * @returns {integer} info - 0 if successful
 */
-function zunmbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
+function zunmbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	if ( vect !== 'q' && vect !== 'p' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid vector type. Value: `%s`.', vect ) );
 	}
@@ -84,7 +83,7 @@ function zunmbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 	if ( M === 0 || N === 0 ) {
 		return 0;
 	}
-	return base( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork );
+	return base(vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
 }
 
 

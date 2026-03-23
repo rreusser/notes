@@ -52,7 +52,6 @@ var base = require( './base.js' );
 * @param {Float64Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - workspace size (unused, kept for API compat)
 * @throws {TypeError} first argument must be a valid operation side
 * @throws {TypeError} second argument must be a valid transpose operation
 * @throws {RangeError} third argument must be a nonnegative integer
@@ -60,7 +59,7 @@ var base = require( './base.js' );
 * @throws {RangeError} fifth argument must be a nonnegative integer
 * @returns {integer} info - 0 if successful
 */
-function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
+function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	if ( !isOperationSide( side ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );
 	}
@@ -79,7 +78,7 @@ function dormqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	if ( M === 0 || N === 0 ) {
 		return 0;
 	}
-	return base( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork );
+	return base(side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
 }
 
 

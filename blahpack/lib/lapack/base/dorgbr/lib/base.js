@@ -64,10 +64,9 @@ var dorglq = require( '../../dorglq/lib/base.js' );
 * @param {Float64Array} WORK - workspace (ignored, allocated internally by dependencies)
 * @param {integer} strideWORK - stride for WORK (ignored)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (ignored)
-* @param {integer} lwork - workspace size (ignored)
 * @returns {integer} info - 0 if successful
 */
-function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var wantq;
 	var i;
 	var j;
@@ -85,7 +84,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 		if ( M >= K ) {
 			// Q was determined by a call to DGEBRD with M >= K.
 			// Simply apply DORGQR to the matrix A.
-			dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+			dorgqr(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		} else {
 			// Q was determined by a call to DGEBRD with M < K.
 			// Need to shift columns and then apply DORGQR.
@@ -114,11 +113,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 			if ( M > 1 ) {
 				// Form Q(1:M-1, 1:M-1) using the reflectors
 				// Fortran: CALL DORGQR( M-1, M-1, M-1, A(2,2), LDA, TAU, WORK, LWORK, IINFO )
-				dorgqr( M - 1, M - 1, M - 1,
-					A, strideA1, strideA2, offsetA + strideA1 + strideA2,
-					TAU, strideTAU, offsetTAU,
-					WORK, strideWORK, offsetWORK, lwork
-				);
+				dorgqr(M - 1, M - 1, M - 1, A, strideA1, strideA2, offsetA + strideA1 + strideA2, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 			}
 		}
 	} else if ( K < N ) {
@@ -126,7 +121,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 
 		// P^T was determined by a call to DGEBRD with K < N.
 		// Simply apply DORGLQ to the matrix A.
-		dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+		dorglq(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 	} else {
 		// Form P^T = G(1) G(2) ... G(K)
 
@@ -157,11 +152,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 		if ( N > 1 ) {
 			// Form P^T(1:N-1, 1:N-1) using the reflectors
 			// Fortran: CALL DORGLQ( N-1, N-1, N-1, A(2,2), LDA, TAU, WORK, LWORK, IINFO )
-			dorglq( N - 1, N - 1, N - 1,
-				A, strideA1, strideA2, offsetA + strideA1 + strideA2,
-				TAU, strideTAU, offsetTAU,
-				WORK, strideWORK, offsetWORK, lwork
-			);
+			dorglq(N - 1, N - 1, N - 1, A, strideA1, strideA2, offsetA + strideA1 + strideA2, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		}
 	}
 

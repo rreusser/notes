@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dsytd2 = require( '../../dsytd2/lib/base.js' );
 var dlatrd = require( '../../dlatrd/lib/base.js' );
 var dsyr2k = require( '../../../../blas/base/dsyr2k/lib/base.js' );
@@ -62,13 +63,9 @@ _ If UPLO = 'L', the matrix Q is represented as Q = H(1) _ H(2) _ ... _ H(n-1).
 * @param {Float64Array} TAU - output array for the scalar factors of the reflectors (length N-1)
 * @param {integer} strideTAU - stride length for `TAU`
 * @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
-* @param {Float64Array} WORK - workspace array (unused; allocated internally)
-* @param {integer} strideWORK - stride length for `WORK` (unused)
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK` (unused)
-* @param {integer} lwork - workspace size (unused)
 * @returns {integer} status code (0 = success)
 */
-function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU ) {
 	var ldwork;
 	var work;
 	var sa1;

@@ -20,7 +20,6 @@
 'use strict';
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zaxpy = require( '../../../../blas/base/zaxpy/lib/base.js' );
 var zgehd2 = require( '../../zgehd2/lib/base.js' );
@@ -32,7 +31,7 @@ var NBMAX = 64;
 var LDT = NBMAX + 1;
 var ONE = new Complex128( 1.0, 0.0 );
 var NEGONE = new Complex128( -1.0, 0.0 );
-function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var LDWORK;
 	var tauv;
 	var eiR;

@@ -63,7 +63,6 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * @returns {integer} status code (0 = success)
 */
 function dorgl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
-	var ia;
 	var it;
 	var i;
 	var j;

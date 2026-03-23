@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dasum = require( './../../../../blas/base/dasum/lib/base.js' );
 var daxpy = require( './../../../../blas/base/daxpy/lib/base.js' );
 var ddot = require( './../../../../blas/base/ddot/lib/base.js' );

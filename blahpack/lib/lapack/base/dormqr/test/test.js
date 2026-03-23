@@ -80,12 +80,7 @@ test( 'dormqr: left_notrans (Q*I)', function t() {
 	var qr = qr4x3();
 	var C = eye( 4, 6 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'left', 'no-transpose', 4, 4, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('left', 'no-transpose', 4, 4, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
@@ -95,12 +90,7 @@ test( 'dormqr: left_trans (Q^T*I)', function t() {
 	var qr = qr4x3();
 	var C = eye( 4, 6 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'left', 'transpose', 4, 4, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('left', 'transpose', 4, 4, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
@@ -110,12 +100,7 @@ test( 'dormqr: right_notrans (I*Q)', function t() {
 	var qr = qr4x3();
 	var C = eye( 4, 6 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'right', 'no-transpose', 4, 4, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('right', 'no-transpose', 4, 4, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
@@ -125,12 +110,7 @@ test( 'dormqr: right_trans (I*Q^T)', function t() {
 	var qr = qr4x3();
 	var C = eye( 4, 6 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'right', 'transpose', 4, 4, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('right', 'transpose', 4, 4, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'c' );
 });
@@ -140,12 +120,7 @@ test( 'dormqr: m_zero (quick return)', function t() {
 	var qr = qr4x3();
 	var C = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dormqr( 'left', 'no-transpose', 0, 4, 0,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 1, 0,
-		WORK, 1, 0, 1
-	);
+	var info = dormqr('left', 'no-transpose', 0, 4, 0, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -154,12 +129,7 @@ test( 'dormqr: n_zero (quick return)', function t() {
 	var qr = qr4x3();
 	var C = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dormqr( 'left', 'no-transpose', 4, 0, 0,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1
-	);
+	var info = dormqr('left', 'no-transpose', 4, 0, 0, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
@@ -169,12 +139,7 @@ test( 'dormqr: k_zero (quick return)', function t() {
 	var C = eye( 4, 6 );
 	var Cexpected = eye( 4, 6 );
 	var WORK = new Float64Array( 1 );
-	var info = dormqr( 'left', 'no-transpose', 4, 4, 0,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1
-	);
+	var info = dormqr('left', 'no-transpose', 4, 4, 0, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), Array.from( Cexpected ), 1e-14, 'c unchanged' );
 });
@@ -187,12 +152,7 @@ test( 'dormqr: left_notrans_rect (Q * non-identity 4x2)', function t() {
 	C[ 0 ] = 1.0; C[ 1 ] = 3.0; C[ 2 ] = -1.0; C[ 3 ] = 2.0;
 	C[ 6 ] = 2.0; C[ 7 ] = 0.0; C[ 8 ] = 4.0; C[ 9 ] = -1.0;
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'left', 'no-transpose', 4, 2, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('left', 'no-transpose', 4, 2, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	// Compare first 12 elements (LDA=6, 2 columns)
 	var result = Array.from( C ).slice( 0, 12 );
@@ -206,12 +166,7 @@ test( 'dormqr: left_trans_rect (Q^T * non-identity 4x2)', function t() {
 	C[ 0 ] = 1.0; C[ 1 ] = 3.0; C[ 2 ] = -1.0; C[ 3 ] = 2.0;
 	C[ 6 ] = 2.0; C[ 7 ] = 0.0; C[ 8 ] = 4.0; C[ 9 ] = -1.0;
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'left', 'transpose', 4, 2, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 6, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('left', 'transpose', 4, 2, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	var result = Array.from( C ).slice( 0, 12 );
 	assertArrayClose( result, tc.c, 1e-14, 'c' );
@@ -231,12 +186,7 @@ test( 'dormqr: right_notrans_rect (3x4 * Q)', function t() {
 	// Column 3
 	C[ 9 ] = 4.0; C[ 10 ] = -2.0; C[ 11 ] = 1.0;
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'right', 'no-transpose', 3, 4, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 3, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('right', 'no-transpose', 3, 4, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	var result = Array.from( C ).slice( 0, 12 );
 	assertArrayClose( result, tc.c, 1e-14, 'c' );
@@ -251,12 +201,7 @@ test( 'dormqr: right_trans_rect (3x4 * Q^T)', function t() {
 	C[ 6 ] = -1.0; C[ 7 ] = 3.0; C[ 8 ] = 0.0;
 	C[ 9 ] = 4.0; C[ 10 ] = -2.0; C[ 11 ] = 1.0;
 	var WORK = new Float64Array( 1000 );
-	var info = dormqr( 'right', 'transpose', 3, 4, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		C, 1, 3, 0,
-		WORK, 1, 0, 1000
-	);
+	var info = dormqr('right', 'transpose', 3, 4, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	var result = Array.from( C ).slice( 0, 12 );
 	assertArrayClose( result, tc.c, 1e-14, 'c' );
@@ -267,12 +212,7 @@ test( 'dormqr: left_notrans_blocked (40x40, K=35)', function t() {
 	var qr = qr40x35();
 	var C = eye( 40, 40 );
 	var WORK = new Float64Array( 10000 );
-	var info = dormqr( 'left', 'no-transpose', 40, 40, 35,
-		qr.A, 1, 40, 0,
-		qr.TAU, 1, 0,
-		C, 1, 40, 0,
-		WORK, 1, 0, 10000
-	);
+	var info = dormqr('left', 'no-transpose', 40, 40, 35, qr.A, 1, 40, 0, qr.TAU, 1, 0, C, 1, 40, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'c' );
 });
@@ -282,12 +222,7 @@ test( 'dormqr: left_trans_blocked (40x40, K=35)', function t() {
 	var qr = qr40x35();
 	var C = eye( 40, 40 );
 	var WORK = new Float64Array( 10000 );
-	var info = dormqr( 'left', 'transpose', 40, 40, 35,
-		qr.A, 1, 40, 0,
-		qr.TAU, 1, 0,
-		C, 1, 40, 0,
-		WORK, 1, 0, 10000
-	);
+	var info = dormqr('left', 'transpose', 40, 40, 35, qr.A, 1, 40, 0, qr.TAU, 1, 0, C, 1, 40, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'c' );
 });
@@ -297,12 +232,7 @@ test( 'dormqr: right_notrans_blocked (40x40, K=35)', function t() {
 	var qr = qr40x35();
 	var C = eye( 40, 40 );
 	var WORK = new Float64Array( 10000 );
-	var info = dormqr( 'right', 'no-transpose', 40, 40, 35,
-		qr.A, 1, 40, 0,
-		qr.TAU, 1, 0,
-		C, 1, 40, 0,
-		WORK, 1, 0, 10000
-	);
+	var info = dormqr('right', 'no-transpose', 40, 40, 35, qr.A, 1, 40, 0, qr.TAU, 1, 0, C, 1, 40, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'c' );
 });
@@ -312,12 +242,7 @@ test( 'dormqr: right_trans_blocked (40x40, K=35)', function t() {
 	var qr = qr40x35();
 	var C = eye( 40, 40 );
 	var WORK = new Float64Array( 10000 );
-	var info = dormqr( 'right', 'transpose', 40, 40, 35,
-		qr.A, 1, 40, 0,
-		qr.TAU, 1, 0,
-		C, 1, 40, 0,
-		WORK, 1, 0, 10000
-	);
+	var info = dormqr('right', 'transpose', 40, 40, 35, qr.A, 1, 40, 0, qr.TAU, 1, 0, C, 1, 40, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'c' );
 });
@@ -328,21 +253,11 @@ test( 'dormqr: Q * Q^T = I (orthogonality check, unblocked)', function t() {
 
 	// Compute Q by applying to identity from left
 	var Q = eye( 4, 4 );
-	dormqr( 'left', 'no-transpose', 4, 4, 3,
-		qr.A, 1, 6, 0,
-		qr.TAU, 1, 0,
-		Q, 1, 4, 0,
-		WORK, 1, 0, 1000
-	);
+	dormqr('left', 'no-transpose', 4, 4, 3, qr.A, 1, 6, 0, qr.TAU, 1, 0, Q, 1, 4, 0, WORK, 1, 0 );
 
 	// Now apply Q^T from the left to Q: result should be I
 	var qr2 = qr4x3();
-	dormqr( 'left', 'transpose', 4, 4, 3,
-		qr2.A, 1, 6, 0,
-		qr2.TAU, 1, 0,
-		Q, 1, 4, 0,
-		WORK, 1, 0, 1000
-	);
+	dormqr('left', 'transpose', 4, 4, 3, qr2.A, 1, 6, 0, qr2.TAU, 1, 0, Q, 1, 4, 0, WORK, 1, 0 );
 
 	var I4 = eye( 4, 4 );
 	assertArrayClose( Array.from( Q ), Array.from( I4 ), 1e-14, 'Q*Q^T=I' );
@@ -354,21 +269,11 @@ test( 'dormqr: Q * Q^T = I (orthogonality check, blocked)', function t() {
 
 	// Compute Q by applying to identity from left
 	var Q = eye( 40, 40 );
-	dormqr( 'left', 'no-transpose', 40, 40, 35,
-		qr.A, 1, 40, 0,
-		qr.TAU, 1, 0,
-		Q, 1, 40, 0,
-		WORK, 1, 0, 10000
-	);
+	dormqr('left', 'no-transpose', 40, 40, 35, qr.A, 1, 40, 0, qr.TAU, 1, 0, Q, 1, 40, 0, WORK, 1, 0 );
 
 	// Apply Q^T from the left: result should be I
 	var qr2 = qr40x35();
-	dormqr( 'left', 'transpose', 40, 40, 35,
-		qr2.A, 1, 40, 0,
-		qr2.TAU, 1, 0,
-		Q, 1, 40, 0,
-		WORK, 1, 0, 10000
-	);
+	dormqr('left', 'transpose', 40, 40, 35, qr2.A, 1, 40, 0, qr2.TAU, 1, 0, Q, 1, 40, 0, WORK, 1, 0 );
 
 	var I40 = eye( 40, 40 );
 	assertArrayClose( Array.from( Q ), Array.from( I40 ), 1e-12, 'Q*Q^T=I blocked' );

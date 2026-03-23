@@ -77,7 +77,6 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	var iscale;
 	var indtau;
 	var indwrk;
-	var llwork;
 	var wantz;
 	var sigma;
 	var anrm;
@@ -142,19 +141,18 @@ function zheev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	inde = offsetRWORK;
 	indtau = offsetWORK;
 	indwrk = offsetWORK + (N * strideWORK);
-	llwork = lwork - N;
 
 	// Reduce to tridiagonal form: Q^H * A * Q = T
 
-	// zhetrd(uplo, N, A, sa1, sa2, oA, d, sd, od, e, se, oe, TAU, sTAU, oTAU, WORK, sWORK, oWORK, lwork)
+	// zhetrd(uplo, N, A, sa1, sa2, oA, d, sd, od, e, se, oe, TAU, sTAU, oTAU )
 
 	// D (diagonal, real) goes into w, e (off-diagonal, real) into RWORK[inde], TAU (complex) into WORK[indtau]
-	zhetrd( uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, RWORK, strideRWORK, inde, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
+	zhetrd(uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, RWORK, strideRWORK, inde, WORK, strideWORK, indtau );
 
 	info = 0;
 	if ( wantz ) {
 		// Generate unitary matrix Q from zhetrd output
-		zungtr( uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
+		zungtr(uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk );
 
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
 

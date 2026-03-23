@@ -65,10 +65,9 @@ var zunglq = require( '../../zunglq/lib/base.js' );
 * @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (complex elements)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
-* @param {integer} lwork - workspace size (unused, kept for API compat)
 * @returns {integer} info - 0 if successful
 */
-function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var wantq;
 	var sA1;
 	var sA2;
@@ -96,7 +95,7 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 		if ( M >= K ) {
 			// Q was determined by a call to ZGEBRD with M >= K.
 			// Simply apply ZUNGQR to the matrix A.
-			zungqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+			zungqr(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		} else {
 			// Q was determined by a call to ZGEBRD with M < K.
 			// Need to shift columns and then apply ZUNGQR.
@@ -129,11 +128,7 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 
 			if ( M > 1 ) {
 				// Form Q(1:M-1, 1:M-1) using the reflectors
-				zungqr( M - 1, M - 1, M - 1,
-					A, strideA1, strideA2, offsetA + strideA1 + strideA2,
-					TAU, strideTAU, offsetTAU,
-					WORK, strideWORK, offsetWORK, lwork
-				);
+				zungqr(M - 1, M - 1, M - 1, A, strideA1, strideA2, offsetA + strideA1 + strideA2, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 			}
 		}
 	} else if ( K < N ) {
@@ -141,7 +136,7 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 
 		// P^H was determined by a call to ZGEBRD with K < N.
 		// Simply apply ZUNGLQ to the matrix A.
-		zunglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+		zunglq(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 	} else {
 		// Form P^H = G(1) G(2) ... G(K)
 
@@ -177,11 +172,7 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 
 		if ( N > 1 ) {
 			// Form P^H(1:N-1, 1:N-1) using the reflectors
-			zunglq( N - 1, N - 1, N - 1,
-				A, strideA1, strideA2, offsetA + strideA1 + strideA2,
-				TAU, strideTAU, offsetTAU,
-				WORK, strideWORK, offsetWORK, lwork
-			);
+			zunglq(N - 1, N - 1, N - 1, A, strideA1, strideA2, offsetA + strideA1 + strideA2, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		}
 	}
 

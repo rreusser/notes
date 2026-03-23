@@ -36,7 +36,6 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 var NB = 32; // Block size (hardcoded; Fortran uses ILAENV)
 var CONE = new Complex128( 1.0, 0.0 );
 var CNEGONE = new Complex128( -1.0, 0.0 );
-var CZERO = new Complex128( 0.0, 0.0 );
 
 
 // MAIN //

@@ -43,12 +43,11 @@ var base = require( './base.js' );
 * @param {Float64Array} WORK - workspace array
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - length of WORK array
 * @throws {RangeError} first argument must be a nonnegative integer
 * @throws {RangeError} second argument must be a nonnegative integer
 * @returns {integer} info - 0 if successful
 */
-function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', M ) );
 	}
@@ -58,7 +57,7 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	if ( M === 0 || N === 0 ) {
 		return 0;
 	}
-	return base( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+	return base(M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 }
 
 

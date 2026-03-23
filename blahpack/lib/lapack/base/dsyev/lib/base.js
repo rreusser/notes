@@ -32,11 +32,6 @@ var dsteqr = require( '../../dsteqr/lib/base.js' );
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 
 
-// VARIABLES //
-
-var NB = 32; // block size (replaces ILAENV query)
-
-
 // MAIN //
 
 /**
@@ -68,20 +63,17 @@ var NB = 32; // block size (replaces ILAENV query)
 * @param {Float64Array} WORK - workspace array
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - length of WORK array
 * @returns {integer} info - 0 if successful, >0 if dsteqr/dsterf did not converge
 */
-function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork ) {
+function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK ) {
 	var safmin;
 	var smlnum;
 	var bignum;
 	var iscale;
 	var indtau;
 	var indwrk;
-	var llwork;
 	var wantz;
 	var sigma;
-	var iinfo;
 	var anrm;
 	var rmin;
 	var rmax;
@@ -134,19 +126,18 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	inde = offsetWORK;
 	indtau = inde + (N * strideWORK);
 	indwrk = indtau + (N * strideWORK);
-	llwork = lwork - (2 * N);
 
 	// Reduce to tridiagonal form: Q^T * A * Q = T
 
-	// dsytrd(uplo, N, A, sa1, sa2, oA, d, sd, od, e, se, oe, TAU, sTAU, oTAU, WORK, sWORK, oWORK, lwork)
+	// dsytrd(uplo, N, A, sa1, sa2, oA, d, sd, od, e, se, oe, TAU, sTAU, oTAU )
 
 	// D (diagonal) goes into w, e (off-diagonal) into WORK[inde], TAU into WORK[indtau]
-	dsytrd( uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, inde, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
+	dsytrd(uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, inde, WORK, strideWORK, indtau );
 
 	info = 0;
 	if ( wantz ) {
 		// Generate orthogonal matrix Q from dsytrd output
-		dorgtr( uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk, llwork );
+		dorgtr(uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, WORK, strideWORK, indwrk );
 
 		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
 

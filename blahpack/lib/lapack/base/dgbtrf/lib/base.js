@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dgbtf2 = require( '../../dgbtf2/lib/base.js' );
 var dgemm = require( '../../../../blas/base/dgemm/lib/base.js' );
 var dger = require( '../../../../blas/base/dger/lib/base.js' );
@@ -68,7 +69,6 @@ var LDWORK = NBMAX + 1;
 function dgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV ) {
 	var WORK13;
 	var WORK31;
-	var iinfo;
 	var minMN;
 	var info;
 	var temp;

@@ -63,10 +63,9 @@ var NB = 32; // Hardcoded block size
 * @param {Complex128Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK (complex elements)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
-* @param {integer} lwork - workspace size in complex elements (unused, kept for API compat)
 * @returns {integer} info - 0 if successful
 */
-function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
+function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var offsetT;
 	var notran;
 	var ldwork;

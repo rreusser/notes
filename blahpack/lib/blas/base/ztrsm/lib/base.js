@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var real = require( '@stdlib/complex/float64/real' );
 var imag = require( '@stdlib/complex/float64/imag' );

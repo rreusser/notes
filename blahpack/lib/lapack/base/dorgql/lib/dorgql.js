@@ -43,11 +43,10 @@ var base = require( './base.js' );
 * @param {integer} strideTAU - `TAU` stride length
 * @param {Float64Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */
-function dorgql( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork ) {
+function dorgql( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK ) {
 	var sa1;
 	var sa2;
 	var ot;
@@ -65,7 +64,7 @@ function dorgql( order, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork
 	}
 	ot = stride2offset( N, strideTAU );
 	ow = stride2offset( N, strideWORK );
-	return base( M, N, K, A, sa1, sa2, 0, TAU, strideTAU, ot, WORK, strideWORK, ow, lwork );
+	return base(M, N, K, A, sa1, sa2, 0, TAU, strideTAU, ot, WORK, strideWORK, ow );
 }
 
 

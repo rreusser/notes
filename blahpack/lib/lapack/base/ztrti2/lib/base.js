@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrmv = require( '../../../../blas/base/ztrmv/lib/base.js' );
@@ -31,7 +32,6 @@ var cmplx = require( '../../../../cmplx.js' );
 
 // Scratch buffer for complex division: [0..1]=numerator(1,0), [2..3]=denominator, [4..5]=result
 var scratch = new Float64Array( 6 );
-var CNEGONE = new Complex128( -1.0, 0.0 );
 
 scratch[ 0 ] = 1.0;
 scratch[ 1 ] = 0.0;

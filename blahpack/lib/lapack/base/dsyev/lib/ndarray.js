@@ -45,13 +45,12 @@ var base = require( './base.js' );
 * @param {Float64Array} WORK - workspace array
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - length of WORK array
 * @throws {TypeError} first argument must be a valid job type
 * @throws {TypeError} second argument must be a valid matrix triangle
 * @throws {RangeError} third argument must be a nonnegative integer
 * @returns {integer} info - 0 if successful, >0 if dsteqr/dsterf did not converge
 */
-function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork ) {
+function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK ) {
 	if ( jobz !== 'none' && jobz !== 'compute' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid job type. Value: `%s`.', jobz ) );
 	}
@@ -64,7 +63,7 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	if ( N === 0 ) {
 		return 0;
 	}
-	return base( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork );
+	return base(jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, WORK, strideWORK, offsetWORK );
 }
 
 

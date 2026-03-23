@@ -70,10 +70,9 @@ var NB = 32;  // Block size (LAPACK default for ZUNGQL)
 * @param {Complex128Array} WORK - workspace (ignored, allocated internally)
 * @param {integer} strideWORK - stride for WORK (ignored)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (ignored)
-* @param {integer} lwork - workspace size (ignored)
 * @returns {integer} status code (0 = success)
 */
-function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function zungql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var ldwork;
 	var work;
 	var sa1;

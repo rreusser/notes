@@ -61,7 +61,6 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	var betaI;
 	var tempR;
 	var tempI;
-	var lenx;
 	var leny;
 	var aijR;
 	var aijI;
@@ -101,10 +100,8 @@ function zgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	noConj = ( trans === 'transpose' );
 
 	if ( noTrans ) {
-		lenx = N;
 		leny = M;
 	} else {
-		lenx = M;
 		leny = N;
 	}
 

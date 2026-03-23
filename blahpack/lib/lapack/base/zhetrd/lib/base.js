@@ -62,13 +62,9 @@ var CNONE = new Complex128( -1.0, 0.0 );
 * @param {Complex128Array} TAU - output scalar factors of reflectors (length N-1)
 * @param {integer} strideTAU - stride for TAU (complex elements)
 * @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
-* @param {Complex128Array} WORK - workspace (unused, allocated internally)
-* @param {integer} strideWORK - stride for WORK (unused)
-* @param {NonNegativeInteger} offsetWORK - starting index for WORK (unused)
-* @param {integer} lwork - workspace size (unused)
 * @returns {integer} info (0 = success)
 */
-function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function zhetrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU ) {
 	var ldwork;
 	var work;
 	var sa1;

@@ -78,10 +78,10 @@ function runZungtr( uplo, N, Adata ) {
 	var info;
 
 	// First reduce to tridiagonal
-	zhetrd( uplo, N, A, 1, N, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, lwork );
+	zhetrd(uplo, N, A, 1, N, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 
 	// Then generate Q
-	info = zungtr( uplo, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0, lwork );
+	info = zungtr(uplo, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	return {
 		info: info,
@@ -160,8 +160,8 @@ test( 'zungtr: N=1', function t() {
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 1 );
 
-	zhetrd( 'lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
-	var info = zungtr( 'lower', 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	zhetrd('lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
+	var info = zungtr('lower', 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'info=0' );
 	// Q should be identity for N=1
@@ -175,6 +175,6 @@ test( 'zungtr: N=0', function t() {
 	var TAU = new Complex128Array( 0 );
 	var WORK = new Complex128Array( 1 );
 
-	var info = zungtr( 'lower', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	var info = zungtr('lower', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info=0' );
 });

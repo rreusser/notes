@@ -44,19 +44,15 @@ var base = require( './base.js' );
 * @param {integer} strideE - `e` stride length
 * @param {Float64Array} TAU - input array
 * @param {integer} strideTAU - `TAU` stride length
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */
-function dsytrd( order, uplo, N, A, LDA, d, strideD, e, strideE, TAU, strideTAU, WORK, strideWORK, lwork ) {
+function dsytrd( order, uplo, N, A, LDA, d, strideD, e, strideE, TAU, strideTAU ) {
 	var sa1;
 	var sa2;
 	var od;
 	var oe;
 	var ot;
-	var ow;
 
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
@@ -71,8 +67,7 @@ function dsytrd( order, uplo, N, A, LDA, d, strideD, e, strideE, TAU, strideTAU,
 	od = stride2offset( N, strideD );
 	oe = stride2offset( N, strideE );
 	ot = stride2offset( N, strideTAU );
-	ow = stride2offset( N, strideWORK );
-	return base( uplo, N, A, sa1, sa2, 0, d, strideD, od, e, strideE, oe, TAU, strideTAU, ot, WORK, strideWORK, ow, lwork );
+	return base( uplo, N, A, sa1, sa2, 0, d, strideD, od, e, strideE, oe, TAU, strideTAU, ot );
 }
 
 

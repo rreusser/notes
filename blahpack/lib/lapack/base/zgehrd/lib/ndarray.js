@@ -44,18 +44,17 @@ var base = require( './base.js' );
 * @param {TODO} WORK - TODO
 * @param {TODO} strideWORK - TODO
 * @param {TODO} offsetWORK - TODO
-* @param {TODO} lwork - TODO
 * @throws {RangeError} first argument must be a nonnegative integer
 * @returns {*} result
 */
-function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
 	if ( N === 0 ) {
 		return;
 	}
-	return base( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+	return base(N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 }
 
 

@@ -178,14 +178,14 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			}
 
 			// B(1:M,1:NRHS) := Q * B(1:M,1:NRHS)
-			dormqr( 'left', 'no-transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
+			dormqr('left', 'no-transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
 
 			scllen = M;
 		} else {
 			// Least squares problem: minimize || b - A*x ||
 
 			// B(1:M,1:NRHS) := Q^T * B(1:M,1:NRHS)
-			dormqr( 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
+			dormqr('left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
 
 			// Solve R*X = B(1:N,1:NRHS)
 			info = dtrtrs( 'upper', 'no-transpose', 'non-unit', N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
@@ -198,13 +198,13 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 	} else {
 		// M < N: LQ factorization of A
 		// A = L * Q
-		dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, WORK, 1, 0 );
+		dgelqf(M, N, A, strideA1, strideA2, offsetA, TAU, 1, 0, WORK, 1 );
 
 		if ( tpsd ) {
 			// Least squares problem: minimize || b - A^T*x ||
 
 			// B(1:N,1:NRHS) := Q * B(1:N,1:NRHS)
-			dormlq( 'left', 'no-transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
+			dormlq('left', 'no-transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
 
 			// Solve L^T * X = B(1:M,1:NRHS)
 			info = dtrtrs( 'lower', 'transpose', 'non-unit', M, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
@@ -232,7 +232,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 			}
 
 			// B(1:N,1:NRHS) := Q^T * B(1:N,1:NRHS)
-			dormlq( 'left', 'transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0, wsize );
+			dormlq('left', 'transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
 
 			scllen = N;
 		}

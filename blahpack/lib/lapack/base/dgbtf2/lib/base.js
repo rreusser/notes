@@ -65,7 +65,6 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 */
 function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV ) {
 	var info;
-	var tmp;
 	var sa1;
 	var sa2;
 	var kv;

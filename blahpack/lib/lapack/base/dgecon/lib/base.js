@@ -22,6 +22,8 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dlacn2 = require( '../../dlacn2/lib/base.js' );
 var dlatrs = require( '../../dlatrs/lib/base.js' );
 var drscl = require( '../../drscl/lib/base.js' );

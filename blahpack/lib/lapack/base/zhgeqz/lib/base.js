@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
@@ -31,7 +32,6 @@ var zlartg = require( '../../zlartg/lib/base.js' );
 var zladiv = require( '../../zladiv/lib/base.js' );
 var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 var zrot = require( '../../zrot/lib/base.js' );
-var cmplx = require( '../../../../cmplx.js' );
 
 
 // VARIABLES //
@@ -144,14 +144,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	var rq1;
 	var rz1;
 	var in0;
-	var jch;
 	var out;
 	var oAL = offsetALPHA * 2;
 	var oBE = offsetBETA * 2;
 	var sAL = strideALPHA * 2;
 	var sBE = strideBETA * 2;
-	var jc;
-	var jr;
 	var Hv = reinterpret( H, 0 );
 	var Tv = reinterpret( T, 0 );
 	var Qv = reinterpret( Q, 0 );
@@ -798,8 +795,6 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		var divr;
 		var t1r;
 		var t1i;
-		var t2r;
-		var t2i;
 		var idx;
 		var jj;
 

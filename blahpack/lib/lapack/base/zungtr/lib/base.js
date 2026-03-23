@@ -54,10 +54,9 @@ var zungql = require( '../../zungql/lib/base.js' );
 * @param {Complex128Array} WORK - workspace array
 * @param {integer} strideWORK - stride length for `WORK` (complex elements)
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK` (complex elements)
-* @param {integer} lwork - length of the workspace array
 * @returns {integer} status code (0 = success)
 */
-function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var upper;
 	var sa1;
 	var sa2;
@@ -113,7 +112,7 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		// Generate Q by calling zungql on the (N-1)x(N-1) leading submatrix
 		if ( N - 1 > 0 ) {
-			zungql( N - 1, N - 1, N - 1, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+			zungql(N - 1, N - 1, N - 1, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		}
 	} else {
 		// Q was determined by ZHETRD as a product of N-1 elementary reflectors
@@ -147,7 +146,7 @@ function zungtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 		// Starting at position (1, 1) (0-based)
 		if ( N > 1 ) {
 			pa = offsetA + strideA1 + strideA2; // A(1, 1) in complex-element addressing
-			zungqr( N - 1, N - 1, N - 1, A, strideA1, strideA2, pa, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+			zungqr(N - 1, N - 1, N - 1, A, strideA1, strideA2, pa, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 		}
 	}
 	return 0;

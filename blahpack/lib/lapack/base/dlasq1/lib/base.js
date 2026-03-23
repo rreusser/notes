@@ -24,6 +24,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dcopy = require( '../../../../blas/base/dcopy/lib/base.js' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlas2 = require( '../../dlas2/lib/base.js' );

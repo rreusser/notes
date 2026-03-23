@@ -47,15 +47,11 @@ var base = require( './base.js' );
 * @param {Float64Array} TAU - output array for the scalar factors of the reflectors (length N-1)
 * @param {integer} strideTAU - stride length for `TAU`
 * @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
-* @param {Float64Array} WORK - workspace array (unused; allocated internally)
-* @param {integer} strideWORK - stride length for `WORK` (unused)
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK` (unused)
-* @param {integer} lwork - workspace size (unused)
 * @throws {TypeError} first argument must be a valid matrix triangle
 * @throws {RangeError} second argument must be a nonnegative integer
 * @returns {integer} status code (0 = success)
 */
-function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
@@ -65,7 +61,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 	if ( N === 0 ) {
 		return 0;
 	}
-	return base( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+	return base(uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU );
 }
 
 

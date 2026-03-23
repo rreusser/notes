@@ -78,7 +78,7 @@ function runDorgqr( inputA, M, N, K, LDA ) {
 	dgeqrf( M, N, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	// Run dorgqr to generate Q
-	info = dorgqr( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	info = dorgqr(M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	return {
 		info: info,
@@ -130,7 +130,7 @@ test( 'dorgqr: k_zero (identity)', function t() {
 	A[ 0 ] = 99; A[ 1 ] = 77; A[ 2 ] = 55;
 	A[ 3 ] = 88; A[ 4 ] = 66; A[ 5 ] = 44;
 
-	info = dorgqr( 3, 2, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 64 );
+	info = dorgqr(3, 2, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO );
 	assertArrayClose( extractMatrix( A, 3, 3, 2 ), tc.Q, 1e-14, 'Q' );
@@ -143,7 +143,7 @@ test( 'dorgqr: n_zero quick return', function t() {
 	var A = new Float64Array( 1 );
 	var info;
 
-	info = dorgqr( 3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dorgqr(3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.INFO );
 });
 
@@ -154,7 +154,7 @@ test( 'dorgqr: m_zero quick return', function t() {
 	var A = new Float64Array( 1 );
 	var info;
 
-	info = dorgqr( 0, 0, 0, A, 1, 0, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dorgqr(0, 0, 0, A, 1, 0, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.INFO );
 });
 
@@ -265,7 +265,7 @@ test( 'dorgqr: 40x40_k34_blocked (blocked path with kk < N, zeroing columns)', f
 	dgeqrf( M, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	// Generate Q with N columns (N > K, so columns K..N-1 should be orthogonal complement)
-	info = dorgqr( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	info = dorgqr(M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 
 	// Verify orthogonality: Q^T * Q should be close to identity

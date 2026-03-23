@@ -44,11 +44,10 @@ var base = require( './base.js' );
 * @param {integer} strideTAU - `TAU` stride length
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */
-function zungbr( order, vect, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork ) {
+function zungbr( order, vect, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK ) {
 	var sa1;
 	var sa2;
 	var ot;
@@ -66,7 +65,7 @@ function zungbr( order, vect, M, N, K, A, LDA, TAU, strideTAU, WORK, strideWORK,
 	}
 	ot = stride2offset( N, strideTAU );
 	ow = stride2offset( N, strideWORK );
-	return base( vect, M, N, K, A, sa1, sa2, 0, TAU, strideTAU, ot, WORK, strideWORK, ow, lwork );
+	return base(vect, M, N, K, A, sa1, sa2, 0, TAU, strideTAU, ot, WORK, strideWORK, ow );
 }
 
 

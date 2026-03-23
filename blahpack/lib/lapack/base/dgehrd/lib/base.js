@@ -27,7 +27,7 @@ var dlarfb = require( '../../dlarfb/lib/base.js' );
 var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
 var NBMAX = 64;
 var LDT = NBMAX + 1;
-function dgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var LDWORK;
 	var IWT;
 	var sa1;

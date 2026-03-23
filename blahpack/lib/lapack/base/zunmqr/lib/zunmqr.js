@@ -47,11 +47,10 @@ var base = require( './base.js' );
 * @param {PositiveInteger} LDC - leading dimension of `C`
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */
-function zunmqr( order, side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK, lwork ) {
+function zunmqr( order, side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK ) {
 	var sa1;
 	var sa2;
 	var sc1;
@@ -75,7 +74,7 @@ function zunmqr( order, side, trans, M, N, K, A, LDA, TAU, strideTAU, C, LDC, WO
 	}
 	ot = stride2offset( N, strideTAU );
 	ow = stride2offset( N, strideWORK );
-	return base( side, trans, M, N, K, A, sa1, sa2, 0, TAU, strideTAU, ot, C, sc1, sc2, 0, WORK, strideWORK, ow, lwork );
+	return base(side, trans, M, N, K, A, sa1, sa2, 0, TAU, strideTAU, ot, C, sc1, sc2, 0, WORK, strideWORK, ow );
 }
 
 

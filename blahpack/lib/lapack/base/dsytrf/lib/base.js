@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dsytf2 = require( '../../dsytf2/lib/base.js' );
 var dlasyf = require( '../../dlasyf/lib/base.js' );
 

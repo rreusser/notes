@@ -20,7 +20,6 @@
 'use strict';
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zaxpy = require( '../../../../blas/base/zaxpy/lib/base.js' );
 var zcopy = require( '../../../../blas/base/zcopy/lib/base.js' );

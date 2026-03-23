@@ -50,7 +50,7 @@ test( 'zungqr: identity (K=0)', function t() {
 	var WORK = new Complex128Array( N * 32 );
 	var info;
 
-	info = zungqr( M, N, 0, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	info = zungqr(M, N, 0, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -66,7 +66,7 @@ test( 'zungqr: 3x3, K=2', function t() {
 	var WORK = new Complex128Array( 3 * 32 );
 	var info;
 
-	info = zungqr( 3, 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 3 * 32 );
+	info = zungqr(3, 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -82,7 +82,7 @@ test( 'zungqr: 4x3, K=3 (rectangular)', function t() {
 	var WORK = new Complex128Array( 3 * 32 );
 	var info;
 
-	info = zungqr( 4, 3, 3, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0, 3 * 32 );
+	info = zungqr(4, 3, 3, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -94,7 +94,7 @@ test( 'zungqr: N=0 quick return', function t() {
 	var WORK = new Complex128Array( 1 );
 	var info;
 
-	info = zungqr( 3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = zungqr(3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -105,7 +105,7 @@ test( 'zungqr: 1x1, K=1', function t() {
 	var WORK = new Complex128Array( 32 );
 	var info;
 
-	info = zungqr( 1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 32 );
+	info = zungqr(1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -121,7 +121,7 @@ test( 'zungqr: from QR factorization 4x4', function t() {
 	var WORK = new Complex128Array( N * 32 );
 	var info;
 
-	info = zungqr( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	info = zungqr(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
 });
@@ -137,7 +137,7 @@ test( 'zungqr: blocked 40x40 (K>NB triggers blocking)', function t() {
 	var WORK = new Complex128Array( N * 32 );
 	var info;
 
-	info = zungqr( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	info = zungqr(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-10, 'A' );
 });
@@ -153,7 +153,7 @@ test( 'zungqr: 8x5, K=5 (rectangular from QR)', function t() {
 	var WORK = new Complex128Array( N * 32 );
 	var info;
 
-	info = zungqr( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N * 32 );
+	info = zungqr(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
 });
@@ -164,7 +164,7 @@ test( 'zungqr: blocked K=35, N=40 (partial-block zero init, covers lines 117-122
 	// This covers lines 117-122 that are uncovered in the K=40 test.
 	//
 	// Strategy: QR-factor a 40x35 matrix, copy reflectors into a 40x40 matrix,
-	// then call zungqr(40, 40, 35) and verify Q^H * Q = I.
+	// then call zungqr(40, 40 ) and verify Q^H * Q = I.
 	var M = 40;
 	var N = 40;
 	var K = 35;
@@ -215,7 +215,7 @@ test( 'zungqr: blocked K=35, N=40 (partial-block zero init, covers lines 117-122
 
 	// Call zungqr to generate the 40x40 Q matrix
 	WORK = new Complex128Array( N * 64 );
-	info = zungqr( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, N * 64 );
+	info = zungqr(M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	// Verify Q is unitary: Q^H * Q should be I_40

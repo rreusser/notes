@@ -88,7 +88,7 @@ test( 'dorglq: 3x4_k3 (M < N, full K=M from LQ)', function t() {
 	var info;
 
 	dgelq2( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-	info = dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
@@ -110,7 +110,7 @@ test( 'dorglq: 3x3_k3 (square, full K=M from LQ)', function t() {
 	var info;
 
 	dgelq2( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-	info = dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
@@ -134,7 +134,7 @@ test( 'dorglq: 2x5_k2 (rectangular, M < N)', function t() {
 	var info;
 
 	dgelq2( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-	info = dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
@@ -155,7 +155,7 @@ test( 'dorglq: k0_identity (K=0 produces identity)', function t() {
 	var WORK = new Float64Array( M * 32 );
 	var info;
 
-	info = dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
@@ -168,7 +168,7 @@ test( 'dorglq: m0_quick (M=0 quick return)', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dorglq( 0, 4, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dorglq(0, 4, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 });
@@ -184,7 +184,7 @@ test( 'dorglq: 1x1_k1', function t() {
 	var info;
 
 	dgelq2( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-	info = dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
@@ -206,7 +206,7 @@ test( 'dorglq: 3x4_k2 (K < M, partial generation)', function t() {
 	var info;
 
 	dgelq2( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-	info = dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
@@ -238,7 +238,7 @@ test( 'dorglq: 35x40_k35_blocked (exercises blocked path, NB=32)', function t() 
 	// delegates to dgelq2 per panel). Using dgelq2 avoids potential
 	// blocking-order differences with the Fortran reference.
 	dgelq2( M, N, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
-	info = dorglq( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0 );
 	// Verify orthogonality: Q * Q^T = I
@@ -256,7 +256,7 @@ test( 'dorglq: 1x4_k1 (single row)', function t() {
 	var info;
 
 	dgelq2( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-	info = dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
@@ -269,7 +269,7 @@ test( 'dorglq: n0_quick (N=0 quick return)', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dorglq( 0, 0, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dorglq(0, 0, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 });
@@ -288,7 +288,7 @@ test( 'dorglq: verifies Q*Q^T = I for 3x4_k3', function t() {
 	var WORK = new Float64Array( M * 32 );
 
 	dgelq2( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-	dorglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	dorglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assertOrthogonal( A, M, N, 1e-14 );
 });
@@ -328,7 +328,7 @@ test( 'dorglq: blocked K=35, M=40 (partial-block zero init)', function t() {
 		}
 	}
 
-	info = dorglq( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, M * 64 );
+	info = dorglq(M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	// Verify Q * Q^T = I_40

@@ -71,10 +71,9 @@ var NB = 32;  // Block size (LAPACK default for DORGLQ)
 * @param {Float64Array} WORK - workspace (length >= M*NB)
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - workspace size (ignored, kept for API compatibility)
 * @returns {integer} status code (0 = success)
 */
-function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var ldwork;
 	var nb;
 	var nx;

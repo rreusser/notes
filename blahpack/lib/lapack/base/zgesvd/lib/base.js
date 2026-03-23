@@ -90,8 +90,6 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	var bignum;
 	var smlnum;
 	var irwork;
-	var ldwrkr;
-	var ldwrku;
 	var wntua;
 	var wntus;
 	var wntuo;
@@ -99,16 +97,13 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	var wntva;
 	var wntvs;
 	var wntvo;
-	var wntvn;
 	var minmn;
 	var itauq;
 	var itaup;
 	var iwork;
-	var chunk;
 	var anrm;
 	var iscl;
 	var info;
-	var ierr;
 	var ncvt;
 	var nrvt;
 	var itau;
@@ -117,17 +112,13 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	var eps;
 	var ncu;
 	var nru;
-	var blk;
 	var sa1;
 	var sa2;
 	var su1;
 	var su2;
 	var wsz;
 	var ie;
-	var ir;
-	var iu;
 	var WK;
-	var i;
 
 	// Compute stride variables for Float64 indexing (complex element strides * 2)
 	sa1 = strideA1;
@@ -147,7 +138,6 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	wntva = ( jobvt === 'A' || jobvt === 'all-rows' );
 	wntvs = ( jobvt === 'S' || jobvt === 'economy' );
 	wntvo = ( jobvt === 'O' || jobvt === 'overwrite' );
-	wntvn = ( jobvt === 'N' || jobvt === 'none' );
 	wntuas = wntua || wntus;
 	wntvas = wntva || wntvs;
 
@@ -227,13 +217,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			ncvt = 0;
 			if ( wntvo || wntvas ) {
 				// If right singular vectors desired, generate P^H in A
-				zungbr(
-					'p', N, N, N,
-					A, sa1, sa2, offsetA,
-					WK, 1, itaup,
-					WK, 1, iwork,
-					-1
-				);
+				zungbr('p', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 				ncvt = N;
 			}
 			irwork = ie + N;
@@ -278,44 +262,20 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// Copy lower triangle of A to U, then generate Q
 				zlacpy( 'lower', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 				ncu = ( wntus ) ? N : M;
-				zungbr(
-					'q', M, ncu, N,
-					U, su1, su2, offsetU,
-					WK, 1, itauq,
-					WK, 1, iwork,
-					-1
-				);
+				zungbr('q', M, ncu, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 			}
 			if ( wntvas ) {
 				// Copy upper triangle of A to VT, then generate P^H
 				zlacpy( 'upper', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
-				zungbr(
-					'p', N, N, N,
-					VT, svt1, svt2, offsetVT,
-					WK, 1, itaup,
-					WK, 1, iwork,
-					-1
-				);
+				zungbr('p', N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 			}
 			if ( wntuo ) {
 				// Generate Q in A
-				zungbr(
-					'q', M, N, N,
-					A, sa1, sa2, offsetA,
-					WK, 1, itauq,
-					WK, 1, iwork,
-					-1
-				);
+				zungbr('q', M, N, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
 			}
 			if ( wntvo ) {
 				// Generate P^H in A
-				zungbr(
-					'p', N, N, N,
-					A, sa1, sa2, offsetA,
-					WK, 1, itaup,
-					WK, 1, iwork,
-					-1
-				);
+				zungbr('p', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 			}
 			irwork = ie + N;
 
@@ -388,45 +348,21 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		if ( wntuas ) {
 			// Copy lower triangle of A to U, then generate Q
 			zlacpy( 'lower', M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
-			zungbr(
-				'q', M, M, N,
-				U, su1, su2, offsetU,
-				WK, 1, itauq,
-				WK, 1, iwork,
-				-1
-			);
+			zungbr('q', M, M, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 		}
 		if ( wntvas ) {
 			// Copy upper triangle of A to VT, then generate P^H
 			zlacpy( 'upper', M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 			nrvt = ( wntva ) ? N : M;
-			zungbr(
-				'p', nrvt, N, M,
-				VT, svt1, svt2, offsetVT,
-				WK, 1, itaup,
-				WK, 1, iwork,
-				-1
-			);
+			zungbr('p', nrvt, N, M, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 		}
 		if ( wntuo ) {
 			// Generate Q in A
-			zungbr(
-				'q', M, M, N,
-				A, sa1, sa2, offsetA,
-				WK, 1, itauq,
-				WK, 1, iwork,
-				-1
-			);
+			zungbr('q', M, M, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
 		}
 		if ( wntvo ) {
 			// Generate P^H in A
-			zungbr(
-				'p', M, N, M,
-				A, sa1, sa2, offsetA,
-				WK, 1, itaup,
-				WK, 1, iwork,
-				-1
-			);
+			zungbr('p', M, N, M, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 		}
 		irwork = ie + M;
 

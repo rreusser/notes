@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlartg = require( '../../dlartg/lib/base.js' );
 var dlas2 = require( '../../dlas2/lib/base.js' );
@@ -123,7 +124,9 @@ _     or max(1, 4_N) otherwise.
 * @returns {integer} info - 0 on success, >0 if convergence failed
 */
 function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
+	var splitFound;
 	var maxitdivn;
+	var converged;
 	var iterdivn;
 	var rotate;
 	var thresh;
@@ -148,11 +151,8 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	var unfl;
 	var info;
 	var idir;
-	var isub;
 	var iter;
 	var dout;
-	var splitFound;
-	var converged;
 	var svd2;
 	var nm12;
 	var nm13;
@@ -172,7 +172,6 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 	var h;
 	var r;
 	var i;
-	var j;
 
 	// Reuse module-level scratch for dlas2 output:
 	dout = DOUT;

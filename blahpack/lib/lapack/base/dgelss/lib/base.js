@@ -194,11 +194,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				WORK, 1, iwork );
 
 			// Multiply B := Q^T * B
-			dormqr( 'left', 'transpose', M, nrhs, N,
-				A, strideA1, strideA2, offsetA,
-				WORK, 1, itau,
-				B, strideB1, strideB2, offsetB,
-				WORK, 1, iwork, lwork - iwork );
+			dormqr('left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itau, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 			// Zero out below-diagonal of R
 			if ( N > 1 ) {
@@ -221,17 +217,10 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
-		dormbr( 'Q', 'left', 'transpose', mm, nrhs, N,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, itauq,
-			B, strideB1, strideB2, offsetB,
-			WORK, 1, iwork, lwork - iwork );
+		dormbr('Q', 'left', 'transpose', mm, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation: P_b^T stored in A
-		dorgbr( 'p', N, N, N,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		dorgbr('p', N, N, N, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
 		iwork = ie + N;
 
 		// Compute SVD of bidiagonal: S = singular values, A = P_b^T (right singular vectors)
@@ -318,9 +307,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = M;       // scratch after TAU
 
 		// Compute A = L * Q
-		dgelqf( M, N, A, strideA1, strideA2, offsetA,
-			WORK, 1, itau,
-			WORK, 1, iwork, lwork - iwork );
+		dgelqf(M, N, A, strideA1, strideA2, offsetA, WORK, 1, itau, WORK, 1, iwork );
 
 		il = iwork; // IL: copy of L starts here, ldwork-by-M stored column-major
 
@@ -345,17 +332,10 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
-		dormbr( 'Q', 'left', 'transpose', M, nrhs, M,
-			WORK, 1, ldwork, il,
-			WORK, 1, itauq,
-			B, strideB1, strideB2, offsetB,
-			WORK, 1, iwork, lwork - iwork );
+		dormbr('Q', 'left', 'transpose', M, nrhs, M, WORK, 1, ldwork, il, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation of L
-		dorgbr( 'p', M, M, M,
-			WORK, 1, ldwork, il,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		dorgbr('p', M, M, M, WORK, 1, ldwork, il, WORK, 1, itaup, WORK, 1, iwork );
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal of L
@@ -424,11 +404,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 
 		// Multiply by Q^T from LQ factorization: X = Q^T * [X_L; 0]
 		iwork = itau + M;
-		dormlq( 'left', 'transpose', N, nrhs, M,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, itau,
-			B, strideB1, strideB2, offsetB,
-			WORK, 1, iwork, lwork - iwork );
+		dormlq('left', 'transpose', N, nrhs, M, A, strideA1, strideA2, offsetA, WORK, 1, itau, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 	} else {
 		// ==========================================
 		// Path 2b: N > M, not enough workspace for LQ+copy — direct bidiag
@@ -447,17 +423,10 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation
-		dormbr( 'Q', 'left', 'transpose', M, nrhs, N,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, itauq,
-			B, strideB1, strideB2, offsetB,
-			WORK, 1, iwork, lwork - iwork );
+		dormbr('Q', 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation
-		dorgbr( 'p', M, N, M,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		dorgbr('p', M, N, M, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal (lower bidiagonal for M < N)

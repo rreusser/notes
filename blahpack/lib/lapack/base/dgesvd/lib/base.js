@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlange = require( '../../dlange/lib/base.js' );
 var dlascl = require( '../../dlascl/lib/base.js' );
@@ -33,7 +34,6 @@ var dgelqf = require( '../../dgelqf/lib/base.js' );
 var dorglq = require( '../../dorglq/lib/base.js' );
 var dgebrd = require( '../../dgebrd/lib/base.js' );
 var dorgbr = require( '../../dorgbr/lib/base.js' );
-var dormbr = require( '../../dormbr/lib/base.js' );
 var dbdsqr = require( '../../dbdsqr/lib/base.js' );
 var dgemm = require( '../../../../blas/base/dgemm/lib/base.js' );
 
@@ -220,10 +220,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				ncvt = 0;
 				if ( wntvo || wntvas ) {
 					// Generate P^T in A
-					dorgbr( 'p', N, N, N,
-						A, sa1, sa2, offsetA,
-						WK, 1, itaup,
-						WK, 1, iwork, -1 );
+					dorgbr('p', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 					ncvt = N;
 				}
 				iwork = ie + N;
@@ -264,8 +261,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir + 1 );
 
 				// Generate Q in A
-				dorgqr( M, N, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				ie = itau;
 				itauq = ie + N;
@@ -281,8 +277,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, iwork, wsz - iwork );
 
 				// Generate left bidiag vectors in WORK(IR)
-				dorgbr( 'q', N, N, N, WK, 1, ldwrkr, ir,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork );
 				iwork = ie + N;
 
 				// Perform bidiagonal QR iteration
@@ -331,8 +326,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				}
 
 				// Generate Q in A
-				dorgqr( M, N, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				ie = itau;
 				itauq = ie + N;
@@ -352,12 +346,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir );
 
 				// Generate left bidiag vectors in WORK(IR)
-				dorgbr( 'q', N, N, N, WK, 1, ldwrkr, ir,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork );
 
 				// Generate right bidiag vectors in VT
-				dorgbr( 'p', N, N, N, VT, svt1, svt2, offsetVT,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 				iwork = ie + N;
 
 				// Perform bidiagonal QR iteration
@@ -403,8 +395,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, ldwrkr, ir + 1 );
 
 					// Generate Q in A
-					dorgqr( M, N, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
+					dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 					ie = itau;
 					itauq = ie + N;
@@ -420,8 +411,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, iwork, wsz - iwork );
 
 					// Generate left bidiag vectors in WORK(IR)
-					dorgbr( 'q', N, N, N, WK, 1, ldwrkr, ir,
-						WK, 1, itauq, WK, 1, iwork, -1 );
+					dorgbr('q', N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork );
 					iwork = ie + N;
 
 					// Perform bidiagonal QR iteration
@@ -461,8 +451,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, ldwrku, iu + 1 );
 
 					// Generate Q in A
-					dorgqr( M, N, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
+					dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 					ie = itau;
 					itauq = ie + N;
@@ -482,12 +471,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, ldwrkr, ir );
 
 					// Generate left bidiag vectors Q in WORK(IU)
-					dorgbr( 'q', N, N, N, WK, 1, ldwrku, iu,
-						WK, 1, itauq, WK, 1, iwork, -1 );
+					dorgbr('q', N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork );
 
 					// Generate right bidiag vectors P^T in WORK(IR)
-					dorgbr( 'p', N, N, N, WK, 1, ldwrkr, ir,
-						WK, 1, itaup, WK, 1, iwork, -1 );
+					dorgbr('p', N, N, N, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork );
 					iwork = ie + N;
 
 					// Perform bidiagonal QR iteration
@@ -529,8 +516,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, ldwrku, iu + 1 );
 
 					// Generate Q in A
-					dorgqr( M, N, N, A, sa1, sa2, offsetA,
-						WK, 1, itau, WK, 1, iwork, -1 );
+					dorgqr(M, N, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 					ie = itau;
 					itauq = ie + N;
@@ -550,12 +536,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						VT, svt1, svt2, offsetVT );
 
 					// Generate left bidiag vectors in WORK(IU)
-					dorgbr( 'q', N, N, N, WK, 1, ldwrku, iu,
-						WK, 1, itauq, WK, 1, iwork, -1 );
+					dorgbr('q', N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork );
 
 					// Generate right bidiag vectors in VT
-					dorgbr( 'p', N, N, N, VT, svt1, svt2, offsetVT,
-						WK, 1, itaup, WK, 1, iwork, -1 );
+					dorgbr('p', N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 					iwork = ie + N;
 
 					// Perform bidiagonal QR iteration
@@ -599,8 +583,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, ldwrkr, ir + 1 );
 
 					// Generate Q in U (M-by-M)
-					dorgqr( M, M, N, U, su1, su2, offsetU,
-						WK, 1, itau, WK, 1, iwork, -1 );
+					dorgqr(M, M, N, U, su1, su2, offsetU, WK, 1, itau, WK, 1, iwork );
 
 					ie = itau;
 					itauq = ie + N;
@@ -616,8 +599,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, iwork, wsz - iwork );
 
 					// Generate left bidiag vectors in WORK(IR)
-					dorgbr( 'q', N, N, N, WK, 1, ldwrkr, ir,
-						WK, 1, itauq, WK, 1, iwork, -1 );
+					dorgbr('q', N, N, N, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork );
 					iwork = ie + N;
 
 					// Perform bidiagonal QR iteration
@@ -661,8 +643,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						U, su1, su2, offsetU );
 
 					// Generate Q in U (M-by-M)
-					dorgqr( M, M, N, U, su1, su2, offsetU,
-						WK, 1, itau, WK, 1, iwork, -1 );
+					dorgqr(M, M, N, U, su1, su2, offsetU, WK, 1, itau, WK, 1, iwork );
 
 					// Copy R to WORK(IU), zero below
 					dlacpy( 'upper', N, N, A, sa1, sa2, offsetA,
@@ -688,12 +669,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						WK, 1, ldwrkr, ir );
 
 					// Generate left bidiag vectors in WORK(IU)
-					dorgbr( 'q', N, N, N, WK, 1, ldwrku, iu,
-						WK, 1, itauq, WK, 1, iwork, -1 );
+					dorgbr('q', N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork );
 
 					// Generate right bidiag vectors in WORK(IR)
-					dorgbr( 'p', N, N, N, WK, 1, ldwrkr, ir,
-						WK, 1, itaup, WK, 1, iwork, -1 );
+					dorgbr('p', N, N, N, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork );
 					iwork = ie + N;
 
 					// Perform bidiagonal QR iteration
@@ -735,8 +714,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						U, su1, su2, offsetU );
 
 					// Generate Q in U (M-by-M)
-					dorgqr( M, M, N, U, su1, su2, offsetU,
-						WK, 1, itau, WK, 1, iwork, -1 );
+					dorgqr(M, M, N, U, su1, su2, offsetU, WK, 1, itau, WK, 1, iwork );
 
 					// Copy R to WORK(IU), zero below
 					dlacpy( 'upper', N, N, A, sa1, sa2, offsetA,
@@ -762,12 +740,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						VT, svt1, svt2, offsetVT );
 
 					// Generate left bidiag vectors in WORK(IU)
-					dorgbr( 'q', N, N, N, WK, 1, ldwrku, iu,
-						WK, 1, itauq, WK, 1, iwork, -1 );
+					dorgbr('q', N, N, N, WK, 1, ldwrku, iu, WK, 1, itauq, WK, 1, iwork );
 
 					// Generate right bidiag vectors in VT
-					dorgbr( 'p', N, N, N, VT, svt1, svt2, offsetVT,
-						WK, 1, itaup, WK, 1, iwork, -1 );
+					dorgbr('p', N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 					iwork = ie + N;
 
 					// Perform bidiagonal QR iteration
@@ -811,25 +787,21 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				dlacpy( 'lower', M, N, A, sa1, sa2, offsetA,
 					U, su1, su2, offsetU );
 				ncu = ( wntus ) ? N : M;
-				dorgbr( 'q', M, ncu, N, U, su1, su2, offsetU,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', M, ncu, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 			}
 			if ( wntvas ) {
 				// Copy upper triangle of A to VT, generate P^T
 				dlacpy( 'upper', N, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
-				dorgbr( 'p', N, N, N, VT, svt1, svt2, offsetVT,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 			}
 			if ( wntuo ) {
 				// Generate Q in A
-				dorgbr( 'q', M, N, N, A, sa1, sa2, offsetA,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', M, N, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
 			}
 			if ( wntvo ) {
 				// Generate P^T in A
-				dorgbr( 'p', N, N, N, A, sa1, sa2, offsetA,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 			}
 			iwork = ie + N;
 
@@ -888,8 +860,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			iwork = itau + M;
 
 			// Compute A = L*Q
-			dgelqf( M, N, A, sa1, sa2, offsetA,
-				WK, 1, itau, WK, 1, iwork, -1 );
+			dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 			// Zero out above L (upper triangle of first M columns)
 			if ( M > 1 ) {
@@ -911,8 +882,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 			if ( wntuo || wntuas ) {
 				// Generate Q from bidiag in A
-				dorgbr( 'q', M, M, M, A, sa1, sa2, offsetA,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', M, M, M, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
 			}
 			iwork = ie + M;
 			nru = 0;
@@ -945,8 +915,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			iwork = itau + M;
 
 			// Compute A = L*Q
-			dgelqf( M, N, A, sa1, sa2, offsetA,
-				WK, 1, itau, WK, 1, iwork, -1 );
+			dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 			// Copy L to WORK(IR), zero above
 			dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
@@ -955,8 +924,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				WK, 1, ldwrkr, ir + ldwrkr );
 
 			// Generate Q in A
-			dorglq( M, N, M, A, sa1, sa2, offsetA,
-				WK, 1, itau, WK, 1, iwork, -1 );
+			dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 			ie = itau;
 			itauq = ie + M;
@@ -972,8 +940,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				WK, 1, iwork, wsz - iwork );
 
 			// Generate right bidiag vectors P^T in WORK(IR)
-			dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
-				WK, 1, itaup, WK, 1, iwork, -1 );
+			dorgbr('p', M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork );
 			iwork = ie + M;
 
 			// Perform bidiagonal QR iteration
@@ -1011,8 +978,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			iwork = itau + M;
 
 			// Compute A = L*Q
-			dgelqf( M, N, A, sa1, sa2, offsetA,
-				WK, 1, itau, WK, 1, iwork, -1 );
+			dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 			// Copy L to U, zero above
 			dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
@@ -1021,8 +987,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				U, su1, su2, offsetU + su2 );
 
 			// Generate Q in A
-			dorglq( M, N, M, A, sa1, sa2, offsetA,
-				WK, 1, itau, WK, 1, iwork, -1 );
+			dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 			ie = itau;
 			itauq = ie + M;
@@ -1042,12 +1007,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				WK, 1, ldwrkr, ir );
 
 			// Generate right bidiag vectors P^T in WORK(IR)
-			dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
-				WK, 1, itaup, WK, 1, iwork, -1 );
+			dorgbr('p', M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork );
 
 			// Generate left bidiag vectors Q in U
-			dorgbr( 'q', M, M, M, U, su1, su2, offsetU,
-				WK, 1, itauq, WK, 1, iwork, -1 );
+			dorgbr('q', M, M, M, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 			iwork = ie + M;
 
 			// Perform bidiagonal QR iteration
@@ -1084,8 +1047,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				iwork = itau + M;
 
 				// Compute A = L*Q
-				dgelqf( M, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				// Copy L to WORK(IR), zero above
 				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
@@ -1094,8 +1056,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir + ldwrkr );
 
 				// Generate Q (M rows) in A
-				dorglq( M, N, M, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				ie = itau;
 				itauq = ie + M;
@@ -1111,8 +1072,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, iwork, wsz - iwork );
 
 				// Generate right bidiag vectors P^T in WORK(IR)
-				dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork );
 				iwork = ie + M;
 
 				// Perform bidiagonal QR iteration
@@ -1142,8 +1102,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				iwork = itau + M;
 
 				// Compute A = L*Q
-				dgelqf( M, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				// Copy L to WORK(IU), zero above
 				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
@@ -1152,8 +1111,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrku, iu + ldwrku );
 
 				// Generate Q in A
-				dorglq( M, N, M, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				ie = itau;
 				itauq = ie + M;
@@ -1173,12 +1131,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir );
 
 				// Generate right bidiag vectors P^T in WORK(IU)
-				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork );
 
 				// Generate left bidiag vectors Q in WORK(IR)
-				dorgbr( 'q', M, M, M, WK, 1, ldwrkr, ir,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', M, M, M, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork );
 				iwork = ie + M;
 
 				// Perform bidiagonal QR iteration
@@ -1210,8 +1166,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				iwork = itau + M;
 
 				// Compute A = L*Q
-				dgelqf( M, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				// Copy L to WORK(IU), zero above
 				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
@@ -1220,8 +1175,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrku, iu + ldwrku );
 
 				// Generate Q in A
-				dorglq( M, N, M, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorglq(M, N, M, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				ie = itau;
 				itauq = ie + M;
@@ -1241,12 +1195,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					U, su1, su2, offsetU );
 
 				// Generate right bidiag vectors P^T in WORK(IU)
-				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork );
 
 				// Generate left bidiag vectors Q in U
-				dorgbr( 'q', M, M, M, U, su1, su2, offsetU,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', M, M, M, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 				iwork = ie + M;
 
 				// Perform bidiagonal QR iteration
@@ -1276,8 +1228,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				iwork = itau + M;
 
 				// Compute A = L*Q
-				dgelqf( M, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				// Copy upper triangle of A to VT
 				dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
@@ -1290,8 +1241,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir + ldwrkr );
 
 				// Generate Q (N-by-N) in VT
-				dorglq( N, N, M, VT, svt1, svt2, offsetVT,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorglq(N, N, M, VT, svt1, svt2, offsetVT, WK, 1, itau, WK, 1, iwork );
 
 				ie = itau;
 				itauq = ie + M;
@@ -1307,8 +1257,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, iwork, wsz - iwork );
 
 				// Generate right bidiag vectors P^T in WORK(IR)
-				dorgbr( 'p', M, M, M, WK, 1, ldwrkr, ir,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', M, M, M, WK, 1, ldwrkr, ir, WK, 1, itaup, WK, 1, iwork );
 				iwork = ie + M;
 
 				// Perform bidiagonal QR iteration
@@ -1340,16 +1289,14 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				iwork = itau + M;
 
 				// Compute A = L*Q
-				dgelqf( M, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				// Copy upper triangle to VT
 				dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
 
 				// Generate Q (N-by-N) in VT
-				dorglq( N, N, M, VT, svt1, svt2, offsetVT,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorglq(N, N, M, VT, svt1, svt2, offsetVT, WK, 1, itau, WK, 1, iwork );
 
 				// Copy L to WORK(IU), zero above
 				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
@@ -1375,12 +1322,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir );
 
 				// Generate right bidiag vectors P^T in WORK(IU)
-				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork );
 
 				// Generate left bidiag vectors Q in WORK(IR)
-				dorgbr( 'q', M, M, M, WK, 1, ldwrkr, ir,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', M, M, M, WK, 1, ldwrkr, ir, WK, 1, itauq, WK, 1, iwork );
 				iwork = ie + M;
 
 				// Perform bidiagonal QR iteration
@@ -1414,16 +1359,14 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				iwork = itau + M;
 
 				// Compute A = L*Q
-				dgelqf( M, N, A, sa1, sa2, offsetA,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dgelqf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork );
 
 				// Copy upper triangle to VT
 				dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
 
 				// Generate Q (N-by-N) in VT
-				dorglq( N, N, M, VT, svt1, svt2, offsetVT,
-					WK, 1, itau, WK, 1, iwork, -1 );
+				dorglq(N, N, M, VT, svt1, svt2, offsetVT, WK, 1, itau, WK, 1, iwork );
 
 				// Copy L to WORK(IU), zero above
 				dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
@@ -1449,12 +1392,10 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					U, su1, su2, offsetU );
 
 				// Generate right bidiag vectors P^T in WORK(IU)
-				dorgbr( 'p', M, M, M, WK, 1, ldwrku, iu,
-					WK, 1, itaup, WK, 1, iwork, -1 );
+				dorgbr('p', M, M, M, WK, 1, ldwrku, iu, WK, 1, itaup, WK, 1, iwork );
 
 				// Generate left bidiag vectors Q in U
-				dorgbr( 'q', M, M, M, U, su1, su2, offsetU,
-					WK, 1, itauq, WK, 1, iwork, -1 );
+				dorgbr('q', M, M, M, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 				iwork = ie + M;
 
 				// Perform bidiagonal QR iteration
@@ -1497,26 +1438,22 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			// Copy lower triangle of A to U, generate Q
 			dlacpy( 'lower', M, M, A, sa1, sa2, offsetA,
 				U, su1, su2, offsetU );
-			dorgbr( 'q', M, M, N, U, su1, su2, offsetU,
-				WK, 1, itauq, WK, 1, iwork, -1 );
+			dorgbr('q', M, M, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 		}
 		if ( wntvas ) {
 			// Copy upper triangle of A to VT, generate P^T
 			dlacpy( 'upper', M, N, A, sa1, sa2, offsetA,
 				VT, svt1, svt2, offsetVT );
 			nrvt = ( wntva ) ? N : M;
-			dorgbr( 'p', nrvt, N, M, VT, svt1, svt2, offsetVT,
-				WK, 1, itaup, WK, 1, iwork, -1 );
+			dorgbr('p', nrvt, N, M, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 		}
 		if ( wntuo ) {
 			// Generate Q in A
-			dorgbr( 'q', M, M, N, A, sa1, sa2, offsetA,
-				WK, 1, itauq, WK, 1, iwork, -1 );
+			dorgbr('q', M, M, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
 		}
 		if ( wntvo ) {
 			// Generate P^T in A
-			dorgbr( 'p', M, N, M, A, sa1, sa2, offsetA,
-				WK, 1, itaup, WK, 1, iwork, -1 );
+			dorgbr('p', M, N, M, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 		}
 		iwork = ie + M;
 

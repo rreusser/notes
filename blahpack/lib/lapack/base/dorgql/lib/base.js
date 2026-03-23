@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dorg2l = require( '../../dorg2l/lib/base.js' );
 var dlarft = require( '../../dlarft/lib/base.js' );
 var dlarfb = require( '../../dlarfb/lib/base.js' );
@@ -70,10 +71,9 @@ var NB = 32;  // Block size (LAPACK default for DORGQL)
 * @param {Float64Array} WORK - workspace (ignored, allocated internally)
 * @param {integer} strideWORK - stride for WORK (ignored)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (ignored)
-* @param {integer} lwork - workspace size (ignored)
 * @returns {integer} status code (0 = success)
 */
-function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var ldwork;
 	var work;
 	var nb;

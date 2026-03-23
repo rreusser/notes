@@ -102,7 +102,7 @@ test( 'dsytrd: upper_4x4 (unblocked path)', function t() {
 	var info;
 	var res;
 
-	info = dsytrd( 'upper', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dsytrd('upper', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 4, d, e, TAU );
 	assertArrayClose( res.d, tc.d, 1e-14, 'd' );
@@ -120,7 +120,7 @@ test( 'dsytrd: lower_4x4 (unblocked path)', function t() {
 	var info;
 	var res;
 
-	info = dsytrd( 'lower', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dsytrd('lower', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 4, d, e, TAU );
 	assertArrayClose( res.d, tc.d, 1e-14, 'd' );
@@ -137,7 +137,7 @@ test( 'dsytrd: n_one_upper', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsytrd( 'upper', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dsytrd('upper', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
 });
@@ -151,7 +151,7 @@ test( 'dsytrd: n_one_lower', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsytrd( 'lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dsytrd('lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
 });
@@ -164,7 +164,7 @@ test( 'dsytrd: n_zero', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dsytrd( 'upper', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dsytrd('upper', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -178,7 +178,7 @@ test( 'dsytrd: upper_35x35 (blocked path)', function t() {
 	var info;
 	var res;
 
-	info = dsytrd( 'upper', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dsytrd('upper', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 35, d, e, TAU );
 	assertArrayClose( res.d, tc.d, 1e-12, 'd' );
@@ -196,7 +196,7 @@ test( 'dsytrd: lower_35x35 (blocked path)', function t() {
 	var info;
 	var res;
 
-	info = dsytrd( 'lower', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = dsytrd('lower', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 35, d, e, TAU );
 	assertArrayClose( res.d, tc.d, 1e-12, 'd' );

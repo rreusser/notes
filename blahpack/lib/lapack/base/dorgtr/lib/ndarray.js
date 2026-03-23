@@ -44,12 +44,11 @@ var base = require( './base.js' );
 * @param {Float64Array} WORK - workspace array
 * @param {integer} strideWORK - stride length for `WORK`
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - length of the workspace array
 * @throws {TypeError} first argument must be a valid matrix triangle
 * @throws {RangeError} second argument must be a nonnegative integer
 * @returns {integer} status code (0 = success)
 */
-function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
@@ -59,7 +58,7 @@ function dorgtr( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	if ( N === 0 ) {
 		return 0;
 	}
-	return base( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+	return base(uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 }
 
 

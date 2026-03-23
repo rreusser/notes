@@ -67,10 +67,9 @@ var dormlq = require( '../../dormlq/lib/base.js' );
 * @param {Float64Array} WORK - workspace
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - workspace size (unused, kept for API compat)
 * @returns {integer} info - 0 if successful
 */
-function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
+function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var applyq;
 	var notran;
 	var transt;
@@ -102,12 +101,7 @@ function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 		if ( nq >= K ) {
 			// Q was determined by a call to DGEBRD with NQ >= K
 			// Apply the full set of reflectors
-			dormqr( side, trans, M, N, K,
-				A, strideA1, strideA2, offsetA,
-				TAU, strideTAU, offsetTAU,
-				C, strideC1, strideC2, offsetC,
-				WORK, strideWORK, offsetWORK, lwork
-			);
+			dormqr(side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
 		} else if ( nq > 1 ) {
 			// Q was determined by a call to DGEBRD with NQ < K
 			// The reflectors are in columns 0..NQ-2 of A, starting from row 1
@@ -122,12 +116,7 @@ function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 				i1 = 0;
 				i2 = 1;
 			}
-			dormqr( side, trans, mi, ni, nq - 1,
-				A, strideA1, strideA2, offsetA + strideA1,
-				TAU, strideTAU, offsetTAU,
-				C, strideC1, strideC2, offsetC + (i1 * strideC1) + (i2 * strideC2),
-				WORK, strideWORK, offsetWORK, lwork
-			);
+			dormqr(side, trans, mi, ni, nq - 1, A, strideA1, strideA2, offsetA + strideA1, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC + (i1 * strideC1) + (i2 * strideC2), WORK, strideWORK, offsetWORK );
 		}
 	} else {
 		// Apply P or P^T (reflectors stored rowwise)
@@ -140,12 +129,7 @@ function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 
 		if ( nq > K ) {
 			// P^T was determined by a call to DGEBRD with NQ > K
-			dormlq( side, transt, M, N, K,
-				A, strideA1, strideA2, offsetA,
-				TAU, strideTAU, offsetTAU,
-				C, strideC1, strideC2, offsetC,
-				WORK, strideWORK, offsetWORK, lwork
-			);
+			dormlq(side, transt, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
 		} else if ( nq > 1 ) {
 			// P^T was determined by a call to DGEBRD with NQ <= K
 			// The reflectors are in rows 0..NQ-2 of A, starting from column 1
@@ -160,12 +144,7 @@ function dormbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 				i1 = 0;
 				i2 = 1;
 			}
-			dormlq( side, transt, mi, ni, nq - 1,
-				A, strideA1, strideA2, offsetA + strideA2,
-				TAU, strideTAU, offsetTAU,
-				C, strideC1, strideC2, offsetC + (i1 * strideC1) + (i2 * strideC2),
-				WORK, strideWORK, offsetWORK, lwork
-			);
+			dormlq(side, transt, mi, ni, nq - 1, A, strideA1, strideA2, offsetA + strideA2, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC + (i1 * strideC1) + (i2 * strideC2), WORK, strideWORK, offsetWORK );
 		}
 	}
 

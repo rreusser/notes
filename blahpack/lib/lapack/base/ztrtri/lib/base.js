@@ -32,7 +32,6 @@ var ztrsm = require( '../../../../blas/base/ztrsm/lib/base.js' );
 var NB = 2; // Block size for blocked algorithm (matches dtrtri)
 var CONE = new Complex128( 1.0, 0.0 );
 var CNEGONE = new Complex128( -1.0, 0.0 );
-var CZERO = new Complex128( 0.0, 0.0 );
 
 
 // MAIN //

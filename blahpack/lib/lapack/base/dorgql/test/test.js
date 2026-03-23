@@ -53,7 +53,7 @@ function runCase( inputName ) {
 	var info;
 
 	// Column-major: strideA1=1, strideA2=M
-	info = dorgql( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, N );
+	info = dorgql(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	return { info: info, Q: A };
 }
 
@@ -110,7 +110,7 @@ test( 'dorgql: N=0 quick return', function t() {
 	var A = new Float64Array( 1 );
 	var TAU = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dorgql( 3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = dorgql(3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -118,7 +118,7 @@ test( 'dorgql: M=0, N=0 quick return', function t() {
 	var A = new Float64Array( 1 );
 	var TAU = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dorgql( 0, 0, 0, A, 1, 0, 0, TAU, 1, 0, WORK, 1, 0, 0 );
+	var info = dorgql(0, 0, 0, A, 1, 0, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 

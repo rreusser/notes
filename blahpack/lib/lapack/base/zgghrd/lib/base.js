@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlartg = require( '../../zlartg/lib/base.js' );
@@ -88,7 +89,6 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	var s;
 	var f;
 	var g;
-	var j;
 
 	// Decode COMPQ
 	if ( compq === 'none' ) {

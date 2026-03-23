@@ -68,7 +68,6 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 */
 function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var negTau;
-	var conjT;
 	var tauv;
 	var sa1;
 	var sa2;
@@ -136,7 +135,6 @@ function zungl2( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				//        A(I+1,I), LDA, WORK)
 
 				// Stride along row = strideA2 (column stride)
-				conjT = new Complex128( tauv[ it ], -tauv[ it + 1 ] );
 				zlarf(
 					'right', M - i - 1, N - i,
 					A, strideA2, offsetA + (i * strideA1) + (i * strideA2),

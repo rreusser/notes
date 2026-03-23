@@ -22,8 +22,8 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );

@@ -111,7 +111,7 @@ test( 'zunmbr: Q, left, no transpose', function t() {
 	var LDC = 6;
 	var C = eye( 4, LDC );
 	var WORK = new Complex128Array( 200 );
-	var info = zunmbr( 'Q', 'left', 'no-transpose', 4, 4, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('Q', 'left', 'no-transpose', 4, 4, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -122,7 +122,7 @@ test( 'zunmbr: Q, left, conjugate transpose', function t() {
 	var LDC = 6;
 	var C = eye( 4, LDC );
 	var WORK = new Complex128Array( 200 );
-	var info = zunmbr( 'Q', 'left', 'conjugate-transpose', 4, 4, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('Q', 'left', 'conjugate-transpose', 4, 4, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -133,7 +133,7 @@ test( 'zunmbr: P, right, no transpose', function t() {
 	var LDC = 6;
 	var C = eye( 5, LDC );
 	var WORK = new Complex128Array( 200 );
-	var info = zunmbr( 'P', 'right', 'no-transpose', 5, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('P', 'right', 'no-transpose', 5, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -144,7 +144,7 @@ test( 'zunmbr: P, right, conjugate transpose', function t() {
 	var LDC = 6;
 	var C = eye( 5, LDC );
 	var WORK = new Complex128Array( 200 );
-	var info = zunmbr( 'P', 'right', 'conjugate-transpose', 5, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('P', 'right', 'conjugate-transpose', 5, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -154,7 +154,7 @@ test( 'zunmbr: M=0 quick return', function t() {
 	var TAU = new Complex128Array( 1 );
 	var C = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
-	var info = zunmbr( 'Q', 'left', 'no-transpose', 0, 0, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0, 1 );
+	var info = zunmbr('Q', 'left', 'no-transpose', 0, 0, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -164,7 +164,7 @@ test( 'zunmbr: Q, right, no transpose', function t() {
 	var LDC = 6;
 	var C = eye( 4, LDC );
 	var WORK = new Complex128Array( 200 );
-	var info = zunmbr( 'Q', 'right', 'no-transpose', 4, 4, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('Q', 'right', 'no-transpose', 4, 4, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -175,7 +175,7 @@ test( 'zunmbr: P, left, conjugate transpose', function t() {
 	var LDC = 6;
 	var C = eye( 5, LDC );
 	var WORK = new Complex128Array( 200 );
-	var info = zunmbr( 'P', 'left', 'conjugate-transpose', 5, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('P', 'left', 'conjugate-transpose', 5, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( C, tc.c.length ), tc.c, 1e-12, 'c' );
 });
@@ -191,10 +191,10 @@ test( 'zunmbr: Q, left, nq < K (M=3, K=5, truncated Q reflectors)', function t()
 	var WORK = new Complex128Array( 200 );
 
 	// Apply Q from left, then Q^H from left => should roundtrip to identity
-	var info = zunmbr( 'Q', 'left', 'no-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('Q', 'left', 'no-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after Q*C' );
 
-	info = zunmbr( 'Q', 'left', 'conjugate-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	info = zunmbr('Q', 'left', 'conjugate-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after Q^H*Q*C' );
 
 	// Verify roundtrip: Q^H * Q * I = I
@@ -212,10 +212,10 @@ test( 'zunmbr: Q, right, nq < K (N=3, K=5, truncated Q reflectors)', function t(
 	var WORK = new Complex128Array( 200 );
 
 	// Apply Q from right, then Q^H from right => roundtrip to identity
-	var info = zunmbr( 'Q', 'right', 'no-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('Q', 'right', 'no-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after C*Q' );
 
-	info = zunmbr( 'Q', 'right', 'conjugate-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	info = zunmbr('Q', 'right', 'conjugate-transpose', 3, 3, 5, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after C*Q*Q^H' );
 
 	var Cv = reinterpret( C, 0 );
@@ -235,10 +235,10 @@ test( 'zunmbr: P, left, nq <= K (M=3, K=4, truncated P reflectors)', function t(
 
 	// Apply P from left (trans = 'no-transpose' => internally becomes transt = 'conjugate-transpose'), then
 	// undo with P (trans = 'conjugate-transpose' => transt = 'no-transpose') => roundtrip
-	var info = zunmbr( 'P', 'left', 'no-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('P', 'left', 'no-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after P*C' );
 
-	info = zunmbr( 'P', 'left', 'conjugate-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	info = zunmbr('P', 'left', 'conjugate-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after P^H*P*C' );
 
 	var Cv = reinterpret( C, 0 );
@@ -255,10 +255,10 @@ test( 'zunmbr: P, right, nq <= K (N=3, K=4, truncated P reflectors)', function t
 	var WORK = new Complex128Array( 200 );
 
 	// Apply P from right, then undo => roundtrip
-	var info = zunmbr( 'P', 'right', 'no-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	var info = zunmbr('P', 'right', 'no-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after C*P' );
 
-	info = zunmbr( 'P', 'right', 'conjugate-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0, 200 );
+	info = zunmbr('P', 'right', 'conjugate-transpose', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info after C*P*P^H' );
 
 	var Cv = reinterpret( C, 0 );

@@ -44,13 +44,12 @@ var base = require( './base.js' );
 * @param {Float64Array} WORK - workspace (ignored, allocated internally)
 * @param {integer} strideWORK - stride for WORK (ignored)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (ignored)
-* @param {integer} lwork - workspace size (ignored)
 * @throws {RangeError} first argument must be a nonnegative integer
 * @throws {RangeError} second argument must be a nonnegative integer
 * @throws {RangeError} third argument must be a nonnegative integer
 * @returns {integer} status code (0 = success)
 */
-function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', M ) );
 	}
@@ -63,7 +62,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	if ( M === 0 || N === 0 ) {
 		return 0;
 	}
-	return base( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+	return base(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 }
 
 

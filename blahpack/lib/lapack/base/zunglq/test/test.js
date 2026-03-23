@@ -50,7 +50,7 @@ test( 'zunglq: identity (K=0)', function t() {
 	var WORK = new Complex128Array( M * 32 );
 	var info;
 
-	info = zunglq( M, N, 0, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = zunglq(M, N, 0, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -67,7 +67,7 @@ test( 'zunglq: 3x3, K=2', function t() {
 	var WORK = new Complex128Array( 3 * 32 );
 	var info;
 
-	info = zunglq( 3, 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 3 * 32 );
+	info = zunglq(3, 3, 2, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -84,7 +84,7 @@ test( 'zunglq: 3x4, K=3 (rectangular)', function t() {
 	var WORK = new Complex128Array( 3 * 32 );
 	var info;
 
-	info = zunglq( 3, 4, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 3 * 32 );
+	info = zunglq(3, 4, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -96,7 +96,7 @@ test( 'zunglq: M=0 quick return', function t() {
 	var WORK = new Complex128Array( 1 );
 	var info;
 
-	info = zunglq( 0, 3, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	info = zunglq(0, 3, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -107,7 +107,7 @@ test( 'zunglq: 1x1, K=1', function t() {
 	var WORK = new Complex128Array( 32 );
 	var info;
 
-	info = zunglq( 1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 32 );
+	info = zunglq(1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
@@ -123,7 +123,7 @@ test( 'zunglq: from LQ factorization 4x4', function t() {
 	var WORK = new Complex128Array( M * 32 );
 	var info;
 
-	info = zunglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = zunglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
 });
@@ -139,7 +139,7 @@ test( 'zunglq: blocked 40x40 (K>NB triggers blocking)', function t() {
 	var WORK = new Complex128Array( M * 32 );
 	var info;
 
-	info = zunglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = zunglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-10, 'A' );
 });
@@ -155,7 +155,7 @@ test( 'zunglq: 5x8, K=5 (rectangular from LQ)', function t() {
 	var WORK = new Complex128Array( M * 32 );
 	var info;
 
-	info = zunglq( M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0, M * 32 );
+	info = zunglq(M, N, K, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, expected.info, 'info' );
 	assertArrayClose( Array.from( reinterpret( A, 0 ) ), expected.A, 1e-12, 'A' );
 });
@@ -166,7 +166,7 @@ test( 'zunglq: blocked K=35, M=40 (partial-block zero init, covers lines 114-117
 	// This covers lines 114-117 that are uncovered in the K=40 test.
 	//
 	// Strategy: LQ-factor a 35x40 matrix, copy reflectors into a 40x40 matrix,
-	// then call zunglq(40, 40, 35) and verify Q * Q^H = I.
+	// then call zunglq(40, 40 ) and verify Q * Q^H = I.
 	var M = 40;
 	var N = 40;
 	var K = 35;
@@ -220,7 +220,7 @@ test( 'zunglq: blocked K=35, M=40 (partial-block zero init, covers lines 114-117
 
 	// Call zunglq to generate the 40x40 Q matrix
 	WORK = new Complex128Array( M * 64 );
-	info = zunglq( M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0, M * 64 );
+	info = zunglq(M, N, K, A, 1, LDA, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 
 	// Verify Q is unitary: Q * Q^H should be I_40

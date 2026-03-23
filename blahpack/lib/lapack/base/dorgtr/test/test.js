@@ -63,7 +63,7 @@ function dsytrdThenDorgtr( uplo, N, Asym ) {
 	var i;
 
 	// Call dsytrd to reduce to tridiagonal form
-	dsytrd( uplo, N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	dsytrd(uplo, N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0 );
 
 	// Copy A to Q (A now contains reflectors)
 	Q = new Float64Array( A );
@@ -72,7 +72,7 @@ function dsytrdThenDorgtr( uplo, N, Asym ) {
 	WORK = new Float64Array( 256 );
 
 	// Call dorgtr to generate Q
-	info = dorgtr( uplo, N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr(uplo, N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	return {
 		Q: Q,
@@ -163,7 +163,7 @@ test( 'dorgtr: N0_uplo_U', function t() {
 	var A = new Float64Array( 1 );
 	var info;
 
-	info = dorgtr( 'upper', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr('upper', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -173,7 +173,7 @@ test( 'dorgtr: N0_uplo_L', function t() {
 	var A = new Float64Array( 1 );
 	var info;
 
-	info = dorgtr( 'lower', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr('lower', 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -409,10 +409,10 @@ test( 'dorgtr: N=2 edge case (uplo_U)', function t() {
 	var j;
 	var k;
 
-	dsytrd( 'upper', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	dsytrd('upper', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0 );
 	Q = new Float64Array( A );
 	WORK = new Float64Array( 256 );
-	info = dorgtr( 'upper', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr('upper', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 
@@ -449,10 +449,10 @@ test( 'dorgtr: N=2 edge case (uplo_L)', function t() {
 	var j;
 	var k;
 
-	dsytrd( 'lower', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	dsytrd('lower', N, A, 1, N, 0, D, 1, 0, E, 1, 0, TAU, 1, 0 );
 	Q = new Float64Array( A );
 	WORK = new Float64Array( 256 );
-	info = dorgtr( 'lower', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0, 256 );
+	info = dorgtr('lower', N, Q, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 

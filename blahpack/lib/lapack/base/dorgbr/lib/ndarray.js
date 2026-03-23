@@ -45,14 +45,13 @@ var base = require( './base.js' );
 * @param {Float64Array} WORK - workspace (ignored, allocated internally by dependencies)
 * @param {integer} strideWORK - stride for WORK (ignored)
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK (ignored)
-* @param {integer} lwork - workspace size (ignored)
 * @throws {TypeError} first argument must be a valid vector type
 * @throws {RangeError} second argument must be a nonnegative integer
 * @throws {RangeError} third argument must be a nonnegative integer
 * @throws {RangeError} fourth argument must be a nonnegative integer
 * @returns {integer} info - 0 if successful
 */
-function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	if ( vect !== 'q' && vect !== 'p' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid vector type. Value: `%s`.', vect ) );
 	}
@@ -68,7 +67,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 	if ( M === 0 || N === 0 ) {
 		return 0;
 	}
-	return base( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork );
+	return base(vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK );
 }
 
 

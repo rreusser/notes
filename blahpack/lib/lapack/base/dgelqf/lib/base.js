@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dgelq2 = require( '../../dgelq2/lib/base.js' );
 var dlarfb = require( '../../dlarfb/lib/base.js' );
 var dlarft = require( '../../dlarft/lib/base.js' );
@@ -56,10 +57,9 @@ var DEFAULT_NB = 32;
 * @param {Float64Array} WORK - workspace array
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - length of WORK array
 * @returns {integer} info - 0 if successful
 */
-function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var ldwork;
 	var nbmin;
 	var iws;

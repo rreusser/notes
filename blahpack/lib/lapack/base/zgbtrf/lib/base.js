@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -76,7 +77,6 @@ function zgbtrf( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 	var ONE_NEG;
 	var WORK13;
 	var WORK31;
-	var iinfo;
 	var minMN;
 	var W13v;
 	var W31v;

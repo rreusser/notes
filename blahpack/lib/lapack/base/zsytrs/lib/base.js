@@ -65,8 +65,6 @@ function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 	var kp;
 	var tr;
 	var ti;
-	var tR;
-	var tI;
 	var p1;
 	var p2;
 	var k;

@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dlarfb = require( '../../dlarfb/lib/base.js' );
 var dlarft = require( '../../dlarft/lib/base.js' );
 var dorml2 = require( '../../dorml2/lib/base.js' );
@@ -63,10 +64,9 @@ var NB = 32; // Hardcoded block size
 * @param {Float64Array} WORK - workspace array
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
-* @param {integer} lwork - workspace size (unused, kept for API compat)
 * @returns {integer} info - 0 if successful
 */
-function dormlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
+function dormlq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var notran;
 	var transt;
 	var ldwork;

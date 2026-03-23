@@ -43,11 +43,10 @@ var base = require( './base.js' );
 * @param {integer} strideTAU - `TAU` stride length
 * @param {Float64Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */
-function dgehrd( order, N, ilo, ihi, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork ) {
+function dgehrd( order, N, ilo, ihi, A, LDA, TAU, strideTAU, WORK, strideWORK ) {
 	var sa1;
 	var sa2;
 	var ot;
@@ -65,7 +64,7 @@ function dgehrd( order, N, ilo, ihi, A, LDA, TAU, strideTAU, WORK, strideWORK, l
 	}
 	ot = stride2offset( N, strideTAU );
 	ow = stride2offset( N, strideWORK );
-	return base( N, ilo, ihi, A, sa1, sa2, 0, TAU, strideTAU, ot, WORK, strideWORK, ow, lwork );
+	return base(N, ilo, ihi, A, sa1, sa2, 0, TAU, strideTAU, ot, WORK, strideWORK, ow );
 }
 
 

@@ -127,7 +127,6 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	var kount;
 	var gamma;
 	var alpha;
-	var iflow;
 	var coef2;
 	var coef5;
 	var found;
@@ -314,7 +313,6 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				// Found isolated row i with single nonzero in column j
 				// (0-based i, j)
 				m = l - 1; // m = l in 1-based → l-1 in 0-based
-				iflow = 1;
 
 				// Perform permutation (label 160-180)
 				doPermute( i, j, m );
@@ -375,7 +373,6 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 					// Found isolated column j with single nonzero in row i
 					m = k - 1; // m = k in 1-based → k-1 in 0-based
-					iflow = 2;
 
 					doPermute( i, j, m );
 

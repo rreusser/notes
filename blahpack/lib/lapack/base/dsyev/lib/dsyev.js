@@ -43,11 +43,10 @@ var base = require( './base.js' );
 * @param {integer} strideW - `w` stride length
 * @param {Float64Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */
-function dsyev( order, jobz, uplo, N, A, LDA, w, strideW, WORK, strideWORK, lwork ) {
+function dsyev( order, jobz, uplo, N, A, LDA, w, strideW, WORK, strideWORK ) {
 	var sa1;
 	var sa2;
 	var ow;
@@ -65,7 +64,7 @@ function dsyev( order, jobz, uplo, N, A, LDA, w, strideW, WORK, strideWORK, lwor
 	}
 	ow = stride2offset( N, strideW );
 	ow = stride2offset( N, strideWORK );
-	return base( jobz, uplo, N, A, sa1, sa2, 0, w, strideW, ow, WORK, strideWORK, ow, lwork );
+	return base(jobz, uplo, N, A, sa1, sa2, 0, w, strideW, ow, WORK, strideWORK, ow );
 }
 
 

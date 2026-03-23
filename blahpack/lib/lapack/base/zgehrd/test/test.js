@@ -27,7 +27,7 @@ function runTest( name, N, ilo, ihi, inputA ) {
 	var A = new Complex128Array( N * N ); var av = reinterpret( A, 0 ); av.set( inputA );
 	var TAU = new Complex128Array( Math.max( 1, N - 1 ) );
 	var WORK = new Complex128Array( Math.max( 1, N * 32 + ( NBMAX + 1 ) * NBMAX ) );
-	var info = zgehrd( N, ilo, ihi, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	var info = zgehrd(N, ilo, ihi, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( av, new Float64Array( tc.A ), 1e-13, 'A' );
 	if ( tc.TAU ) {
@@ -44,7 +44,7 @@ test( 'zgehrd: n1', function () {
 	var tc = findCase( 'n_one' ); var A = new Complex128Array( 1 ); var av = reinterpret( A, 0 );
 	av[ 0 ] = 42.0; av[ 1 ] = 3.0;
 	var TAU = new Complex128Array( 1 ); var WORK = new Complex128Array( 1 );
-	var info = zgehrd( 1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	var info = zgehrd(1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.INFO ); assertArrayClose( av, new Float64Array( tc.A ), 1e-14, 'A' );
 });
 test( 'zgehrd: n2', function () { runTest( 'n_two', 2, 1, 2, new Float64Array([ 3,1, 4,-2, 1,-1, 2,0.5 ]) ); });
@@ -58,7 +58,7 @@ test( 'zgehrd: 40x40 blocked', function () {
 	for ( var idx = 1; idx <= N*N; idx++ ) { inputA[(idx-1)*2] = ((idx*13+7)%97)/10.0; inputA[(idx-1)*2+1] = ((idx*7+3)%53-26)/20.0; }
 	var A1 = new Complex128Array( N*N ); var av1 = reinterpret( A1, 0 ); av1.set( inputA );
 	var TAU1 = new Complex128Array( N-1 ); var WORK1 = new Complex128Array( N*32 + (NBMAX+1)*NBMAX );
-	var info = zgehrd( N, 1, N, A1, 1, N, 0, TAU1, 1, 0, WORK1, 1, 0, WORK1.length );
+	var info = zgehrd(N, 1, N, A1, 1, N, 0, TAU1, 1, 0, WORK1, 1, 0 );
 	assert.equal( info, 0, 'INFO' );
 	// Verify result is upper Hessenberg (zero below first subdiagonal)
 	var maxSubDiag = 0;

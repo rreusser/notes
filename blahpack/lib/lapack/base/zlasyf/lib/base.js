@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var izamax = require( '../../../../blas/base/izamax/lib/base.js' );

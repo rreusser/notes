@@ -47,7 +47,6 @@
 function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY ) {
 	var noTrans;
 	var temp;
-	var lenx;
 	var leny;
 	var sa1;
 	var sa2;
@@ -70,10 +69,8 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	sa2 = strideA2;
 
 	if ( noTrans ) {
-		lenx = N;
 		leny = M;
 	} else {
-		lenx = M;
 		leny = N;
 	}
 

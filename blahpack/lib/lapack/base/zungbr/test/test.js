@@ -134,7 +134,7 @@ test( 'zungbr: VECT=Q, M >= K (4x3 bidiagonal)', function t() {
 	var tc = findCase( 'vect_q_m_ge_k' );
 	var bd = setup4x3();
 	var WORK = new Complex128Array( 200 );
-	var info = zungbr( 'q', 4, 3, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, WORK, 1, 0, 200 );
+	var info = zungbr('q', 4, 3, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( bd.A, tc.a.length ), tc.a, 1e-12, 'a' );
 });
@@ -143,7 +143,7 @@ test( 'zungbr: VECT=P, K < N (3x5 bidiagonal)', function t() {
 	var tc = findCase( 'vect_p_k_lt_n' );
 	var bd = setup3x5();
 	var WORK = new Complex128Array( 200 );
-	var info = zungbr( 'p', 3, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, WORK, 1, 0, 200 );
+	var info = zungbr('p', 3, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( bd.A, tc.a.length ), tc.a, 1e-12, 'a' );
 });
@@ -152,7 +152,7 @@ test( 'zungbr: VECT=Q, M < K (3x4 bidiagonal, Q is 3x3)', function t() {
 	var tc = findCase( 'vect_q_m_lt_k' );
 	var bd = setup3x4();
 	var WORK = new Complex128Array( 200 );
-	var info = zungbr( 'q', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, WORK, 1, 0, 200 );
+	var info = zungbr('q', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( bd.A, tc.a.length ), tc.a, 1e-12, 'a' );
 });
@@ -161,7 +161,7 @@ test( 'zungbr: VECT=P, K >= N (4x3 bidiagonal, P^H is 3x3)', function t() {
 	var tc = findCase( 'vect_p_k_ge_n' );
 	var bd = setup4x3();
 	var WORK = new Complex128Array( 200 );
-	var info = zungbr( 'p', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, WORK, 1, 0, 200 );
+	var info = zungbr('p', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractRaw( bd.A, tc.a.length ), tc.a, 1e-12, 'a' );
 });
@@ -170,6 +170,6 @@ test( 'zungbr: M=0, N=0 quick return', function t() {
 	var A = new Complex128Array( 1 );
 	var TAU = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
-	var info = zungbr( 'q', 0, 0, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	var info = zungbr('q', 0, 0, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });

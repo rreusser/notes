@@ -60,7 +60,7 @@ test( 'zungql: 3x3 full Q (M=N=K=3)', function t() {
 	var TAU = new Complex128Array( new Float64Array([ 1.2, 0.1, 0.8, -0.2, 1.5, 0.3 ]).buffer );
 	var WORK = new Complex128Array( 100 );
 
-	var info = zungql( 3, 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 100 );
+	var info = zungql(3, 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info=0' );
 
 	var expected = extractNxN( tc.Q, 3, 3, 4 );
@@ -78,7 +78,7 @@ test( 'zungql: 4x3 rectangular (M=4, N=3, K=2)', function t() {
 	var TAU = new Complex128Array( new Float64Array([ 1.1, 0.2, 0.9, -0.1 ]).buffer );
 	var WORK = new Complex128Array( 100 );
 
-	var info = zungql( 4, 3, 2, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0, 100 );
+	var info = zungql(4, 3, 2, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info=0' );
 
 	var expected = extractNxN( tc.Q, 4, 3, 4 );
@@ -90,6 +90,6 @@ test( 'zungql: N=0', function t() {
 	var TAU = new Complex128Array( 0 );
 	var WORK = new Complex128Array( 1 );
 
-	var info = zungql( 3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, 1 );
+	var info = zungql(3, 0, 0, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info=0' );
 });

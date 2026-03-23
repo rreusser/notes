@@ -81,7 +81,7 @@ test( 'dgelqf: 3x5 (M < N)', function t() {
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 * 32 );
 
-	info = dgelqf( 3, 5, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(3, 5, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 3, 3, 5 ), tc.A, 1e-14, 'A' );
@@ -108,7 +108,7 @@ test( 'dgelqf: 5x3 (M > N)', function t() {
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 5 * 32 );
 
-	info = dgelqf( 5, 3, A, 1, 5, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(5, 3, A, 1, 5, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 5, 5, 3 ), tc.A, 1e-14, 'A' );
@@ -137,7 +137,7 @@ test( 'dgelqf: 4x4 (square)', function t() {
 	TAU = new Float64Array( 4 );
 	WORK = new Float64Array( 4 * 32 );
 
-	info = dgelqf( 4, 4, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(4, 4, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 4, 4, 4 ), tc.A, 1e-14, 'A' );
@@ -158,7 +158,7 @@ test( 'dgelqf: 1x1 (edge case)', function t() {
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 32 );
 
-	info = dgelqf( 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( Array.from( A ), tc.A, 1e-14, 'A' );
@@ -175,7 +175,7 @@ test( 'dgelqf: M=0 (quick return)', function t() {
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
 
-	info = dgelqf( 0, 5, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(0, 5, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'INFO' );
 });
@@ -190,7 +190,7 @@ test( 'dgelqf: N=0 (quick return)', function t() {
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
 
-	info = dgelqf( 3, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(3, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'INFO' );
 });
@@ -217,7 +217,7 @@ test( 'dgelqf: 35x40 (blocked path, NB=32)', function t() {
 	TAU = new Float64Array( 35 );
 	WORK = new Float64Array( 35 * 32 );
 
-	info = dgelqf( 35, 40, A, 1, 35, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(35, 40, A, 1, 35, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 35, 35, 40 ), tc.A, 1e-12, 'A' );
@@ -244,7 +244,7 @@ test( 'dgelqf: 2x6 (wide)', function t() {
 	TAU = new Float64Array( 2 );
 	WORK = new Float64Array( 2 * 32 );
 
-	info = dgelqf( 2, 6, A, 1, 2, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(2, 6, A, 1, 2, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 2, 2, 6 ), tc.A, 1e-14, 'A' );
@@ -269,7 +269,7 @@ test( 'dgelqf: compact layout (LDA=M, no padding)', function t() {
 	TAU = new Float64Array( 4 );
 	WORK = new Float64Array( 4 * 32 );
 
-	info = dgelqf( 4, 4, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(4, 4, A, 1, 4, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( Array.from( A ), tc.A, 1e-14, 'A' );
@@ -291,7 +291,7 @@ test( 'dgelqf: non-zero offset', function t() {
 	TAU = new Float64Array( 4 );
 	WORK = new Float64Array( 2 * 32 );
 
-	info = dgelqf( 2, 2, A, 1, 4, 5, TAU, 1, 1, WORK, 1, 0, WORK.length );
+	info = dgelqf(2, 2, A, 1, 4, 5, TAU, 1, 1, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'INFO' );
 	// Verify TAU was written at offset 1
@@ -314,7 +314,7 @@ test( 'dgelqf: null WORK triggers internal allocation', function t() {
 	A[ 0 * 3 + 2 ] = 3.0; A[ 1 * 3 + 2 ] = 2.0; A[ 2 * 3 + 2 ] = 5.0; A[ 3 * 3 + 2 ] = 2.0; A[ 4 * 3 + 2 ] = 3.0;
 	TAU = new Float64Array( 3 );
 
-	info = dgelqf( 3, 5, A, 1, 3, 0, TAU, 1, 0, null, 1, 0, 0 );
+	info = dgelqf(3, 5, A, 1, 3, 0, TAU, 1, 0, null, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 3, 3, 5 ), tc.A, 1e-14, 'A' );
@@ -341,7 +341,7 @@ test( 'dgelqf: padded LDA (LDA > M)', function t() {
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 * 32 );
 
-	info = dgelqf( 3, 5, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0, WORK.length );
+	info = dgelqf(3, 5, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 6, 3, 5 ), tc.A, 1e-14, 'A' );
