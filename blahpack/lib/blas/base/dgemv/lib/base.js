@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params */
+
 'use strict';
 
 // MAIN //
@@ -43,7 +45,7 @@
 * @returns {Float64Array} `y`
 */
 function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY ) {
-	var noTrans = ( trans === 'no-transpose' || trans === 'no-transpose' );
+	var noTrans;
 	var temp;
 	var lenx;
 	var leny;
@@ -56,6 +58,17 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	var jy;
 	var i;
 	var j;
+
+	noTrans = ( trans === 'no-transpose' );
+
+	// Quick return if possible
+	if ( M === 0 || N === 0 || ( alpha === 0.0 && beta === 1.0 ) ) {
+		return y;
+	}
+
+	sa1 = strideA1;
+	sa2 = strideA2;
+
 	if ( noTrans ) {
 		lenx = N;
 		leny = M;
@@ -74,7 +87,7 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 			}
 		} else {
 			for ( i = 0; i < leny; i++ ) {
-				y[ iy ] = beta * y[ iy ];
+				y[ iy ] *= beta;
 				iy += strideY;
 			}
 		}

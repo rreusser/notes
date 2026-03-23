@@ -76,7 +76,7 @@ function dsymv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 			}
 		} else {
 			for ( i = 0; i < N; i++ ) {
-				y[ iy ] = beta * y[ iy ];
+				y[ iy ] *= beta;
 				iy += strideY;
 			}
 		}

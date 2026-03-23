@@ -9,7 +9,8 @@
     "report": "node bin/report.js > progress.html",
     "lint:learnings": "! grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md 2>/dev/null | grep . && echo 'All LEARNINGS.md filled in' || (echo 'FAIL: Unfilled LEARNINGS.md found:' && grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md && exit 1)",
     "bundle:notebook": "esbuild notebooks/aaa/laplace-entry.js --bundle --format=esm --outfile=notebooks/aaa/laplace-bundle.js --platform=neutral --main-fields=main,module",
-    "dev": "npm run bundle:notebook && vite --port 5174"
+    "bundle:naca": "esbuild notebooks/naca/naca-entry.js --bundle --format=esm --outfile=notebooks/naca/naca-bundle.js --platform=neutral --main-fields=main,module",
+    "dev": "npm run bundle:notebook && npm run bundle:naca && vite --port 5174"
   },
   "keywords": [],
   "author": "",

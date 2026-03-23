@@ -43,7 +43,10 @@ export default defineConfig(async ({ command }) => {
       outDir: resolve(import.meta.dirname, "dist"),
       emptyOutDir: true,
       rollupOptions: {
-        input: [resolve(import.meta.dirname, "notebooks/aaa/index.html")],
+        input: [
+          resolve(import.meta.dirname, "notebooks/aaa/index.html"),
+          resolve(import.meta.dirname, "notebooks/naca/index.html"),
+        ],
       },
     },
     server: {

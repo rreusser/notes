@@ -122,12 +122,43 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	var sa2;
 	var su1;
 	var su2;
-	var wsz = Math.max( 1, 3 * minmn + Math.max( M, N ) + minmn * Math.max( M, N ) );
+	var wsz;
 	var ie;
 	var ir;
 	var iu;
 	var WK;
 	var i;
+
+	// Compute stride variables for Float64 indexing (complex element strides * 2)
+	sa1 = strideA1;
+	sa2 = strideA2;
+	su1 = strideU1;
+	su2 = strideU2;
+	svt1 = strideVT1;
+	svt2 = strideVT2;
+
+	minmn = Math.min( M, N );
+
+	// Decode job flags
+	wntua = ( jobu === 'A' || jobu === 'all-columns' );
+	wntus = ( jobu === 'S' || jobu === 'economy' );
+	wntuo = ( jobu === 'O' || jobu === 'overwrite' );
+	wntun = ( jobu === 'N' || jobu === 'none' );
+	wntva = ( jobvt === 'A' || jobvt === 'all-rows' );
+	wntvs = ( jobvt === 'S' || jobvt === 'economy' );
+	wntvo = ( jobvt === 'O' || jobvt === 'overwrite' );
+	wntvn = ( jobvt === 'N' || jobvt === 'none' );
+	wntuas = wntua || wntus;
+	wntvas = wntva || wntvs;
+
+	info = 0;
+
+	// Quick return
+	if ( M === 0 || N === 0 ) {
+		return 0;
+	}
+
+	wsz = Math.max( 1, 3 * minmn + Math.max( M, N ) + minmn * Math.max( M, N ) );
 	if ( lwork >= wsz ) {
 		WK = WORK;
 	} else {

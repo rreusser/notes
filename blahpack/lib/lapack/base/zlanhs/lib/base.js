@@ -60,6 +60,11 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 	var j;
 	var n = norm.charAt( 0 ).toUpperCase();
 
+	Av = reinterpret( A, 0 );
+	sa1 = strideA1 * 2;
+	sa2 = strideA2 * 2;
+	oA = offsetA * 2;
+
 	if ( n === 'M' ) {
 		// Max absolute value
 		value = 0.0;

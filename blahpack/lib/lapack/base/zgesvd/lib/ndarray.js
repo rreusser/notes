@@ -79,7 +79,8 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	if ( M === 0 || N === 0 ) {
 		return 0;
 	}
-	return base( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK );
+	var JOB_MAP = { 'all': 'A', 'some': 'S', 'overwrite': 'O', 'none': 'N' };
+	return base( JOB_MAP[ jobu ], JOB_MAP[ jobvt ], M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK );
 }
 
 

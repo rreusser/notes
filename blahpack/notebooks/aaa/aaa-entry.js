@@ -121,7 +121,7 @@ export function aaa(Z, F, tol = 1e-13, mmax = 100) {
 
     t0 = performance.now();
     const info = zgesvd(
-      'N', 'A', nJ, m,
+      'none', 'all', nJ, m,
       Adata, 1, nJ, 0,
       sData, 1, 0,
       UData, 1, 1, 0,

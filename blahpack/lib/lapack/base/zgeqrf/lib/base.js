@@ -55,7 +55,7 @@ var DEFAULT_NB = 32;
 * @returns {integer} status code (0 = success)
 */
 function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
-	var offsetT = offsetWORK + iws;
+	var offsetT;
 	var ldwork;
 	var nbmin;
 	var iws;
@@ -65,7 +65,25 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	var T;
 	var K;
 	var i;
+
+	K = Math.min( M, N );
+	if ( K === 0 ) {
+		return 0;
+	}
+	nb = DEFAULT_NB;
+	nbmin = 2;
+	nx = 0;
+	iws = N;
 	ldwork = N;
+	if ( WORK === null ) {
+		WORK = new Complex128Array( Math.max( 1, N * nb + nb * nb ) );
+	}
+	T = WORK;
+
+	if ( nb > 1 && nb < K ) {
+		iws = ldwork * nb;
+	}
+	offsetT = offsetWORK + iws;
 
 	if ( nb >= nbmin && nb < K && nx < K ) {
 		// Use blocked code

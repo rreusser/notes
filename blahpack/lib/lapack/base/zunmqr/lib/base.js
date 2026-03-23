@@ -67,7 +67,7 @@ var NB = 32; // Hardcoded block size
 * @returns {integer} info - 0 if successful
 */
 function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) {
-	var offsetT = offsetWORK + nw * nb;
+	var offsetT;
 	var notran;
 	var ldwork;
 	var left;
@@ -85,6 +85,42 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var i3;
 	var T;
 	var i;
+
+	left = ( side === 'left' || side === 'L' );
+	notran = ( trans === 'no-transpose' || trans === 'N' );
+
+	if ( left ) {
+		nq = M;
+		nw = Math.max( 1, N );
+	} else {
+		nq = N;
+		nw = Math.max( 1, M );
+	}
+
+	// Quick return
+	if ( M === 0 || N === 0 || K === 0 ) {
+		return 0;
+	}
+
+	nb = NB;
+	ldwork = nw;
+	ldt = nb + 1;
+	if ( WORK === null ) {
+		WORK = new Complex128Array( Math.max( 1, nw * nb + ldt * nb ) );
+	}
+	T = WORK;
+	offsetT = offsetWORK + nw * nb;
+
+	// If nb >= K, use unblocked code
+	if ( nb >= K ) {
+		zunm2r( side, trans, M, N, K,
+			A, strideA1, strideA2, offsetA,
+			TAU, strideTAU, offsetTAU,
+			C, strideC1, strideC2, offsetC,
+			WORK, strideWORK, offsetWORK
+		);
+		return 0;
+	}
 
 	// Determine iteration direction
 	if ( ( left && !notran ) || ( !left && notran ) ) {

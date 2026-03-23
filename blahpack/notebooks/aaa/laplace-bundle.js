@@ -4022,10 +4022,10 @@ var require_base2 = __commonJS({
       var bignum;
       var cfromc;
       var cfrom1;
+      var itype;
       var ctoc;
       var cto1;
       var done;
-      var itype;
       var iMax;
       var iMin;
       var mul;
@@ -4034,23 +4034,21 @@ var require_base2 = __commonJS({
       var k3;
       var k4;
       var ai;
-      var c;
       var i;
       var j;
-      c = type.charAt(0).toUpperCase();
-      if (c === "G") {
+      if (type === "general") {
         itype = 0;
-      } else if (c === "L") {
+      } else if (type === "lower") {
         itype = 1;
-      } else if (c === "U") {
+      } else if (type === "upper") {
         itype = 2;
-      } else if (c === "H") {
+      } else if (type === "upper-hessenberg") {
         itype = 3;
-      } else if (c === "B") {
+      } else if (type === "lower-band") {
         itype = 4;
-      } else if (c === "Q") {
+      } else if (type === "upper-band") {
         itype = 5;
-      } else if (c === "Z") {
+      } else if (type === "band") {
         itype = 6;
       } else {
         return -1;
@@ -4232,27 +4230,25 @@ var require_base4 = __commonJS({
         } else {
           out[1] = Math.max(fhmx, ga) * Math.sqrt(1 + Math.min(fhmx, ga) / Math.max(fhmx, ga) * (Math.min(fhmx, ga) / Math.max(fhmx, ga)));
         }
+      } else if (ga < fhmx) {
+        as = 1 + fhmn / fhmx;
+        at = (fhmx - fhmn) / fhmx;
+        au = ga / fhmx * (ga / fhmx);
+        c = 2 / (Math.sqrt(as * as + au) + Math.sqrt(at * at + au));
+        out[0] = fhmn * c;
+        out[1] = fhmx / c;
       } else {
-        if (ga < fhmx) {
+        au = fhmx / ga;
+        if (au === 0) {
+          out[0] = fhmn * fhmx / ga;
+          out[1] = ga;
+        } else {
           as = 1 + fhmn / fhmx;
           at = (fhmx - fhmn) / fhmx;
-          au = ga / fhmx * (ga / fhmx);
-          c = 2 / (Math.sqrt(as * as + au) + Math.sqrt(at * at + au));
-          out[0] = fhmn * c;
-          out[1] = fhmx / c;
-        } else {
-          au = fhmx / ga;
-          if (au === 0) {
-            out[0] = fhmn * fhmx / ga;
-            out[1] = ga;
-          } else {
-            as = 1 + fhmn / fhmx;
-            at = (fhmx - fhmn) / fhmx;
-            c = 1 / (Math.sqrt(1 + as * au * (as * au)) + Math.sqrt(1 + at * au * (at * au)));
-            out[0] = fhmn * c * au;
-            out[0] = out[0] + out[0];
-            out[1] = ga / (c + c);
-          }
+          c = 1 / (Math.sqrt(1 + as * au * (as * au)) + Math.sqrt(1 + at * au * (at * au)));
+          out[0] = fhmn * c * au;
+          out[0] += out[0];
+          out[1] = ga / (c + c);
         }
       }
       return out;
@@ -4353,7 +4349,11 @@ var require_base7 = __commonJS({
       if (dmin <= 0) {
         tau = -dmin;
         ttype = -1;
-        return { "tau": tau, "ttype": ttype, "g": g };
+        return {
+          "tau": tau,
+          "ttype": ttype,
+          "g": g
+        };
       }
       nn = 4 * n0 + pp;
       if (n0in === n0) {
@@ -4389,7 +4389,11 @@ var require_base7 = __commonJS({
               gam = dn;
               a2 = 0;
               if (Z(nn - 5) > Z(nn - 7)) {
-                return { "tau": tau0, "ttype": ttype, "g": g };
+                return {
+                  "tau": tau0,
+                  "ttype": ttype,
+                  "g": g
+                };
               }
               b2 = Z(nn - 5) / Z(nn - 7);
               np = nn - 9;
@@ -4397,26 +4401,38 @@ var require_base7 = __commonJS({
               np = nn - 2 * pp;
               gam = dn1;
               if (Z(np - 4) > Z(np - 2)) {
-                return { "tau": tau0, "ttype": ttype, "g": g };
+                return {
+                  "tau": tau0,
+                  "ttype": ttype,
+                  "g": g
+                };
               }
               a2 = Z(np - 4) / Z(np - 2);
               if (Z(nn - 9) > Z(nn - 11)) {
-                return { "tau": tau0, "ttype": ttype, "g": g };
+                return {
+                  "tau": tau0,
+                  "ttype": ttype,
+                  "g": g
+                };
               }
               b2 = Z(nn - 9) / Z(nn - 11);
               np = nn - 13;
             }
-            a2 = a2 + b2;
+            a2 += b2;
             for (i4 = np; i4 >= 4 * i0 - 1 + pp; i4 -= 4) {
               if (b2 === 0) {
                 break;
               }
               b1 = b2;
               if (Z(i4) > Z(i4 - 2)) {
-                return { "tau": tau0, "ttype": ttype, "g": g };
+                return {
+                  "tau": tau0,
+                  "ttype": ttype,
+                  "g": g
+                };
               }
-              b2 = b2 * (Z(i4) / Z(i4 - 2));
-              a2 = a2 + b2;
+              b2 *= Z(i4) / Z(i4 - 2);
+              a2 += b2;
               if (HUNDRD * Math.max(b2, b1) < a2 || CNST1 < a2) {
                 break;
               }
@@ -4434,22 +4450,30 @@ var require_base7 = __commonJS({
           b2 = Z(np - 6);
           gam = dn2;
           if (Z(np - 8) > b2 || Z(np - 4) > b1) {
-            return { "tau": tau0, "ttype": ttype, "g": g };
+            return {
+              "tau": tau0,
+              "ttype": ttype,
+              "g": g
+            };
           }
           a2 = Z(np - 8) / b2 * (1 + Z(np - 4) / b1);
           if (n0 - i0 > 2) {
             b2 = Z(nn - 13) / Z(nn - 15);
-            a2 = a2 + b2;
+            a2 += b2;
             for (i4 = nn - 17; i4 >= 4 * i0 - 1 + pp; i4 -= 4) {
               if (b2 === 0) {
                 break;
               }
               b1 = b2;
               if (Z(i4) > Z(i4 - 2)) {
-                return { "tau": tau0, "ttype": ttype, "g": g };
+                return {
+                  "tau": tau0,
+                  "ttype": ttype,
+                  "g": g
+                };
               }
-              b2 = b2 * (Z(i4) / Z(i4 - 2));
-              a2 = a2 + b2;
+              b2 *= Z(i4) / Z(i4 - 2);
+              a2 += b2;
               if (HUNDRD * Math.max(b2, b1) < a2 || CNST1 < a2) {
                 break;
               }
@@ -4461,7 +4485,7 @@ var require_base7 = __commonJS({
           }
         } else {
           if (ttype === -6) {
-            g = g + THIRD * (1 - g);
+            g += THIRD * (1 - g);
           } else if (ttype === -18) {
             g = QURTR * THIRD;
           } else {
@@ -4475,7 +4499,11 @@ var require_base7 = __commonJS({
           ttype = -7;
           s = THIRD * dmin1;
           if (Z(nn - 5) > Z(nn - 7)) {
-            return { "tau": tau0, "ttype": ttype, "g": g };
+            return {
+              "tau": tau0,
+              "ttype": ttype,
+              "g": g
+            };
           }
           b1 = Z(nn - 5) / Z(nn - 7);
           b2 = b1;
@@ -4483,10 +4511,14 @@ var require_base7 = __commonJS({
             for (i4 = 4 * n0 - 9 + pp; i4 >= 4 * i0 - 1 + pp; i4 -= 4) {
               a2 = b1;
               if (Z(i4) > Z(i4 - 2)) {
-                return { "tau": tau0, "ttype": ttype, "g": g };
+                return {
+                  "tau": tau0,
+                  "ttype": ttype,
+                  "g": g
+                };
               }
-              b1 = b1 * (Z(i4) / Z(i4 - 2));
-              b2 = b2 + b1;
+              b1 *= Z(i4) / Z(i4 - 2);
+              b2 += b1;
               if (HUNDRD * Math.max(b1, a2) < b2) {
                 break;
               }
@@ -4513,17 +4545,25 @@ var require_base7 = __commonJS({
           ttype = -10;
           s = THIRD * dmin2;
           if (Z(nn - 5) > Z(nn - 7)) {
-            return { "tau": tau0, "ttype": ttype, "g": g };
+            return {
+              "tau": tau0,
+              "ttype": ttype,
+              "g": g
+            };
           }
           b1 = Z(nn - 5) / Z(nn - 7);
           b2 = b1;
           if (b2 !== 0) {
             for (i4 = 4 * n0 - 9 + pp; i4 >= 4 * i0 - 1 + pp; i4 -= 4) {
               if (Z(i4) > Z(i4 - 2)) {
-                return { "tau": tau0, "ttype": ttype, "g": g };
+                return {
+                  "tau": tau0,
+                  "ttype": ttype,
+                  "g": g
+                };
               }
-              b1 = b1 * (Z(i4) / Z(i4 - 2));
-              b2 = b2 + b1;
+              b1 *= Z(i4) / Z(i4 - 2);
+              b2 += b1;
               if (HUNDRD * b1 < b2) {
                 break;
               }
@@ -4546,7 +4586,11 @@ var require_base7 = __commonJS({
         ttype = -12;
       }
       tau = s;
-      return { "tau": tau, "ttype": ttype, "g": g };
+      return {
+        "tau": tau,
+        "ttype": ttype,
+        "g": g
+      };
     }
     module.exports = dlasq4;
   }
@@ -4897,7 +4941,7 @@ var require_base9 = __commonJS({
           } else if (safmin * Z(j4 + 1) < Z(j4 - 2) && safmin * Z(j4 - 2) < Z(j4 + 1)) {
             temp = Z(j4 + 1) / Z(j4 - 2);
             setZ(j4, Z(j4 - 1) * temp);
-            d = d * temp;
+            d *= temp;
           } else {
             setZ(j4, Z(j4 + 1) * (Z(j4 - 1) / Z(j4 - 2)));
             d = Z(j4 + 1) * (d / Z(j4 - 2));
@@ -4916,7 +4960,7 @@ var require_base9 = __commonJS({
           } else if (safmin * Z(j4 + 2) < Z(j4 - 3) && safmin * Z(j4 - 3) < Z(j4 + 2)) {
             temp = Z(j4 + 2) / Z(j4 - 3);
             setZ(j4 - 1, Z(j4) * temp);
-            d = d * temp;
+            d *= temp;
           } else {
             setZ(j4 - 1, Z(j4 + 2) * (Z(j4) / Z(j4 - 3)));
             d = Z(j4 + 2) * (d / Z(j4 - 3));
@@ -5247,9 +5291,9 @@ var require_base11 = __commonJS({
       var i;
       var j;
       dir = -1;
-      if (id === "D" || id === "d") {
+      if (id === "decreasing") {
         dir = 0;
-      } else if (id === "I" || id === "i") {
+      } else if (id === "increasing") {
         dir = 1;
       }
       if (dir === -1) {
@@ -5308,14 +5352,12 @@ var require_base11 = __commonJS({
             } else {
               dmnmx = d2;
             }
+          } else if (d3 < d2) {
+            dmnmx = d2;
+          } else if (d3 < d1) {
+            dmnmx = d3;
           } else {
-            if (d3 < d2) {
-              dmnmx = d2;
-            } else if (d3 < d1) {
-              dmnmx = d3;
-            } else {
-              dmnmx = d1;
-            }
+            dmnmx = d1;
           }
           if (dir === 0) {
             i = start - 1;
@@ -5525,7 +5567,7 @@ var require_base12 = __commonJS({
         for (k = 2; k <= N; k++) {
           setZ(k, Z(2 * k - 1));
         }
-        dlasrt("D", N, z, stride, offset);
+        dlasrt("decreasing", N, z, stride, offset);
         setZ(2 * N - 1, d);
         return 0;
       }
@@ -5576,7 +5618,7 @@ var require_base12 = __commonJS({
           } else if (safmin * Z(i4 + 1) < Z(i4 - 2 * pp - 2) && safmin * Z(i4 - 2 * pp - 2) < Z(i4 + 1)) {
             temp = Z(i4 + 1) / Z(i4 - 2 * pp - 2);
             setZ(i4 - 2 * pp, Z(i4 - 1) * temp);
-            d = d * temp;
+            d *= temp;
           } else {
             setZ(i4 - 2 * pp, Z(i4 + 1) * (Z(i4 - 1) / Z(i4 - 2 * pp - 2)));
             d = Z(i4 + 1) * (d / Z(i4 - 2 * pp - 2));
@@ -5606,7 +5648,7 @@ var require_base12 = __commonJS({
           for (k = 2; k <= N; k++) {
             setZ(k, Z(4 * k - 3));
           }
-          dlasrt("D", N, z, stride, offset);
+          dlasrt("decreasing", N, z, stride, offset);
           e = ZERO;
           for (k = N; k >= 1; k--) {
             e += Z(k);
@@ -5808,10 +5850,10 @@ var require_base13 = __commonJS({
     var dlasrt = require_base11();
     var ZERO = 0;
     function dlasq1(N, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, offsetWORK) {
+      var safmin;
       var sigmx;
       var sigmn;
       var scale;
-      var safmin;
       var info;
       var eps;
       var out;
@@ -5850,7 +5892,7 @@ var require_base13 = __commonJS({
       }
       d[id] = Math.abs(d[id]);
       if (sigmx === ZERO) {
-        dlasrt("D", N, d, strideD, offsetD);
+        dlasrt("decreasing", N, d, strideD, offsetD);
         return 0;
       }
       id = offsetD;
@@ -5863,7 +5905,7 @@ var require_base13 = __commonJS({
       scale = Math.sqrt(eps / safmin);
       dcopy(N, d, strideD, offsetD, WORK, 2 * strideWORK, offsetWORK);
       dcopy(N - 1, e, strideE, offsetE, WORK, 2 * strideWORK, offsetWORK + strideWORK);
-      dlascl("G", 0, 0, sigmx, scale, 2 * N - 1, 1, WORK, strideWORK, (2 * N - 1) * strideWORK, offsetWORK);
+      dlascl("general", 0, 0, sigmx, scale, 2 * N - 1, 1, WORK, strideWORK, (2 * N - 1) * strideWORK, offsetWORK);
       iw = offsetWORK;
       for (i = 0; i < 2 * N - 1; i++) {
         WORK[iw] = WORK[iw] * WORK[iw];
@@ -5879,7 +5921,7 @@ var require_base13 = __commonJS({
           id += strideD;
           iw += strideWORK;
         }
-        dlascl("G", 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD);
+        dlascl("general", 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD);
       } else if (info === 2) {
         id = offsetD;
         ie = offsetE;
@@ -5893,8 +5935,8 @@ var require_base13 = __commonJS({
           id += strideD;
           iw += 2 * strideWORK;
         }
-        dlascl("G", 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD);
-        dlascl("G", 0, 0, scale, sigmx, N, 1, e, strideE, N * strideE, offsetE);
+        dlascl("general", 0, 0, scale, sigmx, N, 1, d, strideD, N * strideD, offsetD);
+        dlascl("general", 0, 0, scale, sigmx, N, 1, e, strideE, N * strideE, offsetE);
       }
       return info;
     }
@@ -6131,18 +6173,18 @@ var require_base17 = __commonJS({
     "use strict";
     var reinterpret2 = require_lib57();
     function zlasr(side, pivot, direct, M, N, c, strideC, offsetC, s, strideS, offsetS, A, strideA1, strideA2, offsetA) {
-      var ctemp;
-      var stemp;
       var tempRe;
       var tempIm;
-      var aRe;
-      var aIm;
-      var Av;
-      var sa1;
-      var sa2;
-      var oA;
+      var ctemp;
+      var stemp;
       var idx1;
       var idx2;
+      var aRe;
+      var aIm;
+      var sa1;
+      var sa2;
+      var Av;
+      var oA;
       var i;
       var j;
       if (M === 0 || N === 0) {
@@ -6152,9 +6194,9 @@ var require_base17 = __commonJS({
       sa1 = strideA1 * 2;
       sa2 = strideA2 * 2;
       oA = offsetA * 2;
-      if (side === "L" || side === "l") {
-        if (pivot === "V" || pivot === "v") {
-          if (direct === "F" || direct === "f") {
+      if (side === "left") {
+        if (pivot === "variable") {
+          if (direct === "forward") {
             for (j = 0; j < M - 1; j++) {
               ctemp = c[offsetC + j * strideC];
               stemp = s[offsetS + j * strideS];
@@ -6193,8 +6235,8 @@ var require_base17 = __commonJS({
               }
             }
           }
-        } else if (pivot === "T" || pivot === "t") {
-          if (direct === "F" || direct === "f") {
+        } else if (pivot === "top") {
+          if (direct === "forward") {
             for (j = 1; j < M; j++) {
               ctemp = c[offsetC + (j - 1) * strideC];
               stemp = s[offsetS + (j - 1) * strideS];
@@ -6233,8 +6275,8 @@ var require_base17 = __commonJS({
               }
             }
           }
-        } else if (pivot === "B" || pivot === "b") {
-          if (direct === "F" || direct === "f") {
+        } else if (pivot === "bottom") {
+          if (direct === "forward") {
             for (j = 0; j < M - 1; j++) {
               ctemp = c[offsetC + j * strideC];
               stemp = s[offsetS + j * strideS];
@@ -6274,9 +6316,9 @@ var require_base17 = __commonJS({
             }
           }
         }
-      } else if (side === "R" || side === "r") {
-        if (pivot === "V" || pivot === "v") {
-          if (direct === "F" || direct === "f") {
+      } else if (side === "right") {
+        if (pivot === "variable") {
+          if (direct === "forward") {
             for (j = 0; j < N - 1; j++) {
               ctemp = c[offsetC + j * strideC];
               stemp = s[offsetS + j * strideS];
@@ -6315,8 +6357,8 @@ var require_base17 = __commonJS({
               }
             }
           }
-        } else if (pivot === "T" || pivot === "t") {
-          if (direct === "F" || direct === "f") {
+        } else if (pivot === "top") {
+          if (direct === "forward") {
             for (j = 1; j < N; j++) {
               ctemp = c[offsetC + (j - 1) * strideC];
               stemp = s[offsetS + (j - 1) * strideS];
@@ -6355,8 +6397,8 @@ var require_base17 = __commonJS({
               }
             }
           }
-        } else if (pivot === "B" || pivot === "b") {
-          if (direct === "F" || direct === "f") {
+        } else if (pivot === "bottom") {
+          if (direct === "forward") {
             for (j = 0; j < N - 1; j++) {
               ctemp = c[offsetC + j * strideC];
               stemp = s[offsetS + j * strideS];
@@ -6478,13 +6520,13 @@ var require_base19 = __commonJS({
       var rotate;
       var thresh;
       var sminoa;
+      var tolmul;
       var lower;
       var oldcs;
       var oldsn;
       var shift;
       var sigmn;
       var sigmx;
-      var tolmul;
       var oldll;
       var oldm;
       var smax;
@@ -6502,18 +6544,18 @@ var require_base19 = __commonJS({
       var iter;
       var dout;
       var svd2;
+      var nm12;
+      var nm13;
       var rot;
       var eps;
       var nm1;
-      var nm12;
-      var nm13;
       var tol;
       var sll;
+      var lll;
       var cs;
       var sn;
       var mu;
       var ll;
-      var lll;
       var m;
       var f;
       var g;
@@ -6527,7 +6569,7 @@ var require_base19 = __commonJS({
       if (N === 0) {
         return 0;
       }
-      lower = uplo === "L" || uplo === "l";
+      lower = uplo === "lower";
       if (N === 1) {
         if (d[offsetD] < ZERO) {
           d[offsetD] = -d[offsetD];
@@ -6565,9 +6607,9 @@ var require_base19 = __commonJS({
         }
         if (nru > 0) {
           zlasr(
-            "R",
-            "V",
-            "F",
+            "right",
+            "variable",
+            "forward",
             nru,
             N,
             RWORK,
@@ -6584,9 +6626,9 @@ var require_base19 = __commonJS({
         }
         if (ncc > 0) {
           zlasr(
-            "L",
-            "V",
-            "F",
+            "left",
+            "variable",
+            "forward",
             N,
             ncc,
             RWORK,
@@ -6624,7 +6666,7 @@ var require_base19 = __commonJS({
             }
           }
         }
-        sminoa = sminoa / Math.sqrt(N);
+        sminoa /= Math.sqrt(N);
         thresh = Math.max(tol * sminoa, MAXITR * (N * (N * unfl)));
       } else {
         thresh = Math.max(Math.abs(tol) * smax, MAXITR * (N * (N * unfl)));
@@ -6641,13 +6683,13 @@ var require_base19 = __commonJS({
             break;
           }
           if (iter >= N) {
-            iter = iter - N;
-            iterdivn = iterdivn + 1;
+            iter -= N;
+            iterdivn += 1;
             if (iterdivn >= maxitdivn) {
               info = 0;
               for (i = 0; i < N - 1; i++) {
                 if (e[offsetE + i * strideE] !== ZERO) {
-                  info = info + 1;
+                  info += 1;
                 }
               }
               sortSingularValues(N, d, strideD, offsetD, ncvt, VT, strideVT1, strideVT2, offsetVT, nru, U, strideU1, strideU2, offsetU, ncc, C, strideC1, strideC2, offsetC);
@@ -6669,10 +6711,10 @@ var require_base19 = __commonJS({
             if (abse <= thresh) {
               e[offsetE + ll * strideE] = ZERO;
               if (ll === m - 1) {
-                m = m - 1;
+                m -= 1;
                 continue outer;
               }
-              ll = ll + 1;
+              ll += 1;
               break;
             }
             smax = Math.max(smax, abss, abse);
@@ -6741,7 +6783,7 @@ var require_base19 = __commonJS({
                 sinl
               );
             }
-            m = m - 2;
+            m -= 2;
             continue;
           }
           if (ll > oldm || m < oldll) {
@@ -6845,9 +6887,9 @@ var require_base19 = __commonJS({
               e[offsetE + (m - 1) * strideE] = h * oldsn;
               if (ncvt > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "F",
+                  "left",
+                  "variable",
+                  "forward",
                   m - ll + 1,
                   ncvt,
                   RWORK,
@@ -6864,9 +6906,9 @@ var require_base19 = __commonJS({
               }
               if (nru > 0) {
                 zlasr(
-                  "R",
-                  "V",
-                  "F",
+                  "right",
+                  "variable",
+                  "forward",
                   nru,
                   m - ll + 1,
                   RWORK,
@@ -6883,9 +6925,9 @@ var require_base19 = __commonJS({
               }
               if (ncc > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "F",
+                  "left",
+                  "variable",
+                  "forward",
                   m - ll + 1,
                   ncc,
                   RWORK,
@@ -6928,9 +6970,9 @@ var require_base19 = __commonJS({
               e[offsetE + ll * strideE] = h * oldsn;
               if (ncvt > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "B",
+                  "left",
+                  "variable",
+                  "backward",
                   m - ll + 1,
                   ncvt,
                   RWORK,
@@ -6947,9 +6989,9 @@ var require_base19 = __commonJS({
               }
               if (nru > 0) {
                 zlasr(
-                  "R",
-                  "V",
-                  "B",
+                  "right",
+                  "variable",
+                  "backward",
                   nru,
                   m - ll + 1,
                   RWORK,
@@ -6966,9 +7008,9 @@ var require_base19 = __commonJS({
               }
               if (ncc > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "B",
+                  "left",
+                  "variable",
+                  "backward",
                   m - ll + 1,
                   ncc,
                   RWORK,
@@ -7021,9 +7063,9 @@ var require_base19 = __commonJS({
               e[offsetE + (m - 1) * strideE] = f;
               if (ncvt > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "F",
+                  "left",
+                  "variable",
+                  "forward",
                   m - ll + 1,
                   ncvt,
                   RWORK,
@@ -7040,9 +7082,9 @@ var require_base19 = __commonJS({
               }
               if (nru > 0) {
                 zlasr(
-                  "R",
-                  "V",
-                  "F",
+                  "right",
+                  "variable",
+                  "forward",
                   nru,
                   m - ll + 1,
                   RWORK,
@@ -7059,9 +7101,9 @@ var require_base19 = __commonJS({
               }
               if (ncc > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "F",
+                  "left",
+                  "variable",
+                  "forward",
                   m - ll + 1,
                   ncc,
                   RWORK,
@@ -7115,9 +7157,9 @@ var require_base19 = __commonJS({
               }
               if (ncvt > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "B",
+                  "left",
+                  "variable",
+                  "backward",
                   m - ll + 1,
                   ncvt,
                   RWORK,
@@ -7134,9 +7176,9 @@ var require_base19 = __commonJS({
               }
               if (nru > 0) {
                 zlasr(
-                  "R",
-                  "V",
-                  "B",
+                  "right",
+                  "variable",
+                  "backward",
                   nru,
                   m - ll + 1,
                   RWORK,
@@ -7153,9 +7195,9 @@ var require_base19 = __commonJS({
               }
               if (ncc > 0) {
                 zlasr(
-                  "L",
-                  "V",
-                  "B",
+                  "left",
+                  "variable",
+                  "backward",
                   m - ll + 1,
                   ncc,
                   RWORK,
@@ -7252,10 +7294,10 @@ var require_base20 = __commonJS({
     var SBIG = 11113793747425387e-178;
     function dznrm2(N, zx, strideX, offsetX) {
       var notbig;
+      var sumsq;
       var abig;
       var amed;
       var asml;
-      var sumsq;
       var scl;
       var xv;
       var ax;
@@ -7983,10 +8025,10 @@ var require_base23 = __commonJS({
       var beta;
       var tauv;
       var tmp;
+      var knt;
       var av;
       var oA;
       var oT;
-      var knt;
       var j;
       tauv = reinterpret2(tau, 0);
       oT = offsetTau * 2;
@@ -8010,11 +8052,11 @@ var require_base23 = __commonJS({
         knt = 0;
         if (Math.abs(beta) < safmin) {
           do {
-            knt = knt + 1;
+            knt += 1;
             zdscal(N - 1, rsafmn, x, strideX, offsetX);
-            beta = beta * rsafmn;
-            alphi = alphi * rsafmn;
-            alphr = alphr * rsafmn;
+            beta *= rsafmn;
+            alphi *= rsafmn;
+            alphr *= rsafmn;
           } while (Math.abs(beta) < safmin && knt < 20);
           xnorm = dznrm2(N - 1, x, strideX, offsetX);
           av[oA] = alphr;
@@ -8032,7 +8074,7 @@ var require_base23 = __commonJS({
         SCRATCH_CAv[1] = SCRATCH[1];
         zscal(N - 1, SCRATCH_CA.get(0), x, strideX, offsetX);
         for (j = 0; j < knt; j++) {
-          beta = beta * safmin;
+          beta *= safmin;
         }
         av[oA] = beta;
         av[oA + 1] = 0;
@@ -8089,8 +8131,8 @@ var require_base24 = __commonJS({
       if (alphaR === 0 && alphaI === 0 && betaR === 1 && betaI === 0) {
         return y;
       }
-      noTrans = trans === "N" || trans === "n";
-      noConj = trans === "T" || trans === "t";
+      noTrans = trans === "no-transpose";
+      noConj = trans === "transpose";
       if (noTrans) {
         lenx = N;
         leny = M;
@@ -8261,9 +8303,9 @@ var require_base26 = __commonJS({
     var reinterpret2 = require_lib57();
     function ilazlr(M, N, A, strideA1, strideA2, offsetA) {
       var result;
-      var Av;
       var sa1;
       var sa2;
+      var Av;
       var oA;
       var re;
       var im;
@@ -8313,9 +8355,9 @@ var require_base27 = __commonJS({
     "use strict";
     var reinterpret2 = require_lib57();
     function ilazlc(M, N, A, strideA1, strideA2, offsetA) {
-      var Av;
       var sa1;
       var sa2;
+      var Av;
       var oA;
       var re;
       var im;
@@ -8381,7 +8423,7 @@ var require_base28 = __commonJS({
       oT = offsetTau * 2;
       tauR = tauv[oT];
       tauI = tauv[oT + 1];
-      applyLeft = side === "L" || side === "l";
+      applyLeft = side === "left";
       lastv = 0;
       lastc = 0;
       if (tauR !== 0 || tauI !== 0) {
@@ -8411,7 +8453,7 @@ var require_base28 = __commonJS({
       if (applyLeft) {
         if (lastv > 0) {
           zgemv(
-            "C",
+            "conjugate-transpose",
             lastv,
             lastc,
             ONE,
@@ -8446,7 +8488,7 @@ var require_base28 = __commonJS({
       } else {
         if (lastv > 0) {
           zgemv(
-            "N",
+            "no-transpose",
             lastc,
             lastv,
             ONE,
@@ -8528,10 +8570,10 @@ var require_base30 = __commonJS({
       var taup_off;
       var sa1;
       var sa2;
-      var oA;
-      var Av;
       var aii;
       var aij;
+      var oA;
+      var Av;
       var i;
       Av = reinterpret2(A, 0);
       tauq_f64 = reinterpret2(TAUQ, 0);
@@ -8562,7 +8604,7 @@ var require_base30 = __commonJS({
             conj_f64[0] = tauq_f64[(offsetTAUQ + i * strideTAUQ) * 2];
             conj_f64[1] = -tauq_f64[(offsetTAUQ + i * strideTAUQ) * 2 + 1];
             zlarf(
-              "L",
+              "left",
               M - i,
               N - i - 1,
               A,
@@ -8599,7 +8641,7 @@ var require_base30 = __commonJS({
             Av[aij] = 1;
             Av[aij + 1] = 0;
             zlarf(
-              "R",
+              "right",
               M - i - 1,
               N - i - 1,
               A,
@@ -8644,7 +8686,7 @@ var require_base30 = __commonJS({
           Av[aii + 1] = 0;
           if (i < M - 1) {
             zlarf(
-              "R",
+              "right",
               M - i - 1,
               N - i,
               A,
@@ -8683,7 +8725,7 @@ var require_base30 = __commonJS({
             conj_f64[0] = tauq_f64[(offsetTAUQ + i * strideTAUQ) * 2];
             conj_f64[1] = -tauq_f64[(offsetTAUQ + i * strideTAUQ) * 2 + 1];
             zlarf(
-              "L",
+              "left",
               M - i - 1,
               N - i - 1,
               A,
@@ -8728,18 +8770,18 @@ var require_base31 = __commonJS({
       var betaI;
       var tempR;
       var tempI;
-      var nota;
-      var notb;
       var conja;
       var conjb;
-      var cR;
-      var cI;
+      var nota;
+      var notb;
       var sa1;
       var sa2;
       var sb1;
       var sb2;
       var sc1;
       var sc2;
+      var cR;
+      var cI;
       var ci;
       var ai;
       var bi;
@@ -8763,10 +8805,10 @@ var require_base31 = __commonJS({
       alphaI = imag(alpha);
       betaR = real(beta);
       betaI = imag(beta);
-      nota = transa === "N" || transa === "n";
-      notb = transb === "N" || transb === "n";
-      conja = transa === "C" || transa === "c";
-      conjb = transb === "C" || transb === "c";
+      nota = transa === "no-transpose";
+      notb = transb === "no-transpose";
+      conja = transa === "conjugate-transpose";
+      conjb = transb === "conjugate-transpose";
       if (alphaR === 0 && alphaI === 0 && betaR === 1 && betaI === 0) {
         return C;
       }
@@ -9039,63 +9081,61 @@ var require_base31 = __commonJS({
             }
           }
         }
-      } else {
-        if (conjb) {
-          for (j = 0; j < N; j++) {
-            for (i = 0; i < M; i++) {
-              tempR = 0;
-              tempI = 0;
-              ai = oA + i * sa2;
-              bi = oB + j * sb1;
-              for (l = 0; l < K; l++) {
-                aR = Av[ai];
-                aI = Av[ai + 1];
-                bR = Bv[bi];
-                bI = -Bv[bi + 1];
-                tempR += aR * bR - aI * bI;
-                tempI += aR * bI + aI * bR;
-                ai += sa1;
-                bi += sb2;
-              }
-              ci = oC + i * sc1 + j * sc2;
-              if (betaR === 0 && betaI === 0) {
-                Cv[ci] = alphaR * tempR - alphaI * tempI;
-                Cv[ci + 1] = alphaR * tempI + alphaI * tempR;
-              } else {
-                cR = Cv[ci];
-                cI = Cv[ci + 1];
-                Cv[ci] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-                Cv[ci + 1] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
-              }
+      } else if (conjb) {
+        for (j = 0; j < N; j++) {
+          for (i = 0; i < M; i++) {
+            tempR = 0;
+            tempI = 0;
+            ai = oA + i * sa2;
+            bi = oB + j * sb1;
+            for (l = 0; l < K; l++) {
+              aR = Av[ai];
+              aI = Av[ai + 1];
+              bR = Bv[bi];
+              bI = -Bv[bi + 1];
+              tempR += aR * bR - aI * bI;
+              tempI += aR * bI + aI * bR;
+              ai += sa1;
+              bi += sb2;
+            }
+            ci = oC + i * sc1 + j * sc2;
+            if (betaR === 0 && betaI === 0) {
+              Cv[ci] = alphaR * tempR - alphaI * tempI;
+              Cv[ci + 1] = alphaR * tempI + alphaI * tempR;
+            } else {
+              cR = Cv[ci];
+              cI = Cv[ci + 1];
+              Cv[ci] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+              Cv[ci + 1] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
             }
           }
-        } else {
-          for (j = 0; j < N; j++) {
-            for (i = 0; i < M; i++) {
-              tempR = 0;
-              tempI = 0;
-              ai = oA + i * sa2;
-              bi = oB + j * sb1;
-              for (l = 0; l < K; l++) {
-                aR = Av[ai];
-                aI = Av[ai + 1];
-                bR = Bv[bi];
-                bI = Bv[bi + 1];
-                tempR += aR * bR - aI * bI;
-                tempI += aR * bI + aI * bR;
-                ai += sa1;
-                bi += sb2;
-              }
-              ci = oC + i * sc1 + j * sc2;
-              if (betaR === 0 && betaI === 0) {
-                Cv[ci] = alphaR * tempR - alphaI * tempI;
-                Cv[ci + 1] = alphaR * tempI + alphaI * tempR;
-              } else {
-                cR = Cv[ci];
-                cI = Cv[ci + 1];
-                Cv[ci] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
-                Cv[ci + 1] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
-              }
+        }
+      } else {
+        for (j = 0; j < N; j++) {
+          for (i = 0; i < M; i++) {
+            tempR = 0;
+            tempI = 0;
+            ai = oA + i * sa2;
+            bi = oB + j * sb1;
+            for (l = 0; l < K; l++) {
+              aR = Av[ai];
+              aI = Av[ai + 1];
+              bR = Bv[bi];
+              bI = Bv[bi + 1];
+              tempR += aR * bR - aI * bI;
+              tempI += aR * bI + aI * bR;
+              ai += sa1;
+              bi += sb2;
+            }
+            ci = oC + i * sc1 + j * sc2;
+            if (betaR === 0 && betaI === 0) {
+              Cv[ci] = alphaR * tempR - alphaI * tempI;
+              Cv[ci + 1] = alphaR * tempI + alphaI * tempR;
+            } else {
+              cR = Cv[ci];
+              cI = Cv[ci + 1];
+              Cv[ci] = alphaR * tempR - alphaI * tempI + betaR * cR - betaI * cI;
+              Cv[ci + 1] = alphaR * tempI + alphaI * tempR + betaR * cI + betaI * cR;
             }
           }
         }
@@ -9124,9 +9164,9 @@ var require_base32 = __commonJS({
       var alphaRe;
       var alphaIm;
       var alpha;
-      var Av;
       var sa1;
       var sa2;
+      var Av;
       var ia;
       var i;
       alpha = new Complex128Array2(1);
@@ -9140,7 +9180,7 @@ var require_base32 = __commonJS({
         for (i = 0; i < nb; i++) {
           zlacgv(i, Y, strideY2, offsetY + i * strideY1);
           zgemv(
-            "N",
+            "no-transpose",
             M - i,
             i,
             NEGONE,
@@ -9158,7 +9198,7 @@ var require_base32 = __commonJS({
           );
           zlacgv(i, Y, strideY2, offsetY + i * strideY1);
           zgemv(
-            "N",
+            "no-transpose",
             M - i,
             i,
             NEGONE,
@@ -9194,7 +9234,7 @@ var require_base32 = __commonJS({
             Av[ia] = 1;
             Av[ia + 1] = 0;
             zgemv(
-              "C",
+              "conjugate-transpose",
               M - i,
               N - i - 1,
               ONE,
@@ -9211,7 +9251,7 @@ var require_base32 = __commonJS({
               offsetY + (i + 1) * strideY1 + i * strideY2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               M - i,
               i,
               ONE,
@@ -9228,7 +9268,7 @@ var require_base32 = __commonJS({
               offsetY + i * strideY2
             );
             zgemv(
-              "N",
+              "no-transpose",
               N - i - 1,
               i,
               NEGONE,
@@ -9245,7 +9285,7 @@ var require_base32 = __commonJS({
               offsetY + (i + 1) * strideY1 + i * strideY2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               M - i,
               i,
               ONE,
@@ -9262,7 +9302,7 @@ var require_base32 = __commonJS({
               offsetY + i * strideY2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               i,
               N - i - 1,
               NEGONE,
@@ -9288,7 +9328,7 @@ var require_base32 = __commonJS({
             zlacgv(N - i - 1, A, strideA2, offsetA + i * strideA1 + (i + 1) * strideA2);
             zlacgv(i + 1, A, strideA2, offsetA + i * strideA1);
             zgemv(
-              "N",
+              "no-transpose",
               N - i - 1,
               i + 1,
               NEGONE,
@@ -9307,7 +9347,7 @@ var require_base32 = __commonJS({
             zlacgv(i + 1, A, strideA2, offsetA + i * strideA1);
             zlacgv(i, X, strideX2, offsetX + i * strideX1);
             zgemv(
-              "C",
+              "conjugate-transpose",
               i,
               N - i - 1,
               NEGONE,
@@ -9338,7 +9378,7 @@ var require_base32 = __commonJS({
             Av[offsetA * 2 + i * sa1 + (i + 1) * sa2] = 1;
             Av[offsetA * 2 + i * sa1 + (i + 1) * sa2 + 1] = 0;
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               N - i - 1,
               ONE,
@@ -9355,7 +9395,7 @@ var require_base32 = __commonJS({
               offsetX + (i + 1) * strideX1 + i * strideX2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               N - i - 1,
               i + 1,
               ONE,
@@ -9372,7 +9412,7 @@ var require_base32 = __commonJS({
               offsetX + i * strideX2
             );
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               i + 1,
               NEGONE,
@@ -9389,7 +9429,7 @@ var require_base32 = __commonJS({
               offsetX + (i + 1) * strideX1 + i * strideX2
             );
             zgemv(
-              "N",
+              "no-transpose",
               i,
               N - i - 1,
               ONE,
@@ -9406,7 +9446,7 @@ var require_base32 = __commonJS({
               offsetX + i * strideX2
             );
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               i,
               NEGONE,
@@ -9437,7 +9477,7 @@ var require_base32 = __commonJS({
           zlacgv(N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2);
           zlacgv(i, A, strideA2, offsetA + i * strideA1);
           zgemv(
-            "N",
+            "no-transpose",
             N - i,
             i,
             NEGONE,
@@ -9456,7 +9496,7 @@ var require_base32 = __commonJS({
           zlacgv(i, A, strideA2, offsetA + i * strideA1);
           zlacgv(i, X, strideX2, offsetX + i * strideX1);
           zgemv(
-            "C",
+            "conjugate-transpose",
             i,
             N - i,
             NEGONE,
@@ -9493,7 +9533,7 @@ var require_base32 = __commonJS({
             Av[ia] = 1;
             Av[ia + 1] = 0;
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               N - i,
               ONE,
@@ -9510,7 +9550,7 @@ var require_base32 = __commonJS({
               offsetX + (i + 1) * strideX1 + i * strideX2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               N - i,
               i,
               ONE,
@@ -9527,7 +9567,7 @@ var require_base32 = __commonJS({
               offsetX + i * strideX2
             );
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               i,
               NEGONE,
@@ -9544,7 +9584,7 @@ var require_base32 = __commonJS({
               offsetX + (i + 1) * strideX1 + i * strideX2
             );
             zgemv(
-              "N",
+              "no-transpose",
               i,
               N - i,
               ONE,
@@ -9561,7 +9601,7 @@ var require_base32 = __commonJS({
               offsetX + i * strideX2
             );
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               i,
               NEGONE,
@@ -9587,7 +9627,7 @@ var require_base32 = __commonJS({
             zlacgv(N - i, A, strideA2, offsetA + i * strideA1 + i * strideA2);
             zlacgv(i, Y, strideY2, offsetY + i * strideY1);
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               i,
               NEGONE,
@@ -9605,7 +9645,7 @@ var require_base32 = __commonJS({
             );
             zlacgv(i, Y, strideY2, offsetY + i * strideY1);
             zgemv(
-              "N",
+              "no-transpose",
               M - i - 1,
               i + 1,
               NEGONE,
@@ -9635,7 +9675,7 @@ var require_base32 = __commonJS({
             Av[offsetA * 2 + (i + 1) * sa1 + i * sa2] = 1;
             Av[offsetA * 2 + (i + 1) * sa1 + i * sa2 + 1] = 0;
             zgemv(
-              "C",
+              "conjugate-transpose",
               M - i - 1,
               N - i - 1,
               ONE,
@@ -9652,7 +9692,7 @@ var require_base32 = __commonJS({
               offsetY + (i + 1) * strideY1 + i * strideY2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               M - i - 1,
               i,
               ONE,
@@ -9669,7 +9709,7 @@ var require_base32 = __commonJS({
               offsetY + i * strideY2
             );
             zgemv(
-              "N",
+              "no-transpose",
               N - i - 1,
               i,
               NEGONE,
@@ -9686,7 +9726,7 @@ var require_base32 = __commonJS({
               offsetY + (i + 1) * strideY1 + i * strideY2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               M - i - 1,
               i + 1,
               ONE,
@@ -9703,7 +9743,7 @@ var require_base32 = __commonJS({
               offsetY + i * strideY2
             );
             zgemv(
-              "C",
+              "conjugate-transpose",
               i + 1,
               N - i - 1,
               NEGONE,
@@ -9756,10 +9796,10 @@ var require_base33 = __commonJS({
       var nbmin;
       var sa1;
       var sa2;
-      var oA;
-      var Av;
       var aii;
       var aij;
+      var oA;
+      var Av;
       var nb;
       var nx;
       var ws;
@@ -9832,8 +9872,8 @@ var require_base33 = __commonJS({
           );
           if (M - i - nb > 0 && N - i - nb > 0) {
             zgemm(
-              "N",
-              "C",
+              "no-transpose",
+              "conjugate-transpose",
               M - i - nb,
               N - i - nb,
               nb,
@@ -9853,8 +9893,8 @@ var require_base33 = __commonJS({
               offsetA + (i + nb) * strideA1 + (i + nb) * strideA2
             );
             zgemm(
-              "N",
-              "N",
+              "no-transpose",
+              "no-transpose",
               M - i - nb,
               N - i - nb,
               nb,
@@ -9941,10 +9981,10 @@ var require_base34 = __commonJS({
       var tau_f64;
       var sa1;
       var sa2;
+      var aii;
       var oA;
       var oT;
       var Av;
-      var aii;
       var K;
       var i;
       Av = reinterpret2(A, 0);
@@ -9976,7 +10016,7 @@ var require_base34 = __commonJS({
           conj_f64[0] = tau_f64[oT + i * strideTAU * 2];
           conj_f64[1] = -tau_f64[oT + i * strideTAU * 2 + 1];
           zlarf(
-            "L",
+            "left",
             M - i,
             N - i - 1,
             A,
@@ -10046,10 +10086,10 @@ var require_base36 = __commonJS({
     function ztrmm(side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB) {
       var noconj;
       var nounit;
-      var lside;
-      var upper;
       var alphaR;
       var alphaI;
+      var lside;
+      var upper;
       var tempR;
       var tempI;
       var sa1;
@@ -10076,10 +10116,10 @@ var require_base36 = __commonJS({
       if (M === 0 || N === 0) {
         return B;
       }
-      lside = side === "L" || side === "l";
-      upper = uplo === "U" || uplo === "u";
-      noconj = transa === "T" || transa === "t";
-      nounit = diag === "N" || diag === "n";
+      lside = side === "left";
+      upper = uplo === "upper";
+      noconj = transa === "transpose";
+      nounit = diag === "non-unit";
       alphaR = real(alpha);
       alphaI = imag(alpha);
       Av = reinterpret2(A, 0);
@@ -10101,7 +10141,7 @@ var require_base36 = __commonJS({
         return B;
       }
       if (lside) {
-        if (transa === "N" || transa === "n") {
+        if (transa === "no-transpose") {
           if (upper) {
             for (j = 0; j < N; j++) {
               for (k = 0; k < M; k++) {
@@ -10162,266 +10202,260 @@ var require_base36 = __commonJS({
               }
             }
           }
-        } else {
-          if (upper) {
-            for (j = 0; j < N; j++) {
-              for (i = M - 1; i >= 0; i--) {
-                ib = oB + i * sb1 + j * sb2;
-                tempR = Bv[ib];
-                tempI = Bv[ib + 1];
-                if (noconj) {
-                  if (nounit) {
-                    ia = oA + i * sa1 + i * sa2;
-                    ar = Av[ia];
-                    ai = Av[ia + 1];
-                    tr = tempR * ar - tempI * ai;
-                    ti = tempR * ai + tempI * ar;
-                    tempR = tr;
-                    tempI = ti;
-                  }
-                  for (k = 0; k < i; k++) {
-                    ia = oA + k * sa1 + i * sa2;
-                    kb = oB + k * sb1 + j * sb2;
-                    ar = Av[ia];
-                    ai = Av[ia + 1];
-                    tempR += ar * Bv[kb] - ai * Bv[kb + 1];
-                    tempI += ar * Bv[kb + 1] + ai * Bv[kb];
-                  }
-                } else {
-                  if (nounit) {
-                    ia = oA + i * sa1 + i * sa2;
-                    ar = Av[ia];
-                    ai = -Av[ia + 1];
-                    tr = tempR * ar - tempI * ai;
-                    ti = tempR * ai + tempI * ar;
-                    tempR = tr;
-                    tempI = ti;
-                  }
-                  for (k = 0; k < i; k++) {
-                    ia = oA + k * sa1 + i * sa2;
-                    kb = oB + k * sb1 + j * sb2;
-                    ar = Av[ia];
-                    ai = -Av[ia + 1];
-                    tempR += ar * Bv[kb] - ai * Bv[kb + 1];
-                    tempI += ar * Bv[kb + 1] + ai * Bv[kb];
-                  }
+        } else if (upper) {
+          for (j = 0; j < N; j++) {
+            for (i = M - 1; i >= 0; i--) {
+              ib = oB + i * sb1 + j * sb2;
+              tempR = Bv[ib];
+              tempI = Bv[ib + 1];
+              if (noconj) {
+                if (nounit) {
+                  ia = oA + i * sa1 + i * sa2;
+                  ar = Av[ia];
+                  ai = Av[ia + 1];
+                  tr = tempR * ar - tempI * ai;
+                  ti = tempR * ai + tempI * ar;
+                  tempR = tr;
+                  tempI = ti;
                 }
-                Bv[ib] = alphaR * tempR - alphaI * tempI;
-                Bv[ib + 1] = alphaR * tempI + alphaI * tempR;
+                for (k = 0; k < i; k++) {
+                  ia = oA + k * sa1 + i * sa2;
+                  kb = oB + k * sb1 + j * sb2;
+                  ar = Av[ia];
+                  ai = Av[ia + 1];
+                  tempR += ar * Bv[kb] - ai * Bv[kb + 1];
+                  tempI += ar * Bv[kb + 1] + ai * Bv[kb];
+                }
+              } else {
+                if (nounit) {
+                  ia = oA + i * sa1 + i * sa2;
+                  ar = Av[ia];
+                  ai = -Av[ia + 1];
+                  tr = tempR * ar - tempI * ai;
+                  ti = tempR * ai + tempI * ar;
+                  tempR = tr;
+                  tempI = ti;
+                }
+                for (k = 0; k < i; k++) {
+                  ia = oA + k * sa1 + i * sa2;
+                  kb = oB + k * sb1 + j * sb2;
+                  ar = Av[ia];
+                  ai = -Av[ia + 1];
+                  tempR += ar * Bv[kb] - ai * Bv[kb + 1];
+                  tempI += ar * Bv[kb + 1] + ai * Bv[kb];
+                }
+              }
+              Bv[ib] = alphaR * tempR - alphaI * tempI;
+              Bv[ib + 1] = alphaR * tempI + alphaI * tempR;
+            }
+          }
+        } else {
+          for (j = 0; j < N; j++) {
+            for (i = 0; i < M; i++) {
+              ib = oB + i * sb1 + j * sb2;
+              tempR = Bv[ib];
+              tempI = Bv[ib + 1];
+              if (noconj) {
+                if (nounit) {
+                  ia = oA + i * sa1 + i * sa2;
+                  ar = Av[ia];
+                  ai = Av[ia + 1];
+                  tr = tempR * ar - tempI * ai;
+                  ti = tempR * ai + tempI * ar;
+                  tempR = tr;
+                  tempI = ti;
+                }
+                for (k = i + 1; k < M; k++) {
+                  ia = oA + k * sa1 + i * sa2;
+                  kb = oB + k * sb1 + j * sb2;
+                  ar = Av[ia];
+                  ai = Av[ia + 1];
+                  tempR += ar * Bv[kb] - ai * Bv[kb + 1];
+                  tempI += ar * Bv[kb + 1] + ai * Bv[kb];
+                }
+              } else {
+                if (nounit) {
+                  ia = oA + i * sa1 + i * sa2;
+                  ar = Av[ia];
+                  ai = -Av[ia + 1];
+                  tr = tempR * ar - tempI * ai;
+                  ti = tempR * ai + tempI * ar;
+                  tempR = tr;
+                  tempI = ti;
+                }
+                for (k = i + 1; k < M; k++) {
+                  ia = oA + k * sa1 + i * sa2;
+                  kb = oB + k * sb1 + j * sb2;
+                  ar = Av[ia];
+                  ai = -Av[ia + 1];
+                  tempR += ar * Bv[kb] - ai * Bv[kb + 1];
+                  tempI += ar * Bv[kb + 1] + ai * Bv[kb];
+                }
+              }
+              Bv[ib] = alphaR * tempR - alphaI * tempI;
+              Bv[ib + 1] = alphaR * tempI + alphaI * tempR;
+            }
+          }
+        }
+      } else if (transa === "no-transpose") {
+        if (upper) {
+          for (j = N - 1; j >= 0; j--) {
+            tempR = alphaR;
+            tempI = alphaI;
+            if (nounit) {
+              ia = oA + j * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              tr = tempR * ar - tempI * ai;
+              ti = tempR * ai + tempI * ar;
+              tempR = tr;
+              tempI = ti;
+            }
+            for (i = 0; i < M; i++) {
+              ib = oB + i * sb1 + j * sb2;
+              br = Bv[ib];
+              bi = Bv[ib + 1];
+              Bv[ib] = tempR * br - tempI * bi;
+              Bv[ib + 1] = tempR * bi + tempI * br;
+            }
+            for (k = 0; k < j; k++) {
+              ia = oA + k * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              if (ar !== 0 || ai !== 0) {
+                tr = alphaR * ar - alphaI * ai;
+                ti = alphaR * ai + alphaI * ar;
+                for (i = 0; i < M; i++) {
+                  ib = oB + i * sb1 + j * sb2;
+                  kb = oB + i * sb1 + k * sb2;
+                  Bv[ib] += tr * Bv[kb] - ti * Bv[kb + 1];
+                  Bv[ib + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
+                }
               }
             }
-          } else {
-            for (j = 0; j < N; j++) {
-              for (i = 0; i < M; i++) {
-                ib = oB + i * sb1 + j * sb2;
-                tempR = Bv[ib];
-                tempI = Bv[ib + 1];
-                if (noconj) {
-                  if (nounit) {
-                    ia = oA + i * sa1 + i * sa2;
-                    ar = Av[ia];
-                    ai = Av[ia + 1];
-                    tr = tempR * ar - tempI * ai;
-                    ti = tempR * ai + tempI * ar;
-                    tempR = tr;
-                    tempI = ti;
-                  }
-                  for (k = i + 1; k < M; k++) {
-                    ia = oA + k * sa1 + i * sa2;
-                    kb = oB + k * sb1 + j * sb2;
-                    ar = Av[ia];
-                    ai = Av[ia + 1];
-                    tempR += ar * Bv[kb] - ai * Bv[kb + 1];
-                    tempI += ar * Bv[kb + 1] + ai * Bv[kb];
-                  }
-                } else {
-                  if (nounit) {
-                    ia = oA + i * sa1 + i * sa2;
-                    ar = Av[ia];
-                    ai = -Av[ia + 1];
-                    tr = tempR * ar - tempI * ai;
-                    ti = tempR * ai + tempI * ar;
-                    tempR = tr;
-                    tempI = ti;
-                  }
-                  for (k = i + 1; k < M; k++) {
-                    ia = oA + k * sa1 + i * sa2;
-                    kb = oB + k * sb1 + j * sb2;
-                    ar = Av[ia];
-                    ai = -Av[ia + 1];
-                    tempR += ar * Bv[kb] - ai * Bv[kb + 1];
-                    tempI += ar * Bv[kb + 1] + ai * Bv[kb];
-                  }
+          }
+        } else {
+          for (j = 0; j < N; j++) {
+            tempR = alphaR;
+            tempI = alphaI;
+            if (nounit) {
+              ia = oA + j * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              tr = tempR * ar - tempI * ai;
+              ti = tempR * ai + tempI * ar;
+              tempR = tr;
+              tempI = ti;
+            }
+            for (i = 0; i < M; i++) {
+              ib = oB + i * sb1 + j * sb2;
+              br = Bv[ib];
+              bi = Bv[ib + 1];
+              Bv[ib] = tempR * br - tempI * bi;
+              Bv[ib + 1] = tempR * bi + tempI * br;
+            }
+            for (k = j + 1; k < N; k++) {
+              ia = oA + k * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              if (ar !== 0 || ai !== 0) {
+                tr = alphaR * ar - alphaI * ai;
+                ti = alphaR * ai + alphaI * ar;
+                for (i = 0; i < M; i++) {
+                  ib = oB + i * sb1 + j * sb2;
+                  kb = oB + i * sb1 + k * sb2;
+                  Bv[ib] += tr * Bv[kb] - ti * Bv[kb + 1];
+                  Bv[ib + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
                 }
-                Bv[ib] = alphaR * tempR - alphaI * tempI;
-                Bv[ib + 1] = alphaR * tempI + alphaI * tempR;
               }
             }
           }
         }
-      } else {
-        if (transa === "N" || transa === "n") {
-          if (upper) {
-            for (j = N - 1; j >= 0; j--) {
-              tempR = alphaR;
-              tempI = alphaI;
-              if (nounit) {
-                ia = oA + j * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                tr = tempR * ar - tempI * ai;
-                ti = tempR * ai + tempI * ar;
-                tempR = tr;
-                tempI = ti;
+      } else if (upper) {
+        for (k = 0; k < N; k++) {
+          for (j = 0; j < k; j++) {
+            ia = oA + j * sa1 + k * sa2;
+            ar = Av[ia];
+            ai = Av[ia + 1];
+            if (ar !== 0 || ai !== 0) {
+              if (!noconj) {
+                ai = -ai;
               }
+              tr = alphaR * ar - alphaI * ai;
+              ti = alphaR * ai + alphaI * ar;
               for (i = 0; i < M; i++) {
-                ib = oB + i * sb1 + j * sb2;
-                br = Bv[ib];
-                bi = Bv[ib + 1];
-                Bv[ib] = tempR * br - tempI * bi;
-                Bv[ib + 1] = tempR * bi + tempI * br;
-              }
-              for (k = 0; k < j; k++) {
-                ia = oA + k * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                if (ar !== 0 || ai !== 0) {
-                  tr = alphaR * ar - alphaI * ai;
-                  ti = alphaR * ai + alphaI * ar;
-                  for (i = 0; i < M; i++) {
-                    ib = oB + i * sb1 + j * sb2;
-                    kb = oB + i * sb1 + k * sb2;
-                    Bv[ib] += tr * Bv[kb] - ti * Bv[kb + 1];
-                    Bv[ib + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
-                  }
-                }
-              }
-            }
-          } else {
-            for (j = 0; j < N; j++) {
-              tempR = alphaR;
-              tempI = alphaI;
-              if (nounit) {
-                ia = oA + j * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                tr = tempR * ar - tempI * ai;
-                ti = tempR * ai + tempI * ar;
-                tempR = tr;
-                tempI = ti;
-              }
-              for (i = 0; i < M; i++) {
-                ib = oB + i * sb1 + j * sb2;
-                br = Bv[ib];
-                bi = Bv[ib + 1];
-                Bv[ib] = tempR * br - tempI * bi;
-                Bv[ib + 1] = tempR * bi + tempI * br;
-              }
-              for (k = j + 1; k < N; k++) {
-                ia = oA + k * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                if (ar !== 0 || ai !== 0) {
-                  tr = alphaR * ar - alphaI * ai;
-                  ti = alphaR * ai + alphaI * ar;
-                  for (i = 0; i < M; i++) {
-                    ib = oB + i * sb1 + j * sb2;
-                    kb = oB + i * sb1 + k * sb2;
-                    Bv[ib] += tr * Bv[kb] - ti * Bv[kb + 1];
-                    Bv[ib + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
-                  }
-                }
+                jb = oB + i * sb1 + j * sb2;
+                kb = oB + i * sb1 + k * sb2;
+                Bv[jb] += tr * Bv[kb] - ti * Bv[kb + 1];
+                Bv[jb + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
               }
             }
           }
-        } else {
-          if (upper) {
-            for (k = 0; k < N; k++) {
-              for (j = 0; j < k; j++) {
-                ia = oA + j * sa1 + k * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                if (ar !== 0 || ai !== 0) {
-                  if (!noconj) {
-                    ai = -ai;
-                  }
-                  tr = alphaR * ar - alphaI * ai;
-                  ti = alphaR * ai + alphaI * ar;
-                  for (i = 0; i < M; i++) {
-                    jb = oB + i * sb1 + j * sb2;
-                    kb = oB + i * sb1 + k * sb2;
-                    Bv[jb] += tr * Bv[kb] - ti * Bv[kb + 1];
-                    Bv[jb + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
-                  }
-                }
+          tempR = alphaR;
+          tempI = alphaI;
+          if (nounit) {
+            ia = oA + k * sa1 + k * sa2;
+            ar = Av[ia];
+            ai = Av[ia + 1];
+            if (!noconj) {
+              ai = -ai;
+            }
+            tr = tempR * ar - tempI * ai;
+            ti = tempR * ai + tempI * ar;
+            tempR = tr;
+            tempI = ti;
+          }
+          if (tempR !== 1 || tempI !== 0) {
+            for (i = 0; i < M; i++) {
+              kb = oB + i * sb1 + k * sb2;
+              br = Bv[kb];
+              bi = Bv[kb + 1];
+              Bv[kb] = tempR * br - tempI * bi;
+              Bv[kb + 1] = tempR * bi + tempI * br;
+            }
+          }
+        }
+      } else {
+        for (k = N - 1; k >= 0; k--) {
+          for (j = k + 1; j < N; j++) {
+            ia = oA + j * sa1 + k * sa2;
+            ar = Av[ia];
+            ai = Av[ia + 1];
+            if (ar !== 0 || ai !== 0) {
+              if (!noconj) {
+                ai = -ai;
               }
-              tempR = alphaR;
-              tempI = alphaI;
-              if (nounit) {
-                ia = oA + k * sa1 + k * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                if (!noconj) {
-                  ai = -ai;
-                }
-                tr = tempR * ar - tempI * ai;
-                ti = tempR * ai + tempI * ar;
-                tempR = tr;
-                tempI = ti;
-              }
-              if (tempR !== 1 || tempI !== 0) {
-                for (i = 0; i < M; i++) {
-                  kb = oB + i * sb1 + k * sb2;
-                  br = Bv[kb];
-                  bi = Bv[kb + 1];
-                  Bv[kb] = tempR * br - tempI * bi;
-                  Bv[kb + 1] = tempR * bi + tempI * br;
-                }
+              tr = alphaR * ar - alphaI * ai;
+              ti = alphaR * ai + alphaI * ar;
+              for (i = 0; i < M; i++) {
+                jb = oB + i * sb1 + j * sb2;
+                kb = oB + i * sb1 + k * sb2;
+                Bv[jb] += tr * Bv[kb] - ti * Bv[kb + 1];
+                Bv[jb + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
               }
             }
-          } else {
-            for (k = N - 1; k >= 0; k--) {
-              for (j = k + 1; j < N; j++) {
-                ia = oA + j * sa1 + k * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                if (ar !== 0 || ai !== 0) {
-                  if (!noconj) {
-                    ai = -ai;
-                  }
-                  tr = alphaR * ar - alphaI * ai;
-                  ti = alphaR * ai + alphaI * ar;
-                  for (i = 0; i < M; i++) {
-                    jb = oB + i * sb1 + j * sb2;
-                    kb = oB + i * sb1 + k * sb2;
-                    Bv[jb] += tr * Bv[kb] - ti * Bv[kb + 1];
-                    Bv[jb + 1] += tr * Bv[kb + 1] + ti * Bv[kb];
-                  }
-                }
-              }
-              tempR = alphaR;
-              tempI = alphaI;
-              if (nounit) {
-                ia = oA + k * sa1 + k * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                if (!noconj) {
-                  ai = -ai;
-                }
-                tr = tempR * ar - tempI * ai;
-                ti = tempR * ai + tempI * ar;
-                tempR = tr;
-                tempI = ti;
-              }
-              if (tempR !== 1 || tempI !== 0) {
-                for (i = 0; i < M; i++) {
-                  kb = oB + i * sb1 + k * sb2;
-                  br = Bv[kb];
-                  bi = Bv[kb + 1];
-                  Bv[kb] = tempR * br - tempI * bi;
-                  Bv[kb + 1] = tempR * bi + tempI * br;
-                }
-              }
+          }
+          tempR = alphaR;
+          tempI = alphaI;
+          if (nounit) {
+            ia = oA + k * sa1 + k * sa2;
+            ar = Av[ia];
+            ai = Av[ia + 1];
+            if (!noconj) {
+              ai = -ai;
+            }
+            tr = tempR * ar - tempI * ai;
+            ti = tempR * ai + tempI * ar;
+            tempR = tr;
+            tempI = ti;
+          }
+          if (tempR !== 1 || tempI !== 0) {
+            for (i = 0; i < M; i++) {
+              kb = oB + i * sb1 + k * sb2;
+              br = Bv[kb];
+              bi = Bv[kb + 1];
+              Bv[kb] = tempR * br - tempI * bi;
+              Bv[kb + 1] = tempR * bi + tempI * br;
             }
           }
         }
@@ -10446,12 +10480,12 @@ var require_base37 = __commonJS({
     var NEGONE = new Complex128(-1, 0);
     function zlarfb(side, trans, direct, storev, M, N, K, V, strideV1, strideV2, offsetV, T, strideT1, strideT2, offsetT, C, strideC1, strideC2, offsetC, WORK, strideWORK1, strideWORK2, offsetWORK) {
       var transt;
-      var Cv;
-      var Wv;
       var sw1;
       var sw2;
       var sc1;
       var sc2;
+      var Cv;
+      var Wv;
       var oW;
       var oC;
       var iw;
@@ -10469,23 +10503,23 @@ var require_base37 = __commonJS({
       sc2 = strideC2 * 2;
       oW = offsetWORK * 2;
       oC = offsetC * 2;
-      if (trans === "N" || trans === "n") {
-        transt = "C";
+      if (trans === "no-transpose") {
+        transt = "conjugate-transpose";
       } else {
-        transt = "N";
+        transt = "no-transpose";
       }
-      if (storev === "C" || storev === "c") {
-        if (direct === "F" || direct === "f") {
-          if (side === "L" || side === "l") {
+      if (storev === "columnwise") {
+        if (direct === "forward") {
+          if (side === "left") {
             for (j = 0; j < K; j++) {
               zcopy(N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
               zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "L", "N", "U", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "C",
-                "N",
+                "conjugate-transpose",
+                "no-transpose",
                 N,
                 K,
                 M - K,
@@ -10505,11 +10539,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "U", transt, "N", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "N",
-                "C",
+                "no-transpose",
+                "conjugate-transpose",
                 M - K,
                 N,
                 K,
@@ -10529,7 +10563,7 @@ var require_base37 = __commonJS({
                 offsetC + K * strideC1
               );
             }
-            ztrmm("R", "L", "C", "U", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < N; i++) {
                 ic = oC + j * sc1 + i * sc2;
@@ -10538,15 +10572,15 @@ var require_base37 = __commonJS({
                 Cv[ic + 1] -= -Wv[iw + 1];
               }
             }
-          } else if (side === "R" || side === "r") {
+          } else if (side === "right") {
             for (j = 0; j < K; j++) {
               zcopy(M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "L", "N", "U", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "N",
+                "no-transpose",
+                "no-transpose",
                 M,
                 K,
                 N - K,
@@ -10566,11 +10600,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "U", trans, "N", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "C",
+                "no-transpose",
+                "conjugate-transpose",
                 M,
                 N - K,
                 K,
@@ -10590,7 +10624,7 @@ var require_base37 = __commonJS({
                 offsetC + K * strideC2
               );
             }
-            ztrmm("R", "L", "C", "U", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < M; i++) {
                 ic = oC + i * sc1 + j * sc2;
@@ -10601,16 +10635,16 @@ var require_base37 = __commonJS({
             }
           }
         } else {
-          if (side === "L" || side === "l") {
+          if (side === "left") {
             for (j = 0; j < K; j++) {
               zcopy(N, C, strideC2, offsetC + (M - K + j) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
               zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "U", "N", "U", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "C",
-                "N",
+                "conjugate-transpose",
+                "no-transpose",
                 N,
                 K,
                 M - K,
@@ -10630,11 +10664,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "L", transt, "N", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "N",
-                "C",
+                "no-transpose",
+                "conjugate-transpose",
                 M - K,
                 N,
                 K,
@@ -10654,7 +10688,7 @@ var require_base37 = __commonJS({
                 offsetC
               );
             }
-            ztrmm("R", "U", "C", "U", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < N; i++) {
                 ic = oC + (M - K + j) * sc1 + i * sc2;
@@ -10663,15 +10697,15 @@ var require_base37 = __commonJS({
                 Cv[ic + 1] -= -Wv[iw + 1];
               }
             }
-          } else if (side === "R" || side === "r") {
+          } else if (side === "right") {
             for (j = 0; j < K; j++) {
               zcopy(M, C, strideC1, offsetC + (N - K + j) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "U", "N", "U", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "N",
+                "no-transpose",
+                "no-transpose",
                 M,
                 K,
                 N - K,
@@ -10691,11 +10725,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "L", trans, "N", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "C",
+                "no-transpose",
+                "conjugate-transpose",
                 M,
                 N - K,
                 K,
@@ -10715,7 +10749,7 @@ var require_base37 = __commonJS({
                 offsetC
               );
             }
-            ztrmm("R", "U", "C", "U", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < M; i++) {
                 ic = oC + i * sc1 + (N - K + j) * sc2;
@@ -10727,17 +10761,17 @@ var require_base37 = __commonJS({
           }
         }
       } else {
-        if (direct === "F" || direct === "f") {
-          if (side === "L" || side === "l") {
+        if (direct === "forward") {
+          if (side === "left") {
             for (j = 0; j < K; j++) {
               zcopy(N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
               zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "U", "C", "U", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "C",
-                "C",
+                "conjugate-transpose",
+                "conjugate-transpose",
                 N,
                 K,
                 M - K,
@@ -10757,11 +10791,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "U", transt, "N", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "C",
-                "C",
+                "conjugate-transpose",
+                "conjugate-transpose",
                 M - K,
                 N,
                 K,
@@ -10781,7 +10815,7 @@ var require_base37 = __commonJS({
                 offsetC + K * strideC1
               );
             }
-            ztrmm("R", "U", "N", "U", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < N; i++) {
                 ic = oC + j * sc1 + i * sc2;
@@ -10790,15 +10824,15 @@ var require_base37 = __commonJS({
                 Cv[ic + 1] -= -Wv[iw + 1];
               }
             }
-          } else if (side === "R" || side === "r") {
+          } else if (side === "right") {
             for (j = 0; j < K; j++) {
               zcopy(M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "U", "C", "U", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "C",
+                "no-transpose",
+                "conjugate-transpose",
                 M,
                 K,
                 N - K,
@@ -10818,11 +10852,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "U", trans, "N", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "N",
+                "no-transpose",
+                "no-transpose",
                 M,
                 N - K,
                 K,
@@ -10842,7 +10876,7 @@ var require_base37 = __commonJS({
                 offsetC + K * strideC2
               );
             }
-            ztrmm("R", "U", "N", "U", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "upper", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < M; i++) {
                 ic = oC + i * sc1 + j * sc2;
@@ -10853,16 +10887,16 @@ var require_base37 = __commonJS({
             }
           }
         } else {
-          if (side === "L" || side === "l") {
+          if (side === "left") {
             for (j = 0; j < K; j++) {
               zcopy(N, C, strideC2, offsetC + (M - K + j) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
               zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "L", "C", "U", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "C",
-                "C",
+                "conjugate-transpose",
+                "conjugate-transpose",
                 N,
                 K,
                 M - K,
@@ -10882,11 +10916,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "L", transt, "N", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (M > K) {
               zgemm(
-                "C",
-                "C",
+                "conjugate-transpose",
+                "conjugate-transpose",
                 M - K,
                 N,
                 K,
@@ -10906,7 +10940,7 @@ var require_base37 = __commonJS({
                 offsetC
               );
             }
-            ztrmm("R", "L", "N", "U", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < N; i++) {
                 ic = oC + (M - K + j) * sc1 + i * sc2;
@@ -10915,15 +10949,15 @@ var require_base37 = __commonJS({
                 Cv[ic + 1] -= -Wv[iw + 1];
               }
             }
-          } else if (side === "R" || side === "r") {
+          } else if (side === "right") {
             for (j = 0; j < K; j++) {
               zcopy(M, C, strideC1, offsetC + (N - K + j) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
             }
-            ztrmm("R", "L", "C", "U", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "C",
+                "no-transpose",
+                "conjugate-transpose",
                 M,
                 K,
                 N - K,
@@ -10943,11 +10977,11 @@ var require_base37 = __commonJS({
                 offsetWORK
               );
             }
-            ztrmm("R", "L", trans, "N", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
             if (N > K) {
               zgemm(
-                "N",
-                "N",
+                "no-transpose",
+                "no-transpose",
                 M,
                 N - K,
                 K,
@@ -10967,7 +11001,7 @@ var require_base37 = __commonJS({
                 offsetC
               );
             }
-            ztrmm("R", "L", "N", "U", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+            ztrmm("right", "lower", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
             for (j = 0; j < K; j++) {
               for (i = 0; i < M; i++) {
                 ic = oC + i * sc1 + (N - K + j) * sc2;
@@ -11014,9 +11048,9 @@ var require_base38 = __commonJS({
       if (N <= 0) {
         return x;
       }
-      upper = uplo === "U" || uplo === "u";
-      noconj = trans === "T" || trans === "t";
-      nounit = diag === "N" || diag === "n";
+      upper = uplo === "upper";
+      noconj = trans === "transpose";
+      nounit = diag === "non-unit";
       Av = reinterpret2(A, 0);
       oA = offsetA * 2;
       xv = reinterpret2(x, 0);
@@ -11024,7 +11058,7 @@ var require_base38 = __commonJS({
       sx = strideX * 2;
       sa1 = strideA1 * 2;
       sa2 = strideA2 * 2;
-      if (trans === "N" || trans === "n") {
+      if (trans === "no-transpose") {
         if (upper) {
           jx = oX;
           for (j = 0; j < N; j++) {
@@ -11204,23 +11238,23 @@ var require_base39 = __commonJS({
       var tauR;
       var tauI;
       var TAUv;
-      var Vv;
-      var Tv;
-      var vr;
-      var vi;
+      var stau;
+      var oTAU;
       var sv1;
       var sv2;
       var st1;
       var st2;
-      var stau;
+      var Vv;
+      var Tv;
+      var vr;
+      var vi;
       var oV;
-      var oTAU;
       var oT;
       var it;
       var iv;
+      var jj;
       var i;
       var j;
-      var jj;
       if (N === 0) {
         return;
       }
@@ -11235,7 +11269,7 @@ var require_base39 = __commonJS({
       oV = offsetV * 2;
       oTAU = offsetTAU * 2;
       oT = offsetT * 2;
-      if (direct === "F" || direct === "f") {
+      if (direct === "forward") {
         prevlastv = N;
         for (i = 0; i < K; i++) {
           prevlastv = Math.max(prevlastv, i);
@@ -11248,7 +11282,7 @@ var require_base39 = __commonJS({
               Tv[it + 1] = 0;
             }
           } else {
-            if (storev === "C" || storev === "c") {
+            if (storev === "columnwise") {
               lastv = N;
               for (jj = N - 1; jj > i; jj--) {
                 iv = oV + jj * sv1 + i * sv2;
@@ -11271,7 +11305,7 @@ var require_base39 = __commonJS({
               if (jj - i - 1 > 0) {
                 negTau = new Complex128(negTauR, negTauI);
                 zgemv(
-                  "C",
+                  "conjugate-transpose",
                   jj - i - 1,
                   i,
                   negTau,
@@ -11311,8 +11345,8 @@ var require_base39 = __commonJS({
               if (jj - i - 1 > 0) {
                 var negTauR2 = new Complex128(negTauR, negTauI);
                 zgemm(
-                  "N",
-                  "C",
+                  "no-transpose",
+                  "conjugate-transpose",
                   i,
                   1,
                   jj - i - 1,
@@ -11335,9 +11369,9 @@ var require_base39 = __commonJS({
             }
             if (i > 0) {
               ztrmv(
-                "U",
-                "N",
-                "N",
+                "upper",
+                "no-transpose",
+                "non-unit",
                 i,
                 T,
                 strideT1,
@@ -11371,7 +11405,7 @@ var require_base39 = __commonJS({
             }
           } else {
             if (i < K - 1) {
-              if (storev === "C" || storev === "c") {
+              if (storev === "columnwise") {
                 lastv = 0;
                 for (jj = 0; jj < i; jj++) {
                   iv = oV + jj * sv1 + i * sv2;
@@ -11394,7 +11428,7 @@ var require_base39 = __commonJS({
                 if (N - K + i - jj > 0) {
                   var negTauB = new Complex128(negTauR, negTauI);
                   zgemv(
-                    "C",
+                    "conjugate-transpose",
                     N - K + i - jj,
                     K - i - 1,
                     negTauB,
@@ -11434,8 +11468,8 @@ var require_base39 = __commonJS({
                 if (N - K + i - jj > 0) {
                   var negTauB2 = new Complex128(negTauR, negTauI);
                   zgemm(
-                    "N",
-                    "C",
+                    "no-transpose",
+                    "conjugate-transpose",
                     K - i - 1,
                     1,
                     N - K + i - jj,
@@ -11457,9 +11491,9 @@ var require_base39 = __commonJS({
                 }
               }
               ztrmv(
-                "L",
-                "N",
-                "N",
+                "lower",
+                "no-transpose",
+                "non-unit",
                 K - i - 1,
                 T,
                 strideT1,
@@ -11496,6 +11530,7 @@ var require_base40 = __commonJS({
     var zlarft = require_base39();
     var DEFAULT_NB = 32;
     function zgeqrf(M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK) {
+      var offsetT;
       var ldwork;
       var nbmin;
       var iws;
@@ -11513,21 +11548,15 @@ var require_base40 = __commonJS({
       nbmin = 2;
       nx = 0;
       iws = N;
-      if (nb > 1 && nb < K) {
-        nx = 0;
-        if (nx < K) {
-          ldwork = N;
-          iws = ldwork * nb;
-        }
-      }
-      if (!WORK || WORK.length < iws + nb * nb) {
-        WORK = new Complex128Array2(iws + nb * nb);
-        offsetWORK = 0;
-        strideWORK = 1;
+      ldwork = N;
+      if (WORK === null) {
+        WORK = new Complex128Array2(Math.max(1, N * nb + nb * nb));
       }
       T = WORK;
-      var offsetT = offsetWORK + iws;
-      ldwork = N;
+      if (nb > 1 && nb < K) {
+        iws = ldwork * nb;
+      }
+      offsetT = offsetWORK + iws;
       if (nb >= nbmin && nb < K && nx < K) {
         i = 0;
         while (i <= K - 1 - nx) {
@@ -11548,8 +11577,8 @@ var require_base40 = __commonJS({
           );
           if (i + ib < N) {
             zlarft(
-              "F",
-              "C",
+              "forward",
+              "columnwise",
               M - i,
               ib,
               A,
@@ -11565,10 +11594,10 @@ var require_base40 = __commonJS({
               offsetT
             );
             zlarfb(
-              "L",
-              "C",
-              "F",
-              "C",
+              "left",
+              "conjugate-transpose",
+              "forward",
+              "columnwise",
               M - i,
               N - i - ib,
               ib,
@@ -11623,12 +11652,12 @@ var require_base41 = __commonJS({
     "use strict";
     var reinterpret2 = require_lib57();
     function zlacpy(uplo, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB) {
-      var Av;
-      var Bv;
       var sa1;
       var sa2;
       var sb1;
       var sb2;
+      var Av;
+      var Bv;
       var oA;
       var oB;
       var ia;
@@ -11643,7 +11672,7 @@ var require_base41 = __commonJS({
       sb2 = strideB2 * 2;
       oA = offsetA * 2;
       oB = offsetB * 2;
-      if (uplo === "U" || uplo === "u") {
+      if (uplo === "upper") {
         for (j = 0; j < N; j++) {
           ia = oA + j * sa2;
           ib = oB + j * sb2;
@@ -11652,7 +11681,7 @@ var require_base41 = __commonJS({
             Bv[ib + i * sb1 + 1] = Av[ia + i * sa1 + 1];
           }
         }
-      } else if (uplo === "L" || uplo === "l") {
+      } else if (uplo === "lower") {
         for (j = 0; j < N; j++) {
           ia = oA + j * sa2;
           ib = oB + j * sb2;
@@ -11699,7 +11728,10 @@ var require_base42 = __commonJS({
       var ix;
       var i;
       if (scale !== scale || sumsq !== sumsq) {
-        return { scl: scale, sumsq };
+        return {
+          "scl": scale,
+          "sumsq": sumsq
+        };
       }
       if (sumsq === 0) {
         scale = 1;
@@ -11709,7 +11741,10 @@ var require_base42 = __commonJS({
         sumsq = 0;
       }
       if (N <= 0) {
-        return { scl: scale, sumsq };
+        return {
+          "scl": scale,
+          "sumsq": sumsq
+        };
       }
       xv = reinterpret2(x, 0);
       notbig = true;
@@ -11750,7 +11785,7 @@ var require_base42 = __commonJS({
         ax = scale * Math.sqrt(sumsq);
         if (ax > TBIG) {
           if (scale > 1) {
-            scale = scale * SBIG;
+            scale *= SBIG;
             abig += scale * (scale * sumsq);
           } else {
             abig += scale * (scale * (SBIG * (SBIG * sumsq)));
@@ -11758,7 +11793,7 @@ var require_base42 = __commonJS({
         } else if (ax < TSML) {
           if (notbig) {
             if (scale < 1) {
-              scale = scale * SSML;
+              scale *= SSML;
               asml += scale * (scale * sumsq);
             } else {
               asml += scale * (scale * (SSML * (SSML * sumsq)));
@@ -11795,7 +11830,10 @@ var require_base42 = __commonJS({
         scale = 1;
         sumsq = amed;
       }
-      return { scl: scale, sumsq };
+      return {
+        "scl": scale,
+        "sumsq": sumsq
+      };
     }
     module.exports = zlassq;
   }
@@ -11814,9 +11852,9 @@ var require_base43 = __commonJS({
       var temp;
       var sum;
       var out;
-      var Av;
       var sa1;
       var sa2;
+      var Av;
       var oA;
       var ai;
       var wi;
@@ -11829,7 +11867,7 @@ var require_base43 = __commonJS({
       sa1 = strideA1 * 2;
       sa2 = strideA2 * 2;
       oA = offsetA * 2;
-      if (norm === "M" || norm === "m") {
+      if (norm === "max") {
         value = 0;
         for (j = 0; j < N; j++) {
           ai = oA + j * sa2;
@@ -11841,7 +11879,7 @@ var require_base43 = __commonJS({
             ai += sa1;
           }
         }
-      } else if (norm === "O" || norm === "o" || norm === "1") {
+      } else if (norm === "one-norm" || norm === "one-norm") {
         value = 0;
         for (j = 0; j < N; j++) {
           sum = 0;
@@ -11854,7 +11892,7 @@ var require_base43 = __commonJS({
             value = sum;
           }
         }
-      } else if (norm === "I" || norm === "i") {
+      } else if (norm === "inf-norm") {
         for (i = 0; i < M; i++) {
           wi = offsetWORK + i * strideWORK;
           WORK[wi] = 0;
@@ -11876,7 +11914,7 @@ var require_base43 = __commonJS({
             value = temp;
           }
         }
-      } else if (norm === "F" || norm === "f" || norm === "E" || norm === "e") {
+      } else if (norm === "frobenius" || norm === "frobenius") {
         scale = 0;
         sum = 1;
         for (j = 0; j < N; j++) {
@@ -11905,39 +11943,37 @@ var require_base44 = __commonJS({
       var bignum;
       var cfromc;
       var cfrom1;
+      var itype;
       var ctoc;
       var cto1;
       var done;
-      var itype;
+      var iMax;
+      var iMin;
       var mul;
-      var Av;
       var sa1;
       var sa2;
+      var Av;
       var oA;
       var ai;
       var k1;
       var k2;
       var k3;
       var k4;
-      var iMax;
-      var iMin;
       var i;
       var j;
-      var c;
-      c = type.charAt(0).toUpperCase();
-      if (c === "G") {
+      if (type === "general") {
         itype = 0;
-      } else if (c === "L") {
+      } else if (type === "lower") {
         itype = 1;
-      } else if (c === "U") {
+      } else if (type === "upper") {
         itype = 2;
-      } else if (c === "H") {
+      } else if (type === "upper-hessenberg") {
         itype = 3;
-      } else if (c === "B") {
+      } else if (type === "lower-band") {
         itype = 4;
-      } else if (c === "Q") {
+      } else if (type === "upper-band") {
         itype = 5;
-      } else if (c === "Z") {
+      } else if (type === "band") {
         itype = 6;
       } else {
         return -1;
@@ -12071,12 +12107,12 @@ var require_base45 = __commonJS({
       var alphaIm;
       var betaRe;
       var betaIm;
-      var Av;
       var sa1;
       var sa2;
+      var idx;
+      var Av;
       var oA;
       var mn;
-      var idx;
       var i;
       var j;
       alphaRe = real(alpha);
@@ -12088,7 +12124,7 @@ var require_base45 = __commonJS({
       sa2 = strideA2 * 2;
       oA = offsetA * 2;
       mn = Math.min(M, N);
-      if (uplo === "U" || uplo === "u") {
+      if (uplo === "upper") {
         for (j = 1; j < N; j++) {
           idx = oA + j * sa2;
           for (i = 0; i < Math.min(j, M); i++) {
@@ -12103,7 +12139,7 @@ var require_base45 = __commonJS({
           Av[idx + 1] = betaIm;
           idx += sa1 + sa2;
         }
-      } else if (uplo === "L" || uplo === "l") {
+      } else if (uplo === "lower") {
         for (j = 0; j < Math.min(M, N); j++) {
           idx = oA + (j + 1) * sa1 + j * sa2;
           for (i = j + 1; i < M; i++) {
@@ -12187,7 +12223,7 @@ var require_base46 = __commonJS({
           Av[ia] = 1;
           Av[ia + 1] = 0;
           zlarf(
-            "L",
+            "left",
             M - i,
             N - i - 1,
             A,
@@ -12301,8 +12337,8 @@ var require_base47 = __commonJS({
           ib = Math.min(nb, K - i);
           if (i + ib < N) {
             zlarft(
-              "F",
-              "C",
+              "forward",
+              "columnwise",
               M - i,
               ib,
               A,
@@ -12318,10 +12354,10 @@ var require_base47 = __commonJS({
               offsetWORK
             );
             zlarfb(
-              "L",
-              "N",
-              "F",
-              "C",
+              "left",
+              "no-transpose",
+              "forward",
+              "columnwise",
               M - i,
               N - i - ib,
               ib,
@@ -12430,7 +12466,7 @@ var require_base48 = __commonJS({
             Av[ia + 1] = 0;
             conjT = new Complex128(tauv[it], -tauv[it + 1]);
             zlarf(
-              "R",
+              "right",
               M - i - 1,
               N - i,
               A,
@@ -12544,8 +12580,8 @@ var require_base49 = __commonJS({
           ib = Math.min(nb, K - i);
           if (i + ib < M) {
             zlarft(
-              "F",
-              "R",
+              "forward",
+              "rowwise",
               N - i,
               ib,
               A,
@@ -12561,10 +12597,10 @@ var require_base49 = __commonJS({
               offsetWORK
             );
             zlarfb(
-              "R",
-              "C",
-              "F",
-              "R",
+              "right",
+              "conjugate-transpose",
+              "forward",
+              "rowwise",
               M - i - ib,
               N - i,
               ib,
@@ -12625,17 +12661,17 @@ var require_base50 = __commonJS({
     var zunglq = require_base49();
     function zungbr(vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork) {
       var wantq;
-      var Av;
       var sA1;
       var sA2;
-      var oA;
       var idx;
+      var Av;
+      var oA;
       var i;
       var j;
       if (M === 0 || N === 0) {
         return 0;
       }
-      wantq = vect === "Q" || vect === "q";
+      wantq = vect === "q";
       Av = reinterpret2(A, 0);
       sA1 = strideA1 * 2;
       sA2 = strideA2 * 2;
@@ -12745,70 +12781,71 @@ var require_base51 = __commonJS({
     var zungbr = require_base50();
     var CZERO = new Complex128(0, 0);
     function zgesvd2(jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK) {
+      var wntuas;
+      var wntvas;
+      var bignum;
+      var smlnum;
+      var irwork;
+      var ldwrkr;
+      var ldwrku;
       var wntua;
       var wntus;
-      var wntuas;
       var wntuo;
       var wntun;
       var wntva;
       var wntvs;
-      var wntvas;
       var wntvo;
       var wntvn;
       var minmn;
-      var anrm;
-      var bignum;
-      var smlnum;
-      var eps;
-      var iscl;
-      var info;
-      var ierr;
-      var ncu;
-      var ncvt;
-      var nru;
-      var nrvt;
-      var itau;
       var itauq;
       var itaup;
       var iwork;
-      var irwork;
-      var ie;
-      var ir;
-      var iu;
-      var ldwrkr;
-      var ldwrku;
       var chunk;
+      var anrm;
+      var iscl;
+      var info;
+      var ierr;
+      var ncvt;
+      var nrvt;
+      var itau;
+      var svt1;
+      var svt2;
+      var eps;
+      var ncu;
+      var nru;
       var blk;
       var sa1;
       var sa2;
       var su1;
       var su2;
-      var svt1;
-      var svt2;
-      var i;
+      var wsz;
+      var ie;
+      var ir;
+      var iu;
       var WK;
+      var i;
       sa1 = strideA1;
       sa2 = strideA2;
       su1 = strideU1;
       su2 = strideU2;
       svt1 = strideVT1;
       svt2 = strideVT2;
-      info = 0;
       minmn = Math.min(M, N);
-      wntua = jobu === "A" || jobu === "a";
-      wntus = jobu === "S" || jobu === "s";
+      wntua = jobu === "A";
+      wntus = jobu === "S";
+      wntuo = jobu === "O";
+      wntun = jobu === "N";
+      wntva = jobvt === "A";
+      wntvs = jobvt === "S";
+      wntvo = jobvt === "O";
+      wntvn = jobvt === "N";
       wntuas = wntua || wntus;
-      wntuo = jobu === "O" || jobu === "o";
-      wntun = jobu === "N" || jobu === "n";
-      wntva = jobvt === "A" || jobvt === "a";
-      wntvs = jobvt === "S" || jobvt === "s";
       wntvas = wntva || wntvs;
-      wntvo = jobvt === "O" || jobvt === "o";
-      wntvn = jobvt === "N" || jobvt === "n";
+      info = 0;
       if (M === 0 || N === 0) {
         return 0;
       }
-      var wsz = Math.max(1, 3 * minmn + Math.max(M, N) + minmn * Math.max(M, N));
+      wsz = Math.max(1, 3 * minmn + Math.max(M, N) + minmn * Math.max(M, N));
       if (lwork >= wsz) {
         WK = WORK;
       } else {
@@ -12817,14 +12854,14 @@ var require_base51 = __commonJS({
       eps = dlamch("P");
       smlnum = Math.sqrt(dlamch("S")) / eps;
       bignum = 1 / smlnum;
-      anrm = zlange("M", M, N, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK);
+      anrm = zlange("max", M, N, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK);
       iscl = 0;
       if (anrm > 0 && anrm < smlnum) {
         iscl = 1;
-        zlascl("G", 0, 0, anrm, smlnum, M, N, A, sa1, sa2, offsetA);
+        zlascl("general", 0, 0, anrm, smlnum, M, N, A, sa1, sa2, offsetA);
       } else if (anrm > bignum) {
         iscl = 1;
-        zlascl("G", 0, 0, anrm, bignum, M, N, A, sa1, sa2, offsetA);
+        zlascl("general", 0, 0, anrm, bignum, M, N, A, sa1, sa2, offsetA);
       }
       if (M >= N) {
         if (wntun && M >= 2 * N) {
@@ -12845,7 +12882,7 @@ var require_base51 = __commonJS({
             iwork
           );
           if (N > 1) {
-            zlaset("L", N - 1, N - 1, CZERO, CZERO, A, sa1, sa2, offsetA + sa1);
+            zlaset("lower", N - 1, N - 1, CZERO, CZERO, A, sa1, sa2, offsetA + sa1);
           }
           ie = 0;
           itauq = 0;
@@ -12878,7 +12915,7 @@ var require_base51 = __commonJS({
           ncvt = 0;
           if (wntvo || wntvas) {
             zungbr(
-              "P",
+              "p",
               N,
               N,
               N,
@@ -12898,7 +12935,7 @@ var require_base51 = __commonJS({
           }
           irwork = ie + N;
           info = zbdsqr(
-            "U",
+            "upper",
             N,
             ncvt,
             0,
@@ -12960,10 +12997,10 @@ var require_base51 = __commonJS({
             wsz - iwork
           );
           if (wntuas) {
-            zlacpy("L", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
+            zlacpy("lower", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
             ncu = wntus ? N : M;
             zungbr(
-              "Q",
+              "q",
               M,
               ncu,
               N,
@@ -12981,9 +13018,9 @@ var require_base51 = __commonJS({
             );
           }
           if (wntvas) {
-            zlacpy("U", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
+            zlacpy("upper", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
             zungbr(
-              "P",
+              "p",
               N,
               N,
               N,
@@ -13002,7 +13039,7 @@ var require_base51 = __commonJS({
           }
           if (wntuo) {
             zungbr(
-              "Q",
+              "q",
               M,
               N,
               N,
@@ -13021,7 +13058,7 @@ var require_base51 = __commonJS({
           }
           if (wntvo) {
             zungbr(
-              "P",
+              "p",
               N,
               N,
               N,
@@ -13049,7 +13086,7 @@ var require_base51 = __commonJS({
           }
           if (!wntuo && !wntvo) {
             info = zbdsqr(
-              "U",
+              "upper",
               N,
               ncvt,
               nru,
@@ -13079,7 +13116,7 @@ var require_base51 = __commonJS({
             );
           } else if (!wntuo && wntvo) {
             info = zbdsqr(
-              "U",
+              "upper",
               N,
               ncvt,
               nru,
@@ -13109,7 +13146,7 @@ var require_base51 = __commonJS({
             );
           } else {
             info = zbdsqr(
-              "U",
+              "upper",
               N,
               ncvt,
               nru,
@@ -13169,9 +13206,9 @@ var require_base51 = __commonJS({
           wsz - iwork
         );
         if (wntuas) {
-          zlacpy("L", M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
+          zlacpy("lower", M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
           zungbr(
-            "Q",
+            "q",
             M,
             M,
             N,
@@ -13189,10 +13226,10 @@ var require_base51 = __commonJS({
           );
         }
         if (wntvas) {
-          zlacpy("U", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
+          zlacpy("upper", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
           nrvt = wntva ? N : M;
           zungbr(
-            "P",
+            "p",
             nrvt,
             N,
             M,
@@ -13211,7 +13248,7 @@ var require_base51 = __commonJS({
         }
         if (wntuo) {
           zungbr(
-            "Q",
+            "q",
             M,
             M,
             N,
@@ -13230,7 +13267,7 @@ var require_base51 = __commonJS({
         }
         if (wntvo) {
           zungbr(
-            "P",
+            "p",
             M,
             N,
             M,
@@ -13258,7 +13295,7 @@ var require_base51 = __commonJS({
         }
         if (!wntuo && !wntvo) {
           info = zbdsqr(
-            "L",
+            "lower",
             M,
             ncvt,
             nru,
@@ -13287,7 +13324,7 @@ var require_base51 = __commonJS({
           );
         } else if (!wntuo && wntvo) {
           info = zbdsqr(
-            "L",
+            "lower",
             M,
             ncvt,
             nru,
@@ -13316,7 +13353,7 @@ var require_base51 = __commonJS({
           );
         } else {
           info = zbdsqr(
-            "L",
+            "lower",
             M,
             ncvt,
             nru,
@@ -13347,16 +13384,16 @@ var require_base51 = __commonJS({
       }
       if (iscl === 1) {
         if (anrm > bignum) {
-          dlascl("G", 0, 0, bignum, anrm, minmn, 1, s, strideS, 1, offsetS);
+          dlascl("general", 0, 0, bignum, anrm, minmn, 1, s, strideS, 1, offsetS);
         }
         if (info !== 0 && anrm > bignum) {
-          dlascl("G", 0, 0, bignum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie);
+          dlascl("general", 0, 0, bignum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie);
         }
         if (anrm < smlnum) {
-          dlascl("G", 0, 0, smlnum, anrm, minmn, 1, s, strideS, 1, offsetS);
+          dlascl("general", 0, 0, smlnum, anrm, minmn, 1, s, strideS, 1, offsetS);
         }
         if (info !== 0 && anrm < smlnum) {
-          dlascl("G", 0, 0, smlnum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie);
+          dlascl("general", 0, 0, smlnum, anrm, minmn - 1, 1, RWORK, strideRWORK, 1, offsetRWORK + ie);
         }
       }
       return info;
@@ -13369,15 +13406,32 @@ var require_base51 = __commonJS({
 var require_ndarray = __commonJS({
   "lib/lapack/base/zgesvd/lib/ndarray.js"(exports, module) {
     "use strict";
+    var format = require_lib3();
     var base = require_base51();
     function zgesvd2(jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK) {
-      return base(jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK);
+      if (jobu !== "all" && jobu !== "some" && jobu !== "overwrite" && jobu !== "none") {
+        throw new TypeError(format("invalid argument. First argument must be a valid job type. Value: `%s`.", jobu));
+      }
+      if (jobvt !== "all" && jobvt !== "some" && jobvt !== "overwrite" && jobvt !== "none") {
+        throw new TypeError(format("invalid argument. Second argument must be a valid job type. Value: `%s`.", jobvt));
+      }
+      if (M < 0) {
+        throw new RangeError(format("invalid argument. Third argument must be a nonnegative integer. Value: `%d`.", M));
+      }
+      if (N < 0) {
+        throw new RangeError(format("invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.", N));
+      }
+      if (M === 0 || N === 0) {
+        return 0;
+      }
+      var JOB_MAP = { "all": "A", "some": "S", "overwrite": "O", "none": "N" };
+      return base(JOB_MAP[jobu], JOB_MAP[jobvt], M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK);
     }
     module.exports = zgesvd2;
   }
 });
 
-// notebooks/laplace/aaa-entry.js
+// notebooks/aaa/aaa-entry.js
 var import_complex128 = __toESM(require_lib60(), 1);
 var import_reinterpret_complex128 = __toESM(require_lib57(), 1);
 
@@ -14056,7 +14110,7 @@ function prz(z, f, w) {
   return { pol, res, zer };
 }
 
-// notebooks/laplace/aaa-entry.js
+// notebooks/aaa/aaa-entry.js
 var import_ndarray = __toESM(require_ndarray(), 1);
 var timings = {
   svd: 0,
@@ -14185,8 +14239,8 @@ function aaa(Z, F, tol = 1e-13, mmax = 100) {
     for (let i = 0; i < 2 * m * m; i++) VTv[i] = 0;
     t0 = performance.now();
     const info = (0, import_ndarray.default)(
-      "N",
-      "A",
+      "none",
+      "all",
       nJ,
       m,
       Adata,
@@ -14679,7 +14733,7 @@ function stokes(options = {}) {
   };
 }
 
-// notebooks/laplace/laplace-entry.js
+// notebooks/aaa/laplace-entry.js
 var cadd2 = ([ar, ai], [br, bi]) => [ar + br, ai + bi];
 var csub3 = ([ar, ai], [br, bi]) => [ar - br, ai - bi];
 var cmul2 = ([ar, ai], [br, bi]) => [ar * br - ai * bi, ar * bi + ai * br];

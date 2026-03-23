@@ -20,6 +20,9 @@
 
 'use strict';
 
+var dlarf = require( '../../dlarf/lib/base.js' );
+var dlarfg = require( '../../dlarfg/lib/base.js' );
+
 // MAIN //
 
 /**
@@ -42,8 +45,29 @@
 * @returns {integer} status code (0 = success)
 */
 function dgehd2( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+	var xStart;
+	var oAlpha;
+	var oTau;
+	var aii;
+	var i;
+	for ( i = ilo - 1; i < ihi - 1; i++ ) {
+		// Compute elementary reflector H(i) to annihilate A(i+2:ihi,i)
+		oAlpha = offsetA + ( i + 1 ) * strideA1 + i * strideA2;
+		xStart = Math.min( i + 2, N - 1 );
+		oTau = offsetTAU + i * strideTAU;
+		dlarfg( ihi - i - 1, A, oAlpha, A, strideA1, offsetA + xStart * strideA1 + i * strideA2, TAU, oTau );
+		aii = A[ oAlpha ];
+		A[ oAlpha ] = 1.0;
+
+		// Apply H(i) to A(1:ihi,i+1:ihi) from the right
+		dlarf( 'right', ihi, ihi - i - 1, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2, TAU[ oTau ], A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA2, WORK, strideWORK, offsetWORK );
+
+		// Apply H(i) to A(i+1:ihi,i+1:n) from the left
+		dlarf( 'left', ihi - i - 1, N - i - 1, A, strideA1, offsetA + ( i + 1 ) * strideA1 + i * strideA2, TAU[ oTau ], A, strideA1, strideA2, offsetA + ( i + 1 ) * strideA1 + ( i + 1 ) * strideA2, WORK, strideWORK, offsetWORK );
+
+		A[ oAlpha ] = aii;
+	}
+	return 0;
 }
 
 

@@ -164,6 +164,21 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	var x;
 	var y;
 
+	// Float64-based strides for direct Hv/Tv/Qv/Zv indexing
+	sh1 = strideH1 * 2;
+	sh2 = strideH2 * 2;
+	st1 = strideT1 * 2;
+	st2 = strideT2 * 2;
+	sq1 = strideQ1 * 2;
+	sq2 = strideQ2 * 2;
+	sz1 = strideZ1 * 2;
+	sz2 = strideZ2 * 2;
+
+	// Decode job parameters
+	ilschr = ( job === 'schur' || job === 'S' );
+	ilq = ( compq === 'update' || compq === 'initialize' || compq === 'V' || compq === 'I' );
+	ilz = ( compz === 'update' || compz === 'initialize' || compz === 'V' || compz === 'I' );
+
 	// Zrot strides: in complex elements (same as input strides now)
 	rq1 = strideQ1;
 	rz1 = strideZ1;
