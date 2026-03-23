@@ -18,9 +18,11 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dlamch = require( '../../dlamch/lib/base.js' );
+
 
 // VARIABLES //
 
@@ -35,6 +37,7 @@ var EPS = dlamch( 'E' );                 // machine epsilon (~1.110e-16)
 var BE = BS / ( EPS * EPS );             // rescaling factor
 var HALF_OV = HALF * OV;                 // half of overflow threshold
 var SCALE_THRESH = UN * BS / EPS;        // underflow rescaling threshold
+
 
 // FUNCTIONS //
 
@@ -80,6 +83,7 @@ function dladiv1( a, b, c, d, out ) {
 	out[ 0 ] = dladiv2( a, b, c, d, r, t );
 	out[ 1 ] = dladiv2( b, -a, c, d, r, t );
 }
+
 
 // MAIN //
 

@@ -22,6 +22,7 @@
 
 'use strict';
 
+
 // VARIABLES //
 
 var CNST1 = 0.5630;
@@ -31,6 +32,7 @@ var QURTR = 0.250;
 var THIRD = 0.3330;
 var HALF = 0.50;
 var HUNDRD = 100.0;
+
 
 // MAIN //
 

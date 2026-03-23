@@ -20,10 +20,12 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dgemv = require( '../../../../blas/base/dgemv/lib/base.js' );
 var dtrmv = require( '../../../../blas/base/dtrmv/lib/base.js' );
+
 
 // MAIN //
 

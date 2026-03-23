@@ -20,15 +20,18 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dsytd2 = require( '../../dsytd2/lib/base.js' );
 var dlatrd = require( '../../dlatrd/lib/base.js' );
 var dsyr2k = require( '../../../../blas/base/dsyr2k/lib/base.js' );
 
+
 // VARIABLES //
 
 var NB = 32; // block size (replaces ILAENV)
+
 
 // MAIN //
 

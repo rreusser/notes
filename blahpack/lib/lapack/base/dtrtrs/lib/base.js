@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dtrsm = require( '../../../../blas/base/dtrsm/lib/base.js' );

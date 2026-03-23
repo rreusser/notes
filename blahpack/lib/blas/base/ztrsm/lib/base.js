@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -27,12 +28,14 @@ var real = require( '@stdlib/complex/float64/real' );
 var imag = require( '@stdlib/complex/float64/imag' );
 var cmplx = require( '../../../../cmplx.js' );
 
+
 // VARIABLES //
 
 // Scratch buffer for complex reciprocal computation (1/z)
 
 // scratch[0..1] = numerator (1,0), scratch[2..3] = denominator, scratch[4..5] = result
 var scratch = new Float64Array( 6 );
+
 
 // MAIN //
 

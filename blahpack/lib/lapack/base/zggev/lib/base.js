@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -39,12 +40,14 @@ var ztgevc = require( '../../ztgevc/lib/base.js' );
 var zlacpy = require( '../../zlacpy/lib/base.js' );
 var zungqr = require( '../../zungqr/lib/base.js' );
 
+
 // VARIABLES //
 
 var ZERO = 0.0;
 var ONE = 1.0;
 var CZERO = new Complex128( 0.0, 0.0 );
 var CONE = new Complex128( 1.0, 0.0 );
+
 
 // FUNCTIONS //
 
@@ -59,6 +62,7 @@ var CONE = new Complex128( 1.0, 0.0 );
 function abs1( arr, idx ) {
 	return Math.abs( arr[ idx ] ) + Math.abs( arr[ idx + 1 ] );
 }
+
 
 // MAIN //
 

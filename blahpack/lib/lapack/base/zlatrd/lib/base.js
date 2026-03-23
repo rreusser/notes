@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -34,11 +35,13 @@ var zdotc = require( '../../../../blas/base/zdotc/lib/base.js' );
 var zaxpy = require( '../../../../blas/base/zaxpy/lib/base.js' );
 var zlacgv = require( '../../zlacgv/lib/base.js' );
 
+
 // VARIABLES //
 
 var CZERO = new Complex128( 0.0, 0.0 );
 var CONE = new Complex128( 1.0, 0.0 );
 var CNONE = new Complex128( -1.0, 0.0 );
+
 
 // MAIN //
 

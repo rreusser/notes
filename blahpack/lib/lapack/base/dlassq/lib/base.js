@@ -18,6 +18,7 @@
 
 'use strict';
 
+
 // VARIABLES //
 
 // Blue's scaling constants for double precision (IEEE 754):

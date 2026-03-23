@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -31,6 +32,7 @@ var zdscal = require( '../../../../blas/base/zdscal/lib/base.js' );
 var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 var dlamch = require( '../../../../lapack/base/dlamch/lib/base.js' );
 
+
 // VARIABLES //
 
 var ZERO = 0.0;
@@ -38,6 +40,7 @@ var HALF = 0.5;
 var ONE = 1.0;
 var THREE = 3.0;
 var SCLFAC = 10.0;
+
 
 // FUNCTIONS //
 
@@ -78,6 +81,7 @@ function cabs( arr, idx ) {
 	var im = arr[ idx + 1 ];
 	return Math.sqrt( re * re + im * im );
 }
+
 
 // MAIN //
 

@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -29,10 +30,12 @@ var zgerc = require( '../../../../blas/base/zgerc/lib/base.js' );
 var ilazlr = require( '../../ilazlr/lib/base.js' );
 var ilazlc = require( '../../ilazlc/lib/base.js' );
 
+
 // VARIABLES //
 
 var ONE = new Complex128( 1.0, 0.0 );
 var ZERO = new Complex128( 0.0, 0.0 );
+
 
 // MAIN //
 

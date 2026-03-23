@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -28,9 +29,11 @@ var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
 var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var ztrmv = require( '../../../../blas/base/ztrmv/lib/base.js' );
 
+
 // VARIABLES //
 
 var ONE = new Complex128( 1.0, 0.0 );
+
 
 // MAIN //
 

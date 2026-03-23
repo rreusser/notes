@@ -18,15 +18,18 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dscal = require( './../../../../blas/base/dscal/lib/base.js' );
+
 
 // VARIABLES //
 
 // Safe minimum: smallest normalized double-precision number
 var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 var BIGNUM = 1.0 / SMLNUM;
+
 
 // MAIN //
 

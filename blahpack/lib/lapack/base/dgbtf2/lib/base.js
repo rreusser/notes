@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var idamax = require( '../../../../blas/base/idamax/lib/base.js' );

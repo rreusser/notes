@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dgelq2 = require( '../../dgelq2/lib/base.js' );

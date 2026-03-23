@@ -20,15 +20,18 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dorg2r = require( '../../dorg2r/lib/base.js' );
 var dlarft = require( '../../dlarft/lib/base.js' );
 var dlarfb = require( '../../dlarfb/lib/base.js' );
 
+
 // VARIABLES //
 
 var NB = 32;  // Block size (LAPACK default for DORGQR)
+
 
 // MAIN //
 

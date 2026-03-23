@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -33,11 +34,13 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 var zrot = require( '../../zrot/lib/base.js' );
 var cmplx = require( '../../../../cmplx.js' );
 
+
 // VARIABLES //
 
 var ZERO = 0.0;
 var ONE = 1.0;
 var HALF = 0.5;
+
 
 // MAIN //
 

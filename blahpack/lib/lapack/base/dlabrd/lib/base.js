@@ -20,11 +20,13 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dgemv = require( '../../../../blas/base/dgemv/lib/base.js' );
 var dlarfg = require( '../../dlarfg/lib/base.js' );
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
+
 
 // MAIN //
 

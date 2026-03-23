@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );

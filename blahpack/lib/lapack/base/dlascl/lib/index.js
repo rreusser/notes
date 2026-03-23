@@ -40,6 +40,7 @@
 * dlascl.ndarray( 'N', 2, 2, 1.0, 1.0, 2, 2, A, 1, 2, 0 );
 */
 
+
 // MODULES //
 
 var main = require( './main.js' );

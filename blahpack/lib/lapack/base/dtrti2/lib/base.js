@@ -18,6 +18,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dtrmv = require( '../../../../blas/base/dtrmv/lib/base.js' );

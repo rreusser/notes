@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dlassq = require( '../../dlassq/lib/base.js' );

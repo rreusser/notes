@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128Array = require( '@stdlib/array/complex128' );

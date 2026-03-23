@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -30,11 +31,13 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 var zlarfg = require( '../../zlarfg/lib/base.js' );
 var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 
+
 // VARIABLES //
 
 var ONE = new Complex128( 1.0, 0.0 );
 var ZERO = new Complex128( 0.0, 0.0 );
 var NEGONE = new Complex128( -1.0, 0.0 );
+
 
 // MAIN //
 

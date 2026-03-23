@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -29,10 +30,12 @@ var zhetd2 = require( '../../zhetd2/lib/base.js' );
 var zlatrd = require( '../../zlatrd/lib/base.js' );
 var zher2k = require( '../../../../blas/base/zher2k/lib/base.js' );
 
+
 // VARIABLES //
 
 var NB = 32; // block size (replaces ILAENV)
 var CNONE = new Complex128( -1.0, 0.0 );
+
 
 // MAIN //
 

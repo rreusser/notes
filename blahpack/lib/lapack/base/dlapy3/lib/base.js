@@ -18,6 +18,7 @@
 
 'use strict';
 
+
 // VARIABLES //
 
 var HUGEVAL = 1.7976931348623157e+308; // Number.MAX_VALUE

@@ -20,10 +20,12 @@
 
 'use strict';
 
+
 // MODULES //
 
 var zdscal = require( '../../../../blas/base/zdscal/lib/base.js' );
 var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
+
 
 // MAIN //
 

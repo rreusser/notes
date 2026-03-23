@@ -20,15 +20,18 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dgeqr2 = require( '../../dgeqr2/lib/base.js' );
 var dlarfb = require( '../../dlarfb/lib/base.js' );
 var dlarft = require( '../../dlarft/lib/base.js' );
 
+
 // VARIABLES //
 
 var DEFAULT_NB = 32;
+
 
 // MAIN //
 

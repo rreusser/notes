@@ -18,9 +18,11 @@
 
 'use strict';
 
+
 // VARIABLES //
 
 var EPS = 1.1102230246251565e-16; // DLAMCH('EPS') = 2^-53
+
 
 // FUNCTIONS //
 
@@ -44,6 +46,7 @@ function sign( a, b ) {
 	}
 	return -mag;
 }
+
 
 // MAIN //
 

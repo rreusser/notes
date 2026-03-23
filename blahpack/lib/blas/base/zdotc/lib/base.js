@@ -18,10 +18,12 @@
 
 'use strict';
 
+
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
+
 
 // MAIN //
 

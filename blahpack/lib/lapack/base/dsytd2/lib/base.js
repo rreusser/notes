@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dlarfg = require( '../../dlarfg/lib/base.js' );
@@ -28,9 +29,11 @@ var dsyr2 = require( '../../../../blas/base/dsyr2/lib/base.js' );
 var ddot = require( '../../../../blas/base/ddot/lib/base.js' );
 var daxpy = require( '../../../../blas/base/daxpy/lib/base.js' );
 
+
 // VARIABLES //
 
 var HALF = 0.5;
+
 
 // MAIN //
 

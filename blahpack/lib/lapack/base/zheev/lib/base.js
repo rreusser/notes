@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -31,6 +32,7 @@ var zungtr = require( '../../zungtr/lib/base.js' );
 var dsterf = require( '../../dsterf/lib/base.js' );
 var zsteqr = require( '../../zsteqr/lib/base.js' );
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
+
 
 // MAIN //
 

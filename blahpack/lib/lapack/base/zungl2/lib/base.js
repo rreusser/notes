@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -28,6 +29,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlacgv = require( '../../zlacgv/lib/base.js' );
 var zlarf = require( '../../zlarf/lib/base.js' );
 var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
+
 
 // MAIN //
 

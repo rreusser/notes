@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );

@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );

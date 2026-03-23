@@ -18,6 +18,7 @@
 
 'use strict';
 
+
 // VARIABLES //
 
 // IEEE 754 double-precision constants:

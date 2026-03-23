@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dlacn2 = require( '../../dlacn2/lib/base.js' );
@@ -27,9 +28,11 @@ var dlatrs = require( '../../dlatrs/lib/base.js' );
 var drscl = require( '../../drscl/lib/base.js' );
 var idamax = require( '../../../../blas/base/idamax/lib/base.js' );
 
+
 // VARIABLES //
 
 var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
+
 
 // MAIN //
 

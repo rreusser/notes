@@ -47,6 +47,7 @@
 * dgesvd.ndarray( 'none', 'none', 2, 2, A, 1, 2, 0, s, 1, 0, U, 1, 2, 0, VT, 1, 2, 0, WORK, 1, 0, 8 );
 */
 
+
 // MODULES //
 
 var main = require( './main.js' );

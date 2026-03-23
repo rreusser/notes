@@ -18,12 +18,14 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dnrm2 = require( '../../../../blas/base/dnrm2/lib/base.js' );
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlapy2 = require( '../../dlapy2/lib/base.js' );
+
 
 // MAIN //
 

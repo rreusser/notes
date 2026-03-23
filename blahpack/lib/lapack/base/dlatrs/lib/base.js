@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dasum = require( './../../../../blas/base/dasum/lib/base.js' );
@@ -30,6 +31,7 @@ var dtrsv = require( './../../../../blas/base/dtrsv/lib/base.js' );
 var idamax = require( './../../../../blas/base/idamax/lib/base.js' );
 var dlange = require( '../../dlange/lib/base.js' );
 
+
 // VARIABLES //
 
 // DLAMCH('S') / DLAMCH('E') => safe minimum / precision
@@ -37,6 +39,7 @@ var SMLNUM = 2.2250738585072014e-308 / 1.1102230246251565e-16; // smlnum / eps
 var BIGNUM = 1.0 / SMLNUM;
 var HALF = 0.5;
 var RMAX = 1.7976931348623157e+308; // DLAMCH('O')
+
 
 // MAIN //
 

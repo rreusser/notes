@@ -20,11 +20,13 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dcopy = require( '../../../../blas/base/dcopy/lib/base.js' );
 var dgemm = require( '../../../../blas/base/dgemm/lib/base.js' );
 var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
+
 
 // MAIN //
 

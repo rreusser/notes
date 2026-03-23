@@ -40,6 +40,7 @@
 * dlasq6.ndarray( 2, 2, z, 1, 0, 2 );
 */
 
+
 // MODULES //
 
 var main = require( './main.js' );

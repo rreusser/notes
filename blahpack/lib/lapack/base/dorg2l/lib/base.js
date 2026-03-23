@@ -20,10 +20,12 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dlarf = require( '../../dlarf/lib/base.js' );
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
+
 
 // MAIN //
 

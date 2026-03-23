@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -27,9 +28,11 @@ var zung2r = require( '../../zung2r/lib/base.js' );
 var zlarft = require( '../../zlarft/lib/base.js' );
 var zlarfb = require( '../../zlarfb/lib/base.js' );
 
+
 // VARIABLES //
 
 var NB = 32;  // Block size (LAPACK default for ZUNGQR)
+
 
 // MAIN //
 

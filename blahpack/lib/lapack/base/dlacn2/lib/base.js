@@ -20,15 +20,18 @@
 
 'use strict';
 
+
 // MODULES //
 
 var dasum = require( './../../../../blas/base/dasum/lib/base.js' );
 var dcopy = require( './../../../../blas/base/dcopy/lib/base.js' );
 var idamax = require( './../../../../blas/base/idamax/lib/base.js' );
 
+
 // VARIABLES //
 
 var ITMAX = 5;
+
 
 // MAIN //
 

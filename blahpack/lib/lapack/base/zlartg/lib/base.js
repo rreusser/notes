@@ -18,6 +18,7 @@
 
 'use strict';
 
+
 // VARIABLES //
 
 // LA_CONSTANTS for double precision:
@@ -30,6 +31,7 @@ var SAFMAX = 4.49423283715579e+307;
 var RTMIN = Math.sqrt( SAFMIN );
 var RTMAX_HALF = Math.sqrt( SAFMAX / 2.0 );
 var RTMAX_QTR = Math.sqrt( SAFMAX / 4.0 );
+
 
 // FUNCTIONS //
 
@@ -44,6 +46,7 @@ var RTMAX_QTR = Math.sqrt( SAFMAX / 4.0 );
 function abssq( re, im ) {
 	return re * re + im * im;
 }
+
 
 // MAIN //
 

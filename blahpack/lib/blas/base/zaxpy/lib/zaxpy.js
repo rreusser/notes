@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );

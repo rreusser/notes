@@ -20,10 +20,12 @@
 
 'use strict';
 
+
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var cmplx = require( '../../../../cmplx.js' );
+
 
 // MAIN //
 

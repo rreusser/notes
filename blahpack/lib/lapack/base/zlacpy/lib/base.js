@@ -20,9 +20,11 @@
 
 'use strict';
 
+
 // MODULES //
 
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 
 // MAIN //
 

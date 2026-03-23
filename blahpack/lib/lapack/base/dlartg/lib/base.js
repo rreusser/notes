@@ -18,6 +18,7 @@
 
 'use strict';
 
+
 // VARIABLES //
 
 // LA_CONSTANTS for double precision:
@@ -29,6 +30,7 @@ var SAFMIN = 2.2250738585072014e-308;
 var SAFMAX = 4.49423283715579e+307;
 var RTMIN = Math.sqrt( SAFMIN );
 var RTMAX = Math.sqrt( SAFMAX / 2.0 );
+
 
 // MAIN //
 

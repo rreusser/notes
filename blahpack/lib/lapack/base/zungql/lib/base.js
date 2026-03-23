@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -28,9 +29,11 @@ var zung2l = require( '../../zung2l/lib/base.js' );
 var zlarft = require( '../../zlarft/lib/base.js' );
 var zlarfb = require( '../../zlarfb/lib/base.js' );
 
+
 // VARIABLES //
 
 var NB = 32;  // Block size (LAPACK default for ZUNGQL)
+
 
 // MAIN //
 
