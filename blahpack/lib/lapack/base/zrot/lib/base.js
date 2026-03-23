@@ -95,7 +95,7 @@ function zrot( N, cx, strideX, offsetX, cy, strideY, offsetY, c, s ) {
 
 		// conjg(s)*cx(i) = (sr*cxr + si*cxi) + (-si*cxr + sr*cxi)*i
 		cyv[ iy ] = (c * cyr) - ( (sr * cxr) + (si * cxi) );
-		cyv[ iy + 1 ] = (c * cyi) - ( - (si * cxr) + (sr * cxi) );
+		cyv[ iy + 1 ] = (c * cyi) - ( -(si * cxr) + (sr * cxi) );
 
 		cxv[ ix ] = stemp_r;
 		cxv[ ix + 1 ] = stemp_i;

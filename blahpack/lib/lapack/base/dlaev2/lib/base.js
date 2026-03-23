@@ -104,7 +104,7 @@ function dlaev2( a, b, c ) {
 	} else {
 		// sm === 0: eigenvalues are +/- rt/2
 		rt1 = 0.5 * rt;
-		rt2 = - (0.5 * rt);
+		rt2 = -(0.5 * rt);
 		sgn1 = 1;
 	}
 
@@ -119,14 +119,14 @@ function dlaev2( a, b, c ) {
 	acs = Math.abs( cs );
 
 	if ( acs > ab ) {
-		ct = - (tb / cs);
+		ct = -(tb / cs);
 		sn1 = 1.0 / Math.sqrt( 1.0 + (ct * ct) );
 		cs1 = ct * sn1;
 	} else if ( ab === 0.0 ) {
 		cs1 = 1.0;
 		sn1 = 0.0;
 	} else {
-		tn = - (cs / tb);
+		tn = -(cs / tb);
 		cs1 = 1.0 / Math.sqrt( 1.0 + (tn * tn) );
 		sn1 = tn * cs1;
 	}

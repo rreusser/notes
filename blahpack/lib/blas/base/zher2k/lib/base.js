@@ -315,108 +315,108 @@ function zher2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, st
 		}
 	} else if ( upper ) {
 		// C := alpha*A^H*B + conj(alpha)*B^H*A + beta*C
-			for ( j = 0; j < N; j++ ) {
-				for ( i = 0; i <= j; i++ ) {
-					// temp1 = sum_l conj(A[l,i]) * B[l,j]
-					// temp2 = sum_l conj(B[l,i]) * A[l,j]
-					temp1R = 0.0;
-					temp1I = 0.0;
-					temp2R = 0.0;
-					temp2I = 0.0;
-					for ( l = 0; l < K; l++ ) {
-						// conj(A[l,i]) * B[l,j]
-						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
-						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
-						bjR = Bv[ oB + (l * sb1) + (j * sb2) ];
-						bjI = Bv[ oB + (l * sb1) + (j * sb2) + 1 ];
-						temp1R += (aiR * bjR) - (aiI * bjI);
-						temp1I += (aiR * bjI) + (aiI * bjR);
+		for ( j = 0; j < N; j++ ) {
+			for ( i = 0; i <= j; i++ ) {
+				// temp1 = sum_l conj(A[l,i]) * B[l,j]
+				// temp2 = sum_l conj(B[l,i]) * A[l,j]
+				temp1R = 0.0;
+				temp1I = 0.0;
+				temp2R = 0.0;
+				temp2I = 0.0;
+				for ( l = 0; l < K; l++ ) {
+					// conj(A[l,i]) * B[l,j]
+					aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+					aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
+					bjR = Bv[ oB + (l * sb1) + (j * sb2) ];
+					bjI = Bv[ oB + (l * sb1) + (j * sb2) + 1 ];
+					temp1R += (aiR * bjR) - (aiI * bjI);
+					temp1I += (aiR * bjI) + (aiI * bjR);
 
-						// conj(B[l,i]) * A[l,j]
-						biR = Bv[ oB + (l * sb1) + (i * sb2) ];
-						biI = -Bv[ oB + (l * sb1) + (i * sb2) + 1 ]; // conjugate
-						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
-						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
-						temp2R += (biR * ajR) - (biI * ajI);
-						temp2I += (biR * ajI) + (biI * ajR);
-					}
-					ic = oC + (i * sc1) + (j * sc2);
-					if ( i === j ) {
-						// Diagonal: result must be real
-						// Re(alpha*temp1 + conj(alpha)*temp2)
-						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
-						if ( beta === 0.0 ) {
-							Cv[ ic ] = cR;
-						} else {
-							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
-						}
-						Cv[ ic + 1 ] = 0.0;
-					} else {
-						// Off-diagonal: alpha*temp1 + conj(alpha)*temp2
-						// alpha*temp1 = (aR*t1R - aI*t1I) + (aR*t1I + aI*t1R)*i
-						// conj(alpha)*temp2 = (aR*t2R + aI*t2I) + (aR*t2I - aI*t2R)*i  [conj(alpha) = aR - aI*i]
-						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
-						if ( beta === 0.0 ) {
-							Cv[ ic ] = cR;
-							Cv[ ic + 1 ] = (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
-						} else {
-							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
-							Cv[ ic + 1 ] = (beta * Cv[ ic + 1 ]) + (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
-						}
-					}
+					// conj(B[l,i]) * A[l,j]
+					biR = Bv[ oB + (l * sb1) + (i * sb2) ];
+					biI = -Bv[ oB + (l * sb1) + (i * sb2) + 1 ]; // conjugate
+					ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+					ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+					temp2R += (biR * ajR) - (biI * ajI);
+					temp2I += (biR * ajI) + (biI * ajR);
 				}
-			}
-		} else {
-			// Lower
-			for ( j = 0; j < N; j++ ) {
-				for ( i = j; i < N; i++ ) {
-					// temp1 = sum_l conj(A[l,i]) * B[l,j]
-					// temp2 = sum_l conj(B[l,i]) * A[l,j]
-					temp1R = 0.0;
-					temp1I = 0.0;
-					temp2R = 0.0;
-					temp2I = 0.0;
-					for ( l = 0; l < K; l++ ) {
-						// conj(A[l,i]) * B[l,j]
-						aiR = Av[ oA + (l * sa1) + (i * sa2) ];
-						aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
-						bjR = Bv[ oB + (l * sb1) + (j * sb2) ];
-						bjI = Bv[ oB + (l * sb1) + (j * sb2) + 1 ];
-						temp1R += (aiR * bjR) - (aiI * bjI);
-						temp1I += (aiR * bjI) + (aiI * bjR);
-
-						// conj(B[l,i]) * A[l,j]
-						biR = Bv[ oB + (l * sb1) + (i * sb2) ];
-						biI = -Bv[ oB + (l * sb1) + (i * sb2) + 1 ]; // conjugate
-						ajR = Av[ oA + (l * sa1) + (j * sa2) ];
-						ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
-						temp2R += (biR * ajR) - (biI * ajI);
-						temp2I += (biR * ajI) + (biI * ajR);
-					}
-					ic = oC + (i * sc1) + (j * sc2);
-					if ( i === j ) {
-						// Diagonal: result must be real
-						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
-						if ( beta === 0.0 ) {
-							Cv[ ic ] = cR;
-						} else {
-							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
-						}
-						Cv[ ic + 1 ] = 0.0;
+				ic = oC + (i * sc1) + (j * sc2);
+				if ( i === j ) {
+					// Diagonal: result must be real
+					// Re(alpha*temp1 + conj(alpha)*temp2)
+					cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
+					if ( beta === 0.0 ) {
+						Cv[ ic ] = cR;
 					} else {
-						// Off-diagonal: alpha*temp1 + conj(alpha)*temp2
-						cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
-						if ( beta === 0.0 ) {
-							Cv[ ic ] = cR;
-							Cv[ ic + 1 ] = (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
-						} else {
-							Cv[ ic ] = (beta * Cv[ ic ]) + cR;
-							Cv[ ic + 1 ] = (beta * Cv[ ic + 1 ]) + (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
-						}
+						Cv[ ic ] = (beta * Cv[ ic ]) + cR;
+					}
+					Cv[ ic + 1 ] = 0.0;
+				} else {
+					// Off-diagonal: alpha*temp1 + conj(alpha)*temp2
+					// alpha*temp1 = (aR*t1R - aI*t1I) + (aR*t1I + aI*t1R)*i
+					// conj(alpha)*temp2 = (aR*t2R + aI*t2I) + (aR*t2I - aI*t2R)*i  [conj(alpha) = aR - aI*i]
+					cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
+					if ( beta === 0.0 ) {
+						Cv[ ic ] = cR;
+						Cv[ ic + 1 ] = (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
+					} else {
+						Cv[ ic ] = (beta * Cv[ ic ]) + cR;
+						Cv[ ic + 1 ] = (beta * Cv[ ic + 1 ]) + (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
 					}
 				}
 			}
 		}
+	} else {
+		// Lower
+		for ( j = 0; j < N; j++ ) {
+			for ( i = j; i < N; i++ ) {
+				// temp1 = sum_l conj(A[l,i]) * B[l,j]
+				// temp2 = sum_l conj(B[l,i]) * A[l,j]
+				temp1R = 0.0;
+				temp1I = 0.0;
+				temp2R = 0.0;
+				temp2I = 0.0;
+				for ( l = 0; l < K; l++ ) {
+					// conj(A[l,i]) * B[l,j]
+					aiR = Av[ oA + (l * sa1) + (i * sa2) ];
+					aiI = -Av[ oA + (l * sa1) + (i * sa2) + 1 ]; // conjugate
+					bjR = Bv[ oB + (l * sb1) + (j * sb2) ];
+					bjI = Bv[ oB + (l * sb1) + (j * sb2) + 1 ];
+					temp1R += (aiR * bjR) - (aiI * bjI);
+					temp1I += (aiR * bjI) + (aiI * bjR);
+
+					// conj(B[l,i]) * A[l,j]
+					biR = Bv[ oB + (l * sb1) + (i * sb2) ];
+					biI = -Bv[ oB + (l * sb1) + (i * sb2) + 1 ]; // conjugate
+					ajR = Av[ oA + (l * sa1) + (j * sa2) ];
+					ajI = Av[ oA + (l * sa1) + (j * sa2) + 1 ];
+					temp2R += (biR * ajR) - (biI * ajI);
+					temp2I += (biR * ajI) + (biI * ajR);
+				}
+				ic = oC + (i * sc1) + (j * sc2);
+				if ( i === j ) {
+					// Diagonal: result must be real
+					cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
+					if ( beta === 0.0 ) {
+						Cv[ ic ] = cR;
+					} else {
+						Cv[ ic ] = (beta * Cv[ ic ]) + cR;
+					}
+					Cv[ ic + 1 ] = 0.0;
+				} else {
+					// Off-diagonal: alpha*temp1 + conj(alpha)*temp2
+					cR = (alphaR * temp1R) - (alphaI * temp1I) + (alphaR * temp2R) + (alphaI * temp2I);
+					if ( beta === 0.0 ) {
+						Cv[ ic ] = cR;
+						Cv[ ic + 1 ] = (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
+					} else {
+						Cv[ ic ] = (beta * Cv[ ic ]) + cR;
+						Cv[ ic + 1 ] = (beta * Cv[ ic + 1 ]) + (alphaR * temp1I) + (alphaI * temp1R) + (alphaR * temp2I) - (alphaI * temp2R);
+					}
+				}
+			}
+		}
+	}
 	return C;
 }
 

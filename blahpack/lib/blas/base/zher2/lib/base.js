@@ -110,7 +110,7 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 				yv[ jy ] !== 0.0 || yv[ jy + 1 ] !== 0.0 ) {
 				// temp1 = alpha * conj(y[jy])
 				temp1R = (alphaR * yv[ jy ]) + (alphaI * yv[ jy + 1 ]);
-				temp1I = - (alphaR * yv[ jy + 1 ]) + (alphaI * yv[ jy ]);
+				temp1I = -(alphaR * yv[ jy + 1 ]) + (alphaI * yv[ jy ]);
 
 				// temp2 = conj(alpha * x[jx]) = conj(alpha) * conj(x[jx])
 				tr = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);
@@ -153,7 +153,7 @@ function zher2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, str
 				yv[ jy ] !== 0.0 || yv[ jy + 1 ] !== 0.0 ) {
 				// temp1 = alpha * conj(y[jy])
 				temp1R = (alphaR * yv[ jy ]) + (alphaI * yv[ jy + 1 ]);
-				temp1I = - (alphaR * yv[ jy + 1 ]) + (alphaI * yv[ jy ]);
+				temp1I = -(alphaR * yv[ jy + 1 ]) + (alphaI * yv[ jy ]);
 
 				// temp2 = conj(alpha * x[jx])
 				tr = (alphaR * xv[ jx ]) - (alphaI * xv[ jx + 1 ]);

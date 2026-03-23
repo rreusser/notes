@@ -114,14 +114,14 @@ function zlartg( f, g, out ) {
 			rr = d;
 			ri = 0.0;
 			sr = gr / d;
-			si = - (gi / d);
+			si = -(gi / d);
 		} else if ( gi === 0.0 ) {
 			// g is purely real
 			d = Math.abs( gr );
 			rr = d;
 			ri = 0.0;
 			sr = gr / d;
-			si = - (gi / d);
+			si = -(gi / d);
 		} else {
 			// g is general complex
 			g1 = Math.max( Math.abs( gr ), Math.abs( gi ) );
@@ -130,7 +130,7 @@ function zlartg( f, g, out ) {
 				g2 = abssq( gr, gi );
 				d = Math.sqrt( g2 );
 				sr = gr / d;
-				si = - (gi / d);
+				si = -(gi / d);
 				rr = d;
 				ri = 0.0;
 			} else {
@@ -141,7 +141,7 @@ function zlartg( f, g, out ) {
 				g2 = abssq( gsr, gsi );
 				d = Math.sqrt( g2 );
 				sr = gsr / d;
-				si = - (gsi / d);
+				si = -(gsi / d);
 				rr = d * u;
 				ri = 0.0;
 			}

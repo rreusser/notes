@@ -82,7 +82,7 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
 				// Temp = alpha * conj(x[j])
 				tempR = alpha * xv[ jx ];
-				tempI = - (alpha * xv[ jx + 1 ]);
+				tempI = -(alpha * xv[ jx + 1 ]);
 
 				ix = oX;
 				ai = oA + (j * sa2); // column j, row 0
@@ -110,7 +110,7 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 			if ( xv[ jx ] !== 0.0 || xv[ jx + 1 ] !== 0.0 ) {
 				// Temp = alpha * conj(x[j])
 				tempR = alpha * xv[ jx ];
-				tempI = - (alpha * xv[ jx + 1 ]);
+				tempI = -(alpha * xv[ jx + 1 ]);
 
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[j] * temp)
 				ai = oA + (j * sa1) + (j * sa2);

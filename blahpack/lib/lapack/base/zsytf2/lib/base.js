@@ -219,12 +219,12 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 						tR = ti / tr;
 						tI = tr + (ti * tR);
 						r1R = 1.0 / tI;
-						r1I = - (tR / tI);
+						r1I = -(tR / tI);
 					} else {
 						tR = tr / ti;
 						tI = ti + (tr * tR);
 						r1R = tR / tI;
-						r1I = - (1.0 / tI);
+						r1I = -(1.0 / tI);
 					}
 
 					// zsyr(uplo, k, -R1, A(:,k), 1, A, LDA)

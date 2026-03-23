@@ -131,7 +131,7 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Compute alpha := -0.5 * tau * dot(w, v)
 
 				// Fortran: ALPHA = -HALF*TAUI*DDOT(I, TAU, 1, A(1,I+1), 1)
-				alpha = - (HALF * taui) * ddot(
+				alpha = -(HALF * taui) * ddot(
 					i + 1,
 					TAU, strideTAU, offsetTAU,
 					A, sa1, offsetA + (( i + 1 ) * sa2)
@@ -217,7 +217,7 @@ function dsytd2( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 				// Compute alpha := -0.5 * tau * dot(w, v)
 
 				// Fortran: ALPHA = -HALF*TAUI*DDOT(N-I, TAU(I), 1, A(I+1,I), 1)
-				alpha = - (HALF * taui) * ddot(
+				alpha = -(HALF * taui) * ddot(
 					N - i - 1,
 					TAU, strideTAU, offsetTAU + (i * strideTAU),
 					A, sa1, offsetA + (( i + 1 ) * sa1) + (i * sa2)

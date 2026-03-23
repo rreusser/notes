@@ -1220,7 +1220,7 @@ function cabs( arr, idx ) {
 */
 function cscaleConj( out, arr, idx, absval ) {
 	out[ 0 ] = arr[ idx ] / absval;
-	out[ 1 ] = - (arr[ idx + 1 ] / absval);
+	out[ 1 ] = -(arr[ idx + 1 ] / absval);
 }
 
 /**

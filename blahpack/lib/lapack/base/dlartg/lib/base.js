@@ -88,7 +88,7 @@ function dlartg( f, g, out ) {
 		gs = g / u;
 		d = Math.sqrt( (fs * fs) + (gs * gs) );
 		out[ 0 ] = Math.abs( fs ) / d;
-		out[ 2 ] = ( f > 0.0 ) ? d * u : - (d * u);
+		out[ 2 ] = ( f > 0.0 ) ? d * u : -(d * u);
 		out[ 1 ] = gs / ( ( f > 0.0 ) ? d : -d );
 	}
 	return out;

@@ -305,12 +305,12 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 
 						if ( upper ) {
 							if ( j > 0 ) {
-								daxpy( j, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
+								daxpy( j, -(x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
 								i = idamax( j, x, strideX, offsetX );
 								xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 							}
 						} else if ( j < N - 1 ) {
-							daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
+							daxpy( N - j - 1, -(x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
 							i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + (( j + 1 ) * strideX) );
 							xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 						}
@@ -367,12 +367,12 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 
 				if ( upper ) {
 					if ( j > 0 ) {
-						daxpy( j, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
+						daxpy( j, -(x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (j * sa2), x, strideX, offsetX );
 						i = idamax( j, x, strideX, offsetX );
 						xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 					}
 				} else if ( j < N - 1 ) {
-					daxpy( N - j - 1, - (x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
+					daxpy( N - j - 1, -(x[ offsetX + (j * strideX) ] * tscal), A, sa1, offsetA + (( j + 1 ) * sa1) + (j * sa2), x, strideX, offsetX + (( j + 1 ) * strideX) );
 					i = j + 1 + idamax( N - j - 1, x, strideX, offsetX + (( j + 1 ) * strideX) );
 					xmax = Math.abs( x[ offsetX + (i * strideX) ] );
 				}

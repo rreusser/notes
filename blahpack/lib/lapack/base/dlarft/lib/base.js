@@ -85,7 +85,7 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 
 					// T(0:i-1, i) = -tau(i) * V(i, 0:i-1)
 					for ( j = 0; j < i; j++ ) {
-						T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (i * strideV1) + (j * strideV2) ]);
+						T[ offsetT + (j * strideT1) + (i * strideT2) ] = -(TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (i * strideV1) + (j * strideV2) ]);
 					}
 					jj = Math.min( lastv, prevlastv );
 
@@ -109,7 +109,7 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 
 					// T(0:i-1, i) = -tau(i) * V(0:i-1, i)
 					for ( j = 0; j < i; j++ ) {
-						T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (j * strideV1) + (i * strideV2) ]);
+						T[ offsetT + (j * strideT1) + (i * strideT2) ] = -(TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (j * strideV1) + (i * strideV2) ]);
 					}
 					jj = Math.min( lastv, prevlastv );
 
@@ -158,7 +158,7 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						}
 
 						for ( j = i + 1; j < K; j++ ) {
-							T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (( N - K + i ) * strideV1) + (j * strideV2) ]);
+							T[ offsetT + (j * strideT1) + (i * strideT2) ] = -(TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (( N - K + i ) * strideV1) + (j * strideV2) ]);
 						}
 						jj = Math.max( lastv, prevlastv );
 
@@ -180,7 +180,7 @@ function dlarft( direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, stri
 						}
 
 						for ( j = i + 1; j < K; j++ ) {
-							T[ offsetT + (j * strideT1) + (i * strideT2) ] = - (TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (j * strideV1) + (( N - K + i ) * strideV2) ]);
+							T[ offsetT + (j * strideT1) + (i * strideT2) ] = -(TAU[ offsetTAU + (i * strideTAU) ] * V[ offsetV + (j * strideV1) + (( N - K + i ) * strideV2) ]);
 						}
 						jj = Math.max( lastv, prevlastv );
 
