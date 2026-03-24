@@ -584,7 +584,7 @@ ${laplaceData.smoothCoeffs.length} polynomial terms (N=${laplaceData.N}), ${lapl
     function f32buf(data, usage) {
       const arr = new Float32Array(data.flat());
       const buf = device.createBuffer({
-        size: Math.max(arr.byteLength, 4),
+        size: Math.max(arr.byteLength, 8),
         usage: (usage || GPUBufferUsage.STORAGE) | GPUBufferUsage.COPY_DST,
       });
       device.queue.writeBuffer(buf, 0, arr);

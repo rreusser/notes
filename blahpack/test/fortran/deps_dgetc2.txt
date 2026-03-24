@@ -1,0 +1,2 @@
+dgetc2
+dlamch

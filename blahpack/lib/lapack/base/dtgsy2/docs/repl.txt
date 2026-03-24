@@ -1,0 +1,123 @@
+
+    dtgsy2.ndarray( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, D, strideD1, strideD2, offsetD, E, strideE1, strideE2, offsetE, F, strideF1, strideF2, offsetF, scale, rdsum, rdscal, IWORK, strideIWORK, offsetIWORK, pq )
+        Solves the generalized Sylvester equation (unblocked)
+
+        Parameters
+        ----------
+        trans: string
+            specifies the operation type.
+
+        ijob: integer
+            ijob.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        C: Float64Array
+            input matrix.
+
+        strideC1: integer
+            stride of the first dimension of `C`.
+
+        strideC2: integer
+            stride of the second dimension of `C`.
+
+        offsetC: NonNegativeInteger
+            starting index for `C`.
+
+        D: Float64Array
+            input matrix.
+
+        strideD1: integer
+            stride of the first dimension of `D`.
+
+        strideD2: integer
+            stride of the second dimension of `D`.
+
+        offsetD: NonNegativeInteger
+            starting index for `D`.
+
+        E: Float64Array
+            input matrix.
+
+        strideE1: integer
+            stride of the first dimension of `E`.
+
+        strideE2: integer
+            stride of the second dimension of `E`.
+
+        offsetE: NonNegativeInteger
+            starting index for `E`.
+
+        F: Float64Array
+            input matrix.
+
+        strideF1: integer
+            stride of the first dimension of `F`.
+
+        strideF2: integer
+            stride of the second dimension of `F`.
+
+        offsetF: NonNegativeInteger
+            starting index for `F`.
+
+        scale: number
+            scale.
+
+        rdsum: number
+            rdsum.
+
+        rdscal: number
+            rdscal.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: NonNegativeInteger
+            starting index for `IWORK`.
+
+        pq: integer
+            pq.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

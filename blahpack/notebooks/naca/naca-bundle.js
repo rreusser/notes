@@ -3974,37 +3974,47 @@ var require_base = __commonJS({
     var RMIN = 22250738585072014e-324;
     var EMAX = 1024;
     var RMAX = 17976931348623157e292;
+    var TABLE = {
+      "epsilon": EPS,
+      "Epsilon": EPS,
+      "safe-minimum": SFMIN,
+      "Safe minimum": SFMIN,
+      "base": BASE2,
+      "Base": BASE2,
+      "precision": PREC,
+      "Precision": PREC,
+      "digits": DIGITS,
+      "rounding": RND,
+      "min-exponent": EMIN,
+      "underflow": RMIN,
+      "max-exponent": EMAX,
+      "overflow": RMAX,
+      "scale": SFMIN,
+      "E": EPS,
+      "e": EPS,
+      "S": SFMIN,
+      "s": SFMIN,
+      "B": BASE2,
+      "b": BASE2,
+      "P": PREC,
+      "p": PREC,
+      "N": DIGITS,
+      "n": DIGITS,
+      "R": RND,
+      "r": RND,
+      "M": EMIN,
+      "m": EMIN,
+      "U": RMIN,
+      "u": RMIN,
+      "L": EMAX,
+      "l": EMAX,
+      "O": RMAX,
+      "o": RMAX
+    };
     function dlamch(cmach) {
-      var c = cmach.charAt(0).toUpperCase();
-      if (c === "E") {
-        return EPS;
-      }
-      if (c === "S") {
-        return SFMIN;
-      }
-      if (c === "B") {
-        return BASE2;
-      }
-      if (c === "P") {
-        return PREC;
-      }
-      if (c === "N") {
-        return DIGITS;
-      }
-      if (c === "R") {
-        return RND;
-      }
-      if (c === "M") {
-        return EMIN;
-      }
-      if (c === "U") {
-        return RMIN;
-      }
-      if (c === "L") {
-        return EMAX;
-      }
-      if (c === "O") {
-        return RMAX;
+      var v = TABLE[cmach];
+      if (v !== void 0) {
+        return v;
       }
       return 0;
     }
@@ -4437,7 +4447,7 @@ var require_base7 = __commonJS({
                 break;
               }
             }
-            a2 = CNST3 * a2;
+            a2 *= CNST3;
             if (a2 < CNST1) {
               s = gam * (1 - Math.sqrt(a2)) / (1 + a2);
             }
@@ -4478,7 +4488,7 @@ var require_base7 = __commonJS({
                 break;
               }
             }
-            a2 = CNST3 * a2;
+            a2 *= CNST3;
           }
           if (a2 < CNST1) {
             s = gam * (1 - Math.sqrt(a2)) / (1 + a2);
@@ -4633,7 +4643,7 @@ var require_base8 = __commonJS({
       function setZ(k, val) {
         z[offset + (k - 1) * stride] = val;
       }
-      if (tau !== 0) {
+      if (tau === 0) {
         j4 = 4 * i0 + pp - 3;
         emin = Z(j4 + 4);
         d = Z(j4) - tau;
@@ -4645,6 +4655,9 @@ var require_base8 = __commonJS({
               setZ(j4 - 2, d + Z(j4 - 1));
               temp = Z(j4 + 1) / Z(j4 - 2);
               d = d * temp - tau;
+              if (d < dthresh) {
+                d = 0;
+              }
               dmin = Math.min(dmin, d);
               setZ(j4, Z(j4 - 1) * temp);
               emin = Math.min(Z(j4), emin);
@@ -4654,6 +4667,9 @@ var require_base8 = __commonJS({
               setZ(j4 - 3, d + Z(j4));
               temp = Z(j4 + 2) / Z(j4 - 3);
               d = d * temp - tau;
+              if (d < dthresh) {
+                d = 0;
+              }
               dmin = Math.min(dmin, d);
               setZ(j4 - 1, Z(j4) * temp);
               emin = Math.min(Z(j4 - 1), emin);
@@ -4690,6 +4706,9 @@ var require_base8 = __commonJS({
               }
               setZ(j4, Z(j4 + 1) * (Z(j4 - 1) / Z(j4 - 2)));
               d = Z(j4 + 1) * (d / Z(j4 - 2)) - tau;
+              if (d < dthresh) {
+                d = 0;
+              }
               dmin = Math.min(dmin, d);
               emin = Math.min(emin, Z(j4));
             }
@@ -4708,6 +4727,9 @@ var require_base8 = __commonJS({
               }
               setZ(j4 - 1, Z(j4 + 2) * (Z(j4) / Z(j4 - 3)));
               d = Z(j4 + 2) * (d / Z(j4 - 3)) - tau;
+              if (d < dthresh) {
+                d = 0;
+              }
               dmin = Math.min(dmin, d);
               emin = Math.min(emin, Z(j4 - 1));
             }
@@ -4760,9 +4782,6 @@ var require_base8 = __commonJS({
               setZ(j4 - 2, d + Z(j4 - 1));
               temp = Z(j4 + 1) / Z(j4 - 2);
               d = d * temp - tau;
-              if (d < dthresh) {
-                d = 0;
-              }
               dmin = Math.min(dmin, d);
               setZ(j4, Z(j4 - 1) * temp);
               emin = Math.min(Z(j4), emin);
@@ -4772,9 +4791,6 @@ var require_base8 = __commonJS({
               setZ(j4 - 3, d + Z(j4));
               temp = Z(j4 + 2) / Z(j4 - 3);
               d = d * temp - tau;
-              if (d < dthresh) {
-                d = 0;
-              }
               dmin = Math.min(dmin, d);
               setZ(j4 - 1, Z(j4) * temp);
               emin = Math.min(Z(j4 - 1), emin);
@@ -4811,9 +4827,6 @@ var require_base8 = __commonJS({
               }
               setZ(j4, Z(j4 + 1) * (Z(j4 - 1) / Z(j4 - 2)));
               d = Z(j4 + 1) * (d / Z(j4 - 2)) - tau;
-              if (d < dthresh) {
-                d = 0;
-              }
               dmin = Math.min(dmin, d);
               emin = Math.min(emin, Z(j4));
             }
@@ -4832,9 +4845,6 @@ var require_base8 = __commonJS({
               }
               setZ(j4 - 1, Z(j4 + 2) * (Z(j4) / Z(j4 - 3)));
               d = Z(j4 + 2) * (d / Z(j4 - 3)) - tau;
-              if (d < dthresh) {
-                d = 0;
-              }
               dmin = Math.min(dmin, d);
               emin = Math.min(emin, Z(j4 - 1));
             }
@@ -5088,16 +5098,14 @@ var require_base10 = __commonJS({
         }
         nn = 4 * n0 + pp;
         if (n0 === i0 + 1) {
-        } else {
-          if (Z(nn - 5) > tol2 * (sigma + Z(nn - 3)) && Z(nn - 2 * pp - 4) > tol2 * Z(nn - 7)) {
-            if (Z(nn - 9) > tol2 * sigma && Z(nn - 2 * pp - 8) > tol2 * Z(nn - 11)) {
-              break;
-            }
-          } else {
-            setZ(4 * n0 - 3, Z(4 * n0 + pp - 3) + sigma);
-            n0 -= 1;
-            continue;
+        } else if (Z(nn - 5) > tol2 * (sigma + Z(nn - 3)) && Z(nn - 2 * pp - 4) > tol2 * Z(nn - 7)) {
+          if (Z(nn - 9) > tol2 * sigma && Z(nn - 2 * pp - 8) > tol2 * Z(nn - 11)) {
+            break;
           }
+        } else {
+          setZ(4 * n0 - 3, Z(4 * n0 + pp - 3) + sigma);
+          n0 -= 1;
+          continue;
         }
         if (Z(nn - 3) > Z(nn - 7)) {
           s = Z(nn - 3);
@@ -5205,7 +5213,7 @@ var require_base10 = __commonJS({
             tau = (tau + dmin) * (ONE - TWO * eps);
             ttype -= 11;
           } else {
-            tau = QURTR * tau;
+            tau *= QURTR;
             ttype -= 12;
           }
           continue;
@@ -5306,7 +5314,7 @@ var require_base11 = __commonJS({
         return 0;
       }
       stkpnt = 1;
-      stack = new Array(64);
+      stack = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       stack[0] = 0;
       stack[1] = N - 1;
       while (stkpnt > 0) {
@@ -5842,6 +5850,7 @@ var require_base12 = __commonJS({
 var require_base13 = __commonJS({
   "lib/lapack/base/dlasq1/lib/base.js"(exports, module) {
     "use strict";
+    var Float64Array2 = require_lib53();
     var dcopy = require_base5();
     var dlamch = require_base();
     var dlas2 = require_base4();
@@ -5873,7 +5882,7 @@ var require_base13 = __commonJS({
         return 0;
       }
       if (N === 2) {
-        out = new Float64Array(2);
+        out = new Float64Array2(2);
         dlas2(d[offsetD], e[offsetE], d[offsetD + strideD], out);
         sigmn = out[0];
         sigmx = out[1];
@@ -6489,6 +6498,7 @@ var require_base18 = __commonJS({
 var require_base19 = __commonJS({
   "lib/lapack/base/zbdsqr/lib/base.js"(exports, module) {
     "use strict";
+    var Float64Array2 = require_lib53();
     var dlamch = require_base();
     var dlartg = require_base3();
     var dlas2 = require_base4();
@@ -6506,7 +6516,7 @@ var require_base19 = __commonJS({
     var HNDRD = 100;
     var MEIGTH = -0.125;
     var MAXITR = 6;
-    var DOUT = new Float64Array(2);
+    var DOUT = new Float64Array2(2);
     function sign(a, b) {
       var mag = Math.abs(a);
       if (b > 0 || b === 0 && !Object.is(b, -0)) {
@@ -6515,7 +6525,9 @@ var require_base19 = __commonJS({
       return -mag;
     }
     function zbdsqr(uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offsetE, VT, strideVT1, strideVT2, offsetVT, U, strideU1, strideU2, offsetU, C, strideC1, strideC2, offsetC, RWORK, strideRWORK, offsetRWORK) {
+      var splitFound;
       var maxitdivn;
+      var converged;
       var iterdivn;
       var rotate;
       var thresh;
@@ -6540,7 +6552,6 @@ var require_base19 = __commonJS({
       var unfl;
       var info;
       var idir;
-      var isub;
       var iter;
       var dout;
       var svd2;
@@ -6562,9 +6573,8 @@ var require_base19 = __commonJS({
       var h;
       var r;
       var i;
-      var j;
       dout = DOUT;
-      rot = new Float64Array(3);
+      rot = new Float64Array2(3);
       info = 0;
       if (N === 0) {
         return 0;
@@ -6677,544 +6687,552 @@ var require_base19 = __commonJS({
       oldll = -1;
       oldm = -1;
       m = N - 1;
-      outer:
-        while (true) {
-          if (m <= 0) {
-            break;
-          }
-          if (iter >= N) {
-            iter -= N;
-            iterdivn += 1;
-            if (iterdivn >= maxitdivn) {
-              info = 0;
-              for (i = 0; i < N - 1; i++) {
-                if (e[offsetE + i * strideE] !== ZERO) {
-                  info += 1;
-                }
+      while (true) {
+        if (m <= 0) {
+          break;
+        }
+        if (iter >= N) {
+          iter -= N;
+          iterdivn += 1;
+          if (iterdivn >= maxitdivn) {
+            info = 0;
+            for (i = 0; i < N - 1; i++) {
+              if (e[offsetE + i * strideE] !== ZERO) {
+                info += 1;
               }
-              sortSingularValues(N, d, strideD, offsetD, ncvt, VT, strideVT1, strideVT2, offsetVT, nru, U, strideU1, strideU2, offsetU, ncc, C, strideC1, strideC2, offsetC);
-              return info;
             }
+            sortSingularValues(N, d, strideD, offsetD, ncvt, VT, strideVT1, strideVT2, offsetVT, nru, U, strideU1, strideU2, offsetU, ncc, C, strideC1, strideC2, offsetC);
+            return info;
           }
-          if (tol < ZERO && Math.abs(d[offsetD + m * strideD]) <= thresh) {
-            d[offsetD + m * strideD] = ZERO;
+        }
+        if (tol < ZERO && Math.abs(d[offsetD + m * strideD]) <= thresh) {
+          d[offsetD + m * strideD] = ZERO;
+        }
+        smax = Math.abs(d[offsetD + m * strideD]);
+        ll = -1;
+        splitFound = false;
+        for (lll = 0; lll < m; lll++) {
+          ll = m - 1 - lll;
+          abss = Math.abs(d[offsetD + ll * strideD]);
+          abse = Math.abs(e[offsetE + ll * strideE]);
+          if (tol < ZERO && abss <= thresh) {
+            d[offsetD + ll * strideD] = ZERO;
           }
-          smax = Math.abs(d[offsetD + m * strideD]);
-          ll = -1;
-          for (lll = 0; lll < m; lll++) {
-            ll = m - 1 - lll;
-            abss = Math.abs(d[offsetD + ll * strideD]);
-            abse = Math.abs(e[offsetE + ll * strideE]);
-            if (tol < ZERO && abss <= thresh) {
-              d[offsetD + ll * strideD] = ZERO;
-            }
-            if (abse <= thresh) {
-              e[offsetE + ll * strideE] = ZERO;
-              if (ll === m - 1) {
-                m -= 1;
-                continue outer;
-              }
-              ll += 1;
+          if (abse <= thresh) {
+            e[offsetE + ll * strideE] = ZERO;
+            if (ll === m - 1) {
+              m -= 1;
+              splitFound = true;
               break;
             }
-            smax = Math.max(smax, abss, abse);
-            if (lll === m - 1) {
-              ll = 0;
-              break;
-            }
-          }
-          if (m === 0) {
+            ll += 1;
             break;
           }
-          if (ll === -1) {
+          smax = Math.max(smax, abss, abse);
+          if (lll === m - 1) {
             ll = 0;
+            break;
           }
-          if (ll === m - 1) {
-            svd2 = dlasv2(
-              d[offsetD + (m - 1) * strideD],
-              e[offsetE + (m - 1) * strideE],
-              d[offsetD + m * strideD]
+        }
+        if (splitFound) {
+          continue;
+        }
+        if (m === 0) {
+          break;
+        }
+        if (ll === -1) {
+          ll = 0;
+        }
+        if (ll === m - 1) {
+          svd2 = dlasv2(
+            d[offsetD + (m - 1) * strideD],
+            e[offsetE + (m - 1) * strideE],
+            d[offsetD + m * strideD]
+          );
+          sigmn = svd2.ssmin;
+          sigmx = svd2.ssmax;
+          sinr = svd2.snr;
+          cosr = svd2.csr;
+          sinl = svd2.snl;
+          cosl = svd2.csl;
+          d[offsetD + (m - 1) * strideD] = sigmx;
+          e[offsetE + (m - 1) * strideE] = ZERO;
+          d[offsetD + m * strideD] = sigmn;
+          if (ncvt > 0) {
+            zdrot(
+              ncvt,
+              VT,
+              strideVT2,
+              offsetVT + (m - 1) * strideVT1,
+              VT,
+              strideVT2,
+              offsetVT + m * strideVT1,
+              cosr,
+              sinr
             );
-            sigmn = svd2.ssmin;
-            sigmx = svd2.ssmax;
-            sinr = svd2.snr;
-            cosr = svd2.csr;
-            sinl = svd2.snl;
-            cosl = svd2.csl;
-            d[offsetD + (m - 1) * strideD] = sigmx;
+          }
+          if (nru > 0) {
+            zdrot(
+              nru,
+              U,
+              strideU1,
+              offsetU + (m - 1) * strideU2,
+              U,
+              strideU1,
+              offsetU + m * strideU2,
+              cosl,
+              sinl
+            );
+          }
+          if (ncc > 0) {
+            zdrot(
+              ncc,
+              C,
+              strideC2,
+              offsetC + (m - 1) * strideC1,
+              C,
+              strideC2,
+              offsetC + m * strideC1,
+              cosl,
+              sinl
+            );
+          }
+          m -= 2;
+          continue;
+        }
+        if (ll > oldm || m < oldll) {
+          if (Math.abs(d[offsetD + ll * strideD]) >= Math.abs(d[offsetD + m * strideD])) {
+            idir = 1;
+          } else {
+            idir = 2;
+          }
+        }
+        converged = false;
+        if (idir === 1) {
+          if (Math.abs(e[offsetE + (m - 1) * strideE]) <= Math.abs(tol) * Math.abs(d[offsetD + m * strideD]) || tol < ZERO && Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
             e[offsetE + (m - 1) * strideE] = ZERO;
-            d[offsetD + m * strideD] = sigmn;
-            if (ncvt > 0) {
-              zdrot(
-                ncvt,
-                VT,
-                strideVT2,
-                offsetVT + (m - 1) * strideVT1,
-                VT,
-                strideVT2,
-                offsetVT + m * strideVT1,
-                cosr,
-                sinr
-              );
-            }
-            if (nru > 0) {
-              zdrot(
-                nru,
-                U,
-                strideU1,
-                offsetU + (m - 1) * strideU2,
-                U,
-                strideU1,
-                offsetU + m * strideU2,
-                cosl,
-                sinl
-              );
-            }
-            if (ncc > 0) {
-              zdrot(
-                ncc,
-                C,
-                strideC2,
-                offsetC + (m - 1) * strideC1,
-                C,
-                strideC2,
-                offsetC + m * strideC1,
-                cosl,
-                sinl
-              );
-            }
-            m -= 2;
-            continue;
+            converged = true;
           }
-          if (ll > oldm || m < oldll) {
-            if (Math.abs(d[offsetD + ll * strideD]) >= Math.abs(d[offsetD + m * strideD])) {
-              idir = 1;
-            } else {
-              idir = 2;
+          if (!converged && tol >= ZERO) {
+            mu = Math.abs(d[offsetD + ll * strideD]);
+            smin = mu;
+            for (lll = ll; lll < m; lll++) {
+              if (Math.abs(e[offsetE + lll * strideE]) <= tol * mu) {
+                e[offsetE + lll * strideE] = ZERO;
+                converged = true;
+                break;
+              }
+              mu = Math.abs(d[offsetD + (lll + 1) * strideD]) * (mu / (mu + Math.abs(e[offsetE + lll * strideE])));
+              smin = Math.min(smin, mu);
             }
           }
-          if (idir === 1) {
-            if (Math.abs(e[offsetE + (m - 1) * strideE]) <= Math.abs(tol) * Math.abs(d[offsetD + m * strideD]) || tol < ZERO && Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
-              e[offsetE + (m - 1) * strideE] = ZERO;
-              continue;
-            }
-            if (tol >= ZERO) {
-              mu = Math.abs(d[offsetD + ll * strideD]);
-              smin = mu;
-              for (lll = ll; lll < m; lll++) {
-                if (Math.abs(e[offsetE + lll * strideE]) <= tol * mu) {
-                  e[offsetE + lll * strideE] = ZERO;
-                  continue outer;
-                }
-                mu = Math.abs(d[offsetD + (lll + 1) * strideD]) * (mu / (mu + Math.abs(e[offsetE + lll * strideE])));
-                smin = Math.min(smin, mu);
-              }
-            }
-          } else {
-            if (Math.abs(e[offsetE + ll * strideE]) <= Math.abs(tol) * Math.abs(d[offsetD + ll * strideD]) || tol < ZERO && Math.abs(e[offsetE + ll * strideE]) <= thresh) {
-              e[offsetE + ll * strideE] = ZERO;
-              continue;
-            }
-            if (tol >= ZERO) {
-              mu = Math.abs(d[offsetD + m * strideD]);
-              smin = mu;
-              for (lll = m - 1; lll >= ll; lll--) {
-                if (Math.abs(e[offsetE + lll * strideE]) <= tol * mu) {
-                  e[offsetE + lll * strideE] = ZERO;
-                  continue outer;
-                }
-                mu = Math.abs(d[offsetD + lll * strideD]) * (mu / (mu + Math.abs(e[offsetE + lll * strideE])));
-                smin = Math.min(smin, mu);
-              }
-            }
+        } else {
+          if (Math.abs(e[offsetE + ll * strideE]) <= Math.abs(tol) * Math.abs(d[offsetD + ll * strideD]) || tol < ZERO && Math.abs(e[offsetE + ll * strideE]) <= thresh) {
+            e[offsetE + ll * strideE] = ZERO;
+            converged = true;
           }
-          oldll = ll;
-          oldm = m;
-          if (tol >= ZERO && N * tol * (smin / smax) <= Math.max(eps, HNDRTH * tol)) {
-            shift = ZERO;
-          } else {
-            if (idir === 1) {
-              sll = Math.abs(d[offsetD + ll * strideD]);
-              dlas2(
-                d[offsetD + (m - 1) * strideD],
-                e[offsetE + (m - 1) * strideE],
-                d[offsetD + m * strideD],
-                dout
-              );
-              shift = dout[0];
-              r = dout[1];
-            } else {
-              sll = Math.abs(d[offsetD + m * strideD]);
-              dlas2(
-                d[offsetD + ll * strideD],
-                e[offsetE + ll * strideE],
-                d[offsetD + (ll + 1) * strideD],
-                dout
-              );
-              shift = dout[0];
-              r = dout[1];
-            }
-            if (sll > ZERO) {
-              if (shift / sll * (shift / sll) < eps) {
-                shift = ZERO;
+          if (!converged && tol >= ZERO) {
+            mu = Math.abs(d[offsetD + m * strideD]);
+            smin = mu;
+            for (lll = m - 1; lll >= ll; lll--) {
+              if (Math.abs(e[offsetE + lll * strideE]) <= tol * mu) {
+                e[offsetE + lll * strideE] = ZERO;
+                converged = true;
+                break;
               }
-            }
-          }
-          iter = iter + m - ll;
-          if (shift === ZERO) {
-            if (idir === 1) {
-              cs = ONE;
-              oldcs = ONE;
-              for (i = ll; i < m; i++) {
-                dlartg(d[offsetD + i * strideD] * cs, e[offsetE + i * strideE], rot);
-                cs = rot[0];
-                sn = rot[1];
-                r = rot[2];
-                if (i > ll) {
-                  e[offsetE + (i - 1) * strideE] = oldsn * r;
-                }
-                dlartg(oldcs * r, d[offsetD + (i + 1) * strideD] * sn, rot);
-                oldcs = rot[0];
-                oldsn = rot[1];
-                d[offsetD + i * strideD] = rot[2];
-                RWORK[offsetRWORK + (i - ll) * strideRWORK] = cs;
-                RWORK[offsetRWORK + (i - ll + nm1) * strideRWORK] = sn;
-                RWORK[offsetRWORK + (i - ll + nm12) * strideRWORK] = oldcs;
-                RWORK[offsetRWORK + (i - ll + nm13) * strideRWORK] = oldsn;
-              }
-              h = d[offsetD + m * strideD] * cs;
-              d[offsetD + m * strideD] = h * oldcs;
-              e[offsetE + (m - 1) * strideE] = h * oldsn;
-              if (ncvt > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "forward",
-                  m - ll + 1,
-                  ncvt,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm1 * strideRWORK,
-                  VT,
-                  strideVT1,
-                  strideVT2,
-                  offsetVT + ll * strideVT1
-                );
-              }
-              if (nru > 0) {
-                zlasr(
-                  "right",
-                  "variable",
-                  "forward",
-                  nru,
-                  m - ll + 1,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm12 * strideRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm13 * strideRWORK,
-                  U,
-                  strideU1,
-                  strideU2,
-                  offsetU + ll * strideU2
-                );
-              }
-              if (ncc > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "forward",
-                  m - ll + 1,
-                  ncc,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm12 * strideRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm13 * strideRWORK,
-                  C,
-                  strideC1,
-                  strideC2,
-                  offsetC + ll * strideC1
-                );
-              }
-              if (Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
-                e[offsetE + (m - 1) * strideE] = ZERO;
-              }
-            } else {
-              cs = ONE;
-              oldcs = ONE;
-              for (i = m; i >= ll + 1; i--) {
-                dlartg(d[offsetD + i * strideD] * cs, e[offsetE + (i - 1) * strideE], rot);
-                cs = rot[0];
-                sn = rot[1];
-                r = rot[2];
-                if (i < m) {
-                  e[offsetE + i * strideE] = oldsn * r;
-                }
-                dlartg(oldcs * r, d[offsetD + (i - 1) * strideD] * sn, rot);
-                oldcs = rot[0];
-                oldsn = rot[1];
-                d[offsetD + i * strideD] = rot[2];
-                RWORK[offsetRWORK + (i - ll - 1) * strideRWORK] = cs;
-                RWORK[offsetRWORK + (i - ll - 1 + nm1) * strideRWORK] = -sn;
-                RWORK[offsetRWORK + (i - ll - 1 + nm12) * strideRWORK] = oldcs;
-                RWORK[offsetRWORK + (i - ll - 1 + nm13) * strideRWORK] = -oldsn;
-              }
-              h = d[offsetD + ll * strideD] * cs;
-              d[offsetD + ll * strideD] = h * oldcs;
-              e[offsetE + ll * strideE] = h * oldsn;
-              if (ncvt > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "backward",
-                  m - ll + 1,
-                  ncvt,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm12 * strideRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm13 * strideRWORK,
-                  VT,
-                  strideVT1,
-                  strideVT2,
-                  offsetVT + ll * strideVT1
-                );
-              }
-              if (nru > 0) {
-                zlasr(
-                  "right",
-                  "variable",
-                  "backward",
-                  nru,
-                  m - ll + 1,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm1 * strideRWORK,
-                  U,
-                  strideU1,
-                  strideU2,
-                  offsetU + ll * strideU2
-                );
-              }
-              if (ncc > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "backward",
-                  m - ll + 1,
-                  ncc,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm1 * strideRWORK,
-                  C,
-                  strideC1,
-                  strideC2,
-                  offsetC + ll * strideC1
-                );
-              }
-              if (Math.abs(e[offsetE + ll * strideE]) <= thresh) {
-                e[offsetE + ll * strideE] = ZERO;
-              }
-            }
-          } else {
-            if (idir === 1) {
-              f = (Math.abs(d[offsetD + ll * strideD]) - shift) * (sign(ONE, d[offsetD + ll * strideD]) + shift / d[offsetD + ll * strideD]);
-              g = e[offsetE + ll * strideE];
-              for (i = ll; i < m; i++) {
-                dlartg(f, g, rot);
-                cosr = rot[0];
-                sinr = rot[1];
-                r = rot[2];
-                if (i > ll) {
-                  e[offsetE + (i - 1) * strideE] = r;
-                }
-                f = cosr * d[offsetD + i * strideD] + sinr * e[offsetE + i * strideE];
-                e[offsetE + i * strideE] = cosr * e[offsetE + i * strideE] - sinr * d[offsetD + i * strideD];
-                g = sinr * d[offsetD + (i + 1) * strideD];
-                d[offsetD + (i + 1) * strideD] = cosr * d[offsetD + (i + 1) * strideD];
-                dlartg(f, g, rot);
-                cosl = rot[0];
-                sinl = rot[1];
-                d[offsetD + i * strideD] = rot[2];
-                f = cosl * e[offsetE + i * strideE] + sinl * d[offsetD + (i + 1) * strideD];
-                d[offsetD + (i + 1) * strideD] = cosl * d[offsetD + (i + 1) * strideD] - sinl * e[offsetE + i * strideE];
-                if (i < m - 1) {
-                  g = sinl * e[offsetE + (i + 1) * strideE];
-                  e[offsetE + (i + 1) * strideE] = cosl * e[offsetE + (i + 1) * strideE];
-                }
-                RWORK[offsetRWORK + (i - ll) * strideRWORK] = cosr;
-                RWORK[offsetRWORK + (i - ll + nm1) * strideRWORK] = sinr;
-                RWORK[offsetRWORK + (i - ll + nm12) * strideRWORK] = cosl;
-                RWORK[offsetRWORK + (i - ll + nm13) * strideRWORK] = sinl;
-              }
-              e[offsetE + (m - 1) * strideE] = f;
-              if (ncvt > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "forward",
-                  m - ll + 1,
-                  ncvt,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm1 * strideRWORK,
-                  VT,
-                  strideVT1,
-                  strideVT2,
-                  offsetVT + ll * strideVT1
-                );
-              }
-              if (nru > 0) {
-                zlasr(
-                  "right",
-                  "variable",
-                  "forward",
-                  nru,
-                  m - ll + 1,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm12 * strideRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm13 * strideRWORK,
-                  U,
-                  strideU1,
-                  strideU2,
-                  offsetU + ll * strideU2
-                );
-              }
-              if (ncc > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "forward",
-                  m - ll + 1,
-                  ncc,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm12 * strideRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm13 * strideRWORK,
-                  C,
-                  strideC1,
-                  strideC2,
-                  offsetC + ll * strideC1
-                );
-              }
-              if (Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
-                e[offsetE + (m - 1) * strideE] = ZERO;
-              }
-            } else {
-              f = (Math.abs(d[offsetD + m * strideD]) - shift) * (sign(ONE, d[offsetD + m * strideD]) + shift / d[offsetD + m * strideD]);
-              g = e[offsetE + (m - 1) * strideE];
-              for (i = m; i >= ll + 1; i--) {
-                dlartg(f, g, rot);
-                cosr = rot[0];
-                sinr = rot[1];
-                r = rot[2];
-                if (i < m) {
-                  e[offsetE + i * strideE] = r;
-                }
-                f = cosr * d[offsetD + i * strideD] + sinr * e[offsetE + (i - 1) * strideE];
-                e[offsetE + (i - 1) * strideE] = cosr * e[offsetE + (i - 1) * strideE] - sinr * d[offsetD + i * strideD];
-                g = sinr * d[offsetD + (i - 1) * strideD];
-                d[offsetD + (i - 1) * strideD] = cosr * d[offsetD + (i - 1) * strideD];
-                dlartg(f, g, rot);
-                cosl = rot[0];
-                sinl = rot[1];
-                d[offsetD + i * strideD] = rot[2];
-                f = cosl * e[offsetE + (i - 1) * strideE] + sinl * d[offsetD + (i - 1) * strideD];
-                d[offsetD + (i - 1) * strideD] = cosl * d[offsetD + (i - 1) * strideD] - sinl * e[offsetE + (i - 1) * strideE];
-                if (i > ll + 1) {
-                  g = sinl * e[offsetE + (i - 2) * strideE];
-                  e[offsetE + (i - 2) * strideE] = cosl * e[offsetE + (i - 2) * strideE];
-                }
-                RWORK[offsetRWORK + (i - ll - 1) * strideRWORK] = cosr;
-                RWORK[offsetRWORK + (i - ll - 1 + nm1) * strideRWORK] = -sinr;
-                RWORK[offsetRWORK + (i - ll - 1 + nm12) * strideRWORK] = cosl;
-                RWORK[offsetRWORK + (i - ll - 1 + nm13) * strideRWORK] = -sinl;
-              }
-              e[offsetE + ll * strideE] = f;
-              if (Math.abs(e[offsetE + ll * strideE]) <= thresh) {
-                e[offsetE + ll * strideE] = ZERO;
-              }
-              if (ncvt > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "backward",
-                  m - ll + 1,
-                  ncvt,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm12 * strideRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm13 * strideRWORK,
-                  VT,
-                  strideVT1,
-                  strideVT2,
-                  offsetVT + ll * strideVT1
-                );
-              }
-              if (nru > 0) {
-                zlasr(
-                  "right",
-                  "variable",
-                  "backward",
-                  nru,
-                  m - ll + 1,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm1 * strideRWORK,
-                  U,
-                  strideU1,
-                  strideU2,
-                  offsetU + ll * strideU2
-                );
-              }
-              if (ncc > 0) {
-                zlasr(
-                  "left",
-                  "variable",
-                  "backward",
-                  m - ll + 1,
-                  ncc,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK,
-                  RWORK,
-                  strideRWORK,
-                  offsetRWORK + nm1 * strideRWORK,
-                  C,
-                  strideC1,
-                  strideC2,
-                  offsetC + ll * strideC1
-                );
-              }
+              mu = Math.abs(d[offsetD + lll * strideD]) * (mu / (mu + Math.abs(e[offsetE + lll * strideE])));
+              smin = Math.min(smin, mu);
             }
           }
         }
+        if (converged) {
+          continue;
+        }
+        oldll = ll;
+        oldm = m;
+        if (tol >= ZERO && N * tol * (smin / smax) <= Math.max(eps, HNDRTH * tol)) {
+          shift = ZERO;
+        } else {
+          if (idir === 1) {
+            sll = Math.abs(d[offsetD + ll * strideD]);
+            dlas2(
+              d[offsetD + (m - 1) * strideD],
+              e[offsetE + (m - 1) * strideE],
+              d[offsetD + m * strideD],
+              dout
+            );
+            shift = dout[0];
+            r = dout[1];
+          } else {
+            sll = Math.abs(d[offsetD + m * strideD]);
+            dlas2(
+              d[offsetD + ll * strideD],
+              e[offsetE + ll * strideE],
+              d[offsetD + (ll + 1) * strideD],
+              dout
+            );
+            shift = dout[0];
+            r = dout[1];
+          }
+          if (sll > ZERO) {
+            if (shift / sll * (shift / sll) < eps) {
+              shift = ZERO;
+            }
+          }
+        }
+        iter = iter + m - ll;
+        if (shift === ZERO) {
+          if (idir === 1) {
+            cs = ONE;
+            oldcs = ONE;
+            for (i = ll; i < m; i++) {
+              dlartg(d[offsetD + i * strideD] * cs, e[offsetE + i * strideE], rot);
+              cs = rot[0];
+              sn = rot[1];
+              r = rot[2];
+              if (i > ll) {
+                e[offsetE + (i - 1) * strideE] = oldsn * r;
+              }
+              dlartg(oldcs * r, d[offsetD + (i + 1) * strideD] * sn, rot);
+              oldcs = rot[0];
+              oldsn = rot[1];
+              d[offsetD + i * strideD] = rot[2];
+              RWORK[offsetRWORK + (i - ll) * strideRWORK] = cs;
+              RWORK[offsetRWORK + (i - ll + nm1) * strideRWORK] = sn;
+              RWORK[offsetRWORK + (i - ll + nm12) * strideRWORK] = oldcs;
+              RWORK[offsetRWORK + (i - ll + nm13) * strideRWORK] = oldsn;
+            }
+            h = d[offsetD + m * strideD] * cs;
+            d[offsetD + m * strideD] = h * oldcs;
+            e[offsetE + (m - 1) * strideE] = h * oldsn;
+            if (ncvt > 0) {
+              zlasr(
+                "left",
+                "variable",
+                "forward",
+                m - ll + 1,
+                ncvt,
+                RWORK,
+                strideRWORK,
+                offsetRWORK,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm1 * strideRWORK,
+                VT,
+                strideVT1,
+                strideVT2,
+                offsetVT + ll * strideVT1
+              );
+            }
+            if (nru > 0) {
+              zlasr(
+                "right",
+                "variable",
+                "forward",
+                nru,
+                m - ll + 1,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm12 * strideRWORK,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm13 * strideRWORK,
+                U,
+                strideU1,
+                strideU2,
+                offsetU + ll * strideU2
+              );
+            }
+            if (ncc > 0) {
+              zlasr(
+                "left",
+                "variable",
+                "forward",
+                m - ll + 1,
+                ncc,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm12 * strideRWORK,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm13 * strideRWORK,
+                C,
+                strideC1,
+                strideC2,
+                offsetC + ll * strideC1
+              );
+            }
+            if (Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
+              e[offsetE + (m - 1) * strideE] = ZERO;
+            }
+          } else {
+            cs = ONE;
+            oldcs = ONE;
+            for (i = m; i >= ll + 1; i--) {
+              dlartg(d[offsetD + i * strideD] * cs, e[offsetE + (i - 1) * strideE], rot);
+              cs = rot[0];
+              sn = rot[1];
+              r = rot[2];
+              if (i < m) {
+                e[offsetE + i * strideE] = oldsn * r;
+              }
+              dlartg(oldcs * r, d[offsetD + (i - 1) * strideD] * sn, rot);
+              oldcs = rot[0];
+              oldsn = rot[1];
+              d[offsetD + i * strideD] = rot[2];
+              RWORK[offsetRWORK + (i - ll - 1) * strideRWORK] = cs;
+              RWORK[offsetRWORK + (i - ll - 1 + nm1) * strideRWORK] = -sn;
+              RWORK[offsetRWORK + (i - ll - 1 + nm12) * strideRWORK] = oldcs;
+              RWORK[offsetRWORK + (i - ll - 1 + nm13) * strideRWORK] = -oldsn;
+            }
+            h = d[offsetD + ll * strideD] * cs;
+            d[offsetD + ll * strideD] = h * oldcs;
+            e[offsetE + ll * strideE] = h * oldsn;
+            if (ncvt > 0) {
+              zlasr(
+                "left",
+                "variable",
+                "backward",
+                m - ll + 1,
+                ncvt,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm12 * strideRWORK,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm13 * strideRWORK,
+                VT,
+                strideVT1,
+                strideVT2,
+                offsetVT + ll * strideVT1
+              );
+            }
+            if (nru > 0) {
+              zlasr(
+                "right",
+                "variable",
+                "backward",
+                nru,
+                m - ll + 1,
+                RWORK,
+                strideRWORK,
+                offsetRWORK,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm1 * strideRWORK,
+                U,
+                strideU1,
+                strideU2,
+                offsetU + ll * strideU2
+              );
+            }
+            if (ncc > 0) {
+              zlasr(
+                "left",
+                "variable",
+                "backward",
+                m - ll + 1,
+                ncc,
+                RWORK,
+                strideRWORK,
+                offsetRWORK,
+                RWORK,
+                strideRWORK,
+                offsetRWORK + nm1 * strideRWORK,
+                C,
+                strideC1,
+                strideC2,
+                offsetC + ll * strideC1
+              );
+            }
+            if (Math.abs(e[offsetE + ll * strideE]) <= thresh) {
+              e[offsetE + ll * strideE] = ZERO;
+            }
+          }
+        } else if (idir === 1) {
+          f = (Math.abs(d[offsetD + ll * strideD]) - shift) * (sign(ONE, d[offsetD + ll * strideD]) + shift / d[offsetD + ll * strideD]);
+          g = e[offsetE + ll * strideE];
+          for (i = ll; i < m; i++) {
+            dlartg(f, g, rot);
+            cosr = rot[0];
+            sinr = rot[1];
+            r = rot[2];
+            if (i > ll) {
+              e[offsetE + (i - 1) * strideE] = r;
+            }
+            f = cosr * d[offsetD + i * strideD] + sinr * e[offsetE + i * strideE];
+            e[offsetE + i * strideE] = cosr * e[offsetE + i * strideE] - sinr * d[offsetD + i * strideD];
+            g = sinr * d[offsetD + (i + 1) * strideD];
+            d[offsetD + (i + 1) * strideD] = cosr * d[offsetD + (i + 1) * strideD];
+            dlartg(f, g, rot);
+            cosl = rot[0];
+            sinl = rot[1];
+            d[offsetD + i * strideD] = rot[2];
+            f = cosl * e[offsetE + i * strideE] + sinl * d[offsetD + (i + 1) * strideD];
+            d[offsetD + (i + 1) * strideD] = cosl * d[offsetD + (i + 1) * strideD] - sinl * e[offsetE + i * strideE];
+            if (i < m - 1) {
+              g = sinl * e[offsetE + (i + 1) * strideE];
+              e[offsetE + (i + 1) * strideE] = cosl * e[offsetE + (i + 1) * strideE];
+            }
+            RWORK[offsetRWORK + (i - ll) * strideRWORK] = cosr;
+            RWORK[offsetRWORK + (i - ll + nm1) * strideRWORK] = sinr;
+            RWORK[offsetRWORK + (i - ll + nm12) * strideRWORK] = cosl;
+            RWORK[offsetRWORK + (i - ll + nm13) * strideRWORK] = sinl;
+          }
+          e[offsetE + (m - 1) * strideE] = f;
+          if (ncvt > 0) {
+            zlasr(
+              "left",
+              "variable",
+              "forward",
+              m - ll + 1,
+              ncvt,
+              RWORK,
+              strideRWORK,
+              offsetRWORK,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm1 * strideRWORK,
+              VT,
+              strideVT1,
+              strideVT2,
+              offsetVT + ll * strideVT1
+            );
+          }
+          if (nru > 0) {
+            zlasr(
+              "right",
+              "variable",
+              "forward",
+              nru,
+              m - ll + 1,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm12 * strideRWORK,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm13 * strideRWORK,
+              U,
+              strideU1,
+              strideU2,
+              offsetU + ll * strideU2
+            );
+          }
+          if (ncc > 0) {
+            zlasr(
+              "left",
+              "variable",
+              "forward",
+              m - ll + 1,
+              ncc,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm12 * strideRWORK,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm13 * strideRWORK,
+              C,
+              strideC1,
+              strideC2,
+              offsetC + ll * strideC1
+            );
+          }
+          if (Math.abs(e[offsetE + (m - 1) * strideE]) <= thresh) {
+            e[offsetE + (m - 1) * strideE] = ZERO;
+          }
+        } else {
+          f = (Math.abs(d[offsetD + m * strideD]) - shift) * (sign(ONE, d[offsetD + m * strideD]) + shift / d[offsetD + m * strideD]);
+          g = e[offsetE + (m - 1) * strideE];
+          for (i = m; i >= ll + 1; i--) {
+            dlartg(f, g, rot);
+            cosr = rot[0];
+            sinr = rot[1];
+            r = rot[2];
+            if (i < m) {
+              e[offsetE + i * strideE] = r;
+            }
+            f = cosr * d[offsetD + i * strideD] + sinr * e[offsetE + (i - 1) * strideE];
+            e[offsetE + (i - 1) * strideE] = cosr * e[offsetE + (i - 1) * strideE] - sinr * d[offsetD + i * strideD];
+            g = sinr * d[offsetD + (i - 1) * strideD];
+            d[offsetD + (i - 1) * strideD] = cosr * d[offsetD + (i - 1) * strideD];
+            dlartg(f, g, rot);
+            cosl = rot[0];
+            sinl = rot[1];
+            d[offsetD + i * strideD] = rot[2];
+            f = cosl * e[offsetE + (i - 1) * strideE] + sinl * d[offsetD + (i - 1) * strideD];
+            d[offsetD + (i - 1) * strideD] = cosl * d[offsetD + (i - 1) * strideD] - sinl * e[offsetE + (i - 1) * strideE];
+            if (i > ll + 1) {
+              g = sinl * e[offsetE + (i - 2) * strideE];
+              e[offsetE + (i - 2) * strideE] = cosl * e[offsetE + (i - 2) * strideE];
+            }
+            RWORK[offsetRWORK + (i - ll - 1) * strideRWORK] = cosr;
+            RWORK[offsetRWORK + (i - ll - 1 + nm1) * strideRWORK] = -sinr;
+            RWORK[offsetRWORK + (i - ll - 1 + nm12) * strideRWORK] = cosl;
+            RWORK[offsetRWORK + (i - ll - 1 + nm13) * strideRWORK] = -sinl;
+          }
+          e[offsetE + ll * strideE] = f;
+          if (Math.abs(e[offsetE + ll * strideE]) <= thresh) {
+            e[offsetE + ll * strideE] = ZERO;
+          }
+          if (ncvt > 0) {
+            zlasr(
+              "left",
+              "variable",
+              "backward",
+              m - ll + 1,
+              ncvt,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm12 * strideRWORK,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm13 * strideRWORK,
+              VT,
+              strideVT1,
+              strideVT2,
+              offsetVT + ll * strideVT1
+            );
+          }
+          if (nru > 0) {
+            zlasr(
+              "right",
+              "variable",
+              "backward",
+              nru,
+              m - ll + 1,
+              RWORK,
+              strideRWORK,
+              offsetRWORK,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm1 * strideRWORK,
+              U,
+              strideU1,
+              strideU2,
+              offsetU + ll * strideU2
+            );
+          }
+          if (ncc > 0) {
+            zlasr(
+              "left",
+              "variable",
+              "backward",
+              m - ll + 1,
+              ncc,
+              RWORK,
+              strideRWORK,
+              offsetRWORK,
+              RWORK,
+              strideRWORK,
+              offsetRWORK + nm1 * strideRWORK,
+              C,
+              strideC1,
+              strideC2,
+              offsetC + ll * strideC1
+            );
+          }
+        }
+      }
       sortSingularValues(N, d, strideD, offsetD, ncvt, VT, strideVT1, strideVT2, offsetVT, nru, U, strideU1, strideU2, offsetU, ncc, C, strideC1, strideC2, offsetC);
       return info;
     }
@@ -7294,11 +7312,9 @@ var require_base20 = __commonJS({
     var SBIG = 11113793747425387e-178;
     function dznrm2(N, zx, strideX, offsetX) {
       var notbig;
-      var sumsq;
       var abig;
       var amed;
       var asml;
-      var scl;
       var xv;
       var ax;
       var ix;
@@ -7307,8 +7323,6 @@ var require_base20 = __commonJS({
         return 0;
       }
       xv = reinterpret2(zx, 0);
-      scl = 1;
-      sumsq = 0;
       notbig = true;
       asml = 0;
       amed = 0;
@@ -8004,7 +8018,7 @@ var require_cmplx = __commonJS({
 var require_base23 = __commonJS({
   "lib/lapack/base/zlarfg/lib/base.js"(exports, module) {
     "use strict";
-    var Complex128 = require_lib38();
+    var Float64Array2 = require_lib53();
     var Complex128Array2 = require_lib60();
     var reinterpret2 = require_lib57();
     var dznrm2 = require_base20();
@@ -8013,7 +8027,7 @@ var require_base23 = __commonJS({
     var dlamch = require_base();
     var dlapy3 = require_base22();
     var cmplx = require_cmplx();
-    var SCRATCH = new Float64Array(4);
+    var SCRATCH = new Float64Array2(4);
     var SCRATCH_CA = new Complex128Array2(1);
     var SCRATCH_CAv = reinterpret2(SCRATCH_CA, 0);
     function zlarfg(N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau) {
@@ -8024,7 +8038,6 @@ var require_base23 = __commonJS({
       var xnorm;
       var beta;
       var tauv;
-      var tmp;
       var knt;
       var av;
       var oA;
@@ -8100,7 +8113,6 @@ var require_base24 = __commonJS({
       var betaI;
       var tempR;
       var tempI;
-      var lenx;
       var leny;
       var aijR;
       var aijI;
@@ -8134,10 +8146,8 @@ var require_base24 = __commonJS({
       noTrans = trans === "no-transpose";
       noConj = trans === "transpose";
       if (noTrans) {
-        lenx = N;
         leny = M;
       } else {
-        lenx = M;
         leny = N;
       }
       Av = reinterpret2(A, 0);
@@ -8337,7 +8347,7 @@ var require_base26 = __commonJS({
           if (re !== 0 || im !== 0) {
             break;
           }
-          i--;
+          i -= 1;
         }
         if (i > result) {
           result = i;
@@ -8485,41 +8495,39 @@ var require_base28 = __commonJS({
             offsetC
           );
         }
-      } else {
-        if (lastv > 0) {
-          zgemv(
-            "no-transpose",
-            lastc,
-            lastv,
-            ONE,
-            C,
-            strideC1,
-            strideC2,
-            offsetC,
-            v,
-            strideV,
-            offsetV,
-            ZERO,
-            WORK,
-            strideWORK,
-            offsetWORK
-          );
-          zgerc(
-            lastc,
-            lastv,
-            negTau,
-            WORK,
-            strideWORK,
-            offsetWORK,
-            v,
-            strideV,
-            offsetV,
-            C,
-            strideC1,
-            strideC2,
-            offsetC
-          );
-        }
+      } else if (lastv > 0) {
+        zgemv(
+          "no-transpose",
+          lastc,
+          lastv,
+          ONE,
+          C,
+          strideC1,
+          strideC2,
+          offsetC,
+          v,
+          strideV,
+          offsetV,
+          ZERO,
+          WORK,
+          strideWORK,
+          offsetWORK
+        );
+        zgerc(
+          lastc,
+          lastv,
+          negTau,
+          WORK,
+          strideWORK,
+          offsetWORK,
+          v,
+          strideV,
+          offsetV,
+          C,
+          strideC1,
+          strideC2,
+          offsetC
+        );
       }
     }
     module.exports = zlarf;
@@ -10634,382 +10642,376 @@ var require_base37 = __commonJS({
               }
             }
           }
-        } else {
-          if (side === "left") {
-            for (j = 0; j < K; j++) {
-              zcopy(N, C, strideC2, offsetC + (M - K + j) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
-              zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+        } else if (side === "left") {
+          for (j = 0; j < K; j++) {
+            zcopy(N, C, strideC2, offsetC + (M - K + j) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+            zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+          }
+          ztrmm("right", "upper", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (M > K) {
+            zgemm(
+              "conjugate-transpose",
+              "no-transpose",
+              N,
+              K,
+              M - K,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC,
+              V,
+              strideV1,
+              strideV2,
+              offsetV,
+              ONE,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK
+            );
+          }
+          ztrmm("right", "lower", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (M > K) {
+            zgemm(
+              "no-transpose",
+              "conjugate-transpose",
+              M - K,
+              N,
+              K,
+              NEGONE,
+              V,
+              strideV1,
+              strideV2,
+              offsetV,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC
+            );
+          }
+          ztrmm("right", "upper", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+          for (j = 0; j < K; j++) {
+            for (i = 0; i < N; i++) {
+              ic = oC + (M - K + j) * sc1 + i * sc2;
+              iw = oW + i * sw1 + j * sw2;
+              Cv[ic] -= Wv[iw];
+              Cv[ic + 1] -= -Wv[iw + 1];
             }
-            ztrmm("right", "upper", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (M > K) {
-              zgemm(
-                "conjugate-transpose",
-                "no-transpose",
-                N,
-                K,
-                M - K,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                ONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
-            }
-            ztrmm("right", "lower", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (M > K) {
-              zgemm(
-                "no-transpose",
-                "conjugate-transpose",
-                M - K,
-                N,
-                K,
-                NEGONE,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC
-              );
-            }
-            ztrmm("right", "upper", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
-            for (j = 0; j < K; j++) {
-              for (i = 0; i < N; i++) {
-                ic = oC + (M - K + j) * sc1 + i * sc2;
-                iw = oW + i * sw1 + j * sw2;
-                Cv[ic] -= Wv[iw];
-                Cv[ic + 1] -= -Wv[iw + 1];
-              }
-            }
-          } else if (side === "right") {
-            for (j = 0; j < K; j++) {
-              zcopy(M, C, strideC1, offsetC + (N - K + j) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
-            }
-            ztrmm("right", "upper", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (N > K) {
-              zgemm(
-                "no-transpose",
-                "no-transpose",
-                M,
-                K,
-                N - K,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                ONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
-            }
-            ztrmm("right", "lower", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (N > K) {
-              zgemm(
-                "no-transpose",
-                "conjugate-transpose",
-                M,
-                N - K,
-                K,
-                NEGONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC
-              );
-            }
-            ztrmm("right", "upper", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
-            for (j = 0; j < K; j++) {
-              for (i = 0; i < M; i++) {
-                ic = oC + i * sc1 + (N - K + j) * sc2;
-                iw = oW + i * sw1 + j * sw2;
-                Cv[ic] -= Wv[iw];
-                Cv[ic + 1] -= Wv[iw + 1];
-              }
+          }
+        } else if (side === "right") {
+          for (j = 0; j < K; j++) {
+            zcopy(M, C, strideC1, offsetC + (N - K + j) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+          }
+          ztrmm("right", "upper", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (N > K) {
+            zgemm(
+              "no-transpose",
+              "no-transpose",
+              M,
+              K,
+              N - K,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC,
+              V,
+              strideV1,
+              strideV2,
+              offsetV,
+              ONE,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK
+            );
+          }
+          ztrmm("right", "lower", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (N > K) {
+            zgemm(
+              "no-transpose",
+              "conjugate-transpose",
+              M,
+              N - K,
+              K,
+              NEGONE,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK,
+              V,
+              strideV1,
+              strideV2,
+              offsetV,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC
+            );
+          }
+          ztrmm("right", "upper", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV1, WORK, strideWORK1, strideWORK2, offsetWORK);
+          for (j = 0; j < K; j++) {
+            for (i = 0; i < M; i++) {
+              ic = oC + i * sc1 + (N - K + j) * sc2;
+              iw = oW + i * sw1 + j * sw2;
+              Cv[ic] -= Wv[iw];
+              Cv[ic + 1] -= Wv[iw + 1];
             }
           }
         }
-      } else {
-        if (direct === "forward") {
-          if (side === "left") {
-            for (j = 0; j < K; j++) {
-              zcopy(N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
-              zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
-            }
-            ztrmm("right", "upper", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (M > K) {
-              zgemm(
-                "conjugate-transpose",
-                "conjugate-transpose",
-                N,
-                K,
-                M - K,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC1,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV2,
-                ONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
-            }
-            ztrmm("right", "upper", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (M > K) {
-              zgemm(
-                "conjugate-transpose",
-                "conjugate-transpose",
-                M - K,
-                N,
-                K,
-                NEGONE,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV2,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC1
-              );
-            }
-            ztrmm("right", "upper", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
-            for (j = 0; j < K; j++) {
-              for (i = 0; i < N; i++) {
-                ic = oC + j * sc1 + i * sc2;
-                iw = oW + i * sw1 + j * sw2;
-                Cv[ic] -= Wv[iw];
-                Cv[ic + 1] -= -Wv[iw + 1];
-              }
-            }
-          } else if (side === "right") {
-            for (j = 0; j < K; j++) {
-              zcopy(M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
-            }
-            ztrmm("right", "upper", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (N > K) {
-              zgemm(
-                "no-transpose",
-                "conjugate-transpose",
-                M,
-                K,
-                N - K,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC2,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV2,
-                ONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
-            }
-            ztrmm("right", "upper", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (N > K) {
-              zgemm(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N - K,
-                K,
-                NEGONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                V,
-                strideV1,
-                strideV2,
-                offsetV + K * strideV2,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC + K * strideC2
-              );
-            }
-            ztrmm("right", "upper", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
-            for (j = 0; j < K; j++) {
-              for (i = 0; i < M; i++) {
-                ic = oC + i * sc1 + j * sc2;
-                iw = oW + i * sw1 + j * sw2;
-                Cv[ic] -= Wv[iw];
-                Cv[ic + 1] -= Wv[iw + 1];
-              }
+      } else if (direct === "forward") {
+        if (side === "left") {
+          for (j = 0; j < K; j++) {
+            zcopy(N, C, strideC2, offsetC + j * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+            zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+          }
+          ztrmm("right", "upper", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (M > K) {
+            zgemm(
+              "conjugate-transpose",
+              "conjugate-transpose",
+              N,
+              K,
+              M - K,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC + K * strideC1,
+              V,
+              strideV1,
+              strideV2,
+              offsetV + K * strideV2,
+              ONE,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK
+            );
+          }
+          ztrmm("right", "upper", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (M > K) {
+            zgemm(
+              "conjugate-transpose",
+              "conjugate-transpose",
+              M - K,
+              N,
+              K,
+              NEGONE,
+              V,
+              strideV1,
+              strideV2,
+              offsetV + K * strideV2,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC + K * strideC1
+            );
+          }
+          ztrmm("right", "upper", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+          for (j = 0; j < K; j++) {
+            for (i = 0; i < N; i++) {
+              ic = oC + j * sc1 + i * sc2;
+              iw = oW + i * sw1 + j * sw2;
+              Cv[ic] -= Wv[iw];
+              Cv[ic + 1] -= -Wv[iw + 1];
             }
           }
-        } else {
-          if (side === "left") {
-            for (j = 0; j < K; j++) {
-              zcopy(N, C, strideC2, offsetC + (M - K + j) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
-              zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+        } else if (side === "right") {
+          for (j = 0; j < K; j++) {
+            zcopy(M, C, strideC1, offsetC + j * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+          }
+          ztrmm("right", "upper", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (N > K) {
+            zgemm(
+              "no-transpose",
+              "conjugate-transpose",
+              M,
+              K,
+              N - K,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC + K * strideC2,
+              V,
+              strideV1,
+              strideV2,
+              offsetV + K * strideV2,
+              ONE,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK
+            );
+          }
+          ztrmm("right", "upper", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+          if (N > K) {
+            zgemm(
+              "no-transpose",
+              "no-transpose",
+              M,
+              N - K,
+              K,
+              NEGONE,
+              WORK,
+              strideWORK1,
+              strideWORK2,
+              offsetWORK,
+              V,
+              strideV1,
+              strideV2,
+              offsetV + K * strideV2,
+              ONE,
+              C,
+              strideC1,
+              strideC2,
+              offsetC + K * strideC2
+            );
+          }
+          ztrmm("right", "upper", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV, WORK, strideWORK1, strideWORK2, offsetWORK);
+          for (j = 0; j < K; j++) {
+            for (i = 0; i < M; i++) {
+              ic = oC + i * sc1 + j * sc2;
+              iw = oW + i * sw1 + j * sw2;
+              Cv[ic] -= Wv[iw];
+              Cv[ic + 1] -= Wv[iw + 1];
             }
-            ztrmm("right", "lower", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (M > K) {
-              zgemm(
-                "conjugate-transpose",
-                "conjugate-transpose",
-                N,
-                K,
-                M - K,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                ONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
-            }
-            ztrmm("right", "lower", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (M > K) {
-              zgemm(
-                "conjugate-transpose",
-                "conjugate-transpose",
-                M - K,
-                N,
-                K,
-                NEGONE,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC
-              );
-            }
-            ztrmm("right", "lower", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
-            for (j = 0; j < K; j++) {
-              for (i = 0; i < N; i++) {
-                ic = oC + (M - K + j) * sc1 + i * sc2;
-                iw = oW + i * sw1 + j * sw2;
-                Cv[ic] -= Wv[iw];
-                Cv[ic + 1] -= -Wv[iw + 1];
-              }
-            }
-          } else if (side === "right") {
-            for (j = 0; j < K; j++) {
-              zcopy(M, C, strideC1, offsetC + (N - K + j) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
-            }
-            ztrmm("right", "lower", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (N > K) {
-              zgemm(
-                "no-transpose",
-                "conjugate-transpose",
-                M,
-                K,
-                N - K,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                ONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK
-              );
-            }
-            ztrmm("right", "lower", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
-            if (N > K) {
-              zgemm(
-                "no-transpose",
-                "no-transpose",
-                M,
-                N - K,
-                K,
-                NEGONE,
-                WORK,
-                strideWORK1,
-                strideWORK2,
-                offsetWORK,
-                V,
-                strideV1,
-                strideV2,
-                offsetV,
-                ONE,
-                C,
-                strideC1,
-                strideC2,
-                offsetC
-              );
-            }
-            ztrmm("right", "lower", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
-            for (j = 0; j < K; j++) {
-              for (i = 0; i < M; i++) {
-                ic = oC + i * sc1 + (N - K + j) * sc2;
-                iw = oW + i * sw1 + j * sw2;
-                Cv[ic] -= Wv[iw];
-                Cv[ic + 1] -= Wv[iw + 1];
-              }
-            }
+          }
+        }
+      } else if (side === "left") {
+        for (j = 0; j < K; j++) {
+          zcopy(N, C, strideC2, offsetC + (M - K + j) * strideC1, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+          zlacgv(N, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+        }
+        ztrmm("right", "lower", "conjugate-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+        if (M > K) {
+          zgemm(
+            "conjugate-transpose",
+            "conjugate-transpose",
+            N,
+            K,
+            M - K,
+            ONE,
+            C,
+            strideC1,
+            strideC2,
+            offsetC,
+            V,
+            strideV1,
+            strideV2,
+            offsetV,
+            ONE,
+            WORK,
+            strideWORK1,
+            strideWORK2,
+            offsetWORK
+          );
+        }
+        ztrmm("right", "lower", transt, "non-unit", N, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+        if (M > K) {
+          zgemm(
+            "conjugate-transpose",
+            "conjugate-transpose",
+            M - K,
+            N,
+            K,
+            NEGONE,
+            V,
+            strideV1,
+            strideV2,
+            offsetV,
+            WORK,
+            strideWORK1,
+            strideWORK2,
+            offsetWORK,
+            ONE,
+            C,
+            strideC1,
+            strideC2,
+            offsetC
+          );
+        }
+        ztrmm("right", "lower", "no-transpose", "unit", N, K, ONE, V, strideV1, strideV2, offsetV + (M - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+        for (j = 0; j < K; j++) {
+          for (i = 0; i < N; i++) {
+            ic = oC + (M - K + j) * sc1 + i * sc2;
+            iw = oW + i * sw1 + j * sw2;
+            Cv[ic] -= Wv[iw];
+            Cv[ic + 1] -= -Wv[iw + 1];
+          }
+        }
+      } else if (side === "right") {
+        for (j = 0; j < K; j++) {
+          zcopy(M, C, strideC1, offsetC + (N - K + j) * strideC2, WORK, strideWORK1, offsetWORK + j * strideWORK2);
+        }
+        ztrmm("right", "lower", "conjugate-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+        if (N > K) {
+          zgemm(
+            "no-transpose",
+            "conjugate-transpose",
+            M,
+            K,
+            N - K,
+            ONE,
+            C,
+            strideC1,
+            strideC2,
+            offsetC,
+            V,
+            strideV1,
+            strideV2,
+            offsetV,
+            ONE,
+            WORK,
+            strideWORK1,
+            strideWORK2,
+            offsetWORK
+          );
+        }
+        ztrmm("right", "lower", trans, "non-unit", M, K, ONE, T, strideT1, strideT2, offsetT, WORK, strideWORK1, strideWORK2, offsetWORK);
+        if (N > K) {
+          zgemm(
+            "no-transpose",
+            "no-transpose",
+            M,
+            N - K,
+            K,
+            NEGONE,
+            WORK,
+            strideWORK1,
+            strideWORK2,
+            offsetWORK,
+            V,
+            strideV1,
+            strideV2,
+            offsetV,
+            ONE,
+            C,
+            strideC1,
+            strideC2,
+            offsetC
+          );
+        }
+        ztrmm("right", "lower", "no-transpose", "unit", M, K, ONE, V, strideV1, strideV2, offsetV + (N - K) * strideV2, WORK, strideWORK1, strideWORK2, offsetWORK);
+        for (j = 0; j < K; j++) {
+          for (i = 0; i < M; i++) {
+            ic = oC + i * sc1 + (N - K + j) * sc2;
+            iw = oW + i * sw1 + j * sw2;
+            Cv[ic] -= Wv[iw];
+            Cv[ic + 1] -= Wv[iw + 1];
           }
         }
       }
@@ -11114,103 +11116,101 @@ var require_base38 = __commonJS({
             jx -= sx;
           }
         }
+      } else if (upper) {
+        jx = oX + (N - 1) * sx;
+        for (j = N - 1; j >= 0; j--) {
+          tr = xv[jx];
+          ti = xv[jx + 1];
+          if (noconj) {
+            if (nounit) {
+              ia = oA + j * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              xr = tr * ar - ti * ai;
+              xi = tr * ai + ti * ar;
+              tr = xr;
+              ti = xi;
+            }
+            ix = oX + (j - 1) * sx;
+            for (i = j - 1; i >= 0; i--) {
+              ia = oA + i * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              tr += ar * xv[ix] - ai * xv[ix + 1];
+              ti += ar * xv[ix + 1] + ai * xv[ix];
+              ix -= sx;
+            }
+          } else {
+            if (nounit) {
+              ia = oA + j * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = -Av[ia + 1];
+              xr = tr * ar - ti * ai;
+              xi = tr * ai + ti * ar;
+              tr = xr;
+              ti = xi;
+            }
+            ix = oX + (j - 1) * sx;
+            for (i = j - 1; i >= 0; i--) {
+              ia = oA + i * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = -Av[ia + 1];
+              tr += ar * xv[ix] - ai * xv[ix + 1];
+              ti += ar * xv[ix + 1] + ai * xv[ix];
+              ix -= sx;
+            }
+          }
+          xv[jx] = tr;
+          xv[jx + 1] = ti;
+          jx -= sx;
+        }
       } else {
-        if (upper) {
-          jx = oX + (N - 1) * sx;
-          for (j = N - 1; j >= 0; j--) {
-            tr = xv[jx];
-            ti = xv[jx + 1];
-            if (noconj) {
-              if (nounit) {
-                ia = oA + j * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                xr = tr * ar - ti * ai;
-                xi = tr * ai + ti * ar;
-                tr = xr;
-                ti = xi;
-              }
-              ix = oX + (j - 1) * sx;
-              for (i = j - 1; i >= 0; i--) {
-                ia = oA + i * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                tr += ar * xv[ix] - ai * xv[ix + 1];
-                ti += ar * xv[ix + 1] + ai * xv[ix];
-                ix -= sx;
-              }
-            } else {
-              if (nounit) {
-                ia = oA + j * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = -Av[ia + 1];
-                xr = tr * ar - ti * ai;
-                xi = tr * ai + ti * ar;
-                tr = xr;
-                ti = xi;
-              }
-              ix = oX + (j - 1) * sx;
-              for (i = j - 1; i >= 0; i--) {
-                ia = oA + i * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = -Av[ia + 1];
-                tr += ar * xv[ix] - ai * xv[ix + 1];
-                ti += ar * xv[ix + 1] + ai * xv[ix];
-                ix -= sx;
-              }
+        jx = oX;
+        for (j = 0; j < N; j++) {
+          tr = xv[jx];
+          ti = xv[jx + 1];
+          if (noconj) {
+            if (nounit) {
+              ia = oA + j * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              xr = tr * ar - ti * ai;
+              xi = tr * ai + ti * ar;
+              tr = xr;
+              ti = xi;
             }
-            xv[jx] = tr;
-            xv[jx + 1] = ti;
-            jx -= sx;
-          }
-        } else {
-          jx = oX;
-          for (j = 0; j < N; j++) {
-            tr = xv[jx];
-            ti = xv[jx + 1];
-            if (noconj) {
-              if (nounit) {
-                ia = oA + j * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                xr = tr * ar - ti * ai;
-                xi = tr * ai + ti * ar;
-                tr = xr;
-                ti = xi;
-              }
-              ix = oX + (j + 1) * sx;
-              for (i = j + 1; i < N; i++) {
-                ia = oA + i * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = Av[ia + 1];
-                tr += ar * xv[ix] - ai * xv[ix + 1];
-                ti += ar * xv[ix + 1] + ai * xv[ix];
-                ix += sx;
-              }
-            } else {
-              if (nounit) {
-                ia = oA + j * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = -Av[ia + 1];
-                xr = tr * ar - ti * ai;
-                xi = tr * ai + ti * ar;
-                tr = xr;
-                ti = xi;
-              }
-              ix = oX + (j + 1) * sx;
-              for (i = j + 1; i < N; i++) {
-                ia = oA + i * sa1 + j * sa2;
-                ar = Av[ia];
-                ai = -Av[ia + 1];
-                tr += ar * xv[ix] - ai * xv[ix + 1];
-                ti += ar * xv[ix + 1] + ai * xv[ix];
-                ix += sx;
-              }
+            ix = oX + (j + 1) * sx;
+            for (i = j + 1; i < N; i++) {
+              ia = oA + i * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = Av[ia + 1];
+              tr += ar * xv[ix] - ai * xv[ix + 1];
+              ti += ar * xv[ix + 1] + ai * xv[ix];
+              ix += sx;
             }
-            xv[jx] = tr;
-            xv[jx + 1] = ti;
-            jx += sx;
+          } else {
+            if (nounit) {
+              ia = oA + j * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = -Av[ia + 1];
+              xr = tr * ar - ti * ai;
+              xi = tr * ai + ti * ar;
+              tr = xr;
+              ti = xi;
+            }
+            ix = oX + (j + 1) * sx;
+            for (i = j + 1; i < N; i++) {
+              ia = oA + i * sa1 + j * sa2;
+              ar = Av[ia];
+              ai = -Av[ia + 1];
+              tr += ar * xv[ix] - ai * xv[ix + 1];
+              ti += ar * xv[ix + 1] + ai * xv[ix];
+              ix += sx;
+            }
           }
+          xv[jx] = tr;
+          xv[jx + 1] = ti;
+          jx += sx;
         }
       }
       return x;
@@ -11231,6 +11231,7 @@ var require_base39 = __commonJS({
     var ONE = new Complex128(1, 0);
     function zlarft(direct, storev, N, K, V, strideV1, strideV2, offsetV, TAU, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT) {
       var prevlastv;
+      var negTauCx;
       var negTauI;
       var negTauR;
       var negTau;
@@ -11343,14 +11344,14 @@ var require_base39 = __commonJS({
               }
               jj = Math.min(lastv, prevlastv);
               if (jj - i - 1 > 0) {
-                var negTauR2 = new Complex128(negTauR, negTauI);
+                negTauCx = new Complex128(negTauR, negTauI);
                 zgemm(
                   "no-transpose",
                   "conjugate-transpose",
                   i,
                   1,
                   jj - i - 1,
-                  negTauR2,
+                  negTauCx,
                   V,
                   strideV1,
                   strideV2,
@@ -11426,12 +11427,12 @@ var require_base39 = __commonJS({
                 }
                 jj = Math.max(lastv, prevlastv);
                 if (N - K + i - jj > 0) {
-                  var negTauB = new Complex128(negTauR, negTauI);
+                  negTauCx = new Complex128(negTauR, negTauI);
                   zgemv(
                     "conjugate-transpose",
                     N - K + i - jj,
                     K - i - 1,
-                    negTauB,
+                    negTauCx,
                     V,
                     strideV1,
                     strideV2,
@@ -11466,14 +11467,14 @@ var require_base39 = __commonJS({
                 }
                 jj = Math.max(lastv, prevlastv);
                 if (N - K + i - jj > 0) {
-                  var negTauB2 = new Complex128(negTauR, negTauI);
+                  negTauCx = new Complex128(negTauR, negTauI);
                   zgemm(
                     "no-transpose",
                     "conjugate-transpose",
                     K - i - 1,
                     1,
                     N - K + i - jj,
-                    negTauB2,
+                    negTauCx,
                     V,
                     strideV1,
                     strideV2,
@@ -12274,7 +12275,7 @@ var require_base47 = __commonJS({
     var zlarft = require_base39();
     var zlarfb = require_base37();
     var NB = 32;
-    function zungqr(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork) {
+    function zungqr(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK) {
       var ldwork;
       var sa1;
       var sa2;
@@ -12421,7 +12422,6 @@ var require_base48 = __commonJS({
     var zscal = require_base21();
     function zungl2(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK) {
       var negTau;
-      var conjT;
       var tauv;
       var sa1;
       var sa2;
@@ -12464,7 +12464,6 @@ var require_base48 = __commonJS({
             ia = oA + i * sa1 + i * sa2;
             Av[ia] = 1;
             Av[ia + 1] = 0;
-            conjT = new Complex128(tauv[it], -tauv[it + 1]);
             zlarf(
               "right",
               M - i - 1,
@@ -12517,7 +12516,7 @@ var require_base49 = __commonJS({
     var zlarft = require_base39();
     var zlarfb = require_base37();
     var NB = 32;
-    function zunglq(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork) {
+    function zunglq(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK) {
       var ldwork;
       var sa1;
       var sa2;
@@ -12659,7 +12658,7 @@ var require_base50 = __commonJS({
     var reinterpret2 = require_lib57();
     var zungqr = require_base47();
     var zunglq = require_base49();
-    function zungbr(vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork) {
+    function zungbr(vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK) {
       var wantq;
       var sA1;
       var sA2;
@@ -12671,14 +12670,14 @@ var require_base50 = __commonJS({
       if (M === 0 || N === 0) {
         return 0;
       }
-      wantq = vect === "q";
+      wantq = vect === "apply-Q";
       Av = reinterpret2(A, 0);
       sA1 = strideA1 * 2;
       sA2 = strideA2 * 2;
       oA = offsetA * 2;
       if (wantq) {
         if (M >= K) {
-          zungqr(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork);
+          zungqr(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK);
         } else {
           for (j = M - 1; j >= 1; j--) {
             idx = oA + j * sA2;
@@ -12698,63 +12697,31 @@ var require_base50 = __commonJS({
             Av[idx + 1] = 0;
           }
           if (M > 1) {
-            zungqr(
-              M - 1,
-              M - 1,
-              M - 1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + strideA1 + strideA2,
-              TAU,
-              strideTAU,
-              offsetTAU,
-              WORK,
-              strideWORK,
-              offsetWORK,
-              lwork
-            );
+            zungqr(M - 1, M - 1, M - 1, A, strideA1, strideA2, offsetA + strideA1 + strideA2, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK);
           }
         }
+      } else if (K < N) {
+        zunglq(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK);
       } else {
-        if (K < N) {
-          zunglq(M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork);
-        } else {
-          Av[oA] = 1;
-          Av[oA + 1] = 0;
-          for (i = 1; i < N; i++) {
-            idx = oA + i * sA1;
-            Av[idx] = 0;
-            Av[idx + 1] = 0;
+        Av[oA] = 1;
+        Av[oA + 1] = 0;
+        for (i = 1; i < N; i++) {
+          idx = oA + i * sA1;
+          Av[idx] = 0;
+          Av[idx + 1] = 0;
+        }
+        for (j = 1; j < N; j++) {
+          for (i = j - 1; i >= 1; i--) {
+            idx = oA + i * sA1 + j * sA2;
+            Av[idx] = Av[oA + (i - 1) * sA1 + j * sA2];
+            Av[idx + 1] = Av[oA + (i - 1) * sA1 + j * sA2 + 1];
           }
-          for (j = 1; j < N; j++) {
-            for (i = j - 1; i >= 1; i--) {
-              idx = oA + i * sA1 + j * sA2;
-              Av[idx] = Av[oA + (i - 1) * sA1 + j * sA2];
-              Av[idx + 1] = Av[oA + (i - 1) * sA1 + j * sA2 + 1];
-            }
-            idx = oA + j * sA2;
-            Av[idx] = 0;
-            Av[idx + 1] = 0;
-          }
-          if (N > 1) {
-            zunglq(
-              N - 1,
-              N - 1,
-              N - 1,
-              A,
-              strideA1,
-              strideA2,
-              offsetA + strideA1 + strideA2,
-              TAU,
-              strideTAU,
-              offsetTAU,
-              WORK,
-              strideWORK,
-              offsetWORK,
-              lwork
-            );
-          }
+          idx = oA + j * sA2;
+          Av[idx] = 0;
+          Av[idx + 1] = 0;
+        }
+        if (N > 1) {
+          zunglq(N - 1, N - 1, N - 1, A, strideA1, strideA2, offsetA + strideA1 + strideA2, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK);
         }
       }
       return 0;
@@ -12786,8 +12753,6 @@ var require_base51 = __commonJS({
       var bignum;
       var smlnum;
       var irwork;
-      var ldwrkr;
-      var ldwrku;
       var wntua;
       var wntus;
       var wntuo;
@@ -12795,16 +12760,13 @@ var require_base51 = __commonJS({
       var wntva;
       var wntvs;
       var wntvo;
-      var wntvn;
       var minmn;
       var itauq;
       var itaup;
       var iwork;
-      var chunk;
       var anrm;
       var iscl;
       var info;
-      var ierr;
       var ncvt;
       var nrvt;
       var itau;
@@ -12813,17 +12775,13 @@ var require_base51 = __commonJS({
       var eps;
       var ncu;
       var nru;
-      var blk;
       var sa1;
       var sa2;
       var su1;
       var su2;
       var wsz;
       var ie;
-      var ir;
-      var iu;
       var WK;
-      var i;
       sa1 = strideA1;
       sa2 = strideA2;
       su1 = strideU1;
@@ -12831,14 +12789,13 @@ var require_base51 = __commonJS({
       svt1 = strideVT1;
       svt2 = strideVT2;
       minmn = Math.min(M, N);
-      wntua = jobu === "A" || jobu === "all-columns";
-      wntus = jobu === "S" || jobu === "economy";
-      wntuo = jobu === "O" || jobu === "overwrite";
-      wntun = jobu === "N" || jobu === "none";
-      wntva = jobvt === "A" || jobvt === "all-rows";
-      wntvs = jobvt === "S" || jobvt === "economy";
-      wntvo = jobvt === "O" || jobvt === "overwrite";
-      wntvn = jobvt === "N" || jobvt === "none";
+      wntua = jobu === "all-columns";
+      wntus = jobu === "economy";
+      wntuo = jobu === "overwrite";
+      wntun = jobu === "none";
+      wntva = jobvt === "all-rows";
+      wntvs = jobvt === "economy";
+      wntvo = jobvt === "overwrite";
       wntuas = wntua || wntus;
       wntvas = wntva || wntvs;
       info = 0;
@@ -12914,23 +12871,7 @@ var require_base51 = __commonJS({
           );
           ncvt = 0;
           if (wntvo || wntvas) {
-            zungbr(
-              "p",
-              N,
-              N,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              -1
-            );
+            zungbr("apply-P", N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork);
             ncvt = N;
           }
           irwork = ie + N;
@@ -12965,7 +12906,7 @@ var require_base51 = __commonJS({
             offsetRWORK + irwork
           );
           if (wntvas) {
-            zlacpy("F", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
+            zlacpy("full", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
           }
         } else {
           ie = 0;
@@ -12999,81 +12940,17 @@ var require_base51 = __commonJS({
           if (wntuas) {
             zlacpy("lower", M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
             ncu = wntus ? N : M;
-            zungbr(
-              "q",
-              M,
-              ncu,
-              N,
-              U,
-              su1,
-              su2,
-              offsetU,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              iwork,
-              -1
-            );
+            zungbr("apply-Q", M, ncu, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork);
           }
           if (wntvas) {
             zlacpy("upper", N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
-            zungbr(
-              "p",
-              N,
-              N,
-              N,
-              VT,
-              svt1,
-              svt2,
-              offsetVT,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              -1
-            );
+            zungbr("apply-P", N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork);
           }
           if (wntuo) {
-            zungbr(
-              "q",
-              M,
-              N,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              itauq,
-              WK,
-              1,
-              iwork,
-              -1
-            );
+            zungbr("apply-Q", M, N, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork);
           }
           if (wntvo) {
-            zungbr(
-              "p",
-              N,
-              N,
-              N,
-              A,
-              sa1,
-              sa2,
-              offsetA,
-              WK,
-              1,
-              itaup,
-              WK,
-              1,
-              iwork,
-              -1
-            );
+            zungbr("apply-P", N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork);
           }
           irwork = ie + N;
           nru = 0;
@@ -13207,82 +13084,18 @@ var require_base51 = __commonJS({
         );
         if (wntuas) {
           zlacpy("lower", M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU);
-          zungbr(
-            "q",
-            M,
-            M,
-            N,
-            U,
-            su1,
-            su2,
-            offsetU,
-            WK,
-            1,
-            itauq,
-            WK,
-            1,
-            iwork,
-            -1
-          );
+          zungbr("apply-Q", M, M, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork);
         }
         if (wntvas) {
           zlacpy("upper", M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT);
           nrvt = wntva ? N : M;
-          zungbr(
-            "p",
-            nrvt,
-            N,
-            M,
-            VT,
-            svt1,
-            svt2,
-            offsetVT,
-            WK,
-            1,
-            itaup,
-            WK,
-            1,
-            iwork,
-            -1
-          );
+          zungbr("apply-P", nrvt, N, M, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork);
         }
         if (wntuo) {
-          zungbr(
-            "q",
-            M,
-            M,
-            N,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            WK,
-            1,
-            itauq,
-            WK,
-            1,
-            iwork,
-            -1
-          );
+          zungbr("apply-Q", M, M, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork);
         }
         if (wntvo) {
-          zungbr(
-            "p",
-            M,
-            N,
-            M,
-            A,
-            sa1,
-            sa2,
-            offsetA,
-            WK,
-            1,
-            itaup,
-            WK,
-            1,
-            iwork,
-            -1
-          );
+          zungbr("apply-P", M, N, M, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork);
         }
         irwork = ie + M;
         nru = 0;
@@ -13424,8 +13237,9 @@ var require_ndarray = __commonJS({
       if (M === 0 || N === 0) {
         return 0;
       }
-      var JOB_MAP = { "all": "A", "some": "S", "overwrite": "O", "none": "N" };
-      return base(JOB_MAP[jobu], JOB_MAP[jobvt], M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK);
+      var JOBU_MAP = { "all": "all-columns", "some": "economy", "overwrite": "overwrite", "none": "none" };
+      var JOBVT_MAP = { "all": "all-rows", "some": "economy", "overwrite": "overwrite", "none": "none" };
+      return base(JOBU_MAP[jobu], JOBVT_MAP[jobvt], M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK);
     }
     module.exports = zgesvd2;
   }
