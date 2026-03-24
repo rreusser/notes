@@ -228,7 +228,7 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 	//      conjugate shifts, assuming complex conjugate shifts are already
 	//      adjacent to one another. ====
 	for ( i = 1; i <= nshfts - 2; i += 2 ) {
-		if ( SR[ offsetSR + ( i - 1 ) * strideSR ] !== -SI[ offsetSI + i * strideSI ] ) {
+		if ( SI[ offsetSI + ( i - 1 ) * strideSI ] !== -SI[ offsetSI + i * strideSI ] ) {
 			swap = SR[ offsetSR + ( i - 1 ) * strideSR ];
 			SR[ offsetSR + ( i - 1 ) * strideSR ] = SR[ offsetSR + i * strideSR ];
 			SR[ offsetSR + i * strideSR ] = SR[ offsetSR + ( i + 1 ) * strideSR ];

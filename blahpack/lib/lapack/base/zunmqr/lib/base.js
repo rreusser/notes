@@ -85,8 +85,8 @@ function zunmqr( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 	var T;
 	var i;
 
-	left = ( side === 'left' || side === 'L' );
-	notran = ( trans === 'no-transpose' || trans === 'N' );
+	left = ( side === 'left' );
+	notran = ( trans === 'no-transpose' );
 
 	if ( left ) {
 		nq = M;

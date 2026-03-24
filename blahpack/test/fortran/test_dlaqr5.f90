@@ -286,4 +286,98 @@ program test_dlaqr5
   call print_matrix('Z', Z, MAXN, N, N)
   call end_test()
 
+  ! ============================================================
+  ! Test 8: 8x8, 4 shifts, KACC22=0, WANTT=true, WANTZ=true
+  ! ============================================================
+  N = 8
+  KTOP = 1
+  KBOT = 8
+  NSHFTS = 4
+
+  do j = 1, N
+    do i = 1, N
+      H(i,j) = 0.0d0
+    end do
+  end do
+  H(1,1) = 10.0d0; H(1,2) = 2.0d0;  H(1,3) = 1.0d0;  H(1,4) = 0.5d0
+  H(1,5) = 0.3d0;  H(1,6) = 0.2d0;  H(1,7) = 0.1d0;  H(1,8) = 0.05d0
+  H(2,1) = 3.0d0;  H(2,2) = 9.0d0;  H(2,3) = 2.0d0;  H(2,4) = 1.0d0
+  H(2,5) = 0.4d0;  H(2,6) = 0.3d0;  H(2,7) = 0.2d0;  H(2,8) = 0.1d0
+                    H(3,2) = 2.5d0;  H(3,3) = 8.0d0;  H(3,4) = 1.5d0
+  H(3,5) = 0.5d0;  H(3,6) = 0.4d0;  H(3,7) = 0.3d0;  H(3,8) = 0.15d0
+                                      H(4,3) = 2.0d0;  H(4,4) = 7.0d0
+  H(4,5) = 1.0d0;  H(4,6) = 0.5d0;  H(4,7) = 0.4d0;  H(4,8) = 0.2d0
+                                                         H(5,4) = 1.5d0
+  H(5,5) = 6.0d0;  H(5,6) = 1.0d0;  H(5,7) = 0.5d0;  H(5,8) = 0.3d0
+                                                         H(6,5) = 1.0d0
+  H(6,6) = 5.0d0;  H(6,7) = 0.8d0;  H(6,8) = 0.4d0
+                                                         H(7,6) = 0.8d0
+  H(7,7) = 4.0d0;  H(7,8) = 0.6d0
+                                                         H(8,7) = 0.5d0
+  H(8,8) = 3.0d0
+
+  SR(1) = 5.0d0;  SI(1) = 1.0d0
+  SR(2) = 5.0d0;  SI(2) = -1.0d0
+  SR(3) = 3.0d0;  SI(3) = 0.5d0
+  SR(4) = 3.0d0;  SI(4) = -0.5d0
+
+  do j = 1, N
+    do i = 1, N
+      Z(i,j) = 0.0d0
+    end do
+    Z(j,j) = 1.0d0
+  end do
+
+  NH = N
+  NV = N
+
+  call DLAQR5(.TRUE., .TRUE., 0, N, KTOP, KBOT, NSHFTS, &
+              SR, SI, H, MAXN, 1, N, Z, MAXN, V, 3, U, MAXN, &
+              NV, WV, MAXN, NH, WH, MAXN)
+
+  call begin_test('8x8_4shifts_kacc22_0')
+  call print_matrix('H', H, MAXN, N, N)
+  call print_matrix('Z', Z, MAXN, N, N)
+  call end_test()
+
+  ! ============================================================
+  ! Test 9: 4x4, 2 shifts, KACC22=1 (minimal accum test)
+  ! ============================================================
+  N = 4
+  KTOP = 1
+  KBOT = 4
+  NSHFTS = 2
+
+  do j = 1, N
+    do i = 1, N
+      H(i,j) = 0.0d0
+    end do
+  end do
+  H(1,1) = 4.0d0; H(1,2) = 1.0d0; H(1,3) = 0.5d0; H(1,4) = 0.25d0
+  H(2,1) = 2.0d0; H(2,2) = 3.0d0; H(2,3) = 1.0d0; H(2,4) = 0.5d0
+                   H(3,2) = 1.5d0; H(3,3) = 2.0d0; H(3,4) = 0.8d0
+                                    H(4,3) = 1.0d0; H(4,4) = 1.0d0
+
+  SR(1) = 2.5d0;  SI(1) = 0.5d0
+  SR(2) = 2.5d0;  SI(2) = -0.5d0
+
+  do j = 1, N
+    do i = 1, N
+      Z(i,j) = 0.0d0
+    end do
+    Z(j,j) = 1.0d0
+  end do
+
+  NH = N
+  NV = N
+
+  call DLAQR5(.TRUE., .TRUE., 1, N, KTOP, KBOT, NSHFTS, &
+              SR, SI, H, MAXN, 1, N, Z, MAXN, V, 3, U, MAXN, &
+              NV, WV, MAXN, NH, WH, MAXN)
+
+  call begin_test('4x4_2shifts_kacc22_1')
+  call print_matrix('H', H, MAXN, N, N)
+  call print_matrix('Z', Z, MAXN, N, N)
+  call end_test()
+
 end program

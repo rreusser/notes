@@ -553,9 +553,21 @@ for per-line breakdown. Run `bin/bench-blas.js` for leaf-node throughput.
 
 ### uplo/trans String Convention
 
-In `base.js`, use single chars matching Fortran: `'U'`, `'L'`, `'N'`, `'T'`, `'C'`.
-The `ndarray.js` wrapper normalizes from stdlib's full strings (`'upper'`,
-`'lower'`, `'no-transpose'`, etc.).
+**In `base.js`, use lowercase long-form strings:**
+`'upper'`, `'lower'`, `'left'`, `'right'`, `'no-transpose'`, `'transpose'`,
+`'conjugate-transpose'`, `'unit'`, `'non-unit'`, `'forward'`, `'backward'`,
+`'columnwise'`, `'rowwise'`, `'frobenius'`, `'one-norm'`, `'inf-norm'`, `'max'`.
+
+**NEVER use single-char Fortran strings** (`'U'`, `'L'`, `'N'`, `'T'`, `'C'`)
+in `base.js` code. The `ndarray.js` wrapper normalizes from stdlib's public API
+strings, and `base.js` functions use the long-form internally.
+
+**When calling a dependency from `base.js`**, always pass long-form strings.
+This is the #1 cause of silent bugs — a short-form string like `'L'` won't
+match `=== 'left'` and will silently take the wrong branch.
+
+For `job`-style parameters with many values (`'N'`, `'P'`, `'S'`, `'B'`),
+single chars are acceptable since there are no long-form equivalents.
 
 ### Complex Number Support
 

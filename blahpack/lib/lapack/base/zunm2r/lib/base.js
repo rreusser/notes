@@ -82,8 +82,8 @@ function zunm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		return 0;
 	}
 
-	left = ( side === 'left' || side === 'L' );
-	notran = ( trans === 'no-transpose' || trans === 'N' );
+	left = ( side === 'left' );
+	notran = ( trans === 'no-transpose' );
 
 	// Get Float64Array views for direct element access
 	Av = reinterpret( A, 0 );

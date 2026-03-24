@@ -1,17 +1,258 @@
-
-
 'use strict';
+
+// MODULES //
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var dlaqr2 = require( './../lib' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var dlaqr2 = require( './../lib/base.js' );
 
-test( 'dlaqr2: main export is a function', function t() {
-	assert.strictEqual( typeof dlaqr2, 'function' );
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'dlaqr2.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+/**
+* Extracts an NxN submatrix from a Fortran column-major array with leading dimension LDA.
+*
+* @param {Array} arr - column-major flat array
+* @param {integer} LDA - leading dimension
+* @param {integer} N - number of rows/columns to extract
+* @returns {Float64Array} column-major NxN array with leading dimension N
+*/
+function extractMatrix( arr, LDA, N ) {
+	var out = new Float64Array( N * N );
+	var i, j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < N; i++ ) {
+			out[ i + j * N ] = arr[ i + j * LDA ];
+		}
+	}
+	return out;
+}
+
+/**
+* Runs dlaqr2 with the given parameters and returns results.
+*/
+function runDlaqr2( N, KTOP, KBOT, NW, Hin, Zin, WANTT, WANTZ, ILOZ, IHIZ ) {
+	var NH = N;
+	var NV = N;
+	var lwork = 200;
+	var H = new Float64Array( Hin );
+	var Z = new Float64Array( Zin );
+	var SR = new Float64Array( N );
+	var SI = new Float64Array( N );
+	var V = new Float64Array( N * N );
+	var T = new Float64Array( N * N );
+	var WV = new Float64Array( N * N );
+	var WORK = new Float64Array( lwork );
+
+	// Column-major: strideH1=1, strideH2=N
+	var result = dlaqr2(
+		WANTT, WANTZ, N, KTOP, KBOT, NW,
+		H, 1, N, 0,
+		ILOZ, IHIZ,
+		Z, 1, N, 0,
+		SR, 1, 0,
+		SI, 1, 0,
+		V, 1, N, 0,
+		NH,
+		T, 1, N, 0,
+		NV,
+		WV, 1, N, 0,
+		WORK, 1, 0,
+		lwork
+	);
+
+	return {
+		'ns': result.ns,
+		'nd': result.nd,
+		'H': H,
+		'Z': Z,
+		'SR': SR,
+		'SI': SI
+	};
+}
+
+
+// TESTS //
+
+test( 'dlaqr2: 6x6 hessenberg NW=3', function t() {
+	var tc = findCase( '6x6 hessenberg NW=3' );
+	var N = 6;
+	var MAXN = 10;
+
+	// Extract NxN from MAXN-column-major fixture
+	var Hin = extractMatrix( tc.H, MAXN, N );
+	var Zin = extractMatrix( tc.Z, MAXN, N );
+
+	// Build input (before dlaqr2 call)
+	var H0 = new Float64Array( N * N );
+	H0[ 0 + 0*N ] = 4.0; H0[ 0 + 1*N ] = 1.0; H0[ 0 + 2*N ] = 0.5; H0[ 0 + 3*N ] = 0.1; H0[ 0 + 4*N ] = 0.2; H0[ 0 + 5*N ] = 0.3;
+	H0[ 1 + 0*N ] = 1.0; H0[ 1 + 1*N ] = 3.0; H0[ 1 + 2*N ] = 0.8; H0[ 1 + 3*N ] = 0.2; H0[ 1 + 4*N ] = 0.1; H0[ 1 + 5*N ] = 0.4;
+	H0[ 2 + 1*N ] = 0.5; H0[ 2 + 2*N ] = 2.0; H0[ 2 + 3*N ] = 0.7; H0[ 2 + 4*N ] = 0.3; H0[ 2 + 5*N ] = 0.2;
+	H0[ 3 + 2*N ] = 0.3; H0[ 3 + 3*N ] = 1.5; H0[ 3 + 4*N ] = 0.9; H0[ 3 + 5*N ] = 0.1;
+	H0[ 4 + 3*N ] = 0.2; H0[ 4 + 4*N ] = 1.0; H0[ 4 + 5*N ] = 0.6;
+	H0[ 5 + 4*N ] = 0.1; H0[ 5 + 5*N ] = 0.5;
+
+	var Z0 = new Float64Array( N * N );
+	for ( var ii = 0; ii < N; ii++ ) Z0[ ii + ii*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 6, 3, H0, Z0, true, true, 1, 6 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), Array.from( Hin ), 1e-12, 'H' );
+	assertArrayClose( Array.from( r.Z ), Array.from( Zin ), 1e-12, 'Z' );
+	assertArrayClose( Array.from( r.SR ), tc.SR.slice( 0, N ), 1e-12, 'SR' );
+	assertArrayClose( Array.from( r.SI ), tc.SI.slice( 0, N ), 1e-12, 'SI' );
 });
 
-test( 'dlaqr2: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof dlaqr2.ndarray, 'function' );
+test( 'dlaqr2: 4x4 hessenberg NW=2', function t() {
+	var tc = findCase( '4x4 hessenberg NW=2' );
+	var N = 4;
+	var MAXN = 10;
+
+	var Hin = extractMatrix( tc.H, MAXN, N );
+
+	var H0 = new Float64Array( N * N );
+	H0[ 0 + 0*N ] = 5.0; H0[ 0 + 1*N ] = 2.0; H0[ 0 + 2*N ] = 0.3; H0[ 0 + 3*N ] = 0.1;
+	H0[ 1 + 0*N ] = 1.0; H0[ 1 + 1*N ] = 4.0; H0[ 1 + 2*N ] = 1.5; H0[ 1 + 3*N ] = 0.2;
+	H0[ 2 + 1*N ] = 0.8; H0[ 2 + 2*N ] = 3.0; H0[ 2 + 3*N ] = 1.0;
+	H0[ 3 + 2*N ] = 0.5; H0[ 3 + 3*N ] = 2.0;
+
+	var Z0 = new Float64Array( N * N );
+	for ( var ii = 0; ii < N; ii++ ) Z0[ ii + ii*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 4, 2, H0, Z0, true, true, 1, 4 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), Array.from( Hin ), 1e-12, 'H' );
+	assertArrayClose( Array.from( r.SR ), tc.SR.slice( 0, N ), 1e-12, 'SR' );
+	assertArrayClose( Array.from( r.SI ), tc.SI.slice( 0, N ), 1e-12, 'SI' );
 });
 
-// TODO: Add implementation tests
+test( 'dlaqr2: 4x4 NW=1 no wantz', function t() {
+	var tc = findCase( '4x4 NW=1 no wantz' );
+	var N = 4;
+	var MAXN = 10;
+
+	var Hin = extractMatrix( tc.H, MAXN, N );
+
+	var H0 = new Float64Array( N * N );
+	H0[ 0 + 0*N ] = 5.0; H0[ 0 + 1*N ] = 2.0; H0[ 0 + 2*N ] = 0.3; H0[ 0 + 3*N ] = 0.1;
+	H0[ 1 + 0*N ] = 1.0; H0[ 1 + 1*N ] = 4.0; H0[ 1 + 2*N ] = 1.5; H0[ 1 + 3*N ] = 0.2;
+	H0[ 2 + 1*N ] = 0.8; H0[ 2 + 2*N ] = 3.0; H0[ 2 + 3*N ] = 1.0;
+	H0[ 3 + 2*N ] = 0.5; H0[ 3 + 3*N ] = 2.0;
+
+	var Z0 = new Float64Array( N * N );
+
+	var r = runDlaqr2( N, 1, 4, 1, H0, Z0, true, false, 1, 4 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), Array.from( Hin ), 1e-12, 'H' );
+	assertArrayClose( Array.from( r.SR ), tc.SR.slice( 0, N ), 1e-12, 'SR' );
+	assertArrayClose( Array.from( r.SI ), tc.SI.slice( 0, N ), 1e-12, 'SI' );
+});
+
+test( 'dlaqr2: edge case ktop > kbot', function t() {
+	var tc = findCase( 'edge case ktop > kbot' );
+	var N = 4;
+	var H0 = new Float64Array( N * N );
+	var Z0 = new Float64Array( N * N );
+
+	var r = runDlaqr2( N, 3, 2, 2, H0, Z0, true, false, 1, N );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+});
+
+test( 'dlaqr2: 8x8 hessenberg NW=4 partial', function t() {
+	var tc = findCase( '8x8 hessenberg NW=4 partial' );
+	var N = 8;
+	var MAXN = 10;
+
+	var Hin = extractMatrix( tc.H, MAXN, N );
+	var Zin = extractMatrix( tc.Z, MAXN, N );
+
+	// Build input
+	var H0 = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		H0[ i + i*N ] = ( N + 1 - (i+1) ) * 1.5;
+		if ( i + 1 < N ) {
+			H0[ i + (i+1)*N ] = 0.5;
+			H0[ i+1 + i*N ] = 0.3;
+		}
+		if ( i + 2 < N ) {
+			H0[ i + (i+2)*N ] = 0.1;
+		}
+	}
+
+	var Z0 = new Float64Array( N * N );
+	for ( i = 0; i < N; i++ ) Z0[ i + i*N ] = 1.0;
+
+	var r = runDlaqr2( N, 2, 7, 4, H0, Z0, true, true, 1, 8 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), Array.from( Hin ), 1e-10, 'H' );
+	assertArrayClose( Array.from( r.Z ), Array.from( Zin ), 1e-10, 'Z' );
+	assertArrayClose( Array.from( r.SR ), tc.SR.slice( 0, N ), 1e-10, 'SR' );
+	assertArrayClose( Array.from( r.SI ), tc.SI.slice( 0, N ), 1e-10, 'SI' );
+});
+
+test( 'dlaqr2: workspace query', function t() {
+	var N = 6;
+	var H = new Float64Array( N * N );
+	var Z = new Float64Array( N * N );
+	var SR = new Float64Array( N );
+	var SI = new Float64Array( N );
+	var V = new Float64Array( N * N );
+	var T = new Float64Array( N * N );
+	var WV = new Float64Array( N * N );
+	var WORK = new Float64Array( 1 );
+
+	var r = dlaqr2(
+		true, true, N, 1, 6, 3,
+		H, 1, N, 0,
+		1, 6,
+		Z, 1, N, 0,
+		SR, 1, 0,
+		SI, 1, 0,
+		V, 1, N, 0,
+		N,
+		T, 1, N, 0,
+		N,
+		WV, 1, N, 0,
+		WORK, 1, 0,
+		-1
+	);
+
+	assert.ok( WORK[ 0 ] >= 1, 'workspace query returns positive value' );
+});

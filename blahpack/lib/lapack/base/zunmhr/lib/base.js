@@ -41,8 +41,8 @@ var zunmqr = require( '../../zunmqr/lib/base.js' );
 *   Q = H(ilo) H(ilo+1) ... H(ihi-1)
 *
 * @private
-* @param {string} side - 'L' to apply Q from left, 'R' from right
-* @param {string} trans - 'N' for Q, 'C' for Q^H
+* @param {string} side - 'left' to apply Q from left, 'right' from right
+* @param {string} trans - 'no-transpose' for Q, 'conjugate-transpose' for Q^H
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {integer} ilo - 1-based lower index from zgehrd (1 <= ILO <= IHI)
@@ -75,7 +75,7 @@ function zunmhr( side, trans, M, N, ilo, ihi, A, strideA1, strideA2, offsetA, TA
 	// NH = IHI - ILO: number of elementary reflectors
 	nh = ihi - ilo;
 
-	left = ( side === 'L' );
+	left = ( side === 'left' );
 
 	// Quick return if possible
 	if ( M === 0 || N === 0 || nh === 0 ) {

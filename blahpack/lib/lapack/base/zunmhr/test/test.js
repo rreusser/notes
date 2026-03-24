@@ -96,7 +96,7 @@ test( 'zunmhr: left, no-transpose (Q * I)', function t() {
 	var C = eye( 5, 6 );
 	var Cv = reinterpret( C, 0 );
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'L', 'N', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'left', 'no-transpose', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 5, 5 ), extractColMajor( tc.c, 6, 5, 5 ), 1e-13, 'c' );
 });
@@ -108,7 +108,7 @@ test( 'zunmhr: left, conjugate-transpose (Q^H * I)', function t() {
 	var C = eye( 5, 6 );
 	var Cv = reinterpret( C, 0 );
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'L', 'C', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'left', 'conjugate-transpose', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 5, 5 ), extractColMajor( tc.c, 6, 5, 5 ), 1e-13, 'c' );
 });
@@ -120,7 +120,7 @@ test( 'zunmhr: right, no-transpose (I * Q)', function t() {
 	var C = eye( 5, 6 );
 	var Cv = reinterpret( C, 0 );
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'R', 'N', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'right', 'no-transpose', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 5, 5 ), extractColMajor( tc.c, 6, 5, 5 ), 1e-13, 'c' );
 });
@@ -132,7 +132,7 @@ test( 'zunmhr: right, conjugate-transpose (I * Q^H)', function t() {
 	var C = eye( 5, 6 );
 	var Cv = reinterpret( C, 0 );
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'R', 'C', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'right', 'conjugate-transpose', 5, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 5, 5 ), extractColMajor( tc.c, 6, 5, 5 ), 1e-13, 'c' );
 });
@@ -154,7 +154,7 @@ test( 'zunmhr: left, no-transpose, rectangular C (5x3)', function t() {
 	Cv[24] = -0.5; Cv[25] = 0.0; Cv[26] = 1.0; Cv[27] = 1.0; Cv[28] = 2.0; Cv[29] = -1.0;
 	Cv[30] = 3.0; Cv[31] = 2.0; Cv[32] = -2.0; Cv[33] = 0.5;
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'L', 'N', 5, 3, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'left', 'no-transpose', 5, 3, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 5, 3 ), extractColMajor( tc.c, 6, 5, 3 ), 1e-13, 'c' );
 });
@@ -177,7 +177,7 @@ test( 'zunmhr: right, conjugate-transpose, rectangular C (3x5)', function t() {
 	// col 5
 	Cv[48] = 0.5; Cv[49] = 0.5; Cv[50] = 1.5; Cv[51] = -1.0; Cv[52] = -0.5; Cv[53] = 0.0;
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'R', 'C', 3, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'right', 'conjugate-transpose', 3, 5, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 3, 5 ), extractColMajor( tc.c, 6, 3, 5 ), 1e-13, 'c' );
 });
@@ -187,7 +187,7 @@ test( 'zunmhr: M=0 quick return', function t() {
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	var C = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 10 );
-	var info = zunmhr( 'L', 'N', 0, 5, 1, 0, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 10 );
+	var info = zunmhr( 'left', 'no-transpose', 0, 5, 1, 0, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 10 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -196,7 +196,7 @@ test( 'zunmhr: N=0 quick return', function t() {
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	var C = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 10 );
-	var info = zunmhr( 'L', 'N', 5, 0, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 10 );
+	var info = zunmhr( 'left', 'no-transpose', 5, 0, 1, 5, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 10 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -207,7 +207,7 @@ test( 'zunmhr: NH=0 quick return (ILO=IHI)', function t() {
 	var Cv = reinterpret( C, 0 );
 	var expected = reinterpret( eye( 5, 6 ), 0 );
 	var WORK = new Complex128Array( 10 );
-	var info = zunmhr( 'L', 'N', 5, 5, 3, 3, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 10 );
+	var info = zunmhr( 'left', 'no-transpose', 5, 5, 3, 3, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 10 );
 	assert.equal( info, 0, 'info' );
 	// C should be unchanged (identity)
 	assertArrayClose( extractColMajor( Cv, 6, 5, 5 ), extractColMajor( expected, 6, 5, 5 ), 1e-14, 'c unchanged' );
@@ -223,7 +223,7 @@ test( 'zunmhr: left, no-transpose, partial (ILO=2, IHI=4)', function t() {
 	var C = eye( 5, 6 );
 	var Cv = reinterpret( C, 0 );
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'L', 'N', 5, 5, 2, 4, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'left', 'no-transpose', 5, 5, 2, 4, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 5, 5 ), extractColMajor( tc.c, 6, 5, 5 ), 1e-13, 'c' );
 });
@@ -235,7 +235,7 @@ test( 'zunmhr: right, conjugate-transpose, partial (ILO=2, IHI=4)', function t()
 	var C = eye( 5, 6 );
 	var Cv = reinterpret( C, 0 );
 	var WORK = new Complex128Array( 1000 );
-	var info = zunmhr( 'R', 'C', 5, 5, 2, 4, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
+	var info = zunmhr( 'right', 'conjugate-transpose', 5, 5, 2, 4, A, 1, 6, 0, TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0, 1000 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( extractColMajor( Cv, 6, 5, 5 ), extractColMajor( tc.c, 6, 5, 5 ), 1e-13, 'c' );
 });

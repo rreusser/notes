@@ -81,7 +81,7 @@ function zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, st
 	tauR = tauv[ oT ];
 	tauI = tauv[ oT + 1 ];
 
-	applyLeft = ( side === 'left' || side === 'L' );
+	applyLeft = ( side === 'left' );
 	lastv = 0;
 	lastc = 0;
 

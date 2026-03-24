@@ -131,7 +131,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 
 		if ( na < N ) {
 			// Apply Q^H to remaining columns
-			zunmqr('Left', 'Conjugate Transpose', M, N - na, na, A, sa1, sa2, offsetA, TAU, strideTAU, oT, A, sa1, sa2, offsetA + (na * sa2), workQR, 1, 0 );
+			zunmqr('left', 'conjugate-transpose', M, N - na, na, A, sa1, sa2, offsetA, TAU, strideTAU, oT, A, sa1, sa2, offsetA + (na * sa2), workQR, 1, 0 );
 		}
 	}
 
