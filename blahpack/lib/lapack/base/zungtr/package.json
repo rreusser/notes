@@ -1,7 +1,7 @@
 {
   "name": "@stdlib/lapack/base/zungtr",
   "version": "0.0.0",
-  "description": "Generate unitary matrix Q from Hermitian tridiagonal reduction",
+  "description": "Generate unitary matrix Q from zhetrd",
   "license": "Apache-2.0",
   "author": {
     "name": "The Stdlib Authors",

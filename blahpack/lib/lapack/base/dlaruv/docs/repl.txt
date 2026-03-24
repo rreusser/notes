@@ -1,0 +1,39 @@
+
+    dlaruv.ndarray( iseed, strideISEED, offsetISEED, N, x, strideX, offsetX )
+        Generates a vector of random numbers from a uniform distribution
+
+        Parameters
+        ----------
+        iseed: Int32Array
+            input array.
+
+        strideISEED: integer
+            stride length for `iseed`.
+
+        offsetISEED: NonNegativeInteger
+            starting index for `iseed`.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

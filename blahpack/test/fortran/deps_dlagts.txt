@@ -1,0 +1,3 @@
+dlagts
+dlagtf
+dlamch

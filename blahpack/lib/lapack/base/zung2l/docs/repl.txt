@@ -1,6 +1,6 @@
 
     zung2l.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
-        Generate unitary matrix Q from QL factorization (unblocked)
+        Generate unitary matrix Q from QL reflectors
 
         Parameters
         ----------

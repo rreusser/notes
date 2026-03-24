@@ -1,0 +1,176 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var Float64Array = require( '@stdlib/array/float64' );
+var dgerq2 = require( '../../dgerq2/lib/base.js' );
+var dlarfb = require( '../../dlarfb/lib/base.js' );
+var dlarft = require( '../../dlarft/lib/base.js' );
+
+
+// VARIABLES //
+
+var DEFAULT_NB = 32;
+
+
+// MAIN //
+
+/**
+* Computes an RQ factorization of a real M-by-N matrix A = R * Q
+* using blocked Householder reflections.
+*
+* On exit, if M <= N, the upper triangle of the subarray
+* A(0:M-1, N-M:N-1) contains the M-by-M upper triangular matrix R;
+* if M >= N, the elements on and above the (M-N)-th subdiagonal
+* contain the M-by-N upper trapezoidal matrix R; the remaining
+* elements, with the array TAU, represent the orthogonal matrix Q.
+*
+* @private
+* @param {NonNegativeInteger} M - number of rows in A
+* @param {NonNegativeInteger} N - number of columns in A
+* @param {Float64Array} A - input/output matrix (column-major)
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - starting index for A
+* @param {Float64Array} TAU - output array of scalar factors (length min(M,N))
+* @param {integer} strideTAU - stride for TAU
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU
+* @param {Float64Array} WORK - workspace array
+* @param {integer} strideWORK - stride for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @returns {integer} info - 0 if successful
+*/
+function dgerqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
+	var ldwork;
+	var nbmin;
+	var iws;
+	var ib;
+	var nb;
+	var nx;
+	var ki;
+	var kk;
+	var mu;
+	var nu;
+	var T;
+	var K;
+	var i;
+
+	K = Math.min( M, N );
+
+	// Quick return if possible
+	if ( K === 0 ) {
+		return 0;
+	}
+
+	nb = DEFAULT_NB;
+	nbmin = 2;
+	nx = 1;
+	iws = M;
+
+	if ( nb > 1 && nb < K ) {
+		// Determine crossover point NX
+		nx = 0;
+		if ( nx < K ) {
+			ldwork = M;
+			iws = ldwork * nb;
+		}
+	}
+
+	// Allocate the T matrix for block reflectors (NB x NB)
+	T = new Float64Array( nb * nb );
+
+	// Ensure WORK is large enough
+	if ( !WORK || WORK.length < iws + nb * nb ) {
+		WORK = new Float64Array( iws + nb * nb );
+		offsetWORK = 0;
+		strideWORK = 1;
+	}
+	ldwork = M;
+
+	if ( nb >= nbmin && nb < K && nx < K ) {
+		// Use blocked code initially.
+		// The last kk rows are handled by the block method.
+		ki = Math.floor( (K - nx - 1) / nb ) * nb;
+		kk = Math.min( K, ki + nb );
+
+		// Iterate backward over blocks
+		// Fortran: DO I = K-KK+KI+1, K-KK+1, -NB (1-based)
+		// 0-based: i goes from K-kk+ki down to K-kk, step -nb
+		for ( i = K - kk + ki; i >= K - kk; i -= nb ) {
+			ib = Math.min( K - i, nb );
+
+			// Compute the RQ factorization of the current block
+			// A(m-k+i : m-k+i+ib-1, 0 : n-k+i+ib-1)
+			dgerq2(
+				ib, N - K + i + ib,
+				A, strideA1, strideA2, offsetA + ((M - K + i) * strideA1),
+				TAU, strideTAU, offsetTAU + (i * strideTAU),
+				WORK, strideWORK, offsetWORK
+			);
+
+			if ( M - K + i > 0 ) {
+				// Form the triangular factor of the block reflector
+				// H = H(i+ib-1) ... H(i+1) H(i)
+				dlarft(
+					'backward', 'rowwise',
+					N - K + i + ib, ib,
+					A, strideA1, strideA2, offsetA + ((M - K + i) * strideA1),
+					TAU, strideTAU, offsetTAU + (i * strideTAU),
+					T, 1, nb, 0
+				);
+
+				// Apply H to A(0:m-k+i-1, 0:n-k+i+ib-1) from the right
+				dlarfb(
+					'right', 'no-transpose', 'backward', 'rowwise',
+					M - K + i, N - K + i + ib, ib,
+					A, strideA1, strideA2, offsetA + ((M - K + i) * strideA1),
+					T, 1, nb, 0,
+					A, strideA1, strideA2, offsetA,
+					WORK, 1, ldwork, offsetWORK
+				);
+			}
+		}
+		mu = M - K + i + nb;
+		nu = N - K + i + nb;
+	} else {
+		mu = M;
+		nu = N;
+	}
+
+	// Use unblocked code to factor the last or only block
+	if ( mu > 0 && nu > 0 ) {
+		dgerq2(
+			mu, nu,
+			A, strideA1, strideA2, offsetA,
+			TAU, strideTAU, offsetTAU,
+			WORK, strideWORK, offsetWORK
+		);
+	}
+
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = dgerqf;

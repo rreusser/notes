@@ -1,0 +1,42 @@
+
+    dlarnv.ndarray( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset )
+        Generates a vector of random numbers from a specified distribution
+
+        Parameters
+        ----------
+        idist: integer
+            idist.
+
+        iseed: Int32Array
+            input array.
+
+        strideISEED: integer
+            stride length for `iseed`.
+
+        offsetISEED: NonNegativeInteger
+            starting index for `iseed`.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `x`.
+
+        offset: NonNegativeInteger
+            starting index for `x`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

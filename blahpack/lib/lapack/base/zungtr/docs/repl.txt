@@ -1,6 +1,6 @@
 
     zungtr.ndarray( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
-        Generate unitary matrix Q from Hermitian tridiagonal reduction
+        Generate unitary matrix Q from zhetrd
 
         Parameters
         ----------

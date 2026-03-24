@@ -7,7 +7,7 @@
 */
 interface Routine {
 	/**
-	* Generate unitary matrix Q from Hermitian tridiagonal reduction
+	* Generate unitary matrix Q from zhetrd
 	*/
 	(
 		uplo: string,
@@ -27,7 +27,7 @@ interface Routine {
 }
 
 /**
-* Generate unitary matrix Q from Hermitian tridiagonal reduction
+* Generate unitary matrix Q from zhetrd
 */
 declare var zungtr: Routine;
 

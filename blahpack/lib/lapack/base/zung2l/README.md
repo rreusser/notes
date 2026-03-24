@@ -1,6 +1,6 @@
 # zung2l
 
-> Generate unitary matrix Q from QL factorization (unblocked)
+> Generate unitary matrix Q from QL reflectors
 
 <section class="usage">
 
@@ -12,7 +12,7 @@ var zung2l = require( '@stdlib/lapack/base/zung2l' );
 
 #### zung2l.ndarray( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK )
 
-Generate unitary matrix Q from QL factorization (unblocked)
+Generate unitary matrix Q from QL reflectors
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

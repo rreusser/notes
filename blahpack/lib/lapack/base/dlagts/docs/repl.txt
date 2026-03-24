@@ -1,0 +1,81 @@
+
+    dlagts.ndarray( job, N, a, strideA, offsetA, b, strideB, offsetB, c, strideC, offsetC, d, strideD, offsetD, IN, strideIN, offsetIN, y, strideY, offsetY, tol )
+        Solves a tridiagonal system factored by dlagtf
+
+        Parameters
+        ----------
+        job: integer
+            job.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        a: Float64Array
+            input array.
+
+        strideA: integer
+            stride length for `a`.
+
+        offsetA: NonNegativeInteger
+            starting index for `a`.
+
+        b: Float64Array
+            input array.
+
+        strideB: integer
+            stride length for `b`.
+
+        offsetB: NonNegativeInteger
+            starting index for `b`.
+
+        c: Float64Array
+            input array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: NonNegativeInteger
+            starting index for `c`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        IN: Int32Array
+            input array.
+
+        strideIN: integer
+            stride length for `IN`.
+
+        offsetIN: NonNegativeInteger
+            starting index for `IN`.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        tol: number
+            tol.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

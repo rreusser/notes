@@ -1,0 +1,72 @@
+
+    dlagtf.ndarray( N, a, strideA, offsetA, lambda, b, strideB, offsetB, c, strideC, offsetC, tol, d, strideD, offsetD, IN, strideIN, offsetIN )
+        Factorizes the matrix (T - lambda*I) where T is a tridiagonal matrix
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        a: Float64Array
+            input array.
+
+        strideA: integer
+            stride length for `a`.
+
+        offsetA: NonNegativeInteger
+            starting index for `a`.
+
+        lambda: number
+            lambda.
+
+        b: Float64Array
+            input array.
+
+        strideB: integer
+            stride length for `b`.
+
+        offsetB: NonNegativeInteger
+            starting index for `b`.
+
+        c: Float64Array
+            input array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: NonNegativeInteger
+            starting index for `c`.
+
+        tol: number
+            tol.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        IN: Int32Array
+            output array.
+
+        strideIN: integer
+            stride length for `IN`.
+
+        offsetIN: NonNegativeInteger
+            starting index for `IN`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

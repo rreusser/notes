@@ -1,6 +1,6 @@
 # zungtr
 
-> Generate unitary matrix Q from Hermitian tridiagonal reduction
+> Generate unitary matrix Q from zhetrd
 
 <section class="usage">
 
@@ -12,7 +12,7 @@ var zungtr = require( '@stdlib/lapack/base/zungtr' );
 
 #### zungtr.ndarray( uplo, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork )
 
-Generate unitary matrix Q from Hermitian tridiagonal reduction
+Generate unitary matrix Q from zhetrd
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

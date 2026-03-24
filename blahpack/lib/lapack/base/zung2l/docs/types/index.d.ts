@@ -7,7 +7,7 @@
 */
 interface Routine {
 	/**
-	* Generate unitary matrix Q from QL factorization (unblocked)
+	* Generate unitary matrix Q from QL reflectors
 	*/
 	(
 		M: number,
@@ -27,7 +27,7 @@ interface Routine {
 }
 
 /**
-* Generate unitary matrix Q from QL factorization (unblocked)
+* Generate unitary matrix Q from QL reflectors
 */
 declare var zung2l: Routine;
 
