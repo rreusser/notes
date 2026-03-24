@@ -113,7 +113,7 @@ function dsyrfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, s
 		return 0;
 	}
 
-	upper = ( uplo === 'U' );
+	upper = ( uplo === 'upper' );
 
 	// NZ = maximum number of nonzero elements in each row of A, plus 1
 	nz = N + 1;

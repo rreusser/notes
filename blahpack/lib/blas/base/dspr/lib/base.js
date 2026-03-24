@@ -23,9 +23,10 @@
 // MAIN //
 
 /**
-* Performs the symmetric rank-1 update `A := alpha*x*x^T + A` where `alpha` is
-* a scalar, `x` is an `N`-element vector, and `A` is an `N` by `N` symmetric
-* matrix supplied in packed form.
+* Performs the symmetric rank-1 update `A := alpha*x*x^T + A`.
+*
+* `alpha` is a scalar, `x` is an `N`-element vector, and `A` is an `N` by `N`
+* symmetric matrix supplied in packed form.
 *
 * @private
 * @param {string} uplo - specifies whether the upper or lower triangular part of `A` is packed

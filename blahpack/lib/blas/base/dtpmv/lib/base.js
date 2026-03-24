@@ -23,9 +23,10 @@
 // MAIN //
 
 /**
-* Performs one of the matrix-vector operations `x := A*x` or `x := A^T*x`
-* where x is an N element vector and A is an N by N unit or non-unit, upper
-* or lower triangular matrix, supplied in packed form.
+* Performs one of the matrix-vector operations `x := A*x` or `x := A^T*x`.
+*
+* `x` is an N element vector and A is an N by N unit or non-unit, upper or
+* lower triangular matrix, supplied in packed form.
 *
 * @private
 * @param {string} uplo - specifies whether the matrix is upper or lower triangular

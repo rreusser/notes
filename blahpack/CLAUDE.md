@@ -44,6 +44,7 @@ python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
 npm test                        # Run all JS tests
+bin/check-stub-tests.sh         # Check for scaffold-only test stubs
 bin/lint.sh lib/<path>/base.js  # Lint a single file
 bin/lint.sh lib/blas/base/*/lib/base.js lib/lapack/base/*/lib/base.js  # Lint all
 ```
@@ -253,7 +254,11 @@ node --test lib/<package>/base/<routine>/test/test.js
   arrays between cases in Fortran, or account for stale values in JS
   fixture comparison.
 
-**Gate:** All tests pass against Fortran fixtures.
+**Gate:** All tests pass against Fortran fixtures. The test file MUST have
+more than 2 `assert.*` calls — the scaffolded "is a function" checks do
+NOT count as tests. Run `bin/check-stub-tests.sh` to verify no scaffolded
+stubs remain. **Do not commit a test file that only has the scaffolded
+type-check assertions.**
 
 ### Step 6: Verify test coverage
 
@@ -359,9 +364,10 @@ sessions to avoid repeating mistakes.
 
 ```bash
 npm test
+bin/check-stub-tests.sh
 ```
 
-**Gate:** All tests pass, no regressions.
+**Gate:** All tests pass, no regressions, no scaffold-only test stubs.
 
 ---
 

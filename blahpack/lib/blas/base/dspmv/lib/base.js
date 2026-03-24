@@ -23,9 +23,10 @@
 // MAIN //
 
 /**
-* Performs the matrix-vector operation `y = alpha*A*x + beta*y` where `A` is an
-* `N` by `N` symmetric matrix supplied in packed form, `x` and `y` are
-* `N`-element vectors, and `alpha` and `beta` are scalars.
+* Performs the matrix-vector operation `y = alpha*A*x + beta*y`.
+*
+* `A` is an `N` by `N` symmetric matrix supplied in packed form, `x` and `y`
+* are `N`-element vectors, and `alpha` and `beta` are scalars.
 *
 * @private
 * @param {string} uplo - specifies whether the upper or lower triangular part of `A` is packed

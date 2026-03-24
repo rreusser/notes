@@ -23,9 +23,10 @@
 // MAIN //
 
 /**
-* Performs the matrix-vector operation `y := alpha*A*x + beta*y`, where alpha
-* and beta are scalars, x and y are N-element vectors, and A is an N-by-N
-* symmetric band matrix with K super-diagonals.
+* Performs the matrix-vector operation `y := alpha*A*x + beta*y`.
+*
+* Alpha and beta are scalars, x and y are N-element vectors, and A is an
+* N-by-N symmetric band matrix with K super-diagonals.
 *
 * Upper band storage: the diagonal is at row K, and element `A(i,j)` of the
 * full matrix is at band position `A_band[K+i-j, j]`.

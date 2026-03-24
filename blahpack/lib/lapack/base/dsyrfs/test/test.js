@@ -43,7 +43,7 @@ function residualCheck( uplo, N, A, x, b ) {
 /**
 * Helper: factorize symmetric matrix, solve, then refine.
 *
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - 'upper' or 'lower'
 * @param {number} N - matrix order
 * @param {number} nrhs - number of right-hand sides
 * @param {Float64Array} A - original symmetric matrix (column-major, N*N)
@@ -90,13 +90,13 @@ test( 'dsyrfs: upper_3x3 - single RHS', function t() {
 		1.0, 3.0, 6.0
 	]);
 	var b = new Float64Array([ 1.0, 2.0, 3.0 ]);
-	var result = solveAndRefine( 'U', 3, 1, A, b );
+	var result = solveAndRefine( 'upper', 3, 1, A, b );
 	var resid;
 
 	assert.equal( result.info, 0 );
 
 	// Verify A*x = b to high accuracy
-	resid = residualCheck( 'U', 3, A, result.x, b );
+	resid = residualCheck( 'upper', 3, A, result.x, b );
 	assert.ok( resid < 1e-14, 'residual should be near machine epsilon, got ' + resid );
 
 	// BERR and FERR should be very small
@@ -112,12 +112,12 @@ test( 'dsyrfs: lower_3x3 - single RHS', function t() {
 		0.0, 0.0, 6.0
 	]);
 	var b = new Float64Array([ 1.0, 2.0, 3.0 ]);
-	var result = solveAndRefine( 'L', 3, 1, A, b );
+	var result = solveAndRefine( 'lower', 3, 1, A, b );
 	var resid;
 
 	assert.equal( result.info, 0 );
 
-	resid = residualCheck( 'L', 3, A, result.x, b );
+	resid = residualCheck( 'lower', 3, A, result.x, b );
 	assert.ok( resid < 1e-14, 'residual should be near machine epsilon, got ' + resid );
 
 	assert.ok( result.berr[ 0 ] < 1e-13, 'berr should be tiny, got ' + result.berr[ 0 ] );
@@ -132,7 +132,7 @@ test( 'dsyrfs: multi_rhs - two right-hand sides', function t() {
 	]);
 	// b1 = [1;0;0], b2 = [0;1;0] stored column-major
 	var b = new Float64Array([ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ]);
-	var result = solveAndRefine( 'U', 3, 2, A, b );
+	var result = solveAndRefine( 'upper', 3, 2, A, b );
 	var x1 = new Float64Array( result.x.buffer, 0, 3 );
 	var x2 = new Float64Array( result.x.buffer, 3 * 8, 3 );
 	var b1 = new Float64Array([ 1.0, 0.0, 0.0 ]);
@@ -142,8 +142,8 @@ test( 'dsyrfs: multi_rhs - two right-hand sides', function t() {
 
 	assert.equal( result.info, 0 );
 
-	resid1 = residualCheck( 'U', 3, A, x1, b1 );
-	resid2 = residualCheck( 'U', 3, A, x2, b2 );
+	resid1 = residualCheck( 'upper', 3, A, x1, b1 );
+	resid2 = residualCheck( 'upper', 3, A, x2, b2 );
 	assert.ok( resid1 < 1e-14, 'residual for RHS 1: ' + resid1 );
 	assert.ok( resid2 < 1e-14, 'residual for RHS 2: ' + resid2 );
 
@@ -163,7 +163,7 @@ test( 'dsyrfs: N=0 quick return', function t() {
 	var X = new Float64Array( 1 );
 	var info;
 
-	info = dsyrfs( 'U', 0, 1, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0, X, 1, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
+	info = dsyrfs( 'upper', 0, 1, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0, X, 1, 1, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 	assert.equal( info, 0 );
 	assert.equal( FERR[ 0 ], 0.0, 'FERR should be zero for N=0' );
 	assert.equal( BERR[ 0 ], 0.0, 'BERR should be zero for N=0' );
@@ -181,14 +181,14 @@ test( 'dsyrfs: NRHS=0 quick return', function t() {
 	var X = new Float64Array( 3 );
 	var info;
 
-	info = dsyrfs( 'U', 3, 0, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
+	info = dsyrfs( 'upper', 3, 0, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
 test( 'dsyrfs: 1x1 system', function t() {
 	var A = new Float64Array([ 5.0 ]);
 	var b = new Float64Array([ 10.0 ]);
-	var result = solveAndRefine( 'U', 1, 1, A, b );
+	var result = solveAndRefine( 'upper', 1, 1, A, b );
 
 	assert.equal( result.info, 0 );
 	assert.ok( Math.abs( result.x[ 0 ] - 2.0 ) < 1e-14, 'x should be 2.0, got ' + result.x[ 0 ] );
@@ -203,12 +203,12 @@ test( 'dsyrfs: ill-conditioned Hilbert upper', function t() {
 		1.0 / 3.0, 0.25, 0.2
 	]);
 	var b = new Float64Array([ 1.0, 1.0, 1.0 ]);
-	var result = solveAndRefine( 'U', 3, 1, A, b );
+	var result = solveAndRefine( 'upper', 3, 1, A, b );
 	var resid;
 
 	assert.equal( result.info, 0 );
 
-	resid = residualCheck( 'U', 3, A, result.x, b );
+	resid = residualCheck( 'upper', 3, A, result.x, b );
 	assert.ok( resid < 1e-10, 'residual for Hilbert matrix: ' + resid );
 	assert.ok( result.ferr[ 0 ] < 1e-8, 'ferr should reflect ill-conditioning, got ' + result.ferr[ 0 ] );
 });
@@ -222,12 +222,12 @@ test( 'dsyrfs: lower with non-trivial pivoting (indefinite matrix)', function t(
 		0.0, 0.0, 0.0
 	]);
 	var b = new Float64Array([ 6.0, 5.0, 7.0 ]);
-	var result = solveAndRefine( 'L', 3, 1, A, b );
+	var result = solveAndRefine( 'lower', 3, 1, A, b );
 	var resid;
 
 	assert.equal( result.info, 0 );
 
-	resid = residualCheck( 'L', 3, A, result.x, b );
+	resid = residualCheck( 'lower', 3, A, result.x, b );
 	assert.ok( resid < 1e-13, 'residual for indefinite matrix: ' + resid );
 	assert.ok( result.berr[ 0 ] < 1e-13, 'berr: ' + result.berr[ 0 ] );
 });
@@ -256,12 +256,12 @@ test( 'dsyrfs: perturbed solution triggers iterative refinement', function t() {
 	}
 
 	// Factorize
-	info = dsytrf( 'U', 3, AF, 1, 3, 0, IPIV, 1, 0 );
+	info = dsytrf( 'upper', 3, AF, 1, 3, 0, IPIV, 1, 0 );
 	assert.equal( info, 0 );
 
 	// Solve
 	X[ 0 ] = b[ 0 ]; X[ 1 ] = b[ 1 ]; X[ 2 ] = b[ 2 ];
-	dsytrs( 'U', 3, 1, AF, 1, 3, 0, IPIV, 1, 0, X, 1, 3, 0 );
+	dsytrs( 'upper', 3, 1, AF, 1, 3, 0, IPIV, 1, 0, X, 1, 3, 0 );
 
 	// Perturb the solution to trigger iterative refinement
 	X[ 0 ] += 1e-8;
@@ -269,9 +269,9 @@ test( 'dsyrfs: perturbed solution triggers iterative refinement', function t() {
 	X[ 2 ] += 1e-8;
 
 	// Refine
-	info = dsyrfs( 'U', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, b, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
+	info = dsyrfs( 'upper', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, b, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 );
 
 	assert.equal( info, 0 );
-	resid = residualCheck( 'U', 3, A, X, b );
+	resid = residualCheck( 'upper', 3, A, X, b );
 	assert.ok( resid < 1e-14, 'refinement should recover accurate solution, residual: ' + resid );
 });

@@ -23,9 +23,10 @@
 // MAIN //
 
 /**
-* Performs one of the matrix-vector operations `x := A*x` or `x := A**T*x`
-* where x is an N element vector and A is an N by N unit or non-unit, upper
-* or lower triangular band matrix, with (K+1) diagonals.
+* Performs one of the matrix-vector operations `x := A*x` or `x := A**T*x`.
+*
+* `x` is an N element vector and A is an N by N unit or non-unit, upper or
+* lower triangular band matrix, with (K+1) diagonals.
 *
 * Band storage: for upper triangular, the j-th column of A is stored in the
 * j-th column of the band array, with diagonal at row K (0-based).

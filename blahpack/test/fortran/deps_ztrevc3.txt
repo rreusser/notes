@@ -1,0 +1,6 @@
+dlamch
+ieeeck
+ilaenv
+iparmq
+zlatrs
+ztrevc3

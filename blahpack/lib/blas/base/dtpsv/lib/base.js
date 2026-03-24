@@ -23,9 +23,10 @@
 // MAIN //
 
 /**
-* Solves one of the systems of equations `A*x = b` or `A^T*x = b` where `b`
-* and `x` are N element vectors and `A` is an N by N unit or non-unit, upper
-* or lower triangular matrix, supplied in packed form.
+* Solves one of the systems of equations `A*x = b` or `A^T*x = b`.
+*
+* `b` and `x` are N element vectors and `A` is an N by N unit or non-unit,
+* upper or lower triangular matrix, supplied in packed form.
 *
 * @private
 * @param {string} uplo - specifies whether the matrix is upper or lower triangular
@@ -98,46 +99,43 @@ function dtpsv( uplo, trans, diag, N, AP, strideAP, offsetAP, x, strideX, offset
 				kk += ( N - j ) * strideAP;
 			}
 		}
+	} else if ( uplo === 'upper' ) {
+		// Solve A^T*x = b, upper triangular, transpose: forward substitution
+		kk = offsetAP;
+		jx = offsetX;
+		for ( j = 0; j < N; j += 1 ) {
+			temp = x[ jx ];
+			ip = kk;
+			ix = offsetX;
+			for ( ; ip < kk + ( j * strideAP ); ip += strideAP ) {
+				temp -= AP[ ip ] * x[ ix ];
+				ix += strideX;
+			}
+			if ( nounit ) {
+				temp /= AP[ kk + ( j * strideAP ) ];
+			}
+			x[ jx ] = temp;
+			jx += strideX;
+			kk += ( j + 1 ) * strideAP;
+		}
 	} else {
-		// Solve A^T*x = b (trans = 'transpose' or 'conjugate-transpose')
-		if ( uplo === 'upper' ) {
-			// Upper triangular, transpose: forward substitution
-			kk = offsetAP;
-			jx = offsetX;
-			for ( j = 0; j < N; j += 1 ) {
-				temp = x[ jx ];
-				ip = kk;
-				ix = offsetX;
-				for ( ; ip < kk + ( j * strideAP ); ip += strideAP ) {
-					temp -= AP[ ip ] * x[ ix ];
-					ix += strideX;
-				}
-				if ( nounit ) {
-					temp /= AP[ kk + ( j * strideAP ) ];
-				}
-				x[ jx ] = temp;
-				jx += strideX;
-				kk += ( j + 1 ) * strideAP;
+		// Solve A^T*x = b, lower triangular, transpose: backward substitution
+		kk = offsetAP + ( ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP );
+		jx = offsetX + ( ( N - 1 ) * strideX );
+		for ( j = N - 1; j >= 0; j -= 1 ) {
+			temp = x[ jx ];
+			ip = kk;
+			ix = offsetX + ( ( N - 1 ) * strideX );
+			for ( ; ip > kk - ( ( N - j - 1 ) * strideAP ); ip -= strideAP ) {
+				temp -= AP[ ip ] * x[ ix ];
+				ix -= strideX;
 			}
-		} else {
-			// Lower triangular, transpose: backward substitution
-			kk = offsetAP + ( ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP );
-			jx = offsetX + ( ( N - 1 ) * strideX );
-			for ( j = N - 1; j >= 0; j -= 1 ) {
-				temp = x[ jx ];
-				ip = kk;
-				ix = offsetX + ( ( N - 1 ) * strideX );
-				for ( ; ip > kk - ( ( N - j - 1 ) * strideAP ); ip -= strideAP ) {
-					temp -= AP[ ip ] * x[ ix ];
-					ix -= strideX;
-				}
-				if ( nounit ) {
-					temp /= AP[ kk - ( ( N - j - 1 ) * strideAP ) ];
-				}
-				x[ jx ] = temp;
-				jx -= strideX;
-				kk -= ( N - j ) * strideAP;
+			if ( nounit ) {
+				temp /= AP[ kk - ( ( N - j - 1 ) * strideAP ) ];
 			}
+			x[ jx ] = temp;
+			jx -= strideX;
+			kk -= ( N - j ) * strideAP;
 		}
 	}
 	return x;

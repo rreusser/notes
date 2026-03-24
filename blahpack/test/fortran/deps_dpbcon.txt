@@ -1,0 +1,13 @@
+disnan
+dlacn2
+dlaisnan
+dlamch
+dlatbs
+dpbcon
+dpbtrf
+dpbtf2
+dpotf2
+drscl
+ieeeck
+ilaenv
+iparmq

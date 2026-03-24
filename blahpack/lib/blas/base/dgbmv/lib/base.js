@@ -23,8 +23,9 @@
 // MAIN //
 
 /**
-* Performs one of the matrix-vector operations `y := alpha*op(A)*x + beta*y`,
-* where `op(A) = A` or `op(A) = A^T`, alpha and beta are scalars, x and y are
+* Performs the matrix-vector operation `y := alpha*op(A)*x + beta*y`.
+*
+* `op(A) = A` or `op(A) = A^T`, alpha and beta are scalars, x and y are
 * vectors, and A is an M-by-N band matrix with `kl` sub-diagonals and `ku`
 * super-diagonals.
 *

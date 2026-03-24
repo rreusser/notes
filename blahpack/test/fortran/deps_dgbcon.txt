@@ -1,0 +1,11 @@
+dgbcon
+dgbtrf
+dgbtf2
+dlacn2
+dlamch
+dlaswp
+dlatbs
+drscl
+ieeeck
+ilaenv
+iparmq

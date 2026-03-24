@@ -1,0 +1,69 @@
+
+    dlatbs.ndarray( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, offsetAB, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM )
+        Solves a triangular banded system with scaling for overflow
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        normin: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        kd: integer
+            kd.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        scale: number
+            scale.
+
+        CNORM: Float64Array
+            output array.
+
+        strideCNORM: integer
+            stride length for `CNORM`.
+
+        offsetCNORM: NonNegativeInteger
+            starting index for `CNORM`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
