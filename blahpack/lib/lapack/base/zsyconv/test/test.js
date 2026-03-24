@@ -76,7 +76,7 @@ test( 'zsyconv: upper_convert (all 1x1 pivots)', function t() {
 	var Ev;
 	var info;
 
-	info = zsyconv( 'U', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'upper', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	Ev = reinterpret( E, 0 );
@@ -94,7 +94,7 @@ test( 'zsyconv: upper_revert (all 1x1 pivots)', function t() {
 	var Av;
 	var info;
 
-	info = zsyconv( 'U', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'upper', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	assertArrayClose( Array.from( Av ), tcRev.a_reverted, 1e-14, 'a_reverted' );
@@ -110,7 +110,7 @@ test( 'zsyconv: lower_convert (all 1x1 pivots)', function t() {
 	var Ev;
 	var info;
 
-	info = zsyconv( 'L', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'lower', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	Ev = reinterpret( E, 0 );
@@ -128,7 +128,7 @@ test( 'zsyconv: lower_revert (all 1x1 pivots)', function t() {
 	var Av;
 	var info;
 
-	info = zsyconv( 'L', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'lower', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	assertArrayClose( Array.from( Av ), tcRev.a_reverted, 1e-14, 'a_reverted' );
@@ -143,7 +143,7 @@ test( 'zsyconv: n1_upper', function t() {
 	var Ev;
 	var info;
 
-	info = zsyconv( 'U', 'C', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'upper', 'convert', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	Ev = reinterpret( E, 0 );
@@ -160,7 +160,7 @@ test( 'zsyconv: n1_lower', function t() {
 	var Ev;
 	var info;
 
-	info = zsyconv( 'L', 'C', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'lower', 'convert', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	Ev = reinterpret( E, 0 );
@@ -178,7 +178,7 @@ test( 'zsyconv: upper_2x2_convert (with 2x2 pivots)', function t() {
 	var Ev;
 	var info;
 
-	info = zsyconv( 'U', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'upper', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	Ev = reinterpret( E, 0 );
@@ -196,7 +196,7 @@ test( 'zsyconv: upper_2x2_revert (with 2x2 pivots)', function t() {
 	var Av;
 	var info;
 
-	info = zsyconv( 'U', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'upper', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	assertArrayClose( Array.from( Av ), tcRev.a_reverted, 1e-14, 'a_reverted' );
@@ -212,7 +212,7 @@ test( 'zsyconv: lower_2x2_convert (with 2x2 pivots)', function t() {
 	var Ev;
 	var info;
 
-	info = zsyconv( 'L', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'lower', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	Ev = reinterpret( E, 0 );
@@ -230,7 +230,7 @@ test( 'zsyconv: lower_2x2_revert (with 2x2 pivots)', function t() {
 	var Av;
 	var info;
 
-	info = zsyconv( 'L', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'lower', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	Av = reinterpret( A, 0 );
 	assertArrayClose( Array.from( Av ), tcRev.a_reverted, 1e-14, 'a_reverted' );
@@ -242,10 +242,10 @@ test( 'zsyconv: N=0 returns immediately', function t() {
 	var E = new Complex128Array( 0 );
 	var info;
 
-	info = zsyconv( 'U', 'C', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'upper', 'convert', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info upper convert' );
 
-	info = zsyconv( 'L', 'R', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = zsyconv( 'lower', 'revert', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info lower revert' );
 });
 
@@ -259,8 +259,8 @@ test( 'zsyconv: round-trip upper convert then revert restores A', function t() {
 	var Av;
 	var AorigV;
 
-	zsyconv( 'U', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
-	zsyconv( 'U', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	zsyconv( 'upper', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	zsyconv( 'upper', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	Av = reinterpret( A, 0 );
 	AorigV = reinterpret( Aorig, 0 );
 	assertArrayClose( Array.from( Av ), Array.from( AorigV ), 1e-14, 'round-trip' );
@@ -276,8 +276,8 @@ test( 'zsyconv: round-trip lower convert then revert restores A', function t() {
 	var Av;
 	var AorigV;
 
-	zsyconv( 'L', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
-	zsyconv( 'L', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	zsyconv( 'lower', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	zsyconv( 'lower', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	Av = reinterpret( A, 0 );
 	AorigV = reinterpret( Aorig, 0 );
 	assertArrayClose( Array.from( Av ), Array.from( AorigV ), 1e-14, 'round-trip' );

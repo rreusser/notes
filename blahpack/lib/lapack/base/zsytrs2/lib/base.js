@@ -119,7 +119,7 @@ function zsytrs2( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 	var i;
 	var j;
 
-	upper = ( uplo === 'U' );
+	upper = ( uplo === 'upper' );
 
 	// Quick return
 	if ( N === 0 || nrhs === 0 ) {
@@ -143,7 +143,7 @@ function zsytrs2( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 
 	// Step 1: Convert factorization. zsyconv extracts off-diagonal elements
 	// of D into WORK and permutes the triangular factor rows/columns.
-	zsyconv( uplo, 'C', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
+	zsyconv( uplo, 'convert', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
 
 	if ( upper ) {
 		// ============================================================
@@ -379,7 +379,7 @@ function zsytrs2( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 	}
 
 	// Step 7: Revert factorization (restore A to original form)
-	zsyconv( uplo, 'R', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
+	zsyconv( uplo, 'revert', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
 
 	return 0;
 }

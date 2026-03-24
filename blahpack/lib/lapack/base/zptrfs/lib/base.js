@@ -145,7 +145,7 @@ function zptrfs( uplo, N, nrhs, d, strideD, offsetD, e, strideE, offsetE, DF, st
 		return 0;
 	}
 
-	upper = ( uplo === 'U' || uplo === 'u' );
+	upper = ( uplo === 'upper' );
 
 	// Get Float64 views of complex arrays:
 	ev = reinterpret( e, 0 );

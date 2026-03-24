@@ -128,7 +128,7 @@ test( 'dgeev: N=0 returns immediately', function t() {
 	var VR = new Float64Array( 1 );
 	var info;
 
-	info = dgeev( 'V', 'V', 0, A, 1, 0, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0 );
+	info = dgeev( 'compute-vectors', 'compute-vectors', 0, A, 1, 0, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -140,7 +140,7 @@ test( 'dgeev: N=1 scalar eigenvalue', function t() {
 	var VR = new Float64Array( 1 );
 	var info;
 
-	info = dgeev( 'V', 'V', 1, A, 1, 1, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0 );
+	info = dgeev( 'compute-vectors', 'compute-vectors', 1, A, 1, 1, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0 );
 	assert.equal( info, 0 );
 	assert.equal( WR[ 0 ], 7.5 );
 	assert.equal( WI[ 0 ], 0.0 );
@@ -167,7 +167,7 @@ test( 'dgeev: 4x4 diagonal matrix (all real eigenvalues)', function t() {
 	var i;
 	var resid;
 
-	info = dgeev( 'V', 'V', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
+	info = dgeev( 'compute-vectors', 'compute-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
 	assert.equal( info, 0, 'info should be 0' );
 
 	// All imaginary parts should be zero
@@ -209,7 +209,7 @@ test( 'dgeev: 4x4 with complex conjugate eigenvalue pairs', function t() {
 	var i;
 	var resid;
 
-	info = dgeev( 'V', 'V', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
+	info = dgeev( 'compute-vectors', 'compute-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
 	assert.equal( info, 0, 'info should be 0' );
 
 	expected = sortedEigenvalues( [ 0, 0, 0, 0 ], [ -2, -1, 1, 2 ], n );
@@ -250,7 +250,7 @@ test( 'dgeev: eigenvalues only (JOBVL=N, JOBVR=N)', function t() {
 	var actual;
 	var i;
 
-	info = dgeev( 'N', 'N', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0 );
+	info = dgeev( 'no-vectors', 'no-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0 );
 	assert.equal( info, 0, 'info should be 0' );
 
 	expected = sortedEigenvalues( [ -1, 1, 1, 2 ], [ 0, -1, 1, 0 ], n );
@@ -281,7 +281,7 @@ test( 'dgeev: right eigenvectors only (JOBVR=V)', function t() {
 	var i;
 	var resid;
 
-	info = dgeev( 'N', 'V', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, n, 0 );
+	info = dgeev( 'no-vectors', 'compute-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, 1, 0, VR, 1, n, 0 );
 	assert.equal( info, 0, 'info should be 0' );
 
 	expected = sortedEigenvalues( [ 1, 4, 6 ], [ 0, 0, 0 ], n );
@@ -313,7 +313,7 @@ test( 'dgeev: left eigenvectors only (JOBVL=V)', function t() {
 	var i;
 	var nrm;
 
-	info = dgeev( 'V', 'N', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, 1, 0 );
+	info = dgeev( 'compute-vectors', 'no-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, 1, 0 );
 	assert.equal( info, 0, 'info should be 0' );
 
 	expected = sortedEigenvalues( [ 1, 4, 6 ], [ 0, 0, 0 ], n );
@@ -347,7 +347,7 @@ test( 'dgeev: mixed real and complex eigenvalues', function t() {
 	var i;
 	var resid;
 
-	info = dgeev( 'V', 'V', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
+	info = dgeev( 'compute-vectors', 'compute-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
 	assert.equal( info, 0 );
 
 	expected = sortedEigenvalues( [ 0, 0, 1, 2 ], [ -1, 1, 0, 0 ], n );
@@ -389,7 +389,7 @@ test( 'dgeev: general non-symmetric 3x3', function t() {
 	var i;
 	var resid;
 
-	info = dgeev( 'V', 'V', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
+	info = dgeev( 'compute-vectors', 'compute-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
 	assert.equal( info, 0 );
 
 	expected = sortedEigenvalues( [ 1, 2, 3 ], [ 0, 0, 0 ], n );
@@ -419,7 +419,7 @@ test( 'dgeev: 2x2 with complex eigenvalues', function t() {
 	var info;
 	var resid;
 
-	info = dgeev( 'V', 'V', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
+	info = dgeev( 'compute-vectors', 'compute-vectors', n, A, 1, n, 0, WR, 1, 0, WI, 1, 0, VL, 1, n, 0, VR, 1, n, 0 );
 	assert.equal( info, 0 );
 
 	assert.ok( Math.abs( WR[ 0 ] - 1.0 ) < 1e-12, 'WR[0] = 1' );

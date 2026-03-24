@@ -131,13 +131,13 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	minmn = Math.min( M, N );
 
 	// Decode job flags
-	wntua = ( jobu === 'A' || jobu === 'all-columns' );
-	wntus = ( jobu === 'S' || jobu === 'economy' );
-	wntuo = ( jobu === 'O' || jobu === 'overwrite' );
-	wntun = ( jobu === 'N' || jobu === 'none' );
-	wntva = ( jobvt === 'A' || jobvt === 'all-rows' );
-	wntvs = ( jobvt === 'S' || jobvt === 'economy' );
-	wntvo = ( jobvt === 'O' || jobvt === 'overwrite' );
+	wntua = ( jobu === 'all-columns' );
+	wntus = ( jobu === 'economy' );
+	wntuo = ( jobu === 'overwrite' );
+	wntun = ( jobu === 'none' );
+	wntva = ( jobvt === 'all-rows' );
+	wntvs = ( jobvt === 'economy' );
+	wntvo = ( jobvt === 'overwrite' );
 	wntuas = wntua || wntus;
 	wntvas = wntva || wntvs;
 
@@ -237,7 +237,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 			// If right singular vectors desired in VT, copy them there
 			if ( wntvas ) {
-				zlacpy( 'F', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
+				zlacpy( 'full', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 			}
 		} else {
 			// Path 10: direct bidiagonal reduction (M >= N, but M not much larger)

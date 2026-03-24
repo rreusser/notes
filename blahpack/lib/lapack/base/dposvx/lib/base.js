@@ -50,17 +50,17 @@ var BIGNUM = 1.0 / SMLNUM;
 * refinement, and error bounds.
 *
 * FACT controls whether to factor, equilibrate+factor, or use pre-factored:
-*   'N' - factor A, no equilibration
-*   'E' - equilibrate if needed, then factor
-*   'F' - use pre-factored AF (and pre-computed S if equilibrated)
+*   'not-factored' - factor A, no equilibration
+*   'equilibrate' - equilibrate if needed, then factor
+*   'factored' - use pre-factored AF (and pre-computed S if equilibrated)
 *
 * UPLO specifies whether the upper or lower triangle of A is stored:
 *   'upper' - upper triangle
 *   'lower' - lower triangle
 *
-* EQUED (input if FACT='F', output otherwise):
-*   'N' - no equilibration
-*   'Y' - equilibration was done (A replaced by diag(S)*A*diag(S))
+* EQUED (input if FACT='factored', output otherwise):
+*   'none' - no equilibration
+*   'yes' - equilibration was done (A replaced by diag(S)*A*diag(S))
 *
 * Returns { info, equed, rcond } where:
 *   info: 0=success, i (1-based)=leading minor not positive definite, N+1=singular to working precision
@@ -68,7 +68,7 @@ var BIGNUM = 1.0 / SMLNUM;
 *   rcond: reciprocal condition number estimate
 *
 * @private
-* @param {string} fact - 'N', 'E', or 'F'
+* @param {string} fact - 'not-factored', 'equilibrate', or 'factored'
 * @param {string} uplo - 'upper' or 'lower'
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
@@ -80,8 +80,8 @@ var BIGNUM = 1.0 / SMLNUM;
 * @param {integer} strideAF1 - stride of the first dimension of AF
 * @param {integer} strideAF2 - stride of the second dimension of AF
 * @param {NonNegativeInteger} offsetAF - index offset for AF
-* @param {string} equed - equilibration type (input if FACT='F')
-* @param {Float64Array} s - scaling factors (input if FACT='F' and equed='Y', output if FACT='E')
+* @param {string} equed - equilibration type (input if FACT='factored')
+* @param {Float64Array} s - scaling factors (input if FACT='factored' and equed='yes', output if FACT='equilibrate')
 * @param {integer} strideS - stride for s
 * @param {NonNegativeInteger} offsetS - index offset for s
 * @param {Float64Array} B - N-by-NRHS right-hand side (may be scaled on exit)
@@ -116,24 +116,20 @@ function dposvx( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, stride
 	var smax;
 	var smin;
 	var info;
-	var upc;
 	var db;
 	var dx;
 	var eq;
 	var i;
 	var j;
 
-	nofact = ( fact === 'N' );
-	equil = ( fact === 'E' );
-
-	// Single-char uplo for dpoequ/dlaqsy (which use Fortran convention)
-	upc = ( uplo === 'upper' ) ? 'U' : 'L';
+	nofact = ( fact === 'not-factored' );
+	equil = ( fact === 'equilibrate' );
 
 	if ( nofact || equil ) {
-		equed = 'N';
+		equed = 'none';
 		rcequ = false;
 	} else {
-		rcequ = ( equed === 'Y' );
+		rcequ = ( equed === 'yes' );
 		if ( rcequ ) {
 			smin = BIGNUM;
 			smax = 0.0;
@@ -160,8 +156,8 @@ function dposvx( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, stride
 
 		if ( eq.info === 0 ) {
 			// Equilibrate the matrix
-			equed = dlaqsy( upc, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, eq.scond, eq.amax );
-			rcequ = ( equed === 'Y' );
+			equed = dlaqsy( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, eq.scond, eq.amax );
+			rcequ = ( equed === 'yes' );
 			if ( rcequ ) {
 				scond = eq.scond;
 			}

@@ -84,7 +84,7 @@ test( 'dgees: NN basic 3x3 tri', function t() {
 		0, 1, 4, 0,
 		0, 0, 0, 0
 	], N, 4 );
-	var res = runDgees( 'N', 'N', selectNone, N, A );
+	var res = runDgees( 'no-vectors', 'no-sort', selectNone, N, A );
 
 	assert.equal( res.info, tc.info );
 	assert.equal( res.sdim, tc.SDIM );
@@ -101,7 +101,7 @@ test( 'dgees: VN 3x3 general', function t() {
 		3, 6, 0, 0,
 		0, 0, 0, 0
 	], N, 4 );
-	var res = runDgees( 'V', 'N', selectNone, N, A );
+	var res = runDgees( 'compute-vectors', 'no-sort', selectNone, N, A );
 
 	assert.equal( res.info, tc.info );
 	assert.equal( res.sdim, tc.SDIM );
@@ -120,7 +120,7 @@ test( 'dgees: VS select positive real', function t() {
 		0, 0, 2, 0,
 		0, 0, 0, 0
 	], N, 4 );
-	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+	var res = runDgees( 'compute-vectors', 'sort', selectPosReal, N, A );
 
 	assert.equal( res.info, tc.info );
 	assert.equal( res.sdim, tc.SDIM );
@@ -137,7 +137,7 @@ test( 'dgees: N=0', function t() {
 	var WORK = new Float64Array( 200 );
 	var BWORK = new Uint8Array( 0 );
 
-	var info = dgees( 'N', 'N', selectNone, 0, A, 1, 0, 0, sdim, WR, 1, 0, WI, 1, 0, VS, 1, 0, 0, WORK, 1, 0, 200, BWORK, 1, 0 );
+	var info = dgees( 'no-vectors', 'no-sort', selectNone, 0, A, 1, 0, 0, sdim, WR, 1, 0, WI, 1, 0, VS, 1, 0, 0, WORK, 1, 0, 200, BWORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assert.equal( sdim[ 0 ], tc.SDIM );
@@ -147,7 +147,7 @@ test( 'dgees: N=1', function t() {
 	var tc = findCase( 'N=1' );
 	var N = 1;
 	var A = new Float64Array([ 5.0 ]);
-	var res = runDgees( 'V', 'N', selectNone, N, A );
+	var res = runDgees( 'compute-vectors', 'no-sort', selectNone, N, A );
 
 	assert.equal( res.info, tc.info );
 	assertClose( res.WR[ 0 ], 5.0, 1e-12, 'WR[0]' );
@@ -162,7 +162,7 @@ test( 'dgees: N=2 complex eigs', function t() {
 		0.0, -1.0,
 		1.0, 0.0
 	]);
-	var res = runDgees( 'V', 'N', selectNone, N, A );
+	var res = runDgees( 'compute-vectors', 'no-sort', selectNone, N, A );
 
 	assert.equal( res.info, tc.info );
 	assertClose( res.WR[ 0 ], 0.0, 1e-12, 'WR[0]' );
@@ -181,7 +181,7 @@ test( 'dgees: VN 4x4 general', function t() {
 		2, 1, 1, 1,
 		0, 1, 0, 2
 	], N, N );
-	var res = runDgees( 'V', 'N', selectNone, N, A );
+	var res = runDgees( 'compute-vectors', 'no-sort', selectNone, N, A );
 
 	assert.equal( res.info, tc.info );
 
@@ -205,7 +205,7 @@ test( 'dgees: verify Schur decomposition A = Z*T*Z^T', function t() {
 	var WORK = new Float64Array( 200 );
 	var BWORK = new Uint8Array( N );
 
-	var info = dgees( 'V', 'N', selectNone, N, A, 1, N, 0, sdim, WR, 1, 0, WI, 1, 0, VS, 1, N, 0, WORK, 1, 0, 200, BWORK, 1, 0 );
+	var info = dgees( 'compute-vectors', 'no-sort', selectNone, N, A, 1, N, 0, sdim, WR, 1, 0, WI, 1, 0, VS, 1, N, 0, WORK, 1, 0, 200, BWORK, 1, 0 );
 	assert.equal( info, 0 );
 
 	// Verify: Z^T * Aorig * Z ~= T
@@ -250,7 +250,7 @@ test( 'dgees: SORT=S with select that triggers eigenvalue reordering', function 
 		0, 0, 3, 0,
 		0, 0, 0, -1
 	]);
-	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+	var res = runDgees( 'compute-vectors', 'sort', selectPosReal, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	// selectPosReal selects eigenvalues with wr > 0.
@@ -279,7 +279,7 @@ test( 'dgees: SORT=S with larger 5x5 matrix and multiple selected eigenvalues', 
 		0, 0, 1, 2, 0,
 		0, 0, 0, 1, 5
 	]);
-	res = runDgees( 'V', 'S', selectLargeReal, N, A );
+	res = runDgees( 'compute-vectors', 'sort', selectLargeReal, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	// selectLargeReal selects eigenvalues with wr > 1.0, which are 2 and 5
@@ -309,7 +309,7 @@ test( 'dgees: SORT=S with SDIM verification for complex conjugate pair', functio
 		0, 0, 3, 0,
 		0, 0, 0, -2
 	]);
-	res = runDgees( 'V', 'S', selectAll, N, A );
+	res = runDgees( 'compute-vectors', 'sort', selectAll, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	assert.equal( res.sdim, 4, 'sdim should be 4 when all eigenvalues selected' );
@@ -322,7 +322,7 @@ test( 'dgees: SORT=S with select returning false for all (sdim=0)', function t()
 		1, 3, 0,
 		0, 1, 4
 	]);
-	var res = runDgees( 'V', 'S', selectNone, N, A );
+	var res = runDgees( 'compute-vectors', 'sort', selectNone, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	assert.equal( res.sdim, 0, 'sdim should be 0' );
@@ -335,7 +335,7 @@ test( 'dgees: JOBVS=N with SORT=S', function t() {
 		1, 3, 0,
 		0, 1, 4
 	]);
-	var res = runDgees( 'N', 'S', selectPosReal, N, A );
+	var res = runDgees( 'no-vectors', 'sort', selectPosReal, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	assert.ok( res.sdim >= 0, 'sdim should be non-negative' );
@@ -349,7 +349,7 @@ test( 'dgees: very small matrix elements trigger scaling path (anrm < SMLNUM)', 
 		1 * scale, 3 * scale, 0,
 		0, 1 * scale, 4 * scale
 	]);
-	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+	var res = runDgees( 'compute-vectors', 'sort', selectPosReal, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	// Eigenvalues should be 2*scale, 3*scale, 4*scale (all positive)
@@ -368,7 +368,7 @@ test( 'dgees: very large matrix elements trigger scaling path (anrm > BIGNUM)', 
 		1 * scale, 3 * scale, 0,
 		0, 1 * scale, 4 * scale
 	]);
-	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+	var res = runDgees( 'compute-vectors', 'sort', selectPosReal, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	assert.equal( res.sdim, 3, 'all eigenvalues positive' );
@@ -392,7 +392,7 @@ test( 'dgees: 6x6 matrix to exercise larger dimension paths', function t() {
 		A[ ( i + 1 ) + i * N ] = 0.5; // subdiagonal
 	}
 
-	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+	var res = runDgees( 'compute-vectors', 'sort', selectPosReal, N, A );
 
 	assert.equal( res.info, 0, 'info should be 0' );
 	// All eigenvalues should be positive for this matrix

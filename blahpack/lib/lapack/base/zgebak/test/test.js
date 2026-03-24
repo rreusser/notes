@@ -117,7 +117,7 @@ test( 'zgebak: JOB=B, SIDE=R — right eigenvectors with full back-transform', f
 	var scale = new Float64Array( tc.scale );
 	var V = makeIdentityV( N, M, LDV );
 
-	info = zgebak( 'B', 'R', N, tc.ilo, tc.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
+	info = zgebak( 'both', 'right', N, tc.ilo, tc.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -134,7 +134,7 @@ test( 'zgebak: JOB=B, SIDE=L — left eigenvectors with full back-transform', fu
 	var scale = new Float64Array( tcR.scale );
 	var V = makeIdentityV( N, M, LDV );
 
-	var info = zgebak( 'B', 'L', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'both', 'left', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -151,7 +151,7 @@ test( 'zgebak: JOB=S, SIDE=R — scaling only', function t() {
 	var scale = new Float64Array( tcR.scale );
 	var V = makeIdentityV( N, M, LDV );
 
-	var info = zgebak( 'S', 'R', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'scale', 'right', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -168,7 +168,7 @@ test( 'zgebak: JOB=P, SIDE=R — permutation only', function t() {
 	var scale = new Float64Array( tcR.scale );
 	var V = makeIdentityV( N, M, LDV );
 
-	var info = zgebak( 'P', 'R', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'permute', 'right', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -184,7 +184,7 @@ test( 'zgebak: JOB=N — no-op, returns immediately', function t() {
 	var V = makeIdentityV( N, M, LDV );
 	var Vbefore = extractV( V, N, M, LDV );
 
-	var info = zgebak( 'N', 'R', N, 1, 4, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'none', 'right', N, 1, 4, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -195,7 +195,7 @@ test( 'zgebak: N=0 — quick return', function t() {
 	var scale = new Float64Array( 0 );
 	var V = new Complex128Array( 0 );
 
-	var info = zgebak( 'B', 'R', 0, 1, 0, scale, 1, 0, 0, V, 1, 1, 0 );
+	var info = zgebak( 'both', 'right', 0, 1, 0, scale, 1, 0, 0, V, 1, 1, 0 );
 
 	assert.equal( info, 0 );
 });
@@ -204,7 +204,7 @@ test( 'zgebak: M=0 — quick return', function t() {
 	var scale = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var V = new Complex128Array( 0 );
 
-	var info = zgebak( 'B', 'R', 4, 1, 4, scale, 1, 0, 0, V, 1, 4, 0 );
+	var info = zgebak( 'both', 'right', 4, 1, 4, scale, 1, 0, 0, V, 1, 4, 0 );
 
 	assert.equal( info, 0 );
 });
@@ -225,7 +225,7 @@ test( 'zgebak: ILO=IHI — skips scaling, does permutation only', function t() {
 	];
 	var V = makeV( Vdata, N, M, LDV );
 
-	var info = zgebak( 'B', 'R', N, 2, 2, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'both', 'right', N, 2, 2, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -251,7 +251,7 @@ test( 'zgebak: JOB=S, SIDE=L — left eigenvectors, scaling only', function t() 
 	var V = makeV( Vdata, N, M, LDV );
 
 	// ILO/IHI from the balance step (same matrix)
-	var info = zgebak( 'S', 'L', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'scale', 'left', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -268,7 +268,7 @@ test( 'zgebak: JOB=P, SIDE=L — left eigenvectors, permutation only', function 
 	var scale = new Float64Array( tcR.scale );
 	var V = makeIdentityV( N, M, LDV );
 
-	var info = zgebak( 'P', 'L', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'permute', 'left', N, tcR.ilo, tcR.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );
@@ -293,7 +293,7 @@ test( 'zgebak: non-identity V with JOB=B, SIDE=R', function t() {
 	];
 	var V = makeV( Vdata, N, M, LDV );
 
-	var info = zgebak( 'B', 'R', N, tcFirst.ilo, tcFirst.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
+	var info = zgebak( 'both', 'right', N, tcFirst.ilo, tcFirst.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );
 	var actual = extractV( V, N, M, LDV );

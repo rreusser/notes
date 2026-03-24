@@ -28,7 +28,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 // VARIABLES //
 
 var THRESH = 0.1;
-var SMALL = dlamch( 'S' ) / dlamch( 'E' );
+var SMALL = dlamch( 'safe-minimum' ) / dlamch( 'epsilon' );
 var LARGE = 1.0 / SMALL;
 
 
@@ -65,16 +65,16 @@ function dlaqsy( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, s
 
 	// Quick return if possible
 	if ( N <= 0 ) {
-		return 'N';
+		return 'none';
 	}
 
 	// Check whether equilibration is needed
 	if ( scond >= THRESH && amax >= SMALL && amax <= LARGE ) {
-		return 'N';
+		return 'none';
 	}
 
 	// Equilibrate the matrix
-	if ( uplo === 'U' ) {
+	if ( uplo === 'upper' ) {
 		// Upper triangle
 		for ( j = 0; j < N; j++ ) {
 			cj = s[ offsetS + ( j * strideS ) ];
@@ -94,7 +94,7 @@ function dlaqsy( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, s
 		}
 	}
 
-	return 'Y';
+	return 'yes';
 }
 
 

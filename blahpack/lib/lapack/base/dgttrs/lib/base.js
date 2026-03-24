@@ -70,7 +70,7 @@ function dgttrs( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU
 	}
 
 	// Decode TRANS
-	if ( trans === 'N' || trans === 'n' ) {
+	if ( trans === 'no-transpose' ) {
 		itrans = 0;
 	} else {
 		itrans = 1;

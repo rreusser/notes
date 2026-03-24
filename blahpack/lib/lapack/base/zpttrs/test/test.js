@@ -49,7 +49,7 @@ test( 'zpttrs: upper_n4_nrhs1 (UPLO=U, N=4, NRHS=1)', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'U', 4, 1, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
+	info = zpttrs( 'upper', 4, 1, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -63,7 +63,7 @@ test( 'zpttrs: lower_n4_nrhs1 (UPLO=L, N=4, NRHS=1)', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'L', 4, 1, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
+	info = zpttrs( 'lower', 4, 1, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -81,7 +81,7 @@ test( 'zpttrs: upper_n4_nrhs3 (UPLO=U, N=4, NRHS=3)', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'U', 4, 3, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
+	info = zpttrs( 'upper', 4, 3, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -99,7 +99,7 @@ test( 'zpttrs: lower_n4_nrhs3 (UPLO=L, N=4, NRHS=3)', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'L', 4, 3, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
+	info = zpttrs( 'lower', 4, 3, d, 1, 0, e, 1, 0, B, 1, 4, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -113,7 +113,7 @@ test( 'zpttrs: n_eq_1 (N=1, NRHS=1)', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'U', 1, 1, d, 1, 0, e, 1, 0, B, 1, 1, 0 );
+	info = zpttrs( 'upper', 1, 1, d, 1, 0, e, 1, 0, B, 1, 1, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -127,7 +127,7 @@ test( 'zpttrs: n_eq_0 (N=0, quick return)', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'U', 0, 1, d, 1, 0, e, 1, 0, B, 1, 1, 0 );
+	info = zpttrs( 'upper', 0, 1, d, 1, 0, e, 1, 0, B, 1, 1, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -141,7 +141,7 @@ test( 'zpttrs: nrhs_eq_0 (NRHS=0, quick return)', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'U', 2, 0, d, 1, 0, e, 1, 0, B, 1, 2, 0 );
+	info = zpttrs( 'upper', 2, 0, d, 1, 0, e, 1, 0, B, 1, 2, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -156,7 +156,7 @@ test( 'zpttrs: non-unit strides and offsets', function t() {
 	var info;
 	var bv;
 
-	info = zpttrs( 'U', 4, 1, d, 1, 1, e, 1, 1, B, 1, 4, 0 );
+	info = zpttrs( 'upper', 4, 1, d, 1, 1, e, 1, 1, B, 1, 4, 0 );
 	bv = reinterpret( B, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( bv ), tc.b, 1e-14, 'b' );
@@ -168,6 +168,6 @@ test( 'zpttrs: returns 0 (info)', function t() {
 	var B = new Complex128Array( [ 2.0, 1.0, 3.0, -1.0 ] );
 	var info;
 
-	info = zpttrs( 'L', 2, 1, d, 1, 0, e, 1, 0, B, 1, 2, 0 );
+	info = zpttrs( 'lower', 2, 1, d, 1, 0, e, 1, 0, B, 1, 2, 0 );
 	assert.equal( info, 0 );
 });

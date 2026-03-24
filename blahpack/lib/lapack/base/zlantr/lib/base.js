@@ -79,13 +79,13 @@ function zlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, s
 	sa2 = strideA2 * 2;
 	oA = offsetA * 2;
 
-	udiag = ( diag === 'U' );
+	udiag = ( diag === 'unit' );
 
 	if ( norm === 'max' ) {
 		// Find max(abs(A(i,j)))
 		if ( udiag ) {
 			value = 1.0;
-			if ( uplo === 'U' ) {
+			if ( uplo === 'upper' ) {
 				for ( j = 0; j < N; j++ ) {
 					ai = oA + ( j * sa2 );
 					// i from 0 to min(M, j) - 1 (i.e. rows above the diagonal)
@@ -112,7 +112,7 @@ function zlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, s
 			}
 		} else {
 			value = 0.0;
-			if ( uplo === 'U' ) {
+			if ( uplo === 'upper' ) {
 				for ( j = 0; j < N; j++ ) {
 					ai = oA + ( j * sa2 );
 					// i from 0 to min(M, j+1) - 1 (includes diagonal)
@@ -141,7 +141,7 @@ function zlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, s
 	} else if ( norm === 'one-norm' ) {
 		// One-norm: maximum column sum of abs values
 		value = 0.0;
-		if ( uplo === 'U' ) {
+		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
 				if ( udiag && j < M ) {
 					// Unit diagonal: start sum at 1.0, skip diagonal element
@@ -188,7 +188,7 @@ function zlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, s
 		}
 	} else if ( norm === 'inf-norm' ) {
 		// Infinity-norm: maximum row sum of abs values
-		if ( uplo === 'U' ) {
+		if ( uplo === 'upper' ) {
 			if ( udiag ) {
 				for ( i = 0; i < M; i++ ) {
 					WORK[ offsetWORK + ( i * strideWORK ) ] = 1.0;
@@ -254,7 +254,7 @@ function zlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, s
 		}
 	} else if ( norm === 'frobenius' ) {
 		// Frobenius norm using zlassq per column
-		if ( uplo === 'U' ) {
+		if ( uplo === 'upper' ) {
 			if ( udiag ) {
 				scale = 1.0;
 				sum = mn; // min(M,N) unit diagonal elements, each with |1|^2 = 1

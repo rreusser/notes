@@ -62,7 +62,7 @@ function dstev( jobz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, 
 	var info;
 	var imax;
 
-	wantz = ( jobz === 'V' );
+	wantz = ( jobz === 'compute-vectors' );
 
 	// Quick return if possible
 	if ( N === 0 ) {

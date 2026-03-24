@@ -120,7 +120,7 @@ test( 'zlasyf: 4x4 upper, nb=4', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'upper', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -151,7 +151,7 @@ test( 'zlasyf: 4x4 lower, nb=4', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'lower', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -179,7 +179,7 @@ test( 'zlasyf: 3x3 upper, nb=2 (partial panel)', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'upper', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -198,7 +198,7 @@ test( 'zlasyf: 1x1 upper', function t() {
 	var A = new Complex128Array( [ 7, 3 ] );
 	var W = new Complex128Array( 1 );
 	var IPIV = new Int32Array( 1 );
-	result = zlasyf( 'U', 1, 1, A, 1, 1, 0, IPIV, 1, 0, W, 1, 1, 0 );
+	result = zlasyf( 'upper', 1, 1, A, 1, 1, 0, IPIV, 1, 0, W, 1, 1, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, 1 );
@@ -222,7 +222,7 @@ test( 'zlasyf: 2x2 upper with pivot', function t() {
 
 	var W = new Complex128Array( N * 2 );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'U', N, 2, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'upper', N, 2, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -252,7 +252,7 @@ test( 'zlasyf: 3x3 lower', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'lower', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -287,7 +287,7 @@ test( 'zlasyf: 8x8 upper, nb=4 (blocked loop)', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'upper', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -322,7 +322,7 @@ test( 'zlasyf: 8x8 lower, nb=4 (blocked loop)', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'lower', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -355,7 +355,7 @@ test( 'zlasyf: 6x6 upper, nb=2', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'upper', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -388,7 +388,7 @@ test( 'zlasyf: 6x6 lower, nb=2', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'lower', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -420,7 +420,7 @@ test( 'zlasyf: 5x5 upper with 2x2 pivot', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'upper', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );
@@ -452,7 +452,7 @@ test( 'zlasyf: 5x5 lower with 2x2 pivot', function t() {
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
-	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	result = zlasyf( 'lower', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
 	assert.strictEqual( result.info, tc.info );
 	assert.strictEqual( result.kb, tc.kb );
 	expectedA = extractA( tc.A, N );

@@ -236,7 +236,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 				// Copy right singular vectors to VT if desired
 				if ( wntvas ) {
-					dlacpy( 'F', N, N, A, sa1, sa2, offsetA,
+					dlacpy( 'full', N, N, A, sa1, sa2, offsetA,
 						VT, svt1, svt2, offsetVT );
 				}
 			} else if ( wntuo && wntvn ) {
@@ -300,7 +300,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						A, sa1, sa2, offsetA + (i * sa1),
 						WK, 1, ldwrkr, ir,
 						0.0, WK, 1, ldwrku, iu );
-					dlacpy( 'F', chunk, N, WK, 1, ldwrku, iu,
+					dlacpy( 'full', chunk, N, WK, 1, ldwrku, iu,
 						A, sa1, sa2, offsetA + (i * sa1) );
 				}
 			} else if ( wntuo && wntvas ) {
@@ -370,7 +370,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						A, sa1, sa2, offsetA + (i * sa1),
 						WK, 1, ldwrkr, ir,
 						0.0, WK, 1, ldwrku, iu );
-					dlacpy( 'F', chunk, N, WK, 1, ldwrku, iu,
+					dlacpy( 'full', chunk, N, WK, 1, ldwrku, iu,
 						A, sa1, sa2, offsetA + (i * sa1) );
 				}
 			} else if ( wntus ) {
@@ -493,7 +493,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						0.0, U, su1, su2, offsetU );
 
 					// Copy WORK(IR) (right vectors) → A
-					dlacpy( 'F', N, N, WK, 1, ldwrkr, ir,
+					dlacpy( 'full', N, N, WK, 1, ldwrkr, ir,
 						A, sa1, sa2, offsetA );
 				} else if ( wntvas ) {
 					// -------------------------------------------------------
@@ -620,7 +620,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						0.0, A, sa1, sa2, offsetA );
 
 					// Copy result back to U
-					dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+					dlacpy( 'full', M, N, A, sa1, sa2, offsetA,
 						U, su1, su2, offsetU );
 				} else if ( wntvo ) {
 					// -------------------------------------------------------
@@ -689,11 +689,11 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						U, su1, su2, offsetU,
 						WK, 1, ldwrku, iu,
 						0.0, A, sa1, sa2, offsetA );
-					dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+					dlacpy( 'full', M, N, A, sa1, sa2, offsetA,
 						U, su1, su2, offsetU );
 
 					// Copy WORK(IR) to A (right vectors overwrite A)
-					dlacpy( 'F', N, N, WK, 1, ldwrkr, ir,
+					dlacpy( 'full', N, N, WK, 1, ldwrkr, ir,
 						A, sa1, sa2, offsetA );
 				} else if ( wntvas ) {
 					// -------------------------------------------------------
@@ -760,7 +760,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 						U, su1, su2, offsetU,
 						WK, 1, ldwrku, iu,
 						0.0, A, sa1, sa2, offsetA );
-					dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+					dlacpy( 'full', M, N, A, sa1, sa2, offsetA,
 						U, su1, su2, offsetU );
 				}
 			}
@@ -901,7 +901,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 			// Copy U to the desired location
 			if ( wntuas ) {
-				dlacpy( 'F', M, M, A, sa1, sa2, offsetA,
+				dlacpy( 'full', M, M, A, sa1, sa2, offsetA,
 					U, su1, su2, offsetU );
 			}
 		} else if ( wntvo && wntun ) {
@@ -964,7 +964,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir,
 					A, sa1, sa2, offsetA + (i * sa2),
 					0.0, WK, 1, ldwrku, iu );
-				dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
+				dlacpy( 'full', M, blk, WK, 1, ldwrku, iu,
 					A, sa1, sa2, offsetA + (i * sa2) );
 			}
 		} else if ( wntvo && wntuas ) {
@@ -1032,7 +1032,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir,
 					A, sa1, sa2, offsetA + (i * sa2),
 					0.0, WK, 1, ldwrku, iu );
-				dlacpy( 'F', M, blk, WK, 1, ldwrku, iu,
+				dlacpy( 'full', M, blk, WK, 1, ldwrku, iu,
 					A, sa1, sa2, offsetA + (i * sa2) );
 			}
 		} else if ( wntvs ) {
@@ -1153,7 +1153,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					0.0, VT, svt1, svt2, offsetVT );
 
 				// Copy WORK(IR) to A (left vectors overwrite A)
-				dlacpy( 'F', M, M, WK, 1, ldwrkr, ir,
+				dlacpy( 'full', M, M, WK, 1, ldwrkr, ir,
 					A, sa1, sa2, offsetA );
 			} else if ( wntuas ) {
 				// -------------------------------------------------------
@@ -1274,7 +1274,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrkr, ir,
 					VT, svt1, svt2, offsetVT,
 					0.0, A, sa1, sa2, offsetA );
-				dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+				dlacpy( 'full', M, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
 			} else if ( wntuo ) {
 				// -------------------------------------------------------
@@ -1342,11 +1342,11 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrku, iu,
 					VT, svt1, svt2, offsetVT,
 					0.0, A, sa1, sa2, offsetA );
-				dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+				dlacpy( 'full', M, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
 
 				// Copy WORK(IR) to A (left vectors overwrite A)
-				dlacpy( 'F', M, M, WK, 1, ldwrkr, ir,
+				dlacpy( 'full', M, M, WK, 1, ldwrkr, ir,
 					A, sa1, sa2, offsetA );
 			} else if ( wntuas ) {
 				// -------------------------------------------------------
@@ -1412,7 +1412,7 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 					WK, 1, ldwrku, iu,
 					VT, svt1, svt2, offsetVT,
 					0.0, A, sa1, sa2, offsetA );
-				dlacpy( 'F', M, N, A, sa1, sa2, offsetA,
+				dlacpy( 'full', M, N, A, sa1, sa2, offsetA,
 					VT, svt1, svt2, offsetVT );
 			}
 		}

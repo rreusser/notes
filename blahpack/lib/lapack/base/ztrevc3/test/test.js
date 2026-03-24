@@ -73,7 +73,7 @@ test( 'ztrevc3: N=1 right eigenvectors', function t() {
 	var vrv = reinterpret( VR, 0 );
 	var info;
 
-	info = ztrevc3( 'R', 'A', SELECT, 1, 0, 1, T, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 1, 0, WORK, 1, 0, 3, RWORK, 1, 0, 1 );
+	info = ztrevc3( 'right', 'all', SELECT, 1, 0, 1, T, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 1, 0, WORK, 1, 0, 3, RWORK, 1, 0, 1 );
 	assert.strictEqual( info, tc.INFO );
 	assertArrayClose( vrv, tc.VR, 1e-14, 'VR' );
 });
@@ -94,7 +94,7 @@ test( 'ztrevc3: right eigenvectors, all, 3x3', function t() {
 	var vrv = reinterpret( VR, 0 );
 	var info;
 
-	info = ztrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	info = ztrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
 	assert.strictEqual( info, tc.INFO );
 	assertArrayClose( vrv, tc.VR, 1e-13, 'VR' );
 });
@@ -115,7 +115,7 @@ test( 'ztrevc3: left eigenvectors, all, 3x3', function t() {
 	var vlv = reinterpret( VL, 0 );
 	var info;
 
-	info = ztrevc3( 'L', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	info = ztrevc3( 'left', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
 	assert.strictEqual( info, tc.INFO );
 	assertArrayClose( vlv, tc.VL, 1e-13, 'VL' );
 });
@@ -137,7 +137,7 @@ test( 'ztrevc3: both eigenvectors, all, 3x3', function t() {
 	var vlv = reinterpret( VL, 0 );
 	var info;
 
-	info = ztrevc3( 'B', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	info = ztrevc3( 'both', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
 	assert.strictEqual( info, tc.INFO );
 	assertArrayClose( vrv, tc.VR, 1e-13, 'VR' );
 	assertArrayClose( vlv, tc.VL, 1e-13, 'VL' );
@@ -159,7 +159,7 @@ test( 'ztrevc3: right eigenvectors, diagonal matrix', function t() {
 	var vrv = reinterpret( VR, 0 );
 	var info;
 
-	info = ztrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	info = ztrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
 	assert.strictEqual( info, tc.INFO );
 	// For diagonal matrix, eigenvectors should be identity columns
 	// VR is NxN col-major complex: VR(i,j) = vrv[(j*N+i)*2], vrv[(j*N+i)*2+1]
@@ -186,7 +186,7 @@ test( 'ztrevc3: right eigenvectors, 4x4', function t() {
 	var vrv = reinterpret( VR, 0 );
 	var info;
 
-	info = ztrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	info = ztrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
 	assert.strictEqual( info, tc.INFO );
 	assertArrayClose( vrv, tc.VR, 1e-12, 'VR' );
 });
@@ -212,7 +212,7 @@ test( 'ztrevc3: right backtransform with identity, 3x3', function t() {
 	var vrv = reinterpret( VR, 0 );
 	var info;
 
-	info = ztrevc3( 'R', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	info = ztrevc3( 'right', 'backtransform', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
 	assert.strictEqual( info, tc.INFO );
 	assertArrayClose( vrv, tc.VR, 1e-13, 'VR' );
 });
@@ -238,7 +238,7 @@ test( 'ztrevc3: left backtransform with identity, 3x3', function t() {
 	var vlv = reinterpret( VL, 0 );
 	var info;
 
-	info = ztrevc3( 'L', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	info = ztrevc3( 'left', 'backtransform', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
 	assert.strictEqual( info, tc.INFO );
 	assertArrayClose( vlv, tc.VL, 1e-13, 'VL' );
 });
@@ -252,6 +252,6 @@ test( 'ztrevc3: N=0 returns immediately', function t() {
 	var SELECT = new Uint8Array( 1 );
 	var info;
 
-	info = ztrevc3( 'R', 'A', SELECT, 1, 0, 0, T, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 0, 0, WORK, 1, 0, 3, RWORK, 1, 0, 1 );
+	info = ztrevc3( 'right', 'all', SELECT, 1, 0, 0, T, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 0, 0, WORK, 1, 0, 3, RWORK, 1, 0, 1 );
 	assert.strictEqual( info, 0 );
 });

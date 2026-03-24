@@ -114,9 +114,9 @@ function zhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, str
 	var i;
 
 	// Decode parameters
-	wantt = ( job === 'S' );
-	initz = ( compz === 'I' );
-	wantz = initz || ( compz === 'V' );
+	wantt = ( job === 'schur' );
+	initz = ( compz === 'initialize' );
+	wantz = initz || ( compz === 'update' );
 
 	// Quick return if N = 0
 	if ( N === 0 ) {
@@ -142,7 +142,7 @@ function zhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, str
 
 	// Initialize Z to identity if COMPZ = 'I'
 	if ( initz ) {
-		zlaset( 'A', N, N, CZERO, CONE, Z, strideZ1, strideZ2, offsetZ );
+		zlaset( 'full', N, N, CZERO, CONE, Z, strideZ1, strideZ2, offsetZ );
 	}
 
 	// If active block is a single element, just read off the eigenvalue
@@ -168,14 +168,14 @@ function zhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, str
 			} else {
 				HL = new Complex128Array( NL * NL );
 				WORKL = new Complex128Array( NL );
-				zlacpy( 'A', N, N, H, strideH1, strideH2, offsetH, HL, 1, NL, 0 );
+				zlacpy( 'full', N, N, H, strideH1, strideH2, offsetH, HL, 1, NL, 0 );
 				var HLv = reinterpret( HL, 0 ); // eslint-disable-line no-var
 				HLv[ ( N + ( N - 1 ) * NL ) * 2 ] = 0.0;
 				HLv[ ( N + ( N - 1 ) * NL ) * 2 + 1 ] = 0.0;
-				zlaset( 'A', NL, NL - N, CZERO, CZERO, HL, 1, NL, N * NL );
+				zlaset( 'full', NL, NL - N, CZERO, CZERO, HL, 1, NL, N * NL );
 				info = zlaqr0( wantt, wantz, NL, ilo, kbot, HL, 1, NL, 0, w, strideW, offsetW, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, NL );
 				if ( wantt || info !== 0 ) {
-					zlacpy( 'A', N, N, HL, 1, NL, 0, H, strideH1, strideH2, offsetH );
+					zlacpy( 'full', N, N, HL, 1, NL, 0, H, strideH1, strideH2, offsetH );
 				}
 			}
 		}

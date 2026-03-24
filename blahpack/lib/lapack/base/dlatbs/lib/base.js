@@ -113,7 +113,7 @@ function dlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 	}
 
 	// Compute column norms if not provided
-	if ( normin === 'N' || normin === 'n' ) {
+	if ( normin === 'no' ) {
 		if ( upper ) {
 			// For upper: off-diagonal elements of column j are in rows KD+1-JLEN..KD
 			// AB(KD+1-JLEN, j) through AB(KD, j), where JLEN = min(KD, j-1)

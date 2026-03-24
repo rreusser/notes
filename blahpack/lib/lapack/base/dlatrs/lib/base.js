@@ -113,7 +113,7 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 	}
 
 	// Compute column norms if not provided
-	if ( normin === 'N' || normin === 'n' ) {
+	if ( normin === 'no' ) {
 		if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
 				CNORM[ offsetCNORM + (j * sc) ] = dasum( j, A, sa1, offsetA + (j * sa2) );

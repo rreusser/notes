@@ -112,8 +112,8 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	var ar;
 	var ai;
 
-	notrna = ( trana === 'N' );
-	notrnb = ( tranb === 'N' );
+	notrna = ( trana === 'no-transpose' );
+	notrnb = ( tranb === 'no-transpose' );
 
 	info = 0;
 	scale[ 0 ] = ONE;
@@ -126,7 +126,7 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	// Set constants
 	smlnum = SMLNUM * ( M * N ) / EPS;
 	bignum = ONE / smlnum;
-	smin = Math.max( smlnum, EPS * zlange( 'M', M, M, A, strideA1, strideA2, offsetA, DUM, 1, 0 ), EPS * zlange( 'M', N, N, B, strideB1, strideB2, offsetB, DUM, 1, 0 ) );
+	smin = Math.max( smlnum, EPS * zlange( 'max', M, M, A, strideA1, strideA2, offsetA, DUM, 1, 0 ), EPS * zlange( 'max', N, N, B, strideB1, strideB2, offsetB, DUM, 1, 0 ) );
 	sgn = isgn;
 
 	av = reinterpret( A, 0 );

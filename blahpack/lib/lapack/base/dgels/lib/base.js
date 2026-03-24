@@ -107,7 +107,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 
 	// Quick return if dimensions are zero
 	if ( MN === 0 || nrhs === 0 ) {
-		dlaset( 'F', Math.max( M, N ), nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
+		dlaset( 'full', Math.max( M, N ), nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
 		return 0;
 	}
 
@@ -136,7 +136,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 		iascl = 2;
 	} else if ( anrm === 0.0 ) {
 		// Matrix all zero. Return zero solution.
-		dlaset( 'F', Math.max( M, N ), nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
+		dlaset( 'full', Math.max( M, N ), nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
 		return 0;
 	}
 

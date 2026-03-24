@@ -79,7 +79,7 @@ function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	var m3;
 	var k;
 
-	wantq = ( compq === 'V' || compq === 'v' );
+	wantq = ( compq === 'update' );
 
 	// Quick return
 	if ( N <= 1 || ifst === ilst ) {

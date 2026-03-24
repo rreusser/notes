@@ -279,10 +279,10 @@ test( 'zlacn2: works with stride and offset for ISAVE', function t() {
 			break;
 		}
 		if ( KASE[ 0 ] === 1 ) {
-			zgemv( 'N', N, N, one, A, 1, N, 0, X, 1, 0, zero, tmp, 1, 0 );
+			zgemv( 'no-transpose', N, N, one, A, 1, N, 0, X, 1, 0, zero, tmp, 1, 0 );
 			copyCV( tmp, X, N );
 		} else {
-			zgemv( 'C', N, N, one, A, 1, N, 0, X, 1, 0, zero, tmp, 1, 0 );
+			zgemv( 'conjugate-transpose', N, N, one, A, 1, N, 0, X, 1, 0, zero, tmp, 1, 0 );
 			copyCV( tmp, X, N );
 		}
 	}

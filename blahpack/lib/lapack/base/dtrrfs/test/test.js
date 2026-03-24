@@ -42,9 +42,9 @@ function createWorkspace( N ) {
 * Calls dtrrfs with column-major layout and returns FERR, BERR, info.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
-* @param {string} trans - 'N', 'T', or 'C'
-* @param {string} diag - 'N' or 'U'
+* @param {string} uplo - 'upper' or 'lower'
+* @param {string} trans - 'no-transpose', 'transpose', or 'conjugate-transpose'
+* @param {string} diag - 'non-unit' or 'unit'
 * @param {NonNegativeInteger} N - matrix order
 * @param {NonNegativeInteger} nrhs - number of right-hand sides
 * @param {Float64Array} A - triangular matrix, col-major, N x N
@@ -78,7 +78,7 @@ test( 'dtrrfs: upper_no_trans', function t() {
 	var A = new Float64Array([ 2, 0, 0, 1, 4, 0, 3, 5, 6 ]);
 	var B = new Float64Array([ 13, 23, 18 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'U', 'N', 'N', 3, 1, A, B, X );
+	var result = callDtrrfs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	// ferr should be small (exact solution)
@@ -91,7 +91,7 @@ test( 'dtrrfs: lower_trans', function t() {
 	var A = new Float64Array([ 2, 1, 3, 0, 4, 5, 0, 0, 6 ]);
 	var B = new Float64Array([ 13, 23, 18 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'L', 'T', 'N', 3, 1, A, B, X );
+	var result = callDtrrfs( 'lower', 'transpose', 'non-unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.ok( result.ferr[ 0 ] < 1e-13, 'ferr should be small, got ' + result.ferr[ 0 ] );
@@ -103,7 +103,7 @@ test( 'dtrrfs: upper_unit_diag', function t() {
 	var A = new Float64Array([ 1, 0, 0, 2, 1, 0, 3, 4, 1 ]);
 	var B = new Float64Array([ 14, 14, 3 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'U', 'N', 'U', 3, 1, A, B, X );
+	var result = callDtrrfs( 'upper', 'no-transpose', 'unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.ok( result.ferr[ 0 ] < 1e-12, 'ferr should be small, got ' + result.ferr[ 0 ] );
@@ -115,7 +115,7 @@ test( 'dtrrfs: lower_no_trans', function t() {
 	var A = new Float64Array([ 3, 2, 1, 0, 5, 4, 0, 0, 7 ]);
 	var B = new Float64Array([ 3, 12, 30 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'L', 'N', 'N', 3, 1, A, B, X );
+	var result = callDtrrfs( 'lower', 'no-transpose', 'non-unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.ok( result.ferr[ 0 ] < 1e-13, 'ferr should be small, got ' + result.ferr[ 0 ] );
@@ -127,7 +127,7 @@ test( 'dtrrfs: multi_rhs', function t() {
 	// B is 3x2 col-major: [13,23,18, 26,50,36]
 	var B = new Float64Array([ 13, 23, 18, 26, 50, 36 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'U', 'N', 'N', 3, 2, A, B, X );
+	var result = callDtrrfs( 'upper', 'no-transpose', 'non-unit', 3, 2, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.equal( result.berr[ 1 ], tc.berr[ 1 ] );
@@ -145,7 +145,7 @@ test( 'dtrrfs: n_zero', function t() {
 	var WORK = new Float64Array( 1 );
 	var IWORK = new Int32Array( 1 );
 	var info = dtrrfs(
-		'U', 'N', 'N', 0, 1,
+		'upper', 'no-transpose', 'non-unit', 0, 1,
 		A, 1, 1, 0,
 		B, 1, 1, 0,
 		X, 1, 1, 0,
@@ -169,7 +169,7 @@ test( 'dtrrfs: nrhs_zero', function t() {
 	var WORK = new Float64Array( 9 );
 	var IWORK = new Int32Array( 3 );
 	var info = dtrrfs(
-		'U', 'N', 'N', 3, 0,
+		'upper', 'no-transpose', 'non-unit', 3, 0,
 		A, 1, 3, 0,
 		B, 1, 3, 0,
 		X, 1, 3, 0,
@@ -187,7 +187,7 @@ test( 'dtrrfs: lower_unit_trans', function t() {
 	var A = new Float64Array([ 1, 2, 3, 0, 1, 5, 0, 0, 1 ]);
 	var B = new Float64Array([ 14, 17, 3 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'L', 'T', 'U', 3, 1, A, B, X );
+	var result = callDtrrfs( 'lower', 'transpose', 'unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.ok( result.ferr[ 0 ] < 1e-12, 'ferr should be small, got ' + result.ferr[ 0 ] );
@@ -199,7 +199,7 @@ test( 'dtrrfs: upper_trans', function t() {
 	var A = new Float64Array([ 2, 0, 0, 1, 4, 0, 3, 5, 6 ]);
 	var B = new Float64Array([ 2, 9, 31 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'U', 'T', 'N', 3, 1, A, B, X );
+	var result = callDtrrfs( 'upper', 'transpose', 'non-unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.ok( result.ferr[ 0 ] < 1e-13, 'ferr should be small, got ' + result.ferr[ 0 ] );
@@ -211,7 +211,7 @@ test( 'dtrrfs: upper_unit_trans', function t() {
 	var A = new Float64Array([ 1, 0, 0, 2, 1, 0, 3, 4, 1 ]);
 	var B = new Float64Array([ 1, 4, 14 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'U', 'T', 'U', 3, 1, A, B, X );
+	var result = callDtrrfs( 'upper', 'transpose', 'unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.ok( result.ferr[ 0 ] < 1e-12, 'ferr should be small, got ' + result.ferr[ 0 ] );
@@ -223,7 +223,7 @@ test( 'dtrrfs: lower_unit_no_trans', function t() {
 	var A = new Float64Array([ 1, 2, 3, 0, 1, 5, 0, 0, 1 ]);
 	var B = new Float64Array([ 1, 4, 16 ]);
 	var X = new Float64Array( tc.x );
-	var result = callDtrrfs( 'L', 'N', 'U', 3, 1, A, B, X );
+	var result = callDtrrfs( 'lower', 'no-transpose', 'unit', 3, 1, A, B, X );
 	assert.equal( result.info, tc.info );
 	assert.equal( result.berr[ 0 ], tc.berr[ 0 ] );
 	assert.ok( result.ferr[ 0 ] < 1e-12, 'ferr should be small, got ' + result.ferr[ 0 ] );

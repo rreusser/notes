@@ -62,7 +62,7 @@ test( 'dsytrs2: 4x4_lower_1rhs', function t() {
 	ipiv = new Int32Array( 4 );
 	work = new Float64Array( 4 );
 	dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'L', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
+	info = dsytrs2( 'lower', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -85,7 +85,7 @@ test( 'dsytrs2: 4x4_upper_1rhs', function t() {
 	ipiv = new Int32Array( 4 );
 	work = new Float64Array( 4 );
 	dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'U', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
+	info = dsytrs2( 'upper', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -109,7 +109,7 @@ test( 'dsytrs2: 4x4_indef_lower_1rhs', function t() {
 	ipiv = new Int32Array( 4 );
 	work = new Float64Array( 4 );
 	dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'L', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
+	info = dsytrs2( 'lower', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -132,7 +132,7 @@ test( 'dsytrs2: 4x4_indef_upper_1rhs', function t() {
 	ipiv = new Int32Array( 4 );
 	work = new Float64Array( 4 );
 	dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'U', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
+	info = dsytrs2( 'upper', 4, 1, A, 1, 4, 0, ipiv, 1, 0, b, 1, 4, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -158,7 +158,7 @@ test( 'dsytrs2: 3x3_lower_2rhs', function t() {
 	ipiv = new Int32Array( 3 );
 	work = new Float64Array( 3 );
 	dsytrf( 'lower', 3, A, 1, 3, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'L', 3, 2, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0, work, 1, 0 );
+	info = dsytrs2( 'lower', 3, 2, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -183,7 +183,7 @@ test( 'dsytrs2: 3x3_upper_2rhs', function t() {
 	ipiv = new Int32Array( 3 );
 	work = new Float64Array( 3 );
 	dsytrf( 'upper', 3, A, 1, 3, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'U', 3, 2, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0, work, 1, 0 );
+	info = dsytrs2( 'upper', 3, 2, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -199,7 +199,7 @@ test( 'dsytrs2: n_zero', function t() {
 	b = new Float64Array( 1 );
 	ipiv = new Int32Array( 1 );
 	work = new Float64Array( 1 );
-	info = dsytrs2( 'L', 0, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, work, 1, 0 );
+	info = dsytrs2( 'lower', 0, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -214,7 +214,7 @@ test( 'dsytrs2: nrhs_zero', function t() {
 	b = new Float64Array( 3 );
 	ipiv = new Int32Array( 3 );
 	work = new Float64Array( 3 );
-	info = dsytrs2( 'L', 3, 0, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0, work, 1, 0 );
+	info = dsytrs2( 'lower', 3, 0, A, 1, 3, 0, ipiv, 1, 0, b, 1, 3, 0, work, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -232,7 +232,7 @@ test( 'dsytrs2: n_one_lower', function t() {
 	ipiv = new Int32Array( 1 );
 	work = new Float64Array( 1 );
 	dsytrf( 'lower', 1, A, 1, 1, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'L', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, work, 1, 0 );
+	info = dsytrs2( 'lower', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -251,7 +251,7 @@ test( 'dsytrs2: n_one_upper', function t() {
 	ipiv = new Int32Array( 1 );
 	work = new Float64Array( 1 );
 	dsytrf( 'upper', 1, A, 1, 1, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'U', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, work, 1, 0 );
+	info = dsytrs2( 'upper', 1, 1, A, 1, 1, 0, ipiv, 1, 0, b, 1, 1, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -275,7 +275,7 @@ test( 'dsytrs2: 5x5_lower_solve', function t() {
 	ipiv = new Int32Array( 5 );
 	work = new Float64Array( 5 );
 	dsytrf( 'lower', 5, A, 1, 5, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'L', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0, work, 1, 0 );
+	info = dsytrs2( 'lower', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });
@@ -299,7 +299,7 @@ test( 'dsytrs2: 5x5_upper_solve', function t() {
 	ipiv = new Int32Array( 5 );
 	work = new Float64Array( 5 );
 	dsytrf( 'upper', 5, A, 1, 5, 0, ipiv, 1, 0 );
-	info = dsytrs2( 'U', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0, work, 1, 0 );
+	info = dsytrs2( 'upper', 5, 1, A, 1, 5, 0, ipiv, 1, 0, b, 1, 5, 0, work, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( b, tc.b, 1e-12, 'b' );
 });

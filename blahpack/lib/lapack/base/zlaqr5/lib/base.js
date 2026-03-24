@@ -673,14 +673,14 @@ function zlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, s, strideS, offset
 			// Horizontal multiply
 			for ( jcol = Math.min( ndcol, kbot ) + 1; jcol <= jbotAcc; jcol += nh ) {
 				jlen = Math.min( nh, jbotAcc - jcol + 1 );
-				zgemm( 'C', 'N', nu, jlen, nu, CONE, U, strideU1, strideU2, offsetU + ( k1 - 1 ) * strideU1 + ( k1 - 1 ) * strideU2, H, strideH1, strideH2, offsetH + ( incol + k1 - 1 ) * strideH1 + ( jcol - 1 ) * strideH2, CZERO, WH, strideWH1, strideWH2, offsetWH );
+				zgemm( 'conjugate-transpose', 'no-transpose', nu, jlen, nu, CONE, U, strideU1, strideU2, offsetU + ( k1 - 1 ) * strideU1 + ( k1 - 1 ) * strideU2, H, strideH1, strideH2, offsetH + ( incol + k1 - 1 ) * strideH1 + ( jcol - 1 ) * strideH2, CZERO, WH, strideWH1, strideWH2, offsetWH );
 				zlacpy( 'ALL', nu, jlen, WH, strideWH1, strideWH2, offsetWH, H, strideH1, strideH2, offsetH + ( incol + k1 - 1 ) * strideH1 + ( jcol - 1 ) * strideH2 );
 			}
 
 			// Vertical multiply
 			for ( jrow = jtopAcc; jrow <= Math.max( ktop, incol ) - 1; jrow += nv ) {
 				jlen = Math.min( nv, Math.max( ktop, incol ) - jrow );
-				zgemm( 'N', 'N', jlen, nu, nu, CONE, H, strideH1, strideH2, offsetH + ( jrow - 1 ) * strideH1 + ( incol + k1 - 1 ) * strideH2, U, strideU1, strideU2, offsetU + ( k1 - 1 ) * strideU1 + ( k1 - 1 ) * strideU2, CZERO, WV, strideWV1, strideWV2, offsetWV );
+				zgemm( 'no-transpose', 'no-transpose', jlen, nu, nu, CONE, H, strideH1, strideH2, offsetH + ( jrow - 1 ) * strideH1 + ( incol + k1 - 1 ) * strideH2, U, strideU1, strideU2, offsetU + ( k1 - 1 ) * strideU1 + ( k1 - 1 ) * strideU2, CZERO, WV, strideWV1, strideWV2, offsetWV );
 				zlacpy( 'ALL', jlen, nu, WV, strideWV1, strideWV2, offsetWV, H, strideH1, strideH2, offsetH + ( jrow - 1 ) * strideH1 + ( incol + k1 - 1 ) * strideH2 );
 			}
 
@@ -688,7 +688,7 @@ function zlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, s, strideS, offset
 			if ( wantz ) {
 				for ( jrow = iloz; jrow <= ihiz; jrow += nv ) {
 					jlen = Math.min( nv, ihiz - jrow + 1 );
-					zgemm( 'N', 'N', jlen, nu, nu, CONE, Z, strideZ1, strideZ2, offsetZ + ( jrow - 1 ) * strideZ1 + ( incol + k1 - 1 ) * strideZ2, U, strideU1, strideU2, offsetU + ( k1 - 1 ) * strideU1 + ( k1 - 1 ) * strideU2, CZERO, WV, strideWV1, strideWV2, offsetWV );
+					zgemm( 'no-transpose', 'no-transpose', jlen, nu, nu, CONE, Z, strideZ1, strideZ2, offsetZ + ( jrow - 1 ) * strideZ1 + ( incol + k1 - 1 ) * strideZ2, U, strideU1, strideU2, offsetU + ( k1 - 1 ) * strideU1 + ( k1 - 1 ) * strideU2, CZERO, WV, strideWV1, strideWV2, offsetWV );
 					zlacpy( 'ALL', jlen, nu, WV, strideWV1, strideWV2, offsetWV, Z, strideZ1, strideZ2, offsetZ + ( jrow - 1 ) * strideZ1 + ( incol + k1 - 1 ) * strideZ2 );
 				}
 			}

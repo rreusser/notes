@@ -60,7 +60,7 @@ test( 'dposvx: fact_N_upper', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	var result = callDposvx( 'N', 'upper', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'not-factored', 'upper', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.equed, tc.equed, 'equed' );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -78,7 +78,7 @@ test( 'dposvx: fact_N_lower', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	var result = callDposvx( 'N', 'lower', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'not-factored', 'lower', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.equed, tc.equed, 'equed' );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -95,7 +95,7 @@ test( 'dposvx: fact_E', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	var result = callDposvx( 'E', 'upper', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'equilibrate', 'upper', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.equed, tc.equed, 'equed' );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -105,7 +105,7 @@ test( 'dposvx: fact_E', function t() {
 
 test( 'dposvx: fact_F', function t() {
 	var tc = findCase( 'fact_F' );
-	// First factor via FACT='N'
+	// First factor via FACT='not-factored'
 	var A = new Float64Array([ 4.0, 1.0, 0.5, 1.0, 3.0, 1.0, 0.5, 1.0, 2.0 ]);
 	var AF = new Float64Array( 9 );
 	var s = new Float64Array( 3 );
@@ -113,15 +113,15 @@ test( 'dposvx: fact_F', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	callDposvx( 'N', 'upper', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	callDposvx( 'not-factored', 'upper', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 
-	// Now use FACT='F' with the pre-factored AF
+	// Now use FACT='factored' with the pre-factored AF
 	A = new Float64Array([ 4.0, 1.0, 0.5, 1.0, 3.0, 1.0, 0.5, 1.0, 2.0 ]);
 	B = new Float64Array([ 1.0, 2.0, 3.0 ]);
 	X = new Float64Array( 3 );
 	FERR = new Float64Array( 1 );
 	BERR = new Float64Array( 1 );
-	var result = callDposvx( 'F', 'upper', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'factored', 'upper', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.equed, tc.equed, 'equed' );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -137,7 +137,7 @@ test( 'dposvx: not_posdef', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	var result = callDposvx( 'N', 'upper', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'not-factored', 'upper', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.rcond, tc.rcond, 'rcond' );
 });
@@ -151,7 +151,7 @@ test( 'dposvx: n_zero', function t() {
 	var X = new Float64Array( 1 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	var result = callDposvx( 'N', 'upper', 0, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'not-factored', 'upper', 0, 1, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 });
 
@@ -164,7 +164,7 @@ test( 'dposvx: multi_rhs', function t() {
 	var X = new Float64Array( 6 );
 	var FERR = new Float64Array( 2 );
 	var BERR = new Float64Array( 2 );
-	var result = callDposvx( 'N', 'upper', 3, 2, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'not-factored', 'upper', 3, 2, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
 	assertArrayClose( Array.from( X ), tc.x, 1e-10, 'x' );
@@ -173,7 +173,7 @@ test( 'dposvx: multi_rhs', function t() {
 });
 
 test( 'dposvx: fact_F_with_equed_Y', function t() {
-	// First equilibrate and factor via FACT='E'
+	// First equilibrate and factor via FACT='equilibrate'
 	var A = new Float64Array([ 100.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.1, 0.05, 0.01 ]);
 	var AF = new Float64Array( 9 );
 	var s = new Float64Array( 3 );
@@ -181,21 +181,21 @@ test( 'dposvx: fact_F_with_equed_Y', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	var r1 = callDposvx( 'E', 'upper', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var r1 = callDposvx( 'equilibrate', 'upper', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 
-	// Now use FACT='F' with the equilibrated AF and S
-	// Re-create the equilibrated A (since FACT='E' modified it)
+	// Now use FACT='factored' with the equilibrated AF and S
+	// Re-create the equilibrated A (since FACT='equilibrate' modified it)
 	var A2 = new Float64Array([ 100.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.1, 0.05, 0.01 ]);
 	var B2 = new Float64Array([ 101.1, 1.05, 0.16 ]);
 	var X2 = new Float64Array( 3 );
 	var FERR2 = new Float64Array( 1 );
 	var BERR2 = new Float64Array( 1 );
-	// Need to re-equilibrate A2 manually for the FACT='F' call to compute norms correctly
-	// Actually FACT='F' with equed='Y' expects A to be the ORIGINAL (not equilibrated) matrix
+	// Need to re-equilibrate A2 manually for the FACT='factored' call to compute norms correctly
+	// Actually FACT='factored' with equed='yes' expects A to be the ORIGINAL (not equilibrated) matrix
 	// and S to contain the scaling factors - Fortran reference uses A for computing ANORM
-	var r2 = callDposvx( 'F', 'upper', 3, 1, A2, AF, 'Y', s, B2, X2, FERR2, BERR2 );
+	var r2 = callDposvx( 'factored', 'upper', 3, 1, A2, AF, 'yes', s, B2, X2, FERR2, BERR2 );
 	assert.equal( r2.info, 0, 'info' );
-	assert.equal( r2.equed, 'Y', 'equed' );
+	assert.equal( r2.equed, 'yes', 'equed' );
 	// Solution should be reasonable - verify via mathematical property
 	assert.ok( r2.rcond > 0, 'rcond > 0' );
 });
@@ -210,7 +210,7 @@ test( 'dposvx: fact_E_lower', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	var result = callDposvx( 'E', 'lower', 3, 1, A, AF, 'N', s, B, X, FERR, BERR );
+	var result = callDposvx( 'equilibrate', 'lower', 3, 1, A, AF, 'none', s, B, X, FERR, BERR );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.equed, tc.equed, 'equed' );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );

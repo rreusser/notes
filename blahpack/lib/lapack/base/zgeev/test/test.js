@@ -135,14 +135,14 @@ function callZgeev( jobvl, jobvr, N, A_data ) {
 // TESTS //
 
 test( 'zgeev: N=0 quick return', function t() {
-	var result = callZgeev( 'N', 'N', 0, [] );
+	var result = callZgeev( 'no-vectors', 'no-vectors', 0, [] );
 	assert.equal( result.info, 0 );
 });
 
 test( 'zgeev: N=1 eigenvalues only', function t() {
 	var tc = findCase( 'n1_eigvals_only' );
 	// A = (3+2i)
-	var result = callZgeev( 'N', 'N', 1, [ 3.0, 2.0 ] );
+	var result = callZgeev( 'no-vectors', 'no-vectors', 1, [ 3.0, 2.0 ] );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
 });
@@ -150,7 +150,7 @@ test( 'zgeev: N=1 eigenvalues only', function t() {
 test( 'zgeev: N=1 with right eigenvector', function t() {
 	var tc = findCase( 'n1_right' );
 	// A = (5-1i)
-	var result = callZgeev( 'N', 'V', 1, [ 5.0, -1.0 ] );
+	var result = callZgeev( 'no-vectors', 'compute-vectors', 1, [ 5.0, -1.0 ] );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
 	// Eigenvector should be (1,0)
@@ -162,7 +162,7 @@ test( 'zgeev: N=2 diagonal, right eigenvectors', function t() {
 	var tc = findCase( 'n2_diagonal_right' );
 	// A = diag(1, 2), column-major interleaved: [A(1,1)_re, A(1,1)_im, A(2,1)_re, A(2,1)_im, A(1,2)_re, ...]
 	var A_data = [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0 ];
-	var result = callZgeev( 'N', 'V', 2, A_data );
+	var result = callZgeev( 'no-vectors', 'compute-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
 	// Verify A*v = lambda*v
@@ -173,7 +173,7 @@ test( 'zgeev: N=2 general, both eigenvectors', function t() {
 	var tc = findCase( 'n2_general_both' );
 	// A = [[1+2i, 3], [i, 4-i]], column-major interleaved
 	var A_data = [ 1.0, 2.0, 0.0, 1.0, 3.0, 0.0, 4.0, -1.0 ];
-	var result = callZgeev( 'V', 'V', 2, A_data );
+	var result = callZgeev( 'compute-vectors', 'compute-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-12, 'eigenvalues' );
 	assertRightEigenvectors( A_data, 2, result.w, result.VR, 1e-10, 'right eigenvec' );
@@ -187,7 +187,7 @@ test( 'zgeev: N=3 right eigenvectors', function t() {
 		2.0, 1.0, 3.0, 0.0, 0.0, 0.0,     // col 1: (2+i), (3,0), (0,0)
 		0.0, 0.0, 1.0, 0.5, 5.0, -2.0      // col 2: (0,0), (1+0.5i), (5-2i)
 	];
-	var result = callZgeev( 'N', 'V', 3, A_data );
+	var result = callZgeev( 'no-vectors', 'compute-vectors', 3, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-12, 'eigenvalues' );
 	assertRightEigenvectors( A_data, 3, result.w, result.VR, 1e-10, 'right eigenvec' );
@@ -201,7 +201,7 @@ test( 'zgeev: N=4 diagonally dominant, both eigenvectors', function t() {
 		0.0, 0.0, 1.0, 0.0, 30.0, 0.0, 0.5, -0.5,    // col 2
 		0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 40.0, 0.0      // col 3
 	];
-	var result = callZgeev( 'V', 'V', 4, A_data );
+	var result = callZgeev( 'compute-vectors', 'compute-vectors', 4, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-10, 'eigenvalues' );
 	assertRightEigenvectors( A_data, 4, result.w, result.VR, 1e-8, 'right eigenvec' );
@@ -211,7 +211,7 @@ test( 'zgeev: N=2 left eigenvectors only', function t() {
 	var tc = findCase( 'n2_left_only' );
 	// A = [[2, 1+i], [0, 3]], column-major interleaved
 	var A_data = [ 2.0, 0.0, 0.0, 0.0, 1.0, 1.0, 3.0, 0.0 ];
-	var result = callZgeev( 'V', 'N', 2, A_data );
+	var result = callZgeev( 'compute-vectors', 'no-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
 	// Verify left eigenvectors: u^H * A = lambda * u^H

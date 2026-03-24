@@ -113,7 +113,7 @@ function dgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 	scale = new Float64Array( 1 );
 
 	ainvnm = 0.0;
-	normin = 'N';
+	normin = 'no';
 	if ( onenrm ) {
 		kase1 = 1;
 	} else {
@@ -191,7 +191,7 @@ function dgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 		}
 
 		// Combine scaling
-		normin = 'Y';
+		normin = 'yes';
 		if ( scale[ 0 ] !== 1.0 ) {
 			ix = idamax( N, WORK, sw, offsetWORK );
 			if ( scale[ 0 ] < Math.abs( WORK[ offsetWORK + (ix * sw) ] ) * SMLNUM || scale[ 0 ] === 0.0 ) {

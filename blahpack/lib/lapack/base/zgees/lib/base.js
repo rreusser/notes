@@ -118,8 +118,8 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 	var i;
 
 	info = 0;
-	wantvs = ( jobvs === 'V' );
-	wantst = ( sort === 'S' );
+	wantvs = ( jobvs === 'compute-vectors' );
+	wantst = ( sort === 'sort' );
 
 	// Quick return
 	if ( N === 0 ) {
@@ -140,13 +140,13 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 		cscale = BIGNUM;
 	}
 	if ( scalea ) {
-		zlascl( 'G', 0, 0, anrm, cscale, N, N, A, strideA1, strideA2, offsetA );
+		zlascl( 'general', 0, 0, anrm, cscale, N, N, A, strideA1, strideA2, offsetA );
 	}
 
 	// Balance the matrix
 	// RWORK is used for balance SCALE array
 	ibal = 0;
-	balRes = zgebal( 'P', N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK );
+	balRes = zgebal( 'permute', N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK );
 	ilo = balRes.ilo; // 1-based
 	ihi = balRes.ihi; // 1-based
 
@@ -168,7 +168,7 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 
 	// Compute Schur form
 	iwrk = itau;
-	ieval = zhseqr( 'S', jobvs, N, ilo, ihi, A, strideA1, strideA2, offsetA, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+	ieval = zhseqr( 'schur', wantvs ? 'update' : 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
 	if ( ieval > 0 ) {
 		info = ieval;
 	}
@@ -176,7 +176,7 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 	// Sort eigenvalues if requested
 	if ( wantst && info === 0 ) {
 		if ( scalea ) {
-			zlascl( 'G', 0, 0, cscale, anrm, N, 1, W, 1, strideW, offsetW );
+			zlascl( 'general', 0, 0, cscale, anrm, N, 1, W, 1, strideW, offsetW );
 		}
 
 		Wv = reinterpret( W, 0 );
@@ -191,7 +191,7 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 		M = new Float64Array( 1 );
 		S = new Float64Array( 1 );
 		SEP = new Float64Array( 1 );
-		icond = ztrsen( 'N', jobvs, BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, W, strideW, offsetW, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+		icond = ztrsen( 'none', wantvs ? 'update' : 'none', BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, W, strideW, offsetW, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
 		sdim[ 0 ] = M[ 0 ];
 		if ( icond > 0 ) {
 			info = N + icond;
@@ -200,12 +200,12 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 
 	if ( wantvs ) {
 		// Undo balancing of Schur vectors
-		zgebak( 'P', 'R', N, ilo, ihi, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK, N, VS, strideVS1, strideVS2, offsetVS );
+		zgebak( 'permute', 'right', N, ilo, ihi, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK, N, VS, strideVS1, strideVS2, offsetVS );
 	}
 
 	if ( scalea ) {
 		// Undo scaling for the Schur form of A
-		zlascl( 'U', 0, 0, cscale, anrm, N, N, A, strideA1, strideA2, offsetA );
+		zlascl( 'upper', 0, 0, cscale, anrm, N, N, A, strideA1, strideA2, offsetA );
 		// Re-extract diagonal eigenvalues
 		zcopy( N, A, strideA1 + strideA2, offsetA, W, strideW, offsetW );
 	}

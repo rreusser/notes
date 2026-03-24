@@ -158,8 +158,8 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iascl = 2;
 	} else if ( anrm === 0.0 ) {
 		// Matrix all zero. Return zero solution.
-		dlaset( 'F', maxmn, nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
-		dlaset( 'F', minmn, 1, 0.0, 0.0, S, strideS, 1, offsetS );
+		dlaset( 'full', maxmn, nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB );
+		dlaset( 'full', minmn, 1, 0.0, 0.0, S, strideS, 1, offsetS );
 		rank[ 0 ] = 0;
 		return 0;
 	}
@@ -217,7 +217,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
-		dormbr('Q', 'left', 'transpose', mm, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
+		dormbr('apply-Q', 'left', 'transpose', mm, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation: P_b^T stored in A
 		dorgbr('p', N, N, N, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
@@ -252,7 +252,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				rank[ 0 ] += 1;
 			} else {
 				// Zero out the corresponding row of B
-				dlaset( 'F', 1, nrhs, 0.0, 0.0,
+				dlaset( 'full', 1, nrhs, 0.0, 0.0,
 					B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
@@ -264,7 +264,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				A, strideA1, strideA2, offsetA,
 				B, strideB1, strideB2, offsetB,
 				0.0, WORK, 1, N, 0 );
-			dlacpy( 'G', N, nrhs,
+			dlacpy( 'full', N, nrhs,
 				WORK, 1, N, 0,
 				B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
@@ -275,7 +275,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					A, strideA1, strideA2, offsetA,
 					B, strideB1, strideB2, offsetB + (i * strideB2),
 					0.0, WORK, 1, N, 0 );
-				dlacpy( 'G', N, bl,
+				dlacpy( 'full', N, bl,
 					WORK, 1, N, 0,
 					B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
@@ -332,7 +332,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
-		dormbr('Q', 'left', 'transpose', M, nrhs, M, WORK, 1, ldwork, il, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
+		dormbr('apply-Q', 'left', 'transpose', M, nrhs, M, WORK, 1, ldwork, il, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation of L
 		dorgbr('p', M, M, M, WORK, 1, ldwork, il, WORK, 1, itaup, WORK, 1, iwork );
@@ -363,7 +363,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
-				dlaset( 'F', 1, nrhs, 0.0, 0.0,
+				dlaset( 'full', 1, nrhs, 0.0, 0.0,
 					B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
@@ -375,7 +375,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				WORK, 1, ldwork, il,
 				B, strideB1, strideB2, offsetB,
 				0.0, WORK, 1, M, iwork );
-			dlacpy( 'G', M, nrhs,
+			dlacpy( 'full', M, nrhs,
 				WORK, 1, M, iwork,
 				B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
@@ -386,7 +386,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					WORK, 1, ldwork, il,
 					B, strideB1, strideB2, offsetB + (i * strideB2),
 					0.0, WORK, 1, M, iwork );
-				dlacpy( 'G', M, bl,
+				dlacpy( 'full', M, bl,
 					WORK, 1, M, iwork,
 					B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
@@ -399,7 +399,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		}
 
 		// Zero out B(M+1:N, 1:NRHS)
-		dlaset( 'F', N - M, nrhs, 0.0, 0.0,
+		dlaset( 'full', N - M, nrhs, 0.0, 0.0,
 			B, strideB1, strideB2, offsetB + (M * strideB1) );
 
 		// Multiply by Q^T from LQ factorization: X = Q^T * [X_L; 0]
@@ -423,7 +423,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation
-		dormbr('Q', 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
+		dormbr('apply-Q', 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation
 		dorgbr('p', M, N, M, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
@@ -454,7 +454,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
-				dlaset( 'F', 1, nrhs, 0.0, 0.0,
+				dlaset( 'full', 1, nrhs, 0.0, 0.0,
 					B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
@@ -465,7 +465,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 				A, strideA1, strideA2, offsetA,
 				B, strideB1, strideB2, offsetB,
 				0.0, WORK, 1, N, 0 );
-			dlacpy( 'F', N, nrhs,
+			dlacpy( 'full', N, nrhs,
 				WORK, 1, N, 0,
 				B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
@@ -476,7 +476,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 					A, strideA1, strideA2, offsetA,
 					B, strideB1, strideB2, offsetB + (i * strideB2),
 					0.0, WORK, 1, N, 0 );
-				dlacpy( 'F', N, bl,
+				dlacpy( 'full', N, bl,
 					WORK, 1, N, 0,
 					B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}

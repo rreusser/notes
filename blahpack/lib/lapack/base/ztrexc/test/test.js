@@ -84,7 +84,7 @@ test( 'ztrexc: move position 3 to 1, compq=V', function t() {
 	var tm = buildT4( T4_VALS );
 	var qm = identityComplex( N );
 
-	var info = ztrexc( 'V', N, tm.data, 1, N, 0, qm.data, 1, N, 0, 3, 1 );
+	var info = ztrexc( 'update', N, tm.data, 1, N, 0, qm.data, 1, N, 0, 3, 1 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( tm.view ), tc.T, 1e-12, 'T' );
@@ -97,7 +97,7 @@ test( 'ztrexc: move position 1 to 4, compq=V', function t() {
 	var tm = buildT4( T4_VALS );
 	var qm = identityComplex( N );
 
-	var info = ztrexc( 'V', N, tm.data, 1, N, 0, qm.data, 1, N, 0, 1, 4 );
+	var info = ztrexc( 'update', N, tm.data, 1, N, 0, qm.data, 1, N, 0, 1, 4 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( tm.view ), tc.T, 1e-12, 'T' );
@@ -110,7 +110,7 @@ test( 'ztrexc: move position 2 to 4, compq=N', function t() {
 	var tm = buildT4( T4_VALS );
 	var qm = identityComplex( N );
 
-	var info = ztrexc( 'N', N, tm.data, 1, N, 0, qm.data, 1, N, 0, 2, 4 );
+	var info = ztrexc( 'none', N, tm.data, 1, N, 0, qm.data, 1, N, 0, 2, 4 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( tm.view ), tc.T, 1e-12, 'T' );
@@ -128,7 +128,7 @@ test( 'ztrexc: ifst=ilst no-op', function t() {
 	Tv[ (3 + 3*N)*2 ] = 4.0;
 	var qm = identityComplex( N );
 
-	var info = ztrexc( 'V', N, T, 1, N, 0, qm.data, 1, N, 0, 2, 2 );
+	var info = ztrexc( 'update', N, T, 1, N, 0, qm.data, 1, N, 0, 2, 2 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( Tv ), tc.T, 1e-14, 'T' );
@@ -143,7 +143,7 @@ test( 'ztrexc: N=1 quick return', function t() {
 	var Qv = reinterpret( Q, 0 );
 	Qv[ 0 ] = 1.0;
 
-	var info = ztrexc( 'V', 1, T, 1, 1, 0, Q, 1, 1, 0, 1, 1 );
+	var info = ztrexc( 'update', 1, T, 1, 1, 0, Q, 1, 1, 0, 1, 1 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 });
@@ -170,7 +170,7 @@ test( 'ztrexc: move position 4 to 2, compq=V', function t() {
 	}
 	var qm = identityComplex( N );
 
-	var info = ztrexc( 'V', N, T, 1, N, 0, qm.data, 1, N, 0, 4, 2 );
+	var info = ztrexc( 'update', N, T, 1, N, 0, qm.data, 1, N, 0, 4, 2 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( Tv ), tc.T, 1e-12, 'T' );

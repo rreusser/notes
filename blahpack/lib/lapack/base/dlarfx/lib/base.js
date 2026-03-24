@@ -74,7 +74,7 @@ function dlarfx( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, of
 		return;
 	}
 
-	if ( side === 'L' || side === 'l' ) {
+	if ( side === 'left' ) {
 		// Form H * C
 		dim = M;
 		if ( dim >= 1 && dim <= 10 ) {
@@ -97,7 +97,7 @@ function dlarfx( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, of
 			return;
 		}
 		// Fallback to general dlarf
-		dlarf( 'L', M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
+		dlarf( 'left', M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
 	} else {
 		// Form C * H
 		dim = N;
@@ -121,7 +121,7 @@ function dlarfx( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, of
 			return;
 		}
 		// Fallback to general dlarf
-		dlarf( 'R', M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
+		dlarf( 'right', M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK );
 	}
 }
 

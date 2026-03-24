@@ -65,7 +65,6 @@ var zsytrs2 = require( '../../zsytrs2/lib/base.js' );
 * @returns {integer} info - 0 if successful, k>0 if D(k-1,k-1) is exactly zero
 */
 function zsysv( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
-	var uplot;
 	var WORK;
 	var info;
 
@@ -73,17 +72,14 @@ function zsysv( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV,
 		return 0;
 	}
 
-	// Map single-char uplo to the string format zsytrf expects
-	uplot = ( uplo === 'U' ) ? 'upper' : 'lower';
-
 	// Factorize A = U*D*U^T or A = L*D*L^T
-	info = zsytrf( uplot, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV );
+	info = zsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV );
 
 	if ( info === 0 ) {
 		// Allocate workspace for zsytrs2 (needs N complex elements)
 		WORK = new Complex128Array( N );
 
-		// Solve using the factorization; zsytrs2 expects single-char uplo
+		// Solve using the factorization
 		zsytrs2( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, WORK, 1, 0 );
 	}
 

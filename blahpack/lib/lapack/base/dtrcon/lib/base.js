@@ -111,7 +111,7 @@ function dtrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, RCOND, WOR
 		ow = offsetWORK;
 
 		ainvnm = 0.0;
-		normin = 'N';
+		normin = 'no';
 		if ( onenrm ) {
 			kase1 = 1;
 		} else {
@@ -142,7 +142,7 @@ function dtrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, RCOND, WOR
 				// Multiply by inv(A^T)
 				dlatrs( uplo, 'transpose', diag, normin, N, A, strideA1, strideA2, offsetA, WORK, sw, ow, scale, WORK, sw, ow + (2 * N * sw) );
 			}
-			normin = 'Y';
+			normin = 'yes';
 
 			// Multiply by 1/SCALE if doing so will not cause overflow
 			if ( scale[ 0 ] !== 1.0 ) {

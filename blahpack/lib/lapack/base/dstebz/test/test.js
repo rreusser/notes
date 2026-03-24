@@ -64,7 +64,7 @@ test( 'dstebz: N=0 quick return', function t() {
 	var tc = findCase( 'n0' );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 1 );
-	var result = callDstebz( 'A', 'B', 0, 0.0, 0.0, 1, 0, d, e );
+	var result = callDstebz( 'all', 'block', 0, 0.0, 0.0, 1, 0, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 });
@@ -73,7 +73,7 @@ test( 'dstebz: N=1, RANGE=A', function t() {
 	var tc = findCase( 'n1_all' );
 	var d = new Float64Array( [ 5.0 ] );
 	var e = new Float64Array( 1 );
-	var result = callDstebz( 'A', 'B', 1, 0.0, 0.0, 1, 1, d, e );
+	var result = callDstebz( 'all', 'block', 1, 0.0, 0.0, 1, 1, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	assert.equal( result.nsplit, tc.nsplit, 'nsplit' );
@@ -86,7 +86,7 @@ test( 'dstebz: N=1, RANGE=V, eigenvalue outside interval', function t() {
 	var tc = findCase( 'n1_v_outside' );
 	var d = new Float64Array( [ 5.0 ] );
 	var e = new Float64Array( 1 );
-	var result = callDstebz( 'V', 'B', 1, 0.0, 3.0, 1, 1, d, e );
+	var result = callDstebz( 'value', 'block', 1, 0.0, 3.0, 1, 1, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 });
@@ -95,7 +95,7 @@ test( 'dstebz: 5x5, RANGE=A, ORDER=B', function t() {
 	var tc = findCase( 'n5_all_orderB' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'A', 'B', 5, 0.0, 0.0, 1, 5, d, e );
+	var result = callDstebz( 'all', 'block', 5, 0.0, 0.0, 1, 5, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	assert.equal( result.nsplit, tc.nsplit, 'nsplit' );
@@ -110,7 +110,7 @@ test( 'dstebz: 5x5, RANGE=A, ORDER=E', function t() {
 	var tc = findCase( 'n5_all_orderE' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'A', 'E', 5, 0.0, 0.0, 1, 5, d, e );
+	var result = callDstebz( 'all', 'entire', 5, 0.0, 0.0, 1, 5, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	for ( var i = 0; i < tc.m; i++ ) {
@@ -122,7 +122,7 @@ test( 'dstebz: 5x5, RANGE=V (0, 3]', function t() {
 	var tc = findCase( 'n5_rangeV' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'V', 'E', 5, 0.0, 3.0, 1, 5, d, e );
+	var result = callDstebz( 'value', 'entire', 5, 0.0, 3.0, 1, 5, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	for ( var i = 0; i < tc.m; i++ ) {
@@ -134,7 +134,7 @@ test( 'dstebz: 5x5, RANGE=I (eigenvalues 2-4)', function t() {
 	var tc = findCase( 'n5_rangeI' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'I', 'E', 5, 0.0, 0.0, 2, 4, d, e );
+	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 2, 4, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	for ( var i = 0; i < tc.m; i++ ) {
@@ -146,7 +146,7 @@ test( 'dstebz: RANGE=I with IL=1,IU=N simplifies to A', function t() {
 	var tc = findCase( 'n5_rangeI_all' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'I', 'E', 5, 0.0, 0.0, 1, 5, d, e );
+	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 1, 5, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	for ( var i = 0; i < tc.m; i++ ) {
@@ -158,7 +158,7 @@ test( 'dstebz: split matrix (E(2)=0), ORDER=B', function t() {
 	var tc = findCase( 'n5_split_orderB' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 0.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'A', 'B', 5, 0.0, 0.0, 1, 5, d, e );
+	var result = callDstebz( 'all', 'block', 5, 0.0, 0.0, 1, 5, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	assert.equal( result.nsplit, tc.nsplit, 'nsplit' );
@@ -173,7 +173,7 @@ test( 'dstebz: split matrix, ORDER=E', function t() {
 	var tc = findCase( 'n5_split_orderE' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 0.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'A', 'E', 5, 0.0, 0.0, 1, 5, d, e );
+	var result = callDstebz( 'all', 'entire', 5, 0.0, 0.0, 1, 5, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	assert.equal( result.nsplit, tc.nsplit, 'nsplit' );
@@ -188,7 +188,7 @@ test( 'dstebz: diagonal matrix (all E=0)', function t() {
 	var tc = findCase( 'diagonal' );
 	var d = new Float64Array( [ 5.0, 1.0, 3.0, 2.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0, 0.0 ] );
-	var result = callDstebz( 'A', 'E', 4, 0.0, 0.0, 1, 4, d, e );
+	var result = callDstebz( 'all', 'entire', 4, 0.0, 0.0, 1, 4, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	assert.equal( result.nsplit, tc.nsplit, 'nsplit' );
@@ -203,7 +203,7 @@ test( 'dstebz: split matrix, RANGE=V', function t() {
 	var tc = findCase( 'split_rangeV' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'V', 'B', 5, -2.0, 3.5, 1, 5, d, e );
+	var result = callDstebz( 'value', 'block', 5, -2.0, 3.5, 1, 5, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	assert.equal( result.nsplit, tc.nsplit, 'nsplit' );
@@ -218,7 +218,7 @@ test( 'dstebz: split matrix, RANGE=I', function t() {
 	var tc = findCase( 'split_rangeI' );
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'I', 'E', 5, 0.0, 0.0, 2, 4, d, e );
+	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 2, 4, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	for ( var i = 0; i < tc.m; i++ ) {
@@ -231,7 +231,7 @@ test( 'dstebz: Wilkinson 10x10, RANGE=A', function t() {
 	var tc = findCase( 'wilkinson10' );
 	var d = new Float64Array( [ 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ] );
 	var e = new Float64Array( [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] );
-	var result = callDstebz( 'A', 'E', 10, 0.0, 0.0, 1, 10, d, e );
+	var result = callDstebz( 'all', 'entire', 10, 0.0, 0.0, 1, 10, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	assert.equal( result.nsplit, tc.nsplit, 'nsplit' );
@@ -244,7 +244,7 @@ test( 'dstebz: Wilkinson 10x10, RANGE=I (eigenvalues 3-7)', function t() {
 	var tc = findCase( 'wilkinson10_rangeI' );
 	var d = new Float64Array( [ 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ] );
 	var e = new Float64Array( [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] );
-	var result = callDstebz( 'I', 'E', 10, 0.0, 0.0, 3, 7, d, e );
+	var result = callDstebz( 'index', 'entire', 10, 0.0, 0.0, 3, 7, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	for ( var i = 0; i < tc.m; i++ ) {
@@ -256,7 +256,7 @@ test( 'dstebz: Wilkinson 10x10, RANGE=V (1, 4]', function t() {
 	var tc = findCase( 'wilkinson10_rangeV' );
 	var d = new Float64Array( [ 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ] );
 	var e = new Float64Array( [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] );
-	var result = callDstebz( 'V', 'E', 10, 1.0, 4.0, 1, 10, d, e );
+	var result = callDstebz( 'value', 'entire', 10, 1.0, 4.0, 1, 10, d, e );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.m, tc.m, 'm' );
 	for ( var i = 0; i < tc.m; i++ ) {
@@ -274,7 +274,7 @@ test( 'dstebz: N < 0 returns error', function t() {
 	var ISPLIT = new Int32Array( 5 );
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'A', 'B', -1, 0, 0, 1, 1, ABSTOL,
+	var info = dstebz( 'all', 'block', -1, 0, 0, 1, 1, ABSTOL,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -291,7 +291,7 @@ test( 'dstebz: RANGE=V with vl >= vu returns error', function t() {
 	var ISPLIT = new Int32Array( 5 );
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'V', 'B', 2, 3.0, 1.0, 1, 2, ABSTOL,
+	var info = dstebz( 'value', 'block', 2, 3.0, 1.0, 1, 2, ABSTOL,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -309,7 +309,7 @@ test( 'dstebz: RANGE=I with invalid IL returns error', function t() {
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
 	// IL = 0 is invalid (must be >= 1)
-	var info = dstebz( 'I', 'B', 3, 0, 0, 0, 3, ABSTOL,
+	var info = dstebz( 'index', 'block', 3, 0, 0, 0, 3, ABSTOL,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -327,7 +327,7 @@ test( 'dstebz: RANGE=I with invalid IU returns error', function t() {
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
 	// IU = 5 > N = 3
-	var info = dstebz( 'I', 'B', 3, 0, 0, 1, 5, ABSTOL,
+	var info = dstebz( 'index', 'block', 3, 0, 0, 1, 5, ABSTOL,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -337,7 +337,7 @@ test( 'dstebz: RANGE=I with invalid IU returns error', function t() {
 test( 'dstebz: positive abstol', function t() {
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'A', 'B', 5, 0.0, 0.0, 1, 5, d, e );
+	var result = callDstebz( 'all', 'block', 5, 0.0, 0.0, 1, 5, d, e );
 	// Call again with positive abstol
 	var d2 = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e2 = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
@@ -348,7 +348,7 @@ test( 'dstebz: positive abstol', function t() {
 	var ISPLIT = new Int32Array( 6 );
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'A', 'B', 5, 0.0, 0.0, 1, 5, 1e-10,
+	var info = dstebz( 'all', 'block', 5, 0.0, 0.0, 1, 5, 1e-10,
 		d2, 1, 0, e2, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -360,7 +360,7 @@ test( 'dstebz: RANGE=V with interval excluding all eigenvalues', function t() {
 	// All eigenvalues of this matrix are near 2 +/- 1, so interval [10,20] is empty
 	var d = new Float64Array( [ 2.0, 2.0, 2.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0 ] );
-	var result = callDstebz( 'V', 'B', 3, 10.0, 20.0, 1, 3, d, e );
+	var result = callDstebz( 'value', 'block', 3, 10.0, 20.0, 1, 3, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 0, 'no eigenvalues in [10,20]' );
 });
@@ -371,7 +371,7 @@ test( 'dstebz: RANGE=I with split matrix needing discard path', function t() {
 	// Then request IL=2, IU=3 to exercise the discard path.
 	var d = new Float64Array( [ 1.0, 5.0, 2.0, 3.0, 4.0 ] );
 	var e = new Float64Array( [ 0.5, 0.0, 0.5, 0.5 ] );
-	var result = callDstebz( 'I', 'E', 5, 0.0, 0.0, 2, 3, d, e );
+	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 2, 3, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 2, 'should find 2 eigenvalues' );
 	// Eigenvalues should be sorted
@@ -381,7 +381,7 @@ test( 'dstebz: RANGE=I with split matrix needing discard path', function t() {
 test( 'dstebz: RANGE=I requesting single eigenvalue', function t() {
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var result = callDstebz( 'I', 'E', 5, 0.0, 0.0, 3, 3, d, e );
+	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 3, 3, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 1, 'should find exactly 1 eigenvalue' );
 });
@@ -396,7 +396,7 @@ test( 'dstebz: split matrix with RANGE=V and positive abstol', function t() {
 	var ISPLIT = new Int32Array( 6 );
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'V', 'B', 5, 0.0, 3.5, 1, 5, 1e-8,
+	var info = dstebz( 'value', 'block', 5, 0.0, 3.5, 1, 5, 1e-8,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -415,7 +415,7 @@ test( 'dstebz: RANGE=I with split matrix and ORDER=B', function t() {
 	// Three blocks: [10], [1,2,3], [20]
 	// Eigenvalues approx: 10, 0.59, 2, 3.41, 20 -> sorted: 0.59, 2, 3.41, 10, 20
 	// Request eigenvalues 2-4 (sorted)
-	var result = callDstebz( 'I', 'B', 5, 0.0, 0.0, 2, 4, d, e );
+	var result = callDstebz( 'index', 'block', 5, 0.0, 0.0, 2, 4, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 3, 'should find 3 eigenvalues' );
 });
@@ -424,7 +424,7 @@ test( 'dstebz: degenerate eigenvalues (identical diagonal entries)', function t(
 	// All diagonal entries the same -> all eigenvalues are the same (for diagonal matrix)
 	var d = new Float64Array( [ 3.0, 3.0, 3.0, 3.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0, 0.0 ] );
-	var result = callDstebz( 'A', 'E', 4, 0.0, 0.0, 1, 4, d, e );
+	var result = callDstebz( 'all', 'entire', 4, 0.0, 0.0, 1, 4, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 4, 'm' );
 	for ( var i = 0; i < 4; i++ ) {
@@ -448,7 +448,7 @@ test( 'dstebz: large split matrix (15x15) with multiple blocks', function t() {
 	e[ 3 ] = 0.0;
 	e[ 7 ] = 0.0;
 	e[ 11 ] = 0.0;
-	var result = callDstebz( 'A', 'E', N, 0.0, 0.0, 1, N, d, e );
+	var result = callDstebz( 'all', 'entire', N, 0.0, 0.0, 1, N, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, N, 'should find all eigenvalues' );
 	assert.equal( result.nsplit, 4, 'should have 4 blocks' );
@@ -472,7 +472,7 @@ test( 'dstebz: RANGE=I on large split matrix (subset from middle)', function t()
 	e[ 3 ] = 0.0;
 	e[ 7 ] = 0.0;
 	e[ 11 ] = 0.0;
-	var result = callDstebz( 'I', 'E', N, 0.0, 0.0, 5, 10, d, e );
+	var result = callDstebz( 'index', 'entire', N, 0.0, 0.0, 5, 10, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 6, 'should find 6 eigenvalues (indices 5-10)' );
 	for ( i = 0; i < result.m - 1; i++ ) {
@@ -491,7 +491,7 @@ test( 'dstebz: RANGE=I with split and positive abstol', function t() {
 	var ISPLIT = new Int32Array( 6 );
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'I', 'E', 5, 0.0, 0.0, 2, 4, 1e-10,
+	var info = dstebz( 'index', 'entire', 5, 0.0, 0.0, 2, 4, 1e-10,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -511,7 +511,7 @@ test( 'dstebz: RANGE=I with abstol=0 (uses ulp-based tolerance)', function t() {
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
 	// Use abstol = 0 to trigger the ulp*tnorm path (line 266)
-	var info = dstebz( 'I', 'E', N, 0.0, 0.0, 2, 4, 0.0,
+	var info = dstebz( 'index', 'entire', N, 0.0, 0.0, 2, 4, 0.0,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -531,7 +531,7 @@ test( 'dstebz: RANGE=A with abstol=0 (split matrix, exercises atoli=ulp*max)', f
 	var ISPLIT = new Int32Array( N + 1 );
 	var MM = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'A', 'E', N, 0.0, 0.0, 1, N, 0.0,
+	var info = dstebz( 'all', 'entire', N, 0.0, 0.0, 1, N, 0.0,
 		d, 1, 0, e, 1, 0, MM, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -554,7 +554,7 @@ test( 'dstebz: RANGE=I with clustered eigenvalues', function t() {
 		e[ i ] = 0.0001;
 	}
 	// Request middle eigenvalues
-	var result = callDstebz( 'I', 'E', N, 0.0, 0.0, 4, 7, d, e );
+	var result = callDstebz( 'index', 'entire', N, 0.0, 0.0, 4, 7, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 4, 'should find 4 eigenvalues' );
 	for ( i = 0; i < result.m - 1; i++ ) {
@@ -567,7 +567,7 @@ test( 'dstebz: RANGE=V with very narrow interval', function t() {
 	var d = new Float64Array( [ 1.0, 3.0, 5.0 ] );
 	var e = new Float64Array( [ 0.1, 0.1 ] );
 	// Eigenvalues are approximately 0.99, 3.0, 5.01
-	var result = callDstebz( 'V', 'E', 3, 2.5, 3.5, 1, 3, d, e );
+	var result = callDstebz( 'value', 'entire', 3, 2.5, 3.5, 1, 3, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 1, 'should find 1 eigenvalue' );
 	assertClose( result.w[ 0 ], 3.0, 1e-2, 'eigenvalue near 3.0' );
@@ -576,7 +576,7 @@ test( 'dstebz: RANGE=V with very narrow interval', function t() {
 test( 'dstebz: RANGE=I with N=2', function t() {
 	var d = new Float64Array( [ 1.0, 3.0 ] );
 	var e = new Float64Array( [ 0.5 ] );
-	var result = callDstebz( 'I', 'E', 2, 0.0, 0.0, 1, 1, d, e );
+	var result = callDstebz( 'index', 'entire', 2, 0.0, 0.0, 1, 1, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 1, 'should find 1 eigenvalue' );
 });
@@ -586,7 +586,7 @@ test( 'dstebz: RANGE=V on split matrix where one block is entirely excluded', fu
 	// Request interval [50, 150] which excludes block 1 (gu < wl path)
 	var d = new Float64Array( [ 1.0, 1.0, 100.0, 100.0 ] );
 	var e = new Float64Array( [ 0.1, 0.0, 0.1 ] );
-	var result = callDstebz( 'V', 'B', 4, 50.0, 150.0, 1, 4, d, e );
+	var result = callDstebz( 'value', 'block', 4, 50.0, 150.0, 1, 4, d, e );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.m, 2, 'should find 2 eigenvalues from block 2' );
 });
@@ -601,7 +601,7 @@ test( 'dstebz: invalid RANGE returns error', function t() {
 	var ISPLIT = new Int32Array( 5 );
 	var M = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'X', 'B', 1, 0, 0, 1, 1, ABSTOL,
+	var info = dstebz( 'X', 'block', 1, 0, 0, 1, 1, ABSTOL,
 		d, 1, 0, e, 1, 0, M, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );
@@ -618,7 +618,7 @@ test( 'dstebz: invalid ORDER returns error', function t() {
 	var ISPLIT = new Int32Array( 5 );
 	var M = new Int32Array( 1 );
 	var nsplitArr = new Int32Array( 1 );
-	var info = dstebz( 'A', 'X', 1, 0, 0, 1, 1, ABSTOL,
+	var info = dstebz( 'all', 'X', 1, 0, 0, 1, 1, ABSTOL,
 		d, 1, 0, e, 1, 0, M, nsplitArr,
 		w, 1, 0, IBLOCK, 1, 0, ISPLIT, 1, 0,
 		WORK, 1, 0, IWORK, 1, 0 );

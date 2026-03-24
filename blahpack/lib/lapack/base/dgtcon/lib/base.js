@@ -133,13 +133,13 @@ function dgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 
 		if ( KASE[ 0 ] === kase1 ) {
 			// Multiply by inv(A): solve A*x = b (no transpose)
-			dgttrs( 'N', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
+			dgttrs( 'no-transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
 				DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2,
 				IPIV, strideIPIV, offsetIPIV,
 				WORK, sw, N * sw, offsetWORK );
 		} else {
 			// Multiply by inv(A^T): solve A^T*x = b (transpose)
-			dgttrs( 'T', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
+			dgttrs( 'transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
 				DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2,
 				IPIV, strideIPIV, offsetIPIV,
 				WORK, sw, N * sw, offsetWORK );

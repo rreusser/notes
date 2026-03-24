@@ -76,7 +76,7 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=N (upper bidiagonal, NQ>=K)', function t() 
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
 	// NQ = M = 4, K = 3, NQ >= K => dormqr on full A
-	var info = dormbr('Q', 'left', 'no-transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'no-transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -88,7 +88,7 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=T (upper bidiagonal)', function t() {
 	var TAUQ = new Float64Array( gebrd.TAUQ );
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('Q', 'left', 'transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -102,7 +102,7 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=N (upper bidiagonal, NQ>=K)', function t() 
 	var WORK = new Float64Array( 1000 );
 	// VECT=P, SIDE=R: NQ = N = 3, K = 3, NQ >= K is false (NQ > K is false since 3 > 3 is false)
 	// NQ = 3, K = 3, so NQ > K is false, NQ > 1 is true => uses NQ<=K branch
-	var info = dormbr('P', 'right', 'no-transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'right', 'no-transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -114,7 +114,7 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=T (upper bidiagonal)', function t() {
 	var TAUP = new Float64Array( gebrd.TAUP );
 	var C = eye( 3, 3 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('P', 'right', 'transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'right', 'transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -127,7 +127,7 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=N (upper bidiagonal)', function t() {
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
 	// VECT=Q, SIDE=R: NQ = N = 4, K = 3, NQ >= K => dormqr on full A
-	var info = dormbr('Q', 'right', 'no-transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'right', 'no-transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -140,7 +140,7 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=N (upper bidiagonal)', function t() {
 	var C = eye( 3, 3 );
 	var WORK = new Float64Array( 1000 );
 	// VECT=P, SIDE=L: NQ = M = 3, K = 3, NQ > K is false, NQ > 1 => NQ<=K branch
-	var info = dormbr('P', 'left', 'no-transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'left', 'no-transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -152,7 +152,7 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=T (upper bidiagonal)', function t() {
 	var TAUQ = new Float64Array( gebrd.TAUQ );
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('Q', 'right', 'transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'right', 'transpose', 4, 4, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -164,7 +164,7 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=T (upper bidiagonal)', function t() {
 	var TAUP = new Float64Array( gebrd.TAUP );
 	var C = eye( 3, 3 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('P', 'left', 'transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'left', 'transpose', 3, 3, 3, A, 1, 4, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -181,7 +181,7 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=N (lower bidiagonal, NQ<K)', function t() {
 	var C = eye( 3, 3 );
 	var WORK = new Float64Array( 1000 );
 	// VECT=Q, SIDE=L: NQ = M = 3, K = 4, NQ < K => uses A(2:NQ, 1:NQ-1) and NQ-1 reflectors
-	var info = dormbr('Q', 'left', 'no-transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'no-transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -193,7 +193,7 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=T (lower bidiagonal, NQ<K)', function t() {
 	var TAUQ = new Float64Array( gebrd.TAUQ );
 	var C = eye( 3, 3 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('Q', 'left', 'transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -206,7 +206,7 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=N (lower bidiagonal, NQ>K)', function t() {
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
 	// VECT=P, SIDE=R: NQ = N = 4, K = 3, NQ > K => dormlq on full A
-	var info = dormbr('P', 'right', 'no-transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'right', 'no-transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -218,7 +218,7 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=T (lower bidiagonal, NQ>K)', function t() {
 	var TAUP = new Float64Array( gebrd.TAUP );
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('P', 'right', 'transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'right', 'transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -231,7 +231,7 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=N (lower bidiagonal, NQ>K)', function t() {
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
 	// VECT=P, SIDE=L: NQ = M = 4, K = 3, NQ > K => dormlq on full A
-	var info = dormbr('P', 'left', 'no-transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'left', 'no-transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -243,7 +243,7 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=T (lower bidiagonal, NQ>K)', function t() {
 	var TAUP = new Float64Array( gebrd.TAUP );
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('P', 'left', 'transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'left', 'transpose', 4, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -256,7 +256,7 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=N (lower bidiagonal, NQ<K)', function t() {
 	var C = eye( 3, 3 );
 	var WORK = new Float64Array( 1000 );
 	// VECT=Q, SIDE=R: NQ = N = 3, K = 4, NQ < K => uses NQ-1 reflectors from A(2:,1:)
-	var info = dormbr('Q', 'right', 'no-transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'right', 'no-transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -268,7 +268,7 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=T (lower bidiagonal, NQ<K)', function t() {
 	var TAUQ = new Float64Array( gebrd.TAUQ );
 	var C = eye( 3, 3 );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('Q', 'right', 'transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'right', 'transpose', 3, 3, 4, A, 1, 3, 0, TAUQ, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -283,7 +283,7 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=N, non-identity C (upper bidiagonal)', func
 	// C is 4x2: [1,3,-1,2, 2,0,4,-1] column-major
 	var C = new Float64Array( [ 1, 3, -1, 2, 2, 0, 4, -1 ] );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('Q', 'left', 'no-transpose', 4, 2, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'no-transpose', 4, 2, 3, A, 1, 4, 0, TAUQ, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -296,7 +296,7 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=N, non-identity C (lower bidiagonal)', func
 	// C is 3x4: [1,3,-1, 2,0,4, -1,2,1, 0,1,-2] column-major
 	var C = new Float64Array( [ 1, 3, -1, 2, 0, 4, -1, 2, 1, 0, 1, -2 ] );
 	var WORK = new Float64Array( 1000 );
-	var info = dormbr('P', 'right', 'no-transpose', 3, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
+	var info = dormbr('apply-P', 'right', 'no-transpose', 3, 4, 3, A, 1, 3, 0, TAUP, 1, 0, C, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });
@@ -308,7 +308,7 @@ test( 'dormbr: M=0 quick return', function t() {
 	var TAU = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dormbr('Q', 'left', 'no-transpose', 0, 3, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'no-transpose', 0, 3, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -317,7 +317,7 @@ test( 'dormbr: N=0 quick return', function t() {
 	var TAU = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dormbr('Q', 'left', 'no-transpose', 3, 0, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'no-transpose', 3, 0, 0, A, 1, 1, 0, TAU, 1, 0, C, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 });
 
@@ -328,7 +328,7 @@ test( 'dormbr: K=0, VECT=Q (dormqr with K=0, C unchanged)', function t() {
 	var C = eye( 4, 4 );
 	var WORK = new Float64Array( 1000 );
 	// NQ = 4, K = 0, NQ >= K => dormqr with K=0, should leave C unchanged
-	var info = dormbr('Q', 'left', 'no-transpose', 4, 4, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+	var info = dormbr('apply-Q', 'left', 'no-transpose', 4, 4, 0, A, 1, 4, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
 	assert.equal( info, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });

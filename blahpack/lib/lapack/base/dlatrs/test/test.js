@@ -40,7 +40,7 @@ test( 'dlatrs: upper, no-transpose, non-unit diagonal, 3x3', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -54,7 +54,7 @@ test( 'dlatrs: lower, no-transpose, non-unit diagonal, 3x3', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -67,7 +67,7 @@ test( 'dlatrs: upper, transpose, non-unit diagonal, 3x3', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -79,7 +79,7 @@ test( 'dlatrs: lower, transpose, non-unit diagonal, 3x3', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -91,7 +91,7 @@ test( 'dlatrs: upper, no-transpose, unit diagonal, 3x3', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -102,7 +102,7 @@ test( 'dlatrs: N=0', function t() {
 	var x = new Float64Array( 0 );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 0 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 0, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 0, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.strictEqual( scale[ 0 ], 1.0 );
 });
@@ -113,7 +113,7 @@ test( 'dlatrs: N=1', function t() {
 	var x = new Float64Array( [ 10 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 1 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 1, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 1, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertClose( x[ 0 ], tc.x[ 0 ], 1e-14, 'x[0]' );
@@ -125,7 +125,7 @@ test( 'dlatrs: upper, normin=Y (pre-computed norms), 4x4', function t() {
 	var x = new Float64Array( [ 1, 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( [ 0, 1, 3, 4 ] );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'Y', 4, A, 1, 4, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'yes', 4, A, 1, 4, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -137,7 +137,7 @@ test( 'dlatrs: lower, transpose, unit diagonal, 3x3', function t() {
 	var x = new Float64Array( [ 6, 5, 4 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -149,7 +149,7 @@ test( 'dlatrs: identity matrix', function t() {
 	var x = new Float64Array( [ 7, 8, 9 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -164,7 +164,7 @@ test( 'dlatrs: verifies A * x = scale * b', function t() {
 	var i;
 	var j;
 	var ax;
-	dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	for ( i = 0; i < 3; i++ ) {
 		ax = 0;
 		for ( j = 0; j < 3; j++ ) {
@@ -179,7 +179,7 @@ test( 'dlatrs: lower, no-transpose, unit diagonal', function t() {
 	var x = new Float64Array( [ 6, 5, 4 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'no-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'no-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.strictEqual( scale[ 0 ], 1.0 );
 	// x[0] = 6, x[1] = 5 - 1*6 = -1, x[2] = 4 - 2*6 - 3*(-1) = -5
@@ -196,7 +196,7 @@ test( 'dlatrs: near-singular upper triangular triggers careful solve (non-transp
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	// With near-singular matrix, scale may be adjusted
 	assert.ok( scale[ 0 ] >= 0.0, 'scale >= 0' );
@@ -208,7 +208,7 @@ test( 'dlatrs: near-singular lower triangular triggers careful solve (non-transp
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] >= 0.0, 'scale >= 0' );
 });
@@ -219,7 +219,7 @@ test( 'dlatrs: near-singular upper, transpose triggers careful solve', function 
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] >= 0.0, 'scale >= 0' );
 });
@@ -230,7 +230,7 @@ test( 'dlatrs: near-singular lower, transpose triggers careful solve', function 
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] >= 0.0, 'scale >= 0' );
 });
@@ -241,7 +241,7 @@ test( 'dlatrs: near-singular unit diagonal triggers careful solve', function t()
 	var x = new Float64Array( [ 1e200, 1e200, 1e200 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -251,7 +251,7 @@ test( 'dlatrs: zero diagonal triggers singular path', function t() {
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.strictEqual( scale[ 0 ], 0.0 );
 });
@@ -262,7 +262,7 @@ test( 'dlatrs: very large x triggers xmax > BIGNUM scaling', function t() {
 	var x = new Float64Array( [ 1e300, 1e300, 1e300 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] >= 0.0, 'scale >= 0' );
 });
@@ -273,7 +273,7 @@ test( 'dlatrs: near-singular lower, non-transpose, unit diagonal triggers carefu
 	var x = new Float64Array( [ 1e200, 1e200, 1e200 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'no-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'no-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -282,7 +282,7 @@ test( 'dlatrs: near-singular lower, transpose, unit diagonal triggers careful so
 	var x = new Float64Array( [ 1e200, 1e200, 1e200 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -293,7 +293,7 @@ test( 'dlatrs: small diagonal with large x triggers xj > tjj*BIGNUM scaling', fu
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] >= 0.0, 'scale >= 0' );
 });
@@ -306,7 +306,7 @@ test( 'dlatrs: upper with off-diag, non-unit, triggers non-trivial careful solve
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -316,7 +316,7 @@ test( 'dlatrs: lower with off-diag, non-unit, triggers non-trivial careful solve
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -326,7 +326,7 @@ test( 'dlatrs: upper transpose with off-diag, triggers transpose careful solve',
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -336,7 +336,7 @@ test( 'dlatrs: lower transpose with off-diag, triggers transpose careful solve',
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -347,7 +347,7 @@ test( 'dlatrs: large CNORM triggers tscal scaling path', function t() {
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -357,7 +357,7 @@ test( 'dlatrs: large CNORM triggers tscal scaling, lower', function t() {
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 });
 
@@ -367,7 +367,7 @@ test( 'dlatrs: small diagonal with large x, transpose', function t() {
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'lower', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] >= 0.0, 'scale >= 0' );
 });
@@ -377,7 +377,7 @@ test( 'dlatrs: upper, transpose, unit diagonal', function t() {
 	var x = new Float64Array( [ 6, 5, 4 ] );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatrs( 'upper', 'transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatrs( 'upper', 'transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.strictEqual( scale[ 0 ], 1.0 );
 	// A^T * x = b: a^T is lower triangular with unit diag

@@ -22,7 +22,6 @@
 
 // MODULES //
 
-var uppercase = require( '@stdlib/string/base/uppercase' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlassq = require( '../../zlassq/lib/base.js' );
 var cmplx = require( '../../../../cmplx.js' );
@@ -60,14 +59,13 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 	var wi;
 	var i;
 	var j;
-	var n = uppercase( norm.charAt( 0 ) );
 
 	Av = reinterpret( A, 0 );
 	sa1 = strideA1 * 2;
 	sa2 = strideA2 * 2;
 	oA = offsetA * 2;
 
-	if ( n === 'M' ) {
+	if ( norm === 'max' ) {
 		// Max absolute value
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
@@ -81,7 +79,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 				aij += sa1;
 			}
 		}
-	} else if ( n === 'O' || n === '1' ) {
+	} else if ( norm === 'one-norm' ) {
 		// One-norm (max column sum of absolute values)
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
@@ -96,7 +94,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 				value = sum;
 			}
 		}
-	} else if ( n === 'I' ) {
+	} else if ( norm === 'inf-norm' ) {
 		// Infinity-norm (max row sum of absolute values)
 		for ( i = 0; i < N; i++ ) {
 			WORK[ offsetWORK + (i * strideWORK) ] = 0.0;
@@ -118,7 +116,7 @@ function zlanhs( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offs
 				value = sum;
 			}
 		}
-	} else if ( n === 'F' || n === 'E' ) {
+	} else if ( norm === 'frobenius' ) {
 		// Frobenius norm
 		// Zlassq now takes Complex128Array with offset in complex elements
 		scale = 0.0;

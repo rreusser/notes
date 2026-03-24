@@ -142,20 +142,20 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 	info = 0;
 
 	// Decode RANGE
-	if ( range === 'A' ) {
+	if ( range === 'all' ) {
 		irange = 1;
-	} else if ( range === 'V' ) {
+	} else if ( range === 'value' ) {
 		irange = 2;
-	} else if ( range === 'I' ) {
+	} else if ( range === 'index' ) {
 		irange = 3;
 	} else {
 		irange = 0;
 	}
 
 	// Decode ORDER
-	if ( order === 'B' ) {
+	if ( order === 'block' ) {
 		iorder = 2;
-	} else if ( order === 'E' ) {
+	} else if ( order === 'entire' ) {
 		iorder = 1;
 	} else {
 		iorder = 0;

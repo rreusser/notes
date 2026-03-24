@@ -115,9 +115,8 @@ function ztrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, RCOND, WOR
 	onenrm = ( norm === 'one-norm' );
 	upper = ( uplo === 'upper' );
 
-	// Map strings for zlantr (expects single-char uplo 'U'/'L' and diag 'U'/'N')
-	zlantrUplo = upper ? 'U' : 'L';
-	zlantrDiag = ( diag === 'unit' ) ? 'U' : 'N';
+	zlantrUplo = upper ? 'upper' : 'lower';
+	zlantrDiag = ( diag === 'unit' ) ? 'unit' : 'non-unit';
 
 	// Compute norm of A
 	anorm = zlantr( norm, zlantrUplo, zlantrDiag, N, N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK );
@@ -128,7 +127,7 @@ function ztrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, RCOND, WOR
 		ow = offsetWORK;
 
 		ainvnm = 0.0;
-		normin = 'N';
+		normin = 'no';
 		if ( onenrm ) {
 			kase1 = 1;
 		} else {
@@ -170,7 +169,7 @@ function ztrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, RCOND, WOR
 					scale, RWORK, strideRWORK, offsetRWORK
 				);
 			}
-			normin = 'Y';
+			normin = 'yes';
 
 			// Multiply by 1/SCALE if doing so will not cause overflow
 			if ( scale[ 0 ] !== 1.0 ) {

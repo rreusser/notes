@@ -74,7 +74,7 @@ test( 'dtrsen: N V select scalar swap', function t() {
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'N', 'V', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, 0 );
 	assert.equal( M[ 0 ], 1 );
@@ -104,7 +104,7 @@ test( 'dtrsen: all selected 2x2', function t() {
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'N', 'V', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
@@ -126,7 +126,7 @@ test( 'dtrsen: none selected', function t() {
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'N', 'V', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
@@ -152,7 +152,7 @@ test( 'dtrsen: E compute S', function t() {
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'E', 'V', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'eigenvalues', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
@@ -179,7 +179,7 @@ test( 'dtrsen: V compute SEP', function t() {
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'V', 'V', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'subspace', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
@@ -206,7 +206,7 @@ test( 'dtrsen: B compute both', function t() {
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'B', 'V', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'both', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
@@ -227,7 +227,7 @@ test( 'dtrsen: N=0', function t() {
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'N', 'V', SELECT, 1, 0, 0, T, 1, 0, 0, Q, 1, 0, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'none', 'update', SELECT, 1, 0, 0, T, 1, 0, 0, Q, 1, 0, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
@@ -253,7 +253,7 @@ test( 'dtrsen: select complex pair (already in leading position)', function t() 
 	var WORK = new Float64Array( 100 );
 	var IWORK = new Int32Array( 100 );
 
-	var info = dtrsen( 'N', 'V', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
+	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
 
 	assert.equal( info, 0 );
 	assert.equal( M[ 0 ], 2 );

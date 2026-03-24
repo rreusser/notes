@@ -67,7 +67,7 @@ test( 'dgttrs: no-transpose, single RHS, 5x5 symmetric tridiagonal', function t(
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'N', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'no-transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -82,7 +82,7 @@ test( 'dgttrs: transpose, single RHS, 5x5 symmetric tridiagonal', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'T', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -102,7 +102,7 @@ test( 'dgttrs: no-transpose, multiple RHS (3 columns)', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'N', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'no-transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -121,7 +121,7 @@ test( 'dgttrs: transpose, multiple RHS (3 columns)', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'T', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -136,7 +136,7 @@ test( 'dgttrs: N=1', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'N', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'no-transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -146,7 +146,7 @@ test( 'dgttrs: N=0 quick return', function t() {
 	var tc = findCase( 'n_zero' );
 	var info;
 
-	info = dgttrs( 'N', 0, 1, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Int32Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0 );
+	info = dgttrs( 'no-transpose', 0, 1, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Int32Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 });
@@ -160,7 +160,7 @@ test( 'dgttrs: pivoting, no-transpose', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'N', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'no-transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-13, 'B' );
@@ -175,7 +175,7 @@ test( 'dgttrs: pivoting, transpose', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'T', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-13, 'B' );
@@ -190,7 +190,7 @@ test( 'dgttrs: N=2, no-transpose', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'N', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'no-transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -205,7 +205,7 @@ test( 'dgttrs: N=2, transpose', function t() {
 	var info;
 
 	assert.equal( f.info, 0 );
-	info = dgttrs( 'T', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -219,7 +219,7 @@ test( 'dgttrs: supports conjugate transpose (C) same as transpose', function t()
 	var B = new Float64Array( [ 1, 0, 0, 0, 1 ] );
 	var info;
 
-	info = dgttrs( 'C', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
+	info = dgttrs( 'conjugate-transpose', n, nrhs, f.dl, 1, 0, f.d, 1, 0, f.du, 1, 0, f.du2, 1, 0, f.ipiv, 1, 0, B, 1, n, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( B, new Float64Array( tc.B ), 1e-14, 'B' );
@@ -228,7 +228,7 @@ test( 'dgttrs: supports conjugate transpose (C) same as transpose', function t()
 test( 'dgttrs: NRHS=0 quick return', function t() {
 	var info;
 
-	info = dgttrs( 'N', 5, 0, new Float64Array( 4 ), 1, 0, new Float64Array( 5 ), 1, 0, new Float64Array( 4 ), 1, 0, new Float64Array( 3 ), 1, 0, new Int32Array( 5 ), 1, 0, new Float64Array( 0 ), 1, 5, 0 );
+	info = dgttrs( 'no-transpose', 5, 0, new Float64Array( 4 ), 1, 0, new Float64Array( 5 ), 1, 0, new Float64Array( 4 ), 1, 0, new Float64Array( 3 ), 1, 0, new Int32Array( 5 ), 1, 0, new Float64Array( 0 ), 1, 5, 0 );
 
 	assert.equal( info, 0, 'info' );
 });

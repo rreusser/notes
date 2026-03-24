@@ -98,10 +98,10 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	var oT;
 	var k;
 
-	wantbh = ( job === 'B' );
-	wants = ( job === 'E' ) || wantbh;
-	wantsp = ( job === 'V' ) || wantbh;
-	wantq = ( compq === 'V' );
+	wantbh = ( job === 'both' );
+	wants = ( job === 'eigenvalues' ) || wantbh;
+	wantsp = ( job === 'subspace' ) || wantbh;
+	wantq = ( compq === 'update' );
 
 	// Count selected eigenvalues
 	n1 = 0;
@@ -152,10 +152,10 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	if ( wants ) {
 		// Solve the Sylvester equation for R: T11*R - R*T22 = scale*T12
 		// Copy T12 (n1 rows, n2 cols starting at column n1) to WORK
-		zlacpy( 'F', n1, n2, T, strideT1, strideT2, offsetT + n1 * strideT2, WORK, 1, n1, offsetWORK );
+		zlacpy( 'full', n1, n2, T, strideT1, strideT2, offsetT + n1 * strideT2, WORK, 1, n1, offsetWORK );
 
 		scale = new Float64Array( 1 );
-		ztrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
+		ztrsyl( 'no-transpose', 'no-transpose', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
 
 		// Estimate reciprocal condition number of the cluster
 		rwork = new Float64Array( 1 );
@@ -186,10 +186,10 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 			}
 			if ( kase[ 0 ] === 1 ) {
 				// Solve T11*R - R*T22 = scale*X
-				ztrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
+				ztrsyl( 'no-transpose', 'no-transpose', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
 			} else {
 				// Solve T11**H*R - R*T22**H = scale*X
-				ztrsyl( 'C', 'C', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
+				ztrsyl( 'conjugate-transpose', 'conjugate-transpose', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
 			}
 		}
 

@@ -45,7 +45,7 @@ test( 'dlaqsy: upper_equilibrate', function t() {
 	var tc = findCase( 'upper_equilibrate' );
 	var A = new Float64Array([ 4.0, 0.0, 0.0, 1.0, 9.0, 0.0, 0.5, 2.0, 16.0 ]);
 	var s = new Float64Array([ 0.5, 1.0/3.0, 0.25 ]);
-	var equed = dlaqsy( 'U', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
+	var equed = dlaqsy( 'upper', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
 	assert.equal( equed, tc.equed, 'equed' );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });
@@ -54,7 +54,7 @@ test( 'dlaqsy: lower_equilibrate', function t() {
 	var tc = findCase( 'lower_equilibrate' );
 	var A = new Float64Array([ 4.0, 1.0, 0.5, 0.0, 9.0, 2.0, 0.0, 0.0, 16.0 ]);
 	var s = new Float64Array([ 0.5, 1.0/3.0, 0.25 ]);
-	var equed = dlaqsy( 'L', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
+	var equed = dlaqsy( 'lower', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
 	assert.equal( equed, tc.equed, 'equed' );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });
@@ -63,7 +63,7 @@ test( 'dlaqsy: no_equilibrate', function t() {
 	var tc = findCase( 'no_equilibrate' );
 	var A = new Float64Array([ 4.0, 1.0, 0.5, 1.0, 9.0, 2.0, 0.5, 2.0, 16.0 ]);
 	var s = new Float64Array([ 1.0, 1.0, 1.0 ]);
-	var equed = dlaqsy( 'U', 3, A, 1, 3, 0, s, 1, 0, 0.5, 16.0 );
+	var equed = dlaqsy( 'upper', 3, A, 1, 3, 0, s, 1, 0, 0.5, 16.0 );
 	assert.equal( equed, tc.equed, 'equed' );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });
@@ -72,7 +72,7 @@ test( 'dlaqsy: n_zero', function t() {
 	var tc = findCase( 'n_zero' );
 	var A = new Float64Array( 1 );
 	var s = new Float64Array( 1 );
-	var equed = dlaqsy( 'U', 0, A, 1, 1, 0, s, 1, 0, 1.0, 1.0 );
+	var equed = dlaqsy( 'upper', 0, A, 1, 1, 0, s, 1, 0, 1.0, 1.0 );
 	assert.equal( equed, tc.equed, 'equed' );
 });
 
@@ -80,7 +80,7 @@ test( 'dlaqsy: n_one_upper', function t() {
 	var tc = findCase( 'n_one_upper' );
 	var A = new Float64Array([ 100.0 ]);
 	var s = new Float64Array([ 0.1 ]);
-	var equed = dlaqsy( 'U', 1, A, 1, 1, 0, s, 1, 0, 0.01, 100.0 );
+	var equed = dlaqsy( 'upper', 1, A, 1, 1, 0, s, 1, 0, 0.01, 100.0 );
 	assert.equal( equed, tc.equed, 'equed' );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });
@@ -89,7 +89,7 @@ test( 'dlaqsy: small_amax', function t() {
 	var tc = findCase( 'small_amax' );
 	var A = new Float64Array([ 1e-300, 0.0, 0.0, 1e-300 ]);
 	var s = new Float64Array([ 1e150, 1e150 ]);
-	var equed = dlaqsy( 'U', 2, A, 1, 2, 0, s, 1, 0, 1.0, 1e-300 );
+	var equed = dlaqsy( 'upper', 2, A, 1, 2, 0, s, 1, 0, 1.0, 1e-300 );
 	assert.equal( equed, tc.equed, 'equed' );
 	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
 });

@@ -65,7 +65,7 @@ test( 'dlatbs: upper_N_nonunit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -83,7 +83,7 @@ test( 'dlatbs: lower_N_nonunit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'lower', 'no-transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'lower', 'no-transpose', 'non-unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -101,7 +101,7 @@ test( 'dlatbs: upper_T_nonunit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'upper', 'transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'transpose', 'non-unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -119,7 +119,7 @@ test( 'dlatbs: lower_T_nonunit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -137,7 +137,7 @@ test( 'dlatbs: upper_N_unit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'upper', 'no-transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -155,7 +155,7 @@ test( 'dlatbs: lower_N_unit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'lower', 'no-transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'lower', 'no-transpose', 'unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -168,7 +168,7 @@ test( 'dlatbs: n_zero', function t() {
 	var x = new Float64Array( 1 );
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 1 );
-	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 0, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'no', 0, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 });
@@ -179,7 +179,7 @@ test( 'dlatbs: n_one', function t() {
 	var x = new Float64Array([ 10.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 1 );
-	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 1, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'no', 1, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -196,7 +196,7 @@ test( 'dlatbs: normin_Y', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array([ 0.0, 2.0, 2.0, 5.0 ]);
-	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'yes', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -214,7 +214,7 @@ test( 'dlatbs: upper_kd1', function t() {
 	var x = new Float64Array([ 2.0, 3.0, 1.0, 5.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 4, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'no', 4, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -232,7 +232,7 @@ test( 'dlatbs: upper_T_unit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'upper', 'transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'transpose', 'unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -250,7 +250,7 @@ test( 'dlatbs: lower_T_unit', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'lower', 'transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'lower', 'transpose', 'unit', 'no', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -268,7 +268,7 @@ test( 'dlatbs: lower_T_nonunit_normin_Y', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array([ 3.0, 3.0, 3.0, 0.0 ]);
-	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'yes', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -286,7 +286,7 @@ test( 'dlatbs: upper_T_nonunit_normin_Y', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array([ 0.0, 2.0, 2.0, 5.0 ]);
-	var info = dlatbs( 'upper', 'transpose', 'non-unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'transpose', 'non-unit', 'yes', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -304,7 +304,7 @@ test( 'dlatbs: lower_N_unit_normin_Y', function t() {
 	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array([ 3.0, 3.0, 3.0, 0.0 ]);
-	var info = dlatbs( 'lower', 'no-transpose', 'unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'lower', 'no-transpose', 'unit', 'yes', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -322,7 +322,7 @@ test( 'dlatbs: lower_T_kd1', function t() {
 	var x = new Float64Array([ 2.0, 3.0, 1.0, 5.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 4 );
-	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'N', 4, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'no', 4, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -339,7 +339,7 @@ test( 'dlatbs: singular_upper (zero diagonal)', function t() {
 	var x = new Float64Array([ 1.0, 1.0, 1.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 3, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'no', 3, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -356,7 +356,7 @@ test( 'dlatbs: near_singular_upper (very small diagonal)', function t() {
 	var x = new Float64Array([ 1.0, 1.0, 1.0 ]);
 	var scale = new Float64Array( 1 );
 	var cnorm = new Float64Array( 3 );
-	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 3, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'no', 3, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );

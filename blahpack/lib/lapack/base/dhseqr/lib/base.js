@@ -103,9 +103,9 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 	var i;
 
 	// Decode parameters
-	wantt = ( job === 'S' );
-	initz = ( compz === 'I' );
-	wantz = initz || ( compz === 'V' );
+	wantt = ( job === 'schur' );
+	initz = ( compz === 'initialize' );
+	wantz = initz || ( compz === 'update' );
 
 	// Quick return if N = 0
 	if ( N === 0 ) {
@@ -124,7 +124,7 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 
 	// Initialize Z to identity if COMPZ = 'I'
 	if ( initz ) {
-		dlaset( 'A', N, N, ZERO, ONE, Z, strideZ1, strideZ2, offsetZ );
+		dlaset( 'all', N, N, ZERO, ONE, Z, strideZ1, strideZ2, offsetZ );
 	}
 
 	// If active block is a single element, just read off the eigenvalue
@@ -161,21 +161,21 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 				WORKL = new Float64Array( NL );
 
 				// Copy H into HL (column-major, stride = NL)
-				dlacpy( 'A', N, N, H, strideH1, strideH2, offsetH, HL, 1, NL, 0 );
+				dlacpy( 'all', N, N, H, strideH1, strideH2, offsetH, HL, 1, NL, 0 );
 
 				// Zero out HL(N+1, N) — the subdiagonal just below the copied block
 				// (Fortran: HL(N+1, N) = 0; 0-based: HL[N + (N-1)*NL] = 0)
 				HL[ N + ( ( N - 1 ) * NL ) ] = ZERO;
 
 				// Zero the columns beyond N
-				dlaset( 'A', NL, NL - N, ZERO, ZERO, HL, 1, NL, N * NL );
+				dlaset( 'full', NL, NL - N, ZERO, ZERO, HL, 1, NL, N * NL );
 
 				// Run dlaqr0 on the embedded matrix
 				info = dlaqr0( wantt, wantz, NL, ilo, kbot, HL, 1, NL, 0, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, NL );
 
 				// Copy the result back to H if needed
 				if ( wantt || info !== 0 ) {
-					dlacpy( 'A', N, N, HL, 1, NL, 0, H, strideH1, strideH2, offsetH );
+					dlacpy( 'all', N, N, HL, 1, NL, 0, H, strideH1, strideH2, offsetH );
 				}
 			}
 		}

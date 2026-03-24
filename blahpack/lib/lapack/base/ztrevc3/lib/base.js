@@ -130,12 +130,12 @@ function ztrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 	var j;
 	var m;
 
-	rightv = ( side === 'R' || side === 'B' );
-	leftv = ( side === 'L' || side === 'B' );
+	rightv = ( side === 'right' || side === 'both' );
+	leftv = ( side === 'left' || side === 'both' );
 
-	allv = ( howmny === 'A' );
-	over = ( howmny === 'B' );
-	somev = ( howmny === 'S' );
+	allv = ( howmny === 'all' );
+	over = ( howmny === 'backtransform' );
+	somev = ( howmny === 'selected' );
 
 	// Count selected eigenvectors
 	if ( somev ) {
@@ -217,7 +217,7 @@ function ztrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 
 			// Solve (T(0:ki-1,0:ki-1) - T(ki,ki)) * x = scale * work
 			if ( ki > 0 ) {
-				zlatrs( 'upper', 'no-transpose', 'non-unit', 'Y', ki, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + N, scale, RWORK, strideRWORK, offsetRWORK );
+				zlatrs( 'upper', 'no-transpose', 'non-unit', 'yes', ki, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + N, scale, RWORK, strideRWORK, offsetRWORK );
 				// WORK[N+ki] = scale
 				wv[ ( offsetWORK + N + ki ) * 2 ] = scale[ 0 ];
 				wv[ ( offsetWORK + N + ki ) * 2 + 1 ] = ZERO;
@@ -302,7 +302,7 @@ function ztrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 
 			// Solve (T(ki+1:N-1,ki+1:N-1) - T(ki,ki))^H * x = scale * work
 			if ( ki < N - 1 ) {
-				zlatrs( 'upper', 'conjugate-transpose', 'non-unit', 'Y', N - ki - 1, T, strideT1, strideT2, offsetT + ( ki + 1 ) * strideT1 + ( ki + 1 ) * strideT2, WORK, strideWORK, offsetWORK + N + ki + 1, scale, RWORK, strideRWORK, offsetRWORK );
+				zlatrs( 'upper', 'conjugate-transpose', 'non-unit', 'yes', N - ki - 1, T, strideT1, strideT2, offsetT + ( ki + 1 ) * strideT1 + ( ki + 1 ) * strideT2, WORK, strideWORK, offsetWORK + N + ki + 1, scale, RWORK, strideRWORK, offsetRWORK );
 				wv[ ( offsetWORK + N + ki ) * 2 ] = scale[ 0 ];
 				wv[ ( offsetWORK + N + ki ) * 2 + 1 ] = ZERO;
 			}

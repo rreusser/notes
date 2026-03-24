@@ -46,8 +46,8 @@ var ZERO = 0.0;
 var ONE = 1.0;
 
 // Machine constants (hoisted to module scope)
-var EPS = dlamch( 'P' );
-var SMLNUM_BASE = dlamch( 'S' );
+var EPS = dlamch( 'precision' );
+var SMLNUM_BASE = dlamch( 'safe-minimum' );
 var BIGNUM_BASE = ONE / SMLNUM_BASE;
 var SMLNUM = Math.sqrt( SMLNUM_BASE ) / EPS;
 var BIGNUM = ONE / SMLNUM;
@@ -115,8 +115,8 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 	var k;
 	var i;
 
-	wantvl = ( jobvl === 'V' );
-	wantvr = ( jobvr === 'V' );
+	wantvl = ( jobvl === 'compute-vectors' );
+	wantvr = ( jobvr === 'compute-vectors' );
 
 	// Quick return
 	if ( N === 0 ) {
@@ -161,7 +161,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 	}
 
 	// Balance the matrix (Workspace: need N)
-	bal = dgebal( 'B', N, A, strideA1, strideA2, offsetA, SCALE, 1, 0 );
+	bal = dgebal( 'both', N, A, strideA1, strideA2, offsetA, SCALE, 1, 0 );
 	ilo = bal.ilo;
 	ihi = bal.ihi;
 
@@ -170,7 +170,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 
 	if ( wantvl ) {
 		// Want left eigenvectors
-		side = 'L';
+		side = 'left';
 
 		// Copy Householder vectors to VL
 		dlacpy( 'lower', N, N, A, strideA1, strideA2, offsetA, VL, strideVL1, strideVL2, offsetVL );
@@ -179,17 +179,17 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 		dorghr( N, ilo, ihi, VL, strideVL1, strideVL2, offsetVL, TAU, 1, 0, WORK, 1, 0, WORK.length );
 
 		// Perform QR iteration, accumulating Schur vectors in VL
-		info = dhseqr( 'S', 'V', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL );
+		info = dhseqr( 'schur', 'update', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL );
 
 		if ( wantvr ) {
 			// Want both left and right eigenvectors
-			side = 'B';
+			side = 'both';
 			// Copy Schur vectors to VR
 			dlacpy( 'full', N, N, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR );
 		}
 	} else if ( wantvr ) {
 		// Want right eigenvectors only
-		side = 'R';
+		side = 'right';
 
 		// Copy Householder vectors to VR
 		dlacpy( 'lower', N, N, A, strideA1, strideA2, offsetA, VR, strideVR1, strideVR2, offsetVR );
@@ -198,10 +198,10 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 		dorghr( N, ilo, ihi, VR, strideVR1, strideVR2, offsetVR, TAU, 1, 0, WORK, 1, 0, WORK.length );
 
 		// Perform QR iteration, accumulating Schur vectors in VR
-		info = dhseqr( 'S', 'V', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VR, strideVR1, strideVR2, offsetVR );
+		info = dhseqr( 'schur', 'update', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VR, strideVR1, strideVR2, offsetVR );
 	} else {
 		// Compute eigenvalues only
-		info = dhseqr( 'E', 'N', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VR, strideVR1, strideVR2, offsetVR );
+		info = dhseqr( 'eigenvalues', 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VR, strideVR1, strideVR2, offsetVR );
 	}
 
 	// If DHSEQR failed, quit
@@ -223,7 +223,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 		// Workspace for dtrevc3: need 3*N
 		var TREVC_WORK = new Float64Array( 3 * N );
 		nout = 0;
-		dtrevc3( side, 'B', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA,
+		dtrevc3( side, 'backtransform', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA,
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR,
 			N, nout, TREVC_WORK, 1, 0, 3 * N );
@@ -232,7 +232,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 	// Normalize left eigenvectors and make largest component real
 	if ( wantvl ) {
 		// Undo balancing of left eigenvectors
-		dgebak( 'B', 'L', N, ilo, ihi, SCALE, 1, 0, N, VL, strideVL1, strideVL2, offsetVL );
+		dgebak( 'both', 'left', N, ilo, ihi, SCALE, 1, 0, N, VL, strideVL1, strideVL2, offsetVL );
 
 		for ( i = 0; i < N; i++ ) {
 			if ( WI[ offsetWI + i * strideWI ] === ZERO ) {
@@ -271,7 +271,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 	// Normalize right eigenvectors and make largest component real
 	if ( wantvr ) {
 		// Undo balancing of right eigenvectors
-		dgebak( 'B', 'R', N, ilo, ihi, SCALE, 1, 0, N, VR, strideVR1, strideVR2, offsetVR );
+		dgebak( 'both', 'right', N, ilo, ihi, SCALE, 1, 0, N, VR, strideVR1, strideVR2, offsetVR );
 
 		for ( i = 0; i < N; i++ ) {
 			if ( WI[ offsetWI + i * strideWI ] === ZERO ) {

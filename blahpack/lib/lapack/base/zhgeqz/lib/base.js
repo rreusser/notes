@@ -174,9 +174,9 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	sz2 = strideZ2 * 2;
 
 	// Decode job parameters
-	ilschr = ( job === 'schur' || job === 'S' );
-	ilq = ( compq === 'update' || compq === 'initialize' || compq === 'V' || compq === 'I' );
-	ilz = ( compz === 'update' || compz === 'initialize' || compz === 'V' || compz === 'I' );
+	ilschr = ( job === 'schur' );
+	ilq = ( compq === 'update' || compq === 'initialize' );
+	ilz = ( compz === 'update' || compz === 'initialize' );
 
 	// Zrot strides: in complex elements (same as input strides now)
 	rq1 = strideQ1;

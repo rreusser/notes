@@ -168,12 +168,12 @@ function zlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 	}
 
 	// Copy the trailing submatrix to T
-	zlacpy( 'U', jw, jw, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2, T, strideT1, strideT2, offsetT );
+	zlacpy( 'upper', jw, jw, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2, T, strideT1, strideT2, offsetT );
 	// Copy subdiagonal
 	zcopy( jw - 1, H, strideH1 + strideH2, offsetH + kwtop * strideH1 + ( kwtop - 1 ) * strideH2, T, strideT1 + strideT2, offsetT + strideT1 );
 
 	// Initialize V to identity
-	zlaset( 'A', jw, jw, CZERO, CONE, V, strideV1, strideV2, offsetV );
+	zlaset( 'full', jw, jw, CZERO, CONE, V, strideV1, strideV2, offsetV );
 
 	// Compute Schur form of T
 	infqr = zlahqr( true, true, jw, 1, jw, T, strideT1, strideT2, offsetT, SH, strideSH, offsetSH + ( kwtop - 1 ) * strideSH, 1, jw, V, strideV1, strideV2, offsetV );
@@ -191,7 +191,7 @@ function zlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 			ns = ns - 1;
 		} else {
 			ifst = ns;
-			ztrexc( 'V', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst );
+			ztrexc( 'update', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst );
 			ilst = ilst + 1;
 		}
 	}
@@ -213,7 +213,7 @@ function zlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 			}
 			ilst = i;
 			if ( ifst !== ilst ) {
-				ztrexc( 'V', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst );
+				ztrexc( 'update', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst );
 			}
 		}
 	}
@@ -246,11 +246,11 @@ function zlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 			WORKv[ oWk ] = 1.0;
 			WORKv[ oWk + 1 ] = 0.0;
 
-			zlaset( 'L', jw - 2, jw - 2, CZERO, CZERO, T, strideT1, strideT2, offsetT + 2 * strideT1 );
+			zlaset( 'lower', jw - 2, jw - 2, CZERO, CZERO, T, strideT1, strideT2, offsetT + 2 * strideT1 );
 
-			zlarf( 'L', ns, jw, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], -tauV[ 1 ] ), T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
-			zlarf( 'R', ns, ns, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], tauV[ 1 ] ), T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
-			zlarf( 'R', jw, ns, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], tauV[ 1 ] ), V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			zlarf( 'left', ns, jw, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], -tauV[ 1 ] ), T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			zlarf( 'right', ns, ns, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], tauV[ 1 ] ), T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			zlarf( 'right', jw, ns, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], tauV[ 1 ] ), V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK );
 
 			zgehrd( jw, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + jw * strideWORK );
 		}
@@ -263,12 +263,12 @@ function zlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 			Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 ] = sR * v11R + sI * v11I;
 			Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 + 1 ] = -sR * v11I + sI * v11R;
 		}
-		zlacpy( 'U', jw, jw, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2 );
+		zlacpy( 'upper', jw, jw, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2 );
 		zcopy( jw - 1, T, strideT1 + strideT2, offsetT + strideT1, H, strideH1 + strideH2, offsetH + kwtop * strideH1 + ( kwtop - 1 ) * strideH2 );
 
 		// Apply back-transformation
 		if ( ns > 1 && ( sR !== 0.0 || sI !== 0.0 ) ) {
-			zunmhr( 'R', 'N', jw, ns, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK, lwork - jw );
+			zunmhr( 'right', 'no-transpose', jw, ns, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK, lwork - jw );
 		}
 
 		// Update H with V
@@ -279,23 +279,23 @@ function zlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 		}
 		for ( krow = ltop; krow <= kwtop - 1; krow += nvp ) {
 			kln = Math.min( nvp, kwtop - krow );
-			zgemm( 'N', 'N', kln, jw, jw, CONE, H, strideH1, strideH2, offsetH + ( krow - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2, V, strideV1, strideV2, offsetV, CZERO, WV, strideWV1, strideWV2, offsetWV );
-			zlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, H, strideH1, strideH2, offsetH + ( krow - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2 );
+			zgemm( 'no-transpose', 'no-transpose', kln, jw, jw, CONE, H, strideH1, strideH2, offsetH + ( krow - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2, V, strideV1, strideV2, offsetV, CZERO, WV, strideWV1, strideWV2, offsetWV );
+			zlacpy( 'full', kln, jw, WV, strideWV1, strideWV2, offsetWV, H, strideH1, strideH2, offsetH + ( krow - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2 );
 		}
 
 		if ( wantt ) {
 			for ( kcol = kbot + 1; kcol <= N; kcol += nhp ) {
 				kln = Math.min( nhp, N - kcol + 1 );
-				zgemm( 'C', 'N', jw, kln, jw, CONE, V, strideV1, strideV2, offsetV, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kcol - 1 ) * strideH2, CZERO, T, strideT1, strideT2, offsetT );
-				zlacpy( 'A', jw, kln, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kcol - 1 ) * strideH2 );
+				zgemm( 'conjugate-transpose', 'no-transpose', jw, kln, jw, CONE, V, strideV1, strideV2, offsetV, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kcol - 1 ) * strideH2, CZERO, T, strideT1, strideT2, offsetT );
+				zlacpy( 'full', jw, kln, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kcol - 1 ) * strideH2 );
 			}
 		}
 
 		if ( wantz ) {
 			for ( krow = iloz; krow <= ihiz; krow += nvp ) {
 				kln = Math.min( nvp, ihiz - krow + 1 );
-				zgemm( 'N', 'N', kln, jw, jw, CONE, Z, strideZ1, strideZ2, offsetZ + ( krow - 1 ) * strideZ1 + ( kwtop - 1 ) * strideZ2, V, strideV1, strideV2, offsetV, CZERO, WV, strideWV1, strideWV2, offsetWV );
-				zlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, Z, strideZ1, strideZ2, offsetZ + ( krow - 1 ) * strideZ1 + ( kwtop - 1 ) * strideZ2 );
+				zgemm( 'no-transpose', 'no-transpose', kln, jw, jw, CONE, Z, strideZ1, strideZ2, offsetZ + ( krow - 1 ) * strideZ1 + ( kwtop - 1 ) * strideZ2, V, strideV1, strideV2, offsetV, CZERO, WV, strideWV1, strideWV2, offsetWV );
+				zlacpy( 'full', kln, jw, WV, strideWV1, strideWV2, offsetWV, Z, strideZ1, strideZ2, offsetZ + ( krow - 1 ) * strideZ1 + ( kwtop - 1 ) * strideZ2 );
 			}
 		}
 	}

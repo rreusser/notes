@@ -126,13 +126,13 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 	sT2 = strideT2;
 	oT = offsetT;
 
-	bothv = ( side === 'B' || side === 'b' );
-	rightv = ( side === 'R' || side === 'r' ) || bothv;
-	leftv = ( side === 'L' || side === 'l' ) || bothv;
+	bothv = ( side === 'both' );
+	rightv = ( side === 'right' ) || bothv;
+	leftv = ( side === 'left' ) || bothv;
 
-	allv = ( howmny === 'A' || howmny === 'a' );
-	over = ( howmny === 'B' || howmny === 'b' );
-	somev = ( howmny === 'S' || howmny === 's' );
+	allv = ( howmny === 'all' );
+	over = ( howmny === 'backtransform' );
+	somev = ( howmny === 'selected' );
 
 	// Use NB=1 (non-blocked)
 	nb = 1;

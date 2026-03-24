@@ -102,8 +102,8 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	var l2;
 	var j;
 
-	notrna = ( trana === 'N' );
-	notrnb = ( tranb === 'N' );
+	notrna = ( trana === 'no-transpose' );
+	notrnb = ( tranb === 'no-transpose' );
 
 	info = 0;
 

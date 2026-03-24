@@ -77,8 +77,8 @@ function zsyconv( uplo, way, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV
 	var i;
 	var j;
 
-	upper = ( uplo === 'U' );
-	convert = ( way === 'C' );
+	upper = ( uplo === 'upper' );
+	convert = ( way === 'convert' );
 
 	// Quick return if possible
 	if ( N === 0 ) {

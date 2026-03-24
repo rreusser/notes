@@ -156,7 +156,7 @@ test( 'zptrfs: upper_n5_nrhs1', function t() {
 	// Solve
 	var xData = new Float64Array( bData );
 	var x = new Complex128Array( xData.buffer );
-	zpttrs( 'U', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, n, 0 );
+	zpttrs( 'upper', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, n, 0 );
 
 	// Perturb
 	xData[ 0 ] += 1e-10;
@@ -169,7 +169,7 @@ test( 'zptrfs: upper_n5_nrhs1', function t() {
 	var work = new Complex128Array( n );
 	var rwork = new Float64Array( n );
 
-	var info = zptrfs( 'U', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, n, 0, x, 1, n, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
+	var info = zptrfs( 'upper', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, n, 0, x, 1, n, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( xData ), tc.x, 1e-12, 'x' );
@@ -199,7 +199,7 @@ test( 'zptrfs: lower_n5_nrhs1', function t() {
 	// Solve with UPLO='L' — zpttrs interprets EF differently, giving a different x
 	var xData = new Float64Array( bData );
 	var x = new Complex128Array( xData.buffer );
-	zpttrs( 'L', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, n, 0 );
+	zpttrs( 'lower', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, n, 0 );
 
 	// Perturb
 	xData[ 2 ] += 1e-10;
@@ -212,7 +212,7 @@ test( 'zptrfs: lower_n5_nrhs1', function t() {
 	var work = new Complex128Array( n );
 	var rwork = new Float64Array( n );
 
-	var info = zptrfs( 'L', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, n, 0, x, 1, n, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
+	var info = zptrfs( 'lower', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, n, 0, x, 1, n, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	// Lower path: the matrix A_lower differs from A_upper when E has nonzero imag parts.
@@ -256,7 +256,7 @@ test( 'zptrfs: upper_n4_nrhs2', function t() {
 		xData[ i ] = bData[ i ];
 	}
 	var x = new Complex128Array( xData.buffer );
-	zpttrs( 'U', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, n, 0 );
+	zpttrs( 'upper', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, n, 0 );
 
 	// Perturb
 	xData[ 0 ] += 1e-10;
@@ -267,7 +267,7 @@ test( 'zptrfs: upper_n4_nrhs2', function t() {
 	var work = new Complex128Array( n );
 	var rwork = new Float64Array( n );
 
-	var info = zptrfs( 'U', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, n, 0, x, 1, n, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
+	var info = zptrfs( 'upper', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, n, 0, x, 1, n, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( xData ), tc.x, 1e-12, 'x' );
@@ -292,14 +292,14 @@ test( 'zptrfs: n_eq_1', function t() {
 
 	var xData = new Float64Array( bData );
 	var x = new Complex128Array( xData.buffer );
-	zpttrs( 'U', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, 1, 0 );
+	zpttrs( 'upper', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, 1, 0 );
 
 	var ferr = new Float64Array( 1 );
 	var berr = new Float64Array( 1 );
 	var work = new Complex128Array( n );
 	var rwork = new Float64Array( n );
 
-	var info = zptrfs( 'U', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
+	var info = zptrfs( 'upper', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( xData ), tc.x, 1e-14, 'x' );
@@ -322,14 +322,14 @@ test( 'zptrfs: n_eq_1 lower', function t() {
 
 	var xData = new Float64Array( bData );
 	var x = new Complex128Array( xData.buffer );
-	zpttrs( 'L', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, 1, 0 );
+	zpttrs( 'lower', n, nrhs, df, 1, 0, ef, 1, 0, x, 1, 1, 0 );
 
 	var ferr = new Float64Array( 1 );
 	var berr = new Float64Array( 1 );
 	var work = new Complex128Array( n );
 	var rwork = new Float64Array( n );
 
-	var info = zptrfs( 'L', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
+	var info = zptrfs( 'lower', n, nrhs, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	assertClose( xData[ 0 ], 3.0, 1e-14, 'x re' );
@@ -349,7 +349,7 @@ test( 'zptrfs: n_eq_0', function t() {
 	var work = new Complex128Array( 0 );
 	var rwork = new Float64Array( 0 );
 
-	var info = zptrfs( 'U', 0, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
+	var info = zptrfs( 'upper', 0, 1, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 1, 0, x, 1, 1, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	assert.equal( ferr[ 0 ], 0.0, 'ferr zeroed' );
@@ -370,7 +370,7 @@ test( 'zptrfs: nrhs_eq_0', function t() {
 	var work = new Complex128Array( 5 );
 	var rwork = new Float64Array( 5 );
 
-	var info = zptrfs( 'U', 5, 0, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 5, 0, x, 1, 5, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
+	var info = zptrfs( 'upper', 5, 0, d, 1, 0, e, 1, 0, df, 1, 0, ef, 1, 0, b, 1, 5, 0, x, 1, 5, 0, ferr, 1, 0, berr, 1, 0, work, 1, 0, rwork, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 });

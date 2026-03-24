@@ -94,7 +94,7 @@ test( 'zposv: lower_3x3', function t() {
 	B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	Borig = new Float64Array( reinterpret( B, 0 ) );
 
-	info = zposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	info = zposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
@@ -128,7 +128,7 @@ test( 'zposv: upper_3x3', function t() {
 	B = new Complex128Array( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	Borig = new Float64Array( reinterpret( B, 0 ) );
 
-	info = zposv( 'U', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	info = zposv( 'upper', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
@@ -155,7 +155,7 @@ test( 'zposv: not_posdef', function t() {
 	] );
 	B = new Complex128Array( [ 1.0, 0.0, 1.0, 0.0, 1.0, 0.0 ] );
 
-	info = zposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	info = zposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 
 	assert.ok( info > 0, 'info > 0 for non-positive-definite matrix' );
 });
@@ -171,7 +171,7 @@ test( 'zposv: n_zero', function t() {
 	A = new Complex128Array( 1 );
 	B = new Complex128Array( 1 );
 
-	info = zposv( 'L', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
+	info = zposv( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 });
@@ -194,7 +194,7 @@ test( 'zposv: identity', function t() {
 
 	B = new Complex128Array( [ 3.0, 1.0, 5.0, -2.0, 7.0, 0.5 ] );
 
-	info = zposv( 'L', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
+	info = zposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
 	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
@@ -228,7 +228,7 @@ test( 'zposv: multi_rhs', function t() {
 	] );
 	Borig = new Float64Array( reinterpret( B, 0 ) );
 
-	info = zposv( 'L', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
+	info = zposv( 'lower', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
 	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
@@ -250,7 +250,7 @@ test( 'zposv: nrhs_zero', function t() {
 	A = new Complex128Array( [ 4.0, 0.0 ] );
 	B = new Complex128Array( 1 );
 
-	info = zposv( 'L', 1, 0, A, 1, 1, 0, B, 1, 1, 0 );
+	info = zposv( 'lower', 1, 0, A, 1, 1, 0, B, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 });

@@ -92,7 +92,7 @@ function dpbcon( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, 
 	EST = new Float64Array( 1 );
 	scale = new Float64Array( 1 );
 
-	normin = 'N';
+	normin = 'no';
 	KASE[ 0 ] = 0;
 
 	// Estimate norm(inv(A)) using reverse communication with dlacn2
@@ -115,7 +115,7 @@ function dpbcon( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, 
 				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scalel = scale[ 0 ];
-			normin = 'Y';
+			normin = 'yes';
 
 			dlatbs( 'upper', 'no-transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB,
 				WORK, sw, offsetWORK,
@@ -129,7 +129,7 @@ function dpbcon( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, 
 				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scalel = scale[ 0 ];
-			normin = 'Y';
+			normin = 'yes';
 
 			dlatbs( 'lower', 'transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB,
 				WORK, sw, offsetWORK,

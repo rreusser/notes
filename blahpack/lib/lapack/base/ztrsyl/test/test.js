@@ -122,7 +122,7 @@ test( 'ztrsyl: NN basic 2x2', function t() {
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'N', 'N', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -134,7 +134,7 @@ test( 'ztrsyl: NN isgn=-1', function t() {
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'N', 'N', -1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', -1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -146,7 +146,7 @@ test( 'ztrsyl: CN basic (conjugate transpose A)', function t() {
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'C', 'N', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'conjugate-transpose', 'no-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -158,7 +158,7 @@ test( 'ztrsyl: NC basic (conjugate transpose B)', function t() {
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'N', 'C', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'no-transpose', 'conjugate-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -170,7 +170,7 @@ test( 'ztrsyl: CC basic (conjugate transpose both)', function t() {
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'C', 'C', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'conjugate-transpose', 'conjugate-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -184,7 +184,7 @@ test( 'ztrsyl: M=0 quick return', function t() {
 	var C = new Complex128Array( 4 );
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'N', 'N', 1, 0, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', 1, 0, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -197,7 +197,7 @@ test( 'ztrsyl: N=0 quick return', function t() {
 	var C = new Complex128Array( 4 );
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'N', 'N', 1, 2, 0, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', 1, 2, 0, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -216,7 +216,7 @@ test( 'ztrsyl: M=1 N=1', function t() {
 	Cv[ 0 ] = 10.0; Cv[ 1 ] = 5.0;
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'N', 'N', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, C, 1, 1, 0, scale );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, C, 1, 1, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -228,7 +228,7 @@ test( 'ztrsyl: NN 3x3', function t() {
 	var m = build3x3();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'N', 'N', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -240,7 +240,7 @@ test( 'ztrsyl: CN 3x3', function t() {
 	var m = build3x3();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'C', 'N', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'conjugate-transpose', 'no-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -252,7 +252,7 @@ test( 'ztrsyl: CC isgn=-1 3x3', function t() {
 	var m = build3x3();
 	var scale = new Float64Array( 1 );
 
-	var info = ztrsyl( 'C', 'C', -1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	var info = ztrsyl( 'conjugate-transpose', 'conjugate-transpose', -1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );

@@ -28,7 +28,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 // VARIABLES //
 
 var THRESH = 0.1;
-var SMALL = dlamch( 'S' ) / dlamch( 'E' );
+var SMALL = dlamch( 'safe-minimum' ) / dlamch( 'epsilon' );
 var LARGE = 1.0 / SMALL;
 
 
@@ -67,14 +67,14 @@ function dlaqge( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 
 	// Quick return if possible
 	if ( M <= 0 || N <= 0 ) {
-		return 'N';
+		return 'none';
 	}
 
 	if ( rowcnd >= THRESH && amax >= SMALL && amax <= LARGE ) {
 		// No row scaling
 		if ( colcnd >= THRESH ) {
 			// No column scaling
-			return 'N';
+			return 'none';
 		}
 		// Column scaling
 		for ( j = 0; j < N; j++ ) {
@@ -84,7 +84,7 @@ function dlaqge( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 				A[ da + ( i * strideA1 ) ] = cj * A[ da + ( i * strideA1 ) ];
 			}
 		}
-		return 'C';
+		return 'column';
 	} else if ( colcnd >= THRESH ) {
 		// Row scaling, no column scaling
 		for ( j = 0; j < N; j++ ) {
@@ -93,7 +93,7 @@ function dlaqge( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 				A[ da + ( i * strideA1 ) ] = r[ offsetR + ( i * strideR ) ] * A[ da + ( i * strideA1 ) ];
 			}
 		}
-		return 'R';
+		return 'row';
 	}
 	// Both row and column scaling
 	for ( j = 0; j < N; j++ ) {
@@ -103,7 +103,7 @@ function dlaqge( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 			A[ da + ( i * strideA1 ) ] = cj * r[ offsetR + ( i * strideR ) ] * A[ da + ( i * strideA1 ) ];
 		}
 	}
-	return 'B';
+	return 'both';
 }
 
 

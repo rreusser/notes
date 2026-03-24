@@ -78,7 +78,7 @@ test( 'dgebal: n0 (N=0 quick return)', function t() {
 	var result;
 	var SCALE = new Float64Array( 1 );
 	var A = new Float64Array( 1 );
-	result = dgebal( 'B', 0, A, 1, 0, 0, SCALE, 1, 0 );
+	result = dgebal( 'both', 0, A, 1, 0, 0, SCALE, 1, 0 );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.ilo, 1, 'ilo' );
 	assert.equal( result.ihi, 0, 'ihi' );
@@ -89,7 +89,7 @@ test( 'dgebal: n1 (N=1)', function t() {
 	var result;
 	var A = new Float64Array( [ 5.0 ] );
 	var SCALE = new Float64Array( 1 );
-	result = dgebal( 'B', 1, A, 1, 1, 0, SCALE, 1, 0 );
+	result = dgebal( 'both', 1, A, 1, 1, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -106,7 +106,7 @@ test( 'dgebal: job_n (JOB=N, no balancing)', function t() {
 		[ 3, 6, 9 ]
 	]);
 	var SCALE = new Float64Array( N );
-	result = dgebal( 'N', N, A, 1, N, 0, SCALE, 1, 0 );
+	result = dgebal( 'none', N, A, 1, N, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -128,7 +128,7 @@ test( 'dgebal: job_p (JOB=P, permute only)', function t() {
 		[ 0, 0, 0, 4 ]   // col 4
 	]);
 	var SCALE = new Float64Array( N );
-	result = dgebal( 'P', N, A, 1, N, 0, SCALE, 1, 0 );
+	result = dgebal( 'permute', N, A, 1, N, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -149,7 +149,7 @@ test( 'dgebal: job_s (JOB=S, scale only)', function t() {
 		[ 0, 0, 1 ]          // col 3
 	]);
 	var SCALE = new Float64Array( N );
-	result = dgebal( 'S', N, A, 1, N, 0, SCALE, 1, 0 );
+	result = dgebal( 'scale', N, A, 1, N, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -174,7 +174,7 @@ test( 'dgebal: job_b (JOB=B, both permute and scale)', function t() {
 		[ 0, 0, 0, 4 ]          // col 4
 	]);
 	var SCALE = new Float64Array( N );
-	result = dgebal( 'B', N, A, 1, N, 0, SCALE, 1, 0 );
+	result = dgebal( 'both', N, A, 1, N, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -195,7 +195,7 @@ test( 'dgebal: diagonal (already balanced diagonal matrix)', function t() {
 		[ 0, 0, 5 ]
 	]);
 	var SCALE = new Float64Array( N );
-	result = dgebal( 'B', N, A, 1, N, 0, SCALE, 1, 0 );
+	result = dgebal( 'both', N, A, 1, N, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -219,7 +219,7 @@ test( 'dgebal: perm_and_scale (5x5 with permutations on both ends)', function t(
 		[ 0, 0, 0, 0, 5 ]          // col 5
 	]);
 	var SCALE = new Float64Array( N );
-	result = dgebal( 'B', N, A, 1, N, 0, SCALE, 1, 0 );
+	result = dgebal( 'both', N, A, 1, N, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -246,7 +246,7 @@ test( 'dgebal: col_isolation (JOB=P with column isolation)', function t() {
 		[ 3, 0, 0, 9 ]   // col 4
 	]);
 	var SCALE = new Float64Array( N );
-	result = dgebal( 'P', N, A, 1, N, 0, SCALE, 1, 0 );
+	result = dgebal( 'permute', N, A, 1, N, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );

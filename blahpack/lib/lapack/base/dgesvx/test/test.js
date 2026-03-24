@@ -58,7 +58,7 @@ test( 'dgesvx: FACT=N, TRANS=N, 3x3 well-conditioned, 1 RHS', function t() {
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
 
-	result = dgesvx( 'N', 'N', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	result = dgesvx( 'not-factored', 'no-transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	assert.equal( result.info, tc.info );
 	assert.equal( result.equed, tc.equed );
@@ -80,7 +80,7 @@ test( 'dgesvx: FACT=N, TRANS=T, 3x3 well-conditioned', function t() {
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
 
-	result = dgesvx( 'N', 'T', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	result = dgesvx( 'not-factored', 'transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	assert.equal( result.info, tc.info );
 	assert.equal( result.equed, tc.equed );
@@ -101,7 +101,7 @@ test( 'dgesvx: FACT=E, equilibrate poorly-scaled matrix', function t() {
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
 
-	result = dgesvx( 'E', 'N', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	result = dgesvx( 'equilibrate', 'no-transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	assert.equal( result.info, tc.info );
 	assert.equal( result.equed, tc.equed );
@@ -122,7 +122,7 @@ test( 'dgesvx: FACT=F, pre-factored matrix', function t() {
 	var X = new Float64Array( 3 );
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
-	dgesvx( 'N', 'N', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	dgesvx( 'not-factored', 'no-transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	// Now use FACT='F' with the factored AF and IPIV
 	A = testA();
@@ -130,7 +130,7 @@ test( 'dgesvx: FACT=F, pre-factored matrix', function t() {
 	X = new Float64Array( 3 );
 	FERR = new Float64Array( 1 );
 	BERR = new Float64Array( 1 );
-	result = dgesvx( 'F', 'N', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	result = dgesvx( 'factored', 'no-transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	assert.equal( result.info, tc.info );
 	assert.equal( result.equed, tc.equed );
@@ -152,7 +152,7 @@ test( 'dgesvx: singular matrix returns info > 0', function t() {
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
 
-	result = dgesvx( 'N', 'N', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	result = dgesvx( 'not-factored', 'no-transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	// Info should be > 0 (singular), possibly different exact value due to pivoting
 	assert.ok( result.info > 0, 'info should be > 0 for singular matrix, got ' + result.info );
@@ -160,7 +160,7 @@ test( 'dgesvx: singular matrix returns info > 0', function t() {
 });
 
 test( 'dgesvx: N=0 quick return', function t() {
-	var result = dgesvx( 'N', 'N', 0, 1, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Int32Array( 0 ), 1, 0, 'N', new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0 );
+	var result = dgesvx( 'not-factored', 'no-transpose', 0, 1, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Int32Array( 0 ), 1, 0, 'N', new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0 );
 	assert.equal( result.info, 0 );
 });
 
@@ -178,7 +178,7 @@ test( 'dgesvx: multiple RHS (nrhs=2)', function t() {
 	var FERR = new Float64Array( 2 );
 	var BERR = new Float64Array( 2 );
 
-	result = dgesvx( 'N', 'N', 3, 2, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	result = dgesvx( 'not-factored', 'no-transpose', 3, 2, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	assert.equal( result.info, tc.info );
 	assertArrayClose( X, tc.x, 1e-12, 'x' );
@@ -198,7 +198,7 @@ test( 'dgesvx: FACT=E, TRANS=T', function t() {
 	var FERR = new Float64Array( 1 );
 	var BERR = new Float64Array( 1 );
 
-	result = dgesvx( 'E', 'T', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	result = dgesvx( 'equilibrate', 'transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	assert.equal( result.info, tc.info );
 	assert.equal( result.equed, tc.equed );
@@ -221,7 +221,7 @@ test( 'dgesvx: verifies A*x = b mathematically for FACT=N', function t() {
 	var i;
 	var j;
 
-	dgesvx( 'N', 'N', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'N', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
+	dgesvx( 'not-factored', 'no-transpose', 3, 1, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, 'none', r, 1, 0, c, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0 );
 
 	// Compute residual = Acopy * X - B_original
 	var Borig = new Float64Array( [ 1.0, 2.0, 3.0 ] );

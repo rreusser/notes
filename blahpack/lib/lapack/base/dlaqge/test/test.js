@@ -105,10 +105,10 @@ test( 'dlaqge: row scaling triggered by amax < small', function t() {
 
 test( 'dlaqge: quick return M=0', function t() {
 	var equed = dlaqge( 0, 3, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 3 ), 1, 0, 0.5, 0.6, 4.0 );
-	assert.equal( equed, 'N' );
+	assert.equal( equed, 'none' );
 });
 
 test( 'dlaqge: quick return N=0', function t() {
 	var equed = dlaqge( 3, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 3 ), 1, 0, new Float64Array( 0 ), 1, 0, 0.5, 0.6, 4.0 );
-	assert.equal( equed, 'N' );
+	assert.equal( equed, 'none' );
 });

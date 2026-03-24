@@ -248,7 +248,7 @@ function zlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 	csumj = [ ZERO, ZERO ];
 
 	// Compute column norms if not provided
-	if ( normin === 'N' ) {
+	if ( normin === 'no' ) {
 		if ( upper ) {
 			for ( j = 0; j < N; j++ ) {
 				CNORM[ offsetCNORM + j * sc ] = dzasum( j, A, strideA1, offsetA + j * strideA2 );

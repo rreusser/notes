@@ -37,7 +37,7 @@ var SCLFAC = 2.0;
 var FACTOR = 0.95;
 
 // Precompute safe minimum / precision thresholds (hoisted to module scope per performance guidance)
-var SFMIN1 = dlamch( 'S' ) / dlamch( 'P' );
+var SFMIN1 = dlamch( 'safe-minimum' ) / dlamch( 'precision' );
 var SFMAX1 = ONE / SFMIN1;
 var SFMIN2 = SFMIN1 * SCLFAC;
 var SFMAX2 = ONE / SFMIN2;
@@ -100,7 +100,7 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 	}
 
 	// JOB='N': no balancing
-	if ( job === 'N' ) {
+	if ( job === 'none' ) {
 		for ( i = 0; i < N; i++ ) {
 			SCALE[ oS + ( i * sS ) ] = ONE;
 		}
@@ -112,7 +112,7 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 	k = 1;
 	l = N;
 
-	if ( job !== 'S' ) {
+	if ( job !== 'scale' ) {
 		// ============================================================
 		// Search for rows isolating an eigenvalue and push them down.
 		// (Row search: find row i where A(i,j)=0 for all j!=i, j=1..L)
@@ -181,7 +181,7 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 	}
 
 	// If we only had to permute, we are done
-	if ( job === 'P' ) {
+	if ( job === 'permute' ) {
 		return { 'info': 0, 'ilo': k, 'ihi': l };
 	}
 

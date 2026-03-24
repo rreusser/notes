@@ -94,7 +94,7 @@ test( 'ztrsen: job=N compq=V select 1,3', function t() {
 	var s = new Float64Array( 1 );
 	var sep = new Float64Array( 1 );
 
-	var info = ztrsen( 'N', 'V', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
+	var info = ztrsen( 'none', 'update', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assert.strictEqual( M[ 0 ], tc.M, 'M' );
@@ -117,7 +117,7 @@ test( 'ztrsen: job=E compq=V select 1,3', function t() {
 	var s = new Float64Array( 1 );
 	var sep = new Float64Array( 1 );
 
-	var info = ztrsen( 'E', 'V', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
+	var info = ztrsen( 'eigenvalues', 'update', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assert.strictEqual( M[ 0 ], tc.M, 'M' );
@@ -141,7 +141,7 @@ test( 'ztrsen: job=V compq=V select 1,3', function t() {
 	var s = new Float64Array( 1 );
 	var sep = new Float64Array( 1 );
 
-	var info = ztrsen( 'V', 'V', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
+	var info = ztrsen( 'subspace', 'update', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assert.strictEqual( M[ 0 ], tc.M, 'M' );
@@ -165,7 +165,7 @@ test( 'ztrsen: job=B compq=V select 1,3', function t() {
 	var s = new Float64Array( 1 );
 	var sep = new Float64Array( 1 );
 
-	var info = ztrsen( 'B', 'V', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
+	var info = ztrsen( 'both', 'update', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assert.strictEqual( M[ 0 ], tc.M, 'M' );
@@ -190,7 +190,7 @@ test( 'ztrsen: job=N compq=N select 2', function t() {
 	var s = new Float64Array( 1 );
 	var sep = new Float64Array( 1 );
 
-	var info = ztrsen( 'N', 'N', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
+	var info = ztrsen( 'none', 'none', SELECT, 1, 0, N, tm.data, 1, N, 0, qm.data, 1, N, 0, W, 1, 0, M, s, sep, WORK, 1, 0, N * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assert.strictEqual( M[ 0 ], tc.M, 'M' );
@@ -216,7 +216,7 @@ test( 'ztrsen: N=1 quick return', function t() {
 	var s = new Float64Array( 1 );
 	var sep = new Float64Array( 1 );
 
-	var info = ztrsen( 'B', 'V', SELECT, 1, 0, N, T, 1, 1, 0, Q, 1, 1, 0, W, 1, 0, M, s, sep, WORK, 1, 0, 1 );
+	var info = ztrsen( 'both', 'update', SELECT, 1, 0, N, T, 1, 1, 0, Q, 1, 1, 0, W, 1, 0, M, s, sep, WORK, 1, 0, 1 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assert.strictEqual( M[ 0 ], tc.M, 'M' );

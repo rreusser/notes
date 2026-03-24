@@ -105,10 +105,10 @@ function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	var kk;
 	var k;
 
-	wantbh = ( job === 'B' );
-	wants = ( job === 'E' ) || wantbh;
-	wantsp = ( job === 'V' ) || wantbh;
-	wantq = ( compq === 'V' );
+	wantbh = ( job === 'both' );
+	wants = ( job === 'eigenvalues' ) || wantbh;
+	wantsp = ( job === 'subspace' ) || wantbh;
+	wantq = ( compq === 'update' );
 
 	info = 0;
 	lquery = ( lwork === -1 );
@@ -146,7 +146,7 @@ function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	if ( wantsp ) {
 		lwmin = Math.max( 1, 2 * nn );
 		liwmin = Math.max( 1, nn );
-	} else if ( job === 'N' ) {
+	} else if ( job === 'none' ) {
 		lwmin = Math.max( 1, N );
 		liwmin = 1;
 	} else { // job === 'E'
@@ -227,10 +227,10 @@ function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	if ( wants ) {
 		// Solve Sylvester equation: T11*X - X*T22 = scale*T12
 		// Copy T12 into WORK
-		dlacpy( 'F', n1, n2, T, strideT1, strideT2, offsetT + n1 * strideT2, WORK, 1, n1, offsetWORK );
+		dlacpy( 'full', n1, n2, T, strideT1, strideT2, offsetT + n1 * strideT2, WORK, 1, n1, offsetWORK );
 
 		scalArr = new Float64Array( 1 );
-		ierr = dtrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scalArr );
+		ierr = dtrsyl( 'no-transpose', 'no-transpose', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scalArr );
 		scale = scalArr[ 0 ];
 
 		// Compute S = scale / (sqrt(scale^2 / rnorm + rnorm) * sqrt(rnorm))
@@ -259,10 +259,10 @@ function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 			}
 			if ( kase[ 0 ] === 1 ) {
 				// Solve T11*X - X*T22 = scale*WORK
-				dtrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scalArr );
+				dtrsyl( 'no-transpose', 'no-transpose', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scalArr );
 			} else {
 				// Solve T11^T*X - X*T22^T = scale*WORK
-				dtrsyl( 'T', 'T', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scalArr );
+				dtrsyl( 'transpose', 'transpose', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scalArr );
 			}
 		}
 

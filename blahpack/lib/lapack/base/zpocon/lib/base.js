@@ -116,7 +116,7 @@ function zpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	ow = offsetWORK;
 
 	KASE[ 0 ] = 0;
-	normin = 'N';
+	normin = 'no';
 
 	xv = reinterpret( WORK, 0 );
 
@@ -142,7 +142,7 @@ function zpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 				scale, RWORK, strideRWORK, offsetRWORK
 			);
 			scalel = scale[ 0 ];
-			normin = 'Y';
+			normin = 'yes';
 
 			zlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, ow,
@@ -157,7 +157,7 @@ function zpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 				scale, RWORK, strideRWORK, offsetRWORK
 			);
 			scalel = scale[ 0 ];
-			normin = 'Y';
+			normin = 'yes';
 
 			zlatrs( 'lower', 'conjugate-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, ow,

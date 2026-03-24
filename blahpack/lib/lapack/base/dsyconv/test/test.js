@@ -73,7 +73,7 @@ test( 'dsyconv: upper_convert (all 1x1 pivots)', function t() {
 	var E = new Float64Array( N );
 	var info;
 
-	info = dsyconv( 'U', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'upper', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tc.a_converted, 1e-14, 'a_converted' );
 	assertArrayClose( Array.from( E ), tc.e, 1e-14, 'e' );
@@ -88,7 +88,7 @@ test( 'dsyconv: upper_revert (all 1x1 pivots)', function t() {
 	var E = new Float64Array( tcConv.e );
 	var info;
 
-	info = dsyconv( 'U', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'upper', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tcRev.a_reverted, 1e-14, 'a_reverted' );
 });
@@ -101,7 +101,7 @@ test( 'dsyconv: lower_convert (all 1x1 pivots)', function t() {
 	var E = new Float64Array( N );
 	var info;
 
-	info = dsyconv( 'L', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'lower', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tc.a_converted, 1e-14, 'a_converted' );
 	assertArrayClose( Array.from( E ), tc.e, 1e-14, 'e' );
@@ -116,7 +116,7 @@ test( 'dsyconv: lower_revert (all 1x1 pivots)', function t() {
 	var E = new Float64Array( tcConv.e );
 	var info;
 
-	info = dsyconv( 'L', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'lower', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tcRev.a_reverted, 1e-14, 'a_reverted' );
 });
@@ -128,7 +128,7 @@ test( 'dsyconv: n1_upper', function t() {
 	var E = new Float64Array( 1 );
 	var info;
 
-	info = dsyconv( 'U', 'C', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'upper', 'convert', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tc.a_converted, 1e-14, 'a_converted' );
 	assertArrayClose( Array.from( E ), tc.e, 1e-14, 'e' );
@@ -141,7 +141,7 @@ test( 'dsyconv: n1_lower', function t() {
 	var E = new Float64Array( 1 );
 	var info;
 
-	info = dsyconv( 'L', 'C', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'lower', 'convert', 1, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tc.a_converted, 1e-14, 'a_converted' );
 	assertArrayClose( Array.from( E ), tc.e, 1e-14, 'e' );
@@ -155,7 +155,7 @@ test( 'dsyconv: upper_2x2_convert (with 2x2 pivots)', function t() {
 	var E = new Float64Array( N );
 	var info;
 
-	info = dsyconv( 'U', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'upper', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tc.a_converted, 1e-14, 'a_converted' );
 	assertArrayClose( Array.from( E ), tc.e, 1e-14, 'e' );
@@ -170,7 +170,7 @@ test( 'dsyconv: upper_2x2_revert (with 2x2 pivots)', function t() {
 	var E = new Float64Array( tcConv.e );
 	var info;
 
-	info = dsyconv( 'U', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'upper', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tcRev.a_reverted, 1e-14, 'a_reverted' );
 });
@@ -183,7 +183,7 @@ test( 'dsyconv: lower_2x2_convert (with 2x2 pivots)', function t() {
 	var E = new Float64Array( N );
 	var info;
 
-	info = dsyconv( 'L', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'lower', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tc.a_converted, 1e-14, 'a_converted' );
 	assertArrayClose( Array.from( E ), tc.e, 1e-14, 'e' );
@@ -198,7 +198,7 @@ test( 'dsyconv: lower_2x2_revert (with 2x2 pivots)', function t() {
 	var E = new Float64Array( tcConv.e );
 	var info;
 
-	info = dsyconv( 'L', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'lower', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertArrayClose( Array.from( A ), tcRev.a_reverted, 1e-14, 'a_reverted' );
 });
@@ -209,10 +209,10 @@ test( 'dsyconv: N=0 returns immediately', function t() {
 	var E = new Float64Array( 0 );
 	var info;
 
-	info = dsyconv( 'U', 'C', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'upper', 'convert', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info upper convert' );
 
-	info = dsyconv( 'L', 'R', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
+	info = dsyconv( 'lower', 'revert', 0, A, 1, 1, 0, IPIV, 1, 0, E, 1, 0 );
 	assert.equal( info, 0, 'info lower revert' );
 });
 
@@ -224,8 +224,8 @@ test( 'dsyconv: round-trip upper convert then revert restores A', function t() {
 	var IPIV = convertIPIV( tc.ipiv_trf );
 	var E = new Float64Array( N );
 
-	dsyconv( 'U', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
-	dsyconv( 'U', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	dsyconv( 'upper', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	dsyconv( 'upper', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assertArrayClose( Array.from( A ), Array.from( Aorig ), 1e-14, 'round-trip' );
 });
 
@@ -237,7 +237,7 @@ test( 'dsyconv: round-trip lower convert then revert restores A', function t() {
 	var IPIV = convertIPIV( tc.ipiv_trf );
 	var E = new Float64Array( N );
 
-	dsyconv( 'L', 'C', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
-	dsyconv( 'L', 'R', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	dsyconv( 'lower', 'convert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
+	dsyconv( 'lower', 'revert', N, A, 1, N, 0, IPIV, 1, 0, E, 1, 0 );
 	assertArrayClose( Array.from( A ), Array.from( Aorig ), 1e-14, 'round-trip' );
 });

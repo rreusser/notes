@@ -89,7 +89,7 @@ test( 'dhseqr: eigenvalues_only_6x6', function t() {
 	var WI = new Float64Array( N );
 	var Z = new Float64Array( N * N );
 
-	var info = dhseqr( 'E', 'N', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'eigenvalues', 'none', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 
@@ -116,7 +116,7 @@ test( 'dhseqr: schur_with_z_init_4x4', function t() {
 	var WI = new Float64Array( N );
 	var Z = new Float64Array( N * N );
 
-	var info = dhseqr( 'S', 'I', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
@@ -141,7 +141,7 @@ test( 'dhseqr: schur_with_z_update_4x4', function t() {
 		[ 0, 0, 1.0 ], [ 1, 1, 1.0 ], [ 2, 2, 1.0 ], [ 3, 3, 1.0 ]
 	]);
 
-	var info = dhseqr( 'S', 'V', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'schur', 'update', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
@@ -163,7 +163,7 @@ test( 'dhseqr: schur_no_z_4x4', function t() {
 	var WI = new Float64Array( N );
 	var Z = new Float64Array( N * N );
 
-	var info = dhseqr( 'S', 'N', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'schur', 'none', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
@@ -177,7 +177,7 @@ test( 'dhseqr: n0', function t() {
 	var H = new Float64Array( 1 );
 	var Z = new Float64Array( 1 );
 
-	var info = dhseqr( 'S', 'I', 0, 1, 0, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 );
+	var info = dhseqr( 'schur', 'initialize', 0, 1, 0, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -189,7 +189,7 @@ test( 'dhseqr: n1', function t() {
 	var WI = new Float64Array( 1 );
 	var Z = new Float64Array( 1 );
 
-	var info = dhseqr( 'S', 'I', N, 1, N, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 );
+	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertClose( WR[ 0 ], tc.wr1, 1e-14, 'wr1' );
@@ -209,7 +209,7 @@ test( 'dhseqr: n2_complex', function t() {
 	var WI = new Float64Array( N );
 	var Z = new Float64Array( N * N );
 
-	var info = dhseqr( 'S', 'I', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
@@ -231,7 +231,7 @@ test( 'dhseqr: ilo_eq_ihi', function t() {
 	var WI = new Float64Array( N );
 	var Z = new Float64Array( N * N );
 
-	var info = dhseqr( 'S', 'N', N, 2, 2, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'schur', 'none', N, 2, 2, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertClose( WR[ 1 ], tc.wr2, 1e-14, 'wr2' );
@@ -253,7 +253,7 @@ test( 'dhseqr: complex_pairs_6x6', function t() {
 	var WI = new Float64Array( N );
 	var Z = new Float64Array( N * N );
 
-	var info = dhseqr( 'S', 'I', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
@@ -278,7 +278,7 @@ test( 'dhseqr: partial_range_6x6', function t() {
 	var WI = new Float64Array( N );
 	var Z = new Float64Array( N * N );
 
-	var info = dhseqr( 'S', 'I', N, 2, 5, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
+	var info = dhseqr( 'schur', 'initialize', N, 2, 5, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );

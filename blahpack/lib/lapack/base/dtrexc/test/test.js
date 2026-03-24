@@ -68,7 +68,7 @@ test( 'dtrexc: swap 1x1 forward', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -80,7 +80,7 @@ test( 'dtrexc: N=1 quick return', function t() {
 	var Q = new Float64Array([ 1.0 ]);
 	var WORK = new Float64Array( 1 );
 
-	var r = dtrexc( 'V', 1, T, 1, 1, 0, Q, 1, 1, 0, 1, 1, WORK, 1, 0 );
+	var r = dtrexc( 'update', 1, T, 1, 1, 0, Q, 1, 1, 0, 1, 1, WORK, 1, 0 );
 	assert.strictEqual( r.info, 0, 'info' );
 });
 
@@ -96,7 +96,7 @@ test( 'dtrexc: swap 1x1 backward', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 4, 1, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 4, 1, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -115,11 +115,11 @@ test( 'dtrexc: swap 1x1 forward, COMPQ=N', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'N', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
+	var r = dtrexc( 'none', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
-	// Q should be unchanged (identity) since COMPQ='N'
+	// Q should be unchanged (identity) since COMPQ='none'
 	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q unchanged' );
 });
 
@@ -136,7 +136,7 @@ test( 'dtrexc: forward 2x2 block', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -156,7 +156,7 @@ test( 'dtrexc: backward 2x2 block', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 4, 1, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 4, 1, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -177,7 +177,7 @@ test( 'dtrexc: forward 1x1 across 2x2', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 5, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 1, 5, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -197,7 +197,7 @@ test( 'dtrexc: backward 1x1 across 2x2', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 5, 1, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 5, 1, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -214,7 +214,7 @@ test( 'dtrexc: IFST==ILST (no-op)', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 2, 2, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 2, 2, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, 0, 'info' );
 });
@@ -231,7 +231,7 @@ test( 'dtrexc: IFST points to second row of 2x2 block', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 2, 4, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 2, 4, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -250,7 +250,7 @@ test( 'dtrexc: backward 1x1, COMPQ=N', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'N', N, T, 1, N, 0, Q, 1, N, 0, 3, 1, WORK, 1, 0 );
+	var r = dtrexc( 'none', N, T, 1, N, 0, Q, 1, N, 0, 3, 1, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
@@ -270,7 +270,7 @@ test( 'dtrexc: forward 2x2 across 2x2', function t() {
 	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
-	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
 
 	assert.strictEqual( r.info, tc.info, 'info' );
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );

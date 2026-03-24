@@ -94,7 +94,7 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	EST = new Float64Array( 1 );
 	scale = new Float64Array( 1 );
 
-	normin = 'N';
+	normin = 'no';
 	KASE[ 0 ] = 0;
 
 	// Estimate norm(inv(A)) using reverse communication with dlacn2
@@ -117,7 +117,7 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scalel = scale[ 0 ];
-			normin = 'Y';
+			normin = 'yes';
 
 			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,
@@ -131,7 +131,7 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
 			);
 			scalel = scale[ 0 ];
-			normin = 'Y';
+			normin = 'yes';
 
 			dlatrs( 'lower', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
 				WORK, sw, offsetWORK,

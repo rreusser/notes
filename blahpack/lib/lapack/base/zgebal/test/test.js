@@ -85,7 +85,7 @@ test( 'zgebal: n0 - N=0 quick return', function t() {
 
 	A = new Complex128Array( 0 );
 	SCALE = new Float64Array( 0 );
-	result = zgebal( 'B', 0, A, 1, 1, 0, SCALE, 1, 0 );
+	result = zgebal( 'both', 0, A, 1, 1, 0, SCALE, 1, 0 );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.ilo, 1, 'ilo' );
 	assert.equal( result.ihi, 0, 'ihi' );
@@ -106,7 +106,7 @@ test( 'zgebal: n1 - N=1', function t() {
 	av[ 1 ] = 3.0;
 	SCALE = new Float64Array( 1 );
 
-	result = zgebal( 'B', 1, A, 1, 1, 0, SCALE, 1, 0 );
+	result = zgebal( 'both', 1, A, 1, 1, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -129,7 +129,7 @@ test( 'zgebal: job_n - JOB=N no balancing', function t() {
 	]);
 	SCALE = new Float64Array( 3 );
 
-	result = zgebal( 'N', 3, A, 1, 3, 0, SCALE, 1, 0 );
+	result = zgebal( 'none', 3, A, 1, 3, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -152,7 +152,7 @@ test( 'zgebal: job_p - JOB=P permute only', function t() {
 	]);
 	SCALE = new Float64Array( 4 );
 
-	result = zgebal( 'P', 4, A, 1, 4, 0, SCALE, 1, 0 );
+	result = zgebal( 'permute', 4, A, 1, 4, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -178,7 +178,7 @@ test( 'zgebal: job_s - JOB=S scale only', function t() {
 	]);
 	SCALE = new Float64Array( 3 );
 
-	result = zgebal( 'S', 3, A, 1, 3, 0, SCALE, 1, 0 );
+	result = zgebal( 'scale', 3, A, 1, 3, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -204,7 +204,7 @@ test( 'zgebal: job_b - JOB=B both permute and scale', function t() {
 	]);
 	SCALE = new Float64Array( 4 );
 
-	result = zgebal( 'B', 4, A, 1, 4, 0, SCALE, 1, 0 );
+	result = zgebal( 'both', 4, A, 1, 4, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -230,7 +230,7 @@ test( 'zgebal: diagonal - already balanced matrix', function t() {
 	]);
 	SCALE = new Float64Array( 3 );
 
-	result = zgebal( 'B', 3, A, 1, 3, 0, SCALE, 1, 0 );
+	result = zgebal( 'both', 3, A, 1, 3, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -254,7 +254,7 @@ test( 'zgebal: perm_and_scale - 5x5 with permutations on both ends', function t(
 	]);
 	SCALE = new Float64Array( 5 );
 
-	result = zgebal( 'B', 5, A, 1, 5, 0, SCALE, 1, 0 );
+	result = zgebal( 'both', 5, A, 1, 5, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
@@ -282,7 +282,7 @@ test( 'zgebal: col_isolation - JOB=P with column isolation', function t() {
 	]);
 	SCALE = new Float64Array( 4 );
 
-	result = zgebal( 'P', 4, A, 1, 4, 0, SCALE, 1, 0 );
+	result = zgebal( 'permute', 4, A, 1, 4, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );

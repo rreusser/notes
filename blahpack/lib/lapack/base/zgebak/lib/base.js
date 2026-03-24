@@ -48,11 +48,11 @@ function zgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, 
 	var i;
 	var k;
 
-	rightv = ( side === 'R' );
-	leftv = ( side === 'L' );
+	rightv = ( side === 'right' );
+	leftv = ( side === 'left' );
 
 	// Quick return if possible:
-	if ( N === 0 || M === 0 || job === 'N' ) {
+	if ( N === 0 || M === 0 || job === 'none' ) {
 		return 0;
 	}
 
@@ -62,7 +62,7 @@ function zgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, 
 
 	// Backward balance (scaling):
 	if ( ilo0 !== ihi0 ) {
-		if ( job === 'S' || job === 'B' ) {
+		if ( job === 'scale' || job === 'both' ) {
 			if ( rightv ) {
 				// For right eigenvectors, scale row i by SCALE(i):
 				for ( i = ilo0; i <= ihi0; i++ ) {
@@ -84,7 +84,7 @@ function zgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, 
 	// For II = 1 to N (1-based), process rows outside [ILO, IHI]:
 	//   - rows below ILO are visited in reverse: i = ILO - II
 	//   - rows above IHI are visited in order: i = II
-	if ( job === 'P' || job === 'B' ) {
+	if ( job === 'permute' || job === 'both' ) {
 		if ( rightv ) {
 			for ( ii = 0; ii < N; ii++ ) {
 				i = ii;

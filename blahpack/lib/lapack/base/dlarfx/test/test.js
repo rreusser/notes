@@ -73,7 +73,7 @@ test( 'dlarfx: left M=2 N=3', function t() {
 	var C = new Float64Array([ 1, 4, 2, 5, 3, 6 ]);
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -88,7 +88,7 @@ test( 'dlarfx: right M=3 N=2', function t() {
 	var C = new Float64Array([ 1, 3, 5, 2, 4, 6 ]);
 	var WORK = new Float64Array( M );
 
-	dlarfx( 'R', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'right', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -102,7 +102,7 @@ test( 'dlarfx: tau=0 does nothing', function t() {
 	var C = new Float64Array([ 1, 3, 2, 4 ]);
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, 0.0, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, 0.0, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-14, 'C' );
 });
@@ -116,7 +116,7 @@ test( 'dlarfx: left M=3 N=2', function t() {
 	var C = new Float64Array([ 2, 3, 5, 1, 4, 6 ]);
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -130,7 +130,7 @@ test( 'dlarfx: right M=2 N=3', function t() {
 	var C = new Float64Array([ 2, 4, 1, 5, 3, 6 ]);
 	var WORK = new Float64Array( M );
 
-	dlarfx( 'R', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'right', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -152,7 +152,7 @@ test( 'dlarfx: left M=5 N=3', function t() {
 	}
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -177,7 +177,7 @@ test( 'dlarfx: left M=10 N=4', function t() {
 	}
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -202,7 +202,7 @@ test( 'dlarfx: right M=4 N=10', function t() {
 	}
 	var WORK = new Float64Array( M );
 
-	dlarfx( 'R', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'right', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -223,7 +223,7 @@ test( 'dlarfx: left M=4 N=2', function t() {
 	}
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -244,7 +244,7 @@ test( 'dlarfx: left M=6 N=3', function t() {
 	}
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -265,7 +265,7 @@ test( 'dlarfx: left M=7 N=2', function t() {
 	}
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -286,7 +286,7 @@ test( 'dlarfx: left M=8 N=2', function t() {
 	}
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });
@@ -307,7 +307,7 @@ test( 'dlarfx: left M=9 N=2', function t() {
 	}
 	var WORK = new Float64Array( N );
 
-	dlarfx( 'L', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
+	dlarfx( 'left', M, N, v, 1, 0, tau, C, 1, M, 0, WORK, 1, 0 );
 
 	assertArrayClose( extractMatrix( C, M, N ), tc.C, 1e-12, 'C' );
 });

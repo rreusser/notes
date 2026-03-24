@@ -89,7 +89,7 @@ function zunmbr( vect, side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU
 		return 0;
 	}
 
-	applyq = ( vect === 'Q' );
+	applyq = ( vect === 'apply-Q' );
 	left = ( side === 'left' );
 	notran = ( trans === 'no-transpose' );
 

@@ -18,11 +18,6 @@
 
 'use strict';
 
-// MODULES //
-
-var uppercase = require( '@stdlib/string/base/uppercase' );
-
-
 // VARIABLES //
 
 // IEEE 754 double-precision constants:
@@ -40,44 +35,51 @@ var RMAX = 1.7976931348623157e+308;        // Number.MAX_VALUE
 
 // MAIN //
 
+var TABLE = {
+	'epsilon': EPS,
+	'safe-minimum': SFMIN,
+	'base': BASE,
+	'precision': PREC,
+	'digits': DIGITS,
+	'rounding': RND,
+	'min-exponent': EMIN,
+	'underflow': RMIN,
+	'max-exponent': EMAX,
+	'overflow': RMAX,
+	'E': EPS,
+	'e': EPS,
+	'S': SFMIN,
+	's': SFMIN,
+	'B': BASE,
+	'b': BASE,
+	'P': PREC,
+	'p': PREC,
+	'N': DIGITS,
+	'n': DIGITS,
+	'R': RND,
+	'r': RND,
+	'M': EMIN,
+	'm': EMIN,
+	'U': RMIN,
+	'u': RMIN,
+	'L': EMAX,
+	'l': EMAX,
+	'O': RMAX,
+	'o': RMAX
+};
+
+
 /**
 * Determines double-precision machine parameters.
 *
 * @private
-* @param {string} cmach - specifies the machine parameter
+* @param {string} cmach - specifies the machine parameter (long-form preferred)
 * @returns {number} machine parameter value
 */
 function dlamch( cmach ) {
-	var c = uppercase( cmach.charAt( 0 ) );
-	if ( c === 'E' ) {
-		return EPS;
-	}
-	if ( c === 'S' ) {
-		return SFMIN;
-	}
-	if ( c === 'B' ) {
-		return BASE;
-	}
-	if ( c === 'P' ) {
-		return PREC;
-	}
-	if ( c === 'N' ) {
-		return DIGITS;
-	}
-	if ( c === 'R' ) {
-		return RND;
-	}
-	if ( c === 'M' ) {
-		return EMIN;
-	}
-	if ( c === 'U' ) {
-		return RMIN;
-	}
-	if ( c === 'L' ) {
-		return EMAX;
-	}
-	if ( c === 'O' ) {
-		return RMAX;
+	var v = TABLE[ cmach ];
+	if ( v !== void 0 ) {
+		return v;
 	}
 	return 0.0;
 }

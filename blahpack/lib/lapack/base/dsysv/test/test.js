@@ -76,7 +76,7 @@ test( 'dsysv: upper_4x4 - solves symmetric system with upper storage', function 
 	// b = A*[1;2;3;4] = [24;22;26;38]
 	B = new Float64Array([ 24, 22, 26, 38 ]);
 
-	info = dsysv( 'U', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	info = dsysv( 'upper', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -99,7 +99,7 @@ test( 'dsysv: lower_4x4 - solves symmetric system with lower storage', function 
 	]);
 	B = new Float64Array([ 24, 22, 26, 38 ]);
 
-	info = dsysv( 'L', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	info = dsysv( 'lower', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -122,7 +122,7 @@ test( 'dsysv: multi_rhs - multiple right-hand sides', function t() {
 	// B = [1 5; 4 7] (2x2 column-major: col1=[1,5], col2=[4,7])
 	B = new Float64Array([ 1, 5, 4, 7 ]);
 
-	info = dsysv( 'U', 2, 2, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	info = dsysv( 'upper', 2, 2, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -139,7 +139,7 @@ test( 'dsysv: singular - returns info > 0 for singular matrix', function t() {
 	A = new Float64Array([ 1, 2, 2, 4 ]);
 	B = new Float64Array([ 1, 2 ]);
 
-	info = dsysv( 'U', 2, 1, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	info = dsysv( 'upper', 2, 1, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 
 	assert.ok( info > 0, 'info should be > 0 for singular matrix' );
 });
@@ -156,7 +156,7 @@ test( 'dsysv: n1 - N=1 edge case', function t() {
 	A = new Float64Array([ 3 ]);
 	B = new Float64Array([ 9 ]);
 
-	info = dsysv( 'U', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	info = dsysv( 'upper', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -180,7 +180,7 @@ test( 'dsysv: pivot_2x2_upper - matrix triggering 2x2 pivots (upper)', function 
 	]);
 	B = new Float64Array([ 1, 1, 5, 5 ]);
 
-	info = dsysv( 'U', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	info = dsysv( 'upper', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -204,7 +204,7 @@ test( 'dsysv: pivot_2x2_lower - matrix triggering 2x2 pivots (lower)', function 
 	]);
 	B = new Float64Array([ 1, 1, 5, 5 ]);
 
-	info = dsysv( 'L', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	info = dsysv( 'lower', 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
@@ -220,7 +220,7 @@ test( 'dsysv: n_zero - N=0 quick return', function t() {
 	A = new Float64Array([ 1 ]);
 	B = new Float64Array([ 1 ]);
 
-	info = dsysv( 'U', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	info = dsysv( 'upper', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -233,6 +233,6 @@ test( 'dsysv: nrhs_zero - NRHS=0 quick return', function t() {
 	A = new Float64Array([ 5 ]);
 	B = new Float64Array([ 10 ]);
 
-	info = dsysv( 'U', 1, 0, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	info = dsysv( 'upper', 1, 0, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });

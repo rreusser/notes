@@ -37,10 +37,6 @@ var ONE = 1.0;
 var EPS = dlamch( 'E' );
 var SAFMIN = dlamch( 'S' );
 
-// Lookup tables: single-char to long-form string for BLAS routines
-var UPLO_MAP = { 'U': 'upper', 'u': 'upper', 'L': 'lower', 'l': 'lower' };
-var TRANS_MAP = { 'N': 'no-transpose', 'n': 'no-transpose', 'T': 'transpose', 't': 'transpose', 'C': 'transpose', 'c': 'transpose' };
-var DIAG_MAP = { 'N': 'non-unit', 'n': 'non-unit', 'U': 'unit', 'u': 'unit' };
 
 
 // MAIN //
@@ -94,7 +90,6 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	var notran;
 	var nounit;
 	var upper;
-	var transt;
 	var lstres;
 	var safe1;
 	var safe2;
@@ -112,14 +107,13 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	var pj;
 
 	// Decode parameters
-	upper = ( uplo === 'U' || uplo === 'u' );
-	notran = ( trans === 'N' || trans === 'n' );
-	nounit = ( diag === 'N' || diag === 'n' );
+	upper = ( uplo === 'upper' );
+	notran = ( trans === 'no-transpose' );
+	nounit = ( diag === 'non-unit' );
 
-	// Convert to long-form strings for BLAS dependency calls
-	uploLong = UPLO_MAP[ uplo ] || uplo;
-	transLong = TRANS_MAP[ trans ] || trans;
-	diagLong = DIAG_MAP[ diag ] || diag;
+	uploLong = uplo;
+	transLong = trans;
+	diagLong = diag;
 
 	// Quick return if possible
 	if ( N === 0 || nrhs === 0 ) {
@@ -132,10 +126,8 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 
 	// Set transpose type for the condition estimation
 	if ( notran ) {
-		transt = 'T';
 		transtLong = 'transpose';
 	} else {
-		transt = 'N';
 		transtLong = 'no-transpose';
 	}
 

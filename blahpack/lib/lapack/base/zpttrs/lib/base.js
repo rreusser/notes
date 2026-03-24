@@ -60,7 +60,7 @@ function zpttrs( uplo, N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, str
 	}
 
 	// Decode UPLO:
-	if ( uplo === 'U' || uplo === 'u' ) {
+	if ( uplo === 'upper' ) {
 		iuplo = 1;
 	} else {
 		iuplo = 0;

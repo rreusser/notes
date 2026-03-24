@@ -65,7 +65,6 @@ var dsytrs2 = require( '../../dsytrs2/lib/base.js' );
 * @returns {integer} info - 0 if successful, k>0 if D(k-1,k-1) is exactly zero
 */
 function dsysv( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
-	var uplot;
 	var WORK;
 	var info;
 
@@ -73,11 +72,8 @@ function dsysv( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV,
 		return 0;
 	}
 
-	// Map single-char uplo to the string format dsytrf expects
-	uplot = ( uplo === 'U' ) ? 'upper' : 'lower';
-
 	// Factorize A = U*D*U^T or A = L*D*L^T
-	info = dsytrf( uplot, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV );
+	info = dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV );
 
 	if ( info === 0 ) {
 		// Allocate workspace for dsytrs2 (needs N elements)

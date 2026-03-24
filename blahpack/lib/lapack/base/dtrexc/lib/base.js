@@ -70,7 +70,7 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	var nbl;
 
 	info = 0;
-	wantq = ( compq === 'V' || compq === 'v' );
+	wantq = ( compq === 'update' );
 
 	// Quick return
 	if ( N <= 1 ) {

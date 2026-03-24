@@ -108,7 +108,7 @@ test( 'dtrevc3: right eigenvectors, all, 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -124,7 +124,7 @@ test( 'dtrevc3: left eigenvectors, all, 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'L', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'left', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VL ), tc.VL, 1e-12, 'VL' );
@@ -140,7 +140,7 @@ test( 'dtrevc3: both eigenvectors, all, 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'B', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'both', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -162,7 +162,7 @@ test( 'dtrevc3: right eigenvectors, selected, 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'R', 'S', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'right', 'selected', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -183,7 +183,7 @@ test( 'dtrevc3: right backtransform, 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'R', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'right', 'backtransform', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -203,7 +203,7 @@ test( 'dtrevc3: right all real eigenvalues, 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -219,7 +219,7 @@ test( 'dtrevc3: right N=1', function t() {
 	var WORK = new Float64Array( 3 );
 	var M = 0;
 
-	var info = dtrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, 1, M, WORK, 1, 0, 3 );
+	var info = dtrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, 1, M, WORK, 1, 0, 3 );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -240,7 +240,7 @@ test( 'dtrevc3: left selected complex 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'L', 'S', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'left', 'selected', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VL ), tc.VL, 1e-12, 'VL' );
@@ -260,7 +260,7 @@ test( 'dtrevc3: left backtransform, 4x4', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'L', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'left', 'backtransform', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VL ), tc.VL, 1e-12, 'VL' );
@@ -276,7 +276,7 @@ test( 'dtrevc3: right all 6x6 mixed', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -292,7 +292,7 @@ test( 'dtrevc3: left all 6x6 mixed', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'L', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'left', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VL ), tc.VL, 1e-12, 'VL' );
@@ -313,7 +313,7 @@ test( 'dtrevc3: both backtransform 6x6', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'B', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'both', 'backtransform', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -333,7 +333,7 @@ test( 'dtrevc3: right selected real 6x6', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'R', 'S', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'right', 'selected', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
@@ -352,7 +352,7 @@ test( 'dtrevc3: left selected complex first 6x6', function t() {
 	var WORK = new Float64Array( 3 * N );
 	var M = 0;
 
-	var info = dtrevc3( 'L', 'S', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+	var info = dtrevc3( 'left', 'selected', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( Array.from( VL ), tc.VL, 1e-12, 'VL' );

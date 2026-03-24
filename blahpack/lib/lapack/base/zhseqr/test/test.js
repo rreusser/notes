@@ -163,7 +163,7 @@ test( 'zhseqr: n_eq_0', function t() {
 	var W = new Complex128Array( 0 );
 	var WORK = new Complex128Array( 1 );
 
-	var info = zhseqr( 'E', 'N', 0, 1, 0,
+	var info = zhseqr( 'eigenvalues', 'none', 0, 1, 0,
 		H, 1, 0, 0,
 		W, 1, 0,
 		Z, 1, 0, 0,
@@ -182,7 +182,7 @@ test( 'zhseqr: N=1, JOB=E, COMPZ=N', function t() {
 
 	mset( Hm, n, 0, 0, 7.0, -3.0 );
 
-	var info = zhseqr( 'E', 'N', n, 1, 1,
+	var info = zhseqr( 'eigenvalues', 'none', n, 1, 1,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		W, 1, 0,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
@@ -202,7 +202,7 @@ test( 'zhseqr: N=1, JOB=S, COMPZ=I', function t() {
 
 	mset( Hm, n, 0, 0, 7.0, -3.0 );
 
-	var info = zhseqr( 'S', 'I', n, 1, 1,
+	var info = zhseqr( 'schur', 'initialize', n, 1, 1,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		W, 1, 0,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
@@ -224,7 +224,7 @@ test( 'zhseqr: 4x4, JOB=E, COMPZ=N', function t() {
 
 	buildHess4( Hm );
 
-	var info = zhseqr( 'E', 'N', n, 1, 4,
+	var info = zhseqr( 'eigenvalues', 'none', n, 1, 4,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		W, 1, 0,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
@@ -244,7 +244,7 @@ test( 'zhseqr: 4x4, JOB=S, COMPZ=I', function t() {
 
 	buildHess4( Hm );
 
-	var info = zhseqr( 'S', 'I', n, 1, 4,
+	var info = zhseqr( 'schur', 'initialize', n, 1, 4,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		W, 1, 0,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
@@ -270,7 +270,7 @@ test( 'zhseqr: 4x4, JOB=S, COMPZ=V', function t() {
 		mset( Zm, n, i, i, 1.0, 0.0 );
 	}
 
-	var info = zhseqr( 'S', 'V', n, 1, 4,
+	var info = zhseqr( 'schur', 'update', n, 1, 4,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		W, 1, 0,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
@@ -291,7 +291,7 @@ test( 'zhseqr: 6x6, JOB=S, COMPZ=I', function t() {
 
 	buildHess6( Hm );
 
-	var info = zhseqr( 'S', 'I', n, 1, 6,
+	var info = zhseqr( 'schur', 'initialize', n, 1, 6,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		W, 1, 0,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,
@@ -312,7 +312,7 @@ test( 'zhseqr: 6x6, JOB=E, COMPZ=N', function t() {
 
 	buildHess6( Hm );
 
-	var info = zhseqr( 'E', 'N', n, 1, 6,
+	var info = zhseqr( 'eigenvalues', 'none', n, 1, 6,
 		Hm.data, Hm.s1, Hm.s2, Hm.offset,
 		W, 1, 0,
 		Zm.data, Zm.s1, Zm.s2, Zm.offset,

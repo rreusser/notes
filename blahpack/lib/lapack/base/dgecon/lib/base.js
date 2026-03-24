@@ -107,7 +107,7 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	scale = new Float64Array( 1 );
 
 	ainvnm = 0.0;
-	normin = 'N';
+	normin = 'no';
 	if ( onenrm ) {
 		kase1 = 1;
 	} else {
@@ -166,7 +166,7 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 
 		// Combine scaling: divide X by 1/(SL*SU) if doing so will not cause overflow
 		scale[ 0 ] = sl * su;
-		normin = 'Y';
+		normin = 'yes';
 		if ( scale[ 0 ] !== 1.0 ) {
 			ix = idamax( N, WORK, sw, offsetWORK );
 			if ( scale[ 0 ] < Math.abs( WORK[ offsetWORK + (ix * sw) ] ) * SMLNUM || scale[ 0 ] === 0.0 ) {

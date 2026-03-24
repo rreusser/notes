@@ -41,8 +41,8 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 var ZERO = 0.0;
 var ONE = 1.0;
 
-var EPS = dlamch( 'P' );
-var SMLNUM_RAW = dlamch( 'S' );
+var EPS = dlamch( 'precision' );
+var SMLNUM_RAW = dlamch( 'safe-minimum' );
 var SMLNUM = Math.sqrt( SMLNUM_RAW ) / EPS;
 var BIGNUM = ONE / SMLNUM;
 
@@ -119,8 +119,8 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 	var IDUM;
 
 	info = 0;
-	wantvs = ( jobvs === 'V' );
-	wantst = ( sort === 'S' );
+	wantvs = ( jobvs === 'compute-vectors' );
+	wantst = ( sort === 'sort' );
 
 	// Quick return
 	if ( N === 0 ) {
@@ -141,13 +141,13 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 		cscale = BIGNUM;
 	}
 	if ( scalea ) {
-		dlascl( 'G', 0, 0, anrm, cscale, N, N, A, strideA1, strideA2, offsetA );
+		dlascl( 'general', 0, 0, anrm, cscale, N, N, A, strideA1, strideA2, offsetA );
 	}
 
 	// Balance the matrix
 	// WORK layout: [SCALE(0..N-1), TAU(0..N-1), workspace...]
 	ibal = 0; // offset in WORK for SCALE from dgebal
-	balRes = dgebal( 'P', N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK + ibal * strideWORK );
+	balRes = dgebal( 'permute', N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK + ibal * strideWORK );
 	ilo = balRes.ilo; // 1-based
 	ihi = balRes.ihi; // 1-based
 
@@ -168,7 +168,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 
 	// Compute Schur form (reduce Hessenberg to quasi-triangular)
 	iwrk = itau;
-	ieval = dhseqr( 'S', jobvs, N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS );
+	ieval = dhseqr( 'schur', wantvs ? 'update' : 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS );
 	if ( ieval > 0 ) {
 		info = ieval;
 	}
@@ -176,8 +176,8 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 	// Sort eigenvalues if requested
 	if ( wantst && info === 0 ) {
 		if ( scalea ) {
-			dlascl( 'G', 0, 0, cscale, anrm, N, 1, WR, 1, strideWR, offsetWR );
-			dlascl( 'G', 0, 0, cscale, anrm, N, 1, WI, 1, strideWI, offsetWI );
+			dlascl( 'general', 0, 0, cscale, anrm, N, 1, WR, 1, strideWR, offsetWR );
+			dlascl( 'general', 0, 0, cscale, anrm, N, 1, WI, 1, strideWI, offsetWI );
 		}
 		for ( i = 0; i < N; i++ ) {
 			BWORK[ offsetBWORK + i * strideBWORK ] = select( WR[ offsetWR + i * strideWR ], WI[ offsetWI + i * strideWI ] ) ? 1 : 0;
@@ -188,7 +188,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 		S = new Float64Array( 1 );
 		SEP = new Float64Array( 1 );
 		IDUM = new Int32Array( 1 );
-		icond = dtrsen( 'N', jobvs, BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk, IDUM, 1, 0, 1 );
+		icond = dtrsen( 'none', wantvs ? 'update' : 'none', BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk, IDUM, 1, 0, 1 );
 		sdim[ 0 ] = M[ 0 ];
 		if ( icond > 0 ) {
 			info = N + icond;
@@ -197,12 +197,12 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 
 	if ( wantvs ) {
 		// Undo balancing of Schur vectors
-		dgebak( 'P', 'R', N, ilo, ihi, WORK, strideWORK, offsetWORK + ibal * strideWORK, N, VS, strideVS1, strideVS2, offsetVS );
+		dgebak( 'permute', 'right', N, ilo, ihi, WORK, strideWORK, offsetWORK + ibal * strideWORK, N, VS, strideVS1, strideVS2, offsetVS );
 	}
 
 	if ( scalea ) {
 		// Undo scaling
-		dlascl( 'H', 0, 0, cscale, anrm, N, N, A, strideA1, strideA2, offsetA );
+		dlascl( 'upper-hessenberg', 0, 0, cscale, anrm, N, N, A, strideA1, strideA2, offsetA );
 		// Re-extract diagonal eigenvalues
 		dcopy( N, A, strideA1 + strideA2, offsetA, WR, strideWR, offsetWR );
 		if ( cscale === SMLNUM ) {
@@ -211,7 +211,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 				i1 = ieval; // 0-based: ieval is 1-based count of unconverged
 				i2 = ihi - 2; // 0-based: IHI-1 (1-based) - 1
 				// Scale WI for converged eigenvalues below ILO
-				dlascl( 'G', 0, 0, cscale, anrm, ilo - 1, 1, WI, 1, strideWI, offsetWI );
+				dlascl( 'general', 0, 0, cscale, anrm, ilo - 1, 1, WI, 1, strideWI, offsetWI );
 			} else if ( wantst ) {
 				i1 = 0;
 				i2 = N - 2;
@@ -250,7 +250,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 			}
 		}
 		// Scale remaining WI
-		dlascl( 'G', 0, 0, cscale, anrm, N - ieval, 1, WI, 1, strideWI, offsetWI + ieval * strideWI );
+		dlascl( 'general', 0, 0, cscale, anrm, N - ieval, 1, WI, 1, strideWI, offsetWI + ieval * strideWI );
 	}
 
 	if ( wantst && info === 0 ) {

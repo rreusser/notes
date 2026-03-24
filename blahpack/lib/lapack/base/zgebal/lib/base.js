@@ -107,7 +107,7 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 	}
 
 	// JOB='N': no balancing
-	if ( job === 'N' ) {
+	if ( job === 'none' ) {
 		for ( i = 0; i < N; i++ ) {
 			SCALE[ oS + ( i * sS ) ] = ONE;
 		}
@@ -119,7 +119,7 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 	k = 1;
 	l = N;
 
-	if ( job !== 'S' ) {
+	if ( job !== 'scale' ) {
 		// ============================================================
 		// Search for rows isolating an eigenvalue and push them down.
 		// (Row search: find row i where A(i,j)=0 for all j!=i, j=1..L)
@@ -198,7 +198,7 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 	}
 
 	// If we only had to permute, we are done
-	if ( job === 'P' ) {
+	if ( job === 'permute' ) {
 		return { 'info': 0, 'ilo': k, 'ihi': l };
 	}
 

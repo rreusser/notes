@@ -125,8 +125,8 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 	var k;
 	var i;
 
-	wantvl = ( jobvl === 'V' );
-	wantvr = ( jobvr === 'V' );
+	wantvl = ( jobvl === 'compute-vectors' );
+	wantvr = ( jobvr === 'compute-vectors' );
 
 	// Quick return
 	if ( N === 0 ) {
@@ -172,11 +172,11 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 		cscale = BIGNUM;
 	}
 	if ( scalea ) {
-		zlascl( 'G', 0, 0, anrm, cscale, N, N, A, strideA1, strideA2, offsetA );
+		zlascl( 'general', 0, 0, anrm, cscale, N, N, A, strideA1, strideA2, offsetA );
 	}
 
 	// Balance the matrix (RWORK[ibal..ibal+N-1] stores the scale factors)
-	balRes = zgebal( 'B', N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK );
+	balRes = zgebal( 'both', N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK );
 	ilo = balRes.ilo; // 1-based
 	ihi = balRes.ihi; // 1-based
 
@@ -190,7 +190,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 
 	if ( wantvl ) {
 		// Want left eigenvectors
-		side = 'L';
+		side = 'left';
 
 		// Copy Householder vectors to VL
 		zlacpy( 'lower', N, N, A, strideA1, strideA2, offsetA, VL, strideVL1, strideVL2, offsetVL );
@@ -200,17 +200,17 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 
 		// Perform QR iteration, accumulating Schur vectors in VL
 		iwrk = itau;
-		info = zhseqr( 'S', 'V', N, ilo, ihi, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VL, strideVL1, strideVL2, offsetVL, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+		info = zhseqr( 'schur', 'update', N, ilo, ihi, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VL, strideVL1, strideVL2, offsetVL, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
 
 		if ( wantvr ) {
 			// Want both left and right eigenvectors
-			side = 'B';
+			side = 'both';
 			// Copy Schur vectors to VR
 			zlacpy( 'full', N, N, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR );
 		}
 	} else if ( wantvr ) {
 		// Want right eigenvectors only
-		side = 'R';
+		side = 'right';
 
 		// Copy Householder vectors to VR
 		zlacpy( 'lower', N, N, A, strideA1, strideA2, offsetA, VR, strideVR1, strideVR2, offsetVR );
@@ -220,20 +220,20 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 
 		// Perform QR iteration, accumulating Schur vectors in VR
 		iwrk = itau;
-		info = zhseqr( 'S', 'V', N, ilo, ihi, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+		info = zhseqr( 'schur', 'update', N, ilo, ihi, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
 	} else {
 		// Compute eigenvalues only
 		iwrk = itau;
-		info = zhseqr( 'E', 'N', N, ilo, ihi, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+		info = zhseqr( 'eigenvalues', 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
 	}
 
 	// If ZHSEQR failed, skip eigenvector computation
 	if ( info !== 0 ) {
 		// Undo scaling
 		if ( scalea ) {
-			zlascl( 'G', 0, 0, cscale, anrm, N - info, 1, w, strideW, 1, offsetW + info * strideW );
+			zlascl( 'general', 0, 0, cscale, anrm, N - info, 1, w, strideW, 1, offsetW + info * strideW );
 			if ( info > 0 ) {
-				zlascl( 'G', 0, 0, cscale, anrm, ilo - 1, 1, w, strideW, 1, offsetW );
+				zlascl( 'general', 0, 0, cscale, anrm, ilo - 1, 1, w, strideW, 1, offsetW );
 			}
 		}
 		return info;
@@ -243,7 +243,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 		// Compute eigenvectors from the Schur form
 		SELECT = new Uint8Array( 1 ); // unused but required by ztrevc3
 		nout = 0;
-		ztrevc3( side, 'B', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA,
+		ztrevc3( side, 'backtransform', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA,
 			VL, strideVL1, strideVL2, offsetVL,
 			VR, strideVR1, strideVR2, offsetVR,
 			N, nout, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk,
@@ -253,7 +253,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 	// Normalize left eigenvectors and make largest component real
 	if ( wantvl ) {
 		// Undo balancing of left eigenvectors
-		zgebak( 'B', 'L', N, ilo, ihi, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK, N, VL, strideVL1, strideVL2, offsetVL );
+		zgebak( 'both', 'left', N, ilo, ihi, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK, N, VL, strideVL1, strideVL2, offsetVL );
 
 		vv = reinterpret( VL, 0 );
 		sv1 = strideVL1 * 2;
@@ -289,7 +289,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 	// Normalize right eigenvectors and make largest component real
 	if ( wantvr ) {
 		// Undo balancing of right eigenvectors
-		zgebak( 'B', 'R', N, ilo, ihi, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK, N, VR, strideVR1, strideVR2, offsetVR );
+		zgebak( 'both', 'right', N, ilo, ihi, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK, N, VR, strideVR1, strideVR2, offsetVR );
 
 		vv = reinterpret( VR, 0 );
 		sv1 = strideVR1 * 2;
@@ -324,9 +324,9 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 
 	// Undo scaling if necessary
 	if ( scalea ) {
-		zlascl( 'G', 0, 0, cscale, anrm, N - info, 1, w, strideW, 1, offsetW + info * strideW );
+		zlascl( 'general', 0, 0, cscale, anrm, N - info, 1, w, strideW, 1, offsetW + info * strideW );
 		if ( info > 0 ) {
-			zlascl( 'G', 0, 0, cscale, anrm, ilo - 1, 1, w, strideW, 1, offsetW );
+			zlascl( 'general', 0, 0, cscale, anrm, ilo - 1, 1, w, strideW, 1, offsetW );
 		}
 	}
 

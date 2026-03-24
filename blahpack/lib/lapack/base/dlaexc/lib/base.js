@@ -157,7 +157,7 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 		X = new Float64Array( LDX * 2 ); // 2x2 column-major
 
 		// Copy the diagonal block into D
-		dlacpy( 'F', nd, nd, T, strideT1, strideT2, tij( j1, j1 ), D, 1, LDD, 0 );
+		dlacpy( 'full', nd, nd, T, strideT1, strideT2, tij( j1, j1 ), D, 1, LDD, 0 );
 		dnorm = dlange( 'max', nd, nd, D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
 
 		thresh = Math.max( TEN * EPS * dnorm, SMLNUM );
@@ -181,23 +181,23 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 			t11 = T[ tij( j1, j1 ) ];
 
 			// Test
-			dlarfx( 'L', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
-			dlarfx( 'R', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
 
 			if ( Math.max( Math.abs( D[ 2 ] ), Math.abs( D[ 2 + LDD ] ), Math.abs( D[ 2 + 2 * LDD ] - t11 ) ) > thresh ) {
 				return 1;
 			}
 
 			// Apply to T
-			dlarfx( 'L', 3, N - j1 + 1, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( j1, j1 ), WORK, strideWORK, offsetWORK );
-			dlarfx( 'R', j2, 3, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( 1, j1 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, N - j1 + 1, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( j1, j1 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', j2, 3, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( 1, j1 ), WORK, strideWORK, offsetWORK );
 
 			T[ tij( j3, j1 ) ] = ZERO;
 			T[ tij( j3, j2 ) ] = ZERO;
 			T[ tij( j3, j3 ) ] = t11;
 
 			if ( wantq ) {
-				dlarfx( 'R', N, 3, u, 1, 0, tau[ 0 ], Q, strideQ1, strideQ2, qij( 1, j1 ), WORK, strideWORK, offsetWORK );
+				dlarfx( 'right', N, 3, u, 1, 0, tau[ 0 ], Q, strideQ1, strideQ2, qij( 1, j1 ), WORK, strideWORK, offsetWORK );
 			}
 		} else if ( k === 2 ) {
 			// Case: N1=2, N2=1
@@ -211,23 +211,23 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 			t33 = T[ tij( j3, j3 ) ];
 
 			// Test
-			dlarfx( 'L', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
-			dlarfx( 'R', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', 3, 3, u, 1, 0, tau[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
 
 			if ( Math.max( Math.abs( D[ 1 ] ), Math.abs( D[ 2 ] ), Math.abs( D[ 0 ] - t33 ) ) > thresh ) {
 				return 1;
 			}
 
 			// Apply to T
-			dlarfx( 'R', j3, 3, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( 1, j1 ), WORK, strideWORK, offsetWORK );
-			dlarfx( 'L', 3, N - j1, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( j1, j2 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', j3, 3, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( 1, j1 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, N - j1, u, 1, 0, tau[ 0 ], T, strideT1, strideT2, tij( j1, j2 ), WORK, strideWORK, offsetWORK );
 
 			T[ tij( j1, j1 ) ] = t33;
 			T[ tij( j2, j1 ) ] = ZERO;
 			T[ tij( j3, j1 ) ] = ZERO;
 
 			if ( wantq ) {
-				dlarfx( 'R', N, 3, u, 1, 0, tau[ 0 ], Q, strideQ1, strideQ2, qij( 1, j1 ), WORK, strideWORK, offsetWORK );
+				dlarfx( 'right', N, 3, u, 1, 0, tau[ 0 ], Q, strideQ1, strideQ2, qij( 1, j1 ), WORK, strideWORK, offsetWORK );
 			}
 		} else {
 			// Case: N1=2, N2=2
@@ -250,20 +250,20 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 			u2[ 0 ] = ONE;
 
 			// Test
-			dlarfx( 'L', 3, 4, u1, 1, 0, tau1[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
-			dlarfx( 'R', 4, 3, u1, 1, 0, tau1[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
-			dlarfx( 'L', 3, 4, u2, 1, 0, tau2[ 0 ], D, 1, LDD, 1, WORK, strideWORK, offsetWORK );
-			dlarfx( 'R', 4, 3, u2, 1, 0, tau2[ 0 ], D, 1, LDD, LDD, WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, 4, u1, 1, 0, tau1[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', 4, 3, u1, 1, 0, tau1[ 0 ], D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, 4, u2, 1, 0, tau2[ 0 ], D, 1, LDD, 1, WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', 4, 3, u2, 1, 0, tau2[ 0 ], D, 1, LDD, LDD, WORK, strideWORK, offsetWORK );
 
 			if ( Math.max( Math.abs( D[ 2 ] ), Math.abs( D[ 2 + LDD ] ), Math.abs( D[ 3 ] ), Math.abs( D[ 3 + LDD ] ) ) > thresh ) {
 				return 1;
 			}
 
 			// Apply to T
-			dlarfx( 'L', 3, N - j1 + 1, u1, 1, 0, tau1[ 0 ], T, strideT1, strideT2, tij( j1, j1 ), WORK, strideWORK, offsetWORK );
-			dlarfx( 'R', j4, 3, u1, 1, 0, tau1[ 0 ], T, strideT1, strideT2, tij( 1, j1 ), WORK, strideWORK, offsetWORK );
-			dlarfx( 'L', 3, N - j1 + 1, u2, 1, 0, tau2[ 0 ], T, strideT1, strideT2, tij( j2, j1 ), WORK, strideWORK, offsetWORK );
-			dlarfx( 'R', j4, 3, u2, 1, 0, tau2[ 0 ], T, strideT1, strideT2, tij( 1, j2 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, N - j1 + 1, u1, 1, 0, tau1[ 0 ], T, strideT1, strideT2, tij( j1, j1 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', j4, 3, u1, 1, 0, tau1[ 0 ], T, strideT1, strideT2, tij( 1, j1 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'left', 3, N - j1 + 1, u2, 1, 0, tau2[ 0 ], T, strideT1, strideT2, tij( j2, j1 ), WORK, strideWORK, offsetWORK );
+			dlarfx( 'right', j4, 3, u2, 1, 0, tau2[ 0 ], T, strideT1, strideT2, tij( 1, j2 ), WORK, strideWORK, offsetWORK );
 
 			T[ tij( j3, j1 ) ] = ZERO;
 			T[ tij( j3, j2 ) ] = ZERO;
@@ -271,8 +271,8 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 			T[ tij( j4, j2 ) ] = ZERO;
 
 			if ( wantq ) {
-				dlarfx( 'R', N, 3, u1, 1, 0, tau1[ 0 ], Q, strideQ1, strideQ2, qij( 1, j1 ), WORK, strideWORK, offsetWORK );
-				dlarfx( 'R', N, 3, u2, 1, 0, tau2[ 0 ], Q, strideQ1, strideQ2, qij( 1, j2 ), WORK, strideWORK, offsetWORK );
+				dlarfx( 'right', N, 3, u1, 1, 0, tau1[ 0 ], Q, strideQ1, strideQ2, qij( 1, j1 ), WORK, strideWORK, offsetWORK );
+				dlarfx( 'right', N, 3, u2, 1, 0, tau2[ 0 ], Q, strideQ1, strideQ2, qij( 1, j2 ), WORK, strideWORK, offsetWORK );
 			}
 		}
 

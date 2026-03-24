@@ -94,7 +94,7 @@ test( 'zlatrs: N=0 returns immediately', function t() {
 	var cnorm = new Float64Array( 1 );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 0, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 0, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 });
@@ -108,7 +108,7 @@ test( 'zlatrs: N=1 upper, no-transpose, non-unit', function t() {
 	var cnorm = new Float64Array( 1 );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 1, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 1, A, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -129,7 +129,7 @@ test( 'zlatrs: upper, no-transpose, non-unit, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -149,7 +149,7 @@ test( 'zlatrs: lower, no-transpose, non-unit, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'lower', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -169,7 +169,7 @@ test( 'zlatrs: upper, transpose, non-unit, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -188,7 +188,7 @@ test( 'zlatrs: upper, conjugate-transpose, non-unit, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'conjugate-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'conjugate-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -207,7 +207,7 @@ test( 'zlatrs: lower, transpose, non-unit, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'lower', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -226,7 +226,7 @@ test( 'zlatrs: lower, conjugate-transpose, non-unit, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'lower', 'conjugate-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'conjugate-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -245,7 +245,7 @@ test( 'zlatrs: upper, no-transpose, unit diagonal, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -264,7 +264,7 @@ test( 'zlatrs: lower, no-transpose, unit diagonal, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'lower', 'no-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'no-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -283,7 +283,7 @@ test( 'zlatrs: upper, no-transpose, normin=Y, 3x3', function t() {
 	var cnorm = new Float64Array( [ 0.0, 2.0, 2.5 ] );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'Y', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'yes', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -302,7 +302,7 @@ test( 'zlatrs: upper, conjugate-transpose, unit diagonal, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'conjugate-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'conjugate-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -321,7 +321,7 @@ test( 'zlatrs: lower, conjugate-transpose, unit diagonal, 3x3', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'lower', 'conjugate-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'conjugate-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -342,7 +342,7 @@ test( 'zlatrs: upper, no-transpose, 4x4', function t() {
 	var cnorm = new Float64Array( 4 );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 4, A, 1, 4, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 4, A, 1, 4, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-12, 'x' );
@@ -361,7 +361,7 @@ test( 'zlatrs: lower, transpose, unit, normin=Y, 3x3', function t() {
 	var cnorm = new Float64Array( [ 2.5, 2.0, 0.0 ] );
 	var info;
 
-	info = zlatrs( 'lower', 'transpose', 'unit', 'Y', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'transpose', 'unit', 'yes', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-13, 'x' );
@@ -381,7 +381,7 @@ test( 'zlatrs: upper, no-transpose, careful solve (near-singular diag)', functio
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] <= 1e-100, 'scale should be tiny: ' + scale[ 0 ] );
 });
@@ -397,7 +397,7 @@ test( 'zlatrs: lower, no-transpose, careful solve', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'lower', 'no-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'no-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] <= 1e-100, 'scale should be tiny: ' + scale[ 0 ] );
 });
@@ -413,7 +413,7 @@ test( 'zlatrs: upper, transpose, careful solve', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] <= 1e-100, 'scale should be tiny: ' + scale[ 0 ] );
 });
@@ -429,7 +429,7 @@ test( 'zlatrs: upper, conjugate-transpose, careful solve', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'conjugate-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'conjugate-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] <= 1e-100, 'scale should be tiny: ' + scale[ 0 ] );
 });
@@ -447,7 +447,7 @@ test( 'zlatrs: upper, no-transpose, unit, careful solve (large off-diag)', funct
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'upper', 'no-transpose', 'unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'upper', 'no-transpose', 'unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, tc.info );
 	assertClose( scale[ 0 ], tc.scale, 1e-10, 'scale' );
 	assertArrayClose( xv, tc.x, 1e-10, 'x' );
@@ -464,7 +464,7 @@ test( 'zlatrs: lower, conjugate-transpose, careful solve', function t() {
 	var cnorm = new Float64Array( 3 );
 	var info;
 
-	info = zlatrs( 'lower', 'conjugate-transpose', 'non-unit', 'N', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	info = zlatrs( 'lower', 'conjugate-transpose', 'non-unit', 'no', 3, A, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.strictEqual( info, 0 );
 	assert.ok( scale[ 0 ] <= 1e-100, 'scale should be tiny: ' + scale[ 0 ] );
 });

@@ -77,7 +77,7 @@ test( 'zsytrs2: 4x4_lower_1rhs', function t() {
 	WORK = new Complex128Array( 4 );
 
 	zsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'L', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
+	info = zsytrs2( 'lower', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -109,7 +109,7 @@ test( 'zsytrs2: 4x4_upper_1rhs', function t() {
 	WORK = new Complex128Array( 4 );
 
 	zsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'U', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
+	info = zsytrs2( 'upper', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -141,7 +141,7 @@ test( 'zsytrs2: 4x4_indef_lower_1rhs', function t() {
 	WORK = new Complex128Array( 4 );
 
 	zsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'L', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
+	info = zsytrs2( 'lower', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -173,7 +173,7 @@ test( 'zsytrs2: 4x4_indef_upper_1rhs', function t() {
 	WORK = new Complex128Array( 4 );
 
 	zsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'U', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
+	info = zsytrs2( 'upper', 4, 1, A, 1, 4, 0, ipiv, 1, 0, B, 1, 4, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -204,7 +204,7 @@ test( 'zsytrs2: 3x3_lower_2rhs', function t() {
 	WORK = new Complex128Array( 3 );
 
 	zsytrf( 'lower', 3, A, 1, 3, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'L', 3, 2, A, 1, 3, 0, ipiv, 1, 0, B, 1, 3, 0, WORK, 1, 0 );
+	info = zsytrs2( 'lower', 3, 2, A, 1, 3, 0, ipiv, 1, 0, B, 1, 3, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -235,7 +235,7 @@ test( 'zsytrs2: 3x3_upper_2rhs', function t() {
 	WORK = new Complex128Array( 3 );
 
 	zsytrf( 'upper', 3, A, 1, 3, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'U', 3, 2, A, 1, 3, 0, ipiv, 1, 0, B, 1, 3, 0, WORK, 1, 0 );
+	info = zsytrs2( 'upper', 3, 2, A, 1, 3, 0, ipiv, 1, 0, B, 1, 3, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -254,7 +254,7 @@ test( 'zsytrs2: n_zero', function t() {
 	ipiv = new Int32Array( 1 );
 	WORK = new Complex128Array( 1 );
 
-	info = zsytrs2( 'L', 0, 1, A, 1, 1, 0, ipiv, 1, 0, B, 1, 1, 0, WORK, 1, 0 );
+	info = zsytrs2( 'lower', 0, 1, A, 1, 1, 0, ipiv, 1, 0, B, 1, 1, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -270,7 +270,7 @@ test( 'zsytrs2: nrhs_zero', function t() {
 	ipiv = new Int32Array( 3 );
 	WORK = new Complex128Array( 3 );
 
-	info = zsytrs2( 'L', 3, 0, A, 1, 3, 0, ipiv, 1, 0, B, 1, 3, 0, WORK, 1, 0 );
+	info = zsytrs2( 'lower', 3, 0, A, 1, 3, 0, ipiv, 1, 0, B, 1, 3, 0, WORK, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
@@ -291,7 +291,7 @@ test( 'zsytrs2: n_one_lower', function t() {
 	WORK = new Complex128Array( 1 );
 
 	zsytrf( 'lower', 1, A, 1, 1, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'L', 1, 1, A, 1, 1, 0, ipiv, 1, 0, B, 1, 1, 0, WORK, 1, 0 );
+	info = zsytrs2( 'lower', 1, 1, A, 1, 1, 0, ipiv, 1, 0, B, 1, 1, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -315,7 +315,7 @@ test( 'zsytrs2: n_one_upper', function t() {
 	WORK = new Complex128Array( 1 );
 
 	zsytrf( 'upper', 1, A, 1, 1, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'U', 1, 1, A, 1, 1, 0, ipiv, 1, 0, B, 1, 1, 0, WORK, 1, 0 );
+	info = zsytrs2( 'upper', 1, 1, A, 1, 1, 0, ipiv, 1, 0, B, 1, 1, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -348,7 +348,7 @@ test( 'zsytrs2: 5x5_lower_solve', function t() {
 	WORK = new Complex128Array( 5 );
 
 	zsytrf( 'lower', 5, A, 1, 5, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'L', 5, 1, A, 1, 5, 0, ipiv, 1, 0, B, 1, 5, 0, WORK, 1, 0 );
+	info = zsytrs2( 'lower', 5, 1, A, 1, 5, 0, ipiv, 1, 0, B, 1, 5, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -381,7 +381,7 @@ test( 'zsytrs2: 5x5_upper_solve', function t() {
 	WORK = new Complex128Array( 5 );
 
 	zsytrf( 'upper', 5, A, 1, 5, 0, ipiv, 1, 0 );
-	info = zsytrs2( 'U', 5, 1, A, 1, 5, 0, ipiv, 1, 0, B, 1, 5, 0, WORK, 1, 0 );
+	info = zsytrs2( 'upper', 5, 1, A, 1, 5, 0, ipiv, 1, 0, B, 1, 5, 0, WORK, 1, 0 );
 
 	Bv = reinterpret( B, 0 );
 	assert.equal( info, tc.info, 'info' );

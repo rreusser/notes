@@ -83,7 +83,7 @@ function callZgees( jobvs, sort, selectFn, N, Adata ) {
 // TESTS //
 
 test( 'zgees: n0', function t() {
-	var result = callZgees( 'V', 'N', selectNone, 0, [] );
+	var result = callZgees( 'compute-vectors', 'no-sort', selectNone, 0, [] );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.sdim, 0, 'sdim' );
 });
@@ -91,7 +91,7 @@ test( 'zgees: n0', function t() {
 test( 'zgees: n1', function t() {
 	var tc = findCase( 'n1' );
 	// A = (3+2i)
-	var result = callZgees( 'V', 'N', selectNone, 1, [ 3.0, 2.0 ] );
+	var result = callZgees( 'compute-vectors', 'no-sort', selectNone, 1, [ 3.0, 2.0 ] );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.sdim, 0, 'sdim' );
 	assertArrayClose( Array.from( result.w ).slice( 0, 2 ), tc.w, 1e-14, 'w' );
@@ -109,7 +109,7 @@ test( 'zgees: n3_nosort', function t() {
 		2, 1,  4, 0,  0, -1,  // col 1: A(0,1), A(1,1), A(2,1)
 		3, -1, 5, 2,  6, 0    // col 2: A(0,2), A(1,2), A(2,2)
 	];
-	var result = callZgees( 'V', 'N', selectNone, 3, Adata );
+	var result = callZgees( 'compute-vectors', 'no-sort', selectNone, 3, Adata );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.sdim, 0, 'sdim' );
 
@@ -126,7 +126,7 @@ test( 'zgees: n3_sort (select real>3)', function t() {
 		2, 1,  4, 0,  0, -1,
 		3, -1, 5, 2,  6, 0
 	];
-	var result = callZgees( 'V', 'S', selectGt3, 3, Adata );
+	var result = callZgees( 'compute-vectors', 'sort', selectGt3, 3, Adata );
 	assert.equal( result.info, 0, 'info' );
 	// SDIM should be the number of eigenvalues with real > 3
 	// From fixture: eigenvalues are ~(7.16, ...), ~(1.00, ...), ~(2.84, ...)
@@ -142,7 +142,7 @@ test( 'zgees: n4_noschur (JOBVS=N)', function t() {
 		0, 0,   1, 1,    4, 0.5,  1, 0,    // col 2
 		0, 0,   0, 0,    2, 0,    5, -1    // col 3
 	];
-	var result = callZgees( 'N', 'N', selectNone, 4, Adata );
+	var result = callZgees( 'no-vectors', 'no-sort', selectNone, 4, Adata );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.sdim, 0, 'sdim' );
 
@@ -159,7 +159,7 @@ test( 'zgees: n4_schur (JOBVS=V)', function t() {
 		0, 0,   1, 1,    4, 0.5,  1, 0,
 		0, 0,   0, 0,    2, 0,    5, -1
 	];
-	var result = callZgees( 'V', 'N', selectNone, 4, Adata );
+	var result = callZgees( 'compute-vectors', 'no-sort', selectNone, 4, Adata );
 	assert.equal( result.info, 0, 'info' );
 	assert.equal( result.sdim, 0, 'sdim' );
 

@@ -175,7 +175,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 		lwk1 = Math.floor( WORK[ offsetWORK ] );
 
 		// Workspace query to DORMHR
-		dormhr( 'R', 'N', jw, jw, 1, jw - 1, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK, -1 );
+		dormhr( 'right', 'no-transpose', jw, jw, 1, jw - 1, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK, -1 );
 		lwk2 = Math.floor( WORK[ offsetWORK ] );
 
 		if ( dlaqr4fn ) {
@@ -235,10 +235,10 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 	}
 
 	// ==== Convert to spike-triangular form ====
-	dlacpy( 'U', jw, jw, H, strideH1, strideH2, hij( kwtop, kwtop ), T, strideT1, strideT2, offsetT );
+	dlacpy( 'upper', jw, jw, H, strideH1, strideH2, hij( kwtop, kwtop ), T, strideT1, strideT2, offsetT );
 	dcopy( jw - 1, H, strideH1 + strideH2, hij( kwtop + 1, kwtop ), T, strideT1 + strideT2, tij( 2, 1 ) );
 
-	dlaset( 'A', jw, jw, ZERO, ONE, V, strideV1, strideV2, offsetV );
+	dlaset( 'full', jw, jw, ZERO, ONE, V, strideV1, strideV2, offsetV );
 
 	// Compute Schur decomposition of the deflation window
 	if ( dlaqr4fn ) {
@@ -285,7 +285,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 				ns = ns - 1;
 			} else {
 				ifst = ns;
-				trxResult = dtrexc( 'V', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK );
+				trxResult = dtrexc( 'update', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK );
 				ilst = trxResult.ilst + 1;
 			}
 		} else {
@@ -298,7 +298,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 				ns = ns - 2;
 			} else {
 				ifst = ns;
-				trxResult = dtrexc( 'V', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK );
+				trxResult = dtrexc( 'update', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK );
 				ilst = trxResult.ilst + 2;
 			}
 		}
@@ -345,7 +345,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 				} else {
 					sorted = false;
 					ifst = i;
-					trxResult = dtrexc( 'V', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, k, WORK, strideWORK, offsetWORK );
+					trxResult = dtrexc( 'update', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, k, WORK, strideWORK, offsetWORK );
 					if ( trxResult.info === 0 ) {
 						i = trxResult.ilst;
 					} else {
@@ -398,11 +398,11 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 			tau = tauArr[ 0 ];
 			WORK[ offsetWORK ] = ONE;
 
-			dlaset( 'L', jw - 2, jw - 2, ZERO, ZERO, T, strideT1, strideT2, tij( 3, 1 ) );
+			dlaset( 'lower', jw - 2, jw - 2, ZERO, ZERO, T, strideT1, strideT2, tij( 3, 1 ) );
 
-			dlarf( 'L', ns, jw, WORK, strideWORK, offsetWORK, tau, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
-			dlarf( 'R', ns, ns, WORK, strideWORK, offsetWORK, tau, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
-			dlarf( 'R', jw, ns, WORK, strideWORK, offsetWORK, tau, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			dlarf( 'left', ns, jw, WORK, strideWORK, offsetWORK, tau, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			dlarf( 'right', ns, ns, WORK, strideWORK, offsetWORK, tau, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			dlarf( 'right', jw, ns, WORK, strideWORK, offsetWORK, tau, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK );
 
 			dgehrd( jw, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + jw * strideWORK, lwork - jw );
 		}
@@ -411,12 +411,12 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 		if ( kwtop > 1 ) {
 			H[ hij( kwtop, kwtop - 1 ) ] = s * V[ vij( 1, 1 ) ];
 		}
-		dlacpy( 'U', jw, jw, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, hij( kwtop, kwtop ) );
+		dlacpy( 'upper', jw, jw, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, hij( kwtop, kwtop ) );
 		dcopy( jw - 1, T, strideT1 + strideT2, tij( 2, 1 ), H, strideH1 + strideH2, hij( kwtop + 1, kwtop ) );
 
 		// ==== Accumulate orthogonal matrix ====
 		if ( ns > 1 && s !== ZERO ) {
-			dormhr( 'R', 'N', jw, ns, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK, lwork - jw );
+			dormhr( 'right', 'no-transpose', jw, ns, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK, lwork - jw );
 		}
 
 		// ==== Update vertical slab in H ====
@@ -428,7 +428,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 		for ( krow = ltop; krow <= kwtop - 1; krow += nv ) {
 			kln = Math.min( nv, kwtop - krow );
 			dgemm( 'no-transpose', 'no-transpose', kln, jw, jw, ONE, H, strideH1, strideH2, hij( krow, kwtop ), V, strideV1, strideV2, offsetV, ZERO, WV, strideWV1, strideWV2, offsetWV );
-			dlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, H, strideH1, strideH2, hij( krow, kwtop ) );
+			dlacpy( 'full', kln, jw, WV, strideWV1, strideWV2, offsetWV, H, strideH1, strideH2, hij( krow, kwtop ) );
 		}
 
 		// ==== Update horizontal slab in H ====
@@ -436,7 +436,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 			for ( kcol = kbot + 1; kcol <= N; kcol += nh ) {
 				kln = Math.min( nh, N - kcol + 1 );
 				dgemm( 'transpose', 'no-transpose', jw, kln, jw, ONE, V, strideV1, strideV2, offsetV, H, strideH1, strideH2, hij( kwtop, kcol ), ZERO, T, strideT1, strideT2, offsetT );
-				dlacpy( 'A', jw, kln, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, hij( kwtop, kcol ) );
+				dlacpy( 'full', jw, kln, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, hij( kwtop, kcol ) );
 			}
 		}
 
@@ -445,7 +445,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 			for ( krow = iloz; krow <= ihiz; krow += nv ) {
 				kln = Math.min( nv, ihiz - krow + 1 );
 				dgemm( 'no-transpose', 'no-transpose', kln, jw, jw, ONE, Z, strideZ1, strideZ2, zij( krow, kwtop ), V, strideV1, strideV2, offsetV, ZERO, WV, strideWV1, strideWV2, offsetWV );
-				dlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, Z, strideZ1, strideZ2, zij( krow, kwtop ) );
+				dlacpy( 'full', kln, jw, WV, strideWV1, strideWV2, offsetWV, Z, strideZ1, strideZ2, zij( krow, kwtop ) );
 			}
 		}
 	}

@@ -38,7 +38,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 
 // VARIABLES //
 
-var EPS = dlamch( 'E' );
+var EPS = dlamch( 'epsilon' );
 
 
 // MAIN //
@@ -131,17 +131,17 @@ function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 	var i;
 	var j;
 
-	nofact = ( fact === 'N' );
-	equil = ( fact === 'E' );
-	notran = ( trans === 'N' );
+	nofact = ( fact === 'not-factored' );
+	equil = ( fact === 'equilibrate' );
+	notran = ( trans === 'no-transpose' );
 
 	if ( nofact || equil ) {
-		equed = 'N';
+		equed = 'none';
 		rowequ = false;
 		colequ = false;
 	} else {
-		rowequ = ( equed === 'R' || equed === 'B' );
-		colequ = ( equed === 'C' || equed === 'B' );
+		rowequ = ( equed === 'row' || equed === 'both' );
+		colequ = ( equed === 'column' || equed === 'both' );
 	}
 
 	// Quick return if possible
@@ -158,8 +158,8 @@ function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 		if ( eq.info === 0 ) {
 			// Equilibrate the matrix
 			equed = dlaqge( N, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, eq.amax );
-			rowequ = ( equed === 'R' || equed === 'B' );
-			colequ = ( equed === 'C' || equed === 'B' );
+			rowequ = ( equed === 'row' || equed === 'both' );
+			colequ = ( equed === 'column' || equed === 'both' );
 		}
 	}
 
@@ -228,18 +228,10 @@ function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 	// Compute the solution matrix X
 	dlacpy( 'full', N, nrhs, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX );
 
-	// Convert trans to long-form for dgetrs and dgerfs
-	var transLong; // eslint-disable-line no-var
-	if ( notran ) {
-		transLong = 'no-transpose';
-	} else {
-		transLong = 'transpose';
-	}
-
-	dgetrs( transLong, N, nrhs, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, X, strideX1, strideX2, offsetX );
+	dgetrs( trans, N, nrhs, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, X, strideX1, strideX2, offsetX );
 
 	// Use iterative refinement to improve the solution
-	dgerfs( transLong, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR );
+	dgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR );
 
 	// Transform the solution matrix X to a solution of the original system
 	if ( notran ) {

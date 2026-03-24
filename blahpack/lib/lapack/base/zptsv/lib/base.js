@@ -50,7 +50,7 @@ function zptsv( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, 
 	info = zpttrf( N, d, strideD, offsetD, e, strideE, offsetE );
 	if ( info === 0 ) {
 		// Solve the system A*X = B, overwriting B with X:
-		zpttrs( 'L', N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB );
+		zpttrs( 'lower', N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB );
 	}
 	return info;
 }

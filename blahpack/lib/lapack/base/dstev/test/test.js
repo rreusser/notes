@@ -50,7 +50,7 @@ test( 'dstev: eigenvalues_only_5x5 (JOBZ=N)', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dstev( 'N', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	info = dstev( 'no-vectors', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -66,7 +66,7 @@ test( 'dstev: eigenvectors_5x5 (JOBZ=V)', function t() {
 	var info;
 	var i;
 
-	info = dstev( 'V', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dstev( 'compute-vectors', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-13, 'd' );
@@ -87,7 +87,7 @@ test( 'dstev: eigenvectors_4x4 (JOBZ=V)', function t() {
 	var info;
 	var i;
 
-	info = dstev( 'V', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dstev( 'compute-vectors', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-13, 'd' );
@@ -105,7 +105,7 @@ test( 'dstev: n_zero', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dstev( 'N', 0, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	info = dstev( 'no-vectors', 0, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 });
@@ -118,7 +118,7 @@ test( 'dstev: n_one (JOBZ=V)', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dstev( 'V', 1, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	info = dstev( 'compute-vectors', 1, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -134,7 +134,7 @@ test( 'dstev: already_sorted (JOBZ=N, diagonal matrix)', function t() {
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dstev( 'N', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	info = dstev( 'no-vectors', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, tc.info );
 	assertArrayClose( Array.from( d ), tc.d, 1e-14, 'd' );
@@ -151,7 +151,7 @@ test( 'dstev: very small values trigger scaling path (tnrm < RMIN)', function t(
 	var WORK = new Float64Array( 2 * N - 2 );
 	var info;
 
-	info = dstev( 'V', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dstev( 'compute-vectors', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	// Eigenvalues should be in ascending order and roughly scale * {original eigs}
@@ -170,7 +170,7 @@ test( 'dstev: very large values trigger scaling path (tnrm > RMAX)', function t(
 	var WORK = new Float64Array( 2 * N - 2 );
 	var info;
 
-	info = dstev( 'V', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dstev( 'compute-vectors', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	for ( var i = 0; i < N - 1; i++ ) {
@@ -187,7 +187,7 @@ test( 'dstev: JOBZ=V with larger 8x8 matrix', function t() {
 	var info;
 	var i;
 
-	info = dstev( 'V', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
+	info = dstev( 'compute-vectors', N, d, 1, 0, e, 1, 0, Z, 1, N, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	// Verify eigenvalues are sorted
@@ -223,7 +223,7 @@ test( 'dstev: eigenvalues only with scaling (JOBZ=N, small values)', function t(
 	var WORK = new Float64Array( 1 );
 	var info;
 
-	info = dstev( 'N', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
+	info = dstev( 'no-vectors', N, d, 1, 0, e, 1, 0, Z, 1, 1, 0, WORK, 1, 0 );
 
 	assert.equal( info, 0, 'info' );
 	// Eigenvalues should be in ascending order

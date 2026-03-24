@@ -108,7 +108,7 @@ test( 'dtrsyl: NN basic 2x2', function t() {
 	C[ 1 + 0*LDA ] = 7.0; C[ 1 + 1*LDA ] = 8.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -129,7 +129,7 @@ test( 'dtrsyl: NN isgn=-1', function t() {
 	C[ 1 + 0*LDA ] = 7.0; C[ 1 + 1*LDA ] = 8.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', -1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', -1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -150,7 +150,7 @@ test( 'dtrsyl: TN basic', function t() {
 	C[ 1 + 0*LDA ] = 7.0; C[ 1 + 1*LDA ] = 8.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'N', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'no-transpose', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -171,7 +171,7 @@ test( 'dtrsyl: TT basic', function t() {
 	C[ 1 + 0*LDA ] = 7.0; C[ 1 + 1*LDA ] = 8.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'T', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'transpose', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -192,7 +192,7 @@ test( 'dtrsyl: NT basic', function t() {
 	C[ 1 + 0*LDA ] = 7.0; C[ 1 + 1*LDA ] = 8.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'T', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'transpose', 1, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -206,7 +206,7 @@ test( 'dtrsyl: M=0', function t() {
 	var C = new Float64Array( 16 );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', 1, 0, 2, A, 1, 4, 0, B, 1, 4, 0, C, 1, 4, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', 1, 0, 2, A, 1, 4, 0, B, 1, 4, 0, C, 1, 4, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -219,7 +219,7 @@ test( 'dtrsyl: N=0', function t() {
 	var C = new Float64Array( 16 );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', 1, 2, 0, A, 1, 4, 0, B, 1, 4, 0, C, 1, 4, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', 1, 2, 0, A, 1, 4, 0, B, 1, 4, 0, C, 1, 4, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -242,7 +242,7 @@ test( 'dtrsyl: NN 3x3 quasi-tri', function t() {
 	C[ 2 + 0*LDA ] = 7.0; C[ 2 + 1*LDA ] = 8.0; C[ 2 + 2*LDA ] = 9.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -260,7 +260,7 @@ test( 'dtrsyl: M=1 N=1', function t() {
 	C[ 0 ] = 10.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', 1, 1, 1, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', 1, 1, 1, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -284,7 +284,7 @@ test( 'dtrsyl: TN 3x3 quasi-tri', function t() {
 	C[ 2 + 0*LDA ] = 7.0; C[ 2 + 1*LDA ] = 8.0; C[ 2 + 2*LDA ] = 9.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'N', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'no-transpose', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -308,7 +308,7 @@ test( 'dtrsyl: TT 3x3 quasi-tri', function t() {
 	C[ 2 + 0*LDA ] = 7.0; C[ 2 + 1*LDA ] = 8.0; C[ 2 + 2*LDA ] = 9.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'T', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'transpose', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -332,7 +332,7 @@ test( 'dtrsyl: NT 3x3 quasi-tri', function t() {
 	C[ 2 + 0*LDA ] = 7.0; C[ 2 + 1*LDA ] = 8.0; C[ 2 + 2*LDA ] = 9.0;
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'T', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'transpose', 1, 3, 3, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -349,7 +349,7 @@ test( 'dtrsyl: NN 4x4 quasi-tri both', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -364,7 +364,7 @@ test( 'dtrsyl: TN 4x4 quasi-tri both', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'N', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'no-transpose', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -379,7 +379,7 @@ test( 'dtrsyl: TT 4x4 quasi-tri both', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'T', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'transpose', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -394,7 +394,7 @@ test( 'dtrsyl: NT 4x4 quasi-tri both', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'T', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'transpose', 1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -409,7 +409,7 @@ test( 'dtrsyl: NN 4x4 quasi-tri both isgn=-1', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'N', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'no-transpose', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -424,7 +424,7 @@ test( 'dtrsyl: TN 4x4 quasi-tri both isgn=-1', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'N', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'no-transpose', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -439,7 +439,7 @@ test( 'dtrsyl: TT 4x4 quasi-tri both isgn=-1', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'T', 'T', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'transpose', 'transpose', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
@@ -454,7 +454,7 @@ test( 'dtrsyl: NT 4x4 quasi-tri both isgn=-1', function t() {
 	var C = buildC4( LDA );
 	var scale = new Float64Array( 1 );
 
-	var info = dtrsyl( 'N', 'T', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
+	var info = dtrsyl( 'no-transpose', 'transpose', -1, 4, 4, A, 1, LDA, 0, B, 1, LDA, 0, C, 1, LDA, 0, scale );
 
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
