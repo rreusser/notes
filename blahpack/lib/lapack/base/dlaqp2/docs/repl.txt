@@ -1,0 +1,84 @@
+
+    dlaqp2.ndarray( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, WORK, strideWORK, offsetWORK )
+        Computes a QR factorization with column pivoting using Level 2 BLAS
+
+        Parameters
+        ----------
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        offset: integer
+            offset.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        JPVT: Int32Array
+            input array.
+
+        strideJPVT: integer
+            stride length for `JPVT`.
+
+        offsetJPVT: NonNegativeInteger
+            starting index for `JPVT`.
+
+        TAU: Float64Array
+            input array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: NonNegativeInteger
+            starting index for `TAU`.
+
+        VN1: Float64Array
+            input array.
+
+        strideVN1: integer
+            stride length for `VN1`.
+
+        offsetVN1: NonNegativeInteger
+            starting index for `VN1`.
+
+        VN2: Float64Array
+            input array.
+
+        strideVN2: integer
+            stride length for `VN2`.
+
+        offsetVN2: NonNegativeInteger
+            starting index for `VN2`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

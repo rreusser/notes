@@ -1,0 +1,11 @@
+dsyconv
+dsytrs2
+# dsytrf and its deps (needed for test only)
+dsytrf
+dsytf2
+dlasyf
+ilaenv
+ieeeck
+iparmq
+disnan
+dlaisnan
