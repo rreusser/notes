@@ -1,59 +1,88 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params */
 
 'use strict';
+
+// MODULES //
+
+var dlaqr23impl = require( '../../dlaqr2/lib/base.js' ).dlaqr23impl;
+var dlaqr4 = require( '../../dlaqr4/lib/base.js' );
+
 
 // MAIN //
 
 /**
-* Performs aggressive early deflation with blocked operations
+* Performs aggressive early deflation on an upper Hessenberg matrix.
+*
+* DLAQR3 is identical to DLAQR2 except that for large deflation windows it
+* uses DLAQR4 (recursive multi-shift QR) instead of DLAHQR for computing
+* the Schur decomposition of the deflation window. This provides better
+* performance for large matrices.
+*
+* Note: KTOP and KBOT are 1-based (Fortran convention).
 *
 * @private
-* @param {boolean} wantt - wantt
-* @param {boolean} wantz - wantz
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ktop - ktop
-* @param {integer} kbot - kbot
-* @param {integer} nw - nw
-* @param {Float64Array} H - input matrix
-* @param {integer} strideH1 - stride of the first dimension of `H`
-* @param {integer} strideH2 - stride of the second dimension of `H`
-* @param {NonNegativeInteger} offsetH - starting index for `H`
-* @param {integer} iloz - iloz
-* @param {integer} ihiz - ihiz
-* @param {Float64Array} Z - input matrix
-* @param {integer} strideZ1 - stride of the first dimension of `Z`
-* @param {integer} strideZ2 - stride of the second dimension of `Z`
-* @param {NonNegativeInteger} offsetZ - starting index for `Z`
-* @param {integer} ns - ns
-* @param {integer} nd - nd
-* @param {Float64Array} SR - input array
-* @param {integer} strideSR - stride length for `SR`
-* @param {NonNegativeInteger} offsetSR - starting index for `SR`
-* @param {Float64Array} SI - input array
-* @param {integer} strideSI - stride length for `SI`
-* @param {NonNegativeInteger} offsetSI - starting index for `SI`
-* @param {Float64Array} V - input matrix
-* @param {integer} strideV1 - stride of the first dimension of `V`
-* @param {integer} strideV2 - stride of the second dimension of `V`
-* @param {NonNegativeInteger} offsetV - starting index for `V`
-* @param {integer} nh - nh
-* @param {Float64Array} T - input matrix
-* @param {integer} strideT1 - stride of the first dimension of `T`
-* @param {integer} strideT2 - stride of the second dimension of `T`
-* @param {NonNegativeInteger} offsetT - starting index for `T`
-* @param {integer} nv - nv
-* @param {Float64Array} WV - input matrix
-* @param {integer} strideWV1 - stride of the first dimension of `WV`
-* @param {integer} strideWV2 - stride of the second dimension of `WV`
-* @param {NonNegativeInteger} offsetWV - starting index for `WV`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
+* @param {boolean} wantt - if true, fully update H for Schur form
+* @param {boolean} wantz - if true, accumulate transformations in Z
+* @param {NonNegativeInteger} N - order of matrix H
+* @param {integer} ktop - top of the active block (1-based)
+* @param {integer} kbot - bottom of the active block (1-based)
+* @param {integer} nw - deflation window size
+* @param {Float64Array} H - upper Hessenberg matrix
+* @param {integer} strideH1 - stride of first dim of H
+* @param {integer} strideH2 - stride of second dim of H
+* @param {NonNegativeInteger} offsetH - starting index for H
+* @param {integer} iloz - first row of Z to update (1-based)
+* @param {integer} ihiz - last row of Z to update (1-based)
+* @param {Float64Array} Z - orthogonal matrix
+* @param {integer} strideZ1 - stride of first dim of Z
+* @param {integer} strideZ2 - stride of second dim of Z
+* @param {NonNegativeInteger} offsetZ - starting index for Z
+* @param {Float64Array} SR - real parts of eigenvalues/shifts (output)
+* @param {integer} strideSR - stride for SR
+* @param {NonNegativeInteger} offsetSR - starting index for SR
+* @param {Float64Array} SI - imaginary parts of eigenvalues/shifts (output)
+* @param {integer} strideSI - stride for SI
+* @param {NonNegativeInteger} offsetSI - starting index for SI
+* @param {Float64Array} V - NW-by-NW workspace matrix
+* @param {integer} strideV1 - stride of first dim of V
+* @param {integer} strideV2 - stride of second dim of V
+* @param {NonNegativeInteger} offsetV - starting index for V
+* @param {integer} nh - number of columns available in T
+* @param {Float64Array} T - workspace matrix
+* @param {integer} strideT1 - stride of first dim of T
+* @param {integer} strideT2 - stride of second dim of T
+* @param {NonNegativeInteger} offsetT - starting index for T
+* @param {integer} nv - number of rows available in WV
+* @param {Float64Array} WV - workspace matrix
+* @param {integer} strideWV1 - stride of first dim of WV
+* @param {integer} strideWV2 - stride of second dim of WV
+* @param {NonNegativeInteger} offsetWV - starting index for WV
+* @param {Float64Array} WORK - workspace array
+* @param {integer} strideWORK - stride for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {integer} lwork - length of WORK
+* @returns {Object} { ns, nd }
 */
-function dlaqr3( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SR, strideSR, offsetSR, SI, strideSI, offsetSI, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+function dlaqr3( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, SR, strideSR, offsetSR, SI, strideSI, offsetSI, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ) {
+	return dlaqr23impl( dlaqr4, wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, SR, strideSR, offsetSR, SI, strideSI, offsetSI, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork );
 }
 
 

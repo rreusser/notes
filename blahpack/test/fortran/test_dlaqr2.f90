@@ -172,4 +172,83 @@ program test_dlaqr2
   call print_array('SI', SI, N)
   call end_test()
 
+  ! ---- Test 6: 6x6 with deflation (tiny subdiag) ----
+  SR = 0.0d0; SI = 0.0d0
+  N = 6
+  KTOP = 1
+  KBOT = 6
+  NW = 3
+  WANTT = .true.
+  WANTZ = .true.
+  ILOZ = 1
+  IHIZ = 6
+  NH = 6
+  NV = 6
+  LWORK = 200
+
+  ! Build Hessenberg with a tiny subdiagonal entry near bottom
+  H = 0.0d0
+  H(1,1) = 10.0d0; H(1,2) = 1.0d0; H(1,3) = 0.5d0; H(1,4) = 0.1d0; H(1,5) = 0.2d0; H(1,6) = 0.3d0
+  H(2,1) = 2.0d0;  H(2,2) = 8.0d0;  H(2,3) = 0.8d0; H(2,4) = 0.2d0; H(2,5) = 0.1d0; H(2,6) = 0.4d0
+  H(3,2) = 1.5d0;  H(3,3) = 6.0d0;  H(3,4) = 0.7d0; H(3,5) = 0.3d0; H(3,6) = 0.2d0
+  H(4,3) = 1.0d0;  H(4,4) = 4.0d0;  H(4,5) = 0.9d0; H(4,6) = 0.1d0
+  H(5,4) = 1.0d-14; H(5,5) = 3.0d0; H(5,6) = 0.6d0
+  H(6,5) = 1.0d-15; H(6,6) = 1.0d0
+
+  Z = 0.0d0
+  do i = 1, N
+    Z(i,i) = 1.0d0
+  end do
+
+  call DLAQR2(WANTT, WANTZ, N, KTOP, KBOT, NW, H, MAXN, ILOZ, IHIZ, &
+              Z, MAXN, NS, ND, SR, SI, V, MAXN, NH, T, MAXN, NV, WV, MAXN, WORK, LWORK)
+
+  call begin_test('6x6 with deflation')
+  call print_int('ns', NS)
+  call print_int('nd', ND)
+  call print_array('H', H, MAXN*N)
+  call print_array('Z', Z, MAXN*N)
+  call print_array('SR', SR, N)
+  call print_array('SI', SI, N)
+  call end_test()
+
+  ! ---- Test 7: 6x6 with NW=6 (full window) ----
+  SR = 0.0d0; SI = 0.0d0
+  N = 6
+  KTOP = 1
+  KBOT = 6
+  NW = 6
+  WANTT = .true.
+  WANTZ = .true.
+  ILOZ = 1
+  IHIZ = 6
+  NH = 6
+  NV = 6
+  LWORK = 200
+
+  H = 0.0d0
+  H(1,1) = 10.0d0; H(1,2) = 1.0d0; H(1,3) = 0.5d0; H(1,4) = 0.1d0; H(1,5) = 0.2d0; H(1,6) = 0.3d0
+  H(2,1) = 2.0d0;  H(2,2) = 8.0d0;  H(2,3) = 0.8d0; H(2,4) = 0.2d0; H(2,5) = 0.1d0; H(2,6) = 0.4d0
+  H(3,2) = 1.5d0;  H(3,3) = 6.0d0;  H(3,4) = 0.7d0; H(3,5) = 0.3d0; H(3,6) = 0.2d0
+  H(4,3) = 1.0d0;  H(4,4) = 4.0d0;  H(4,5) = 0.9d0; H(4,6) = 0.1d0
+  H(5,4) = 1.0d-14; H(5,5) = 3.0d0; H(5,6) = 0.6d0
+  H(6,5) = 1.0d-15; H(6,6) = 1.0d0
+
+  Z = 0.0d0
+  do i = 1, N
+    Z(i,i) = 1.0d0
+  end do
+
+  call DLAQR2(WANTT, WANTZ, N, KTOP, KBOT, NW, H, MAXN, ILOZ, IHIZ, &
+              Z, MAXN, NS, ND, SR, SI, V, MAXN, NH, T, MAXN, NV, WV, MAXN, WORK, LWORK)
+
+  call begin_test('6x6 full window')
+  call print_int('ns', NS)
+  call print_int('nd', ND)
+  call print_array('H', H, MAXN*N)
+  call print_array('Z', Z, MAXN*N)
+  call print_array('SR', SR, N)
+  call print_array('SI', SI, N)
+  call end_test()
+
 end program

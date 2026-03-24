@@ -55,6 +55,23 @@ function extractMatrix( arr, LDA, N ) {
 }
 
 /**
+* Verifies that a column-major NxN matrix is orthogonal (Z^T * Z ~ I).
+*/
+function verifyOrthogonal( Z, N, tol, msg ) {
+	var i, j, k, sum;
+	for ( i = 0; i < N; i++ ) {
+		for ( j = 0; j < N; j++ ) {
+			sum = 0.0;
+			for ( k = 0; k < N; k++ ) {
+				sum += Z[ k + i * N ] * Z[ k + j * N ];
+			}
+			var expected = ( i === j ) ? 1.0 : 0.0;
+			assertClose( sum, expected, tol, msg + ' ZtZ(' + i + ',' + j + ')' );
+		}
+	}
+}
+
+/**
 * Runs dlaqr2 with the given parameters and returns results.
 */
 function runDlaqr2( N, KTOP, KBOT, NW, Hin, Zin, WANTT, WANTZ, ILOZ, IHIZ ) {
@@ -255,4 +272,64 @@ test( 'dlaqr2: workspace query', function t() {
 	);
 
 	assert.ok( WORK[ 0 ] >= 1, 'workspace query returns positive value' );
+});
+
+test( 'dlaqr2: 6x6 with deflation', function t() {
+	var tc = findCase( '6x6 with deflation' );
+	var N = 6;
+	var MAXN = 10;
+
+	var Hin = extractMatrix( tc.H, MAXN, N );
+	var Zin = extractMatrix( tc.Z, MAXN, N );
+
+	var H0 = new Float64Array( N * N );
+	H0[ 0 + 0*N ] = 10.0; H0[ 0 + 1*N ] = 1.0;  H0[ 0 + 2*N ] = 0.5; H0[ 0 + 3*N ] = 0.1;    H0[ 0 + 4*N ] = 0.2;  H0[ 0 + 5*N ] = 0.3;
+	H0[ 1 + 0*N ] = 2.0;  H0[ 1 + 1*N ] = 8.0;  H0[ 1 + 2*N ] = 0.8; H0[ 1 + 3*N ] = 0.2;    H0[ 1 + 4*N ] = 0.1;  H0[ 1 + 5*N ] = 0.4;
+	H0[ 2 + 1*N ] = 1.5;  H0[ 2 + 2*N ] = 6.0;  H0[ 2 + 3*N ] = 0.7; H0[ 2 + 4*N ] = 0.3;    H0[ 2 + 5*N ] = 0.2;
+	H0[ 3 + 2*N ] = 1.0;  H0[ 3 + 3*N ] = 4.0;  H0[ 3 + 4*N ] = 0.9; H0[ 3 + 5*N ] = 0.1;
+	H0[ 4 + 3*N ] = 1e-14; H0[ 4 + 4*N ] = 3.0; H0[ 4 + 5*N ] = 0.6;
+	H0[ 5 + 4*N ] = 1e-15; H0[ 5 + 5*N ] = 1.0;
+
+	var Z0 = new Float64Array( N * N );
+	for ( var ii = 0; ii < N; ii++ ) Z0[ ii + ii*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 6, 3, H0, Z0, true, true, 1, 6 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	// Check SR/SI in the kwtop..kbot range (indices 3..5 for kwtop=4, kbot=6)
+	assertArrayClose( Array.from( r.SR ).slice( 3, 6 ), tc.SR.slice( 3, 6 ), 1e-10, 'SR' );
+	assertArrayClose( Array.from( r.SI ).slice( 3, 6 ), tc.SI.slice( 3, 6 ), 1e-10, 'SI' );
+	// Verify orthogonality of Z: Z^T * Z should be close to I
+	verifyOrthogonal( r.Z, N, 1e-10, 'Z orthogonal' );
+});
+
+test( 'dlaqr2: 6x6 full window', function t() {
+	var tc = findCase( '6x6 full window' );
+	var N = 6;
+	var MAXN = 10;
+
+	var Hin = extractMatrix( tc.H, MAXN, N );
+	var Zin = extractMatrix( tc.Z, MAXN, N );
+
+	var H0 = new Float64Array( N * N );
+	H0[ 0 + 0*N ] = 10.0; H0[ 0 + 1*N ] = 1.0;  H0[ 0 + 2*N ] = 0.5; H0[ 0 + 3*N ] = 0.1;    H0[ 0 + 4*N ] = 0.2;  H0[ 0 + 5*N ] = 0.3;
+	H0[ 1 + 0*N ] = 2.0;  H0[ 1 + 1*N ] = 8.0;  H0[ 1 + 2*N ] = 0.8; H0[ 1 + 3*N ] = 0.2;    H0[ 1 + 4*N ] = 0.1;  H0[ 1 + 5*N ] = 0.4;
+	H0[ 2 + 1*N ] = 1.5;  H0[ 2 + 2*N ] = 6.0;  H0[ 2 + 3*N ] = 0.7; H0[ 2 + 4*N ] = 0.3;    H0[ 2 + 5*N ] = 0.2;
+	H0[ 3 + 2*N ] = 1.0;  H0[ 3 + 3*N ] = 4.0;  H0[ 3 + 4*N ] = 0.9; H0[ 3 + 5*N ] = 0.1;
+	H0[ 4 + 3*N ] = 1e-14; H0[ 4 + 4*N ] = 3.0; H0[ 4 + 5*N ] = 0.6;
+	H0[ 5 + 4*N ] = 1e-15; H0[ 5 + 5*N ] = 1.0;
+
+	var Z0 = new Float64Array( N * N );
+	for ( var ii = 0; ii < N; ii++ ) Z0[ ii + ii*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 6, 6, H0, Z0, true, true, 1, 6 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	// For full window with full deflation, compare sorted eigenvalues
+	var srJS = Array.from( r.SR ).slice().sort();
+	var srFort = tc.SR.slice( 0, N ).slice().sort();
+	assertArrayClose( srJS, srFort, 1e-10, 'SR sorted' );
+	verifyOrthogonal( r.Z, N, 1e-10, 'Z orthogonal' );
 });

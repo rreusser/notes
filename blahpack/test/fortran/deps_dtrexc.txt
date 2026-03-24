@@ -15,3 +15,5 @@ dlasy2
 dtrexc
 iladlc
 iladlr
+la_constants
+la_xisnan

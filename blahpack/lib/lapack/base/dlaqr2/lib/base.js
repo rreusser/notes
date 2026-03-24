@@ -427,7 +427,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 		}
 		for ( krow = ltop; krow <= kwtop - 1; krow += nv ) {
 			kln = Math.min( nv, kwtop - krow );
-			dgemm( 'N', 'N', kln, jw, jw, ONE, H, strideH1, strideH2, hij( krow, kwtop ), V, strideV1, strideV2, offsetV, ZERO, WV, strideWV1, strideWV2, offsetWV );
+			dgemm( 'no-transpose', 'no-transpose', kln, jw, jw, ONE, H, strideH1, strideH2, hij( krow, kwtop ), V, strideV1, strideV2, offsetV, ZERO, WV, strideWV1, strideWV2, offsetWV );
 			dlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, H, strideH1, strideH2, hij( krow, kwtop ) );
 		}
 
@@ -435,7 +435,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 		if ( wantt ) {
 			for ( kcol = kbot + 1; kcol <= N; kcol += nh ) {
 				kln = Math.min( nh, N - kcol + 1 );
-				dgemm( 'C', 'N', jw, kln, jw, ONE, V, strideV1, strideV2, offsetV, H, strideH1, strideH2, hij( kwtop, kcol ), ZERO, T, strideT1, strideT2, offsetT );
+				dgemm( 'transpose', 'no-transpose', jw, kln, jw, ONE, V, strideV1, strideV2, offsetV, H, strideH1, strideH2, hij( kwtop, kcol ), ZERO, T, strideT1, strideT2, offsetT );
 				dlacpy( 'A', jw, kln, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, hij( kwtop, kcol ) );
 			}
 		}
@@ -444,7 +444,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 		if ( wantz ) {
 			for ( krow = iloz; krow <= ihiz; krow += nv ) {
 				kln = Math.min( nv, ihiz - krow + 1 );
-				dgemm( 'N', 'N', kln, jw, jw, ONE, Z, strideZ1, strideZ2, zij( krow, kwtop ), V, strideV1, strideV2, offsetV, ZERO, WV, strideWV1, strideWV2, offsetWV );
+				dgemm( 'no-transpose', 'no-transpose', kln, jw, jw, ONE, Z, strideZ1, strideZ2, zij( krow, kwtop ), V, strideV1, strideV2, offsetV, ZERO, WV, strideWV1, strideWV2, offsetWV );
 				dlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, Z, strideZ1, strideZ2, zij( krow, kwtop ) );
 			}
 		}
