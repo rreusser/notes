@@ -1,0 +1,7 @@
+zptsv
+zpttrf
+zpttrs
+zptts2
+ilaenv
+ieeeck
+iparmq

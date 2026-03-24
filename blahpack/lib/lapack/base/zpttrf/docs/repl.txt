@@ -1,0 +1,39 @@
+
+    zpttrf.ndarray( N, d, strideD, offsetD, e, strideE, offsetE )
+        Computes the LDL^H factorization of a complex Hermitian positive definite tridiagonal matrix
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            output array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
