@@ -403,15 +403,18 @@ translations. Read before starting any new routine.
 
 ### Index Strategy: When to Keep 1-Based Internals
 
-For simple routines, use 0-based loop variables throughout. But for routines
-with deeply nested, complex index arithmetic (dlaqr5, dlahqr, dlaqr2/3),
-**keep internal loop variables 1-based** (matching Fortran) and convert only
-at array access boundaries. Use helper functions like `get2d(A, i, j)` /
-`set2d(A, i, j, v)` that subtract 1 internally. This avoids error-prone
-index arithmetic in expressions like `(KTOP-KRCOL)/2+1`.
+For simple routines, use 0-based loop variables throughout — this is the
+default. But for routines with deeply nested, complex index arithmetic
+(dlaqr5, dlahqr, dlaqr2/3), **keeping internal loop variables 1-based**
+(matching Fortran) has proven less error-prone than converting every
+expression. The tradeoff: a `(I-1)` at each array access vs. risk of
+subtle off-by-ones in expressions like `(KTOP-KRCOL)/2+1`.
 
-Strategy: `var KTOP = ktop + 1;` at function entry (API is 0-based, internals
-are 1-based), then use `A[oA + (I-1)*sA1 + (J-1)*sA2]` everywhere.
+Strategy: `var KTOP = ktop + 1;` at function entry (API is 0-based,
+internals are 1-based), then use `A[oA + (I-1)*sA1 + (J-1)*sA2]`
+directly at every array access. Do NOT hide the `(I-1)` behind helper
+functions like `get2d`/`set2d` — the explicit offset keeps the index
+arithmetic visible and auditable.
 
 ### Multi-Output Return Conventions
 

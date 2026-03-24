@@ -1,0 +1,48 @@
+
+    dtpmv.ndarray( uplo, trans, diag, N, AP, strideAP, offsetAP, x, strideX, offsetX )
+        Perform matrix-vector operation with a triangular packed matrix
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        x: Float64Array
+            output array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

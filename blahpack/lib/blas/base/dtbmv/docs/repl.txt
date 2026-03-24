@@ -1,0 +1,54 @@
+
+    dtbmv.ndarray( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, strideX, offsetX )
+        Perform matrix-vector operation with a triangular band matrix
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        x: Float64Array
+            output array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

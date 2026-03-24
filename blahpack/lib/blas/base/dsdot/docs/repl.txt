@@ -1,0 +1,45 @@
+
+    dsdot.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy )
+        Compute the dot product of two vectors with extended precision accumulation
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float32Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        y: Float32Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        incy: integer
+            incy.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

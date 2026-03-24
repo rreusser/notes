@@ -1,0 +1,39 @@
+
+    drotmg.ndarray( dd1, dd2, dx1, dy1, dparam, strideDPARAM, offsetDPARAM )
+        Construct a modified Givens plane rotation
+
+        Parameters
+        ----------
+        dd1: number
+            dd1.
+
+        dd2: number
+            dd2.
+
+        dx1: number
+            dx1.
+
+        dy1: number
+            dy1.
+
+        dparam: Float64Array
+            input array.
+
+        strideDPARAM: integer
+            stride length for `dparam`.
+
+        offsetDPARAM: NonNegativeInteger
+            starting index for `dparam`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

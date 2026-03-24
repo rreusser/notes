@@ -33,7 +33,7 @@ var idamax = require( '../../../../blas/base/idamax/lib/base.js' );
 // VARIABLES //
 
 var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
-var HUGEVAL = 1.7976931348623157e+308; // DLAMCH('one-norm')
+var HUGEVAL = 1.7976931348623157e+308; // DLAMCH('Overflow')
 
 
 // MAIN //
@@ -70,6 +70,7 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	var kase1;
 	var scale;
 	var ISAVE;
+	var bail;
 	var KASE;
 	var EST;
 	var sl;
@@ -80,7 +81,7 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	sw = strideWORK;
 
 	// Determine norm type
-	onenrm = ( norm === 'one-norm' || norm === 'one-norm' );
+	onenrm = ( norm === 'one-norm' );
 
 	rcond[ 0 ] = 0.0;
 
@@ -116,8 +117,13 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	KASE[ 0 ] = 0;
 
 	// dlacn2 uses V = WORK[N..2N-1], X = WORK[0..N-1], ISGN = IWORK[0..N-1]
+	// dlatrs uses CNORM stored at WORK[2N..3N-1] and WORK[3N..4N-1] for lower/upper
 
-	// Dlatrs uses CNORM stored at WORK[2N..3N-1] and WORK[3N..4N-1] for upper/lower
+	// Reverse-communication loop (Fortran labels 10/20)
+	// bail is set to true when scale overflow would occur (GO TO 20 in Fortran),
+	// which skips the rcond computation entirely.
+	bail = false;
+
 	while ( true ) {
 		dlacn2( N,
 			WORK, sw, offsetWORK + (N * sw), // v
@@ -158,29 +164,33 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 			sl = scale[ 0 ];
 		}
 
-		// Combine scaling
+		// Combine scaling: divide X by 1/(SL*SU) if doing so will not cause overflow
 		scale[ 0 ] = sl * su;
 		normin = 'Y';
 		if ( scale[ 0 ] !== 1.0 ) {
 			ix = idamax( N, WORK, sw, offsetWORK );
 			if ( scale[ 0 ] < Math.abs( WORK[ offsetWORK + (ix * sw) ] ) * SMLNUM || scale[ 0 ] === 0.0 ) {
-				// Estimate would overflow; bail out
-				KASE[ 0 ] = 0;
+				// Estimate would overflow; bail out (GO TO 20)
+				bail = true;
 				break;
 			}
 			drscl( N, scale[ 0 ], WORK, sw, offsetWORK );
 		}
 	}
 
-	// Compute rcond
-	ainvnm = EST[ 0 ];
-	if ( ainvnm !== 0.0 ) {
-		rcond[ 0 ] = ( 1.0 / ainvnm ) / anorm;
-	}
+	if ( !bail ) {
+		// Compute the estimate of the reciprocal condition number
+		ainvnm = EST[ 0 ];
+		if ( ainvnm !== 0.0 ) {
+			rcond[ 0 ] = ( 1.0 / ainvnm ) / anorm;
+		} else {
+			return 1;
+		}
 
-	// Check for NaN or overflow in rcond
-	if ( rcond[ 0 ] !== rcond[ 0 ] || rcond[ 0 ] > HUGEVAL ) {
-		return 1;
+		// Check for NaN or overflow in rcond
+		if ( rcond[ 0 ] !== rcond[ 0 ] || rcond[ 0 ] > HUGEVAL ) {
+			return 1;
+		}
 	}
 
 	return 0;

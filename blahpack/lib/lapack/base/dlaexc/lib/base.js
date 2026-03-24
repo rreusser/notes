@@ -169,7 +169,7 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 
 		k = n1 + n1 + n2 - 3;
 
-		if ( k === 0 ) {
+		if ( k === 1 ) {
 			// Case: N1=1, N2=2
 			u = new Float64Array( 3 );
 			tau = new Float64Array( 1 );
@@ -199,7 +199,7 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 			if ( wantq ) {
 				dlarfx( 'R', N, 3, u, 1, 0, tau[ 0 ], Q, strideQ1, strideQ2, qij( 1, j1 ), WORK, strideWORK, offsetWORK );
 			}
-		} else if ( k === 1 ) {
+		} else if ( k === 2 ) {
 			// Case: N1=2, N2=1
 			u = new Float64Array( 3 );
 			tau = new Float64Array( 1 );

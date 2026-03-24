@@ -1,0 +1,10 @@
+{"name":"upper_well_cond","anorm": 6.00000000000000000E+000,"rcond": 1.77083333333333343E-001,"info":0,"ipiv":[1,2,3]}
+{"name":"lower_well_cond","anorm": 6.00000000000000000E+000,"rcond": 1.77083333333333343E-001,"info":0,"ipiv":[1,2,3]}
+{"name":"identity_upper","anorm": 1.00000000000000000E+000,"rcond": 1.00000000000000000E+000,"info":0}
+{"name":"identity_lower","anorm": 1.00000000000000000E+000,"rcond": 1.00000000000000000E+000,"info":0}
+{"name":"ill_cond_upper","anorm": 1.00000000000000000E+000,"rcond": 1.00000000000000008E-015,"info":0}
+{"name":"singular_upper","anorm": 1.80000000000000000E+001,"rcond": 0.00000000000000000E+000,"info":0}
+{"name":"n_zero","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"4x4_upper","anorm": 1.30000000000000000E+001,"rcond": 2.76199410345751795E-001,"info":0}
+{"name":"4x4_lower","anorm": 1.30000000000000000E+001,"rcond": 2.76199410345751795E-001,"info":0}
+{"name":"n_one_upper","anorm": 5.00000000000000000E+000,"rcond": 1.00000000000000000E+000,"info":0}

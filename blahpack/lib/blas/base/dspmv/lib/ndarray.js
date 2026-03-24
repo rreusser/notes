@@ -1,0 +1,88 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Performs the matrix-vector operation `y = alpha*A*x + beta*y` where `A` is an
+* `N` by `N` symmetric matrix supplied in packed form, `x` and `y` are
+* `N`-element vectors, and `alpha` and `beta` are scalars.
+*
+* @param {string} uplo - specifies whether the upper or lower triangular part of `A` is packed
+* @param {NonNegativeInteger} N - order of the matrix `A`
+* @param {number} alpha - scalar constant
+* @param {Float64Array} AP - packed symmetric matrix
+* @param {integer} strideAP - stride length for `AP`
+* @param {NonNegativeInteger} offsetAP - starting index for `AP`
+* @param {Float64Array} x - input vector
+* @param {integer} strideX - `x` stride length
+* @param {NonNegativeInteger} offsetX - starting index for `x`
+* @param {number} beta - scalar constant
+* @param {Float64Array} y - output vector
+* @param {integer} strideY - `y` stride length
+* @param {NonNegativeInteger} offsetY - starting index for `y`
+* @throws {TypeError} first argument must be a valid matrix triangle
+* @throws {RangeError} second argument must be a nonnegative integer
+* @throws {RangeError} eighth argument must be non-zero
+* @throws {RangeError} twelfth argument must be non-zero
+* @returns {Float64Array} `y`
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+*
+* var AP = new Float64Array( [ 1, 2, 5, 3, 6, 8 ] );
+* var x = new Float64Array( [ 1, 1, 1 ] );
+* var y = new Float64Array( [ 0, 0, 0 ] );
+*
+* dspmv( 'upper', 3, 1.0, AP, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
+* // y => <Float64Array>[ 6, 13, 17 ]
+*/
+function dspmv( uplo, N, alpha, AP, strideAP, offsetAP, x, strideX, offsetX, beta, y, strideY, offsetY ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( strideX === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be non-zero. Value: `%d`.', strideX ) );
+	}
+	if ( strideY === 0 ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be non-zero. Value: `%d`.', strideY ) );
+	}
+	if ( N === 0 || ( alpha === 0.0 && beta === 1.0 ) ) {
+		return y;
+	}
+	return base( uplo, N, alpha, AP, strideAP, offsetAP, x, strideX, offsetX, beta, y, strideY, offsetY );
+}
+
+
+// EXPORTS //
+
+module.exports = dspmv;

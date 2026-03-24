@@ -442,6 +442,31 @@ console.log( {routine} );
 """
 
 
+def gen_learnings_md(routine):
+    """Generate LEARNINGS.md template, prefix-aware."""
+    is_complex = routine.startswith(('z', 'c'))
+    complex_section = (
+        '## Complex number handling\n\n'
+        '- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)\n'
+    ) if is_complex else (
+        '## Complex number handling\n\n'
+        f'- N/A: {routine} is a real-valued routine.\n'
+    )
+    return (
+        f'# {routine}: Translation Learnings\n\n'
+        'TODO: Fill in after implementing base.js. This file is MANDATORY.\n\n'
+        '## Translation pitfalls\n\n'
+        '- [ ] (describe any index off-by-ones, stride confusion, etc.)\n\n'
+        '## Dependency interface surprises\n\n'
+        '- [ ] (note unexpected calling conventions of deps)\n\n'
+        '## Automation opportunities\n\n'
+        '- [ ] (mechanical steps that should be automated)\n\n'
+        '## Coverage gaps\n\n'
+        '- [ ] (code paths that were hard to test and why)\n\n'
+        + complex_section
+    )
+
+
 def gen_jsdoc_params(sig):
     """Generate JSDoc @param lines from signature metadata."""
     lines = []
@@ -509,7 +534,7 @@ def main():
         'docs/repl.txt': gen_repl_txt(args.routine, sig, description),
         'docs/types/index.d.ts': gen_types_dts(args.routine, args.package, sig, description),
         'examples/index.js': gen_examples_js(args.routine, args.package),
-        'LEARNINGS.md': f'# {args.routine}: Translation Learnings\n\nTODO: Fill in after implementing base.js. This file is MANDATORY.\n\n## Translation pitfalls\n\n- [ ] (describe any index off-by-ones, stride confusion, etc.)\n\n## Dependency interface surprises\n\n- [ ] (note unexpected calling conventions of deps)\n\n## Automation opportunities\n\n- [ ] (mechanical steps that should be automated)\n\n## Coverage gaps\n\n- [ ] (code paths that were hard to test and why)\n\n## Complex number handling\n\n- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)\n',
+        'LEARNINGS.md': gen_learnings_md(args.routine),
     }
 
     for rel_path, content in files.items():
@@ -520,8 +545,9 @@ def main():
             print()
         else:
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
-            # Don't overwrite existing base.js (might have real implementation)
-            if os.path.exists(full_path) and rel_path == 'lib/base.js':
+            # Don't overwrite files that may have real content
+            protected = {'lib/base.js', 'test/test.js', 'LEARNINGS.md'}
+            if os.path.exists(full_path) and rel_path in protected:
                 print(f'  SKIP (exists): {rel_path}', file=sys.stderr)
                 continue
             with open(full_path, 'w') as f:

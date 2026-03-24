@@ -1,0 +1,111 @@
+
+    dtrsen.ndarray( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, s, sep, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork )
+        Reorders the Schur factorization and computes condition numbers
+
+        Parameters
+        ----------
+        job: string
+            specifies the operation type.
+
+        compq: string
+            specifies the operation type.
+
+        SELECT: Float64Array
+            input array.
+
+        strideSELECT: integer
+            stride length for `SELECT`.
+
+        offsetSELECT: NonNegativeInteger
+            starting index for `SELECT`.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of the first dimension of `T`.
+
+        strideT2: integer
+            stride of the second dimension of `T`.
+
+        offsetT: NonNegativeInteger
+            starting index for `T`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of the first dimension of `Q`.
+
+        strideQ2: integer
+            stride of the second dimension of `Q`.
+
+        offsetQ: NonNegativeInteger
+            starting index for `Q`.
+
+        WR: Float64Array
+            input array.
+
+        strideWR: integer
+            stride length for `WR`.
+
+        offsetWR: NonNegativeInteger
+            starting index for `WR`.
+
+        WI: Float64Array
+            input array.
+
+        strideWI: integer
+            stride length for `WI`.
+
+        offsetWI: NonNegativeInteger
+            starting index for `WI`.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        s: number
+            s.
+
+        sep: number
+            sep.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        IWORK: Int32Array
+            output array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: NonNegativeInteger
+            starting index for `IWORK`.
+
+        liwork: integer
+            liwork.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

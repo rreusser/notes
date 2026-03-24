@@ -1,0 +1,96 @@
+
+    dgees.ndarray( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, BWORK, strideBWORK, offsetBWORK )
+        Computes eigenvalues and Schur decomposition of a real general matrix
+
+        Parameters
+        ----------
+        jobvs: string
+            specifies the operation type.
+
+        sort: string
+            specifies the operation type.
+
+        select: boolean
+            select.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        sdim: integer
+            sdim.
+
+        WR: Float64Array
+            input array.
+
+        strideWR: integer
+            stride length for `WR`.
+
+        offsetWR: NonNegativeInteger
+            starting index for `WR`.
+
+        WI: Float64Array
+            input array.
+
+        strideWI: integer
+            stride length for `WI`.
+
+        offsetWI: NonNegativeInteger
+            starting index for `WI`.
+
+        VS: Float64Array
+            input matrix.
+
+        strideVS1: integer
+            stride of the first dimension of `VS`.
+
+        strideVS2: integer
+            stride of the second dimension of `VS`.
+
+        offsetVS: NonNegativeInteger
+            starting index for `VS`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        BWORK: Float64Array
+            output array.
+
+        strideBWORK: integer
+            stride length for `BWORK`.
+
+        offsetBWORK: NonNegativeInteger
+            starting index for `BWORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

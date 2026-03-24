@@ -77,6 +77,16 @@ def generate_deps_file(routine, package):
                     lapack_deps.add('dlamch')
                     break
 
+        # Add common Fortran-only infrastructure deps that deps.py
+        # misses. These are needed for Fortran test compilation but
+        # not for JS (ILAENV is replaced with hardcoded constants).
+        INFRA_DEPS = {'ilaenv', 'ieeeck', 'iparmq'}
+        # Check if any dep transitively calls ILAENV
+        all_dep_names = {n['id'] for n in data.get('nodes', [])}
+        # Most LAPACK routines with >2 deps use ILAENV somewhere
+        if len(lapack_deps) > 2:
+            lapack_deps |= INFRA_DEPS
+
         with open(deps_file, 'w') as f:
             for dep in sorted(lapack_deps):
                 f.write(dep + '\n')
@@ -172,6 +182,8 @@ def main():
     print(f'  6. Fill in test inputs: {test_js}', file=sys.stderr)
     print(f'  7. Verify: node --test {test_js}', file=sys.stderr)
     print(f'  8. Coverage: node --test --experimental-test-coverage {test_js}', file=sys.stderr)
+    print(f'  9. Lint: bin/lint.sh {base_js}', file=sys.stderr)
+    print(f' 10. Write LEARNINGS.md (MANDATORY)', file=sys.stderr)
 
 
 if __name__ == '__main__':
