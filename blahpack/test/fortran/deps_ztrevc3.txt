@@ -4,3 +4,7 @@ ilaenv
 iparmq
 zlatrs
 ztrevc3
+zladiv
+dladiv
+zlaset
+zlacpy

@@ -331,6 +331,280 @@ test( 'dgelss: positive rcond threshold', function t() {
 	assert.ok( rank[ 0 ] >= 1 && rank[ 0 ] <= 3, 'rank in valid range: ' + rank[ 0 ] );
 });
 
+test( 'dgelss: rank-deficient underdetermined (2x5, M < N, rank 1)', function t() {
+	// A has rank 1: rows are linearly dependent
+	var Aorig = new Float64Array( [
+		1, 2,  // col 1
+		2, 4,  // col 2
+		3, 6,  // col 3
+		0, 0,  // col 4
+		0, 0   // col 5
+	] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [ 5, 10, 0, 0, 0 ] ); // LDB=5, consistent system
+	var S = new Float64Array( 2 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 2, 5, 1, A, 1, 2, 0, B, 1, 5, 0, S, 1, 0, 0.01, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 1, 'rank should be 1' );
+	// S[1] should be near zero relative to S[0]
+	assert.ok( S[ 1 ] < 0.01 * S[ 0 ], 'second singular value should be small' );
+});
+
+test( 'dgelss: underdetermined multiple RHS (2x5, 3 RHS)', function t() {
+	// M=2, N=5, 3 RHS to exercise GEMM paths in N > M case
+	var Aorig = new Float64Array( [
+		1, 0,  // col 1
+		0, 1,  // col 2
+		1, 0,  // col 3
+		0, 1,  // col 4
+		0, 0   // col 5
+	] );
+	var A = new Float64Array( Aorig );
+	// B must be max(M,N) x NRHS = 5x3 column-major
+	var B = new Float64Array( [
+		1, 2, 0, 0, 0,  // RHS 1
+		3, 4, 0, 0, 0,  // RHS 2
+		5, 6, 0, 0, 0   // RHS 3
+	] );
+	var S = new Float64Array( 2 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 2, 5, 3, A, 1, 2, 0, B, 1, 5, 0, S, 1, 0, -1.0, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 2, 'rank' );
+	// Verify each RHS: A*x = b
+	var x1 = new Float64Array( [ B[ 0 ], B[ 1 ], B[ 2 ], B[ 3 ], B[ 4 ] ] );
+	var x2 = new Float64Array( [ B[ 5 ], B[ 6 ], B[ 7 ], B[ 8 ], B[ 9 ] ] );
+	var x3 = new Float64Array( [ B[ 10 ], B[ 11 ], B[ 12 ], B[ 13 ], B[ 14 ] ] );
+	assertResidualSmall( 2, 5, Aorig, x1, new Float64Array( [ 1, 2 ] ), 1e-10, 'residual1' );
+	assertResidualSmall( 2, 5, Aorig, x2, new Float64Array( [ 3, 4 ] ), 1e-10, 'residual2' );
+	assertResidualSmall( 2, 5, Aorig, x3, new Float64Array( [ 5, 6 ] ), 1e-10, 'residual3' );
+});
+
+test( 'dgelss: overdetermined multiple RHS with large NRHS (4x2, 4 RHS)', function t() {
+	// 4x2 with 4 RHS to exercise various GEMM paths for M >= N
+	var Aorig = new Float64Array( [
+		2, 0, 1, 0,  // col 1
+		0, 3, 0, 1   // col 2
+	] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [
+		1, 2, 3, 4,  // RHS 1
+		4, 5, 6, 7,  // RHS 2
+		7, 8, 9, 10, // RHS 3
+		10, 11, 12, 13 // RHS 4
+	] );
+	var S = new Float64Array( 2 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 4, 2, 4, A, 1, 4, 0, B, 1, 4, 0, S, 1, 0, -1.0, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 2, 'rank' );
+});
+
+test( 'dgelss: rank-deficient overdetermined (4x3, rank 2)', function t() {
+	// Third column is sum of first two, so rank = 2
+	var Aorig = new Float64Array( [
+		1, 0, 1, 0,  // col 1
+		0, 1, 0, 1,  // col 2
+		1, 1, 1, 1   // col 3 = col1 + col2
+	] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [ 3, 5, 7, 9 ] );
+	var S = new Float64Array( 3 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 4, 3, 1, A, 1, 4, 0, B, 1, 4, 0, S, 1, 0, 0.01, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 2, 'rank should be 2' );
+	assert.ok( S[ 2 ] < 0.01 * S[ 0 ], 'third singular value small relative to first' );
+});
+
+test( 'dgelss: underdetermined direct bidiag with multiple RHS', function t() {
+	// M=2, N=5, 2 RHS with small WORK to force path 2b and exercise multi-RHS GEMM
+	var Aorig = new Float64Array( [
+		1, 0,  // col 1
+		0, 1,  // col 2
+		1, 0,  // col 3
+		0, 1,  // col 4
+		0, 0   // col 5
+	] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [
+		3, 5, 0, 0, 0,  // RHS 1
+		1, 2, 0, 0, 0   // RHS 2
+	] );
+	var S = new Float64Array( 2 );
+	var rank = [ 0 ];
+	// Use small workspace to force path 2b
+	var WORK = new Float64Array( 30 );
+	var info = dgelss( 2, 5, 2, A, 1, 2, 0, B, 1, 5, 0, S, 1, 0, -1.0, rank, WORK, 1, 0, 30 );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 2, 'rank' );
+	var x1 = new Float64Array( [ B[ 0 ], B[ 1 ], B[ 2 ], B[ 3 ], B[ 4 ] ] );
+	var x2 = new Float64Array( [ B[ 5 ], B[ 6 ], B[ 7 ], B[ 8 ], B[ 9 ] ] );
+	assertResidualSmall( 2, 5, Aorig, x1, new Float64Array( [ 3, 5 ] ), 1e-10, 'residual1' );
+	assertResidualSmall( 2, 5, Aorig, x2, new Float64Array( [ 1, 2 ] ), 1e-10, 'residual2' );
+});
+
+test( 'dgelss: M >= N chunked GEMM path (multi-RHS with small workspace)', function t() {
+	// 4x2 with 3 RHS, provide small workspace to force chunked GEMM (lines 271-281)
+	var Aorig = new Float64Array( [
+		2, 0, 1, 0,  // col 1
+		0, 3, 0, 1   // col 2
+	] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [
+		1, 2, 3, 4,
+		5, 6, 7, 8,
+		9, 10, 11, 12
+	] );
+	var S = new Float64Array( 2 );
+	var rank = [ 0 ];
+	// Use small workspace: enough for bidiag but not for full GEMM
+	// Path 1: M>=N, needs WORK >= strideB2*nrhs = 4*3 = 12 for the non-chunked path
+	// We give it less so it falls to chunked GEMM
+	var WORK = new Float64Array( 8 );
+	var info = dgelss( 4, 2, 3, A, 1, 4, 0, B, 1, 4, 0, S, 1, 0, -1.0, rank, WORK, 1, 0, 8 );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 2, 'rank' );
+});
+
+test( 'dgelss: very small A elements trigger scaling (anrm < smlnum)', function t() {
+	// smlnum = sfmin/eps ~ 1e-292. Use scale ~ 1e-295 to trigger
+	var scale = 1e-295;
+	var Aorig = new Float64Array( [ 2 * scale, 1 * scale, 0, 1 * scale, 3 * scale, 1 * scale, 0, 1 * scale, 2 * scale ] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [ 1, 2, 3 ] );
+	var S = new Float64Array( 3 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 3, 3, 1, A, 1, 3, 0, B, 1, 3, 0, S, 1, 0, -1.0, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.ok( rank[ 0 ] >= 1, 'rank at least 1' );
+});
+
+test( 'dgelss: very large A elements trigger scaling (anrm > bignum)', function t() {
+	// bignum ~ 1e+291. Use scale ~ 1e+295 to trigger
+	var scale = 1e295;
+	var Aorig = new Float64Array( [ 2 * scale, 1 * scale, 0, 1 * scale, 3 * scale, 1 * scale, 0, 1 * scale, 2 * scale ] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [ 1, 2, 3 ] );
+	var S = new Float64Array( 3 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 3, 3, 1, A, 1, 3, 0, B, 1, 3, 0, S, 1, 0, -1.0, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.ok( rank[ 0 ] >= 1, 'rank at least 1' );
+});
+
+test( 'dgelss: very small B elements trigger B scaling (bnrm < smlnum)', function t() {
+	var Aorig = new Float64Array( [ 2, 1, 0, 1, 3, 1, 0, 1, 2 ] );
+	var A = new Float64Array( Aorig );
+	var bscale = 1e-295;
+	var B = new Float64Array( [ 1 * bscale, 2 * bscale, 3 * bscale ] );
+	var S = new Float64Array( 3 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 3, 3, 1, A, 1, 3, 0, B, 1, 3, 0, S, 1, 0, -1.0, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.ok( rank[ 0 ] >= 1, 'rank at least 1' );
+});
+
+test( 'dgelss: very large B elements trigger B scaling (bnrm > bignum)', function t() {
+	var Aorig = new Float64Array( [ 2, 1, 0, 1, 3, 1, 0, 1, 2 ] );
+	var A = new Float64Array( Aorig );
+	var bscale = 1e295;
+	var B = new Float64Array( [ 1 * bscale, 2 * bscale, 3 * bscale ] );
+	var S = new Float64Array( 3 );
+	var rank = [ 0 ];
+
+	var info = dgelss( 3, 3, 1, A, 1, 3, 0, B, 1, 3, 0, S, 1, 0, -1.0, rank, null, 1, 0, 0 );
+	assert.equal( info, 0, 'info' );
+	assert.ok( rank[ 0 ] >= 1, 'rank at least 1' );
+});
+
+test( 'dgelss: N > M path 2b chunked GEMM with multiple RHS (limited workspace)', function t() {
+	// M=2, N=5, 3 RHS, limited workspace to force chunked GEMM in path 2b
+	var Aorig = new Float64Array( [
+		1, 0,
+		0, 1,
+		1, 0,
+		0, 1,
+		0, 0
+	] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [
+		1, 2, 0, 0, 0,
+		3, 4, 0, 0, 0,
+		5, 6, 0, 0, 0
+	] );
+	var S = new Float64Array( 2 );
+	var rank = [ 0 ];
+	// Provide workspace too small for full GEMM but enough for computation
+	// strideB2 * nrhs = 5 * 3 = 15 for non-chunked path
+	var WORK = new Float64Array( 10 );
+	var info = dgelss( 2, 5, 3, A, 1, 2, 0, B, 1, 5, 0, S, 1, 0, -1.0, rank, WORK, 1, 0, 10 );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 2, 'rank' );
+});
+
+test( 'dgelss: LQ path (2a) chunked GEMM with multiple RHS and limited workspace', function t() {
+	// N >> M path 2a with constrained workspace to force chunked GEMM (lines 382-392)
+	// Need N >= mnthr (M * 1.6), so M=2, N=6 -> mnthr=3.2, N=6 >= 3
+	// Also need enough workspace for LQ+copy but not enough for full GEMM
+	var Aorig = new Float64Array( [
+		1, 0,  // col 1
+		0, 1,  // col 2
+		1, 1,  // col 3
+		0, 0,  // col 4
+		0, 0,  // col 5
+		0, 0   // col 6
+	] );
+	var A = new Float64Array( Aorig );
+	// B = 6x3, LDB=6
+	var B = new Float64Array( [
+		1, 2, 0, 0, 0, 0,
+		3, 4, 0, 0, 0, 0,
+		5, 6, 0, 0, 0, 0
+	] );
+	var S = new Float64Array( 2 );
+	var rank = [ 0 ];
+	// Provide workspace large enough for path 2a (4*M + M*M + ...) but small enough
+	// to force chunked GEMM: need lwork >= iwork + M*nrhs = ie+M*3 to NOT chunk.
+	// ie = il + ldwork*M. Give just enough for path 2a but not for full GEMM.
+	var M = 2;
+	var lwork = 4 * M + M * M + Math.max( M, 2 * M - 4, 3, 6 - 3 * M ) + 2;
+	var WORK = new Float64Array( lwork );
+	var info = dgelss( 2, 6, 3, A, 1, 2, 0, B, 1, 6, 0, S, 1, 0, -1.0, rank, WORK, 1, 0, lwork );
+	assert.equal( info, 0, 'info' );
+	assert.equal( rank[ 0 ], 2, 'rank' );
+	var x1 = new Float64Array( [ B[ 0 ], B[ 1 ], B[ 2 ], B[ 3 ], B[ 4 ], B[ 5 ] ] );
+	assertResidualSmall( 2, 6, Aorig, x1, new Float64Array( [ 1, 2 ] ), 1e-10, 'residual1' );
+});
+
+test( 'dgelss: rank-deficient in path 2b (M < N, zero singular values)', function t() {
+	// M=3, N=5 with rank 2 (third row is sum of first two)
+	var Aorig = new Float64Array( [
+		1, 0, 1,  // col 1
+		0, 1, 1,  // col 2
+		0, 0, 0,  // col 3
+		0, 0, 0,  // col 4
+		0, 0, 0   // col 5
+	] );
+	var A = new Float64Array( Aorig );
+	var B = new Float64Array( [ 1, 2, 3, 0, 0 ] ); // LDB = 5
+	var S = new Float64Array( 3 );
+	var rank = [ 0 ];
+	// Small workspace to stay in path 2b
+	var WORK = new Float64Array( 20 );
+	var info = dgelss( 3, 5, 1, A, 1, 3, 0, B, 1, 5, 0, S, 1, 0, 0.01, rank, WORK, 1, 0, 20 );
+	assert.equal( info, 0, 'info' );
+	assert.ok( rank[ 0 ] <= 2, 'rank should be at most 2' );
+});
+
 test( 'dgelss: underdetermined wide (2x6, N >> M triggers LQ path)', function t() {
 	var tc = findCase( 'underdetermined_wide' );
 	// A = [[1 1 0 0 0 0], [0 1 1 0 0 0]] column-major, LDA=2

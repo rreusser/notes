@@ -1,17 +1,257 @@
-
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*/
 
 'use strict';
 
+// MODULES //
+
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var ztrevc3 = require( './../lib' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var ztrevc3 = require( './../lib/base.js' );
 
-test( 'ztrevc3: main export is a function', function t() {
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'ztrevc3.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var diff = Math.abs( actual - expected );
+	var denom = Math.max( Math.abs( expected ), 1.0 );
+	var relErr = diff / denom;
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.strictEqual( actual.length >= expected.length, true, msg + ' length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+
+// HELPERS //
+
+function makeMatrix( vals, N ) {
+	var buf = new Complex128Array( N * N );
+	var v = reinterpret( buf, 0 );
+	var i;
+	for ( i = 0; i < vals.length; i++ ) {
+		v[ i ] = vals[ i ];
+	}
+	return buf;
+}
+
+
+// TESTS //
+
+test( 'ztrevc3 is a function', function t() {
 	assert.strictEqual( typeof ztrevc3, 'function' );
 });
 
-test( 'ztrevc3: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof ztrevc3.ndarray, 'function' );
+test( 'ztrevc3: N=1 right eigenvectors', function t() {
+	var tc = findCase( 'right_all_n1' );
+	var T = makeMatrix( [ 5.0, -3.0 ], 1 );
+	var VR = new Complex128Array( 1 );
+	var VL = new Complex128Array( 1 );
+	var WORK = new Complex128Array( 3 );
+	var RWORK = new Float64Array( 1 );
+	var SELECT = new Uint8Array( 1 );
+	var vrv = reinterpret( VR, 0 );
+	var info;
+
+	info = ztrevc3( 'R', 'A', SELECT, 1, 0, 1, T, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 1, 0, WORK, 1, 0, 3, RWORK, 1, 0, 1 );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( vrv, tc.VR, 1e-14, 'VR' );
 });
 
-// TODO: Add implementation tests
+test( 'ztrevc3: right eigenvectors, all, 3x3', function t() {
+	var tc = findCase( 'right_all_3x3' );
+	var N = 3;
+	var T = makeMatrix( [
+		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
+		0.5, 0.0,  2.0, -1.0, 0.0, 0.0,
+		0.0, 0.3,  0.2, 0.1,  3.0, 0.0
+	], N );
+	var VR = new Complex128Array( N * N );
+	var VL = new Complex128Array( N * N );
+	var WORK = new Complex128Array( 3 * N );
+	var RWORK = new Float64Array( N );
+	var SELECT = new Uint8Array( N );
+	var vrv = reinterpret( VR, 0 );
+	var info;
+
+	info = ztrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( vrv, tc.VR, 1e-13, 'VR' );
+});
+
+test( 'ztrevc3: left eigenvectors, all, 3x3', function t() {
+	var tc = findCase( 'left_all_3x3' );
+	var N = 3;
+	var T = makeMatrix( [
+		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
+		0.5, 0.0,  2.0, -1.0, 0.0, 0.0,
+		0.0, 0.3,  0.2, 0.1,  3.0, 0.0
+	], N );
+	var VR = new Complex128Array( N * N );
+	var VL = new Complex128Array( N * N );
+	var WORK = new Complex128Array( 3 * N );
+	var RWORK = new Float64Array( N );
+	var SELECT = new Uint8Array( N );
+	var vlv = reinterpret( VL, 0 );
+	var info;
+
+	info = ztrevc3( 'L', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( vlv, tc.VL, 1e-13, 'VL' );
+});
+
+test( 'ztrevc3: both eigenvectors, all, 3x3', function t() {
+	var tc = findCase( 'both_all_3x3' );
+	var N = 3;
+	var T = makeMatrix( [
+		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
+		0.5, 0.0,  2.0, -1.0, 0.0, 0.0,
+		0.0, 0.3,  0.2, 0.1,  3.0, 0.0
+	], N );
+	var VR = new Complex128Array( N * N );
+	var VL = new Complex128Array( N * N );
+	var WORK = new Complex128Array( 3 * N );
+	var RWORK = new Float64Array( N );
+	var SELECT = new Uint8Array( N );
+	var vrv = reinterpret( VR, 0 );
+	var vlv = reinterpret( VL, 0 );
+	var info;
+
+	info = ztrevc3( 'B', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( vrv, tc.VR, 1e-13, 'VR' );
+	assertArrayClose( vlv, tc.VL, 1e-13, 'VL' );
+});
+
+test( 'ztrevc3: right eigenvectors, diagonal matrix', function t() {
+	var tc = findCase( 'right_all_diag' );
+	var N = 3;
+	var T = makeMatrix( [
+		2.0, 1.0,  0.0, 0.0,  0.0, 0.0,
+		0.0, 0.0,  3.0, -2.0, 0.0, 0.0,
+		0.0, 0.0,  0.0, 0.0,  1.0, 0.0
+	], N );
+	var VR = new Complex128Array( N * N );
+	var VL = new Complex128Array( N * N );
+	var WORK = new Complex128Array( 3 * N );
+	var RWORK = new Float64Array( N );
+	var SELECT = new Uint8Array( N );
+	var vrv = reinterpret( VR, 0 );
+	var info;
+
+	info = ztrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	assert.strictEqual( info, tc.INFO );
+	// For diagonal matrix, eigenvectors should be identity columns
+	// VR is NxN col-major complex: VR(i,j) = vrv[(j*N+i)*2], vrv[(j*N+i)*2+1]
+	assertClose( vrv[ 0 ], 1.0, 1e-14, 'VR(0,0) re' );
+	assertClose( vrv[ 1 ], 0.0, 1e-14, 'VR(0,0) im' );
+	assertClose( vrv[ 8 ], 1.0, 1e-14, 'VR(1,1) re' );
+	assertClose( vrv[ 9 ], 0.0, 1e-14, 'VR(1,1) im' );
+});
+
+test( 'ztrevc3: right eigenvectors, 4x4', function t() {
+	var tc = findCase( 'right_all_4x4' );
+	var N = 4;
+	var T = makeMatrix( [
+		1.0, 0.0,   0.0, 0.0,   0.0, 0.0,   0.0, 0.0,
+		0.5, 0.2,   2.0, 1.0,   0.0, 0.0,   0.0, 0.0,
+		0.1, 0.0,   0.3, -0.1,  3.0, -1.0,  0.0, 0.0,
+		0.0, 0.3,   0.0, 0.0,   0.4, 0.2,   4.0, 0.0
+	], N );
+	var VR = new Complex128Array( N * N );
+	var VL = new Complex128Array( N * N );
+	var WORK = new Complex128Array( 3 * N );
+	var RWORK = new Float64Array( N );
+	var SELECT = new Uint8Array( N );
+	var vrv = reinterpret( VR, 0 );
+	var info;
+
+	info = ztrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( vrv, tc.VR, 1e-12, 'VR' );
+});
+
+test( 'ztrevc3: right backtransform with identity, 3x3', function t() {
+	var tc = findCase( 'right_backtransform_3x3' );
+	var N = 3;
+	var T = makeMatrix( [
+		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
+		0.5, 0.0,  2.0, -1.0, 0.0, 0.0,
+		0.0, 0.3,  0.2, 0.1,  3.0, 0.0
+	], N );
+	// VR = identity
+	var VR = makeMatrix( [
+		1.0, 0.0,  0.0, 0.0,  0.0, 0.0,
+		0.0, 0.0,  1.0, 0.0,  0.0, 0.0,
+		0.0, 0.0,  0.0, 0.0,  1.0, 0.0
+	], N );
+	var VL = new Complex128Array( N * N );
+	var WORK = new Complex128Array( 3 * N );
+	var RWORK = new Float64Array( N );
+	var SELECT = new Uint8Array( N );
+	var vrv = reinterpret( VR, 0 );
+	var info;
+
+	info = ztrevc3( 'R', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( vrv, tc.VR, 1e-13, 'VR' );
+});
+
+test( 'ztrevc3: left backtransform with identity, 3x3', function t() {
+	var tc = findCase( 'left_backtransform_3x3' );
+	var N = 3;
+	var T = makeMatrix( [
+		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
+		0.5, 0.0,  2.0, -1.0, 0.0, 0.0,
+		0.0, 0.3,  0.2, 0.1,  3.0, 0.0
+	], N );
+	// VL = identity
+	var VL = makeMatrix( [
+		1.0, 0.0,  0.0, 0.0,  0.0, 0.0,
+		0.0, 0.0,  1.0, 0.0,  0.0, 0.0,
+		0.0, 0.0,  0.0, 0.0,  1.0, 0.0
+	], N );
+	var VR = new Complex128Array( N * N );
+	var WORK = new Complex128Array( 3 * N );
+	var RWORK = new Float64Array( N );
+	var SELECT = new Uint8Array( N );
+	var vlv = reinterpret( VL, 0 );
+	var info;
+
+	info = ztrevc3( 'L', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, 0, WORK, 1, 0, 3 * N, RWORK, 1, 0, N );
+	assert.strictEqual( info, tc.INFO );
+	assertArrayClose( vlv, tc.VL, 1e-13, 'VL' );
+});
+
+test( 'ztrevc3: N=0 returns immediately', function t() {
+	var T = new Complex128Array( 1 );
+	var VR = new Complex128Array( 1 );
+	var VL = new Complex128Array( 1 );
+	var WORK = new Complex128Array( 3 );
+	var RWORK = new Float64Array( 1 );
+	var SELECT = new Uint8Array( 1 );
+	var info;
+
+	info = ztrevc3( 'R', 'A', SELECT, 1, 0, 0, T, 1, 1, 0, VL, 1, 1, 0, VR, 1, 1, 0, 0, 0, WORK, 1, 0, 3, RWORK, 1, 0, 1 );
+	assert.strictEqual( info, 0 );
+});

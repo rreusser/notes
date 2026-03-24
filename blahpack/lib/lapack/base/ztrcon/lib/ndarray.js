@@ -1,0 +1,39 @@
+
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Estimate the reciprocal condition number of a complex triangular matrix
+*
+* @param {string} norm - specifies the operation type
+* @param {string} uplo - specifies the operation type
+* @param {string} diag - specifies the operation type
+* @param {NonNegativeInteger} N - number of columns
+* @param {Float64Array} A - input matrix
+* @param {integer} strideA1 - stride of the first dimension of `A`
+* @param {integer} strideA2 - stride of the second dimension of `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @param {number} rcond - rcond
+* @param {Float64Array} WORK - input array
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {Float64Array} RWORK - output array
+* @param {integer} strideRWORK - stride length for `RWORK`
+* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
+* @returns {integer} status code (0 = success)
+*/
+function ztrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+	return base( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = ztrcon;

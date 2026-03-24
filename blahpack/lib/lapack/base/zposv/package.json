@@ -1,7 +1,7 @@
 {
   "name": "@stdlib/lapack/base/zposv",
   "version": "0.0.0",
-  "description": "Solves a Hermitian positive definite system of linear equations (complex double-precision).",
+  "description": "Compute the solution to a complex system of linear equations A * X = B where A is Hermitian positive definite",
   "license": "Apache-2.0",
   "author": {
     "name": "The Stdlib Authors",

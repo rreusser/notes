@@ -192,3 +192,81 @@ test( 'zgbtrf: 5x5 pentadiagonal (KL=2, KU=2)', function t() {
 		assert.strictEqual( IPIV[ i ], tc.ipiv[ i ] - 1, 'ipiv[' + i + ']' );
 	}
 });
+
+test( 'zgbtrf: blocked path 100x100 with KL=33 KU=33', function t() {
+	var zgbtrs = require( '../../zgbtrs/lib/base.js' );
+	var N = 100;
+	var kl = 33;
+	var ku = 33;
+	var kv = ku + kl;
+	var LDAB = 2 * kl + ku + 1;
+	var AB_orig = new Complex128Array( LDAB * N );
+	var AB_origv = reinterpret( AB_orig, 0 );
+	var AB = new Complex128Array( LDAB * N );
+	var ABv = reinterpret( AB, 0 );
+	var IPIV = new Int32Array( N );
+	var b = new Complex128Array( N );
+	var bv = reinterpret( b, 0 );
+	var i;
+	var j;
+	var re;
+	var im;
+	var resid;
+	var bnorm;
+	var Are;
+	var Aim;
+
+	// Build a diagonally dominant complex banded matrix
+	for ( j = 0; j < N; j++ ) {
+		AB_origv[ (kv + j * LDAB) * 2 ] = 10.0 * N + ( j + 1 );
+		AB_origv[ (kv + j * LDAB) * 2 + 1 ] = 0.5 * ( j + 1 );
+		for ( i = 1; i <= Math.min( kl, N - j - 1 ); i++ ) {
+			AB_origv[ (kv + i + j * LDAB) * 2 ] = -1.0 + 0.01 * i;
+			AB_origv[ (kv + i + j * LDAB) * 2 + 1 ] = 0.1;
+		}
+		for ( i = 1; i <= Math.min( ku, j ); i++ ) {
+			AB_origv[ (kv - i + j * LDAB) * 2 ] = -1.0 + 0.02 * i;
+			AB_origv[ (kv - i + j * LDAB) * 2 + 1 ] = -0.1;
+		}
+	}
+
+	// Copy for factorization
+	for ( i = 0; i < AB_origv.length; i++ ) {
+		ABv[ i ] = AB_origv[ i ];
+	}
+
+	// Known solution: x_true[k] = (k+1, 0.5*(k+1))
+	// Compute b = A * x_true using banded structure
+	for ( i = 0; i < N; i++ ) {
+		re = 0.0;
+		im = 0.0;
+		for ( j = Math.max( 0, i - kl ); j <= Math.min( N - 1, i + ku ); j++ ) {
+			Are = AB_origv[ (kv + i - j + j * LDAB) * 2 ];
+			Aim = AB_origv[ (kv + i - j + j * LDAB) * 2 + 1 ];
+			// x_true[j] = (j+1) + 0.5*(j+1)*i
+			re += Are * ( j + 1 ) - Aim * 0.5 * ( j + 1 );
+			im += Aim * ( j + 1 ) + Are * 0.5 * ( j + 1 );
+		}
+		bv[ i * 2 ] = re;
+		bv[ i * 2 + 1 ] = im;
+	}
+
+	// Factorize
+	var info = zgbtrf( N, N, kl, ku, AB, 1, LDAB, 0, IPIV, 1, 0 );
+	assert.strictEqual( info, 0, 'info should be 0' );
+
+	// Solve using zgbtrs
+	zgbtrs( 'no-transpose', N, kl, ku, 1, AB, 1, LDAB, 0, IPIV, 1, 0, b, 1, N, 0 );
+
+	// Verify solution: b should now contain x_true
+	bnorm = 0.0;
+	resid = 0.0;
+	for ( i = 0; i < N; i++ ) {
+		re = bv[ i * 2 ] - ( i + 1 );
+		im = bv[ i * 2 + 1 ] - 0.5 * ( i + 1 );
+		resid += re * re + im * im;
+		bnorm += ( i + 1 ) * ( i + 1 ) + 0.25 * ( i + 1 ) * ( i + 1 );
+	}
+	resid = Math.sqrt( resid ) / Math.sqrt( bnorm );
+	assert.ok( resid < 1e-4, 'relative residual should be small: ' + resid );
+});

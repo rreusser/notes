@@ -113,3 +113,173 @@ test( 'dlasy2: quick return for n1=0', function t() {
 	var info = dlasy2( false, false, 1, 0, 1, new Float64Array(4), 1, 2, 0, new Float64Array(4), 1, 2, 0, new Float64Array(4), 1, 2, 0, scale, X, 1, 2, 0, xnorm );
 	assert.strictEqual( info, 0 );
 });
+
+test( 'dlasy2: n1=1 n2=1 ltranl=T ltranr=T isgn=-1', function t() {
+	var tc = findCase( 'n1=1 n2=1 ltranl=T ltranr=T isgn=-1' );
+	var TL = new Float64Array([ 3.0, 0, 0, 0 ]);
+	var TR = new Float64Array([ 2.0, 0, 0, 0 ]);
+	var B = new Float64Array([ 10.0, 0, 0, 0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( true, true, -1, 1, 1, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=1 n2=2 ltranr=T', function t() {
+	var tc = findCase( 'n1=1 n2=2 ltranr=T' );
+	var TL = new Float64Array([ 2.0, 0, 0, 0 ]);
+	var TR = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
+	var B = new Float64Array([ 3.0, 0, 4.0, 0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( false, true, 1, 1, 2, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=2 n2=1 ltranl=T', function t() {
+	var tc = findCase( 'n1=2 n2=1 ltranl=T' );
+	var TL = new Float64Array([ 2.0, -0.5, 0.5, 2.0 ]);
+	var TR = new Float64Array([ 1.0, 0, 0, 0 ]);
+	var B = new Float64Array([ 3.0, 4.0, 0, 0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( true, false, 1, 2, 1, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=2 n2=2 ltranl=T ltranr=T', function t() {
+	var tc = findCase( 'n1=2 n2=2 ltranl=T ltranr=T' );
+	var TL = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
+	var TR = new Float64Array([ 2.0, -0.3, 0.3, 2.0 ]);
+	var B = new Float64Array([ 1.0, 3.0, 2.0, 4.0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( true, true, 1, 2, 2, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=2 n2=2 ltranl=T isgn=-1', function t() {
+	var tc = findCase( 'n1=2 n2=2 ltranl=T isgn=-1' );
+	var TL = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
+	var TR = new Float64Array([ 2.0, -0.3, 0.3, 2.0 ]);
+	var B = new Float64Array([ 5.0, 7.0, 6.0, 8.0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( true, false, -1, 2, 2, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=2 n2=2 ltranr=T isgn=-1', function t() {
+	var tc = findCase( 'n1=2 n2=2 ltranr=T isgn=-1' );
+	var TL = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
+	var TR = new Float64Array([ 2.0, -0.3, 0.3, 2.0 ]);
+	var B = new Float64Array([ 5.0, 7.0, 6.0, 8.0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( false, true, -1, 2, 2, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=1 n2=1 isgn=-1', function t() {
+	var tc = findCase( 'n1=1 n2=1 isgn=-1' );
+	var TL = new Float64Array([ 3.0, 0, 0, 0 ]);
+	var TR = new Float64Array([ 2.0, 0, 0, 0 ]);
+	var B = new Float64Array([ 10.0, 0, 0, 0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( false, false, -1, 1, 1, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=1 n2=2 isgn=-1', function t() {
+	var tc = findCase( 'n1=1 n2=2 isgn=-1' );
+	var TL = new Float64Array([ 2.0, 0, 0, 0 ]);
+	var TR = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
+	var B = new Float64Array([ 3.0, 0, 4.0, 0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( false, false, -1, 1, 2, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=2 n2=1 isgn=-1', function t() {
+	var tc = findCase( 'n1=2 n2=1 isgn=-1' );
+	var TL = new Float64Array([ 2.0, -0.5, 0.5, 2.0 ]);
+	var TR = new Float64Array([ 1.0, 0, 0, 0 ]);
+	var B = new Float64Array([ 3.0, 4.0, 0, 0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( false, false, -1, 2, 1, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-14, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-14, 'X' );
+});
+
+test( 'dlasy2: n1=1 n2=1 near-singular', function t() {
+	var tc = findCase( 'n1=1 n2=1 near-singular' );
+	var TL = new Float64Array([ 1.0e-300, 0, 0, 0 ]);
+	var TR = new Float64Array([ -1.0e-300, 0, 0, 0 ]);
+	var B = new Float64Array([ 1.0, 0, 0, 0 ]);
+	var X = new Float64Array( 4 );
+	var scale = new Float64Array( 1 );
+	var xnorm = new Float64Array( 1 );
+
+	var info = dlasy2( false, false, 1, 1, 1, TL, 1, 2, 0, TR, 1, 2, 0, B, 1, 2, 0, scale, X, 1, 2, 0, xnorm );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertClose( xnorm[ 0 ], tc.xnorm, 1e-10, 'xnorm' );
+	assertArrayClose( Array.from( X ), tc.X, 1e-10, 'X' );
+});

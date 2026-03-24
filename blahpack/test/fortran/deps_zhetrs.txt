@@ -1,0 +1,12 @@
+zhetrs
+zhetrf
+zhetf2
+zlahef
+zlacgv
+disnan
+dlaisnan
+dlapy2
+dlamch
+ilaenv
+ieeeck
+iparmq

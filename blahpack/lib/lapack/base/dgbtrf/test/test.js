@@ -128,3 +128,69 @@ test( 'dgbtrf: kl1_ku2_3x3', function t() {
 		assert.equal( IPIV[ i ], tc.ipiv[ i ] - 1, 'ipiv[' + i + ']' );
 	}
 });
+
+test( 'dgbtrf: blocked path 100x100 with KL=33 KU=33', function t() {
+	var dgbtrs = require( '../../dgbtrs/lib/base.js' );
+	var N = 100;
+	var kl = 33;
+	var ku = 33;
+	var kv = ku + kl;
+	var LDAB = 2 * kl + ku + 1;
+	var AB_orig = new Float64Array( LDAB * N );
+	var AB = new Float64Array( LDAB * N );
+	var IPIV = new Int32Array( N );
+	var b = new Float64Array( N );
+	var x = new Float64Array( N );
+	var i;
+	var j;
+	var resid;
+	var bnorm;
+	var val;
+
+	// Build a diagonally dominant banded matrix
+	for ( j = 0; j < N; j++ ) {
+		AB_orig[ kv + j * LDAB ] = 10.0 * N + ( j + 1 );
+		for ( i = 1; i <= Math.min( kl, N - j - 1 ); i++ ) {
+			AB_orig[ kv + i + j * LDAB ] = -1.0 + 0.01 * i;
+		}
+		for ( i = 1; i <= Math.min( ku, j ); i++ ) {
+			AB_orig[ kv - i + j * LDAB ] = -1.0 + 0.02 * i;
+		}
+	}
+
+	// Copy for factorization
+	for ( i = 0; i < AB_orig.length; i++ ) {
+		AB[ i ] = AB_orig[ i ];
+	}
+
+	// Set up known solution x_true = [1, 2, 3, ..., N]
+	// Compute b = A * x_true using the banded structure
+	for ( i = 0; i < N; i++ ) {
+		val = 0.0;
+		for ( j = Math.max( 0, i - kl ); j <= Math.min( N - 1, i + ku ); j++ ) {
+			// A(i,j) is stored at AB_orig[ kv + i - j + j * LDAB ]
+			val += AB_orig[ kv + i - j + j * LDAB ] * ( j + 1 );
+		}
+		b[ i ] = val;
+	}
+
+	// Factorize
+	var info = dgbtrf( N, N, kl, ku, AB, 1, LDAB, 0, IPIV, 1, 0 );
+	assert.equal( info, 0, 'info should be 0' );
+
+	// Solve using dgbtrs
+	for ( i = 0; i < N; i++ ) {
+		x[ i ] = b[ i ];
+	}
+	dgbtrs( 'no-transpose', N, kl, ku, 1, AB, 1, LDAB, 0, IPIV, 1, 0, x, 1, N, 0 );
+
+	// Verify solution: x should be [1, 2, 3, ..., N]
+	bnorm = 0.0;
+	resid = 0.0;
+	for ( i = 0; i < N; i++ ) {
+		bnorm += b[ i ] * b[ i ];
+		resid += ( x[ i ] - ( i + 1 ) ) * ( x[ i ] - ( i + 1 ) );
+	}
+	resid = Math.sqrt( resid ) / Math.sqrt( bnorm );
+	assert.ok( resid < 1e-8, 'relative residual should be small: ' + resid );
+});

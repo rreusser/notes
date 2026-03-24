@@ -4,6 +4,15 @@ program test_dgbtrf
   double precision :: AB4(4, 10), AB7(7, 10), AB5(5, 10), AB1(1, 10)
   integer :: ipiv(10), info
 
+  ! Parameters for blocked test
+  integer, parameter :: KL_BIG = 33, KU_BIG = 33
+  integer, parameter :: N_BIG = 100
+  integer, parameter :: LDAB_BIG = 2*KL_BIG + KU_BIG + 1
+  double precision :: AB_big(LDAB_BIG, N_BIG)
+  double precision :: AB_packed(LDAB_BIG * N_BIG)
+  integer :: ipiv_big(N_BIG)
+  integer :: i, j, kv_big
+
   ! ============================================================
   ! Test 1: 4x4 tridiagonal (KL=1, KU=1), LDAB=4
   ! Same as dgbtf2 test - should get same result (NB > KL so falls through)
@@ -86,6 +95,39 @@ program test_dgbtrf
   call begin_test('kl1_ku2_3x3')
   call print_matrix('AB', AB5, 5, 5, 3)
   call print_int_array('ipiv', ipiv, 3)
+  call print_int('info', info)
+  call end_test()
+
+  ! ============================================================
+  ! Test 8: Blocked path - large banded matrix with KL=33, KU=33, N=100
+  ! This exercises the blocked code path since NB <= KL
+  kv_big = KU_BIG + KL_BIG
+  AB_big = 0.0d0
+  do j = 1, N_BIG
+    ! Diagonal at row KL+KU+1 = kv_big+1
+    AB_big(kv_big + 1, j) = 10.0d0 * N_BIG + dble(j)
+    ! Subdiagonals
+    do i = 1, min(KL_BIG, N_BIG - j)
+      AB_big(kv_big + 1 + i, j) = -1.0d0 + 0.01d0 * dble(i)
+    end do
+    ! Superdiagonals
+    do i = 1, min(KU_BIG, j - 1)
+      AB_big(kv_big + 1 - i, j) = -1.0d0 + 0.02d0 * dble(i)
+    end do
+  end do
+  ipiv_big = 0
+  call DGBTRF(N_BIG, N_BIG, KL_BIG, KU_BIG, AB_big, LDAB_BIG, ipiv_big, info)
+
+  ! Pack AB_big column by column into AB_packed
+  do j = 1, N_BIG
+    do i = 1, LDAB_BIG
+      AB_packed((j-1)*LDAB_BIG + i) = AB_big(i, j)
+    end do
+  end do
+
+  call begin_test('blocked_100x100_kl33')
+  call print_array('AB', AB_packed, LDAB_BIG * N_BIG)
+  call print_int_array('ipiv', ipiv_big, N_BIG)
   call print_int('info', info)
   call end_test()
 

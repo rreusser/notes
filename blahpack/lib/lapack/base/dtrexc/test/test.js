@@ -35,23 +35,37 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
+function buildSchurMatrix( entries, N ) {
+	var T = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < entries.length; i++ ) {
+		T[ entries[ i ][ 0 ] + entries[ i ][ 1 ] * N ] = entries[ i ][ 2 ];
+	}
+	return T;
+}
+
+function eye( N ) {
+	var Q = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		Q[ i + i * N ] = 1.0;
+	}
+	return Q;
+}
+
 
 // TESTS //
 
 test( 'dtrexc: swap 1x1 forward', function t() {
 	var tc = findCase( 'swap 1x1 forward' );
 	var N = 4;
-
-	// Upper triangular: T(i,j) in column-major, LDT=N
-	var T = new Float64Array( N * N );
-	T[ 0 + 0*N ] = 4.0; T[ 0 + 1*N ] = 1.0; T[ 0 + 2*N ] = 0.5; T[ 0 + 3*N ] = 0.2;
-	T[ 1 + 1*N ] = 3.0; T[ 1 + 2*N ] = 0.8; T[ 1 + 3*N ] = 0.3;
-	T[ 2 + 2*N ] = 2.0; T[ 2 + 3*N ] = 0.6;
-	T[ 3 + 3*N ] = 1.0;
-
-	var Q = new Float64Array( N * N );
-	for ( var i = 0; i < N; i++ ) Q[ i + i*N ] = 1.0;
-
+	var T = buildSchurMatrix([
+		[0,0,4], [0,1,1], [0,2,0.5], [0,3,0.2],
+		[1,1,3], [1,2,0.8], [1,3,0.3],
+		[2,2,2], [2,3,0.6],
+		[3,3,1]
+	], N);
+	var Q = eye( N );
 	var WORK = new Float64Array( N );
 
 	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
@@ -68,4 +82,197 @@ test( 'dtrexc: N=1 quick return', function t() {
 
 	var r = dtrexc( 'V', 1, T, 1, 1, 0, Q, 1, 1, 0, 1, 1, WORK, 1, 0 );
 	assert.strictEqual( r.info, 0, 'info' );
+});
+
+test( 'dtrexc: swap 1x1 backward', function t() {
+	var tc = findCase( 'swap 1x1 backward' );
+	var N = 4;
+	var T = buildSchurMatrix([
+		[0,0,4], [0,1,1], [0,2,0.5], [0,3,0.2],
+		[1,1,3], [1,2,0.8], [1,3,0.3],
+		[2,2,2], [2,3,0.6],
+		[3,3,1]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 4, 1, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: swap 1x1 forward, COMPQ=N', function t() {
+	var tc = findCase( 'swap 1x1 forward compq_N' );
+	var N = 4;
+	var T = buildSchurMatrix([
+		[0,0,4], [0,1,1], [0,2,0.5], [0,3,0.2],
+		[1,1,3], [1,2,0.8], [1,3,0.3],
+		[2,2,2], [2,3,0.6],
+		[3,3,1]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'N', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	// Q should be unchanged (identity) since COMPQ='N'
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q unchanged' );
+});
+
+test( 'dtrexc: forward 2x2 block', function t() {
+	var tc = findCase( 'forward 2x2 block' );
+	var N = 5;
+	var T = buildSchurMatrix([
+		[0,0,3], [0,1,2], [0,2,0.5], [0,3,0.2], [0,4,0.1],
+		[1,0,-2], [1,1,3], [1,2,0.8], [1,3,0.3], [1,4,0.15],
+		[2,2,5], [2,3,0.6], [2,4,0.4],
+		[3,3,1], [3,4,0.9],
+		[4,4,0.5]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: backward 2x2 block', function t() {
+	var tc = findCase( 'backward 2x2 block' );
+	var N = 5;
+	var T = buildSchurMatrix([
+		[0,0,5], [0,1,0.5], [0,2,0.2], [0,3,0.1], [0,4,0.3],
+		[1,1,1], [1,2,0.6], [1,3,0.4], [1,4,0.15],
+		[2,2,0.5], [2,3,0.9], [2,4,0.2],
+		[3,3,3], [3,4,2],
+		[4,3,-2], [4,4,3]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 4, 1, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: forward 1x1 across 2x2', function t() {
+	var tc = findCase( 'forward 1x1 across 2x2' );
+	var N = 5;
+	var T = buildSchurMatrix([
+		[0,0,5],
+		[0,1,0.5], [0,2,0.2], [0,3,0.1], [0,4,0.3],
+		[1,1,3], [1,2,2], [1,3,0.6], [1,4,0.4],
+		[2,1,-2], [2,2,3], [2,3,0.8], [2,4,0.15],
+		[3,3,1], [3,4,0.9],
+		[4,4,0.5]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 5, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: backward 1x1 across 2x2', function t() {
+	var tc = findCase( 'backward 1x1 across 2x2' );
+	var N = 5;
+	var T = buildSchurMatrix([
+		[0,0,1], [0,1,0.5], [0,2,0.2], [0,3,0.1], [0,4,0.3],
+		[1,1,3], [1,2,2], [1,3,0.6], [1,4,0.4],
+		[2,1,-2], [2,2,3], [2,3,0.8], [2,4,0.15],
+		[3,3,5], [3,4,0.9],
+		[4,4,0.5]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 5, 1, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: IFST==ILST (no-op)', function t() {
+	var N = 3;
+	var T = buildSchurMatrix([
+		[0,0,4], [0,1,1], [0,2,0.5],
+		[1,1,3], [1,2,0.8],
+		[2,2,2]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 2, 2, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, 0, 'info' );
+});
+
+test( 'dtrexc: IFST points to second row of 2x2 block', function t() {
+	var tc = findCase( 'ifst_adjusted_2x2' );
+	var N = 4;
+	var T = buildSchurMatrix([
+		[0,0,3], [0,1,2], [0,2,0.5], [0,3,0.2],
+		[1,0,-2], [1,1,3], [1,2,0.8], [1,3,0.3],
+		[2,2,5], [2,3,0.6],
+		[3,3,1]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 2, 4, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: backward 1x1, COMPQ=N', function t() {
+	var tc = findCase( 'backward 1x1 compq_N' );
+	var N = 4;
+	var T = buildSchurMatrix([
+		[0,0,4], [0,1,1], [0,2,0.5], [0,3,0.2],
+		[1,1,3], [1,2,0.8], [1,3,0.3],
+		[2,2,2], [2,3,0.6],
+		[3,3,1]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'N', N, T, 1, N, 0, Q, 1, N, 0, 3, 1, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+});
+
+test( 'dtrexc: forward 2x2 across 2x2', function t() {
+	var tc = findCase( 'forward 2x2 across 2x2' );
+	var N = 6;
+	var T = buildSchurMatrix([
+		[0,0,4], [0,1,1], [0,2,0.5], [0,3,0.3], [0,4,0.2], [0,5,0.1],
+		[1,0,-1], [1,1,4], [1,2,0.8], [1,3,0.4], [1,4,0.25], [1,5,0.15],
+		[2,2,2], [2,3,3], [2,4,0.6], [2,5,0.35],
+		[3,2,-3], [3,3,2], [3,4,0.7], [3,5,0.45],
+		[4,4,1], [4,5,0.9],
+		[5,5,0.5]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'V', N, T, 1, N, 0, Q, 1, N, 0, 1, 4, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
 });

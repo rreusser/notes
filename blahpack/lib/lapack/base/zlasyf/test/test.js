@@ -62,7 +62,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 /**
 * Convert Fortran 1-based IPIV to expected JS 0-based IPIV.
-* Positive Fortran k -> JS k-1; negative Fortran -k -> JS ~(k-1) = -k (same value).
 */
 function fortranIPIVtoJS( ipiv ) {
 	return ipiv.map( function convert( v ) {
@@ -71,6 +70,29 @@ function fortranIPIVtoJS( ipiv ) {
 		}
 		return v; // negative values: ~(k-1) = -k, same as Fortran
 	});
+}
+
+/**
+* Fill upper triangle of complex symmetric matrix.
+* entries: [[row, col, re, im], ...]
+*/
+function fillUpper( Av, N, entries ) {
+	var i;
+	for ( i = 0; i < entries.length; i++ ) {
+		Av[ (entries[i][0] + entries[i][1] * N) * 2 ] = entries[i][2];
+		Av[ (entries[i][0] + entries[i][1] * N) * 2 + 1 ] = entries[i][3];
+	}
+}
+
+/**
+* Fill lower triangle of complex symmetric matrix.
+*/
+function fillLower( Av, N, entries ) {
+	var i;
+	for ( i = 0; i < entries.length; i++ ) {
+		Av[ (entries[i][0] + entries[i][1] * N) * 2 ] = entries[i][2];
+		Av[ (entries[i][0] + entries[i][1] * N) * 2 + 1 ] = entries[i][3];
+	}
 }
 
 
@@ -91,17 +113,10 @@ test( 'zlasyf: 4x4 upper, nb=4', function t() {
 	var result;
 	var i;
 
-	// Fill upper triangle of symmetric matrix (column-major)
-	Av[ (0 + 0 * N) * 2 ] = 4; Av[ (0 + 0 * N) * 2 + 1 ] = 1;
-	Av[ (0 + 1 * N) * 2 ] = 1; Av[ (0 + 1 * N) * 2 + 1 ] = 2;
-	Av[ (1 + 1 * N) * 2 ] = 5; Av[ (1 + 1 * N) * 2 + 1 ] = 0;
-	Av[ (0 + 2 * N) * 2 ] = 2; Av[ (0 + 2 * N) * 2 + 1 ] = 0;
-	Av[ (1 + 2 * N) * 2 ] = 1; Av[ (1 + 2 * N) * 2 + 1 ] = 1;
-	Av[ (2 + 2 * N) * 2 ] = 6; Av[ (2 + 2 * N) * 2 + 1 ] = 2;
-	Av[ (0 + 3 * N) * 2 ] = 0; Av[ (0 + 3 * N) * 2 + 1 ] = 1;
-	Av[ (1 + 3 * N) * 2 ] = 0; Av[ (1 + 3 * N) * 2 + 1 ] = 0;
-	Av[ (2 + 3 * N) * 2 ] = 1; Av[ (2 + 3 * N) * 2 + 1 ] = -1;
-	Av[ (3 + 3 * N) * 2 ] = 3; Av[ (3 + 3 * N) * 2 + 1 ] = 0;
+	fillUpper( Av, N, [
+		[0,0,4,1], [0,1,1,2], [1,1,5,0], [0,2,2,0], [1,2,1,1], [2,2,6,2],
+		[0,3,0,1], [1,3,0,0], [2,3,1,-1], [3,3,3,0]
+	]);
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
@@ -127,17 +142,12 @@ test( 'zlasyf: 4x4 lower, nb=4', function t() {
 	var result;
 	var i;
 
-	// Fill lower triangle
-	Av[ (0 + 0 * N) * 2 ] = 4; Av[ (0 + 0 * N) * 2 + 1 ] = 1;
-	Av[ (1 + 0 * N) * 2 ] = 1; Av[ (1 + 0 * N) * 2 + 1 ] = 2;
-	Av[ (2 + 0 * N) * 2 ] = 2; Av[ (2 + 0 * N) * 2 + 1 ] = 0;
-	Av[ (3 + 0 * N) * 2 ] = 0; Av[ (3 + 0 * N) * 2 + 1 ] = 1;
-	Av[ (1 + 1 * N) * 2 ] = 5; Av[ (1 + 1 * N) * 2 + 1 ] = 0;
-	Av[ (2 + 1 * N) * 2 ] = 1; Av[ (2 + 1 * N) * 2 + 1 ] = 1;
-	Av[ (3 + 1 * N) * 2 ] = 0; Av[ (3 + 1 * N) * 2 + 1 ] = 0;
-	Av[ (2 + 2 * N) * 2 ] = 6; Av[ (2 + 2 * N) * 2 + 1 ] = 2;
-	Av[ (3 + 2 * N) * 2 ] = 1; Av[ (3 + 2 * N) * 2 + 1 ] = -1;
-	Av[ (3 + 3 * N) * 2 ] = 3; Av[ (3 + 3 * N) * 2 + 1 ] = 0;
+	fillLower( Av, N, [
+		[0,0,4,1], [1,0,1,2], [2,0,2,0], [3,0,0,1],
+		[1,1,5,0], [2,1,1,1], [3,1,0,0],
+		[2,2,6,2], [3,2,1,-1],
+		[3,3,3,0]
+	]);
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
@@ -163,12 +173,9 @@ test( 'zlasyf: 3x3 upper, nb=2 (partial panel)', function t() {
 	var result;
 	var i;
 
-	Av[ (0 + 0 * N) * 2 ] = 5; Av[ (0 + 0 * N) * 2 + 1 ] = 0;
-	Av[ (0 + 1 * N) * 2 ] = 2; Av[ (0 + 1 * N) * 2 + 1 ] = 1;
-	Av[ (1 + 1 * N) * 2 ] = 4; Av[ (1 + 1 * N) * 2 + 1 ] = 0;
-	Av[ (0 + 2 * N) * 2 ] = 1; Av[ (0 + 2 * N) * 2 + 1 ] = 0;
-	Av[ (1 + 2 * N) * 2 ] = 1; Av[ (1 + 2 * N) * 2 + 1 ] = -1;
-	Av[ (2 + 2 * N) * 2 ] = 6; Av[ (2 + 2 * N) * 2 + 1 ] = 1;
+	fillUpper( Av, N, [
+		[0,0,5,0], [0,1,2,1], [1,1,4,0], [0,2,1,0], [1,2,1,-1], [2,2,6,1]
+	]);
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );
@@ -209,9 +216,9 @@ test( 'zlasyf: 2x2 upper with pivot', function t() {
 	var result;
 	var i;
 
-	Av[ (0 + 0 * N) * 2 ] = 0.1; Av[ (0 + 0 * N) * 2 + 1 ] = 0;
-	Av[ (0 + 1 * N) * 2 ] = 3; Av[ (0 + 1 * N) * 2 + 1 ] = 4;
-	Av[ (1 + 1 * N) * 2 ] = 10; Av[ (1 + 1 * N) * 2 + 1 ] = 0;
+	fillUpper( Av, N, [
+		[0,0,0.1,0], [0,1,3,4], [1,1,10,0]
+	]);
 
 	var W = new Complex128Array( N * 2 );
 	var IPIV = new Int32Array( N );
@@ -237,12 +244,211 @@ test( 'zlasyf: 3x3 lower', function t() {
 	var result;
 	var i;
 
-	Av[ (0 + 0 * N) * 2 ] = 5; Av[ (0 + 0 * N) * 2 + 1 ] = 0;
-	Av[ (1 + 0 * N) * 2 ] = 2; Av[ (1 + 0 * N) * 2 + 1 ] = 1;
-	Av[ (2 + 0 * N) * 2 ] = 1; Av[ (2 + 0 * N) * 2 + 1 ] = 0;
-	Av[ (1 + 1 * N) * 2 ] = 4; Av[ (1 + 1 * N) * 2 + 1 ] = 0;
-	Av[ (2 + 1 * N) * 2 ] = 1; Av[ (2 + 1 * N) * 2 + 1 ] = -1;
-	Av[ (2 + 2 * N) * 2 ] = 6; Av[ (2 + 2 * N) * 2 + 1 ] = 1;
+	fillLower( Av, N, [
+		[0,0,5,0], [1,0,2,1], [2,0,1,0],
+		[1,1,4,0], [2,1,1,-1],
+		[2,2,6,1]
+	]);
+
+	var W = new Complex128Array( N * nb );
+	var IPIV = new Int32Array( N );
+	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	assert.strictEqual( result.info, tc.info );
+	assert.strictEqual( result.kb, tc.kb );
+	expectedA = extractA( tc.A, N );
+	assertArrayClose( Array.from( Av ), expectedA, 1e-10, 'A' );
+	expected = fortranIPIVtoJS( tc.ipiv );
+	for ( i = 0; i < N; i++ ) {
+		assert.strictEqual( IPIV[ i ], expected[ i ], 'ipiv[' + i + ']' );
+	}
+});
+
+test( 'zlasyf: 8x8 upper, nb=4 (blocked loop)', function t() {
+	var tc = findCase( 'upper_8x8_nb4' );
+	var N = 8;
+	var nb = 4;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var expectedA;
+	var expected;
+	var result;
+	var i;
+
+	fillUpper( Av, N, [
+		[0,0,10,1],
+		[0,1,1,0.5], [1,1,9,0],
+		[0,2,0.5,0.2], [1,2,0.8,-0.3], [2,2,11,0.5],
+		[0,3,0.3,0.1], [1,3,0.4,0.2], [2,3,0.6,-0.1], [3,3,8,0],
+		[0,4,0.2,0], [1,4,0.3,0.1], [2,4,0.5,0.2], [3,4,0.7,-0.3], [4,4,12,1],
+		[0,5,0.1,0.1], [1,5,0.2,0], [2,5,0.4,0.1], [3,5,0.3,0.2], [4,5,0.6,-0.1], [5,5,7,0],
+		[0,6,0.15,0.05], [1,6,0.25,0.15], [2,6,0.35,-0.05], [3,6,0.2,0.1], [4,6,0.4,0.2], [5,6,0.5,-0.15], [6,6,13,0.5],
+		[0,7,0.1,0], [1,7,0.15,0.1], [2,7,0.2,0.05], [3,7,0.1,0], [4,7,0.3,0.1], [5,7,0.35,-0.2], [6,7,0.45,0.1], [7,7,6,0]
+	]);
+
+	var W = new Complex128Array( N * nb );
+	var IPIV = new Int32Array( N );
+	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	assert.strictEqual( result.info, tc.info );
+	assert.strictEqual( result.kb, tc.kb );
+	expectedA = extractA( tc.A, N );
+	assertArrayClose( Array.from( Av ), expectedA, 1e-10, 'A' );
+	expected = fortranIPIVtoJS( tc.ipiv );
+	for ( i = 0; i < N; i++ ) {
+		assert.strictEqual( IPIV[ i ], expected[ i ], 'ipiv[' + i + ']' );
+	}
+});
+
+test( 'zlasyf: 8x8 lower, nb=4 (blocked loop)', function t() {
+	var tc = findCase( 'lower_8x8_nb4' );
+	var N = 8;
+	var nb = 4;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var expectedA;
+	var expected;
+	var result;
+	var i;
+
+	fillLower( Av, N, [
+		[0,0,10,1],
+		[1,0,1,0.5], [1,1,9,0],
+		[2,0,0.5,0.2], [2,1,0.8,-0.3], [2,2,11,0.5],
+		[3,0,0.3,0.1], [3,1,0.4,0.2], [3,2,0.6,-0.1], [3,3,8,0],
+		[4,0,0.2,0], [4,1,0.3,0.1], [4,2,0.5,0.2], [4,3,0.7,-0.3], [4,4,12,1],
+		[5,0,0.1,0.1], [5,1,0.2,0], [5,2,0.4,0.1], [5,3,0.3,0.2], [5,4,0.6,-0.1], [5,5,7,0],
+		[6,0,0.15,0.05], [6,1,0.25,0.15], [6,2,0.35,-0.05], [6,3,0.2,0.1], [6,4,0.4,0.2], [6,5,0.5,-0.15], [6,6,13,0.5],
+		[7,0,0.1,0], [7,1,0.15,0.1], [7,2,0.2,0.05], [7,3,0.1,0], [7,4,0.3,0.1], [7,5,0.35,-0.2], [7,6,0.45,0.1], [7,7,6,0]
+	]);
+
+	var W = new Complex128Array( N * nb );
+	var IPIV = new Int32Array( N );
+	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	assert.strictEqual( result.info, tc.info );
+	assert.strictEqual( result.kb, tc.kb );
+	expectedA = extractA( tc.A, N );
+	assertArrayClose( Array.from( Av ), expectedA, 1e-10, 'A' );
+	expected = fortranIPIVtoJS( tc.ipiv );
+	for ( i = 0; i < N; i++ ) {
+		assert.strictEqual( IPIV[ i ], expected[ i ], 'ipiv[' + i + ']' );
+	}
+});
+
+test( 'zlasyf: 6x6 upper, nb=2', function t() {
+	var tc = findCase( 'upper_6x6_nb2' );
+	var N = 6;
+	var nb = 2;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var expectedA;
+	var expected;
+	var result;
+	var i;
+
+	fillUpper( Av, N, [
+		[0,0,8,0],
+		[0,1,1,1], [1,1,7,0.5],
+		[0,2,0.5,0], [1,2,0.8,-0.2], [2,2,9,0],
+		[0,3,0.3,0.1], [1,3,0.4,0.3], [2,3,0.6,-0.1], [3,3,10,1],
+		[0,4,0.2,0], [1,4,0.3,0.1], [2,4,0.5,0.2], [3,4,0.7,-0.3], [4,4,6,0],
+		[0,5,0.1,0.05], [1,5,0.2,-0.1], [2,5,0.4,0.1], [3,5,0.3,0.2], [4,5,0.5,-0.15], [5,5,11,0.5]
+	]);
+
+	var W = new Complex128Array( N * nb );
+	var IPIV = new Int32Array( N );
+	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	assert.strictEqual( result.info, tc.info );
+	assert.strictEqual( result.kb, tc.kb );
+	expectedA = extractA( tc.A, N );
+	assertArrayClose( Array.from( Av ), expectedA, 1e-10, 'A' );
+	expected = fortranIPIVtoJS( tc.ipiv );
+	for ( i = 0; i < N; i++ ) {
+		assert.strictEqual( IPIV[ i ], expected[ i ], 'ipiv[' + i + ']' );
+	}
+});
+
+test( 'zlasyf: 6x6 lower, nb=2', function t() {
+	var tc = findCase( 'lower_6x6_nb2' );
+	var N = 6;
+	var nb = 2;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var expectedA;
+	var expected;
+	var result;
+	var i;
+
+	fillLower( Av, N, [
+		[0,0,8,0],
+		[1,0,1,1], [1,1,7,0.5],
+		[2,0,0.5,0], [2,1,0.8,-0.2], [2,2,9,0],
+		[3,0,0.3,0.1], [3,1,0.4,0.3], [3,2,0.6,-0.1], [3,3,10,1],
+		[4,0,0.2,0], [4,1,0.3,0.1], [4,2,0.5,0.2], [4,3,0.7,-0.3], [4,4,6,0],
+		[5,0,0.1,0.05], [5,1,0.2,-0.1], [5,2,0.4,0.1], [5,3,0.3,0.2], [5,4,0.5,-0.15], [5,5,11,0.5]
+	]);
+
+	var W = new Complex128Array( N * nb );
+	var IPIV = new Int32Array( N );
+	result = zlasyf( 'L', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	assert.strictEqual( result.info, tc.info );
+	assert.strictEqual( result.kb, tc.kb );
+	expectedA = extractA( tc.A, N );
+	assertArrayClose( Array.from( Av ), expectedA, 1e-10, 'A' );
+	expected = fortranIPIVtoJS( tc.ipiv );
+	for ( i = 0; i < N; i++ ) {
+		assert.strictEqual( IPIV[ i ], expected[ i ], 'ipiv[' + i + ']' );
+	}
+});
+
+test( 'zlasyf: 5x5 upper with 2x2 pivot', function t() {
+	var tc = findCase( 'upper_5x5_2x2pivot' );
+	var N = 5;
+	var nb = 5;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var expectedA;
+	var expected;
+	var result;
+	var i;
+
+	fillUpper( Av, N, [
+		[0,0,0.01,0],
+		[0,1,0.02,0.01], [1,1,0.01,0],
+		[0,2,0.5,0.3], [1,2,0.4,-0.2], [2,2,0.01,0],
+		[0,3,0.3,0.1], [1,3,0.6,0.2], [2,3,0.7,-0.1], [3,3,5,0],
+		[0,4,0.2,0], [1,4,0.3,0.1], [2,4,0.5,0.2], [3,4,0.4,-0.3], [4,4,6,1]
+	]);
+
+	var W = new Complex128Array( N * nb );
+	var IPIV = new Int32Array( N );
+	result = zlasyf( 'U', N, nb, A, 1, N, 0, IPIV, 1, 0, W, 1, N, 0 );
+	assert.strictEqual( result.info, tc.info );
+	assert.strictEqual( result.kb, tc.kb );
+	expectedA = extractA( tc.A, N );
+	assertArrayClose( Array.from( Av ), expectedA, 1e-10, 'A' );
+	expected = fortranIPIVtoJS( tc.ipiv );
+	for ( i = 0; i < N; i++ ) {
+		assert.strictEqual( IPIV[ i ], expected[ i ], 'ipiv[' + i + ']' );
+	}
+});
+
+test( 'zlasyf: 5x5 lower with 2x2 pivot', function t() {
+	var tc = findCase( 'lower_5x5_2x2pivot' );
+	var N = 5;
+	var nb = 5;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	var expectedA;
+	var expected;
+	var result;
+	var i;
+
+	fillLower( Av, N, [
+		[0,0,6,1],
+		[1,0,0.4,-0.3], [1,1,5,0],
+		[2,0,0.5,0.2], [2,1,0.7,-0.1], [2,2,0.01,0],
+		[3,0,0.3,0.1], [3,1,0.6,0.2], [3,2,0.4,-0.2], [3,3,0.01,0],
+		[4,0,0.2,0], [4,1,0.3,0.1], [4,2,0.5,0.3], [4,3,0.02,0.01], [4,4,0.01,0]
+	]);
 
 	var W = new Complex128Array( N * nb );
 	var IPIV = new Int32Array( N );

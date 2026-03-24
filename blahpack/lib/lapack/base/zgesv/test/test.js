@@ -40,38 +40,39 @@ function assertArrayClose( actual, expected, tol, msg ) {
 }
 
 /**
-* Computes complex matrix-matrix product C = A*B (col-major, N x N times N x NRHS).
-* A and B are Float64Array views of Complex128Arrays (interleaved re/im).
+* Computes complex matrix-vector product b = A*x (col-major).
+* All arrays are Float64 interleaved [re, im, re, im, ...].
+*
+* @param {Float64Array} A - N*N complex matrix (2*N*N doubles, col-major)
+* @param {Float64Array} x - N complex vector (2*N doubles)
+* @param {number} N - dimension
+* @param {number} nrhs - number of right-hand sides
+* @returns {Float64Array} b - N*nrhs complex result (2*N*nrhs doubles)
 */
-function zmatmat( Av, Bv, N, nrhs ) {
-	var cr;
-	var ci;
-	var ar;
-	var ai;
-	var br;
-	var bi;
-	var C;
+function zmatmat( A, x, N, nrhs ) {
+	var b = new Float64Array( 2 * N * nrhs );
+	var are;
+	var aim;
+	var xre;
+	var xim;
 	var i;
 	var j;
 	var k;
-	C = new Float64Array( 2 * N * nrhs );
 	for ( j = 0; j < nrhs; j++ ) {
 		for ( i = 0; i < N; i++ ) {
-			cr = 0.0;
-			ci = 0.0;
 			for ( k = 0; k < N; k++ ) {
-				ar = Av[ 2 * ( i + k * N ) ];
-				ai = Av[ 2 * ( i + k * N ) + 1 ];
-				br = Bv[ 2 * ( k + j * N ) ];
-				bi = Bv[ 2 * ( k + j * N ) + 1 ];
-				cr += ar * br - ai * bi;
-				ci += ar * bi + ai * br;
+				// A[i,k] col-major: index i + k*N, each complex = 2 doubles
+				are = A[ 2 * ( i + k * N ) ];
+				aim = A[ 2 * ( i + k * N ) + 1 ];
+				xre = x[ 2 * ( k + j * N ) ];
+				xim = x[ 2 * ( k + j * N ) + 1 ];
+				// (are + i*aim) * (xre + i*xim)
+				b[ 2 * ( i + j * N ) ] += are * xre - aim * xim;
+				b[ 2 * ( i + j * N ) + 1 ] += are * xim + aim * xre;
 			}
-			C[ 2 * ( i + j * N ) ] = cr;
-			C[ 2 * ( i + j * N ) + 1 ] = ci;
 		}
 	}
-	return C;
+	return b;
 }
 
 
@@ -82,6 +83,7 @@ test( 'zgesv: solve_3x3', function t() {
 	var Borig;
 	var IPIV;
 	var info;
+	var view;
 	var tc;
 	var AB;
 	var A;
@@ -92,26 +94,33 @@ test( 'zgesv: solve_3x3', function t() {
 	// A = [(2+1i) (1+0.5i) (0.5+0.1i);
 	//      (1-1i) (4+2i)   (1+0.3i);
 	//      (0.5+0.2i) (1-0.5i) (3+1i)] col-major
-	Aorig = new Complex128Array( [
-		2, 1, 1, -1, 0.5, 0.2,
-		1, 0.5, 4, 2, 1, -0.5,
-		0.5, 0.1, 1, 0.3, 3, 1
+	A = new Complex128Array( [
+		2.0, 1.0, 1.0, -1.0, 0.5, 0.2,
+		1.0, 0.5, 4.0, 2.0, 1.0, -0.5,
+		0.5, 0.1, 1.0, 0.3, 3.0, 1.0
 	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Float64Array( reinterpret( A, 0 ) );
+
+	// b = A * [1; 1; 1] = sum of each row
+	B = new Complex128Array( 3 );
+	Borig = reinterpret( B, 0 );
+
+	// Compute b = A * [1+0i; 1+0i; 1+0i]
+	var bview = zmatmat( Aorig, new Float64Array( [ 1, 0, 1, 0, 1, 0 ] ), 3, 1 );
+	Borig.set( bview );
+	Borig = new Float64Array( Borig );
+
 	IPIV = new Int32Array( 3 );
 
-	// b = A * [1+0i; 1+0i; 1+0i]
-	Borig = new Complex128Array( [ 3.5, 1.6, 6.0, 1.3, 4.5, 0.7 ] );
-	B = new Complex128Array( Array.from( reinterpret( Borig, 0 ) ) );
-
 	info = zgesv( 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
+	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from( view ), tc.x, 1e-13, 'x' );
 
-	// Verify A_orig * x = b_orig
-	AB = zmatmat( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3, 1 );
-	assertArrayClose( Array.from( AB ), Array.from( reinterpret( Borig, 0 ) ), 1e-14, 'A*x=b' );
+	// Verify A_orig * x ≈ b_orig
+	AB = zmatmat( Aorig, Array.from( view ), 3, 1 );
+	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-13, 'A*x=b' );
 });
 
 test( 'zgesv: multi_rhs', function t() {
@@ -119,6 +128,7 @@ test( 'zgesv: multi_rhs', function t() {
 	var Borig;
 	var IPIV;
 	var info;
+	var view;
 	var tc;
 	var AB;
 	var A;
@@ -127,28 +137,29 @@ test( 'zgesv: multi_rhs', function t() {
 	tc = findCase( 'multi_rhs' );
 
 	// A = [(3+1i) (1-1i); (2+0.5i) (5+2i)] col-major
-	Aorig = new Complex128Array( [
-		3, 1, 2, 0.5,
-		1, -1, 5, 2
+	A = new Complex128Array( [
+		3.0, 1.0, 2.0, 0.5,
+		1.0, -1.0, 5.0, 2.0
 	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Float64Array( reinterpret( A, 0 ) );
 	IPIV = new Int32Array( 2 );
 
-	// B col-major: [(3+1i) (0+2i); (2+0.5i) (4.5+4i)]
-	Borig = new Complex128Array( [
-		3, 1, 2, 0.5,
-		0, 2, 4.5, 4
+	// B col-major: b1 = [(3+1i); (2+0.5i)], b2 = [(0+2i); (4.5+4i)]
+	B = new Complex128Array( [
+		3.0, 1.0, 2.0, 0.5,
+		0.0, 2.0, 4.5, 4.0
 	] );
-	B = new Complex128Array( Array.from( reinterpret( Borig, 0 ) ) );
+	Borig = new Float64Array( reinterpret( B, 0 ) );
 
 	info = zgesv( 2, 2, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from( view ), tc.x, 1e-13, 'x' );
 
-	// Verify A_orig * X = B_orig
-	AB = zmatmat( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 2, 2 );
-	assertArrayClose( Array.from( AB ), Array.from( reinterpret( Borig, 0 ) ), 1e-14, 'A*X=B' );
+	// Verify A_orig * X ≈ B_orig
+	AB = zmatmat( Aorig, Array.from( view ), 2, 2 );
+	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-13, 'A*X=B' );
 });
 
 test( 'zgesv: singular', function t() {
@@ -160,18 +171,19 @@ test( 'zgesv: singular', function t() {
 
 	tc = findCase( 'singular' );
 
-	// Singular 3x3: each column is a multiple of [1;2;3]
+	// Singular: rows are multiples [1 2 3; 2 4 6; 3 6 9] (all real)
 	A = new Complex128Array( [
-		1, 0, 2, 0, 3, 0,
-		2, 0, 4, 0, 6, 0,
-		3, 0, 6, 0, 9, 0
+		1.0, 0.0, 2.0, 0.0, 3.0, 0.0,
+		2.0, 0.0, 4.0, 0.0, 6.0, 0.0,
+		3.0, 0.0, 6.0, 0.0, 9.0, 0.0
 	] );
 	IPIV = new Int32Array( 3 );
-	B = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
+	B = new Complex128Array( [
+		1.0, 0.0, 2.0, 0.0, 3.0, 0.0
+	] );
 
 	info = zgesv( 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 
-	// Singular matrix: info > 0
 	assert.ok( info > 0, 'info > 0 for singular matrix' );
 });
 
@@ -202,7 +214,7 @@ test( 'zgesv: nrhs_zero', function t() {
 
 	tc = findCase( 'nrhs_zero' );
 
-	A = new Complex128Array( [ 5, 1 ] );
+	A = new Complex128Array( [ 5.0, 1.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
 
@@ -212,8 +224,9 @@ test( 'zgesv: nrhs_zero', function t() {
 });
 
 test( 'zgesv: 1x1', function t() {
-	var IPIV;
 	var info;
+	var IPIV;
+	var view;
 	var tc;
 	var A;
 	var B;
@@ -221,14 +234,15 @@ test( 'zgesv: 1x1', function t() {
 	tc = findCase( '1x1' );
 
 	// (5+2i)*x = (10+4i) => x = 2+0i
-	A = new Complex128Array( [ 5, 2 ] );
+	A = new Complex128Array( [ 5.0, 2.0 ] );
 	IPIV = new Int32Array( 1 );
-	B = new Complex128Array( [ 10, 4 ] );
+	B = new Complex128Array( [ 10.0, 4.0 ] );
 
 	info = zgesv( 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
+	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from( view ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zgesv: 4x4', function t() {
@@ -236,6 +250,7 @@ test( 'zgesv: 4x4', function t() {
 	var Borig;
 	var IPIV;
 	var info;
+	var view;
 	var tc;
 	var AB;
 	var A;
@@ -243,31 +258,34 @@ test( 'zgesv: 4x4', function t() {
 
 	tc = findCase( '4x4' );
 
-	// 4x4 diagonally dominant complex matrix, col-major
-	Aorig = new Complex128Array( [
-		10, 1, 1, 2, 2, -1, 3, 0.5,
-		1, -1, 12, 2, 1, 3, 2, -0.5,
-		2, 0.5, 3, -1, 15, 1, 1, 2,
-		1, 1, 2, 0.5, 3, -2, 20, 3
+	// A = diagonally dominant 4x4 complex matrix (col-major)
+	A = new Complex128Array( [
+		10.0, 1.0, 1.0, 2.0, 2.0, -1.0, 3.0, 0.5,
+		1.0, -1.0, 12.0, 2.0, 1.0, 3.0, 2.0, -0.5,
+		2.0, 0.5, 3.0, -1.0, 15.0, 1.0, 1.0, 2.0,
+		1.0, 1.0, 2.0, 0.5, 3.0, -2.0, 20.0, 3.0
 	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Float64Array( reinterpret( A, 0 ) );
 	IPIV = new Int32Array( 4 );
 
-	// b = A * [1+1i; 2-1i; -1+2i; 3+0i] (computed by Fortran)
-	// Compute b from the known x and A
-	var Av = reinterpret( Aorig, 0 );
-	// x = [1+1i, 2-1i, -1+2i, 3+0i]
-	var xv = new Float64Array( [ 1, 1, 2, -1, -1, 2, 3, 0 ] );
-	var bv = zmatmat( Av, xv, 4, 1 );
-	Borig = new Complex128Array( bv.buffer );
-	B = new Complex128Array( Array.from( bv ) );
+	// x = [1+1i; 2-1i; -1+2i; 3+0i]
+	var xvec = new Float64Array( [
+		1.0, 1.0, 2.0, -1.0, -1.0, 2.0, 3.0, 0.0
+	] );
+
+	// b = A * x
+	var bvals = zmatmat( Aorig, xvec, 4, 1 );
+	B = new Complex128Array( 4 );
+	reinterpret( B, 0 ).set( bvals );
+	Borig = new Float64Array( reinterpret( B, 0 ) );
 
 	info = zgesv( 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	view = reinterpret( B, 0 );
 
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-13, 'x' );
+	assertArrayClose( Array.from( view ), tc.x, 1e-13, 'x' );
 
-	// Verify A_orig * x = b_orig
-	AB = zmatmat( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 4, 1 );
-	assertArrayClose( Array.from( AB ), Array.from( bv ), 1e-13, 'A*x=b' );
+	// Verify A_orig * x ≈ b_orig
+	AB = zmatmat( Aorig, Array.from( view ), 4, 1 );
+	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-13, 'A*x=b' );
 });

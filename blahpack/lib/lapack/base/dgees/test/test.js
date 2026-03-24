@@ -236,3 +236,165 @@ test( 'dgees: verify Schur decomposition A = Z*T*Z^T', function t() {
 
 	assertArrayClose( Array.from( result ), Array.from( A ), 1e-10, 'Z^T*A*Z = T' );
 });
+
+test( 'dgees: SORT=S with select that triggers eigenvalue reordering', function t() {
+	var N = 4;
+	// Matrix with eigenvalues that are both positive and negative real parts
+	// so that sorting by selectPosReal will reorder them.
+	// Use a block diagonal matrix with known eigenvalues:
+	// Block 1: [[0, -2], [2, 0]] -> eigenvalues +/-2i
+	// Block 2: [[3, 0], [0, -1]] -> eigenvalues 3, -1
+	var A = new Float64Array([
+		0, 2, 0, 0,
+		-2, 0, 0, 0,
+		0, 0, 3, 0,
+		0, 0, 0, -1
+	]);
+	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	// selectPosReal selects eigenvalues with wr > 0.
+	// Eigenvalue 3 has wr=3 > 0, so sdim >= 1.
+	assert.ok( res.sdim >= 1, 'sdim should be at least 1, got ' + res.sdim );
+	// The selected eigenvalue (wr=3) should appear first on the diagonal
+	assertClose( res.WR[ 0 ], 3.0, 1e-10, 'first eigenvalue should be 3' );
+});
+
+test( 'dgees: SORT=S with larger 5x5 matrix and multiple selected eigenvalues', function t() {
+	var selectLargeReal;
+	var N = 5;
+	var res;
+	var i;
+
+	selectLargeReal = function selectLargeReal( wr ) {
+		return wr > 1.0;
+	};
+
+	// 5x5 matrix with eigenvalues roughly at -2, -1, 0, 2, 5
+	// (upper triangular so eigenvalues are diagonal entries)
+	var A = new Float64Array([
+		-2, 0, 0, 0, 0,
+		1, -1, 0, 0, 0,
+		0, 1, 0, 0, 0,
+		0, 0, 1, 2, 0,
+		0, 0, 0, 1, 5
+	]);
+	res = runDgees( 'V', 'S', selectLargeReal, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	// selectLargeReal selects eigenvalues with wr > 1.0, which are 2 and 5
+	assert.equal( res.sdim, 2, 'sdim should be 2' );
+	// The first two diagonal entries of T should be the selected eigenvalues (2 and 5)
+	var selectedWR = [ res.WR[ 0 ], res.WR[ 1 ] ].sort( function( a, b ) { return a - b; } );
+	assertClose( selectedWR[ 0 ], 2.0, 1e-10, 'selected WR[0]' );
+	assertClose( selectedWR[ 1 ], 5.0, 1e-10, 'selected WR[1]' );
+});
+
+test( 'dgees: SORT=S with SDIM verification for complex conjugate pair', function t() {
+	var N = 4;
+	// Matrix with a complex conjugate pair and two real eigenvalues.
+	// If the select function picks a complex conjugate pair, sdim should include both.
+	var selectAll;
+	var res;
+
+	selectAll = function selectAll() {
+		return true;
+	};
+
+	// [[1, -1, 0, 0], [1, 1, 0, 0], [0, 0, 3, 0], [0, 0, 0, -2]]
+	// Eigenvalues: 1+i, 1-i, 3, -2
+	var A = new Float64Array([
+		1, 1, 0, 0,
+		-1, 1, 0, 0,
+		0, 0, 3, 0,
+		0, 0, 0, -2
+	]);
+	res = runDgees( 'V', 'S', selectAll, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	assert.equal( res.sdim, 4, 'sdim should be 4 when all eigenvalues selected' );
+});
+
+test( 'dgees: SORT=S with select returning false for all (sdim=0)', function t() {
+	var N = 3;
+	var A = new Float64Array([
+		2, 0, 0,
+		1, 3, 0,
+		0, 1, 4
+	]);
+	var res = runDgees( 'V', 'S', selectNone, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	assert.equal( res.sdim, 0, 'sdim should be 0' );
+});
+
+test( 'dgees: JOBVS=N with SORT=S', function t() {
+	var N = 3;
+	var A = new Float64Array([
+		2, 0, 0,
+		1, 3, 0,
+		0, 1, 4
+	]);
+	var res = runDgees( 'N', 'S', selectPosReal, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	assert.ok( res.sdim >= 0, 'sdim should be non-negative' );
+});
+
+test( 'dgees: very small matrix elements trigger scaling path (anrm < SMLNUM)', function t() {
+	var N = 3;
+	var scale = 1e-155; // well below sqrt(SMLNUM/EPS)
+	var A = new Float64Array([
+		2 * scale, 0, 0,
+		1 * scale, 3 * scale, 0,
+		0, 1 * scale, 4 * scale
+	]);
+	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	// Eigenvalues should be 2*scale, 3*scale, 4*scale (all positive)
+	assert.equal( res.sdim, 3, 'all eigenvalues positive' );
+	var sortedWR = Array.from( res.WR ).sort( function( a, b ) { return a - b; } );
+	assertClose( sortedWR[ 0 ], 2 * scale, 1e-6, 'WR[0]' );
+	assertClose( sortedWR[ 1 ], 3 * scale, 1e-6, 'WR[1]' );
+	assertClose( sortedWR[ 2 ], 4 * scale, 1e-6, 'WR[2]' );
+});
+
+test( 'dgees: very large matrix elements trigger scaling path (anrm > BIGNUM)', function t() {
+	var N = 3;
+	var scale = 1e155; // well above BIGNUM = 1/sqrt(SMLNUM/EPS)
+	var A = new Float64Array([
+		2 * scale, 0, 0,
+		1 * scale, 3 * scale, 0,
+		0, 1 * scale, 4 * scale
+	]);
+	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	assert.equal( res.sdim, 3, 'all eigenvalues positive' );
+	var sortedWR = Array.from( res.WR ).sort( function( a, b ) { return a - b; } );
+	assertClose( sortedWR[ 0 ], 2 * scale, 1e-6, 'WR[0]' );
+	assertClose( sortedWR[ 1 ], 3 * scale, 1e-6, 'WR[1]' );
+	assertClose( sortedWR[ 2 ], 4 * scale, 1e-6, 'WR[2]' );
+});
+
+test( 'dgees: 6x6 matrix to exercise larger dimension paths', function t() {
+	var N = 6;
+	var i;
+	var j;
+	var A = new Float64Array( N * N );
+	// Create a matrix with known structure: tridiagonal + perturbation
+	for ( i = 0; i < N; i++ ) {
+		A[ i + i * N ] = ( i + 1 ) * 2.0; // diagonal
+	}
+	for ( i = 0; i < N - 1; i++ ) {
+		A[ i + ( i + 1 ) * N ] = 1.0; // superdiagonal
+		A[ ( i + 1 ) + i * N ] = 0.5; // subdiagonal
+	}
+
+	var res = runDgees( 'V', 'S', selectPosReal, N, A );
+
+	assert.equal( res.info, 0, 'info should be 0' );
+	// All eigenvalues should be positive for this matrix
+	assert.equal( res.sdim, N, 'all eigenvalues should be positive' );
+});

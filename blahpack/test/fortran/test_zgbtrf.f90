@@ -9,6 +9,17 @@ program test_zgbtrf
   equivalence (AB1, AB1_r)
   integer :: ipiv(10), info
 
+  ! Parameters for blocked test
+  integer, parameter :: KL_BIG = 33, KU_BIG = 33
+  integer, parameter :: N_BIG = 100
+  integer, parameter :: LDAB_BIG = 2*KL_BIG + KU_BIG + 1
+  complex*16 :: AB_big(LDAB_BIG, N_BIG)
+  double precision :: AB_big_r(2 * LDAB_BIG * N_BIG)
+  equivalence (AB_big, AB_big_r)
+  double precision :: AB_packed_r(2 * LDAB_BIG * N_BIG)
+  integer :: ipiv_big(N_BIG)
+  integer :: i, j, kv_big
+
   ! ============================================================
   ! Test 1: 4x4 tridiagonal (KL=1, KU=1), LDAB=4
   ! Same as zgbtf2 test — should give identical results since NB>KL
@@ -109,6 +120,40 @@ program test_zgbtrf
   call begin_test('pentadiag_5x5')
   call print_array('AB', AB7_r, 7*5*2)
   call print_int_array('ipiv', ipiv, 5)
+  call print_int('info', info)
+  call end_test()
+
+  ! ============================================================
+  ! Test 9: Blocked path - large banded matrix with KL=33, KU=33, N=100
+  ! This exercises the blocked code path since NB <= KL
+  kv_big = KU_BIG + KL_BIG
+  AB_big = (0.0d0, 0.0d0)
+  do j = 1, N_BIG
+    ! Diagonal at row KL+KU+1 = kv_big+1
+    AB_big(kv_big + 1, j) = dcmplx(10.0d0 * N_BIG + dble(j), 0.5d0 * dble(j))
+    ! Subdiagonals
+    do i = 1, min(KL_BIG, N_BIG - j)
+      AB_big(kv_big + 1 + i, j) = dcmplx(-1.0d0 + 0.01d0 * dble(i), 0.1d0)
+    end do
+    ! Superdiagonals
+    do i = 1, min(KU_BIG, j - 1)
+      AB_big(kv_big + 1 - i, j) = dcmplx(-1.0d0 + 0.02d0 * dble(i), -0.1d0)
+    end do
+  end do
+  ipiv_big = 0
+  call ZGBTRF(N_BIG, N_BIG, KL_BIG, KU_BIG, AB_big, LDAB_BIG, ipiv_big, info)
+
+  ! Pack AB_big column by column into AB_packed_r (interleaved re/im)
+  do j = 1, N_BIG
+    do i = 1, LDAB_BIG
+      AB_packed_r((j-1)*LDAB_BIG*2 + (i-1)*2 + 1) = dble(AB_big(i, j))
+      AB_packed_r((j-1)*LDAB_BIG*2 + (i-1)*2 + 2) = dimag(AB_big(i, j))
+    end do
+  end do
+
+  call begin_test('blocked_100x100_kl33')
+  call print_array('AB', AB_packed_r, 2 * LDAB_BIG * N_BIG)
+  call print_int_array('ipiv', ipiv_big, N_BIG)
   call print_int('info', info)
   call end_test()
 

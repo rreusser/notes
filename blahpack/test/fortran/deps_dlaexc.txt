@@ -14,3 +14,5 @@ dlassq
 dlasy2
 iladlc
 iladlr
+la_constants
+la_xisnan

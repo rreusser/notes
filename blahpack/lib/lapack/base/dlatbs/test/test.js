@@ -39,8 +39,8 @@ function assertArrayClose( actual, expected, tol, msg ) {
 }
 
 /**
-* Creates upper banded storage (KD+1 x N) in column-major from entries.
-* entries is array of [row0based, col, value] where row is the banded row (0-based).
+* Creates banded storage (KD+1 x N) in column-major from entries.
+* entries is array of [row0based, col, value].
 */
 function bandedMatrix( kdp1, n, entries ) {
 	var ab = new Float64Array( kdp1 * n );
@@ -55,29 +55,17 @@ function bandedMatrix( kdp1, n, entries ) {
 // TESTS //
 
 test( 'dlatbs: upper_N_nonunit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'upper_N_nonunit' );
-
-	// Upper, KD=2, N=4. Column-major banded storage (LDAB=3).
-	// Full: [4 2 1 0; 0 3 1 2; 0 0 5 3; 0 0 0 6]
-	ab = bandedMatrix( 3, 4, [
-		[2, 0, 4.0],                        // main diag col 0
-		[1, 1, 2.0], [2, 1, 3.0],           // superdiag-1 + main col 1
-		[0, 2, 1.0], [1, 2, 1.0], [2, 2, 5.0], // superdiag-2, -1, main col 2
-		[0, 3, 2.0], [1, 3, 3.0], [2, 3, 6.0]  // col 3
+	var tc = findCase( 'upper_N_nonunit' );
+	var ab = bandedMatrix( 3, 4, [
+		[2, 0, 4.0],
+		[1, 1, 2.0], [2, 1, 3.0],
+		[0, 2, 1.0], [1, 2, 1.0], [2, 2, 5.0],
+		[0, 3, 2.0], [1, 3, 3.0], [2, 3, 6.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -85,29 +73,17 @@ test( 'dlatbs: upper_N_nonunit', function t() {
 });
 
 test( 'dlatbs: lower_N_nonunit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'lower_N_nonunit' );
-
-	// Lower, KD=2, N=4. Banded storage (LDAB=3).
-	// Full: [4 0 0 0; 2 3 0 0; 1 1 5 0; 0 2 3 6]
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'lower_N_nonunit' );
+	var ab = bandedMatrix( 3, 4, [
 		[0, 0, 4.0], [1, 0, 2.0], [2, 0, 1.0],
 		[0, 1, 3.0], [1, 1, 1.0], [2, 1, 2.0],
 		[0, 2, 5.0], [1, 2, 3.0],
 		[0, 3, 6.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'lower', 'no-transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'lower', 'no-transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -115,27 +91,17 @@ test( 'dlatbs: lower_N_nonunit', function t() {
 });
 
 test( 'dlatbs: upper_T_nonunit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'upper_T_nonunit' );
-
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'upper_T_nonunit' );
+	var ab = bandedMatrix( 3, 4, [
 		[2, 0, 4.0],
 		[1, 1, 2.0], [2, 1, 3.0],
 		[0, 2, 1.0], [1, 2, 1.0], [2, 2, 5.0],
 		[0, 3, 2.0], [1, 3, 3.0], [2, 3, 6.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'upper', 'transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'upper', 'transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -143,27 +109,17 @@ test( 'dlatbs: upper_T_nonunit', function t() {
 });
 
 test( 'dlatbs: lower_T_nonunit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'lower_T_nonunit' );
-
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'lower_T_nonunit' );
+	var ab = bandedMatrix( 3, 4, [
 		[0, 0, 4.0], [1, 0, 2.0], [2, 0, 1.0],
 		[0, 1, 3.0], [1, 1, 1.0], [2, 1, 2.0],
 		[0, 2, 5.0], [1, 2, 3.0],
 		[0, 3, 6.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'lower', 'transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -171,27 +127,17 @@ test( 'dlatbs: lower_T_nonunit', function t() {
 });
 
 test( 'dlatbs: upper_N_unit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'upper_N_unit' );
-
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'upper_N_unit' );
+	var ab = bandedMatrix( 3, 4, [
 		[2, 0, 99.0],
 		[1, 1, 2.0], [2, 1, 99.0],
 		[0, 2, 1.0], [1, 2, 1.0], [2, 2, 99.0],
 		[0, 3, 2.0], [1, 3, 3.0], [2, 3, 99.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'upper', 'no-transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'upper', 'no-transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -199,27 +145,17 @@ test( 'dlatbs: upper_N_unit', function t() {
 });
 
 test( 'dlatbs: lower_N_unit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'lower_N_unit' );
-
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'lower_N_unit' );
+	var ab = bandedMatrix( 3, 4, [
 		[0, 0, 99.0], [1, 0, 2.0], [2, 0, 1.0],
 		[0, 1, 99.0], [1, 1, 1.0], [2, 1, 2.0],
 		[0, 2, 99.0], [1, 2, 3.0],
 		[0, 3, 99.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'lower', 'no-transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'lower', 'no-transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -227,70 +163,40 @@ test( 'dlatbs: lower_N_unit', function t() {
 });
 
 test( 'dlatbs: n_zero', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'n_zero' );
-
-	ab = new Float64Array( 1 );
-	x = new Float64Array( 1 );
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 1 );
-
-	info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 0, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var tc = findCase( 'n_zero' );
+	var ab = new Float64Array( 1 );
+	var x = new Float64Array( 1 );
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 1 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 0, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 });
 
 test( 'dlatbs: n_one', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'n_one' );
-
-	ab = new Float64Array([ 5.0 ]);
-	x = new Float64Array([ 10.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 1 );
-
-	info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 1, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var tc = findCase( 'n_one' );
+	var ab = new Float64Array([ 5.0 ]);
+	var x = new Float64Array([ 10.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 1 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 1, 0, ab, 1, 1, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
 });
 
 test( 'dlatbs: normin_Y', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'normin_Y' );
-
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'normin_Y' );
+	var ab = bandedMatrix( 3, 4, [
 		[2, 0, 4.0],
 		[1, 1, 2.0], [2, 1, 3.0],
 		[0, 2, 1.0], [1, 2, 1.0], [2, 2, 5.0],
 		[0, 3, 2.0], [1, 3, 3.0], [2, 3, 6.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array([ 0.0, 2.0, 2.0, 5.0 ]);
-
-	info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array([ 0.0, 2.0, 2.0, 5.0 ]);
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -298,29 +204,17 @@ test( 'dlatbs: normin_Y', function t() {
 });
 
 test( 'dlatbs: upper_kd1', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'upper_kd1' );
-
-	// Upper, KD=1, LDAB=2, N=4
-	// Full: [3 1 0 0; 0 4 2 0; 0 0 5 1; 0 0 0 6]
-	ab = bandedMatrix( 2, 4, [
+	var tc = findCase( 'upper_kd1' );
+	var ab = bandedMatrix( 2, 4, [
 		[1, 0, 3.0],
 		[0, 1, 1.0], [1, 1, 4.0],
 		[0, 2, 2.0], [1, 2, 5.0],
 		[0, 3, 1.0], [1, 3, 6.0]
 	]);
-	x = new Float64Array([ 2.0, 3.0, 1.0, 5.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 4, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 2.0, 3.0, 1.0, 5.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 4, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -328,27 +222,17 @@ test( 'dlatbs: upper_kd1', function t() {
 });
 
 test( 'dlatbs: upper_T_unit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'upper_T_unit' );
-
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'upper_T_unit' );
+	var ab = bandedMatrix( 3, 4, [
 		[2, 0, 99.0],
 		[1, 1, 2.0], [2, 1, 99.0],
 		[0, 2, 1.0], [1, 2, 1.0], [2, 2, 99.0],
 		[0, 3, 2.0], [1, 3, 3.0], [2, 3, 99.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
-
-	info = dlatbs( 'upper', 'transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
-
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'upper', 'transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
@@ -356,27 +240,123 @@ test( 'dlatbs: upper_T_unit', function t() {
 });
 
 test( 'dlatbs: lower_T_unit', function t() {
-	var cnorm;
-	var scale;
-	var info;
-	var tc;
-	var ab;
-	var x;
-
-	tc = findCase( 'lower_T_unit' );
-
-	ab = bandedMatrix( 3, 4, [
+	var tc = findCase( 'lower_T_unit' );
+	var ab = bandedMatrix( 3, 4, [
 		[0, 0, 99.0], [1, 0, 2.0], [2, 0, 1.0],
 		[0, 1, 99.0], [1, 1, 1.0], [2, 1, 2.0],
 		[0, 2, 99.0], [1, 2, 3.0],
 		[0, 3, 99.0]
 	]);
-	x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
-	scale = new Float64Array( 1 );
-	cnorm = new Float64Array( 4 );
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'lower', 'transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from(cnorm), tc.cnorm, 1e-14, 'cnorm' );
+});
 
-	info = dlatbs( 'lower', 'transpose', 'unit', 'N', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+test( 'dlatbs: lower_T_nonunit_normin_Y', function t() {
+	var tc = findCase( 'lower_T_nonunit_normin_Y' );
+	var ab = bandedMatrix( 3, 4, [
+		[0, 0, 4.0], [1, 0, 2.0], [2, 0, 1.0],
+		[0, 1, 3.0], [1, 1, 1.0], [2, 1, 2.0],
+		[0, 2, 5.0], [1, 2, 3.0],
+		[0, 3, 6.0]
+	]);
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array([ 3.0, 3.0, 3.0, 0.0 ]);
+	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from(cnorm), tc.cnorm, 1e-14, 'cnorm' );
+});
 
+test( 'dlatbs: upper_T_nonunit_normin_Y', function t() {
+	var tc = findCase( 'upper_T_nonunit_normin_Y' );
+	var ab = bandedMatrix( 3, 4, [
+		[2, 0, 4.0],
+		[1, 1, 2.0], [2, 1, 3.0],
+		[0, 2, 1.0], [1, 2, 1.0], [2, 2, 5.0],
+		[0, 3, 2.0], [1, 3, 3.0], [2, 3, 6.0]
+	]);
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array([ 0.0, 2.0, 2.0, 5.0 ]);
+	var info = dlatbs( 'upper', 'transpose', 'non-unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from(cnorm), tc.cnorm, 1e-14, 'cnorm' );
+});
+
+test( 'dlatbs: lower_N_unit_normin_Y', function t() {
+	var tc = findCase( 'lower_N_unit_normin_Y' );
+	var ab = bandedMatrix( 3, 4, [
+		[0, 0, 99.0], [1, 0, 2.0], [2, 0, 1.0],
+		[0, 1, 99.0], [1, 1, 1.0], [2, 1, 2.0],
+		[0, 2, 99.0], [1, 2, 3.0],
+		[0, 3, 99.0]
+	]);
+	var x = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array([ 3.0, 3.0, 3.0, 0.0 ]);
+	var info = dlatbs( 'lower', 'no-transpose', 'unit', 'Y', 4, 2, ab, 1, 3, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from(cnorm), tc.cnorm, 1e-14, 'cnorm' );
+});
+
+test( 'dlatbs: lower_T_kd1', function t() {
+	var tc = findCase( 'lower_T_kd1' );
+	var ab = bandedMatrix( 2, 4, [
+		[0, 0, 3.0], [1, 0, 1.0],
+		[0, 1, 4.0], [1, 1, 2.0],
+		[0, 2, 5.0], [1, 2, 1.0],
+		[0, 3, 6.0]
+	]);
+	var x = new Float64Array([ 2.0, 3.0, 1.0, 5.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 4 );
+	var info = dlatbs( 'lower', 'transpose', 'non-unit', 'N', 4, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from(cnorm), tc.cnorm, 1e-14, 'cnorm' );
+});
+
+test( 'dlatbs: singular_upper (zero diagonal)', function t() {
+	var tc = findCase( 'singular_upper' );
+	var ab = bandedMatrix( 2, 3, [
+		[1, 0, 2.0],
+		[0, 1, 1.0], [1, 1, 0.0],
+		[0, 2, 1.0], [1, 2, 3.0]
+	]);
+	var x = new Float64Array([ 1.0, 1.0, 1.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 3 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 3, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );
+	assertArrayClose( Array.from(cnorm), tc.cnorm, 1e-14, 'cnorm' );
+});
+
+test( 'dlatbs: near_singular_upper (very small diagonal)', function t() {
+	var tc = findCase( 'near_singular_upper' );
+	var ab = bandedMatrix( 2, 3, [
+		[1, 0, 1.0],
+		[0, 1, 1.0], [1, 1, 1e-300],
+		[0, 2, 1.0], [1, 2, 1.0]
+	]);
+	var x = new Float64Array([ 1.0, 1.0, 1.0 ]);
+	var scale = new Float64Array( 1 );
+	var cnorm = new Float64Array( 3 );
+	var info = dlatbs( 'upper', 'no-transpose', 'non-unit', 'N', 3, 1, ab, 1, 2, 0, x, 1, 0, scale, cnorm, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( scale[0], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from(x), tc.x, 1e-14, 'x' );

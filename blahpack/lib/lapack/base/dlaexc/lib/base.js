@@ -158,7 +158,7 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 
 		// Copy the diagonal block into D
 		dlacpy( 'F', nd, nd, T, strideT1, strideT2, tij( j1, j1 ), D, 1, LDD, 0 );
-		dnorm = dlange( 'M', nd, nd, D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
+		dnorm = dlange( 'max', nd, nd, D, 1, LDD, 0, WORK, strideWORK, offsetWORK );
 
 		thresh = Math.max( TEN * EPS * dnorm, SMLNUM );
 

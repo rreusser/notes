@@ -1,0 +1,8 @@
+{"name":"upper_nonunit_1norm","rcond": 3.35065357462367930E-001,"info":0}
+{"name":"upper_nonunit_Inorm","rcond": 3.70374318115846091E-001,"info":0}
+{"name":"lower_nonunit_1norm","rcond": 3.61185608432608718E-001,"info":0}
+{"name":"upper_unit_1norm","rcond": 8.76665887130539390E-002,"info":0}
+{"name":"identity","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"n_zero","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"4x4_lower_Inorm","rcond": 2.96898713195040520E-001,"info":0}
+{"name":"lower_unit_Inorm","rcond": 2.65409196609864229E-001,"info":0}

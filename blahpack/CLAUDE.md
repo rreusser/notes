@@ -138,6 +138,32 @@ equivalence (zx, zx_r)
 call print_array('zx', zx_r, 2*n)
 ```
 
+**CRITICAL: Leading dimension vs EQUIVALENCE stride mismatch.** When
+printing 2D arrays via EQUIVALENCE, you MUST account for the leading
+dimension. If you declare `A(NMAX, NMAX)` with NMAX=10 but your test
+matrix is N=4, the memory layout has stride NMAX, not N. Printing
+`2*N*N` doubles via EQUIVALENCE will read padding from rows 5-10
+instead of the next column. Two safe approaches:
+
+1. **Pack before printing:** Copy the N-by-N submatrix into a
+   contiguous array, then print that:
+   ```fortran
+   do j = 1, n
+     do i = 1, n
+       Apk(i + (j-1)*n) = A(i, j)
+     end do
+   end do
+   call print_array('A', Apk_r, 2*n*n)  ! Apk equivalenced to Apk_r
+   ```
+
+2. **Match declared and used dimensions:** Declare `A(N, N)` instead
+   of `A(NMAX, NMAX)` if N is fixed for the test case. Then
+   EQUIVALENCE stride matches.
+
+This bug class caused 8+ corrupted fixture files in one session — it
+is silent (no compiler warning, no runtime error) and produces plausible
+but subtly wrong reference data.
+
 **Gate:** `./test/run_fortran.sh <package> <routine>` compiles and runs.
 
 ### Step 3: Generate fixture and JS test scaffold

@@ -138,3 +138,118 @@ test( 'dsygst: n_one', function t() {
 	assert.equal( info, tc.info );
 	assertClose( A[ 0 ], tc.A11, 1e-14, 'A11' );
 });
+
+// Helper to build N=70 diagonally dominant SPD matrix B (column-major flat)
+function makeBigB( uplo ) {
+	var N = 70;
+	var B = new Float64Array( N * N );
+	var i;
+	var j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < N; i++ ) {
+			if ( i === j ) {
+				B[ j * N + i ] = N + 1.0;
+			} else if ( Math.abs( i - j ) === 1 ) {
+				B[ j * N + i ] = 0.5;
+			}
+		}
+	}
+	dpotrf( uplo, N, B, 1, N, 0 );
+	return B;
+}
+
+// Helper to build N=70 symmetric A in upper storage (column-major flat)
+function makeBigAUpper() {
+	var N = 70;
+	var A = new Float64Array( N * N );
+	var i;
+	var j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i <= j; i++ ) {
+			if ( i === j ) {
+				A[ j * N + i ] = 2 * N + ( i + 1 );
+			} else {
+				A[ j * N + i ] = 0.1 * ( ( i + 1 ) + ( j + 1 ) );
+			}
+		}
+	}
+	return A;
+}
+
+// Helper to build N=70 symmetric A in lower storage (column-major flat)
+function makeBigALower() {
+	var N = 70;
+	var A = new Float64Array( N * N );
+	var i;
+	var j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = j; i < N; i++ ) {
+			if ( i === j ) {
+				A[ j * N + i ] = 2 * N + ( i + 1 );
+			} else {
+				A[ j * N + i ] = 0.1 * ( ( i + 1 ) + ( j + 1 ) );
+			}
+		}
+	}
+	return A;
+}
+
+test( 'dsygst: blocked itype1 upper N=70', function t() {
+	var tc = findCase( 'blocked_itype1_upper_70' );
+	var N = 70;
+	var B = makeBigB( 'upper' );
+	var A = makeBigAUpper();
+	var info = dsygst( 1, 'upper', N, A, 1, N, 0, B, 1, N, 0 );
+	assert.equal( info, tc.info );
+	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
+});
+
+test( 'dsygst: blocked itype1 lower N=70', function t() {
+	var tc = findCase( 'blocked_itype1_lower_70' );
+	var N = 70;
+	var B = makeBigB( 'lower' );
+	var A = makeBigALower();
+	var info = dsygst( 1, 'lower', N, A, 1, N, 0, B, 1, N, 0 );
+	assert.equal( info, tc.info );
+	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
+});
+
+test( 'dsygst: blocked itype2 upper N=70', function t() {
+	var tc = findCase( 'blocked_itype2_upper_70' );
+	var N = 70;
+	var B = makeBigB( 'upper' );
+	var A = makeBigAUpper();
+	var info = dsygst( 2, 'upper', N, A, 1, N, 0, B, 1, N, 0 );
+	assert.equal( info, tc.info );
+	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
+});
+
+test( 'dsygst: blocked itype2 lower N=70', function t() {
+	var tc = findCase( 'blocked_itype2_lower_70' );
+	var N = 70;
+	var B = makeBigB( 'lower' );
+	var A = makeBigALower();
+	var info = dsygst( 2, 'lower', N, A, 1, N, 0, B, 1, N, 0 );
+	assert.equal( info, tc.info );
+	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
+});
+
+test( 'dsygst: blocked itype3 upper N=70', function t() {
+	var tc = findCase( 'blocked_itype3_upper_70' );
+	var N = 70;
+	var B = makeBigB( 'upper' );
+	var A = makeBigAUpper();
+	var info = dsygst( 3, 'upper', N, A, 1, N, 0, B, 1, N, 0 );
+	assert.equal( info, tc.info );
+	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
+});
+
+test( 'dsygst: blocked itype3 lower N=70', function t() {
+	var tc = findCase( 'blocked_itype3_lower_70' );
+	var N = 70;
+	var B = makeBigB( 'lower' );
+	var A = makeBigALower();
+	var info = dsygst( 3, 'lower', N, A, 1, N, 0, B, 1, N, 0 );
+	assert.equal( info, tc.info );
+	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
+});
