@@ -1,0 +1,7 @@
+{"name":"basic_3","result": 7.00000000000000000E+000}
+{"name":"stride2","result": 3.50000000000000000E+001}
+{"name":"n_zero","result": 0.00000000000000000E+000}
+{"name":"n_one","result": 1.00000000000000000E+001}
+{"name":"all_zeros","result": 0.00000000000000000E+000}
+{"name":"purely_real","result": 1.20000000000000000E+001}
+{"name":"purely_imag","result": 5.00000000000000000E+000}

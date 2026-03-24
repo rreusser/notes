@@ -139,4 +139,55 @@ program test_zhemm
   call print_array('C', c_r, 8)
   call end_test()
 
+  ! Test 11: alpha=0, beta=0 — zero out C
+  c = (0.0d0, 0.0d0)
+  c(1) = (99.0d0, 88.0d0); c(2) = (77.0d0, 66.0d0)
+  c(3) = (55.0d0, 44.0d0); c(4) = (33.0d0, 22.0d0)
+  call zhemm('L', 'U', 2, 2, (0.0d0,0.0d0), a, 2, b, 2, (0.0d0,0.0d0), c, 2)
+  call begin_test('alpha_zero_beta_zero')
+  call print_array('C', c_r, 8)
+  call end_test()
+
+  ! Test 12: SIDE='L', UPLO='L', nonzero beta
+  ! This covers left/lower with beta != 0 path (lines 239-243 in JS)
+  a = (0.0d0, 0.0d0)
+  a(1) = (2.0d0, 0.0d0)   ! A(1,1)
+  a(2) = (1.0d0, -1.0d0)  ! A(2,1) = conj(A(1,2))
+  a(3) = (3.0d0, 2.0d0)   ! A(3,1) = conj(A(1,3))
+  a(5) = (4.0d0, 0.0d0)   ! A(2,2)
+  a(6) = (2.0d0, -1.0d0)  ! A(3,2) = conj(A(2,3))
+  a(9) = (5.0d0, 0.0d0)   ! A(3,3)
+
+  b = (0.0d0, 0.0d0)
+  b(1) = (1.0d0, 0.5d0); b(2) = (2.0d0, -1.0d0); b(3) = (3.0d0, 1.0d0)
+  b(4) = (4.0d0, 2.0d0); b(5) = (5.0d0, 0.0d0);  b(6) = (6.0d0, -0.5d0)
+
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 1.0d0); c(2) = (2.0d0, -1.0d0); c(3) = (0.5d0, 0.5d0)
+  c(4) = (1.0d0, 0.0d0); c(5) = (0.0d0, 2.0d0);  c(6) = (3.0d0, -1.0d0)
+  call zhemm('L', 'L', 3, 2, (1.0d0,0.0d0), a, 3, b, 3, (0.5d0,0.0d0), c, 3)
+  call begin_test('left_lower_nonzero_beta')
+  call print_array('C', c_r, 12)
+  call end_test()
+
+  ! Test 13: SIDE='R', UPLO='U', nonzero beta
+  ! This covers right side with beta != 0 on the diagonal (lines 267-278 in JS)
+  a = (0.0d0, 0.0d0)
+  a(1) = (2.0d0, 0.0d0); a(4) = (1.0d0, 1.0d0); a(5) = (4.0d0, 0.0d0)
+  a(7) = (3.0d0, -2.0d0); a(8) = (2.0d0, 1.0d0); a(9) = (5.0d0, 0.0d0)
+
+  b = (0.0d0, 0.0d0)
+  b(1) = (1.0d0, 0.5d0); b(2) = (2.0d0, -1.0d0)
+  b(3) = (3.0d0, 1.0d0); b(4) = (4.0d0, 2.0d0)
+  b(5) = (5.0d0, 0.0d0); b(6) = (6.0d0, -0.5d0)
+
+  c = (0.0d0, 0.0d0)
+  c(1) = (1.0d0, 1.0d0); c(2) = (2.0d0, -1.0d0)
+  c(3) = (0.5d0, 0.5d0); c(4) = (1.0d0, 0.0d0)
+  c(5) = (0.0d0, 2.0d0); c(6) = (3.0d0, -1.0d0)
+  call zhemm('R', 'U', 2, 3, (1.0d0,0.0d0), a, 3, b, 2, (0.5d0,0.5d0), c, 2)
+  call begin_test('right_upper_nonzero_beta')
+  call print_array('C', c_r, 12)
+  call end_test()
+
 end program

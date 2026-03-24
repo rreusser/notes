@@ -4,7 +4,8 @@ program test_dlacn2
 
   double precision :: v(10), x(10), est
   integer :: isgn(10), isave(3), kase, n, i, j, iter
-  double precision :: a(10,10)
+  integer, parameter :: lda = 10
+  double precision :: a(lda,10)
 
   ! Test 1: 3x3 identity matrix — 1-norm is exactly 1
   n = 3
@@ -23,11 +24,11 @@ program test_dlacn2
     if (iter > 20) exit
     if (kase .eq. 1) then
       ! x = A * x
-      call dgemv('N', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('N', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     else
       ! x = A^T * x
-      call dgemv('T', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('T', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     end if
   end do
@@ -53,10 +54,10 @@ program test_dlacn2
     iter = iter + 1
     if (iter > 20) exit
     if (kase .eq. 1) then
-      call dgemv('N', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('N', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     else
-      call dgemv('T', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('T', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     end if
   end do
@@ -103,10 +104,10 @@ program test_dlacn2
     iter = iter + 1
     if (iter > 20) exit
     if (kase .eq. 1) then
-      call dgemv('N', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('N', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     else
-      call dgemv('T', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('T', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     end if
   end do
@@ -134,10 +135,10 @@ program test_dlacn2
     iter = iter + 1
     if (iter > 20) exit
     if (kase .eq. 1) then
-      call dgemv('N', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('N', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     else
-      call dgemv('T', n, n, 1.0d0, a, n, x, 1, 0.0d0, v, 1)
+      call dgemv('T', n, n, 1.0d0, a, lda, x, 1, 0.0d0, v, 1)
       x(1:n) = v(1:n)
     end if
   end do

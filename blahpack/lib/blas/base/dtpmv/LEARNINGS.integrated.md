@@ -1,24 +1,18 @@
-# dtpmv: Translation Learnings
+# LEARNINGS: dtpmv
 
 ## Translation pitfalls
-
-- Packed storage KK pointer arithmetic requires careful mapping: Fortran's 1-based KK starts at 1 (upper) or N*(N+1)/2 (lower), which maps to `offsetAP` and `offsetAP + (N*(N+1)/2 - 1)*strideAP` in 0-based JS.
-- The Fortran stride-1 specialization (INCX.EQ.1 branches) was dropped in favor of a single general-stride implementation using incremental pointers. This simplifies the code without performance loss in JS.
-- Diagonal element location in packed storage differs between upper and lower. Upper: diagonal of column j is at `kk + j*strideAP`. Lower: diagonal of column j is at `kk - (N-1-j)*strideAP` (when iterating backward).
-- The Fortran `KK = KK + J` (upper, no-trans) accumulates column lengths 1, 2, 3, ..., J. In JS this translates to `kk += (j+1) * strideAP` since j is 0-based.
+- Packed storage pointer `kk` advances by column size: for upper, column j has j+1 elements so `kk += (j+1)*strideAP`; for lower, column j has N-j elements so `kk += (N-j)*strideAP`.
+- Lower no-transpose starts `kk` at the end of packed storage and works backward. The diagonal element position is `kk - (N-1-j)*strideAP`, not `kk`.
+- Upper transpose starts `kk` at the end and decrements. The diagonal position is simply `kk` (last element of the column's packed segment).
 
 ## Dependency interface surprises
+- N/A (no external dependencies)
 
-- N/A -- dtpmv is a leaf BLAS routine with no dependencies.
-
-## Automation opportunities
-
-- Packed-storage BLAS routines (dtpmv, dtpsv, dspmv, dspr, dspr2, dtbmv, dtbsv) all share the same KK-pointer pattern. A common transform could handle the 1-based-to-0-based KK arithmetic.
+## Missing automation
+- N/A
 
 ## Coverage gaps
-
-- 100% line, branch, and function coverage achieved. All 8 parameter combinations (upper/lower x transpose/no-transpose x unit/non-unit) are covered, plus stride and edge cases.
+- 100% line, branch, and function coverage achieved with 7 test cases covering all 4 uplo x trans branches, unit diagonal, N=0 edge case, and stride=2.
 
 ## Complex number handling
-
-- N/A -- dtpmv is a real (double precision) routine.
+- N/A (real-valued routine)

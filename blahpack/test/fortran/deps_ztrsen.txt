@@ -13,6 +13,7 @@ zladiv
 zlange
 zlartg
 zlassq
+la_xisnan
 zrot
 ztrexc
 ztrsen

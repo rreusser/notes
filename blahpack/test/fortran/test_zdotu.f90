@@ -1,0 +1,170 @@
+program test_zdotu
+  use test_utils
+  implicit none
+
+  complex*16 :: zx(10), zy(10), result
+  double precision :: zx_r(20), zy_r(20), res_r(2)
+  equivalence (zx, zx_r)
+  equivalence (zy, zy_r)
+  equivalence (result, res_r)
+
+  complex*16 :: ZDOTU
+
+  ! Test 1: basic (N=3, unit stride)
+  ! x = [(1,2), (3,4), (5,6)]
+  ! y = [(7,8), (9,10), (11,12)]
+  ! x[0]*y[0] = (1,2)*(7,8) = (7-16, 8+14) = (-9, 22)
+  ! x[1]*y[1] = (3,4)*(9,10) = (27-40, 30+36) = (-13, 66)
+  ! x[2]*y[2] = (5,6)*(11,12) = (55-72, 60+66) = (-17, 126)
+  ! sum = (-39, 214)
+  zx(1) = (1.0d0, 2.0d0)
+  zx(2) = (3.0d0, 4.0d0)
+  zx(3) = (5.0d0, 6.0d0)
+  zy(1) = (7.0d0, 8.0d0)
+  zy(2) = (9.0d0, 10.0d0)
+  zy(3) = (11.0d0, 12.0d0)
+  result = ZDOTU(3, zx, 1, zy, 1)
+  call begin_test('basic')
+  call print_int('N', 3)
+  call print_array('x', zx_r, 6)
+  call print_array('y', zy_r, 6)
+  call print_int('incx', 1)
+  call print_int('incy', 1)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 2: N=0 (quick return)
+  result = ZDOTU(0, zx, 1, zy, 1)
+  call begin_test('n_zero')
+  call print_int('N', 0)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 3: N=1
+  zx(1) = (3.0d0, 4.0d0)
+  zy(1) = (1.0d0, 2.0d0)
+  ! (3,4)*(1,2) = (3-8, 6+4) = (-5, 10)
+  result = ZDOTU(1, zx, 1, zy, 1)
+  call begin_test('n_one')
+  call print_int('N', 1)
+  call print_array('x', zx_r, 2)
+  call print_array('y', zy_r, 2)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 4: non-unit stride (incx=2, incy=1)
+  ! x stored: [(1,2), junk, (3,4), junk, (5,6)], stride 2
+  ! y stored: [(7,8), (9,10), (11,12)], stride 1
+  zx(1) = (1.0d0, 2.0d0)
+  zx(2) = (99.0d0, 99.0d0)
+  zx(3) = (3.0d0, 4.0d0)
+  zx(4) = (99.0d0, 99.0d0)
+  zx(5) = (5.0d0, 6.0d0)
+  zy(1) = (7.0d0, 8.0d0)
+  zy(2) = (9.0d0, 10.0d0)
+  zy(3) = (11.0d0, 12.0d0)
+  result = ZDOTU(3, zx, 2, zy, 1)
+  call begin_test('non_unit_stride')
+  call print_int('N', 3)
+  call print_array('x', zx_r, 10)
+  call print_array('y', zy_r, 6)
+  call print_int('incx', 2)
+  call print_int('incy', 1)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 5: negative stride (incx=-1)
+  ! x = [(1,2), (3,4), (5,6)], incx=-1 reads in reverse: (5,6), (3,4), (1,2)
+  ! y = [(7,8), (9,10), (11,12)], incy=1
+  zx(1) = (1.0d0, 2.0d0)
+  zx(2) = (3.0d0, 4.0d0)
+  zx(3) = (5.0d0, 6.0d0)
+  zy(1) = (7.0d0, 8.0d0)
+  zy(2) = (9.0d0, 10.0d0)
+  zy(3) = (11.0d0, 12.0d0)
+  result = ZDOTU(3, zx, -1, zy, 1)
+  call begin_test('negative_stride')
+  call print_int('N', 3)
+  call print_array('x', zx_r, 6)
+  call print_array('y', zy_r, 6)
+  call print_int('incx', -1)
+  call print_int('incy', 1)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 6: both negative strides
+  zx(1) = (1.0d0, 2.0d0)
+  zx(2) = (3.0d0, 4.0d0)
+  zx(3) = (5.0d0, 6.0d0)
+  zy(1) = (7.0d0, 8.0d0)
+  zy(2) = (9.0d0, 10.0d0)
+  zy(3) = (11.0d0, 12.0d0)
+  result = ZDOTU(3, zx, -1, zy, -1)
+  call begin_test('both_negative')
+  call print_int('N', 3)
+  call print_array('x', zx_r, 6)
+  call print_array('y', zy_r, 6)
+  call print_int('incx', -1)
+  call print_int('incy', -1)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 7: purely real vectors
+  ! x = [(1,0), (2,0), (3,0)]
+  ! y = [(4,0), (5,0), (6,0)]
+  ! sum = 1*4 + 2*5 + 3*6 = 32
+  zx(1) = (1.0d0, 0.0d0)
+  zx(2) = (2.0d0, 0.0d0)
+  zx(3) = (3.0d0, 0.0d0)
+  zy(1) = (4.0d0, 0.0d0)
+  zy(2) = (5.0d0, 0.0d0)
+  zy(3) = (6.0d0, 0.0d0)
+  result = ZDOTU(3, zx, 1, zy, 1)
+  call begin_test('purely_real')
+  call print_int('N', 3)
+  call print_array('x', zx_r, 6)
+  call print_array('y', zy_r, 6)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 8: purely imaginary vectors
+  ! x = [(0,1), (0,2), (0,3)]
+  ! y = [(0,4), (0,5), (0,6)]
+  ! (0,1)*(0,4) = (-4, 0); (0,2)*(0,5) = (-10, 0); (0,3)*(0,6) = (-18, 0)
+  ! sum = (-32, 0)
+  zx(1) = (0.0d0, 1.0d0)
+  zx(2) = (0.0d0, 2.0d0)
+  zx(3) = (0.0d0, 3.0d0)
+  zy(1) = (0.0d0, 4.0d0)
+  zy(2) = (0.0d0, 5.0d0)
+  zy(3) = (0.0d0, 6.0d0)
+  result = ZDOTU(3, zx, 1, zy, 1)
+  call begin_test('purely_imaginary')
+  call print_int('N', 3)
+  call print_array('x', zx_r, 6)
+  call print_array('y', zy_r, 6)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+  ! Test 9: larger N (N=6) for unrolled path
+  zx(1) = (1.0d0, 1.0d0)
+  zx(2) = (2.0d0, 2.0d0)
+  zx(3) = (3.0d0, 3.0d0)
+  zx(4) = (4.0d0, 4.0d0)
+  zx(5) = (5.0d0, 5.0d0)
+  zx(6) = (6.0d0, 6.0d0)
+  zy(1) = (1.0d0, 0.0d0)
+  zy(2) = (1.0d0, 0.0d0)
+  zy(3) = (1.0d0, 0.0d0)
+  zy(4) = (1.0d0, 0.0d0)
+  zy(5) = (1.0d0, 0.0d0)
+  zy(6) = (1.0d0, 0.0d0)
+  result = ZDOTU(6, zx, 1, zy, 1)
+  call begin_test('larger_n')
+  call print_int('N', 6)
+  call print_array('x', zx_r, 12)
+  call print_array('y', zy_r, 12)
+  call print_array('result', res_r, 2)
+  call end_test()
+
+end program

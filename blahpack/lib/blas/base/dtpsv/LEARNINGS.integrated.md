@@ -1,23 +1,19 @@
-# dtpsv: Translation Learnings
+# LEARNINGS: dtpsv
 
 ## Translation pitfalls
-
-- Packed storage index tracking (`kk`) is 1D and advances differently for upper vs lower: upper decrements by `j+1` per column (going backward), lower increments by `N-j` per column (going forward). Converting from 1-based Fortran to 0-based JS: `kk` starts at `offsetAP + (N*(N+1)/2 - 1)*strideAP` for upper (last diagonal), `offsetAP` for lower (first diagonal).
-- The inner loops use two parallel pointers (`ip` for AP, `ix` for x) that advance independently. The Fortran uses K as the loop variable for the AP pointer and separately tracks IX for x. In JS, the for-loop condition is on `ip` (the AP pointer) while `ix` is manually advanced.
-- For the no-transpose branches, the `x[jx] !== 0.0` guard is an optimization that skips zero RHS entries. This means the loop structure is: check if nonzero, optionally divide by diagonal, then subtract from neighbors. The transpose branches do not have this guard since they accumulate first and set the result at the end.
+- dtpsv is the solve counterpart of dtpmv: uses subtraction/division instead of addition/multiplication.
+- Upper no-transpose uses backward substitution (j from N-1 to 0), while lower no-transpose uses forward substitution (j from 0 to N-1). This is the opposite of dtpmv.
+- The inner loop bounds use pointer arithmetic (`ip >= kk - j*strideAP`) rather than index-based bounds. This matches the Fortran reference closely but requires careful stride accounting.
+- Negative stride requires computing offsetX = (N-1)*|stride| to point to the logical first element.
 
 ## Dependency interface surprises
+- N/A (no external dependencies)
 
-- N/A -- dtpsv has no BLAS/LAPACK dependencies (self-contained Level 2 routine).
-
-## Automation opportunities
-
-- The packed-storage pattern (dtpmv, dtpsv, dspmv, dspr, dspr2, etc.) shares the same KK-tracking loop structure. A generalized packed-storage template could reduce manual work for future packed routines.
+## Missing automation
+- N/A
 
 ## Coverage gaps
-
-- 100% line, branch, and function coverage achieved with 18 tests covering all 8 uplo/trans/diag combinations, N=0, N=1, stride=2, stride=-1, zero RHS, and offset parameters.
+- 100% line, branch, and function coverage achieved with 15 test cases covering all 8 uplo x trans x diag combinations, N=0, N=1, stride=2, negative stride, zero RHS elements, and lower transpose with stride=2.
 
 ## Complex number handling
-
-- N/A -- dtpsv is a real (double precision) routine.
+- N/A (real-valued routine)

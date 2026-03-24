@@ -357,6 +357,25 @@ Include:
 - **Complex number handling**: Any subtleties in how complex arithmetic
   was handled (e.g., "inlined cmplx.mul to avoid allocation in hot loop").
 
+**CRITICAL: Document ALL known issues as TODO comments in the code itself,**
+at the exact location where the issue is realized. This ensures issues are
+discovered inline when reading or working on the code. Examples:
+
+```javascript
+// TODO: JS izmax1 selects a different pivot than Fortran here, producing
+// a less-tight norm estimate (4.563 vs 5.842 on dense 3x3). The estimate
+// is still a valid lower bound but affects condition number accuracy.
+
+// TODO: This branch (knt >= 20 safmin scaling bailout) is unreachable in
+// IEEE 754 double precision — safmin ~ 2e-292, so a single scaling always
+// exceeds the threshold.
+```
+
+Do NOT put code issues in LEARNINGS.md. LEARNINGS.md is strictly for
+**process improvements** — what to do differently when translating the
+next routine. If a test fails or a branch diverges from Fortran, the
+TODO goes in `base.js` at the relevant line, not in LEARNINGS.md.
+
 Keep it concise — bullet points, not prose. This file is read by future
 sessions to avoid repeating mistakes.
 

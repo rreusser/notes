@@ -122,7 +122,7 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 		}
 		if ( wantsp ) {
 			rwork = new Float64Array( 1 );
-			sep[ 0 ] = zlange( '1', N, N, T, strideT1, strideT2, offsetT, rwork, 1, 0 );
+			sep[ 0 ] = zlange( 'one-norm', N, N, T, strideT1, strideT2, offsetT, rwork, 1, 0 );
 		}
 		// Copy eigenvalues to W
 		tv = reinterpret( T, 0 );
@@ -152,14 +152,14 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	if ( wants ) {
 		// Solve the Sylvester equation for R: T11*R - R*T22 = scale*T12
 		// Copy T12 (n1 rows, n2 cols starting at column n1) to WORK
-		zlacpy( 'F', n1, n2, T, strideT1, strideT2, offsetT + n1 * strideT2, WORK, strideWORK, 1, offsetWORK );
+		zlacpy( 'F', n1, n2, T, strideT1, strideT2, offsetT + n1 * strideT2, WORK, 1, n1, offsetWORK );
 
 		scale = new Float64Array( 1 );
-		ztrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, strideWORK, 1, offsetWORK, scale );
+		ztrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
 
 		// Estimate reciprocal condition number of the cluster
 		rwork = new Float64Array( 1 );
-		rnorm = zlange( 'F', n1, n2, WORK, strideWORK, 1, offsetWORK, rwork, 1, 0 );
+		rnorm = zlange( 'frobenius', n1, n2, WORK, 1, n1, offsetWORK, rwork, 1, 0 );
 		if ( rnorm === ZERO ) {
 			s[ 0 ] = ONE;
 		} else {
@@ -186,10 +186,10 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 			}
 			if ( kase[ 0 ] === 1 ) {
 				// Solve T11*R - R*T22 = scale*X
-				ztrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, strideWORK, 1, offsetWORK, scale );
+				ztrsyl( 'N', 'N', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
 			} else {
 				// Solve T11**H*R - R*T22**H = scale*X
-				ztrsyl( 'C', 'C', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, strideWORK, 1, offsetWORK, scale );
+				ztrsyl( 'C', 'C', -1, n1, n2, T, strideT1, strideT2, offsetT, T, strideT1, strideT2, offsetT + n1 * strideT1 + n1 * strideT2, WORK, 1, n1, offsetWORK, scale );
 			}
 		}
 

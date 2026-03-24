@@ -1,17 +1,183 @@
-
-
 'use strict';
+
+// MODULES //
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var dtrevc3 = require( './../lib' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var dtrevc3 = require( './../lib/base.js' );
 
-test( 'dtrevc3: main export is a function', function t() {
-	assert.strictEqual( typeof dtrevc3, 'function' );
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'dtrevc3.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+/**
+* Build the 4x4 quasi-triangular test matrix T.
+* T = [ 1   0.5  0.2  0.1  ]
+*     [ 0   2    0.3  0.15 ]
+*     [ 0   0    3   -0.5  ]
+*     [ 0   0    0.8  3    ]
+*/
+function buildT4() {
+	var N = 4;
+	var T = new Float64Array( N * N );
+	T[ 0 + 0*N ] = 1.0; T[ 0 + 1*N ] = 0.5; T[ 0 + 2*N ] = 0.2; T[ 0 + 3*N ] = 0.1;
+	T[ 1 + 1*N ] = 2.0; T[ 1 + 2*N ] = 0.3; T[ 1 + 3*N ] = 0.15;
+	T[ 2 + 2*N ] = 3.0; T[ 2 + 3*N ] = -0.5;
+	T[ 3 + 2*N ] = 0.8; T[ 3 + 3*N ] = 3.0;
+	return T;
+}
+
+
+// TESTS //
+
+test( 'dtrevc3: right eigenvectors, all, 4x4', function t() {
+	var tc = findCase( 'right all 4x4' );
+	var N = 4;
+	var T = buildT4();
+	var VL = new Float64Array( N * N );
+	var VR = new Float64Array( N * N );
+	var SELECT = new Uint8Array( N );
+	var WORK = new Float64Array( 3 * N );
+	var M = 0;
+
+	var info = dtrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
 });
 
-test( 'dtrevc3: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof dtrevc3.ndarray, 'function' );
+test( 'dtrevc3: left eigenvectors, all, 4x4', function t() {
+	var tc = findCase( 'left all 4x4' );
+	var N = 4;
+	var T = buildT4();
+	var VL = new Float64Array( N * N );
+	var VR = new Float64Array( N * N );
+	var SELECT = new Uint8Array( N );
+	var WORK = new Float64Array( 3 * N );
+	var M = 0;
+
+	var info = dtrevc3( 'L', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertArrayClose( Array.from( VL ), tc.VL, 1e-12, 'VL' );
 });
 
-// TODO: Add implementation tests
+test( 'dtrevc3: both eigenvectors, all, 4x4', function t() {
+	var tc = findCase( 'both all 4x4' );
+	var N = 4;
+	var T = buildT4();
+	var VL = new Float64Array( N * N );
+	var VR = new Float64Array( N * N );
+	var SELECT = new Uint8Array( N );
+	var WORK = new Float64Array( 3 * N );
+	var M = 0;
+
+	var info = dtrevc3( 'B', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
+	assertArrayClose( Array.from( VL ), tc.VL, 1e-12, 'VL' );
+});
+
+test( 'dtrevc3: right eigenvectors, selected, 4x4', function t() {
+	var tc = findCase( 'right selected 4x4' );
+	var N = 4;
+	var M_out = tc.M;
+	var T = buildT4();
+	var VL = new Float64Array( N * N );
+	var VR = new Float64Array( N * M_out );
+	var SELECT = new Uint8Array( N );
+	SELECT[ 0 ] = 1;  // eigenvalue 1
+	SELECT[ 1 ] = 0;  // skip eigenvalue 2
+	SELECT[ 2 ] = 1;  // complex pair
+	SELECT[ 3 ] = 1;  // complex pair
+	var WORK = new Float64Array( 3 * N );
+	var M = 0;
+
+	var info = dtrevc3( 'R', 'S', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
+});
+
+test( 'dtrevc3: right backtransform, 4x4', function t() {
+	var tc = findCase( 'right backtransform 4x4' );
+	var N = 4;
+	var T = buildT4();
+	var VL = new Float64Array( N * N );
+	var VR = new Float64Array( N * N );
+	// VR starts as identity (Q)
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		VR[ i + i*N ] = 1.0;
+	}
+	var SELECT = new Uint8Array( N );
+	var WORK = new Float64Array( 3 * N );
+	var M = 0;
+
+	var info = dtrevc3( 'R', 'B', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
+});
+
+test( 'dtrevc3: right all real eigenvalues, 4x4', function t() {
+	var tc = findCase( 'right all real 4x4' );
+	var N = 4;
+	var T = new Float64Array( N * N );
+	T[ 0 + 0*N ] = 5.0; T[ 0 + 1*N ] = 1.0; T[ 0 + 2*N ] = 0.5; T[ 0 + 3*N ] = 0.2;
+	T[ 1 + 1*N ] = 3.0; T[ 1 + 2*N ] = 0.8; T[ 1 + 3*N ] = 0.3;
+	T[ 2 + 2*N ] = 1.0; T[ 2 + 3*N ] = 0.6;
+	T[ 3 + 3*N ] = -1.0;
+	var VL = new Float64Array( N * N );
+	var VR = new Float64Array( N * N );
+	var SELECT = new Uint8Array( N );
+	var WORK = new Float64Array( 3 * N );
+	var M = 0;
+
+	var info = dtrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, N, M, WORK, 1, 0, 3 * N );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
+});
+
+test( 'dtrevc3: right N=1', function t() {
+	var tc = findCase( 'right N=1' );
+	var N = 1;
+	var T = new Float64Array([ 7.0 ]);
+	var VL = new Float64Array( 1 );
+	var VR = new Float64Array( 1 );
+	var SELECT = new Uint8Array( 1 );
+	var WORK = new Float64Array( 3 );
+	var M = 0;
+
+	var info = dtrevc3( 'R', 'A', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, 1, M, WORK, 1, 0, 3 );
+
+	assert.strictEqual( info, tc.info, 'info' );
+	assertArrayClose( Array.from( VR ), tc.VR, 1e-12, 'VR' );
+});

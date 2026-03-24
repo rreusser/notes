@@ -199,3 +199,58 @@ test( 'zhemm: beta_zero', function t() {
 	zhemm( 'left', 'lower', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
+
+test( 'zhemm: alpha_zero_beta_zero (zeros C)', function t() {
+	var tc = findCase( 'alpha_zero_beta_zero' );
+	var A = new Complex128Array( 4 );
+	var B = new Complex128Array( 4 );
+	var C = new Complex128Array( [
+		99, 88, 77, 66,
+		55, 44, 33, 22
+	] );
+
+	zhemm( 'left', 'upper', 2, 2, new Complex128( 0, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+});
+
+test( 'zhemm: left_lower_nonzero_beta', function t() {
+	var tc = findCase( 'left_lower_nonzero_beta' );
+	var A = new Complex128Array( [
+		2, 0, 1, -1, 3, 2,
+		0, 0, 4, 0, 2, -1,
+		0, 0, 0, 0, 5, 0
+	] );
+	var B = new Complex128Array( [
+		1, 0.5, 2, -1, 3, 1,
+		4, 2, 5, 0, 6, -0.5
+	] );
+	var C = new Complex128Array( [
+		1, 1, 2, -1, 0.5, 0.5,
+		1, 0, 0, 2, 3, -1
+	] );
+
+	zhemm( 'left', 'lower', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0.5, 0 ), C, 1, 3, 0 );
+	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+});
+
+test( 'zhemm: right_upper_nonzero_beta', function t() {
+	var tc = findCase( 'right_upper_nonzero_beta' );
+	var A = new Complex128Array( [
+		2, 0, 0, 0, 0, 0,
+		1, 1, 4, 0, 0, 0,
+		3, -2, 2, 1, 5, 0
+	] );
+	var B = new Complex128Array( [
+		1, 0.5, 2, -1,
+		3, 1, 4, 2,
+		5, 0, 6, -0.5
+	] );
+	var C = new Complex128Array( [
+		1, 1, 2, -1,
+		0.5, 0.5, 1, 0,
+		0, 2, 3, -1
+	] );
+
+	zhemm( 'right', 'upper', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0.5, 0.5 ), C, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+});

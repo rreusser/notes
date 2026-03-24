@@ -8,4 +8,5 @@ iparmq
 zladiv
 zlange
 zlassq
+la_xisnan
 ztrsyl

@@ -13,8 +13,10 @@ zlacpy
 zladiv
 zlahqr
 zlahr2
+zlaqr1
 zlaqr2
 zlarf
+zlaset
 zlarfb
 zlarfg
 zlarft

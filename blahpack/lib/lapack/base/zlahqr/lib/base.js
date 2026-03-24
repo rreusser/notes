@@ -292,7 +292,8 @@ function zlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, W, s
 			absc = Math.sqrt( scr * scr + sci * sci );
 			scr /= absc;
 			sci /= absc;
-			Hv[ oH + ( i - 1 ) * sh1 + ( i - 2 ) * sh2 ] = temp;
+			// Fortran: H( I, I-1 ) = ABS( H( I, I-1 ) ) — modulus, not CABS1
+			Hv[ oH + ( i - 1 ) * sh1 + ( i - 2 ) * sh2 ] = Math.sqrt( Hv[ oH + ( i - 1 ) * sh1 + ( i - 2 ) * sh2 ] * Hv[ oH + ( i - 1 ) * sh1 + ( i - 2 ) * sh2 ] + Hv[ oH + ( i - 1 ) * sh1 + ( i - 2 ) * sh2 + 1 ] * Hv[ oH + ( i - 1 ) * sh1 + ( i - 2 ) * sh2 + 1 ] );
 			Hv[ oH + ( i - 1 ) * sh1 + ( i - 2 ) * sh2 + 1 ] = 0.0;
 			zscal( jhi - i + 1, new Complex128( scr, sci ), H, strideH2, offsetH + ( i - 1 ) * strideH1 + ( i - 1 ) * strideH2 );
 			zscal( Math.min( jhi, i + 1 ) - jlo + 1, new Complex128( scr, -sci ), H, strideH1, offsetH + ( jlo - 1 ) * strideH1 + ( i - 1 ) * strideH2 );
@@ -411,8 +412,9 @@ function zlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, W, s
 					yi = s * scratch[ 1 ];
 
 					if ( sx > RZERO ) {
-						cmul( xr / sx, xi / sx, yr, yi, scratch );
-						if ( scratch[ 0 ] < RZERO ) {
+						// Fortran: DBLE(X/SX)*DBLE(Y) + DIMAG(X/SX)*DIMAG(Y)
+						// This is Re(conj(X/SX)*Y), i.e. a dot product, not Re(X/SX * Y)
+						if ( ( xr / sx ) * yr + ( xi / sx ) * yi < RZERO ) {
 							yr = -yr;
 							yi = -yi;
 						}
@@ -478,8 +480,9 @@ function zlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, W, s
 				v2i = vv[ 3 ];
 				t1r = tauV[ 0 ];
 				t1i = tauV[ 1 ];
-				t2r = t1r * v2r - t1i * v2i; // t1*v2
-				t2i = t1r * v2i + t1i * v2r;
+				// T2 = DBLE( T1*V2 ) — T2 is real (the real part of T1*V2)
+				t2r = t1r * v2r - t1i * v2i;
+				t2i = 0.0;
 
 				// Apply reflector from the left
 				for ( j = k; j <= i2; j++ ) {

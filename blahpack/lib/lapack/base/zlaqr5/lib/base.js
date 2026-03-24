@@ -109,6 +109,9 @@ function zlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, s, strideS, offset
 	var h21;
 	var h22;
 	var scl;
+	var dR;
+	var dI;
+	var aa;
 	var kdu;
 	var kms;
 	var m22;
@@ -321,12 +324,12 @@ function zlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, s, strideS, offset
 						if ( cabs1( Hv, oH + k * sH1 + ( k - 1 ) * sH2 ) <= Math.max( smlnum, ULP * tst1 ) ) {
 							h12 = Math.max( cabs1( Hv, oH + k * sH1 + ( k - 1 ) * sH2 ), cabs1( Hv, oH + ( k - 1 ) * sH1 + k * sH2 ) );
 							h21 = Math.min( cabs1( Hv, oH + k * sH1 + ( k - 1 ) * sH2 ), cabs1( Hv, oH + ( k - 1 ) * sH1 + k * sH2 ) );
-							h11 = Math.max( cabs1( Hv, oH + k * sH1 + k * sH2 ), cabs1( Hv, oH + ( k - 1 ) * sH1 + ( k - 1 ) * sH2 ) - cabs1( Hv, oH + k * sH1 + k * sH2 ) );
-							// TODO: fix — this should use CABS1 of difference
-							var dR = Hv[ oH + ( k - 1 ) * sH1 + ( k - 1 ) * sH2 ] - Hv[ oH + k * sH1 + k * sH2 ]; // eslint-disable-line no-var
-							var dI = Hv[ oH + ( k - 1 ) * sH1 + ( k - 1 ) * sH2 + 1 ] - Hv[ oH + k * sH1 + k * sH2 + 1 ]; // eslint-disable-line no-var
-							h11 = Math.max( cabs1( Hv, oH + k * sH1 + k * sH2 ), Math.abs( dR ) + Math.abs( dI ) );
-							h22 = Math.min( cabs1( Hv, oH + k * sH1 + k * sH2 ), Math.abs( dR ) + Math.abs( dI ) );
+							// CABS1 of complex difference H(K-1,K-1) - H(K,K):
+							dR = Hv[ oH + ( k - 1 ) * sH1 + ( k - 1 ) * sH2 ] - Hv[ oH + k * sH1 + k * sH2 ];
+							dI = Hv[ oH + ( k - 1 ) * sH1 + ( k - 1 ) * sH2 + 1 ] - Hv[ oH + k * sH1 + k * sH2 + 1 ];
+							aa = Math.abs( dR ) + Math.abs( dI );
+							h11 = Math.max( cabs1( Hv, oH + k * sH1 + k * sH2 ), aa );
+							h22 = Math.min( cabs1( Hv, oH + k * sH1 + k * sH2 ), aa );
 							scl = h11 + h12;
 							tst2 = h22 * ( h11 / scl );
 							if ( tst2 === 0.0 || h21 * ( h12 / scl ) <= Math.max( smlnum, ULP * tst2 ) ) {

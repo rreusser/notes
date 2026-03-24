@@ -359,3 +359,221 @@ test( 'dlaqr5: 8x8_5shifts_odd', function t() {
 
 	assertArrayClose( Array.from( H ), tc.H, 1e-12, 'H' );
 });
+
+// ---- Additional coverage tests (no fixtures — verify structural properties) ----
+
+function isUpperHessenberg( H, N, tol ) {
+	var i;
+	var j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = j + 2; i < N; i++ ) {
+			if ( Math.abs( H[ i + j * N ] ) > tol ) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+function matmul( A, B, N ) {
+	var C = new Float64Array( N * N );
+	var i;
+	var j;
+	var k;
+	for ( j = 0; j < N; j++ ) {
+		for ( k = 0; k < N; k++ ) {
+			for ( i = 0; i < N; i++ ) {
+				C[ i + j * N ] += A[ i + k * N ] * B[ k + j * N ];
+			}
+		}
+	}
+	return C;
+}
+
+function transposeM( A, N ) {
+	var AT = new Float64Array( N * N );
+	var i;
+	var j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < N; i++ ) {
+			AT[ i + j * N ] = A[ j + i * N ];
+		}
+	}
+	return AT;
+}
+
+function matFrobNorm( A, N ) {
+	var s = 0.0;
+	var i;
+	for ( i = 0; i < N * N; i++ ) {
+		s += A[ i ] * A[ i ];
+	}
+	return Math.sqrt( s );
+}
+
+test( 'dlaqr5: bmp22 at KTOP-1 (ktop=0, kbot=1, 2 shifts)', function t() {
+	// This triggers the bmp22 path where k === KTOP - 1, covering lines 306-313.
+	var N = 4;
+	var H = new Float64Array( N * N );
+	H[ 0 + 0 * N ] = 4.0; H[ 0 + 1 * N ] = 3.0;
+	H[ 1 + 0 * N ] = 1.0; H[ 1 + 1 * N ] = 3.0;
+	H[ 2 + 2 * N ] = 2.0;
+	H[ 3 + 3 * N ] = 1.0;
+
+	var Z = eye( N );
+	var SR = new Float64Array( [ 3.5, 3.5 ] );
+	var SI = new Float64Array( [ 0.5, -0.5 ] );
+
+	run( true, true, 0, N, 0, 1, 2, SR, SI, H, 0, 1, Z );
+
+	// Verify H is still upper Hessenberg
+	assert.ok( isUpperHessenberg( H, N, 1e-14 ), 'H should be upper Hessenberg' );
+});
+
+test( 'dlaqr5: tiny sub-diagonals trigger deflation (convergence test)', function t() {
+	// Sub-diagonal elements near machine epsilon should be deflated to zero,
+	// exercising convergence test branches (lines 349-385, 505-539).
+	var N = 6;
+	var H = new Float64Array( N * N );
+	H[ 0 + 0 * N ] = 5.0;   H[ 0 + 1 * N ] = 2.0;   H[ 0 + 2 * N ] = 1.0;   H[ 0 + 3 * N ] = 0.5;   H[ 0 + 4 * N ] = 0.3;   H[ 0 + 5 * N ] = 0.2;
+	H[ 1 + 0 * N ] = 1e-16;  H[ 1 + 1 * N ] = 4.0;   H[ 1 + 2 * N ] = 1.5;   H[ 1 + 3 * N ] = 0.8;   H[ 1 + 4 * N ] = 0.4;   H[ 1 + 5 * N ] = 0.3;
+	H[ 2 + 1 * N ] = 1e-16;  H[ 2 + 2 * N ] = 3.0;   H[ 2 + 3 * N ] = 1.0;   H[ 2 + 4 * N ] = 0.5;   H[ 2 + 5 * N ] = 0.2;
+	H[ 3 + 2 * N ] = 1e-16;  H[ 3 + 3 * N ] = 2.0;   H[ 3 + 4 * N ] = 0.6;   H[ 3 + 5 * N ] = 0.3;
+	H[ 4 + 3 * N ] = 1e-16;  H[ 4 + 4 * N ] = 1.5;   H[ 4 + 5 * N ] = 0.5;
+	H[ 5 + 4 * N ] = 1e-16;  H[ 5 + 5 * N ] = 0.8;
+
+	var Horig = new Float64Array( H );
+	var Z = eye( N );
+	var SR = new Float64Array( [ 3.0, 3.0 ] );
+	var SI = new Float64Array( [ 0.5, -0.5 ] );
+
+	run( true, true, 0, N, 0, 5, 2, SR, SI, H, 0, 5, Z );
+
+	// H should remain upper Hessenberg
+	assert.ok( isUpperHessenberg( H, N, 1e-12 ), 'H should be upper Hessenberg' );
+
+	// Verify Z^T * Horig * Z approx H (similarity transform preserved)
+	var ZtH = matmul( transposeM( Z, N ), Horig, N );
+	var ZtHZ = matmul( ZtH, Z, N );
+	var diff = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < N * N; i++ ) {
+		diff[ i ] = ZtHZ[ i ] - H[ i ];
+	}
+	var relErr = matFrobNorm( diff, N ) / Math.max( matFrobNorm( Horig, N ), 1.0 );
+	assert.ok( relErr < 1e-12, 'Similarity transform should be preserved (relErr=' + relErr + ')' );
+});
+
+test( 'dlaqr5: zero-diagonal matrix (tst1 === 0 branch)', function t() {
+	// Matrix with all-zero diagonals to trigger the tst1 === 0.0 branch
+	// in convergence tests (lines 352, 507).
+	var N = 6;
+	var H = new Float64Array( N * N );
+	H[ 0 + 0 * N ] = 0.0;   H[ 0 + 1 * N ] = 2.0;   H[ 0 + 2 * N ] = 1.0;   H[ 0 + 3 * N ] = 0.5;   H[ 0 + 4 * N ] = 0.3;   H[ 0 + 5 * N ] = 0.2;
+	H[ 1 + 0 * N ] = 1e-17;  H[ 1 + 1 * N ] = 0.0;   H[ 1 + 2 * N ] = 1.5;   H[ 1 + 3 * N ] = 0.8;   H[ 1 + 4 * N ] = 0.4;   H[ 1 + 5 * N ] = 0.3;
+	H[ 2 + 1 * N ] = 1e-17;  H[ 2 + 2 * N ] = 0.0;   H[ 2 + 3 * N ] = 1.0;   H[ 2 + 4 * N ] = 0.5;   H[ 2 + 5 * N ] = 0.2;
+	H[ 3 + 2 * N ] = 1e-17;  H[ 3 + 3 * N ] = 0.0;   H[ 3 + 4 * N ] = 0.6;   H[ 3 + 5 * N ] = 0.3;
+	H[ 4 + 3 * N ] = 1e-17;  H[ 4 + 4 * N ] = 0.0;   H[ 4 + 5 * N ] = 0.5;
+	H[ 5 + 4 * N ] = 1e-17;  H[ 5 + 5 * N ] = 0.0;
+
+	var Z = eye( N );
+	var SR = new Float64Array( [ 1.0, 1.0 ] );
+	var SI = new Float64Array( [ 0.5, -0.5 ] );
+
+	run( true, true, 0, N, 0, 5, 2, SR, SI, H, 0, 5, Z );
+
+	// Should not crash; H stays upper Hessenberg
+	assert.ok( isUpperHessenberg( H, N, 1e-10 ), 'H should be upper Hessenberg' );
+});
+
+test( 'dlaqr5: accum with wantt=false (kacc22=2)', function t() {
+	// Exercises the accum path with wantt=false, covering lines 608-611.
+	var N = 8;
+	var H = new Float64Array( N * N );
+	H[ 0 + 0 * N ] = 10; H[ 0 + 1 * N ] = 2;   H[ 0 + 2 * N ] = 1;   H[ 0 + 3 * N ] = 0.5;  H[ 0 + 4 * N ] = 0.3;  H[ 0 + 5 * N ] = 0.2;  H[ 0 + 6 * N ] = 0.1;  H[ 0 + 7 * N ] = 0.05;
+	H[ 1 + 0 * N ] = 3;  H[ 1 + 1 * N ] = 9;   H[ 1 + 2 * N ] = 2;   H[ 1 + 3 * N ] = 1;    H[ 1 + 4 * N ] = 0.4;  H[ 1 + 5 * N ] = 0.3;  H[ 1 + 6 * N ] = 0.2;  H[ 1 + 7 * N ] = 0.1;
+	H[ 2 + 1 * N ] = 2.5; H[ 2 + 2 * N ] = 8;  H[ 2 + 3 * N ] = 1.5;  H[ 2 + 4 * N ] = 0.5;  H[ 2 + 5 * N ] = 0.4;  H[ 2 + 6 * N ] = 0.3;  H[ 2 + 7 * N ] = 0.15;
+	H[ 3 + 2 * N ] = 2;  H[ 3 + 3 * N ] = 7;   H[ 3 + 4 * N ] = 1;    H[ 3 + 5 * N ] = 0.5;  H[ 3 + 6 * N ] = 0.4;  H[ 3 + 7 * N ] = 0.2;
+	H[ 4 + 3 * N ] = 1.5; H[ 4 + 4 * N ] = 6;  H[ 4 + 5 * N ] = 1;    H[ 4 + 6 * N ] = 0.5;  H[ 4 + 7 * N ] = 0.3;
+	H[ 5 + 4 * N ] = 1;  H[ 5 + 5 * N ] = 5;   H[ 5 + 6 * N ] = 0.8;  H[ 5 + 7 * N ] = 0.4;
+	H[ 6 + 5 * N ] = 0.8; H[ 6 + 6 * N ] = 4;  H[ 6 + 7 * N ] = 0.6;
+	H[ 7 + 6 * N ] = 0.5; H[ 7 + 7 * N ] = 3;
+
+	var Z = eye( N );
+	var SR = new Float64Array( [ 5, 5, 3, 3 ] );
+	var SI = new Float64Array( [ 1, -1, 0.5, -0.5 ] );
+
+	run( false, true, 2, N, 0, 7, 4, SR, SI, H, 0, 7, Z );
+
+	// H should remain upper Hessenberg
+	assert.ok( isUpperHessenberg( H, N, 1e-10 ), 'H should be upper Hessenberg' );
+});
+
+test( 'dlaqr5: bmp22 with larger window (ktop=0, kbot=3, 4 shifts)', function t() {
+	// With 4 shifts (nbmps=2) and kbot=3, exercises the 2x2 reflection at bottom.
+	var N = 6;
+	var H = new Float64Array( N * N );
+	H[ 0 + 0 * N ] = 6.0; H[ 0 + 1 * N ] = 2.0; H[ 0 + 2 * N ] = 1.5; H[ 0 + 3 * N ] = 1.0; H[ 0 + 4 * N ] = 0.5; H[ 0 + 5 * N ] = 0.3;
+	H[ 1 + 0 * N ] = 2.0; H[ 1 + 1 * N ] = 5.0; H[ 1 + 2 * N ] = 2.0; H[ 1 + 3 * N ] = 1.5; H[ 1 + 4 * N ] = 0.8; H[ 1 + 5 * N ] = 0.4;
+	H[ 2 + 1 * N ] = 1.8; H[ 2 + 2 * N ] = 4.0; H[ 2 + 3 * N ] = 1.0; H[ 2 + 4 * N ] = 0.6; H[ 2 + 5 * N ] = 0.35;
+	H[ 3 + 2 * N ] = 1.2; H[ 3 + 3 * N ] = 3.0; H[ 3 + 4 * N ] = 0.9; H[ 3 + 5 * N ] = 0.5;
+	H[ 4 + 3 * N ] = 0.7; H[ 4 + 4 * N ] = 2.0; H[ 4 + 5 * N ] = 0.6;
+	H[ 5 + 4 * N ] = 0.4; H[ 5 + 5 * N ] = 1.0;
+
+	var Z = eye( N );
+	var SR = new Float64Array( [ 4.0, 4.0, 2.0, 1.0 ] );
+	var SI = new Float64Array( [ 1.0, -1.0, 0.0, 0.0 ] );
+
+	run( true, true, 0, N, 0, 3, 4, SR, SI, H, 0, 5, Z );
+
+	// H should remain upper Hessenberg
+	assert.ok( isUpperHessenberg( H, N, 1e-10 ), 'H should be upper Hessenberg' );
+});
+
+test( 'dlaqr5: 3x3 with 2 shifts (minimal for 3x3 bulge + deflation)', function t() {
+	// Smallest matrix that exercises the 3x3 bulge chase path.
+	var N = 3;
+	var H = new Float64Array( N * N );
+	H[ 0 + 0 * N ] = 3.0; H[ 0 + 1 * N ] = 2.0; H[ 0 + 2 * N ] = 1.0;
+	H[ 1 + 0 * N ] = 1.0; H[ 1 + 1 * N ] = 2.0; H[ 1 + 2 * N ] = 1.5;
+	H[ 2 + 1 * N ] = 0.5; H[ 2 + 2 * N ] = 1.0;
+
+	var Horig = new Float64Array( H );
+	var Z = eye( N );
+	var SR = new Float64Array( [ 2.5, 2.5 ] );
+	var SI = new Float64Array( [ 0.3, -0.3 ] );
+
+	run( true, true, 0, N, 0, 2, 2, SR, SI, H, 0, 2, Z );
+
+	// Verify similarity transform: Z^T * Horig * Z approx H
+	var ZtH = matmul( transposeM( Z, N ), Horig, N );
+	var ZtHZ = matmul( ZtH, Z, N );
+	var diff = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < N * N; i++ ) {
+		diff[ i ] = ZtHZ[ i ] - H[ i ];
+	}
+	var relErr = matFrobNorm( diff, N ) / Math.max( matFrobNorm( Horig, N ), 1.0 );
+	assert.ok( relErr < 1e-12, 'Similarity transform preserved (relErr=' + relErr + ')' );
+});
+
+test( 'dlaqr5: zero-diagonal with large sub-diags (tst1 === 0, 3x3 path)', function t() {
+	// Zero diagonals with non-trivial sub-diagonals to exercise tst1 === 0
+	// in the 3x3 bulge convergence test (lines 506-526) without immediate deflation.
+	var N = 6;
+	var H = new Float64Array( N * N );
+	H[ 0 + 0 * N ] = 0.0;  H[ 0 + 1 * N ] = 2.0;  H[ 0 + 2 * N ] = 1.0;  H[ 0 + 3 * N ] = 0.5;  H[ 0 + 4 * N ] = 0.3;  H[ 0 + 5 * N ] = 0.2;
+	H[ 1 + 0 * N ] = 1.5;  H[ 1 + 1 * N ] = 0.0;  H[ 1 + 2 * N ] = 1.5;  H[ 1 + 3 * N ] = 0.8;  H[ 1 + 4 * N ] = 0.4;  H[ 1 + 5 * N ] = 0.3;
+	H[ 2 + 1 * N ] = 1.2;  H[ 2 + 2 * N ] = 0.0;  H[ 2 + 3 * N ] = 1.0;  H[ 2 + 4 * N ] = 0.5;  H[ 2 + 5 * N ] = 0.2;
+	H[ 3 + 2 * N ] = 1.0;  H[ 3 + 3 * N ] = 0.0;  H[ 3 + 4 * N ] = 0.6;  H[ 3 + 5 * N ] = 0.3;
+	H[ 4 + 3 * N ] = 0.8;  H[ 4 + 4 * N ] = 0.0;  H[ 4 + 5 * N ] = 0.5;
+	H[ 5 + 4 * N ] = 0.6;  H[ 5 + 5 * N ] = 0.0;
+
+	var Z = eye( N );
+	var SR = new Float64Array( [ 1.0, 1.0 ] );
+	var SI = new Float64Array( [ 0.5, -0.5 ] );
+
+	run( true, true, 0, N, 0, 5, 2, SR, SI, H, 0, 5, Z );
+
+	assert.ok( isUpperHessenberg( H, N, 1e-10 ), 'H should be upper Hessenberg' );
+});

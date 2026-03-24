@@ -182,3 +182,55 @@ test( 'dsymm: beta_zero', function t() {
 	dsymm( 'left', 'lower', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
 	assertArrayClose( Array.from( C ), tc.C, 1e-14, 'C' );
 });
+
+test( 'dsymm: alpha_zero_beta_zero (zeros C)', function t() {
+	var tc = findCase( 'alpha_zero_beta_zero' );
+	var A = new Float64Array( 4 );
+	var B = new Float64Array( 4 );
+	var C = new Float64Array([ 99.0, 88.0, 77.0, 66.0 ]);
+
+	dsymm( 'left', 'upper', 2, 2, 0.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 1e-14, 'C' );
+});
+
+test( 'dsymm: left_lower_nonzero_beta', function t() {
+	var tc = findCase( 'left_lower_nonzero_beta' );
+	var A = new Float64Array([
+		2.0, 1.0, 3.0,
+		0.0, 4.0, 2.0,
+		0.0, 0.0, 5.0
+	]);
+	var B = new Float64Array([
+		1.0, 2.0, 3.0,
+		4.0, 5.0, 6.0
+	]);
+	var C = new Float64Array([
+		1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0
+	]);
+
+	dsymm( 'left', 'lower', 3, 2, 2.0, A, 1, 3, 0, B, 1, 3, 0, 0.5, C, 1, 3, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 1e-14, 'C' );
+});
+
+test( 'dsymm: right_upper_nonzero_beta', function t() {
+	var tc = findCase( 'right_upper_nonzero_beta' );
+	var A = new Float64Array([
+		2.0, 0.0, 0.0,
+		1.0, 4.0, 0.0,
+		3.0, 2.0, 5.0
+	]);
+	var B = new Float64Array([
+		1.0, 2.0,
+		3.0, 4.0,
+		5.0, 6.0
+	]);
+	var C = new Float64Array([
+		1.0, 2.0,
+		3.0, 4.0,
+		5.0, 6.0
+	]);
+
+	dsymm( 'right', 'upper', 2, 3, 1.0, A, 1, 3, 0, B, 1, 2, 0, 0.5, C, 1, 2, 0 );
+	assertArrayClose( Array.from( C ), tc.C, 1e-14, 'C' );
+});

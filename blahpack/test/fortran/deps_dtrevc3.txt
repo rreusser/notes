@@ -1,4 +1,9 @@
 dladiv
 dlaln2
 dlamch
+dlacpy
+dlaset
 dtrevc3
+ilaenv
+ieeeck
+iparmq

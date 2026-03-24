@@ -22,3 +22,16 @@ dormhr
 dormqr
 iladlc
 iladlr
+ilaenv
+iparmq
+ieeeck
+dtrexc
+dlaexc
+dlange
+dlasy2
+dlaln2
+dladiv
+dlarfx
+dlartg
+dlassq
+la_xisnan

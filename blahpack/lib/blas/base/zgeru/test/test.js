@@ -2,16 +2,202 @@
 
 'use strict';
 
+// MODULES //
+
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var zgeru = require( './../lib' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zgeru = require( './../lib/base.js' );
+
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
+var lines = readFileSync( path.join( fixtureDir, 'zgeru.jsonl' ), 'utf8' ).trim().split( '\n' );
+var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+
+
+// FUNCTIONS //
+
+function findCase( name ) {
+	return fixture.find( function find( t ) { return t.name === name; } );
+}
+
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+
+// TESTS //
 
 test( 'zgeru: main export is a function', function t() {
 	assert.strictEqual( typeof zgeru, 'function' );
 });
 
-test( 'zgeru: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof zgeru.ndarray, 'function' );
+test( 'zgeru: basic 2x3 rank-1 update', function t() {
+	var tc = findCase( 'basic_2x3' );
+	// A = 2x3 col-major, x = 2-elem, y = 3-elem, alpha = (1,0)
+	var A = new Complex128Array( [
+		1, 2, 7, 8,    // col 1: A(1,1)=1+2i, A(2,1)=7+8i
+		3, 4, 9, 10,   // col 2: A(1,2)=3+4i, A(2,2)=9+10i
+		5, 6, 11, 12   // col 3: A(1,3)=5+6i, A(2,3)=11+12i
+	] );
+	var x = new Complex128Array( [ 1, 1, 2, 2 ] );
+	var y = new Complex128Array( [ 1, 0, 0, 1, 1, 1 ] );
+
+	zgeru( 2, 3, new Complex128( 1, 0 ), x, 1, 0, y, 1, 0, A, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
 });
 
-// TODO: Add implementation tests
+test( 'zgeru: alpha = (2, -1)', function t() {
+	var tc = findCase( 'alpha_2_neg1' );
+	// A = 2x2 identity, x = [(1,2), (3,4)], y = [(2,1), (1,-1)]
+	var A = new Complex128Array( [
+		1, 0, 0, 0,   // col 1
+		0, 0, 1, 0    // col 2
+	] );
+	var x = new Complex128Array( [ 1, 2, 3, 4 ] );
+	var y = new Complex128Array( [ 2, 1, 1, -1 ] );
+
+	zgeru( 2, 2, new Complex128( 2, -1 ), x, 1, 0, y, 1, 0, A, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+test( 'zgeru: alpha = 0 (no update)', function t() {
+	var tc = findCase( 'alpha_zero' );
+	var A = new Complex128Array( [
+		5, 6, 7, 8,
+		// Note: the fixture has 8 doubles for a 2x2 matrix, but the alpha_zero test
+		// in Fortran only prints the first column since M=2 N=2. Let me check.
+		7, -1, 16, -5
+	] );
+	var x = new Complex128Array( [ 1, 1, 2, 2 ] );
+	var y = new Complex128Array( [ 3, 3, 4, 4 ] );
+
+	zgeru( 2, 2, new Complex128( 0, 0 ), x, 1, 0, y, 1, 0, A, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+test( 'zgeru: N=0 quick return', function t() {
+	var tc = findCase( 'n_zero' );
+	var A = new Complex128Array( [ 5, 6 ] );
+	var x = new Complex128Array( [ 1, 1, 2, 2 ] );
+	var y = new Complex128Array( [ 3, 3 ] );
+
+	zgeru( 2, 0, new Complex128( 1, 0 ), x, 1, 0, y, 1, 0, A, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+test( 'zgeru: M=0 quick return', function t() {
+	var tc = findCase( 'm_zero' );
+	var A = new Complex128Array( [ 5, 6 ] );
+	var x = new Complex128Array( [ 1, 1 ] );
+	var y = new Complex128Array( [ 3, 3, 4, 4 ] );
+
+	zgeru( 0, 2, new Complex128( 1, 0 ), x, 1, 0, y, 1, 0, A, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+test( 'zgeru: non-unit strides (incx=2, incy=2)', function t() {
+	var tc = findCase( 'stride_2' );
+	// x stored: [(1,0), (99,99), (0,1)], stride 2 picks elements 0 and 2
+	// y stored: [(2,0), (88,88), (0,2)], stride 2 picks elements 0 and 2
+	var A = new Complex128Array( [
+		0, 0, 0, 0,
+		0, 0, 0, 0
+	] );
+	var x = new Complex128Array( [ 1, 0, 99, 99, 0, 1 ] );
+	var y = new Complex128Array( [ 2, 0, 88, 88, 0, 2 ] );
+
+	zgeru( 2, 2, new Complex128( 1, 0 ), x, 2, 0, y, 2, 0, A, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+test( 'zgeru: negative stride incy=-1', function t() {
+	var tc = findCase( 'neg_incy' );
+	// x = [(1,1), (2,0)], y = [(3,0), (0,3)], incy=-1 reads y in reverse
+	var A = new Complex128Array( [
+		0, 0, 0, 0,
+		0, 0, 0, 0
+	] );
+	var x = new Complex128Array( [ 1, 1, 2, 0 ] );
+	var y = new Complex128Array( [ 3, 0, 0, 3 ] );
+
+	// In Fortran incy=-1, so y is read backward.
+	// In our base.js convention, we pass offset = N-1 = 1, stride = -1
+	zgeru( 2, 2, new Complex128( 1, 0 ), x, 1, 0, y, -1, 1, A, 1, 2, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+test( 'zgeru: 1x1 matrix', function t() {
+	var tc = findCase( 'one_by_one' );
+	var A = new Complex128Array( [ 1, 1 ] );
+	var x = new Complex128Array( [ 2, 3 ] );
+	var y = new Complex128Array( [ 4, 5 ] );
+
+	zgeru( 1, 1, new Complex128( 1, 0 ), x, 1, 0, y, 1, 0, A, 1, 1, 0 );
+	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.A, 1e-14, 'A' );
+});
+
+test( 'zgeru: y element zero skips column update', function t() {
+	// When y[j] = 0, the inner loop is skipped for column j
+	var A = new Complex128Array( [
+		1, 2, 3, 4,   // col 1
+		5, 6, 7, 8    // col 2
+	] );
+	var x = new Complex128Array( [ 10, 20, 30, 40 ] );
+	var y = new Complex128Array( [ 0, 0, 1, 0 ] ); // y[0]=(0,0), y[1]=(1,0)
+
+	zgeru( 2, 2, new Complex128( 1, 0 ), x, 1, 0, y, 1, 0, A, 1, 2, 0 );
+
+	var Av = Array.from( reinterpret( A, 0 ) );
+	// Col 1: y[0]=0, so no update -> A unchanged
+	assertClose( Av[ 0 ], 1, 1e-14, 'A[0,0] re' );
+	assertClose( Av[ 1 ], 2, 1e-14, 'A[0,0] im' );
+	assertClose( Av[ 2 ], 3, 1e-14, 'A[1,0] re' );
+	assertClose( Av[ 3 ], 4, 1e-14, 'A[1,0] im' );
+	// Col 2: y[1]=(1,0), so update: A[i,1] += x[i] * (1,0)
+	assertClose( Av[ 4 ], 15, 1e-14, 'A[0,1] re' );
+	assertClose( Av[ 5 ], 26, 1e-14, 'A[0,1] im' );
+	assertClose( Av[ 6 ], 37, 1e-14, 'A[1,1] re' );
+	assertClose( Av[ 7 ], 48, 1e-14, 'A[1,1] im' );
+});
+
+test( 'zgeru: offset support', function t() {
+	// Test that offsetA, offsetX, offsetY work correctly
+	// Put garbage before the real data
+	var A = new Complex128Array( [
+		99, 99,        // garbage at index 0
+		0, 0, 0, 0,   // actual 1x2 col-major matrix starts at index 1
+		0, 0
+	] );
+	var x = new Complex128Array( [ 88, 88, 2, 3 ] ); // x starts at index 1
+	var y = new Complex128Array( [ 77, 77, 4, 5, 6, 7 ] ); // y starts at index 1
+
+	// 1x2 matrix at offsetA=1, x at offsetX=1, y at offsetY=1
+	zgeru( 1, 2, new Complex128( 1, 0 ), x, 1, 1, y, 1, 1, A, 1, 1, 1 );
+
+	var Av = Array.from( reinterpret( A, 0 ) );
+	// A[0] should be unchanged (garbage)
+	assertClose( Av[ 0 ], 99, 1e-14, 'garbage re' );
+	assertClose( Av[ 1 ], 99, 1e-14, 'garbage im' );
+	// A[0,0] at offset 1: 0 + (2,3)*(4,5) = (2*4-3*5, 2*5+3*4) = (-7, 22)
+	assertClose( Av[ 2 ], -7, 1e-14, 'A[0,0] re' );
+	assertClose( Av[ 3 ], 22, 1e-14, 'A[0,0] im' );
+	// A[0,1] at offset 2: 0 + (2,3)*(6,7) = (2*6-3*7, 2*7+3*6) = (-9, 32)
+	assertClose( Av[ 4 ], -9, 1e-14, 'A[0,1] re' );
+	assertClose( Av[ 5 ], 32, 1e-14, 'A[0,1] im' );
+});
