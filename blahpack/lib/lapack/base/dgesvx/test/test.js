@@ -160,7 +160,7 @@ test( 'dgesvx: singular matrix returns info > 0', function t() {
 });
 
 test( 'dgesvx: N=0 quick return', function t() {
-	var result = dgesvx( 'not-factored', 'no-transpose', 0, 1, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Int32Array( 0 ), 1, 0, 'N', new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0 );
+	var result = dgesvx( 'not-factored', 'no-transpose', 0, 1, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Int32Array( 0 ), 1, 0, 'none', new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0 );
 	assert.equal( result.info, 0 );
 });
 

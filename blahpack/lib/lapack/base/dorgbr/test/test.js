@@ -93,7 +93,7 @@ test( 'dorgbr: VECT=Q, M > N (4x3 matrix, M >= K path)', function t() {
 	]);
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
-	var info = dorgbr('q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-Q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
 	var Q = extractMatrix( A, M, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -112,7 +112,7 @@ test( 'dorgbr: VECT=P, M > N (4x3 matrix, K >= N shift path)', function t() {
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
 	// For VECT='P' with M > N: generate P^T as N x N, K = M (original rows)
-	var info = dorgbr('p', N, N, M, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-P', N, N, M, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
 	var PT = extractMatrix( A, N, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -132,7 +132,7 @@ test( 'dorgbr: VECT=Q, M < N (3x4 matrix, M < K shift path)', function t() {
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
 	// For VECT='Q' with M < N: generate Q as M x M, K = N (original cols)
-	var info = dorgbr('q', M, M, N, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-Q', M, M, N, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
 	var Q = extractMatrix( A, M, M, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -153,7 +153,7 @@ test( 'dorgbr: VECT=P, M < N (3x4 matrix, K < N direct path)', function t() {
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
 	// For VECT='P' with M < N: generate P^T as M x N, K = M
-	var info = dorgbr('p', M, N, K, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-P', M, N, K, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
 	var PT = extractMatrix( A, M, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -173,7 +173,7 @@ test( 'dorgbr: VECT=Q, square (4x4 matrix)', function t() {
 	]);
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
-	var info = dorgbr('q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-Q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
 	var Q = extractMatrix( A, M, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -193,7 +193,7 @@ test( 'dorgbr: VECT=P, square (4x4 matrix, K >= N shift path)', function t() {
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
 	// For VECT='P' with square: K = M = N >= N => shift path
-	var info = dorgbr('p', N, N, M, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-P', N, N, M, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
 	var PT = extractMatrix( A, N, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -205,7 +205,7 @@ test( 'dorgbr: M=0 quick return', function t() {
 	var A = new Float64Array( 1 );
 	var TAU = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
-	var info = dorgbr('q', 0, 0, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-Q', 0, 0, 0, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.equal( info, tc.INFO, 'INFO' );
 });
 
@@ -222,7 +222,7 @@ test( 'dorgbr: VECT=Q, 5x4 matrix (M >= K path)', function t() {
 	]);
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
-	var info = dorgbr('q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-Q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
 	var Q = extractMatrix( A, M, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -237,7 +237,7 @@ test( 'dorgbr: VECT=Q, 1x1 matrix', function t() {
 	var A = new Float64Array([ 5.0 ]);
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
-	var info = dorgbr('q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-Q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
 	var Q = extractMatrix( A, M, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -252,7 +252,7 @@ test( 'dorgbr: VECT=P, 1x1 matrix', function t() {
 	var A = new Float64Array([ 5.0 ]);
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
-	var info = dorgbr('p', N, N, M, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
+	var info = dorgbr('apply-P', N, N, M, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
 	var PT = extractMatrix( A, N, N, M );
 
 	assert.equal( info, tc.INFO, 'INFO' );
@@ -273,7 +273,7 @@ test( 'dorgbr: orthogonality verification for VECT=Q', function t() {
 	]);
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
-	dorgbr('q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
+	dorgbr('apply-Q', M, N, K, A, 1, M, 0, result.TAUQ, 1, 0, WORK, 1, 0 );
 
 	// Compute Q^T * Q
 	var QtQ = new Float64Array( N * N );
@@ -313,7 +313,7 @@ test( 'dorgbr: orthogonality verification for VECT=P', function t() {
 	]);
 	var WORK = new Float64Array( 2048 );
 	var result = runGebrd( M, N, A );
-	dorgbr('p', M, N, K, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
+	dorgbr('apply-P', M, N, K, A, 1, M, 0, result.TAUP, 1, 0, WORK, 1, 0 );
 
 	// Compute (P^T) * (P^T)^T = should be I_M
 	var PTPt = new Float64Array( M * M );

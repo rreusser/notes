@@ -76,7 +76,7 @@ function dorgbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 		return 0;
 	}
 
-	wantq = ( vect === 'q' );
+	wantq = ( vect === 'apply-Q' );
 
 	if ( wantq ) {
 		// Form Q = H(1) H(2) ... H(K)

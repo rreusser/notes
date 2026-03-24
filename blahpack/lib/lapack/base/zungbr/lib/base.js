@@ -82,7 +82,7 @@ function zungbr( vect, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, 
 		return 0;
 	}
 
-	wantq = ( vect === 'q' );
+	wantq = ( vect === 'apply-Q' );
 
 	Av = reinterpret( A, 0 );
 	sA1 = strideA1 * 2;

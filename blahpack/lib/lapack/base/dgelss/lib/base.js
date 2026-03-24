@@ -220,7 +220,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		dormbr('apply-Q', 'left', 'transpose', mm, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation: P_b^T stored in A
-		dorgbr('p', N, N, N, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
+		dorgbr('apply-P', N, N, N, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
 		iwork = ie + N;
 
 		// Compute SVD of bidiagonal: S = singular values, A = P_b^T (right singular vectors)
@@ -335,7 +335,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		dormbr('apply-Q', 'left', 'transpose', M, nrhs, M, WORK, 1, ldwork, il, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation of L
-		dorgbr('p', M, M, M, WORK, 1, ldwork, il, WORK, 1, itaup, WORK, 1, iwork );
+		dorgbr('apply-P', M, M, M, WORK, 1, ldwork, il, WORK, 1, itaup, WORK, 1, iwork );
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal of L
@@ -426,7 +426,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		dormbr('apply-Q', 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 		// Generate right bidiagonal transformation
-		dorgbr('p', M, N, M, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
+		dorgbr('apply-P', M, N, M, A, strideA1, strideA2, offsetA, WORK, 1, itaup, WORK, 1, iwork );
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal (lower bidiagonal for M < N)

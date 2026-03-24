@@ -217,7 +217,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			ncvt = 0;
 			if ( wntvo || wntvas ) {
 				// If right singular vectors desired, generate P^H in A
-				zungbr('p', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
+				zungbr('apply-P', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 				ncvt = N;
 			}
 			irwork = ie + N;
@@ -262,20 +262,20 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 				// Copy lower triangle of A to U, then generate Q
 				zlacpy( 'lower', M, N, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
 				ncu = ( wntus ) ? N : M;
-				zungbr('q', M, ncu, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
+				zungbr('apply-Q', M, ncu, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 			}
 			if ( wntvas ) {
 				// Copy upper triangle of A to VT, then generate P^H
 				zlacpy( 'upper', N, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
-				zungbr('p', N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
+				zungbr('apply-P', N, N, N, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 			}
 			if ( wntuo ) {
 				// Generate Q in A
-				zungbr('q', M, N, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
+				zungbr('apply-Q', M, N, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
 			}
 			if ( wntvo ) {
 				// Generate P^H in A
-				zungbr('p', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
+				zungbr('apply-P', N, N, N, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 			}
 			irwork = ie + N;
 
@@ -348,21 +348,21 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		if ( wntuas ) {
 			// Copy lower triangle of A to U, then generate Q
 			zlacpy( 'lower', M, M, A, sa1, sa2, offsetA, U, su1, su2, offsetU );
-			zungbr('q', M, M, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
+			zungbr('apply-Q', M, M, N, U, su1, su2, offsetU, WK, 1, itauq, WK, 1, iwork );
 		}
 		if ( wntvas ) {
 			// Copy upper triangle of A to VT, then generate P^H
 			zlacpy( 'upper', M, N, A, sa1, sa2, offsetA, VT, svt1, svt2, offsetVT );
 			nrvt = ( wntva ) ? N : M;
-			zungbr('p', nrvt, N, M, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
+			zungbr('apply-P', nrvt, N, M, VT, svt1, svt2, offsetVT, WK, 1, itaup, WK, 1, iwork );
 		}
 		if ( wntuo ) {
 			// Generate Q in A
-			zungbr('q', M, M, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
+			zungbr('apply-Q', M, M, N, A, sa1, sa2, offsetA, WK, 1, itauq, WK, 1, iwork );
 		}
 		if ( wntvo ) {
 			// Generate P^H in A
-			zungbr('p', M, N, M, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
+			zungbr('apply-P', M, N, M, A, sa1, sa2, offsetA, WK, 1, itaup, WK, 1, iwork );
 		}
 		irwork = ie + M;
 

@@ -74,7 +74,7 @@ test( 'dlaset: lower_4x4', function t() {
 test( 'dlaset: full_4x4', function t() {
 	var tc = findCase( 'full_4x4' );
 	var A = filled( 16, -1.0 );
-	dlaset( 'X', 4, 4, 1.0, 9.0, A, 1, 4, 0 );
+	dlaset( 'full', 4, 4, 1.0, 9.0, A, 1, 4, 0 );
 	var result = extractMatrix( A, 4, 4, 1, 4, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -82,7 +82,7 @@ test( 'dlaset: full_4x4', function t() {
 test( 'dlaset: full_5x3', function t() {
 	var tc = findCase( 'full_5x3' );
 	var A = filled( 15, -1.0 );
-	dlaset( 'X', 5, 3, 4.0, 8.0, A, 1, 5, 0 );
+	dlaset( 'full', 5, 3, 4.0, 8.0, A, 1, 5, 0 );
 	var result = extractMatrix( A, 5, 3, 1, 5, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -90,7 +90,7 @@ test( 'dlaset: full_5x3', function t() {
 test( 'dlaset: full_3x5', function t() {
 	var tc = findCase( 'full_3x5' );
 	var A = filled( 15, -1.0 );
-	dlaset( 'X', 3, 5, 6.0, 2.0, A, 1, 3, 0 );
+	dlaset( 'full', 3, 5, 6.0, 2.0, A, 1, 3, 0 );
 	var result = extractMatrix( A, 3, 5, 1, 3, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -113,7 +113,7 @@ test( 'dlaset: lower_3x5', function t() {
 
 test( 'dlaset: m_zero (quick return)', function t() {
 	var A = filled( 16, -1.0 );
-	dlaset( 'X', 0, 4, 1.0, 1.0, A, 1, 4, 0 );
+	dlaset( 'full', 0, 4, 1.0, 1.0, A, 1, 4, 0 );
 	// Matrix should be untouched
 	var result = extractMatrix( A, 4, 4, 1, 4, 0 );
 	var expected = [];
@@ -126,7 +126,7 @@ test( 'dlaset: m_zero (quick return)', function t() {
 
 test( 'dlaset: n_zero (quick return)', function t() {
 	var A = filled( 16, -1.0 );
-	dlaset( 'X', 4, 0, 1.0, 1.0, A, 1, 4, 0 );
+	dlaset( 'full', 4, 0, 1.0, 1.0, A, 1, 4, 0 );
 	// Matrix should be untouched
 	var result = extractMatrix( A, 4, 4, 1, 4, 0 );
 	var expected = [];
@@ -140,7 +140,7 @@ test( 'dlaset: n_zero (quick return)', function t() {
 test( 'dlaset: full_4x1', function t() {
 	var tc = findCase( 'full_4x1' );
 	var A = filled( 4, -1.0 );
-	dlaset( 'X', 4, 1, 3.0, 7.0, A, 1, 4, 0 );
+	dlaset( 'full', 4, 1, 3.0, 7.0, A, 1, 4, 0 );
 	var result = extractMatrix( A, 4, 1, 1, 4, 0 );
 	assert.deepStrictEqual( result, tc.A );
 });
@@ -163,14 +163,14 @@ test( 'dlaset: lower_5x3', function t() {
 
 test( 'dlaset: returns A', function t() {
 	var A = filled( 9, 0.0 );
-	var result = dlaset( 'X', 3, 3, 1.0, 2.0, A, 1, 3, 0 );
+	var result = dlaset( 'full', 3, 3, 1.0, 2.0, A, 1, 3, 0 );
 	assert.strictEqual( result, A );
 });
 
 test( 'dlaset: works with non-zero offset', function t() {
 	var A = filled( 20, -1.0 );
 	// Place a 3x3 matrix starting at offset 5
-	dlaset( 'X', 3, 3, 4.0, 8.0, A, 1, 3, 5 );
+	dlaset( 'full', 3, 3, 4.0, 8.0, A, 1, 3, 5 );
 	// Elements before offset should be untouched
 	assert.strictEqual( A[ 0 ], -1.0 );
 	assert.strictEqual( A[ 4 ], -1.0 );
@@ -192,7 +192,7 @@ test( 'dlaset: works with non-zero offset', function t() {
 test( 'dlaset: works with non-unit strides (LDA padding)', function t() {
 	// Simulate LDA=5 for a 3x3 matrix (column-major, strideA1=1, strideA2=5)
 	var A = filled( 15, -1.0 );
-	dlaset( 'X', 3, 3, 2.0, 6.0, A, 1, 5, 0 );
+	dlaset( 'full', 3, 3, 2.0, 6.0, A, 1, 5, 0 );
 	// Column 0: [6, 2, 2, -1, -1]
 	assert.strictEqual( A[ 0 ], 6.0 );
 	assert.strictEqual( A[ 1 ], 2.0 );
