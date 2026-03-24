@@ -1,0 +1,54 @@
+
+    dlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, sr1, si1, sr2, si2, v, strideV, offsetV )
+        Sets a scalar multiple of the first column of H - shift product
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of the first dimension of `H`.
+
+        strideH2: integer
+            stride of the second dimension of `H`.
+
+        offsetH: NonNegativeInteger
+            starting index for `H`.
+
+        sr1: number
+            sr1.
+
+        si1: number
+            si1.
+
+        sr2: number
+            sr2.
+
+        si2: number
+            si2.
+
+        v: Float64Array
+            output array.
+
+        strideV: integer
+            stride length for `v`.
+
+        offsetV: NonNegativeInteger
+            starting index for `v`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

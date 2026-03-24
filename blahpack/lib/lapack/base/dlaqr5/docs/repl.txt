@@ -1,0 +1,141 @@
+
+    dlaqr5.ndarray( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offsetSR, SI, strideSI, offsetSI, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, V, strideV1, strideV2, offsetV, U, strideU1, strideU2, offsetU, nv, WV, strideWV1, strideWV2, offsetWV, nh, WH, strideWH1, strideWH2, offsetWH )
+        Performs a single small-bulge multi-shift QR sweep
+
+        Parameters
+        ----------
+        wantt: boolean
+            wantt.
+
+        wantz: boolean
+            wantz.
+
+        kacc22: integer
+            kacc22.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        ktop: integer
+            ktop.
+
+        kbot: integer
+            kbot.
+
+        nshfts: integer
+            nshfts.
+
+        SR: Float64Array
+            input array.
+
+        strideSR: integer
+            stride length for `SR`.
+
+        offsetSR: NonNegativeInteger
+            starting index for `SR`.
+
+        SI: Float64Array
+            input array.
+
+        strideSI: integer
+            stride length for `SI`.
+
+        offsetSI: NonNegativeInteger
+            starting index for `SI`.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of the first dimension of `H`.
+
+        strideH2: integer
+            stride of the second dimension of `H`.
+
+        offsetH: NonNegativeInteger
+            starting index for `H`.
+
+        iloz: integer
+            iloz.
+
+        ihiz: integer
+            ihiz.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of the first dimension of `V`.
+
+        strideV2: integer
+            stride of the second dimension of `V`.
+
+        offsetV: NonNegativeInteger
+            starting index for `V`.
+
+        U: Float64Array
+            input matrix.
+
+        strideU1: integer
+            stride of the first dimension of `U`.
+
+        strideU2: integer
+            stride of the second dimension of `U`.
+
+        offsetU: NonNegativeInteger
+            starting index for `U`.
+
+        nv: integer
+            nv.
+
+        WV: Float64Array
+            input matrix.
+
+        strideWV1: integer
+            stride of the first dimension of `WV`.
+
+        strideWV2: integer
+            stride of the second dimension of `WV`.
+
+        offsetWV: NonNegativeInteger
+            starting index for `WV`.
+
+        nh: integer
+            nh.
+
+        WH: Float64Array
+            output matrix.
+
+        strideWH1: integer
+            stride of the first dimension of `WH`.
+
+        strideWH2: integer
+            stride of the second dimension of `WH`.
+
+        offsetWH: NonNegativeInteger
+            starting index for `WH`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

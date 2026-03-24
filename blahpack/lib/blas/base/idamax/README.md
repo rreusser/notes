@@ -1,6 +1,6 @@
 # idamax
 
-> Find index of element with maximum absolute value.
+> Find the index of element with maximum absolute value
 
 <section class="usage">
 
@@ -12,7 +12,7 @@ var idamax = require( '@stdlib/blas/base/idamax' );
 
 #### idamax.ndarray( N, x, stride, offset )
 
-Find index of element with maximum absolute value.
+Find the index of element with maximum absolute value
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

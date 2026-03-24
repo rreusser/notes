@@ -1,0 +1,16 @@
+disnan
+dlacpy
+dlaexc
+dlaisnan
+dlamch
+dlange
+dlanv2
+dlapy2
+dlarf
+dlarfg
+dlarfx
+dlartg
+dlassq
+dlasy2
+iladlc
+iladlr

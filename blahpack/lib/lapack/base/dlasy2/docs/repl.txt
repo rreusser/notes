@@ -1,0 +1,87 @@
+
+    dlasy2.ndarray( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetTL, TR, strideTR1, strideTR2, offsetTR, B, strideB1, strideB2, offsetB, scale, X, strideX1, strideX2, offsetX, xnorm )
+        Solves the real Sylvester matrix equation for 1-by-1 or 2-by-2 matrices
+
+        Parameters
+        ----------
+        ltranl: boolean
+            ltranl.
+
+        ltranr: boolean
+            ltranr.
+
+        isgn: integer
+            isgn.
+
+        n1: integer
+            n1.
+
+        n2: integer
+            n2.
+
+        TL: Float64Array
+            input matrix.
+
+        strideTL1: integer
+            stride of the first dimension of `TL`.
+
+        strideTL2: integer
+            stride of the second dimension of `TL`.
+
+        offsetTL: NonNegativeInteger
+            starting index for `TL`.
+
+        TR: Float64Array
+            input matrix.
+
+        strideTR1: integer
+            stride of the first dimension of `TR`.
+
+        strideTR2: integer
+            stride of the second dimension of `TR`.
+
+        offsetTR: NonNegativeInteger
+            starting index for `TR`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        scale: number
+            scale.
+
+        X: Float64Array
+            output matrix.
+
+        strideX1: integer
+            stride of the first dimension of `X`.
+
+        strideX2: integer
+            stride of the second dimension of `X`.
+
+        offsetX: NonNegativeInteger
+            starting index for `X`.
+
+        xnorm: number
+            xnorm.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

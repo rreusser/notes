@@ -7,7 +7,7 @@
 */
 interface Routine {
 	/**
-	* Find index of element with maximum absolute value.
+	* Find the index of element with maximum absolute value
 	*/
 	(
 		N: number,
@@ -18,7 +18,7 @@ interface Routine {
 }
 
 /**
-* Find index of element with maximum absolute value.
+* Find the index of element with maximum absolute value
 */
 declare var idamax: Routine;
 

@@ -1,0 +1,81 @@
+
+    dlahqr.ndarray( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ )
+        Computes eigenvalues and Schur form of an upper Hessenberg matrix (small/medium)
+
+        Parameters
+        ----------
+        wantt: boolean
+            wantt.
+
+        wantz: boolean
+            wantz.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of the first dimension of `H`.
+
+        strideH2: integer
+            stride of the second dimension of `H`.
+
+        offsetH: NonNegativeInteger
+            starting index for `H`.
+
+        WR: Float64Array
+            input array.
+
+        strideWR: integer
+            stride length for `WR`.
+
+        offsetWR: NonNegativeInteger
+            starting index for `WR`.
+
+        WI: Float64Array
+            input array.
+
+        strideWI: integer
+            stride length for `WI`.
+
+        offsetWI: NonNegativeInteger
+            starting index for `WI`.
+
+        iloz: integer
+            iloz.
+
+        ihiz: integer
+            ihiz.
+
+        Z: Float64Array
+            output matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,6 +1,6 @@
 
     dswap.ndarray( N, x, strideX, offsetX, y, strideY, offsetY )
-        Interchange two double-precision floating-point vectors
+        Interchange two vectors
 
         Parameters
         ----------

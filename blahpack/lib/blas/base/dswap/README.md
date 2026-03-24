@@ -1,6 +1,6 @@
 # dswap
 
-> Interchange two double-precision floating-point vectors
+> Interchange two vectors
 
 <section class="usage">
 
@@ -12,7 +12,7 @@ var dswap = require( '@stdlib/blas/base/dswap' );
 
 #### dswap.ndarray( N, x, strideX, offsetX, y, strideY, offsetY )
 
-Interchange two double-precision floating-point vectors
+Interchange two vectors
 
 ```javascript
 var Float64Array = require( '@stdlib/array/float64' );

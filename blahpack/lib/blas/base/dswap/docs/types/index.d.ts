@@ -7,7 +7,7 @@
 */
 interface Routine {
 	/**
-	* Interchange two double-precision floating-point vectors
+	* Interchange two vectors
 	*/
 	(
 		N: number,
@@ -21,7 +21,7 @@ interface Routine {
 }
 
 /**
-* Interchange two double-precision floating-point vectors
+* Interchange two vectors
 */
 declare var dswap: Routine;
 

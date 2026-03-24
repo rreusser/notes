@@ -1,6 +1,6 @@
 
     idamax.ndarray( N, x, stride, offset )
-        Find index of element with maximum absolute value.
+        Find the index of element with maximum absolute value
 
         Parameters
         ----------

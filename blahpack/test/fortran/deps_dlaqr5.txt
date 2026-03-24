@@ -1,0 +1,9 @@
+disnan
+dlacpy
+dlaisnan
+dlamch
+dlapy2
+dlaqr1
+dlaqr5
+dlarfg
+dlaset

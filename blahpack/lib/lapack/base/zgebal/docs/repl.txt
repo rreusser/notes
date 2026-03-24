@@ -1,0 +1,51 @@
+
+    zgebal.ndarray( job, N, A, strideA1, strideA2, offsetA, ilo, ihi, SCALE, strideSCALE, offsetSCALE )
+        Balances a general complex matrix for eigenvalue computation
+
+        Parameters
+        ----------
+        job: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        SCALE: Float64Array
+            output array.
+
+        strideSCALE: integer
+            stride length for `SCALE`.
+
+        offsetSCALE: NonNegativeInteger
+            starting index for `SCALE`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

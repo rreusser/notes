@@ -1,0 +1,10 @@
+zgebak
+zgebal
+disnan
+dlaisnan
+dlamch
+dznrm2
+izamax
+dcabs1
+zdscal
+zswap

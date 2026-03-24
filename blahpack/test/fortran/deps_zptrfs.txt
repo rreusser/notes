@@ -1,0 +1,8 @@
+dlamch
+zptrfs
+zpttrf
+zpttrs
+zptts2
+ilaenv
+ieeeck
+iparmq
