@@ -1,0 +1,6 @@
+dgttrs
+dgtts2
+dgttrf
+ilaenv
+ieeeck
+iparmq

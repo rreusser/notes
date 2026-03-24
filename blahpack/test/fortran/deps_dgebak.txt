@@ -1,0 +1,7 @@
+dgebak
+dgebal
+dlamch
+dlassq
+disnan
+dlaisnan
+la_xisnan

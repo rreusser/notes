@@ -1,0 +1,48 @@
+
+    dlanv2.ndarray( a, b, c, d, rt1r, rt1i, rt2r, rt2i, cs, sn )
+        Computes the Schur factorization of a 2x2 nonsymmetric matrix
+
+        Parameters
+        ----------
+        a: number
+            a.
+
+        b: number
+            b.
+
+        c: number
+            c.
+
+        d: number
+            d.
+
+        rt1r: number
+            rt1r.
+
+        rt1i: number
+            rt1i.
+
+        rt2r: number
+            rt2r.
+
+        rt2i: number
+            rt2i.
+
+        cs: number
+            cs.
+
+        sn: number
+            sn.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

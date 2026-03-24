@@ -1,0 +1,13 @@
+dlacn2
+dlamch
+dlaisnan
+disnan
+dlasyf
+dsyrfs
+dsytf2
+dsytrf
+dsytrs
+ilaenv
+ieeeck
+iparmq
+iparam2stage

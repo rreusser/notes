@@ -1,0 +1,4 @@
+dgebal
+disnan
+dlaisnan
+dlamch

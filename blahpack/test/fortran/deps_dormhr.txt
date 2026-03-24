@@ -1,0 +1,21 @@
+dlarf
+dlarfb
+dlarft
+dorm2r
+dormhr
+dormqr
+iladlc
+iladlr
+# dgehrd and its deps (needed for Fortran test only)
+dgehrd
+dgehd2
+dlahr2
+dlarfg
+dlacpy
+dlaisnan
+disnan
+dlamch
+dlapy2
+ilaenv
+iparmq
+ieeeck
