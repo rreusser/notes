@@ -44,7 +44,8 @@ var NWR = 5;
 var NSR = 14;
 var NMIN = 75;
 var NIBBLE = 14;
-var KACC22 = 0;
+var KACMIN = 14;
+var K22MIN = 14;
 
 
 // FUNCTIONS //
@@ -69,6 +70,7 @@ function cabs1a( re, im ) {
 * @private
 */
 function zlaqr0( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ) {
+	var kacc22;
 	var nwupbd;
 	var sorted;
 	var nsmax;
@@ -137,6 +139,16 @@ function zlaqr0( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, s
 	var nsr = Math.min( Math.floor( ( N - 3 ) / 6 ), ihi - ilo, Math.max( 2, NSR ) );
 	nsr = nsr - ( nsr % 2 );
 	var nmin = Math.max( NTINY, NMIN );
+
+	// Accumulate reflections? Block 2x2 structure? (ILAENV 16 / IPARMQ)
+	kacc22 = 0;
+	if ( nsr >= KACMIN ) {
+		kacc22 = 1;
+	}
+	if ( nsr >= K22MIN ) {
+		kacc22 = 2;
+	}
+	kacc22 = Math.max( 0, Math.min( 2, kacc22 ) );
 
 	nwmax = Math.min( Math.floor( ( N - 1 ) / 3 ), Math.floor( lwork / 2 ) );
 	nw = nwmax;
@@ -307,12 +319,12 @@ function zlaqr0( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, s
 			kwv = kdu + 4;
 			nve = N - kdu - kwv + 1;
 
-			zlaqr5( wantt, wantz, KACC22, N, ktop, kbot, ns,
+			zlaqr5( wantt, wantz, kacc22, N, ktop, kbot, ns,
 				w, strideW, offsetW + ( ks - 1 ) * strideW,
 				H, strideH1, strideH2, offsetH,
 				iloz, ihiz,
 				Z, strideZ1, strideZ2, offsetZ,
-				WORK, 3, 1, 0,
+				WORK, 1, 3, 0,
 				H, strideH1, strideH2, offsetH + ( ku - 1 ) * strideH1,
 				nve,
 				H, strideH1, strideH2, offsetH + ( kwv - 1 ) * strideH1,

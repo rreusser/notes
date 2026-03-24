@@ -101,10 +101,10 @@ function zgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	betaR = real( beta );
 	betaI = imag( beta );
 
-	nota = ( transa === 'no-transpose' );
-	notb = ( transb === 'no-transpose' );
-	conja = ( transa === 'conjugate-transpose' );
-	conjb = ( transb === 'conjugate-transpose' );
+	nota = ( transa === 'no-transpose' || transa === 'N' );
+	notb = ( transb === 'no-transpose' || transb === 'N' );
+	conja = ( transa === 'conjugate-transpose' || transa === 'C' );
+	conjb = ( transb === 'conjugate-transpose' || transb === 'C' );
 
 	// Quick return if alpha=0 and beta=1
 	if ( alphaR === 0.0 && alphaI === 0.0 && betaR === 1.0 && betaI === 0.0 ) {
