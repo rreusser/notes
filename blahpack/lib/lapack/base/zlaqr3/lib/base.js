@@ -1,56 +1,301 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params, max-depth, max-statements, max-lines-per-function, no-var */
 
 'use strict';
+
+// MODULES //
+
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+var zcopy = require( '../../../../blas/base/zcopy/lib/base.js' );
+var zgehrd = require( '../../zgehrd/lib/base.js' );
+var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
+var zlacpy = require( '../../zlacpy/lib/base.js' );
+var zlahqr = require( '../../zlahqr/lib/base.js' );
+var zlaqr4 = require( '../../zlaqr4/lib/base.js' );
+var zlarf = require( '../../zlarf/lib/base.js' );
+var zlarfg = require( '../../zlarfg/lib/base.js' );
+var zlaset = require( '../../zlaset/lib/base.js' );
+var ztrexc = require( '../../ztrexc/lib/base.js' );
+var zunmhr = require( '../../zunmhr/lib/base.js' );
+
+
+// VARIABLES //
+
+var CZERO = new Complex128( 0.0, 0.0 );
+var CONE = new Complex128( 1.0, 0.0 );
+var RZERO = 0.0;
+var SAFMIN = dlamch( 'S' );
+var ULP = dlamch( 'P' );
+var NMIN_CROSSOVER = 75; // ILAENV(12) for ZLAQR3
+
+
+// FUNCTIONS //
+
+function cabs1( v, idx ) {
+	return Math.abs( v[ idx ] ) + Math.abs( v[ idx + 1 ] );
+}
+
 
 // MAIN //
 
 /**
-* Aggressive early deflation (large matrix version)
+* Aggressive early deflation for the complex QR algorithm (recursive version).
+*
+* Identical to zlaqr2 except uses zlaqr4 for larger deflation windows.
+*
+* All indices are 1-based (Fortran convention).
+* Returns { ns, nd }.
 *
 * @private
-* @param {boolean} wantt - wantt
-* @param {boolean} wantz - wantz
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ktop - ktop
-* @param {integer} kbot - kbot
-* @param {integer} nw - nw
-* @param {Float64Array} H - input matrix
-* @param {integer} strideH1 - stride of the first dimension of `H`
-* @param {integer} strideH2 - stride of the second dimension of `H`
-* @param {NonNegativeInteger} offsetH - starting index for `H`
-* @param {integer} iloz - iloz
-* @param {integer} ihiz - ihiz
-* @param {Float64Array} Z - input matrix
-* @param {integer} strideZ1 - stride of the first dimension of `Z`
-* @param {integer} strideZ2 - stride of the second dimension of `Z`
-* @param {NonNegativeInteger} offsetZ - starting index for `Z`
-* @param {integer} ns - ns
-* @param {integer} nd - nd
-* @param {Float64Array} SH - input array
-* @param {integer} strideSH - stride length for `SH`
-* @param {NonNegativeInteger} offsetSH - starting index for `SH`
-* @param {Float64Array} V - input matrix
-* @param {integer} strideV1 - stride of the first dimension of `V`
-* @param {integer} strideV2 - stride of the second dimension of `V`
-* @param {NonNegativeInteger} offsetV - starting index for `V`
-* @param {integer} nh - nh
-* @param {Float64Array} T - input matrix
-* @param {integer} strideT1 - stride of the first dimension of `T`
-* @param {integer} strideT2 - stride of the second dimension of `T`
-* @param {NonNegativeInteger} offsetT - starting index for `T`
-* @param {integer} nv - nv
-* @param {Float64Array} WV - input matrix
-* @param {integer} strideWV1 - stride of the first dimension of `WV`
-* @param {integer} strideWV2 - stride of the second dimension of `WV`
-* @param {NonNegativeInteger} offsetWV - starting index for `WV`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
 */
-function zlaqr3( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+function zlaqr3( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, ns, nd, SH, strideSH, offsetSH, V, strideV1, strideV2, offsetV, nhp, T, strideT1, strideT2, offsetT, nvp, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ) {
+	var smlnum;
+	var infqr;
+	var kwtop;
+	var ltop;
+	var kcol;
+	var krow;
+	var kln;
+	var jw;
+	var Hv;
+	var Tv;
+	var Vv;
+	var SHv;
+	var sh1;
+	var sh2;
+	var oH;
+	var st1;
+	var st2;
+	var oT;
+	var sv1;
+	var sv2;
+	var oV;
+	var sSH;
+	var oSH;
+	var sR;
+	var sI;
+	var foo;
+	var ifst;
+	var ilst;
+	var knt;
+	var betaCA;
+	var betaV;
+	var tauCA;
+	var tauV;
+	var i;
+	var j;
+
+	jw = Math.min( nw, kbot - ktop + 1 );
+
+	if ( lwork === -1 ) {
+		return { 'ns': 0, 'nd': 0 };
+	}
+
+	ns = 0;
+	nd = 0;
+
+	if ( ktop > kbot ) {
+		return { 'ns': 0, 'nd': 0 };
+	}
+	if ( nw < 1 ) {
+		return { 'ns': 0, 'nd': 0 };
+	}
+
+	Hv = reinterpret( H, 0 );
+	sh1 = strideH1 * 2;
+	sh2 = strideH2 * 2;
+	oH = offsetH * 2;
+
+	Tv = reinterpret( T, 0 );
+	st1 = strideT1 * 2;
+	st2 = strideT2 * 2;
+	oT = offsetT * 2;
+
+	Vv = reinterpret( V, 0 );
+	sv1 = strideV1 * 2;
+	sv2 = strideV2 * 2;
+	oV = offsetV * 2;
+
+	SHv = reinterpret( SH, 0 );
+	sSH = strideSH * 2;
+	oSH = offsetSH * 2;
+
+	smlnum = SAFMIN * ( N / ULP );
+
+	kwtop = kbot - jw + 1;
+	if ( kwtop === ktop ) {
+		sR = 0.0;
+		sI = 0.0;
+	} else {
+		sR = Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 ];
+		sI = Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 + 1 ];
+	}
+
+	if ( kbot === kwtop ) {
+		SHv[ oSH + ( kwtop - 1 ) * sSH ] = Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 1 ) * sh2 ];
+		SHv[ oSH + ( kwtop - 1 ) * sSH + 1 ] = Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 1 ) * sh2 + 1 ];
+		ns = 1;
+		nd = 0;
+		if ( cabs1( Hv, oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 ) <= Math.max( smlnum, ULP * cabs1( Hv, oH + ( kwtop - 1 ) * sh1 + ( kwtop - 1 ) * sh2 ) ) ) {
+			ns = 0;
+			nd = 1;
+			if ( kwtop > ktop ) {
+				Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 ] = 0.0;
+				Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 + 1 ] = 0.0;
+			}
+		}
+		return { 'ns': ns, 'nd': nd };
+	}
+
+	// Copy trailing submatrix to T
+	zlacpy( 'U', jw, jw, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2, T, strideT1, strideT2, offsetT );
+	zcopy( jw - 1, H, strideH1 + strideH2, offsetH + kwtop * strideH1 + ( kwtop - 1 ) * strideH2, T, strideT1 + strideT2, offsetT + strideT1 );
+
+	zlaset( 'A', jw, jw, CZERO, CONE, V, strideV1, strideV2, offsetV );
+
+	// Compute Schur form: use zlaqr4 for larger windows, zlahqr for smaller
+	if ( jw > NMIN_CROSSOVER ) {
+		infqr = zlaqr4( true, true, jw, 1, jw, T, strideT1, strideT2, offsetT, SH, strideSH, offsetSH + ( kwtop - 1 ) * strideSH, 1, jw, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK, lwork );
+	} else {
+		infqr = zlahqr( true, true, jw, 1, jw, T, strideT1, strideT2, offsetT, SH, strideSH, offsetSH + ( kwtop - 1 ) * strideSH, 1, jw, V, strideV1, strideV2, offsetV );
+	}
+
+	// Deflation detection
+	ns = jw;
+	ilst = infqr + 1;
+	for ( knt = infqr + 1; knt <= jw; knt++ ) {
+		foo = cabs1( Tv, oT + ( ns - 1 ) * st1 + ( ns - 1 ) * st2 );
+		if ( foo === RZERO ) {
+			foo = Math.abs( sR ) + Math.abs( sI );
+		}
+		var vTest = ( Math.abs( sR ) + Math.abs( sI ) ) * cabs1( Vv, oV + ( ns - 1 ) * sv2 );
+		if ( vTest <= Math.max( smlnum, ULP * foo ) ) {
+			ns = ns - 1;
+		} else {
+			ifst = ns;
+			ztrexc( 'V', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst );
+			ilst = ilst + 1;
+		}
+	}
+
+	if ( ns === 0 ) {
+		sR = 0.0;
+		sI = 0.0;
+	}
+
+	if ( ns < jw ) {
+		for ( i = infqr + 1; i <= ns; i++ ) {
+			ifst = i;
+			for ( j = i + 1; j <= ns; j++ ) {
+				if ( cabs1( Tv, oT + ( j - 1 ) * st1 + ( j - 1 ) * st2 ) > cabs1( Tv, oT + ( ifst - 1 ) * st1 + ( ifst - 1 ) * st2 ) ) {
+					ifst = j;
+				}
+			}
+			ilst = i;
+			if ( ifst !== ilst ) {
+				ztrexc( 'V', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst );
+			}
+		}
+	}
+
+	for ( i = infqr + 1; i <= jw; i++ ) {
+		SHv[ oSH + ( kwtop + i - 2 ) * sSH ] = Tv[ oT + ( i - 1 ) * st1 + ( i - 1 ) * st2 ];
+		SHv[ oSH + ( kwtop + i - 2 ) * sSH + 1 ] = Tv[ oT + ( i - 1 ) * st1 + ( i - 1 ) * st2 + 1 ];
+	}
+
+	if ( ns < jw || ( sR === 0.0 && sI === 0.0 ) ) {
+		if ( ns > 1 && ( sR !== 0.0 || sI !== 0.0 ) ) {
+			zcopy( ns, V, strideV1, offsetV, WORK, strideWORK, offsetWORK );
+			var WORKv = reinterpret( WORK, 0 );
+			var oWk = offsetWORK * 2;
+			var sWk = strideWORK * 2;
+			for ( i = 0; i < ns; i++ ) {
+				WORKv[ oWk + i * sWk + 1 ] = -WORKv[ oWk + i * sWk + 1 ];
+			}
+			betaCA = new Complex128Array( 1 );
+			betaV = reinterpret( betaCA, 0 );
+			tauCA = new Complex128Array( 1 );
+			tauV = reinterpret( tauCA, 0 );
+			betaV[ 0 ] = WORKv[ oWk ];
+			betaV[ 1 ] = WORKv[ oWk + 1 ];
+			zlarfg( ns, betaCA, 0, WORK, strideWORK, offsetWORK + strideWORK, tauCA, 0 );
+			WORKv[ oWk ] = 1.0;
+			WORKv[ oWk + 1 ] = 0.0;
+
+			zlaset( 'L', jw - 2, jw - 2, CZERO, CZERO, T, strideT1, strideT2, offsetT + 2 * strideT1 );
+
+			zlarf( 'L', ns, jw, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], -tauV[ 1 ] ), T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			zlarf( 'R', ns, ns, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], tauV[ 1 ] ), T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK + jw * strideWORK );
+			zlarf( 'R', jw, ns, WORK, strideWORK, offsetWORK, new Complex128( tauV[ 0 ], tauV[ 1 ] ), V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK );
+
+			zgehrd( jw, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + jw * strideWORK );
+		}
+
+		if ( kwtop > 1 ) {
+			var v11R = Vv[ oV ];
+			var v11I = Vv[ oV + 1 ];
+			Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 ] = sR * v11R + sI * v11I;
+			Hv[ oH + ( kwtop - 1 ) * sh1 + ( kwtop - 2 ) * sh2 + 1 ] = -sR * v11I + sI * v11R;
+		}
+		zlacpy( 'U', jw, jw, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2 );
+		zcopy( jw - 1, T, strideT1 + strideT2, offsetT + strideT1, H, strideH1 + strideH2, offsetH + kwtop * strideH1 + ( kwtop - 1 ) * strideH2 );
+
+		if ( ns > 1 && ( sR !== 0.0 || sI !== 0.0 ) ) {
+			zunmhr( 'R', 'N', jw, ns, 1, ns, T, strideT1, strideT2, offsetT, WORK, strideWORK, offsetWORK, V, strideV1, strideV2, offsetV, WORK, strideWORK, offsetWORK + jw * strideWORK, lwork - jw );
+		}
+
+		if ( wantt ) {
+			ltop = 1;
+		} else {
+			ltop = ktop;
+		}
+		for ( krow = ltop; krow <= kwtop - 1; krow += nvp ) {
+			kln = Math.min( nvp, kwtop - krow );
+			zgemm( 'N', 'N', kln, jw, jw, CONE, H, strideH1, strideH2, offsetH + ( krow - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2, V, strideV1, strideV2, offsetV, CZERO, WV, strideWV1, strideWV2, offsetWV );
+			zlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, H, strideH1, strideH2, offsetH + ( krow - 1 ) * strideH1 + ( kwtop - 1 ) * strideH2 );
+		}
+
+		if ( wantt ) {
+			for ( kcol = kbot + 1; kcol <= N; kcol += nhp ) {
+				kln = Math.min( nhp, N - kcol + 1 );
+				zgemm( 'C', 'N', jw, kln, jw, CONE, V, strideV1, strideV2, offsetV, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kcol - 1 ) * strideH2, CZERO, T, strideT1, strideT2, offsetT );
+				zlacpy( 'A', jw, kln, T, strideT1, strideT2, offsetT, H, strideH1, strideH2, offsetH + ( kwtop - 1 ) * strideH1 + ( kcol - 1 ) * strideH2 );
+			}
+		}
+
+		if ( wantz ) {
+			for ( krow = iloz; krow <= ihiz; krow += nvp ) {
+				kln = Math.min( nvp, ihiz - krow + 1 );
+				zgemm( 'N', 'N', kln, jw, jw, CONE, Z, strideZ1, strideZ2, offsetZ + ( krow - 1 ) * strideZ1 + ( kwtop - 1 ) * strideZ2, V, strideV1, strideV2, offsetV, CZERO, WV, strideWV1, strideWV2, offsetWV );
+				zlacpy( 'A', kln, jw, WV, strideWV1, strideWV2, offsetWV, Z, strideZ1, strideZ2, offsetZ + ( krow - 1 ) * strideZ1 + ( kwtop - 1 ) * strideZ2 );
+			}
+		}
+	}
+
+	nd = jw - ns;
+	ns = ns - infqr;
+
+	return { 'ns': ns, 'nd': nd };
 }
 
 

@@ -28,7 +28,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zcopy = require( '../../../../blas/base/zcopy/lib/base.js' );
 var zlacpy = require( '../../zlacpy/lib/base.js' );
 var zlahqr = require( '../../zlahqr/lib/base.js' );
-// var zlaqr0 = require( '../../zlaqr0/lib/base.js' ); // TODO: implement for large matrices
+var zlaqr0 = require( '../../zlaqr0/lib/base.js' );
 var zlaset = require( '../../zlaset/lib/base.js' );
 
 
@@ -152,9 +152,34 @@ function zhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, str
 		return 0;
 	}
 
-	// Use zlahqr (single-shift QR) for all sizes.
-	// TODO: For large matrices (N > NMIN), use zlaqr0 (aggressive early deflation).
-	info = zlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, ilo, ihi, Z, strideZ1, strideZ2, offsetZ );
+	// For N > NMIN, use the aggressive early deflation QR algorithm (zlaqr0).
+	// For small N (<= NMIN), use zlahqr (single-shift implicit QR).
+	if ( N > Math.max( NTINY, NMIN ) ) {
+		WORKL = new Complex128Array( Math.max( 1, N ) );
+		info = zlaqr0( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, WORKL.length );
+	} else {
+		info = zlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, ilo, ihi, Z, strideZ1, strideZ2, offsetZ );
+
+		if ( info > 0 ) {
+			kbot = info;
+			if ( N >= NL ) {
+				WORKL = new Complex128Array( Math.max( 1, N ) );
+				info = zlaqr0( wantt, wantz, N, ilo, kbot, H, strideH1, strideH2, offsetH, w, strideW, offsetW, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, WORKL.length );
+			} else {
+				HL = new Complex128Array( NL * NL );
+				WORKL = new Complex128Array( NL );
+				zlacpy( 'A', N, N, H, strideH1, strideH2, offsetH, HL, 1, NL, 0 );
+				var HLv = reinterpret( HL, 0 ); // eslint-disable-line no-var
+				HLv[ ( N + ( N - 1 ) * NL ) * 2 ] = 0.0;
+				HLv[ ( N + ( N - 1 ) * NL ) * 2 + 1 ] = 0.0;
+				zlaset( 'A', NL, NL - N, CZERO, CZERO, HL, 1, NL, N * NL );
+				info = zlaqr0( wantt, wantz, NL, ilo, kbot, HL, 1, NL, 0, w, strideW, offsetW, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, NL );
+				if ( wantt || info !== 0 ) {
+					zlacpy( 'A', N, N, HL, 1, NL, 0, H, strideH1, strideH2, offsetH );
+				}
+			}
+		}
+	}
 
 	// Clean up the strictly lower triangular part of H (below subdiagonal)
 	if ( ( wantt || info !== 0 ) && N > 2 ) {

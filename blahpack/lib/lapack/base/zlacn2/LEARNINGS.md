@@ -1,23 +1,17 @@
 # zlacn2: Translation Learnings
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
-
 ## Translation pitfalls
-
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+- Straightforward translation from Fortran reference.
 
 ## Dependency interface surprises
-
-- [ ] (note unexpected calling conventions of deps)
+- N/A
 
 ## Automation opportunities
-
-- [ ] (mechanical steps that should be automated)
+- N/A
 
 ## Coverage gaps
-
-- [ ] (code paths that were hard to test and why)
+- Basic functionality verified via zgees integration tests. Dedicated unit tests not yet written.
 
 ## Complex number handling
-
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+- Uses reinterpret() for Float64Array views of Complex128Array data.
+- Strides/offsets in complex elements at API boundary, multiplied by 2 internally for Float64 indexing.

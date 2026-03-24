@@ -1,44 +1,216 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
+/* eslint-disable max-len, max-params, max-depth, max-statements, max-lines-per-function */
 
 'use strict';
+
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+var zlange = require( '../../zlange/lib/base.js' );
+var zlascl = require( '../../zlascl/lib/base.js' );
+var zgebal = require( '../../zgebal/lib/base.js' );
+var zgebak = require( '../../zgebak/lib/base.js' );
+var zgehrd = require( '../../zgehrd/lib/base.js' );
+var zunghr = require( '../../zunghr/lib/base.js' );
+var zhseqr = require( '../../zhseqr/lib/base.js' );
+var zlacpy = require( '../../zlacpy/lib/base.js' );
+var ztrsen = require( '../../ztrsen/lib/base.js' );
+var zcopy = require( '../../../../blas/base/zcopy/lib/base.js' );
+
+
+// VARIABLES //
+
+var ZERO = 0.0;
+var ONE = 1.0;
+
+var EPS = dlamch( 'P' );
+var SMLNUM_RAW = dlamch( 'S' );
+var SMLNUM = Math.sqrt( SMLNUM_RAW ) / EPS;
+var BIGNUM = ONE / SMLNUM;
+
 
 // MAIN //
 
 /**
-* Compute eigenvalues and Schur decomposition of a complex matrix
+* Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,
+* the Schur form T, and, optionally, the matrix of Schur vectors Z.
+* This gives the Schur factorization A = Z*T*(Z**H).
+*
+* Optionally, it also orders the eigenvalues on the diagonal of the Schur
+* form so that selected eigenvalues are at the top left. The leading columns
+* of Z then form an orthonormal basis for the invariant subspace corresponding
+* to the selected eigenvalues.
+*
+* A complex matrix is in Schur form if it is upper triangular.
 *
 * @private
-* @param {string} jobvs - specifies the operation type
-* @param {string} sort - specifies the operation type
-* @param {boolean} select - select
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {integer} sdim - sdim
-* @param {Float64Array} w - input array
-* @param {integer} strideW - stride length for `w`
-* @param {NonNegativeInteger} offsetW - starting index for `w`
-* @param {Float64Array} VS - input matrix
-* @param {integer} strideVS1 - stride of the first dimension of `VS`
-* @param {integer} strideVS2 - stride of the second dimension of `VS`
-* @param {NonNegativeInteger} offsetVS - starting index for `VS`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @param {Float64Array} RWORK - input array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @param {Float64Array} BWORK - output array
-* @param {integer} strideBWORK - stride length for `BWORK`
-* @param {NonNegativeInteger} offsetBWORK - starting index for `BWORK`
-* @returns {integer} status code (0 = success)
+* @param {string} jobvs - 'N' (no Schur vectors) or 'V' (compute Schur vectors)
+* @param {string} sort - 'N' (no sorting) or 'S' (sort eigenvalues)
+* @param {Function} select - function(w) returning boolean, where w is Complex128; used when sort='S'
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Complex128Array} A - N-by-N matrix, overwritten with Schur form T on exit
+* @param {integer} strideA1 - stride of first dimension of A (complex elements)
+* @param {integer} strideA2 - stride of second dimension of A (complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+* @param {Float64Array} sdim - output: sdim[0] = number of eigenvalues for which SELECT is true
+* @param {Complex128Array} W - output: eigenvalues
+* @param {integer} strideW - stride for W (complex elements)
+* @param {NonNegativeInteger} offsetW - starting index for W (complex elements)
+* @param {Complex128Array} VS - output: N-by-N matrix of Schur vectors (if jobvs='V')
+* @param {integer} strideVS1 - stride of first dimension of VS (complex elements)
+* @param {integer} strideVS2 - stride of second dimension of VS (complex elements)
+* @param {NonNegativeInteger} offsetVS - starting index for VS (complex elements)
+* @param {Complex128Array} WORK - workspace
+* @param {integer} strideWORK - stride for WORK (complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+* @param {integer} lwork - workspace length (complex elements)
+* @param {Float64Array} RWORK - real workspace of length N
+* @param {integer} strideRWORK - stride for RWORK
+* @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
+* @param {Uint8Array} BWORK - boolean workspace of length N (used when sort='S')
+* @param {integer} strideBWORK - stride for BWORK
+* @param {NonNegativeInteger} offsetBWORK - starting index for BWORK
+* @returns {integer} info (0=success, >0 = failure)
 */
-function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ) { // eslint-disable-line max-len, max-params
-	// TODO: implement
-	throw new Error( 'not yet implemented' );
+function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ) {
+	var wantvs;
+	var wantst;
+	var scalea;
+	var cscale;
+	var icond;
+	var ieval;
+	var anrm;
+	var ierr;
+	var info;
+	var balRes;
+	var ilo;
+	var ihi;
+	var ibal;
+	var itau;
+	var iwrk;
+	var DUM;
+	var Wv;
+	var sw;
+	var oW;
+	var M;
+	var S;
+	var SEP;
+	var i;
+
+	info = 0;
+	wantvs = ( jobvs === 'V' );
+	wantst = ( sort === 'S' );
+
+	// Quick return
+	if ( N === 0 ) {
+		sdim[ 0 ] = 0;
+		return info;
+	}
+
+	// Scale matrix
+	DUM = new Float64Array( 1 );
+	anrm = zlange( 'max', N, N, A, strideA1, strideA2, offsetA, DUM, 1, 0 );
+	scalea = false;
+	cscale = ONE;
+	if ( anrm > ZERO && anrm < SMLNUM ) {
+		scalea = true;
+		cscale = SMLNUM;
+	} else if ( anrm > BIGNUM ) {
+		scalea = true;
+		cscale = BIGNUM;
+	}
+	if ( scalea ) {
+		zlascl( 'G', 0, 0, anrm, cscale, N, N, A, strideA1, strideA2, offsetA );
+	}
+
+	// Balance the matrix
+	// RWORK is used for balance SCALE array
+	ibal = 0;
+	balRes = zgebal( 'P', N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK );
+	ilo = balRes.ilo; // 1-based
+	ihi = balRes.ihi; // 1-based
+
+	// Reduce to upper Hessenberg form
+	// WORK layout: [TAU(0..N-1), workspace...]
+	itau = 0; // offset in WORK for TAU (in complex elements)
+	iwrk = N + itau;
+	zgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK + itau * strideWORK, WORK, strideWORK, offsetWORK + iwrk * strideWORK );
+
+	if ( wantvs ) {
+		// Copy Hessenberg form to VS
+		zlacpy( 'lower', N, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS );
+
+		// Generate unitary matrix in VS
+		zunghr( N, ilo, ihi, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK + itau * strideWORK, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+	}
+
+	sdim[ 0 ] = 0;
+
+	// Compute Schur form
+	iwrk = itau;
+	ieval = zhseqr( 'S', jobvs, N, ilo, ihi, A, strideA1, strideA2, offsetA, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+	if ( ieval > 0 ) {
+		info = ieval;
+	}
+
+	// Sort eigenvalues if requested
+	if ( wantst && info === 0 ) {
+		if ( scalea ) {
+			zlascl( 'G', 0, 0, cscale, anrm, N, 1, W, 1, strideW, offsetW );
+		}
+
+		Wv = reinterpret( W, 0 );
+		sw = strideW * 2;
+		oW = offsetW * 2;
+
+		for ( i = 0; i < N; i++ ) {
+			BWORK[ offsetBWORK + i * strideBWORK ] = select( new Complex128( Wv[ oW + i * sw ], Wv[ oW + i * sw + 1 ] ) ) ? 1 : 0;
+		}
+
+		// Reorder Schur form
+		M = new Float64Array( 1 );
+		S = new Float64Array( 1 );
+		SEP = new Float64Array( 1 );
+		icond = ztrsen( 'N', jobvs, BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, W, strideW, offsetW, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+		sdim[ 0 ] = M[ 0 ];
+		if ( icond > 0 ) {
+			info = N + icond;
+		}
+	}
+
+	if ( wantvs ) {
+		// Undo balancing of Schur vectors
+		zgebak( 'P', 'R', N, ilo, ihi, RWORK, strideRWORK, offsetRWORK + ibal * strideRWORK, N, VS, strideVS1, strideVS2, offsetVS );
+	}
+
+	if ( scalea ) {
+		// Undo scaling for the Schur form of A
+		zlascl( 'U', 0, 0, cscale, anrm, N, N, A, strideA1, strideA2, offsetA );
+		// Re-extract diagonal eigenvalues
+		zcopy( N, A, strideA1 + strideA2, offsetA, W, strideW, offsetW );
+	}
+
+	return info;
 }
 
 

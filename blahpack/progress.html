@@ -48,10 +48,10 @@ tr.prefix-hidden { display: none !important; }
 <h1>Blahpack Translation Progress</h1>
 <p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated 2026-03-24</p>
 <div class="stats">
-<div class="stat green"><div class="val">318/2204</div><div class="lbl">Implemented</div></div>
-<div class="stat"><div class="val">3605</div><div class="lbl">Tests</div></div>
+<div class="stat green"><div class="val">327/2204</div><div class="lbl">Implemented</div></div>
+<div class="stat"><div class="val">3630</div><div class="lbl">Tests</div></div>
 <div class="stat" id="statBlas"><div class="val">61/151</div><div class="lbl">BLAS</div></div>
-<div class="stat" id="statLapack"><div class="val">257/2053</div><div class="lbl">LAPACK</div></div>
+<div class="stat" id="statLapack"><div class="val">266/2053</div><div class="lbl">LAPACK</div></div>
 </div>
 <div class="controls">
 <label class="toggle"><input type="checkbox" id="showAll">Show unimplemented</label>
@@ -227,7 +227,7 @@ tr.prefix-hidden { display: none !important; }
 </table>
 </section>
 <section>
-<h2>LAPACK <span class="count">257/2053</span></h2>
+<h2>LAPACK <span class="count">266/2053</span></h2>
 <table>
 <thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>
 <tbody>
@@ -808,7 +808,7 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">dgesvdq</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dgesvdx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dgesvj</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">dgesvx</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Expert driver for solving a general system with equilibration and condition estimation</td></tr>
+<tr><td class="name">dgesvx</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="cov"><span class="cov-good">99%</span></td><td class="cov"><span class="cov-good">92%</span></td><td class="desc">Expert driver for solving a general system with equilibration and condition estimation</td></tr>
 <tr class="unimpl"><td class="name">dgesvxx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dgetc2</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dgetf2</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -1801,7 +1801,7 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">zgedmdq</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zgeequ</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zgeequb</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">zgees</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Compute eigenvalues and Schur decomposition of a complex matrix</td></tr>
+<tr><td class="name">zgees</td><td><span class="badge done">done</span></td><td class="tests">6</td><td class="cov"><span class="cov-good">92%</span></td><td class="cov"><span class="cov-bad">73%</span></td><td class="desc">Compute eigenvalues and Schur decomposition of a complex matrix</td></tr>
 <tr class="unimpl"><td class="name">zgeesx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zgeev</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zgeevx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -1905,8 +1905,8 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">zheevx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zheevx_2stage</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr><td class="name">zhegs2</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Reduces a Hermitian-definite generalized eigenproblem to standard form (unblocked)</td></tr>
-<tr><td class="name">zhegst</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">26%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Reduces a Hermitian-definite generalized eigenproblem to standard form (blocked)</td></tr>
-<tr class="unimpl"><td class="name">zhegv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
+<tr><td class="name">zhegst</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-bad">35%</span></td><td class="cov"><span class="cov-warn">83%</span></td><td class="desc">Reduces a Hermitian-definite generalized eigenproblem to standard form (blocked)</td></tr>
+<tr><td class="name">zhegv</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-good">98%</span></td><td class="cov"><span class="cov-good">87%</span></td><td class="desc">Computes all eigenvalues and optionally eigenvectors of a complex generalized Hermitian-definite eigenproblem</td></tr>
 <tr class="unimpl"><td class="name">zhegv_2stage</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhegvd</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhegvx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -1963,7 +1963,7 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">zhptri</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhptrs</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhsein</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">zhseqr</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Compute eigenvalues and Schur form of complex upper Hessenberg matrix</td></tr>
+<tr><td class="name">zhseqr</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">53%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Compute eigenvalues and Schur form of complex upper Hessenberg matrix</td></tr>
 <tr class="unimpl"><td class="name">zla_gbamv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zla_gbrcond_c</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zla_gbrcond_x</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -2012,7 +2012,7 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">zlahef_aa</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlahef_rk</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlahef_rook</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">zlahqr</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">16%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Compute eigenvalues and Schur form of upper Hessenberg matrix</td></tr>
+<tr><td class="name">zlahqr</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">22%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Compute eigenvalues and Schur form of upper Hessenberg matrix</td></tr>
 <tr><td class="name">zlahr2</td><td><span class="badge done">done</span></td><td class="tests">4</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Reduce NB columns of a complex matrix in Hessenberg form</td></tr>
 <tr class="unimpl"><td class="name">zlaic1</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlals0</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -2047,12 +2047,12 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">zlaqp2rk</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlaqp3rk</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr><td class="name">zlaqps</td><td><span class="badge done">done</span></td><td class="tests">5</td><td class="cov"><span class="cov-good">98%</span></td><td class="cov"><span class="cov-good">95%</span></td><td class="desc">QR factorization with column pivoting (blocked panel)</td></tr>
-<tr><td class="name">zlaqr0</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Complex multishift QR top-level driver</td></tr>
+<tr><td class="name">zlaqr0</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">20%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Complex multishift QR top-level driver</td></tr>
 <tr><td class="name">zlaqr1</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">29%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Set initial vector for Francis QR step</td></tr>
-<tr><td class="name">zlaqr2</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Complex aggressive early deflation (non-recursive)</td></tr>
-<tr><td class="name">zlaqr3</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Complex aggressive early deflation (recursive)</td></tr>
-<tr><td class="name">zlaqr4</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Complex multishift QR with aggressive early deflation (non-recursive)</td></tr>
-<tr><td class="name">zlaqr5</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Complex multi-shift QR sweep</td></tr>
+<tr><td class="name">zlaqr2</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">22%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Complex aggressive early deflation (non-recursive)</td></tr>
+<tr><td class="name">zlaqr3</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">24%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Complex aggressive early deflation (recursive)</td></tr>
+<tr><td class="name">zlaqr4</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">19%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Complex multishift QR with aggressive early deflation (non-recursive)</td></tr>
+<tr><td class="name">zlaqr5</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">11%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Complex multi-shift QR sweep</td></tr>
 <tr class="unimpl"><td class="name">zlaqsb</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlaqsp</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlaqsy</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
