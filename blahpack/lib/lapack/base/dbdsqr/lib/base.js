@@ -77,22 +77,24 @@ function sign( a, b ) {
 * zero-shift QR algorithm.
 *
 * The SVD of B has the form:
-*   B = Q _ S _ P^T
+* `B = Q*S*P^T`
 * where S is the diagonal matrix of singular values, Q is an orthogonal
 * matrix of left singular vectors, and P is an orthogonal matrix of right
 * singular vectors.
 *
 * If left singular vectors are requested, this subroutine actually returns
 * U_Q instead of Q, and if right singular vectors are requested, this
-_ subroutine returns P^T_VT instead of P^T, for given real input
+* subroutine returns P^T_VT instead of P^T, for given real input
 * matrices U and VT.
 *
 * ## Notes
 *
 * -   D and E are real arrays containing diagonal and off-diagonal elements.
+*
 * -   VT, U, C are Float64Arrays (real matrices).
+*
 * -   WORK is a real workspace of length at least max(1, 4_N-4) when NCVT=NRU=NCC=0,
-_     or max(1, 4_N) otherwise.
+* or max(1, 4_N) otherwise.
 *
 * @private
 * @param {string} uplo - 'U' for upper bidiagonal, 'L' for lower bidiagonal

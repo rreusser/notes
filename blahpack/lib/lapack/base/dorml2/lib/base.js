@@ -32,7 +32,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 * where Q is a real orthogonal matrix defined as the product of K
 * elementary reflectors (from an LQ factorization):
 *
-*   Q = H(k) ... H(2) H(1)
+* Q = H(k) ... H(2) H(1)
 *
 * as returned by DGELQ2. This is the unblocked algorithm.
 *

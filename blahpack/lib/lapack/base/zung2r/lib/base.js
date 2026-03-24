@@ -36,15 +36,16 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 *
 * Q is defined as the product of K elementary reflectors:
 *
-*   Q = H(1) H(2) ... H(K)
+* Q = H(1) H(2) ... H(K)
 *
-* where each H(i) has the form H(i) = I - tau(i) _ v _ v^H.
+* where each H(i) has the form `H(i) = I - tau(i)*v*v^H`.
 *
 * ## Notes
 *
 * -   On entry, the i-th column of A must contain the vector which defines
-*     the elementary reflector H(i), for i = 1, 2, ..., K, as returned by
-*     ZGEQRF in the first K columns of its array argument A.
+* the elementary reflector H(i), for i = 1, 2, ..., K, as returned by
+* ZGEQRF in the first K columns of its array argument A.
+*
 * -   On exit, A contains the M-by-N matrix Q.
 *
 * @private

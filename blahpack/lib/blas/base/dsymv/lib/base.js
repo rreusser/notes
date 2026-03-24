@@ -24,7 +24,7 @@
 
 /**
 * Performs the matrix-vector operation:.
-*   y := alpha _ A _ x + beta * y
+* `y := alpha*A*x + beta * y`
 * where A is an N-by-N symmetric matrix, x and y are N-element vectors,
 * and alpha and beta are scalars.
 *

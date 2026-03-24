@@ -29,8 +29,8 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * Applies a plane rotation, where the cos (C) is real and the sin (S) is.
 * complex, to a pair of complex vectors CX and CY:
 *
-*   CX(i) =  C _ CX(i) + S _ CY(i)
-*   CY(i) = -conjg(S) _ CX(i) + C _ CY(i)
+* `CX(i) =  C*CX(i) + S*CY(i)`
+* `CY(i) = -conjg(S)*CX(i) + C*CY(i)`
 *
 * @private
 * @param {NonNegativeInteger} N - number of complex elements

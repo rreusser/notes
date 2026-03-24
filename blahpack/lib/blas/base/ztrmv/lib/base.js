@@ -29,7 +29,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 
 /**
 * Perform one of the matrix-vector operations.
-*   x := A_x,  or  x := A__T_x,  or  x := A*_H_x,
+* x := A_x,  or  x := A__T_x,  or  x := A*_H_x,
 * where x is an N element complex vector and A is an N by N unit, or
 * non-unit, upper or lower triangular complex matrix.
 *

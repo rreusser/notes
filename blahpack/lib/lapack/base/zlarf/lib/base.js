@@ -42,7 +42,7 @@ var ZERO = new Complex128( 0.0, 0.0 );
 * Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 * from either the left or the right.
 *
-*   H = I - tau _ v _ v^H
+* `H = I - tau*v*v^H`
 *
 * If tau = 0, then H is taken to be the unit matrix.
 *

@@ -24,7 +24,7 @@
 
 /**
 * Performs one of the matrix-vector operations:.
-*   y := alpha_A_x + beta_y,   or   y := alpha_A^T_x + beta_y
+* y := alpha_A_x + beta_y,   or   y := alpha_A^T_x + beta_y
 *
 * @private
 * @param {string} trans - specifies whether A is transposed ('no-transpose', 'T', or 'C')

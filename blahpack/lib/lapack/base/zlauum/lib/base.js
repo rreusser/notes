@@ -39,8 +39,8 @@ var CONE = new Complex128( 1.0, 0.0 );
 * Computes the product of a complex triangular matrix with its conjugate.
 * transpose (blocked algorithm).
 *
-* If UPLO = 'U', computes U _ U^H (upper triangle of result stored in A).
-_ If UPLO = 'L', computes L^H _ L (lower triangle of result stored in A).
+* If UPLO = 'U', computes `U*U^H` (upper triangle of result stored in A).
+* If UPLO = 'L', computes L^H*L (lower triangle of result stored in A).
 *
 * On exit, the upper (or lower) triangle of A is overwritten with the
 * upper (or lower) triangle of the product.

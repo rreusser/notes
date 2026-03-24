@@ -31,11 +31,11 @@ var imag = require( '@stdlib/complex/float64/imag' );
 
 /**
 * Perform one of the matrix-matrix operations.
-*   B := alpha_op(A)_B,  or  B := alpha_B_op(A)
+* B := alpha_op(A)_B,  or  B := alpha_B_op(A)
 *
 * where alpha is a complex scalar, B is an M-by-N matrix, A is a unit
 * or non-unit, upper or lower triangular matrix, and op(A) is one of
-*   op(A) = A  or  op(A) = A^T  or  op(A) = A^H.
+* op(A) = A  or  op(A) = A^T  or  op(A) = A^H.
 *
 * @private
 * @param {string} side - 'L' or 'R'

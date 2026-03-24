@@ -24,7 +24,7 @@
 
 /**
 * Performs the symmetric rank-2 operation:.
-*   A := alpha_x_y**T + alpha_y_x**T + A,
+* A := alpha_x_y**T + alpha_y_x**T + A,
 * where alpha is a real scalar, x and y are N element vectors, and A is an
 * N by N symmetric matrix.
 *

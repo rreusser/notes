@@ -72,12 +72,24 @@ function dlasq6( i0, n0, z, stride, offset, pp ) {
 
 	safmin = dlamch( 'Safe minimum' );
 
-	// Helper: convert Fortran 1-based index k to JS 0-based array position
-
-	// Fortran Z(k) -> z[ offset + (k-1)*stride ]
+	/**
+	* Access Z using 1-based Fortran index.
+	*
+	* @private
+	* @param {integer} k - 1-based index
+	* @returns {number} array element
+	*/
 	function Z( k ) {
 		return z[ offset + (( k - 1 ) * stride) ];
 	}
+
+	/**
+	* Set Z using 1-based Fortran index.
+	*
+	* @private
+	* @param {integer} k - 1-based index
+	* @param {number} val - value to set
+	*/
 	function setZ( k, val ) {
 		z[ offset + (( k - 1 ) * stride) ] = val;
 	}

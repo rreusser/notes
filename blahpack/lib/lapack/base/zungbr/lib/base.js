@@ -31,24 +31,24 @@ var zunglq = require( '../../zunglq/lib/base.js' );
 
 /**
 * Generate one of the complex unitary matrices Q or P^H determined by ZGEBRD.
-* when reducing a complex matrix A to bidiagonal form: A = Q _ B _ P^H.
+* when reducing a complex matrix A to bidiagonal form: `A = Q*B*P^H`.
 *
 * Q and P^H are defined as products of elementary reflectors H(i) or G(i)
 * respectively.
 *
 * If VECT = 'Q', A is assumed to have been an M-by-K matrix, and Q
 * is of order M:
-*   if M >= K, Q = H(1) H(2) ... H(k) and zungbr returns the first N
-*   columns of Q, where M >= N >= K;
-*   if M < K, Q = H(1) H(2) ... H(m-1) and zungbr returns Q as an
-*   M-by-M unitary matrix.
+* if M >= K, Q = H(1) H(2) ... H(k) and zungbr returns the first N
+* columns of Q, where M >= N >= K;
+* if M < K, Q = H(1) H(2) ... H(m-1) and zungbr returns Q as an
+* M-by-M unitary matrix.
 *
 * If VECT = 'P', A is assumed to have been a K-by-N matrix, and P^H
 * is of order N:
-*   if K < N, P^H = G(1) G(2) ... G(k) and zungbr returns the first M
-*   rows of P^H, where N >= M >= K;
-*   if K >= N, P^H = G(1) G(2) ... G(n-1) and zungbr returns P^H as an
-*   N-by-N unitary matrix.
+* if K < N, P^H = G(1) G(2) ... G(k) and zungbr returns the first M
+* rows of P^H, where N >= M >= K;
+* if K >= N, P^H = G(1) G(2) ... G(n-1) and zungbr returns P^H as an
+* N-by-N unitary matrix.
 *
 * @private
 * @param {string} vect - 'q' to generate Q, 'p' to generate P^H

@@ -32,8 +32,8 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * matrix `A` using the unblocked algorithm (Level 2 BLAS).
 *
 * The factorization has the form:
-*   A = U^T _ U,  if uplo = 'upper', or
-_   A = L _ L^T,  if uplo = 'lower',
+* `A = U^T*U`,  if uplo = 'upper', or
+* A = L*L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * @private

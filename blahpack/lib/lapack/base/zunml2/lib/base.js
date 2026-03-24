@@ -34,7 +34,7 @@ var zlarf = require( '../../zlarf/lib/base.js' );
 * where Q is a complex unitary matrix defined as the product of K
 * elementary reflectors (from an LQ factorization):
 *
-*   Q = H(k)^H ... H(2)^H H(1)^H  (for TRANS='N')
+* Q = H(k)^H ... H(2)^H H(1)^H  (for TRANS='N')
 *
 * as returned by ZGELQ2. This is the unblocked algorithm.
 *

@@ -44,6 +44,8 @@ python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
 npm test                        # Run all JS tests
+bin/lint.sh lib/<path>/base.js  # Lint a single file
+bin/lint.sh lib/blas/base/*/lib/base.js lib/lapack/base/*/lib/base.js  # Lint all
 ```
 
 ---
@@ -304,7 +306,55 @@ If coverage is low, add targeted test cases:
 - STOREV='R' / backward direction in dlarfb/dlarft
 - Iteration-limit-exceeded branches
 
-### Step 7: Write LEARNINGS.md (MANDATORY — DO NOT SKIP)
+### Step 7: Lint base.js
+
+```bash
+bin/lint.sh lib/<package>/base/<routine>/lib/base.js
+```
+
+Fix all **easy/mechanical** lint errors immediately:
+
+| Rule | Fix |
+|------|-----|
+| `no-plusplus` | `x++` → `x += 1` |
+| `no-unused-vars` | Delete unused `var` declarations and unused requires |
+| `stdlib/vars-order` | Reorder `var` declarations by name length (longest first) |
+| `stdlib/require-globals` | Add `var Float64Array = require( '@stdlib/array/float64' );` etc. |
+| `indent` | Fix tab indentation to match surrounding code |
+| `no-lonely-if` | `else { if (...) }` → `else if (...)` |
+| `no-negated-condition` | Swap if/else branches |
+| `operator-assignment` | `x = x + y` → `x += y` |
+| `stdlib/empty-line-before-comment` | Add blank line before comment blocks |
+| `no-restricted-syntax` (toUpperCase) | Use `require( '@stdlib/string/base/uppercase' )` |
+| `no-restricted-syntax` (labels) | Replace labeled statements with boolean flags |
+| JSDoc rules | Fix formatting per stdlib conventions (see below) |
+
+**JSDoc conventions (stdlib):**
+- Math formulas use backticks: `` `C = α*op(A)*op(B) + β*C` `` (Unicode Greek letters)
+- Emphasis uses `_underscores_`, not `*asterisks*`
+- List items: blank `*` line between multi-line items; tight spacing for single-line items
+- Bracket notation in text: wrap in backticks (`` `A[i,j]` ``) to avoid markdown link parsing
+- All functions need `@private` annotation and `@param`/`@returns` tags
+- Fenced code blocks need a language flag (e.g., ` ```text `)
+- Description must start uppercase and end with period
+
+**Defer these rules** (address in bulk later via `eslint-disable` or codemods):
+- `function-call-argument-newline`, `function-paren-newline` — requires reformatting all multi-arg calls
+- `@cspell/spellchecker` — needs BLAS/LAPACK dictionary
+- `new-cap` — `Complex128Array()` etc.
+- `camelcase` — Fortran-style names (sa1, sa2)
+- `max-depth`, `max-len`, `max-statements`, `max-lines-per-function`, `max-lines`, `max-params` — add `/* eslint-disable */` at file top
+
+For deferred rules, add a single eslint-disable comment at the top of the file listing
+only the rules that actually fire. Example:
+
+```javascript
+/* eslint-disable max-len, max-params, max-depth, max-statements */
+```
+
+**Gate:** Zero errors from the "easy" rules above.
+
+### Step 8: Write LEARNINGS.md (MANDATORY — DO NOT SKIP)
 
 **This step is NOT optional.** Every translation MUST produce a `LEARNINGS.md`
 file in the module directory (`lib/<package>/base/<routine>/LEARNINGS.md`).
@@ -331,7 +381,7 @@ Include:
 Keep it concise — bullet points, not prose. This file is read by future
 sessions to avoid repeating mistakes.
 
-### Step 8: Verify full suite
+### Step 9: Verify full suite
 
 ```bash
 npm test

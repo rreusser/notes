@@ -27,6 +27,25 @@ var dlarfb = require( '../../dlarfb/lib/base.js' );
 var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
 var NBMAX = 64;
 var LDT = NBMAX + 1;
+/**
+* Reduces a real general matrix to upper Hessenberg form using blocked algorithm.
+*
+* @private
+* @param {integer} N - order of the matrix
+* @param {integer} ilo - lower index of the balanced matrix
+* @param {integer} ihi - upper index of the balanced matrix
+* @param {Float64Array} A - input/output matrix
+* @param {integer} strideA1 - first stride of A
+* @param {integer} strideA2 - second stride of A
+* @param {integer} offsetA - offset into A
+* @param {Float64Array} TAU - output array of scalar factors
+* @param {integer} strideTAU - stride of TAU
+* @param {integer} offsetTAU - offset into TAU
+* @param {Float64Array} WORK - workspace array
+* @param {integer} strideWORK - stride of WORK
+* @param {integer} offsetWORK - offset into WORK
+* @returns {integer} info value
+*/
 function dgehrd( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var LDWORK;
 	var IWT;

@@ -40,7 +40,7 @@ var CNONE = new Complex128( -1.0, 0.0 );
 
 /**
 * Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T.
-* by a unitary similarity transformation: Q__H _ A _ Q = T.
+* by a unitary similarity transformation: `Q__H*A*Q = T`.
 *
 * Uses the blocked algorithm: reduces NB columns at a time using zlatrd
 * (panel factorization) and zher2k (trailing matrix update), then finishes

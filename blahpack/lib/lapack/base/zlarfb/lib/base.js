@@ -42,7 +42,7 @@ var NEGONE = new Complex128( -1.0, 0.0 );
 * Apply a complex block reflector H or its conjugate-transpose H^H to a.
 * complex M-by-N matrix C, from either the left or the right.
 *
-* H = I - V _ T _ V^H  (for STOREV='C')
+* `H = I - V*T*V^H  (for STOREV='C')`
 *
 * Supports both STOREV='C' (columnwise) and STOREV='R' (rowwise).
 *

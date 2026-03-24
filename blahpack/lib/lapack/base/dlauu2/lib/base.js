@@ -31,8 +31,8 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * Computes the product of an upper or lower triangular matrix with its.
 * transpose (unblocked algorithm).
 *
-* If UPLO = 'U', computes U _ U^T (upper triangle of result stored in A).
-_ If UPLO = 'L', computes L^T _ L (lower triangle of result stored in A).
+* If UPLO = 'U', computes `U*U^T` (upper triangle of result stored in A).
+* If UPLO = 'L', computes L^T*L (lower triangle of result stored in A).
 *
 * @private
 * @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular

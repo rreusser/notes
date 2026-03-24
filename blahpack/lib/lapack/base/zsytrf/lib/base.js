@@ -22,6 +22,22 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var zsytf2 = require( '../../zsytf2/lib/base.js' );
 var zlasyf = require( '../../zlasyf/lib/base.js' );
 var NB = 32;
+
+/**
+* Compute the factorization of a complex symmetric matrix using Bunch-Kaufman diagonal pivoting.
+*
+* @private
+* @param {string} uplo - 'U' or 'L' indicating upper or lower triangular storage
+* @param {integer} N - order of the matrix
+* @param {Complex128Array} A - input/output matrix
+* @param {integer} strideA1 - first stride of A
+* @param {integer} strideA2 - second stride of A
+* @param {integer} offsetA - offset into A
+* @param {Int32Array} IPIV - output pivot indices
+* @param {integer} strideIPIV - stride of IPIV
+* @param {integer} offsetIPIV - offset into IPIV
+* @returns {integer} info value
+*/
 function zsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var ldwork;
 	var result;

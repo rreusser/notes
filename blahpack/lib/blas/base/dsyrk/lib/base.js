@@ -24,7 +24,7 @@
 
 /**
 * Performs one of the symmetric rank-k operations:.
-*   C := alpha_A_A^T + beta_C,  or  C := alpha_A^T_A + beta_C
+* C := alpha_A_A^T + beta_C,  or  C := alpha_A^T_A + beta_C
 * where alpha and beta are scalars, C is an N-by-N symmetric matrix,
 * and A is an N-by-K matrix in the first case and a K-by-N matrix in
 * the second case. Only the upper or lower triangular part of C is

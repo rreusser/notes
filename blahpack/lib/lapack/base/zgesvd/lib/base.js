@@ -47,7 +47,7 @@ var CZERO = new Complex128( 0.0, 0.0 );
 * Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
 * optionally computing the left and/or right singular vectors.
 *
-* The SVD is written: A = U _ SIGMA _ conjugate-transpose(V)
+* The SVD is written: `A = U*SIGMA*conjugate-transpose(V)`
 *
 * where SIGMA is an M-by-N matrix which is zero except for its min(M,N) diagonal
 * elements, U is an M-by-M unitary matrix, and V is an N-by-N unitary matrix.

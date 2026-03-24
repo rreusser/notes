@@ -40,7 +40,7 @@ var SBIG = Math.pow( 2, -538 );  // scale-down multiplier for big values
 * Updates a sum of squares represented in scaled form.
 *
 * Returns updated (scale, sumsq) such that:
-*   scale^2 _ sumsq = old_scale^2 _ old_sumsq + sum(|x_i|^2)
+* `scale^2*sumsq = old_scale^2*old_sumsq + sum(|x_i|^2)`
 *
 * @private
 * @param {NonNegativeInteger} N - number of complex elements

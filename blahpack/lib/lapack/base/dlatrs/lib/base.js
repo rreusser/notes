@@ -46,12 +46,12 @@ var RMAX = 1.7976931348623157e+308; // DLAMCH('O')
 /**
 * Solves a triangular system with scaling to prevent overflow.
 *
-*   A _ x = s _ b  (trans = 'no-transpose')
-*   A^T _ x = s _ b  (trans = 'transpose' or 'C')
+* `A*x = s*b  (trans = 'no-transpose')`
+* `A^T*x = s*b`  (trans = 'transpose' or 'C')
 *
 * where A is an N-by-N triangular matrix, x and b are N-vectors, and s is a
 * scaling factor chosen to prevent overflow. The scale factor s is returned
-* in scale[0].
+* in `scale[0]`.
 *
 * @private
 * @param {string} uplo - 'U' for upper triangular, 'L' for lower

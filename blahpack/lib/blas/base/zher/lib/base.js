@@ -29,7 +29,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 
 /**
 * Perform Hermitian rank-1 update:.
-*   A := alpha _ x _ x^H + A
+* `A := alpha*x*x^H + A`
 * where A is an N-by-N Hermitian matrix, x is an N-element vector,
 * and alpha is a real scalar.
 *

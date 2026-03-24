@@ -56,13 +56,16 @@ var CONE = new Complex128( 1.0, 0.0 );
 * ## Notes
 *
 * -   COMPZ = 'N': compute eigenvalues only (Z is not referenced)
+*
 * -   COMPZ = 'V': compute eigenvalues and eigenvectors of the original
-*     symmetric matrix. On entry, Z must contain the unitary matrix used
-*     to reduce the original matrix to tridiagonal form.
+* symmetric matrix. On entry, Z must contain the unitary matrix used
+* to reduce the original matrix to tridiagonal form.
+*
 * -   COMPZ = 'I': compute eigenvalues and eigenvectors of the tridiagonal
-*     matrix. Z is initialized to the identity matrix.
+* matrix. Z is initialized to the identity matrix.
+*
 * -   On exit, if INFO = 0, D contains the eigenvalues in ascending order
-*     and Z contains the orthonormal eigenvectors of the matrix.
+* and Z contains the orthonormal eigenvectors of the matrix.
 *
 * @private
 * @param {string} compz - specifies whether eigenvectors are computed

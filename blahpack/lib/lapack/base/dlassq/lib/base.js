@@ -35,7 +35,7 @@ var SBIG = Math.pow( 2, -538 );  // scale-down multiplier for big values
 * Returns updated scale and sum-of-squares in scaled form.
 *
 * The return value satisfies:
-*   scale_out^2 _ sumsq_out = x(1)^2 + ... + x(n)^2 + scale_in^2 _ sumsq_in
+* `scale_out^2*sumsq_out = x(1)^2 + ... + x(n)^2 + scale_in^2*sumsq_in`
 *
 * Uses Blue's safe-scaling algorithm to avoid overflow/underflow.
 *

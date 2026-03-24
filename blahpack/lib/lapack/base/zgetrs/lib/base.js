@@ -36,7 +36,7 @@ var CONE = new Complex128( 1.0, 0.0 );
 
 /**
 * Solves a system of linear equations.
-*   A _ X = B,  A^T _ X = B,  or  A^H * X = B
+* `A*X = B`,  `A^T*X = B`,  or  `A^H * X = B`
 * with a general N-by-N matrix A using the LU factorization computed by
 * zgetrf/zgetrf2.
 *

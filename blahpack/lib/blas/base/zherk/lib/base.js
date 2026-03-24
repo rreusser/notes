@@ -29,7 +29,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 
 /**
 * Performs one of the Hermitian rank-k operations:.
-*   C := alpha_A_A^H + beta_C,  or  C := alpha_A^H_A + beta_C
+* C := alpha_A_A^H + beta_C,  or  C := alpha_A^H_A + beta_C
 * where alpha and beta are REAL scalars, C is an N-by-N Hermitian matrix
 * (stored as Complex128Array), and A is an N-by-K matrix in the first case
 * and a K-by-N matrix in the second case.

@@ -46,7 +46,7 @@ var CNONE = new Complex128( -1.0, 0.0 );
 
 /**
 * Reduces NB rows and columns of a complex Hermitian matrix A to Hermitian.
-* tridiagonal form by a unitary similarity transformation Q__H _ A _ Q,
+* tridiagonal form by a unitary similarity transformation `Q__H*A*Q`,
 * and returns the matrices V and W which are needed to apply the
 * transformation to the unreduced part of A.
 *

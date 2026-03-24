@@ -31,8 +31,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 
 /**
 * Perform one of the complex matrix-vector operations:.
-*   y := alpha_A_x + beta_y,   or   y := alpha_A**T_x + beta_y,   or
-*   y := alpha*A**H_x + beta_y
+* y := alpha_A_x + beta_y,   or   y := alpha_A**T_x + beta_y,   or
+* y := alpha*A**H_x + beta_y
 *
 * @private
 * @param {string} trans - specifies the operation ('no-transpose', 'T', or 'C')

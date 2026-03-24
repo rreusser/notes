@@ -34,6 +34,30 @@ var ztrmv = require( '../../../../blas/base/ztrmv/lib/base.js' );
 var ZERO = new Complex128( 0.0, 0.0 );
 var ONE = new Complex128( 1.0, 0.0 );
 var NEGONE = new Complex128( -1.0, 0.0 );
+/**
+* Reduces the first nb columns of a complex general rectangular matrix to upper trapezoidal form.
+*
+* @private
+* @param {integer} N - number of rows
+* @param {integer} K - offset for the reduction
+* @param {integer} nb - number of columns to reduce
+* @param {Complex128Array} A - input/output matrix
+* @param {integer} strideA1 - first stride of A
+* @param {integer} strideA2 - second stride of A
+* @param {integer} offsetA - offset into A
+* @param {Complex128Array} tau - output array of scalar factors
+* @param {integer} strideTAU - stride of tau
+* @param {integer} offsetTAU - offset into tau
+* @param {Complex128Array} T - output upper triangular factor
+* @param {integer} strideT1 - first stride of T
+* @param {integer} strideT2 - second stride of T
+* @param {integer} offsetT - offset into T
+* @param {Complex128Array} Y - output matrix
+* @param {integer} strideY1 - first stride of Y
+* @param {integer} strideY2 - second stride of Y
+* @param {integer} offsetY - offset into Y
+* @returns {void}
+*/
 function zlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT1, strideT2, offsetT, Y, strideY1, strideY2, offsetY ) {
 	var negTau;
 	var tauv;

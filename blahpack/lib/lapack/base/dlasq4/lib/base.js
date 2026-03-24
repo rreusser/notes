@@ -74,7 +74,13 @@ function dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn
 	// Save the input tau value for early returns (Fortran leaves TAU unchanged)
 	tau0 = tau;
 
-	// Helper: access Z using 1-based Fortran index
+	/**
+	* Access Z using 1-based Fortran index.
+	*
+	* @private
+	* @param {integer} idx - 1-based index
+	* @returns {number} array element
+	*/
 	function Z( idx ) {
 		return z[ offset + (( idx - 1 ) * stride) ];
 	}

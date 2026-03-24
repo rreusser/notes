@@ -52,15 +52,15 @@ function abssq( re, im ) {
 /**
 * Generates a plane rotation so that:.
 *
-*    [  C         S  ] . [ F ]  =  [ R ]
-*    [ -conjg(S)  C  ]   [ G ]     [ 0 ]
+* \[  C         S  \] . \[ F \]  =  \[ R \]
+* \[ -conjg(S)  C  \]   \[ G \]     \[ 0 \]
 *
 * where C is real and C^2 + |S|^2 = 1.
 *
 * @private
-* @param {Float64Array} f - first component [re, im]
-* @param {Float64Array} g - second component [re, im]
-* @param {Float64Array} out - output: out[0]=c, out[1..2]=s (re,im), out[3..4]=r (re,im)
+* @param {Float64Array} f - first component \[re, im\]
+* @param {Float64Array} g - second component \[re, im\]
+* @param {Float64Array} out - output: `out[0]`=c, `out[1..2]`=s (re,im), `out[3..4]`=r (re,im)
 * @returns {Float64Array} out
 */
 function zlartg( f, g, out ) {

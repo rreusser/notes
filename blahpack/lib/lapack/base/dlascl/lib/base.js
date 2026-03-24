@@ -33,13 +33,13 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 * iterative scaling.
 *
 * TYPE specifies which matrix elements are accessed:
-*   'G' - general full matrix
-*   'L' - lower triangular
-*   'U' - upper triangular
-*   'H' - upper Hessenberg
-*   'B' - lower half of symmetric band (kl+1 rows, N cols)
-*   'Q' - upper half of symmetric band (ku+1 rows, N cols)
-*   'Z' - band matrix (2*kl+ku+1 rows, N cols)
+* 'G' - general full matrix
+* 'L' - lower triangular
+* 'U' - upper triangular
+* 'H' - upper Hessenberg
+* 'B' - lower half of symmetric band (kl+1 rows, N cols)
+* 'Q' - upper half of symmetric band (ku+1 rows, N cols)
+* 'Z' - band matrix (2*kl+ku+1 rows, N cols)
 *
 * @private
 * @param {string} type - matrix type ('general','L','U','H','B','Q','Z')

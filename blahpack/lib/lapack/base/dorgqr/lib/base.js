@@ -41,9 +41,9 @@ var NB = 32;  // Block size (LAPACK default for DORGQR)
 *
 * Q is defined as the product of K elementary reflectors:
 *
-*   Q = H(1) H(2) ... H(K)
+* Q = H(1) H(2) ... H(K)
 *
-* where each H(i) has the form H(i) = I - tau(i) _ v _ v^T.
+* where each H(i) has the form `H(i) = I - tau(i)*v*v^T`.
 *
 * This is the blocked version that uses DLARFT + DLARFB for efficiency
 * on large matrices, falling back to DORG2R for small ones.
@@ -51,11 +51,13 @@ var NB = 32;  // Block size (LAPACK default for DORGQR)
 * ## Notes
 *
 * -   On entry, the i-th column of A must contain the reflector vector
-*     for H(i), as returned by DGEQRF.
+* for H(i), as returned by DGEQRF.
+*
 * -   On exit, A contains the M-by-N orthogonal matrix Q.
+*
 * -   WORK is allocated internally with sufficient size (N*NB).
-*     The lwork parameter and WORK/strideWORK/offsetWORK are kept for
-*     API compatibility but not used.
+* The lwork parameter and WORK/strideWORK/offsetWORK are kept for
+* API compatibility but not used.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of Q (M >= 0)

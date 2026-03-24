@@ -259,7 +259,14 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 
 	// Also updates k as a side effect via closure.
 
-	// ----------------------------------------------------------------
+	/**
+	* Find isolated eigenvalues and permute rows/columns.
+	*
+	* @private
+	* @param {integer} kk - initial lower permutation index
+	* @param {integer} ll - initial upper permutation index
+	* @returns {void}
+	*/
 	function findAndPermute( kk, ll ) {
 		var allZeroCol;
 		var foundRow;
@@ -396,7 +403,15 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	// ----------------------------------------------------------------
 	// doPermute: perform row/column permutation (labels 160-180)
 	// i, j, m are 0-based indices
-	// ----------------------------------------------------------------
+	/**
+	* Perform row/column permutation.
+	*
+	* @private
+	* @param {integer} ri - 0-based source row index
+	* @param {integer} cj - 0-based source column index
+	* @param {integer} pm - 0-based destination index
+	* @returns {void}
+	*/
 	function doPermute( ri, cj, pm ) {
 		// Pm is 0-based destination row/column
 		// Ri is 0-based source row
@@ -434,7 +449,14 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 	// ----------------------------------------------------------------
 	// doScaling: scaling phase (labels 190 onwards)
 	// Kk and ll are the final 1-based k and l values
-	// ----------------------------------------------------------------
+	/**
+	* Perform diagonal scaling phase.
+	*
+	* @private
+	* @param {integer} kk - 1-based lower index
+	* @param {integer} ll - 1-based upper index
+	* @returns {Array} two-element array of ilo and ihi
+	*/
 	function doScaling( kk, ll ) {
 		var ilo;
 		var ihi;

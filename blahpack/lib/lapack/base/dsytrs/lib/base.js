@@ -32,11 +32,12 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 
 /**
 * Solves a system of linear equations A_X = B with a real symmetric matrix A.
-_ using the factorization A = U_D_U^T or A = L_D*L^T computed by dsytrf.
+* using the factorization A = U_D_U^T or A = L_D*L^T computed by dsytrf.
 *
 * IPIV uses the same 0-based convention as dsytf2/dsytrf:
-* - IPIV[k] >= 0: 1x1 pivot, row k was interchanged with row IPIV[k]
-* - IPIV[k] < 0: 2x2 pivot, IPIV[k] = ~kp (bitwise NOT of 0-based index)
+*
+* -   `IPIV[k]` >= 0: 1x1 pivot, row k was interchanged with row `IPIV[k]`
+* -   `IPIV[k]` < 0: 2x2 pivot, `IPIV[k]` = ~kp (bitwise NOT of 0-based index)
 *
 * @private
 * @param {string} uplo - 'U' or 'L', must match the factorization

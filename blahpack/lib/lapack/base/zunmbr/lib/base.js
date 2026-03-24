@@ -31,18 +31,22 @@ var zunmlq = require( '../../zunmlq/lib/base.js' );
 /**
 * If VECT = 'Q', overwrite the matrix C with one of:.
 *
-*                 SIDE = 'L'     SIDE = 'R'
-*   TRANS = 'N':  Q _ C          C _ Q
-*   TRANS = 'C':  Q^H _ C        C _ Q^H
+* ```text
+* SIDE = 'L'     SIDE = 'R'
+* TRANS = 'N':  Q*C          C*Q
+* TRANS = 'C':  Q^H*C        C*Q^H
+* ```
 *
 * If VECT = 'P', overwrite the matrix C with one of:
 *
-*                 SIDE = 'L'     SIDE = 'R'
-*   TRANS = 'N':  P _ C          C _ P
-*   TRANS = 'C':  P^H _ C        C _ P^H
+* ```text
+* SIDE = 'L'     SIDE = 'R'
+* TRANS = 'N':  P*C          C*P
+* TRANS = 'C':  P^H*C        C*P^H
+* ```
 *
 * Here Q and P^H are the unitary matrices determined by ZGEBRD when
-* reducing a complex matrix A to bidiagonal form: A = Q _ B _ P^H.
+* reducing a complex matrix A to bidiagonal form: `A = Q*B*P^H`.
 * Q is defined as a product of elementary reflectors H(i) = I - tauq(i)_v(i)_v(i)^H.
 * P is defined as a product of elementary reflectors G(i) = I - taup(i)_u(i)_u(i)^H.
 *

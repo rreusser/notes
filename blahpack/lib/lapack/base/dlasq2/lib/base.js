@@ -102,10 +102,24 @@ function dlasq2( N, z, stride, offset ) {
 	var s;
 	var t;
 
-	// Helper: access Z using 1-based Fortran index
+	/**
+	* Access Z using 1-based Fortran index.
+	*
+	* @private
+	* @param {integer} idx - 1-based index
+	* @returns {number} array element
+	*/
 	function Z( idx ) {
 		return z[ offset + (( idx - 1 ) * stride) ];
 	}
+
+	/**
+	* Set Z using 1-based Fortran index.
+	*
+	* @private
+	* @param {integer} idx - 1-based index
+	* @param {number} val - value to set
+	*/
 	function setZ( idx, val ) {
 		z[ offset + (( idx - 1 ) * stride) ] = val;
 	}

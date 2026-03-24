@@ -40,7 +40,7 @@ var NB = 32; // Hardcoded block size
 * where Q is a real orthogonal matrix defined as the product of K
 * elementary reflectors (from an LQ factorization):
 *
-*   Q = H(k) ... H(2) H(1)
+* Q = H(k) ... H(2) H(1)
 *
 * as returned by DGELQF. Uses a blocked algorithm with block size NB=32.
 *

@@ -35,8 +35,8 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 * Computes the product of a complex upper or lower triangular matrix with its.
 * conjugate transpose (unblocked algorithm).
 *
-* If UPLO = 'U', computes U _ U^H (upper triangle of result stored in A).
-_ If UPLO = 'L', computes L^H _ L (lower triangle of result stored in A).
+* If UPLO = 'U', computes `U*U^H` (upper triangle of result stored in A).
+* If UPLO = 'L', computes L^H*L (lower triangle of result stored in A).
 *
 * @private
 * @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular

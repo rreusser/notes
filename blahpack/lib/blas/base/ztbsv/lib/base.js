@@ -30,7 +30,7 @@ var cmplx = require( '../../../../cmplx.js' );
 
 /**
 * Solves one of the systems of equations:.
-*   A_x = b,  or  A__T_x = b,  or  A*_H_x = b
+* A_x = b,  or  A__T_x = b,  or  A*_H_x = b
 * where b and x are N element complex vectors and A is an N by N unit or
 * non-unit, upper or lower triangular band matrix, with (K+1) diagonals.
 *

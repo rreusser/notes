@@ -41,7 +41,7 @@ var NEGONE = new Complex128( -1.0, 0.0 );
 
 /**
 * Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B.
-* by a unitary transformation: Q^H _ A _ P = B.
+* by a unitary transformation: `Q^H*A*P = B`.
 *
 * This is the blocked version that processes NB columns at a time using
 * zlabrd for the panel factorization, zgemm for the trailing matrix update,

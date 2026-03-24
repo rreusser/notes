@@ -35,10 +35,10 @@ var dorgql = require( '../../dorgql/lib/base.js' );
 * ## Notes
 *
 * -   If UPLO = 'U', Q is defined as a product of reflectors:
-*     Q = H(n-1) _ ... _ H(2) * H(1)
+* `Q = H(n-1)*...*H(2) * H(1)`
 *
 * -   If UPLO = 'L', Q is defined as a product of reflectors:
-*     Q = H(1) _ H(2) _ ... * H(n-1)
+* `Q = H(1)*H(2)*... * H(n-1)`
 *
 * @private
 * @param {string} uplo - specifies whether the upper or lower triangle was used in DSYTRD ('U' or 'L')

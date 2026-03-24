@@ -28,8 +28,8 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 /**
 * Applies a real plane rotation to a pair of complex double-precision vectors:.
 *
-*   zx(i) = c _ zx(i) + s _ zy(i)
-*   zy(i) = c _ zy(i) - s _ zx(i)
+* `zx(i) = c*zx(i) + s*zy(i)`
+* `zy(i) = c*zy(i) - s*zx(i)`
 *
 * where c and s are real scalars (cosine and sine of a Givens rotation).
 *

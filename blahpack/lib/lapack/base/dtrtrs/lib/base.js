@@ -29,7 +29,7 @@ var dtrsm = require( '../../../../blas/base/dtrsm/lib/base.js' );
 
 /**
 * Solves a triangular system of the form:.
-*   A _ X = B,  A^T _ X = B,  or  A^H * X = B
+* `A*X = B`,  `A^T*X = B`,  or  `A^H * X = B`
 * where A is a triangular matrix of order N, and B is an N-by-NRHS matrix.
 * A check is made to verify that A is nonsingular.
 *

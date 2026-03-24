@@ -34,7 +34,7 @@ var zrot = require( '../../zrot/lib/base.js' );
 
 /**
 * Reduce a pair of complex matrices (A, B) to generalized upper Hessenberg.
-* form using unitary transformations: Q^H _ A _ Z = H, Q^H _ B _ Z = T,
+* form using unitary `transformations: Q^H*A*Z = H`, `Q^H*B*Z = T`,
 * where H is upper Hessenberg, T is upper triangular, and Q and Z are
 * unitary.
 *

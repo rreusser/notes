@@ -44,16 +44,16 @@ var SCRATCH_CAv = reinterpret( SCRATCH_CA, 0 );
 /**
 * Generate a complex elementary reflector H of order N, such that.
 *
-*   H^H _ ( alpha ) = ( beta ),   H^H _ H = I.
-*          (   x   )   (   0  )
+* `H^H*( alpha ) = ( beta )`,   `H^H*H = I`.
+* (   x   )   (   0  )
 *
 * where alpha and beta are scalars, with beta real, and x is an
 * (N-1)-element complex vector.
 *
 * H is represented in the form
 *
-*   H = I - tau _ ( 1 ) _ ( 1 v^H )
-*                 ( v )
+* `H = I - tau*( 1 )*( 1 v^H )`
+* ( v )
 *
 * @private
 * @param {NonNegativeInteger} N - order of the reflector

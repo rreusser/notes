@@ -49,7 +49,7 @@ var MNTHR_FAC = 1.6; // crossover ratio: if M >= MNTHR_FAC * N, use QR path
 * Computes the singular value decomposition (SVD) of a real M-by-N matrix A,.
 * optionally computing the left and/or right singular vectors.
 *
-* The SVD is written: A = U _ SIGMA _ V^T
+* The SVD is written: `A = U*SIGMA*V^T`
 *
 * where SIGMA is an M-by-N matrix which is zero except for its min(M,N) diagonal
 * elements, U is an M-by-M orthogonal matrix, and V is an N-by-N orthogonal matrix.

@@ -41,7 +41,7 @@ var NB = 32;  // Block size (LAPACK default for ZUNGLQ)
 *
 * Q is defined as the product of K elementary reflectors:
 *
-*   Q = H(K)^H ... H(2)^H H(1)^H
+* Q = H(K)^H ... H(2)^H H(1)^H
 *
 * This is the blocked version that uses ZLARFT + ZLARFB for efficiency
 * on large matrices, falling back to ZUNGL2 for small ones.
@@ -49,11 +49,13 @@ var NB = 32;  // Block size (LAPACK default for ZUNGLQ)
 * ## Notes
 *
 * -   On entry, the i-th row of A must contain the reflector vector
-*     for H(i), as returned by ZGELQF.
+* for H(i), as returned by ZGELQF.
+*
 * -   On exit, A contains the M-by-N unitary matrix Q.
+*
 * -   WORK must have length >= M*NB (where NB is the block size, 32).
-*     The lwork parameter is ignored in this implementation; WORK is
-*     assumed to be large enough.
+* The lwork parameter is ignored in this implementation; WORK is
+* assumed to be large enough.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of Q (0 <= M <= N)

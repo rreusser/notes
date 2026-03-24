@@ -36,8 +36,8 @@ var NB = 32; // Block size for blocked algorithm
 /**
 * Computes the product of a triangular matrix with its transpose.
 *
-* If UPLO = 'U', computes U _ U^T (upper triangular input, result is upper triangle of symmetric product).
-_ If UPLO = 'L', computes L^T _ L (lower triangular input, result is upper triangle stored in lower).
+* If UPLO = 'U', computes `U*U^T` (upper triangular input, result is upper triangle of symmetric product).
+* If UPLO = 'L', computes L^T*L (lower triangular input, result is upper triangle stored in lower).
 *
 * On exit, the upper (or lower) triangle of A is overwritten with the
 * upper (or lower) triangle of the product.

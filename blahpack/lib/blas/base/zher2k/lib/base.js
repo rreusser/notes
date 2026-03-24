@@ -31,8 +31,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 
 /**
 * Performs one of the Hermitian rank-2k operations:.
-*   C := alpha_A_B^H + conj(alpha)_B_A^H + beta_C,  or
-_   C := alpha_A^H_B + conj(alpha)_B^H_A + beta_C
+* C := alpha_A_B^H + conj(alpha)_B_A^H + beta_C,  or
+* C := alpha_A^H_B + conj(alpha)_B^H_A + beta_C
 * where alpha is a complex scalar, beta is a REAL scalar, C is an N-by-N
 * Hermitian matrix (stored as Complex128Array), and A and B are N-by-K
 * matrices in the first case and K-by-N matrices in the second case.

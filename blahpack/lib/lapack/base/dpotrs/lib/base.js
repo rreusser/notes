@@ -29,7 +29,7 @@ var dtrsm = require( '../../../../blas/base/dtrsm/lib/base.js' );
 
 /**
 * Solves a system of linear equations A_X = B with a symmetric positive.
-_ definite matrix A using the Cholesky factorization A = U^T_U or A = L*L^T
+* definite matrix A using the Cholesky factorization A = U^T_U or A = L*L^T
 * computed by dpotrf.
 *
 * @private

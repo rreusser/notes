@@ -38,8 +38,8 @@ var CONE = new Complex128( 1.0, 0.0 );
 * matrix A using the recursive algorithm.
 *
 * The factorization has the form:
-*   A = U^H _ U,  if uplo = 'upper', or
-_   A = L _ L^H,  if uplo = 'lower',
+* `A = U^H*U`,  if uplo = 'upper', or
+* A = L*L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the recursive version of the algorithm. It divides the matrix

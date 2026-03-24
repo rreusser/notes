@@ -34,7 +34,7 @@ var daxpy = require( '../../../../blas/base/daxpy/lib/base.js' );
 
 /**
 * Reduces NB rows and columns of a real symmetric matrix A to symmetric.
-* tridiagonal form by an orthogonal similarity transformation Q__T _ A _ Q,
+* tridiagonal form by an orthogonal similarity transformation `Q__T*A*Q`,
 * and returns the matrices V and W which are needed to apply the
 * transformation to the unreduced part of A.
 *

@@ -51,13 +51,14 @@ var CNEG_ONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Computes an LU factorization of a complex M-by-N band matrix A using partial
-* pivoting with row interchanges (blocked algorithm).
+* Computes an LU factorization of a complex M-by-N band matrix A.
+*
+* Uses partial pivoting with row interchanges (blocked algorithm).
 *
 * This is the blocked version calling Level 3 BLAS. For small bandwidth
 * (NB <= 1 or NB > KL), it falls through to the unblocked zgbtf2.
 *
-* IPIV stores 0-based pivot indices: row i was interchanged with row IPIV[i].
+* IPIV stores 0-based pivot indices: row i was interchanged with row `IPIV[i]`.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of matrix A

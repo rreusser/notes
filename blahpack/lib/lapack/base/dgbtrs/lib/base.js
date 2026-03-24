@@ -32,7 +32,7 @@ var dger = require( '../../../../blas/base/dger/lib/base.js' );
 
 /**
 * Solves a system of linear equations:.
-*   A _ X = B  or  A__T _ X = B
+* `A*X = B  or  A__T*X = B`
 * with a general band matrix A using the LU factorization computed by dgbtrf.
 *
 * IPIV is 0-based (matching dgbtf2/dgbtrf output).

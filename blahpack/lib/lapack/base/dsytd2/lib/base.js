@@ -38,11 +38,11 @@ var HALF = 0.5;
 
 /**
 * Reduces a real symmetric matrix A to real symmetric tridiagonal form T.
-* by an orthogonal similarity transformation: Q__T _ A _ Q = T.
+* by an orthogonal similarity transformation: `Q__T*A*Q = T`.
 *
 * If UPLO = 'U', the matrix Q is represented as a product of elementary
-* reflectors Q = H(n-1) _ ... _ H(2) _ H(1), and if UPLO = 'L', the matrix
-_ Q is represented as Q = H(1) _ H(2) _ ... _ H(n-1).
+* reflectors `Q = H(n-1)*...*H(2)*H(1)`, and if UPLO = 'L', the matrix
+* Q is represented `as Q = H(1)*H(2)*...*H(n-1)`.
 *
 * @private
 * @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangular part of A is stored

@@ -23,15 +23,15 @@
 /**
 * Computes the eigenvalues of a 2-by-2 symmetric matrix:.
 *
-*   [ a  b ]
-*   [ b  c ]
+* \[ a  b \]
+* \[ b  c \]
 *
 * On return, rt1 is the eigenvalue of larger absolute value, and rt2 is the
 * eigenvalue of smaller absolute value.
 *
 * Uses the formula:
-*   rt1 = (sm + rt) / 2   or  (sm - rt) / 2  depending on sign of sm
-*   rt2 = (acmx / rt1) _ acmn - (b / rt1) _ b
+* rt1 = (sm + rt) / 2   or  (sm - rt) / 2  depending on sign of sm
+* `rt2 = (acmx / rt1)*acmn - (b / rt1)*b`
 * where sm = a + c, df = a - c, and rt = sqrt(df^2 + 4*b^2).
 *
 * @private

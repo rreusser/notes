@@ -34,15 +34,16 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 *
 * Q is defined as the product of K elementary reflectors:
 *
-*   Q = H(1) H(2) ... H(K)
+* Q = H(1) H(2) ... H(K)
 *
-* where each H(i) has the form H(i) = I - tau(i) _ v _ v^T.
+* where each H(i) has the form `H(i) = I - tau(i)*v*v^T`.
 *
 * ## Notes
 *
 * -   On entry, the i-th column of A must contain the vector which defines
-*     the elementary reflector H(i), for i = 1, 2, ..., K, as returned by
-*     DGEQRF in the first K columns of its array argument A.
+* the elementary reflector H(i), for i = 1, 2, ..., K, as returned by
+* DGEQRF in the first K columns of its array argument A.
+*
 * -   On exit, A contains the M-by-N matrix Q.
 *
 * @private

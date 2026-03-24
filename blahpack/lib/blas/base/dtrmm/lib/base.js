@@ -24,7 +24,7 @@
 
 /**
 * Performs one of the matrix-matrix operations.
-*   B := alpha_op(A)_B,  or  B := alpha_B_op(A)
+* B := alpha_op(A)_B,  or  B := alpha_B_op(A)
 *
 * where alpha is a scalar, B is an M-by-N matrix, A is a unit or
 * non-unit, upper or lower triangular matrix, and op(A) is A or A**T.

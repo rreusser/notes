@@ -24,7 +24,7 @@
 
 /**
 * Performs the symmetric rank 1 operation:.
-*   A := alpha_x_x**T + A,
+* A := alpha_x_x**T + A,
 * where alpha is a real scalar, x is an N element vector, and A is an
 * N by N symmetric matrix.
 *

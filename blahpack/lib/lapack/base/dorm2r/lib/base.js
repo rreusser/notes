@@ -28,9 +28,9 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrites the M-by-N matrix C with Q_C, Q__T_C, C_Q, or C_Q*_T,.
-_ where Q is a real orthogonal matrix defined as the product of K
-_ elementary reflectors Q = H(1) _ H(2) _ ... _ H(k) as returned
+* Overwrites the M-by-N matrix C with Q_C, Q__T_C, C_Q, or `C_Q*_T`.
+* where Q is a real orthogonal matrix defined as the product of K
+* elementary reflectors `Q = H(1)*H(2)*...*H(k)` as returned
 * by DGEQR2.
 *
 * @private

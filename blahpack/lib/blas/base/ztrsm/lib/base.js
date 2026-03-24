@@ -41,12 +41,12 @@ var scratch = new Float64Array( 6 );
 
 /**
 * Solves one of the matrix equations:.
-*   op(A)_X = alpha_B,  or  X_op(A) = alpha_B
+* op(A)_X = alpha_B,  or  X_op(A) = alpha_B
 *
 * where alpha is a complex scalar, X and B are M-by-N complex matrices,
 * A is a unit or non-unit, upper or lower triangular complex matrix, and
 * op(A) is one of:
-*   op(A) = A  or  op(A) = A**T  or  op(A) = A**H.
+* op(A) = A  or  op(A) = A**T  or  op(A) = A**H.
 *
 * The matrix X is overwritten on B.
 *

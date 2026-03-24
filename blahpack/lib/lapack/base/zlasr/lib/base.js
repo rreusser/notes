@@ -31,9 +31,9 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * Applies a sequence of real plane rotations to a complex general matrix.
 *
 * When SIDE = 'L', the transformation takes the form:
-*   A := P _ A
-_ When SIDE = 'R', the transformation takes the form:
-_   A := A _ P^T
+* `A := P*A`
+* When SIDE = 'R', the transformation takes the form:
+* A := A*P^T
 *
 * where P is an orthogonal matrix consisting of a sequence of z plane
 * rotations, with z = M-1 when SIDE = 'L' and z = N-1 when SIDE = 'R',

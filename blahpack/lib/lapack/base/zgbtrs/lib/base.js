@@ -39,9 +39,9 @@ var CNONE = new Complex128( -1.0, 0.0 );
 // MAIN //
 
 /**
-* Solves a system of linear equations:
-*   A * X = B,  A^T * X = B,  or  A^H * X = B
-* with a general band matrix A using the LU factorization computed by zgbtrf.
+* Solves a system of linear equations `A*X = B`, `A^T*X = B`, or `A^H*X = B`.
+*
+* Uses a general band matrix A and the LU factorization computed by zgbtrf.
 *
 * IPIV is 0-based (matching zgbtf2/zgbtrf output).
 *

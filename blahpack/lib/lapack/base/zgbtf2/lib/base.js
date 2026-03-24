@@ -43,14 +43,14 @@ var TEMP = new Float64Array( 2 );
 * Computes an LU factorization of a complex M-by-N band matrix A using partial.
 * pivoting with row interchanges (unblocked algorithm).
 *
-* The factorization has the form A = P _ L _ U where P is a permutation
+* The factorization has the form `A = P*L*U` where P is a permutation
 * matrix, L is lower triangular with unit diagonal, and U is upper triangular.
 *
 * The band matrix A is stored in band format:
-*   AB(kl+ku+1+i-j, j) = A(i,j) (1-based Fortran indexing)
+* AB(kl+ku+1+i-j, j) = A(i,j) (1-based Fortran indexing)
 * In JS with complex-element strides, row kv = ku+kl is the diagonal.
 *
-* IPIV stores 0-based pivot indices: row i was interchanged with row IPIV[i].
+* IPIV stores 0-based pivot indices: row i was interchanged with row `IPIV[i]`.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of matrix A

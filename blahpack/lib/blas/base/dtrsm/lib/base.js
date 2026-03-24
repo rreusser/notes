@@ -24,7 +24,7 @@
 
 /**
 * Solves one of the matrix equations:.
-*   op(A)_X = alpha_B,  or  X_op(A) = alpha_B
+* op(A)_X = alpha_B,  or  X_op(A) = alpha_B
 * where alpha is a scalar, X and B are M-by-N matrices, A is a unit or
 * non-unit, upper or lower triangular matrix, and op(A) is A or A**T.
 * The matrix X is overwritten on B.

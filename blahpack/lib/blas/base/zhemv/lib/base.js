@@ -31,7 +31,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 
 /**
 * Perform Hermitian matrix-vector multiplication:.
-*   y := alpha _ A _ x + beta * y
+* `y := alpha*A*x + beta * y`
 * where A is an N-by-N Hermitian matrix.
 *
 * @private

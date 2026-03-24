@@ -40,9 +40,9 @@ var NB = 32;  // Block size (LAPACK default for DORGLQ)
 *
 * Q is defined as the product of K elementary reflectors:
 *
-*   Q = H(K) ... H(2) H(1)
+* Q = H(K) ... H(2) H(1)
 *
-* where each H(i) has the form H(i) = I - tau(i) _ v _ v^T, and v is
+* where each H(i) has the form `H(i) = I - tau(i)*v*v^T`, and v is
 * stored as row i of the input matrix A.
 *
 * This is the blocked version that uses DLARFT + DLARFB for efficiency
@@ -51,11 +51,13 @@ var NB = 32;  // Block size (LAPACK default for DORGLQ)
 * ## Notes
 *
 * -   On entry, the i-th row of A must contain the reflector vector
-*     for H(i), as returned by DGELQF.
+* for H(i), as returned by DGELQF.
+*
 * -   On exit, A contains the M-by-N orthogonal matrix Q.
+*
 * -   WORK must have length >= M*NB (where NB is the block size, 32).
-*     The lwork parameter is ignored in this implementation; WORK is
-*     assumed to be large enough.
+* The lwork parameter is ignored in this implementation; WORK is
+* assumed to be large enough.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of Q (0 <= M <= N)

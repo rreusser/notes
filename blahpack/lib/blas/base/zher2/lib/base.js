@@ -31,7 +31,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 
 /**
 * Perform Hermitian rank-2 update:.
-*   A := alpha _ x _ conj(y)^T + conj(alpha) _ y _ conj(x)^T + A
+* `A := alpha*x*conj(y)^T + conj(alpha)*y*conj(x)^T + A`
 * where A is an N-by-N Hermitian matrix and x, y are N-element vectors.
 *
 * @private

@@ -42,7 +42,7 @@ var NB = 32; // Block size (hardcoded; Fortran uses ILAENV)
 * This method inverts U and then computes inv(A) by solving the system
 * inv(A)*L = inv(U) for inv(A).
 *
-* IPIV stores 0-based pivot indices: row i was interchanged with row IPIV[i].
+* IPIV stores 0-based pivot indices: row i was interchanged with row `IPIV[i]`.
 *
 * @private
 * @param {NonNegativeInteger} N - order of the matrix A

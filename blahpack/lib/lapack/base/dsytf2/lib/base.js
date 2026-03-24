@@ -39,15 +39,15 @@ var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 * Computes the factorization of a real symmetric matrix A using the.
 * Bunch-Kaufman diagonal pivoting method:
 *
-*   A = U _ D _ U^T  or  A = L _ D _ L^T
+* `A = U*D*U^T  or  A = L*D*L^T`
 *
 * where U (or L) is a product of permutation and unit upper (lower)
 * triangular matrices, and D is symmetric and block diagonal with
 * 1-by-1 and 2-by-2 diagonal blocks.
 *
-* IPIV stores 0-based pivot indices. If IPIV[k] >= 0, then a 1x1 pivot
-* was used and rows/columns k and IPIV[k] were interchanged.
-* If IPIV[k] < 0 (for a 2x2 pivot), then IPIV[k] = IPIV[k±1] = -(p+1)
+* IPIV stores 0-based pivot indices. If `IPIV[k]` >= 0, then a 1x1 pivot
+* was used and rows/columns k and `IPIV[k]` were interchanged.
+* If `IPIV[k]` < 0 (for a 2x2 pivot), then `IPIV[k]` = `IPIV[k±1]` = -(p+1)
 * where p is the 0-based row/column that was interchanged.
 *
 * @private

@@ -49,19 +49,19 @@ var NB = 32; // Hardcoded block size (replaces ILAENV queries)
 *
 * The following options are provided:
 *
-* 1. If TRANS = 'N' and M >= N: find the least squares solution of an
-*    overdetermined system, i.e., solve the least squares problem:
-*      minimize || B - A*X ||
+* 1.  If TRANS = 'N' and M >= N: find the least squares solution of an
+*     overdetermined system, i.e., solve the least squares problem:
+*     minimize || B - A*X ||
 *
-* 2. If TRANS = 'N' and M < N: find the minimum norm solution of an
-*    underdetermined system A * X = B.
+* 2.  If TRANS = 'N' and M < N: find the minimum norm solution of an
+*     underdetermined system A * X = B.
 *
-* 3. If TRANS = 'T' and M >= N: find the minimum norm solution of an
-*    underdetermined system A^T * X = B.
+* 3.  If TRANS = 'T' and M >= N: find the minimum norm solution of an
+*     underdetermined system A^T * X = B.
 *
-* 4. If TRANS = 'T' and M < N: find the least squares solution of an
-*    overdetermined system, i.e., solve the least squares problem:
-*      minimize || B - A^T * X ||
+* 4.  If TRANS = 'T' and M < N: find the least squares solution of an
+*     overdetermined system, i.e., solve the least squares problem:
+*     minimize || B - A^T * X ||
 *
 * Several right hand side vectors b and solution vectors x can be handled
 * in a single call; they are stored as columns of the M-by-NRHS right

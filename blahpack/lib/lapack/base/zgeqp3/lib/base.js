@@ -40,7 +40,7 @@ var DEFAULT_NB = 32;
 
 /**
 * Computes a QR factorization with column pivoting of an M-by-N matrix:.
-*   A _ P = Q _ R
+* `A*P = Q*R`
 * using level 3 BLAS.
 *
 * A, TAU, WORK are Complex128Arrays. Strides and offsets are in complex elements.

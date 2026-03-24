@@ -37,7 +37,8 @@ var zlassq = require( '../../zlassq/lib/base.js' );
 * ## Notes
 *
 * -   The diagonal elements of a Hermitian matrix are real; only their real
-*     part is used in the max-norm and Frobenius-norm calculations.
+* part is used in the max-norm and Frobenius-norm calculations.
+*
 * -   The off-diagonal elements are complex; their complex modulus is used.
 *
 * @private

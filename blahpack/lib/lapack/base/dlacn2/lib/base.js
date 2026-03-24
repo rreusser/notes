@@ -38,11 +38,13 @@ var ITMAX = 5;
 * Estimates the 1-norm of a square matrix using reverse communication.
 *
 * This is a reverse communication interface routine. The caller must:
-* 1. Set KASE[0] = 0 on the first call.
-* 2. Call dlacn2 in a loop. After each return:
-*    - If KASE[0] = 1: compute x = A * x and call dlacn2 again.
-*    - If KASE[0] = 2: compute x = A^T * x and call dlacn2 again.
-*    - If KASE[0] = 0: the estimate is complete; EST[0] holds the result.
+*
+* 1.  Set `KASE[0]` = 0 on the first call.
+*
+* 2.  Call dlacn2 in a loop. After each return, if `KASE[0]` = 1,
+*     compute `x = A*x` and call dlacn2 again; if `KASE[0]` = 2,
+*     compute `x = A^T*x` and call dlacn2 again; if `KASE[0]` = 0,
+*     the estimate is complete and `EST[0]` holds the result.
 *
 * ISAVE is used to maintain state between calls (3 elements).
 *

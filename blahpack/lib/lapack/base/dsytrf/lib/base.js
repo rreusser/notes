@@ -38,7 +38,7 @@ var NB = 32; // Block size (hardcoded; Fortran uses ILAENV)
 * Computes the factorization of a real symmetric matrix A using the.
 * Bunch-Kaufman diagonal pivoting method (blocked algorithm):
 *
-*   A = U _ D _ U^T  or  A = L _ D _ L^T
+* `A = U*D*U^T  or  A = L*D*L^T`
 *
 * where U (or L) is a product of permutation and unit upper (lower)
 * triangular matrices, and D is symmetric and block diagonal with

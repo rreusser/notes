@@ -43,7 +43,7 @@ var NEGONE = new Complex128( -1.0, 0.0 );
 /**
 * Reduces the first NB rows and columns of a complex general M-by-N matrix A.
 * to upper or lower real bidiagonal form by a unitary transformation
-* Q^H _ A _ P, and returns the matrices X and Y which are needed to apply
+* `Q^H*A*P`, and returns the matrices X and Y which are needed to apply
 * the transformation to the unreduced part of A.
 *
 * If M >= N, A is reduced to upper bidiagonal form; if M < N, to lower

@@ -39,8 +39,8 @@ var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 
 /**
 * Estimates the reciprocal of the condition number of a symmetric positive.
-* definite matrix A using the Cholesky factorization A = U^T _ U or
-_ A = L _ L^T computed by dpotrf.
+* definite matrix A using the Cholesky factorization `A = U^T*U` or
+* A = L*L^T computed by dpotrf.
 *
 * An estimate is obtained for norm(inv(A)), and the reciprocal of the
 * condition number is computed as RCOND = 1 / ( norm(A) * norm(inv(A)) ).

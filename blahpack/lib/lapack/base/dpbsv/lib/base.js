@@ -34,8 +34,8 @@ var dpbtrs = require( '../../dpbtrs/lib/base.js' );
 * are N-by-NRHS matrices.
 *
 * The Cholesky decomposition is used to factor A as:
-*   A = U**T _ U,  if uplo = 'upper', or
-_   A = L _ L**T,  if uplo = 'lower',
+* `A = U**T*U`,  if uplo = 'upper', or
+* A = L*L**T,  if uplo = 'lower',
 * where U is an upper triangular band matrix, and L is a lower triangular
 * band matrix. The factored form of A is then used to solve the system.
 *

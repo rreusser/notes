@@ -40,7 +40,7 @@ var NB = 32; // Hardcoded block size
 * where Q is a complex unitary matrix defined as the product of K
 * elementary reflectors (from an LQ factorization):
 *
-*   Q = H(k)^H ... H(2)^H H(1)^H
+* Q = H(k)^H ... H(2)^H H(1)^H
 *
 * as returned by ZGELQF. Uses a blocked algorithm with block size NB=32.
 *

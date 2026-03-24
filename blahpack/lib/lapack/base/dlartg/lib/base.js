@@ -36,8 +36,8 @@ var RTMAX = Math.sqrt( SAFMAX / 2.0 );
 /**
 * Generates a plane rotation so that:.
 *
-*    [  c  s ] . [ f ] = [ r ]
-*    [ -s  c ]   [ g ]   [ 0 ]
+* \[  c  s \] . \[ f \] = \[ r \]
+* \[ -s  c \]   \[ g \]   \[ 0 \]
 *
 * where c^2 + s^2 = 1.
 *
@@ -47,9 +47,13 @@ var RTMAX = Math.sqrt( SAFMAX / 2.0 );
 *     -   r = sign(f) * sqrt(f^2 + g^2)
 *     -   c = f / r
 *     -   s = g / r
+*
 *     Hence c >= 0.
+*
 * -   The algorithm incorporates scaling to avoid overflow or underflow.
+*
 * -   If g = 0, then c = 1 and s = 0.
+*
 * -   If f = 0 and g != 0, then c = 0 and s = sign(1, g).
 *
 * @private

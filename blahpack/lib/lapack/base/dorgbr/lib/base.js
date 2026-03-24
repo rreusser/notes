@@ -30,24 +30,24 @@ var dorglq = require( '../../dorglq/lib/base.js' );
 
 /**
 * Generates one of the real orthogonal matrices Q or P^T determined by DGEBRD.
-* when reducing a real matrix A to bidiagonal form: A = Q _ B _ P^T.
+* when reducing a real matrix A to bidiagonal form: `A = Q*B*P^T`.
 *
 * Q and P^T are defined as products of elementary reflectors H(i) or G(i)
 * respectively.
 *
 * If VECT = 'Q', A is assumed to have been an M-by-K matrix, and Q
 * is of order M:
-*   if M >= K, Q = H(1) H(2) ... H(K) and dorgbr returns the first N
-*   columns of Q, where M >= N >= K;
-*   if M < K, Q = H(1) H(2) ... H(M-1) and dorgbr returns Q as an
-*   M-by-M orthogonal matrix.
+* if M >= K, Q = H(1) H(2) ... H(K) and dorgbr returns the first N
+* columns of Q, where M >= N >= K;
+* if M < K, Q = H(1) H(2) ... H(M-1) and dorgbr returns Q as an
+* M-by-M orthogonal matrix.
 *
 * If VECT = 'P', A is assumed to have been a K-by-N matrix, and P^T
 * is of order N:
-*   if K < N, P^T = G(1) G(2) ... G(K) and dorgbr returns the first M
-*   rows of P^T, where N >= M >= K;
-*   if K >= N, P^T = G(1) G(2) ... G(N-1) and dorgbr returns P^T as an
-*   N-by-N orthogonal matrix.
+* if K < N, P^T = G(1) G(2) ... G(K) and dorgbr returns the first M
+* rows of P^T, where N >= M >= K;
+* if K >= N, P^T = G(1) G(2) ... G(N-1) and dorgbr returns P^T as an
+* N-by-N orthogonal matrix.
 *
 * @private
 * @param {string} vect - 'q' to generate Q, 'p' to generate P^T

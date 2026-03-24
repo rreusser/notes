@@ -46,7 +46,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * 1. Scale the matrix if the norm is outside safe range
 * 2. Reduce to tridiagonal form via dsytrd
 * 3. If eigenvalues only (JOBZ='N'): compute via dsterf
-*    If eigenvectors too (JOBZ='V'): generate Q via dorgtr, then dsteqr
+* If eigenvectors too (JOBZ='V'): generate Q via dorgtr, then dsteqr
 * 4. Undo scaling on eigenvalues if needed
 *
 * @private

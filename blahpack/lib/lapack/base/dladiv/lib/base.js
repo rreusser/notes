@@ -89,7 +89,7 @@ function dladiv1( a, b, c, d, out ) {
 /**
 * Performs complex division in real arithmetic:.
 *
-*   p + i_q = (a + i_b) / (c + i*d)
+* p + i_q = (a + i_b) / (c + i*d)
 *
 * The algorithm is due to Michael Baudin and Robert L. Smith.
 *

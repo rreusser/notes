@@ -52,15 +52,15 @@ function sign( a, b ) {
 /**
 * Computes the singular value decomposition of a 2-by-2 triangular matrix:.
 *
-*   [ F  G ]
-*   [ 0  H ]
+* \[ F  G \]
+* \[ 0  H \]
 *
 * On return, abs(SSMAX) is the larger singular value, abs(SSMIN) is the
 * smaller singular value, and (CSL,SNL) and (CSR,SNR) are the left and
 * right singular vectors for abs(SSMAX), giving the decomposition:
 *
-*   [ CSL  SNL ] [ F  G ] [ CSR -SNR ]   [ SSMAX   0   ]
-*   [-SNL  CSL ] [ 0  H ] [ SNR  CSR ] = [  0    SSMIN ]
+* \[ CSL  SNL \] \[ F  G \] \[ CSR -SNR \]   \[ SSMAX   0   \]
+* \[-SNL  CSL \] \[ 0  H \] \[ SNR  CSR \] = \[  0    SSMIN \]
 *
 * @private
 * @param {number} f - the (1,1) element

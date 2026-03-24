@@ -31,18 +31,22 @@ var dormlq = require( '../../dormlq/lib/base.js' );
 /**
 * If VECT = 'Q', overwrite the matrix C with one of:.
 *
-*                 SIDE = 'L'     SIDE = 'R'
-*   TRANS = 'N':  Q _ C          C _ Q
-*   TRANS = 'T':  Q^T _ C        C _ Q^T
+* ```text
+* SIDE = 'L'     SIDE = 'R'
+* TRANS = 'N':  Q*C          C*Q
+* TRANS = 'T':  Q^T*C        C*Q^T
+* ```
 *
 * If VECT = 'P', overwrite the matrix C with one of:
 *
-*                 SIDE = 'L'     SIDE = 'R'
-*   TRANS = 'N':  P _ C          C _ P
-*   TRANS = 'T':  P^T _ C        C _ P^T
+* ```text
+* SIDE = 'L'     SIDE = 'R'
+* TRANS = 'N':  P*C          C*P
+* TRANS = 'T':  P^T*C        C*P^T
+* ```
 *
 * Here Q and P^T are the orthogonal matrices determined by DGEBRD when
-* reducing a real matrix A to bidiagonal form: A = Q _ B _ P^T.
+* reducing a real matrix A to bidiagonal form: `A = Q*B*P^T`.
 * Q is defined as a product of elementary reflectors H(i) = I - tauq(i)_v(i)_v(i)^T.
 * P is defined as a product of elementary reflectors G(i) = I - taup(i)_u(i)_u(i)^T.
 *

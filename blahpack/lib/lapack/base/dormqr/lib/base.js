@@ -38,7 +38,7 @@ var NB = 32; // Hardcoded block size
 /**
 * Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 * where Q is a real orthogonal matrix defined as the product of K
-* elementary reflectors Q = H(1) _ H(2) _ ... * H(k) as returned
+* elementary reflectors `Q = H(1)*H(2)*... * H(k)` as returned
 * by DGEQRF. Uses a blocked algorithm with block size NB=32.
 *
 * @private

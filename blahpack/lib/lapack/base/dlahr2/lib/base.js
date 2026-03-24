@@ -36,9 +36,12 @@ var dtrmv = require( '../../../../blas/base/dtrmv/lib/base.js' );
 // MAIN //
 
 /**
-* Reduces NB columns of a real general n-by-(n-k+1) matrix A so that elements
-* below the k-th subdiagonal are zero. Returns matrices V, T, and Y needed
-* to apply the transformation to the unreduced part of A.
+* Reduces NB columns of a real general n-by-(n-k+1) matrix A.
+*
+* Elements below the k-th subdiagonal are zeroed out.
+*
+* Returns matrices V, T, and Y needed to apply the transformation to the
+* unreduced part of A.
 *
 * @private
 * @param {NonNegativeInteger} N - order of the matrix A

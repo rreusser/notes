@@ -23,18 +23,19 @@
 /**
 * Computes the eigendecomposition of a 2-by-2 symmetric matrix:.
 *
-*   [ a  b ]
-*   [ b  c ]
+* \[ a  b \]
+* \[ b  c \]
 *
 * On return:
-* - rt1: eigenvalue of larger absolute value
-* - rt2: eigenvalue of smaller absolute value
-* - cs1: cosine of the rotation
-* - sn1: sine of the rotation
 *
-* The rotation matrix [cs1, sn1; -sn1, cs1] diagonalizes the input:
-*   [ cs1  sn1 ] [ a  b ] [ cs1 -sn1 ] = [ rt1  0  ]
-*   [-sn1  cs1 ] [ b  c ] [ sn1  cs1 ]   [  0  rt2 ]
+* -   rt1: eigenvalue of larger absolute value
+* -   rt2: eigenvalue of smaller absolute value
+* -   cs1: cosine of the rotation
+* -   sn1: sine of the rotation
+*
+* The rotation matrix \[cs1, sn1; -sn1, cs1\] diagonalizes the input:
+* \[ cs1  sn1 \] \[ a  b \] \[ cs1 -sn1 \] = \[ rt1  0  \]
+* \[-sn1  cs1 \] \[ b  c \] \[ sn1  cs1 \]   \[  0  rt2 \]
 *
 * @private
 * @param {number} a - (1,1) element of the 2-by-2 matrix

@@ -27,6 +27,25 @@ var SCRATCH_TAU = new Complex128Array( 1 );
 var SCRATCH_TAUv = reinterpret( SCRATCH_TAU, 0 );
 var SCRATCH_ALPHA = new Complex128Array( 1 );
 var SCRATCH_ALPHAv = reinterpret( SCRATCH_ALPHA, 0 );
+/**
+* Reduces a complex general matrix to upper Hessenberg form using unblocked algorithm.
+*
+* @private
+* @param {integer} N - order of the matrix
+* @param {integer} ilo - lower index of the balanced matrix
+* @param {integer} ihi - upper index of the balanced matrix
+* @param {Complex128Array} A - input/output matrix
+* @param {integer} strideA1 - first stride of A
+* @param {integer} strideA2 - second stride of A
+* @param {integer} offsetA - offset into A
+* @param {Complex128Array} TAU - output array of scalar factors
+* @param {integer} strideTAU - stride of TAU
+* @param {integer} offsetTAU - offset into TAU
+* @param {Complex128Array} WORK - workspace array
+* @param {integer} strideWORK - stride of WORK
+* @param {integer} offsetWORK - offset into WORK
+* @returns {integer} info value
+*/
 function zgehd2( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	var xStart;
 	var oAlpha;

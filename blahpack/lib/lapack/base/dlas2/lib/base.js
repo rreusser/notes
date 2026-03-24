@@ -23,10 +23,10 @@
 /**
 * Computes the singular values of a 2-by-2 triangular matrix:.
 *
-*   [ F  G ]
-*   [ 0  H ]
+* \[ F  G \]
+* \[ 0  H \]
 *
-* On return, out[0] is the smaller singular value (SSMIN) and out[1] is the
+* On return, `out[0]` is the smaller singular value (SSMIN) and `out[1]` is the
 * larger singular value (SSMAX).
 *
 * The algorithm is numerically stable, avoiding overflow and unnecessary

@@ -33,7 +33,7 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 
 /**
 * Reduces a complex M-by-N matrix A to upper or lower real bidiagonal form B.
-* by a unitary transformation: Q^H _ A _ P = B.
+* by a unitary transformation: `Q^H*A*P = B`.
 *
 * If M >= N, B is upper bidiagonal; if M < N, B is lower bidiagonal.
 *

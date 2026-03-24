@@ -38,7 +38,7 @@ var NB = 32; // Hardcoded block size
 /**
 * Overwrites the M-by-N matrix C with Q_C, Q^H_C, C_Q, or C_Q^H,.
 * where Q is a complex unitary matrix defined as the product of K
-* elementary reflectors Q = H(1) _ H(2) _ ... * H(k) as returned
+* elementary reflectors `Q = H(1)*H(2)*... * H(k)` as returned
 * by ZGEQRF. Uses a blocked algorithm with block size NB=32.
 *
 * A, TAU, C, WORK are Complex128Arrays. Strides and offsets are in complex elements.

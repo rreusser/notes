@@ -30,16 +30,16 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 
 /**
 * Reduces a real M-by-N matrix A to upper or lower bidiagonal form B.
-* by an orthogonal transformation: Q__T _ A _ P = B.
+* by an orthogonal transformation: `Q__T*A*P = B`.
 *
 * If M >= N, B is upper bidiagonal; if M < N, B is lower bidiagonal.
 *
 * The matrices Q and P are represented as products of elementary reflectors:
 *
 * If M >= N,
-*   Q = H(1) H(2) ... H(N)  and  P = G(1) G(2) ... G(N-1)
+* Q = H(1) H(2) ... H(N)  and  P = G(1) G(2) ... G(N-1)
 * If M < N,
-*   Q = H(1) H(2) ... H(M-1)  and  P = G(1) G(2) ... G(M)
+* Q = H(1) H(2) ... H(M-1)  and  P = G(1) G(2) ... G(M)
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of A

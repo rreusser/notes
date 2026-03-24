@@ -47,7 +47,7 @@ var cdI = 0.0;
 * Computes the factorization of a complex symmetric matrix A using the.
 * Bunch-Kaufman diagonal pivoting method:
 *
-*   A = U _ D _ U^T  or  A = L _ D _ L^T
+* `A = U*D*U^T  or  A = L*D*L^T`
 *
 * where U (or L) is a product of permutation and unit upper (lower)
 * triangular matrices, and D is symmetric and block diagonal with
@@ -56,9 +56,9 @@ var cdI = 0.0;
 * NOTE: This is for SYMMETRIC (not Hermitian) matrices. The transpose
 * is used (not conjugate transpose).
 *
-* IPIV stores 0-based pivot indices. If IPIV[k] >= 0, then a 1x1 pivot
-* was used and rows/columns k and IPIV[k] were interchanged.
-* If IPIV[k] < 0 (for a 2x2 pivot), then IPIV[k] = IPIV[k±1] = ~(p)
+* IPIV stores 0-based pivot indices. If `IPIV[k]` >= 0, then a 1x1 pivot
+* was used and rows/columns k and `IPIV[k]` were interchanged.
+* If `IPIV[k]` < 0 (for a 2x2 pivot), then `IPIV[k]` = `IPIV[k±1]` = ~(p)
 * where p is the 0-based row/column that was interchanged.
 *
 * @private
@@ -563,6 +563,15 @@ function zsytf2( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	return info;
 }
 
+/**
+* Perform complex division, storing result in module-level cdR and cdI.
+*
+* @private
+* @param {number} ar - real part of numerator
+* @param {number} ai - imaginary part of numerator
+* @param {number} br - real part of denominator
+* @param {number} bi - imaginary part of denominator
+*/
 function cDiv( ar, ai, br, bi ) {
 	var r;
 	var d;

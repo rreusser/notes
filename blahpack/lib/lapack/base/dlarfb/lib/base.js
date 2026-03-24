@@ -33,8 +33,8 @@ var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
 * Applies a real block reflector H or its transpose H**T to a.
 * real M-by-N matrix C, from either the left or the right.
 *
-* H = I - V _ T _ V**T  (for STOREV='C')
-* H = I - V**T _ T _ V  (for STOREV='R')
+* `H = I - V*T*V**T  (for STOREV='C')`
+* `H = I - V**T*T*V  (for STOREV='R')`
 *
 * Supports both STOREV='C' (columnwise) and STOREV='R' (rowwise).
 *

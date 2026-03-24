@@ -26,8 +26,32 @@ var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
 var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 var CONE = new Complex128( 1.0, 0.0 );
 var NCONE = new Complex128( -1.0, 0.0 );
+
+/**
+* Real part of complex division result.
+*
+* @private
+* @type {number}
+*/
 var cdR = 0.0;
+
+/**
+* Imaginary part of complex division result.
+*
+* @private
+* @type {number}
+*/
 var cdI = 0.0;
+
+/**
+* Perform complex division, storing result in module-level cdR and cdI.
+*
+* @private
+* @param {number} ar - real part of numerator
+* @param {number} ai - imaginary part of numerator
+* @param {number} br - real part of denominator
+* @param {number} bi - imaginary part of denominator
+*/
 function cDiv( ar, ai, br, bi ) {
 	var r;
 	var d;
@@ -43,6 +67,26 @@ function cDiv( ar, ai, br, bi ) {
 		cdI = ( (ai * r) - ar ) / d;
 	}
 }
+/**
+* Solve a system of linear equations A*X = B with a complex symmetric matrix using Bunch-Kaufman factorization.
+*
+* @private
+* @param {string} uplo - 'U' or 'L' indicating upper or lower triangular storage
+* @param {integer} N - order of the matrix
+* @param {integer} nrhs - number of right-hand sides
+* @param {Complex128Array} A - factored matrix from zsytrf
+* @param {integer} strideA1 - first stride of A
+* @param {integer} strideA2 - second stride of A
+* @param {integer} offsetA - offset into A
+* @param {Int32Array} IPIV - pivot indices from zsytrf
+* @param {integer} strideIPIV - stride of IPIV
+* @param {integer} offsetIPIV - offset into IPIV
+* @param {Complex128Array} B - input/output right-hand side matrix
+* @param {integer} strideB1 - first stride of B
+* @param {integer} strideB2 - second stride of B
+* @param {integer} offsetB - offset into B
+* @returns {integer} info value
+*/
 function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
 	var denomR;
 	var denomI;

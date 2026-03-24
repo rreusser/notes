@@ -31,8 +31,8 @@ var dsyrk = require( '../../../../blas/base/dsyrk/lib/base.js' );
 * matrix A using the recursive algorithm.
 *
 * The factorization has the form:
-*   A = U^T _ U,  if uplo = 'upper', or
-_   A = L _ L^T,  if uplo = 'lower',
+* `A = U^T*U`,  if uplo = 'upper', or
+* A = L*L^T,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the recursive version of the algorithm. It divides the matrix

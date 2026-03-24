@@ -24,7 +24,7 @@
 
 /**
 * Solves one of the systems of equations:.
-*   A_x = b,  or  A__T_x = b
+* A_x = b,  or  A__T_x = b
 * where b and x are N element vectors and A is an N by N unit or non-unit,
 * upper or lower triangular band matrix, with (K+1) diagonals.
 *
@@ -32,8 +32,8 @@
 * j-th column of the band array, with diagonal at row K (0-based).
 * For lower triangular, diagonal at row 0.
 *
-* Upper band: A_band[K-s + s_sa1 + j_sa2] = A(j-s, j) for s = 0..min(K,j)
-* Lower band: A_band[s_sa1 + j_sa2] = A(j+s, j) for s = 0..min(K, N-1-j)
+* Upper band: `A_band[K-s + s_sa1 + j_sa2] = A(j-s, j)` for s = 0..min(K,j)
+* Lower band: `A_band[s_sa1 + j_sa2] = A(j+s, j)` for s = 0..min(K, N-1-j)
 *
 * @private
 * @param {string} uplo - 'U' or 'L'

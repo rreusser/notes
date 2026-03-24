@@ -31,7 +31,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 
 /**
 * Perform one of the complex matrix-matrix operations:.
-*   C := alpha_op(A)_op(B) + beta*C
+* C := alpha_op(A)_op(B) + beta*C
 * where op(X) is one of X, X**T, or X**H.
 *
 * @private

@@ -39,14 +39,14 @@ var NB = 64; // Block size (hardcoded; Fortran uses ILAENV)
 * Computes an LU factorization of a general M-by-N matrix A using partial.
 * pivoting with row interchanges (blocked algorithm).
 *
-* The factorization has the form A = P _ L _ U where P is a permutation
+* The factorization has the form `A = P*L*U` where P is a permutation
 * matrix, L is lower triangular with unit diagonal elements, and U is upper
 * triangular.
 *
 * Uses dgetrf2 for panel factorizations, then dlaswp + dtrsm + dgemm for
 * trailing matrix updates.
 *
-* IPIV stores 0-based pivot indices: row i was interchanged with row IPIV[i].
+* IPIV stores 0-based pivot indices: row i was interchanged with row `IPIV[i]`.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of matrix A

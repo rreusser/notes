@@ -37,7 +37,7 @@ var DEFAULT_NB = 32;
 
 /**
 * Reduces a real M-by-N matrix A to upper or lower real bidiagonal form B.
-* by an orthogonal transformation: Q__T _ A _ P = B.
+* by an orthogonal transformation: `Q__T*A*P = B`.
 *
 * This is the blocked version that processes NB columns at a time using
 * dlabrd for the panel factorization, dgemm for the trailing matrix update,

@@ -46,8 +46,8 @@ var CMONE = new Complex128( -1.0, 0.0 );
 * band matrix AB.
 *
 * The factorization has the form:
-*   AB = U^H _ U,  if uplo = 'upper', or
-_   AB = L _ L^H,  if uplo = 'lower',
+* `AB = U^H*U`,  if uplo = 'upper', or
+* AB = L*L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.

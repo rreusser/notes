@@ -345,11 +345,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 	info = ilast + 1; // Convert 0-based to 1-based for INFO
 	return info;
 
-	// ================================================================
-
-	// Helper: set eigenvalues for indices 0..ilo-2 and return info=0
-
-	// ================================================================
+	/**
+	* Set eigenvalues for indices 0..ilo-2.
+	*
+	* @private
+	* @returns {integer} info value (always 0)
+	*/
 	function setEigenvaluesBelow() {
 		var jj;
 		var ab;
@@ -380,10 +381,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		return 0;
 	}
 
-	// ================================================================
-	// Handle T(ILAST,ILAST)=0: clear H(ILAST,ILAST-1) then deflate
-	// (Fortran label 50 -> 60)
-	// ================================================================
+	/**
+	* Handle T(ILAST,ILAST)=0: clear H(ILAST,ILAST-1) then deflate.
+	*
+	* @private
+	* @returns {void}
+	*/
 	function handleZeroTdiag() {
 		var idx1;
 		var idx2;
@@ -445,10 +448,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		deflateAndExtract();
 	}
 
-	// ================================================================
-	// Deflate: standardize B diagonal, extract eigenvalue
-	// (Fortran label 60)
-	// ================================================================
+	/**
+	* Deflate: standardize B diagonal and extract eigenvalue.
+	*
+	* @private
+	* @returns {void}
+	*/
 	function deflateAndExtract() {
 		var idx;
 		var ab;
@@ -504,11 +509,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		// GO TO 160 (continue to next iteration of main loop)
 	}
 
-	// ================================================================
-	// Scan J from ILAST-1 down to ILO (0-based), perform tests, and
-	// Route to appropriate handler. Returns true if processing happened,
-	// False for "drop-through" (impossible in theory).
-	// ================================================================
+	/**
+	* Scan from ILAST-1 down to ILO and route to appropriate handler.
+	*
+	* @private
+	* @returns {boolean} true if processing happened, false for drop-through
+	*/
 	function scanAndProcess() {
 		var found;
 		var jj;
@@ -572,11 +578,13 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		return false; // drop-through (should be impossible)
 	}
 
-	// ================================================================
-	// Both tests pass: split 1x1 block (DO 20 loop in Fortran)
-	// Returns true if found a deflation/QZ entry point, false if
-	// Loop completed (fall to label 50).
-	// ================================================================
+	/**
+	* Handle case where both tests pass: split 1x1 block.
+	*
+	* @private
+	* @param {integer} jj - 0-based scan index
+	* @returns {boolean} true if deflation/QZ entry found, false if loop completed
+	*/
 	function handleBothTestsPass( jj ) {
 		var idx1;
 		var idx2;
@@ -663,9 +671,13 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		return false; // fall to label 50
 	}
 
-	// ================================================================
-	// Chase the zero in T to T(ILAST,ILAST) (DO 30 loop in Fortran)
-	// ================================================================
+	/**
+	* Chase the zero in T to T(ILAST,ILAST).
+	*
+	* @private
+	* @param {integer} jj - 0-based starting index
+	* @returns {void}
+	*/
 	function chaseZeroToBottom( jj ) {
 		var idx1;
 		var idx2;
@@ -787,9 +799,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		}
 	}
 
-	// ================================================================
-	// QZ step (Fortran label 70)
-	// ================================================================
+	/**
+	* Perform a single QZ step.
+	*
+	* @private
+	* @returns {void}
+	*/
 	function doQZStep() {
 		var divi;
 		var divr;
@@ -883,9 +898,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		doQZSweep();
 	}
 
-	// ================================================================
-	// Wilkinson shift computation
-	// ================================================================
+	/**
+	* Compute the Wilkinson shift for QZ iteration.
+	*
+	* @private
+	* @returns {void}
+	*/
 	function computeWilkinsonShift() {
 		var divr;
 		var divi;
@@ -1024,9 +1042,12 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 		}
 	}
 
-	// ================================================================
-	// QZ sweep: DO 150 J = ISTART, ILAST-1
-	// ================================================================
+	/**
+	* Perform a QZ sweep from ISTART to ILAST-1.
+	*
+	* @private
+	* @returns {void}
+	*/
 	function doQZSweep() {
 		var idx1;
 		var idx2;
@@ -1215,6 +1236,11 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 /**
 * Compute |Re(z)| + |Im(z)| at a given offset into an array.
+*
+* @private
+* @param {Float64Array} arr - input array
+* @param {integer} idx - index into the array
+* @returns {number} sum of absolute values of real and imaginary parts
 */
 function cabs1At( arr, idx ) {
 	return Math.abs( arr[ idx ] ) + Math.abs( arr[ idx + 1 ] );
@@ -1222,6 +1248,11 @@ function cabs1At( arr, idx ) {
 
 /**
 * Compute |z| = sqrt(re^2 + im^2) at a given offset into an array.
+*
+* @private
+* @param {Float64Array} arr - input array
+* @param {integer} idx - index into the array
+* @returns {number} absolute value of the complex number
 */
 function cabs( arr, idx ) {
 	var re = arr[ idx ];
@@ -1230,7 +1261,14 @@ function cabs( arr, idx ) {
 }
 
 /**
-* Compute signbc = conj(z / |z|) where z is at arr[idx].
+* Compute signbc = conj(z / |z|) where z is at `arr[idx]`.
+*
+* @private
+* @param {Float64Array} out - output array for the result
+* @param {Float64Array} arr - input array
+* @param {integer} idx - index into the array
+* @param {number} absval - absolute value used for scaling
+* @returns {void}
 */
 function cscaleConj( out, arr, idx, absval ) {
 	out[ 0 ] = arr[ idx ] / absval;
@@ -1239,6 +1277,14 @@ function cscaleConj( out, arr, idx, absval ) {
 
 /**
 * Complex division: out = (ar + ai_i) / (br + bi_i).
+*
+* @private
+* @param {Float64Array} out - output array for the result
+* @param {number} ar - real part of the numerator
+* @param {number} ai - imaginary part of the numerator
+* @param {number} br - real part of the denominator
+* @param {number} bi - imaginary part of the denominator
+* @returns {void}
 */
 function cdivInline( out, ar, ai, br, bi ) {
 	var r;
@@ -1258,6 +1304,11 @@ function cdivInline( out, ar, ai, br, bi ) {
 
 /**
 * Complex square root: out = sqrt(z).
+*
+* @private
+* @param {Float64Array} out - output array for the result
+* @param {Float64Array} z - input complex number as [re, im]
+* @returns {void}
 */
 function csqrt( out, z ) {
 	var re = z[ 0 ];

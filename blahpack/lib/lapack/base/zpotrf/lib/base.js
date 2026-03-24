@@ -41,8 +41,8 @@ var MCONE = new Complex128( -1.0, 0.0 );
 * matrix A using a blocked algorithm.
 *
 * The factorization has the form:
-*   A = U^H _ U,  if uplo = 'upper', or
-_   A = L _ L^H,  if uplo = 'lower',
+* `A = U^H*U`,  if uplo = 'upper', or
+* A = L*L^H,  if uplo = 'lower',
 * where U is upper triangular and L is lower triangular.
 *
 * This is the blocked version of the algorithm, calling Level 3 BLAS.

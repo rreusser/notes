@@ -53,7 +53,7 @@ var MNTHR_RATIO = 1.6;  // ILAENV(6, 'DGELSS') threshold ratio M/N
 /**
 * Computes the minimum norm solution to a real linear least squares problem:.
 *
-*   minimize 2-norm(|| b - A*x ||)
+* minimize 2-norm(|| b - A*x ||)
 *
 * using the singular value decomposition (SVD) of A. A is an M-by-N matrix
 * which may be rank-deficient.
@@ -74,7 +74,7 @@ var MNTHR_RATIO = 1.6;  // ILAENV(6, 'DGELSS') threshold ratio M/N
 * @param {integer} strideA2 - stride of the second dimension of A
 * @param {NonNegativeInteger} offsetA - starting index for A
 * @param {Float64Array} B - on entry, M-by-NRHS (or max(M,N)-by-NRHS) RHS matrix;
-*   on exit, N-by-NRHS solution matrix (rows max(M,N)+1..N zeroed if M < N)
+* on exit, N-by-NRHS solution matrix (rows max(M,N)+1..N zeroed if M < N)
 * @param {integer} strideB1 - stride of the first dimension of B
 * @param {integer} strideB2 - stride of the second dimension of B
 * @param {NonNegativeInteger} offsetB - starting index for B
@@ -82,8 +82,8 @@ var MNTHR_RATIO = 1.6;  // ILAENV(6, 'DGELSS') threshold ratio M/N
 * @param {integer} strideS - stride length for S
 * @param {NonNegativeInteger} offsetS - starting index for S
 * @param {number} rcond - used to determine the effective rank of A.
-*   Singular values S(i) <= RCOND*S(1) are treated as zero.
-*   If RCOND < 0, machine precision is used instead.
+* Singular values S(i) <= RCOND*S(1) are treated as zero.
+* If RCOND < 0, machine precision is used instead.
 * @param {Array} rank - output array; rank[0] set to the effective rank of A
 * @param {Float64Array} WORK - workspace array (if null, allocated internally)
 * @param {integer} strideWORK - stride length for WORK

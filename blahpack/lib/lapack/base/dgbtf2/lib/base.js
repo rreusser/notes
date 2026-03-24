@@ -34,20 +34,21 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 * Computes an LU factorization of a real M-by-N band matrix A using partial.
 * pivoting with row interchanges (unblocked algorithm).
 *
-* The factorization has the form A = P _ L _ U where P is a permutation
+* The factorization has the form `A = P*L*U` where P is a permutation
 * matrix, L is lower triangular with unit diagonal, and U is upper triangular.
 *
 * The band matrix A is stored in band format:
-*   AB(kl+ku+1+i-j, j) = A(i,j) for max(1,j-ku) <= i <= min(m,j+kl)
+* AB(kl+ku+1+i-j, j) = A(i,j) for max(1,j-ku) <= i <= min(m,j+kl)
 * (using 1-based Fortran indexing). In the JS stride/offset API,
 * rows map to strideAB1, columns to strideAB2.
 *
 * On entry, the first KL rows of AB need not be set (fill-in space for U).
 * On exit, the factored form is stored with:
-*   - U as an upper triangular band matrix with KL+KU superdiagonals
-*   - L multipliers stored below the diagonal
 *
-* IPIV stores 0-based pivot indices: row i was interchanged with row IPIV[i].
+* -   U as an upper triangular band matrix with KL+KU superdiagonals
+* -   L multipliers stored below the diagonal
+*
+* IPIV stores 0-based pivot indices: row i was interchanged with row `IPIV[i]`.
 *
 * @private
 * @param {NonNegativeInteger} M - number of rows of matrix A

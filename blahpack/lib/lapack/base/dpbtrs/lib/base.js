@@ -29,7 +29,7 @@ var dtbsv = require( '../../../../blas/base/dtbsv/lib/base.js' );
 
 /**
 * Solves a system of linear equations A_X = B with a symmetric positive.
-_ definite band matrix A using the Cholesky factorization A = U__T_U or
+* definite band matrix A using the Cholesky factorization A = U__T_U or
 * A = L*L**T computed by dpbtrf.
 *
 * @private
