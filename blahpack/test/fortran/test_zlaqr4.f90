@@ -5,10 +5,12 @@ program test_zlaqr4
   integer, parameter :: NMAX = 16
   complex*16 :: H(NMAX, NMAX), Z(NMAX, NMAX), W(NMAX)
   complex*16 :: WORK(NMAX*NMAX)
-  double precision :: H_r(2*NMAX*NMAX), Z_r(2*NMAX*NMAX), W_r(2*NMAX)
-  equivalence (H, H_r)
-  equivalence (Z, Z_r)
+  double precision :: W_r(2*NMAX)
   equivalence (W, W_r)
+  complex*16 :: Hpk(NMAX*NMAX), Zpk(NMAX*NMAX)
+  double precision :: Hpk_r(2*NMAX*NMAX), Zpk_r(2*NMAX*NMAX)
+  equivalence (Hpk, Hpk_r)
+  equivalence (Zpk, Zpk_r)
   integer :: info, n, ilo, ihi, ldh, ldz, iloz, ihiz, lwork
   integer :: i, j
 
@@ -111,8 +113,14 @@ program test_zlaqr4
   call print_int('info', info)
   call print_int('n', n)
   call print_array('w', W_r, 2*n)
-  call print_array('H', H_r, 2*n*n)
-  call print_array('Z', Z_r, 2*n*n)
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+      Zpk((j-1)*n + i) = Z(i,j)
+    end do
+  end do
+  call print_array('H', Hpk_r, 2*n*n)
+  call print_array('Z', Zpk_r, 2*n*n)
   call end_test()
 
   ! ==================================================================
@@ -205,7 +213,12 @@ program test_zlaqr4
   call print_int('info', info)
   call print_int('n', n)
   call print_array('w', W_r, 2*n)
-  call print_array('H', H_r, 2*n*n)
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+    end do
+  end do
+  call print_array('H', Hpk_r, 2*n*n)
   call end_test()
 
 end program

@@ -7,13 +7,16 @@ program test_zlaqr5
   complex*16 :: H(NMAX, NMAX), Z(NMAX, NMAX), S(NSMAX)
   complex*16 :: V(3, NSMAX/2), U(2*NSMAX+1, 2*NSMAX+1)
   complex*16 :: WV(NMAX, 2*NSMAX+1), WH(2*NSMAX+1, NMAX)
-  double precision :: H_r(2*NMAX*NMAX), Z_r(2*NMAX*NMAX), S_r(2*NSMAX)
-  equivalence (H, H_r)
-  equivalence (Z, Z_r)
+  double precision :: S_r(2*NSMAX)
   equivalence (S, S_r)
+  ! Packed output arrays (n*n) for printing without LDH padding
+  complex*16 :: Hpk(NMAX*NMAX), Zpk(NMAX*NMAX)
+  double precision :: Hpk_r(2*NMAX*NMAX), Zpk_r(2*NMAX*NMAX)
+  equivalence (Hpk, Hpk_r)
+  equivalence (Zpk, Zpk_r)
   integer :: n, ktop, kbot, nshfts, kacc22
   integer :: iloz, ihiz, ldh, ldz, ldv, ldu, ldwv, ldwh, nh, nv
-  integer :: i
+  integer :: i, j
 
   ldh = NMAX
   ldz = NMAX
@@ -84,10 +87,17 @@ program test_zlaqr5
                H, ldh, iloz, ihiz, Z, ldz, V, ldv, U, ldu, nv, &
                WV, ldwv, nh, WH, ldwh)
 
+  ! Pack n*n result from LDH-strided storage into contiguous array
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+      Zpk((j-1)*n + i) = Z(i,j)
+    end do
+  end do
   call begin_test('6x6_2shifts')
   call print_int('n', n)
-  call print_array('H', H_r, 2*n*n)
-  call print_array('Z', Z_r, 2*n*n)
+  call print_array('H', Hpk_r, 2*n*n)
+  call print_array('Z', Zpk_r, 2*n*n)
   call print_array('S', S_r, 2*nshfts)
   call end_test()
 
@@ -161,10 +171,16 @@ program test_zlaqr5
                H, ldh, iloz, ihiz, Z, ldz, V, ldv, U, ldu, nv, &
                WV, ldwv, nh, WH, ldwh)
 
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+      Zpk((j-1)*n + i) = Z(i,j)
+    end do
+  end do
   call begin_test('8x8_4shifts')
   call print_int('n', n)
-  call print_array('H', H_r, 2*n*n)
-  call print_array('Z', Z_r, 2*n*n)
+  call print_array('H', Hpk_r, 2*n*n)
+  call print_array('Z', Zpk_r, 2*n*n)
   call end_test()
 
   ! ==================================================================
@@ -220,10 +236,16 @@ program test_zlaqr5
                H, ldh, iloz, ihiz, Z, ldz, V, ldv, U, ldu, nv, &
                WV, ldwv, nh, WH, ldwh)
 
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+      Zpk((j-1)*n + i) = Z(i,j)
+    end do
+  end do
   call begin_test('6x6_partial_sweep')
   call print_int('n', n)
-  call print_array('H', H_r, 2*n*n)
-  call print_array('Z', Z_r, 2*n*n)
+  call print_array('H', Hpk_r, 2*n*n)
+  call print_array('Z', Zpk_r, 2*n*n)
   call end_test()
 
 end program

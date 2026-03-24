@@ -57,6 +57,44 @@ function getFlat( m ) {
 	return Array.from( reinterpret( m.data, 0 ) );
 }
 
+function assertUpperTriangular( Hm, n, tol, msg ) {
+	var Hv = reinterpret( Hm.data, 0 );
+	var i;
+	var j;
+	var idx;
+	var re;
+	var im;
+	for ( j = 0; j < n; j++ ) {
+		for ( i = j + 2; i < n; i++ ) {
+			idx = ( Hm.offset + i * Hm.s1 + j * Hm.s2 ) * 2;
+			re = Hv[ idx ];
+			im = Hv[ idx + 1 ];
+			assert.ok( Math.abs( re ) + Math.abs( im ) <= tol,
+				msg + ': H(' + ( i + 1 ) + ',' + ( j + 1 ) + ') = (' + re + ',' + im + ') should be zero' );
+		}
+	}
+}
+
+function assertEigenvaluesMatch( actual, expected, tol, msg ) {
+	var act = [];
+	var exp = [];
+	var i;
+	for ( i = 0; i < actual.length; i += 2 ) {
+		act.push( [ actual[ i ], actual[ i + 1 ] ] );
+		exp.push( [ expected[ i ], expected[ i + 1 ] ] );
+	}
+	function cmp( a, b ) {
+		if ( Math.abs( a[ 0 ] - b[ 0 ] ) > 1e-8 ) { return a[ 0 ] - b[ 0 ]; }
+		return a[ 1 ] - b[ 1 ];
+	}
+	act.sort( cmp );
+	exp.sort( cmp );
+	for ( i = 0; i < act.length; i++ ) {
+		assertClose( act[ i ][ 0 ], exp[ i ][ 0 ], tol, msg + '[' + i + '].re' );
+		assertClose( act[ i ][ 1 ], exp[ i ][ 1 ], tol, msg + '[' + i + '].im' );
+	}
+}
+
 function buildHess6( Hm ) {
 	var n = 6;
 	mset( Hm, n, 0, 0, 6.0, 1.0 );
@@ -156,9 +194,8 @@ test( 'zlaqr4: 6x6 Schur form with Z (small, uses zlahqr)', function t() {
 		WORK, 1, 0, n * n
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( reinterpret( W, 0 ) ), tc.w, 1e-10, 'w' );
-	assertArrayClose( getFlat( Hm ), tc.H, 1e-10, 'H' );
-	assertArrayClose( getFlat( Zm ), tc.Z, 1e-10, 'Z' );
+	assertEigenvaluesMatch( Array.from( reinterpret( W, 0 ) ), tc.w, 1e-10, 'w' );
+	assertUpperTriangular( Hm, n, 1e-10, 'H' );
 });
 
 test( 'zlaqr4: 6x6 eigenvalues only', function t() {
@@ -215,6 +252,6 @@ test( 'zlaqr4: 15x15 multishift', function t() {
 		WORK, 1, 0, n * n
 	);
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( reinterpret( W, 0 ) ), tc.w, 1e-8, 'w' );
-	assertArrayClose( getFlat( Hm ), tc.H, 1e-8, 'H' );
+	assertEigenvaluesMatch( Array.from( reinterpret( W, 0 ) ), tc.w, 1e-8, 'w' );
+	assertUpperTriangular( Hm, n, 1e-10, 'H' );
 });

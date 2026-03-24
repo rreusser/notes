@@ -7,16 +7,17 @@ program test_zlaqr2
   complex*16 :: H(NMAX, NMAX), Z(NMAX, NMAX)
   complex*16 :: SH(NMAX), V(NWMAX, NWMAX), T(NWMAX, NWMAX)
   complex*16 :: WV(NMAX, NWMAX), WORK(NMAX*NMAX)
-  double precision :: H_r(2*NMAX*NMAX), Z_r(2*NMAX*NMAX)
   double precision :: SH_r(2*NMAX), V_r(2*NWMAX*NWMAX), T_r(2*NWMAX*NWMAX)
-  equivalence (H, H_r)
-  equivalence (Z, Z_r)
   equivalence (SH, SH_r)
   equivalence (V, V_r)
   equivalence (T, T_r)
+  complex*16 :: Hpk(NMAX*NMAX), Zpk(NMAX*NMAX)
+  double precision :: Hpk_r(2*NMAX*NMAX), Zpk_r(2*NMAX*NMAX)
+  equivalence (Hpk, Hpk_r)
+  equivalence (Zpk, Zpk_r)
   integer :: n, ktop, kbot, nw, ns, nd
   integer :: iloz, ihiz, ldh, ldz, ldv, ldt, ldwv, nh, nv, lwork
-  integer :: i
+  integer :: i, j
 
   ldh = NMAX
   ldz = NMAX
@@ -92,8 +93,14 @@ program test_zlaqr2
   call print_int('n', n)
   call print_int('ns', ns)
   call print_int('nd', nd)
-  call print_array('H', H_r, 2*n*n)
-  call print_array('Z', Z_r, 2*n*n)
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+      Zpk((j-1)*n + i) = Z(i,j)
+    end do
+  end do
+  call print_array('H', Hpk_r, 2*n*n)
+  call print_array('Z', Zpk_r, 2*n*n)
   call print_array('SH', SH_r, 2*n)
   call end_test()
 
@@ -165,8 +172,14 @@ program test_zlaqr2
   call print_int('n', n)
   call print_int('ns', ns)
   call print_int('nd', nd)
-  call print_array('H', H_r, 2*n*n)
-  call print_array('Z', Z_r, 2*n*n)
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+      Zpk((j-1)*n + i) = Z(i,j)
+    end do
+  end do
+  call print_array('H', Hpk_r, 2*n*n)
+  call print_array('Z', Zpk_r, 2*n*n)
   call print_array('SH', SH_r, 2*n)
   call end_test()
 
