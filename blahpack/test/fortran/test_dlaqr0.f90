@@ -2,15 +2,15 @@ program test_dlaqr0
   use test_utils
   implicit none
 
-  integer, parameter :: MAXN = 20
+  integer, parameter :: MAXN = 100
   double precision :: H(MAXN, MAXN), Z(MAXN, MAXN)
-  double precision :: WR(MAXN), WI(MAXN), WORK(10*MAXN)
+  double precision :: WR(MAXN), WI(MAXN), WORK(100000)
   integer :: N, ILO, IHI, INFO, LDH, LDZ, LWORK, i, j
   logical :: WANTT, WANTZ
 
   LDH = MAXN
   LDZ = MAXN
-  LWORK = 10*MAXN
+  LWORK = 100000
 
   ! ==== Test 1: N=0, trivial case ====
   call begin_test('n_eq_0')
@@ -259,6 +259,78 @@ program test_dlaqr0
   end do
   call DLAQR0(.TRUE., .TRUE., N, ILO, IHI, H, LDH, WR, WI, &
               1, 10, Z, LDZ, WORK, LWORK, INFO)
+  call print_int('info', INFO)
+  call print_array('wr', WR, N)
+  call print_array('wi', WI, N)
+  call end_test()
+
+  ! ==== Test 11: 80x80 (exercises dlaqr3/dlaqr5 path, above NMIN=75) ====
+  call begin_test('hess_80x80')
+  N = 80
+  ILO = 1
+  IHI = 80
+  H = 0.0d0
+  Z = 0.0d0
+  do i = 1, N
+    H(i,i) = dble(i) * 1.0d0 + 5.0d0 * dble(mod(i*3, 7))
+    if (i < N) then
+      H(i+1,i) = 0.5d0
+    end if
+    do j = i+1, min(i+3, N)
+      H(i,j) = 0.15d0 / dble(j - i)
+    end do
+    Z(i,i) = 1.0d0
+  end do
+  call DLAQR0(.TRUE., .TRUE., N, ILO, IHI, H, LDH, WR, WI, &
+              1, N, Z, LDZ, WORK, LWORK, INFO)
+  call print_int('info', INFO)
+  call print_array('wr', WR, N)
+  call print_array('wi', WI, N)
+  call end_test()
+
+  ! ==== Test 12: 80x80 eigenvalues only (WANTT=F, WANTZ=F) ====
+  call begin_test('hess_80x80_eigonly')
+  N = 80
+  ILO = 1
+  IHI = 80
+  H = 0.0d0
+  Z = 0.0d0
+  do i = 1, N
+    H(i,i) = dble(i) * 1.0d0 + 5.0d0 * dble(mod(i*3, 7))
+    if (i < N) then
+      H(i+1,i) = 0.5d0
+    end if
+    do j = i+1, min(i+3, N)
+      H(i,j) = 0.15d0 / dble(j - i)
+    end do
+  end do
+  call DLAQR0(.FALSE., .FALSE., N, ILO, IHI, H, LDH, WR, WI, &
+              1, 1, Z, LDZ, WORK, LWORK, INFO)
+  call print_int('info', INFO)
+  call print_array('wr', WR, N)
+  call print_array('wi', WI, N)
+  call end_test()
+
+  ! ==== Test 13: 40x40 with complex eigenvalues ====
+  call begin_test('hess_40x40_complex')
+  N = 40
+  ILO = 1
+  IHI = 40
+  H = 0.0d0
+  Z = 0.0d0
+  ! Build matrix with some close eigenvalues that create complex pairs
+  do i = 1, N
+    H(i,i) = dble(mod(i, 5)) * 3.0d0 + 1.0d0
+    if (i < N) then
+      H(i+1,i) = 2.0d0
+    end if
+    do j = i+1, min(i+4, N)
+      H(i,j) = 0.5d0 / dble(J - I)
+    end do
+    Z(i,i) = 1.0d0
+  end do
+  call DLAQR0(.TRUE., .TRUE., N, ILO, IHI, H, LDH, WR, WI, &
+              1, N, Z, LDZ, WORK, LWORK, INFO)
   call print_int('info', INFO)
   call print_array('wr', WR, N)
   call print_array('wi', WI, N)

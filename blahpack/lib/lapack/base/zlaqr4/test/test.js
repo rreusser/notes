@@ -255,3 +255,96 @@ test( 'zlaqr4: 15x15 multishift', function t() {
 	assertEigenvaluesMatch( Array.from( reinterpret( W, 0 ) ), tc.w, 1e-8, 'w' );
 	assertUpperTriangular( Hm, n, 1e-10, 'H' );
 });
+
+test( 'zlaqr4: 16x16 multishift eigenvalues with Z (property-based)', function t() {
+	var n = 16;
+	var Hm = makeMatrix( n );
+	var Zm = makeMatrix( n );
+	var W = new Complex128Array( n );
+	var WORK = new Complex128Array( n * n );
+	var Wv;
+	var info;
+	var i;
+
+	// Build simple upper Hessenberg with well-separated real diagonal
+	for ( i = 0; i < n; i++ ) {
+		mset( Hm, n, i, i, ( n - i ) * 10.0, 0.0 );
+		if ( i < n - 1 ) {
+			mset( Hm, n, i + 1, i, 1.0, 0.0 );
+		}
+	}
+
+	for ( i = 0; i < n; i++ ) {
+		mset( Zm, n, i, i, 1.0, 0.0 );
+	}
+
+	// Use wantt=false, wantz=true to exercise multishift deflation+Z update path
+	info = zlaqr4( false, true, n, 1, n,
+		Hm.data, Hm.s1, Hm.s2, Hm.offset,
+		W, 1, 0,
+		1, n,
+		Zm.data, Zm.s1, Zm.s2, Zm.offset,
+		WORK, 1, 0, n * n
+	);
+
+	assert.equal( info, 0, 'convergence (info=0)' );
+
+	Wv = reinterpret( W, 0 );
+	for ( i = 0; i < n; i++ ) {
+		assert.ok( !Number.isNaN( Wv[ 2 * i ] ) && !Number.isNaN( Wv[ 2 * i + 1 ] ),
+			'eigenvalue ' + i + ' is not NaN' );
+		assert.ok( Math.abs( Wv[ 2 * i ] ) + Math.abs( Wv[ 2 * i + 1 ] ) < 1e6,
+			'eigenvalue ' + i + ' has reasonable magnitude' );
+	}
+});
+
+test( 'zlaqr4: 16x16 eigenvalues only (property-based)', function t() {
+	var n = 16;
+	var Hm = makeMatrix( n );
+	var Zm = makeMatrix( n );
+	var W = new Complex128Array( n );
+	var WORK = new Complex128Array( n * n );
+	var Wv;
+	var info;
+	var i;
+
+	for ( i = 0; i < n; i++ ) {
+		mset( Hm, n, i, i, ( n - i ) * 10.0, 0.0 );
+		if ( i < n - 1 ) {
+			mset( Hm, n, i + 1, i, 1.0, 0.0 );
+		}
+	}
+
+	info = zlaqr4( false, false, n, 1, n,
+		Hm.data, Hm.s1, Hm.s2, Hm.offset,
+		W, 1, 0,
+		1, n,
+		Zm.data, Zm.s1, Zm.s2, Zm.offset,
+		WORK, 1, 0, n * n
+	);
+
+	assert.equal( info, 0, 'convergence (info=0)' );
+
+	Wv = reinterpret( W, 0 );
+	for ( i = 0; i < n; i++ ) {
+		assert.ok( Number.isFinite( Wv[ 2 * i ] ) && Number.isFinite( Wv[ 2 * i + 1 ] ),
+			'eigenvalue ' + i + ' is finite' );
+	}
+});
+
+test( 'zlaqr4: workspace query (lwork=-1)', function t() {
+	var n = 20;
+	var Hm = makeMatrix( n );
+	var Zm = makeMatrix( n );
+	var W = new Complex128Array( n );
+	var WORK = new Complex128Array( 1 );
+
+	var info = zlaqr4( true, true, n, 1, n,
+		Hm.data, Hm.s1, Hm.s2, Hm.offset,
+		W, 1, 0,
+		1, n,
+		Zm.data, Zm.s1, Zm.s2, Zm.offset,
+		WORK, 1, 0, -1
+	);
+	assert.equal( info, 0, 'workspace query returns info=0' );
+});

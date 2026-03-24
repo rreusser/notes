@@ -3,13 +3,13 @@ program test_dlaqr4
   implicit none
 
   ! Max sizes
-  integer, parameter :: MAXN = 15
+  integer, parameter :: MAXN = 100
   double precision :: H(MAXN, MAXN), Z(MAXN, MAXN)
   double precision :: WR(MAXN), WI(MAXN)
-  double precision :: WORK(10000)
+  double precision :: WORK(100000)
   integer :: INFO, N, I, J, LWORK
 
-  LWORK = 10000
+  LWORK = 100000
 
   ! ============================================================
   ! Test 1: 6x6 Hessenberg (small path via dlahqr), WANTT=T, WANTZ=T
@@ -157,6 +157,138 @@ program test_dlaqr4
   call begin_test('6x6 partial ilo=2 ihi=5')
   call print_matrix('H', H, MAXN, N, N)
   call print_matrix('Z', Z, MAXN, N, N)
+  call print_array('WR', WR, N)
+  call print_array('WI', WI, N)
+  call print_int('info', INFO)
+  call end_test()
+
+  ! ============================================================
+  ! Test 8: 20x20 diagonally dominant (exercises multishift path, N > NTINY=15)
+  ! ============================================================
+  N = 20
+  H = 0.0d0; Z = 0.0d0; WR = 0.0d0; WI = 0.0d0
+  do I = 1, N
+    H(I, I) = dble(N + 1 - I) * 2.0d0
+    if (I < N) then
+      H(I+1, I) = 1.0d0
+    end if
+    do J = I+1, N
+      H(I, J) = 0.3d0 / dble(J - I)
+    end do
+  end do
+  do I = 1, N
+    Z(I, I) = 1.0d0
+  end do
+  call DLAQR4(.TRUE., .TRUE., N, 1, N, H, MAXN, WR, WI, 1, N, Z, MAXN, WORK, LWORK, INFO)
+  call begin_test('20x20 wantt wantz')
+  call print_matrix('H', H, MAXN, N, N)
+  call print_matrix('Z', Z, MAXN, N, N)
+  call print_array('WR', WR, N)
+  call print_array('WI', WI, N)
+  call print_int('info', INFO)
+  call end_test()
+
+  ! ============================================================
+  ! Test 9: 40x40 diagonally dominant (larger multishift)
+  ! ============================================================
+  N = 40
+  H = 0.0d0; Z = 0.0d0; WR = 0.0d0; WI = 0.0d0
+  do I = 1, N
+    H(I, I) = dble(I) * 1.5d0 + 0.1d0 * dble(mod(I*7, 13))
+    if (I < N) then
+      H(I+1, I) = 0.8d0
+    end if
+    do J = I+1, min(I+5, N)
+      H(I, J) = 0.2d0 / dble(J - I)
+    end do
+  end do
+  do I = 1, N
+    Z(I, I) = 1.0d0
+  end do
+  call DLAQR4(.TRUE., .TRUE., N, 1, N, H, MAXN, WR, WI, 1, N, Z, MAXN, WORK, LWORK, INFO)
+  call begin_test('40x40 wantt wantz')
+  call print_matrix('H', H, MAXN, N, N)
+  call print_matrix('Z', Z, MAXN, N, N)
+  call print_array('WR', WR, N)
+  call print_array('WI', WI, N)
+  call print_int('info', INFO)
+  call end_test()
+
+  ! ============================================================
+  ! Test 10: 80x80 (well above NTINY, exercises full multishift + AED)
+  ! ============================================================
+  N = 80
+  H = 0.0d0; Z = 0.0d0; WR = 0.0d0; WI = 0.0d0
+  do I = 1, N
+    H(I, I) = dble(I) * 1.0d0 + 5.0d0 * dble(mod(I*3, 7))
+    if (I < N) then
+      H(I+1, I) = 0.5d0
+    end if
+    do J = I+1, min(I+3, N)
+      H(I, J) = 0.15d0 / dble(J - I)
+    end do
+  end do
+  do I = 1, N
+    Z(I, I) = 1.0d0
+  end do
+  call DLAQR4(.TRUE., .TRUE., N, 1, N, H, MAXN, WR, WI, 1, N, Z, MAXN, WORK, LWORK, INFO)
+  call begin_test('80x80 wantt wantz')
+  call print_array('WR', WR, N)
+  call print_array('WI', WI, N)
+  call print_int('info', INFO)
+  call end_test()
+
+  ! ============================================================
+  ! Test 11: 20x20 WANTT=F, WANTZ=F (eigenvalues only, multishift)
+  ! ============================================================
+  N = 20
+  H = 0.0d0; Z = 0.0d0; WR = 0.0d0; WI = 0.0d0
+  do I = 1, N
+    H(I, I) = dble(N + 1 - I) * 2.0d0
+    if (I < N) then
+      H(I+1, I) = 1.0d0
+    end if
+    do J = I+1, N
+      H(I, J) = 0.3d0 / dble(J - I)
+    end do
+  end do
+  call DLAQR4(.FALSE., .FALSE., N, 1, N, H, MAXN, WR, WI, 1, N, Z, MAXN, WORK, LWORK, INFO)
+  call begin_test('20x20 no wantt no wantz')
+  call print_array('WR', WR, N)
+  call print_array('WI', WI, N)
+  call print_int('info', INFO)
+  call end_test()
+
+  ! ============================================================
+  ! Test 12: 30x30 partial range (ILO=5, IHI=25)
+  ! ============================================================
+  N = 30
+  H = 0.0d0; Z = 0.0d0; WR = 0.0d0; WI = 0.0d0
+  ! Already converged outside [5,25]
+  do I = 1, 4
+    H(I, I) = dble(100 + I)
+  end do
+  do I = 26, 30
+    H(I, I) = dble(-100 - I)
+  end do
+  ! Active block 5..25: upper Hessenberg
+  do I = 5, 25
+    H(I, I) = dble(I) * 1.5d0
+    if (I < 25) then
+      H(I+1, I) = 0.7d0
+    end if
+    do J = I+1, min(I+4, 25)
+      H(I, J) = 0.25d0 / dble(J - I)
+    end do
+  end do
+  ! Off-diagonal connections
+  H(4, 5) = 0.3d0
+  H(25, 26) = 0.3d0
+  do I = 1, N
+    Z(I, I) = 1.0d0
+  end do
+  call DLAQR4(.TRUE., .TRUE., N, 5, 25, H, MAXN, WR, WI, 1, N, Z, MAXN, WORK, LWORK, INFO)
+  call begin_test('30x30 partial ilo=5 ihi=25')
   call print_array('WR', WR, N)
   call print_array('WI', WI, N)
   call print_int('info', INFO)

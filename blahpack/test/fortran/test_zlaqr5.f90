@@ -248,4 +248,138 @@ program test_zlaqr5
   call print_array('Z', Zpk_r, 2*n*n)
   call end_test()
 
+  ! ==================================================================
+  ! Test 4: 10x10 with 6 shifts, KACC22=0
+  ! ==================================================================
+  n = 10
+  ktop = 1
+  kbot = 10
+  nshfts = 6
+  kacc22 = 0
+  iloz = 1
+  ihiz = 10
+  nh = n
+  nv = n
+
+  H = (0.0d0, 0.0d0)
+  Z = (0.0d0, 0.0d0)
+  S = (0.0d0, 0.0d0)
+  V = (0.0d0, 0.0d0)
+  U = (0.0d0, 0.0d0)
+  WV = (0.0d0, 0.0d0)
+  WH = (0.0d0, 0.0d0)
+
+  ! Diagonally dominant upper Hessenberg 10x10
+  do i = 1, n
+    H(i,i) = dcmplx(dble(n-i+1)*3.0d0, dble(i)*0.1d0)
+    if (i < n) then
+      H(i+1,i) = dcmplx(0.5d0, 0.1d0 * (-1)**i)
+    end if
+    do j = i+1, min(i+2, n)
+      H(i,j) = dcmplx(0.3d0/dble(j-i), 0.05d0 * (-1)**j)
+    end do
+  end do
+
+  do i = 1, n
+    Z(i,i) = (1.0d0, 0.0d0)
+  end do
+
+  ! 6 shifts
+  S(1) = (5.0d0, 0.3d0)
+  S(2) = (4.0d0, -0.2d0)
+  S(3) = (3.0d0, 0.5d0)
+  S(4) = (2.0d0, -0.4d0)
+  S(5) = (1.5d0, 0.1d0)
+  S(6) = (1.0d0, -0.3d0)
+
+  call ZLAQR5(.TRUE., .TRUE., kacc22, n, ktop, kbot, nshfts, S, &
+               H, ldh, iloz, ihiz, Z, ldz, V, ldv, U, ldu, nv, &
+               WV, ldwv, nh, WH, ldwh)
+
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+      Zpk((j-1)*n + i) = Z(i,j)
+    end do
+  end do
+  call begin_test('10x10_6shifts')
+  call print_int('n', n)
+  call print_array('H', Hpk_r, 2*n*n)
+  call print_array('Z', Zpk_r, 2*n*n)
+  call end_test()
+
+  ! ==================================================================
+  ! Test 5: 8x8 with no Z (wantz=false)
+  ! ==================================================================
+  n = 8
+  ktop = 1
+  kbot = 8
+  nshfts = 4
+  kacc22 = 0
+  iloz = 1
+  ihiz = 8
+  nh = n
+  nv = n
+
+  H = (0.0d0, 0.0d0)
+  Z = (0.0d0, 0.0d0)
+  S = (0.0d0, 0.0d0)
+  V = (0.0d0, 0.0d0)
+  U = (0.0d0, 0.0d0)
+  WV = (0.0d0, 0.0d0)
+  WH = (0.0d0, 0.0d0)
+
+  H(1,1) = (8.0d0, 0.5d0)
+  H(1,2) = (1.0d0, -0.5d0)
+  H(1,3) = (0.5d0, 0.0d0)
+  H(1,4) = (0.25d0, 0.1d0)
+  H(2,1) = (1.0d0, 0.0d0)
+  H(2,2) = (7.0d0, -0.5d0)
+  H(2,3) = (1.0d0, 0.5d0)
+  H(2,4) = (0.5d0, 0.0d0)
+  H(2,5) = (0.25d0, 0.0d0)
+  H(3,2) = (0.8d0, 0.1d0)
+  H(3,3) = (6.0d0, 1.0d0)
+  H(3,4) = (1.0d0, -0.3d0)
+  H(3,5) = (0.5d0, 0.0d0)
+  H(3,6) = (0.2d0, 0.0d0)
+  H(4,3) = (0.7d0, -0.2d0)
+  H(4,4) = (5.0d0, -1.0d0)
+  H(4,5) = (1.0d0, 0.5d0)
+  H(4,6) = (0.4d0, 0.0d0)
+  H(4,7) = (0.1d0, 0.0d0)
+  H(5,4) = (0.6d0, 0.1d0)
+  H(5,5) = (4.0d0, 0.0d0)
+  H(5,6) = (1.0d0, -0.5d0)
+  H(5,7) = (0.3d0, 0.0d0)
+  H(5,8) = (0.1d0, 0.0d0)
+  H(6,5) = (0.5d0, -0.1d0)
+  H(6,6) = (3.0d0, 0.5d0)
+  H(6,7) = (1.0d0, 0.5d0)
+  H(6,8) = (0.2d0, 0.0d0)
+  H(7,6) = (0.4d0, 0.05d0)
+  H(7,7) = (2.0d0, -0.5d0)
+  H(7,8) = (1.0d0, -0.5d0)
+  H(8,7) = (0.3d0, -0.1d0)
+  H(8,8) = (1.0d0, 1.0d0)
+
+  S(1) = (4.5d0, 0.5d0)
+  S(2) = (3.5d0, -0.5d0)
+  S(3) = (2.5d0, 1.0d0)
+  S(4) = (1.5d0, -1.0d0)
+
+  call ZLAQR5(.TRUE., .FALSE., kacc22, n, ktop, kbot, nshfts, S, &
+               H, ldh, iloz, ihiz, Z, ldz, V, ldv, U, ldu, nv, &
+               WV, ldwv, nh, WH, ldwh)
+
+  do j = 1, n
+    do i = 1, n
+      Hpk((j-1)*n + i) = H(i,j)
+    end do
+  end do
+  call begin_test('8x8_4shifts_no_z')
+  call print_int('n', n)
+  call print_array('H', Hpk_r, 2*n*n)
+  call end_test()
+
 end program

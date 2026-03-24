@@ -207,3 +207,84 @@ test( 'zlaqr1: 2x2 with identical shifts', function t() {
 	vv = Array.from( reinterpret( v, 0 ) );
 	assertArrayClose( vv, tc.v, 1e-13, 'v' );
 });
+
+test( 'zlaqr1: quick return for invalid N (N=0)', function t() {
+	var Hm = makeMatrix( 2 );
+	var v = new Complex128Array( 2 );
+	var vv;
+
+	// Pre-fill v with sentinel values
+	vv = reinterpret( v, 0 );
+	vv[ 0 ] = 99.0;
+	vv[ 1 ] = 99.0;
+	vv[ 2 ] = 99.0;
+	vv[ 3 ] = 99.0;
+
+	zlaqr1( 0, Hm.data, Hm.s1, Hm.s2, Hm.offset,
+		new Complex128( 1.0, 0.0 ), new Complex128( 1.0, 0.0 ),
+		v, 1, 0
+	);
+
+	// v should be untouched
+	vv = Array.from( reinterpret( v, 0 ) );
+	assert.equal( vv[ 0 ], 99.0, 'v untouched for N=0' );
+	assert.equal( vv[ 1 ], 99.0, 'v untouched for N=0' );
+});
+
+test( 'zlaqr1: quick return for invalid N (N=1)', function t() {
+	var Hm = makeMatrix( 2 );
+	var v = new Complex128Array( 2 );
+	var vv;
+
+	vv = reinterpret( v, 0 );
+	vv[ 0 ] = 99.0;
+	vv[ 1 ] = 99.0;
+
+	zlaqr1( 1, Hm.data, Hm.s1, Hm.s2, Hm.offset,
+		new Complex128( 1.0, 0.0 ), new Complex128( 1.0, 0.0 ),
+		v, 1, 0
+	);
+
+	vv = Array.from( reinterpret( v, 0 ) );
+	assert.equal( vv[ 0 ], 99.0, 'v untouched for N=1' );
+});
+
+test( 'zlaqr1: 2x2 zero matrix produces zero output (s=0 branch)', function t() {
+	var n = 2;
+	var Hm = makeMatrix( n );
+	var v = new Complex128Array( n );
+	var vv;
+
+	// H is all zeros, shifts are zero => s = 0
+	zlaqr1( n, Hm.data, Hm.s1, Hm.s2, Hm.offset,
+		new Complex128( 0.0, 0.0 ), new Complex128( 0.0, 0.0 ),
+		v, 1, 0
+	);
+
+	vv = Array.from( reinterpret( v, 0 ) );
+	assert.equal( vv[ 0 ], 0.0, 'v[0].re = 0' );
+	assert.equal( vv[ 1 ], 0.0, 'v[0].im = 0' );
+	assert.equal( vv[ 2 ], 0.0, 'v[1].re = 0' );
+	assert.equal( vv[ 3 ], 0.0, 'v[1].im = 0' );
+});
+
+test( 'zlaqr1: 3x3 zero matrix produces zero output (s=0 branch)', function t() {
+	var n = 3;
+	var Hm = makeMatrix( n );
+	var v = new Complex128Array( n );
+	var vv;
+
+	// H is all zeros, shifts are zero => s = 0
+	zlaqr1( n, Hm.data, Hm.s1, Hm.s2, Hm.offset,
+		new Complex128( 0.0, 0.0 ), new Complex128( 0.0, 0.0 ),
+		v, 1, 0
+	);
+
+	vv = Array.from( reinterpret( v, 0 ) );
+	assert.equal( vv[ 0 ], 0.0, 'v[0].re = 0' );
+	assert.equal( vv[ 1 ], 0.0, 'v[0].im = 0' );
+	assert.equal( vv[ 2 ], 0.0, 'v[1].re = 0' );
+	assert.equal( vv[ 3 ], 0.0, 'v[1].im = 0' );
+	assert.equal( vv[ 4 ], 0.0, 'v[2].re = 0' );
+	assert.equal( vv[ 5 ], 0.0, 'v[2].im = 0' );
+});

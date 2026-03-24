@@ -371,7 +371,8 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 				nve = N - kdu - kwv + 1;
 
 				// Small-bulge multi-shift QR sweep
-				dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, ns, WR, strideWR, offsetWR + ( ks - 1 ) * strideWR, WI, strideWI, offsetWI + ( ks - 1 ) * strideWI, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, 3, H, strideH1, strideH2, hij( ku, 1 ), nve, H, strideH1, strideH2, hij( kwv, 1 ), nho, H, strideH1, strideH2, hij( ku, kwh ) );
+				// NOTE: dlaqr5 uses 0-based ktop, kbot, iloz, ihiz
+				dlaqr5( wantt, wantz, kacc22, N, ktop - 1, kbot - 1, ns, WR, strideWR, offsetWR + ( ks - 1 ) * strideWR, WI, strideWI, offsetWI + ( ks - 1 ) * strideWI, H, strideH1, strideH2, offsetH, iloz - 1, ihiz - 1, Z, strideZ1, strideZ2, offsetZ, WORK, 1, 3, offsetWORK, H, strideH1, strideH2, hij( ku, 1 ), nve, H, strideH1, strideH2, hij( kwv, 1 ), nho, H, strideH1, strideH2, hij( ku, kwh ) );
 			}
 
 			// Note progress

@@ -120,11 +120,9 @@ function runDlaqr2( N, KTOP, KBOT, NW, Hin, Zin, WANTT, WANTZ, ILOZ, IHIZ ) {
 test( 'dlaqr2: 6x6 hessenberg NW=3', function t() {
 	var tc = findCase( '6x6 hessenberg NW=3' );
 	var N = 6;
-	var MAXN = 10;
-
-	// Extract NxN from MAXN-column-major fixture
-	var Hin = extractMatrix( tc.H, MAXN, N );
-	var Zin = extractMatrix( tc.Z, MAXN, N );
+	// Fixture H/Z are packed NxN (print_matrix packs them)
+	var Hin = new Float64Array( tc.H );
+	var Zin = new Float64Array( tc.Z );
 
 	// Build input (before dlaqr2 call)
 	var H0 = new Float64Array( N * N );
@@ -151,9 +149,7 @@ test( 'dlaqr2: 6x6 hessenberg NW=3', function t() {
 test( 'dlaqr2: 4x4 hessenberg NW=2', function t() {
 	var tc = findCase( '4x4 hessenberg NW=2' );
 	var N = 4;
-	var MAXN = 10;
-
-	var Hin = extractMatrix( tc.H, MAXN, N );
+	var Hin = new Float64Array( tc.H );
 
 	var H0 = new Float64Array( N * N );
 	H0[ 0 + 0*N ] = 5.0; H0[ 0 + 1*N ] = 2.0; H0[ 0 + 2*N ] = 0.3; H0[ 0 + 3*N ] = 0.1;
@@ -176,9 +172,7 @@ test( 'dlaqr2: 4x4 hessenberg NW=2', function t() {
 test( 'dlaqr2: 4x4 NW=1 no wantz', function t() {
 	var tc = findCase( '4x4 NW=1 no wantz' );
 	var N = 4;
-	var MAXN = 10;
-
-	var Hin = extractMatrix( tc.H, MAXN, N );
+	var Hin = new Float64Array( tc.H );
 
 	var H0 = new Float64Array( N * N );
 	H0[ 0 + 0*N ] = 5.0; H0[ 0 + 1*N ] = 2.0; H0[ 0 + 2*N ] = 0.3; H0[ 0 + 3*N ] = 0.1;
@@ -212,10 +206,8 @@ test( 'dlaqr2: edge case ktop > kbot', function t() {
 test( 'dlaqr2: 8x8 hessenberg NW=4 partial', function t() {
 	var tc = findCase( '8x8 hessenberg NW=4 partial' );
 	var N = 8;
-	var MAXN = 10;
-
-	var Hin = extractMatrix( tc.H, MAXN, N );
-	var Zin = extractMatrix( tc.Z, MAXN, N );
+	var Hin = new Float64Array( tc.H );
+	var Zin = new Float64Array( tc.Z );
 
 	// Build input
 	var H0 = new Float64Array( N * N );
@@ -277,10 +269,8 @@ test( 'dlaqr2: workspace query', function t() {
 test( 'dlaqr2: 6x6 with deflation', function t() {
 	var tc = findCase( '6x6 with deflation' );
 	var N = 6;
-	var MAXN = 10;
-
-	var Hin = extractMatrix( tc.H, MAXN, N );
-	var Zin = extractMatrix( tc.Z, MAXN, N );
+	var Hin = new Float64Array( tc.H );
+	var Zin = new Float64Array( tc.Z );
 
 	var H0 = new Float64Array( N * N );
 	H0[ 0 + 0*N ] = 10.0; H0[ 0 + 1*N ] = 1.0;  H0[ 0 + 2*N ] = 0.5; H0[ 0 + 3*N ] = 0.1;    H0[ 0 + 4*N ] = 0.2;  H0[ 0 + 5*N ] = 0.3;
@@ -307,10 +297,6 @@ test( 'dlaqr2: 6x6 with deflation', function t() {
 test( 'dlaqr2: 6x6 full window', function t() {
 	var tc = findCase( '6x6 full window' );
 	var N = 6;
-	var MAXN = 10;
-
-	var Hin = extractMatrix( tc.H, MAXN, N );
-	var Zin = extractMatrix( tc.Z, MAXN, N );
 
 	var H0 = new Float64Array( N * N );
 	H0[ 0 + 0*N ] = 10.0; H0[ 0 + 1*N ] = 1.0;  H0[ 0 + 2*N ] = 0.5; H0[ 0 + 3*N ] = 0.1;    H0[ 0 + 4*N ] = 0.2;  H0[ 0 + 5*N ] = 0.3;
@@ -332,4 +318,144 @@ test( 'dlaqr2: 6x6 full window', function t() {
 	var srFort = tc.SR.slice( 0, N ).slice().sort();
 	assertArrayClose( srJS, srFort, 1e-10, 'SR sorted' );
 	verifyOrthogonal( r.Z, N, 1e-10, 'Z orthogonal' );
+});
+
+test( 'dlaqr2: 10x10 NW=5', function t() {
+	var tc = findCase( '10x10 NW=5' );
+	var N = 10;
+
+	var H0 = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		H0[ i + i*N ] = ( N + 1 - ( i + 1 ) ) * 2.0;
+		if ( i + 1 < N ) {
+			H0[ ( i + 1 ) + i*N ] = 0.8;
+			H0[ i + ( i + 1 )*N ] = 0.6;
+		}
+		if ( i + 2 < N ) {
+			H0[ i + ( i + 2 )*N ] = 0.15;
+		}
+	}
+
+	var Z0 = new Float64Array( N * N );
+	for ( i = 0; i < N; i++ ) Z0[ i + i*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 10, 5, H0, Z0, true, true, 1, 10 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), tc.H, 1e-10, 'H' );
+	assertArrayClose( Array.from( r.Z ), tc.Z, 1e-10, 'Z' );
+	assertArrayClose( Array.from( r.SR ).slice( 0, N ), tc.SR, 1e-10, 'SR' );
+	assertArrayClose( Array.from( r.SI ).slice( 0, N ), tc.SI, 1e-10, 'SI' );
+});
+
+test( 'dlaqr2: 10x10 NW=8 large window', function t() {
+	var tc = findCase( '10x10 NW=8 large window' );
+	var N = 10;
+
+	var H0 = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		H0[ i + i*N ] = ( i + 1 ) * 0.5 + 2.0;
+		if ( i + 1 < N ) {
+			H0[ ( i + 1 ) + i*N ] = 1.5;
+			H0[ i + ( i + 1 )*N ] = 0.8;
+		}
+		if ( i + 2 < N ) {
+			H0[ i + ( i + 2 )*N ] = 0.3;
+		}
+	}
+
+	var Z0 = new Float64Array( N * N );
+	for ( i = 0; i < N; i++ ) Z0[ i + i*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 10, 8, H0, Z0, true, true, 1, 10 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), tc.H, 1e-10, 'H' );
+	assertArrayClose( Array.from( r.Z ), tc.Z, 1e-10, 'Z' );
+	assertArrayClose( Array.from( r.SR ).slice( 0, N ), tc.SR, 1e-10, 'SR' );
+	assertArrayClose( Array.from( r.SI ).slice( 0, N ), tc.SI, 1e-10, 'SI' );
+});
+
+test( 'dlaqr2: 6x6 NW=4 no wantt no wantz', function t() {
+	var tc = findCase( '6x6 NW=4 no wantt no wantz' );
+	var N = 6;
+
+	var H0 = new Float64Array( N * N );
+	H0[ 0 + 0*N ] = 4.0; H0[ 0 + 1*N ] = 1.0; H0[ 0 + 2*N ] = 0.5; H0[ 0 + 3*N ] = 0.1; H0[ 0 + 4*N ] = 0.2; H0[ 0 + 5*N ] = 0.3;
+	H0[ 1 + 0*N ] = 1.0; H0[ 1 + 1*N ] = 3.0; H0[ 1 + 2*N ] = 0.8; H0[ 1 + 3*N ] = 0.2; H0[ 1 + 4*N ] = 0.1; H0[ 1 + 5*N ] = 0.4;
+	H0[ 2 + 1*N ] = 0.5; H0[ 2 + 2*N ] = 2.0; H0[ 2 + 3*N ] = 0.7; H0[ 2 + 4*N ] = 0.3; H0[ 2 + 5*N ] = 0.2;
+	H0[ 3 + 2*N ] = 0.3; H0[ 3 + 3*N ] = 1.5; H0[ 3 + 4*N ] = 0.9; H0[ 3 + 5*N ] = 0.1;
+	H0[ 4 + 3*N ] = 0.2; H0[ 4 + 4*N ] = 1.0; H0[ 4 + 5*N ] = 0.6;
+	H0[ 5 + 4*N ] = 0.1; H0[ 5 + 5*N ] = 0.5;
+
+	var Z0 = new Float64Array( N * N );
+
+	var r = runDlaqr2( N, 1, 6, 4, H0, Z0, false, false, 1, 6 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), tc.H, 1e-10, 'H' );
+	assertArrayClose( Array.from( r.SR ).slice( 0, N ), tc.SR, 1e-10, 'SR' );
+	assertArrayClose( Array.from( r.SI ).slice( 0, N ), tc.SI, 1e-10, 'SI' );
+});
+
+test( 'dlaqr2: 8x8 NW=6 nearly deflated', function t() {
+	var tc = findCase( '8x8 NW=6 nearly deflated' );
+	var N = 8;
+
+	var H0 = new Float64Array( N * N );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		H0[ i + i*N ] = ( i + 1 ) * 3.0;
+		if ( i + 1 < N ) {
+			H0[ i + ( i + 1 )*N ] = 1.0;
+		}
+		if ( i > 0 && i <= 4 ) {
+			H0[ i + ( i - 1 )*N ] = 0.8;
+		}
+	}
+	// Tiny subdiag entries near bottom
+	H0[ 5 + 4*N ] = 1e-15;
+	H0[ 6 + 5*N ] = 1e-14;
+	H0[ 7 + 6*N ] = 1e-13;
+
+	var Z0 = new Float64Array( N * N );
+	for ( i = 0; i < N; i++ ) Z0[ i + i*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 8, 6, H0, Z0, true, true, 1, 8 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	// Verify at least some deflation occurred
+	assert.ok( r.nd > 0, 'should have some deflation with tiny subdiag entries' );
+	verifyOrthogonal( r.Z, N, 1e-10, 'Z orthogonal' );
+});
+
+test( 'dlaqr2: 6x6 NW=2 complex pair', function t() {
+	var tc = findCase( '6x6 NW=2 complex pair' );
+	var N = 6;
+
+	var H0 = new Float64Array( N * N );
+	H0[ 0 + 0*N ] = 10.0; H0[ 0 + 1*N ] = 1.0;  H0[ 0 + 2*N ] = 0.5;  H0[ 0 + 3*N ] = 0.2; H0[ 0 + 4*N ] = 0.1;  H0[ 0 + 5*N ] = 0.05;
+	H0[ 1 + 0*N ] = 0.5;  H0[ 1 + 1*N ] = 8.0;  H0[ 1 + 2*N ] = 1.0;  H0[ 1 + 3*N ] = 0.3; H0[ 1 + 4*N ] = 0.2;  H0[ 1 + 5*N ] = 0.1;
+	H0[ 2 + 1*N ] = 0.3;  H0[ 2 + 2*N ] = 6.0;  H0[ 2 + 3*N ] = 0.8;  H0[ 2 + 4*N ] = 0.3; H0[ 2 + 5*N ] = 0.15;
+	H0[ 3 + 2*N ] = 0.2;  H0[ 3 + 3*N ] = 4.0;  H0[ 3 + 4*N ] = 1.0;  H0[ 3 + 5*N ] = 0.2;
+	H0[ 4 + 3*N ] = 0.1;  H0[ 4 + 4*N ] = 1.0;  H0[ 4 + 5*N ] = 4.0;
+	H0[ 5 + 4*N ] = -1.0; H0[ 5 + 5*N ] = 1.0;
+
+	var Z0 = new Float64Array( N * N );
+	for ( var ii = 0; ii < N; ii++ ) Z0[ ii + ii*N ] = 1.0;
+
+	var r = runDlaqr2( N, 1, 6, 2, H0, Z0, true, true, 1, 6 );
+
+	assert.strictEqual( r.ns, tc.ns, 'ns' );
+	assert.strictEqual( r.nd, tc.nd, 'nd' );
+	assertArrayClose( Array.from( r.H ), tc.H, 1e-10, 'H' );
+	assertArrayClose( Array.from( r.Z ), tc.Z, 1e-10, 'Z' );
+	assertArrayClose( Array.from( r.SR ).slice( 0, N ), tc.SR, 1e-10, 'SR' );
+	assertArrayClose( Array.from( r.SI ).slice( 0, N ), tc.SI, 1e-10, 'SI' );
 });
