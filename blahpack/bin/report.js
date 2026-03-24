@@ -252,21 +252,103 @@ var html = '<!DOCTYPE html>\n' +
 '.cov-bad { color: #dc2626; font-weight: 600; }\n' +
 'tr.unimpl { display: none; }\n' +
 'body.show-all tr.unimpl { display: table-row; }\n' +
-'.toggle { margin-bottom: 1.5rem; font-size: 0.9rem; cursor: pointer; user-select: none; }\n' +
+'tr.prefix-hidden { display: none !important; }\n' +
+'.controls { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }\n' +
+'.toggle { font-size: 0.9rem; cursor: pointer; user-select: none; }\n' +
 '.toggle input { margin-right: 0.4rem; cursor: pointer; }\n' +
+'.prefix-filter { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }\n' +
+'.prefix-filter input[type="text"] { width: 6rem; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 0.875rem; }\n' +
+'.prefix-btns { display: flex; gap: 0.25rem; }\n' +
+'.prefix-btns button { padding: 3px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 0.8rem; cursor: pointer; font-family: ui-monospace, monospace; }\n' +
+'.prefix-btns button:hover { background: #f1f3f5; }\n' +
+'.prefix-btns button.active { background: #3b82f6; color: white; border-color: #3b82f6; }\n' +
 '</style>\n</head>\n<body>\n' +
 '<h1>Blahpack Translation Progress</h1>\n' +
 '<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated ' + now + '</p>\n' +
 '<div class="stats">\n' +
 '<div class="stat green"><div class="val">' + implemented.length + '/' + ( blasSources.length + lapackSources.length ) + '</div><div class="lbl">Implemented</div></div>\n' +
 '<div class="stat"><div class="val">' + totalTests + '</div><div class="lbl">Tests</div></div>\n' +
-'<div class="stat"><div class="val">' + blasModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + blasSources.length + '</div><div class="lbl">BLAS</div></div>\n' +
-'<div class="stat"><div class="val">' + lapackModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + lapackSources.length + '</div><div class="lbl">LAPACK</div></div>\n' +
+'<div class="stat" id="statBlas"><div class="val">' + blasModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + blasSources.length + '</div><div class="lbl">BLAS</div></div>\n' +
+'<div class="stat" id="statLapack"><div class="val">' + lapackModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + lapackSources.length + '</div><div class="lbl">LAPACK</div></div>\n' +
 '</div>\n' +
-'<label class="toggle"><input type="checkbox" id="showAll">Show all reference routines (including unimplemented)</label>\n' +
+'<div class="controls">\n' +
+'<label class="toggle"><input type="checkbox" id="showAll">Show unimplemented</label>\n' +
+'<div class="prefix-filter">\n' +
+'<span>Prefix:</span>\n' +
+'<input type="text" id="prefixInput" placeholder="e.g. z, dge">\n' +
+'<div class="prefix-btns">\n' +
+'<button data-prefix="">all</button>\n' +
+'<button data-prefix="d">d*</button>\n' +
+'<button data-prefix="z">z*</button>\n' +
+'<button data-prefix="s">s*</button>\n' +
+'<button data-prefix="c">c*</button>\n' +
+'</div>\n' +
+'</div>\n' +
+'</div>\n' +
 sectionHTML( 'BLAS', blasModules ) +
 sectionHTML( 'LAPACK', lapackModules ) +
-'<script>document.getElementById("showAll").addEventListener("change",function(){document.body.classList.toggle("show-all",this.checked)});</script>\n' +
+'<script>\n' +
+'(function() {\n' +
+'  var showAll = document.getElementById("showAll");\n' +
+'  var prefixInput = document.getElementById("prefixInput");\n' +
+'  var prefixBtns = document.querySelectorAll(".prefix-btns button");\n' +
+'  var statImpl = document.querySelector(".stat.green .val");\n' +
+'  var statTests = document.querySelectorAll(".stat")[1].querySelector(".val");\n' +
+'  var statBlas = document.getElementById("statBlas").querySelector(".val");\n' +
+'  var statLapack = document.getElementById("statLapack").querySelector(".val");\n' +
+'  var sections = document.querySelectorAll("section");\n' +
+'\n' +
+'  showAll.addEventListener("change", function() {\n' +
+'    document.body.classList.toggle("show-all", this.checked);\n' +
+'  });\n' +
+'\n' +
+'  function applyFilter(prefix) {\n' +
+'    prefixInput.value = prefix;\n' +
+'    prefixBtns.forEach(function(b) {\n' +
+'      b.classList.toggle("active", b.dataset.prefix === prefix);\n' +
+'    });\n' +
+'    var p = prefix.toLowerCase();\n' +
+'    var totals = { impl: 0, total: 0, tests: 0 };\n' +
+'    var perSec = [];\n' +
+'    sections.forEach(function(sec) {\n' +
+'      var rows = sec.querySelectorAll("tbody tr");\n' +
+'      var secImpl = 0, secTotal = 0;\n' +
+'      rows.forEach(function(row) {\n' +
+'        var name = row.querySelector(".name").textContent;\n' +
+'        var match = !p || name.indexOf(p) === 0;\n' +
+'        row.classList.toggle("prefix-hidden", !match);\n' +
+'        if (match) {\n' +
+'          secTotal++;\n' +
+'          totals.total++;\n' +
+'          if (row.querySelector(".badge.done")) {\n' +
+'            secImpl++;\n' +
+'            totals.impl++;\n' +
+'          }\n' +
+'          var tc = row.querySelector(".tests").textContent;\n' +
+'          if (tc !== "\\u2014") totals.tests += parseInt(tc, 10) || 0;\n' +
+'        }\n' +
+'      });\n' +
+'      var cnt = sec.querySelector(".count");\n' +
+'      if (cnt) cnt.textContent = secImpl + "/" + secTotal;\n' +
+'      perSec.push({ impl: secImpl, total: secTotal });\n' +
+'    });\n' +
+'    statImpl.textContent = totals.impl + "/" + totals.total;\n' +
+'    statTests.textContent = totals.tests;\n' +
+'    if (perSec[0]) statBlas.textContent = perSec[0].impl + "/" + perSec[0].total;\n' +
+'    if (perSec[1]) statLapack.textContent = perSec[1].impl + "/" + perSec[1].total;\n' +
+'  }\n' +
+'\n' +
+'  prefixInput.addEventListener("input", function() {\n' +
+'    applyFilter(this.value);\n' +
+'  });\n' +
+'  prefixBtns.forEach(function(btn) {\n' +
+'    btn.addEventListener("click", function() {\n' +
+'      applyFilter(this.dataset.prefix);\n' +
+'    });\n' +
+'  });\n' +
+'  prefixBtns[0].classList.add("active");\n' +
+'})();\n' +
+'</script>\n' +
 '</body>\n</html>\n';
 
 process.stdout.write( html );

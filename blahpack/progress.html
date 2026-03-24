@@ -32,20 +32,41 @@ td { padding: 0.4rem 0.75rem; border-top: 1px solid #eee; font-size: 0.875rem; }
 .cov-bad { color: #dc2626; font-weight: 600; }
 tr.unimpl { display: none; }
 body.show-all tr.unimpl { display: table-row; }
-.toggle { margin-bottom: 1.5rem; font-size: 0.9rem; cursor: pointer; user-select: none; }
+tr.prefix-hidden { display: none !important; }
+.controls { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.toggle { font-size: 0.9rem; cursor: pointer; user-select: none; }
 .toggle input { margin-right: 0.4rem; cursor: pointer; }
+.prefix-filter { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.prefix-filter input[type="text"] { width: 6rem; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 0.875rem; }
+.prefix-btns { display: flex; gap: 0.25rem; }
+.prefix-btns button { padding: 3px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 0.8rem; cursor: pointer; font-family: ui-monospace, monospace; }
+.prefix-btns button:hover { background: #f1f3f5; }
+.prefix-btns button.active { background: #3b82f6; color: white; border-color: #3b82f6; }
 </style>
 </head>
 <body>
 <h1>Blahpack Translation Progress</h1>
 <p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated 2026-03-24</p>
 <div class="stats">
-<div class="stat green"><div class="val">280/2204</div><div class="lbl">Implemented</div></div>
-<div class="stat"><div class="val">3324</div><div class="lbl">Tests</div></div>
-<div class="stat"><div class="val">46/151</div><div class="lbl">BLAS</div></div>
-<div class="stat"><div class="val">234/2053</div><div class="lbl">LAPACK</div></div>
+<div class="stat green"><div class="val">283/2204</div><div class="lbl">Implemented</div></div>
+<div class="stat"><div class="val">3335</div><div class="lbl">Tests</div></div>
+<div class="stat" id="statBlas"><div class="val">46/151</div><div class="lbl">BLAS</div></div>
+<div class="stat" id="statLapack"><div class="val">237/2053</div><div class="lbl">LAPACK</div></div>
 </div>
-<label class="toggle"><input type="checkbox" id="showAll">Show all reference routines (including unimplemented)</label>
+<div class="controls">
+<label class="toggle"><input type="checkbox" id="showAll">Show unimplemented</label>
+<div class="prefix-filter">
+<span>Prefix:</span>
+<input type="text" id="prefixInput" placeholder="e.g. z, dge">
+<div class="prefix-btns">
+<button data-prefix="">all</button>
+<button data-prefix="d">d*</button>
+<button data-prefix="z">z*</button>
+<button data-prefix="s">s*</button>
+<button data-prefix="c">c*</button>
+</div>
+</div>
+</div>
 <section>
 <h2>BLAS <span class="count">46/151</span></h2>
 <table>
@@ -206,7 +227,7 @@ body.show-all tr.unimpl { display: table-row; }
 </table>
 </section>
 <section>
-<h2>LAPACK <span class="count">234/2053</span></h2>
+<h2>LAPACK <span class="count">237/2053</span></h2>
 <table>
 <thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>
 <tbody>
@@ -745,7 +766,7 @@ body.show-all tr.unimpl { display: table-row; }
 <tr class="unimpl"><td class="name">dgeequb</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dgees</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dgeesx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">dgeev</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Computes eigenvalues and eigenvectors of a real general matrix</td></tr>
+<tr><td class="name">dgeev</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="cov"><span class="cov-good">92%</span></td><td class="cov"><span class="cov-good">87%</span></td><td class="desc">Computes eigenvalues and eigenvectors of a real general matrix</td></tr>
 <tr class="unimpl"><td class="name">dgeevx</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr><td class="name">dgehd2</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">68%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Reduce a general matrix to upper Hessenberg form (unblocked)</td></tr>
 <tr><td class="name">dgehrd</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">49%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Reduce a general matrix to upper Hessenberg form (blocked)</td></tr>
@@ -824,7 +845,7 @@ body.show-all tr.unimpl { display: table-row; }
 <tr><td class="name">dgtts2</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Solves a real tridiagonal system using LU factorization from dgttrf (unblocked)</td></tr>
 <tr class="unimpl"><td class="name">dhgeqz</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dhsein</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">dhseqr</td><td><span class="badge stub">stub</span></td><td class="tests">10</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Computes eigenvalues and Schur decomposition of an upper Hessenberg matrix</td></tr>
+<tr><td class="name">dhseqr</td><td><span class="badge done">done</span></td><td class="tests">10</td><td class="cov"><span class="cov-warn">81%</span></td><td class="cov"><span class="cov-good">90%</span></td><td class="desc">Computes eigenvalues and Schur decomposition of an upper Hessenberg matrix</td></tr>
 <tr><td class="name">disnan</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Test if input is NaN</td></tr>
 <tr class="unimpl"><td class="name">dla_gbamv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dla_gbrcond</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -876,7 +897,7 @@ body.show-all tr.unimpl { display: table-row; }
 <tr><td class="name">dlahr2</td><td><span class="badge done">done</span></td><td class="tests">6</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Reduce NB columns of a general matrix in Hessenberg form</td></tr>
 <tr class="unimpl"><td class="name">dlaic1</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr><td class="name">dlaisnan</td><td><span class="badge done">done</span></td><td class="tests">6</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Test for NaN by comparing two arguments for inequality</td></tr>
-<tr><td class="name">dlaln2</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">22%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Solves a 1x1 or 2x2 linear system with scaling to prevent overflow</td></tr>
+<tr><td class="name">dlaln2</td><td><span class="badge done">done</span></td><td class="tests">5</td><td class="cov"><span class="cov-bad">56%</span></td><td class="cov"><span class="cov-bad">50%</span></td><td class="desc">Solves a 1x1 or 2x2 linear system with scaling to prevent overflow</td></tr>
 <tr class="unimpl"><td class="name">dlals0</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dlalsa</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dlalsd</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -1211,7 +1232,7 @@ body.show-all tr.unimpl { display: table-row; }
 <tr class="unimpl"><td class="name">dtpttr</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dtrcon</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">dtrevc</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">dtrevc3</td><td><span class="badge stub">stub</span></td><td class="tests">2</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc">Computes eigenvectors of a real upper quasi-triangular matrix</td></tr>
+<tr><td class="name">dtrevc3</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">12%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Computes eigenvectors of a real upper quasi-triangular matrix</td></tr>
 <tr><td class="name">dtrexc</td><td><span class="badge done">done</span></td><td class="tests">2</td><td class="cov"><span class="cov-bad">53%</span></td><td class="cov"><span class="cov-bad">44%</span></td><td class="desc">Reorders the real Schur factorization by an orthogonal similarity transformation</td></tr>
 <tr><td class="name">dtrrfs</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="cov"><span class="cov-good">99%</span></td><td class="cov"><span class="cov-good">91%</span></td><td class="desc">Provides error bounds for solution of a triangular system</td></tr>
 <tr class="unimpl"><td class="name">dtrsen</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -2266,6 +2287,67 @@ body.show-all tr.unimpl { display: table-row; }
 </tbody>
 </table>
 </section>
-<script>document.getElementById("showAll").addEventListener("change",function(){document.body.classList.toggle("show-all",this.checked)});</script>
+<script>
+(function() {
+  var showAll = document.getElementById("showAll");
+  var prefixInput = document.getElementById("prefixInput");
+  var prefixBtns = document.querySelectorAll(".prefix-btns button");
+  var statImpl = document.querySelector(".stat.green .val");
+  var statTests = document.querySelectorAll(".stat")[1].querySelector(".val");
+  var statBlas = document.getElementById("statBlas").querySelector(".val");
+  var statLapack = document.getElementById("statLapack").querySelector(".val");
+  var sections = document.querySelectorAll("section");
+
+  showAll.addEventListener("change", function() {
+    document.body.classList.toggle("show-all", this.checked);
+  });
+
+  function applyFilter(prefix) {
+    prefixInput.value = prefix;
+    prefixBtns.forEach(function(b) {
+      b.classList.toggle("active", b.dataset.prefix === prefix);
+    });
+    var p = prefix.toLowerCase();
+    var totals = { impl: 0, total: 0, tests: 0 };
+    var perSec = [];
+    sections.forEach(function(sec) {
+      var rows = sec.querySelectorAll("tbody tr");
+      var secImpl = 0, secTotal = 0;
+      rows.forEach(function(row) {
+        var name = row.querySelector(".name").textContent;
+        var match = !p || name.indexOf(p) === 0;
+        row.classList.toggle("prefix-hidden", !match);
+        if (match) {
+          secTotal++;
+          totals.total++;
+          if (row.querySelector(".badge.done")) {
+            secImpl++;
+            totals.impl++;
+          }
+          var tc = row.querySelector(".tests").textContent;
+          if (tc !== "\u2014") totals.tests += parseInt(tc, 10) || 0;
+        }
+      });
+      var cnt = sec.querySelector(".count");
+      if (cnt) cnt.textContent = secImpl + "/" + secTotal;
+      perSec.push({ impl: secImpl, total: secTotal });
+    });
+    statImpl.textContent = totals.impl + "/" + totals.total;
+    statTests.textContent = totals.tests;
+    if (perSec[0]) statBlas.textContent = perSec[0].impl + "/" + perSec[0].total;
+    if (perSec[1]) statLapack.textContent = perSec[1].impl + "/" + perSec[1].total;
+  }
+
+  prefixInput.addEventListener("input", function() {
+    applyFilter(this.value);
+  });
+  prefixBtns.forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      applyFilter(this.dataset.prefix);
+    });
+  });
+  prefixBtns[0].classList.add("active");
+})();
+</script>
 </body>
 </html>
