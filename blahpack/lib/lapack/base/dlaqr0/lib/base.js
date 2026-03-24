@@ -40,6 +40,47 @@ var KEXSH = 6;
 var WILK1 = 0.75;
 var WILK2 = -0.4375;
 
+// iparmq defaults matching reference LAPACK
+var IPARMQ_NMIN = 75;     // ISPEC=12: crossover point
+var IPARMQ_NIBBLE = 14;   // ISPEC=14: nibble crossover
+var IPARMQ_K22MIN = 14;   // threshold for KACC22=2
+var IPARMQ_KACMIN = 14;   // threshold for KACC22=1
+var IPARMQ_KNWSWP = 500;  // deflation window NS vs 3*NS/2 threshold
+
+
+// FUNCTIONS //
+
+/**
+* Compute the number of simultaneous shifts (ISPEC=15) per iparmq.
+*
+* @private
+* @param {integer} nh - IHI-ILO+1
+* @returns {integer} ns
+*/
+function iparmqShifts( nh ) {
+	var ns = 2;
+	if ( nh >= 30 ) {
+		ns = 4;
+	}
+	if ( nh >= 60 ) {
+		ns = 10;
+	}
+	if ( nh >= 150 ) {
+		ns = Math.max( 10, Math.round( nh / ( Math.log( nh ) / Math.log( 2.0 ) ) ) );
+	}
+	if ( nh >= 590 ) {
+		ns = 64;
+	}
+	if ( nh >= 3000 ) {
+		ns = 128;
+	}
+	if ( nh >= 6000 ) {
+		ns = 256;
+	}
+	ns = Math.max( 2, ns - ( ns % 2 ) );
+	return ns;
+}
+
 
 // MAIN //
 
@@ -152,13 +193,17 @@ function dlaqr0( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 		// Use small bulge multi-shift QR with aggressive early deflation
 		info = 0;
 
+		// Compute NS from iparmq (ISPEC=15)
+		ns = iparmqShifts( ihi - ilo + 1 );
+
 		// NWR = recommended deflation window size (ILAENV 13)
-		nwr = 4;
+		// iparmq: NWR = NS if NH <= 500, else 3*NS/2
+		nwr = ( ihi - ilo + 1 <= IPARMQ_KNWSWP ) ? ns : Math.floor( 3 * ns / 2 );
 		nwr = Math.max( 2, nwr );
 		nwr = Math.min( ihi - ilo + 1, Math.floor( ( N - 1 ) / 3 ), nwr );
 
 		// NSR = recommended number of simultaneous shifts (ILAENV 15)
-		nsr = 2;
+		nsr = ns;
 		nsr = Math.min( nsr, Math.floor( ( N - 3 ) / 6 ), ihi - ilo );
 		nsr = Math.max( 2, nsr - ( nsr % 2 ) );
 
@@ -173,14 +218,21 @@ function dlaqr0( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 			return 0;
 		}
 
-		// DLAHQR/DLAQR0 crossover point (ILAENV 12)
-		nmin = NTINY;
+		// DLAHQR/DLAQR0 crossover point (ILAENV 12 = iparmq NMIN)
+		nmin = Math.max( NTINY, IPARMQ_NMIN );
 
 		// Nibble crossover point (ILAENV 14)
-		nibble = 14;
+		nibble = IPARMQ_NIBBLE;
 
 		// Accumulate reflections? Block 2x2 structure? (ILAENV 16)
+		// iparmq: for DLAQR0 (LAQR prefix), KACC22 based on NS vs thresholds
 		kacc22 = 0;
+		if ( ns >= IPARMQ_KACMIN ) {
+			kacc22 = 1;
+		}
+		if ( ns >= IPARMQ_K22MIN ) {
+			kacc22 = 2;
+		}
 		kacc22 = Math.max( 0, Math.min( 2, kacc22 ) );
 
 		// NWMAX = largest possible deflation window
@@ -384,7 +436,9 @@ function dlaqr0( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 				nve = N - kdu - kwv + 1;
 
 				// Small-bulge multi-shift QR sweep
-				dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, ns, WR, strideWR, offsetWR + ( ks - 1 ) * strideWR, WI, strideWI, offsetWI + ( ks - 1 ) * strideWI, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, 3, H, strideH1, strideH2, hij( ku, 1 ), nve, H, strideH1, strideH2, hij( kwv, 1 ), nho, H, strideH1, strideH2, hij( ku, kwh ) );
+				// V = WORK used as 2D with LDV=3 (column-major: strideV1=1, strideV2=3)
+				// NOTE: dlaqr5 uses 0-based ktop, kbot, iloz, ihiz
+				dlaqr5( wantt, wantz, kacc22, N, ktop - 1, kbot - 1, ns, WR, strideWR, offsetWR + ( ks - 1 ) * strideWR, WI, strideWI, offsetWI + ( ks - 1 ) * strideWI, H, strideH1, strideH2, offsetH, iloz - 1, ihiz - 1, Z, strideZ1, strideZ2, offsetZ, WORK, 1, 3, offsetWORK, H, strideH1, strideH2, hij( ku, 1 ), nve, H, strideH1, strideH2, hij( kwv, 1 ), nho, H, strideH1, strideH2, hij( ku, kwh ) );
 			}
 
 			// Note progress

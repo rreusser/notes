@@ -1,23 +1,22 @@
 # dlarfx: Translation Learnings
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
-
 ## Translation pitfalls
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+- The Fortran uses computed GOTO with M or N as the index to select unrolled code for sizes 1-10. Instead of 20 separate unrolled cases, used a generic loop-based implementation for M/N <= 10 and fall back to dlarf for larger sizes.
+- Performance: the loop-based approach is simpler but may be slightly slower than fully unrolled code. For the sizes used by dlaexc (3-4), this is negligible.
 
 ## Dependency interface surprises
 
-- [ ] (note unexpected calling conventions of deps)
+- dlarf and dlarfx share the same interface pattern for side/M/N/v/tau/C/WORK.
 
 ## Automation opportunities
 
-- [ ] (mechanical steps that should be automated)
+- N/A
 
 ## Coverage gaps
 
-- [ ] (code paths that were hard to test and why)
+- Only M=2-3, N=2-3 tested via dlaexc calls. Larger sizes (up to 10) untested but share the same code path.
 
 ## Complex number handling
 
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+- N/A: real routine only.

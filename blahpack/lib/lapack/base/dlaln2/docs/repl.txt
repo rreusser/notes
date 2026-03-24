@@ -1,0 +1,87 @@
+
+    dlaln2.ndarray( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d2, B, strideB1, strideB2, offsetB, wr, wi, X, strideX1, strideX2, offsetX, scale, xnorm )
+        Solves a 1x1 or 2x2 linear system with scaling to prevent overflow
+
+        Parameters
+        ----------
+        ltrans: boolean
+            ltrans.
+
+        na: integer
+            na.
+
+        nw: integer
+            nw.
+
+        smin: number
+            smin.
+
+        ca: number
+            ca.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        d1: number
+            d1.
+
+        d2: number
+            d2.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        wr: number
+            wr.
+
+        wi: number
+            wi.
+
+        X: Float64Array
+            output matrix.
+
+        strideX1: integer
+            stride of the first dimension of `X`.
+
+        strideX2: integer
+            stride of the second dimension of `X`.
+
+        offsetX: NonNegativeInteger
+            starting index for `X`.
+
+        scale: number
+            scale.
+
+        xnorm: number
+            xnorm.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

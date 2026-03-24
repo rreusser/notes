@@ -1,23 +1,25 @@
 # dtrexc: Translation Learnings
 
-TODO: Fill in after implementing base.js. This file is MANDATORY.
-
 ## Translation pitfalls
 
-- [ ] (describe any index off-by-ones, stride confusion, etc.)
+- IFST and ILST are modified on input: they snap to the first row of 2x2 blocks. Must track both as mutable values.
+- IFST and ILST are 1-based throughout.
+- The routine returns an object `{ info, ifst, ilst }` because all three are outputs.
+- The COMPQ parameter 'V' means "update Q"; 'N' means "don't". Matched by checking for 'V' or 'v'.
+- The NBF variable can take value 3 to indicate that a 2x2 block split into two 1x1 blocks during movement. This special case is handled with different dlaexc calls.
 
 ## Dependency interface surprises
 
-- [ ] (note unexpected calling conventions of deps)
+- dlaexc returns a plain integer (info), not an object. Returns 1 on failure, 0 on success.
 
 ## Automation opportunities
 
-- [ ] (mechanical steps that should be automated)
+- N/A
 
 ## Coverage gaps
 
-- [ ] (code paths that were hard to test and why)
+- Only forward movement (ifst < ilst) with N1=1 blocks tested. Backward movement and 2x2 block cases exercised indirectly through dlaqr2.
 
 ## Complex number handling
 
-- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)
+- N/A: real routine only.

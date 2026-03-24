@@ -1,0 +1,3 @@
+dladiv
+dlaln2
+dlamch

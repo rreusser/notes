@@ -50,52 +50,12 @@ bin/lint.sh lib/blas/base/*/lib/base.js lib/lapack/base/*/lib/base.js  # Lint al
 
 ---
 
-## CRITICAL: Automation-First Mindset
+## Automation-First Mindset
 
-This pipeline will be applied to hundreds of routines. Any manual work that
-repeats across routines is a bug in the tooling, not an inherent cost.
-
-### Rules for the AI assistant
-
-**1. After every manual edit, ask: "Was this mechanical?"**
-
-If you just performed a transformation that could be described as a rule
-(e.g., "replace all `lda` with `sa2`", "wrap every array subscript in
-`offsetA + ...`", "convert `for (i = 1; i <= n` to `for (i = 0; i < N`"),
-then STOP. Do not continue to the next routine. Instead:
-
-- State clearly: "I just performed a mechanical transformation: [description].
-  This should be automated."
-- Propose a new transform for `bin/transform.py` or a standalone script in `bin/`.
-- Implement the automation.
-- Verify it produces identical output to the manual step on the current routine.
-- THEN proceed to the next routine using the new automation.
-
-**2. Track repeated patterns in a log.**
-
-When working through multiple routines, maintain a running tally at the end
-of your response of manual steps you performed and how many times. Example:
-
-```
-## Automation Candidates
-- Replaced `lda` → `sa2` in 3 routines (should be a transform)
-- Added CommonJS boilerplate to 3 routines (should be a transform)
-- Wrote identical test scaffolding 3 times (should be a generator)
-```
-
-If any item reaches count 2, stop and automate it before continuing.
-
-**3. When automating, follow this process:**
-
-a. Define the transform clearly: input pattern → output pattern.
-b. Implement it (new transform in `bin/transform.py`, or new script in `bin/`).
-c. Test it: run on the current routine, diff output against the manual result.
-d. Register it: add to `python bin/transform.py --list` if it's a code-mod.
-e. Document it: update this file's "Available transforms" list.
-f. Then re-run the checklist using the new automation.
-
-**4. The end state is: the human types one command, reviews the output, and
-approves or requests changes.** Every manual step is a waypoint, not a destination.
+Any manual work that repeats across routines is a bug in the tooling. If you
+perform the same mechanical transformation twice, stop and automate it (new
+transform in `bin/transform.py` or script in `bin/`) before continuing.
+Track repeated manual steps; if any reaches count 2, automate first.
 
 ---
 
@@ -198,7 +158,8 @@ python bin/fortran_body.py data/<source-path>/<routine>.f
 
 The base.js must:
 - Match the signature from Step 0 exactly
-- Use 0-based indexing throughout
+- Use 0-based indexing for loop variables and array access (see "Index
+  Strategy" below for when to keep 1-based internals)
 - Use stride/offset parameters for all array access
 - Use `require()` for BLAS/LAPACK dependencies — NEVER inline them (see below)
 - Use `Complex128Array` for complex array parameters, `Complex128` for complex scalars
@@ -283,6 +244,14 @@ node --test lib/<package>/base/<routine>/test/test.js
   unblocked paths. Use diagonally dominant matrices for fixture-based tests.
 - **Reverse-pivot mode (dlaswp with incx<0):** Had a known bug — verify
   that backward iteration applies swaps in reverse order.
+- **Pivot tie-breaking (dgeqp3, zgeqp3):** Column norms with identical
+  values cause divergent pivot orders between JS and Fortran (idamax
+  tie-breaking differs). Use transcendental functions (sin/cos) or
+  irregular patterns for test matrices to avoid tied norms.
+- **Fortran test array reuse:** Fortran tests may reuse arrays across
+  test cases without re-zeroing (e.g., SR/SI in dlaqr2). Either zero
+  arrays between cases in Fortran, or account for stale values in JS
+  fixture comparison.
 
 **Gate:** All tests pass against Fortran fixtures.
 
@@ -305,6 +274,11 @@ If coverage is low, add targeted test cases:
 - sfmin rescaling paths (require inputs near underflow threshold)
 - STOREV='R' / backward direction in dlarfb/dlarft
 - Iteration-limit-exceeded branches
+- **safe2/SAFE1 underflow guard branches** in iterative refinement routines
+  (dgerfs, dsyrfs, dporfs, dptrfs, dtrrfs, zptrfs): require WORK values
+  near machine underflow (~1e-308) to trigger. Accept these as uncovered.
+- **Collapsed/underflowed bulges** in multi-shift QR (dlaqr5): require
+  all three bulge elements to be simultaneously zero
 
 ### Step 7: Lint base.js
 
@@ -391,7 +365,7 @@ npm test
 
 ---
 
-## Common Translation Pitfalls (from 40+ translated routines)
+## Common Translation Pitfalls (from 280+ translated routines)
 
 These are hard-won lessons extracted from LEARNINGS.md across all completed
 translations. Read before starting any new routine.
@@ -404,13 +378,20 @@ translations. Read before starting any new routine.
 | `DISNAN(X)` | `x !== x` (or `Number.isNaN(x)`) | Self-comparison NaN test |
 | `DLAMCH('S')` | `Number.MIN_VALUE` or stdlib constant | Replace DLAMCH constants with direct numeric literals |
 | `DLAMCH('E')` | `Number.EPSILON / 2` | Machine epsilon (half-precision) |
-| `ILAENV(1, ...)` | `NB = 32` (hardcoded) | Remove ILAENV/LWORK workspace queries entirely — allocate internally |
+| `ILAENV(1, ...)` | `NB = 32` (hardcoded) | Remove ILAENV/LWORK workspace queries entirely — allocate internally. **Defaults vary by query:** `ILAENV(1)` → NB=32, `ILAENV(3)` → NX=128 (crossover), `ILAENV(12)` → NMIN=12 (dlaqr3 threshold). Check the Fortran source for which query is used. |
+| Integer division | `(expr)\|0` | Fortran integer division truncates toward zero (like JS `\|0`), NOT `Math.floor`. For negative dividends, `Math.floor(-3/2) = -2` but Fortran gives `-1`. Always use `\|0` for integer division of expressions that can be negative. |
+| `ABS(z)` (complex) | `Math.sqrt(re*re + im*im)` | Complex modulus. Safe to inline (no division). |
+| `CABS1(z)` | `Math.abs(re) + Math.abs(im)` | NOT the same as `ABS`. Used for backward error norms. `ABS` is the true modulus — do not confuse them. |
 
 ### Index Convention Landmines
 
 - **IPIV arrays are 0-based in base.js.** Fortran IPIV is 1-based. If
   comparing against fixtures, subtract 1 from Fortran values. The ndarray.js
   wrapper handles conversion from 1-based Fortran convention.
+- **Negative IPIV (Bunch-Kaufman):** Fortran encodes 2x2 pivot rows as
+  negative 1-based values (`-p`). In JS with bitwise NOT convention,
+  `~(p-1) = -p`, so the raw numeric value is preserved between Fortran
+  and JS. Extract with `~IPIV[i]` (bitwise NOT), not `-IPIV[i] - 1`.
 - **INFO return values remain 1-based** (matching Fortran): 0 = success,
   k > 0 = algorithmic outcome at position k. In implementation, this means
   `return j + 1` when the 0-based loop variable finds the problem.
@@ -419,6 +400,32 @@ translations. Read before starting any new routine.
   `if (iinfo > 0) return iinfo + j`.
 - **idamax, iladlc, iladlr** return 0-based indices in JS vs 1-based in
   Fortran. Tests must subtract 1 from fixture values.
+
+### Index Strategy: When to Keep 1-Based Internals
+
+For simple routines, use 0-based loop variables throughout. But for routines
+with deeply nested, complex index arithmetic (dlaqr5, dlahqr, dlaqr2/3),
+**keep internal loop variables 1-based** (matching Fortran) and convert only
+at array access boundaries. Use helper functions like `get2d(A, i, j)` /
+`set2d(A, i, j, v)` that subtract 1 internally. This avoids error-prone
+index arithmetic in expressions like `(KTOP-KRCOL)/2+1`.
+
+Strategy: `var KTOP = ktop + 1;` at function entry (API is 0-based, internals
+are 1-based), then use `A[oA + (I-1)*sA1 + (J-1)*sA2]` everywhere.
+
+### Multi-Output Return Conventions
+
+Fortran pass-by-reference outputs map to different JS patterns:
+
+| Pattern | Example | Convention |
+|---------|---------|------------|
+| Object return | `dlanv2` → `{ a, b, c, d, rt1r, rt1i, rt2r, rt2i, cs, sn }` | For routines returning many scalars |
+| Object return | `dtrexc` → `{ info, ifst, ilst }` | When in/out params are modified |
+| Output array | `dlartg(f, g, out)` → `out[0]=cs, out[1]=sn, out[2]=r` | For small fixed-count outputs |
+| Float64Array(1) | `dlasy2(scale, xnorm)` | For scalar output parameters |
+
+Check [docs/dependency-conventions.md](docs/dependency-conventions.md) for
+specific routines before calling them.
 
 ### Quick-Return Conditions Are Subtle
 
@@ -450,6 +457,27 @@ Before calling a dependency for the first time, check
 [docs/dependency-conventions.md](docs/dependency-conventions.md) for known
 gotchas (e.g., dlarfg takes alpha as array+offset, not scalar; dlarf vs
 zlarf differ in tau parameter type; zlarfb vs zgeqr2 differ in WORK strides).
+
+### Common Patterns
+
+**WORK array partitioning:** Many routines (dgerfs, dsyrfs, dporfs, dptrfs,
+dtrrfs, zptrfs) partition a single WORK array into 2-3 segments of N
+elements: `WORK[0..N-1]` for abs values, `WORK[N..2N-1]` for residuals,
+`WORK[2N..3N-1]` for dlacn2's v vector. Use offset `N*strideWORK` for
+each segment.
+
+**dlacn2 reverse communication:** Used by all iterative refinement routines
+for condition estimation. Requires `KASE` as `Int32Array(1)`, `EST` as
+`Float64Array(1)`, and `ISAVE` as `Int32Array(3)`. Initialize all to 0
+at the start of each RHS column. Loop with `while (true)`, call dlacn2,
+break when `KASE[0] === 0`. KASE=1 means multiply by A, KASE=2 means
+multiply by A^T.
+
+**Real-to-complex porting:** Translating d-prefix to z-prefix routines is
+mostly mechanical: replace dswap→zswap, dscal→zdscal, dnrm2→dznrm2,
+idamax→izamax; add `reinterpret()` for zero checks; change `ABS` to
+complex modulus. The Fortran test is also mechanical (same structure +
+EQUIVALENCE for printing).
 
 ---
 
@@ -512,44 +540,19 @@ Fortran stride-1 specializations. Preserve zero-element guards. For `uplo`
 routines, use layout-aware stride remapping. See
 [docs/performance-patterns.md](docs/performance-patterns.md) for code examples.
 
-**Proven optimizations (from zggev profiling):**
+**Key optimizations (see [docs/performance-patterns.md](docs/performance-patterns.md)
+for code examples):**
 
-1. **Hoist invariant constants to module scope.** `dlamch()` calls, `Math.sqrt()`
-   of constants, and any expression that depends only on machine constants must
-   be computed once at module level, not per call. Example: `dladiv` called
-   `dlamch('O')` 3× per call × 200K calls = 600K wasted function calls at
-   N=200. Fix: move to module-level `var OV = dlamch('O');`.
+1. **Hoist `dlamch()` and constant expressions to module scope.** Never call
+   `dlamch()` inside a function body — compute once at module level.
+2. **Cache typed-array reads into locals** in hot inner loops (eliminates
+   V8 aliasing concerns, reduces bounds checks).
+3. **Avoid redundant `reinterpret()` calls** when `cx === cy`.
+4. **Size WORK buffers correctly.** If WORK is undersized, callees silently
+   allocate their own, wasting the caller's buffer. Check actual formulas.
 
-2. **Cache typed-array element reads into local variables.** In rotation inner
-   loops, read all 4 values (re/im of both elements) into locals before
-   computing. This eliminates aliasing concerns for V8 and reduces bounds
-   checks. Combined with incremental pointers, this gave **16% speedup** on
-   zhgeqz's QZ sweep (the single hottest function at 53% of zggev time).
-
-3. **Avoid redundant `reinterpret()` calls.** When `cx === cy` (same
-   Complex128Array with different offsets — common in LAPACK rotation calls),
-   skip the second `reinterpret()`. Measured 11-34% improvement on zrot at
-   workload-relevant sizes.
-
-4. **Function call overhead matters at high call counts.** Scalar JS BLAS
-   peaks at ~5-6 GFLOPS for complex operations. At N=5, zrot spends more
-   time entering/exiting the function than doing useful work. For routines
-   called >100K times (zlartg, zrot, dladiv), every nanosecond of per-call
-   overhead is amplified. Consider inlining critical inner rotations as
-   zhgeqz does in doQZSweep.
-
-5. **Size WORK buffers correctly and carve sub-allocations from them.**
-   Driver routines (zggev, zgesvd) must allocate WORK large enough for
-   all subroutines. Blocked routines (zgeqrf, zunmqr) need `N*NB+NB*NB`
-   or more — check the actual formulas. If WORK is undersized, the callee
-   silently allocates its own, wasting the caller's buffer. Similarly,
-   carve the block reflector `T` from the tail of WORK instead of
-   allocating a separate Complex128Array per call. This eliminated ~35%
-   of per-call heap allocation in zggev (1.4MB → 0.9MB at N=100).
-
-**Profiling workflow:** Use `bin/instrument.js` (Module._load hook) for
-subroutine-level profiling, then `bin/profile-zhgeqz.js` (V8 inspector API)
-for per-line breakdown. Run `bin/bench-blas.js` for leaf-node throughput.
+**Profiling:** `bin/instrument.js` for subroutine-level, `bin/profile-zhgeqz.js`
+for per-line V8 CPU profiling, `bin/bench-blas.js` for leaf-node throughput.
 
 ### uplo/trans String Convention
 
@@ -558,13 +561,29 @@ for per-line breakdown. Run `bin/bench-blas.js` for leaf-node throughput.
 `'conjugate-transpose'`, `'unit'`, `'non-unit'`, `'forward'`, `'backward'`,
 `'columnwise'`, `'rowwise'`, `'frobenius'`, `'one-norm'`, `'inf-norm'`, `'max'`.
 
-**NEVER use single-char Fortran strings** (`'U'`, `'L'`, `'N'`, `'T'`, `'C'`)
-in `base.js` code. The `ndarray.js` wrapper normalizes from stdlib's public API
-strings, and `base.js` functions use the long-form internally.
-
 **When calling a dependency from `base.js`**, always pass long-form strings.
 This is the #1 cause of silent bugs — a short-form string like `'L'` won't
 match `=== 'left'` and will silently take the wrong branch.
+
+**WARNING: Existing implementations are inconsistent.** Some routines only
+accept long-form (`dormqr`: `'left'`), others accept both (`zunmqr`:
+`'left'` or `'L'`), and a few use short-form (`dsyconv`: `'U'`/`'L'`).
+**Before calling any dependency for the first time, grep its source to check
+which convention it uses.** Do not assume. Known inconsistencies:
+
+| Routine | Accepts | Known bug if wrong convention used |
+|---------|---------|-------------------------------------|
+| `dormqr` | long-form only | Silent wrong result (treats unknown as right/no-transpose) |
+| `zunmqr` | both forms | Works either way |
+| `dtrsm`/`ztrsm` | long-form only | Silent wrong result |
+| `dtrmv`/`dtrsv` | long-form only | Silent wrong result |
+| `dlarf`/`zlarf` | long-form only | Silent wrong branch (left vs right) |
+| `dsyconv`/`zsyconv` | short-form (`'U'`/`'L'`) | |
+| `dsytrf`/`zsytrf` | long-form only | |
+
+When a caller uses short-form strings (e.g., dsytrs2 uses `'U'`/`'L'`) but
+a callee requires long-form (e.g., dtrsm requires `'upper'`), add mapping
+lookup tables in the caller.
 
 For `job`-style parameters with many values (`'N'`, `'P'`, `'S'`, `'B'`),
 single chars are acceptable since there are no long-form equivalents.
@@ -589,9 +608,13 @@ Key rules (always in effect):
 
 ## Known Limitations
 
-- `translate-to-js` transform cannot parse fparser's free-form output for
-  some routines. Work around: translate from original `.f` source, or from
-  manually written `.f90`.
 - Fortran `.f90` files that use modules (`USE la_constants`) cannot be
   compiled by `run_fortran.sh` without module compilation ordering.
   Work around: write JS tests with hand-computed expected values.
+- **`deps.py` misses transitive Fortran-only dependencies.** Routines
+  that call `ILAENV` transitively need `ilaenv`, `ieeeck`, `iparmq` in
+  their Fortran deps file for test compilation. These are not JS
+  dependencies (ILAENV is replaced with hardcoded constants), but
+  `deps_<routine>.txt` must include them for `run_fortran.sh` to link.
+  Check the deps files of similar routines when compilation fails with
+  undefined references.
