@@ -25,17 +25,17 @@
 /**
 * Applies a modified Givens plane rotation.
 *
-* The modified Givens rotation matrix `H` is determined by the `param` array:
+* The modified Givens rotation matrix `H` is determined by the `param` array.
+* `param[0]` is `DFLAG` which determines the form of `H`:
 *
-* - `param[0]` = `DFLAG` determines the form of `H`:
-*   - `DFLAG = -1`: `H = [ DH11  DH12; DH21  DH22 ]`
-*   - `DFLAG =  0`: `H = [ 1     DH12; DH21  1    ]`
-*   - `DFLAG =  1`: `H = [ DH11  1;    -1    DH22 ]`
-*   - `DFLAG = -2`: `H = [ 1     0;     0    1    ]` (identity)
-* - `param[1]` = `DH11`
-* - `param[2]` = `DH21`
-* - `param[3]` = `DH12`
-* - `param[4]` = `DH22`
+* ```text
+* DFLAG=-1:            DFLAG=0:             DFLAG=1:             DFLAG=-2:
+* (DH11  DH12)         (1     DH12)         (DH11  1   )         (1  0)
+* (DH21  DH22)         (DH21  1   )         (-1    DH22)         (0  1)
+* ```
+*
+* `param[1]` = `DH11`, `param[2]` = `DH21`, `param[3]` = `DH12`,
+* `param[4]` = `DH22`.
 *
 * @private
 * @param {NonNegativeInteger} N - number of indexed elements
@@ -63,7 +63,7 @@ function drotm( N, x, strideX, offsetX, y, strideY, offsetY, param, strideParam,
 	var i;
 
 	dflag = param[ offsetParam ];
-	if ( N <= 0 || ( dflag + 2.0 === 0.0 ) ) {
+	if ( N <= 0 || dflag === -2.0 ) {
 		return y;
 	}
 	ix = offsetX;

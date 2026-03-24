@@ -1,0 +1,78 @@
+
+    zhseqr.ndarray( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork )
+        Compute eigenvalues and Schur form of complex upper Hessenberg matrix
+
+        Parameters
+        ----------
+        job: string
+            specifies the operation type.
+
+        compz: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of the first dimension of `H`.
+
+        strideH2: integer
+            stride of the second dimension of `H`.
+
+        offsetH: NonNegativeInteger
+            starting index for `H`.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: NonNegativeInteger
+            starting index for `w`.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        lwork: integer
+            lwork.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,54 @@
+
+    ztrexc.ndarray( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst )
+        Reorder Schur factorization of a complex matrix
+
+        Parameters
+        ----------
+        compq: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        T: Float64Array
+            input matrix.
+
+        strideT1: integer
+            stride of the first dimension of `T`.
+
+        strideT2: integer
+            stride of the second dimension of `T`.
+
+        offsetT: NonNegativeInteger
+            starting index for `T`.
+
+        Q: Float64Array
+            output matrix.
+
+        strideQ1: integer
+            stride of the first dimension of `Q`.
+
+        strideQ2: integer
+            stride of the second dimension of `Q`.
+
+        offsetQ: NonNegativeInteger
+            starting index for `Q`.
+
+        ifst: integer
+            ifst.
+
+        ilst: integer
+            ilst.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

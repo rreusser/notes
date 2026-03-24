@@ -82,7 +82,7 @@ function dtpmv( uplo, trans, diag, N, AP, strideAP, offsetAP, x, strideX, offset
 			}
 		} else {
 			// Lower triangular, no-transpose
-			kk = offsetAP + ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP;
+			kk = offsetAP + ( ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP );
 			jx = offsetX + ( ( N - 1 ) * strideX );
 			for ( j = N - 1; j >= 0; j -= 1 ) {
 				if ( x[ jx ] !== 0.0 ) {
@@ -105,7 +105,7 @@ function dtpmv( uplo, trans, diag, N, AP, strideAP, offsetAP, x, strideX, offset
 		}
 	} else if ( uplo === 'upper' ) {
 		// Form x := A^T*x, upper triangular, transpose
-		kk = offsetAP + ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP;
+		kk = offsetAP + ( ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP );
 		jx = offsetX + ( ( N - 1 ) * strideX );
 		for ( j = N - 1; j >= 0; j -= 1 ) {
 			temp = x[ jx ];

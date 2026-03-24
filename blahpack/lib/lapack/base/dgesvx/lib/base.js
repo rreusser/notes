@@ -1,0 +1,281 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params, max-statements */
+
+'use strict';
+
+// MODULES //
+
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var dgeequ = require( '../../dgeequ/lib/base.js' );
+var dlaqge = require( '../../dlaqge/lib/base.js' );
+var dgetrf = require( '../../dgetrf/lib/base.js' );
+var dgetrs = require( '../../dgetrs/lib/base.js' );
+var dgerfs = require( '../../dgerfs/lib/base.js' );
+var dgecon = require( '../../dgecon/lib/base.js' );
+var dlacpy = require( '../../dlacpy/lib/base.js' );
+var dlange = require( '../../dlange/lib/base.js' );
+var dlantr = require( '../../dlantr/lib/base.js' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+
+
+// VARIABLES //
+
+var EPS = dlamch( 'E' );
+
+
+// MAIN //
+
+/**
+* Expert driver for solving a real system of linear equations A*X = B,
+* using the LU factorization. Provides equilibration, condition estimation,
+* iterative refinement, and error bounds.
+*
+* FACT controls whether to factor, equilibrate+factor, or use pre-factored:
+*   'N' - factor A, no equilibration
+*   'E' - equilibrate if needed, then factor
+*   'F' - use pre-factored AF and IPIV (and pre-computed R,C if equilibrated)
+*
+* TRANS specifies the system:
+*   'N' - A * X = B
+*   'T' or 'C' - A^T * X = B
+*
+* EQUED (input if FACT='F', output otherwise):
+*   'N' - no equilibration
+*   'R' - row equilibration (A premultiplied by diag(R))
+*   'C' - column equilibration (A postmultiplied by diag(C))
+*   'B' - both row and column equilibration
+*
+* Returns { info, equed, rcond, rpvgrw } where:
+*   info: 0=success, i (1-based)=U(i,i) is zero, N+1=singular to working precision
+*   equed: equilibration type applied
+*   rcond: reciprocal condition number estimate
+*   rpvgrw: reciprocal pivot growth factor
+*
+* @private
+* @param {string} fact - 'N', 'E', or 'F'
+* @param {string} trans - 'N', 'T', or 'C'
+* @param {NonNegativeInteger} N - order of matrix A
+* @param {NonNegativeInteger} nrhs - number of right-hand side columns
+* @param {Float64Array} A - N-by-N matrix (may be equilibrated on exit)
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - index offset for A
+* @param {Float64Array} AF - N-by-N factored matrix (output)
+* @param {integer} strideAF1 - stride of the first dimension of AF
+* @param {integer} strideAF2 - stride of the second dimension of AF
+* @param {NonNegativeInteger} offsetAF - index offset for AF
+* @param {Int32Array} IPIV - pivot indices (0-based, output)
+* @param {integer} strideIPIV - stride for IPIV
+* @param {NonNegativeInteger} offsetIPIV - index offset for IPIV
+* @param {string} equed - equilibration type (input if FACT='F')
+* @param {Float64Array} r - row scale factors
+* @param {integer} strideR - stride for r
+* @param {NonNegativeInteger} offsetR - index offset for r
+* @param {Float64Array} c - column scale factors
+* @param {integer} strideC - stride for c
+* @param {NonNegativeInteger} offsetC - index offset for c
+* @param {Float64Array} B - N-by-NRHS right-hand side (may be scaled on exit)
+* @param {integer} strideB1 - stride of the first dimension of B
+* @param {integer} strideB2 - stride of the second dimension of B
+* @param {NonNegativeInteger} offsetB - index offset for B
+* @param {Float64Array} X - N-by-NRHS solution matrix (output)
+* @param {integer} strideX1 - stride of the first dimension of X
+* @param {integer} strideX2 - stride of the second dimension of X
+* @param {NonNegativeInteger} offsetX - index offset for X
+* @param {Float64Array} FERR - forward error bounds (output, length nrhs)
+* @param {integer} strideFERR - stride for FERR
+* @param {NonNegativeInteger} offsetFERR - index offset for FERR
+* @param {Float64Array} BERR - backward error bounds (output, length nrhs)
+* @param {integer} strideBERR - stride for BERR
+* @param {NonNegativeInteger} offsetBERR - index offset for BERR
+* @returns {Object} result with info, equed, rcond, rpvgrw
+*/
+function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, equed, r, strideR, offsetR, c, strideC, offsetC, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR ) {
+	var rpvgrw;
+	var rowequ;
+	var colequ;
+	var nofact;
+	var notran;
+	var colcnd;
+	var rowcnd;
+	var equil;
+	var rcond;
+	var anorm;
+	var RCOND;
+	var WORK;
+	var IWORK;
+	var norm;
+	var info;
+	var da;
+	var db;
+	var dx;
+	var eq;
+	var i;
+	var j;
+
+	nofact = ( fact === 'N' );
+	equil = ( fact === 'E' );
+	notran = ( trans === 'N' );
+
+	if ( nofact || equil ) {
+		equed = 'N';
+		rowequ = false;
+		colequ = false;
+	} else {
+		rowequ = ( equed === 'R' || equed === 'B' );
+		colequ = ( equed === 'C' || equed === 'B' );
+	}
+
+	// Quick return if possible
+	if ( N === 0 || nrhs === 0 ) {
+		return { 'info': 0, 'equed': equed, 'rcond': 1.0, 'rpvgrw': 1.0 };
+	}
+
+	// Equilibrate if requested
+	if ( equil ) {
+		eq = dgeequ( N, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC );
+		rowcnd = eq.rowcnd;
+		colcnd = eq.colcnd;
+
+		if ( eq.info === 0 ) {
+			// Equilibrate the matrix
+			equed = dlaqge( N, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, eq.amax );
+			rowequ = ( equed === 'R' || equed === 'B' );
+			colequ = ( equed === 'C' || equed === 'B' );
+		}
+	}
+
+	// Scale the right-hand side
+	if ( notran ) {
+		if ( rowequ ) {
+			for ( j = 0; j < nrhs; j++ ) {
+				db = offsetB + ( j * strideB2 );
+				for ( i = 0; i < N; i++ ) {
+					B[ db + ( i * strideB1 ) ] = r[ offsetR + ( i * strideR ) ] * B[ db + ( i * strideB1 ) ];
+				}
+			}
+		}
+	} else if ( colequ ) {
+		for ( j = 0; j < nrhs; j++ ) {
+			db = offsetB + ( j * strideB2 );
+			for ( i = 0; i < N; i++ ) {
+				B[ db + ( i * strideB1 ) ] = c[ offsetC + ( i * strideC ) ] * B[ db + ( i * strideB1 ) ];
+			}
+		}
+	}
+
+	if ( nofact || equil ) {
+		// Copy A to AF
+		dlacpy( 'full', N, N, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF );
+
+		// Compute the LU factorization
+		info = dgetrf( N, N, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV );
+
+		if ( info > 0 ) {
+			// Compute reciprocal pivot growth factor of leading rank-deficient columns
+			WORK = new Float64Array( Math.max( 1, N ) );
+			rpvgrw = dlantr( 'max', 'upper', 'non-unit', info, info, AF, strideAF1, strideAF2, offsetAF, WORK, 1, 0 );
+			if ( rpvgrw === 0.0 ) {
+				rpvgrw = 1.0;
+			} else {
+				rpvgrw = dlange( 'max', N, info, A, strideA1, strideA2, offsetA, WORK, 1, 0 ) / rpvgrw;
+			}
+			return { 'info': info, 'equed': equed, 'rcond': 0.0, 'rpvgrw': rpvgrw };
+		}
+	}
+
+	// Allocate workspace
+	WORK = new Float64Array( Math.max( 1, 4 * N ) );
+	IWORK = new Int32Array( N );
+
+	// Compute the norm of A and the reciprocal pivot growth factor
+	if ( notran ) {
+		norm = 'one-norm';
+	} else {
+		norm = 'inf-norm';
+	}
+	anorm = dlange( norm, N, N, A, strideA1, strideA2, offsetA, WORK, 1, 0 );
+	rpvgrw = dlantr( 'max', 'upper', 'non-unit', N, N, AF, strideAF1, strideAF2, offsetAF, WORK, 1, 0 );
+	if ( rpvgrw === 0.0 ) {
+		rpvgrw = 1.0;
+	} else {
+		rpvgrw = dlange( 'max', N, N, A, strideA1, strideA2, offsetA, WORK, 1, 0 ) / rpvgrw;
+	}
+
+	// Compute the reciprocal of the condition number
+	RCOND = new Float64Array( 1 );
+	dgecon( norm, N, AF, strideAF1, strideAF2, offsetAF, anorm, RCOND, WORK, 1, 0, IWORK, 1, 0 );
+	rcond = RCOND[ 0 ];
+
+	// Compute the solution matrix X
+	dlacpy( 'full', N, nrhs, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX );
+
+	// Convert trans to long-form for dgetrs and dgerfs
+	var transLong; // eslint-disable-line no-var
+	if ( notran ) {
+		transLong = 'no-transpose';
+	} else {
+		transLong = 'transpose';
+	}
+
+	dgetrs( transLong, N, nrhs, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, X, strideX1, strideX2, offsetX );
+
+	// Use iterative refinement to improve the solution
+	dgerfs( transLong, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR );
+
+	// Transform the solution matrix X to a solution of the original system
+	if ( notran ) {
+		if ( colequ ) {
+			for ( j = 0; j < nrhs; j++ ) {
+				dx = offsetX + ( j * strideX2 );
+				for ( i = 0; i < N; i++ ) {
+					X[ dx + ( i * strideX1 ) ] = c[ offsetC + ( i * strideC ) ] * X[ dx + ( i * strideX1 ) ];
+				}
+			}
+			for ( j = 0; j < nrhs; j++ ) {
+				FERR[ offsetFERR + ( j * strideFERR ) ] = FERR[ offsetFERR + ( j * strideFERR ) ] / colcnd;
+			}
+		}
+	} else if ( rowequ ) {
+		for ( j = 0; j < nrhs; j++ ) {
+			dx = offsetX + ( j * strideX2 );
+			for ( i = 0; i < N; i++ ) {
+				X[ dx + ( i * strideX1 ) ] = r[ offsetR + ( i * strideR ) ] * X[ dx + ( i * strideX1 ) ];
+			}
+		}
+		for ( j = 0; j < nrhs; j++ ) {
+			FERR[ offsetFERR + ( j * strideFERR ) ] = FERR[ offsetFERR + ( j * strideFERR ) ] / rowcnd;
+		}
+	}
+
+	// Set INFO = N+1 if the matrix is singular to working precision
+	info = 0;
+	if ( rcond < EPS ) {
+		info = N + 1;
+	}
+
+	return { 'info': info, 'equed': equed, 'rcond': rcond, 'rpvgrw': rpvgrw };
+}
+
+
+// EXPORTS //
+
+module.exports = dgesvx;

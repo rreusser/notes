@@ -59,7 +59,7 @@ function dtpsv( uplo, trans, diag, N, AP, strideAP, offsetAP, x, strideX, offset
 		// Solve A*x = b
 		if ( uplo === 'upper' ) {
 			// Upper triangular, no transpose: backward substitution
-			kk = offsetAP + ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP;
+			kk = offsetAP + ( ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP );
 			jx = offsetX + ( ( N - 1 ) * strideX );
 			for ( j = N - 1; j >= 0; j -= 1 ) {
 				if ( x[ jx ] !== 0.0 ) {
@@ -121,7 +121,7 @@ function dtpsv( uplo, trans, diag, N, AP, strideAP, offsetAP, x, strideX, offset
 			}
 		} else {
 			// Lower triangular, transpose: backward substitution
-			kk = offsetAP + ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP;
+			kk = offsetAP + ( ( ( ( N * ( N + 1 ) ) / 2 ) - 1 ) * strideAP );
 			jx = offsetX + ( ( N - 1 ) * strideX );
 			for ( j = N - 1; j >= 0; j -= 1 ) {
 				temp = x[ jx ];

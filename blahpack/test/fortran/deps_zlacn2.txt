@@ -1,0 +1,7 @@
+dlamch
+dzsum1
+ieeeck
+ilaenv
+iparmq
+izmax1
+zlacn2

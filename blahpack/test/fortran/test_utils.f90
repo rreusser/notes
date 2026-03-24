@@ -1,7 +1,7 @@
 module test_utils
   implicit none
   private
-  public :: begin_test, end_test, print_scalar, print_int, print_array, print_int_array, print_matrix
+  public :: begin_test, end_test, print_scalar, print_int, print_array, print_int_array, print_matrix, print_char
 
 contains
 
@@ -24,6 +24,12 @@ contains
     character(*), intent(in) :: name
     integer, intent(in) :: val
     write(*, '(A,A,A,I0)', advance='no') ',"', trim(name), '":', val
+  end subroutine
+
+  subroutine print_char(name, val)
+    character(*), intent(in) :: name
+    character, intent(in) :: val
+    write(*, '(A,A,A,A,A)', advance='no') ',"', trim(name), '":"', val, '"'
   end subroutine
 
   subroutine print_array(name, arr, n)

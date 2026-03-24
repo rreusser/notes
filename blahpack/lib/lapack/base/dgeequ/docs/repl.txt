@@ -1,0 +1,63 @@
+
+    dgeequ.ndarray( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax )
+        Computes row and column scalings for equilibrating a general matrix
+
+        Parameters
+        ----------
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        r: Float64Array
+            input array.
+
+        strideR: integer
+            stride length for `r`.
+
+        offsetR: NonNegativeInteger
+            starting index for `r`.
+
+        c: Float64Array
+            output array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: NonNegativeInteger
+            starting index for `c`.
+
+        rowcnd: number
+            rowcnd.
+
+        colcnd: number
+            colcnd.
+
+        amax: number
+            amax.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

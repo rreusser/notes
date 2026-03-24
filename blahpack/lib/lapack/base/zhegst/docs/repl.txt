@@ -1,0 +1,51 @@
+
+    zhegst.ndarray( itype, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB )
+        Reduces a Hermitian-definite generalized eigenproblem to standard form (blocked)
+
+        Parameters
+        ----------
+        itype: integer
+            itype.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

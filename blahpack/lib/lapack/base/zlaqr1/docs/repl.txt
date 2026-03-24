@@ -1,0 +1,48 @@
+
+    zlaqr1.ndarray( N, H, strideH1, strideH2, offsetH, s1, s2, v, strideV, offsetV )
+        Set initial vector for Francis QR step
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        H: Float64Array
+            input matrix.
+
+        strideH1: integer
+            stride of the first dimension of `H`.
+
+        strideH2: integer
+            stride of the second dimension of `H`.
+
+        offsetH: NonNegativeInteger
+            starting index for `H`.
+
+        s1: Complex128
+            s1.
+
+        s2: Complex128
+            s2.
+
+        v: Float64Array
+            output array.
+
+        strideV: integer
+            stride length for `v`.
+
+        offsetV: NonNegativeInteger
+            starting index for `v`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
