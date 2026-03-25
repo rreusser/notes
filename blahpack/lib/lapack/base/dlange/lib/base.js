@@ -72,7 +72,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				ai += strideA1;
 			}
 		}
-	} else if ( norm === 'one-norm' || norm === 'one-norm' ) {
+	} else if ( norm === 'one-norm' ) {
 		// One-norm: maximum column sum of absolute values
 		value = 0.0;
 		for ( j = 0; j < N; j++ ) {
@@ -109,7 +109,7 @@ function dlange( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, o
 				value = temp;
 			}
 		}
-	} else if ( norm === 'frobenius' || norm === 'frobenius' ) {
+	} else if ( norm === 'frobenius' ) {
 		// Frobenius norm: scale * sqrt(sumsq) using dlassq per column
 		scale = 0.0;
 		sum = 1.0;

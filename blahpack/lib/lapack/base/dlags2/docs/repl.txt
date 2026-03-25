@@ -1,0 +1,57 @@
+
+    dlags2.ndarray( upper, a1, a2, a3, b1, b2, b3, csu, snu, csv, snv, csq, snq )
+        Computes 2-by-2 orthogonal matrices U, V, Q for simultaneous upper/lower triangularization
+
+        Parameters
+        ----------
+        upper: boolean
+            upper.
+
+        a1: number
+            a1.
+
+        a2: number
+            a2.
+
+        a3: number
+            a3.
+
+        b1: number
+            b1.
+
+        b2: number
+            b2.
+
+        b3: number
+            b3.
+
+        csu: number
+            csu.
+
+        snu: number
+            snu.
+
+        csv: number
+            csv.
+
+        snv: number
+            snv.
+
+        csq: number
+            csq.
+
+        snq: number
+            snq.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

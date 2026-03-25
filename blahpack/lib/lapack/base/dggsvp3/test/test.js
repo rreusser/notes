@@ -89,7 +89,7 @@ test( 'dggsvp3: basic_4x3_3x3_UVQ', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 4, 3, 3, A, 1, 4, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 4, 0, V, 1, 3, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 4, 3, 3, A, 1, 4, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 4, 0, V, 1, 3, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -114,7 +114,7 @@ test( 'dggsvp3: basic_4x3_3x3_NNN', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'N', 'N', 'N', 4, 3, 3, A, 1, 4, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 1, 0, V, 1, 1, 0, Q, 1, 1, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'none', 'none', 'none', 4, 3, 3, A, 1, 4, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 1, 0, V, 1, 1, 0, Q, 1, 1, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -135,7 +135,7 @@ test( 'dggsvp3: m_zero', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 0, 2, 2, A, 1, 1, 0, B, 1, 2, 0, 1e-8, 1e-8, K, l, U, 1, 1, 0, V, 1, 2, 0, Q, 1, 2, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 0, 2, 2, A, 1, 1, 0, B, 1, 2, 0, 1e-8, 1e-8, K, l, U, 1, 1, 0, V, 1, 2, 0, Q, 1, 2, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -154,7 +154,7 @@ test( 'dggsvp3: n_zero', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 3, 2, 0, A, 1, 3, 0, B, 1, 2, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 2, 0, Q, 1, 1, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 3, 2, 0, A, 1, 3, 0, B, 1, 2, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 2, 0, Q, 1, 1, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -173,7 +173,7 @@ test( 'dggsvp3: p_zero', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 2, 0, 2, A, 1, 2, 0, B, 1, 1, 0, 1e-8, 1e-8, K, l, U, 1, 2, 0, V, 1, 1, 0, Q, 1, 2, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 2, 0, 2, A, 1, 2, 0, B, 1, 1, 0, 1e-8, 1e-8, K, l, U, 1, 2, 0, V, 1, 1, 0, Q, 1, 2, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -192,7 +192,7 @@ test( 'dggsvp3: rank_deficient_B', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 3, 3, 3, A, 1, 3, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 3, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 3, 3, 3, A, 1, 3, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 3, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -216,7 +216,7 @@ test( 'dggsvp3: wide_2x5_UVQ', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 2, 2, 5, A, 1, 2, 0, B, 1, 2, 0, 1e-8, 1e-8, K, l, U, 1, 2, 0, V, 1, 2, 0, Q, 1, 5, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 2, 2, 5, A, 1, 2, 0, B, 1, 2, 0, 1e-8, 1e-8, K, l, U, 1, 2, 0, V, 1, 2, 0, Q, 1, 5, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -240,7 +240,7 @@ test( 'dggsvp3: diagonal_3x3', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 3, 3, 3, A, 1, 3, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 3, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 3, 3, 3, A, 1, 3, 0, B, 1, 3, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 3, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );
@@ -264,7 +264,7 @@ test( 'dggsvp3: tall_B_3x5x3', function t() {
 	var WORK = new Float64Array( 5000 );
 	var K = [ 0 ];
 	var l = [ 0 ];
-	var info = dggsvp3( 'U', 'V', 'Q', 3, 5, 3, A, 1, 3, 0, B, 1, 5, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 5, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
+	var info = dggsvp3( 'compute-U', 'compute-V', 'compute-Q', 3, 5, 3, A, 1, 3, 0, B, 1, 5, 0, 1e-8, 1e-8, K, l, U, 1, 3, 0, V, 1, 5, 0, Q, 1, 3, 0, IWORK, 1, 0, TAU, 1, 0, WORK, 1, 0, 5000 );
 
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.K );

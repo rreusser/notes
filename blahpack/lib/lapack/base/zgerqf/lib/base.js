@@ -1,0 +1,174 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params, no-var */
+
+'use strict';
+
+// MODULES //
+
+var Complex128Array = require( '@stdlib/array/complex128' );
+var zgerq2 = require( '../../zgerq2/lib/base.js' );
+var zlarfb = require( '../../zlarfb/lib/base.js' );
+var zlarft = require( '../../zlarft/lib/base.js' );
+
+
+// VARIABLES //
+
+var DEFAULT_NB = 32;
+
+
+// MAIN //
+
+/**
+* Computes an RQ factorization of a complex M-by-N matrix A = R * Q
+* using blocked Householder reflections.
+*
+* On exit, if M <= N, the upper triangle of the subarray
+* A(0:M-1, N-M:N-1) contains the M-by-M upper triangular matrix R;
+* if M >= N, the elements on and above the (M-N)-th subdiagonal
+* contain the M-by-N upper trapezoidal matrix R; the remaining
+* elements, with the array TAU, represent the unitary matrix Q.
+*
+* @private
+* @param {NonNegativeInteger} M - number of rows in A
+* @param {NonNegativeInteger} N - number of columns in A
+* @param {Complex128Array} A - input/output matrix (column-major)
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+* @param {Complex128Array} TAU - output array of scalar factors (length min(M,N))
+* @param {integer} strideTAU - stride for TAU (in complex elements)
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU (in complex elements)
+* @param {Complex128Array} WORK - workspace array
+* @param {integer} strideWORK - stride for WORK (in complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
+* @param {integer} lwork - dimension of WORK array (ignored; workspace allocated internally if needed)
+* @returns {integer} info - 0 if successful
+*/
+function zgerqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) {
+	var offsetT;
+	var ldwork;
+	var nbmin;
+	var iws;
+	var ib;
+	var nb;
+	var nx;
+	var T;
+	var K;
+	var i;
+
+	K = Math.min( M, N );
+
+	// Quick return if possible
+	if ( K === 0 ) {
+		return 0;
+	}
+
+	nb = DEFAULT_NB;
+	nbmin = 2;
+	nx = 1;
+	iws = M;
+	ldwork = M;
+
+	if ( nb > 1 && nb < K ) {
+		// Determine crossover point NX
+		nx = 0;
+		if ( nx < K ) {
+			iws = ldwork * nb;
+		}
+	}
+
+	// Ensure WORK is large enough: need ldwork*nb for WORK panel + nb*nb for T
+	if ( WORK === null || WORK.length < iws + nb * nb ) {
+		WORK = new Complex128Array( Math.max( 1, iws + nb * nb ) );
+		offsetWORK = 0;
+		strideWORK = 1;
+	}
+
+	// T matrix is carved from the tail of WORK
+	T = WORK;
+	offsetT = offsetWORK + iws;
+
+	if ( nb >= nbmin && nb < K && nx < K ) {
+		// Use blocked code initially.
+		// The last kk rows are handled by the block method.
+		var ki = Math.floor( ( K - nx - 1 ) / nb ) * nb;
+		var kk = Math.min( K, ki + nb );
+
+		// Iterate backward over blocks
+		// Fortran: DO I = K-KK+KI+1, K-KK+1, -NB (1-based)
+		// 0-based: i goes from K-kk+ki down to K-kk, step -nb
+		for ( i = K - kk + ki; i >= K - kk; i -= nb ) {
+			ib = Math.min( K - i, nb );
+
+			// Compute the RQ factorization of the current block
+			// A(m-k+i : m-k+i+ib-1, 0 : n-k+i+ib-1)
+			zgerq2(
+				ib, N - K + i + ib,
+				A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ),
+				TAU, strideTAU, offsetTAU + ( i * strideTAU ),
+				WORK, strideWORK, offsetWORK
+			);
+
+			if ( M - K + i > 0 ) {
+				// Form the triangular factor of the block reflector
+				// H = H(i+ib-1) ... H(i+1) H(i)
+				zlarft(
+					'backward', 'rowwise',
+					N - K + i + ib, ib,
+					A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ),
+					TAU, strideTAU, offsetTAU + ( i * strideTAU ),
+					T, 1, nb, offsetT
+				);
+
+				// Apply H to A(0:m-k+i-1, 0:n-k+i+ib-1) from the right
+				zlarfb(
+					'right', 'no-transpose', 'backward', 'rowwise',
+					M - K + i, N - K + i + ib, ib,
+					A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ),
+					T, 1, nb, offsetT,
+					A, strideA1, strideA2, offsetA,
+					WORK, 1, ldwork, offsetWORK
+				);
+			}
+		}
+		var mu = M - K + i + nb;
+		var nu = N - K + i + nb;
+	} else {
+		var mu = M;
+		var nu = N;
+	}
+
+	// Use unblocked code to factor the last or only block
+	if ( mu > 0 && nu > 0 ) {
+		zgerq2(
+			mu, nu,
+			A, strideA1, strideA2, offsetA,
+			TAU, strideTAU, offsetTAU,
+			WORK, strideWORK, offsetWORK
+		);
+	}
+
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = zgerqf;

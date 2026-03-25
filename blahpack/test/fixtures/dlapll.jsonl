@@ -1,0 +1,6 @@
+{"name":"parallel","ssmin": 8.12643651126987161E-016}
+{"name":"orthogonal","ssmin": 1.00000000000000000E+000}
+{"name":"general","ssmin": 7.72869635673484989E-001}
+{"name":"n_equals_1","ssmin": 0.00000000000000000E+000}
+{"name":"n_equals_2","ssmin": 3.65966190626257737E-001}
+{"name":"nearly_parallel","ssmin": 5.22209229897474905E-004}

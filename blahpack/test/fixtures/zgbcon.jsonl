@@ -1,0 +1,6 @@
+{"name":"tridiag_1norm","anorm": 7.00000000000000000E+000,"rcond": 3.38310354436672289E-001,"info":0}
+{"name":"tridiag_Inorm","anorm": 7.00000000000000000E+000,"rcond": 3.38310354436672289E-001,"info":0}
+{"name":"kl2_ku1_1norm","anorm": 1.45000000000000000E+001,"rcond": 2.16308518308325370E-001,"info":0}
+{"name":"n_zero","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"n_one","rcond": 7.90569415042094770E-001,"info":0}
+{"name":"anorm_zero","rcond": 0.00000000000000000E+000,"info":0}

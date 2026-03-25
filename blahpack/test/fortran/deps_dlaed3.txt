@@ -1,0 +1,10 @@
+dlacpy
+dlaed3
+dlaed4
+dlaed5
+dlaed6
+dlamch
+dlaset
+ieeeck
+ilaenv
+iparmq

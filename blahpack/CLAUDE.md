@@ -294,6 +294,17 @@ node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.
 
 Target: **≥90% line coverage, ≥85% branch coverage** on `base.js`.
 
+**This is a HARD GATE — not aspirational.** A module is NOT complete until it
+meets these targets. Do not move to LEARNINGS.md or declare the routine done
+if coverage is below threshold. Keep adding tests until the targets are met.
+The only acceptable exceptions are specific branches documented with inline
+TODO comments explaining why they are unreachable (e.g., IEEE 754 limits,
+convergence failures requiring pathological inputs).
+
+**NEVER scaffold stub modules that throw "not yet implemented".** If a
+dependency is not ready, do not create a stub — report the missing dependency
+and stop. Empty stubs pollute the test suite and create false progress.
+
 If coverage is low, add targeted test cases:
 - For `uplo`/`trans`/`side`/`diag` params: test ALL valid combinations
 - Edge cases: N=0, M=0, alpha=0

@@ -1,0 +1,15 @@
+dlamch
+dzsum1
+ieeeck
+ilaenv
+iparmq
+izmax1
+zdrscl
+zgbcon
+zgbtf2
+zgbtrf
+zlaswp
+zladiv
+zlacn2
+zlatbs
+dladiv

@@ -1,0 +1,16 @@
+disnan
+dlacpy
+dlaed1
+dlaed2
+dlaed3
+dlaed4
+dlaed5
+dlaed6
+dlaisnan
+dlamch
+dlamrg
+dlapy2
+dlaset
+ieeeck
+ilaenv
+iparmq

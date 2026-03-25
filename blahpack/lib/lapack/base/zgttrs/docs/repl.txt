@@ -1,0 +1,84 @@
+
+    zgttrs.ndarray( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB )
+        Solve tridiagonal system using LU factorization (complex)
+
+        Parameters
+        ----------
+        trans: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        DL: Float64Array
+            input array.
+
+        strideDL: integer
+            stride length for `DL`.
+
+        offsetDL: NonNegativeInteger
+            starting index for `DL`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        DU: Float64Array
+            input array.
+
+        strideDU: integer
+            stride length for `DU`.
+
+        offsetDU: NonNegativeInteger
+            starting index for `DU`.
+
+        DU2: Float64Array
+            input array.
+
+        strideDU2: integer
+            stride length for `DU2`.
+
+        offsetDU2: NonNegativeInteger
+            starting index for `DU2`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

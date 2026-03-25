@@ -1,0 +1,6 @@
+{"name":"tridiag_1norm","anorm": 7.00000000000000000E+000,"rcond": 3.22133572892047582E-001,"info":0}
+{"name":"tridiag_Inorm","anorm": 7.00000000000000000E+000,"rcond": 3.22133572892047637E-001,"info":0}
+{"name":"n_zero","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"n_one","rcond": 7.90569415042094770E-001,"info":0}
+{"name":"anorm_zero","rcond": 0.00000000000000000E+000,"info":0}
+{"name":"complex_4x4_1norm","anorm": 1.40000000000000000E+001,"rcond": 2.33704871670821795E-001,"info":0}

@@ -1,0 +1,7 @@
+dlags2
+dlamch
+dlartg
+dlasv2
+ieeeck
+ilaenv
+iparmq

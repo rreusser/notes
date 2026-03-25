@@ -1,0 +1,69 @@
+
+    dlatdf.ndarray( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offsetRHS, rdsum, rdscal, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+        Computes contribution to reciprocal DIF estimate using LU factorization from dgetc2
+
+        Parameters
+        ----------
+        ijob: integer
+            ijob.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        RHS: Float64Array
+            input array.
+
+        strideRHS: integer
+            stride length for `RHS`.
+
+        offsetRHS: NonNegativeInteger
+            starting index for `RHS`.
+
+        rdsum: number
+            rdsum.
+
+        rdscal: number
+            rdscal.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        JPIV: Int32Array
+            output array.
+
+        strideJPIV: integer
+            stride length for `JPIV`.
+
+        offsetJPIV: NonNegativeInteger
+            starting index for `JPIV`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

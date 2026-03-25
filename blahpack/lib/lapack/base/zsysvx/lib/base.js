@@ -112,7 +112,7 @@ function zsysvx( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, stride
 
 	// Compute infinity-norm of A
 	rw = new Float64Array( N );
-	anorm = zlansy( 'I', uplo, N, A, strideA1, strideA2, offsetA, rw, 1, 0 );
+	anorm = zlansy( 'inf-norm', uplo, N, A, strideA1, strideA2, offsetA, rw, 1, 0 );
 
 	// Estimate reciprocal condition number
 	zsycon( uplo, N, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK );

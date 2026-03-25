@@ -1,0 +1,8 @@
+dlaed4
+dlaed5
+dlaed6
+dlaed9
+dlamch
+ieeeck
+ilaenv
+iparmq

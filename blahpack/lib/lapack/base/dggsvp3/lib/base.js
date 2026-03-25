@@ -108,9 +108,9 @@ function dggsvp3( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, 
 	var i;
 	var j;
 
-	wantu = ( jobu === 'U' );
-	wantv = ( jobv === 'V' );
-	wantq = ( jobq === 'Q' );
+	wantu = ( jobu === 'compute-U' );
+	wantv = ( jobv === 'compute-V' );
+	wantq = ( jobq === 'compute-Q' );
 	forwrd = true;
 
 	// Initialize IWORK to zeros (means all columns are "free" for dgeqp3)

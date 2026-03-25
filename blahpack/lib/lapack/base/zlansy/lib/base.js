@@ -73,7 +73,7 @@ function zlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 	sa2 = strideA2 * 2;
 	oA = offsetA * 2;
 
-	if ( norm === 'M' || norm === 'm' ) {
+	if ( norm === 'max' ) {
 		value = 0.0;
 		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
@@ -103,7 +103,7 @@ function zlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		return value;
 	}
 
-	if ( norm === '1' || norm === 'O' || norm === 'o' || norm === 'I' || norm === 'i' ) {
+	if ( norm === 'one-norm' || norm === 'inf-norm' ) {
 		value = 0.0;
 		if ( uplo === 'upper' ) {
 			for ( j = 0; j < N; j++ ) {
@@ -154,7 +154,7 @@ function zlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		return value;
 	}
 
-	if ( norm === 'F' || norm === 'f' || norm === 'E' || norm === 'e' ) {
+	if ( norm === 'frobenius' ) {
 		scale = 0.0;
 		sum = 1.0;
 		if ( uplo === 'upper' ) {

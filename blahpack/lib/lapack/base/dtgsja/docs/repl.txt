@@ -1,0 +1,138 @@
+
+    dtgsja.ndarray( jobu, jobv, jobq, M, p, N, K, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, ncycle )
+        Computes the generalized SVD of two upper triangular matrices via Jacobi-Kogbetliantz iteration
+
+        Parameters
+        ----------
+        jobu: string
+            specifies the operation type.
+
+        jobv: string
+            specifies the operation type.
+
+        jobq: string
+            specifies the operation type.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        p: integer
+            p.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        l: integer
+            l.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        tola: number
+            tola.
+
+        tolb: number
+            tolb.
+
+        ALPHA: Float64Array
+            input array.
+
+        strideALPHA: integer
+            stride length for `ALPHA`.
+
+        offsetALPHA: NonNegativeInteger
+            starting index for `ALPHA`.
+
+        BETA: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `BETA`.
+
+        offsetBETA: NonNegativeInteger
+            starting index for `BETA`.
+
+        U: Float64Array
+            input matrix.
+
+        strideU1: integer
+            stride of the first dimension of `U`.
+
+        strideU2: integer
+            stride of the second dimension of `U`.
+
+        offsetU: NonNegativeInteger
+            starting index for `U`.
+
+        V: Float64Array
+            input matrix.
+
+        strideV1: integer
+            stride of the first dimension of `V`.
+
+        strideV2: integer
+            stride of the second dimension of `V`.
+
+        offsetV: NonNegativeInteger
+            starting index for `V`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of the first dimension of `Q`.
+
+        strideQ2: integer
+            stride of the second dimension of `Q`.
+
+        offsetQ: NonNegativeInteger
+            starting index for `Q`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        ncycle: integer
+            ncycle.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

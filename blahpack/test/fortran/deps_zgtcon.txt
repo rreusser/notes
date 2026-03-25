@@ -1,0 +1,11 @@
+dlamch
+dzsum1
+ieeeck
+ilaenv
+iparmq
+izmax1
+zgtcon
+zgttrf
+zgttrs
+zgtts2
+zlacn2
