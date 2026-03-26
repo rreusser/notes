@@ -13,8 +13,8 @@ var dsteqr = require( '../../dsteqr/lib/base.js' );
 
 // VARIABLES //
 
-var SAFMIN = dlamch( 'S' );
-var EPS = dlamch( 'E' );
+var SAFMIN = dlamch( 'safe-minimum' );
+var EPS = dlamch( 'epsilon' );
 var SMLNUM = SAFMIN / EPS;
 var BIGNUM = 1.0 / SMLNUM;
 var RMIN = Math.sqrt( SMLNUM );

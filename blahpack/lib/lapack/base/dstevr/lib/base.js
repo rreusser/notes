@@ -171,8 +171,8 @@ function dstevr( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	}
 
 	// Get machine constants
-	safmin = dlamch( 'S' );
-	eps = dlamch( 'E' );
+	safmin = dlamch( 'safe-minimum' );
+	eps = dlamch( 'epsilon' );
 	smlnum = safmin / eps;
 	bignum = 1.0 / smlnum;
 	rmin = sqrt( smlnum );
@@ -183,7 +183,7 @@ function dstevr( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	vll = vl;
 	vuu = vu;
 
-	tnrm = dlanst( 'M', N, d, strideD, offsetD, e, strideE, offsetE );
+	tnrm = dlanst( 'max', N, d, strideD, offsetD, e, strideE, offsetE );
 	if ( tnrm > 0.0 && tnrm < rmin ) {
 		iscale = 1;
 		sigma = rmin / tnrm;

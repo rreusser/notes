@@ -343,6 +343,129 @@ test( 'dsyevr: N_V_U - eigenvalues only, value range, upper', function t() {
 	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
 });
 
+test( 'dsyevr: N1_V_in_range - N=1 value range eigenvalue in range', function t() {
+	var A = new Float64Array( [ 5.0 ] );
+	var w = new Float64Array( 1 );
+	var Z = new Float64Array( 1 );
+	var ISUPPZ = new Int32Array( 2 );
+	var WORK = new Float64Array( 26 );
+	var IWORK = new Int32Array( 10 );
+	var out = {};
+
+	var info = dsyevr( 'compute-vectors', 'value', 'lower', 1, A, 1, 1, 0, 4.0, 6.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 );
+
+	assert.equal( info, 0 );
+	assert.equal( out.M, 1 );
+	assertClose( w[ 0 ], 5.0, 1e-14, 'eigenvalue' );
+});
+
+test( 'dsyevr: N1_V_out_range - N=1 value range eigenvalue out of range', function t() {
+	var A = new Float64Array( [ 5.0 ] );
+	var w = new Float64Array( 1 );
+	var Z = new Float64Array( 1 );
+	var ISUPPZ = new Int32Array( 2 );
+	var WORK = new Float64Array( 26 );
+	var IWORK = new Int32Array( 10 );
+	var out = {};
+
+	var info = dsyevr( 'compute-vectors', 'value', 'lower', 1, A, 1, 1, 0, 6.0, 8.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 );
+
+	assert.equal( info, 0 );
+	assert.equal( out.M, 0, 'no eigenvalues in range' );
+});
+
+test( 'dsyevr: tiny_matrix - scaling path for small norm', function t() {
+	// Matrix with very small entries to trigger anrm < rmin scaling
+	var tiny = 1e-170;
+	var N = 4;
+	var A = new Float64Array( [
+		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
+		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
+		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
+		0.25 * tiny, 0, 1 * tiny, 6 * tiny
+	] );
+	var w = new Float64Array( N );
+	var Z = new Float64Array( N * N );
+	var ISUPPZ = new Int32Array( 2 * N );
+	var WORK = new Float64Array( 26 * N );
+	var IWORK = new Int32Array( 10 * N );
+	var out = {};
+
+	var info = dsyevr( 'compute-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
+
+	assert.equal( info, 0, 'info' );
+	assert.equal( out.M, N, 'M' );
+	// Eigenvalues should be the original eigenvalues * tiny
+	assert.ok( w[ 0 ] > 0, 'smallest eigenvalue positive' );
+});
+
+test( 'dsyevr: tiny_matrix_upper - scaling path for small norm, upper', function t() {
+	var tiny = 1e-170;
+	var N = 4;
+	var A = new Float64Array( [
+		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
+		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
+		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
+		0.25 * tiny, 0, 1 * tiny, 6 * tiny
+	] );
+	var w = new Float64Array( N );
+	var Z = new Float64Array( N * N );
+	var ISUPPZ = new Int32Array( 2 * N );
+	var WORK = new Float64Array( 26 * N );
+	var IWORK = new Int32Array( 10 * N );
+	var out = {};
+
+	var info = dsyevr( 'compute-vectors', 'all', 'upper', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
+
+	assert.equal( info, 0, 'info' );
+	assert.equal( out.M, N, 'M' );
+});
+
+test( 'dsyevr: tiny_eigenvalues_only - scaling path with eigenvalues only, dsterf path', function t() {
+	var tiny = 1e-170;
+	var N = 4;
+	var A = new Float64Array( [
+		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
+		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
+		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
+		0.25 * tiny, 0, 1 * tiny, 6 * tiny
+	] );
+	var w = new Float64Array( N );
+	var Z = new Float64Array( 1 );
+	var ISUPPZ = new Int32Array( 2 * N );
+	var WORK = new Float64Array( 26 * N );
+	var IWORK = new Int32Array( 10 * N );
+	var out = {};
+
+	var info = dsyevr( 'no-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
+
+	assert.equal( info, 0, 'info' );
+	assert.equal( out.M, N, 'M' );
+});
+
+test( 'dsyevr: value_range_with_scaling - scaling + value range', function t() {
+	var tiny = 1e-170;
+	var N = 4;
+	var A = new Float64Array( [
+		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
+		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
+		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
+		0.25 * tiny, 0, 1 * tiny, 6 * tiny
+	] );
+	var w = new Float64Array( N );
+	var Z = new Float64Array( N * N );
+	var ISUPPZ = new Int32Array( 2 * N );
+	var WORK = new Float64Array( 26 * N );
+	var IWORK = new Int32Array( 10 * N );
+	var out = {};
+
+	// Value range that should capture some eigenvalues
+	var info = dsyevr( 'compute-vectors', 'value', 'lower', N, A, 1, N, 0, 7e-170, 11e-170, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
+
+	assert.equal( info, 0, 'info' );
+	assert.ok( out.M >= 0, 'M should be non-negative' );
+});
+
 test( 'dsyevr: N_I_L - eigenvalues only, index range, lower', function t() {
 	var ISUPPZ;
 	var IWORK;

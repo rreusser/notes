@@ -7,6 +7,12 @@ program test_dormql
   double precision :: CR(2, 4)
   integer :: info, lwork
 
+  ! Large matrices for blocked path (K=40 > NB=32)
+  integer, parameter :: BIG = 40
+  double precision :: ABIG(BIG, BIG), TAUBIG(BIG), CBIG(BIG, BIG), WBIG(10000)
+  double precision :: CBIG2(BIG, 2), CBIG3(2, BIG)
+  integer :: i, j
+
   lwork = 100
 
   ! Compute QL of a 4x3 matrix
@@ -107,6 +113,64 @@ program test_dormql
   call begin_test('right_notrans_rect')
   call print_int('info', info)
   call print_array('c', CR, 8)
+  call end_test()
+
+  ! Test 10-13: Large blocked path (K=40 > NB=32)
+  ! Build a 40x40 matrix, QL factorize it, then apply
+  do j = 1, BIG
+    do i = 1, BIG
+      ABIG(i, j) = dble(mod(i*7 + j*13, 97)) / 97.0d0
+    end do
+  end do
+  call dgeqlf(BIG, BIG, ABIG, BIG, TAUBIG, WBIG, 10000, info)
+
+  call begin_test('big_ql_factor')
+  call print_array('A', ABIG, BIG*BIG)
+  call print_array('TAU', TAUBIG, BIG)
+  call end_test()
+
+  ! Test 10: blocked left notrans
+  CBIG = 0.0d0
+  do i = 1, BIG
+    CBIG(i,i) = 1.0d0
+  end do
+  call dormql('L', 'N', BIG, BIG, BIG, ABIG, BIG, TAUBIG, CBIG, BIG, WBIG, 10000, info)
+  call begin_test('blocked_left_notrans')
+  call print_int('info', info)
+  call print_array('c', CBIG, BIG*BIG)
+  call end_test()
+
+  ! Test 11: blocked left trans
+  CBIG = 0.0d0
+  do i = 1, BIG
+    CBIG(i,i) = 1.0d0
+  end do
+  call dormql('L', 'T', BIG, BIG, BIG, ABIG, BIG, TAUBIG, CBIG, BIG, WBIG, 10000, info)
+  call begin_test('blocked_left_trans')
+  call print_int('info', info)
+  call print_array('c', CBIG, BIG*BIG)
+  call end_test()
+
+  ! Test 12: blocked right notrans
+  CBIG = 0.0d0
+  do i = 1, BIG
+    CBIG(i,i) = 1.0d0
+  end do
+  call dormql('R', 'N', BIG, BIG, BIG, ABIG, BIG, TAUBIG, CBIG, BIG, WBIG, 10000, info)
+  call begin_test('blocked_right_notrans')
+  call print_int('info', info)
+  call print_array('c', CBIG, BIG*BIG)
+  call end_test()
+
+  ! Test 13: blocked right trans
+  CBIG = 0.0d0
+  do i = 1, BIG
+    CBIG(i,i) = 1.0d0
+  end do
+  call dormql('R', 'T', BIG, BIG, BIG, ABIG, BIG, TAUBIG, CBIG, BIG, WBIG, 10000, info)
+  call begin_test('blocked_right_trans')
+  call print_int('info', info)
+  call print_array('c', CBIG, BIG*BIG)
   call end_test()
 
 end program

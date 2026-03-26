@@ -120,7 +120,7 @@ function dgels( trans, M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, 
 	WORK = new Float64Array( wsize );
 
 	// Get machine parameters
-	smlnum = dlamch( 'S' ) / dlamch( 'P' );
+	smlnum = dlamch( 'safe-minimum' ) / dlamch( 'precision' );
 	bignum = 1.0 / smlnum;
 
 	// Scale A if max element is outside [smlnum, bignum]

@@ -39,7 +39,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 // VARIABLES //
 
 var CZERO = new Complex128( 0.0, 0.0 );
-var smlnum = dlamch( 'S' ) / dlamch( 'P' );
+var smlnum = dlamch( 'safe-minimum' ) / dlamch( 'precision' );
 var bignum = 1.0 / smlnum;
 
 

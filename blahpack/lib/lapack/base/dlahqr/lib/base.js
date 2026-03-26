@@ -38,9 +38,9 @@ var DAT1 = 3.0 / 4.0;
 var DAT2 = -0.4375;
 var KEXSH = 10;
 
-var SAFMIN = dlamch( 'S' );
+var SAFMIN = dlamch( 'safe-minimum' );
 var SAFMAX = ONE / SAFMIN;
-var ULP = dlamch( 'P' );
+var ULP = dlamch( 'precision' );
 
 
 // MAIN //

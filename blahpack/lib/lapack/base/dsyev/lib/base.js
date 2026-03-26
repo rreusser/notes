@@ -98,8 +98,8 @@ function dsyev( jobz, uplo, N, A, strideA1, strideA2, offsetA, w, strideW, offse
 	}
 
 	// Get machine constants
-	safmin = dlamch( 'S' );
-	eps = dlamch( 'E' );
+	safmin = dlamch( 'safe-minimum' );
+	eps = dlamch( 'epsilon' );
 	smlnum = safmin / eps;
 	bignum = 1.0 / smlnum;
 	rmin = Math.sqrt( smlnum );

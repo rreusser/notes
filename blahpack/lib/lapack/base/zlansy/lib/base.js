@@ -160,20 +160,20 @@ function zlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK
 		if ( uplo === 'upper' ) {
 			for ( j = 1; j < N; j++ ) {
 				result = zlassq( j, A, strideA1, offsetA + (j * strideA2), scale, sum );
-				scale = result[ 0 ];
-				sum = result[ 1 ];
+				scale = result.scl;
+				sum = result.sumsq;
 			}
 		} else {
 			for ( j = 0; j < N - 1; j++ ) {
 				result = zlassq( N - j - 1, A, strideA1, offsetA + (( j + 1 ) * strideA1) + (j * strideA2), scale, sum );
-				scale = result[ 0 ];
-				sum = result[ 1 ];
+				scale = result.scl;
+				sum = result.sumsq;
 			}
 		}
 		sum *= 2.0;
 		result = zlassq( N, A, strideA1 + strideA2, offsetA, scale, sum );
-		scale = result[ 0 ];
-		sum = result[ 1 ];
+		scale = result.scl;
+		sum = result.sumsq;
 		return scale * Math.sqrt( sum );
 	}
 

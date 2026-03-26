@@ -94,9 +94,9 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 	}
 
 	// Determine the unit roundoff for this environment
-	eps = dlamch( 'E' );
+	eps = dlamch( 'epsilon' );
 	eps2 = eps * eps;
-	safmin = dlamch( 'S' );
+	safmin = dlamch( 'safe-minimum' );
 	safmax = 1.0 / safmin;
 	ssfmax = Math.sqrt( safmax ) / 3.0;
 	ssfmin = Math.sqrt( safmin ) / eps2;

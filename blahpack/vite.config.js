@@ -46,6 +46,7 @@ export default defineConfig(async ({ command }) => {
         input: [
           resolve(import.meta.dirname, "notebooks/aaa/index.html"),
           resolve(import.meta.dirname, "notebooks/naca/index.html"),
+          resolve(import.meta.dirname, "notebooks/pseudospectra/index.html"),
         ],
       },
     },

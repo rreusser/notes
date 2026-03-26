@@ -200,8 +200,8 @@ function zheevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	}
 
 	// Get machine constants
-	safmin = dlamch( 'S' );
-	eps = dlamch( 'E' );
+	safmin = dlamch( 'safe-minimum' );
+	eps = dlamch( 'epsilon' );
 	smlnum = safmin / eps;
 	bignum = 1.0 / smlnum;
 	rmin = sqrt( smlnum );

@@ -30,6 +30,7 @@ var dger = require( '../../../../blas/base/dger/lib/base.js' );
 var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 var dgetc2 = require( '../../dgetc2/lib/base.js' );
 var dgesc2 = require( '../../dgesc2/lib/base.js' );
+var dlatdf = require( '../../dlatdf/lib/base.js' );
 var dlaset = require( '../../dlaset/lib/base.js' );
 
 
@@ -108,6 +109,7 @@ function dtgsy2( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 	var jsp1;
 	var zdim;
 	var RHS;
+	var res;
 	var is;
 	var ie;
 	var js;
@@ -216,7 +218,9 @@ function dtgsy2( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 							scale[ 0 ] *= scaloc;
 						}
 					} else {
-						throw new Error( 'dlatdf not yet implemented (ijob=' + ijob + ')' );
+						res = dlatdf( ijob, zdim, Z, 1, LDZ, 0, RHS, 1, 0, rdsum[ 0 ], rdscal[ 0 ], IPIV, 1, 0, JPIV, 1, 0 );
+						rdsum[ 0 ] = res.rdsum;
+						rdscal[ 0 ] = res.rdscal;
 					}
 
 					C[ offsetC + ( is * strideC1 ) + ( js * strideC2 ) ] = RHS[ 0 ];
@@ -276,7 +280,9 @@ function dtgsy2( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 							scale[ 0 ] *= scaloc;
 						}
 					} else {
-						throw new Error( 'dlatdf not yet implemented (ijob=' + ijob + ')' );
+						res = dlatdf( ijob, zdim, Z, 1, LDZ, 0, RHS, 1, 0, rdsum[ 0 ], rdscal[ 0 ], IPIV, 1, 0, JPIV, 1, 0 );
+						rdsum[ 0 ] = res.rdsum;
+						rdscal[ 0 ] = res.rdscal;
 					}
 
 					C[ offsetC + ( is * strideC1 ) + ( js * strideC2 ) ] = RHS[ 0 ];
@@ -337,7 +343,9 @@ function dtgsy2( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 							scale[ 0 ] *= scaloc;
 						}
 					} else {
-						throw new Error( 'dlatdf not yet implemented (ijob=' + ijob + ')' );
+						res = dlatdf( ijob, zdim, Z, 1, LDZ, 0, RHS, 1, 0, rdsum[ 0 ], rdscal[ 0 ], IPIV, 1, 0, JPIV, 1, 0 );
+						rdsum[ 0 ] = res.rdsum;
+						rdscal[ 0 ] = res.rdscal;
 					}
 
 					C[ offsetC + ( is * strideC1 ) + ( js * strideC2 ) ] = RHS[ 0 ];
@@ -419,7 +427,9 @@ function dtgsy2( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 							scale[ 0 ] *= scaloc;
 						}
 					} else {
-						throw new Error( 'dlatdf not yet implemented (ijob=' + ijob + ')' );
+						res = dlatdf( ijob, zdim, Z, 1, LDZ, 0, RHS, 1, 0, rdsum[ 0 ], rdscal[ 0 ], IPIV, 1, 0, JPIV, 1, 0 );
+						rdsum[ 0 ] = res.rdsum;
+						rdscal[ 0 ] = res.rdscal;
 					}
 
 					// Copy solution back

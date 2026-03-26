@@ -1,0 +1,768 @@
+<!doctype html>
+<notebook>
+  <title>Pseudospectra</title>
+
+  <!-- ═══════════════════════════════════════════════════════
+       INFRASTRUCTURE (imports, worker, GPU, matrices)
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="imports" type="module">
+    import { createElementStack } from '../lib/element-stack.js';
+    import { createZoomableAxes } from '../lib/zoomable-axes.js';
+    import { createWebGPUContext, webgpuAxesViewport } from '../lib/webgpu-canvas.js';
+  </script>
+
+  <script id="worker" type="module">
+    const workerURL = new URL('./worker.js', import.meta.url).href;
+    const pworker = new Worker(workerURL, { type: 'module' });
+    let _id = 0;
+    const pending = {};
+    pworker.onmessage = (e) => {
+      const { id, type } = e.data;
+      if (type === 'progress') {
+        if (pending[id]?.onProgress) pending[id].onProgress(e.data);
+        return;
+      }
+      if (pending[id]) { pending[id].resolve(e.data); delete pending[id]; }
+    };
+    function workerCall(msg, onProgress) {
+      const id = _id++;
+      msg.id = id;
+      return new Promise((resolve) => { pending[id] = { resolve, onProgress }; pworker.postMessage(msg); });
+    }
+  </script>
+
+  <script id="matrices" type="module">
+    function grcar(N) {
+      const A = new Float64Array(N * N);
+      for (let j = 0; j < N; j++) {
+        if (j > 0) A[j + (j - 1) * N] = -1;
+        for (let k = 0; k <= 3 && j + k < N; k++) A[j + (j + k) * N] = 1;
+      }
+      return A;
+    }
+
+    function transientDemo(N) {
+      const A = new Float64Array(N * N);
+      for (let i = 0; i < N; i++) {
+        A[i + i * N] = -(i + 1);
+        for (let j = i + 1; j < N; j++) A[i + j * N] = 10;
+      }
+      return A;
+    }
+
+    function convectionDiffusion(N) {
+      const eps = 1 / (2 * N);
+      const h = 1 / (N + 1);
+      const A = new Float64Array(N * N);
+      for (let i = 0; i < N; i++) {
+        A[i + i * N] = -2 * eps / (h * h);
+        if (i > 0) A[i + (i - 1) * N] = eps / (h * h) - 1 / (2 * h);
+        if (i < N - 1) A[i + (i + 1) * N] = eps / (h * h) + 1 / (2 * h);
+      }
+      return A;
+    }
+
+    function randomTriangular(N) {
+      const A = new Float64Array(N * N);
+      let seed = 42;
+      function rand() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+      for (let i = 0; i < N; i++) {
+        A[i + i * N] = i + 1;
+        for (let j = i + 1; j < N; j++) A[i + j * N] = 2 * (rand() - 0.5) * 5;
+      }
+      return A;
+    }
+
+    function normalMatrix(N) {
+      const A = new Float64Array(N * N);
+      for (let i = 0; i < N; i++) {
+        A[i + i * N] = i + 1;
+        if (i > 0) { A[i + (i - 1) * N] = 0.5; A[(i - 1) + i * N] = 0.5; }
+      }
+      return A;
+    }
+
+    const presets = new Map([
+      ['Normal (symmetric, 10)', { fn: () => normalMatrix(10), N: 10, desc: 'Contours form perfect circles around each eigenvalue — a perturbation of size ε moves an eigenvalue by at most ε. This is the well-behaved baseline. No surprises.', zoom: [-1, 12, -6.5, 6.5] }],
+      ['Grcar (16)', { fn: () => grcar(16), N: 16, desc: 'The eigenvalues sit on a tidy curve in the complex plane, but the contours bulge far to the right. A tiny perturbation (ε ≈ 0.1) could push eigenvalues across a large region — the matrix is much more "nearly singular" than its eigenvalues suggest.', zoom: [-2, 4, -3, 3] }],
+      ['Transient growth (10)', { fn: () => transientDemo(10), N: 10, desc: 'Every eigenvalue has negative real part (the left half-plane), so this system is asymptotically stable. But the contours extend deep into the right half-plane — this predicts the enormous transient growth shown earlier.', zoom: [-12, 4, -8, 8] }],
+      ['Convection-diffusion (16)', { fn: () => convectionDiffusion(16), N: 16, desc: 'A finite-difference discretization of a convection-dominated PDE (ε·u″ + u′). The eigenvalues are all real and negative, but the pseudospectra protrude far into the right half-plane, explaining why naive time-stepping schemes blow up.', zoom: null }],
+      ['Random triangular (10)', { fn: () => randomTriangular(10), N: 10, desc: 'The eigenvalues are simply {1, 2, ..., 10} (readable straight off the diagonal), but large off-diagonal entries make the eigenvectors nearly parallel. The pseudospectra merge into one giant blob — a perturbation of size 1 could move any eigenvalue almost anywhere.', zoom: null }],
+    ]);
+  </script>
+
+  <script id="gpu" type="module">
+    const { device, canvasFormat } = await createWebGPUContext();
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 1: EIGENVALUES AND THEIR PROMISE
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="s1" type="text/markdown">
+# When Eigenvalues Lie
+
+Eigenvalues are one of the most powerful ideas in linear algebra. Given a matrix ${tex`A`}, its eigenvalues tell you about stability, resonance, growth, and decay. If you're modeling a physical system, eigenvalues are usually the first thing you compute.
+
+But eigenvalues have a dirty secret: **they can be misleading**. For certain matrices, the eigenvalues confidently say *"this system is stable"* while the actual behavior is temporarily explosive.
+
+This essay is about **pseudospectra** — a tool that reveals what eigenvalues hide.
+  </script>
+
+  <script id="s1b" type="text/markdown">
+## A quick refresher
+
+A number ${tex`\lambda`} is an eigenvalue of a matrix ${tex`A`} if there exists a nonzero vector ${tex`\mathbf{v}`} such that ${tex`A\mathbf{v} = \lambda\mathbf{v}`}. Geometrically, ${tex`A`} stretches ${tex`\mathbf{v}`} by a factor of ${tex`\lambda`}. For a dynamical system ${tex`\mathbf{x}'(t) = A\mathbf{x}(t)`}, the eigenvalues control the long-term behavior:
+
+- If all eigenvalues have **negative real part**, the system is *stable* — solutions decay to zero.
+- If any eigenvalue has **positive real part**, the system is *unstable* — solutions blow up.
+
+This is the eigenvalue stability criterion, and it works beautifully — most of the time.
+  </script>
+
+  <!-- A small inline SVG diagram: eigenvalues in the complex plane -->
+
+  <script id="eigDiagram" type="module">
+    const ed_w = Math.min(width, 500);
+    const ed_h = 200;
+    const ed_svg = d3.create("svg").attr("viewBox", `0 0 ${ed_w} ${ed_h}`).attr("width", ed_w);
+
+    // Left half = stable, right half = unstable
+    const ed_cx = ed_w / 2, ed_cy = ed_h / 2;
+    const sc = ed_w / 6;
+
+    // Shading
+    ed_svg.append("rect").attr("x", 0).attr("y", 0).attr("width", ed_cx).attr("height", ed_h)
+      .attr("fill", "#e8f5e9").attr("opacity", 0.5);
+    ed_svg.append("rect").attr("x", ed_cx).attr("y", 0).attr("width", ed_cx).attr("height", ed_h)
+      .attr("fill", "#ffebee").attr("opacity", 0.5);
+
+    // Axes
+    ed_svg.append("line").attr("x1", 0).attr("y1", ed_cy).attr("x2", ed_w).attr("y2", ed_cy)
+      .attr("stroke", "#999").attr("stroke-width", 0.5);
+    ed_svg.append("line").attr("x1", ed_cx).attr("y1", 0).attr("x2", ed_cx).attr("y2", ed_h)
+      .attr("stroke", "#999").attr("stroke-width", 0.5);
+
+    // Labels
+    ed_svg.append("text").attr("x", ed_cx / 2).attr("y", 20).attr("text-anchor", "middle")
+      .attr("fill", "#2e7d32").attr("font-size", "13px").text("Stable (Re < 0)");
+    ed_svg.append("text").attr("x", ed_cx + ed_cx / 2).attr("y", 20).attr("text-anchor", "middle")
+      .attr("fill", "#c62828").attr("font-size", "13px").text("Unstable (Re > 0)");
+    ed_svg.append("text").attr("x", ed_w - 5).attr("y", ed_cy - 6).attr("text-anchor", "end")
+      .attr("fill", "#666").attr("font-size", "11px").text("Re(λ)");
+    ed_svg.append("text").attr("x", ed_cx + 6).attr("y", 14).attr("text-anchor", "start")
+      .attr("fill", "#666").attr("font-size", "11px").text("Im(λ)");
+
+    // Some example eigenvalues in the left half
+    const pts = [[-1.5, 1], [-1.5, -1], [-0.8, 0], [-2, 0.5], [-2, -0.5]];
+    for (const [re, im] of pts) {
+      ed_svg.append("circle").attr("cx", ed_cx + re * sc).attr("cy", ed_cy - im * sc)
+        .attr("r", 5).attr("fill", "#1565c0").attr("stroke", "#fff").attr("stroke-width", 1);
+    }
+    ed_svg.append("text").attr("x", ed_cx + pts[2][0] * sc + 10).attr("y", ed_cy - pts[2][1] * sc + 4)
+      .attr("fill", "#1565c0").attr("font-size", "11px").text("← eigenvalues");
+
+    display(html`<figure>${ed_svg.node()}<figcaption>The complex plane. Eigenvalues in the left half-plane (green) mean stability. The right half-plane (red) means instability.</figcaption></figure>`);
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 2: THE PROBLEM — NORMAL VS NON-NORMAL
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="s2" type="text/markdown">
+## Normal vs. non-normal matrices
+
+Eigenvalue analysis works perfectly for **normal** matrices — matrices that satisfy ${tex`A^*A = AA^*`}. This includes symmetric matrices, orthogonal matrices, and diagonal matrices. For normal matrices, eigenvectors are orthogonal, and eigenvalues are the whole story.
+
+But most matrices arising in applications are **non-normal**. Their eigenvectors can be far from orthogonal — nearly parallel, even. This near-parallelism is the source of trouble.
+  </script>
+
+  <!-- SVG diagram: orthogonal vs skewed eigenvectors -->
+
+  <script id="normalVsNonnormal" type="module">
+    const nn_w = Math.min(width, 520);
+    const nn_h = 180;
+    const nn_svg = d3.create("svg").attr("viewBox", `0 0 ${nn_w} ${nn_h}`).attr("width", nn_w);
+    const nn_mid = nn_w / 2;
+
+    function nn_drawAxes(g, cx2, cy2, label) {
+      g.append("line").attr("x1", cx2 - 60).attr("y1", cy2).attr("x2", cx2 + 60).attr("y2", cy2)
+        .attr("stroke", "#ccc").attr("stroke-width", 0.5);
+      g.append("line").attr("x1", cx2).attr("y1", cy2 - 60).attr("x2", cx2).attr("y2", cy2 + 60)
+        .attr("stroke", "#ccc").attr("stroke-width", 0.5);
+      g.append("text").attr("x", cx2).attr("y", cy2 + 78).attr("text-anchor", "middle")
+        .attr("fill", "#555").attr("font-size", "12px").text(label);
+    }
+
+    function nn_arrow(g, cx2, cy2, dx, dy, color) {
+      g.append("line").attr("x1", cx2).attr("y1", cy2)
+        .attr("x2", cx2 + dx).attr("y2", cy2 + dy)
+        .attr("stroke", color).attr("stroke-width", 2.5)
+        .attr("marker-end", `url(#arrowhead-${color.replace('#','')})`);
+    }
+
+    for (const c of ['1565c0', 'e65100']) {
+      nn_svg.append("defs").append("marker").attr("id", `arrowhead-${c}`)
+        .attr("markerWidth", 8).attr("markerHeight", 6).attr("refX", 7).attr("refY", 3)
+        .attr("orient", "auto")
+        .append("polygon").attr("points", "0 0, 8 3, 0 6").attr("fill", `#${c}`);
+    }
+
+    const nn_g1 = nn_svg.append("g");
+    nn_drawAxes(nn_g1, nn_mid / 2, nn_h / 2 - 5, "Normal: orthogonal eigenvectors");
+    nn_arrow(nn_g1, nn_mid / 2, nn_h / 2 - 5, 50, 0, '#1565c0');
+    nn_arrow(nn_g1, nn_mid / 2, nn_h / 2 - 5, 0, -50, '#e65100');
+
+    const nn_g2 = nn_svg.append("g");
+    nn_drawAxes(nn_g2, nn_mid + nn_mid / 2, nn_h / 2 - 5, "Non-normal: nearly parallel eigenvectors");
+    nn_arrow(nn_g2, nn_mid + nn_mid / 2, nn_h / 2 - 5, 50, -5, '#1565c0');
+    nn_arrow(nn_g2, nn_mid + nn_mid / 2, nn_h / 2 - 5, 45, -25, '#e65100');
+
+    display(html`<figure>${nn_svg.node()}<figcaption>Eigenvectors of normal matrices are perpendicular. Non-normal matrices can have nearly parallel eigenvectors, which causes trouble.</figcaption></figure>`);
+  </script>
+
+  <script id="s2b" type="text/markdown">
+When eigenvectors are nearly parallel, components that should cancel can instead *amplify* each other before eventually decaying. The eigenvalues still predict the long-term outcome (decay), but they completely miss the short-term behavior (growth).
+
+This is not a rare pathology. It shows up in fluid dynamics, control systems, ecology models, and numerical PDE discretizations.
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 3: THE EVIDENCE — TRANSIENT GROWTH
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="s3" type="text/markdown">
+## Seeing the problem: transient growth
+
+Consider a 10×10 upper triangular matrix with eigenvalues −1, −2, ..., −10 on the diagonal and the value 10 in every upper-triangular entry. Every eigenvalue is safely negative — this system is "stable." But watch what happens to ${tex`\|e^{tA}\|`}, the norm of the matrix exponential:
+  </script>
+
+  <script id="transientData" type="module">
+    const tMatrix = (() => {
+      const N = 10;
+      const A = new Float64Array(N * N);
+      for (let i = 0; i < N; i++) {
+        A[i + i * N] = -(i + 1);
+        for (let j = i + 1; j < N; j++) A[i + j * N] = 10;
+      }
+      return A;
+    })();
+
+    const tResult = await workerCall({ type: 'eigenvalues', matrix: tMatrix, N: 10 });
+    const tEigs = [];
+    for (let i = 0; i < 10; i++) tEigs.push({ re: tResult.WR[i], im: tResult.WI[i] });
+
+    const transientResult = await workerCall({
+      type: 'transient', matrix: tMatrix, N: 10, tMax: 3, nSteps: 300,
+    });
+  </script>
+
+  <script id="transientPlot" type="module">
+    const tTimes = Array.from(transientResult.times);
+    const tNorms = Array.from(transientResult.norms);
+    const tData = tTimes.map((t, i) => ({ t, norm: tNorms[i] }));
+    const peakNorm = d3.max(tNorms);
+    const peakTime = tTimes[tNorms.indexOf(peakNorm)];
+
+    const eigBound = tTimes.map(t => ({
+      t, norm: Math.max(...tEigs.map(e => Math.exp(t * e.re)))
+    }));
+
+    display(Plot.plot({
+      width: Math.min(width, 580),
+      height: 280,
+      y: { type: 'log', label: '||exp(tA)||', grid: true, ticks: 5, domain: [Math.min(0.1, d3.min(eigBound, d => d.norm) * 0.5), peakNorm * 3] },
+      x: { label: 'Time t', grid: true, ticks: 5 },
+      marks: [
+        Plot.ruleY([1], { stroke: '#aaa', strokeDasharray: '4,3' }),
+        Plot.areaY(tData, { x: 't', y: 'norm', y1: 1, fill: '#1565c0', fillOpacity: 0.08 }),
+        Plot.line(eigBound, { x: 't', y: 'norm', stroke: '#999', strokeDasharray: '6,3', strokeWidth: 1.5 }),
+        Plot.line(tData, { x: 't', y: 'norm', stroke: '#1565c0', strokeWidth: 2.5 }),
+        Plot.tip([`Peak: ${peakNorm.toFixed(0)}× at t=${peakTime.toFixed(2)}`],
+          { x: peakTime, y: peakNorm, anchor: 'bottom' }),
+      ],
+    }));
+  </script>
+
+  <script id="s3b" type="text/markdown">
+The **blue curve** is the actual norm ${tex`\|e^{tA}\|`} — it surges upward by orders of magnitude before eventually decaying. The **dashed line** is the decay rate predicted by eigenvalues alone. The eigenvalues are *technically correct* about the long-term behavior, but they completely fail to predict the enormous transient spike.
+
+In a physical system — say, fluid flow in a pipe — this transient growth can trigger turbulence long before the eigenvalue-predicted decay has a chance to take effect.
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 4: THE FIX — PSEUDOSPECTRA
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="s4" type="text/markdown">
+## Pseudospectra: the fix
+
+The eigenvalues of ${tex`A`} are the values of ${tex`z`} where ${tex`(zI - A)`} is singular. But "singular" is a binary question — a matrix is either invertible or it isn't. **Pseudospectra** ask a more nuanced question: *how close is ${tex`(zI - A)`} to being singular?*
+
+Formally, the ${tex`\varepsilon`}-**pseudospectrum** of ${tex`A`} is the set of all ${tex`z \in \mathbb{C}`} where:
+
+${tex.block`\sigma_{\min}(zI - A) \le \varepsilon`}
+
+Here ${tex`\sigma_{\min}`} is the *smallest singular value* — a measure of "how close to singular" the matrix is. When ${tex`\sigma_{\min} = 0`}, the matrix is exactly singular and ${tex`z`} is an eigenvalue. When ${tex`\sigma_{\min}`} is small, the matrix is *nearly* singular, and ${tex`z`} is a *near*-eigenvalue.
+
+Equivalently: the ${tex`\varepsilon`}-pseudospectrum is the set of all ${tex`z`} that would become an eigenvalue of ${tex`A + E`} for some perturbation ${tex`\|E\| \le \varepsilon`}. Pseudospectra show how sensitive eigenvalues are to perturbation.
+  </script>
+
+  <!-- SVG: disks vs blobs -->
+
+  <script id="diskVsBlob" type="module">
+    const db_w = Math.min(width, 540);
+    const db_h = 200;
+    const db_svg = d3.create("svg").attr("viewBox", `0 0 ${db_w} ${db_h}`).attr("width", db_w);
+    const db_mid = db_w / 2;
+
+    // Left: normal matrix — perfect ε-disks
+    const db_g1 = db_svg.append("g");
+    db_g1.append("text").attr("x", db_mid / 2).attr("y", 16).attr("text-anchor", "middle")
+      .attr("font-size", "12px").attr("fill", "#555").text("Normal matrix");
+    const eigs1 = [[0.3, 0.5], [0.5, 0.3], [0.7, 0.6]];
+    for (const r of [40, 28, 16]) {
+      for (const [ex, ey] of eigs1) {
+        db_g1.append("circle")
+          .attr("cx", ex * db_mid).attr("cy", 20 + ey * (db_h - 30))
+          .attr("r", r).attr("fill", "none").attr("stroke", "#1565c0")
+          .attr("stroke-width", 1).attr("opacity", 0.4 + 0.2 * (40 - r) / 24);
+      }
+    }
+    for (const [ex, ey] of eigs1) {
+      db_g1.append("circle").attr("cx", ex * db_mid).attr("cy", 20 + ey * (db_h - 30))
+        .attr("r", 4).attr("fill", "#1565c0");
+    }
+
+    // Right: non-normal — irregular blobs
+    const db_g2 = db_svg.append("g");
+    db_g2.append("text").attr("x", db_mid + db_mid / 2).attr("y", 16).attr("text-anchor", "middle")
+      .attr("font-size", "12px").attr("fill", "#555").text("Non-normal matrix");
+    const eigs2 = [[0.35, 0.45], [0.55, 0.35], [0.65, 0.6]];
+    for (const [level, op] of [[38, 0.25], [26, 0.4], [14, 0.6]]) {
+      const path = d3.path();
+      const db_cx0 = db_mid + 0.5 * db_mid, db_cy0 = 20 + 0.47 * (db_h - 30);
+      const rx = level * 2.2, ry = level * 1.3;
+      path.moveTo(db_cx0 + rx, db_cy0);
+      for (let a = 0; a <= 360; a += 5) {
+        const rad = a * Math.PI / 180;
+        const wobble = 1 + 0.15 * Math.sin(3 * rad) + 0.1 * Math.cos(5 * rad + level);
+        path.lineTo(db_cx0 + rx * wobble * Math.cos(rad), db_cy0 + ry * wobble * Math.sin(rad));
+      }
+      path.closePath();
+      db_g2.append("path").attr("d", path.toString())
+        .attr("fill", "none").attr("stroke", "#c62828").attr("stroke-width", 1).attr("opacity", op);
+    }
+    for (const [ex, ey] of eigs2) {
+      db_g2.append("circle").attr("cx", db_mid + ex * db_mid).attr("cy", 20 + ey * (db_h - 30))
+        .attr("r", 4).attr("fill", "#c62828");
+    }
+
+    display(html`<figure>${db_svg.node()}<figcaption><b>Left:</b> For a normal matrix, pseudospectra are perfect disks around eigenvalues (radius = ε). <b>Right:</b> For a non-normal matrix, pseudospectra merge into irregular blobs extending far from the eigenvalues.</figcaption></figure>`);
+  </script>
+
+  <script id="s4b" type="text/markdown">
+The key insight: **for normal matrices, pseudospectra are boring** — they're exact ${tex`\varepsilon`}-disks around each eigenvalue, and perturbations of size ${tex`\varepsilon`} move eigenvalues by at most ${tex`\varepsilon`}. But **for non-normal matrices, pseudospectra can extend far from the eigenvalues**, meaning tiny perturbations can move eigenvalues across large distances.
+
+When pseudospectral contours extend into the right half-plane (${tex`\text{Re}(z) > 0`}), even though eigenvalues are in the left half-plane, this predicts transient growth — exactly what we saw above.
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 5: READING A PSEUDOSPECTRAL PLOT
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="s5" type="text/markdown">
+## Reading a pseudospectral plot
+
+In the interactive plot below, we compute ${tex`\sigma_{\min}(zI - A)`} at every point ${tex`z`} in the complex plane and visualize the result as a filled contour plot. Here's how to read it:
+
+- **Dark regions** = small ${tex`\sigma_{\min}`} = ${tex`z`} is *nearly* an eigenvalue (dangerous)
+- **Light regions** = large ${tex`\sigma_{\min}`} = ${tex`z`} is far from being an eigenvalue (safe)
+- **Contour lines** = boundaries of ${tex`\varepsilon`}-pseudospectra at ${tex`\varepsilon = 10^{-1}, 10^{-2}, 10^{-3}, \ldots`}
+- **White dots** = the actual eigenvalues (${tex`\sigma_{\min} = 0`})
+
+Try switching between the normal matrix (perfect circles!) and the non-normal examples. Scroll to zoom, drag to pan.
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 6: INTERACTIVE EXPLORER
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="controls" type="module">
+    const matrixChoice = view(Inputs.select(
+      Array.from(presets.keys()),
+      { label: 'Matrix', value: 'Grcar (16)' }
+    ));
+    const gridRes = view(Inputs.range([50, 250], {
+      label: 'Grid resolution', step: 10, value: 150
+    }));
+  </script>
+
+  <script id="computeEig" type="module">
+    const preset = presets.get(matrixChoice);
+    const matrixData = preset.fn();
+    const matrixN = preset.N;
+    const matrixDesc = preset.desc;
+
+    const eigResult = await workerCall({ type: 'eigenvalues', matrix: matrixData, N: matrixN });
+    const eigenvalues = [];
+    for (let i = 0; i < matrixN; i++) {
+      eigenvalues.push({ re: eigResult.WR[i], im: eigResult.WI[i], kappa: eigResult.condNums[i] });
+    }
+    const maxKappa = Math.max(...eigenvalues.map(e => e.kappa));
+  </script>
+
+  <script id="desc" type="module">
+    display(md`*${matrixDesc}*`);
+  </script>
+
+  <script id="domain" type="module">
+    let eMin = Infinity, eMax = -Infinity, iMin = Infinity, iMax = -Infinity;
+    for (const e of eigenvalues) {
+      if (e.re < eMin) eMin = e.re;
+      if (e.re > eMax) eMax = e.re;
+      if (e.im < iMin) iMin = e.im;
+      if (e.im > iMax) iMax = e.im;
+    }
+    const pad = Math.max((eMax - eMin), (iMax - iMin), 2) * 0.6;
+    const cx = (eMin + eMax) / 2, cy = (iMin + iMax) / 2;
+    const span = Math.max(eMax - eMin, iMax - iMin, 2) / 2 + pad;
+    const zoomDomain = presets.get(matrixChoice).zoom;
+    const xDom = zoomDomain ? [zoomDomain[0], zoomDomain[1]] : [cx - span, cx + span];
+    const yDom = zoomDomain ? [zoomDomain[2], zoomDomain[3]] : [cy - span, cy + span];
+  </script>
+
+  <script id="computeGrid" type="module">
+    const gridResult = await workerCall({
+      type: 'pseudospectra', matrix: matrixData, N: matrixN,
+      xMin: xDom[0], xMax: xDom[1], yMin: yDom[0], yMax: yDom[1], gridN: gridRes,
+    });
+  </script>
+
+  <!-- GPU resources -->
+
+  <script id="colorscale" type="module">
+    const cStops = [
+      [0.00, [0.05, 0.02, 0.15]],
+      [0.15, [0.20, 0.05, 0.35]],
+      [0.30, [0.50, 0.08, 0.35]],
+      [0.45, [0.78, 0.18, 0.22]],
+      [0.60, [0.92, 0.45, 0.20]],
+      [0.75, [0.96, 0.70, 0.35]],
+      [0.90, [0.98, 0.90, 0.65]],
+      [1.00, [0.99, 0.97, 0.88]],
+    ];
+    const cWidth = 256;
+    const cData = new Uint8Array(cWidth * 4);
+    for (let i = 0; i < cWidth; i++) {
+      const t = i / (cWidth - 1);
+      let lo = 0;
+      for (let j = 1; j < cStops.length; j++) { if (cStops[j][0] >= t) { lo = j - 1; break; } }
+      const [t0, c0] = cStops[lo], [t1, c1] = cStops[lo + 1];
+      const f = (t - t0) / (t1 - t0);
+      cData[i * 4 + 0] = Math.round((c0[0] + f * (c1[0] - c0[0])) * 255);
+      cData[i * 4 + 1] = Math.round((c0[1] + f * (c1[1] - c0[1])) * 255);
+      cData[i * 4 + 2] = Math.round((c0[2] + f * (c1[2] - c0[2])) * 255);
+      cData[i * 4 + 3] = 255;
+    }
+    const csTexture = device.createTexture({
+      size: [cWidth, 1], format: 'rgba8unorm',
+      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
+    });
+    device.queue.writeTexture({ texture: csTexture }, cData, { bytesPerRow: cWidth * 4 }, [cWidth, 1]);
+    const csSampler = device.createSampler({ magFilter: 'linear', minFilter: 'linear', addressModeU: 'clamp-to-edge' });
+  </script>
+
+  <script id="gridTexture" type="module">
+    const gN = gridResult.gridN;
+    const gridTexture = device.createTexture({
+      label: 'pseudospectra-grid', size: [gN, gN], format: 'r32float',
+      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
+    });
+    device.queue.writeTexture({ texture: gridTexture }, gridResult.grid, { bytesPerRow: gN * 4 }, [gN, gN]);
+
+    let vMin = Infinity, vMax = -Infinity;
+    for (let i = 0; i < gridResult.grid.length; i++) {
+      const v = gridResult.grid[i];
+      if (isFinite(v)) { if (v < vMin) vMin = v; if (v > vMax) vMax = v; }
+    }
+    vMin = Math.max(vMin, -16);
+    vMax = Math.min(vMax, 4);
+  </script>
+
+  <script id="shader" type="module">
+    const shaderCode = `
+      struct Params {
+        viewInverse: mat4x4<f32>,
+        vMin: f32, vMax: f32,
+        domMin: vec2<f32>, domMax: vec2<f32>,
+        _pad: vec2<f32>,
+      };
+      @group(0) @binding(0) var<uniform> params: Params;
+      @group(0) @binding(1) var grid_texture: texture_2d<f32>;
+      @group(0) @binding(2) var color_texture: texture_2d<f32>;
+      @group(0) @binding(3) var color_sampler: sampler;
+
+      struct VOut { @builtin(position) pos: vec4<f32>, @location(0) uv: vec2<f32> };
+
+      @vertex fn vs(@builtin(vertex_index) i: u32) -> VOut {
+        var p = array<vec2<f32>, 4>(vec2(-1,-1), vec2(1,-1), vec2(-1,1), vec2(1,1));
+        var o: VOut;
+        o.pos = vec4<f32>(p[i], 0, 1);
+        o.uv = p[i];
+        return o;
+      }
+
+      @fragment fn fs(input: VOut) -> @location(0) vec4<f32> {
+        let world = (params.viewInverse * vec4<f32>(input.uv, 0, 1)).xy;
+        let texUV = (world - params.domMin) / (params.domMax - params.domMin);
+
+        let clamped_uv = clamp(texUV, vec2(0.0), vec2(1.0));
+        let sz = vec2<f32>(textureDimensions(grid_texture));
+        let tc = clamped_uv * sz - 0.5;
+        let tc0 = vec2<i32>(floor(tc));
+        let fr = fract(tc);
+        let mx = vec2<i32>(sz) - 1;
+        let p00 = textureLoad(grid_texture, clamp(tc0, vec2(0), mx), 0).r;
+        let p10 = textureLoad(grid_texture, clamp(tc0 + vec2(1,0), vec2(0), mx), 0).r;
+        let p01 = textureLoad(grid_texture, clamp(tc0 + vec2(0,1), vec2(0), mx), 0).r;
+        let p11 = textureLoad(grid_texture, clamp(tc0 + vec2(1,1), vec2(0), mx), 0).r;
+        let val = mix(mix(p00, p10, fr.x), mix(p01, p11, fr.x), fr.y);
+
+        let t = clamp((val - params.vMin) / (params.vMax - params.vMin), 0.0, 1.0);
+        let color = textureSample(color_texture, color_sampler, vec2<f32>(t, 0.5));
+
+        let dp_dx = dpdx(val);
+        let dp_dy = dpdy(val);
+        let grad = length(vec2<f32>(dp_dx, dp_dy));
+        let dist = abs(fract(val + 0.5) - 0.5) / max(grad, 1e-6);
+        let contourAlpha = 1.0 - smoothstep(0.5, 1.5, dist);
+
+        let final_color = mix(color.rgb, vec3<f32>(0.15), contourAlpha * 0.7);
+
+        let inBounds = texUV.x >= 0.0 && texUV.x <= 1.0 && texUV.y >= 0.0 && texUV.y <= 1.0;
+        return select(vec4<f32>(0.0, 0.0, 0.0, 0.0), vec4<f32>(final_color, 1.0), inBounds);
+      }
+    `;
+
+    const bgl = device.createBindGroupLayout({ entries: [
+      { binding: 0, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+      { binding: 1, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: 'unfilterable-float' } },
+      { binding: 2, visibility: GPUShaderStage.FRAGMENT, texture: {} },
+      { binding: 3, visibility: GPUShaderStage.FRAGMENT, sampler: {} },
+    ]});
+
+    const paramsBuf = device.createBuffer({ size: 96, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+
+    const pipeline = device.createRenderPipeline({
+      layout: device.createPipelineLayout({ bindGroupLayouts: [bgl] }),
+      vertex: { module: device.createShaderModule({ code: shaderCode }), entryPoint: 'vs' },
+      fragment: { module: device.createShaderModule({ code: shaderCode }), entryPoint: 'fs', targets: [{ format: canvasFormat }] },
+      primitive: { topology: 'triangle-strip' },
+    });
+
+    const bindGroup = device.createBindGroup({ layout: bgl, entries: [
+      { binding: 0, resource: { buffer: paramsBuf } },
+      { binding: 1, resource: gridTexture.createView() },
+      { binding: 2, resource: csTexture.createView() },
+      { binding: 3, resource: csSampler },
+    ]});
+  </script>
+
+  <!-- Figure assembly -->
+
+  <script id="createPlot" type="module">
+    function createPspecPlot(w, h, xD, yD) {
+      return Plot.plot({
+        width: w, height: h,
+        marginTop: 10, marginRight: 10, marginLeft: 40, marginBottom: 30,
+        style: { backgroundColor: "transparent", maxWidth: "none", position: "absolute" },
+        x: { domain: xD, tickSpacing: 80, label: "Re(z)", grid: true },
+        y: { domain: yD, tickSpacing: 80, label: "Im(z)", grid: true },
+        marks: [
+          Plot.ruleX([0], { stroke: "#000", strokeWidth: 0.5 }),
+          Plot.ruleY([0], { stroke: "#000", strokeWidth: 0.5 }),
+        ],
+      });
+    }
+  </script>
+
+  <script id="stack" type="module">
+    const pxRatio = devicePixelRatio;
+    const sw = Math.min(width, 640);
+
+    const stack = createElementStack({
+      layers: [{
+        id: 'webgpu',
+        element: ({ current, width, height }) => {
+          let canvas, ctx;
+          if (current) { canvas = current; ctx = canvas._gpuContext; }
+          else {
+            canvas = document.createElement('canvas');
+            ctx = canvas.getContext('webgpu');
+            canvas._gpuContext = ctx;
+            ctx.configure({ device, format: canvasFormat, alphaMode: 'premultiplied' });
+          }
+          canvas.width = Math.floor(width * pxRatio);
+          canvas.height = Math.floor(height * pxRatio);
+          canvas.style.cssText = `width:${width}px;height:${height}px;position:absolute;top:0;left:0`;
+          ctx.configure({ device, format: canvasFormat, alphaMode: 'premultiplied' });
+          return canvas;
+        }
+      }, {
+        id: 'plot',
+        element: ({ width, height }) => createPspecPlot(width, height, xDom, yDom)
+      }, {
+        id: 'svg',
+        element: ({ current, width, height }) =>
+          (current ? d3.select(current) : d3.create("svg"))
+            .attr("width", width).attr("height", height)
+            .style("position", "absolute").style("top", "0").style("left", "0").node()
+      }],
+      width: sw, height: sw,
+    });
+  </script>
+
+  <script id="axes" type="module">
+    const renderDirty = { value: true };
+    const axes = createZoomableAxes({
+      d3, element: stack.elements.svg,
+      xScale: stack.elements.plot.scale("x"),
+      yScale: stack.elements.plot.scale("y"),
+      aspectRatio: 1,
+      onChange: ({ xDomain, yDomain }) => {
+        renderDirty.value = true;
+        const newPlot = createPspecPlot(stack.width, stack.height, xDomain, yDomain);
+        stack.elements.plot.replaceWith(newPlot);
+        stack.elements.plot = newPlot;
+        stack.dispatchEvent(new CustomEvent('update'));
+      }
+    });
+  </script>
+
+  <script id="figure" type="module">
+    const figure = html`<figure style="position:relative">
+      ${stack.element}
+      <figcaption>Pseudospectra of the ${matrixN}×${matrixN} <b>${matrixChoice}</b> matrix. Contour lines mark ε = 10<sup>k</sup>. White dots are eigenvalues. Scroll to zoom, drag to pan.</figcaption>
+    </figure>`;
+    stack.resize(Math.min(width, 640), Math.min(width, 640));
+    axes.updateScales(stack.elements.plot.scale("x"), stack.elements.plot.scale("y"));
+    renderDirty.value = true;
+    display(figure);
+  </script>
+
+  <script id="eigenOverlay" type="module">
+    const ov_svg = d3.select(stack.elements.svg);
+    const ov_defs = ov_svg.selectAll('defs').data([0]).join('defs');
+    ov_defs.selectAll('clipPath#ps-clip').data([0]).join('clipPath')
+      .attr('id', 'ps-clip').selectAll('rect').data([0]).join('rect');
+    const ov_clipped = ov_svg.selectAll('g.clipped').data([0]).join('g')
+      .attr('class', 'clipped').attr('clip-path', 'url(#ps-clip)');
+
+    // Size dots by eigenvalue condition number (log scale, clamped)
+    function eigRadius(kappa) {
+      // Map log10(kappa) from [0, log10(maxKappa)] to [3, 12] pixels
+      const logK = Math.log10(Math.max(kappa, 1));
+      const logMax = Math.log10(Math.max(maxKappa, 2));
+      return 3 + 9 * Math.min(logK / Math.max(logMax, 1), 1);
+    }
+
+    const ov_dots = ov_clipped.selectAll('circle.eig')
+      .data(eigenvalues).join('circle')
+      .attr('class', 'eig')
+      .attr('r', d => eigRadius(d.kappa))
+      .attr('fill', 'white')
+      .attr('fill-opacity', 0.85)
+      .attr('stroke', '#333')
+      .attr('stroke-width', 1.5);
+
+    // Tooltip on hover
+    ov_dots.append('title').text(d => `λ = ${d.re.toFixed(3)} + ${d.im.toFixed(3)}i\nκ = ${d.kappa.toFixed(1)}`);
+
+    function ov_updatePositions() {
+      const [x0, x1] = axes.xRange, [y0, y1] = axes.yRange;
+      ov_defs.select('#ps-clip rect')
+        .attr('x', Math.min(x0, x1)).attr('y', Math.min(y0, y1))
+        .attr('width', Math.abs(x1 - x0)).attr('height', Math.abs(y1 - y0));
+      ov_dots.attr('cx', d => axes.xScale(d.re)).attr('cy', d => axes.yScale(d.im));
+    }
+    ov_updatePositions();
+    stack.addEventListener('update', ov_updatePositions);
+  </script>
+
+  <script id="renderLoop" type="module">
+    const gpuCtx = stack.elements.webgpu._gpuContext;
+    const gpuCanvas = stack.elements.webgpu;
+
+    if (!stack._renderState) {
+      stack._renderState = { bindGroup: null, paramsBuf: null, pipeline: null, vMin: -10, vMax: 0, domMin: [0,0], domMax: [1,1] };
+    }
+    const rs = stack._renderState;
+    rs.bindGroup = bindGroup;
+    rs.paramsBuf = paramsBuf;
+    rs.pipeline = pipeline;
+    rs.vMin = vMin;
+    rs.vMax = vMax;
+    rs.domMin = [gridResult.xMin, gridResult.yMin];
+    rs.domMax = [gridResult.xMax, gridResult.yMax];
+    renderDirty.value = true;
+
+    function render() {
+      if (!renderDirty.value || !rs.bindGroup) return;
+      renderDirty.value = false;
+
+      const buf = new ArrayBuffer(96);
+      const f = new Float32Array(buf);
+      f.set(axes.viewInverse, 0);
+      f[16] = rs.vMin; f[17] = rs.vMax;
+      f[18] = rs.domMin[0]; f[19] = rs.domMin[1];
+      f[20] = rs.domMax[0]; f[21] = rs.domMax[1];
+      device.queue.writeBuffer(rs.paramsBuf, 0, f);
+
+      const vp = webgpuAxesViewport(axes, pxRatio, gpuCanvas.height);
+      const enc = device.createCommandEncoder();
+      const pass = enc.beginRenderPass({ colorAttachments: [{
+        view: gpuCtx.getCurrentTexture().createView(),
+        clearValue: { r: 0, g: 0, b: 0, a: 0 },
+        loadOp: 'clear', storeOp: 'store',
+      }]});
+      pass.setViewport(vp.x, vp.y, vp.width, vp.height, 0, 1);
+      pass.setScissorRect(Math.round(vp.x), Math.round(vp.y), Math.round(vp.width), Math.round(vp.height));
+      pass.setPipeline(rs.pipeline);
+      pass.setBindGroup(0, rs.bindGroup);
+      pass.draw(4);
+      pass.end();
+      device.queue.submit([enc.finish()]);
+    }
+
+    if (!stack._animLoop) {
+      function loop() { render(); stack._animLoop = requestAnimationFrame(loop); }
+      loop();
+      invalidation.then(() => { cancelAnimationFrame(stack._animLoop); stack._animLoop = null; });
+    }
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 7: FURTHER READING
+       ═══════════════════════════════════════════════════════ -->
+
+  <script id="s7" type="text/markdown">
+## Why it matters
+
+Pseudospectra have practical consequences in:
+
+- **Fluid dynamics**: Pipe flow is linearly stable (eigenvalues in the left half-plane) at all Reynolds numbers, yet turbulence occurs in practice. Pseudospectra explain why — the transient growth from non-normality triggers nonlinear instability.
+- **Numerical methods**: Non-normal discretization matrices can cause numerical schemes to amplify errors transiently, even when eigenvalue analysis says they're stable.
+- **Control theory**: A controller designed around eigenvalues can fail spectacularly when the system is non-normal, because small disturbances get amplified before decaying.
+
+## Further reading
+
+- L.N. Trefethen and M. Embree, *Spectra and Pseudospectra: The Behavior of Nonnormal Matrices and Operators* (Princeton, 2005) — the definitive reference.
+- L.N. Trefethen, "Pseudospectra of linear operators," *SIAM Review* 39(3), 1997.
+
+---
+
+*Computation: eigenvalues via LAPACK `dgeev`, ${tex`\sigma_{\min}`} via `dgesvd` on a grid — all running in JavaScript, translated from reference Fortran BLAS/LAPACK.*
+  </script>
+</notebook>

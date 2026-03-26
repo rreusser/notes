@@ -29,8 +29,8 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 
 // VARIABLES //
 
-var EPS = dlamch( 'P' );
-var SMLNUM = dlamch( 'S' ) / EPS;
+var EPS = dlamch( 'precision' );
+var SMLNUM = dlamch( 'safe-minimum' ) / EPS;
 
 
 // MAIN //

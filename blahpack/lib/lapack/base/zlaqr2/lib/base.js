@@ -44,8 +44,8 @@ var CZERO = new Complex128( 0.0, 0.0 );
 var CONE = new Complex128( 1.0, 0.0 );
 var RZERO = 0.0;
 var RONE = 1.0;
-var SAFMIN = dlamch( 'S' );
-var ULP = dlamch( 'P' );
+var SAFMIN = dlamch( 'safe-minimum' );
+var ULP = dlamch( 'precision' );
 
 
 // FUNCTIONS //

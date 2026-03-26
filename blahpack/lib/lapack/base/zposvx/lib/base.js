@@ -36,8 +36,8 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 
 // VARIABLES //
 
-var EPS = dlamch( 'E' );
-var SMLNUM = dlamch( 'S' );
+var EPS = dlamch( 'epsilon' );
+var SMLNUM = dlamch( 'safe-minimum' );
 var BIGNUM = 1.0 / SMLNUM;
 
 

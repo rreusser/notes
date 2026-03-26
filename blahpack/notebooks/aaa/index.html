@@ -797,8 +797,9 @@ ${stokesData.nPoles} lightning poles (${stokesN}/corner), degree ${stokesData.nP
 
   <script id="stokesVis" type="module">
     const gridN = stokesData.gridN;
-    const sPsiMin = stokesData.psiMin;
-    const sPsiMax = stokesData.psiMax;
+    const sPsiRange = Math.max(Math.abs(stokesData.psiMin), Math.abs(stokesData.psiMax), 1e-10);
+    const sPsiMin = -0.2;//sPsiRange;
+    const sPsiMax = 0.0;//sPsiRange;
     const sDomMin = stokesData.domMin;
     const sDomMax = stokesData.domMax;
 
@@ -1048,20 +1049,37 @@ ${stokesData.nPoles} lightning poles (${stokesN}/corner), degree ${stokesData.nP
     const sGpuCtx = sStack.elements.webgpu._gpuContext;
     const sGpuCanvas = sStack.elements.webgpu;
 
+    // Mutable render state — updated when stokesVis re-runs with new data
+    if (!sStack._sRenderState) {
+      sStack._sRenderState = { bindGroup: null, pipeline: null, paramsBuf: null, psiMin: 0, psiMax: 1, domMin: [-1, -1], domMax: [1, 1] };
+    }
+    const srs = sStack._sRenderState;
+    srs.bindGroup = stokesBindGroup;
+    srs.pipeline = stokesPipeline;
+    srs.paramsBuf = sParamsBuf;
+    srs.psiMin = sPsiMin;
+    srs.psiMax = sPsiMax;
+    srs.domMin = sDomMin;
+    srs.domMax = sDomMax;
+
+    // Signal a redraw since data changed
+    sRenderDirty.value = true;
+
     function sRender() {
       if (!sRenderDirty.value) return;
+      if (!srs.bindGroup || !srs.pipeline) return;
       sRenderDirty.value = false;
 
       const sp = new ArrayBuffer(96);
       const sf = new Float32Array(sp);
       sf.set(sAxes.viewInverse, 0);  // mat4x4 at offset 0
-      sf[16] = sPsiMin;              // psiMin
-      sf[17] = sPsiMax;              // psiMax
-      sf[18] = sDomMin[0];           // domMin.x
-      sf[19] = sDomMin[1];           // domMin.y
-      sf[20] = sDomMax[0];           // domMax.x
-      sf[21] = sDomMax[1];           // domMax.y
-      device.queue.writeBuffer(sParamsBuf, 0, sf);
+      sf[16] = srs.psiMin;              // psiMin
+      sf[17] = srs.psiMax;              // psiMax
+      sf[18] = srs.domMin[0];           // domMin.x
+      sf[19] = srs.domMin[1];           // domMin.y
+      sf[20] = srs.domMax[0];           // domMax.x
+      sf[21] = srs.domMax[1];           // domMax.y
+      device.queue.writeBuffer(srs.paramsBuf, 0, sf);
 
       const vp = webgpuAxesViewport(sAxes, sPixelRatio, sGpuCanvas.height);
       const enc = device.createCommandEncoder();
@@ -1074,8 +1092,8 @@ ${stokesData.nPoles} lightning poles (${stokesN}/corner), degree ${stokesData.nP
       });
       pass.setViewport(vp.x, vp.y, vp.width, vp.height, 0, 1);
       pass.setScissorRect(Math.round(vp.x), Math.round(vp.y), Math.round(vp.width), Math.round(vp.height));
-      pass.setPipeline(stokesPipeline);
-      pass.setBindGroup(0, stokesBindGroup);
+      pass.setPipeline(srs.pipeline);
+      pass.setBindGroup(0, srs.bindGroup);
       pass.draw(4);
       pass.end();
       device.queue.submit([enc.finish()]);

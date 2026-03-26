@@ -36,8 +36,8 @@ var TWO = 2.0;
 var HALF = 0.5;
 var EIGHT = 8.0;
 
-var EPS = dlamch( 'P' );
-var SMLNUM = dlamch( 'S' ) / EPS;
+var EPS = dlamch( 'precision' );
+var SMLNUM = dlamch( 'safe-minimum' ) / EPS;
 
 // DATA arrays (0-based)
 var LOCU12 = [ 2, 3, 0, 1 ];  // Fortran: 3, 4, 1, 2

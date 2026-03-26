@@ -95,7 +95,7 @@ function zlascl( type, kl, ku, cfrom, cto, M, N, A, strideA1, strideA2, offsetA 
 	}
 
 	// Get machine parameters
-	smlnum = dlamch( 'S' );
+	smlnum = dlamch( 'safe-minimum' );
 	bignum = 1.0 / smlnum;
 
 	// Get Float64 view and convert strides/offset

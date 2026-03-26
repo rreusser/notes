@@ -38,8 +38,8 @@ var ZERO = 0.0;
 var ONE = 1.0;
 
 // Machine constants (hoisted to module scope)
-var UNFL = dlamch( 'S' );
-var ULP = dlamch( 'P' );
+var UNFL = dlamch( 'safe-minimum' );
+var ULP = dlamch( 'precision' );
 var SMLNUM = UNFL * ( 1.0 / ULP );  // N/ULP at N=1, close enough
 var BIGNUM = ( ONE - ULP ) / SMLNUM;
 

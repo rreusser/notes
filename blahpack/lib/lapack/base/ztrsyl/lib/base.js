@@ -35,8 +35,8 @@ var zladiv = require( '../../zladiv/lib/base.js' );
 // VARIABLES //
 
 var ONE = 1.0;
-var EPS = dlamch( 'P' );
-var SMLNUM = dlamch( 'S' );
+var EPS = dlamch( 'precision' );
+var SMLNUM = dlamch( 'safe-minimum' );
 var DUM = new Float64Array( 1 );
 
 

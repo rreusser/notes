@@ -30,8 +30,8 @@ var dlaswp = require( '../../dlaswp/lib/base.js' );
 
 // VARIABLES //
 
-var EPS = dlamch( 'P' );
-var SMLNUM = dlamch( 'S' ) / EPS;
+var EPS = dlamch( 'precision' );
+var SMLNUM = dlamch( 'safe-minimum' ) / EPS;
 var BIGNUM = 1.0 / SMLNUM;
 
 

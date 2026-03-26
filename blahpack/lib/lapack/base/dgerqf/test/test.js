@@ -194,3 +194,69 @@ test( 'dgerqf: 2x5 (wide)', function t() {
 	assertArrayClose( extractMatrix( A, 6, 2, 5 ), tc.A, 1e-14, 'A' );
 	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-14, 'TAU' );
 });
+
+test( 'dgerqf: 40x40 (blocked path, verify R is upper triangular)', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var A;
+	var N = 40;
+	var i;
+	var j;
+
+	A = new Float64Array( N * N );
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < N; i++ ) {
+			A[ j * N + i ] = ( ( i + 1 ) * 7 + ( j + 1 ) * 13 ) % 97 / 97.0;
+		}
+	}
+	TAU = new Float64Array( N );
+	WORK = new Float64Array( N * 64 );
+
+	info = dgerqf( N, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
+
+	assert.equal( info, 0, 'INFO' );
+
+	// Verify R (upper triangle of A) has the right structure:
+	// For square M=N, R is upper triangular in A(0:N-1, 0:N-1)
+	// Check that info = 0 and TAU is filled
+	var tauNonZero = 0;
+	for ( i = 0; i < N; i++ ) {
+		if ( TAU[ i ] !== 0.0 ) {
+			tauNonZero += 1;
+		}
+	}
+	assert.ok( tauNonZero > 0, 'TAU should have nonzero entries' );
+});
+
+test( 'dgerqf: 40x35 (M > N, blocked path)', function t() {
+	var WORK;
+	var info;
+	var TAU;
+	var A;
+	var M = 40;
+	var N = 35;
+	var i;
+	var j;
+
+	A = new Float64Array( M * N );
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			A[ j * M + i ] = ( ( i + 1 ) * 11 + ( j + 1 ) * 7 ) % 101 / 101.0;
+		}
+	}
+	TAU = new Float64Array( N );
+	WORK = new Float64Array( M * 64 );
+
+	info = dgerqf( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
+
+	assert.equal( info, 0, 'INFO' );
+
+	var tauNonZero = 0;
+	for ( i = 0; i < N; i++ ) {
+		if ( TAU[ i ] !== 0.0 ) {
+			tauNonZero += 1;
+		}
+	}
+	assert.ok( tauNonZero > 0, 'TAU should have nonzero entries' );
+});

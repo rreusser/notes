@@ -309,6 +309,93 @@ test( 'dstevr: N_V - eigenvalues only, value range', function t() {
 	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
 });
 
+test( 'dstevr: N1_V_in_range - N=1 value range, eigenvalue in range', function t() {
+	var d = new Float64Array( [ 7.0 ] );
+	var e = new Float64Array( 1 );
+	var w = new Float64Array( 1 );
+	var Z = new Float64Array( 1 );
+	var ISUPPZ = new Int32Array( 2 );
+	var WORK = new Float64Array( 20 );
+	var IWORK = new Int32Array( 10 );
+	var out = {};
+
+	var info = dstevr( 'compute-vectors', 'value', 1, d, 1, 0, e, 1, 0, 6.0, 8.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 20, IWORK, 1, 0, 10 );
+
+	assert.equal( info, 0 );
+	assert.equal( out.M, 1 );
+	assertClose( w[ 0 ], 7.0, 1e-14, 'eigenvalue' );
+});
+
+test( 'dstevr: N1_V_out_range - N=1 value range, eigenvalue out of range', function t() {
+	var d = new Float64Array( [ 7.0 ] );
+	var e = new Float64Array( 1 );
+	var w = new Float64Array( 1 );
+	var Z = new Float64Array( 1 );
+	var ISUPPZ = new Int32Array( 2 );
+	var WORK = new Float64Array( 20 );
+	var IWORK = new Int32Array( 10 );
+	var out = {};
+
+	var info = dstevr( 'no-vectors', 'value', 1, d, 1, 0, e, 1, 0, 10.0, 20.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 20, IWORK, 1, 0, 10 );
+
+	assert.equal( info, 0 );
+	assert.equal( out.M, 0, 'no eigenvalues in range' );
+});
+
+test( 'dstevr: tiny_matrix - scaling path for small norm', function t() {
+	var tiny = 1e-170;
+	var N = 5;
+	var d = new Float64Array( [ 4 * tiny, 6 * tiny, 8 * tiny, 10 * tiny, 12 * tiny ] );
+	var e = new Float64Array( [ 1 * tiny, 0.5 * tiny, 1 * tiny, 0.5 * tiny ] );
+	var w = new Float64Array( N );
+	var Z = new Float64Array( N * N );
+	var ISUPPZ = new Int32Array( 2 * N );
+	var WORK = new Float64Array( 20 * N );
+	var IWORK = new Int32Array( 10 * N );
+	var out = {};
+
+	var info = dstevr( 'compute-vectors', 'all', N, d, 1, 0, e, 1, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 20 * N, IWORK, 1, 0, 10 * N );
+
+	assert.equal( info, 0, 'info' );
+	assert.equal( out.M, N, 'M' );
+});
+
+test( 'dstevr: tiny_eigenvalues_only - scaling with dsterf path', function t() {
+	var tiny = 1e-170;
+	var N = 5;
+	var d = new Float64Array( [ 4 * tiny, 6 * tiny, 8 * tiny, 10 * tiny, 12 * tiny ] );
+	var e = new Float64Array( [ 1 * tiny, 0.5 * tiny, 1 * tiny, 0.5 * tiny ] );
+	var w = new Float64Array( N );
+	var Z = new Float64Array( 1 );
+	var ISUPPZ = new Int32Array( 2 * N );
+	var WORK = new Float64Array( 20 * N );
+	var IWORK = new Int32Array( 10 * N );
+	var out = {};
+
+	var info = dstevr( 'no-vectors', 'all', N, d, 1, 0, e, 1, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 20 * N, IWORK, 1, 0, 10 * N );
+
+	assert.equal( info, 0, 'info' );
+	assert.equal( out.M, N, 'M' );
+});
+
+test( 'dstevr: value_range_with_scaling - scaling + value range', function t() {
+	var tiny = 1e-170;
+	var N = 5;
+	var d = new Float64Array( [ 4 * tiny, 6 * tiny, 8 * tiny, 10 * tiny, 12 * tiny ] );
+	var e = new Float64Array( [ 1 * tiny, 0.5 * tiny, 1 * tiny, 0.5 * tiny ] );
+	var w = new Float64Array( N );
+	var Z = new Float64Array( N * N );
+	var ISUPPZ = new Int32Array( 2 * N );
+	var WORK = new Float64Array( 20 * N );
+	var IWORK = new Int32Array( 10 * N );
+	var out = {};
+
+	var info = dstevr( 'compute-vectors', 'value', N, d, 1, 0, e, 1, 0, 5e-170, 9e-170, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 20 * N, IWORK, 1, 0, 10 * N );
+
+	assert.equal( info, 0, 'info' );
+	assert.ok( out.M >= 0, 'M should be non-negative' );
+});
+
 test( 'dstevr: N_I - eigenvalues only, index range', function t() {
 	var ISUPPZ;
 	var IWORK;

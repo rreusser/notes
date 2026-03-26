@@ -32,9 +32,9 @@ var ONE = 1.0;
 var TWO = 2.0;
 var MULTPL = 4.0;
 
-var EPS = dlamch( 'P' );
-var SAFMIN = dlamch( 'S' );
-var BASE = dlamch( 'B' );
+var EPS = dlamch( 'precision' );
+var SAFMIN = dlamch( 'safe-minimum' );
+var BASE = dlamch( 'base' );
 var SAFMN2 = Math.pow( BASE, Math.floor( Math.log( SAFMIN / EPS ) / Math.log( BASE ) / TWO ) );
 var SAFMX2 = ONE / SAFMN2;
 

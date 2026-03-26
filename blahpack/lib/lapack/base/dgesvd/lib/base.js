@@ -162,8 +162,8 @@ function dgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	DUM = new Float64Array( 1 );
 
 	// Compute machine parameters
-	eps = dlamch( 'P' );
-	smlnum = Math.sqrt( dlamch( 'S' ) ) / eps;
+	eps = dlamch( 'precision' );
+	smlnum = Math.sqrt( dlamch( 'safe-minimum' ) ) / eps;
 	bignum = 1.0 / smlnum;
 
 	// Scale A if max element outside range [smlnum, bignum]

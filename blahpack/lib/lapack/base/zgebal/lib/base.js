@@ -38,7 +38,7 @@ var SCLFAC = 2.0;
 var FACTOR = 0.95;
 
 // Precompute safe minimum / precision thresholds (hoisted to module scope per performance guidance)
-var SFMIN1 = dlamch( 'S' ) / dlamch( 'P' );
+var SFMIN1 = dlamch( 'safe-minimum' ) / dlamch( 'precision' );
 var SFMAX1 = ONE / SFMIN1;
 var SFMIN2 = SFMIN1 * SCLFAC;
 var SFMAX2 = ONE / SFMIN2;

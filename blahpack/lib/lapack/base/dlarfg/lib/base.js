@@ -69,7 +69,7 @@ function dlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		// General case
 		// Fortran SIGN(A,B): |A| * sign(B)
 		beta = -( Math.sign( alpha[ offsetAlpha ] ) || 1.0 ) * dlapy2( alpha[ offsetAlpha ], xnorm );
-		safmin = dlamch( 'S' ) / dlamch( 'E' );
+		safmin = dlamch( 'safe-minimum' ) / dlamch( 'epsilon' );
 		knt = 0;
 
 		if ( Math.abs( beta ) < safmin ) {

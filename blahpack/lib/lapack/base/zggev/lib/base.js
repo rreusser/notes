@@ -167,8 +167,8 @@ function zggev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 	RWORK = new Float64Array( 8 * N );
 
 	// Get machine constants
-	eps = dlamch( 'E' ) * dlamch( 'B' );
-	smlnum = dlamch( 'S' );
+	eps = dlamch( 'epsilon' ) * dlamch( 'base' );
+	smlnum = dlamch( 'safe-minimum' );
 	bignum = ONE / smlnum;
 	smlnum = Math.sqrt( smlnum ) / eps;
 	bignum = ONE / smlnum;

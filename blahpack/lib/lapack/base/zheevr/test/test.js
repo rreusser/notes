@@ -213,6 +213,98 @@ test( 'zheevr: N=1', function t() {
 	assertClose( Zv[ 1 ], 0.0, 1e-14, 'Z[0] imag' );
 });
 
+test( 'zheevr: N=1 valeig in range', function t() {
+	var A = new Complex128Array( [ 5.0, 0.0 ] );
+	var r = runZheevr( 'compute-vectors', 'value', 'lower', 1, A, 4.0, 6.0, 0, 0, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.equal( r.M, 1 );
+	assertClose( r.w[ 0 ], 5.0, 1e-14, 'w[0]' );
+});
+
+test( 'zheevr: N=1 valeig out of range', function t() {
+	var A = new Complex128Array( [ 5.0, 0.0 ] );
+	var r = runZheevr( 'compute-vectors', 'value', 'lower', 1, A, 6.0, 8.0, 0, 0, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.equal( r.M, 0 );
+});
+
+test( 'zheevr: tiny matrix triggers upscaling', function t() {
+	var tiny = 1e-170;
+	var Aorig = hermMatrix4();
+	var Av = reinterpret( Aorig, 0 );
+	// Scale all elements by tiny
+	var i;
+	for ( i = 0; i < Av.length; i++ ) {
+		Av[ i ] *= tiny;
+	}
+	var r = runZheevr( 'compute-vectors', 'all', 'lower', 4, Aorig, 0, 0, 0, 0, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.equal( r.M, 4 );
+});
+
+test( 'zheevr: tiny matrix eigenvalues only (dsterf path with scaling)', function t() {
+	var tiny = 1e-170;
+	var Aorig = hermMatrix4();
+	var Av = reinterpret( Aorig, 0 );
+	var i;
+	for ( i = 0; i < Av.length; i++ ) {
+		Av[ i ] *= tiny;
+	}
+	var r = runZheevr( 'no-vectors', 'all', 'lower', 4, Aorig, 0, 0, 0, 0, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.equal( r.M, 4 );
+});
+
+test( 'zheevr: tiny matrix upper with scaling', function t() {
+	var tiny = 1e-170;
+	var Aorig = hermMatrix4();
+	var Av = reinterpret( Aorig, 0 );
+	var i;
+	for ( i = 0; i < Av.length; i++ ) {
+		Av[ i ] *= tiny;
+	}
+	var r = runZheevr( 'compute-vectors', 'all', 'upper', 4, Aorig, 0, 0, 0, 0, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.equal( r.M, 4 );
+});
+
+test( 'zheevr: value range with scaling', function t() {
+	var tiny = 1e-170;
+	var Aorig = hermMatrix4();
+	var Av = reinterpret( Aorig, 0 );
+	var i;
+	for ( i = 0; i < Av.length; i++ ) {
+		Av[ i ] *= tiny;
+	}
+	var r = runZheevr( 'compute-vectors', 'value', 'lower', 4, Aorig, 7e-170, 11e-170, 0, 0, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.ok( r.M >= 0, 'M should be non-negative' );
+});
+
+test( 'zheevr: JOBZ=N, RANGE=V, UPLO=U', function t() {
+	var Aorig = hermMatrix4();
+	var A = new Complex128Array( reinterpret( Aorig, 0 ).slice() );
+	var r = runZheevr( 'no-vectors', 'value', 'upper', 4, A, 7.0, 11.0, 0, 0, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.ok( r.M >= 0, 'M should be non-negative' );
+});
+
+test( 'zheevr: JOBZ=N, RANGE=I, UPLO=L', function t() {
+	var Aorig = hermMatrix4();
+	var A = new Complex128Array( reinterpret( Aorig, 0 ).slice() );
+	var r = runZheevr( 'no-vectors', 'index', 'lower', 4, A, 0, 0, 1, 2, 0 );
+
+	assert.equal( r.info, 0 );
+	assert.ok( r.M >= 0, 'M should be non-negative' );
+});
+
 test( 'zheevr: JOBZ=V, RANGE=V, UPLO=U', function t() {
 	var tc = findCase( 'V_V_U' );
 	var Aorig = hermMatrix4();

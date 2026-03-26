@@ -34,8 +34,8 @@ var dlamch = require( './../../dlamch/lib/base.js' );
 
 var ZERO = 0.0;
 var ONE = 1.0;
-var EPS = dlamch( 'E' );
-var SAFMIN = dlamch( 'S' );
+var EPS = dlamch( 'epsilon' );
+var SAFMIN = dlamch( 'safe-minimum' );
 
 
 

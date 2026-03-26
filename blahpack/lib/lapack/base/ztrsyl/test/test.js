@@ -258,3 +258,142 @@ test( 'ztrsyl: CC isgn=-1 3x3', function t() {
 	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
 	assertArrayClose( Array.from( m.Cv ), tc.C, 1e-12, 'C' );
 });
+
+/**
+* Build 2x2 matrices where A(k,k) + sgn*B(l,l) is near zero to trigger
+* the da11 <= smin perturbation branch and info=1 return.
+* A(0,0) = (eps, 0), B(0,0) = (-eps, 0) with isgn=+1 => a11 ~ 0
+*/
+function buildNearSingular() {
+	var N = 2;
+	var eps = 1e-320;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	Av[ (0 + 0*N)*2 ] = eps; Av[ (0 + 0*N)*2 + 1 ] = 0.0;
+	Av[ (0 + 1*N)*2 ] = 0.1; Av[ (0 + 1*N)*2 + 1 ] = 0.05;
+	Av[ (1 + 1*N)*2 ] = 2.0; Av[ (1 + 1*N)*2 + 1 ] = 0.0;
+
+	var B = new Complex128Array( N * N );
+	var Bv = reinterpret( B, 0 );
+	Bv[ (0 + 0*N)*2 ] = -eps; Bv[ (0 + 0*N)*2 + 1 ] = 0.0;
+	Bv[ (0 + 1*N)*2 ] = 0.2; Bv[ (0 + 1*N)*2 + 1 ] = -0.1;
+	Bv[ (1 + 1*N)*2 ] = 3.0; Bv[ (1 + 1*N)*2 + 1 ] = 0.0;
+
+	var C = new Complex128Array( N * N );
+	var Cv = reinterpret( C, 0 );
+	Cv[ (0 + 0*N)*2 ] = 1.0; Cv[ (0 + 0*N)*2 + 1 ] = 0.5;
+	Cv[ (0 + 1*N)*2 ] = 2.0; Cv[ (0 + 1*N)*2 + 1 ] = -0.3;
+	Cv[ (1 + 0*N)*2 ] = 3.0; Cv[ (1 + 0*N)*2 + 1 ] = 1.0;
+	Cv[ (1 + 1*N)*2 ] = 4.0; Cv[ (1 + 1*N)*2 + 1 ] = -1.0;
+
+	return { A: A, B: B, C: C, Cv: Cv, N: N };
+}
+
+test( 'ztrsyl: NN near-singular - da11 perturbation', function t() {
+	var m = buildNearSingular();
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	// info=1 indicates perturbation was needed
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+	assert.ok( scale[ 0 ] > 0 && scale[ 0 ] <= 1.0, 'scale should be in (0, 1]' );
+});
+
+test( 'ztrsyl: CN near-singular - da11 perturbation with conj transpose A', function t() {
+	var m = buildNearSingular();
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'conjugate-transpose', 'no-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+	assert.ok( scale[ 0 ] > 0 && scale[ 0 ] <= 1.0, 'scale should be in (0, 1]' );
+});
+
+test( 'ztrsyl: CC near-singular - da11 perturbation with conj transpose both', function t() {
+	var m = buildNearSingular();
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'conjugate-transpose', 'conjugate-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+	assert.ok( scale[ 0 ] > 0 && scale[ 0 ] <= 1.0, 'scale should be in (0, 1]' );
+});
+
+test( 'ztrsyl: NC near-singular - da11 perturbation with conj transpose B', function t() {
+	var m = buildNearSingular();
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'no-transpose', 'conjugate-transpose', 1, m.N, m.N, m.A, 1, m.N, 0, m.B, 1, m.N, 0, m.C, 1, m.N, 0, scale );
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+	assert.ok( scale[ 0 ] > 0 && scale[ 0 ] <= 1.0, 'scale should be in (0, 1]' );
+});
+
+/**
+* Build matrices where the RHS vector (vec) is very large relative to the
+* near-zero diagonal element, triggering the scaloc scaling (da11 < 1, db > bignum*da11).
+*/
+function buildScalocTrigger() {
+	// Need: da11 = |A(k,k) + sgn*B(l,l)| <= smin triggers perturbation to smin = EPS*max(||A||,||B||)
+	// Then: db > bignum * smin requires C values ~ 3e275
+	// A diagonal near-zero, off-diagonal ~ 1 so max(||A||)=1, smin=EPS
+	var N = 2;
+	var A = new Complex128Array( N * N );
+	var Av = reinterpret( A, 0 );
+	Av[ (0 + 0*N)*2 ] = 0.0; Av[ (0 + 0*N)*2 + 1 ] = 0.0;
+	Av[ (0 + 1*N)*2 ] = 1.0; Av[ (0 + 1*N)*2 + 1 ] = 0.0;
+	Av[ (1 + 1*N)*2 ] = 5.0; Av[ (1 + 1*N)*2 + 1 ] = 0.0;
+
+	var B = new Complex128Array( N * N );
+	var Bv = reinterpret( B, 0 );
+	Bv[ (0 + 0*N)*2 ] = 0.0; Bv[ (0 + 0*N)*2 + 1 ] = 0.0;
+	Bv[ (0 + 1*N)*2 ] = 1.0; Bv[ (0 + 1*N)*2 + 1 ] = 0.0;
+	Bv[ (1 + 1*N)*2 ] = 5.0; Bv[ (1 + 1*N)*2 + 1 ] = 0.0;
+
+	var C = new Complex128Array( N * N );
+	var Cv = reinterpret( C, 0 );
+	// C(M-1,0) = large value to trigger scaloc at k=M-1=1, l=0 in NN path
+	// Actually for NN: k goes from M-1 down to 0. At k=1, l=0:
+	// suml = zdotu(0,...) = 0, sumr = zdotu(0,...) = 0
+	// vec = C(1,0) = large. A(1,1)+B(0,0) = 5+0 = 5. da11=5 > smin, no perturbation needed.
+	// At k=0, l=0: A(0,0)+B(0,0) = 0. da11=0 <= smin => perturbation to smin~EPS
+	// vec = C(0,0) - zdotu(1, A(0,1), C(1,0)) - zdotu(0,...) = C(0,0) - A(0,1)*C(1,0)
+	// Make C(0,0) large and C(1,0) such that vec remains large
+	Cv[ (0 + 0*N)*2 ] = 1e276; Cv[ (0 + 0*N)*2 + 1 ] = 1e276;
+	Cv[ (0 + 1*N)*2 ] = 1.0; Cv[ (0 + 1*N)*2 + 1 ] = 0.0;
+	Cv[ (1 + 0*N)*2 ] = 0.0; Cv[ (1 + 0*N)*2 + 1 ] = 0.0;
+	Cv[ (1 + 1*N)*2 ] = 1.0; Cv[ (1 + 1*N)*2 + 1 ] = 0.0;
+
+	return { A: A, B: B, C: C, Cv: Cv, N: N };
+}
+
+// Tests using 2x2 matrices with A(0,0)=B(0,0)=0 and large C to trigger scaloc
+test( 'ztrsyl: NN scaloc - overflow protection scaling', function t() {
+	// 2x2: A(0,0)+B(0,0)=0 => perturbed. Large C triggers scaloc.
+	var A = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var B = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var C = new Complex128Array( [ 2e276, 2e276, 1, 0, 0, 0, 1, 0 ] );
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'no-transpose', 'no-transpose', 1, 2, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+});
+
+test( 'ztrsyl: CN scaloc - overflow protection with conj transpose A', function t() {
+	var A = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var B = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var C = new Complex128Array( [ 2e276, 2e276, 1, 0, 0, 0, 1, 0 ] );
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'conjugate-transpose', 'no-transpose', 1, 2, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+});
+
+test( 'ztrsyl: CC scaloc - overflow protection with conj transpose both', function t() {
+	var A = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var B = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var C = new Complex128Array( [ 2e276, 2e276, 1, 0, 0, 0, 1, 0 ] );
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'conjugate-transpose', 'conjugate-transpose', 1, 2, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+});
+
+test( 'ztrsyl: NC scaloc - overflow protection with conj transpose B', function t() {
+	var A = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var B = new Complex128Array( [ 0, 0, 0, 0, 1, 0, 5, 0 ] );
+	var C = new Complex128Array( [ 2e276, 2e276, 1, 0, 0, 0, 1, 0 ] );
+	var scale = new Float64Array( 1 );
+	var info = ztrsyl( 'no-transpose', 'conjugate-transpose', 1, 2, 2, A, 1, 2, 0, B, 1, 2, 0, C, 1, 2, 0, scale );
+	assert.strictEqual( info, 1, 'info should be 1 (perturbed)' );
+});

@@ -99,3 +99,30 @@ test( 'zdrscl: non-unit stride (incx=2)', function t() {
 	zdrscl( 2, 4.0, x, 2, 0 );
 	assertArrayClose( reinterpret( x, 0 ), tc.x, 1e-14, 'x' );
 });
+
+test( 'zdrscl: very large scalar triggers iterative SMLNUM scaling (line 69)', function t() {
+	// sa > BIGNUM (~4.5e307) to trigger |cden*SMLNUM| > |cnum|
+	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	var xv = reinterpret( x, 0 );
+	var sa = 1e308;
+	zdrscl( 2, sa, x, 1, 0 );
+	// Result should be x / sa = [1e-308, 2e-308, 3e-308, 4e-308]
+	assertClose( xv[ 0 ], 1.0 / sa, 1e-10, 'x[0]' );
+	assertClose( xv[ 1 ], 2.0 / sa, 1e-10, 'x[1]' );
+	assertClose( xv[ 2 ], 3.0 / sa, 1e-10, 'x[2]' );
+	assertClose( xv[ 3 ], 4.0 / sa, 1e-10, 'x[3]' );
+});
+
+test( 'zdrscl: very small scalar triggers iterative BIGNUM scaling (line 74)', function t() {
+	// sa < SMLNUM (~2.2e-308) to trigger |cnum/BIGNUM| > |cden|
+	// Use small x values to avoid overflow in the result
+	var x = new Complex128Array( [ 1e-300, 2e-300, 3e-300, 4e-300 ] );
+	var xv = reinterpret( x, 0 );
+	var sa = 5e-309;
+	zdrscl( 2, sa, x, 1, 0 );
+	// Result should be x / sa
+	assertClose( xv[ 0 ], 1e-300 / sa, 1e-10, 'x[0]' );
+	assertClose( xv[ 1 ], 2e-300 / sa, 1e-10, 'x[1]' );
+	assertClose( xv[ 2 ], 3e-300 / sa, 1e-10, 'x[2]' );
+	assertClose( xv[ 3 ], 4e-300 / sa, 1e-10, 'x[3]' );
+});

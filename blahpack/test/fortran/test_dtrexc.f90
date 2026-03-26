@@ -402,4 +402,113 @@ program test_dtrexc
   call print_array('Q', Q_packed, N*N)
   call end_test()
 
+  ! ==========================================================================
+  ! Test 13: backward move of 2x2 across 2x2
+  ! Two 2x2 blocks: block at rows 3-4, move backward past block at 1-2
+  ! ==========================================================================
+  N = 6
+  T = 0.0d0
+  T(1,1) = 2.0d0; T(1,2) = 3.0d0
+  T(2,1) = -3.0d0; T(2,2) = 2.0d0
+  T(1,3) = 0.5d0; T(1,4) = 0.3d0; T(1,5) = 0.2d0; T(1,6) = 0.1d0
+  T(2,3) = 0.8d0; T(2,4) = 0.4d0; T(2,5) = 0.25d0; T(2,6) = 0.15d0
+  T(3,3) = 4.0d0; T(3,4) = 1.0d0
+  T(4,3) = -1.0d0; T(4,4) = 4.0d0
+  T(3,5) = 0.6d0; T(3,6) = 0.35d0
+  T(4,5) = 0.7d0; T(4,6) = 0.45d0
+  T(5,5) = 1.0d0; T(5,6) = 0.9d0
+  T(6,6) = 0.5d0
+
+  Q = 0.0d0
+  do i = 1, N
+    Q(i,i) = 1.0d0
+  end do
+
+  IFST = 3
+  ILST = 1
+  call DTREXC('V', N, T, MAXN, Q, MAXN, IFST, ILST, WORK, INFO)
+
+  do j = 1, N
+    do i = 1, N
+      T_packed((j-1)*N + i) = T(i, j)
+      Q_packed((j-1)*N + i) = Q(i, j)
+    end do
+  end do
+
+  call begin_test('backward 2x2 across 2x2')
+  call print_int('info', INFO)
+  call print_int('ifst', IFST)
+  call print_int('ilst', ILST)
+  call print_array('T', T_packed, N*N)
+  call print_array('Q', Q_packed, N*N)
+  call end_test()
+
+  ! ==========================================================================
+  ! Test 14: ILST adjusted to second row of 2x2 block
+  ! Move 1x1 at position 1 to position 2 which is inside 2x2 at 2-3
+  ! ==========================================================================
+  N = 4
+  T = 0.0d0
+  T(1,1) = 5.0d0; T(1,2) = 0.5d0; T(1,3) = 0.2d0; T(1,4) = 0.1d0
+  T(2,2) = 3.0d0; T(2,3) = 2.0d0; T(2,4) = 0.6d0
+  T(3,2) = -2.0d0; T(3,3) = 3.0d0; T(3,4) = 0.8d0
+  T(4,4) = 1.0d0
+
+  Q = 0.0d0
+  do i = 1, N
+    Q(i,i) = 1.0d0
+  end do
+
+  IFST = 1
+  ILST = 2
+  call DTREXC('V', N, T, MAXN, Q, MAXN, IFST, ILST, WORK, INFO)
+
+  do j = 1, N
+    do i = 1, N
+      T_packed((j-1)*N + i) = T(i, j)
+      Q_packed((j-1)*N + i) = Q(i, j)
+    end do
+  end do
+
+  call begin_test('ilst_adjusted_fwd')
+  call print_int('info', INFO)
+  call print_int('ifst', IFST)
+  call print_int('ilst', ILST)
+  call print_array('T', T_packed, N*N)
+  call print_array('Q', Q_packed, N*N)
+  call end_test()
+
+  ! ==========================================================================
+  ! Test 15: backward 2x2 block with COMPQ=N
+  ! ==========================================================================
+  N = 5
+  T = 0.0d0
+  T(1,1) = 5.0d0; T(1,2) = 0.5d0; T(1,3) = 0.2d0; T(1,4) = 0.1d0; T(1,5) = 0.3d0
+  T(2,2) = 1.0d0; T(2,3) = 0.6d0; T(2,4) = 0.4d0; T(2,5) = 0.15d0
+  T(3,3) = 0.5d0; T(3,4) = 0.9d0; T(3,5) = 0.2d0
+  T(4,4) = 3.0d0; T(4,5) = 2.0d0
+  T(5,4) = -2.0d0; T(5,5) = 3.0d0
+
+  Q = 0.0d0
+  do i = 1, N
+    Q(i,i) = 1.0d0
+  end do
+
+  IFST = 4
+  ILST = 1
+  call DTREXC('N', N, T, MAXN, Q, MAXN, IFST, ILST, WORK, INFO)
+
+  do j = 1, N
+    do i = 1, N
+      T_packed((j-1)*N + i) = T(i, j)
+    end do
+  end do
+
+  call begin_test('backward 2x2 compq_N')
+  call print_int('info', INFO)
+  call print_int('ifst', IFST)
+  call print_int('ilst', ILST)
+  call print_array('T', T_packed, N*N)
+  call end_test()
+
 end program

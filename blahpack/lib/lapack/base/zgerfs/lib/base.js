@@ -38,8 +38,8 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 // VARIABLES //
 
 var ITMAX = 5;
-var EPS = dlamch( 'E' );
-var SAFMIN = dlamch( 'S' );
+var EPS = dlamch( 'epsilon' );
+var SAFMIN = dlamch( 'safe-minimum' );
 var CONE = new Complex128( 1.0, 0.0 );
 var CNEGONE = new Complex128( -1.0, 0.0 );
 

@@ -221,8 +221,8 @@ function zhgeqz( job, compq, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH,
 
 	// Machine constants
 	in0 = ihi + 1 - ilo;
-	safmin = dlamch( 'S' );
-	ulp = dlamch( 'E' ) * dlamch( 'B' );
+	safmin = dlamch( 'safe-minimum' );
+	ulp = dlamch( 'epsilon' ) * dlamch( 'base' );
 
 	// Compute norms of active submatrix
 

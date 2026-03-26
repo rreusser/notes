@@ -167,6 +167,52 @@ test( 'zgels: nrhs_zero quick return', function t() {
 	assert.equal( info, tc.info );
 });
 
+test( 'zgels: zero matrix A returns zero solution', function t() {
+	var A = c128( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+	var B = c128( [ 1, 2, 0, 0 ] );
+	var info = zgels( 'no-transpose', 2, 2, 1, A, 1, 2, 0, B, 1, 2, 0, null, 1, 0, -1 );
+	assert.equal( info, 0, 'info' );
+	// B should be zeroed out
+	var Bv = reinterpret( B, 0 );
+	assert.equal( Bv[ 0 ], 0.0, 'B[0]' );
+	assert.equal( Bv[ 1 ], 0.0, 'B[1]' );
+});
+
+test( 'zgels: tiny A triggers upscaling (iascl=1)', function t() {
+	// A values near underflow: anrm < smlnum
+	var tiny = 1e-310;
+	var A = c128( [ tiny, 0, 0, 0, 0, 0, tiny, 0 ] );
+	var B = c128( [ tiny, 0, 0, 0 ] );
+	var info = zgels( 'no-transpose', 2, 2, 1, A, 1, 2, 0, B, 1, 2, 0, null, 1, 0, -1 );
+	// Should not crash; info may be 0 or > 0 depending on conditioning
+	assert.ok( info >= 0, 'info should be non-negative' );
+});
+
+test( 'zgels: huge A triggers downscaling (iascl=2)', function t() {
+	// A values near overflow: anrm > bignum
+	var huge = 1e307;
+	var A = c128( [ huge, 0, 0, 0, 0, 0, huge, 0 ] );
+	var B = c128( [ huge, 0, 0, 0 ] );
+	var info = zgels( 'no-transpose', 2, 2, 1, A, 1, 2, 0, B, 1, 2, 0, null, 1, 0, -1 );
+	assert.ok( info >= 0, 'info should be non-negative' );
+});
+
+test( 'zgels: tiny B triggers upscaling (ibscl=1)', function t() {
+	var tiny = 1e-310;
+	var A = c128( [ 5, 1, 0, 1, 0, 1, 5, 1, 0, 0, 0, 1, 5, 1 ] );
+	var B = c128( [ tiny, 0, tiny, 0, tiny, 0 ] );
+	var info = zgels( 'no-transpose', 3, 3, 1, A, 1, 3, 0, B, 1, 3, 0, null, 1, 0, -1 );
+	assert.equal( info, 0, 'info' );
+});
+
+test( 'zgels: huge B triggers downscaling (ibscl=2)', function t() {
+	var huge = 1e307;
+	var A = c128( [ 5, 1, 0, 1, 0, 1, 5, 1, 0, 0, 0, 1, 5, 1 ] );
+	var B = c128( [ huge, 0, huge, 0, huge, 0 ] );
+	var info = zgels( 'no-transpose', 3, 3, 1, A, 1, 3, 0, B, 1, 3, 0, null, 1, 0, -1 );
+	assert.equal( info, 0, 'info' );
+});
+
 test( 'zgels: overdetermined_6x3', function t() {
 	var tc = findCase( 'overdetermined_6x3' );
 	// A col-major (6x3, LDA=6), diag-dominant complex matrix

@@ -1,0 +1,7 @@
+{"name":"fwd_fwd_3_3","index":[1,4,2,5,3,6]}
+{"name":"fwd_bwd_3_3","index":[1,6,2,5,3,4]}
+{"name":"bwd_fwd_3_2","index":[3,4,2,5,1]}
+{"name":"bwd_bwd_2_3","index":[5,2,4,1,3]}
+{"name":"n1_n1","index":[2,1]}
+{"name":"equal","index":[1,2,3,4]}
+{"name":"n4_n1","index":[1,2,5,3,4]}

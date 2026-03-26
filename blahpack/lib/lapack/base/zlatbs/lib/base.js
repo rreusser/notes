@@ -47,7 +47,7 @@ var ONE = 1.0;
 var TWO = 2.0;
 
 // Machine constants
-var SMLNUM = dlamch( 'S' ) / dlamch( 'E' );
+var SMLNUM = dlamch( 'safe-minimum' ) / dlamch( 'epsilon' );
 var BIGNUM = ONE / SMLNUM;
 
 // Scratch arrays for zladiv

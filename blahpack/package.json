@@ -10,7 +10,8 @@
     "lint:learnings": "! grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md 2>/dev/null | grep . && echo 'All LEARNINGS.md filled in' || (echo 'FAIL: Unfilled LEARNINGS.md found:' && grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md && exit 1)",
     "bundle:notebook": "esbuild notebooks/aaa/laplace-entry.js --bundle --format=esm --outfile=notebooks/aaa/laplace-bundle.js --platform=neutral --main-fields=main,module",
     "bundle:naca": "esbuild notebooks/naca/naca-entry.js --bundle --format=esm --outfile=notebooks/naca/naca-bundle.js --platform=neutral --main-fields=main,module",
-    "dev": "npm run bundle:notebook && npm run bundle:naca && vite --port 5174"
+    "bundle:pseudospectra": "esbuild notebooks/pseudospectra/pspectra-entry.js --bundle --format=esm --outfile=notebooks/pseudospectra/pspectra-bundle.js --platform=neutral --main-fields=main,module",
+    "dev": "npm run bundle:notebook && npm run bundle:naca && npm run bundle:pseudospectra && vite --port 5174"
   },
   "keywords": [],
   "author": "",

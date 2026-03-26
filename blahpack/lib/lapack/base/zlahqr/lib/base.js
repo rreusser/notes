@@ -41,8 +41,8 @@ var HALF = 0.5;
 var DAT1 = 3.0 / 4.0;
 var KEXSH = 10;
 
-var SAFMIN = dlamch( 'S' );
-var ULP = dlamch( 'P' );
+var SAFMIN = dlamch( 'safe-minimum' );
+var ULP = dlamch( 'precision' );
 
 
 // FUNCTIONS //

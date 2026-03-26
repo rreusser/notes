@@ -200,8 +200,8 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 	}
 
 	// Get machine constants
-	safemn = dlamch( 'S' );
-	ulp = dlamch( 'P' );
+	safemn = dlamch( 'safe-minimum' );
+	ulp = dlamch( 'precision' );
 	rtoli = ulp * RELFAC;
 	nb = 0;
 

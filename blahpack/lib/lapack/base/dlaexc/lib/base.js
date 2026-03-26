@@ -41,8 +41,8 @@ var TEN = 10.0;
 var LDD = 4;
 var LDX = 2;
 
-var EPS = dlamch( 'P' );
-var SMLNUM = dlamch( 'S' ) / EPS;
+var EPS = dlamch( 'precision' );
+var SMLNUM = dlamch( 'safe-minimum' ) / EPS;
 
 
 // MAIN //

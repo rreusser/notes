@@ -621,34 +621,68 @@ for per-line V8 CPU profiling, `bin/bench-blas.js` for leaf-node throughput.
 
 ### uplo/trans String Convention
 
-**In `base.js`, use lowercase long-form strings:**
-`'upper'`, `'lower'`, `'left'`, `'right'`, `'no-transpose'`, `'transpose'`,
-`'conjugate-transpose'`, `'unit'`, `'non-unit'`, `'forward'`, `'backward'`,
-`'columnwise'`, `'rowwise'`, `'frobenius'`, `'one-norm'`, `'inf-norm'`, `'max'`.
+**ALL string parameters in `base.js` MUST use lowercase long-form strings.
+Single-character Fortran flags (`'U'`, `'L'`, `'N'`, `'T'`, `'C'`, `'M'`,
+`'F'`, `'E'`, `'V'`, `'S'`, `'I'`, etc.) are CATEGORICALLY FORBIDDEN.**
 
-**When calling a dependency from `base.js`**, always pass long-form strings.
-This is the #1 cause of silent bugs — a short-form string like `'L'` won't
-match `=== 'left'` and will silently take the wrong branch.
+This is the #1 source of bugs in this codebase. A short-form string like
+`'M'` silently fails to match `=== 'max'` and takes the wrong branch,
+producing subtly wrong results or zeros that propagate as NaN. We have
+found and fixed this bug class **over 20 times** across the codebase.
 
-**WARNING: Existing implementations are inconsistent.** Some routines only
-accept long-form (`dormqr`: `'left'`), others accept both (`zunmqr`:
-`'left'` or `'L'`), and a few use short-form (`dsyconv`: `'U'`/`'L'`).
-**Before calling any dependency for the first time, grep its source to check
-which convention it uses.** Do not assume. Known inconsistencies:
+**The complete mapping (memorize this):**
 
-| Routine | Accepts | Known bug if wrong convention used |
-|---------|---------|-------------------------------------|
-| `dormqr` | long-form only | Silent wrong result (treats unknown as right/no-transpose) |
-| `zunmqr` | both forms | Works either way |
-| `dtrsm`/`ztrsm` | long-form only | Silent wrong result |
-| `dtrmv`/`dtrsv` | long-form only | Silent wrong result |
-| `dlarf`/`zlarf` | long-form only | Silent wrong branch (left vs right) |
-| `dsyconv`/`zsyconv` | short-form (`'U'`/`'L'`) | |
-| `dsytrf`/`zsytrf` | long-form only | |
+| Fortran | JavaScript | Parameter type |
+|---------|-----------|---------------|
+| `'U'` | `'upper'` | UPLO |
+| `'L'` | `'lower'` | UPLO |
+| `'N'` | `'no-transpose'` | TRANS |
+| `'T'` | `'transpose'` | TRANS |
+| `'C'` | `'conjugate-transpose'` | TRANS |
+| `'L'` | `'left'` | SIDE |
+| `'R'` | `'right'` | SIDE |
+| `'U'` | `'unit'` | DIAG |
+| `'N'` | `'non-unit'` | DIAG |
+| `'M'` | `'max'` | NORM |
+| `'1'`/`'O'` | `'one-norm'` | NORM |
+| `'I'` | `'inf-norm'` | NORM |
+| `'F'`/`'E'` | `'frobenius'` | NORM |
+| `'F'` | `'forward'` | DIRECT |
+| `'B'` | `'backward'` | DIRECT |
+| `'C'` | `'columnwise'` | STOREV |
+| `'R'` | `'rowwise'` | STOREV |
+| `'N'` | `'none'` | COMPZ/JOB |
+| `'I'` | `'initialize'` | COMPZ |
+| `'V'` | `'update'` | COMPZ |
+| `'E'` | `'eigenvalues'` | JOB (hseqr) |
+| `'S'` | `'schur'` | JOB (hseqr) |
+| `'N'` | `'none'`/`'permute'`/`'scale'`/`'both'` | JOB (gebal) |
+| `'N'` | `'not-factored'` | FACT |
+| `'E'` | `'equilibrate'` | FACT |
+| `'F'` | `'factored'` | FACT |
+| `'N'` | `'no-vectors'` | JOBZ/JOBVL/JOBVR |
+| `'V'` | `'compute-vectors'` | JOBZ/JOBVL/JOBVR |
+| `'A'` | `'all'` | RANGE/HOWMNY |
+| `'V'` | `'value'` | RANGE |
+| `'I'` | `'index'` | RANGE |
+| `'B'` | `'backtransform'` | HOWMNY |
+| `'S'` | `'selected'` | HOWMNY |
+| `'Y'` | `'yes'` | NORMIN |
+| `'N'` | `'no'` | NORMIN |
+| `'Q'` | `'apply-Q'` | VECT |
+| `'P'` | `'apply-P'` | VECT |
+| `'C'` | `'convert'` | WAY |
+| `'R'` | `'revert'` | WAY |
+| `'A'`/`'F'`/`'G'` | `'full'` | dlacpy/dlaset TYPE |
 
-When a caller uses short-form strings (e.g., dsytrs2 uses `'U'`/`'L'`) but
-a callee requires long-form (e.g., dtrsm requires `'upper'`), add mapping
-lookup tables in the caller.
+**VERIFICATION STEP (mandatory after every translation):**
+
+```bash
+grep -n "'[A-Z0-9]'" lib/<pkg>/base/<routine>/lib/base.js | grep -v '//\|^\s*\*\|eslint\|require'
+```
+
+If this produces ANY output, you have unconverted Fortran strings. Fix them
+before proceeding. This grep MUST return empty for every new module.
 
 For `job`-style parameters with many values (`'N'`, `'P'`, `'S'`, `'B'`),
 single chars are acceptable since there are no long-form equivalents.

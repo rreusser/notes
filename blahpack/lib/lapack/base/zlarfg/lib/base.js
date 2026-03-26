@@ -104,7 +104,7 @@ function zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		// Fortran SIGN(A,B) returns |A|*sign(B); when B=0, result is +|A|.
 		// Math.sign(0) returns 0, so default to 1.0 for alphr=0.
 		beta = -( Math.sign( alphr ) || 1.0 ) * dlapy3( alphr, alphi, xnorm );
-		safmin = dlamch( 'S' ) / dlamch( 'E' );
+		safmin = dlamch( 'safe-minimum' ) / dlamch( 'epsilon' );
 		rsafmn = 1.0 / safmin;
 
 		knt = 0;

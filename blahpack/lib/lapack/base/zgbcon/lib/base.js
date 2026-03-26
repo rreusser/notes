@@ -39,7 +39,7 @@ var dlamch = require( '../../dlamch/lib/base.js' );
 
 // VARIABLES //
 
-var SMLNUM = dlamch( 'S' );
+var SMLNUM = dlamch( 'safe-minimum' );
 
 
 // FUNCTIONS //

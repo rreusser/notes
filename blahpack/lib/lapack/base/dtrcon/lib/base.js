@@ -34,7 +34,7 @@ var idamax = require( './../../../../blas/base/idamax/lib/base.js' );
 
 // VARIABLES //
 
-var SMLNUM = dlamch( 'S' );
+var SMLNUM = dlamch( 'safe-minimum' );
 
 
 // MAIN //

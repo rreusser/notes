@@ -40,8 +40,8 @@ var ZERO = 0.0;
 var ONE = 1.0;
 
 // Machine constants (hoisted)
-var UNFL = dlamch( 'S' );
-var ULP = dlamch( 'P' );
+var UNFL = dlamch( 'safe-minimum' );
+var ULP = dlamch( 'precision' );
 
 
 // FUNCTIONS //

@@ -30,9 +30,9 @@ var HALF = 0.5;
 var TWO = 2.0;
 
 // Machine constants (invariant — computed once at module load)
-var OV = dlamch( 'O' );                  // overflow threshold (~1.798e+308)
-var UN = dlamch( 'U' );                  // underflow threshold (~2.225e-308)
-var EPS = dlamch( 'E' );                 // machine epsilon (~1.110e-16)
+var OV = dlamch( 'overflow' );                  // overflow threshold (~1.798e+308)
+var UN = dlamch( 'underflow' );                  // underflow threshold (~2.225e-308)
+var EPS = dlamch( 'epsilon' );                 // machine epsilon (~1.110e-16)
 var BE = BS / ( EPS * EPS );             // rescaling factor
 var HALF_OV = HALF * OV;                 // half of overflow threshold
 var SCALE_THRESH = UN * BS / EPS;        // underflow rescaling threshold

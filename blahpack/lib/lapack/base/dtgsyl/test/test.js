@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 // MODULES //
@@ -8,6 +6,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dtgsyl = require( './../lib/base.js' );
 
 
@@ -37,42 +37,182 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
+function packMatrix( entries, M, N ) {
+	var A = new Float64Array( M * N );
+	var i;
+	for ( i = 0; i < entries.length; i += 3 ) {
+		A[ entries[ i + 1 ] * M + entries[ i ] ] = entries[ i + 2 ];
+	}
+	return A;
+}
+
+function extractMatrix( A, LDA, M, N ) {
+	var out = [];
+	var i;
+	var j;
+	for ( j = 0; j < N; j++ ) {
+		for ( i = 0; i < M; i++ ) {
+			out.push( A[ j * LDA + i ] );
+		}
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'dtgsyl: notrans_2x2', function t() {
 	var tc = findCase( 'notrans_2x2' );
-	// TODO: set up inputs and call dtgsyl(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
-	// assertArrayClose( result, tc.F, 1e-14, 'F' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
-	// assertClose( result, tc.scale, 1e-14, 'scale' );
+	var M = 2;
+	var N = 2;
+	var A = packMatrix([ 0,0,1.0, 0,1,0.5, 1,1,2.0 ], M, M);
+	var B = packMatrix([ 0,0,3.0, 0,1,0.3, 1,1,4.0 ], N, N);
+	var C = new Float64Array([ 1.0, 3.0, 2.0, 4.0 ]);
+	var D = packMatrix([ 0,0,1.0, 0,1,0.2, 1,1,1.5 ], M, M);
+	var E = packMatrix([ 0,0,1.0, 0,1,0.1, 1,1,2.0 ], N, N);
+	var F = new Float64Array([ 5.0, 7.0, 6.0, 8.0 ]);
+	var scale = new Float64Array( 1 );
+	var dif = new Float64Array( 1 );
+	var WORK = new Float64Array( 400 );
+	var IWORK = new Int32Array( M + N + 6 );
+
+	var info = dtgsyl( 'no-transpose', 0, M, N, A, 1, M, 0, B, 1, N, 0, C, 1, M, 0, D, 1, M, 0, E, 1, N, 0, F, 1, M, 0, scale, dif, WORK, 1, 0, 400, IWORK, 1, 0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( extractMatrix( C, M, M, N ), tc.C, 1e-14, 'C' );
+	assertArrayClose( extractMatrix( F, M, M, N ), tc.F, 1e-14, 'F' );
 });
 
 test( 'dtgsyl: notrans_3x2_quasi', function t() {
 	var tc = findCase( 'notrans_3x2_quasi' );
-	// TODO: set up inputs and call dtgsyl(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
-	// assertArrayClose( result, tc.F, 1e-14, 'F' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
-	// assertClose( result, tc.scale, 1e-14, 'scale' );
+	var M = 3;
+	var N = 2;
+	var A = packMatrix([ 0,0,1.0, 0,1,0.5, 0,2,0.3, 1,0,-0.5, 1,1,1.0, 1,2,0.2, 2,2,3.0 ], M, M);
+	var B = packMatrix([ 0,0,2.0, 0,1,0.4, 1,1,5.0 ], N, N);
+	var C = new Float64Array([ 1.0, 3.0, 5.0, 2.0, 4.0, 6.0 ]);
+	var D = packMatrix([ 0,0,1.0, 0,1,0.1, 0,2,0.2, 1,1,1.5, 1,2,0.3, 2,2,2.0 ], M, M);
+	var E = packMatrix([ 0,0,1.0, 0,1,0.2, 1,1,3.0 ], N, N);
+	var F = new Float64Array([ 7.0, 9.0, 11.0, 8.0, 10.0, 12.0 ]);
+	var scale = new Float64Array( 1 );
+	var dif = new Float64Array( 1 );
+	var WORK = new Float64Array( 400 );
+	var IWORK = new Int32Array( M + N + 6 );
+
+	var info = dtgsyl( 'no-transpose', 0, M, N, A, 1, M, 0, B, 1, N, 0, C, 1, M, 0, D, 1, M, 0, E, 1, N, 0, F, 1, M, 0, scale, dif, WORK, 1, 0, 400, IWORK, 1, 0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( extractMatrix( C, M, M, N ), tc.C, 1e-14, 'C' );
+	assertArrayClose( extractMatrix( F, M, M, N ), tc.F, 1e-14, 'F' );
 });
 
 test( 'dtgsyl: trans_2x2', function t() {
 	var tc = findCase( 'trans_2x2' );
-	// TODO: set up inputs and call dtgsyl(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
-	// assertArrayClose( result, tc.F, 1e-14, 'F' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
-	// assertClose( result, tc.scale, 1e-14, 'scale' );
+	var M = 2;
+	var N = 2;
+	var A = packMatrix([ 0,0,1.0, 0,1,0.5, 1,1,2.0 ], M, M);
+	var B = packMatrix([ 0,0,3.0, 0,1,0.3, 1,1,4.0 ], N, N);
+	var C = new Float64Array([ 1.0, 3.0, 2.0, 4.0 ]);
+	var D = packMatrix([ 0,0,1.0, 0,1,0.2, 1,1,1.5 ], M, M);
+	var E = packMatrix([ 0,0,1.0, 0,1,0.1, 1,1,2.0 ], N, N);
+	var F = new Float64Array([ 5.0, 7.0, 6.0, 8.0 ]);
+	var scale = new Float64Array( 1 );
+	var dif = new Float64Array( 1 );
+	var WORK = new Float64Array( 400 );
+	var IWORK = new Int32Array( M + N + 6 );
+
+	var info = dtgsyl( 'transpose', 0, M, N, A, 1, M, 0, B, 1, N, 0, C, 1, M, 0, D, 1, M, 0, E, 1, N, 0, F, 1, M, 0, scale, dif, WORK, 1, 0, 400, IWORK, 1, 0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( extractMatrix( C, M, M, N ), tc.C, 1e-14, 'C' );
+	assertArrayClose( extractMatrix( F, M, M, N ), tc.F, 1e-14, 'F' );
+});
+
+test( 'dtgsyl: trans_3x2_quasi', function t() {
+	var tc = findCase( 'trans_3x2_quasi' );
+	var M = 3;
+	var N = 2;
+	var A = packMatrix([ 0,0,1.0, 0,1,0.5, 0,2,0.3, 1,0,-0.5, 1,1,1.0, 1,2,0.2, 2,2,3.0 ], M, M);
+	var B = packMatrix([ 0,0,2.0, 0,1,0.4, 1,1,5.0 ], N, N);
+	var C = new Float64Array([ 1.0, 3.0, 5.0, 2.0, 4.0, 6.0 ]);
+	var D = packMatrix([ 0,0,1.0, 0,1,0.1, 0,2,0.2, 1,1,1.5, 1,2,0.3, 2,2,2.0 ], M, M);
+	var E = packMatrix([ 0,0,1.0, 0,1,0.2, 1,1,3.0 ], N, N);
+	var F = new Float64Array([ 7.0, 9.0, 11.0, 8.0, 10.0, 12.0 ]);
+	var scale = new Float64Array( 1 );
+	var dif = new Float64Array( 1 );
+	var WORK = new Float64Array( 400 );
+	var IWORK = new Int32Array( M + N + 6 );
+
+	var info = dtgsyl( 'transpose', 0, M, N, A, 1, M, 0, B, 1, N, 0, C, 1, M, 0, D, 1, M, 0, E, 1, N, 0, F, 1, M, 0, scale, dif, WORK, 1, 0, 400, IWORK, 1, 0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( extractMatrix( C, M, M, N ), tc.C, 1e-14, 'C' );
+	assertArrayClose( extractMatrix( F, M, M, N ), tc.F, 1e-14, 'F' );
+});
+
+test( 'dtgsyl: m0_n0 (quick return)', function t() {
+	var A = new Float64Array( 1 );
+	var B = new Float64Array( 1 );
+	var C = new Float64Array( 1 );
+	var D = new Float64Array( 1 );
+	var E = new Float64Array( 1 );
+	var F = new Float64Array( 1 );
+	var scale = new Float64Array( 1 );
+	var dif = new Float64Array( 1 );
+	var WORK = new Float64Array( 1 );
+	var IWORK = new Int32Array( 10 );
+
+	var info = dtgsyl( 'no-transpose', 0, 0, 0, A, 1, 1, 0, B, 1, 1, 0, C, 1, 1, 0, D, 1, 1, 0, E, 1, 1, 0, F, 1, 1, 0, scale, dif, WORK, 1, 0, 1, IWORK, 1, 0 );
+
+	assert.equal( info, 0, 'info' );
+	assert.equal( scale[ 0 ], 1.0, 'scale' );
+});
+
+test( 'dtgsyl: trans_3x3_quasi', function t() {
+	var tc = findCase( 'trans_3x3_quasi' );
+	var M = 3;
+	var N = 3;
+	var A = packMatrix([ 0,0,1.0, 0,1,0.4, 0,2,0.1, 1,0,-0.4, 1,1,1.0, 1,2,0.2, 2,2,5.0 ], M, M);
+	var B = packMatrix([ 0,0,2.0, 0,1,0.3, 0,2,0.1, 1,0,-0.3, 1,1,2.0, 1,2,0.2, 2,2,6.0 ], N, N);
+	var C = new Float64Array([ 1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 9.0 ]);
+	var D = packMatrix([ 0,0,1.0, 0,1,0.1, 0,2,0.05, 1,1,1.5, 1,2,0.2, 2,2,2.0 ], M, M);
+	var E = packMatrix([ 0,0,1.0, 0,1,0.2, 0,2,0.1, 1,1,2.5, 1,2,0.15, 2,2,3.0 ], N, N);
+	var F = new Float64Array([ 10.0, 13.0, 16.0, 11.0, 14.0, 17.0, 12.0, 15.0, 18.0 ]);
+	var scale = new Float64Array( 1 );
+	var dif = new Float64Array( 1 );
+	var WORK = new Float64Array( 400 );
+	var IWORK = new Int32Array( M + N + 6 );
+
+	var info = dtgsyl( 'transpose', 0, M, N, A, 1, M, 0, B, 1, N, 0, C, 1, M, 0, D, 1, M, 0, E, 1, N, 0, F, 1, M, 0, scale, dif, WORK, 1, 0, 400, IWORK, 1, 0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( extractMatrix( C, M, M, N ), tc.C, 1e-14, 'C' );
+	assertArrayClose( extractMatrix( F, M, M, N ), tc.F, 1e-14, 'F' );
 });
 
 test( 'dtgsyl: notrans_3x3_quasi', function t() {
 	var tc = findCase( 'notrans_3x3_quasi' );
-	// TODO: set up inputs and call dtgsyl(...)
-	// assertArrayClose( result, tc.C, 1e-14, 'C' );
-	// assertArrayClose( result, tc.F, 1e-14, 'F' );
-	// assertClose( result, tc.info, 1e-14, 'info' );
-	// assertClose( result, tc.scale, 1e-14, 'scale' );
-});
+	var M = 3;
+	var N = 3;
+	var A = packMatrix([ 0,0,1.0, 0,1,0.4, 0,2,0.1, 1,0,-0.4, 1,1,1.0, 1,2,0.2, 2,2,5.0 ], M, M);
+	var B = packMatrix([ 0,0,2.0, 0,1,0.3, 0,2,0.1, 1,0,-0.3, 1,1,2.0, 1,2,0.2, 2,2,6.0 ], N, N);
+	var C = new Float64Array([ 1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 9.0 ]);
+	var D = packMatrix([ 0,0,1.0, 0,1,0.1, 0,2,0.05, 1,1,1.5, 1,2,0.2, 2,2,2.0 ], M, M);
+	var E = packMatrix([ 0,0,1.0, 0,1,0.2, 0,2,0.1, 1,1,2.5, 1,2,0.15, 2,2,3.0 ], N, N);
+	var F = new Float64Array([ 10.0, 13.0, 16.0, 11.0, 14.0, 17.0, 12.0, 15.0, 18.0 ]);
+	var scale = new Float64Array( 1 );
+	var dif = new Float64Array( 1 );
+	var WORK = new Float64Array( 400 );
+	var IWORK = new Int32Array( M + N + 6 );
 
+	var info = dtgsyl( 'no-transpose', 0, M, N, A, 1, M, 0, B, 1, N, 0, C, 1, M, 0, D, 1, M, 0, E, 1, N, 0, F, 1, M, 0, scale, dif, WORK, 1, 0, 400, IWORK, 1, 0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertClose( scale[ 0 ], tc.scale, 1e-14, 'scale' );
+	assertArrayClose( extractMatrix( C, M, M, N ), tc.C, 1e-14, 'C' );
+	assertArrayClose( extractMatrix( F, M, M, N ), tc.F, 1e-14, 'F' );
+});

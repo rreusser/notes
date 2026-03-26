@@ -154,8 +154,8 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 	}
 
 	// Get machine parameters
-	eps = dlamch( 'P' );
-	sfmin = dlamch( 'S' );
+	eps = dlamch( 'precision' );
+	sfmin = dlamch( 'safe-minimum' );
 	smlnum = sfmin / eps;
 	bignum = 1.0 / smlnum;
 

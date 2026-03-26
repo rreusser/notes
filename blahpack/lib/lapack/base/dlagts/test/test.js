@@ -38,7 +38,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-function setupFactorization() {
+function setupFactorization5() {
 	var a = new Float64Array( [ 4.0, 4.0, 4.0, 4.0, 4.0 ] );
 	var b = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var c = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
@@ -50,12 +50,36 @@ function setupFactorization() {
 	return { a: a, b: b, c: c, d: d, IN: IN };
 }
 
+function setupFactorization2() {
+	var a = new Float64Array( [ 5.0, 3.0 ] );
+	var b = new Float64Array( [ 2.0 ] );
+	var c = new Float64Array( [ 0.5 ] );
+	var d = new Float64Array( 1 );
+	var IN = new Int32Array( 2 );
+	var tol = 0.0;
+
+	dlagtf( 2, a, 1, 0, 0.0, b, 1, 0, c, 1, 0, tol, d, 1, 0, IN, 1, 0 );
+	return { a: a, b: b, c: c, d: d, IN: IN };
+}
+
+function setupFactorization1() {
+	var a = new Float64Array( [ 3.0 ] );
+	var b = new Float64Array( 1 );
+	var c = new Float64Array( 1 );
+	var d = new Float64Array( 1 );
+	var IN = new Int32Array( 1 );
+	var tol = 0.0;
+
+	dlagtf( 1, a, 1, 0, 0.5, b, 1, 0, c, 1, 0, tol, d, 1, 0, IN, 1, 0 );
+	return { a: a, b: b, c: c, d: d, IN: IN };
+}
+
 
 // TESTS //
 
 test( 'dlagts: solve (T-lambda*I)x=y with perturbation (job=-1)', function t() {
 	var tc = findCase( 'solve_job_m1' );
-	var f = setupFactorization();
+	var f = setupFactorization5();
 	var y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 
 	var info = dlagts( -1, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
@@ -66,7 +90,7 @@ test( 'dlagts: solve (T-lambda*I)x=y with perturbation (job=-1)', function t() {
 
 test( 'dlagts: solve transpose with perturbation (job=-2)', function t() {
 	var tc = findCase( 'solve_job_m2' );
-	var f = setupFactorization();
+	var f = setupFactorization5();
 	var y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 
 	var info = dlagts( -2, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
@@ -76,10 +100,104 @@ test( 'dlagts: solve transpose with perturbation (job=-2)', function t() {
 });
 
 test( 'dlagts: N=0', function t() {
-	var f = setupFactorization();
+	var f = setupFactorization5();
 	var y = new Float64Array( 1 );
 
 	var info = dlagts( -1, 0, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
 
 	assert.equal( info, 0, 'info' );
+});
+
+test( 'dlagts: solve without perturbation (job=1)', function t() {
+	var tc = findCase( 'solve_job_1' );
+	var f = setupFactorization5();
+	var y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+
+	var info = dlagts( 1, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( y, tc.y, 1e-14, 'y' );
+});
+
+test( 'dlagts: solve transpose without perturbation (job=2)', function t() {
+	var tc = findCase( 'solve_job_2' );
+	var f = setupFactorization5();
+	var y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+
+	var info = dlagts( 2, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( y, tc.y, 1e-14, 'y' );
+});
+
+test( 'dlagts: N=1', function t() {
+	var tc = findCase( 'n_equals_1' );
+	var f = setupFactorization1();
+	var y = new Float64Array( [ 7.0 ] );
+
+	var info = dlagts( -1, 1, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( y, tc.y, 1e-14, 'y' );
+});
+
+test( 'dlagts: job=1 N=2', function t() {
+	var tc = findCase( 'solve_job_1_n2' );
+	var f = setupFactorization2();
+	var y = new Float64Array( [ 1.0, 2.0 ] );
+
+	var info = dlagts( 1, 2, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( y, tc.y, 1e-14, 'y' );
+});
+
+test( 'dlagts: job=2 N=2', function t() {
+	var tc = findCase( 'solve_job_2_n2' );
+	var f = setupFactorization2();
+	var y = new Float64Array( [ 1.0, 2.0 ] );
+
+	var info = dlagts( 2, 2, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( y, tc.y, 1e-14, 'y' );
+});
+
+test( 'dlagts: job=-2 N=2', function t() {
+	var tc = findCase( 'solve_job_m2_n2' );
+	var f = setupFactorization2();
+	var y = new Float64Array( [ 1.0, 2.0 ] );
+
+	var info = dlagts( -2, 2, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( y, tc.y, 1e-14, 'y' );
+});
+
+test( 'dlagts: job=-1 with explicit tol', function t() {
+	var tc = findCase( 'solve_job_m1_explicit_tol' );
+	var f = setupFactorization5();
+	var y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+
+	var info = dlagts( -1, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 1e-8 );
+
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( y, tc.y, 1e-14, 'y' );
+});
+
+test( 'dlagts: invalid job returns -1', function t() {
+	var f = setupFactorization5();
+	var y = new Float64Array( [ 1.0 ] );
+	var info = dlagts( 0, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+	assert.equal( info, -1, 'info' );
+
+	info = dlagts( 3, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+	assert.equal( info, -1, 'info for job=3' );
+});
+
+test( 'dlagts: negative N returns -2', function t() {
+	var f = setupFactorization5();
+	var y = new Float64Array( [ 1.0 ] );
+	var info = dlagts( 1, -1, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 );
+	assert.equal( info, -2, 'info' );
 });

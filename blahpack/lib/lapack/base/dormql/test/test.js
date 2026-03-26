@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 // MODULES //
@@ -43,6 +41,13 @@ function getQLFactors() {
 	var A = new Float64Array( ql.A );
 	var TAU = new Float64Array( ql.TAU );
 	return { A: A, TAU: TAU };
+}
+
+function getBigQLFactors() {
+	var ql = findCase( 'big_ql_factor' );
+	var A = new Float64Array( ql.A );
+	var TAU = new Float64Array( ql.TAU );
+	return { A: A, TAU: TAU, N: 40 };
 }
 
 
@@ -158,4 +163,64 @@ test( 'dormql: right_notrans_rect (C*Q, 2x4)', function t() {
 	var info = dormql( 'right', 'no-transpose', 2, 4, 3, ql.A, 1, 4, 0, ql.TAU, 1, 0, C, 1, 2, 0, WORK, 1, 0 );
 	assert.equal( info, tc.info, 'INFO' );
 	assertArrayClose( Array.from( C ), tc.c, 1e-14, 'C' );
+});
+
+test( 'dormql: blocked left notrans (K=40)', function t() {
+	var tc = findCase( 'blocked_left_notrans' );
+	var f = getBigQLFactors();
+	var N = f.N;
+	var C = new Float64Array( N * N );
+	var WORK = new Float64Array( N * 64 );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		C[ i * N + i ] = 1.0;
+	}
+	var info = dormql( 'left', 'no-transpose', N, N, N, f.A, 1, N, 0, f.TAU, 1, 0, C, 1, N, 0, WORK, 1, 0 );
+	assert.equal( info, tc.info, 'INFO' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'C' );
+});
+
+test( 'dormql: blocked left trans (K=40)', function t() {
+	var tc = findCase( 'blocked_left_trans' );
+	var f = getBigQLFactors();
+	var N = f.N;
+	var C = new Float64Array( N * N );
+	var WORK = new Float64Array( N * 64 );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		C[ i * N + i ] = 1.0;
+	}
+	var info = dormql( 'left', 'transpose', N, N, N, f.A, 1, N, 0, f.TAU, 1, 0, C, 1, N, 0, WORK, 1, 0 );
+	assert.equal( info, tc.info, 'INFO' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'C' );
+});
+
+test( 'dormql: blocked right notrans (K=40)', function t() {
+	var tc = findCase( 'blocked_right_notrans' );
+	var f = getBigQLFactors();
+	var N = f.N;
+	var C = new Float64Array( N * N );
+	var WORK = new Float64Array( N * 64 );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		C[ i * N + i ] = 1.0;
+	}
+	var info = dormql( 'right', 'no-transpose', N, N, N, f.A, 1, N, 0, f.TAU, 1, 0, C, 1, N, 0, WORK, 1, 0 );
+	assert.equal( info, tc.info, 'INFO' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'C' );
+});
+
+test( 'dormql: blocked right trans (K=40)', function t() {
+	var tc = findCase( 'blocked_right_trans' );
+	var f = getBigQLFactors();
+	var N = f.N;
+	var C = new Float64Array( N * N );
+	var WORK = new Float64Array( N * 64 );
+	var i;
+	for ( i = 0; i < N; i++ ) {
+		C[ i * N + i ] = 1.0;
+	}
+	var info = dormql( 'right', 'transpose', N, N, N, f.A, 1, N, 0, f.TAU, 1, 0, C, 1, N, 0, WORK, 1, 0 );
+	assert.equal( info, tc.info, 'INFO' );
+	assertArrayClose( Array.from( C ), tc.c, 1e-12, 'C' );
 });

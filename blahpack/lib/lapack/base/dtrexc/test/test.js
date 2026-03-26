@@ -276,3 +276,62 @@ test( 'dtrexc: forward 2x2 across 2x2', function t() {
 	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
 	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
 });
+
+test( 'dtrexc: backward 2x2 across 2x2', function t() {
+	var tc = findCase( 'backward 2x2 across 2x2' );
+	var N = 6;
+	var T = buildSchurMatrix([
+		[0,0,2], [0,1,3], [0,2,0.5], [0,3,0.3], [0,4,0.2], [0,5,0.1],
+		[1,0,-3], [1,1,2], [1,2,0.8], [1,3,0.4], [1,4,0.25], [1,5,0.15],
+		[2,2,4], [2,3,1], [2,4,0.6], [2,5,0.35],
+		[3,2,-1], [3,3,4], [3,4,0.7], [3,5,0.45],
+		[4,4,1], [4,5,0.9],
+		[5,5,0.5]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 3, 1, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: ilst adjusted forward', function t() {
+	var tc = findCase( 'ilst_adjusted_fwd' );
+	var N = 4;
+	var T = buildSchurMatrix([
+		[0,0,5], [0,1,0.5], [0,2,0.2], [0,3,0.1],
+		[1,1,3], [1,2,2], [1,3,0.6],
+		[2,1,-2], [2,2,3], [2,3,0.8],
+		[3,3,1]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'update', N, T, 1, N, 0, Q, 1, N, 0, 1, 2, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+	assertArrayClose( Array.from( Q ), tc.Q, 1e-12, 'Q' );
+});
+
+test( 'dtrexc: backward 2x2 block, COMPQ=N', function t() {
+	var tc = findCase( 'backward 2x2 compq_N' );
+	var N = 5;
+	var T = buildSchurMatrix([
+		[0,0,5], [0,1,0.5], [0,2,0.2], [0,3,0.1], [0,4,0.3],
+		[1,1,1], [1,2,0.6], [1,3,0.4], [1,4,0.15],
+		[2,2,0.5], [2,3,0.9], [2,4,0.2],
+		[3,3,3], [3,4,2],
+		[4,3,-2], [4,4,3]
+	], N);
+	var Q = eye( N );
+	var WORK = new Float64Array( N );
+
+	var r = dtrexc( 'none', N, T, 1, N, 0, Q, 1, N, 0, 4, 1, WORK, 1, 0 );
+
+	assert.strictEqual( r.info, tc.info, 'info' );
+	assertArrayClose( Array.from( T ), tc.T, 1e-12, 'T' );
+});

@@ -140,7 +140,7 @@ function zhetrs2( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 	oW = offsetWORK * 2;
 
 	// Convert: extract off-diagonal of D into WORK, apply permutations
-	zsyconv( uplo, 'C', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
+	zsyconv( uplo, 'convert', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
 
 	if ( uplo === 'upper' ) {
 		// Apply row permutations: backward
@@ -325,7 +325,7 @@ function zhetrs2( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 	}
 
 	// Revert zsyconv
-	zsyconv( uplo, 'R', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
+	zsyconv( uplo, 'revert', N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK );
 
 	return 0;
 }

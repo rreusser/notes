@@ -31,8 +31,8 @@ var dpttrs = require( './../../dpttrs/lib/base.js' );
 // VARIABLES //
 
 var ITMAX = 5;
-var EPS = dlamch( 'E' );
-var SAFMIN = dlamch( 'S' );
+var EPS = dlamch( 'epsilon' );
+var SAFMIN = dlamch( 'safe-minimum' );
 var SAFE1 = 4.0 * SAFMIN;          // NZ = 4 (max nonzeros per row + 1)
 var SAFE2 = SAFE1 / EPS;
 

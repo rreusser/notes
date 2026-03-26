@@ -43,8 +43,8 @@ var zcopy = require( '../../../../blas/base/zcopy/lib/base.js' );
 var ZERO = 0.0;
 var ONE = 1.0;
 
-var EPS = dlamch( 'P' );
-var SMLNUM_RAW = dlamch( 'S' );
+var EPS = dlamch( 'precision' );
+var SMLNUM_RAW = dlamch( 'safe-minimum' );
 var SMLNUM = Math.sqrt( SMLNUM_RAW ) / EPS;
 var BIGNUM = ONE / SMLNUM;
 

@@ -113,7 +113,7 @@ function zgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		}
 	} else if ( N === 1 ) {
 		// ?x1 column -- find pivot, swap, scale
-		sfmin = dlamch( 'S' );
+		sfmin = dlamch( 'safe-minimum' );
 
 		// Izamax returns 0-based index
 		ip = izamax( M, A, sa1, offsetA );

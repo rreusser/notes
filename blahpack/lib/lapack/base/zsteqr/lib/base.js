@@ -146,9 +146,9 @@ function zsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 	}
 
 	// Determine machine parameters
-	eps = dlamch( 'E' );
+	eps = dlamch( 'epsilon' );
 	eps2 = eps * eps;
-	safmin = dlamch( 'S' );
+	safmin = dlamch( 'safe-minimum' );
 	safmax = 1.0 / safmin;
 	ssfmax = Math.sqrt( safmax ) / 3.0;
 	ssfmin = Math.sqrt( safmin ) / eps2;

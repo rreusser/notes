@@ -41,8 +41,8 @@ var dcopy = require( '../../../../blas/base/dcopy/lib/base.js' );
 var ZERO = 0.0;
 var ONE = 1.0;
 
-var SAFMIN = dlamch( 'S' );
-var ULP = dlamch( 'P' );
+var SAFMIN = dlamch( 'safe-minimum' );
+var ULP = dlamch( 'precision' );
 
 
 // MAIN //

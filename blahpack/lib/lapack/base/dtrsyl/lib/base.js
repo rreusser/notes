@@ -35,8 +35,8 @@ var dlasy2 = require( '../../dlasy2/lib/base.js' );
 var ZERO = 0.0;
 var ONE = 1.0;
 
-var EPS = dlamch( 'P' );
-var SMLNUM = dlamch( 'S' );
+var EPS = dlamch( 'precision' );
+var SMLNUM = dlamch( 'safe-minimum' );
 
 // Scratch arrays for dlaln2 and dlasy2
 var VEC = new Float64Array( 4 );  // 2x2 column-major

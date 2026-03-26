@@ -33,7 +33,7 @@ var ONE = 1.0;
 var TWO = 2.0;
 
 // Machine constants (hoisted to module scope for performance)
-var SMLNUM = TWO * dlamch( 'S' );
+var SMLNUM = TWO * dlamch( 'safe-minimum' );
 var BIGNUM = ONE / SMLNUM;
 
 // Lookup tables from Fortran DATA statements

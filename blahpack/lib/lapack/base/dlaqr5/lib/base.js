@@ -32,8 +32,8 @@ var dgemm = require( '../../../../blas/base/dgemm/lib/base.js' );
 
 // VARIABLES //
 
-var SAFMIN = dlamch( 'S' );
-var ULP = dlamch( 'E' );
+var SAFMIN = dlamch( 'safe-minimum' );
+var ULP = dlamch( 'epsilon' );
 
 
 // FUNCTIONS //

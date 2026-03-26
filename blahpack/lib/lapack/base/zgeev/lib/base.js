@@ -47,8 +47,8 @@ var ZERO = 0.0;
 var ONE = 1.0;
 
 // Machine constants (hoisted to module scope)
-var EPS = dlamch( 'P' );
-var SMLNUM_BASE = dlamch( 'S' );
+var EPS = dlamch( 'precision' );
+var SMLNUM_BASE = dlamch( 'safe-minimum' );
 var BIGNUM_BASE = ONE / SMLNUM_BASE;
 var SMLNUM = Math.sqrt( SMLNUM_BASE ) / EPS;
 var BIGNUM = ONE / SMLNUM;
