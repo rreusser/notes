@@ -42,7 +42,7 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} N - number of columns
 * @param {integer} kl - kl
 * @param {integer} ku - ku
-* @param {Float64Array} AB - input matrix
+* @param {Complex128Array} AB - input matrix
 * @param {integer} strideAB1 - stride of the first dimension of `AB`
 * @param {integer} strideAB2 - stride of the second dimension of `AB`
 * @param {NonNegativeInteger} offsetAB - starting index for `AB`

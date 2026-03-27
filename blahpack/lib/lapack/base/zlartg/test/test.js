@@ -22,6 +22,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var base = require( './../lib/base.js' );
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
@@ -35,6 +37,32 @@ function assertClose( actual, expected, msg ) {
 	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+function makeComplex( re, im ) {
+	var arr = new Complex128Array( 1 );
+	var v = reinterpret( arr, 0 );
+	v[ 0 ] = re;
+	v[ 1 ] = im;
+	return arr;
+}
+
+function runTest( fRe, fIm, gRe, gIm, tc, label ) {
+	var cArr = new Float64Array( 1 );
+	var sArr = new Complex128Array( 1 );
+	var rArr = new Complex128Array( 1 );
+	var sv = reinterpret( sArr, 0 );
+	var rv = reinterpret( rArr, 0 );
+	var f = makeComplex( fRe, fIm );
+	var g = makeComplex( gRe, gIm );
+
+	base( f, 0, g, 0, cArr, 0, sArr, 0, rArr, 0 );
+
+	assertClose( cArr[ 0 ], tc.c, label + ' c' );
+	assertClose( sv[ 0 ], tc.s[ 0 ], label + ' s[0]' );
+	assertClose( sv[ 1 ], tc.s[ 1 ], label + ' s[1]' );
+	assertClose( rv[ 0 ], tc.r[ 0 ], label + ' r[0]' );
+	assertClose( rv[ 1 ], tc.r[ 1 ], label + ' r[1]' );
+}
+
 // TESTS //
 
 test( 'zlartg: main export is a function', function t() {
@@ -43,273 +71,105 @@ test( 'zlartg: main export is a function', function t() {
 
 test( 'zlartg: g=0 => c=1, s=0, r=f', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_g_zero'; } );
-	var f = new Float64Array( [ 3.0, 4.0 ] );
-	var g = new Float64Array( [ 0.0, 0.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_g_zero c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_g_zero s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_g_zero s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_g_zero r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_g_zero r[1]' );
+	runTest( 3.0, 4.0, 0.0, 0.0, tc, 'zlartg_g_zero' );
 });
 
 test( 'zlartg: f=0, g=(3+4i)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_f_zero'; } );
-	var f = new Float64Array( [ 0.0, 0.0 ] );
-	var g = new Float64Array( [ 3.0, 4.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_f_zero c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_f_zero s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_f_zero s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_f_zero r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_f_zero r[1]' );
+	runTest( 0.0, 0.0, 3.0, 4.0, tc, 'zlartg_f_zero' );
 });
 
 test( 'zlartg: both real f=3, g=4', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_real'; } );
-	var f = new Float64Array( [ 3.0, 0.0 ] );
-	var g = new Float64Array( [ 4.0, 0.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_real c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_real s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_real s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_real r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_real r[1]' );
+	runTest( 3.0, 0.0, 4.0, 0.0, tc, 'zlartg_real' );
 });
 
 test( 'zlartg: general complex case f=(1+2i), g=(3+4i)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_general'; } );
-	var f = new Float64Array( [ 1.0, 2.0 ] );
-	var g = new Float64Array( [ 3.0, 4.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_general c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_general s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_general s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_general r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_general r[1]' );
+	runTest( 1.0, 2.0, 3.0, 4.0, tc, 'zlartg_general' );
 });
 
 test( 'zlartg: purely imaginary f=(0+2i), g=(0+3i)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_pure_imag'; } );
-	var f = new Float64Array( [ 0.0, 2.0 ] );
-	var g = new Float64Array( [ 0.0, 3.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_pure_imag c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_pure_imag s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_pure_imag s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_pure_imag r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_pure_imag r[1]' );
+	runTest( 0.0, 2.0, 0.0, 3.0, tc, 'zlartg_pure_imag' );
 });
 
 test( 'zlartg: f=0, g purely imaginary (0+5i)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_f_zero_g_imag'; } );
-	var f = new Float64Array( [ 0.0, 0.0 ] );
-	var g = new Float64Array( [ 0.0, 5.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_f_zero_g_imag c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_f_zero_g_imag s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_f_zero_g_imag s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_f_zero_g_imag r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_f_zero_g_imag r[1]' );
+	runTest( 0.0, 0.0, 0.0, 5.0, tc, 'zlartg_f_zero_g_imag' );
 });
 
 test( 'zlartg: f=0, g purely real (5+0i)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_f_zero_g_real'; } );
-	var f = new Float64Array( [ 0.0, 0.0 ] );
-	var g = new Float64Array( [ 5.0, 0.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_f_zero_g_real c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_f_zero_g_real s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_f_zero_g_real s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_f_zero_g_real r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_f_zero_g_real r[1]' );
+	runTest( 0.0, 0.0, 5.0, 0.0, tc, 'zlartg_f_zero_g_real' );
 });
 
 test( 'zlartg: very large f (scaled algorithm)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_large_f'; } );
-	var f = new Float64Array( [ 1e200, 1e200 ] );
-	var g = new Float64Array( [ 1.0, 1.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_large_f c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_large_f s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_large_f s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_large_f r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_large_f r[1]' );
+	runTest( 1e200, 1e200, 1.0, 1.0, tc, 'zlartg_large_f' );
 });
 
 test( 'zlartg: very small f (scaled algorithm, f not well-scaled)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_small_f'; } );
-	var f = new Float64Array( [ 1e-200, 1e-200 ] );
-	var g = new Float64Array( [ 1.0, 1.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_small_f c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_small_f s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_small_f s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_small_f r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_small_f r[1]' );
+	runTest( 1e-200, 1e-200, 1.0, 1.0, tc, 'zlartg_small_f' );
 });
 
 test( 'zlartg: both very large (scaled algorithm, same scale)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_both_large'; } );
-	var f = new Float64Array( [ 3e200, 4e200 ] );
-	var g = new Float64Array( [ 1e200, 2e200 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_both_large c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_both_large s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_both_large s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_both_large r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_both_large r[1]' );
+	runTest( 3e200, 4e200, 1e200, 2e200, tc, 'zlartg_both_large' );
 });
 
 test( 'zlartg: normal f, very large g (scaled algorithm)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_large_g'; } );
-	var f = new Float64Array( [ 1.0, 1.0 ] );
-	var g = new Float64Array( [ 1e200, 1e200 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_large_g c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_large_g s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_large_g s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_large_g r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_large_g r[1]' );
+	runTest( 1.0, 1.0, 1e200, 1e200, tc, 'zlartg_large_g' );
 });
 
 test( 'zlartg: f=0, very large g (scaled f=0 path)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_f_zero_g_large'; } );
-	var f = new Float64Array( [ 0.0, 0.0 ] );
-	var g = new Float64Array( [ 1e200, 2e200 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_f_zero_g_large c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_f_zero_g_large s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_f_zero_g_large s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_f_zero_g_large r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_f_zero_g_large r[1]' );
+	runTest( 0.0, 0.0, 1e200, 2e200, tc, 'zlartg_f_zero_g_large' );
 });
 
 test( 'zlartg: both very small (scaled algorithm)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_both_small'; } );
-	var f = new Float64Array( [ 3e-200, 4e-200 ] );
-	var g = new Float64Array( [ 1e-200, 2e-200 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_both_small c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_both_small s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_both_small s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_both_small r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_both_small r[1]' );
+	runTest( 3e-200, 4e-200, 1e-200, 2e-200, tc, 'zlartg_both_small' );
 });
 
 test( 'zlartg: large f, very small g', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_large_f_small_g'; } );
-	var f = new Float64Array( [ 1e200, 0.0 ] );
-	var g = new Float64Array( [ 1e-200, 0.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_large_f_small_g c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_large_f_small_g s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_large_f_small_g s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_large_f_small_g r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_large_f_small_g r[1]' );
+	runTest( 1e200, 0.0, 1e-200, 0.0, tc, 'zlartg_large_f_small_g' );
 });
 
 test( 'zlartg: tiny f, g=0', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_tiny_f_g_zero'; } );
-	var f = new Float64Array( [ 1e-300, 1e-300 ] );
-	var g = new Float64Array( [ 0.0, 0.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_tiny_f_g_zero c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_tiny_f_g_zero s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_tiny_f_g_zero s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_tiny_f_g_zero r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_tiny_f_g_zero r[1]' );
+	runTest( 1e-300, 1e-300, 0.0, 0.0, tc, 'zlartg_tiny_f_g_zero' );
 });
 
 test( 'zlartg: f=0, very small g (scaled f=0 path)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_f_zero_g_small'; } );
-	var f = new Float64Array( [ 0.0, 0.0 ] );
-	var g = new Float64Array( [ 1e-200, 2e-200 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_f_zero_g_small c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_f_zero_g_small s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_f_zero_g_small s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_f_zero_g_small r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_f_zero_g_small r[1]' );
+	runTest( 0.0, 0.0, 1e-200, 2e-200, tc, 'zlartg_f_zero_g_small' );
 });
 
 test( 'zlartg: unscaled, f2 < h2*SAFMIN (tiny f relative to g)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_unscaled_tiny_f'; } );
-	var f = new Float64Array( [ 1e-54, 0.0 ] );
-	var g = new Float64Array( [ 1e100, 0.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_unscaled_tiny_f c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_unscaled_tiny_f s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_unscaled_tiny_f s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_unscaled_tiny_f r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_unscaled_tiny_f r[1]' );
+	runTest( 1e-54, 0.0, 1e100, 0.0, tc, 'zlartg_unscaled_tiny_f' );
 });
 
 test( 'zlartg: unscaled, f2 small (else branch of f2>rtmin)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_unscaled_f2_small'; } );
-	var f = new Float64Array( [ 1e-100, 0.0 ] );
-	var g = new Float64Array( [ 1.0, 0.0 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_unscaled_f2_small c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_unscaled_f2_small s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_unscaled_f2_small s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_unscaled_f2_small r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_unscaled_f2_small r[1]' );
+	runTest( 1e-100, 0.0, 1.0, 0.0, tc, 'zlartg_unscaled_f2_small' );
 });
 
 test( 'zlartg: scaled, f2 < h2*SAFMIN (tiny f in scaled path)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_scaled_tiny_f'; } );
-	var f = new Float64Array( [ 1e-100, 0.0 ] );
-	var g = new Float64Array( [ 1e200, 1e200 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_scaled_tiny_f c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_scaled_tiny_f s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_scaled_tiny_f s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_scaled_tiny_f r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_scaled_tiny_f r[1]' );
+	runTest( 1e-100, 0.0, 1e200, 1e200, tc, 'zlartg_scaled_tiny_f' );
 });
 
 test( 'zlartg: scaled, large both, h2 >= rtmax (else branch in scaled)', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_scaled_large_both'; } );
-	var f = new Float64Array( [ 5e152, 5e152 ] );
-	var g = new Float64Array( [ 5e152, 5e152 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_scaled_large_both c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_scaled_large_both s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_scaled_large_both s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_scaled_large_both r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_scaled_large_both r[1]' );
+	runTest( 5e152, 5e152, 5e152, 5e152, tc, 'zlartg_scaled_large_both' );
 });
 
 test( 'zlartg: scaled, same scaling, f2 < h2*SAFMIN', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zlartg_scaled_f2_lt_safmin'; } );
-	var f = new Float64Array( [ 2e46, 0.0 ] );
-	var g = new Float64Array( [ 1e200, 1e200 ] );
-	var out = new Float64Array( 5 );
-	base( f, g, out );
-	assertClose( out[ 0 ], tc.c, 'zlartg_scaled_f2_lt_safmin c' );
-	assertClose( out[ 1 ], tc.s[ 0 ], 'zlartg_scaled_f2_lt_safmin s[0]' );
-	assertClose( out[ 2 ], tc.s[ 1 ], 'zlartg_scaled_f2_lt_safmin s[1]' );
-	assertClose( out[ 3 ], tc.r[ 0 ], 'zlartg_scaled_f2_lt_safmin r[0]' );
-	assertClose( out[ 4 ], tc.r[ 1 ], 'zlartg_scaled_f2_lt_safmin r[1]' );
+	runTest( 2e46, 0.0, 1e200, 1e200, tc, 'zlartg_scaled_f2_lt_safmin' );
 });

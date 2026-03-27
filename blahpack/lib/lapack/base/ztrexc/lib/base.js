@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlartg = require( '../../zlartg/lib/base.js' );
@@ -61,9 +62,13 @@ var zrot = require( '../../zrot/lib/base.js' );
 function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst ) {
 	var conjSn;
 	var wantq;
-	var scratch;
 	var fIn;
 	var gIn;
+	var cArr;
+	var sArr;
+	var rArr;
+	var fInv;
+	var gInv;
 	var Tv;
 	var st1;
 	var st2;
@@ -72,6 +77,7 @@ function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	var t11I;
 	var t22R;
 	var t22I;
+	var snv;
 	var sn;
 	var cs;
 	var m1;
@@ -91,10 +97,15 @@ function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	st2 = strideT2 * 2;
 	oT = offsetT * 2;
 
-	// scratch for zlartg: out[0]=c, out[1..2]=s(re,im), out[3..4]=r(re,im)
-	scratch = new Float64Array( 5 );
-	fIn = new Float64Array( 2 );
-	gIn = new Float64Array( 2 );
+	// Working arrays for zlartg
+	fIn = new Complex128Array( 1 );
+	fInv = reinterpret( fIn, 0 );
+	gIn = new Complex128Array( 1 );
+	gInv = reinterpret( gIn, 0 );
+	cArr = new Float64Array( 1 );
+	sArr = new Complex128Array( 1 );
+	snv = reinterpret( sArr, 0 );
+	rArr = new Complex128Array( 1 );
 	sn = new Float64Array( 2 );
 	conjSn = new Float64Array( 2 );
 
@@ -117,17 +128,17 @@ function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 		t22I = Tv[ oT + k * st1 + k * st2 + 1 ];
 
 		// Compute Givens rotation: zlartg( T(k,k+1), T22-T11 )
-		fIn[ 0 ] = Tv[ oT + ( k - 1 ) * st1 + k * st2 ];
-		fIn[ 1 ] = Tv[ oT + ( k - 1 ) * st1 + k * st2 + 1 ];
-		gIn[ 0 ] = t22R - t11R;
-		gIn[ 1 ] = t22I - t11I;
-		zlartg( fIn, gIn, scratch );
+		fInv[ 0 ] = Tv[ oT + ( k - 1 ) * st1 + k * st2 ];
+		fInv[ 1 ] = Tv[ oT + ( k - 1 ) * st1 + k * st2 + 1 ];
+		gInv[ 0 ] = t22R - t11R;
+		gInv[ 1 ] = t22I - t11I;
+		zlartg( fIn, 0, gIn, 0, cArr, 0, sArr, 0, rArr, 0 );
 
-		cs = scratch[ 0 ];
-		sn[ 0 ] = scratch[ 1 ];
-		sn[ 1 ] = scratch[ 2 ];
-		conjSn[ 0 ] = scratch[ 1 ];
-		conjSn[ 1 ] = -scratch[ 2 ];
+		cs = cArr[ 0 ];
+		sn[ 0 ] = snv[ 0 ];
+		sn[ 1 ] = snv[ 1 ];
+		conjSn[ 0 ] = snv[ 0 ];
+		conjSn[ 1 ] = -snv[ 1 ];
 
 		// Apply rotation from the left: rows k, k+1, columns k+2..N
 		if ( k + 2 <= N ) {

@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var dlamch = require( '../../dlamch/lib/base.js' );
@@ -38,6 +39,14 @@ var ONE = 1.0;
 var EPS = dlamch( 'precision' );
 var SMLNUM = dlamch( 'safe-minimum' );
 var DUM = new Float64Array( 1 );
+
+// Scratch Complex128Array buffers for zladiv calls:
+var ZLADIV_X = new Complex128Array( 1 );
+var ZLADIV_Y = new Complex128Array( 1 );
+var ZLADIV_OUT = new Complex128Array( 1 );
+var ZLADIV_Xv = reinterpret( ZLADIV_X, 0 );
+var ZLADIV_Yv = reinterpret( ZLADIV_Y, 0 );
+var ZLADIV_OUTv = reinterpret( ZLADIV_OUT, 0 );
 
 
 // MAIN //
@@ -83,12 +92,10 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	var smin;
 	var suml;
 	var sumr;
-	var a11;
 	var da11;
 	var db;
 	var sgn;
 	var vec;
-	var x11;
 	var av;
 	var bv;
 	var cv;
@@ -104,7 +111,6 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	var j;
 	var k;
 	var l;
-	var tmp;
 	var vr;
 	var vi;
 	var xr;
@@ -142,9 +148,6 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	oB = offsetB * 2;
 	oC = offsetC * 2;
 
-	tmp = new Float64Array( 2 );
-	x11 = new Float64Array( 2 );
-
 	if ( notrna && notrnb ) {
 		// Solve A*X + ISGN*X*B = scale*C
 		for ( l = 0; l < N; l++ ) {
@@ -177,12 +180,11 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				}
 
 				// X11 = ZLADIV( VEC * SCALOC, A11 )
-				tmp[ 0 ] = vr * scaloc;
-				tmp[ 1 ] = vi * scaloc;
-				a11 = new Float64Array( 2 );
-				a11[ 0 ] = ar;
-				a11[ 1 ] = ai;
-				zladiv( tmp, a11, x11 );
+				ZLADIV_Xv[ 0 ] = vr * scaloc;
+				ZLADIV_Xv[ 1 ] = vi * scaloc;
+				ZLADIV_Yv[ 0 ] = ar;
+				ZLADIV_Yv[ 1 ] = ai;
+				zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
 
 				if ( scaloc !== ONE ) {
 					for ( j = 0; j < N; j++ ) {
@@ -190,8 +192,8 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					scale[ 0 ] *= scaloc;
 				}
-				cv[ oC + k * sc1 + l * sc2 ] = x11[ 0 ];
-				cv[ oC + k * sc1 + l * sc2 + 1 ] = x11[ 1 ];
+				cv[ oC + k * sc1 + l * sc2 ] = ZLADIV_OUTv[ 0 ];
+				cv[ oC + k * sc1 + l * sc2 + 1 ] = ZLADIV_OUTv[ 1 ];
 			}
 		}
 	} else if ( !notrna && notrnb ) {
@@ -226,12 +228,11 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 				}
 
-				tmp[ 0 ] = vr * scaloc;
-				tmp[ 1 ] = vi * scaloc;
-				a11 = new Float64Array( 2 );
-				a11[ 0 ] = ar;
-				a11[ 1 ] = ai;
-				zladiv( tmp, a11, x11 );
+				ZLADIV_Xv[ 0 ] = vr * scaloc;
+				ZLADIV_Xv[ 1 ] = vi * scaloc;
+				ZLADIV_Yv[ 0 ] = ar;
+				ZLADIV_Yv[ 1 ] = ai;
+				zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
 
 				if ( scaloc !== ONE ) {
 					for ( j = 0; j < N; j++ ) {
@@ -239,8 +240,8 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					scale[ 0 ] *= scaloc;
 				}
-				cv[ oC + k * sc1 + l * sc2 ] = x11[ 0 ];
-				cv[ oC + k * sc1 + l * sc2 + 1 ] = x11[ 1 ];
+				cv[ oC + k * sc1 + l * sc2 ] = ZLADIV_OUTv[ 0 ];
+				cv[ oC + k * sc1 + l * sc2 + 1 ] = ZLADIV_OUTv[ 1 ];
 			}
 		}
 	} else if ( !notrna && !notrnb ) {
@@ -277,12 +278,11 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 				}
 
-				tmp[ 0 ] = vr * scaloc;
-				tmp[ 1 ] = vi * scaloc;
-				a11 = new Float64Array( 2 );
-				a11[ 0 ] = ar;
-				a11[ 1 ] = ai;
-				zladiv( tmp, a11, x11 );
+				ZLADIV_Xv[ 0 ] = vr * scaloc;
+				ZLADIV_Xv[ 1 ] = vi * scaloc;
+				ZLADIV_Yv[ 0 ] = ar;
+				ZLADIV_Yv[ 1 ] = ai;
+				zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
 
 				if ( scaloc !== ONE ) {
 					for ( j = 0; j < N; j++ ) {
@@ -290,8 +290,8 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					scale[ 0 ] *= scaloc;
 				}
-				cv[ oC + k * sc1 + l * sc2 ] = x11[ 0 ];
-				cv[ oC + k * sc1 + l * sc2 + 1 ] = x11[ 1 ];
+				cv[ oC + k * sc1 + l * sc2 ] = ZLADIV_OUTv[ 0 ];
+				cv[ oC + k * sc1 + l * sc2 + 1 ] = ZLADIV_OUTv[ 1 ];
 			}
 		}
 	} else if ( notrna && !notrnb ) {
@@ -325,12 +325,11 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 				}
 
-				tmp[ 0 ] = vr * scaloc;
-				tmp[ 1 ] = vi * scaloc;
-				a11 = new Float64Array( 2 );
-				a11[ 0 ] = ar;
-				a11[ 1 ] = ai;
-				zladiv( tmp, a11, x11 );
+				ZLADIV_Xv[ 0 ] = vr * scaloc;
+				ZLADIV_Xv[ 1 ] = vi * scaloc;
+				ZLADIV_Yv[ 0 ] = ar;
+				ZLADIV_Yv[ 1 ] = ai;
+				zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
 
 				if ( scaloc !== ONE ) {
 					for ( j = 0; j < N; j++ ) {
@@ -338,8 +337,8 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					scale[ 0 ] *= scaloc;
 				}
-				cv[ oC + k * sc1 + l * sc2 ] = x11[ 0 ];
-				cv[ oC + k * sc1 + l * sc2 + 1 ] = x11[ 1 ];
+				cv[ oC + k * sc1 + l * sc2 ] = ZLADIV_OUTv[ 0 ];
+				cv[ oC + k * sc1 + l * sc2 + 1 ] = ZLADIV_OUTv[ 1 ];
 			}
 		}
 	}

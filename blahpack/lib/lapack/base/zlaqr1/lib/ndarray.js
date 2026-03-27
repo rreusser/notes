@@ -13,7 +13,7 @@ var base = require( './base.js' );
  * CABS1 = |Re(z)| + |Im(z)|.
  *
  *
- * @param {Float64Array} v - interleaved view
+ * @param {Complex128Array} v - interleaved view
  * @param {integer} idx - Float64 index
  * @returns {number} result
  */

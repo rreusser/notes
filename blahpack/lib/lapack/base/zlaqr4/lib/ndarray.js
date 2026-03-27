@@ -17,16 +17,16 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} N - number of columns
 * @param {integer} ilo - ilo
 * @param {integer} ihi - ihi
-* @param {Float64Array} H - input matrix
+* @param {Complex128Array} H - input matrix
 * @param {integer} strideH1 - stride of the first dimension of `H`
 * @param {integer} strideH2 - stride of the second dimension of `H`
 * @param {NonNegativeInteger} offsetH - starting index for `H`
-* @param {Float64Array} w - input array
+* @param {Complex128Array} w - input array
 * @param {integer} strideW - stride length for `w`
 * @param {NonNegativeInteger} offsetW - starting index for `w`
 * @param {integer} iloz - iloz
 * @param {integer} ihiz - ihiz
-* @param {Float64Array} Z - input matrix
+* @param {Complex128Array} Z - input matrix
 * @param {integer} strideZ1 - stride of the first dimension of `Z`
 * @param {integer} strideZ2 - stride of the second dimension of `Z`
 * @param {NonNegativeInteger} offsetZ - starting index for `Z`

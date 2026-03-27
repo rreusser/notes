@@ -15,7 +15,7 @@ var base = require( './base.js' );
  * CABS1: |re(z)| + |im(z)|
  *
  *
- * @param {Float64Array} v - Float64 view
+ * @param {Complex128Array} v - Float64 view
  * @param {integer} idx - index of real part
  * @throws {TypeError} First argument must be a valid matrix triangle
  * @returns {number} CABS1 value

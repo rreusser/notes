@@ -16,7 +16,14 @@
 * limitations under the License.
 */
 
+/* eslint-disable max-len, max-params, max-statements */
+
 'use strict';
+
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
 
 // VARIABLES //
 
@@ -50,20 +57,39 @@ function abssq( re, im ) {
 // MAIN //
 
 /**
-* Generates a plane rotation so that:.
+* Generates a plane rotation so that:
 *
-* \[  C         S  \] . \[ F \]  =  \[ R \]
-* \[ -conjg(S)  C  \]   \[ G \]     \[ 0 \]
+* ```text
+* [  C         S  ] . [ F ]  =  [ R ]
+* [ -conjg(S)  C  ]   [ G ]     [ 0 ]
+* ```
 *
-* where C is real and C^2 + |S|^2 = 1.
+* where C is real and `C**2 + |S|**2 = 1`.
+*
+* F and G are unchanged on return.
 *
 * @private
-* @param {Float64Array} f - first component \[re, im\]
-* @param {Float64Array} g - second component \[re, im\]
-* @param {Float64Array} out - output: `out[0]`=c, `out[1..2]`=s (re,im), `out[3..4]`=r (re,im)
-* @returns {Float64Array} out
+* @param {Complex128Array} f - first component (input only)
+* @param {NonNegativeInteger} offsetF - index offset for `f` (in complex elements)
+* @param {Complex128Array} g - second component (input only)
+* @param {NonNegativeInteger} offsetG - index offset for `g` (in complex elements)
+* @param {Float64Array} c - on exit, the real cosine of the rotation
+* @param {NonNegativeInteger} offsetC - index offset for `c`
+* @param {Complex128Array} s - on exit, the complex sine of the rotation
+* @param {NonNegativeInteger} offsetS - index offset for `s` (in complex elements)
+* @param {Complex128Array} r - on exit, the complex result
+* @param {NonNegativeInteger} offsetR - index offset for `r` (in complex elements)
+* @returns {void}
 */
-function zlartg( f, g, out ) {
+function zlartg( f, offsetF, g, offsetG, c, offsetC, s, offsetS, r, offsetR ) {
+	var Fv;
+	var Gv;
+	var Sv;
+	var Rv;
+	var oF;
+	var oG;
+	var oS;
+	var oR;
 	var fsr;
 	var fsi;
 	var gsr;
@@ -84,30 +110,40 @@ function zlartg( f, g, out ) {
 	var t0;
 	var t1;
 	var t2;
+	var cc;
 	var d;
-	var c;
 	var u;
 	var v;
 	var w;
 
-	fr = f[ 0 ];
-	fi = f[ 1 ];
-	gr = g[ 0 ];
-	gi = g[ 1 ];
+	// Reinterpret Complex128Array as Float64Array
+	Fv = reinterpret( f, 0 );
+	oF = offsetF * 2;
+	Gv = reinterpret( g, 0 );
+	oG = offsetG * 2;
+	Sv = reinterpret( s, 0 );
+	oS = offsetS * 2;
+	Rv = reinterpret( r, 0 );
+	oR = offsetR * 2;
+
+	fr = Fv[ oF ];
+	fi = Fv[ oF + 1 ];
+	gr = Gv[ oG ];
+	gi = Gv[ oG + 1 ];
 
 	// g == 0
 	if ( gr === 0.0 && gi === 0.0 ) {
-		out[ 0 ] = 1.0;
-		out[ 1 ] = 0.0;
-		out[ 2 ] = 0.0;
-		out[ 3 ] = fr;
-		out[ 4 ] = fi;
-		return out;
+		c[ offsetC ] = 1.0;
+		Sv[ oS ] = 0.0;
+		Sv[ oS + 1 ] = 0.0;
+		Rv[ oR ] = fr;
+		Rv[ oR + 1 ] = fi;
+		return;
 	}
 
 	// f == 0
 	if ( fr === 0.0 && fi === 0.0 ) {
-		c = 0.0;
+		cc = 0.0;
 		if ( gr === 0.0 ) {
 			// g is purely imaginary
 			d = Math.abs( gi );
@@ -146,12 +182,12 @@ function zlartg( f, g, out ) {
 				ri = 0.0;
 			}
 		}
-		out[ 0 ] = c;
-		out[ 1 ] = sr;
-		out[ 2 ] = si;
-		out[ 3 ] = rr;
-		out[ 4 ] = ri;
-		return out;
+		c[ offsetC ] = cc;
+		Sv[ oS ] = sr;
+		Sv[ oS + 1 ] = si;
+		Rv[ oR ] = rr;
+		Rv[ oR + 1 ] = ri;
+		return;
 	}
 
 	// General case: both f and g are nonzero
@@ -165,9 +201,9 @@ function zlartg( f, g, out ) {
 		h2 = f2 + g2;
 
 		if ( f2 >= h2 * SAFMIN ) {
-			c = Math.sqrt( f2 / h2 );
-			rr = fr / c;
-			ri = fi / c;
+			cc = Math.sqrt( f2 / h2 );
+			rr = fr / cc;
+			ri = fi / cc;
 			if ( f2 > RTMIN && h2 < RTMAX_QTR * 2.0 ) {
 				t0 = Math.sqrt( f2 * h2 );
 
@@ -187,10 +223,10 @@ function zlartg( f, g, out ) {
 			}
 		} else {
 			d = Math.sqrt( f2 * h2 );
-			c = f2 / d;
-			if ( c >= SAFMIN ) {
-				rr = fr / c;
-				ri = fi / c;
+			cc = f2 / d;
+			if ( cc >= SAFMIN ) {
+				rr = fr / cc;
+				ri = fi / cc;
 			} else {
 				t0 = h2 / d;
 				rr = fr * t0;
@@ -228,9 +264,9 @@ function zlartg( f, g, out ) {
 		}
 
 		if ( f2 >= h2 * SAFMIN ) {
-			c = Math.sqrt( f2 / h2 );
-			rr = fsr / c;
-			ri = fsi / c;
+			cc = Math.sqrt( f2 / h2 );
+			rr = fsr / cc;
+			ri = fsi / cc;
 			if ( f2 > RTMIN && h2 < RTMAX_QTR * 2.0 ) {
 				t0 = Math.sqrt( f2 * h2 );
 				t1 = fsr / t0;
@@ -245,10 +281,10 @@ function zlartg( f, g, out ) {
 			}
 		} else {
 			d = Math.sqrt( f2 * h2 );
-			c = f2 / d;
-			if ( c >= SAFMIN ) {
-				rr = fsr / c;
-				ri = fsi / c;
+			cc = f2 / d;
+			if ( cc >= SAFMIN ) {
+				rr = fsr / cc;
+				ri = fsi / cc;
 			} else {
 				t0 = h2 / d;
 				rr = fsr * t0;
@@ -260,17 +296,16 @@ function zlartg( f, g, out ) {
 			si = (gsr * t1) - (gsi * t0);
 		}
 		// Rescale c and r
-		c *= w;
+		cc *= w;
 		rr *= u;
 		ri *= u;
 	}
 
-	out[ 0 ] = c;
-	out[ 1 ] = sr;
-	out[ 2 ] = si;
-	out[ 3 ] = rr;
-	out[ 4 ] = ri;
-	return out;
+	c[ offsetC ] = cc;
+	Sv[ oS ] = sr;
+	Sv[ oS + 1 ] = si;
+	Rv[ oR ] = rr;
+	Rv[ oR + 1 ] = ri;
 }
 
 

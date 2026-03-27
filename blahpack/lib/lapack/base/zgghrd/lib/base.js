@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -71,9 +72,11 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	var beta;
 	var jcol;
 	var jrow;
+	var cArr;
+	var sArr;
+	var rArr;
 	var ilq;
 	var ilz;
-	var out;
 	var sa1;
 	var sa2;
 	var sb1;
@@ -83,6 +86,10 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	var Bv;
 	var oA;
 	var oB;
+	var fv;
+	var gv;
+	var sv;
+	var rv;
 	var sr;
 	var si;
 	var c;
@@ -168,9 +175,15 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 	}
 
 	// Working arrays for zlartg
-	f = new Float64Array( 2 );
-	g = new Float64Array( 2 );
-	out = new Float64Array( 5 ); // [c, s_re, s_im, r_re, r_im]
+	f = new Complex128Array( 1 );
+	fv = reinterpret( f, 0 );
+	g = new Complex128Array( 1 );
+	gv = reinterpret( g, 0 );
+	cArr = new Float64Array( 1 );
+	sArr = new Complex128Array( 1 );
+	sv = reinterpret( sArr, 0 );
+	rArr = new Complex128Array( 1 );
+	rv = reinterpret( rArr, 0 );
 	s = new Float64Array( 2 );   // complex s for zrot
 
 	// Main reduction loop
@@ -189,22 +202,22 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// JS 0-based: A(jrow-1, jcol)
 			// -------------------------------------------------------
 			idx = oA + (( jrow - 1 ) * sa1) + (jcol * sa2);
-			f[ 0 ] = Av[ idx ];
-			f[ 1 ] = Av[ idx + 1 ];
+			fv[ 0 ] = Av[ idx ];
+			fv[ 1 ] = Av[ idx + 1 ];
 
 			idx = oA + (jrow * sa1) + (jcol * sa2);
-			g[ 0 ] = Av[ idx ];
-			g[ 1 ] = Av[ idx + 1 ];
+			gv[ 0 ] = Av[ idx ];
+			gv[ 1 ] = Av[ idx + 1 ];
 
-			zlartg( f, g, out );
-			c = out[ 0 ];
-			sr = out[ 1 ];
-			si = out[ 2 ];
+			zlartg( f, 0, g, 0, cArr, 0, sArr, 0, rArr, 0 );
+			c = cArr[ 0 ];
+			sr = sv[ 0 ];
+			si = sv[ 1 ];
 
 			// A(JROW-1, JCOL) = R (the result from zlartg)
 			idx = oA + (( jrow - 1 ) * sa1) + (jcol * sa2);
-			Av[ idx ] = out[ 3 ];
-			Av[ idx + 1 ] = out[ 4 ];
+			Av[ idx ] = rv[ 0 ];
+			Av[ idx + 1 ] = rv[ 1 ];
 
 			// A(JROW, JCOL) = 0
 			idx = oA + (jrow * sa1) + (jcol * sa2);
@@ -259,22 +272,22 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// Fortran: CTEMP = B(JROW, JROW)
 			// -------------------------------------------------------
 			idx = oB + (jrow * sb1) + (jrow * sb2);
-			f[ 0 ] = Bv[ idx ];
-			f[ 1 ] = Bv[ idx + 1 ];
+			fv[ 0 ] = Bv[ idx ];
+			fv[ 1 ] = Bv[ idx + 1 ];
 
 			idx = oB + (jrow * sb1) + (( jrow - 1 ) * sb2);
-			g[ 0 ] = Bv[ idx ];
-			g[ 1 ] = Bv[ idx + 1 ];
+			gv[ 0 ] = Bv[ idx ];
+			gv[ 1 ] = Bv[ idx + 1 ];
 
-			zlartg( f, g, out );
-			c = out[ 0 ];
-			sr = out[ 1 ];
-			si = out[ 2 ];
+			zlartg( f, 0, g, 0, cArr, 0, sArr, 0, rArr, 0 );
+			c = cArr[ 0 ];
+			sr = sv[ 0 ];
+			si = sv[ 1 ];
 
 			// B(JROW, JROW) = R
 			idx = oB + (jrow * sb1) + (jrow * sb2);
-			Bv[ idx ] = out[ 3 ];
-			Bv[ idx + 1 ] = out[ 4 ];
+			Bv[ idx ] = rv[ 0 ];
+			Bv[ idx + 1 ] = rv[ 1 ];
 
 			// B(JROW, JROW-1) = 0
 			idx = oB + (jrow * sb1) + (( jrow - 1 ) * sb2);

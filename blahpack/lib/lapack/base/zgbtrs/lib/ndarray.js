@@ -52,14 +52,14 @@ var base = require( './base.js' );
 * @param {integer} kl - number of subdiagonals
 * @param {integer} ku - number of superdiagonals
 * @param {integer} nrhs - number of right-hand sides
-* @param {Float64Array} AB - input matrix in band storage
+* @param {Complex128Array} AB - input matrix in band storage
 * @param {integer} strideAB1 - stride of the first dimension of `AB`
 * @param {integer} strideAB2 - stride of the second dimension of `AB`
 * @param {NonNegativeInteger} offsetAB - starting index for `AB`
 * @param {Int32Array} IPIV - pivot indices
 * @param {integer} strideIPIV - stride length for `IPIV`
 * @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {Float64Array} B - output matrix
+* @param {Complex128Array} B - output matrix
 * @param {integer} strideB1 - stride of the first dimension of `B`
 * @param {integer} strideB2 - stride of the second dimension of `B`
 * @param {NonNegativeInteger} offsetB - starting index for `B`
@@ -68,11 +68,11 @@ var base = require( './base.js' );
 * @returns {integer} status code (0 = success)
 *
 * @example
-* var Float64Array = require( '@stdlib/array/float64' );
+* var Complex128Array = require( '@stdlib/array/complex128' );
 *
-* var AB = new Float64Array( 16 );
+* var AB = new Complex128Array( 16 );
 * var IPIV = new Int32Array( 4 );
-* var B = new Float64Array( 4 );
+* var B = new Complex128Array( 4 );
 *
 * var info = zgbtrs( 'no-transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 * // ? => 0

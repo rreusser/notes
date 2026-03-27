@@ -23,6 +23,7 @@
 // MODULES //
 
 var Float64Array = require( '@stdlib/array/float64' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var dlamch = require( '../../dlamch/lib/base.js' );
@@ -36,6 +37,14 @@ var ZERO = 0.0;
 var ONE = 1.0;
 var CZERO = new Complex128( 0.0, 0.0 );
 var CONE = new Complex128( 1.0, 0.0 );
+
+// Scratch Complex128Array buffers for zladiv calls:
+var ZLADIV_X = new Complex128Array( 1 );
+var ZLADIV_Y = new Complex128Array( 1 );
+var ZLADIV_OUT = new Complex128Array( 1 );
+var ZLADIV_Xv = reinterpret( ZLADIV_X, 0 );
+var ZLADIV_Yv = reinterpret( ZLADIV_Y, 0 );
+var ZLADIV_OUTv = reinterpret( ZLADIV_OUT, 0 );
 
 
 // FUNCTIONS //
@@ -114,8 +123,6 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	var ilback;
 	var salpha;
 	var bcoeff;
-	var negSum;
-	var divOut;
 	var sumaRe;
 	var sumaIm;
 	var sumbRe;
@@ -137,7 +144,6 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	var sVL2;
 	var sVR1;
 	var sVR2;
-	var negW;
 	var ieig;
 	var isrc;
 	var ibeg;
@@ -263,9 +269,6 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 	d = new Float64Array( 2 );
 	ca = new Float64Array( 2 );
 	cb = new Float64Array( 2 );
-	negSum = new Float64Array( 2 );
-	negW = new Float64Array( 2 );
-	divOut = new Float64Array( 2 );
 
 	// ========================
 
@@ -420,11 +423,13 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 				}
 
 				// WORK(J) = ZLADIV(-SUM, D)
-				negSum[ 0 ] = -sum[ 0 ];
-				negSum[ 1 ] = -sum[ 1 ];
-				zladiv( negSum, d, divOut );
-				WORKv[ j * 2 ] = divOut[ 0 ];
-				WORKv[ (j * 2) + 1 ] = divOut[ 1 ];
+				ZLADIV_Xv[ 0 ] = -sum[ 0 ];
+				ZLADIV_Xv[ 1 ] = -sum[ 1 ];
+				ZLADIV_Yv[ 0 ] = d[ 0 ];
+				ZLADIV_Yv[ 1 ] = d[ 1 ];
+				zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+				WORKv[ j * 2 ] = ZLADIV_OUTv[ 0 ];
+				WORKv[ (j * 2) + 1 ] = ZLADIV_OUTv[ 1 ];
 				xmax = Math.max( xmax, abs1( WORKv, j * 2 ) );
 			}
 
@@ -586,11 +591,13 @@ function ztgevc( side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, strideS
 				}
 
 				// WORK(J) = ZLADIV(-WORK(J), D)
-				negW[ 0 ] = -WORKv[ j * 2 ];
-				negW[ 1 ] = -WORKv[ (j * 2) + 1 ];
-				zladiv( negW, d, divOut );
-				WORKv[ j * 2 ] = divOut[ 0 ];
-				WORKv[ (j * 2) + 1 ] = divOut[ 1 ];
+				ZLADIV_Xv[ 0 ] = -WORKv[ j * 2 ];
+				ZLADIV_Xv[ 1 ] = -WORKv[ (j * 2) + 1 ];
+				ZLADIV_Yv[ 0 ] = d[ 0 ];
+				ZLADIV_Yv[ 1 ] = d[ 1 ];
+				zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+				WORKv[ j * 2 ] = ZLADIV_OUTv[ 0 ];
+				WORKv[ (j * 2) + 1 ] = ZLADIV_OUTv[ 1 ];
 
 				if ( j > 0 ) {
 					// Scale to avoid overflow and update

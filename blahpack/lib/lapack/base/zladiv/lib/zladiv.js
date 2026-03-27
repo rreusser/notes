@@ -30,8 +30,8 @@ var base = require( './base.js' );
 /**
 * Performs complex division: out = X / Y, where X and Y are complex.
 */
-function zladiv( x, y, out ) {
-	return base( x, y, out );
+function zladiv( x, offsetX, y, offsetY, out, offsetOut ) {
+	return base( x, offsetX, y, offsetY, out, offsetOut );
 }
 
 

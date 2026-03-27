@@ -20,26 +20,30 @@
 
 'use strict';
 
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
+
 // MAIN //
 
 /**
 * Performs the Hermitian packed rank-1 update `A := alpha*x*x**H + A`.
 *
 * `alpha` is a real scalar, `x` is an `N`-element complex vector, and `A` is
-* an `N` by `N` Hermitian matrix supplied in packed form as a Float64Array
-* with interleaved real and imaginary parts.
+* an `N` by `N` Hermitian matrix supplied in packed form.
 *
 * @private
 * @param {string} uplo - specifies whether upper or lower triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix `A`
 * @param {number} alpha - real scalar constant
-* @param {Float64Array} x - input vector (interleaved re/im pairs)
-* @param {integer} strideX - stride length for `x` (in Float64 elements)
-* @param {NonNegativeInteger} offsetX - starting index for `x` (in Float64 elements)
-* @param {Float64Array} AP - packed Hermitian matrix (interleaved re/im pairs)
-* @param {integer} strideAP - stride length for `AP` (in Float64 elements, typically 2)
-* @param {NonNegativeInteger} offsetAP - starting index for `AP` (in Float64 elements)
-* @returns {Float64Array} `AP`
+* @param {Complex128Array} x - complex input vector
+* @param {integer} strideX - stride length for `x` (in complex elements)
+* @param {NonNegativeInteger} offsetX - starting index for `x` (in complex elements)
+* @param {Complex128Array} AP - packed Hermitian matrix
+* @param {integer} strideAP - stride length for `AP` (in complex elements)
+* @param {NonNegativeInteger} offsetAP - starting index for `AP` (in complex elements)
+* @returns {Complex128Array} `AP`
 */
 function zhpr( uplo, N, alpha, x, strideX, offsetX, AP, strideAP, offsetAP ) {
 	var tempR;
@@ -48,6 +52,12 @@ function zhpr( uplo, N, alpha, x, strideX, offsetX, AP, strideAP, offsetAP ) {
 	var xjI;
 	var xiR;
 	var xiI;
+	var APv;
+	var sap;
+	var oAP;
+	var xv;
+	var ox;
+	var sx;
 	var kk;
 	var ix;
 	var jx;
@@ -60,77 +70,87 @@ function zhpr( uplo, N, alpha, x, strideX, offsetX, AP, strideAP, offsetAP ) {
 		return AP;
 	}
 
-	jx = offsetX;
-	kk = offsetAP;
+	// Reinterpret Complex128Arrays as Float64Arrays:
+	xv = reinterpret( x, 0 );
+	APv = reinterpret( AP, 0 );
+
+	// Convert complex-element strides/offsets to Float64 strides/offsets:
+	sx = strideX * 2;
+	sap = strideAP * 2;
+	ox = offsetX * 2;
+	oAP = offsetAP * 2;
+
+	jx = ox;
+	kk = oAP;
 
 	if ( uplo === 'upper' ) {
 		// Form A when upper triangle is stored in AP:
 		for ( j = 0; j < N; j += 1 ) {
-			xjR = x[ jx ];
-			xjI = x[ jx + 1 ];
+			xjR = xv[ jx ];
+			xjI = xv[ jx + 1 ];
 			if ( xjR !== 0.0 || xjI !== 0.0 ) {
 				// Temp = alpha * conj(x[j]):
 				tempR = alpha * xjR;
 				tempI = -( alpha * xjI );
 
 				// Off-diagonal elements: AP[k] += x[i] * temp
-				ix = offsetX;
+				ix = ox;
 				k = kk;
 				for ( i = 0; i < j; i += 1 ) {
-					xiR = x[ ix ];
-					xiI = x[ ix + 1 ];
+					xiR = xv[ ix ];
+					xiI = xv[ ix + 1 ];
 
 					// AP[k] += x[i] * temp (complex multiply):
-					AP[ k ] += ( xiR * tempR ) - ( xiI * tempI );
-					AP[ k + 1 ] += ( xiR * tempI ) + ( xiI * tempR );
-					ix += strideX;
-					k += strideAP;
+					APv[ k ] += ( xiR * tempR ) - ( xiI * tempI );
+					APv[ k + 1 ] += ( xiR * tempI ) + ( xiI * tempR );
+					ix += sx;
+					k += sap;
 				}
 
 				// Diagonal: A(j,j) = real(A(j,j)) + real(x[j] * temp)
-				AP[ k ] += ( xjR * tempR ) - ( xjI * tempI );
-				AP[ k + 1 ] = 0.0;
+				APv[ k ] += ( xjR * tempR ) - ( xjI * tempI );
+				APv[ k + 1 ] = 0.0;
 			} else {
 				// Force diagonal to real when x[j] == 0:
-				k = kk + ( j * strideAP );
-				AP[ k + 1 ] = 0.0;
+				k = kk + ( j * sap );
+				APv[ k + 1 ] = 0.0;
 			}
-			jx += strideX;
-			kk += ( j + 1 ) * strideAP;
+			jx += sx;
+			kk += ( j + 1 ) * sap;
 		}
 	} else {
 		// Form A when lower triangle is stored in AP:
 		for ( j = 0; j < N; j += 1 ) {
-			xjR = x[ jx ];
-			xjI = x[ jx + 1 ];
+			xjR = xv[ jx ];
+			xjI = xv[ jx + 1 ];
 			if ( xjR !== 0.0 || xjI !== 0.0 ) {
 				// Temp = alpha * conj(x[j]):
 				tempR = alpha * xjR;
 				tempI = -( alpha * xjI );
 
 				// Diagonal: A(j,j) = real(A(j,j)) + real(temp * x[j])
-				AP[ kk ] += ( xjR * tempR ) - ( xjI * tempI );
-				AP[ kk + 1 ] = 0.0;
+				APv[ kk ] += ( xjR * tempR ) - ( xjI * tempI );
+				APv[ kk + 1 ] = 0.0;
 
 				// Off-diagonal elements below diagonal:
-				ix = jx + strideX;
-				k = kk + strideAP;
+				ix = jx + sx;
+				k = kk + sap;
 				for ( i = j + 1; i < N; i += 1 ) {
-					xiR = x[ ix ];
-					xiI = x[ ix + 1 ];
+					xiR = xv[ ix ];
+					xiI = xv[ ix + 1 ];
 
 					// AP[k] += x[i] * temp (complex multiply):
-					AP[ k ] += ( xiR * tempR ) - ( xiI * tempI );
-					AP[ k + 1 ] += ( xiR * tempI ) + ( xiI * tempR );
-					ix += strideX;
-					k += strideAP;
+					APv[ k ] += ( xiR * tempR ) - ( xiI * tempI );
+					APv[ k + 1 ] += ( xiR * tempI ) + ( xiI * tempR );
+					ix += sx;
+					k += sap;
 				}
 			} else {
 				// Force diagonal to real when x[j] == 0:
-				AP[ kk + 1 ] = 0.0;
+				APv[ kk + 1 ] = 0.0;
 			}
-			jx += strideX;
-			kk += ( N - j ) * strideAP;
+			jx += sx;
+			kk += ( N - j ) * sap;
 		}
 	}
 	return AP;

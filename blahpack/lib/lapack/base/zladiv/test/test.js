@@ -22,6 +22,8 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var base = require( './../lib/base.js' );
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
@@ -51,63 +53,77 @@ test( 'zladiv: main export is a function', function t() {
 
 test( 'zladiv: (4+2i)/(1+1i) = 3-1i', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zladiv_basic'; } );
-	var x = new Float64Array( [ 4.0, 2.0 ] );
-	var y = new Float64Array( [ 1.0, 1.0 ] );
-	var out = new Float64Array( 2 );
-	base( x, y, out );
-	assertArrayClose( Array.from( out ), tc.result, 'zladiv_basic' );
+	var x = new Complex128Array( [ 4.0, 2.0 ] );
+	var y = new Complex128Array( [ 1.0, 1.0 ] );
+	var out = new Complex128Array( 1 );
+	var ov;
+	base( x, 0, y, 0, out, 0 );
+	ov = reinterpret( out, 0 );
+	assertArrayClose( Array.from( ov ), tc.result, 'zladiv_basic' );
 });
 
 test( 'zladiv: (1+0i)/(0+1i) = 0-1i', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zladiv_pure_imag_denom'; } );
-	var x = new Float64Array( [ 1.0, 0.0 ] );
-	var y = new Float64Array( [ 0.0, 1.0 ] );
-	var out = new Float64Array( 2 );
-	base( x, y, out );
-	assertArrayClose( Array.from( out ), tc.result, 'zladiv_pure_imag_denom' );
+	var x = new Complex128Array( [ 1.0, 0.0 ] );
+	var y = new Complex128Array( [ 0.0, 1.0 ] );
+	var out = new Complex128Array( 1 );
+	var ov;
+	base( x, 0, y, 0, out, 0 );
+	ov = reinterpret( out, 0 );
+	assertArrayClose( Array.from( ov ), tc.result, 'zladiv_pure_imag_denom' );
 });
 
 test( 'zladiv: (1+0i)/(1+0i) = 1+0i', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zladiv_real_div'; } );
-	var x = new Float64Array( [ 1.0, 0.0 ] );
-	var y = new Float64Array( [ 1.0, 0.0 ] );
-	var out = new Float64Array( 2 );
-	base( x, y, out );
-	assertArrayClose( Array.from( out ), tc.result, 'zladiv_real_div' );
+	var x = new Complex128Array( [ 1.0, 0.0 ] );
+	var y = new Complex128Array( [ 1.0, 0.0 ] );
+	var out = new Complex128Array( 1 );
+	var ov;
+	base( x, 0, y, 0, out, 0 );
+	ov = reinterpret( out, 0 );
+	assertArrayClose( Array.from( ov ), tc.result, 'zladiv_real_div' );
 });
 
 test( 'zladiv: (0+0i)/(1+1i) = 0+0i', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zladiv_zero_numer'; } );
-	var x = new Float64Array( [ 0.0, 0.0 ] );
-	var y = new Float64Array( [ 1.0, 1.0 ] );
-	var out = new Float64Array( 2 );
-	base( x, y, out );
-	assertArrayClose( Array.from( out ), tc.result, 'zladiv_zero_numer' );
+	var x = new Complex128Array( [ 0.0, 0.0 ] );
+	var y = new Complex128Array( [ 1.0, 1.0 ] );
+	var out = new Complex128Array( 1 );
+	var ov;
+	base( x, 0, y, 0, out, 0 );
+	ov = reinterpret( out, 0 );
+	assertArrayClose( Array.from( ov ), tc.result, 'zladiv_zero_numer' );
 });
 
 test( 'zladiv: (3+4i)/(1-2i) = -1+2i', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zladiv_neg_denom'; } );
-	var x = new Float64Array( [ 3.0, 4.0 ] );
-	var y = new Float64Array( [ 1.0, -2.0 ] );
-	var out = new Float64Array( 2 );
-	base( x, y, out );
-	assertArrayClose( Array.from( out ), tc.result, 'zladiv_neg_denom' );
+	var x = new Complex128Array( [ 3.0, 4.0 ] );
+	var y = new Complex128Array( [ 1.0, -2.0 ] );
+	var out = new Complex128Array( 1 );
+	var ov;
+	base( x, 0, y, 0, out, 0 );
+	ov = reinterpret( out, 0 );
+	assertArrayClose( Array.from( ov ), tc.result, 'zladiv_neg_denom' );
 });
 
 test( 'zladiv: large values', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zladiv_large'; } );
-	var x = new Float64Array( [ 1.0e300, 1.0e300 ] );
-	var y = new Float64Array( [ 1.0e300, 1.0e300 ] );
-	var out = new Float64Array( 2 );
-	base( x, y, out );
-	assertArrayClose( Array.from( out ), tc.result, 'zladiv_large' );
+	var x = new Complex128Array( [ 1.0e300, 1.0e300 ] );
+	var y = new Complex128Array( [ 1.0e300, 1.0e300 ] );
+	var out = new Complex128Array( 1 );
+	var ov;
+	base( x, 0, y, 0, out, 0 );
+	ov = reinterpret( out, 0 );
+	assertArrayClose( Array.from( ov ), tc.result, 'zladiv_large' );
 });
 
 test( 'zladiv: small values', function t() {
 	var tc = fixture.find( function( t ) { return t.name === 'zladiv_small'; } );
-	var x = new Float64Array( [ 1.0e-300, 1.0e-300 ] );
-	var y = new Float64Array( [ 1.0e-300, 1.0e-300 ] );
-	var out = new Float64Array( 2 );
-	base( x, y, out );
-	assertArrayClose( Array.from( out ), tc.result, 'zladiv_small' );
+	var x = new Complex128Array( [ 1.0e-300, 1.0e-300 ] );
+	var y = new Complex128Array( [ 1.0e-300, 1.0e-300 ] );
+	var out = new Complex128Array( 1 );
+	var ov;
+	base( x, 0, y, 0, out, 0 );
+	ov = reinterpret( out, 0 );
+	assertArrayClose( Array.from( ov ), tc.result, 'zladiv_small' );
 });

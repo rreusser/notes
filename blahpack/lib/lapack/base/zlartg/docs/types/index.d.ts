@@ -18,24 +18,42 @@
 
 // TypeScript declarations for @stdlib/lapack/base/zlartg
 
+import { Complex128Array } from '@stdlib/types/array';
+
 /**
 * Interface describing the ndarray API.
 */
 interface Routine {
 	/**
-	* Generate a complex Givens plane rotation
+	* Generate a complex Givens plane rotation.
+	*
+	* @param f - first component (input only)
+	* @param offsetF - index offset for f (in complex elements)
+	* @param g - second component (input only)
+	* @param offsetG - index offset for g (in complex elements)
+	* @param c - on exit, the real cosine of the rotation
+	* @param offsetC - index offset for c
+	* @param s - on exit, the complex sine of the rotation
+	* @param offsetS - index offset for s (in complex elements)
+	* @param r - on exit, the complex result
+	* @param offsetR - index offset for r (in complex elements)
 	*/
 	(
-		f: number,
-		g: number,
-		c: number,
-		s: number,
-		r: number
+		f: Complex128Array,
+		offsetF: number,
+		g: Complex128Array,
+		offsetG: number,
+		c: Float64Array,
+		offsetC: number,
+		s: Complex128Array,
+		offsetS: number,
+		r: Complex128Array,
+		offsetR: number
 	): void;
 }
 
 /**
-* Generate a complex Givens plane rotation
+* Generate a complex Givens plane rotation.
 */
 declare var zlartg: Routine;
 

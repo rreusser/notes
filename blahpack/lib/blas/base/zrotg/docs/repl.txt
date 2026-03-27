@@ -1,0 +1,30 @@
+
+    zrotg.ndarray( a, b, c, s )
+        Construct a Givens plane rotation with real cosine and complex sine.
+
+        Parameters
+        ----------
+        a: number
+            a.
+
+        b: number
+            b.
+
+        c: number
+            c.
+
+        s: number
+            s.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
