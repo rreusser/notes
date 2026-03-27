@@ -4,17 +4,29 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {Int32Array} iseed - iseed
+* @param {integer} strideISEED - strideISEED
+* @param {NonNegativeInteger} N - N
+* @param {Float64Array} x - x
+* @param {integer} strideX - strideX
+* @returns {*} result
 */
-function dlaruv() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlaruv( iseed, strideISEED, N, x, strideX ) {
+	var oiseed;
+	var ox;
+
+	oiseed = stride2offset( N, strideISEED );
+	ox = stride2offset( N, strideX );
+	return base( iseed, strideISEED, oiseed, N, x, strideX, ox );
 }
 
 

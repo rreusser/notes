@@ -106,8 +106,19 @@ echo "Scaffolding remnants:"
 c=$(grep -rl "@param.*TODO\|{TODO}" lib --include='*.js' 2>/dev/null | wc -l)
 check "files with TODO @param" "$c"
 
-c=$(grep -rl "assert.fail" lib/*/base/*/test/test.js 2>/dev/null | wc -l)
-warn "test files with assert.fail" "$c"
+c=$(grep -rl "assert\.fail.*TODO\|assert\.fail.*Scaffold\|assert\.fail.*implement" lib/*/base/*/test/test.js 2>/dev/null | wc -l)
+warn "test files with scaffold assert.fail" "$c"
+
+stubcount=0
+for dir in lib/blas/base/*/lib lib/lapack/base/*/lib; do
+  [ -d "$dir" ] || continue
+  for f in "$dir"/*.js; do
+    [ -f "$f" ] || continue
+    [ "$(basename "$f")" = "base.js" ] && continue
+    grep -q "not yet implemented" "$f" 2>/dev/null && stubcount=$((stubcount + 1))
+  done
+done
+check "wrapper files with 'not yet implemented'" "$stubcount"
 
 echo ""
 echo "String conventions:"
@@ -123,25 +134,29 @@ zcount=0
 for f in lib/blas/base/z*/lib/base.js lib/lapack/base/z*/lib/base.js; do
   [ -f "$f" ] || continue
   if ! grep -q "reinterpret" "$f" 2>/dev/null; then
-    zcount=$((zcount + 1))
+    # Check if it indexes Complex128Array params directly (not just real arrays)
+    # Real arrays: IPIV, RWORK, WORK, SCALE, d, e, S, rot, JPVT, rank, LSCALE, RSCALE, BWORK
+    if grep -qE "(Av|Bv|Cv|Hv|Zv|Qv|Tv|Uv|Xv|VTv|VLv|VRv)\[" "$f" 2>/dev/null; then
+      zcount=$((zcount + 1))
+    fi
   fi
 done
-warn "z-prefix base.js without reinterpret" "$zcount"
+check "z-prefix indexing Complex128Array without reinterpret" "$zcount"
 
 echo ""
 echo "Validation:"
 vcount=0
 for f in lib/*/base/*/lib/ndarray.js; do
   [ -f "$f" ] || continue
-  base_dir=$(dirname "$f")
-  base="$base_dir/base.js"
-  if [ -f "$base" ] && grep -q "uplo\|trans\|diag\|side" "$base" 2>/dev/null; then
-    if ! grep -q "throw new TypeError" "$f" 2>/dev/null; then
-      vcount=$((vcount + 1))
-    fi
+  grep -q "throw new TypeError" "$f" 2>/dev/null && continue
+  base="$(dirname "$f")/base.js"
+  [ -f "$base" ] || continue
+  # Check if base.js has string @params (not just string references in code)
+  if grep -q "@param {string}" "$base" 2>/dev/null; then
+    vcount=$((vcount + 1))
   fi
 done
-warn "ndarray.js without string validation" "$vcount"
+warn "ndarray.js with string params but no validation" "$vcount"
 
 echo ""
 echo "Tests:"

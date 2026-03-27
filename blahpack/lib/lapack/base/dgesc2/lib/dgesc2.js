@@ -4,17 +4,40 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {NonNegativeInteger} N - N
+* @param {Float64Array} A - A
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Float64Array} RHS - RHS
+* @param {integer} strideRHS - strideRHS
+* @param {Int32Array} IPIV - IPIV
+* @param {integer} strideIPIV - strideIPIV
+* @param {Int32Array} JPIV - JPIV
+* @param {integer} strideJPIV - strideJPIV
+* @param {Float64Array} scale - scale
+* @returns {*} result
 */
-function dgesc2() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dgesc2( N, A, LDA, RHS, strideRHS, IPIV, strideIPIV, JPIV, strideJPIV, scale ) { // eslint-disable-line max-len, max-params
+	var oipiv;
+	var ojpiv;
+	var orhs;
+	var sa1;
+	var sa2;
+
+	sa1 = 1;
+	sa2 = LDA;
+	orhs = stride2offset( N, strideRHS );
+	oipiv = stride2offset( N, strideIPIV );
+	ojpiv = stride2offset( N, strideJPIV );
+	return base( N, A, sa1, sa2, 0, RHS, strideRHS, orhs, IPIV, strideIPIV, oipiv, JPIV, strideJPIV, ojpiv, scale ); // eslint-disable-line max-len
 }
 
 

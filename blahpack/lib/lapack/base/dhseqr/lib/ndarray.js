@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -58,9 +59,17 @@ var base = require( './base.js' );
  * @param {integer} strideZ1 - stride of the first dimension of `Z`
  * @param {integer} strideZ2 - stride of the second dimension of `Z`
  * @param {NonNegativeInteger} offsetZ - starting index for `Z`
+ * @throws {TypeError} Second argument must be a valid compz value
+ * @throws {TypeError} First argument must be a valid job value
  * @returns {integer} info - 0 on success, >0 if failed to converge
  */
 function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+	if ( job !== 'eigenvalues' && job !== 'schur' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid job value. Value: `%s`.', job ) );
+	}
+	if ( compz !== 'none' && compz !== 'initialize' && compz !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid compz value. Value: `%s`.', compz ) );
+	}
 	return base( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 

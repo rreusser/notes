@@ -59,7 +59,7 @@ var ZERO = 0.0;
 * @param {integer} strideT1 - stride of first dimension of T (in complex elements)
 * @param {integer} strideT2 - stride of second dimension of T (in complex elements)
 * @param {NonNegativeInteger} offsetT - starting index for T (in complex elements)
-* @param {Complex128Array} Q - N-by-N unitary matrix, modified if compq='V'
+* @param {Complex128Array} Q - N-by-N unitary matrix, modified if compq=`'update'`
 * @param {integer} strideQ1 - stride of first dimension of Q (in complex elements)
 * @param {integer} strideQ2 - stride of second dimension of Q (in complex elements)
 * @param {NonNegativeInteger} offsetQ - starting index for Q (in complex elements)

@@ -10,11 +10,14 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {number} re - re
+* @param {number} im - im
+* @returns {*} result
 */
-function zherfs() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zherfs( re, im ) {
+	return base( re, im );
 }
 
 

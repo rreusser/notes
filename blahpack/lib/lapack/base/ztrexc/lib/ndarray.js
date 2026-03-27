@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -29,15 +30,19 @@ var base = require( './base.js' );
  * @param {integer} strideT1 - stride of the first dimension of T (complex elements)
  * @param {integer} strideT2 - stride of the second dimension of T (complex elements)
  * @param {NonNegativeInteger} offsetT - starting index for T (complex elements)
- * @param {Complex128Array} Q - unitary matrix (updated if compq='V')
+ * @param {Complex128Array} Q - unitary matrix (updated if compq=`'update'`)
  * @param {integer} strideQ1 - stride of the first dimension of Q (complex elements)
  * @param {integer} strideQ2 - stride of the second dimension of Q (complex elements)
  * @param {NonNegativeInteger} offsetQ - starting index for Q (complex elements)
  * @param {integer} ifst - row index of the element to move (1-based)
  * @param {integer} ilst - target row index (1-based)
+ * @throws {TypeError} First argument must be a valid compq value
  * @returns {integer} info - 0 on success
  */
 function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst ) { // eslint-disable-line max-len, max-params
+	if ( compq !== 'none' && compq !== 'initialize' && compq !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid compq value. Value: `%s`.', compq ) );
+	}
 	return base( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst ); // eslint-disable-line max-len
 }
 

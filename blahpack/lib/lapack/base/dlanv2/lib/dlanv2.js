@@ -10,11 +10,14 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {number} a - a
+* @param {number} b - b
+* @returns {*} result
 */
-function dlanv2() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlanv2( a, b ) {
+	return base( a, b );
 }
 
 

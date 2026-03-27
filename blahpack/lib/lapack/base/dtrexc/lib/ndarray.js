@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -32,7 +33,7 @@ var base = require( './base.js' );
  * @param {integer} strideT1 - stride of the first dimension of T
  * @param {integer} strideT2 - stride of the second dimension of T
  * @param {NonNegativeInteger} offsetT - starting index for T
- * @param {Float64Array} Q - orthogonal matrix (updated if compq='V')
+ * @param {Float64Array} Q - orthogonal matrix (updated if compq=`'update'`)
  * @param {integer} strideQ1 - stride of the first dimension of Q
  * @param {integer} strideQ2 - stride of the second dimension of Q
  * @param {NonNegativeInteger} offsetQ - starting index for Q
@@ -41,9 +42,13 @@ var base = require( './base.js' );
  * @param {Float64Array} WORK - workspace of length N
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK
+ * @throws {TypeError} First argument must be a valid compq value
  * @returns {Object} { info, ifst, ilst }
  */
 function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	if ( compq !== 'none' && compq !== 'initialize' && compq !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid compq value. Value: `%s`.', compq ) );
+	}
 	return base( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

@@ -10,11 +10,16 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {NonNegativeInteger} N - N
+* @param {Complex128Array} zx - zx
+* @param {integer} strideX - strideX
+* @param {NonNegativeInteger} offsetX - offsetX
+* @returns {*} result
 */
-function dzasum() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dzasum( N, zx, strideX, offsetX ) {
+	return base( N, zx, strideX, offsetX );
 }
 
 

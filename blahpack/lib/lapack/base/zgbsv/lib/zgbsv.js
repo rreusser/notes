@@ -4,17 +4,40 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {NonNegativeInteger} N - N
+* @param {NonNegativeInteger} kl - kl
+* @param {NonNegativeInteger} ku - ku
+* @param {NonNegativeInteger} nrhs - nrhs
+* @param {Complex128Array} AB - AB
+* @param {PositiveInteger} LDAB - leading dimension of `AB`
+* @param {Int32Array} IPIV - IPIV
+* @param {integer} strideIPIV - strideIPIV
+* @param {Complex128Array} B - B
+* @param {PositiveInteger} LDB - leading dimension of `B`
+* @returns {*} result
 */
-function zgbsv() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zgbsv( N, kl, ku, nrhs, AB, LDAB, IPIV, strideIPIV, B, LDB ) { // eslint-disable-line max-len, max-params
+	var oipiv;
+	var sab1;
+	var sab2;
+	var sb1;
+	var sb2;
+
+	sab1 = 1;
+	sab2 = LDAB;
+	sb1 = 1;
+	sb2 = LDB;
+	oipiv = stride2offset( N, strideIPIV );
+	return base( N, kl, ku, nrhs, AB, sab1, sab2, 0, IPIV, strideIPIV, oipiv, B, sb1, sb2, 0 );
 }
 
 

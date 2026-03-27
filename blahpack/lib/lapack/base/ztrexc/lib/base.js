@@ -51,7 +51,7 @@ var zrot = require( '../../zrot/lib/base.js' );
 * @param {integer} strideT1 - stride of the first dimension of T (complex elements)
 * @param {integer} strideT2 - stride of the second dimension of T (complex elements)
 * @param {NonNegativeInteger} offsetT - starting index for T (complex elements)
-* @param {Complex128Array} Q - unitary matrix (updated if compq='V')
+* @param {Complex128Array} Q - unitary matrix (updated if compq=`'update'`)
 * @param {integer} strideQ1 - stride of the first dimension of Q (complex elements)
 * @param {integer} strideQ2 - stride of the second dimension of Q (complex elements)
 * @param {NonNegativeInteger} offsetQ - starting index for Q (complex elements)

@@ -9,15 +9,15 @@
  * Algorithm:
  * 1. Scale the matrix if the norm is outside safe range
  * 2. Reduce to tridiagonal form via zhetrd
- * 3. If JOBZ='N': compute eigenvalues only (dsterf)
- * If JOBZ='V': generate Q via zungtr, then eigenvalues+eigenvectors (zsteqr)
+ * 3. If jobz=`'no-vectors'`: compute eigenvalues only (dsterf)
+ * If jobz=`'compute-vectors'`: generate Q via zungtr, then eigenvalues+eigenvectors (zsteqr)
  * 4. Undo scaling on eigenvalues if needed
  *
  *
  * @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
  * @param {string} uplo - `'upper'` or `'lower'`
  * @param {NonNegativeInteger} N - order of the matrix A
- * @param {Complex128Array} A - input/output Hermitian matrix; on exit contains eigenvectors if JOBZ='V'
+ * @param {Complex128Array} A - input/output Hermitian matrix; on exit contains eigenvectors if jobz=`'compute-vectors'`
  * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
  * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
  * @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
@@ -54,7 +54,7 @@ var base = require( './base.js' );
 * @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
 * @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
-* @param {Complex128Array} A - input/output Hermitian matrix; on exit contains eigenvectors if JOBZ='V'
+* @param {Complex128Array} A - input/output Hermitian matrix; on exit contains eigenvectors if jobz=`'compute-vectors'`
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
 * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
 * @param {NonNegativeInteger} offsetA - starting index for A (complex elements)

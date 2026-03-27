@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -47,15 +48,15 @@ var base = require( './base.js' );
  * @param {number} tolb - tolerance for B
  * @param {Array} K - output array; K[0] set to the numerical rank dimension
  * @param {Array} l - output array; l[0] set to the numerical rank dimension
- * @param {Float64Array} U - M-by-M orthogonal matrix (if jobu='U')
+ * @param {Float64Array} U - M-by-M orthogonal matrix (if jobu=`'compute'`)
  * @param {integer} strideU1 - stride of the first dimension of U
  * @param {integer} strideU2 - stride of the second dimension of U
  * @param {NonNegativeInteger} offsetU - starting index for U
- * @param {Float64Array} V - P-by-P orthogonal matrix (if jobv='V')
+ * @param {Float64Array} V - P-by-P orthogonal matrix (if jobv=`'compute'`)
  * @param {integer} strideV1 - stride of the first dimension of V
  * @param {integer} strideV2 - stride of the second dimension of V
  * @param {NonNegativeInteger} offsetV - starting index for V
- * @param {Float64Array} Q - N-by-N orthogonal matrix (if jobq='Q')
+ * @param {Float64Array} Q - N-by-N orthogonal matrix (if jobq=`'compute'`)
  * @param {integer} strideQ1 - stride of the first dimension of Q
  * @param {integer} strideQ2 - stride of the second dimension of Q
  * @param {NonNegativeInteger} offsetQ - starting index for Q
@@ -69,9 +70,21 @@ var base = require( './base.js' );
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK
  * @param {integer} lwork - length of WORK
+ * @throws {TypeError} Third argument must be a valid jobq value
+ * @throws {TypeError} Second argument must be a valid jobv value
+ * @throws {TypeError} First argument must be a valid jobu value
  * @returns {integer} info - 0 if successful
  */
 function dggsvp3( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+	if ( jobu !== 'none' && jobu !== 'compute' && jobu !== 'initialize' && jobu !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid jobu value. Value: `%s`.', jobu ) );
+	}
+	if ( jobv !== 'none' && jobv !== 'compute' && jobv !== 'initialize' && jobv !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid jobv value. Value: `%s`.', jobv ) );
+	}
+	if ( jobq !== 'none' && jobq !== 'compute' && jobq !== 'initialize' && jobq !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid jobq value. Value: `%s`.', jobq ) );
+	}
 	return base( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 

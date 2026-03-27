@@ -66,7 +66,7 @@ var BIGNUM = ONE / SMLNUM;
 * @private
 * @param {string} jobvs - `'none'` or `'compute-vectors'`
 * @param {string} sort - `'none'` or `'sort'`
-* @param {Function} select - function(w) returning boolean, where w is Complex128; used when sort='S'
+* @param {Function} select - function(w) returning boolean, where w is Complex128; used when sort=`'sort'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - N-by-N matrix, overwritten with Schur form T on exit
 * @param {integer} strideA1 - stride of first dimension of A (complex elements)
@@ -76,7 +76,7 @@ var BIGNUM = ONE / SMLNUM;
 * @param {Complex128Array} W - output: eigenvalues
 * @param {integer} strideW - stride for W (complex elements)
 * @param {NonNegativeInteger} offsetW - starting index for W (complex elements)
-* @param {Complex128Array} VS - output: N-by-N matrix of Schur vectors (if jobvs='V')
+* @param {Complex128Array} VS - output: N-by-N matrix of Schur vectors (if jobvs=`'compute-vectors'`)
 * @param {integer} strideVS1 - stride of first dimension of VS (complex elements)
 * @param {integer} strideVS2 - stride of second dimension of VS (complex elements)
 * @param {NonNegativeInteger} offsetVS - starting index for VS (complex elements)
@@ -87,7 +87,7 @@ var BIGNUM = ONE / SMLNUM;
 * @param {Float64Array} RWORK - real workspace of length N
 * @param {integer} strideRWORK - stride for RWORK
 * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
-* @param {Uint8Array} BWORK - boolean workspace of length N (used when sort='S')
+* @param {Uint8Array} BWORK - boolean workspace of length N (used when sort=`'sort'`)
 * @param {integer} strideBWORK - stride for BWORK
 * @param {NonNegativeInteger} offsetBWORK - starting index for BWORK
 * @returns {integer} info (0=success, >0 = failure)

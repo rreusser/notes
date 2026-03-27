@@ -26,7 +26,7 @@ var base = require( './base.js' );
 *
 * @param {string} side - `'right'`, `'left'`, or `'both'`
 * @param {string} howmny - `'all'`, `'backtransform'`, or `'selected'`
-* @param {BooleanArray} SELECT - logical array of length N (used when HOWMNY='S')
+* @param {BooleanArray} SELECT - logical array of length N (used when howmny=`'selected'`)
 * @param {integer} strideSELECT - stride for SELECT
 * @param {NonNegativeInteger} offsetSELECT - offset for SELECT
 * @param {NonNegativeInteger} N - order of matrices

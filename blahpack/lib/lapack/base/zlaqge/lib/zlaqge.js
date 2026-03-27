@@ -4,17 +4,39 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {NonNegativeInteger} M - M
+* @param {NonNegativeInteger} N - N
+* @param {Complex128Array} A - A
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Float64Array} r - r
+* @param {integer} strideR - strideR
+* @param {Float64Array} c - c
+* @param {integer} strideC - strideC
+* @param {number} rowcnd - rowcnd
+* @param {number} colcnd - colcnd
+* @param {number} amax - amax
+* @returns {*} result
 */
-function zlaqge() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zlaqge( M, N, A, LDA, r, strideR, c, strideC, rowcnd, colcnd, amax ) { // eslint-disable-line max-len, max-params
+	var sa1;
+	var sa2;
+	var oc;
+	var or;
+
+	sa1 = 1;
+	sa2 = LDA;
+	or = stride2offset( N, strideR );
+	oc = stride2offset( N, strideC );
+	return base( M, N, A, sa1, sa2, 0, r, strideR, or, c, strideC, oc, rowcnd, colcnd, amax );
 }
 
 

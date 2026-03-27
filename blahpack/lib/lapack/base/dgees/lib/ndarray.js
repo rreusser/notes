@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -22,7 +23,7 @@ var base = require( './base.js' );
  *
  * @param {string} jobvs - `'none'` or `'compute-vectors'`
  * @param {string} sort - `'none'` or `'sort'`
- * @param {Function} select - function(wr, wi) returning boolean; used when sort='S'
+ * @param {Function} select - function(wr, wi) returning boolean; used when sort=`'sort'`
  * @param {NonNegativeInteger} N - order of the matrix A
  * @param {Float64Array} A - N-by-N matrix, overwritten with Schur form T on exit
  * @param {integer} strideA1 - stride of the first dimension of A
@@ -43,12 +44,20 @@ var base = require( './base.js' );
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK
  * @param {integer} lwork - length of WORK
- * @param {Uint8Array} BWORK - boolean workspace of length N (used when sort='S')
+ * @param {Uint8Array} BWORK - boolean workspace of length N (used when sort=`'sort'`)
  * @param {integer} strideBWORK - stride for BWORK
  * @param {NonNegativeInteger} offsetBWORK - starting index for BWORK
+ * @throws {TypeError} Second argument must be a valid sort value
+ * @throws {TypeError} First argument must be a valid jobvs value
  * @returns {integer} info (0=success, >0 eigenvalue computation failed, N+1/N+2 sorting issues)
  */
 function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, BWORK, strideBWORK, offsetBWORK ) { // eslint-disable-line max-len, max-params
+	if ( jobvs !== 'no-vectors' && jobvs !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid jobvs value. Value: `%s`.', jobvs ) );
+	}
+	if ( sort !== 'none' && sort !== 'sort' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid sort value. Value: `%s`.', sort ) );
+	}
 	return base( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, BWORK, strideBWORK, offsetBWORK ); // eslint-disable-line max-len
 }
 

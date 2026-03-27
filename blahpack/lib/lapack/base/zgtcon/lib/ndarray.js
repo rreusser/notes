@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -40,9 +41,13 @@ var base = require( './base.js' );
  * @param {Complex128Array} WORK - workspace array of length at least 2*N
  * @param {integer} strideWORK - stride for WORK (complex elements)
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+ * @throws {TypeError} First argument must be a valid norm value
  * @returns {integer} info - 0 if successful
  */
 function zgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	if ( norm !== 'max' && norm !== 'one-norm' && norm !== 'inf-norm' && norm !== 'frobenius' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid norm value. Value: `%s`.', norm ) );
+	}
 	return base( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

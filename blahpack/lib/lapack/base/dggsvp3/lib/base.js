@@ -73,15 +73,15 @@ var dormr2 = require( '../../dormr2/lib/base.js' );
 * @param {number} tolb - tolerance for B
 * @param {Array} K - output array; K[0] set to the numerical rank dimension
 * @param {Array} l - output array; l[0] set to the numerical rank dimension
-* @param {Float64Array} U - M-by-M orthogonal matrix (if jobu='U')
+* @param {Float64Array} U - M-by-M orthogonal matrix (if jobu=`'compute'`)
 * @param {integer} strideU1 - stride of the first dimension of U
 * @param {integer} strideU2 - stride of the second dimension of U
 * @param {NonNegativeInteger} offsetU - starting index for U
-* @param {Float64Array} V - P-by-P orthogonal matrix (if jobv='V')
+* @param {Float64Array} V - P-by-P orthogonal matrix (if jobv=`'compute'`)
 * @param {integer} strideV1 - stride of the first dimension of V
 * @param {integer} strideV2 - stride of the second dimension of V
 * @param {NonNegativeInteger} offsetV - starting index for V
-* @param {Float64Array} Q - N-by-N orthogonal matrix (if jobq='Q')
+* @param {Float64Array} Q - N-by-N orthogonal matrix (if jobq=`'compute'`)
 * @param {integer} strideQ1 - stride of the first dimension of Q
 * @param {integer} strideQ2 - stride of the second dimension of Q
 * @param {NonNegativeInteger} offsetQ - starting index for Q

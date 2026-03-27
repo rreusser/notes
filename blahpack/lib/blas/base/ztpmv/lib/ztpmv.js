@@ -4,17 +4,32 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {string} uplo - uplo
+* @param {string} trans - trans
+* @param {string} diag - diag
+* @param {NonNegativeInteger} N - N
+* @param {Complex128Array} AP - AP
+* @param {integer} strideAP - strideAP
+* @param {Complex128Array} x - x
+* @param {integer} strideX - strideX
+* @returns {*} result
 */
-function ztpmv() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function ztpmv( uplo, trans, diag, N, AP, strideAP, x, strideX ) { // eslint-disable-line max-len, max-params
+	var oap;
+	var ox;
+
+	oap = stride2offset( N, strideAP );
+	ox = stride2offset( N, strideX );
+	return base( uplo, trans, diag, N, AP, strideAP, oap, x, strideX, ox );
 }
 
 

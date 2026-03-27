@@ -140,6 +140,110 @@ function scanSources( pkg ) {
 // Generate HTML
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Conformance checks (programmatic audit)
+// ---------------------------------------------------------------------------
+
+function runConformanceChecks() {
+	var checks = [];
+
+	// 1. TODO @param remnants
+	try {
+		var out = execSync( "grep -rl '@param.*TODO\\|{TODO}' lib --include='*.js' 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
+		var c = parseInt( out, 10 ) || 0;
+		checks.push({ name: 'TODO @param remnants', count: c, severity: c > 0 ? 'fail' : 'pass' });
+	} catch ( e ) {
+		checks.push({ name: 'TODO @param remnants', count: 0, severity: 'pass' });
+	}
+
+	// 2. Stub wrapper files (not yet implemented)
+	var stubCount = 0;
+	[ 'blas', 'lapack' ].forEach( function( pkg ) {
+		var baseDir = path.join( ROOT, 'lib', pkg, 'base' );
+		if ( !fs.existsSync( baseDir ) ) return;
+		fs.readdirSync( baseDir ).forEach( function( routine ) {
+			var libDir = path.join( baseDir, routine, 'lib' );
+			if ( !fs.existsSync( libDir ) ) return;
+			fs.readdirSync( libDir ).forEach( function( f ) {
+				if ( f === 'base.js' || !/\.js$/.test( f ) ) return;
+				var content = fs.readFileSync( path.join( libDir, f ), 'utf8' );
+				if ( /not yet implemented/.test( content ) ) {
+					stubCount += 1;
+				}
+			});
+		});
+	});
+	checks.push({ name: 'Stub wrapper files', count: stubCount, severity: stubCount > 0 ? 'fail' : 'pass' });
+
+	// 3. Single-char Fortran flags in @param JSDoc
+	try {
+		var out2 = execSync( "grep -rn \"@param.*'[A-Z]'\" lib --include='*.js' 2>/dev/null | grep -cv '`' || true", { encoding: 'utf8' } ).trim();
+		var c2 = parseInt( out2, 10 ) || 0;
+		checks.push({ name: 'Single-char flags in @param', count: c2, severity: c2 > 0 ? 'fail' : 'pass' });
+	} catch ( e ) {
+		checks.push({ name: 'Single-char flags in @param', count: 0, severity: 'pass' });
+	}
+
+	// 4. d-prefix files with conjugate-transpose
+	try {
+		var out3 = execSync( "grep -rl 'conjugate-transpose' lib/blas/base/d*/lib/ lib/lapack/base/d*/lib/ 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
+		var c3 = parseInt( out3, 10 ) || 0;
+		checks.push({ name: 'd-prefix conjugate-transpose', count: c3, severity: c3 > 0 ? 'fail' : 'pass' });
+	} catch ( e ) {
+		checks.push({ name: 'd-prefix conjugate-transpose', count: 0, severity: 'pass' });
+	}
+
+	// 5. Scaffold-only test stubs
+	try {
+		var out4 = execSync( "grep -rl 'assert.fail' lib/*/base/*/test/test.js 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
+		var c4 = parseInt( out4, 10 ) || 0;
+		checks.push({ name: 'Test files with assert.fail', count: c4, severity: c4 > 0 ? 'warn' : 'pass' });
+	} catch ( e ) {
+		checks.push({ name: 'Test files with assert.fail', count: 0, severity: 'pass' });
+	}
+
+	// 6. ndarray.js without string validation
+	var noValidation = 0;
+	[ 'blas', 'lapack' ].forEach( function( pkg ) {
+		var baseDir = path.join( ROOT, 'lib', pkg, 'base' );
+		if ( !fs.existsSync( baseDir ) ) return;
+		fs.readdirSync( baseDir ).forEach( function( routine ) {
+			var ndarrayJs = path.join( baseDir, routine, 'lib', 'ndarray.js' );
+			var baseJs = path.join( baseDir, routine, 'lib', 'base.js' );
+			if ( !fs.existsSync( ndarrayJs ) || !fs.existsSync( baseJs ) ) return;
+			var baseSrc = fs.readFileSync( baseJs, 'utf8' );
+			if ( !/uplo|trans|diag|side/.test( baseSrc ) ) return;
+			var ndSrc = fs.readFileSync( ndarrayJs, 'utf8' );
+			if ( !/throw new TypeError/.test( ndSrc ) ) {
+				noValidation += 1;
+			}
+		});
+	});
+	checks.push({ name: 'ndarray.js without string validation', count: noValidation, severity: noValidation > 0 ? 'warn' : 'pass' });
+
+	return checks;
+}
+
+function conformanceHTML( checks ) {
+	var pass = checks.filter( function( c ) { return c.severity === 'pass'; } ).length;
+	var rows = checks.map( function( c ) {
+		var badge;
+		if ( c.severity === 'pass' ) {
+			badge = '<span class="badge done">PASS</span>';
+		} else if ( c.severity === 'warn' ) {
+			badge = '<span class="badge stub">' + c.count + '</span>';
+		} else {
+			badge = '<span class="badge" style="background:#fecaca;color:#991b1b;">' + c.count + '</span>';
+		}
+		return '<tr><td>' + c.name + '</td><td class="tests">' + badge + '</td></tr>';
+	}).join( '\n' );
+
+	return '<section>\n' +
+		'<h2>Conformance Checks <span class="count">' + pass + '/' + checks.length + ' passing</span></h2>\n' +
+		'<table>\n<thead><tr><th>Check</th><th style="text-align:center">Result</th></tr></thead>\n' +
+		'<tbody>\n' + rows + '\n</tbody>\n</table>\n</section>\n';
+}
+
 var blasModules = scanModules( 'blas' );
 var lapackModules = scanModules( 'lapack' );
 
@@ -271,6 +375,7 @@ var html = '<!DOCTYPE html>\n' +
 '<div class="stat" id="statBlas"><div class="val">' + blasModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + blasSources.length + '</div><div class="lbl">BLAS</div></div>\n' +
 '<div class="stat" id="statLapack"><div class="val">' + lapackModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + lapackSources.length + '</div><div class="lbl">LAPACK</div></div>\n' +
 '</div>\n' +
+conformanceHTML( runConformanceChecks() ) +
 '<div class="controls">\n' +
 '<label class="toggle"><input type="checkbox" id="showAll">Show unimplemented</label>\n' +
 '<div class="prefix-filter">\n' +

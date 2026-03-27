@@ -29,6 +29,7 @@ then apply the full manual checklist below.
 | Script | Purpose |
 |--------|---------|
 | `${CLAUDE_SKILL_DIR}/audit.sh` | Automated convention audit |
+| `${CLAUDE_SKILL_DIR}/check-stubs.sh` | Detect stub wrapper files (`'not yet implemented'`) |
 | `${CLAUDE_SKILL_DIR}/check-stub-tests.sh` | Detect scaffold-only test stubs |
 | `${CLAUDE_SKILL_DIR}/fix_wrapper_docs.py` | Propagate base.js @param to ndarray.js/wrapper files |
 
@@ -39,22 +40,26 @@ integration until every applicable check passes.
 
 ---
 
-## 1. No scaffolding remnants
+## 1. No scaffolding remnants or stub wrappers
 
 Scaffolded content must be fully replaced with real implementations.
+Every file in the module must work — not just base.js.
 
 ```bash
+# No 'not yet implemented' in ANY JS file (base.js, ndarray.js, <routine>.js, index.js, main.js)
+grep -rn "not yet implemented" lib/<pkg>/base/<routine>/lib/*.js
+
 # No TODO in @param or @returns
 grep -n "@param.*TODO\|@returns.*TODO\|{TODO}" lib/<pkg>/base/<routine>/lib/*.js
 
 # No assert.fail stubs in tests
 grep -n "assert.fail" lib/<pkg>/base/<routine>/test/test.js
 
-# No 'not yet implemented' in base.js
-grep -n "not yet implemented" lib/<pkg>/base/<routine>/lib/base.js
-
 # Test file has real assertions (not just type checks)
 # Must have >2 assert.* calls beyond the scaffolded type checks
+
+# Full codebase check for stub wrappers:
+bash bin/check-stubs.sh
 ```
 
 ---

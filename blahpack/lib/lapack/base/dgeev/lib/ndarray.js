@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -33,17 +34,25 @@ var base = require( './base.js' );
  * @param {Float64Array} WI - output: imaginary parts of eigenvalues (length N)
  * @param {integer} strideWI - stride for WI
  * @param {NonNegativeInteger} offsetWI - offset for WI
- * @param {Float64Array} VL - output: left eigenvectors (N x N), not referenced if jobvl='N'
+ * @param {Float64Array} VL - output: left eigenvectors (N x N), not referenced if jobvl=`'no-vectors'`
  * @param {integer} strideVL1 - first dimension stride of VL
  * @param {integer} strideVL2 - second dimension stride of VL
  * @param {NonNegativeInteger} offsetVL - offset for VL
- * @param {Float64Array} VR - output: right eigenvectors (N x N), not referenced if jobvr='N'
+ * @param {Float64Array} VR - output: right eigenvectors (N x N), not referenced if jobvr=`'no-vectors'`
  * @param {integer} strideVR1 - first dimension stride of VR
  * @param {integer} strideVR2 - second dimension stride of VR
  * @param {NonNegativeInteger} offsetVR - offset for VR
+ * @throws {TypeError} Second argument must be a valid jobvr value
+ * @throws {TypeError} First argument must be a valid jobvl value
  * @returns {integer} info - 0 on success, >0 if QR failed (eigenvalues info+1:N have converged)
  */
 function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+	if ( jobvl !== 'no-vectors' && jobvl !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid jobvl value. Value: `%s`.', jobvl ) );
+	}
+	if ( jobvr !== 'no-vectors' && jobvr !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid jobvr value. Value: `%s`.', jobvr ) );
+	}
 	return base( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 

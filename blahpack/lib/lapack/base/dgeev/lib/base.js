@@ -82,11 +82,11 @@ var DLARTG_OUT = new Float64Array( 3 );
 * @param {Float64Array} WI - output: imaginary parts of eigenvalues (length N)
 * @param {integer} strideWI - stride for WI
 * @param {NonNegativeInteger} offsetWI - offset for WI
-* @param {Float64Array} VL - output: left eigenvectors (N x N), not referenced if jobvl='N'
+* @param {Float64Array} VL - output: left eigenvectors (N x N), not referenced if jobvl=`'no-vectors'`
 * @param {integer} strideVL1 - first dimension stride of VL
 * @param {integer} strideVL2 - second dimension stride of VL
 * @param {NonNegativeInteger} offsetVL - offset for VL
-* @param {Float64Array} VR - output: right eigenvectors (N x N), not referenced if jobvr='N'
+* @param {Float64Array} VR - output: right eigenvectors (N x N), not referenced if jobvr=`'no-vectors'`
 * @param {integer} strideVR1 - first dimension stride of VR
 * @param {integer} strideVR2 - second dimension stride of VR
 * @param {NonNegativeInteger} offsetVR - offset for VR

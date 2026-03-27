@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -26,9 +27,13 @@ var base = require( './base.js' );
  * @param {Float64Array} DU - super-diagonal elements (length N-1)
  * @param {integer} strideDU - stride for DU
  * @param {NonNegativeInteger} offsetDU - starting index for DU
+ * @throws {TypeError} First argument must be a valid norm value
  * @returns {number} the computed norm
  */
 function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU ) { // eslint-disable-line max-len, max-params
+	if ( norm !== 'max' && norm !== 'one-norm' && norm !== 'inf-norm' && norm !== 'frobenius' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid norm value. Value: `%s`.', norm ) );
+	}
 	return base( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU ); // eslint-disable-line max-len
 }
 

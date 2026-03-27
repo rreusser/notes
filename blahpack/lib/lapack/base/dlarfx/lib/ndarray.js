@@ -35,7 +35,7 @@ var base = require( './base.js' );
  * @param {integer} strideC1 - stride of the first dimension of C
  * @param {integer} strideC2 - stride of the second dimension of C
  * @param {NonNegativeInteger} offsetC - starting index for C
- * @param {Float64Array} WORK - workspace (length N if side='L', length M if side='R')
+ * @param {Float64Array} WORK - workspace (length N if side=`'left'`, length M if side=`'right'`)
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK
  * @throws {TypeError} First argument must be a valid operation side

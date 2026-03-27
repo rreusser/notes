@@ -50,7 +50,7 @@ var dlaexc = require( '../../dlaexc/lib/base.js' );
 * @param {integer} strideT1 - stride of the first dimension of T
 * @param {integer} strideT2 - stride of the second dimension of T
 * @param {NonNegativeInteger} offsetT - starting index for T
-* @param {Float64Array} Q - orthogonal matrix (updated if compq='V')
+* @param {Float64Array} Q - orthogonal matrix (updated if compq=`'update'`)
 * @param {integer} strideQ1 - stride of the first dimension of Q
 * @param {integer} strideQ2 - stride of the second dimension of Q
 * @param {NonNegativeInteger} offsetQ - starting index for Q

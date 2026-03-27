@@ -53,10 +53,10 @@ var RELFAC = 2.0;
 * @param {string} range - `'all'`, `'value'`, or `'index'`
 * @param {string} order - `'block'` or `'entire'`
 * @param {NonNegativeInteger} N - order of the tridiagonal matrix
-* @param {number} vl - lower bound of interval (RANGE='V')
-* @param {number} vu - upper bound of interval (RANGE='V')
-* @param {integer} il - index of smallest eigenvalue (RANGE='I', 1-based)
-* @param {integer} iu - index of largest eigenvalue (RANGE='I', 1-based)
+* @param {number} vl - lower bound of interval (range=`'value'`)
+* @param {number} vu - upper bound of interval (range=`'value'`)
+* @param {integer} il - index of smallest eigenvalue (range=`'index'`, 1-based)
+* @param {integer} iu - index of largest eigenvalue (range=`'index'`, 1-based)
 * @param {number} abstol - absolute tolerance for eigenvalues
 * @param {Float64Array} d - diagonal elements, length N
 * @param {integer} strideD - stride for d
@@ -242,7 +242,7 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 
 	// Compute Interval and ATOLI
 	if ( irange === 3 ) {
-		// RANGE='I': Compute the interval containing eigenvalues IL through IU
+		// range=`'index'`: Compute the interval containing eigenvalues IL through IU
 		gu = d[ offsetD ];
 		gl = d[ offsetD ];
 		tmp1 = ZERO;
@@ -485,7 +485,7 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 		}
 	}
 
-	// If RANGE='I', then (WL,WU) contains eigenvalues NWL+1,...,NWU
+	// If range=`'index'`, then (WL,WU) contains eigenvalues NWL+1,...,NWU
 	if ( irange === 3 ) {
 		im = 0;
 		idiscl = il - 1 - nwl;

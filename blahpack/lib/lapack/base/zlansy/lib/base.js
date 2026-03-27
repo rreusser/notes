@@ -42,7 +42,7 @@ var zlassq = require( '../../zlassq/lib/base.js' );
 * @param {integer} strideA1 - first stride of A (complex elements)
 * @param {integer} strideA2 - second stride of A (complex elements)
 * @param {NonNegativeInteger} offsetA - offset into A (complex elements)
-* @param {Float64Array} WORK - workspace of length N (only for '1'/'O'/'I' norms)
+* @param {Float64Array} WORK - workspace of length N (only for `'one-norm'`/`'inf-norm'` norms)
 * @param {integer} strideWORK - stride of WORK
 * @param {NonNegativeInteger} offsetWORK - offset into WORK
 * @returns {number} the norm value

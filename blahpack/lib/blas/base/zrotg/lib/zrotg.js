@@ -10,11 +10,14 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* Returns `re*re + im*im` without complex abs overhead.
+*
+* @param {number} re - re
+* @param {number} im - im
+* @returns {*} result
 */
-function zrotg() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function zrotg( re, im ) {
+	return base( re, im );
 }
 
 

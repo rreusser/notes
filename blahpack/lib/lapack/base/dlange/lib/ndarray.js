@@ -10,7 +10,7 @@
  * @param {integer} strideA1 - stride of the first dimension of `A`
  * @param {integer} strideA2 - stride of the second dimension of `A`
  * @param {NonNegativeInteger} offsetA - starting index for `A`
- * @param {Float64Array} WORK - workspace array (length >= M for 'I' norm)
+ * @param {Float64Array} WORK - workspace array (length >= M for `'inf-norm'`)
  * @param {integer} strideWORK - stride length for `WORK`
  * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
  * @returns {number} norm value
@@ -38,7 +38,7 @@ var base = require( './base.js' );
 * @param {integer} strideA1 - stride of the first dimension of `A`
 * @param {integer} strideA2 - stride of the second dimension of `A`
 * @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} WORK - workspace array (length >= M for 'I' norm)
+* @param {Float64Array} WORK - workspace array (length >= M for `'inf-norm'`)
 * @param {integer} strideWORK - stride length for `WORK`
 * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
 * @throws {TypeError} first argument must be a valid norm type

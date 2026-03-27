@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -45,9 +46,17 @@ var base = require( './base.js' );
  * @param {Float64Array} RWORK - real workspace (length >= 2*N)
  * @param {integer} strideRWORK - stride for RWORK
  * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
+ * @throws {TypeError} Second argument must be a valid jobvr value
+ * @throws {TypeError} First argument must be a valid jobvl value
  * @returns {integer} info - 0 on success, >0 if QR failed (eigenvalues info+1:N have converged)
  */
 function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+	if ( jobvl !== 'no-vectors' && jobvl !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid jobvl value. Value: `%s`.', jobvl ) );
+	}
+	if ( jobvr !== 'no-vectors' && jobvr !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid jobvr value. Value: `%s`.', jobvr ) );
+	}
 	return base( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
 }
 

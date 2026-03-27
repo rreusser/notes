@@ -4,17 +4,32 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {string} job - job
+* @param {NonNegativeInteger} N - N
+* @param {Float64Array} A - A
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Float64Array} SCALE - SCALE
+* @param {integer} strideSCALE - strideSCALE
+* @returns {*} result
 */
-function dgebal() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dgebal( job, N, A, LDA, SCALE, strideSCALE ) {
+	var oscale;
+	var sa1;
+	var sa2;
+
+	sa1 = 1;
+	sa2 = LDA;
+	oscale = stride2offset( N, strideSCALE );
+	return base( job, N, A, sa1, sa2, 0, SCALE, strideSCALE, oscale );
 }
 
 

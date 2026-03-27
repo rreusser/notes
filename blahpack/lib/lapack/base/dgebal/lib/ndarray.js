@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -28,9 +29,13 @@ var base = require( './base.js' );
  * @param {Float64Array} SCALE - output array of length N (permutation/scaling info)
  * @param {integer} strideSCALE - stride for SCALE
  * @param {NonNegativeInteger} offsetSCALE - starting index for SCALE
+ * @throws {TypeError} First argument must be a valid job value
  * @returns {Object} result with properties: info (0=success), ilo (1-based), ihi (1-based)
  */
 function dgebal( job, N, A, strideA1, strideA2, offsetA, ilo, ihi, SCALE, strideSCALE, offsetSCALE ) { // eslint-disable-line max-len, max-params
+	if ( job !== 'none' && job !== 'permute' && job !== 'scale' && job !== 'both' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid job value. Value: `%s`.', job ) );
+	}
 	return base( job, N, A, strideA1, strideA2, offsetA, ilo, ihi, SCALE, strideSCALE, offsetSCALE ); // eslint-disable-line max-len
 }
 

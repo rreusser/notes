@@ -10,11 +10,18 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {Float64Array} A - A
+* @param {integer} sA1 - sA1
+* @param {integer} sA2 - sA2
+* @param {integer} oA - oA
+* @param {integer} i - i
+* @param {integer} j - j
+* @returns {*} result
 */
-function dlaqr5() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlaqr5( A, sA1, sA2, oA, i, j ) {
+	return base( A, sA1, sA2, oA, i, j );
 }
 
 

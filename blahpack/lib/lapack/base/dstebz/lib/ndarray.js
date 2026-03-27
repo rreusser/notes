@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -17,10 +18,10 @@ var base = require( './base.js' );
  * @param {string} range - `'all'`, `'value'`, or `'index'`
  * @param {string} order - `'block'` or `'entire'`
  * @param {NonNegativeInteger} N - order of the tridiagonal matrix
- * @param {number} vl - lower bound of interval (RANGE='V')
- * @param {number} vu - upper bound of interval (RANGE='V')
- * @param {integer} il - index of smallest eigenvalue (RANGE='I', 1-based)
- * @param {integer} iu - index of largest eigenvalue (RANGE='I', 1-based)
+ * @param {number} vl - lower bound of interval (range=`'value'`)
+ * @param {number} vu - upper bound of interval (range=`'value'`)
+ * @param {integer} il - index of smallest eigenvalue (range=`'index'`, 1-based)
+ * @param {integer} iu - index of largest eigenvalue (range=`'index'`, 1-based)
  * @param {number} abstol - absolute tolerance for eigenvalues
  * @param {Float64Array} d - diagonal elements, length N
  * @param {integer} strideD - stride for d
@@ -45,9 +46,17 @@ var base = require( './base.js' );
  * @param {Int32Array} IWORK - workspace, length 3*N
  * @param {integer} strideIWORK - stride for IWORK
  * @param {NonNegativeInteger} offsetIWORK - starting index for IWORK
+ * @throws {TypeError} Second argument must be a valid order value
+ * @throws {TypeError} First argument must be a valid range value
  * @returns {integer} info
  */
 function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e, strideE, offsetE, M, nsplit, w, strideW, offsetW, IBLOCK, strideIBLOCK, offsetIBLOCK, ISPLIT, strideISPLIT, offsetISPLIT, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
+	if ( range !== 'all' && range !== 'value' && range !== 'index' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid range value. Value: `%s`.', range ) );
+	}
+	if ( order !== 'block' && order !== 'entire' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid order value. Value: `%s`.', order ) );
+	}
 	return base( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e, strideE, offsetE, M, nsplit, w, strideW, offsetW, IBLOCK, strideIBLOCK, offsetIBLOCK, ISPLIT, strideISPLIT, offsetISPLIT, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ); // eslint-disable-line max-len
 }
 

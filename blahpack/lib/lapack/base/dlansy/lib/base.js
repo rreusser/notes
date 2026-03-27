@@ -41,7 +41,7 @@ var dlassq = require( '../../dlassq/lib/base.js' );
 * @param {integer} strideA1 - first dimension stride for A
 * @param {integer} strideA2 - second dimension stride for A
 * @param {NonNegativeInteger} offsetA - starting index for A
-* @param {Float64Array} WORK - workspace array (length >= N for '1'/'O'/'I' norms)
+* @param {Float64Array} WORK - workspace array (length >= N for `'one-norm'`/`'inf-norm'` norms)
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {number} norm value

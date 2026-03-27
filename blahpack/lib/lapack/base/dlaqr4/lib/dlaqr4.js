@@ -4,17 +4,52 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {boolean} wantt - wantt
+* @param {boolean} wantz - wantz
+* @param {NonNegativeInteger} N - N
+* @param {integer} ilo - ilo
+* @param {integer} ihi - ihi
+* @param {Float64Array} H - H
+* @param {PositiveInteger} LDH - leading dimension of `H`
+* @param {Float64Array} WR - WR
+* @param {integer} strideWR - strideWR
+* @param {Float64Array} WI - WI
+* @param {integer} strideWI - strideWI
+* @param {integer} iloz - iloz
+* @param {integer} ihiz - ihiz
+* @param {Float64Array} Z - Z
+* @param {PositiveInteger} LDZ - leading dimension of `Z`
+* @param {Float64Array} WORK - WORK
+* @param {integer} strideWORK - strideWORK
+* @param {integer} lwork - lwork
+* @returns {*} result
 */
-function dlaqr4() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlaqr4( wantt, wantz, N, ilo, ihi, H, LDH, WR, strideWR, WI, strideWI, iloz, ihiz, Z, LDZ, WORK, strideWORK, lwork ) { // eslint-disable-line max-len, max-params
+	var owork;
+	var owi;
+	var owr;
+	var sh1;
+	var sh2;
+	var sz1;
+	var sz2;
+
+	sh1 = 1;
+	sh2 = LDH;
+	sz1 = 1;
+	sz2 = LDZ;
+	owr = stride2offset( N, strideWR );
+	owi = stride2offset( N, strideWI );
+	owork = stride2offset( N, strideWORK );
+	return base( wantt, wantz, N, ilo, ihi, H, sh1, sh2, 0, WR, strideWR, owr, WI, strideWI, owi, iloz, ihiz, Z, sz1, sz2, 0, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }
 
 

@@ -4,17 +4,30 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {NonNegativeInteger} N - N
+* @param {Float64Array} x - x
+* @param {integer} strideX - strideX
+* @param {Float64Array} y - y
+* @param {integer} strideY - strideY
+* @param {Float64Array} ssmin - ssmin
+* @returns {*} result
 */
-function dlapll() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dlapll( N, x, strideX, y, strideY, ssmin ) {
+	var ox;
+	var oy;
+
+	ox = stride2offset( N, strideX );
+	oy = stride2offset( N, strideY );
+	return base( N, x, strideX, ox, y, strideY, oy, ssmin );
 }
 
 

@@ -48,11 +48,25 @@ tr.prefix-hidden { display: none !important; }
 <h1>Blahpack Translation Progress</h1>
 <p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated 2026-03-27</p>
 <div class="stats">
-<div class="stat green"><div class="val">437/2204</div><div class="lbl">Implemented</div></div>
-<div class="stat"><div class="val">5126</div><div class="lbl">Tests</div></div>
-<div class="stat" id="statBlas"><div class="val">73/151</div><div class="lbl">BLAS</div></div>
+<div class="stat green"><div class="val">438/2204</div><div class="lbl">Implemented</div></div>
+<div class="stat"><div class="val">5147</div><div class="lbl">Tests</div></div>
+<div class="stat" id="statBlas"><div class="val">74/151</div><div class="lbl">BLAS</div></div>
 <div class="stat" id="statLapack"><div class="val">364/2053</div><div class="lbl">LAPACK</div></div>
 </div>
+<section>
+<h2>Conformance Checks <span class="count">2/6 passing</span></h2>
+<table>
+<thead><tr><th>Check</th><th style="text-align:center">Result</th></tr></thead>
+<tbody>
+<tr><td>TODO @param remnants</td><td class="tests"><span class="badge done">PASS</span></td></tr>
+<tr><td>Stub wrapper files</td><td class="tests"><span class="badge" style="background:#fecaca;color:#991b1b;">212</span></td></tr>
+<tr><td>Single-char flags in @param</td><td class="tests"><span class="badge" style="background:#fecaca;color:#991b1b;">67</span></td></tr>
+<tr><td>d-prefix conjugate-transpose</td><td class="tests"><span class="badge done">PASS</span></td></tr>
+<tr><td>Test files with assert.fail</td><td class="tests"><span class="badge stub">9</span></td></tr>
+<tr><td>ndarray.js without string validation</td><td class="tests"><span class="badge stub">128</span></td></tr>
+</tbody>
+</table>
+</section>
 <div class="controls">
 <label class="toggle"><input type="checkbox" id="showAll">Show unimplemented</label>
 <div class="prefix-filter">
@@ -68,7 +82,7 @@ tr.prefix-hidden { display: none !important; }
 </div>
 </div>
 <section>
-<h2>BLAS <span class="count">73/151</span></h2>
+<h2>BLAS <span class="count">74/151</span></h2>
 <table>
 <thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>
 <tbody>
@@ -209,7 +223,7 @@ tr.prefix-hidden { display: none !important; }
 <tr><td class="name">zhpmv</td><td><span class="badge done">done</span></td><td class="tests">15</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform the Hermitian packed matrix-vector operation y := alpha*A*x + beta*y.</td></tr>
 <tr><td class="name">zhpr</td><td><span class="badge done">done</span></td><td class="tests">13</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform the Hermitian packed rank-1 update A := alpha*x*x**H + A.</td></tr>
 <tr><td class="name">zhpr2</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform the Hermitian packed rank-2 update A := alpha*x*y**H + conj(alpha)*y*x**H + A.</td></tr>
-<tr class="unimpl"><td class="name">zrotg</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
+<tr><td class="name">zrotg</td><td><span class="badge done">done</span></td><td class="tests">21</td><td class="cov"><span class="cov-warn">90%</span></td><td class="cov"><span class="cov-good">93%</span></td><td class="desc">Construct a Givens plane rotation with real cosine and complex sine.</td></tr>
 <tr><td class="name">zscal</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Scale a complex double-precision vector by a complex constant</td></tr>
 <tr><td class="name">zswap</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Interchange two complex double-precision vectors.</td></tr>
 <tr><td class="name">zsymm</td><td><span class="badge done">done</span></td><td class="tests">13</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">98%</span></td><td class="desc">Perform one of the symmetric matrix-matrix operations C := alpha*A*B + beta*C or C := alpha*B*A + beta*C.</td></tr>
@@ -1946,7 +1960,7 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">zhetrs_aa_2stage</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhetrs_rook</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhfrk</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">zhgeqz</td><td><span class="badge done">done</span></td><td class="tests">13</td><td class="cov"><span class="cov-warn">82%</span></td><td class="cov"><span class="cov-warn">79%</span></td><td class="desc">Implement the single-shift QZ method for computing generalized eigenvalues of a complex matrix pair in Hessenberg-triangular form.</td></tr>
+<tr><td class="name">zhgeqz</td><td><span class="badge done">done</span></td><td class="tests">13</td><td class="cov"><span class="cov-warn">83%</span></td><td class="cov"><span class="cov-warn">79%</span></td><td class="desc">Implement the single-shift QZ method for computing generalized eigenvalues of a complex matrix pair in Hessenberg-triangular form.</td></tr>
 <tr class="unimpl"><td class="name">zhpcon</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhpev</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zhpevd</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -2075,7 +2089,7 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">zlarnv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlarrv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlarscl2</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">zlartg</td><td><span class="badge done">done</span></td><td class="tests">22</td><td class="cov"><span class="cov-good">95%</span></td><td class="cov"><span class="cov-good">91%</span></td><td class="desc">Generate a complex Givens plane rotation</td></tr>
+<tr><td class="name">zlartg</td><td><span class="badge done">done</span></td><td class="tests">22</td><td class="cov"><span class="cov-good">96%</span></td><td class="cov"><span class="cov-good">91%</span></td><td class="desc">Generate a complex Givens plane rotation</td></tr>
 <tr class="unimpl"><td class="name">zlartv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlarz</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">zlarzb</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
@@ -2209,7 +2223,7 @@ tr.prefix-hidden { display: none !important; }
 <tr class="unimpl"><td class="name">ztftri</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">ztfttp</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">ztfttr</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr><td class="name">ztgevc</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-warn">84%</span></td><td class="cov"><span class="cov-bad">72%</span></td><td class="desc">Compute eigenvectors of a pair of complex upper triangular matrices</td></tr>
+<tr><td class="name">ztgevc</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-warn">85%</span></td><td class="cov"><span class="cov-bad">72%</span></td><td class="desc">Compute eigenvectors of a pair of complex upper triangular matrices</td></tr>
 <tr class="unimpl"><td class="name">ztgex2</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">ztgexc</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr class="unimpl"><td class="name">ztgsen</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>

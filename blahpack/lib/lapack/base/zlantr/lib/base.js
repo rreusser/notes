@@ -44,7 +44,7 @@ var cmplx = require( '../../../../cmplx.js' );
 * @param {integer} strideA1 - first dimension stride (in complex elements)
 * @param {integer} strideA2 - second dimension stride (in complex elements)
 * @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
-* @param {Float64Array} WORK - workspace (length >= M for 'I' norm, real)
+* @param {Float64Array} WORK - workspace (length >= M for `'inf-norm'`, real)
 * @param {integer} strideWORK - stride for WORK
 * @param {NonNegativeInteger} offsetWORK - starting index for WORK
 * @returns {number} norm value

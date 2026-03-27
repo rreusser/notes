@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -59,9 +60,21 @@ var base = require( './base.js' );
  * @param {Int32Array} IWORK - integer workspace of length N
  * @param {integer} strideIWORK - stride for IWORK
  * @param {NonNegativeInteger} offsetIWORK - starting index for IWORK
+ * @throws {TypeError} Third argument must be a valid jobq value
+ * @throws {TypeError} Second argument must be a valid jobv value
+ * @throws {TypeError} First argument must be a valid jobu value
  * @returns {integer} info - 0 for success, 1 if Jacobi procedure failed to converge
  */
 function dggsvd3( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
+	if ( jobu !== 'none' && jobu !== 'compute' && jobu !== 'initialize' && jobu !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid jobu value. Value: `%s`.', jobu ) );
+	}
+	if ( jobv !== 'none' && jobv !== 'compute' && jobv !== 'initialize' && jobv !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid jobv value. Value: `%s`.', jobv ) );
+	}
+	if ( jobq !== 'none' && jobq !== 'compute' && jobq !== 'initialize' && jobq !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid jobq value. Value: `%s`.', jobq ) );
+	}
 	return base( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK ); // eslint-disable-line max-len
 }
 

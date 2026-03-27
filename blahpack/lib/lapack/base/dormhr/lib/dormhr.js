@@ -4,17 +4,47 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {string} side - side
+* @param {string} trans - trans
+* @param {NonNegativeInteger} M - M
+* @param {NonNegativeInteger} N - N
+* @param {integer} ilo - ilo
+* @param {integer} ihi - ihi
+* @param {Float64Array} A - A
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Float64Array} TAU - TAU
+* @param {integer} strideTAU - strideTAU
+* @param {Float64Array} C - C
+* @param {PositiveInteger} LDC - leading dimension of `C`
+* @param {Float64Array} WORK - WORK
+* @param {integer} strideWORK - strideWORK
+* @param {integer} lwork - lwork
+* @returns {*} result
 */
-function dormhr() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function dormhr( side, trans, M, N, ilo, ihi, A, LDA, TAU, strideTAU, C, LDC, WORK, strideWORK, lwork ) { // eslint-disable-line max-len, max-params
+	var owork;
+	var otau;
+	var sa1;
+	var sa2;
+	var sc1;
+	var sc2;
+
+	sa1 = 1;
+	sa2 = LDA;
+	sc1 = 1;
+	sc2 = LDC;
+	otau = stride2offset( N, strideTAU );
+	owork = stride2offset( N, strideWORK );
+	return base( side, trans, M, N, ilo, ihi, A, sa1, sa2, 0, TAU, strideTAU, otau, C, sc1, sc2, 0, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }
 
 

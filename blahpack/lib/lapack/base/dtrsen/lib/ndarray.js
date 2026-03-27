@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -50,9 +51,17 @@ var base = require( './base.js' );
  * @param {integer} strideIWORK - stride for IWORK
  * @param {NonNegativeInteger} offsetIWORK - starting index for IWORK
  * @param {integer} liwork - length of IWORK (-1 for query)
+ * @throws {TypeError} Second argument must be a valid compq value
+ * @throws {TypeError} First argument must be a valid job value
  * @returns {integer} info (0 = success, 1 = reordering failed)
  */
 function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, s, sep, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork ) { // eslint-disable-line max-len, max-params
+	if ( job !== 'none' && job !== 'eigenvalues' && job !== 'subspace' && job !== 'both' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid job value. Value: `%s`.', job ) );
+	}
+	if ( compq !== 'none' && compq !== 'initialize' && compq !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid compq value. Value: `%s`.', compq ) );
+	}
 	return base( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, s, sep, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork ); // eslint-disable-line max-len
 }
 

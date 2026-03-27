@@ -4,17 +4,25 @@
 
 // MODULES //
 
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* TODO: Add BLAS/LAPACK-style API wrapper (order/layout param, LDA instead of strides).
+* @license Apache-2.0
+*
+* @param {NonNegativeInteger} N - N
+* @param {Float64Array} x - x
+* @param {integer} strideX - strideX
+* @returns {*} result
 */
-function idamax() {
-	// TODO: implement BLAS/LAPACK-style API
-	throw new Error( 'not yet implemented' );
+function idamax( N, x, strideX ) {
+	var ox;
+
+	ox = stride2offset( N, strideX );
+	return base( N, x, strideX, ox );
 }
 
 
