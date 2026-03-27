@@ -44,6 +44,14 @@ var KEXSH = 10;
 var SAFMIN = dlamch( 'safe-minimum' );
 var ULP = dlamch( 'precision' );
 
+// Scratch Complex128Array buffers for zladiv calls:
+var ZLADIV_X = new Complex128Array( 1 );
+var ZLADIV_Y = new Complex128Array( 1 );
+var ZLADIV_OUT = new Complex128Array( 1 );
+var ZLADIV_Xv = reinterpret( ZLADIV_X, 0 );
+var ZLADIV_Yv = reinterpret( ZLADIV_Y, 0 );
+var ZLADIV_OUTv = reinterpret( ZLADIV_OUT, 0 );
+
 
 // FUNCTIONS //
 
@@ -226,8 +234,6 @@ function zlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, W, s
 	var hkji;
 	var hk1jr;
 	var hk1ji;
-	var udiv;
-	var uin;
 	var i;
 	var i1;
 	var i2;
@@ -419,14 +425,12 @@ function zlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, W, s
 							yi = -yi;
 						}
 					}
-					udiv = new Float64Array( 2 );
-					uin = new Float64Array( 2 );
-					uin[ 0 ] = ur;
-					uin[ 1 ] = ui;
-					scratch[ 0 ] = xr + yr;
-					scratch[ 1 ] = xi + yi;
-					zladiv( uin, scratch, udiv );
-					cmul( ur, ui, udiv[ 0 ], udiv[ 1 ], scratch );
+					ZLADIV_Xv[ 0 ] = ur;
+					ZLADIV_Xv[ 1 ] = ui;
+					ZLADIV_Yv[ 0 ] = xr + yr;
+					ZLADIV_Yv[ 1 ] = xi + yi;
+					zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+					cmul( ur, ui, ZLADIV_OUTv[ 0 ], ZLADIV_OUTv[ 1 ], scratch );
 					tr -= scratch[ 0 ];
 					ti -= scratch[ 1 ];
 				}

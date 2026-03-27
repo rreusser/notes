@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var real = require( '@stdlib/complex/float64/real' );
@@ -50,10 +51,13 @@ var TWO = 2.0;
 var SMLNUM = dlamch( 'safe-minimum' ) / dlamch( 'epsilon' );
 var BIGNUM = ONE / SMLNUM;
 
-// Scratch arrays for zladiv
-var ZLADIV_X = new Float64Array( 2 );
-var ZLADIV_Y = new Float64Array( 2 );
-var ZLADIV_OUT = new Float64Array( 2 );
+// Scratch Complex128Array buffers for zladiv calls:
+var ZLADIV_X = new Complex128Array( 1 );
+var ZLADIV_Y = new Complex128Array( 1 );
+var ZLADIV_OUT = new Complex128Array( 1 );
+var ZLADIV_Xv = reinterpret( ZLADIV_X, 0 );
+var ZLADIV_Yv = reinterpret( ZLADIV_Y, 0 );
+var ZLADIV_OUTv = reinterpret( ZLADIV_OUT, 0 );
 
 
 // FUNCTIONS //
@@ -383,13 +387,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 							xmax *= rec;
 						}
 					}
-					ZLADIV_X[ 0 ] = xv[ jr ];
-					ZLADIV_X[ 1 ] = xv[ ji ];
-					ZLADIV_Y[ 0 ] = tjjs_re;
-					ZLADIV_Y[ 1 ] = tjjs_im;
-					zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-					xv[ jr ] = ZLADIV_OUT[ 0 ];
-					xv[ ji ] = ZLADIV_OUT[ 1 ];
+					ZLADIV_Xv[ 0 ] = xv[ jr ];
+					ZLADIV_Xv[ 1 ] = xv[ ji ];
+					ZLADIV_Yv[ 0 ] = tjjs_re;
+					ZLADIV_Yv[ 1 ] = tjjs_im;
+					zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+					xv[ jr ] = ZLADIV_OUTv[ 0 ];
+					xv[ ji ] = ZLADIV_OUTv[ 1 ];
 					xj = cabs1( xv, jr );
 				} else if ( tjj > ZERO ) {
 					if ( xj > tjj * BIGNUM ) {
@@ -401,13 +405,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 						scale[ 0 ] *= rec;
 						xmax *= rec;
 					}
-					ZLADIV_X[ 0 ] = xv[ jr ];
-					ZLADIV_X[ 1 ] = xv[ ji ];
-					ZLADIV_Y[ 0 ] = tjjs_re;
-					ZLADIV_Y[ 1 ] = tjjs_im;
-					zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-					xv[ jr ] = ZLADIV_OUT[ 0 ];
-					xv[ ji ] = ZLADIV_OUT[ 1 ];
+					ZLADIV_Xv[ 0 ] = xv[ jr ];
+					ZLADIV_Xv[ 1 ] = xv[ ji ];
+					ZLADIV_Yv[ 0 ] = tjjs_re;
+					ZLADIV_Yv[ 1 ] = tjjs_im;
+					zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+					xv[ jr ] = ZLADIV_OUTv[ 0 ];
+					xv[ ji ] = ZLADIV_OUTv[ 1 ];
 					xj = cabs1( xv, jr );
 				} else {
 					// Singular: set x(1:n)=0, x(j)=1, scale=0
@@ -474,13 +478,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 					tjj = Math.abs( tjjs_re ) + Math.abs( tjjs_im );
 					if ( tjj > ONE ) {
 						rec = Math.min( ONE, rec * tjj );
-						ZLADIV_X[ 0 ] = uscal_re;
-						ZLADIV_X[ 1 ] = uscal_im;
-						ZLADIV_Y[ 0 ] = tjjs_re;
-						ZLADIV_Y[ 1 ] = tjjs_im;
-						zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-						uscal_re = ZLADIV_OUT[ 0 ];
-						uscal_im = ZLADIV_OUT[ 1 ];
+						ZLADIV_Xv[ 0 ] = uscal_re;
+						ZLADIV_Xv[ 1 ] = uscal_im;
+						ZLADIV_Yv[ 0 ] = tjjs_re;
+						ZLADIV_Yv[ 1 ] = tjjs_im;
+						zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+						uscal_re = ZLADIV_OUTv[ 0 ];
+						uscal_im = ZLADIV_OUTv[ 1 ];
 					}
 					if ( rec < ONE ) {
 						zdscal( N, rec, x, strideX, offsetX );
@@ -569,13 +573,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 								xmax *= rec;
 							}
 						}
-						ZLADIV_X[ 0 ] = xv[ jr ];
-						ZLADIV_X[ 1 ] = xv[ ji ];
-						ZLADIV_Y[ 0 ] = tjjs_re;
-						ZLADIV_Y[ 1 ] = tjjs_im;
-						zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-						xv[ jr ] = ZLADIV_OUT[ 0 ];
-						xv[ ji ] = ZLADIV_OUT[ 1 ];
+						ZLADIV_Xv[ 0 ] = xv[ jr ];
+						ZLADIV_Xv[ 1 ] = xv[ ji ];
+						ZLADIV_Yv[ 0 ] = tjjs_re;
+						ZLADIV_Yv[ 1 ] = tjjs_im;
+						zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+						xv[ jr ] = ZLADIV_OUTv[ 0 ];
+						xv[ ji ] = ZLADIV_OUTv[ 1 ];
 					} else if ( tjj > ZERO ) {
 						if ( xj > tjj * BIGNUM ) {
 							rec = ( tjj * BIGNUM ) / xj;
@@ -583,13 +587,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 							scale[ 0 ] *= rec;
 							xmax *= rec;
 						}
-						ZLADIV_X[ 0 ] = xv[ jr ];
-						ZLADIV_X[ 1 ] = xv[ ji ];
-						ZLADIV_Y[ 0 ] = tjjs_re;
-						ZLADIV_Y[ 1 ] = tjjs_im;
-						zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-						xv[ jr ] = ZLADIV_OUT[ 0 ];
-						xv[ ji ] = ZLADIV_OUT[ 1 ];
+						ZLADIV_Xv[ 0 ] = xv[ jr ];
+						ZLADIV_Xv[ 1 ] = xv[ ji ];
+						ZLADIV_Yv[ 0 ] = tjjs_re;
+						ZLADIV_Yv[ 1 ] = tjjs_im;
+						zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+						xv[ jr ] = ZLADIV_OUTv[ 0 ];
+						xv[ ji ] = ZLADIV_OUTv[ 1 ];
 					} else {
 						for ( i = 0; i < N; i++ ) {
 							xv[ ox + i * sx ] = ZERO;
@@ -602,13 +606,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 					}
 				} else {
 					// x(j) = x(j)/A(j,j) - CSUMJ
-					ZLADIV_X[ 0 ] = xv[ jr ];
-					ZLADIV_X[ 1 ] = xv[ ji ];
-					ZLADIV_Y[ 0 ] = tjjs_re;
-					ZLADIV_Y[ 1 ] = tjjs_im;
-					zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-					xv[ jr ] = ZLADIV_OUT[ 0 ] - csumj_re;
-					xv[ ji ] = ZLADIV_OUT[ 1 ] - csumj_im;
+					ZLADIV_Xv[ 0 ] = xv[ jr ];
+					ZLADIV_Xv[ 1 ] = xv[ ji ];
+					ZLADIV_Yv[ 0 ] = tjjs_re;
+					ZLADIV_Yv[ 1 ] = tjjs_im;
+					zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+					xv[ jr ] = ZLADIV_OUTv[ 0 ] - csumj_re;
+					xv[ ji ] = ZLADIV_OUTv[ 1 ] - csumj_im;
 				}
 				xmax = Math.max( xmax, cabs1( xv, jr ) );
 			}
@@ -635,13 +639,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 					tjj = Math.abs( tjjs_re ) + Math.abs( tjjs_im );
 					if ( tjj > ONE ) {
 						rec = Math.min( ONE, rec * tjj );
-						ZLADIV_X[ 0 ] = uscal_re;
-						ZLADIV_X[ 1 ] = uscal_im;
-						ZLADIV_Y[ 0 ] = tjjs_re;
-						ZLADIV_Y[ 1 ] = tjjs_im;
-						zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-						uscal_re = ZLADIV_OUT[ 0 ];
-						uscal_im = ZLADIV_OUT[ 1 ];
+						ZLADIV_Xv[ 0 ] = uscal_re;
+						ZLADIV_Xv[ 1 ] = uscal_im;
+						ZLADIV_Yv[ 0 ] = tjjs_re;
+						ZLADIV_Yv[ 1 ] = tjjs_im;
+						zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+						uscal_re = ZLADIV_OUTv[ 0 ];
+						uscal_im = ZLADIV_OUTv[ 1 ];
 					}
 					if ( rec < ONE ) {
 						zdscal( N, rec, x, strideX, offsetX );
@@ -727,13 +731,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 								xmax *= rec;
 							}
 						}
-						ZLADIV_X[ 0 ] = xv[ jr ];
-						ZLADIV_X[ 1 ] = xv[ ji ];
-						ZLADIV_Y[ 0 ] = tjjs_re;
-						ZLADIV_Y[ 1 ] = tjjs_im;
-						zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-						xv[ jr ] = ZLADIV_OUT[ 0 ];
-						xv[ ji ] = ZLADIV_OUT[ 1 ];
+						ZLADIV_Xv[ 0 ] = xv[ jr ];
+						ZLADIV_Xv[ 1 ] = xv[ ji ];
+						ZLADIV_Yv[ 0 ] = tjjs_re;
+						ZLADIV_Yv[ 1 ] = tjjs_im;
+						zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+						xv[ jr ] = ZLADIV_OUTv[ 0 ];
+						xv[ ji ] = ZLADIV_OUTv[ 1 ];
 					} else if ( tjj > ZERO ) {
 						if ( xj > tjj * BIGNUM ) {
 							rec = ( tjj * BIGNUM ) / xj;
@@ -741,13 +745,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 							scale[ 0 ] *= rec;
 							xmax *= rec;
 						}
-						ZLADIV_X[ 0 ] = xv[ jr ];
-						ZLADIV_X[ 1 ] = xv[ ji ];
-						ZLADIV_Y[ 0 ] = tjjs_re;
-						ZLADIV_Y[ 1 ] = tjjs_im;
-						zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-						xv[ jr ] = ZLADIV_OUT[ 0 ];
-						xv[ ji ] = ZLADIV_OUT[ 1 ];
+						ZLADIV_Xv[ 0 ] = xv[ jr ];
+						ZLADIV_Xv[ 1 ] = xv[ ji ];
+						ZLADIV_Yv[ 0 ] = tjjs_re;
+						ZLADIV_Yv[ 1 ] = tjjs_im;
+						zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+						xv[ jr ] = ZLADIV_OUTv[ 0 ];
+						xv[ ji ] = ZLADIV_OUTv[ 1 ];
 					} else {
 						for ( i = 0; i < N; i++ ) {
 							xv[ ox + i * sx ] = ZERO;
@@ -759,13 +763,13 @@ function zlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 						xmax = ZERO;
 					}
 				} else {
-					ZLADIV_X[ 0 ] = xv[ jr ];
-					ZLADIV_X[ 1 ] = xv[ ji ];
-					ZLADIV_Y[ 0 ] = tjjs_re;
-					ZLADIV_Y[ 1 ] = tjjs_im;
-					zladiv( ZLADIV_X, ZLADIV_Y, ZLADIV_OUT );
-					xv[ jr ] = ZLADIV_OUT[ 0 ] - csumj_re;
-					xv[ ji ] = ZLADIV_OUT[ 1 ] - csumj_im;
+					ZLADIV_Xv[ 0 ] = xv[ jr ];
+					ZLADIV_Xv[ 1 ] = xv[ ji ];
+					ZLADIV_Yv[ 0 ] = tjjs_re;
+					ZLADIV_Yv[ 1 ] = tjjs_im;
+					zladiv( ZLADIV_X, 0, ZLADIV_Y, 0, ZLADIV_OUT, 0 );
+					xv[ jr ] = ZLADIV_OUTv[ 0 ] - csumj_re;
+					xv[ ji ] = ZLADIV_OUTv[ 1 ] - csumj_im;
 				}
 				xmax = Math.max( xmax, cabs1( xv, jr ) );
 			}
