@@ -10,25 +10,35 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves a complex banded system of linear equations A*X = B using LU factorization
-*
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} kl - kl
-* @param {integer} ku - ku
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} AB - input matrix
-* @param {integer} strideAB1 - stride of the first dimension of `AB`
-* @param {integer} strideAB2 - stride of the second dimension of `AB`
-* @param {NonNegativeInteger} offsetAB - starting index for `AB`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {Float64Array} B - output matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @returns {integer} status code (0 = success)
-*/
+ * Solves a complex system of linear equations `A * X = B` for a banded matrix.
+ *
+ * A is an N-by-N band matrix with KL subdiagonals and KU superdiagonals.
+ * Uses the LU factorization computed by zgbtrf.
+ *
+ * The band matrix A is stored in an array AB with 2*KL+KU+1 rows and N
+ * columns. The first KL rows are reserved for fill-in during factorization.
+ *
+ * On exit, AB contains the LU factors and IPIV contains the (0-based)
+ * pivot indices. B is overwritten with the solution matrix X.
+ *
+ *
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {NonNegativeInteger} kl - number of subdiagonals
+ * @param {NonNegativeInteger} ku - number of superdiagonals
+ * @param {NonNegativeInteger} nrhs - number of right-hand sides (columns of B)
+ * @param {Complex128Array} AB - band matrix in LAPACK band storage (2*KL+KU+1 by N)
+ * @param {integer} strideAB1 - stride of the first dimension of AB
+ * @param {integer} strideAB2 - stride of the second dimension of AB
+ * @param {NonNegativeInteger} offsetAB - starting index for AB
+ * @param {Int32Array} IPIV - pivot index array of length N (output, 0-based)
+ * @param {integer} strideIPIV - stride for IPIV
+ * @param {NonNegativeInteger} offsetIPIV - starting index for IPIV
+ * @param {Complex128Array} B - right-hand side matrix (N by NRHS)
+ * @param {integer} strideB1 - stride of the first dimension of B
+ * @param {integer} strideB2 - stride of the second dimension of B
+ * @param {NonNegativeInteger} offsetB - starting index for B
+ * @returns {integer} info - 0 if successful, >0 if U(i,i) is zero (1-based index)
+ */
 function zgbsv( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
 	return base( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 }

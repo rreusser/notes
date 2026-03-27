@@ -31,21 +31,21 @@ var base = require( './base.js' );
 /**
 * Computes an approximation TAU to the smallest eigenvalue using values of d.
 *
-* @param {integer} i0 - TODO
-* @param {integer} n0 - TODO
+* @param {integer} i0 - first index (1-based)
+* @param {integer} n0 - last index (1-based)
 * @param {Float64Array} z - input array
 * @param {integer} stride - `z` stride length
-* @param {integer} pp - TODO
-* @param {integer} n0in - TODO
-* @param {number} dmin - TODO
-* @param {number} dmin1 - TODO
-* @param {number} dmin2 - TODO
-* @param {number} dn - TODO
-* @param {number} dn1 - TODO
-* @param {number} dn2 - TODO
-* @param {number} tau - TODO
-* @param {integer} ttype - TODO
-* @param {number} g - TODO
+* @param {integer} pp - ping-pong flag (0 or 1)
+* @param {integer} n0in - value of n0 at start of eigtest
+* @param {number} dmin - minimum value of d
+* @param {number} dmin1 - minimum value of d, excluding d(n0)
+* @param {number} dmin2 - minimum value of d, excluding d(n0) and d(n0-1)
+* @param {number} dn - d(n0)
+* @param {number} dn1 - d(n0-1)
+* @param {number} dn2 - d(n0-2)
+* @param {number} tau - (input, unused — kept for API compat)
+* @param {integer} ttype - shift type from previous call
+* @param {number} g - damping parameter preserved between calls
 * @returns {*} result
 */
 function dlasq4( i0, n0, z, stride, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g ) {

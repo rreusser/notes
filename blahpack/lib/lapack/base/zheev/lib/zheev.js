@@ -34,16 +34,16 @@ var base = require( './base.js' );
 * Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} jobz - TODO
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} w - input array
 * @param {integer} strideW - `w` stride length
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
+* @param {integer} lwork - length of WORK array (in complex elements)
 * @param {Float64Array} RWORK - input array
 * @param {integer} strideRWORK - `RWORK` stride length
 * @throws {TypeError} first argument must be a valid order

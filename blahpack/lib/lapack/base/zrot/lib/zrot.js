@@ -31,13 +31,13 @@ var base = require( './base.js' );
 /**
 * Applies a plane rotation, where the cos (C) is real and the sin (S) is.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of complex elements
 * @param {Complex128Array} cx - input array
 * @param {integer} strideX - `cx` stride length
 * @param {Complex128Array} cy - input array
 * @param {integer} strideY - `cy` stride length
-* @param {number} c - TODO
-* @param {Float64Array} s - TODO
+* @param {number} c - cosine of rotation (real)
+* @param {Float64Array} s - sine of rotation (complex, 2-element array [re, im])
 * @returns {*} result
 */
 function zrot( N, cx, strideX, cy, strideY, c, s ) {

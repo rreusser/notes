@@ -10,33 +10,38 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves a 1x1 or 2x2 linear system with scaling to prevent overflow
-*
-* @param {boolean} ltrans - ltrans
-* @param {integer} na - na
-* @param {integer} nw - nw
-* @param {number} smin - smin
-* @param {number} ca - ca
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {number} d1 - d1
-* @param {number} d2 - d2
-* @param {Float64Array} B - input matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {number} wr - wr
-* @param {number} wi - wi
-* @param {Float64Array} X - output matrix
-* @param {integer} strideX1 - stride of the first dimension of `X`
-* @param {integer} strideX2 - stride of the second dimension of `X`
-* @param {NonNegativeInteger} offsetX - starting index for `X`
-* @param {number} scale - scale
-* @param {number} xnorm - xnorm
-* @returns {integer} status code (0 = success)
-*/
+ * Solves a 1-by-1 or 2-by-2 linear system of the form:
+ *
+ *   (ca*A    - w*D) * X = scale * B  (if ltrans = false)
+ *   (ca*A**T - w*D) * X = scale * B  (if ltrans = true)
+ *
+ * where A is NA-by-NA (NA = 1 or 2), w = (wr, wi), D is an NA-by-NA
+ * diagonal matrix, and scale is chosen (0 < scale <= 1) to prevent overflow.
+ *
+ *
+ * @param {boolean} ltrans - if true, solve transposed system
+ * @param {integer} na - order of A (1 or 2)
+ * @param {integer} nw - 1 for real, 2 for complex system
+ * @param {number} smin - lower bound on singular values; clamped to machine threshold
+ * @param {number} ca - scalar multiplier for A
+ * @param {Float64Array} A - matrix A
+ * @param {integer} strideA1 - first dimension stride of A
+ * @param {integer} strideA2 - second dimension stride of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {number} d1 - D(1,1) diagonal element
+ * @param {number} d2 - D(2,2) diagonal element
+ * @param {Float64Array} B - right-hand side matrix
+ * @param {integer} strideB1 - first dimension stride of B
+ * @param {integer} strideB2 - second dimension stride of B
+ * @param {NonNegativeInteger} offsetB - starting index for B
+ * @param {number} wr - real part of the scalar w
+ * @param {number} wi - imaginary part of the scalar w
+ * @param {Float64Array} X - output matrix (solution)
+ * @param {integer} strideX1 - first dimension stride of X
+ * @param {integer} strideX2 - second dimension stride of X
+ * @param {NonNegativeInteger} offsetX - starting index for X
+ * @returns {Object} result with properties: info (0=exact, 1=perturbed), scale, xnorm
+ */
 function dlaln2( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d2, B, strideB1, strideB2, offsetB, wr, wi, X, strideX1, strideX2, offsetX, scale, xnorm ) { // eslint-disable-line max-len, max-params
 	return base( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d2, B, strideB1, strideB2, offsetB, wr, wi, X, strideX1, strideX2, offsetX, scale, xnorm ); // eslint-disable-line max-len
 }

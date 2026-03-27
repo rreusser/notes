@@ -1,20 +1,45 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Solves overdetermined or underdetermined real linear systems involving an.
+ * M-by-N matrix A, or its transpose, using a QR or LQ factorization of A.
+ *
+ * It is assumed that A has full rank.
+ *
+ * The following options are provided:
+ *
+ * 1.  If TRANS = 'N' and M >= N: find the least squares solution of an
+ *     overdetermined system, i.e., solve the least squares problem:
+ *     minimize || B - A*X ||
+ *
+ * 2.  If TRANS = 'N' and M < N: find the minimum norm solution of an
+ *     underdetermined system A * X = B.
+ *
+ * 3.  If TRANS = 'T' and M >= N: find the minimum norm solution of an
+ *     underdetermined system A^T * X = B.
+ *
+ * 4.  If TRANS = 'T' and M < N: find the least squares solution of an
+ *     overdetermined system, i.e., solve the least squares problem:
+ *     minimize || B - A^T * X ||
+ *
+ * Several right hand side vectors b and solution vectors x can be handled
+ * in a single call; they are stored as columns of the M-by-NRHS right
+ * hand side matrix B and the N-by-NRHS solution matrix X.
+ *
+ *
+ * @param {string} trans - `'no-transpose'` or `'transpose'`
+ * @param {NonNegativeInteger} M - number of rows of A
+ * @param {NonNegativeInteger} N - number of columns of A
+ * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
+ * @param {Float64Array} A - M-by-N matrix, overwritten with factorization on exit
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} B - on entry, M-by-NRHS (or N-by-NRHS) RHS matrix; on exit, solution
+ * @param {integer} strideB1 - stride of the first dimension of B
+ * @param {integer} strideB2 - stride of the second dimension of B
+ * @param {NonNegativeInteger} offsetB - starting index for B
+ * @throws {TypeError} First argument must be a valid transpose operation
+ * @returns {integer} info - 0 if successful, >0 if the i-th diagonal element of the triangular factor is zero (matrix not full rank)
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -24,6 +49,7 @@
 
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

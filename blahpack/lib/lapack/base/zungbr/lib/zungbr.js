@@ -34,10 +34,10 @@ var base = require( './base.js' );
 * Generate one of the complex unitary matrices Q or P^H determined by ZGEBRD.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} vect - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} vect - 'q' to generate Q, 'p' to generate P^H
+* @param {NonNegativeInteger} M - number of rows of the matrix Q or P^H
+* @param {NonNegativeInteger} N - number of columns of the matrix Q or P^H
+* @param {NonNegativeInteger} K - number of columns/rows in original matrix
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} TAU - input array

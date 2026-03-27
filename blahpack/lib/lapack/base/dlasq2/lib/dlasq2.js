@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Computes all the eigenvalues of the symmetric positive definite tridiagonal.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of rows and columns
 * @param {Float64Array} z - input array
 * @param {integer} stride - `z` stride length
 * @returns {*} result

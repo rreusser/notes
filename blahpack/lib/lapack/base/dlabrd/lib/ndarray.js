@@ -1,20 +1,43 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Reduces the first NB rows and columns of a real general M-by-N matrix A.
+ * to upper or lower bidiagonal form by an orthogonal transformation
+ * `Q__T*A*P`, and returns the matrices X and Y which are needed to apply
+ * the transformation to the unreduced part of A.
+ *
+ * If M >= N, A is reduced to upper bidiagonal form; if M < N, to lower
+ * bidiagonal form.
+ *
+ * This is an auxiliary routine called by DGEBRD.
+ *
+ *
+ * @param {NonNegativeInteger} M - number of rows
+ * @param {NonNegativeInteger} N - number of columns
+ * @param {integer} nb - number of leading rows and columns to reduce
+ * @param {Float64Array} A - input matrix (M-by-N, column-major)
+ * @param {integer} strideA1 - stride of the first dimension of `A`
+ * @param {integer} strideA2 - stride of the second dimension of `A`
+ * @param {NonNegativeInteger} offsetA - starting index for `A`
+ * @param {Float64Array} d - real diagonal elements (length nb)
+ * @param {integer} strideD - stride length for `d`
+ * @param {NonNegativeInteger} offsetD - starting index for `d`
+ * @param {Float64Array} e - real off-diagonal elements (length nb)
+ * @param {integer} strideE - stride length for `e`
+ * @param {NonNegativeInteger} offsetE - starting index for `e`
+ * @param {Float64Array} TAUQ - scalars for Q reflectors (length nb)
+ * @param {integer} strideTAUQ - stride length for `TAUQ`
+ * @param {NonNegativeInteger} offsetTAUQ - starting index for `TAUQ`
+ * @param {Float64Array} TAUP - scalars for P reflectors (length nb)
+ * @param {integer} strideTAUP - stride length for `TAUP`
+ * @param {NonNegativeInteger} offsetTAUP - starting index for `TAUP`
+ * @param {Float64Array} X - output matrix (M-by-NB, column-major)
+ * @param {integer} strideX1 - stride of the first dimension of `X`
+ * @param {integer} strideX2 - stride of the second dimension of `X`
+ * @param {NonNegativeInteger} offsetX - starting index for `X`
+ * @param {Float64Array} Y - output matrix (N-by-NB, column-major)
+ * @param {integer} strideY1 - stride of the first dimension of `Y`
+ * @param {integer} strideY2 - stride of the second dimension of `Y`
+ * @param {NonNegativeInteger} offsetY - starting index for `Y`
+ */
 
 /* eslint-disable max-len, max-params */
 

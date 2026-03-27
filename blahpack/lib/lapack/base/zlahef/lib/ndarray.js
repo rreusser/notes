@@ -4,32 +4,26 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Complex Hermitian indefinite panel factorization (blocked Bunch-Kaufman)
-*
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nb - nb
-* @param {integer} kb - kb
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {Float64Array} W - output matrix
-* @param {integer} strideW1 - stride of the first dimension of `W`
-* @param {integer} strideW2 - stride of the second dimension of `W`
-* @param {NonNegativeInteger} offsetW - starting index for `W`
-* @returns {integer} status code (0 = success)
-*/
+ * CABS1: |re(z)| + |im(z)|.
+ *
+ *
+ * @param {Float64Array} v - Float64 view
+ * @param {integer} idx - Float64 index of real part
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {number} sum of absolute values of real and imaginary parts
+ */
 function zlahef( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( uplo, N, nb, kb, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, W, strideW1, strideW2, offsetW ); // eslint-disable-line max-len
 }
 

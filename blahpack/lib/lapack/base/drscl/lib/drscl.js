@@ -31,8 +31,8 @@ var base = require( './base.js' );
 /**
 * Scales a vector by the reciprocal of a scalar, performing the scaling.
 *
-* @param {NonNegativeInteger} N - TODO
-* @param {number} sa - TODO
+* @param {NonNegativeInteger} N - number of elements
+* @param {number} sa - scalar divisor
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @returns {*} result

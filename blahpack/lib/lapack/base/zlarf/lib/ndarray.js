@@ -1,20 +1,29 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Apply a complex elementary reflector H to a complex M-by-N matrix C,.
+ * from either the left or the right.
+ *
+ * `H = I - tau*v*v^H`
+ *
+ * If tau = 0, then H is taken to be the unit matrix.
+ *
+ *
+ * @param {string} side - `'left'` or `'right'`
+ * @param {NonNegativeInteger} M - number of rows of C
+ * @param {NonNegativeInteger} N - number of columns of C
+ * @param {Complex128Array} v - reflector vector
+ * @param {integer} strideV - stride for v (in complex elements)
+ * @param {NonNegativeInteger} offsetV - starting index for v (in complex elements)
+ * @param {Complex128Array} tau - complex scalar
+ * @param {NonNegativeInteger} offsetTau - starting index for tau (in complex elements)
+ * @param {Complex128Array} C - matrix, modified in-place
+ * @param {integer} strideC1 - stride of the first dimension of C (complex elements)
+ * @param {integer} strideC2 - stride of the second dimension of C (complex elements)
+ * @param {NonNegativeInteger} offsetC - starting index for C (in complex elements)
+ * @param {Complex128Array} WORK - workspace
+ * @param {integer} strideWORK - stride for WORK (in complex elements)
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
+ * @throws {TypeError} First argument must be a valid operation side
+ */
 
 /* eslint-disable max-len, max-params */
 

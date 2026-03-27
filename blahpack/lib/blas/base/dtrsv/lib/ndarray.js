@@ -1,20 +1,26 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Solves one of the systems of equations:.
+ * A_x = b,  or  A__T_x = b
+ * where b is overwritten with the solution x, x is an N element vector,
+ * and A is an N by N unit or non-unit, upper or lower triangular matrix.
+ *
+ *
+ * @param {string} uplo - `'upper'` or `'lower'`
+ * @param {string} trans - `'no-transpose'` or `'transpose'`
+ * @param {string} diag - `'unit'` or `'non-unit'`
+ * @param {NonNegativeInteger} N - order of the matrix
+ * @param {Float64Array} A - triangular matrix
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} x - input/output vector (b on entry, x on exit)
+ * @param {integer} strideX - stride for x
+ * @param {NonNegativeInteger} offsetX - starting index for x
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @throws {TypeError} Second argument must be a valid transpose operation
+ * @throws {TypeError} Third argument must be a valid diagonal type
+ * @returns {Float64Array} `x`
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -26,6 +32,7 @@ var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operatio
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

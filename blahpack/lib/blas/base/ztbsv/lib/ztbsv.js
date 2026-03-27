@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Solves one of the systems of equations:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {string} trans - TODO
-* @param {string} diag - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {NonNegativeInteger} K - number of super/sub-diagonals
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} x - input array

@@ -1,20 +1,41 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Generates one of the real orthogonal matrices Q or P^T determined by DGEBRD.
+ * when reducing a real matrix A to bidiagonal form: `A = Q*B*P^T`.
+ *
+ * Q and P^T are defined as products of elementary reflectors H(i) or G(i)
+ * respectively.
+ *
+ * If VECT = 'Q', A is assumed to have been an M-by-K matrix, and Q
+ * is of order M:
+ * if M >= K, Q = H(1) H(2) ... H(K) and dorgbr returns the first N
+ * columns of Q, where M >= N >= K;
+ * if M < K, Q = H(1) H(2) ... H(M-1) and dorgbr returns Q as an
+ * M-by-M orthogonal matrix.
+ *
+ * If VECT = 'P', A is assumed to have been a K-by-N matrix, and P^T
+ * is of order N:
+ * if K < N, P^T = G(1) G(2) ... G(K) and dorgbr returns the first M
+ * rows of P^T, where N >= M >= K;
+ * if K >= N, P^T = G(1) G(2) ... G(N-1) and dorgbr returns P^T as an
+ * N-by-N orthogonal matrix.
+ *
+ *
+ * @param {string} vect - 'q' to generate Q, 'p' to generate P^T
+ * @param {NonNegativeInteger} M - number of rows of the matrix Q or P^T
+ * @param {NonNegativeInteger} N - number of columns of the matrix Q or P^T
+ * @param {NonNegativeInteger} K - number of columns/rows in original matrix
+ * @param {Float64Array} A - matrix containing reflectors from DGEBRD
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} TAU - scalar factors of reflectors
+ * @param {integer} strideTAU - stride for TAU
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU
+ * @param {Float64Array} WORK - workspace (ignored, allocated internally by dependencies)
+ * @param {integer} strideWORK - stride for WORK (ignored)
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK (ignored)
+ * @returns {integer} info - 0 if successful
+ */
 
 /* eslint-disable max-len, max-params */
 

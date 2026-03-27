@@ -33,8 +33,8 @@ var base = require( './base.js' );
 * Computes the product of a triangular matrix with its transpose.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the triangular matrix
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

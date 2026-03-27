@@ -1,20 +1,34 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Reduces a real symmetric matrix A to real symmetric tridiagonal form T.
+ * by an orthogonal similarity transformation: `Q__T*A*Q = T`.
+ *
+ * Uses the blocked algorithm: reduces NB columns at a time using dlatrd
+ * (panel factorization) and dsyr2k (trailing matrix update), then finishes
+ * the remaining block with dsytd2 (unblocked).
+ *
+ * If UPLO = 'U', the matrix Q is represented as a product of elementary
+ * reflectors `Q = H(n-1)*...*H(2)*H(1)`.
+ * If UPLO = 'L', the matrix Q is represented `as Q = H(1)*H(2)*...*H(n-1)`.
+ *
+ *
+ * @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangular part of A is stored
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {Float64Array} A - input/output symmetric matrix; on exit contains tridiagonal form and reflectors
+ * @param {integer} strideA1 - stride of the first dimension of `A`
+ * @param {integer} strideA2 - stride of the second dimension of `A`
+ * @param {NonNegativeInteger} offsetA - starting index for `A`
+ * @param {Float64Array} d - output array for the diagonal elements of T (length N)
+ * @param {integer} strideD - stride length for `d`
+ * @param {NonNegativeInteger} offsetD - starting index for `d`
+ * @param {Float64Array} e - output array for the off-diagonal elements of T (length N-1)
+ * @param {integer} strideE - stride length for `e`
+ * @param {NonNegativeInteger} offsetE - starting index for `e`
+ * @param {Float64Array} TAU - output array for the scalar factors of the reflectors (length N-1)
+ * @param {integer} strideTAU - stride length for `TAU`
+ * @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {integer} status code (0 = success)
+ */
 
 /* eslint-disable max-len, max-params */
 

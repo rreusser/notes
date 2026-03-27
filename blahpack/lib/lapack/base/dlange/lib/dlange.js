@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Computes the value of the one norm, Frobenius norm, infinity norm, or.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} norm - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} WORK - input array

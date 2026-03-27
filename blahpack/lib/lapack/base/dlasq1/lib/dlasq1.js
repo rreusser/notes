@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Computes all the singular values of a real upper bidiagonal matrix of.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of rows and columns
 * @param {Float64Array} d - input array
 * @param {integer} strideD - `d` stride length
 * @param {Float64Array} e - input array

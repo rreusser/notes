@@ -34,10 +34,10 @@ var base = require( './base.js' );
 * Generates one of the real orthogonal matrices Q or P^T determined by DGEBRD.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} vect - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} vect - 'q' to generate Q, 'p' to generate P^T
+* @param {NonNegativeInteger} M - number of rows of the matrix Q or P^T
+* @param {NonNegativeInteger} N - number of columns of the matrix Q or P^T
+* @param {NonNegativeInteger} K - number of columns/rows in original matrix
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} TAU - input array

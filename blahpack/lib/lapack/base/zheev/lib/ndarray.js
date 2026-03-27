@@ -1,20 +1,39 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian.
+ * matrix A.
+ *
+ * The eigenvalues are returned in ascending order. If eigenvectors are
+ * requested (JOBZ = 'V'), the matrix A is overwritten with the unitary
+ * eigenvector matrix.
+ *
+ * Algorithm:
+ * 1. Scale the matrix if the norm is outside safe range
+ * 2. Reduce to tridiagonal form via zhetrd
+ * 3. If JOBZ='N': compute eigenvalues only (dsterf)
+ * If JOBZ='V': generate Q via zungtr, then eigenvalues+eigenvectors (zsteqr)
+ * 4. Undo scaling on eigenvalues if needed
+ *
+ *
+ * @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
+ * @param {string} uplo - `'upper'` or `'lower'`
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {Complex128Array} A - input/output Hermitian matrix; on exit contains eigenvectors if JOBZ='V'
+ * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
+ * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
+ * @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+ * @param {Float64Array} w - output array for eigenvalues (length N), in ascending order
+ * @param {integer} strideW - stride for w
+ * @param {NonNegativeInteger} offsetW - starting index for w
+ * @param {Complex128Array} WORK - complex workspace array
+ * @param {integer} strideWORK - stride for WORK (complex elements)
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+ * @param {integer} lwork - length of WORK array (in complex elements)
+ * @param {Float64Array} RWORK - real workspace array (length >= max(1, 3*N-2))
+ * @param {integer} strideRWORK - stride for RWORK
+ * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
+ * @throws {TypeError} Second argument must be a valid matrix triangle
+ * @returns {integer} info - 0 if successful, >0 if zsteqr/dsterf did not converge
+ */
 
 /* eslint-disable max-len, max-params */
 

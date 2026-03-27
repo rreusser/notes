@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Perform Hermitian rank-2 update:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {Complex128} alpha - TODO
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangle is stored
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Complex128} alpha - complex scalar
 * @param {Complex128Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Complex128Array} y - input array

@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Computes a QR factorization with column pivoting of the M-by-N matrix A.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} offset - TODO
+* @param {NonNegativeInteger} M - total number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {NonNegativeInteger} offset - number of rows already factored
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Int32Array} JPVT - input array

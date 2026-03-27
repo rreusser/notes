@@ -4,48 +4,54 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Improves solution to a symmetric positive definite system and provides error bounds
-*
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} AF - input matrix
-* @param {integer} strideAF1 - stride of the first dimension of `AF`
-* @param {integer} strideAF2 - stride of the second dimension of `AF`
-* @param {NonNegativeInteger} offsetAF - starting index for `AF`
-* @param {Float64Array} B - input matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {Float64Array} X - input matrix
-* @param {integer} strideX1 - stride of the first dimension of `X`
-* @param {integer} strideX2 - stride of the second dimension of `X`
-* @param {NonNegativeInteger} offsetX - starting index for `X`
-* @param {Float64Array} FERR - input array
-* @param {integer} strideFERR - stride length for `FERR`
-* @param {NonNegativeInteger} offsetFERR - starting index for `FERR`
-* @param {Float64Array} BERR - input array
-* @param {integer} strideBERR - stride length for `BERR`
-* @param {NonNegativeInteger} offsetBERR - starting index for `BERR`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {Int32Array} IWORK - output array
-* @param {integer} strideIWORK - stride length for `IWORK`
-* @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
-* @returns {integer} status code (0 = success)
-*/
+ * Improves the computed solution to a system of linear equations when the
+ * coefficient matrix is symmetric positive definite, and provides error
+ * bounds and backward error estimates for the solution.
+ *
+ * Uses the Cholesky factorization computed by dpotrf. WORK (3*N) and IWORK (N)
+ * are allocated internally.
+ *
+ *
+ * @param {string} uplo - 'upper' if upper Cholesky factor stored, 'lower' if lower
+ * @param {NonNegativeInteger} N - order of matrix A
+ * @param {NonNegativeInteger} nrhs - number of right-hand side columns
+ * @param {Float64Array} A - original N-by-N symmetric matrix
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - index offset for A
+ * @param {Float64Array} AF - Cholesky-factored N-by-N matrix (from dpotrf)
+ * @param {integer} strideAF1 - stride of the first dimension of AF
+ * @param {integer} strideAF2 - stride of the second dimension of AF
+ * @param {NonNegativeInteger} offsetAF - index offset for AF
+ * @param {Float64Array} B - right-hand side matrix
+ * @param {integer} strideB1 - stride of the first dimension of B
+ * @param {integer} strideB2 - stride of the second dimension of B
+ * @param {NonNegativeInteger} offsetB - index offset for B
+ * @param {Float64Array} X - solution matrix (improved on exit)
+ * @param {integer} strideX1 - stride of the first dimension of X
+ * @param {integer} strideX2 - stride of the second dimension of X
+ * @param {NonNegativeInteger} offsetX - index offset for X
+ * @param {Float64Array} FERR - output forward error bounds (length nrhs)
+ * @param {integer} strideFERR - stride for FERR
+ * @param {NonNegativeInteger} offsetFERR - index offset for FERR
+ * @param {Float64Array} BERR - output backward error bounds (length nrhs)
+ * @param {integer} strideBERR - stride for BERR
+ * @param {NonNegativeInteger} offsetBERR - index offset for BERR
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {integer} info - 0 if successful
+ */
 function dporfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ); // eslint-disable-line max-len
 }
 

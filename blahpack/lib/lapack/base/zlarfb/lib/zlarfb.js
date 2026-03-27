@@ -33,13 +33,13 @@ var base = require( './base.js' );
 * Apply a complex block reflector H or its conjugate-transpose H^H to a.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {string} trans - TODO
-* @param {string} direct - TODO
-* @param {string} storev - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} side - `'left'` or `'right'`
+* @param {string} trans - `'no-transpose'` or `'conjugate-transpose'`
+* @param {string} direct - `'forward'` or `'backward'`
+* @param {string} storev - `'columnwise'` or `'rowwise'`
+* @param {NonNegativeInteger} M - rows of C
+* @param {NonNegativeInteger} N - columns of C
+* @param {NonNegativeInteger} K - number of elementary reflectors
 * @param {Complex128Array} V - input matrix
 * @param {PositiveInteger} LDV - leading dimension of `V`
 * @param {Complex128Array} T - input matrix

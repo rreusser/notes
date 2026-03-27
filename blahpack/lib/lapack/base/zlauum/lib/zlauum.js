@@ -33,8 +33,8 @@ var base = require( './base.js' );
 * Computes the product of a complex triangular matrix with its conjugate.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the triangular matrix
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

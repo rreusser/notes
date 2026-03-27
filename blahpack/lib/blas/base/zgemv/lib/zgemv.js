@@ -34,15 +34,15 @@ var base = require( './base.js' );
 * Perform one of the complex matrix-vector operations:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {Complex128} alpha - TODO
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {Complex128} alpha - complex scalar
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} x - input array
 * @param {integer} strideX - `x` stride length
-* @param {Complex128} beta - TODO
+* @param {Complex128} beta - complex scalar
 * @param {Complex128Array} y - input array
 * @param {integer} strideY - `y` stride length
 * @throws {TypeError} first argument must be a valid order

@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Computes the value of a matrix norm for a complex matrix.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} norm - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {NonNegativeInteger} M - rows
+* @param {NonNegativeInteger} N - columns
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} WORK - input array

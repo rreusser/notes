@@ -1,20 +1,27 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Perform one of the complex matrix-vector operations:.
+ * y := alpha_A_x + beta_y,   or   y := alpha_A**T_x + beta_y,   or
+ * y := alpha*A**H_x + beta_y
+ *
+ *
+ * @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+ * @param {NonNegativeInteger} M - number of rows of A
+ * @param {NonNegativeInteger} N - number of columns of A
+ * @param {Complex128} alpha - complex scalar
+ * @param {Complex128Array} A - complex input matrix
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+ * @param {Complex128Array} x - complex input vector
+ * @param {integer} strideX - stride for x (in complex elements)
+ * @param {NonNegativeInteger} offsetX - starting index for x (in complex elements)
+ * @param {Complex128} beta - complex scalar
+ * @param {Complex128Array} y - complex input/output vector
+ * @param {integer} strideY - stride for y (in complex elements)
+ * @param {NonNegativeInteger} offsetY - starting index for y (in complex elements)
+ * @throws {TypeError} First argument must be a valid transpose operation
+ * @returns {Complex128Array} `y`
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -24,6 +31,7 @@
 
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

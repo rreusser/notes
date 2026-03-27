@@ -1,20 +1,32 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Checks for deflation, computes a shift (TAU) and calls dqds. In case of.
+ * failure it changes shifts, and tries again until output is positive.
+ *
+ *
+ * @param {integer} i0 - first index (1-based)
+ * @param {integer} n0 - last index (1-based)
+ * @param {Float64Array} z - qd array
+ * @param {integer} stride - stride length for `z`
+ * @param {NonNegativeInteger} offset - starting index for `z`
+ * @param {integer} pp - ping-pong flag (0, 1, or 2)
+ * @param {number} dmin - minimum value of d
+ * @param {number} sigma - accumulated shift
+ * @param {number} desig - lower order part of sigma
+ * @param {number} qmax - maximum value of q
+ * @param {integer} nfail - failure counter
+ * @param {integer} iter - iteration counter
+ * @param {integer} ndiv - division counter
+ * @param {boolean} ieee - flag for IEEE arithmetic
+ * @param {integer} ttype - shift type
+ * @param {number} dmin1 - min d excluding d(n0)
+ * @param {number} dmin2 - min d excluding d(n0) and d(n0-1)
+ * @param {number} dn - d(n0)
+ * @param {number} dn1 - d(n0-1)
+ * @param {number} dn2 - d(n0-2)
+ * @param {number} g - damping parameter
+ * @param {number} tau - shift value
+ * @returns {Object} object with updated values
+ */
 
 /* eslint-disable max-len, max-params */
 

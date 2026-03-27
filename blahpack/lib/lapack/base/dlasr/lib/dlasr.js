@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Applies a sequence of real plane rotations to a real general rectangular matrix.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {string} pivot - TODO
-* @param {string} direct - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} side - `'left'` or `'right'`
+* @param {string} pivot - `'variable'`, `'top'`, or `'bottom'`
+* @param {string} direct - `'forward'` or `'backward'`
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
 * @param {Float64Array} c - input array
 * @param {integer} strideC - `c` stride length
 * @param {Float64Array} s - input array

@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} compz - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} compz - specifies whether eigenvectors are computed
+* @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} d - input array
 * @param {integer} strideD - `d` stride length
 * @param {Float64Array} e - input array

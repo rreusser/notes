@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Reduces NB rows and columns of a real symmetric matrix A to symmetric.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} nb - TODO
+* @param {string} uplo - specifies whether the upper or lower triangular part of A is stored (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {integer} nb - number of rows and columns to reduce
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} e - input array

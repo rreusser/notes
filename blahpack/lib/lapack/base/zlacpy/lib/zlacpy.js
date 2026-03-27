@@ -33,9 +33,9 @@ var base = require( './base.js' );
 * Copies all or part of a complex matrix `A` to another complex matrix `B`.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - specifies whether to copy the upper triangle, lower triangle, or all of `A`
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} B - input matrix

@@ -33,8 +33,8 @@ var base = require( './base.js' );
 * Computes the inverse of a real symmetric positive definite matrix using.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

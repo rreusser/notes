@@ -31,8 +31,8 @@ var base = require( './base.js' );
 /**
 * Scale a complex double-precision vector by a complex constant.
 *
-* @param {PositiveInteger} N - TODO
-* @param {Complex128} za - TODO
+* @param {PositiveInteger} N - number of complex elements
+* @param {Complex128} za - complex scalar
 * @param {Complex128Array} zx - input array
 * @param {integer} strideX - `zx` stride length
 * @returns {*} result

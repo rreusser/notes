@@ -1,20 +1,4 @@
-/**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+
 
 /* eslint-disable max-len, max-params */
 
@@ -29,24 +13,24 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* @param {TODO} N - TODO
-* @param {TODO} ilo - TODO
-* @param {TODO} ihi - TODO
-* @param {TODO} A - TODO
-* @param {TODO} strideA1 - TODO
-* @param {TODO} strideA2 - TODO
-* @param {TODO} offsetA - TODO
-* @param {TODO} TAU - TODO
-* @param {TODO} strideTAU - TODO
-* @param {TODO} offsetTAU - TODO
-* @param {TODO} WORK - TODO
-* @param {TODO} strideWORK - TODO
-* @param {TODO} offsetWORK - TODO
-* @throws {RangeError} first argument must be a nonnegative integer
-* @returns {*} result
-*/
+ * Reduces a complex general matrix to upper Hessenberg form using unblocked algorithm.
+ *
+ *
+ * @param {integer} N - order of the matrix
+ * @param {integer} ilo - lower index of the balanced matrix
+ * @param {integer} ihi - upper index of the balanced matrix
+ * @param {Complex128Array} A - input/output matrix
+ * @param {integer} strideA1 - first stride of A
+ * @param {integer} strideA2 - second stride of A
+ * @param {integer} offsetA - offset into A
+ * @param {Complex128Array} TAU - output array of scalar factors
+ * @param {integer} strideTAU - stride of TAU
+ * @param {integer} offsetTAU - offset into TAU
+ * @param {Complex128Array} WORK - workspace array
+ * @param {integer} strideWORK - stride of WORK
+ * @param {integer} offsetWORK - offset into WORK
+ * @returns {integer} info value
+ */
 function zgehd2( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );

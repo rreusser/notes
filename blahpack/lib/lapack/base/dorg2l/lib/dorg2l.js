@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Generate an M-by-N real orthogonal matrix Q with orthonormal columns,.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {NonNegativeInteger} M - number of rows of Q (M >= 0)
+* @param {NonNegativeInteger} N - number of columns of Q (0 <= N <= M)
+* @param {NonNegativeInteger} K - number of elementary reflectors (0 <= K <= N)
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} TAU - input array

@@ -1,20 +1,27 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Forms the triangular factor T of a real block reflector H of order N,.
+ * which is defined as a product of K elementary reflectors.
+ *
+ * If DIRECT = 'F', H = H(1) H(2) ... H(k) and T is upper triangular.
+ * If DIRECT = 'B', H = H(k) ... H(2) H(1) and T is lower triangular.
+ *
+ *
+ * @param {string} direct - `'forward'` or `'backward'`
+ * @param {string} storev - `'columnwise'` or `'rowwise'`
+ * @param {NonNegativeInteger} N - order of the block reflector
+ * @param {NonNegativeInteger} K - number of elementary reflectors
+ * @param {Float64Array} V - matrix of reflector vectors
+ * @param {integer} strideV1 - stride of first dim of V
+ * @param {integer} strideV2 - stride of second dim of V
+ * @param {NonNegativeInteger} offsetV - starting index for V
+ * @param {Float64Array} TAU - array of scalar factors
+ * @param {integer} strideTAU - stride for TAU
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU
+ * @param {Float64Array} T - output triangular matrix
+ * @param {integer} strideT1 - stride of first dim of T
+ * @param {integer} strideT2 - stride of second dim of T
+ * @param {NonNegativeInteger} offsetT - starting index for T
+ */
 
 /* eslint-disable max-len, max-params */
 

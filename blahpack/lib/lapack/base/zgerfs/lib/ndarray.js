@@ -4,51 +4,26 @@
 
 // MODULES //
 
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Improve solution to complex linear system with iterative refinement
-*
-* @param {string} trans - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} AF - input matrix
-* @param {integer} strideAF1 - stride of the first dimension of `AF`
-* @param {integer} strideAF2 - stride of the second dimension of `AF`
-* @param {NonNegativeInteger} offsetAF - starting index for `AF`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {Float64Array} B - input matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {Float64Array} X - input matrix
-* @param {integer} strideX1 - stride of the first dimension of `X`
-* @param {integer} strideX2 - stride of the second dimension of `X`
-* @param {NonNegativeInteger} offsetX - starting index for `X`
-* @param {Float64Array} FERR - input array
-* @param {integer} strideFERR - stride length for `FERR`
-* @param {NonNegativeInteger} offsetFERR - starting index for `FERR`
-* @param {Float64Array} BERR - input array
-* @param {integer} strideBERR - stride length for `BERR`
-* @param {NonNegativeInteger} offsetBERR - starting index for `BERR`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {Float64Array} RWORK - output array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @returns {integer} status code (0 = success)
-*/
+ * CABS1: |re(z)| + |im(z)|
+ *
+ *
+ * @param {Float64Array} v - Float64 view of complex array
+ * @param {integer} idx - index of real part in Float64 view
+ * @throws {TypeError} First argument must be a valid transpose operation
+ * @returns {number} CABS1 value
+ */
 function zgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isTransposeOperation( trans ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
 	return base( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
 }
 

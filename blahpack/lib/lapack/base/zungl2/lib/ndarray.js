@@ -1,20 +1,38 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Generate an M-by-N complex unitary matrix Q from the elementary.
+ * reflectors returned by ZGELQF (LQ factorization, unblocked algorithm).
+ *
+ * Q is defined as the product of K elementary reflectors:
+ *
+ * Q = H(K)^H ... H(2)^H H(1)^H
+ *
+ * where each H(i) has the form `H(i) = I - tau(i)*v*v^H`, and v is
+ * stored as row i of the input matrix A.
+ *
+ * ## Notes
+ *
+ * -   On entry, the i-th row of A must contain the vector which defines
+ * the elementary reflector H(i), for i = 1, 2, ..., K, as returned by
+ * ZGELQF in the first K rows of its array argument A.
+ *
+ * -   On exit, A contains the M-by-N matrix Q.
+ *
+ *
+ * @param {NonNegativeInteger} M - number of rows of Q (0 <= M <= N)
+ * @param {NonNegativeInteger} N - number of columns of Q (N >= 0)
+ * @param {NonNegativeInteger} K - number of elementary reflectors (0 <= K <= M)
+ * @param {Complex128Array} A - input/output matrix (M x N)
+ * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
+ * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
+ * @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+ * @param {Complex128Array} TAU - scalar factors of reflectors (length K)
+ * @param {integer} strideTAU - stride for TAU (complex elements)
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
+ * @param {Complex128Array} WORK - workspace (length >= M)
+ * @param {integer} strideWORK - stride for WORK (complex elements)
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+ * @returns {integer} status code (0 = success)
+ */
 
 /* eslint-disable max-len, max-params */
 

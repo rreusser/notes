@@ -34,10 +34,10 @@ var base = require( './base.js' );
 * Computes an LU factorization of a real M-by-N band matrix A using partial.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} kl - TODO
-* @param {NonNegativeInteger} ku - TODO
+* @param {NonNegativeInteger} M - number of rows of matrix A
+* @param {NonNegativeInteger} N - number of columns of matrix A
+* @param {NonNegativeInteger} kl - number of subdiagonals
+* @param {NonNegativeInteger} ku - number of superdiagonals
 * @param {Float64Array} AB - input matrix
 * @param {PositiveInteger} LDAB - leading dimension of `AB`
 * @param {Int32Array} IPIV - input array

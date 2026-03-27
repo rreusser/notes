@@ -31,13 +31,13 @@ var base = require( './base.js' );
 /**
 * Generate a complex elementary reflector H of order N, such that.
 *
-* @param {NonNegativeInteger} N - TODO
-* @param {Complex128Array} alpha - TODO
-* @param {NonNegativeInteger} offsetAlpha - TODO
+* @param {NonNegativeInteger} N - order of the reflector
+* @param {Complex128Array} alpha - complex scalar, overwritten with beta
+* @param {NonNegativeInteger} offsetAlpha - starting index for alpha (in complex elements)
 * @param {Complex128Array} x - input array
 * @param {integer} strideX - `x` stride length
-* @param {Complex128Array} tau - TODO
-* @param {NonNegativeInteger} offsetTau - TODO
+* @param {Complex128Array} tau - output complex scalar
+* @param {NonNegativeInteger} offsetTau - starting index for tau (in complex elements)
 * @returns {*} result
 */
 function zlarfg( N, alpha, offsetAlpha, x, strideX, tau, offsetTau ) {

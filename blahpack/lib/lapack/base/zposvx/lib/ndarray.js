@@ -4,54 +4,82 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Expert solver for Hermitian positive definite system
-*
-* @param {string} fact - specifies the operation type
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} AF - input matrix
-* @param {integer} strideAF1 - stride of the first dimension of `AF`
-* @param {integer} strideAF2 - stride of the second dimension of `AF`
-* @param {NonNegativeInteger} offsetAF - starting index for `AF`
-* @param {string} equed - specifies the operation type
-* @param {Float64Array} s - input array
-* @param {integer} strideS - stride length for `s`
-* @param {NonNegativeInteger} offsetS - starting index for `s`
-* @param {Float64Array} B - input matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {Float64Array} X - input matrix
-* @param {integer} strideX1 - stride of the first dimension of `X`
-* @param {integer} strideX2 - stride of the second dimension of `X`
-* @param {NonNegativeInteger} offsetX - starting index for `X`
-* @param {number} rcond - rcond
-* @param {Float64Array} FERR - input array
-* @param {integer} strideFERR - stride length for `FERR`
-* @param {NonNegativeInteger} offsetFERR - starting index for `FERR`
-* @param {Float64Array} BERR - input array
-* @param {integer} strideBERR - stride length for `BERR`
-* @param {NonNegativeInteger} offsetBERR - starting index for `BERR`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {Float64Array} RWORK - output array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @returns {integer} status code (0 = success)
-*/
+ * Expert driver for solving a complex Hermitian positive definite system of
+ * linear equations A*X = B, using the Cholesky factorization A = U^H*U or
+ * A = L*L^H. Provides equilibration, condition estimation, iterative
+ * refinement, and error bounds.
+ *
+ * FACT controls whether to factor, equilibrate+factor, or use pre-factored:
+ *   'not-factored' - factor A, no equilibration
+ *   'equilibrate' - equilibrate if needed, then factor
+ *   'factored' - use pre-factored AF (and pre-computed S if equilibrated)
+ *
+ * UPLO specifies whether the upper or lower triangle of A is stored:
+ *   'upper' - upper triangle
+ *   'lower' - lower triangle
+ *
+ * EQUED (input if FACT='factored', output otherwise):
+ *   'none' - no equilibration
+ *   'yes' - equilibration was done (A replaced by diag(S)*A*diag(S))
+ *
+ * Returns { info, equed, rcond } where:
+ *   info: 0=success, i (1-based)=leading minor not positive definite, N+1=singular to working precision
+ *   equed: equilibration type applied
+ *   rcond: reciprocal condition number estimate
+ *
+ *
+ * @param {string} fact - 'not-factored', 'equilibrate', or 'factored'
+ * @param {string} uplo - 'upper' or 'lower'
+ * @param {NonNegativeInteger} N - order of matrix A
+ * @param {NonNegativeInteger} nrhs - number of right-hand side columns
+ * @param {Complex128Array} A - N-by-N Hermitian positive definite matrix (may be equilibrated on exit)
+ * @param {integer} strideA1 - stride of the first dimension of A (complex elements)
+ * @param {integer} strideA2 - stride of the second dimension of A (complex elements)
+ * @param {NonNegativeInteger} offsetA - index offset for A (complex elements)
+ * @param {Complex128Array} AF - N-by-N factored matrix (output)
+ * @param {integer} strideAF1 - stride of the first dimension of AF (complex elements)
+ * @param {integer} strideAF2 - stride of the second dimension of AF (complex elements)
+ * @param {NonNegativeInteger} offsetAF - index offset for AF (complex elements)
+ * @param {string} equed - equilibration type (input if FACT='factored')
+ * @param {Float64Array} s - scaling factors (input if FACT='factored' and equed='yes', output if FACT='equilibrate')
+ * @param {integer} strideS - stride for s
+ * @param {NonNegativeInteger} offsetS - index offset for s
+ * @param {Complex128Array} B - N-by-NRHS right-hand side (may be scaled on exit)
+ * @param {integer} strideB1 - stride of the first dimension of B (complex elements)
+ * @param {integer} strideB2 - stride of the second dimension of B (complex elements)
+ * @param {NonNegativeInteger} offsetB - index offset for B (complex elements)
+ * @param {Complex128Array} X - N-by-NRHS solution matrix (output)
+ * @param {integer} strideX1 - stride of the first dimension of X (complex elements)
+ * @param {integer} strideX2 - stride of the second dimension of X (complex elements)
+ * @param {NonNegativeInteger} offsetX - index offset for X (complex elements)
+ * @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
+ * @param {Float64Array} FERR - forward error bounds (output, length nrhs)
+ * @param {integer} strideFERR - stride for FERR
+ * @param {NonNegativeInteger} offsetFERR - index offset for FERR
+ * @param {Float64Array} BERR - backward error bounds (output, length nrhs)
+ * @param {integer} strideBERR - stride for BERR
+ * @param {NonNegativeInteger} offsetBERR - index offset for BERR
+ * @param {Complex128Array} WORK - workspace of length 2*N (complex)
+ * @param {integer} strideWORK - stride for WORK (complex elements)
+ * @param {NonNegativeInteger} offsetWORK - index offset for WORK (complex elements)
+ * @param {Float64Array} RWORK - real workspace of length N
+ * @param {integer} strideRWORK - stride for RWORK
+ * @param {NonNegativeInteger} offsetRWORK - index offset for RWORK
+ * @throws {TypeError} Second argument must be a valid matrix triangle
+ * @returns {Object} result with info, equed, rcond
+ */
 function zposvx( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, equed, s, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, equed, s, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
 }
 

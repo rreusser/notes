@@ -34,19 +34,19 @@ var base = require( './base.js' );
 * Reduce NB columns of a general matrix in Hessenberg form.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
-* @param {integer} nb - TODO
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} K - offset for the reduction
+* @param {NonNegativeInteger} nb - number of columns to reduce
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} tau - input array
 * @param {integer} strideTAU - `tau` stride length
 * @param {Float64Array} t - input array
 * @param {integer} strideT - `t` stride length
-* @param {integer} ldt - TODO
+* @param {*} ldt - ldt
 * @param {Float64Array} y - input array
 * @param {integer} strideY - `y` stride length
-* @param {integer} ldy - TODO
+* @param {*} ldy - ldy
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */

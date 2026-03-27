@@ -33,11 +33,11 @@ var base = require( './base.js' );
 * Solves a triangular system of the form:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {string} trans - TODO
-* @param {string} diag - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} nrhs - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {NonNegativeInteger} N - order of matrix A
+* @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} B - input matrix

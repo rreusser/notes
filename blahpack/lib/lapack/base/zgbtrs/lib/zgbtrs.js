@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Solve a complex banded system using LU factorization.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} kl - TODO
-* @param {integer} ku - TODO
-* @param {integer} nrhs - TODO
+* @param {string} trans - 'no-transpose' for A*X=B, 'transpose' for A^T*X=B, 'conjugate-transpose' for A^H*X=B
+* @param {NonNegativeInteger} N - order of matrix A
+* @param {NonNegativeInteger} kl - number of subdiagonals
+* @param {NonNegativeInteger} ku - number of superdiagonals
+* @param {NonNegativeInteger} nrhs - number of right-hand sides
 * @param {Float64Array} AB - input matrix
 * @param {PositiveInteger} LDAB - leading dimension of `AB`
 * @param {Int32Array} IPIV - input array

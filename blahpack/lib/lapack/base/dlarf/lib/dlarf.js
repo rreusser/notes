@@ -34,12 +34,12 @@ var base = require( './base.js' );
 * Applies a real elementary reflector H to a real M-by-N matrix C,.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} side - `'left'` or `'right'`
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
 * @param {Float64Array} v - input array
 * @param {integer} strideV - `v` stride length
-* @param {number} tau - TODO
+* @param {number} tau - scalar factor
 * @param {Float64Array} C - input matrix
 * @param {PositiveInteger} LDC - leading dimension of `C`
 * @param {Float64Array} WORK - input array

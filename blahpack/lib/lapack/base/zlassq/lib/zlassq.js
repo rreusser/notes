@@ -31,11 +31,11 @@ var base = require( './base.js' );
 /**
 * Updates a sum of squares represented in scaled form.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of complex elements
 * @param {Complex128Array} x - input array
 * @param {integer} stride - `x` stride length
-* @param {number} scale - TODO
-* @param {number} sumsq - TODO
+* @param {number} scale - input scale
+* @param {number} sumsq - input sum of squares
 * @returns {*} result
 */
 function zlassq( N, x, stride, scale, sumsq ) {

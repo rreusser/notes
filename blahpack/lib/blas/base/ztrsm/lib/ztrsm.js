@@ -33,13 +33,13 @@ var base = require( './base.js' );
 * Solves one of the matrix equations:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {string} uplo - TODO
-* @param {string} transa - TODO
-* @param {string} diag - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {Complex128} alpha - TODO
+* @param {string} side - `'left'` or `'right'`
+* @param {string} uplo - `'upper'` or `'lower'` (upper or lower triangular)
+* @param {string} transa - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {NonNegativeInteger} M - number of rows of B
+* @param {NonNegativeInteger} N - number of columns of B
+* @param {Complex128} alpha - complex scalar multiplier for B
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} B - input matrix

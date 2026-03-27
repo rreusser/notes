@@ -10,31 +10,35 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes a QR factorization with column pivoting using Level 2 BLAS
-*
-* @param {NonNegativeInteger} M - number of rows
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} offset - offset
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} JPVT - input array
-* @param {integer} strideJPVT - stride length for `JPVT`
-* @param {NonNegativeInteger} offsetJPVT - starting index for `JPVT`
-* @param {Float64Array} TAU - input array
-* @param {integer} strideTAU - stride length for `TAU`
-* @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
-* @param {Float64Array} VN1 - input array
-* @param {integer} strideVN1 - stride length for `VN1`
-* @param {NonNegativeInteger} offsetVN1 - starting index for `VN1`
-* @param {Float64Array} VN2 - input array
-* @param {integer} strideVN2 - stride length for `VN2`
-* @param {NonNegativeInteger} offsetVN2 - starting index for `VN2`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-*/
+ * Computes a QR factorization with column pivoting of the block
+ * A(offset:M-1, 0:N-1) using Level 2 BLAS.
+ *
+ * The block A(0:offset-1, 0:N-1) is accordingly pivoted, but not factorized.
+ *
+ *
+ * @param {NonNegativeInteger} M - total number of rows of A
+ * @param {NonNegativeInteger} N - number of columns of A
+ * @param {NonNegativeInteger} offset - number of rows already factored (0-based)
+ * @param {Float64Array} A - input/output matrix (M-by-N)
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Int32Array} JPVT - column permutation array (length >= N), 0-based
+ * @param {integer} strideJPVT - stride for JPVT
+ * @param {NonNegativeInteger} offsetJPVT - starting index for JPVT
+ * @param {Float64Array} TAU - output reflector scalars (length >= min(M-offset, N))
+ * @param {integer} strideTAU - stride for TAU
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU
+ * @param {Float64Array} VN1 - partial column norms (length >= N)
+ * @param {integer} strideVN1 - stride for VN1
+ * @param {NonNegativeInteger} offsetVN1 - starting index for VN1
+ * @param {Float64Array} VN2 - original column norms (length >= N)
+ * @param {integer} strideVN2 - stride for VN2
+ * @param {NonNegativeInteger} offsetVN2 - starting index for VN2
+ * @param {Float64Array} WORK - workspace (length >= N)
+ * @param {integer} strideWORK - stride for WORK
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK
+ */
 function dlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	return base( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJPVT, TAU, strideTAU, offsetTAU, VN1, strideVN1, offsetVN1, VN2, strideVN2, offsetVN2, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }

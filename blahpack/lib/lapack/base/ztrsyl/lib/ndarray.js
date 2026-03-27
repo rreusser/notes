@@ -10,28 +10,36 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solve complex Sylvester matrix equation
-*
-* @param {string} trana - specifies the operation type
-* @param {string} tranb - specifies the operation type
-* @param {integer} isgn - isgn
-* @param {NonNegativeInteger} M - number of rows
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} B - input matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {Float64Array} C - output matrix
-* @param {integer} strideC1 - stride of the first dimension of `C`
-* @param {integer} strideC2 - stride of the second dimension of `C`
-* @param {NonNegativeInteger} offsetC - starting index for `C`
-* @param {number} scale - scale
-* @returns {integer} status code (0 = success)
-*/
+ * Solves the complex Sylvester matrix equation:
+ *
+ *   op(A)*X + X*op(B) = scale*C  (when isgn = +1)
+ *   op(A)*X - X*op(B) = scale*C  (when isgn = -1)
+ *
+ * where op(A) = A or A**H, and A and B are both upper triangular. A is
+ * M-by-M and B is N-by-N; the right hand side C and the solution X are
+ * M-by-N; and scale is an output scale factor, set <= 1 to avoid overflow.
+ *
+ *
+ * @param {string} trana - `'no-transpose'` or `'conjugate-transpose'` of A
+ * @param {string} tranb - `'no-transpose'` or `'conjugate-transpose'` of B
+ * @param {integer} isgn - +1 or -1
+ * @param {NonNegativeInteger} M - order of matrix A, rows of C
+ * @param {NonNegativeInteger} N - order of matrix B, columns of C
+ * @param {Complex128Array} A - upper triangular matrix A (M-by-M)
+ * @param {integer} strideA1 - stride of first dimension of A (in complex elements)
+ * @param {integer} strideA2 - stride of second dimension of A (in complex elements)
+ * @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+ * @param {Complex128Array} B - upper triangular matrix B (N-by-N)
+ * @param {integer} strideB1 - stride of first dimension of B (in complex elements)
+ * @param {integer} strideB2 - stride of second dimension of B (in complex elements)
+ * @param {NonNegativeInteger} offsetB - starting index for B (in complex elements)
+ * @param {Complex128Array} C - M-by-N right hand side, overwritten with solution X
+ * @param {integer} strideC1 - stride of first dimension of C (in complex elements)
+ * @param {integer} strideC2 - stride of second dimension of C (in complex elements)
+ * @param {NonNegativeInteger} offsetC - starting index for C (in complex elements)
+ * @param {Float64Array} scale - output: scale[0] = scaling factor
+ * @returns {integer} info (0 = success, 1 = perturbed)
+ */
 function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale ) { // eslint-disable-line max-len, max-params
 	return base( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale ); // eslint-disable-line max-len
 }

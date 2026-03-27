@@ -33,10 +33,10 @@ var base = require( './base.js' );
 * Solves a complex Hermitian positive definite banded system of equations.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} kd - TODO
-* @param {NonNegativeInteger} nrhs - TODO
+* @param {string} uplo - specifies whether upper or lower triangle is stored (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} kd - number of super/sub-diagonals
+* @param {NonNegativeInteger} nrhs - number of right-hand sides
 * @param {Complex128Array} AB - input matrix
 * @param {PositiveInteger} LDAB - leading dimension of `AB`
 * @param {Complex128Array} B - input matrix

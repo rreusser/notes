@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} jobz - TODO
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} w - input array

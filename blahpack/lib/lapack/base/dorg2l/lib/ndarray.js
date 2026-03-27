@@ -1,20 +1,36 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Generate an M-by-N real orthogonal matrix Q with orthonormal columns,.
+ * which is defined as the last N columns of a product of K elementary
+ * reflectors of order M
+ *
+ * Q = H(K) ... H(2) H(1)
+ *
+ * as returned by DGEQLF (QL factorization, unblocked algorithm).
+ *
+ * ## Notes
+ *
+ * -   On entry, the (N-K+i)-th column of A must contain the vector which
+ * defines the elementary reflector H(i), for i = 1, 2, ..., K, as
+ * returned by DGEQLF in the last K columns of its array argument A.
+ *
+ * -   On exit, A contains the M-by-N matrix Q.
+ *
+ *
+ * @param {NonNegativeInteger} M - number of rows of Q (M >= 0)
+ * @param {NonNegativeInteger} N - number of columns of Q (0 <= N <= M)
+ * @param {NonNegativeInteger} K - number of elementary reflectors (0 <= K <= N)
+ * @param {Float64Array} A - input/output matrix (M x N)
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} TAU - scalar factors of reflectors (length K)
+ * @param {integer} strideTAU - stride for TAU
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU
+ * @param {Float64Array} WORK - workspace (length >= N)
+ * @param {integer} strideWORK - stride for WORK
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK
+ * @returns {integer} status code (0 = success)
+ */
 
 /* eslint-disable max-len, max-params */
 

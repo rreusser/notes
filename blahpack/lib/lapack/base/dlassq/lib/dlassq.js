@@ -31,11 +31,11 @@ var base = require( './base.js' );
 /**
 * Returns updated scale and sum-of-squares in scaled form.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of elements
 * @param {Float64Array} x - input array
 * @param {integer} stride - `x` stride length
-* @param {number} scale - TODO
-* @param {number} sumsq - TODO
+* @param {number} scale - input scale
+* @param {number} sumsq - input sum of squares
 * @returns {*} result
 */
 function dlassq( N, x, stride, scale, sumsq ) {

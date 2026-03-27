@@ -31,13 +31,13 @@ var base = require( './base.js' );
 /**
 * Generates a real elementary reflector H of order N, such that.
 *
-* @param {NonNegativeInteger} N - TODO
-* @param {Float64Array} alpha - TODO
-* @param {NonNegativeInteger} offsetAlpha - TODO
+* @param {NonNegativeInteger} N - order of the reflector
+* @param {Float64Array} alpha - scalar, overwritten with beta on exit
+* @param {NonNegativeInteger} offsetAlpha - index into alpha array
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
-* @param {Float64Array} tau - TODO
-* @param {NonNegativeInteger} offsetTau - TODO
+* @param {Float64Array} tau - output scalar
+* @param {NonNegativeInteger} offsetTau - index into tau array
 * @returns {*} result
 */
 function dlarfg( N, alpha, offsetAlpha, x, strideX, tau, offsetTau ) {

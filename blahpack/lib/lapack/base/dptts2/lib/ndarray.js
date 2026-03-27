@@ -10,21 +10,28 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves a tridiagonal system using the LDL^T factorization from dpttrf
-*
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} d - input array
-* @param {integer} strideD - stride length for `d`
-* @param {NonNegativeInteger} offsetD - starting index for `d`
-* @param {Float64Array} e - input array
-* @param {integer} strideE - stride length for `e`
-* @param {NonNegativeInteger} offsetE - starting index for `e`
-* @param {Float64Array} B - output matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-*/
+ * Solves a tridiagonal system of the form A * X = B using the L*D*L^T
+ * factorization of A computed by dpttrf.
+ *
+ * D is a diagonal matrix specified in the vector D, L is a unit bidiagonal
+ * matrix whose subdiagonal is specified in the vector E, and X and B are
+ * N by NRHS matrices.
+ *
+ *
+ * @param {NonNegativeInteger} N - order of the tridiagonal matrix A (N >= 0)
+ * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
+ * @param {Float64Array} d - diagonal elements of D, length N
+ * @param {integer} strideD - stride length for `d`
+ * @param {NonNegativeInteger} offsetD - starting index for `d`
+ * @param {Float64Array} e - subdiagonal elements of L, length N-1
+ * @param {integer} strideE - stride length for `e`
+ * @param {NonNegativeInteger} offsetE - starting index for `e`
+ * @param {Float64Array} B - right hand side matrix (N x NRHS), overwritten with solution X
+ * @param {integer} strideB1 - stride of the first dimension of `B` (row stride)
+ * @param {integer} strideB2 - stride of the second dimension of `B` (column stride)
+ * @param {NonNegativeInteger} offsetB - starting index for `B`
+ * @returns {Float64Array} B - the solution matrix X
+ */
 function dptts2( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
 	return base( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 }

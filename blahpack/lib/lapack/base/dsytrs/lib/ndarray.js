@@ -1,20 +1,30 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Solves a system of linear equations A_X = B with a real symmetric matrix A.
+ * using the factorization A = U_D_U^T or A = L_D*L^T computed by dsytrf.
+ *
+ * IPIV uses the same 0-based convention as dsytf2/dsytrf:
+ *
+ * -   `IPIV[k]` >= 0: 1x1 pivot, row k was interchanged with row `IPIV[k]`
+ * -   `IPIV[k]` < 0: 2x2 pivot, `IPIV[k]` = ~kp (bitwise NOT of 0-based index)
+ *
+ *
+ * @param {string} uplo - `'upper'` or `'lower'`, must match the factorization
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {NonNegativeInteger} nrhs - number of right-hand side vectors
+ * @param {Float64Array} A - factored matrix from dsytrf (column-major)
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - index offset for A
+ * @param {Int32Array} IPIV - pivot indices from dsytrf
+ * @param {integer} strideIPIV - stride for IPIV
+ * @param {NonNegativeInteger} offsetIPIV - index offset for IPIV
+ * @param {Float64Array} B - input/output right-hand side / solution matrix
+ * @param {integer} strideB1 - stride of the first dimension of B
+ * @param {integer} strideB2 - stride of the second dimension of B
+ * @param {NonNegativeInteger} offsetB - index offset for B
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {integer} info - 0 on success
+ */
 
 /* eslint-disable max-len, max-params */
 

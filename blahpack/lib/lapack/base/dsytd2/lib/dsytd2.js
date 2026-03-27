@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Reduces a real symmetric matrix A to real symmetric tridiagonal form T.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangular part of A is stored
+* @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} d - input array

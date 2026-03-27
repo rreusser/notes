@@ -10,29 +10,32 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Estimates the reciprocal condition number of a general banded matrix
-*
-* @param {string} norm - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} kl - kl
-* @param {integer} ku - ku
-* @param {Float64Array} AB - input matrix
-* @param {integer} strideAB1 - stride of the first dimension of `AB`
-* @param {integer} strideAB2 - stride of the second dimension of `AB`
-* @param {NonNegativeInteger} offsetAB - starting index for `AB`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {number} anorm - anorm
-* @param {number} rcond - rcond
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {Int32Array} IWORK - output array
-* @param {integer} strideIWORK - stride length for `IWORK`
-* @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
-* @returns {integer} status code (0 = success)
-*/
+ * Estimates the reciprocal of the condition number of a general band matrix A,
+ * in either the 1-norm or the infinity-norm, using the LU factorization
+ * computed by dgbtrf.
+ *
+ *
+ * @param {string} norm - 'one-norm' for 1-norm, 'infinity-norm' for infinity-norm
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {NonNegativeInteger} kl - number of subdiagonals
+ * @param {NonNegativeInteger} ku - number of superdiagonals
+ * @param {Float64Array} AB - LU factorization from dgbtrf, (2*KL+KU+1) by N
+ * @param {integer} strideAB1 - stride of the first dimension of `AB`
+ * @param {integer} strideAB2 - stride of the second dimension of `AB`
+ * @param {NonNegativeInteger} offsetAB - starting index for `AB`
+ * @param {Int32Array} IPIV - pivot indices from dgbtrf (0-based)
+ * @param {integer} strideIPIV - stride length for `IPIV`
+ * @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
+ * @param {number} anorm - the 1-norm or infinity-norm of the original matrix
+ * @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
+ * @param {Float64Array} WORK - workspace array of length 3*N
+ * @param {integer} strideWORK - stride length for `WORK`
+ * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+ * @param {Int32Array} IWORK - workspace array of length N
+ * @param {integer} strideIWORK - stride length for `IWORK`
+ * @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
+ * @returns {integer} info - 0 if successful
+ */
 function dgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
 	return base( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ); // eslint-disable-line max-len
 }

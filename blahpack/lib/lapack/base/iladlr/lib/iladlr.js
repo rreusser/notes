@@ -33,8 +33,8 @@ var base = require( './base.js' );
 * Scans a real matrix for its last non-zero row.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

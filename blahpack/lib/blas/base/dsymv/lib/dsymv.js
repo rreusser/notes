@@ -34,14 +34,14 @@ var base = require( './base.js' );
 * Performs the matrix-vector operation:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {number} alpha - TODO
+* @param {string} uplo - specifies whether the upper or lower triangular part of A is stored (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {number} alpha - scalar multiplier for A*x
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
-* @param {number} beta - TODO
+* @param {number} beta - scalar multiplier for y
 * @param {Float64Array} y - input array
 * @param {integer} strideY - `y` stride length
 * @throws {TypeError} first argument must be a valid order

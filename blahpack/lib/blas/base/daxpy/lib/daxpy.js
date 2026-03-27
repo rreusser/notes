@@ -31,8 +31,8 @@ var base = require( './base.js' );
 /**
 * Multiplies a vector `x` by a constant `alpha` and adds the result to `y`.
 *
-* @param {PositiveInteger} N - TODO
-* @param {number} alpha - TODO
+* @param {PositiveInteger} N - number of indexed elements
+* @param {number} alpha - scalar constant
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Float64Array} y - input array

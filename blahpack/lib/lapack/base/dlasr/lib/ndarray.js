@@ -1,20 +1,34 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Applies a sequence of real plane rotations to a real general rectangular matrix.
+ *
+ * When SIDE = 'L', the transformation takes the form:
+ * `A := P*A`
+ * When SIDE = 'R', the transformation takes the form:
+ * A := A*P^T
+ *
+ * where P is an orthogonal matrix consisting of a sequence of z plane
+ * rotations, with z = M-1 when SIDE = 'L' and z = N-1 when SIDE = 'R',
+ * and P^T is the transpose of P.
+ *
+ *
+ * @param {string} side - `'left'` or `'right'`
+ * @param {string} pivot - `'variable'`, `'top'`, or `'bottom'`
+ * @param {string} direct - `'forward'` or `'backward'`
+ * @param {NonNegativeInteger} M - number of rows of A
+ * @param {NonNegativeInteger} N - number of columns of A
+ * @param {Float64Array} c - array of cosines
+ * @param {integer} strideC - stride for `c`
+ * @param {NonNegativeInteger} offsetC - starting index for `c`
+ * @param {Float64Array} s - array of sines
+ * @param {integer} strideS - stride for `s`
+ * @param {NonNegativeInteger} offsetS - starting index for `s`
+ * @param {Float64Array} A - input/output matrix
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @throws {TypeError} First argument must be a valid operation side
+ * @returns {Float64Array} A
+ */
 
 /* eslint-disable max-len, max-params */
 

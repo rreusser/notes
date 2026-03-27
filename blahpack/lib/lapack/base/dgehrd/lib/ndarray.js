@@ -1,20 +1,22 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Reduces a real general matrix to upper Hessenberg form using blocked algorithm.
+ *
+ *
+ * @param {integer} N - order of the matrix
+ * @param {integer} ilo - lower index of the balanced matrix
+ * @param {integer} ihi - upper index of the balanced matrix
+ * @param {Float64Array} A - input/output matrix
+ * @param {integer} strideA1 - first stride of A
+ * @param {integer} strideA2 - second stride of A
+ * @param {integer} offsetA - offset into A
+ * @param {Float64Array} TAU - output array of scalar factors
+ * @param {integer} strideTAU - stride of TAU
+ * @param {integer} offsetTAU - offset into TAU
+ * @param {Float64Array} WORK - workspace array
+ * @param {integer} strideWORK - stride of WORK
+ * @param {integer} offsetWORK - offset into WORK
+ * @returns {integer} info value
+ */
 
 /* eslint-disable max-len, max-params */
 

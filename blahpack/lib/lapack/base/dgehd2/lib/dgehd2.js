@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Reduce a general matrix to upper Hessenberg form (unblocked).
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} ilo - TODO
-* @param {integer} ihi - TODO
+* @param {NonNegativeInteger} N - number of columns
+* @param {integer} ilo - ilo
+* @param {integer} ihi - ihi
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} TAU - input array

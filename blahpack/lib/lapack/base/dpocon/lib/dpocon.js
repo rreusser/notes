@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Estimates the reciprocal of the condition number of a symmetric positive.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
-* @param {number} anorm - TODO
+* @param {number} anorm - the 1-norm (or infinity-norm) of the original matrix
 * @param {Float64Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
 * @param {Int32Array} IWORK - input array

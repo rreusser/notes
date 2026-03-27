@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Generates an orthogonal matrix Q which is defined as the product of N-1.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - specifies whether the upper or lower triangle was used in DSYTRD (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix Q
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} TAU - input array

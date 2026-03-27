@@ -4,27 +4,37 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Complex symmetric matrix norm
-*
-* @param {string} norm - specifies the operation type
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @returns {number} result
-*/
+ * Returns the value of the one-norm, Frobenius norm, infinity-norm, or the
+ * largest absolute value of any element of a complex symmetric matrix A.
+ *
+ * NOTE: This is for SYMMETRIC matrices (not Hermitian).
+ *
+ *
+ * @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+ * @param {string} uplo - `'upper'` or `'lower'`
+ * @param {NonNegativeInteger} N - order of the matrix
+ * @param {Complex128Array} A - the matrix
+ * @param {integer} strideA1 - first stride of A (complex elements)
+ * @param {integer} strideA2 - second stride of A (complex elements)
+ * @param {NonNegativeInteger} offsetA - offset into A (complex elements)
+ * @param {Float64Array} WORK - workspace of length N (only for '1'/'O'/'I' norms)
+ * @param {integer} strideWORK - stride of WORK
+ * @param {NonNegativeInteger} offsetWORK - offset into WORK
+ * @throws {TypeError} Second argument must be a valid matrix triangle
+ * @returns {number} the norm value
+ */
 function zlansy( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( norm, uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

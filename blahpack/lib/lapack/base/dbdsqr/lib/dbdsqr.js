@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Computes the singular values and, optionally, the right and/or left.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} ncvt - TODO
-* @param {NonNegativeInteger} nru - TODO
-* @param {NonNegativeInteger} ncc - TODO
+* @param {*} uplo - uplo
+* @param {*} N - N
+* @param {*} ncvt - ncvt
+* @param {*} nru - nru
+* @param {*} ncc - ncc
 * @param {Float64Array} d - input array
 * @param {integer} strideD - `d` stride length
 * @param {Float64Array} e - input array

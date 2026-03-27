@@ -4,28 +4,56 @@
 
 // MODULES //
 
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Perform matrix-vector operation with a triangular band matrix
-*
-* @param {string} uplo - specifies the operation type
-* @param {string} trans - specifies the operation type
-* @param {string} diag - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {NonNegativeInteger} K - number of superdiagonals
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} x - output array
-* @param {integer} strideX - stride length for `x`
-* @param {NonNegativeInteger} offsetX - starting index for `x`
-*/
+ * Performs one of the matrix-vector operations `x := A*x` or `x := A**T*x`.
+ *
+ * `x` is an N element vector and A is an N by N unit or non-unit, upper or
+ * lower triangular band matrix, with (K+1) diagonals.
+ *
+ * Band storage: for upper triangular, the j-th column of A is stored in the
+ * j-th column of the band array, with diagonal at row K (0-based).
+ * For lower triangular, diagonal at row 0.
+ *
+ * Upper band: `A_band[K-s + s*sa1 + j*sa2] = A(j-s, j)` for s = 0..min(K,j)
+ * Lower band: `A_band[s*sa1 + j*sa2] = A(j+s, j)` for s = 0..min(K, N-1-j)
+ *
+ *
+ * @param {string} uplo - specifies whether the matrix is upper or lower triangular
+ * @param {string} trans - specifies the operation to be performed
+ * @param {string} diag - specifies whether the matrix is unit or non-unit triangular
+ * @param {NonNegativeInteger} N - order of the matrix
+ * @param {NonNegativeInteger} K - number of super/sub-diagonals
+ * @param {Float64Array} A - band matrix in band storage
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} x - input/output vector
+ * @param {integer} strideX - stride for x
+ * @param {NonNegativeInteger} offsetX - starting index for x
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @throws {TypeError} Second argument must be a valid transpose operation
+ * @throws {TypeError} Third argument must be a valid diagonal type
+ * @returns {Float64Array} `x`
+ */
 function dtbmv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, strideX, offsetX ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isTransposeOperation( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
 	return base( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, strideX, offsetX ); // eslint-disable-line max-len
 }
 

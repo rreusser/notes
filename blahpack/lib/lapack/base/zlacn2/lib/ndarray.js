@@ -10,21 +10,33 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Estimate 1-norm of a square matrix using reverse communication
-*
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} v - input array
-* @param {integer} strideV - stride length for `v`
-* @param {NonNegativeInteger} offsetV - starting index for `v`
-* @param {Float64Array} x - output array
-* @param {integer} strideX - stride length for `x`
-* @param {NonNegativeInteger} offsetX - starting index for `x`
-* @param {number} est - est
-* @param {integer} kase - kase
-* @param {Int32Array} isave - input array
-* @param {integer} strideISAVE - stride length for `isave`
-* @param {NonNegativeInteger} offsetISAVE - starting index for `isave`
-*/
+ * Estimates the 1-norm of a square complex matrix A using reverse communication.
+ *
+ * This is a reverse communication interface routine. The caller must:
+ *
+ * 1. Set `KASE[0]` = 0 on the first call.
+ *
+ * 2. Call zlacn2 in a loop. After each return, if `KASE[0]` = 1,
+ *    compute `X = A*X` and call zlacn2 again; if `KASE[0]` = 2,
+ *    compute `X = A**H * X` and call zlacn2 again; if `KASE[0]` = 0,
+ *    the estimate is complete and `EST[0]` holds the result.
+ *
+ * ISAVE is used to maintain state between calls (3 elements).
+ *
+ *
+ * @param {NonNegativeInteger} N - order of the matrix
+ * @param {Complex128Array} V - workspace vector of length N
+ * @param {integer} strideV - stride for V (in complex elements)
+ * @param {NonNegativeInteger} offsetV - starting index for V (in complex elements)
+ * @param {Complex128Array} X - input/output vector of length N
+ * @param {integer} strideX - stride for X (in complex elements)
+ * @param {NonNegativeInteger} offsetX - starting index for X (in complex elements)
+ * @param {Float64Array} EST - in/out: EST[0] is the estimated 1-norm
+ * @param {Int32Array} KASE - in/out: KASE[0] is the operation to perform
+ * @param {Int32Array} ISAVE - state array of length 3
+ * @param {integer} strideISAVE - stride for ISAVE
+ * @param {NonNegativeInteger} offsetISAVE - starting index for ISAVE
+ */
 function zlacn2( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE ) { // eslint-disable-line max-len, max-params
 	return base( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE ); // eslint-disable-line max-len
 }

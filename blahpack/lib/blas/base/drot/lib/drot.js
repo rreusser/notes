@@ -31,13 +31,13 @@ var base = require( './base.js' );
 /**
 * Applies a plane rotation.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of indexed elements
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Float64Array} y - input array
 * @param {integer} strideY - `y` stride length
-* @param {number} c - TODO
-* @param {number} s - TODO
+* @param {number} c - cosine of the angle of rotation
+* @param {number} s - sine of the angle of rotation
 * @returns {*} result
 */
 function drot( N, x, strideX, y, strideY, c, s ) {

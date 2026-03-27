@@ -34,10 +34,10 @@ var base = require( './base.js' );
 * Forms the triangular factor T of a real block reflector H of order N,.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} direct - TODO
-* @param {string} storev - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} direct - `'forward'` or `'backward'`
+* @param {string} storev - `'columnwise'` or `'rowwise'`
+* @param {NonNegativeInteger} N - order of the block reflector
+* @param {NonNegativeInteger} K - number of elementary reflectors
 * @param {Float64Array} V - input matrix
 * @param {PositiveInteger} LDV - leading dimension of `V`
 * @param {Float64Array} TAU - input array

@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Overwrites the M-by-N real matrix C with Q.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} side - `'left'` to apply Q from left, `'right'` from right
+* @param {string} trans - `'no-transpose'` for Q, `'transpose'` for Q^T
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {NonNegativeInteger} K - number of elementary reflectors
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} TAU - input array

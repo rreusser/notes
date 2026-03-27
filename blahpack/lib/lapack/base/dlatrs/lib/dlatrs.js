@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Solves a triangular system with scaling to prevent overflow.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {string} trans - TODO
-* @param {string} diag - TODO
-* @param {string} normin - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {string} normin - `'yes'` if CNORM contains column norms on input, `'no'` to compute them
+* @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} x - input array

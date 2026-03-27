@@ -34,11 +34,11 @@ var base = require( './base.js' );
 * Compute some or all of the right and/or left eigenvectors of a pair of.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {string} howmny - TODO
-* @param {integer} strideSELECT - TODO
-* @param {NonNegativeInteger} offsetSELECT - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {*} side - side
+* @param {*} howmny - howmny
+* @param {*} strideSELECT - strideSELECT
+* @param {*} offsetSELECT - offsetSELECT
+* @param {*} N - N
 * @param {Complex128Array} S - input matrix
 * @param {PositiveInteger} LDS - leading dimension of `S`
 * @param {Complex128Array} P - input matrix
@@ -47,8 +47,8 @@ var base = require( './base.js' );
 * @param {PositiveInteger} LDVL - leading dimension of `VL`
 * @param {Complex128Array} VR - input matrix
 * @param {PositiveInteger} LDVR - leading dimension of `VR`
-* @param {NonNegativeInteger} mm - TODO
-* @param {Array<integer>} M - TODO
+* @param {*} mm - mm
+* @param {*} M - M
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
 * @param {Float64Array} RWORK - input array

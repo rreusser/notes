@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Performs the complex symmetric rank-1 operation:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {Complex128} alpha - TODO
+* @param {string} uplo - specifies whether the upper ('upper') or lower ('lower') triangle is stored
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Complex128} alpha - complex scalar multiplier
 * @param {Complex128Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Complex128Array} A - input matrix

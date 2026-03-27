@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Reduces the first NB rows and columns of a real general M-by-N matrix A.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} nb - TODO
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
+* @param {integer} nb - number of leading rows and columns to reduce
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} d - input array

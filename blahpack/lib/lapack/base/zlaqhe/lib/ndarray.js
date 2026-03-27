@@ -4,28 +4,42 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Equilibrate a Hermitian matrix using scaling factors
-*
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} s - output array
-* @param {integer} strideS - stride length for `s`
-* @param {NonNegativeInteger} offsetS - starting index for `s`
-* @param {number} scond - scond
-* @param {number} amax - amax
-* @param {string} equed - specifies the operation type
-*/
+ * Equilibrates a Hermitian matrix A using the scaling factors in the vector S.
+ *
+ * This sets A(i,j) = S(i) * A(i,j) * S(j) for the stored triangle. The
+ * diagonal is forced real: A(j,j) = S(j)^2 * real(A(j,j)).
+ *
+ * Returns the equilibration type:
+ * - 'none' - no equilibration was needed
+ * - 'yes' - equilibration was done
+ *
+ *
+ * @param {string} uplo - 'upper' if upper triangle stored, 'lower' if lower
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {Complex128Array} A - input/output N-by-N Hermitian matrix
+ * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+ * @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+ * @param {NonNegativeInteger} offsetA - index offset for A (in complex elements)
+ * @param {Float64Array} s - scaling factors, length N
+ * @param {integer} strideS - stride for s
+ * @param {NonNegativeInteger} offsetS - index offset for s
+ * @param {number} scond - ratio of smallest to largest scaling factor
+ * @param {number} amax - absolute value of largest matrix element
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {string} equed - 'none' or 'yes'
+ */
 function zlaqhe( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax, equed ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( uplo, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax, equed ); // eslint-disable-line max-len
 }
 

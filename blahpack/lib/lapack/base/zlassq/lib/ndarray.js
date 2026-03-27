@@ -1,20 +1,18 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Updates a sum of squares represented in scaled form.
+ *
+ * Returns updated (scale, sumsq) such that:
+ * `scale^2*sumsq = old_scale^2*old_sumsq + sum(|x_i|^2)`
+ *
+ *
+ * @param {NonNegativeInteger} N - number of complex elements
+ * @param {Complex128Array} x - complex input vector
+ * @param {integer} stride - stride in complex elements
+ * @param {NonNegativeInteger} offset - starting index (in complex elements)
+ * @param {number} scale - input scale
+ * @param {number} sumsq - input sum of squares
+ * @returns {Object} object with `scl` and `sumsq` properties
+ */
 
 /* eslint-disable max-len, max-params */
 

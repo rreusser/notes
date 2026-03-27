@@ -34,14 +34,14 @@ var base = require( './base.js' );
 * Performs a series of row interchanges on a complex double-precision matrix `A`.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {PositiveInteger} N - TODO
+* @param {PositiveInteger} N - number of columns in `A`
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
-* @param {NonNegativeInteger} k1 - TODO
-* @param {NonNegativeInteger} k2 - TODO
+* @param {NonNegativeInteger} k1 - index of first row to interchange (0-based)
+* @param {NonNegativeInteger} k2 - index of last row to interchange (0-based)
 * @param {Int32Array} IPIV - input array
 * @param {integer} strideIPIV - `IPIV` stride length
-* @param {integer} incx - TODO
+* @param {integer} incx - direction in which to apply pivots (-1 to apply in reverse order; otherwise, apply in provided order)
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */

@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Perform the rank 1 operation A := alpha.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {Complex128} alpha - TODO
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
+* @param {Complex128} alpha - complex scalar
 * @param {Complex128Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Complex128Array} y - input array

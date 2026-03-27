@@ -1,20 +1,31 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Reduces NB columns of a real general n-by-(n-k+1) matrix A.
+ *
+ * Elements below the k-th subdiagonal are zeroed out.
+ *
+ * Returns matrices V, T, and Y needed to apply the transformation to the
+ * unreduced part of A.
+ *
+ *
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {NonNegativeInteger} K - offset for the reduction
+ * @param {NonNegativeInteger} nb - number of columns to reduce
+ * @param {Float64Array} A - input matrix A
+ * @param {integer} strideA1 - first dimension stride of A
+ * @param {integer} strideA2 - second dimension stride of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} tau - output array for scalar factors
+ * @param {integer} strideTAU - stride for tau
+ * @param {NonNegativeInteger} offsetTAU - starting index for tau
+ * @param {Float64Array} T - output upper triangular matrix T
+ * @param {integer} strideT - first dimension stride of T
+ * @param {NonNegativeInteger} offsetT - starting index for T
+ * @param {integer} ldT - leading dimension (second dimension stride) of T
+ * @param {Float64Array} Y - output matrix Y
+ * @param {integer} strideY - first dimension stride of Y
+ * @param {NonNegativeInteger} offsetY - starting index for Y
+ * @param {integer} ldY - leading dimension (second dimension stride) of Y
+ */
 
 /* eslint-disable max-len, max-params */
 

@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Compute the generalized eigenvalues and optionally the left and/or.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} jobvl - TODO
-* @param {string} jobvr - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {*} jobvl - jobvl
+* @param {*} jobvr - jobvr
+* @param {*} N - N
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} B - input matrix

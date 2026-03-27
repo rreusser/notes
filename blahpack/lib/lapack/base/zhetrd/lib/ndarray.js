@@ -1,20 +1,30 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T.
+ * by a unitary similarity transformation: `Q__H*A*Q = T`.
+ *
+ * Uses the blocked algorithm: reduces NB columns at a time using zlatrd
+ * (panel factorization) and zher2k (trailing matrix update), then finishes
+ * the remaining block with zhetd2 (unblocked).
+ *
+ *
+ * @param {string} uplo - `'upper'` or `'lower'`
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {Complex128Array} A - input/output Hermitian matrix (complex-element strides)
+ * @param {integer} strideA1 - stride of first dimension of A (complex elements)
+ * @param {integer} strideA2 - stride of second dimension of A (complex elements)
+ * @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+ * @param {Float64Array} d - output diagonal elements of T (length N)
+ * @param {integer} strideD - stride for d
+ * @param {NonNegativeInteger} offsetD - starting index for d
+ * @param {Float64Array} e - output off-diagonal elements of T (length N-1)
+ * @param {integer} strideE - stride for e
+ * @param {NonNegativeInteger} offsetE - starting index for e
+ * @param {Complex128Array} TAU - output scalar factors of reflectors (length N-1)
+ * @param {integer} strideTAU - stride for TAU (complex elements)
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {integer} info (0 = success)
+ */
 
 /* eslint-disable max-len, max-params */
 

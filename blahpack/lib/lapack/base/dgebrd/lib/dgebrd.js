@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Reduces a real M-by-N matrix A to upper or lower real bidiagonal form B.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} d - input array
@@ -48,7 +48,7 @@ var base = require( './base.js' );
 * @param {integer} strideTAUP - `TAUP` stride length
 * @param {Float64Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
+* @param {integer} lwork - length of WORK array
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */

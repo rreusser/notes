@@ -33,13 +33,13 @@ var base = require( './base.js' );
 * Applies a real block reflector H or its transpose H.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {string} trans - TODO
-* @param {string} direct - TODO
-* @param {string} storev - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} side - `'left'` or `'right'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} direct - `'forward'` or `'backward'`
+* @param {string} storev - `'columnwise'` or `'rowwise'`
+* @param {NonNegativeInteger} M - rows of C
+* @param {NonNegativeInteger} N - columns of C
+* @param {NonNegativeInteger} K - number of elementary reflectors
 * @param {Float64Array} V - input matrix
 * @param {PositiveInteger} LDV - leading dimension of `V`
 * @param {Float64Array} T - input matrix

@@ -33,11 +33,11 @@ var base = require( './base.js' );
 * Initializes an M-by-N matrix A to BETA on the diagonal and ALPHA on the.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {number} alpha - TODO
-* @param {number} beta - TODO
+* @param {string} uplo - `'upper'` or `'lower'`, otherwise full matrix
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
+* @param {number} alpha - off-diagonal value
+* @param {number} beta - diagonal value
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

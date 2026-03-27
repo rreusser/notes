@@ -10,22 +10,29 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves a complex Hermitian tridiagonal system using LDL^H factorization
-*
-* @param {integer} iuplo - iuplo
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} nrhs - nrhs
-* @param {Float64Array} d - input array
-* @param {integer} strideD - stride length for `d`
-* @param {NonNegativeInteger} offsetD - starting index for `d`
-* @param {Float64Array} e - input array
-* @param {integer} strideE - stride length for `e`
-* @param {NonNegativeInteger} offsetE - starting index for `e`
-* @param {Float64Array} B - output matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-*/
+ * Solves a complex Hermitian positive definite tridiagonal system of the form
+ * A * X = B using the L*D*L^H or U^H*D*U factorization of A computed by zpttrf.
+ *
+ * D is a diagonal matrix (real) specified in the vector D, U (or L) is a unit
+ * bidiagonal matrix whose superdiagonal (subdiagonal) is specified in the
+ * complex vector E, and X and B are N by NRHS complex matrices.
+ *
+ *
+ * @param {integer} iuplo - 0 for L*D*L^H factorization, 1 for U^H*D*U factorization
+ * @param {NonNegativeInteger} N - order of the tridiagonal matrix A (N >= 0)
+ * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
+ * @param {Float64Array} d - diagonal elements of D (real), length N
+ * @param {integer} strideD - stride length for `d`
+ * @param {NonNegativeInteger} offsetD - starting index for `d`
+ * @param {Complex128Array} e - off-diagonal elements of L or U, length N-1
+ * @param {integer} strideE - stride length for `e` (in complex elements)
+ * @param {NonNegativeInteger} offsetE - starting index for `e` (in complex elements)
+ * @param {Complex128Array} B - right hand side matrix (N x NRHS), overwritten with solution X
+ * @param {integer} strideB1 - stride of the first dimension of `B` (in complex elements)
+ * @param {integer} strideB2 - stride of the second dimension of `B` (in complex elements)
+ * @param {NonNegativeInteger} offsetB - starting index for `B` (in complex elements)
+ * @returns {Complex128Array} B - the solution matrix X
+ */
 function zptts2( iuplo, N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
 	return base( iuplo, N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 }

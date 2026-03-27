@@ -33,16 +33,16 @@ var base = require( './base.js' );
 * Performs one of the Hermitian rank-2k operations:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
-* @param {Complex128} alpha - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'conjugate-transpose'`
+* @param {NonNegativeInteger} N - order of matrix C
+* @param {NonNegativeInteger} K - number of columns of A,B (if trans = 'no-transpose') or rows (if trans = 'conjugate-transpose')
+* @param {Complex128} alpha - complex scalar multiplier
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} B - input matrix
 * @param {PositiveInteger} LDB - leading dimension of `B`
-* @param {number} beta - TODO
+* @param {number} beta - REAL scalar multiplier for C
 * @param {Complex128Array} C - input matrix
 * @param {PositiveInteger} LDC - leading dimension of `C`
 * @throws {TypeError} first argument must be a valid order

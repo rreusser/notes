@@ -31,15 +31,15 @@ var base = require( './base.js' );
 /**
 * Estimates the 1-norm of a square matrix using reverse communication.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} v - input array
 * @param {integer} strideV - `v` stride length
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Int32Array} ISGN - input array
 * @param {integer} strideISGN - `ISGN` stride length
-* @param {Float64Array} EST - TODO
-* @param {Int32Array} KASE - TODO
+* @param {Float64Array} EST - in/out: EST[0] is the estimated norm
+* @param {Int32Array} KASE - in/out: KASE[0] is the operation to perform
 * @param {Int32Array} ISAVE - input array
 * @param {integer} strideISAVE - `ISAVE` stride length
 * @returns {*} result

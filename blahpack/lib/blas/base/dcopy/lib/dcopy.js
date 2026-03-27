@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Copies a vector x to a vector y.
 *
-* @param {PositiveInteger} N - TODO
+* @param {PositiveInteger} N - number of indexed elements
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Float64Array} y - input array

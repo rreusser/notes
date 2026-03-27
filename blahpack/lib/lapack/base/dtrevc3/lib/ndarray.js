@@ -4,41 +4,55 @@
 
 // MODULES //
 
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Computes eigenvectors of a real upper quasi-triangular matrix
-*
-* @param {string} side - specifies the operation type
-* @param {string} howmny - specifies the operation type
-* @param {Float64Array} SELECT - input array
-* @param {integer} strideSELECT - stride length for `SELECT`
-* @param {NonNegativeInteger} offsetSELECT - starting index for `SELECT`
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} T - input matrix
-* @param {integer} strideT1 - stride of the first dimension of `T`
-* @param {integer} strideT2 - stride of the second dimension of `T`
-* @param {NonNegativeInteger} offsetT - starting index for `T`
-* @param {Float64Array} VL - input matrix
-* @param {integer} strideVL1 - stride of the first dimension of `VL`
-* @param {integer} strideVL2 - stride of the second dimension of `VL`
-* @param {NonNegativeInteger} offsetVL - starting index for `VL`
-* @param {Float64Array} VR - input matrix
-* @param {integer} strideVR1 - stride of the first dimension of `VR`
-* @param {integer} strideVR2 - stride of the second dimension of `VR`
-* @param {NonNegativeInteger} offsetVR - starting index for `VR`
-* @param {integer} mm - mm
-* @param {NonNegativeInteger} M - number of rows
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @returns {integer} status code (0 = success)
-*/
+ * Computes some or all of the right and/or left eigenvectors of a real
+ * upper quasi-triangular matrix T.
+ *
+ * The right eigenvector x and the left eigenvector y of T corresponding
+ * to an eigenvalue w are defined by:
+ *   T*x = w*x,     y**T * T = w * y**T
+ *
+ * This uses NB=1 (non-blocked) back-transformation.
+ *
+ *
+ * @param {string} side - `'right'`, `'left'`, or `'both'`
+ * @param {string} howmny - `'all'`, `'backtransform'`, or `'selected'`
+ * @param {(Uint8Array|Array)} SELECT - boolean selection array (used only if howmny='S')
+ * @param {integer} strideSELECT - stride for SELECT
+ * @param {NonNegativeInteger} offsetSELECT - offset for SELECT
+ * @param {NonNegativeInteger} N - order of matrix T
+ * @param {Float64Array} T - quasi-triangular Schur matrix (N x N)
+ * @param {integer} strideT1 - first dimension stride of T
+ * @param {integer} strideT2 - second dimension stride of T
+ * @param {NonNegativeInteger} offsetT - offset for T
+ * @param {Float64Array} VL - left eigenvector matrix (N x MM)
+ * @param {integer} strideVL1 - first dimension stride of VL
+ * @param {integer} strideVL2 - second dimension stride of VL
+ * @param {NonNegativeInteger} offsetVL - offset for VL
+ * @param {Float64Array} VR - right eigenvector matrix (N x MM)
+ * @param {integer} strideVR1 - first dimension stride of VR
+ * @param {integer} strideVR2 - second dimension stride of VR
+ * @param {NonNegativeInteger} offsetVR - offset for VR
+ * @param {integer} mm - number of columns available in VL/VR
+ * @param {integer} M - (unused, set internally)
+ * @param {Float64Array} WORK - workspace array of length at least 3*N
+ * @param {integer} strideWORK - stride for WORK (must be 1)
+ * @param {NonNegativeInteger} offsetWORK - offset for WORK
+ * @param {integer} lwork - length of WORK
+ * @throws {TypeError} First argument must be a valid operation side
+ * @returns {integer} info (0 = success)
+ */
 function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );
+	}
 	return base( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, mm, M, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 

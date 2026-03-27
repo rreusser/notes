@@ -1,20 +1,33 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Overwrites the M-by-N matrix C with Q_C, Q__T_C, C_Q, or `C_Q*_T`.
+ * where Q is a real orthogonal matrix defined as the product of K
+ * elementary reflectors `Q = H(1)*H(2)*...*H(k)` as returned
+ * by DGEQR2.
+ *
+ *
+ * @param {string} side - `'left'` to apply Q from left, `'right'` from right
+ * @param {string} trans - `'no-transpose'` for Q, `'transpose'` for Q^T
+ * @param {NonNegativeInteger} M - number of rows of C
+ * @param {NonNegativeInteger} N - number of columns of C
+ * @param {NonNegativeInteger} K - number of elementary reflectors
+ * @param {Float64Array} A - reflector vectors from DGEQR2
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} TAU - scalar factors of reflectors
+ * @param {integer} strideTAU - stride for TAU
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU
+ * @param {Float64Array} C - input/output matrix
+ * @param {integer} strideC1 - stride of the first dimension of C
+ * @param {integer} strideC2 - stride of the second dimension of C
+ * @param {NonNegativeInteger} offsetC - starting index for C
+ * @param {Float64Array} WORK - workspace array
+ * @param {integer} strideWORK - stride for WORK
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK
+ * @throws {TypeError} First argument must be a valid operation side
+ * @throws {TypeError} Second argument must be a valid transpose operation
+ * @returns {integer} info - 0 if successful
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -25,6 +38,7 @@
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

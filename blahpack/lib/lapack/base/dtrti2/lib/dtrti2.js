@@ -33,9 +33,9 @@ var base = require( './base.js' );
 * Computes the inverse of a real upper or lower triangular matrix.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {string} diag - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

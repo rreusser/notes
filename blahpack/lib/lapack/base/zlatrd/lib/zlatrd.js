@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Reduces NB rows and columns of a complex Hermitian matrix A to Hermitian.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} nb - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of matrix A
+* @param {integer} nb - number of rows/columns to reduce
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} e - input array

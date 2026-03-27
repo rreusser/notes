@@ -10,36 +10,46 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Compute eigenvalues and Schur decomposition of a complex matrix
-*
-* @param {string} jobvs - specifies the operation type
-* @param {string} sort - specifies the operation type
-* @param {boolean} select - select
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {integer} sdim - sdim
-* @param {Float64Array} w - input array
-* @param {integer} strideW - stride length for `w`
-* @param {NonNegativeInteger} offsetW - starting index for `w`
-* @param {Float64Array} VS - input matrix
-* @param {integer} strideVS1 - stride of the first dimension of `VS`
-* @param {integer} strideVS2 - stride of the second dimension of `VS`
-* @param {NonNegativeInteger} offsetVS - starting index for `VS`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @param {Float64Array} RWORK - input array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @param {Float64Array} BWORK - output array
-* @param {integer} strideBWORK - stride length for `BWORK`
-* @param {NonNegativeInteger} offsetBWORK - starting index for `BWORK`
-* @returns {integer} status code (0 = success)
-*/
+ * Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,
+ * the Schur form T, and, optionally, the matrix of Schur vectors Z.
+ * This gives the Schur factorization A = Z*T*(Z**H).
+ *
+ * Optionally, it also orders the eigenvalues on the diagonal of the Schur
+ * form so that selected eigenvalues are at the top left. The leading columns
+ * of Z then form an orthonormal basis for the invariant subspace corresponding
+ * to the selected eigenvalues.
+ *
+ * A complex matrix is in Schur form if it is upper triangular.
+ *
+ *
+ * @param {string} jobvs - `'none'` or `'compute-vectors'`
+ * @param {string} sort - `'none'` or `'sort'`
+ * @param {Function} select - function(w) returning boolean, where w is Complex128; used when sort='S'
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {Complex128Array} A - N-by-N matrix, overwritten with Schur form T on exit
+ * @param {integer} strideA1 - stride of first dimension of A (complex elements)
+ * @param {integer} strideA2 - stride of second dimension of A (complex elements)
+ * @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+ * @param {Float64Array} sdim - output: sdim[0] = number of eigenvalues for which SELECT is true
+ * @param {Complex128Array} W - output: eigenvalues
+ * @param {integer} strideW - stride for W (complex elements)
+ * @param {NonNegativeInteger} offsetW - starting index for W (complex elements)
+ * @param {Complex128Array} VS - output: N-by-N matrix of Schur vectors (if jobvs='V')
+ * @param {integer} strideVS1 - stride of first dimension of VS (complex elements)
+ * @param {integer} strideVS2 - stride of second dimension of VS (complex elements)
+ * @param {NonNegativeInteger} offsetVS - starting index for VS (complex elements)
+ * @param {Complex128Array} WORK - workspace
+ * @param {integer} strideWORK - stride for WORK (complex elements)
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+ * @param {integer} lwork - workspace length (complex elements)
+ * @param {Float64Array} RWORK - real workspace of length N
+ * @param {integer} strideRWORK - stride for RWORK
+ * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
+ * @param {Uint8Array} BWORK - boolean workspace of length N (used when sort='S')
+ * @param {integer} strideBWORK - stride for BWORK
+ * @param {NonNegativeInteger} offsetBWORK - starting index for BWORK
+ * @returns {integer} info (0=success, >0 = failure)
+ */
 function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ) { // eslint-disable-line max-len, max-params
 	return base( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ); // eslint-disable-line max-len
 }

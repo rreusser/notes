@@ -1,20 +1,34 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Solves a system of linear equations:.
+ * `A*X = B  or  A__T*X = B`
+ * with a general band matrix A using the LU factorization computed by dgbtrf.
+ *
+ * IPIV is 0-based (matching dgbtf2/dgbtrf output).
+ *
+ * Band storage: AB is stored with LDAB = 2*KL+KU+1 rows. The factored form
+ * has U as an upper triangular band matrix with KL+KU superdiagonals, and
+ * L multipliers below the diagonal.
+ *
+ *
+ * @param {string} trans - `'no-transpose'` for A*X=B, `'transpose'` for A^T*X=B
+ * @param {NonNegativeInteger} N - order of matrix A
+ * @param {NonNegativeInteger} kl - number of subdiagonals
+ * @param {NonNegativeInteger} ku - number of superdiagonals
+ * @param {NonNegativeInteger} nrhs - number of right-hand sides
+ * @param {Float64Array} AB - factored band matrix from dgbtrf
+ * @param {integer} strideAB1 - stride of the first dimension of AB
+ * @param {integer} strideAB2 - stride of the second dimension of AB
+ * @param {NonNegativeInteger} offsetAB - starting index for AB
+ * @param {Int32Array} IPIV - pivot indices from dgbtrf (0-based)
+ * @param {integer} strideIPIV - stride for IPIV
+ * @param {NonNegativeInteger} offsetIPIV - starting index for IPIV
+ * @param {Float64Array} B - right-hand side matrix, overwritten with solution
+ * @param {integer} strideB1 - stride of the first dimension of B
+ * @param {integer} strideB2 - stride of the second dimension of B
+ * @param {NonNegativeInteger} offsetB - starting index for B
+ * @throws {TypeError} First argument must be a valid transpose operation
+ * @returns {integer} info - 0 if successful
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -24,6 +38,7 @@
 
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

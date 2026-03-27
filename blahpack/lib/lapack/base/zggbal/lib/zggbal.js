@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Balances a pair of general complex matrices (A, B).
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} job - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {*} job - job
+* @param {*} N - N
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} B - input matrix

@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Copy a complex double-precision vector.
 *
-* @param {PositiveInteger} N - TODO
+* @param {PositiveInteger} N - number of complex elements
 * @param {Complex128Array} zx - input array
 * @param {integer} strideX - `zx` stride length
 * @param {Complex128Array} zy - input array

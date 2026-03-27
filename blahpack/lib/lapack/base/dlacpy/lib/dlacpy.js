@@ -33,9 +33,9 @@ var base = require( './base.js' );
 * Copies all or part of a matrix `A` to another matrix `B`.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} uplo - specifies whether to copy the upper triangle, lower triangle, or all of `A`
+* @param {NonNegativeInteger} M - number of rows in `A`
+* @param {NonNegativeInteger} N - number of columns in `A`
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} B - input matrix

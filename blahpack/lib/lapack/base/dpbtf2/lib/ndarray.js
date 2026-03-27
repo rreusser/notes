@@ -1,20 +1,29 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Computes the Cholesky factorization of a real symmetric positive definite.
+ * band matrix A.
+ *
+ * The factorization has the form:
+ * `A = U^T*U`,  if uplo = 'upper', or
+ * A = L*L^T,  if uplo = 'lower',
+ * where U is upper triangular and L is lower triangular.
+ *
+ * This is the unblocked version of the algorithm, calling Level 2 BLAS.
+ *
+ * Uses band storage format: if UPLO = 'U', AB(kd+1+i-j, j) = A(i,j) for
+ * max(1,j-kd)<=i<=j; if UPLO = 'L', AB(1+i-j, j) = A(i,j) for
+ * j<=i<=min(n,j+kd).
+ *
+ *
+ * @param {string} uplo - specifies whether upper or lower triangle is stored (`'upper'` or `'lower'`)
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {NonNegativeInteger} kd - number of super/sub-diagonals
+ * @param {Float64Array} AB - input/output band matrix in band storage
+ * @param {integer} strideAB1 - stride of the first dimension of AB
+ * @param {integer} strideAB2 - stride of the second dimension of AB
+ * @param {NonNegativeInteger} offsetAB - starting index for AB
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {integer} info - 0 if successful, k>0 if the leading minor of order k is not positive definite
+ */
 
 /* eslint-disable max-len, max-params */
 

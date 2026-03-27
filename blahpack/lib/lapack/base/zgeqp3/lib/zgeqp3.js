@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Computes a QR factorization with column pivoting of an M-by-N matrix:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Int32Array} JPVT - input array
@@ -44,7 +44,7 @@ var base = require( './base.js' );
 * @param {integer} strideTAU - `TAU` stride length
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
+* @param {integer} lwork - workspace size in complex elements (unused)
 * @param {Float64Array} RWORK - input array
 * @param {integer} strideRWORK - `RWORK` stride length
 * @throws {TypeError} first argument must be a valid order

@@ -31,13 +31,13 @@ var base = require( './base.js' );
 /**
 * Applies a real plane rotation to a pair of complex double-precision vectors:.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of complex elements
 * @param {Complex128Array} zx - input array
 * @param {integer} strideX - `zx` stride length
 * @param {Complex128Array} zy - input array
 * @param {integer} strideY - `zy` stride length
-* @param {number} c - TODO
-* @param {number} s - TODO
+* @param {number} c - cosine of rotation (real)
+* @param {number} s - sine of rotation (real)
 * @returns {*} result
 */
 function zdrot( N, zx, strideX, zy, strideY, c, s ) {

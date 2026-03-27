@@ -31,26 +31,26 @@ var base = require( './base.js' );
 /**
 * Checks for deflation, computes a shift (TAU) and calls dqds. In case of.
 *
-* @param {integer} i0 - TODO
-* @param {integer} n0 - TODO
+* @param {integer} i0 - first index (1-based)
+* @param {integer} n0 - last index (1-based)
 * @param {Float64Array} z - input array
 * @param {integer} stride - `z` stride length
-* @param {integer} pp - TODO
-* @param {number} dmin - TODO
-* @param {number} sigma - TODO
-* @param {number} desig - TODO
-* @param {number} qmax - TODO
-* @param {integer} nfail - TODO
-* @param {integer} iter - TODO
-* @param {integer} ndiv - TODO
-* @param {integer} ttype - TODO
-* @param {number} dmin1 - TODO
-* @param {number} dmin2 - TODO
-* @param {number} dn - TODO
-* @param {number} dn1 - TODO
-* @param {number} dn2 - TODO
-* @param {number} g - TODO
-* @param {number} tau - TODO
+* @param {integer} pp - ping-pong flag (0, 1, or 2)
+* @param {number} dmin - minimum value of d
+* @param {number} sigma - accumulated shift
+* @param {number} desig - lower order part of sigma
+* @param {number} qmax - maximum value of q
+* @param {integer} nfail - failure counter
+* @param {integer} iter - iteration counter
+* @param {integer} ndiv - division counter
+* @param {integer} ttype - shift type
+* @param {number} dmin1 - min d excluding d(n0)
+* @param {number} dmin2 - min d excluding d(n0) and d(n0-1)
+* @param {number} dn - d(n0)
+* @param {number} dn1 - d(n0-1)
+* @param {number} dn2 - d(n0-2)
+* @param {number} g - damping parameter
+* @param {number} tau - shift value
 * @returns {*} result
 */
 function dlasq3( i0, n0, z, stride, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, ieee, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau ) {

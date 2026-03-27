@@ -1,20 +1,42 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Computes a step of QR factorization with column pivoting using a.
+ * blocked algorithm. It factors at most NB columns of the M-by-N
+ * submatrix A(OFFSET+1:M, 1:N). The actual number of columns
+ * factored is returned as kb.
+ *
+ * A, TAU, AUXV, F are Complex128Arrays. Strides and offsets are in complex elements.
+ * VN1, VN2 are real (Float64Array).
+ *
+ *
+ * @param {NonNegativeInteger} M - total rows of A
+ * @param {NonNegativeInteger} N - columns of current submatrix
+ * @param {NonNegativeInteger} offset - rows already factored
+ * @param {NonNegativeInteger} nb - desired block size
+ * @param {Complex128Array} A - matrix
+ * @param {integer} strideA1 - first dim stride of A (complex elements)
+ * @param {integer} strideA2 - second dim stride of A (complex elements)
+ * @param {NonNegativeInteger} offsetA - starting index for A (complex elements)
+ * @param {Int32Array} JPVT - column permutation
+ * @param {integer} strideJPVT - stride for JPVT
+ * @param {NonNegativeInteger} offsetJPVT - starting index for JPVT
+ * @param {Complex128Array} TAU - reflector scalars
+ * @param {integer} strideTAU - stride for TAU (complex elements)
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU (complex elements)
+ * @param {Float64Array} VN1 - partial column norms (real)
+ * @param {integer} strideVN1 - stride for VN1
+ * @param {NonNegativeInteger} offsetVN1 - starting index for VN1
+ * @param {Float64Array} VN2 - original column norms (real)
+ * @param {integer} strideVN2 - stride for VN2
+ * @param {NonNegativeInteger} offsetVN2 - starting index for VN2
+ * @param {Complex128Array} AUXV - auxiliary vector (length >= NB)
+ * @param {integer} strideAUXV - stride for AUXV (complex elements)
+ * @param {NonNegativeInteger} offsetAUXV - starting index for AUXV (complex elements)
+ * @param {Complex128Array} F - panel update matrix (N-by-NB)
+ * @param {integer} strideF1 - first dim stride of F (complex elements)
+ * @param {integer} strideF2 - second dim stride of F (complex elements)
+ * @param {NonNegativeInteger} offsetF - starting index for F (complex elements)
+ * @returns {integer} kb - actual number of columns factored
+ */
 
 /* eslint-disable max-len, max-params */
 

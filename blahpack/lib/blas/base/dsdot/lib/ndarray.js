@@ -10,19 +10,18 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Compute the dot product of two vectors with extended precision accumulation
-*
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float32Array} x - input array
-* @param {integer} strideX - stride length for `x`
-* @param {NonNegativeInteger} offsetX - starting index for `x`
-* @param {integer} incx - incx
-* @param {Float32Array} y - output array
-* @param {integer} strideY - stride length for `y`
-* @param {NonNegativeInteger} offsetY - starting index for `y`
-* @param {integer} incy - incy
-* @returns {number} result
-*/
+ * Computes the dot product of two vectors with extended precision accumulation.
+ *
+ *
+ * @param {PositiveInteger} N - number of indexed elements
+ * @param {Float64Array} x - first input array
+ * @param {integer} strideX - `x` stride length
+ * @param {NonNegativeInteger} offsetX - starting `x` index
+ * @param {Float64Array} y - second input array
+ * @param {integer} strideY - `y` stride length
+ * @param {NonNegativeInteger} offsetY - starting `y` index
+ * @returns {number} dot product
+ */
 function dsdot( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy ) { // eslint-disable-line max-len, max-params
 	return base( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy ); // eslint-disable-line max-len
 }

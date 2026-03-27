@@ -33,9 +33,9 @@ var base = require( './base.js' );
 * Computes the Cholesky factorization of a real symmetric positive definite.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} kd - TODO
+* @param {string} uplo - specifies whether upper or lower triangle is stored (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} kd - number of super/sub-diagonals
 * @param {Float64Array} AB - input matrix
 * @param {PositiveInteger} LDAB - leading dimension of `AB`
 * @throws {TypeError} first argument must be a valid order

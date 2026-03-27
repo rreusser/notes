@@ -1,20 +1,29 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Computes a partial factorization of a real symmetric matrix A using the.
+ * Bunch-Kaufman diagonal pivoting method. This is the blocked panel
+ * factorization used by dsytrf.
+ *
+ * The routine factorizes NB columns of A and returns the number of columns
+ * factored in the return value's `kb` field.
+ *
+ *
+ * @param {string} uplo - `'upper'` or `'lower'`
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {NonNegativeInteger} nb - maximum number of columns to factor
+ * @param {Float64Array} A - input/output symmetric matrix (column-major)
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - index offset for A
+ * @param {Int32Array} IPIV - pivot index output array, length N
+ * @param {integer} strideIPIV - stride for IPIV
+ * @param {NonNegativeInteger} offsetIPIV - index offset for IPIV
+ * @param {Float64Array} W - workspace matrix, dimensions N x NB
+ * @param {integer} strideW1 - stride of the first dimension of W
+ * @param {integer} strideW2 - stride of the second dimension of W
+ * @param {NonNegativeInteger} offsetW - index offset for W
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {Object} result - { info, kb } where info=0 on success, kb=columns factored
+ */
 
 /* eslint-disable max-len, max-params */
 

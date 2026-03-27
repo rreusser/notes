@@ -33,17 +33,17 @@ var base = require( './base.js' );
 * Perform one of the complex matrix-matrix operations:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} transa - TODO
-* @param {string} transb - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
-* @param {Complex128} alpha - TODO
+* @param {string} transa - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} transb - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {NonNegativeInteger} M - rows of op(A) and C
+* @param {NonNegativeInteger} N - columns of op(B) and C
+* @param {NonNegativeInteger} K - columns of op(A) / rows of op(B)
+* @param {Complex128} alpha - complex scalar
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} B - input matrix
 * @param {PositiveInteger} LDB - leading dimension of `B`
-* @param {Complex128} beta - TODO
+* @param {Complex128} beta - complex scalar
 * @param {Complex128Array} C - input matrix
 * @param {PositiveInteger} LDC - leading dimension of `C`
 * @throws {TypeError} first argument must be a valid order

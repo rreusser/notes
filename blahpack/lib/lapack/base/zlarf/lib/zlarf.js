@@ -34,12 +34,12 @@ var base = require( './base.js' );
 * Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} side - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} side - `'left'` or `'right'`
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
 * @param {Complex128Array} v - input array
 * @param {integer} strideV - `v` stride length
-* @param {NonNegativeInteger} offsetTau - TODO
+* @param {NonNegativeInteger} offsetTau - starting index for tau (in complex elements)
 * @param {Complex128Array} C - input matrix
 * @param {PositiveInteger} LDC - leading dimension of `C`
 * @param {Complex128Array} WORK - input array

@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Compute the conjugate dot product of two complex vectors:.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of complex elements
 * @param {Complex128Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Complex128Array} y - input array

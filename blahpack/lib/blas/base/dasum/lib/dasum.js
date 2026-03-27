@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Computes the sum of absolute values of a double-precision floating-point vector.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of indexed elements
 * @param {Float64Array} x - input array
 * @param {integer} stride - `x` stride length
 * @returns {*} result

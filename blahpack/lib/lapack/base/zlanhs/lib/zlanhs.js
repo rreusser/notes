@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Returns the value of the one norm, Frobenius norm, infinity norm, or.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} norm - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} WORK - input array

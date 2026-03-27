@@ -1,20 +1,39 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Applies a real block reflector H or its transpose H**T to a.
+ * real M-by-N matrix C, from either the left or the right.
+ *
+ * `H = I - V*T*V**T  (for STOREV='C')`
+ * `H = I - V**T*T*V  (for STOREV='R')`
+ *
+ * Supports both STOREV='C' (columnwise) and STOREV='R' (rowwise).
+ *
+ *
+ * @param {string} side - `'left'` or `'right'`
+ * @param {string} trans - `'no-transpose'` or `'transpose'`
+ * @param {string} direct - `'forward'` or `'backward'`
+ * @param {string} storev - `'columnwise'` or `'rowwise'`
+ * @param {NonNegativeInteger} M - rows of C
+ * @param {NonNegativeInteger} N - columns of C
+ * @param {NonNegativeInteger} K - number of elementary reflectors
+ * @param {Float64Array} V - matrix of reflector vectors
+ * @param {integer} strideV1 - first dim stride of V
+ * @param {integer} strideV2 - second dim stride of V
+ * @param {NonNegativeInteger} offsetV - starting index for V
+ * @param {Float64Array} T - triangular factor
+ * @param {integer} strideT1 - first dim stride of T
+ * @param {integer} strideT2 - second dim stride of T
+ * @param {NonNegativeInteger} offsetT - starting index for T
+ * @param {Float64Array} C - matrix, modified in-place
+ * @param {integer} strideC1 - first dim stride of C
+ * @param {integer} strideC2 - second dim stride of C
+ * @param {NonNegativeInteger} offsetC - starting index for C
+ * @param {Float64Array} WORK - workspace
+ * @param {integer} strideWORK1 - first dim stride of WORK
+ * @param {integer} strideWORK2 - second dim stride of WORK
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK
+ * @throws {TypeError} First argument must be a valid operation side
+ * @throws {TypeError} Second argument must be a valid transpose operation
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -25,6 +44,7 @@
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

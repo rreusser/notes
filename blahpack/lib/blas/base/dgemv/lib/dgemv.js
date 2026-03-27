@@ -34,15 +34,15 @@ var base = require( './base.js' );
 * Performs one of the matrix-vector operations:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {number} alpha - TODO
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {number} alpha - scalar multiplier for A*x
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
-* @param {number} beta - TODO
+* @param {number} beta - scalar multiplier for y
 * @param {Float64Array} y - input array
 * @param {integer} strideY - `y` stride length
 * @throws {TypeError} first argument must be a valid order

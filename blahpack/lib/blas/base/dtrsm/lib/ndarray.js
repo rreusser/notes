@@ -1,20 +1,32 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Solves one of the matrix equations:.
+ * op(A)_X = alpha_B,  or  X_op(A) = alpha_B
+ * where alpha is a scalar, X and B are M-by-N matrices, A is a unit or
+ * non-unit, upper or lower triangular matrix, and op(A) is A or A**T.
+ * The matrix X is overwritten on B.
+ *
+ *
+ * @param {string} side - `'left'` or `'right'`
+ * @param {string} uplo - `'upper'` or `'lower'` (upper or lower triangular)
+ * @param {string} transa - `'no-transpose'` or `'transpose'`
+ * @param {string} diag - `'unit'` or `'non-unit'`
+ * @param {NonNegativeInteger} M - number of rows of B
+ * @param {NonNegativeInteger} N - number of columns of B
+ * @param {number} alpha - scalar multiplier for B
+ * @param {Float64Array} A - triangular matrix
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - index offset for A
+ * @param {Float64Array} B - input/output matrix (overwritten with X)
+ * @param {integer} strideB1 - stride of the first dimension of B
+ * @param {integer} strideB2 - stride of the second dimension of B
+ * @param {NonNegativeInteger} offsetB - index offset for B
+ * @throws {TypeError} First argument must be a valid operation side
+ * @throws {TypeError} Second argument must be a valid matrix triangle
+ * @throws {TypeError} Third argument must be a valid transpose operation
+ * @throws {TypeError} Fourth argument must be a valid diagonal type
+ * @returns {Float64Array} `B`
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -27,6 +39,7 @@ var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

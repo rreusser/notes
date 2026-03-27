@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Computes the Euclidean norm of a real double-precision vector.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of indexed elements
 * @param {Float64Array} x - input array
 * @param {integer} stride - `x` stride length
 * @returns {*} result

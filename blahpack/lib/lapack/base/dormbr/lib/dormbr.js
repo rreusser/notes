@@ -34,12 +34,12 @@ var base = require( './base.js' );
 * If VECT = 'Q', overwrite the matrix C with one of:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} vect - TODO
-* @param {string} side - TODO
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
+* @param {string} vect - `'apply-Q'` or `'apply-P'`
+* @param {string} side - `'left'` or `'right'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {NonNegativeInteger} K - number of columns/rows in original matrix for DGEBRD
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} TAU - input array

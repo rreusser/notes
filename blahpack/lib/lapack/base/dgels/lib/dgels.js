@@ -33,10 +33,10 @@ var base = require( './base.js' );
 * Solves overdetermined or underdetermined real linear systems involving an.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} nrhs - TODO
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} B - input matrix

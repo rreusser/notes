@@ -33,17 +33,17 @@ var base = require( './base.js' );
 * Performs one of the matrix-matrix operations:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} transa - TODO
-* @param {string} transb - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
-* @param {number} alpha - TODO
+* @param {string} transa - specifies op(A): `'no-transpose'` or `'transpose'`
+* @param {string} transb - `'no-transpose'` or `'transpose'`
+* @param {NonNegativeInteger} M - number of rows of op(A) and C
+* @param {NonNegativeInteger} N - number of columns of op(B) and C
+* @param {NonNegativeInteger} K - number of columns of op(A) / rows of op(B)
+* @param {number} alpha - scalar multiplier for op(A)*op(B)
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} B - input matrix
 * @param {PositiveInteger} LDB - leading dimension of `B`
-* @param {number} beta - TODO
+* @param {number} beta - scalar multiplier for C
 * @param {Float64Array} C - input matrix
 * @param {PositiveInteger} LDC - leading dimension of `C`
 * @throws {TypeError} first argument must be a valid order

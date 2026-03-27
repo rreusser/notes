@@ -34,14 +34,14 @@ var base = require( './base.js' );
 * Computes the inverse of a matrix using the LU factorization computed by zgetrf.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Int32Array} IPIV - input array
 * @param {integer} strideIPIV - `IPIV` stride length
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
+* @param {integer} lwork - length of the WORK array (complex elements); should be at least N for unblocked, N*NB for blocked
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */

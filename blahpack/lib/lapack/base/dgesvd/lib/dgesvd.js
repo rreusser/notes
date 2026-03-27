@@ -34,10 +34,10 @@ var base = require( './base.js' );
 * Computes the singular value decomposition (SVD) of a real M-by-N matrix A,.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} jobu - TODO
-* @param {string} jobvt - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} jobu - `'all'`: all M columns of U returned, `'some'`: first min(M,N) columns, `'overwrite'`: overwrite A, `'none'`: no U
+* @param {string} jobvt - `'all'`: all N rows of V^T returned, `'some'`: first min(M,N) rows, `'overwrite'`: overwrite A, `'none'`: no VT
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} s - input array

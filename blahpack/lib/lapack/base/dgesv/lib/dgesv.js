@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Computes the solution to a real system of linear equations A.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} nrhs - TODO
+* @param {NonNegativeInteger} N - order of matrix A (number of rows and columns)
+* @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Int32Array} IPIV - input array

@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Solves a system of linear equations.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} trans - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} nrhs - TODO
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {NonNegativeInteger} N - order of matrix A
+* @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Int32Array} IPIV - input array

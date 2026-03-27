@@ -1,20 +1,50 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * If VECT = 'Q', overwrite the matrix C with one of:.
+ *
+ * ```text
+ * SIDE = 'L'     SIDE = 'R'
+ * TRANS = 'N':  Q*C          C*Q
+ * TRANS = 'T':  Q^T*C        C*Q^T
+ * ```
+ *
+ * If VECT = 'P', overwrite the matrix C with one of:
+ *
+ * ```text
+ * SIDE = 'L'     SIDE = 'R'
+ * TRANS = 'N':  P*C          C*P
+ * TRANS = 'T':  P^T*C        C*P^T
+ * ```
+ *
+ * Here Q and P^T are the orthogonal matrices determined by DGEBRD when
+ * reducing a real matrix A to bidiagonal form: `A = Q*B*P^T`.
+ * Q is defined as a product of elementary reflectors H(i) = I - tauq(i)_v(i)_v(i)^T.
+ * P is defined as a product of elementary reflectors G(i) = I - taup(i)_u(i)_u(i)^T.
+ *
+ *
+ * @param {string} vect - `'apply-Q'` or `'apply-P'`
+ * @param {string} side - `'left'` or `'right'`
+ * @param {string} trans - `'no-transpose'` or `'transpose'`
+ * @param {NonNegativeInteger} M - number of rows of C
+ * @param {NonNegativeInteger} N - number of columns of C
+ * @param {NonNegativeInteger} K - number of columns/rows in original matrix for DGEBRD
+ * @param {Float64Array} A - matrix containing reflectors from DGEBRD
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - starting index for A
+ * @param {Float64Array} TAU - scalar factors of reflectors (TAUQ or TAUP)
+ * @param {integer} strideTAU - stride for TAU
+ * @param {NonNegativeInteger} offsetTAU - starting index for TAU
+ * @param {Float64Array} C - input/output matrix
+ * @param {integer} strideC1 - stride of the first dimension of C
+ * @param {integer} strideC2 - stride of the second dimension of C
+ * @param {NonNegativeInteger} offsetC - starting index for C
+ * @param {Float64Array} WORK - workspace
+ * @param {integer} strideWORK - stride for WORK
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK
+ * @throws {TypeError} Second argument must be a valid operation side
+ * @throws {TypeError} Third argument must be a valid transpose operation
+ * @returns {integer} info - 0 if successful
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -25,6 +55,7 @@
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

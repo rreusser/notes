@@ -34,20 +34,20 @@ var base = require( './base.js' );
 * Computes the minimum norm solution to a real linear least squares problem:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} nrhs - TODO
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} B - input matrix
 * @param {PositiveInteger} LDB - leading dimension of `B`
 * @param {Float64Array} S - input array
 * @param {integer} strideS - `S` stride length
-* @param {number} rcond - TODO
-* @param {Array} rank - TODO
+* @param {number} rcond - used to determine the effective rank of A.
+* @param {Array} rank - output array; rank[0] set to the effective rank of A
 * @param {Float64Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
+* @param {integer} lwork - length of WORK array (if 0 or WORK is null, auto-sized)
 * @throws {TypeError} first argument must be a valid order
 * @returns {*} result
 */

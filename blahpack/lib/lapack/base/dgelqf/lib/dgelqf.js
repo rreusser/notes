@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Computes an LQ factorization of a real M-by-N matrix A = L.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} M - number of rows in A
+* @param {NonNegativeInteger} N - number of columns in A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} TAU - input array

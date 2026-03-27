@@ -34,10 +34,10 @@ var base = require( './base.js' );
 * Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} jobu - TODO
-* @param {string} jobvt - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} jobu - `'all'`: all M columns of U returned, `'some'`: first min(M,N) columns, `'overwrite'`: overwrite A, `'none'`: no U
+* @param {string} jobvt - `'all'`: all N rows of V^H returned, `'some'`: first min(M,N) rows, `'overwrite'`: overwrite A, `'none'`: no VT
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Float64Array} s - input array
@@ -48,7 +48,7 @@ var base = require( './base.js' );
 * @param {PositiveInteger} LDVT - leading dimension of `VT`
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
+* @param {integer} lwork - length of WORK array (in complex elements)
 * @param {Float64Array} RWORK - input array
 * @param {integer} strideRWORK - `RWORK` stride length
 * @throws {TypeError} first argument must be a valid order

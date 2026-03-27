@@ -34,8 +34,8 @@ var base = require( './base.js' );
 * Computes an LU factorization of a general M-by-N matrix A using partial.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} M - number of rows of matrix A
+* @param {NonNegativeInteger} N - number of columns of matrix A
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Int32Array} IPIV - input array

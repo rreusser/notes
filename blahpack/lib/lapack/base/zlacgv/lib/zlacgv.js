@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Conjugate a complex vector in-place.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of complex elements
 * @param {Complex128Array} x - input array
 * @param {integer} stride - `x` stride length
 * @returns {*} result

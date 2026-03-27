@@ -31,8 +31,8 @@ var base = require( './base.js' );
 /**
 * Sort an array of doubles in increasing or decreasing order using quicksort.
 *
-* @param {string} id - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} id - sort direction: 'increasing' or 'decreasing'
+* @param {NonNegativeInteger} N - number of elements to sort
 * @param {Float64Array} d - input array
 * @param {integer} stride - `d` stride length
 * @returns {*} result

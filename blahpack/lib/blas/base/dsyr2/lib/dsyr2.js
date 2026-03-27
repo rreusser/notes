@@ -34,9 +34,9 @@ var base = require( './base.js' );
 * Performs the symmetric rank-2 operation:.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {number} alpha - TODO
+* @param {string} uplo - specifies whether the upper or lower triangle is used (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {number} alpha - scalar multiplier
 * @param {Float64Array} x - input array
 * @param {integer} strideX - `x` stride length
 * @param {Float64Array} y - input array

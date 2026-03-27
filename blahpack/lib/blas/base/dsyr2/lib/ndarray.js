@@ -1,20 +1,26 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Performs the symmetric rank-2 operation:.
+ * A := alpha_x_y**T + alpha_y_x**T + A,
+ * where alpha is a real scalar, x and y are N element vectors, and A is an
+ * N by N symmetric matrix.
+ *
+ *
+ * @param {string} uplo - specifies whether the upper or lower triangle is used (`'upper'` or `'lower'`)
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {number} alpha - scalar multiplier
+ * @param {Float64Array} x - first input vector
+ * @param {integer} strideX - `x` stride length
+ * @param {NonNegativeInteger} offsetX - starting `x` index
+ * @param {Float64Array} y - second input vector
+ * @param {integer} strideY - `y` stride length
+ * @param {NonNegativeInteger} offsetY - starting `y` index
+ * @param {Float64Array} A - input/output symmetric matrix
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - index offset for A
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {Float64Array} `A`
+ */
 
 /* eslint-disable max-len, max-params */
 

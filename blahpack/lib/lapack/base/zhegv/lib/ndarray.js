@@ -4,39 +4,52 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Computes all eigenvalues and optionally eigenvectors of a complex generalized Hermitian-definite eigenproblem
-*
-* @param {integer} itype - itype
-* @param {string} jobz - specifies the operation type
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Float64Array} B - input matrix
-* @param {integer} strideB1 - stride of the first dimension of `B`
-* @param {integer} strideB2 - stride of the second dimension of `B`
-* @param {NonNegativeInteger} offsetB - starting index for `B`
-* @param {Float64Array} w - input array
-* @param {integer} strideW - stride length for `w`
-* @param {NonNegativeInteger} offsetW - starting index for `w`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @param {Float64Array} RWORK - output array
-* @param {integer} strideRWORK - stride length for `RWORK`
-* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
-* @returns {integer} status code (0 = success)
-*/
+ * Computes all the eigenvalues, and optionally, the eigenvectors of a complex
+ * generalized Hermitian-definite eigenproblem:
+ *   A*x = lambda*B*x  (itype=1)
+ *   A*B*x = lambda*x  (itype=2)
+ *   B*A*x = lambda*x  (itype=3)
+ *
+ * Here A and B are assumed to be Hermitian and B is also positive definite.
+ *
+ *
+ * @param {integer} itype - problem type (1, 2, or 3)
+ * @param {string} jobz - 'compute' for eigenvalues and eigenvectors, 'none' for eigenvalues only
+ * @param {string} uplo - 'upper' or 'lower'
+ * @param {NonNegativeInteger} N - order of matrices A and B
+ * @param {Complex128Array} A - input/output Hermitian matrix; on exit, eigenvectors if jobz='compute'
+ * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+ * @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+ * @param {NonNegativeInteger} offsetA - index offset for A (in complex elements)
+ * @param {Complex128Array} B - Hermitian positive definite matrix; on exit, Cholesky factor
+ * @param {integer} strideB1 - stride of the first dimension of B (in complex elements)
+ * @param {integer} strideB2 - stride of the second dimension of B (in complex elements)
+ * @param {NonNegativeInteger} offsetB - index offset for B (in complex elements)
+ * @param {Float64Array} w - output array for eigenvalues (length N)
+ * @param {integer} strideW - stride for w
+ * @param {NonNegativeInteger} offsetW - starting index for w
+ * @param {Complex128Array} WORK - complex workspace array
+ * @param {integer} strideWORK - stride for WORK (in complex elements)
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
+ * @param {integer} lwork - length of WORK array (in complex elements)
+ * @param {Float64Array} RWORK - real workspace array (length >= max(1, 3*N-2))
+ * @param {integer} strideRWORK - stride for RWORK
+ * @param {NonNegativeInteger} offsetRWORK - starting index for RWORK
+ * @throws {TypeError} Third argument must be a valid matrix triangle
+ * @returns {integer} info - 0 if successful, >0 if zpotrf or zheev failed
+ */
 function zhegv( itype, jobz, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( itype, jobz, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, w, strideW, offsetW, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
 }
 

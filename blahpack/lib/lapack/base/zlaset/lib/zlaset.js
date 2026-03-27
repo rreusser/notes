@@ -33,11 +33,11 @@ var base = require( './base.js' );
 * Initializes a complex matrix to BETA on the diagonal and ALPHA on the.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {Complex128} alpha - TODO
-* @param {Complex128} beta - TODO
+* @param {string} uplo - `'upper'` or `'lower'`, otherwise full
+* @param {NonNegativeInteger} M - number of rows
+* @param {NonNegativeInteger} N - number of columns
+* @param {Complex128} alpha - complex off-diagonal value
+* @param {Complex128} beta - complex diagonal value
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

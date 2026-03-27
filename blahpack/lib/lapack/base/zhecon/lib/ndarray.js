@@ -4,31 +4,47 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
 // MAIN //
 
 /**
-* Estimate the reciprocal condition number of a Hermitian indefinite matrix
-*
-* @param {string} uplo - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} A - input matrix
-* @param {integer} strideA1 - stride of the first dimension of `A`
-* @param {integer} strideA2 - stride of the second dimension of `A`
-* @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} IPIV - input array
-* @param {integer} strideIPIV - stride length for `IPIV`
-* @param {NonNegativeInteger} offsetIPIV - starting index for `IPIV`
-* @param {number} anorm - anorm
-* @param {number} rcond - rcond
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @returns {integer} status code (0 = success)
-*/
+ * Estimates the reciprocal of the condition number (in the 1-norm) of a
+ * complex Hermitian matrix A using the factorization A = U*D*U**H or
+ * A = L*D*L**H computed by zhetrf.
+ *
+ * An estimate is obtained for norm(inv(A)), and the reciprocal of the
+ * condition number is computed as RCOND = 1 / (ANORM * norm(inv(A))).
+ *
+ * IPIV uses the same 0-based convention as zhetrf:
+ *   IPIV[k] >= 0: 1x1 pivot, row k was interchanged with row IPIV[k]
+ *   IPIV[k] < 0: 2x2 pivot, IPIV[k] = ~kp (bitwise NOT of 0-based index)
+ *
+ *
+ * @param {string} uplo - 'upper' or 'lower', must match the factorization
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {Complex128Array} A - factored matrix from zhetrf
+ * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+ * @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+ * @param {NonNegativeInteger} offsetA - starting index for A (in complex elements)
+ * @param {Int32Array} IPIV - pivot indices from zhetrf (0-based)
+ * @param {integer} strideIPIV - stride for IPIV
+ * @param {NonNegativeInteger} offsetIPIV - starting index for IPIV
+ * @param {number} anorm - the 1-norm of the original matrix A
+ * @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
+ * @param {Complex128Array} WORK - workspace array of length at least 2*N
+ * @param {integer} strideWORK - stride for WORK (in complex elements)
+ * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {integer} info - 0 if successful
+ */
 function zhecon( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

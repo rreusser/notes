@@ -34,16 +34,16 @@ var base = require( './base.js' );
 * Back-transform eigenvectors of a balanced pair of general real matrices.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} job - TODO
-* @param {string} side - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} ilo - TODO
-* @param {integer} ihi - TODO
+* @param {string} job - specifies the type of backward transformation:
+* @param {string} side - `'right'` for right eigenvectors, `'left'` for left eigenvectors
+* @param {NonNegativeInteger} N - number of rows of V
+* @param {integer} ilo - ilo from balancing (1-based)
+* @param {integer} ihi - ihi from balancing (1-based)
 * @param {Float64Array} LSCALE - input array
 * @param {integer} strideLSCALE - `LSCALE` stride length
 * @param {Float64Array} RSCALE - input array
 * @param {integer} strideRSCALE - `RSCALE` stride length
-* @param {NonNegativeInteger} M - TODO
+* @param {NonNegativeInteger} M - number of columns of V
 * @param {Complex128Array} V - input matrix
 * @param {PositiveInteger} LDV - leading dimension of `V`
 * @throws {TypeError} first argument must be a valid order

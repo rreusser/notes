@@ -1,20 +1,34 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Estimates the 1-norm of a square matrix using reverse communication.
+ *
+ * This is a reverse communication interface routine. The caller must:
+ *
+ * 1.  Set `KASE[0]` = 0 on the first call.
+ *
+ * 2.  Call dlacn2 in a loop. After each return, if `KASE[0]` = 1,
+ *     compute `x = A*x` and call dlacn2 again; if `KASE[0]` = 2,
+ *     compute `x = A^T*x` and call dlacn2 again; if `KASE[0]` = 0,
+ *     the estimate is complete and `EST[0]` holds the result.
+ *
+ * ISAVE is used to maintain state between calls (3 elements).
+ *
+ *
+ * @param {NonNegativeInteger} N - order of the matrix
+ * @param {Float64Array} v - workspace array of length N
+ * @param {integer} strideV - stride length for `v`
+ * @param {NonNegativeInteger} offsetV - starting index for `v`
+ * @param {Float64Array} x - input/output vector of length N
+ * @param {integer} strideX - stride length for `x`
+ * @param {NonNegativeInteger} offsetX - starting index for `x`
+ * @param {Int32Array} ISGN - sign array of length N
+ * @param {integer} strideISGN - stride length for `ISGN`
+ * @param {NonNegativeInteger} offsetISGN - starting index for `ISGN`
+ * @param {Float64Array} EST - in/out: EST[0] is the estimated norm
+ * @param {Int32Array} KASE - in/out: KASE[0] is the operation to perform
+ * @param {Int32Array} ISAVE - state array of length 3
+ * @param {integer} strideISAVE - stride length for `ISAVE`
+ * @param {NonNegativeInteger} offsetISAVE - starting index for `ISAVE`
+ */
 
 /* eslint-disable max-len, max-params */
 

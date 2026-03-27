@@ -33,10 +33,10 @@ var base = require( './base.js' );
 * Computes the solution to a real system of linear equations A.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} kd - TODO
-* @param {NonNegativeInteger} nrhs - TODO
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - number of linear equations / order of A
+* @param {NonNegativeInteger} kd - number of super/sub-diagonals of A
+* @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
 * @param {Float64Array} AB - input matrix
 * @param {PositiveInteger} LDAB - leading dimension of `AB`
 * @param {Float64Array} B - input matrix

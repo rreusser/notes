@@ -31,11 +31,11 @@ var base = require( './base.js' );
 /**
 * Computes one dqds transform in ping-pong form without a shift.
 *
-* @param {integer} i0 - TODO
-* @param {integer} n0 - TODO
+* @param {integer} i0 - first index (1-based)
+* @param {integer} n0 - last index (1-based)
 * @param {Float64Array} z - input array
 * @param {integer} stride - `z` stride length
-* @param {integer} pp - TODO
+* @param {integer} pp - ping-pong flag (0 or 1)
 * @returns {*} result
 */
 function dlasq6( i0, n0, z, stride, pp ) {

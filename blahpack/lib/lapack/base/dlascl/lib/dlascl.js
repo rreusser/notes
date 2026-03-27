@@ -33,13 +33,13 @@ var base = require( './base.js' );
 * Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} type - TODO
-* @param {integer} kl - TODO
-* @param {integer} ku - TODO
-* @param {number} cfrom - TODO
-* @param {number} cto - TODO
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
+* @param {string} type - `'general'`, `'lower'`, `'upper'`, `'upper-hessenberg'`, `'lower-band'`, `'upper-band'`, or `'band'`
+* @param {integer} kl - lower bandwidth (for banded types)
+* @param {integer} ku - upper bandwidth (for banded types)
+* @param {number} cfrom - scale denominator (must be nonzero)
+* @param {number} cto - scale numerator
+* @param {NonNegativeInteger} M - rows
+* @param {NonNegativeInteger} N - columns
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @throws {TypeError} first argument must be a valid order

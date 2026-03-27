@@ -34,12 +34,12 @@ var base = require( './base.js' );
 * Compute the eigenvalues of a complex matrix pair (H, T), where H is.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} job - TODO
-* @param {string} compq - TODO
-* @param {string} compz - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} ilo - TODO
-* @param {integer} ihi - TODO
+* @param {string} job - `'eigenvalues'` or `'schur'`
+* @param {string} compq - `'none'`, `'initialize'`, or `'update'`
+* @param {string} compz - `'none'`, `'initialize'`, or `'update'`
+* @param {NonNegativeInteger} N - order of matrices H, T, Q, Z
+* @param {integer} ilo - start of active block (1-based)
+* @param {integer} ihi - end of active block (1-based)
 * @param {Complex128Array} H - input matrix
 * @param {PositiveInteger} LDH - leading dimension of `H`
 * @param {Complex128Array} T - input matrix
@@ -54,7 +54,7 @@ var base = require( './base.js' );
 * @param {PositiveInteger} LDZ - leading dimension of `Z`
 * @param {Complex128Array} WORK - input array
 * @param {integer} strideWORK - `WORK` stride length
-* @param {integer} lwork - TODO
+* @param {integer} lwork - workspace size (in complex elements); -1 for query
 * @param {Float64Array} RWORK - input array
 * @param {integer} strideRWORK - `RWORK` stride length
 * @throws {TypeError} first argument must be a valid order

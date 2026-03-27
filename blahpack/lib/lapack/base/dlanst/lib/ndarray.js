@@ -1,20 +1,19 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Computes the value of the one norm, or the Frobenius norm, or the infinity.
+ * norm, or the element of largest absolute value of a real symmetric
+ * tridiagonal matrix A.
+ *
+ *
+ * @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+ * @param {NonNegativeInteger} N - order of the matrix A
+ * @param {Float64Array} d - diagonal elements, length N
+ * @param {integer} strideD - stride for d
+ * @param {NonNegativeInteger} offsetD - starting index for d
+ * @param {Float64Array} e - off-diagonal elements, length N-1
+ * @param {integer} strideE - stride for e
+ * @param {NonNegativeInteger} offsetE - starting index for e
+ * @returns {number} the computed norm value
+ */
 
 /* eslint-disable max-len, max-params */
 

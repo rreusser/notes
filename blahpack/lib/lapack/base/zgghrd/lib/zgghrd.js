@@ -33,11 +33,11 @@ var base = require( './base.js' );
 * Reduce a pair of complex matrices (A, B) to generalized upper Hessenberg.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} compq - TODO
-* @param {string} compz - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {integer} ilo - TODO
-* @param {integer} ihi - TODO
+* @param {string} compq - `'none'`, `'initialize'`, or `'update'`
+* @param {string} compz - `'none'`, `'initialize'`, or `'update'`
+* @param {NonNegativeInteger} N - order of the matrices A and B
+* @param {integer} ilo - ilo (1-based)
+* @param {integer} ihi - ihi (1-based)
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Complex128Array} B - input matrix

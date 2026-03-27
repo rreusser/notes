@@ -1,20 +1,31 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Generates an orthogonal matrix Q which is defined as the product of N-1.
+ * elementary reflectors of order N, as returned by DSYTRD.
+ *
+ * ## Notes
+ *
+ * -   If UPLO = 'U', Q is defined as a product of reflectors:
+ * `Q = H(n-1)*...*H(2) * H(1)`
+ *
+ * -   If UPLO = 'L', Q is defined as a product of reflectors:
+ * `Q = H(1)*H(2)*... * H(n-1)`
+ *
+ *
+ * @param {string} uplo - specifies whether the upper or lower triangle was used in DSYTRD (`'upper'` or `'lower'`)
+ * @param {NonNegativeInteger} N - order of the matrix Q
+ * @param {Float64Array} A - on entry, contains the reflectors from DSYTRD; on exit, the orthogonal matrix Q
+ * @param {integer} strideA1 - stride of the first dimension of `A`
+ * @param {integer} strideA2 - stride of the second dimension of `A`
+ * @param {NonNegativeInteger} offsetA - starting index for `A`
+ * @param {Float64Array} TAU - scalar factors of the reflectors from DSYTRD (length N-1)
+ * @param {integer} strideTAU - stride length for `TAU`
+ * @param {NonNegativeInteger} offsetTAU - starting index for `TAU`
+ * @param {Float64Array} WORK - workspace array
+ * @param {integer} strideWORK - stride length for `WORK`
+ * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @returns {integer} status code (0 = success)
+ */
 
 /* eslint-disable max-len, max-params */
 

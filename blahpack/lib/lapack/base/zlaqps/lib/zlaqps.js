@@ -34,10 +34,10 @@ var base = require( './base.js' );
 * Computes a step of QR factorization with column pivoting using a.
 *
 * @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {NonNegativeInteger} M - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} offset - TODO
-* @param {NonNegativeInteger} nb - TODO
+* @param {NonNegativeInteger} M - total rows of A
+* @param {NonNegativeInteger} N - columns of current submatrix
+* @param {NonNegativeInteger} offset - rows already factored
+* @param {NonNegativeInteger} nb - desired block size
 * @param {Complex128Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
 * @param {Int32Array} JPVT - input array

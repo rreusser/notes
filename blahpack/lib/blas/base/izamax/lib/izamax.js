@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Finds the index of the element having the maximum sum of absolute values of.
 *
-* @param {NonNegativeInteger} N - TODO
+* @param {NonNegativeInteger} N - number of complex elements
 * @param {Complex128Array} zx - input array
 * @param {integer} strideX - `zx` stride length
 * @returns {*} result

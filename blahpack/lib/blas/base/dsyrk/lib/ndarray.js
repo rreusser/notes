@@ -1,20 +1,30 @@
 /**
-* @license Apache-2.0
-*
-* Copyright (c) 2025 The Stdlib Authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Performs one of the symmetric rank-k operations:.
+ * C := alpha_A_A^T + beta_C,  or  C := alpha_A^T_A + beta_C
+ * where alpha and beta are scalars, C is an N-by-N symmetric matrix,
+ * and A is an N-by-K matrix in the first case and a K-by-N matrix in
+ * the second case. Only the upper or lower triangular part of C is
+ * updated.
+ *
+ *
+ * @param {string} uplo - `'upper'` or `'lower'`
+ * @param {string} trans - `'no-transpose'` or `'transpose'`
+ * @param {NonNegativeInteger} N - order of matrix C
+ * @param {NonNegativeInteger} K - number of columns of A (if trans = 'no-transpose') or rows (if trans = 'transpose')
+ * @param {number} alpha - scalar multiplier for A*A^T or A^T*A
+ * @param {Float64Array} A - input matrix
+ * @param {integer} strideA1 - stride of the first dimension of A
+ * @param {integer} strideA2 - stride of the second dimension of A
+ * @param {NonNegativeInteger} offsetA - index offset for A
+ * @param {number} beta - scalar multiplier for C
+ * @param {Float64Array} C - input/output symmetric matrix (only upper or lower triangle accessed)
+ * @param {integer} strideC1 - stride of the first dimension of C
+ * @param {integer} strideC2 - stride of the second dimension of C
+ * @param {NonNegativeInteger} offsetC - index offset for C
+ * @throws {TypeError} First argument must be a valid matrix triangle
+ * @throws {TypeError} Second argument must be a valid transpose operation
+ * @returns {Float64Array} `C`
+ */
 
 /* eslint-disable max-len, max-params */
 
@@ -25,6 +35,7 @@
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var format = require( '@stdlib/string/format' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 

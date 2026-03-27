@@ -10,28 +10,34 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Factorizes the matrix (T - lambda*I) where T is a tridiagonal matrix
-*
-* @param {NonNegativeInteger} N - number of columns
-* @param {Float64Array} a - input array
-* @param {integer} strideA - stride length for `a`
-* @param {NonNegativeInteger} offsetA - starting index for `a`
-* @param {number} lambda - lambda
-* @param {Float64Array} b - input array
-* @param {integer} strideB - stride length for `b`
-* @param {NonNegativeInteger} offsetB - starting index for `b`
-* @param {Float64Array} c - input array
-* @param {integer} strideC - stride length for `c`
-* @param {NonNegativeInteger} offsetC - starting index for `c`
-* @param {number} tol - tol
-* @param {Float64Array} d - input array
-* @param {integer} strideD - stride length for `d`
-* @param {NonNegativeInteger} offsetD - starting index for `d`
-* @param {Int32Array} IN - output array
-* @param {integer} strideIN - stride length for `IN`
-* @param {NonNegativeInteger} offsetIN - starting index for `IN`
-* @returns {integer} status code (0 = success)
-*/
+ * Computes an LU factorization of the matrix (T - lambda*I), where T is an
+ * n-by-n tridiagonal matrix and lambda is a scalar, as T - lambda*I = PLU.
+ *
+ * P is a permutation matrix, L is a unit lower tridiagonal matrix with at most
+ * one non-zero sub-diagonal element per column, and U is an upper triangular
+ * matrix with at most two non-zero super-diagonal elements per column.
+ *
+ *
+ * @param {NonNegativeInteger} N - order of the matrix T
+ * @param {Float64Array} a - diagonal elements (overwritten with U diagonal), length N
+ * @param {integer} strideA - stride for a
+ * @param {NonNegativeInteger} offsetA - offset for a
+ * @param {number} lambda - scalar lambda
+ * @param {Float64Array} b - super-diagonal elements (overwritten with U super-diagonal), length N-1
+ * @param {integer} strideB - stride for b
+ * @param {NonNegativeInteger} offsetB - offset for b
+ * @param {Float64Array} c - sub-diagonal elements (overwritten with L sub-diagonal), length N-1
+ * @param {integer} strideC - stride for c
+ * @param {NonNegativeInteger} offsetC - offset for c
+ * @param {number} tol - relative tolerance for near-singularity detection
+ * @param {Float64Array} d - second super-diagonal of U, length N-2
+ * @param {integer} strideD - stride for d
+ * @param {NonNegativeInteger} offsetD - offset for d
+ * @param {Int32Array} IN - pivot/info array, length N
+ * @param {integer} strideIN - stride for IN
+ * @param {NonNegativeInteger} offsetIN - offset for IN
+ * @returns {integer} info: 0 = success, <0 = illegal argument
+ */
 function dlagtf( N, a, strideA, offsetA, lambda, b, strideB, offsetB, c, strideC, offsetC, tol, d, strideD, offsetD, IN, strideIN, offsetIN ) { // eslint-disable-line max-len, max-params
 	return base( N, a, strideA, offsetA, lambda, b, strideB, offsetB, c, strideC, offsetC, tol, d, strideD, offsetD, IN, strideIN, offsetIN ); // eslint-disable-line max-len
 }

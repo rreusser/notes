@@ -10,33 +10,56 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes eigenvalues and Schur decomposition of an upper Hessenberg matrix
-*
-* @param {string} job - specifies the operation type
-* @param {string} compz - specifies the operation type
-* @param {NonNegativeInteger} N - number of columns
-* @param {integer} ilo - ilo
-* @param {integer} ihi - ihi
-* @param {Float64Array} H - input matrix
-* @param {integer} strideH1 - stride of the first dimension of `H`
-* @param {integer} strideH2 - stride of the second dimension of `H`
-* @param {NonNegativeInteger} offsetH - starting index for `H`
-* @param {Float64Array} WR - input array
-* @param {integer} strideWR - stride length for `WR`
-* @param {NonNegativeInteger} offsetWR - starting index for `WR`
-* @param {Float64Array} WI - input array
-* @param {integer} strideWI - stride length for `WI`
-* @param {NonNegativeInteger} offsetWI - starting index for `WI`
-* @param {Float64Array} Z - input matrix
-* @param {integer} strideZ1 - stride of the first dimension of `Z`
-* @param {integer} strideZ2 - stride of the second dimension of `Z`
-* @param {NonNegativeInteger} offsetZ - starting index for `Z`
-* @param {Float64Array} WORK - output array
-* @param {integer} strideWORK - stride length for `WORK`
-* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
-* @param {integer} lwork - lwork
-* @returns {integer} status code (0 = success)
-*/
+ * Computes the eigenvalues of a real upper Hessenberg matrix H, and
+ * optionally the matrices T and Z from the Schur decomposition
+ * H = Z * T * Z**T, where T is an upper quasi-triangular matrix (the
+ * Schur form) and Z is the orthogonal matrix of Schur vectors.
+ *
+ * JOB = 'E': compute eigenvalues only.
+ * JOB = 'S': compute eigenvalues and the Schur form T.
+ *
+ * COMPZ = 'N': no Schur vectors are computed.
+ * COMPZ = 'I': Z is initialized to the identity matrix and the matrix Z
+ *              of Schur vectors of H is returned.
+ * COMPZ = 'V': Z must contain an orthogonal matrix Q on entry, and the
+ *              product Q*Z is returned.
+ *
+ * ILO and IHI are 1-based indices (Fortran convention). The active block
+ * is H(ILO:IHI, ILO:IHI). Elements outside this block are assumed already
+ * upper triangular. Normally ILO=1 and IHI=N.
+ *
+ * On exit, if INFO = 0, WR and WI contain the real and imaginary parts
+ * of the computed eigenvalues. Complex eigenvalues occur in conjugate
+ * pairs in consecutive entries. If JOB = 'S', the eigenvalues are stored
+ * in the same order as on the diagonal of T.
+ *
+ * INFO = 0: success.
+ * INFO > 0: dhseqr failed to compute all eigenvalues. Elements
+ *           INFO+1:IHI of WR and WI contain those eigenvalues which
+ *           have been successfully computed.
+ *
+ *
+ * @param {string} job - `'eigenvalues'` or `'schur'`
+ * @param {string} compz - `'none'`, `'initialize'`, or `'update'`
+ * @param {NonNegativeInteger} N - order of the matrix H
+ * @param {integer} ilo - first row/col of the active block (1-based)
+ * @param {integer} ihi - last row/col of the active block (1-based)
+ * @param {Float64Array} H - upper Hessenberg matrix (N-by-N)
+ * @param {integer} strideH1 - stride of the first dimension of `H`
+ * @param {integer} strideH2 - stride of the second dimension of `H`
+ * @param {NonNegativeInteger} offsetH - starting index for `H`
+ * @param {Float64Array} WR - output array for real parts of eigenvalues
+ * @param {integer} strideWR - stride length for `WR`
+ * @param {NonNegativeInteger} offsetWR - starting index for `WR`
+ * @param {Float64Array} WI - output array for imaginary parts of eigenvalues
+ * @param {integer} strideWI - stride length for `WI`
+ * @param {NonNegativeInteger} offsetWI - starting index for `WI`
+ * @param {Float64Array} Z - Schur vectors matrix (N-by-N)
+ * @param {integer} strideZ1 - stride of the first dimension of `Z`
+ * @param {integer} strideZ2 - stride of the second dimension of `Z`
+ * @param {NonNegativeInteger} offsetZ - starting index for `Z`
+ * @returns {integer} info - 0 on success, >0 if failed to converge
+ */
 function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
 	return base( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
