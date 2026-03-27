@@ -54,7 +54,7 @@ var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 * IPIV[k] = IPIV[k-1] = ~p where p is the 0-based interchange index.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input/output complex Hermitian matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)

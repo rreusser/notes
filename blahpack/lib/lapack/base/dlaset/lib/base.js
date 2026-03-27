@@ -27,7 +27,7 @@
 * off-diagonals.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle, otherwise full matrix
+* @param {string} uplo - `'upper'` or `'lower'`, otherwise full matrix
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
 * @param {number} alpha - off-diagonal value

@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Multiplies a complex matrix by a real scalar CTO/CFROM, handling overflow.
 *
-* @param {string} type - matrix type ('general','L','U','H','B','Q','Z')
+* @param {string} type - `'general'`, `'lower'`, `'upper'`, `'upper-hessenberg'`, `'lower-band'`, `'upper-band'`, or `'band'`
 * @param {integer} kl - lower bandwidth (for banded types)
 * @param {integer} ku - upper bandwidth (for banded types)
 * @param {number} cfrom - scale denominator (must be nonzero)

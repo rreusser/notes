@@ -40,7 +40,7 @@ var dpbtrs = require( '../../dpbtrs/lib/base.js' );
 * band matrix. The factored form of A is then used to solve the system.
 *
 * @private
-* @param {string} uplo - 'U': upper triangle of A is stored; 'L': lower triangle of A is stored
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - number of linear equations / order of A
 * @param {NonNegativeInteger} kd - number of super/sub-diagonals of A
 * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)

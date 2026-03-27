@@ -51,9 +51,9 @@ var SAFMIN = dlamch( 'safe-minimum' );
 * - BERR: componentwise relative backward error for each solution vector
 *
 * @private
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
-* @param {string} trans - 'N' for no transpose, 'T' or 'C' for transpose
-* @param {string} diag - 'N' for non-unit diagonal, 'U' for unit diagonal
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand sides
 * @param {Float64Array} A - triangular matrix A, shape [N, N]

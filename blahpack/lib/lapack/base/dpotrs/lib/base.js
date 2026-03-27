@@ -33,7 +33,7 @@ var dtrsm = require( '../../../../blas/base/dtrsm/lib/base.js' );
 * computed by dpotrf.
 *
 * @private
-* @param {string} uplo - 'U' if upper Cholesky factor stored, 'L' if lower
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Float64Array} A - the Cholesky factor (from dpotrf)

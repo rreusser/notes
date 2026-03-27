@@ -31,20 +31,22 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves one of the systems of equations:.
+* Solves one of the systems of equations `A*x = b` or `A**T*x = b`, where `b`
+* and `x` are N element vectors and `A` is an N-by-N unit or non-unit, upper or
+* lower triangular band matrix, with `K+1` diagonals.
 *
-* @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} uplo - TODO
-* @param {string} trans - TODO
-* @param {string} diag - TODO
-* @param {NonNegativeInteger} N - TODO
-* @param {NonNegativeInteger} K - TODO
-* @param {Float64Array} A - input matrix
+* @param {string} order - storage layout (`'row-major'` or `'column-major'`)
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {NonNegativeInteger} N - order of the matrix `A`
+* @param {NonNegativeInteger} K - number of super-diagonals (upper) or sub-diagonals (lower)
+* @param {Float64Array} A - band matrix in band storage
 * @param {PositiveInteger} LDA - leading dimension of `A`
-* @param {Float64Array} x - input array
+* @param {Float64Array} x - input/output vector
 * @param {integer} strideX - `x` stride length
 * @throws {TypeError} first argument must be a valid order
-* @returns {*} result
+* @returns {Float64Array} `x`
 */
 function dtbsv( order, uplo, trans, diag, N, K, A, LDA, x, strideX ) {
 	var sa1;

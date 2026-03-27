@@ -47,7 +47,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * Helper: performs dsytrd then dorgtr and returns the Q matrix (column-major flat).
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - matrix order
 * @param {Float64Array} Asym - symmetric matrix (column-major, N*N)
 * @returns {Object} { Q, D, E, TAU, info }

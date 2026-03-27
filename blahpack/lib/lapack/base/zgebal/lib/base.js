@@ -56,7 +56,7 @@ var SFMAX2 = ONE / SFMIN2;
 * columns as close in norm as possible.
 *
 * @private
-* @param {string} job - 'N' none, 'P' permute, 'S' scale, 'B' both
+* @param {string} job - `'none'`, `'permute'`, `'scale'`, or `'both'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - input matrix (modified in-place)
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)

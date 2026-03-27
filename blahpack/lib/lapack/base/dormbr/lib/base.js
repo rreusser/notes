@@ -51,9 +51,9 @@ var dormlq = require( '../../dormlq/lib/base.js' );
 * P is defined as a product of elementary reflectors G(i) = I - taup(i)_u(i)_u(i)^T.
 *
 * @private
-* @param {string} vect - 'Q' to apply Q or Q^T, 'P' to apply P or P^T
-* @param {string} side - 'L' to apply from left, 'R' from right
-* @param {string} trans - 'N' for no transpose, 'T' for transpose
+* @param {string} vect - `'apply-Q'` or `'apply-P'`
+* @param {string} side - `'left'` or `'right'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {NonNegativeInteger} K - number of columns/rows in original matrix for DGEBRD

@@ -67,8 +67,8 @@ var BIGNUM = ONE / SMLNUM;
 * and largest component real.
 *
 * @private
-* @param {string} jobvl - 'V' to compute left eigenvectors, 'N' to not compute
-* @param {string} jobvr - 'V' to compute right eigenvectors, 'N' to not compute
+* @param {string} jobvl - `'compute-vectors'` or `'no-vectors'`
+* @param {string} jobvr - `'compute-vectors'` or `'no-vectors'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {Complex128Array} A - input matrix (N x N), overwritten on exit
 * @param {integer} strideA1 - first dimension stride of A (complex elements)

@@ -33,8 +33,8 @@ var base = require( './base.js' );
 /**
 * Computes the inverse of a complex upper or lower triangular matrix.
 *
-* @param {string} uplo - 'U' or 'L'
-* @param {string} diag - 'U' (unit) or 'N' (non-unit)
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - input/output triangular matrix (overwritten with inverse)
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)

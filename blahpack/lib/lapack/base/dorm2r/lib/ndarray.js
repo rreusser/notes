@@ -33,8 +33,8 @@ var base = require( './base.js' );
 /**
 * Overwrites the M-by-N matrix C with Q.
 *
-* @param {string} side - 'L' to apply Q from left, 'R' from right
-* @param {string} trans - 'N' for Q, 'T' for Q**T
+* @param {string} side - `'left'` to apply Q from left, `'right'` from right
+* @param {string} trans - `'no-transpose'` for Q, `'transpose'` for Q^T
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {NonNegativeInteger} K - number of elementary reflectors

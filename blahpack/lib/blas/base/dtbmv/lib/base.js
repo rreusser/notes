@@ -126,7 +126,7 @@ function dtbmv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 			}
 		}
 	} else if ( uplo === 'upper' ) {
-		// Form x := A**T*x (trans = 'transpose' or 'conjugate-transpose')
+		// Form x := A**T*x (trans = 'transpose')
 		// Upper triangular, transpose: backward through columns
 		kplus1 = K;
 		jx = kx + ( ( N - 1 ) * strideX );

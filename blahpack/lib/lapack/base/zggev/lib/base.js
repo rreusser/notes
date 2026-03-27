@@ -74,8 +74,8 @@ function abs1( arr, idx ) {
 * Strides and offsets are in complex elements.
 *
 * @private
-* @param {string} jobvl - 'N' for no left eigenvectors, 'V' for compute
-* @param {string} jobvr - 'N' for no right eigenvectors, 'V' for compute
+* @param {string} jobvl - `'no-vectors'` or `'compute-vectors'`
+* @param {string} jobvr - `'no-vectors'` or `'compute-vectors'`
 * @param {NonNegativeInteger} N - order of matrices A and B
 * @param {Complex128Array} A - first complex matrix (modified in-place)
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)

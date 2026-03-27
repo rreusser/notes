@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Multiplies a real M-by-N matrix A by the real scalar CTO/CFROM, doing.
 *
-* @param {string} type - matrix type ('general','L','U','H','B','Q','Z')
+* @param {string} type - `'general'`, `'lower'`, `'upper'`, `'upper-hessenberg'`, `'lower-band'`, `'upper-band'`, or `'band'`
 * @param {integer} kl - lower bandwidth (for banded types)
 * @param {integer} ku - upper bandwidth (for banded types)
 * @param {number} cfrom - scale denominator (must be nonzero)

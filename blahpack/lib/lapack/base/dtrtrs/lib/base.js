@@ -34,9 +34,9 @@ var dtrsm = require( '../../../../blas/base/dtrsm/lib/base.js' );
 * A check is made to verify that A is nonsingular.
 *
 * @private
-* @param {string} uplo - 'U' if A is upper triangular, 'L' if lower triangular
-* @param {string} trans - 'N' for no transpose, 'T' or 'C' for transpose
-* @param {string} diag - 'N' for non-unit diagonal, 'U' for unit diagonal
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Float64Array} A - triangular matrix A

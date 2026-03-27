@@ -31,8 +31,8 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * using the unblocked algorithm.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
-* @param {string} diag - 'U' (unit) or 'N' (non-unit)
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} A - input/output triangular matrix (overwritten with inverse)
 * @param {integer} strideA1 - stride of the first dimension of A

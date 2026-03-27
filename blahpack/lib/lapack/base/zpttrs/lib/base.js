@@ -36,7 +36,7 @@ var zptts2 = require( '../../zptts2/lib/base.js' );
 * complex vector E, and X and B are N by NRHS complex matrices.
 *
 * @private
-* @param {string} uplo - 'U' for U^H*D*U factorization, 'L' for L*D*L^H factorization
+* @param {string} uplo - `'upper'` for U^H*D*U factorization, `'lower'` for L*D*L^H factorization
 * @param {NonNegativeInteger} N - order of the tridiagonal matrix A (N >= 0)
 * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
 * @param {Float64Array} d - diagonal elements of D (real), length N

@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes the Cholesky factorization of a real symmetric positive definite.
 *
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {Float64Array} A - input/output matrix (column-major)
 * @param {integer} strideA1 - stride of the first dimension of A

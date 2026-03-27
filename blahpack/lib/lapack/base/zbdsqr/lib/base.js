@@ -97,7 +97,7 @@ function sign( a, b ) {
 * or max(1, 4_N) otherwise.
 *
 * @private
-* @param {string} uplo - 'U' for upper bidiagonal, 'L' for lower bidiagonal
+* @param {string} uplo - `'upper'` for upper bidiagonal, `'lower'` for lower bidiagonal
 * @param {NonNegativeInteger} N - order of the bidiagonal matrix
 * @param {NonNegativeInteger} ncvt - number of columns in VT
 * @param {NonNegativeInteger} nru - number of rows in U

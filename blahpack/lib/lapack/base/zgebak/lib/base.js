@@ -25,8 +25,8 @@ var zswap = require( './../../../../blas/base/zswap/lib/base.js' );
 * -   SCALE is a Float64Array of real scaling/permutation factors from zgebal.
 *
 * @private
-* @param {string} job - specifies the type of backward transformation ('N','P','S','B')
-* @param {string} side - 'R' for right eigenvectors, 'L' for left eigenvectors
+* @param {string} job - `'none'`, `'permute'`, `'scale'`, or `'both'`
+* @param {string} side - `'right'` for right eigenvectors, `'left'` for left eigenvectors
 * @param {NonNegativeInteger} N - number of rows of the matrix V
 * @param {integer} ilo - index determined by zgebal (1-based)
 * @param {integer} ihi - index determined by zgebal (1-based)

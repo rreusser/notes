@@ -35,8 +35,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * where op(X) is one of X, X**T, or X**H.
 *
 * @private
-* @param {string} transa - 'N', 'T', or 'C'
-* @param {string} transb - 'N', 'T', or 'C'
+* @param {string} transa - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} transb - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
 * @param {NonNegativeInteger} M - rows of op(A) and C
 * @param {NonNegativeInteger} N - columns of op(B) and C
 * @param {NonNegativeInteger} K - columns of op(A) / rows of op(B)

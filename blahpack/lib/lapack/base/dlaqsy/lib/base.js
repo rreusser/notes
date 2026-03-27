@@ -44,7 +44,7 @@ var LARGE = 1.0 / SMALL;
 * - 'Y' - equilibration was done
 *
 * @private
-* @param {string} uplo - 'U' if upper triangle stored, 'L' if lower
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input/output N-by-N symmetric matrix
 * @param {integer} strideA1 - stride of the first dimension of A

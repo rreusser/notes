@@ -37,7 +37,7 @@ var RMAX = Math.sqrt( BIGNUM );
 * 3. Undo scaling on eigenvalues if needed
 *
 * @private
-* @param {string} jobz - 'N': eigenvalues only, 'V': eigenvalues and eigenvectors
+* @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} d - diagonal elements (length N); on exit, eigenvalues in ascending order
 * @param {integer} strideD - stride for d

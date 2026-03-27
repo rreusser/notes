@@ -35,7 +35,7 @@ var zlauum = require( '../../zlauum/lib/base.js' );
 * conjugate transpose (zlauum).
 *
 * @private
-* @param {string} uplo - 'U' for upper triangular factor, 'L' for lower triangular factor
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input/output matrix; on entry, the triangular factor from zpotrf; on exit, the inverse
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)

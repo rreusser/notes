@@ -46,7 +46,7 @@ var ONE = 1.0;
 * This version uses inline code if H has order <= 10.
 *
 * @private
-* @param {string} side - 'L' or 'R'
+* @param {string} side - `'left'` or `'right'`
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {Float64Array} v - the vector v in the reflector

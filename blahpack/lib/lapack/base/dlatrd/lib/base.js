@@ -46,7 +46,7 @@ var daxpy = require( '../../../../blas/base/daxpy/lib/base.js' );
 * This is an auxiliary routine called by DSYTRD.
 *
 * @private
-* @param {string} uplo - specifies whether the upper or lower triangular part of A is stored ('U' or 'L')
+* @param {string} uplo - specifies whether the upper or lower triangular part of A is stored (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {integer} nb - number of rows and columns to reduce
 * @param {Float64Array} A - input matrix (N-by-N, symmetric)

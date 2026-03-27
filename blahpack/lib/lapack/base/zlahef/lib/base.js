@@ -67,7 +67,7 @@ function cabs1( v, idx ) {
 * Diagonal elements are real.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nb - maximum number of columns to factor
 * @param {Complex128Array} A - input/output Hermitian matrix (column-major)

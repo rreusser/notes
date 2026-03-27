@@ -31,9 +31,9 @@ var base = require( './base.js' );
 /**
 * Compute the eigenvalues of a complex matrix pair (H, T), where H is.
 *
-* @param {string} job - 'E': eigenvalues only; 'S': Schur form
-* @param {string} compq - 'N': no Q; 'I': initialize Q to I; 'V': accumulate into Q
-* @param {string} compz - 'N': no Z; 'I': initialize Z to I; 'V': accumulate into Z
+* @param {string} job - `'eigenvalues'` or `'schur'`
+* @param {string} compq - `'none'`, `'initialize'`, or `'update'`
+* @param {string} compz - `'none'`, `'initialize'`, or `'update'`
 * @param {NonNegativeInteger} N - order of matrices H, T, Q, Z
 * @param {integer} ilo - start of active block (1-based)
 * @param {integer} ihi - end of active block (1-based)

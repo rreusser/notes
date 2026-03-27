@@ -53,7 +53,7 @@ var CMONE = new Complex128( -1.0, 0.0 );
 * This is the blocked version of the algorithm, calling Level 3 BLAS.
 *
 * @private
-* @param {string} uplo - specifies whether upper or lower triangle is stored ('U' or 'L')
+* @param {string} uplo - specifies whether upper or lower triangle is stored (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} kd - number of super/sub-diagonals
 * @param {Complex128Array} AB - input/output band matrix in band storage

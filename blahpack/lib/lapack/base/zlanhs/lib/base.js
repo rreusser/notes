@@ -34,7 +34,7 @@ var cmplx = require( '../../../../cmplx.js' );
 * max absolute value of an upper Hessenberg complex matrix.
 *
 * @private
-* @param {string} norm - 'M' (max), '1'/'O' (one-norm), 'I' (inf-norm), 'F'/'E' (Frobenius)
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - upper Hessenberg matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)

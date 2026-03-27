@@ -41,8 +41,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * The diagonal of C is always real after the update.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
-* @param {string} trans - 'N' for no transpose, 'C' for conjugate transpose
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'conjugate-transpose'`
 * @param {NonNegativeInteger} N - order of matrix C
 * @param {NonNegativeInteger} K - number of columns of A,B (if trans = 'no-transpose') or rows (if trans = 'conjugate-transpose')
 * @param {Complex128} alpha - complex scalar multiplier

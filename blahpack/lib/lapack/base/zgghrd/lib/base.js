@@ -41,8 +41,8 @@ var zrot = require( '../../zrot/lib/base.js' );
 * A, B, Q, Z are Complex128Arrays. Strides and offsets are in complex elements.
 *
 * @private
-* @param {string} compq - 'N': do not compute Q; 'I': initialize Q to identity and compute; 'V': accumulate into Q
-* @param {string} compz - 'N': do not compute Z; 'I': initialize Z to identity and compute; 'V': accumulate into Z
+* @param {string} compq - `'none'`, `'initialize'`, or `'update'`
+* @param {string} compz - `'none'`, `'initialize'`, or `'update'`
 * @param {NonNegativeInteger} N - order of the matrices A and B
 * @param {integer} ilo - ilo (1-based)
 * @param {integer} ihi - ihi (1-based)

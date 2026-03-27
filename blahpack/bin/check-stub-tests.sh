@@ -3,9 +3,10 @@
 # A stub test has only "is a function" / "has .ndarray" assertions and no
 # real test cases. Exit 1 if any are found.
 #
-# Detection: a file is a stub if BOTH:
-#   - It has <= 2 test()/it() calls (the scaffold generates exactly 2)
-#   - It has <= 2 assert.* calls (no real assertions)
+# Detection: a file is a stub if ANY of:
+#   - It has <= 2 test()/it() calls AND <= 2 assert.* calls
+#     (the scaffold generates exactly 2 type-check tests)
+#   - It contains assert.fail('TODO:') calls (explicit scaffold markers)
 # Files with >2 test() calls are assumed to have real tests even if
 # assertions are in helper functions (assertClose, etc.).
 
@@ -21,8 +22,12 @@ for f in $(git ls-files 'lib/*/base/*/test/test.js'); do
   test_count=${test_count:-0}
   assert_count=$(grep -c 'assert\.' "$f" 2>/dev/null || true)
   assert_count=${assert_count:-0}
+  fail_count=$(grep -c 'assert\.fail' "$f" 2>/dev/null || true)
+  fail_count=${fail_count:-0}
 
   if [ "$test_count" -le 2 ] && [ "$assert_count" -le 2 ]; then
+    stubs+=("$dir")
+  elif [ "$fail_count" -gt 0 ]; then
     stubs+=("$dir")
   fi
 done

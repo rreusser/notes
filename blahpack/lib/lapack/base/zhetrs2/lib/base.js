@@ -72,7 +72,7 @@ function cDiv( ar, ai, br, bi ) {
 * A = U*D*U^H or A = L*D*L^H computed by ZHETRF.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {integer} N - order of the matrix
 * @param {integer} nrhs - number of right hand sides
 * @param {Complex128Array} A - factored matrix from zhetrf

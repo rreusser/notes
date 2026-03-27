@@ -30,10 +30,10 @@
 * The matrix X is overwritten on B.
 *
 * @private
-* @param {string} side - 'L' or 'R' (left or right side)
-* @param {string} uplo - 'U' or 'L' (upper or lower triangular)
-* @param {string} transa - 'N', 'T', or 'C' (no-transpose or transpose)
-* @param {string} diag - 'U' or 'N' (unit or non-unit diagonal)
+* @param {string} side - `'left'` or `'right'`
+* @param {string} uplo - `'upper'` or `'lower'` (upper or lower triangular)
+* @param {string} transa - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} M - number of rows of B
 * @param {NonNegativeInteger} N - number of columns of B
 * @param {number} alpha - scalar multiplier for B

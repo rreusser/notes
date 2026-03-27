@@ -34,7 +34,7 @@ var base = require( './base.js' );
 * `N` by `N` symmetric matrix supplied in packed form, `x` and `y` are
 * `N`-element vectors, and `alpha` and `beta` are scalars.
 *
-* @param {string} uplo - specifies whether the upper or lower triangular part of `A` is packed
+* @param {string} uplo - specifies whether upper or lower triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix `A`
 * @param {number} alpha - scalar constant
 * @param {Float64Array} AP - packed symmetric matrix

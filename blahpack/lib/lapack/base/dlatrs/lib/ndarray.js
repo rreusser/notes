@@ -34,10 +34,10 @@ var base = require( './base.js' );
 /**
 * Solves a triangular system with scaling to prevent overflow.
 *
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower
-* @param {string} trans - 'N' for no transpose, 'T'/'C' for transpose
-* @param {string} diag - 'N' for non-unit diagonal, 'U' for unit diagonal
-* @param {string} normin - 'Y' if CNORM contains column norms on input, 'N' to compute them
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {string} normin - `'yes'` if CNORM contains column norms on input, `'no'` to compute them
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} A - N-by-N triangular matrix
 * @param {integer} strideA1 - stride of the first dimension of `A`

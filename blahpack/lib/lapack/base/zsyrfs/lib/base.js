@@ -72,7 +72,7 @@ function cabs1( re, im ) {
 * NOTE: SYMMETRIC (not Hermitian). No conjugation.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Complex128Array} A - original symmetric N-by-N matrix

@@ -40,7 +40,7 @@ var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
 * @private
 * @param {string} job - specifies the type of backward transformation:
 * 'N': do nothing; 'P': permute only; 'S': scale only; 'B': both
-* @param {string} side - 'R' for right eigenvectors, 'L' for left eigenvectors
+* @param {string} side - `'right'` for right eigenvectors, `'left'` for left eigenvectors
 * @param {NonNegativeInteger} N - number of rows of V
 * @param {integer} ilo - ilo from balancing (1-based)
 * @param {integer} ihi - ihi from balancing (1-based)

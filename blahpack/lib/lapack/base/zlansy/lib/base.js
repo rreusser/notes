@@ -35,8 +35,8 @@ var zlassq = require( '../../zlassq/lib/base.js' );
 * NOTE: This is for SYMMETRIC matrices (not Hermitian).
 *
 * @private
-* @param {string} norm - 'M' (max), '1'/'O' (one-norm), 'I' (infinity-norm), 'F'/'E' (Frobenius)
-* @param {string} uplo - 'U' or 'L'
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - the matrix
 * @param {integer} strideA1 - first stride of A (complex elements)

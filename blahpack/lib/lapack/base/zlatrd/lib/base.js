@@ -51,7 +51,7 @@ var CNONE = new Complex128( -1.0, 0.0 );
 * transformation to the unreduced part of A.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {integer} nb - number of rows/columns to reduce
 * @param {Complex128Array} A - complex Hermitian matrix (complex-element strides)

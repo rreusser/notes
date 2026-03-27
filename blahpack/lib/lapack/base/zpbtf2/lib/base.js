@@ -46,7 +46,7 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 * j<=i<=min(n,j+kd).
 *
 * @private
-* @param {string} uplo - specifies whether upper or lower triangle is stored ('U' or 'L')
+* @param {string} uplo - specifies whether upper or lower triangle is stored (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} kd - number of super/sub-diagonals
 * @param {Complex128Array} AB - input/output band matrix in band storage

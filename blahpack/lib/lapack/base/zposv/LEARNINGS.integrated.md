@@ -2,22 +2,27 @@
 
 ## Translation pitfalls
 
-- zposv is structurally identical to dposv: factorize (zpotrf), then solve (zpotrs) if factorization succeeds. The only difference is operating on Complex128Array instead of Float64Array.
-- Unlike dgesv, zposv has no pivot array (IPIV). The Cholesky factorization has no row interchanges.
+- Trivial driver routine: just calls zpotrf + zpotrs. Direct mirror of dposv.
+- uplo parameter uses single char ('U'/'L') matching Fortran convention, consistent with zpotrf/zpotrs expectations.
 
 ## Dependency interface surprises
 
-- zpotrf and zpotrs both take Complex128Array with strides/offsets in complex elements. The uplo parameter passes through directly with no mapping needed.
-- zpotrf returns info > 0 when the matrix is not positive definite (the k-th leading principal minor is not positive). This is correctly forwarded without calling zpotrs.
+- zpotrf and zpotrs both accept Complex128Array with complex-element strides. No stride doubling needed at the driver level.
+- zpotrf returns info > 0 when the leading minor of order k is not positive definite. The exact value of info depends on the factorization path.
 
 ## Automation opportunities
 
-- The real-to-complex driver pattern (dposv -> zposv) is purely mechanical: replace dpotrf->zpotrf, dpotrs->zpotrs, Float64Array->Complex128Array in the signature. A template could generate this.
+- The scaffold generator produced a correct base.js from the dposv template with Hermitian-specific comments (U^H instead of U^T). No manual edits needed.
+- Same observation as zgesv: complex test input setup could be automated.
 
 ## Coverage gaps
 
-- 100% line and branch coverage achieved. The not-positive-definite test exercises the early return path (info > 0 from zpotrf). Both upper and lower paths tested via the 3x3 HPD matrix, along with N=0, NRHS=0 quick returns and identity matrix test.
+- 100% line, branch, and function coverage achieved.
+- Both 'U' and 'L' uplo paths are tested.
+- Non-positive-definite test only checks info > 0 (not exact value).
 
 ## Complex number handling
 
-- No direct complex arithmetic in zposv. All complex operations are delegated to zpotrf and zpotrs. The only Complex128Array handling is passing parameters through.
+- No complex arithmetic in this driver; all complex work is delegated to zpotrf/zpotrs.
+- Tests use Complex128Array inputs with reinterpret() for Float64 comparison against fixtures.
+- Hermitian matrix setup requires conjugate symmetry: A(i,j) = conj(A(j,i)). The Fortran test uses the full matrix; zpotrf only reads the specified triangle.

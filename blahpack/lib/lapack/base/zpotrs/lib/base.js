@@ -39,7 +39,7 @@ var CONE = new Complex128( 1.0, 0.0 );
 * computed by zpotrf.
 *
 * @private
-* @param {string} uplo - 'U' if upper Cholesky factor stored, 'L' if lower
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Complex128Array} A - the Cholesky factor (from zpotrf)

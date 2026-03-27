@@ -31,8 +31,8 @@ var base = require( './base.js' );
 /**
 * Form the triangular factor T of a complex block reflector H of order N,.
 *
-* @param {string} direct - 'F' for forward, 'B' for backward
-* @param {string} storev - 'C' for columnwise, 'R' for rowwise
+* @param {string} direct - `'forward'` or `'backward'`
+* @param {string} storev - `'columnwise'` or `'rowwise'`
 * @param {NonNegativeInteger} N - order of the block reflector
 * @param {NonNegativeInteger} K - number of elementary reflectors
 * @param {Complex128Array} V - matrix of reflector vectors

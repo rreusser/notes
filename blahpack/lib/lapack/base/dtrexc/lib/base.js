@@ -44,7 +44,7 @@ var dlaexc = require( '../../dlaexc/lib/base.js' );
 * on return when they point to the second row of a 2-by-2 block.
 *
 * @private
-* @param {string} compq - 'V' to update Q, 'N' to not update Q
+* @param {string} compq - `'update'` to update Q, `'none'` to not update Q
 * @param {NonNegativeInteger} N - order of the matrix T
 * @param {Float64Array} T - the upper quasi-triangular matrix
 * @param {integer} strideT1 - stride of the first dimension of T

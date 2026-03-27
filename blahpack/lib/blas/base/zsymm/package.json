@@ -1,0 +1,26 @@
+{
+  "name": "@stdlib/blas/base/zsymm",
+  "version": "0.0.0",
+  "description": "Perform one of the symmetric matrix-matrix operations C := alpha*A*B + beta*C or C := alpha*B*A + beta*C.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "The Stdlib Authors",
+    "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+  },
+  "contributors": [
+    {
+      "name": "The Stdlib Authors",
+      "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+    }
+  ],
+  "main": "./lib/index.js",
+  "directories": {
+    "doc": "./docs",
+    "example": "./examples",
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "scripts": {
+    "test": "node --test test/test.js"
+  }
+}

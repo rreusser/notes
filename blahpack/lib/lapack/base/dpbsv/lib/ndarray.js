@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes the solution to a real system of linear equations A.
 *
-* @param {string} uplo - 'U': upper triangle of A is stored; 'L': lower triangle of A is stored
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - number of linear equations / order of A
 * @param {NonNegativeInteger} kd - number of super/sub-diagonals of A
 * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)

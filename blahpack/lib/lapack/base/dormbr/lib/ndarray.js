@@ -33,9 +33,9 @@ var base = require( './base.js' );
 /**
 * If VECT = 'Q', overwrite the matrix C with one of:.
 *
-* @param {string} vect - 'Q' to apply Q or Q^T, 'P' to apply P or P^T
-* @param {string} side - 'L' to apply from left, 'R' from right
-* @param {string} trans - 'N' for no transpose, 'T' for transpose
+* @param {string} vect - `'apply-Q'` or `'apply-P'`
+* @param {string} side - `'left'` or `'right'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {NonNegativeInteger} K - number of columns/rows in original matrix for DGEBRD

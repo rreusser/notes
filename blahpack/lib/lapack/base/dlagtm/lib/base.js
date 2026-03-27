@@ -26,7 +26,7 @@
 * Performs one of the matrix-matrix operations
 *
 *   B := alpha * A * X + beta * B    (trans = 'no-transpose')
-*   B := alpha * A^T * X + beta * B  (trans = 'transpose' or 'conjugate-transpose')
+*   B := alpha * A^T * X + beta * B  (trans = 'transpose')
 *
 * where A is an N-by-N general tridiagonal matrix with sub-diagonal DL,
 * diagonal D, and super-diagonal DU; X is an N-by-NRHS matrix; and B is
@@ -36,7 +36,7 @@
 * after the beta scaling.
 *
 * @private
-* @param {string} trans - 'no-transpose', 'transpose', or 'conjugate-transpose'
+* @param {string} trans - 'no-transpose' or 'transpose'
 * @param {NonNegativeInteger} N - order of the tridiagonal matrix A
 * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of X and B)
 * @param {number} alpha - scalar multiplier (must be 1.0 or -1.0)

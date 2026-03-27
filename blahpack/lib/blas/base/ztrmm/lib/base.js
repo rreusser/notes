@@ -38,10 +38,10 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * op(A) = A  or  op(A) = A^T  or  op(A) = A^H.
 *
 * @private
-* @param {string} side - 'L' or 'R'
-* @param {string} uplo - 'U' or 'L'
-* @param {string} transa - 'N', 'T', or 'C'
-* @param {string} diag - 'U' or 'N'
+* @param {string} side - `'left'` or `'right'`
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} transa - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} M - number of rows of B
 * @param {NonNegativeInteger} N - number of columns of B
 * @param {Complex128} alpha - complex scalar

@@ -34,9 +34,9 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * non-unit, upper or lower triangular complex matrix.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
-* @param {string} trans - 'N', 'T', or 'C'
-* @param {string} diag - 'U' or 'N'
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - complex triangular matrix
 * @param {integer} strideA1 - stride of the first dimension of `A` (complex elements)

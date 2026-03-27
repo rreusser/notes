@@ -44,7 +44,7 @@ var zrot = require( '../../zrot/lib/base.js' );
 * Note: IFST and ILST are 1-based (Fortran convention).
 *
 * @private
-* @param {string} compq - 'V' to update Q, 'N' to not update Q
+* @param {string} compq - `'update'` to update Q, `'none'` to not update Q
 * @param {NonNegativeInteger} N - order of the matrix T
 * @param {Complex128Array} T - the upper triangular Schur matrix
 * @param {integer} strideT1 - stride of the first dimension of T (complex elements)

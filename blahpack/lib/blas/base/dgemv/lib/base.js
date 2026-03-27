@@ -27,7 +27,7 @@
 * y := alpha_A_x + beta_y,   or   y := alpha_A^T_x + beta_y
 *
 * @private
-* @param {string} trans - specifies whether A is transposed ('no-transpose', 'T', or 'C')
+* @param {string} trans - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {number} alpha - scalar multiplier for A*x

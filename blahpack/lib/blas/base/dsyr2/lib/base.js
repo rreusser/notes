@@ -29,7 +29,7 @@
 * N by N symmetric matrix.
 *
 * @private
-* @param {string} uplo - specifies whether the upper or lower triangle is used ('U' or 'L')
+* @param {string} uplo - specifies whether the upper or lower triangle is used (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {number} alpha - scalar multiplier
 * @param {Float64Array} x - first input vector

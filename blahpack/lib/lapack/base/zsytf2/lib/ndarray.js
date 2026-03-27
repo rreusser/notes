@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes the factorization of a complex symmetric matrix A using the.
 *
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input/output complex symmetric matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)

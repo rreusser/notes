@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes the product of a triangular matrix with its transpose.
 *
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the triangular matrix
 * @param {Float64Array} A - input/output triangular matrix
 * @param {integer} strideA1 - stride of the first dimension of A

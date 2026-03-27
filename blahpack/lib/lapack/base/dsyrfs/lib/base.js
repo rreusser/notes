@@ -50,7 +50,7 @@ var SAFMIN = dlamch( 'safe-minimum' );
 * IPIV must contain 0-based pivot indices (as produced by dsytf2/dsytrf).
 *
 * @private
-* @param {string} uplo - 'U' or 'L', must match the factorization
+* @param {string} uplo - `'upper'` or `'lower'`, must match the factorization
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Float64Array} A - original symmetric N-by-N matrix

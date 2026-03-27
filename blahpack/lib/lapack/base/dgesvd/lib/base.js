@@ -58,8 +58,8 @@ var MNTHR_FAC = 1.6; // crossover ratio: if M >= MNTHR_FAC * N, use QR path
 * of U and V are the left and right singular vectors of A.
 *
 * @private
-* @param {string} jobu - 'A': all M columns of U are returned, 'S': first min(M,N) columns, 'O': overwrite A, 'N': no U
-* @param {string} jobvt - 'A': all N rows of V^T are returned, 'S': first min(M,N) rows, 'O': overwrite A, 'N': no VT
+* @param {string} jobu - `'all'`: all M columns of U returned, `'some'`: first min(M,N) columns, `'overwrite'`: overwrite A, `'none'`: no U
+* @param {string} jobvt - `'all'`: all N rows of V^T returned, `'some'`: first min(M,N) rows, `'overwrite'`: overwrite A, `'none'`: no VT
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {Float64Array} A - input/output matrix (column-major)

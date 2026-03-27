@@ -28,8 +28,8 @@
 * where op(X) is one of X or X**T.
 *
 * @private
-* @param {string} transa - specifies op(A): 'N' for A, 'T' or 'C' for A**T
-* @param {string} transb - specifies op(B): 'N' for B, 'T' or 'C' for B**T
+* @param {string} transa - specifies op(A): `'no-transpose'` or `'transpose'`
+* @param {string} transb - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} M - number of rows of op(A) and C
 * @param {NonNegativeInteger} N - number of columns of op(B) and C
 * @param {NonNegativeInteger} K - number of columns of op(A) / rows of op(B)

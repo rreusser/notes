@@ -39,7 +39,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * Runs dsytd2 on a given symmetric matrix.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {number} N - order
 * @param {Array} Aflat - column-major flat array of the symmetric matrix
 * @returns {Object} { info, A, d, e, tau }

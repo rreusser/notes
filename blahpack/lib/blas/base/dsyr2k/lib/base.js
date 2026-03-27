@@ -32,8 +32,8 @@
 * updated.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
-* @param {string} trans - 'N' for no transpose, 'T' or 'C' for transpose
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} N - order of matrix C
 * @param {NonNegativeInteger} K - number of columns of A and B (if trans = 'no-transpose') or rows (if trans = 'transpose')
 * @param {number} alpha - scalar multiplier for A*B^T + B*A^T

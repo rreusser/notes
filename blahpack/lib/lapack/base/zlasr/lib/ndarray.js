@@ -32,9 +32,9 @@ var base = require( './base.js' );
 /**
 * Applies a sequence of real plane rotations to a complex general matrix.
 *
-* @param {string} side - 'L' to apply from the left, 'R' from the right
-* @param {string} pivot - 'V' for variable, 'T' for top, 'B' for bottom
-* @param {string} direct - 'F' for forward, 'B' for backward
+* @param {string} side - `'left'` or `'right'`
+* @param {string} pivot - `'variable'`, `'top'`, or `'bottom'`
+* @param {string} direct - `'forward'` or `'backward'`
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {Float64Array} c - array of cosines (real)

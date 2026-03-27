@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes the singular values and, optionally, the right and/or left.
 *
-* @param {string} uplo - 'U' for upper bidiagonal, 'L' for lower bidiagonal
+* @param {string} uplo - `'upper'` for upper bidiagonal, `'lower'` for lower bidiagonal
 * @param {NonNegativeInteger} N - order of the bidiagonal matrix
 * @param {NonNegativeInteger} ncvt - number of columns in VT
 * @param {NonNegativeInteger} nru - number of rows in U

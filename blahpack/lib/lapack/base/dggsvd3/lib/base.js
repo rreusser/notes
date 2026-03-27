@@ -47,9 +47,9 @@ var UNFL = dlamch( 'Safe Minimum' );
 * where U, V and Q are orthogonal matrices.
 *
 * @private
-* @param {string} jobu - 'U' to compute U, 'N' to skip
-* @param {string} jobv - 'V' to compute V, 'N' to skip
-* @param {string} jobq - 'Q' to compute Q, 'N' to skip
+* @param {string} jobu - `'compute'` or `'none'`
+* @param {string} jobv - `'compute'` or `'none'`
+* @param {string} jobq - `'compute'` or `'none'`
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A and B
 * @param {NonNegativeInteger} p - number of rows of B

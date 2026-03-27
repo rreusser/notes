@@ -35,7 +35,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * If UPLO = 'L', computes L^T*L (lower triangle of result stored in A).
 *
 * @private
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the triangular matrix
 * @param {Float64Array} A - input/output triangular matrix (overwritten with result)
 * @param {integer} strideA1 - stride of the first dimension of A

@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Computes the value of the one norm, Frobenius norm, infinity norm, or.
 *
-* @param {string} norm - norm type: 'M' (max abs), '1'/'O' (one-norm), 'I' (infinity-norm), 'F'/'E' (Frobenius)
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
 * @param {Float64Array} A - input matrix

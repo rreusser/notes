@@ -39,7 +39,7 @@ var dsyrk = require( '../../../../blas/base/dsyrk/lib/base.js' );
 * into four submatrices and recursively factors.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {Float64Array} A - input/output matrix (column-major)
 * @param {integer} strideA1 - stride of the first dimension of A

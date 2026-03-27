@@ -33,7 +33,7 @@ function assertClose( actual, expected, tol, msg ) {
 * in either the upper or lower triangle.
 *
 * @private
-* @param {string} uplo - 'U' or 'L' (which triangle of A is stored)
+* @param {string} uplo - `'upper'` or `'lower'` (which triangle of A is stored)
 * @param {NonNegativeInteger} N - order
 * @param {Float64Array} A - symmetric matrix (column-major, only uplo triangle meaningful)
 * @param {Float64Array} B - full N x N matrix (column-major)

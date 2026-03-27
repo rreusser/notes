@@ -33,11 +33,11 @@ var dgtts2 = require( './../../dgtts2/lib/base.js' );
 * ## Notes
 *
 * -   IPIV values are 0-based (Fortran convention is 1-based).
-* -   `trans` is a single character: 'N' for no transpose, 'T' or 'C' for transpose.
+* -   `trans` is a single character: `'no-transpose'` or `'transpose'`.
 * -   INFO is returned: 0 = success.
 *
 * @private
-* @param {string} trans - 'N' for A*X=B, 'T' or 'C' for A^T*X=B
+* @param {string} trans - `'no-transpose'` for A*X=B, `'transpose'` for A^T*X=B
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)
 * @param {Float64Array} DL - multipliers from LU factorization (length N-1)

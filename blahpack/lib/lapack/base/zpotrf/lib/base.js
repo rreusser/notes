@@ -49,7 +49,7 @@ var MCONE = new Complex128( -1.0, 0.0 );
 * For small matrices (N <= NB), it delegates to zpotrf2.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {Complex128Array} A - input/output Hermitian positive definite matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)

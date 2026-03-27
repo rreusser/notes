@@ -50,8 +50,8 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * 4. Undo scaling on eigenvalues if needed
 *
 * @private
-* @param {string} jobz - 'N': eigenvalues only, 'V': eigenvalues and eigenvectors
-* @param {string} uplo - 'U': upper triangle stored, 'L': lower triangle stored
+* @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input/output symmetric matrix; on exit contains eigenvectors if JOBZ='V'
 * @param {integer} strideA1 - stride of the first dimension of A

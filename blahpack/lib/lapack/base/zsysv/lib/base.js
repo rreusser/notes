@@ -48,7 +48,7 @@ var zsytrs2 = require( '../../zsytrs2/lib/base.js' );
 * Negative values indicate 2x2 pivots (using bitwise NOT encoding).
 *
 * @private
-* @param {string} uplo - 'U' for upper triangular storage, 'L' for lower
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Complex128Array} A - input/output N-by-N symmetric matrix; on exit, block diagonal matrix D and multipliers for the factorization

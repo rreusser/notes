@@ -38,8 +38,8 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * The diagonal of C is always real after the update.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
-* @param {string} trans - 'N' for A*A^H, 'C' for A^H*A
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` for A*A^H, `'conjugate-transpose'` for A^H*A
 * @param {NonNegativeInteger} N - order of matrix C
 * @param {NonNegativeInteger} K - number of columns of A (if trans = 'no-transpose') or rows (if trans = 'conjugate-transpose')
 * @param {number} alpha - real scalar multiplier

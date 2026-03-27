@@ -37,7 +37,7 @@ var iladlc = require( '../../iladlc/lib/base.js' );
 * `H = I - tau*v*v**T`
 *
 * @private
-* @param {string} side - 'L' for left, 'R' for right
+* @param {string} side - `'left'` or `'right'`
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {Float64Array} v - reflector vector

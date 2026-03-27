@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Estimates the reciprocal of the condition number of a general real matrix A,.
 *
-* @param {string} norm - '1' or 'O' for 1-norm, 'I' for infinity-norm
+* @param {string} norm - `'one-norm'` or `'inf-norm'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - LU factorization from dgetrf, N-by-N
 * @param {integer} strideA1 - stride of the first dimension of `A`

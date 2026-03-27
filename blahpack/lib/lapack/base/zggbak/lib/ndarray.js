@@ -33,7 +33,7 @@ var base = require( './base.js' );
 * Back-transform eigenvectors of a balanced pair of general real matrices.
 *
 * @param {string} job - specifies the type of backward transformation:
-* @param {string} side - 'R' for right eigenvectors, 'L' for left eigenvectors
+* @param {string} side - `'right'` for right eigenvectors, `'left'` for left eigenvectors
 * @param {NonNegativeInteger} N - number of rows of V
 * @param {integer} ilo - ilo from balancing (1-based)
 * @param {integer} ihi - ihi from balancing (1-based)

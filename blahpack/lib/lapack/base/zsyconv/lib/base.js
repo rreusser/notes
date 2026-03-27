@@ -44,8 +44,8 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 *     Internally uses Float64 views with doubled strides/offsets.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
-* @param {string} way - 'C' to convert, 'R' to revert
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} way - `'convert'` or `'revert'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - input/output matrix (column-major via strides)
 * @param {integer} strideA1 - stride of the first dimension of `A` (complex elements)

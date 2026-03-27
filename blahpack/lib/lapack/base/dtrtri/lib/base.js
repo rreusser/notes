@@ -39,8 +39,8 @@ var NB = 2; // Block size for blocked algorithm
 * falls back to the unblocked algorithm (dtrti2) for small matrices.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
-* @param {string} diag - 'U' (unit) or 'N' (non-unit)
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} A - input/output triangular matrix (overwritten with inverse)
 * @param {integer} strideA1 - stride of the first dimension of A

@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Reduces NB rows and columns of a complex Hermitian matrix A to Hermitian.
 *
-* @param {string} uplo - 'U' for upper, 'L' for lower
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {integer} nb - number of rows/columns to reduce
 * @param {Complex128Array} A - complex Hermitian matrix (complex-element strides)

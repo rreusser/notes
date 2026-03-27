@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Balances a pair of general complex matrices (A, B).
 *
-* @param {string} job - 'N' none, 'P' permute, 'S' scale, 'B' both
+* @param {string} job - `'none'`, `'permute'`, `'scale'`, or `'both'`
 * @param {NonNegativeInteger} N - order of matrices A and B
 * @param {Complex128Array} A - first complex matrix (modified in-place)
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)

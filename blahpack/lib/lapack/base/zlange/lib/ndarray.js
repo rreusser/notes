@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Computes the value of a matrix norm for a complex matrix.
 *
-* @param {string} norm - 'M', '1', 'O', 'I', 'F', or 'E'
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
 * @param {NonNegativeInteger} M - rows
 * @param {NonNegativeInteger} N - columns
 * @param {Complex128Array} A - complex matrix

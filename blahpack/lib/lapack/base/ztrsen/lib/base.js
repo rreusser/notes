@@ -49,8 +49,8 @@ var ZERO = 0.0;
 * eigenvalues (S) and/or the invariant subspace (SEP).
 *
 * @private
-* @param {string} job - 'N' (none), 'E' (eigenvalues), 'V' (subspace), 'B' (both)
-* @param {string} compq - 'V' (update Q) or 'N' (don't update Q)
+* @param {string} job - `'none'`, `'eigenvalues'`, `'subspace'`, or `'both'`
+* @param {string} compq - `'update'` or `'none'`
 * @param {Uint8Array} SELECT - boolean array of length N
 * @param {integer} strideSELECT - stride for SELECT
 * @param {NonNegativeInteger} offsetSELECT - starting index for SELECT

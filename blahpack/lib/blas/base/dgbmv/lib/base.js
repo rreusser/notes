@@ -34,7 +34,7 @@
 * `A_band[ku+i-j, j]`.
 *
 * @private
-* @param {string} trans - specifies the operation: `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} trans - specifies the operation: `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} M - number of rows of the matrix A
 * @param {NonNegativeInteger} N - number of columns of the matrix A
 * @param {NonNegativeInteger} kl - number of sub-diagonals

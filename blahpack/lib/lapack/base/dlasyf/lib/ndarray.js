@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes a partial factorization of a real symmetric matrix A using the.
 *
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nb - maximum number of columns to factor
 * @param {Float64Array} A - input/output symmetric matrix (column-major)

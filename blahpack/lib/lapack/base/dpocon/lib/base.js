@@ -46,7 +46,7 @@ var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 * condition number is computed as RCOND = 1 / ( norm(A) * norm(inv(A)) ).
 *
 * @private
-* @param {string} uplo - 'U' if upper Cholesky factor, 'L' if lower
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - Cholesky factorization from dpotrf, N-by-N
 * @param {integer} strideA1 - stride of the first dimension of `A`

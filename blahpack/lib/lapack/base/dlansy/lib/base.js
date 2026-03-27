@@ -34,8 +34,8 @@ var dlassq = require( '../../dlassq/lib/base.js' );
 * For a symmetric matrix, the one-norm equals the infinity-norm.
 *
 * @private
-* @param {string} norm - 'M' (max abs), '1'/'O' (one-norm), 'I' (infinity-norm), 'F'/'E' (Frobenius)
-* @param {string} uplo - 'U' (upper triangle stored) or 'L' (lower triangle stored)
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} A - real symmetric matrix
 * @param {integer} strideA1 - first dimension stride for A

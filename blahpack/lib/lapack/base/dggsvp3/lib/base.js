@@ -55,9 +55,9 @@ var dormr2 = require( '../../dormr2/lib/base.js' );
 * Singular Value Decomposition (GSVD).
 *
 * @private
-* @param {string} jobu - 'U' to compute U, 'N' otherwise
-* @param {string} jobv - 'V' to compute V, 'N' otherwise
-* @param {string} jobq - 'Q' to compute Q, 'N' otherwise
+* @param {string} jobu - `'compute'` or `'none'`
+* @param {string} jobv - `'compute'` or `'none'`
+* @param {string} jobq - `'compute'` or `'none'`
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} p - number of rows of B
 * @param {NonNegativeInteger} N - number of columns of A and B

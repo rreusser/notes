@@ -31,7 +31,7 @@ var base = require( './base.js' );
 /**
 * Returns the value of the one norm, Frobenius norm, infinity norm, or.
 *
-* @param {string} norm - 'M' (max), '1'/'O' (one-norm), 'I' (inf-norm), 'F'/'E' (Frobenius)
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - upper Hessenberg matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)

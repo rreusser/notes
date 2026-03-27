@@ -32,11 +32,10 @@ var cmplx = require( '../../../../cmplx.js' );
 /**
 * Computes the value of a matrix norm for a complex matrix.
 *
-* Supports norms: 'M' (max abs), '1'/'O' (one-norm), 'I' (infinity-norm),
-* 'F'/'E' (Frobenius norm).
+* Supports norms: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`.
 *
 * @private
-* @param {string} norm - 'M', '1', 'O', 'I', 'F', or 'E'
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
 * @param {NonNegativeInteger} M - rows
 * @param {NonNegativeInteger} N - columns
 * @param {Complex128Array} A - complex matrix

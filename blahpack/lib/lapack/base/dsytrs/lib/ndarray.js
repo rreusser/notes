@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Solves a system of linear equations A.
 *
-* @param {string} uplo - 'U' or 'L', must match the factorization
+* @param {string} uplo - `'upper'` or `'lower'`, must match the factorization
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side vectors
 * @param {Float64Array} A - factored matrix from dsytrf (column-major)

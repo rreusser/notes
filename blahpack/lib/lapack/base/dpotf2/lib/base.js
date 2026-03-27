@@ -37,7 +37,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 * where U is upper triangular and L is lower triangular.
 *
 * @private
-* @param {string} uplo - specifies whether upper or lower triangle is stored ('U' or 'L')
+* @param {string} uplo - specifies whether upper or lower triangle is stored (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {Float64Array} A - input/output matrix (column-major)
 * @param {integer} strideA1 - stride of the first dimension of A

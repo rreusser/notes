@@ -74,8 +74,8 @@ var NMIN = 75;
 *           have been successfully computed.
 *
 * @private
-* @param {string} job - 'E' for eigenvalues only, 'S' for Schur form
-* @param {string} compz - 'N' no Z, 'I' initialize Z to identity, 'V' update Z
+* @param {string} job - `'eigenvalues'` or `'schur'`
+* @param {string} compz - `'none'`, `'initialize'`, or `'update'`
 * @param {NonNegativeInteger} N - order of the matrix H
 * @param {integer} ilo - first row/col of the active block (1-based)
 * @param {integer} ihi - last row/col of the active block (1-based)

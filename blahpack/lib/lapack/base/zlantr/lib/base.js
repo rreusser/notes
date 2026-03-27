@@ -32,13 +32,12 @@ var cmplx = require( '../../../../cmplx.js' );
 /**
 * Computes the value of a matrix norm for a complex triangular or trapezoidal matrix.
 *
-* Supports norms: 'M' (max abs), '1'/'O' (one-norm), 'I' (infinity-norm),
-* 'F'/'E' (Frobenius norm).
+* Supports norms: `'max'`, `'one-norm'`, `'inf-norm'`, `'frobenius'`.
 *
 * @private
-* @param {string} norm - norm type: 'max', 'one-norm', 'inf-norm', or 'frobenius'
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
-* @param {string} diag - 'U' for unit diagonal, 'N' for non-unit diagonal
+* @param {string} norm - norm type: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} M - rows
 * @param {NonNegativeInteger} N - columns
 * @param {Complex128Array} A - complex matrix

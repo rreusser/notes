@@ -29,7 +29,7 @@
 * and alpha and beta are scalars.
 *
 * @private
-* @param {string} uplo - specifies whether the upper or lower triangular part of A is stored ('U' or 'L')
+* @param {string} uplo - specifies whether the upper or lower triangular part of A is stored (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {number} alpha - scalar multiplier for A*x
 * @param {Float64Array} A - input matrix

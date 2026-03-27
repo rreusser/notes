@@ -41,9 +41,9 @@ var CONE = new Complex128( 1.0, 0.0 );
 * A check is made to verify that A is nonsingular.
 *
 * @private
-* @param {string} uplo - 'U' if A is upper triangular, 'L' if lower triangular
-* @param {string} trans - 'N' for no transpose, 'T' for transpose, 'C' for conjugate transpose
-* @param {string} diag - 'N' for non-unit diagonal, 'U' for unit diagonal
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Complex128Array} A - triangular matrix A

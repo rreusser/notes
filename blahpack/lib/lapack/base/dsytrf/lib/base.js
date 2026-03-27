@@ -48,7 +48,7 @@ var NB = 32; // Block size (hardcoded; Fortran uses ILAENV)
 * Negative values ~kp (bitwise NOT of 0-based index) indicate 2x2 pivots.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input/output symmetric matrix (column-major)
 * @param {integer} strideA1 - stride of the first dimension of A

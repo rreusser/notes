@@ -39,9 +39,9 @@ var cmplx = require( '../../../../cmplx.js' );
 * For lower triangular, diagonal at row 0.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
-* @param {string} trans - 'N', 'T', or 'C'
-* @param {string} diag - 'U' (unit) or 'N' (non-unit)
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {NonNegativeInteger} K - number of super/sub-diagonals
 * @param {Complex128Array} A - band matrix in band storage

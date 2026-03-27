@@ -60,8 +60,8 @@ var BIGNUM = ONE / SMLNUM;
 * to the selected eigenvalues.
 *
 * @private
-* @param {string} jobvs - 'N' (no Schur vectors) or 'V' (compute Schur vectors)
-* @param {string} sort - 'N' (no sorting) or 'S' (sort eigenvalues)
+* @param {string} jobvs - `'none'` or `'compute-vectors'`
+* @param {string} sort - `'none'` or `'sort'`
 * @param {Function} select - function(wr, wi) returning boolean; used when sort='S'
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - N-by-N matrix, overwritten with Schur form T on exit

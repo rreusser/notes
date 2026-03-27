@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Performs one of the matrix-vector operations `y = alpha*A*x + beta*y` or `y = alpha*A^T*x + beta*y`.
 *
-* @param {string} trans - specifies whether `A` should be transposed, conjugate-transposed, or not transposed
+* @param {string} trans - specifies whether `A` should be transposed or not transposed
 * @param {NonNegativeInteger} M - number of rows in the matrix `A`
 * @param {NonNegativeInteger} N - number of columns in the matrix `A`
 * @param {number} alpha - scalar constant

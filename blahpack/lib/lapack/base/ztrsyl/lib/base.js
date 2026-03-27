@@ -53,8 +53,8 @@ var DUM = new Float64Array( 1 );
 * M-by-N; and scale is an output scale factor, set <= 1 to avoid overflow.
 *
 * @private
-* @param {string} trana - 'N' for no transpose, 'C' for conjugate transpose of A
-* @param {string} tranb - 'N' for no transpose, 'C' for conjugate transpose of B
+* @param {string} trana - `'no-transpose'` or `'conjugate-transpose'` of A
+* @param {string} tranb - `'no-transpose'` or `'conjugate-transpose'` of B
 * @param {integer} isgn - +1 or -1
 * @param {NonNegativeInteger} M - order of matrix A, rows of C
 * @param {NonNegativeInteger} N - order of matrix B, columns of C

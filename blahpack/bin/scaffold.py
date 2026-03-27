@@ -244,7 +244,9 @@ test( '{routine}: attached to the main export is an `ndarray` method', function 
 \tassert.strictEqual( typeof {routine}.ndarray, 'function' );
 }});
 
-// TODO: Add implementation tests
+test( '{routine}: TODO — implement real tests', function t() {{
+\tassert.fail( 'Scaffold only — implement real tests before marking complete' );
+}});
 """
 
 

@@ -32,8 +32,8 @@ var base = require( './base.js' );
 /**
 * Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian.
 *
-* @param {string} jobz - 'N': eigenvalues only, 'V': eigenvalues and eigenvectors
-* @param {string} uplo - 'U': upper triangle stored, 'L': lower triangle stored
+* @param {string} jobz - `'no-vectors'` or `'compute-vectors'`
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input/output Hermitian matrix; on exit contains eigenvectors if JOBZ='V'
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)

@@ -41,7 +41,7 @@ var dorgql = require( '../../dorgql/lib/base.js' );
 * `Q = H(1)*H(2)*... * H(n-1)`
 *
 * @private
-* @param {string} uplo - specifies whether the upper or lower triangle was used in DSYTRD ('U' or 'L')
+* @param {string} uplo - specifies whether the upper or lower triangle was used in DSYTRD (`'upper'` or `'lower'`)
 * @param {NonNegativeInteger} N - order of the matrix Q
 * @param {Float64Array} A - on entry, contains the reflectors from DSYTRD; on exit, the orthogonal matrix Q
 * @param {integer} strideA1 - stride of the first dimension of `A`

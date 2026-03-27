@@ -29,7 +29,7 @@
 * are `N`-element vectors, and `alpha` and `beta` are scalars.
 *
 * @private
-* @param {string} uplo - specifies whether the upper or lower triangular part of `A` is packed
+* @param {string} uplo - specifies whether upper or lower triangle is stored
 * @param {NonNegativeInteger} N - order of the matrix `A`
 * @param {number} alpha - scalar multiplier for `A*x`
 * @param {Float64Array} AP - packed symmetric matrix

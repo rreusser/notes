@@ -55,9 +55,9 @@ var ssminArr = new Float64Array( 1 );
 * orthogonal matrices.
 *
 * @private
-* @param {string} jobu - 'U' to update U, 'I' to initialize U to identity, 'N' to skip
-* @param {string} jobv - 'V' to update V, 'I' to initialize V to identity, 'N' to skip
-* @param {string} jobq - 'Q' to update Q, 'I' to initialize Q to identity, 'N' to skip
+* @param {string} jobu - `'update'`, `'initialize'`, or `'none'`
+* @param {string} jobv - `'update'`, `'initialize'`, or `'none'`
+* @param {string} jobq - `'update'`, `'initialize'`, or `'none'`
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} p - number of rows of B
 * @param {NonNegativeInteger} N - number of columns of A and B

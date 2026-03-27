@@ -36,9 +36,9 @@
 * Lower band: `A_band[s_sa1 + j_sa2] = A(j+s, j)` for s = 0..min(K, N-1-j)
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
-* @param {string} trans - 'N', 'T', or 'C'
-* @param {string} diag - 'U' or 'N'
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {NonNegativeInteger} K - number of super/sub-diagonals
 * @param {Float64Array} A - band matrix in band storage

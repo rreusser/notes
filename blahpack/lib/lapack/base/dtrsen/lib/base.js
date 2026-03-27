@@ -47,8 +47,8 @@ var ONE = 1.0;
 * and of the invariant subspace (SEP).
 *
 * @private
-* @param {string} job - 'N', 'E', 'V', or 'B'
-* @param {string} compq - 'V' to update Q, 'N' to not
+* @param {string} job - `'none'`, `'eigenvalues'`, `'subspace'`, or `'both'`
+* @param {string} compq - `'update'` or `'none'`
 * @param {Uint8Array|Array} SELECT - boolean array of length N indicating selected eigenvalues
 * @param {integer} strideSELECT - stride for SELECT
 * @param {NonNegativeInteger} offsetSELECT - starting index for SELECT

@@ -43,7 +43,7 @@ var CONE = new Complex128( 1.0, 0.0 );
 * IPIV must contain 0-based pivot indices (as produced by zgetrf/zgetrf2).
 *
 * @private
-* @param {string} trans - 'N' for no transpose, 'T' for transpose, 'C' for conjugate transpose
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Complex128Array} A - LU-factored N-by-N matrix (from zgetrf)

@@ -46,11 +46,11 @@ tr.prefix-hidden { display: none !important; }
 </head>
 <body>
 <h1>Blahpack Translation Progress</h1>
-<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated 2026-03-25</p>
+<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated 2026-03-27</p>
 <div class="stats">
-<div class="stat green"><div class="val">426/2204</div><div class="lbl">Implemented</div></div>
-<div class="stat"><div class="val">4935</div><div class="lbl">Tests</div></div>
-<div class="stat" id="statBlas"><div class="val">62/151</div><div class="lbl">BLAS</div></div>
+<div class="stat green"><div class="val">437/2204</div><div class="lbl">Implemented</div></div>
+<div class="stat"><div class="val">5126</div><div class="lbl">Tests</div></div>
+<div class="stat" id="statBlas"><div class="val">73/151</div><div class="lbl">BLAS</div></div>
 <div class="stat" id="statLapack"><div class="val">364/2053</div><div class="lbl">LAPACK</div></div>
 </div>
 <div class="controls">
@@ -68,7 +68,7 @@ tr.prefix-hidden { display: none !important; }
 </div>
 </div>
 <section>
-<h2>BLAS <span class="count">62/151</span></h2>
+<h2>BLAS <span class="count">73/151</span></h2>
 <table>
 <thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>
 <tbody>
@@ -194,31 +194,31 @@ tr.prefix-hidden { display: none !important; }
 <tr><td class="name">zdotu</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Compute unconjugated dot product of two complex vectors</td></tr>
 <tr><td class="name">zdrot</td><td><span class="badge done">done</span></td><td class="tests">15</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Apply a plane rotation to complex vectors</td></tr>
 <tr><td class="name">zdscal</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Scale a complex double-precision vector by a double-precision constant.</td></tr>
-<tr class="unimpl"><td class="name">zgbmv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
+<tr><td class="name">zgbmv</td><td><span class="badge done">done</span></td><td class="tests">18</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform one of the matrix-vector operations y := alpha*A*x + beta*y or y := alpha*A**T*x + beta*y or y := alpha*A**H*x + beta*y where A is a general band matrix.</td></tr>
 <tr><td class="name">zgemm</td><td><span class="badge done">done</span></td><td class="tests">30</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">98%</span></td><td class="desc">Perform complex matrix-matrix operations</td></tr>
 <tr><td class="name">zgemv</td><td><span class="badge done">done</span></td><td class="tests">15</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform complex matrix-vector multiplication</td></tr>
 <tr><td class="name">zgerc</td><td><span class="badge done">done</span></td><td class="tests">9</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform the rank 1 operation A := alpha*x*y**H + A</td></tr>
 <tr><td class="name">zgeru</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform complex rank-1 update (unconjugated)</td></tr>
-<tr class="unimpl"><td class="name">zhbmv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
+<tr><td class="name">zhbmv</td><td><span class="badge done">done</span></td><td class="tests">15</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">96%</span></td><td class="desc">Perform the Hermitian banded matrix-vector operation y := alpha*A*x + beta*y.</td></tr>
 <tr><td class="name">zhemm</td><td><span class="badge done">done</span></td><td class="tests">13</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">98%</span></td><td class="desc">Performs Hermitian matrix-matrix multiplication</td></tr>
 <tr><td class="name">zhemv</td><td><span class="badge done">done</span></td><td class="tests">14</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform Hermitian matrix-vector multiplication</td></tr>
 <tr><td class="name">zher</td><td><span class="badge done">done</span></td><td class="tests">14</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform Hermitian rank-1 update</td></tr>
 <tr><td class="name">zher2</td><td><span class="badge done">done</span></td><td class="tests">15</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform Hermitian rank-2 update</td></tr>
 <tr><td class="name">zher2k</td><td><span class="badge done">done</span></td><td class="tests">24</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">91%</span></td><td class="desc">Perform Hermitian rank-2k update</td></tr>
 <tr><td class="name">zherk</td><td><span class="badge done">done</span></td><td class="tests">19</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">96%</span></td><td class="desc">Performs a Hermitian rank-k update (complex double-precision).</td></tr>
-<tr class="unimpl"><td class="name">zhpmv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr class="unimpl"><td class="name">zhpr</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr class="unimpl"><td class="name">zhpr2</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
+<tr><td class="name">zhpmv</td><td><span class="badge done">done</span></td><td class="tests">15</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform the Hermitian packed matrix-vector operation y := alpha*A*x + beta*y.</td></tr>
+<tr><td class="name">zhpr</td><td><span class="badge done">done</span></td><td class="tests">13</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform the Hermitian packed rank-1 update A := alpha*x*x**H + A.</td></tr>
+<tr><td class="name">zhpr2</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform the Hermitian packed rank-2 update A := alpha*x*y**H + conj(alpha)*y*x**H + A.</td></tr>
 <tr class="unimpl"><td class="name">zrotg</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
 <tr><td class="name">zscal</td><td><span class="badge done">done</span></td><td class="tests">8</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Scale a complex double-precision vector by a complex constant</td></tr>
 <tr><td class="name">zswap</td><td><span class="badge done">done</span></td><td class="tests">7</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Interchange two complex double-precision vectors.</td></tr>
-<tr class="unimpl"><td class="name">zsymm</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr class="unimpl"><td class="name">zsyr2k</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr class="unimpl"><td class="name">zsyrk</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr class="unimpl"><td class="name">ztbmv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
+<tr><td class="name">zsymm</td><td><span class="badge done">done</span></td><td class="tests">13</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">98%</span></td><td class="desc">Perform one of the symmetric matrix-matrix operations C := alpha*A*B + beta*C or C := alpha*B*A + beta*C.</td></tr>
+<tr><td class="name">zsyr2k</td><td><span class="badge done">done</span></td><td class="tests">20</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">88%</span></td><td class="desc">Perform one of the symmetric rank-2k operations C := alpha*A*B**T + alpha*B*A**T + beta*C or C := alpha*A**T*B + alpha*B**T*A + beta*C.</td></tr>
+<tr><td class="name">zsyrk</td><td><span class="badge done">done</span></td><td class="tests">21</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">94%</span></td><td class="desc">Perform one of the symmetric rank-k operations C := alpha*A*A**T + beta*C or C := alpha*A**T*A + beta*C.</td></tr>
+<tr><td class="name">ztbmv</td><td><span class="badge done">done</span></td><td class="tests">21</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x, where A is a triangular band matrix</td></tr>
 <tr><td class="name">ztbsv</td><td><span class="badge done">done</span></td><td class="tests">11</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">93%</span></td><td class="desc">Solve a complex triangular banded system of equations</td></tr>
-<tr class="unimpl"><td class="name">ztpmv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
-<tr class="unimpl"><td class="name">ztpsv</td><td><span class="badge none">—</span></td><td class="tests">—</td><td class="cov"><span class="cov">—</span></td><td class="cov"><span class="cov">—</span></td><td class="desc"></td></tr>
+<tr><td class="name">ztpmv</td><td><span class="badge done">done</span></td><td class="tests">22</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Perform one of the triangular packed matrix-vector operations x := A*x or x := A**T*x or x := A**H*x.</td></tr>
+<tr><td class="name">ztpsv</td><td><span class="badge done">done</span></td><td class="tests">22</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">100%</span></td><td class="desc">Solve one of the triangular packed systems A*x = b or A**T*x = b or A**H*x = b.</td></tr>
 <tr><td class="name">ztrmm</td><td><span class="badge done">done</span></td><td class="tests">24</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">92%</span></td><td class="desc">Perform one of the matrix-matrix operations B := alpha*op(A)*B or B := alpha*B*op(A)</td></tr>
 <tr><td class="name">ztrmv</td><td><span class="badge done">done</span></td><td class="tests">18</td><td class="cov"><span class="cov-good">100%</span></td><td class="cov"><span class="cov-good">96%</span></td><td class="desc">Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x</td></tr>
 <tr><td class="name">ztrsm</td><td><span class="badge done">done</span></td><td class="tests">41</td><td class="cov"><span class="cov-good">95%</span></td><td class="cov"><span class="cov-good">93%</span></td><td class="desc">Solves a triangular matrix equation (complex double-precision).</td></tr>

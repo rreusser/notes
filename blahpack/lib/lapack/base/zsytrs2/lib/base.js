@@ -68,7 +68,7 @@ var scratch = new Float64Array( 6 );
 * -   A, B, and WORK are Complex128Array. Strides and offsets are in complex elements.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower (single char)
+* @param {string} uplo - `'upper'` or `'lower'` (single char)
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side vectors
 * @param {Complex128Array} A - factored matrix from zsytrf (column-major)

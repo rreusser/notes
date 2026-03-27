@@ -2,26 +2,26 @@
 
 ## Translation pitfalls
 
-- Direct analog of dorg2l. The key index mapping for the diagonal: Fortran `A(M-N+J, J) = ONE` maps to 0-based `A[oA + (M-N+j)*sa1 + j*sa2] = (1,0)`.
-- zlarf and zscal calls match the pattern in zung2r but with the QL reflector structure (from bottom of column upward).
-- Fortran `ZSCAL(M-N+II-1, -TAU(I), ...)` count maps to `M-N+ii` elements in 0-based.
+- Direct mirror of dorg2l with complex arithmetic. Key difference: `zscal` takes a `Complex128` scalar, so `-TAU(I)` requires constructing `new Complex128(-tauv[it], -tauv[it+1])`.
+- The diagonal element `A(M-N+II, II) = ONE - TAU(I)` becomes two writes: `1.0 - tauv[it]` for real, `-tauv[it+1]` for imaginary.
+- Fixture uses LDA=NMAX=4 even when M=3, so extracting expected values from fixtures requires accounting for the padding row.
 
 ## Dependency interface surprises
 
-- zlarf takes tau as Complex128Array + offset (not scalar), unlike dlarf which takes a scalar Float64.
-- zscal takes a Complex128 scalar, not a Complex128Array. Required `new Complex128(-tauv[it], -tauv[it+1])`.
+- zlarf takes TAU as `(TAU, offsetTAU)` (Complex128Array + offset) rather than a scalar -- different from the real dlarf which takes `TAU[offset]` directly.
 
 ## Automation opportunities
 
-- Pattern is identical to zung2r -> dorg2l translation. Could be automated as a "real-to-complex unblocked generator" transform.
+- N/A: implementation already existed; only tests were written.
 
 ## Coverage gaps
 
-- The `ii > 0` condition in zlarf (skipping for first column when N=K) is covered by the K=3 test.
-- The `M-N+ii > 0` condition for zscal is covered when M > N.
+- 100% line, branch, and function coverage achieved.
+- Tested: M=N=K (square full), M>N with K<N (rectangular partial), K=0 (identity), N=0 (quick return), M=N=0, and non-unit LDA.
+- Orthonormality of Q is only guaranteed when reflectors come from a proper QL factorization; arbitrary TAU values do not produce unitary Q, so the orthonormality test was replaced with a fixture match + non-unit LDA test.
 
 ## Complex number handling
 
-- Setting elements to zero/one requires zeroing both real and imaginary parts.
-- `A(M-N+ii, ii) = 1 - TAU(i)` becomes `Av[ia] = 1 - tauv[it]; Av[ia+1] = -tauv[it+1]` (complex subtraction from 1).
-- negTau constructed as `new Complex128(-re, -im)` for zscal.
+- `reinterpret()` used at function entry for Float64 views of A and TAU.
+- Complex negation for `-TAU(I)` uses `new Complex128(-re, -im)` passed to zscal.
+- No complex division or abs needed.

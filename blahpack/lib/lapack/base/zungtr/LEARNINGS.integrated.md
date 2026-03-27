@@ -2,27 +2,23 @@
 
 ## Translation pitfalls
 
-- Direct analog of dorgtr. The reflector shifting logic (copy column j+1 -> j for upper, shift right for lower) operates on complex elements via Float64Array view, requiring `sa1 = strideA1 * 2`, `sa2 = strideA2 * 2`.
-- For UPLO='L', the submatrix offset for zungqr is `pa = offsetA + strideA1 + strideA2` in complex-element addressing (one row and one column down), same as dorgtr.
-- For UPLO='U', zungql operates on the leading (N-1)x(N-1) submatrix starting at offsetA (no offset change), also same as dorgtr.
+- Direct mirror of dorgtr with complex arithmetic. The main gotcha is the `reinterpret()` pattern: all array access uses Float64 views with doubled strides/offsets (`sa1 = strideA1 * 2`, `oA = offsetA * 2`), while function calls to zungql/zungqr pass the original complex-element strides.
+- Setting complex zero `(0, 0)` and complex one `(1, 0)` requires writing two Float64 values per element.
 
 ## Dependency interface surprises
 
-- zungql and zungqr both take complex-element strides/offsets. The lwork parameter is passed through from the caller.
-- N/A for the routines themselves; their conventions match expectations.
+- zhetrd and zungtr both use long-form `'upper'`/`'lower'` strings (not `'U'`/`'L'`). Initially the test passed `'U'`/`'L'` to zhetrd which caused incorrect results. All routines in this codebase use long-form strings at the base.js level.
 
 ## Automation opportunities
 
-- dorgtr -> zungtr translation is mechanical. Only differences: reinterpret for Float64 view, multiply strides by 2, use `Av[ia] = 1.0; Av[ia+1] = 0.0` instead of `A[ia] = 1.0`, replace dorgqr/dorgql with zungqr/zungql.
+- N/A: implementation already existed; only tests were written.
 
 ## Coverage gaps
 
-- Both UPLO='U' and UPLO='L' paths are fully covered.
-- N=0 and N=1 edge cases covered.
-- 98.72% line coverage, 91.67% branch coverage.
+- 100% line, branch, and function coverage achieved.
+- Tests use zhetrd + zungtr pipeline (matching the Fortran test pattern) plus unitarity verification (Q^H * Q = I).
 
 ## Complex number handling
 
-- Element copying requires copying both real and imaginary parts: `Av[ia] = Av[src]; Av[ia+1] = Av[src+1]`.
-- Setting elements to (1,0) or (0,0) requires two assignments.
-- No complex arithmetic operations; only element copying and zero/one assignments.
+- Column shift loop inlines complex element copies (two Float64 writes per complex element).
+- zungql and zungqr are called via `require()` -- no complex arithmetic inlined for the actual Q generation.

@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Reduces a complex Hermitian matrix A to real symmetric tridiagonal form T.
 *
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input/output Hermitian matrix (complex-element strides)
 * @param {integer} strideA1 - stride of first dimension of A (complex elements)

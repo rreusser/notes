@@ -44,7 +44,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * Verify A * Ainv is approximately identity by computing C = A * Ainv
 * and checking that C is close to I.
 *
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {number} N - matrix order
 * @param {Array} aData - original Hermitian matrix (interleaved re/im, column-major)
 * @param {Array} ainvData - inverse matrix (interleaved re/im, only tri stored)

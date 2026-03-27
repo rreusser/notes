@@ -71,7 +71,7 @@ function cDiv( ar, ai, br, bi ) {
 * Solve a system of linear equations A*X = B with a complex symmetric matrix using Bunch-Kaufman factorization.
 *
 * @private
-* @param {string} uplo - 'U' or 'L' indicating upper or lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'` indicating upper or lower triangular storage
 * @param {integer} N - order of the matrix
 * @param {integer} nrhs - number of right-hand sides
 * @param {Complex128Array} A - factored matrix from zsytrf

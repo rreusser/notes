@@ -47,7 +47,7 @@ var ZERO = new Complex128( 0.0, 0.0 );
 * If tau = 0, then H is taken to be the unit matrix.
 *
 * @private
-* @param {string} side - 'L' for left, 'R' for right
+* @param {string} side - `'left'` or `'right'`
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {Complex128Array} v - reflector vector

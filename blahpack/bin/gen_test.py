@@ -106,6 +106,7 @@ def main():
                 print(f"\t// assertArrayClose( result, tc.{key}, 1e-14, '{key}' );")
             elif isinstance(val, (int, float)):
                 print(f"\t// assertClose( result, tc.{key}, 1e-14, '{key}' );")
+        print(f"\tassert.fail( 'TODO: implement test for {name}' );")
         print("});")
         print()
 

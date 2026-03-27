@@ -70,8 +70,8 @@ var EPS = dlamch( 'epsilon' );
 *   rpvgrw: reciprocal pivot growth factor
 *
 * @private
-* @param {string} fact - 'N', 'E', or 'F'
-* @param {string} trans - 'N', 'T', or 'C'
+* @param {string} fact - `'not-factored'`, `'equilibrate'`, or `'factored'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Float64Array} A - N-by-N matrix (may be equilibrated on exit)
@@ -85,7 +85,7 @@ var EPS = dlamch( 'epsilon' );
 * @param {Int32Array} IPIV - pivot indices (0-based, output)
 * @param {integer} strideIPIV - stride for IPIV
 * @param {NonNegativeInteger} offsetIPIV - index offset for IPIV
-* @param {string} equed - equilibration type (input if FACT='F')
+* @param {string} equed - equilibration type (input if FACT=`'factored'`)
 * @param {Float64Array} r - row scale factors
 * @param {integer} strideR - stride for r
 * @param {NonNegativeInteger} offsetR - index offset for r

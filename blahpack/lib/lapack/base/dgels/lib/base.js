@@ -68,7 +68,7 @@ var NB = 32; // Hardcoded block size (replaces ILAENV queries)
 * hand side matrix B and the N-by-NRHS solution matrix X.
 *
 * @private
-* @param {string} trans - 'N' for no transpose, 'T' for transpose
+* @param {string} trans - `'no-transpose'` or `'transpose'`
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)

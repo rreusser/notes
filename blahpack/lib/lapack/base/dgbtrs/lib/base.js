@@ -42,7 +42,7 @@ var dger = require( '../../../../blas/base/dger/lib/base.js' );
 * L multipliers below the diagonal.
 *
 * @private
-* @param {string} trans - 'N' for A*X=B, 'T' or 'C' for A^T*X=B
+* @param {string} trans - `'no-transpose'` for A*X=B, `'transpose'` for A^T*X=B
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} kl - number of subdiagonals
 * @param {NonNegativeInteger} ku - number of superdiagonals

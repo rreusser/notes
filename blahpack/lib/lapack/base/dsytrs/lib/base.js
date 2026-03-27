@@ -40,7 +40,7 @@ var dswap = require( '../../../../blas/base/dswap/lib/base.js' );
 * -   `IPIV[k]` < 0: 2x2 pivot, `IPIV[k]` = ~kp (bitwise NOT of 0-based index)
 *
 * @private
-* @param {string} uplo - 'U' or 'L', must match the factorization
+* @param {string} uplo - `'upper'` or `'lower'`, must match the factorization
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side vectors
 * @param {Float64Array} A - factored matrix from dsytrf (column-major)

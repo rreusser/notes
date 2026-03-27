@@ -31,8 +31,8 @@ var base = require( './base.js' );
 /**
 * Computes the singular value decomposition (SVD) of a complex M-by-N matrix A,.
 *
-* @param {string} jobu - 'A': all M columns of U are returned, 'S': first min(M,N) columns, 'O': overwrite A, 'N': no U
-* @param {string} jobvt - 'A': all N rows of V^H are returned, 'S': first min(M,N) rows, 'O': overwrite A, 'N': no VT
+* @param {string} jobu - `'all'`: all M columns of U returned, `'some'`: first min(M,N) columns, `'overwrite'`: overwrite A, `'none'`: no U
+* @param {string} jobvt - `'all'`: all N rows of V^H returned, `'some'`: first min(M,N) rows, `'overwrite'`: overwrite A, `'none'`: no VT
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {Complex128Array} A - input/output matrix (column-major)

@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Applies a real elementary reflector H to a real M-by-N matrix C,.
 *
-* @param {string} side - 'L' for left, 'R' for right
+* @param {string} side - `'left'` or `'right'`
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {Float64Array} v - reflector vector

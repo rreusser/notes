@@ -97,7 +97,7 @@ function cabs( arr, idx ) {
 * object along with the info status.
 *
 * @private
-* @param {string} job - 'N' none, 'P' permute, 'S' scale, 'B' both
+* @param {string} job - `'none'`, `'permute'`, `'scale'`, or `'both'`
 * @param {NonNegativeInteger} N - order of matrices A and B
 * @param {Complex128Array} A - first complex matrix (modified in-place)
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)

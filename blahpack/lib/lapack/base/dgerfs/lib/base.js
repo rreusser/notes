@@ -49,7 +49,7 @@ var SAFMIN = dlamch( 'safe-minimum' );
 * IPIV must contain 0-based pivot indices (as produced by dgetrf).
 *
 * @private
-* @param {string} trans - specifies the form of the system: 'no-transpose', 'transpose', or 'conjugate-transpose'
+* @param {string} trans - specifies the form of the system: 'no-transpose' or 'transpose'
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Float64Array} A - original N-by-N matrix

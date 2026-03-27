@@ -57,8 +57,8 @@ var DUM = new Float64Array( 1 );
 * scale is an output scale factor set <= 1 to avoid overflow in X.
 *
 * @private
-* @param {string} trana - 'N' for no transpose, 'T' or 'C' for transpose of A
-* @param {string} tranb - 'N' for no transpose, 'T' or 'C' for transpose of B
+* @param {string} trana - `'no-transpose'` or `'transpose'` of A
+* @param {string} tranb - `'no-transpose'` or `'transpose'` of B
 * @param {integer} isgn - +1 or -1
 * @param {NonNegativeInteger} M - number of rows in A and C
 * @param {NonNegativeInteger} N - number of columns in B and C

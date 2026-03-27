@@ -50,8 +50,8 @@ var RELFAC = 2.0;
 * by bisection.
 *
 * @private
-* @param {string} range - 'A' (all), 'V' (by value interval), or 'I' (by index)
-* @param {string} order - 'B' (by block) or 'E' (entire matrix ordering)
+* @param {string} range - `'all'`, `'value'`, or `'index'`
+* @param {string} order - `'block'` or `'entire'`
 * @param {NonNegativeInteger} N - order of the tridiagonal matrix
 * @param {number} vl - lower bound of interval (RANGE='V')
 * @param {number} vu - upper bound of interval (RANGE='V')

@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Solves a system of linear equations A.
 *
-* @param {string} uplo - 'U': upper triangular factor stored in AB; 'L': lower triangular factor stored in AB
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} kd - number of super/sub-diagonals of A
 * @param {NonNegativeInteger} nrhs - number of right hand sides (columns of B)

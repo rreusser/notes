@@ -27,7 +27,7 @@ var NB = 32;
 * Compute the factorization of a complex symmetric matrix using Bunch-Kaufman diagonal pivoting.
 *
 * @private
-* @param {string} uplo - 'U' or 'L' indicating upper or lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'` indicating upper or lower triangular storage
 * @param {integer} N - order of the matrix
 * @param {Complex128Array} A - input/output matrix
 * @param {integer} strideA1 - first stride of A

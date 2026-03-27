@@ -43,7 +43,7 @@ var zhetrs2 = require( '../../zhetrs2/lib/base.js' );
 * and 2-by-2 diagonal blocks.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {integer} N - order of the matrix A
 * @param {integer} nrhs - number of right hand sides
 * @param {Complex128Array} A - input/output matrix A (N x N)

@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes the factorization of a real symmetric matrix A using the.
 *
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input/output symmetric matrix (column-major)
 * @param {integer} strideA1 - stride of the first dimension of A

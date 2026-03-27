@@ -46,7 +46,7 @@ var ALPHA = ( 1.0 + Math.sqrt( 17.0 ) ) / 8.0;
 * factored in the return value's `kb` field.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nb - maximum number of columns to factor
 * @param {Float64Array} A - input/output symmetric matrix (column-major)

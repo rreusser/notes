@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Computes the product of a complex upper or lower triangular matrix with its.
 *
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower triangular
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the triangular matrix
 * @param {Complex128Array} A - input/output triangular matrix (overwritten with result)
 * @param {integer} strideA1 - stride of the first dimension of A (complex elements)

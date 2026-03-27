@@ -35,7 +35,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * y := alpha*A**H_x + beta_y
 *
 * @private
-* @param {string} trans - specifies the operation ('no-transpose', 'T', or 'C')
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
 * @param {NonNegativeInteger} M - number of rows of A
 * @param {NonNegativeInteger} N - number of columns of A
 * @param {Complex128} alpha - complex scalar

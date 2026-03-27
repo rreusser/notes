@@ -34,7 +34,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 * off-diagonals.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower, otherwise full
+* @param {string} uplo - `'upper'` or `'lower'`, otherwise full
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
 * @param {Complex128} alpha - complex off-diagonal value

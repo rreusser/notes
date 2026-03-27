@@ -35,7 +35,7 @@ var dlauum = require( '../../dlauum/lib/base.js' );
 * transpose (dlauum).
 *
 * @private
-* @param {string} uplo - 'U' for upper triangular factor, 'L' for lower triangular factor
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Float64Array} A - input/output matrix; on entry, the triangular factor from dpotrf; on exit, the inverse
 * @param {integer} strideA1 - stride of the first dimension of A

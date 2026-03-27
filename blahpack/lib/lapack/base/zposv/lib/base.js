@@ -40,7 +40,7 @@ var zpotrs = require( '../../zpotrs/lib/base.js' );
 * form of A is then used to solve the system A*X = B.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangle, 'L' for lower triangle
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of matrix A
 * @param {NonNegativeInteger} nrhs - number of right-hand side columns
 * @param {Complex128Array} A - input/output matrix; on exit, the Cholesky factor

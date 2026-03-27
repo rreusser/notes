@@ -62,7 +62,7 @@ var cdI = 0.0;
 * where p is the 0-based row/column that was interchanged.
 *
 * @private
-* @param {string} uplo - 'U' for upper, 'L' for lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - input/output complex symmetric matrix
 * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)

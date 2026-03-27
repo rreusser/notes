@@ -279,6 +279,12 @@ node --test lib/<package>/base/<routine>/test/test.js
   test cases without re-zeroing (e.g., SR/SI in dlaqr2). Either zero
   arrays between cases in Fortran, or account for stale values in JS
   fixture comparison.
+- **Non-unique decompositions:** Decompositions (GSVD, eigenvalues with
+  tied norms, rank-deficient QR) are not unique. Test mathematical
+  properties (`A*x ≈ b`, orthogonality) rather than exact element values.
+- **Round-trip testing for solve/multiply pairs:** Multiply then solve
+  and check recovery of the original vector. This validates both routines
+  simultaneously and avoids fragile fixture comparisons.
 
 **Gate:** All tests pass against Fortran fixtures. The test file MUST have
 more than 2 `assert.*` calls — the scaffolded "is a function" checks do
@@ -321,6 +327,10 @@ If coverage is low, add targeted test cases:
   near machine underflow (~1e-308) to trigger. Accept these as uncovered.
 - **Collapsed/underflowed bulges** in multi-shift QR (dlaqr5): require
   all three bulge elements to be simultaneously zero
+- **Compound quick-return conditions** (`alpha=0 && beta=1`): the
+  identity short-circuit in Level-3 routines is hard to isolate.
+- **Convergence failure paths (info > 0):** Require matrices that defeat
+  iterative convergence. Accept as uncovered with inline TODO comment.
 
 ### Step 7: Lint base.js
 
@@ -427,7 +437,7 @@ bin/check-stub-tests.sh
 
 ---
 
-## Common Translation Pitfalls (from 280+ translated routines)
+## Common Translation Pitfalls (from 380+ translated routines)
 
 These are hard-won lessons extracted from LEARNINGS.md across all completed
 translations. Read before starting any new routine.
@@ -444,6 +454,32 @@ translations. Read before starting any new routine.
 | Integer division | `(expr)\|0` | Fortran integer division truncates toward zero (like JS `\|0`), NOT `Math.floor`. For negative dividends, `Math.floor(-3/2) = -2` but Fortran gives `-1`. Always use `\|0` for integer division of expressions that can be negative. |
 | `ABS(z)` (complex) | `Math.sqrt(re*re + im*im)` | Complex modulus. Safe to inline (no division). |
 | `CABS1(z)` | `Math.abs(re) + Math.abs(im)` | NOT the same as `ABS`. Used for backward error norms. `ABS` is the true modulus — do not confuse them. |
+| Complex `X.NE.ZERO` | `xr !== 0.0 \|\| xi !== 0.0` | Must use OR, not AND. Fortran checks both real and imaginary parts are zero. Using AND would skip updates when only one part is zero. |
+| `safmin` / `safmax` | `require('@stdlib/constants/float64/smallest-normal')` / `1.0/safmin` | Use stdlib constants, not magic numbers. Hoist to module scope — never call `dlamch()` inside a function body. |
+
+### Hermitian vs. Symmetric: Silent Differences
+
+Hermitian and symmetric routines look structurally identical but differ in
+critical details. Getting these wrong produces plausible but incorrect results:
+
+| Aspect | Hermitian (zh\*) | Symmetric (zs\*) |
+|--------|-----------------|-------------------|
+| Diagonal | Real-only; imaginary forced to zero | Fully complex |
+| Off-diagonal | `conj(A[k,i])` when reading mirror | `A[k,i]` directly (no conjugation) |
+| Alpha type (rank-k) | Real scalar | Complex scalar |
+| Beta type (rank-2k) | Real scalar | Complex scalar |
+| Trans values | `'no-transpose'` / `'conjugate-transpose'` | `'no-transpose'` / `'transpose'` |
+
+### In-Place Complex Update Aliasing
+
+When computing `C[i,j] = beta*C[i,j] + ...` with complex beta, save both
+real and imaginary parts to temporaries before overwriting. The real-part
+write clobbers data needed for the imaginary-part computation:
+```javascript
+cR = Cv[ic]; cI = Cv[ic+1];
+Cv[ic] = betaR*cR - betaI*cI + ...;
+Cv[ic+1] = betaR*cI + betaI*cR + ...;
+```
 
 ### Index Convention Landmines
 
@@ -523,6 +559,18 @@ Before calling a dependency for the first time, check
 gotchas (e.g., dlarfg takes alpha as array+offset, not scalar; dlarf vs
 zlarf differ in tau parameter type; zlarfb vs zgeqr2 differ in WORK strides).
 
+Additional common gotchas:
+
+- **d-prefix vs z-prefix API differences:** The complex analog of a
+  routine may differ in subtle ways. dlacn2 has an ISGN parameter that
+  zlacn2 lacks. zdscal takes a real scalar; zscal takes Complex128.
+  Always check the actual signature, not just the d-prefix equivalent.
+- **LWORK is removed in JS.** Routines allocate workspace internally.
+  The Fortran workspace-query pattern (`LWORK=-1`) does not exist.
+- **Always verify the callee's string convention.** Some JSDoc comments
+  may still reference single-char Fortran flags even when the code uses
+  long-form strings. Trust the actual `===` comparisons, not the docs.
+
 ### Common Patterns
 
 **WORK array partitioning:** Many routines (dgerfs, dsyrfs, dporfs, dptrfs,
@@ -542,7 +590,10 @@ multiply by A^T.
 mostly mechanical: replace dswap→zswap, dscal→zdscal, dnrm2→dznrm2,
 idamax→izamax; add `reinterpret()` for zero checks; change `ABS` to
 complex modulus. The Fortran test is also mechanical (same structure +
-EQUIVALENCE for printing).
+EQUIVALENCE for printing). **Symmetric-to-Hermitian** (e.g., dsymm→zhemm,
+dsyrk→zherk) additionally requires adding conjugation at mirror reads,
+forcing diagonal imaginary parts to zero, and changing `'transpose'` to
+`'conjugate-transpose'`. See the Hermitian vs. Symmetric table above.
 
 ---
 

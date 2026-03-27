@@ -37,8 +37,8 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 * as returned by DGELQ2. This is the unblocked algorithm.
 *
 * @private
-* @param {string} side - 'L' to apply Q from left, 'R' from right
-* @param {string} trans - 'N' for Q, 'T' for Q^T
+* @param {string} side - `'left'` to apply Q from left, `'right'` from right
+* @param {string} trans - `'no-transpose'` for Q, `'transpose'` for Q^T
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {NonNegativeInteger} K - number of elementary reflectors

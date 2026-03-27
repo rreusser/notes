@@ -64,8 +64,8 @@ var BIGNUM = ONE / SMLNUM;
 * A complex matrix is in Schur form if it is upper triangular.
 *
 * @private
-* @param {string} jobvs - 'N' (no Schur vectors) or 'V' (compute Schur vectors)
-* @param {string} sort - 'N' (no sorting) or 'S' (sort eigenvalues)
+* @param {string} jobvs - `'none'` or `'compute-vectors'`
+* @param {string} sort - `'none'` or `'sort'`
 * @param {Function} select - function(w) returning boolean, where w is Complex128; used when sort='S'
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - N-by-N matrix, overwritten with Schur form T on exit

@@ -2,24 +2,25 @@
 
 ## Translation pitfalls
 
-- zgesv is a thin driver routine that calls zgetrf then zgetrs, identical in structure to dgesv. No indexing or stride complications in zgesv itself.
-- For singular matrices, the exact info value may differ from Fortran due to different pivot orderings in the recursive zgetrf2 algorithm. Tests should check info > 0 rather than matching the exact Fortran info value.
-- The Fortran test required computing b = A*x in Fortran itself (rather than hand-computing b) to avoid arithmetic errors with complex numbers. The 4x4 hand computation was wrong on first attempt.
+- Trivial driver routine: just calls zgetrf + zgetrs. No index arithmetic needed.
+- zgetrs expects `'no-transpose'` (long-form string), not `'N'`. Matched dgesv pattern.
 
 ## Dependency interface surprises
 
-- zgesv passes Complex128Array for A and B. Strides and offsets are in complex-element units (not Float64 units). The underlying zgetrf and zgetrs handle the *2 conversion to Float64 indices internally.
-- The IPIV output from zgesv is 0-based (JS convention), unlike Fortran's 1-based. Tests verify mathematical correctness (A*x = b) rather than comparing IPIV values.
+- zgetrf and zgetrs use Complex128Array with complex-element strides (1, N for col-major), same as dgesv uses Float64Array with element strides. No conversion needed at the driver level.
+- IPIV from zgetrf is 0-based (JS convention), same as dgetrf.
 
 ## Automation opportunities
 
-- The scaffold generator (bin/scaffold.py) failed because fparser is not installed in the environment. The module scaffold had to be created manually by copying from dgesv. This is a recurring issue when the venv is not activated.
+- The scaffold generator (init_routine.py) correctly produced a working base.js from the dgesv template. No manual edits to base.js were needed.
+- Test scaffold required manual fill-in of Complex128Array inputs and reinterpret() calls. Could potentially automate complex test input generation from Fortran source.
 
 ## Coverage gaps
 
-- base.js achieves 100% line, branch, and function coverage. The quick-return paths (N=0, NRHS=0) and the info > 0 (singular) path are all covered.
+- 100% line, branch, and function coverage achieved.
+- Singular matrix test only checks info > 0 (exact value depends on pivot order, which may differ between Fortran 1-based and JS 0-based IPIV).
 
 ## Complex number handling
 
-- zgesv itself does not perform complex arithmetic; it delegates entirely to zgetrf and zgetrs. The test file uses a zmatmat helper for verification that operates on Float64Array views of Complex128Arrays with interleaved real/imaginary pairs.
-- Test inputs use Complex128Array constructor with flat interleaved [re, im, re, im, ...] values. Verification uses reinterpret() to get Float64Array views for element-wise comparison.
+- No complex arithmetic in this driver; all complex work is delegated to zgetrf/zgetrs.
+- Tests use Complex128Array for inputs and reinterpret() to get Float64 views for comparison against JSONL fixtures (which store interleaved re/im doubles).

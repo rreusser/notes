@@ -175,10 +175,10 @@ function computeTransposeSum( av, xv, oA, ox, sa1, sa2, sx, j, N, uscalRe, uscal
 * and s is a real scaling factor chosen to prevent overflow.
 *
 * @private
-* @param {string} uplo - 'U' for upper triangular, 'L' for lower
-* @param {string} trans - 'N' for no transpose, 'T' for transpose, 'C' for conjugate transpose
-* @param {string} diag - 'N' for non-unit diagonal, 'U' for unit diagonal
-* @param {string} normin - 'Y' if CNORM contains column norms on input, 'N' to compute them
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'`, `'transpose'`, or `'conjugate-transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {string} normin - `'yes'` if CNORM contains column norms on input, `'no'` to compute them
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128Array} A - N-by-N triangular matrix
 * @param {integer} strideA1 - first dimension stride of A (complex elements)

@@ -39,7 +39,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * conjugation. For Hermitian, use zhemv.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
+* @param {string} uplo - `'upper'` or `'lower'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Complex128} alpha - scalar alpha
 * @param {Complex128Array} A - N x N symmetric matrix

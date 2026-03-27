@@ -40,7 +40,7 @@ var NB = 32;
 * for small trailing/leading submatrices.
 *
 * @private
-* @param {string} uplo - 'U' or 'L' indicating upper or lower triangular storage
+* @param {string} uplo - `'upper'` or `'lower'` indicating upper or lower triangular storage
 * @param {integer} N - order of the matrix
 * @param {Complex128Array} A - input/output matrix
 * @param {integer} strideA1 - first stride of A

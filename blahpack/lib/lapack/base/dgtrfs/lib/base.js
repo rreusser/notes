@@ -47,7 +47,7 @@ var SAFMIN = dlamch( 'Safe minimum' );
 * and backward error estimates for the solution.
 *
 * @private
-* @param {string} trans - 'no-transpose', 'transpose', or 'conjugate-transpose'
+* @param {string} trans - 'no-transpose' or 'transpose'
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {NonNegativeInteger} nrhs - number of right hand sides
 * @param {Float64Array} DL - sub-diagonal of original A (length N-1)

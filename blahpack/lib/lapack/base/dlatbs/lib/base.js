@@ -44,7 +44,7 @@ var HALF = 0.5;
 * Solves a triangular banded system with scaling to prevent overflow.
 *
 * `AB*x = s*b  (trans = 'no-transpose')`
-* `AB^T*x = s*b  (trans = 'transpose' or 'conjugate-transpose')`
+* `AB^T*x = s*b  (trans = 'transpose')`
 *
 * where AB is an N-by-N upper or lower triangular band matrix with KD+1
 * diagonals, x and b are N-vectors, and s is a scaling factor chosen to
@@ -52,9 +52,9 @@ var HALF = 0.5;
 *
 * @private
 * @param {string} uplo - 'upper' or 'lower'
-* @param {string} trans - 'no-transpose', 'transpose', or 'conjugate-transpose'
+* @param {string} trans - 'no-transpose' or 'transpose'
 * @param {string} diag - 'non-unit' or 'unit'
-* @param {string} normin - 'Y' if CNORM contains column norms on input, 'N' to compute them
+* @param {string} normin - `'yes'` if CNORM contains column norms on input, `'no'` to compute them
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {NonNegativeInteger} kd - number of superdiagonals (upper) or subdiagonals (lower)
 * @param {Float64Array} AB - band matrix in banded storage, (KD+1) by N

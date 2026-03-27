@@ -29,9 +29,9 @@
 * upper or lower triangular matrix.
 *
 * @private
-* @param {string} uplo - 'U' or 'L'
-* @param {string} trans - 'N', 'T', or 'C'
-* @param {string} diag - 'U' or 'N'
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
 * @param {NonNegativeInteger} N - order of the matrix
 * @param {Float64Array} A - triangular matrix
 * @param {integer} strideA1 - stride of the first dimension of A

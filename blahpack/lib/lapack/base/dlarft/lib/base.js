@@ -36,8 +36,8 @@ var dtrmv = require( '../../../../blas/base/dtrmv/lib/base.js' );
 * If DIRECT = 'B', H = H(k) ... H(2) H(1) and T is lower triangular.
 *
 * @private
-* @param {string} direct - 'F' for forward, 'B' for backward
-* @param {string} storev - 'C' for columnwise, 'R' for rowwise
+* @param {string} direct - `'forward'` or `'backward'`
+* @param {string} storev - `'columnwise'` or `'rowwise'`
 * @param {NonNegativeInteger} N - order of the block reflector
 * @param {NonNegativeInteger} K - number of elementary reflectors
 * @param {Float64Array} V - matrix of reflector vectors

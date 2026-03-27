@@ -32,7 +32,7 @@ var base = require( './base.js' );
 /**
 * Apply a complex elementary reflector H to a complex M-by-N matrix C,.
 *
-* @param {string} side - 'L' for left, 'R' for right
+* @param {string} side - `'left'` or `'right'`
 * @param {NonNegativeInteger} M - number of rows of C
 * @param {NonNegativeInteger} N - number of columns of C
 * @param {Complex128Array} v - reflector vector

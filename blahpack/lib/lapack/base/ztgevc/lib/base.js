@@ -71,8 +71,8 @@ function abs1( arr, idx ) {
 * HOWMNY = 'S': compute selected eigenvectors (specified by SELECT)
 *
 * @private
-* @param {string} side - 'R', 'L', or 'B'
-* @param {string} howmny - 'A', 'B', or 'S'
+* @param {string} side - `'right'`, `'left'`, or `'both'`
+* @param {string} howmny - `'all'`, `'backtransform'`, or `'selected'`
 * @param {BooleanArray} SELECT - logical array of length N (used when HOWMNY='S')
 * @param {integer} strideSELECT - stride for SELECT
 * @param {NonNegativeInteger} offsetSELECT - offset for SELECT
