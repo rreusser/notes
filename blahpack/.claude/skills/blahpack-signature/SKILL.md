@@ -1,3 +1,9 @@
+---
+name: blahpack-signature
+description: Generate the stdlib-js call signature for a BLAS/LAPACK routine
+argument-hint: <routine>
+---
+
 Generate the stdlib-js call signature for a BLAS/LAPACK routine. Run:
 
 ```

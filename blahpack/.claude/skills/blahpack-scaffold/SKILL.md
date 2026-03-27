@@ -1,3 +1,9 @@
+---
+name: blahpack-scaffold
+description: Generate the stdlib-js module scaffold for a BLAS/LAPACK routine
+argument-hint: <routine>
+---
+
 Generate the stdlib-js module scaffold for a BLAS/LAPACK routine. Run:
 
 ```

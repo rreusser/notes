@@ -1,3 +1,9 @@
+---
+name: blahpack-coverage
+description: Run test coverage analysis
+argument-hint: <routine>
+---
+
 Run test coverage analysis. Run:
 
 ```

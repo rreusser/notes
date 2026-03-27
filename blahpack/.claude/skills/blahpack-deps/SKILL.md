@@ -1,3 +1,9 @@
+---
+name: blahpack-deps
+description: Show the dependency tree for a BLAS/LAPACK routine
+argument-hint: <routine>
+---
+
 Show the dependency tree for a BLAS/LAPACK routine. Run:
 
 ```

@@ -1,3 +1,9 @@
+---
+name: blahpack-status
+description: Show the current translation status
+argument-hint: <routine>
+---
+
 Show the current translation status. Run:
 
 1. List all implemented modules:
