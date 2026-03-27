@@ -44,10 +44,10 @@ docs/                          # Reference documentation
 python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
-npm test                        # Run all JS tests
-bash bin/audit.sh               # Full codebase convention audit
-bash bin/audit.sh lib/<path>    # Audit a single module
-bin/check-stub-tests.sh         # Check for scaffold-only test stubs
+npm run check                   # MANDATORY: tests + conformance audit (the final gate)
+npm test                        # Run JS tests only (not sufficient for completion)
+npm run audit                   # Conformance audit only
+npm run report                  # Generate progress.html with conformance checks
 bin/lint.sh lib/<path>/base.js  # Lint a single file
 ```
 

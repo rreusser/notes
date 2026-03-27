@@ -64,8 +64,6 @@ var base = require( './base.js' );
  * @param {integer} strideIWORK - stride for IWORK
  * @param {NonNegativeInteger} offsetIWORK - starting index for IWORK
  * @param {integer} liwork - length of IWORK
- * @throws {TypeError} Second argument must be a valid range value
- * @throws {TypeError} First argument must be a valid jobz value
  * @returns {integer} info - 0 if successful, >0 if internal error
  */
 function dstevr( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, ISUPPZ, strideISUPPZ, offsetISUPPZ, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork ) { // eslint-disable-line max-len, max-params

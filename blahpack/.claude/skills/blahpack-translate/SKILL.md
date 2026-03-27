@@ -103,9 +103,14 @@ python bin/init_routine.py <package> <routine> -d "<one-line description>"
 
 This single command:
 - Generates the complete stdlib-js module scaffold (package.json, index.js, etc.)
+- ndarray.js is generated WITH validation for string params (uplo, trans, diag, side)
 - Auto-generates the Fortran deps file from the dependency tree
 - Generates a JS test scaffold if a fixture already exists
 - Prints a summary with the exact commands for remaining steps
+
+After scaffolding, verify that ndarray.js has validation (grep for `throw new TypeError`).
+If the routine has string params not covered by stdlib validators (job, norm, compq, etc.),
+add manual whitelist validation to ndarray.js before proceeding.
 
 ### Step 2: Write the Fortran test
 
@@ -434,23 +439,18 @@ TODO goes in `base.js` at the relevant line, not in LEARNINGS.md.
 Keep it concise — bullet points, not prose. This file is read by future
 sessions to avoid repeating mistakes.
 
-### Step 9: Verify full suite
+### Step 9: Verify full suite and conformance
 
 ```bash
-npm test
-bin/check-stub-tests.sh
+npm run check
 ```
 
-**Gate:** All tests pass, no regressions, no scaffold-only test stubs.
+This runs both the test suite AND the conformance audit. A module is NOT
+complete until `npm run check` passes with 0 errors and 0 warnings.
 
-### Step 10: Run the review audit
-
-```bash
-bash bin/audit.sh lib/<package>/base/<routine>
-```
-
-This must pass with 0 errors. See `docs/review-guidelines.md` for the full
-review checklist.
+**This is the MANDATORY final gate.** Do not declare a translation complete
+until this passes. `npm test` alone is insufficient — it does not verify
+conformance (stub wrappers, string conventions, validation, etc.).
 
 ---
 

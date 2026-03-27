@@ -42,7 +42,6 @@ var base = require( './base.js' );
  * @param {Float64Array} WORK - workspace of length N
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK
- * @throws {TypeError} First argument must be a valid compq value
  * @returns {Object} { info, ifst, ilst }
  */
 function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params

@@ -59,8 +59,6 @@ var base = require( './base.js' );
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - offset for WORK
  * @param {integer} lwork - workspace length
- * @throws {TypeError} Second argument must be a valid compz value
- * @throws {TypeError} First argument must be a valid job value
  * @returns {integer} info - 0 on success, >0 if failed to converge
  */
 function zhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params

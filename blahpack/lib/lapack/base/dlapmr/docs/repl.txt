@@ -1,0 +1,48 @@
+
+    dlapmr.ndarray( forwrd, M, N, X, strideX1, strideX2, offsetX, k, strideK, offsetK )
+        Rearrange the rows of a matrix as specified by a permutation vector.
+
+        Parameters
+        ----------
+        forwrd: boolean
+            forwrd.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        X: Float64Array
+            input matrix.
+
+        strideX1: integer
+            stride of the first dimension of `X`.
+
+        strideX2: integer
+            stride of the second dimension of `X`.
+
+        offsetX: NonNegativeInteger
+            starting index for `X`.
+
+        k: Int32Array
+            output array.
+
+        strideK: integer
+            stride length for `k`.
+
+        offsetK: NonNegativeInteger
+            starting index for `k`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

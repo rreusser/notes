@@ -21,6 +21,7 @@ var base = require( './base.js' );
  * @param {number} ai - imaginary part of numerator
  * @param {number} br - real part of denominator
  * @param {number} bi - imaginary part of denominator
+ * @throws {TypeError} First argument must be a valid matrix triangle
  */
 function zsytrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
 	if ( !isMatrixTriangle( uplo ) ) {

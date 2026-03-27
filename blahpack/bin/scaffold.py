@@ -76,20 +76,78 @@ module.exports = {routine};
 
 
 def gen_ndarray_js(routine, sig, package, description):
-    """Generate lib/ndarray.js — validation wrapper stub."""
+    """Generate lib/ndarray.js — validation wrapper with string param checks."""
     args = ', '.join(sig['js_args'])
     base_args = ', '.join(sig['js_args'])
     eslint = ' // eslint-disable-line max-len, max-params' if len(sig['js_args']) > 6 else ''
     eslint_call = ' // eslint-disable-line max-len' if len(sig['js_args']) > 6 else ''
     returns_line = gen_jsdoc_returns(sig)
     returns_doc = f'\n{returns_line}' if returns_line else ''
+
+    # Determine which string params need validation
+    STDLIB_VALIDATORS = {
+        'uplo': ('isMatrixTriangle', '@stdlib/blas/base/assert/is-matrix-triangle', 'a valid matrix triangle'),
+        'trans': ('isTransposeOperation', '@stdlib/blas/base/assert/is-transpose-operation', 'a valid transpose operation'),
+        'transa': ('isTransposeOperation', '@stdlib/blas/base/assert/is-transpose-operation', 'a valid transpose operation'),
+        'transb': ('isTransposeOperation', '@stdlib/blas/base/assert/is-transpose-operation', 'a valid transpose operation'),
+        'diag': ('isDiagonalType', '@stdlib/blas/base/assert/is-diagonal-type', 'a valid diagonal type'),
+        'side': ('isOperationSide', '@stdlib/blas/base/assert/is-operation-side', 'a valid operation side'),
+    }
+    ORDINALS = ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth',
+                'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth']
+
+    string_params = []
+    for i, meta in enumerate(sig.get('js_arg_meta', [])):
+        if meta['type'] == 'string' and meta['name'] in STDLIB_VALIDATORS:
+            var_name, require_path, err_desc = STDLIB_VALIDATORS[meta['name']]
+            ordinal = ORDINALS[i] if i < len(ORDINALS) else f'{i+1}th'
+            string_params.append({
+                'name': meta['name'],
+                'var': var_name,
+                'require': require_path,
+                'desc': err_desc,
+                'ordinal': ordinal,
+            })
+
+    # Build requires
+    requires = []
+    seen_vars = set()
+    for sp in string_params:
+        if sp['var'] not in seen_vars:
+            requires.append(f"var {sp['var']} = require( '{sp['require']}' );")
+            seen_vars.add(sp['var'])
+    if string_params:
+        requires.append("var format = require( '@stdlib/string/format' );")
+    requires.append("var base = require( './base.js' );")
+
+    requires_block = '\n'.join(requires)
+
+    # Build validation code
+    validation_lines = []
+    for sp in string_params:
+        validation_lines.append(f"\tif ( !{sp['var']}( {sp['name']} ) ) {{")
+        validation_lines.append(f"\t\tthrow new TypeError( format( 'invalid argument. {sp['ordinal']} argument must be {sp['desc']}. Value: `%s`.', {sp['name']} ) );")
+        validation_lines.append('\t}')
+    validation_block = '\n'.join(validation_lines)
+
+    # Build @throws JSDoc
+    throws_lines = []
+    for sp in string_params:
+        throws_lines.append(f'* @throws {{TypeError}} {sp["ordinal"]} argument must be {sp["desc"]}')
+    throws_block = '\n'.join(throws_lines)
+    if throws_block:
+        throws_block = '\n' + throws_block
+
+    body = validation_block + '\n' if validation_block else ''
+    body += f'\treturn base( {base_args} );{eslint_call}'
+
     return f"""{LICENSE_HEADER}
 
 'use strict';
 
 // MODULES //
 
-var base = require( './base.js' );
+{requires_block}
 
 
 // MAIN //
@@ -97,10 +155,10 @@ var base = require( './base.js' );
 /**
 * {description}
 *
-{gen_jsdoc_params(sig)}{returns_doc}
+{gen_jsdoc_params(sig)}{throws_block}{returns_doc}
 */
 function {routine}( {args} ) {{{eslint}
-\treturn base( {base_args} );{eslint_call}
+{body}
 }}
 
 

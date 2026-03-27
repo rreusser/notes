@@ -47,8 +47,6 @@ var base = require( './base.js' );
  * @param {Uint8Array} BWORK - boolean workspace of length N (used when sort=`'sort'`)
  * @param {integer} strideBWORK - stride for BWORK
  * @param {NonNegativeInteger} offsetBWORK - starting index for BWORK
- * @throws {TypeError} Second argument must be a valid sort value
- * @throws {TypeError} First argument must be a valid jobvs value
  * @returns {integer} info (0=success, >0 eigenvalue computation failed, N+1/N+2 sorting issues)
  */
 function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, BWORK, strideBWORK, offsetBWORK ) { // eslint-disable-line max-len, max-params

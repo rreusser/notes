@@ -49,8 +49,6 @@ var base = require( './base.js' );
  * @param {Int32Array} IFAIL - output: indices of non-converged eigenvectors
  * @param {integer} strideIFAIL - stride for IFAIL
  * @param {NonNegativeInteger} offsetIFAIL - offset for IFAIL
- * @throws {TypeError} Second argument must be a valid range value
- * @throws {TypeError} First argument must be a valid jobz value
  * @returns {integer} info - 0 on success, >0 if eigenvectors failed to converge
  */
 function dstevx( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL ) { // eslint-disable-line max-len, max-params

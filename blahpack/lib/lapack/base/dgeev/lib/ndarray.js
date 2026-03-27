@@ -42,8 +42,6 @@ var base = require( './base.js' );
  * @param {integer} strideVR1 - first dimension stride of VR
  * @param {integer} strideVR2 - second dimension stride of VR
  * @param {NonNegativeInteger} offsetVR - offset for VR
- * @throws {TypeError} Second argument must be a valid jobvr value
- * @throws {TypeError} First argument must be a valid jobvl value
  * @returns {integer} info - 0 on success, >0 if QR failed (eigenvalues info+1:N have converged)
  */
 function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params

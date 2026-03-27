@@ -27,7 +27,6 @@ var base = require( './base.js' );
  * @param {Float64Array} DU - super-diagonal elements (length N-1)
  * @param {integer} strideDU - stride for DU
  * @param {NonNegativeInteger} offsetDU - starting index for DU
- * @throws {TypeError} First argument must be a valid norm value
  * @returns {number} the computed norm
  */
 function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU ) { // eslint-disable-line max-len, max-params

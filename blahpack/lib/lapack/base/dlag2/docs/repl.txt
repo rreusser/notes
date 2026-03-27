@@ -1,0 +1,60 @@
+
+    dlag2.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, safmin, scale1, scale2, wr1, wr2, wi )
+        Compute the eigenvalues of a 2-by-2 generalized eigenvalue problem.
+
+        Parameters
+        ----------
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        safmin: number
+            safmin.
+
+        scale1: number
+            scale1.
+
+        scale2: number
+            scale2.
+
+        wr1: number
+            wr1.
+
+        wr2: number
+            wr2.
+
+        wi: number
+            wi.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

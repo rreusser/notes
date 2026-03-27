@@ -44,8 +44,6 @@ var base = require( './base.js' );
  * @param {integer} strideWORK - stride for WORK (in complex elements)
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK (in complex elements)
  * @param {integer} lwork - workspace length (in complex elements)
- * @throws {TypeError} Second argument must be a valid compq value
- * @throws {TypeError} First argument must be a valid job value
  * @returns {integer} info (0 = success)
  */
 function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, w, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params

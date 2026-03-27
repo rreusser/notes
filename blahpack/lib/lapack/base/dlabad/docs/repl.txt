@@ -1,0 +1,24 @@
+
+    dlabad.ndarray( small, large )
+        Take the square root of the overflow and underflow thresholds if the exponent range is very large.
+
+        Parameters
+        ----------
+        small: number
+            small.
+
+        large: number
+            large.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

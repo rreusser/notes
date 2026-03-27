@@ -193,16 +193,16 @@ function runConformanceChecks() {
 		checks.push({ name: 'd-prefix conjugate-transpose', count: 0, severity: 'pass' });
 	}
 
-	// 5. Scaffold-only test stubs
+	// 5. Scaffold-only test stubs (only TODO/Scaffold assert.fail, not assertion helpers)
 	try {
-		var out4 = execSync( "grep -rl 'assert.fail' lib/*/base/*/test/test.js 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
+		var out4 = execSync( "grep -rl 'assert\\.fail.*TODO\\|assert\\.fail.*Scaffold\\|assert\\.fail.*implement' lib/*/base/*/test/test.js 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
 		var c4 = parseInt( out4, 10 ) || 0;
-		checks.push({ name: 'Test files with assert.fail', count: c4, severity: c4 > 0 ? 'warn' : 'pass' });
+		checks.push({ name: 'Scaffold test stubs', count: c4, severity: c4 > 0 ? 'warn' : 'pass' });
 	} catch ( e ) {
-		checks.push({ name: 'Test files with assert.fail', count: 0, severity: 'pass' });
+		checks.push({ name: 'Scaffold test stubs', count: 0, severity: 'pass' });
 	}
 
-	// 6. ndarray.js without string validation
+	// 6. ndarray.js with string @params but no validation
 	var noValidation = 0;
 	[ 'blas', 'lapack' ].forEach( function( pkg ) {
 		var baseDir = path.join( ROOT, 'lib', pkg, 'base' );
@@ -212,7 +212,7 @@ function runConformanceChecks() {
 			var baseJs = path.join( baseDir, routine, 'lib', 'base.js' );
 			if ( !fs.existsSync( ndarrayJs ) || !fs.existsSync( baseJs ) ) return;
 			var baseSrc = fs.readFileSync( baseJs, 'utf8' );
-			if ( !/uplo|trans|diag|side/.test( baseSrc ) ) return;
+			if ( !/@param \{string\}/.test( baseSrc ) ) return;
 			var ndSrc = fs.readFileSync( ndarrayJs, 'utf8' );
 			if ( !/throw new TypeError/.test( ndSrc ) ) {
 				noValidation += 1;
@@ -316,7 +316,7 @@ function moduleRow( m ) {
 function sectionHTML( title, modules ) {
 	var complete = modules.filter( function( m ) { return m.hasImpl; } ).length;
 	var rows = modules.map( moduleRow ).join( '\n' );
-	return '<section>\n' +
+	return '<section class="module-table">\n' +
 		'<h2>' + title + ' <span class="count">' + complete + '/' + modules.length + '</span></h2>\n' +
 		'<table>\n<thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>\n' +
 		'<tbody>\n' + rows + '\n</tbody>\n</table>\n</section>\n';
@@ -401,7 +401,7 @@ sectionHTML( 'LAPACK', lapackModules ) +
 '  var statTests = document.querySelectorAll(".stat")[1].querySelector(".val");\n' +
 '  var statBlas = document.getElementById("statBlas").querySelector(".val");\n' +
 '  var statLapack = document.getElementById("statLapack").querySelector(".val");\n' +
-'  var sections = document.querySelectorAll("section");\n' +
+'  var sections = document.querySelectorAll("section.module-table");\n' +
 '\n' +
 '  showAll.addEventListener("change", function() {\n' +
 '    document.body.classList.toggle("show-all", this.checked);\n' +

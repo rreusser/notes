@@ -54,16 +54,16 @@ tr.prefix-hidden { display: none !important; }
 <div class="stat" id="statLapack"><div class="val">364/2053</div><div class="lbl">LAPACK</div></div>
 </div>
 <section>
-<h2>Conformance Checks <span class="count">2/6 passing</span></h2>
+<h2>Conformance Checks <span class="count">6/6 passing</span></h2>
 <table>
 <thead><tr><th>Check</th><th style="text-align:center">Result</th></tr></thead>
 <tbody>
 <tr><td>TODO @param remnants</td><td class="tests"><span class="badge done">PASS</span></td></tr>
-<tr><td>Stub wrapper files</td><td class="tests"><span class="badge" style="background:#fecaca;color:#991b1b;">212</span></td></tr>
-<tr><td>Single-char flags in @param</td><td class="tests"><span class="badge" style="background:#fecaca;color:#991b1b;">67</span></td></tr>
+<tr><td>Stub wrapper files</td><td class="tests"><span class="badge done">PASS</span></td></tr>
+<tr><td>Single-char flags in @param</td><td class="tests"><span class="badge done">PASS</span></td></tr>
 <tr><td>d-prefix conjugate-transpose</td><td class="tests"><span class="badge done">PASS</span></td></tr>
-<tr><td>Test files with assert.fail</td><td class="tests"><span class="badge stub">9</span></td></tr>
-<tr><td>ndarray.js without string validation</td><td class="tests"><span class="badge stub">128</span></td></tr>
+<tr><td>Scaffold test stubs</td><td class="tests"><span class="badge done">PASS</span></td></tr>
+<tr><td>ndarray.js without string validation</td><td class="tests"><span class="badge done">PASS</span></td></tr>
 </tbody>
 </table>
 </section>
@@ -81,7 +81,7 @@ tr.prefix-hidden { display: none !important; }
 </div>
 </div>
 </div>
-<section>
+<section class="module-table">
 <h2>BLAS <span class="count">74/151</span></h2>
 <table>
 <thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>
@@ -240,7 +240,7 @@ tr.prefix-hidden { display: none !important; }
 </tbody>
 </table>
 </section>
-<section>
+<section class="module-table">
 <h2>LAPACK <span class="count">364/2053</span></h2>
 <table>
 <thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>
@@ -2310,7 +2310,7 @@ tr.prefix-hidden { display: none !important; }
   var statTests = document.querySelectorAll(".stat")[1].querySelector(".val");
   var statBlas = document.getElementById("statBlas").querySelector(".val");
   var statLapack = document.getElementById("statLapack").querySelector(".val");
-  var sections = document.querySelectorAll("section");
+  var sections = document.querySelectorAll("section.module-table");
 
   showAll.addEventListener("change", function() {
     document.body.classList.toggle("show-all", this.checked);

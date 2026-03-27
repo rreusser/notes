@@ -184,6 +184,7 @@ def main():
     print(f'  8. Coverage: node --test --experimental-test-coverage {test_js}', file=sys.stderr)
     print(f'  9. Lint: bin/lint.sh {base_js}', file=sys.stderr)
     print(f' 10. Write LEARNINGS.md (MANDATORY)', file=sys.stderr)
+    print(f' 11. MANDATORY FINAL GATE: npm run check (must pass with 0 errors, 0 warnings)', file=sys.stderr)
 
 
 if __name__ == '__main__':

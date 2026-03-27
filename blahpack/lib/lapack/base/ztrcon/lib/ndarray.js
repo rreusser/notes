@@ -16,7 +16,7 @@ var base = require( './base.js' );
  * CABS1: |re(z)| + |im(z)|
  *
  *
- * @param {Complex128Array} v - Float64 view of complex array
+ * @param {Float64Array} v - Float64 view of complex array
  * @param {integer} idx - index of real part
  * @throws {TypeError} Second argument must be a valid matrix triangle
  * @throws {TypeError} Third argument must be a valid diagonal type

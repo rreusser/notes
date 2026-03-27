@@ -10,13 +10,13 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Construct a Givens plane rotation with real cosine and complex sine.
-*
-* @param {number} a - a
-* @param {number} b - b
-* @param {number} c - c
-* @param {number} s - s
-*/
+ * Returns `re*re + im*im` without complex abs overhead.
+ *
+ *
+ * @param {number} re - real part
+ * @param {number} im - imaginary part
+ * @returns {number} sum of squares
+ */
 function zrotg( a, b, c, s ) {
 	return base( a, b, c, s );
 }

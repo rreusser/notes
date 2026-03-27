@@ -70,9 +70,6 @@ var base = require( './base.js' );
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK
  * @param {integer} lwork - length of WORK
- * @throws {TypeError} Third argument must be a valid jobq value
- * @throws {TypeError} Second argument must be a valid jobv value
- * @throws {TypeError} First argument must be a valid jobu value
  * @returns {integer} info - 0 if successful
  */
 function dggsvp3( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params

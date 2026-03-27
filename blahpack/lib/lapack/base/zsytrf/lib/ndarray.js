@@ -26,6 +26,7 @@ var base = require( './base.js' );
  * @param {Int32Array} IPIV - output pivot indices
  * @param {integer} strideIPIV - stride of IPIV
  * @param {integer} offsetIPIV - offset into IPIV
+ * @throws {TypeError} First argument must be a valid matrix triangle
  * @returns {integer} info value
  */
 function zsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {

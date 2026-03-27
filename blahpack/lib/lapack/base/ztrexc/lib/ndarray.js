@@ -36,7 +36,6 @@ var base = require( './base.js' );
  * @param {NonNegativeInteger} offsetQ - starting index for Q (complex elements)
  * @param {integer} ifst - row index of the element to move (1-based)
  * @param {integer} ilst - target row index (1-based)
- * @throws {TypeError} First argument must be a valid compq value
  * @returns {integer} info - 0 on success
  */
 function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst ) { // eslint-disable-line max-len, max-params

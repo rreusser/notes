@@ -41,7 +41,6 @@ var base = require( './base.js' );
  * @param {Complex128Array} WORK - workspace array of length at least 2*N
  * @param {integer} strideWORK - stride for WORK (complex elements)
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
- * @throws {TypeError} First argument must be a valid norm value
  * @returns {integer} info - 0 if successful
  */
 function zgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params

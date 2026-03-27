@@ -37,8 +37,6 @@ var base = require( './base.js' );
  * @param {integer} strideC2 - stride of the second dimension of C
  * @param {NonNegativeInteger} offsetC - starting index for C
  * @param {Float64Array} scale - output: scale[0] is the scaling factor
- * @throws {TypeError} Second argument must be a valid tranb value
- * @throws {TypeError} First argument must be a valid trana value
  * @returns {integer} info (0 = success, 1 = A and B have common or close eigenvalues)
  */
 function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale ) { // eslint-disable-line max-len, max-params

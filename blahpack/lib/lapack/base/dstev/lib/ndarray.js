@@ -39,7 +39,6 @@ var base = require( './base.js' );
  * @param {Float64Array} WORK - workspace array (length max(1, 2*N-2)) if jobz=`'compute-vectors'`; not referenced if jobz=`'no-vectors'`
  * @param {integer} strideWORK - stride for WORK
  * @param {NonNegativeInteger} offsetWORK - starting index for WORK
- * @throws {TypeError} First argument must be a valid jobz value
  * @returns {integer} info - 0 if successful, >0 if dsteqr/dsterf did not converge
  */
 function dstev( jobz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params

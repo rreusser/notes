@@ -67,7 +67,7 @@ if [ "${1:-}" != "" ]; then
   check "single-char Fortran flags in code" "${c:-0}"
 
   # Single-char strings in JSDoc
-  c=$(grep -c "@param.*'[A-Z]'" "$base" 2>/dev/null | grep -cv '`' || true)
+  c=$(grep "@param.*'[A-Z]'" "$base" 2>/dev/null | grep -cv '`' || true)
   c2=0
   if [ -f "$ndarray" ]; then
     c2=$(grep "@param.*'[A-Z]'" "$ndarray" 2>/dev/null | grep -cv '`' || true)

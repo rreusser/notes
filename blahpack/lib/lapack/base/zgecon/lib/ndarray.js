@@ -14,9 +14,8 @@ var base = require( './base.js' );
  * CABS1: |re(z)| + |im(z)|
  *
  *
- * @param {Complex128Array} v - Float64 view of complex array
+ * @param {Float64Array} v - Float64 view of complex array
  * @param {integer} idx - index of real part
- * @throws {TypeError} First argument must be a valid norm value
  * @returns {number} CABS1 value
  */
 function zgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
