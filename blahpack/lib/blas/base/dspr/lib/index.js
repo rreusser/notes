@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform symmetric rank-1 update of a packed matrix
+* Perform symmetric rank-1 update of a packed matrix.
 *
 * @module @stdlib/blas/base/dspr
 *

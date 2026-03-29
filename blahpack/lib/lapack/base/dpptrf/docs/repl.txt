@@ -1,0 +1,33 @@
+
+    dpptrf.ndarray( uplo, N, AP, stride, offset )
+        Compute the Cholesky factorization of a real symmetric positive definite matrix stored in packed format.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `AP`.
+
+        offset: NonNegativeInteger
+            starting index for `AP`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

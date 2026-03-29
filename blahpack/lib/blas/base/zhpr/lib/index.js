@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform the Hermitian packed rank-1 update A := alpha*x*x**H + A.
+* Perform the Hermitian packed rank-1 update A := alpha_x_x**H + A.
 *
 * @module @stdlib/blas/base/zhpr
 *

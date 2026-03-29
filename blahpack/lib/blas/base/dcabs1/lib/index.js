@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Compute the sum of the absolute values of the real and imaginary parts of a double-precision complex number.
 *

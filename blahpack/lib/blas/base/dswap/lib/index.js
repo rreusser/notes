@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Interchange two vectors
+* Interchange two vectors.
 *
 * @module @stdlib/blas/base/dswap
 *

@@ -1,0 +1,132 @@
+
+    dlaed2.ndarray( K, N, n1, d, strideD, offsetD, Q, strideQ1, strideQ2, offsetQ, INDXQ, strideINDXQ, offsetINDXQ, rho, z, strideZ, offsetZ, DLAMBDA, strideDLAMBDA, offsetDLAMBDA, w, strideW, offsetW, Q2, strideQ2, offsetQ2, INDX, strideINDX, offsetINDX, INDXC, strideINDXC, offsetINDXC, INDXP, strideINDXP, offsetINDXP, COLTYP, strideCOLTYP, offsetCOLTYP )
+        Merge eigenvalues and deflate secular equation in divide and conquer
+
+        Parameters
+        ----------
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        n1: integer
+            n1.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of the first dimension of `Q`.
+
+        strideQ2: integer
+            stride of the second dimension of `Q`.
+
+        offsetQ: NonNegativeInteger
+            starting index for `Q`.
+
+        INDXQ: Int32Array
+            input array.
+
+        strideINDXQ: integer
+            stride length for `INDXQ`.
+
+        offsetINDXQ: NonNegativeInteger
+            starting index for `INDXQ`.
+
+        rho: number
+            rho.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `z`.
+
+        DLAMBDA: Float64Array
+            input array.
+
+        strideDLAMBDA: integer
+            stride length for `DLAMBDA`.
+
+        offsetDLAMBDA: NonNegativeInteger
+            starting index for `DLAMBDA`.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: NonNegativeInteger
+            starting index for `w`.
+
+        Q2: Float64Array
+            input array.
+
+        strideQ2: integer
+            stride length for `Q2`.
+
+        offsetQ2: NonNegativeInteger
+            starting index for `Q2`.
+
+        INDX: Int32Array
+            input array.
+
+        strideINDX: integer
+            stride length for `INDX`.
+
+        offsetINDX: NonNegativeInteger
+            starting index for `INDX`.
+
+        INDXC: Int32Array
+            input array.
+
+        strideINDXC: integer
+            stride length for `INDXC`.
+
+        offsetINDXC: NonNegativeInteger
+            starting index for `INDXC`.
+
+        INDXP: Int32Array
+            input array.
+
+        strideINDXP: integer
+            stride length for `INDXP`.
+
+        offsetINDXP: NonNegativeInteger
+            starting index for `INDXP`.
+
+        COLTYP: Int32Array
+            output array.
+
+        strideCOLTYP: integer
+            stride length for `COLTYP`.
+
+        offsetCOLTYP: NonNegativeInteger
+            starting index for `COLTYP`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,180 @@
+
+    dlasd7.ndarray( icompq, nl, nr, sqre, K, d, strideD, offsetD, z, strideZ, offsetZ, ZW, strideZW, offsetZW, VF, strideVF, offsetVF, VFW, strideVFW, offsetVFW, VL, strideVL, offsetVL, VLW, strideVLW, offsetVLW, alpha, beta, DSIGMA, strideDSIGMA, offsetDSIGMA, IDX, strideIDX, offsetIDX, IDXP, strideIDXP, offsetIDXP, IDXQ, strideIDXQ, offsetIDXQ, PERM, stridePERM, offsetPERM, givptr, GIVCOL, strideGIVCOL1, strideGIVCOL2, offsetGIVCOL, GIVNUM, strideGIVNUM1, strideGIVNUM2, offsetGIVNUM, c, s )
+        Merge two sets of singular values together into a single sorted set and deflate.
+
+        Parameters
+        ----------
+        icompq: integer
+            icompq.
+
+        nl: integer
+            nl.
+
+        nr: integer
+            nr.
+
+        sqre: integer
+            sqre.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `z`.
+
+        ZW: Float64Array
+            input array.
+
+        strideZW: integer
+            stride length for `ZW`.
+
+        offsetZW: NonNegativeInteger
+            starting index for `ZW`.
+
+        VF: Float64Array
+            input array.
+
+        strideVF: integer
+            stride length for `VF`.
+
+        offsetVF: NonNegativeInteger
+            starting index for `VF`.
+
+        VFW: Float64Array
+            input array.
+
+        strideVFW: integer
+            stride length for `VFW`.
+
+        offsetVFW: NonNegativeInteger
+            starting index for `VFW`.
+
+        VL: Float64Array
+            input array.
+
+        strideVL: integer
+            stride length for `VL`.
+
+        offsetVL: NonNegativeInteger
+            starting index for `VL`.
+
+        VLW: Float64Array
+            input array.
+
+        strideVLW: integer
+            stride length for `VLW`.
+
+        offsetVLW: NonNegativeInteger
+            starting index for `VLW`.
+
+        alpha: number
+            scalar constant.
+
+        beta: number
+            scalar constant.
+
+        DSIGMA: Float64Array
+            input array.
+
+        strideDSIGMA: integer
+            stride length for `DSIGMA`.
+
+        offsetDSIGMA: NonNegativeInteger
+            starting index for `DSIGMA`.
+
+        IDX: Int32Array
+            input array.
+
+        strideIDX: integer
+            stride length for `IDX`.
+
+        offsetIDX: NonNegativeInteger
+            starting index for `IDX`.
+
+        IDXP: Int32Array
+            input array.
+
+        strideIDXP: integer
+            stride length for `IDXP`.
+
+        offsetIDXP: NonNegativeInteger
+            starting index for `IDXP`.
+
+        IDXQ: Int32Array
+            input array.
+
+        strideIDXQ: integer
+            stride length for `IDXQ`.
+
+        offsetIDXQ: NonNegativeInteger
+            starting index for `IDXQ`.
+
+        PERM: Int32Array
+            input array.
+
+        stridePERM: integer
+            stride length for `PERM`.
+
+        offsetPERM: NonNegativeInteger
+            starting index for `PERM`.
+
+        givptr: integer
+            givptr.
+
+        GIVCOL: Int32Array
+            input matrix.
+
+        strideGIVCOL1: integer
+            stride of the first dimension of `GIVCOL`.
+
+        strideGIVCOL2: integer
+            stride of the second dimension of `GIVCOL`.
+
+        offsetGIVCOL: NonNegativeInteger
+            starting index for `GIVCOL`.
+
+        GIVNUM: Float64Array
+            output matrix.
+
+        strideGIVNUM1: integer
+            stride of the first dimension of `GIVNUM`.
+
+        strideGIVNUM2: integer
+            stride of the second dimension of `GIVNUM`.
+
+        offsetGIVNUM: NonNegativeInteger
+            starting index for `GIVNUM`.
+
+        c: number
+            c.
+
+        s: number
+            s.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

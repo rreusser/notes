@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the dot product of two vectors with extended precision accumulation
+* Compute the dot product of two vectors with extended precision accumulation.
 *
 * @module @stdlib/blas/base/dsdot
 *

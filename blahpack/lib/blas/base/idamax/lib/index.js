@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Find the index of element with maximum absolute value
+* Find the index of element with maximum absolute value.
 *
 * @module @stdlib/blas/base/idamax
 *

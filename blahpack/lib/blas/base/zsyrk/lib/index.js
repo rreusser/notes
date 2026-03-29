@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform one of the symmetric rank-k operations C := alpha*A*A**T + beta*C or C := alpha*A**T*A + beta*C.
+* Perform one of the symmetric rank-k operations C := alpha_A_A**T + beta_C or C := alpha_A**T_A + beta_C.
 *
 * @module @stdlib/blas/base/zsyrk
 *

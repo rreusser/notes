@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Performs symmetric matrix-matrix multiplication
+* Performs symmetric matrix-matrix multiplication.
 *
 * @module @stdlib/blas/base/dsymm
 *

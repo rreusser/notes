@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform matrix-vector operation with a general band matrix
+* Perform matrix-vector operation with a general band matrix.
 *
 * @module @stdlib/blas/base/dgbmv
 *

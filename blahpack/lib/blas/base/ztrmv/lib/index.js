@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Perform one of the matrix-vector operations x := A_x, x := A__T_x, or x := A*_H_x.
 *

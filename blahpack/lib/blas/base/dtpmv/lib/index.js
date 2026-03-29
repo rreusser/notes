@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform matrix-vector operation with a triangular packed matrix
+* Perform matrix-vector operation with a triangular packed matrix.
 *
 * @module @stdlib/blas/base/dtpmv
 *

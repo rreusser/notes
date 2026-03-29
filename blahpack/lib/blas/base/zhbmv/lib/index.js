@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform the Hermitian banded matrix-vector operation y := alpha*A*x + beta*y.
+* Perform the Hermitian banded matrix-vector operation y := alpha_A_x + beta*y.
 *
 * @module @stdlib/blas/base/zhbmv
 *

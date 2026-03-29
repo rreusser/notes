@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Perform one of the matrix-matrix operations B := alpha_op(A)_B or B := alpha_B_op(A).
 *

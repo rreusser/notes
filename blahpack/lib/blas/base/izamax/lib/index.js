@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Find the index of the element having the maximum sum of absolute values of real and imaginary parts.
 *

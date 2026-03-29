@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the sum of absolute values of a complex vector
+* Compute the sum of absolute values of a complex vector.
 *
 * @module @stdlib/blas/base/dzasum
 *

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Scale a complex double-precision vector by a complex constant.
 *

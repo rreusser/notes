@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Performs Hermitian matrix-matrix multiplication
+* Performs Hermitian matrix-matrix multiplication.
 *
 * @module @stdlib/blas/base/zhemm
 *

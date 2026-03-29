@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Perform the rank 1 operation A := alpha_x_y**H + A.
 *

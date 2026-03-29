@@ -1,0 +1,156 @@
+
+    dlasd2.ndarray( nl, nr, sqre, K, d, strideD, offsetD, z, strideZ, offsetZ, alpha, beta, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, DSIGMA, strideDSIGMA, offsetDSIGMA, U2, strideU21, strideU22, offsetU2, VT2, strideVT21, strideVT22, offsetVT2, IDXP, strideIDXP, offsetIDXP, IDX, strideIDX, offsetIDX, IDXC, strideIDXC, offsetIDXC, IDXQ, strideIDXQ, offsetIDXQ, COLTYP, strideCOLTYP, offsetCOLTYP )
+        Merge two sets of singular values in bidiagonal SVD divide and conquer
+
+        Parameters
+        ----------
+        nl: integer
+            nl.
+
+        nr: integer
+            nr.
+
+        sqre: integer
+            sqre.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `z`.
+
+        alpha: number
+            scalar constant.
+
+        beta: number
+            scalar constant.
+
+        U: Float64Array
+            input matrix.
+
+        strideU1: integer
+            stride of the first dimension of `U`.
+
+        strideU2: integer
+            stride of the second dimension of `U`.
+
+        offsetU: NonNegativeInteger
+            starting index for `U`.
+
+        VT: Float64Array
+            input matrix.
+
+        strideVT1: integer
+            stride of the first dimension of `VT`.
+
+        strideVT2: integer
+            stride of the second dimension of `VT`.
+
+        offsetVT: NonNegativeInteger
+            starting index for `VT`.
+
+        DSIGMA: Float64Array
+            input array.
+
+        strideDSIGMA: integer
+            stride length for `DSIGMA`.
+
+        offsetDSIGMA: NonNegativeInteger
+            starting index for `DSIGMA`.
+
+        U2: Float64Array
+            input matrix.
+
+        strideU21: integer
+            stride of the first dimension of `U2`.
+
+        strideU22: integer
+            stride of the second dimension of `U2`.
+
+        offsetU2: NonNegativeInteger
+            starting index for `U2`.
+
+        VT2: Float64Array
+            input matrix.
+
+        strideVT21: integer
+            stride of the first dimension of `VT2`.
+
+        strideVT22: integer
+            stride of the second dimension of `VT2`.
+
+        offsetVT2: NonNegativeInteger
+            starting index for `VT2`.
+
+        IDXP: Int32Array
+            input array.
+
+        strideIDXP: integer
+            stride length for `IDXP`.
+
+        offsetIDXP: NonNegativeInteger
+            starting index for `IDXP`.
+
+        IDX: Int32Array
+            input array.
+
+        strideIDX: integer
+            stride length for `IDX`.
+
+        offsetIDX: NonNegativeInteger
+            starting index for `IDX`.
+
+        IDXC: Int32Array
+            input array.
+
+        strideIDXC: integer
+            stride length for `IDXC`.
+
+        offsetIDXC: NonNegativeInteger
+            starting index for `IDXC`.
+
+        IDXQ: Int32Array
+            input array.
+
+        strideIDXQ: integer
+            stride length for `IDXQ`.
+
+        offsetIDXQ: NonNegativeInteger
+            starting index for `IDXQ`.
+
+        COLTYP: Int32Array
+            output array.
+
+        strideCOLTYP: integer
+            stride length for `COLTYP`.
+
+        offsetCOLTYP: NonNegativeInteger
+            starting index for `COLTYP`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform matrix-vector operation with a triangular band matrix
+* Perform matrix-vector operation with a triangular band matrix.
 *
 * @module @stdlib/blas/base/dtbmv
 *

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solve one of the triangular packed systems A*x = b or A**T*x = b or A**H*x = b.
+* Solve one of the triangular packed systems A_x = b or A__T_x = b or A*_H_x = b.
 *
 * @module @stdlib/blas/base/ztpsv
 *

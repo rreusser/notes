@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Multiply a vector x by a constant and add the result to y.
 *

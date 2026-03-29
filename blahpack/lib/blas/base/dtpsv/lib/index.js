@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solve a triangular packed system of equations
+* Solve a triangular packed system of equations.
 *
 * @module @stdlib/blas/base/dtpsv
 *

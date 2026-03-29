@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Construct a modified Givens plane rotation
+* Construct a modified Givens plane rotation.
 *
 * @module @stdlib/blas/base/drotmg
 *

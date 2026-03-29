@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform one of the matrix-vector operations x := A*x, x := A**T*x, or x := A**H*x, where A is a triangular band matrix
+* Perform one of the matrix-vector operations x := A_x, x := A__T_x, or x := A*_H_x, where A is a triangular band matrix.
 *
 * @module @stdlib/blas/base/ztbmv
 *

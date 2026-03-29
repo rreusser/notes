@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
@@ -7,31 +7,59 @@ var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dcopy = require( './../lib/base.js' );
 
+
+// FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
+
 test( 'dcopy: main export is a function', function t() {
 	assert.strictEqual( typeof dcopy, 'function' );
 });
 
 test( 'dcopy: N=0 returns y unchanged', function t() {
-	var out = dcopy( 0, x, 1, 0, y, 1, 0 );
-	var x = new Float64Array( [ 1, 2, 3 ] );
-	var y = new Float64Array( [ 99, 99, 99 ] );
+	var out;
+	var x;
+	var y;
+
+	out = dcopy( 0, x, 1, 0, y, 1, 0 );
+	x = new Float64Array( [ 1, 2, 3 ] );
+	y = new Float64Array( [ 99, 99, 99 ] );
 	assert.strictEqual( out, y );
-	assert.deepStrictEqual( Array.from( y ), [ 99, 99, 99 ] );
+	assert.deepStrictEqual( toArray( y ), [ 99, 99, 99 ] );
 });
 
 test( 'dcopy: N<0 returns y unchanged', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 99, 99, 99 ] );
 	dcopy( -1, x, 1, 0, y, 1, 0 );
-	assert.deepStrictEqual( Array.from( y ), [ 99, 99, 99 ] );
+	assert.deepStrictEqual( toArray( y ), [ 99, 99, 99 ] );
 });
 
 test( 'dcopy: basic copy (N=3, unit stride)', function t() {
-	var out = dcopy( 3, x, 1, 0, y, 1, 0 );
-	var x = new Float64Array( [ 1, 2, 3 ] );
-	var y = new Float64Array( 3 );
+	var out;
+	var x;
+	var y;
+
+	out = dcopy( 3, x, 1, 0, y, 1, 0 );
+	x = new Float64Array( [ 1, 2, 3 ] );
+	y = new Float64Array( 3 );
 	assert.strictEqual( out, y, 'returns y' );
-	assert.deepStrictEqual( Array.from( y ), [ 1, 2, 3 ] );
+	assert.deepStrictEqual( toArray( y ), [ 1, 2, 3 ] );
 });
 
 test( 'dcopy: N=1', function t() {
@@ -45,14 +73,14 @@ test( 'dcopy: unrolled path (N=10, unit stride)', function t() {
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] );
 	var y = new Float64Array( 10 );
 	dcopy( 10, x, 1, 0, y, 1, 0 );
-	assert.deepStrictEqual( Array.from( y ), [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] );
+	assert.deepStrictEqual( toArray( y ), [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] );
 });
 
 test( 'dcopy: unrolled path (N=7, exact multiple)', function t() {
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7 ] );
 	var y = new Float64Array( 7 );
 	dcopy( 7, x, 1, 0, y, 1, 0 );
-	assert.deepStrictEqual( Array.from( y ), [ 1, 2, 3, 4, 5, 6, 7 ] );
+	assert.deepStrictEqual( toArray( y ), [ 1, 2, 3, 4, 5, 6, 7 ] );
 });
 
 test( 'dcopy: unrolled path (N=14, two blocks)', function t() {
@@ -81,19 +109,19 @@ test( 'dcopy: negative stride', function t() {
 	var x = new Float64Array( [ 3, 2, 1 ] );
 	var y = new Float64Array( 3 );
 	dcopy( 3, x, -1, 2, y, 1, 0 );
-	assert.deepStrictEqual( Array.from( y ), [ 1, 2, 3 ] );
+	assert.deepStrictEqual( toArray( y ), [ 1, 2, 3 ] );
 });
 
 test( 'dcopy: offsetX and offsetY', function t() {
 	var x = new Float64Array( [ 99, 1, 2, 3 ] );
 	var y = new Float64Array( [ 99, 99, 0, 0, 0 ] );
 	dcopy( 3, x, 1, 1, y, 1, 2 );
-	assert.deepStrictEqual( Array.from( y ), [ 99, 99, 1, 2, 3 ] );
+	assert.deepStrictEqual( toArray( y ), [ 99, 99, 1, 2, 3 ] );
 });
 
 test( 'dcopy: does not modify source', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( 3 );
 	dcopy( 3, x, 1, 0, y, 1, 0 );
-	assert.deepStrictEqual( Array.from( x ), [ 1, 2, 3 ] );
+	assert.deepStrictEqual( toArray( x ), [ 1, 2, 3 ] );
 });

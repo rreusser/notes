@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute unconjugated dot product of two complex vectors
+* Compute unconjugated dot product of two complex vectors.
 *
 * @module @stdlib/blas/base/zdotu
 *

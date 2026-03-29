@@ -355,7 +355,14 @@ bin/lint.sh --fix lib/<package>/base/<routine>   # auto-fix what's possible
 
 This runs stdlib ESLint rules plus blahpack conformance rules (scaffold
 remnants, backtick quoting, d-prefix conjugate-transpose, z-prefix reinterpret,
-etc.). Fix all **easy/mechanical** lint errors immediately:
+etc.).
+
+**IMPORTANT: Follow linter rules, do not silence them.** The goal is to write
+code that conforms to stdlib conventions, not to disable rules until lint
+passes. Every `eslint-disable` must be justified — there must be no way to
+satisfy the rule while keeping correct code.
+
+Fix lint errors by actually conforming to the rule:
 
 | Rule | Fix |
 |------|-----|
@@ -370,6 +377,12 @@ etc.). Fix all **easy/mechanical** lint errors immediately:
 | `stdlib/empty-line-before-comment` | Add blank line before comment blocks |
 | `no-restricted-syntax` (toUpperCase) | Use `require( '@stdlib/string/base/uppercase' )` |
 | `no-restricted-syntax` (labels) | Replace labeled statements with boolean flags |
+| `node/no-unsupported-features/es-builtins` | Require globals from @stdlib (see `require-globals`) |
+| `no-use-before-define` | Declare all `var` before first use |
+| `func-names` | All functions must be named: `function name()` not `function()` |
+| `require-jsdoc` | All functions need JSDoc (`@private`, `@param`, `@returns`) |
+| `function-paren-newline` | All args on one line; use `eslint-disable-line max-len` if needed |
+| `function-call-argument-newline` | All args on one line |
 | JSDoc rules | Fix formatting per stdlib conventions (see below) |
 
 **JSDoc conventions (stdlib):**
@@ -381,21 +394,31 @@ etc.). Fix all **easy/mechanical** lint errors immediately:
 - Fenced code blocks need a language flag (e.g., ` ```text `)
 - Description must start uppercase and end with period
 
-**Defer these rules** (address in bulk later via `eslint-disable` or codemods):
-- `function-call-argument-newline`, `function-paren-newline` — requires reformatting all multi-arg calls
-- `@cspell/spellchecker` — needs BLAS/LAPACK dictionary
-- `new-cap` — `Complex128Array()` etc.
-- `camelcase` — Fortran-style names (sa1, sa2)
-- `max-depth`, `max-len`, `max-statements`, `max-lines-per-function`, `max-lines`, `max-params` — add `/* eslint-disable */` at file top
+**Legitimate disables** (only these rules may be disabled at file level):
+- `max-depth`, `max-statements`, `max-lines-per-function`, `max-lines`, `max-params` — complex BLAS/LAPACK routines inherently exceed these thresholds
+- `max-len` — inline `eslint-disable-line` on individual long lines (fixture paths, assertions, etc.)
 
-For deferred rules, add a single eslint-disable comment at the top of the file listing
-only the rules that actually fire. Example:
+For complexity rules, add a single eslint-disable comment after `'use strict';`:
 
 ```javascript
-/* eslint-disable max-len, max-params, max-depth, max-statements */
+/* eslint-disable max-depth, max-statements */
 ```
 
-**Gate:** Zero errors from the "easy" rules above.
+**Test file conventions** — the only file-level disables allowed in tests:
+- `no-restricted-syntax` — `node:test` requires FunctionExpression callbacks
+- `stdlib/first-unit-test` — tape-specific first-test pattern
+
+All other rules must be followed. See `lib/blas/base/daxpy/test/test.js` for
+the reference template. Key patterns:
+- Require all globals: `var Float64Array = require( '@stdlib/array/float64' );`
+- Section headers: `// MODULES //`, `// VARIABLES //`, `// FUNCTIONS //`, `// TESTS //`
+- Helper functions need `@private` JSDoc
+- Declare all vars at function top, longest first (`stdlib/vars-order`)
+- Use `eslint-disable-line max-len` on long assertion lines
+- Use `eslint-disable-line node/no-sync` on `readFileSync` calls
+- Use `toArray()` helper instead of `Array.from()` (node compatibility)
+
+**Gate:** Zero errors on `bin/lint.sh lib/<pkg>/base/<routine>`.
 
 ### Step 8: Write LEARNINGS.md (MANDATORY — DO NOT SKIP)
 

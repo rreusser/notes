@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Perform matrix-vector operation with a symmetric band matrix
+* Perform matrix-vector operation with a symmetric band matrix.
 *
 * @module @stdlib/blas/base/dsbmv
 *
