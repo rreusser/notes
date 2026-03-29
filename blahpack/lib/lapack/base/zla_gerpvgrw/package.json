@@ -1,0 +1,26 @@
+{
+  "name": "@stdlib/lapack/base/zla_gerpvgrw",
+  "version": "0.0.0",
+  "description": "Compute the reciprocal pivot growth factor norm(A)/norm(U) for a complex general matrix.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "The Stdlib Authors",
+    "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+  },
+  "contributors": [
+    {
+      "name": "The Stdlib Authors",
+      "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+    }
+  ],
+  "main": "./lib/index.js",
+  "directories": {
+    "doc": "./docs",
+    "example": "./examples",
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "scripts": {
+    "test": "node --test test/test.js"
+  }
+}

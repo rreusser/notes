@@ -1,0 +1,9 @@
+{"name":"basic_3x3","result": 1.00000000000000000E+000,"N":3,"ncols":3}
+{"name":"ncols_zero","result": 1.00000000000000000E+000}
+{"name":"one_by_one","result": 1.00000000000000000E+000}
+{"name":"one_by_one_growth","result": 5.00000000000000000E-001}
+{"name":"zero_u_column","result": 1.00000000000000000E+000}
+{"name":"ratio_less_than_one","result": 3.75000000000000000E-001}
+{"name":"ncols_less_than_n","result": 1.00000000000000000E+000}
+{"name":"purely_imaginary","result": 5.00000000000000000E-001}
+{"name":"large_values","result": 5.00000000000000000E-001}

@@ -1,0 +1,9 @@
+{"name":"no_growth","result": 1.00000000000000000E+000}
+{"name":"ncols_zero","result": 1.00000000000000000E+000}
+{"name":"single_element_growth","result": 8.75000000000000000E-001}
+{"name":"growth_factor","result": 2.50000000000000000E-001}
+{"name":"zero_umax","result": 5.00000000000000000E-001}
+{"name":"tridiagonal","result": 4.44444444444444420E-001}
+{"name":"ncols_less_than_n","result": 5.00000000000000000E-001}
+{"name":"wider_band","result": 5.00000000000000000E-001}
+{"name":"complex_values","result": 5.00000000000000000E-001}

@@ -1,0 +1,51 @@
+
+    zlacrt.ndarray( N, x, strideX, offsetX, incx, y, strideY, offsetY, incy, c, s )
+        Apply a plane rotation with complex cosine and sine to two complex vectors.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        incx: integer
+            incx.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        incy: integer
+            incy.
+
+        c: Complex128
+            c.
+
+        s: Complex128
+            s.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,42 @@
+
+    zlaesy.ndarray( a, b, c, rt1, rt2, evscal, cs1, sn1 )
+        Compute the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.
+
+        Parameters
+        ----------
+        a: Complex128
+            a.
+
+        b: Complex128
+            b.
+
+        c: Complex128
+            c.
+
+        rt1: Complex128
+            rt1.
+
+        rt2: Complex128
+            rt2.
+
+        evscal: Complex128
+            evscal.
+
+        cs1: Complex128
+            cs1.
+
+        sn1: Complex128
+            sn1.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -9,5 +9,6 @@
   "stdlib/jsdoc-backtick-params": ["error"],
   "stdlib/no-dprefix-conjugate-transpose": "error",
   "stdlib/no-scaffold-assertions": "error",
-  "stdlib/z-prefix-reinterpret": "error"
+  "stdlib/z-prefix-reinterpret": "error",
+  "stdlib/signature-conformance": "warn"
 }
