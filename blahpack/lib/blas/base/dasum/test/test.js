@@ -1,7 +1,10 @@
+/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+
 'use strict';
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dasum = require( './../lib/base.js' );
 
 test( 'dasum: main export is a function', function t() {
@@ -39,7 +42,7 @@ test( 'dasum: N=1 with negative value', function t() {
 });
 
 test( 'dasum: non-unit stride (stride=2)', function t() {
-	// x = [1, 99, 2, 99, 3], stride=2 => values 1, 2, 3
+	// Values at stride positions: 1, 2, 3
 	var x = new Float64Array( [ 1, 99, 2, 99, 3 ] );
 	assert.strictEqual( dasum( 3, x, 2, 0 ), 6.0 );
 });
@@ -51,19 +54,22 @@ test( 'dasum: stride <= 0 returns 0', function t() {
 
 test( 'dasum: unrolled path (N=7, remainder=1 + one block of 6)', function t() {
 	var x = new Float64Array( [ 1, -2, 3, -4, 5, -6, 7 ] );
-	// sum of abs = 1+2+3+4+5+6+7 = 28
+
+	// Sum of abs = 1+2+3+4+5+6+7 = 28
 	assert.strictEqual( dasum( 7, x, 1, 0 ), 28.0 );
 });
 
 test( 'dasum: unrolled path (N=6, exact multiple)', function t() {
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
-	// m=0, so remainder loop skipped, one full block
+
+	// Remainder loop skipped, one full block
 	assert.strictEqual( dasum( 6, x, 1, 0 ), 21.0 );
 });
 
 test( 'dasum: unrolled path (N=12, two full blocks)', function t() {
 	var x = new Float64Array( [ 1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6 ] );
-	// sum = 2*(1+2+3+4+5+6) = 42
+
+	// Sum = 2*(1+2+3+4+5+6) = 42
 	assert.strictEqual( dasum( 12, x, 1, 0 ), 42.0 );
 });
 
@@ -73,7 +79,8 @@ test( 'dasum: unrolled path (N=13)', function t() {
 	for ( i = 0; i < 13; i++ ) {
 		x[ i ] = i + 1;
 	}
-	// sum = 13*14/2 = 91
+
+	// Sum = 13*14/2 = 91
 	assert.strictEqual( dasum( 13, x, 1, 0 ), 91.0 );
 });
 
@@ -83,13 +90,14 @@ test( 'dasum: all zeros', function t() {
 });
 
 test( 'dasum: offset', function t() {
-	// x = [99, 1, 2, 3], offset=1
+	// Offset=1 skips the first element
 	var x = new Float64Array( [ 99, 1, 2, 3 ] );
 	assert.strictEqual( dasum( 3, x, 1, 1 ), 6.0 );
 });
 
 test( 'dasum: stride=3 with offset', function t() {
 	var x = new Float64Array( [ 0, 1, 0, 0, -2, 0, 0, 3, 0 ] );
-	// stride=3, offset=1 => values 1, -2, 3 => sum = 6
+
+	// Stride=3, offset=1 => values 1, -2, 3 => sum = 6
 	assert.strictEqual( dasum( 3, x, 3, 1 ), 6.0 );
 });

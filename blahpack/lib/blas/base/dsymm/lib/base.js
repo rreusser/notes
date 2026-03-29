@@ -23,8 +23,8 @@
 // MAIN //
 
 /**
-* Performs one of the symmetric matrix-matrix operations:
-*   C := alpha*A*B + beta*C,  or  C := alpha*B*A + beta*C,
+* Performs one of the symmetric matrix-matrix operations:.
+*   C := alpha_A_B + beta_C,  or  C := alpha_B_A + beta_C,
 * where alpha and beta are scalars, A is a symmetric matrix, and B and C
 * are M-by-N matrices.
 *

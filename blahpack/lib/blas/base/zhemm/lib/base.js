@@ -30,8 +30,8 @@ var imag = require( '@stdlib/complex/float64/imag' );
 // MAIN //
 
 /**
-* Performs one of the Hermitian matrix-matrix operations:
-*   C := alpha*A*B + beta*C,  or  C := alpha*B*A + beta*C,
+* Performs one of the Hermitian matrix-matrix operations:.
+*   C := alpha_A_B + beta_C,  or  C := alpha_B_A + beta_C,
 * where alpha and beta are complex scalars, A is a Hermitian matrix, and B and C
 * are M-by-N matrices.
 *
@@ -59,12 +59,12 @@ var imag = require( '@stdlib/complex/float64/imag' );
 function zhemm( side, uplo, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC ) {
 	var alphaR;
 	var alphaI;
-	var betaR;
-	var betaI;
 	var temp1R;
 	var temp1I;
 	var temp2R;
 	var temp2I;
+	var betaR;
+	var betaI;
 	var upper;
 	var lside;
 	var aiiR;
@@ -185,6 +185,7 @@ function zhemm( side, uplo, M, N, alpha, A, strideA1, strideA2, offsetA, B, stri
 					ia = oA + ( i * sa1 ) + ( i * sa2 );
 					aiiR = Av[ ia ];
 					ic = oC + ( i * sc1 ) + ( j * sc2 );
+
 					// alpha * temp2
 					tR = ( alphaR * temp2R ) - ( alphaI * temp2I );
 					tI = ( alphaR * temp2I ) + ( alphaI * temp2R );
@@ -250,6 +251,7 @@ function zhemm( side, uplo, M, N, alpha, A, strideA1, strideA2, offsetA, B, stri
 			// Diagonal of A is real: temp1 = alpha * DBLE(A(J,J))
 			ia = oA + ( j * sa1 ) + ( j * sa2 );
 			aiiR = Av[ ia ];
+
 			// temp1 = alpha * aiiR (real scalar times complex)
 			temp1R = alphaR * aiiR;
 			temp1I = alphaI * aiiR;
@@ -259,6 +261,7 @@ function zhemm( side, uplo, M, N, alpha, A, strideA1, strideA2, offsetA, B, stri
 					ib = oB + ( i * sb1 ) + ( j * sb2 );
 					bijR = Bv[ ib ];
 					bijI = Bv[ ib + 1 ];
+
 					// C[i,j] = temp1 * B[i,j]
 					Cv[ ic ] = ( temp1R * bijR ) - ( temp1I * bijI );
 					Cv[ ic + 1 ] = ( temp1R * bijI ) + ( temp1I * bijR );
@@ -271,6 +274,7 @@ function zhemm( side, uplo, M, N, alpha, A, strideA1, strideA2, offsetA, B, stri
 					bijI = Bv[ ib + 1 ];
 					cR = Cv[ ic ];
 					cI = Cv[ ic + 1 ];
+
 					// C[i,j] = beta*C[i,j] + temp1*B[i,j]
 					Cv[ ic ] = ( betaR * cR ) - ( betaI * cI ) + ( temp1R * bijR ) - ( temp1I * bijI );
 					Cv[ ic + 1 ] = ( betaR * cI ) + ( betaI * cR ) + ( temp1R * bijI ) + ( temp1I * bijR );
@@ -295,6 +299,7 @@ function zhemm( side, uplo, M, N, alpha, A, strideA1, strideA2, offsetA, B, stri
 					ib = oB + ( i * sb1 ) + ( k * sb2 );
 					bkjR = Bv[ ib ];
 					bkjI = Bv[ ib + 1 ];
+
 					// C[i,j] += temp1 * B[i,k]
 					Cv[ ic ] += ( temp1R * bkjR ) - ( temp1I * bkjI );
 					Cv[ ic + 1 ] += ( temp1R * bkjI ) + ( temp1I * bkjR );
@@ -319,6 +324,7 @@ function zhemm( side, uplo, M, N, alpha, A, strideA1, strideA2, offsetA, B, stri
 					ib = oB + ( i * sb1 ) + ( k * sb2 );
 					bkjR = Bv[ ib ];
 					bkjI = Bv[ ib + 1 ];
+
 					// C[i,j] += temp1 * B[i,k]
 					Cv[ ic ] += ( temp1R * bkjR ) - ( temp1I * bkjI );
 					Cv[ ic + 1 ] += ( temp1R * bkjI ) + ( temp1I * bkjR );

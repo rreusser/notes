@@ -27,8 +27,8 @@ var Complex128 = require( '@stdlib/complex/float64/ctor' );
 // MAIN //
 
 /**
-* Computes the unconjugated dot product of two complex vectors:
-* ZDOTU = X^T * Y = sum_i x_i * y_i
+* Computes the unconjugated dot product of two complex vectors:.
+* ZDOTU = X^T _ Y = sum_i x_i _ y_i
 *
 * @private
 * @param {NonNegativeInteger} N - number of complex elements
@@ -77,6 +77,7 @@ function zdotu( N, x, strideX, offsetX, y, strideY, offsetY ) {
 		yi = yv[ iy + 1 ];
 
 		// x * y = (xr + xi*i) * (yr + yi*i)
+
 		//       = (xr*yr - xi*yi) + (xr*yi + xi*yr)*i
 		tempR += (xr * yr) - (xi * yi);
 		tempI += (xr * yi) + (xi * yr);

@@ -3,6 +3,7 @@
   "stdlib/require-leading-slash": "off",
   "stdlib/no-builtin-math": "off",
   "stdlib/jsdoc-markdown-remark": "off",
+  "stdlib/jsdoc-main-export": "off",
 
   "stdlib/no-todo-params": "error",
   "stdlib/no-stub-wrappers": "error",
