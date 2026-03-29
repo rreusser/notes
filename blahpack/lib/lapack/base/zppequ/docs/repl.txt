@@ -1,0 +1,48 @@
+
+    zppequ.ndarray( uplo, N, AP, strideAP, offsetAP, s, strideS, offsetS, scond, amax )
+        Compute row and column scalings to equilibrate a complex Hermitian positive definite matrix in packed storage
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        s: Float64Array
+            output array.
+
+        strideS: integer
+            stride length for `s`.
+
+        offsetS: NonNegativeInteger
+            starting index for `s`.
+
+        scond: number
+            scond.
+
+        amax: number
+            amax.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

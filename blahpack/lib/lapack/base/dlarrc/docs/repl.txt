@@ -1,0 +1,60 @@
+
+    dlarrc.ndarray( jobt, N, vl, vu, d, strideD, offsetD, e, strideE, offsetE, pivmin, eigcnt, lcnt, rcnt )
+        Count eigenvalues of a symmetric tridiagonal matrix in an interval
+
+        Parameters
+        ----------
+        jobt: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        vl: number
+            vl.
+
+        vu: number
+            vu.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            output array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        pivmin: number
+            pivmin.
+
+        eigcnt: integer
+            eigcnt.
+
+        lcnt: integer
+            lcnt.
+
+        rcnt: integer
+            rcnt.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

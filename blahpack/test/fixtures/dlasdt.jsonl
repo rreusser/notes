@@ -1,0 +1,7 @@
+{"name":"n15_msub6","N":15,"MSUB":6,"LVL":2,"ND":3,"INODE":[8,4,12],"NDIML":[7,3,3],"NDIMR":[7,3,3]}
+{"name":"n1_msub6","N":1,"MSUB":6,"LVL":-1,"ND":1,"INODE":[1],"NDIML":[0],"NDIMR":[0]}
+{"name":"n2_msub6","N":2,"MSUB":6,"LVL":0,"ND":1,"INODE":[2],"NDIML":[1],"NDIMR":[0]}
+{"name":"n31_msub6","N":31,"MSUB":6,"LVL":3,"ND":7,"INODE":[16,8,24,4,12,20,28],"NDIML":[15,7,7,3,3,3,3],"NDIMR":[15,7,7,3,3,3,3]}
+{"name":"n63_msub12","N":63,"MSUB":12,"LVL":3,"ND":7,"INODE":[32,16,48,8,24,40,56],"NDIML":[31,15,15,7,7,7,7],"NDIMR":[31,15,15,7,7,7,7]}
+{"name":"n7_msub2","N":7,"MSUB":2,"LVL":2,"ND":3,"INODE":[4,2,6],"NDIML":[3,1,1],"NDIMR":[3,1,1]}
+{"name":"n100_msub25","N":100,"MSUB":25,"LVL":2,"ND":3,"INODE":[51,26,76],"NDIML":[50,25,24],"NDIMR":[49,24,24]}

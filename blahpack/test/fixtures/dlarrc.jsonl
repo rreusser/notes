@@ -1,0 +1,13 @@
+{"name":"n_zero","info":0,"eigcnt":0,"lcnt":0,"rcnt":0}
+{"name":"n1_t_inside","info":0,"eigcnt":1,"lcnt":0,"rcnt":1}
+{"name":"n1_t_outside","info":0,"eigcnt":0,"lcnt":1,"rcnt":1}
+{"name":"n5_t_all","info":0,"eigcnt":5,"lcnt":0,"rcnt":5}
+{"name":"n5_t_narrow","info":0,"eigcnt":3,"lcnt":1,"rcnt":4}
+{"name":"n1_l_inside","info":0,"eigcnt":1,"lcnt":0,"rcnt":1}
+{"name":"n5_l_all","info":0,"eigcnt":5,"lcnt":0,"rcnt":5}
+{"name":"n5_l_narrow","info":0,"eigcnt":3,"lcnt":1,"rcnt":4}
+{"name":"n3_t_boundary","info":0,"eigcnt":2,"lcnt":1,"rcnt":3}
+{"name":"n4_t_negative","info":0,"eigcnt":3,"lcnt":0,"rcnt":3}
+{"name":"n4_l_negative","info":0,"eigcnt":2,"lcnt":1,"rcnt":3}
+{"name":"n2_t_both","info":0,"eigcnt":2,"lcnt":0,"rcnt":2}
+{"name":"n2_l_both","info":0,"eigcnt":1,"lcnt":0,"rcnt":1}

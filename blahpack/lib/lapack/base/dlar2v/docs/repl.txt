@@ -1,0 +1,66 @@
+
+    dlar2v.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, z, strideZ, offsetZ, c, strideC, offsetC, s, strideS, offsetS )
+        Apply a vector of real plane rotations from both sides to a sequence of 2-by-2 symmetric matrices.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        y: Float64Array
+            input array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `z`.
+
+        c: Float64Array
+            input array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: NonNegativeInteger
+            starting index for `c`.
+
+        s: Float64Array
+            output array.
+
+        strideS: integer
+            stride length for `s`.
+
+        offsetS: NonNegativeInteger
+            starting index for `s`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

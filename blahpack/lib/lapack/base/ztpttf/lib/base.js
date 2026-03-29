@@ -1,0 +1,346 @@
+/* eslint-disable max-len, max-params, max-depth, max-statements, max-lines-per-function, max-lines */
+
+'use strict';
+
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+
+
+// MAIN //
+
+/**
+* Copies a triangular matrix from standard packed format (TP) to Rectangular Full Packed format (RFP), complex version.
+*
+* @private
+* @param {string} transr - specifies whether `ARF` is in normal or conjugate-transpose format (`'no-transpose'` or `'conjugate-transpose'`)
+* @param {string} uplo - specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Complex128Array} AP - input array in standard packed format
+* @param {integer} strideAP - stride length for `AP` (in complex elements)
+* @param {NonNegativeInteger} offsetAP - starting index for `AP` (in complex elements)
+* @param {Complex128Array} ARF - output array in RFP format
+* @param {integer} strideARF - stride length for `ARF` (in complex elements)
+* @param {NonNegativeInteger} offsetARF - starting index for `ARF` (in complex elements)
+* @returns {integer} status code (0 = success)
+*/
+function ztpttf( transr, uplo, N, AP, strideAP, offsetAP, ARF, strideARF, offsetARF ) {
+	var normalTransr;
+	var nisodd;
+	var lower;
+	var sAP;
+	var sRF;
+	var oAP;
+	var oRF;
+	var APv;
+	var RFv;
+	var ijp;
+	var lda;
+	var ij;
+	var jp;
+	var js;
+	var n1;
+	var n2;
+	var ip;
+	var ir;
+	var k;
+	var i;
+	var j;
+
+	// Quick return if possible:
+	if ( N <= 0 ) {
+		return 0;
+	}
+
+	normalTransr = ( transr === 'no-transpose' );
+	lower = ( uplo === 'lower' );
+
+	// Reinterpret Complex128Arrays as Float64Arrays:
+	APv = reinterpret( AP, 0 );
+	RFv = reinterpret( ARF, 0 );
+
+	// Convert complex-element strides/offsets to Float64 strides/offsets:
+	sAP = strideAP * 2;
+	sRF = strideARF * 2;
+	oAP = offsetAP * 2;
+	oRF = offsetARF * 2;
+
+	if ( N === 1 ) {
+		if ( normalTransr ) {
+			// ARF(0) = AP(0) — plain copy:
+			RFv[ oRF ] = APv[ oAP ];
+			RFv[ oRF + 1 ] = APv[ oAP + 1 ];
+		} else {
+			// ARF(0) = DCONJG( AP(0) ) — conjugate:
+			RFv[ oRF ] = APv[ oAP ];
+			RFv[ oRF + 1 ] = -APv[ oAP + 1 ];
+		}
+		return 0;
+	}
+
+	// Set N1 and N2 depending on LOWER:
+	if ( lower ) {
+		n2 = ( N / 2 ) | 0;
+		n1 = N - n2;
+	} else {
+		n1 = ( N / 2 ) | 0;
+		n2 = N - n1;
+	}
+
+	// If N is odd, set NISODD = true; if N is even, set K = N/2 and NISODD = false:
+	if ( N % 2 === 0 ) {
+		k = ( N / 2 ) | 0;
+		nisodd = false;
+		lda = N + 1;
+	} else {
+		nisodd = true;
+		lda = N;
+	}
+
+	// ARF^C has lda rows and n+1-noe cols:
+	if ( !normalTransr ) {
+		lda = ( ( N + 1 ) / 2 ) | 0;
+	}
+
+	// Start execution: there are eight cases...
+	if ( nisodd ) {
+		// N is odd...
+		if ( normalTransr ) {
+			// N is odd and TRANSR = 'N'...
+			if ( lower ) {
+				// N is odd, TRANSR = 'N', and UPLO = 'L':
+				ijp = 0;
+				jp = 0;
+				for ( j = 0; j <= n2; j += 1 ) {
+					for ( i = j; i <= N - 1; i += 1 ) {
+						ij = i + jp;
+						ir = oRF + ( ij * sRF );
+						ip = oAP + ( ijp * sAP );
+
+						// ARF(IJ) = AP(IJP) — plain copy:
+						RFv[ ir ] = APv[ ip ];
+						RFv[ ir + 1 ] = APv[ ip + 1 ];
+						ijp += 1;
+					}
+					jp += lda;
+				}
+				for ( i = 0; i <= n2 - 1; i += 1 ) {
+					for ( j = 1 + i; j <= n2; j += 1 ) {
+						ij = i + ( j * lda );
+						ir = oRF + ( ij * sRF );
+						ip = oAP + ( ijp * sAP );
+
+						// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+						RFv[ ir ] = APv[ ip ];
+						RFv[ ir + 1 ] = -APv[ ip + 1 ];
+						ijp += 1;
+					}
+				}
+			} else {
+				// N is odd, TRANSR = 'N', and UPLO = 'U':
+				ijp = 0;
+				for ( j = 0; j <= n1 - 1; j += 1 ) {
+					ij = n2 + j;
+					for ( i = 0; i <= j; i += 1 ) {
+						ir = oRF + ( ij * sRF );
+						ip = oAP + ( ijp * sAP );
+
+						// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+						RFv[ ir ] = APv[ ip ];
+						RFv[ ir + 1 ] = -APv[ ip + 1 ];
+						ijp += 1;
+						ij += lda;
+					}
+				}
+				js = 0;
+				for ( j = n1; j <= N - 1; j += 1 ) {
+					for ( ij = js; ij <= js + j; ij += 1 ) {
+						ir = oRF + ( ij * sRF );
+						ip = oAP + ( ijp * sAP );
+
+						// ARF(IJ) = AP(IJP) — plain copy:
+						RFv[ ir ] = APv[ ip ];
+						RFv[ ir + 1 ] = APv[ ip + 1 ];
+						ijp += 1;
+					}
+					js += lda;
+				}
+			}
+		} else if ( lower ) {
+			// N is odd, TRANSR = 'C', and UPLO = 'L':
+			ijp = 0;
+			for ( i = 0; i <= n2; i += 1 ) {
+				for ( ij = i * ( lda + 1 ); ij <= ( N * lda ) - 1; ij += lda ) {
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = -APv[ ip + 1 ];
+					ijp += 1;
+				}
+			}
+			js = 1;
+			for ( j = 0; j <= n2 - 1; j += 1 ) {
+				for ( ij = js; ij <= js + n2 - j - 1; ij += 1 ) {
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = AP(IJP) — plain copy:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = APv[ ip + 1 ];
+					ijp += 1;
+				}
+				js += lda + 1;
+			}
+		} else {
+			// N is odd, TRANSR = 'C', and UPLO = 'U':
+			ijp = 0;
+			js = n2 * lda;
+			for ( j = 0; j <= n1 - 1; j += 1 ) {
+				for ( ij = js; ij <= js + j; ij += 1 ) {
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = AP(IJP) — plain copy:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = APv[ ip + 1 ];
+					ijp += 1;
+				}
+				js += lda;
+			}
+			for ( i = 0; i <= n1; i += 1 ) {
+				for ( ij = i; ij <= i + ( ( n1 + i ) * lda ); ij += lda ) {
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = -APv[ ip + 1 ];
+					ijp += 1;
+				}
+			}
+		}
+	} else if ( normalTransr ) {
+		// N is even and TRANSR = 'N'...
+		if ( lower ) {
+			// N is even, TRANSR = 'N', and UPLO = 'L':
+			ijp = 0;
+			jp = 0;
+			for ( j = 0; j <= k - 1; j += 1 ) {
+				for ( i = j; i <= N - 1; i += 1 ) {
+					ij = 1 + i + jp;
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = AP(IJP) — plain copy:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = APv[ ip + 1 ];
+					ijp += 1;
+				}
+				jp += lda;
+			}
+			for ( i = 0; i <= k - 1; i += 1 ) {
+				for ( j = i; j <= k - 1; j += 1 ) {
+					ij = i + ( j * lda );
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = -APv[ ip + 1 ];
+					ijp += 1;
+				}
+			}
+		} else {
+			// N is even, TRANSR = 'N', and UPLO = 'U':
+			ijp = 0;
+			for ( j = 0; j <= k - 1; j += 1 ) {
+				ij = k + 1 + j;
+				for ( i = 0; i <= j; i += 1 ) {
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = -APv[ ip + 1 ];
+					ijp += 1;
+					ij += lda;
+				}
+			}
+			js = 0;
+			for ( j = k; j <= N - 1; j += 1 ) {
+				for ( ij = js; ij <= js + j; ij += 1 ) {
+					ir = oRF + ( ij * sRF );
+					ip = oAP + ( ijp * sAP );
+
+					// ARF(IJ) = AP(IJP) — plain copy:
+					RFv[ ir ] = APv[ ip ];
+					RFv[ ir + 1 ] = APv[ ip + 1 ];
+					ijp += 1;
+				}
+				js += lda;
+			}
+		}
+	} else if ( lower ) {
+		// N is even, TRANSR = 'C', and UPLO = 'L':
+		ijp = 0;
+		for ( i = 0; i <= k - 1; i += 1 ) {
+			for ( ij = i + ( ( i + 1 ) * lda ); ij <= ( ( N + 1 ) * lda ) - 1; ij += lda ) {
+				ir = oRF + ( ij * sRF );
+				ip = oAP + ( ijp * sAP );
+
+				// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+				RFv[ ir ] = APv[ ip ];
+				RFv[ ir + 1 ] = -APv[ ip + 1 ];
+				ijp += 1;
+			}
+		}
+		js = 0;
+		for ( j = 0; j <= k - 1; j += 1 ) {
+			for ( ij = js; ij <= js + k - j - 1; ij += 1 ) {
+				ir = oRF + ( ij * sRF );
+				ip = oAP + ( ijp * sAP );
+
+				// ARF(IJ) = AP(IJP) — plain copy:
+				RFv[ ir ] = APv[ ip ];
+				RFv[ ir + 1 ] = APv[ ip + 1 ];
+				ijp += 1;
+			}
+			js += lda + 1;
+		}
+	} else {
+		// N is even, TRANSR = 'C', and UPLO = 'U':
+		ijp = 0;
+		js = ( k + 1 ) * lda;
+		for ( j = 0; j <= k - 1; j += 1 ) {
+			for ( ij = js; ij <= js + j; ij += 1 ) {
+				ir = oRF + ( ij * sRF );
+				ip = oAP + ( ijp * sAP );
+
+				// ARF(IJ) = AP(IJP) — plain copy:
+				RFv[ ir ] = APv[ ip ];
+				RFv[ ir + 1 ] = APv[ ip + 1 ];
+				ijp += 1;
+			}
+			js += lda;
+		}
+		for ( i = 0; i <= k - 1; i += 1 ) {
+			for ( ij = i; ij <= i + ( ( k + i ) * lda ); ij += lda ) {
+				ir = oRF + ( ij * sRF );
+				ip = oAP + ( ijp * sAP );
+
+				// ARF(IJ) = DCONJG( AP(IJP) ) — conjugate:
+				RFv[ ir ] = APv[ ip ];
+				RFv[ ir + 1 ] = -APv[ ip + 1 ];
+				ijp += 1;
+			}
+		}
+	}
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = ztpttf;

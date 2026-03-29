@@ -1,0 +1,2242 @@
+[
+  {
+    "algorithm": "2st_kernels",
+    "raw": "Is an internal routine used by the DSYTRD_SB2ST subroutine.",
+    "tex": "Is an internal routine used by the DSYTRD_SB2ST subroutine."
+  },
+  {
+    "algorithm": "_gbamv",
+    "raw": "Performs a matrix-vector operation to calculate error bounds.",
+    "tex": "Performs a matrix-vector operation to calculate error bounds."
+  },
+  {
+    "algorithm": "_gbrcond",
+    "raw": "Estimates the Skeel condition number for a general banded matrix.",
+    "tex": "Estimates the Skeel condition number for a general banded matrix."
+  },
+  {
+    "algorithm": "_gbrcond_c",
+    "raw": "Computes the infinity norm condition number of op(A)*inv(diag(c)) for general banded matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*inv(diag(c)) for general banded matrices."
+  },
+  {
+    "algorithm": "_gbrcond_x",
+    "raw": "Computes the infinity norm condition number of op(A)*diag(x) for general banded matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*diag(x) for general banded matrices."
+  },
+  {
+    "algorithm": "_gbrfsx_extended",
+    "raw": "Improves the computed solution to a system of linear equations for general banded matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution.",
+    "tex": "Improves the computed solution to a system of linear equations for general banded matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution."
+  },
+  {
+    "algorithm": "_gbrpvgrw",
+    "raw": "Computes the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.",
+    "tex": "Computes the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix."
+  },
+  {
+    "algorithm": "_geamv",
+    "raw": "Computes a matrix-vector product using a general matrix to calculate error bounds.",
+    "tex": "Computes a matrix-vector product using a general matrix to calculate error bounds."
+  },
+  {
+    "algorithm": "_gercond",
+    "raw": "Estimates the Skeel condition number for a general matrix.",
+    "tex": "Estimates the Skeel condition number for a general matrix."
+  },
+  {
+    "algorithm": "_gercond_c",
+    "raw": "Computes the infinity norm condition number of op(A)*inv(diag(c)) for general matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*inv(diag(c)) for general matrices."
+  },
+  {
+    "algorithm": "_gercond_x",
+    "raw": "Computes the infinity norm condition number of op(A)*diag(x) for general matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*diag(x) for general matrices."
+  },
+  {
+    "algorithm": "_gerfsx_extended",
+    "raw": "Improves the computed solution to a system of linear equations for general matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution.",
+    "tex": "Improves the computed solution to a system of linear equations for general matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution."
+  },
+  {
+    "algorithm": "_gerpvgrw",
+    "raw": "Computes the reciprocal pivot growth factor norm(A)/norm(U).",
+    "tex": "Computes the reciprocal pivot growth factor norm(A)/norm(U)."
+  },
+  {
+    "algorithm": "_heamv",
+    "raw": "Computes a matrix-vector product using a Hermitian indefinite matrix to calculate error bounds.",
+    "tex": "Computes a matrix-vector product using a Hermitian indefinite matrix to calculate error bounds."
+  },
+  {
+    "algorithm": "_hercond_c",
+    "raw": "Computes the infinity norm condition number of op(A)*inv(diag(c)) for Hermitian indefinite matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*inv(diag(c)) for Hermitian indefinite matrices."
+  },
+  {
+    "algorithm": "_hercond_x",
+    "raw": "Computes the infinity norm condition number of op(A)*diag(x) for Hermitian indefinite matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*diag(x) for Hermitian indefinite matrices."
+  },
+  {
+    "algorithm": "_herfsx_extended",
+    "raw": "Improves the computed solution to a system of linear equations for Hermitian indefinite matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution.",
+    "tex": "Improves the computed solution to a system of linear equations for Hermitian indefinite matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution."
+  },
+  {
+    "algorithm": "_herpvgrw",
+    "raw": "Computes the reciprocal pivot growth factor norm(A)/norm(U).",
+    "tex": "Computes the reciprocal pivot growth factor norm(A)/norm(U)."
+  },
+  {
+    "algorithm": "_lin_berr",
+    "raw": "Computes a component-wise relative backward error.",
+    "tex": "Computes a component-wise relative backward error."
+  },
+  {
+    "algorithm": "_porcond",
+    "raw": "Estimates the Skeel condition number for a symmetric positive-definite matrix.",
+    "tex": "Estimates the Skeel condition number for a symmetric positive-definite matrix."
+  },
+  {
+    "algorithm": "_porcond_c",
+    "raw": "Computes the infinity norm condition number of op(A)*inv(diag(c)) for Hermitian positive-definite matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*inv(diag(c)) for Hermitian positive-definite matrices."
+  },
+  {
+    "algorithm": "_porcond_x",
+    "raw": "Computes the infinity norm condition number of op(A)*diag(x) for Hermitian positive-definite matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*diag(x) for Hermitian positive-definite matrices."
+  },
+  {
+    "algorithm": "_porfsx_extended",
+    "raw": "Improves the computed solution to a system of linear equations for symmetric or Hermitian positive-definite matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution.",
+    "tex": "Improves the computed solution to a system of linear equations for symmetric or Hermitian positive-definite matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution."
+  },
+  {
+    "algorithm": "_porpvgrw",
+    "raw": "Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric or Hermitian positive-definite matrix.",
+    "tex": "Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric or Hermitian positive-definite matrix."
+  },
+  {
+    "algorithm": "_syamv",
+    "raw": "Computes a matrix-vector product using a symmetric indefinite matrix to calculate error bounds.",
+    "tex": "Computes a matrix-vector product using a symmetric indefinite matrix to calculate error bounds."
+  },
+  {
+    "algorithm": "_syrcond",
+    "raw": "Estimates the Skeel condition number for a symmetric indefinite matrix.",
+    "tex": "Estimates the Skeel condition number for a symmetric indefinite matrix."
+  },
+  {
+    "algorithm": "_syrcond_c",
+    "raw": "Computes the infinity norm condition number of op(A)*inv(diag(c)) for symmetric indefinite matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*inv(diag(c)) for symmetric indefinite matrices."
+  },
+  {
+    "algorithm": "_syrcond_x",
+    "raw": "Computes the infinity norm condition number of op(A)*diag(x) for symmetric indefinite matrices.",
+    "tex": "Computes the infinity norm condition number of \\(\\operatorname{op}(A)\\)*diag(x) for symmetric indefinite matrices."
+  },
+  {
+    "algorithm": "_syrfsx_extended",
+    "raw": "Improves the computed solution to a system of linear equations for symmetric indefinite matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution.",
+    "tex": "Improves the computed solution to a system of linear equations for symmetric indefinite matrices by performing extra-precise iterative refinement and provides error bounds and backward error estimates for the solution."
+  },
+  {
+    "algorithm": "_syrpvgrw",
+    "raw": "Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric indefinite matrix.",
+    "tex": "Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric indefinite matrix."
+  },
+  {
+    "algorithm": "_wwaddw",
+    "raw": "Adds a vector into a doubled-single vector.",
+    "tex": "Adds a vector into a doubled-single vector."
+  },
+  {
+    "algorithm": "asum",
+    "raw": "Takes the sum of the absolute values.",
+    "tex": "Takes the sum of the absolute values."
+  },
+  {
+    "algorithm": "axpy",
+    "raw": "Constant times a vector plus a vector.",
+    "tex": "Constant times a vector plus a vector."
+  },
+  {
+    "algorithm": "bad",
+    "raw": "Is a no-op and kept for compatibility reasons.",
+    "tex": "Is a no-op and kept for compatibility reasons."
+  },
+  {
+    "algorithm": "bak",
+    "raw": "Forms the right or left eigenvectors of a real general matrix by backward transformation on the computed eigenvectors of the balanced matrix output by DGEBAL.",
+    "tex": "Forms the right or left eigenvectors of a real general matrix by backward transformation on the computed eigenvectors of the balanced matrix output by DGEBAL."
+  },
+  {
+    "algorithm": "bal",
+    "raw": "Balances a general real matrix A.",
+    "tex": "Balances a general real matrix A."
+  },
+  {
+    "algorithm": "bd2",
+    "raw": "Reduces a general matrix to bidiagonal form using an unblocked algorithm.",
+    "tex": "Reduces a general matrix to bidiagonal form using an unblocked algorithm."
+  },
+  {
+    "algorithm": "bdb",
+    "raw": "Simultaneously bidiagonalizes the blocks of an M-by-M partitioned orthogonal matrix X: [ B11 | B12 0 0 ] [ X11 | X12 ] [ P1 | ] [ 0 | 0 -I 0 ] [ Q1 | ]**T X = [-----------] = [---------] [----------------] [---------] . [ X21 | X22 ] [ | P2 ] [ B21 | B22 0 0 ] [ | Q2 ] [ 0 | 0 0 I ] X11 is P-by-Q. Q must be no larger than P, M-P, or M-Q. (If this is not the case, then X must be transposed and/or permuted. This can be done in constant time using the TRANS and SIGNS options. See DORCSD for details.) The orthogonal matrices P1, P2, Q1, and Q2 are P-by-P, (M-P)-by- (M-P), Q-by-Q, and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11, B12, B21, and B22 are Q-by-Q bidiagonal matrices represented implicitly by angles THETA, PHI.",
+    "tex": "Simultaneously bidiagonalizes the blocks of an M-by-M partitioned orthogonal matrix X: [ B11 | B12 0 0 ] [ X11 | X12 ] [ P1 | ] [ 0 | 0 -I 0 ] [ Q1 | ]**T X = [-----------] = [---------] [----------------] [---------] . [ X21 | X22 ] [ | P2 ] [ B21 | B22 0 0 ] [ | Q2 ] [ 0 | 0 0 I ] X11 is P-by-Q. Q must be no larger than P, M-P, or M-Q. (If this is not the case, then X must be transposed and/or permuted. This can be done in constant time using the TRANS and SIGNS options. See DORCSD for details.) The orthogonal matrices P1, P2, Q1, and Q2 are P-by-P, (M-P)-by- (M-P), Q-by-Q, and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11, B12, B21, and B22 are Q-by-Q bidiagonal matrices represented implicitly by angles THETA, PHI."
+  },
+  {
+    "algorithm": "bdb1",
+    "raw": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. Q must be no larger than P, M-P, or M-Q. Routines DORBDB2, DORBDB3, and DORBDB4 handle cases in which Q is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are Q-by-Q bidiagonal matrices represented implicitly by angles THETA, PHI.",
+    "tex": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. Q must be no larger than P, M-P, or M-Q. Routines DORBDB2, DORBDB3, and DORBDB4 handle cases in which Q is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are Q-by-Q bidiagonal matrices represented implicitly by angles THETA, PHI."
+  },
+  {
+    "algorithm": "bdb2",
+    "raw": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. P must be no larger than M-P, Q, or M-Q. Routines DORBDB1, DORBDB3, and DORBDB4 handle cases in which P is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are P-by-P bidiagonal matrices represented implicitly by angles THETA, PHI.",
+    "tex": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. P must be no larger than M-P, Q, or M-Q. Routines DORBDB1, DORBDB3, and DORBDB4 handle cases in which P is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are P-by-P bidiagonal matrices represented implicitly by angles THETA, PHI."
+  },
+  {
+    "algorithm": "bdb3",
+    "raw": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. M-P must be no larger than P, Q, or M-Q. Routines DORBDB1, DORBDB2, and DORBDB4 handle cases in which M-P is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are (M-P)-by-(M-P) bidiagonal matrices represented implicitly by angles THETA, PHI.",
+    "tex": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. M-P must be no larger than P, Q, or M-Q. Routines DORBDB1, DORBDB2, and DORBDB4 handle cases in which M-P is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are (M-P)-by-(M-P) bidiagonal matrices represented implicitly by angles THETA, PHI."
+  },
+  {
+    "algorithm": "bdb4",
+    "raw": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. M-Q must be no larger than P, M-P, or Q. Routines DORBDB1, DORBDB2, and DORBDB3 handle cases in which M-Q is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are (M-Q)-by-(M-Q) bidiagonal matrices represented implicitly by angles THETA, PHI.",
+    "tex": "Simultaneously bidiagonalizes the blocks of a tall and skinny matrix X with orthonormal columns: [ B11 ] [ X11 ] [ P1 | ] [ 0 ] [-----] = [---------] [-----] Q1**T . [ X21 ] [ | P2 ] [ B21 ] [ 0 ] X11 is P-by-Q, and X21 is (M-P)-by-Q. M-Q must be no larger than P, M-P, or Q. Routines DORBDB1, DORBDB2, and DORBDB3 handle cases in which M-Q is not the minimum dimension. The orthogonal matrices P1, P2, and Q1 are P-by-P, (M-P)-by-(M-P), and (M-Q)-by-(M-Q), respectively. They are represented implicitly by Householder vectors. B11 and B12 are (M-Q)-by-(M-Q) bidiagonal matrices represented implicitly by angles THETA, PHI."
+  },
+  {
+    "algorithm": "bdb5",
+    "raw": "Orthogonalizes the column vector X = [ X1 ] [ X2 ] with respect to the columns of Q = [ Q1 ] .",
+    "tex": "Orthogonalizes the column vector X = [ X1 ] [ X2 ] with respect to the columns of Q = [ Q1 ] ."
+  },
+  {
+    "algorithm": "bdb6",
+    "raw": "Orthogonalizes the column vector X = [ X1 ] [ X2 ] with respect to the columns of Q = [ Q1 ] .",
+    "tex": "Orthogonalizes the column vector X = [ X1 ] [ X2 ] with respect to the columns of Q = [ Q1 ] ."
+  },
+  {
+    "algorithm": "brd",
+    "raw": "Reduces a real general m-by-n band matrix A to upper bidiagonal form B by an orthogonal transformation: Q**T * A * P = B.",
+    "tex": "Reduces a real general m-by-n band matrix A to upper bidiagonal form B by an orthogonal transformation: \\(Q^TAP = B\\)."
+  },
+  {
+    "algorithm": "cabs1",
+    "raw": "Computes |Re(.)| + |Im(.)| of a double complex number",
+    "tex": "Computes |Re(.)| + |Im(.)| of a double complex number"
+  },
+  {
+    "algorithm": "camax",
+    "raw": "Finds the index of the first element having maximum |Re(.)| + |Im(.)|",
+    "tex": "Finds the index of the first element having maximum |Re(.)| + |Im(.)|"
+  },
+  {
+    "algorithm": "casum",
+    "raw": "Takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a single precision result.",
+    "tex": "Takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a single precision result."
+  },
+  {
+    "algorithm": "cgesv",
+    "raw": "Computes the solution to system of linear equations A * X = B for GE matrices (mixed precision with iterative refinement)",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for GE matrices (mixed precision with iterative refinement)"
+  },
+  {
+    "algorithm": "cgv",
+    "raw": "Conjugates a complex vector.",
+    "tex": "Conjugates a complex vector."
+  },
+  {
+    "algorithm": "clc",
+    "raw": "Scans a matrix for its last non-zero column.",
+    "tex": "Scans a matrix for its last non-zero column."
+  },
+  {
+    "algorithm": "clr",
+    "raw": "Scans a matrix for its last non-zero row.",
+    "tex": "Scans a matrix for its last non-zero row."
+  },
+  {
+    "algorithm": "cmax1",
+    "raw": "Finds the index of the first vector element of maximum absolute value.",
+    "tex": "Finds the index of the first vector element of maximum absolute value."
+  },
+  {
+    "algorithm": "cn2",
+    "raw": "Estimates the 1-norm of a square matrix, using reverse communication for evaluating matrix-vector products.",
+    "tex": "Estimates the 1-norm of a square matrix, using reverse communication for evaluating matrix-vector products."
+  },
+  {
+    "algorithm": "cnrm2",
+    "raw": "Returns the euclidean norm of a vector via the function name, so that SCNRM2 := sqrt( x**H*x )",
+    "tex": "Returns the euclidean norm of a vector via the function name, so that SCNRM2 := \\(\\sqrt{x^Hx }\\)"
+  },
+  {
+    "algorithm": "con",
+    "raw": "Estimates the reciprocal of the condition number of a real general band matrix A, in either the 1-norm or the infinity-norm, using the LU factorization computed by DGBTRF.",
+    "tex": "Estimates the reciprocal of the condition number of a real general band matrix A, in either the 1-norm or the infinity-norm, using the LU factorization computed by DGBTRF."
+  },
+  {
+    "algorithm": "con_3",
+    "raw": "Estimates the reciprocal of the condition number (in the 1-norm) of a real symmetric matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: A = P*U*D*(U**T)*(P**T) or A = P*L*D*(L**T)*(P**T), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.",
+    "tex": "Estimates the reciprocal of the condition number (in the 1-norm) of a real symmetric matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: \\(A = PUD(U^T)(P^T)\\) or \\(A = PLD(L^T)(P^T)\\), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks."
+  },
+  {
+    "algorithm": "con_rook",
+    "raw": "DSYCON_ROOK",
+    "tex": "DSYCON_ROOK"
+  },
+  {
+    "algorithm": "conv",
+    "raw": "Convert A given by TRF into L and D and vice-versa.",
+    "tex": "Convert A given by TRF into L and D and vice-versa."
+  },
+  {
+    "algorithm": "convf",
+    "raw": "If parameter WAY = 'C': DSYCONVF converts the factorization output format used in DSYTRF provided on entry in parameter A into the factorization output format used in DSYTRF_RK (or DSYTRF_BK) that is stored on exit in parameters A and E.",
+    "tex": "If parameter WAY = 'C': DSYCONVF converts the factorization output format used in DSYTRF provided on entry in parameter A into the factorization output format used in DSYTRF_RK (or DSYTRF_BK) that is stored on exit in parameters A and E."
+  },
+  {
+    "algorithm": "convf_rook",
+    "raw": "If parameter WAY = 'C': DSYCONVF_ROOK converts the factorization output format used in DSYTRF_ROOK provided on entry in parameter A into the factorization output format used in DSYTRF_RK (or DSYTRF_BK) that is stored on exit in parameters A and E.",
+    "tex": "If parameter WAY = 'C': DSYCONVF_ROOK converts the factorization output format used in DSYTRF_ROOK provided on entry in parameter A into the factorization output format used in DSYTRF_RK (or DSYTRF_BK) that is stored on exit in parameters A and E."
+  },
+  {
+    "algorithm": "copy",
+    "raw": "Copies a vector, x, to a vector, y.",
+    "tex": "Copies a vector, x, to a vector, y."
+  },
+  {
+    "algorithm": "cp2",
+    "raw": "Copies all or part of a real two-dimensional array to a complex array.",
+    "tex": "Copies all or part of a real two-dimensional array to a complex array."
+  },
+  {
+    "algorithm": "cposv",
+    "raw": "Computes the solution to system of linear equations A * X = B for PO matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for PO matrices"
+  },
+  {
+    "algorithm": "cpy",
+    "raw": "Copies all or part of one two-dimensional array to another.",
+    "tex": "Copies all or part of one two-dimensional array to another."
+  },
+  {
+    "algorithm": "crm",
+    "raw": "Multiplies a complex matrix by a square real matrix.",
+    "tex": "Multiplies a complex matrix by a square real matrix."
+  },
+  {
+    "algorithm": "crt",
+    "raw": "Performs a linear transformation of a pair of complex vectors.",
+    "tex": "Performs a linear transformation of a pair of complex vectors."
+  },
+  {
+    "algorithm": "csd",
+    "raw": "Computes the CS decomposition of an orthogonal matrix in bidiagonal-block form, [ B11 | B12 0 0 ] [ 0 | 0 -I 0 ] X = [----------------] [ B21 | B22 0 0 ] [ 0 | 0 0 I ] [ C | -S 0 0 ] [ U1 | ] [ 0 | 0 -I 0 ] [ V1 | ]**T = [---------] [---------------] [---------] . [ | U2 ] [ S | C 0 0 ] [ | V2 ] [ 0 | 0 0 I ] X is M-by-M, its top-left block is P-by-Q, and Q must be no larger than P, M-P, or M-Q. (If Q is not the smallest index, then X must be transposed and/or permuted. This can be done in constant time using the TRANS and SIGNS options. See DORCSD for details.) The bidiagonal matrices B11, B12, B21, and B22 are represented implicitly by angles THETA(1:Q) and PHI(1:Q-1). The orthogonal matrices U1, U2, V1T, and V2T are input/output. The input matrices are pre- or post-multiplied by the appropriate singular vector matrices.",
+    "tex": "Computes the CS decomposition of an orthogonal matrix in bidiagonal-block form, [ B11 | B12 0 0 ] [ 0 | 0 -I 0 ] X = [----------------] [ B21 | B22 0 0 ] [ 0 | 0 0 I ] [ C | -S 0 0 ] [ U1 | ] [ 0 | 0 -I 0 ] [ V1 | ]**T = [---------] [---------------] [---------] . [ | U2 ] [ S | C 0 0 ] [ | V2 ] [ 0 | 0 0 I ] X is M-by-M, its top-left block is P-by-Q, and Q must be no larger than P, M-P, or M-Q. (If Q is not the smallest index, then X must be transposed and/or permuted. This can be done in constant time using the TRANS and SIGNS options. See DORCSD for details.) The bidiagonal matrices B11, B12, B21, and B22 are represented implicitly by angles THETA(1:Q) and PHI(1:Q-1). The orthogonal matrices U1, U2, V1T, and V2T are input/output. The input matrices are pre- or post-multiplied by the appropriate singular vector matrices."
+  },
+  {
+    "algorithm": "csd2by1",
+    "raw": "Computes the CS decomposition of an M-by-Q matrix X with orthonormal columns that has been partitioned into a 2-by-1 block structure: [ I1 0 0 ] [ 0 C 0 ] [ X11 ] [ U1 | ] [ 0 0 0 ] X = [-----] = [---------] [----------] V1**T . [ X21 ] [ | U2 ] [ 0 0 0 ] [ 0 S 0 ] [ 0 0 I2] X11 is P-by-Q. The orthogonal matrices U1, U2, and V1 are P-by-P, (M-P)-by-(M-P), and Q-by-Q, respectively. C and S are R-by-R nonnegative diagonal matrices satisfying C^2 + S^2 = I, in which R = MIN(P,M-P,Q,M-Q). I1 is a K1-by-K1 identity matrix and I2 is a K2-by-K2 identity matrix, where K1 = MAX(Q+P-M,0), K2 = MAX(Q-P,0).",
+    "tex": "Computes the CS decomposition of an M-by-Q matrix X with orthonormal columns that has been partitioned into a 2-by-1 block structure: [ I1 0 0 ] [ 0 C 0 ] [ X11 ] [ U1 | ] [ 0 0 0 ] X = [-----] = [---------] [----------] V1**T . [ X21 ] [ | U2 ] [ 0 0 0 ] [ 0 S 0 ] [ 0 0 I2] X11 is P-by-Q. The orthogonal matrices U1, U2, and V1 are P-by-P, (M-P)-by-(M-P), and Q-by-Q, respectively. C and S are R-by-R nonnegative diagonal matrices satisfying C^2 + S^2 = I, in which R = MIN(P,M-P,Q,M-Q). I1 is a K1-by-K1 identity matrix and I2 is a K2-by-K2 identity matrix, where K1 = MAX(Q+P-M,0), K2 = MAX(Q-P,0)."
+  },
+  {
+    "algorithm": "csum1",
+    "raw": "Forms the 1-norm of the complex vector using the true absolute value.",
+    "tex": "Forms the 1-norm of the complex vector using the true absolute value."
+  },
+  {
+    "algorithm": "damax",
+    "raw": "Finds the index of the first element having maximum absolute value.",
+    "tex": "Finds the index of the first element having maximum absolute value."
+  },
+  {
+    "algorithm": "diag",
+    "raw": "This subroutine translated from a character string specifying if a matrix has unit diagonal or not to the relevant BLAST-specified integer constant.",
+    "tex": "This subroutine translated from a character string specifying if a matrix has unit diagonal or not to the relevant BLAST-specified integer constant."
+  },
+  {
+    "algorithm": "div",
+    "raw": "Performs complex division in real arithmetic, avoiding unnecessary overflow.",
+    "tex": "Performs complex division in real arithmetic, avoiding unnecessary overflow."
+  },
+  {
+    "algorithm": "dlc",
+    "raw": "Scans a matrix for its last non-zero column.",
+    "tex": "Scans a matrix for its last non-zero column."
+  },
+  {
+    "algorithm": "dlr",
+    "raw": "Scans a matrix for its last non-zero row.",
+    "tex": "Scans a matrix for its last non-zero row."
+  },
+  {
+    "algorithm": "dmd",
+    "raw": "Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices.",
+    "tex": "Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices."
+  },
+  {
+    "algorithm": "dmdq",
+    "raw": "Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices.",
+    "tex": "Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices."
+  },
+  {
+    "algorithm": "dot",
+    "raw": "Forms the dot product of two vectors.",
+    "tex": "Forms the dot product of two vectors."
+  },
+  {
+    "algorithm": "dotc",
+    "raw": "Forms the dot product of two complex vectors ZDOTC = X^H * Y",
+    "tex": "Forms the dot product of two complex vectors ZDOTC = X^H * Y"
+  },
+  {
+    "algorithm": "dotu",
+    "raw": "Forms the dot product of two complex vectors ZDOTU = X^T * Y",
+    "tex": "Forms the dot product of two complex vectors ZDOTU = X^T * Y"
+  },
+  {
+    "algorithm": "drot",
+    "raw": "Applies a plane rotation, where the cos and sin (c and s) are real and the vectors cx and cy are complex.",
+    "tex": "Applies a plane rotation, where the cos and sin (c and s) are real and the vectors cx and cy are complex."
+  },
+  {
+    "algorithm": "drscl",
+    "raw": "Multiplies a vector by the reciprocal of a real scalar.",
+    "tex": "Multiplies a vector by the reciprocal of a real scalar."
+  },
+  {
+    "algorithm": "dscal",
+    "raw": "Scales a vector by a constant.",
+    "tex": "Scales a vector by a constant."
+  },
+  {
+    "algorithm": "dsdot",
+    "raw": "Compute the inner product of two vectors with extended precision accumulation.",
+    "tex": "Compute the inner product of two vectors with extended precision accumulation."
+  },
+  {
+    "algorithm": "e2",
+    "raw": "Computes the eigenvalues of a 2-by-2 symmetric matrix.",
+    "tex": "Computes the eigenvalues of a 2-by-2 symmetric matrix."
+  },
+  {
+    "algorithm": "ebz",
+    "raw": "Computes the number of eigenvalues of a real symmetric tridiagonal matrix which are less than or equal to a given value, and performs other tasks required by the routine sstebz.",
+    "tex": "Computes the number of eigenvalues of a real symmetric tridiagonal matrix which are less than or equal to a given value, and performs other tasks required by the routine sstebz."
+  },
+  {
+    "algorithm": "ed0",
+    "raw": "Used by DSTEDC. Computes all eigenvalues and corresponding eigenvectors of an unreduced symmetric tridiagonal matrix using the divide and conquer method.",
+    "tex": "Used by DSTEDC. Computes all eigenvalues and corresponding eigenvectors of an unreduced symmetric tridiagonal matrix using the divide and conquer method."
+  },
+  {
+    "algorithm": "ed1",
+    "raw": "Used by DSTEDC. Computes the updated eigensystem of a diagonal matrix after modification by a rank-one symmetric matrix. Used when the original matrix is tridiagonal.",
+    "tex": "Used by DSTEDC. Computes the updated eigensystem of a diagonal matrix after modification by a rank-one symmetric matrix. Used when the original matrix is tridiagonal."
+  },
+  {
+    "algorithm": "ed2",
+    "raw": "Used by DSTEDC. Merges eigenvalues and deflates secular equation. Used when the original matrix is tridiagonal.",
+    "tex": "Used by DSTEDC. Merges eigenvalues and deflates secular equation. Used when the original matrix is tridiagonal."
+  },
+  {
+    "algorithm": "ed3",
+    "raw": "Used by DSTEDC. Finds the roots of the secular equation and updates the eigenvectors. Used when the original matrix is tridiagonal.",
+    "tex": "Used by DSTEDC. Finds the roots of the secular equation and updates the eigenvectors. Used when the original matrix is tridiagonal."
+  },
+  {
+    "algorithm": "ed4",
+    "raw": "Used by DSTEDC. Finds a single root of the secular equation.",
+    "tex": "Used by DSTEDC. Finds a single root of the secular equation."
+  },
+  {
+    "algorithm": "ed5",
+    "raw": "Used by DSTEDC. Solves the 2-by-2 secular equation.",
+    "tex": "Used by DSTEDC. Solves the 2-by-2 secular equation."
+  },
+  {
+    "algorithm": "ed6",
+    "raw": "Used by DSTEDC. Computes one Newton step in solution of the secular equation.",
+    "tex": "Used by DSTEDC. Computes one Newton step in solution of the secular equation."
+  },
+  {
+    "algorithm": "ed7",
+    "raw": "Used by DSTEDC. Computes the updated eigensystem of a diagonal matrix after modification by a rank-one symmetric matrix. Used when the original matrix is dense.",
+    "tex": "Used by DSTEDC. Computes the updated eigensystem of a diagonal matrix after modification by a rank-one symmetric matrix. Used when the original matrix is dense."
+  },
+  {
+    "algorithm": "ed8",
+    "raw": "Used by DSTEDC. Merges eigenvalues and deflates secular equation. Used when the original matrix is dense.",
+    "tex": "Used by DSTEDC. Merges eigenvalues and deflates secular equation. Used when the original matrix is dense."
+  },
+  {
+    "algorithm": "ed9",
+    "raw": "Used by DSTEDC. Finds the roots of the secular equation and updates the eigenvectors. Used when the original matrix is dense.",
+    "tex": "Used by DSTEDC. Finds the roots of the secular equation and updates the eigenvectors. Used when the original matrix is dense."
+  },
+  {
+    "algorithm": "eda",
+    "raw": "Used by DSTEDC. Computes the Z vector determining the rank-one modification of the diagonal matrix. Used when the original matrix is dense.",
+    "tex": "Used by DSTEDC. Computes the Z vector determining the rank-one modification of the diagonal matrix. Used when the original matrix is dense."
+  },
+  {
+    "algorithm": "edc",
+    "raw": "Computes all eigenvalues and, optionally, eigenvectors of a symmetric tridiagonal matrix using the divide and conquer method.",
+    "tex": "Computes all eigenvalues and, optionally, eigenvectors of a symmetric tridiagonal matrix using the divide and conquer method."
+  },
+  {
+    "algorithm": "eeeck",
+    "raw": "Is called from the ILAENV to verify that Infinity and possibly NaN arithmetic is safe (i.e. will not trap).",
+    "tex": "Is called from the ILAENV to verify that Infinity and possibly NaN arithmetic is safe (i.e. will not trap)."
+  },
+  {
+    "algorithm": "egr",
+    "raw": "Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T.",
+    "tex": "Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T."
+  },
+  {
+    "algorithm": "ein",
+    "raw": "Uses inverse iteration to find specified right and/or left eigenvectors of a real upper Hessenberg matrix H.",
+    "tex": "Uses inverse iteration to find specified right and/or left eigenvectors of a real upper Hessenberg matrix H."
+  },
+  {
+    "algorithm": "emr",
+    "raw": "Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T.",
+    "tex": "Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T."
+  },
+  {
+    "algorithm": "env",
+    "raw": "Is called from the LAPACK routines to choose problem-dependent parameters for the local environment.",
+    "tex": "Is called from the LAPACK routines to choose problem-dependent parameters for the local environment."
+  },
+  {
+    "algorithm": "env2stage",
+    "raw": "Is called from the LAPACK routines to choose problem-dependent parameters for the local environment.",
+    "tex": "Is called from the LAPACK routines to choose problem-dependent parameters for the local environment."
+  },
+  {
+    "algorithm": "eqr",
+    "raw": "Computes the eigenvalues of a Hessenberg matrix H and, optionally, the matrices T and Z from the Schur decomposition H = Z T Z**T, where T is an upper quasi-triangular matrix (the Schur form), and Z is the orthogonal matrix of Schur vectors.",
+    "tex": "Computes the eigenvalues of a Hessenberg matrix H and, optionally, the matrices T and Z from the Schur decomposition H = Z T Z**T, where T is an upper quasi-triangular matrix (the Schur form), and Z is the orthogonal matrix of Schur vectors."
+  },
+  {
+    "algorithm": "equ",
+    "raw": "Computes row and column scalings intended to equilibrate an M-by-N band matrix A and reduce its condition number.",
+    "tex": "Computes row and column scalings intended to equilibrate an M-by-N band matrix A and reduce its condition number."
+  },
+  {
+    "algorithm": "equb",
+    "raw": "Computes row and column scalings intended to equilibrate an M-by-N matrix A and reduce its condition number.",
+    "tex": "Computes row and column scalings intended to equilibrate an M-by-N matrix A and reduce its condition number."
+  },
+  {
+    "algorithm": "eqz",
+    "raw": "Computes the eigenvalues of a real matrix pair (H,T), where H is an upper Hessenberg matrix and T is upper triangular, using the double-shift QZ method.",
+    "tex": "Computes the eigenvalues of a real matrix pair (H,T), where H is an upper Hessenberg matrix and T is upper triangular, using the double-shift QZ method."
+  },
+  {
+    "algorithm": "erbla",
+    "raw": "Is an error handler for the LAPACK routines.",
+    "tex": "Is an error handler for the LAPACK routines."
+  },
+  {
+    "algorithm": "erbla_array",
+    "raw": "Assists other languages in calling XERBLA, the LAPACK and BLAS error handler.",
+    "tex": "Assists other languages in calling XERBLA, the LAPACK and BLAS error handler."
+  },
+  {
+    "algorithm": "erf",
+    "raw": "Computes all eigenvalues of a symmetric tridiagonal matrix using the Pal-Walker-Kahan variant of the QL or QR algorithm.",
+    "tex": "Computes all eigenvalues of a symmetric tridiagonal matrix using the Pal-Walker-Kahan variant of the QL or QR algorithm."
+  },
+  {
+    "algorithm": "es",
+    "raw": "Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices",
+    "tex": "Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices"
+  },
+  {
+    "algorithm": "es3",
+    "raw": "Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices (blocked algorithm)",
+    "tex": "Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices (blocked algorithm)"
+  },
+  {
+    "algorithm": "esx",
+    "raw": "Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices",
+    "tex": "Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices"
+  },
+  {
+    "algorithm": "esy",
+    "raw": "Computes the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.",
+    "tex": "Computes the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix."
+  },
+  {
+    "algorithm": "ev",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices"
+  },
+  {
+    "algorithm": "ev2",
+    "raw": "Computes the eigenvalues and eigenvectors of a 2-by-2 symmetric/Hermitian matrix.",
+    "tex": "Computes the eigenvalues and eigenvectors of a 2-by-2 symmetric/Hermitian matrix."
+  },
+  {
+    "algorithm": "ev3",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices (blocked algorithm)",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices (blocked algorithm)"
+  },
+  {
+    "algorithm": "ev_2stage",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices"
+  },
+  {
+    "algorithm": "evc",
+    "raw": "Computes some or all of the right and/or left eigenvectors of a pair of real matrices (S,P), where S is a quasi-triangular matrix and P is upper triangular.",
+    "tex": "Computes some or all of the right and/or left eigenvectors of a pair of real matrices (S,P), where S is a quasi-triangular matrix and P is upper triangular."
+  },
+  {
+    "algorithm": "evc3",
+    "raw": "Computes some or all of the right and/or left eigenvectors of a real upper quasi-triangular matrix T.",
+    "tex": "Computes some or all of the right and/or left eigenvectors of a real upper quasi-triangular matrix T."
+  },
+  {
+    "algorithm": "evd",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices"
+  },
+  {
+    "algorithm": "evd_2stage",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices"
+  },
+  {
+    "algorithm": "evr",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices"
+  },
+  {
+    "algorithm": "evr_2stage",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for SY matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for SY matrices"
+  },
+  {
+    "algorithm": "evx",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices"
+  },
+  {
+    "algorithm": "evx_2stage",
+    "raw": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices",
+    "tex": "Computes the eigenvalues and, optionally, the left and/or right eigenvectors for OTHER matrices"
+  },
+  {
+    "algorithm": "ex2",
+    "raw": "Swaps adjacent diagonal blocks in an upper (quasi) triangular matrix pair by an orthogonal equivalence transformation.",
+    "tex": "Swaps adjacent diagonal blocks in an upper (quasi) triangular matrix pair by an orthogonal equivalence transformation."
+  },
+  {
+    "algorithm": "exc",
+    "raw": "Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix in Schur canonical form, by an orthogonal similarity transformation.",
+    "tex": "Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix in Schur canonical form, by an orthogonal similarity transformation."
+  },
+  {
+    "algorithm": "g2",
+    "raw": "Computes the eigenvalues of a 2-by-2 generalized eigenvalue problem, with scaling as necessary to avoid over-/underflow.",
+    "tex": "Computes the eigenvalues of a 2-by-2 generalized eigenvalue problem, with scaling as necessary to avoid over-/underflow."
+  },
+  {
+    "algorithm": "g2c",
+    "raw": "Converts a complex double precision matrix to a complex single precision matrix.",
+    "tex": "Converts a complex double precision matrix to a complex single precision matrix."
+  },
+  {
+    "algorithm": "g2d",
+    "raw": "Converts a single precision matrix to a double precision matrix.",
+    "tex": "Converts a single precision matrix to a double precision matrix."
+  },
+  {
+    "algorithm": "g2l",
+    "raw": "Generates all or part of the orthogonal matrix Q from a QL factorization determined by sgeqlf (unblocked algorithm).",
+    "tex": "Generates all or part of the orthogonal matrix Q from a QL factorization determined by sgeqlf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "g2r",
+    "raw": "Generates all or part of the orthogonal matrix Q from a QR factorization determined by sgeqrf (unblocked algorithm).",
+    "tex": "Generates all or part of the orthogonal matrix Q from a QR factorization determined by sgeqrf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "g2s",
+    "raw": "Converts a double precision matrix to a single precision matrix.",
+    "tex": "Converts a double precision matrix to a single precision matrix."
+  },
+  {
+    "algorithm": "g2z",
+    "raw": "Converts a complex single precision matrix to a complex double precision matrix.",
+    "tex": "Converts a complex single precision matrix to a complex double precision matrix."
+  },
+  {
+    "algorithm": "gbr",
+    "raw": "Generates one of the real orthogonal matrices Q or P**T determined by DGEBRD when reducing a real matrix A to bidiagonal form: A = Q * B * P**T.",
+    "tex": "Generates one of the real orthogonal matrices Q or P**T determined by DGEBRD when reducing a real matrix A to bidiagonal form: A = Q * B * P**T."
+  },
+  {
+    "algorithm": "ghr",
+    "raw": "Generates a real orthogonal matrix Q which is defined as the product of IHI-ILO elementary reflectors of order N, as returned by DGEHRD: Q = H(ilo) H(ilo+1) .",
+    "tex": "Generates a real orthogonal matrix Q which is defined as the product of IHI-ILO elementary reflectors of order N, as returned by DGEHRD: Q = H(ilo) H(ilo+1) ."
+  },
+  {
+    "algorithm": "gl2",
+    "raw": "Generates an m by n real matrix Q with orthonormal rows, which is defined as the first m rows of a product of k elementary reflectors of order n Q = H(k) .",
+    "tex": "Generates an m by n real matrix Q with orthonormal rows, which is defined as the first m rows of a product of k elementary reflectors of order n Q = H(k) ."
+  },
+  {
+    "algorithm": "glm",
+    "raw": "Solves a general Gauss-Markov linear model (GLM) problem: minimize || y ||_2 subject to d = A*x + B*y x where A is an N-by-M matrix, B is an N-by-P matrix, and d is a given N-vector. It is assumed that M <= N <= M+P, and rank(A) = M and rank( A B ) = N. Under these assumptions, the constrained equation is always consistent, and there is a unique solution x and a minimal 2-norm solution y, which is obtained using a generalized QR factorization of the matrices (A, B) given by A = Q*(R), B = Q*T*Z. (0) In particular, if matrix B is square nonsingular, then the problem GLM is equivalent to the following weighted linear least squares problem minimize || inv(B)*(d-A*x) ||_2 x where inv(B) denotes the inverse of B.",
+    "tex": "Solves a general Gauss-Markov linear model (GLM) problem: minimize || y ||_2 subject to d = A*x + B*y x where A is an N-by-M matrix, B is an N-by-P matrix, and d is a given N-vector. It is assumed that M &lt;= N &lt;= M+P, and rank(A) = M and rank( A B ) = N. Under these assumptions, the constrained equation is always consistent, and there is a unique solution x and a minimal 2-norm solution y, which is obtained using a generalized QR factorization of the matrices (A, B) given by A = Q*(R), B = Q*T*Z. (0) In particular, if matrix B is square nonsingular, then the problem GLM is equivalent to the following weighted linear least squares problem minimize || inv(B)*(d-A*x) ||_2 x where inv(B) denotes the inverse of B."
+  },
+  {
+    "algorithm": "glq",
+    "raw": "Generates an M-by-N real matrix Q with orthonormal rows, which is defined as the first M rows of a product of K elementary reflectors of order N Q = H(k) .",
+    "tex": "Generates an M-by-N real matrix Q with orthonormal rows, which is defined as the first M rows of a product of K elementary reflectors of order N Q = H(k) ."
+  },
+  {
+    "algorithm": "gql",
+    "raw": "Generates an M-by-N real matrix Q with orthonormal columns, which is defined as the last N columns of a product of K elementary reflectors of order M Q = H(k) .",
+    "tex": "Generates an M-by-N real matrix Q with orthonormal columns, which is defined as the last N columns of a product of K elementary reflectors of order M Q = H(k) ."
+  },
+  {
+    "algorithm": "gqr",
+    "raw": "Generates an M-by-N real matrix Q with orthonormal columns, which is defined as the first N columns of a product of K elementary reflectors of order M Q = H(1) H(2) .",
+    "tex": "Generates an M-by-N real matrix Q with orthonormal columns, which is defined as the first N columns of a product of K elementary reflectors of order M Q = H(1) H(2) ."
+  },
+  {
+    "algorithm": "gr2",
+    "raw": "Generates all or part of the orthogonal matrix Q from an RQ factorization determined by sgerqf (unblocked algorithm).",
+    "tex": "Generates all or part of the orthogonal matrix Q from an RQ factorization determined by sgerqf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "grq",
+    "raw": "Generates an M-by-N real matrix Q with orthonormal rows, which is defined as the last M rows of a product of K elementary reflectors of order N Q = H(1) H(2) .",
+    "tex": "Generates an M-by-N real matrix Q with orthonormal rows, which is defined as the last M rows of a product of K elementary reflectors of order N Q = H(1) H(2) ."
+  },
+  {
+    "algorithm": "gs2",
+    "raw": "Computes 2-by-2 orthogonal matrices U, V, and Q, and applies them to matrices A and B such that the rows of the transformed A and B are parallel.",
+    "tex": "Computes 2-by-2 orthogonal matrices U, V, and Q, and applies them to matrices A and B such that the rows of the transformed A and B are parallel."
+  },
+  {
+    "algorithm": "gst",
+    "raw": "Reduces a real symmetric-definite banded generalized eigenproblem A*x = lambda*B*x to standard form C*y = lambda*y, such that C has the same bandwidth as A.",
+    "tex": "Reduces a real symmetric-definite banded generalized eigenproblem A*x = \\(\\lambda\\)*B*x to standard form C*y = \\(\\lambda\\)*y, such that C has the same bandwidth as A."
+  },
+  {
+    "algorithm": "gtf",
+    "raw": "Computes an LU factorization of a matrix T-λI, where T is a general tridiagonal matrix, and λ a scalar, using partial pivoting with row interchanges.",
+    "tex": "Computes an LU factorization of a matrix T-λI, where T is a general tridiagonal matrix, and λ a scalar, using partial pivoting with row interchanges."
+  },
+  {
+    "algorithm": "gtm",
+    "raw": "Performs a matrix-matrix product of the form C = αAB+βC, where A is a tridiagonal matrix, B and C are rectangular matrices, and α and β are scalars, which may be 0, 1, or -1.",
+    "tex": "Performs a matrix-matrix product of the form C = αAB+βC, where A is a tridiagonal matrix, B and C are rectangular matrices, and α and β are scalars, which may be 0, 1, or -1."
+  },
+  {
+    "algorithm": "gtr",
+    "raw": "Generates a real orthogonal matrix Q which is defined as the product of n-1 elementary reflectors H(i) of order n, as returned by DSPTRD using packed storage: if UPLO = 'U', Q = H(n-1) .",
+    "tex": "Generates a real orthogonal matrix Q which is defined as the product of n-1 elementary reflectors H(i) of order n, as returned by DSPTRD using packed storage: if UPLO = 'U', Q = H(n-1) ."
+  },
+  {
+    "algorithm": "gts",
+    "raw": "Solves the system of equations (T-λI)x = y",
+    "tex": "Solves the system of equations (T-λI)x = y"
+  },
+  {
+    "algorithm": "gtsqr",
+    "raw": "Generates an M-by-N real matrix Q_out with orthonormal columns, which are the first N columns of a product of real orthogonal matrices of order M which are returned by DLATSQR Q_out = first_N_columns_of( Q(1)_in * Q(2)_in * ... * Q(k)_in ).",
+    "tex": "Generates an M-by-N real matrix Q_out with orthonormal columns, which are the first N columns of a product of real orthogonal matrices of order M which are returned by DLATSQR Q_out = first_N_columns_of( Q(1)_in * Q(2)_in * ... * Q(k)_in )."
+  },
+  {
+    "algorithm": "gtsqr_row",
+    "raw": "Generates an M-by-N real matrix Q_out with orthonormal columns from the output of DLATSQR.",
+    "tex": "Generates an M-by-N real matrix Q_out with orthonormal columns from the output of DLATSQR."
+  },
+  {
+    "algorithm": "gv",
+    "raw": "Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite banded eigenproblem, of the form A*x=(lambda)*B*x.",
+    "tex": "Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite banded eigenproblem, of the form \\(Ax=\\\\lambda\\,Bx\\)."
+  },
+  {
+    "algorithm": "gv2",
+    "raw": "Computes the Generalized Schur factorization of a real 2-by-2 matrix pencil (A,B) where B is upper triangular.",
+    "tex": "Computes the Generalized Schur factorization of a real 2-by-2 matrix pencil (A,B) where B is upper triangular."
+  },
+  {
+    "algorithm": "gv_2stage",
+    "raw": "Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite eigenproblem, of the form A*x=(lambda)*B*x, A*Bx=(lambda)*x, or B*A*x=(lambda)*x.",
+    "tex": "Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite eigenproblem, of the form \\(Ax=\\\\lambda\\,Bx\\), A*Bx=(\\(\\lambda\\))*x, or B*A*x=(\\(\\lambda\\))*x."
+  },
+  {
+    "algorithm": "gvd",
+    "raw": "Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite banded eigenproblem, of the form A*x=(lambda)*B*x.",
+    "tex": "Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite banded eigenproblem, of the form \\(Ax=\\\\lambda\\,Bx\\)."
+  },
+  {
+    "algorithm": "gvx",
+    "raw": "Computes selected eigenvalues, and optionally, eigenvectors of a real generalized symmetric-definite banded eigenproblem, of the form A*x=(lambda)*B*x.",
+    "tex": "Computes selected eigenvalues, and optionally, eigenvectors of a real generalized symmetric-definite banded eigenproblem, of the form \\(Ax=\\\\lambda\\,Bx\\)."
+  },
+  {
+    "algorithm": "hd2",
+    "raw": "Reduces a general square matrix to upper Hessenberg form using an unblocked algorithm.",
+    "tex": "Reduces a general square matrix to upper Hessenberg form using an unblocked algorithm."
+  },
+  {
+    "algorithm": "hd3",
+    "raw": "Reduces a pair of real matrices (A,B) to generalized upper Hessenberg form using orthogonal transformations, where A is a general matrix and B is upper triangular.",
+    "tex": "Reduces a pair of real matrices (A,B) to generalized upper Hessenberg form using orthogonal transformations, where A is a general matrix and B is upper triangular."
+  },
+  {
+    "algorithm": "hef",
+    "raw": "Computes a partial factorization of a complex Hermitian indefinite matrix using the Bunch-Kaufman diagonal pivoting method (blocked algorithm, calling Level 3 BLAS).",
+    "tex": "Computes a partial factorization of a complex Hermitian indefinite matrix using the Bunch-Kaufman diagonal pivoting method (blocked algorithm, calling Level 3 BLAS)."
+  },
+  {
+    "algorithm": "hef_aa",
+    "raw": "DLAHEF_AA factorizes a panel of a complex hermitian matrix A using the Aasen's algorithm.",
+    "tex": "DLAHEF_AA factorizes a panel of a complex hermitian matrix A using the Aasen's algorithm."
+  },
+  {
+    "algorithm": "hef_rk",
+    "raw": "Computes a partial factorization of a complex Hermitian indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pivoting method.",
+    "tex": "Computes a partial factorization of a complex Hermitian indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pivoting method."
+  },
+  {
+    "algorithm": "hef_rook",
+    "raw": "Computes a partial factorization of a complex Hermitian indefinite matrix using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method (blocked algorithm, calling Level 3 BLAS).",
+    "tex": "Computes a partial factorization of a complex Hermitian indefinite matrix using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method (blocked algorithm, calling Level 3 BLAS)."
+  },
+  {
+    "algorithm": "hla_transtype",
+    "raw": "This subroutine translates from a BLAST-specified integer constant to the character string specifying a transposition operation.",
+    "tex": "This subroutine translates from a BLAST-specified integer constant to the character string specifying a transposition operation."
+  },
+  {
+    "algorithm": "hqr",
+    "raw": "Computes the eigenvalues and Schur factorization of an upper Hessenberg matrix, using the double-shift/single-shift QR algorithm.",
+    "tex": "Computes the eigenvalues and Schur factorization of an upper Hessenberg matrix, using the double-shift/single-shift QR algorithm."
+  },
+  {
+    "algorithm": "hr2",
+    "raw": "Reduces the specified number of first columns of a general rectangular matrix A so that elements below the specified subdiagonal are zero, and returns auxiliary matrices which are needed to apply the transformation to the unreduced part of A.",
+    "tex": "Reduces the specified number of first columns of a general rectangular matrix A so that elements below the specified subdiagonal are zero, and returns auxiliary matrices which are needed to apply the transformation to the unreduced part of A."
+  },
+  {
+    "algorithm": "hr_col",
+    "raw": "Takes an M-by-N real matrix Q_in with orthonormal columns as input, stored in A, and performs Householder Reconstruction (HR), i.e.",
+    "tex": "Takes an M-by-N real matrix Q_in with orthonormal columns as input, stored in A, and performs Householder Reconstruction (HR), i.e."
+  },
+  {
+    "algorithm": "hrd",
+    "raw": "Reduces a real general matrix A to upper Hessenberg form H by an orthogonal similarity transformation: Q**T * A * Q = H .",
+    "tex": "Reduces a real general matrix A to upper Hessenberg form H by an orthogonal similarity transformation: \\(Q^TAQ = H\\) ."
+  },
+  {
+    "algorithm": "ic1",
+    "raw": "Applies one step of incremental condition estimation.",
+    "tex": "Applies one step of incremental condition estimation."
+  },
+  {
+    "algorithm": "isnan",
+    "raw": "Tests input for NaN.",
+    "tex": "Tests input for NaN."
+  },
+  {
+    "algorithm": "jsv",
+    "raw": "Computes the singular value decomposition (SVD) of a real M-by-N matrix [A], where M >= N.",
+    "tex": "Computes the singular value decomposition (SVD) of a real M-by-N matrix [A], where M &gt;= N."
+  },
+  {
+    "algorithm": "ln2",
+    "raw": "Solves a 1-by-1 or 2-by-2 linear system of equations of the specified form.",
+    "tex": "Solves a 1-by-1 or 2-by-2 linear system of equations of the specified form."
+  },
+  {
+    "algorithm": "lq",
+    "raw": "Computes an LQ factorization of a real M-by-N matrix A: A = ( L 0 ) * Q where: Q is a N-by-N orthogonal matrix; L is a lower-triangular M-by-M matrix; 0 is a M-by-(N-M) zero matrix, if M < N.",
+    "tex": "Computes an LQ factorization of a real M-by-N matrix A: A = ( L 0 ) * Q where: Q is a N-by-N orthogonal matrix; L is a lower-triangular M-by-M matrix; 0 is a M-by-(N-M) zero matrix, if M &lt; N."
+  },
+  {
+    "algorithm": "lq2",
+    "raw": "Computes the LQ factorization of a general rectangular matrix using an unblocked algorithm.",
+    "tex": "Computes the LQ factorization of a general rectangular matrix using an unblocked algorithm."
+  },
+  {
+    "algorithm": "lqf",
+    "raw": "Computes an LQ factorization of a real M-by-N matrix A: A = ( L 0 ) * Q where: Q is a N-by-N orthogonal matrix; L is a lower-triangular M-by-M matrix; 0 is a M-by-(N-M) zero matrix, if M < N.",
+    "tex": "Computes an LQ factorization of a real M-by-N matrix A: A = ( L 0 ) * Q where: Q is a N-by-N orthogonal matrix; L is a lower-triangular M-by-M matrix; 0 is a M-by-(N-M) zero matrix, if M &lt; N."
+  },
+  {
+    "algorithm": "lqt",
+    "raw": "Computes a blocked LQ factorization of a real M-by-N matrix A using the compact WY representation of Q.",
+    "tex": "Computes a blocked LQ factorization of a real M-by-N matrix A using the compact WY representation of Q."
+  },
+  {
+    "algorithm": "lqt2",
+    "raw": "Computes a LQ factorization of a real or complex \"triangular-pentagonal\" matrix, which is composed of a triangular block and a pentagonal block, using the compact WY representation for Q.",
+    "tex": "Computes a LQ factorization of a real or complex \"triangular-pentagonal\" matrix, which is composed of a triangular block and a pentagonal block, using the compact WY representation for Q."
+  },
+  {
+    "algorithm": "lqt3",
+    "raw": "Recursively computes a LQ factorization of a general real or complex matrix using the compact WY representation of Q.",
+    "tex": "Recursively computes a LQ factorization of a general real or complex matrix using the compact WY representation of Q."
+  },
+  {
+    "algorithm": "ls",
+    "raw": "Solves overdetermined or underdetermined systems for GE matrices",
+    "tex": "Solves overdetermined or underdetermined systems for GE matrices"
+  },
+  {
+    "algorithm": "ls0",
+    "raw": "Applies back multiplying factors in solving the least squares problem using divide and conquer SVD approach. Used by sgelsd.",
+    "tex": "Applies back multiplying factors in solving the least squares problem using divide and conquer SVD approach. Used by sgelsd."
+  },
+  {
+    "algorithm": "lsa",
+    "raw": "Computes the SVD of the coefficient matrix in compact form. Used by sgelsd.",
+    "tex": "Computes the SVD of the coefficient matrix in compact form. Used by sgelsd."
+  },
+  {
+    "algorithm": "lsd",
+    "raw": "Computes the minimum-norm solution to a linear least squares problem for GE matrices",
+    "tex": "Computes the minimum-norm solution to a linear least squares problem for GE matrices"
+  },
+  {
+    "algorithm": "lse",
+    "raw": "Solves overdetermined or underdetermined systems for OTHER matrices",
+    "tex": "Solves overdetermined or underdetermined systems for OTHER matrices"
+  },
+  {
+    "algorithm": "lss",
+    "raw": "Solves overdetermined or underdetermined systems for GE matrices",
+    "tex": "Solves overdetermined or underdetermined systems for GE matrices"
+  },
+  {
+    "algorithm": "lst",
+    "raw": "Solves overdetermined or underdetermined systems for GE matrices using QR or LQ factorization with compact WY representation of Q.",
+    "tex": "Solves overdetermined or underdetermined systems for GE matrices using QR or LQ factorization with compact WY representation of Q."
+  },
+  {
+    "algorithm": "lsy",
+    "raw": "Solves overdetermined or underdetermined systems for GE matrices",
+    "tex": "Solves overdetermined or underdetermined systems for GE matrices"
+  },
+  {
+    "algorithm": "m22",
+    "raw": "Multiplies a general matrix by a banded orthogonal matrix.",
+    "tex": "Multiplies a general matrix by a banded orthogonal matrix."
+  },
+  {
+    "algorithm": "m2l",
+    "raw": "Multiplies a general matrix by the orthogonal matrix from a QL factorization determined by sgeqlf (unblocked algorithm).",
+    "tex": "Multiplies a general matrix by the orthogonal matrix from a QL factorization determined by sgeqlf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "m2r",
+    "raw": "Multiplies a general matrix by the orthogonal matrix from a QR factorization determined by sgeqrf (unblocked algorithm).",
+    "tex": "Multiplies a general matrix by the orthogonal matrix from a QR factorization determined by sgeqrf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "mbr",
+    "raw": "If VECT = 'Q', DORMBR overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T If VECT = 'P', DORMBR overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': P * C C * P TRANS = 'T': P**T * C C * P**T Here Q and P**T are the orthogonal matrices determined by DGEBRD when reducing a real matrix A to bidiagonal form: A = Q * B * P**T.",
+    "tex": "If VECT = 'Q', DORMBR overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T If VECT = 'P', DORMBR overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': P * C C * P TRANS = 'T': P**T * C C * P**T Here Q and P**T are the orthogonal matrices determined by DGEBRD when reducing a real matrix A to bidiagonal form: A = Q * B * P**T."
+  },
+  {
+    "algorithm": "mhr",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix of order nq, with nq = m if SIDE = 'L' and nq = n if SIDE = 'R'.",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix of order nq, with nq = m if SIDE = 'L' and nq = n if SIDE = 'R'."
+  },
+  {
+    "algorithm": "ml2",
+    "raw": "Multiplies a general matrix by the orthogonal matrix from a LQ factorization determined by sgelqf (unblocked algorithm).",
+    "tex": "Multiplies a general matrix by the orthogonal matrix from a LQ factorization determined by sgelqf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "mlq",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by short wide LQ factorization (DGELQ)",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by short wide LQ factorization (DGELQ)"
+  },
+  {
+    "algorithm": "mlqt",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q C C Q TRANS = 'T': Q**T C C Q**T where Q is a real orthogonal matrix defined as the product of K elementary reflectors: Q = H(1) H(2) .",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q C C Q TRANS = 'T': Q**T C C Q**T where Q is a real orthogonal matrix defined as the product of K elementary reflectors: Q = H(1) H(2) ."
+  },
+  {
+    "algorithm": "mm",
+    "raw": "Performs one of the matrix-matrix operations C := alpha*op( A )*op( B ) + beta*C, where op( X ) is one of op( X ) = X or op( X ) = X**T, alpha and beta are scalars, and A, B and C are matrices, with op( A ) an m by k matrix, op( B ) a k by n matrix and C an m by n matrix.",
+    "tex": "Performs one of the matrix-matrix operations \\(C \\coloneqq  \\alpha\\operatorname{op}(A)\\operatorname{op}(B) + \\beta\\,C\\), where \\(\\operatorname{op}(X)\\) is one of \\(\\operatorname{op}(X)\\) = X or \\(\\operatorname{op}(X)\\) = X**T, \\(\\alpha\\) and \\(\\beta\\) are scalars, and A, B and C are matrices, with \\(\\operatorname{op}(A)\\) an m by k matrix, \\(\\operatorname{op}(B)\\) a k by n matrix and C an m by n matrix."
+  },
+  {
+    "algorithm": "mql",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of k elementary reflectors Q = H(k) .",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of k elementary reflectors Q = H(k) ."
+  },
+  {
+    "algorithm": "mqr",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by tall skinny QR factorization (DGEQR)",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by tall skinny QR factorization (DGEQR)"
+  },
+  {
+    "algorithm": "mqrt",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q C C Q TRANS = 'T': Q**T C C Q**T where Q is a real orthogonal matrix defined as the product of K elementary reflectors: Q = H(1) H(2) .",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q C C Q TRANS = 'T': Q**T C C Q**T where Q is a real orthogonal matrix defined as the product of K elementary reflectors: Q = H(1) H(2) ."
+  },
+  {
+    "algorithm": "mr2",
+    "raw": "Multiplies a general matrix by the orthogonal matrix from a RQ factorization determined by sgerqf (unblocked algorithm).",
+    "tex": "Multiplies a general matrix by the orthogonal matrix from a RQ factorization determined by sgerqf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "mr3",
+    "raw": "Multiplies a general matrix by the orthogonal matrix from a RZ factorization determined by stzrzf (unblocked algorithm).",
+    "tex": "Multiplies a general matrix by the orthogonal matrix from a RZ factorization determined by stzrzf (unblocked algorithm)."
+  },
+  {
+    "algorithm": "mrg",
+    "raw": "Creates a permutation list to merge the entries of two independently sorted sets into a single set sorted in ascending order.",
+    "tex": "Creates a permutation list to merge the entries of two independently sorted sets into a single set sorted in ascending order."
+  },
+  {
+    "algorithm": "mrq",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of k elementary reflectors Q = H(1) H(2) .",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of k elementary reflectors Q = H(1) H(2) ."
+  },
+  {
+    "algorithm": "mrz",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of k elementary reflectors Q = H(1) H(2) .",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of k elementary reflectors Q = H(1) H(2) ."
+  },
+  {
+    "algorithm": "mswlq",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by short wide LQ factorization (DLASWLQ)",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by short wide LQ factorization (DLASWLQ)"
+  },
+  {
+    "algorithm": "mtr",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix of order nq, with nq = m if SIDE = 'L' and nq = n if SIDE = 'R'.",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix of order nq, with nq = m if SIDE = 'L' and nq = n if SIDE = 'R'."
+  },
+  {
+    "algorithm": "mtsqr",
+    "raw": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by tall skinny QR factorization (DLATSQR)",
+    "tex": "Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C * Q**T where Q is a real orthogonal matrix defined as the product of blocked elementary reflectors computed by tall skinny QR factorization (DLATSQR)"
+  },
+  {
+    "algorithm": "mv",
+    "raw": "Performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, where alpha and beta are scalars, x and y are vectors and A is an m by n band matrix, with kl sub-diagonals and ku super-diagonals.",
+    "tex": "Performs one of the matrix-vector operations \\(y \\coloneqq  \\alpha\\,Ax + \\beta\\,y\\), or \\(y \\coloneqq  \\alpha\\,A^Tx + \\beta\\,y\\), where \\(\\alpha\\) and \\(\\beta\\) are scalars, x and y are vectors and A is an m by n band matrix, with kl sub-diagonals and ku super-diagonals."
+  },
+  {
+    "algorithm": "neg",
+    "raw": "Computes the Sturm count.",
+    "tex": "Computes the Sturm count."
+  },
+  {
+    "algorithm": "ngb",
+    "raw": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of general band matrix.",
+    "tex": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of general band matrix."
+  },
+  {
+    "algorithm": "nge",
+    "raw": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a general rectangular matrix.",
+    "tex": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a general rectangular matrix."
+  },
+  {
+    "algorithm": "ngt",
+    "raw": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a general tridiagonal matrix.",
+    "tex": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a general tridiagonal matrix."
+  },
+  {
+    "algorithm": "nhb",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a Hermitian band matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a Hermitian band matrix."
+  },
+  {
+    "algorithm": "nhe",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a complex Hermitian matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a complex Hermitian matrix."
+  },
+  {
+    "algorithm": "nhf",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a Hermitian matrix in RFP format.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a Hermitian matrix in RFP format."
+  },
+  {
+    "algorithm": "nhp",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a complex Hermitian matrix supplied in packed form.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a complex Hermitian matrix supplied in packed form."
+  },
+  {
+    "algorithm": "nhs",
+    "raw": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of an upper Hessenberg matrix.",
+    "tex": "Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of an upper Hessenberg matrix."
+  },
+  {
+    "algorithm": "nht",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a complex Hermitian tridiagonal matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a complex Hermitian tridiagonal matrix."
+  },
+  {
+    "algorithm": "nrm2",
+    "raw": "Returns the euclidean norm of a vector via the function name, so that DNRM2 := sqrt( x'*x )",
+    "tex": "Returns the euclidean norm of a vector via the function name, so that DNRM2 := \\(\\sqrt{x'x }\\)"
+  },
+  {
+    "algorithm": "nsb",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a symmetric band matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a symmetric band matrix."
+  },
+  {
+    "algorithm": "nsf",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a symmetric matrix in RFP format.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a symmetric matrix in RFP format."
+  },
+  {
+    "algorithm": "nsp",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a symmetric matrix supplied in packed form.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a symmetric matrix supplied in packed form."
+  },
+  {
+    "algorithm": "nst",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a real symmetric tridiagonal matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a real symmetric tridiagonal matrix."
+  },
+  {
+    "algorithm": "nsy",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a real symmetric matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a real symmetric matrix."
+  },
+  {
+    "algorithm": "ntb",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a triangular band matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a triangular band matrix."
+  },
+  {
+    "algorithm": "ntp",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a triangular matrix supplied in packed form.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a triangular matrix supplied in packed form."
+  },
+  {
+    "algorithm": "ntr",
+    "raw": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a trapezoidal or triangular matrix.",
+    "tex": "Returns the value of the 1-norm, or the Frobenius norm, or the infinity norm, or the element of largest absolute value of a trapezoidal or triangular matrix."
+  },
+  {
+    "algorithm": "nv2",
+    "raw": "Computes the Schur factorization of a real 2-by-2 nonsymmetric matrix in standard form.",
+    "tex": "Computes the Schur factorization of a real 2-by-2 nonsymmetric matrix in standard form."
+  },
+  {
+    "algorithm": "orhr_col_getrfnp",
+    "raw": "Computes the modified LU factorization without pivoting of a real general M-by-N matrix A.",
+    "tex": "Computes the modified LU factorization without pivoting of a real general M-by-N matrix A."
+  },
+  {
+    "algorithm": "orhr_col_getrfnp2",
+    "raw": "Computes the modified LU factorization without pivoting of a real general M-by-N matrix A.",
+    "tex": "Computes the modified LU factorization without pivoting of a real general M-by-N matrix A."
+  },
+  {
+    "algorithm": "osv",
+    "raw": "Computes the solution to system of linear equations A * X = B for PO matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for PO matrices"
+  },
+  {
+    "algorithm": "parmq",
+    "raw": "This program sets problem and machine dependent parameters useful for xHSEQR and related subroutines for eigenvalue problems.",
+    "tex": "This program sets problem and machine dependent parameters useful for xHSEQR and related subroutines for eigenvalue problems."
+  },
+  {
+    "algorithm": "pll",
+    "raw": "Measures the linear dependence of two vectors.",
+    "tex": "Measures the linear dependence of two vectors."
+  },
+  {
+    "algorithm": "pmr",
+    "raw": "Rearranges rows of a matrix as specified by a permutation vector.",
+    "tex": "Rearranges rows of a matrix as specified by a permutation vector."
+  },
+  {
+    "algorithm": "pmt",
+    "raw": "Performs a forward or backward permutation of the columns of a matrix.",
+    "tex": "Performs a forward or backward permutation of the columns of a matrix."
+  },
+  {
+    "algorithm": "prec",
+    "raw": "This subroutine translated from a character string specifying an intermediate precision to the relevant BLAST-specified integer constant.",
+    "tex": "This subroutine translated from a character string specifying an intermediate precision to the relevant BLAST-specified integer constant."
+  },
+  {
+    "algorithm": "py2",
+    "raw": "Returns sqrt(x2+y2).",
+    "tex": "Returns \\(\\sqrt{x^2+y^2}\\)."
+  },
+  {
+    "algorithm": "py3",
+    "raw": "Returns sqrt(x2+y2+z2).",
+    "tex": "Returns \\(\\sqrt{x^2+y^2+z^2}\\)."
+  },
+  {
+    "algorithm": "qgb",
+    "raw": "Scales a general band matrix, using row and column scaling factors computed by sgbequ.",
+    "tex": "Scales a general band matrix, using row and column scaling factors computed by sgbequ."
+  },
+  {
+    "algorithm": "qge",
+    "raw": "Scales a general rectangular matrix, using row and column scaling factors computed by sgeequ.",
+    "tex": "Scales a general rectangular matrix, using row and column scaling factors computed by sgeequ."
+  },
+  {
+    "algorithm": "qhb",
+    "raw": "Scales a Hermitian band matrix, using scaling factors computed by cpbequ.",
+    "tex": "Scales a Hermitian band matrix, using scaling factors computed by cpbequ."
+  },
+  {
+    "algorithm": "qhe",
+    "raw": "Scales a Hermitian matrix.",
+    "tex": "Scales a Hermitian matrix."
+  },
+  {
+    "algorithm": "qhp",
+    "raw": "Scales a Hermitian matrix stored in packed form.",
+    "tex": "Scales a Hermitian matrix stored in packed form."
+  },
+  {
+    "algorithm": "ql2",
+    "raw": "Computes the QL factorization of a general rectangular matrix using an unblocked algorithm.",
+    "tex": "Computes the QL factorization of a general rectangular matrix using an unblocked algorithm."
+  },
+  {
+    "algorithm": "qlf",
+    "raw": "Computes a QL factorization of a real M-by-N matrix A: A = Q * L.",
+    "tex": "Computes a QL factorization of a real M-by-N matrix A: A = Q * L."
+  },
+  {
+    "algorithm": "qp2",
+    "raw": "Computes a QR factorization with column pivoting of the matrix block.",
+    "tex": "Computes a QR factorization with column pivoting of the matrix block."
+  },
+  {
+    "algorithm": "qp2rk",
+    "raw": "Computes truncated QR factorization with column pivoting of a real matrix block using Level 2 BLAS and overwrites a real m-by-nrhs matrix B with Q**T * B.",
+    "tex": "Computes truncated QR factorization with column pivoting of a real matrix block using Level 2 BLAS and overwrites a real m-by-nrhs matrix B with Q**T * B."
+  },
+  {
+    "algorithm": "qp3",
+    "raw": "Computes a QR factorization with column pivoting of a matrix A: A*P = Q*R using Level 3 BLAS.",
+    "tex": "Computes a QR factorization with column pivoting of a matrix A: \\(AP = Q\\)*R using Level 3 BLAS."
+  },
+  {
+    "algorithm": "qp3rk",
+    "raw": "Computes a truncated Householder QR factorization with column pivoting of a real m-by-n matrix A by using Level 3 BLAS and overwrites a real m-by-nrhs matrix B with Q**T * B.",
+    "tex": "Computes a truncated Householder QR factorization with column pivoting of a real m-by-n matrix A by using Level 3 BLAS and overwrites a real m-by-nrhs matrix B with Q**T * B."
+  },
+  {
+    "algorithm": "qps",
+    "raw": "Computes a step of QR factorization with column pivoting of a real m-by-n matrix A by using BLAS level 3.",
+    "tex": "Computes a step of QR factorization with column pivoting of a real m-by-n matrix A by using BLAS level 3."
+  },
+  {
+    "algorithm": "qr",
+    "raw": "Computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is an upper-triangular N-by-N matrix; 0 is a (M-N)-by-N zero matrix, if M > N.",
+    "tex": "Computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is an upper-triangular N-by-N matrix; 0 is a (M-N)-by-N zero matrix, if M &gt; N."
+  },
+  {
+    "algorithm": "qr0",
+    "raw": "Computes the eigenvalues of a Hessenberg matrix, and optionally the matrices from the Schur decomposition.",
+    "tex": "Computes the eigenvalues of a Hessenberg matrix, and optionally the matrices from the Schur decomposition."
+  },
+  {
+    "algorithm": "qr1",
+    "raw": "Sets a scalar multiple of the first column of the product of 2-by-2 or 3-by-3 matrix H and specified shifts.",
+    "tex": "Sets a scalar multiple of the first column of the product of 2-by-2 or 3-by-3 matrix H and specified shifts."
+  },
+  {
+    "algorithm": "qr2",
+    "raw": "Computes the QR factorization of a general rectangular matrix using an unblocked algorithm.",
+    "tex": "Computes the QR factorization of a general rectangular matrix using an unblocked algorithm."
+  },
+  {
+    "algorithm": "qr2p",
+    "raw": "Computes the QR factorization of a general rectangular matrix with non-negative diagonal elements using an unblocked algorithm.",
+    "tex": "Computes the QR factorization of a general rectangular matrix with non-negative diagonal elements using an unblocked algorithm."
+  },
+  {
+    "algorithm": "qr3",
+    "raw": "Performs the orthogonal similarity transformation of a Hessenberg matrix to detect and deflate fully converged eigenvalues from a trailing principal submatrix (aggressive early deflation).",
+    "tex": "Performs the orthogonal similarity transformation of a Hessenberg matrix to detect and deflate fully converged eigenvalues from a trailing principal submatrix (aggressive early deflation)."
+  },
+  {
+    "algorithm": "qr4",
+    "raw": "Computes the eigenvalues of a Hessenberg matrix, and optionally the matrices from the Schur decomposition.",
+    "tex": "Computes the eigenvalues of a Hessenberg matrix, and optionally the matrices from the Schur decomposition."
+  },
+  {
+    "algorithm": "qr5",
+    "raw": "Performs a single small-bulge multi-shift QR sweep.",
+    "tex": "Performs a single small-bulge multi-shift QR sweep."
+  },
+  {
+    "algorithm": "qrf",
+    "raw": "Computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is an upper-triangular N-by-N matrix; 0 is a (M-N)-by-N zero matrix, if M > N.",
+    "tex": "Computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is an upper-triangular N-by-N matrix; 0 is a (M-N)-by-N zero matrix, if M &gt; N."
+  },
+  {
+    "algorithm": "qrfp",
+    "raw": "DGEQR2P computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is an upper-triangular N-by-N matrix with nonnegative diagonal entries; 0 is a (M-N)-by-N zero matrix, if M > N.",
+    "tex": "DGEQR2P computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is an upper-triangular N-by-N matrix with nonnegative diagonal entries; 0 is a (M-N)-by-N zero matrix, if M &gt; N."
+  },
+  {
+    "algorithm": "qrt",
+    "raw": "Computes a blocked QR factorization of a real M-by-N matrix A using the compact WY representation of Q.",
+    "tex": "Computes a blocked QR factorization of a real M-by-N matrix A using the compact WY representation of Q."
+  },
+  {
+    "algorithm": "qrt2",
+    "raw": "Computes a QR factorization of a general real or complex matrix using the compact WY representation of Q.",
+    "tex": "Computes a QR factorization of a general real or complex matrix using the compact WY representation of Q."
+  },
+  {
+    "algorithm": "qrt3",
+    "raw": "Recursively computes a QR factorization of a general real or complex matrix using the compact WY representation of Q.",
+    "tex": "Recursively computes a QR factorization of a general real or complex matrix using the compact WY representation of Q."
+  },
+  {
+    "algorithm": "qsb",
+    "raw": "Scales a symmetric/Hermitian band matrix, using scaling factors computed by spbequ.",
+    "tex": "Scales a symmetric/Hermitian band matrix, using scaling factors computed by spbequ."
+  },
+  {
+    "algorithm": "qsp",
+    "raw": "Scales a symmetric/Hermitian matrix in packed storage, using scaling factors computed by sppequ.",
+    "tex": "Scales a symmetric/Hermitian matrix in packed storage, using scaling factors computed by sppequ."
+  },
+  {
+    "algorithm": "qsy",
+    "raw": "Scales a symmetric/Hermitian matrix, using scaling factors computed by spoequ.",
+    "tex": "Scales a symmetric/Hermitian matrix, using scaling factors computed by spoequ."
+  },
+  {
+    "algorithm": "qtr",
+    "raw": "Solves a real quasi-triangular system of equations, or a complex quasi-triangular system of special form, in real arithmetic.",
+    "tex": "Solves a real quasi-triangular system of equations, or a complex quasi-triangular system of special form, in real arithmetic."
+  },
+  {
+    "algorithm": "qz0",
+    "raw": "Computes the eigenvalues of a real matrix pair (H,T), where H is an upper Hessenberg matrix and T is upper triangular, using the double-shift QZ method.",
+    "tex": "Computes the eigenvalues of a real matrix pair (H,T), where H is an upper Hessenberg matrix and T is upper triangular, using the double-shift QZ method."
+  },
+  {
+    "algorithm": "qz1",
+    "raw": "Given a 3-by-3 matrix pencil (A,B), DLAQZ1 sets v to a scalar multiple of the first column of the product (*) K = (A - (beta2*sr2 - i*si)*B)*B^(-1)*(beta1*A - (sr2 + i*si2)*B)*B^(-1).",
+    "tex": "Given a 3-by-3 matrix pencil (A,B), DLAQZ1 sets v to a scalar multiple of the first column of the product (*) K = (A - (beta2*sr2 - i*si)*B)*B^(-1)*(beta1*A - (sr2 + i*si2)*B)*B^(-1)."
+  },
+  {
+    "algorithm": "qz2",
+    "raw": "Chases a 2x2 shift bulge in a matrix pencil down a single position",
+    "tex": "Chases a 2x2 shift bulge in a matrix pencil down a single position"
+  },
+  {
+    "algorithm": "qz3",
+    "raw": "Performs AED",
+    "tex": "Performs AED"
+  },
+  {
+    "algorithm": "qz4",
+    "raw": "Executes a single multishift QZ sweep",
+    "tex": "Executes a single multishift QZ sweep"
+  },
+  {
+    "algorithm": "r",
+    "raw": "Performs the rank 1 operation A := alpha*x*y**T + A, where alpha is a scalar, x is an m element vector, y is an n element vector and A is an m by n matrix.",
+    "tex": "Performs the rank 1 operation \\(A \\coloneqq  \\alpha\\,xy^T + A\\), where \\(\\alpha\\) is a scalar, x is an m element vector, y is an n element vector and A is an m by n matrix."
+  },
+  {
+    "algorithm": "r1v",
+    "raw": "Computes the (scaled) r-th column of the inverse of the submatrix in rows b1 through bn of the tridiagonal matrix LDLT - λI.",
+    "tex": "Computes the (scaled) r-th column of the inverse of the submatrix in rows b1 through bn of the tridiagonal matrix LDLT - λI."
+  },
+  {
+    "algorithm": "r2",
+    "raw": "Performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A, where alpha is a scalar, x and y are n element vectors and A is an n by n symmetric matrix, supplied in packed form.",
+    "tex": "Performs the symmetric rank 2 operation \\(A \\coloneqq  \\alpha\\,xy^T + \\alpha\\,yx^T + A\\), where \\(\\alpha\\) is a scalar, x and y are n element vectors and A is an n by n symmetric matrix, supplied in packed form."
+  },
+  {
+    "algorithm": "r2k",
+    "raw": "Performs one of the symmetric rank 2k operations C := alpha*A*B**T + alpha*B*A**T + beta*C, or C := alpha*A**T*B + alpha*B**T*A + beta*C, where alpha and beta are scalars, C is an n by n symmetric matrix and A and B are n by k matrices in the first case and k by n matrices in the second case.",
+    "tex": "Performs one of the symmetric rank 2k operations \\(C \\coloneqq  \\alpha\\,AB^T + \\alpha\\,BA^T + \\beta\\,C\\), or \\(C \\coloneqq  \\alpha\\,A^TB + \\alpha\\,B^TA + \\beta\\,C\\), where \\(\\alpha\\) and \\(\\beta\\) are scalars, C is an n by n symmetric matrix and A and B are n by k matrices in the first case and k by n matrices in the second case."
+  },
+  {
+    "algorithm": "r2v",
+    "raw": "Applies a vector of plane rotations with real cosines and real sines from both sides to a sequence of 2-by-2 symmetric/Hermitian matrices.",
+    "tex": "Applies a vector of plane rotations with real cosines and real sines from both sides to a sequence of 2-by-2 symmetric/Hermitian matrices."
+  },
+  {
+    "algorithm": "rc",
+    "raw": "Performs the rank 1 operation A := alpha*x*y**H + A, where alpha is a scalar, x is an m element vector, y is an n element vector and A is an m by n matrix.",
+    "tex": "Performs the rank 1 operation \\(A \\coloneqq  \\alpha\\,xy^H + A\\), where \\(\\alpha\\) is a scalar, x is an m element vector, y is an n element vector and A is an m by n matrix."
+  },
+  {
+    "algorithm": "rcm",
+    "raw": "Copies all or part of a real two-dimensional array to a complex array.",
+    "tex": "Copies all or part of a real two-dimensional array to a complex array."
+  },
+  {
+    "algorithm": "rf",
+    "raw": "Applies an elementary reflector to a general rectangular matrix.",
+    "tex": "Applies an elementary reflector to a general rectangular matrix."
+  },
+  {
+    "algorithm": "rfb",
+    "raw": "Applies a block reflector or its transpose to a general rectangular matrix.",
+    "tex": "Applies a block reflector or its transpose to a general rectangular matrix."
+  },
+  {
+    "algorithm": "rfb_gett",
+    "raw": "Applies a real Householder block reflector H from the left to a real (K+M)-by-N \"triangular-pentagonal\" matrix composed of two block matrices: an upper trapezoidal K-by-N matrix A stored in the array A, and a rectangular M-by-(N-K) matrix B, stored in the array B.",
+    "tex": "Applies a real Householder block reflector H from the left to a real (K+M)-by-N \"triangular-pentagonal\" matrix composed of two block matrices: an upper trapezoidal K-by-N matrix A stored in the array A, and a rectangular M-by-(N-K) matrix B, stored in the array B."
+  },
+  {
+    "algorithm": "rfg",
+    "raw": "Generates an elementary reflector (Householder matrix).",
+    "tex": "Generates an elementary reflector (Householder matrix)."
+  },
+  {
+    "algorithm": "rfgp",
+    "raw": "Generates an elementary reflector (Householder matrix) with non-negative beta.",
+    "tex": "Generates an elementary reflector (Householder matrix) with non-negative \\(\\beta\\)."
+  },
+  {
+    "algorithm": "rfs",
+    "raw": "Improves the computed solution to a system of linear equations when the coefficient matrix is banded, and provides error bounds and backward error estimates for the solution.",
+    "tex": "Improves the computed solution to a system of linear equations when the coefficient matrix is banded, and provides error bounds and backward error estimates for the solution."
+  },
+  {
+    "algorithm": "rfsx",
+    "raw": "Improves the computed solution to a system of linear equations and provides error bounds and backward error estimates for the solution.",
+    "tex": "Improves the computed solution to a system of linear equations and provides error bounds and backward error estimates for the solution."
+  },
+  {
+    "algorithm": "rft",
+    "raw": "Forms the triangular factor T of a block reflector H = I - vtvH",
+    "tex": "Forms the triangular factor T of a block reflector H = I - vtvH"
+  },
+  {
+    "algorithm": "rfx",
+    "raw": "Applies an elementary reflector to a general rectangular matrix, with loop unrolling when the reflector has order ≤ 10.",
+    "tex": "Applies an elementary reflector to a general rectangular matrix, with loop unrolling when the reflector has order ≤ 10."
+  },
+  {
+    "algorithm": "rfy",
+    "raw": "Applies an elementary reflector, or Householder matrix, H, to an n x n symmetric matrix C, from both the left and the right.",
+    "tex": "Applies an elementary reflector, or Householder matrix, H, to an n x n symmetric matrix C, from both the left and the right."
+  },
+  {
+    "algorithm": "rgv",
+    "raw": "Generates a vector of plane rotations with real cosines and real sines.",
+    "tex": "Generates a vector of plane rotations with real cosines and real sines."
+  },
+  {
+    "algorithm": "rk",
+    "raw": "Performs a symmetric rank-k operation for matrix in RFP format.",
+    "tex": "Performs a symmetric rank-k operation for matrix in RFP format."
+  },
+  {
+    "algorithm": "rmm",
+    "raw": "Returns a factor s in (0, 1] such that the linear updates (s * C) - A * (s * B) and (s * C) - (s * A) * B cannot overflow, where A, B, and C are matrices of conforming dimensions. This is an auxiliary routine so there is no argument checking.",
+    "tex": "Returns a factor s in (0, 1] such that the linear updates (s * C) - A * (s * B) and (s * C) - (s * A) * B cannot overflow, where A, B, and C are matrices of conforming dimensions. This is an auxiliary routine so there is no argument checking."
+  },
+  {
+    "algorithm": "rnv",
+    "raw": "Returns a vector of random numbers from a uniform or normal distribution.",
+    "tex": "Returns a vector of random numbers from a uniform or normal distribution."
+  },
+  {
+    "algorithm": "rot",
+    "raw": "Applies a plane rotation.",
+    "tex": "Applies a plane rotation."
+  },
+  {
+    "algorithm": "rotg",
+    "raw": "Constructs a plane rotation [ c s ] [ a ] = [ r ] [ -s c ] [ b ] [ 0 ] satisfying c**2 + s**2 = 1.",
+    "tex": "Constructs a plane rotation [ c s ] [ a ] = [ r ] [ -s c ] [ b ] [ 0 ] satisfying \\(c^{2} + s^{2} = 1\\)."
+  },
+  {
+    "algorithm": "rotm",
+    "raw": "Apply the modified givens transformation, h, to the 2 by n matrix (dx**t) , where **t indicates transpose.",
+    "tex": "Apply the modified givens transformation, h, to the 2 by n matrix (dx**t) , where **t indicates transpose."
+  },
+  {
+    "algorithm": "rotmg",
+    "raw": "Construct the modified givens transformation matrix h which zeros the second component of the 2-vector (dsqrt(dd1)*dx1,dsqrt(dd2)*> dy2)**t.",
+    "tex": "Construct the modified givens transformation matrix h which zeros the second component of the 2-vector (\\(\\sqrt{dd^1}\\)*dx1,\\(\\sqrt{dd^2}\\)*&gt; dy2)**t."
+  },
+  {
+    "algorithm": "rq2",
+    "raw": "Computes the RQ factorization of a general rectangular matrix using an unblocked algorithm.",
+    "tex": "Computes the RQ factorization of a general rectangular matrix using an unblocked algorithm."
+  },
+  {
+    "algorithm": "rqf",
+    "raw": "Computes an RQ factorization of a real M-by-N matrix A: A = R * Q.",
+    "tex": "Computes an RQ factorization of a real M-by-N matrix A: A = R * Q."
+  },
+  {
+    "algorithm": "rra",
+    "raw": "Computes the splitting points with the specified threshold.",
+    "tex": "Computes the splitting points with the specified threshold."
+  },
+  {
+    "algorithm": "rrb",
+    "raw": "Provides limited bisection to locate eigenvalues for more accuracy.",
+    "tex": "Provides limited bisection to locate eigenvalues for more accuracy."
+  },
+  {
+    "algorithm": "rrc",
+    "raw": "Computes the number of eigenvalues of the symmetric tridiagonal matrix.",
+    "tex": "Computes the number of eigenvalues of the symmetric tridiagonal matrix."
+  },
+  {
+    "algorithm": "rrd",
+    "raw": "Computes the eigenvalues of a symmetric tridiagonal matrix to suitable accuracy.",
+    "tex": "Computes the eigenvalues of a symmetric tridiagonal matrix to suitable accuracy."
+  },
+  {
+    "algorithm": "rre",
+    "raw": "Given the tridiagonal matrix T, sets small off-diagonal elements to zero and for each unreduced block Ti, finds base representations and eigenvalues.",
+    "tex": "Given the tridiagonal matrix T, sets small off-diagonal elements to zero and for each unreduced block Ti, finds base representations and eigenvalues."
+  },
+  {
+    "algorithm": "rrf",
+    "raw": "Finds a new relatively robust representation such that at least one of the eigenvalues is relatively isolated.",
+    "tex": "Finds a new relatively robust representation such that at least one of the eigenvalues is relatively isolated."
+  },
+  {
+    "algorithm": "rrj",
+    "raw": "Performs refinement of the initial estimates of the eigenvalues of the matrix T.",
+    "tex": "Performs refinement of the initial estimates of the eigenvalues of the matrix T."
+  },
+  {
+    "algorithm": "rrk",
+    "raw": "Computes one eigenvalue of a symmetric tridiagonal matrix T to suitable accuracy.",
+    "tex": "Computes one eigenvalue of a symmetric tridiagonal matrix T to suitable accuracy."
+  },
+  {
+    "algorithm": "rrr",
+    "raw": "Performs tests to decide whether the symmetric tridiagonal matrix T warrants expensive computations which guarantee high relative accuracy in the eigenvalues.",
+    "tex": "Performs tests to decide whether the symmetric tridiagonal matrix T warrants expensive computations which guarantee high relative accuracy in the eigenvalues."
+  },
+  {
+    "algorithm": "rrv",
+    "raw": "Computes the eigenvectors of the tridiagonal matrix T = L D LT given L, D and the eigenvalues of L D LT.",
+    "tex": "Computes the eigenvectors of the tridiagonal matrix T = L D LT given L, D and the eigenvalues of L D LT."
+  },
+  {
+    "algorithm": "rscl",
+    "raw": "Multiplies a vector by the reciprocal of a real scalar.",
+    "tex": "Multiplies a vector by the reciprocal of a real scalar."
+  },
+  {
+    "algorithm": "rscl2",
+    "raw": "Performs reciprocal diagonal scaling on a matrix.",
+    "tex": "Performs reciprocal diagonal scaling on a matrix."
+  },
+  {
+    "algorithm": "rtg",
+    "raw": "Generates a plane rotation with real cosine and real sine.",
+    "tex": "Generates a plane rotation with real cosine and real sine."
+  },
+  {
+    "algorithm": "rtgp",
+    "raw": "Generates a plane rotation so that the diagonal is nonnegative.",
+    "tex": "Generates a plane rotation so that the diagonal is nonnegative."
+  },
+  {
+    "algorithm": "rtgs",
+    "raw": "Generates a plane rotation designed to introduce a bulge in implicit QR iteration for the bidiagonal SVD problem.",
+    "tex": "Generates a plane rotation designed to introduce a bulge in implicit QR iteration for the bidiagonal SVD problem."
+  },
+  {
+    "algorithm": "rtv",
+    "raw": "Applies a vector of plane rotations with real cosines and real sines to the elements of a pair of vectors.",
+    "tex": "Applies a vector of plane rotations with real cosines and real sines to the elements of a pair of vectors."
+  },
+  {
+    "algorithm": "ru",
+    "raw": "Performs the rank 1 operation A := alpha*x*y**T + A, where alpha is a scalar, x is an m element vector, y is an n element vector and A is an m by n matrix.",
+    "tex": "Performs the rank 1 operation \\(A \\coloneqq  \\alpha\\,xy^T + A\\), where \\(\\alpha\\) is a scalar, x is an m element vector, y is an n element vector and A is an m by n matrix."
+  },
+  {
+    "algorithm": "ruv",
+    "raw": "Returns a vector of n random real numbers from a uniform distribution.",
+    "tex": "Returns a vector of n random real numbers from a uniform distribution."
+  },
+  {
+    "algorithm": "rz",
+    "raw": "Applies an elementary reflector (as returned by stzrzf) to a general matrix.",
+    "tex": "Applies an elementary reflector (as returned by stzrzf) to a general matrix."
+  },
+  {
+    "algorithm": "rzb",
+    "raw": "Applies a block reflector or its transpose to a general matrix.",
+    "tex": "Applies a block reflector or its transpose to a general matrix."
+  },
+  {
+    "algorithm": "rzf",
+    "raw": "Reduces the M-by-N ( M<=N ) real upper trapezoidal matrix A to upper triangular form by means of orthogonal transformations.",
+    "tex": "Reduces the M-by-N ( M&lt;=N ) real upper trapezoidal matrix A to upper triangular form by means of orthogonal transformations."
+  },
+  {
+    "algorithm": "rzt",
+    "raw": "Forms the triangular factor T of a block reflector H = I - vtvH.",
+    "tex": "Forms the triangular factor T of a block reflector H = I - vtvH."
+  },
+  {
+    "algorithm": "s2",
+    "raw": "Computes singular values of a 2-by-2 triangular matrix.",
+    "tex": "Computes singular values of a 2-by-2 triangular matrix."
+  },
+  {
+    "algorithm": "samax",
+    "raw": "Finds the index of the first element having maximum absolute value.",
+    "tex": "Finds the index of the first element having maximum absolute value."
+  },
+  {
+    "algorithm": "same",
+    "raw": "Returns .TRUE.",
+    "tex": "Returns .TRUE."
+  },
+  {
+    "algorithm": "samen",
+    "raw": "Tests if the first N letters of CA are the same as the first N letters of CB, regardless of case.",
+    "tex": "Tests if the first N letters of CA are the same as the first N letters of CB, regardless of case."
+  },
+  {
+    "algorithm": "sc2",
+    "raw": "Solves a system of linear equations using the LU factorization with complete pivoting computed by sgetc2.",
+    "tex": "Solves a system of linear equations using the LU factorization with complete pivoting computed by sgetc2."
+  },
+  {
+    "algorithm": "scal",
+    "raw": "Scales a vector by a constant.",
+    "tex": "Scales a vector by a constant."
+  },
+  {
+    "algorithm": "scl",
+    "raw": "Multiplies a general rectangular matrix by a real scalar defined as cto/cfrom.",
+    "tex": "Multiplies a general rectangular matrix by a real scalar defined as cto/cfrom."
+  },
+  {
+    "algorithm": "scl2",
+    "raw": "Performs diagonal scaling on a matrix.",
+    "tex": "Performs diagonal scaling on a matrix."
+  },
+  {
+    "algorithm": "sd0",
+    "raw": "Computes the singular values of a real upper bidiagonal n-by-m matrix B with diagonal d and off-diagonal e. Used by sbdsdc.",
+    "tex": "Computes the singular values of a real upper bidiagonal n-by-m matrix B with diagonal d and off-diagonal e. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sd1",
+    "raw": "Computes the SVD of an upper bidiagonal matrix B of the specified size. Used by sbdsdc.",
+    "tex": "Computes the SVD of an upper bidiagonal matrix B of the specified size. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sd2",
+    "raw": "Merges the two sets of singular values together into a single sorted set. Used by sbdsdc.",
+    "tex": "Merges the two sets of singular values together into a single sorted set. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sd3",
+    "raw": "Finds all square roots of the roots of the secular equation, as defined by the values in D and Z, and then updates the singular vectors by matrix multiplication. Used by sbdsdc.",
+    "tex": "Finds all square roots of the roots of the secular equation, as defined by the values in D and Z, and then updates the singular vectors by matrix multiplication. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sd4",
+    "raw": "Computes the square root of the i-th updated eigenvalue of a positive symmetric rank-one modification to a positive diagonal matrix. Used by dbdsdc.",
+    "tex": "Computes the square root of the i-th updated eigenvalue of a positive symmetric rank-one modification to a positive diagonal matrix. Used by dbdsdc."
+  },
+  {
+    "algorithm": "sd5",
+    "raw": "Computes the square root of the i-th eigenvalue of a positive symmetric rank-one modification of a 2-by-2 diagonal matrix. Used by sbdsdc.",
+    "tex": "Computes the square root of the i-th eigenvalue of a positive symmetric rank-one modification of a 2-by-2 diagonal matrix. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sd6",
+    "raw": "Computes the SVD of an updated upper bidiagonal matrix obtained by merging two smaller ones by appending a row. Used by sbdsdc.",
+    "tex": "Computes the SVD of an updated upper bidiagonal matrix obtained by merging two smaller ones by appending a row. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sd7",
+    "raw": "Merges the two sets of singular values together into a single sorted set. Then it tries to deflate the size of the problem. Used by sbdsdc.",
+    "tex": "Merges the two sets of singular values together into a single sorted set. Then it tries to deflate the size of the problem. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sd8",
+    "raw": "Finds the square roots of the roots of the secular equation, and stores, for each element in D, the distance to its two nearest poles. Used by sbdsdc.",
+    "tex": "Finds the square roots of the roots of the secular equation, and stores, for each element in D, the distance to its two nearest poles. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sda",
+    "raw": "Computes the singular value decomposition (SVD) of a real upper bidiagonal matrix with diagonal d and off-diagonal e. Used by sbdsdc.",
+    "tex": "Computes the singular value decomposition (SVD) of a real upper bidiagonal matrix with diagonal d and off-diagonal e. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sdc",
+    "raw": "Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B: B = U * S * VT, using a divide and conquer method, where S is a diagonal matrix with non-negative diagonal elements (the singular values of B), and U and VT are orthogonal matrices of left and right singular vectors, respectively.",
+    "tex": "Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B: B = U * S * VT, using a divide and conquer method, where S is a diagonal matrix with non-negative diagonal elements (the singular values of B), and U and VT are orthogonal matrices of left and right singular vectors, respectively."
+  },
+  {
+    "algorithm": "sdd",
+    "raw": "Computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and right singular vectors.",
+    "tex": "Computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and right singular vectors."
+  },
+  {
+    "algorithm": "sdot",
+    "raw": "",
+    "tex": ""
+  },
+  {
+    "algorithm": "sdq",
+    "raw": "Computes the SVD of a real bidiagonal matrix with diagonal d and off-diagonal e. Used by sbdsdc.",
+    "tex": "Computes the SVD of a real bidiagonal matrix with diagonal d and off-diagonal e. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sdt",
+    "raw": "Creates a tree of subproblems for bidiagonal divide and conquer. Used by sbdsdc.",
+    "tex": "Creates a tree of subproblems for bidiagonal divide and conquer. Used by sbdsdc."
+  },
+  {
+    "algorithm": "sen",
+    "raw": "Reorders the generalized real Schur decomposition of a real matrix pair (A, B) (in terms of an orthonormal equivalence trans- formation Q**T * (A, B) * Z), so that a selected cluster of eigenvalues appears in the leading diagonal blocks of the upper quasi-triangular matrix A and the upper triangular B.",
+    "tex": "Reorders the generalized real Schur decomposition of a real matrix pair (A, B) (in terms of an orthonormal equivalence trans- formation Q**T * (A, B) * Z), so that a selected cluster of eigenvalues appears in the leading diagonal blocks of the upper quasi-triangular matrix A and the upper triangular B."
+  },
+  {
+    "algorithm": "set",
+    "raw": "Initializes the off-diagonal elements and the diagonal elements of a matrix to given values.",
+    "tex": "Initializes the off-diagonal elements and the diagonal elements of a matrix to given values."
+  },
+  {
+    "algorithm": "sgesv",
+    "raw": "Computes the solution to system of linear equations A * X = B for GE matrices (mixed precision with iterative refinement)",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for GE matrices (mixed precision with iterative refinement)"
+  },
+  {
+    "algorithm": "sja",
+    "raw": "Computes the generalized singular value decomposition (GSVD) of two real upper triangular (or trapezoidal) matrices A and B.",
+    "tex": "Computes the generalized singular value decomposition (GSVD) of two real upper triangular (or trapezoidal) matrices A and B."
+  },
+  {
+    "algorithm": "slc",
+    "raw": "Scans a matrix for its last non-zero column.",
+    "tex": "Scans a matrix for its last non-zero column."
+  },
+  {
+    "algorithm": "slr",
+    "raw": "Scans a matrix for its last non-zero row.",
+    "tex": "Scans a matrix for its last non-zero row."
+  },
+  {
+    "algorithm": "sm",
+    "raw": "Solves a matrix equation (one operand is a triangular matrix in RFP format).",
+    "tex": "Solves a matrix equation (one operand is a triangular matrix in RFP format)."
+  },
+  {
+    "algorithm": "sna",
+    "raw": "Computes the reciprocal condition numbers for the eigenvectors of a real symmetric or complex Hermitian matrix or for the left or right singular vectors of a general m-by-n matrix.",
+    "tex": "Computes the reciprocal condition numbers for the eigenvectors of a real symmetric or complex Hermitian matrix or for the left or right singular vectors of a general m-by-n matrix."
+  },
+  {
+    "algorithm": "sq1",
+    "raw": "Computes the singular values of a real square bidiagonal matrix. Used by sbdsqr.",
+    "tex": "Computes the singular values of a real square bidiagonal matrix. Used by sbdsqr."
+  },
+  {
+    "algorithm": "sq2",
+    "raw": "Computes all the eigenvalues of the symmetric positive definite tridiagonal matrix associated with the qd Array Z to high relative accuracy. Used by sbdsqr and sstegr.",
+    "tex": "Computes all the eigenvalues of the symmetric positive definite tridiagonal matrix associated with the qd Array Z to high relative accuracy. Used by sbdsqr and sstegr."
+  },
+  {
+    "algorithm": "sq3",
+    "raw": "Checks for deflation, computes a shift and calls dqds. Used by sbdsqr.",
+    "tex": "Checks for deflation, computes a shift and calls dqds. Used by sbdsqr."
+  },
+  {
+    "algorithm": "sq4",
+    "raw": "Computes an approximation to the smallest eigenvalue using values of d from the previous transform. Used by sbdsqr.",
+    "tex": "Computes an approximation to the smallest eigenvalue using values of d from the previous transform. Used by sbdsqr."
+  },
+  {
+    "algorithm": "sq5",
+    "raw": "Computes one dqds transform in ping-pong form. Used by sbdsqr and sstegr.",
+    "tex": "Computes one dqds transform in ping-pong form. Used by sbdsqr and sstegr."
+  },
+  {
+    "algorithm": "sq6",
+    "raw": "Computes one dqd transform in ping-pong form. Used by sbdsqr and sstegr.",
+    "tex": "Computes one dqd transform in ping-pong form. Used by sbdsqr and sstegr."
+  },
+  {
+    "algorithm": "sqr",
+    "raw": "Computes the singular values and, optionally, the right and/or left singular vectors from the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B using the implicit zero-shift QR algorithm.",
+    "tex": "Computes the singular values and, optionally, the right and/or left singular vectors from the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B using the implicit zero-shift QR algorithm."
+  },
+  {
+    "algorithm": "sr",
+    "raw": "Applies a sequence of plane rotations to a general rectangular matrix.",
+    "tex": "Applies a sequence of plane rotations to a general rectangular matrix."
+  },
+  {
+    "algorithm": "srot",
+    "raw": "Applies a plane rotation, where the cos and sin (c and s) are real and the vectors cx and cy are complex.",
+    "tex": "Applies a plane rotation, where the cos and sin (c and s) are real and the vectors cx and cy are complex."
+  },
+  {
+    "algorithm": "srscl",
+    "raw": "Multiplies a vector by the reciprocal of a real scalar.",
+    "tex": "Multiplies a vector by the reciprocal of a real scalar."
+  },
+  {
+    "algorithm": "srt",
+    "raw": "Sorts numbers in increasing or decreasing order.",
+    "tex": "Sorts numbers in increasing or decreasing order."
+  },
+  {
+    "algorithm": "sscal",
+    "raw": "Scales a complex vector by a real constant.",
+    "tex": "Scales a complex vector by a real constant."
+  },
+  {
+    "algorithm": "ssq",
+    "raw": "Updates a sum of squares represented in scaled form.",
+    "tex": "Updates a sum of squares represented in scaled form."
+  },
+  {
+    "algorithm": "stf",
+    "raw": "Computes a split Cholesky factorization of a real symmetric positive definite band matrix A.",
+    "tex": "Computes a split Cholesky factorization of a real symmetric positive definite band matrix A."
+  },
+  {
+    "algorithm": "sv",
+    "raw": "Computes the solution to system of linear equations A * X = B for GB matrices (simple driver)",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for GB matrices (simple driver)"
+  },
+  {
+    "algorithm": "sv2",
+    "raw": "Computes the singular value decomposition of a 2-by-2 triangular matrix.",
+    "tex": "Computes the singular value decomposition of a 2-by-2 triangular matrix."
+  },
+  {
+    "algorithm": "sv_aa",
+    "raw": "Computes the solution to system of linear equations A * X = B for SY matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for SY matrices"
+  },
+  {
+    "algorithm": "sv_aa_2stage",
+    "raw": "Computes the solution to system of linear equations A * X = B for SY matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for SY matrices"
+  },
+  {
+    "algorithm": "sv_rk",
+    "raw": "Computes the solution to system of linear equations A * X = B for SY matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for SY matrices"
+  },
+  {
+    "algorithm": "sv_rook",
+    "raw": "Computes the solution to system of linear equations A * X = B for SY matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for SY matrices"
+  },
+  {
+    "algorithm": "svd",
+    "raw": "Computes the singular value decomposition (SVD) for GE matrices",
+    "tex": "Computes the singular value decomposition (SVD) for GE matrices"
+  },
+  {
+    "algorithm": "svd3",
+    "raw": "Computes the singular value decomposition (SVD) for OTHER matrices",
+    "tex": "Computes the singular value decomposition (SVD) for OTHER matrices"
+  },
+  {
+    "algorithm": "svdq",
+    "raw": "Computes the singular value decomposition (SVD) with a QR-Preconditioned QR SVD Method for GE matrices",
+    "tex": "Computes the singular value decomposition (SVD) with a QR-Preconditioned QR SVD Method for GE matrices"
+  },
+  {
+    "algorithm": "svdx",
+    "raw": "Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B, B = U * S * VT, where S is a diagonal matrix with non-negative diagonal elements (the singular values of B), and U and VT are orthogonal matrices of left and right singular vectors, respectively.",
+    "tex": "Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B, B = U * S * VT, where S is a diagonal matrix with non-negative diagonal elements (the singular values of B), and U and VT are orthogonal matrices of left and right singular vectors, respectively."
+  },
+  {
+    "algorithm": "svj",
+    "raw": "Computes the singular value decomposition (SVD) of a real M-by-N matrix A, where M >= N.",
+    "tex": "Computes the singular value decomposition (SVD) of a real M-by-N matrix A, where M &gt;= N."
+  },
+  {
+    "algorithm": "svp3",
+    "raw": "Computes orthogonal matrices U, V and Q such that N-K-L K L U**T*A*Q = K ( 0 A12 A13 ) if M-K-L >= 0; L ( 0 0 A23 ) M-K-L ( 0 0 0 ) N-K-L K L = K ( 0 A12 A13 ) if M-K-L < 0; M-K ( 0 0 A23 ) N-K-L K L V**T*B*Q = L ( 0 0 B13 ) P-L ( 0 0 0 ) where the K-by-K matrix A12 and L-by-L matrix B13 are nonsingular upper triangular; A23 is L-by-L upper triangular if M-K-L >= 0, otherwise A23 is (M-K)-by-L upper trapezoidal.",
+    "tex": "Computes orthogonal matrices U, V and Q such that N-K-L K L \\(U^TAQ = K\\) ( 0 A12 A13 ) if M-K-L &gt;= 0; L ( 0 0 A23 ) M-K-L ( 0 0 0 ) N-K-L K L = K ( 0 A12 A13 ) if M-K-L &lt; 0; M-K ( 0 0 A23 ) N-K-L K L \\(V^TBQ = L\\) ( 0 0 B13 ) P-L ( 0 0 0 ) where the K-by-K matrix A12 and L-by-L matrix B13 are nonsingular upper triangular; A23 is L-by-L upper triangular if M-K-L &gt;= 0, otherwise A23 is (M-K)-by-L upper trapezoidal."
+  },
+  {
+    "algorithm": "svx",
+    "raw": "Computes the solution to system of linear equations A * X = B for GB matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for GB matrices"
+  },
+  {
+    "algorithm": "svxx",
+    "raw": "Computes the solution to system of linear equations A * X = B for GB matrices",
+    "tex": "Computes the solution to system of linear equations \\(AX = B\\) for GB matrices"
+  },
+  {
+    "algorithm": "swap",
+    "raw": "Interchanges two vectors.",
+    "tex": "Interchanges two vectors."
+  },
+  {
+    "algorithm": "swapr",
+    "raw": "Applies an elementary permutation on the rows and columns of a symmetric matrix.",
+    "tex": "Applies an elementary permutation on the rows and columns of a symmetric matrix."
+  },
+  {
+    "algorithm": "swlq",
+    "raw": "Computes a blocked Tall-Skinny LQ factorization of a real M-by-N matrix A for M <= N: A = ( L 0 ) * Q, where: Q is a n-by-N orthogonal matrix, stored on exit in an implicit form in the elements above the diagonal of the array A and in the elements of the array T; L is a lower-triangular M-by-M matrix stored on exit in the elements on and below the diagonal of the array A.",
+    "tex": "Computes a blocked Tall-Skinny LQ factorization of a real M-by-N matrix A for M &lt;= N: A = ( L 0 ) * Q, where: Q is a n-by-N orthogonal matrix, stored on exit in an implicit form in the elements above the diagonal of the array A and in the elements of the array T; L is a lower-triangular M-by-M matrix stored on exit in the elements on and below the diagonal of the array A."
+  },
+  {
+    "algorithm": "swp",
+    "raw": "Performs a series of row interchanges on a general rectangular matrix.",
+    "tex": "Performs a series of row interchanges on a general rectangular matrix."
+  },
+  {
+    "algorithm": "sy2",
+    "raw": "Solves the Sylvester matrix equation where the matrices are of order 1 or 2.",
+    "tex": "Solves the Sylvester matrix equation where the matrices are of order 1 or 2."
+  },
+  {
+    "algorithm": "syf",
+    "raw": "Computes a partial factorization of a real symmetric matrix using the Bunch-Kaufman diagonal pivoting method.",
+    "tex": "Computes a partial factorization of a real symmetric matrix using the Bunch-Kaufman diagonal pivoting method."
+  },
+  {
+    "algorithm": "syf_aa",
+    "raw": "DLATRF_AA factorizes a panel of a real symmetric matrix A using the Aasen's algorithm.",
+    "tex": "DLATRF_AA factorizes a panel of a real symmetric matrix A using the Aasen's algorithm."
+  },
+  {
+    "algorithm": "syf_rk",
+    "raw": "Computes a partial factorization of a real symmetric indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pivoting method.",
+    "tex": "Computes a partial factorization of a real symmetric indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pivoting method."
+  },
+  {
+    "algorithm": "syf_rook",
+    "raw": "*> DLASYF_ROOK computes a partial factorization of a real symmetric matrix using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method.",
+    "tex": "*&gt; DLASYF_ROOK computes a partial factorization of a real symmetric matrix using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method."
+  },
+  {
+    "algorithm": "syl",
+    "raw": "Solves the generalized Sylvester equation: A * R - L * B = scale * C (1) D * R - L * E = scale * F where R and L are unknown m-by-n matrices, (A, D), (B, E) and (C, F) are given matrix pairs of size m-by-m, n-by-n and m-by-n, respectively, with real entries.",
+    "tex": "Solves the generalized Sylvester equation: A * R - L * B = scale * C (1) D * R - L * E = scale * F where R and L are unknown m-by-n matrices, (A, D), (B, E) and (C, F) are given matrix pairs of size m-by-m, n-by-n and m-by-n, respectively, with real entries."
+  },
+  {
+    "algorithm": "syl3",
+    "raw": "",
+    "tex": ""
+  },
+  {
+    "algorithm": "t2c",
+    "raw": "Converts a double complex triangular matrix to a complex triangular matrix.",
+    "tex": "Converts a double complex triangular matrix to a complex triangular matrix."
+  },
+  {
+    "algorithm": "t2s",
+    "raw": "Converts a double-precision triangular matrix to a single-precision triangular matrix.",
+    "tex": "Converts a double-precision triangular matrix to a single-precision triangular matrix."
+  },
+  {
+    "algorithm": "tbs",
+    "raw": "Solves a triangular banded system of equations.",
+    "tex": "Solves a triangular banded system of equations."
+  },
+  {
+    "algorithm": "tc2",
+    "raw": "Computes the LU factorization with complete pivoting of the general n-by-n matrix.",
+    "tex": "Computes the LU factorization with complete pivoting of the general n-by-n matrix."
+  },
+  {
+    "algorithm": "td2",
+    "raw": "Reduces a symmetric matrix to real symmetric tridiagonal form by an orthogonal similarity transformation (unblocked algorithm).",
+    "tex": "Reduces a symmetric matrix to real symmetric tridiagonal form by an orthogonal similarity transformation (unblocked algorithm)."
+  },
+  {
+    "algorithm": "tdf",
+    "raw": "Uses the LU factorization of the n-by-n matrix computed by sgetc2 and computes a contribution to the reciprocal Dif-estimate.",
+    "tex": "Uses the LU factorization of the n-by-n matrix computed by sgetc2 and computes a contribution to the reciprocal Dif-estimate."
+  },
+  {
+    "algorithm": "tf2",
+    "raw": "Computes the LU factorization of a general band matrix using the unblocked version of the algorithm.",
+    "tex": "Computes the LU factorization of a general band matrix using the unblocked version of the algorithm."
+  },
+  {
+    "algorithm": "tf2_rk",
+    "raw": "Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (rook) diagonal pivoting method (BLAS2 unblocked algorithm).",
+    "tex": "Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (rook) diagonal pivoting method (BLAS2 unblocked algorithm)."
+  },
+  {
+    "algorithm": "tf2_rook",
+    "raw": "Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method (unblocked algorithm).",
+    "tex": "Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method (unblocked algorithm)."
+  },
+  {
+    "algorithm": "ti2",
+    "raw": "Computes the inverse of a triangular matrix (unblocked algorithm).",
+    "tex": "Computes the inverse of a triangular matrix (unblocked algorithm)."
+  },
+  {
+    "algorithm": "tps",
+    "raw": "Solves a triangular system of equations with the matrix held in packed storage.",
+    "tex": "Solves a triangular system of equations with the matrix held in packed storage."
+  },
+  {
+    "algorithm": "trans",
+    "raw": "This subroutine translates from a character string specifying a transposition operation to the relevant BLAST-specified integer constant.",
+    "tex": "This subroutine translates from a character string specifying a transposition operation to the relevant BLAST-specified integer constant."
+  },
+  {
+    "algorithm": "trd",
+    "raw": "Reduces the first nb rows and columns of a symmetric/Hermitian matrix A to real tridiagonal form by an orthogonal similarity transformation.",
+    "tex": "Reduces the first nb rows and columns of a symmetric/Hermitian matrix A to real tridiagonal form by an orthogonal similarity transformation."
+  },
+  {
+    "algorithm": "trd_2stage",
+    "raw": "Reduces a real symmetric matrix A to real symmetric tridiagonal form T by a orthogonal similarity transformation: Q1**T Q2**T* A * Q2 * Q1 = T.",
+    "tex": "Reduces a real symmetric matrix A to real symmetric tridiagonal form T by a orthogonal similarity transformation: Q1**T Q2**T* A * Q2 * Q1 = T."
+  },
+  {
+    "algorithm": "trd_he2hb",
+    "raw": "Reduces a complex Hermitian matrix A to complex Hermitian band-diagonal form AB by a unitary similarity transformation: Q**H * A * Q = AB.",
+    "tex": "Reduces a complex Hermitian matrix A to complex Hermitian band-diagonal form AB by a unitary similarity transformation: Q**H * A * Q = AB."
+  },
+  {
+    "algorithm": "trd_sy2sb",
+    "raw": "Reduces a real symmetric matrix A to real symmetric band-diagonal form AB by a orthogonal similarity transformation: Q**T * A * Q = AB.",
+    "tex": "Reduces a real symmetric matrix A to real symmetric band-diagonal form AB by a orthogonal similarity transformation: Q**T * A * Q = AB."
+  },
+  {
+    "algorithm": "trf",
+    "raw": "Computes an LU factorization of a real m-by-n band matrix A using partial pivoting with row interchanges.",
+    "tex": "Computes an LU factorization of a real m-by-n band matrix A using partial pivoting with row interchanges."
+  },
+  {
+    "algorithm": "trf2",
+    "raw": "Computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.",
+    "tex": "Computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges."
+  },
+  {
+    "algorithm": "trf_aa",
+    "raw": "Computes the factorization of a real symmetric matrix A using the Aasen's algorithm.",
+    "tex": "Computes the factorization of a real symmetric matrix A using the Aasen's algorithm."
+  },
+  {
+    "algorithm": "trf_aa_2stage",
+    "raw": "Computes the factorization of a real symmetric matrix A using the Aasen's algorithm.",
+    "tex": "Computes the factorization of a real symmetric matrix A using the Aasen's algorithm."
+  },
+  {
+    "algorithm": "trf_rk",
+    "raw": "Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (rook) diagonal pivoting method (BLAS3 blocked algorithm).",
+    "tex": "Computes the factorization of a real symmetric indefinite matrix using the bounded Bunch-Kaufman (rook) diagonal pivoting method (BLAS3 blocked algorithm)."
+  },
+  {
+    "algorithm": "trf_rook",
+    "raw": "Computes the factorization of a real symmetric matrix A using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method.",
+    "tex": "Computes the factorization of a real symmetric matrix A using the bounded Bunch-Kaufman (\"rook\") diagonal pivoting method."
+  },
+  {
+    "algorithm": "tri",
+    "raw": "Computes the inverse of a matrix using the LU factorization computed by DGETRF.",
+    "tex": "Computes the inverse of a matrix using the LU factorization computed by DGETRF."
+  },
+  {
+    "algorithm": "tri2",
+    "raw": "Computes the inverse of a DOUBLE PRECISION symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D*L**T computed by DSYTRF.",
+    "tex": "Computes the inverse of a DOUBLE PRECISION symmetric indefinite matrix A using the factorization \\(A = UDU^T\\) or \\(A = LDL^T\\) computed by DSYTRF."
+  },
+  {
+    "algorithm": "tri2x",
+    "raw": "Computes the inverse of a real symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D*L**T computed by DSYTRF.",
+    "tex": "Computes the inverse of a real symmetric indefinite matrix A using the factorization \\(A = UDU^T\\) or \\(A = LDL^T\\) computed by DSYTRF."
+  },
+  {
+    "algorithm": "tri_3",
+    "raw": "Computes the inverse of a real symmetric indefinite matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: A = P*U*D*(U**T)*(P**T) or A = P*L*D*(L**T)*(P**T), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.",
+    "tex": "Computes the inverse of a real symmetric indefinite matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: \\(A = PUD(U^T)(P^T)\\) or \\(A = PLD(L^T)(P^T)\\), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks."
+  },
+  {
+    "algorithm": "tri_3x",
+    "raw": "Computes the inverse of a real symmetric indefinite matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: A = P*U*D*(U**T)*(P**T) or A = P*L*D*(L**T)*(P**T), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.",
+    "tex": "Computes the inverse of a real symmetric indefinite matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: \\(A = PUD(U^T)(P^T)\\) or \\(A = PLD(L^T)(P^T)\\), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks."
+  },
+  {
+    "algorithm": "tri_rook",
+    "raw": "Computes the inverse of a real symmetric matrix A using the factorization A = U*D*U**T or A = L*D*L**T computed by DSYTRF_ROOK.",
+    "tex": "Computes the inverse of a real symmetric matrix A using the factorization \\(A = UDU^T\\) or \\(A = LDL^T\\) computed by DSYTRF_ROOK."
+  },
+  {
+    "algorithm": "trs",
+    "raw": "Solves a system of linear equations A * X = B or A**T * X = B with a general band matrix A using the LU factorization computed by DGBTRF.",
+    "tex": "Solves a system of linear equations \\(AX = B\\) or \\(A^TX = B\\) with a general band matrix A using the LU factorization computed by DGBTRF."
+  },
+  {
+    "algorithm": "trs2",
+    "raw": "Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U*D*U**T or A = L*D*L**T computed by DSYTRF and converted by DSYCONV.",
+    "tex": "Solves a system of linear equations \\(AX = B\\) with a real symmetric matrix A using the factorization \\(A = UDU^T\\) or \\(A = LDL^T\\) computed by DSYTRF and converted by DSYCONV."
+  },
+  {
+    "algorithm": "trs3",
+    "raw": "Solves a triangular system of equations with the scale factors set to prevent overflow.",
+    "tex": "Solves a triangular system of equations with the scale factors set to prevent overflow."
+  },
+  {
+    "algorithm": "trs_3",
+    "raw": "Solves a system of linear equations A * X = B with a real symmetric matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: A = P*U*D*(U**T)*(P**T) or A = P*L*D*(L**T)*(P**T), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks.",
+    "tex": "Solves a system of linear equations \\(AX = B\\) with a real symmetric matrix A using the factorization computed by DSYTRF_RK or DSYTRF_BK: \\(A = PUD(U^T)(P^T)\\) or \\(A = PLD(L^T)(P^T)\\), where U (or L) is unit upper (or lower) triangular matrix, U**T (or L**T) is the transpose of U (or L), P is a permutation matrix, P**T is the transpose of P, and D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks."
+  },
+  {
+    "algorithm": "trs_aa",
+    "raw": "Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U**T*T*U or A = L*T*L**T computed by DSYTRF_AA.",
+    "tex": "Solves a system of linear equations \\(AX = B\\) with a real symmetric matrix A using the factorization \\(A = U^TTU\\) or \\(A = LTL^T\\) computed by DSYTRF_AA."
+  },
+  {
+    "algorithm": "trs_aa_2stage",
+    "raw": "Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U**T*T*U or A = L*T*L**T computed by DSYTRF_AA_2STAGE.",
+    "tex": "Solves a system of linear equations \\(AX = B\\) with a real symmetric matrix A using the factorization \\(A = U^TTU\\) or \\(A = LTL^T\\) computed by DSYTRF_AA_2STAGE."
+  },
+  {
+    "algorithm": "trs_rook",
+    "raw": "Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U*D*U**T or A = L*D*L**T computed by DSYTRF_ROOK.",
+    "tex": "Solves a system of linear equations \\(AX = B\\) with a real symmetric matrix A using the factorization \\(A = UDU^T\\) or \\(A = LDL^T\\) computed by DSYTRF_ROOK."
+  },
+  {
+    "algorithm": "trz",
+    "raw": "Factors an upper trapezoidal matrix by means of orthogonal transformations.",
+    "tex": "Factors an upper trapezoidal matrix by means of orthogonal transformations."
+  },
+  {
+    "algorithm": "ts2",
+    "raw": "Solves a system of linear equations with a tridiagonal matrix using the LU factorization computed by sgttrf.",
+    "tex": "Solves a system of linear equations with a tridiagonal matrix using the LU factorization computed by sgttrf."
+  },
+  {
+    "algorithm": "tsls",
+    "raw": "Solves overdetermined or underdetermined real linear systems involving an M-by-N matrix A, using a tall skinny QR or short wide LQ factorization of A.",
+    "tex": "Solves overdetermined or underdetermined real linear systems involving an M-by-N matrix A, using a tall skinny QR or short wide LQ factorization of A."
+  },
+  {
+    "algorithm": "tsqr",
+    "raw": "Computes a blocked Tall-Skinny QR factorization of a real M-by-N matrix A for M >= N: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix, stored on exit in an implicit form in the elements below the diagonal of the array A and in the elements of the array T; R is an upper-triangular N-by-N matrix, stored on exit in the elements on and above the diagonal of the array A.",
+    "tex": "Computes a blocked Tall-Skinny QR factorization of a real M-by-N matrix A for M &gt;= N: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix, stored on exit in an implicit form in the elements below the diagonal of the array A and in the elements of the array T; R is an upper-triangular N-by-N matrix, stored on exit in the elements on and above the diagonal of the array A."
+  },
+  {
+    "algorithm": "tsqrhrt",
+    "raw": "Computes a NB2-sized column blocked QR-factorization of a real M-by-N matrix A with M >= N, A = Q * R.",
+    "tex": "Computes a NB2-sized column blocked QR-factorization of a real M-by-N matrix A with M &gt;= N, A = Q * R."
+  },
+  {
+    "algorithm": "ttf",
+    "raw": "Copies a triangular matrix from the standard packed format (TP) to the rectangular full packed format (TF).",
+    "tex": "Copies a triangular matrix from the standard packed format (TP) to the rectangular full packed format (TF)."
+  },
+  {
+    "algorithm": "ttp",
+    "raw": "Copies a triangular matrix from the rectangular full packed format (TF) to the standard packed format (TP).",
+    "tex": "Copies a triangular matrix from the rectangular full packed format (TF) to the standard packed format (TP)."
+  },
+  {
+    "algorithm": "ttr",
+    "raw": "Copies a triangular matrix from the rectangular full packed format (TF) to the standard full format (TR).",
+    "tex": "Copies a triangular matrix from the rectangular full packed format (TF) to the standard full format (TR)."
+  },
+  {
+    "algorithm": "unhr_col_getrfnp",
+    "raw": "Computes the modified LU factorization without pivoting of a complex general M-by-N matrix A.",
+    "tex": "Computes the modified LU factorization without pivoting of a complex general M-by-N matrix A."
+  },
+  {
+    "algorithm": "unhr_col_getrfnp2",
+    "raw": "Computes the modified LU factorization without pivoting of a complex general M-by-N matrix A.",
+    "tex": "Computes the modified LU factorization without pivoting of a complex general M-by-N matrix A."
+  },
+  {
+    "algorithm": "uplo",
+    "raw": "This subroutine translated from a character string specifying a upper- or lower-triangular matrix to the relevant BLAST-specified integer constant.",
+    "tex": "This subroutine translated from a character string specifying a upper- or lower-triangular matrix to the relevant BLAST-specified integer constant."
+  },
+  {
+    "algorithm": "uu2",
+    "raw": "Computes the product UUH or LHL, where U and L are upper or lower triangular matrices (unblocked algorithm).",
+    "tex": "Computes the product UUH or LHL, where U and L are upper or lower triangular matrices (unblocked algorithm)."
+  },
+  {
+    "algorithm": "uum",
+    "raw": "Computes the product UUH or LHL, where U and L are upper or lower triangular matrices (blocked algorithm).",
+    "tex": "Computes the product UUH or LHL, where U and L are upper or lower triangular matrices (blocked algorithm)."
+  },
+  {
+    "algorithm": "vj0",
+    "raw": "Pre-processor for the routine dgesvj.",
+    "tex": "Pre-processor for the routine dgesvj."
+  },
+  {
+    "algorithm": "vj1",
+    "raw": "Pre-processor for the routine dgesvj, applies Jacobi rotations targeting only particular pivots.",
+    "tex": "Pre-processor for the routine dgesvj, applies Jacobi rotations targeting only particular pivots."
+  },
+  {
+    "algorithm": "zamax",
+    "raw": "Finds the index of the first element having maximum |Re(.)| + |Im(.)|",
+    "tex": "Finds the index of the first element having maximum |Re(.)| + |Im(.)|"
+  },
+  {
+    "algorithm": "zasum",
+    "raw": "Takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a double precision result.",
+    "tex": "Takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a double precision result."
+  },
+  {
+    "algorithm": "zlc",
+    "raw": "Scans a matrix for its last non-zero column.",
+    "tex": "Scans a matrix for its last non-zero column."
+  },
+  {
+    "algorithm": "zlr",
+    "raw": "Scans a matrix for its last non-zero row.",
+    "tex": "Scans a matrix for its last non-zero row."
+  },
+  {
+    "algorithm": "zmax1",
+    "raw": "Finds the index of the first vector element of maximum absolute value.",
+    "tex": "Finds the index of the first vector element of maximum absolute value."
+  },
+  {
+    "algorithm": "znrm2",
+    "raw": "Returns the euclidean norm of a vector via the function name, so that DZNRM2 := sqrt( x**H*x )",
+    "tex": "Returns the euclidean norm of a vector via the function name, so that DZNRM2 := \\(\\sqrt{x^Hx }\\)"
+  },
+  {
+    "algorithm": "zsum1",
+    "raw": "Forms the 1-norm of the complex vector using the true absolute value.",
+    "tex": "Forms the 1-norm of the complex vector using the true absolute value."
+  }
+]

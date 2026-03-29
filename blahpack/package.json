@@ -4,7 +4,9 @@
   "main": "generate.js",
   "type": "module",
   "scripts": {
-    "test": "script -q /dev/null node --test 'lib/**/test/test*.js' 'lib/*.test.js' 2>&1 | awk '/ℹ (tests|suites|pass|fail|cancelled|skipped|todo|duration)/{buf=buf $0 ORS; next} {print} END{printf buf}'",
+    "test": "node --test 'lib/**/test/test*.js' 'lib/*.test.js' 2>&1 | awk '/ℹ (tests|suites|pass|fail|cancelled|skipped|todo|duration)/{buf=buf $0 ORS; next} {print} END{printf buf}'",
+    "lint": "bash bin/lint.sh",
+    "lint:fix": "bash bin/lint.sh --fix",
     "audit": "bash bin/audit.sh",
     "check": "npm test && npm run audit",
     "fixtures": "./test/generate_fixtures.sh",
@@ -27,6 +29,9 @@
   "devDependencies": {
     "@observablehq/notebook-kit": "^1.5.2",
     "@rreusser/mcp-observable-notebook-kit-debug": "^1.0.1",
+    "doctrine": "^3.0.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-node": "^11.1.0",
     "prettier": "^3.4.2"
   }
 }

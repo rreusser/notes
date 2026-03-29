@@ -6,9 +6,9 @@
 * Usage:
 *   node bin/report.js > progress.html
 *
-* Scans lib/ for implemented modules, reads package.json for descriptions,
-* checks for test files, and cross-references against the full BLAS/LAPACK
-* source inventory.
+* Loads data/routines.json (from extract_metadata.py), scans lib/ for
+* implemented modules, and produces a grouped dashboard showing algorithms
+* with their type×storage variants.
 */
 
 'use strict';
@@ -20,18 +20,30 @@ var execSync = require( 'child_process' ).execSync;
 var ROOT = path.join( __dirname, '..' );
 
 // ---------------------------------------------------------------------------
+// Load the routine database
+// ---------------------------------------------------------------------------
+
+var routinesPath = path.join( ROOT, 'data', 'routines.json' );
+if ( !fs.existsSync( routinesPath ) ) {
+	process.stderr.write( 'Missing data/routines.json — run: python3 bin/extract_metadata.py > data/routines.json\n' );
+	process.exit( 1 );
+}
+var db = JSON.parse( fs.readFileSync( routinesPath, 'utf8' ) );
+
+// ---------------------------------------------------------------------------
 // Scan implemented modules
 // ---------------------------------------------------------------------------
 
 function scanModules( pkg ) {
 	var baseDir = path.join( ROOT, 'lib', pkg, 'base' );
+	var out = {};
 	if ( !fs.existsSync( baseDir ) ) {
-		return [];
+		return out;
 	}
 	var dirs = fs.readdirSync( baseDir ).filter( function( d ) {
 		return fs.statSync( path.join( baseDir, d ) ).isDirectory();
 	});
-	return dirs.map( function( name ) {
+	dirs.forEach( function( name ) {
 		var dir = path.join( baseDir, name );
 		var baseJs = path.join( dir, 'lib', 'base.js' );
 		var pkgJson = path.join( dir, 'package.json' );
@@ -42,8 +54,6 @@ function scanModules( pkg ) {
 		if ( fs.existsSync( baseJs ) ) {
 			hasImpl = true;
 			var src = fs.readFileSync( baseJs, 'utf8' );
-			// Only count as stub if the MAIN function body is a stub,
-			// not STOREV=R "not yet implemented" throws
 			isStub = /^\t(?:\/\/ )?TODO: implement|^\tthrow new Error\( 'not yet implemented' \)/m.test( src );
 		}
 
@@ -61,7 +71,7 @@ function scanModules( pkg ) {
 			testCount = ( testSrc.match( /\btest\s*\(/g ) || [] ).length;
 		}
 
-		// Get coverage data if tests exist
+		// Coverage
 		var lineCov = null;
 		var branchCov = null;
 		if ( hasTests && hasImpl && !isStub ) {
@@ -70,16 +80,10 @@ function scanModules( pkg ) {
 					'node --test --experimental-test-coverage ' + testJs + ' 2>&1',
 					{ timeout: 30000, encoding: 'utf8' }
 				);
-				// Parse coverage for base.js specifically
-				// The module's own base.js appears right after the module
-				// directory header (e.g. "ℹ    zlange       |"). Take the
-				// FIRST base.js line that follows the module name header,
-				// not the last (which may be a dependency's base.js).
 				var covLines = covOut.split( '\n' );
 				var foundDir = false;
 				for ( var li = 0; li < covLines.length; li++ ) {
 					var covLine = covLines[ li ];
-					// Detect the module directory header
 					if ( new RegExp( '\\b' + name + '\\b' ).test( covLine ) && /\|/.test( covLine ) ) {
 						foundDir = true;
 						continue;
@@ -90,15 +94,13 @@ function scanModules( pkg ) {
 							lineCov = parseFloat( nums[ 0 ] );
 							branchCov = parseFloat( nums[ 1 ] );
 						}
-						break; // Take the first base.js after the module header
+						break;
 					}
 				}
-			} catch ( e ) {
-				// Coverage run failed, skip
-			}
+			} catch ( e ) {}
 		}
 
-		return {
+		out[ name ] = {
 			name: name,
 			package: pkg,
 			description: description,
@@ -110,177 +112,50 @@ function scanModules( pkg ) {
 			branchCov: branchCov
 		};
 	});
+	return out;
 }
 
 // ---------------------------------------------------------------------------
-// Scan source inventory
+// Build the report
 // ---------------------------------------------------------------------------
 
-function scanSources( pkg ) {
-	var routines = {};
-	var dirs;
-	if ( pkg === 'blas' ) {
-		dirs = [ path.join( ROOT, 'data', 'BLAS-3.12.0' ) ];
-	} else {
-		dirs = [ path.join( ROOT, 'data', 'lapack-3.12.0', 'SRC' ) ];
-	}
-	dirs.forEach( function( dir ) {
-		if ( !fs.existsSync( dir ) ) return;
-		fs.readdirSync( dir ).forEach( function( f ) {
-			if ( /\.(f|f90)$/i.test( f ) ) {
-				var name = f.replace( /\.(f|f90)$/i, '' ).toLowerCase();
-				routines[ name ] = true;
-			}
-		});
-	});
-	return Object.keys( routines ).sort();
+var blasImpl = scanModules( 'blas' );
+var lapackImpl = scanModules( 'lapack' );
+
+// Lookup: routine name (lowercase) -> implementation info
+function getImpl( name ) {
+	var lower = name.toLowerCase();
+	return blasImpl[ lower ] || lapackImpl[ lower ] || null;
 }
 
-// ---------------------------------------------------------------------------
-// Generate HTML
-// ---------------------------------------------------------------------------
+// Compute overall stats
+var totalRoutines = db.meta.total_routines;
+var totalAlgorithms = db.meta.total_algorithms;
+var allImpl = Object.keys( blasImpl ).concat( Object.keys( lapackImpl ) );
+var implementedCount = allImpl.filter( function( k ) {
+	var m = blasImpl[ k ] || lapackImpl[ k ];
+	return m && m.hasImpl;
+}).length;
+var totalTests = allImpl.reduce( function( s, k ) {
+	var m = blasImpl[ k ] || lapackImpl[ k ];
+	return s + ( m ? m.testCount : 0 );
+}, 0 );
+
+// Count source routines from the actual Fortran directories
+var blasSourceCount = fs.readdirSync( path.join( ROOT, 'data', 'BLAS-3.12.0' ) )
+	.filter( function( f ) { return /\.(f|f90)$/i.test( f ); } ).length;
+var lapackSourceCount = fs.readdirSync( path.join( ROOT, 'data', 'lapack-3.12.0', 'SRC' ) )
+	.filter( function( f ) { return /\.(f|f90)$/i.test( f ); } ).length;
+var blasImplCount = Object.keys( blasImpl ).filter( function( k ) { return blasImpl[ k ].hasImpl; } ).length;
+var lapackImplCount = Object.keys( lapackImpl ).filter( function( k ) { return lapackImpl[ k ].hasImpl; } ).length;
 
 // ---------------------------------------------------------------------------
-// Conformance checks (programmatic audit)
+// HTML helpers
 // ---------------------------------------------------------------------------
 
-function runConformanceChecks() {
-	var checks = [];
-
-	// 1. TODO @param remnants
-	try {
-		var out = execSync( "grep -rl '@param.*TODO\\|{TODO}' lib --include='*.js' 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
-		var c = parseInt( out, 10 ) || 0;
-		checks.push({ name: 'TODO @param remnants', count: c, severity: c > 0 ? 'fail' : 'pass' });
-	} catch ( e ) {
-		checks.push({ name: 'TODO @param remnants', count: 0, severity: 'pass' });
-	}
-
-	// 2. Stub wrapper files (not yet implemented)
-	var stubCount = 0;
-	[ 'blas', 'lapack' ].forEach( function( pkg ) {
-		var baseDir = path.join( ROOT, 'lib', pkg, 'base' );
-		if ( !fs.existsSync( baseDir ) ) return;
-		fs.readdirSync( baseDir ).forEach( function( routine ) {
-			var libDir = path.join( baseDir, routine, 'lib' );
-			if ( !fs.existsSync( libDir ) ) return;
-			fs.readdirSync( libDir ).forEach( function( f ) {
-				if ( f === 'base.js' || !/\.js$/.test( f ) ) return;
-				var content = fs.readFileSync( path.join( libDir, f ), 'utf8' );
-				if ( /not yet implemented/.test( content ) ) {
-					stubCount += 1;
-				}
-			});
-		});
-	});
-	checks.push({ name: 'Stub wrapper files', count: stubCount, severity: stubCount > 0 ? 'fail' : 'pass' });
-
-	// 3. Single-char Fortran flags in @param JSDoc
-	try {
-		var out2 = execSync( "grep -rn \"@param.*'[A-Z]'\" lib --include='*.js' 2>/dev/null | grep -cv '`' || true", { encoding: 'utf8' } ).trim();
-		var c2 = parseInt( out2, 10 ) || 0;
-		checks.push({ name: 'Single-char flags in @param', count: c2, severity: c2 > 0 ? 'fail' : 'pass' });
-	} catch ( e ) {
-		checks.push({ name: 'Single-char flags in @param', count: 0, severity: 'pass' });
-	}
-
-	// 4. d-prefix files with conjugate-transpose
-	try {
-		var out3 = execSync( "grep -rl 'conjugate-transpose' lib/blas/base/d*/lib/ lib/lapack/base/d*/lib/ 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
-		var c3 = parseInt( out3, 10 ) || 0;
-		checks.push({ name: 'd-prefix conjugate-transpose', count: c3, severity: c3 > 0 ? 'fail' : 'pass' });
-	} catch ( e ) {
-		checks.push({ name: 'd-prefix conjugate-transpose', count: 0, severity: 'pass' });
-	}
-
-	// 5. Scaffold-only test stubs (only TODO/Scaffold assert.fail, not assertion helpers)
-	try {
-		var out4 = execSync( "grep -rl 'assert\\.fail.*TODO\\|assert\\.fail.*Scaffold\\|assert\\.fail.*implement' lib/*/base/*/test/test.js 2>/dev/null | wc -l", { encoding: 'utf8' } ).trim();
-		var c4 = parseInt( out4, 10 ) || 0;
-		checks.push({ name: 'Scaffold test stubs', count: c4, severity: c4 > 0 ? 'warn' : 'pass' });
-	} catch ( e ) {
-		checks.push({ name: 'Scaffold test stubs', count: 0, severity: 'pass' });
-	}
-
-	// 6. ndarray.js with string @params but no validation
-	var noValidation = 0;
-	[ 'blas', 'lapack' ].forEach( function( pkg ) {
-		var baseDir = path.join( ROOT, 'lib', pkg, 'base' );
-		if ( !fs.existsSync( baseDir ) ) return;
-		fs.readdirSync( baseDir ).forEach( function( routine ) {
-			var ndarrayJs = path.join( baseDir, routine, 'lib', 'ndarray.js' );
-			var baseJs = path.join( baseDir, routine, 'lib', 'base.js' );
-			if ( !fs.existsSync( ndarrayJs ) || !fs.existsSync( baseJs ) ) return;
-			var baseSrc = fs.readFileSync( baseJs, 'utf8' );
-			if ( !/@param \{string\}/.test( baseSrc ) ) return;
-			var ndSrc = fs.readFileSync( ndarrayJs, 'utf8' );
-			if ( !/throw new TypeError/.test( ndSrc ) ) {
-				noValidation += 1;
-			}
-		});
-	});
-	checks.push({ name: 'ndarray.js without string validation', count: noValidation, severity: noValidation > 0 ? 'warn' : 'pass' });
-
-	return checks;
+function esc( s ) {
+	return ( s || '' ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
 }
-
-function conformanceHTML( checks ) {
-	var pass = checks.filter( function( c ) { return c.severity === 'pass'; } ).length;
-	var rows = checks.map( function( c ) {
-		var badge;
-		if ( c.severity === 'pass' ) {
-			badge = '<span class="badge done">PASS</span>';
-		} else if ( c.severity === 'warn' ) {
-			badge = '<span class="badge stub">' + c.count + '</span>';
-		} else {
-			badge = '<span class="badge" style="background:#fecaca;color:#991b1b;">' + c.count + '</span>';
-		}
-		return '<tr><td>' + c.name + '</td><td class="tests">' + badge + '</td></tr>';
-	}).join( '\n' );
-
-	return '<section>\n' +
-		'<h2>Conformance Checks <span class="count">' + pass + '/' + checks.length + ' passing</span></h2>\n' +
-		'<table>\n<thead><tr><th>Check</th><th style="text-align:center">Result</th></tr></thead>\n' +
-		'<tbody>\n' + rows + '\n</tbody>\n</table>\n</section>\n';
-}
-
-var blasModules = scanModules( 'blas' );
-var lapackModules = scanModules( 'lapack' );
-
-var blasSources = scanSources( 'blas' );
-var lapackSources = scanSources( 'lapack' );
-
-// Merge: include ALL reference routines, marking unimplemented ones
-function mergeWithSources( modules, sources ) {
-	var byName = {};
-	modules.forEach( function( m ) {
-		byName[ m.name ] = m;
-	});
-	return sources.map( function( name ) {
-		if ( byName[ name ] ) {
-			return byName[ name ];
-		}
-		return {
-			name: name,
-			package: modules.length > 0 ? modules[ 0 ].package : '',
-			description: '',
-			hasImpl: false,
-			isStub: false,
-			hasTests: false,
-			testCount: 0,
-			lineCov: null,
-			branchCov: null
-		};
-	});
-}
-
-blasModules = mergeWithSources( blasModules, blasSources );
-lapackModules = mergeWithSources( lapackModules, lapackSources );
-var allModules = blasModules.concat( lapackModules );
-
-var implemented = allModules.filter( function( m ) { return m.hasImpl; } );
-var stubs = allModules.filter( function( m ) { return m.isStub; } );
-var totalTests = allModules.reduce( function( s, m ) { return s + m.testCount; }, 0 );
 
 function covBadge( val, threshold ) {
 	if ( val === null ) return '<span class="cov">—</span>';
@@ -288,48 +163,407 @@ function covBadge( val, threshold ) {
 	return '<span class="' + cls + '">' + val.toFixed( 0 ) + '%</span>';
 }
 
-function moduleRow( m ) {
-	var status;
-	if ( m.hasImpl ) {
-		status = '<span class="badge done">done</span>';
-	} else if ( m.isStub ) {
-		status = '<span class="badge stub">stub</span>';
+function variantCell( variant ) {
+	var impl = getImpl( variant.name );
+	var cls = 'variant';
+	if ( impl && impl.hasImpl ) {
+		cls += ' variant-done';
+	} else if ( impl && impl.isStub ) {
+		cls += ' variant-stub';
 	} else {
-		status = '<span class="badge none">—</span>';
+		cls += ' variant-none';
 	}
-	var tests = m.testCount > 0 ? m.testCount : '—';
-	var desc = m.description
-		.replace( /TODO: Add description for \w+\./, '' )
-		.replace( /&/g, '&amp;' )
-		.replace( /</g, '&lt;' );
-	var implAttr = ( m.hasImpl || m.isStub ) ? '' : ' class="unimpl"';
-	return '<tr' + implAttr + '>' +
-		'<td class="name">' + m.name + '</td>' +
-		'<td>' + status + '</td>' +
-		'<td class="tests">' + tests + '</td>' +
-		'<td class="cov">' + covBadge( m.lineCov, 90 ) + '</td>' +
-		'<td class="cov">' + covBadge( m.branchCov, 85 ) + '</td>' +
-		'<td class="desc">' + desc + '</td>' +
+	var typeLabel = db.meta.type_prefixes[ variant.type ];
+	var tip = variant.name + ( typeLabel ? ' (' + typeLabel.label + ')' : '' );
+	var id = variant.name.toLowerCase();
+	var href = '#' + id;
+	if ( impl && impl.hasImpl ) {
+		var pkg = impl.package || 'lapack';
+		href = 'https://github.com/rreusser/notes/tree/main/blahpack/lib/' + pkg + '/base/' + id;
+	}
+	return '<a id="' + id + '" href="' + href + '" class="' + cls + '" title="' + esc( tip ) + '">' + variant.type + '</a>';
+}
+
+function texifyDesc( raw ) {
+	if ( !raw ) return '';
+	var s = esc( raw );
+
+	// := equations
+	var eqnPattern = /([A-Za-z](?:\([^)]*\))?\s*:=\s*(?:[^,.]|,(?!\s+(?:where|or|and|such)\b))*)/g;
+	s = s.replace( eqnPattern, function( match ) {
+		return '\\(' + fortranToTex( match.trim() ) + '\\)';
+	});
+
+	// A = U**T*U or A = L*L**T style
+	s = s.replace(
+		/([A-Z]\s*=\s*(?:[A-Z*()^]+(?:\*\*[A-Za-z]+)?)+(?:\s+or\s+[A-Z]\s*=\s*(?:[A-Z*()^]+(?:\*\*[A-Za-z]+)?)+)*)(?=\s+(?:computed|where|using)\b|[,.])/g,
+		function( match ) {
+			if ( match.indexOf( '\\(' ) >= 0 ) return match;
+			if ( !/\*\*/.test( match ) ) return match;
+			var parts = match.split( /\s+or\s+/ );
+			return parts.map( function( p ) {
+				return '\\(' + fortranToTex( p.trim() ) + '\\)';
+			}).join( ' or ' );
+		}
+	);
+
+	// Q**T * A * Q = H style
+	s = s.replace(
+		/([A-Z]\*\*[A-Za-z]\s*\*\s*[A-Z][\s*A-Z]*=\s*[A-Z])\b/g,
+		function( match ) {
+			if ( match.indexOf( '\\(' ) >= 0 ) return match;
+			return '\\(' + fortranToTex( match.trim() ) + '\\)';
+		}
+	);
+
+	// A*X = B or A**T*X = B style
+	s = s.replace(
+		/([A-Z](?:\*\*[A-Z])?\s*\*\s*[A-Za-z]\s*=\s*[A-Za-z])\b/g,
+		function( match ) {
+			if ( match.indexOf( '\\(' ) >= 0 ) return match;
+			return '\\(' + fortranToTex( match.trim() ) + '\\)';
+		}
+	);
+
+	// A*x=(lambda)*B*x
+	s = s.replace(
+		/([A-Z]\*[a-z]=\(lambda\)\*[A-Z]\*[a-z])/g,
+		function( match ) {
+			if ( match.indexOf( '\\(' ) >= 0 ) return match;
+			return '\\(' + fortranToTex( match ) + '\\)';
+		}
+	);
+
+	// c**2 + s**2 = 1 style
+	s = s.replace(
+		/\b([a-z]\*\*\d[\s+a-z0-9*=]*)/g,
+		function( match ) {
+			if ( match.indexOf( '\\(' ) >= 0 ) return match;
+			return '\\(' + fortranToTex( match.trim() ) + '\\)';
+		}
+	);
+
+	// sqrt(...) standalone
+	s = s.replace(
+		/[A-Z]?sqrt\(\s*([^)]+)\s*\)/gi,
+		function( match ) {
+			if ( match.indexOf( '\\(' ) >= 0 || match.indexOf( '\\sqrt' ) >= 0 ) return match;
+			return '\\(' + fortranToTex( match ) + '\\)';
+		}
+	);
+
+	// op( X ) standalone
+	s = s.replace( /op\(\s*([A-Z])\s*\)/g, function( m, l ) {
+		if ( m.indexOf( '\\(' ) >= 0 ) return m;
+		return '\\(\\operatorname{op}(' + l + ')\\)';
+	});
+
+	// Final cleanup in prose regions (outside math)
+	var parts = s.split( /(\\\(.*?\\\))/g );
+	for ( var i = 0; i < parts.length; i++ ) {
+		if ( i % 2 === 0 ) {
+			parts[ i ] = parts[ i ]
+				.replace( /([A-Za-z])\*\*([A-Za-z0-9])/g, '\\($1^$2\\)' )
+				.replace( /([A-Z])\^([A-Z0-9])\s*\*\s*([A-Z])/g, '\\($1^$2 $3\\)' )
+				.replace( /([A-Za-z])\^([A-Za-z0-9])/g, '\\($1^$2\\)' )
+				.replace( /\balpha\b/g, '\\(\\alpha\\)' )
+				.replace( /\bbeta\b/g, '\\(\\beta\\)' )
+				.replace( /\blambda\b/g, '\\(\\lambda\\)' );
+		}
+	}
+	s = parts.join( '' );
+
+	// Merge adjacent math regions
+	s = s.replace( /\\\)\s*\\\(/g, '\\,' );
+
+	// Remove nested delimiters
+	s = s.replace( /\\\(\\\(/g, '\\(' );
+	s = s.replace( /\\\)\\\)/g, '\\)' );
+
+	return s;
+}
+
+function fortranToTex( expr ) {
+	var s = expr;
+	s = s.replace( /&amp;/g, '&' );
+	s = s.replace( /&lt;/g, '<' );
+	s = s.replace( /&gt;/g, '>' );
+	s = s.replace( /conjg\(\s*alpha\s*\)/gi, '\\overline{\\alpha}' );
+	s = s.replace( /[A-Z]?sqrt\(\s*([^)]+)\s*\)/gi, function( m, inner ) {
+		return '\\sqrt{' + inner + '}';
+	});
+	s = s.replace( /\(lambda\)/gi, '\\lambda' );
+	s = s.replace( /\(alpha\)/gi, '\\alpha' );
+	s = s.replace( /\(beta\)/gi, '\\beta' );
+	s = s.replace( /op\(\s*([A-Z])\s*\)/g, '\\operatorname{op}($1)' );
+	s = s.replace( /(?<!\\)\balpha\b/g, '\\alpha' );
+	s = s.replace( /(?<!\\)\bbeta\b/g, '\\beta' );
+	s = s.replace( /(?<!\\)\blambda\b/g, '\\lambda' );
+	s = s.replace( /(?<!\\)\bsigma\b/g, '\\sigma' );
+	s = s.replace( /(?<!\\)\btau\b/g, '\\tau' );
+	s = s.replace( /\*\*\(([^)]+)\)/g, function( m, inner ) {
+		return '^{' + inner.replace( /\*\*/g, '^' ).replace( /\s*\*\s*/g, '' ) + '}';
+	});
+	s = s.replace( /\*\*(-?\d+)/g, '^{$1}' );
+	s = s.replace( /\*\*([A-Za-z])/g, '^$1' );
+	s = s.replace( /\s*\*\s*/g, '' );
+	s = s.replace( /([a-z])(\d)/g, '$1^$2' );
+	s = s.replace( /:=/g, '\\coloneqq ' );
+	s = s.replace( /(\\(?:alpha|beta|lambda|sigma|tau))([A-Za-z])/g, '$1\\,$2' );
+	return s;
+}
+
+// ---------------------------------------------------------------------------
+// Build algorithm table rows, grouped by library
+// ---------------------------------------------------------------------------
+
+// Description overrides for algorithms whose Fortran-extracted descriptions
+// are too long, contain ASCII art matrices, or are otherwise unhelpful.
+var DESC_OVERRIDES = {
+	// CS decomposition — Fortran description has huge ASCII matrices
+	'csd':       'Computes the CS decomposition of a partitioned orthogonal/unitary matrix.',
+	'csd2by1':   'Computes the CS decomposition of an M-by-Q matrix with orthonormal columns partitioned into a 2-by-1 block structure.',
+	'bdb':       'Simultaneously bidiagonalizes the blocks of a partitioned orthogonal/unitary matrix (CS decomposition driver).',
+	'bdb1':      'Simultaneously bidiagonalizes the blocks of a tall and skinny matrix with orthonormal columns (case 1).',
+	'bdb2':      'Simultaneously bidiagonalizes the blocks of a tall and skinny matrix with orthonormal columns (case 2).',
+	'bdb3':      'Simultaneously bidiagonalizes the blocks of a tall and skinny matrix with orthonormal columns (case 3).',
+	'bdb4':      'Simultaneously bidiagonalizes the blocks of a tall and skinny matrix with orthonormal columns (case 4).',
+
+	// Multiply by orthogonal/unitary Q — Fortran has SIDE/TRANS table
+	'mbr':       'Multiplies a general matrix by the orthogonal/unitary matrix Q or P from a bidiagonal reduction.',
+	'mhr':       'Multiplies a general matrix by the orthogonal/unitary matrix Q from a Hessenberg reduction.',
+	'mlq':       'Multiplies a general matrix by the orthogonal/unitary matrix Q from an LQ factorization.',
+	'mlqt':      'Multiplies a general matrix by the orthogonal/unitary matrix Q from a blocked LQ factorization.',
+	'mql':       'Multiplies a general matrix by the orthogonal/unitary matrix Q from a QL factorization.',
+	'mqr':       'Multiplies a general matrix by the orthogonal/unitary matrix Q from a QR factorization.',
+	'mqrt':      'Multiplies a general matrix by the orthogonal/unitary matrix Q from a blocked QR factorization.',
+	'mrq':       'Multiplies a general matrix by the orthogonal/unitary matrix Q from an RQ factorization.',
+	'mrz':       'Multiplies a general matrix by the orthogonal/unitary matrix Q from an RZ factorization.',
+	'mswlq':     'Multiplies a general matrix by the orthogonal/unitary matrix Q from a short-wide LQ factorization.',
+	'mtsqr':     'Multiplies a general matrix by the orthogonal/unitary matrix Q from a tall-skinny QR factorization.',
+	'mtr':       'Multiplies a general matrix by the orthogonal/unitary matrix Q stored in a triangular factorization.',
+
+	// Tall-skinny and short-wide factorizations — long descriptions
+	'tsqr':      'Computes a blocked tall-skinny QR factorization.',
+	'swlq':      'Computes a blocked short-wide LQ factorization.',
+	'tsqrhrt':   'Computes an upper-triangular factor of an orthogonal/unitary matrix from a tall-skinny QR factorization.',
+
+	// QR factorization variants
+	'qrfp':      'Computes a QR factorization with non-negative diagonal entries.',
+
+	// Generalized problems
+	'glm':       'Solves a general Gauss-Markov linear model (GLM) problem.',
+	'svp3':      'Computes the generalized singular value decomposition (GSVD).',
+	'syl':       'Solves the generalized Sylvester equation.',
+	'sen':       'Reorders the generalized Schur decomposition and computes reciprocal condition numbers.',
+
+	// Condition number / inverse with long factorization descriptions
+	'con_3':     'Estimates the reciprocal of the condition number using the bounded Bunch-Kaufman factorization.',
+	'tri_3':     'Computes the inverse of a symmetric/Hermitian indefinite matrix using the bounded Bunch-Kaufman factorization.',
+	'tri_3x':    'Computes the inverse of a symmetric/Hermitian indefinite matrix using the bounded Bunch-Kaufman factorization (expert).',
+	'trs_3':     'Solves a system of linear equations using the bounded Bunch-Kaufman factorization.',
+
+	// Factorization format conversion
+	'convf':     'Converts between factorization storage formats for symmetric/Hermitian indefinite factorizations.',
+	'convf_rook': 'Converts between factorization storage formats for rook-pivoted symmetric/Hermitian indefinite factorizations.',
+
+	// SVD
+	'sdc':       'Computes the SVD of a bidiagonal matrix using a divide and conquer method.',
+	'svdx':      'Computes selected singular values and vectors of a bidiagonal matrix.',
+	'sqr':       'Computes singular values and vectors from the SVD of a bidiagonal matrix.',
+
+	// Rotations — clean up ALL-CAPS and matrix notation
+	'rotg':      'Constructs a Givens plane rotation.',
+	'rotm':      'Applies a modified Givens rotation.',
+	'rotmg':     'Constructs a modified Givens rotation.',
+
+	// Empty or stub descriptions
+	'syl3':      'Solves the Sylvester matrix equation (blocked algorithm).',
+	'con_rook':  'Estimates the reciprocal of the condition number using rook pivoting.',
+	'qz3':       'Performs aggressive early deflation in the QZ algorithm.',
+
+	// Eigenvalue descriptions that say "for OTHER matrices"
+	'ev_2stage':   'Computes eigenvalues and optionally eigenvectors (2-stage algorithm).',
+	'evd':         'Computes eigenvalues and optionally eigenvectors using divide and conquer.',
+	'evd_2stage':  'Computes eigenvalues and optionally eigenvectors using divide and conquer (2-stage algorithm).',
+	'evr':         'Computes eigenvalues and optionally eigenvectors using the MRRR algorithm.',
+	'evr_2stage':  'Computes eigenvalues and optionally eigenvectors using the MRRR algorithm (2-stage).',
+	'evx_2stage':  'Computes selected eigenvalues and optionally eigenvectors (2-stage algorithm).',
+
+	// Mixed-precision solvers
+	'cgesv':     'Computes the solution to a system of linear equations using mixed-precision iterative refinement.',
+	'cposv':     'Computes the solution to a positive definite system using mixed-precision iterative refinement.',
+	'sgesv':     'Computes the solution to a system of linear equations using mixed-precision iterative refinement.',
+
+	// Block reflector
+	'rft':       'Forms the triangular factor T of a block reflector.',
+
+	// BLAS descriptions — shorter versions
+	'dotc':      'Computes the dot product of two complex vectors, conjugating the first.',
+	'dotu':      'Computes the dot product of two complex vectors, without conjugation.',
+
+	// Iterative refinement
+	'_gbrfsx_extended': 'Improves the computed solution to a general banded system using extra-precise iterative refinement.',
+	'_gerfsx_extended': 'Improves the computed solution to a general system using extra-precise iterative refinement.',
+	'_herfsx_extended': 'Improves the computed solution to a Hermitian indefinite system using extra-precise iterative refinement.',
+	'_porfsx_extended': 'Improves the computed solution to a positive definite system using extra-precise iterative refinement.',
+	'_syrfsx_extended': 'Improves the computed solution to a symmetric indefinite system using extra-precise iterative refinement.',
+
+	// Comment artifact
+	'syf_rook':  'Computes a partial factorization of a symmetric matrix using rook pivoting (blocked).',
+
+	// Overflow-safe
+	'rmm':       'Computes a scaling factor to prevent overflow in triangular matrix multiplication.',
+
+	// Householder reflector
+	'rfb_gett':  'Applies a block Householder reflector to a triangular-pentagonal matrix.',
+};
+
+function algorithmRow( alg ) {
+	var totalTestsAlg = 0;
+	var variantNames = [];
+	var storageSet = {};
+	var typeSet = {};
+
+	// Group variants by storage
+	var byStorage = {};
+	alg.variants.forEach( function( v ) {
+		var s = v.storage || 'none';
+		storageSet[ s ] = true;
+		typeSet[ v.type ] = true;
+		variantNames.push( v.name.toLowerCase() );
+		if ( !byStorage[ s ] ) byStorage[ s ] = {};
+		byStorage[ s ][ v.type ] = v;
+		var impl = getImpl( v.name );
+		if ( impl ) totalTestsAlg += impl.testCount;
+	});
+
+	var storageKeys = Object.keys( byStorage ).sort();
+	// Canonical type order
+	var typeOrder = [ 's', 'd', 'c', 'z', 'i', 'l', 'x' ];
+	var typeKeys = typeOrder.filter( function( t ) { return typeSet[ t ]; } );
+
+	// Build the variants grid: one row per storage, one column per type
+	var gridHTML = '<table class="variant-grid"><tbody>';
+	storageKeys.forEach( function( s ) {
+		var storageLabel = s === 'none' ? '' : s;
+		var storageTitle = db.meta.storage_codes[ s ] || '';
+		gridHTML += '<tr data-vg-storage="' + s + '">';
+		gridHTML += '<td class="vg-storage"' + ( storageTitle ? ' title="' + esc( storageTitle ) + '"' : '' ) + '>' + storageLabel + '</td>';
+		typeKeys.forEach( function( t ) {
+			var v = byStorage[ s ][ t ];
+			if ( v ) {
+				gridHTML += '<td>' + variantCell( v ) + '</td>';
+			} else {
+				gridHTML += '<td></td>';
+			}
+		});
+		gridHTML += '</tr>';
+	});
+	gridHTML += '</tbody></table>';
+
+	// Build the algorithm display name. If all variants share the same
+	// storage, show a representative full name (e.g. "dgetrf").
+	// If variants span multiple storages, show the algorithm suffix
+	// with a wildcard (e.g. "*trf") since no single name represents all.
+	var canonVar = alg.variants.find( function( v ) { return v.type === 'd'; } ) ||
+		alg.variants.find( function( v ) { return v.type === 'z'; } ) ||
+		alg.variants[ 0 ];
+	var canonicalName;
+	var uniqueTypes = Object.keys( typeSet ).length;
+	if ( uniqueTypes === 1 && storageKeys.length === 1 ) {
+		// Single type, single storage — show the actual routine name
+		canonicalName = canonVar.name.toLowerCase();
+	} else {
+		canonicalName = '*' + alg.algorithm;
+	}
+
+	// Use description override or Fortran-extracted description
+	var desc = DESC_OVERRIDES[ alg.algorithm ] || '';
+	if ( !desc ) {
+		var descVariant = alg.variants.find( function( v ) { return v.type === 'd' && v.description; } ) ||
+			alg.variants.find( function( v ) { return v.type === 'z' && v.description; } ) ||
+			alg.variants.find( function( v ) { return v.description; } );
+		if ( descVariant ) {
+			desc = descVariant.description;
+		}
+	}
+
+	var doneCount = alg.variants.filter( function( v ) {
+		var impl = getImpl( v.name );
+		return impl && impl.hasImpl;
+	}).length;
+
+	// Compute average line coverage across implemented variants
+	var covSum = 0;
+	var covCount = 0;
+	alg.variants.forEach( function( v ) {
+		var impl = getImpl( v.name );
+		if ( impl && impl.lineCov !== null ) {
+			covSum += impl.lineCov;
+			covCount++;
+		}
+	});
+	var covDisp = covCount > 0 ? covBadge( covSum / covCount, 90 ) : '—';
+
+	return '<tr' +
+		' data-algorithm="' + esc( alg.algorithm ) + '"' +
+		' data-variants="' + variantNames.join( ',' ) + '"' +
+		' data-storage="' + Object.keys( storageSet ).join( ',' ) + '"' +
+		' data-types="' + typeKeys.join( ',' ) + '"' +
+		'>' +
+		'<td class="name"><a id="' + esc( canonicalName ) + '" href="#' + esc( canonicalName ) + '">' + esc( canonicalName ) + '</a></td>' +
+		'<td class="variants-cell">' + gridHTML + '</td>' +
+		'<td class="cov">' + covDisp + '</td>' +
+		'<td class="desc">' + texifyDesc( desc ) + '</td>' +
 		'</tr>';
 }
 
-function sectionHTML( title, modules ) {
-	var complete = modules.filter( function( m ) { return m.hasImpl; } ).length;
-	var rows = modules.map( moduleRow ).join( '\n' );
+function sectionHTML( title, algorithms ) {
+	var totalAlg = algorithms.length;
+	var totalVariants = algorithms.reduce( function( s, a ) { return s + a.variants.length; }, 0 );
+	var doneAlg = algorithms.filter( function( a ) {
+		return a.variants.some( function( v ) {
+			var impl = getImpl( v.name );
+			return impl && impl.hasImpl;
+		});
+	}).length;
+	var doneVariants = 0;
+	algorithms.forEach( function( a ) {
+		a.variants.forEach( function( v ) {
+			var impl = getImpl( v.name );
+			if ( impl && impl.hasImpl ) doneVariants++;
+		});
+	});
+
+	var rows = algorithms.map( algorithmRow ).join( '\n' );
 	return '<section class="module-table">\n' +
-		'<h2>' + title + ' <span class="count">' + complete + '/' + modules.length + '</span></h2>\n' +
-		'<table>\n<thead><tr><th>Routine</th><th>Status</th><th>Tests</th><th>Lines</th><th>Branch</th><th>Description</th></tr></thead>\n' +
+		'<h2>' + title + ' <span class="count">' + doneAlg + '/' + totalAlg +
+		' algorithms (' + doneVariants + '/' + totalVariants + ' routines)</span></h2>\n' +
+		'<table>\n<thead><tr>' +
+		'<th>Algorithm</th>' +
+		'<th>Variants</th>' +
+		'<th>Coverage</th>' +
+		'<th>Description</th>' +
+		'</tr></thead>\n' +
 		'<tbody>\n' + rows + '\n</tbody>\n</table>\n</section>\n';
 }
+
+// Split algorithms by library
+var blasAlgs = db.routines.filter( function( a ) { return a.library === 'BLAS'; } );
+var lapackAlgs = db.routines.filter( function( a ) { return a.library === 'LAPACK'; } );
 
 var now = new Date().toISOString().replace( /T.*/, '' );
 
 var html = '<!DOCTYPE html>\n' +
 '<html lang="en">\n<head>\n<meta charset="utf-8">\n' +
 '<title>Blahpack Progress</title>\n' +
+'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">\n' +
+'<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>\n' +
+'<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:\'\\\\(\',right:\'\\\\)\',display:false}]});"></script>\n' +
 '<style>\n' +
 '* { margin: 0; padding: 0; box-sizing: border-box; }\n' +
-'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8f9fa; color: #333; padding: 2rem; max-width: 960px; margin: 0 auto; }\n' +
+'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8f9fa; color: #333; padding: 2rem; margin: 0 auto; }\n' +
 'h1 { margin-bottom: 0.25rem; }\n' +
 '.subtitle { color: #666; margin-bottom: 1.5rem; }\n' +
 '.stats { display: flex; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }\n' +
@@ -340,118 +574,149 @@ var html = '<!DOCTYPE html>\n' +
 'section { margin-bottom: 2rem; }\n' +
 'h2 { margin-bottom: 0.5rem; }\n' +
 '.count { font-weight: 400; color: #888; font-size: 0.9rem; }\n' +
-'table { width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }\n' +
+'table { width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); table-layout: auto; }\n' +
 'th { text-align: left; padding: 0.5rem 0.75rem; background: #f1f3f5; font-size: 0.8rem; text-transform: uppercase; color: #666; }\n' +
 'td { padding: 0.4rem 0.75rem; border-top: 1px solid #eee; font-size: 0.875rem; }\n' +
-'.name { font-family: ui-monospace, monospace; font-weight: 600; }\n' +
+'.name { font-family: ui-monospace, monospace; font-weight: 600; white-space: nowrap; }\n' +
+'.name a { color: inherit; text-decoration: none; }\n' +
+'.name a:hover { text-decoration: underline; }\n' +
+'a.variant { text-decoration: none; cursor: pointer; border: 1px solid transparent; }\n' +
+'a.variant:hover { border-color: #3b82f6; }\n' +
+'tr.vg-hidden { display: none; }\n' +
+'.variants-cell { padding: 0.2rem 0.5rem; }\n' +
+'.variant-grid { border-collapse: collapse; border: none; box-shadow: none; background: transparent; width: auto; }\n' +
+'.variant-grid td { border: none; padding: 1px; }\n' +
+'.vg-storage { font-family: ui-monospace, monospace; font-size: 0.7rem; color: #888; text-align: right; padding-right: 4px !important; font-weight: 500; }\n' +
+'.variant { display: inline-block; width: 1.5rem; height: 1.3rem; line-height: 1.3rem; text-align: center; font-family: ui-monospace, monospace; font-size: 0.65rem; font-weight: 600; border-radius: 3px; cursor: default; }\n' +
+'.variant-done { background: #dcfce7; color: #166534; }\n' +
+'.variant-stub { background: #fef9c3; color: #854d0e; }\n' +
+'.variant-none { background: #f3f4f6; color: #999; }\n' +
 '.tests { text-align: center; }\n' +
-'.desc { color: #555; }\n' +
+'.desc { color: #555; font-size: 0.8rem; }\n' +
 '.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }\n' +
 '.badge.done { background: #dcfce7; color: #166534; }\n' +
+'.badge.partial { background: #dbeafe; color: #1e40af; }\n' +
 '.badge.stub { background: #fef9c3; color: #854d0e; }\n' +
 '.badge.none { background: #f3f4f6; color: #9ca3af; }\n' +
 '.cov { text-align: center; font-size: 0.8rem; }\n' +
 '.cov-good { color: #16a34a; font-weight: 600; }\n' +
 '.cov-warn { color: #ca8a04; font-weight: 600; }\n' +
 '.cov-bad { color: #dc2626; font-weight: 600; }\n' +
-'tr.unimpl { display: none; }\n' +
-'body.show-all tr.unimpl { display: table-row; }\n' +
-'tr.prefix-hidden { display: none !important; }\n' +
+'tr.filter-hidden { display: none !important; }\n' +
 '.controls { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }\n' +
 '.toggle { font-size: 0.9rem; cursor: pointer; user-select: none; }\n' +
 '.toggle input { margin-right: 0.4rem; cursor: pointer; }\n' +
-'.prefix-filter { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }\n' +
-'.prefix-filter input[type="text"] { width: 6rem; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 0.875rem; }\n' +
-'.prefix-btns { display: flex; gap: 0.25rem; }\n' +
-'.prefix-btns button { padding: 3px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 0.8rem; cursor: pointer; font-family: ui-monospace, monospace; }\n' +
-'.prefix-btns button:hover { background: #f1f3f5; }\n' +
-'.prefix-btns button.active { background: #3b82f6; color: white; border-color: #3b82f6; }\n' +
+'.legend { margin-bottom: 1.5rem; background: white; border-radius: 8px; padding: 0.75rem 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-size: 0.85rem; }\n' +
+'.legend summary { cursor: pointer; font-weight: 600; color: #555; }\n' +
+'.legend-cols { display: flex; gap: 2rem; margin-top: 0.75rem; flex-wrap: wrap; }\n' +
+'.legend-col h4 { font-size: 0.75rem; text-transform: uppercase; color: #888; margin-bottom: 0.25rem; }\n' +
+'.legend-table { border: none; box-shadow: none; background: transparent; width: auto; }\n' +
+'.legend-table td { border: none; padding: 1px 0.5rem 1px 0; font-size: 0.8rem; }\n' +
+'.legend-code { font-family: ui-monospace, monospace; font-weight: 600; color: #333; }\n' +
+'.filter-group { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }\n' +
+'.filter-group input[type="text"] { width: 8rem; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 0.875rem; }\n' +
+'.filter-btns { display: flex; gap: 0.25rem; }\n' +
+'.filter-btns button { padding: 3px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 0.8rem; cursor: pointer; font-family: ui-monospace, monospace; }\n' +
+'.filter-btns button:hover { background: #f1f3f5; }\n' +
+'.filter-btns button.active { background: #3b82f6; color: white; border-color: #3b82f6; }\n' +
 '</style>\n</head>\n<body>\n' +
 '<h1>Blahpack Translation Progress</h1>\n' +
-'<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; generated ' + now + '</p>\n' +
+'<p class="subtitle">Fortran BLAS/LAPACK &rarr; JavaScript &mdash; ' + totalRoutines + ' routines across ' + totalAlgorithms + ' algorithms &mdash; generated ' + now + '</p>\n' +
 '<div class="stats">\n' +
-'<div class="stat green"><div class="val">' + implemented.length + '/' + ( blasSources.length + lapackSources.length ) + '</div><div class="lbl">Implemented</div></div>\n' +
-'<div class="stat"><div class="val">' + totalTests + '</div><div class="lbl">Tests</div></div>\n' +
-'<div class="stat" id="statBlas"><div class="val">' + blasModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + blasSources.length + '</div><div class="lbl">BLAS</div></div>\n' +
-'<div class="stat" id="statLapack"><div class="val">' + lapackModules.filter( function( m ) { return m.hasImpl; } ).length + '/' + lapackSources.length + '</div><div class="lbl">LAPACK</div></div>\n' +
+'<div class="stat green"><div class="val" id="statImpl">' + implementedCount + '/' + totalRoutines + '</div><div class="lbl">Routines Implemented</div></div>\n' +
+'<div class="stat"><div class="val" id="statTests">' + totalTests + '</div><div class="lbl">Tests</div></div>\n' +
+'<div class="stat" id="statBlas"><div class="val">' + blasImplCount + '/' + blasSourceCount + '</div><div class="lbl">BLAS</div></div>\n' +
+'<div class="stat" id="statLapack"><div class="val">' + lapackImplCount + '/' + lapackSourceCount + '</div><div class="lbl">LAPACK</div></div>\n' +
+'<div class="stat"><div class="val">' + totalAlgorithms + '</div><div class="lbl">Algorithms</div></div>\n' +
 '</div>\n' +
-conformanceHTML( runConformanceChecks() ) +
+'<details class="legend">\n' +
+'<summary>Key: type prefixes &amp; storage codes</summary>\n' +
+'<div class="legend-cols">\n' +
+'<div class="legend-col">\n' +
+'<h4>Type prefixes</h4>\n' +
+'<table class="legend-table"><tbody>\n' +
+'<tr><td class="legend-code">s</td><td>single-precision real</td></tr>\n' +
+'<tr><td class="legend-code">d</td><td>double-precision real</td></tr>\n' +
+'<tr><td class="legend-code">c</td><td>single-precision complex</td></tr>\n' +
+'<tr><td class="legend-code">z</td><td>double-precision complex</td></tr>\n' +
+'</tbody></table>\n' +
+'</div>\n' +
+'<div class="legend-col">\n' +
+'<h4>Storage codes</h4>\n' +
+'<table class="legend-table"><tbody>\n' +
+Object.keys( db.meta.storage_codes ).sort().map( function( code ) {
+	return '<tr><td class="legend-code">' + code + '</td><td>' + esc( db.meta.storage_codes[ code ] ) + '</td></tr>';
+}).join( '\n' ) +
+'\n</tbody></table>\n' +
+'</div>\n' +
+'</div>\n' +
+'</details>\n' +
 '<div class="controls">\n' +
-'<label class="toggle"><input type="checkbox" id="showAll">Show unimplemented</label>\n' +
-'<div class="prefix-filter">\n' +
-'<span>Prefix:</span>\n' +
-'<input type="text" id="prefixInput" placeholder="e.g. z, dge">\n' +
-'<div class="prefix-btns">\n' +
-'<button data-prefix="">all</button>\n' +
-'<button data-prefix="d">d*</button>\n' +
-'<button data-prefix="z">z*</button>\n' +
-'<button data-prefix="s">s*</button>\n' +
-'<button data-prefix="c">c*</button>\n' +
+'<div class="filter-group">\n' +
+'<span>Storage:</span>\n' +
+'<div class="filter-btns" id="storageBtns">\n' +
+'<button data-storage="" class="active">all</button>\n' +
+Object.keys( db.meta.storage_codes ).sort().filter( function( c ) {
+	return [ 'ge', 'sy', 'he', 'tr', 'po', 'gb', 'or', 'un', 'la' ].indexOf( c ) >= 0;
+}).map( function( c ) {
+	return '<button data-storage="' + c + '" title="' + esc( db.meta.storage_codes[ c ] ) + '">' + c + '</button>';
+}).join( '\n' ) + '\n' +
 '</div>\n' +
 '</div>\n' +
+'<div class="filter-group">\n' +
+'<span>Search:</span>\n' +
+'<input type="text" id="searchInput" placeholder="algorithm or routine">\n' +
 '</div>\n' +
-sectionHTML( 'BLAS', blasModules ) +
-sectionHTML( 'LAPACK', lapackModules ) +
+'</div>\n' +
+sectionHTML( 'BLAS', blasAlgs ) +
+sectionHTML( 'LAPACK', lapackAlgs ) +
 '<script>\n' +
 '(function() {\n' +
-'  var showAll = document.getElementById("showAll");\n' +
-'  var prefixInput = document.getElementById("prefixInput");\n' +
-'  var prefixBtns = document.querySelectorAll(".prefix-btns button");\n' +
-'  var statImpl = document.querySelector(".stat.green .val");\n' +
-'  var statTests = document.querySelectorAll(".stat")[1].querySelector(".val");\n' +
-'  var statBlas = document.getElementById("statBlas").querySelector(".val");\n' +
-'  var statLapack = document.getElementById("statLapack").querySelector(".val");\n' +
-'  var sections = document.querySelectorAll("section.module-table");\n' +
+'  var searchInput = document.getElementById("searchInput");\n' +
+'  var storageBtns = document.querySelectorAll("#storageBtns button");\n' +
+'  var activeStorage = "";\n' +
 '\n' +
-'  showAll.addEventListener("change", function() {\n' +
-'    document.body.classList.toggle("show-all", this.checked);\n' +
-'  });\n' +
 '\n' +
-'  function applyFilter(prefix) {\n' +
-'    prefixInput.value = prefix;\n' +
-'    prefixBtns.forEach(function(b) {\n' +
-'      b.classList.toggle("active", b.dataset.prefix === prefix);\n' +
-'    });\n' +
-'    var p = prefix.toLowerCase();\n' +
-'    var totals = { impl: 0, total: 0, tests: 0 };\n' +
-'    var perSec = [];\n' +
-'    sections.forEach(function(sec) {\n' +
-'      var rows = sec.querySelectorAll("tbody tr");\n' +
-'      var secImpl = 0, secTotal = 0;\n' +
-'      rows.forEach(function(row) {\n' +
-'        var name = row.querySelector(".name").textContent;\n' +
-'        var match = !p || name.indexOf(p) === 0;\n' +
-'        row.classList.toggle("prefix-hidden", !match);\n' +
-'        if (match) {\n' +
-'          secTotal++;\n' +
-'          totals.total++;\n' +
-'          if (row.querySelector(".badge.done")) {\n' +
-'            secImpl++;\n' +
-'            totals.impl++;\n' +
-'          }\n' +
-'          var tc = row.querySelector(".tests").textContent;\n' +
-'          if (tc !== "\\u2014") totals.tests += parseInt(tc, 10) || 0;\n' +
+'  function applyFilters() {\n' +
+'    var search = searchInput.value.toLowerCase();\n' +
+'    var rows = document.querySelectorAll("section.module-table > table > tbody > tr");\n' +
+'    rows.forEach(function(row) {\n' +
+'      var alg = row.dataset.algorithm || "";\n' +
+'      var variants = row.dataset.variants || "";\n' +
+'      var storages = (row.dataset.storage || "").split(",");\n' +
+'      var matchStorage = !activeStorage || storages.indexOf(activeStorage) >= 0;\n' +
+'      var matchSearch = !search || alg.indexOf(search) >= 0 || variants.indexOf(search) >= 0;\n' +
+'      row.classList.toggle("filter-hidden", !matchStorage || !matchSearch);\n' +
+'      // Also filter variant grid rows within this row\n' +
+'      var vgRows = row.querySelectorAll("tr[data-vg-storage]");\n' +
+'      vgRows.forEach(function(vgRow) {\n' +
+'        var s = vgRow.dataset.vgStorage;\n' +
+'        var hideByStorage = activeStorage && s !== activeStorage;\n' +
+'        // For search: hide grid rows where no variant name contains the search\n' +
+'        var hideBySearch = false;\n' +
+'        if (search && matchStorage) {\n' +
+'          var chips = vgRow.querySelectorAll("a.variant");\n' +
+'          var anyMatch = false;\n' +
+'          chips.forEach(function(chip) {\n' +
+'            if (chip.id.indexOf(search) >= 0) anyMatch = true;\n' +
+'          });\n' +
+'          hideBySearch = !anyMatch;\n' +
 '        }\n' +
+'        vgRow.classList.toggle("vg-hidden", hideByStorage || hideBySearch);\n' +
 '      });\n' +
-'      var cnt = sec.querySelector(".count");\n' +
-'      if (cnt) cnt.textContent = secImpl + "/" + secTotal;\n' +
-'      perSec.push({ impl: secImpl, total: secTotal });\n' +
 '    });\n' +
-'    statImpl.textContent = totals.impl + "/" + totals.total;\n' +
-'    statTests.textContent = totals.tests;\n' +
-'    if (perSec[0]) statBlas.textContent = perSec[0].impl + "/" + perSec[0].total;\n' +
-'    if (perSec[1]) statLapack.textContent = perSec[1].impl + "/" + perSec[1].total;\n' +
 '  }\n' +
 '\n' +
-'  prefixInput.addEventListener("input", function() {\n' +
-'    applyFilter(this.value);\n' +
-'  });\n' +
-'  prefixBtns.forEach(function(btn) {\n' +
+'  storageBtns.forEach(function(btn) {\n' +
 '    btn.addEventListener("click", function() {\n' +
-'      applyFilter(this.dataset.prefix);\n' +
+'      storageBtns.forEach(function(b) { b.classList.remove("active"); });\n' +
+'      btn.classList.add("active");\n' +
+'      activeStorage = btn.dataset.storage;\n' +
+'      applyFilters();\n' +
 '    });\n' +
 '  });\n' +
-'  prefixBtns[0].classList.add("active");\n' +
+'\n' +
+'  searchInput.addEventListener("input", applyFilters);\n' +
 '})();\n' +
 '</script>\n' +
 '</body>\n</html>\n';

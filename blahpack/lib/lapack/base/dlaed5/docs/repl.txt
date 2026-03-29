@@ -1,0 +1,54 @@
+
+    dlaed5.ndarray( i, d, strideD, offsetD, z, strideZ, offsetZ, delta, strideDELTA, offsetDELTA, rho, dlam )
+        Solve the 2-by-2 secular equation.
+
+        Parameters
+        ----------
+        i: integer
+            i.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `z`.
+
+        delta: Float64Array
+            input array.
+
+        strideDELTA: integer
+            stride length for `delta`.
+
+        offsetDELTA: NonNegativeInteger
+            starting index for `delta`.
+
+        rho: number
+            rho.
+
+        dlam: number
+            dlam.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

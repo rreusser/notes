@@ -1,0 +1,51 @@
+
+    dtrttf.ndarray( transr, uplo, N, A, strideA1, strideA2, offsetA, lda, ARF, strideARF, offsetARF )
+        Copy a triangular matrix from standard full format (TR) to Rectangular Full Packed format (RFP)
+
+        Parameters
+        ----------
+        transr: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        lda: integer
+            lda.
+
+        ARF: Float64Array
+            output array.
+
+        strideARF: integer
+            stride length for `ARF`.
+
+        offsetARF: NonNegativeInteger
+            starting index for `ARF`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

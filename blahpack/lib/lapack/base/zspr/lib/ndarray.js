@@ -1,0 +1,38 @@
+
+
+'use strict';
+
+// MODULES //
+
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Perform the symmetric rank-1 update of a complex symmetric packed matrix
+*
+* @param {string} uplo - specifies the operation type
+* @param {NonNegativeInteger} N - number of columns
+* @param {Complex128} alpha - scalar constant
+* @param {Float64Array} x - input array
+* @param {integer} strideX - stride length for `x`
+* @param {NonNegativeInteger} offsetX - starting index for `x`
+* @param {Float64Array} AP - output array
+* @param {integer} strideAP - stride length for `AP`
+* @param {NonNegativeInteger} offsetAP - starting index for `AP`
+* @throws {TypeError} First argument must be a valid matrix triangle
+*/
+function zspr( uplo, N, alpha, x, strideX, offsetX, AP, strideAP, offsetAP ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	return base( uplo, N, alpha, x, strideX, offsetX, AP, strideAP, offsetAP ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zspr;

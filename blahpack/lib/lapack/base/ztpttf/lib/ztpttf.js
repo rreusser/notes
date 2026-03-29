@@ -1,0 +1,29 @@
+
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Copies a triangular matrix from standard packed format (TP) to Rectangular Full Packed format (RFP), complex version.
+*
+* @param {string} transr - specifies whether `ARF` is in normal or conjugate-transpose format (`'no-transpose'` or `'conjugate-transpose'`)
+* @param {string} uplo - specifies whether the matrix is upper or lower triangular (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Complex128Array} AP - input array in standard packed format
+* @param {Complex128Array} ARF - output array in RFP format
+* @returns {integer} status code (0 = success)
+*/
+function ztpttf( transr, uplo, N, AP, ARF ) {
+	return base( transr, uplo, N, AP, 1, 0, ARF, 1, 0 );
+}
+
+
+// EXPORTS //
+
+module.exports = ztpttf;

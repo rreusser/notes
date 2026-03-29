@@ -1,0 +1,54 @@
+
+    dla_gbrpvgrw.ndarray( N, kl, ku, ncols, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB )
+        Compute the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        kl: integer
+            kl.
+
+        ku: integer
+            ku.
+
+        ncols: integer
+            ncols.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        AFB: Float64Array
+            output matrix.
+
+        strideAFB1: integer
+            stride of the first dimension of `AFB`.
+
+        strideAFB2: integer
+            stride of the second dimension of `AFB`.
+
+        offsetAFB: NonNegativeInteger
+            starting index for `AFB`.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,13 @@
+{
+  "node/no-unpublished-require": "off",
+  "stdlib/require-leading-slash": "off",
+  "stdlib/no-builtin-math": "off",
+  "stdlib/jsdoc-markdown-remark": "off",
+
+  "stdlib/no-todo-params": "error",
+  "stdlib/no-stub-wrappers": "error",
+  "stdlib/jsdoc-backtick-params": ["error"],
+  "stdlib/no-dprefix-conjugate-transpose": "error",
+  "stdlib/no-scaffold-assertions": "error",
+  "stdlib/z-prefix-reinterpret": "error"
+}

@@ -10,25 +10,35 @@ Review `$ARGUMENTS` for convention violations. Fix all errors found.
 
 ## Quick start
 
-Run the automated audit first:
+Run ESLint first — it catches most conformance issues automatically:
+```bash
+bin/lint.sh $ARGUMENTS
+```
+
+This runs both stdlib ESLint rules and blahpack-specific conformance rules:
+- `no-todo-params` — TODO remnants in @param tags
+- `no-stub-wrappers` — "not yet implemented" in wrapper files
+- `jsdoc-backtick-params` — bare single-char Fortran flags in @param (fixable)
+- `no-dprefix-conjugate-transpose` — conjugate-transpose in d-prefix routines (fixable)
+- `no-scaffold-assertions` — scaffold assert.fail() in tests
+- `z-prefix-reinterpret` — complex array indexing without reinterpret()
+
+Auto-fix what's possible:
+```bash
+bin/lint.sh --fix $ARGUMENTS
+```
+
+Then run the remaining audit checks (cross-file checks that ESLint can't do):
 ```bash
 bash ${CLAUDE_SKILL_DIR}/audit.sh $ARGUMENTS
 ```
-
-If no argument is given, this audits the full codebase. For a single module:
-```bash
-bash ${CLAUDE_SKILL_DIR}/audit.sh lib/<package>/base/<routine>
-```
-
-The audit checks scaffolding remnants, string conventions, Complex128Array
-usage, and ndarray.js validation. Fix all errors and warnings it reports,
-then apply the full manual checklist below.
 
 ## Bundled scripts
 
 | Script | Purpose |
 |--------|---------|
-| `${CLAUDE_SKILL_DIR}/audit.sh` | Automated convention audit |
+| `bin/lint.sh` | ESLint with stdlib + blahpack conformance rules |
+| `${CLAUDE_SKILL_DIR}/audit.sh` | Cross-file convention audit (ndarray validation, etc.) |
 | `${CLAUDE_SKILL_DIR}/check-stubs.sh` | Detect stub wrapper files (`'not yet implemented'`) |
 | `${CLAUDE_SKILL_DIR}/check-stub-tests.sh` | Detect scaffold-only test stubs |
 | `${CLAUDE_SKILL_DIR}/fix_wrapper_docs.py` | Propagate base.js @param to ndarray.js/wrapper files |
@@ -45,20 +55,16 @@ integration until every applicable check passes.
 Scaffolded content must be fully replaced with real implementations.
 Every file in the module must work — not just base.js.
 
+These are now enforced by ESLint rules (run `bin/lint.sh`):
+- **`stdlib/no-stub-wrappers`** — flags "not yet implemented" in wrapper files
+- **`stdlib/no-todo-params`** — flags TODO in @param or type annotations
+- **`stdlib/no-scaffold-assertions`** — flags assert.fail('TODO:...') in tests
+
 ```bash
-# No 'not yet implemented' in ANY JS file (base.js, ndarray.js, <routine>.js, index.js, main.js)
-grep -rn "not yet implemented" lib/<pkg>/base/<routine>/lib/*.js
+# Lint catches all of the above:
+bin/lint.sh lib/<pkg>/base/<routine>
 
-# No TODO in @param or @returns
-grep -n "@param.*TODO\|@returns.*TODO\|{TODO}" lib/<pkg>/base/<routine>/lib/*.js
-
-# No assert.fail stubs in tests
-grep -n "assert.fail" lib/<pkg>/base/<routine>/test/test.js
-
-# Test file has real assertions (not just type checks)
-# Must have >2 assert.* calls beyond the scaffolded type checks
-
-# Full codebase check for stub wrappers:
+# Full codebase check for stub wrappers (legacy, also caught by lint):
 bash bin/check-stubs.sh
 ```
 
@@ -69,12 +75,16 @@ bash bin/check-stubs.sh
 Single-character Fortran flags are categorically forbidden in code AND
 docstrings. See CLAUDE.md for the complete mapping table.
 
-```bash
-# No single-char strings in executable code
-grep -n "'[A-Z0-9]'" lib/<pkg>/base/<routine>/lib/base.js | grep -v '//\|^\s*\*\|eslint\|require'
+These are now enforced by ESLint rules (run `bin/lint.sh`):
+- **`stdlib/jsdoc-backtick-params`** — bare `'N'` in @param (fixable with `--fix`)
+- **`stdlib/no-dprefix-conjugate-transpose`** — conjugate-transpose in d-prefix (fixable with `--fix`)
 
-# No single-char strings in @param descriptions (should use backtick-quoted long-form)
-grep -n "@param.*'[A-Z]'" lib/<pkg>/base/<routine>/lib/*.js | grep -v '`'
+```bash
+# Auto-fix backtick quoting and d-prefix conjugate-transpose:
+bin/lint.sh --fix lib/<pkg>/base/<routine>
+
+# Single-char strings in executable code (not yet an ESLint rule):
+grep -n "'[A-Z0-9]'" lib/<pkg>/base/<routine>/lib/base.js | grep -v '//\|^\s*\*\|eslint\|require'
 ```
 
 **d-prefix routines** must not list `'conjugate-transpose'` as a valid trans
@@ -88,16 +98,17 @@ All z-prefix (and c-prefix) routines must accept `Complex128Array` at the API
 boundary for complex data. `Float64Array` is only acceptable for genuinely real
 parameters (RWORK, d, e, eigenvalues, scale factors, etc.).
 
+The **`stdlib/z-prefix-reinterpret`** ESLint rule flags z-prefix base.js files
+that index complex arrays without calling `reinterpret()`. Run `bin/lint.sh`
+to check.
+
 ```bash
-# Check base.js @param types
+# Check base.js @param types (manual — not yet an ESLint rule)
 grep "@param {Float64Array}" lib/<pkg>/base/<routine>/lib/base.js
 
 # For z-prefix: every matrix/vector param (A, B, x, y, AP, etc.) must be Complex128Array
 # Only these should remain Float64Array: WORK, RWORK, IWORK, d, e, w, S, s, scale,
 # CNORM, FERR, BERR, VN1, VN2, ISUPPZ, IFAIL, BWORK, and scalar output arrays
-
-# base.js must call reinterpret() for internal Float64 access
-grep "reinterpret" lib/<pkg>/base/<routine>/lib/base.js
 ```
 
 The pattern: accept `Complex128Array` in the signature, call
@@ -208,8 +219,12 @@ grep "assert.fail\|TODO.*implement" lib/<pkg>/base/<routine>/test/test.js
 ## 9. Lint passes
 
 ```bash
-bin/lint.sh lib/<pkg>/base/<routine>/lib/base.js
+bin/lint.sh lib/<pkg>/base/<routine>
 ```
+
+This runs all stdlib rules plus blahpack conformance rules (scaffolding,
+string conventions, complex arrays, etc.) in a single pass. Fix what you can
+with `--fix`, then address the rest manually.
 
 Deferred rules (`max-len`, `max-params`, etc.) must be disabled with a single
 `/* eslint-disable */` comment at file top listing only rules that fire.
@@ -257,40 +272,37 @@ issue at index `j` returns `j + 1`.
 After any change, verify:
 
 ```bash
-node --test 'lib/**/test/test*.js' 'lib/*.test.js'
-bin/check-stub-tests.sh
+npm run check
 ```
+
+This runs both the test suite and the conformance audit. Scaffold stubs are
+also caught by `stdlib/no-scaffold-assertions` during linting.
 
 ---
 
 ## Bulk audit commands
 
-Run these across the entire codebase to find systemic issues:
+Most of these are now ESLint rules — run `bin/lint.sh` for a full codebase
+lint (processes each module individually to avoid OOM).
 
 ```bash
-# All single-char Fortran flags in @param
-grep -rn "@param.*'[A-Z]'" lib --include='*.js' | grep -v '`' | wc -l
+# Full lint (all conformance rules included):
+bin/lint.sh
 
-# All TODO @param
-grep -rl "@param.*TODO\|{TODO}" lib --include='*.js' | wc -l
+# Auto-fix backtick quoting and d-prefix conjugate-transpose:
+bin/lint.sh --fix
 
-# z-prefix files missing reinterpret (possible Float64Array API)
-for f in lib/blas/base/z*/lib/base.js lib/lapack/base/z*/lib/base.js; do
-  grep -qL "reinterpret" "$f" 2>/dev/null && echo "$f"
-done
+# Cross-file checks not covered by ESLint:
 
-# ndarray.js files without string validation
+# ndarray.js files without string validation (requires reading base.js)
 for f in lib/*/base/*/lib/ndarray.js; do
   if grep -q "uplo\|trans\|diag\|side" "$(dirname $f)/base.js" 2>/dev/null; then
     grep -qL "throw new TypeError" "$f" 2>/dev/null && echo "$f"
   fi
 done
 
-# d-prefix files mentioning conjugate-transpose
-grep -rl "conjugate-transpose" lib/blas/base/d*/lib/ lib/lapack/base/d*/lib/ 2>/dev/null
-
-# Scaffold stubs in test files
-bin/check-stub-tests.sh
+# Full audit (includes cross-file checks):
+bash bin/audit.sh
 ```
 
 ---

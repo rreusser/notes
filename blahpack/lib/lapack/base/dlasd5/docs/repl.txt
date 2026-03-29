@@ -1,0 +1,63 @@
+
+    dlasd5.ndarray( i, d, strideD, offsetD, z, strideZ, offsetZ, delta, strideDELTA, offsetDELTA, rho, dsigma, work, strideWORK, offsetWORK )
+        Compute the square root of the i-th eigenvalue of a positive symmetric rank-one modification of a 2-by-2 diagonal matrix.
+
+        Parameters
+        ----------
+        i: integer
+            i.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        z: Float64Array
+            input array.
+
+        strideZ: integer
+            stride length for `z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `z`.
+
+        delta: Float64Array
+            input array.
+
+        strideDELTA: integer
+            stride length for `delta`.
+
+        offsetDELTA: NonNegativeInteger
+            starting index for `delta`.
+
+        rho: number
+            rho.
+
+        dsigma: number
+            dsigma.
+
+        work: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `work`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `work`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

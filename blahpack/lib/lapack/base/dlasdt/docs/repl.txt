@@ -1,0 +1,57 @@
+
+    dlasdt.ndarray( N, lvl, nd, INODE, strideINODE, offsetINODE, NDIML, strideNDIML, offsetNDIML, NDIMR, strideNDIMR, offsetNDIMR, msub )
+        Create a tree of subproblems for bidiagonal divide and conquer.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        lvl: integer
+            lvl.
+
+        nd: integer
+            nd.
+
+        INODE: Int32Array
+            input array.
+
+        strideINODE: integer
+            stride length for `INODE`.
+
+        offsetINODE: NonNegativeInteger
+            starting index for `INODE`.
+
+        NDIML: Int32Array
+            input array.
+
+        strideNDIML: integer
+            stride length for `NDIML`.
+
+        offsetNDIML: NonNegativeInteger
+            starting index for `NDIML`.
+
+        NDIMR: Int32Array
+            output array.
+
+        strideNDIMR: integer
+            stride length for `NDIMR`.
+
+        offsetNDIMR: NonNegativeInteger
+            starting index for `NDIMR`.
+
+        msub: integer
+            msub.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

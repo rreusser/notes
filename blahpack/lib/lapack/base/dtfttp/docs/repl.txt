@@ -1,0 +1,45 @@
+
+    dtfttp.ndarray( transr, uplo, N, ARF, strideARF, offsetARF, AP, strideAP, offsetAP )
+        Copy a triangular matrix from Rectangular Full Packed (RFP) format to standard packed format (TP).
+
+        Parameters
+        ----------
+        transr: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        ARF: Float64Array
+            input array.
+
+        strideARF: integer
+            stride length for `ARF`.
+
+        offsetARF: NonNegativeInteger
+            starting index for `ARF`.
+
+        AP: Float64Array
+            output array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

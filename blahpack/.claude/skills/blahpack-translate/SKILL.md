@@ -52,9 +52,10 @@ python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
 npm test                        # Run all JS tests
-bin/check-stub-tests.sh         # Check for scaffold-only test stubs
-bin/lint.sh lib/<path>/base.js  # Lint a single file
-bin/lint.sh lib/blas/base/*/lib/base.js lib/lapack/base/*/lib/base.js  # Lint all
+npm run check                   # Tests + conformance audit (the final gate)
+bin/lint.sh lib/<pkg>/base/<routine>  # Lint a module (stdlib + conformance rules)
+bin/lint.sh --fix lib/<pkg>/base/<routine>  # Auto-fix what's possible
+bin/lint.sh                     # Lint all modules (batched, no OOM)
 ```
 
 ---
@@ -301,9 +302,9 @@ node --test lib/<package>/base/<routine>/test/test.js
 
 **Gate:** All tests pass against Fortran fixtures. The test file MUST have
 more than 2 `assert.*` calls — the scaffolded "is a function" checks do
-NOT count as tests. Run `bin/check-stub-tests.sh` to verify no scaffolded
-stubs remain. **Do not commit a test file that only has the scaffolded
-type-check assertions.**
+NOT count as tests. The `stdlib/no-scaffold-assertions` ESLint rule catches
+scaffold `assert.fail('TODO:...')` remnants automatically during linting.
+**Do not commit a test file that only has the scaffolded type-check assertions.**
 
 ### Step 6: Verify test coverage
 
@@ -345,13 +346,16 @@ If coverage is low, add targeted test cases:
 - **Convergence failure paths (info > 0):** Require matrices that defeat
   iterative convergence. Accept as uncovered with inline TODO comment.
 
-### Step 7: Lint base.js
+### Step 7: Lint the module
 
 ```bash
-bin/lint.sh lib/<package>/base/<routine>/lib/base.js
+bin/lint.sh lib/<package>/base/<routine>
+bin/lint.sh --fix lib/<package>/base/<routine>   # auto-fix what's possible
 ```
 
-Fix all **easy/mechanical** lint errors immediately:
+This runs stdlib ESLint rules plus blahpack conformance rules (scaffold
+remnants, backtick quoting, d-prefix conjugate-transpose, z-prefix reinterpret,
+etc.). Fix all **easy/mechanical** lint errors immediately:
 
 | Rule | Fix |
 |------|-----|
@@ -442,11 +446,13 @@ sessions to avoid repeating mistakes.
 ### Step 9: Verify full suite and conformance
 
 ```bash
-npm run check
+bin/lint.sh lib/<package>/base/<routine>   # Lint (includes conformance rules)
+npm run check                               # Tests + audit
 ```
 
-This runs both the test suite AND the conformance audit. A module is NOT
-complete until `npm run check` passes with 0 errors and 0 warnings.
+Linting catches most conformance issues (scaffolding, string conventions,
+complex array usage). The audit adds cross-file checks (ndarray validation).
+A module is NOT complete until both pass with 0 errors.
 
 **This is the MANDATORY final gate.** Do not declare a translation complete
 until this passes. `npm test` alone is insufficient — it does not verify
@@ -746,7 +752,11 @@ found and fixed this bug class **over 20 times** across the codebase.
 **VERIFICATION STEP (mandatory after every translation):**
 
 ```bash
+# In executable code (not yet an ESLint rule):
 grep -n "'[A-Z0-9]'" lib/<pkg>/base/<routine>/lib/base.js | grep -v '//\|^\s*\*\|eslint\|require'
+
+# In @param JSDoc (caught by stdlib/jsdoc-backtick-params, fixable with --fix):
+bin/lint.sh lib/<pkg>/base/<routine>
 ```
 
 If this produces ANY output, you have unconverted Fortran strings. Fix them

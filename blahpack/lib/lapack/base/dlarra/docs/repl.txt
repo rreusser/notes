@@ -1,0 +1,66 @@
+
+    dlarra.ndarray( N, d, strideD, offsetD, e, strideE, offsetE, E2, strideE2, offsetE2, spltol, tnrm, nsplit, ISPLIT, strideISPLIT, offsetISPLIT )
+        Compute the splitting points with threshold based on the representation
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        E2: Float64Array
+            input array.
+
+        strideE2: integer
+            stride length for `E2`.
+
+        offsetE2: NonNegativeInteger
+            starting index for `E2`.
+
+        spltol: number
+            spltol.
+
+        tnrm: number
+            tnrm.
+
+        nsplit: integer
+            nsplit.
+
+        ISPLIT: Int32Array
+            output array.
+
+        strideISPLIT: integer
+            stride length for `ISPLIT`.
+
+        offsetISPLIT: NonNegativeInteger
+            starting index for `ISPLIT`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
