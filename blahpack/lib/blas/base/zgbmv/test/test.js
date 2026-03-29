@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 /**
 * @license Apache-2.0
@@ -20,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var test = require( 'node:test' );
@@ -35,25 +36,51 @@ var base = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgbmv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgbmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
-// HELPERS //
+// FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, msg ) {
 	var i;
-	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch' );
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch' ); // eslint-disable-line max-len
 	for ( i = 0; i < expected.length; i += 1 ) {
 		assertClose( actual[ i ], expected[ i ], msg + '[' + i + ']' );
 	}
@@ -126,145 +153,252 @@ function createBandMatrix44() {
 }
 
 
+// FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
+
 // TESTS //
 
 test( 'zgbmv: main export is a function', function t() {
 	assert.strictEqual( typeof zgbmv, 'function' );
 });
 
-test( 'zgbmv: attached to the main export is an `ndarray` method', function t() {
+test( 'zgbmv: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
 	assert.strictEqual( typeof zgbmv.ndarray, 'function' );
 });
 
-test( 'zgbmv: no-transpose basic (M=4, N=4, KL=1, KU=2, alpha=(1,0), beta=(0,0))', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'no_trans_basic' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( 4 );
+test( 'zgbmv: no-transpose basic (M=4, N=4, KL=1, KU=2, alpha=(1,0), beta=(0,0))', function t() { // eslint-disable-line max-len
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'no_trans_basic' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'no_trans_basic y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'no_trans_basic y' );
 });
 
 test( 'zgbmv: transpose basic (M=4, N=4, KL=1, KU=2)', function t() {
-	var result = base( 'transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'trans_basic' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( 4 );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'trans_basic' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'trans_basic y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'trans_basic y' );
 });
 
 test( 'zgbmv: conjugate-transpose basic (M=4, N=4, KL=1, KU=2)', function t() {
-	var result = base( 'conjugate-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'conj_trans_basic' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( 4 );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'conj_trans_basic' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'conjugate-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'conj_trans_basic y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'conj_trans_basic y' );
 });
 
-test( 'zgbmv: complex alpha and beta (alpha=(2,1), beta=(0.5,-0.5))', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 2, 1 );
-	var beta = new Complex128( 0.5, -0.5 );
-	var tc = findCase( 'complex_alpha_beta' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5, 3, 0 ] );
+test( 'zgbmv: complex alpha and beta (alpha=(2,1), beta=(0.5,-0.5))', function t() { // eslint-disable-line max-len
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'complex_alpha_beta' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5, 3, 0 ] );
+	alpha = new Complex128( 2, 1 );
+	beta = new Complex128( 0.5, -0.5 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'complex_alpha_beta y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'complex_alpha_beta y' ); // eslint-disable-line max-len
 });
 
 test( 'zgbmv: alpha=(0,0), beta=(2,0) — only scale y', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 2, 0 );
-	var tc = findCase( 'alpha_zero' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'alpha_zero' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 2, 0 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'alpha_zero y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'alpha_zero y' );
 });
 
 test( 'zgbmv: M=0 quick return', function t() {
-	var result = base( 'no-transpose', 0, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'm_zero' );
-	var yv = reinterpret( y, 0 );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 99, 0, 77, 66 ] );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var yv;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'm_zero' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 99, 0, 77, 66 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'no-transpose', 0, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
+	assert.strictEqual( result, y );
+	yv = reinterpret( y, 0 );
 	assert.strictEqual( yv[ 0 ], 99 );
 	assert.strictEqual( yv[ 1 ], 0 );
 });
 
-test( 'zgbmv: N=0, beta=(0,0) — zero y since leny=M=4 but no matrix', function t() {
-	var result = base( 'no-transpose', 4, 0, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var yv = reinterpret( y, 0 );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 99, 0, 77, 66, 55, 44, 33, 22 ] );
+test( 'zgbmv: N=0, beta=(0,0) — zero y since leny=M=4 but no matrix', function t() { // eslint-disable-line max-len
+	var result;
+	var alpha;
+	var beta;
+	var yv;
+	var A;
+	var x;
+	var y;
+
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 99, 0, 77, 66, 55, 44, 33, 22 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'no-transpose', 4, 0, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
+	assert.strictEqual( result, y );
+	yv = reinterpret( y, 0 );
 	assert.strictEqual( yv[ 0 ], 99 );
 	assert.strictEqual( yv[ 1 ], 0 );
 });
 
 test( 'zgbmv: alpha=(0,0), beta=(0,0) — zero out y', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'alpha_zero_beta_zero' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 99, 88, 77, 66, 55, 44, 33, 22 ] );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'alpha_zero_beta_zero' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 99, 88, 77, 66, 55, 44, 33, 22 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'alpha_zero_beta_zero y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'alpha_zero_beta_zero y' ); // eslint-disable-line max-len
 });
 
 test( 'zgbmv: non-unit incx=2 (strideX=2)', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'incx_2' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'incx_2' );
+	A = createBandMatrix44();
+	x = new Complex128Array([
 		1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0
 	]);
-	var y = new Complex128Array( 4 );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'incx_2 y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'incx_2 y' );
 });
 
 test( 'zgbmv: non-unit incy=2 (strideY=2)', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 2, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'incy_2' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( 8 );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'incy_2' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( 8 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 2, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'incy_2 y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'incy_2 y' );
 });
 
 test( 'zgbmv: rectangular M<N (3x5 matrix, KL=1, KU=1, LDA=3)', function t() {
-	var result = base( 'no-transpose', 3, 5, 1, 1, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'rect_m_lt_n' );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'rect_m_lt_n' );
+	A = new Complex128Array([
 		// Col 1: *, A(1,1)=(1,1), A(2,1)=(2,0)
 		0,
 		0,
@@ -305,85 +439,120 @@ test( 'zgbmv: rectangular M<N (3x5 matrix, KL=1, KU=1, LDA=3)', function t() {
 		0,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 0.5, 0.5, 1, -0.5 ] );
-	var y = new Complex128Array( 3 );
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 0.5, 0.5, 1, -0.5 ] );
+	y = new Complex128Array( 3 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'no-transpose', 3, 5, 1, 1, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'rect_m_lt_n y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'rect_m_lt_n y' );
 });
 
 test( 'zgbmv: beta=(1,0) — add to existing y', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 1, 0 );
-	var tc = findCase( 'beta_one' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 10, 5, 20, -10, 30, 15, 40, -20 ] );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'beta_one' );
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 10, 5, 20, -10, 30, 15, 40, -20 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 1, 0 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'beta_one y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'beta_one y' );
 });
 
-test( 'zgbmv: alpha=(0,0), beta=(1,0) quick return (y unchanged)', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 1, 0 );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 5, 6, 7, 8, 9, 10, 11, 12 ] );
+test( 'zgbmv: alpha=(0,0), beta=(1,0) quick return (y unchanged)', function t() { // eslint-disable-line max-len
+	var result;
+	var alpha;
+	var beta;
+	var A;
+	var x;
+	var y;
+
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 5, 6, 7, 8, 9, 10, 11, 12 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 1, 0 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	assert.deepStrictEqual( Array.from( reinterpret( y, 0 ) ), [ 5, 6, 7, 8, 9, 10, 11, 12 ] );
+	assert.deepStrictEqual( toArray( reinterpret( y, 0 ) ), [ 5, 6, 7, 8, 9, 10, 11, 12 ] ); // eslint-disable-line max-len
 });
 
 test( 'zgbmv: conjugate-transpose with non-unit strides', function t() {
-	var result = base( 'conjugate-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'conj_trans_basic' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	A = createBandMatrix44();
+	x = new Complex128Array([
 		1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0
 	]);
-	var y = new Complex128Array( 4 );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'conj_trans_stride y' );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'conjugate-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
+	assert.strictEqual( result, y );
+	tc = findCase( 'conj_trans_basic' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'conj_trans_stride y' ); // eslint-disable-line max-len
 });
 
 test( 'zgbmv: transpose with non-unit strides', function t() {
-	var result = base( 'transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'trans_basic' );
-	var A = createBandMatrix44();
-	var x = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	A = createBandMatrix44();
+	x = new Complex128Array([
 		1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0
 	]);
-	var y = new Complex128Array( 4 );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'trans_stride y' );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = base( 'transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
+	assert.strictEqual( result, y );
+	tc = findCase( 'trans_basic' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'trans_stride y' );
 });
 
 test( 'zgbmv: complex beta scaling (alpha=0, beta=(1,1))', function t() {
-	var result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 1, 1 );
-	var yv = reinterpret( y, 0 );
-	var A = createBandMatrix44();
-	var x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
-	var y = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
+	var result;
+	var alpha;
+	var beta;
+	var yv;
+	var A;
+	var x;
+	var y;
 
-	// y[0] = (1+1i)*(1+0i) = (1, 1)
+	A = createBandMatrix44();
+	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+	y = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 1, 1 );
+	result = base( 'no-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 1, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
+	assert.strictEqual( result, y );
+	yv = reinterpret( y, 0 );
 	assertClose( yv[ 0 ], 1, 'beta_complex y[0] re' );
 	assertClose( yv[ 1 ], 1, 'beta_complex y[0] im' );
-
-	// y[1] = (1+1i)*(0+1i) = (0*1 - 1*1) + (0*1 + 1*1)i = (-1, 1) -- wait:
-
-	// beta * y[1] = (1+i)*(0+i) = 0 + i + 0 + i^2 = -1 + i
 	assertClose( yv[ 2 ], -1, 'beta_complex y[1] re' );
 	assertClose( yv[ 3 ], 1, 'beta_complex y[1] im' );
-
-	// y[2] = (1+i)*(2+0i) = (2, 2)
 	assertClose( yv[ 4 ], 2, 'beta_complex y[2] re' );
 	assertClose( yv[ 5 ], 2, 'beta_complex y[2] im' );
-
-	// y[3] = (1+i)*(0+2i) = (-2, 2)
 	assertClose( yv[ 6 ], -2, 'beta_complex y[3] re' );
 	assertClose( yv[ 7 ], 2, 'beta_complex y[3] im' );
 });

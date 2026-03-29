@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Balances a general real matrix for eigenvalue computation
+* Balances a general real matrix for eigenvalue computation.
 *
 * @module @stdlib/lapack/base/dgebal
 *

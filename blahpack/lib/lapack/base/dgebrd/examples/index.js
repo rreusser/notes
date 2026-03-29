@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgebrd = require( '@stdlib/lapack/base/dgebrd' );

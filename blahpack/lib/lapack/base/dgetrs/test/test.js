@@ -1,13 +1,16 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgetrf = require( './../../dgetrf/lib/base.js' );
 var dgetrs = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
@@ -15,22 +18,50 @@ var ndarrayFn = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgetrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgetrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -94,6 +125,22 @@ function matmat( A, B, N, nrhs ) {
 	return C;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
@@ -107,48 +154,36 @@ test( 'dgetrs: solve_3x3', function t() {
 	var B;
 
 	tc = findCase( 'solve_3x3' );
-
-	// A = [2 1 1; 4 3 3; 8 7 9] col-major
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-
 	factorize( 3, A, IPIV );
 	info = dgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-
-	// Verify A*x = b: multiply original A by solution x (now in B)
 	Ax = matvec( Aorig, B, 3 );
-	assertArrayClose( Array.from( Ax ), [ 1.0, 1.0, 1.0 ], 1e-14, 'A*x=b' );
+	assertArrayClose( toArray( Ax ), [ 1.0, 1.0, 1.0 ], 1e-14, 'A*x=b' );
 });
 
 test( 'dgetrs: solve_3x3_trans', function t() {
 	var Aorig;
 	var IPIV;
 	var info;
-	var tc;
 	var ATx;
+	var tc;
 	var A;
 	var B;
 
 	tc = findCase( 'solve_3x3_trans' );
-
-	// Same matrix, transpose solve
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-
 	factorize( 3, A, IPIV );
 	info = dgetrs( 'transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-
-	// Verify A^T * x = b
 	ATx = matvecT( Aorig, B, 3 );
-	assertArrayClose( Array.from( ATx ), [ 1.0, 1.0, 1.0 ], 1e-14, 'A^T*x=b' );
+	assertArrayClose( toArray( ATx ), [ 1.0, 1.0, 1.0 ], 1e-14, 'A^T*x=b' );
 });
 
 test( 'dgetrs: multi_rhs', function t() {
@@ -162,24 +197,16 @@ test( 'dgetrs: multi_rhs', function t() {
 	var B;
 
 	tc = findCase( 'multi_rhs' );
-
-	// A = [2 1 1; 4 3 3; 8 7 9] col-major
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
-
-	// B is 3x2 col-major: b1 = [1;0;0], b2 = [0;1;0]
 	Borig = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
 	B = new Float64Array( Borig );
-
 	factorize( 3, A, IPIV );
 	info = dgetrs( 'no-transpose', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-
-	// Verify A*X = B_original
 	AB = matmat( Aorig, B, 3, 2 );
-	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-14, 'A*X=B' );
+	assertArrayClose( toArray( AB ), toArray( Borig ), 1e-14, 'A*X=B' );
 });
 
 test( 'dgetrs: n_zero', function t() {
@@ -190,13 +217,10 @@ test( 'dgetrs: n_zero', function t() {
 	var B;
 
 	tc = findCase( 'n_zero' );
-
 	A = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( 1 );
-
 	info = dgetrs( 'no-transpose', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -208,13 +232,10 @@ test( 'dgetrs: nrhs_zero', function t() {
 	var B;
 
 	tc = findCase( 'nrhs_zero' );
-
 	A = new Float64Array( 9 );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( 3 );
-
 	info = dgetrs( 'no-transpose', 3, 0, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -226,17 +247,13 @@ test( 'dgetrs: 1x1', function t() {
 	var B;
 
 	tc = findCase( '1x1' );
-
-	// 5x = 10 => x = 2
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( [ 10.0 ] );
-
 	factorize( 1, A, IPIV );
 	info = dgetrs( 'no-transpose', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 });
 
 test( 'dgetrs: identity', function t() {
@@ -247,35 +264,31 @@ test( 'dgetrs: identity', function t() {
 	var B;
 
 	tc = findCase( 'identity' );
-
-	// 3x3 identity matrix, col-major
 	A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ] );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( [ 3.0, 5.0, 7.0 ] );
-
 	factorize( 3, A, IPIV );
 	info = dgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 });
 
 // ndarray validation tests
 
 test( 'dgetrs: ndarray throws TypeError for invalid trans', function t() {
-	var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	var IPIV = new Int32Array( 3 );
+	var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	var B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-	assert.throws( function() {
+	assert.throws( function throws() {
 		ndarrayFn( 'invalid', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 	}, TypeError );
 });
 
 test( 'dgetrs: ndarray throws RangeError for negative N', function t() {
-	var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	var IPIV = new Int32Array( 3 );
+	var A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	var B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-	assert.throws( function() {
+	assert.throws( function throws() {
 		ndarrayFn( 'no-transpose', -1, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 	}, RangeError );
 });
@@ -288,16 +301,13 @@ test( 'dgetrs: lowercase trans argument', function t() {
 	var A;
 	var B;
 
-	// Same as solve_3x3 but with lowercase 'n'
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-
 	factorize( 3, A, IPIV );
 	info = dgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, 0, 'info' );
 	Ax = matvec( Aorig, B, 3 );
-	assertArrayClose( Array.from( Ax ), [ 1.0, 1.0, 1.0 ], 1e-14, 'A*x=b' );
+	assertArrayClose( toArray( Ax ), [ 1.0, 1.0, 1.0 ], 1e-14, 'A*x=b' );
 });

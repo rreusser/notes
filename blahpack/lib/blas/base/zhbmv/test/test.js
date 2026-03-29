@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -16,28 +17,72 @@ var zhbmv = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhbmv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zhbmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i += 1 ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -47,12 +92,17 @@ test( 'zhbmv: main export is a function', function t() {
 	assert.strictEqual( typeof zhbmv, 'function' );
 });
 
-test( 'zhbmv: upper_basic (UPLO=U, N=4, K=2, alpha=(1,0), beta=(0,0))', function t() {
-	var result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'upper_basic' );
-	var A = new Complex128Array([
+test( 'zhbmv: upper_basic (UPLO=U, N=4, K=2, alpha=(1,0), beta=(0,0))', function t() { // eslint-disable-line max-len
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'upper_basic' );
+	A = new Complex128Array([
 		0,
 		0,
 		0,
@@ -78,18 +128,26 @@ test( 'zhbmv: upper_basic (UPLO=U, N=4, K=2, alpha=(1,0), beta=(0,0))', function
 		3,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
-	var y = new Complex128Array( 4 );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
-test( 'zhbmv: lower_basic (UPLO=L, N=4, K=2, alpha=(1,0), beta=(0,0))', function t() {
-	var result = zhbmv( 'lower', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'lower_basic' );
-	var A = new Complex128Array([
+test( 'zhbmv: lower_basic (UPLO=L, N=4, K=2, alpha=(1,0), beta=(0,0))', function t() { // eslint-disable-line max-len
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'lower_basic' );
+	A = new Complex128Array([
 		2,
 		0,
 		1,
@@ -115,18 +173,26 @@ test( 'zhbmv: lower_basic (UPLO=L, N=4, K=2, alpha=(1,0), beta=(0,0))', function
 		0,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
-	var y = new Complex128Array( 4 );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
+	y = new Complex128Array( 4 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = zhbmv( 'lower', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: complex_alpha_beta (alpha=(2,1), beta=(0.5,-0.5))', function t() {
-	var result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 2, 1 );
-	var beta = new Complex128( 0.5, -0.5 );
-	var tc = findCase( 'complex_alpha_beta' );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'complex_alpha_beta' );
+	A = new Complex128Array([
 		0,
 		0,
 		0,
@@ -152,18 +218,26 @@ test( 'zhbmv: complex_alpha_beta (alpha=(2,1), beta=(0.5,-0.5))', function t() {
 		3,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
-	var y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5, 3, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
+	y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5, 3, 0 ] );
+	alpha = new Complex128( 2, 1 );
+	beta = new Complex128( 0.5, -0.5 );
+	result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: alpha_zero (alpha=0, beta=(2,0) scales y only)', function t() {
-	var result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 2, 0 );
-	var tc = findCase( 'alpha_zero' );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'alpha_zero' );
+	A = new Complex128Array([
 		0,
 		0,
 		0,
@@ -189,30 +263,46 @@ test( 'zhbmv: alpha_zero (alpha=0, beta=(2,0) scales y only)', function t() {
 		3,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
-	var y = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
+	y = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 2, 0 );
+	result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: n_zero (N=0 quick return)', function t() {
-	var result = zhbmv( 'upper', 0, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'n_zero' );
-	var A = new Complex128Array( 0 );
-	var x = new Complex128Array( 0 );
-	var y = new Complex128Array( [ 99, 0 ] );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'n_zero' );
+	A = new Complex128Array( 0 );
+	x = new Complex128Array( 0 );
+	y = new Complex128Array( [ 99, 0 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = zhbmv( 'upper', 0, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: alpha_zero_beta_zero (alpha=0, beta=0 zeroes y)', function t() {
-	var result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'alpha_zero_beta_zero' );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'alpha_zero_beta_zero' );
+	A = new Complex128Array([
 		0,
 		0,
 		0,
@@ -238,18 +328,26 @@ test( 'zhbmv: alpha_zero_beta_zero (alpha=0, beta=0 zeroes y)', function t() {
 		3,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
-	var y = new Complex128Array( [ 99, 88, 77, 66, 55, 44, 33, 22 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
+	y = new Complex128Array( [ 99, 88, 77, 66, 55, 44, 33, 22 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 0, 0 );
+	result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: stride_2 (non-unit strides)', function t() {
-	var result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'stride_2' );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'stride_2' );
+	A = new Complex128Array([
 		0,
 		0,
 		0,
@@ -275,32 +373,47 @@ test( 'zhbmv: stride_2 (non-unit strides)', function t() {
 		3,
 		0
 	]);
-	var x = new Complex128Array([
+	x = new Complex128Array([
 		1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0, 4, 0, 0, 0
 	]);
-	var y = new Complex128Array( 8 );
+	y = new Complex128Array( 8 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: scalar (1x1, K=0, alpha=(2,1))', function t() {
-	var result = zhbmv( 'upper', 1, 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 2, 1 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'scalar' );
-	var A = new Complex128Array( [ 5, 0 ] );
-	var x = new Complex128Array( [ 3, 2 ] );
-	var y = new Complex128Array( 1 );
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'scalar' );
+	A = new Complex128Array( [ 5, 0 ] );
+	x = new Complex128Array( [ 3, 2 ] );
+	y = new Complex128Array( 1 );
+	alpha = new Complex128( 2, 1 );
+	beta = new Complex128( 0, 0 );
+	result = zhbmv( 'upper', 1, 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: alpha=0, beta=1 quick return (y unchanged)', function t() {
-	var result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 1, 0 );
-	var yv = reinterpret( y, 0 );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var yv;
+	var A;
+	var x;
+	var y;
+
+	A = new Complex128Array([
 		0,
 		0,
 		0,
@@ -326,8 +439,13 @@ test( 'zhbmv: alpha=0, beta=1 quick return (y unchanged)', function t() {
 		3,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
-	var y = new Complex128Array( [ 5, 6, 7, 8, 9, 10, 11, 12 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
+	y = new Complex128Array( [ 5, 6, 7, 8, 9, 10, 11, 12 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 1, 0 );
+	result = zhbmv( 'upper', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
+	assert.strictEqual( result, y );
+	yv = reinterpret( y, 0 );
 	assert.strictEqual( yv[ 0 ], 5 );
 	assert.strictEqual( yv[ 1 ], 6 );
 	assert.strictEqual( yv[ 2 ], 7 );
@@ -339,12 +457,15 @@ test( 'zhbmv: alpha=0, beta=1 quick return (y unchanged)', function t() {
 });
 
 test( 'zhbmv: lower with non-unit strides', function t() {
-	// Use the same Hermitian matrix in lower band storage with stride 2
-	var result = zhbmv( 'lower', 4, 2, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'stride_2' );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	A = new Complex128Array([
 		2,
 		0,
 		1,
@@ -370,20 +491,28 @@ test( 'zhbmv: lower with non-unit strides', function t() {
 		0,
 		0
 	]);
-	var x = new Complex128Array([
+	x = new Complex128Array([
 		1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0, 4, 0, 0, 0
 	]);
-	var y = new Complex128Array( 8 );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	y = new Complex128Array( 8 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = zhbmv( 'lower', 4, 2, alpha, A, 1, 3, 0, x, 2, 0, beta, y, 2, 0 );
+	assert.strictEqual( result, y );
+	tc = findCase( 'stride_2' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: lower with complex alpha and beta', function t() {
-	// Same Hermitian matrix in lower band storage with complex alpha/beta
-	var result = zhbmv( 'lower', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 2, 1 );
-	var beta = new Complex128( 0.5, -0.5 );
-	var tc = findCase( 'complex_alpha_beta' );
-	var A = new Complex128Array([
+	var result;
+	var alpha;
+	var beta;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	A = new Complex128Array([
 		2,
 		0,
 		1,
@@ -409,23 +538,25 @@ test( 'zhbmv: lower with complex alpha and beta', function t() {
 		0,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
-	var y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5, 3, 0 ] );
-	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 0 ] );
+	y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5, 3, 0 ] );
+	alpha = new Complex128( 2, 1 );
+	beta = new Complex128( 0.5, -0.5 );
+	result = zhbmv( 'lower', 4, 2, alpha, A, 1, 3, 0, x, 1, 0, beta, y, 1, 0 );
+	assert.strictEqual( result, y );
+	tc = findCase( 'complex_alpha_beta' );
+	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhbmv: K=1 bandwidth (tridiagonal-like)', function t() {
-	// 3x3 Hermitian with K=1: only diagonal and 1 super-diagonal
-	// Full: [ 2     (1+i)    0   ]
-	//       [ (1-i)   3    (2-i) ]
-	//       [  0    (2+i)    4   ]
-	// Upper band (LDA=2):
-	// Row 0 (1st superdiag): *     (1+i)  (2-i)
-	// Row 1 (diagonal):      2      3      4
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var yv = reinterpret( y, 0 );
-	var A = new Complex128Array([
+	var alpha;
+	var beta;
+	var yv;
+	var A;
+	var x;
+	var y;
+
+	A = new Complex128Array([
 		0,
 		0,
 		2,
@@ -439,8 +570,12 @@ test( 'zhbmv: K=1 bandwidth (tridiagonal-like)', function t() {
 		4,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
-	var y = new Complex128Array( 3 );
+	x = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
+	y = new Complex128Array( 3 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhbmv( 'upper', 3, 1, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
 	assertClose( yv[ 0 ], 1, 1e-14, 'y[0].re' );
 	assertClose( yv[ 1 ], 1, 1e-14, 'y[0].im' );
 	assertClose( yv[ 2 ], 2, 1e-14, 'y[1].re' );
@@ -450,13 +585,14 @@ test( 'zhbmv: K=1 bandwidth (tridiagonal-like)', function t() {
 });
 
 test( 'zhbmv: lower K=1 bandwidth (tridiagonal-like)', function t() {
-	// Same matrix in lower band storage (LDA=2):
-	// Row 0 (diagonal):      2      3      4
-	// Row 1 (1st subdiag):  (1-i)  (2+i)   *
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var yv = reinterpret( y, 0 );
-	var A = new Complex128Array([
+	var alpha;
+	var beta;
+	var yv;
+	var A;
+	var x;
+	var y;
+
+	A = new Complex128Array([
 		2,
 		0,
 		1,
@@ -470,8 +606,12 @@ test( 'zhbmv: lower K=1 bandwidth (tridiagonal-like)', function t() {
 		0,
 		0
 	]);
-	var x = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
-	var y = new Complex128Array( 3 );
+	x = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
+	y = new Complex128Array( 3 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhbmv( 'lower', 3, 1, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
 	assertClose( yv[ 0 ], 1, 1e-14, 'y[0].re' );
 	assertClose( yv[ 1 ], 1, 1e-14, 'y[0].im' );
 	assertClose( yv[ 2 ], 2, 1e-14, 'y[1].re' );
@@ -481,13 +621,20 @@ test( 'zhbmv: lower K=1 bandwidth (tridiagonal-like)', function t() {
 });
 
 test( 'zhbmv: beta scaling with non-trivial imaginary part', function t() {
-	// Test that complex beta scaling works correctly
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 1 );
-	var yv = reinterpret( y, 0 );
-	var A = new Complex128Array( [ 3, 0 ] );
-	var x = new Complex128Array( [ 1, 0 ] );
-	var y = new Complex128Array( [ 2, 3 ] );
+	var alpha;
+	var beta;
+	var yv;
+	var A;
+	var x;
+	var y;
+
+	A = new Complex128Array( [ 3, 0 ] );
+	x = new Complex128Array( [ 1, 0 ] );
+	y = new Complex128Array( [ 2, 3 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 1 );
+	zhbmv( 'upper', 1, 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
 	assertClose( yv[ 0 ], 0, 1e-14, 'y[0].re' );
 	assertClose( yv[ 1 ], 2, 1e-14, 'y[0].im' );
 });

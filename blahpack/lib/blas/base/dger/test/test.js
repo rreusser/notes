@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
@@ -8,21 +8,40 @@ var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dger = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dger.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dger.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
 	var i;
 	for ( i = 0; i < expected.length; i++ ) {
-		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
+		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
 		if ( relErr > tol ) {
-			throw new Error( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+			throw new Error( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 		}
 	}
 }
@@ -47,21 +66,32 @@ test( 'dger: alpha=2', function t() {
 });
 
 test( 'dger: add to existing', function t() {
-	var tc = findCase( 'add_existing' );
-	var A = new Float64Array( 6 );
-	A[ 0 ] = 10.0; A[ 4 ] = 20.0;
-	var x = new Float64Array( [ 1, 2, 3 ] );
-	var y = new Float64Array( [ 4, 5 ] );
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'add_existing' );
+	A = new Float64Array( 6 );
+	A[ 0 ] = 10.0;
+	A[ 4 ] = 20.0;
+	x = new Float64Array( [ 1, 2, 3 ] );
+	y = new Float64Array( [ 4, 5 ] );
 	dger( 3, 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });
 
 test( 'dger: alpha=0', function t() {
-	var tc = findCase( 'alpha_zero' );
-	var A = new Float64Array( 6 );
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = findCase( 'alpha_zero' );
+	A = new Float64Array( 6 );
 	A[ 0 ] = 99.0;
-	var x = new Float64Array( [ 1, 2, 3 ] );
-	var y = new Float64Array( [ 4, 5 ] );
+	x = new Float64Array( [ 1, 2, 3 ] );
+	y = new Float64Array( [ 4, 5 ] );
 	dger( 3, 2, 0.0, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assertArrayClose( A, tc.A, 1e-14, 'A' );
 });

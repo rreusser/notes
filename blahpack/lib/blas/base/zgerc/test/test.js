@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 /**
 * @license Apache-2.0
@@ -30,20 +30,39 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgerc = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgerc.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgerc.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
-// HELPERS //
 
+// FUNCTIONS //
+
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, msg ) {
 	var i;
-	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' );
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' ); // eslint-disable-line max-len
 	for ( i = 0; i < expected.length; i++ ) {
 		assertClose( actual[ i ], expected[ i ], msg + '[' + i + ']' );
 	}
@@ -70,89 +89,172 @@ function extractCMatrix( arr, M, N, sa1, sa2, offsetA ) {
 	return out;
 }
 
+
+// FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
+
 // TESTS //
 
 test( 'zgerc: main export is a function', function t() {
 	assert.strictEqual( typeof zgerc, 'function' );
 });
 
-test( 'zgerc: attached to the main export is an `ndarray` method', function t() {
+test( 'zgerc: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
 	assert.strictEqual( typeof zgerc.ndarray, 'function' );
 });
 
 test( 'zgerc: basic 2x2 rank-1 update', function t() {
-	var result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zgerc_basic'; } );
-	var A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
-	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
-	var y = new Complex128Array( [ 1, 1, 0, 2 ] );
+	var result;
+	var alpha;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zgerc_basic';
+	} );
+	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
+	x = new Complex128Array( [ 1, 0, 0, 1 ] );
+	y = new Complex128Array( [ 1, 1, 0, 2 ] );
+	alpha = new Complex128( 1, 0 );
+	result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
 });
 
 test( 'zgerc: n=0 quick return', function t() {
-	var result = base( 2, 0, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zgerc_n_zero'; } );
-	var A = new Complex128Array( [ 1, 1, 2, 2 ] );
-	var x = new Complex128Array( [ 5, 5 ] );
-	var y = new Complex128Array( [ 6, 6 ] );
+	var result;
+	var alpha;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zgerc_n_zero';
+	} );
+	A = new Complex128Array( [ 1, 1, 2, 2 ] );
+	x = new Complex128Array( [ 5, 5 ] );
+	y = new Complex128Array( [ 6, 6 ] );
+	alpha = new Complex128( 1, 0 );
+	result = base( 2, 0, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
-	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'a' );
+	assertArrayClose( toArray( reinterpret( A, 0 ) ), tc.a, 'a' );
 });
 
 test( 'zgerc: m=0 quick return', function t() {
-	var result = base( 0, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 0, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zgerc_m_zero'; } );
-	var A = new Complex128Array( [ 1, 1, 2, 2 ] );
-	var x = new Complex128Array( [ 5, 5 ] );
-	var y = new Complex128Array( [ 6, 6, 7, 7 ] );
+	var result;
+	var alpha;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zgerc_m_zero';
+	} );
+	A = new Complex128Array( [ 1, 1, 2, 2 ] );
+	x = new Complex128Array( [ 5, 5 ] );
+	y = new Complex128Array( [ 6, 6, 7, 7 ] );
+	alpha = new Complex128( 1, 0 );
+	result = base( 0, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 0, 0 );
 	assert.strictEqual( result, A );
-	assertArrayClose( Array.from( reinterpret( A, 0 ) ), tc.a, 'a' );
+	assertArrayClose( toArray( reinterpret( A, 0 ) ), tc.a, 'a' );
 });
 
 test( 'zgerc: alpha=0 quick return', function t() {
-	var result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
-	var alpha = new Complex128( 0, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zgerc_alpha_zero'; } );
-	var A = new Complex128Array( [ 7, 7, 8, 8, 9, 9, 10, 10 ] );
-	var x = new Complex128Array( [ 5, 5, 6, 6 ] );
-	var y = new Complex128Array( [ 7, 7, 8, 8 ] );
+	var result;
+	var alpha;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zgerc_alpha_zero';
+	} );
+	A = new Complex128Array( [ 7, 7, 8, 8, 9, 9, 10, 10 ] );
+	x = new Complex128Array( [ 5, 5, 6, 6 ] );
+	y = new Complex128Array( [ 7, 7, 8, 8 ] );
+	alpha = new Complex128( 0, 0 );
+	result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
 });
 
 test( 'zgerc: complex alpha', function t() {
-	var result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
-	var alpha = new Complex128( 0, 1 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zgerc_complex_alpha'; } );
-	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
-	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
-	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
+	var result;
+	var alpha;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zgerc_complex_alpha';
+	} );
+	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
+	x = new Complex128Array( [ 1, 0, 0, 1 ] );
+	y = new Complex128Array( [ 1, 0, 0, 1 ] );
+	alpha = new Complex128( 0, 1 );
+	result = base( 2, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
 });
 
 test( 'zgerc: non-unit strides (strideX=2, strideY=2)', function t() {
-	var result = base( 2, 2, alpha, x, 2, 0, y, 2, 0, A, 1, 2, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zgerc_stride'; } );
-	var A = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
-	var x = new Complex128Array( [ 1, 2, 99, 99, 3, 4 ] );
-	var y = new Complex128Array( [ 5, 6, 99, 99, 7, 8 ] );
+	var result;
+	var alpha;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zgerc_stride';
+	} );
+	A = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+	x = new Complex128Array( [ 1, 2, 99, 99, 3, 4 ] );
+	y = new Complex128Array( [ 5, 6, 99, 99, 7, 8 ] );
+	alpha = new Complex128( 1, 0 );
+	result = base( 2, 2, alpha, x, 2, 0, y, 2, 0, A, 1, 2, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 2, 2, 1, 2, 0 ), tc.a, 'a' );
 });
 
 test( 'zgerc: 3x2 non-square', function t() {
-	var result = base( 3, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zgerc_nonsquare'; } );
-	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] );
-	var x = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
-	var y = new Complex128Array( [ 1, 1, 2, 0 ] );
+	var result;
+	var alpha;
+	var tc;
+	var A;
+	var x;
+	var y;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zgerc_nonsquare';
+	} );
+	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] );
+	x = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
+	y = new Complex128Array( [ 1, 1, 2, 0 ] );
+	alpha = new Complex128( 1, 0 );
+	result = base( 3, 2, alpha, x, 1, 0, y, 1, 0, A, 1, 3, 0 );
 	assert.strictEqual( result, A );
 	assertArrayClose( extractCMatrix( A, 3, 2, 1, 3, 0 ), tc.a, 'a' );
 });

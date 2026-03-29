@@ -133,9 +133,7 @@ function dgetc2( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 		}
 
 		// Rank-1 update: A(i+1:N-1, i+1:N-1) -= A(i+1:N-1, i) * A(i, i+1:N-1)
-		dger(
-			N - i - 1, N - i - 1, -1.0,
-			A, strideA1, offsetA + ( ( i + 1 ) * strideA1 ) + ( i * strideA2 ),        // x = column vector A(i+1:, i)
+		dger(N - i - 1, N - i - 1, -1.0, A, strideA1, offsetA + ( ( i + 1 ) * strideA1 ) + ( i * strideA2 ),        // x = column vector A(i+1:, i)
 			A, strideA2, offsetA + ( i * strideA1 ) + ( ( i + 1 ) * strideA2 ),         // y = row vector A(i, i+1:)
 			A, strideA1, strideA2, offsetA + ( ( i + 1 ) * strideA1 ) + ( ( i + 1 ) * strideA2 ) // A submatrix
 		);

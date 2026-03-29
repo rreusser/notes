@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgehrd = require( '@stdlib/lapack/base/dgehrd' );

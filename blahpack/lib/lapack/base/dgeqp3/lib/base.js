@@ -39,8 +39,8 @@ var DEFAULT_NX = 128; // crossover point: ILAENV(3, 'DGEQRF', ...) = 128
 // MAIN //
 
 /**
-* Computes a QR factorization with column pivoting of a real M-by-N matrix:
-*   A*P = Q*R
+* Computes a QR factorization with column pivoting of a real M-by-N matrix:.
+*   A_P = Q_R
 * using Level 3 BLAS.
 *
 * @private
@@ -139,9 +139,7 @@ function dgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 
 		// Compute initial column norms for the unfactored submatrix
 		for ( j = 0; j < sn; j++ ) {
-			VN1[ j ] = dnrm2(
-				sm, A, sa1, offsetA + (nfxd * sa1) + ((nfxd + j) * sa2)
-			);
+			VN1[ j ] = dnrm2(sm, A, sa1, offsetA + (nfxd * sa1) + ((nfxd + j) * sa2));
 			VN2[ j ] = VN1[ j ];
 		}
 
@@ -166,17 +164,9 @@ function dgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 				jb = Math.min( nb, topbmn - j );
 
 				// Factor panel using dlaqps
+
 				// dlaqps( M, N, offset, nb, A, sa1, sa2, oA, JPVT, sJ, oJ, TAU, sT, oT, VN1, sV1, oV1, VN2, sV2, oV2, AUXV, sA, oA, F, sF1, sF2, oF )
-				fjb = dlaqps(
-					M, sn - j, nfxd + j, jb,
-					A, sa1, sa2, offsetA + ((nfxd + j) * sa2),
-					JPVT, strideJPVT, oJ + ((nfxd + j) * strideJPVT),
-					TAU, strideTAU, oT + ((nfxd + j) * strideTAU),
-					VN1, 1, j,
-					VN2, 1, j,
-					AUXV, 1, 0,
-					F, 1, sn - j, 0
-				);
+				fjb = dlaqps(M, sn - j, nfxd + j, jb, A, sa1, sa2, offsetA + ((nfxd + j) * sa2), JPVT, strideJPVT, oJ + ((nfxd + j) * strideJPVT), TAU, strideTAU, oT + ((nfxd + j) * strideTAU), VN1, 1, j, VN2, 1, j, AUXV, 1, 0, F, 1, sn - j, 0);
 				j += fjb;
 			}
 		} else {
@@ -188,15 +178,7 @@ function dgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 			// Allocate scratch workspace for dlaqp2
 			workQR = new Float64Array( sn );
 
-			dlaqp2(
-				M, sn - j, nfxd + j,
-				A, sa1, sa2, offsetA + ((nfxd + j) * sa2),
-				JPVT, strideJPVT, oJ + ((nfxd + j) * strideJPVT),
-				TAU, strideTAU, oT + ((nfxd + j) * strideTAU),
-				VN1, 1, j,
-				VN2, 1, j,
-				workQR, 1, 0
-			);
+			dlaqp2(M, sn - j, nfxd + j, A, sa1, sa2, offsetA + ((nfxd + j) * sa2), JPVT, strideJPVT, oJ + ((nfxd + j) * strideJPVT), TAU, strideTAU, oT + ((nfxd + j) * strideTAU), VN1, 1, j, VN2, 1, j, workQR, 1, 0);
 		}
 	}
 

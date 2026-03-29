@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -15,22 +16,50 @@ var ndarrayFn = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgemm.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgemm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -51,7 +80,7 @@ test( 'dgemm: basic N,N 2x2', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( 4 );
-	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'basic_nn' );
 });
 
@@ -60,7 +89,7 @@ test( 'dgemm: T,N transpose A', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( 4 );
-	dgemm( 'transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	dgemm( 'transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'tn' );
 });
 
@@ -69,7 +98,7 @@ test( 'dgemm: N,T transpose B', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 7, 6, 8 ] );
 	var C = new Float64Array( 4 );
-	dgemm( 'no-transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'nt' );
 });
 
@@ -78,7 +107,7 @@ test( 'dgemm: alpha=0 just scales C by beta', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 7, 6, 8 ] );
 	var C = new Float64Array( [ 1, 2, 3, 4 ] );
-	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 0.0, A, 1, 2, 0, B, 1, 2, 0, 2.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 0.0, A, 1, 2, 0, B, 1, 2, 0, 2.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'alpha_zero' );
 });
 
@@ -87,13 +116,13 @@ test( 'dgemm: beta=0 overwrites C', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 999, 999, 999, 999 ] );
-	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'beta_zero' );
 });
 
 test( 'dgemm: M=0 quick return', function t() {
 	var C = new Float64Array( [ 99 ] );
-	dgemm( 'no-transpose', 'no-transpose', 0, 2, 2, 1.0, new Float64Array( 4 ), 1, 1, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, C, 1, 1, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 0, 2, 2, 1.0, new Float64Array( 4 ), 1, 1, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, C, 1, 1, 0 ); // eslint-disable-line max-len
 
 	// C should be unchanged
 	assert.strictEqual( C[ 0 ], 99 );
@@ -104,7 +133,7 @@ test( 'dgemm: alpha and beta scaling', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
-	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0, 3.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0, 3.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'alpha_beta' );
 });
 
@@ -115,7 +144,7 @@ test( 'dgemm: non-square M=3, N=2, K=2', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 1, 0, 0, 1 ] );
 	var C = new Float64Array( 6 );
-	dgemm( 'no-transpose', 'no-transpose', 3, 2, 2, 1.0, A, 1, 3, 0, B, 1, 2, 0, 0.0, C, 1, 3, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 3, 2, 2, 1.0, A, 1, 3, 0, B, 1, 2, 0, 0.0, C, 1, 3, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'nonsquare' );
 });
 
@@ -124,25 +153,25 @@ test( 'dgemm: T,T both transposed', function t() {
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( 4 );
-	dgemm( 'transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 );
+	dgemm( 'transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, tc.C, 1e-14, 'tt' );
 });
 
 test( 'dgemm: N=0 quick return', function t() {
 	var C = new Float64Array( [ 99 ] );
-	dgemm( 'no-transpose', 'no-transpose', 2, 0, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 0, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( C[ 0 ], 99 );
 });
 
 test( 'dgemm: alpha=0 beta=0 zeros C', function t() {
 	var C = new Float64Array( [ 10, 20, 30, 40 ] );
-	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 0.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 0.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, [ 0, 0, 0, 0 ], 1e-14, 'alpha0_beta0' );
 });
 
 test( 'dgemm: K=0 and beta=1 quick return', function t() {
 	var C = new Float64Array( [ 10, 20, 30, 40 ] );
-	dgemm( 'no-transpose', 'no-transpose', 2, 2, 0, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 1.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 2, 0, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 1.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( C[ 0 ], 10 );
 	assert.strictEqual( C[ 1 ], 20 );
 });
@@ -154,16 +183,16 @@ test( 'dgemm: beta=1 does not scale C', function t() {
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
 
 	// C = 1.0 * I * B + 1.0 * C = B + C
-	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 	assertArrayClose( C, [ 3, 1, 1, 3 ], 1e-14, 'beta_one' );
 });
 
 test( 'dgemm: T,N with beta!=0 (lines 130-131)', function t() {
-	// Transa = 'transpose', transb = 'no-transpose', beta=2.0 -> exercises the else (beta!=0) branch in T,N path
+	// Transa = 'transpose', transb = 'no-transpose', beta=2.0 -> exercises the else (beta!=0) branch in T,N path // eslint-disable-line max-len
 	var A = new Float64Array( [ 1, 2, 3, 4 ] ); // 2x2 col-major
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
-	dgemm( 'transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 2.0, C, 1, 2, 0 );
+	dgemm( 'transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 2.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 
 	// C = alpha * A^T * B + beta * C_old
 
@@ -174,11 +203,11 @@ test( 'dgemm: T,N with beta!=0 (lines 130-131)', function t() {
 });
 
 test( 'dgemm: N,T with beta!=0,!=1 (lines 146-151)', function t() {
-	// Transa = 'no-transpose', transb = 'transpose', beta=0.5 -> exercises the else if (beta!==1.0) scaling in N,T path
+	// Transa = 'no-transpose', transb = 'transpose', beta=0.5 -> exercises the else if (beta!==1.0) scaling in N,T path // eslint-disable-line max-len
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 10, 10, 10, 10 ] );
-	dgemm( 'no-transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.5, C, 1, 2, 0 );
+	dgemm( 'no-transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.5, C, 1, 2, 0 ); // eslint-disable-line max-len
 
 	// A*B^T: [1*5+3*6, 2*5+4*6; 1*7+3*8, 2*7+4*8] = [23 34; 31 46]
 
@@ -193,11 +222,11 @@ test( 'dgemm: N,T with beta!=0,!=1 (lines 146-151)', function t() {
 });
 
 test( 'dgemm: T,T with beta!=0 (lines 179-180)', function t() {
-	// Transa = 'transpose', transb = 'transpose', beta=3.0 -> exercises the else (beta!=0) branch in T,T path
+	// Transa = 'transpose', transb = 'transpose', beta=3.0 -> exercises the else (beta!=0) branch in T,T path // eslint-disable-line max-len
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
-	dgemm( 'transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 3.0, C, 1, 2, 0 );
+	dgemm( 'transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 3.0, C, 1, 2, 0 ); // eslint-disable-line max-len
 
 	// A^T = [1 2; 3 4], B^T = [5 6; 7 8]
 
@@ -210,31 +239,31 @@ test( 'dgemm: T,T with beta!=0 (lines 179-180)', function t() {
 // ndarray validation tests
 
 test( 'dgemm: ndarray throws TypeError for invalid transa', function t() {
-	assert.throws( function () {
-		ndarrayFn( 'invalid', 'no-transpose', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarrayFn( 'invalid', 'no-transpose', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, TypeError );
 });
 
 test( 'dgemm: ndarray throws TypeError for invalid transb', function t() {
-	assert.throws( function () {
-		ndarrayFn( 'no-transpose', 'invalid', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarrayFn( 'no-transpose', 'invalid', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, TypeError );
 });
 
 test( 'dgemm: ndarray throws RangeError for negative M', function t() {
-	assert.throws( function () {
-		ndarrayFn( 'no-transpose', 'no-transpose', -1, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarrayFn( 'no-transpose', 'no-transpose', -1, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });
 
 test( 'dgemm: ndarray throws RangeError for negative N', function t() {
-	assert.throws( function () {
-		ndarrayFn( 'no-transpose', 'no-transpose', 2, -1, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarrayFn( 'no-transpose', 'no-transpose', 2, -1, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });
 
 test( 'dgemm: ndarray throws RangeError for negative K', function t() {
-	assert.throws( function () {
-		ndarrayFn( 'no-transpose', 'no-transpose', 2, 2, -1, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarrayFn( 'no-transpose', 'no-transpose', 2, 2, -1, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });

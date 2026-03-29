@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Improves the solution to A*X = B using iterative refinement
+* Improves the solution to A*X = B using iterative refinement.
 *
 * @module @stdlib/lapack/base/dgerfs
 *

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgeequ = require( '@stdlib/lapack/base/dgeequ' );

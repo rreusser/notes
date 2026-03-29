@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dbdsqr = require( '@stdlib/lapack/base/dbdsqr' );

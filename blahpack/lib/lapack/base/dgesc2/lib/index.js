@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a system of linear equations with an LU factored matrix using complete pivoting
+* Solves a system of linear equations with an LU factored matrix using complete pivoting.
 *
 * @module @stdlib/lapack/base/dgesc2
 *

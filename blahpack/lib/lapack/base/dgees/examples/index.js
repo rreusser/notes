@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgees = require( '@stdlib/lapack/base/dgees' );

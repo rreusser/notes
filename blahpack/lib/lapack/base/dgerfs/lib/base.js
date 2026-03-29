@@ -40,7 +40,7 @@ var SAFMIN = dlamch( 'safe-minimum' );
 // MAIN //
 
 /**
-* Improves the computed solution to a system of linear equations and provides
+* Improves the computed solution to a system of linear equations and provides.
 * error bounds and backward error estimates for the solution.
 *
 * Uses the LU factorization computed by dgetrf. WORK (3*N) and IWORK (N)
@@ -141,6 +141,7 @@ function dgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, 
 			dgemv( trans, N, N, -1.0, A, strideA1, strideA2, offsetA, X, strideX1, offsetX + ( j * strideX2 ), 1.0, WORK, 1, N );
 
 			// Compute componentwise relative backward error
+
 			// WORK(0:N-1) = abs(B(:,j))
 			for ( i = 0; i < N; i++ ) {
 				WORK[ i ] = Math.abs( B[ offsetB + ( i * strideB1 ) + ( j * strideB2 ) ] );
@@ -192,7 +193,7 @@ function dgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, 
 		}
 
 		// Bound error from formula using DLACN2 to estimate the infinity-norm
-		// of inv(op(A)) * diag(W)
+		// Of inv(op(A)) * diag(W)
 
 		// Set up WORK(0:N-1) = abs(R) + NZ*EPS*(abs(op(A))*abs(X)+abs(B))
 		for ( i = 0; i < N; i++ ) {

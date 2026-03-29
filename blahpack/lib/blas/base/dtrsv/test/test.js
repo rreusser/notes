@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -15,22 +16,50 @@ var ndarray = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dtrsv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dtrsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -40,6 +69,12 @@ function assertArrayClose( actual, expected, tol, msg ) {
 }
 
 // Helper: create upper triangular 3x3 matrix [2 3 4; 0 5 6; 0 0 7] in col-major
+/**
+* UpperA3.
+*
+* @private
+* @returns {*} result
+*/
 function upperA3() {
 	//     col0  col1  col2
 	return new Float64Array([
@@ -56,7 +91,13 @@ function upperA3() {
 }
 
 // Helper: create lower triangular 3x3 matrix [2 0 0; 3 5 0; 4 6 7] in col-major
-function lowerA3() {
+/**
+* LowerA3.
+*
+* @private
+* @returns {*} result
+*/
+function lowerA3( ) {
 	return new Float64Array([
 		2.0,
 		3.0,
@@ -116,7 +157,7 @@ test( 'dtrsv: lower, transpose, non-unit diag (N=3)', function t() {
 test( 'dtrsv: upper, no-transpose, unit diag (N=3)', function t() {
 	var tc = findCase( 'upper_n_unit' );
 
-	// Unit diag: A = [1 3 4; 0 1 6; 0 0 1], diag values set to 99 (should be ignored)
+	// Unit diag: A = [1 3 4; 0 1 6; 0 0 1], diag values set to 99 (should be ignored) // eslint-disable-line max-len
 	var A = new Float64Array([
 		99.0,
 		0.0,
@@ -206,9 +247,13 @@ test( 'dtrsv: lower, transpose, unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: N=0 quick return', function t() {
-	var out = dtrsv( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
-	var A = new Float64Array([ 1.0 ]);
-	var x = new Float64Array([ 99.0 ]);
+	var out;
+	var A;
+	var x;
+
+	A = new Float64Array([ 1.0 ]);
+	x = new Float64Array([ 99.0 ]);
+	out = dtrsv( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
 	assert.equal( x[ 0 ], 99.0 );
 	assert.equal( out, x );
 });
@@ -299,9 +344,13 @@ test( 'dtrsv: upper, no-transpose with zero RHS entries', function t() {
 });
 
 test( 'dtrsv: returns x', function t() {
-	var out = dtrsv( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
-	var A = new Float64Array([ 2.0 ]);
-	var x = new Float64Array([ 4.0 ]);
+	var out;
+	var A;
+	var x;
+
+	A = new Float64Array([ 2.0 ]);
+	x = new Float64Array([ 4.0 ]);
+	out = dtrsv( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
 	assert.equal( out, x );
 });
 
@@ -359,20 +408,23 @@ test( 'ndarray: throws TypeError for invalid diag', function t() {
 test( 'ndarray: throws RangeError for negative N', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	assert.throws( function f() {
-		ndarray( 'upper', 'no-transpose', 'non-unit', -1, upperA3(), 1, 3, 0, x, 1, 0 );
+		ndarray( 'upper', 'no-transpose', 'non-unit', -1, upperA3(), 1, 3, 0, x, 1, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });
 
 test( 'ndarray: throws RangeError for strideX=0', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	assert.throws( function f() {
-		ndarray( 'upper', 'no-transpose', 'non-unit', 3, upperA3(), 1, 3, 0, x, 0, 0 );
+		ndarray( 'upper', 'no-transpose', 'non-unit', 3, upperA3(), 1, 3, 0, x, 0, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });
 
 test( 'ndarray: N=0 early return', function t() {
-	var out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, new Float64Array( 1 ), 1, 1, 0, x, 1, 0 );
-	var x = new Float64Array( [ 99 ] );
+	var out;
+	var x;
+
+	x = new Float64Array( [ 99 ] );
+	out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, new Float64Array( 1 ), 1, 1, 0, x, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( out, x );
 	assert.equal( x[ 0 ], 99 );
 });

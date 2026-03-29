@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgerfs = require( '@stdlib/lapack/base/dgerfs' );

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgerq2 = require( '@stdlib/lapack/base/dgerq2' );

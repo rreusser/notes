@@ -26,7 +26,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 test( 'dcopy: main export is a function', function t() {
 	assert.strictEqual( typeof dcopy, 'function' );
 });
@@ -36,9 +35,9 @@ test( 'dcopy: N=0 returns y unchanged', function t() {
 	var x;
 	var y;
 
-	out = dcopy( 0, x, 1, 0, y, 1, 0 );
 	x = new Float64Array( [ 1, 2, 3 ] );
 	y = new Float64Array( [ 99, 99, 99 ] );
+	out = dcopy( 0, x, 1, 0, y, 1, 0 );
 	assert.strictEqual( out, y );
 	assert.deepStrictEqual( toArray( y ), [ 99, 99, 99 ] );
 });
@@ -55,9 +54,9 @@ test( 'dcopy: basic copy (N=3, unit stride)', function t() {
 	var x;
 	var y;
 
-	out = dcopy( 3, x, 1, 0, y, 1, 0 );
 	x = new Float64Array( [ 1, 2, 3 ] );
 	y = new Float64Array( 3 );
+	out = dcopy( 3, x, 1, 0, y, 1, 0 );
 	assert.strictEqual( out, y, 'returns y' );
 	assert.deepStrictEqual( toArray( y ), [ 1, 2, 3 ] );
 });

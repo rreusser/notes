@@ -349,9 +349,13 @@ If coverage is low, add targeted test cases:
 ### Step 7: Lint the module
 
 ```bash
-bin/lint.sh lib/<package>/base/<routine>
-bin/lint.sh --fix lib/<package>/base/<routine>   # auto-fix what's possible
+bin/lint-fix.sh lib/<package>/base/<routine>     # codemods + eslint --fix + test verify
+bin/lint.sh lib/<package>/base/<routine>          # check remaining errors
 ```
+
+`bin/lint-fix.sh` runs the full pipeline: test codemods (var hoisting, Array.from
+→ toArray, require-globals, JSDoc, section headers), then eslint --fix for
+formatting, with automatic test verification and rollback if anything breaks.
 
 This runs stdlib ESLint rules plus blahpack conformance rules (scaffold
 remnants, backtick quoting, d-prefix conjugate-transpose, z-prefix reinterpret,

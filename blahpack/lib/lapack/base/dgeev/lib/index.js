@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvalues and eigenvectors of a real general matrix
+* Computes eigenvalues and eigenvectors of a real general matrix.
 *
 * @module @stdlib/lapack/base/dgeev
 *

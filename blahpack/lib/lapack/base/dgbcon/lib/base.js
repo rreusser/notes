@@ -40,7 +40,7 @@ var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a general band matrix A,
+* Estimates the reciprocal of the condition number of a general band matrix A,.
 * in either the 1-norm or the infinity-norm, using the LU factorization
 * computed by dgbtrf.
 *
@@ -77,14 +77,14 @@ function dgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 	var bail;
 	var KASE;
 	var EST;
+	var sa1;
+	var sa2;
 	var lm;
 	var jp;
 	var kd;
 	var ix;
 	var sw;
 	var si;
-	var sa1;
-	var sa2;
 	var t;
 	var j;
 
@@ -133,12 +133,10 @@ function dgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 	bail = false;
 
 	while ( true ) {
-		dlacn2( N,
-			WORK, sw, offsetWORK + (N * sw), // v
+		dlacn2( N, WORK, sw, offsetWORK + (N * sw), // v
 			WORK, sw, offsetWORK, // x
 			IWORK, strideIWORK, offsetIWORK, // isgn
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -151,6 +149,7 @@ function dgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 			if ( lnoti ) {
 				for ( j = 0; j < N - 1; j++ ) {
 					lm = Math.min( kl, N - j - 1 );
+
 					// IPIV is 0-based in JS
 					jp = IPIV[ offsetIPIV + (j * si) ];
 					t = WORK[ offsetWORK + (jp * sw) ];

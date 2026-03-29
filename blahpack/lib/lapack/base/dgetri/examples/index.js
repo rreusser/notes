@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgetri = require( '@stdlib/lapack/base/dgetri' );

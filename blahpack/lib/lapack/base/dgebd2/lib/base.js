@@ -83,9 +83,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			// Generate elementary reflector H(i) to annihilate A(i+1:M-1, i)
 
 			// dlarfg: alpha is (array, offset), modifies in-place
-			dlarfg( M - i, A, aii,
-				A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2),
-				TAUQ, offsetTAUQ + (i * strideTAUQ) );
+			dlarfg( M - i, A, aii, A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2), TAUQ, offsetTAUQ + (i * strideTAUQ) );
 
 			// D(i) = A(i,i) (the computed beta)
 			d[ offsetD + (i * strideD) ] = A[ aii ];
@@ -97,11 +95,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// dlarf: tau is a plain number
 			if ( i < N - 1 ) {
-				dlarf( 'left', M - i, N - i - 1,
-					A, strideA1, aii,
-					TAUQ[ offsetTAUQ + (i * strideTAUQ) ],
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
-					WORK, strideWORK, offsetWORK );
+				dlarf( 'left', M - i, N - i - 1, A, strideA1, aii, TAUQ[ offsetTAUQ + (i * strideTAUQ) ], A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 			}
 
 			// Restore A(i,i) = D(i)
@@ -112,9 +106,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				aij = offsetA + (i * strideA1) + (( i + 1 ) * strideA2);
 
 				// Generate elementary reflector G(i) to annihilate A(i, i+2:N-1)
-				dlarfg( N - i - 1, A, aij,
-					A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 2, N - 1 ) * strideA2),
-					TAUP, offsetTAUP + (i * strideTAUP) );
+				dlarfg( N - i - 1, A, aij, A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 2, N - 1 ) * strideA2), TAUP, offsetTAUP + (i * strideTAUP) );
 
 				// E(i) = A(i, i+1) (the computed beta)
 				e[ offsetE + (i * strideE) ] = A[ aij ];
@@ -123,11 +115,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				A[ aij ] = 1.0;
 
 				// Apply G(i) to A(i+1:M-1, i+1:N-1) from the right
-				dlarf( 'right', M - i - 1, N - i - 1,
-					A, strideA2, aij,
-					TAUP[ offsetTAUP + (i * strideTAUP) ],
-					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
-					WORK, strideWORK, offsetWORK );
+				dlarf( 'right', M - i - 1, N - i - 1, A, strideA2, aij, TAUP[ offsetTAUP + (i * strideTAUP) ], A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 
 				// Restore A(i, i+1) = E(i)
 				A[ aij ] = e[ offsetE + (i * strideE) ];
@@ -142,9 +130,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			aii = offsetA + (i * strideA1) + (i * strideA2);
 
 			// Generate elementary reflector G(i) to annihilate A(i, i+1:N-1)
-			dlarfg( N - i, A, aii,
-				A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2),
-				TAUP, offsetTAUP + (i * strideTAUP) );
+			dlarfg( N - i, A, aii, A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2), TAUP, offsetTAUP + (i * strideTAUP) );
 
 			// D(i) = A(i,i) (the computed beta)
 			d[ offsetD + (i * strideD) ] = A[ aii ];
@@ -154,11 +140,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// Apply G(i) to A(i+1:M-1, i:N-1) from the right
 			if ( i < M - 1 ) {
-				dlarf( 'right', M - i - 1, N - i,
-					A, strideA2, aii,
-					TAUP[ offsetTAUP + (i * strideTAUP) ],
-					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
-					WORK, strideWORK, offsetWORK );
+				dlarf( 'right', M - i - 1, N - i, A, strideA2, aii, TAUP[ offsetTAUP + (i * strideTAUP) ], A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2), WORK, strideWORK, offsetWORK );
 			}
 
 			// Restore A(i,i) = D(i)
@@ -169,9 +151,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				aij = offsetA + (( i + 1 ) * strideA1) + (i * strideA2);
 
 				// Generate elementary reflector H(i) to annihilate A(i+2:M-1, i)
-				dlarfg( M - i - 1, A, aij,
-					A, strideA1, offsetA + (Math.min( i + 2, M - 1 ) * strideA1) + (i * strideA2),
-					TAUQ, offsetTAUQ + (i * strideTAUQ) );
+				dlarfg( M - i - 1, A, aij, A, strideA1, offsetA + (Math.min( i + 2, M - 1 ) * strideA1) + (i * strideA2), TAUQ, offsetTAUQ + (i * strideTAUQ) );
 
 				// E(i) = A(i+1, i) (the computed beta)
 				e[ offsetE + (i * strideE) ] = A[ aij ];
@@ -180,11 +160,7 @@ function dgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				A[ aij ] = 1.0;
 
 				// Apply H(i) to A(i+1:M-1, i+1:N-1) from the left
-				dlarf( 'left', M - i - 1, N - i - 1,
-					A, strideA1, aij,
-					TAUQ[ offsetTAUQ + (i * strideTAUQ) ],
-					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
-					WORK, strideWORK, offsetWORK );
+				dlarf( 'left', M - i - 1, N - i - 1, A, strideA1, aij, TAUQ[ offsetTAUQ + (i * strideTAUQ) ], A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 
 				// Restore A(i+1, i) = E(i)
 				A[ aij ] = e[ offsetE + (i * strideE) ];

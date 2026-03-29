@@ -66,33 +66,8 @@ files.forEach( function processFile( file ) {
 	// 2. Fix no-multiple-empty-lines (collapse 3+ blank lines to 2)
 	src = src.replace( /\n{4,}/g, '\n\n\n' );
 
-	// 3. Fix jsdoc-emphasis-marker: *text* -> _text_ in JSDoc
-	//    Only within JSDoc blocks (lines starting with *)
-	//    Be careful not to touch multiplication, pointers, etc.
-	var lines = src.split( '\n' );
-	for ( i = 0; i < lines.length; i++ ) {
-		var line = lines[ i ];
-
-		// Only process JSDoc lines (lines starting with optional whitespace + *)
-		if ( !/^\s*\*/.test( line ) ) {
-			continue;
-		}
-
-		// Replace *word(s)* emphasis with _word(s)_ emphasis
-		// Match: space or start, then *word(s)*, then space or punctuation
-		// Avoid: ** (bold), * at line start (list), *16 (complex type)
-		lines[ i ] = line.replace(
-			/(?<=\s)\*([A-Za-z][A-Za-z0-9 ]*[A-Za-z0-9])\*(?=[\s,.\-;:)]|$)/g,
-			'_$1_'
-		);
-
-		// Also handle single-word: *word*
-		lines[ i ] = lines[ i ].replace(
-			/(?<=\s)\*([A-Za-z][A-Za-z0-9]*)\*(?=[\s,.\-;:)]|$)/g,
-			'_$1_'
-		);
-	}
-	src = lines.join( '\n' );
+	// 3. jsdoc-emphasis-marker: let eslint --fix handle this (our regex
+	//    is too aggressive and corrupts math like c*a + s*b).
 
 	if ( src !== original ) {
 		changed += 1;

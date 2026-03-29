@@ -59,11 +59,11 @@ var DLARTG_OUT = new Float64Array( 3 );
 // MAIN //
 
 /**
-* Computes the eigenvalues and, optionally, the left and/or right eigenvectors
+* Computes the eigenvalues and, optionally, the left and/or right eigenvectors.
 * of a real N-by-N nonsymmetric matrix A.
 *
-* The right eigenvector v(j) of A satisfies A * v(j) = lambda(j) * v(j).
-* The left eigenvector u(j) of A satisfies u(j)**H * A = lambda(j) * u(j)**H.
+* The right eigenvector v(j) of A satisfies A _ v(j) = lambda(j) _ v(j).
+* The left eigenvector u(j) of A satisfies u(j)**H _ A = lambda(j) _ u(j)**H.
 *
 * The computed eigenvectors are normalized to have Euclidean norm equal to 1
 * and largest component real.
@@ -97,21 +97,21 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 	var wantvr;
 	var scalea;
 	var cscale;
+	var SELECT;
+	var SCALE;
 	var anrm;
 	var info;
+	var WORK;
+	var side;
+	var nout;
 	var ilo;
 	var ihi;
-	var WORK;
-	var SCALE;
 	var TAU;
-	var SELECT;
-	var side;
 	var scl;
+	var bal;
 	var cs;
 	var sn;
 	var r;
-	var bal;
-	var nout;
 	var k;
 	var i;
 
@@ -184,6 +184,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 		if ( wantvr ) {
 			// Want both left and right eigenvectors
 			side = 'both';
+
 			// Copy Schur vectors to VR
 			dlacpy( 'full', N, N, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR );
 		}
@@ -223,10 +224,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 		// Workspace for dtrevc3: need 3*N
 		var TREVC_WORK = new Float64Array( 3 * N );
 		nout = 0;
-		dtrevc3( side, 'backtransform', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA,
-			VL, strideVL1, strideVL2, offsetVL,
-			VR, strideVR1, strideVR2, offsetVR,
-			N, nout, TREVC_WORK, 1, 0, 3 * N );
+		dtrevc3( side, 'backtransform', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, N, nout, TREVC_WORK, 1, 0, 3 * N );
 	}
 
 	// Normalize left eigenvectors and make largest component real
@@ -241,10 +239,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 				dscal( N, scl, VL, strideVL1, offsetVL + i * strideVL2 );
 			} else if ( WI[ offsetWI + i * strideWI ] > ZERO ) {
 				// First of complex pair: normalize both columns
-				scl = ONE / dlapy2(
-					dnrm2( N, VL, strideVL1, offsetVL + i * strideVL2 ),
-					dnrm2( N, VL, strideVL1, offsetVL + ( i + 1 ) * strideVL2 )
-				);
+				scl = ONE / dlapy2(dnrm2( N, VL, strideVL1, offsetVL + i * strideVL2 ), dnrm2( N, VL, strideVL1, offsetVL + ( i + 1 ) * strideVL2 ));
 				dscal( N, scl, VL, strideVL1, offsetVL + i * strideVL2 );
 				dscal( N, scl, VL, strideVL1, offsetVL + ( i + 1 ) * strideVL2 );
 
@@ -256,13 +251,11 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 				k = idamax( N, WORK, 1, 0 );
 
 				// Generate rotation to make largest component real
-				dlartg( VL[ offsetVL + k * strideVL1 + i * strideVL2 ],
-					VL[ offsetVL + k * strideVL1 + ( i + 1 ) * strideVL2 ], DLARTG_OUT );
+				dlartg( VL[ offsetVL + k * strideVL1 + i * strideVL2 ], VL[ offsetVL + k * strideVL1 + ( i + 1 ) * strideVL2 ], DLARTG_OUT );
 				cs = DLARTG_OUT[ 0 ];
 				sn = DLARTG_OUT[ 1 ];
 
-				drot( N, VL, strideVL1, offsetVL + i * strideVL2,
-					VL, strideVL1, offsetVL + ( i + 1 ) * strideVL2, cs, sn );
+				drot( N, VL, strideVL1, offsetVL + i * strideVL2, VL, strideVL1, offsetVL + ( i + 1 ) * strideVL2, cs, sn );
 				VL[ offsetVL + k * strideVL1 + ( i + 1 ) * strideVL2 ] = ZERO;
 			}
 		}
@@ -280,10 +273,7 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 				dscal( N, scl, VR, strideVR1, offsetVR + i * strideVR2 );
 			} else if ( WI[ offsetWI + i * strideWI ] > ZERO ) {
 				// First of complex pair: normalize both columns
-				scl = ONE / dlapy2(
-					dnrm2( N, VR, strideVR1, offsetVR + i * strideVR2 ),
-					dnrm2( N, VR, strideVR1, offsetVR + ( i + 1 ) * strideVR2 )
-				);
+				scl = ONE / dlapy2(dnrm2( N, VR, strideVR1, offsetVR + i * strideVR2 ), dnrm2( N, VR, strideVR1, offsetVR + ( i + 1 ) * strideVR2 ));
 				dscal( N, scl, VR, strideVR1, offsetVR + i * strideVR2 );
 				dscal( N, scl, VR, strideVR1, offsetVR + ( i + 1 ) * strideVR2 );
 
@@ -295,13 +285,11 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 				k = idamax( N, WORK, 1, 0 );
 
 				// Generate rotation to make largest component real
-				dlartg( VR[ offsetVR + k * strideVR1 + i * strideVR2 ],
-					VR[ offsetVR + k * strideVR1 + ( i + 1 ) * strideVR2 ], DLARTG_OUT );
+				dlartg( VR[ offsetVR + k * strideVR1 + i * strideVR2 ], VR[ offsetVR + k * strideVR1 + ( i + 1 ) * strideVR2 ], DLARTG_OUT );
 				cs = DLARTG_OUT[ 0 ];
 				sn = DLARTG_OUT[ 1 ];
 
-				drot( N, VR, strideVR1, offsetVR + i * strideVR2,
-					VR, strideVR1, offsetVR + ( i + 1 ) * strideVR2, cs, sn );
+				drot( N, VR, strideVR1, offsetVR + i * strideVR2, VR, strideVR1, offsetVR + ( i + 1 ) * strideVR2, cs, sn );
 				VR[ offsetVR + k * strideVR1 + ( i + 1 ) * strideVR2 ] = ZERO;
 			}
 		}

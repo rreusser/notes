@@ -1,35 +1,64 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dbdsqr = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dbdsqr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dbdsqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -66,44 +95,74 @@ function toArray( arr, len ) {
 // TESTS //
 
 test( 'dbdsqr: upper_4x4_values_only', function t() {
-	var tc = findCase( 'upper_4x4_values_only' );
-	var n = 4;
-	var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
-	var e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-	var work = new Float64Array( 100 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_4x4_values_only' );
+	n = 4;
+	d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
+	e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+	work = new Float64Array( 100 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
 
 test( 'dbdsqr: upper_3x3_with_vt', function t() {
-	var tc = findCase( 'upper_3x3_with_vt' );
-	var n = 3;
-	var d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
-	var e = new Float64Array( [ 0.5, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_with_vt' );
+	n = 3;
+	d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
+	e = new Float64Array( [ 0.5, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
 });
 
 test( 'dbdsqr: upper_3x3_with_vt_and_u', function t() {
-	var tc = findCase( 'upper_3x3_with_vt_and_u' );
-	var n = 3;
-	var d = new Float64Array( [ 5.0, 3.0, 1.0 ] );
-	var e = new Float64Array( [ 2.0, 1.0 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_with_vt_and_u' );
+	n = 3;
+	d = new Float64Array( [ 5.0, 3.0, 1.0 ] );
+	e = new Float64Array( [ 2.0, 1.0 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -111,69 +170,117 @@ test( 'dbdsqr: upper_3x3_with_vt_and_u', function t() {
 });
 
 test( 'dbdsqr: lower_3x3_values_only', function t() {
-	var tc = findCase( 'lower_3x3_values_only' );
-	var n = 3;
-	var d = new Float64Array( [ 4.0, 3.0, 2.0 ] );
-	var e = new Float64Array( [ 1.5, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'lower', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'lower_3x3_values_only' );
+	n = 3;
+	d = new Float64Array( [ 4.0, 3.0, 2.0 ] );
+	e = new Float64Array( [ 1.5, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'lower', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
 
 test( 'dbdsqr: lower_3x3_with_u', function t() {
-	var tc = findCase( 'lower_3x3_with_u' );
-	var n = 3;
-	var d = new Float64Array( [ 4.0, 3.0, 2.0 ] );
-	var e = new Float64Array( [ 1.5, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = new Float64Array( 1 );
-	var U = eye( 3 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'lower', n, 0, 3, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'lower_3x3_with_u' );
+	n = 3;
+	d = new Float64Array( [ 4.0, 3.0, 2.0 ] );
+	e = new Float64Array( [ 1.5, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = new Float64Array( 1 );
+	U = eye( 3 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'lower', n, 0, 3, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( U, n * n ), tc.u, 1e-14, 'u' );
 });
 
 test( 'dbdsqr: n_1', function t() {
-	var tc = findCase( 'n_1' );
-	var d = new Float64Array( [ -5.0 ] );
-	var e = new Float64Array( 1 );
-	var work = new Float64Array( 10 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', 1, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'n_1' );
+	d = new Float64Array( [ -5.0 ] );
+	e = new Float64Array( 1 );
+	work = new Float64Array( 10 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', 1, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, 1 ), tc.d, 1e-14, 'd' );
 });
 
 test( 'dbdsqr: n_0', function t() {
-	var tc = findCase( 'n_0' );
-	var d = new Float64Array( 1 );
-	var e = new Float64Array( 1 );
-	var work = new Float64Array( 10 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', 0, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'n_0' );
+	d = new Float64Array( 1 );
+	e = new Float64Array( 1 );
+	work = new Float64Array( 10 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', 0, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 });
 
 test( 'dbdsqr: upper_2x2_with_vectors', function t() {
-	var tc = findCase( 'upper_2x2_with_vectors' );
-	var n = 2;
-	var d = new Float64Array( [ 3.0, 1.0 ] );
-	var e = new Float64Array( [ 2.0 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 2 );
-	var U = eye( 2 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 2, 2, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_2x2_with_vectors' );
+	n = 2;
+	d = new Float64Array( [ 3.0, 1.0 ] );
+	e = new Float64Array( [ 2.0 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 2 );
+	U = eye( 2 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 2, 2, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -181,61 +288,99 @@ test( 'dbdsqr: upper_2x2_with_vectors', function t() {
 });
 
 test( 'dbdsqr: n_1_neg_with_vt', function t() {
-	var tc = findCase( 'n_1_neg_with_vt' );
-	var d = new Float64Array( [ -3.0 ] );
-	var e = new Float64Array( 1 );
-	var work = new Float64Array( 10 );
-	var VT = new Float64Array( [ 1.0, 3.0 ] );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	// ncvt=2, LDVT=1 => strideVT2=1 for row access
-	var info = dbdsqr( 'upper', 1, 2, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'n_1_neg_with_vt' );
+	d = new Float64Array( [ -3.0 ] );
+	e = new Float64Array( 1 );
+	work = new Float64Array( 10 );
+	VT = new Float64Array( [ 1.0, 3.0 ] );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', 1, 2, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, 1 ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, 2 ), tc.vt, 1e-14, 'vt' );
 });
 
 test( 'dbdsqr: upper_3x3_with_c', function t() {
-	var tc = findCase( 'upper_3x3_with_c' );
-	var n = 3;
-	var ncc = 2;
-	var d = new Float64Array( [ 4.0, 2.0, 1.0 ] );
-	var e = new Float64Array( [ 1.0, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	// C is 3x2 column-major: C(1,:)=[1,2], C(2,:)=[0.5,0.25], C(3,:)=[1.5,2.5]
-	var C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
-	var info = dbdsqr( 'upper', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 );
+	var work;
+	var info;
+	var ncc;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_with_c' );
+	n = 3;
+	ncc = 2;
+	d = new Float64Array( [ 4.0, 2.0, 1.0 ] );
+	e = new Float64Array( [ 1.0, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
+	info = dbdsqr( 'upper', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( C, n * ncc ), tc.c, 1e-14, 'c' );
 });
 
 test( 'dbdsqr: upper_4x4_idir2', function t() {
-	var tc = findCase( 'upper_4x4_idir2' );
-	var n = 4;
-	var d = new Float64Array( [ 0.5, 1.0, 2.0, 4.0 ] );
-	var e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
-	var work = new Float64Array( 100 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_4x4_idir2' );
+	n = 4;
+	d = new Float64Array( [ 0.5, 1.0, 2.0, 4.0 ] );
+	e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
+	work = new Float64Array( 100 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
 
 test( 'dbdsqr: upper_3x3_zero_shift', function t() {
-	var tc = findCase( 'upper_3x3_zero_shift' );
-	var n = 3;
-	var d = new Float64Array( [ 1.0, 1e-15, 1.0 ] );
-	var e = new Float64Array( [ 1.0, 1.0 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_zero_shift' );
+	n = 3;
+	d = new Float64Array( [ 1.0, 1e-15, 1.0 ] );
+	e = new Float64Array( [ 1.0, 1.0 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -243,31 +388,52 @@ test( 'dbdsqr: upper_3x3_zero_shift', function t() {
 });
 
 test( 'dbdsqr: lower_3x3_with_c', function t() {
-	var tc = findCase( 'lower_3x3_with_c' );
-	var n = 3;
-	var ncc = 2;
-	var d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
-	var e = new Float64Array( [ 0.5, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
-	var info = dbdsqr( 'lower', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 );
+	var work;
+	var info;
+	var ncc;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'lower_3x3_with_c' );
+	n = 3;
+	ncc = 2;
+	d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
+	e = new Float64Array( [ 0.5, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+	info = dbdsqr( 'lower', n, 0, 0, ncc, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, n, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( C, n * ncc ), tc.c, 1e-14, 'c' );
 });
 
 test( 'dbdsqr: upper_3x3_idir2_with_vectors', function t() {
-	var tc = findCase( 'upper_3x3_idir2_with_vectors' );
-	var n = 3;
-	var d = new Float64Array( [ 0.1, 0.5, 3.0 ] );
-	var e = new Float64Array( [ 0.2, 0.3 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_idir2_with_vectors' );
+	n = 3;
+	d = new Float64Array( [ 0.1, 0.5, 3.0 ] );
+	e = new Float64Array( [ 0.2, 0.3 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -275,44 +441,74 @@ test( 'dbdsqr: upper_3x3_idir2_with_vectors', function t() {
 });
 
 test( 'dbdsqr: upper_3x3_negative_d', function t() {
-	var tc = findCase( 'upper_3x3_negative_d' );
-	var n = 3;
-	var d = new Float64Array( [ -3.0, 2.0, -1.0 ] );
-	var e = new Float64Array( [ 0.5, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_negative_d' );
+	n = 3;
+	d = new Float64Array( [ -3.0, 2.0, -1.0 ] );
+	e = new Float64Array( [ 0.5, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 3, 0, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
 });
 
 test( 'dbdsqr: nearly_diagonal', function t() {
-	var tc = findCase( 'nearly_diagonal' );
-	var n = 4;
-	var d = new Float64Array( [ 5.0, 3.0, 2.0, 1.0 ] );
-	var e = new Float64Array( [ 1e-16, 1e-16, 1e-16 ] );
-	var work = new Float64Array( 100 );
-	var VT = new Float64Array( 1 );
-	var U = new Float64Array( 1 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'nearly_diagonal' );
+	n = 4;
+	d = new Float64Array( [ 5.0, 3.0, 2.0, 1.0 ] );
+	e = new Float64Array( [ 1e-16, 1e-16, 1e-16 ] );
+	work = new Float64Array( 100 );
+	VT = new Float64Array( 1 );
+	U = new Float64Array( 1 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 0, 0, 0, d, 1, 0, e, 1, 0, VT, 1, 1, 0, U, 1, 1, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 });
 
 test( 'dbdsqr: lower_3x3_with_vt_and_u', function t() {
-	var tc = findCase( 'lower_3x3_with_vt_and_u' );
-	var n = 3;
-	var d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
-	var e = new Float64Array( [ 0.5, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'lower', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'lower_3x3_with_vt_and_u' );
+	n = 3;
+	d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
+	e = new Float64Array( [ 0.5, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'lower', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -320,16 +516,27 @@ test( 'dbdsqr: lower_3x3_with_vt_and_u', function t() {
 });
 
 test( 'dbdsqr: lower_3x3_all_vectors', function t() {
-	var tc = findCase( 'lower_3x3_all_vectors' );
-	var n = 3;
-	var ncc = 2;
-	var d = new Float64Array( [ 4.0, 2.0, 1.0 ] );
-	var e = new Float64Array( [ 1.0, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
-	var info = dbdsqr( 'lower', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var work;
+	var info;
+	var ncc;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'lower_3x3_all_vectors' );
+	n = 3;
+	ncc = 2;
+	d = new Float64Array( [ 4.0, 2.0, 1.0 ] );
+	e = new Float64Array( [ 1.0, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
+	info = dbdsqr( 'lower', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -338,15 +545,25 @@ test( 'dbdsqr: lower_3x3_all_vectors', function t() {
 });
 
 test( 'dbdsqr: upper_3x3_zero_d', function t() {
-	var tc = findCase( 'upper_3x3_zero_d' );
-	var n = 3;
-	var d = new Float64Array( [ 2.0, 0.0, 3.0 ] );
-	var e = new Float64Array( [ 1.0, 1.0 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_zero_d' );
+	n = 3;
+	d = new Float64Array( [ 2.0, 0.0, 3.0 ] );
+	e = new Float64Array( [ 1.0, 1.0 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -354,16 +571,27 @@ test( 'dbdsqr: upper_3x3_zero_d', function t() {
 });
 
 test( 'dbdsqr: upper_3x3_zero_shift_all_vecs', function t() {
-	var tc = findCase( 'upper_3x3_zero_shift_all_vecs' );
-	var n = 3;
-	var ncc = 2;
-	var d = new Float64Array( [ 1e-15, 1.0, 1.0 ] );
-	var e = new Float64Array( [ 1.0, 1.0 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
-	var info = dbdsqr( 'upper', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var work;
+	var info;
+	var ncc;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_zero_shift_all_vecs' );
+	n = 3;
+	ncc = 2;
+	d = new Float64Array( [ 1e-15, 1.0, 1.0 ] );
+	e = new Float64Array( [ 1.0, 1.0 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( [ 1.0, 0.5, 1.5, 2.0, 0.25, 2.5 ] );
+	info = dbdsqr( 'upper', n, 3, 3, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -372,16 +600,27 @@ test( 'dbdsqr: upper_3x3_zero_shift_all_vecs', function t() {
 });
 
 test( 'dbdsqr: upper_4x4_idir2_all_vecs', function t() {
-	var tc = findCase( 'upper_4x4_idir2_all_vecs' );
-	var n = 4;
-	var ncc = 2;
-	var d = new Float64Array( [ 0.5, 1.0, 2.0, 4.0 ] );
-	var e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 4 );
-	var U = eye( 4 );
-	var C = new Float64Array( [ 1.0, 0.5, 1.5, 0.25, 2.0, 0.75, 2.5, 1.0 ] );
-	var info = dbdsqr( 'upper', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var work;
+	var info;
+	var ncc;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_4x4_idir2_all_vecs' );
+	n = 4;
+	ncc = 2;
+	d = new Float64Array( [ 0.5, 1.0, 2.0, 4.0 ] );
+	e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 4 );
+	U = eye( 4 );
+	C = new Float64Array( [ 1.0, 0.5, 1.5, 0.25, 2.0, 0.75, 2.5, 1.0 ] );
+	info = dbdsqr( 'upper', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -390,16 +629,27 @@ test( 'dbdsqr: upper_4x4_idir2_all_vecs', function t() {
 });
 
 test( 'dbdsqr: upper_4x4_idir1_zero_shift_all_vecs', function t() {
-	var tc = findCase( 'upper_4x4_idir1_zero_shift_all_vecs' );
-	var n = 4;
-	var ncc = 2;
-	var d = new Float64Array( [ 10.0, 1e-15, 5.0, 1.0 ] );
-	var e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 4 );
-	var U = eye( 4 );
-	var C = new Float64Array( [ 1.0, 0.5, 1.5, 0.25, 2.0, 0.75, 2.5, 1.0 ] );
-	var info = dbdsqr( 'upper', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 );
+	var work;
+	var info;
+	var ncc;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_4x4_idir1_zero_shift_all_vecs' );
+	n = 4;
+	ncc = 2;
+	d = new Float64Array( [ 10.0, 1e-15, 5.0, 1.0 ] );
+	e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 4 );
+	U = eye( 4 );
+	C = new Float64Array( [ 1.0, 0.5, 1.5, 0.25, 2.0, 0.75, 2.5, 1.0 ] );
+	info = dbdsqr( 'upper', n, 4, 4, ncc, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, n, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );
@@ -408,15 +658,25 @@ test( 'dbdsqr: upper_4x4_idir1_zero_shift_all_vecs', function t() {
 });
 
 test( 'dbdsqr: upper_3x3_near_zero_shift', function t() {
-	var tc = findCase( 'upper_3x3_near_zero_shift' );
-	var n = 3;
-	var d = new Float64Array( [ 1e8, 1.0, 1.0 ] );
-	var e = new Float64Array( [ 0.5, 0.5 ] );
-	var work = new Float64Array( 100 );
-	var VT = eye( 3 );
-	var U = eye( 3 );
-	var C = new Float64Array( 1 );
-	var info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 );
+	var work;
+	var info;
+	var tc;
+	var VT;
+	var n;
+	var d;
+	var e;
+	var U;
+	var C;
+
+	tc = findCase( 'upper_3x3_near_zero_shift' );
+	n = 3;
+	d = new Float64Array( [ 1e8, 1.0, 1.0 ] );
+	e = new Float64Array( [ 0.5, 0.5 ] );
+	work = new Float64Array( 100 );
+	VT = eye( 3 );
+	U = eye( 3 );
+	C = new Float64Array( 1 );
+	info = dbdsqr( 'upper', n, 3, 3, 0, d, 1, 0, e, 1, 0, VT, 1, n, 0, U, 1, n, 0, C, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( d, n ), tc.d, 1e-14, 'd' );
 	assertArrayClose( toArray( VT, n * n ), tc.vt, 1e-14, 'vt' );

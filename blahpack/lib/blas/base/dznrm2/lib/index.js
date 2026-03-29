@@ -33,11 +33,4 @@
 
 'use strict';
 
-// MODULES //
-
-var main = require( './base.js' );
-
-
-// EXPORTS //
-
-module.exports = main;
+module.exports = require( './base.js' );

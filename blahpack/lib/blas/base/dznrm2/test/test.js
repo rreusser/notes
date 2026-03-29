@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
@@ -9,17 +9,36 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var dznrm2 = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dznrm2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dznrm2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function ( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
 test( 'dznrm2: single complex element (3+4i) has norm 5', function t() {
@@ -71,7 +90,7 @@ test( 'dznrm2: large and medium values (abig > 0, amed > 0)', function t() {
 	assertClose( dznrm2( 2, zx, 1, 0 ), tc.result, 1e-14, 'large_and_medium' );
 });
 
-test( 'dznrm2: small and medium values (asml > 0, amed > 0, asml < amed)', function t() {
+test( 'dznrm2: small and medium values (asml > 0, amed > 0, asml < amed)', function t() { // eslint-disable-line max-len
 	var tc = findCase( 'small_and_medium' );
 	var zx = new Complex128Array( [ 1e-300, 1e-300, 1, 1 ] );
 	assertClose( dznrm2( 2, zx, 1, 0 ), tc.result, 1e-14, 'small_and_medium' );
@@ -80,7 +99,7 @@ test( 'dznrm2: small and medium values (asml > 0, amed > 0, asml < amed)', funct
 test( 'dznrm2: small dominant with medium (asml > amed branch)', function t() {
 	var tc = findCase( 'small_dominant' );
 
-	// Many small complex values (just below TSML ~1.49e-154) plus one tiny medium value
+	// Many small complex values (just below TSML ~1.49e-154) plus one tiny medium value // eslint-disable-line max-len
 
 	// (just above TSML). After scaling, small contribution dominates medium.
 	var zx = new Complex128Array([

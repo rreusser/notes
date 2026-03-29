@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -13,11 +14,29 @@ var ndarray = require( './../lib/ndarray.js' );
 
 // FUNCTIONS //
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -242,7 +261,7 @@ test( 'dtbsv: upper_T_nonunit_k2_stride2', function t() {
 	]);
 	var x = new Float64Array( [ 1.0, 0.0, 6.0, 0.0, 15.0, 0.0, 24.0, 0.0, 32.0 ] );
 	dtbsv( 'upper', 'transpose', 'non-unit', 5, 2, AB, 1, 3, 0, x, 2, 0 );
-	assertArrayClose( x, [ 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ], 1e-14, 'x' );
+	assertArrayClose( x, [ 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 ], 1e-14, 'x' ); // eslint-disable-line max-len
 });
 
 
@@ -297,9 +316,13 @@ test( 'ndarray: throws RangeError for strideX=0', function t() {
 });
 
 test( 'ndarray: N=0 early return', function t() {
-	var out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, 0, AB, 1, 1, 0, x, 1, 0 );
-	var AB = new Float64Array( 1 );
-	var x = new Float64Array( [ 99 ] );
+	var out;
+	var AB;
+	var x;
+
+	AB = new Float64Array( 1 );
+	x = new Float64Array( [ 99 ] );
+	out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, 0, AB, 1, 1, 0, x, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( out, x );
 	assert.equal( x[ 0 ], 99 );
 });

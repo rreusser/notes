@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
@@ -9,11 +9,19 @@ var drotg = require( './../lib/base.js' );
 
 var EPS = 1.0e-14;
 
+/**
+* Approx.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function approx( actual, expected, msg ) {
 	if ( expected === 0.0 ) {
-		assert.ok( Math.abs( actual ) < EPS, msg + ': got ' + actual + ', expected ~0' );
+		assert.ok( Math.abs( actual ) < EPS, msg + ': got ' + actual + ', expected ~0' ); // eslint-disable-line max-len
 	} else {
-		assert.ok( Math.abs( actual - expected ) / Math.abs( expected ) < EPS, msg + ': got ' + actual + ', expected ' + expected );
+		assert.ok( Math.abs( actual - expected ) / Math.abs( expected ) < EPS, msg + ': got ' + actual + ', expected ' + expected ); // eslint-disable-line max-len
 	}
 }
 
@@ -67,7 +75,7 @@ test( 'drotg: |b| > |a|', function t() {
 });
 
 test( 'drotg: negative a, |a| > |b|', function t() {
-	// a=-5, b=3: sigma=sign(a)=-1, r=-sqrt(34), c=-5/r=5/sqrt(34), s=3/r=-3/sqrt(34), z=s
+	// a=-5, b=3: sigma=sign(a)=-1, r=-sqrt(34), c=-5/r=5/sqrt(34), s=3/r=-3/sqrt(34), z=s // eslint-disable-line max-len
 	var ab = new Float64Array( [ -5.0, 3.0 ] );
 	var cs = new Float64Array( 2 );
 	var r = -Math.sqrt( 34.0 );
@@ -112,7 +120,7 @@ test( 'drotg: both zero', function t() {
 });
 
 test( 'drotg: equal a and b', function t() {
-	// a=5, b=5: |b|>=|a| (equal), sigma=sign(b)=+1, r=5*sqrt(2), c=s=1/sqrt(2), z=1/c=sqrt(2)
+	// a=5, b=5: |b|>=|a| (equal), sigma=sign(b)=+1, r=5*sqrt(2), c=s=1/sqrt(2), z=1/c=sqrt(2) // eslint-disable-line max-len
 	var ab = new Float64Array( [ 5.0, 5.0 ] );
 	var cs = new Float64Array( 2 );
 	var r = 5.0 * Math.sqrt( 2.0 );
@@ -139,7 +147,7 @@ test( 'drotg: verify c^2 + s^2 = 1', function t() {
 		ab = new Float64Array( cases[ i ] );
 		cs = new Float64Array( 2 );
 		drotg( ab, 1, 0, cs, 1, 0 );
-		approx( ( cs[ 0 ] * cs[ 0 ] ) + ( cs[ 1 ] * cs[ 1 ] ), 1.0, 'c^2+s^2 for case ' + i );
+		approx( ( cs[ 0 ] * cs[ 0 ] ) + ( cs[ 1 ] * cs[ 1 ] ), 1.0, 'c^2+s^2 for case ' + i ); // eslint-disable-line max-len
 	}
 });
 
@@ -163,10 +171,10 @@ test( 'drotg: verify rotation zeroes b', function t() {
 		drotg( ab, 1, 0, cs, 1, 0 );
 
 		// Second component of rotation should be zero: -s*a + c*b = 0
-		approx( ( -cs[ 1 ] * a ) + ( cs[ 0 ] * b ), 0.0, 'rotation zeroes b for case ' + i );
+		approx( ( -cs[ 1 ] * a ) + ( cs[ 0 ] * b ), 0.0, 'rotation zeroes b for case ' + i ); // eslint-disable-line max-len
 
 		// First component should equal r: c*a + s*b = r
-		approx( ( cs[ 0 ] * a ) + ( cs[ 1 ] * b ), ab[ 0 ], 'rotation gives r for case ' + i );
+		approx( ( cs[ 0 ] * a ) + ( cs[ 1 ] * b ), ab[ 0 ], 'rotation gives r for case ' + i ); // eslint-disable-line max-len
 	}
 });
 

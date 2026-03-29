@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgesvx = require( '@stdlib/lapack/base/dgesvx' );

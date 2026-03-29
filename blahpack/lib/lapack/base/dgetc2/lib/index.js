@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* LU factorization with complete pivoting of a general NxN matrix
+* LU factorization with complete pivoting of a general NxN matrix.
 *
 * @module @stdlib/lapack/base/dgetc2
 *

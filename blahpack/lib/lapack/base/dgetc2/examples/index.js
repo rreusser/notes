@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgetc2 = require( '@stdlib/lapack/base/dgetc2' );

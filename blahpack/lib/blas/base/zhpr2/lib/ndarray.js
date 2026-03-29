@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -12,27 +11,26 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Performs the Hermitian packed rank-2 update `A := alpha*x*y**H + conj(alpha)*y*x**H + A`.
- *
- * `alpha` is a complex scalar, `x` and `y` are `N` element complex vectors,
- * and `A` is an `N` by `N` Hermitian matrix supplied in packed form.
- *
- *
- * @param {string} uplo - specifies whether upper or lower triangle is stored
- * @param {NonNegativeInteger} N - order of the matrix `A`
- * @param {Complex128} alpha - complex scalar constant
- * @param {Complex128Array} x - first input vector
- * @param {integer} strideX - `x` stride length (in complex elements)
- * @param {NonNegativeInteger} offsetX - starting index for `x` (in complex elements)
- * @param {Complex128Array} y - second input vector
- * @param {integer} strideY - `y` stride length (in complex elements)
- * @param {NonNegativeInteger} offsetY - starting index for `y` (in complex elements)
- * @param {Complex128Array} AP - packed Hermitian matrix
- * @param {integer} strideAP - `AP` stride length (in complex elements)
- * @param {NonNegativeInteger} offsetAP - starting index for `AP` (in complex elements)
- * @throws {TypeError} First argument must be a valid matrix triangle
- * @returns {Complex128Array} `AP`
- */
+* Performs the Hermitian packed rank-2 update `A := alpha*x*y**H + conj(alpha)*y*x**H + A`.
+*
+* `alpha` is a complex scalar, `x` and `y` are `N` element complex vectors,
+* and `A` is an `N` by `N` Hermitian matrix supplied in packed form.
+*
+* @param {string} uplo - specifies whether upper or lower triangle is stored
+* @param {NonNegativeInteger} N - order of the matrix `A`
+* @param {Complex128} alpha - complex scalar constant
+* @param {Complex128Array} x - first input vector
+* @param {integer} strideX - `x` stride length (in complex elements)
+* @param {NonNegativeInteger} offsetX - starting index for `x` (in complex elements)
+* @param {Complex128Array} y - second input vector
+* @param {integer} strideY - `y` stride length (in complex elements)
+* @param {NonNegativeInteger} offsetY - starting index for `y` (in complex elements)
+* @param {Complex128Array} AP - packed Hermitian matrix
+* @param {integer} strideAP - `AP` stride length (in complex elements)
+* @param {NonNegativeInteger} offsetAP - starting index for `AP` (in complex elements)
+* @throws {TypeError} First argument must be a valid matrix triangle
+* @returns {Complex128Array} `AP`
+*/
 function zhpr2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, AP, strideAP, offsetAP ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );

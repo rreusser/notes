@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes a generalized QR factorization of matrices A and B
+* Computes a generalized QR factorization of matrices A and B.
 *
 * @module @stdlib/lapack/base/dggqrf
 *

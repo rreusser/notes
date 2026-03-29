@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgelqf = require( '@stdlib/lapack/base/dgelqf' );

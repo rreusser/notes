@@ -1,11 +1,16 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgetrf = require( '../../dgetrf/lib/base.js' );
 var dgetrs = require( '../../dgetrs/lib/base.js' );
 var dgerfs = require( './../lib/base.js' );
@@ -13,17 +18,36 @@ var dgerfs = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgerfs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgerfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
 	var relErr;
 	if ( expected === 0.0 ) {
@@ -31,9 +55,18 @@ function assertClose( actual, expected, tol, msg ) {
 		return;
 	}
 	relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -57,11 +90,11 @@ function setupSystem( trans, aVals, bVals, N, nrhs ) {
 	var IPIV = new Int32Array( N );
 	var FERR = new Float64Array( nrhs );
 	var BERR = new Float64Array( nrhs );
-	var A = new Float64Array( aVals );
+	var info;
 	var AF = new Float64Array( aVals );
+	var A = new Float64Array( aVals );
 	var B = new Float64Array( bVals );
 	var X = new Float64Array( bVals );
-	var info;
 
 	// Factorize AF = P*L*U
 	info = dgetrf( N, N, AF, 1, N, 0, IPIV, 1, 0 );
@@ -72,92 +105,105 @@ function setupSystem( trans, aVals, bVals, N, nrhs ) {
 	assert.equal( info, 0, 'dgetrs should succeed' );
 
 	return {
-		A: A,
-		AF: AF,
-		IPIV: IPIV,
-		B: B,
-		X: X,
-		FERR: FERR,
-		BERR: BERR
+		'A': A,
+		'AF': AF,
+		'IPIV': IPIV,
+		'B': B,
+		'X': X,
+		'FERR': FERR,
+		'BERR': BERR
 	};
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
 // TESTS //
 
 test( 'dgerfs: basic_3x3', function t() {
-	var tc = findCase( 'basic_3x3' );
-	var sys = setupSystem( 'no-transpose', [
-		2, 4, 8,
-		1, 3, 7,
-		1, 3, 9
-	], [ 1, 1, 1 ], 3, 1 );
 	var info;
+	var sys;
+	var tc;
 
-	info = dgerfs( 'no-transpose', 3, 1,
-		sys.A, 1, 3, 0,
-		sys.AF, 1, 3, 0,
-		sys.IPIV, 1, 0,
-		sys.B, 1, 3, 0,
-		sys.X, 1, 3, 0,
-		sys.FERR, 1, 0,
-		sys.BERR, 1, 0
-	);
-
+	tc = findCase( 'basic_3x3' );
+	sys = setupSystem( 'no-transpose', [
+		2,
+		4,
+		8,
+		1,
+		3,
+		7,
+		1,
+		3,
+		9
+	], [ 1, 1, 1 ], 3, 1 );
+	info = dgerfs( 'no-transpose', 3, 1, sys.A, 1, 3, 0, sys.AF, 1, 3, 0, sys.IPIV, 1, 0, sys.B, 1, 3, 0, sys.X, 1, 3, 0, sys.FERR, 1, 0, sys.BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( sys.X.subarray( 0, 3 ) ), tc.x, 1e-12, 'x' );
+	assertArrayClose( toArray( sys.X.subarray( 0, 3 ) ), tc.x, 1e-12, 'x' );
 	assert.ok( sys.FERR[ 0 ] >= 0.0, 'FERR >= 0' );
 	assert.ok( sys.BERR[ 0 ] >= 0.0, 'BERR >= 0' );
 	assert.ok( sys.BERR[ 0 ] < 1e-10, 'BERR is small' );
 });
 
 test( 'dgerfs: transpose_3x3', function t() {
-	var tc = findCase( 'transpose_3x3' );
-	var sys = setupSystem( 'transpose', [
-		2, 4, 8,
-		1, 3, 7,
-		1, 3, 9
-	], [ 1, 1, 1 ], 3, 1 );
 	var info;
+	var sys;
+	var tc;
 
-	info = dgerfs( 'transpose', 3, 1,
-		sys.A, 1, 3, 0,
-		sys.AF, 1, 3, 0,
-		sys.IPIV, 1, 0,
-		sys.B, 1, 3, 0,
-		sys.X, 1, 3, 0,
-		sys.FERR, 1, 0,
-		sys.BERR, 1, 0
-	);
-
+	tc = findCase( 'transpose_3x3' );
+	sys = setupSystem( 'transpose', [
+		2,
+		4,
+		8,
+		1,
+		3,
+		7,
+		1,
+		3,
+		9
+	], [ 1, 1, 1 ], 3, 1 );
+	info = dgerfs( 'transpose', 3, 1, sys.A, 1, 3, 0, sys.AF, 1, 3, 0, sys.IPIV, 1, 0, sys.B, 1, 3, 0, sys.X, 1, 3, 0, sys.FERR, 1, 0, sys.BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( sys.X.subarray( 0, 3 ) ), tc.x, 1e-12, 'x' );
+	assertArrayClose( toArray( sys.X.subarray( 0, 3 ) ), tc.x, 1e-12, 'x' );
 	assert.ok( sys.FERR[ 0 ] >= 0.0, 'FERR >= 0' );
 	assert.ok( sys.BERR[ 0 ] >= 0.0, 'BERR >= 0' );
 	assert.ok( sys.BERR[ 0 ] < 1e-10, 'BERR is small' );
 });
 
 test( 'dgerfs: multi_rhs', function t() {
-	var tc = findCase( 'multi_rhs' );
-	var sys = setupSystem( 'no-transpose', [
-		2, 4, 8,
-		1, 3, 7,
-		1, 3, 9
-	], [ 1, 0, 0, 0, 1, 0 ], 3, 2 );
 	var info;
+	var sys;
+	var tc;
 
-	info = dgerfs( 'no-transpose', 3, 2,
-		sys.A, 1, 3, 0,
-		sys.AF, 1, 3, 0,
-		sys.IPIV, 1, 0,
-		sys.B, 1, 3, 0,
-		sys.X, 1, 3, 0,
-		sys.FERR, 1, 0,
-		sys.BERR, 1, 0
-	);
-
+	tc = findCase( 'multi_rhs' );
+	sys = setupSystem( 'no-transpose', [
+		2,
+		4,
+		8,
+		1,
+		3,
+		7,
+		1,
+		3,
+		9
+	], [ 1, 0, 0, 0, 1, 0 ], 3, 2 );
+	info = dgerfs( 'no-transpose', 3, 2, sys.A, 1, 3, 0, sys.AF, 1, 3, 0, sys.IPIV, 1, 0, sys.B, 1, 3, 0, sys.X, 1, 3, 0, sys.FERR, 1, 0, sys.BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( sys.X.subarray( 0, 6 ) ), tc.x, 1e-12, 'x' );
+	assertArrayClose( toArray( sys.X.subarray( 0, 6 ) ), tc.x, 1e-12, 'x' );
 	assert.ok( sys.FERR[ 0 ] >= 0.0, 'FERR[0] >= 0' );
 	assert.ok( sys.FERR[ 1 ] >= 0.0, 'FERR[1] >= 0' );
 	assert.ok( sys.BERR[ 0 ] >= 0.0, 'BERR[0] >= 0' );
@@ -165,97 +211,87 @@ test( 'dgerfs: multi_rhs', function t() {
 });
 
 test( 'dgerfs: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
-	var A = new Float64Array( 1 );
-	var AF = new Float64Array( 1 );
-	var IPIV = new Int32Array( 1 );
-	var B = new Float64Array( 1 );
-	var X = new Float64Array( 1 );
-	var FERR = new Float64Array( 1 );
-	var BERR = new Float64Array( 1 );
+	var IPIV;
+	var FERR;
+	var BERR;
 	var info;
+	var tc;
+	var AF;
+	var A;
+	var B;
+	var X;
 
-	info = dgerfs( 'no-transpose', 0, 1,
-		A, 1, 1, 0,
-		AF, 1, 1, 0,
-		IPIV, 1, 0,
-		B, 1, 1, 0,
-		X, 1, 1, 0,
-		FERR, 1, 0,
-		BERR, 1, 0
-	);
-
+	tc = findCase( 'n_zero' );
+	A = new Float64Array( 1 );
+	AF = new Float64Array( 1 );
+	IPIV = new Int32Array( 1 );
+	B = new Float64Array( 1 );
+	X = new Float64Array( 1 );
+	FERR = new Float64Array( 1 );
+	BERR = new Float64Array( 1 );
+	info = dgerfs( 'no-transpose', 0, 1, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0, X, 1, 1, 0, FERR, 1, 0, BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( FERR[ 0 ], 0.0, 'FERR = 0 for N=0' );
 	assert.equal( BERR[ 0 ], 0.0, 'BERR = 0 for N=0' );
 });
 
 test( 'dgerfs: nrhs_zero', function t() {
-	var tc = findCase( 'nrhs_zero' );
-	var A = new Float64Array( 9 );
-	var AF = new Float64Array( 9 );
-	var IPIV = new Int32Array( 3 );
-	var B = new Float64Array( 3 );
-	var X = new Float64Array( 3 );
-	var FERR = new Float64Array( 1 );
-	var BERR = new Float64Array( 1 );
+	var IPIV;
+	var FERR;
+	var BERR;
 	var info;
+	var tc;
+	var AF;
+	var A;
+	var B;
+	var X;
 
-	info = dgerfs( 'no-transpose', 3, 0,
-		A, 1, 3, 0,
-		AF, 1, 3, 0,
-		IPIV, 1, 0,
-		B, 1, 3, 0,
-		X, 1, 3, 0,
-		FERR, 1, 0,
-		BERR, 1, 0
-	);
-
+	tc = findCase( 'nrhs_zero' );
+	A = new Float64Array( 9 );
+	AF = new Float64Array( 9 );
+	IPIV = new Int32Array( 3 );
+	B = new Float64Array( 3 );
+	X = new Float64Array( 3 );
+	FERR = new Float64Array( 1 );
+	BERR = new Float64Array( 1 );
+	info = dgerfs( 'no-transpose', 3, 0, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0, X, 1, 3, 0, FERR, 1, 0, BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );
 });
 
 test( 'dgerfs: hilbert_3x3', function t() {
-	var tc = findCase( 'hilbert_3x3' );
-	var sys = setupSystem( 'no-transpose', [
-		1.0, 0.5, 1.0 / 3.0,
-		0.5, 1.0 / 3.0, 0.25,
-		1.0 / 3.0, 0.25, 0.2
-	], [ 1, 1, 1 ], 3, 1 );
 	var info;
+	var sys;
+	var tc;
 
-	info = dgerfs( 'no-transpose', 3, 1,
-		sys.A, 1, 3, 0,
-		sys.AF, 1, 3, 0,
-		sys.IPIV, 1, 0,
-		sys.B, 1, 3, 0,
-		sys.X, 1, 3, 0,
-		sys.FERR, 1, 0,
-		sys.BERR, 1, 0
-	);
-
+	tc = findCase( 'hilbert_3x3' );
+	sys = setupSystem( 'no-transpose', [
+		1.0,
+		0.5,
+		1.0 / 3.0,
+		0.5,
+		1.0 / 3.0,
+		0.25,
+		1.0 / 3.0,
+		0.25,
+		0.2
+	], [ 1, 1, 1 ], 3, 1 );
+	info = dgerfs( 'no-transpose', 3, 1, sys.A, 1, 3, 0, sys.AF, 1, 3, 0, sys.IPIV, 1, 0, sys.B, 1, 3, 0, sys.X, 1, 3, 0, sys.FERR, 1, 0, sys.BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( sys.X.subarray( 0, 3 ) ), tc.x, 1e-10, 'x' );
+	assertArrayClose( toArray( sys.X.subarray( 0, 3 ) ), tc.x, 1e-10, 'x' );
 	assert.ok( sys.FERR[ 0 ] >= 0.0, 'FERR >= 0' );
 	assert.ok( sys.BERR[ 0 ] >= 0.0, 'BERR >= 0' );
 });
 
 test( 'dgerfs: one_by_one', function t() {
-	var tc = findCase( 'one_by_one' );
-	var sys = setupSystem( 'no-transpose', [ 5.0 ], [ 10.0 ], 1, 1 );
 	var info;
+	var sys;
+	var tc;
 
-	info = dgerfs( 'no-transpose', 1, 1,
-		sys.A, 1, 1, 0,
-		sys.AF, 1, 1, 0,
-		sys.IPIV, 1, 0,
-		sys.B, 1, 1, 0,
-		sys.X, 1, 1, 0,
-		sys.FERR, 1, 0,
-		sys.BERR, 1, 0
-	);
-
+	tc = findCase( 'one_by_one' );
+	sys = setupSystem( 'no-transpose', [ 5.0 ], [ 10.0 ], 1, 1 );
+	info = dgerfs( 'no-transpose', 1, 1, sys.A, 1, 1, 0, sys.AF, 1, 1, 0, sys.IPIV, 1, 0, sys.B, 1, 1, 0, sys.X, 1, 1, 0, sys.FERR, 1, 0, sys.BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( sys.X.subarray( 0, 1 ) ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( sys.X.subarray( 0, 1 ) ), tc.x, 1e-14, 'x' );
 	assert.ok( sys.FERR[ 0 ] >= 0.0, 'FERR >= 0' );
 	assert.ok( sys.BERR[ 0 ] >= 0.0, 'BERR >= 0' );
 });

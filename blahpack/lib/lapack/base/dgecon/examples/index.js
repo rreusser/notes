@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgecon = require( '@stdlib/lapack/base/dgecon' );

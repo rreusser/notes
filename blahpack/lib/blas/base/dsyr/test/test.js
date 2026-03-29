@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
@@ -17,14 +17,15 @@ test( 'dsyr: attached to the main export is an `ndarray` method', function t() {
 });
 
 test( 'dsyr: upper triangle, basic 3x3 (alpha=1, x=[1,2,3])', function t() {
-	// A = I (identity), column-major: strideA1=1, strideA2=3
-	// A := 1.0 * x*x^T + A
-	// x*x^T = [[1,2,3],[2,4,6],[3,6,9]]
-	// Upper: A[0,0]+=1, A[0,1]+=2, A[0,2]+=3, A[1,1]+=4, A[1,2]+=6, A[2,2]+=9
-	var expected = new Float64Array([ 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
-	var out = dsyr.ndarray( 'upper', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
-	var A = new Float64Array([ 1, 0, 0, 0, 1, 0, 0, 0, 1 ]);
-	var x = new Float64Array([ 1, 2, 3 ]);
+	var expected;
+	var out;
+	var A;
+	var x;
+
+	A = new Float64Array([ 1, 0, 0, 0, 1, 0, 0, 0, 1 ]);
+	x = new Float64Array([ 1, 2, 3 ]);
+	expected = new Float64Array([ 2, 0, 0, 2, 5, 0, 3, 6, 10 ]);
+	out = dsyr.ndarray( 'upper', 3, 1.0, x, 1, 0, A, 1, 3, 0 );
 	assert.strictEqual( out, A, 'returns A' );
 	assert.deepStrictEqual( A, expected );
 });
@@ -153,19 +154,19 @@ test( 'dsyr: lower triangle, row-major', function t() {
 // ndarray validation tests
 
 test( 'dsyr: ndarray throws TypeError for invalid uplo', function t() {
-	assert.throws( function () {
-		ndarray( 'invalid', 3, 1.0, new Float64Array( 3 ), 1, 0, new Float64Array( 9 ), 1, 3, 0 );
+	assert.throws( function throws() {
+		ndarray( 'invalid', 3, 1.0, new Float64Array( 3 ), 1, 0, new Float64Array( 9 ), 1, 3, 0 ); // eslint-disable-line max-len
 	}, TypeError );
 });
 
 test( 'dsyr: ndarray throws RangeError for negative N', function t() {
-	assert.throws( function () {
-		ndarray( 'upper', -1, 1.0, new Float64Array( 3 ), 1, 0, new Float64Array( 9 ), 1, 3, 0 );
+	assert.throws( function throws() {
+		ndarray( 'upper', -1, 1.0, new Float64Array( 3 ), 1, 0, new Float64Array( 9 ), 1, 3, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });
 
 test( 'dsyr: ndarray throws RangeError for zero strideX', function t() {
-	assert.throws( function () {
-		ndarray( 'upper', 3, 1.0, new Float64Array( 3 ), 0, 0, new Float64Array( 9 ), 1, 3, 0 );
+	assert.throws( function throws() {
+		ndarray( 'upper', 3, 1.0, new Float64Array( 3 ), 0, 0, new Float64Array( 9 ), 1, 3, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });

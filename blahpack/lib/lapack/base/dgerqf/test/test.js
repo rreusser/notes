@@ -1,34 +1,64 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dgerqf = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgerqf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgerqf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -37,6 +67,16 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
+/**
+* ExtractMatrix.
+*
+* @private
+* @param {*} A - A
+* @param {*} LDA - LDA
+* @param {*} M - M
+* @param {*} N - N
+* @returns {*} result
+*/
 function extractMatrix( A, LDA, M, N ) {
 	var out = [];
 	var i;
@@ -45,6 +85,22 @@ function extractMatrix( A, LDA, M, N ) {
 		for ( i = 0; i < M; i++ ) {
 			out.push( A[ j * LDA + i ] );
 		}
+	}
+	return out;
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
 	}
 	return out;
 }
@@ -60,19 +116,25 @@ test( 'dgerqf: 3x4 (M < N)', function t() {
 	var A;
 
 	tc = findCase( '3x4' );
-
 	A = new Float64Array( 6 * 4 );
-	A[ 0 * 6 + 0 ] = 2.0; A[ 1 * 6 + 0 ] = 1.0; A[ 2 * 6 + 0 ] = 3.0; A[ 3 * 6 + 0 ] = 1.0;
-	A[ 0 * 6 + 1 ] = 1.0; A[ 1 * 6 + 1 ] = 4.0; A[ 2 * 6 + 1 ] = 2.0; A[ 3 * 6 + 1 ] = 3.0;
-	A[ 0 * 6 + 2 ] = 3.0; A[ 1 * 6 + 2 ] = 2.0; A[ 2 * 6 + 2 ] = 5.0; A[ 3 * 6 + 2 ] = 2.0;
+	A[ 0 * 6 + 0 ] = 2.0;
+	A[ 1 * 6 + 0 ] = 1.0;
+	A[ 2 * 6 + 0 ] = 3.0;
+	A[ 3 * 6 + 0 ] = 1.0;
+	A[ 0 * 6 + 1 ] = 1.0;
+	A[ 1 * 6 + 1 ] = 4.0;
+	A[ 2 * 6 + 1 ] = 2.0;
+	A[ 3 * 6 + 1 ] = 3.0;
+	A[ 0 * 6 + 2 ] = 3.0;
+	A[ 1 * 6 + 2 ] = 2.0;
+	A[ 2 * 6 + 2 ] = 5.0;
+	A[ 3 * 6 + 2 ] = 2.0;
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 600 );
-
 	info = dgerqf( 3, 4, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 6, 3, 4 ), tc.A, 1e-14, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-14, 'TAU' );
 });
 
 test( 'dgerqf: 4x3 (M > N)', function t() {
@@ -83,20 +145,25 @@ test( 'dgerqf: 4x3 (M > N)', function t() {
 	var A;
 
 	tc = findCase( '4x3' );
-
 	A = new Float64Array( 6 * 3 );
-	A[ 0 * 6 + 0 ] = 2.0; A[ 1 * 6 + 0 ] = 1.0; A[ 2 * 6 + 0 ] = 3.0;
-	A[ 0 * 6 + 1 ] = 1.0; A[ 1 * 6 + 1 ] = 4.0; A[ 2 * 6 + 1 ] = 2.0;
-	A[ 0 * 6 + 2 ] = 3.0; A[ 1 * 6 + 2 ] = 2.0; A[ 2 * 6 + 2 ] = 5.0;
-	A[ 0 * 6 + 3 ] = 1.0; A[ 1 * 6 + 3 ] = 3.0; A[ 2 * 6 + 3 ] = 1.0;
+	A[ 0 * 6 + 0 ] = 2.0;
+	A[ 1 * 6 + 0 ] = 1.0;
+	A[ 2 * 6 + 0 ] = 3.0;
+	A[ 0 * 6 + 1 ] = 1.0;
+	A[ 1 * 6 + 1 ] = 4.0;
+	A[ 2 * 6 + 1 ] = 2.0;
+	A[ 0 * 6 + 2 ] = 3.0;
+	A[ 1 * 6 + 2 ] = 2.0;
+	A[ 2 * 6 + 2 ] = 5.0;
+	A[ 0 * 6 + 3 ] = 1.0;
+	A[ 1 * 6 + 3 ] = 3.0;
+	A[ 2 * 6 + 3 ] = 1.0;
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 600 );
-
 	info = dgerqf( 4, 3, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 6, 4, 3 ), tc.A, 1e-14, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-14, 'TAU' );
 });
 
 test( 'dgerqf: 3x3 (square)', function t() {
@@ -107,19 +174,22 @@ test( 'dgerqf: 3x3 (square)', function t() {
 	var A;
 
 	tc = findCase( '3x3' );
-
 	A = new Float64Array( 6 * 3 );
-	A[ 0 * 6 + 0 ] = 4.0; A[ 1 * 6 + 0 ] = 1.0; A[ 2 * 6 + 0 ] = 2.0;
-	A[ 0 * 6 + 1 ] = 1.0; A[ 1 * 6 + 1 ] = 3.0; A[ 2 * 6 + 1 ] = 1.0;
-	A[ 0 * 6 + 2 ] = 2.0; A[ 1 * 6 + 2 ] = 1.0; A[ 2 * 6 + 2 ] = 5.0;
+	A[ 0 * 6 + 0 ] = 4.0;
+	A[ 1 * 6 + 0 ] = 1.0;
+	A[ 2 * 6 + 0 ] = 2.0;
+	A[ 0 * 6 + 1 ] = 1.0;
+	A[ 1 * 6 + 1 ] = 3.0;
+	A[ 2 * 6 + 1 ] = 1.0;
+	A[ 0 * 6 + 2 ] = 2.0;
+	A[ 1 * 6 + 2 ] = 1.0;
+	A[ 2 * 6 + 2 ] = 5.0;
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 600 );
-
 	info = dgerqf( 3, 3, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 6, 3, 3 ), tc.A, 1e-14, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-14, 'TAU' );
 });
 
 test( 'dgerqf: 1x1', function t() {
@@ -130,17 +200,14 @@ test( 'dgerqf: 1x1', function t() {
 	var A;
 
 	tc = findCase( '1x1' );
-
 	A = new Float64Array( 6 );
 	A[ 0 ] = 7.0;
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 600 );
-
 	info = dgerqf( 1, 1, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 6, 1, 1 ), tc.A, 1e-14, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-14, 'TAU' );
 });
 
 test( 'dgerqf: M=0 (quick return)', function t() {
@@ -152,9 +219,7 @@ test( 'dgerqf: M=0 (quick return)', function t() {
 	A = new Float64Array( 1 );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
-
 	info = dgerqf( 0, 3, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, 0, 'INFO' );
 });
 
@@ -167,9 +232,7 @@ test( 'dgerqf: N=0 (quick return)', function t() {
 	A = new Float64Array( 1 );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
-
 	info = dgerqf( 3, 0, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, 0, 'INFO' );
 });
 
@@ -181,29 +244,36 @@ test( 'dgerqf: 2x5 (wide)', function t() {
 	var A;
 
 	tc = findCase( '2x5' );
-
 	A = new Float64Array( 6 * 5 );
-	A[ 0 * 6 + 0 ] = 1.0; A[ 1 * 6 + 0 ] = 2.0; A[ 2 * 6 + 0 ] = 3.0; A[ 3 * 6 + 0 ] = 4.0; A[ 4 * 6 + 0 ] = 5.0;
-	A[ 0 * 6 + 1 ] = 6.0; A[ 1 * 6 + 1 ] = 7.0; A[ 2 * 6 + 1 ] = 8.0; A[ 3 * 6 + 1 ] = 9.0; A[ 4 * 6 + 1 ] = 10.0;
+	A[ 0 * 6 + 0 ] = 1.0;
+	A[ 1 * 6 + 0 ] = 2.0;
+	A[ 2 * 6 + 0 ] = 3.0;
+	A[ 3 * 6 + 0 ] = 4.0;
+	A[ 4 * 6 + 0 ] = 5.0;
+	A[ 0 * 6 + 1 ] = 6.0;
+	A[ 1 * 6 + 1 ] = 7.0;
+	A[ 2 * 6 + 1 ] = 8.0;
+	A[ 3 * 6 + 1 ] = 9.0;
+	A[ 4 * 6 + 1 ] = 10.0;
 	TAU = new Float64Array( 2 );
 	WORK = new Float64Array( 600 );
-
 	info = dgerqf( 2, 5, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( extractMatrix( A, 6, 2, 5 ), tc.A, 1e-14, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-14, 'TAU' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-14, 'TAU' );
 });
 
-test( 'dgerqf: 40x40 (blocked path, verify R is upper triangular)', function t() {
+test( 'dgerqf: 40x40 (blocked path, verify R is upper triangular)', function t() { // eslint-disable-line max-len
+	var tauNonZero;
 	var WORK;
 	var info;
 	var TAU;
 	var A;
-	var N = 40;
+	var N;
 	var i;
 	var j;
 
+	N = 40;
 	A = new Float64Array( N * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < N; i++ ) {
@@ -212,15 +282,9 @@ test( 'dgerqf: 40x40 (blocked path, verify R is upper triangular)', function t()
 	}
 	TAU = new Float64Array( N );
 	WORK = new Float64Array( N * 64 );
-
 	info = dgerqf( N, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, 0, 'INFO' );
-
-	// Verify R (upper triangle of A) has the right structure:
-	// For square M=N, R is upper triangular in A(0:N-1, 0:N-1)
-	// Check that info = 0 and TAU is filled
-	var tauNonZero = 0;
+	tauNonZero = 0;
 	for ( i = 0; i < N; i++ ) {
 		if ( TAU[ i ] !== 0.0 ) {
 			tauNonZero += 1;
@@ -230,15 +294,18 @@ test( 'dgerqf: 40x40 (blocked path, verify R is upper triangular)', function t()
 });
 
 test( 'dgerqf: 40x35 (M > N, blocked path)', function t() {
+	var tauNonZero;
 	var WORK;
 	var info;
 	var TAU;
 	var A;
-	var M = 40;
-	var N = 35;
+	var M;
+	var N;
 	var i;
 	var j;
 
+	M = 40;
+	N = 35;
 	A = new Float64Array( M * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
@@ -247,12 +314,9 @@ test( 'dgerqf: 40x35 (M > N, blocked path)', function t() {
 	}
 	TAU = new Float64Array( N );
 	WORK = new Float64Array( M * 64 );
-
 	info = dgerqf( M, N, A, 1, M, 0, TAU, 1, 0, WORK, 1, 0 );
-
 	assert.equal( info, 0, 'INFO' );
-
-	var tauNonZero = 0;
+	tauNonZero = 0;
 	for ( i = 0; i < N; i++ ) {
 		if ( TAU[ i ] !== 0.0 ) {
 			tauNonZero += 1;

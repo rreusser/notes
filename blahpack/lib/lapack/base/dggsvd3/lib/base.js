@@ -39,10 +39,10 @@ var UNFL = dlamch( 'Safe Minimum' );
 // MAIN //
 
 /**
-* Computes the generalized singular value decomposition (GSVD) of an M-by-N
+* Computes the generalized singular value decomposition (GSVD) of an M-by-N.
 * real matrix A and P-by-N real matrix B:
 *
-*   U^T*A*Q = D1*(0 R),    V^T*B*Q = D2*(0 R)
+*   U^T_A_Q = D1_(0 R),    V^T_B_Q = D2_(0 R)
 *
 * where U, V and Q are orthogonal matrices.
 *
@@ -115,19 +115,16 @@ function dggsvd3( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offset
 	wantq = ( jobq === 'compute-Q' );
 
 	// Compute workspace
+
 	// Call dggsvp3 with lwork=-1 for workspace query
 	lwkopt = 1;
 
 	// For workspace query, call dggsvp3 with lwork=-1
+
 	// dggsvp3 needs TAU(N) + inner WORK; we put TAU in WORK[0..N-1]
-	// and inner WORK in WORK[N..].
-	dggsvp3( jobu, jobv, jobq,
-		M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB,
-		0, 0, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV,
-		Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK,
-		WORK, strideWORK, offsetWORK,
-		WORK, strideWORK, offsetWORK, -1
-	);
+
+	// And inner WORK in WORK[N..].
+	dggsvp3( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, 0, 0, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK, -1);
 	lwkopt = N + ( WORK[ offsetWORK ] | 0 );
 	lwkopt = Math.max( 2 * N, lwkopt );
 	lwkopt = Math.max( 1, lwkopt );
@@ -142,32 +139,23 @@ function dggsvd3( jobu, jobv, jobq, M, N, p, K, l, A, strideA1, strideA2, offset
 	bnorm = dlange( 'one-norm', p, N, B, strideB1, strideB2, offsetB, WORK, strideWORK, offsetWORK );
 
 	// Get machine precision and set up threshold for determining
-	// the effective numerical rank of the matrices A and B.
+
+	// The effective numerical rank of the matrices A and B.
 	tola = Math.max( M, N ) * Math.max( anorm, UNFL ) * ULP;
 	tolb = Math.max( p, N ) * Math.max( bnorm, UNFL ) * ULP;
 
 	// Preprocessing
-	dggsvp3( jobu, jobv, jobq,
-		M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB,
-		tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV,
-		Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK,
-		WORK, strideWORK, offsetWORK,
-		WORK, strideWORK, offsetWORK + ( N * strideWORK ), lwork - N
-	);
+	dggsvp3( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + ( N * strideWORK ), lwork - N);
 
 	kval = K[ 0 ];
 	lval = l[ 0 ];
 
 	// Compute the GSVD of two upper "triangular" matrices
 	ncycle = new Int32Array( 1 );
-	info = dtgsja( jobu, jobv, jobq,
-		M, p, N, kval, lval, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB,
-		tola, tolb, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA,
-		U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV,
-		Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, ncycle
-	);
+	info = dtgsja( jobu, jobv, jobq, M, p, N, kval, lval, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, ALPHA, strideALPHA, offsetALPHA, BETA, strideBETA, offsetBETA, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK, ncycle);
 
 	// Sort the singular values and store the pivot indices in IWORK
+
 	// Copy ALPHA to WORK, then sort ALPHA in WORK
 	dcopy( N, ALPHA, strideALPHA, offsetALPHA, WORK, strideWORK, offsetWORK );
 	ibnd = Math.min( lval, M - kval );

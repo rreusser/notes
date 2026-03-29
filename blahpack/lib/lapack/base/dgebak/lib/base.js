@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -41,22 +40,12 @@ var dswap = require( './../../../../blas/base/dswap/lib/base.js' );
 function dgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, strideV1, strideV2, offsetV ) { // eslint-disable-line max-len, max-params
 	var rightv;
 	var leftv;
+	var ilo0 = ilo - 1;
+	var ihi0 = ihi - 1;
 	var ii;
 	var s;
 	var i;
 	var k;
-
-	rightv = ( side === 'right' );
-	leftv = ( side === 'left' );
-
-	// Quick return if possible:
-	if ( N === 0 || M === 0 || job === 'none' ) {
-		return 0;
-	}
-
-	// Convert ILO and IHI from 1-based to 0-based:
-	var ilo0 = ilo - 1;
-	var ihi0 = ihi - 1;
 
 	// Backward balance (scaling):
 	if ( ilo0 !== ihi0 ) {
@@ -95,8 +84,9 @@ function dgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, 
 					i = ilo0 - ii - 1;
 				}
 				k = SCALE[ offsetSCALE + i * strideSCALE ] | 0;
+
 				// Convert k from 1-based Fortran to 0-based:
-				k = k - 1;
+				k -= 1;
 				if ( k === i ) {
 					continue;
 				}
@@ -113,7 +103,7 @@ function dgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, 
 					i = ilo0 - ii - 1;
 				}
 				k = SCALE[ offsetSCALE + i * strideSCALE ] | 0;
-				k = k - 1;
+				k -= 1;
 				if ( k === i ) {
 					continue;
 				}

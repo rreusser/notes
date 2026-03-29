@@ -1,39 +1,86 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgehd2 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgehd2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgehd2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -44,92 +91,186 @@ test( 'dgehd2: main export is a function', function t() {
 });
 
 test( 'dgehd2: 4x4 full range (ILO=1, IHI=4)', function t() {
-	var tc = findCase( '4x4_full' );
-	var N = 4;
-	// Column-major: [1 5 9 13; 2 6 10 14; 3 7 11 15; 4 8 12 16]
-	var A = new Float64Array( [
-		1, 5, 9, 13,
-		2, 6, 10, 14,
-		3, 7, 11, 15,
-		4, 8, 12, 16
-	] );
-	var TAU = new Float64Array( N - 1 );
-	var WORK = new Float64Array( N );
-	// ilo=1, ihi=N (1-based, matching Fortran)
-	var info = dgehd2( N, 1, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var N;
+	var A;
+
+	tc = findCase( '4x4_full' );
+	N = 4;
+	A = new Float64Array([
+		1,
+		5,
+		9,
+		13,
+		2,
+		6,
+		10,
+		14,
+		3,
+		7,
+		11,
+		15,
+		4,
+		8,
+		12,
+		16
+	]);
+	TAU = new Float64Array( N - 1 );
+	WORK = new Float64Array( N );
+	info = dgehd2( N, 1, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.strictEqual( info, tc.INFO );
-	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-10, 'TAU' );
+	assertArrayClose( toArray( A ), tc.A, 1e-10, 'A' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-10, 'TAU' );
 });
 
 test( 'dgehd2: 5x5 full range', function t() {
-	var tc = findCase( '5x5_full' );
-	var N = 5;
-	var A = new Float64Array( [
-		2, 1, 3, 1, 4,
-		1, 4, 1, 2, 1,
-		3, 1, 5, 1, 2,
-		1, 2, 1, 6, 1,
-		4, 1, 2, 1, 7
-	] );
-	var TAU = new Float64Array( N - 1 );
-	var WORK = new Float64Array( N );
-	var info = dgehd2( N, 1, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var N;
+	var A;
+
+	tc = findCase( '5x5_full' );
+	N = 5;
+	A = new Float64Array([
+		2,
+		1,
+		3,
+		1,
+		4,
+		1,
+		4,
+		1,
+		2,
+		1,
+		3,
+		1,
+		5,
+		1,
+		2,
+		1,
+		2,
+		1,
+		6,
+		1,
+		4,
+		1,
+		2,
+		1,
+		7
+	]);
+	TAU = new Float64Array( N - 1 );
+	WORK = new Float64Array( N );
+	info = dgehd2( N, 1, N, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.strictEqual( info, tc.INFO );
-	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-10, 'TAU' );
+	assertArrayClose( toArray( A ), tc.A, 1e-10, 'A' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-10, 'TAU' );
 });
 
 test( 'dgehd2: 4x4 partial range (ILO=2, IHI=3)', function t() {
-	var tc = findCase( '4x4_partial_ilo2_ihi3' );
-	var N = 4;
-	var A = new Float64Array( [
-		1, 0, 0, 0,
-		2, 5, 8, 0,
-		3, 6, 9, 0,
-		4, 7, 10, 11
-	] );
-	var TAU = new Float64Array( N - 1 );
-	var WORK = new Float64Array( N );
-	var info = dgehd2( N, 2, 3, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var N;
+	var A;
+
+	tc = findCase( '4x4_partial_ilo2_ihi3' );
+	N = 4;
+	A = new Float64Array([
+		1,
+		0,
+		0,
+		0,
+		2,
+		5,
+		8,
+		0,
+		3,
+		6,
+		9,
+		0,
+		4,
+		7,
+		10,
+		11
+	]);
+	TAU = new Float64Array( N - 1 );
+	WORK = new Float64Array( N );
+	info = dgehd2( N, 2, 3, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.strictEqual( info, tc.INFO );
-	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-10, 'TAU' );
+	assertArrayClose( toArray( A ), tc.A, 1e-10, 'A' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-10, 'TAU' );
 });
 
 test( 'dgehd2: N=1 (quick return)', function t() {
-	var tc = findCase( 'n_one' );
-	var A = new Float64Array( [ 42.0 ] );
-	var TAU = new Float64Array( 0 );
-	var WORK = new Float64Array( 1 );
-	var info = dgehd2( 1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var A;
+
+	tc = findCase( 'n_one' );
+	A = new Float64Array( [ 42.0 ] );
+	TAU = new Float64Array( 0 );
+	WORK = new Float64Array( 1 );
+	info = dgehd2( 1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.strictEqual( info, tc.INFO );
 	assertClose( A[ 0 ], tc.A[ 0 ], 1e-14, 'A[0]' );
 });
 
 test( 'dgehd2: N=2', function t() {
-	var tc = findCase( 'n_two' );
-	var A = new Float64Array( [ 3, 4, 1, 2 ] );
-	var TAU = new Float64Array( 1 );
-	var WORK = new Float64Array( 2 );
-	var info = dgehd2( 2, 1, 2, A, 1, 2, 0, TAU, 1, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var A;
+
+	tc = findCase( 'n_two' );
+	A = new Float64Array( [ 3, 4, 1, 2 ] );
+	TAU = new Float64Array( 1 );
+	WORK = new Float64Array( 2 );
+	info = dgehd2( 2, 1, 2, A, 1, 2, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.strictEqual( info, tc.INFO );
-	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
-	assertArrayClose( Array.from( TAU ), tc.TAU, 1e-10, 'TAU' );
+	assertArrayClose( toArray( A ), tc.A, 1e-10, 'A' );
+	assertArrayClose( toArray( TAU ), tc.TAU, 1e-10, 'TAU' );
 });
 
 test( 'dgehd2: ILO=IHI (nothing to reduce)', function t() {
-	var tc = findCase( 'ilo_eq_ihi' );
-	var N = 4;
-	var A = new Float64Array( [
-		1, 0, 0, 0,
-		2, 5, 0, 0,
-		3, 6, 9, 0,
-		4, 7, 10, 11
-	] );
-	var TAU = new Float64Array( N - 1 );
-	var WORK = new Float64Array( N );
-	var info = dgehd2( N, 2, 2, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var N;
+	var A;
+
+	tc = findCase( 'ilo_eq_ihi' );
+	N = 4;
+	A = new Float64Array([
+		1,
+		0,
+		0,
+		0,
+		2,
+		5,
+		0,
+		0,
+		3,
+		6,
+		9,
+		0,
+		4,
+		7,
+		10,
+		11
+	]);
+	TAU = new Float64Array( N - 1 );
+	WORK = new Float64Array( N );
+	info = dgehd2( N, 2, 2, A, 1, N, 0, TAU, 1, 0, WORK, 1, 0 );
 	assert.strictEqual( info, tc.INFO );
-	assertArrayClose( Array.from( A ), tc.A, 1e-10, 'A' );
+	assertArrayClose( toArray( A ), tc.A, 1e-10, 'A' );
 });

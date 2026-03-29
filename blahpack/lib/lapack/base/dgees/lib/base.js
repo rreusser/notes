@@ -50,9 +50,9 @@ var BIGNUM = ONE / SMLNUM;
 // MAIN //
 
 /**
-* Computes for an N-by-N real nonsymmetric matrix A, the eigenvalues, the real
+* Computes for an N-by-N real nonsymmetric matrix A, the eigenvalues, the real.
 * Schur form T, and, optionally, the matrix of Schur vectors Z. This gives
-* the Schur factorization A = Z*T*Z**T.
+* the Schur factorization A = Z_T_Z**T.
 *
 * Optionally, it also orders the eigenvalues on the diagonal of the real Schur
 * form so that selected eigenvalues are at the top left. The leading columns
@@ -93,30 +93,30 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 	var wantst;
 	var scalea;
 	var cscale;
-	var cursl;
 	var lastsl;
 	var lst2sl;
+	var balRes;
+	var cursl;
 	var icond;
 	var ieval;
 	var anrm;
 	var ierr;
 	var info;
-	var balRes;
-	var ilo;
-	var ihi;
 	var ibal;
 	var itau;
 	var iwrk;
 	var inxt;
+	var IDUM;
+	var ilo;
+	var ihi;
 	var DUM;
+	var SEP;
 	var ip;
-	var i;
 	var i1;
 	var i2;
+	var i;
 	var M;
 	var S;
-	var SEP;
-	var IDUM;
 
 	info = 0;
 	wantvs = ( jobvs === 'compute-vectors' );
@@ -168,7 +168,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 
 	// Compute Schur form (reduce Hessenberg to quasi-triangular)
 	iwrk = itau;
-	ieval = dhseqr( 'schur', wantvs ? 'update' : 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS );
+	ieval = dhseqr( 'schur', ( wantvs ) ? 'update' : 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VS, strideVS1, strideVS2, offsetVS );
 	if ( ieval > 0 ) {
 		info = ieval;
 	}
@@ -180,7 +180,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 			dlascl( 'general', 0, 0, cscale, anrm, N, 1, WI, 1, strideWI, offsetWI );
 		}
 		for ( i = 0; i < N; i++ ) {
-			BWORK[ offsetBWORK + i * strideBWORK ] = select( WR[ offsetWR + i * strideWR ], WI[ offsetWI + i * strideWI ] ) ? 1 : 0;
+			BWORK[ offsetBWORK + i * strideBWORK ] = ( select( WR[ offsetWR + i * strideWR ], WI[ offsetWI + i * strideWI ] ) ) ? 1 : 0;
 		}
 
 		// Reorder Schur form
@@ -188,7 +188,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 		S = new Float64Array( 1 );
 		SEP = new Float64Array( 1 );
 		IDUM = new Int32Array( 1 );
-		icond = dtrsen( 'none', wantvs ? 'update' : 'none', BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk, IDUM, 1, 0, 1 );
+		icond = dtrsen( 'none', ( wantvs ) ? 'update' : 'none', BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk, IDUM, 1, 0, 1 );
 		sdim[ 0 ] = M[ 0 ];
 		if ( icond > 0 ) {
 			info = N + icond;
@@ -203,6 +203,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 	if ( scalea ) {
 		// Undo scaling
 		dlascl( 'upper-hessenberg', 0, 0, cscale, anrm, N, N, A, strideA1, strideA2, offsetA );
+
 		// Re-extract diagonal eigenvalues
 		dcopy( N, A, strideA1 + strideA2, offsetA, WR, strideWR, offsetWR );
 		if ( cscale === SMLNUM ) {
@@ -210,6 +211,7 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 			if ( ieval > 0 ) {
 				i1 = ieval; // 0-based: ieval is 1-based count of unconverged
 				i2 = ihi - 2; // 0-based: IHI-1 (1-based) - 1
+
 				// Scale WI for converged eigenvalues below ILO
 				dlascl( 'general', 0, 0, cscale, anrm, ilo - 1, 1, WI, 1, strideWI, offsetWI );
 			} else if ( wantst ) {
@@ -269,22 +271,20 @@ function dgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, WR
 				if ( cursl && !lastsl ) {
 					info = N + 2;
 				}
-			} else {
-				if ( ip === 1 ) {
-					// Second eigenvalue of conjugate pair
-					cursl = cursl || lastsl;
-					lastsl = cursl;
-					if ( cursl ) {
-						sdim[ 0 ] += 2;
-					}
-					ip = -1;
-					if ( cursl && !lst2sl ) {
-						info = N + 2;
-					}
-				} else {
-					// First eigenvalue of conjugate pair
-					ip = 1;
+			} else if ( ip === 1 ) {
+				// Second eigenvalue of conjugate pair
+				cursl = cursl || lastsl;
+				lastsl = cursl;
+				if ( cursl ) {
+					sdim[ 0 ] += 2;
 				}
+				ip = -1;
+				if ( cursl && !lst2sl ) {
+					info = N + 2;
+				}
+			} else {
+				// First eigenvalue of conjugate pair
+				ip = 1;
 			}
 			lst2sl = lastsl;
 			lastsl = cursl;

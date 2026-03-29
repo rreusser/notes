@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimates the reciprocal condition number of a general banded matrix
+* Estimates the reciprocal condition number of a general banded matrix.
 *
 * @module @stdlib/lapack/base/dgbcon
 *

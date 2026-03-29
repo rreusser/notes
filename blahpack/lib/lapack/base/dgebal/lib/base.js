@@ -67,15 +67,15 @@ var SFMAX2 = ONE / SFMIN2;
 * @returns {Object} result with properties: info (0=success), ilo (1-based), ihi (1-based)
 */
 function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, offsetSCALE ) {
-	var noconv;
 	var canswap;
-	var ca;
-	var ra;
+	var noconv;
 	var ica;
 	var ira;
-	var oA;
 	var sA1;
 	var sA2;
+	var ca;
+	var ra;
+	var oA;
 	var oS;
 	var sS;
 	var c;
@@ -96,7 +96,11 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 	// Quick return: N=0
 	if ( N === 0 ) {
-		return { 'info': 0, 'ilo': 1, 'ihi': 0 };
+		return {
+			'info': 0,
+			'ilo': 1,
+			'ihi': 0
+		};
 	}
 
 	// JOB='N': no balancing
@@ -104,7 +108,11 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 		for ( i = 0; i < N; i++ ) {
 			SCALE[ oS + ( i * sS ) ] = ONE;
 		}
-		return { 'info': 0, 'ilo': 1, 'ihi': N };
+		return {
+			'info': 0,
+			'ilo': 1,
+			'ihi': N
+		};
 	}
 
 	// Permutation to isolate eigenvalues if possible.
@@ -133,13 +141,18 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 					if ( i !== l ) {
 						// Swap columns i and l (rows 1..L)
 						dswap( l, A, sA1, oA + ( i - 1 ) * sA2, A, sA1, oA + ( l - 1 ) * sA2 );
+
 						// Swap rows i and l (columns k..N)
 						dswap( N - k + 1, A, sA2, oA + ( i - 1 ) * sA1 + ( k - 1 ) * sA2, A, sA2, oA + ( l - 1 ) * sA1 + ( k - 1 ) * sA2 );
 					}
 					noconv = true;
 
 					if ( l === 1 ) {
-						return { 'info': 0, 'ilo': 1, 'ihi': 1 };
+						return {
+							'info': 0,
+							'ilo': 1,
+							'ihi': 1
+						};
 					}
 					l -= 1;
 				}
@@ -165,6 +178,7 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 					if ( j !== k ) {
 						// Swap columns j and k (rows 1..L)
 						dswap( l, A, sA1, oA + ( j - 1 ) * sA2, A, sA1, oA + ( k - 1 ) * sA2 );
+
 						// Swap rows j and k (columns k..N)
 						dswap( N - k + 1, A, sA2, oA + ( j - 1 ) * sA1 + ( k - 1 ) * sA2, A, sA2, oA + ( k - 1 ) * sA1 + ( k - 1 ) * sA2 );
 					}
@@ -182,7 +196,11 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 	// If we only had to permute, we are done
 	if ( job === 'permute' ) {
-		return { 'info': 0, 'ilo': k, 'ihi': l };
+		return {
+			'info': 0,
+			'ilo': k,
+			'ihi': l
+		};
 	}
 
 	// ============================================================
@@ -196,14 +214,16 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 		for ( i = k; i <= l; i++ ) {
 			// Compute column norm (rows k..l of column i)
 			c = dnrm2( l - k + 1, A, sA1, oA + ( k - 1 ) * sA1 + ( i - 1 ) * sA2 );
+
 			// Compute row norm (columns k..l of row i)
 			r = dnrm2( l - k + 1, A, sA2, oA + ( i - 1 ) * sA1 + ( k - 1 ) * sA2 );
 
-			// idamax returns 0-based index in JS
+			// Idamax returns 0-based index in JS
 			ica = idamax( l, A, sA1, oA + ( i - 1 ) * sA2 );
 			ca = Math.abs( A[ oA + ica * sA1 + ( i - 1 ) * sA2 ] );
 
 			ira = idamax( N - k + 1, A, sA2, oA + ( i - 1 ) * sA1 + ( k - 1 ) * sA2 );
+
 			// ira is 0-based offset from k, so actual column index (0-based) is ira + (k-1)
 			ra = Math.abs( A[ oA + ( i - 1 ) * sA1 + ( ira + k - 1 ) * sA2 ] );
 
@@ -214,7 +234,11 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 			// Exit if NaN to avoid infinite loop
 			if ( ( c + ca + r + ra ) !== ( c + ca + r + ra ) ) {
-				return { 'info': -3, 'ilo': k, 'ihi': l };
+				return {
+					'info': -3,
+					'ilo': k,
+					'ihi': l
+				};
 			}
 
 			g = r / SCLFAC;
@@ -262,12 +286,17 @@ function dgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 			// Scale row i (columns k..N) by g
 			dscal( N - k + 1, g, A, sA2, oA + ( i - 1 ) * sA1 + ( k - 1 ) * sA2 );
+
 			// Scale column i (rows 1..L) by f
 			dscal( l, f, A, sA1, oA + ( i - 1 ) * sA2 );
 		}
 	}
 
-	return { 'info': 0, 'ilo': k, 'ihi': l };
+	return {
+		'info': 0,
+		'ilo': k,
+		'ihi': l
+	};
 }
 
 

@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -14,19 +15,38 @@ var dzasum = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dzasum.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dzasum.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
@@ -34,35 +54,45 @@ function assertClose( actual, expected, tol, msg ) {
 // TESTS //
 
 test( 'dzasum: basic', function t() {
-	var result = dzasum( 3, zx, 1, 0 );
-	var tc = findCase( 'basic' );
-	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
+	var result;
+	var tc;
+	var zx;
 
-	// |1|+|2| + |3|+|-4| + |-5|+|6| = 3 + 7 + 11 = 21
+	tc = findCase( 'basic' );
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
+	result = dzasum( 3, zx, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dzasum: n_zero', function t() {
-	var result = dzasum( 0, zx, 1, 0 );
-	var tc = findCase( 'n_zero' );
-	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
+	var result;
+	var tc;
+	var zx;
+
+	tc = findCase( 'n_zero' );
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
+	result = dzasum( 0, zx, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dzasum: n_one', function t() {
-	var result = dzasum( 1, zx, 1, 0 );
-	var tc = findCase( 'n_one' );
-	var zx = new Complex128Array( [ 3.0, 4.0 ] );
+	var result;
+	var tc;
+	var zx;
 
-	// |3| + |4| = 7
+	tc = findCase( 'n_one' );
+	zx = new Complex128Array( [ 3.0, 4.0 ] );
+	result = dzasum( 1, zx, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dzasum: stride2', function t() {
-	var result = dzasum( 2, zx, 2, 0 );
-	var tc = findCase( 'stride2' );
-	var zx = new Complex128Array( [ 1.0, 1.0, 99.0, 99.0, 2.0, 3.0 ] );
+	var result;
+	var tc;
+	var zx;
 
-	// (|1|+|1|) + (|2|+|3|) = 2 + 5 = 7
+	tc = findCase( 'stride2' );
+	zx = new Complex128Array( [ 1.0, 1.0, 99.0, 99.0, 2.0, 3.0 ] );
+	result = dzasum( 2, zx, 2, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });

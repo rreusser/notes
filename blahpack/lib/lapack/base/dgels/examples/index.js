@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgels = require( '@stdlib/lapack/base/dgels' );

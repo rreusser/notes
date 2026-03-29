@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -14,23 +15,58 @@ var dswap = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dswap.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dswap.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
 		assert.ok(Math.abs( actual[ i ] - expected[ i ] ) <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ]);
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -45,8 +81,8 @@ test( 'dswap: basic swap (N=5, stride=1)', function t() {
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 6.0, 7.0, 8.0, 9.0, 10.0 ] );
 	dswap( 5, x, 1, 0, y, 1, 0 );
-	assertArrayClose( Array.from( x ), tc.x, 1e-14, 'x' );
-	assertArrayClose( Array.from( y ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( y ), tc.y, 1e-14, 'y' );
 });
 
 test( 'dswap: negative stride (N=3, strideX=2, strideY=-1)', function t() {
@@ -60,8 +96,8 @@ test( 'dswap: negative stride (N=3, strideX=2, strideY=-1)', function t() {
 	var x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dswap( 3, x, 2, 0, y, -1, 2 );
-	assertArrayClose( Array.from( x ), tc.x, 1e-14, 'x' );
-	assertArrayClose( Array.from( y ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( y ), tc.y, 1e-14, 'y' );
 });
 
 test( 'dswap: N=0 quick return (vectors unchanged)', function t() {
@@ -69,8 +105,8 @@ test( 'dswap: N=0 quick return (vectors unchanged)', function t() {
 	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dswap( 0, x, 1, 0, y, 1, 0 );
-	assertArrayClose( Array.from( x ), tc.x, 1e-14, 'x' );
-	assertArrayClose( Array.from( y ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( y ), tc.y, 1e-14, 'y' );
 });
 
 test( 'dswap: N=1', function t() {
@@ -78,14 +114,18 @@ test( 'dswap: N=1', function t() {
 	var x = new Float64Array( [ 42.0 ] );
 	var y = new Float64Array( [ 99.0 ] );
 	dswap( 1, x, 1, 0, y, 1, 0 );
-	assertArrayClose( Array.from( x ), tc.x, 1e-14, 'x' );
-	assertArrayClose( Array.from( y ), tc.y, 1e-14, 'y' );
+	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( y ), tc.y, 1e-14, 'y' );
 });
 
 test( 'dswap: returns y', function t() {
-	var result = dswap( 2, x, 1, 0, y, 1, 0 );
-	var x = new Float64Array( [ 1.0, 2.0 ] );
-	var y = new Float64Array( [ 3.0, 4.0 ] );
+	var result;
+	var x;
+	var y;
+
+	x = new Float64Array( [ 1.0, 2.0 ] );
+	y = new Float64Array( [ 3.0, 4.0 ] );
+	result = dswap( 2, x, 1, 0, y, 1, 0 );
 	assert.strictEqual( result, y );
 });
 

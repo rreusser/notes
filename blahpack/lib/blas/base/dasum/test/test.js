@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
@@ -42,7 +42,7 @@ test( 'dasum: N=1 with negative value', function t() {
 });
 
 test( 'dasum: non-unit stride (stride=2)', function t() {
-	// Values at stride positions: 1, 2, 3
+	// x = [1, 99, 2, 99, 3], stride=2 => values 1, 2, 3
 	var x = new Float64Array( [ 1, 99, 2, 99, 3 ] );
 	assert.strictEqual( dasum( 3, x, 2, 0 ), 6.0 );
 });
@@ -62,7 +62,7 @@ test( 'dasum: unrolled path (N=7, remainder=1 + one block of 6)', function t() {
 test( 'dasum: unrolled path (N=6, exact multiple)', function t() {
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 
-	// Remainder loop skipped, one full block
+	// m=0, so remainder loop skipped, one full block
 	assert.strictEqual( dasum( 6, x, 1, 0 ), 21.0 );
 });
 
@@ -79,7 +79,6 @@ test( 'dasum: unrolled path (N=13)', function t() {
 	for ( i = 0; i < 13; i++ ) {
 		x[ i ] = i + 1;
 	}
-
 	// Sum = 13*14/2 = 91
 	assert.strictEqual( dasum( 13, x, 1, 0 ), 91.0 );
 });
@@ -90,14 +89,13 @@ test( 'dasum: all zeros', function t() {
 });
 
 test( 'dasum: offset', function t() {
-	// Offset=1 skips the first element
+	// x = [99, 1, 2, 3], offset=1
 	var x = new Float64Array( [ 99, 1, 2, 3 ] );
 	assert.strictEqual( dasum( 3, x, 1, 1 ), 6.0 );
 });
 
 test( 'dasum: stride=3 with offset', function t() {
 	var x = new Float64Array( [ 0, 1, 0, 0, -2, 0, 0, 3, 0 ] );
-
-	// Stride=3, offset=1 => values 1, -2, 3 => sum = 6
+	// stride=3, offset=1 => values 1, -2, 3 => sum = 6
 	assert.strictEqual( dasum( 3, x, 3, 1 ), 6.0 );
 });

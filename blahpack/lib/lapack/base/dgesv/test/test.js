@@ -1,34 +1,65 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgesv = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgesv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgesv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -55,6 +86,22 @@ function matmat( A, B, N, nrhs ) {
 	return C;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
@@ -69,24 +116,16 @@ test( 'dgesv: solve_3x3', function t() {
 	var B;
 
 	tc = findCase( 'solve_3x3' );
-
-	// A = [2 1 1; 4 3 3; 8 7 9] col-major
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
-
-	// b = [4; 10; 24], solution x = [1; 1; 1]
 	Borig = new Float64Array( [ 4.0, 10.0, 24.0 ] );
 	B = new Float64Array( Borig );
-
 	info = dgesv( 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-
-	// Verify A_orig * x = b_orig
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 	AB = matmat( Aorig, B, 3, 1 );
-	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-14, 'A*x=b' );
+	assertArrayClose( toArray( AB ), toArray( Borig ), 1e-14, 'A*x=b' );
 });
 
 test( 'dgesv: singular', function t() {
@@ -97,15 +136,10 @@ test( 'dgesv: singular', function t() {
 	var B;
 
 	tc = findCase( 'singular' );
-
-	// Singular 3x3: [1 2 3; 2 4 6; 3 6 9] col-major
 	A = new Float64Array( [ 1.0, 2.0, 3.0, 2.0, 4.0, 6.0, 3.0, 6.0, 9.0 ] );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
-
 	info = dgesv( 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
-	// Singular matrix: info > 0
 	assert.ok( info > 0, 'info > 0 for singular matrix' );
 });
 
@@ -117,13 +151,10 @@ test( 'dgesv: n_zero', function t() {
 	var B;
 
 	tc = findCase( 'n_zero' );
-
 	A = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( 1 );
-
 	info = dgesv( 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -135,13 +166,10 @@ test( 'dgesv: nrhs_zero', function t() {
 	var B;
 
 	tc = findCase( 'nrhs_zero' );
-
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( 1 );
-
 	info = dgesv( 1, 0, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -156,24 +184,16 @@ test( 'dgesv: multi_rhs', function t() {
 	var B;
 
 	tc = findCase( 'multi_rhs' );
-
-	// A = [1 2; 3 4] col-major
 	Aorig = new Float64Array( [ 1.0, 3.0, 2.0, 4.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 2 );
-
-	// B = [5 11; 6 12] col-major (2x2)
 	Borig = new Float64Array( [ 5.0, 6.0, 11.0, 12.0 ] );
 	B = new Float64Array( Borig );
-
 	info = dgesv( 2, 2, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-
-	// Verify A_orig * X = B_orig
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 	AB = matmat( Aorig, B, 2, 2 );
-	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-14, 'A*X=B' );
+	assertArrayClose( toArray( AB ), toArray( Borig ), 1e-14, 'A*X=B' );
 });
 
 test( 'dgesv: 1x1', function t() {
@@ -184,16 +204,12 @@ test( 'dgesv: 1x1', function t() {
 	var B;
 
 	tc = findCase( '1x1' );
-
-	// 5x = 10 => x = 2
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( [ 10.0 ] );
-
 	info = dgesv( 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 });
 
 test( 'dgesv: 4x4', function t() {
@@ -207,27 +223,31 @@ test( 'dgesv: 4x4', function t() {
 	var B;
 
 	tc = findCase( '4x4' );
-
-	// A = [4 1 2 3; 1 5 1 2; 2 1 6 1; 3 2 1 7] col-major
-	Aorig = new Float64Array( [
-		4.0, 1.0, 2.0, 3.0,
-		1.0, 5.0, 1.0, 2.0,
-		2.0, 1.0, 6.0, 1.0,
-		3.0, 2.0, 1.0, 7.0
-	] );
+	Aorig = new Float64Array([
+		4.0,
+		1.0,
+		2.0,
+		3.0,
+		1.0,
+		5.0,
+		1.0,
+		2.0,
+		2.0,
+		1.0,
+		6.0,
+		1.0,
+		3.0,
+		2.0,
+		1.0,
+		7.0
+	]);
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 4 );
-
-	// b = A * [1;2;3;4] = [24;22;26;38]
 	Borig = new Float64Array( [ 24.0, 22.0, 26.0, 38.0 ] );
 	B = new Float64Array( Borig );
-
 	info = dgesv( 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-
-	// Verify A_orig * x = b_orig
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 	AB = matmat( Aorig, B, 4, 1 );
-	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-14, 'A*x=b' );
+	assertArrayClose( toArray( AB ), toArray( Borig ), 1e-14, 'A*x=b' );
 });

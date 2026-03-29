@@ -139,24 +139,13 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 		// Solve A11 * A12_new = A12 (triangular solve)
 
 		// A11 is lower triangular with unit diagonal, n1 x n1
-		dtrsm( 'left', 'lower', 'no-transpose', 'unit', n1, n2, 1.0,
-			A, sa1, sa2, offsetA,
-			A, sa1, sa2, offsetA + (n1 * sa2)
-		);
+		dtrsm( 'left', 'lower', 'no-transpose', 'unit', n1, n2, 1.0, A, sa1, sa2, offsetA, A, sa1, sa2, offsetA + (n1 * sa2));
 
 		// Update A22 = A22 - A21 * A12_new
-		dgemm( 'no-transpose', 'no-transpose', M - n1, n2, n1, -1.0,
-			A, sa1, sa2, offsetA + (n1 * sa1),
-			A, sa1, sa2, offsetA + (n1 * sa2),
-			1.0,
-			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2)
-		);
+		dgemm( 'no-transpose', 'no-transpose', M - n1, n2, n1, -1.0, A, sa1, sa2, offsetA + (n1 * sa1), A, sa1, sa2, offsetA + (n1 * sa2), 1.0, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2));
 
 		// Factor A22 (M-n1 x n2)
-		iinfo = dgetrf2( M - n1, n2,
-			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2),
-			IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV)
-		);
+		iinfo = dgetrf2( M - n1, n2, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2), IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV));
 
 		if ( info === 0 && iinfo > 0 ) {
 			info = iinfo + n1;
@@ -169,9 +158,7 @@ function dgetrf2( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offset
 
 		// Apply the second set of row interchanges to A11 columns
 		// Reads IPIV at positions n1..minMN-1 (offset by n1 from start)
-		dlaswp( n1, A, sa1, sa2, offsetA, n1, minMN - 1,
-			IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV), 1
-		);
+		dlaswp( n1, A, sa1, sa2, offsetA, n1, minMN - 1, IPIV, strideIPIV, offsetIPIV + (n1 * strideIPIV), 1);
 	}
 
 	return info;

@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 /**
 * @license Apache-2.0
@@ -31,25 +31,51 @@ var base = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztpmv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'ztpmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
-// HELPERS //
+// FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, msg ) {
 	var i;
-	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' );
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' ); // eslint-disable-line max-len
 	for ( i = 0; i < expected.length; i += 1 ) {
 		assertClose( actual[ i ], expected[ i ], msg + '[' + i + ']' );
 	}
@@ -57,8 +83,14 @@ function assertArrayClose( actual, expected, msg ) {
 
 // Upper packed AP (4x4):
 // [a11, a12, a22, a13, a23, a33, a14, a24, a34, a44]
-// = [(2,1), (1,0.5), (3,-1), (4,2), (5,0), (6,-0.5), (7,1), (8,-2), (9,0.5), (10,-1)]
-function upperAP() {
+// = [(2,1), (1,0.5), (3,-1), (4,2), (5,0), (6,-0.5), (7,1), (8,-2), (9,0.5), (10,-1)] // eslint-disable-line max-len
+/**
+* UpperAP.
+*
+* @private
+* @returns {*} result
+*/
+function upperAP( ) {
 	return new Complex128Array([
 		2, 1, 1, 0.5, 3, -1, 4, 2, 5, 0, 6, -0.5, 7, 1, 8, -2, 9, 0.5, 10, -1
 	]);
@@ -66,8 +98,14 @@ function upperAP() {
 
 // Lower packed AP (4x4):
 // [a11, a21, a31, a41, a22, a32, a42, a33, a43, a44]
-// = [(2,1), (1,0.5), (4,2), (7,1), (3,-1), (5,0), (8,-2), (6,-0.5), (9,0.5), (10,-1)]
-function lowerAP() {
+// = [(2,1), (1,0.5), (4,2), (7,1), (3,-1), (5,0), (8,-2), (6,-0.5), (9,0.5), (10,-1)] // eslint-disable-line max-len
+/**
+* LowerAP.
+*
+* @private
+* @returns {*} result
+*/
+function lowerAP( ) {
 	return new Complex128Array([
 		2, 1, 1, 0.5, 4, 2, 7, 1, 3, -1, 5, 0, 8, -2, 6, -0.5, 9, 0.5, 10, -1
 	]);
@@ -75,8 +113,33 @@ function lowerAP() {
 
 // Input x vector (4 complex elements):
 // [(1,0), (2,1), (3,-1), (4,0.5)]
-function inputX() {
+/**
+* InputX.
+*
+* @private
+* @returns {*} result
+*/
+function inputX( ) {
 	return new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
+}
+
+
+// FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -87,194 +150,285 @@ test( 'ztpmv: base is a function', function t() {
 });
 
 test( 'ztpmv: upper, no-transpose, non-unit diagonal (N=4)', function t() {
-	var result = base( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'upper_no_trans_nonunit' );
-	var ap = upperAP();
-	var x = inputX();
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'upper_no_trans_nonunit' );
+	ap = upperAP();
+	x = inputX();
+	result = base( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: upper, transpose, non-unit diagonal (N=4)', function t() {
-	var result = base( 'upper', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'upper_trans_nonunit' );
-	var ap = upperAP();
-	var x = inputX();
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'upper_trans_nonunit' );
+	ap = upperAP();
+	x = inputX();
+	result = base( 'upper', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
-test( 'ztpmv: upper, conjugate-transpose, non-unit diagonal (N=4)', function t() {
-	var result = base( 'upper', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'upper_conj_trans_nonunit' );
-	var ap = upperAP();
-	var x = inputX();
+test( 'ztpmv: upper, conjugate-transpose, non-unit diagonal (N=4)', function t() { // eslint-disable-line max-len
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'upper_conj_trans_nonunit' );
+	ap = upperAP();
+	x = inputX();
+	result = base( 'upper', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: upper, no-transpose, unit diagonal (N=4)', function t() {
-	var result = base( 'upper', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'upper_no_trans_unit' );
-	var ap = upperAP();
-	var x = inputX();
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'upper_no_trans_unit' );
+	ap = upperAP();
+	x = inputX();
+	result = base( 'upper', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: lower, no-transpose, non-unit diagonal (N=4)', function t() {
-	var result = base( 'lower', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'lower_no_trans_nonunit' );
-	var ap = lowerAP();
-	var x = inputX();
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'lower_no_trans_nonunit' );
+	ap = lowerAP();
+	x = inputX();
+	result = base( 'lower', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: lower, transpose, non-unit diagonal (N=4)', function t() {
-	var result = base( 'lower', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'lower_trans_nonunit' );
-	var ap = lowerAP();
-	var x = inputX();
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'lower_trans_nonunit' );
+	ap = lowerAP();
+	x = inputX();
+	result = base( 'lower', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
-test( 'ztpmv: lower, conjugate-transpose, non-unit diagonal (N=4)', function t() {
-	var result = base( 'lower', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'lower_conj_trans_nonunit' );
-	var ap = lowerAP();
-	var x = inputX();
+test( 'ztpmv: lower, conjugate-transpose, non-unit diagonal (N=4)', function t() { // eslint-disable-line max-len
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'lower_conj_trans_nonunit' );
+	ap = lowerAP();
+	x = inputX();
+	result = base( 'lower', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: lower, no-transpose, unit diagonal (N=4)', function t() {
-	var result = base( 'lower', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'lower_no_trans_unit' );
-	var ap = lowerAP();
-	var x = inputX();
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'lower_no_trans_unit' );
+	ap = lowerAP();
+	x = inputX();
+	result = base( 'lower', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: N=0 quick return', function t() {
-	var result = base( 'upper', 'no-transpose', 'non-unit', 0, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'n_zero' );
-	var ap = upperAP();
-	var x = new Complex128Array( [ 99, 0 ] );
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'n_zero' );
+	ap = upperAP();
+	x = new Complex128Array( [ 99, 0 ] );
+	result = base( 'upper', 'no-transpose', 'non-unit', 0, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: upper, no-transpose, non-unit, strideX=2 (N=4)', function t() {
-	var result = base( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 2, 0 );
-	var tc = findCase( 'upper_stride_2' );
-	var ap = upperAP();
-	var x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] );
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'upper_stride_2' );
+	ap = upperAP();
+	x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] ); // eslint-disable-line max-len
+	result = base( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 2, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: N=1, scalar case', function t() {
-	var result = base( 'upper', 'no-transpose', 'non-unit', 1, ap, 1, 0, x, 1, 0 );
-	var tc = findCase( 'scalar' );
-	var ap = new Complex128Array( [ 5, 2 ] );
-	var x = new Complex128Array( [ 3, -1 ] );
+	var result;
+	var tc;
+	var ap;
+	var x;
+
+	tc = findCase( 'scalar' );
+	ap = new Complex128Array( [ 5, 2 ] );
+	x = new Complex128Array( [ 3, -1 ] );
+	result = base( 'upper', 'no-transpose', 'non-unit', 1, ap, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
-	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
+	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztpmv: upper, transpose, unit diagonal (N=4)', function t() {
-	// Exercise trans=T + diag=U for upper
-	var ap = upperAP();
-	var xv = reinterpret( x, 0 );
-	var x = inputX();
+	var ap;
+	var xv;
+	var x;
 
-	// Just sanity check it is not NaN and has changed
+	ap = upperAP();
+	x = inputX();
+	base( 'upper', 'transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
+	xv = reinterpret( x, 0 );
 	assert.ok( !Number.isNaN( xv[ 0 ] ), 'result should not be NaN' );
 	assert.ok( !Number.isNaN( xv[ 1 ] ), 'result should not be NaN' );
 });
 
 test( 'ztpmv: lower, transpose, unit diagonal (N=4)', function t() {
-	// Exercise trans=T + diag=U for lower
-	var ap = lowerAP();
-	var xv = reinterpret( x, 0 );
-	var x = inputX();
+	var ap;
+	var xv;
+	var x;
+
+	ap = lowerAP();
+	x = inputX();
+	base( 'lower', 'transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
+	xv = reinterpret( x, 0 );
 	assert.ok( !Number.isNaN( xv[ 0 ] ), 'result should not be NaN' );
 	assert.ok( !Number.isNaN( xv[ 6 ] ), 'result should not be NaN' );
 });
 
 test( 'ztpmv: upper, conjugate-transpose, unit diagonal (N=4)', function t() {
-	// Exercise trans=C + diag=U for upper
-	var ap = upperAP();
-	var xv = reinterpret( x, 0 );
-	var x = inputX();
+	var ap;
+	var xv;
+	var x;
+
+	ap = upperAP();
+	x = inputX();
+	base( 'upper', 'conjugate-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
+	xv = reinterpret( x, 0 );
 	assert.ok( !Number.isNaN( xv[ 0 ] ), 'result should not be NaN' );
 	assert.ok( !Number.isNaN( xv[ 1 ] ), 'result should not be NaN' );
 });
 
 test( 'ztpmv: lower, conjugate-transpose, unit diagonal (N=4)', function t() {
-	// Exercise trans=C + diag=U for lower
-	var ap = lowerAP();
-	var xv = reinterpret( x, 0 );
-	var x = inputX();
+	var ap;
+	var xv;
+	var x;
+
+	ap = lowerAP();
+	x = inputX();
+	base( 'lower', 'conjugate-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
+	xv = reinterpret( x, 0 );
 	assert.ok( !Number.isNaN( xv[ 0 ] ), 'result should not be NaN' );
 	assert.ok( !Number.isNaN( xv[ 6 ] ), 'result should not be NaN' );
 });
 
-test( 'ztpmv: x with all zeros returns zeros (upper, no-transpose)', function t() {
-	var ap = upperAP();
-	var xv = reinterpret( x, 0 );
-	var x = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+test( 'ztpmv: x with all zeros returns zeros (upper, no-transpose)', function t() { // eslint-disable-line max-len
+	var ap;
+	var xv;
+	var x;
 	var i;
+
+	ap = upperAP();
+	x = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+	base( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
+	xv = reinterpret( x, 0 );
 	for ( i = 0; i < 8; i += 1 ) {
 		assert.strictEqual( xv[ i ], 0.0, 'x[' + i + '] should be zero' );
 	}
 });
 
-test( 'ztpmv: x with all zeros returns zeros (lower, no-transpose)', function t() {
-	var ap = lowerAP();
-	var xv = reinterpret( x, 0 );
-	var x = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+test( 'ztpmv: x with all zeros returns zeros (lower, no-transpose)', function t() { // eslint-disable-line max-len
+	var ap;
+	var xv;
+	var x;
 	var i;
+
+	ap = lowerAP();
+	x = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+	base( 'lower', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
+	xv = reinterpret( x, 0 );
 	for ( i = 0; i < 8; i += 1 ) {
 		assert.strictEqual( xv[ i ], 0.0, 'x[' + i + '] should be zero' );
 	}
 });
 
 test( 'ztpmv: lower, no-transpose, stride 2 (N=4)', function t() {
-	// Exercise lower + stride>1 in the no-transpose path
-	var ap = lowerAP();
-	var xv = reinterpret( x, 0 );
-	var x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] );
+	var ap;
+	var xv;
+	var x;
 
-	// Verify not NaN and in-place mutation
+	ap = lowerAP();
+	x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] ); // eslint-disable-line max-len
+	base( 'lower', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 2, 0 );
+	xv = reinterpret( x, 0 );
 	assert.ok( !Number.isNaN( xv[ 0 ] ), 'x[0] should not be NaN' );
 	assert.ok( !Number.isNaN( xv[ 4 ] ), 'x[4] should not be NaN' );
 });
 
 test( 'ztpmv: upper, transpose, stride 2 (N=4)', function t() {
-	// Exercise upper transpose with non-unit stride
-	var ap = upperAP();
-	var xv = reinterpret( x, 0 );
-	var x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] );
+	var ap;
+	var xv;
+	var x;
+
+	ap = upperAP();
+	x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] ); // eslint-disable-line max-len
+	base( 'upper', 'transpose', 'non-unit', 4, ap, 1, 0, x, 2, 0 );
+	xv = reinterpret( x, 0 );
 	assert.ok( !Number.isNaN( xv[ 0 ] ), 'x[0] should not be NaN' );
 });
 
 test( 'ztpmv: lower, conjugate-transpose, stride 2 (N=4)', function t() {
-	// Exercise lower conjugate-transpose with non-unit stride
-	var ap = lowerAP();
-	var xv = reinterpret( x, 0 );
-	var x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] );
+	var ap;
+	var xv;
+	var x;
+
+	ap = lowerAP();
+	x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] ); // eslint-disable-line max-len
+	base( 'lower', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 2, 0 );
+	xv = reinterpret( x, 0 );
 	assert.ok( !Number.isNaN( xv[ 0 ] ), 'x[0] should not be NaN' );
 });
 
 test( 'ztpmv: with offsetAP and offsetX', function t() {
-	// Test with non-zero offsets
-	// Pad the front of AP with 2 junk elements, offset by 2
-	var result = base( 'upper', 'no-transpose', 'non-unit', 1, ap, 1, 2, x, 1, 1 );
-	var ap = new Complex128Array([
+	var result;
+	var ap;
+	var xv;
+	var x;
+
+	ap = new Complex128Array([
 		99,
 		99,
 		99,
@@ -300,10 +454,10 @@ test( 'ztpmv: with offsetAP and offsetX', function t() {
 		0,
 		0
 	]);
-	var xv = reinterpret( x, 0 );
-	var x = new Complex128Array( [ 99, 99, 3, -1 ] );
-
-	// (5+2i)*(3-1i) = 15-5i+6i-2i^2 = 17+1i
+	x = new Complex128Array( [ 99, 99, 3, -1 ] );
+	result = base( 'upper', 'no-transpose', 'non-unit', 1, ap, 1, 2, x, 1, 1 );
+	assert.strictEqual( result, x );
+	xv = reinterpret( x, 0 );
 	assertClose( xv[ 2 ], 17.0, 'x real' );
 	assertClose( xv[ 3 ], 1.0, 'x imag' );
 });

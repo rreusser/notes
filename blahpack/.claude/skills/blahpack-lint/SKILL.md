@@ -10,24 +10,28 @@ Blahpack uses a **copy-on-write** ESLint setup. All 122 stdlib rules load from
 the stdlib checkout by default. When a rule needs modification, it gets forked
 locally into `tools/eslint/rules/` where it takes priority.
 
-## Lint files
+## Lint and fix
+
+The primary workflow is `bin/lint-fix.sh` which runs the full pipeline:
+codemods → eslint --fix → test verification → rollback if broken.
 
 ```bash
-# Lint specific files or directories:
+# Fix one module (codemods + eslint --fix + test verify):
+bin/lint-fix.sh lib/blas/base/daxpy
+
+# Fix all modules:
+bin/lint-fix.sh
+
+# Just lint (no fixes):
 bin/lint.sh lib/blas/base/daxpy/lib/base.js
-bin/lint.sh lib/lapack/base/dpotf2/lib/
+bin/lint.sh                                      # all modules (batched)
 
-# Lint everything:
-bin/lint.sh
-npm run lint
-
-# Auto-fix:
-bin/lint.sh --fix lib/
-npm run lint:fix
+# Just eslint --fix (no codemods):
+bin/lint.sh --fix lib/blas/base/daxpy/lib/
 ```
 
-If the user provides `$ARGUMENTS`, lint those paths. Otherwise lint the path
-the user is working on or default to `lib/`.
+If the user provides `$ARGUMENTS`, run `bin/lint-fix.sh` on those paths.
+Otherwise lint the path the user is working on or default to `lib/`.
 
 ## Fork a stdlib rule for customization
 
@@ -89,10 +93,26 @@ module.exports = rule;
 If the user asks to create a new rule (`$ARGUMENTS` starts with `--new`),
 scaffold the rule file and add the config entry.
 
+## Codemods
+
+The `bin/lint-fix.sh` pipeline runs these codemods before eslint --fix:
+
+| Script | Transforms |
+|--------|-----------|
+| `bin/codemod-tests.js` | Var hoisting with toposort, Array.from→toArray, require-globals, JSDoc for helpers, section headers, func-names, eslint-disable headers |
+| `bin/codemod-index.js` | use-strict insertion, empty lines, emphasis markers |
+
+Codemods are safe to re-run (idempotent) and never break tests.
+ESLint --fix is applied per-file with automatic test verification and
+rollback if anything breaks.
+
 ## Key files
 
 | File | Purpose |
 |------|---------|
+| `bin/lint-fix.sh` | Full pipeline: codemods + eslint --fix + test verify |
+| `bin/codemod-tests.js` | Test file codemod (var hoisting, Array.from, JSDoc) |
+| `bin/codemod-index.js` | Index.js codemod (use strict, emphasis, empty lines) |
 | `.eslintrc.cjs` | Root config (merges all severity configs) |
 | `tools/eslint/plugin.cjs` | Copy-on-write plugin loader |
 | `tools/eslint/shims.cjs` | Drop-in replacements for @stdlib utilities |

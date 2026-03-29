@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -13,31 +12,30 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Performs one of the symmetric rank-2k operations `C := alpha*A*B**T + alpha*B*A**T + beta*C` or `C := alpha*A**T*B + alpha*B**T*A + beta*C` where alpha and beta are complex scalars, C is an N-by-N symmetric matrix, and A and B are N-by-K or K-by-N matrices.
- *
- *
- * @param {string} uplo - `'upper'` for upper triangle, `'lower'` for lower triangle
- * @param {string} trans - `'no-transpose'` or `'transpose'`
- * @param {NonNegativeInteger} N - order of matrix C
- * @param {NonNegativeInteger} K - number of columns of A,B (if trans = `'no-transpose'`) or rows (if trans = `'transpose'`)
- * @param {Complex128} alpha - complex scalar multiplier
- * @param {Complex128Array} A - complex input matrix
- * @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
- * @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
- * @param {NonNegativeInteger} offsetA - index offset for A (in complex elements)
- * @param {Complex128Array} B - complex input matrix
- * @param {integer} strideB1 - stride of the first dimension of B (in complex elements)
- * @param {integer} strideB2 - stride of the second dimension of B (in complex elements)
- * @param {NonNegativeInteger} offsetB - index offset for B (in complex elements)
- * @param {Complex128} beta - complex scalar multiplier for C
- * @param {Complex128Array} C - input/output symmetric matrix (only upper or lower triangle accessed)
- * @param {integer} strideC1 - stride of the first dimension of C (in complex elements)
- * @param {integer} strideC2 - stride of the second dimension of C (in complex elements)
- * @param {NonNegativeInteger} offsetC - index offset for C (in complex elements)
- * @throws {TypeError} First argument must be a valid matrix triangle
- * @throws {TypeError} Second argument must be a valid transpose operation
- * @returns {Complex128Array} `C`
- */
+* Performs one of the symmetric rank-2k operations `C := alpha*A*B**T + alpha*B*A**T + beta*C` or `C := alpha*A**T*B + alpha*B**T*A + beta*C` where alpha and beta are complex scalars, C is an N-by-N symmetric matrix, and A and B are N-by-K or K-by-N matrices.
+*
+* @param {string} uplo - `'upper'` for upper triangle, `'lower'` for lower triangle
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {NonNegativeInteger} N - order of matrix C
+* @param {NonNegativeInteger} K - number of columns of A,B (if trans = `'no-transpose'`) or rows (if trans = `'transpose'`)
+* @param {Complex128} alpha - complex scalar multiplier
+* @param {Complex128Array} A - complex input matrix
+* @param {integer} strideA1 - stride of the first dimension of A (in complex elements)
+* @param {integer} strideA2 - stride of the second dimension of A (in complex elements)
+* @param {NonNegativeInteger} offsetA - index offset for A (in complex elements)
+* @param {Complex128Array} B - complex input matrix
+* @param {integer} strideB1 - stride of the first dimension of B (in complex elements)
+* @param {integer} strideB2 - stride of the second dimension of B (in complex elements)
+* @param {NonNegativeInteger} offsetB - index offset for B (in complex elements)
+* @param {Complex128} beta - complex scalar multiplier for C
+* @param {Complex128Array} C - input/output symmetric matrix (only upper or lower triangle accessed)
+* @param {integer} strideC1 - stride of the first dimension of C (in complex elements)
+* @param {integer} strideC2 - stride of the second dimension of C (in complex elements)
+* @param {NonNegativeInteger} offsetC - index offset for C (in complex elements)
+* @throws {TypeError} First argument must be a valid matrix triangle
+* @throws {TypeError} Second argument must be a valid transpose operation
+* @returns {Complex128Array} `C`
+*/
 function zsyr2k( uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );

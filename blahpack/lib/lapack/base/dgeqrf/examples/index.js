@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgeqrf = require( '@stdlib/lapack/base/dgeqrf' );

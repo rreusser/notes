@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgbtf2 = require( '@stdlib/lapack/base/dgbtf2' );

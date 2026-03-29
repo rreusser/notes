@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -16,28 +17,72 @@ var zhpmv = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhpmv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zhpmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i += 1 ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -47,160 +92,271 @@ test( 'zhpmv is a function', function t() {
 	assert.strictEqual( typeof zhpmv, 'function' );
 });
 
-test( 'zhpmv: upper_basic (UPLO=upper, N=3, alpha=(1,0), beta=(0,0))', function t() {
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'upper_basic' );
-	var AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( 3 );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+test( 'zhpmv: upper_basic (UPLO=upper, N=3, alpha=(1,0), beta=(0,0))', function t() { // eslint-disable-line max-len
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'upper_basic' );
+	AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( 3 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
-test( 'zhpmv: lower_basic (UPLO=lower, N=3, alpha=(1,0), beta=(0,0))', function t() {
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'lower_basic' );
-	var AP = new Complex128Array( [ 2, 0, 1, -1, 3, 2, 4, 0, 2, -1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( 3 );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+test( 'zhpmv: lower_basic (UPLO=lower, N=3, alpha=(1,0), beta=(0,0))', function t() { // eslint-disable-line max-len
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'lower_basic' );
+	AP = new Complex128Array( [ 2, 0, 1, -1, 3, 2, 4, 0, 2, -1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( 3 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'lower', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
-test( 'zhpmv: complex_alpha_beta (UPLO=upper, alpha=(2,1), beta=(0.5,-0.5))', function t() {
-	var alpha = new Complex128( 2, 1 );
-	var beta = new Complex128( 0.5, -0.5 );
-	var tc = findCase( 'complex_alpha_beta' );
-	var AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5 ] );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+test( 'zhpmv: complex_alpha_beta (UPLO=upper, alpha=(2,1), beta=(0.5,-0.5))', function t() { // eslint-disable-line max-len
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'complex_alpha_beta' );
+	AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5 ] );
+	alpha = new Complex128( 2, 1 );
+	beta = new Complex128( 0.5, -0.5 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
-test( 'zhpmv: alpha_zero (alpha=(0,0), beta=(2,0)) scales y only', function t() {
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 2, 0 );
-	var tc = findCase( 'alpha_zero' );
-	var AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+test( 'zhpmv: alpha_zero (alpha=(0,0), beta=(2,0)) scales y only', function t() { // eslint-disable-line max-len
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'alpha_zero' );
+	AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 2, 0 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhpmv: n_zero (N=0 quick return, y unchanged)', function t() {
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'n_zero' );
-	var AP = new Complex128Array( 6 );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( 3 );
-	var y = new Complex128Array( [ 99, 0, 0, 0, 0, 0 ] );
-	assertArrayClose( Array.from( yv ).slice( 0, 2 ), tc.y, 1e-14, 'y' );
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'n_zero' );
+	AP = new Complex128Array( 6 );
+	x = new Complex128Array( 3 );
+	y = new Complex128Array( [ 99, 0, 0, 0, 0, 0 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'upper', 0, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ).slice( 0, 2 ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhpmv: alpha_zero_beta_zero (zeros y)', function t() {
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'alpha_zero_beta_zero' );
-	var AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( [ 99, 88, 77, 66, 55, 44 ] );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'alpha_zero_beta_zero' );
+	AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( [ 99, 88, 77, 66, 55, 44 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhpmv: stride_2 (incx=2, incy=2)', function t() {
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'stride_2' );
-	var AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0 ] );
-	var y = new Complex128Array( 6 );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'stride_2' );
+	AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0 ] );
+	y = new Complex128Array( 6 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 0, x, 2, 0, beta, y, 2, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhpmv: scalar (N=1, alpha=(2,1))', function t() {
-	var alpha = new Complex128( 2, 1 );
-	var beta = new Complex128( 0, 0 );
-	var tc = findCase( 'scalar' );
-	var AP = new Complex128Array( [ 3, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 5, 2 ] );
-	var y = new Complex128Array( 1 );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'scalar' );
+	AP = new Complex128Array( [ 3, 0 ] );
+	x = new Complex128Array( [ 5, 2 ] );
+	y = new Complex128Array( 1 );
+	alpha = new Complex128( 2, 1 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'upper', 1, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
 test( 'zhpmv: lower_nonzero_beta (UPLO=lower, beta=(0.5,0))', function t() {
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0.5, 0 );
-	var tc = findCase( 'lower_nonzero_beta' );
-	var AP = new Complex128Array( [ 2, 0, 1, -1, 3, 2, 4, 0, 2, -1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5 ] );
-	assertArrayClose( Array.from( yv ), tc.y, 1e-14, 'y' );
+	var alpha;
+	var beta;
+	var tc;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	tc = findCase( 'lower_nonzero_beta' );
+	AP = new Complex128Array( [ 2, 0, 1, -1, 3, 2, 4, 0, 2, -1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0.5, 0 );
+	zhpmv( 'lower', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), tc.y, 1e-14, 'y' );
 });
 
-test( 'zhpmv: alpha=(1,0), beta=(1,0) quick return (no computation)', function t() {
-	// When alpha=0 and beta=1, should return immediately
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 1, 0 );
-	var AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( [ 7, 8, 9, 10, 11, 12 ] );
-	assertArrayClose( Array.from( yv ), [ 7, 8, 9, 10, 11, 12 ], 1e-14, 'y unchanged' );
+test( 'zhpmv: alpha=(1,0), beta=(1,0) quick return (no computation)', function t() { // eslint-disable-line max-len
+	var alpha;
+	var beta;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( [ 7, 8, 9, 10, 11, 12 ] );
+	alpha = new Complex128( 0, 0 );
+	beta = new Complex128( 1, 0 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), [ 7, 8, 9, 10, 11, 12 ], 1e-14, 'y unchanged' ); // eslint-disable-line max-len
 });
 
 test( 'zhpmv: returns y', function t() {
-	var result = zhpmv( 'upper', 1, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var AP = new Complex128Array( [ 3, 0 ] );
-	var x = new Complex128Array( [ 1, 0 ] );
-	var y = new Complex128Array( 1 );
+	var result;
+	var alpha;
+	var beta;
+	var AP;
+	var x;
+	var y;
+
+	AP = new Complex128Array( [ 3, 0 ] );
+	x = new Complex128Array( [ 1, 0 ] );
+	y = new Complex128Array( 1 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	result = zhpmv( 'upper', 1, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 });
 
 test( 'zhpmv: upper with complex beta (beta=(1,1))', function t() {
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 1, 1 );
-	var AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
-	assertArrayClose( Array.from( yv ), [ 17, 0, 13.5, 1.5, 22, 4.5 ], 1e-14, 'y' );
+	var alpha;
+	var beta;
+	var AP;
+	var yv;
+	var x;
+	var y;
+
+	AP = new Complex128Array( [ 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( [ 1, 0, 0, 1, 1, -1 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 1, 1 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), [ 17, 0, 13.5, 1.5, 22, 4.5 ], 1e-14, 'y' );
 });
 
 test( 'zhpmv: lower with stride 2', function t() {
-	// Same lower packed matrix, but with strides=2
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var AP = new Complex128Array( [ 2, 0, 1, -1, 3, 2, 4, 0, 2, -1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0 ] );
-	var y = new Complex128Array( 6 );
+	var alpha;
+	var beta;
+	var AP;
+	var yv;
+	var x;
+	var y;
 
-	// Same result as lower_basic but interspersed with zeros at odd positions
-
-	// lower_basic y = [16, -1, 14.5, 0.5, 20, 4.5]
-	assertArrayClose( Array.from( yv ), [ 16, -1, 0, 0, 14.5, 0.5, 0, 0, 20, 4.5, 0, 0 ], 1e-14, 'y' );
+	AP = new Complex128Array( [ 2, 0, 1, -1, 3, 2, 4, 0, 2, -1, 5, 0 ] );
+	x = new Complex128Array( [ 1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0 ] );
+	y = new Complex128Array( 6 );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'lower', 3, alpha, AP, 1, 0, x, 2, 0, beta, y, 2, 0 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ), [ 16, -1, 0, 0, 14.5, 0.5, 0, 0, 20, 4.5, 0, 0 ], 1e-14, 'y' ); // eslint-disable-line max-len
 });
 
 test( 'zhpmv: upper with offset', function t() {
-	// Test offsetAP, offsetX, offsetY
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var AP = new Complex128Array( [ 0, 0, 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
-	var yv = reinterpret( y, 0 );
-	var x = new Complex128Array( [ 0, 0, 1, 0.5, 2, -1, 3, 1 ] );
-	var y = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+	var alpha;
+	var beta;
+	var AP;
+	var yv;
+	var x;
+	var y;
 
-	// y[1..3] should match upper_basic
-	assertArrayClose( Array.from( yv ).slice( 2, 8 ), [ 16, -1, 14.5, 0.5, 20, 4.5 ], 1e-14, 'y with offset' );
+	AP = new Complex128Array( [ 0, 0, 2, 0, 1, 1, 4, 0, 3, -2, 2, 1, 5, 0 ] );
+	x = new Complex128Array( [ 0, 0, 1, 0.5, 2, -1, 3, 1 ] );
+	y = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
+	alpha = new Complex128( 1, 0 );
+	beta = new Complex128( 0, 0 );
+	zhpmv( 'upper', 3, alpha, AP, 1, 1, x, 1, 1, beta, y, 1, 1 );
+	yv = reinterpret( y, 0 );
+	assertArrayClose( toArray( yv ).slice( 2, 8 ), [ 16, -1, 14.5, 0.5, 20, 4.5 ], 1e-14, 'y with offset' ); // eslint-disable-line max-len
 });

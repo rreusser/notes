@@ -1,11 +1,16 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dgbtrf = require( '../../dgbtrf/lib/base.js' );
 var dgbtrs = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
@@ -13,22 +18,50 @@ var ndarrayFn = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgbtrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgbtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -42,13 +75,13 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * A is specified in its original dense band storage before factorization.
 */
 function bandMatVec( N, kl, ku, ABrows, x ) {
-	// ABrows is a 2D array [LDAB][N] stored column-major as flat array with LDAB rows
+	// ABrows is a 2D array [LDAB][N] stored column-major as flat array with LDAB rows // eslint-disable-line max-len
+	var bandRow;
+	var result = new Float64Array( N );
 	var LDAB = 2 * kl + ku + 1;
 	var kv = ku + kl;
-	var result = new Float64Array( N );
 	var i;
 	var j;
-	var bandRow;
 
 	for ( j = 0; j < N; j++ ) {
 		for ( i = Math.max( 0, j - ku ); i < Math.min( N, j + kl + 1 ); i++ ) {
@@ -60,211 +93,355 @@ function bandMatVec( N, kl, ku, ABrows, x ) {
 	return result;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'dgbtrs: N=0 quick return', function t() {
-	var AB = new Float64Array( 16 );
-	var IPIV = new Int32Array( 4 );
-	var B = new Float64Array( 4 );
-	var info = dgbtrs( 'no-transpose', 0, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	var IPIV;
+	var info;
+	var AB;
+	var B;
+
+	AB = new Float64Array( 16 );
+	IPIV = new Int32Array( 4 );
+	B = new Float64Array( 4 );
+	info = dgbtrs( 'no-transpose', 0, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 });
 
 test( 'dgbtrs: NRHS=0 quick return', function t() {
-	var AB = new Float64Array( 16 );
-	var IPIV = new Int32Array( 4 );
-	var B = new Float64Array( 4 );
-	var info = dgbtrs( 'no-transpose', 4, 1, 1, 0, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	var IPIV;
+	var info;
+	var AB;
+	var B;
+
+	AB = new Float64Array( 16 );
+	IPIV = new Int32Array( 4 );
+	B = new Float64Array( 4 );
+	info = dgbtrs( 'no-transpose', 4, 1, 1, 0, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 });
 
 test( 'dgbtrs: tridiag_4x4_1rhs (verify A*x = b)', function t() {
-	var tc = findCase( 'tridiag_4x4_1rhs' );
-	// Original A: tridiag [4 -1 0 0; -1 4 -1 0; 0 -1 4 -1; 0 0 -1 4]
-	// KL=1, KU=1, KV=2, LDAB=4
-	var AB_orig = new Float64Array( [
-		0.0, 0.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, 0.0
-	] );
-	var AB = new Float64Array( AB_orig );
-	var b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-	var IPIV = new Int32Array( 4 );
-	dgbtrf( 4, 4, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	var AB_orig;
+	var IPIV;
+	var info;
+	var tc;
+	var AB;
+	var Ax;
+	var b;
+	var B;
 
-	// B is stored as a column vector (N x NRHS with LDB=N)
-	var B = new Float64Array( b );
-	var info = dgbtrs( 'no-transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	tc = findCase( 'tridiag_4x4_1rhs' );
+	AB_orig = new Float64Array([
+		0.0,
+		0.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		0.0
+	]);
+	AB = new Float64Array( AB_orig );
+	b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	IPIV = new Int32Array( 4 );
+	dgbtrf( 4, 4, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	B = new Float64Array( b );
+	info = dgbtrs( 'no-transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
-	// Check fixture
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-	// Verify A*x = b
-	var Ax = bandMatVec( 4, 1, 1, AB_orig, B );
-	assertArrayClose( Array.from( Ax ), Array.from( b ), 1e-12, 'A*x=b' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
+	Ax = bandMatVec( 4, 1, 1, AB_orig, B );
+	assertArrayClose( toArray( Ax ), toArray( b ), 1e-12, 'A*x=b' );
 });
 
 test( 'dgbtrs: tridiag_4x4_2rhs', function t() {
-	var tc = findCase( 'tridiag_4x4_2rhs' );
-	var AB_orig = new Float64Array( [
-		0.0, 0.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, 0.0
-	] );
-	var AB = new Float64Array( AB_orig );
-	var IPIV = new Int32Array( 4 );
-	dgbtrf( 4, 4, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	var AB_orig;
+	var IPIV;
+	var info;
+	var tc;
+	var AB;
+	var b0;
+	var b1;
+	var x0;
+	var x1;
+	var B;
 
-	// B is 4x2 column-major with LDB=4
-	var B = new Float64Array( [
-		1.0, 2.0, 3.0, 4.0,  // column 0
-		4.0, 3.0, 2.0, 1.0   // column 1
-	] );
-	var b0 = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-	var b1 = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
-	var info = dgbtrs( 'no-transpose', 4, 1, 1, 2, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	tc = findCase( 'tridiag_4x4_2rhs' );
+	AB_orig = new Float64Array([
+		0.0,
+		0.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		0.0
+	]);
+	AB = new Float64Array( AB_orig );
+	IPIV = new Int32Array( 4 );
+	dgbtrf( 4, 4, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	B = new Float64Array([
+		1.0,
+		2.0,
+		3.0,
+		4.0,  // column 0
+		4.0,
+		3.0,
+		2.0,
+		1.0   // column 1
+	]);
+	b0 = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	b1 = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
+	info = dgbtrs( 'no-transpose', 4, 1, 1, 2, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-	// Verify A*x = b for both columns
-	var x0 = B.slice( 0, 4 );
-	var x1 = B.slice( 4, 8 );
-	assertArrayClose( Array.from( bandMatVec( 4, 1, 1, AB_orig, x0 ) ), Array.from( b0 ), 1e-12, 'A*x0=b0' );
-	assertArrayClose( Array.from( bandMatVec( 4, 1, 1, AB_orig, x1 ) ), Array.from( b1 ), 1e-12, 'A*x1=b1' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
+	x0 = B.slice( 0, 4 );
+	x1 = B.slice( 4, 8 );
+	assertArrayClose( toArray( bandMatVec( 4, 1, 1, AB_orig, x0 ) ), toArray( b0 ), 1e-12, 'A*x0=b0' ); // eslint-disable-line max-len
+	assertArrayClose( toArray( bandMatVec( 4, 1, 1, AB_orig, x1 ) ), toArray( b1 ), 1e-12, 'A*x1=b1' ); // eslint-disable-line max-len
 });
 
 test( 'dgbtrs: tridiag_4x4_trans (verify A^T*x = b)', function t() {
-	var tc = findCase( 'tridiag_4x4_trans' );
-	var AB_orig = new Float64Array( [
-		0.0, 0.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, -1.0,
-		0.0, -1.0, 4.0, 0.0
-	] );
-	var AB = new Float64Array( AB_orig );
-	var IPIV = new Int32Array( 4 );
-	dgbtrf( 4, 4, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	var AB_orig;
+	var IPIV;
+	var info;
+	var tc;
+	var AB;
+	var Ax;
+	var B;
+	var b;
 
-	var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-	var b = new Float64Array( B );
-	var info = dgbtrs( 'transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
+	tc = findCase( 'tridiag_4x4_trans' );
+	AB_orig = new Float64Array([
+		0.0,
+		0.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		-1.0,
+		0.0,
+		-1.0,
+		4.0,
+		0.0
+	]);
+	AB = new Float64Array( AB_orig );
+	IPIV = new Int32Array( 4 );
+	dgbtrf( 4, 4, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	b = new Float64Array( B );
+	info = dgbtrs( 'transpose', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	assert.equal( info, 0 );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-	// For symmetric A, A^T = A, so A*x should also = b
-	var Ax = bandMatVec( 4, 1, 1, AB_orig, B );
-	assertArrayClose( Array.from( Ax ), Array.from( b ), 1e-12, 'A^T*x=b' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
+	Ax = bandMatVec( 4, 1, 1, AB_orig, B );
+	assertArrayClose( toArray( Ax ), toArray( b ), 1e-12, 'A^T*x=b' );
 });
 
 test( 'dgbtrs: pentadiag_5x5_1rhs (verify A*x = b)', function t() {
-	var tc = findCase( 'pentadiag_5x5_1rhs' );
-	// KL=2, KU=2, KV=4, LDAB=7
-	var AB_orig = new Float64Array( 7 * 5 );
-	AB_orig[ 4 ] = 6.0; AB_orig[ 5 ] = -2.0; AB_orig[ 6 ] = 1.0;
-	AB_orig[ 7 + 3 ] = -2.0; AB_orig[ 7 + 4 ] = 6.0; AB_orig[ 7 + 5 ] = -2.0; AB_orig[ 7 + 6 ] = 1.0;
-	AB_orig[ 14 + 2 ] = 1.0; AB_orig[ 14 + 3 ] = -2.0; AB_orig[ 14 + 4 ] = 6.0; AB_orig[ 14 + 5 ] = -2.0; AB_orig[ 14 + 6 ] = 1.0;
-	AB_orig[ 21 + 2 ] = 1.0; AB_orig[ 21 + 3 ] = -2.0; AB_orig[ 21 + 4 ] = 6.0; AB_orig[ 21 + 5 ] = -2.0;
-	AB_orig[ 28 + 2 ] = 1.0; AB_orig[ 28 + 3 ] = -2.0; AB_orig[ 28 + 4 ] = 6.0;
-	var AB = new Float64Array( AB_orig );
-	var IPIV = new Int32Array( 5 );
-	dgbtrf( 5, 5, 2, 2, AB, 1, 7, 0, IPIV, 1, 0 );
+	var AB_orig;
+	var IPIV;
+	var info;
+	var tc;
+	var AB;
+	var Ax;
+	var b;
+	var B;
 
-	var b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
-	var B = new Float64Array( b );
-	var info = dgbtrs( 'no-transpose', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 );
+	tc = findCase( 'pentadiag_5x5_1rhs' );
+	AB_orig = new Float64Array( 7 * 5 );
+	AB_orig[ 4 ] = 6.0;
+	AB_orig[ 5 ] = -2.0;
+	AB_orig[ 6 ] = 1.0;
+	AB_orig[ 7 + 3 ] = -2.0;
+	AB_orig[ 7 + 4 ] = 6.0;
+	AB_orig[ 7 + 5 ] = -2.0;
+	AB_orig[ 7 + 6 ] = 1.0;
+	AB_orig[ 14 + 2 ] = 1.0;
+	AB_orig[ 14 + 3 ] = -2.0;
+	AB_orig[ 14 + 4 ] = 6.0;
+	AB_orig[ 14 + 5 ] = -2.0;
+	AB_orig[ 14 + 6 ] = 1.0;
+	AB_orig[ 21 + 2 ] = 1.0;
+	AB_orig[ 21 + 3 ] = -2.0;
+	AB_orig[ 21 + 4 ] = 6.0;
+	AB_orig[ 21 + 5 ] = -2.0;
+	AB_orig[ 28 + 2 ] = 1.0;
+	AB_orig[ 28 + 3 ] = -2.0;
+	AB_orig[ 28 + 4 ] = 6.0;
+	AB = new Float64Array( AB_orig );
+	IPIV = new Int32Array( 5 );
+	dgbtrf( 5, 5, 2, 2, AB, 1, 7, 0, IPIV, 1, 0 );
+	b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+	B = new Float64Array( b );
+	info = dgbtrs( 'no-transpose', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-	var Ax = bandMatVec( 5, 2, 2, AB_orig, B );
-	assertArrayClose( Array.from( Ax ), Array.from( b ), 1e-12, 'A*x=b' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
+	Ax = bandMatVec( 5, 2, 2, AB_orig, B );
+	assertArrayClose( toArray( Ax ), toArray( b ), 1e-12, 'A*x=b' );
 });
 
 test( 'dgbtrs: pentadiag_5x5_trans', function t() {
-	var tc = findCase( 'pentadiag_5x5_trans' );
-	var AB_orig = new Float64Array( 7 * 5 );
-	AB_orig[ 4 ] = 6.0; AB_orig[ 5 ] = -2.0; AB_orig[ 6 ] = 1.0;
-	AB_orig[ 7 + 3 ] = -2.0; AB_orig[ 7 + 4 ] = 6.0; AB_orig[ 7 + 5 ] = -2.0; AB_orig[ 7 + 6 ] = 1.0;
-	AB_orig[ 14 + 2 ] = 1.0; AB_orig[ 14 + 3 ] = -2.0; AB_orig[ 14 + 4 ] = 6.0; AB_orig[ 14 + 5 ] = -2.0; AB_orig[ 14 + 6 ] = 1.0;
-	AB_orig[ 21 + 2 ] = 1.0; AB_orig[ 21 + 3 ] = -2.0; AB_orig[ 21 + 4 ] = 6.0; AB_orig[ 21 + 5 ] = -2.0;
-	AB_orig[ 28 + 2 ] = 1.0; AB_orig[ 28 + 3 ] = -2.0; AB_orig[ 28 + 4 ] = 6.0;
-	var AB = new Float64Array( AB_orig );
-	var IPIV = new Int32Array( 5 );
-	dgbtrf( 5, 5, 2, 2, AB, 1, 7, 0, IPIV, 1, 0 );
+	var AB_orig;
+	var IPIV;
+	var info;
+	var tc;
+	var AB;
+	var b;
+	var B;
 
-	var b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
-	var B = new Float64Array( b );
-	var info = dgbtrs( 'transpose', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 );
+	tc = findCase( 'pentadiag_5x5_trans' );
+	AB_orig = new Float64Array( 7 * 5 );
+	AB_orig[ 4 ] = 6.0;
+	AB_orig[ 5 ] = -2.0;
+	AB_orig[ 6 ] = 1.0;
+	AB_orig[ 7 + 3 ] = -2.0;
+	AB_orig[ 7 + 4 ] = 6.0;
+	AB_orig[ 7 + 5 ] = -2.0;
+	AB_orig[ 7 + 6 ] = 1.0;
+	AB_orig[ 14 + 2 ] = 1.0;
+	AB_orig[ 14 + 3 ] = -2.0;
+	AB_orig[ 14 + 4 ] = 6.0;
+	AB_orig[ 14 + 5 ] = -2.0;
+	AB_orig[ 14 + 6 ] = 1.0;
+	AB_orig[ 21 + 2 ] = 1.0;
+	AB_orig[ 21 + 3 ] = -2.0;
+	AB_orig[ 21 + 4 ] = 6.0;
+	AB_orig[ 21 + 5 ] = -2.0;
+	AB_orig[ 28 + 2 ] = 1.0;
+	AB_orig[ 28 + 3 ] = -2.0;
+	AB_orig[ 28 + 4 ] = 6.0;
+	AB = new Float64Array( AB_orig );
+	IPIV = new Int32Array( 5 );
+	dgbtrf( 5, 5, 2, 2, AB, 1, 7, 0, IPIV, 1, 0 );
+	b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+	B = new Float64Array( b );
+	info = dgbtrs( 'transpose', 5, 2, 2, 1, AB, 1, 7, 0, IPIV, 1, 0, B, 1, 5, 0 );
 	assert.equal( info, 0 );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 });
 
 test( 'dgbtrs: pivot_2x2 (verify A*x = b)', function t() {
-	var tc = findCase( 'pivot_2x2' );
-	// A = [1 2; 3 4], KL=1, KU=1, LDAB=4
-	var AB_orig = new Float64Array( 4 * 2 );
-	AB_orig[ 2 ] = 1.0; AB_orig[ 3 ] = 3.0;
-	AB_orig[ 4 + 1 ] = 2.0; AB_orig[ 4 + 2 ] = 4.0;
-	var AB = new Float64Array( AB_orig );
-	var IPIV = new Int32Array( 2 );
-	dgbtrf( 2, 2, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	var AB_orig;
+	var IPIV;
+	var info;
+	var tc;
+	var AB;
+	var b;
+	var B;
 
-	var b = new Float64Array( [ 5.0, 11.0 ] );
-	var B = new Float64Array( b );
-	var info = dgbtrs( 'no-transpose', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	tc = findCase( 'pivot_2x2' );
+	AB_orig = new Float64Array( 4 * 2 );
+	AB_orig[ 2 ] = 1.0;
+	AB_orig[ 3 ] = 3.0;
+	AB_orig[ 4 + 1 ] = 2.0;
+	AB_orig[ 4 + 2 ] = 4.0;
+	AB = new Float64Array( AB_orig );
+	IPIV = new Int32Array( 2 );
+	dgbtrf( 2, 2, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	b = new Float64Array( [ 5.0, 11.0 ] );
+	B = new Float64Array( b );
+	info = dgbtrs( 'no-transpose', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
-	assertArrayClose( Array.from( B ), tc.x, 1e-14, 'x' );
-	// Verify: A*[1,2] = [1*1+2*2, 3*1+4*2] = [5, 11]
+	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 	assert.equal( B[ 0 ], 1.0 );
 	assert.equal( B[ 1 ], 2.0 );
 });
 
 test( 'dgbtrs: pivot_2x2 transpose (verify A^T*x = b)', function t() {
-	// A = [1 2; 3 4], KL=1, KU=1, LDAB=4
-	// A^T = [1 3; 2 4]
-	// b = [7, 10], x should be [1, 2] since A^T*[1,2] = [1+6, 2+8] = [7, 10]
-	var AB = new Float64Array( 4 * 2 );
-	AB[ 2 ] = 1.0; AB[ 3 ] = 3.0;
-	AB[ 4 + 1 ] = 2.0; AB[ 4 + 2 ] = 4.0;
-	var IPIV = new Int32Array( 2 );
-	dgbtrf( 2, 2, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	var IPIV;
+	var info;
+	var AB;
+	var B;
 
-	var B = new Float64Array( [ 7.0, 10.0 ] );
-	var info = dgbtrs( 'transpose', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	AB = new Float64Array( 4 * 2 );
+	AB[ 2 ] = 1.0;
+	AB[ 3 ] = 3.0;
+	AB[ 4 + 1 ] = 2.0;
+	AB[ 4 + 2 ] = 4.0;
+	IPIV = new Int32Array( 2 );
+	dgbtrf( 2, 2, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
+	B = new Float64Array( [ 7.0, 10.0 ] );
+	info = dgbtrs( 'transpose', 2, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 2, 0 );
 	assert.equal( info, 0 );
 	assertClose( B[ 0 ], 1.0, 1e-14, 'x[0]' );
 	assertClose( B[ 1 ], 2.0, 1e-14, 'x[1]' );
 });
 
 test( 'dgbtrs: KL=0 no-L path transpose', function t() {
-	// A = [2 1; 0 3], KL=0, KU=1, LDAB=2
-	// A^T = [2 0; 1 3]
-	// b = [4, 7], x should be [2, 5/3] since A^T*x = [2*2, 1*2+3*5/3] = [4, 7]
-	var AB = new Float64Array( [
-		0.0, 2.0,
-		1.0, 3.0
-	] );
-	var IPIV = new Int32Array( 2 );
-	dgbtrf( 2, 2, 0, 1, AB, 1, 2, 0, IPIV, 1, 0 );
+	var IPIV;
+	var info;
+	var AB;
+	var B;
 
-	var B = new Float64Array( [ 4.0, 7.0 ] );
-	var info = dgbtrs( 'transpose', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	AB = new Float64Array([
+		0.0,
+		2.0,
+		1.0,
+		3.0
+	]);
+	IPIV = new Int32Array( 2 );
+	dgbtrf( 2, 2, 0, 1, AB, 1, 2, 0, IPIV, 1, 0 );
+	B = new Float64Array( [ 4.0, 7.0 ] );
+	info = dgbtrs( 'transpose', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 	assert.equal( info, 0 );
 	assertClose( B[ 0 ], 2.0, 1e-14, 'x[0]' );
 	assertClose( B[ 1 ], 5.0 / 3.0, 1e-14, 'x[1]' );
 });
 
 test( 'dgbtrs: KL=0 no-L path', function t() {
-	// A = [2 1; 0 3], KL=0, KU=1, LDAB=2
-	// b = [5, 6]
-	// Solution: x2 = 6/3 = 2, x1 = (5 - 1*2)/2 = 1.5
-	var AB = new Float64Array( [
-		0.0, 2.0,   // col 0: [superdiag=0, diag=2]
-		1.0, 3.0    // col 1: [superdiag=1, diag=3]
-	] );
-	var IPIV = new Int32Array( 2 );
-	dgbtrf( 2, 2, 0, 1, AB, 1, 2, 0, IPIV, 1, 0 );
+	var IPIV;
+	var info;
+	var AB;
+	var B;
 
-	var B = new Float64Array( [ 5.0, 6.0 ] );
-	var info = dgbtrs( 'no-transpose', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
+	AB = new Float64Array([
+		0.0,
+		2.0,   // col 0: [superdiag=0, diag=2]
+		1.0,
+		3.0    // col 1: [superdiag=1, diag=3]
+	]);
+	IPIV = new Int32Array( 2 );
+	dgbtrf( 2, 2, 0, 1, AB, 1, 2, 0, IPIV, 1, 0 );
+	B = new Float64Array( [ 5.0, 6.0 ] );
+	info = dgbtrs( 'no-transpose', 2, 0, 1, 1, AB, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assertClose( B[ 0 ], 1.5, 1e-14, 'x[0]' );
 	assertClose( B[ 1 ], 2.0, 1e-14, 'x[1]' );
@@ -273,19 +450,19 @@ test( 'dgbtrs: KL=0 no-L path', function t() {
 // ndarray validation tests
 
 test( 'dgbtrs: ndarray throws TypeError for invalid trans', function t() {
-	var AB = new Float64Array( 16 );
 	var IPIV = new Int32Array( 4 );
+	var AB = new Float64Array( 16 );
 	var B = new Float64Array( 4 );
-	assert.throws( function() {
+	assert.throws( function throws() {
 		ndarrayFn( 'invalid', 4, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	}, TypeError );
 });
 
 test( 'dgbtrs: ndarray throws RangeError for negative N', function t() {
-	var AB = new Float64Array( 16 );
 	var IPIV = new Int32Array( 4 );
+	var AB = new Float64Array( 16 );
 	var B = new Float64Array( 4 );
-	assert.throws( function() {
+	assert.throws( function throws() {
 		ndarrayFn( 'no-transpose', -1, 1, 1, 1, AB, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	}, RangeError );
 });

@@ -109,33 +109,15 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			ib = Math.min( K - i, nb );
 
 			// Compute the LQ factorization of the current panel A(i:i+ib-1, i:N-1)
-			dgelq2(
-				ib, N - i,
-				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-				TAU, strideTAU, offsetTAU + (i * strideTAU),
-				WORK, strideWORK, offsetWORK
-			);
+			dgelq2(ib, N - i, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), WORK, strideWORK, offsetWORK);
 
 			if ( i + ib < M ) {
 				// Form the triangular factor of the block reflector
 				// H = H(i) H(i+1) ... H(i+ib-1)
-				dlarft(
-					'forward', 'rowwise',
-					N - i, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					TAU, strideTAU, offsetTAU + (i * strideTAU),
-					T, 1, nb, 0
-				);
+				dlarft('forward', 'rowwise', N - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), T, 1, nb, 0);
 
 				// Apply H to A(i+ib:M-1, i:N-1) from the right
-				dlarfb(
-					'right', 'no-transpose', 'forward', 'rowwise',
-					M - i - ib, N - i, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					T, 1, nb, 0,
-					A, strideA1, strideA2, offsetA + (( i + ib ) * strideA1) + (i * strideA2),
-					WORK, 1, ldwork, offsetWORK
-				);
+				dlarfb('right', 'no-transpose', 'forward', 'rowwise', M - i - ib, N - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), T, 1, nb, 0, A, strideA1, strideA2, offsetA + (( i + ib ) * strideA1) + (i * strideA2), WORK, 1, ldwork, offsetWORK);
 			}
 			i += nb;
 		}
@@ -145,12 +127,7 @@ function dgelqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 	// Use unblocked code to factor the last or only block
 	if ( i <= K - 1 ) {
-		dgelq2(
-			M - i, N - i,
-			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-			TAU, strideTAU, offsetTAU + (i * strideTAU),
-			WORK, strideWORK, offsetWORK
-		);
+		dgelq2(M - i, N - i, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), WORK, strideWORK, offsetWORK);
 	}
 
 	return 0;

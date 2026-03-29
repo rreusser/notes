@@ -64,30 +64,18 @@ function dgetrs( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 		dlaswp( nrhs, B, strideB1, strideB2, offsetB, 0, N - 1, IPIV, strideIPIV, offsetIPIV, 1 );
 
 		// Solve L * Y = P * B (forward substitution, L is unit lower triangular)
-		dtrsm( 'left', 'lower', 'no-transpose', 'unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'lower', 'no-transpose', 'unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Solve U * X = Y (back substitution)
-		dtrsm( 'left', 'upper', 'no-transpose', 'non-unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'upper', 'no-transpose', 'non-unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 	} else {
 		// Solve A^T * X = B.
 
 		// Solve U^T * Y = B (forward substitution with U transposed)
-		dtrsm( 'left', 'upper', 'transpose', 'non-unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'upper', 'transpose', 'non-unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Solve L^T * X = Y (back substitution with L transposed, unit diagonal)
-		dtrsm( 'left', 'lower', 'transpose', 'unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'lower', 'transpose', 'unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Apply row interchanges in reverse order
 		dlaswp( nrhs, B, strideB1, strideB2, offsetB, N - 1, 0, IPIV, strideIPIV, offsetIPIV, -1 );

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgetrf = require( '@stdlib/lapack/base/dgetrf' );

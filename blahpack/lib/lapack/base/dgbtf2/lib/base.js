@@ -124,21 +124,16 @@ function dgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 			// Band rows are accessed with stride sa2 - sa1 (corresponds to LDAB-1)
 			if ( jp !== 0 ) {
-				dswap( ju - j + 1, AB, sa2 - sa1, offsetAB + (( kv + jp ) * sa1) + (j * sa2),
-					AB, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2) );
+				dswap( ju - j + 1, AB, sa2 - sa1, offsetAB + (( kv + jp ) * sa1) + (j * sa2), AB, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2) );
 			}
 
 			if ( km > 0 ) {
 				// Scale multipliers: L(j+1:j+km, j) = AB(kv+1:kv+km, j) / AB(kv, j)
-				dscal( km, 1.0 / AB[ offsetAB + (kv * sa1) + (j * sa2) ],
-					AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2) );
+				dscal( km, 1.0 / AB[ offsetAB + (kv * sa1) + (j * sa2) ], AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2) );
 
 				// Rank-1 update: A(j+1:j+km, j+1:ju) -= L(j+1:j+km, j) * U(j, j+1:ju)
 				if ( ju > j ) {
-					dger( km, ju - j, -1.0,
-						AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2),
-						AB, sa2 - sa1, offsetAB + (( kv - 1 ) * sa1) + (( j + 1 ) * sa2),
-						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (( j + 1 ) * sa2) );
+					dger( km, ju - j, -1.0, AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2), AB, sa2 - sa1, offsetAB + (( kv - 1 ) * sa1) + (( j + 1 ) * sa2), AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (( j + 1 ) * sa2) );
 				}
 			}
 		}

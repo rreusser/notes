@@ -189,17 +189,14 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			iwork = itau + N;
 
 			// Compute A = Q * R
-			dgeqrf( M, N, A, strideA1, strideA2, offsetA,
-				WORK, 1, itau,
-				WORK, 1, iwork );
+			dgeqrf( M, N, A, strideA1, strideA2, offsetA, WORK, 1, itau, WORK, 1, iwork );
 
 			// Multiply B := Q^T * B
 			dormqr('left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itau, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 			// Zero out below-diagonal of R
 			if ( N > 1 ) {
-				dlaset( 'lower', N - 1, N - 1, 0.0, 0.0,
-					A, strideA1, strideA2, offsetA + strideA1 );
+				dlaset( 'lower', N - 1, N - 1, 0.0, 0.0, A, strideA1, strideA2, offsetA + strideA1 );
 			}
 		}
 
@@ -209,12 +206,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = itaup + N; // scratch space after TAUP
 
 		// Bidiagonal reduction: A = Q_b * B_bd * P_b^T (of the mm-by-N matrix)
-		dgebrd( mm, N, A, strideA1, strideA2, offsetA,
-			S, strideS, offsetS,
-			WORK, 1, ie,
-			WORK, 1, itauq,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		dgebrd( mm, N, A, strideA1, strideA2, offsetA, S, strideS, offsetS, WORK, 1, ie, WORK, 1, itauq, WORK, 1, itaup, WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
 		dormbr('apply-Q', 'left', 'transpose', mm, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
@@ -226,13 +218,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		// Compute SVD of bidiagonal: S = singular values, A = P_b^T (right singular vectors)
 
 		// B is multiplied by Q_b^T on the left
-		info = dbdsqr( 'upper', N, N, 0, nrhs,
-			S, strideS, offsetS,
-			WORK, 1, ie,
-			A, strideA1, strideA2, offsetA,
-			DUM, 1, 1, 0,
-			B, strideB1, strideB2, offsetB,
-			WORK, 1, iwork );
+		info = dbdsqr( 'upper', N, N, 0, nrhs, S, strideS, offsetS, WORK, 1, ie, A, strideA1, strideA2, offsetA, DUM, 1, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 		if ( info !== 0 ) {
 			rank[ 0 ] = 0;
 			return info;
@@ -247,43 +233,28 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		for ( i = 0; i < N; i++ ) {
 			if ( S[ offsetS + (i * strideS) ] > thr ) {
 				// Scale the corresponding row of B by 1/S(i)
-				drscl( nrhs, S[ offsetS + (i * strideS) ],
-					B, strideB2, offsetB + (i * strideB1) );
+				drscl( nrhs, S[ offsetS + (i * strideS) ], B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
 				// Zero out the corresponding row of B
-				dlaset( 'full', 1, nrhs, 0.0, 0.0,
-					B, strideB1, strideB2, offsetB + (i * strideB1) );
+				dlaset( 'full', 1, nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 
 		// Multiply by right singular vectors: X = V^T * (Sigma^+ * Q_b^T * B)
 		// A now contains V^T (the right singular vectors), so X = A^T * B
 		if ( lwork >= strideB2 * nrhs && nrhs > 1 ) {
-			dgemm( 'transpose', 'no-transpose', N, nrhs, N, 1.0,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, strideB2, offsetB,
-				0.0, WORK, 1, N, 0 );
-			dlacpy( 'full', N, nrhs,
-				WORK, 1, N, 0,
-				B, strideB1, strideB2, offsetB );
+			dgemm( 'transpose', 'no-transpose', N, nrhs, N, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, 0.0, WORK, 1, N, 0 );
+			dlacpy( 'full', N, nrhs, WORK, 1, N, 0, B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
 			chunk = Math.max( 1, Math.floor( lwork / N ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				dgemm( 'transpose', 'no-transpose', N, bl, N, 1.0,
-					A, strideA1, strideA2, offsetA,
-					B, strideB1, strideB2, offsetB + (i * strideB2),
-					0.0, WORK, 1, N, 0 );
-				dlacpy( 'full', N, bl,
-					WORK, 1, N, 0,
-					B, strideB1, strideB2, offsetB + (i * strideB2) );
+				dgemm( 'transpose', 'no-transpose', N, bl, N, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB + (i * strideB2), 0.0, WORK, 1, N, 0 );
+				dlacpy( 'full', N, bl, WORK, 1, N, 0, B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
-			dgemv( 'transpose', N, N, 1.0,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, offsetB,
-				0.0, WORK, 1, 0 );
+			dgemv( 'transpose', N, N, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, offsetB, 0.0, WORK, 1, 0 );
 			dcopy( N, WORK, 1, 0, B, strideB1, offsetB );
 		}
 	} else if ( N >= mnthr && lwork >= (4 * M) + (M * M) + Math.max( M, (2 * M) - 4, nrhs, N - (3 * M) ) ) {
@@ -293,8 +264,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		ldwork = M;
 
 		// Check if we can use a larger ldwork for better performance
-		if ( lwork >= Math.max( (4 * M) + (M * M) + Math.max( M, (2 * M) - 4, nrhs, N - (3 * M) ),
-			(M * M) + M + (M * nrhs) ) ) {
+		if ( lwork >= Math.max( (4 * M) + (M * M) + Math.max( M, (2 * M) - 4, nrhs, N - (3 * M) ), (M * M) + M + (M * nrhs) ) ) {
 			ldwork = Math.max( M, Math.floor( Math.sqrt( lwork - (3 * M) ) ) );
 
 			// Cap ldwork to a reasonable value
@@ -312,11 +282,8 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		il = iwork; // IL: copy of L starts here, ldwork-by-M stored column-major
 
 		// Copy L into workspace and zero it in A
-		dlacpy( 'lower', M, M,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, ldwork, il );
-		dlaset( 'upper', M - 1, M - 1, 0.0, 0.0,
-			WORK, 1, ldwork, il + ldwork );
+		dlacpy( 'lower', M, M, A, strideA1, strideA2, offsetA, WORK, 1, ldwork, il );
+		dlaset( 'upper', M - 1, M - 1, 0.0, 0.0, WORK, 1, ldwork, il + ldwork );
 
 		ie = il + (ldwork * M);
 		itauq = ie + M;
@@ -324,12 +291,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = itaup + M;
 
 		// Bidiagonal reduction of L (M-by-M)
-		dgebrd( M, M, WORK, 1, ldwork, il,
-			S, strideS, offsetS,
-			WORK, 1, ie,
-			WORK, 1, itauq,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		dgebrd( M, M, WORK, 1, ldwork, il, S, strideS, offsetS, WORK, 1, ie, WORK, 1, itauq, WORK, 1, itaup, WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation: B := Q_b^T * B
 		dormbr('apply-Q', 'left', 'transpose', M, nrhs, M, WORK, 1, ldwork, il, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
@@ -339,13 +301,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal of L
-		info = dbdsqr( 'upper', M, M, 0, nrhs,
-			S, strideS, offsetS,
-			WORK, 1, ie,
-			WORK, 1, ldwork, il,
-			DUM, 1, 1, 0,
-			B, strideB1, strideB2, offsetB,
-			WORK, 1, iwork );
+		info = dbdsqr( 'upper', M, M, 0, nrhs, S, strideS, offsetS, WORK, 1, ie, WORK, 1, ldwork, il, DUM, 1, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 		if ( info !== 0 ) {
 			rank[ 0 ] = 0;
 			return info;
@@ -359,48 +315,32 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		rank[ 0 ] = 0;
 		for ( i = 0; i < M; i++ ) {
 			if ( S[ offsetS + (i * strideS) ] > thr ) {
-				drscl( nrhs, S[ offsetS + (i * strideS) ],
-					B, strideB2, offsetB + (i * strideB1) );
+				drscl( nrhs, S[ offsetS + (i * strideS) ], B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
-				dlaset( 'full', 1, nrhs, 0.0, 0.0,
-					B, strideB1, strideB2, offsetB + (i * strideB1) );
+				dlaset( 'full', 1, nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 		iwork = ie;
 
 		// Multiply by right singular vectors of L: X_L = V_L^T * (Sigma^+ * ...)
 		if ( lwork >= iwork + (M * nrhs) && nrhs > 1 ) {
-			dgemm( 'transpose', 'no-transpose', M, nrhs, M, 1.0,
-				WORK, 1, ldwork, il,
-				B, strideB1, strideB2, offsetB,
-				0.0, WORK, 1, M, iwork );
-			dlacpy( 'full', M, nrhs,
-				WORK, 1, M, iwork,
-				B, strideB1, strideB2, offsetB );
+			dgemm( 'transpose', 'no-transpose', M, nrhs, M, 1.0, WORK, 1, ldwork, il, B, strideB1, strideB2, offsetB, 0.0, WORK, 1, M, iwork );
+			dlacpy( 'full', M, nrhs, WORK, 1, M, iwork, B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
 			chunk = Math.max( 1, Math.floor( ( lwork - iwork ) / M ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				dgemm( 'transpose', 'no-transpose', M, bl, M, 1.0,
-					WORK, 1, ldwork, il,
-					B, strideB1, strideB2, offsetB + (i * strideB2),
-					0.0, WORK, 1, M, iwork );
-				dlacpy( 'full', M, bl,
-					WORK, 1, M, iwork,
-					B, strideB1, strideB2, offsetB + (i * strideB2) );
+				dgemm( 'transpose', 'no-transpose', M, bl, M, 1.0, WORK, 1, ldwork, il, B, strideB1, strideB2, offsetB + (i * strideB2), 0.0, WORK, 1, M, iwork );
+				dlacpy( 'full', M, bl, WORK, 1, M, iwork, B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
-			dgemv( 'transpose', M, M, 1.0,
-				WORK, 1, ldwork, il,
-				B, strideB1, offsetB,
-				0.0, WORK, 1, iwork );
+			dgemv( 'transpose', M, M, 1.0, WORK, 1, ldwork, il, B, strideB1, offsetB, 0.0, WORK, 1, iwork );
 			dcopy( M, WORK, 1, iwork, B, strideB1, offsetB );
 		}
 
 		// Zero out B(M+1:N, 1:NRHS)
-		dlaset( 'full', N - M, nrhs, 0.0, 0.0,
-			B, strideB1, strideB2, offsetB + (M * strideB1) );
+		dlaset( 'full', N - M, nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB + (M * strideB1) );
 
 		// Multiply by Q^T from LQ factorization: X = Q^T * [X_L; 0]
 		iwork = itau + M;
@@ -415,12 +355,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = itaup + M;
 
 		// Bidiagonal reduction of A (M-by-N)
-		dgebrd( M, N, A, strideA1, strideA2, offsetA,
-			S, strideS, offsetS,
-			WORK, 1, ie,
-			WORK, 1, itauq,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		dgebrd( M, N, A, strideA1, strideA2, offsetA, S, strideS, offsetS, WORK, 1, ie, WORK, 1, itauq, WORK, 1, itaup, WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by transpose of left bidiagonal transformation
 		dormbr('apply-Q', 'left', 'transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
@@ -430,13 +365,7 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = ie + M;
 
 		// Compute SVD of bidiagonal (lower bidiagonal for M < N)
-		info = dbdsqr( 'lower', M, N, 0, nrhs,
-			S, strideS, offsetS,
-			WORK, 1, ie,
-			A, strideA1, strideA2, offsetA,
-			DUM, 1, 1, 0,
-			B, strideB1, strideB2, offsetB,
-			WORK, 1, iwork );
+		info = dbdsqr( 'lower', M, N, 0, nrhs, S, strideS, offsetS, WORK, 1, ie, A, strideA1, strideA2, offsetA, DUM, 1, 1, 0, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 		if ( info !== 0 ) {
 			rank[ 0 ] = 0;
 			return info;
@@ -450,41 +379,26 @@ function dgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		rank[ 0 ] = 0;
 		for ( i = 0; i < M; i++ ) {
 			if ( S[ offsetS + (i * strideS) ] > thr ) {
-				drscl( nrhs, S[ offsetS + (i * strideS) ],
-					B, strideB2, offsetB + (i * strideB1) );
+				drscl( nrhs, S[ offsetS + (i * strideS) ], B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
-				dlaset( 'full', 1, nrhs, 0.0, 0.0,
-					B, strideB1, strideB2, offsetB + (i * strideB1) );
+				dlaset( 'full', 1, nrhs, 0.0, 0.0, B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 
 		// Multiply by right singular vectors: X = V^T * (Sigma^+ * ...)
 		if ( lwork >= strideB2 * nrhs && nrhs > 1 ) {
-			dgemm( 'transpose', 'no-transpose', N, nrhs, M, 1.0,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, strideB2, offsetB,
-				0.0, WORK, 1, N, 0 );
-			dlacpy( 'full', N, nrhs,
-				WORK, 1, N, 0,
-				B, strideB1, strideB2, offsetB );
+			dgemm( 'transpose', 'no-transpose', N, nrhs, M, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, 0.0, WORK, 1, N, 0 );
+			dlacpy( 'full', N, nrhs, WORK, 1, N, 0, B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
 			chunk = Math.max( 1, Math.floor( lwork / N ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				dgemm( 'transpose', 'no-transpose', N, bl, M, 1.0,
-					A, strideA1, strideA2, offsetA,
-					B, strideB1, strideB2, offsetB + (i * strideB2),
-					0.0, WORK, 1, N, 0 );
-				dlacpy( 'full', N, bl,
-					WORK, 1, N, 0,
-					B, strideB1, strideB2, offsetB + (i * strideB2) );
+				dgemm( 'transpose', 'no-transpose', N, bl, M, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB + (i * strideB2), 0.0, WORK, 1, N, 0 );
+				dlacpy( 'full', N, bl, WORK, 1, N, 0, B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
-			dgemv( 'transpose', M, N, 1.0,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, offsetB,
-				0.0, WORK, 1, 0 );
+			dgemv( 'transpose', M, N, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, offsetB, 0.0, WORK, 1, 0 );
 			dcopy( N, WORK, 1, 0, B, strideB1, offsetB );
 		}
 	}

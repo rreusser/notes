@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -16,28 +17,72 @@ var zsymm = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zsymm.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zsymm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -83,8 +128,8 @@ test( 'zsymm: left_upper_basic', function t() {
 	]);
 	var C = new Complex128Array( 6 );
 
-	zsymm( 'left', 'upper', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 3, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'upper', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 3, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: left_lower_basic', function t() {
@@ -127,8 +172,8 @@ test( 'zsymm: left_lower_basic', function t() {
 	]);
 	var C = new Complex128Array( 6 );
 
-	zsymm( 'left', 'lower', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 3, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'lower', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 3, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: right_upper_basic', function t() {
@@ -171,8 +216,8 @@ test( 'zsymm: right_upper_basic', function t() {
 	]);
 	var C = new Complex128Array( 6 );
 
-	zsymm( 'right', 'upper', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'right', 'upper', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: right_lower_basic', function t() {
@@ -213,8 +258,8 @@ test( 'zsymm: right_lower_basic', function t() {
 	]);
 	var C = new Complex128Array( 6 );
 
-	zsymm( 'right', 'lower', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'right', 'lower', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: complex_alpha_beta', function t() {
@@ -268,8 +313,8 @@ test( 'zsymm: complex_alpha_beta', function t() {
 		-1
 	]);
 
-	zsymm( 'left', 'upper', 3, 2, new Complex128( 2, 1 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0.5, -0.5 ), C, 1, 3, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'upper', 3, 2, new Complex128( 2, 1 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0.5, -0.5 ), C, 1, 3, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: alpha_zero', function t() {
@@ -287,28 +332,32 @@ test( 'zsymm: alpha_zero', function t() {
 		8
 	]);
 
-	zsymm( 'left', 'upper', 2, 2, new Complex128( 0, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 2, 0 ), C, 1, 2, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'upper', 2, 2, new Complex128( 0, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 2, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: m_zero', function t() {
-	var tc = findCase( 'm_zero' );
-	var C = new Complex128Array( [ 99, 0 ] );
+	var tc;
+	var C;
+	var v;
 
-	zsymm( 'left', 'upper', 0, 2, new Complex128( 1, 0 ), new Complex128Array( 1 ), 1, 1, 0, new Complex128Array( 1 ), 1, 1, 0, new Complex128( 0, 0 ), C, 1, 1, 0 );
-
-	// Should not modify C
-	var v = reinterpret( C, 0 );
+	tc = findCase( 'm_zero' );
+	C = new Complex128Array( [ 99, 0 ] );
+	zsymm( 'left', 'upper', 0, 2, new Complex128( 1, 0 ), new Complex128Array( 1 ), 1, 1, 0, new Complex128Array( 1 ), 1, 1, 0, new Complex128( 0, 0 ), C, 1, 1, 0 ); // eslint-disable-line max-len
+	v = reinterpret( C, 0 );
 	assertClose( v[ 0 ], tc.C[ 0 ], 1e-14, 'C[0]' );
 	assertClose( v[ 1 ], tc.C[ 1 ], 1e-14, 'C[1]' );
 });
 
 test( 'zsymm: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
-	var C = new Complex128Array( [ 99, 0 ] );
+	var tc;
+	var C;
+	var v;
 
-	zsymm( 'left', 'upper', 2, 0, new Complex128( 1, 0 ), new Complex128Array( 4 ), 1, 2, 0, new Complex128Array( 4 ), 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
-	var v = reinterpret( C, 0 );
+	tc = findCase( 'n_zero' );
+	C = new Complex128Array( [ 99, 0 ] );
+	zsymm( 'left', 'upper', 2, 0, new Complex128( 1, 0 ), new Complex128Array( 4 ), 1, 2, 0, new Complex128Array( 4 ), 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
+	v = reinterpret( C, 0 );
 	assertClose( v[ 0 ], tc.C[ 0 ], 1e-14, 'C[0]' );
 	assertClose( v[ 1 ], tc.C[ 1 ], 1e-14, 'C[1]' );
 });
@@ -321,8 +370,8 @@ test( 'zsymm: scalar', function t() {
 	var B = new Complex128Array( [ 5, 2 ] );
 	var C = new Complex128Array( 1 );
 
-	zsymm( 'left', 'upper', 1, 1, new Complex128( 2, 1 ), A, 1, 1, 0, B, 1, 1, 0, new Complex128( 0, 0 ), C, 1, 1, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'upper', 1, 1, new Complex128( 2, 1 ), A, 1, 1, 0, B, 1, 1, 0, new Complex128( 0, 0 ), C, 1, 1, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: beta_zero', function t() {
@@ -360,8 +409,8 @@ test( 'zsymm: beta_zero', function t() {
 		999
 	]);
 
-	zsymm( 'left', 'lower', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'lower', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: alpha_zero_beta_zero (zeros C)', function t() {
@@ -379,8 +428,8 @@ test( 'zsymm: alpha_zero_beta_zero (zeros C)', function t() {
 		22
 	]);
 
-	zsymm( 'left', 'upper', 2, 2, new Complex128( 0, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'upper', 2, 2, new Complex128( 0, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: left_lower_nonzero_beta', function t() {
@@ -434,8 +483,8 @@ test( 'zsymm: left_lower_nonzero_beta', function t() {
 		-1
 	]);
 
-	zsymm( 'left', 'lower', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0.5, 0 ), C, 1, 3, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'left', 'lower', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0.5, 0 ), C, 1, 3, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });
 
 test( 'zsymm: right_upper_nonzero_beta', function t() {
@@ -489,6 +538,6 @@ test( 'zsymm: right_upper_nonzero_beta', function t() {
 		-1
 	]);
 
-	zsymm( 'right', 'upper', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0.5, 0.5 ), C, 1, 2, 0 );
-	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
+	zsymm( 'right', 'upper', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0.5, 0.5 ), C, 1, 2, 0 ); // eslint-disable-line max-len
+	assertArrayClose( toArray( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
 });

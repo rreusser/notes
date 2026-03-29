@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes a QR factorization with column pivoting of a real matrix
+* Computes a QR factorization with column pivoting of a real matrix.
 *
 * @module @stdlib/lapack/base/dgeqp3
 *

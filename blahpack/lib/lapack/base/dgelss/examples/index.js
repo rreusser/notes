@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgelss = require( '@stdlib/lapack/base/dgelss' );

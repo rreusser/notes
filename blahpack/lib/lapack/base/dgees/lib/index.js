@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvalues and Schur decomposition of a real general matrix
+* Computes eigenvalues and Schur decomposition of a real general matrix.
 *
 * @module @stdlib/lapack/base/dgees
 *

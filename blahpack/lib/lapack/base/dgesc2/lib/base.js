@@ -38,7 +38,7 @@ var BIGNUM = 1.0 / SMLNUM;
 // MAIN //
 
 /**
-* Solves a system of linear equations A * X = scale * RHS with a general
+* Solves a system of linear equations A _ X = scale _ RHS with a general.
 * N-by-N matrix A using the LU factorization with complete pivoting computed
 * by dgetc2.
 *

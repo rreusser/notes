@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgesc2 = require( '@stdlib/lapack/base/dgesc2' );

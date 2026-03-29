@@ -31,7 +31,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves one of the systems of equations `A*x = b` or `A**T*x = b`, where `b`
+* Solves one of the systems of equations `A*x = b` or `A**T*x = b`, where `b`.
 * and `x` are N element vectors and `A` is an N-by-N unit or non-unit, upper or
 * lower triangular band matrix, with `K+1` diagonals.
 *

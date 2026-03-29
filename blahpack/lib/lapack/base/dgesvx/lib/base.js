@@ -44,7 +44,7 @@ var EPS = dlamch( 'epsilon' );
 // MAIN //
 
 /**
-* Expert driver for solving a real system of linear equations A*X = B,
+* Expert driver for solving a real system of linear equations A*X = B,.
 * using the LU factorization. Provides equilibration, condition estimation,
 * iterative refinement, and error bounds.
 *
@@ -54,8 +54,8 @@ var EPS = dlamch( 'epsilon' );
 *   'F' - use pre-factored AF and IPIV (and pre-computed R,C if equilibrated)
 *
 * TRANS specifies the system:
-*   'N' - A * X = B
-*   'T' or 'C' - A^T * X = B
+*   'N' - A _ X = B
+_   'T' or 'C' - A^T _ X = B
 *
 * EQUED (input if FACT='F', output otherwise):
 *   'N' - no equilibration
@@ -120,8 +120,8 @@ function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 	var rcond;
 	var anorm;
 	var RCOND;
-	var WORK;
 	var IWORK;
+	var WORK;
 	var norm;
 	var info;
 	var da;
@@ -146,7 +146,12 @@ function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 
 	// Quick return if possible
 	if ( N === 0 || nrhs === 0 ) {
-		return { 'info': 0, 'equed': equed, 'rcond': 1.0, 'rpvgrw': 1.0 };
+		return {
+			'info': 0,
+			'equed': equed,
+			'rcond': 1.0,
+			'rpvgrw': 1.0
+		};
 	}
 
 	// Equilibrate if requested
@@ -198,7 +203,12 @@ function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 			} else {
 				rpvgrw = dlange( 'max', N, info, A, strideA1, strideA2, offsetA, WORK, 1, 0 ) / rpvgrw;
 			}
-			return { 'info': info, 'equed': equed, 'rcond': 0.0, 'rpvgrw': rpvgrw };
+			return {
+				'info': info,
+				'equed': equed,
+				'rcond': 0.0,
+				'rpvgrw': rpvgrw
+			};
 		}
 	}
 
@@ -264,7 +274,12 @@ function dgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 		info = N + 1;
 	}
 
-	return { 'info': info, 'equed': equed, 'rcond': rcond, 'rpvgrw': rpvgrw };
+	return {
+		'info': info,
+		'equed': equed,
+		'rcond': rcond,
+		'rpvgrw': rpvgrw
+	};
 }
 
 

@@ -216,29 +216,54 @@ function processFile( file ) {
 			return;
 		}
 
-		// Check if any var initializer references a later-declared var
-		var varNames = {};
-		varDecls.forEach( function( v ) { varNames[ v.name ] = true; });
+		// Also check ExpressionStatement assignments to local vars
+		var allLocalNames = {};
+		varDecls.forEach( function( v ) { allLocalNames[ v.name ] = true; });
 
-		var hasForwardRef = false;
-		varDecls.forEach( function checkForward( v ) {
+		var hasLocalRef = false;
+
+		// Check var initializers
+		varDecls.forEach( function checkRef( v ) {
 			if ( !v.hasInit ) {
 				return;
 			}
-			// Check if the init expression references any var declared
-			// after this one in the original source
-			var laterVars = varDecls.filter( function( other ) {
-				return other.stmtRange[0] > v.stmtRange[0];
-			});
-			laterVars.forEach( function( later ) {
-				var re = new RegExp( '\\b' + later.name + '\\b' );
+			Object.keys( allLocalNames ).forEach( function( other ) {
+				if ( other === v.name ) {
+					return;
+				}
+				var re = new RegExp( '\\b' + other + '\\b' );
 				if ( re.test( v.initSrc ) ) {
-					hasForwardRef = true;
+					hasLocalRef = true;
 				}
 			});
 		});
 
-		if ( !hasForwardRef && !hasOutOfOrderVars ) {
+		// Check ExpressionStatement assignments to local vars
+		stmts.forEach( function checkExpr( s ) {
+			if (
+				s.type === 'ExpressionStatement' &&
+				s.expression.type === 'AssignmentExpression' &&
+				s.expression.left.type === 'Identifier' &&
+				allLocalNames[ s.expression.left.name ]
+			) {
+				var rhsSrc = src.substring(
+					s.expression.right.range[0],
+					s.expression.right.range[1]
+				);
+				Object.keys( allLocalNames ).forEach( function( other ) {
+					if ( other === s.expression.left.name ) {
+						return;
+					}
+					var re = new RegExp( '\\b' + other + '\\b' );
+					if ( re.test( rhsSrc ) ) {
+						hasLocalRef = true;
+					}
+				});
+			}
+		});
+
+		// Skip if no vars reference each other and all are already at top
+		if ( !hasLocalRef && !hasOutOfOrderVars ) {
 			return;
 		}
 
@@ -289,37 +314,100 @@ function processFile( file ) {
 			return indent + 'var ' + name + ';';
 		}).join( '\n' );
 
-		// Build new body: var block, blank line, then statements
-		// (replacing var declarations with assignments)
-		var newStmts = [];
-		var processedRanges = {};
+		// Build new body: var declarations at top, then statements.
+		// Only var declarations from the leading block (before any
+		// non-var statement) get their assignments toposorted.
+		// Var declarations after non-var statements become assignments
+		// in-place (preserving position relative to other statements).
+		var leadingAssigns = [];
+		var bodyStmts = [];
+		var seenNonVar2 = false;
 		var j;
 		var stmt;
-		var isVarDecl;
 
 		for ( j = 0; j < edit.stmts.length; j++ ) {
 			stmt = edit.stmts[ j ];
-			isVarDecl = ( stmt.type === 'VariableDeclaration' );
 
-			if ( isVarDecl ) {
-				// Replace with assignments (skip declarations without init)
+			if ( stmt.type === 'VariableDeclaration' && !seenNonVar2 ) {
+				// Leading var block: extract initializers for toposorting
+				stmt.declarations.forEach( function( d ) {
+					if ( !d.init ) {
+						return;
+					}
+					var initSrc = src.substring(
+						d.init.range[0], d.init.range[1]
+					);
+					var deps = [];
+					edit.uniqueNames.forEach( function( other ) {
+						if ( other === d.id.name ) {
+							return;
+						}
+						var re = new RegExp( '\\b' + other + '\\b' );
+						if ( re.test( initSrc ) ) {
+							deps.push( other );
+						}
+					});
+					leadingAssigns.push({
+						name: d.id.name,
+						line: indent + d.id.name + ' = ' + initSrc + ';',
+						deps: deps
+					});
+				});
+			} else if ( stmt.type === 'VariableDeclaration' && seenNonVar2 ) {
+				// Late var: convert to assignment in-place
 				stmt.declarations.forEach( function( d ) {
 					if ( d.init ) {
 						var initSrc = src.substring(
 							d.init.range[0], d.init.range[1]
 						);
-						newStmts.push( indent + d.id.name + ' = ' + initSrc + ';' );
+						bodyStmts.push(
+							indent + d.id.name + ' = ' + initSrc + ';'
+						);
 					}
 				});
 			} else {
-				// Keep the original statement
+				seenNonVar2 = true;
 				var stmtSrc = src.substring( stmt.range[0], stmt.range[1] );
-
-				// Trim leading indent (we'll re-add it)
 				stmtSrc = stmtSrc.replace( /^[\t ]+/, '' );
-				newStmts.push( indent + stmtSrc );
+				bodyStmts.push( indent + stmtSrc );
 			}
 		}
+
+		// Topological sort of leading assignments by dependency
+		var sorted = [];
+		var placed = {};
+		var maxIter = leadingAssigns.length * leadingAssigns.length + 1;
+		var iter = 0;
+		while ( sorted.length < leadingAssigns.length && iter < maxIter ) {
+			iter += 1;
+			leadingAssigns.forEach( function( a ) {
+				if ( placed[ a.name ] ) {
+					return;
+				}
+				var ready = a.deps.every( function( dep ) {
+					return placed[ dep ];
+				});
+				if ( ready ) {
+					sorted.push( a );
+					placed[ a.name ] = true;
+				}
+			});
+		}
+
+		// Fall back to original order for cycles
+		if ( sorted.length < leadingAssigns.length ) {
+			leadingAssigns.forEach( function( a ) {
+				if ( !placed[ a.name ] ) {
+					sorted.push( a );
+				}
+			});
+		}
+
+		// Combine: sorted leading assigns + remaining body statements
+		var newStmts = sorted.map( function( a ) { return a.line; });
+		bodyStmts.forEach( function( s ) {
+			newStmts.push( s );
+		});
 
 		// Assemble the new body content
 		var newBody = '\n' + varBlock + '\n\n' + newStmts.join( '\n' ) + '\n';
@@ -335,10 +423,206 @@ function processFile( file ) {
 	return applyTextFixes( src, original, file );
 }
 
-function applyTextFixes( src, original, file ) {
-	// --- Phase 3: Final text-level fixes ---
+// Known helper descriptions (params are read dynamically from the source)
+var HELPER_DESCRIPTIONS = {
+	'findCase': 'Returns a test case from the fixture data.',
+	'tc': 'Returns a test case from the fixture data.',
+	'assertArrayClose': 'Asserts that two arrays are element-wise approximately equal.',
+	'assertClose': 'Asserts that two numbers are approximately equal.',
+	'assertComplexClose': 'Asserts that two complex numbers are approximately equal.',
+	'toArray': 'Converts a typed array to a plain array.',
+	'complexToArray': 'Converts a complex array to a plain array of interleaved re/im.'
+};
 
-	// Add eslint-disable-line node/no-sync to readFileSync
+// Guess @param type and description from name
+var PARAM_INFO = {
+	'name': [ '{string}', 'test case name' ],
+	'actual': [ '{*}', 'actual value' ],
+	'expected': [ '{*}', 'expected value' ],
+	'tol': [ '{number}', 'tolerance' ],
+	'msg': [ '{string}', 'assertion message' ],
+	'arr': [ '{TypedArray}', 'input array' ],
+	'relErr': [ '{number}', 'relative error' ],
+	'sb1': [ '{number}', 'stride for first dimension' ],
+	'sb2': [ '{number}', 'stride for second dimension' ],
+	'result': [ '{*}', 'result' ]
+};
+
+function guessParamInfo( name ) {
+	return PARAM_INFO[ name ] || [ '{*}', name ];
+}
+
+/**
+* Generates JSDoc for a function by reading its actual params from source.
+*
+* @private
+* @param {string} funcName - function name
+* @param {string} src - full source text
+* @returns {(string|null)} JSDoc block or null
+*/
+function generateJSDoc( funcName, src ) {
+	var desc = HELPER_DESCRIPTIONS[ funcName ];
+	if ( !desc ) {
+		desc = funcName + '.';
+	}
+
+	// Find the function and extract its params
+	var re = new RegExp(
+		'function\\s+' + funcName + '\\s*\\(([^)]*)\\)'
+	);
+	var match = src.match( re );
+	if ( !match ) {
+		return null;
+	}
+	var params = match[ 1 ].split( ',' ).map( function trim( s ) {
+		return s.trim();
+	}).filter( Boolean );
+
+	// Check for return by finding the function body and looking for return
+	var bodyStart = src.indexOf( '{', match.index + match[0].length );
+	var hasReturn = false;
+	if ( bodyStart !== -1 ) {
+		// Find matching close brace (simple depth count)
+		var depth = 1;
+		var pos = bodyStart + 1;
+		var bodyContent = '';
+		while ( pos < src.length && depth > 0 ) {
+			if ( src[ pos ] === '{' ) {
+				depth += 1;
+			} else if ( src[ pos ] === '}' ) {
+				depth -= 1;
+			}
+			if ( depth > 0 ) {
+				bodyContent += src[ pos ];
+			}
+			pos += 1;
+		}
+		// Only count returns at depth 0 (not inside nested functions)
+		// Simple heuristic: check for 'return ' not inside a nested function
+		var simpleBody = bodyContent.replace(
+			/function\s*\w*\s*\([^)]*\)\s*\{[^}]*\}/g, ''
+		);
+		hasReturn = /\breturn\s+[^;]/.test( simpleBody );
+	}
+
+	var lines = [];
+	lines.push( '/**' );
+	lines.push( '* ' + desc );
+	lines.push( '*' );
+	lines.push( '* @private' );
+	params.forEach( function addParam( p ) {
+		var info = guessParamInfo( p );
+		lines.push( '* @param ' + info[ 0 ] + ' ' + p +
+			' - ' + info[ 1 ] );
+	});
+	if ( hasReturn ) {
+		lines.push( '* @returns {*} result' );
+	}
+	lines.push( '*/' );
+	return lines.join( '\n' ) + '\n';
+}
+
+function applyTextFixes( src, original, file ) {
+	// --- Phase 3: Text-level fixes ---
+
+	// 3a. Ensure eslint-disable header has no-restricted-syntax, first-unit-test
+	var requiredDisables = [ 'no-restricted-syntax', 'stdlib/first-unit-test' ];
+	var headerMatch = src.match(
+		/^\/\*\s*eslint-disable\s+([^*]*)\*\//m
+	);
+	if ( headerMatch ) {
+		var existing = headerMatch[1].split( /,\s*/ ).map(
+			function trim( s ) { return s.trim(); }
+		).filter( Boolean );
+		var toAdd = requiredDisables.filter( function missing( r ) {
+			return existing.indexOf( r ) === -1;
+		});
+		if ( toAdd.length > 0 ) {
+			var allRules = existing.concat( toAdd ).join( ', ' );
+			src = src.replace( headerMatch[0],
+				'/* eslint-disable ' + allRules + ' */' );
+		}
+	} else {
+		// No header — add one at the top
+		src = '/* eslint-disable ' + requiredDisables.join( ', ' ) +
+			' */\n\n' + src;
+	}
+
+	// 3b. Add names to anonymous functions in common patterns
+	src = src.replace(
+		/\.(map|find|filter|forEach|some|every|reduce)\(\s*function\s*\(/g,
+		function addMethodName( match, method ) {
+			return '.' + method + '( function ' + method + '(';
+		}
+	);
+	// Also: assert.throws( function() { -> assert.throws( function throws() {
+	src = src.replace(
+		/assert\.throws\(\s*function\s*\(\s*\)/g,
+		'assert.throws( function throws()'
+	);
+
+	// 3c. Rename HELPERS section to FUNCTIONS (valid section name)
+	src = src.replace( /\/\/ HELPERS \/\//g, '// FUNCTIONS //' );
+
+	// 3d. Ensure section headers have proper blank lines before them
+	//     Pattern: \n\n\n// SECTION //  (two blank lines before)
+	src = src.replace(
+		/([^\n])\n(\/\/ (?:MODULES|VARIABLES|FUNCTIONS|FIXTURES|TESTS|EXPORTS|MAIN) \/\/)/g,
+		'$1\n\n\n$2'
+	);
+	// Also fix when there's only one blank line
+	src = src.replace(
+		/([^\n])\n\n(\/\/ (?:MODULES|VARIABLES|FUNCTIONS|FIXTURES|TESTS|EXPORTS|MAIN) \/\/)/g,
+		'$1\n\n\n$2'
+	);
+
+	// 3e. Add JSDoc to helper functions if missing
+	var funcRE = /^function\s+(\w+)\s*\(/gm;
+	var funcMatch;
+	while ( ( funcMatch = funcRE.exec( src ) ) !== null ) {
+		var funcName = funcMatch[ 1 ];
+
+		// Skip test callbacks (named 't')
+		if ( funcName === 't' ) {
+			continue;
+		}
+
+		// Check if there's already a JSDoc before this function
+		var beforeIdx = funcMatch.index;
+		var lineStart = src.lastIndexOf( '\n', beforeIdx - 1 );
+		var prevLine = ( lineStart > 0 ) ?
+			src.substring(
+				src.lastIndexOf( '\n', lineStart - 1 ) + 1, lineStart
+			) : '';
+		if ( /\*\/\s*$/.test( prevLine ) ) {
+			continue; // Already has JSDoc
+		}
+
+		var jsdoc = generateJSDoc( funcName, src );
+		if ( jsdoc ) {
+			src = src.substring( 0, funcMatch.index ) +
+				jsdoc + src.substring( funcMatch.index );
+			// Reset regex index since we modified the string
+			funcRE.lastIndex = funcMatch.index + jsdoc.length +
+				funcMatch[ 0 ].length;
+		}
+	}
+
+	// 3d. Fix max-statements-per-line for inline functions:
+	//     function(x) { return expr; }  ->  multiline
+	src = src.replace(
+		/function\s+(\w+)\(\s*([^)]*)\)\s*\{\s*return\s+([^;]+);\s*\}/g,
+		function splitInline( match, name, params, body ) {
+			// Only split if the line has 2+ statements
+			if ( match.length < 40 ) {
+				return match; // Short enough, leave it
+			}
+			return 'function ' + name + '( ' + params.trim() +
+				' ) {\n\t\treturn ' + body.trim() + ';\n\t}';
+		}
+	);
+
+	// 3e. Add eslint-disable-line node/no-sync to readFileSync
 	src = src.replace(
 		/(readFileSync\([^)]+\)[^;\n]*;)(?!\s*\/\/\s*eslint)/gm,
 		function addSync( match ) {
@@ -346,9 +630,10 @@ function applyTextFixes( src, original, file ) {
 		}
 	);
 
-	// Add eslint-disable-line max-len to long lines
+	// 3f. Add eslint-disable-line max-len to long lines
 	var lines = src.split( '\n' );
-	for ( var j = 0; j < lines.length; j++ ) {
+	var j;
+	for ( j = 0; j < lines.length; j++ ) {
 		if (
 			lines[ j ].length > 80 &&
 			!/eslint-disable/.test( lines[ j ] ) &&
@@ -360,7 +645,7 @@ function applyTextFixes( src, original, file ) {
 	}
 	src = lines.join( '\n' );
 
-	// Clean up multiple blank lines
+	// 3g. Clean up multiple blank lines
 	src = src.replace( /\n{4,}/g, '\n\n\n' );
 
 	if ( src !== original ) {

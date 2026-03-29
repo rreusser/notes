@@ -239,20 +239,12 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		// If NRU > 0, apply rotations to U from the right
 		// Fortran: DLASR('R','V','F', NRU, N, WORK(1), WORK(N), U, LDU)
 		if ( nru > 0 ) {
-			dlasr( 'right', 'variable', 'forward', nru, N,
-				WORK, strideWORK, offsetWORK,
-				WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-				U, strideU1, strideU2, offsetU
-			);
+			dlasr( 'right', 'variable', 'forward', nru, N, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), U, strideU1, strideU2, offsetU);
 		}
 		// If NCC > 0, apply rotations to C from the left
 		// Fortran: DLASR('lower','V','F', N, NCC, WORK(1), WORK(N), C, LDC)
 		if ( ncc > 0 ) {
-			dlasr( 'left', 'variable', 'forward', N, ncc,
-				WORK, strideWORK, offsetWORK,
-				WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-				C, strideC1, strideC2, offsetC
-			);
+			dlasr( 'left', 'variable', 'forward', N, ncc, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), C, strideC1, strideC2, offsetC);
 		}
 	}
 
@@ -377,11 +369,7 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		// 2-by-2 block at bottom (label 90 in Fortran)
 		if ( ll === m - 1 ) {
 			// 2-by-2 block: compute SVD
-			svd2 = dlasv2(
-				d[ offsetD + (( m - 1 ) * strideD) ],
-				e[ offsetE + (( m - 1 ) * strideE) ],
-				d[ offsetD + (m * strideD) ]
-			);
+			svd2 = dlasv2(d[ offsetD + (( m - 1 ) * strideD) ], e[ offsetE + (( m - 1 ) * strideE) ], d[ offsetD + (m * strideD) ]);
 			sigmn = svd2.ssmin;
 			sigmx = svd2.ssmax;
 			sinr = svd2.snr;
@@ -396,28 +384,16 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 			if ( ncvt > 0 ) {
 				// DROT(NCVT, VT(M-1,1), LDVT, VT(M,1), LDVT, COSR, SINR)
 				// In 0-based: rows m-1 and m of VT
-				drot( ncvt,
-					VT, strideVT2, offsetVT + (( m - 1 ) * strideVT1),
-					VT, strideVT2, offsetVT + (m * strideVT1),
-					cosr, sinr
-				);
+				drot( ncvt, VT, strideVT2, offsetVT + (( m - 1 ) * strideVT1), VT, strideVT2, offsetVT + (m * strideVT1), cosr, sinr);
 			}
 			if ( nru > 0 ) {
 				// DROT(NRU, U(1,M-1), 1, U(1,M), 1, COSL, SINL)
 				// Columns m-1 and m (0-based), step through rows with stride 1
-				drot( nru,
-					U, strideU1, offsetU + (( m - 1 ) * strideU2),
-					U, strideU1, offsetU + (m * strideU2),
-					cosl, sinl
-				);
+				drot( nru, U, strideU1, offsetU + (( m - 1 ) * strideU2), U, strideU1, offsetU + (m * strideU2), cosl, sinl);
 			}
 			if ( ncc > 0 ) {
 				// DROT(NCC, C(M-1,1), LDC, C(M,1), LDC, COSL, SINL)
-				drot( ncc,
-					C, strideC2, offsetC + (( m - 1 ) * strideC1),
-					C, strideC2, offsetC + (m * strideC1),
-					cosl, sinl
-				);
+				drot( ncc, C, strideC2, offsetC + (( m - 1 ) * strideC1), C, strideC2, offsetC + (m * strideC1), cosl, sinl);
 			}
 			m -= 2;
 			continue;
@@ -493,22 +469,12 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 			// Compute shift from 2-by-2 block at end of matrix
 			if ( idir === 1 ) {
 				sll = Math.abs( d[ offsetD + (ll * strideD) ] );
-				dlas2(
-					d[ offsetD + (( m - 1 ) * strideD) ],
-					e[ offsetE + (( m - 1 ) * strideE) ],
-					d[ offsetD + (m * strideD) ],
-					dout
-				);
+				dlas2(d[ offsetD + (( m - 1 ) * strideD) ], e[ offsetE + (( m - 1 ) * strideE) ], d[ offsetD + (m * strideD) ], dout);
 				shift = dout[ 0 ];
 				r = dout[ 1 ];
 			} else {
 				sll = Math.abs( d[ offsetD + (m * strideD) ] );
-				dlas2(
-					d[ offsetD + (ll * strideD) ],
-					e[ offsetE + (ll * strideE) ],
-					d[ offsetD + (( ll + 1 ) * strideD) ],
-					dout
-				);
+				dlas2(d[ offsetD + (ll * strideD) ], e[ offsetE + (ll * strideE) ], d[ offsetD + (( ll + 1 ) * strideD) ], dout);
 				shift = dout[ 0 ];
 				r = dout[ 1 ];
 			}
@@ -555,27 +521,15 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				// Update singular vectors
 				if ( ncvt > 0 ) {
 					// DLASR('lower','V','F', M-LL+1, NCVT, WORK(1), WORK(N), VT(LL,1), LDVT)
-					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
-						WORK, strideWORK, offsetWORK,
-						WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-						VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-					);
+					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 				}
 				if ( nru > 0 ) {
 					// DLASR('R','V','F', NRU, M-LL+1, WORK(NM12+1), WORK(NM13+1), U(1,LL), LDU)
-					dlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
-						WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-						WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-						U, strideU1, strideU2, offsetU + (ll * strideU2)
-					);
+					dlasr( 'right', 'variable', 'forward', nru, m - ll + 1, WORK, strideWORK, offsetWORK + (nm12 * strideWORK), WORK, strideWORK, offsetWORK + (nm13 * strideWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 				}
 				if ( ncc > 0 ) {
 					// DLASR('lower','V','F', M-LL+1, NCC, WORK(NM12+1), WORK(NM13+1), C(LL,1), LDC)
-					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
-						WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-						WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-						C, strideC1, strideC2, offsetC + (ll * strideC1)
-					);
+					dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc, WORK, strideWORK, offsetWORK + (nm12 * strideWORK), WORK, strideWORK, offsetWORK + (nm13 * strideWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 				}
 
 				// Test convergence
@@ -610,27 +564,15 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				// Update singular vectors
 				if ( ncvt > 0 ) {
 					// DLASR('lower','V','B', M-LL+1, NCVT, WORK(NM12+1), WORK(NM13+1), VT(LL,1), LDVT)
-					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
-						WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-						WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-						VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-					);
+					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt, WORK, strideWORK, offsetWORK + (nm12 * strideWORK), WORK, strideWORK, offsetWORK + (nm13 * strideWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 				}
 				if ( nru > 0 ) {
 					// DLASR('R','V','B', NRU, M-LL+1, WORK(1), WORK(N), U(1,LL), LDU)
-					dlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
-						WORK, strideWORK, offsetWORK,
-						WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-						U, strideU1, strideU2, offsetU + (ll * strideU2)
-					);
+					dlasr( 'right', 'variable', 'backward', nru, m - ll + 1, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 				}
 				if ( ncc > 0 ) {
 					// DLASR('lower','V','B', M-LL+1, NCC, WORK(1), WORK(N), C(LL,1), LDC)
-					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
-						WORK, strideWORK, offsetWORK,
-						WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-						C, strideC1, strideC2, offsetC + (ll * strideC1)
-					);
+					dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 				}
 
 				// Test convergence
@@ -675,25 +617,13 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 			// Update singular vectors
 			if ( ncvt > 0 ) {
-				dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
-					WORK, strideWORK, offsetWORK,
-					WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-					VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-				);
+				dlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 			}
 			if ( nru > 0 ) {
-				dlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
-					WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-					WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-					U, strideU1, strideU2, offsetU + (ll * strideU2)
-				);
+				dlasr( 'right', 'variable', 'forward', nru, m - ll + 1, WORK, strideWORK, offsetWORK + (nm12 * strideWORK), WORK, strideWORK, offsetWORK + (nm13 * strideWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 			}
 			if ( ncc > 0 ) {
-				dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
-					WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-					WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-					C, strideC1, strideC2, offsetC + (ll * strideC1)
-				);
+				dlasr( 'left', 'variable', 'forward', m - ll + 1, ncc, WORK, strideWORK, offsetWORK + (nm12 * strideWORK), WORK, strideWORK, offsetWORK + (nm13 * strideWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 			}
 
 			// Test convergence
@@ -742,25 +672,13 @@ function dbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 			// Update singular vectors
 			if ( ncvt > 0 ) {
-				dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
-					WORK, strideWORK, offsetWORK + (nm12 * strideWORK),
-					WORK, strideWORK, offsetWORK + (nm13 * strideWORK),
-					VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-				);
+				dlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt, WORK, strideWORK, offsetWORK + (nm12 * strideWORK), WORK, strideWORK, offsetWORK + (nm13 * strideWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 			}
 			if ( nru > 0 ) {
-				dlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
-					WORK, strideWORK, offsetWORK,
-					WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-					U, strideU1, strideU2, offsetU + (ll * strideU2)
-				);
+				dlasr( 'right', 'variable', 'backward', nru, m - ll + 1, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 			}
 			if ( ncc > 0 ) {
-				dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
-					WORK, strideWORK, offsetWORK,
-					WORK, strideWORK, offsetWORK + (nm1 * strideWORK),
-					C, strideC1, strideC2, offsetC + (ll * strideC1)
-				);
+				dlasr( 'left', 'variable', 'backward', m - ll + 1, ncc, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + (nm1 * strideWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 			}
 		}
 	}
@@ -830,22 +748,13 @@ function sortSingularValues( N, d, strideD, offsetD, ncvt, VT, strideVT1, stride
 			d[ offsetD + (isub * strideD) ] = d[ offsetD + (( N - 1 - i ) * strideD) ];
 			d[ offsetD + (( N - 1 - i ) * strideD) ] = smin;
 			if ( ncvt > 0 ) {
-				dswap( ncvt,
-					VT, strideVT2, offsetVT + (isub * strideVT1),
-					VT, strideVT2, offsetVT + (( N - 1 - i ) * strideVT1)
-				);
+				dswap( ncvt, VT, strideVT2, offsetVT + (isub * strideVT1), VT, strideVT2, offsetVT + (( N - 1 - i ) * strideVT1));
 			}
 			if ( nru > 0 ) {
-				dswap( nru,
-					U, strideU1, offsetU + (isub * strideU2),
-					U, strideU1, offsetU + (( N - 1 - i ) * strideU2)
-				);
+				dswap( nru, U, strideU1, offsetU + (isub * strideU2), U, strideU1, offsetU + (( N - 1 - i ) * strideU2));
 			}
 			if ( ncc > 0 ) {
-				dswap( ncc,
-					C, strideC2, offsetC + (isub * strideC1),
-					C, strideC2, offsetC + (( N - 1 - i ) * strideC1)
-				);
+				dswap( ncc, C, strideC2, offsetC + (isub * strideC1), C, strideC2, offsetC + (( N - 1 - i ) * strideC1));
 			}
 		}
 	}

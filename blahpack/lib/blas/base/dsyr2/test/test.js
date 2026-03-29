@@ -1,6 +1,7 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
@@ -15,22 +16,50 @@ var ndarray = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsyr2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dsyr2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -201,10 +230,15 @@ test( 'dsyr2: upper_zeros (skip when x[j]==0 && y[j]==0)', function t() {
 });
 
 test( 'dsyr2: returns A', function t() {
-	var result = dsyr2( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
-	var A = new Float64Array( [ 1, 0, 0, 1 ] );
-	var x = new Float64Array( [ 1, 2 ] );
-	var y = new Float64Array( [ 3, 4 ] );
+	var result;
+	var A;
+	var x;
+	var y;
+
+	A = new Float64Array( [ 1, 0, 0, 1 ] );
+	x = new Float64Array( [ 1, 2 ] );
+	y = new Float64Array( [ 3, 4 ] );
+	result = dsyr2( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.equal( result, A );
 });
 
@@ -239,25 +273,25 @@ test( 'dsyr2: offsetA support', function t() {
 // ndarray validation tests
 
 test( 'dsyr2: ndarray throws TypeError for invalid uplo', function t() {
-	assert.throws( function () {
-		ndarray( 'invalid', 2, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarray( 'invalid', 2, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, TypeError );
 });
 
 test( 'dsyr2: ndarray throws RangeError for negative N', function t() {
-	assert.throws( function () {
-		ndarray( 'upper', -1, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarray( 'upper', -1, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });
 
 test( 'dsyr2: ndarray throws RangeError for zero strideX', function t() {
-	assert.throws( function () {
-		ndarray( 'upper', 2, 1.0, new Float64Array( 2 ), 0, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarray( 'upper', 2, 1.0, new Float64Array( 2 ), 0, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });
 
 test( 'dsyr2: ndarray throws RangeError for zero strideY', function t() {
-	assert.throws( function () {
-		ndarray( 'upper', 2, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 0, 0, new Float64Array( 4 ), 1, 2, 0 );
+	assert.throws( function throws() {
+		ndarray( 'upper', 2, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 0, 0, new Float64Array( 4 ), 1, 2, 0 ); // eslint-disable-line max-len
 	}, RangeError );
 });

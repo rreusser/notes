@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
@@ -9,16 +9,35 @@ var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dnrm2 = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dnrm2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dnrm2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
@@ -78,7 +97,7 @@ test( 'dnrm2: overflow path - very large values', function t() {
 });
 
 test( 'dnrm2: overflow path with medium values (lines 69-70)', function t() {
-	// Mix of one value above TBIG (~2e+146) and medium-range values in [TSML, TBIG].
+	// Mix of one value above TBIG (~2e+146) and medium-range values in [TSML, TBIG]. // eslint-disable-line max-len
 	// This exercises lines 69-70: abig > 0 and amed > 0 branch.
 	var expected = Math.sqrt( 9e+292 + 1.0 + 4.0 );
 	var x = new Float64Array( [ 3e+146, 1.0, 2.0 ] );
@@ -102,11 +121,12 @@ test( 'dnrm2: underflow path with medium values (lines 75-85)', function t() {
 });
 
 test( 'dnrm2: underflow path, asml > amed (lines 78-79)', function t() {
-	// Ensure we cover the branch where asml > amed in lines 77-79.
-	// Use 2 values just below TSML (~1.49e-154) and 1 value just barely above TSML.
-	// Asml = sqrt(2) * 1.4e-154 ~ 1.98e-154 > amed = 1.4917e-154
-	var expected = Math.sqrt( 2.0 * 1.96e-308 + TSML * TSML );
-	var TSML = 1.4916681462400413e-154;
-	var x = new Float64Array( [ 1.4e-154, 1.4e-154, TSML + 1e-168 ] );
+	var expected;
+	var TSML;
+	var x;
+
+	TSML = 1.4916681462400413e-154;
+	x = new Float64Array( [ 1.4e-154, 1.4e-154, TSML + 1e-168 ] );
+	expected = Math.sqrt( 2.0 * 1.96e-308 + TSML * TSML );
 	assertClose( dnrm2( 3, x, 1, 0 ), expected, 1e-10, 'asml > amed branch' );
 });

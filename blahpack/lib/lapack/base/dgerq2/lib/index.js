@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the RQ factorization of a real matrix (unblocked)
+* Compute the RQ factorization of a real matrix (unblocked).
 *
 * @module @stdlib/lapack/base/dgerq2
 *

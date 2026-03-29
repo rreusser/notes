@@ -30,7 +30,7 @@ var dgerqf = require( '../../dgerqf/lib/base.js' );
 // MAIN //
 
 /**
-* Computes a generalized QR factorization of an N-by-M matrix A and an
+* Computes a generalized QR factorization of an N-by-M matrix A and an.
 * N-by-P matrix B:
 *
 *     A = Q*R,        B = Q*T*Z,
@@ -63,7 +63,6 @@ var dgerqf = require( '../../dgerqf/lib/base.js' );
 * @returns {integer} info - 0 on success
 */
 function dggqrf( N, M, p, A, strideA1, strideA2, offsetA, TAUA, strideTAUA, offsetTAUA, B, strideB1, strideB2, offsetB, TAUB, strideTAUB, offsetTAUB, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
-
 	// Quick return if possible
 	if ( N === 0 ) {
 		return 0;

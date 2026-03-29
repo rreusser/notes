@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 /**
 * @license Apache-2.0
@@ -29,24 +29,63 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zcopy = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zcopy.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zcopy.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
-// HELPERS //
 
+// FUNCTIONS //
+
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, msg ) {
 	var i;
-	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch' );
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch' ); // eslint-disable-line max-len
 	for ( i = 0; i < expected.length; i++ ) {
 		assertClose( actual[ i ], expected[ i ], msg + '[' + i + ']' );
 	}
 }
+
+
+// FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
@@ -54,53 +93,81 @@ test( 'zcopy: main export is a function', function t() {
 	assert.strictEqual( typeof zcopy, 'function' );
 });
 
-test( 'zcopy: attached to the main export is an `ndarray` method', function t() {
+test( 'zcopy: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
 	assert.strictEqual( typeof zcopy.ndarray, 'function' );
 });
 
 test( 'zcopy: basic copy (N=3, strideX=1, strideY=1)', function t() {
-	var result = base( 3, zx, 1, 0, zy, 1, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_basic'; } );
-	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
-	var zy = new Complex128Array( 3 );
+	var result;
+	var tc;
+	var zx;
+	var zy;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zcopy_basic';
+	} );
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+	zy = new Complex128Array( 3 );
+	result = base( 3, zx, 1, 0, zy, 1, 0 );
 	assert.strictEqual( result, zy );
-	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
-	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy copied' );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
+	assertArrayClose( toArray( reinterpret( zy, 0 ) ), tc.zy, 'zy copied' );
 });
 
 test( 'zcopy: N=0 is a no-op', function t() {
-	var result = base( 0, zx, 1, 0, zy, 1, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_n_zero'; } );
-	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-	var zy = new Complex128Array( [ 99.0, 88.0, 77.0, 66.0 ] );
+	var result;
+	var tc;
+	var zx;
+	var zy;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zcopy_n_zero';
+	} );
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	zy = new Complex128Array( [ 99.0, 88.0, 77.0, 66.0 ] );
+	result = base( 0, zx, 1, 0, zy, 1, 0 );
 	assert.strictEqual( result, zy );
-	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy unchanged' );
+	assertArrayClose( toArray( reinterpret( zy, 0 ) ), tc.zy, 'zy unchanged' );
 });
 
 test( 'zcopy: non-unit stride (strideX=2, strideY=2)', function t() {
-	var result = base( 3, zx, 2, 0, zy, 2, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_stride'; } );
-	var zx = new Complex128Array([
+	var result;
+	var tc;
+	var zx;
+	var zy;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zcopy_stride';
+	} );
+	zx = new Complex128Array([
 		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
 	]);
-	var zy = new Complex128Array([
+	zy = new Complex128Array([
 		77.0, 77.0, 88.0, 88.0, 77.0, 77.0, 88.0, 88.0, 77.0, 77.0
 	]);
+	result = base( 3, zx, 2, 0, zy, 2, 0 );
 	assert.strictEqual( result, zy );
-	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
-	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy copied at stride' );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
+	assertArrayClose( toArray( reinterpret( zy, 0 ) ), tc.zy, 'zy copied at stride' ); // eslint-disable-line max-len
 });
 
 test( 'zcopy: mixed strides (strideX=1, strideY=2)', function t() {
-	var result = base( 3, zx, 1, 0, zy, 2, 0 );
-	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_mixed_stride'; } );
-	var zx = new Complex128Array([
+	var result;
+	var tc;
+	var zx;
+	var zy;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'zcopy_mixed_stride';
+	} );
+	zx = new Complex128Array([
 		10.0, 20.0, 30.0, 40.0, 50.0, 60.0
 	]);
-	var zy = new Complex128Array([
+	zy = new Complex128Array([
 		0.0, 0.0, 88.0, 88.0, 0.0, 0.0, 88.0, 88.0, 0.0, 0.0
 	]);
+	result = base( 3, zx, 1, 0, zy, 2, 0 );
 	assert.strictEqual( result, zy );
-	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
-	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy copied with mixed stride' );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
+	assertArrayClose( toArray( reinterpret( zy, 0 ) ), tc.zy, 'zy copied with mixed stride' ); // eslint-disable-line max-len
 });

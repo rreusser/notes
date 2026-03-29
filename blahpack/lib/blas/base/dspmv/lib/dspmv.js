@@ -31,7 +31,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Performs the matrix-vector operation `y = alpha*A*x + beta*y` where `A` is an
+* Performs the matrix-vector operation `y = alpha*A*x + beta*y` where `A` is an.
 * `N` by `N` symmetric matrix supplied in packed form.
 *
 * @param {string} order - storage layout

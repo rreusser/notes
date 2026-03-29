@@ -117,20 +117,21 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	KASE[ 0 ] = 0;
 
 	// dlacn2 uses V = WORK[N..2N-1], X = WORK[0..N-1], ISGN = IWORK[0..N-1]
-	// dlatrs uses CNORM stored at WORK[2N..3N-1] and WORK[3N..4N-1] for lower/upper
+
+	// Dlatrs uses CNORM stored at WORK[2N..3N-1] and WORK[3N..4N-1] for lower/upper
 
 	// Reverse-communication loop (Fortran labels 10/20)
+
 	// bail is set to true when scale overflow would occur (GO TO 20 in Fortran),
-	// which skips the rcond computation entirely.
+
+	// Which skips the rcond computation entirely.
 	bail = false;
 
 	while ( true ) {
-		dlacn2( N,
-			WORK, sw, offsetWORK + (N * sw), // v
+		dlacn2( N, WORK, sw, offsetWORK + (N * sw), // v
 			WORK, sw, offsetWORK, // x
 			IWORK, strideIWORK, offsetIWORK, // isgn
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -138,29 +139,17 @@ function dgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 
 		if ( KASE[ 0 ] === kase1 ) {
 			// Multiply by inv(L), then inv(U)
-			dlatrs( 'lower', 'no-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatrs( 'lower', 'no-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			sl = scale[ 0 ];
 
-			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((3 * N) * sw)
-			);
+			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((3 * N) * sw));
 			su = scale[ 0 ];
 		} else {
 			// Multiply by inv(U^T), then inv(L^T)
-			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((3 * N) * sw)
-			);
+			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((3 * N) * sw));
 			su = scale[ 0 ];
 
-			dlatrs( 'lower', 'transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatrs( 'lower', 'transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			sl = scale[ 0 ];
 		}
 

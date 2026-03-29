@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgbcon = require( '@stdlib/lapack/base/dgbcon' );

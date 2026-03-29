@@ -29,7 +29,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Computes an RQ factorization of a real M-by-N matrix A = R * Q
+* Computes an RQ factorization of a real M-by-N matrix A = R * Q.
 * using Householder reflections (unblocked algorithm).
 *
 * On exit, if M <= N, the upper triangle of the subarray
@@ -41,7 +41,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 *
 * Q = H(1) H(2) ... H(k), where k = min(M,N).
 *
-* Each H(i) has the form H(i) = I - tau * v * v^T
+* Each H(i) has the form H(i) = I - tau _ v _ v^T
 * where v(n-k+i+1:n) = 0 and v(n-k+i) = 1; v(1:n-k+i-1) is stored
 * in A(m-k+i, 0:n-k+i-2), and tau in TAU(i).
 *
@@ -70,7 +70,9 @@ function dgerq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	K = Math.min( M, N );
 
 	// Iterate backward: i = K-1, K-2, ..., 0
+
 	// Fortran iterates I = K, K-1, ..., 1 (1-based)
+
 	// 0-based: row index = M-K+i, col index = N-K+i
 	for ( i = K - 1; i >= 0; i-- ) {
 		// Row of reflector in 0-based: M-K+i
@@ -80,15 +82,13 @@ function dgerq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		aii = offsetA + (row * strideA1) + ((N - K + i) * strideA2);
 
 		// Generate elementary reflector H(i) to annihilate A(row, 0:N-K+i-1)
+
 		// dlarfg( len, alpha(array,offset), x, strideX, offsetX, tau, offsetTau )
-		// alpha = A(row, N-K+i), x = A(row, 0) stepping by strideA2
+
+		// Alpha = A(row, N-K+i), x = A(row, 0) stepping by strideA2
+
 		// Length of reflector vector = N-K+i+1 (Fortran: N-K+I)
-		dlarfg(
-			N - K + i + 1,
-			A, aii,
-			A, strideA2, offsetA + (row * strideA1),
-			TAU, offsetTAU + (i * strideTAU)
-		);
+		dlarfg(N - K + i + 1, A, aii, A, strideA2, offsetA + (row * strideA1), TAU, offsetTAU + (i * strideTAU));
 
 		if ( row > 0 ) {
 			// Save A(row, N-K+i) and set it to 1 for the reflector application
@@ -96,16 +96,14 @@ function dgerq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			A[ aii ] = 1.0;
 
 			// Apply H(i) to A(0:row-1, 0:N-K+i) from the right
+
 			// dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-			dlarf(
-				'right',
-				row,                 // number of rows of sub-matrix
+			dlarf('right', row,                 // number of rows of sub-matrix
 				N - K + i + 1,       // number of columns of sub-matrix
 				A, strideA2, offsetA + (row * strideA1), // v = row `row` from col 0 to N-K+i, stride along columns
 				TAU[ offsetTAU + (i * strideTAU) ],      // tau is a plain scalar for dlarf
 				A, strideA1, strideA2, offsetA,           // C = A(0, 0)
-				WORK, strideWORK, offsetWORK
-			);
+				WORK, strideWORK, offsetWORK);
 
 			// Restore A(row, N-K+i)
 			A[ aii ] = save;
