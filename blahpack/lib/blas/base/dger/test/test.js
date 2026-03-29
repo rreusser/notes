@@ -1,6 +1,9 @@
+/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+
 'use strict';
 
 var test = require( 'node:test' );
+var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
 var dger = require( './../lib/base.js' );

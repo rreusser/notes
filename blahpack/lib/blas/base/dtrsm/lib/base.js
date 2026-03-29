@@ -16,7 +16,7 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params */
+/* eslint-disable max-depth, max-len, max-lines-per-function, max-params, max-statements */
 
 'use strict';
 

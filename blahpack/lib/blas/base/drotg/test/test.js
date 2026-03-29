@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/require-globals, stdlib/first-unit-test */
+
 'use strict';
 
 var test = require( 'node:test' );

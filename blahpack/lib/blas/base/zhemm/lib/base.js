@@ -16,7 +16,7 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params */
+/* eslint-disable max-len, max-lines-per-function, max-params, max-statements */
 
 'use strict';
 
@@ -31,7 +31,7 @@ var imag = require( '@stdlib/complex/float64/imag' );
 
 /**
 * Performs one of the Hermitian matrix-matrix operations:.
-*   C := alpha_A_B + beta_C,  or  C := alpha_B_A + beta_C,
+* C := alpha_A_B + beta_C, or C := alpha_B_A + beta_C,
 * where alpha and beta are complex scalars, A is a Hermitian matrix, and B and C
 * are M-by-N matrices.
 *
