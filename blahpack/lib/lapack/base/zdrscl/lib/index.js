@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Scale a complex vector by the reciprocal of a real scalar with overflow protection
+* Scale a complex vector by the reciprocal of a real scalar with overflow protection.
 *
 * @module @stdlib/lapack/base/zdrscl
 *

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimate the reciprocal condition number of a Hermitian indefinite matrix
+* Estimate the reciprocal condition number of a Hermitian indefinite matrix.
 *
 * @module @stdlib/lapack/base/zhecon
 *

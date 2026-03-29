@@ -1,35 +1,66 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dsytrf = require( './../lib/base.js' );
 var dsytrs = require( '../../dsytrs/lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsytrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dsytrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -38,6 +69,13 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
+/**
+* ConvertIPIV.
+*
+* @private
+* @param {*} fipiv - fipiv
+* @returns {*} result
+*/
 function convertIPIV( fipiv ) {
 	var out = [];
 	var i;
@@ -51,123 +89,240 @@ function convertIPIV( fipiv ) {
 	return out;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'dsytrf: 4x4_lower', function t() {
-	var ipiv = new Int32Array( 4 );
-	var tc = findCase( '4x4_lower' );
-	var A = new Float64Array([
-		4, 2, 1, 0,
-		0, 5, 2, 1,
-		0, 0, 6, 3,
-		0, 0, 0, 8
+	var ipiv;
+	var info;
+	var tc;
+	var A;
+
+	ipiv = new Int32Array( 4 );
+	tc = findCase( '4x4_lower' );
+	A = new Float64Array([
+		4,
+		2,
+		1,
+		0,
+		0,
+		5,
+		2,
+		1,
+		0,
+		0,
+		6,
+		3,
+		0,
+		0,
+		0,
+		8
 	]);
-	var info = dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	info = dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
-	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
+	assert.deepEqual( toArray( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
 });
 
 test( 'dsytrf: 4x4_upper', function t() {
-	var ipiv = new Int32Array( 4 );
-	var tc = findCase( '4x4_upper' );
-	var A = new Float64Array( 16 );
+	var ipiv;
+	var info;
+	var tc;
+	var A;
+
+	ipiv = new Int32Array( 4 );
+	tc = findCase( '4x4_upper' );
+	A = new Float64Array( 16 );
 	A[ 0 ] = 4;
-	A[ 4 ] = 2; A[ 5 ] = 5;
-	A[ 8 ] = 1; A[ 9 ] = 2; A[ 10 ] = 6;
-	A[ 12 ] = 0; A[ 13 ] = 1; A[ 14 ] = 3; A[ 15 ] = 8;
-	var info = dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	A[ 4 ] = 2;
+	A[ 5 ] = 5;
+	A[ 8 ] = 1;
+	A[ 9 ] = 2;
+	A[ 10 ] = 6;
+	A[ 12 ] = 0;
+	A[ 13 ] = 1;
+	A[ 14 ] = 3;
+	A[ 15 ] = 8;
+	info = dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
-	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
+	assert.deepEqual( toArray( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
 });
 
 test( 'dsytrf: 4x4_indef_lower', function t() {
-	var ipiv = new Int32Array( 4 );
-	var tc = findCase( '4x4_indef_lower' );
-	var A = new Float64Array([
-		0, 1, 2, 3,
-		0, 0, 4, 5,
-		0, 0, 0, 6,
-		0, 0, 0, 0
+	var ipiv;
+	var info;
+	var tc;
+	var A;
+
+	ipiv = new Int32Array( 4 );
+	tc = findCase( '4x4_indef_lower' );
+	A = new Float64Array([
+		0,
+		1,
+		2,
+		3,
+		0,
+		0,
+		4,
+		5,
+		0,
+		0,
+		0,
+		6,
+		0,
+		0,
+		0,
+		0
 	]);
-	var info = dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	info = dsytrf( 'lower', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
-	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
+	assert.deepEqual( toArray( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
 });
 
 test( 'dsytrf: 4x4_indef_upper', function t() {
-	var ipiv = new Int32Array( 4 );
-	var tc = findCase( '4x4_indef_upper' );
-	var A = new Float64Array( 16 );
+	var ipiv;
+	var info;
+	var tc;
+	var A;
+
+	ipiv = new Int32Array( 4 );
+	tc = findCase( '4x4_indef_upper' );
+	A = new Float64Array( 16 );
 	A[ 0 ] = 0;
-	A[ 4 ] = 1; A[ 5 ] = 0;
-	A[ 8 ] = 2; A[ 9 ] = 4; A[ 10 ] = 0;
-	A[ 12 ] = 3; A[ 13 ] = 5; A[ 14 ] = 6; A[ 15 ] = 0;
-	var info = dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
+	A[ 4 ] = 1;
+	A[ 5 ] = 0;
+	A[ 8 ] = 2;
+	A[ 9 ] = 4;
+	A[ 10 ] = 0;
+	A[ 12 ] = 3;
+	A[ 13 ] = 5;
+	A[ 14 ] = 6;
+	A[ 15 ] = 0;
+	info = dsytrf( 'upper', 4, A, 1, 4, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
-	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
+	assert.deepEqual( toArray( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
 });
 
 test( 'dsytrf: n_zero', function t() {
-	var ipiv = new Int32Array( 1 );
-	var A = new Float64Array( 1 );
-	var info = dsytrf( 'lower', 0, A, 1, 1, 0, ipiv, 1, 0 );
+	var ipiv;
+	var info;
+	var A;
+
+	ipiv = new Int32Array( 1 );
+	A = new Float64Array( 1 );
+	info = dsytrf( 'lower', 0, A, 1, 1, 0, ipiv, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
 test( 'dsytrf: n_one', function t() {
-	var ipiv = new Int32Array( 1 );
-	var tc = findCase( 'n_one' );
-	var A = new Float64Array([ 7.0 ]);
-	var info = dsytrf( 'lower', 1, A, 1, 1, 0, ipiv, 1, 0 );
+	var ipiv;
+	var info;
+	var tc;
+	var A;
+
+	ipiv = new Int32Array( 1 );
+	tc = findCase( 'n_one' );
+	A = new Float64Array([ 7.0 ]);
+	info = dsytrf( 'lower', 1, A, 1, 1, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
-	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
+	assert.deepEqual( toArray( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
 });
 
 test( 'dsytrf: singular', function t() {
-	var ipiv = new Int32Array( 2 );
-	var tc = findCase( 'singular' );
-	var A = new Float64Array([ 0, 0, 0, 0 ]);
-	var info = dsytrf( 'lower', 2, A, 1, 2, 0, ipiv, 1, 0 );
+	var ipiv;
+	var info;
+	var tc;
+	var A;
+
+	ipiv = new Int32Array( 2 );
+	tc = findCase( 'singular' );
+	A = new Float64Array([ 0, 0, 0, 0 ]);
+	info = dsytrf( 'lower', 2, A, 1, 2, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
-	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
+	assert.deepEqual( toArray( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
 });
 
 test( 'dsytrf: 5x5_lower', function t() {
-	var ipiv = new Int32Array( 5 );
-	var tc = findCase( '5x5_lower' );
-	var A = new Float64Array([
-		1, -2, 0, 3, 1,
-		0, 0, 4, -1, 2,
-		0, 0, -3, 2, 0,
-		0, 0, 0, 1, -2,
-		0, 0, 0, 0, 4
+	var ipiv;
+	var info;
+	var tc;
+	var A;
+
+	ipiv = new Int32Array( 5 );
+	tc = findCase( '5x5_lower' );
+	A = new Float64Array([
+		1,
+		-2,
+		0,
+		3,
+		1,
+		0,
+		0,
+		4,
+		-1,
+		2,
+		0,
+		0,
+		-3,
+		2,
+		0,
+		0,
+		0,
+		0,
+		1,
+		-2,
+		0,
+		0,
+		0,
+		0,
+		4
 	]);
-	var info = dsytrf( 'lower', 5, A, 1, 5, 0, ipiv, 1, 0 );
+	info = dsytrf( 'lower', 5, A, 1, 5, 0, ipiv, 1, 0 );
 	assertArrayClose( A, tc.a, 1e-14, 'a' );
 	assert.equal( info, tc.info, 'info' );
-	assert.deepEqual( Array.from( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
+	assert.deepEqual( toArray( ipiv ), convertIPIV( tc.ipiv ), 'ipiv' );
 });
 
 test( 'dsytrf: 40x40 blocked lower (exercise dlasyf)', function t() {
-	// Create a 40x40 diagonally dominant symmetric matrix to exercise blocked path (NB=32)
-	var N = 40;
-	var A = new Float64Array( N * N );
-	var Asave = new Float64Array( N * N );
-	var b = new Float64Array( N );
-	var x = new Float64Array( N );
-	var ipiv = new Int32Array( N );
+	var Asave;
+	var info2;
+	var ipiv;
+	var info;
 	var sum;
+	var N;
+	var A;
+	var b;
+	var x;
 	var i;
 	var j;
 
-	// Build symmetric diagonally dominant matrix (lower triangle stored)
+	N = 40;
+	A = new Float64Array( N * N );
+	Asave = new Float64Array( N * N );
+	b = new Float64Array( N );
+	x = new Float64Array( N );
+	ipiv = new Int32Array( N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = j; i < N; i++ ) {
 			if ( i === j ) {
@@ -178,8 +333,6 @@ test( 'dsytrf: 40x40 blocked lower (exercise dlasyf)', function t() {
 		}
 	}
 	Asave.set( A );
-
-	// x = [1, 2, 3, ..., N], compute b = A*x using full symmetric matrix
 	for ( i = 0; i < N; i++ ) {
 		x[ i ] = i + 1.0;
 	}
@@ -194,31 +347,34 @@ test( 'dsytrf: 40x40 blocked lower (exercise dlasyf)', function t() {
 		}
 		b[ i ] = sum;
 	}
-
-	var info = dsytrf( 'lower', N, A, 1, N, 0, ipiv, 1, 0 );
+	info = dsytrf( 'lower', N, A, 1, N, 0, ipiv, 1, 0 );
 	assert.equal( info, 0, 'factor info' );
-
-	var info2 = dsytrs( 'lower', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
+	info2 = dsytrs( 'lower', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
 	assert.equal( info2, 0, 'solve info' );
-
-	// Verify b ≈ x
 	for ( i = 0; i < N; i++ ) {
 		assertClose( b[ i ], x[ i ], 1e-10, 'x[' + i + ']' );
 	}
 });
 
 test( 'dsytrf: 40x40 blocked upper (exercise dlasyf)', function t() {
-	var N = 40;
-	var A = new Float64Array( N * N );
-	var Asave = new Float64Array( N * N );
-	var b = new Float64Array( N );
-	var x = new Float64Array( N );
-	var ipiv = new Int32Array( N );
+	var Asave;
+	var info2;
+	var ipiv;
+	var info;
 	var sum;
+	var N;
+	var A;
+	var b;
+	var x;
 	var i;
 	var j;
 
-	// Build symmetric matrix (upper triangle stored)
+	N = 40;
+	A = new Float64Array( N * N );
+	Asave = new Float64Array( N * N );
+	b = new Float64Array( N );
+	x = new Float64Array( N );
+	ipiv = new Int32Array( N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i <= j; i++ ) {
 			if ( i === j ) {
@@ -229,7 +385,6 @@ test( 'dsytrf: 40x40 blocked upper (exercise dlasyf)', function t() {
 		}
 	}
 	Asave.set( A );
-
 	for ( i = 0; i < N; i++ ) {
 		x[ i ] = i + 1.0;
 	}
@@ -244,13 +399,10 @@ test( 'dsytrf: 40x40 blocked upper (exercise dlasyf)', function t() {
 		}
 		b[ i ] = sum;
 	}
-
-	var info = dsytrf( 'upper', N, A, 1, N, 0, ipiv, 1, 0 );
+	info = dsytrf( 'upper', N, A, 1, N, 0, ipiv, 1, 0 );
 	assert.equal( info, 0, 'factor info' );
-
-	var info2 = dsytrs( 'upper', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
+	info2 = dsytrs( 'upper', N, 1, A, 1, N, 0, ipiv, 1, 0, b, 1, N, 0 );
 	assert.equal( info2, 0, 'solve info' );
-
 	for ( i = 0; i < N; i++ ) {
 		assertClose( b[ i ], x[ i ], 1e-10, 'x[' + i + ']' );
 	}

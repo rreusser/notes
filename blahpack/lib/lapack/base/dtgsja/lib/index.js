@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes the generalized SVD of two upper triangular matrices via Jacobi-Kogbetliantz iteration
+* Computes the generalized SVD of two upper triangular matrices via Jacobi-Kogbetliantz iteration.
 *
 * @module @stdlib/lapack/base/dtgsja
 *

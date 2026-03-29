@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zdrscl = require( '@stdlib/lapack/base/zdrscl' );

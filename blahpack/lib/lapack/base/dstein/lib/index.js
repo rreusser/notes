@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute eigenvectors of a real symmetric tridiagonal matrix by inverse iteration
+* Compute eigenvectors of a real symmetric tridiagonal matrix by inverse iteration.
 *
 * @module @stdlib/lapack/base/dstein
 *

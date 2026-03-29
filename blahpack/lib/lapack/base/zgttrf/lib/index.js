@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute LU factorization of complex tridiagonal matrix
+* Compute LU factorization of complex tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/zgttrf
 *

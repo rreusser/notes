@@ -92,33 +92,15 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			ib = Math.min( K - i, nb );
 
 			// Compute the QR factorization of the current panel A(i:M-1, i:i+ib-1)
-			zgeqr2(
-				M - i, ib,
-				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-				TAU, strideTAU, offsetTAU + (i * strideTAU),
-				WORK, strideWORK, offsetWORK
-			);
+			zgeqr2(M - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), WORK, strideWORK, offsetWORK);
 
 			if ( i + ib < N ) {
 				// Form the triangular factor of the block reflector
 				// H = H(i) H(i+1) ... H(i+ib-1)
-				zlarft(
-					'forward', 'columnwise',
-					M - i, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					TAU, strideTAU, offsetTAU + (i * strideTAU),
-					T, 1, nb, offsetT
-				);
+				zlarft('forward', 'columnwise', M - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), T, 1, nb, offsetT);
 
 				// Apply H^H to A(i:M-1, i+ib:N-1) from the left
-				zlarfb(
-					'left', 'conjugate-transpose', 'forward', 'columnwise',
-					M - i, N - i - ib, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					T, 1, nb, offsetT,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + ib ) * strideA2),
-					WORK, 1, ldwork, offsetWORK
-				);
+				zlarfb('left', 'conjugate-transpose', 'forward', 'columnwise', M - i, N - i - ib, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), T, 1, nb, offsetT, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + ib ) * strideA2), WORK, 1, ldwork, offsetWORK);
 			}
 			i += nb;
 		}
@@ -128,12 +110,7 @@ function zgeqrf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 	// Use unblocked code to factor the last or only block
 	if ( i <= K - 1 ) {
-		zgeqr2(
-			M - i, N - i,
-			A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-			TAU, strideTAU, offsetTAU + (i * strideTAU),
-			WORK, strideWORK, offsetWORK
-		);
+		zgeqr2(M - i, N - i, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), WORK, strideWORK, offsetWORK);
 	}
 
 	return 0;

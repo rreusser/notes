@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtgsja = require( '@stdlib/lapack/base/dtgsja' );

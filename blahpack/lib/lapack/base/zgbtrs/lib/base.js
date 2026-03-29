@@ -104,27 +104,20 @@ function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 					zswap( nrhs, B, sb2, offsetB + (l * sb1), B, sb2, offsetB + (j * sb1) );
 				}
 				// B(j+1:j+lm, :) -= L(j+1:j+lm, j) * B(j, :)
-				zgeru( lm, nrhs, CNONE,
-					AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2),
-					B, sb2, offsetB + (j * sb1),
-					B, sb1, sb2, offsetB + (( j + 1 ) * sb1) );
+				zgeru( lm, nrhs, CNONE, AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2), B, sb2, offsetB + (j * sb1), B, sb1, sb2, offsetB + (( j + 1 ) * sb1) );
 			}
 		}
 
 		// Solve U * X = y using back-substitution
 		for ( i = 0; i < nrhs; i++ ) {
-			ztbsv( 'upper', 'no-transpose', 'non-unit', N, kl + ku,
-				AB, sa1, sa2, offsetAB,
-				B, sb1, offsetB + (i * sb2) );
+			ztbsv( 'upper', 'no-transpose', 'non-unit', N, kl + ku, AB, sa1, sa2, offsetAB, B, sb1, offsetB + (i * sb2) );
 		}
 	} else if ( trans === 'transpose' ) {
 		// Solve A^T * X = B
 
 		// Solve U^T * y = B using forward substitution
 		for ( i = 0; i < nrhs; i++ ) {
-			ztbsv( 'upper', 'transpose', 'non-unit', N, kl + ku,
-				AB, sa1, sa2, offsetAB,
-				B, sb1, offsetB + (i * sb2) );
+			ztbsv( 'upper', 'transpose', 'non-unit', N, kl + ku, AB, sa1, sa2, offsetAB, B, sb1, offsetB + (i * sb2) );
 		}
 
 		// Apply L^T and row interchanges in reverse (backward elimination)
@@ -133,11 +126,7 @@ function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 				lm = Math.min( kl, N - j - 1 );
 
 				// B(j, :) -= L(j+1:j+lm, j)^T * B(j+1:j+lm, :)
-				zgemv( 'transpose', lm, nrhs, CNONE,
-					B, sb1, sb2, offsetB + (( j + 1 ) * sb1),
-					AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2),
-					CONE,
-					B, sb2, offsetB + (j * sb1) );
+				zgemv( 'transpose', lm, nrhs, CNONE, B, sb1, sb2, offsetB + (( j + 1 ) * sb1), AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2), CONE, B, sb2, offsetB + (j * sb1) );
 				l = IPIV[ offsetIPIV + (j * strideIPIV) ];
 				if ( l !== j ) {
 					zswap( nrhs, B, sb2, offsetB + (l * sb1), B, sb2, offsetB + (j * sb1) );
@@ -149,9 +138,7 @@ function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 
 		// Solve U^H * y = B using forward substitution
 		for ( i = 0; i < nrhs; i++ ) {
-			ztbsv( 'upper', 'conjugate-transpose', 'non-unit', N, kl + ku,
-				AB, sa1, sa2, offsetAB,
-				B, sb1, offsetB + (i * sb2) );
+			ztbsv( 'upper', 'conjugate-transpose', 'non-unit', N, kl + ku, AB, sa1, sa2, offsetAB, B, sb1, offsetB + (i * sb2) );
 		}
 
 		// Apply L^H and row interchanges in reverse (backward elimination)
@@ -163,11 +150,7 @@ function zgbtrs( trans, N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPI
 				zlacgv( nrhs, B, sb2, offsetB + (j * sb1) );
 
 				// B(j, :) -= conj(L(j+1:j+lm, j))^T * B(j+1:j+lm, :)
-				zgemv( 'conjugate-transpose', lm, nrhs, CNONE,
-					B, sb1, sb2, offsetB + (( j + 1 ) * sb1),
-					AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2),
-					CONE,
-					B, sb2, offsetB + (j * sb1) );
+				zgemv( 'conjugate-transpose', lm, nrhs, CNONE, B, sb1, sb2, offsetB + (( j + 1 ) * sb1), AB, sa1, offsetAB + (( kd + 1 ) * sa1) + (j * sa2), CONE, B, sb2, offsetB + (j * sb1) );
 
 				// Unconjugate row j of B
 				zlacgv( nrhs, B, sb2, offsetB + (j * sb1) );

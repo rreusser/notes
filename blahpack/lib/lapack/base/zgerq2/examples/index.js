@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgerq2 = require( '@stdlib/lapack/base/zgerq2' );

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsycon = require( '@stdlib/lapack/base/dsycon' );

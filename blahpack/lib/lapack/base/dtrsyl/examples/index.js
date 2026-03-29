@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtrsyl = require( '@stdlib/lapack/base/dtrsyl' );

@@ -28,11 +28,11 @@ var dlaexc = require( '../../dlaexc/lib/base.js' );
 // MAIN //
 
 /**
-* Reorders the real Schur factorization of a real matrix A = Q*T*Q^T, so that
+* Reorders the real Schur factorization of a real matrix A = Q_T_Q^T, so that.
 * the diagonal block of T with row index IFST is moved to row ILST.
 *
 * The real Schur form T is reordered by an orthogonal similarity transformation
-* Z^T * T * Z, and optionally the matrix Q of Schur vectors is updated by
+* Z^T _ T _ Z, and optionally the matrix Q of Schur vectors is updated by
 * postmultiplication with Z.
 *
 * T must be in Schur canonical form (as output by DHSEQR), that is, block
@@ -62,8 +62,8 @@ var dlaexc = require( '../../dlaexc/lib/base.js' );
 * @returns {Object} { info, ifst, ilst }
 */
 function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst, WORK, strideWORK, offsetWORK ) {
-	var wantq;
 	var nbnext;
+	var wantq;
 	var info;
 	var here;
 	var nbf;
@@ -74,7 +74,11 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 
 	// Quick return
 	if ( N <= 1 ) {
-		return { 'info': 0, 'ifst': ifst, 'ilst': ilst };
+		return {
+			'info': 0,
+			'ifst': ifst,
+			'ilst': ilst
+		};
 	}
 
 	// Helper: 0-based access to T(i,j) where i,j are 1-based
@@ -85,7 +89,7 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	// Determine the first row of specified block and find out the size (NBF).
 	if ( ifst > 1 ) {
 		if ( T[ tij( ifst, ifst - 1 ) ] !== 0.0 ) {
-			ifst = ifst - 1;
+			ifst -= 1;
 		}
 	}
 	nbf = 1;
@@ -98,7 +102,7 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	// Determine the first row of the final block and find out the size (NBL).
 	if ( ilst > 1 ) {
 		if ( T[ tij( ilst, ilst - 1 ) ] !== 0.0 ) {
-			ilst = ilst - 1;
+			ilst -= 1;
 		}
 	}
 	nbl = 1;
@@ -109,16 +113,20 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	}
 
 	if ( ifst === ilst ) {
-		return { 'info': 0, 'ifst': ifst, 'ilst': ilst };
+		return {
+			'info': 0,
+			'ifst': ifst,
+			'ilst': ilst
+		};
 	}
 
 	if ( ifst < ilst ) {
 		// Move forward
 		if ( nbf === 2 && nbl === 1 ) {
-			ilst = ilst - 1;
+			ilst -= 1;
 		}
 		if ( nbf === 1 && nbl === 2 ) {
-			ilst = ilst + 1;
+			ilst += 1;
 		}
 
 		here = ifst;
@@ -136,9 +144,13 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 				info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, nbf, nbnext, WORK, strideWORK, offsetWORK );
 				if ( info !== 0 ) {
 					ilst = here;
-					return { 'info': info, 'ifst': ifst, 'ilst': ilst };
+					return {
+						'info': info,
+						'ifst': ifst,
+						'ilst': ilst
+					};
 				}
-				here = here + nbnext;
+				here += nbnext;
 
 				// Check if 2-by-2 block broke up
 				if ( nbf === 2 ) {
@@ -157,12 +169,16 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 				info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here + 1, 1, nbnext, WORK, strideWORK, offsetWORK );
 				if ( info !== 0 ) {
 					ilst = here;
-					return { 'info': info, 'ifst': ifst, 'ilst': ilst };
+					return {
+						'info': info,
+						'ifst': ifst,
+						'ilst': ilst
+					};
 				}
 				if ( nbnext === 1 ) {
 					// Swap single with single
 					info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, nbnext, WORK, strideWORK, offsetWORK );
-					here = here + 1;
+					here += 1;
 				} else {
 					// Recheck if 2-by-2 block is still intact
 					if ( T[ tij( here + 2, here + 1 ) ] === 0.0 ) {
@@ -172,13 +188,17 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 						info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, nbnext, WORK, strideWORK, offsetWORK );
 						if ( info !== 0 ) {
 							ilst = here;
-							return { 'info': info, 'ifst': ifst, 'ilst': ilst };
+							return {
+								'info': info,
+								'ifst': ifst,
+								'ilst': ilst
+							};
 						}
-						here = here + 2;
+						here += 2;
 					} else {
 						info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, 1, WORK, strideWORK, offsetWORK );
 						info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here + 1, 1, 1, WORK, strideWORK, offsetWORK );
-						here = here + 2;
+						here += 2;
 					}
 				}
 			}
@@ -198,9 +218,13 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 				info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - nbnext, nbnext, nbf, WORK, strideWORK, offsetWORK );
 				if ( info !== 0 ) {
 					ilst = here;
-					return { 'info': info, 'ifst': ifst, 'ilst': ilst };
+					return {
+						'info': info,
+						'ifst': ifst,
+						'ilst': ilst
+					};
 				}
-				here = here - nbnext;
+				here -= nbnext;
 
 				if ( nbf === 2 ) {
 					if ( T[ tij( here + 1, here ) ] === 0.0 ) {
@@ -217,11 +241,15 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 				info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - nbnext, nbnext, 1, WORK, strideWORK, offsetWORK );
 				if ( info !== 0 ) {
 					ilst = here;
-					return { 'info': info, 'ifst': ifst, 'ilst': ilst };
+					return {
+						'info': info,
+						'ifst': ifst,
+						'ilst': ilst
+					};
 				}
 				if ( nbnext === 1 ) {
 					info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, nbnext, 1, WORK, strideWORK, offsetWORK );
-					here = here - 1;
+					here -= 1;
 				} else {
 					if ( T[ tij( here, here - 1 ) ] === 0.0 ) {
 						nbnext = 1;
@@ -230,13 +258,17 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 						info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - 1, 2, 1, WORK, strideWORK, offsetWORK );
 						if ( info !== 0 ) {
 							ilst = here;
-							return { 'info': info, 'ifst': ifst, 'ilst': ilst };
+							return {
+								'info': info,
+								'ifst': ifst,
+								'ilst': ilst
+							};
 						}
-						here = here - 2;
+						here -= 2;
 					} else {
 						info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here, 1, 1, WORK, strideWORK, offsetWORK );
 						info = dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, here - 1, 1, 1, WORK, strideWORK, offsetWORK );
-						here = here - 2;
+						here -= 2;
 					}
 				}
 			}
@@ -244,7 +276,11 @@ function dtrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	}
 	ilst = here;
 
-	return { 'info': 0, 'ifst': ifst, 'ilst': ilst };
+	return {
+		'info': 0,
+		'ifst': ifst,
+		'ilst': ilst
+	};
 }
 
 

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsytrs2 = require( '@stdlib/lapack/base/dsytrs2' );

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute selected eigenvalues and optionally eigenvectors of a real symmetric matrix
+* Compute selected eigenvalues and optionally eigenvectors of a real symmetric matrix.
 *
 * @module @stdlib/lapack/base/dsyevr
 *

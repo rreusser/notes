@@ -32,9 +32,9 @@ var zhetrs = require( '../../zhetrs/lib/base.js' );
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number (in the 1-norm) of a
-* complex Hermitian matrix A using the factorization A = U*D*U**H or
-* A = L*D*L**H computed by zhetrf.
+* Estimates the reciprocal of the condition number (in the 1-norm) of a.
+* complex Hermitian matrix A using the factorization A = U_D_U**H or
+* A = L_D_L**H computed by zhetrf.
 *
 * An estimate is obtained for norm(inv(A)), and the reciprocal of the
 * condition number is computed as RCOND = 1 / (ANORM * norm(inv(A))).
@@ -66,11 +66,11 @@ function zhecon( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	var ISAVE;
 	var KASE;
 	var EST;
+	var sa1;
+	var sa2;
 	var Av;
 	var sw;
 	var p1;
-	var sa1;
-	var sa2;
 	var i;
 
 	sw = strideWORK;
@@ -116,24 +116,23 @@ function zhecon( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	KASE[ 0 ] = 0;
 
 	// zlacn2 uses:
+
 	//   V = WORK[N..2N-1] (scratch for norm estimation)
+
 	//   X = WORK[0..N-1]  (input/output vector)
 	while ( true ) {
-		zlacn2( N,
-			WORK, sw, offsetWORK + (N * sw),  // V
+		zlacn2( N, WORK, sw, offsetWORK + (N * sw),  // V
 			WORK, sw, offsetWORK,              // X
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
 		}
 
 		// Multiply by inv(A): solve A*X = WORK[0..N-1] using zhetrs.
-		// zhetrs expects B as N-by-1 matrix with strideB1, strideB2.
+		// Zhetrs expects B as N-by-1 matrix with strideB1, strideB2.
 		// B = WORK[0..N-1], strideB1 = sw, strideB2 = N*sw, offsetB = offsetWORK
-		zhetrs( uplo, N, 1, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV,
-			WORK, sw, N * sw, offsetWORK );
+		zhetrs( uplo, N, 1, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, sw, N * sw, offsetWORK );
 	}
 
 	// Compute the estimate of the reciprocal condition number.

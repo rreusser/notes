@@ -1,28 +1,39 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dtpttr = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dtpttr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dtpttr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
 
@@ -45,9 +56,7 @@ test( 'dtpttr: lower_4x4', function t() {
 	N = 4;
 	AP = new Float64Array( tc.AP );
 	A = new Float64Array( N * N );
-
 	info = dtpttr( 'lower', N, AP, 1, 0, A, 1, N, 0 );
-
 	expected = new Float64Array( tc.A );
 	actual = A;
 	assert.equal( info, tc.info );
@@ -67,9 +76,7 @@ test( 'dtpttr: upper_4x4', function t() {
 	N = 4;
 	AP = new Float64Array( tc.AP );
 	A = new Float64Array( N * N );
-
 	info = dtpttr( 'upper', N, AP, 1, 0, A, 1, N, 0 );
-
 	expected = new Float64Array( tc.A );
 	actual = A;
 	assert.equal( info, tc.info );
@@ -83,7 +90,6 @@ test( 'dtpttr: n_zero', function t() {
 
 	AP = new Float64Array( 0 );
 	A = new Float64Array( 0 );
-
 	info = dtpttr( 'lower', 0, AP, 1, 0, A, 1, 1, 0 );
 	assert.equal( info, 0 );
 });
@@ -97,9 +103,7 @@ test( 'dtpttr: n_one_lower', function t() {
 	tc = findCase( 'n_one_lower' );
 	AP = new Float64Array( [ 42.0 ] );
 	A = new Float64Array( 1 );
-
 	info = dtpttr( 'lower', 1, AP, 1, 0, A, 1, 1, 0 );
-
 	assert.equal( info, tc.info );
 	assert.equal( A[ 0 ], tc.A[ 0 ] );
 });
@@ -113,9 +117,7 @@ test( 'dtpttr: n_one_upper', function t() {
 	tc = findCase( 'n_one_upper' );
 	AP = new Float64Array( [ 77.0 ] );
 	A = new Float64Array( 1 );
-
 	info = dtpttr( 'upper', 1, AP, 1, 0, A, 1, 1, 0 );
-
 	assert.equal( info, tc.info );
 	assert.equal( A[ 0 ], tc.A[ 0 ] );
 });
@@ -133,9 +135,7 @@ test( 'dtpttr: lower_3x3', function t() {
 	N = 3;
 	AP = new Float64Array( tc.AP );
 	A = new Float64Array( N * N );
-
 	info = dtpttr( 'lower', N, AP, 1, 0, A, 1, N, 0 );
-
 	expected = new Float64Array( tc.A );
 	actual = A;
 	assert.equal( info, tc.info );
@@ -155,9 +155,7 @@ test( 'dtpttr: upper_3x3', function t() {
 	N = 3;
 	AP = new Float64Array( tc.AP );
 	A = new Float64Array( N * N );
-
 	info = dtpttr( 'upper', N, AP, 1, 0, A, 1, N, 0 );
-
 	expected = new Float64Array( tc.A );
 	actual = A;
 	assert.equal( info, tc.info );
@@ -169,18 +167,14 @@ test( 'dtpttr: supports AP stride', function t() {
 	var AP;
 	var A;
 
-	// Lower 2x2: packed has 3 elements. AP with stride 2: [1, *, 2, *, 3]
 	AP = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0 ] );
 	A = new Float64Array( 4 );
-
 	info = dtpttr( 'lower', 2, AP, 2, 0, A, 1, 2, 0 );
-
 	assert.equal( info, 0 );
-	// Column-major: A = [1, 2, 0, 3]
-	assert.equal( A[ 0 ], 1.0 ); // A(0,0)
-	assert.equal( A[ 1 ], 2.0 ); // A(1,0)
-	assert.equal( A[ 2 ], 0.0 ); // A(0,1) - not set by lower
-	assert.equal( A[ 3 ], 3.0 ); // A(1,1)
+	assert.equal( A[ 0 ], 1.0 );
+	assert.equal( A[ 1 ], 2.0 );
+	assert.equal( A[ 2 ], 0.0 );
+	assert.equal( A[ 3 ], 3.0 );
 });
 
 test( 'dtpttr: supports AP offset', function t() {
@@ -188,12 +182,9 @@ test( 'dtpttr: supports AP offset', function t() {
 	var AP;
 	var A;
 
-	// Lower 2x2: packed has 3 elements at offset 2
 	AP = new Float64Array( [ 0.0, 0.0, 5.0, 6.0, 7.0 ] );
 	A = new Float64Array( 4 );
-
 	info = dtpttr( 'lower', 2, AP, 1, 2, A, 1, 2, 0 );
-
 	assert.equal( info, 0 );
 	assert.equal( A[ 0 ], 5.0 );
 	assert.equal( A[ 1 ], 6.0 );
@@ -206,17 +197,14 @@ test( 'dtpttr: supports A offset', function t() {
 	var AP;
 	var A;
 
-	// Upper 2x2: packed = [10, 20, 30], output at offset 4
 	AP = new Float64Array( [ 10.0, 20.0, 30.0 ] );
 	A = new Float64Array( 8 );
-
 	info = dtpttr( 'upper', 2, AP, 1, 0, A, 1, 2, 4 );
-
 	assert.equal( info, 0 );
-	assert.equal( A[ 4 ], 10.0 ); // A(0,0)
-	assert.equal( A[ 5 ], 0.0 );  // A(1,0) - not set by upper
-	assert.equal( A[ 6 ], 20.0 ); // A(0,1)
-	assert.equal( A[ 7 ], 30.0 ); // A(1,1)
+	assert.equal( A[ 4 ], 10.0 );
+	assert.equal( A[ 5 ], 0.0 );
+	assert.equal( A[ 6 ], 20.0 );
+	assert.equal( A[ 7 ], 30.0 );
 });
 
 test( 'dtpttr: supports non-unit A strides', function t() {
@@ -224,16 +212,12 @@ test( 'dtpttr: supports non-unit A strides', function t() {
 	var AP;
 	var A;
 
-	// Lower 2x2: packed = [1, 2, 3]
-	// strideA1=2, strideA2=4 (row stride 2, col stride 4)
 	AP = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	A = new Float64Array( 8 );
-
 	info = dtpttr( 'lower', 2, AP, 1, 0, A, 2, 4, 0 );
-
 	assert.equal( info, 0 );
-	assert.equal( A[ 0 ], 1.0 ); // A(0,0): offset + 0*2 + 0*4
-	assert.equal( A[ 2 ], 2.0 ); // A(1,0): offset + 1*2 + 0*4
-	assert.equal( A[ 4 ], 0.0 ); // A(0,1): offset + 0*2 + 1*4 — not set
-	assert.equal( A[ 6 ], 3.0 ); // A(1,1): offset + 1*2 + 1*4
+	assert.equal( A[ 0 ], 1.0 );
+	assert.equal( A[ 2 ], 2.0 );
+	assert.equal( A[ 4 ], 0.0 );
+	assert.equal( A[ 6 ], 3.0 );
 });

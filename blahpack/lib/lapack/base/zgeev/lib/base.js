@@ -57,11 +57,11 @@ var BIGNUM = ONE / SMLNUM;
 // MAIN //
 
 /**
-* Computes the eigenvalues and, optionally, the left and/or right eigenvectors
+* Computes the eigenvalues and, optionally, the left and/or right eigenvectors.
 * of a complex N-by-N nonsymmetric matrix A.
 *
-* The right eigenvector v(j) of A satisfies A * v(j) = lambda(j) * v(j).
-* The left eigenvector u(j) of A satisfies u(j)**H * A = lambda(j) * u(j)**H.
+* The right eigenvector v(j) of A satisfies A _ v(j) = lambda(j) _ v(j).
+* The left eigenvector u(j) of A satisfies u(j)**H _ A = lambda(j) _ u(j)**H.
 *
 * The computed eigenvectors are normalized to have Euclidean norm equal to 1
 * and largest component real.
@@ -95,33 +95,33 @@ var BIGNUM = ONE / SMLNUM;
 * @returns {integer} info - 0 on success, >0 if QR failed (eigenvalues info+1:N have converged)
 */
 function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, offsetW, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK ) {
+	var tmp_mag;
 	var wantvl;
 	var wantvr;
 	var scalea;
 	var cscale;
 	var balRes;
-	var SCALE;
 	var SELECT;
+	var irwork;
+	var tmp_re;
+	var tmp_im;
+	var SCALE;
 	var anrm;
 	var info;
 	var side;
 	var nout;
-	var ilo;
-	var ihi;
 	var itau;
 	var iwrk;
 	var ibal;
-	var irwork;
+	var ilo;
+	var ihi;
 	var scl;
-	var tmp_re;
-	var tmp_im;
-	var tmp_mag;
-	var vv;
-	var rv;
 	var sv1;
 	var sv2;
-	var oV;
 	var DUM;
+	var vv;
+	var rv;
+	var oV;
 	var k;
 	var i;
 
@@ -181,6 +181,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 	ihi = balRes.ihi; // 1-based
 
 	// Reduce to upper Hessenberg form
+
 	// WORK layout: [TAU(0..N-1), workspace(iwrk...)]
 	itau = 0;
 	iwrk = itau + N;
@@ -205,6 +206,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 		if ( wantvr ) {
 			// Want both left and right eigenvectors
 			side = 'both';
+
 			// Copy Schur vectors to VR
 			zlacpy( 'full', N, N, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR );
 		}
@@ -243,11 +245,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 		// Compute eigenvectors from the Schur form
 		SELECT = new Uint8Array( 1 ); // unused but required by ztrevc3
 		nout = 0;
-		ztrevc3( side, 'backtransform', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA,
-			VL, strideVL1, strideVL2, offsetVL,
-			VR, strideVR1, strideVR2, offsetVR,
-			N, nout, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk,
-			RWORK, strideRWORK, offsetRWORK + irwork * strideRWORK, N );
+		ztrevc3( side, 'backtransform', SELECT, 1, 0, N, A, strideA1, strideA2, offsetA, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, N, nout, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk, RWORK, strideRWORK, offsetRWORK + irwork * strideRWORK, N );
 	}
 
 	// Normalize left eigenvectors and make largest component real
@@ -273,7 +271,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 			}
 			k = idamax( N, RWORK, strideRWORK, offsetRWORK + irwork * strideRWORK );
 
-			// tmp = conj(VL(k,i)) / sqrt(|VL(k,i)|^2)
+			// Tmp = conj(VL(k,i)) / sqrt(|VL(k,i)|^2)
 			tmp_mag = Math.sqrt( rv[ offsetRWORK + irwork * strideRWORK + k ] );
 			tmp_re = vv[ oV + k * sv1 + i * sv2 ] / tmp_mag;
 			tmp_im = -vv[ oV + k * sv1 + i * sv2 + 1 ] / tmp_mag;
@@ -309,7 +307,7 @@ function zgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, w, strideW, off
 			}
 			k = idamax( N, RWORK, strideRWORK, offsetRWORK + irwork * strideRWORK );
 
-			// tmp = conj(VR(k,i)) / sqrt(|VR(k,i)|^2)
+			// Tmp = conj(VR(k,i)) / sqrt(|VR(k,i)|^2)
 			tmp_mag = Math.sqrt( rv[ offsetRWORK + irwork * strideRWORK + k ] );
 			tmp_re = vv[ oV + k * sv1 + i * sv2 ] / tmp_mag;
 			tmp_im = -vv[ oV + k * sv1 + i * sv2 + 1 ] / tmp_mag;

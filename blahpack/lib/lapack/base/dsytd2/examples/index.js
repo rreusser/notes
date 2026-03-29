@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsytd2 = require( '@stdlib/lapack/base/dsytd2' );

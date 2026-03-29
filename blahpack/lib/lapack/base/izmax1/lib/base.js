@@ -43,12 +43,12 @@ var Complex128 = require( '@stdlib/complex/float64/ctor' );
 * @returns {integer} 0-based index of the element with maximum absolute value
 */
 function izmax1( N, ZX, strideZX, offsetZX ) {
+	var result;
 	var dmax;
+	var val;
 	var xv;
 	var sx;
 	var ix;
-	var result;
-	var val;
 	var i;
 
 	if ( N < 1 ) {

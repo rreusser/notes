@@ -143,9 +143,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 
 		// Compute initial column norms for the unfactored submatrix
 		for ( j = nfxd; j < N; j++ ) {
-			RWORK[ oR + (j * strideRWORK) ] = dznrm2(
-				sm, A, sa1, offsetA + (nfxd * sa1) + (j * sa2)
-			);
+			RWORK[ oR + (j * strideRWORK) ] = dznrm2(sm, A, sa1, offsetA + (nfxd * sa1) + (j * sa2));
 			RWORK[ oR + (( N + j ) * strideRWORK) ] = RWORK[ oR + (j * strideRWORK) ];
 		}
 
@@ -170,16 +168,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 				jb = Math.min( nb, topbmn - j );
 
 				// Factor panel using zlaqps
-				fjb = zlaqps(
-					M, N - j, j, jb,
-					A, sa1, sa2, offsetA + (j * sa2),
-					JPVT, strideJPVT, oJ + (j * strideJPVT),
-					TAU, strideTAU, oT + (j * strideTAU),
-					RWORK, strideRWORK, oR + (j * strideRWORK),
-					RWORK, strideRWORK, oR + (( N + j ) * strideRWORK),
-					AUXV, 1, 0,
-					F, 1, sn + 1, 0
-				);
+				fjb = zlaqps(M, N - j, j, jb, A, sa1, sa2, offsetA + (j * sa2), JPVT, strideJPVT, oJ + (j * strideJPVT), TAU, strideTAU, oT + (j * strideTAU), RWORK, strideRWORK, oR + (j * strideRWORK), RWORK, strideRWORK, oR + (( N + j ) * strideRWORK), AUXV, 1, 0, F, 1, sn + 1, 0);
 				j += fjb;
 			}
 		} else {
@@ -188,15 +177,7 @@ function zgeqp3( M, N, A, strideA1, strideA2, offsetA, JPVT, strideJPVT, offsetJ
 
 		// Use unblocked code for the remainder
 		if ( j < minmn ) {
-			zlaqp2(
-				M, N - j, j,
-				A, sa1, sa2, offsetA + (j * sa2),
-				JPVT, strideJPVT, oJ + (j * strideJPVT),
-				TAU, strideTAU, oT + (j * strideTAU),
-				RWORK, strideRWORK, oR + (j * strideRWORK),
-				RWORK, strideRWORK, oR + (( N + j ) * strideRWORK),
-				WORK, strideWORK, offsetWORK
-			);
+			zlaqp2(M, N - j, j, A, sa1, sa2, offsetA + (j * sa2), JPVT, strideJPVT, oJ + (j * strideJPVT), TAU, strideTAU, oT + (j * strideTAU), RWORK, strideRWORK, oR + (j * strideRWORK), RWORK, strideRWORK, oR + (( N + j ) * strideRWORK), WORK, strideWORK, offsetWORK);
 		}
 	}
 

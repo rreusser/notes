@@ -28,8 +28,8 @@ var dptts2 = require( '../../dptts2/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a real symmetric positive definite tridiagonal system A*X = B
-* using the L*D*L^T factorization of A computed by dpttrf.
+* Solves a real symmetric positive definite tridiagonal system A_X = B.
+_ using the L_D*L^T factorization of A computed by dpttrf.
 *
 * @private
 * @param {NonNegativeInteger} N - order of the tridiagonal matrix A (N >= 0)

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a real symmetric indefinite system of linear equations using Bunch-Kaufman factorization
+* Solves a real symmetric indefinite system of linear equations using Bunch-Kaufman factorization.
 *
 * @module @stdlib/lapack/base/dsysv
 *

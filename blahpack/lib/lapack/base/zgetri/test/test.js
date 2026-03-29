@@ -1,35 +1,68 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgetrf = require( '../../zgetrf/lib/base.js' );
 var zgetri = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgetri.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgetri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -57,6 +90,7 @@ function zmatmul( N, Av, Bv ) {
 				ai = Av[ 2 * ( i + k * N ) + 1 ];
 				br = Bv[ 2 * ( k + j * N ) ];
 				bi = Bv[ 2 * ( k + j * N ) + 1 ];
+
 				// (ar + ai*i) * (br + bi*i) = (ar*br - ai*bi) + (ar*bi + ai*br)*i
 				Cv[ 2 * ( i + j * N ) ] += ar * br - ai * bi;
 				Cv[ 2 * ( i + j * N ) + 1 ] += ar * bi + ai * br;
@@ -82,143 +116,239 @@ function assertComplexIdentity( N, Cv, tol, msg ) {
 			expectedI = 0.0;
 			errR = Math.abs( Cv[ 2 * ( i + j * N ) ] - expectedR );
 			errI = Math.abs( Cv[ 2 * ( i + j * N ) + 1 ] - expectedI );
-			assert.ok( errR <= tol, msg + ': C[' + i + ',' + j + '] real = ' + Cv[ 2 * ( i + j * N ) ] + ', expected ' + expectedR + ', err = ' + errR );
-			assert.ok( errI <= tol, msg + ': C[' + i + ',' + j + '] imag = ' + Cv[ 2 * ( i + j * N ) + 1 ] + ', expected ' + expectedI + ', err = ' + errI );
+			assert.ok( errR <= tol, msg + ': C[' + i + ',' + j + '] real = ' + Cv[ 2 * ( i + j * N ) ] + ', expected ' + expectedR + ', err = ' + errR ); // eslint-disable-line max-len
+			assert.ok( errI <= tol, msg + ': C[' + i + ',' + j + '] imag = ' + Cv[ 2 * ( i + j * N ) + 1 ] + ', expected ' + expectedI + ', err = ' + errI ); // eslint-disable-line max-len
 		}
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
 // TESTS //
 
 test( 'zgetri: 3x3 inverse', function t() {
-	var tc = findCase( '3x3_inverse' );
-	// A = [[2+1i, 1+0i, 1+0.5i], [4+2i, 3+1i, 3+0i], [8+0i, 7+1i, 9+2i]] col-major
-	var Aorig = new Complex128Array( [
-		2, 1, 4, 2, 8, 0,
-		1, 0, 3, 1, 7, 1,
-		1, 0.5, 3, 0, 9, 2
-	] );
-	var A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
-	var IPIV = new Int32Array( 3 );
-	var WORK = new Complex128Array( 64 );
+	var Aorig;
+	var IPIV;
+	var WORK;
 	var info;
+	var view;
+	var tc;
+	var A;
+	var C;
 
-	// Factor
+	tc = findCase( '3x3_inverse' );
+	Aorig = new Complex128Array([
+		2,
+		1,
+		4,
+		2,
+		8,
+		0,
+		1,
+		0,
+		3,
+		1,
+		7,
+		1,
+		1,
+		0.5,
+		3,
+		0,
+		9,
+		2
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
+	IPIV = new Int32Array( 3 );
+	WORK = new Complex128Array( 64 );
 	info = zgetrf( 3, 3, A, 1, 3, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, 'zgetrf info' );
-
-	// Invert
 	info = zgetri( 3, A, 1, 3, 0, IPIV, 1, 0, WORK, 1, 0, 64 );
 	assert.equal( info, tc.info, 'zgetri info' );
-
-	var view = reinterpret( A, 0 );
-	assertArrayClose( Array.from( view ), tc.a, 1e-13, 'a' );
-
-	// Verify A_orig * A_inv ~= I
-	var C = zmatmul( 3, reinterpret( Aorig, 0 ), view );
+	view = reinterpret( A, 0 );
+	assertArrayClose( toArray( view ), tc.a, 1e-13, 'a' );
+	C = zmatmul( 3, reinterpret( Aorig, 0 ), view );
 	assertComplexIdentity( 3, C, 1e-13, 'A * A_inv' );
 });
 
 test( 'zgetri: 4x4 inverse', function t() {
-	var tc = findCase( '4x4_inverse' );
-	var Aorig = new Complex128Array( [
-		5, 1, 1, 0.5, 0.5, 0, 0, 0.5,
-		1, -0.5, 5, 2, 1, 1, 0.5, 0,
-		0.5, 0, 1, -1, 5, 0, 1, 0.5,
-		0, -0.5, 0.5, 0, 1, -0.5, 5, 1
-	] );
-	var A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
-	var IPIV = new Int32Array( 4 );
-	var WORK = new Complex128Array( 128 );
+	var Aorig;
+	var IPIV;
+	var WORK;
 	var info;
+	var view;
+	var tc;
+	var A;
+	var C;
 
+	tc = findCase( '4x4_inverse' );
+	Aorig = new Complex128Array([
+		5,
+		1,
+		1,
+		0.5,
+		0.5,
+		0,
+		0,
+		0.5,
+		1,
+		-0.5,
+		5,
+		2,
+		1,
+		1,
+		0.5,
+		0,
+		0.5,
+		0,
+		1,
+		-1,
+		5,
+		0,
+		1,
+		0.5,
+		0,
+		-0.5,
+		0.5,
+		0,
+		1,
+		-0.5,
+		5,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
+	IPIV = new Int32Array( 4 );
+	WORK = new Complex128Array( 128 );
 	info = zgetrf( 4, 4, A, 1, 4, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, 'zgetrf info' );
-
 	info = zgetri( 4, A, 1, 4, 0, IPIV, 1, 0, WORK, 1, 0, 128 );
 	assert.equal( info, tc.info, 'zgetri info' );
-
-	var view = reinterpret( A, 0 );
-	assertArrayClose( Array.from( view ), tc.a, 1e-13, 'a' );
-
-	var C = zmatmul( 4, reinterpret( Aorig, 0 ), view );
+	view = reinterpret( A, 0 );
+	assertArrayClose( toArray( view ), tc.a, 1e-13, 'a' );
+	C = zmatmul( 4, reinterpret( Aorig, 0 ), view );
 	assertComplexIdentity( 4, C, 1e-13, 'A * A_inv' );
 });
 
 test( 'zgetri: N=1 edge case', function t() {
-	var tc = findCase( 'n1' );
-	var A = new Complex128Array( [ 3, 4 ] );
-	var IPIV = new Int32Array( 1 );
-	var WORK = new Complex128Array( 4 );
+	var IPIV;
+	var WORK;
 	var info;
+	var view;
+	var tc;
+	var A;
 
+	tc = findCase( 'n1' );
+	A = new Complex128Array( [ 3, 4 ] );
+	IPIV = new Int32Array( 1 );
+	WORK = new Complex128Array( 4 );
 	info = zgetrf( 1, 1, A, 1, 1, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, 'zgetrf info' );
-
 	info = zgetri( 1, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0, 4 );
 	assert.equal( info, tc.info, 'zgetri info' );
-
-	var view = reinterpret( A, 0 );
-	assertArrayClose( Array.from( view ), tc.a, 1e-14, 'a' );
+	view = reinterpret( A, 0 );
+	assertArrayClose( toArray( view ), tc.a, 1e-14, 'a' );
 });
 
 test( 'zgetri: N=0 quick return', function t() {
-	var A = new Complex128Array( 1 );
-	var IPIV = new Int32Array( 1 );
-	var WORK = new Complex128Array( 1 );
+	var IPIV;
+	var WORK;
 	var info;
+	var A;
 
+	A = new Complex128Array( 1 );
+	IPIV = new Int32Array( 1 );
+	WORK = new Complex128Array( 1 );
 	info = zgetri( 0, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0, 1 );
 	assert.equal( info, 0, 'info should be 0' );
 });
 
 test( 'zgetri: 3x3 different pivots', function t() {
-	var tc = findCase( '3x3_pivots_inverse' );
-	var Aorig = new Complex128Array( [
-		1, 0, 4, 1, 7, 2,
-		2, 1, 5, 0, 8, 1,
-		3, 0, 6, 2, 0, 1
-	] );
-	var A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
-	var IPIV = new Int32Array( 3 );
-	var WORK = new Complex128Array( 64 );
+	var Aorig;
+	var IPIV;
+	var WORK;
 	var info;
+	var view;
+	var tc;
+	var A;
+	var C;
 
+	tc = findCase( '3x3_pivots_inverse' );
+	Aorig = new Complex128Array([
+		1,
+		0,
+		4,
+		1,
+		7,
+		2,
+		2,
+		1,
+		5,
+		0,
+		8,
+		1,
+		3,
+		0,
+		6,
+		2,
+		0,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
+	IPIV = new Int32Array( 3 );
+	WORK = new Complex128Array( 64 );
 	info = zgetrf( 3, 3, A, 1, 3, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, 'zgetrf info' );
-
 	info = zgetri( 3, A, 1, 3, 0, IPIV, 1, 0, WORK, 1, 0, 64 );
 	assert.equal( info, tc.info, 'zgetri info' );
-
-	var view = reinterpret( A, 0 );
-	assertArrayClose( Array.from( view ), tc.a, 1e-13, 'a' );
-
-	var C = zmatmul( 3, reinterpret( Aorig, 0 ), view );
+	view = reinterpret( A, 0 );
+	assertArrayClose( toArray( view ), tc.a, 1e-13, 'a' );
+	C = zmatmul( 3, reinterpret( Aorig, 0 ), view );
 	assertComplexIdentity( 3, C, 1e-13, 'A * A_inv' );
 });
 
 test( 'zgetri: singular matrix returns info > 0', function t() {
-	// A = [[1+0i, 2+0i], [2+0i, 4+0i]] (singular, column-major)
-	var A = new Complex128Array( [ 1, 0, 2, 0, 2, 0, 4, 0 ] );
-	var IPIV = new Int32Array( 2 );
-	var WORK = new Complex128Array( 16 );
+	var IPIV;
+	var WORK;
 	var info;
+	var A;
 
+	A = new Complex128Array( [ 1, 0, 2, 0, 2, 0, 4, 0 ] );
+	IPIV = new Int32Array( 2 );
+	WORK = new Complex128Array( 16 );
 	info = zgetrf( 2, 2, A, 1, 2, 0, IPIV, 1, 0 );
 	assert.ok( info > 0, 'zgetrf should detect singular matrix, info=' + info );
-
 	info = zgetri( 2, A, 1, 2, 0, IPIV, 1, 0, WORK, 1, 0, 16 );
-	assert.ok( info > 0, 'zgetri should return info > 0 for singular matrix, info=' + info );
+	assert.ok( info > 0, 'zgetri should return info > 0 for singular matrix, info=' + info ); // eslint-disable-line max-len
 });
 
 test( 'zgetri: 5x5 matrix inverse (diagonally dominant)', function t() {
-	var N = 5;
-	var data = new Float64Array( 2 * N * N );
+	var Aorig;
+	var data;
+	var IPIV;
+	var WORK;
+	var info;
+	var N;
 	var i;
 	var j;
+	var A;
+	var C;
 
-	// Create diagonally dominant complex matrix
+	N = 5;
+	data = new Float64Array( 2 * N * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < N; i++ ) {
 			if ( i === j ) {
@@ -230,31 +360,32 @@ test( 'zgetri: 5x5 matrix inverse (diagonally dominant)', function t() {
 			}
 		}
 	}
-
-	var Aorig = new Complex128Array( data.buffer.slice( 0 ) );
-	var A = new Complex128Array( Array.from( data ) );
-	var IPIV = new Int32Array( N );
-	var WORK = new Complex128Array( N * 64 );
-	var info;
-
+	Aorig = new Complex128Array( data.buffer.slice( 0 ) );
+	A = new Complex128Array( toArray( data ) );
+	IPIV = new Int32Array( N );
+	WORK = new Complex128Array( N * 64 );
 	info = zgetrf( N, N, A, 1, N, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, 'zgetrf info' );
-
 	info = zgetri( N, A, 1, N, 0, IPIV, 1, 0, WORK, 1, 0, N * 64 );
 	assert.equal( info, 0, 'zgetri info' );
-
-	var C = zmatmul( N, reinterpret( Aorig, 0 ), reinterpret( A, 0 ) );
+	C = zmatmul( N, reinterpret( Aorig, 0 ), reinterpret( A, 0 ) );
 	assertComplexIdentity( N, C, 1e-12, 'A * A_inv' );
 });
 
 test( 'zgetri: blocked path (large matrix, N=35)', function t() {
-	// N=35 > NB=32, exercises the blocked code path
-	var N = 35;
-	var data = new Float64Array( 2 * N * N );
+	var Aorig;
+	var data;
+	var IPIV;
+	var WORK;
+	var info;
+	var N;
 	var i;
 	var j;
+	var A;
+	var C;
 
-	// Create diagonally dominant complex matrix
+	N = 35;
+	data = new Float64Array( 2 * N * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < N; i++ ) {
 			if ( i === j ) {
@@ -266,30 +397,33 @@ test( 'zgetri: blocked path (large matrix, N=35)', function t() {
 			}
 		}
 	}
-
-	var Aorig = new Complex128Array( data.buffer.slice( 0 ) );
-	var A = new Complex128Array( Array.from( data ) );
-	var IPIV = new Int32Array( N );
-	var WORK = new Complex128Array( N * 64 );
-	var info;
-
+	Aorig = new Complex128Array( data.buffer.slice( 0 ) );
+	A = new Complex128Array( toArray( data ) );
+	IPIV = new Int32Array( N );
+	WORK = new Complex128Array( N * 64 );
 	info = zgetrf( N, N, A, 1, N, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, 'zgetrf info' );
-
 	info = zgetri( N, A, 1, N, 0, IPIV, 1, 0, WORK, 1, 0, N * 64 );
 	assert.equal( info, 0, 'zgetri info' );
-
-	var C = zmatmul( N, reinterpret( Aorig, 0 ), reinterpret( A, 0 ) );
+	C = zmatmul( N, reinterpret( Aorig, 0 ), reinterpret( A, 0 ) );
 	assertComplexIdentity( N, C, 1e-10, 'A * A_inv' );
 });
 
 test( 'zgetri: blocked path with insufficient workspace', function t() {
-	// N=35 > NB=32, lwork < N*NB triggers nb adjustment
-	var N = 35;
-	var data = new Float64Array( 2 * N * N );
+	var Aorig;
+	var lwork;
+	var data;
+	var IPIV;
+	var WORK;
+	var info;
+	var N;
 	var i;
 	var j;
+	var A;
+	var C;
 
+	N = 35;
+	data = new Float64Array( 2 * N * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < N; i++ ) {
 			if ( i === j ) {
@@ -301,22 +435,15 @@ test( 'zgetri: blocked path with insufficient workspace', function t() {
 			}
 		}
 	}
-
-	var Aorig = new Complex128Array( data.buffer.slice( 0 ) );
-	var A = new Complex128Array( Array.from( data ) );
-	var IPIV = new Int32Array( N );
-	// Provide workspace smaller than N*NB (35*32=1120) but >= N*2 (70)
-	// This forces nb = floor(lwork/N) = floor(105/35) = 3
-	var lwork = 105;
-	var WORK = new Complex128Array( lwork );
-	var info;
-
+	Aorig = new Complex128Array( data.buffer.slice( 0 ) );
+	A = new Complex128Array( toArray( data ) );
+	IPIV = new Int32Array( N );
+	lwork = 105;
+	WORK = new Complex128Array( lwork );
 	info = zgetrf( N, N, A, 1, N, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, 'zgetrf info' );
-
 	info = zgetri( N, A, 1, N, 0, IPIV, 1, 0, WORK, 1, 0, lwork );
 	assert.equal( info, 0, 'zgetri info' );
-
-	var C = zmatmul( N, reinterpret( Aorig, 0 ), reinterpret( A, 0 ) );
+	C = zmatmul( N, reinterpret( Aorig, 0 ), reinterpret( A, 0 ) );
 	assertComplexIdentity( N, C, 1e-10, 'A * A_inv' );
 });

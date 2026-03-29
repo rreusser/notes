@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsyconv = require( '@stdlib/lapack/base/dsyconv' );

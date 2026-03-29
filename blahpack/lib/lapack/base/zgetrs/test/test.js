@@ -1,15 +1,18 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgetrf2 = require( './../../zgetrf2/lib/base.js' );
 var zgetrs = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
@@ -17,22 +20,50 @@ var ndarrayFn = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgetrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgetrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -217,6 +248,22 @@ function zmatmatH( Av, Bv, N, nrhs ) {
 	return C;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
@@ -230,88 +277,117 @@ test( 'zgetrs: solve_3x3 (no-transpose)', function t() {
 	var B;
 
 	tc = findCase( 'solve_3x3' );
-
-	// A = [(2+1i) (1+0.5i) (1+0.1i); (4+2i) (3+1i) (3+0.5i); (8+3i) (7+2i) (9+1i)] col-major
-	Aorig = new Complex128Array( [
-		2, 1, 4, 2, 8, 3,
-		1, 0.5, 3, 1, 7, 2,
-		1, 0.1, 3, 0.5, 9, 1
-	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Complex128Array([
+		2,
+		1,
+		4,
+		2,
+		8,
+		3,
+		1,
+		0.5,
+		3,
+		1,
+		7,
+		2,
+		1,
+		0.1,
+		3,
+		0.5,
+		9,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
-
 	factorize( 3, A, IPIV );
 	info = zgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
-
-	// Verify A*x = b: multiply original A by solution x (now in B)
+	assertArrayClose( toArray( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
 	Ax = zmatvec( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3 );
-	assertArrayClose( Array.from( Ax ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A*x=b' );
+	assertArrayClose( toArray( Ax ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A*x=b' );
 });
 
 test( 'zgetrs: solve_3x3_trans (transpose)', function t() {
 	var Aorig;
 	var IPIV;
 	var info;
-	var tc;
 	var ATx;
+	var tc;
 	var A;
 	var B;
 
 	tc = findCase( 'solve_3x3_trans' );
-
-	Aorig = new Complex128Array( [
-		2, 1, 4, 2, 8, 3,
-		1, 0.5, 3, 1, 7, 2,
-		1, 0.1, 3, 0.5, 9, 1
-	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Complex128Array([
+		2,
+		1,
+		4,
+		2,
+		8,
+		3,
+		1,
+		0.5,
+		3,
+		1,
+		7,
+		2,
+		1,
+		0.1,
+		3,
+		0.5,
+		9,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
-
 	factorize( 3, A, IPIV );
 	info = zgetrs( 'transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
-
-	// Verify A^T * x = b
+	assertArrayClose( toArray( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
 	ATx = zmatvecT( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3 );
-	assertArrayClose( Array.from( ATx ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A^T*x=b' );
+	assertArrayClose( toArray( ATx ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A^T*x=b' );
 });
 
 test( 'zgetrs: solve_3x3_conj (conjugate transpose)', function t() {
 	var Aorig;
 	var IPIV;
 	var info;
-	var tc;
 	var AHx;
+	var tc;
 	var A;
 	var B;
 
 	tc = findCase( 'solve_3x3_conj' );
-
-	Aorig = new Complex128Array( [
-		2, 1, 4, 2, 8, 3,
-		1, 0.5, 3, 1, 7, 2,
-		1, 0.1, 3, 0.5, 9, 1
-	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Complex128Array([
+		2,
+		1,
+		4,
+		2,
+		8,
+		3,
+		1,
+		0.5,
+		3,
+		1,
+		7,
+		2,
+		1,
+		0.1,
+		3,
+		0.5,
+		9,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
-
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'conjugate-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
+	info = zgetrs( 'conjugate-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
-
-	// Verify A^H * x = b
+	assertArrayClose( toArray( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
 	AHx = zmatvecH( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3 );
-	assertArrayClose( Array.from( AHx ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A^H*x=b' );
+	assertArrayClose( toArray( AHx ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A^H*x=b' );
 });
 
 test( 'zgetrs: multi_rhs (NRHS=2, no-transpose)', function t() {
@@ -325,28 +401,36 @@ test( 'zgetrs: multi_rhs (NRHS=2, no-transpose)', function t() {
 	var B;
 
 	tc = findCase( 'multi_rhs' );
-
-	Aorig = new Complex128Array( [
-		2, 1, 4, 2, 8, 3,
-		1, 0.5, 3, 1, 7, 2,
-		1, 0.1, 3, 0.5, 9, 1
-	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Complex128Array([
+		2,
+		1,
+		4,
+		2,
+		8,
+		3,
+		1,
+		0.5,
+		3,
+		1,
+		7,
+		2,
+		1,
+		0.1,
+		3,
+		0.5,
+		9,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
 	IPIV = new Int32Array( 3 );
-
-	// B is 3x2 col-major: b1 = [1+0i; 0+0i; 0+0i], b2 = [0+0i; 1+0i; 0+0i]
 	Borig = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] );
-	B = new Complex128Array( Array.from( reinterpret( Borig, 0 ) ) );
-
+	B = new Complex128Array( toArray( reinterpret( Borig, 0 ) ) );
 	factorize( 3, A, IPIV );
 	info = zgetrs( 'no-transpose', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
-
-	// Verify A*X = B_original
+	assertArrayClose( toArray( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
 	AB = zmatmat( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3, 2 );
-	assertArrayClose( Array.from( AB ), Array.from( reinterpret( Borig, 0 ) ), 1e-12, 'A*X=B' );
+	assertArrayClose( toArray( AB ), toArray( reinterpret( Borig, 0 ) ), 1e-12, 'A*X=B' ); // eslint-disable-line max-len
 });
 
 test( 'zgetrs: n_zero (quick return)', function t() {
@@ -357,13 +441,10 @@ test( 'zgetrs: n_zero (quick return)', function t() {
 	var B;
 
 	tc = findCase( 'n_zero' );
-
 	A = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
-
 	info = zgetrs( 'no-transpose', 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -375,13 +456,10 @@ test( 'zgetrs: nrhs_zero (quick return)', function t() {
 	var B;
 
 	tc = findCase( 'nrhs_zero' );
-
 	A = new Complex128Array( 9 );
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( 3 );
-
 	info = zgetrs( 'no-transpose', 3, 0, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -393,17 +471,13 @@ test( 'zgetrs: 1x1', function t() {
 	var B;
 
 	tc = findCase( '1x1' );
-
-	// (5+3i)*x = (10+6i) => x = 2+0i
 	A = new Complex128Array( [ 5, 3 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( [ 10, 6 ] );
-
 	factorize( 1, A, IPIV );
 	info = zgetrs( 'no-transpose', 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zgetrs: identity', function t() {
@@ -414,17 +488,13 @@ test( 'zgetrs: identity', function t() {
 	var B;
 
 	tc = findCase( 'identity' );
-
-	// 3x3 identity matrix, col-major
-	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] );
+	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] ); // eslint-disable-line max-len
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( [ 3, 1, 5, 2, 7, 3 ] );
-
 	factorize( 3, A, IPIV );
 	info = zgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( reinterpret( B, 0 ) ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zgetrs: multi_rhs_conj (NRHS=2, conjugate transpose)', function t() {
@@ -432,52 +502,60 @@ test( 'zgetrs: multi_rhs_conj (NRHS=2, conjugate transpose)', function t() {
 	var Aorig;
 	var IPIV;
 	var info;
-	var tc;
 	var AHB;
+	var tc;
 	var A;
 	var B;
 
 	tc = findCase( 'multi_rhs_conj' );
-
-	Aorig = new Complex128Array( [
-		2, 1, 4, 2, 8, 3,
-		1, 0.5, 3, 1, 7, 2,
-		1, 0.1, 3, 0.5, 9, 1
-	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Complex128Array([
+		2,
+		1,
+		4,
+		2,
+		8,
+		3,
+		1,
+		0.5,
+		3,
+		1,
+		7,
+		2,
+		1,
+		0.1,
+		3,
+		0.5,
+		9,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
 	IPIV = new Int32Array( 3 );
-
-	// B is 3x2 col-major: b1 = [1+0i; 0+0i; 0+0i], b2 = [0+0i; 1+0i; 0+0i]
 	Borig = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] );
-	B = new Complex128Array( Array.from( reinterpret( Borig, 0 ) ) );
-
+	B = new Complex128Array( toArray( reinterpret( Borig, 0 ) ) );
 	factorize( 3, A, IPIV );
-	info = zgetrs( 'conjugate-transpose', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
+	info = zgetrs( 'conjugate-transpose', 3, 2, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
-
-	// Verify A^H * X = B_original
+	assertArrayClose( toArray( reinterpret( B, 0 ) ), tc.x, 1e-12, 'x' );
 	AHB = zmatmatH( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3, 2 );
-	assertArrayClose( Array.from( AHB ), Array.from( reinterpret( Borig, 0 ) ), 1e-12, 'A^H*X=B' );
+	assertArrayClose( toArray( AHB ), toArray( reinterpret( Borig, 0 ) ), 1e-12, 'A^H*X=B' ); // eslint-disable-line max-len
 });
 
 // ndarray validation tests
 
 test( 'zgetrs: ndarray throws TypeError for invalid trans', function t() {
-	var A = new Complex128Array( 9 );
 	var IPIV = new Int32Array( 3 );
+	var A = new Complex128Array( 9 );
 	var B = new Complex128Array( 3 );
-	assert.throws( function() {
+	assert.throws( function throws() {
 		ndarrayFn( 'invalid', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 	}, TypeError );
 });
 
 test( 'zgetrs: ndarray throws RangeError for negative N', function t() {
-	var A = new Complex128Array( 9 );
 	var IPIV = new Int32Array( 3 );
+	var A = new Complex128Array( 9 );
 	var B = new Complex128Array( 3 );
-	assert.throws( function() {
+	assert.throws( function throws() {
 		ndarrayFn( 'no-transpose', -1, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 	}, RangeError );
 });
@@ -490,20 +568,32 @@ test( 'zgetrs: lowercase trans argument', function t() {
 	var A;
 	var B;
 
-	// Same as solve_3x3 but with lowercase 'n'
-	Aorig = new Complex128Array( [
-		2, 1, 4, 2, 8, 3,
-		1, 0.5, 3, 1, 7, 2,
-		1, 0.1, 3, 0.5, 9, 1
-	] );
-	A = new Complex128Array( Array.from( reinterpret( Aorig, 0 ) ) );
+	Aorig = new Complex128Array([
+		2,
+		1,
+		4,
+		2,
+		8,
+		3,
+		1,
+		0.5,
+		3,
+		1,
+		7,
+		2,
+		1,
+		0.1,
+		3,
+		0.5,
+		9,
+		1
+	]);
+	A = new Complex128Array( toArray( reinterpret( Aorig, 0 ) ) );
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( [ 1, 0.5, 2, 1, 3, 0 ] );
-
 	factorize( 3, A, IPIV );
 	info = zgetrs( 'no-transpose', 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.equal( info, 0, 'info' );
 	Ax = zmatvec( reinterpret( Aorig, 0 ), reinterpret( B, 0 ), 3 );
-	assertArrayClose( Array.from( Ax ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A*x=b' );
+	assertArrayClose( toArray( Ax ), [ 1, 0.5, 2, 1, 3, 0 ], 1e-12, 'A*x=b' );
 });

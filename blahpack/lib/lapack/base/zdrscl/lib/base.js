@@ -33,7 +33,7 @@ var BIGNUM = 1.0 / SMLNUM;
 // MAIN //
 
 /**
-* Scales a complex vector by the reciprocal of a real scalar, performing the
+* Scales a complex vector by the reciprocal of a real scalar, performing the.
 * scaling carefully to avoid overflow/underflow.
 *
 * Computes x <- x / sa by iteratively multiplying by safe scale factors.

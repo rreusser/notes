@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgebd2 = require( '@stdlib/lapack/base/zgebd2' );

@@ -260,11 +260,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 						obj = dlaev2( d[ offsetD + (l * strideD) ], e[ offsetE + (l * strideE) ], d[ offsetD + (( l + 1 ) * strideD) ] );
 						WORK[ offsetWORK + (l * strideWORK) ] = obj.cs1;
 						WORK[ offsetWORK + (( N - 1 + l ) * strideWORK) ] = obj.sn1;
-						dlasr( 'right', 'variable', 'backward', N, 2,
-							WORK, strideWORK, offsetWORK + (l * strideWORK),
-							WORK, strideWORK, offsetWORK + (( N - 1 + l ) * strideWORK),
-							Z, strideZ1, strideZ2, offsetZ + (l * strideZ2)
-						);
+						dlasr( 'right', 'variable', 'backward', N, 2, WORK, strideWORK, offsetWORK + (l * strideWORK), WORK, strideWORK, offsetWORK + (( N - 1 + l ) * strideWORK), Z, strideZ1, strideZ2, offsetZ + (l * strideZ2));
 						d[ offsetD + (l * strideD) ] = obj.rt1;
 						d[ offsetD + (( l + 1 ) * strideD) ] = obj.rt2;
 					} else {
@@ -321,11 +317,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Apply rotations to Z
 				if ( icompz > 0 ) {
 					mm = m - l + 1;
-					dlasr( 'right', 'variable', 'backward', N, mm,
-						WORK, strideWORK, offsetWORK + (l * strideWORK),
-						WORK, strideWORK, offsetWORK + (( N - 1 + l ) * strideWORK),
-						Z, strideZ1, strideZ2, offsetZ + (l * strideZ2)
-					);
+					dlasr( 'right', 'variable', 'backward', N, mm, WORK, strideWORK, offsetWORK + (l * strideWORK), WORK, strideWORK, offsetWORK + (( N - 1 + l ) * strideWORK), Z, strideZ1, strideZ2, offsetZ + (l * strideZ2));
 				}
 
 				d[ offsetD + (l * strideD) ] -= p;
@@ -375,11 +367,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 						obj = dlaev2( d[ offsetD + (( l - 1 ) * strideD) ], e[ offsetE + (( l - 1 ) * strideE) ], d[ offsetD + (l * strideD) ] );
 						WORK[ offsetWORK + (m * strideWORK) ] = obj.cs1;
 						WORK[ offsetWORK + (( N - 1 + m ) * strideWORK) ] = obj.sn1;
-						dlasr( 'right', 'variable', 'forward', N, 2,
-							WORK, strideWORK, offsetWORK + (m * strideWORK),
-							WORK, strideWORK, offsetWORK + (( N - 1 + m ) * strideWORK),
-							Z, strideZ1, strideZ2, offsetZ + (( l - 1 ) * strideZ2)
-						);
+						dlasr( 'right', 'variable', 'forward', N, 2, WORK, strideWORK, offsetWORK + (m * strideWORK), WORK, strideWORK, offsetWORK + (( N - 1 + m ) * strideWORK), Z, strideZ1, strideZ2, offsetZ + (( l - 1 ) * strideZ2));
 						d[ offsetD + (( l - 1 ) * strideD) ] = obj.rt1;
 						d[ offsetD + (l * strideD) ] = obj.rt2;
 					} else {
@@ -436,11 +424,7 @@ function dsteqr( compz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1
 				// Apply rotations to Z
 				if ( icompz > 0 ) {
 					mm = l - m + 1;
-					dlasr( 'right', 'variable', 'forward', N, mm,
-						WORK, strideWORK, offsetWORK + (m * strideWORK),
-						WORK, strideWORK, offsetWORK + (( N - 1 + m ) * strideWORK),
-						Z, strideZ1, strideZ2, offsetZ + (m * strideZ2)
-					);
+					dlasr( 'right', 'variable', 'forward', N, mm, WORK, strideWORK, offsetWORK + (m * strideWORK), WORK, strideWORK, offsetWORK + (( N - 1 + m ) * strideWORK), Z, strideZ1, strideZ2, offsetZ + (m * strideZ2));
 				}
 
 				d[ offsetD + (l * strideD) ] -= p;

@@ -50,7 +50,7 @@ var max = Math.max;
 // MAIN //
 
 /**
-* Computes selected eigenvalues and, optionally, eigenvectors of a real
+* Computes selected eigenvalues and, optionally, eigenvectors of a real.
 * symmetric matrix A.
 *
 * Eigenvalues and eigenvectors can be selected by specifying a range of values
@@ -110,53 +110,43 @@ function dsyevx( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	var alleig;
 	var valeig;
 	var indeig;
-	var wantz;
-	var lower;
 	var safmin;
 	var smlnum;
 	var bignum;
 	var iscale;
 	var abstll;
+	var indtau;
+	var indwrk;
+	var llwork;
+	var indwkn;
+	var llwrkn;
+	var nsplit;
+	var indibl;
+	var indisp;
+	var indiwo;
+	var wantz;
+	var lower;
 	var sigma;
+	var indee;
+	var order;
+	var itmp1;
 	var anrm;
 	var rmin;
 	var rmax;
 	var info;
 	var imax;
+	var inde;
+	var indd;
+	var Mout;
+	var tmp1;
+	var test;
 	var eps;
 	var vll;
 	var vuu;
-
-	// Workspace partitions (Fortran 1-based offsets mapped to 0-based)
-	var indtau;
-	var inde;
-	var indd;
-	var indwrk;
-	var llwork;
-	var indee;
-	var indwkn;
-	var llwrkn;
-
-	// dstebz outputs
-	var Mout;
-	var nsplit;
-	var indibl;
-	var indisp;
-	var indiwo;
-	var order;
-
-	// Sorting variables
-	var itmp1;
-	var tmp1;
-
-	// Loop variables
+	var jj;
 	var i;
 	var j;
-	var jj;
 	var M;
-
-	// Flag for fast path
-	var test;
 
 	wantz = ( jobz === 'compute-vectors' );
 	alleig = ( range === 'all' );
@@ -246,6 +236,7 @@ function dsyevx( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	dsytrd( uplo, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, indd, WORK, strideWORK, inde, WORK, strideWORK, indtau );
 
 	// Determine if we can use the fast path
+
 	// Fast path: computing all eigenvalues with abstol <= 0
 	test = false;
 	if ( indeig ) {
@@ -299,41 +290,19 @@ function dsyevx( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 		Mout = new Int32Array( 1 );
 		nsplit = new Int32Array( 1 );
 
-		info = dstebz( range, order, N, vll, vuu, il, iu, abstll,
-			WORK, strideWORK, indd,
-			WORK, strideWORK, inde,
-			Mout, nsplit,
-			w, strideW, offsetW,
-			IWORK, strideIWORK, indibl,
-			IWORK, strideIWORK, indisp,
-			WORK, strideWORK, indwrk,
-			IWORK, strideIWORK, indiwo
-		);
+		info = dstebz( range, order, N, vll, vuu, il, iu, abstll, WORK, strideWORK, indd, WORK, strideWORK, inde, Mout, nsplit, w, strideW, offsetW, IWORK, strideIWORK, indibl, IWORK, strideIWORK, indisp, WORK, strideWORK, indwrk, IWORK, strideIWORK, indiwo);
 
 		M = Mout[ 0 ];
 
 		if ( wantz && M > 0 ) {
-			info = dstein( N, WORK, strideWORK, indd, WORK, strideWORK, inde,
-				M, w, strideW, offsetW,
-				IWORK, strideIWORK, indibl,
-				IWORK, strideIWORK, indisp,
-				Z, strideZ1, strideZ2, offsetZ,
-				WORK, strideWORK, indwrk,
-				IWORK, strideIWORK, indiwo,
-				IFAIL, strideIFAIL, offsetIFAIL
-			);
+			info = dstein( N, WORK, strideWORK, indd, WORK, strideWORK, inde, M, w, strideW, offsetW, IWORK, strideIWORK, indibl, IWORK, strideIWORK, indisp, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, indwrk, IWORK, strideIWORK, indiwo, IFAIL, strideIFAIL, offsetIFAIL);
 
 			// Transform eigenvectors back to original space
+
 			// Fortran: INDWKN = INDE, LLWRKN = LWORK - INDWKN + 1
 			indwkn = inde;
 			llwrkn = lwork - ( indwkn - offsetWORK );
-			dormtr( 'left', uplo, 'no-transpose', N, M,
-				A, strideA1, strideA2, offsetA,
-				WORK, strideWORK, indtau,
-				Z, strideZ1, strideZ2, offsetZ,
-				WORK, strideWORK, indwkn,
-				llwrkn
-			);
+			dormtr( 'left', uplo, 'no-transpose', N, M, A, strideA1, strideA2, offsetA, WORK, strideWORK, indtau, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, indwkn, llwrkn);
 		}
 	}
 

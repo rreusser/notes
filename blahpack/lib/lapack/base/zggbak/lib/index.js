@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Back-transform eigenvectors of a balanced pair of matrices.
 *

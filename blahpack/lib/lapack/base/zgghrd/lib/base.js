@@ -231,24 +231,14 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// Iterates over columns (stride=strideA2 complex elements), N-JCOL elements (1-based)
 			s[ 0 ] = sr;
 			s[ 1 ] = si;
-			zrot(
-				N - ( jcol + 1 ),
-				A, strideA2, offsetA + (( jrow - 1 ) * strideA1) + (( jcol + 1 ) * strideA2),
-				A, strideA2, offsetA + (jrow * strideA1) + (( jcol + 1 ) * strideA2),
-				c, s
-			);
+			zrot(N - ( jcol + 1 ), A, strideA2, offsetA + (( jrow - 1 ) * strideA1) + (( jcol + 1 ) * strideA2), A, strideA2, offsetA + (jrow * strideA1) + (( jcol + 1 ) * strideA2), c, s);
 
 			// Apply rotation to B:
 
 			// Fortran: CALL ZROT(N+2-JROW, B(JROW-1,JROW-1), LDB, B(JROW,JROW-1), LDB, C, S)
 
 			// Iterates over columns (stride=strideB2 complex elements)
-			zrot(
-				N + 1 - jrow,
-				B, strideB2, offsetB + (( jrow - 1 ) * strideB1) + (( jrow - 1 ) * strideB2),
-				B, strideB2, offsetB + (jrow * strideB1) + (( jrow - 1 ) * strideB2),
-				c, s
-			);
+			zrot(N + 1 - jrow, B, strideB2, offsetB + (( jrow - 1 ) * strideB1) + (( jrow - 1 ) * strideB2), B, strideB2, offsetB + (jrow * strideB1) + (( jrow - 1 ) * strideB2), c, s);
 
 			// Apply conjugate rotation to Q if needed:
 
@@ -258,12 +248,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			if ( ilq ) {
 				s[ 0 ] = sr;
 				s[ 1 ] = -si; // conjugate
-				zrot(
-					N,
-					Q, strideQ1, offsetQ + (( jrow - 1 ) * strideQ2),
-					Q, strideQ1, offsetQ + (jrow * strideQ2),
-					c, s
-				);
+				zrot(N, Q, strideQ1, offsetQ + (( jrow - 1 ) * strideQ2), Q, strideQ1, offsetQ + (jrow * strideQ2), c, s);
 			}
 
 			// -------------------------------------------------------
@@ -301,24 +286,14 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 			// Iterates over rows (stride=strideA1 complex elements)
 			s[ 0 ] = sr;
 			s[ 1 ] = si;
-			zrot(
-				ihi,
-				A, strideA1, offsetA + (jrow * strideA2),
-				A, strideA1, offsetA + (( jrow - 1 ) * strideA2),
-				c, s
-			);
+			zrot(ihi, A, strideA1, offsetA + (jrow * strideA2), A, strideA1, offsetA + (( jrow - 1 ) * strideA2), c, s);
 
 			// Apply rotation to B from the right:
 
 			// Fortran: CALL ZROT(JROW-1, B(1,JROW), 1, B(1,JROW-1), 1, C, S)
 
 			// Iterates over rows (stride=strideB1 complex elements)
-			zrot(
-				jrow,
-				B, strideB1, offsetB + (jrow * strideB2),
-				B, strideB1, offsetB + (( jrow - 1 ) * strideB2),
-				c, s
-			);
+			zrot(jrow, B, strideB1, offsetB + (jrow * strideB2), B, strideB1, offsetB + (( jrow - 1 ) * strideB2), c, s);
 
 			// Apply rotation to Z if needed:
 
@@ -326,12 +301,7 @@ function zgghrd( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, s
 
 			// Iterates over rows (stride=strideZ1 complex elements)
 			if ( ilz ) {
-				zrot(
-					N,
-					Z, strideZ1, offsetZ + (jrow * strideZ2),
-					Z, strideZ1, offsetZ + (( jrow - 1 ) * strideZ2),
-					c, s
-				);
+				zrot(N, Z, strideZ1, offsetZ + (jrow * strideZ2), Z, strideZ1, offsetZ + (( jrow - 1 ) * strideZ2), c, s);
 			}
 		}
 	}

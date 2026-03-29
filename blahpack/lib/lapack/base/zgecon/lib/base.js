@@ -40,7 +40,7 @@ var HUGEVAL = 1.7976931348623157e+308; // DLAMCH('Overflow')
 // FUNCTIONS //
 
 /**
-* CABS1: |re(z)| + |im(z)|
+* CABS1: |re(z)| + |im(z)|.
 *
 * @private
 * @param {Float64Array} v - Float64 view of complex array
@@ -55,7 +55,7 @@ function cabs1( v, idx ) {
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a general complex matrix A,
+* Estimates the reciprocal of the condition number of a general complex matrix A,.
 * in either the 1-norm or the infinity-norm, using the LU factorization
 * computed by zgetrf.
 *
@@ -134,7 +134,8 @@ function zgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	KASE[ 0 ] = 0;
 
 	// zlacn2 uses V = WORK[N..2N-1], X = WORK[0..N-1] (complex elements)
-	// zlatrs uses CNORM stored at RWORK[0..N-1] and RWORK[N..2N-1] for lower/upper
+
+	// Zlatrs uses CNORM stored at RWORK[0..N-1] and RWORK[N..2N-1] for lower/upper
 
 	// Reverse-communication loop
 	bail = false;
@@ -142,11 +143,9 @@ function zgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 	xv = reinterpret( WORK, 0 );
 
 	while ( true ) {
-		zlacn2( N,
-			WORK, sw, offsetWORK + ( N * sw ), // v
+		zlacn2( N, WORK, sw, offsetWORK + ( N * sw ), // v
 			WORK, sw, offsetWORK, // x
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -154,29 +153,17 @@ function zgecon( norm, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 
 		if ( KASE[ 0 ] === kase1 ) {
 			// Multiply by inv(L), then inv(U)
-			zlatrs( 'lower', 'no-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, RWORK, strideRWORK, offsetRWORK
-			);
+			zlatrs( 'lower', 'no-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK);
 			sl = scale[ 0 ];
 
-			zlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, RWORK, strideRWORK, offsetRWORK + ( N * strideRWORK )
-			);
+			zlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK + ( N * strideRWORK ));
 			su = scale[ 0 ];
 		} else {
 			// Multiply by inv(U^H), then inv(L^H)
-			zlatrs( 'upper', 'conjugate-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, RWORK, strideRWORK, offsetRWORK + ( N * strideRWORK )
-			);
+			zlatrs( 'upper', 'conjugate-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK + ( N * strideRWORK ));
 			su = scale[ 0 ];
 
-			zlatrs( 'lower', 'conjugate-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, RWORK, strideRWORK, offsetRWORK
-			);
+			zlatrs( 'lower', 'conjugate-transpose', 'unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK);
 			sl = scale[ 0 ];
 		}
 

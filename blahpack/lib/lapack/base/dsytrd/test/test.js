@@ -1,33 +1,64 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
-var Float64Array = require( '@stdlib/array/float64' );
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dsytrd = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsytrd.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dsytrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -46,9 +77,9 @@ function matrix4x4() {
 	//  2  1  6  1
 	//  1  2  1  7
 	var A = new Float64Array( 16 );
-	A[  0 ] = 4.0; A[  1 ] = 1.0; A[  2 ] = 2.0; A[  3 ] = 1.0;
-	A[  4 ] = 1.0; A[  5 ] = 5.0; A[  6 ] = 1.0; A[  7 ] = 2.0;
-	A[  8 ] = 2.0; A[  9 ] = 1.0; A[ 10 ] = 6.0; A[ 11 ] = 1.0;
+	A[ 0 ] = 4.0; A[ 1 ] = 1.0; A[ 2 ] = 2.0; A[ 3 ] = 1.0;
+	A[ 4 ] = 1.0; A[ 5 ] = 5.0; A[ 6 ] = 1.0; A[ 7 ] = 2.0;
+	A[ 8 ] = 2.0; A[ 9 ] = 1.0; A[ 10 ] = 6.0; A[ 11 ] = 1.0;
 	A[ 12 ] = 1.0; A[ 13 ] = 2.0; A[ 14 ] = 1.0; A[ 15 ] = 7.0;
 	return A;
 }
@@ -65,7 +96,7 @@ function matrix35x35() {
 			if ( i === j ) {
 				A[ i + j * 35 ] = ( i + 1 ) + 35.0;
 			} else {
-				A[ i + j * 35 ] = 0.1 * ( ( ( i + 1 ) * ( j + 1 ) + ( i + 1 ) + ( j + 1 ) ) % 7 ) / 7.0;
+				A[ i + j * 35 ] = 0.1 * ( ( ( i + 1 ) * ( j + 1 ) + ( i + 1 ) + ( j + 1 ) ) % 7 ) / 7.0; // eslint-disable-line max-len
 			}
 		}
 	}
@@ -83,9 +114,9 @@ function matrix35x35() {
 */
 function extractResults( N, d, e, TAU ) {
 	return {
-		d: Array.prototype.slice.call( d, 0, N ),
-		e: Array.prototype.slice.call( e, 0, N - 1 ),
-		tau: Array.prototype.slice.call( TAU, 0, N - 1 )
+		'd': Array.prototype.slice.call( d, 0, N ),
+		'e': Array.prototype.slice.call( e, 0, N - 1 ),
+		'tau': Array.prototype.slice.call( TAU, 0, N - 1 )
 	};
 }
 
@@ -93,15 +124,21 @@ function extractResults( N, d, e, TAU ) {
 // TESTS //
 
 test( 'dsytrd: upper_4x4 (unblocked path)', function t() {
-	var tc = findCase( 'upper_4x4' );
-	var TAU = new Float64Array( 3 );
-	var d = new Float64Array( 4 );
-	var e = new Float64Array( 3 );
-	var A = matrix4x4();
-	var WORK = new Float64Array( 1 );
+	var WORK;
 	var info;
+	var TAU;
 	var res;
+	var tc;
+	var d;
+	var e;
+	var A;
 
+	tc = findCase( 'upper_4x4' );
+	TAU = new Float64Array( 3 );
+	d = new Float64Array( 4 );
+	e = new Float64Array( 3 );
+	A = matrix4x4();
+	WORK = new Float64Array( 1 );
 	info = dsytrd('upper', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 4, d, e, TAU );
@@ -111,15 +148,21 @@ test( 'dsytrd: upper_4x4 (unblocked path)', function t() {
 });
 
 test( 'dsytrd: lower_4x4 (unblocked path)', function t() {
-	var tc = findCase( 'lower_4x4' );
-	var TAU = new Float64Array( 3 );
-	var d = new Float64Array( 4 );
-	var e = new Float64Array( 3 );
-	var A = matrix4x4();
-	var WORK = new Float64Array( 1 );
+	var WORK;
 	var info;
+	var TAU;
 	var res;
+	var tc;
+	var d;
+	var e;
+	var A;
 
+	tc = findCase( 'lower_4x4' );
+	TAU = new Float64Array( 3 );
+	d = new Float64Array( 4 );
+	e = new Float64Array( 3 );
+	A = matrix4x4();
+	WORK = new Float64Array( 1 );
 	info = dsytrd('lower', 4, A, 1, 4, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 4, d, e, TAU );
@@ -129,55 +172,78 @@ test( 'dsytrd: lower_4x4 (unblocked path)', function t() {
 });
 
 test( 'dsytrd: n_one_upper', function t() {
-	var tc = findCase( 'n_one_upper' );
-	var TAU = new Float64Array( 1 );
-	var d = new Float64Array( 1 );
-	var e = new Float64Array( 1 );
-	var A = new Float64Array( [ 3.0 ] );
-	var WORK = new Float64Array( 1 );
+	var WORK;
 	var info;
+	var TAU;
+	var tc;
+	var d;
+	var e;
+	var A;
 
+	tc = findCase( 'n_one_upper' );
+	TAU = new Float64Array( 1 );
+	d = new Float64Array( 1 );
+	e = new Float64Array( 1 );
+	A = new Float64Array( [ 3.0 ] );
+	WORK = new Float64Array( 1 );
 	info = dsytrd('upper', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
 });
 
 test( 'dsytrd: n_one_lower', function t() {
-	var tc = findCase( 'n_one_lower' );
-	var TAU = new Float64Array( 1 );
-	var d = new Float64Array( 1 );
-	var e = new Float64Array( 1 );
-	var A = new Float64Array( [ 5.0 ] );
-	var WORK = new Float64Array( 1 );
+	var WORK;
 	var info;
+	var TAU;
+	var tc;
+	var d;
+	var e;
+	var A;
 
+	tc = findCase( 'n_one_lower' );
+	TAU = new Float64Array( 1 );
+	d = new Float64Array( 1 );
+	e = new Float64Array( 1 );
+	A = new Float64Array( [ 5.0 ] );
+	WORK = new Float64Array( 1 );
 	info = dsytrd('lower', 1, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	assertClose( d[ 0 ], tc.d1, 1e-14, 'd1' );
 });
 
 test( 'dsytrd: n_zero', function t() {
-	var A = new Float64Array( 1 );
-	var d = new Float64Array( 1 );
-	var e = new Float64Array( 1 );
-	var TAU = new Float64Array( 1 );
-	var WORK = new Float64Array( 1 );
+	var WORK;
 	var info;
+	var TAU;
+	var A;
+	var d;
+	var e;
 
+	A = new Float64Array( 1 );
+	d = new Float64Array( 1 );
+	e = new Float64Array( 1 );
+	TAU = new Float64Array( 1 );
+	WORK = new Float64Array( 1 );
 	info = dsytrd('upper', 0, A, 1, 1, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });
 
 test( 'dsytrd: upper_35x35 (blocked path)', function t() {
-	var tc = findCase( 'upper_35x35' );
-	var TAU = new Float64Array( 34 );
-	var d = new Float64Array( 35 );
-	var e = new Float64Array( 34 );
-	var A = matrix35x35();
-	var WORK = new Float64Array( 1 );
+	var WORK;
 	var info;
+	var TAU;
 	var res;
+	var tc;
+	var d;
+	var e;
+	var A;
 
+	tc = findCase( 'upper_35x35' );
+	TAU = new Float64Array( 34 );
+	d = new Float64Array( 35 );
+	e = new Float64Array( 34 );
+	A = matrix35x35();
+	WORK = new Float64Array( 1 );
 	info = dsytrd('upper', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 35, d, e, TAU );
@@ -187,15 +253,21 @@ test( 'dsytrd: upper_35x35 (blocked path)', function t() {
 });
 
 test( 'dsytrd: lower_35x35 (blocked path)', function t() {
-	var tc = findCase( 'lower_35x35' );
-	var TAU = new Float64Array( 34 );
-	var d = new Float64Array( 35 );
-	var e = new Float64Array( 34 );
-	var A = matrix35x35();
-	var WORK = new Float64Array( 1 );
+	var WORK;
 	var info;
+	var TAU;
 	var res;
+	var tc;
+	var d;
+	var e;
+	var A;
 
+	tc = findCase( 'lower_35x35' );
+	TAU = new Float64Array( 34 );
+	d = new Float64Array( 35 );
+	e = new Float64Array( 34 );
+	A = matrix35x35();
+	WORK = new Float64Array( 1 );
 	info = dsytrd('lower', 35, A, 1, 35, 0, d, 1, 0, e, 1, 0, TAU, 1, 0 );
 	assert.equal( info, 0, 'info' );
 	res = extractResults( 35, d, e, TAU );

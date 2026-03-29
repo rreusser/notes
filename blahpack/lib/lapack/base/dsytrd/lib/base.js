@@ -123,13 +123,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// Fortran: DLATRD(UPLO, I+NB-1, NB, A, LDA, E, TAU, WORK, LDWORK)
 			// Fortran I = i+1, so I+NB-1 = i+1+NB-1 = i+NB
 			// Dlatrd signature: (uplo, N, nb, A, sa1, sa2, oA, e, sE, oE, TAU, sTAU, oTAU, W, sw1, sw2, oW)
-			dlatrd(
-				uplo, i + nb, nb,
-				A, sa1, sa2, offsetA,
-				e, strideE, offsetE,
-				TAU, strideTAU, offsetTAU,
-				work, 1, ldwork, 0
-			);
+			dlatrd(uplo, i + nb, nb, A, sa1, sa2, offsetA, e, strideE, offsetE, TAU, strideTAU, offsetTAU, work, 1, ldwork, 0);
 
 			// Update the unreduced submatrix A(0:i-1, 0:i-1):
 
@@ -142,13 +136,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// A(1,I) in Fortran (1-based) = A(0, i) in 0-based = offsetA + i*sa2
 
 			// WORK starts at (0,0) with strides (1, ldwork)
-			dsyr2k(
-				uplo, 'no-transpose', i, nb, -1.0,
-				A, sa1, sa2, offsetA + (i * sa2),
-				work, 1, ldwork, 0,
-				1.0,
-				A, sa1, sa2, offsetA
-			);
+			dsyr2k(uplo, 'no-transpose', i, nb, -1.0, A, sa1, sa2, offsetA + (i * sa2), work, 1, ldwork, 0, 1.0, A, sa1, sa2, offsetA);
 
 			// Copy superdiagonal elements back into A, and diagonal elements into D
 
@@ -185,13 +173,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// A(I,I) 1-based = A(i,i) 0-based = offsetA + i*sa1 + i*sa2
 			// E(I) 1-based = e[i] 0-based (offset + i*stride)
 			// TAU(I) 1-based = TAU[i] 0-based
-			dlatrd(
-				uplo, N - i, nb,
-				A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
-				e, strideE, offsetE + (i * strideE),
-				TAU, strideTAU, offsetTAU + (i * strideTAU),
-				work, 1, ldwork, 0
-			);
+			dlatrd(uplo, N - i, nb, A, sa1, sa2, offsetA + (i * sa1) + (i * sa2), e, strideE, offsetE + (i * strideE), TAU, strideTAU, offsetTAU + (i * strideTAU), work, 1, ldwork, 0);
 
 			// Update the unreduced submatrix A(i+nb:N-1, i+nb:N-1):
 
@@ -206,13 +188,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 			// WORK(NB+1) 1-based = work[nb] 0-based (row nb, col 0)
 
 			// A(I+NB, I+NB) 1-based = A(i+nb, i+nb) 0-based
-			dsyr2k(
-				uplo, 'no-transpose', N - i - nb, nb, -1.0,
-				A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (i * sa2),
-				work, 1, ldwork, nb,
-				1.0,
-				A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (( i + nb ) * sa2)
-			);
+			dsyr2k(uplo, 'no-transpose', N - i - nb, nb, -1.0, A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (i * sa2), work, 1, ldwork, nb, 1.0, A, sa1, sa2, offsetA + (( i + nb ) * sa1) + (( i + nb ) * sa2));
 
 			// Copy subdiagonal elements back into A, and diagonal elements into D
 
@@ -233,13 +209,7 @@ function dsytrd( uplo, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e
 		// Use unblocked code to reduce the last or only block
 		// Fortran: DSYTD2(UPLO, N-I+1, A(I,I), LDA, D(I), E(I), TAU(I), IINFO)
 		// Fortran I = i+1, so N-I+1 = N-i
-		dsytd2(
-			uplo, N - i,
-			A, sa1, sa2, offsetA + (i * sa1) + (i * sa2),
-			d, strideD, offsetD + (i * strideD),
-			e, strideE, offsetE + (i * strideE),
-			TAU, strideTAU, offsetTAU + (i * strideTAU)
-		);
+		dsytd2(uplo, N - i, A, sa1, sa2, offsetA + (i * sa1) + (i * sa2), d, strideD, offsetD + (i * strideD), e, strideE, offsetE + (i * strideE), TAU, strideTAU, offsetTAU + (i * strideTAU));
 	}
 
 	return 0;

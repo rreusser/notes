@@ -162,25 +162,19 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 		}
 
 		// Scale submatrix in rows and columns l to lend
-		anorm = dlanst( 'max', lend - l + 1,
-			d, strideD, offsetD + (l * strideD),
-			e, strideE, offsetE + (l * strideE) );
+		anorm = dlanst( 'max', lend - l + 1, d, strideD, offsetD + (l * strideD), e, strideE, offsetE + (l * strideE) );
 		iscale = 0;
 		if ( anorm === 0.0 ) {
 			continue;
 		}
 		if ( anorm > ssfmax ) {
 			iscale = 1;
-			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l + 1, 1,
-				d, 1, strideD, offsetD + (l * strideD) );
-			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l, 1,
-				e, 1, strideE, offsetE + (l * strideE) );
+			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l + 1, 1, d, 1, strideD, offsetD + (l * strideD) );
+			dlascl( 'general', 0, 0, anorm, ssfmax, lend - l, 1, e, 1, strideE, offsetE + (l * strideE) );
 		} else if ( anorm < ssfmin ) {
 			iscale = 2;
-			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l + 1, 1,
-				d, 1, strideD, offsetD + (l * strideD) );
-			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l, 1,
-				e, 1, strideE, offsetE + (l * strideE) );
+			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l + 1, 1, d, 1, strideD, offsetD + (l * strideD) );
+			dlascl( 'general', 0, 0, anorm, ssfmin, lend - l, 1, e, 1, strideE, offsetE + (l * strideE) );
 		}
 
 		// Square the off-diagonal elements
@@ -381,12 +375,10 @@ function dsterf( N, d, strideD, offsetD, e, strideE, offsetE ) {
 
 		// Label 150: Undo scaling if necessary
 		if ( iscale === 1 ) {
-			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1,
-				d, 1, strideD, offsetD + (lsv * strideD) );
+			dlascl( 'general', 0, 0, ssfmax, anorm, lendsv - lsv + 1, 1, d, 1, strideD, offsetD + (lsv * strideD) );
 		}
 		if ( iscale === 2 ) {
-			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv + 1, 1,
-				d, 1, strideD, offsetD + (lsv * strideD) );
+			dlascl( 'general', 0, 0, ssfmin, anorm, lendsv - lsv + 1, 1, d, 1, strideD, offsetD + (lsv * strideD) );
 		}
 
 		// Check for no convergence

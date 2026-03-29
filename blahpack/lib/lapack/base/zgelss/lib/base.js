@@ -206,17 +206,14 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 			iwork = itau + N;
 
 			// Compute A = Q * R
-			zgeqrf( M, N, A, strideA1, strideA2, offsetA,
-				WORK, 1, itau,
-				WORK, 1, iwork );
+			zgeqrf( M, N, A, strideA1, strideA2, offsetA, WORK, 1, itau, WORK, 1, iwork );
 
 			// Multiply B := Q^H * B
 			zunmqr( 'left', 'conjugate-transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itau, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
 
 			// Zero out below-diagonal of R
 			if ( N > 1 ) {
-				zlaset( 'lower', N - 1, N - 1, CZERO, CZERO,
-					A, strideA1, strideA2, offsetA + strideA1 );
+				zlaset( 'lower', N - 1, N - 1, CZERO, CZERO, A, strideA1, strideA2, offsetA + strideA1 );
 			}
 		}
 
@@ -229,12 +226,7 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = itaup + N;           // scratch after TAUP
 
 		// Bidiagonal reduction: A = Q_b * B_bd * P_b^H (of the mm-by-N matrix)
-		zgebrd( mm, N, A, strideA1, strideA2, offsetA,
-			S, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			WORK, 1, itauq,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		zgebrd( mm, N, A, strideA1, strideA2, offsetA, S, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, WORK, 1, itauq, WORK, 1, itaup, WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by conjugate-transpose of left bidiagonal transformation: B := Q_b^H * B
 		zunmbr( 'apply-Q', 'left', 'conjugate-transpose', mm, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
@@ -244,14 +236,9 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		irwork = ie + N;
 
 		// Compute SVD of bidiagonal: S = singular values, A = P_b^H (right singular vectors)
+
 		// B is multiplied by Q_b^H on the left
-		info = zbdsqr( 'upper', N, N, 0, nrhs,
-			S, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			A, strideA1, strideA2, offsetA,
-			DUM, 1, 1, 0,
-			B, strideB1, strideB2, offsetB,
-			RWORK, strideRWORK, offsetRWORK + irwork );
+		info = zbdsqr( 'upper', N, N, 0, nrhs, S, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, A, strideA1, strideA2, offsetA, DUM, 1, 1, 0, B, strideB1, strideB2, offsetB, RWORK, strideRWORK, offsetRWORK + irwork );
 		if ( info !== 0 ) {
 			rank[ 0 ] = 0;
 			return info;
@@ -266,43 +253,28 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		for ( i = 0; i < N; i++ ) {
 			if ( S[ offsetS + (i * strideS) ] > thr ) {
 				// Scale the corresponding row of B by 1/S(i)
-				zdrscl( nrhs, S[ offsetS + (i * strideS) ],
-					B, strideB2, offsetB + (i * strideB1) );
+				zdrscl( nrhs, S[ offsetS + (i * strideS) ], B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
 				// Zero out the corresponding row of B
-				zlaset( 'full', 1, nrhs, CZERO, CZERO,
-					B, strideB1, strideB2, offsetB + (i * strideB1) );
+				zlaset( 'full', 1, nrhs, CZERO, CZERO, B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 
 		// Multiply by right singular vectors: X = V^H^T * (Sigma^+ * Q_b^H * B)
 		// A now contains V^H (the right singular vectors in rows), so X = A^H * B
 		if ( lwork >= strideB2 * nrhs && nrhs > 1 ) {
-			zgemm( 'conjugate-transpose', 'no-transpose', N, nrhs, N, CONE,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, strideB2, offsetB,
-				CZERO, WORK, 1, N, 0 );
-			zlacpy( 'full', N, nrhs,
-				WORK, 1, N, 0,
-				B, strideB1, strideB2, offsetB );
+			zgemm( 'conjugate-transpose', 'no-transpose', N, nrhs, N, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, CZERO, WORK, 1, N, 0 );
+			zlacpy( 'full', N, nrhs, WORK, 1, N, 0, B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
 			chunk = Math.max( 1, Math.floor( lwork / N ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				zgemm( 'conjugate-transpose', 'no-transpose', N, bl, N, CONE,
-					A, strideA1, strideA2, offsetA,
-					B, strideB1, strideB2, offsetB + (i * strideB2),
-					CZERO, WORK, 1, N, 0 );
-				zlacpy( 'full', N, bl,
-					WORK, 1, N, 0,
-					B, strideB1, strideB2, offsetB + (i * strideB2) );
+				zgemm( 'conjugate-transpose', 'no-transpose', N, bl, N, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB + (i * strideB2), CZERO, WORK, 1, N, 0 );
+				zlacpy( 'full', N, bl, WORK, 1, N, 0, B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
-			zgemv( 'conjugate-transpose', N, N, CONE,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, offsetB,
-				CZERO, WORK, 1, 0 );
+			zgemv( 'conjugate-transpose', N, N, CONE, A, strideA1, strideA2, offsetA, B, strideB1, offsetB, CZERO, WORK, 1, 0 );
 			zcopy( N, WORK, 1, 0, B, strideB1, offsetB );
 		}
 	} else if ( N >= mnthr && lwork >= (3 * M) + (M * M) + Math.max( M, nrhs, N - (2 * M) ) ) {
@@ -320,11 +292,8 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		il = iwork; // IL: copy of L starts here, ldwork-by-M stored column-major
 
 		// Copy L into workspace and zero it in A
-		zlacpy( 'lower', M, M,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, ldwork, il );
-		zlaset( 'upper', M - 1, M - 1, CZERO, CZERO,
-			WORK, 1, ldwork, il + ldwork );
+		zlacpy( 'lower', M, M, A, strideA1, strideA2, offsetA, WORK, 1, ldwork, il );
+		zlaset( 'upper', M - 1, M - 1, CZERO, CZERO, WORK, 1, ldwork, il + ldwork );
 
 		// Real workspace for bidiagonal off-diagonal
 		ie = 0;
@@ -335,12 +304,7 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = itaup + M;
 
 		// Bidiagonal reduction of L (M-by-M)
-		zgebrd( M, M, WORK, 1, ldwork, il,
-			S, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			WORK, 1, itauq,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		zgebrd( M, M, WORK, 1, ldwork, il, S, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, WORK, 1, itauq, WORK, 1, itaup, WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by conjugate-transpose of left bidiagonal transformation: B := Q_b^H * B
 		zunmbr( 'apply-Q', 'left', 'conjugate-transpose', M, nrhs, M, WORK, 1, ldwork, il, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
@@ -350,13 +314,7 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		irwork = ie + M;
 
 		// Compute SVD of bidiagonal of L
-		info = zbdsqr( 'upper', M, M, 0, nrhs,
-			S, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			WORK, 1, ldwork, il,
-			DUM, 1, 1, 0,
-			B, strideB1, strideB2, offsetB,
-			RWORK, strideRWORK, offsetRWORK + irwork );
+		info = zbdsqr( 'upper', M, M, 0, nrhs, S, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, WORK, 1, ldwork, il, DUM, 1, 1, 0, B, strideB1, strideB2, offsetB, RWORK, strideRWORK, offsetRWORK + irwork );
 		if ( info !== 0 ) {
 			rank[ 0 ] = 0;
 			return info;
@@ -370,48 +328,32 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		rank[ 0 ] = 0;
 		for ( i = 0; i < M; i++ ) {
 			if ( S[ offsetS + (i * strideS) ] > thr ) {
-				zdrscl( nrhs, S[ offsetS + (i * strideS) ],
-					B, strideB2, offsetB + (i * strideB1) );
+				zdrscl( nrhs, S[ offsetS + (i * strideS) ], B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
-				zlaset( 'full', 1, nrhs, CZERO, CZERO,
-					B, strideB1, strideB2, offsetB + (i * strideB1) );
+				zlaset( 'full', 1, nrhs, CZERO, CZERO, B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 		iwork = il + (M * ldwork);
 
 		// Multiply by right singular vectors of L: X_L = V_L^H^T * (Sigma^+ * ...)
 		if ( lwork >= iwork + (M * nrhs) && nrhs > 1 ) {
-			zgemm( 'conjugate-transpose', 'no-transpose', M, nrhs, M, CONE,
-				WORK, 1, ldwork, il,
-				B, strideB1, strideB2, offsetB,
-				CZERO, WORK, 1, M, iwork );
-			zlacpy( 'full', M, nrhs,
-				WORK, 1, M, iwork,
-				B, strideB1, strideB2, offsetB );
+			zgemm( 'conjugate-transpose', 'no-transpose', M, nrhs, M, CONE, WORK, 1, ldwork, il, B, strideB1, strideB2, offsetB, CZERO, WORK, 1, M, iwork );
+			zlacpy( 'full', M, nrhs, WORK, 1, M, iwork, B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
 			chunk = Math.max( 1, Math.floor( ( lwork - iwork ) / M ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				zgemm( 'conjugate-transpose', 'no-transpose', M, bl, M, CONE,
-					WORK, 1, ldwork, il,
-					B, strideB1, strideB2, offsetB + (i * strideB2),
-					CZERO, WORK, 1, M, iwork );
-				zlacpy( 'full', M, bl,
-					WORK, 1, M, iwork,
-					B, strideB1, strideB2, offsetB + (i * strideB2) );
+				zgemm( 'conjugate-transpose', 'no-transpose', M, bl, M, CONE, WORK, 1, ldwork, il, B, strideB1, strideB2, offsetB + (i * strideB2), CZERO, WORK, 1, M, iwork );
+				zlacpy( 'full', M, bl, WORK, 1, M, iwork, B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
-			zgemv( 'conjugate-transpose', M, M, CONE,
-				WORK, 1, ldwork, il,
-				B, strideB1, offsetB,
-				CZERO, WORK, 1, iwork );
+			zgemv( 'conjugate-transpose', M, M, CONE, WORK, 1, ldwork, il, B, strideB1, offsetB, CZERO, WORK, 1, iwork );
 			zcopy( M, WORK, 1, iwork, B, strideB1, offsetB );
 		}
 
 		// Zero out B(M+1:N, 1:NRHS)
-		zlaset( 'full', N - M, nrhs, CZERO, CZERO,
-			B, strideB1, strideB2, offsetB + (M * strideB1) );
+		zlaset( 'full', N - M, nrhs, CZERO, CZERO, B, strideB1, strideB2, offsetB + (M * strideB1) );
 
 		// Multiply by Q^H from LQ factorization: X = Q^H * [X_L; 0]
 		iwork = itau + M;
@@ -430,12 +372,7 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		iwork = itaup + M;
 
 		// Bidiagonal reduction of A (M-by-N)
-		zgebrd( M, N, A, strideA1, strideA2, offsetA,
-			S, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			WORK, 1, itauq,
-			WORK, 1, itaup,
-			WORK, 1, iwork, lwork - iwork );
+		zgebrd( M, N, A, strideA1, strideA2, offsetA, S, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, WORK, 1, itauq, WORK, 1, itaup, WORK, 1, iwork, lwork - iwork );
 
 		// Multiply B by conjugate-transpose of left bidiagonal transformation
 		zunmbr( 'apply-Q', 'left', 'conjugate-transpose', M, nrhs, N, A, strideA1, strideA2, offsetA, WORK, 1, itauq, B, strideB1, strideB2, offsetB, WORK, 1, iwork );
@@ -445,13 +382,7 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		irwork = ie + M;
 
 		// Compute SVD of bidiagonal (lower bidiagonal for M < N)
-		info = zbdsqr( 'lower', M, N, 0, nrhs,
-			S, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			A, strideA1, strideA2, offsetA,
-			DUM, 1, 1, 0,
-			B, strideB1, strideB2, offsetB,
-			RWORK, strideRWORK, offsetRWORK + irwork );
+		info = zbdsqr( 'lower', M, N, 0, nrhs, S, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, A, strideA1, strideA2, offsetA, DUM, 1, 1, 0, B, strideB1, strideB2, offsetB, RWORK, strideRWORK, offsetRWORK + irwork );
 		if ( info !== 0 ) {
 			rank[ 0 ] = 0;
 			return info;
@@ -465,41 +396,26 @@ function zgelss( M, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stride
 		rank[ 0 ] = 0;
 		for ( i = 0; i < M; i++ ) {
 			if ( S[ offsetS + (i * strideS) ] > thr ) {
-				zdrscl( nrhs, S[ offsetS + (i * strideS) ],
-					B, strideB2, offsetB + (i * strideB1) );
+				zdrscl( nrhs, S[ offsetS + (i * strideS) ], B, strideB2, offsetB + (i * strideB1) );
 				rank[ 0 ] += 1;
 			} else {
-				zlaset( 'full', 1, nrhs, CZERO, CZERO,
-					B, strideB1, strideB2, offsetB + (i * strideB1) );
+				zlaset( 'full', 1, nrhs, CZERO, CZERO, B, strideB1, strideB2, offsetB + (i * strideB1) );
 			}
 		}
 
 		// Multiply by right singular vectors: X = V^H^T * (Sigma^+ * ...)
 		if ( lwork >= strideB2 * nrhs && nrhs > 1 ) {
-			zgemm( 'conjugate-transpose', 'no-transpose', N, nrhs, M, CONE,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, strideB2, offsetB,
-				CZERO, WORK, 1, N, 0 );
-			zlacpy( 'full', N, nrhs,
-				WORK, 1, N, 0,
-				B, strideB1, strideB2, offsetB );
+			zgemm( 'conjugate-transpose', 'no-transpose', N, nrhs, M, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, CZERO, WORK, 1, N, 0 );
+			zlacpy( 'full', N, nrhs, WORK, 1, N, 0, B, strideB1, strideB2, offsetB );
 		} else if ( nrhs > 1 ) {
 			chunk = Math.max( 1, Math.floor( lwork / N ) );
 			for ( i = 0; i < nrhs; i += chunk ) {
 				bl = Math.min( nrhs - i, chunk );
-				zgemm( 'conjugate-transpose', 'no-transpose', N, bl, M, CONE,
-					A, strideA1, strideA2, offsetA,
-					B, strideB1, strideB2, offsetB + (i * strideB2),
-					CZERO, WORK, 1, N, 0 );
-				zlacpy( 'full', N, bl,
-					WORK, 1, N, 0,
-					B, strideB1, strideB2, offsetB + (i * strideB2) );
+				zgemm( 'conjugate-transpose', 'no-transpose', N, bl, M, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB + (i * strideB2), CZERO, WORK, 1, N, 0 );
+				zlacpy( 'full', N, bl, WORK, 1, N, 0, B, strideB1, strideB2, offsetB + (i * strideB2) );
 			}
 		} else if ( nrhs === 1 ) {
-			zgemv( 'conjugate-transpose', M, N, CONE,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, offsetB,
-				CZERO, WORK, 1, 0 );
+			zgemv( 'conjugate-transpose', M, N, CONE, A, strideA1, strideA2, offsetA, B, strideB1, offsetB, CZERO, WORK, 1, 0 );
 			zcopy( N, WORK, 1, 0, B, strideB1, offsetB );
 		}
 	}

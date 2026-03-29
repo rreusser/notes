@@ -31,8 +31,8 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a system of linear equations A*X = B with a real symmetric matrix A
-* using the factorization A = U*D*U^T or A = L*D*L^T computed by dsytrf,
+* Solves a system of linear equations A_X = B with a real symmetric matrix A.
+_ using the factorization A = U_D_U^T or A = L_D*L^T computed by dsytrf,
 * employing BLAS-3 triangular solves (dtrsm) after converting the factorization
 * via dsyconv.
 *
@@ -107,7 +107,8 @@ function dsytrs2( uplo, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 	sw = strideWORK;
 
 	// Step 1: Convert factorization. dsyconv extracts off-diagonal elements
-	// of D into WORK and permutes the triangular factor rows/columns.
+
+	// Of D into WORK and permutes the triangular factor rows/columns.
 	dsyconv( uplo, 'convert', N, A, sa1, sa2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, sw, offsetWORK );
 
 	if ( upper ) {

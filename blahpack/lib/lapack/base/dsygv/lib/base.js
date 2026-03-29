@@ -32,11 +32,11 @@ var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
 // MAIN //
 
 /**
-* Computes all the eigenvalues, and optionally, the eigenvectors of a real
+* Computes all the eigenvalues, and optionally, the eigenvectors of a real.
 * generalized symmetric-definite eigenproblem:
-*   A*x = lambda*B*x  (itype=1)
-*   A*B*x = lambda*x  (itype=2)
-*   B*A*x = lambda*x  (itype=3)
+*   A_x = lambda_B_x  (itype=1)
+_   A_B_x = lambda_x  (itype=2)
+*   B_A_x = lambda*x  (itype=3)
 *
 * Here A and B are assumed to be symmetric and B is also positive definite.
 *
@@ -105,28 +105,22 @@ function dsygv( itype, jobz, uplo, N, A, strideA1, strideA2, offsetA, B, strideB
 		}
 		if ( itype === 1 || itype === 2 ) {
 			// For A*x = lambda*B*x and A*B*x = lambda*x:
-			// backtransform eigenvectors: x = inv(L)^T * y or inv(U) * y
+			// Backtransform eigenvectors: x = inv(L)^T * y or inv(U) * y
 			if ( upper ) {
 				trans = 'no-transpose';
 			} else {
 				trans = 'transpose';
 			}
-			dtrsm( 'left', uplo, trans, 'non-unit', N, neig, 1.0,
-				B, sb1, sb2, offsetB,
-				A, sa1, sa2, offsetA
-			);
+			dtrsm( 'left', uplo, trans, 'non-unit', N, neig, 1.0, B, sb1, sb2, offsetB, A, sa1, sa2, offsetA);
 		} else if ( itype === 3 ) {
 			// For B*A*x = lambda*x:
-			// backtransform eigenvectors: x = L*y or U^T*y
+			// Backtransform eigenvectors: x = L*y or U^T*y
 			if ( upper ) {
 				trans = 'transpose';
 			} else {
 				trans = 'no-transpose';
 			}
-			dtrmm( 'left', uplo, trans, 'non-unit', N, neig, 1.0,
-				B, sb1, sb2, offsetB,
-				A, sa1, sa2, offsetA
-			);
+			dtrmm( 'left', uplo, trans, 'non-unit', N, neig, 1.0, B, sb1, sb2, offsetB, A, sa1, sa2, offsetA);
 		}
 	}
 

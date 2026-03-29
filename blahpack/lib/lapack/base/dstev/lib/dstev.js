@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -11,7 +10,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric
+* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 *
 * @param {string} jobz - jobz
 * @param {NonNegativeInteger} N - N

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtrti2 = require( '@stdlib/lapack/base/dtrti2' );

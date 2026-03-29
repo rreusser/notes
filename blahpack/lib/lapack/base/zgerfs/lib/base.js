@@ -47,7 +47,7 @@ var CNEGONE = new Complex128( -1.0, 0.0 );
 // FUNCTIONS //
 
 /**
-* CABS1: |re(z)| + |im(z)|
+* CABS1: |re(z)| + |im(z)|.
 *
 * @private
 * @param {Float64Array} v - Float64 view of complex array
@@ -62,7 +62,7 @@ function cabs1( v, idx ) {
 // MAIN //
 
 /**
-* Improves the computed solution to a complex system of linear equations and
+* Improves the computed solution to a complex system of linear equations and.
 * provides error bounds and backward error estimates for the solution.
 *
 * Uses the LU factorization computed by zgetrf. WORK and RWORK are provided
@@ -71,8 +71,8 @@ function cabs1( v, idx ) {
 * IPIV must contain 0-based pivot indices (as produced by zgetrf).
 *
 * For TRANS:
-*   'no-transpose' - A * X = B
-*   'transpose' - A^T * X = B
+*   'no-transpose' - A _ X = B
+_   'transpose' - A^T _ X = B
 *   'conjugate-transpose' - A^H * X = B
 *
 * Note: In zgerfs, when NOTRAN, the transposed solve uses 'conjugate-transpose'
@@ -125,18 +125,18 @@ function zgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, 
 	var ISAVE;
 	var safe1;
 	var safe2;
+	var WORKv;
 	var KASE;
 	var EST;
-	var WORKv;
-	var Av;
-	var Bv;
-	var Xv;
 	var sa1;
 	var sa2;
 	var sb1;
 	var sb2;
 	var sx1;
 	var sx2;
+	var Av;
+	var Bv;
+	var Xv;
 	var sw;
 	var oA;
 	var oB;
@@ -211,6 +211,7 @@ function zgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, 
 			zgemv( trans, N, N, CNEGONE, A, strideA1, strideA2, offsetA, X, strideX1, offsetX + ( j * strideX2 ), CONE, WORK, strideWORK, offsetWORK );
 
 			// Compute componentwise relative backward error
+
 			// RWORK(0:N-1) = CABS1(B(:,j))
 			for ( i = 0; i < N; i++ ) {
 				RWORK[ offsetRWORK + ( i * strideRWORK ) ] = cabs1( Bv, oB + ( i * sb1 ) + ( j * sb2 ) );
@@ -262,7 +263,7 @@ function zgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, 
 		}
 
 		// Bound error from formula using zlacn2 to estimate the infinity-norm
-		// of inv(op(A)) * diag(W)
+		// Of inv(op(A)) * diag(W)
 
 		// Set up RWORK(0:N-1) for the error bound estimation
 		for ( i = 0; i < N; i++ ) {
@@ -278,11 +279,9 @@ function zgerfs( trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, 
 		// zlacn2 reverse communication loop
 		while ( true ) {
 			EST[ 0 ] = FERR[ offsetFERR + ( j * strideFERR ) ];
-			zlacn2( N,
-				WORK, strideWORK, offsetWORK + ( N * strideWORK ), // V = WORK(N:2N-1)
+			zlacn2( N, WORK, strideWORK, offsetWORK + ( N * strideWORK ), // V = WORK(N:2N-1)
 				WORK, strideWORK, offsetWORK,                       // X = WORK(0:N-1)
-				EST, KASE, ISAVE, 1, 0
-			);
+				EST, KASE, ISAVE, 1, 0);
 			FERR[ offsetFERR + ( j * strideFERR ) ] = EST[ 0 ];
 
 			if ( KASE[ 0 ] === 0 ) {

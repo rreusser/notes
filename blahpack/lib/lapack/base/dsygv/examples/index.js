@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsygv = require( '@stdlib/lapack/base/dsygv' );

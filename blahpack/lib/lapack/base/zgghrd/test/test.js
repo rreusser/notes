@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 /**
 * @license Apache-2.0
 *
@@ -19,34 +21,55 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgghrd = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgghrd.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgghrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
-// HELPERS //
 
+// FUNCTIONS //
+
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, msg ) {
 	var relErr;
 	var i;
-	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' );
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' ); // eslint-disable-line max-len
 	for ( i = 0; i < expected.length; i++ ) {
 		if ( expected[ i ] === 0.0 ) {
-			assert.ok( Math.abs( actual[ i ] ) <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+			assert.ok( Math.abs( actual[ i ] ) <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 		} else {
-			relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
-			assert.ok( relErr <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+			relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
+			assert.ok( relErr <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 		}
 	}
 }
 
+/**
+* ExtractCol.
+*
+* @private
+* @param {*} M - M
+* @param {*} j - j
+* @param {*} nrows - nrows
+* @param {*} LDA - LDA
+* @returns {*} result
+*/
 function extractCol( M, j, nrows, LDA ) {
 	var result = [];
 	var start = j * 2 * LDA;
@@ -58,11 +81,23 @@ function extractCol( M, j, nrows, LDA ) {
 	return result;
 }
 
+/**
+* Cset.
+*
+* @private
+* @param {*} M - M
+* @param {*} LDA - LDA
+* @param {*} i - i
+* @param {*} j - j
+* @param {*} re - re
+* @param {*} im - im
+*/
 function cset( M, LDA, i, j, re, im ) {
 	var idx = j * 2 * LDA + i * 2;
 	M[ idx ] = re;
 	M[ idx + 1 ] = im;
 }
+
 
 // TESTS //
 
@@ -70,26 +105,41 @@ test( 'zgghrd: main export is a function', function t() {
 	assert.strictEqual( typeof zgghrd, 'function' );
 });
 
-test( 'zgghrd: attached to the main export is an `ndarray` method', function t() {
+test( 'zgghrd: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
 	assert.strictEqual( typeof zgghrd.ndarray, 'function' );
 });
 
 test( 'zgghrd: basic 4x4 with COMPQ=I, COMPZ=I', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'basic_4x4'; } );
-	var n = 4;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Qv = reinterpret( Q, 0 );
-	var Zv = reinterpret( Z, 0 );
-	var sa1 = 1;
-	var sa2 = LDA;
 	var info;
+	var LDA;
+	var sa1;
+	var sa2;
+	var tc;
+	var Av;
+	var Bv;
+	var Qv;
+	var Zv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'basic_4x4';
+	} );
+	n = 4;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Qv = reinterpret( Q, 0 );
+	Zv = reinterpret( Z, 0 );
+	sa1 = 1;
+	sa2 = LDA;
 	cset( Av, LDA, 0, 0, 2.0, 1.0 );
 	cset( Av, LDA, 0, 1, 1.0, 0.5 );
 	cset( Av, LDA, 0, 2, 0.5, -0.5 );
@@ -116,9 +166,7 @@ test( 'zgghrd: basic 4x4 with COMPQ=I, COMPZ=I', function t() {
 	cset( Bv, LDA, 2, 2, 4.0, -1.0 );
 	cset( Bv, LDA, 2, 3, 1.0, 1.0 );
 	cset( Bv, LDA, 3, 3, 1.0, 0.0 );
-
-	info = base( 'initialize', 'initialize', n, 1, 4, A, sa1, sa2, 0, B, sa1, sa2, 0, Q, sa1, sa2, 0, Z, sa1, sa2, 0 );
-
+	info = base( 'initialize', 'initialize', n, 1, 4, A, sa1, sa2, 0, B, sa1, sa2, 0, Q, sa1, sa2, 0, Z, sa1, sa2, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
@@ -139,22 +187,33 @@ test( 'zgghrd: basic 4x4 with COMPQ=I, COMPZ=I', function t() {
 });
 
 test( 'zgghrd: n=1 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'n_equals_1'; } );
-	var A = new Complex128Array( 1 );
-	var B = new Complex128Array( 1 );
-	var Q = new Complex128Array( 1 );
-	var Z = new Complex128Array( 1 );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Qv = reinterpret( Q, 0 );
-	var Zv = reinterpret( Z, 0 );
 	var info;
+	var tc;
+	var Av;
+	var Bv;
+	var Qv;
+	var Zv;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
-	Av[ 0 ] = 5.0; Av[ 1 ] = 3.0;
-	Bv[ 0 ] = 2.0; Bv[ 1 ] = 1.0;
-
-	info = base( 'initialize', 'initialize', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
-
+	tc = fixture.find( function find( t ) {
+		return t.name === 'n_equals_1';
+	} );
+	A = new Complex128Array( 1 );
+	B = new Complex128Array( 1 );
+	Q = new Complex128Array( 1 );
+	Z = new Complex128Array( 1 );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Qv = reinterpret( Q, 0 );
+	Zv = reinterpret( Z, 0 );
+	Av[ 0 ] = 5.0;
+	Av[ 1 ] = 3.0;
+	Bv[ 0 ] = 2.0;
+	Bv[ 1 ] = 1.0;
+	info = base( 'initialize', 'initialize', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( [ Av[ 0 ], Av[ 1 ] ], tc.A, 'A' );
 	assertArrayClose( [ Bv[ 0 ], Bv[ 1 ] ], tc.B, 'B' );
@@ -163,17 +222,28 @@ test( 'zgghrd: n=1 quick return', function t() {
 });
 
 test( 'zgghrd: no Q/Z accumulation (COMPQ=N, COMPZ=N) 3x3', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'no_qz_3x3'; } );
-	var n = 3;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
 	var info;
+	var LDA;
+	var tc;
+	var Av;
+	var Bv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'no_qz_3x3';
+	} );
+	n = 3;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
 	cset( Av, LDA, 0, 0, 1.0, 0.0 );
 	cset( Av, LDA, 0, 1, 2.0, 1.0 );
 	cset( Av, LDA, 0, 2, 3.0, -1.0 );
@@ -189,9 +259,7 @@ test( 'zgghrd: no Q/Z accumulation (COMPQ=N, COMPZ=N) 3x3', function t() {
 	cset( Bv, LDA, 1, 1, 3.0, 0.0 );
 	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
 	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
-
-	info = base( 'none', 'none', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
-
+	info = base( 'none', 'none', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
@@ -202,34 +270,45 @@ test( 'zgghrd: no Q/Z accumulation (COMPQ=N, COMPZ=N) 3x3', function t() {
 });
 
 test( 'zgghrd: partial reduction ILO=2, IHI=4 on 5x5', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'partial_5x5'; } );
-	var n = 5;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Qv = reinterpret( Q, 0 );
-	var Zv = reinterpret( Z, 0 );
 	var info;
+	var LDA;
+	var tc;
+	var Av;
+	var Bv;
+	var Qv;
+	var Zv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 	var i;
 	var j;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'partial_5x5';
+	} );
+	n = 5;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Qv = reinterpret( Q, 0 );
+	Zv = reinterpret( Z, 0 );
 	for ( j = 0; j < n; j++ ) {
 		for ( i = 0; i < n; i++ ) {
-			cset( Av, LDA, i, j, ( i + 1 ) + ( j + 1 ), ( ( i + 1 ) - ( j + 1 ) ) * 0.5 );
+			cset( Av, LDA, i, j, ( i + 1 ) + ( j + 1 ), ( ( i + 1 ) - ( j + 1 ) ) * 0.5 ); // eslint-disable-line max-len
 		}
 	}
 	for ( j = 0; j < n; j++ ) {
 		for ( i = 0; i <= j; i++ ) {
-			cset( Bv, LDA, i, j, ( i + 1 ) + ( j + 1 ), ( ( j + 1 ) - ( i + 1 ) ) * 0.25 );
+			cset( Bv, LDA, i, j, ( i + 1 ) + ( j + 1 ), ( ( j + 1 ) - ( i + 1 ) ) * 0.25 ); // eslint-disable-line max-len
 		}
 	}
-
-	info = base( 'initialize', 'initialize', n, 2, 4, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
-
+	info = base( 'initialize', 'initialize', n, 2, 4, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
@@ -253,21 +332,34 @@ test( 'zgghrd: partial reduction ILO=2, IHI=4 on 5x5', function t() {
 	assertArrayClose( extractCol( Zv, 4, n, LDA ), tc.Z_col5, 'Z_col5' );
 });
 
-test( 'zgghrd: accumulate into existing Q, Z (COMPQ=V, COMPZ=V) 3x3', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'accumulate_3x3'; } );
-	var n = 3;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Qv = reinterpret( Q, 0 );
-	var Zv = reinterpret( Z, 0 );
+test( 'zgghrd: accumulate into existing Q, Z (COMPQ=V, COMPZ=V) 3x3', function t() { // eslint-disable-line max-len
 	var info;
+	var LDA;
+	var tc;
+	var Av;
+	var Bv;
+	var Qv;
+	var Zv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 	var i;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'accumulate_3x3';
+	} );
+	n = 3;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Qv = reinterpret( Q, 0 );
+	Zv = reinterpret( Z, 0 );
 	cset( Av, LDA, 0, 0, 2.0, 0.0 );
 	cset( Av, LDA, 0, 1, 1.0, 1.0 );
 	cset( Av, LDA, 0, 2, 0.0, 1.0 );
@@ -287,9 +379,7 @@ test( 'zgghrd: accumulate into existing Q, Z (COMPQ=V, COMPZ=V) 3x3', function t
 		cset( Qv, LDA, i, i, 1.0, 0.0 );
 		cset( Zv, LDA, i, i, 1.0, 0.0 );
 	}
-
-	info = base( 'update', 'update', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
-
+	info = base( 'update', 'update', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
@@ -306,28 +396,48 @@ test( 'zgghrd: accumulate into existing Q, Z (COMPQ=V, COMPZ=V) 3x3', function t
 });
 
 test( 'zgghrd: ILO=IHI (already reduced, near no-op)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ilo_eq_ihi'; } );
-	var n = 3;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Qv = reinterpret( Q, 0 );
-	var Zv = reinterpret( Z, 0 );
 	var info;
+	var LDA;
+	var tc;
+	var Av;
+	var Bv;
+	var Qv;
+	var Zv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
-	cset( Av, LDA, 0, 0, 1.0, 0.0 ); cset( Av, LDA, 0, 1, 2.0, 0.0 ); cset( Av, LDA, 0, 2, 3.0, 0.0 );
-	cset( Av, LDA, 1, 0, 4.0, 0.0 ); cset( Av, LDA, 1, 1, 5.0, 0.0 ); cset( Av, LDA, 1, 2, 6.0, 0.0 );
-	cset( Av, LDA, 2, 0, 7.0, 0.0 ); cset( Av, LDA, 2, 1, 8.0, 0.0 ); cset( Av, LDA, 2, 2, 9.0, 0.0 );
-	cset( Bv, LDA, 0, 0, 1.0, 0.0 ); cset( Bv, LDA, 0, 1, 1.0, 0.0 ); cset( Bv, LDA, 0, 2, 1.0, 0.0 );
-	cset( Bv, LDA, 1, 1, 2.0, 0.0 ); cset( Bv, LDA, 1, 2, 1.0, 0.0 );
+	tc = fixture.find( function find( t ) {
+		return t.name === 'ilo_eq_ihi';
+	} );
+	n = 3;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Qv = reinterpret( Q, 0 );
+	Zv = reinterpret( Z, 0 );
+	cset( Av, LDA, 0, 0, 1.0, 0.0 );
+	cset( Av, LDA, 0, 1, 2.0, 0.0 );
+	cset( Av, LDA, 0, 2, 3.0, 0.0 );
+	cset( Av, LDA, 1, 0, 4.0, 0.0 );
+	cset( Av, LDA, 1, 1, 5.0, 0.0 );
+	cset( Av, LDA, 1, 2, 6.0, 0.0 );
+	cset( Av, LDA, 2, 0, 7.0, 0.0 );
+	cset( Av, LDA, 2, 1, 8.0, 0.0 );
+	cset( Av, LDA, 2, 2, 9.0, 0.0 );
+	cset( Bv, LDA, 0, 0, 1.0, 0.0 );
+	cset( Bv, LDA, 0, 1, 1.0, 0.0 );
+	cset( Bv, LDA, 0, 2, 1.0, 0.0 );
+	cset( Bv, LDA, 1, 1, 2.0, 0.0 );
+	cset( Bv, LDA, 1, 2, 1.0, 0.0 );
 	cset( Bv, LDA, 2, 2, 3.0, 0.0 );
-
-	info = base( 'initialize', 'initialize', n, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
-
+	info = base( 'initialize', 'initialize', n, 2, 2, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
@@ -344,51 +454,75 @@ test( 'zgghrd: ILO=IHI (already reduced, near no-op)', function t() {
 });
 
 test( 'zgghrd: invalid COMPQ returns -1', function t() {
-	var A = new Complex128Array( 1 );
-	var B = new Complex128Array( 1 );
-	var Q = new Complex128Array( 1 );
-	var Z = new Complex128Array( 1 );
 	var info;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
-	info = base( 'X', 'initialize', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	A = new Complex128Array( 1 );
+	B = new Complex128Array( 1 );
+	Q = new Complex128Array( 1 );
+	Z = new Complex128Array( 1 );
+	info = base( 'X', 'initialize', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, -1, 'invalid compq returns -1' );
 });
 
 test( 'zgghrd: invalid COMPZ returns -2', function t() {
-	var A = new Complex128Array( 1 );
-	var B = new Complex128Array( 1 );
-	var Q = new Complex128Array( 1 );
-	var Z = new Complex128Array( 1 );
 	var info;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
-	info = base( 'initialize', 'X', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	A = new Complex128Array( 1 );
+	B = new Complex128Array( 1 );
+	Q = new Complex128Array( 1 );
+	Z = new Complex128Array( 1 );
+	info = base( 'initialize', 'X', 1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, -2, 'invalid compz returns -2' );
 });
 
 test( 'zgghrd: negative N returns -3', function t() {
-	var A = new Complex128Array( 1 );
-	var B = new Complex128Array( 1 );
-	var Q = new Complex128Array( 1 );
-	var Z = new Complex128Array( 1 );
 	var info;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
-	info = base( 'initialize', 'initialize', -1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 );
+	A = new Complex128Array( 1 );
+	B = new Complex128Array( 1 );
+	Q = new Complex128Array( 1 );
+	Z = new Complex128Array( 1 );
+	info = base( 'initialize', 'initialize', -1, 1, 1, A, 1, 1, 0, B, 1, 1, 0, Q, 1, 1, 0, Z, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, -3, 'negative N returns -3' );
 });
 
 test( 'zgghrd: COMPQ=N, COMPZ=I (Z only, no Q accumulation) 3x3', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'no_qz_3x3'; } );
-	var n = 3;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Zv = reinterpret( Z, 0 );
 	var info;
+	var LDA;
+	var tc;
+	var Av;
+	var Bv;
+	var Zv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'no_qz_3x3';
+	} );
+	n = 3;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Zv = reinterpret( Z, 0 );
 	cset( Av, LDA, 0, 0, 1.0, 0.0 );
 	cset( Av, LDA, 0, 1, 2.0, 1.0 );
 	cset( Av, LDA, 0, 2, 3.0, -1.0 );
@@ -404,35 +538,42 @@ test( 'zgghrd: COMPQ=N, COMPZ=I (Z only, no Q accumulation) 3x3', function t() {
 	cset( Bv, LDA, 1, 1, 3.0, 0.0 );
 	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
 	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
-
-	info = base( 'none', 'initialize', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
-
+	info = base( 'none', 'initialize', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, 0, 'info' );
-	// A and B should match the no_qz_3x3 fixture (same A,B inputs, same reduction)
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
 	assertArrayClose( extractCol( Av, 2, n, LDA ), tc.A_col3, 'A_col3' );
 	assertArrayClose( extractCol( Bv, 0, n, LDA ), tc.B_col1, 'B_col1' );
 	assertArrayClose( extractCol( Bv, 1, n, LDA ), tc.B_col2, 'B_col2' );
 	assertArrayClose( extractCol( Bv, 2, n, LDA ), tc.B_col3, 'B_col3' );
-	// Z should be initialized to identity and then accumulated (not just identity)
-	// Verify Z is unitary and not all zeros
 	assert.ok( Zv[ 0 ] !== 0.0 || Zv[ 1 ] !== 0.0, 'Z is not all zeros' );
 });
 
 test( 'zgghrd: COMPQ=I, COMPZ=N (Q only, no Z accumulation) 3x3', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'no_qz_3x3'; } );
-	var n = 3;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Qv = reinterpret( Q, 0 );
 	var info;
+	var LDA;
+	var tc;
+	var Av;
+	var Bv;
+	var Qv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'no_qz_3x3';
+	} );
+	n = 3;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Qv = reinterpret( Q, 0 );
 	cset( Av, LDA, 0, 0, 1.0, 0.0 );
 	cset( Av, LDA, 0, 1, 2.0, 1.0 );
 	cset( Av, LDA, 0, 2, 3.0, -1.0 );
@@ -448,44 +589,57 @@ test( 'zgghrd: COMPQ=I, COMPZ=N (Q only, no Z accumulation) 3x3', function t() {
 	cset( Bv, LDA, 1, 1, 3.0, 0.0 );
 	cset( Bv, LDA, 1, 2, 1.0, -1.0 );
 	cset( Bv, LDA, 2, 2, 1.0, 0.0 );
-
-	info = base( 'initialize', 'none', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
-
+	info = base( 'initialize', 'none', n, 1, 3, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, 0, 'info' );
-	// A and B should match the no_qz_3x3 fixture
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );
 	assertArrayClose( extractCol( Av, 2, n, LDA ), tc.A_col3, 'A_col3' );
 	assertArrayClose( extractCol( Bv, 0, n, LDA ), tc.B_col1, 'B_col1' );
 	assertArrayClose( extractCol( Bv, 1, n, LDA ), tc.B_col2, 'B_col2' );
 	assertArrayClose( extractCol( Bv, 2, n, LDA ), tc.B_col3, 'B_col3' );
-	// Q should be initialized to identity and accumulated
 	assert.ok( Qv[ 0 ] !== 0.0 || Qv[ 1 ] !== 0.0, 'Q is not all zeros' );
 });
 
 test( 'zgghrd: empty range IHI=ILO-1', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'empty_range'; } );
-	var n = 3;
-	var LDA = n;
-	var A = new Complex128Array( LDA * n );
-	var B = new Complex128Array( LDA * n );
-	var Q = new Complex128Array( LDA * n );
-	var Z = new Complex128Array( LDA * n );
-	var Av = reinterpret( A, 0 );
-	var Bv = reinterpret( B, 0 );
-	var Qv = reinterpret( Q, 0 );
-	var Zv = reinterpret( Z, 0 );
 	var info;
+	var LDA;
+	var tc;
+	var Av;
+	var Bv;
+	var Qv;
+	var Zv;
+	var n;
+	var A;
+	var B;
+	var Q;
+	var Z;
 
-	cset( Av, LDA, 0, 0, 1.0, 0.0 ); cset( Av, LDA, 0, 1, 2.0, 0.0 ); cset( Av, LDA, 0, 2, 3.0, 0.0 );
-	cset( Av, LDA, 1, 0, 4.0, 0.0 ); cset( Av, LDA, 1, 1, 5.0, 0.0 ); cset( Av, LDA, 1, 2, 6.0, 0.0 );
-	cset( Av, LDA, 2, 0, 7.0, 0.0 ); cset( Av, LDA, 2, 1, 8.0, 0.0 ); cset( Av, LDA, 2, 2, 9.0, 0.0 );
+	tc = fixture.find( function find( t ) {
+		return t.name === 'empty_range';
+	} );
+	n = 3;
+	LDA = n;
+	A = new Complex128Array( LDA * n );
+	B = new Complex128Array( LDA * n );
+	Q = new Complex128Array( LDA * n );
+	Z = new Complex128Array( LDA * n );
+	Av = reinterpret( A, 0 );
+	Bv = reinterpret( B, 0 );
+	Qv = reinterpret( Q, 0 );
+	Zv = reinterpret( Z, 0 );
+	cset( Av, LDA, 0, 0, 1.0, 0.0 );
+	cset( Av, LDA, 0, 1, 2.0, 0.0 );
+	cset( Av, LDA, 0, 2, 3.0, 0.0 );
+	cset( Av, LDA, 1, 0, 4.0, 0.0 );
+	cset( Av, LDA, 1, 1, 5.0, 0.0 );
+	cset( Av, LDA, 1, 2, 6.0, 0.0 );
+	cset( Av, LDA, 2, 0, 7.0, 0.0 );
+	cset( Av, LDA, 2, 1, 8.0, 0.0 );
+	cset( Av, LDA, 2, 2, 9.0, 0.0 );
 	cset( Bv, LDA, 0, 0, 1.0, 0.0 );
 	cset( Bv, LDA, 1, 1, 2.0, 0.0 );
 	cset( Bv, LDA, 2, 2, 3.0, 0.0 );
-
-	info = base( 'initialize', 'initialize', n, 2, 1, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 );
-
+	info = base( 'initialize', 'initialize', n, 2, 1, A, 1, LDA, 0, B, 1, LDA, 0, Q, 1, LDA, 0, Z, 1, LDA, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCol( Av, 0, n, LDA ), tc.A_col1, 'A_col1' );
 	assertArrayClose( extractCol( Av, 1, n, LDA ), tc.A_col2, 'A_col2' );

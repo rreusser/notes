@@ -151,40 +151,15 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			//         TAUQ, sTQ, oTQ, TAUP, sTP, oTP, X, sX1, sX2, oX, Y, sY1, sY2, oY )
 
 			// X starts at offsetWORK, Y starts at offsetWORK + ldwrkx * nb
-			zlabrd(
-				M - i, N - i, nb,
-				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-				d, strideD, offsetD + (i * strideD),
-				e, strideE, offsetE + (i * strideE),
-				TAUQ, strideTAUQ, offsetTAUQ + (i * strideTAUQ),
-				TAUP, strideTAUP, offsetTAUP + (i * strideTAUP),
-				WORK, 1, ldwrkx, offsetWORK,
-				WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb)
-			);
+			zlabrd(M - i, N - i, nb, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), d, strideD, offsetD + (i * strideD), e, strideE, offsetE + (i * strideE), TAUQ, strideTAUQ, offsetTAUQ + (i * strideTAUQ), TAUP, strideTAUP, offsetTAUP + (i * strideTAUP), WORK, 1, ldwrkx, offsetWORK, WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb));
 
 			// Update the trailing submatrix A(i+nb:M-1, i+nb:N-1)
 			if ( M - i - nb > 0 && N - i - nb > 0 ) {
 				// C := -1 * A(i+nb:,i:i+nb-1) * Y(nb:,:)^H + 1 * A(i+nb:,i+nb:)
-				zgemm(
-					'no-transpose', 'conjugate-transpose',
-					M - i - nb, N - i - nb, nb,
-					NEGONE,
-					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (i * strideA2),
-					WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb) + nb,
-					ONE,
-					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2)
-				);
+				zgemm('no-transpose', 'conjugate-transpose', M - i - nb, N - i - nb, nb, NEGONE, A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (i * strideA2), WORK, 1, ldwrky, offsetWORK + (ldwrkx * nb) + nb, ONE, A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2));
 
 				// C := -1 * X(nb:,:) * A(i:i+nb-1,i+nb:) + 1 * A(i+nb:,i+nb:)
-				zgemm(
-					'no-transpose', 'no-transpose',
-					M - i - nb, N - i - nb, nb,
-					NEGONE,
-					WORK, 1, ldwrkx, offsetWORK + nb,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + nb ) * strideA2),
-					ONE,
-					A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2)
-				);
+				zgemm('no-transpose', 'no-transpose', M - i - nb, N - i - nb, nb, NEGONE, WORK, 1, ldwrkx, offsetWORK + nb, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + nb ) * strideA2), ONE, A, strideA1, strideA2, offsetA + (( i + nb ) * strideA1) + (( i + nb ) * strideA2));
 			}
 
 			// Copy diagonal and off-diagonal elements of B back into A
@@ -215,15 +190,7 @@ function zgebrd( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 	}
 
 	// Use unblocked code to factor the last or only block
-	zgebd2(
-		M - i, N - i,
-		A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-		d, strideD, offsetD + (i * strideD),
-		e, strideE, offsetE + (i * strideE),
-		TAUQ, strideTAUQ, offsetTAUQ + (i * strideTAUQ),
-		TAUP, strideTAUP, offsetTAUP + (i * strideTAUP),
-		WORK, strideWORK, offsetWORK
-	);
+	zgebd2(M - i, N - i, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), d, strideD, offsetD + (i * strideD), e, strideE, offsetE + (i * strideE), TAUQ, strideTAUQ, offsetTAUQ + (i * strideTAUQ), TAUP, strideTAUP, offsetTAUP + (i * strideTAUP), WORK, strideWORK, offsetWORK);
 
 	return 0;
 }

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtrsen = require( '@stdlib/lapack/base/dtrsen' );

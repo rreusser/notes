@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves the generalized Sylvester equation (unblocked)
+* Solves the generalized Sylvester equation (unblocked).
 *
 * @module @stdlib/lapack/base/dtgsy2
 *

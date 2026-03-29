@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 /**
 * @license Apache-2.0
 *
@@ -18,6 +20,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var test = require( 'node:test' );
@@ -30,22 +33,50 @@ var dtbtrs = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dtbtrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dtbtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -61,25 +92,13 @@ test( 'dtbtrs is a function', function t() {
 	assert.equal( typeof dtbtrs, 'function' );
 });
 
-test( 'dtbtrs: upper_no_trans (upper triangular, no transpose, KD=2, N=4)', function t() {
+test( 'dtbtrs: upper_no_trans (upper triangular, no transpose, KD=2, N=4)', function t() { // eslint-disable-line max-len
 	var info;
 	var tc;
 	var ab;
 	var b;
 
 	tc = findCase( 'upper_no_trans' );
-
-	// AB in band storage, LDAB=3, KD=2, N=4 (col-major)
-
-	// Dense A:
-
-	//   [3  1  2  0]
-
-	//   [0  4  1  3]
-
-	//   [0  0  5  2]
-
-	//   [0  0  0  6]
 	ab = new Float64Array([
 		0,
 		0,
@@ -95,30 +114,18 @@ test( 'dtbtrs: upper_no_trans (upper triangular, no transpose, KD=2, N=4)', func
 		6    // col 4: *, a24, a44
 	]);
 	b = new Float64Array([ 10, 20, 15, 12 ]);
-	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 );
+	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });
 
-test( 'dtbtrs: lower_no_trans (lower triangular, no transpose, KD=2, N=4)', function t() {
+test( 'dtbtrs: lower_no_trans (lower triangular, no transpose, KD=2, N=4)', function t() { // eslint-disable-line max-len
 	var info;
 	var tc;
 	var ab;
 	var b;
 
 	tc = findCase( 'lower_no_trans' );
-
-	// AB in band storage, LDAB=3, KD=2, N=4 (col-major)
-
-	// Dense A:
-
-	//   [3  0  0  0]
-
-	//   [1  4  0  0]
-
-	//   [2  1  5  0]
-
-	//   [0  3  2  6]
 	ab = new Float64Array([
 		3,
 		1,
@@ -134,19 +141,18 @@ test( 'dtbtrs: lower_no_trans (lower triangular, no transpose, KD=2, N=4)', func
 		0    // col 4: a44, *, *
 	]);
 	b = new Float64Array([ 10, 20, 15, 12 ]);
-	info = dtbtrs( 'lower', 'no-transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 );
+	info = dtbtrs( 'lower', 'no-transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });
 
-test( 'dtbtrs: upper_trans (upper triangular, transpose, KD=2, N=4)', function t() {
+test( 'dtbtrs: upper_trans (upper triangular, transpose, KD=2, N=4)', function t() { // eslint-disable-line max-len
 	var info;
 	var tc;
 	var ab;
 	var b;
 
 	tc = findCase( 'upper_trans' );
-
 	ab = new Float64Array([
 		0,
 		0,
@@ -162,19 +168,18 @@ test( 'dtbtrs: upper_trans (upper triangular, transpose, KD=2, N=4)', function t
 		6
 	]);
 	b = new Float64Array([ 10, 20, 15, 12 ]);
-	info = dtbtrs( 'upper', 'transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 );
+	info = dtbtrs( 'upper', 'transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });
 
-test( 'dtbtrs: lower_trans (lower triangular, transpose, KD=2, N=4)', function t() {
+test( 'dtbtrs: lower_trans (lower triangular, transpose, KD=2, N=4)', function t() { // eslint-disable-line max-len
 	var info;
 	var tc;
 	var ab;
 	var b;
 
 	tc = findCase( 'lower_trans' );
-
 	ab = new Float64Array([
 		3,
 		1,
@@ -190,28 +195,18 @@ test( 'dtbtrs: lower_trans (lower triangular, transpose, KD=2, N=4)', function t
 		0
 	]);
 	b = new Float64Array([ 10, 20, 15, 12 ]);
-	info = dtbtrs( 'lower', 'transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 );
+	info = dtbtrs( 'lower', 'transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });
 
-test( 'dtbtrs: upper_unit_diag (unit diagonal, upper triangular, KD=1, N=4)', function t() {
+test( 'dtbtrs: upper_unit_diag (unit diagonal, upper triangular, KD=1, N=4)', function t() { // eslint-disable-line max-len
 	var info;
 	var tc;
 	var ab;
 	var b;
 
 	tc = findCase( 'upper_unit_diag' );
-
-	// Dense A = [1  2  0  0]
-
-	//           [0  1  3  0]
-
-	//           [0  0  1  4]
-
-	//           [0  0  0  1]
-
-	// AB in band storage, LDAB=2, KD=1:
 	ab = new Float64Array([
 		0,
 		1,   // col 1: *, a11(=1)
@@ -223,7 +218,7 @@ test( 'dtbtrs: upper_unit_diag (unit diagonal, upper triangular, KD=1, N=4)', fu
 		1    // col 4: a34, a44(=1)
 	]);
 	b = new Float64Array([ 10, 6, 3, 1 ]);
-	info = dtbtrs( 'upper', 'no-transpose', 'unit', 4, 1, 1, ab, 1, 2, 0, b, 1, 4, 0 );
+	info = dtbtrs( 'upper', 'no-transpose', 'unit', 4, 1, 1, ab, 1, 2, 0, b, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });
@@ -235,10 +230,9 @@ test( 'dtbtrs: n_zero (N=0 quick return)', function t() {
 	var b;
 
 	tc = findCase( 'n_zero' );
-
 	ab = new Float64Array([ 1.0 ]);
 	b = new Float64Array([ 1.0 ]);
-	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 0, 0, 1, ab, 1, 1, 0, b, 1, 1, 0 );
+	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 0, 0, 1, ab, 1, 1, 0, b, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 });
 
@@ -249,10 +243,6 @@ test( 'dtbtrs: singular (zero diagonal, upper, info=2)', function t() {
 	var b;
 
 	tc = findCase( 'singular' );
-
-	// Upper band with KD=1, N=3:
-
-	// Dense: [2 1 0; 0 0 1; 0 0 3] <- A(2,2)=0
 	ab = new Float64Array([
 		0,
 		2,   // col 1: *, a11=2
@@ -262,7 +252,7 @@ test( 'dtbtrs: singular (zero diagonal, upper, info=2)', function t() {
 		3    // col 3: a23=1, a33=3
 	]);
 	b = new Float64Array([ 1, 2, 3 ]);
-	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, ab, 1, 2, 0, b, 1, 3, 0 );
+	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, 1, ab, 1, 2, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 });
 
@@ -273,8 +263,6 @@ test( 'dtbtrs: multi_rhs (NRHS=2, upper, KD=1, N=3)', function t() {
 	var b;
 
 	tc = findCase( 'multi_rhs' );
-
-	// Dense: [3 1 0; 0 4 2; 0 0 5]
 	ab = new Float64Array([
 		0,
 		3,   // col 1: *, a11=3
@@ -283,10 +271,8 @@ test( 'dtbtrs: multi_rhs (NRHS=2, upper, KD=1, N=3)', function t() {
 		2,
 		5    // col 3: a23=2, a33=5
 	]);
-
-	// B is 3x2, col-major: b(:,1) = [1,2,3], b(:,2) = [7,8,9]
 	b = new Float64Array([ 1, 2, 3, 7, 8, 9 ]);
-	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, 2, ab, 1, 2, 0, b, 1, 3, 0 );
+	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, 2, ab, 1, 2, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });
@@ -298,25 +284,20 @@ test( 'dtbtrs: n_one (N=1 edge case)', function t() {
 	var b;
 
 	tc = findCase( 'n_one' );
-
 	ab = new Float64Array([ 5.0 ]);
 	b = new Float64Array([ 15.0 ]);
-	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 1, 0, 1, ab, 1, 1, 0, b, 1, 1, 0 );
+	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 1, 0, 1, ab, 1, 1, 0, b, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });
 
-test( 'dtbtrs: lower_singular (lower, zero diagonal at row 1, info=1)', function t() {
+test( 'dtbtrs: lower_singular (lower, zero diagonal at row 1, info=1)', function t() { // eslint-disable-line max-len
 	var info;
 	var tc;
 	var ab;
 	var b;
 
 	tc = findCase( 'lower_singular' );
-
-	// Lower band with KD=1, N=3:
-
-	// Dense: [0 0 0; 1 4 0; 0 2 5] <- A(1,1)=0
 	ab = new Float64Array([
 		0,
 		1,   // col 1: a11=0, a21=1
@@ -326,18 +307,17 @@ test( 'dtbtrs: lower_singular (lower, zero diagonal at row 1, info=1)', function
 		0    // col 3: a33=5, *
 	]);
 	b = new Float64Array([ 1, 2, 3 ]);
-	info = dtbtrs( 'lower', 'no-transpose', 'non-unit', 3, 1, 1, ab, 1, 2, 0, b, 1, 3, 0 );
+	info = dtbtrs( 'lower', 'no-transpose', 'non-unit', 3, 1, 1, ab, 1, 2, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 });
 
-test( 'dtbtrs: upper_conj_trans (conjugate-transpose, same as transpose for real)', function t() {
+test( 'dtbtrs: upper_conj_trans (conjugate-transpose, same as transpose for real)', function t() { // eslint-disable-line max-len
 	var info;
 	var tc;
 	var ab;
 	var b;
 
 	tc = findCase( 'upper_conj_trans' );
-
 	ab = new Float64Array([
 		0,
 		0,
@@ -353,7 +333,7 @@ test( 'dtbtrs: upper_conj_trans (conjugate-transpose, same as transpose for real
 		6
 	]);
 	b = new Float64Array([ 10, 20, 15, 12 ]);
-	info = dtbtrs( 'upper', 'transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 );
+	info = dtbtrs( 'upper', 'transpose', 'non-unit', 4, 2, 1, ab, 1, 3, 0, b, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( b, tc.x, 1e-14, 'x' );
 });

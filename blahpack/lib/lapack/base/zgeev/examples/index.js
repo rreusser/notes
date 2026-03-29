@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgeev = require( '@stdlib/lapack/base/zgeev' );

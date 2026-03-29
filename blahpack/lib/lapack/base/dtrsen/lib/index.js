@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Reorders the Schur factorization and computes condition numbers
+* Reorders the Schur factorization and computes condition numbers.
 *
 * @module @stdlib/lapack/base/dtrsen
 *

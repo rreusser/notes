@@ -425,10 +425,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			// ZSWAP(N-K+1, A(I,K), LDA, A(M,K), LDA)
 			// Swap rows ri and pm, columns from k-1 to N-1
 			// Stride = LDA in complex elements = sA2/2
-			zswap( N - k + 1, A, strideA2, offsetA + (ri * strideA1) + (( k - 1 ) * strideA2),
-				A, strideA2, offsetA + (pm * strideA1) + (( k - 1 ) * strideA2) );
-			zswap( N - k + 1, B, strideB2, offsetB + (ri * strideB1) + (( k - 1 ) * strideB2),
-				B, strideB2, offsetB + (pm * strideB1) + (( k - 1 ) * strideB2) );
+			zswap( N - k + 1, A, strideA2, offsetA + (ri * strideA1) + (( k - 1 ) * strideA2), A, strideA2, offsetA + (pm * strideA1) + (( k - 1 ) * strideA2) );
+			zswap( N - k + 1, B, strideB2, offsetB + (ri * strideB1) + (( k - 1 ) * strideB2), B, strideB2, offsetB + (pm * strideB1) + (( k - 1 ) * strideB2) );
 		}
 
 		// RSCALE(M) = J (1-based)
@@ -439,10 +437,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			// ZSWAP(L, A(1,J), 1, A(1,M), 1)
 			// Swap columns cj and pm, rows 0 to l-1
 			// Stride = 1 in complex elements = sA1/2
-			zswap( l, A, strideA1, offsetA + (cj * strideA2),
-				A, strideA1, offsetA + (pm * strideA2) );
-			zswap( l, B, strideB1, offsetB + (cj * strideB2),
-				B, strideB1, offsetB + (pm * strideB2) );
+			zswap( l, A, strideA1, offsetA + (cj * strideA2), A, strideA1, offsetA + (pm * strideA2) );
+			zswap( l, B, strideB1, offsetB + (cj * strideB2), B, strideB1, offsetB + (pm * strideB2) );
 		}
 	}
 
@@ -534,10 +530,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 		// eslint-disable-next-line no-constant-condition
 		while ( true ) {
 			// Compute gamma
-			gamma = ddot( nr, WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW),
-				WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW) ) +
-				ddot( nr, WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW),
-					WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW) );
+			gamma = ddot( nr, WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW), WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW) ) +
+				ddot( nr, WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW), WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW) );
 
 			ew = ZERO;
 			ewc = ZERO;
@@ -560,10 +554,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 			dscal( nr, beta, WORK, sW, oW + (( ilo - 1 ) * sW) );
 			dscal( nr, beta, WORK, sW, oW + (( ilo - 1 + N ) * sW) );
 
-			daxpy( nr, coef, WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW),
-				WORK, sW, oW + (( ilo - 1 + N ) * sW) );
-			daxpy( nr, coef, WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW),
-				WORK, sW, oW + (( ilo - 1 ) * sW) );
+			daxpy( nr, coef, WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW), WORK, sW, oW + (( ilo - 1 + N ) * sW) );
+			daxpy( nr, coef, WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW), WORK, sW, oW + (( ilo - 1 ) * sW) );
 
 			for ( i = ilo - 1; i < ihi; i++ ) {
 				WORK[ oW + (i * sW) ] += tc;
@@ -607,10 +599,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				WORK[ oW + (( j + (3 * N) ) * sW) ] = (kount * WORK[ oW + (j * sW) ]) + sum;
 			}
 
-			sum = ddot( nr, WORK, sW, oW + (( ilo - 1 + N ) * sW),
-				WORK, sW, oW + (( ilo - 1 + (2 * N) ) * sW) ) +
-				ddot( nr, WORK, sW, oW + (( ilo - 1 ) * sW),
-					WORK, sW, oW + (( ilo - 1 + (3 * N) ) * sW) );
+			sum = ddot( nr, WORK, sW, oW + (( ilo - 1 + N ) * sW), WORK, sW, oW + (( ilo - 1 + (2 * N) ) * sW) ) +
+				ddot( nr, WORK, sW, oW + (( ilo - 1 ) * sW), WORK, sW, oW + (( ilo - 1 + (3 * N) ) * sW) );
 			alpha = gamma / sum;
 
 			// Determine correction to current iteration
@@ -631,10 +621,8 @@ function zggbal( job, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, 
 				break; // go to 350
 			}
 
-			daxpy( nr, -alpha, WORK, sW, oW + (( ilo - 1 + (2 * N) ) * sW),
-				WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW) );
-			daxpy( nr, -alpha, WORK, sW, oW + (( ilo - 1 + (3 * N) ) * sW),
-				WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW) );
+			daxpy( nr, -alpha, WORK, sW, oW + (( ilo - 1 + (2 * N) ) * sW), WORK, sW, oW + (( ilo - 1 + (4 * N) ) * sW) );
+			daxpy( nr, -alpha, WORK, sW, oW + (( ilo - 1 + (3 * N) ) * sW), WORK, sW, oW + (( ilo - 1 + (5 * N) ) * sW) );
 
 			pgamma = gamma;
 			it += 1;

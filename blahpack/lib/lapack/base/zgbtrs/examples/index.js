@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgbtrs = require( '@stdlib/lapack/base/zgbtrs' );

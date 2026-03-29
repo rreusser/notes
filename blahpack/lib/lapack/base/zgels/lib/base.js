@@ -46,7 +46,7 @@ var bignum = 1.0 / smlnum;
 // MAIN //
 
 /**
-* Solves overdetermined or underdetermined complex linear systems involving an
+* Solves overdetermined or underdetermined complex linear systems involving an.
 * M-by-N matrix A, or its conjugate transpose, using a QR or LQ factorization
 * of A. It is assumed that A has full rank.
 *

@@ -49,9 +49,9 @@ var DUM = new Float64Array( 1 );
 // MAIN //
 
 /**
-* Solves the real Sylvester matrix equation:
+* Solves the real Sylvester matrix equation:.
 *
-*   op(A) * X + ISGN * X * op(B) = scale * C
+*   op(A) _ X + ISGN _ X _ op(B) = scale _ C
 *
 * where op(A) = A or A**T, A and B are upper quasi-triangular, and
 * scale is an output scale factor set <= 1 to avoid overflow in X.
@@ -89,17 +89,17 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	var suml;
 	var sumr;
 	var smin;
+	var da11;
 	var sgn;
 	var a11;
-	var da11;
-	var db;
 	var res;
-	var k;
-	var l;
+	var db;
 	var k1;
 	var k2;
 	var l1;
 	var l2;
+	var k;
+	var l;
 	var j;
 
 	notrna = ( trana === 'no-transpose' );
@@ -117,18 +117,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	smlnum = SMLNUM * ( M * N ) / EPS;
 	bignum = ONE / smlnum;
 
-	smin = Math.max(
-		smlnum,
-		EPS * dlange( 'max', M, M, A, strideA1, strideA2, offsetA, DUM, 1, 0 ),
-		EPS * dlange( 'max', N, N, B, strideB1, strideB2, offsetB, DUM, 1, 0 )
-	);
+	smin = Math.max(smlnum, EPS * dlange( 'max', M, M, A, strideA1, strideA2, offsetA, DUM, 1, 0 ), EPS * dlange( 'max', N, N, B, strideB1, strideB2, offsetB, DUM, 1, 0 ));
 
 	sgn = isgn;
 
 	if ( notrna && notrnb ) {
 		// Solve A*X + ISGN*X*B = scale*C
 		// The (K,L) block is determined by back-substitution for:
-		// rows K..K2 and columns L..L2
+		// Rows K..K2 and columns L..L2
 
 		lnext = 0;
 		for ( l = 0; l < N; l++ ) {
@@ -138,16 +134,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 			if ( l === N - 1 ) {
 				l1 = l;
 				l2 = l;
+			} else if ( B[ offsetB + (l + 1) * strideB1 + l * strideB2 ] !== ZERO ) {
+				l1 = l;
+				l2 = l + 1;
+				lnext = l + 2;
 			} else {
-				if ( B[ offsetB + (l + 1) * strideB1 + l * strideB2 ] !== ZERO ) {
-					l1 = l;
-					l2 = l + 1;
-					lnext = l + 2;
-				} else {
-					l1 = l;
-					l2 = l;
-					lnext = l + 1;
-				}
+				l1 = l;
+				l2 = l;
+				lnext = l + 1;
 			}
 
 			knext = M - 1;
@@ -158,16 +152,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				if ( k === 0 ) {
 					k1 = k;
 					k2 = k;
+				} else if ( A[ offsetA + k * strideA1 + (k - 1) * strideA2 ] !== ZERO ) {
+					k1 = k - 1;
+					k2 = k;
+					knext = k - 2;
 				} else {
-					if ( A[ offsetA + k * strideA1 + (k - 1) * strideA2 ] !== ZERO ) {
-						k1 = k - 1;
-						k2 = k;
-						knext = k - 2;
-					} else {
-						k1 = k;
-						k2 = k;
-						knext = k - 1;
-					}
+					k1 = k;
+					k2 = k;
+					knext = k - 1;
 				}
 
 				if ( l1 === l2 && k1 === k2 ) {
@@ -198,7 +190,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 						scale[ 0 ] *= scaloc;
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
-
 				} else if ( l1 === l2 && k1 !== k2 ) {
 					suml = ddot( M - k2 - 1, A, strideA2, offsetA + k1 * strideA1 + Math.min(k2 + 1, M - 1) * strideA2, C, strideC1, offsetC + Math.min(k2 + 1, M - 1) * strideC1 + l1 * strideC2 );
 					sumr = ddot( l1, C, strideC2, offsetC + k1 * strideC1, B, strideB1, offsetB + l1 * strideB2 );
@@ -223,7 +214,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k2 * strideC1 + l1 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 === k2 ) {
 					suml = ddot( M - k1 - 1, A, strideA2, offsetA + k1 * strideA1 + Math.min(k1 + 1, M - 1) * strideA2, C, strideC1, offsetC + Math.min(k1 + 1, M - 1) * strideC1 + l1 * strideC2 );
 					sumr = ddot( l1, C, strideC2, offsetC + k1 * strideC1, B, strideB1, offsetB + l1 * strideB2 );
@@ -247,7 +237,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k1 * strideC1 + l2 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 !== k2 ) {
 					suml = ddot( M - k2 - 1, A, strideA2, offsetA + k1 * strideA1 + Math.min(k2 + 1, M - 1) * strideA2, C, strideC1, offsetC + Math.min(k2 + 1, M - 1) * strideC1 + l1 * strideC2 );
 					sumr = ddot( l1, C, strideC2, offsetC + k1 * strideC1, B, strideB1, offsetB + l1 * strideB2 );
@@ -285,10 +274,9 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				}
 			}
 		}
-
 	} else if ( !notrna && notrnb ) {
 		// Solve A**T*X + ISGN*X*B = scale*C
-		// rows forward, columns forward
+		// Rows forward, columns forward
 
 		lnext = 0;
 		for ( l = 0; l < N; l++ ) {
@@ -298,16 +286,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 			if ( l === N - 1 ) {
 				l1 = l;
 				l2 = l;
+			} else if ( B[ offsetB + (l + 1) * strideB1 + l * strideB2 ] !== ZERO ) {
+				l1 = l;
+				l2 = l + 1;
+				lnext = l + 2;
 			} else {
-				if ( B[ offsetB + (l + 1) * strideB1 + l * strideB2 ] !== ZERO ) {
-					l1 = l;
-					l2 = l + 1;
-					lnext = l + 2;
-				} else {
-					l1 = l;
-					l2 = l;
-					lnext = l + 1;
-				}
+				l1 = l;
+				l2 = l;
+				lnext = l + 1;
 			}
 
 			knext = 0;
@@ -318,16 +304,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				if ( k === M - 1 ) {
 					k1 = k;
 					k2 = k;
+				} else if ( A[ offsetA + (k + 1) * strideA1 + k * strideA2 ] !== ZERO ) {
+					k1 = k;
+					k2 = k + 1;
+					knext = k + 2;
 				} else {
-					if ( A[ offsetA + (k + 1) * strideA1 + k * strideA2 ] !== ZERO ) {
-						k1 = k;
-						k2 = k + 1;
-						knext = k + 2;
-					} else {
-						k1 = k;
-						k2 = k;
-						knext = k + 1;
-					}
+					k1 = k;
+					k2 = k;
+					knext = k + 1;
 				}
 
 				if ( l1 === l2 && k1 === k2 ) {
@@ -358,7 +342,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 						scale[ 0 ] *= scaloc;
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
-
 				} else if ( l1 === l2 && k1 !== k2 ) {
 					suml = ddot( k1, A, strideA1, offsetA + k1 * strideA2, C, strideC1, offsetC + l1 * strideC2 );
 					sumr = ddot( l1, C, strideC2, offsetC + k1 * strideC1, B, strideB1, offsetB + l1 * strideB2 );
@@ -382,7 +365,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k2 * strideC1 + l1 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 === k2 ) {
 					suml = ddot( k1, A, strideA1, offsetA + k1 * strideA2, C, strideC1, offsetC + l1 * strideC2 );
 					sumr = ddot( l1, C, strideC2, offsetC + k1 * strideC1, B, strideB1, offsetB + l1 * strideB2 );
@@ -406,7 +388,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k1 * strideC1 + l2 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 !== k2 ) {
 					suml = ddot( k1, A, strideA1, offsetA + k1 * strideA2, C, strideC1, offsetC + l1 * strideC2 );
 					sumr = ddot( l1, C, strideC2, offsetC + k1 * strideC1, B, strideB1, offsetB + l1 * strideB2 );
@@ -443,10 +424,9 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				}
 			}
 		}
-
 	} else if ( !notrna && !notrnb ) {
 		// Solve A**T*X + ISGN*X*B**T = scale*C
-		// rows forward, columns backward
+		// Rows forward, columns backward
 
 		lnext = N - 1;
 		for ( l = N - 1; l >= 0; l-- ) {
@@ -456,16 +436,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 			if ( l === 0 ) {
 				l1 = l;
 				l2 = l;
+			} else if ( B[ offsetB + l * strideB1 + (l - 1) * strideB2 ] !== ZERO ) {
+				l1 = l - 1;
+				l2 = l;
+				lnext = l - 2;
 			} else {
-				if ( B[ offsetB + l * strideB1 + (l - 1) * strideB2 ] !== ZERO ) {
-					l1 = l - 1;
-					l2 = l;
-					lnext = l - 2;
-				} else {
-					l1 = l;
-					l2 = l;
-					lnext = l - 1;
-				}
+				l1 = l;
+				l2 = l;
+				lnext = l - 1;
 			}
 
 			knext = 0;
@@ -476,16 +454,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				if ( k === M - 1 ) {
 					k1 = k;
 					k2 = k;
+				} else if ( A[ offsetA + (k + 1) * strideA1 + k * strideA2 ] !== ZERO ) {
+					k1 = k;
+					k2 = k + 1;
+					knext = k + 2;
 				} else {
-					if ( A[ offsetA + (k + 1) * strideA1 + k * strideA2 ] !== ZERO ) {
-						k1 = k;
-						k2 = k + 1;
-						knext = k + 2;
-					} else {
-						k1 = k;
-						k2 = k;
-						knext = k + 1;
-					}
+					k1 = k;
+					k2 = k;
+					knext = k + 1;
 				}
 
 				if ( l1 === l2 && k1 === k2 ) {
@@ -516,7 +492,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 						scale[ 0 ] *= scaloc;
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
-
 				} else if ( l1 === l2 && k1 !== k2 ) {
 					suml = ddot( k1, A, strideA1, offsetA + k1 * strideA2, C, strideC1, offsetC + l1 * strideC2 );
 					sumr = ddot( N - l2 - 1, C, strideC2, offsetC + k1 * strideC1 + Math.min(l2 + 1, N - 1) * strideC2, B, strideB2, offsetB + l1 * strideB1 + Math.min(l2 + 1, N - 1) * strideB2 );
@@ -540,7 +515,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k2 * strideC1 + l1 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 === k2 ) {
 					suml = ddot( k1, A, strideA1, offsetA + k1 * strideA2, C, strideC1, offsetC + l1 * strideC2 );
 					sumr = ddot( N - l2 - 1, C, strideC2, offsetC + k1 * strideC1 + Math.min(l2 + 1, N - 1) * strideC2, B, strideB2, offsetB + l1 * strideB1 + Math.min(l2 + 1, N - 1) * strideB2 );
@@ -564,7 +538,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k1 * strideC1 + l2 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 !== k2 ) {
 					suml = ddot( k1, A, strideA1, offsetA + k1 * strideA2, C, strideC1, offsetC + l1 * strideC2 );
 					sumr = ddot( N - l2 - 1, C, strideC2, offsetC + k1 * strideC1 + Math.min(l2 + 1, N - 1) * strideC2, B, strideB2, offsetB + l1 * strideB1 + Math.min(l2 + 1, N - 1) * strideB2 );
@@ -601,10 +574,9 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				}
 			}
 		}
-
 	} else if ( notrna && !notrnb ) {
 		// Solve A*X + ISGN*X*B**T = scale*C
-		// rows backward, columns backward
+		// Rows backward, columns backward
 
 		lnext = N - 1;
 		for ( l = N - 1; l >= 0; l-- ) {
@@ -614,16 +586,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 			if ( l === 0 ) {
 				l1 = l;
 				l2 = l;
+			} else if ( B[ offsetB + l * strideB1 + (l - 1) * strideB2 ] !== ZERO ) {
+				l1 = l - 1;
+				l2 = l;
+				lnext = l - 2;
 			} else {
-				if ( B[ offsetB + l * strideB1 + (l - 1) * strideB2 ] !== ZERO ) {
-					l1 = l - 1;
-					l2 = l;
-					lnext = l - 2;
-				} else {
-					l1 = l;
-					l2 = l;
-					lnext = l - 1;
-				}
+				l1 = l;
+				l2 = l;
+				lnext = l - 1;
 			}
 
 			knext = M - 1;
@@ -634,16 +604,14 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 				if ( k === 0 ) {
 					k1 = k;
 					k2 = k;
+				} else if ( A[ offsetA + k * strideA1 + (k - 1) * strideA2 ] !== ZERO ) {
+					k1 = k - 1;
+					k2 = k;
+					knext = k - 2;
 				} else {
-					if ( A[ offsetA + k * strideA1 + (k - 1) * strideA2 ] !== ZERO ) {
-						k1 = k - 1;
-						k2 = k;
-						knext = k - 2;
-					} else {
-						k1 = k;
-						k2 = k;
-						knext = k - 1;
-					}
+					k1 = k;
+					k2 = k;
+					knext = k - 1;
 				}
 
 				if ( l1 === l2 && k1 === k2 ) {
@@ -674,7 +642,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 						scale[ 0 ] *= scaloc;
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
-
 				} else if ( l1 === l2 && k1 !== k2 ) {
 					suml = ddot( M - k2 - 1, A, strideA2, offsetA + k1 * strideA1 + Math.min(k2 + 1, M - 1) * strideA2, C, strideC1, offsetC + Math.min(k2 + 1, M - 1) * strideC1 + l1 * strideC2 );
 					sumr = ddot( N - l2 - 1, C, strideC2, offsetC + k1 * strideC1 + Math.min(l2 + 1, N - 1) * strideC2, B, strideB2, offsetB + l1 * strideB1 + Math.min(l2 + 1, N - 1) * strideB2 );
@@ -698,7 +665,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k2 * strideC1 + l1 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 === k2 ) {
 					suml = ddot( M - k1 - 1, A, strideA2, offsetA + k1 * strideA1 + Math.min(k1 + 1, M - 1) * strideA2, C, strideC1, offsetC + Math.min(k1 + 1, M - 1) * strideC1 + l1 * strideC2 );
 					sumr = ddot( N - l2 - 1, C, strideC2, offsetC + k1 * strideC1 + Math.min(l2 + 1, N - 1) * strideC2, B, strideB2, offsetB + l1 * strideB1 + Math.min(l2 + 1, N - 1) * strideB2 );
@@ -722,7 +688,6 @@ function dtrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 					}
 					C[ offsetC + k1 * strideC1 + l1 * strideC2 ] = X[ 0 ];
 					C[ offsetC + k1 * strideC1 + l2 * strideC2 ] = X[ 1 ];
-
 				} else if ( l1 !== l2 && k1 !== k2 ) {
 					suml = ddot( M - k2 - 1, A, strideA2, offsetA + k1 * strideA1 + Math.min(k2 + 1, M - 1) * strideA2, C, strideC1, offsetC + Math.min(k2 + 1, M - 1) * strideC1 + l1 * strideC2 );
 					sumr = ddot( N - l2 - 1, C, strideC2, offsetC + k1 * strideC1 + Math.min(l2 + 1, N - 1) * strideC2, B, strideB2, offsetB + l1 * strideB1 + Math.min(l2 + 1, N - 1) * strideB2 );

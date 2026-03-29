@@ -186,11 +186,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			iwork = itau + N;     // WORK start in WK at iwork
 
 			// Compute A = Q * R
-			zgeqrf(
-				M, N, A, sa1, sa2, offsetA,
-				WK, 1, itau,
-				WK, 1, iwork
-			);
+			zgeqrf(M, N, A, sa1, sa2, offsetA, WK, 1, itau, WK, 1, iwork);
 
 			// Zero out below R (the lower triangle of A(1:N, 0:N))
 			if ( N > 1 ) {
@@ -204,15 +200,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			iwork = itaup + N; // WORK start in WK at iwork
 
 			// Bidiagonalize R in A (N×N upper triangle)
-			zgebrd(
-				N, N, A, sa1, sa2, offsetA,
-				s, strideS, offsetS,
-				RWORK, strideRWORK, offsetRWORK + ie,
-				WK, 1, itauq,
-				WK, 1, itaup,
-				WK, 1, iwork,
-				wsz - iwork
-			);
+			zgebrd(N, N, A, sa1, sa2, offsetA, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
 
 			ncvt = 0;
 			if ( wntvo || wntvas ) {
@@ -225,15 +213,9 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			// Perform bidiagonal QR iteration, computing right singular
 
 			// Vectors of A in A if desired (NRU=0: no left vectors)
-			info = zbdsqr(
-				'upper', N, ncvt, 0, 0,
-				s, strideS, offsetS,
-				RWORK, strideRWORK, offsetRWORK + ie,
-				A, sa1, sa2, offsetA,
-				A, sa1, sa2, offsetA,  // U dummy (NRU=0)
+			info = zbdsqr('upper', N, ncvt, 0, 0, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, A, sa1, sa2, offsetA, A, sa1, sa2, offsetA,  // U dummy (NRU=0)
 				A, sa1, sa2, offsetA,  // C dummy (NCC=0)
-				RWORK, strideRWORK, offsetRWORK + irwork
-			);
+				RWORK, strideRWORK, offsetRWORK + irwork);
 
 			// If right singular vectors desired in VT, copy them there
 			if ( wntvas ) {
@@ -248,15 +230,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			iwork = itaup + N; // WORK start in WK at iwork
 
 			// Bidiagonalize A (reduce to upper bidiagonal)
-			zgebrd(
-				M, N, A, sa1, sa2, offsetA,
-				s, strideS, offsetS,
-				RWORK, strideRWORK, offsetRWORK + ie,
-				WK, 1, itauq,
-				WK, 1, itaup,
-				WK, 1, iwork,
-				wsz - iwork
-			);
+			zgebrd(M, N, A, sa1, sa2, offsetA, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
 
 			if ( wntuas ) {
 				// Copy lower triangle of A to U, then generate Q
@@ -292,37 +266,16 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 			// Perform bidiagonal SVD
 			if ( ( !wntuo ) && ( !wntvo ) ) {
 				// Neither U nor VT overwrite A
-				info = zbdsqr(
-					'upper', N, ncvt, nru, 0,
-					s, strideS, offsetS,
-					RWORK, strideRWORK, offsetRWORK + ie,
-					VT, svt1, svt2, offsetVT,
-					U, su1, su2, offsetU,
-					A, sa1, sa2, offsetA,  // C dummy (NCC=0)
-					RWORK, strideRWORK, offsetRWORK + irwork
-				);
+				info = zbdsqr('upper', N, ncvt, nru, 0, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, VT, svt1, svt2, offsetVT, U, su1, su2, offsetU, A, sa1, sa2, offsetA,  // C dummy (NCC=0)
+					RWORK, strideRWORK, offsetRWORK + irwork);
 			} else if ( ( !wntuo ) && wntvo ) {
 				// VT overwrites A
-				info = zbdsqr(
-					'upper', N, ncvt, nru, 0,
-					s, strideS, offsetS,
-					RWORK, strideRWORK, offsetRWORK + ie,
-					A, sa1, sa2, offsetA,
-					U, su1, su2, offsetU,
-					A, sa1, sa2, offsetA, // C dummy (NCC=0)
-					RWORK, strideRWORK, offsetRWORK + irwork
-				);
+				info = zbdsqr('upper', N, ncvt, nru, 0, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, A, sa1, sa2, offsetA, U, su1, su2, offsetU, A, sa1, sa2, offsetA, // C dummy (NCC=0)
+					RWORK, strideRWORK, offsetRWORK + irwork);
 			} else {
 				// U overwrites A, or both overwrite A
-				info = zbdsqr(
-					'upper', N, ncvt, nru, 0,
-					s, strideS, offsetS,
-					RWORK, strideRWORK, offsetRWORK + ie,
-					VT, svt1, svt2, offsetVT,
-					A, sa1, sa2, offsetA,
-					A, sa1, sa2, offsetA, // C dummy (NCC=0)
-					RWORK, strideRWORK, offsetRWORK + irwork
-				);
+				info = zbdsqr('upper', N, ncvt, nru, 0, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, VT, svt1, svt2, offsetVT, A, sa1, sa2, offsetA, A, sa1, sa2, offsetA, // C dummy (NCC=0)
+					RWORK, strideRWORK, offsetRWORK + irwork);
 			}
 		}
 	} else {
@@ -335,15 +288,7 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 		iwork = itaup + M; // WORK start in WK
 
 		// Bidiagonalize A (reduce to lower bidiagonal when M < N)
-		zgebrd(
-			M, N, A, sa1, sa2, offsetA,
-			s, strideS, offsetS,
-			RWORK, strideRWORK, offsetRWORK + ie,
-			WK, 1, itauq,
-			WK, 1, itaup,
-			WK, 1, iwork,
-			wsz - iwork
-		);
+		zgebrd(M, N, A, sa1, sa2, offsetA, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, WK, 1, itauq, WK, 1, itaup, WK, 1, iwork, wsz - iwork);
 
 		if ( wntuas ) {
 			// Copy lower triangle of A to U, then generate Q
@@ -378,35 +323,11 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 
 		// Perform bidiagonal SVD (lower bidiagonal when M < N)
 		if ( ( !wntuo ) && ( !wntvo ) ) {
-			info = zbdsqr(
-				'lower', M, ncvt, nru, 0,
-				s, strideS, offsetS,
-				RWORK, strideRWORK, offsetRWORK + ie,
-				VT, svt1, svt2, offsetVT,
-				U, su1, su2, offsetU,
-				A, sa1, sa2, offsetA,
-				RWORK, strideRWORK, offsetRWORK + irwork
-			);
+			info = zbdsqr('lower', M, ncvt, nru, 0, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, VT, svt1, svt2, offsetVT, U, su1, su2, offsetU, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK + irwork);
 		} else if ( ( !wntuo ) && wntvo ) {
-			info = zbdsqr(
-				'lower', M, ncvt, nru, 0,
-				s, strideS, offsetS,
-				RWORK, strideRWORK, offsetRWORK + ie,
-				A, sa1, sa2, offsetA,
-				U, su1, su2, offsetU,
-				A, sa1, sa2, offsetA,
-				RWORK, strideRWORK, offsetRWORK + irwork
-			);
+			info = zbdsqr('lower', M, ncvt, nru, 0, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, A, sa1, sa2, offsetA, U, su1, su2, offsetU, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK + irwork);
 		} else {
-			info = zbdsqr(
-				'lower', M, ncvt, nru, 0,
-				s, strideS, offsetS,
-				RWORK, strideRWORK, offsetRWORK + ie,
-				VT, svt1, svt2, offsetVT,
-				A, sa1, sa2, offsetA,
-				A, sa1, sa2, offsetA,
-				RWORK, strideRWORK, offsetRWORK + irwork
-			);
+			info = zbdsqr('lower', M, ncvt, nru, 0, s, strideS, offsetS, RWORK, strideRWORK, offsetRWORK + ie, VT, svt1, svt2, offsetVT, A, sa1, sa2, offsetA, A, sa1, sa2, offsetA, RWORK, strideRWORK, offsetRWORK + irwork);
 		}
 	}
 

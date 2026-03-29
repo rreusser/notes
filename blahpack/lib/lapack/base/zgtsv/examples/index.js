@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgtsv = require( '@stdlib/lapack/base/zgtsv' );

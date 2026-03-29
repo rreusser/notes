@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -11,38 +10,37 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Estimates the reciprocal of the condition number of a complex general
- * tridiagonal matrix A, in either the 1-norm or the infinity-norm, using
- * the LU factorization computed by zgttrf.
- *
- * An estimate is obtained for norm(inv(A)), and the reciprocal of the
- * condition number is computed as RCOND = 1 / (ANORM * norm(inv(A))).
- *
- *
- * @param {string} norm - 'one-norm' for 1-norm, 'infinity-norm' for infinity-norm
- * @param {NonNegativeInteger} N - order of the matrix A
- * @param {Complex128Array} DL - multipliers from zgttrf (length N-1)
- * @param {integer} strideDL - stride for DL (complex elements)
- * @param {NonNegativeInteger} offsetDL - starting index for DL (complex elements)
- * @param {Complex128Array} d - diagonal of U from zgttrf (length N)
- * @param {integer} strideD - stride for d (complex elements)
- * @param {NonNegativeInteger} offsetD - starting index for d (complex elements)
- * @param {Complex128Array} DU - first superdiagonal of U from zgttrf (length N-1)
- * @param {integer} strideDU - stride for DU (complex elements)
- * @param {NonNegativeInteger} offsetDU - starting index for DU (complex elements)
- * @param {Complex128Array} DU2 - second superdiagonal of U from zgttrf (length N-2)
- * @param {integer} strideDU2 - stride for DU2 (complex elements)
- * @param {NonNegativeInteger} offsetDU2 - starting index for DU2 (complex elements)
- * @param {Int32Array} IPIV - pivot indices from zgttrf (0-based, length N)
- * @param {integer} strideIPIV - stride for IPIV
- * @param {NonNegativeInteger} offsetIPIV - starting index for IPIV
- * @param {number} anorm - the 1-norm or infinity-norm of the original matrix
- * @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
- * @param {Complex128Array} WORK - workspace array of length at least 2*N
- * @param {integer} strideWORK - stride for WORK (complex elements)
- * @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
- * @returns {integer} info - 0 if successful
- */
+* Estimates the reciprocal of the condition number of a complex general.
+* tridiagonal matrix A, in either the 1-norm or the infinity-norm, using
+* the LU factorization computed by zgttrf.
+*
+* An estimate is obtained for norm(inv(A)), and the reciprocal of the
+* condition number is computed as RCOND = 1 / (ANORM * norm(inv(A))).
+*
+* @param {string} norm - 'one-norm' for 1-norm, 'infinity-norm' for infinity-norm
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Complex128Array} DL - multipliers from zgttrf (length N-1)
+* @param {integer} strideDL - stride for DL (complex elements)
+* @param {NonNegativeInteger} offsetDL - starting index for DL (complex elements)
+* @param {Complex128Array} d - diagonal of U from zgttrf (length N)
+* @param {integer} strideD - stride for d (complex elements)
+* @param {NonNegativeInteger} offsetD - starting index for d (complex elements)
+* @param {Complex128Array} DU - first superdiagonal of U from zgttrf (length N-1)
+* @param {integer} strideDU - stride for DU (complex elements)
+* @param {NonNegativeInteger} offsetDU - starting index for DU (complex elements)
+* @param {Complex128Array} DU2 - second superdiagonal of U from zgttrf (length N-2)
+* @param {integer} strideDU2 - stride for DU2 (complex elements)
+* @param {NonNegativeInteger} offsetDU2 - starting index for DU2 (complex elements)
+* @param {Int32Array} IPIV - pivot indices from zgttrf (0-based, length N)
+* @param {integer} strideIPIV - stride for IPIV
+* @param {NonNegativeInteger} offsetIPIV - starting index for IPIV
+* @param {number} anorm - the 1-norm or infinity-norm of the original matrix
+* @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
+* @param {Complex128Array} WORK - workspace array of length at least 2*N
+* @param {integer} strideWORK - stride for WORK (complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK (complex elements)
+* @returns {integer} info - 0 if successful
+*/
 function zgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	if ( norm !== 'max' && norm !== 'one-norm' && norm !== 'inf-norm' && norm !== 'frobenius' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid norm value. Value: `%s`.', norm ) );

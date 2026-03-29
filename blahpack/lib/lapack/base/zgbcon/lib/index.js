@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimate reciprocal condition number of complex general band matrix
+* Estimate reciprocal condition number of complex general band matrix.
 *
 * @module @stdlib/lapack/base/zgbcon
 *

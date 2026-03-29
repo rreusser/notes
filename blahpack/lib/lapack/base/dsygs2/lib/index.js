@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Reduces a symmetric definite generalized eigenproblem to standard form (unblocked)
+* Reduces a symmetric definite generalized eigenproblem to standard form (unblocked).
 *
 * @module @stdlib/lapack/base/dsygs2
 *

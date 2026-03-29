@@ -71,30 +71,18 @@ function zgetrs( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 		zlaswp( nrhs, B, strideB1, strideB2, offsetB, 0, N - 1, IPIV, strideIPIV, offsetIPIV, 1 );
 
 		// Solve L * Y = P * B (forward substitution, L is unit lower triangular)
-		ztrsm( 'left', 'lower', 'no-transpose', 'unit', N, nrhs, CONE,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		ztrsm( 'left', 'lower', 'no-transpose', 'unit', N, nrhs, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Solve U * X = Y (back substitution)
-		ztrsm( 'left', 'upper', 'no-transpose', 'non-unit', N, nrhs, CONE,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		ztrsm( 'left', 'upper', 'no-transpose', 'non-unit', N, nrhs, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 	} else if ( trans === 'transpose' ) {
 		// Solve A^T * X = B.
 
 		// Solve U^T * Y = B (forward substitution with U transposed)
-		ztrsm( 'left', 'upper', 'transpose', 'non-unit', N, nrhs, CONE,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		ztrsm( 'left', 'upper', 'transpose', 'non-unit', N, nrhs, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Solve L^T * X = Y (back substitution with L transposed, unit diagonal)
-		ztrsm( 'left', 'lower', 'transpose', 'unit', N, nrhs, CONE,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		ztrsm( 'left', 'lower', 'transpose', 'unit', N, nrhs, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Apply row interchanges in reverse order
 		zlaswp( nrhs, B, strideB1, strideB2, offsetB, N - 1, 0, IPIV, strideIPIV, offsetIPIV, -1 );
@@ -102,16 +90,10 @@ function zgetrs( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 		// Solve A^H * X = B (conjugate transpose).
 
 		// Solve U^H * Y = B (forward substitution with U conjugate-transposed)
-		ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', N, nrhs, CONE,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		ztrsm( 'left', 'upper', 'conjugate-transpose', 'non-unit', N, nrhs, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Solve L^H * X = Y (back substitution with L conjugate-transposed, unit diagonal)
-		ztrsm( 'left', 'lower', 'conjugate-transpose', 'unit', N, nrhs, CONE,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		ztrsm( 'left', 'lower', 'conjugate-transpose', 'unit', N, nrhs, CONE, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Apply row interchanges in reverse order
 		zlaswp( nrhs, B, strideB1, strideB2, offsetB, N - 1, 0, IPIV, strideIPIV, offsetIPIV, -1 );

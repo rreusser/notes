@@ -48,7 +48,7 @@ var max = Math.max;
 // MAIN //
 
 /**
-* Computes selected eigenvalues and, optionally, eigenvectors of a complex
+* Computes selected eigenvalues and, optionally, eigenvectors of a complex.
 * Hermitian matrix A.
 *
 * Eigenvalues and eigenvectors can be selected by specifying either a range
@@ -112,53 +112,41 @@ function zheevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	var alleig;
 	var valeig;
 	var indeig;
-	var wantz;
-	var lower;
 	var safmin;
 	var smlnum;
 	var bignum;
 	var iscale;
 	var abstll;
+	var indree;
+	var indrwk;
+	var indibl;
+	var indisp;
+	var indifl;
+	var indiwo;
+	var nsplit;
+	var wantz;
+	var lower;
 	var sigma;
+	var indrd;
+	var indre;
+	var order;
+	var itmp1;
 	var anrm;
 	var rmin;
 	var rmax;
 	var info;
 	var imax;
+	var Mout;
+	var tmp1;
 	var eps;
 	var vll;
 	var vuu;
+	var TAU;
 	var Av;
 	var Zv;
-
-	// RWORK partition offsets
-	var indrd;
-	var indre;
-	var indree;
-	var indrwk;
-
-	// TAU (separate allocation to avoid aliasing with WORK)
-	var TAU;
-
-	// IWORK partition offsets
-	var indibl;
-	var indisp;
-	var indifl;
-	var indiwo;
-
-	// dstebz outputs
-	var Mout;
-	var nsplit;
-	var order;
-
-	// Sorting variables
-	var itmp1;
-	var tmp1;
-
-	// Loop variables
+	var jj;
 	var i;
 	var j;
-	var jj;
 	var M;
 
 	wantz = ( jobz === 'compute-vectors' );
@@ -213,7 +201,7 @@ function zheevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	vll = vl;
 	vuu = vu;
 
-	// zlanhe computes the norm using Complex128Array with complex-element strides
+	// Zlanhe computes the norm using Complex128Array with complex-element strides
 	anrm = zlanhe( 'max', uplo, N, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK );
 	sigma = 1.0;
 	if ( anrm > 0.0 && anrm < rmin ) {
@@ -249,7 +237,9 @@ function zheevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	TAU = new Complex128Array( max( 1, N - 1 ) );
 
 	// Partition RWORK:
+
 	// indrd: diagonal (N), indre: off-diagonal (N), indree: copy of off-diagonal (N),
+
 	// indrwk: remaining workspace
 	indrd = offsetRWORK;
 	indre = indrd + N;
@@ -257,7 +247,9 @@ function zheevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	indrwk = indree + N;
 
 	// Partition IWORK:
+
 	// indibl: block indices (N), indisp: split indices (N),
+
 	// indifl: fail indices (N), indiwo: remaining workspace
 	indibl = offsetIWORK;
 	indisp = indibl + N;
@@ -297,38 +289,15 @@ function zheevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	Mout = new Int32Array( 1 );
 	nsplit = new Int32Array( 1 );
 
-	info = dstebz( range, order, N, vll, vuu, il, iu, abstll,
-		RWORK, strideRWORK, indrd,
-		RWORK, strideRWORK, indre,
-		Mout, nsplit,
-		w, strideW, offsetW,
-		IWORK, strideIWORK, indibl,
-		IWORK, strideIWORK, indisp,
-		RWORK, strideRWORK, indrwk,
-		IWORK, strideIWORK, indiwo
-	);
+	info = dstebz( range, order, N, vll, vuu, il, iu, abstll, RWORK, strideRWORK, indrd, RWORK, strideRWORK, indre, Mout, nsplit, w, strideW, offsetW, IWORK, strideIWORK, indibl, IWORK, strideIWORK, indisp, RWORK, strideRWORK, indrwk, IWORK, strideIWORK, indiwo);
 
 	M = Mout[ 0 ];
 
 	if ( wantz && M > 0 ) {
-		info = zstein( N, RWORK, strideRWORK, indrd, RWORK, strideRWORK, indre,
-			M, w, strideW, offsetW,
-			IWORK, strideIWORK, indibl,
-			IWORK, strideIWORK, indisp,
-			Z, strideZ1, strideZ2, offsetZ,
-			RWORK, strideRWORK, indrwk,
-			IWORK, strideIWORK, indiwo,
-			IWORK, strideIWORK, indifl
-		);
+		info = zstein( N, RWORK, strideRWORK, indrd, RWORK, strideRWORK, indre, M, w, strideW, offsetW, IWORK, strideIWORK, indibl, IWORK, strideIWORK, indisp, Z, strideZ1, strideZ2, offsetZ, RWORK, strideRWORK, indrwk, IWORK, strideIWORK, indiwo, IWORK, strideIWORK, indifl);
 
 		// Transform eigenvectors back to original space
-		zunmtr( 'left', uplo, 'no-transpose', N, M,
-			A, strideA1, strideA2, offsetA,
-			TAU, 1, 0,
-			Z, strideZ1, strideZ2, offsetZ,
-			WORK, strideWORK, offsetWORK,
-			lwork
-		);
+		zunmtr( 'left', uplo, 'no-transpose', N, M, A, strideA1, strideA2, offsetA, TAU, 1, 0, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork);
 	}
 
 	// Undo scaling if necessary

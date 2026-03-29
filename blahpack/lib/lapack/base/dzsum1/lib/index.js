@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Sum of absolute values of a complex vector
+* Sum of absolute values of a complex vector.
 *
 * @module @stdlib/lapack/base/dzsum1
 *

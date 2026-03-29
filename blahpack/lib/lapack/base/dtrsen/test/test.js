@@ -1,34 +1,65 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dtrsen = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dtrsen.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dtrsen.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -52,162 +83,310 @@ function fromFortranColMajor( arr, N, LDA ) {
 	return out;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'dtrsen: N V select scalar swap', function t() {
-	// Select second eigenvalue to move it to position 0
-	var N = 3;
-	var T = new Float64Array([
-		1.0, 0.0, 0.0,
-		2.0, 3.0, 0.0,
-		0.5, 1.0, 5.0
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var WR;
+	var WI;
+	var N;
+	var T;
+	var Q;
+	var M;
+	var s;
+
+	N = 3;
+	T = new Float64Array([
+		1.0,
+		0.0,
+		0.0,
+		2.0,
+		3.0,
+		0.0,
+		0.5,
+		1.0,
+		5.0
 	]);
-	var Q = new Float64Array( N * N );
-	Q[ 0 ] = 1; Q[ 4 ] = 1; Q[ 8 ] = 1;
-	var SELECT = new Uint8Array([ 0, 1, 0 ]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
-
-	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	Q = new Float64Array( N * N );
+	Q[ 0 ] = 1;
+	Q[ 4 ] = 1;
+	Q[ 8 ] = 1;
+	SELECT = new Uint8Array([ 0, 1, 0 ]);
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( M[ 0 ], 1 );
-	// Eigenvalue 3.0 should now be in leading position
 	assertClose( WR[ 0 ], 3.0, 1e-13, 'WR[0]' );
 	assertClose( WR[ 1 ], 1.0, 1e-13, 'WR[1]' );
 	assertClose( WR[ 2 ], 5.0, 1e-13, 'WR[2]' );
 });
 
 test( 'dtrsen: all selected 2x2', function t() {
-	var tc = findCase( 'all selected 2x2' );
-	var N = 2;
-	var T = fromFortranColMajor( [
-		1.0, 0.0, 0.0, 0.0,
-		2.0, 3.0, 0.0, 0.0,
-		0.0, 0.0, 0.0, 0.0,
-		0.0, 0.0, 0.0, 0.0
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var T;
+	var Q;
+	var M;
+	var s;
+
+	tc = findCase( 'all selected 2x2' );
+	N = 2;
+	T = fromFortranColMajor([
+		1.0,
+		0.0,
+		0.0,
+		0.0,
+		2.0,
+		3.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0
 	], N, 4 );
-	var Q = new Float64Array( N * N );
-	Q[ 0 ] = 1; Q[ 3 ] = 1;
-	var SELECT = new Uint8Array([ 1, 1 ]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
-
-	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	Q = new Float64Array( N * N );
+	Q[ 0 ] = 1;
+	Q[ 3 ] = 1;
+	SELECT = new Uint8Array([ 1, 1 ]);
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
-	assertArrayClose( Array.from( WR ), tc.WR.slice( 0, N ), 1e-13, 'WR' );
-	assertArrayClose( Array.from( WI ), tc.WI.slice( 0, N ), 1e-13, 'WI' );
+	assertArrayClose( toArray( WR ), tc.WR.slice( 0, N ), 1e-13, 'WR' );
+	assertArrayClose( toArray( WI ), tc.WI.slice( 0, N ), 1e-13, 'WI' );
 });
 
 test( 'dtrsen: none selected', function t() {
-	var tc = findCase( 'none selected' );
-	var N = 2;
-	var T = new Float64Array([ 1.0, 0.0, 2.0, 3.0 ]);
-	var Q = new Float64Array([ 1.0, 0.0, 0.0, 1.0 ]);
-	var SELECT = new Uint8Array([ 0, 0 ]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var T;
+	var Q;
+	var M;
+	var s;
 
-	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	tc = findCase( 'none selected' );
+	N = 2;
+	T = new Float64Array([ 1.0, 0.0, 2.0, 3.0 ]);
+	Q = new Float64Array([ 1.0, 0.0, 0.0, 1.0 ]);
+	SELECT = new Uint8Array([ 0, 0 ]);
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
 });
 
 test( 'dtrsen: E compute S', function t() {
-	var tc = findCase( 'E compute S' );
-	var N = 3;
-	var T = fromFortranColMajor( [
-		1.0, 0.0, 0.0, 0.0,
-		2.0, 3.0, 0.0, 0.0,
-		0.5, 1.0, 5.0, 0.0,
-		0.0, 0.0, 0.0, 0.0
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var T;
+	var Q;
+	var M;
+	var s;
+
+	tc = findCase( 'E compute S' );
+	N = 3;
+	T = fromFortranColMajor([
+		1.0,
+		0.0,
+		0.0,
+		0.0,
+		2.0,
+		3.0,
+		0.0,
+		0.0,
+		0.5,
+		1.0,
+		5.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0
 	], N, 4 );
-	var Q = new Float64Array( N * N );
-	Q[ 0 ] = 1; Q[ 4 ] = 1; Q[ 8 ] = 1;
-	var SELECT = new Uint8Array([ 1, 0, 0 ]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
-
-	var info = dtrsen( 'eigenvalues', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	Q = new Float64Array( N * N );
+	Q[ 0 ] = 1;
+	Q[ 4 ] = 1;
+	Q[ 8 ] = 1;
+	SELECT = new Uint8Array([ 1, 0, 0 ]);
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'eigenvalues', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
 	assertClose( s[ 0 ], tc.S, 1e-13, 'S' );
 });
 
 test( 'dtrsen: V compute SEP', function t() {
-	var tc = findCase( 'V compute SEP' );
-	var N = 3;
-	var T = fromFortranColMajor( [
-		1.0, 0.0, 0.0, 0.0,
-		2.0, 3.0, 0.0, 0.0,
-		0.5, 1.0, 5.0, 0.0,
-		0.0, 0.0, 0.0, 0.0
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var T;
+	var Q;
+	var M;
+	var s;
+
+	tc = findCase( 'V compute SEP' );
+	N = 3;
+	T = fromFortranColMajor([
+		1.0,
+		0.0,
+		0.0,
+		0.0,
+		2.0,
+		3.0,
+		0.0,
+		0.0,
+		0.5,
+		1.0,
+		5.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0
 	], N, 4 );
-	var Q = new Float64Array( N * N );
-	Q[ 0 ] = 1; Q[ 4 ] = 1; Q[ 8 ] = 1;
-	var SELECT = new Uint8Array([ 1, 0, 0 ]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
-
-	var info = dtrsen( 'subspace', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	Q = new Float64Array( N * N );
+	Q[ 0 ] = 1;
+	Q[ 4 ] = 1;
+	Q[ 8 ] = 1;
+	SELECT = new Uint8Array([ 1, 0, 0 ]);
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'subspace', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
 	assertClose( sep[ 0 ], tc.SEP, 1e-13, 'SEP' );
 });
 
 test( 'dtrsen: B compute both', function t() {
-	var tc = findCase( 'B compute both' );
-	var N = 3;
-	var T = fromFortranColMajor( [
-		1.0, 0.0, 0.0, 0.0,
-		2.0, 3.0, 0.0, 0.0,
-		0.5, 1.0, 5.0, 0.0,
-		0.0, 0.0, 0.0, 0.0
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var T;
+	var Q;
+	var M;
+	var s;
+
+	tc = findCase( 'B compute both' );
+	N = 3;
+	T = fromFortranColMajor([
+		1.0,
+		0.0,
+		0.0,
+		0.0,
+		2.0,
+		3.0,
+		0.0,
+		0.0,
+		0.5,
+		1.0,
+		5.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0
 	], N, 4 );
-	var Q = new Float64Array( N * N );
-	Q[ 0 ] = 1; Q[ 4 ] = 1; Q[ 8 ] = 1;
-	var SELECT = new Uint8Array([ 1, 0, 0 ]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
-
-	var info = dtrsen( 'both', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	Q = new Float64Array( N * N );
+	Q[ 0 ] = 1;
+	Q[ 4 ] = 1;
+	Q[ 8 ] = 1;
+	SELECT = new Uint8Array([ 1, 0, 0 ]);
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'both', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
 	assertClose( s[ 0 ], tc.S, 1e-13, 'S' );
@@ -215,49 +394,84 @@ test( 'dtrsen: B compute both', function t() {
 });
 
 test( 'dtrsen: N=0', function t() {
-	var tc = findCase( 'N=0' );
-	var T = new Float64Array( 0 );
-	var Q = new Float64Array( 0 );
-	var SELECT = new Uint8Array( 0 );
-	var WR = new Float64Array( 0 );
-	var WI = new Float64Array( 0 );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var tc;
+	var WR;
+	var WI;
+	var T;
+	var Q;
+	var M;
+	var s;
 
-	var info = dtrsen( 'none', 'update', SELECT, 1, 0, 0, T, 1, 0, 0, Q, 1, 0, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	tc = findCase( 'N=0' );
+	T = new Float64Array( 0 );
+	Q = new Float64Array( 0 );
+	SELECT = new Uint8Array( 0 );
+	WR = new Float64Array( 0 );
+	WI = new Float64Array( 0 );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'none', 'update', SELECT, 1, 0, 0, T, 1, 0, 0, Q, 1, 0, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assert.equal( M[ 0 ], tc.M );
 });
 
-test( 'dtrsen: select complex pair (already in leading position)', function t() {
-	// Test with complex pair already in leading position (no swap needed)
-	var N = 4;
-	var T = fromFortranColMajor( [
-		4.0, -1.5, 0.0, 0.0,
-		1.5, 4.0, 0.0, 0.0,
-		0.3, 0.4, 1.0, 0.0,
-		0.2, 0.1, 0.5, 2.0
+test( 'dtrsen: select complex pair (already in leading position)', function t() { // eslint-disable-line max-len
+	var SELECT;
+	var IWORK;
+	var WORK;
+	var info;
+	var sep;
+	var WR;
+	var WI;
+	var N;
+	var T;
+	var Q;
+	var M;
+	var s;
+
+	N = 4;
+	T = fromFortranColMajor([
+		4.0,
+		-1.5,
+		0.0,
+		0.0,
+		1.5,
+		4.0,
+		0.0,
+		0.0,
+		0.3,
+		0.4,
+		1.0,
+		0.0,
+		0.2,
+		0.1,
+		0.5,
+		2.0
 	], N, N );
-	var Q = new Float64Array( N * N );
-	Q[ 0 ] = 1; Q[ 5 ] = 1; Q[ 10 ] = 1; Q[ 15 ] = 1;
-	var SELECT = new Uint8Array([ 1, 1, 0, 0 ]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var M = new Float64Array( 1 );
-	var s = new Float64Array( 1 );
-	var sep = new Float64Array( 1 );
-	var WORK = new Float64Array( 100 );
-	var IWORK = new Int32Array( 100 );
-
-	var info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 );
-
+	Q = new Float64Array( N * N );
+	Q[ 0 ] = 1;
+	Q[ 5 ] = 1;
+	Q[ 10 ] = 1;
+	Q[ 15 ] = 1;
+	SELECT = new Uint8Array([ 1, 1, 0, 0 ]);
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	M = new Float64Array( 1 );
+	s = new Float64Array( 1 );
+	sep = new Float64Array( 1 );
+	WORK = new Float64Array( 100 );
+	IWORK = new Int32Array( 100 );
+	info = dtrsen( 'none', 'update', SELECT, 1, 0, N, T, 1, N, 0, Q, 1, N, 0, WR, 1, 0, WI, 1, 0, M, s, sep, WORK, 1, 0, 100, IWORK, 1, 0, 100 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( M[ 0 ], 2 );
-	// Complex pair eigenvalues: 4 +/- 1.5i
 	assertClose( WR[ 0 ], 4.0, 1e-13, 'WR[0]' );
 	assertClose( WR[ 1 ], 4.0, 1e-13, 'WR[1]' );
 	assertClose( Math.abs( WI[ 0 ] ), 1.5, 1e-13, 'WI[0]' );

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -13,7 +12,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Copy a triangular matrix from Rectangular Full Packed format to standard full format
+* Copy a triangular matrix from Rectangular Full Packed format to standard full format.
 *
 * @param {string} transr - specifies whether ARF is in normal or transposed format
 * @param {string} uplo - specifies whether the matrix is upper or lower triangular

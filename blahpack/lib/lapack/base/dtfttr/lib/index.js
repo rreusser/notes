@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Copy a triangular matrix from Rectangular Full Packed format to standard full format
+* Copy a triangular matrix from Rectangular Full Packed format to standard full format.
 *
 * @module @stdlib/lapack/base/dtfttr
 *

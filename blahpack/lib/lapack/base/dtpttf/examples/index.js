@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtpttf = require( '@stdlib/lapack/base/dtpttf' );

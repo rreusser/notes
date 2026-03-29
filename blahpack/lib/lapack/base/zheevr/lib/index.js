@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes selected eigenvalues and eigenvectors of a complex Hermitian matrix using MRRR
+* Computes selected eigenvalues and eigenvectors of a complex Hermitian matrix using MRRR.
 *
 * @module @stdlib/lapack/base/zheevr
 *

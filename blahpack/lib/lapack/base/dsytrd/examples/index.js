@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsytrd = require( '@stdlib/lapack/base/dsytrd' );

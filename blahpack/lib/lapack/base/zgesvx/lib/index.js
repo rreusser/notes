@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Expert driver for solving complex general linear systems
+* Expert driver for solving complex general linear systems.
 *
 * @module @stdlib/lapack/base/zgesvx
 *

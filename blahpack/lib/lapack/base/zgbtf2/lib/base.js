@@ -132,8 +132,7 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 
 			// Band stride for moving along a row = sa2 - sa1 (corresponds to LDAB-1)
 			if ( jp !== 0 ) {
-				zswap( ju - j + 1, AB, sa2 - sa1, offsetAB + (( kv + jp ) * sa1) + (j * sa2),
-					AB, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2) );
+				zswap( ju - j + 1, AB, sa2 - sa1, offsetAB + (( kv + jp ) * sa1) + (j * sa2), AB, sa2 - sa1, offsetAB + (kv * sa1) + (j * sa2) );
 			}
 
 			if ( km > 0 ) {
@@ -145,15 +144,11 @@ function zgbtf2( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, strideI
 				cmplx.divAt( TEMP, 0, TEMP, 0, ABv, idx );
 				ONE_NEG = new Complex128( TEMP[ 0 ], TEMP[ 1 ] );
 
-				zscal( km, ONE_NEG,
-					AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2) );
+				zscal( km, ONE_NEG, AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2) );
 
 				// Rank-1 update: A(j+1:j+km, j+1:ju) -= L(j+1:j+km, j) * U(j, j+1:ju)
 				if ( ju > j ) {
-					zgeru( km, ju - j, new Complex128( -1.0, 0.0 ),
-						AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2),
-						AB, sa2 - sa1, offsetAB + (( kv - 1 ) * sa1) + (( j + 1 ) * sa2),
-						AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (( j + 1 ) * sa2) );
+					zgeru( km, ju - j, new Complex128( -1.0, 0.0 ), AB, sa1, offsetAB + (( kv + 1 ) * sa1) + (j * sa2), AB, sa2 - sa1, offsetAB + (( kv - 1 ) * sa1) + (( j + 1 ) * sa2), AB, sa1, sa2 - sa1, offsetAB + (kv * sa1) + (( j + 1 ) * sa2) );
 				}
 			}
 		} else if ( info === 0 ) {

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solve tridiagonal system using LU factorization (complex)
+* Solve tridiagonal system using LU factorization (complex).
 *
 * @module @stdlib/lapack/base/zgttrs
 *

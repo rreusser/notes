@@ -1,36 +1,67 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgesv = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgesv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgesv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -50,11 +81,11 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * @returns {Float64Array} b - N*nrhs complex result (2*N*nrhs doubles)
 */
 function zmatmat( A, x, N, nrhs ) {
-	var b = new Float64Array( 2 * N * nrhs );
 	var are;
 	var aim;
 	var xre;
 	var xim;
+	var b = new Float64Array( 2 * N * nrhs );
 	var i;
 	var j;
 	var k;
@@ -66,6 +97,7 @@ function zmatmat( A, x, N, nrhs ) {
 				aim = A[ 2 * ( i + k * N ) + 1 ];
 				xre = x[ 2 * ( k + j * N ) ];
 				xim = x[ 2 * ( k + j * N ) + 1 ];
+
 				// (are + i*aim) * (xre + i*xim)
 				b[ 2 * ( i + j * N ) ] += are * xre - aim * xim;
 				b[ 2 * ( i + j * N ) + 1 ] += are * xim + aim * xre;
@@ -75,12 +107,29 @@ function zmatmat( A, x, N, nrhs ) {
 	return b;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'zgesv: solve_3x3', function t() {
 	var Aorig;
 	var Borig;
+	var bview;
 	var IPIV;
 	var info;
 	var view;
@@ -90,37 +139,39 @@ test( 'zgesv: solve_3x3', function t() {
 	var B;
 
 	tc = findCase( 'solve_3x3' );
-
-	// A = [(2+1i) (1+0.5i) (0.5+0.1i);
-	//      (1-1i) (4+2i)   (1+0.3i);
-	//      (0.5+0.2i) (1-0.5i) (3+1i)] col-major
-	A = new Complex128Array( [
-		2.0, 1.0, 1.0, -1.0, 0.5, 0.2,
-		1.0, 0.5, 4.0, 2.0, 1.0, -0.5,
-		0.5, 0.1, 1.0, 0.3, 3.0, 1.0
-	] );
+	A = new Complex128Array([
+		2.0,
+		1.0,
+		1.0,
+		-1.0,
+		0.5,
+		0.2,
+		1.0,
+		0.5,
+		4.0,
+		2.0,
+		1.0,
+		-0.5,
+		0.5,
+		0.1,
+		1.0,
+		0.3,
+		3.0,
+		1.0
+	]);
 	Aorig = new Float64Array( reinterpret( A, 0 ) );
-
-	// b = A * [1; 1; 1] = sum of each row
 	B = new Complex128Array( 3 );
 	Borig = reinterpret( B, 0 );
-
-	// Compute b = A * [1+0i; 1+0i; 1+0i]
-	var bview = zmatmat( Aorig, new Float64Array( [ 1, 0, 1, 0, 1, 0 ] ), 3, 1 );
+	bview = zmatmat( Aorig, new Float64Array( [ 1, 0, 1, 0, 1, 0 ] ), 3, 1 );
 	Borig.set( bview );
 	Borig = new Float64Array( Borig );
-
 	IPIV = new Int32Array( 3 );
-
 	info = zgesv( 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
 	view = reinterpret( B, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( view ), tc.x, 1e-13, 'x' );
-
-	// Verify A_orig * x ≈ b_orig
-	AB = zmatmat( Aorig, Array.from( view ), 3, 1 );
-	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-13, 'A*x=b' );
+	assertArrayClose( toArray( view ), tc.x, 1e-13, 'x' );
+	AB = zmatmat( Aorig, toArray( view ), 3, 1 );
+	assertArrayClose( toArray( AB ), toArray( Borig ), 1e-13, 'A*x=b' );
 });
 
 test( 'zgesv: multi_rhs', function t() {
@@ -135,31 +186,35 @@ test( 'zgesv: multi_rhs', function t() {
 	var B;
 
 	tc = findCase( 'multi_rhs' );
-
-	// A = [(3+1i) (1-1i); (2+0.5i) (5+2i)] col-major
-	A = new Complex128Array( [
-		3.0, 1.0, 2.0, 0.5,
-		1.0, -1.0, 5.0, 2.0
-	] );
+	A = new Complex128Array([
+		3.0,
+		1.0,
+		2.0,
+		0.5,
+		1.0,
+		-1.0,
+		5.0,
+		2.0
+	]);
 	Aorig = new Float64Array( reinterpret( A, 0 ) );
 	IPIV = new Int32Array( 2 );
-
-	// B col-major: b1 = [(3+1i); (2+0.5i)], b2 = [(0+2i); (4.5+4i)]
-	B = new Complex128Array( [
-		3.0, 1.0, 2.0, 0.5,
-		0.0, 2.0, 4.5, 4.0
-	] );
+	B = new Complex128Array([
+		3.0,
+		1.0,
+		2.0,
+		0.5,
+		0.0,
+		2.0,
+		4.5,
+		4.0
+	]);
 	Borig = new Float64Array( reinterpret( B, 0 ) );
-
 	info = zgesv( 2, 2, A, 1, 2, 0, IPIV, 1, 0, B, 1, 2, 0 );
 	view = reinterpret( B, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( view ), tc.x, 1e-13, 'x' );
-
-	// Verify A_orig * X ≈ B_orig
-	AB = zmatmat( Aorig, Array.from( view ), 2, 2 );
-	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-13, 'A*X=B' );
+	assertArrayClose( toArray( view ), tc.x, 1e-13, 'x' );
+	AB = zmatmat( Aorig, toArray( view ), 2, 2 );
+	assertArrayClose( toArray( AB ), toArray( Borig ), 1e-13, 'A*X=B' );
 });
 
 test( 'zgesv: singular', function t() {
@@ -170,20 +225,31 @@ test( 'zgesv: singular', function t() {
 	var B;
 
 	tc = findCase( 'singular' );
-
-	// Singular: rows are multiples [1 2 3; 2 4 6; 3 6 9] (all real)
-	A = new Complex128Array( [
-		1.0, 0.0, 2.0, 0.0, 3.0, 0.0,
-		2.0, 0.0, 4.0, 0.0, 6.0, 0.0,
-		3.0, 0.0, 6.0, 0.0, 9.0, 0.0
-	] );
+	A = new Complex128Array([
+		1.0,
+		0.0,
+		2.0,
+		0.0,
+		3.0,
+		0.0,
+		2.0,
+		0.0,
+		4.0,
+		0.0,
+		6.0,
+		0.0,
+		3.0,
+		0.0,
+		6.0,
+		0.0,
+		9.0,
+		0.0
+	]);
 	IPIV = new Int32Array( 3 );
-	B = new Complex128Array( [
+	B = new Complex128Array([
 		1.0, 0.0, 2.0, 0.0, 3.0, 0.0
-	] );
-
+	]);
 	info = zgesv( 3, 1, A, 1, 3, 0, IPIV, 1, 0, B, 1, 3, 0 );
-
 	assert.ok( info > 0, 'info > 0 for singular matrix' );
 });
 
@@ -195,13 +261,10 @@ test( 'zgesv: n_zero', function t() {
 	var B;
 
 	tc = findCase( 'n_zero' );
-
 	A = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
-
 	info = zgesv( 0, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -213,13 +276,10 @@ test( 'zgesv: nrhs_zero', function t() {
 	var B;
 
 	tc = findCase( 'nrhs_zero' );
-
 	A = new Complex128Array( [ 5.0, 1.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
-
 	info = zgesv( 1, 0, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
-
 	assert.equal( info, tc.info, 'info' );
 });
 
@@ -232,60 +292,76 @@ test( 'zgesv: 1x1', function t() {
 	var B;
 
 	tc = findCase( '1x1' );
-
-	// (5+2i)*x = (10+4i) => x = 2+0i
 	A = new Complex128Array( [ 5.0, 2.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( [ 10.0, 4.0 ] );
-
 	info = zgesv( 1, 1, A, 1, 1, 0, IPIV, 1, 0, B, 1, 1, 0 );
 	view = reinterpret( B, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( view ), tc.x, 1e-14, 'x' );
+	assertArrayClose( toArray( view ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zgesv: 4x4', function t() {
 	var Aorig;
 	var Borig;
+	var bvals;
 	var IPIV;
 	var info;
 	var view;
+	var xvec;
 	var tc;
 	var AB;
 	var A;
 	var B;
 
 	tc = findCase( '4x4' );
-
-	// A = diagonally dominant 4x4 complex matrix (col-major)
-	A = new Complex128Array( [
-		10.0, 1.0, 1.0, 2.0, 2.0, -1.0, 3.0, 0.5,
-		1.0, -1.0, 12.0, 2.0, 1.0, 3.0, 2.0, -0.5,
-		2.0, 0.5, 3.0, -1.0, 15.0, 1.0, 1.0, 2.0,
-		1.0, 1.0, 2.0, 0.5, 3.0, -2.0, 20.0, 3.0
-	] );
+	A = new Complex128Array([
+		10.0,
+		1.0,
+		1.0,
+		2.0,
+		2.0,
+		-1.0,
+		3.0,
+		0.5,
+		1.0,
+		-1.0,
+		12.0,
+		2.0,
+		1.0,
+		3.0,
+		2.0,
+		-0.5,
+		2.0,
+		0.5,
+		3.0,
+		-1.0,
+		15.0,
+		1.0,
+		1.0,
+		2.0,
+		1.0,
+		1.0,
+		2.0,
+		0.5,
+		3.0,
+		-2.0,
+		20.0,
+		3.0
+	]);
 	Aorig = new Float64Array( reinterpret( A, 0 ) );
 	IPIV = new Int32Array( 4 );
-
-	// x = [1+1i; 2-1i; -1+2i; 3+0i]
-	var xvec = new Float64Array( [
+	xvec = new Float64Array([
 		1.0, 1.0, 2.0, -1.0, -1.0, 2.0, 3.0, 0.0
-	] );
-
-	// b = A * x
-	var bvals = zmatmat( Aorig, xvec, 4, 1 );
+	]);
+	bvals = zmatmat( Aorig, xvec, 4, 1 );
 	B = new Complex128Array( 4 );
 	reinterpret( B, 0 ).set( bvals );
 	Borig = new Float64Array( reinterpret( B, 0 ) );
-
 	info = zgesv( 4, 1, A, 1, 4, 0, IPIV, 1, 0, B, 1, 4, 0 );
 	view = reinterpret( B, 0 );
-
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( view ), tc.x, 1e-13, 'x' );
-
-	// Verify A_orig * x ≈ b_orig
-	AB = zmatmat( Aorig, Array.from( view ), 4, 1 );
-	assertArrayClose( Array.from( AB ), Array.from( Borig ), 1e-13, 'A*x=b' );
+	assertArrayClose( toArray( view ), tc.x, 1e-13, 'x' );
+	AB = zmatmat( Aorig, toArray( view ), 4, 1 );
+	assertArrayClose( toArray( AB ), toArray( Borig ), 1e-13, 'A*x=b' );
 });

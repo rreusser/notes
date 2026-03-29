@@ -52,9 +52,9 @@ var BIGNUM = ONE / SMLNUM;
 // MAIN //
 
 /**
-* Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,
+* Computes for an N-by-N complex nonsymmetric matrix A, the eigenvalues,.
 * the Schur form T, and, optionally, the matrix of Schur vectors Z.
-* This gives the Schur factorization A = Z*T*(Z**H).
+* This gives the Schur factorization A = Z_T_(Z**H).
 *
 * Optionally, it also orders the eigenvalues on the diagonal of the Schur
 * form so that selected eigenvalues are at the top left. The leading columns
@@ -97,24 +97,24 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 	var wantst;
 	var scalea;
 	var cscale;
+	var balRes;
 	var icond;
 	var ieval;
 	var anrm;
 	var ierr;
 	var info;
-	var balRes;
-	var ilo;
-	var ihi;
 	var ibal;
 	var itau;
 	var iwrk;
+	var ilo;
+	var ihi;
 	var DUM;
+	var SEP;
 	var Wv;
 	var sw;
 	var oW;
 	var M;
 	var S;
-	var SEP;
 	var i;
 
 	info = 0;
@@ -151,6 +151,7 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 	ihi = balRes.ihi; // 1-based
 
 	// Reduce to upper Hessenberg form
+
 	// WORK layout: [TAU(0..N-1), workspace...]
 	itau = 0; // offset in WORK for TAU (in complex elements)
 	iwrk = N + itau;
@@ -168,7 +169,7 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 
 	// Compute Schur form
 	iwrk = itau;
-	ieval = zhseqr( 'schur', wantvs ? 'update' : 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+	ieval = zhseqr( 'schur', ( wantvs ) ? 'update' : 'none', N, ilo, ihi, A, strideA1, strideA2, offsetA, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
 	if ( ieval > 0 ) {
 		info = ieval;
 	}
@@ -184,14 +185,14 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 		oW = offsetW * 2;
 
 		for ( i = 0; i < N; i++ ) {
-			BWORK[ offsetBWORK + i * strideBWORK ] = select( new Complex128( Wv[ oW + i * sw ], Wv[ oW + i * sw + 1 ] ) ) ? 1 : 0;
+			BWORK[ offsetBWORK + i * strideBWORK ] = ( select( new Complex128( Wv[ oW + i * sw ], Wv[ oW + i * sw + 1 ] ) ) ) ? 1 : 0;
 		}
 
 		// Reorder Schur form
 		M = new Float64Array( 1 );
 		S = new Float64Array( 1 );
 		SEP = new Float64Array( 1 );
-		icond = ztrsen( 'none', wantvs ? 'update' : 'none', BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, W, strideW, offsetW, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
+		icond = ztrsen( 'none', ( wantvs ) ? 'update' : 'none', BWORK, strideBWORK, offsetBWORK, N, A, strideA1, strideA2, offsetA, VS, strideVS1, strideVS2, offsetVS, W, strideW, offsetW, M, S, SEP, WORK, strideWORK, offsetWORK + iwrk * strideWORK, lwork - iwrk );
 		sdim[ 0 ] = M[ 0 ];
 		if ( icond > 0 ) {
 			info = N + icond;
@@ -206,6 +207,7 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W,
 	if ( scalea ) {
 		// Undo scaling for the Schur form of A
 		zlascl( 'upper', 0, 0, cscale, anrm, N, N, A, strideA1, strideA2, offsetA );
+
 		// Re-extract diagonal eigenvalues
 		zcopy( N, A, strideA1 + strideA2, offsetA, W, strideW, offsetW );
 	}

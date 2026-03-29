@@ -96,10 +96,7 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			if ( k > nb ) {
 				// Use blocked code for this panel
 				W = new Float64Array( ldwork * nb );
-				result = dlasyf( 'upper', k, nb,
-					A, sa1, sa2, offsetA,
-					IPIV, strideIPIV, offsetIPIV,
-					W, 1, ldwork, 0 );
+				result = dlasyf( 'upper', k, nb, A, sa1, sa2, offsetA, IPIV, strideIPIV, offsetIPIV, W, 1, ldwork, 0 );
 				kb = result.kb;
 				iinfo = result.info;
 			} else {
@@ -122,16 +119,12 @@ function dsytrf( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 			if ( k <= N - nb - 1 ) {
 				// Use blocked code
 				W = new Float64Array( ldwork * nb );
-				result = dlasyf( 'lower', N - k, nb,
-					A, sa1, sa2, offsetA + (k * sa1) + (k * sa2),
-					IPIV, strideIPIV, offsetIPIV + (k * strideIPIV),
-					W, 1, ldwork, 0 );
+				result = dlasyf( 'lower', N - k, nb, A, sa1, sa2, offsetA + (k * sa1) + (k * sa2), IPIV, strideIPIV, offsetIPIV + (k * strideIPIV), W, 1, ldwork, 0 );
 				kb = result.kb;
 				iinfo = result.info;
 			} else {
 				// Use unblocked code
-				iinfo = dsytf2( 'lower', N - k, A, sa1, sa2, offsetA + (k * sa1) + (k * sa2),
-					IPIV, strideIPIV, offsetIPIV + (k * strideIPIV) );
+				iinfo = dsytf2( 'lower', N - k, A, sa1, sa2, offsetA + (k * sa1) + (k * sa2), IPIV, strideIPIV, offsetIPIV + (k * strideIPIV) );
 				kb = N - k;
 			}
 

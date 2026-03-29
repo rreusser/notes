@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgebak = require( '@stdlib/lapack/base/zgebak' );

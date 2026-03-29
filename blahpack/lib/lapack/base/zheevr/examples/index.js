@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zheevr = require( '@stdlib/lapack/base/zheevr' );

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgetrf = require( '@stdlib/lapack/base/zgetrf' );

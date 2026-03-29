@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Reduce a pair of complex matrices to generalized upper Hessenberg form.
 *

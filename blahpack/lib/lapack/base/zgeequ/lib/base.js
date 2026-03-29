@@ -35,7 +35,7 @@ var BIGNUM = 1.0 / SMLNUM;
 // FUNCTIONS //
 
 /**
-* CABS1: |re(z)| + |im(z)|
+* CABS1: |re(z)| + |im(z)|.
 *
 * @private
 * @param {Float64Array} v - Float64 view of complex array
@@ -50,12 +50,12 @@ function cabs1( v, idx ) {
 // MAIN //
 
 /**
-* Computes row and column scalings intended to equilibrate a complex M-by-N
+* Computes row and column scalings intended to equilibrate a complex M-by-N.
 * matrix A and reduce its condition number.
 *
 * R returns the row scale factors and C the column scale factors, chosen to
 * try to make the largest element in each row and column of the matrix B with
-* elements B(i,j)=R(i)*A(i,j)*C(j) have absolute value 1.
+* elements B(i,j)=R(i)_A(i,j)_C(j) have absolute value 1.
 *
 * Returns an object with:
 * - info: 0 if successful; i if the i-th row is zero (1-based); M+j if the
@@ -80,10 +80,10 @@ function cabs1( v, idx ) {
 * @returns {Object} result with info, rowcnd, colcnd, amax
 */
 function zgeequ( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, strideC, offsetC ) {
-	var rcmax;
-	var rcmin;
 	var rowcnd;
 	var colcnd;
+	var rcmax;
+	var rcmin;
 	var amax;
 	var sa1;
 	var sa2;
@@ -97,7 +97,12 @@ function zgeequ( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 
 	// Quick return if possible
 	if ( M === 0 || N === 0 ) {
-		return { 'info': 0, 'rowcnd': 1.0, 'colcnd': 1.0, 'amax': 0.0 };
+		return {
+			'info': 0,
+			'rowcnd': 1.0,
+			'colcnd': 1.0,
+			'amax': 0.0
+		};
 	}
 
 	// Get Float64 view and compute double-based strides
@@ -139,7 +144,12 @@ function zgeequ( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 		// Find the first zero scale factor and return an error code
 		for ( i = 0; i < M; i++ ) {
 			if ( r[ offsetR + ( i * strideR ) ] === 0.0 ) {
-				return { 'info': i + 1, 'rowcnd': 0.0, 'colcnd': 0.0, 'amax': amax };
+				return {
+					'info': i + 1,
+					'rowcnd': 0.0,
+					'colcnd': 0.0,
+					'amax': amax
+				};
 			}
 		}
 	}
@@ -154,6 +164,7 @@ function zgeequ( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 	rowcnd = Math.max( rcmin, SMLNUM ) / Math.min( rcmax, BIGNUM );
 
 	// Compute column scale factors: find max element in each column
+
 	// (assuming row scaling already applied)
 	for ( j = 0; j < N; j++ ) {
 		c[ offsetC + ( j * strideC ) ] = 0.0;
@@ -186,7 +197,12 @@ function zgeequ( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 		// Find the first zero column scale factor and return error
 		for ( j = 0; j < N; j++ ) {
 			if ( c[ offsetC + ( j * strideC ) ] === 0.0 ) {
-				return { 'info': M + j + 1, 'rowcnd': rowcnd, 'colcnd': 0.0, 'amax': amax };
+				return {
+					'info': M + j + 1,
+					'rowcnd': rowcnd,
+					'colcnd': 0.0,
+					'amax': amax
+				};
 			}
 		}
 	}
@@ -200,7 +216,12 @@ function zgeequ( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 	// Compute COLCND = min(C) / max(C)
 	colcnd = Math.max( rcmin, SMLNUM ) / Math.min( rcmax, BIGNUM );
 
-	return { 'info': 0, 'rowcnd': rowcnd, 'colcnd': colcnd, 'amax': amax };
+	return {
+		'info': 0,
+		'rowcnd': rowcnd,
+		'colcnd': colcnd,
+		'amax': amax
+	};
 }
 
 

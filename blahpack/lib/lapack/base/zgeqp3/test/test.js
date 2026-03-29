@@ -1,21 +1,28 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var zgeqp3 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgeqp3.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgeqp3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // VARIABLES //
@@ -25,15 +32,41 @@ var LDA = 8; // Matches Fortran MAXMN
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -42,273 +75,458 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'zgeqp3: 4x3 matrix', function t() {
-	var tc = findCase( 'rect_4x3' );
-	var A = new Complex128Array( LDA * LDA );
-	var Av = reinterpret( A, 0 );
-	// A = [1 0+2i 3+i; 2+i 1 0; 0 3+i 1; 1+i 2 2+i]
-	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=1; Av[4]=0; Av[5]=0; Av[6]=1; Av[7]=1;
-	Av[2*LDA]=0; Av[2*LDA+1]=2; Av[2*LDA+2]=1; Av[2*LDA+3]=0; Av[2*LDA+4]=3; Av[2*LDA+5]=1; Av[2*LDA+6]=2; Av[2*LDA+7]=0;
-	Av[4*LDA]=3; Av[4*LDA+1]=1; Av[4*LDA+2]=0; Av[4*LDA+3]=0; Av[4*LDA+4]=1; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=1;
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var Av;
+	var A;
 
-	var JPVT = new Int32Array( 3 );
-	var TAU = new Complex128Array( 3 );
-	var WORK = new Complex128Array( 200 );
-	var RWORK = new Float64Array( 2 * LDA );
-
-	var info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
-
+	tc = findCase( 'rect_4x3' );
+	A = new Complex128Array( LDA * LDA );
+	Av = reinterpret( A, 0 );
+	Av[0]=1;
+	Av[1]=0;
+	Av[2]=2;
+	Av[3]=1;
+	Av[4]=0;
+	Av[5]=0;
+	Av[6]=1;
+	Av[7]=1;
+	Av[2*LDA]=0;
+	Av[2*LDA+1]=2;
+	Av[2*LDA+2]=1;
+	Av[2*LDA+3]=0;
+	Av[2*LDA+4]=3;
+	Av[2*LDA+5]=1;
+	Av[2*LDA+6]=2;
+	Av[2*LDA+7]=0;
+	Av[4*LDA]=3;
+	Av[4*LDA+1]=1;
+	Av[4*LDA+2]=0;
+	Av[4*LDA+3]=0;
+	Av[4*LDA+4]=1;
+	Av[4*LDA+5]=0;
+	Av[4*LDA+6]=2;
+	Av[4*LDA+7]=1;
+	JPVT = new Int32Array( 3 );
+	TAU = new Complex128Array( 3 );
+	WORK = new Complex128Array( 200 );
+	RWORK = new Float64Array( 2 * LDA );
+	info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
+	assertArrayClose( toArray( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( toArray( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zgeqp3: 3x4 matrix', function t() {
-	var tc = findCase( 'rect_3x4' );
-	var A = new Complex128Array( LDA * LDA );
-	var Av = reinterpret( A, 0 );
-	Av[0]=1; Av[1]=0; Av[2]=0; Av[3]=1; Av[4]=2; Av[5]=0;
-	Av[2*LDA]=3; Av[2*LDA+1]=1; Av[2*LDA+2]=1; Av[2*LDA+3]=0; Av[2*LDA+4]=0; Av[2*LDA+5]=1;
-	Av[4*LDA]=0; Av[4*LDA+1]=2; Av[4*LDA+2]=2; Av[4*LDA+3]=1; Av[4*LDA+4]=1; Av[4*LDA+5]=0;
-	Av[6*LDA]=1; Av[6*LDA+1]=1; Av[6*LDA+2]=0; Av[6*LDA+3]=0; Av[6*LDA+4]=3; Av[6*LDA+5]=0;
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var Av;
+	var A;
 
-	var JPVT = new Int32Array( 4 );
-	var TAU = new Complex128Array( 3 );
-	var WORK = new Complex128Array( 200 );
-	var RWORK = new Float64Array( 2 * LDA );
-
-	var info = zgeqp3( 3, 4, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
-
+	tc = findCase( 'rect_3x4' );
+	A = new Complex128Array( LDA * LDA );
+	Av = reinterpret( A, 0 );
+	Av[0]=1;
+	Av[1]=0;
+	Av[2]=0;
+	Av[3]=1;
+	Av[4]=2;
+	Av[5]=0;
+	Av[2*LDA]=3;
+	Av[2*LDA+1]=1;
+	Av[2*LDA+2]=1;
+	Av[2*LDA+3]=0;
+	Av[2*LDA+4]=0;
+	Av[2*LDA+5]=1;
+	Av[4*LDA]=0;
+	Av[4*LDA+1]=2;
+	Av[4*LDA+2]=2;
+	Av[4*LDA+3]=1;
+	Av[4*LDA+4]=1;
+	Av[4*LDA+5]=0;
+	Av[6*LDA]=1;
+	Av[6*LDA+1]=1;
+	Av[6*LDA+2]=0;
+	Av[6*LDA+3]=0;
+	Av[6*LDA+4]=3;
+	Av[6*LDA+5]=0;
+	JPVT = new Int32Array( 4 );
+	TAU = new Complex128Array( 3 );
+	WORK = new Complex128Array( 200 );
+	RWORK = new Float64Array( 2 * LDA );
+	info = zgeqp3( 3, 4, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
+	assertArrayClose( toArray( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( toArray( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zgeqp3: rank-deficient 3x3', function t() {
-	var A = new Complex128Array( LDA * LDA );
-	var Av = reinterpret( A, 0 );
-	// col 3 = col 1 + col 2, so rank = 1
-	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=0; Av[4]=3; Av[5]=0;
-	Av[2*LDA]=0; Av[2*LDA+1]=1; Av[2*LDA+2]=0; Av[2*LDA+3]=2; Av[2*LDA+4]=0; Av[2*LDA+5]=3;
-	Av[4*LDA]=1; Av[4*LDA+1]=1; Av[4*LDA+2]=2; Av[4*LDA+3]=2; Av[4*LDA+4]=3; Av[4*LDA+5]=3;
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var Av;
+	var A;
 
-	var JPVT = new Int32Array( 3 );
-	var TAU = new Complex128Array( 3 );
-	var WORK = new Complex128Array( 200 );
-	var RWORK = new Float64Array( 2 * LDA );
-
-	var info = zgeqp3( 3, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
-
+	A = new Complex128Array( LDA * LDA );
+	Av = reinterpret( A, 0 );
+	Av[0]=1;
+	Av[1]=0;
+	Av[2]=2;
+	Av[3]=0;
+	Av[4]=3;
+	Av[5]=0;
+	Av[2*LDA]=0;
+	Av[2*LDA+1]=1;
+	Av[2*LDA+2]=0;
+	Av[2*LDA+3]=2;
+	Av[2*LDA+4]=0;
+	Av[2*LDA+5]=3;
+	Av[4*LDA]=1;
+	Av[4*LDA+1]=1;
+	Av[4*LDA+2]=2;
+	Av[4*LDA+3]=2;
+	Av[4*LDA+4]=3;
+	Av[4*LDA+5]=3;
+	JPVT = new Int32Array( 3 );
+	TAU = new Complex128Array( 3 );
+	WORK = new Complex128Array( 200 );
+	RWORK = new Float64Array( 2 * LDA );
+	info = zgeqp3( 3, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assertClose( info, 0, 1e-14, 'info' );
-	// First column must be col 3 (largest norm), columns 2-3 can be either order
 	assert.equal( JPVT[ 0 ], 3, 'first pivot is column 3' );
-	// R(0,0) should be -sqrt(28) ~ -5.2915
 	assertClose( Av[ 0 ], -5.2915026221291805, 1e-10, 'R(0,0)' );
-	// R(1,1) and R(2,2) should be ~0 (rank deficient)
 	assertClose( Math.abs( Av[ 2 * LDA + 2 ] ), 0.0, 1e-10, '|R(1,1)|~0' );
 	assertClose( Math.abs( Av[ 4 * LDA + 4 ] ), 0.0, 1e-10, '|R(2,2)|~0' );
 });
 
 test( 'zgeqp3: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
-	var A = new Complex128Array( 10 );
-	var JPVT = new Int32Array( 1 );
-	var TAU = new Complex128Array( 1 );
-	var WORK = new Complex128Array( 10 );
-	var RWORK = new Float64Array( 10 );
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var A;
 
-	var info = zgeqp3( 3, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10, RWORK, 1, 0 );
+	tc = findCase( 'n_zero' );
+	A = new Complex128Array( 10 );
+	JPVT = new Int32Array( 1 );
+	TAU = new Complex128Array( 1 );
+	WORK = new Complex128Array( 10 );
+	RWORK = new Float64Array( 10 );
+	info = zgeqp3( 3, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
 
 test( 'zgeqp3: M=0 quick return', function t() {
-	var tc = findCase( 'm_zero' );
-	var A = new Complex128Array( 10 );
-	var JPVT = new Int32Array( 3 );
-	var TAU = new Complex128Array( 1 );
-	var WORK = new Complex128Array( 10 );
-	var RWORK = new Float64Array( 10 );
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var A;
 
-	var info = zgeqp3( 0, 3, A, 1, 1, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10, RWORK, 1, 0 );
+	tc = findCase( 'm_zero' );
+	A = new Complex128Array( 10 );
+	JPVT = new Int32Array( 3 );
+	TAU = new Complex128Array( 1 );
+	WORK = new Complex128Array( 10 );
+	RWORK = new Float64Array( 10 );
+	info = zgeqp3( 0, 3, A, 1, 1, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assertClose( info, tc.info, 1e-14, 'info' );
 });
 
 test( 'zgeqp3: 1x1 matrix', function t() {
-	var tc = findCase( 'one_by_one' );
-	var A = new Complex128Array( LDA * LDA );
-	var Av = reinterpret( A, 0 );
-	Av[0] = 3; Av[1] = 4;
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var Av;
+	var A;
 
-	var JPVT = new Int32Array( [ 0 ] );
-	var TAU = new Complex128Array( 1 );
-	var WORK = new Complex128Array( 200 );
-	var RWORK = new Float64Array( 2 * LDA );
-
-	var info = zgeqp3( 1, 1, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
-
+	tc = findCase( 'one_by_one' );
+	A = new Complex128Array( LDA * LDA );
+	Av = reinterpret( A, 0 );
+	Av[0] = 3;
+	Av[1] = 4;
+	JPVT = new Int32Array( [ 0 ] );
+	TAU = new Complex128Array( 1 );
+	WORK = new Complex128Array( 200 );
+	RWORK = new Float64Array( 2 * LDA );
+	info = zgeqp3( 1, 1, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
+	assertArrayClose( toArray( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( toArray( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zgeqp3: fixed column', function t() {
-	var tc = findCase( 'fixed_col' );
-	var A = new Complex128Array( LDA * LDA );
-	var Av = reinterpret( A, 0 );
-	Av[0]=1; Av[1]=0; Av[2]=0; Av[3]=0; Av[4]=0; Av[5]=0;
-	Av[2*LDA]=0; Av[2*LDA+1]=0; Av[2*LDA+2]=3; Av[2*LDA+3]=0; Av[2*LDA+4]=4; Av[2*LDA+5]=0;
-	Av[4*LDA]=0; Av[4*LDA+1]=0; Av[4*LDA+2]=1; Av[4*LDA+3]=1; Av[4*LDA+4]=2; Av[4*LDA+5]=0;
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var tc;
+	var Av;
+	var A;
 
-	var JPVT = new Int32Array( [ 1, 0, 0 ] ); // Fix column 1
-	var TAU = new Complex128Array( 3 );
-	var WORK = new Complex128Array( 200 );
-	var RWORK = new Float64Array( 2 * LDA );
-
-	var info = zgeqp3( 3, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
-
+	tc = findCase( 'fixed_col' );
+	A = new Complex128Array( LDA * LDA );
+	Av = reinterpret( A, 0 );
+	Av[0]=1;
+	Av[1]=0;
+	Av[2]=0;
+	Av[3]=0;
+	Av[4]=0;
+	Av[5]=0;
+	Av[2*LDA]=0;
+	Av[2*LDA+1]=0;
+	Av[2*LDA+2]=3;
+	Av[2*LDA+3]=0;
+	Av[2*LDA+4]=4;
+	Av[2*LDA+5]=0;
+	Av[4*LDA]=0;
+	Av[4*LDA+1]=0;
+	Av[4*LDA+2]=1;
+	Av[4*LDA+3]=1;
+	Av[4*LDA+4]=2;
+	Av[4*LDA+5]=0;
+	JPVT = new Int32Array( [ 1, 0, 0 ] );
+	TAU = new Complex128Array( 3 );
+	WORK = new Complex128Array( 200 );
+	RWORK = new Float64Array( 2 * LDA );
+	info = zgeqp3( 3, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assertClose( info, tc.info, 1e-14, 'info' );
-	assertArrayClose( Array.from( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
-	assertArrayClose( Array.from( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt, 'jpvt' );
+	assertArrayClose( toArray( Av.subarray( 0, tc.a.length ) ), tc.a, 1e-10, 'a' );
+	assertArrayClose( toArray( reinterpret( TAU, 0 ) ), tc.tau, 1e-10, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt, 'jpvt' );
 });
 
 test( 'zgeqp3: fixed column with swap (JPVT[2]=1)', function t() {
-	var A = new Complex128Array( LDA * LDA );
-	var Av = reinterpret( A, 0 );
-	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=0; Av[4]=0; Av[5]=0; Av[6]=1; Av[7]=0;
-	Av[2*LDA]=3; Av[2*LDA+1]=0; Av[2*LDA+2]=0; Av[2*LDA+3]=1; Av[2*LDA+4]=2; Av[2*LDA+5]=0; Av[2*LDA+6]=1; Av[2*LDA+7]=1;
-	Av[4*LDA]=0; Av[4*LDA+1]=1; Av[4*LDA+2]=1; Av[4*LDA+3]=0; Av[4*LDA+4]=3; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=0;
+	var r00mag;
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var Av;
+	var A;
 
-	var JPVT = new Int32Array( [ 0, 0, 1 ] ); // Fix column 3 (index 2) -- requires swap
-	var TAU = new Complex128Array( 3 );
-	var WORK = new Complex128Array( 200 );
-	var RWORK = new Float64Array( 2 * LDA );
-
-	var info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
-
+	A = new Complex128Array( LDA * LDA );
+	Av = reinterpret( A, 0 );
+	Av[0]=1;
+	Av[1]=0;
+	Av[2]=2;
+	Av[3]=0;
+	Av[4]=0;
+	Av[5]=0;
+	Av[6]=1;
+	Av[7]=0;
+	Av[2*LDA]=3;
+	Av[2*LDA+1]=0;
+	Av[2*LDA+2]=0;
+	Av[2*LDA+3]=1;
+	Av[2*LDA+4]=2;
+	Av[2*LDA+5]=0;
+	Av[2*LDA+6]=1;
+	Av[2*LDA+7]=1;
+	Av[4*LDA]=0;
+	Av[4*LDA+1]=1;
+	Av[4*LDA+2]=1;
+	Av[4*LDA+3]=0;
+	Av[4*LDA+4]=3;
+	Av[4*LDA+5]=0;
+	Av[4*LDA+6]=2;
+	Av[4*LDA+7]=0;
+	JPVT = new Int32Array( [ 0, 0, 1 ] );
+	TAU = new Complex128Array( 3 );
+	WORK = new Complex128Array( 200 );
+	RWORK = new Float64Array( 2 * LDA );
+	info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
-	// Column 3 was fixed, so it must appear first in the permutation
 	assert.equal( JPVT[0], 3, 'fixed column 3 is first' );
-	// R(0,0) should be non-zero (the norm of the fixed column)
-	var r00mag = Math.sqrt( Av[0] * Av[0] + Av[1] * Av[1] );
+	r00mag = Math.sqrt( Av[0] * Av[0] + Av[1] * Av[1] );
 	assert.ok( r00mag > 0.1, 'R(0,0) magnitude is non-trivial: ' + r00mag );
 });
 
 test( 'zgeqp3: two fixed columns', function t() {
-	var A = new Complex128Array( LDA * LDA );
-	var Av = reinterpret( A, 0 );
-	Av[0]=1; Av[1]=0; Av[2]=2; Av[3]=0; Av[4]=0; Av[5]=0; Av[6]=1; Av[7]=0;
-	Av[2*LDA]=3; Av[2*LDA+1]=0; Av[2*LDA+2]=0; Av[2*LDA+3]=1; Av[2*LDA+4]=2; Av[2*LDA+5]=0; Av[2*LDA+6]=1; Av[2*LDA+7]=1;
-	Av[4*LDA]=0; Av[4*LDA+1]=1; Av[4*LDA+2]=1; Av[4*LDA+3]=0; Av[4*LDA+4]=3; Av[4*LDA+5]=0; Av[4*LDA+6]=2; Av[4*LDA+7]=0;
+	var RWORK;
+	var JPVT;
+	var WORK;
+	var info;
+	var TAU;
+	var Av;
+	var A;
 
-	var JPVT = new Int32Array( [ 1, 0, 1 ] ); // Fix columns 1 and 3
-	var TAU = new Complex128Array( 3 );
-	var WORK = new Complex128Array( 200 );
-	var RWORK = new Float64Array( 2 * LDA );
-
-	var info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 );
-
+	A = new Complex128Array( LDA * LDA );
+	Av = reinterpret( A, 0 );
+	Av[0]=1;
+	Av[1]=0;
+	Av[2]=2;
+	Av[3]=0;
+	Av[4]=0;
+	Av[5]=0;
+	Av[6]=1;
+	Av[7]=0;
+	Av[2*LDA]=3;
+	Av[2*LDA+1]=0;
+	Av[2*LDA+2]=0;
+	Av[2*LDA+3]=1;
+	Av[2*LDA+4]=2;
+	Av[2*LDA+5]=0;
+	Av[2*LDA+6]=1;
+	Av[2*LDA+7]=1;
+	Av[4*LDA]=0;
+	Av[4*LDA+1]=1;
+	Av[4*LDA+2]=1;
+	Av[4*LDA+3]=0;
+	Av[4*LDA+4]=3;
+	Av[4*LDA+5]=0;
+	Av[4*LDA+6]=2;
+	Av[4*LDA+7]=0;
+	JPVT = new Int32Array( [ 1, 0, 1 ] );
+	TAU = new Complex128Array( 3 );
+	WORK = new Complex128Array( 200 );
+	RWORK = new Float64Array( 2 * LDA );
+	info = zgeqp3( 4, 3, A, 1, LDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 200, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
-	// Fixed columns 1 and 3 should be in positions 1 and 2 (JPVT[0] and JPVT[1])
-	assert.ok( JPVT[0] === 1 || JPVT[0] === 3, 'first pivot is a fixed column: ' + JPVT[0] );
-	assert.ok( JPVT[1] === 1 || JPVT[1] === 3, 'second pivot is a fixed column: ' + JPVT[1] );
+	assert.ok( JPVT[0] === 1 || JPVT[0] === 3, 'first pivot is a fixed column: ' + JPVT[0] ); // eslint-disable-line max-len
+	assert.ok( JPVT[1] === 1 || JPVT[1] === 3, 'second pivot is a fixed column: ' + JPVT[1] ); // eslint-disable-line max-len
 	assert.notEqual( JPVT[0], JPVT[1], 'first two pivots are different' );
 });
 
-test( 'zgeqp3: large matrix 35x36 (blocked zlaqps path, sminmn > 32)', function t() {
-	// Need min(M,N) > 32 to trigger blocked code
-	var BLDA = 40;
-	var M = 35;
-	var N = 36;
-	var A = new Complex128Array( BLDA * N );
-	var Av = reinterpret( A, 0 );
+test( 'zgeqp3: large matrix 35x36 (blocked zlaqps path, sminmn > 32)', function t() { // eslint-disable-line max-len
+	var prevMag;
+	var RWORK;
+	var minmn;
+	var BLDA;
+	var JPVT;
+	var WORK;
+	var info;
+	var perm;
+	var TAU;
+	var mag;
+	var Av;
+	var re;
+	var im;
+	var M;
+	var N;
+	var A;
 	var i;
 	var j;
 
+	BLDA = 40;
+	M = 35;
+	N = 36;
+	A = new Complex128Array( BLDA * N );
+	Av = reinterpret( A, 0 );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
 			Av[ 2 * ( i + j * BLDA ) ] = ( ( ( i + 1 ) * ( j + 1 ) + 3 ) % 7 ) - 3.0;
 			Av[ 2 * ( i + j * BLDA ) + 1 ] = ( ( ( i + 1 ) + ( j + 1 ) ) % 5 ) - 2.0;
 		}
 	}
-
-	var JPVT = new Int32Array( N );
-	var TAU = new Complex128Array( Math.min( M, N ) );
-	var WORK = new Complex128Array( 10000 );
-	var RWORK = new Float64Array( 2 * N );
-
-	var info = zgeqp3( M, N, A, 1, BLDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10000, RWORK, 1, 0 );
-
+	JPVT = new Int32Array( N );
+	TAU = new Complex128Array( Math.min( M, N ) );
+	WORK = new Complex128Array( 10000 );
+	RWORK = new Float64Array( 2 * N );
+	info = zgeqp3( M, N, A, 1, BLDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10000, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
-
-	// Verify R diagonal has decreasing magnitude
-	var prevMag = Infinity;
-	var re;
-	var im;
-	var mag;
-	var minmn = Math.min( M, N );
+	prevMag = Infinity;
+	minmn = Math.min( M, N );
 	for ( i = 0; i < minmn; i++ ) {
 		re = Av[ 2 * ( i + i * BLDA ) ];
 		im = Av[ 2 * ( i + i * BLDA ) + 1 ];
 		mag = Math.sqrt( re * re + im * im );
-		assert.ok( mag <= prevMag + 1e-10, 'R diagonal magnitude decreasing at ' + i + ': ' + mag + ' <= ' + prevMag );
+		assert.ok( mag <= prevMag + 1e-10, 'R diagonal magnitude decreasing at ' + i + ': ' + mag + ' <= ' + prevMag ); // eslint-disable-line max-len
 		prevMag = mag;
 	}
-
-	// Verify JPVT is a valid permutation of 1..N
-	var perm = Array.from( JPVT ).sort( function cmp( a, b ) { return a - b; } );
+	perm = toArray( JPVT ).sort( function cmp( a, b ) { return a - b; } );
 	for ( i = 0; i < N; i++ ) {
 		assert.equal( perm[ i ], i + 1, 'JPVT is valid permutation at ' + i );
 	}
 });
 
 test( 'zgeqp3: wide matrix 8x36 (blocked zlaqps path)', function t() {
-	var BLDA = 40;
-	var M = 8;
-	var N = 36;
-	var A = new Complex128Array( BLDA * N );
-	var Av = reinterpret( A, 0 );
+	var prevMag;
+	var RWORK;
+	var BLDA;
+	var JPVT;
+	var WORK;
+	var info;
+	var perm;
+	var TAU;
+	var mag;
+	var Av;
+	var re;
+	var im;
+	var M;
+	var N;
+	var A;
 	var i;
 	var j;
 
-	// Fill A with same pattern as Fortran: dcmplx(mod(i*j+3,7) - 3, mod(i+j,5) - 2)
+	BLDA = 40;
+	M = 8;
+	N = 36;
+	A = new Complex128Array( BLDA * N );
+	Av = reinterpret( A, 0 );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
 			Av[ 2 * ( i + j * BLDA ) ] = ( ( ( i + 1 ) * ( j + 1 ) + 3 ) % 7 ) - 3.0;
 			Av[ 2 * ( i + j * BLDA ) + 1 ] = ( ( ( i + 1 ) + ( j + 1 ) ) % 5 ) - 2.0;
 		}
 	}
-
-	var JPVT = new Int32Array( N );
-	var TAU = new Complex128Array( M );
-	var WORK = new Complex128Array( 10000 );
-	var RWORK = new Float64Array( 2 * BLDA );
-
-	var info = zgeqp3( M, N, A, 1, BLDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10000, RWORK, 1, 0 );
-
+	JPVT = new Int32Array( N );
+	TAU = new Complex128Array( M );
+	WORK = new Complex128Array( 10000 );
+	RWORK = new Float64Array( 2 * BLDA );
+	info = zgeqp3( M, N, A, 1, BLDA, 0, JPVT, 1, 0, TAU, 1, 0, WORK, 1, 0, 10000, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
-
-	// Verify R diagonal has decreasing magnitude (property of QR with pivoting)
-	var prevMag = Infinity;
-	var re;
-	var im;
-	var mag;
+	prevMag = Infinity;
 	for ( i = 0; i < M; i++ ) {
 		re = Av[ 2 * ( i + i * BLDA ) ];
 		im = Av[ 2 * ( i + i * BLDA ) + 1 ];
 		mag = Math.sqrt( re * re + im * im );
-		assert.ok( mag <= prevMag + 1e-10, 'R diagonal magnitude decreasing at ' + i + ': ' + mag + ' <= ' + prevMag );
+		assert.ok( mag <= prevMag + 1e-10, 'R diagonal magnitude decreasing at ' + i + ': ' + mag + ' <= ' + prevMag ); // eslint-disable-line max-len
 		prevMag = mag;
 	}
-
-	// Verify JPVT is a valid permutation of 1..N
-	var perm = Array.from( JPVT ).sort( function cmp( a, b ) { return a - b; } );
+	perm = toArray( JPVT ).sort( function cmp( a, b ) { return a - b; } );
 	for ( i = 0; i < N; i++ ) {
 		assert.equal( perm[ i ], i + 1, 'JPVT is valid permutation at ' + i );
 	}

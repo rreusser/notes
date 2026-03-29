@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var iladlc = require( '@stdlib/lapack/base/iladlc' );

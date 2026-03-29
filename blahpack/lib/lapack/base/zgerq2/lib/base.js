@@ -32,7 +32,7 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 // MAIN //
 
 /**
-* Computes an RQ factorization of a complex M-by-N matrix A = R * Q
+* Computes an RQ factorization of a complex M-by-N matrix A = R * Q.
 * using Householder reflections (unblocked algorithm).
 *
 * On exit, if M <= N, the upper triangle of the subarray
@@ -44,7 +44,7 @@ var zlacgv = require( '../../zlacgv/lib/base.js' );
 *
 * Q = H(1)^H H(2)^H ... H(k)^H, where k = min(M,N).
 *
-* Each H(i) has the form H(i) = I - tau * v * v^H
+* Each H(i) has the form H(i) = I - tau _ v _ v^H
 * where v(n-k+i+1:n) = 0 and v(n-k+i) = 1; conjg(v(1:n-k+i-1)) is stored
 * in A(m-k+i, 0:n-k+i-2), and tau in TAU(i).
 *
@@ -88,6 +88,7 @@ function zgerq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 	K = Math.min( M, N );
 
 	// Iterate backward: i = K-1, K-2, ..., 0
+
 	// Fortran iterates I = K, K-1, ..., 1 (1-based)
 	for ( i = K - 1; i >= 0; i-- ) {
 		// Row of reflector in 0-based: M-K+i
@@ -97,22 +98,24 @@ function zgerq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		aii = oA + ( row * sa1 ) + ( ( N - K + i ) * sa2 );
 
 		// Conjugate the row A(row, 0:N-K+i) so that zlarfg works on
-		// conjugated entries
+
+		// Conjugated entries
+
 		// Fortran: CALL ZLACGV(N-K+I, A(M-K+I,1), LDA)
+
 		// N-K+I elements starting at column 0, stepping by strideA2
+
 		// In 0-based: N-K+i+1 elements (columns 0 through N-K+i)
 		zlacgv( N - K + i + 1, A, strideA2, offsetA + ( row * strideA1 ) );
 
 		// Generate elementary reflector H(i) to annihilate A(row, 0:N-K+i-1)
+
 		// zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
-		// alpha = A(row, N-K+i), x = A(row, 0) stepping by strideA2
+
+		// Alpha = A(row, N-K+i), x = A(row, 0) stepping by strideA2
+
 		// Length of reflector vector = N-K+i+1
-		zlarfg(
-			N - K + i + 1,
-			A, offsetA + ( row * strideA1 ) + ( ( N - K + i ) * strideA2 ),
-			A, strideA2, offsetA + ( row * strideA1 ),
-			TAU, offsetTAU + ( i * strideTAU )
-		);
+		zlarfg(N - K + i + 1, A, offsetA + ( row * strideA1 ) + ( ( N - K + i ) * strideA2 ), A, strideA2, offsetA + ( row * strideA1 ), TAU, offsetTAU + ( i * strideTAU ));
 
 		if ( row > 0 ) {
 			// Save A(row, N-K+i) and set to 1 for the reflector application
@@ -122,16 +125,13 @@ function zgerq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			Av[ aii + 1 ] = 0.0;
 
 			// Apply H(i) to A(0:row-1, 0:N-K+i) from the right
+
 			// zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-			zlarf(
-				'right',
-				row,                 // number of rows of sub-matrix
+			zlarf('right', row,                 // number of rows of sub-matrix
 				N - K + i + 1,       // number of columns of sub-matrix
 				A, strideA2, offsetA + ( row * strideA1 ), // v = row `row`, stride along columns
-				TAU, offsetTAU + ( i * strideTAU ),
-				A, strideA1, strideA2, offsetA,             // C = A(0, 0)
-				WORK, strideWORK, offsetWORK
-			);
+				TAU, offsetTAU + ( i * strideTAU ), A, strideA1, strideA2, offsetA,             // C = A(0, 0)
+				WORK, strideWORK, offsetWORK);
 
 			// Restore A(row, N-K+i)
 			Av[ aii ] = alpha_re;
@@ -141,7 +141,7 @@ function zgerq2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		// Unconjugate A(row, 0:N-K+i-1)
 		// Fortran: CALL ZLACGV(N-K+I-1, A(M-K+I,1), LDA)
 		// In 0-based: N-K+i elements (columns 0 through N-K+i-2),
-		// but Fortran says N-K+I-1 elements from column 1 (0-based: 0)
+		// But Fortran says N-K+I-1 elements from column 1 (0-based: 0)
 		if ( N - K + i > 0 ) {
 			zlacgv( N - K + i, A, strideA2, offsetA + ( row * strideA1 ) );
 		}

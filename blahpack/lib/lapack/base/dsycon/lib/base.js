@@ -31,8 +31,8 @@ var dsytrs = require( '../../dsytrs/lib/base.js' );
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number (in the 1-norm) of a real
-* symmetric matrix A using the factorization A = U*D*U^T or A = L*D*L^T
+* Estimates the reciprocal of the condition number (in the 1-norm) of a real.
+* symmetric matrix A using the factorization A = U_D_U^T or A = L_D_L^T
 * computed by dsytrf.
 *
 * An estimate is obtained for norm(inv(A)), and the reciprocal of the
@@ -112,26 +112,26 @@ function dsycon( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offs
 	KASE[ 0 ] = 0;
 
 	// dlacn2 uses:
+
 	//   V = WORK[N..2N-1]  (scratch for norm estimation)
+
 	//   X = WORK[0..N-1]   (input/output vector)
+
 	//   ISGN = IWORK[0..N-1]
 	while ( true ) {
-		dlacn2( N,
-			WORK, sw, offsetWORK + (N * sw),  // v
+		dlacn2( N, WORK, sw, offsetWORK + (N * sw),  // v
 			WORK, sw, offsetWORK,              // x
 			IWORK, strideIWORK, offsetIWORK,   // isgn
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
 		}
 
 		// Multiply by inv(L*D*L^T) or inv(U*D*U^T).
-		// dsytrs solves A*X = B; here B is WORK[0..N-1] treated as N-by-1.
+		// Dsytrs solves A*X = B; here B is WORK[0..N-1] treated as N-by-1.
 		// B params: strideB1=sw (row stride), strideB2=N*sw (col stride), offsetB
-		dsytrs( uplo, N, 1, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV,
-			WORK, sw, N * sw, offsetWORK );
+		dsytrs( uplo, N, 1, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, sw, N * sw, offsetWORK );
 	}
 
 	// Compute the estimate of the reciprocal condition number.

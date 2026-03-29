@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimates the reciprocal condition number of a symmetric indefinite matrix
+* Estimates the reciprocal condition number of a symmetric indefinite matrix.
 *
 * @module @stdlib/lapack/base/dsycon
 *

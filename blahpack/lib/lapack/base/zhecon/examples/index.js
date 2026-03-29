@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zhecon = require( '@stdlib/lapack/base/zhecon' );

@@ -20,10 +20,10 @@
 
 // MODULES //
 
-var dlaebz = require( './../../dlaebz/lib/base.js' );
-var dlamch = require( './../../dlamch/lib/base.js' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
+var dlaebz = require( './../../dlaebz/lib/base.js' );
+var dlamch = require( './../../dlamch/lib/base.js' );
 
 
 // VARIABLES //
@@ -46,7 +46,7 @@ var RELFAC = 2.0;
 // MAIN //
 
 /**
-* Computes selected eigenvalues of a real symmetric tridiagonal matrix T
+* Computes selected eigenvalues of a real symmetric tridiagonal matrix T.
 * by bisection.
 *
 * @private
@@ -84,6 +84,9 @@ var RELFAC = 2.0;
 * @returns {integer} info
 */
 function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e, strideE, offsetE, M, nsplit, w, strideW, offsetW, IBLOCK, strideIBLOCK, offsetIBLOCK, ISPLIT, strideISPLIT, offsetISPLIT, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
+	var iwScratch;
+	var wScratch;
+	var nabWork;
 	var ncnvrg;
 	var toofew;
 	var irange;
@@ -93,6 +96,8 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 	var idiscu;
 	var pivmin;
 	var safemn;
+	var idumma;
+	var abWork;
 	var bnorm;
 	var tnorm;
 	var iinfo;
@@ -102,18 +107,22 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 	var rtoli;
 	var itmax;
 	var itmp1;
-	var idumma;
+	var jdisc;
+	var cWork;
 	var iout;
 	var info;
 	var ioff;
 	var iend;
-	var jdisc;
 	var tmp1;
 	var tmp2;
+	var mout;
 	var nwl;
 	var nwu;
 	var wlu;
 	var wul;
+	var in_;
+	var ulp;
+	var nsp;
 	var nb;
 	var gl;
 	var gu;
@@ -123,21 +132,10 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 	var ib;
 	var ie;
 	var iw;
-	var m;
-	var j;
 	var jb;
 	var je;
-	var in_;
-	var ulp;
-	var nsp;
-	var mout;
-
-	// Internal arrays for dlaebz calls
-	var abWork;
-	var nabWork;
-	var cWork;
-	var wScratch;
-	var iwScratch;
+	var m;
+	var j;
 
 	info = 0;
 
@@ -238,7 +236,7 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 	}
 	ISPLIT[ offsetISPLIT + ((nsp - 1) * strideISPLIT) ] = N;
 	nsplit[ 0 ] = nsp;
-	pivmin = pivmin * safemn;
+	pivmin *= safemn;
 
 	// Compute Interval and ATOLI
 	if ( irange === 3 ) {
@@ -291,17 +289,7 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 		nvalWork[ 0 ] = il - 1;
 		nvalWork[ 1 ] = iu;
 
-		iinfo = dlaebz( 3, itmax, N, 2, 2, nb, atoli, rtoli, pivmin,
-			d, strideD, offsetD,
-			e, strideE, offsetE,
-			WORK, strideWORK, offsetWORK,
-			nvalWork, 1, 0,
-			abWork, 1, 2, 0,
-			cWork, 1, 0,
-			mout,
-			nabWork, 1, 2, 0,
-			wScratch, 1, 0,
-			iwScratch, 1, 0 );
+		iinfo = dlaebz( 3, itmax, N, 2, 2, nb, atoli, rtoli, pivmin, d, strideD, offsetD, e, strideE, offsetE, WORK, strideWORK, offsetWORK, nvalWork, 1, 0, abWork, 1, 2, 0, cWork, 1, 0, mout, nabWork, 1, 2, 0, wScratch, 1, 0, iwScratch, 1, 0 );
 
 		if ( nvalWork[ 1 ] === iu ) {
 			wl = abWork[ 0 ];
@@ -326,10 +314,7 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 		}
 	} else {
 		// RANGE='A' or 'V' -- Set ATOLI
-		tnorm = max(
-			abs( d[ offsetD ] ) + abs( e[ offsetE ] ),
-			abs( d[ offsetD + ((N - 1) * strideD) ] ) + abs( e[ offsetE + ((N - 2) * strideE) ] )
-		);
+		tnorm = max(abs( d[ offsetD ] ) + abs( e[ offsetE ] ), abs( d[ offsetD + ((N - 1) * strideD) ] ) + abs( e[ offsetE + ((N - 2) * strideE) ] ));
 
 		for ( j = 1; j < N - 1; j++ ) {
 			tnorm = max( tnorm, abs( d[ offsetD + (j * strideD) ] ) + abs( e[ offsetE + ((j - 1) * strideE) ] ) + abs( e[ offsetE + (j * strideE) ] ) );
@@ -430,17 +415,7 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 			abWork[ in_ ] = gu;
 
 			// IJOB=1: count eigenvalues
-			iinfo = dlaebz( 1, 0, in_, in_, 1, nb, atoli, rtoli, pivmin,
-				d, strideD, offsetD + (ibegin * strideD),
-				e, strideE, offsetE + (ibegin * strideE),
-				WORK, strideWORK, offsetWORK + (ibegin * strideWORK),
-				idumma, 1, 0,
-				abWork, 1, in_, 0,
-				cWork, 1, 0,
-				mout,
-				nabWork, 1, in_, 0,
-				wScratch, 1, 0,
-				iwScratch, 1, 0 );
+			iinfo = dlaebz( 1, 0, in_, in_, 1, nb, atoli, rtoli, pivmin, d, strideD, offsetD + (ibegin * strideD), e, strideE, offsetE + (ibegin * strideE), WORK, strideWORK, offsetWORK + (ibegin * strideWORK), idumma, 1, 0, abWork, 1, in_, 0, cWork, 1, 0, mout, nabWork, 1, in_, 0, wScratch, 1, 0, iwScratch, 1, 0 );
 
 			nwl += nabWork[ 0 ];
 			nwu += nabWork[ in_ ];
@@ -449,17 +424,7 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 
 			// Compute Eigenvalues
 			itmax = floor( ( log( gu - gl + pivmin ) - log( pivmin ) ) / log( TWO ) ) + 2;
-			iinfo = dlaebz( 2, itmax, in_, in_, 1, nb, atoli, rtoli, pivmin,
-				d, strideD, offsetD + (ibegin * strideD),
-				e, strideE, offsetE + (ibegin * strideE),
-				WORK, strideWORK, offsetWORK + (ibegin * strideWORK),
-				idumma, 1, 0,
-				abWork, 1, in_, 0,
-				cWork, 1, 0,
-				mout,
-				nabWork, 1, in_, 0,
-				wScratch, 1, 0,
-				iwScratch, 1, 0 );
+			iinfo = dlaebz( 2, itmax, in_, in_, 1, nb, atoli, rtoli, pivmin, d, strideD, offsetD + (ibegin * strideD), e, strideE, offsetE + (ibegin * strideE), WORK, strideWORK, offsetWORK + (ibegin * strideWORK), idumma, 1, 0, abWork, 1, in_, 0, cWork, 1, 0, mout, nabWork, 1, in_, 0, wScratch, 1, 0, iwScratch, 1, 0 );
 
 			iout = mout[ 0 ];
 

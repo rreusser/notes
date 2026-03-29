@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsterf = require( '@stdlib/lapack/base/dsterf' );

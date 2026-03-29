@@ -41,8 +41,8 @@ var EPS = dlamch( 'epsilon' );
 // MAIN //
 
 /**
-* Solves a real symmetric indefinite system of linear equations A*X = B using
-* the diagonal pivoting factorization A = U*D*U^T or A = L*D*L^T, and provides
+* Solves a real symmetric indefinite system of linear equations A_X = B using.
+_ the diagonal pivoting factorization A = U_D_U^T or A = L_D*L^T, and provides
 * an estimate of the condition number and error bounds on the solution.
 *
 * @private

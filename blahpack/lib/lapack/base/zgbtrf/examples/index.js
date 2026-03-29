@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgbtrf = require( '@stdlib/lapack/base/zgbtrf' );

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Balances a general complex matrix for eigenvalue computation
+* Balances a general complex matrix for eigenvalue computation.
 *
 * @module @stdlib/lapack/base/zgebal
 *

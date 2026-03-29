@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dsyevx = require( '@stdlib/lapack/base/dsyevx' );

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Scan a complex matrix for its last non-zero column.
 *

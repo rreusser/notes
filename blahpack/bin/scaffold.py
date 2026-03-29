@@ -204,20 +204,14 @@ def gen_main_js(routine):
 
 // MODULES //
 
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
 var {routine} = require( './{routine}.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-// NOTE: In stdlib, this uses setReadOnly from @stdlib/utils.
-// For standalone development, we use Object.defineProperty directly.
-Object.defineProperty( {routine}, 'ndarray', {{
-\tvalue: ndarray,
-\tenumerable: false,
-\twritable: false,
-\tconfigurable: false
-}});
+setReadOnly( {routine}, 'ndarray', ndarray );
 
 
 // EXPORTS //

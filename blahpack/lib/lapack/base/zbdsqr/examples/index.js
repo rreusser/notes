@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zbdsqr = require( '@stdlib/lapack/base/zbdsqr' );

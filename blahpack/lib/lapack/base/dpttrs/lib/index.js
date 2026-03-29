@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a real symmetric positive definite tridiagonal system using LDL^T factorization
+* Solves a real symmetric positive definite tridiagonal system using LDL^T factorization.
 *
 * @module @stdlib/lapack/base/dpttrs
 *

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dstebz = require( '@stdlib/lapack/base/dstebz' );

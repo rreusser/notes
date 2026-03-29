@@ -50,12 +50,12 @@ var X = new Float64Array( 4 );
 // MAIN //
 
 /**
-* Computes some or all of the right and/or left eigenvectors of a real
+* Computes some or all of the right and/or left eigenvectors of a real.
 * upper quasi-triangular matrix T.
 *
 * The right eigenvector x and the left eigenvector y of T corresponding
 * to an eigenvalue w are defined by:
-*   T*x = w*x,     y**T * T = w * y**T
+*   T_x = w_x,     y**T _ T = w _ y**T
 *
 * This uses NB=1 (non-blocked) back-transformation.
 *
@@ -90,36 +90,36 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 	var rightv;
 	var bothv;
 	var leftv;
-	var allv;
-	var over;
 	var somev;
-	var smin;
 	var remax;
-	var emax;
 	var scale;
 	var xnorm;
 	var vcrit;
+	var allv;
+	var over;
+	var smin;
+	var emax;
 	var vmax;
 	var beta;
 	var pair;
+	var jnxt;
 	var rec;
+	var res;
+	var sT1;
+	var sT2;
 	var wr;
 	var wi;
 	var ip;
 	var is;
 	var ki;
 	var ii;
-	var jnxt;
-	var j;
 	var j1;
 	var j2;
-	var k;
-	var m;
-	var res;
-	var sT1;
-	var sT2;
 	var oT;
 	var nb;
+	var j;
+	var k;
+	var m;
 
 	// Decode side
 	sT1 = strideT1;
@@ -166,23 +166,19 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 		for ( j = 0; j < N; j++ ) {
 			if ( pair ) {
 				pair = false;
-			} else {
-				if ( j < N - 1 ) {
-					if ( T[ oT + ( j + 1 ) * sT1 + j * sT2 ] === ZERO ) {
-						if ( SELECT[ offsetSELECT + j * strideSELECT ] ) {
-							m += 1;
-						}
-					} else {
-						pair = true;
-						if ( SELECT[ offsetSELECT + j * strideSELECT ] || SELECT[ offsetSELECT + ( j + 1 ) * strideSELECT ] ) {
-							m += 2;
-						}
-					}
-				} else {
+			} else if ( j < N - 1 ) {
+				if ( T[ oT + ( j + 1 ) * sT1 + j * sT2 ] === ZERO ) {
 					if ( SELECT[ offsetSELECT + j * strideSELECT ] ) {
 						m += 1;
 					}
+				} else {
+					pair = true;
+					if ( SELECT[ offsetSELECT + j * strideSELECT ] || SELECT[ offsetSELECT + ( j + 1 ) * strideSELECT ] ) {
+						m += 2;
+					}
 				}
+			} else if ( SELECT[ offsetSELECT + j * strideSELECT ] ) {
+				m += 1;
 			}
 		}
 	} else {
@@ -214,10 +210,8 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 					if ( !SELECT[ offsetSELECT + ki * strideSELECT ] ) {
 						continue;
 					}
-				} else {
-					if ( !SELECT[ offsetSELECT + ( ki - 1 ) * strideSELECT ] ) {
-						continue;
-					}
+				} else if ( !SELECT[ offsetSELECT + ( ki - 1 ) * strideSELECT ] ) {
+					continue;
 				}
 			}
 
@@ -260,16 +254,14 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 
 					if ( j1 === j2 ) {
 						// 1x1 diagonal block
-						res = dlaln2( false, 1, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + 2 * N + j, wr, ZERO,
-							X, 1, 2, 0 );
+						res = dlaln2( false, 1, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + 2 * N + j, wr, ZERO, X, 1, 2, 0 );
 						scale = res.scale;
 						xnorm = res.xnorm;
 
 						if ( xnorm > ONE ) {
 							if ( WORK[ offsetWORK + j ] > BIGNUM / xnorm ) {
-								X[ 0 ] = X[ 0 ] / xnorm;
-								scale = scale / xnorm;
+								X[ 0 ] /= xnorm;
+								scale /= xnorm;
 							}
 						}
 
@@ -282,18 +274,16 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 						daxpy( j, -X[ 0 ], T, sT1, oT + j * sT2, WORK, 1, offsetWORK + 2 * N );
 					} else {
 						// 2x2 diagonal block
-						res = dlaln2( false, 2, 1, smin, ONE, T, sT1, sT2, oT + ( j - 1 ) * sT1 + ( j - 1 ) * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + 2 * N + ( j - 1 ), wr, ZERO,
-							X, 1, 2, 0 );
+						res = dlaln2( false, 2, 1, smin, ONE, T, sT1, sT2, oT + ( j - 1 ) * sT1 + ( j - 1 ) * sT2, ONE, ONE, WORK, 1, N, offsetWORK + 2 * N + ( j - 1 ), wr, ZERO, X, 1, 2, 0 );
 						scale = res.scale;
 						xnorm = res.xnorm;
 
 						if ( xnorm > ONE ) {
 							beta = Math.max( WORK[ offsetWORK + j - 1 ], WORK[ offsetWORK + j ] );
 							if ( beta > BIGNUM / xnorm ) {
-								X[ 0 ] = X[ 0 ] / xnorm;
-								X[ 1 ] = X[ 1 ] / xnorm;
-								scale = scale / xnorm;
+								X[ 0 ] /= xnorm;
+								X[ 1 ] /= xnorm;
+								scale /= xnorm;
 							}
 						}
 
@@ -324,11 +314,7 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 				} else {
 					// Back-transform with GEMV: Q*x
 					if ( ki > 0 ) {
-						dgemv( 'no-transpose', N, ki, ONE,
-							VR, strideVR1, strideVR2, offsetVR,
-							WORK, 1, offsetWORK + 2 * N,
-							WORK[ offsetWORK + 2 * N + ki ],
-							VR, strideVR1, offsetVR + ki * strideVR2 );
+						dgemv( 'no-transpose', N, ki, ONE, VR, strideVR1, strideVR2, offsetVR, WORK, 1, offsetWORK + 2 * N, WORK[ offsetWORK + 2 * N + ki ], VR, strideVR1, offsetVR + ki * strideVR2 );
 					} else {
 						dscal( N, WORK[ offsetWORK + 2 * N + ki ], VR, strideVR1, offsetVR + ki * strideVR2 );
 					}
@@ -376,17 +362,15 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 
 					if ( j1 === j2 ) {
 						// 1x1 diagonal block
-						res = dlaln2( false, 1, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, wi,
-							X, 1, 2, 0 );
+						res = dlaln2( false, 1, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, wi, X, 1, 2, 0 );
 						scale = res.scale;
 						xnorm = res.xnorm;
 
 						if ( xnorm > ONE ) {
 							if ( WORK[ offsetWORK + j ] > BIGNUM / xnorm ) {
-								X[ 0 ] = X[ 0 ] / xnorm;
-								X[ 2 ] = X[ 2 ] / xnorm;
-								scale = scale / xnorm;
+								X[ 0 ] /= xnorm;
+								X[ 2 ] /= xnorm;
+								scale /= xnorm;
 							}
 						}
 
@@ -402,9 +386,7 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 						daxpy( j, -X[ 2 ], T, sT1, oT + j * sT2, WORK, 1, offsetWORK + 2 * N );
 					} else {
 						// 2x2 diagonal block
-						res = dlaln2( false, 2, 2, smin, ONE, T, sT1, sT2, oT + ( j - 1 ) * sT1 + ( j - 1 ) * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + N + j - 1, wr, wi,
-							X, 1, 2, 0 );
+						res = dlaln2( false, 2, 2, smin, ONE, T, sT1, sT2, oT + ( j - 1 ) * sT1 + ( j - 1 ) * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j - 1, wr, wi, X, 1, 2, 0 );
 						scale = res.scale;
 						xnorm = res.xnorm;
 
@@ -458,16 +440,8 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 				} else {
 					// Back-transform with GEMV
 					if ( ki > 1 ) {
-						dgemv( 'no-transpose', N, ki - 1, ONE,
-							VR, strideVR1, strideVR2, offsetVR,
-							WORK, 1, offsetWORK + N,
-							WORK[ offsetWORK + N + ki - 1 ],
-							VR, strideVR1, offsetVR + ( ki - 1 ) * strideVR2 );
-						dgemv( 'no-transpose', N, ki - 1, ONE,
-							VR, strideVR1, strideVR2, offsetVR,
-							WORK, 1, offsetWORK + 2 * N,
-							WORK[ offsetWORK + 2 * N + ki ],
-							VR, strideVR1, offsetVR + ki * strideVR2 );
+						dgemv( 'no-transpose', N, ki - 1, ONE, VR, strideVR1, strideVR2, offsetVR, WORK, 1, offsetWORK + N, WORK[ offsetWORK + N + ki - 1 ], VR, strideVR1, offsetVR + ( ki - 1 ) * strideVR2 );
+						dgemv( 'no-transpose', N, ki - 1, ONE, VR, strideVR1, strideVR2, offsetVR, WORK, 1, offsetWORK + 2 * N, WORK[ offsetWORK + 2 * N + ki ], VR, strideVR1, offsetVR + ki * strideVR2 );
 					} else {
 						dscal( N, WORK[ offsetWORK + N + ki - 1 ], VR, strideVR1, offsetVR + ( ki - 1 ) * strideVR2 );
 						dscal( N, WORK[ offsetWORK + 2 * N + ki ], VR, strideVR1, offsetVR + ki * strideVR2 );
@@ -563,12 +537,9 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 							vcrit = BIGNUM;
 						}
 
-						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 1, T, sT1, oT + ( ki + 1 ) * sT1 + j * sT2,
-							WORK, 1, offsetWORK + N + ki + 1 );
+						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 1, T, sT1, oT + ( ki + 1 ) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 1 );
 
-						res = dlaln2( false, 1, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, ZERO,
-							X, 1, 2, 0 );
+						res = dlaln2( false, 1, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, ZERO, X, 1, 2, 0 );
 						scale = res.scale;
 
 						if ( scale !== ONE ) {
@@ -587,15 +558,11 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 							vcrit = BIGNUM;
 						}
 
-						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 1, T, sT1, oT + ( ki + 1 ) * sT1 + j * sT2,
-							WORK, 1, offsetWORK + N + ki + 1 );
+						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 1, T, sT1, oT + ( ki + 1 ) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 1 );
 
-						WORK[ offsetWORK + N + j + 1 ] -= ddot( j - ki - 1, T, sT1, oT + ( ki + 1 ) * sT1 + ( j + 1 ) * sT2,
-							WORK, 1, offsetWORK + N + ki + 1 );
+						WORK[ offsetWORK + N + j + 1 ] -= ddot( j - ki - 1, T, sT1, oT + ( ki + 1 ) * sT1 + ( j + 1 ) * sT2, WORK, 1, offsetWORK + N + ki + 1 );
 
-						res = dlaln2( true, 2, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, ZERO,
-							X, 1, 2, 0 );
+						res = dlaln2( true, 2, 1, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, ZERO, X, 1, 2, 0 );
 						scale = res.scale;
 
 						if ( scale !== ONE ) {
@@ -604,8 +571,7 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 						WORK[ offsetWORK + N + j ] = X[ 0 ];
 						WORK[ offsetWORK + N + j + 1 ] = X[ 1 ];
 
-						vmax = Math.max( Math.abs( WORK[ offsetWORK + N + j ] ),
-							Math.abs( WORK[ offsetWORK + N + j + 1 ] ), vmax );
+						vmax = Math.max( Math.abs( WORK[ offsetWORK + N + j ] ), Math.abs( WORK[ offsetWORK + N + j + 1 ] ), vmax );
 						vcrit = BIGNUM / vmax;
 					}
 				}
@@ -624,11 +590,7 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 				} else {
 					// Back-transform: Q*x
 					if ( ki < N - 1 ) {
-						dgemv( 'no-transpose', N, N - ki - 1, ONE,
-							VL, strideVL1, strideVL2, offsetVL + ( ki + 1 ) * strideVL2,
-							WORK, 1, offsetWORK + N + ki + 1,
-							WORK[ offsetWORK + N + ki ],
-							VL, strideVL1, offsetVL + ki * strideVL2 );
+						dgemv( 'no-transpose', N, N - ki - 1, ONE, VL, strideVL1, strideVL2, offsetVL + ( ki + 1 ) * strideVL2, WORK, 1, offsetWORK + N + ki + 1, WORK[ offsetWORK + N + ki ], VL, strideVL1, offsetVL + ki * strideVL2 );
 					} else {
 						dscal( N, WORK[ offsetWORK + N + ki ], VL, strideVL1, offsetVL + ki * strideVL2 );
 					}
@@ -687,15 +649,11 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 							vcrit = BIGNUM;
 						}
 
-						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2,
-							WORK, 1, offsetWORK + N + ki + 2 );
-						WORK[ offsetWORK + 2 * N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2,
-							WORK, 1, offsetWORK + 2 * N + ki + 2 );
+						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 2 );
+						WORK[ offsetWORK + 2 * N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2, WORK, 1, offsetWORK + 2 * N + ki + 2 );
 
 						// Note: -wi for left eigenvectors (conjugate)
-						res = dlaln2( false, 1, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, -wi,
-							X, 1, 2, 0 );
+						res = dlaln2( false, 1, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, -wi, X, 1, 2, 0 );
 						scale = res.scale;
 
 						if ( scale !== ONE ) {
@@ -704,8 +662,7 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 						}
 						WORK[ offsetWORK + N + j ] = X[ 0 ];
 						WORK[ offsetWORK + 2 * N + j ] = X[ 2 ];
-						vmax = Math.max( Math.abs( WORK[ offsetWORK + N + j ] ),
-							Math.abs( WORK[ offsetWORK + 2 * N + j ] ), vmax );
+						vmax = Math.max( Math.abs( WORK[ offsetWORK + N + j ] ), Math.abs( WORK[ offsetWORK + 2 * N + j ] ), vmax );
 						vcrit = BIGNUM / vmax;
 					} else {
 						// 2x2 diagonal block
@@ -718,18 +675,12 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 							vcrit = BIGNUM;
 						}
 
-						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2,
-							WORK, 1, offsetWORK + N + ki + 2 );
-						WORK[ offsetWORK + 2 * N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2,
-							WORK, 1, offsetWORK + 2 * N + ki + 2 );
-						WORK[ offsetWORK + N + j + 1 ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + ( j + 1 ) * sT2,
-							WORK, 1, offsetWORK + N + ki + 2 );
-						WORK[ offsetWORK + 2 * N + j + 1 ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + ( j + 1 ) * sT2,
-							WORK, 1, offsetWORK + 2 * N + ki + 2 );
+						WORK[ offsetWORK + N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2, WORK, 1, offsetWORK + N + ki + 2 );
+						WORK[ offsetWORK + 2 * N + j ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + j * sT2, WORK, 1, offsetWORK + 2 * N + ki + 2 );
+						WORK[ offsetWORK + N + j + 1 ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + ( j + 1 ) * sT2, WORK, 1, offsetWORK + N + ki + 2 );
+						WORK[ offsetWORK + 2 * N + j + 1 ] -= ddot( j - ki - 2, T, sT1, oT + ( ki + 2 ) * sT1 + ( j + 1 ) * sT2, WORK, 1, offsetWORK + 2 * N + ki + 2 );
 
-						res = dlaln2( true, 2, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2,
-							ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, -wi,
-							X, 1, 2, 0 );
+						res = dlaln2( true, 2, 2, smin, ONE, T, sT1, sT2, oT + j * sT1 + j * sT2, ONE, ONE, WORK, 1, N, offsetWORK + N + j, wr, -wi, X, 1, 2, 0 );
 						scale = res.scale;
 
 						if ( scale !== ONE ) {
@@ -740,8 +691,7 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 						WORK[ offsetWORK + N + j + 1 ] = X[ 1 ];
 						WORK[ offsetWORK + 2 * N + j ] = X[ 2 ];
 						WORK[ offsetWORK + 2 * N + j + 1 ] = X[ 3 ];
-						vmax = Math.max( Math.abs( X[ 0 ] ), Math.abs( X[ 2 ] ),
-							Math.abs( X[ 1 ] ), Math.abs( X[ 3 ] ), vmax );
+						vmax = Math.max( Math.abs( X[ 0 ] ), Math.abs( X[ 2 ] ), Math.abs( X[ 1 ] ), Math.abs( X[ 3 ] ), vmax );
 						vcrit = BIGNUM / vmax;
 					}
 				}
@@ -767,16 +717,8 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, offsetSELECT, N, T, stride
 				} else {
 					// Back-transform
 					if ( ki < N - 2 ) {
-						dgemv( 'no-transpose', N, N - ki - 2, ONE,
-							VL, strideVL1, strideVL2, offsetVL + ( ki + 2 ) * strideVL2,
-							WORK, 1, offsetWORK + N + ki + 2,
-							WORK[ offsetWORK + N + ki ],
-							VL, strideVL1, offsetVL + ki * strideVL2 );
-						dgemv( 'no-transpose', N, N - ki - 2, ONE,
-							VL, strideVL1, strideVL2, offsetVL + ( ki + 2 ) * strideVL2,
-							WORK, 1, offsetWORK + 2 * N + ki + 2,
-							WORK[ offsetWORK + 2 * N + ki + 1 ],
-							VL, strideVL1, offsetVL + ( ki + 1 ) * strideVL2 );
+						dgemv( 'no-transpose', N, N - ki - 2, ONE, VL, strideVL1, strideVL2, offsetVL + ( ki + 2 ) * strideVL2, WORK, 1, offsetWORK + N + ki + 2, WORK[ offsetWORK + N + ki ], VL, strideVL1, offsetVL + ki * strideVL2 );
+						dgemv( 'no-transpose', N, N - ki - 2, ONE, VL, strideVL1, strideVL2, offsetVL + ( ki + 2 ) * strideVL2, WORK, 1, offsetWORK + 2 * N + ki + 2, WORK[ offsetWORK + 2 * N + ki + 1 ], VL, strideVL1, offsetVL + ( ki + 1 ) * strideVL2 );
 					} else {
 						dscal( N, WORK[ offsetWORK + N + ki ], VL, strideVL1, offsetVL + ki * strideVL2 );
 						dscal( N, WORK[ offsetWORK + 2 * N + ki + 1 ], VL, strideVL1, offsetVL + ( ki + 1 ) * strideVL2 );

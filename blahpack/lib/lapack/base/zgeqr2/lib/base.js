@@ -89,9 +89,7 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		// zlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
 
 		// Sub-routines accept Complex128Array with complex-element strides/offsets
-		zlarfg( M - i, A, offsetA + (i * strideA1) + (i * strideA2),
-			A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2),
-			TAU, offsetTAU + (i * strideTAU) );
+		zlarfg( M - i, A, offsetA + (i * strideA1) + (i * strideA2), A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2), TAU, offsetTAU + (i * strideTAU) );
 
 		if ( i < N - 1 ) {
 			// Save A(i,i) and set to 1 for the reflector application
@@ -109,10 +107,7 @@ function zgeqr2( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 			// zlarf( side, M, N, v, strideV, offsetV, tau, offsetTau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
 
 			// Sub-routines accept Complex128Array with complex-element strides/offsets
-			zlarf( 'left', M - i, N - i - 1, A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
-				conj_tau, 0,
-				A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
-				WORK, strideWORK, offsetWORK );
+			zlarf( 'left', M - i, N - i - 1, A, strideA1, offsetA + (i * strideA1) + (i * strideA2), conj_tau, 0, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 
 			// Restore A(i,i)
 			Av[ aii ] = alpha_re;

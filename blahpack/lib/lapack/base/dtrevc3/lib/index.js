@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvectors of a real upper quasi-triangular matrix
+* Computes eigenvectors of a real upper quasi-triangular matrix.
 *
 * @module @stdlib/lapack/base/dtrevc3
 *

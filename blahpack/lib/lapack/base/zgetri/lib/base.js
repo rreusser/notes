@@ -136,11 +136,7 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 			// Compute current column of inv(A):
 			// A(:, j) = A(:, j+1:N-1) * (-WORK(j+1:N-1)) + A(:, j)
 			if ( j < N - 1 ) {
-				zgemv( 'no-transpose', N, N - j - 1, CNEGONE,
-					A, sa1, sa2, offsetA + (( j + 1 ) * sa2),
-					WORK, strideWORK, offsetWORK + (( j + 1 ) * strideWORK),
-					CONE,
-					A, sa1, offsetA + (j * sa2) );
+				zgemv( 'no-transpose', N, N - j - 1, CNEGONE, A, sa1, sa2, offsetA + (( j + 1 ) * sa2), WORK, strideWORK, offsetWORK + (( j + 1 ) * strideWORK), CONE, A, sa1, offsetA + (j * sa2) );
 			}
 		}
 	} else {
@@ -167,16 +163,10 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 
 			// Update the current block column with trailing columns
 			if ( j + jb < N ) {
-				zgemm( 'no-transpose', 'no-transpose', N, jb, N - j - jb, CNEGONE,
-					A, sa1, sa2, offsetA + (( j + jb ) * sa2),
-					WORK, 1, ldwork, offsetWORK + ( j + jb ),
-					CONE,
-					A, sa1, sa2, offsetA + (j * sa2) );
+				zgemm( 'no-transpose', 'no-transpose', N, jb, N - j - jb, CNEGONE, A, sa1, sa2, offsetA + (( j + jb ) * sa2), WORK, 1, ldwork, offsetWORK + ( j + jb ), CONE, A, sa1, sa2, offsetA + (j * sa2) );
 			}
 			// Solve with the unit lower triangular block from WORK
-			ztrsm( 'right', 'lower', 'no-transpose', 'unit', N, jb, CONE,
-				WORK, 1, ldwork, offsetWORK + j,
-				A, sa1, sa2, offsetA + (j * sa2) );
+			ztrsm( 'right', 'lower', 'no-transpose', 'unit', N, jb, CONE, WORK, 1, ldwork, offsetWORK + j, A, sa1, sa2, offsetA + (j * sa2) );
 		}
 	}
 
@@ -184,9 +174,7 @@ function zgetri( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV
 	for ( j = N - 2; j >= 0; j-- ) {
 		jp = IPIV[ offsetIPIV + (j * strideIPIV) ];
 		if ( jp !== j ) {
-			zswap( N,
-				A, sa1, offsetA + (j * sa2),
-				A, sa1, offsetA + (jp * sa2) );
+			zswap( N, A, sa1, offsetA + (j * sa2), A, sa1, offsetA + (jp * sa2) );
 		}
 	}
 

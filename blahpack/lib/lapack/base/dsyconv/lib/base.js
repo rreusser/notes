@@ -23,7 +23,7 @@
 // MAIN //
 
 /**
-* Converts a symmetric matrix given by `dsytrf` (Bunch-Kaufman factorization)
+* Converts a symmetric matrix given by `dsytrf` (Bunch-Kaufman factorization).
 * to L and D and vice-versa. Extracts (or reinserts) the off-diagonal elements
 * of the block-diagonal factor D into a separate array E, and applies (or
 * reverts) the permutations stored in IPIV.

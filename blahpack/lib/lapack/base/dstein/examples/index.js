@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dstein = require( '@stdlib/lapack/base/dstein' );

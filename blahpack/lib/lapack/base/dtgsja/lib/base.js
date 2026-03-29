@@ -45,13 +45,13 @@ var ssminArr = new Float64Array( 1 );
 // MAIN //
 
 /**
-* Computes the generalized singular value decomposition (GSVD) of two real
+* Computes the generalized singular value decomposition (GSVD) of two real.
 * upper triangular (or trapezoidal) matrices A and B.
 *
 * On entry, it is assumed that matrices A and B have the forms obtained by
 * the preprocessing subroutine DGGSVP.
 *
-* On exit, U^T*A*Q = D1*(0 R), V^T*B*Q = D2*(0 R), where U, V and Q are
+* On exit, U^T_A_Q = D1_(0 R), V^T_B_Q = D2_(0 R), where U, V and Q are
 * orthogonal matrices.
 *
 * @private
@@ -179,32 +179,16 @@ function dtgsja( jobu, jobv, jobq, M, p, N, K, l, A, strideA1, strideA2, offsetA
 
 				// Update (K+I)-th and (K+J)-th rows of matrix A: U^T*A
 				if ( K + j < M ) {
-					drot( l,
-						A, strideA2, offsetA + ( ( K + j ) * strideA1 ) + ( ( N - l ) * strideA2 ),
-						A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l ) * strideA2 ),
-						rot.csu, rot.snu
-					);
+					drot( l, A, strideA2, offsetA + ( ( K + j ) * strideA1 ) + ( ( N - l ) * strideA2 ), A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l ) * strideA2 ), rot.csu, rot.snu);
 				}
 
 				// Update I-th and J-th rows of matrix B: V^T*B
-				drot( l,
-					B, strideB2, offsetB + ( j * strideB1 ) + ( ( N - l ) * strideB2 ),
-					B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l ) * strideB2 ),
-					rot.csv, rot.snv
-				);
+				drot( l, B, strideB2, offsetB + ( j * strideB1 ) + ( ( N - l ) * strideB2 ), B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l ) * strideB2 ), rot.csv, rot.snv);
 
 				// Update (N-L+I)-th and (N-L+J)-th columns of matrices A and B: A*Q and B*Q
-				drot( Math.min( K + l, M ),
-					A, strideA1, offsetA + ( ( N - l + j ) * strideA2 ),
-					A, strideA1, offsetA + ( ( N - l + i ) * strideA2 ),
-					rot.csq, rot.snq
-				);
+				drot( Math.min( K + l, M ), A, strideA1, offsetA + ( ( N - l + j ) * strideA2 ), A, strideA1, offsetA + ( ( N - l + i ) * strideA2 ), rot.csq, rot.snq);
 
-				drot( l,
-					B, strideB1, offsetB + ( ( N - l + j ) * strideB2 ),
-					B, strideB1, offsetB + ( ( N - l + i ) * strideB2 ),
-					rot.csq, rot.snq
-				);
+				drot( l, B, strideB1, offsetB + ( ( N - l + j ) * strideB2 ), B, strideB1, offsetB + ( ( N - l + i ) * strideB2 ), rot.csq, rot.snq);
 
 				if ( upper ) {
 					if ( K + i < M ) {
@@ -220,51 +204,29 @@ function dtgsja( jobu, jobv, jobq, M, p, N, K, l, A, strideA1, strideA2, offsetA
 
 				// Update orthogonal matrices U, V, Q, if desired.
 				if ( wantu && K + j < M ) {
-					drot( M,
-						U, strideU1, offsetU + ( ( K + j ) * strideU2 ),
-						U, strideU1, offsetU + ( ( K + i ) * strideU2 ),
-						rot.csu, rot.snu
-					);
+					drot( M, U, strideU1, offsetU + ( ( K + j ) * strideU2 ), U, strideU1, offsetU + ( ( K + i ) * strideU2 ), rot.csu, rot.snu);
 				}
 
 				if ( wantv ) {
-					drot( p,
-						V, strideV1, offsetV + ( j * strideV2 ),
-						V, strideV1, offsetV + ( i * strideV2 ),
-						rot.csv, rot.snv
-					);
+					drot( p, V, strideV1, offsetV + ( j * strideV2 ), V, strideV1, offsetV + ( i * strideV2 ), rot.csv, rot.snv);
 				}
 
 				if ( wantq ) {
-					drot( N,
-						Q, strideQ1, offsetQ + ( ( N - l + j ) * strideQ2 ),
-						Q, strideQ1, offsetQ + ( ( N - l + i ) * strideQ2 ),
-						rot.csq, rot.snq
-					);
+					drot( N, Q, strideQ1, offsetQ + ( ( N - l + j ) * strideQ2 ), Q, strideQ1, offsetQ + ( ( N - l + i ) * strideQ2 ), rot.csq, rot.snq);
 				}
 			}
 		}
 
 		if ( !upper ) {
 			// The matrices A13 and B13 were lower triangular at the start
-			// of the cycle, and are now upper triangular.
+			// Of the cycle, and are now upper triangular.
 			// Convergence test: test the parallelism of the corresponding
-			// rows of A and B.
+			// Rows of A and B.
 			error = ZERO;
 			for ( i = 0; i < Math.min( l, M - K ); i++ ) {
-				dcopy( l - i,
-					A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 ),
-					WORK, strideWORK, offsetWORK
-				);
-				dcopy( l - i,
-					B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ),
-					WORK, strideWORK, offsetWORK + ( l * strideWORK )
-				);
-				dlapll( l - i,
-					WORK, strideWORK, offsetWORK,
-					WORK, strideWORK, offsetWORK + ( l * strideWORK ),
-					ssminArr
-				);
+				dcopy( l - i, A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 ), WORK, strideWORK, offsetWORK);
+				dcopy( l - i, B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ), WORK, strideWORK, offsetWORK + ( l * strideWORK ));
+				dlapll( l - i, WORK, strideWORK, offsetWORK, WORK, strideWORK, offsetWORK + ( l * strideWORK ), ssminArr);
 				error = Math.max( error, ssminArr[ 0 ] );
 			}
 
@@ -284,7 +246,7 @@ function dtgsja( jobu, jobv, jobq, M, p, N, K, l, A, strideA1, strideA2, offsetA
 
 	// If ERROR <= MIN(TOLA,TOLB), then the algorithm has converged.
 	// Compute the generalized singular value pairs (ALPHA, BETA), and
-	// set the triangular matrix R to array A.
+	// Set the triangular matrix R to array A.
 
 	for ( i = 0; i < K; i++ ) {
 		ALPHA[ offsetALPHA + ( i * strideALPHA ) ] = ONE;
@@ -299,9 +261,7 @@ function dtgsja( jobu, jobv, jobq, M, p, N, K, l, A, strideA1, strideA2, offsetA
 		if ( ( gamma <= HUGENUM ) && ( gamma >= -HUGENUM ) ) {
 			// Change sign if necessary
 			if ( gamma < ZERO ) {
-				dscal( l - i, -ONE,
-					B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 )
-				);
+				dscal( l - i, -ONE, B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ));
 				if ( wantv ) {
 					dscal( p, -ONE, V, strideV1, offsetV + ( i * strideV2 ) );
 				}
@@ -312,25 +272,15 @@ function dtgsja( jobu, jobv, jobq, M, p, N, K, l, A, strideA1, strideA2, offsetA
 			ALPHA[ offsetALPHA + ( ( K + i ) * strideALPHA ) ] = lartgOut[ 1 ];
 
 			if ( ALPHA[ offsetALPHA + ( ( K + i ) * strideALPHA ) ] >= BETA[ offsetBETA + ( ( K + i ) * strideBETA ) ] ) {
-				dscal( l - i, ONE / ALPHA[ offsetALPHA + ( ( K + i ) * strideALPHA ) ],
-					A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 )
-				);
+				dscal( l - i, ONE / ALPHA[ offsetALPHA + ( ( K + i ) * strideALPHA ) ], A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 ));
 			} else {
-				dscal( l - i, ONE / BETA[ offsetBETA + ( ( K + i ) * strideBETA ) ],
-					B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 )
-				);
-				dcopy( l - i,
-					B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ),
-					A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 )
-				);
+				dscal( l - i, ONE / BETA[ offsetBETA + ( ( K + i ) * strideBETA ) ], B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ));
+				dcopy( l - i, B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ), A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 ));
 			}
 		} else {
 			ALPHA[ offsetALPHA + ( ( K + i ) * strideALPHA ) ] = ZERO;
 			BETA[ offsetBETA + ( ( K + i ) * strideBETA ) ] = ONE;
-			dcopy( l - i,
-				B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ),
-				A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 )
-			);
+			dcopy( l - i, B, strideB2, offsetB + ( i * strideB1 ) + ( ( N - l + i ) * strideB2 ), A, strideA2, offsetA + ( ( K + i ) * strideA1 ) + ( ( N - l + i ) * strideA2 ));
 		}
 	}
 

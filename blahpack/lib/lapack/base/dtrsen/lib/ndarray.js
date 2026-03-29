@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -11,48 +10,47 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Reorders the real Schur factorization of a real matrix A = Q*T*Q**T,
- * so that a selected cluster of eigenvalues appears in the leading diagonal
- * blocks of the upper quasi-triangular matrix T, and the leading columns
- * of Q form an orthonormal basis of the corresponding right invariant subspace.
- *
- * Optionally computes the reciprocal condition numbers of the cluster (S)
- * and of the invariant subspace (SEP).
- *
- *
- * @param {string} job - `'none'`, `'eigenvalues'`, `'subspace'`, or `'both'`
- * @param {string} compq - `'update'` or `'none'`
- * @param {Uint8Array|Array} SELECT - boolean array of length N indicating selected eigenvalues
- * @param {integer} strideSELECT - stride for SELECT
- * @param {NonNegativeInteger} offsetSELECT - starting index for SELECT
- * @param {NonNegativeInteger} N - order of the matrix T
- * @param {Float64Array} T - N-by-N upper quasi-triangular matrix (Schur form)
- * @param {integer} strideT1 - stride of the first dimension of T
- * @param {integer} strideT2 - stride of the second dimension of T
- * @param {NonNegativeInteger} offsetT - starting index for T
- * @param {Float64Array} Q - N-by-N orthogonal matrix of Schur vectors
- * @param {integer} strideQ1 - stride of the first dimension of Q
- * @param {integer} strideQ2 - stride of the second dimension of Q
- * @param {NonNegativeInteger} offsetQ - starting index for Q
- * @param {Float64Array} WR - output: real parts of eigenvalues
- * @param {integer} strideWR - stride for WR
- * @param {NonNegativeInteger} offsetWR - starting index for WR
- * @param {Float64Array} WI - output: imaginary parts of eigenvalues
- * @param {integer} strideWI - stride for WI
- * @param {NonNegativeInteger} offsetWI - starting index for WI
- * @param {Float64Array} M - output: M[0] = dimension of selected subspace
- * @param {Float64Array} s - output: s[0] = reciprocal condition number of selected cluster
- * @param {Float64Array} sep - output: sep[0] = reciprocal condition number of subspace
- * @param {Float64Array} WORK - workspace of length lwork
- * @param {integer} strideWORK - stride for WORK
- * @param {NonNegativeInteger} offsetWORK - starting index for WORK
- * @param {integer} lwork - length of WORK (-1 for query)
- * @param {Int32Array} IWORK - integer workspace of length liwork
- * @param {integer} strideIWORK - stride for IWORK
- * @param {NonNegativeInteger} offsetIWORK - starting index for IWORK
- * @param {integer} liwork - length of IWORK (-1 for query)
- * @returns {integer} info (0 = success, 1 = reordering failed)
- */
+* Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
+* so that a selected cluster of eigenvalues appears in the leading diagonal
+* blocks of the upper quasi-triangular matrix T, and the leading columns
+* of Q form an orthonormal basis of the corresponding right invariant subspace.
+*
+* Optionally computes the reciprocal condition numbers of the cluster (S)
+* and of the invariant subspace (SEP).
+*
+* @param {string} job - `'none'`, `'eigenvalues'`, `'subspace'`, or `'both'`
+* @param {string} compq - `'update'` or `'none'`
+* @param {Uint8Array|Array} SELECT - boolean array of length N indicating selected eigenvalues
+* @param {integer} strideSELECT - stride for SELECT
+* @param {NonNegativeInteger} offsetSELECT - starting index for SELECT
+* @param {NonNegativeInteger} N - order of the matrix T
+* @param {Float64Array} T - N-by-N upper quasi-triangular matrix (Schur form)
+* @param {integer} strideT1 - stride of the first dimension of T
+* @param {integer} strideT2 - stride of the second dimension of T
+* @param {NonNegativeInteger} offsetT - starting index for T
+* @param {Float64Array} Q - N-by-N orthogonal matrix of Schur vectors
+* @param {integer} strideQ1 - stride of the first dimension of Q
+* @param {integer} strideQ2 - stride of the second dimension of Q
+* @param {NonNegativeInteger} offsetQ - starting index for Q
+* @param {Float64Array} WR - output: real parts of eigenvalues
+* @param {integer} strideWR - stride for WR
+* @param {NonNegativeInteger} offsetWR - starting index for WR
+* @param {Float64Array} WI - output: imaginary parts of eigenvalues
+* @param {integer} strideWI - stride for WI
+* @param {NonNegativeInteger} offsetWI - starting index for WI
+* @param {Float64Array} M - output: M[0] = dimension of selected subspace
+* @param {Float64Array} s - output: s[0] = reciprocal condition number of selected cluster
+* @param {Float64Array} sep - output: sep[0] = reciprocal condition number of subspace
+* @param {Float64Array} WORK - workspace of length lwork
+* @param {integer} strideWORK - stride for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {integer} lwork - length of WORK (-1 for query)
+* @param {Int32Array} IWORK - integer workspace of length liwork
+* @param {integer} strideIWORK - stride for IWORK
+* @param {NonNegativeInteger} offsetIWORK - starting index for IWORK
+* @param {integer} liwork - length of IWORK (-1 for query)
+* @returns {integer} info (0 = success, 1 = reordering failed)
+*/
 function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, s, sep, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork ) { // eslint-disable-line max-len, max-params
 	if ( job !== 'none' && job !== 'eigenvalues' && job !== 'subspace' && job !== 'both' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid job value. Value: `%s`.', job ) );

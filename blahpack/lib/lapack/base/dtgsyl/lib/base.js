@@ -38,14 +38,14 @@ var ONE = 1.0;
 // MAIN //
 
 /**
-* Solves the generalized Sylvester equation (blocked):
+* Solves the generalized Sylvester equation (blocked):.
 *
-*   A*R - L*B = scale*C        (1)
-*   D*R - L*E = scale*F
+*   A_R - L_B = scale_C        (1)
+_   D_R - L_E = scale_F
 *
 * or the transposed system (TRANS='transpose'):
-*   A^T*R + D^T*L = scale*C    (3)
-*   -R*B^T - L*E^T = scale*F
+*   A^T_R + D^T_L = scale_C    (3)
+_   -R_B^T - L_E^T = scale_F
 *
 * where (A,D), (B,E), C, F are matrix pencils. (A,D) and (B,E) are in
 * generalized real Schur form.
@@ -94,17 +94,18 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 	var notran;
 	var dscale;
 	var scaloc;
-	var ifunc;
 	var scale2;
+	var iround;
+	var isolve;
+	var ifunc;
 	var SCALV;
 	var DSUMV;
 	var DSCLV;
-	var iround;
-	var isolve;
 	var linfo;
 	var info;
 	var ppqq;
 	var dsum;
+	var PQV;
 	var is;
 	var ie;
 	var js;
@@ -112,7 +113,6 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 	var mb;
 	var nb;
 	var pq;
-	var PQV;
 	var p;
 	var q;
 	var i;
@@ -160,16 +160,7 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 			DSCLV[ 0 ] = ZERO;
 			DSUMV[ 0 ] = ONE;
 			PQV[ 0 ] = 0;
-			dtgsy2( trans, ifunc, M, N,
-				A, strideA1, strideA2, offsetA,
-				B, strideB1, strideB2, offsetB,
-				C, strideC1, strideC2, offsetC,
-				D, strideD1, strideD2, offsetD,
-				E, strideE1, strideE2, offsetE,
-				F, strideF1, strideF2, offsetF,
-				SCALV, DSUMV, DSCLV,
-				IWORK, strideIWORK, offsetIWORK, PQV
-			);
+			dtgsy2( trans, ifunc, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, D, strideD1, strideD2, offsetD, E, strideE1, strideE2, offsetE, F, strideF1, strideF2, offsetF, SCALV, DSUMV, DSCLV, IWORK, strideIWORK, offsetIWORK, PQV);
 			scale[ 0 ] = SCALV[ 0 ];
 			dscale = DSCLV[ 0 ];
 			dsum = DSUMV[ 0 ];
@@ -188,6 +179,7 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 					ifunc = ijob;
 				}
 				scale2 = scale[ 0 ];
+
 				// Allocate WORK if needed
 				if ( WORK === null || WORK.length < 2 * M * N ) {
 					WORK = new Float64Array( 2 * M * N );
@@ -254,16 +246,7 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 					mb = ie - is + 1;
 					ppqq = 0;
 					PQV[ 0 ] = 0;
-					linfo = dtgsy2( trans, ifunc, mb, nb,
-						A, strideA1, strideA2, offsetA + ( is * strideA1 ) + ( is * strideA2 ),
-						B, strideB1, strideB2, offsetB + ( js * strideB1 ) + ( js * strideB2 ),
-						C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ),
-						D, strideD1, strideD2, offsetD + ( is * strideD1 ) + ( is * strideD2 ),
-						E, strideE1, strideE2, offsetE + ( js * strideE1 ) + ( js * strideE2 ),
-						F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ),
-						SCALV, DSUMV, DSCLV,
-						IWORK, strideIWORK, offsetIWORK + ( ( q + 2 ) * strideIWORK ), PQV
-					);
+					linfo = dtgsy2( trans, ifunc, mb, nb, A, strideA1, strideA2, offsetA + ( is * strideA1 ) + ( is * strideA2 ), B, strideB1, strideB2, offsetB + ( js * strideB1 ) + ( js * strideB2 ), C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ), D, strideD1, strideD2, offsetD + ( is * strideD1 ) + ( is * strideD2 ), E, strideE1, strideE2, offsetE + ( js * strideE1 ) + ( js * strideE2 ), F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ), SCALV, DSUMV, DSCLV, IWORK, strideIWORK, offsetIWORK + ( ( q + 2 ) * strideIWORK ), PQV);
 					if ( linfo > 0 ) {
 						info = linfo;
 					}
@@ -293,24 +276,12 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 
 					// Update C and F
 					if ( i > 0 ) {
-						dgemm( 'no-transpose', 'no-transpose', is, nb, mb, -ONE,
-							A, strideA1, strideA2, offsetA + ( is * strideA2 ),
-							C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ),
-							ONE, C, strideC1, strideC2, offsetC + ( js * strideC2 ) );
-						dgemm( 'no-transpose', 'no-transpose', is, nb, mb, -ONE,
-							D, strideD1, strideD2, offsetD + ( is * strideD2 ),
-							C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ),
-							ONE, F, strideF1, strideF2, offsetF + ( js * strideF2 ) );
+						dgemm( 'no-transpose', 'no-transpose', is, nb, mb, -ONE, A, strideA1, strideA2, offsetA + ( is * strideA2 ), C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ), ONE, C, strideC1, strideC2, offsetC + ( js * strideC2 ) );
+						dgemm( 'no-transpose', 'no-transpose', is, nb, mb, -ONE, D, strideD1, strideD2, offsetD + ( is * strideD2 ), C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ), ONE, F, strideF1, strideF2, offsetF + ( js * strideF2 ) );
 					}
 					if ( j < q ) {
-						dgemm( 'no-transpose', 'no-transpose', mb, N - je - 1, nb, ONE,
-							F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ),
-							B, strideB1, strideB2, offsetB + ( js * strideB1 ) + ( ( je + 1 ) * strideB2 ),
-							ONE, C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( ( je + 1 ) * strideC2 ) );
-						dgemm( 'no-transpose', 'no-transpose', mb, N - je - 1, nb, ONE,
-							F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ),
-							E, strideE1, strideE2, offsetE + ( js * strideE1 ) + ( ( je + 1 ) * strideE2 ),
-							ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( ( je + 1 ) * strideF2 ) );
+						dgemm( 'no-transpose', 'no-transpose', mb, N - je - 1, nb, ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ), B, strideB1, strideB2, offsetB + ( js * strideB1 ) + ( ( je + 1 ) * strideB2 ), ONE, C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( ( je + 1 ) * strideC2 ) );
+						dgemm( 'no-transpose', 'no-transpose', mb, N - je - 1, nb, ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ), E, strideE1, strideE2, offsetE + ( js * strideE1 ) + ( ( je + 1 ) * strideE2 ), ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( ( je + 1 ) * strideF2 ) );
 					}
 				}
 			}
@@ -358,16 +329,7 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 				nb = je - js + 1;
 
 				PQV[ 0 ] = 0;
-				linfo = dtgsy2( trans, ifunc, mb, nb,
-					A, strideA1, strideA2, offsetA + ( is * strideA1 ) + ( is * strideA2 ),
-					B, strideB1, strideB2, offsetB + ( js * strideB1 ) + ( js * strideB2 ),
-					C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ),
-					D, strideD1, strideD2, offsetD + ( is * strideD1 ) + ( is * strideD2 ),
-					E, strideE1, strideE2, offsetE + ( js * strideE1 ) + ( js * strideE2 ),
-					F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ),
-					SCALV, DSUMV, DSCLV,
-					IWORK, strideIWORK, offsetIWORK + ( ( q + 2 ) * strideIWORK ), PQV
-				);
+				linfo = dtgsy2( trans, ifunc, mb, nb, A, strideA1, strideA2, offsetA + ( is * strideA1 ) + ( is * strideA2 ), B, strideB1, strideB2, offsetB + ( js * strideB1 ) + ( js * strideB2 ), C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ), D, strideD1, strideD2, offsetD + ( is * strideD1 ) + ( is * strideD2 ), E, strideE1, strideE2, offsetE + ( js * strideE1 ) + ( js * strideE2 ), F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ), SCALV, DSUMV, DSCLV, IWORK, strideIWORK, offsetIWORK + ( ( q + 2 ) * strideIWORK ), PQV);
 				if ( linfo > 0 ) {
 					info = linfo;
 				}
@@ -394,24 +356,12 @@ function dtgsyl( trans, ijob, M, N, A, strideA1, strideA2, offsetA, B, strideB1,
 				}
 
 				if ( j > p + 1 ) {
-					dgemm( 'no-transpose', 'transpose', mb, js, nb, ONE,
-						C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ),
-						B, strideB1, strideB2, offsetB + ( js * strideB2 ),
-						ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) );
-					dgemm( 'no-transpose', 'transpose', mb, js, nb, ONE,
-						F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ),
-						E, strideE1, strideE2, offsetE + ( js * strideE2 ),
-						ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) );
+					dgemm( 'no-transpose', 'transpose', mb, js, nb, ONE, C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ), B, strideB1, strideB2, offsetB + ( js * strideB2 ), ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) );
+					dgemm( 'no-transpose', 'transpose', mb, js, nb, ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ), E, strideE1, strideE2, offsetE + ( js * strideE2 ), ONE, F, strideF1, strideF2, offsetF + ( is * strideF1 ) );
 				}
 				if ( i < p - 1 ) {
-					dgemm( 'transpose', 'no-transpose', M - ie - 1, nb, mb, -ONE,
-						A, strideA1, strideA2, offsetA + ( is * strideA1 ) + ( ( ie + 1 ) * strideA2 ),
-						C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ),
-						ONE, C, strideC1, strideC2, offsetC + ( ( ie + 1 ) * strideC1 ) + ( js * strideC2 ) );
-					dgemm( 'transpose', 'no-transpose', M - ie - 1, nb, mb, -ONE,
-						D, strideD1, strideD2, offsetD + ( is * strideD1 ) + ( ( ie + 1 ) * strideD2 ),
-						F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ),
-						ONE, C, strideC1, strideC2, offsetC + ( ( ie + 1 ) * strideC1 ) + ( js * strideC2 ) );
+					dgemm( 'transpose', 'no-transpose', M - ie - 1, nb, mb, -ONE, A, strideA1, strideA2, offsetA + ( is * strideA1 ) + ( ( ie + 1 ) * strideA2 ), C, strideC1, strideC2, offsetC + ( is * strideC1 ) + ( js * strideC2 ), ONE, C, strideC1, strideC2, offsetC + ( ( ie + 1 ) * strideC1 ) + ( js * strideC2 ) );
+					dgemm( 'transpose', 'no-transpose', M - ie - 1, nb, mb, -ONE, D, strideD1, strideD2, offsetD + ( is * strideD1 ) + ( ( ie + 1 ) * strideD2 ), F, strideF1, strideF2, offsetF + ( is * strideF1 ) + ( js * strideF2 ), ONE, C, strideC1, strideC2, offsetC + ( ( ie + 1 ) * strideC1 ) + ( js * strideC2 ) );
 				}
 			}
 		}

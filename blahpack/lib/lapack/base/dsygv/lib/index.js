@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvalues and optionally eigenvectors of a generalized symmetric-definite eigenproblem
+* Computes eigenvalues and optionally eigenvectors of a generalized symmetric-definite eigenproblem.
 *
 * @module @stdlib/lapack/base/dsygv
 *

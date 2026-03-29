@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Provides error bounds for solution of a triangular system
+* Provides error bounds for solution of a triangular system.
 *
 * @module @stdlib/lapack/base/dtrrfs
 *

@@ -1,34 +1,66 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
+var Float64Array = require( '@stdlib/array/float64' );
 var zgebal = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgebal.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgebal.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -47,8 +79,8 @@ function assertArrayClose( actual, expected, tol, msg ) {
 */
 function buildComplexMatrix( N, LDA, cols ) {
 	var out = new Complex128Array( LDA * cols.length );
-	var ov = reinterpret( out, 0 );
 	var col;
+	var ov = reinterpret( out, 0 );
 	var i;
 	var j;
 	for ( j = 0; j < cols.length; j++ ) {
@@ -65,12 +97,28 @@ function buildComplexMatrix( N, LDA, cols ) {
 * Extract column j (0-based) as interleaved Float64 array of length 2*N.
 */
 function extractColumn( A, N, LDA, j ) {
-	var av = reinterpret( A, 0 );
 	var out = [];
+	var av = reinterpret( A, 0 );
 	var i;
 	for ( i = 0; i < N; i++ ) {
 		out.push( av[ ( j * LDA + i ) * 2 ] );
 		out.push( av[ ( j * LDA + i ) * 2 + 1 ] );
+	}
+	return out;
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
 	}
 	return out;
 }
@@ -99,19 +147,17 @@ test( 'zgebal: n1 - N=1', function t() {
 	var A;
 
 	tc = findCase( 'n1' );
-	// A = [ (5, 3) ]
 	A = new Complex128Array( 1 );
 	av = reinterpret( A, 0 );
 	av[ 0 ] = 5.0;
 	av[ 1 ] = 3.0;
 	SCALE = new Float64Array( 1 );
-
 	result = zgebal( 'both', 1, A, 1, 1, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
-	assertArrayClose( Array.from( av ).slice( 0, 2 ), tc.A, 1e-14, 'A' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( av ).slice( 0, 2 ), tc.A, 1e-14, 'A' );
 });
 
 test( 'zgebal: job_n - JOB=N no balancing', function t() {
@@ -121,19 +167,17 @@ test( 'zgebal: job_n - JOB=N no balancing', function t() {
 	var A;
 
 	tc = findCase( 'job_n' );
-	// 3x3 complex matrix, LDA=3
 	A = buildComplexMatrix( 3, 3, [
 		[ 1.0, 0.5, 4.0, 2.0, 7.0, 0.0 ],
 		[ 2.0, 1.0, 5.0, 0.0, 8.0, 3.0 ],
 		[ 3.0, 0.0, 6.0, 1.5, 9.0, 0.5 ]
 	]);
 	SCALE = new Float64Array( 3 );
-
 	result = zgebal( 'none', 3, A, 1, 3, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
 });
 
 test( 'zgebal: job_p - JOB=P permute only', function t() {
@@ -143,7 +187,6 @@ test( 'zgebal: job_p - JOB=P permute only', function t() {
 	var A;
 
 	tc = findCase( 'job_p' );
-	// 4x4 complex matrix, LDA=4 (use N as LDA for simplicity)
 	A = buildComplexMatrix( 4, 4, [
 		[ 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 2.0, 1.0, 5.0, 2.0, 8.0, 1.0, 0.0, 0.0 ],
@@ -151,12 +194,11 @@ test( 'zgebal: job_p - JOB=P permute only', function t() {
 		[ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.0, 3.0 ]
 	]);
 	SCALE = new Float64Array( 4 );
-
 	result = zgebal( 'permute', 4, A, 1, 4, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
 	assertArrayClose( extractColumn( A, 4, 4, 0 ), tc.A1, 1e-14, 'A col 1' );
 	assertArrayClose( extractColumn( A, 4, 4, 1 ), tc.A2, 1e-14, 'A col 2' );
 	assertArrayClose( extractColumn( A, 4, 4, 2 ), tc.A3, 1e-14, 'A col 3' );
@@ -170,19 +212,17 @@ test( 'zgebal: job_s - JOB=S scale only', function t() {
 	var A;
 
 	tc = findCase( 'job_s' );
-	// 3x3, LDA=3
 	A = buildComplexMatrix( 3, 3, [
 		[ 1.0, 0.5, 1000.0, 500.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 1.0, 0.5, 1000.0, 200.0 ],
 		[ 0.0, 0.0, 0.0, 0.0, 1.0, 0.5 ]
 	]);
 	SCALE = new Float64Array( 3 );
-
 	result = zgebal( 'scale', 3, A, 1, 3, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
 	assertArrayClose( extractColumn( A, 3, 3, 0 ), tc.A1, 1e-14, 'A col 1' );
 	assertArrayClose( extractColumn( A, 3, 3, 1 ), tc.A2, 1e-14, 'A col 2' );
 	assertArrayClose( extractColumn( A, 3, 3, 2 ), tc.A3, 1e-14, 'A col 3' );
@@ -195,7 +235,6 @@ test( 'zgebal: job_b - JOB=B both permute and scale', function t() {
 	var A;
 
 	tc = findCase( 'job_b' );
-	// 4x4, LDA=4
 	A = buildComplexMatrix( 4, 4, [
 		[ 1.0, 0.0, 100.0, 50.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 2.0, 1.0, 0.01, 0.005, 0.0, 0.0 ],
@@ -203,12 +242,11 @@ test( 'zgebal: job_b - JOB=B both permute and scale', function t() {
 		[ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.0, 2.0 ]
 	]);
 	SCALE = new Float64Array( 4 );
-
 	result = zgebal( 'both', 4, A, 1, 4, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
 	assertArrayClose( extractColumn( A, 4, 4, 0 ), tc.A1, 1e-14, 'A col 1' );
 	assertArrayClose( extractColumn( A, 4, 4, 1 ), tc.A2, 1e-14, 'A col 2' );
 	assertArrayClose( extractColumn( A, 4, 4, 2 ), tc.A3, 1e-14, 'A col 3' );
@@ -222,29 +260,26 @@ test( 'zgebal: diagonal - already balanced matrix', function t() {
 	var A;
 
 	tc = findCase( 'diagonal' );
-	// 3x3 diagonal
 	A = buildComplexMatrix( 3, 3, [
 		[ 2.0, 1.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 3.0, 2.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 0.0, 0.0, 5.0, 0.5 ]
 	]);
 	SCALE = new Float64Array( 3 );
-
 	result = zgebal( 'both', 3, A, 1, 3, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
 });
 
-test( 'zgebal: perm_and_scale - 5x5 with permutations on both ends', function t() {
+test( 'zgebal: perm_and_scale - 5x5 with permutations on both ends', function t() { // eslint-disable-line max-len
 	var result;
 	var SCALE;
 	var tc;
 	var A;
 
 	tc = findCase( 'perm_and_scale' );
-	// 5x5, LDA=5
 	A = buildComplexMatrix( 5, 5, [
 		[ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 2.0, 1.0, 0.001, 0.0005, 0.0, 0.0, 0.0, 0.0 ],
@@ -253,12 +288,11 @@ test( 'zgebal: perm_and_scale - 5x5 with permutations on both ends', function t(
 		[ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0 ]
 	]);
 	SCALE = new Float64Array( 5 );
-
 	result = zgebal( 'both', 5, A, 1, 5, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
 	assertArrayClose( extractColumn( A, 5, 5, 0 ), tc.A1, 1e-14, 'A col 1' );
 	assertArrayClose( extractColumn( A, 5, 5, 1 ), tc.A2, 1e-14, 'A col 2' );
 	assertArrayClose( extractColumn( A, 5, 5, 2 ), tc.A3, 1e-14, 'A col 3' );
@@ -273,7 +307,6 @@ test( 'zgebal: col_isolation - JOB=P with column isolation', function t() {
 	var A;
 
 	tc = findCase( 'col_isolation' );
-	// 4x4, LDA=4
 	A = buildComplexMatrix( 4, 4, [
 		[ 7.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 1.0, 0.5, 4.0, 2.0, 6.0, 1.0, 0.0, 0.0 ],
@@ -281,12 +314,11 @@ test( 'zgebal: col_isolation - JOB=P with column isolation', function t() {
 		[ 3.0, 1.0, 0.0, 0.0, 0.0, 0.0, 9.0, 3.0 ]
 	]);
 	SCALE = new Float64Array( 4 );
-
 	result = zgebal( 'permute', 4, A, 1, 4, 0, SCALE, 1, 0 );
 	assert.equal( result.info, tc.info, 'info' );
 	assert.equal( result.ilo, tc.ilo, 'ilo' );
 	assert.equal( result.ihi, tc.ihi, 'ihi' );
-	assertArrayClose( Array.from( SCALE ), tc.scale, 1e-14, 'scale' );
+	assertArrayClose( toArray( SCALE ), tc.scale, 1e-14, 'scale' );
 	assertArrayClose( extractColumn( A, 4, 4, 0 ), tc.A1, 1e-14, 'A col 1' );
 	assertArrayClose( extractColumn( A, 4, 4, 1 ), tc.A2, 1e-14, 'A col 2' );
 	assertArrayClose( extractColumn( A, 4, 4, 2 ), tc.A3, 1e-14, 'A col 3' );

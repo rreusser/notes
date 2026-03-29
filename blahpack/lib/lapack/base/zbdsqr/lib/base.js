@@ -239,20 +239,12 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		// If NRU > 0, apply rotations to U from the right
 		// Fortran: ZLASR('R','V','F', NRU, N, RWORK(1), RWORK(N), U, LDU)
 		if ( nru > 0 ) {
-			zlasr( 'right', 'variable', 'forward', nru, N,
-				RWORK, strideRWORK, offsetRWORK,
-				RWORK, strideRWORK, offsetRWORK + (( nm1 ) * strideRWORK),
-				U, strideU1, strideU2, offsetU
-			);
+			zlasr( 'right', 'variable', 'forward', nru, N, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (( nm1 ) * strideRWORK), U, strideU1, strideU2, offsetU);
 		}
 		// If NCC > 0, apply rotations to C from the left
 		// Fortran: ZLASR('lower','V','F', N, NCC, RWORK(1), RWORK(N), C, LDC)
 		if ( ncc > 0 ) {
-			zlasr( 'left', 'variable', 'forward', N, ncc,
-				RWORK, strideRWORK, offsetRWORK,
-				RWORK, strideRWORK, offsetRWORK + (( nm1 ) * strideRWORK),
-				C, strideC1, strideC2, offsetC
-			);
+			zlasr( 'left', 'variable', 'forward', N, ncc, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (( nm1 ) * strideRWORK), C, strideC1, strideC2, offsetC);
 		}
 	}
 
@@ -377,11 +369,7 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 		// 2-by-2 block at bottom (label 90 in Fortran)
 		if ( ll === m - 1 ) {
 			// 2-by-2 block: compute SVD
-			svd2 = dlasv2(
-				d[ offsetD + (( m - 1 ) * strideD) ],
-				e[ offsetE + (( m - 1 ) * strideE) ],
-				d[ offsetD + (m * strideD) ]
-			);
+			svd2 = dlasv2(d[ offsetD + (( m - 1 ) * strideD) ], e[ offsetE + (( m - 1 ) * strideE) ], d[ offsetD + (m * strideD) ]);
 			sigmn = svd2.ssmin;
 			sigmx = svd2.ssmax;
 			sinr = svd2.snr;
@@ -396,28 +384,16 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 			if ( ncvt > 0 ) {
 				// ZDROT(NCVT, VT(M-1,1), LDVT, VT(M,1), LDVT, COSR, SINR)
 				// In Fortran 1-based: M-1 and M are rows. In 0-based: m-1 and m
-				zdrot( ncvt,
-					VT, strideVT2, offsetVT + (( m - 1 ) * strideVT1),
-					VT, strideVT2, offsetVT + (m * strideVT1),
-					cosr, sinr
-				);
+				zdrot( ncvt, VT, strideVT2, offsetVT + (( m - 1 ) * strideVT1), VT, strideVT2, offsetVT + (m * strideVT1), cosr, sinr);
 			}
 			if ( nru > 0 ) {
 				// ZDROT(NRU, U(1,M-1), 1, U(1,M), 1, COSL, SINL)
 				// Columns M-1 and M (0-based: m-1 and m), step through rows with stride 1
-				zdrot( nru,
-					U, strideU1, offsetU + (( m - 1 ) * strideU2),
-					U, strideU1, offsetU + (m * strideU2),
-					cosl, sinl
-				);
+				zdrot( nru, U, strideU1, offsetU + (( m - 1 ) * strideU2), U, strideU1, offsetU + (m * strideU2), cosl, sinl);
 			}
 			if ( ncc > 0 ) {
 				// ZDROT(NCC, C(M-1,1), LDC, C(M,1), LDC, COSL, SINL)
-				zdrot( ncc,
-					C, strideC2, offsetC + (( m - 1 ) * strideC1),
-					C, strideC2, offsetC + (m * strideC1),
-					cosl, sinl
-				);
+				zdrot( ncc, C, strideC2, offsetC + (( m - 1 ) * strideC1), C, strideC2, offsetC + (m * strideC1), cosl, sinl);
 			}
 			m -= 2;
 			continue;
@@ -493,22 +469,12 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 			// Compute shift from 2-by-2 block at end of matrix
 			if ( idir === 1 ) {
 				sll = Math.abs( d[ offsetD + (ll * strideD) ] );
-				dlas2(
-					d[ offsetD + (( m - 1 ) * strideD) ],
-					e[ offsetE + (( m - 1 ) * strideE) ],
-					d[ offsetD + (m * strideD) ],
-					dout
-				);
+				dlas2(d[ offsetD + (( m - 1 ) * strideD) ], e[ offsetE + (( m - 1 ) * strideE) ], d[ offsetD + (m * strideD) ], dout);
 				shift = dout[ 0 ];
 				r = dout[ 1 ];
 			} else {
 				sll = Math.abs( d[ offsetD + (m * strideD) ] );
-				dlas2(
-					d[ offsetD + (ll * strideD) ],
-					e[ offsetE + (ll * strideE) ],
-					d[ offsetD + (( ll + 1 ) * strideD) ],
-					dout
-				);
+				dlas2(d[ offsetD + (ll * strideD) ], e[ offsetE + (ll * strideE) ], d[ offsetD + (( ll + 1 ) * strideD) ], dout);
 				shift = dout[ 0 ];
 				r = dout[ 1 ];
 			}
@@ -555,27 +521,15 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				// Update singular vectors
 				if ( ncvt > 0 ) {
 					// ZLASR('lower','V','F', M-LL+1, NCVT, RWORK(1), RWORK(N), VT(LL,1), LDVT)
-					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
-						RWORK, strideRWORK, offsetRWORK,
-						RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK),
-						VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-					);
+					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 				}
 				if ( nru > 0 ) {
 					// ZLASR('R','V','F', NRU, M-LL+1, RWORK(NM12+1), RWORK(NM13+1), U(1,LL), LDU)
-					zlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
-						RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK),
-						RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK),
-						U, strideU1, strideU2, offsetU + (ll * strideU2)
-					);
+					zlasr( 'right', 'variable', 'forward', nru, m - ll + 1, RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK), RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 				}
 				if ( ncc > 0 ) {
 					// ZLASR('lower','V','F', M-LL+1, NCC, RWORK(NM12+1), RWORK(NM13+1), C(LL,1), LDC)
-					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
-						RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK),
-						RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK),
-						C, strideC1, strideC2, offsetC + (ll * strideC1)
-					);
+					zlasr( 'left', 'variable', 'forward', m - ll + 1, ncc, RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK), RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 				}
 
 				// Test convergence
@@ -610,27 +564,15 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 				// Update singular vectors
 				if ( ncvt > 0 ) {
 					// ZLASR('lower','V','B', M-LL+1, NCVT, RWORK(NM12+1), RWORK(NM13+1), VT(LL,1), LDVT)
-					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
-						RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK),
-						RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK),
-						VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-					);
+					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt, RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK), RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 				}
 				if ( nru > 0 ) {
 					// ZLASR('R','V','B', NRU, M-LL+1, RWORK(1), RWORK(N), U(1,LL), LDU)
-					zlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
-						RWORK, strideRWORK, offsetRWORK,
-						RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK),
-						U, strideU1, strideU2, offsetU + (ll * strideU2)
-					);
+					zlasr( 'right', 'variable', 'backward', nru, m - ll + 1, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 				}
 				if ( ncc > 0 ) {
 					// ZLASR('lower','V','B', M-LL+1, NCC, RWORK(1), RWORK(N), C(LL,1), LDC)
-					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
-						RWORK, strideRWORK, offsetRWORK,
-						RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK),
-						C, strideC1, strideC2, offsetC + (ll * strideC1)
-					);
+					zlasr( 'left', 'variable', 'backward', m - ll + 1, ncc, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 				}
 
 				// Test convergence
@@ -675,25 +617,13 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 			// Update singular vectors
 			if ( ncvt > 0 ) {
-				zlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt,
-					RWORK, strideRWORK, offsetRWORK,
-					RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK),
-					VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-				);
+				zlasr( 'left', 'variable', 'forward', m - ll + 1, ncvt, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 			}
 			if ( nru > 0 ) {
-				zlasr( 'right', 'variable', 'forward', nru, m - ll + 1,
-					RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK),
-					RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK),
-					U, strideU1, strideU2, offsetU + (ll * strideU2)
-				);
+				zlasr( 'right', 'variable', 'forward', nru, m - ll + 1, RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK), RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 			}
 			if ( ncc > 0 ) {
-				zlasr( 'left', 'variable', 'forward', m - ll + 1, ncc,
-					RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK),
-					RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK),
-					C, strideC1, strideC2, offsetC + (ll * strideC1)
-				);
+				zlasr( 'left', 'variable', 'forward', m - ll + 1, ncc, RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK), RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 			}
 
 			// Test convergence
@@ -741,25 +671,13 @@ function zbdsqr( uplo, N, ncvt, nru, ncc, d, strideD, offsetD, e, strideE, offse
 
 			// Update singular vectors
 			if ( ncvt > 0 ) {
-				zlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt,
-					RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK),
-					RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK),
-					VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1)
-				);
+				zlasr( 'left', 'variable', 'backward', m - ll + 1, ncvt, RWORK, strideRWORK, offsetRWORK + (nm12 * strideRWORK), RWORK, strideRWORK, offsetRWORK + (nm13 * strideRWORK), VT, strideVT1, strideVT2, offsetVT + (ll * strideVT1));
 			}
 			if ( nru > 0 ) {
-				zlasr( 'right', 'variable', 'backward', nru, m - ll + 1,
-					RWORK, strideRWORK, offsetRWORK,
-					RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK),
-					U, strideU1, strideU2, offsetU + (ll * strideU2)
-				);
+				zlasr( 'right', 'variable', 'backward', nru, m - ll + 1, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK), U, strideU1, strideU2, offsetU + (ll * strideU2));
 			}
 			if ( ncc > 0 ) {
-				zlasr( 'left', 'variable', 'backward', m - ll + 1, ncc,
-					RWORK, strideRWORK, offsetRWORK,
-					RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK),
-					C, strideC1, strideC2, offsetC + (ll * strideC1)
-				);
+				zlasr( 'left', 'variable', 'backward', m - ll + 1, ncc, RWORK, strideRWORK, offsetRWORK, RWORK, strideRWORK, offsetRWORK + (nm1 * strideRWORK), C, strideC1, strideC2, offsetC + (ll * strideC1));
 			}
 		}
 	}
@@ -829,22 +747,13 @@ function sortSingularValues( N, d, strideD, offsetD, ncvt, VT, strideVT1, stride
 			d[ offsetD + (isub * strideD) ] = d[ offsetD + (( N - 1 - i ) * strideD) ];
 			d[ offsetD + (( N - 1 - i ) * strideD) ] = smin;
 			if ( ncvt > 0 ) {
-				zswap( ncvt,
-					VT, strideVT2, offsetVT + (isub * strideVT1),
-					VT, strideVT2, offsetVT + (( N - 1 - i ) * strideVT1)
-				);
+				zswap( ncvt, VT, strideVT2, offsetVT + (isub * strideVT1), VT, strideVT2, offsetVT + (( N - 1 - i ) * strideVT1));
 			}
 			if ( nru > 0 ) {
-				zswap( nru,
-					U, strideU1, offsetU + (isub * strideU2),
-					U, strideU1, offsetU + (( N - 1 - i ) * strideU2)
-				);
+				zswap( nru, U, strideU1, offsetU + (isub * strideU2), U, strideU1, offsetU + (( N - 1 - i ) * strideU2));
 			}
 			if ( ncc > 0 ) {
-				zswap( ncc,
-					C, strideC2, offsetC + (isub * strideC1),
-					C, strideC2, offsetC + (( N - 1 - i ) * strideC1)
-				);
+				zswap( ncc, C, strideC2, offsetC + (isub * strideC1), C, strideC2, offsetC + (( N - 1 - i ) * strideC1));
 			}
 		}
 	}

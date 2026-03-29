@@ -50,7 +50,7 @@ var RMAX = Math.min( Math.sqrt( BIGNUM ), ONE / Math.sqrt( Math.sqrt( SAFMIN ) )
 // MAIN //
 
 /**
-* Computes selected eigenvalues and, optionally, eigenvectors of a real
+* Computes selected eigenvalues and, optionally, eigenvectors of a real.
 * symmetric tridiagonal matrix A.
 *
 * Eigenvalues and eigenvectors can be selected by specifying either a
@@ -98,11 +98,11 @@ function dstevx( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	var iWork2;
 	var nsplit;
 	var stWork;
-	var wantz;
 	var alleig;
 	var valeig;
 	var indeig;
 	var iscale;
+	var wantz;
 	var dWork;
 	var sigma;
 	var order;
@@ -116,10 +116,10 @@ function dstevx( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	var tmp1;
 	var vll;
 	var vuu;
+	var jj;
 	var m;
 	var i;
 	var j;
-	var jj;
 
 	// Decode job parameters
 	wantz = ( jobz === 'compute-vectors' );
@@ -179,8 +179,8 @@ function dstevx( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	}
 
 	// If all eigenvalues are desired and ABSTOL is less than or equal to zero,
-	// then call DSTERF or DSTEQR. If this fails for some eigenvalue, then
-	// try DSTEBZ.
+	// Then call DSTERF or DSTEQR. If this fails for some eigenvalue, then
+	// Try DSTEBZ.
 	test = false;
 	if ( indeig ) {
 		if ( il === 1 && iu === N ) {
@@ -191,6 +191,7 @@ function dstevx( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	info = 0;
 	if ( ( alleig || test ) && abstol <= ZERO ) {
 		dcopy( N, d, strideD, offsetD, w, strideW, offsetW );
+
 		// Copy E into WORK
 		dcopy( N - 1, e, strideE, offsetE, WORK, strideWORK, offsetWORK );
 
@@ -206,6 +207,7 @@ function dstevx( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 		}
 		if ( info === 0 ) {
 			M[ 0 ] = N;
+
 			// Rescale if needed and return
 			if ( iscale === 1 ) {
 				dscal( N, ONE / sigma, w, strideW, offsetW );

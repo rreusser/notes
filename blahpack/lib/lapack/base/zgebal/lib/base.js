@@ -68,15 +68,15 @@ var SFMAX2 = ONE / SFMIN2;
 * @returns {Object} result with properties: info (0=success), ilo (1-based), ihi (1-based)
 */
 function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, offsetSCALE ) {
-	var noconv;
 	var canswap;
-	var ca;
-	var ra;
+	var noconv;
 	var ica;
 	var ira;
-	var Av;
 	var sA1;
 	var sA2;
+	var ca;
+	var ra;
+	var Av;
 	var oA;
 	var oS;
 	var sS;
@@ -103,7 +103,11 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 	// Quick return: N=0
 	if ( N === 0 ) {
-		return { 'info': 0, 'ilo': 1, 'ihi': 0 };
+		return {
+			'info': 0,
+			'ilo': 1,
+			'ihi': 0
+		};
 	}
 
 	// JOB='N': no balancing
@@ -111,7 +115,11 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 		for ( i = 0; i < N; i++ ) {
 			SCALE[ oS + ( i * sS ) ] = ONE;
 		}
-		return { 'info': 0, 'ilo': 1, 'ihi': N };
+		return {
+			'info': 0,
+			'ilo': 1,
+			'ihi': N
+		};
 	}
 
 	// Permutation to isolate eigenvalues if possible.
@@ -145,13 +153,18 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 					if ( i !== l ) {
 						// Swap columns i and l (rows 1..L) — complex element strides
 						zswap( l, A, strideA1, offsetA + ( i - 1 ) * strideA2, A, strideA1, offsetA + ( l - 1 ) * strideA2 );
+
 						// Swap rows i and l (columns k..N)
 						zswap( N - k + 1, A, strideA2, offsetA + ( i - 1 ) * strideA1 + ( k - 1 ) * strideA2, A, strideA2, offsetA + ( l - 1 ) * strideA1 + ( k - 1 ) * strideA2 );
 					}
 					noconv = true;
 
 					if ( l === 1 ) {
-						return { 'info': 0, 'ilo': 1, 'ihi': 1 };
+						return {
+							'info': 0,
+							'ilo': 1,
+							'ihi': 1
+						};
 					}
 					l -= 1;
 				}
@@ -182,6 +195,7 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 					if ( j !== k ) {
 						// Swap columns j and k (rows 1..L)
 						zswap( l, A, strideA1, offsetA + ( j - 1 ) * strideA2, A, strideA1, offsetA + ( k - 1 ) * strideA2 );
+
 						// Swap rows j and k (columns k..N)
 						zswap( N - k + 1, A, strideA2, offsetA + ( j - 1 ) * strideA1 + ( k - 1 ) * strideA2, A, strideA2, offsetA + ( k - 1 ) * strideA1 + ( k - 1 ) * strideA2 );
 					}
@@ -199,7 +213,11 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 	// If we only had to permute, we are done
 	if ( job === 'permute' ) {
-		return { 'info': 0, 'ilo': k, 'ihi': l };
+		return {
+			'info': 0,
+			'ilo': k,
+			'ihi': l
+		};
 	}
 
 	// ============================================================
@@ -213,11 +231,13 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 		for ( i = k; i <= l; i++ ) {
 			// Compute column norm (rows k..l of column i) — complex element strides
 			c = dznrm2( l - k + 1, A, strideA1, offsetA + ( k - 1 ) * strideA1 + ( i - 1 ) * strideA2 );
+
 			// Compute row norm (columns k..l of row i)
 			r = dznrm2( l - k + 1, A, strideA2, offsetA + ( i - 1 ) * strideA1 + ( k - 1 ) * strideA2 );
 
-			// izamax returns 0-based index in JS; strides in complex elements
+			// Izamax returns 0-based index in JS; strides in complex elements
 			ica = izamax( l, A, strideA1, offsetA + ( i - 1 ) * strideA2 );
+
 			// ica is 0-based, compute complex abs of A(ica+1, i) from Float64 view
 			p = oA + ica * sA1 + ( i - 1 ) * sA2;
 			re = Av[ p ];
@@ -225,6 +245,7 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 			ca = Math.sqrt( re * re + im * im );
 
 			ira = izamax( N - k + 1, A, strideA2, offsetA + ( i - 1 ) * strideA1 + ( k - 1 ) * strideA2 );
+
 			// ira is 0-based offset from k, so actual column index (0-based) is ira + (k-1)
 			p = oA + ( i - 1 ) * sA1 + ( ira + k - 1 ) * sA2;
 			re = Av[ p ];
@@ -238,7 +259,11 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 			// Exit if NaN to avoid infinite loop
 			if ( ( c + ca + r + ra ) !== ( c + ca + r + ra ) ) {
-				return { 'info': -3, 'ilo': k, 'ihi': l };
+				return {
+					'info': -3,
+					'ilo': k,
+					'ihi': l
+				};
 			}
 
 			g = r / SCLFAC;
@@ -286,12 +311,17 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, SCALE, strideSCALE, off
 
 			// Scale row i (columns k..N) by g — complex element strides
 			zdscal( N - k + 1, g, A, strideA2, offsetA + ( i - 1 ) * strideA1 + ( k - 1 ) * strideA2 );
+
 			// Scale column i (rows 1..L) by f
 			zdscal( l, f, A, strideA1, offsetA + ( i - 1 ) * strideA2 );
 		}
 	}
 
-	return { 'info': 0, 'ilo': k, 'ihi': l };
+	return {
+		'info': 0,
+		'ilo': k,
+		'ihi': l
+	};
 }
 
 

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Complex unblocked RQ factorization
+* Complex unblocked RQ factorization.
 *
 * @module @stdlib/lapack/base/zgerq2
 *

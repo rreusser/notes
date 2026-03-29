@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Find index of first element of maximum absolute value
+* Find index of first element of maximum absolute value.
 *
 * @module @stdlib/lapack/base/izmax1
 *

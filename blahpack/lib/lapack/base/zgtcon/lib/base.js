@@ -32,7 +32,7 @@ var zgttrs = require( '../../zgttrs/lib/base.js' );
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a complex general
+* Estimates the reciprocal of the condition number of a complex general.
 * tridiagonal matrix A, in either the 1-norm or the infinity-norm, using
 * the LU factorization computed by zgttrf.
 *
@@ -118,13 +118,12 @@ function zgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 	KASE[ 0 ] = 0;
 
 	// Reverse-communication loop
+
 	// zlacn2 uses V = WORK[N..2N-1], X = WORK[0..N-1] (complex element offsets)
 	while ( true ) {
-		zlacn2( N,
-			WORK, sw, offsetWORK + ( N * sw ),  // V
+		zlacn2( N, WORK, sw, offsetWORK + ( N * sw ),  // V
 			WORK, sw, offsetWORK,                // X
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -132,16 +131,10 @@ function zgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 
 		if ( KASE[ 0 ] === kase1 ) {
 			// Multiply by inv(A): solve A*x = b (no transpose)
-			zgttrs( 'no-transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
-				DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2,
-				IPIV, strideIPIV, offsetIPIV,
-				WORK, sw * 2, N * sw * 2, offsetWORK * 2 );
+			zgttrs( 'no-transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, WORK, sw * 2, N * sw * 2, offsetWORK * 2 );
 		} else {
 			// Multiply by inv(A^H): solve A^H*x = b (conjugate transpose)
-			zgttrs( 'conjugate-transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
-				DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2,
-				IPIV, strideIPIV, offsetIPIV,
-				WORK, sw * 2, N * sw * 2, offsetWORK * 2 );
+			zgttrs( 'conjugate-transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, WORK, sw * 2, N * sw * 2, offsetWORK * 2 );
 		}
 	}
 

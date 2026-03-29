@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the solution to a complex system of linear equations A * X = B
+* Compute the solution to a complex system of linear equations A * X = B.
 *
 * @module @stdlib/lapack/base/zgesv
 *

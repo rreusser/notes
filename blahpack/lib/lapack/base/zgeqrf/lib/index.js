@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Compute a QR factorization of a complex matrix (blocked algorithm).
 *

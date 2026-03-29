@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes the minimum norm solution to a complex linear least squares problem using SVD
+* Computes the minimum norm solution to a complex linear least squares problem using SVD.
 *
 * @module @stdlib/lapack/base/zgelss
 *

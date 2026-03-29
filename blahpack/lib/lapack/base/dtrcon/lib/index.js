@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimates the reciprocal condition number of a triangular matrix
+* Estimates the reciprocal condition number of a triangular matrix.
 *
 * @module @stdlib/lapack/base/dtrcon
 *

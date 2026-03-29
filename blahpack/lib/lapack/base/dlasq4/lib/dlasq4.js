@@ -49,7 +49,7 @@ var base = require( './base.js' );
 * @returns {*} result
 */
 function dlasq4( i0, n0, z, stride, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g ) {
-	var oz = stride2offset( N, stride );
+	var oz = stride2offset( 4 * n0, stride );
 	return base( i0, n0, z, stride, oz, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g );
 }
 

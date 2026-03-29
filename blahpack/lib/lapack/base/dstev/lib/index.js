@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute all eigenvalues and optionally eigenvectors of a real symmetric tridiagonal matrix
+* Compute all eigenvalues and optionally eigenvectors of a real symmetric tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/dstev
 *

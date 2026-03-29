@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtrttp = require( '@stdlib/lapack/base/dtrttp' );

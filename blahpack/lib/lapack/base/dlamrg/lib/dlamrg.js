@@ -26,8 +26,8 @@ function dlamrg( n1, n2, a, strideA, dtrd1, dtrd2, INDEX, strideINDEX ) { // esl
 	var oindex;
 	var oa;
 
-	oa = stride2offset( N, strideA );
-	oindex = stride2offset( N, strideINDEX );
+	oa = stride2offset( n1 + n2, strideA );
+	oindex = stride2offset( n1 + n2, strideINDEX );
 	return base( n1, n2, a, strideA, oa, dtrd1, dtrd2, INDEX, strideINDEX, oindex );
 }
 

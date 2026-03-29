@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute row and column scalings for a complex general matrix
+* Compute row and column scalings for a complex general matrix.
 *
 * @module @stdlib/lapack/base/zgeequ
 *

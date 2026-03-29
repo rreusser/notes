@@ -28,7 +28,7 @@ var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a tridiagonal system of the form A * X = B using the L*D*L^T
+* Solves a tridiagonal system of the form A _ X = B using the L_D*L^T.
 * factorization of A computed by dpttrf.
 *
 * D is a diagonal matrix specified in the vector D, L is a unit bidiagonal
@@ -67,11 +67,12 @@ function dptts2( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, B, strideB1,
 	}
 
 	// Solve A * X = B using the factorization A = L*D*L^T,
-	// overwriting each right hand side vector with its solution.
+	// Overwriting each right hand side vector with its solution.
 	for ( j = 0; j < nrhs; j++ ) {
 		ib = offsetB + ( j * strideB2 );
 
 		// Solve L * x = b (forward substitution)
+
 		// B(i,j) = B(i,j) - B(i-1,j) * E(i-1), for i = 1..N-1 (0-based)
 		ie = offsetE;
 		for ( i = 1; i < N; i++ ) {

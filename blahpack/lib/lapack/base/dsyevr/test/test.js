@@ -1,12 +1,14 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsyevr = require( './../lib/base.js' );
@@ -14,32 +16,60 @@ var dsyevr = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsyevr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dsyevr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch (actual=' + actual.length + ', expected=' + expected.length + ')' );
+	assert.equal( actual.length, expected.length, msg + ': length mismatch (actual=' + actual.length + ', expected=' + expected.length + ')' ); // eslint-disable-line max-len
 	for ( i = 0; i < expected.length; i++ ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
 
 /**
-* 4x4 symmetric matrix (column-major flat):
+* 4x4 symmetric matrix (column-major flat):.
 *   [10    1     0.5   0.25]
 *   [1     8     0.5   0   ]
 *   [0.5   0.5   12    1   ]
@@ -50,35 +80,65 @@ function assertArrayClose( actual, expected, tol, msg ) {
 function symMatrix4Lower() {
 	// Full column-major, but only lower triangle matters for UPLO='L'
 	return new Float64Array([
-		10, 1, 0.5, 0.25,
-		1, 8, 0.5, 0,
-		0.5, 0.5, 12, 1,
-		0.25, 0, 1, 6
-	]);
-}
-
-function symMatrix4Upper() {
-	// Full column-major, but only upper triangle matters for UPLO='U'
-	return new Float64Array([
-		10, 1, 0.5, 0.25,
-		1, 8, 0.5, 0,
-		0.5, 0.5, 12, 1,
-		0.25, 0, 1, 6
+		10,
+		1,
+		0.5,
+		0.25,
+		1,
+		8,
+		0.5,
+		0,
+		0.5,
+		0.5,
+		12,
+		1,
+		0.25,
+		0,
+		1,
+		6
 	]);
 }
 
 /**
-* Verify eigenvector property: A*v = lambda*v for each eigenpair.
+* SymMatrix4Upper.
+*
+* @private
+* @returns {*} result
+*/
+function symMatrix4Upper() {
+	// Full column-major, but only upper triangle matters for UPLO='U'
+	return new Float64Array([
+		10,
+		1,
+		0.5,
+		0.25,
+		1,
+		8,
+		0.5,
+		0,
+		0.5,
+		0.5,
+		12,
+		1,
+		0.25,
+		0,
+		1,
+		6
+	]);
+}
+
+/**
+* Verify eigenvector property: A_v = lambda_v for each eigenpair.
 * Aorig is N x N symmetric (Float64Array column-major), Z is N x M, w is eigenvalues.
 */
 function verifyEigenpairs( Aorig, N, w, Z, M, tol, msg ) {
 	var Avec;
+	var err;
+	var nrm;
 	var v;
 	var i;
 	var j;
 	var k;
-	var err;
-	var nrm;
 
 	for ( k = 0; k < M; k++ ) {
 		Avec = new Float64Array( N );
@@ -106,8 +166,24 @@ function verifyEigenpairs( Aorig, N, w, Z, M, tol, msg ) {
 		}
 		err = Math.sqrt( err );
 		nrm = Math.sqrt( nrm );
-		assert.ok( err / ( nrm * Math.max( Math.abs( w[ k ] ), 1.0 ) ) < tol, msg + ': eigenpair ' + k + ' residual too large (' + err + ')' );
+		assert.ok( err / ( nrm * Math.max( Math.abs( w[ k ] ), 1.0 ) ) < tol, msg + ': eigenpair ' + k + ' residual too large (' + err + ')' ); // eslint-disable-line max-len
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -134,12 +210,10 @@ test( 'dsyevr: V_A_L - compute all eigenvectors, lower', function t() {
 	WORK = new Float64Array( 26 * N );
 	IWORK = new Int32Array( 10 * N );
 	out = {};
-
-	info = dsyevr( 'compute-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	info = dsyevr( 'compute-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, tc.M );
-	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
+	assertArrayClose( toArray( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' ); // eslint-disable-line max-len
 	verifyEigenpairs( symMatrix4Lower(), N, w, Z, out.M, 1e-12, 'eigenpairs' );
 });
 
@@ -164,12 +238,10 @@ test( 'dsyevr: V_A_U - compute all eigenvectors, upper', function t() {
 	WORK = new Float64Array( 26 * N );
 	IWORK = new Int32Array( 10 * N );
 	out = {};
-
-	info = dsyevr( 'compute-vectors', 'all', 'upper', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	info = dsyevr( 'compute-vectors', 'all', 'upper', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, tc.M );
-	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
+	assertArrayClose( toArray( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' ); // eslint-disable-line max-len
 	verifyEigenpairs( symMatrix4Upper(), N, w, Z, out.M, 1e-12, 'eigenpairs' );
 });
 
@@ -194,12 +266,10 @@ test( 'dsyevr: N_A_L - eigenvalues only, all, lower', function t() {
 	WORK = new Float64Array( 26 * N );
 	IWORK = new Int32Array( 10 * N );
 	out = {};
-
-	info = dsyevr( 'no-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	info = dsyevr( 'no-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, tc.M );
-	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
+	assertArrayClose( toArray( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' ); // eslint-disable-line max-len
 });
 
 test( 'dsyevr: V_V_L - value range, lower, compute vectors', function t() {
@@ -223,12 +293,10 @@ test( 'dsyevr: V_V_L - value range, lower, compute vectors', function t() {
 	WORK = new Float64Array( 26 * N );
 	IWORK = new Int32Array( 10 * N );
 	out = {};
-
-	info = dsyevr( 'compute-vectors', 'value', 'lower', N, A, 1, N, 0, 7.0, 11.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	info = dsyevr( 'compute-vectors', 'value', 'lower', N, A, 1, N, 0, 7.0, 11.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, tc.M );
-	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
+	assertArrayClose( toArray( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' ); // eslint-disable-line max-len
 	verifyEigenpairs( symMatrix4Lower(), N, w, Z, out.M, 1e-12, 'eigenpairs' );
 });
 
@@ -253,12 +321,10 @@ test( 'dsyevr: V_I_L - index range, lower, compute vectors', function t() {
 	WORK = new Float64Array( 26 * N );
 	IWORK = new Int32Array( 10 * N );
 	out = {};
-
-	info = dsyevr( 'compute-vectors', 'index', 'lower', N, A, 1, N, 0, 0.0, 0.0, 2, 3, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	info = dsyevr( 'compute-vectors', 'index', 'lower', N, A, 1, N, 0, 0.0, 0.0, 2, 3, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, tc.M );
-	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
+	assertArrayClose( toArray( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' ); // eslint-disable-line max-len
 	verifyEigenpairs( symMatrix4Lower(), N, w, Z, out.M, 1e-12, 'eigenpairs' );
 });
 
@@ -279,9 +345,7 @@ test( 'dsyevr: N0 - N=0', function t() {
 	WORK = new Float64Array( 1 );
 	IWORK = new Int32Array( 1 );
 	out = {};
-
-	info = dsyevr( 'compute-vectors', 'all', 'lower', 0, A, 1, 1, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 1, IWORK, 1, 0, 1 );
-
+	info = dsyevr( 'compute-vectors', 'all', 'lower', 0, A, 1, 1, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 1, IWORK, 1, 0, 1 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, 0 );
 });
@@ -305,9 +369,7 @@ test( 'dsyevr: N1 - N=1', function t() {
 	WORK = new Float64Array( 26 );
 	IWORK = new Int32Array( 10 );
 	out = {};
-
-	info = dsyevr( 'compute-vectors', 'all', 'lower', 1, A, 1, 1, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 );
-
+	info = dsyevr( 'compute-vectors', 'all', 'lower', 1, A, 1, 1, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, 1 );
 	assertClose( w[ 0 ], 5.0, 1e-14, 'eigenvalue' );
@@ -335,133 +397,226 @@ test( 'dsyevr: N_V_U - eigenvalues only, value range, upper', function t() {
 	WORK = new Float64Array( 26 * N );
 	IWORK = new Int32Array( 10 * N );
 	out = {};
-
-	info = dsyevr( 'no-vectors', 'value', 'upper', N, A, 1, N, 0, 7.0, 11.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	info = dsyevr( 'no-vectors', 'value', 'upper', N, A, 1, N, 0, 7.0, 11.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, tc.M );
-	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
+	assertArrayClose( toArray( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' ); // eslint-disable-line max-len
 });
 
-test( 'dsyevr: N1_V_in_range - N=1 value range eigenvalue in range', function t() {
-	var A = new Float64Array( [ 5.0 ] );
-	var w = new Float64Array( 1 );
-	var Z = new Float64Array( 1 );
-	var ISUPPZ = new Int32Array( 2 );
-	var WORK = new Float64Array( 26 );
-	var IWORK = new Int32Array( 10 );
-	var out = {};
+test( 'dsyevr: N1_V_in_range - N=1 value range eigenvalue in range', function t() { // eslint-disable-line max-len
+	var ISUPPZ;
+	var IWORK;
+	var WORK;
+	var info;
+	var out;
+	var A;
+	var w;
+	var Z;
 
-	var info = dsyevr( 'compute-vectors', 'value', 'lower', 1, A, 1, 1, 0, 4.0, 6.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 );
-
+	A = new Float64Array( [ 5.0 ] );
+	w = new Float64Array( 1 );
+	Z = new Float64Array( 1 );
+	ISUPPZ = new Int32Array( 2 );
+	WORK = new Float64Array( 26 );
+	IWORK = new Int32Array( 10 );
+	out = {};
+	info = dsyevr( 'compute-vectors', 'value', 'lower', 1, A, 1, 1, 0, 4.0, 6.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, 1 );
 	assertClose( w[ 0 ], 5.0, 1e-14, 'eigenvalue' );
 });
 
-test( 'dsyevr: N1_V_out_range - N=1 value range eigenvalue out of range', function t() {
-	var A = new Float64Array( [ 5.0 ] );
-	var w = new Float64Array( 1 );
-	var Z = new Float64Array( 1 );
-	var ISUPPZ = new Int32Array( 2 );
-	var WORK = new Float64Array( 26 );
-	var IWORK = new Int32Array( 10 );
-	var out = {};
+test( 'dsyevr: N1_V_out_range - N=1 value range eigenvalue out of range', function t() { // eslint-disable-line max-len
+	var ISUPPZ;
+	var IWORK;
+	var WORK;
+	var info;
+	var out;
+	var A;
+	var w;
+	var Z;
 
-	var info = dsyevr( 'compute-vectors', 'value', 'lower', 1, A, 1, 1, 0, 6.0, 8.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 );
-
+	A = new Float64Array( [ 5.0 ] );
+	w = new Float64Array( 1 );
+	Z = new Float64Array( 1 );
+	ISUPPZ = new Int32Array( 2 );
+	WORK = new Float64Array( 26 );
+	IWORK = new Int32Array( 10 );
+	out = {};
+	info = dsyevr( 'compute-vectors', 'value', 'lower', 1, A, 1, 1, 0, 6.0, 8.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26, IWORK, 1, 0, 10 ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, 0, 'no eigenvalues in range' );
 });
 
 test( 'dsyevr: tiny_matrix - scaling path for small norm', function t() {
-	// Matrix with very small entries to trigger anrm < rmin scaling
-	var tiny = 1e-170;
-	var N = 4;
-	var A = new Float64Array( [
-		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
-		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
-		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
-		0.25 * tiny, 0, 1 * tiny, 6 * tiny
-	] );
-	var w = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-	var ISUPPZ = new Int32Array( 2 * N );
-	var WORK = new Float64Array( 26 * N );
-	var IWORK = new Int32Array( 10 * N );
-	var out = {};
+	var ISUPPZ;
+	var IWORK;
+	var tiny;
+	var WORK;
+	var info;
+	var out;
+	var N;
+	var A;
+	var w;
+	var Z;
 
-	var info = dsyevr( 'compute-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	tiny = 1e-170;
+	N = 4;
+	A = new Float64Array([
+		10 * tiny,
+		1 * tiny,
+		0.5 * tiny,
+		0.25 * tiny,
+		1 * tiny,
+		8 * tiny,
+		0.5 * tiny,
+		0,
+		0.5 * tiny,
+		0.5 * tiny,
+		12 * tiny,
+		1 * tiny,
+		0.25 * tiny,
+		0,
+		1 * tiny,
+		6 * tiny
+	]);
+	w = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	ISUPPZ = new Int32Array( 2 * N );
+	WORK = new Float64Array( 26 * N );
+	IWORK = new Int32Array( 10 * N );
+	out = {};
+	info = dsyevr( 'compute-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 	assert.equal( out.M, N, 'M' );
-	// Eigenvalues should be the original eigenvalues * tiny
 	assert.ok( w[ 0 ] > 0, 'smallest eigenvalue positive' );
 });
 
-test( 'dsyevr: tiny_matrix_upper - scaling path for small norm, upper', function t() {
-	var tiny = 1e-170;
-	var N = 4;
-	var A = new Float64Array( [
-		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
-		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
-		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
-		0.25 * tiny, 0, 1 * tiny, 6 * tiny
-	] );
-	var w = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-	var ISUPPZ = new Int32Array( 2 * N );
-	var WORK = new Float64Array( 26 * N );
-	var IWORK = new Int32Array( 10 * N );
-	var out = {};
+test( 'dsyevr: tiny_matrix_upper - scaling path for small norm, upper', function t() { // eslint-disable-line max-len
+	var ISUPPZ;
+	var IWORK;
+	var tiny;
+	var WORK;
+	var info;
+	var out;
+	var N;
+	var A;
+	var w;
+	var Z;
 
-	var info = dsyevr( 'compute-vectors', 'all', 'upper', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	tiny = 1e-170;
+	N = 4;
+	A = new Float64Array([
+		10 * tiny,
+		1 * tiny,
+		0.5 * tiny,
+		0.25 * tiny,
+		1 * tiny,
+		8 * tiny,
+		0.5 * tiny,
+		0,
+		0.5 * tiny,
+		0.5 * tiny,
+		12 * tiny,
+		1 * tiny,
+		0.25 * tiny,
+		0,
+		1 * tiny,
+		6 * tiny
+	]);
+	w = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	ISUPPZ = new Int32Array( 2 * N );
+	WORK = new Float64Array( 26 * N );
+	IWORK = new Int32Array( 10 * N );
+	out = {};
+	info = dsyevr( 'compute-vectors', 'all', 'upper', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 	assert.equal( out.M, N, 'M' );
 });
 
-test( 'dsyevr: tiny_eigenvalues_only - scaling path with eigenvalues only, dsterf path', function t() {
-	var tiny = 1e-170;
-	var N = 4;
-	var A = new Float64Array( [
-		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
-		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
-		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
-		0.25 * tiny, 0, 1 * tiny, 6 * tiny
-	] );
-	var w = new Float64Array( N );
-	var Z = new Float64Array( 1 );
-	var ISUPPZ = new Int32Array( 2 * N );
-	var WORK = new Float64Array( 26 * N );
-	var IWORK = new Int32Array( 10 * N );
-	var out = {};
+test( 'dsyevr: tiny_eigenvalues_only - scaling path with eigenvalues only, dsterf path', function t() { // eslint-disable-line max-len
+	var ISUPPZ;
+	var IWORK;
+	var tiny;
+	var WORK;
+	var info;
+	var out;
+	var N;
+	var A;
+	var w;
+	var Z;
 
-	var info = dsyevr( 'no-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	tiny = 1e-170;
+	N = 4;
+	A = new Float64Array([
+		10 * tiny,
+		1 * tiny,
+		0.5 * tiny,
+		0.25 * tiny,
+		1 * tiny,
+		8 * tiny,
+		0.5 * tiny,
+		0,
+		0.5 * tiny,
+		0.5 * tiny,
+		12 * tiny,
+		1 * tiny,
+		0.25 * tiny,
+		0,
+		1 * tiny,
+		6 * tiny
+	]);
+	w = new Float64Array( N );
+	Z = new Float64Array( 1 );
+	ISUPPZ = new Int32Array( 2 * N );
+	WORK = new Float64Array( 26 * N );
+	IWORK = new Int32Array( 10 * N );
+	out = {};
+	info = dsyevr( 'no-vectors', 'all', 'lower', N, A, 1, N, 0, 0.0, 0.0, 0, 0, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 	assert.equal( out.M, N, 'M' );
 });
 
 test( 'dsyevr: value_range_with_scaling - scaling + value range', function t() {
-	var tiny = 1e-170;
-	var N = 4;
-	var A = new Float64Array( [
-		10 * tiny, 1 * tiny, 0.5 * tiny, 0.25 * tiny,
-		1 * tiny, 8 * tiny, 0.5 * tiny, 0,
-		0.5 * tiny, 0.5 * tiny, 12 * tiny, 1 * tiny,
-		0.25 * tiny, 0, 1 * tiny, 6 * tiny
-	] );
-	var w = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-	var ISUPPZ = new Int32Array( 2 * N );
-	var WORK = new Float64Array( 26 * N );
-	var IWORK = new Int32Array( 10 * N );
-	var out = {};
+	var ISUPPZ;
+	var IWORK;
+	var tiny;
+	var WORK;
+	var info;
+	var out;
+	var N;
+	var A;
+	var w;
+	var Z;
 
-	// Value range that should capture some eigenvalues
-	var info = dsyevr( 'compute-vectors', 'value', 'lower', N, A, 1, N, 0, 7e-170, 11e-170, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	tiny = 1e-170;
+	N = 4;
+	A = new Float64Array([
+		10 * tiny,
+		1 * tiny,
+		0.5 * tiny,
+		0.25 * tiny,
+		1 * tiny,
+		8 * tiny,
+		0.5 * tiny,
+		0,
+		0.5 * tiny,
+		0.5 * tiny,
+		12 * tiny,
+		1 * tiny,
+		0.25 * tiny,
+		0,
+		1 * tiny,
+		6 * tiny
+	]);
+	w = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	ISUPPZ = new Int32Array( 2 * N );
+	WORK = new Float64Array( 26 * N );
+	IWORK = new Int32Array( 10 * N );
+	out = {};
+	info = dsyevr( 'compute-vectors', 'value', 'lower', N, A, 1, N, 0, 7e-170, 11e-170, 0, 0, 0.0, out, w, 1, 0, Z, 1, N, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 	assert.ok( out.M >= 0, 'M should be non-negative' );
 });
@@ -487,10 +642,8 @@ test( 'dsyevr: N_I_L - eigenvalues only, index range, lower', function t() {
 	WORK = new Float64Array( 26 * N );
 	IWORK = new Int32Array( 10 * N );
 	out = {};
-
-	info = dsyevr( 'no-vectors', 'index', 'lower', N, A, 1, N, 0, 0.0, 0.0, 1, 2, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N );
-
+	info = dsyevr( 'no-vectors', 'index', 'lower', N, A, 1, N, 0, 0.0, 0.0, 1, 2, 0.0, out, w, 1, 0, Z, 1, 1, 0, ISUPPZ, 1, 0, WORK, 1, 0, 26 * N, IWORK, 1, 0, 10 * N ); // eslint-disable-line max-len
 	assert.equal( info, 0 );
 	assert.equal( out.M, tc.M );
-	assertArrayClose( Array.from( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' );
+	assertArrayClose( toArray( w.subarray( 0, out.M ) ), tc.w, 1e-12, 'eigenvalues' ); // eslint-disable-line max-len
 });

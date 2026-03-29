@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dstevx = require( '@stdlib/lapack/base/dstevx' );

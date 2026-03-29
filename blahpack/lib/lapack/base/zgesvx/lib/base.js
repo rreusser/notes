@@ -44,7 +44,7 @@ var EPS = dlamch( 'epsilon' );
 // MAIN //
 
 /**
-* Expert driver for solving a complex system of linear equations A*X = B,
+* Expert driver for solving a complex system of linear equations A*X = B,.
 * using the LU factorization. Provides equilibration, condition estimation,
 * iterative refinement, and error bounds.
 *
@@ -54,8 +54,8 @@ var EPS = dlamch( 'epsilon' );
 *   'factored' - use pre-factored AF and IPIV (and pre-computed R,C if equilibrated)
 *
 * TRANS specifies the system:
-*   'no-transpose' - A * X = B
-*   'transpose' - A^T * X = B
+*   'no-transpose' - A _ X = B
+_   'transpose' - A^T _ X = B
 *   'conjugate-transpose' - A^H * X = B
 *
 * EQUED (input if FACT='factored', output otherwise):
@@ -129,12 +129,12 @@ function zgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 	var RCOND;
 	var norm;
 	var info;
-	var Bv;
-	var Xv;
 	var sb1;
 	var sb2;
 	var sx1;
 	var sx2;
+	var Bv;
+	var Xv;
 	var oB;
 	var oX;
 	var ri;
@@ -159,7 +159,12 @@ function zgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 
 	// Quick return if possible
 	if ( N === 0 || nrhs === 0 ) {
-		return { 'info': 0, 'equed': equed, 'rcond': 1.0, 'rpvgrw': 1.0 };
+		return {
+			'info': 0,
+			'equed': equed,
+			'rcond': 1.0,
+			'rpvgrw': 1.0
+		};
 	}
 
 	// Equilibrate if requested
@@ -224,7 +229,12 @@ function zgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 			} else {
 				rpvgrw = zlange( 'max', N, info, A, strideA1, strideA2, offsetA, RWORK, strideRWORK, offsetRWORK ) / rpvgrw;
 			}
-			return { 'info': info, 'equed': equed, 'rcond': 0.0, 'rpvgrw': rpvgrw };
+			return {
+				'info': info,
+				'equed': equed,
+				'rcond': 0.0,
+				'rpvgrw': rpvgrw
+			};
 		}
 	}
 
@@ -290,7 +300,12 @@ function zgesvx( fact, trans, N, nrhs, A, strideA1, strideA2, offsetA, AF, strid
 		info = N + 1;
 	}
 
-	return { 'info': info, 'equed': equed, 'rcond': rcond, 'rpvgrw': rpvgrw };
+	return {
+		'info': info,
+		'equed': equed,
+		'rcond': rcond,
+		'rpvgrw': rpvgrw
+	};
 }
 
 

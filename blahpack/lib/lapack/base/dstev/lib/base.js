@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -24,7 +23,7 @@ var RMAX = Math.sqrt( BIGNUM );
 // MAIN //
 
 /**
-* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric
+* Computes all eigenvalues and, optionally, eigenvectors of a real symmetric.
 * tridiagonal matrix A.
 *
 * The eigenvalues are returned in ascending order in D. If eigenvectors are

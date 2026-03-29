@@ -1,28 +1,39 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dtfttr = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dtfttr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dtfttr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
 /**
@@ -52,11 +63,27 @@ function runFixtureTest( name, transr, uplo ) {
 	assert.equal( info, tc.info, name + ' info' );
 
 	expected = tc.A;
-	actual = Array.from( A );
+	actual = toArray( A );
 	assert.equal( actual.length, expected.length, name + ': length mismatch' );
 	for ( i = 0; i < expected.length; i += 1 ) {
-		assert.equal( actual[ i ], expected[ i ], name + ': A[' + i + '] expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		assert.equal( actual[ i ], expected[ i ], name + ': A[' + i + '] expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -67,19 +94,27 @@ test( 'dtfttr is a function', function t() {
 });
 
 test( 'dtfttr: N=0 quick return', function t() {
-	var A = new Float64Array( [ -1.0 ] );
-	var arf = new Float64Array( 1 );
-	var info = dtfttr( 'no-transpose', 'lower', 0, arf, 1, 0, A, 1, 1, 0, 1 );
+	var info;
+	var arf;
+	var A;
+
+	A = new Float64Array( [ -1.0 ] );
+	arf = new Float64Array( 1 );
+	info = dtfttr( 'no-transpose', 'lower', 0, arf, 1, 0, A, 1, 1, 0, 1 );
 	assert.equal( info, 0, 'info' );
-	// A should be unchanged
 	assert.equal( A[ 0 ], -1.0, 'A unchanged' );
 });
 
 test( 'dtfttr: N=1 quick return', function t() {
-	var tc = findCase( 'n1' );
-	var arf = new Float64Array( [ 42.0 ] );
-	var A = new Float64Array( 1 );
-	var info = dtfttr( 'no-transpose', 'lower', 1, arf, 1, 0, A, 1, 1, 0, 1 );
+	var info;
+	var arf;
+	var tc;
+	var A;
+
+	tc = findCase( 'n1' );
+	arf = new Float64Array( [ 42.0 ] );
+	A = new Float64Array( 1 );
+	info = dtfttr( 'no-transpose', 'lower', 1, arf, 1, 0, A, 1, 1, 0, 1 );
 	assert.equal( info, 0, 'info' );
 	assert.equal( A[ 0 ], tc.a00, 'A[0,0]' );
 });
@@ -171,17 +206,12 @@ test( 'dtfttr: N=5, normal, lower, LDA=8', function t() {
 	arf = new Float64Array( tc.ARF );
 	A = new Float64Array( lda * n );
 	info = dtfttr( 'no-transpose', 'lower', n, arf, 1, 0, A, 1, lda, 0, lda );
-
 	assert.equal( info, tc.info, 'info' );
-
-	// The fixture uses print_matrix(A, LDA=8, M=5, N=5) which outputs
-	// 5 rows from each of 5 columns: A(1:5,1) then A(1:5,2) etc.
-	// In JS with strideA1=1, strideA2=lda=8, element (i,j) is at j*lda+i.
 	expected = tc.A;
 	ei = 0;
 	for ( j = 0; j < n; j += 1 ) {
 		for ( i = 0; i < n; i += 1 ) {
-			assert.equal( A[ ( j * lda ) + i ], expected[ ei ], 'A(' + i + ',' + j + ')' );
+			assert.equal( A[ ( j * lda ) + i ], expected[ ei ], 'A(' + i + ',' + j + ')' ); // eslint-disable-line max-len
 			ei += 1;
 		}
 	}
@@ -199,14 +229,10 @@ test( 'dtfttr: ARF offset', function t() {
 
 	tc = findCase( 'n5_N_L' );
 	n = tc.n;
-
-	// Prepend 3 dummy values to ARF
-	arf = new Float64Array( [ 99.0, 88.0, 77.0 ].concat( Array.from( tc.ARF ) ) );
+	arf = new Float64Array( [ 99.0, 88.0, 77.0 ].concat( toArray( tc.ARF ) ) );
 	A = new Float64Array( n * n );
 	info = dtfttr( 'no-transpose', 'lower', n, arf, 1, 3, A, 1, n, 0, n );
-
 	assert.equal( info, 0, 'info' );
-
 	expected = tc.A;
 	for ( i = 0; i < expected.length; i += 1 ) {
 		assert.equal( A[ i ], expected[ i ], 'A[' + i + ']' );
@@ -225,14 +251,10 @@ test( 'dtfttr: A offset', function t() {
 
 	tc = findCase( 'n5_N_L' );
 	n = tc.n;
-
 	arf = new Float64Array( tc.ARF );
-	// Prepend 2 dummy values to A
 	A = new Float64Array( 2 + ( n * n ) );
 	info = dtfttr( 'no-transpose', 'lower', n, arf, 1, 0, A, 1, n, 2, n );
-
 	assert.equal( info, 0, 'info' );
-
 	expected = tc.A;
 	for ( i = 0; i < expected.length; i += 1 ) {
 		assert.equal( A[ 2 + i ], expected[ i ], 'A[' + i + ']' );

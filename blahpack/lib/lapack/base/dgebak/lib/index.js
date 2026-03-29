@@ -1,8 +1,9 @@
 
+
 'use strict';
 
 /**
-* Back-transforms eigenvectors after balancing by dgebal.
+* Back-transforms eigenvectors after balancing by dgebal
 *
 * @module @stdlib/lapack/base/dgebak
 *

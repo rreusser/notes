@@ -40,11 +40,11 @@ var SAFMIN = dlamch( 'safe-minimum' );
 // MAIN //
 
 /**
-* Improves the computed solution to a system of linear equations when the
+* Improves the computed solution to a system of linear equations when the.
 * coefficient matrix is symmetric indefinite, and provides error bounds
 * and backward error estimates for the solution.
 *
-* Uses the factorization A = U*D*U^T or A = L*D*L^T computed by dsytrf.
+* Uses the factorization A = U_D_U^T or A = L_D_L^T computed by dsytrf.
 * WORK (3*N) and IWORK (N) are allocated internally.
 *
 * IPIV must contain 0-based pivot indices (as produced by dsytf2/dsytrf).
@@ -87,15 +87,15 @@ var SAFMIN = dlamch( 'safe-minimum' );
 * @returns {integer} info - 0 if successful
 */
 function dsyrfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params, no-unused-vars
-	var upper;
 	var lstres;
+	var upper;
 	var count;
 	var ISAVE;
-	var IWRK;
 	var safe1;
 	var safe2;
-	var WRK;
+	var IWRK;
 	var KASE;
+	var WRK;
 	var EST;
 	var xk;
 	var nz;
@@ -139,10 +139,12 @@ function dsyrfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, s
 			dcopy( N, B, strideB1, offsetB + ( j * strideB2 ), WRK, 1, N );
 
 			// WRK(N:2N-1) = B(:,j) - A * X(:,j)
+
 			// dsymv: y := alpha*A*x + beta*y
 			dsymv( uplo, N, -1.0, A, strideA1, strideA2, offsetA, X, strideX1, offsetX + ( j * strideX2 ), 1.0, WRK, 1, N );
 
 			// Compute componentwise relative backward error
+
 			// WRK(0:N-1) = abs(B(:,j))
 			for ( i = 0; i < N; i++ ) {
 				WRK[ i ] = Math.abs( B[ offsetB + ( i * strideB1 ) + ( j * strideB2 ) ] );
@@ -199,7 +201,7 @@ function dsyrfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, s
 		}
 
 		// Bound error from formula using DLACN2 to estimate the infinity-norm
-		// of inv(A) * diag(W)
+		// Of inv(A) * diag(W)
 
 		// Set up WRK(0:N-1) = abs(R) + NZ*EPS*(abs(A)*abs(X)+abs(B))
 		for ( i = 0; i < N; i++ ) {

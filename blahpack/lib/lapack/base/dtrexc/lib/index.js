@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Reorders the real Schur factorization by an orthogonal similarity transformation
+* Reorders the real Schur factorization by an orthogonal similarity transformation.
 *
 * @module @stdlib/lapack/base/dtrexc
 *

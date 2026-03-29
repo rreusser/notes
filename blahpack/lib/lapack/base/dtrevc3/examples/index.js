@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtrevc3 = require( '@stdlib/lapack/base/dtrevc3' );

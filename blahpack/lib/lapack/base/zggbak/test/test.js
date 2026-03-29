@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 /**
 * @license Apache-2.0
 *
@@ -19,30 +21,42 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 var zggbak = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zggbak.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zggbak.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
-// HELPERS //
 
+// FUNCTIONS //
+
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, msg ) {
 	var relErr;
 	var i;
-	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' );
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch (' + actual.length + ' vs ' + expected.length + ')' ); // eslint-disable-line max-len
 	for ( i = 0; i < expected.length; i++ ) {
 		if ( expected[ i ] === 0.0 ) {
-			assert.ok( Math.abs( actual[ i ] ) <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+			assert.ok( Math.abs( actual[ i ] ) <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 		} else {
-			relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
-			assert.ok( relErr <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+			relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
+			assert.ok( relErr <= 1e-14, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 		}
 	}
 }
@@ -57,7 +71,7 @@ function cset( M, LDV, i, j, re, im ) {
 }
 
 /**
-* Extract the complex matrix as a flat interleaved array (column-by-column,
+* Extract the complex matrix as a flat interleaved array (column-by-column,.
 * matching Fortran fixture output format from print_cmatrix).
 *
 * @param {Float64Array} V - Float64 view of matrix
@@ -79,99 +93,153 @@ function extractCMatrix( V, LDV, n, m ) {
 	return result;
 }
 
+
+// FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
+
 // TESTS //
 
 test( 'zggbak: main export is a function', function t() {
 	assert.strictEqual( typeof zggbak, 'function' );
 });
 
-test( 'zggbak: attached to the main export is an `ndarray` method', function t() {
+test( 'zggbak: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
 	assert.strictEqual( typeof zggbak.ndarray, 'function' );
 });
 
 test( 'zggbak: JOB=N quick return (no transformation)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'job_n'; } );
-	var n = 3;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( [ 2.0, 3.0, 4.0 ] );
-	var rscale = new Float64Array( [ 5.0, 6.0, 7.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'job_n';
+	} );
+	n = 3;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( [ 2.0, 3.0, 4.0 ] );
+	rscale = new Float64Array( [ 5.0, 6.0, 7.0 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 2.0 );
 	cset( Vv, LDV, 1, 0, 3.0, 4.0 );
 	cset( Vv, LDV, 2, 0, 5.0, 6.0 );
 	cset( Vv, LDV, 0, 1, 7.0, 8.0 );
 	cset( Vv, LDV, 1, 1, 9.0, 10.0 );
 	cset( Vv, LDV, 2, 1, 11.0, 12.0 );
-
-	info = base( 'none', 'right', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'none', 'right', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
-test( 'zggbak: JOB=S, SIDE=R (scale right eigenvectors by RSCALE)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'scale_right'; } );
-	var n = 3;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 3 );
-	var rscale = new Float64Array( [ 2.0, 3.0, 0.5 ] );
+test( 'zggbak: JOB=S, SIDE=R (scale right eigenvectors by RSCALE)', function t() { // eslint-disable-line max-len
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'scale_right';
+	} );
+	n = 3;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 3 );
+	rscale = new Float64Array( [ 2.0, 3.0, 0.5 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 2.0 );
 	cset( Vv, LDV, 1, 0, 3.0, 4.0 );
 	cset( Vv, LDV, 2, 0, 5.0, 6.0 );
 	cset( Vv, LDV, 0, 1, 7.0, 8.0 );
 	cset( Vv, LDV, 1, 1, 9.0, 10.0 );
 	cset( Vv, LDV, 2, 1, 11.0, 12.0 );
-
-	info = base( 'scale', 'right', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'scale', 'right', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
-test( 'zggbak: JOB=S, SIDE=L (scale left eigenvectors by LSCALE)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'scale_left'; } );
-	var n = 3;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( [ 2.0, 0.5, 3.0 ] );
-	var rscale = new Float64Array( 3 );
+test( 'zggbak: JOB=S, SIDE=L (scale left eigenvectors by LSCALE)', function t() { // eslint-disable-line max-len
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'scale_left';
+	} );
+	n = 3;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( [ 2.0, 0.5, 3.0 ] );
+	rscale = new Float64Array( 3 );
 	cset( Vv, LDV, 0, 0, 1.0, 2.0 );
 	cset( Vv, LDV, 1, 0, 3.0, 4.0 );
 	cset( Vv, LDV, 2, 0, 5.0, 6.0 );
 	cset( Vv, LDV, 0, 1, 7.0, 8.0 );
 	cset( Vv, LDV, 1, 1, 9.0, 10.0 );
 	cset( Vv, LDV, 2, 1, 11.0, 12.0 );
-
-	info = base( 'scale', 'left', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'scale', 'left', n, 1, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=P, SIDE=R (permute right eigenvectors)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'permute_right'; } );
-	var n = 4;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 4 );
-	var rscale = new Float64Array( [ 3.0, 0.0, 0.0, 2.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'permute_right';
+	} );
+	n = 4;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 4 );
+	rscale = new Float64Array( [ 3.0, 0.0, 0.0, 2.0 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
@@ -180,24 +248,32 @@ test( 'zggbak: JOB=P, SIDE=R (permute right eigenvectors)', function t() {
 	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
 	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
 	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
-
-	info = base( 'permute', 'right', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'permute', 'right', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=P, SIDE=L (permute left eigenvectors)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'permute_left'; } );
-	var n = 4;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( [ 4.0, 0.0, 0.0, 1.0 ] );
-	var rscale = new Float64Array( 4 );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'permute_left';
+	} );
+	n = 4;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( [ 4.0, 0.0, 0.0, 1.0 ] );
+	rscale = new Float64Array( 4 );
 	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
@@ -206,24 +282,32 @@ test( 'zggbak: JOB=P, SIDE=L (permute left eigenvectors)', function t() {
 	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
 	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
 	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
-
-	info = base( 'permute', 'left', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'permute', 'left', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=B, SIDE=R (both scale and permute, right)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'both_right'; } );
-	var n = 4;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 4 );
-	var rscale = new Float64Array( [ 3.0, 2.0, 0.5, 2.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'both_right';
+	} );
+	n = 4;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 4 );
+	rscale = new Float64Array( [ 3.0, 2.0, 0.5, 2.0 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 1.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 2.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 3.0 );
@@ -232,24 +316,32 @@ test( 'zggbak: JOB=B, SIDE=R (both scale and permute, right)', function t() {
 	cset( Vv, LDV, 1, 1, 6.0, 6.0 );
 	cset( Vv, LDV, 2, 1, 7.0, 7.0 );
 	cset( Vv, LDV, 3, 1, 8.0, 8.0 );
-
-	info = base( 'both', 'right', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'both', 'right', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: JOB=B, SIDE=L (both scale and permute, left)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'both_left'; } );
-	var n = 4;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( [ 4.0, 3.0, 0.25, 1.0 ] );
-	var rscale = new Float64Array( 4 );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'both_left';
+	} );
+	n = 4;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( [ 4.0, 3.0, 0.25, 1.0 ] );
+	rscale = new Float64Array( 4 );
 	cset( Vv, LDV, 0, 0, 1.0, 1.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 2.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 3.0 );
@@ -258,50 +350,62 @@ test( 'zggbak: JOB=B, SIDE=L (both scale and permute, left)', function t() {
 	cset( Vv, LDV, 1, 1, 6.0, 6.0 );
 	cset( Vv, LDV, 2, 1, 7.0, 7.0 );
 	cset( Vv, LDV, 3, 1, 8.0, 8.0 );
-
-	info = base( 'both', 'left', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'both', 'left', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: N=0 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'n_zero'; } );
-	var V = new Complex128Array( 2 );
-	var lscale = new Float64Array( 1 );
-	var rscale = new Float64Array( 1 );
+	var lscale;
+	var rscale;
 	var info;
+	var tc;
+	var V;
 
-	info = base( 'both', 'right', 0, 1, 0, lscale, 1, 0, rscale, 1, 0, 2, V, 1, 1, 0 );
-
+	tc = fixture.find( function find( t ) {
+		return t.name === 'n_zero';
+	} );
+	V = new Complex128Array( 2 );
+	lscale = new Float64Array( 1 );
+	rscale = new Float64Array( 1 );
+	info = base( 'both', 'right', 0, 1, 0, lscale, 1, 0, rscale, 1, 0, 2, V, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 });
 
 test( 'zggbak: M=0 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'm_zero'; } );
-	var V = new Complex128Array( 2 );
-	var lscale = new Float64Array( 3 );
-	var rscale = new Float64Array( 3 );
+	var lscale;
+	var rscale;
 	var info;
+	var tc;
+	var V;
 
-	info = base( 'both', 'right', 3, 1, 3, lscale, 1, 0, rscale, 1, 0, 0, V, 1, 3, 0 );
-
+	tc = fixture.find( function find( t ) {
+		return t.name === 'm_zero';
+	} );
+	V = new Complex128Array( 2 );
+	lscale = new Float64Array( 3 );
+	rscale = new Float64Array( 3 );
+	info = base( 'both', 'right', 3, 1, 3, lscale, 1, 0, rscale, 1, 0, 0, V, 1, 3, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 });
 
 test( 'zggbak: ILO=IHI with valid permutation indices', function t() {
-	// This test uses valid RSCALE values (all within [1, N]) to avoid
-	// the undefined behavior that occurs when RSCALE contains 0
-	// (an invalid 1-based index).
-	var n = 4;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 4 );
-	var rscale = new Float64Array( [ 3.0, 2.0, 3.0, 1.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	n = 4;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 4 );
+	rscale = new Float64Array( [ 3.0, 2.0, 3.0, 1.0 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
@@ -310,11 +414,8 @@ test( 'zggbak: ILO=IHI with valid permutation indices', function t() {
 	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
 	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
 	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
-
-	info = base( 'both', 'right', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'both', 'right', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, 0, 'info' );
-	// Row 1 (index 1) is untouched, verify it
 	assert.strictEqual( Vv[ 2 ], 2.0, 'row 1 col 0 re' );
 	assert.strictEqual( Vv[ 3 ], 0.0, 'row 1 col 0 im' );
 	assert.strictEqual( Vv[ 10 ], 6.0, 'row 1 col 1 re' );
@@ -322,90 +423,119 @@ test( 'zggbak: ILO=IHI with valid permutation indices', function t() {
 });
 
 test( 'zggbak: ILO=1 (skip first permutation loop)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ilo_one_permute'; } );
-	var n = 3;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 3 );
-	var rscale = new Float64Array( [ 1.0, 2.0, 1.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'ilo_one_permute';
+	} );
+	n = 3;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 3 );
+	rscale = new Float64Array( [ 1.0, 2.0, 1.0 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
 	cset( Vv, LDV, 0, 1, 4.0, 0.0 );
 	cset( Vv, LDV, 1, 1, 5.0, 0.0 );
 	cset( Vv, LDV, 2, 1, 6.0, 0.0 );
-
-	info = base( 'permute', 'right', n, 1, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'permute', 'right', n, 1, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: IHI=N (skip second permutation loop)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ihi_n_permute'; } );
-	var n = 3;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 3 );
-	var rscale = new Float64Array( [ 3.0, 2.0, 3.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'ihi_n_permute';
+	} );
+	n = 3;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 3 );
+	rscale = new Float64Array( [ 3.0, 2.0, 3.0 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
 	cset( Vv, LDV, 0, 1, 4.0, 0.0 );
 	cset( Vv, LDV, 1, 1, 5.0, 0.0 );
 	cset( Vv, LDV, 2, 1, 6.0, 0.0 );
-
-	info = base( 'permute', 'right', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'permute', 'right', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
 test( 'zggbak: K=I (no-swap, continue case)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'k_eq_i'; } );
-	var n = 3;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 3 );
-	var rscale = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'k_eq_i';
+	} );
+	n = 3;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 3 );
+	rscale = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
 	cset( Vv, LDV, 0, 1, 4.0, 0.0 );
 	cset( Vv, LDV, 1, 1, 5.0, 0.0 );
 	cset( Vv, LDV, 2, 1, 6.0, 0.0 );
-
-	info = base( 'permute', 'right', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'permute', 'right', n, 2, 2, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });
 
-test( 'zggbak: JOB=P, SIDE=L, self-permutation (k===i) in both loops', function t() {
-	// Use N=4, ilo=2, ihi=3 so both backward (i from ilo-2 downto 0)
-	// and forward (i from ihi to N-1) loops run for left eigenvectors.
-	// LSCALE contains 1-based self-referencing indices to trigger k===i continues.
-	var n = 4;
-	var m = 2;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( [ 1.0, 0.0, 0.0, 4.0 ] ); // l[0]=1 → k=0=i, l[3]=4 → k=3=i
-	var rscale = new Float64Array( 4 );
+test( 'zggbak: JOB=P, SIDE=L, self-permutation (k===i) in both loops', function t() { // eslint-disable-line max-len
+	var lscale;
+	var rscale;
+	var origV;
 	var info;
+	var LDV;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	n = 4;
+	m = 2;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( [ 1.0, 0.0, 0.0, 4.0 ] );
+	rscale = new Float64Array( 4 );
 	cset( Vv, LDV, 0, 0, 1.0, 0.0 );
 	cset( Vv, LDV, 1, 0, 2.0, 0.0 );
 	cset( Vv, LDV, 2, 0, 3.0, 0.0 );
@@ -414,62 +544,86 @@ test( 'zggbak: JOB=P, SIDE=L, self-permutation (k===i) in both loops', function 
 	cset( Vv, LDV, 1, 1, 6.0, 0.0 );
 	cset( Vv, LDV, 2, 1, 7.0, 0.0 );
 	cset( Vv, LDV, 3, 1, 8.0, 0.0 );
-
-	// Save original V to compare
-	var origV = Array.from( Vv );
-
-	info = base( 'permute', 'left', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	origV = toArray( Vv );
+	info = base( 'permute', 'left', n, 2, 3, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, 0, 'info' );
-	// Since lscale[0]=1 (→ self-permute row 0) and lscale[3]=4 (→ self-permute row 3),
-	// V should be unchanged
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), origV, 'v unchanged' );
 });
 
 test( 'zggbak: N=1 edge case', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'n_one'; } );
-	var n = 1;
-	var m = 1;
-	var LDV = n;
-	var V = new Complex128Array( 1 );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 1 );
-	var rscale = new Float64Array( [ 1.0 ] );
+	var lscale;
+	var rscale;
 	var info;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 
+	tc = fixture.find( function find( t ) {
+		return t.name === 'n_one';
+	} );
+	n = 1;
+	m = 1;
+	LDV = n;
+	V = new Complex128Array( 1 );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 1 );
+	rscale = new Float64Array( [ 1.0 ] );
 	Vv[ 0 ] = 5.0;
 	Vv[ 1 ] = 3.0;
-
-	info = base( 'both', 'right', n, 1, 1, lscale, 1, 0, rscale, 1, 0, m, V, 1, 1, 0 );
-
+	info = base( 'both', 'right', n, 1, 1, lscale, 1, 0, rscale, 1, 0, m, V, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( [ Vv[ 0 ], Vv[ 1 ] ], tc.v, 'v' );
 });
 
 test( 'zggbak: larger matrix with complex values, JOB=B, SIDE=R', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'larger_both_right'; } );
-	var n = 5;
-	var m = 3;
-	var LDV = n;
-	var V = new Complex128Array( LDV * m );
-	var Vv = reinterpret( V, 0 );
-	var lscale = new Float64Array( 5 );
-	var rscale = new Float64Array( [ 4.0, 2.0, 0.5, 3.0, 1.0 ] );
+	var lscale;
+	var rscale;
 	var info;
-	var vals = [
-		[ 0, 0, 1, 1 ], [ 1, 0, 2, 2 ], [ 2, 0, 3, 3 ], [ 3, 0, 4, 4 ], [ 4, 0, 5, 5 ],
-		[ 0, 1, 6, 6 ], [ 1, 1, 7, 7 ], [ 2, 1, 8, 8 ], [ 3, 1, 9, 9 ], [ 4, 1, 10, 10 ],
-		[ 0, 2, 11, 11 ], [ 1, 2, 12, 12 ], [ 2, 2, 13, 13 ], [ 3, 2, 14, 14 ], [ 4, 2, 15, 15 ]
-	];
+	var vals;
+	var LDV;
+	var tc;
+	var Vv;
+	var n;
+	var m;
+	var V;
 	var v;
 	var k;
+
+	tc = fixture.find( function find( t ) {
+		return t.name === 'larger_both_right';
+	} );
+	n = 5;
+	m = 3;
+	LDV = n;
+	V = new Complex128Array( LDV * m );
+	Vv = reinterpret( V, 0 );
+	lscale = new Float64Array( 5 );
+	rscale = new Float64Array( [ 4.0, 2.0, 0.5, 3.0, 1.0 ] );
+	vals = [
+		[ 0, 0, 1, 1 ],
+		[ 1, 0, 2, 2 ],
+		[ 2, 0, 3, 3 ],
+		[ 3, 0, 4, 4 ],
+		[ 4, 0, 5, 5 ], // eslint-disable-line max-len
+		[ 0, 1, 6, 6 ],
+		[ 1, 1, 7, 7 ],
+		[ 2, 1, 8, 8 ],
+		[ 3, 1, 9, 9 ],
+		[ 4, 1, 10, 10 ], // eslint-disable-line max-len
+		[ 0, 2, 11, 11 ],
+		[ 1, 2, 12, 12 ],
+		[ 2, 2, 13, 13 ],
+		[ 3, 2, 14, 14 ],
+		[ 4, 2, 15, 15 ] // eslint-disable-line max-len
+	];
 	for ( k = 0; k < vals.length; k++ ) {
 		v = vals[ k ];
 		cset( Vv, LDV, v[ 0 ], v[ 1 ], v[ 2 ], v[ 3 ] );
 	}
-
-	info = base( 'both', 'right', n, 2, 4, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 );
-
+	info = base( 'both', 'right', n, 2, 4, lscale, 1, 0, rscale, 1, 0, m, V, 1, LDV, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( extractCMatrix( Vv, LDV, n, m ), tc.v, 'v' );
 });

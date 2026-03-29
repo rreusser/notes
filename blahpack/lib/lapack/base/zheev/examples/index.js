@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zheev = require( '@stdlib/lapack/base/zheev' );

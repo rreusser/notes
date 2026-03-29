@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimate the reciprocal condition number of a complex general matrix
+* Estimate the reciprocal condition number of a complex general matrix.
 *
 * @module @stdlib/lapack/base/zgecon
 *

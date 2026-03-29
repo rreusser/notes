@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dstevr = require( '@stdlib/lapack/base/dstevr' );

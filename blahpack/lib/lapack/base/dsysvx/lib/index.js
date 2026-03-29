@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Expert symmetric indefinite solver with condition estimation and iterative refinement
+* Expert symmetric indefinite solver with condition estimation and iterative refinement.
 *
 * @module @stdlib/lapack/base/dsysvx
 *

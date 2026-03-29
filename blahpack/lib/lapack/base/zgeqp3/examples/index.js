@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgeqp3 = require( '@stdlib/lapack/base/zgeqp3' );

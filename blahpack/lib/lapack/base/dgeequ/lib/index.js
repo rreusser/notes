@@ -1,8 +1,9 @@
 
+
 'use strict';
 
 /**
-* Computes row and column scalings for equilibrating a general matrix.
+* Computes row and column scalings for equilibrating a general matrix
 *
 * @module @stdlib/lapack/base/dgeequ
 *

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solve complex linear least squares using QR or LQ factorization
+* Solve complex linear least squares using QR or LQ factorization.
 *
 * @module @stdlib/lapack/base/zgels
 *

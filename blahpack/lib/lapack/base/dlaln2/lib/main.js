@@ -1,23 +1,15 @@
-
 'use strict';
 
 // MODULES //
 
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
 var dlaln2 = require( './dlaln2.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-// NOTE: In stdlib, this uses setReadOnly from @stdlib/utils.
-
-// For standalone development, we use Object.defineProperty directly.
-Object.defineProperty( dlaln2, 'ndarray', {
-	'value': ndarray,
-	'enumerable': false,
-	'writable': false,
-	'configurable': false
-});
+setReadOnly( dlaln2, 'ndarray', ndarray );
 
 
 // EXPORTS //

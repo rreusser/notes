@@ -1,23 +1,15 @@
-
 'use strict';
 
 // MODULES //
 
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
 var dla_gbrpvgrw = require( './dla_gbrpvgrw.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-// NOTE: In stdlib, this uses setReadOnly from @stdlib/utils.
-
-// For standalone development, we use Object.defineProperty directly.
-Object.defineProperty( dla_gbrpvgrw, 'ndarray', {
-	'value': ndarray,
-	'enumerable': false,
-	'writable': false,
-	'configurable': false
-});
+setReadOnly( dla_gbrpvgrw, 'ndarray', ndarray );
 
 
 // EXPORTS //

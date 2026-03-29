@@ -1,38 +1,50 @@
-/* eslint-disable max-len, max-statements */
+/* eslint-disable max-len, max-statements, no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
+var Float64Array = require( '@stdlib/array/float64' );
 var zgeev = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgeev.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zgeev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
 /**
 * Verify eigenvalues match fixture (order may differ, so sort both).
 */
 function assertEigenvaluesClose( wv, expected, tol, msg ) {
-	var N = expected.length / 2;
 	var actual = [];
 	var expect = [];
+	var N = expected.length / 2;
 	var i;
 
 	for ( i = 0; i < N; i++ ) {
@@ -41,20 +53,22 @@ function assertEigenvaluesClose( wv, expected, tol, msg ) {
 	}
 
 	// Sort by real part, then imaginary
-	actual.sort( function cmp( a, b ) { return a[ 0 ] - b[ 0 ] || a[ 1 ] - b[ 1 ]; } );
-	expect.sort( function cmp( a, b ) { return a[ 0 ] - b[ 0 ] || a[ 1 ] - b[ 1 ]; } );
+	actual.sort( function cmp( a, b ) {
+		return a[ 0 ] - b[ 0 ] || a[ 1 ] - b[ 1 ];
+	} );
+	expect.sort( function cmp( a, b ) {
+		return a[ 0 ] - b[ 0 ] || a[ 1 ] - b[ 1 ];
+	} );
 
 	for ( i = 0; i < N; i++ ) {
-		assert.ok(
-			Math.abs( actual[ i ][ 0 ] - expect[ i ][ 0 ] ) < tol &&
-			Math.abs( actual[ i ][ 1 ] - expect[ i ][ 1 ] ) < tol,
-			msg + ': eigenvalue ' + i + ': expected (' + expect[ i ][ 0 ] + ',' + expect[ i ][ 1 ] + '), got (' + actual[ i ][ 0 ] + ',' + actual[ i ][ 1 ] + ')'
+		assert.ok(Math.abs( actual[ i ][ 0 ] - expect[ i ][ 0 ] ) < tol &&
+			Math.abs( actual[ i ][ 1 ] - expect[ i ][ 1 ] ) < tol, msg + ': eigenvalue ' + i + ': expected (' + expect[ i ][ 0 ] + ',' + expect[ i ][ 1 ] + '), got (' + actual[ i ][ 0 ] + ',' + actual[ i ][ 1 ] + ')' // eslint-disable-line max-len
 		);
 	}
 }
 
 /**
-* Verify A*v = lambda*v for right eigenvectors.
+* Verify A_v = lambda_v for right eigenvectors.
 * A_orig is the original matrix (Float64Array interleaved, column-major).
 */
 function assertRightEigenvectors( A_orig, N, wv, vrv, tol, msg ) {
@@ -62,17 +76,17 @@ function assertRightEigenvectors( A_orig, N, wv, vrv, tol, msg ) {
 	var av_im;
 	var vr_re;
 	var vr_im;
+	var err;
 	var lr;
 	var li;
 	var sr;
 	var si;
-	var err;
 	var i;
 	var j;
 	var k;
 
 	for ( j = 0; j < N; j++ ) {
-		// eigenvalue j
+		// Eigenvalue j
 		lr = wv[ 2 * j ];
 		li = wv[ 2 * j + 1 ];
 
@@ -97,7 +111,7 @@ function assertRightEigenvectors( A_orig, N, wv, vrv, tol, msg ) {
 			si = lr * vr_im + li * vr_re;
 
 			err = Math.abs( av_re - sr ) + Math.abs( av_im - si );
-			assert.ok( err < tol, msg + ': A*v != lambda*v at (' + i + ',' + j + '), err=' + err );
+			assert.ok( err < tol, msg + ': A*v != lambda*v at (' + i + ',' + j + '), err=' + err ); // eslint-disable-line max-len
 		}
 	}
 }
@@ -115,19 +129,19 @@ function makeComplex128Array( data ) {
 function callZgeev( jobvl, jobvr, N, A_data ) {
 	var RWORK = new Float64Array( Math.max( 2 * N, 1 ) );
 	var WORK = new Complex128Array( Math.max( 4 * N, 1 ) );
+	var info;
 	var VL = new Complex128Array( N * N );
 	var VR = new Complex128Array( N * N );
 	var w = new Complex128Array( N );
 	var A = makeComplex128Array( A_data );
-	var info;
 
-	info = zgeev( jobvl, jobvr, N, A, 1, N, 0, w, 1, 0, VL, 1, N, 0, VR, 1, N, 0, WORK, 1, 0, Math.max( 4 * N, 1 ), RWORK, 1, 0 );
+	info = zgeev( jobvl, jobvr, N, A, 1, N, 0, w, 1, 0, VL, 1, N, 0, VR, 1, N, 0, WORK, 1, 0, Math.max( 4 * N, 1 ), RWORK, 1, 0 ); // eslint-disable-line max-len
 
 	return {
-		info: info,
-		w: reinterpret( w, 0 ),
-		VL: reinterpret( VL, 0 ),
-		VR: reinterpret( VR, 0 )
+		'info': info,
+		'w': reinterpret( w, 0 ),
+		'VL': reinterpret( VL, 0 ),
+		'VR': reinterpret( VR, 0 )
 	};
 }
 
@@ -140,80 +154,135 @@ test( 'zgeev: N=0 quick return', function t() {
 });
 
 test( 'zgeev: N=1 eigenvalues only', function t() {
-	var tc = findCase( 'n1_eigvals_only' );
-	// A = (3+2i)
 	var result = callZgeev( 'no-vectors', 'no-vectors', 1, [ 3.0, 2.0 ] );
+	var tc = findCase( 'n1_eigvals_only' );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
 });
 
 test( 'zgeev: N=1 with right eigenvector', function t() {
-	var tc = findCase( 'n1_right' );
-	// A = (5-1i)
 	var result = callZgeev( 'no-vectors', 'compute-vectors', 1, [ 5.0, -1.0 ] );
+	var tc = findCase( 'n1_right' );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
+
 	// Eigenvector should be (1,0)
 	assert.ok( Math.abs( result.VR[ 0 ] - 1.0 ) < 1e-14 );
 	assert.ok( Math.abs( result.VR[ 1 ] ) < 1e-14 );
 });
 
 test( 'zgeev: N=2 diagonal, right eigenvectors', function t() {
-	var tc = findCase( 'n2_diagonal_right' );
-	// A = diag(1, 2), column-major interleaved: [A(1,1)_re, A(1,1)_im, A(2,1)_re, A(2,1)_im, A(1,2)_re, ...]
-	var A_data = [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0 ];
-	var result = callZgeev( 'no-vectors', 'compute-vectors', 2, A_data );
+	var A_data;
+	var result;
+	var tc;
+
+	tc = findCase( 'n2_diagonal_right' );
+	A_data = [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0 ];
+	result = callZgeev( 'no-vectors', 'compute-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
-	// Verify A*v = lambda*v
 	assertRightEigenvectors( A_data, 2, result.w, result.VR, 1e-12, 'eigenvec' );
 });
 
 test( 'zgeev: N=2 general, both eigenvectors', function t() {
-	var tc = findCase( 'n2_general_both' );
-	// A = [[1+2i, 3], [i, 4-i]], column-major interleaved
-	var A_data = [ 1.0, 2.0, 0.0, 1.0, 3.0, 0.0, 4.0, -1.0 ];
-	var result = callZgeev( 'compute-vectors', 'compute-vectors', 2, A_data );
+	var A_data;
+	var result;
+	var tc;
+
+	tc = findCase( 'n2_general_both' );
+	A_data = [ 1.0, 2.0, 0.0, 1.0, 3.0, 0.0, 4.0, -1.0 ];
+	result = callZgeev( 'compute-vectors', 'compute-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-12, 'eigenvalues' );
-	assertRightEigenvectors( A_data, 2, result.w, result.VR, 1e-10, 'right eigenvec' );
+	assertRightEigenvectors( A_data, 2, result.w, result.VR, 1e-10, 'right eigenvec' ); // eslint-disable-line max-len
 });
 
 test( 'zgeev: N=3 right eigenvectors', function t() {
-	var tc = findCase( 'n3_right' );
-	// A column-major interleaved: A(i,j) = data[2*(i + j*3)] + data[2*(i + j*3)+1]*i
-	var A_data = [
-		1.0, 0.0, 0.0, -1.0, 0.0, 0.0,   // col 0: (1,0), (0,-1), (0,0)
-		2.0, 1.0, 3.0, 0.0, 0.0, 0.0,     // col 1: (2+i), (3,0), (0,0)
-		0.0, 0.0, 1.0, 0.5, 5.0, -2.0      // col 2: (0,0), (1+0.5i), (5-2i)
+	var A_data;
+	var result;
+	var tc;
+
+	tc = findCase( 'n3_right' );
+	A_data = [
+		1.0,
+		0.0,
+		0.0,
+		-1.0,
+		0.0,
+		0.0,   // col 0: (1,0), (0,-1), (0,0)
+		2.0,
+		1.0,
+		3.0,
+		0.0,
+		0.0,
+		0.0,     // col 1: (2+i), (3,0), (0,0)
+		0.0,
+		0.0,
+		1.0,
+		0.5,
+		5.0,
+		-2.0      // col 2: (0,0), (1+0.5i), (5-2i)
 	];
-	var result = callZgeev( 'no-vectors', 'compute-vectors', 3, A_data );
+	result = callZgeev( 'no-vectors', 'compute-vectors', 3, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-12, 'eigenvalues' );
-	assertRightEigenvectors( A_data, 3, result.w, result.VR, 1e-10, 'right eigenvec' );
+	assertRightEigenvectors( A_data, 3, result.w, result.VR, 1e-10, 'right eigenvec' ); // eslint-disable-line max-len
 });
 
 test( 'zgeev: N=4 diagonally dominant, both eigenvectors', function t() {
-	var tc = findCase( 'n4_diagdom_both' );
-	var A_data = [
-		10.0, 0.0, 0.5, -0.5, 0.0, 0.0, 0.0, 0.0,   // col 0
-		1.0, 0.5, 20.0, 0.0, 0.0, 1.0, 0.0, 0.0,     // col 1
-		0.0, 0.0, 1.0, 0.0, 30.0, 0.0, 0.5, -0.5,    // col 2
-		0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 40.0, 0.0      // col 3
+	var A_data;
+	var result;
+	var tc;
+
+	tc = findCase( 'n4_diagdom_both' );
+	A_data = [
+		10.0,
+		0.0,
+		0.5,
+		-0.5,
+		0.0,
+		0.0,
+		0.0,
+		0.0,   // col 0
+		1.0,
+		0.5,
+		20.0,
+		0.0,
+		0.0,
+		1.0,
+		0.0,
+		0.0,     // col 1
+		0.0,
+		0.0,
+		1.0,
+		0.0,
+		30.0,
+		0.0,
+		0.5,
+		-0.5,    // col 2
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.5,
+		0.5,
+		40.0,
+		0.0      // col 3
 	];
-	var result = callZgeev( 'compute-vectors', 'compute-vectors', 4, A_data );
+	result = callZgeev( 'compute-vectors', 'compute-vectors', 4, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-10, 'eigenvalues' );
-	assertRightEigenvectors( A_data, 4, result.w, result.VR, 1e-8, 'right eigenvec' );
+	assertRightEigenvectors( A_data, 4, result.w, result.VR, 1e-8, 'right eigenvec' ); // eslint-disable-line max-len
 });
 
 test( 'zgeev: N=2 left eigenvectors only', function t() {
-	var tc = findCase( 'n2_left_only' );
-	// A = [[2, 1+i], [0, 3]], column-major interleaved
-	var A_data = [ 2.0, 0.0, 0.0, 0.0, 1.0, 1.0, 3.0, 0.0 ];
-	var result = callZgeev( 'compute-vectors', 'no-vectors', 2, A_data );
+	var A_data;
+	var result;
+	var tc;
+
+	tc = findCase( 'n2_left_only' );
+	A_data = [ 2.0, 0.0, 0.0, 0.0, 1.0, 1.0, 3.0, 0.0 ];
+	result = callZgeev( 'compute-vectors', 'no-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
-	// Verify left eigenvectors: u^H * A = lambda * u^H
-	// i.e. A^H * u = conj(lambda) * u
 });

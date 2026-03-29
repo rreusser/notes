@@ -1,17 +1,16 @@
 
-
 'use strict';
 
 // MODULES //
 
-var cmplx = require( '../../../../cmplx.js' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var cmplx = require( '../../../../cmplx.js' );
 
 
 // MAIN //
 
 /**
-* Solves a complex general tridiagonal system of linear equations A * X = B
+* Solves a complex general tridiagonal system of linear equations A * X = B.
 * using Gaussian elimination with partial pivoting.
 *
 * ## Notes
@@ -42,17 +41,17 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 */
 function zgtsv( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
 	var dlv;
-	var dv;
 	var duv;
-	var bv;
 	var sdl;
-	var sd;
 	var sdu;
 	var sb1;
 	var sb2;
 	var idl;
-	var id;
 	var idu;
+	var dv;
+	var bv;
+	var sd;
+	var id;
 	var ib;
 	var jb;
 	var tr;
@@ -99,6 +98,7 @@ function zgtsv( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, stride
 			mi = dlv[ idl + 1 ];
 
 			// D(k+1) = D(k+1) - MULT * DU(k)
+
 			// (mr + mi*i) * (duv[idu] + duv[idu+1]*i)
 			dv[ id + sd ] -= mr * duv[ idu ] - mi * duv[ idu + 1 ];
 			dv[ id + sd + 1 ] -= mr * duv[ idu + 1 ] + mi * duv[ idu ];
@@ -121,7 +121,9 @@ function zgtsv( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, stride
 			cmplx.divAt( dv, id, dv, id, dlv, idl ); // store mult temporarily in D(k) slot; but we need D(k) = DL(k) first...
 
 			// Actually: mult = D(k) / DL(k), then D(k) = DL(k)
+
 			// We need to be more careful. Let's compute mult first, then overwrite.
+
 			// But divAt already overwrote dv[id]. We stored mult there. Save DL(k) → D(k):
 			mr = dv[ id ];     // mult real
 			mi = dv[ id + 1 ]; // mult imag
@@ -157,9 +159,13 @@ function zgtsv( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, stride
 				ti = bv[ jb + 1 ];
 				bv[ jb ] = bv[ jb + sb1 ];
 				bv[ jb + 1 ] = bv[ jb + sb1 + 1 ];
+
 				// B(k+1,j) = TEMP - MULT * B(k+1,j)  (B(k+1,j) is now the old B(k,j))
+
 				// Wait: after swap, B(k,j) = old B(k+1,j) and B(k+1,j) = old B(k,j) = (tr,ti)
+
 				// Actually: B(k+1,j) = TEMP - MULT * new_B(k,j) = (tr,ti) - MULT * old_B(k+1,j)
+
 				// But we already set bv[jb] = old B(k+1,j). So:
 				bv[ jb + sb1 ] = tr - ( mr * bv[ jb ] - mi * bv[ jb + 1 ] );
 				bv[ jb + sb1 + 1 ] = ti - ( mr * bv[ jb + 1 ] + mi * bv[ jb ] );
@@ -209,11 +215,11 @@ function zgtsv( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, stride
 * @param {NonNegativeInteger} ob - offset for bv (Float64)
 */
 function backSolve( N, nrhs, dlv, sdl, odl, dv, sd, od, duv, sdu, odu, bv, sb1, sb2, ob ) { // eslint-disable-line max-len, max-params
+	var idu;
+	var idl;
 	var pN;
 	var ib;
 	var id;
-	var idu;
-	var idl;
 	var j;
 	var k;
 

@@ -40,7 +40,7 @@ var SMLNUM = dlamch( 'safe-minimum' );
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a triangular matrix A,
+* Estimates the reciprocal of the condition number of a triangular matrix A,.
 * in either the 1-norm or the infinity-norm.
 *
 * The norm of A is computed and an estimate is obtained for norm(inv(A)),
@@ -99,12 +99,12 @@ function dtrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, RCOND, WOR
 	// Continue only if anorm > 0
 	if ( anorm > 0.0 ) {
 		// Estimate the norm of the inverse of A using dlacn2 reverse communication.
-		//
+
 		// WORK layout (using contiguous stride=1 workspace):
 		//   WORK[offsetWORK .. offsetWORK + N-1]       = x (dlacn2 x vector, also dlatrs RHS)
 		//   WORK[offsetWORK + N .. offsetWORK + 2N-1]  = v (dlacn2 v/workspace)
 		//   WORK[offsetWORK + 2N .. offsetWORK + 3N-1] = CNORM (dlatrs column norms)
-		//
+
 		// IWORK[offsetIWORK .. offsetIWORK + N-1] = ISGN (dlacn2 sign array)
 
 		sw = strideWORK;

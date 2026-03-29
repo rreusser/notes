@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgbcon = require( '@stdlib/lapack/base/zgbcon' );

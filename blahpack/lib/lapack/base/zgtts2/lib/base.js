@@ -28,7 +28,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 // MAIN //
 
 /**
-* Solves one of the systems of equations A*X = B, A^T*X = B, or A^H*X = B
+* Solves one of the systems of equations A_X = B, A^T_X = B, or A^H*X = B.
 * with a complex tridiagonal matrix A using the LU factorization computed by zgttrf.
 *
 * ## Notes
@@ -62,20 +62,23 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 * @param {NonNegativeInteger} offsetB - starting index for `B` (Float64 elements)
 */
 function zgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
-	var dlv;
-	var dv;
-	var duv;
 	var du2v;
-	var bv;
-	var sdl;
-	var sd;
-	var sdu;
 	var sdu2;
+	var idu2;
+	var dlv;
+	var duv;
+	var sdl;
+	var sdu;
 	var sb1;
 	var sb2;
 	var idl;
 	var idu;
-	var idu2;
+	var dr2;
+	var di2;
+	var den;
+	var dv;
+	var bv;
+	var sd;
 	var ip;
 	var id;
 	var ib;
@@ -87,9 +90,6 @@ function zgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, D
 	var bi;
 	var cr;
 	var ci;
-	var dr2;
-	var di2;
-	var den;
 	var i;
 	var j;
 
@@ -132,6 +132,7 @@ function zgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, D
 					ti = bv[ ib + 1 ];
 					bv[ ib ] = bv[ ib + sb1 ];
 					bv[ ib + 1 ] = bv[ ib + sb1 + 1 ];
+
 					// B(i+1,j) = temp - DL(i) * B(i,j) (B(i,j) is now old B(i+1,j))
 					ar = dlv[ idl ];
 					ai = dlv[ idl + 1 ];
@@ -175,6 +176,7 @@ function zgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, D
 			idu2 = ( offsetDU2 * 2 ) + ( ( N - 3 ) * sdu2 );
 			for ( i = N - 3; i >= 0; i-- ) {
 				ib = offsetB + ( i * sb1 ) + ( j * sb2 );
+
 				// B(i) = (B(i) - DU(i)*B(i+1) - DU2(i)*B(i+2)) / D(i)
 				ar = duv[ idu ];
 				ai = duv[ idu + 1 ];
@@ -290,13 +292,15 @@ function zgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, D
 			den = dv[ id ] * dv[ id ] + dv[ id + 1 ] * dv[ id + 1 ];
 			tr = bv[ ib ];
 			ti = bv[ ib + 1 ];
-			// divide by conj(D(0)) = (dr, -di): real = (tr*dr - ti*di)/den, imag = (ti*dr + tr*di)/den
+
+			// Divide by conj(D(0)) = (dr, -di): real = (tr*dr - ti*di)/den, imag = (ti*dr + tr*di)/den
 			bv[ ib ] = ( tr * dv[ id ] - ti * dv[ id + 1 ] ) / den;
 			bv[ ib + 1 ] = ( ti * dv[ id ] + tr * dv[ id + 1 ] ) / den;
 
 			if ( N > 1 ) {
 				idu = offsetDU * 2;
 				ib = offsetB + sb1 + ( j * sb2 );
+
 				// conj(DU(0))
 				ar = duv[ idu ];
 				ai = -duv[ idu + 1 ];
@@ -306,7 +310,8 @@ function zgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, D
 				ci = bv[ ib + 1 ] - ( ar * bi + ai * br );
 				id = ( offsetD * 2 ) + sd;
 				den = dv[ id ] * dv[ id ] + dv[ id + 1 ] * dv[ id + 1 ];
-				// divide by conj(D(1))
+
+				// Divide by conj(D(1))
 				bv[ ib ] = ( cr * dv[ id ] - ci * dv[ id + 1 ] ) / den;
 				bv[ ib + 1 ] = ( ci * dv[ id ] + cr * dv[ id + 1 ] ) / den;
 			}
@@ -316,6 +321,7 @@ function zgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, D
 			idu2 = offsetDU2 * 2;
 			for ( i = 2; i < N; i++ ) {
 				ib = offsetB + ( i * sb1 ) + ( j * sb2 );
+
 				// conj(DU(i-1))
 				ar = duv[ idu ];
 				ai = -duv[ idu + 1 ];

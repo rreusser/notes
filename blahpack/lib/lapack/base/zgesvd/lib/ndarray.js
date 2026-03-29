@@ -103,8 +103,18 @@ function zgesvd( jobu, jobvt, M, N, A, strideA1, strideA2, offsetA, s, strideS, 
 	if ( M === 0 || N === 0 ) {
 		return 0;
 	}
-	var JOBU_MAP = { 'all': 'all-columns', 'some': 'economy', 'overwrite': 'overwrite', 'none': 'none' };
-	var JOBVT_MAP = { 'all': 'all-rows', 'some': 'economy', 'overwrite': 'overwrite', 'none': 'none' };
+	var JOBVT_MAP = {
+		'all': 'all-rows',
+		'some': 'economy',
+		'overwrite': 'overwrite',
+		'none': 'none'
+	};
+	var JOBU_MAP = {
+		'all': 'all-columns',
+		'some': 'economy',
+		'overwrite': 'overwrite',
+		'none': 'none'
+	};
 	return base( JOBU_MAP[ jobu ], JOBVT_MAP[ jobvt ], M, N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, U, strideU1, strideU2, offsetU, VT, strideVT1, strideVT2, offsetVT, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK );
 }
 

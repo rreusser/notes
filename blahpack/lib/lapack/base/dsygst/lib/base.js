@@ -37,16 +37,16 @@ var NB = 64; // Block size (hardcoded, replaces ILAENV query)
 // MAIN //
 
 /**
-* Reduces a real symmetric-definite generalized eigenproblem to standard form
+* Reduces a real symmetric-definite generalized eigenproblem to standard form.
 * (blocked algorithm).
 *
-* If itype = 1, the problem is A*x = lambda*B*x,
-* and A is overwritten by inv(U^T)*A*inv(U) or inv(L)*A*inv(L^T).
+* If itype = 1, the problem is A_x = lambda_B_x,
+_ and A is overwritten by inv(U^T)_A_inv(U) or inv(L)_A*inv(L^T).
 *
-* If itype = 2 or 3, the problem is A*B*x = lambda*x or B*A*x = lambda*x,
-* and A is overwritten by U*A*U^T or L^T*A*L.
+* If itype = 2 or 3, the problem is A_B_x = lambda_x or B_A_x = lambda_x,
+* and A is overwritten by U_A_U^T or L^T_A_L.
 *
-* B must have been previously factorized as U^T*U or L*L^T by dpotrf.
+* B must have been previously factorized as U^T_U or L_L^T by dpotrf.
 *
 * @private
 * @param {integer} itype - problem type (1, 2, or 3)
@@ -99,40 +99,19 @@ function dsygst( itype, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 				if ( k + kb < N ) {
 					// DTRSM('Left', UPLO, 'Transpose', 'Non-unit', KB, N-K-KB, 1, B(K,K), LDB, A(K,K+KB), LDA)
-					dtrsm( 'left', uplo, 'transpose', 'non-unit', kb, N - k - kb, 1.0,
-						B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ),
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 )
-					);
+					dtrsm( 'left', uplo, 'transpose', 'non-unit', kb, N - k - kb, 1.0, B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ), A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 ));
 
 					// DSYMM('Left', UPLO, KB, N-K-KB, -HALF, A(K,K), LDA, B(K,K+KB), LDB, 1, A(K,K+KB), LDA)
-					dsymm( 'left', uplo, kb, N - k - kb, -0.5,
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-						B, sb1, sb2, offsetB + ( k * sb1 ) + ( ( k + kb ) * sb2 ),
-						1.0,
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 )
-					);
+					dsymm( 'left', uplo, kb, N - k - kb, -0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb1 ) + ( ( k + kb ) * sb2 ), 1.0, A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 ));
 
 					// DSYR2K(UPLO, 'Transpose', N-K-KB, KB, -1, A(K,K+KB), LDA, B(K,K+KB), LDB, 1, A(K+KB,K+KB), LDA)
-					dsyr2k( uplo, 'transpose', N - k - kb, kb, -1.0,
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 ),
-						B, sb1, sb2, offsetB + ( k * sb1 ) + ( ( k + kb ) * sb2 ),
-						1.0,
-						A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( ( k + kb ) * sa2 )
-					);
+					dsyr2k( uplo, 'transpose', N - k - kb, kb, -1.0, A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 ), B, sb1, sb2, offsetB + ( k * sb1 ) + ( ( k + kb ) * sb2 ), 1.0, A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( ( k + kb ) * sa2 ));
 
 					// DSYMM again
-					dsymm( 'left', uplo, kb, N - k - kb, -0.5,
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-						B, sb1, sb2, offsetB + ( k * sb1 ) + ( ( k + kb ) * sb2 ),
-						1.0,
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 )
-					);
+					dsymm( 'left', uplo, kb, N - k - kb, -0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb1 ) + ( ( k + kb ) * sb2 ), 1.0, A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 ));
 
 					// DTRSM('Right', UPLO, 'No transpose', 'Non-unit', KB, N-K-KB, 1, B(K+KB,K+KB), LDB, A(K,K+KB), LDA)
-					dtrsm( 'right', uplo, 'no-transpose', 'non-unit', kb, N - k - kb, 1.0,
-						B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( ( k + kb ) * sb2 ),
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 )
-					);
+					dtrsm( 'right', uplo, 'no-transpose', 'non-unit', kb, N - k - kb, 1.0, B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( ( k + kb ) * sb2 ), A, sa1, sa2, offsetA + ( k * sa1 ) + ( ( k + kb ) * sa2 ));
 				}
 			}
 		} else {
@@ -144,39 +123,18 @@ function dsygst( itype, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 
 				if ( k + kb < N ) {
 					// DTRSM('Right', UPLO, 'Transpose', 'Non-unit', N-K-KB, KB, 1, B(K,K), LDB, A(K+KB,K), LDA)
-					dtrsm( 'right', uplo, 'transpose', 'non-unit', N - k - kb, kb, 1.0,
-						B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ),
-						A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 )
-					);
+					dtrsm( 'right', uplo, 'transpose', 'non-unit', N - k - kb, kb, 1.0, B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ), A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 ));
 
 					// DSYMM('Right', UPLO, N-K-KB, KB, -HALF, A(K,K), LDA, B(K+KB,K), LDB, 1, A(K+KB,K), LDA)
-					dsymm( 'right', uplo, N - k - kb, kb, -0.5,
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-						B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( k * sb2 ),
-						1.0,
-						A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 )
-					);
+					dsymm( 'right', uplo, N - k - kb, kb, -0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( k * sb2 ), 1.0, A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 ));
 
 					// DSYR2K(UPLO, 'No transpose', N-K-KB, KB, -1, A(K+KB,K), LDA, B(K+KB,K), LDB, 1, A(K+KB,K+KB), LDA)
-					dsyr2k( uplo, 'no-transpose', N - k - kb, kb, -1.0,
-						A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 ),
-						B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( k * sb2 ),
-						1.0,
-						A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( ( k + kb ) * sa2 )
-					);
+					dsyr2k( uplo, 'no-transpose', N - k - kb, kb, -1.0, A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( k * sb2 ), 1.0, A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( ( k + kb ) * sa2 ));
 
-					dsymm( 'right', uplo, N - k - kb, kb, -0.5,
-						A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-						B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( k * sb2 ),
-						1.0,
-						A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 )
-					);
+					dsymm( 'right', uplo, N - k - kb, kb, -0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( k * sb2 ), 1.0, A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 ));
 
 					// DTRSM('Left', UPLO, 'No transpose', 'Non-unit', N-K-KB, KB, 1, B(K+KB,K+KB), LDB, A(K+KB,K), LDA)
-					dtrsm( 'left', uplo, 'no-transpose', 'non-unit', N - k - kb, kb, 1.0,
-						B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( ( k + kb ) * sb2 ),
-						A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 )
-					);
+					dtrsm( 'left', uplo, 'no-transpose', 'non-unit', N - k - kb, kb, 1.0, B, sb1, sb2, offsetB + ( ( k + kb ) * sb1 ) + ( ( k + kb ) * sb2 ), A, sa1, sa2, offsetA + ( ( k + kb ) * sa1 ) + ( k * sa2 ));
 				}
 			}
 		}
@@ -188,40 +146,20 @@ function dsygst( itype, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 				kb = Math.min( N - k, NB );
 
 				// DTRMM('Left', UPLO, 'No transpose', 'Non-unit', K, KB, 1, B, LDB, A(1,K+1), LDA)
+
 				// Note: Fortran K is 1-based loop var, our k is 0-based. Fortran K-1 = our k.
-				dtrmm( 'left', uplo, 'no-transpose', 'non-unit', k, kb, 1.0,
-					B, sb1, sb2, offsetB,
-					A, sa1, sa2, offsetA + ( k * sa2 )
-				);
+				dtrmm( 'left', uplo, 'no-transpose', 'non-unit', k, kb, 1.0, B, sb1, sb2, offsetB, A, sa1, sa2, offsetA + ( k * sa2 ));
 
 				// DSYMM('Right', UPLO, K, KB, HALF, A(K+1,K+1), LDA, B(1,K+1), LDB, 1, A(1,K+1), LDA)
-				dsymm( 'right', uplo, k, kb, 0.5,
-					A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-					B, sb1, sb2, offsetB + ( k * sb2 ),
-					1.0,
-					A, sa1, sa2, offsetA + ( k * sa2 )
-				);
+				dsymm( 'right', uplo, k, kb, 0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb2 ), 1.0, A, sa1, sa2, offsetA + ( k * sa2 ));
 
 				// DSYR2K(UPLO, 'No transpose', K, KB, 1, A(1,K+1), LDA, B(1,K+1), LDB, 1, A, LDA)
-				dsyr2k( uplo, 'no-transpose', k, kb, 1.0,
-					A, sa1, sa2, offsetA + ( k * sa2 ),
-					B, sb1, sb2, offsetB + ( k * sb2 ),
-					1.0,
-					A, sa1, sa2, offsetA
-				);
+				dsyr2k( uplo, 'no-transpose', k, kb, 1.0, A, sa1, sa2, offsetA + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb2 ), 1.0, A, sa1, sa2, offsetA);
 
-				dsymm( 'right', uplo, k, kb, 0.5,
-					A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-					B, sb1, sb2, offsetB + ( k * sb2 ),
-					1.0,
-					A, sa1, sa2, offsetA + ( k * sa2 )
-				);
+				dsymm( 'right', uplo, k, kb, 0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb2 ), 1.0, A, sa1, sa2, offsetA + ( k * sa2 ));
 
 				// DTRMM('Right', UPLO, 'Transpose', 'Non-unit', K, KB, 1, B(K+1,K+1), LDB, A(1,K+1), LDA)
-				dtrmm( 'right', uplo, 'transpose', 'non-unit', k, kb, 1.0,
-					B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ),
-					A, sa1, sa2, offsetA + ( k * sa2 )
-				);
+				dtrmm( 'right', uplo, 'transpose', 'non-unit', k, kb, 1.0, B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ), A, sa1, sa2, offsetA + ( k * sa2 ));
 
 				dsygs2( itype, uplo, kb, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ) );
 			}
@@ -231,39 +169,18 @@ function dsygst( itype, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, st
 				kb = Math.min( N - k, NB );
 
 				// DTRMM('Right', UPLO, 'No transpose', 'Non-unit', KB, K, 1, B, LDB, A(K+1,1), LDA)
-				dtrmm( 'right', uplo, 'no-transpose', 'non-unit', kb, k, 1.0,
-					B, sb1, sb2, offsetB,
-					A, sa1, sa2, offsetA + ( k * sa1 )
-				);
+				dtrmm( 'right', uplo, 'no-transpose', 'non-unit', kb, k, 1.0, B, sb1, sb2, offsetB, A, sa1, sa2, offsetA + ( k * sa1 ));
 
 				// DSYMM('Left', UPLO, KB, K, HALF, A(K+1,K+1), LDA, B(K+1,1), LDB, 1, A(K+1,1), LDA)
-				dsymm( 'left', uplo, kb, k, 0.5,
-					A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-					B, sb1, sb2, offsetB + ( k * sb1 ),
-					1.0,
-					A, sa1, sa2, offsetA + ( k * sa1 )
-				);
+				dsymm( 'left', uplo, kb, k, 0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb1 ), 1.0, A, sa1, sa2, offsetA + ( k * sa1 ));
 
 				// DSYR2K(UPLO, 'Transpose', K, KB, 1, A(K+1,1), LDA, B(K+1,1), LDB, 1, A, LDA)
-				dsyr2k( uplo, 'transpose', k, kb, 1.0,
-					A, sa1, sa2, offsetA + ( k * sa1 ),
-					B, sb1, sb2, offsetB + ( k * sb1 ),
-					1.0,
-					A, sa1, sa2, offsetA
-				);
+				dsyr2k( uplo, 'transpose', k, kb, 1.0, A, sa1, sa2, offsetA + ( k * sa1 ), B, sb1, sb2, offsetB + ( k * sb1 ), 1.0, A, sa1, sa2, offsetA);
 
-				dsymm( 'left', uplo, kb, k, 0.5,
-					A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ),
-					B, sb1, sb2, offsetB + ( k * sb1 ),
-					1.0,
-					A, sa1, sa2, offsetA + ( k * sa1 )
-				);
+				dsymm( 'left', uplo, kb, k, 0.5, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb1 ), 1.0, A, sa1, sa2, offsetA + ( k * sa1 ));
 
 				// DTRMM('Left', UPLO, 'Transpose', 'Non-unit', KB, K, 1, B(K+1,K+1), LDB, A(K+1,1), LDA)
-				dtrmm( 'left', uplo, 'transpose', 'non-unit', kb, k, 1.0,
-					B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ),
-					A, sa1, sa2, offsetA + ( k * sa1 )
-				);
+				dtrmm( 'left', uplo, 'transpose', 'non-unit', kb, k, 1.0, B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ), A, sa1, sa2, offsetA + ( k * sa1 ));
 
 				dsygs2( itype, uplo, kb, A, sa1, sa2, offsetA + ( k * sa1 ) + ( k * sa2 ), B, sb1, sb2, offsetB + ( k * sb1 ) + ( k * sb2 ) );
 			}

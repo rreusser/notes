@@ -48,7 +48,7 @@ var EPS = dlamch( 'Precision' );
 // MAIN //
 
 /**
-* Computes the eigenvectors of a real symmetric tridiagonal matrix T
+* Computes the eigenvectors of a real symmetric tridiagonal matrix T.
 * corresponding to specified eigenvalues, using inverse iteration.
 *
 * @private
@@ -201,6 +201,7 @@ function dstein( N, d, strideD, offsetD, e, strideE, offsetE, M, w, strideW, off
 			// Skip all the work if the block size is one
 			if ( blksiz === 1 ) {
 				WORK[ indrv1 ] = 1.0;
+
 				// Jump to store eigenvector
 				_storeEigenvector( N, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, indrv1, b1, blksiz, j );
 				xjm = xj;
@@ -247,6 +248,7 @@ function dstein( N, d, strideD, offsetD, e, strideE, offsetE, M, w, strideW, off
 
 				// Normalize and scale the righthand side vector
 				jmax = idamax( blksiz, WORK, strideWORK, indrv1 );
+
 				// jmax is 0-based
 				scl = blksiz * onenrm * Math.max( EPS, Math.abs( WORK[ indrv4 + ( blksiz - 1 ) * strideWORK ] ) ) / Math.abs( WORK[ indrv1 + jmax * strideWORK ] );
 				dscal( blksiz, scl, WORK, strideWORK, indrv1 );

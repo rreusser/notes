@@ -28,7 +28,7 @@ var Complex128 = require( '@stdlib/complex/float64/ctor' );
 // MAIN //
 
 /**
-* Takes the sum of the absolute values of a complex vector and returns a
+* Takes the sum of the absolute values of a complex vector and returns a.
 * double precision result.
 *
 * Based on DZASUM from Level 1 BLAS. The change is to use the 'genuine'

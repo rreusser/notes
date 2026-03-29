@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var base = require( './base.js' );
 
 

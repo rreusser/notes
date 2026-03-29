@@ -1,8 +1,9 @@
 
+
 'use strict';
 
 /**
-* Expert driver for solving a general system with equilibration and condition estimation.
+* Expert driver for solving a general system with equilibration and condition estimation
 *
 * @module @stdlib/lapack/base/dgesvx
 *

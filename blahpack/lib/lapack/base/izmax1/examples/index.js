@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var izmax1 = require( '@stdlib/lapack/base/izmax1' );

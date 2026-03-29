@@ -101,9 +101,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			tauq_off = offsetTAUQ + (i * strideTAUQ);
 
 			// Generate elementary reflector H(i) to annihilate A(i+1:M-1, i)
-			zlarfg( M - i, A, offsetA + (i * strideA1) + (i * strideA2),
-				A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2),
-				TAUQ, tauq_off );
+			zlarfg( M - i, A, offsetA + (i * strideA1) + (i * strideA2), A, strideA1, offsetA + (Math.min( i + 1, M - 1 ) * strideA1) + (i * strideA2), TAUQ, tauq_off );
 
 			// D(i) = real(alpha)
 			d[ offsetD + (i * strideD) ] = Av[ aii ];
@@ -118,10 +116,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				conj_f64[ 0 ] = tauq_f64[ ( offsetTAUQ + (i * strideTAUQ) ) * 2 ];
 				conj_f64[ 1 ] = -tauq_f64[ (( offsetTAUQ + (i * strideTAUQ) ) * 2) + 1 ];
 
-				zlarf( 'left', M - i, N - i - 1, A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
-					conj_tauq, 0,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
-					WORK, strideWORK, offsetWORK );
+				zlarf( 'left', M - i, N - i - 1, A, strideA1, offsetA + (i * strideA1) + (i * strideA2), conj_tauq, 0, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 			}
 
 			// Restore A(i,i) = D(i) (real, so imag = 0)
@@ -139,9 +134,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
 
 				// Generate elementary reflector G(i) to annihilate A(i, i+2:N-1)
-				zlarfg( N - i - 1, A, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
-					A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 2, N - 1 ) * strideA2),
-					TAUP, taup_off );
+				zlarfg( N - i - 1, A, offsetA + (i * strideA1) + (( i + 1 ) * strideA2), A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 2, N - 1 ) * strideA2), TAUP, taup_off );
 
 				// E(i) = real(alpha)
 				e[ offsetE + (i * strideE) ] = Av[ aij ];
@@ -151,10 +144,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				Av[ aij + 1 ] = 0.0;
 
 				// Apply G(i) to A(i+1:M-1, i+1:N-1) from the right
-				zlarf( 'right', M - i - 1, N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
-					TAUP, taup_off,
-					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
-					WORK, strideWORK, offsetWORK );
+				zlarf( 'right', M - i - 1, N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2), TAUP, taup_off, A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 
 				// Unconjugate row A(i, i+1:N-1)
 				zlacgv( N - i - 1, A, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2) );
@@ -182,9 +172,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 			zlacgv( N - i, A, strideA2, offsetA + (i * strideA1) + (i * strideA2) );
 
 			// Generate elementary reflector G(i) to annihilate A(i, i+1:N-1)
-			zlarfg( N - i, A, offsetA + (i * strideA1) + (i * strideA2),
-				A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2),
-				TAUP, taup_off );
+			zlarfg( N - i, A, offsetA + (i * strideA1) + (i * strideA2), A, strideA2, offsetA + (i * strideA1) + (Math.min( i + 1, N - 1 ) * strideA2), TAUP, taup_off );
 
 			// D(i) = real(alpha)
 			d[ offsetD + (i * strideD) ] = Av[ aii ];
@@ -195,10 +183,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 
 			// Apply G(i) to A(i+1:M-1, i:N-1) from the right
 			if ( i < M - 1 ) {
-				zlarf( 'right', M - i - 1, N - i, A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					TAUP, taup_off,
-					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
-					WORK, strideWORK, offsetWORK );
+				zlarf( 'right', M - i - 1, N - i, A, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAUP, taup_off, A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (i * strideA2), WORK, strideWORK, offsetWORK );
 			}
 
 			// Unconjugate row A(i, i:N-1)
@@ -216,9 +201,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				aij = oA + (( i + 1 ) * sa1) + (i * sa2);
 
 				// Generate elementary reflector H(i) to annihilate A(i+2:M-1, i)
-				zlarfg( M - i - 1, A, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
-					A, strideA1, offsetA + (Math.min( i + 2, M - 1 ) * strideA1) + (i * strideA2),
-					TAUQ, tauq_off );
+				zlarfg( M - i - 1, A, offsetA + (( i + 1 ) * strideA1) + (i * strideA2), A, strideA1, offsetA + (Math.min( i + 2, M - 1 ) * strideA1) + (i * strideA2), TAUQ, tauq_off );
 
 				// E(i) = real(alpha)
 				e[ offsetE + (i * strideE) ] = Av[ aij ];
@@ -231,10 +214,7 @@ function zgebd2( M, N, A, strideA1, strideA2, offsetA, d, strideD, offsetD, e, s
 				conj_f64[ 0 ] = tauq_f64[ ( offsetTAUQ + (i * strideTAUQ) ) * 2 ];
 				conj_f64[ 1 ] = -tauq_f64[ (( offsetTAUQ + (i * strideTAUQ) ) * 2) + 1 ];
 
-				zlarf( 'left', M - i - 1, N - i - 1, A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2),
-					conj_tauq, 0,
-					A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2),
-					WORK, strideWORK, offsetWORK );
+				zlarf( 'left', M - i - 1, N - i - 1, A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2), conj_tauq, 0, A, strideA1, strideA2, offsetA + (( i + 1 ) * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK );
 
 				// Restore A(i+1, i) = E(i) (real, so imag = 0)
 				Av[ aij ] = e[ offsetE + (i * strideE) ];

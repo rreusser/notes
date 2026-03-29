@@ -1,11 +1,14 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zdrscl = require( './../lib/base.js' );
@@ -13,22 +16,50 @@ var zdrscl = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zdrscl.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zdrscl.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -100,27 +131,30 @@ test( 'zdrscl: non-unit stride (incx=2)', function t() {
 	assertArrayClose( reinterpret( x, 0 ), tc.x, 1e-14, 'x' );
 });
 
-test( 'zdrscl: very large scalar triggers iterative SMLNUM scaling (line 69)', function t() {
-	// sa > BIGNUM (~4.5e307) to trigger |cden*SMLNUM| > |cnum|
-	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-	var xv = reinterpret( x, 0 );
-	var sa = 1e308;
+test( 'zdrscl: very large scalar triggers iterative SMLNUM scaling (line 69)', function t() { // eslint-disable-line max-len
+	var xv;
+	var sa;
+	var x;
+
+	x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	xv = reinterpret( x, 0 );
+	sa = 1e308;
 	zdrscl( 2, sa, x, 1, 0 );
-	// Result should be x / sa = [1e-308, 2e-308, 3e-308, 4e-308]
 	assertClose( xv[ 0 ], 1.0 / sa, 1e-10, 'x[0]' );
 	assertClose( xv[ 1 ], 2.0 / sa, 1e-10, 'x[1]' );
 	assertClose( xv[ 2 ], 3.0 / sa, 1e-10, 'x[2]' );
 	assertClose( xv[ 3 ], 4.0 / sa, 1e-10, 'x[3]' );
 });
 
-test( 'zdrscl: very small scalar triggers iterative BIGNUM scaling (line 74)', function t() {
-	// sa < SMLNUM (~2.2e-308) to trigger |cnum/BIGNUM| > |cden|
-	// Use small x values to avoid overflow in the result
-	var x = new Complex128Array( [ 1e-300, 2e-300, 3e-300, 4e-300 ] );
-	var xv = reinterpret( x, 0 );
-	var sa = 5e-309;
+test( 'zdrscl: very small scalar triggers iterative BIGNUM scaling (line 74)', function t() { // eslint-disable-line max-len
+	var xv;
+	var sa;
+	var x;
+
+	x = new Complex128Array( [ 1e-300, 2e-300, 3e-300, 4e-300 ] );
+	xv = reinterpret( x, 0 );
+	sa = 5e-309;
 	zdrscl( 2, sa, x, 1, 0 );
-	// Result should be x / sa
 	assertClose( xv[ 0 ], 1e-300 / sa, 1e-10, 'x[0]' );
 	assertClose( xv[ 1 ], 2e-300 / sa, 1e-10, 'x[1]' );
 	assertClose( xv[ 2 ], 3e-300 / sa, 1e-10, 'x[2]' );

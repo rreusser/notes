@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvalues and eigenvectors of a complex general matrix
+* Computes eigenvalues and eigenvectors of a complex general matrix.
 *
 * @module @stdlib/lapack/base/zgeev
 *

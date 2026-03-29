@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var Float64Array = require( '@stdlib/array/float64' );
 var dlamch = require( '../../dlamch/lib/base.js' );
 var dlaqr1 = require( '../../dlaqr1/lib/base.js' );
 var dlarfg = require( '../../dlarfg/lib/base.js' );
@@ -186,7 +187,7 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 	var sU2 = strideU2;
 	var oWV = offsetWV;
 	var oWH = offsetWH;
-	var vt;
+	var vt = new Float64Array( 3 );
 	var ns;
 	var nu;
 	var k1;

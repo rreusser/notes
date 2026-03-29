@@ -28,7 +28,7 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 // FUNCTIONS //
 
 /**
-* CABS1: |re(z)| + |im(z)|
+* CABS1: |re(z)| + |im(z)|.
 *
 * @private
 * @param {Float64Array} v - Float64 view
@@ -43,7 +43,7 @@ function cabs1( v, idx ) {
 // MAIN //
 
 /**
-* Computes an LU factorization of a complex tridiagonal matrix A using
+* Computes an LU factorization of a complex tridiagonal matrix A using.
 * elimination with partial pivoting and row interchanges.
 *
 * The factorization has the form A = L * U where L is a product of
@@ -76,16 +76,19 @@ function cabs1( v, idx ) {
 * @returns {integer} info - 0 if successful, k > 0 if U(k,k) is zero (1-based)
 */
 function zgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV ) {
+	var sdu2;
+	var du2v;
+	var idu2;
 	var sdl;
 	var sdu;
-	var sdu2;
 	var dlv;
-	var dv;
 	var duv;
-	var du2v;
 	var idl;
 	var idu;
-	var idu2;
+	var d1r;
+	var d1i;
+	var den;
+	var dv;
 	var sd;
 	var ip;
 	var id;
@@ -97,9 +100,6 @@ function zgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, o
 	var ai;
 	var br;
 	var bi;
-	var d1r;
-	var d1i;
-	var den;
 	var i;
 
 	if ( N < 0 ) {
@@ -143,7 +143,7 @@ function zgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, o
 		if ( cabs1( dv, id ) >= cabs1( dlv, idl ) ) {
 			// No row interchange
 			if ( cabs1( dv, id ) !== 0.0 ) {
-				// fact = DL(i) / D(i)
+				// Fact = DL(i) / D(i)
 				ar = dv[ id ];
 				ai = dv[ id + 1 ];
 				den = ar * ar + ai * ai;
@@ -151,13 +151,14 @@ function zgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, o
 				fi = ( dlv[ idl + 1 ] * ar - dlv[ idl ] * ai ) / den;
 				dlv[ idl ] = fr;
 				dlv[ idl + 1 ] = fi;
+
 				// D(i+1) -= fact * DU(i)
 				dv[ id + sd ] -= ( fr * duv[ idu ] - fi * duv[ idu + 1 ] );
 				dv[ id + sd + 1 ] -= ( fr * duv[ idu + 1 ] + fi * duv[ idu ] );
 			}
 		} else {
 			// Interchange rows i and i+1
-			// fact = D(i) / DL(i)
+			// Fact = D(i) / DL(i)
 			ar = dlv[ idl ];
 			ai = dlv[ idl + 1 ];
 			den = ar * ar + ai * ai;
@@ -167,11 +168,12 @@ function zgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, o
 			// D(i) = DL(i)
 			dv[ id ] = dlv[ idl ];
 			dv[ id + 1 ] = dlv[ idl + 1 ];
+
 			// DL(i) = fact
 			dlv[ idl ] = fr;
 			dlv[ idl + 1 ] = fi;
 
-			// temp = DU(i)
+			// Temp = DU(i)
 			tr = duv[ idu ];
 			ti = duv[ idu + 1 ];
 
@@ -210,7 +212,7 @@ function zgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, o
 	if ( N > 1 ) {
 		if ( cabs1( dv, id ) >= cabs1( dlv, idl ) ) {
 			if ( cabs1( dv, id ) !== 0.0 ) {
-				// fact = DL(i) / D(i)
+				// Fact = DL(i) / D(i)
 				ar = dv[ id ];
 				ai = dv[ id + 1 ];
 				den = ar * ar + ai * ai;
@@ -218,6 +220,7 @@ function zgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, o
 				fi = ( dlv[ idl + 1 ] * ar - dlv[ idl ] * ai ) / den;
 				dlv[ idl ] = fr;
 				dlv[ idl + 1 ] = fi;
+
 				// D(i+1) -= fact * DU(i)
 				dv[ id + sd ] -= ( fr * duv[ idu ] - fi * duv[ idu + 1 ] );
 				dv[ id + sd + 1 ] -= ( fr * duv[ idu + 1 ] + fi * duv[ idu ] );

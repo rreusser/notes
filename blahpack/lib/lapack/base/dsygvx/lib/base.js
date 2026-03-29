@@ -32,9 +32,9 @@ var dtrmm = require( '../../../../blas/base/dtrmm/lib/base.js' );
 // MAIN //
 
 /**
-* Computes selected eigenvalues, and optionally, eigenvectors of a real
+* Computes selected eigenvalues, and optionally, eigenvectors of a real.
 * generalized symmetric-definite eigenproblem, of the form
-* A*x=(lambda)*B*x, A*B*x=(lambda)*x, or B*A*x=(lambda)*x.
+* A_x=(lambda)_B_x, A_B_x=(lambda)_x, or B_A_x=(lambda)*x.
 *
 * Here A and B are assumed to be symmetric and B is also positive definite.
 * Eigenvalues and eigenvectors can be selected by specifying either a range
@@ -102,7 +102,7 @@ function dsygvx( itype, jobz, range, uplo, N, A, strideA1, strideA2, offsetA, B,
 	info = dpotrf( uplo, N, B, strideB1, strideB2, offsetB );
 	if ( info !== 0 ) {
 		// INFO = N + INFO: the leading principal minor of order INFO of B
-		// is not positive definite
+		// Is not positive definite
 		return N + info;
 	}
 
@@ -121,7 +121,7 @@ function dsygvx( itype, jobz, range, uplo, N, A, strideA1, strideA2, offsetA, B,
 		if ( M > 0 ) {
 			if ( itype === 1 || itype === 2 ) {
 				// For A*x=(lambda)*B*x and A*B*x=(lambda)*x:
-				// backtransform eigenvectors: x = inv(L)^T*y or inv(U)*y
+				// Backtransform eigenvectors: x = inv(L)^T*y or inv(U)*y
 				if ( upper ) {
 					trans = 'no-transpose';
 				} else {
@@ -130,7 +130,7 @@ function dsygvx( itype, jobz, range, uplo, N, A, strideA1, strideA2, offsetA, B,
 				dtrsm( 'left', uplo, trans, 'non-unit', N, M, 1.0, B, strideB1, strideB2, offsetB, Z, strideZ1, strideZ2, offsetZ );
 			} else if ( itype === 3 ) {
 				// For B*A*x=(lambda)*x:
-				// backtransform eigenvectors: x = L*y or U^T*y
+				// Backtransform eigenvectors: x = L*y or U^T*y
 				if ( upper ) {
 					trans = 'transpose';
 				} else {

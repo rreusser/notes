@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgtcon = require( '@stdlib/lapack/base/zgtcon' );

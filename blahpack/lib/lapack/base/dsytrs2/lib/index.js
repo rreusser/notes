@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a symmetric indefinite system using Bunch-Kaufman factorization with BLAS-3
+* Solves a symmetric indefinite system using Bunch-Kaufman factorization with BLAS-3.
 *
 * @module @stdlib/lapack/base/dsytrs2
 *

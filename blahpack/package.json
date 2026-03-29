@@ -8,7 +8,7 @@
     "lint": "bash bin/lint.sh",
     "lint:fix": "bash bin/lint.sh --fix",
     "audit": "bash bin/audit.sh",
-    "check": "npm test && npm run audit",
+    "check": "npm test && npm run lint && npm run audit",
     "fixtures": "./test/generate_fixtures.sh",
     "report": "node bin/report.js > progress.html",
     "lint:learnings": "! grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md 2>/dev/null | grep . && echo 'All LEARNINGS.md filled in' || (echo 'FAIL: Unfilled LEARNINGS.md found:' && grep -rl 'TODO: Fill in' lib/*/base/*/LEARNINGS.md && exit 1)",

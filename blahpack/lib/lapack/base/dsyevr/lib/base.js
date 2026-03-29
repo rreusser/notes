@@ -46,7 +46,7 @@ var max = Math.max;
 // MAIN //
 
 /**
-* Computes selected eigenvalues and, optionally, eigenvectors of a real
+* Computes selected eigenvalues and, optionally, eigenvectors of a real.
 * symmetric matrix A.
 *
 * Eigenvalues and eigenvectors can be selected by specifying either a range
@@ -106,49 +106,39 @@ function dsyevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	var alleig;
 	var valeig;
 	var indeig;
-	var wantz;
-	var lower;
 	var safmin;
 	var smlnum;
 	var bignum;
 	var iscale;
 	var abstll;
+	var indtau;
+	var llwork;
+	var indibl;
+	var indisp;
+	var indifl;
+	var indiwo;
+	var nsplit;
+	var wantz;
+	var lower;
 	var sigma;
+	var indee;
+	var indwk;
+	var order;
 	var anrm;
 	var rmin;
 	var rmax;
 	var info;
 	var imax;
+	var indd;
+	var inde;
+	var Mout;
+	var tmp1;
 	var eps;
 	var vll;
 	var vuu;
-
-	// WORK partition offsets (all relative, will add offsetWORK)
-	var indtau;
-	var indd;
-	var inde;
-	var indee;
-	var indwk;
-	var llwork;
-
-	// IWORK partition offsets
-	var indibl;
-	var indisp;
-	var indifl;
-	var indiwo;
-
-	// dstebz outputs
-	var Mout;
-	var nsplit;
-	var order;
-
-	// Sorting variables
-	var tmp1;
-
-	// Loop variables
+	var jj;
 	var i;
 	var j;
-	var jj;
 	var M;
 
 	wantz = ( jobz === 'compute-vectors' );
@@ -242,7 +232,9 @@ function dsyevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	llwork = lwork - ( indwk - offsetWORK );
 
 	// Partition IWORK:
+
 	// indibl: block indices (N), indisp: split indices (N),
+
 	// indifl: fail indices (N), indiwo: remaining workspace
 	indibl = offsetIWORK;
 	indisp = indibl + N;
@@ -250,7 +242,8 @@ function dsyevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	indiwo = indifl + N;
 
 	// Reduce symmetric matrix to tridiagonal form
-	// dsytrd outputs: diagonal in WORK[indd..], off-diagonal in WORK[inde..], TAU in WORK[indtau..]
+
+	// Dsytrd outputs: diagonal in WORK[indd..], off-diagonal in WORK[inde..], TAU in WORK[indtau..]
 	dsytrd( uplo, N, A, strideA1, strideA2, offsetA, WORK, 1, indd, WORK, 1, inde, WORK, 1, indtau );
 
 	// Fast path: all eigenvalues, eigenvalues-only => use dsterf
@@ -283,38 +276,15 @@ function dsyevr( jobz, range, uplo, N, A, strideA1, strideA2, offsetA, vl, vu, i
 	Mout = new Int32Array( 1 );
 	nsplit = new Int32Array( 1 );
 
-	info = dstebz( range, order, N, vll, vuu, il, iu, abstll,
-		WORK, 1, indd,
-		WORK, 1, inde,
-		Mout, nsplit,
-		w, strideW, offsetW,
-		IWORK, 1, indibl,
-		IWORK, 1, indisp,
-		WORK, 1, indwk,
-		IWORK, 1, indiwo
-	);
+	info = dstebz( range, order, N, vll, vuu, il, iu, abstll, WORK, 1, indd, WORK, 1, inde, Mout, nsplit, w, strideW, offsetW, IWORK, 1, indibl, IWORK, 1, indisp, WORK, 1, indwk, IWORK, 1, indiwo);
 
 	M = Mout[ 0 ];
 
 	if ( wantz && M > 0 ) {
-		info = dstein( N, WORK, 1, indd, WORK, 1, inde,
-			M, w, strideW, offsetW,
-			IWORK, 1, indibl,
-			IWORK, 1, indisp,
-			Z, strideZ1, strideZ2, offsetZ,
-			WORK, 1, indwk,
-			IWORK, 1, indiwo,
-			IWORK, 1, indifl
-		);
+		info = dstein( N, WORK, 1, indd, WORK, 1, inde, M, w, strideW, offsetW, IWORK, 1, indibl, IWORK, 1, indisp, Z, strideZ1, strideZ2, offsetZ, WORK, 1, indwk, IWORK, 1, indiwo, IWORK, 1, indifl);
 
 		// Transform eigenvectors back to original space
-		dormtr( 'left', uplo, 'no-transpose', N, M,
-			A, strideA1, strideA2, offsetA,
-			WORK, 1, indtau,
-			Z, strideZ1, strideZ2, offsetZ,
-			WORK, 1, indwk,
-			llwork
-		);
+		dormtr( 'left', uplo, 'no-transpose', N, M, A, strideA1, strideA2, offsetA, WORK, 1, indtau, Z, strideZ1, strideZ2, offsetZ, WORK, 1, indwk, llwork);
 	}
 
 	// Undo scaling if necessary

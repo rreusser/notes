@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves the real Sylvester matrix equation
+* Solves the real Sylvester matrix equation.
 *
 * @module @stdlib/lapack/base/dtrsyl
 *

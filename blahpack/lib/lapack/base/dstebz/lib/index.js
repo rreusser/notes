@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes selected eigenvalues of a real symmetric tridiagonal matrix by bisection
+* Computes selected eigenvalues of a real symmetric tridiagonal matrix by bisection.
 *
 * @module @stdlib/lapack/base/dstebz
 *

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -12,21 +11,20 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Copies a triangular matrix from standard packed format (TP) to full format (TR).
- *
- *
- * @param {string} uplo - specifies whether the matrix is upper or lower triangular
- * @param {NonNegativeInteger} N - order of the matrix
- * @param {Float64Array} AP - input packed triangular matrix
- * @param {integer} strideAP - stride length for `AP`
- * @param {NonNegativeInteger} offsetAP - starting index for `AP`
- * @param {Float64Array} A - output matrix in full format
- * @param {integer} strideA1 - stride of the first dimension of `A`
- * @param {integer} strideA2 - stride of the second dimension of `A`
- * @param {NonNegativeInteger} offsetA - starting index for `A`
- * @throws {TypeError} First argument must be a valid matrix triangle
- * @returns {integer} status code
- */
+* Copies a triangular matrix from standard packed format (TP) to full format (TR).
+*
+* @param {string} uplo - specifies whether the matrix is upper or lower triangular
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} AP - input packed triangular matrix
+* @param {integer} strideAP - stride length for `AP`
+* @param {NonNegativeInteger} offsetAP - starting index for `AP`
+* @param {Float64Array} A - output matrix in full format
+* @param {integer} strideA1 - stride of the first dimension of `A`
+* @param {integer} strideA2 - stride of the second dimension of `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @throws {TypeError} First argument must be a valid matrix triangle
+* @returns {integer} status code
+*/
 function dtpttr( uplo, N, AP, strideAP, offsetAP, A, strideA1, strideA2, offsetA ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );

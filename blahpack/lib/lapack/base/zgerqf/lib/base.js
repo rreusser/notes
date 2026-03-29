@@ -36,7 +36,7 @@ var DEFAULT_NB = 32;
 // MAIN //
 
 /**
-* Computes an RQ factorization of a complex M-by-N matrix A = R * Q
+* Computes an RQ factorization of a complex M-by-N matrix A = R * Q.
 * using blocked Householder reflections.
 *
 * On exit, if M <= N, the upper triangle of the subarray
@@ -112,40 +112,25 @@ function zgerqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 		var kk = Math.min( K, ki + nb );
 
 		// Iterate backward over blocks
+
 		// Fortran: DO I = K-KK+KI+1, K-KK+1, -NB (1-based)
+
 		// 0-based: i goes from K-kk+ki down to K-kk, step -nb
 		for ( i = K - kk + ki; i >= K - kk; i -= nb ) {
 			ib = Math.min( K - i, nb );
 
 			// Compute the RQ factorization of the current block
+
 			// A(m-k+i : m-k+i+ib-1, 0 : n-k+i+ib-1)
-			zgerq2(
-				ib, N - K + i + ib,
-				A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ),
-				TAU, strideTAU, offsetTAU + ( i * strideTAU ),
-				WORK, strideWORK, offsetWORK
-			);
+			zgerq2(ib, N - K + i + ib, A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ), TAU, strideTAU, offsetTAU + ( i * strideTAU ), WORK, strideWORK, offsetWORK);
 
 			if ( M - K + i > 0 ) {
 				// Form the triangular factor of the block reflector
 				// H = H(i+ib-1) ... H(i+1) H(i)
-				zlarft(
-					'backward', 'rowwise',
-					N - K + i + ib, ib,
-					A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ),
-					TAU, strideTAU, offsetTAU + ( i * strideTAU ),
-					T, 1, nb, offsetT
-				);
+				zlarft('backward', 'rowwise', N - K + i + ib, ib, A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ), TAU, strideTAU, offsetTAU + ( i * strideTAU ), T, 1, nb, offsetT);
 
 				// Apply H to A(0:m-k+i-1, 0:n-k+i+ib-1) from the right
-				zlarfb(
-					'right', 'no-transpose', 'backward', 'rowwise',
-					M - K + i, N - K + i + ib, ib,
-					A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ),
-					T, 1, nb, offsetT,
-					A, strideA1, strideA2, offsetA,
-					WORK, 1, ldwork, offsetWORK
-				);
+				zlarfb('right', 'no-transpose', 'backward', 'rowwise', M - K + i, N - K + i + ib, ib, A, strideA1, strideA2, offsetA + ( ( M - K + i ) * strideA1 ), T, 1, nb, offsetT, A, strideA1, strideA2, offsetA, WORK, 1, ldwork, offsetWORK);
 			}
 		}
 		var mu = M - K + i + nb;
@@ -157,12 +142,7 @@ function zgerqf( M, N, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU
 
 	// Use unblocked code to factor the last or only block
 	if ( mu > 0 && nu > 0 ) {
-		zgerq2(
-			mu, nu,
-			A, strideA1, strideA2, offsetA,
-			TAU, strideTAU, offsetTAU,
-			WORK, strideWORK, offsetWORK
-		);
+		zgerq2(mu, nu, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK);
 	}
 
 	return 0;

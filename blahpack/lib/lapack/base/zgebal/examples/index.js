@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgebal = require( '@stdlib/lapack/base/zgebal' );

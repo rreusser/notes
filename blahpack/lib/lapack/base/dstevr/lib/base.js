@@ -43,7 +43,7 @@ var max = Math.max;
 // MAIN //
 
 /**
-* Computes selected eigenvalues and, optionally, eigenvectors of a real
+* Computes selected eigenvalues and, optionally, eigenvectors of a real.
 * symmetric tridiagonal matrix T.
 *
 * Eigenvalues and eigenvectors can be selected by specifying either a range
@@ -102,40 +102,32 @@ function dstevr( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	var alleig;
 	var valeig;
 	var indeig;
-	var wantz;
 	var safmin;
 	var smlnum;
 	var bignum;
 	var iscale;
+	var indibl;
+	var indisp;
+	var indifl;
+	var indiwo;
+	var nsplit;
+	var wantz;
 	var sigma;
+	var order;
+	var itmp1;
 	var tnrm;
 	var rmin;
 	var rmax;
 	var info;
 	var imax;
+	var Mout;
+	var tmp1;
 	var eps;
 	var vll;
 	var vuu;
-
-	// IWORK partition offsets
-	var indibl;
-	var indisp;
-	var indifl;
-	var indiwo;
-
-	// dstebz outputs
-	var Mout;
-	var nsplit;
-	var order;
-
-	// Sorting variables
-	var itmp1;
-	var tmp1;
-
-	// Loop variables
+	var jj;
 	var i;
 	var j;
-	var jj;
 	var M;
 
 	wantz = ( jobz === 'compute-vectors' );
@@ -236,29 +228,12 @@ function dstevr( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	Mout = new Int32Array( 1 );
 	nsplit = new Int32Array( 1 );
 
-	info = dstebz( range, order, N, vll, vuu, il, iu, abstol,
-		d, strideD, offsetD,
-		e, strideE, offsetE,
-		Mout, nsplit,
-		w, strideW, offsetW,
-		IWORK, 1, indibl,
-		IWORK, 1, indisp,
-		WORK, 1, offsetWORK,
-		IWORK, 1, indiwo
-	);
+	info = dstebz( range, order, N, vll, vuu, il, iu, abstol, d, strideD, offsetD, e, strideE, offsetE, Mout, nsplit, w, strideW, offsetW, IWORK, 1, indibl, IWORK, 1, indisp, WORK, 1, offsetWORK, IWORK, 1, indiwo);
 
 	M = Mout[ 0 ];
 
 	if ( wantz && M > 0 ) {
-		info = dstein( N, d, strideD, offsetD, e, strideE, offsetE,
-			M, w, strideW, offsetW,
-			IWORK, 1, indibl,
-			IWORK, 1, indisp,
-			Z, strideZ1, strideZ2, offsetZ,
-			WORK, 1, offsetWORK,
-			IWORK, 1, indiwo,
-			IWORK, 1, indifl
-		);
+		info = dstein( N, d, strideD, offsetD, e, strideE, offsetE, M, w, strideW, offsetW, IWORK, 1, indibl, IWORK, 1, indisp, Z, strideZ1, strideZ2, offsetZ, WORK, 1, offsetWORK, IWORK, 1, indiwo, IWORK, 1, indifl);
 	}
 
 	// Undo scaling if necessary

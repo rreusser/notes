@@ -38,15 +38,14 @@ var EPS = dlamch( 'epsilon' );
 var SAFMIN = dlamch( 'safe-minimum' );
 
 
-
 // MAIN //
 
 /**
-* Provides error bounds and backward error estimates for the solution to a
+* Provides error bounds and backward error estimates for the solution to a.
 * system of linear equations with a triangular coefficient matrix.
 *
-* Given a triangular matrix A and its computed solution X to A*X = B (or
-* A^T*X = B), this routine computes:
+* Given a triangular matrix A and its computed solution X to A_X = B (or
+_ A^T_X = B), this routine computes:
 * - FERR: componentwise relative forward error bound for each solution vector
 * - BERR: componentwise relative backward error for each solution vector
 *
@@ -83,28 +82,28 @@ var SAFMIN = dlamch( 'safe-minimum' );
 * @returns {integer} status code (0 = success)
 */
 function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) {
-	var uploLong;
-	var transLong;
-	var diagLong;
 	var transtLong;
+	var transLong;
+	var uploLong;
+	var diagLong;
 	var notran;
 	var nounit;
-	var upper;
 	var lstres;
+	var upper;
 	var safe1;
 	var safe2;
-	var KASE;
 	var ISAVE;
+	var KASE;
 	var EST;
+	var ow2;
 	var xk;
 	var nz;
+	var ow;
+	var pj;
 	var s;
 	var i;
 	var j;
 	var k;
-	var ow;
-	var ow2;
-	var pj;
 
 	// Decode parameters
 	upper = ( uplo === 'upper' );
@@ -137,8 +136,11 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 	safe2 = safe1 / EPS;
 
 	// Workspace layout (all with strideWORK):
+
 	// WORK[offsetWORK .. offsetWORK + (N-1)*strideWORK]       = component bounds (WORK(1..N) in Fortran)
+
 	// WORK[offsetWORK + N*strideWORK .. offsetWORK + (2N-1)*strideWORK] = residual/x vectors (WORK(N+1..2N) in Fortran)
+
 	// WORK[offsetWORK + 2N*strideWORK .. offsetWORK + (3N-1)*strideWORK] = dlacn2 V workspace (WORK(2N+1..3N) in Fortran)
 	ow = offsetWORK;            // start of first segment
 	ow2 = offsetWORK + ( N * strideWORK ); // start of second segment (residual)
@@ -153,6 +155,7 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 		pj = j; // column index
 
 		// Compute residual: WORK(N+1..2N) = A*X(:,j) - B(:,j)
+
 		// First copy X(:,j) into WORK(N+1..2N)
 		dcopy( N, X, strideX1, offsetX + ( pj * strideX2 ), WORK, strideWORK, ow2 );
 
@@ -163,6 +166,7 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 		daxpy( N, -ONE, B, strideB1, offsetB + ( pj * strideB2 ), WORK, strideWORK, ow2 );
 
 		// Compute componentwise bound in WORK(1..N)
+
 		// WORK(i) = |B(i,j)| initially
 		for ( i = 0; i < N; i++ ) {
 			WORK[ ow + ( i * strideWORK ) ] = Math.abs( B[ offsetB + ( i * strideB1 ) + ( pj * strideB2 ) ] );
@@ -188,7 +192,7 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 					}
 				}
 			} else {
-				// lower
+				// Lower
 				if ( nounit ) {
 					for ( k = 0; k < N; k++ ) {
 						xk = Math.abs( X[ offsetX + ( k * strideX1 ) + ( pj * strideX2 ) ] );
@@ -227,7 +231,7 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 					}
 				}
 			} else {
-				// lower
+				// Lower
 				if ( nounit ) {
 					for ( k = 0; k < N; k++ ) {
 						s = ZERO;
@@ -262,6 +266,7 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 		// Estimate forward error bound using dlacn2 (condition estimation via reverse communication)
 
 		// Set up the right-hand side for the condition estimator:
+
 		// WORK(i) becomes the row scaling for the error bound
 		for ( i = 0; i < N; i++ ) {
 			if ( WORK[ ow + ( i * strideWORK ) ] > safe2 ) {
@@ -278,9 +283,7 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 		ISAVE[ 1 ] = 0;
 		ISAVE[ 2 ] = 0;
 		while ( true ) { // eslint-disable-line no-constant-condition
-			dlacn2(
-				N,
-				WORK, strideWORK, offsetWORK + ( 2 * N * strideWORK ),  // V workspace
+			dlacn2(N, WORK, strideWORK, offsetWORK + ( 2 * N * strideWORK ),  // V workspace
 				WORK, strideWORK, ow2,                                    // X workspace
 				IWORK, strideIWORK, offsetIWORK,                          // ISGN
 				EST, KASE,                                                 // EST[0] and KASE[0]
@@ -292,6 +295,7 @@ function dtrrfs( uplo, trans, diag, N, nrhs, A, strideA1, strideA2, offsetA, B, 
 			if ( KASE[ 0 ] === 1 ) {
 				// Multiply by inv(op(A)): solve op(A)^T * x = work(N+1..2N)
 				dtrsv( uploLong, transtLong, diagLong, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, ow2 );
+
 				// Scale by WORK(1..N)
 				for ( i = 0; i < N; i++ ) {
 					WORK[ ow2 + ( i * strideWORK ) ] = WORK[ ow + ( i * strideWORK ) ] * WORK[ ow2 + ( i * strideWORK ) ];

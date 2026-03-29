@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Converts a symmetric matrix factored by dsytrf to standard L*D*L^T form and vice versa
+* Converts a symmetric matrix factored by dsytrf to standard L_D_L^T form and vice versa.
 *
 * @module @stdlib/lapack/base/dsyconv
 *

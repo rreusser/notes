@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a tridiagonal system using the LDL^T factorization from dpttrf
+* Solves a tridiagonal system using the LDL^T factorization from dpttrf.
 *
 * @module @stdlib/lapack/base/dptts2
 *

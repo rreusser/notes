@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes selected eigenvalues and eigenvectors of a real generalized symmetric-definite eigenproblem
+* Computes selected eigenvalues and eigenvectors of a real generalized symmetric-definite eigenproblem.
 *
 * @module @stdlib/lapack/base/dsygvx
 *

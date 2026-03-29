@@ -28,7 +28,7 @@ var zgtts2 = require( './../../zgtts2/lib/base.js' );
 // MAIN //
 
 /**
-* Solves one of the systems of equations A*X = B, A^T*X = B, or A^H*X = B
+* Solves one of the systems of equations A_X = B, A^T_X = B, or A^H*X = B.
 * with a complex tridiagonal matrix A using the LU factorization computed by zgttrf.
 *
 * ## Notes

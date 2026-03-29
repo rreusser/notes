@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solve a complex general tridiagonal system of linear equations A * X = B
+* Solve a complex general tridiagonal system of linear equations A * X = B.
 *
 * @module @stdlib/lapack/base/zgtsv
 *

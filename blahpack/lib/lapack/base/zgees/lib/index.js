@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute eigenvalues and Schur decomposition of a complex matrix
+* Compute eigenvalues and Schur decomposition of a complex matrix.
 *
 * @module @stdlib/lapack/base/zgees
 *

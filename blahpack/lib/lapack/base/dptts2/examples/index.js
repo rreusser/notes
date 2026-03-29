@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dptts2 = require( '@stdlib/lapack/base/dptts2' );

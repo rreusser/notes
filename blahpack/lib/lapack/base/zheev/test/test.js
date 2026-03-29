@@ -1,33 +1,65 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
+var Float64Array = require( '@stdlib/array/float64' );
 var zheev = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zheev.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'zheev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -38,158 +70,248 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 /**
 * Build a 4x4 Hermitian test matrix (lower triangle stored).
-* A = [[2, *, *, *],
-*      [1+i, 3, *, *],
+* A = [[2, _, _, *],
+*      [1+i, 3, _, _],
 *      [0.5-0.5i, 2i, 4, *],
 *      [0, 1-i, 0.5+0.5i, 5]]
 */
 function make4x4Lower() {
 	// Column-major interleaved real/imag, 4x4
 	return new Float64Array([
-		// col 0
-		2.0, 0.0,       // (0,0)
-		1.0, 1.0,       // (1,0)
-		0.5, -0.5,      // (2,0)
-		0.0, 0.0,       // (3,0)
-		// col 1
-		0.0, 0.0,       // (0,1) not referenced
-		3.0, 0.0,       // (1,1)
-		0.0, 2.0,       // (2,1)
-		1.0, -1.0,      // (3,1)
-		// col 2
-		0.0, 0.0,       // (0,2) not referenced
-		0.0, 0.0,       // (1,2) not referenced
-		4.0, 0.0,       // (2,2)
-		0.5, 0.5,       // (3,2)
-		// col 3
-		0.0, 0.0,       // (0,3) not referenced
-		0.0, 0.0,       // (1,3) not referenced
-		0.0, 0.0,       // (2,3) not referenced
-		5.0, 0.0        // (3,3)
+		// Col 0
+		2.0,
+		0.0,       // (0,0)
+		1.0,
+		1.0,       // (1,0)
+		0.5,
+		-0.5,      // (2,0)
+		0.0,
+		0.0,       // (3,0)
+
+		// Col 1
+		0.0,
+		0.0,       // (0,1) not referenced
+		3.0,
+		0.0,       // (1,1)
+		0.0,
+		2.0,       // (2,1)
+		1.0,
+		-1.0,      // (3,1)
+
+		// Col 2
+		0.0,
+		0.0,       // (0,2) not referenced
+		0.0,
+		0.0,       // (1,2) not referenced
+		4.0,
+		0.0,       // (2,2)
+		0.5,
+		0.5,       // (3,2)
+
+		// Col 3
+		0.0,
+		0.0,       // (0,3) not referenced
+		0.0,
+		0.0,       // (1,3) not referenced
+		0.0,
+		0.0,       // (2,3) not referenced
+		5.0,
+		0.0        // (3,3)
 	]);
 }
 
 /**
 * Build the same 4x4 Hermitian matrix with upper triangle stored.
 */
-function make4x4Upper() {
+function make4x4Upper( ) {
 	return new Float64Array([
-		// col 0
-		2.0, 0.0,       // (0,0)
-		0.0, 0.0,       // (1,0) not referenced
-		0.0, 0.0,       // (2,0)
-		0.0, 0.0,       // (3,0)
-		// col 1
-		1.0, -1.0,      // (0,1) conj of (1,0)
-		3.0, 0.0,       // (1,1)
-		0.0, 0.0,       // (2,1) not referenced
-		0.0, 0.0,       // (3,1)
-		// col 2
-		0.5, 0.5,       // (0,2) conj of (2,0)
-		0.0, -2.0,      // (1,2) conj of (2,1)
-		4.0, 0.0,       // (2,2)
-		0.0, 0.0,       // (3,2)
-		// col 3
-		0.0, 0.0,       // (0,3)
-		1.0, 1.0,       // (1,3) conj of (3,1)
-		0.5, -0.5,      // (2,3) conj of (3,2)
-		5.0, 0.0        // (3,3)
+		// Col 0
+		2.0,
+		0.0,       // (0,0)
+		0.0,
+		0.0,       // (1,0) not referenced
+		0.0,
+		0.0,       // (2,0)
+		0.0,
+		0.0,       // (3,0)
+
+		// Col 1
+		1.0,
+		-1.0,      // (0,1) conj of (1,0)
+		3.0,
+		0.0,       // (1,1)
+		0.0,
+		0.0,       // (2,1) not referenced
+		0.0,
+		0.0,       // (3,1)
+
+		// Col 2
+		0.5,
+		0.5,       // (0,2) conj of (2,0)
+		0.0,
+		-2.0,      // (1,2) conj of (2,1)
+		4.0,
+		0.0,       // (2,2)
+		0.0,
+		0.0,       // (3,2)
+
+		// Col 3
+		0.0,
+		0.0,       // (0,3)
+		1.0,
+		1.0,       // (1,3) conj of (3,1)
+		0.5,
+		-0.5,      // (2,3) conj of (3,2)
+		5.0,
+		0.0        // (3,3)
 	]);
 }
 
 /**
 * Build a 3x3 Hermitian matrix (lower triangle stored).
-* A = [[4, *, *],
+* A = [[4, _, _],
 *      [1-2i, 5, *],
 *      [i, 2, 6]]
 */
-function make3x3Lower() {
+function make3x3Lower( ) {
 	return new Float64Array([
-		// col 0
-		4.0, 0.0,       // (0,0)
-		1.0, -2.0,      // (1,0)
-		0.0, 1.0,       // (2,0)
-		// col 1
-		0.0, 0.0,       // (0,1) not referenced
-		5.0, 0.0,       // (1,1)
-		2.0, 0.0,       // (2,1)
-		// col 2
-		0.0, 0.0,       // (0,2) not referenced
-		0.0, 0.0,       // (1,2) not referenced
-		6.0, 0.0        // (2,2)
+		// Col 0
+		4.0,
+		0.0,       // (0,0)
+		1.0,
+		-2.0,      // (1,0)
+		0.0,
+		1.0,       // (2,0)
+
+		// Col 1
+		0.0,
+		0.0,       // (0,1) not referenced
+		5.0,
+		0.0,       // (1,1)
+		2.0,
+		0.0,       // (2,1)
+
+		// Col 2
+		0.0,
+		0.0,       // (0,2) not referenced
+		0.0,
+		0.0,       // (1,2) not referenced
+		6.0,
+		0.0        // (2,2)
 	]);
 }
 
 /**
 * Build the same 3x3 Hermitian matrix (upper triangle stored).
 */
-function make3x3Upper() {
+function make3x3Upper( ) {
 	return new Float64Array([
-		// col 0
-		4.0, 0.0,       // (0,0)
-		0.0, 0.0,       // (1,0) not referenced
-		0.0, 0.0,       // (2,0)
-		// col 1
-		1.0, 2.0,       // (0,1) conj of (1,0)
-		5.0, 0.0,       // (1,1)
-		0.0, 0.0,       // (2,1)
-		// col 2
-		0.0, -1.0,      // (0,2) conj of (2,0)
-		2.0, 0.0,       // (1,2) conj of (2,1)
-		6.0, 0.0        // (2,2)
+		// Col 0
+		4.0,
+		0.0,       // (0,0)
+		0.0,
+		0.0,       // (1,0) not referenced
+		0.0,
+		0.0,       // (2,0)
+
+		// Col 1
+		1.0,
+		2.0,       // (0,1) conj of (1,0)
+		5.0,
+		0.0,       // (1,1)
+		0.0,
+		0.0,       // (2,1)
+
+		// Col 2
+		0.0,
+		-1.0,      // (0,2) conj of (2,0)
+		2.0,
+		0.0,       // (1,2) conj of (2,1)
+		6.0,
+		0.0        // (2,2)
 	]);
 }
 
 /**
 * Build the full 4x4 Hermitian matrix (all elements) for verification.
 */
-function makeFull4x4() {
+function makeFull4x4( ) {
 	return new Float64Array([
-		// col 0
-		2.0, 0.0,       // (0,0)
-		1.0, 1.0,       // (1,0)
-		0.5, -0.5,      // (2,0)
-		0.0, 0.0,       // (3,0)
-		// col 1
-		1.0, -1.0,      // (0,1)
-		3.0, 0.0,       // (1,1)
-		0.0, 2.0,       // (2,1)
-		1.0, -1.0,      // (3,1)
-		// col 2
-		0.5, 0.5,       // (0,2)
-		0.0, -2.0,      // (1,2)
-		4.0, 0.0,       // (2,2)
-		0.5, 0.5,       // (3,2)
-		// col 3
-		0.0, 0.0,       // (0,3)
-		1.0, 1.0,       // (1,3)
-		0.5, -0.5,      // (2,3)
-		5.0, 0.0        // (3,3)
+		// Col 0
+		2.0,
+		0.0,       // (0,0)
+		1.0,
+		1.0,       // (1,0)
+		0.5,
+		-0.5,      // (2,0)
+		0.0,
+		0.0,       // (3,0)
+
+		// Col 1
+		1.0,
+		-1.0,      // (0,1)
+		3.0,
+		0.0,       // (1,1)
+		0.0,
+		2.0,       // (2,1)
+		1.0,
+		-1.0,      // (3,1)
+
+		// Col 2
+		0.5,
+		0.5,       // (0,2)
+		0.0,
+		-2.0,      // (1,2)
+		4.0,
+		0.0,       // (2,2)
+		0.5,
+		0.5,       // (3,2)
+
+		// Col 3
+		0.0,
+		0.0,       // (0,3)
+		1.0,
+		1.0,       // (1,3)
+		0.5,
+		-0.5,      // (2,3)
+		5.0,
+		0.0        // (3,3)
 	]);
 }
 
 /**
 * Build the full 3x3 Hermitian matrix for verification.
 */
-function makeFull3x3() {
+function makeFull3x3( ) {
 	return new Float64Array([
-		// col 0
-		4.0, 0.0,       // (0,0)
-		1.0, -2.0,      // (1,0)
-		0.0, 1.0,       // (2,0)
-		// col 1
-		1.0, 2.0,       // (0,1)
-		5.0, 0.0,       // (1,1)
-		2.0, 0.0,       // (2,1)
-		// col 2
-		0.0, -1.0,      // (0,2)
-		2.0, 0.0,       // (1,2)
-		6.0, 0.0        // (2,2)
+		// Col 0
+		4.0,
+		0.0,       // (0,0)
+		1.0,
+		-2.0,      // (1,0)
+		0.0,
+		1.0,       // (2,0)
+
+		// Col 1
+		1.0,
+		2.0,       // (0,1)
+		5.0,
+		0.0,       // (1,1)
+		2.0,
+		0.0,       // (2,1)
+
+		// Col 2
+		0.0,
+		-1.0,      // (0,2)
+		2.0,
+		0.0,       // (1,2)
+		6.0,
+		0.0        // (2,2)
 	]);
 }
 
 /**
-* Verify A * Z = Z * diag(W) for each eigenpair.
+* Verify A _ Z = Z _ diag(W) for each eigenpair.
 * A is the original matrix (full, column-major, interleaved).
 * Z is the eigenvector matrix (column-major, interleaved).
 * W is the eigenvalue array (real).
@@ -230,7 +352,7 @@ function verifyEigenpairs( Afull, Z, W, N, tol, msg ) {
 		}
 		err = Math.sqrt( err );
 		norm = Math.sqrt( norm );
-		assert.ok( err / Math.max(norm, 1.0) < tol, msg + ': eigenpair ' + j + ' residual ' + (err / Math.max(norm, 1.0)) );
+		assert.ok( err / Math.max(norm, 1.0) < tol, msg + ': eigenpair ' + j + ' residual ' + (err / Math.max(norm, 1.0)) ); // eslint-disable-line max-len
 	}
 }
 
@@ -256,13 +378,13 @@ function verifyOrthonormality( Z, N, tol, msg ) {
 				var ziIm = Z[ (i * N + k) * 2 + 1 ];
 				var zjRe = Z[ (j * N + k) * 2 ];
 				var zjIm = Z[ (j * N + k) * 2 + 1 ];
+
 				// conj(zi) * zj = (ziRe - ziIm*i)(zjRe + zjIm*i)
 				dotRe += ziRe * zjRe + ziIm * zjIm;
 				dotIm += ziRe * zjIm - ziIm * zjRe;
 			}
 			expRe = ( i === j ) ? 1.0 : 0.0;
-			assert.ok( Math.abs(dotRe - expRe) < tol && Math.abs(dotIm) < tol,
-				msg + ': Z^H*Z[' + i + ',' + j + '] = (' + dotRe + ',' + dotIm + '), expected (' + expRe + ',0)' );
+			assert.ok( Math.abs(dotRe - expRe) < tol && Math.abs(dotIm) < tol, msg + ': Z^H*Z[' + i + ',' + j + '] = (' + dotRe + ',' + dotIm + '), expected (' + expRe + ',0)' ); // eslint-disable-line max-len
 		}
 	}
 }
@@ -273,130 +395,189 @@ function verifyOrthonormality( Z, N, tol, msg ) {
 function callZheev( jobz, uplo, N, Adata, W ) {
 	var rworkLen = Math.max( 1, 3 * N - 2 );
 	var lwork = Math.max( 1, ( 32 + 1 ) * N );
-	var WORK = new Complex128Array( lwork );
 	var RWORK = new Float64Array( rworkLen );
-	var A = new Complex128Array( Adata.buffer.slice(0) );
+	var WORK = new Complex128Array( lwork );
 	var info;
+	var A = new Complex128Array( Adata.buffer.slice(0) );
 
-	info = zheev( jobz, uplo, N, A, 1, N, 0, W, 1, 0, WORK, 1, 0, lwork, RWORK, 1, 0 );
+	info = zheev( jobz, uplo, N, A, 1, N, 0, W, 1, 0, WORK, 1, 0, lwork, RWORK, 1, 0 ); // eslint-disable-line max-len
 	return {
-		info: info,
-		A: new Float64Array( A.buffer ),
-		W: W
+		'info': info,
+		'A': new Float64Array( A.buffer ),
+		'W': W
 	};
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
 // TESTS //
 
 test( 'zheev: 4x4 JOBZ=V UPLO=L', function t() {
-	var tc = findCase( 'zheev_4x4_V_L' );
-	var Afull = makeFull4x4();
-	var W = new Float64Array( 4 );
-	var result = callZheev( 'compute', 'lower', 4, make4x4Lower(), W );
+	var result;
+	var Afull;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_4x4_V_L' );
+	Afull = makeFull4x4();
+	W = new Float64Array( 4 );
+	result = callZheev( 'compute', 'lower', 4, make4x4Lower(), W );
 	assert.equal( result.info, 0, 'info=0' );
-	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
+	assertArrayClose( toArray( result.W), tc.w, 1e-13, 'eigenvalues' );
 	verifyEigenpairs( Afull, result.A, result.W, 4, 1e-12, 'AZ=ZW' );
 	verifyOrthonormality( result.A, 4, 1e-12, 'Z^H*Z=I' );
 });
 
 test( 'zheev: 4x4 JOBZ=V UPLO=U', function t() {
-	var tc = findCase( 'zheev_4x4_V_U' );
-	var Afull = makeFull4x4();
-	var W = new Float64Array( 4 );
-	var result = callZheev( 'compute', 'upper', 4, make4x4Upper(), W );
+	var result;
+	var Afull;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_4x4_V_U' );
+	Afull = makeFull4x4();
+	W = new Float64Array( 4 );
+	result = callZheev( 'compute', 'upper', 4, make4x4Upper(), W );
 	assert.equal( result.info, 0, 'info=0' );
-	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
+	assertArrayClose( toArray( result.W), tc.w, 1e-13, 'eigenvalues' );
 	verifyEigenpairs( Afull, result.A, result.W, 4, 1e-12, 'AZ=ZW' );
 	verifyOrthonormality( result.A, 4, 1e-12, 'Z^H*Z=I' );
 });
 
 test( 'zheev: 4x4 JOBZ=N UPLO=L (eigenvalues only)', function t() {
-	var tc = findCase( 'zheev_4x4_N_L' );
-	var W = new Float64Array( 4 );
-	var result = callZheev( 'none', 'lower', 4, make4x4Lower(), W );
+	var result;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_4x4_N_L' );
+	W = new Float64Array( 4 );
+	result = callZheev( 'none', 'lower', 4, make4x4Lower(), W );
 	assert.equal( result.info, 0, 'info=0' );
-	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
+	assertArrayClose( toArray( result.W), tc.w, 1e-13, 'eigenvalues' );
 });
 
 test( 'zheev: 3x3 JOBZ=V UPLO=L', function t() {
-	var tc = findCase( 'zheev_3x3_V_L' );
-	var Afull = makeFull3x3();
-	var W = new Float64Array( 3 );
-	var result = callZheev( 'compute', 'lower', 3, make3x3Lower(), W );
+	var result;
+	var Afull;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_3x3_V_L' );
+	Afull = makeFull3x3();
+	W = new Float64Array( 3 );
+	result = callZheev( 'compute', 'lower', 3, make3x3Lower(), W );
 	assert.equal( result.info, 0, 'info=0' );
-	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
+	assertArrayClose( toArray( result.W), tc.w, 1e-13, 'eigenvalues' );
 	verifyEigenpairs( Afull, result.A, result.W, 3, 1e-12, 'AZ=ZW' );
 	verifyOrthonormality( result.A, 3, 1e-12, 'Z^H*Z=I' );
 });
 
 test( 'zheev: 3x3 JOBZ=V UPLO=U', function t() {
-	var tc = findCase( 'zheev_3x3_V_U' );
-	var Afull = makeFull3x3();
-	var W = new Float64Array( 3 );
-	var result = callZheev( 'compute', 'upper', 3, make3x3Upper(), W );
+	var result;
+	var Afull;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_3x3_V_U' );
+	Afull = makeFull3x3();
+	W = new Float64Array( 3 );
+	result = callZheev( 'compute', 'upper', 3, make3x3Upper(), W );
 	assert.equal( result.info, 0, 'info=0' );
-	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
+	assertArrayClose( toArray( result.W), tc.w, 1e-13, 'eigenvalues' );
 	verifyEigenpairs( Afull, result.A, result.W, 3, 1e-12, 'AZ=ZW' );
 	verifyOrthonormality( result.A, 3, 1e-12, 'Z^H*Z=I' );
 });
 
 test( 'zheev: N=1 JOBZ=V', function t() {
-	var tc = findCase( 'zheev_1x1_V' );
-	var W = new Float64Array( 1 );
-	var Adata = new Float64Array([ 7.5, 0.0 ]);
-	var result = callZheev( 'compute', 'lower', 1, Adata, W );
+	var result;
+	var Adata;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_1x1_V' );
+	W = new Float64Array( 1 );
+	Adata = new Float64Array([ 7.5, 0.0 ]);
+	result = callZheev( 'compute', 'lower', 1, Adata, W );
 	assert.equal( result.info, 0, 'info=0' );
 	assertClose( result.W[0], 7.5, 1e-15, 'eigenvalue' );
-	// Eigenvector should be [1, 0]
 	assertClose( result.A[0], 1.0, 1e-15, 'Z(0,0) real' );
 	assertClose( result.A[1], 0.0, 1e-15, 'Z(0,0) imag' );
 });
 
 test( 'zheev: N=0', function t() {
-	var W = new Float64Array( 0 );
-	var A = new Complex128Array( 0 );
-	var WORK = new Complex128Array( 1 );
-	var RWORK = new Float64Array( 1 );
+	var RWORK;
+	var WORK;
+	var info;
+	var W;
+	var A;
 
-	var info = zheev( 'compute', 'lower', 0, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 1, RWORK, 1, 0 );
+	W = new Float64Array( 0 );
+	A = new Complex128Array( 0 );
+	WORK = new Complex128Array( 1 );
+	RWORK = new Float64Array( 1 );
+	info = zheev( 'compute', 'lower', 0, A, 1, 1, 0, W, 1, 0, WORK, 1, 0, 1, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info=0' );
 });
 
 test( 'zheev: 2x2 diagonal JOBZ=V', function t() {
-	var tc = findCase( 'zheev_2x2_diag' );
-	var W = new Float64Array( 2 );
-	var Adata = new Float64Array([
-		3.0, 0.0,  // (0,0)
-		0.0, 0.0,  // (1,0)
-		0.0, 0.0,  // (0,1)
-		1.0, 0.0   // (1,1)
-	]);
-	var Afull = new Float64Array([
-		3.0, 0.0,  // (0,0)
-		0.0, 0.0,  // (1,0)
-		0.0, 0.0,  // (0,1)
-		1.0, 0.0   // (1,1)
-	]);
-	var result = callZheev( 'compute', 'lower', 2, Adata, W );
+	var result;
+	var Adata;
+	var Afull;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_2x2_diag' );
+	W = new Float64Array( 2 );
+	Adata = new Float64Array([
+		3.0,
+		0.0,  // (0,0)
+		0.0,
+		0.0,  // (1,0)
+		0.0,
+		0.0,  // (0,1)
+		1.0,
+		0.0   // (1,1)
+	]);
+	Afull = new Float64Array([
+		3.0,
+		0.0,  // (0,0)
+		0.0,
+		0.0,  // (1,0)
+		0.0,
+		0.0,  // (0,1)
+		1.0,
+		0.0   // (1,1)
+	]);
+	result = callZheev( 'compute', 'lower', 2, Adata, W );
 	assert.equal( result.info, 0, 'info=0' );
-	assertArrayClose( Array.from(result.W), tc.w, 1e-14, 'eigenvalues' );
+	assertArrayClose( toArray( result.W), tc.w, 1e-14, 'eigenvalues' );
 	verifyEigenpairs( Afull, result.A, result.W, 2, 1e-12, 'AZ=ZW' );
 	verifyOrthonormality( result.A, 2, 1e-12, 'Z^H*Z=I' );
 });
 
 test( 'zheev: 3x3 JOBZ=N UPLO=U (eigenvalues only)', function t() {
-	var tc = findCase( 'zheev_3x3_N_U' );
-	var W = new Float64Array( 3 );
-	var result = callZheev( 'none', 'upper', 3, make3x3Upper(), W );
+	var result;
+	var tc;
+	var W;
 
+	tc = findCase( 'zheev_3x3_N_U' );
+	W = new Float64Array( 3 );
+	result = callZheev( 'none', 'upper', 3, make3x3Upper(), W );
 	assert.equal( result.info, 0, 'info=0' );
-	assertArrayClose( Array.from(result.W), tc.w, 1e-13, 'eigenvalues' );
+	assertArrayClose( toArray( result.W), tc.w, 1e-13, 'eigenvalues' );
 });

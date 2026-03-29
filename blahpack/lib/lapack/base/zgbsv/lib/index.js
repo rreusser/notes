@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a complex banded system of linear equations A*X = B using LU factorization
+* Solves a complex banded system of linear equations A*X = B using LU factorization.
 *
 * @module @stdlib/lapack/base/zgbsv
 *

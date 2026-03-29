@@ -45,7 +45,7 @@ var SMLNUM = dlamch( 'safe-minimum' );
 // FUNCTIONS //
 
 /**
-* CABS1: |re(z)| + |im(z)|
+* CABS1: |re(z)| + |im(z)|.
 *
 * @private
 * @param {Float64Array} v - Float64 view
@@ -60,7 +60,7 @@ function cabs1( v, idx ) {
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a complex general band
+* Estimates the reciprocal of the condition number of a complex general band.
 * matrix A, in either the 1-norm or the infinity-norm, using the LU
 * factorization computed by zgbtrf.
 *
@@ -98,6 +98,8 @@ function zgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 	var KASE;
 	var EST;
 	var dot;
+	var sa1;
+	var sa2;
 	var wv;
 	var lm;
 	var jp;
@@ -105,8 +107,6 @@ function zgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 	var ix;
 	var sw;
 	var si;
-	var sa1;
-	var sa2;
 	var pw;
 	var tr;
 	var ti;
@@ -157,11 +157,9 @@ function zgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 	bail = false;
 
 	while ( true ) {
-		zlacn2( N,
-			WORK, sw, offsetWORK + ( N * sw ),  // v
+		zlacn2( N, WORK, sw, offsetWORK + ( N * sw ),  // v
 			WORK, sw, offsetWORK,                // x
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -175,44 +173,38 @@ function zgbcon( norm, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, IPIV, stri
 				for ( j = 0; j < N - 1; j++ ) {
 					lm = Math.min( kl, N - j - 1 );
 					jp = IPIV[ offsetIPIV + ( j * si ) ];
-					// t = WORK(jp) - read from Float64 view
+
+					// T = WORK(jp) - read from Float64 view
 					pw = ( offsetWORK + ( jp * sw ) ) * 2;
 					tr = wv[ pw ];
 					ti = wv[ pw + 1 ];
 					if ( jp !== j ) {
-						// swap WORK(jp) and WORK(j)
+						// Swap WORK(jp) and WORK(j)
 						wv[ pw ] = wv[ ( offsetWORK + ( j * sw ) ) * 2 ];
 						wv[ pw + 1 ] = wv[ ( offsetWORK + ( j * sw ) ) * 2 + 1 ];
 						wv[ ( offsetWORK + ( j * sw ) ) * 2 ] = tr;
 						wv[ ( offsetWORK + ( j * sw ) ) * 2 + 1 ] = ti;
 					}
 					// ZAXPY(lm, -t, AB(KD+1,j), 1, WORK(j+1), 1)
-					zaxpy( lm, new Complex128( -tr, -ti ),
-						AB, sa1, offsetAB + ( ( kd + 1 ) * sa1 ) + ( j * sa2 ),
-						WORK, sw, offsetWORK + ( ( j + 1 ) * sw ) );
+					zaxpy( lm, new Complex128( -tr, -ti ), AB, sa1, offsetAB + ( ( kd + 1 ) * sa1 ) + ( j * sa2 ), WORK, sw, offsetWORK + ( ( j + 1 ) * sw ) );
 				}
 			}
 
 			// Solve U*x = y using zlatbs
-			zlatbs( 'upper', 'no-transpose', 'non-unit', normin, N, kl + ku,
-				AB, sa1, sa2, offsetAB,
-				WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK );
+			zlatbs( 'upper', 'no-transpose', 'non-unit', normin, N, kl + ku, AB, sa1, sa2, offsetAB, WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK );
 		} else {
 			// Multiply by inv(U^H), then inv(L^H)
 
 			// Solve U^H*x = y using zlatbs
-			zlatbs( 'upper', 'conjugate-transpose', 'non-unit', normin, N, kl + ku,
-				AB, sa1, sa2, offsetAB,
-				WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK );
+			zlatbs( 'upper', 'conjugate-transpose', 'non-unit', normin, N, kl + ku, AB, sa1, sa2, offsetAB, WORK, sw, offsetWORK, scale, RWORK, strideRWORK, offsetRWORK );
 
 			// Apply L^H: backward elimination with pivots
 			if ( lnoti ) {
 				for ( j = N - 2; j >= 0; j-- ) {
 					lm = Math.min( kl, N - j - 1 );
+
 					// WORK(j) -= ZDOTC(lm, AB(KD+1,j), 1, WORK(j+1), 1)
-					dot = zdotc( lm,
-						AB, sa1, offsetAB + ( ( kd + 1 ) * sa1 ) + ( j * sa2 ),
-						WORK, sw, offsetWORK + ( ( j + 1 ) * sw ) );
+					dot = zdotc( lm, AB, sa1, offsetAB + ( ( kd + 1 ) * sa1 ) + ( j * sa2 ), WORK, sw, offsetWORK + ( ( j + 1 ) * sw ) );
 					pw = ( offsetWORK + ( j * sw ) ) * 2;
 					wv[ pw ] -= real( dot );
 					wv[ pw + 1 ] -= imag( dot );

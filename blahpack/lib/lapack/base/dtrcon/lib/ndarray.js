@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -13,33 +12,32 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Estimates the reciprocal of the condition number of a triangular matrix A,
- * in either the 1-norm or the infinity-norm.
- *
- * The norm of A is computed and an estimate is obtained for norm(inv(A)),
- * then the reciprocal of the condition number is computed as:
- *   RCOND = 1 / ( norm(A) * norm(inv(A)) )
- *
- *
- * @param {string} norm - norm type: 'one-norm' or 'inf-norm'
- * @param {string} uplo - 'upper' or 'lower'
- * @param {string} diag - 'unit' or 'non-unit'
- * @param {NonNegativeInteger} N - order of the matrix
- * @param {Float64Array} A - input triangular matrix
- * @param {integer} strideA1 - stride of the first dimension of `A`
- * @param {integer} strideA2 - stride of the second dimension of `A`
- * @param {NonNegativeInteger} offsetA - starting index for `A`
- * @param {Float64Array} RCOND - output array of length 1; RCOND[0] receives the reciprocal condition number
- * @param {Float64Array} WORK - workspace array of length at least 3*N
- * @param {integer} strideWORK - stride length for `WORK`
- * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
- * @param {Int32Array} IWORK - integer workspace array of length at least N
- * @param {integer} strideIWORK - stride length for `IWORK`
- * @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
- * @throws {TypeError} Second argument must be a valid matrix triangle
- * @throws {TypeError} Third argument must be a valid diagonal type
- * @returns {integer} info - 0 if successful
- */
+* Estimates the reciprocal of the condition number of a triangular matrix A,.
+* in either the 1-norm or the infinity-norm.
+*
+* The norm of A is computed and an estimate is obtained for norm(inv(A)),
+* then the reciprocal of the condition number is computed as:
+*   RCOND = 1 / ( norm(A) * norm(inv(A)) )
+*
+* @param {string} norm - norm type: 'one-norm' or 'inf-norm'
+* @param {string} uplo - 'upper' or 'lower'
+* @param {string} diag - 'unit' or 'non-unit'
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} A - input triangular matrix
+* @param {integer} strideA1 - stride of the first dimension of `A`
+* @param {integer} strideA2 - stride of the second dimension of `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @param {Float64Array} RCOND - output array of length 1; RCOND[0] receives the reciprocal condition number
+* @param {Float64Array} WORK - workspace array of length at least 3*N
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {Int32Array} IWORK - integer workspace array of length at least N
+* @param {integer} strideIWORK - stride length for `IWORK`
+* @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
+* @throws {TypeError} Second argument must be a valid matrix triangle
+* @throws {TypeError} Third argument must be a valid diagonal type
+* @returns {integer} info - 0 if successful
+*/
 function dtrcon( norm, uplo, diag, N, A, strideA1, strideA2, offsetA, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );

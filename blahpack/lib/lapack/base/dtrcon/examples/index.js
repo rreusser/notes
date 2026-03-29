@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtrcon = require( '@stdlib/lapack/base/dtrcon' );

@@ -44,16 +44,16 @@ var ONE = 1.0;
 // MAIN //
 
 /**
-* Solves the generalized Sylvester equation (unblocked):
+* Solves the generalized Sylvester equation (unblocked):.
 *
-*   A*R - L*B = scale*C        (1)
-*   D*R - L*E = scale*F
+*   A_R - L_B = scale_C        (1)
+_   D_R - L_E = scale_F
 *
 * using Level 1 and 2 BLAS calls.
 *
 * If TRANS = 'transpose', solves the transposed system:
-*   A^T*R + D^T*L = scale*C    (3)
-*   -R*B^T - L*E^T = scale*F
+*   A^T_R + D^T_L = scale_C    (3)
+_   -R_B^T - L_E^T = scale_F
 *
 * (A,D), (B,E), C, and F are M-by-M, N-by-N, M-by-N, M-by-N matrices.
 * (A,D) and (B,E) must be in real Schur form (quasi-triangular).

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgecon = require( '@stdlib/lapack/base/zgecon' );

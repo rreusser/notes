@@ -38,7 +38,7 @@ var ONE = 1.0;
 // MAIN //
 
 /**
-* Reorders the real Schur factorization of a real matrix A = Q*T*Q**T,
+* Reorders the real Schur factorization of a real matrix A = Q_T_Q**T,.
 * so that a selected cluster of eigenvalues appears in the leading diagonal
 * blocks of the upper quasi-triangular matrix T, and the leading columns
 * of Q form an orthonormal basis of the corresponding right invariant subspace.
@@ -81,6 +81,7 @@ var ONE = 1.0;
 * @returns {integer} info (0 = success, 1 = reordering failed)
 */
 function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, WR, strideWR, offsetWR, WI, strideWI, offsetWI, M, s, sep, WORK, strideWORK, offsetWORK, lwork, IWORK, strideIWORK, offsetIWORK, liwork ) {
+	var scalArr;
 	var wantbh;
 	var wantsp;
 	var lquery;
@@ -90,14 +91,13 @@ function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	var wantq;
 	var rnorm;
 	var scale;
-	var scalArr;
+	var isave;
 	var ierr;
 	var pair;
 	var swap;
 	var info;
 	var kase;
 	var est;
-	var isave;
 	var n1;
 	var n2;
 	var nn;
@@ -119,23 +119,19 @@ function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	for ( k = 0; k < N; k++ ) {
 		if ( pair ) {
 			pair = false;
-		} else {
-			if ( k < N - 1 ) {
-				if ( T[ offsetT + (k + 1) * strideT1 + k * strideT2 ] === ZERO ) {
-					if ( SELECT[ offsetSELECT + k * strideSELECT ] ) {
-						M[ 0 ] += 1;
-					}
-				} else {
-					pair = true;
-					if ( SELECT[ offsetSELECT + k * strideSELECT ] || SELECT[ offsetSELECT + (k + 1) * strideSELECT ] ) {
-						M[ 0 ] += 2;
-					}
-				}
-			} else {
-				if ( SELECT[ offsetSELECT + (N - 1) * strideSELECT ] ) {
+		} else if ( k < N - 1 ) {
+			if ( T[ offsetT + (k + 1) * strideT1 + k * strideT2 ] === ZERO ) {
+				if ( SELECT[ offsetSELECT + k * strideSELECT ] ) {
 					M[ 0 ] += 1;
 				}
+			} else {
+				pair = true;
+				if ( SELECT[ offsetSELECT + k * strideSELECT ] || SELECT[ offsetSELECT + (k + 1) * strideSELECT ] ) {
+					M[ 0 ] += 2;
+				}
 			}
+		} else if ( SELECT[ offsetSELECT + (N - 1) * strideSELECT ] ) {
+			M[ 0 ] += 1;
 		}
 	}
 
@@ -195,7 +191,7 @@ function dtrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 			if ( swap ) {
 				ks += 1;
 
-				// dtrexc uses 1-based ifst, ilst
+				// Dtrexc uses 1-based ifst, ilst
 				ierr = 0;
 				kk = k + 1; // Convert 0-based k to 1-based
 				if ( kk !== ks ) {

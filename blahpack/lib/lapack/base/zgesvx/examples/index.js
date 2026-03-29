@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var zgesvx = require( '@stdlib/lapack/base/zgesvx' );

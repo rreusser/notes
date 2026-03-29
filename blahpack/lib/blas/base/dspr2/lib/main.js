@@ -3,23 +3,16 @@
 
 // MODULES //
 
-var dspr2 = require( './dspr2.js' );
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
+var var dspr2 = require( './dspr2.js' ); = require( './dspr2.js' );
 var ndarray = require( './ndarray.js' );
 
 
 // MAIN //
 
-// NOTE: In stdlib, this uses setReadOnly from @stdlib/utils.
-
-// For standalone development, we use Object.defineProperty directly.
-Object.defineProperty( dspr2, 'ndarray', {
-	'value': ndarray,
-	'enumerable': false,
-	'writable': false,
-	'configurable': false
-});
+setReadOnly( var dspr2 = require( './dspr2.js' );, 'ndarray', ndarray );
 
 
 // EXPORTS //
 
-module.exports = dspr2;
+module.exports = var dspr2 = require( './dspr2.js' );;

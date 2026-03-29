@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Improve solution to complex linear system with iterative refinement
+* Improve solution to complex linear system with iterative refinement.
 *
 * @module @stdlib/lapack/base/zgerfs
 *

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dtgsyl = require( '@stdlib/lapack/base/dtgsyl' );
