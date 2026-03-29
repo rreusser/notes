@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dpocon = require( '@stdlib/lapack/base/dpocon' );

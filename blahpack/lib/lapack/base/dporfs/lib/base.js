@@ -40,7 +40,7 @@ var SAFMIN = dlamch( 'safe-minimum' );
 // MAIN //
 
 /**
-* Improves the computed solution to a system of linear equations when the
+* Improves the computed solution to a system of linear equations when the.
 * coefficient matrix is symmetric positive definite, and provides error
 * bounds and backward error estimates for the solution.
 *
@@ -76,8 +76,8 @@ var SAFMIN = dlamch( 'safe-minimum' );
 * @returns {integer} info - 0 if successful
 */
 function dporfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR ) { // eslint-disable-line max-len, max-params
-	var upper;
 	var lstres;
+	var upper;
 	var count;
 	var ISAVE;
 	var IWORK;
@@ -131,6 +131,7 @@ function dporfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, s
 			dsymv( uplo, N, -1.0, A, strideA1, strideA2, offsetA, X, strideX1, offsetX + ( j * strideX2 ), 1.0, WORK, 1, N );
 
 			// Compute componentwise relative backward error
+
 			// WORK(0:N-1) = abs(B(:,j))
 			for ( i = 0; i < N; i++ ) {
 				WORK[ i ] = Math.abs( B[ offsetB + ( i * strideB1 ) + ( j * strideB2 ) ] );
@@ -141,6 +142,7 @@ function dporfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, s
 				for ( k = 0; k < N; k++ ) {
 					s = 0.0;
 					xk = Math.abs( X[ offsetX + ( k * strideX1 ) + ( j * strideX2 ) ] );
+
 					// Upper triangle: rows 0..k-1
 					for ( i = 0; i < k; i++ ) {
 						WORK[ i ] += Math.abs( A[ offsetA + ( i * strideA1 ) + ( k * strideA2 ) ] ) * xk;
@@ -153,8 +155,10 @@ function dporfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, s
 				for ( k = 0; k < N; k++ ) {
 					s = 0.0;
 					xk = Math.abs( X[ offsetX + ( k * strideX1 ) + ( j * strideX2 ) ] );
+
 					// Diagonal element
 					WORK[ k ] += Math.abs( A[ offsetA + ( k * strideA1 ) + ( k * strideA2 ) ] ) * xk;
+
 					// Lower triangle: rows k+1..N-1
 					for ( i = k + 1; i < N; i++ ) {
 						WORK[ i ] += Math.abs( A[ offsetA + ( i * strideA1 ) + ( k * strideA2 ) ] ) * xk;
@@ -191,7 +195,7 @@ function dporfs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, strideAF1, s
 		}
 
 		// Bound error from formula using DLACN2 to estimate the infinity-norm
-		// of inv(A) * diag(W)
+		// Of inv(A) * diag(W)
 
 		// Set up WORK(0:N-1) = abs(R) + NZ*EPS*(abs(A)*abs(X)+abs(B))
 		for ( i = 0; i < N; i++ ) {

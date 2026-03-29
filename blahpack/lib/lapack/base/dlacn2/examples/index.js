@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlacn2 = require( '@stdlib/lapack/base/dlacn2' );

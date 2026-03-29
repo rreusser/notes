@@ -29,7 +29,7 @@ var dorgqr = require( '../../dorgqr/lib/base.js' );
 // MAIN //
 
 /**
-* Generates the real orthogonal matrix Q which is defined as the product
+* Generates the real orthogonal matrix Q which is defined as the product.
 * of IHI-ILO elementary reflectors of order N, as returned by DGEHRD:
 *
 * Q = H(ilo) H(ilo+1) ... H(ihi-1)
@@ -63,9 +63,9 @@ var dorgqr = require( '../../dorgqr/lib/base.js' );
 */
 function dorghr( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line no-unused-vars
 	var work;
-	var nh;
 	var sa1;
 	var sa2;
+	var nh;
 	var oA;
 	var i;
 	var j;
@@ -81,10 +81,13 @@ function dorghr( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, of
 	nh = ihi - ilo; // Number of reflectors (IHI and ILO are 1-based)
 
 	// Shift the vectors which define the elementary reflectors one
-	// column to the right, and set the first ILO and the last N-IHI
-	// rows and columns to those of the unit matrix.
-	//
+
+	// Column to the right, and set the first ILO and the last N-IHI
+
+	// Rows and columns to those of the unit matrix.
+
 	// Fortran (1-based): DO 40 J = IHI, ILO+1, -1
+
 	// In 0-based: j goes from ihi-1 down to ilo
 	for ( j = ihi - 1; j >= ilo; j-- ) {
 		// Zero rows 0..j-1 of column j
@@ -128,12 +131,7 @@ function dorghr( N, ilo, ihi, A, strideA1, strideA2, offsetA, TAU, strideTAU, of
 		// TAU starts at TAU[ilo-1] (0-based: the ilo-th element, which is
 		// TAU(ILO) in Fortran)
 		work = new Float64Array( Math.max( 1, nh ) * 32 );
-		dorgqr(
-			nh, nh, nh,
-			A, sa1, sa2, oA + ( ilo * sa1 ) + ( ilo * sa2 ),
-			TAU, strideTAU, offsetTAU + ( ( ilo - 1 ) * strideTAU ),
-			work, 1, 0
-		);
+		dorgqr(nh, nh, nh, A, sa1, sa2, oA + ( ilo * sa1 ) + ( ilo * sa2 ), TAU, strideTAU, offsetTAU + ( ( ilo - 1 ) * strideTAU ), work, 1, 0);
 	}
 
 	return 0;

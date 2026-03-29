@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Performs aggressive early deflation with blocked operations
+* Performs aggressive early deflation with blocked operations.
 *
 * @module @stdlib/lapack/base/dlaqr3
 *

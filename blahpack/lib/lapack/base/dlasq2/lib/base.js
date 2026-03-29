@@ -428,8 +428,7 @@ function dlasq2( N, z, stride, offset ) {
 			}
 
 			// Call dlasq3
-			r = dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax,
-				nfail, iter, ndiv, true, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau );
+			r = dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail, iter, ndiv, true, ttype, dmin1, dmin2, dn, dn1, dn2, g, tau );
 
 			n0 = r.n0;
 			pp = r.pp;

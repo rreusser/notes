@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the splitting points with threshold based on the representation
+* Compute the splitting points with threshold based on the representation.
 *
 * @module @stdlib/lapack/base/dlarra
 *

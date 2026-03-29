@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Multi-shift QR algorithm for eigenvalues of a Hessenberg matrix
+* Multi-shift QR algorithm for eigenvalues of a Hessenberg matrix.
 *
 * @module @stdlib/lapack/base/dlaqr4
 *

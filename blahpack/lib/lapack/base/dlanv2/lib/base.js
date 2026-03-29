@@ -61,7 +61,7 @@ function sign( a, b ) {
 // MAIN //
 
 /**
-* Computes the Schur factorization of a real 2-by-2 nonsymmetric matrix in
+* Computes the Schur factorization of a real 2-by-2 nonsymmetric matrix in.
 * standard form:
 *
 *     [ A  B ] = [ CS -SN ] [ AA  BB ] [ CS  SN ]
@@ -69,7 +69,7 @@ function sign( a, b ) {
 *
 * where either:
 *   1) CC = 0 so that AA and DD are real eigenvalues of the matrix, or
-*   2) AA = DD and BB*CC < 0, so that AA +/- sqrt(BB*CC) are complex
+*   2) AA = DD and BB_CC < 0, so that AA +/- sqrt(BB_CC) are complex
 *      conjugate eigenvalues.
 *
 * @private
@@ -86,17 +86,17 @@ function dlanv2( A, B, C, D ) {
 	var sigma;
 	var count;
 	var temp;
-	var tau;
 	var rt1r;
 	var rt1i;
 	var rt2r;
 	var rt2i;
-	var cs;
-	var sn;
+	var tau;
 	var cs1;
 	var sn1;
 	var sab;
 	var sac;
+	var cs;
+	var sn;
 	var aa;
 	var bb;
 	var cc;
@@ -128,18 +128,19 @@ function dlanv2( A, B, C, D ) {
 		z = ( p / scale ) * p + ( bcmax / scale ) * bcmis;
 
 		// If Z is of the order of the machine accuracy, postpone the
-		// decision on the nature of eigenvalues
+
+		// Decision on the nature of eigenvalues
 		if ( z >= MULTPL * EPS ) {
 			// Real eigenvalues. Compute A and D.
 			z = p + sign( Math.sqrt( scale ) * Math.sqrt( z ), p );
 			A = D + z;
-			D = D - ( bcmax / z ) * bcmis;
+			D -= ( bcmax / z ) * bcmis;
 
 			// Compute B and the rotation matrix
 			tau = dlapy2( C, z );
 			cs = z / tau;
 			sn = C / tau;
-			B = B - C;
+			B -= C;
 			C = ZERO;
 		} else {
 			// Complex eigenvalues, or real (almost) equal eigenvalues.
@@ -152,15 +153,15 @@ function dlanv2( A, B, C, D ) {
 				count += 1;
 				scale = Math.max( Math.abs( temp ), Math.abs( sigma ) );
 				if ( scale >= SAFMX2 ) {
-					sigma = sigma * SAFMN2;
-					temp = temp * SAFMN2;
+					sigma *= SAFMN2;
+					temp *= SAFMN2;
 					if ( count <= 20 ) {
 						continue;
 					}
 				}
 				if ( scale <= SAFMN2 ) {
-					sigma = sigma * SAFMX2;
-					temp = temp * SAFMX2;
+					sigma *= SAFMX2;
+					temp *= SAFMX2;
 					if ( count <= 20 ) {
 						continue;
 					}
@@ -174,6 +175,7 @@ function dlanv2( A, B, C, D ) {
 			sn = -( p / ( tau * cs ) ) * sign( ONE, sigma );
 
 			// Compute [ AA  BB ] = [ A  B ] [ CS -SN ]
+
 			//         [ CC  DD ]   [ C  D ] [ SN  CS ]
 			aa = A * cs + B * sn;
 			bb = -A * sn + B * cs;
@@ -181,6 +183,7 @@ function dlanv2( A, B, C, D ) {
 			dd = -C * sn + D * cs;
 
 			// Compute [ A  B ] = [ CS  SN ] [ AA  BB ]
+
 			//         [ C  D ]   [-SN  CS ] [ CC  DD ]
 			A = aa * cs + cc * sn;
 			B = bb * cs + dd * sn;
@@ -201,7 +204,7 @@ function dlanv2( A, B, C, D ) {
 						tau = ONE / Math.sqrt( Math.abs( B + C ) );
 						A = temp + p;
 						D = temp - p;
-						B = B - C;
+						B -= C;
 						C = ZERO;
 						cs1 = sab * tau;
 						sn1 = sac * tau;

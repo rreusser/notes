@@ -38,9 +38,9 @@ var SMLNUM = 2.2250738585072014e-308; // DLAMCH('S')
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a symmetric positive
-* definite band matrix A using the Cholesky factorization A = U^T*U or
-* A = L*L^T computed by dpbtrf.
+* Estimates the reciprocal of the condition number of a symmetric positive.
+* definite band matrix A using the Cholesky factorization A = U^T_U or
+_ A = L_L^T computed by dpbtrf.
 *
 * @private
 * @param {string} uplo - 'upper' if upper Cholesky factor, 'lower' if lower
@@ -97,12 +97,10 @@ function dpbcon( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, 
 
 	// Estimate norm(inv(A)) using reverse communication with dlacn2
 	while ( true ) {
-		dlacn2( N,
-			WORK, sw, offsetWORK + (N * sw), // v
+		dlacn2( N, WORK, sw, offsetWORK + (N * sw), // v
 			WORK, sw, offsetWORK, // x
 			IWORK, strideIWORK, offsetIWORK, // isgn
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -110,31 +108,19 @@ function dpbcon( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, 
 
 		if ( upper ) {
 			// A = U^T * U: solve U^T * y = x, then U * x = y
-			dlatbs( 'upper', 'transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatbs( 'upper', 'transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scalel = scale[ 0 ];
 			normin = 'yes';
 
-			dlatbs( 'upper', 'no-transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatbs( 'upper', 'no-transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scaleu = scale[ 0 ];
 		} else {
 			// A = L * L^T: solve L * y = x, then L^T * x = y
-			dlatbs( 'lower', 'no-transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatbs( 'lower', 'no-transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scalel = scale[ 0 ];
 			normin = 'yes';
 
-			dlatbs( 'lower', 'transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatbs( 'lower', 'transpose', 'non-unit', normin, N, kd, AB, strideAB1, strideAB2, offsetAB, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scaleu = scale[ 0 ];
 		}
 

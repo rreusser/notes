@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Generates a vector of random numbers from a uniform distribution
+* Generates a vector of random numbers from a uniform distribution.
 *
 * @module @stdlib/lapack/base/dlaruv
 *

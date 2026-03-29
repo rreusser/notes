@@ -135,21 +135,14 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 					// Update A12:
 					// DTRSM('Left','Upper','Transpose','Non-unit', IB, I2, ONE,
 					//        AB(KD+1,I), LDAB-1, AB(KD+1-IB,I+IB), LDAB-1)
-					dtrsm( 'left', 'upper', 'transpose', 'non-unit', ib, i2, 1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (i * sa2),
-						AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2)
-					);
+					dtrsm( 'left', 'upper', 'transpose', 'non-unit', ib, i2, 1.0, AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (i * sa2), AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2));
 
 					// Update A22:
 
 					// DSYRK('Upper','Transpose', I2, IB, -ONE,
 
 					//        AB(KD+1-IB,I+IB), LDAB-1, ONE, AB(KD+1,I+IB), LDAB-1)
-					dsyrk( 'upper', 'transpose', i2, ib, -1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2),
-						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + ib ) * sa2)
-					);
+					dsyrk( 'upper', 'transpose', i2, ib, -1.0, AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2), 1.0, AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + ib ) * sa2));
 				}
 
 				if ( i3 > 0 ) {
@@ -164,30 +157,18 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 
 					// DTRSM('Left','Upper','Transpose','Non-unit', IB, I3, ONE,
 					//        AB(KD+1,I), LDAB-1, WORK, LDWORK)
-					dtrsm( 'left', 'upper', 'transpose', 'non-unit', ib, i3, 1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (i * sa2),
-						WORK, 1, LDWORK, 0
-					);
+					dtrsm( 'left', 'upper', 'transpose', 'non-unit', ib, i3, 1.0, AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (i * sa2), WORK, 1, LDWORK, 0);
 
 					if ( i2 > 0 ) {
 						// DGEMM('Transpose','No Transpose', I2, I3, IB, -ONE,
 						//        AB(KD+1-IB,I+IB), LDAB-1, WORK, LDWORK, ONE,
 						//        AB(1+IB,I+KD), LDAB-1)
-						dgemm( 'transpose', 'no-transpose', i2, i3, ib, -1.0,
-							AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2),
-							WORK, 1, LDWORK, 0,
-							1.0,
-							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (( i + kd ) * sa2)
-						);
+						dgemm( 'transpose', 'no-transpose', i2, i3, ib, -1.0, AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2), WORK, 1, LDWORK, 0, 1.0, AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (( i + kd ) * sa2));
 					}
 
 					// DSYRK('Upper','Transpose', I3, IB, -ONE,
 					//        WORK, LDWORK, ONE, AB(KD+1,I+KD), LDAB-1)
-					dsyrk( 'upper', 'transpose', i3, ib, -1.0,
-						WORK, 1, LDWORK, 0,
-						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + kd ) * sa2)
-					);
+					dsyrk( 'upper', 'transpose', i3, ib, -1.0, WORK, 1, LDWORK, 0, 1.0, AB, sa1, sa2 - sa1, offsetAB + (kd * sa1) + (( i + kd ) * sa2));
 
 					// Copy the result back from WORK to AB
 					for ( jj = 0; jj < i3; jj++ ) {
@@ -227,19 +208,12 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				if ( i2 > 0 ) {
 					// DTRSM('Right','Lower','Transpose','Non-unit', I2, IB, ONE,
 					//        AB(1,I), LDAB-1, AB(1+IB,I), LDAB-1)
-					dtrsm( 'right', 'lower', 'transpose', 'non-unit', i2, ib, 1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (i * sa2),
-						AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2)
-					);
+					dtrsm( 'right', 'lower', 'transpose', 'non-unit', i2, ib, 1.0, AB, sa1, sa2 - sa1, offsetAB + (i * sa2), AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2));
 
 					// DSYRK('Lower','No Transpose', I2, IB, -ONE,
 
 					//        AB(1+IB,I), LDAB-1, ONE, AB(1,I+IB), LDAB-1)
-					dsyrk( 'lower', 'no-transpose', i2, ib, -1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2),
-						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (( i + ib ) * sa2)
-					);
+					dsyrk( 'lower', 'no-transpose', i2, ib, -1.0, AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2), 1.0, AB, sa1, sa2 - sa1, offsetAB + (( i + ib ) * sa2));
 				}
 
 				if ( i3 > 0 ) {
@@ -256,30 +230,18 @@ function dpbtrf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 
 					// DTRSM('Right','Lower','Transpose','Non-unit', I3, IB, ONE,
 					//        AB(1,I), LDAB-1, WORK, LDWORK)
-					dtrsm( 'right', 'lower', 'transpose', 'non-unit', i3, ib, 1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (i * sa2),
-						WORK, 1, LDWORK, 0
-					);
+					dtrsm( 'right', 'lower', 'transpose', 'non-unit', i3, ib, 1.0, AB, sa1, sa2 - sa1, offsetAB + (i * sa2), WORK, 1, LDWORK, 0);
 
 					if ( i2 > 0 ) {
 						// DGEMM('No transpose','Transpose', I3, I2, IB, -ONE,
 						//        WORK, LDWORK, AB(1+IB,I), LDAB-1, ONE,
 						//        AB(1+KD-IB,I+IB), LDAB-1)
-						dgemm( 'no-transpose', 'transpose', i3, i2, ib, -1.0,
-							WORK, 1, LDWORK, 0,
-							AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2),
-							1.0,
-							AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2)
-						);
+						dgemm( 'no-transpose', 'transpose', i3, i2, ib, -1.0, WORK, 1, LDWORK, 0, AB, sa1, sa2 - sa1, offsetAB + (ib * sa1) + (i * sa2), 1.0, AB, sa1, sa2 - sa1, offsetAB + (( kd - ib ) * sa1) + (( i + ib ) * sa2));
 					}
 
 					// DSYRK('Lower','No Transpose', I3, IB, -ONE,
 					//        WORK, LDWORK, ONE, AB(1,I+KD), LDAB-1)
-					dsyrk( 'lower', 'no-transpose', i3, ib, -1.0,
-						WORK, 1, LDWORK, 0,
-						1.0,
-						AB, sa1, sa2 - sa1, offsetAB + (( i + kd ) * sa2)
-					);
+					dsyrk( 'lower', 'no-transpose', i3, ib, -1.0, WORK, 1, LDWORK, 0, 1.0, AB, sa1, sa2 - sa1, offsetAB + (( i + kd ) * sa2));
 
 					// Copy the result back from WORK to AB
 					for ( jj = 0; jj < ib; jj++ ) {

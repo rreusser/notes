@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -11,7 +10,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Sets a scalar multiple of the first column of the product
+* Sets a scalar multiple of the first column of the product.
 *
 * @param {NonNegativeInteger} N - N
 * @param {Float64Array} H - H

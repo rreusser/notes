@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Generates the orthogonal matrix Q from Hessenberg reduction
+* Generates the orthogonal matrix Q from Hessenberg reduction.
 *
 * @module @stdlib/lapack/base/dorghr
 *

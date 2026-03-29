@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dla_porpvgrw = require( '@stdlib/lapack/base/dla_porpvgrw' );

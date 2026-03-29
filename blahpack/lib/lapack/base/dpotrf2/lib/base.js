@@ -84,17 +84,10 @@ function dpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 
 	if ( upper ) {
 		// Solve U11^T * A12 = A12 (update off-diagonal block)
-		dtrsm( 'left', 'upper', 'transpose', 'non-unit', n1, n2, 1.0,
-			A, sa1, sa2, offsetA,
-			A, sa1, sa2, offsetA + (n1 * sa2)
-		);
+		dtrsm( 'left', 'upper', 'transpose', 'non-unit', n1, n2, 1.0, A, sa1, sa2, offsetA, A, sa1, sa2, offsetA + (n1 * sa2));
 
 		// Update A22: A22 -= A12^T * A12
-		dsyrk( uplo, 'transpose', n2, n1, -1.0,
-			A, sa1, sa2, offsetA + (n1 * sa2),
-			1.0,
-			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2)
-		);
+		dsyrk( uplo, 'transpose', n2, n1, -1.0, A, sa1, sa2, offsetA + (n1 * sa2), 1.0, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2));
 
 		// Factor A22
 		iinfo = dpotrf2( uplo, n2, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2) );
@@ -103,17 +96,10 @@ function dpotrf2( uplo, N, A, strideA1, strideA2, offsetA ) {
 		}
 	} else {
 		// Solve A21 * L11^T = A21 (update off-diagonal block)
-		dtrsm( 'right', 'lower', 'transpose', 'non-unit', n2, n1, 1.0,
-			A, sa1, sa2, offsetA,
-			A, sa1, sa2, offsetA + (n1 * sa1)
-		);
+		dtrsm( 'right', 'lower', 'transpose', 'non-unit', n2, n1, 1.0, A, sa1, sa2, offsetA, A, sa1, sa2, offsetA + (n1 * sa1));
 
 		// Update A22: A22 -= A21 * A21^T
-		dsyrk( uplo, 'no-transpose', n2, n1, -1.0,
-			A, sa1, sa2, offsetA + (n1 * sa1),
-			1.0,
-			A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2)
-		);
+		dsyrk( uplo, 'no-transpose', n2, n1, -1.0, A, sa1, sa2, offsetA + (n1 * sa1), 1.0, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2));
 
 		// Factor A22
 		iinfo = dpotrf2( uplo, n2, A, sa1, sa2, offsetA + (n1 * sa1) + (n1 * sa2) );

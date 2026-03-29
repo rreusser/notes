@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes the LU factorization of a real tridiagonal matrix
+* Computes the LU factorization of a real tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/dgttrf
 *

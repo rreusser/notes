@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlaebz = require( '@stdlib/lapack/base/dlaebz' );

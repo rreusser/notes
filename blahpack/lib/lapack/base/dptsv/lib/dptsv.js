@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -11,7 +10,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves a real symmetric positive definite tridiagonal system of linear
+* Solves a real symmetric positive definite tridiagonal system of linear.
 *
 * @param {NonNegativeInteger} N - N
 * @param {NonNegativeInteger} nrhs - nrhs

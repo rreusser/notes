@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlartg = require( '@stdlib/lapack/base/dlartg' );

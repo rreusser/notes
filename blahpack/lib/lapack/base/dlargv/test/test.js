@@ -1,35 +1,64 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
-var Float64Array = require( '@stdlib/array/float64' );
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dlargv = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlargv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlargv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -162,6 +191,7 @@ test( 'dlargv: offset support', function t() {
 	dlargv( 2, x, 1, 1, y, 1, 1, c, 1, 1 );
 
 	// First pair: f=4, g=3, |f|>|g| => t=3/4=0.75, tt=sqrt(1+0.5625)=1.25
+
 	// c = 1/1.25 = 0.8, y = 0.75*0.8 = 0.6, x = 4*1.25 = 5
 	assertClose( x[ 1 ], 5.0, 1e-14, 'x[1]' );
 	assertClose( y[ 1 ], 0.6, 1e-14, 'y[1]' );
@@ -179,27 +209,32 @@ test( 'dlargv: offset support', function t() {
 });
 
 test( 'dlargv: mathematical property (rotation zeros out y)', function t() {
-	// Verify the mathematical property: applying the rotation zeros out y
-	var x = new Float64Array( [ 3.0, 7.0, -2.0, 0.0, 0.0 ] );
-	var y = new Float64Array( [ 4.0, -1.0, 5.0, 8.0, 0.0 ] );
-	var c = new Float64Array( 5 );
-	var xOrig = new Float64Array( x );
-	var yOrig = new Float64Array( y );
 	var residual;
+	var xOrig;
+	var yOrig;
 	var ci;
 	var si;
+	var x;
+	var y;
+	var c;
 	var i;
 
+	x = new Float64Array( [ 3.0, 7.0, -2.0, 0.0, 0.0 ] );
+	y = new Float64Array( [ 4.0, -1.0, 5.0, 8.0, 0.0 ] );
+	c = new Float64Array( 5 );
+	xOrig = new Float64Array( x );
+	yOrig = new Float64Array( y );
 	dlargv( 5, x, 1, 0, y, 1, 0, c, 1, 0 );
-
 	for ( i = 0; i < 5; i += 1 ) {
 		ci = c[ i ];
 		si = y[ i ];
 
 		// The rotation applied to (xOrig, yOrig) should give (x[i], 0):
+
 		// c*xOrig + s*yOrig = x[i]  (the "a" value)
+
 		// -s*xOrig + c*yOrig = 0    (should be zero)
 		residual = Math.abs( ( -si * xOrig[ i ] ) + ( ci * yOrig[ i ] ) );
-		assert.ok( residual < 1e-12, 'rotation zeros out y[' + i + ']: residual=' + residual );
+		assert.ok( residual < 1e-12, 'rotation zeros out y[' + i + ']: residual=' + residual ); // eslint-disable-line max-len
 	}
 });

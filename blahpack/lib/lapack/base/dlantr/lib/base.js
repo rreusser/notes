@@ -43,7 +43,7 @@ function min( a, b ) {
 // MAIN //
 
 /**
-* Computes the value of the one norm, Frobenius norm, infinity norm, or
+* Computes the value of the one norm, Frobenius norm, infinity norm, or.
 * largest absolute value of a real triangular matrix.
 *
 * @private
@@ -284,6 +284,7 @@ function dlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, s
 				// Unit diagonal contributes min(M,N) ones to sum
 				scale = 1.0;
 				sum = min( M, N );
+
 				// Strict upper triangle: columns j=1..N-1, rows 0..min(M,j)-1
 				for ( j = 1; j < N; j++ ) {
 					nn = min( M, j );
@@ -312,6 +313,7 @@ function dlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, s
 				// Unit diagonal contributes min(M,N) ones
 				scale = 1.0;
 				sum = min( M, N );
+
 				// Strict lower triangle: column j, rows j+1..M-1
 				for ( j = 0; j < N; j++ ) {
 					nn = M - j - 1;

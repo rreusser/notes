@@ -48,11 +48,11 @@ var TWOPI = 6.28318530717958647692528676655900576839;
 * @param {NonNegativeInteger} offset - offset for x
 */
 function dlarnv( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset ) { // eslint-disable-line max-len, max-params
-	var u;
-	var il;
 	var il2;
+	var il;
 	var iv;
 	var ix;
+	var u;
 	var i;
 
 	u = new Float64Array( LV );

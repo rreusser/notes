@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlarnv = require( '@stdlib/lapack/base/dlarnv' );

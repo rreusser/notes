@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );

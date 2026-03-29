@@ -52,10 +52,10 @@
 */
 function dlapmt( forwrd, M, N, X, strideX1, strideX2, offsetX, k, strideK, offsetK ) {
 	var temp;
+	var in_;
 	var ik;
 	var ii;
 	var ij;
-	var in_;
 	var i;
 	var j;
 

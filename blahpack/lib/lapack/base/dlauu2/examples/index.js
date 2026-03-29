@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlauu2 = require( '@stdlib/lapack/base/dlauu2' );

@@ -65,7 +65,7 @@ for mod in "${MODULES[@]}"; do
     for f in "$mod"/lib/*.js "$mod"/test/test.js "$mod"/examples/index.js; do
         [ -f "$f" ] || continue
         cp "$f" /tmp/lint_fix_backup.js
-        npx eslint --resolve-plugins-relative-to tools/eslint --fix --rule 'stdlib/vars-order: off' --rule 'no-mixed-operators: off' "$f" 2>/dev/null
+        npx eslint --resolve-plugins-relative-to tools/eslint --fix "$f" 2>/dev/null
     done
 
     # Step 4: Verify tests still pass

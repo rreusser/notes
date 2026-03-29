@@ -99,8 +99,8 @@ function dla_syrpvgrw( uplo, N, info, A, strideA1, strideA2, offsetA, AF, stride
 	// Now find the max magnitude entry of each column of U or L. Also permute the magnitudes of A above so they are in the same order as the factor. The iteration orders and permutations were copied from dsytrs. Fortran IPIV is 1-based; JS IPIV is 0-based. Positive IPIV[k] indicates a 1x1 pivot at row IPIV[k]. Negative IPIV[k] (via bitwise NOT) indicates a 2x2 pivot block.
 	if ( upper ) {
 		// TODO: This while loop is unreachable in the upper branch. K starts at N
-		// and NCOLS is either 1 (INFO=0) or INFO (INFO>0, INFO<=N), so K >= NCOLS
-		// always holds. The code is preserved to match the reference Fortran exactly.
+		// And NCOLS is either 1 (INFO=0) or INFO (INFO>0, INFO<=N), so K >= NCOLS
+		// Always holds. The code is preserved to match the reference Fortran exactly.
 		k = N - 1;
 		while ( (k + 1) < ncols && k >= 0 ) {
 			kp = IPIV[ offsetIPIV + (k * strideIPIV) ];
@@ -196,8 +196,8 @@ function dla_syrpvgrw( uplo, N, info, A, strideA1, strideA2, offsetA, AF, stride
 				}
 
 				// TODO: This diagonal update branch is hard to trigger because DSYTRF
-				// picks 2x2 pivots when the off-diagonal AF[k+1,k] dominates AF[k,k],
-				// so the max is typically already set from the loop above.
+				// Picks 2x2 pivots when the off-diagonal AF[k+1,k] dominates AF[k,k],
+				// So the max is typically already set from the loop above.
 				tmp = Math.abs( AF[ offsetAF + (k * strideAF1) + (k * strideAF2) ] );
 				if ( tmp > WORK[ oW + (k * sW) ] ) {
 					WORK[ oW + (k * sW) ] = tmp;
@@ -231,7 +231,7 @@ function dla_syrpvgrw( uplo, N, info, A, strideA1, strideA2, offsetA, AF, stride
 	if ( upper ) {
 		// TODO: In the upper branch, the first-pass while loop (above) never executes
 		// (see TODO there), so WORK[0..N-1] remains 0. As a result, the umax !== 0
-		// check always fails and rpvgrw is always returned as 1.0 for the upper case.
+		// Check always fails and rpvgrw is always returned as 1.0 for the upper case.
 		// The code is preserved to match the reference Fortran exactly.
 		for ( i = ncols - 1; i < N; i += 1 ) {
 			umax = WORK[ oW + (i * sW) ];

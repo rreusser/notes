@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes contribution to reciprocal DIF estimate using LU factorization from dgetc2
+* Computes contribution to reciprocal DIF estimate using LU factorization from dgetc2.
 *
 * @module @stdlib/lapack/base/dlatdf
 *

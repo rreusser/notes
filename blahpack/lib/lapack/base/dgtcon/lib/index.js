@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimate the reciprocal of the condition number of a real general tridiagonal matrix
+* Estimate the reciprocal of the condition number of a real general tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/dgtcon
 *

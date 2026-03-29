@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Performs aggressive early deflation on an upper Hessenberg matrix
+* Performs aggressive early deflation on an upper Hessenberg matrix.
 *
 * @module @stdlib/lapack/base/dlaqr2
 *

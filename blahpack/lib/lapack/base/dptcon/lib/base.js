@@ -28,9 +28,9 @@ var idamax = require( '../../../../blas/base/idamax/lib/base.js' );
 // MAIN //
 
 /**
-* Computes the reciprocal of the condition number (in the 1-norm) of a real
+* Computes the reciprocal of the condition number (in the 1-norm) of a real.
 * symmetric positive definite tridiagonal matrix using the factorization
-* A = L*D*L^T computed by dpttrf.
+* A = L_D_L^T computed by dpttrf.
 *
 * The norm of inv(A) is computed by a direct method, and the reciprocal of
 * the condition number is computed as RCOND = 1 / (ANORM * norm(inv(A))).
@@ -87,7 +87,7 @@ function dptcon( N, d, strideD, offsetD, e, strideE, offsetE, anorm, rcond, WORK
 
 	// Compute the 1-norm of inv(A) using the factored form:
 	//   inv(A) = (L^T)^{-1} * D^{-1} * L^{-1}
-	//
+
 	// The algorithm computes the max column sum of |inv(A)|.
 	// For the tridiagonal case this simplifies to:
 	//   WORK(i) = sum_{j >= i} product_{k=i..j-1} |E(k)| / D(j) ... (forward pass)

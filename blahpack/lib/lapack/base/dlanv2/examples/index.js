@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlanv2 = require( '@stdlib/lapack/base/dlanv2' );

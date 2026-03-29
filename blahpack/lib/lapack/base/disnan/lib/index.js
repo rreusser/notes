@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Test if input is NaN.
 *

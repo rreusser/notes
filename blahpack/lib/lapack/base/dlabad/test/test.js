@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 /**
 * @license Apache-2.0
 *
@@ -30,7 +32,7 @@ test( 'attached to the main export is an `ndarray` method', function t() {
 	assert.strictEqual( typeof dlabad.ndarray, 'function' );
 });
 
-test( 'dlabad returns an object with `small` and `large` properties', function t() {
+test( 'dlabad returns an object with `small` and `large` properties', function t() { // eslint-disable-line max-len
 	var out = dlabad( 1.0e-300, 1.0e+300 );
 	assert.strictEqual( typeof out, 'object' );
 	assert.strictEqual( 'small' in out, true );

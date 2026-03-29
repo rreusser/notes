@@ -27,7 +27,7 @@ var dgtts2 = require( './../../dgtts2/lib/base.js' );
 // MAIN //
 
 /**
-* Solves one of the systems of equations A*X = B or A^T*X = B with a
+* Solves one of the systems of equations A_X = B or A^T_X = B with a.
 * tridiagonal matrix A using the LU factorization computed by dgttrf.
 *
 * ## Notes

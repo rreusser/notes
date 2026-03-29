@@ -1,13 +1,14 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlaqp2 = require( './../lib/base.js' );
@@ -15,22 +16,50 @@ var dlaqp2 = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlaqp2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlaqp2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -51,9 +80,9 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * @returns {Float64Array} - column-major array with stride=(1, LDA)
 */
 function makeMatrix( data, M, N, LDA ) {
-	var A = new Float64Array( LDA * N );
 	var col;
 	var row;
+	var A = new Float64Array( LDA * N );
 	var k;
 	k = 0;
 	for ( col = 0; col < N; col++ ) {
@@ -105,7 +134,26 @@ function computeNorms( A, M, N, LDA, startRow ) {
 		VN1[ j ] = Math.sqrt( sum );
 		VN2[ j ] = VN1[ j ];
 	}
-	return { VN1: VN1, VN2: VN2 };
+	return {
+		'VN1': VN1,
+		'VN2': VN2
+	};
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -120,26 +168,28 @@ test( 'dlaqp2: basic_4x3', function t() {
 	var A;
 
 	tc = findCase( 'basic_4x3' );
-
-	// 4x3 matrix, column-major with LDA=4
-	A = makeMatrix( [
-		1, 2, 0, 1,
-		0, 1, 3, 2,
-		3, 0, 1, 2
+	A = makeMatrix([
+		1,
+		2,
+		0,
+		1,
+		0,
+		1,
+		3,
+		2,
+		3,
+		0,
+		1,
+		2
 	], 4, 3, 4 );
-
-	JPVT = new Int32Array( [ 0, 1, 2 ] ); // 0-based
+	JPVT = new Int32Array( [ 0, 1, 2 ] );
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 );
 	norms = computeNorms( A, 4, 3, 4, 0 );
-
-	dlaqp2( 4, 3, 0, A, 1, 4, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 );
-
+	dlaqp2( 4, 3, 0, A, 1, 4, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( extractMatrix( A, 4, 3, 4 ), tc.a, 1e-14, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-14, 'tau' );
-
-	// Fixture JPVT is 1-based, ours is 0-based
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt.map( function( v ) { return v - 1; } ) );
+	assertArrayClose( toArray( TAU ), tc.tau, 1e-14, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt.map( function map( v ) { return v - 1; } ) ); // eslint-disable-line max-len
 });
 
 test( 'dlaqp2: square_3x3', function t() {
@@ -151,23 +201,25 @@ test( 'dlaqp2: square_3x3', function t() {
 	var A;
 
 	tc = findCase( 'square_3x3' );
-
-	A = makeMatrix( [
-		1, 0, 1,
-		2, 1, 0,
-		3, 2, 1
+	A = makeMatrix([
+		1,
+		0,
+		1,
+		2,
+		1,
+		0,
+		3,
+		2,
+		1
 	], 3, 3, 3 );
-
 	JPVT = new Int32Array( [ 0, 1, 2 ] );
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 );
 	norms = computeNorms( A, 3, 3, 3, 0 );
-
-	dlaqp2( 3, 3, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 );
-
+	dlaqp2( 3, 3, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( extractMatrix( A, 3, 3, 3 ), tc.a, 1e-14, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-14, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt.map( function( v ) { return v - 1; } ) );
+	assertArrayClose( toArray( TAU ), tc.tau, 1e-14, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt.map( function map( v ) { return v - 1; } ) ); // eslint-disable-line max-len
 });
 
 test( 'dlaqp2: n_one', function t() {
@@ -179,21 +231,17 @@ test( 'dlaqp2: n_one', function t() {
 	var A;
 
 	tc = findCase( 'n_one' );
-
-	A = makeMatrix( [
+	A = makeMatrix([
 		3, 4, 0
 	], 3, 1, 3 );
-
 	JPVT = new Int32Array( [ 0 ] );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
 	norms = computeNorms( A, 3, 1, 3, 0 );
-
-	dlaqp2( 3, 1, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 );
-
+	dlaqp2( 3, 1, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( extractMatrix( A, 3, 1, 3 ), tc.a, 1e-14, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-14, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt.map( function( v ) { return v - 1; } ) );
+	assertArrayClose( toArray( TAU ), tc.tau, 1e-14, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt.map( function map( v ) { return v - 1; } ) ); // eslint-disable-line max-len
 });
 
 test( 'dlaqp2: one_by_one', function t() {
@@ -214,11 +262,11 @@ test( 'dlaqp2: one_by_one', function t() {
 	VN1 = new Float64Array( [ 7.0 ] );
 	VN2 = new Float64Array( [ 7.0 ] );
 
-	dlaqp2( 1, 1, 0, A, 1, 1, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
+	dlaqp2( 1, 1, 0, A, 1, 1, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 
-	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-14, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt.map( function( v ) { return v - 1; } ) );
+	assertArrayClose( toArray( A ), tc.a, 1e-14, 'a' );
+	assertArrayClose( toArray( TAU ), tc.tau, 1e-14, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt.map( function map( v ) { return v - 1; } ) ); // eslint-disable-line max-len
 });
 
 test( 'dlaqp2: n_zero', function t() {
@@ -238,7 +286,7 @@ test( 'dlaqp2: n_zero', function t() {
 	VN2 = new Float64Array( 1 );
 
 	// Should not throw
-	dlaqp2( 3, 0, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 );
+	dlaqp2( 3, 0, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, VN1, 1, 0, VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 });
 
 test( 'dlaqp2: offset_1', function t() {
@@ -250,25 +298,28 @@ test( 'dlaqp2: offset_1', function t() {
 	var A;
 
 	tc = findCase( 'offset_1' );
-
-	// 4x3 matrix with offset=1, LDA=4
-	A = makeMatrix( [
-		5, 0, 0, 0,
-		1, 1, 3, 2,
-		2, 2, 0, 1
+	A = makeMatrix([
+		5,
+		0,
+		0,
+		0,
+		1,
+		1,
+		3,
+		2,
+		2,
+		2,
+		0,
+		1
 	], 4, 3, 4 );
-
 	JPVT = new Int32Array( [ 0, 1, 2 ] );
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 );
-	// Norms computed from rows 1..3 (0-based), i.e. rows 2..4 in Fortran
 	norms = computeNorms( A, 4, 3, 4, 1 );
-
-	dlaqp2( 4, 3, 1, A, 1, 4, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 );
-
+	dlaqp2( 4, 3, 1, A, 1, 4, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( extractMatrix( A, 4, 3, 4 ), tc.a, 1e-14, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-14, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt.map( function( v ) { return v - 1; } ) );
+	assertArrayClose( toArray( TAU ), tc.tau, 1e-14, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt.map( function map( v ) { return v - 1; } ) ); // eslint-disable-line max-len
 });
 
 test( 'dlaqp2: pivot_reorder', function t() {
@@ -280,23 +331,25 @@ test( 'dlaqp2: pivot_reorder', function t() {
 	var A;
 
 	tc = findCase( 'pivot_reorder' );
-
-	A = makeMatrix( [
-		0.1, 0.1, 0.1,
-		1, 1, 0,
-		5, 3, 4
+	A = makeMatrix([
+		0.1,
+		0.1,
+		0.1,
+		1,
+		1,
+		0,
+		5,
+		3,
+		4
 	], 3, 3, 3 );
-
 	JPVT = new Int32Array( [ 0, 1, 2 ] );
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 );
 	norms = computeNorms( A, 3, 3, 3, 0 );
-
-	dlaqp2( 3, 3, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 );
-
+	dlaqp2( 3, 3, 0, A, 1, 3, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( extractMatrix( A, 3, 3, 3 ), tc.a, 1e-14, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-14, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt.map( function( v ) { return v - 1; } ) );
+	assertArrayClose( toArray( TAU ), tc.tau, 1e-14, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt.map( function map( v ) { return v - 1; } ) ); // eslint-disable-line max-len
 });
 
 test( 'dlaqp2: collinear_recomp', function t() {
@@ -308,21 +361,32 @@ test( 'dlaqp2: collinear_recomp', function t() {
 	var A;
 
 	tc = findCase( 'collinear_recomp' );
-
-	A = makeMatrix( [
-		1, 2, 3, 4, 5, 6,
-		1, 2, 3, 4, 5, 6 + 1e-10,
-		1, 2, 3, 4, 5, 6 + 1e-15
+	A = makeMatrix([
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6 + 1e-10,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6 + 1e-15
 	], 6, 3, 6 );
-
 	JPVT = new Int32Array( [ 0, 1, 2 ] );
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 );
 	norms = computeNorms( A, 6, 3, 6, 0 );
-
-	dlaqp2( 6, 3, 0, A, 1, 6, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 );
-
+	dlaqp2( 6, 3, 0, A, 1, 6, 0, JPVT, 1, 0, TAU, 1, 0, norms.VN1, 1, 0, norms.VN2, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( extractMatrix( A, 6, 3, 6 ), tc.a, 1e-4, 'a' );
-	assertArrayClose( Array.from( TAU ), tc.tau, 1e-4, 'tau' );
-	assert.deepStrictEqual( Array.from( JPVT ), tc.jpvt.map( function( v ) { return v - 1; } ) );
+	assertArrayClose( toArray( TAU ), tc.tau, 1e-4, 'tau' );
+	assert.deepStrictEqual( toArray( JPVT ), tc.jpvt.map( function map( v ) { return v - 1; } ) ); // eslint-disable-line max-len
 });

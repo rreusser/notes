@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dpbsv = require( '@stdlib/lapack/base/dpbsv' );

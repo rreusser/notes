@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvalues and Schur form of an upper Hessenberg matrix (small/medium)
+* Computes eigenvalues and Schur form of an upper Hessenberg matrix (small/medium).
 *
 * @module @stdlib/lapack/base/dlahqr
 *

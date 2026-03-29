@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlamrg = require( '@stdlib/lapack/base/dlamrg' );

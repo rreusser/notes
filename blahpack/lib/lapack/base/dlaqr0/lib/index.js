@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvalues and Schur form using multishift QR with aggressive early deflation
+* Computes eigenvalues and Schur form using multishift QR with aggressive early deflation.
 *
 * @module @stdlib/lapack/base/dlaqr0
 *

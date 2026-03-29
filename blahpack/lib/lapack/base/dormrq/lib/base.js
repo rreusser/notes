@@ -36,7 +36,7 @@ var NB = 32; // Hardcoded block size
 // MAIN //
 
 /**
-* Overwrites the M-by-N real matrix C with Q*C, Q^T*C, C*Q, or C*Q^T,
+* Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 * where Q is a real orthogonal matrix defined as the product of K
 * elementary reflectors Q = H(1) H(2) ... H(k) as returned by DGERQF.
 * Uses a blocked algorithm with block size NB=32.
@@ -138,7 +138,7 @@ function dormrq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		mi = M;
 	}
 
-	// dormrq flips the transpose for dlarfb
+	// Dormrq flips the transpose for dlarfb
 	if ( notran ) {
 		transt = 'transpose';
 	} else {
@@ -149,13 +149,9 @@ function dormrq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		ib = Math.min( nb, K - i );
 
 		// Form the triangular factor of the block reflector
+
 		// H = H(i+ib-1) ... H(i+1) H(i)
-		dlarft(
-			'backward', 'rowwise', nq - K + i + ib, ib,
-			A, strideA1, strideA2, offsetA + (i * strideA1),
-			TAU, strideTAU, offsetTAU + (i * strideTAU),
-			T, 1, ldt, 0
-		);
+		dlarft('backward', 'rowwise', nq - K + i + ib, ib, A, strideA1, strideA2, offsetA + (i * strideA1), TAU, strideTAU, offsetTAU + (i * strideTAU), T, 1, ldt, 0);
 
 		if ( left ) {
 			// H or H^T is applied to C(0:m-k+i+ib-1, 0:n-1)
@@ -166,13 +162,7 @@ function dormrq( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		}
 
 		// Apply H or H^T
-		dlarfb(
-			side, transt, 'backward', 'rowwise', mi, ni, ib,
-			A, strideA1, strideA2, offsetA + (i * strideA1),
-			T, 1, ldt, 0,
-			C, strideC1, strideC2, offsetC,
-			WORK, 1, ldwork, offsetWORK
-		);
+		dlarfb(side, transt, 'backward', 'rowwise', mi, ni, ib, A, strideA1, strideA2, offsetA + (i * strideA1), T, 1, ldt, 0, C, strideC1, strideC2, offsetC, WORK, 1, ldwork, offsetWORK);
 	}
 
 	return 0;

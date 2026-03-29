@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlange = require( '@stdlib/lapack/base/dlange' );

@@ -23,7 +23,7 @@
 // MAIN //
 
 /**
-* Solves one of the systems of equations A*X = B or A^T*X = B with a
+* Solves one of the systems of equations A_X = B or A^T_X = B with a.
 * tridiagonal matrix A using the LU factorization computed by dgttrf.
 *
 * ## Notes
@@ -57,9 +57,9 @@
 */
 function dgtts2( itrans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
 	var temp;
+	var idu2;
 	var idl;
 	var idu;
-	var idu2;
 	var ip;
 	var id;
 	var ib;

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Generates a vector of random numbers from a specified distribution
+* Generates a vector of random numbers from a specified distribution.
 *
 * @module @stdlib/lapack/base/dlarnv
 *

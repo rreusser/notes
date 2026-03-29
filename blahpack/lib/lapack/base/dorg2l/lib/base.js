@@ -106,23 +106,14 @@ function dorg2l( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 		//   C starts at A(1,1) = A(row=0, col=0) in 0-based
 		if ( ii > 0 ) {
-			dlarf(
-				'left', M - N + ii + 1, ii,
-				A, strideA1, offsetA + (ii * strideA2),
-				TAU[ offsetTAU + (i * strideTAU) ],
-				A, strideA1, strideA2, offsetA,
-				WORK, strideWORK, offsetWORK
-			);
+			dlarf('left', M - N + ii + 1, ii, A, strideA1, offsetA + (ii * strideA2), TAU[ offsetTAU + (i * strideTAU) ], A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK);
 		}
 
 		// Scale the reflector column above the diagonal: DSCAL(M-N+II-1, -TAU(I), A(1,II), 1)
 		// Fortran count M-N+II-1 = M-N+ii+1-1 = M-N+ii
 		// Starts at A(1,II) = A(row=0, col=ii) in 0-based
 		if ( M - N + ii > 0 ) {
-			dscal(
-				M - N + ii, -TAU[ offsetTAU + (i * strideTAU) ],
-				A, strideA1, offsetA + (ii * strideA2)
-			);
+			dscal(M - N + ii, -TAU[ offsetTAU + (i * strideTAU) ], A, strideA1, offsetA + (ii * strideA2));
 		}
 
 		// A(M-N+ii, ii) = 1 - TAU(i)

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 /**
 * @license Apache-2.0
 *
@@ -6,12 +8,13 @@
 
 'use strict';
 
+
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlapmr = require( './../lib/base.js' );
@@ -19,9 +22,11 @@ var dlapmr = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlapmr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlapmr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 // MMAX in Fortran test (leading dimension of X)
 var MMAX = 5;
@@ -29,17 +34,34 @@ var MMAX = 5;
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i += 1 ) {
-		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
-		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
+		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 	}
 }
 
@@ -88,6 +110,22 @@ function extractFixtureX( tc ) {
 	return extractMatrix( tc.X, MMAX, tc.M, tc.N );
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
@@ -96,72 +134,86 @@ test( 'dlapmr is a function', function t() {
 });
 
 test( 'dlapmr: forward permutation 4x3', function t() {
-	var tc = findCase( 'forward_4x3' );
-	var M = 4;
-	var N = 3;
-	var LDA = M;
+	var Xdata;
+	var LDA;
+	var out;
+	var tc;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	// Input matrix (column-major, M=4, N=3):
-	// row 0: [1, 5, 9], row 1: [2, 6, 10], row 2: [3, 7, 11], row 3: [4, 8, 12]
-	var Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
-	var X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [3, 1, 4, 2] in Fortran (1-based) -> [2, 0, 3, 1] in JS (0-based)
-	var K = new Int32Array([ 2, 0, 3, 1 ]);
-
+	tc = findCase( 'forward_4x3' );
+	M = 4;
+	N = 3;
+	LDA = M;
+	Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
+	X = loadMatrix( Xdata, M, N, LDA );
+	K = new Int32Array([ 2, 0, 3, 1 ]);
 	dlapmr( true, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X' );
 });
 
 test( 'dlapmr: backward permutation 4x3', function t() {
-	var tc = findCase( 'backward_4x3' );
-	var M = 4;
-	var N = 3;
-	var LDA = M;
+	var Xdata;
+	var LDA;
+	var out;
+	var tc;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	var Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
-	var X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [3, 1, 4, 2] -> [2, 0, 3, 1] (0-based)
-	var K = new Int32Array([ 2, 0, 3, 1 ]);
-
+	tc = findCase( 'backward_4x3' );
+	M = 4;
+	N = 3;
+	LDA = M;
+	Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
+	X = loadMatrix( Xdata, M, N, LDA );
+	K = new Int32Array([ 2, 0, 3, 1 ]);
 	dlapmr( false, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X' );
 });
 
 test( 'dlapmr: identity permutation 3x2', function t() {
-	var tc = findCase( 'identity_3x2' );
-	var M = 3;
-	var N = 2;
-	var LDA = M;
+	var Xdata;
+	var LDA;
+	var out;
+	var tc;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	var Xdata = [ 10, 20, 30, 40, 50, 60 ];
-	var X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [1, 2, 3] -> [0, 1, 2] (0-based)
-	var K = new Int32Array([ 0, 1, 2 ]);
-
+	tc = findCase( 'identity_3x2' );
+	M = 3;
+	N = 2;
+	LDA = M;
+	Xdata = [ 10, 20, 30, 40, 50, 60 ];
+	X = loadMatrix( Xdata, M, N, LDA );
+	K = new Int32Array([ 0, 1, 2 ]);
 	dlapmr( true, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X' );
 });
 
 test( 'dlapmr: M=1 quick return', function t() {
-	var M = 1;
-	var N = 3;
-	var LDA = M;
+	var LDA;
+	var out;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	var X = loadMatrix( [ 42, 43, 44 ], M, N, LDA );
-	var K = new Int32Array([ 0 ]);
-
+	M = 1;
+	N = 3;
+	LDA = M;
+	X = loadMatrix( [ 42, 43, 44 ], M, N, LDA );
+	K = new Int32Array([ 0 ]);
 	dlapmr( true, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, [ 42, 43, 44 ], 1e-14, 'X' );
 });
 
@@ -175,100 +227,120 @@ test( 'dlapmr: M=0 quick return', function t() {
 });
 
 test( 'dlapmr: reverse permutation forward 4x2', function t() {
-	var tc = findCase( 'reverse_fwd_4x2' );
-	var M = 4;
-	var N = 2;
-	var LDA = M;
+	var Xdata;
+	var LDA;
+	var out;
+	var tc;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	var Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
-	var X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [4, 3, 2, 1] -> [3, 2, 1, 0] (0-based)
-	var K = new Int32Array([ 3, 2, 1, 0 ]);
-
+	tc = findCase( 'reverse_fwd_4x2' );
+	M = 4;
+	N = 2;
+	LDA = M;
+	Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
+	X = loadMatrix( Xdata, M, N, LDA );
+	K = new Int32Array([ 3, 2, 1, 0 ]);
 	dlapmr( true, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X' );
 });
 
 test( 'dlapmr: reverse permutation backward 4x2', function t() {
-	var tc = findCase( 'reverse_bwd_4x2' );
-	var M = 4;
-	var N = 2;
-	var LDA = M;
+	var Xdata;
+	var LDA;
+	var out;
+	var tc;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	var Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
-	var X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [4, 3, 2, 1] -> [3, 2, 1, 0] (0-based)
-	var K = new Int32Array([ 3, 2, 1, 0 ]);
-
+	tc = findCase( 'reverse_bwd_4x2' );
+	M = 4;
+	N = 2;
+	LDA = M;
+	Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
+	X = loadMatrix( Xdata, M, N, LDA );
+	K = new Int32Array([ 3, 2, 1, 0 ]);
 	dlapmr( false, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X' );
 });
 
 test( 'dlapmr: cyclic permutation forward 5x2', function t() {
-	var tc = findCase( 'cyclic_fwd_5x2' );
-	var M = 5;
-	var N = 2;
-	var LDA = M;
+	var Xdata;
+	var LDA;
+	var out;
+	var tc;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	var Xdata = [ 10, 20, 30, 40, 50, 11, 21, 31, 41, 51 ];
-	var X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [2, 3, 4, 5, 1] -> [1, 2, 3, 4, 0] (0-based)
-	var K = new Int32Array([ 1, 2, 3, 4, 0 ]);
-
+	tc = findCase( 'cyclic_fwd_5x2' );
+	M = 5;
+	N = 2;
+	LDA = M;
+	Xdata = [ 10, 20, 30, 40, 50, 11, 21, 31, 41, 51 ];
+	X = loadMatrix( Xdata, M, N, LDA );
+	K = new Int32Array([ 1, 2, 3, 4, 0 ]);
 	dlapmr( true, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X' );
 });
 
 test( 'dlapmr: cyclic permutation backward 5x2', function t() {
-	var tc = findCase( 'cyclic_bwd_5x2' );
-	var M = 5;
-	var N = 2;
-	var LDA = M;
+	var Xdata;
+	var LDA;
+	var out;
+	var tc;
+	var M;
+	var N;
+	var X;
+	var K;
 
-	var Xdata = [ 10, 20, 30, 40, 50, 11, 21, 31, 41, 51 ];
-	var X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [2, 3, 4, 5, 1] -> [1, 2, 3, 4, 0] (0-based)
-	var K = new Int32Array([ 1, 2, 3, 4, 0 ]);
-
+	tc = findCase( 'cyclic_bwd_5x2' );
+	M = 5;
+	N = 2;
+	LDA = M;
+	Xdata = [ 10, 20, 30, 40, 50, 11, 21, 31, 41, 51 ];
+	X = loadMatrix( Xdata, M, N, LDA );
+	K = new Int32Array([ 1, 2, 3, 4, 0 ]);
 	dlapmr( false, M, N, X, 1, LDA, 0, K, 1, 0 );
-
-	var out = extractMatrix( X, LDA, M, N );
+	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X' );
 });
 
 test( 'dlapmr: non-unit stride for X', function t() {
-	var tc = findCase( 'forward_4x3' );
-	var strideX2 = 8;
-	var strideX1 = 2;
-	var Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
-	var M = 4;
-	var N = 3;
+	var strideX2;
+	var strideX1;
+	var Xdata;
 	var out;
+	var tc;
+	var M;
+	var N;
 	var X;
 	var K;
 	var i;
 	var j;
 
+	tc = findCase( 'forward_4x3' );
+	strideX2 = 8;
+	strideX1 = 2;
+	Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
+	M = 4;
+	N = 3;
 	X = new Float64Array( strideX2 * N );
 	for ( j = 0; j < N; j += 1 ) {
 		for ( i = 0; i < M; i += 1 ) {
 			X[ i * strideX1 + j * strideX2 ] = Xdata[ j * M + i ];
 		}
 	}
-
 	K = new Int32Array([ 2, 0, 3, 1 ]);
 	dlapmr( true, M, N, X, strideX1, strideX2, 0, K, 1, 0 );
-
 	out = [];
 	for ( j = 0; j < N; j += 1 ) {
 		for ( i = 0; i < M; i += 1 ) {
@@ -279,29 +351,32 @@ test( 'dlapmr: non-unit stride for X', function t() {
 });
 
 test( 'dlapmr: non-zero offset', function t() {
-	var tc = findCase( 'forward_4x3' );
-	var Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
-	var off = 7;
-	var LDA = 4;
-	var M = 4;
-	var N = 3;
+	var Xdata;
+	var off;
+	var LDA;
 	var out;
+	var tc;
+	var M;
+	var N;
 	var X;
 	var K;
 	var i;
 	var j;
 
+	tc = findCase( 'forward_4x3' );
+	Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
+	off = 7;
+	LDA = 4;
+	M = 4;
+	N = 3;
 	X = new Float64Array( off + LDA * N );
 	for ( j = 0; j < N; j += 1 ) {
 		for ( i = 0; i < M; i += 1 ) {
 			X[ off + j * LDA + i ] = Xdata[ j * M + i ];
 		}
 	}
-
-	// K with offset 1: first element is padding
 	K = new Int32Array([ 99, 2, 0, 3, 1 ]);
 	dlapmr( true, M, N, X, 1, LDA, off, K, 1, 1 );
-
 	out = [];
 	for ( j = 0; j < N; j += 1 ) {
 		for ( i = 0; i < M; i += 1 ) {
@@ -324,7 +399,7 @@ test( 'dlapmr: K is restored after forward permutation', function t() {
 	dlapmr( true, M, N, X, 1, LDA, 0, K, 1, 0 );
 
 	// K should be restored to original values
-	assert.deepStrictEqual( Array.from( K ), [ 2, 0, 3, 1 ], 'K restored' );
+	assert.deepStrictEqual( toArray( K ), [ 2, 0, 3, 1 ], 'K restored' );
 });
 
 test( 'dlapmr: K is restored after backward permutation', function t() {
@@ -339,30 +414,29 @@ test( 'dlapmr: K is restored after backward permutation', function t() {
 
 	dlapmr( false, M, N, X, 1, LDA, 0, K, 1, 0 );
 
-	assert.deepStrictEqual( Array.from( K ), [ 2, 0, 3, 1 ], 'K restored' );
+	assert.deepStrictEqual( toArray( K ), [ 2, 0, 3, 1 ], 'K restored' );
 });
 
 test( 'dlapmr: non-unit stride for K', function t() {
-	var tc = findCase( 'forward_4x3' );
-	var Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
-	var LDA = 4;
-	var M = 4;
-	var N = 3;
+	var Xdata;
+	var LDA;
 	var out;
+	var tc;
+	var M;
+	var N;
 	var X;
 	var K;
 
+	tc = findCase( 'forward_4x3' );
+	Xdata = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
+	LDA = 4;
+	M = 4;
+	N = 3;
 	X = loadMatrix( Xdata, M, N, LDA );
-
-	// K = [2, 0, 3, 1] interleaved with padding: stride=2
 	K = new Int32Array([ 2, 99, 0, 99, 3, 99, 1, 99 ]);
-
 	dlapmr( true, M, N, X, 1, LDA, 0, K, 2, 0 );
-
 	out = extractMatrix( X, LDA, M, N );
 	assertArrayClose( out, extractFixtureX( tc ), 1e-14, 'X with strided K' );
-
-	// K should be restored
 	assert.equal( K[ 0 ], 2, 'K[0] restored' );
 	assert.equal( K[ 2 ], 0, 'K[2] restored' );
 	assert.equal( K[ 4 ], 3, 'K[4] restored' );

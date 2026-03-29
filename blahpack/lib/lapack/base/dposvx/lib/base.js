@@ -44,8 +44,8 @@ var BIGNUM = 1.0 / SMLNUM;
 // MAIN //
 
 /**
-* Expert driver for solving a real symmetric positive definite system of
-* linear equations A*X = B, using the Cholesky factorization A = U^T*U or
+* Expert driver for solving a real symmetric positive definite system of.
+* linear equations A_X = B, using the Cholesky factorization A = U^T_U or
 * A = L*L^T. Provides equilibration, condition estimation, iterative
 * refinement, and error bounds.
 *
@@ -60,7 +60,7 @@ var BIGNUM = 1.0 / SMLNUM;
 *
 * EQUED (input if FACT='factored', output otherwise):
 *   'none' - no equilibration
-*   'yes' - equilibration was done (A replaced by diag(S)*A*diag(S))
+*   'yes' - equilibration was done (A replaced by diag(S)_A_diag(S))
 *
 * Returns { info, equed, rcond } where:
 *   info: 0=success, i (1-based)=leading minor not positive definite, N+1=singular to working precision
@@ -147,7 +147,11 @@ function dposvx( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, stride
 
 	// Quick return if possible
 	if ( N === 0 || nrhs === 0 ) {
-		return { 'info': 0, 'equed': equed, 'rcond': 1.0 };
+		return {
+			'info': 0,
+			'equed': equed,
+			'rcond': 1.0
+		};
 	}
 
 	// Equilibrate if requested
@@ -180,7 +184,11 @@ function dposvx( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, stride
 		info = dpotrf( uplo, N, AF, strideAF1, strideAF2, offsetAF );
 
 		if ( info > 0 ) {
-			return { 'info': info, 'equed': equed, 'rcond': 0.0 };
+			return {
+				'info': info,
+				'equed': equed,
+				'rcond': 0.0
+			};
 		}
 	}
 
@@ -217,7 +225,11 @@ function dposvx( fact, uplo, N, nrhs, A, strideA1, strideA2, offsetA, AF, stride
 		info = N + 1;
 	}
 
-	return { 'info': info, 'equed': equed, 'rcond': RCOND[ 0 ] };
+	return {
+		'info': info,
+		'equed': equed,
+		'rcond': RCOND[ 0 ]
+	};
 }
 
 

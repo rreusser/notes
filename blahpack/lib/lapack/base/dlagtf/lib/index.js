@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Factorizes the matrix (T - lambda*I) where T is a tridiagonal matrix
+* Factorizes the matrix (T - lambda*I) where T is a tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/dlagtf
 *

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* LAPACK dlamrg routine
+* LAPACK dlamrg routine.
 *
 * @module @stdlib/lapack/base/dlamrg
 *

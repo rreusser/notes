@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Return sqrt(x^2 + y^2 + z^2) safely avoiding overflow.
 *

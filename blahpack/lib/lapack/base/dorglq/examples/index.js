@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dorglq = require( '@stdlib/lapack/base/dorglq' );

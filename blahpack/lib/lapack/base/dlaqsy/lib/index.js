@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Equilibrate a symmetric matrix using scaling factors
+* Equilibrate a symmetric matrix using scaling factors.
 *
 * @module @stdlib/lapack/base/dlaqsy
 *

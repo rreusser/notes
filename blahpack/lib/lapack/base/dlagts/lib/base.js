@@ -35,7 +35,7 @@ var BIGNUM = 1.0 / SFMIN;
 // MAIN //
 
 /**
-* Solves the system (T - lambda*I)*x = y or (T - lambda*I)**T*x = y using
+* Solves the system (T - lambda_I)_x = y or (T - lambda_I)__T_x = y using.
 * the LU factorization computed by dlagtf.
 *
 * @private

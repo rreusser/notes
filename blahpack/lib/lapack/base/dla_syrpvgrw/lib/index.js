@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric indefinite matrix
+* Compute the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric indefinite matrix.
 *
 * @module @stdlib/lapack/base/dla_syrpvgrw
 *

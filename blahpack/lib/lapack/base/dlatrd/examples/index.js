@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlatrd = require( '@stdlib/lapack/base/dlatrd' );

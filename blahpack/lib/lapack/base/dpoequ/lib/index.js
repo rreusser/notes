@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute row/column scalings for equilibrating a symmetric positive definite matrix
+* Compute row/column scalings for equilibrating a symmetric positive definite matrix.
 *
 * @module @stdlib/lapack/base/dpoequ
 *

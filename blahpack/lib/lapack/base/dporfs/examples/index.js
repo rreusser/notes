@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dporfs = require( '@stdlib/lapack/base/dporfs' );

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlansy = require( '@stdlib/lapack/base/dlansy' );

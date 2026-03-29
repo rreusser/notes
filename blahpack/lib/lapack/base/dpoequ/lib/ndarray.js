@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -10,28 +9,27 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Computes row and column scalings intended to equilibrate a symmetric positive
- * definite matrix A and reduce its condition number.
- *
- * S(i) = 1 / sqrt(A(i,i)). The choice of S puts the condition number of
- * B = S*A*S within a factor N of the smallest possible condition number.
- *
- * Returns an object with:
- * - info: 0 if successful; i (1-based) if the i-th diagonal element is non-positive.
- * - scond: ratio of smallest to largest scaling factor
- * - amax: absolute value of the largest diagonal element
- *
- *
- * @param {NonNegativeInteger} N - order of the matrix A
- * @param {Float64Array} A - input N-by-N symmetric positive definite matrix
- * @param {integer} strideA1 - stride of the first dimension of A
- * @param {integer} strideA2 - stride of the second dimension of A
- * @param {NonNegativeInteger} offsetA - index offset for A
- * @param {Float64Array} s - output scale factors, length N
- * @param {integer} strideS - stride for s
- * @param {NonNegativeInteger} offsetS - index offset for s
- * @returns {Object} result with info, scond, amax
- */
+* Computes row and column scalings intended to equilibrate a symmetric positive.
+* definite matrix A and reduce its condition number.
+*
+* S(i) = 1 / sqrt(A(i,i)). The choice of S puts the condition number of
+* B = S_A_S within a factor N of the smallest possible condition number.
+*
+* Returns an object with:
+* - info: 0 if successful; i (1-based) if the i-th diagonal element is non-positive.
+* - scond: ratio of smallest to largest scaling factor
+* - amax: absolute value of the largest diagonal element
+*
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Float64Array} A - input N-by-N symmetric positive definite matrix
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - index offset for A
+* @param {Float64Array} s - output scale factors, length N
+* @param {integer} strideS - stride for s
+* @param {NonNegativeInteger} offsetS - index offset for s
+* @returns {Object} result with info, scond, amax
+*/
 function dpoequ( N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax ) { // eslint-disable-line max-len, max-params
 	return base( N, A, strideA1, strideA2, offsetA, s, strideS, offsetS, scond, amax ); // eslint-disable-line max-len
 }

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the reciprocal of the condition number of a real symmetric positive definite tridiagonal matrix
+* Compute the reciprocal of the condition number of a real symmetric positive definite tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/dptcon
 *

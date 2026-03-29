@@ -113,12 +113,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 	// Use unblocked code for the first or only block
 	// Fortran: CALL DORG2L(M-KK, N-KK, K-KK, A, LDA, TAU, WORK, IINFO)
 	// A starts at A(1,1) in Fortran = A(0,0) in 0-based, no offset change needed
-	dorg2l(
-		M - kk, N - kk, K - kk,
-		A, strideA1, strideA2, offsetA,
-		TAU, strideTAU, offsetTAU,
-		WORK, strideWORK, offsetWORK
-	);
+	dorg2l(M - kk, N - kk, K - kk, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK);
 
 	if ( kk > 0 ) {
 		// Allocate internal workspace for dlarft (T matrix) and dlarfb (scratch)
@@ -140,12 +135,7 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// Fortran: DLARFT('Backward', 'Columnwise', M-K+I+IB-1, IB,
 				//                  A(1, N-K+I), LDA, TAU(I), WORK, LDWORK)
 				// M-K+I+IB-1 (Fortran 1-based count) = M-K+i+ib (0-based: rows 0..M-K+i+ib-1)
-				dlarft(
-					'backward', 'columnwise', M - K + i + ib, ib,
-					A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2),
-					TAU, strideTAU, offsetTAU + (i * strideTAU),
-					work, 1, ldwork, 0
-				);
+				dlarft('backward', 'columnwise', M - K + i + ib, ib, A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), work, 1, ldwork, 0);
 
 				// Apply H to A(0:M-K+i+ib-1, 0:N-K+i-1) from the left
 
@@ -160,25 +150,13 @@ function dorgql( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// M-K+I+IB-1 (1-based count) = M-K+i+ib (0-based rows)
 
 				// N-K+I-1 (1-based count) = N-K+i (0-based cols)
-				dlarfb(
-					'left', 'no-transpose', 'backward', 'columnwise',
-					M - K + i + ib, N - K + i, ib,
-					A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2),
-					work, 1, ldwork, 0,
-					A, strideA1, strideA2, offsetA,
-					work, 1, ldwork, ib
-				);
+				dlarfb('left', 'no-transpose', 'backward', 'columnwise', M - K + i + ib, N - K + i, ib, A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2), work, 1, ldwork, 0, A, strideA1, strideA2, offsetA, work, 1, ldwork, ib);
 			}
 
 			// Apply DORG2L to the current block
 			// Fortran: DORG2L(M-K+I+IB-1, IB, IB, A(1, N-K+I), LDA, TAU(I), WORK, IINFO)
 			// M-K+I+IB-1 (1-based) = M-K+i+ib (0-based rows)
-			dorg2l(
-				M - K + i + ib, ib, ib,
-				A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2),
-				TAU, strideTAU, offsetTAU + (i * strideTAU),
-				work, 1, 0
-			);
+			dorg2l(M - K + i + ib, ib, ib, A, strideA1, strideA2, offsetA + (( N - K + i ) * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), work, 1, 0);
 
 			// Set rows M-K+i+ib to M-1 of columns N-K+i to N-K+i+ib-1 to zero
 

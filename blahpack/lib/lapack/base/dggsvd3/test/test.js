@@ -1,17 +1,16 @@
 /* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
-
 'use strict';
 
 
 // MODULES //
 
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
 var dggsvd3 = require( './../lib/base.js' );
 
 
@@ -20,8 +19,8 @@ var dggsvd3 = require( './../lib/base.js' );
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
 var lines = readFileSync( path.join( fixtureDir, 'dggsvd3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
 var fixture = lines.map( function parse( line ) {
-		return JSON.parse( line );
-	} );
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
@@ -34,7 +33,7 @@ var fixture = lines.map( function parse( line ) {
 * @returns {*} result
 */
 function findCase( name ) {
-		return fixture.find( function find( t ) { return t.name === name;
+	return fixture.find( function find( t ) { return t.name === name;
 	} );
 }
 
@@ -122,11 +121,7 @@ test( 'dggsvd3: basic 3x3 A, 2x3 B', function t() {
 	IWORK = new Int32Array( N );
 	K = new Int32Array( 1 );
 	L = new Int32Array( 1 );
-	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L,
-		A, 1, M, 0, B, 1, P, 0,
-		ALPHA, 1, 0, BETA, 1, 0,
-		U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0,
-		WORK, 1, 0, 200, IWORK, 1, 0 );
+	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L, A, 1, M, 0, B, 1, P, 0, ALPHA, 1, 0, BETA, 1, 0, U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0, WORK, 1, 0, 200, IWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.k );
 	assert.equal( L[ 0 ], tc.l );
@@ -182,11 +177,7 @@ test( 'dggsvd3: 2x3 A, 3x3 B', function t() {
 	IWORK = new Int32Array( N );
 	K = new Int32Array( 1 );
 	L = new Int32Array( 1 );
-	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L,
-		A, 1, M, 0, B, 1, P, 0,
-		ALPHA, 1, 0, BETA, 1, 0,
-		U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0,
-		WORK, 1, 0, 200, IWORK, 1, 0 );
+	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L, A, 1, M, 0, B, 1, P, 0, ALPHA, 1, 0, BETA, 1, 0, U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0, WORK, 1, 0, 200, IWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.k );
 	assert.equal( L[ 0 ], tc.l );
@@ -242,11 +233,7 @@ test( 'dggsvd3: no U/V/Q', function t() {
 	IWORK = new Int32Array( N );
 	K = new Int32Array( 1 );
 	L = new Int32Array( 1 );
-	info = dggsvd3( 'none', 'none', 'none', M, N, P, K, L,
-		A, 1, M, 0, B, 1, P, 0,
-		ALPHA, 1, 0, BETA, 1, 0,
-		U, 1, 1, 0, V, 1, 1, 0, Q, 1, 1, 0,
-		WORK, 1, 0, 200, IWORK, 1, 0 );
+	info = dggsvd3( 'none', 'none', 'none', M, N, P, K, L, A, 1, M, 0, B, 1, P, 0, ALPHA, 1, 0, BETA, 1, 0, U, 1, 1, 0, V, 1, 1, 0, Q, 1, 1, 0, WORK, 1, 0, 200, IWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.k );
 	assert.equal( L[ 0 ], tc.l );
@@ -300,11 +287,7 @@ test( 'dggsvd3: diagonal 4x4 A, 3x4 B', function t() {
 	IWORK = new Int32Array( N );
 	K = new Int32Array( 1 );
 	L = new Int32Array( 1 );
-	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L,
-		A, 1, M, 0, B, 1, P, 0,
-		ALPHA, 1, 0, BETA, 1, 0,
-		U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0,
-		WORK, 1, 0, 200, IWORK, 1, 0 );
+	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L, A, 1, M, 0, B, 1, P, 0, ALPHA, 1, 0, BETA, 1, 0, U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0, WORK, 1, 0, 200, IWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.equal( K[ 0 ], tc.k );
 	assert.equal( L[ 0 ], tc.l );
@@ -353,11 +336,7 @@ test( 'dggsvd3: workspace query', function t() {
 	IWORK = new Int32Array( N );
 	K = new Int32Array( 1 );
 	L = new Int32Array( 1 );
-	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L,
-		A, 1, M, 0, B, 1, P, 0,
-		ALPHA, 1, 0, BETA, 1, 0,
-		U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0,
-		WORK, 1, 0, -1, IWORK, 1, 0 );
+	info = dggsvd3( 'compute-U', 'compute-V', 'compute-Q', M, N, P, K, L, A, 1, M, 0, B, 1, P, 0, ALPHA, 1, 0, BETA, 1, 0, U, 1, M, 0, V, 1, P, 0, Q, 1, N, 0, WORK, 1, 0, -1, IWORK, 1, 0 );
 	assert.equal( info, tc.info );
 	assert.ok( WORK[ 0 ] >= 1, 'optimal lwork >= 1' );
 });

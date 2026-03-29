@@ -62,31 +62,19 @@ function dpbtrs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strid
 		// Solve A*X = B where A = U**T * U.
 		for ( j = 0; j < nrhs; j++ ) {
 			// Solve U**T * X = B, overwriting B with X:
-			dtbsv( 'upper', 'transpose', 'non-unit', N, kd,
-				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + (j * strideB2)
-			);
+			dtbsv( 'upper', 'transpose', 'non-unit', N, kd, AB, strideAB1, strideAB2, offsetAB, B, strideB1, offsetB + (j * strideB2));
 
 			// Solve U * X = B, overwriting B with X:
-			dtbsv( 'upper', 'no-transpose', 'non-unit', N, kd,
-				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + (j * strideB2)
-			);
+			dtbsv( 'upper', 'no-transpose', 'non-unit', N, kd, AB, strideAB1, strideAB2, offsetAB, B, strideB1, offsetB + (j * strideB2));
 		}
 	} else {
 		// Solve A*X = B where A = L * L**T.
 		for ( j = 0; j < nrhs; j++ ) {
 			// Solve L * X = B, overwriting B with X:
-			dtbsv( 'lower', 'no-transpose', 'non-unit', N, kd,
-				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + (j * strideB2)
-			);
+			dtbsv( 'lower', 'no-transpose', 'non-unit', N, kd, AB, strideAB1, strideAB2, offsetAB, B, strideB1, offsetB + (j * strideB2));
 
 			// Solve L**T * X = B, overwriting B with X:
-			dtbsv( 'lower', 'transpose', 'non-unit', N, kd,
-				AB, strideAB1, strideAB2, offsetAB,
-				B, strideB1, offsetB + (j * strideB2)
-			);
+			dtbsv( 'lower', 'transpose', 'non-unit', N, kd, AB, strideAB1, strideAB2, offsetAB, B, strideB1, offsetB + (j * strideB2));
 		}
 	}
 

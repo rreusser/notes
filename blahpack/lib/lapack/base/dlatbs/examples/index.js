@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlatbs = require( '@stdlib/lapack/base/dlatbs' );

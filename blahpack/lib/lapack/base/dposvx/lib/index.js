@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Expert driver for symmetric positive definite solve with equilibration, condition estimation, and refinement
+* Expert driver for symmetric positive definite solve with equilibration, condition estimation, and refinement.
 *
 * @module @stdlib/lapack/base/dposvx
 *

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a real symmetric positive definite tridiagonal system of linear equations
+* Solves a real symmetric positive definite tridiagonal system of linear equations.
 *
 * @module @stdlib/lapack/base/dptsv
 *

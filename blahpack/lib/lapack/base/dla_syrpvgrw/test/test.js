@@ -1,29 +1,40 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
-var path = require( 'path' );
 var dla_syrpvgrw = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dla_syrpvgrw.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dla_syrpvgrw.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
 /**
@@ -71,7 +82,7 @@ function runCase( name, uplo ) {
 	IPIV = convertIPIV( tc.IPIV );
 	WORK = new Float64Array( 2 * N );
 
-	result = dla_syrpvgrw( uplo, N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 );
+	result = dla_syrpvgrw( uplo, N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result, tc.rpvgrw, name + ': rpvgrw mismatch' );
 }
 
@@ -99,13 +110,11 @@ test( 'dla_syrpvgrw: upper 1x1', function t() {
 	var A;
 
 	tc = findCase( 'upper_1x1' );
-	// N=1, A=[7], AF=[7], IPIV=[1] (Fortran) => [0] (JS)
 	A = new Float64Array( [ 7.0 ] );
 	AF = new Float64Array( [ 7.0 ] );
 	IPIV = new Int32Array( [ 0 ] );
 	WORK = new Float64Array( 2 );
-
-	result = dla_syrpvgrw( 'upper', 1, tc.INFO, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
+	result = dla_syrpvgrw( 'upper', 1, tc.INFO, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result, tc.rpvgrw );
 });
 
@@ -122,8 +131,7 @@ test( 'dla_syrpvgrw: lower 1x1', function t() {
 	AF = new Float64Array( [ 3.0 ] );
 	IPIV = new Int32Array( [ 0 ] );
 	WORK = new Float64Array( 2 );
-
-	result = dla_syrpvgrw( 'lower', 1, tc.INFO, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
+	result = dla_syrpvgrw( 'lower', 1, tc.INFO, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result, tc.rpvgrw );
 });
 
@@ -162,11 +170,9 @@ test( 'dla_syrpvgrw: N=0 returns 1.0', function t() {
 	AF = new Float64Array( 0 );
 	IPIV = new Int32Array( 0 );
 	WORK = new Float64Array( 0 );
-
-	result = dla_syrpvgrw( 'upper', 0, 0, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
+	result = dla_syrpvgrw( 'upper', 0, 0, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result, 1.0, 'N=0 upper returns 1.0' );
-
-	result = dla_syrpvgrw( 'lower', 0, 0, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
+	result = dla_syrpvgrw( 'lower', 0, 0, A, 1, 1, 0, AF, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result, 1.0, 'N=0 lower returns 1.0' );
 });
 
@@ -177,24 +183,33 @@ test( 'dla_syrpvgrw: identity matrix returns 1.0', function t() {
 	var AF;
 	var A;
 
-	// 3x3 identity matrix (upper storage): A = AF = I, IPIV = [0,1,2]
-	A = new Float64Array( [
-		1, 0, 0,
-		0, 1, 0,
-		0, 0, 1
-	] );
-	AF = new Float64Array( [
-		1, 0, 0,
-		0, 1, 0,
-		0, 0, 1
-	] );
+	A = new Float64Array([
+		1,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		1
+	]);
+	AF = new Float64Array([
+		1,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		1
+	]);
 	IPIV = new Int32Array( [ 0, 1, 2 ] );
 	WORK = new Float64Array( 6 );
-
-	result = dla_syrpvgrw( 'upper', 3, 0, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, WORK, 1, 0 );
+	result = dla_syrpvgrw( 'upper', 3, 0, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result, 1.0, 'identity upper' );
-
-	result = dla_syrpvgrw( 'lower', 3, 0, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, WORK, 1, 0 );
+	result = dla_syrpvgrw( 'lower', 3, 0, A, 1, 3, 0, AF, 1, 3, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result, 1.0, 'identity lower' );
 });
 
@@ -213,15 +228,9 @@ test( 'dla_syrpvgrw: verifies WORK array contents (upper)', function t() {
 	AF = new Float64Array( tc.AF );
 	IPIV = convertIPIV( tc.IPIV );
 	WORK = new Float64Array( 2 * N );
-
-	dla_syrpvgrw( 'upper', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 );
-
-	// Compare WORK contents to fixture
+	dla_syrpvgrw( 'upper', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	for ( i = 0; i < 2 * N; i++ ) {
-		assert.ok(
-			Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10,
-			'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]
-		);
+		assert.ok(Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10, 'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]);
 	}
 });
 
@@ -240,18 +249,13 @@ test( 'dla_syrpvgrw: verifies WORK array contents (lower)', function t() {
 	AF = new Float64Array( tc.AF );
 	IPIV = convertIPIV( tc.IPIV );
 	WORK = new Float64Array( 2 * N );
-
-	dla_syrpvgrw( 'lower', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 );
-
+	dla_syrpvgrw( 'lower', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	for ( i = 0; i < 2 * N; i++ ) {
-		assert.ok(
-			Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10,
-			'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]
-		);
+		assert.ok(Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10, 'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]);
 	}
 });
 
-test( 'dla_syrpvgrw: verifies WORK array contents (upper 2x2 pivot)', function t() {
+test( 'dla_syrpvgrw: verifies WORK array contents (upper 2x2 pivot)', function t() { // eslint-disable-line max-len
 	var WORK;
 	var IPIV;
 	var tc;
@@ -266,18 +270,13 @@ test( 'dla_syrpvgrw: verifies WORK array contents (upper 2x2 pivot)', function t
 	AF = new Float64Array( tc.AF );
 	IPIV = convertIPIV( tc.IPIV );
 	WORK = new Float64Array( 2 * N );
-
-	dla_syrpvgrw( 'upper', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 );
-
+	dla_syrpvgrw( 'upper', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	for ( i = 0; i < 2 * N; i++ ) {
-		assert.ok(
-			Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10,
-			'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]
-		);
+		assert.ok(Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10, 'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]);
 	}
 });
 
-test( 'dla_syrpvgrw: verifies WORK array contents (lower 2x2 pivot)', function t() {
+test( 'dla_syrpvgrw: verifies WORK array contents (lower 2x2 pivot)', function t() { // eslint-disable-line max-len
 	var WORK;
 	var IPIV;
 	var tc;
@@ -292,14 +291,9 @@ test( 'dla_syrpvgrw: verifies WORK array contents (lower 2x2 pivot)', function t
 	AF = new Float64Array( tc.AF );
 	IPIV = convertIPIV( tc.IPIV );
 	WORK = new Float64Array( 2 * N );
-
-	dla_syrpvgrw( 'lower', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 );
-
+	dla_syrpvgrw( 'lower', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	for ( i = 0; i < 2 * N; i++ ) {
-		assert.ok(
-			Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10,
-			'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]
-		);
+		assert.ok(Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10, 'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]);
 	}
 });
 
@@ -307,7 +301,7 @@ test( 'dla_syrpvgrw: lower with nontrivial 1x1 pivot swaps', function t() {
 	runCase( 'lower_1x1_swap', 'lower' );
 });
 
-test( 'dla_syrpvgrw: lower with nontrivial 1x1 pivot swaps (5x5)', function t() {
+test( 'dla_syrpvgrw: lower with nontrivial 1x1 pivot swaps (5x5)', function t() { // eslint-disable-line max-len
 	runCase( 'lower_1x1_swap_5x5', 'lower' );
 });
 
@@ -326,13 +320,8 @@ test( 'dla_syrpvgrw: lower 1x1 swap WORK contents', function t() {
 	AF = new Float64Array( tc.AF );
 	IPIV = convertIPIV( tc.IPIV );
 	WORK = new Float64Array( 2 * N );
-
-	dla_syrpvgrw( 'lower', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 );
-
+	dla_syrpvgrw( 'lower', N, tc.INFO, A, 1, N, 0, AF, 1, N, 0, IPIV, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	for ( i = 0; i < 2 * N; i++ ) {
-		assert.ok(
-			Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10,
-			'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]
-		);
+		assert.ok(Math.abs( WORK[ i ] - tc.WORK[ i ] ) < 1e-10, 'WORK[' + i + ']: expected ' + tc.WORK[ i ] + ', got ' + WORK[ i ]);
 	}
 });

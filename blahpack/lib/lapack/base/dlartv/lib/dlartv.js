@@ -24,9 +24,9 @@ var base = require( './base.js' );
 * @returns {void}
 */
 function dlartv( N, x, strideX, y, strideY, c, s, strideCS ) {
+	var ocs = stride2offset( N, strideCS );
 	var ox = stride2offset( N, strideX );
 	var oy = stride2offset( N, strideY );
-	var ocs = stride2offset( N, strideCS );
 	base( N, x, strideX, ox, y, strideY, oy, c, strideCS, ocs, s, strideCS, ocs );
 }
 

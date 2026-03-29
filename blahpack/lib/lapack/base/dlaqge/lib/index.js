@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Equilibrates a general matrix using row and column scaling factors
+* Equilibrates a general matrix using row and column scaling factors.
 *
 * @module @stdlib/lapack/base/dlaqge
 *

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlas2 = require( '@stdlib/lapack/base/dlas2' );

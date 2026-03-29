@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlags2 = require( '@stdlib/lapack/base/dlags2' );

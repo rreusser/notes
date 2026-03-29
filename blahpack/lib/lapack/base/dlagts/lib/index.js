@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a tridiagonal system factored by dlagtf
+* Solves a tridiagonal system factored by dlagtf.
 *
 * @module @stdlib/lapack/base/dlagts
 *

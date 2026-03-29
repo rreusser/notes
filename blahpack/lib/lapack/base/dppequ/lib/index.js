@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute row and column scalings to equilibrate a symmetric positive definite matrix in packed storage
+* Compute row and column scalings to equilibrate a symmetric positive definite matrix in packed storage.
 *
 * @module @stdlib/lapack/base/dppequ
 *

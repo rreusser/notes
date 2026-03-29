@@ -36,10 +36,10 @@ var dormr2 = require( '../../dormr2/lib/base.js' );
 // MAIN //
 
 /**
-* Computes orthogonal matrices U, V, and Q such that:
+* Computes orthogonal matrices U, V, and Q such that:.
 *
 *                  N-K-L  K    L
-*   U^T*A*Q =   K ( 0    A12  A13 )  if M-K-L >= 0;
+*   U^T_A_Q =   K ( 0    A12  A13 )  if M-K-L >= 0;
 *               L ( 0     0   A23 )
 *           M-K-L ( 0     0    0  )
 *
@@ -48,7 +48,7 @@ var dormr2 = require( '../../dormr2/lib/base.js' );
 *           M-K ( 0     0   A23 )
 *
 *                N-K-L  K    L
-*   V^T*B*Q = L ( 0     0   B13 )
+*   V^T_B_Q = L ( 0     0   B13 )
 *           P-L ( 0     0    0  )
 *
 * This is the preprocessing step for computing the Generalized
@@ -98,10 +98,10 @@ var dormr2 = require( '../../dormr2/lib/base.js' );
 * @returns {integer} info - 0 if successful
 */
 function dggsvp3( jobu, jobv, jobq, M, p, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, tola, tolb, K, l, U, strideU1, strideU2, offsetU, V, strideV1, strideV2, offsetV, Q, strideQ1, strideQ2, offsetQ, IWORK, strideIWORK, offsetIWORK, TAU, strideTAU, offsetTAU, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len
+	var forwrd;
 	var wantq;
 	var wantu;
 	var wantv;
-	var forwrd;
 	var kval;
 	var lval;
 	var oIW;

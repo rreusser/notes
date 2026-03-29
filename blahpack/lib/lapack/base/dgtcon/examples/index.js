@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgtcon = require( '@stdlib/lapack/base/dgtcon' );

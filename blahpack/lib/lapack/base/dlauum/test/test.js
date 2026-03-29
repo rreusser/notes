@@ -1,33 +1,64 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dlauum = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlauum.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlauum.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -59,81 +90,119 @@ function extractColMajor( A, N, sa1, sa2, offset ) {
 	return out;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'dlauum: upper 4x4 (U*U^T)', function t() {
-	var tc = findCase( 'upper_4' );
-	var N = 4;
-	var A = new Float64Array( N * N );
 	var info;
+	var tc;
+	var N;
+	var A;
 
-	// U = [2 1 3 2; 0 4 1 3; 0 0 5 1; 0 0 0 6] (column-major)
-	A[ 0 ] = 2.0; A[ 4 ] = 1.0; A[ 8 ]  = 3.0; A[ 12 ] = 2.0;
-	               A[ 5 ] = 4.0; A[ 9 ]  = 1.0; A[ 13 ] = 3.0;
-	                              A[ 10 ] = 5.0; A[ 14 ] = 1.0;
-	                                              A[ 15 ] = 6.0;
-
+	tc = findCase( 'upper_4' );
+	N = 4;
+	A = new Float64Array( N * N );
+	A[ 0 ] = 2.0;
+	A[ 4 ] = 1.0;
+	A[ 8 ] = 3.0;
+	A[ 12 ] = 2.0;
+	A[ 5 ] = 4.0;
+	A[ 9 ] = 1.0;
+	A[ 13 ] = 3.0;
+	A[ 10 ] = 5.0;
+	A[ 14 ] = 1.0;
+	A[ 15 ] = 6.0;
 	info = dlauum( 'upper', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-14, 'a' );
 });
 
 test( 'dlauum: lower 4x4 (L^T*L)', function t() {
-	var tc = findCase( 'lower_4' );
-	var N = 4;
-	var A = new Float64Array( N * N );
 	var info;
+	var tc;
+	var N;
+	var A;
 
-	// L = [2 0 0 0; 1 4 0 0; 3 1 5 0; 2 3 1 6] (column-major)
-	A[ 0 ] = 2.0; A[ 1 ] = 1.0; A[ 2 ]  = 3.0; A[ 3 ]  = 2.0;
-	               A[ 5 ] = 4.0; A[ 6 ]  = 1.0; A[ 7 ]  = 3.0;
-	                              A[ 10 ] = 5.0; A[ 11 ] = 1.0;
-	                                              A[ 15 ] = 6.0;
-
+	tc = findCase( 'lower_4' );
+	N = 4;
+	A = new Float64Array( N * N );
+	A[ 0 ] = 2.0;
+	A[ 1 ] = 1.0;
+	A[ 2 ] = 3.0;
+	A[ 3 ] = 2.0;
+	A[ 5 ] = 4.0;
+	A[ 6 ] = 1.0;
+	A[ 7 ] = 3.0;
+	A[ 10 ] = 5.0;
+	A[ 11 ] = 1.0;
+	A[ 15 ] = 6.0;
 	info = dlauum( 'lower', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-14, 'a' );
 });
 
 test( 'dlauum: N=1 upper', function t() {
-	var tc = findCase( 'n1_upper' );
-	var A = new Float64Array( [ 3.0 ] );
 	var info;
+	var tc;
+	var A;
 
+	tc = findCase( 'n1_upper' );
+	A = new Float64Array( [ 3.0 ] );
 	info = dlauum( 'upper', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
+	assertArrayClose( toArray( A ), tc.a, 1e-14, 'a' );
 });
 
 test( 'dlauum: N=1 lower', function t() {
-	var tc = findCase( 'n1_lower' );
-	var A = new Float64Array( [ 5.0 ] );
 	var info;
+	var tc;
+	var A;
 
+	tc = findCase( 'n1_lower' );
+	A = new Float64Array( [ 5.0 ] );
 	info = dlauum( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
-	assertArrayClose( Array.from( A ), tc.a, 1e-14, 'a' );
+	assertArrayClose( toArray( A ), tc.a, 1e-14, 'a' );
 });
 
 test( 'dlauum: N=0 quick return', function t() {
-	var tc = findCase( 'n0' );
-	var A = new Float64Array( 1 );
 	var info;
+	var tc;
+	var A;
 
+	tc = findCase( 'n0' );
+	A = new Float64Array( 1 );
 	info = dlauum( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dlauum: upper 35x35 (blocked path)', function t() {
-	var tc = findCase( 'upper_35' );
-	var N = 35;
-	var A = new Float64Array( N * N );
 	var info;
+	var tc;
+	var N;
+	var A;
 	var i;
 	var j;
 
-	// Build diagonally dominant upper triangular matrix (matching Fortran)
+	tc = findCase( 'upper_35' );
+	N = 35;
+	A = new Float64Array( N * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i <= j; i++ ) {
 			if ( i === j ) {
@@ -143,21 +212,22 @@ test( 'dlauum: upper 35x35 (blocked path)', function t() {
 			}
 		}
 	}
-
 	info = dlauum( 'upper', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-12, 'a' );
 });
 
 test( 'dlauum: lower 35x35 (blocked path)', function t() {
-	var tc = findCase( 'lower_35' );
-	var N = 35;
-	var A = new Float64Array( N * N );
 	var info;
+	var tc;
+	var N;
+	var A;
 	var i;
 	var j;
 
-	// Build diagonally dominant lower triangular matrix (matching Fortran)
+	tc = findCase( 'lower_35' );
+	N = 35;
+	A = new Float64Array( N * N );
 	for ( j = 0; j < N; j++ ) {
 		for ( i = j; i < N; i++ ) {
 			if ( i === j ) {
@@ -167,7 +237,6 @@ test( 'dlauum: lower 35x35 (blocked path)', function t() {
 			}
 		}
 	}
-
 	info = dlauum( 'lower', N, A, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( extractColMajor( A, N, 1, N, 0 ), tc.a, 1e-12, 'a' );

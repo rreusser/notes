@@ -1,34 +1,62 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var dlanv2 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlanv2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlanv2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
+/**
+* CheckResult.
+*
+* @private
+* @param {*} result - result
+* @param {*} tc - tc
+* @param {number} tol - tolerance
+*/
 function checkResult( result, tc, tol ) {
 	assertClose( result.a, tc.a, tol, 'a' );
 	assertClose( result.b, tc.b, tol, 'b' );
@@ -64,129 +92,196 @@ var inputs = {
 // TESTS //
 
 test( 'dlanv2: c_zero (C=0, already Schur form)', function t() {
-	var inp = inputs[ 'c_zero' ];
-	var tc = findCase( 'c_zero' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'c_zero' ];
+	tc = findCase( 'c_zero' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: b_zero (B=0, swap rows and columns)', function t() {
-	var inp = inputs[ 'b_zero' ];
-	var tc = findCase( 'b_zero' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'b_zero' ];
+	tc = findCase( 'b_zero' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: a_eq_d_diff_sign (A=D, sign(B)!=sign(C))', function t() {
-	var inp = inputs[ 'a_eq_d_diff_sign' ];
-	var tc = findCase( 'a_eq_d_diff_sign' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'a_eq_d_diff_sign' ];
+	tc = findCase( 'a_eq_d_diff_sign' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: real_eigenvalues (Z >= MULTPL*EPS)', function t() {
-	var inp = inputs[ 'real_eigenvalues' ];
-	var tc = findCase( 'real_eigenvalues' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'real_eigenvalues' ];
+	tc = findCase( 'real_eigenvalues' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: complex_eigenvalues', function t() {
-	var inp = inputs[ 'complex_eigenvalues' ];
-	var tc = findCase( 'complex_eigenvalues' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'complex_eigenvalues' ];
+	tc = findCase( 'complex_eigenvalues' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: zero_matrix', function t() {
-	var inp = inputs[ 'zero_matrix' ];
-	var tc = findCase( 'zero_matrix' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'zero_matrix' ];
+	tc = findCase( 'zero_matrix' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: identity', function t() {
-	var inp = inputs[ 'identity' ];
-	var tc = findCase( 'identity' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'identity' ];
+	tc = findCase( 'identity' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: diagonal', function t() {
-	var inp = inputs[ 'diagonal' ];
-	var tc = findCase( 'diagonal' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'diagonal' ];
+	tc = findCase( 'diagonal' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: real_negative', function t() {
-	var inp = inputs[ 'real_negative' ];
-	var tc = findCase( 'real_negative' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'real_negative' ];
+	tc = findCase( 'real_negative' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: complex_equal_diag', function t() {
-	var inp = inputs[ 'complex_equal_diag' ];
-	var tc = findCase( 'complex_equal_diag' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'complex_equal_diag' ];
+	tc = findCase( 'complex_equal_diag' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: near_equal (small Z, complex path)', function t() {
-	var inp = inputs[ 'near_equal' ];
-	var tc = findCase( 'near_equal' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'near_equal' ];
+	tc = findCase( 'near_equal' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: large_values', function t() {
-	var inp = inputs[ 'large_values' ];
-	var tc = findCase( 'large_values' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'large_values' ];
+	tc = findCase( 'large_values' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: same_sign_bc (sign(B)==sign(C), real reduction)', function t() {
-	var inp = inputs[ 'same_sign_bc' ];
-	var tc = findCase( 'same_sign_bc' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'same_sign_bc' ];
+	tc = findCase( 'same_sign_bc' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
 test( 'dlanv2: tiny_bc (near-zero B,C)', function t() {
-	var inp = inputs[ 'tiny_bc' ];
-	var tc = findCase( 'tiny_bc' );
-	var result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
+	var result;
+	var inp;
+	var tc;
+
+	inp = inputs[ 'tiny_bc' ];
+	tc = findCase( 'tiny_bc' );
+	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
 
-// Verify Schur factorization property: [CS -SN; SN CS]' * [A B; C D] * [CS -SN; SN CS] = Schur form
+// Verify Schur factorization property: [CS -SN; SN CS]' * [A B; C D] * [CS -SN; SN CS] = Schur form // eslint-disable-line max-len
 test( 'dlanv2: verify Schur factorization property', function t() {
 	var names = Object.keys( inputs );
-	var i;
 	var inp;
-	var r;
 	var a11;
 	var a12;
 	var a21;
 	var a22;
+	var i;
+	var r;
 
 	for ( i = 0; i < names.length; i++ ) {
 		inp = inputs[ names[i] ];
 		r = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 
 		// From Fortran doc:
+
 		// [A B] = [CS -SN] [AA BB] [ CS SN]
+
 		// [C D]   [SN  CS] [CC DD] [-SN CS]
+
 		// So original = Q * Schur * Q^T where Q = [CS -SN; SN CS]
+
 		// Q^T = [CS SN; -SN CS]
+
 		// First compute T = Schur * Q^T:
+
 		// t11 = r.a*r.cs + r.b*(-r.sn)
+
 		// t12 = r.a*r.sn + r.b*r.cs
+
 		// t21 = r.c*r.cs + r.d*(-r.sn)
+
 		// t22 = r.c*r.sn + r.d*r.cs
+
 		// Then original = Q * T:
+
 		// a11 = cs*t11 + (-sn)*t21, etc.
 		var t11 = r.a * r.cs - r.b * r.sn;
 		var t12 = r.a * r.sn + r.b * r.cs;

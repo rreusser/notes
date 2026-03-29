@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlar2v = require( '@stdlib/lapack/base/dlar2v' );

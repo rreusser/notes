@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Multiply a matrix by the orthogonal matrix Q from RQ factorization (blocked)
+* Multiply a matrix by the orthogonal matrix Q from RQ factorization (blocked).
 *
 * @module @stdlib/lapack/base/dormrq
 *

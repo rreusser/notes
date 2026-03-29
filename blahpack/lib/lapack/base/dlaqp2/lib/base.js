@@ -38,7 +38,7 @@ var tol3z = Math.sqrt( dlamch( 'Epsilon' ) );
 // MAIN //
 
 /**
-* Computes a QR factorization with column pivoting of the block
+* Computes a QR factorization with column pivoting of the block.
 * A(offset:M-1, 0:N-1) using Level 2 BLAS.
 *
 * The block A(0:offset-1, 0:N-1) is accordingly pivoted, but not factorized.
@@ -106,19 +106,9 @@ function dlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 		// Generate elementary reflector H(i) to annul A(offpi+1:M-1, i)
 		if ( offpi < M - 1 ) {
 			// dlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau )
-			dlarfg(
-				M - offpi,
-				A, offsetA + ( offpi * strideA1 ) + ( i * strideA2 ),
-				A, strideA1, offsetA + ( ( offpi + 1 ) * strideA1 ) + ( i * strideA2 ),
-				TAU, offsetTAU + ( i * strideTAU )
-			);
+			dlarfg(M - offpi, A, offsetA + ( offpi * strideA1 ) + ( i * strideA2 ), A, strideA1, offsetA + ( ( offpi + 1 ) * strideA1 ) + ( i * strideA2 ), TAU, offsetTAU + ( i * strideTAU ));
 		} else {
-			dlarfg(
-				1,
-				A, offsetA + ( ( M - 1 ) * strideA1 ) + ( i * strideA2 ),
-				A, strideA1, offsetA + ( ( M - 1 ) * strideA1 ) + ( i * strideA2 ),
-				TAU, offsetTAU + ( i * strideTAU )
-			);
+			dlarfg(1, A, offsetA + ( ( M - 1 ) * strideA1 ) + ( i * strideA2 ), A, strideA1, offsetA + ( ( M - 1 ) * strideA1 ) + ( i * strideA2 ), TAU, offsetTAU + ( i * strideTAU ));
 		}
 
 		if ( i < N - 1 ) {
@@ -130,14 +120,7 @@ function dlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 			A[ pA ] = 1.0;
 
 			// dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-			dlarf(
-				'left',
-				M - offpi, N - i - 1,
-				A, strideA1, offsetA + ( offpi * strideA1 ) + ( i * strideA2 ),
-				TAU[ offsetTAU + ( i * strideTAU ) ],
-				A, strideA1, strideA2, offsetA + ( offpi * strideA1 ) + ( ( i + 1 ) * strideA2 ),
-				WORK, strideWORK, offsetWORK
-			);
+			dlarf('left', M - offpi, N - i - 1, A, strideA1, offsetA + ( offpi * strideA1 ) + ( i * strideA2 ), TAU[ offsetTAU + ( i * strideTAU ) ], A, strideA1, strideA2, offsetA + ( offpi * strideA1 ) + ( ( i + 1 ) * strideA2 ), WORK, strideWORK, offsetWORK);
 
 			// Restore A(offpi, i)
 			A[ pA ] = aii;
@@ -154,10 +137,7 @@ function dlaqp2( M, N, offset, A, strideA1, strideA2, offsetA, JPVT, strideJPVT,
 
 				if ( temp2 <= tol3z ) {
 					if ( offpi < M - 1 ) {
-						VN1[ offsetVN1 + ( j * strideVN1 ) ] = dnrm2(
-							M - offpi - 1,
-							A, strideA1, offsetA + ( ( offpi + 1 ) * strideA1 ) + ( j * strideA2 )
-						);
+						VN1[ offsetVN1 + ( j * strideVN1 ) ] = dnrm2(M - offpi - 1, A, strideA1, offsetA + ( ( offpi + 1 ) * strideA1 ) + ( j * strideA2 ));
 						VN2[ offsetVN2 + ( j * strideVN2 ) ] = VN1[ offsetVN1 + ( j * strideVN1 ) ];
 					} else {
 						VN1[ offsetVN1 + ( j * strideVN1 ) ] = 0.0;

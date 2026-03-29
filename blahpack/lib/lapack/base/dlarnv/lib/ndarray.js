@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -10,18 +9,17 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Returns a vector of n random real numbers from a uniform or normal distribution.
- *
- *
- * @param {integer} idist - distribution type: 1=uniform(0,1), 2=uniform(-1,1), 3=normal(0,1)
- * @param {Int32Array} iseed - seed array of 4 integers
- * @param {integer} strideISEED - stride for iseed
- * @param {NonNegativeInteger} offsetISEED - offset for iseed
- * @param {NonNegativeInteger} N - number of random numbers to generate
- * @param {Float64Array} x - output array
- * @param {integer} stride - stride for x
- * @param {NonNegativeInteger} offset - offset for x
- */
+* Returns a vector of n random real numbers from a uniform or normal distribution.
+*
+* @param {integer} idist - distribution type: 1=uniform(0,1), 2=uniform(-1,1), 3=normal(0,1)
+* @param {Int32Array} iseed - seed array of 4 integers
+* @param {integer} strideISEED - stride for iseed
+* @param {NonNegativeInteger} offsetISEED - offset for iseed
+* @param {NonNegativeInteger} N - number of random numbers to generate
+* @param {Float64Array} x - output array
+* @param {integer} stride - stride for x
+* @param {NonNegativeInteger} offset - offset for x
+*/
 function dlarnv( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset ) { // eslint-disable-line max-len, max-params
 	return base( idist, iseed, strideISEED, offsetISEED, N, x, stride, offset ); // eslint-disable-line max-len
 }

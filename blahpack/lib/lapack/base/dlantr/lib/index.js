@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes the norm of a real triangular matrix
+* Computes the norm of a real triangular matrix.
 *
 * @module @stdlib/lapack/base/dlantr
 *

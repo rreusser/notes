@@ -48,7 +48,7 @@ var SMLNUM = dlamch( 'safe-minimum' ) / EPS;
 // MAIN //
 
 /**
-* Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper
+* Swaps adjacent diagonal blocks T11 and T22 of order 1 or 2 in an upper.
 * quasi-triangular matrix T by an orthogonal similarity transformation.
 *
 * T must be in Schur canonical form, i.e., block upper triangular with
@@ -77,33 +77,33 @@ var SMLNUM = dlamch( 'safe-minimum' ) / EPS;
 * @returns {integer} info (0=success, 1=swap failed)
 */
 function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK ) {
-	var dnorm;
-	var scale;
-	var xnorm;
 	var thresh;
 	var lanv2r;
 	var rtgOut;
+	var dnorm;
+	var scale;
+	var xnorm;
 	var info;
 	var ierr;
 	var temp;
-	var tau;
 	var tau1;
 	var tau2;
-	var cs;
-	var sn;
+	var tau;
 	var t11;
 	var t22;
 	var t33;
+	var cs;
+	var sn;
 	var nd;
-	var k;
 	var j2;
 	var j3;
 	var j4;
+	var u1;
+	var u2;
+	var k;
 	var D;
 	var X;
 	var u;
-	var u1;
-	var u2;
 
 	info = 0;
 
@@ -278,12 +278,7 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 
 		// Standardize the 2-by-2 blocks
 		if ( n2 === 2 ) {
-			lanv2r = dlanv2(
-				T[ tij( j1, j1 ) ],
-				T[ tij( j1, j2 ) ],
-				T[ tij( j2, j1 ) ],
-				T[ tij( j2, j2 ) ]
-			);
+			lanv2r = dlanv2(T[ tij( j1, j1 ) ], T[ tij( j1, j2 ) ], T[ tij( j2, j1 ) ], T[ tij( j2, j2 ) ]);
 			T[ tij( j1, j1 ) ] = lanv2r.a;
 			T[ tij( j1, j2 ) ] = lanv2r.b;
 			T[ tij( j2, j1 ) ] = lanv2r.c;
@@ -300,12 +295,7 @@ function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 		if ( n1 === 2 ) {
 			j3 = j1 + n2;
 			j4 = j3 + 1;
-			lanv2r = dlanv2(
-				T[ tij( j3, j3 ) ],
-				T[ tij( j3, j4 ) ],
-				T[ tij( j4, j3 ) ],
-				T[ tij( j4, j4 ) ]
-			);
+			lanv2r = dlanv2(T[ tij( j3, j3 ) ], T[ tij( j3, j4 ) ], T[ tij( j4, j3 ) ], T[ tij( j4, j4 ) ]);
 			T[ tij( j3, j3 ) ] = lanv2r.a;
 			T[ tij( j3, j4 ) ] = lanv2r.b;
 			T[ tij( j4, j3 ) ] = lanv2r.c;

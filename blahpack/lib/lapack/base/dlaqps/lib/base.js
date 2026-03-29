@@ -39,7 +39,7 @@ var TOL3Z = Math.sqrt( dlamch( 'Epsilon' ) );
 // MAIN //
 
 /**
-* Computes a step of QR factorization with column pivoting of a
+* Computes a step of QR factorization with column pivoting of a.
 * real M-by-N matrix A by using Level 3 BLAS. It tries to factorize
 * NB columns from A starting from the row OFFSET+1, and updates all
 * of the matrix with Level 3 BLAS.
@@ -115,6 +115,7 @@ function dlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			dswap( M, A, sa1, offsetA + ( pvt * sa2 ), A, sa1, offsetA + ( k * sa2 ) );
 
 			// Swap rows pvt and k of F (first k columns)
+
 			// F(pvt, 0:k-1) <-> F(k, 0:k-1), row stride is sf1, column stride is sf2
 			dswap( k, F, sf2, offsetF + ( pvt * sf1 ), F, sf2, offsetF + ( k * sf1 ) );
 
@@ -132,31 +133,14 @@ function dlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		// A(rk:M-1, k) -= A(rk:M-1, 0:k-1) * F(k, 0:k-1)^T
 		if ( k > 0 ) {
 			// dgemv('No transpose', M-rk, k, -1, A(rk,0), lda, F(k,0), ldf, 1, A(rk,k), 1)
-			dgemv(
-				'no-transpose', M - rk, k,
-				-1.0,
-				A, sa1, sa2, offsetA + ( rk * sa1 ),
-				F, sf2, offsetF + ( k * sf1 ),
-				1.0,
-				A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 )
-			);
+			dgemv('no-transpose', M - rk, k, -1.0, A, sa1, sa2, offsetA + ( rk * sa1 ), F, sf2, offsetF + ( k * sf1 ), 1.0, A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 ));
 		}
 
 		// Generate elementary reflector H(k)
 		if ( rk < M - 1 ) {
-			dlarfg(
-				M - rk,
-				A, offsetA + ( rk * sa1 ) + ( k * sa2 ),
-				A, sa1, offsetA + ( ( rk + 1 ) * sa1 ) + ( k * sa2 ),
-				TAU, offsetTAU + ( k * strideTAU )
-			);
+			dlarfg(M - rk, A, offsetA + ( rk * sa1 ) + ( k * sa2 ), A, sa1, offsetA + ( ( rk + 1 ) * sa1 ) + ( k * sa2 ), TAU, offsetTAU + ( k * strideTAU ));
 		} else {
-			dlarfg(
-				1,
-				A, offsetA + ( rk * sa1 ) + ( k * sa2 ),
-				A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 ),
-				TAU, offsetTAU + ( k * strideTAU )
-			);
+			dlarfg(1, A, offsetA + ( rk * sa1 ) + ( k * sa2 ), A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 ), TAU, offsetTAU + ( k * strideTAU ));
 		}
 
 		// Save A(rk, k) and set to 1 for reflector application
@@ -164,17 +148,11 @@ function dlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 		A[ offsetA + ( rk * sa1 ) + ( k * sa2 ) ] = 1.0;
 
 		// Compute k-th column of F:
+
 		// F(k+1:N-1, k) = tau(k) * A(rk:M-1, k+1:N-1)^T * A(rk:M-1, k)
 		if ( k < N - 1 ) {
 			tauK = TAU[ offsetTAU + ( k * strideTAU ) ];
-			dgemv(
-				'transpose', M - rk, N - k - 1,
-				tauK,
-				A, sa1, sa2, offsetA + ( rk * sa1 ) + ( ( k + 1 ) * sa2 ),
-				A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 ),
-				0.0,
-				F, sf1, offsetF + ( ( k + 1 ) * sf1 ) + ( k * sf2 )
-			);
+			dgemv('transpose', M - rk, N - k - 1, tauK, A, sa1, sa2, offsetA + ( rk * sa1 ) + ( ( k + 1 ) * sa2 ), A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 ), 0.0, F, sf1, offsetF + ( ( k + 1 ) * sf1 ) + ( k * sf2 ));
 		}
 
 		// Zero out F(0:k, k)
@@ -187,38 +165,17 @@ function dlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 			tauK = TAU[ offsetTAU + ( k * strideTAU ) ];
 
 			// AUXV(0:k-1) = -tau(k) * A(rk:M-1, 0:k-1)^T * A(rk:M-1, k)
-			dgemv(
-				'transpose', M - rk, k,
-				-tauK,
-				A, sa1, sa2, offsetA + ( rk * sa1 ),
-				A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 ),
-				0.0,
-				AUXV, strideAUXV, offsetAUXV
-			);
+			dgemv('transpose', M - rk, k, -tauK, A, sa1, sa2, offsetA + ( rk * sa1 ), A, sa1, offsetA + ( rk * sa1 ) + ( k * sa2 ), 0.0, AUXV, strideAUXV, offsetAUXV);
 
 			// F(0:N-1, k) += F(0:N-1, 0:k-1) * AUXV(0:k-1)
-			dgemv(
-				'no-transpose', N, k,
-				1.0,
-				F, sf1, sf2, offsetF,
-				AUXV, strideAUXV, offsetAUXV,
-				1.0,
-				F, sf1, offsetF + ( k * sf2 )
-			);
+			dgemv('no-transpose', N, k, 1.0, F, sf1, sf2, offsetF, AUXV, strideAUXV, offsetAUXV, 1.0, F, sf1, offsetF + ( k * sf2 ));
 		}
 
 		// Update the current row of A:
 		// A(rk, k+1:N-1) -= A(rk, 0:k) * F(k+1:N-1, 0:k)^T
 		// Fortran: DGEMV('No transpose', N-K, K, -1, F(K+1,1), LDF, A(RK,1), LDA, 1, A(RK,K+1), LDA)
 		if ( k < N - 1 ) {
-			dgemv(
-				'no-transpose', N - k - 1, k + 1,
-				-1.0,
-				F, sf1, sf2, offsetF + ( ( k + 1 ) * sf1 ),
-				A, sa2, offsetA + ( rk * sa1 ),
-				1.0,
-				A, sa2, offsetA + ( rk * sa1 ) + ( ( k + 1 ) * sa2 )
-			);
+			dgemv('no-transpose', N - k - 1, k + 1, -1.0, F, sf1, sf2, offsetF + ( ( k + 1 ) * sf1 ), A, sa2, offsetA + ( rk * sa1 ), 1.0, A, sa2, offsetA + ( rk * sa1 ) + ( ( k + 1 ) * sa2 ));
 		}
 
 		// Update partial column norms
@@ -251,25 +208,16 @@ function dlaqps( M, N, offset, nb, A, strideA1, strideA2, offsetA, JPVT, strideJ
 	rk = offset + k;
 
 	// Apply the block reflector to the rest of the matrix:
+
 	// A(rk+1:M-1, k+1:N-1) -= A(rk+1:M-1, 0:k-1) * F(k+1:N-1, 0:k-1)^T
 	if ( k < Math.min( N, M - offset ) ) {
-		dgemm(
-			'no-transpose', 'transpose', M - rk, N - k, k,
-			-1.0,
-			A, sa1, sa2, offsetA + ( rk * sa1 ),
-			F, sf1, sf2, offsetF + ( k * sf1 ),
-			1.0,
-			A, sa1, sa2, offsetA + ( rk * sa1 ) + ( k * sa2 )
-		);
+		dgemm('no-transpose', 'transpose', M - rk, N - k, k, -1.0, A, sa1, sa2, offsetA + ( rk * sa1 ), F, sf1, sf2, offsetF + ( k * sf1 ), 1.0, A, sa1, sa2, offsetA + ( rk * sa1 ) + ( k * sa2 ));
 	}
 
 	// Recompute norms for columns flagged in lsticc linked list
 	while ( lsticc > 0 ) {
 		itemp = Math.round( VN2[ offsetVN2 + ( lsticc * strideVN2 ) ] );
-		VN1[ offsetVN1 + ( lsticc * strideVN1 ) ] = dnrm2(
-			M - rk,
-			A, sa1, offsetA + ( rk * sa1 ) + ( lsticc * sa2 )
-		);
+		VN1[ offsetVN1 + ( lsticc * strideVN1 ) ] = dnrm2(M - rk, A, sa1, offsetA + ( rk * sa1 ) + ( lsticc * sa2 ));
 		VN2[ offsetVN2 + ( lsticc * strideVN2 ) ] = VN1[ offsetVN1 + ( lsticc * strideVN1 ) ];
 		lsticc = itemp;
 	}

@@ -50,9 +50,9 @@ function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 	var anorm;
 	var temp;
 	var pdl;
-	var pd;
 	var pdu;
 	var res;
+	var pd;
 	var i;
 
 	if ( N <= 0 ) {
@@ -90,6 +90,7 @@ function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 		} else {
 			// First column: d[0] + dl[0]
 			anorm = Math.abs( d[ offsetD ] ) + Math.abs( DL[ offsetDL ] );
+
 			// Last column: d[N-1] + du[N-2]
 			temp = Math.abs( d[ offsetD + ( ( N - 1 ) * strideD ) ] ) + Math.abs( DU[ offsetDU + ( ( N - 2 ) * strideDU ) ] );
 			if ( anorm < temp || temp !== temp ) {
@@ -110,6 +111,7 @@ function dlangt( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 		} else {
 			// First row: d[0] + du[0]
 			anorm = Math.abs( d[ offsetD ] ) + Math.abs( DU[ offsetDU ] );
+
 			// Last row: d[N-1] + dl[N-2]
 			temp = Math.abs( d[ offsetD + ( ( N - 1 ) * strideD ) ] ) + Math.abs( DL[ offsetDL + ( ( N - 2 ) * strideDL ) ] );
 			if ( anorm < temp || temp !== temp ) {

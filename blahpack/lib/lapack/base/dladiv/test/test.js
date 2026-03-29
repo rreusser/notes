@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 /**
 * @license Apache-2.0
 *
@@ -19,21 +21,34 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dladiv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dladiv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
-// HELPERS //
 
+// FUNCTIONS //
+
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
 }
+
 
 // TESTS //
 
@@ -42,48 +57,60 @@ test( 'dladiv: main export is a function', function t() {
 });
 
 test( 'dladiv: (4+2i)/(1+1i) = 3-1i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'dladiv_basic'; } );
 	var out = new Float64Array( 2 );
+	var tc = fixture.find( function find( t ) {
+		return t.name === 'dladiv_basic';
+	} );
 	base( 4.0, 2.0, 1.0, 1.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_basic p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_basic q' );
 });
 
 test( 'dladiv: (1+0i)/(0+1i) = 0-1i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'dladiv_pure_imag_denom'; } );
 	var out = new Float64Array( 2 );
+	var tc = fixture.find( function find( t ) {
+		return t.name === 'dladiv_pure_imag_denom';
+	} );
 	base( 1.0, 0.0, 0.0, 1.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_pure_imag_denom p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_pure_imag_denom q' );
 });
 
 test( 'dladiv: (1+0i)/(1+0i) = 1+0i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'dladiv_real_div'; } );
 	var out = new Float64Array( 2 );
+	var tc = fixture.find( function find( t ) {
+		return t.name === 'dladiv_real_div';
+	} );
 	base( 1.0, 0.0, 1.0, 0.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_real_div p' );
 	assert.strictEqual( out[ 1 ], tc.q, 'dladiv_real_div q' );
 });
 
 test( 'dladiv: (0+0i)/(1+1i) = 0+0i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'dladiv_zero_numer'; } );
 	var out = new Float64Array( 2 );
+	var tc = fixture.find( function find( t ) {
+		return t.name === 'dladiv_zero_numer';
+	} );
 	base( 0.0, 0.0, 1.0, 1.0, out );
 	assert.strictEqual( out[ 0 ], tc.p, 'dladiv_zero_numer p' );
 	assert.strictEqual( out[ 1 ], tc.q, 'dladiv_zero_numer q' );
 });
 
 test( 'dladiv: (3+4i)/(1-2i) = -1+2i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'dladiv_neg_denom'; } );
 	var out = new Float64Array( 2 );
+	var tc = fixture.find( function find( t ) {
+		return t.name === 'dladiv_neg_denom';
+	} );
 	base( 3.0, 4.0, 1.0, -2.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_neg_denom p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_neg_denom q' );
 });
 
 test( 'dladiv: large values (overflow-safe)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'dladiv_large'; } );
 	var out = new Float64Array( 2 );
+	var tc = fixture.find( function find( t ) {
+		return t.name === 'dladiv_large';
+	} );
 	base( 1.0e300, 1.0e300, 1.0e300, 1.0e300, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_large p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_large q' );
@@ -91,7 +118,7 @@ test( 'dladiv: large values (overflow-safe)', function t() {
 
 test( 'dladiv: near-overflow numerator (ab >= HALF*ov)', function t() {
 	// (1e308 + 0i) / (1 + 0i) = 1e308 + 0i
-	// ab = 1e308 >= HALF*ov (~9e307) → triggers numerator scaling
+	// Ab = 1e308 >= HALF*ov (~9e307) → triggers numerator scaling
 	var out = new Float64Array( 2 );
 	base( 1.0e308, 0.0, 1.0, 0.0, out );
 	assertClose( out[ 0 ], 1e308, 'near-overflow num p' );
@@ -100,7 +127,7 @@ test( 'dladiv: near-overflow numerator (ab >= HALF*ov)', function t() {
 
 test( 'dladiv: near-overflow denominator (cd >= HALF*ov)', function t() {
 	// (1 + 0i) / (1e308 + 0i) = 1e-308 + 0i
-	// cd = 1e308 >= HALF*ov → triggers denominator scaling
+	// Cd = 1e308 >= HALF*ov → triggers denominator scaling
 	var out = new Float64Array( 2 );
 	base( 1.0, 0.0, 1.0e308, 0.0, out );
 	assertClose( out[ 0 ], 1e-308, 'near-overflow denom p' );
@@ -108,8 +135,10 @@ test( 'dladiv: near-overflow denominator (cd >= HALF*ov)', function t() {
 });
 
 test( 'dladiv: small values', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'dladiv_small'; } );
 	var out = new Float64Array( 2 );
+	var tc = fixture.find( function find( t ) {
+		return t.name === 'dladiv_small';
+	} );
 	base( 1.0e-300, 1.0e-300, 1.0e-300, 1.0e-300, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_small p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_small q' );

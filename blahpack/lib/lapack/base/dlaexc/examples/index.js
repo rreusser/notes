@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlaexc = require( '@stdlib/lapack/base/dlaexc' );

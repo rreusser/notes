@@ -33,8 +33,8 @@ var EPS = dlamch( 'Epsilon' );
 // MAIN //
 
 /**
-* Computes an LU factorization of the matrix (T - lambda*I), where T is an
-* n-by-n tridiagonal matrix and lambda is a scalar, as T - lambda*I = PLU.
+* Computes an LU factorization of the matrix (T - lambda_I), where T is an.
+_ n-by-n tridiagonal matrix and lambda is a scalar, as T - lambda_I = PLU.
 *
 * P is a permutation matrix, L is a unit lower tridiagonal matrix with at most
 * one non-zero sub-diagonal element per column, and U is an upper triangular

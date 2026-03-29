@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlagts = require( '@stdlib/lapack/base/dlagts' );

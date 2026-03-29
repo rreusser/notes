@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -12,29 +11,28 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Estimates the reciprocal of the condition number of a symmetric positive
- * definite band matrix A using the Cholesky factorization A = U^T*U or
- * A = L*L^T computed by dpbtrf.
- *
- *
- * @param {string} uplo - 'upper' if upper Cholesky factor, 'lower' if lower
- * @param {NonNegativeInteger} N - order of the matrix A
- * @param {NonNegativeInteger} kd - number of superdiagonals (upper) or subdiagonals (lower)
- * @param {Float64Array} AB - Cholesky factorization from dpbtrf, (KD+1) by N
- * @param {integer} strideAB1 - stride of the first dimension of `AB`
- * @param {integer} strideAB2 - stride of the second dimension of `AB`
- * @param {NonNegativeInteger} offsetAB - starting index for `AB`
- * @param {number} anorm - the 1-norm (or infinity-norm) of the original matrix
- * @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
- * @param {Float64Array} WORK - workspace array of length 3*N
- * @param {integer} strideWORK - stride length for `WORK`
- * @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
- * @param {Int32Array} IWORK - workspace array of length N
- * @param {integer} strideIWORK - stride length for `IWORK`
- * @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
- * @throws {TypeError} First argument must be a valid matrix triangle
- * @returns {integer} info - 0 if successful
- */
+* Estimates the reciprocal of the condition number of a symmetric positive.
+* definite band matrix A using the Cholesky factorization A = U^T_U or
+_ A = L_L^T computed by dpbtrf.
+*
+* @param {string} uplo - 'upper' if upper Cholesky factor, 'lower' if lower
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} kd - number of superdiagonals (upper) or subdiagonals (lower)
+* @param {Float64Array} AB - Cholesky factorization from dpbtrf, (KD+1) by N
+* @param {integer} strideAB1 - stride of the first dimension of `AB`
+* @param {integer} strideAB2 - stride of the second dimension of `AB`
+* @param {NonNegativeInteger} offsetAB - starting index for `AB`
+* @param {number} anorm - the 1-norm (or infinity-norm) of the original matrix
+* @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
+* @param {Float64Array} WORK - workspace array of length 3*N
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {Int32Array} IWORK - workspace array of length N
+* @param {integer} strideIWORK - stride length for `IWORK`
+* @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
+* @throws {TypeError} First argument must be a valid matrix triangle
+* @returns {integer} info - 0 if successful
+*/
 function dpbcon( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );

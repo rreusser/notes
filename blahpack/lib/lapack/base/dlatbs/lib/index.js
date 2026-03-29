@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a triangular banded system with scaling for overflow
+* Solves a triangular banded system with scaling for overflow.
 *
 * @module @stdlib/lapack/base/dlatbs
 *

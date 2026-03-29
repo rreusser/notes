@@ -117,12 +117,7 @@ function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 	// Apply DORGL2 to the trailing submatrix (unblocked part)
 	if ( kk < M ) {
-		dorgl2(
-			M - kk, N - kk, K - kk,
-			A, strideA1, strideA2, offsetA + (kk * strideA1) + (kk * strideA2),
-			TAU, strideTAU, offsetTAU + (kk * strideTAU),
-			WORK, strideWORK, offsetWORK
-		);
+		dorgl2(M - kk, N - kk, K - kk, A, strideA1, strideA2, offsetA + (kk * strideA1) + (kk * strideA2), TAU, strideTAU, offsetTAU + (kk * strideTAU), WORK, strideWORK, offsetWORK);
 	}
 
 	if ( kk > 0 ) {
@@ -136,12 +131,7 @@ function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				// Form the triangular factor of the block reflector
 				// DLARFT('Forward', 'Rowwise', N-I+1, IB, A(I,I), LDA, TAU(I), WORK, LDWORK)
 				// Fortran N-I+1 with 1-based I => JS N-i with 0-based i
-				dlarft(
-					'forward', 'rowwise', N - i, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					TAU, strideTAU, offsetTAU + (i * strideTAU),
-					WORK, 1, ldwork, offsetWORK
-				);
+				dlarft('forward', 'rowwise', N - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), WORK, 1, ldwork, offsetWORK);
 
 				// Apply H to A(i+ib:M-1, i:N-1) from the right
 
@@ -150,24 +140,12 @@ function dorglq( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				//         M-I-IB+1, N-I+1, IB, A(I,I), LDA, WORK, LDWORK,
 
 				//         A(I+IB,I), LDA, WORK(IB+1), LDWORK)
-				dlarfb(
-					'right', 'transpose', 'forward', 'rowwise',
-					M - i - ib, N - i, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					WORK, 1, ldwork, offsetWORK,
-					A, strideA1, strideA2, offsetA + (( i + ib ) * strideA1) + (i * strideA2),
-					WORK, 1, ldwork, offsetWORK + ib
-				);
+				dlarfb('right', 'transpose', 'forward', 'rowwise', M - i - ib, N - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), WORK, 1, ldwork, offsetWORK, A, strideA1, strideA2, offsetA + (( i + ib ) * strideA1) + (i * strideA2), WORK, 1, ldwork, offsetWORK + ib);
 			}
 
 			// Apply DORGL2 to the current block panel
 			// DORGL2(IB, N-I+1, IB, A(I,I), LDA, TAU(I), WORK, IINFO)
-			dorgl2(
-				ib, N - i, ib,
-				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-				TAU, strideTAU, offsetTAU + (i * strideTAU),
-				WORK, strideWORK, offsetWORK
-			);
+			dorgl2(ib, N - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), WORK, strideWORK, offsetWORK);
 
 			// Zero out columns 0..i-1 of rows i..i+ib-1
 

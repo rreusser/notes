@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dorml2 = require( '@stdlib/lapack/base/dorml2' );

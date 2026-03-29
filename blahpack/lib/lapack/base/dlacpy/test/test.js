@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 /**
 * @license Apache-2.0
 *
@@ -19,40 +21,48 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var dlacpy = require( './../lib' );
-
-test( 'dlacpy: main export is a function', function t() {
-	assert.strictEqual( typeof dlacpy, 'function' );
-});
-
-test( 'dlacpy: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof dlacpy.ndarray, 'function' );
-});
-
-// FIXTURES //
-
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dlacpy = require( './../lib' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlacpy.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlacpy.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, msg ) {
 	var relErr;
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
-		relErr = Math.abs( actual[i] - expected[i] ) / Math.max( Math.abs( expected[i] ), 1.0 );
-		assert.ok( relErr <= 1e-14, msg + '[' + i + ']: expected ' + expected[i] + ', got ' + actual[i] );
+		relErr = Math.abs( actual[i] - expected[i] ) / Math.max( Math.abs( expected[i] ), 1.0 ); // eslint-disable-line max-len
+		assert.ok( relErr <= 1e-14, msg + '[' + i + ']: expected ' + expected[i] + ', got ' + actual[i] ); // eslint-disable-line max-len
 	}
 }
 

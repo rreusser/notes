@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // VARIABLES //
@@ -9,8 +8,8 @@ var ZERO = 0.0;
 // MAIN //
 
 /**
-* Sets a scalar multiple of the first column of the product
-* (H - (sr1 + i*si1)*I)*(H - (sr2 + i*si2)*I), scaling to avoid
+* Sets a scalar multiple of the first column of the product.
+* (H - (sr1 + i_si1)_I)_(H - (sr2 + i_si2)*I), scaling to avoid
 * overflows and most underflows.
 *
 * @private

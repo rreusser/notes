@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Multiplies a matrix by the orthogonal matrix Q from Hessenberg reduction
+* Multiplies a matrix by the orthogonal matrix Q from Hessenberg reduction.
 *
 * @module @stdlib/lapack/base/dormhr
 *

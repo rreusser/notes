@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dptsv = require( '@stdlib/lapack/base/dptsv' );

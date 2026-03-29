@@ -99,12 +99,10 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 
 	// Estimate norm(inv(A)) using reverse communication with dlacn2
 	while ( true ) {
-		dlacn2( N,
-			WORK, sw, offsetWORK + (N * sw), // v
+		dlacn2( N, WORK, sw, offsetWORK + (N * sw), // v
 			WORK, sw, offsetWORK, // x
 			IWORK, strideIWORK, offsetIWORK, // isgn
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -112,31 +110,19 @@ function dpocon( uplo, N, A, strideA1, strideA2, offsetA, anorm, rcond, WORK, st
 
 		if ( upper ) {
 			// A = U^T * U: solve U^T * y = x, then U * x = y
-			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatrs( 'upper', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scalel = scale[ 0 ];
 			normin = 'yes';
 
-			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatrs( 'upper', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scaleu = scale[ 0 ];
 		} else {
 			// A = L * L^T: solve L * y = x, then L^T * x = y
-			dlatrs( 'lower', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatrs( 'lower', 'no-transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scalel = scale[ 0 ];
 			normin = 'yes';
 
-			dlatrs( 'lower', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA,
-				WORK, sw, offsetWORK,
-				scale, WORK, sw, offsetWORK + ((2 * N) * sw)
-			);
+			dlatrs( 'lower', 'transpose', 'non-unit', normin, N, A, strideA1, strideA2, offsetA, WORK, sw, offsetWORK, scale, WORK, sw, offsetWORK + ((2 * N) * sw));
 			scaleu = scale[ 0 ];
 		}
 

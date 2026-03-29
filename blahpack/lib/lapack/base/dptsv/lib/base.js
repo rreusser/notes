@@ -9,16 +9,16 @@ var dpttrs = require( '../../dpttrs/lib/base.js' );
 // MAIN //
 
 /**
-* Solves a real symmetric positive definite tridiagonal system of linear
+* Solves a real symmetric positive definite tridiagonal system of linear.
 * equations A*X = B, where A is an N-by-N symmetric positive definite
 * tridiagonal matrix and X and B are N-by-NRHS matrices.
 *
-* A is factored as A = L*D*L^T, and the factored form of A is then used
+* A is factored as A = L_D_L^T, and the factored form of A is then used
 * to solve the system of equations.
 *
 * ## Notes
 *
-* -   On entry, `d` contains the n diagonal elements of A. On exit, the n diagonal elements of D from L*D*L^T.
+* -   On entry, `d` contains the n diagonal elements of A. On exit, the n diagonal elements of D from L_D_L^T.
 * -   On entry, `e` contains the (n-1) subdiagonal elements of A. On exit, the (n-1) subdiagonal elements of the unit bidiagonal factor L.
 * -   On entry, `B` contains the N-by-NRHS right hand side matrix. On exit, the solution matrix X.
 *

@@ -91,23 +91,19 @@ function dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, off
 		// Form H * C
 		if ( lastv > 0 ) {
 			// w(1:lastc) := C(1:lastv, 1:lastc)**T * v(1:lastv)
-			dgemv( 'transpose', lastv, lastc, 1.0, C, strideC1, strideC2, offsetC,
-				v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
+			dgemv( 'transpose', lastv, lastc, 1.0, C, strideC1, strideC2, offsetC, v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
 
 			// C(1:lastv, 1:lastc) := C(...) - tau * v(1:lastv) * w(1:lastc)**T
-			dger( lastv, lastc, -tau, v, strideV, offsetV,
-				WORK, strideWORK, offsetWORK, C, strideC1, strideC2, offsetC );
+			dger( lastv, lastc, -tau, v, strideV, offsetV, WORK, strideWORK, offsetWORK, C, strideC1, strideC2, offsetC );
 		}
 	} else if ( lastv > 0 ) {
 		// Form C * H
 
 		// w(1:lastc) := C(1:lastc, 1:lastv) * v(1:lastv)
-		dgemv( 'no-transpose', lastc, lastv, 1.0, C, strideC1, strideC2, offsetC,
-			v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
+		dgemv( 'no-transpose', lastc, lastv, 1.0, C, strideC1, strideC2, offsetC, v, strideV, offsetV, 0.0, WORK, strideWORK, offsetWORK );
 
 		// C(1:lastc, 1:lastv) := C(...) - tau * w(1:lastc) * v(1:lastv)**T
-		dger( lastc, lastv, -tau, WORK, strideWORK, offsetWORK,
-			v, strideV, offsetV, C, strideC1, strideC2, offsetC );
+		dger( lastc, lastv, -tau, WORK, strideWORK, offsetWORK, v, strideV, offsetV, C, strideC1, strideC2, offsetC );
 	}
 }
 

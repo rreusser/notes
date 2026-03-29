@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Measures linear dependence of two vectors via QR factorization and SVD
+* Measures linear dependence of two vectors via QR factorization and SVD.
 *
 * @module @stdlib/lapack/base/dlapll
 *

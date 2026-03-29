@@ -103,9 +103,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				// DSCAL(KN, 1/AJJ, AB(KD, J+2), KLD)
 				// AB(KD, J+2) in 0-based: (kd-1)*sa1 + (j+1)*sa2
 				// Stride = KLD (stepping diagonally along the band)
-				dscal( kn, 1.0 / ajj,
-					AB, kld, offsetAB + (( kd - 1 ) * sa1) + (( j + 1 ) * sa2)
-				);
+				dscal( kn, 1.0 / ajj, AB, kld, offsetAB + (( kd - 1 ) * sa1) + (( j + 1 ) * sa2));
 
 				// DSYR('Upper', KN, -1, AB(KD, J+2), KLD, AB(KD+1, J+2), KLD)
 
@@ -118,10 +116,7 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				//   strideA1 = sa1 (step within a column = 1 for col-major)
 
 				//   strideA2 = kld (step between columns = LDAB-1)
-				dsyr( 'upper', kn, -1.0,
-					AB, kld, offsetAB + (( kd - 1 ) * sa1) + (( j + 1 ) * sa2),
-					AB, sa1, kld, offsetAB + (kd * sa1) + (( j + 1 ) * sa2)
-				);
+				dsyr( 'upper', kn, -1.0, AB, kld, offsetAB + (( kd - 1 ) * sa1) + (( j + 1 ) * sa2), AB, sa1, kld, offsetAB + (kd * sa1) + (( j + 1 ) * sa2));
 			}
 		}
 	} else {
@@ -142,17 +137,12 @@ function dpbtf2( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 				// DSCAL(KN, 1/AJJ, AB(2, J+1), 1)
 				// AB(2, J+1) in 0-based: sa1 + j*sa2
 				// Stride = sa1 (= 1 for col-major, stepping down rows)
-				dscal( kn, 1.0 / ajj,
-					AB, sa1, offsetAB + sa1 + (j * sa2)
-				);
+				dscal( kn, 1.0 / ajj, AB, sa1, offsetAB + sa1 + (j * sa2));
 
 				// DSYR('Lower', KN, -1, AB(2, J+1), 1, AB(1, J+2), KLD)
 
 				// Dsyr matrix: strideA1 = sa1, strideA2 = kld
-				dsyr( 'lower', kn, -1.0,
-					AB, sa1, offsetAB + sa1 + (j * sa2),
-					AB, sa1, kld, offsetAB + (( j + 1 ) * sa2)
-				);
+				dsyr( 'lower', kn, -1.0, AB, sa1, offsetAB + sa1 + (j * sa2), AB, sa1, kld, offsetAB + (( j + 1 ) * sa2));
 			}
 		}
 	}

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -11,7 +10,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Solves a general real tridiagonal system of linear equations A * X = B
+* Solves a general real tridiagonal system of linear equations A * X = B.
 *
 * @param {NonNegativeInteger} N - N
 * @param {integer} nrhs - nrhs

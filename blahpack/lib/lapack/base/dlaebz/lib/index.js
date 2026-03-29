@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Auxiliary bisection routine for tridiagonal eigenvalue computation
+* Auxiliary bisection routine for tridiagonal eigenvalue computation.
 *
 * @module @stdlib/lapack/base/dlaebz
 *

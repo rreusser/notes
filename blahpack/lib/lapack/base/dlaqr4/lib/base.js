@@ -43,7 +43,7 @@ var WILK2 = -0.4375;
 // MAIN //
 
 /**
-* Implements one level of recursion for DLAQR0. It is a complete implementation
+* Implements one level of recursion for DLAQR0. It is a complete implementation.
 * of the small bulge multi-shift QR algorithm. This routine is identical to
 * DLAQR0 except that it calls DLAQR2 instead of DLAQR3 (breaking the recursion).
 *
@@ -81,10 +81,13 @@ var WILK2 = -0.4375;
 * @returns {integer} info (0=success, >0=convergence failure at that index)
 */
 function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ) {
+	var aedResult;
 	var lwkopt;
 	var nwupbd;
-	var nsmax;
 	var sorted;
+	var nibble;
+	var kacc22;
+	var nsmax;
 	var itmax;
 	var kwtop;
 	var kbot;
@@ -94,22 +97,25 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 	var info;
 	var swap;
 	var nmin;
+	var zdum;
 	var nwr;
 	var nsr;
-	var nw;
-	var nh;
 	var nho;
 	var nve;
+	var kwv;
+	var kwh;
+	var kdu;
+	var lv2;
+	var inf;
+	var nw;
+	var nh;
 	var ns;
 	var ks;
 	var ld;
 	var ls;
 	var kv;
 	var kt;
-	var kwv;
-	var kwh;
 	var ku;
-	var kdu;
 	var aa;
 	var bb;
 	var cc;
@@ -117,15 +123,9 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 	var cs;
 	var sn;
 	var ss;
-	var lv2;
 	var it;
 	var k;
 	var i;
-	var nibble;
-	var kacc22;
-	var inf;
-	var aedResult;
-	var zdum;
 
 	// Helpers for 1-based indexing
 	function hij( r, c ) {
@@ -184,7 +184,7 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 		var nwmax = Math.min( Math.floor( ( N - 1 ) / 3 ), Math.floor( lwork / 2 ) );
 		nw = nwmax;
 		nsmax = Math.min( Math.floor( ( N - 3 ) / 6 ), Math.floor( 2 * lwork / 3 ) );
-		nsmax = nsmax - ( nsmax % 2 );
+		nsmax -= ( nsmax % 2 );
 
 		ndfl = 1;
 		itmax = Math.max( 30, 2 * KEXSH ) * Math.max( 10, ihi - ilo + 1 );
@@ -224,18 +224,18 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 				} else {
 					kwtop = kbot - nw + 1;
 					if ( Math.abs( H[ hij( kwtop, kwtop - 1 ) ] ) > Math.abs( H[ hij( kwtop - 1, kwtop - 2 ) ] ) ) {
-						nw = nw + 1;
+						nw += 1;
 					}
 				}
 			}
 			if ( ndfl < KEXNW ) {
 				ndec = -1;
 			} else if ( ndec >= 0 || nw >= nwupbd ) {
-				ndec = ndec + 1;
+				ndec += 1;
 				if ( nw - ndec < 2 ) {
 					ndec = 0;
 				}
-				nw = nw - ndec;
+				nw -= ndec;
 			}
 
 			// Workspace partitioning
@@ -251,7 +251,7 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 			ld = aedResult.nd;
 
 			// Adjust KBOT
-			kbot = kbot - ld;
+			kbot -= ld;
 
 			// KS points to the shifts
 			ks = kbot - ls + 1;
@@ -260,7 +260,7 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 			if ( ld === 0 || ( 100 * ld <= nw * nibble && kbot - ktop + 1 > Math.min( nmin, nwmax ) ) ) {
 				// NS = nominal number of simultaneous shifts
 				ns = Math.min( nsmax, nsr, Math.max( 2, kbot - ktop ) );
-				ns = ns - ( ns % 2 );
+				ns -= ( ns % 2 );
 
 				// Exceptional shifts or use shifts from deflation
 				if ( ndfl % KEXSH === 0 ) {
@@ -291,7 +291,7 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 						dlacpy( 'full', ns, ns, H, strideH1, strideH2, hij( ks, ks ), H, strideH1, strideH2, hij( kt, 1 ) );
 						zdum = new Float64Array( 1 );
 						inf = dlahqr( false, false, ns, 1, ns, H, strideH1, strideH2, hij( kt, 1 ), WR, strideWR, offsetWR + ( ks - 1 ) * strideWR, WI, strideWI, offsetWI + ( ks - 1 ) * strideWI, 1, 1, zdum, 1, 1, 0 );
-						ks = ks + inf;
+						ks += inf;
 
 						if ( ks >= kbot ) {
 							aa = H[ hij( kbot - 1, kbot - 1 ) ];
@@ -359,7 +359,7 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 
 				// Use up to NS shifts
 				ns = Math.min( ns, kbot - ks + 1 );
-				ns = ns - ( ns % 2 );
+				ns -= ( ns % 2 );
 				ks = kbot - ns + 1;
 
 				// Workspace partitioning for QR sweep
@@ -371,6 +371,7 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 				nve = N - kdu - kwv + 1;
 
 				// Small-bulge multi-shift QR sweep
+
 				// NOTE: dlaqr5 uses 0-based ktop, kbot, iloz, ihiz
 				dlaqr5( wantt, wantz, kacc22, N, ktop - 1, kbot - 1, ns, WR, strideWR, offsetWR + ( ks - 1 ) * strideWR, WI, strideWI, offsetWI + ( ks - 1 ) * strideWI, H, strideH1, strideH2, offsetH, iloz - 1, ihiz - 1, Z, strideZ1, strideZ2, offsetZ, WORK, 1, 3, offsetWORK, H, strideH1, strideH2, hij( ku, 1 ), nve, H, strideH1, strideH2, hij( kwv, 1 ), nho, H, strideH1, strideH2, hij( ku, kwh ) );
 			}
@@ -379,7 +380,7 @@ function dlaqr4( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 			if ( ld > 0 ) {
 				ndfl = 1;
 			} else {
-				ndfl = ndfl + 1;
+				ndfl += 1;
 			}
 		}
 

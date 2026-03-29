@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlapll = require( '@stdlib/lapack/base/dlapll' );

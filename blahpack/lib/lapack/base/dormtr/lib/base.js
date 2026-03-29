@@ -29,11 +29,11 @@ var dormqr = require( '../../dormqr/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q^T*C, C*Q, or C*Q^T,
+* Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 * where Q is a real orthogonal matrix defined from the output of DSYTRD.
 *
-* If UPLO='upper', Q is defined as Q = H(NQ-1)*...*H(2)*H(1) (QL factorization).
-* If UPLO='lower', Q is defined as Q = H(1)*H(2)*...*H(NQ-1) (QR factorization).
+* If UPLO='upper', Q is defined as Q = H(NQ-1)_..._H(2)_H(1) (QL factorization).
+_ If UPLO='lower', Q is defined as Q = H(1)_H(2)_..._H(NQ-1) (QR factorization).
 *
 * NQ = M if SIDE='left', NQ = N if SIDE='right'.
 *
@@ -95,12 +95,7 @@ function dormtr( side, uplo, trans, M, N, A, strideA1, strideA2, offsetA, TAU, s
 		// Upper: reflectors in columns 1..NQ-1 of A (0-based: columns 1..NQ-1)
 		// Q = H(NQ-1)*...*H(1) stored as QL reflectors in A(0:NQ-2, 1:NQ-1)
 		// Fortran: CALL DORMQL( SIDE, TRANS, MI, NI, NQ-1, A(1,2), LDA, TAU, C, ... )
-		dormql( side, trans, mi, ni, nq - 1,
-			A, strideA1, strideA2, offsetA + strideA2,
-			TAU, strideTAU, offsetTAU,
-			C, strideC1, strideC2, offsetC,
-			WORK, strideWORK, offsetWORK
-		);
+		dormql( side, trans, mi, ni, nq - 1, A, strideA1, strideA2, offsetA + strideA2, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK);
 	} else {
 		// Lower: reflectors in columns 0..NQ-2 of A (below diagonal)
 		// Q = H(1)*H(2)*...*H(NQ-1) stored as QR reflectors in A(1:NQ-1, 0:NQ-2)
@@ -112,12 +107,7 @@ function dormtr( side, uplo, trans, M, N, A, strideA1, strideA2, offsetA, TAU, s
 			i1 = 0;
 			i2 = 1;
 		}
-		dormqr( side, trans, mi, ni, nq - 1,
-			A, strideA1, strideA2, offsetA + strideA1,
-			TAU, strideTAU, offsetTAU,
-			C, strideC1, strideC2, offsetC + ( i1 * strideC1 ) + ( i2 * strideC2 ),
-			WORK, strideWORK, offsetWORK
-		);
+		dormqr( side, trans, mi, ni, nq - 1, A, strideA1, strideA2, offsetA + strideA1, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC + ( i1 * strideC1 ) + ( i2 * strideC2 ), WORK, strideWORK, offsetWORK);
 	}
 
 	return 0;

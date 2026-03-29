@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlartv = require( '@stdlib/lapack/base/dlartv' );

@@ -46,7 +46,7 @@ var ULP = dlamch( 'precision' );
 // MAIN //
 
 /**
-* Computes the eigenvalues and optionally the Schur factorization of an upper
+* Computes the eigenvalues and optionally the Schur factorization of an upper.
 * Hessenberg matrix, using the double-shift implicit QR algorithm.
 *
 * On exit, H is upper quasi-triangular (Schur form) if WANTT is true,
@@ -90,26 +90,28 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 	var smlnum;
 	var kdefl;
 	var itmax;
+	var lanv2;
 	var info;
-	var h11;
-	var h12;
-	var h21;
 	var h21s;
-	var h22;
 	var rt1r;
 	var rt1i;
 	var rt2r;
 	var rt2i;
-	var lanv2;
+	var h11;
+	var h12;
+	var h21;
+	var h22;
 	var sum;
 	var tst;
+	var det;
+	var tau;
+	var its;
 	var aa;
 	var ab;
 	var ba;
 	var bb;
 	var cs;
 	var sn;
-	var det;
 	var nr;
 	var nh;
 	var nz;
@@ -119,13 +121,11 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 	var t3;
 	var v2;
 	var v3;
-	var s;
-	var v;
-	var tau;
-	var i;
 	var i1;
 	var i2;
-	var its;
+	var s;
+	var v;
+	var i;
 	var j;
 	var k;
 	var l;
@@ -144,9 +144,9 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 
 	// Convert 1-based ilo/ihi to 0-based for array access
 	// Internally we use 0-based i, l, m, k but the Fortran algorithm logic
-	// uses 1-based. We'll keep the algorithm in 1-based and convert at access time.
+	// Uses 1-based. We'll keep the algorithm in 1-based and convert at access time.
 	// Actually, to minimize errors, let's use the Fortran 1-based convention
-	// throughout and convert to 0-based only at array access points.
+	// Throughout and convert to 0-based only at array access points.
 
 	if ( ilo === ihi ) {
 		WR[ offsetWR + ( ilo - 1 ) * strideWR ] = H[ offsetH + ( ilo - 1 ) * strideH1 + ( ilo - 1 ) * strideH2 ];
@@ -199,10 +199,10 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 				tst = Math.abs( H[ offsetH + ( k - 1 - 1 ) * strideH1 + ( k - 1 - 1 ) * strideH2 ] ) + Math.abs( H[ offsetH + ( k - 1 ) * strideH1 + ( k - 1 ) * strideH2 ] );
 				if ( tst === ZERO ) {
 					if ( k - 2 >= ilo ) {
-						tst = tst + Math.abs( H[ offsetH + ( k - 1 - 1 ) * strideH1 + ( k - 2 - 1 ) * strideH2 ] );
+						tst += Math.abs( H[ offsetH + ( k - 1 - 1 ) * strideH1 + ( k - 2 - 1 ) * strideH2 ] );
 					}
 					if ( k + 1 <= ihi ) {
-						tst = tst + Math.abs( H[ offsetH + ( k + 1 - 1 ) * strideH1 + ( k - 1 ) * strideH2 ] );
+						tst += Math.abs( H[ offsetH + ( k + 1 - 1 ) * strideH1 + ( k - 1 ) * strideH2 ] );
 					}
 				}
 				if ( Math.abs( H[ offsetH + ( k - 1 ) * strideH1 + ( k - 1 - 1 ) * strideH2 ] ) <= ULP * tst ) {
@@ -268,10 +268,10 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 				rt2r = ZERO;
 				rt2i = ZERO;
 			} else {
-				h11 = h11 / s;
-				h21 = h21 / s;
-				h12 = h12 / s;
-				h22 = h22 / s;
+				h11 /= s;
+				h21 /= s;
+				h12 /= s;
+				h22 /= s;
 				tr = ( h11 + h22 ) / TWO;
 				det = ( h11 - tr ) * ( h22 - tr ) - h12 * h21;
 				rtdisc = Math.sqrt( Math.abs( det ) );
@@ -286,10 +286,10 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 					rt1r = tr + rtdisc;
 					rt2r = tr - rtdisc;
 					if ( Math.abs( rt1r - h22 ) <= Math.abs( rt2r - h22 ) ) {
-						rt1r = rt1r * s;
+						rt1r *= s;
 						rt2r = rt1r;
 					} else {
-						rt2r = rt2r * s;
+						rt2r *= s;
 						rt1r = rt2r;
 					}
 					rt1i = ZERO;
@@ -306,9 +306,9 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 				v[ 1 ] = h21s * ( H[ offsetH + ( m - 1 ) * strideH1 + ( m - 1 ) * strideH2 ] + H[ offsetH + ( m + 1 - 1 ) * strideH1 + ( m + 1 - 1 ) * strideH2 ] - rt1r - rt2r );
 				v[ 2 ] = h21s * H[ offsetH + ( m + 2 - 1 ) * strideH1 + ( m + 1 - 1 ) * strideH2 ];
 				s = Math.abs( v[ 0 ] ) + Math.abs( v[ 1 ] ) + Math.abs( v[ 2 ] );
-				v[ 0 ] = v[ 0 ] / s;
-				v[ 1 ] = v[ 1 ] / s;
-				v[ 2 ] = v[ 2 ] / s;
+				v[ 0 ] /= s;
+				v[ 1 ] /= s;
+				v[ 2 ] /= s;
 				if ( m === l ) {
 					break;
 				}
@@ -407,12 +407,7 @@ function dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, 
 			WI[ offsetWI + ( i - 1 ) * strideWI ] = ZERO;
 		} else if ( l === i - 1 ) {
 			// 2x2 deflation: use dlanv2 to compute eigenvalues and optionally Schur form
-			lanv2 = dlanv2(
-				H[ offsetH + ( i - 1 - 1 ) * strideH1 + ( i - 1 - 1 ) * strideH2 ],
-				H[ offsetH + ( i - 1 - 1 ) * strideH1 + ( i - 1 ) * strideH2 ],
-				H[ offsetH + ( i - 1 ) * strideH1 + ( i - 1 - 1 ) * strideH2 ],
-				H[ offsetH + ( i - 1 ) * strideH1 + ( i - 1 ) * strideH2 ]
-			);
+			lanv2 = dlanv2(H[ offsetH + ( i - 1 - 1 ) * strideH1 + ( i - 1 - 1 ) * strideH2 ], H[ offsetH + ( i - 1 - 1 ) * strideH1 + ( i - 1 ) * strideH2 ], H[ offsetH + ( i - 1 ) * strideH1 + ( i - 1 - 1 ) * strideH2 ], H[ offsetH + ( i - 1 ) * strideH1 + ( i - 1 ) * strideH2 ]);
 			H[ offsetH + ( i - 1 - 1 ) * strideH1 + ( i - 1 - 1 ) * strideH2 ] = lanv2.a;
 			H[ offsetH + ( i - 1 - 1 ) * strideH1 + ( i - 1 ) * strideH2 ] = lanv2.b;
 			H[ offsetH + ( i - 1 ) * strideH1 + ( i - 1 - 1 ) * strideH2 ] = lanv2.c;

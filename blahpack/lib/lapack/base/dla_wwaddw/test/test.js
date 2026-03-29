@@ -1,35 +1,64 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dla_wwaddw = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dla_wwaddw.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dla_wwaddw.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -56,13 +85,16 @@ test( 'dla_wwaddw: basic', function t() {
 });
 
 test( 'dla_wwaddw: n_zero', function t() {
-	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
-	var y = new Float64Array( [ 0.1, 0.2, 0.3, 0.4, 0.5 ] );
-	var w = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
-	dla_wwaddw( 0, x, 1, 0, y, 1, 0, w, 1, 0 );
+	var tc;
+	var x;
+	var y;
+	var w;
 
-	// Arrays unchanged when N=0
-	var tc = findCase( 'n_zero' );
+	x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+	y = new Float64Array( [ 0.1, 0.2, 0.3, 0.4, 0.5 ] );
+	w = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
+	dla_wwaddw( 0, x, 1, 0, y, 1, 0, w, 1, 0 );
+	tc = findCase( 'n_zero' );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 	assertArrayClose( y, tc.y, 1e-14, 'y' );
 });
@@ -109,12 +141,10 @@ test( 'dla_wwaddw: zeros', function t() {
 
 test( 'dla_wwaddw: non-unit strides', function t() {
 	// Test with stride=2 and offset=1
+	var tcBasic = findCase( 'basic' );
 	var x = new Float64Array( [ 999.0, 1.0, 999.0, 2.0, 999.0, 3.0 ] );
 	var y = new Float64Array( [ 999.0, 0.1, 999.0, 0.2, 999.0, 0.3 ] );
 	var w = new Float64Array( [ 999.0, 10.0, 999.0, 20.0, 999.0, 30.0 ] );
-
-	// Same inputs as basic[0:3], should produce same results
-	var tcBasic = findCase( 'basic' );
 	dla_wwaddw( 3, x, 2, 1, y, 2, 1, w, 2, 1 );
 
 	assertClose( x[ 1 ], tcBasic.x[ 0 ], 1e-14, 'x[1]' );
@@ -132,11 +162,10 @@ test( 'dla_wwaddw: non-unit strides', function t() {
 
 test( 'dla_wwaddw: negative strides', function t() {
 	// Test with negative stride
+	var tcBasic = findCase( 'basic' );
 	var x = new Float64Array( [ 3.0, 2.0, 1.0 ] );
 	var y = new Float64Array( [ 0.3, 0.2, 0.1 ] );
 	var w = new Float64Array( [ 30.0, 20.0, 10.0 ] );
-
-	var tcBasic = findCase( 'basic' );
 	dla_wwaddw( 3, x, -1, 2, y, -1, 2, w, -1, 2 );
 
 	// Negative stride means we start at offset=2 and go backwards

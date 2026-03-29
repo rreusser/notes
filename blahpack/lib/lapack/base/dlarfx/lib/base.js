@@ -34,10 +34,10 @@ var ONE = 1.0;
 // MAIN //
 
 /**
-* Applies an elementary reflector H to a real M-by-N matrix C, from either
+* Applies an elementary reflector H to a real M-by-N matrix C, from either.
 * the left or the right. H is represented in the form:
 *
-*   H = I - tau * v * v^T
+*   H = I - tau _ v _ v^T
 *
 * where tau is a real scalar and v is a real vector.
 *
@@ -64,11 +64,11 @@ var ONE = 1.0;
 */
 function dlarfx( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK ) {
 	var sum;
+	var dim;
 	var vv;
 	var tt;
 	var i;
 	var j;
-	var dim;
 
 	if ( tau === ZERO ) {
 		return;

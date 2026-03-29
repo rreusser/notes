@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -10,7 +9,7 @@ var abs = Math.abs;
 // MAIN //
 
 /**
-* Solves a general real tridiagonal system of linear equations A * X = B
+* Solves a general real tridiagonal system of linear equations A * X = B.
 * using Gaussian elimination with partial pivoting.
 *
 * @private
@@ -35,8 +34,8 @@ function dgtsv( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, stride
 	var fact;
 	var temp;
 	var idl;
-	var id;
 	var idu;
+	var id;
 	var ib;
 	var jb;
 	var i;
@@ -224,12 +223,12 @@ function dgtsv( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, stride
 * @param {NonNegativeInteger} offsetB - offset for B
 */
 function backSolve( N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
-	var pN;   // pointer to row N-1 (0-based) in d
-	var pNm1; // pointer to row N-2 in d
-	var ib;
-	var id;
+	var pNm1;
 	var idu;
 	var idl;
+	var pN;
+	var ib;
+	var id;
 	var i;
 	var j;
 

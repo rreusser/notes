@@ -1,35 +1,64 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dgtsv = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgtsv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dgtsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -66,15 +95,21 @@ function getColumn( B, LDB, col, N ) {
 // TESTS //
 
 test( 'dgtsv: basic_5x5_single_rhs', function t() {
-	var tc = findCase( 'basic_5x5_single_rhs' );
-	var N = 5;
-	var dl = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
-	var d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
-	var du = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
-	var B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+	var info;
+	var tc;
+	var dl;
+	var du;
+	var N;
+	var d;
+	var B;
 
-	var info = dgtsv( N, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, N, 0 );
-
+	tc = findCase( 'basic_5x5_single_rhs' );
+	N = 5;
+	dl = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
+	d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
+	du = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
+	B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+	info = dgtsv( N, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( B, 0, N ), tc.b, 1e-14, 'b' );
 	assertArrayClose( toArray( d, 0, N ), tc.d, 1e-14, 'd' );
@@ -83,21 +118,34 @@ test( 'dgtsv: basic_5x5_single_rhs', function t() {
 });
 
 test( 'dgtsv: multi_rhs', function t() {
-	var tc = findCase( 'multi_rhs' );
-	var N = 4;
-	var nrhs = 2;
-	var LDB = N;
-	var dl = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-	var d = new Float64Array( [ 3.0, 3.0, 3.0, 3.0 ] );
-	var du = new Float64Array( [ 1.0, 1.0, 1.0 ] );
-	// Column-major: B(:,1) then B(:,2)
-	var B = new Float64Array( [
-		1.0, 0.0, 0.0, 1.0,
-		2.0, 1.0, 1.0, 2.0
-	] );
+	var nrhs;
+	var info;
+	var LDB;
+	var tc;
+	var dl;
+	var du;
+	var N;
+	var d;
+	var B;
 
-	var info = dgtsv( N, nrhs, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, LDB, 0 );
-
+	tc = findCase( 'multi_rhs' );
+	N = 4;
+	nrhs = 2;
+	LDB = N;
+	dl = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+	d = new Float64Array( [ 3.0, 3.0, 3.0, 3.0 ] );
+	du = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+	B = new Float64Array([
+		1.0,
+		0.0,
+		0.0,
+		1.0,
+		2.0,
+		1.0,
+		1.0,
+		2.0
+	]);
+	info = dgtsv( N, nrhs, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, LDB, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( getColumn( B, LDB, 0, N ), tc.b1, 1e-14, 'b1' );
 	assertArrayClose( getColumn( B, LDB, 1, N ), tc.b2, 1e-14, 'b2' );
@@ -107,53 +155,74 @@ test( 'dgtsv: multi_rhs', function t() {
 });
 
 test( 'dgtsv: n_one', function t() {
-	var tc = findCase( 'n_one' );
-	var d = new Float64Array( [ 5.0 ] );
-	var dl = new Float64Array( 0 );
-	var du = new Float64Array( 0 );
-	var B = new Float64Array( [ 10.0 ] );
+	var info;
+	var tc;
+	var dl;
+	var du;
+	var d;
+	var B;
 
-	var info = dgtsv( 1, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, 1, 0 );
-
+	tc = findCase( 'n_one' );
+	d = new Float64Array( [ 5.0 ] );
+	dl = new Float64Array( 0 );
+	du = new Float64Array( 0 );
+	B = new Float64Array( [ 10.0 ] );
+	info = dgtsv( 1, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( B, 0, 1 ), tc.b, 1e-14, 'b' );
 	assertArrayClose( toArray( d, 0, 1 ), tc.d, 1e-14, 'd' );
 });
 
 test( 'dgtsv: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
-	var dl = new Float64Array( 0 );
-	var d = new Float64Array( 0 );
-	var du = new Float64Array( 0 );
-	var B = new Float64Array( 0 );
+	var info;
+	var tc;
+	var dl;
+	var du;
+	var d;
+	var B;
 
-	var info = dgtsv( 0, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, 1, 0 );
-
+	tc = findCase( 'n_zero' );
+	dl = new Float64Array( 0 );
+	d = new Float64Array( 0 );
+	du = new Float64Array( 0 );
+	B = new Float64Array( 0 );
+	info = dgtsv( 0, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dgtsv: singular', function t() {
-	var tc = findCase( 'singular' );
-	var dl = new Float64Array( [ 0.0, 0.0 ] );
-	var d = new Float64Array( [ 0.0, 2.0, 3.0 ] );
-	var du = new Float64Array( [ 1.0, 1.0 ] );
-	var B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+	var info;
+	var tc;
+	var dl;
+	var du;
+	var d;
+	var B;
 
-	var info = dgtsv( 3, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, 3, 0 );
-
+	tc = findCase( 'singular' );
+	dl = new Float64Array( [ 0.0, 0.0 ] );
+	d = new Float64Array( [ 0.0, 2.0, 3.0 ] );
+	du = new Float64Array( [ 1.0, 1.0 ] );
+	B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+	info = dgtsv( 3, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, 3, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'dgtsv: pivoting', function t() {
-	var tc = findCase( 'pivoting' );
-	var N = 4;
-	var dl = new Float64Array( [ 5.0, 7.0, 9.0 ] );
-	var d = new Float64Array( [ 1.0, 3.0, 2.0, 1.0 ] );
-	var du = new Float64Array( [ 2.0, 4.0, 6.0 ] );
-	var B = new Float64Array( [ 5.0, 12.0, 15.0, 10.0 ] );
+	var info;
+	var tc;
+	var dl;
+	var du;
+	var N;
+	var d;
+	var B;
 
-	var info = dgtsv( N, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, N, 0 );
-
+	tc = findCase( 'pivoting' );
+	N = 4;
+	dl = new Float64Array( [ 5.0, 7.0, 9.0 ] );
+	d = new Float64Array( [ 1.0, 3.0, 2.0, 1.0 ] );
+	du = new Float64Array( [ 2.0, 4.0, 6.0 ] );
+	B = new Float64Array( [ 5.0, 12.0, 15.0, 10.0 ] );
+	info = dgtsv( N, 1, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, N, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( B, 0, N ), tc.b, 1e-14, 'b' );
 	assertArrayClose( toArray( d, 0, N ), tc.d, 1e-14, 'd' );
@@ -162,22 +231,35 @@ test( 'dgtsv: pivoting', function t() {
 });
 
 test( 'dgtsv: three_rhs', function t() {
-	var tc = findCase( 'three_rhs' );
-	var N = 3;
-	var nrhs = 3;
-	var LDB = N;
-	var dl = new Float64Array( [ 1.0, 1.0 ] );
-	var d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
-	var du = new Float64Array( [ 1.0, 1.0 ] );
-	// Column-major: 3 columns of length 3
-	var B = new Float64Array( [
-		6.0, 9.0, 9.0,
-		1.0, 2.0, 3.0,
-		10.0, 5.0, 10.0
-	] );
+	var nrhs;
+	var info;
+	var LDB;
+	var tc;
+	var dl;
+	var du;
+	var N;
+	var d;
+	var B;
 
-	var info = dgtsv( N, nrhs, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, LDB, 0 );
-
+	tc = findCase( 'three_rhs' );
+	N = 3;
+	nrhs = 3;
+	LDB = N;
+	dl = new Float64Array( [ 1.0, 1.0 ] );
+	d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
+	du = new Float64Array( [ 1.0, 1.0 ] );
+	B = new Float64Array([
+		6.0,
+		9.0,
+		9.0,
+		1.0,
+		2.0,
+		3.0,
+		10.0,
+		5.0,
+		10.0
+	]);
+	info = dgtsv( N, nrhs, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, LDB, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( getColumn( B, LDB, 0, N ), tc.b1, 1e-14, 'b1' );
 	assertArrayClose( getColumn( B, LDB, 1, N ), tc.b2, 1e-14, 'b2' );
@@ -188,20 +270,34 @@ test( 'dgtsv: three_rhs', function t() {
 });
 
 test( 'dgtsv: pivoting_multi_rhs', function t() {
-	var tc = findCase( 'pivoting_multi_rhs' );
-	var N = 4;
-	var nrhs = 2;
-	var LDB = N;
-	var dl = new Float64Array( [ 5.0, 7.0, 9.0 ] );
-	var d = new Float64Array( [ 1.0, 3.0, 2.0, 1.0 ] );
-	var du = new Float64Array( [ 2.0, 4.0, 6.0 ] );
-	var B = new Float64Array( [
-		5.0, 12.0, 15.0, 10.0,
-		3.0, 7.0, 9.0, 10.0
-	] );
+	var nrhs;
+	var info;
+	var LDB;
+	var tc;
+	var dl;
+	var du;
+	var N;
+	var d;
+	var B;
 
-	var info = dgtsv( N, nrhs, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, LDB, 0 );
-
+	tc = findCase( 'pivoting_multi_rhs' );
+	N = 4;
+	nrhs = 2;
+	LDB = N;
+	dl = new Float64Array( [ 5.0, 7.0, 9.0 ] );
+	d = new Float64Array( [ 1.0, 3.0, 2.0, 1.0 ] );
+	du = new Float64Array( [ 2.0, 4.0, 6.0 ] );
+	B = new Float64Array([
+		5.0,
+		12.0,
+		15.0,
+		10.0,
+		3.0,
+		7.0,
+		9.0,
+		10.0
+	]);
+	info = dgtsv( N, nrhs, dl, 1, 0, d, 1, 0, du, 1, 0, B, 1, LDB, 0 );
 	assert.equal( info, tc.info );
 	assertArrayClose( getColumn( B, LDB, 0, N ), tc.b1, 1e-14, 'b1' );
 	assertArrayClose( getColumn( B, LDB, 1, N ), tc.b2, 1e-14, 'b2' );

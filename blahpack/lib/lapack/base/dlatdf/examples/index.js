@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlatdf = require( '@stdlib/lapack/base/dlatdf' );

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a general real tridiagonal system of linear equations
+* Solves a general real tridiagonal system of linear equations.
 *
 * @module @stdlib/lapack/base/dgtsv
 *

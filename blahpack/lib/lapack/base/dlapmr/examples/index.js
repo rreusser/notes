@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlapmr = require( '@stdlib/lapack/base/dlapmr' );

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dggsvd3 = require( '@stdlib/lapack/base/dggsvd3' );

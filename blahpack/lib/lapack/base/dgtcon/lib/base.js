@@ -31,7 +31,7 @@ var dgttrs = require( '../../dgttrs/lib/base.js' );
 // MAIN //
 
 /**
-* Estimates the reciprocal of the condition number of a real general tridiagonal
+* Estimates the reciprocal of the condition number of a real general tridiagonal.
 * matrix A, in either the 1-norm or the infinity-norm, using the LU
 * factorization computed by dgttrf.
 *
@@ -118,14 +118,13 @@ function dgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 	KASE[ 0 ] = 0;
 
 	// Reverse-communication loop
+
 	// dlacn2 uses V = WORK[N..2N-1], X = WORK[0..N-1], ISGN = IWORK[0..N-1]
 	while ( true ) {
-		dlacn2( N,
-			WORK, sw, offsetWORK + ( N * sw ),   // V
+		dlacn2( N, WORK, sw, offsetWORK + ( N * sw ),   // V
 			WORK, sw, offsetWORK,                 // X
 			IWORK, strideIWORK, offsetIWORK,      // ISGN
-			EST, KASE, ISAVE, 1, 0
-		);
+			EST, KASE, ISAVE, 1, 0);
 
 		if ( KASE[ 0 ] === 0 ) {
 			break;
@@ -133,16 +132,10 @@ function dgtcon( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strid
 
 		if ( KASE[ 0 ] === kase1 ) {
 			// Multiply by inv(A): solve A*x = b (no transpose)
-			dgttrs( 'no-transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
-				DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2,
-				IPIV, strideIPIV, offsetIPIV,
-				WORK, sw, N * sw, offsetWORK );
+			dgttrs( 'no-transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, WORK, sw, N * sw, offsetWORK );
 		} else {
 			// Multiply by inv(A^T): solve A^T*x = b (transpose)
-			dgttrs( 'transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD,
-				DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2,
-				IPIV, strideIPIV, offsetIPIV,
-				WORK, sw, N * sw, offsetWORK );
+			dgttrs( 'transpose', N, 1, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, WORK, sw, N * sw, offsetWORK );
 		}
 	}
 

@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dla_wwaddw = require( '@stdlib/lapack/base/dla_wwaddw' );

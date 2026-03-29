@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Expert driver for solving a general tridiagonal system
+* Expert driver for solving a general tridiagonal system.
 *
 * @module @stdlib/lapack/base/dgtsvx
 *

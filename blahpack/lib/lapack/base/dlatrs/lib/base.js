@@ -140,17 +140,11 @@ function dlatrs( uplo, trans, diag, normin, N, A, strideA1, strideA2, offsetA, x
 		work = new Float64Array( 1 );
 		if ( upper ) {
 			for ( j = 1; j < N; j++ ) {
-				tmax = Math.max(
-					dlange( 'max', j, 1, A, sa1, sa2, offsetA + (j * sa2), work, 1, 0 ),
-					tmax
-				);
+				tmax = Math.max(dlange( 'max', j, 1, A, sa1, sa2, offsetA + (j * sa2), work, 1, 0 ), tmax);
 			}
 		} else {
 			for ( j = 0; j < N - 1; j++ ) {
-				tmax = Math.max(
-					dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + (( j + 1 ) * sa1) + (j * sa2), work, 1, 0 ),
-					tmax
-				);
+				tmax = Math.max(dlange( 'max', N - j - 1, 1, A, sa1, sa2, offsetA + (( j + 1 ) * sa1) + (j * sa2), work, 1, 0 ), tmax);
 			}
 		}
 		if ( tmax <= RMAX ) {

@@ -2,6 +2,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
@@ -15,9 +16,11 @@ var dlaed2 = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlaed2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlaed2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
@@ -30,7 +33,8 @@ var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } )
 * @returns {Object} test case fixture data
 */
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
 /**
@@ -43,7 +47,7 @@ function findCase( name ) {
 * @param {string} msg - assertion message
 */
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
@@ -87,7 +91,7 @@ function callDlaed2( N, n1, d, Q, INDXQ, rho, z ) {
 	var Q2 = new Float64Array( N * N );
 	var w = new Float64Array( N );
 
-	result = dlaed2( N, n1, d, 1, 0, Q, 1, N, 0, INDXQ, 1, 0, rho, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, 1, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 );
+	result = dlaed2( N, n1, d, 1, 0, Q, 1, N, 0, INDXQ, 1, 0, rho, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, 1, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 ); // eslint-disable-line max-len
 
 	return {
 		'info': result.info,
@@ -104,6 +108,22 @@ function callDlaed2( N, n1, d, Q, INDXQ, rho, z ) {
 		'INDXP': INDXP,
 		'COLTYP': COLTYP
 	};
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
 }
 
 
@@ -124,45 +144,54 @@ test( 'dlaed2: basic_n6 - no deflation', function t() {
 
 	tc = findCase( 'basic_n6' );
 	N = tc.N;
-
 	d = new Float64Array( [ 1.0, 3.0, 5.0, 2.0, 4.0, 6.0 ] );
 	Q = new Float64Array( N * N );
-	Q[ 0 ] = 1.0; Q[ 7 ] = 1.0; Q[ 14 ] = 1.0; Q[ 21 ] = 1.0; Q[ 28 ] = 1.0; Q[ 35 ] = 1.0;
+	Q[ 0 ] = 1.0;
+	Q[ 7 ] = 1.0;
+	Q[ 14 ] = 1.0;
+	Q[ 21 ] = 1.0;
+	Q[ 28 ] = 1.0;
+	Q[ 35 ] = 1.0;
 	INDXQ = new Int32Array( [ 1, 2, 3, 1, 2, 3 ] );
 	z = new Float64Array( [ 0.5, 0.6, 0.7, 0.4, 0.3, 0.2 ] );
-
 	r = callDlaed2( N, 3, d, Q, INDXQ, 1.0, z );
-
 	assert.equal( r.info, tc.INFO, 'INFO' );
 	assert.equal( r.K, tc.K, 'K' );
 	assertClose( r.rho, tc.RHO, 1e-14, 'RHO' );
-	assertArrayClose( Array.from( r.DLAMBDA ), tc.DLAMBDA, 1e-14, 'DLAMBDA' );
-	assertArrayClose( Array.from( r.w ), tc.W, 1e-14, 'W' );
-	assertArrayClose( Array.from( r.Q.slice( 0, N * N ) ), tc.Q, 1e-14, 'Q' );
-
-	// COLTYP on exit contains counts of each column type
-	assert.deepEqual( Array.from( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
+	assertArrayClose( toArray( r.DLAMBDA ), tc.DLAMBDA, 1e-14, 'DLAMBDA' );
+	assertArrayClose( toArray( r.w ), tc.W, 1e-14, 'W' );
+	assertArrayClose( toArray( r.Q.slice( 0, N * N ) ), tc.Q, 1e-14, 'Q' );
+	assert.deepEqual( toArray( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
 });
 
 test( 'dlaed2: n0 - quick return for empty matrix', function t() {
-	var DLAMBDA = new Float64Array( 0 );
-	var COLTYP = new Int32Array( 0 );
+	var DLAMBDA;
+	var COLTYP;
 	var result;
-	var INDXQ = new Int32Array( 0 );
-	var INDXP = new Int32Array( 0 );
-	var INDXC = new Int32Array( 0 );
-	var INDX = new Int32Array( 0 );
-	var Q2 = new Float64Array( 0 );
+	var INDXQ;
+	var INDXP;
+	var INDXC;
+	var INDX;
+	var Q2;
 	var tc;
-	var d = new Float64Array( 0 );
-	var Q = new Float64Array( 0 );
-	var w = new Float64Array( 0 );
-	var z = new Float64Array( 0 );
+	var d;
+	var Q;
+	var w;
+	var z;
 
+	DLAMBDA = new Float64Array( 0 );
+	COLTYP = new Int32Array( 0 );
+	INDXQ = new Int32Array( 0 );
+	INDXP = new Int32Array( 0 );
+	INDXC = new Int32Array( 0 );
+	INDX = new Int32Array( 0 );
+	Q2 = new Float64Array( 0 );
+	d = new Float64Array( 0 );
+	Q = new Float64Array( 0 );
+	w = new Float64Array( 0 );
+	z = new Float64Array( 0 );
 	tc = findCase( 'n0' );
-
-	result = dlaed2( 0, 0, d, 1, 0, Q, 1, 1, 0, INDXQ, 1, 0, 1.0, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, 1, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 );
-
+	result = dlaed2( 0, 0, d, 1, 0, Q, 1, 1, 0, INDXQ, 1, 0, 1.0, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, 1, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result.info, tc.INFO, 'INFO' );
 	assert.equal( result.K, 0, 'K' );
 });
@@ -178,22 +207,22 @@ test( 'dlaed2: neg_rho - negative rho negates second half of z', function t() {
 
 	tc = findCase( 'neg_rho' );
 	N = tc.N;
-
 	d = new Float64Array( [ 1.0, 4.0, 2.0, 5.0 ] );
 	Q = new Float64Array( N * N );
-	Q[ 0 ] = 1.0; Q[ 5 ] = 1.0; Q[ 10 ] = 1.0; Q[ 15 ] = 1.0;
+	Q[ 0 ] = 1.0;
+	Q[ 5 ] = 1.0;
+	Q[ 10 ] = 1.0;
+	Q[ 15 ] = 1.0;
 	INDXQ = new Int32Array( [ 1, 2, 1, 2 ] );
 	z = new Float64Array( [ 0.3, 0.5, 0.4, 0.6 ] );
-
 	r = callDlaed2( N, 2, d, Q, INDXQ, -2.0, z );
-
 	assert.equal( r.info, tc.INFO, 'INFO' );
 	assert.equal( r.K, tc.K, 'K' );
 	assertClose( r.rho, tc.RHO, 1e-14, 'RHO' );
-	assertArrayClose( Array.from( r.DLAMBDA ), tc.DLAMBDA, 1e-14, 'DLAMBDA' );
-	assertArrayClose( Array.from( r.w ), tc.W, 1e-14, 'W' );
-	assertArrayClose( Array.from( r.Q.slice( 0, N * N ) ), tc.Q, 1e-14, 'Q' );
-	assert.deepEqual( Array.from( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
+	assertArrayClose( toArray( r.DLAMBDA ), tc.DLAMBDA, 1e-14, 'DLAMBDA' );
+	assertArrayClose( toArray( r.w ), tc.W, 1e-14, 'W' );
+	assertArrayClose( toArray( r.Q.slice( 0, N * N ) ), tc.Q, 1e-14, 'Q' );
+	assert.deepEqual( toArray( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
 });
 
 test( 'dlaed2: small_z - deflation via small z component', function t() {
@@ -207,24 +236,24 @@ test( 'dlaed2: small_z - deflation via small z component', function t() {
 
 	tc = findCase( 'small_z' );
 	N = tc.N;
-
 	d = new Float64Array( [ 1.0, 3.0, 2.0, 5.0 ] );
 	Q = new Float64Array( N * N );
-	Q[ 0 ] = 1.0; Q[ 5 ] = 1.0; Q[ 10 ] = 1.0; Q[ 15 ] = 1.0;
+	Q[ 0 ] = 1.0;
+	Q[ 5 ] = 1.0;
+	Q[ 10 ] = 1.0;
+	Q[ 15 ] = 1.0;
 	INDXQ = new Int32Array( [ 1, 2, 1, 2 ] );
 	z = new Float64Array( [ 0.5, 1.0e-20, 0.4, 0.3 ] );
-
 	r = callDlaed2( N, 2, d, Q, INDXQ, 1.0, z );
-
 	assert.equal( r.info, tc.INFO, 'INFO' );
 	assert.equal( r.K, tc.K, 'K' );
 	assertClose( r.rho, tc.RHO, 1e-14, 'RHO' );
-	assertArrayClose( Array.from( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' );
-	assertArrayClose( Array.from( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' );
-	assert.deepEqual( Array.from( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
+	assertArrayClose( toArray( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' ); // eslint-disable-line max-len
+	assertArrayClose( toArray( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' ); // eslint-disable-line max-len
+	assert.deepEqual( toArray( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
 });
 
-test( 'dlaed2: close_eigenvalues - deflation via close eigenvalues', function t() {
+test( 'dlaed2: close_eigenvalues - deflation via close eigenvalues', function t() { // eslint-disable-line max-len
 	var INDXQ;
 	var tc;
 	var Q;
@@ -235,21 +264,21 @@ test( 'dlaed2: close_eigenvalues - deflation via close eigenvalues', function t(
 
 	tc = findCase( 'close_eigenvalues' );
 	N = tc.N;
-
 	d = new Float64Array( [ 1.0, 3.0, 1.0 + 1.0e-16, 5.0 ] );
 	Q = new Float64Array( N * N );
-	Q[ 0 ] = 1.0; Q[ 5 ] = 1.0; Q[ 10 ] = 1.0; Q[ 15 ] = 1.0;
+	Q[ 0 ] = 1.0;
+	Q[ 5 ] = 1.0;
+	Q[ 10 ] = 1.0;
+	Q[ 15 ] = 1.0;
 	INDXQ = new Int32Array( [ 1, 2, 1, 2 ] );
 	z = new Float64Array( [ 0.5, 0.6, 0.4, 0.3 ] );
-
 	r = callDlaed2( N, 2, d, Q, INDXQ, 1.0, z );
-
 	assert.equal( r.info, tc.INFO, 'INFO' );
 	assert.equal( r.K, tc.K, 'K' );
 	assertClose( r.rho, tc.RHO, 1e-14, 'RHO' );
-	assertArrayClose( Array.from( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' );
-	assertArrayClose( Array.from( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' );
-	assert.deepEqual( Array.from( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
+	assertArrayClose( toArray( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' ); // eslint-disable-line max-len
+	assertArrayClose( toArray( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' ); // eslint-disable-line max-len
+	assert.deepEqual( toArray( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
 });
 
 test( 'dlaed2: all_deflated - all z components tiny', function t() {
@@ -263,22 +292,20 @@ test( 'dlaed2: all_deflated - all z components tiny', function t() {
 
 	tc = findCase( 'all_deflated' );
 	N = tc.N;
-
 	d = new Float64Array( [ 1.0, 3.0, 2.0, 5.0 ] );
 	Q = new Float64Array( N * N );
-	Q[ 0 ] = 1.0; Q[ 5 ] = 1.0; Q[ 10 ] = 1.0; Q[ 15 ] = 1.0;
+	Q[ 0 ] = 1.0;
+	Q[ 5 ] = 1.0;
+	Q[ 10 ] = 1.0;
+	Q[ 15 ] = 1.0;
 	INDXQ = new Int32Array( [ 1, 2, 1, 2 ] );
 	z = new Float64Array( [ 1.0e-20, 1.0e-20, 1.0e-20, 1.0e-20 ] );
-
 	r = callDlaed2( N, 2, d, Q, INDXQ, 1.0, z );
-
 	assert.equal( r.info, tc.INFO, 'INFO' );
 	assert.equal( r.K, tc.K, 'K = 0 (all deflated)' );
 	assertClose( r.rho, tc.RHO, 1e-14, 'RHO' );
-
-	// On exit, D should contain sorted eigenvalues and Q should be reordered
-	assertArrayClose( Array.from( r.d ), tc.D, 1e-14, 'D' );
-	assertArrayClose( Array.from( r.Q.slice( 0, N * N ) ), tc.Q, 1e-14, 'Q' );
+	assertArrayClose( toArray( r.d ), tc.D, 1e-14, 'D' );
+	assertArrayClose( toArray( r.Q.slice( 0, N * N ) ), tc.Q, 1e-14, 'Q' );
 });
 
 test( 'dlaed2: n2 - minimal case N=2, N1=1', function t() {
@@ -290,21 +317,19 @@ test( 'dlaed2: n2 - minimal case N=2, N1=1', function t() {
 	var r;
 
 	tc = findCase( 'n2' );
-
 	d = new Float64Array( [ 3.0, 1.0 ] );
 	Q = new Float64Array( 4 );
-	Q[ 0 ] = 1.0; Q[ 3 ] = 1.0;
+	Q[ 0 ] = 1.0;
+	Q[ 3 ] = 1.0;
 	INDXQ = new Int32Array( [ 1, 1 ] );
 	z = new Float64Array( [ 0.7, 0.7 ] );
-
 	r = callDlaed2( 2, 1, d, Q, INDXQ, 0.5, z );
-
 	assert.equal( r.info, tc.INFO, 'INFO' );
 	assert.equal( r.K, tc.K, 'K' );
 	assertClose( r.rho, tc.RHO, 1e-14, 'RHO' );
-	assertArrayClose( Array.from( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' );
-	assertArrayClose( Array.from( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' );
-	assert.deepEqual( Array.from( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
+	assertArrayClose( toArray( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' ); // eslint-disable-line max-len
+	assertArrayClose( toArray( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' ); // eslint-disable-line max-len
+	assert.deepEqual( toArray( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
 });
 
 test( 'dlaed2: n8_mixed - larger case with mixed deflation', function t() {
@@ -319,7 +344,6 @@ test( 'dlaed2: n8_mixed - larger case with mixed deflation', function t() {
 
 	tc = findCase( 'n8_mixed' );
 	N = tc.N;
-
 	d = new Float64Array( [ 1.0, 3.0, 5.5, 7.0, 2.0, 4.0, 5.5 + 1.0e-16, 9.0 ] );
 	Q = new Float64Array( N * N );
 	for ( i = 0; i < N; i += 1 ) {
@@ -327,26 +351,24 @@ test( 'dlaed2: n8_mixed - larger case with mixed deflation', function t() {
 	}
 	INDXQ = new Int32Array( [ 1, 2, 3, 4, 1, 2, 3, 4 ] );
 	z = new Float64Array( [ 0.3, 0.4, 0.5, 0.2, 0.35, 0.45, 0.25, 0.15 ] );
-
 	r = callDlaed2( N, 4, d, Q, INDXQ, 1.5, z );
-
 	assert.equal( r.info, tc.INFO, 'INFO' );
 	assert.equal( r.K, tc.K, 'K' );
 	assertClose( r.rho, tc.RHO, 1e-14, 'RHO' );
-	assertArrayClose( Array.from( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' );
-	assertArrayClose( Array.from( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' );
-	assert.deepEqual( Array.from( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
+	assertArrayClose( toArray( r.DLAMBDA.slice( 0, r.K ) ), tc.DLAMBDA.slice( 0, r.K ), 1e-14, 'DLAMBDA' ); // eslint-disable-line max-len
+	assertArrayClose( toArray( r.w.slice( 0, r.K ) ), tc.W.slice( 0, r.K ), 1e-14, 'W' ); // eslint-disable-line max-len
+	assert.deepEqual( toArray( r.COLTYP.slice( 0, 4 ) ), tc.COLTYP, 'COLTYP' );
 });
 
 test( 'dlaed2: returns rho = ABS(2*rho)', function t() {
 	var result;
 
 	// Rho = 3.5 => returns ABS(2*3.5) = 7.0
-	result = callDlaed2( 2, 1, new Float64Array( [ 1.0, 2.0 ] ), new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] ), new Int32Array( [ 1, 1 ] ), 3.5, new Float64Array( [ 0.5, 0.5 ] ) );
+	result = callDlaed2( 2, 1, new Float64Array( [ 1.0, 2.0 ] ), new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] ), new Int32Array( [ 1, 1 ] ), 3.5, new Float64Array( [ 0.5, 0.5 ] ) ); // eslint-disable-line max-len
 	assertClose( result.rho, 7.0, 1e-14, 'rho=ABS(2*3.5)' );
 
 	// Rho = -2.0 => returns ABS(2*(-2)) = 4.0
-	result = callDlaed2( 2, 1, new Float64Array( [ 1.0, 2.0 ] ), new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] ), new Int32Array( [ 1, 1 ] ), -2.0, new Float64Array( [ 0.5, 0.5 ] ) );
+	result = callDlaed2( 2, 1, new Float64Array( [ 1.0, 2.0 ] ), new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] ), new Int32Array( [ 1, 1 ] ), -2.0, new Float64Array( [ 0.5, 0.5 ] ) ); // eslint-disable-line max-len
 	assertClose( result.rho, 4.0, 1e-14, 'rho=ABS(2*(-2))' );
 });
 
@@ -354,10 +376,10 @@ test( 'dlaed2: deflated D values sorted in increasing order', function t() {
 	var r;
 	var i;
 
-	r = callDlaed2( 4, 2, new Float64Array( [ 1.0, 3.0, 2.0, 5.0 ] ), new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] ), new Int32Array( [ 1, 2, 1, 2 ] ), 1.0, new Float64Array( [ 0.5, 1.0e-20, 0.4, 0.3 ] ) );
+	r = callDlaed2( 4, 2, new Float64Array( [ 1.0, 3.0, 2.0, 5.0 ] ), new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] ), new Int32Array( [ 1, 2, 1, 2 ] ), 1.0, new Float64Array( [ 0.5, 1.0e-20, 0.4, 0.3 ] ) ); // eslint-disable-line max-len
 
 	// Verify deflated D entries (from K+1 to N) are in increasing order
 	for ( i = r.K; i < 3; i += 1 ) {
-		assert.ok( r.d[ i ] <= r.d[ i + 1 ], 'D[' + i + '] <= D[' + ( i + 1 ) + ']: ' + r.d[ i ] + ' <= ' + r.d[ i + 1 ] );
+		assert.ok( r.d[ i ] <= r.d[ i + 1 ], 'D[' + i + '] <= D[' + ( i + 1 ) + ']: ' + r.d[ i ] + ' <= ' + r.d[ i + 1 ] ); // eslint-disable-line max-len
 	}
 });

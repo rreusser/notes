@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlangt = require( '@stdlib/lapack/base/dlangt' );

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes eigenvalues and Schur decomposition of an upper Hessenberg matrix
+* Computes eigenvalues and Schur decomposition of an upper Hessenberg matrix.
 *
 * @module @stdlib/lapack/base/dhseqr
 *

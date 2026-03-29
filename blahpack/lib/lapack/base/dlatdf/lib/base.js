@@ -45,10 +45,10 @@ var ONE = 1.0;
 // MAIN //
 
 /**
-* Uses the LU factorization of the n-by-n matrix Z computed by dgetc2
+* Uses the LU factorization of the n-by-n matrix Z computed by dgetc2.
 * and computes a contribution to the reciprocal Dif-estimate.
 *
-* The factorization of Z returned by dgetc2 has the form Z = P*L*U*Q,
+* The factorization of Z returned by dgetc2 has the form Z = P_L_U*Q,
 * where P and Q are permutation matrices.
 *
 * IPIV and JPIV are 0-based pivot indices from dgetc2.
@@ -77,18 +77,18 @@ function dlatdf( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offset
 	var pmone;
 	var sminu;
 	var splus;
+	var iwork;
+	var rcond;
+	var scale;
 	var work;
 	var temp;
-	var iwork;
+	var res;
+	var idx;
+	var tmp;
 	var xm;
 	var xp;
 	var bp;
 	var bm;
-	var rcond;
-	var scale;
-	var res;
-	var idx;
-	var tmp;
 	var i;
 	var j;
 	var k;
@@ -120,17 +120,13 @@ function dlatdf( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offset
 			splus = ONE;
 
 			// Look-ahead for L-part RHS(0:N-2) = + or -1
+
 			// SPLUS = SPLUS + DOT(Z(j+1:N-1,j), Z(j+1:N-1,j))
-			splus = splus + ddot( N - j - 1,
-				Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 ),
-				Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 )
-			);
+			splus += ddot( N - j - 1, Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 ), Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 ));
+
 			// SMINU = DOT(Z(j+1:N-1,j), RHS(j+1:N-1))
-			sminu = ddot( N - j - 1,
-				Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 ),
-				RHS, strideRHS, offsetRHS + ( ( j + 1 ) * strideRHS )
-			);
-			splus = splus * RHS[ offsetRHS + ( j * strideRHS ) ];
+			sminu = ddot( N - j - 1, Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 ), RHS, strideRHS, offsetRHS + ( ( j + 1 ) * strideRHS ));
+			splus *= RHS[ offsetRHS + ( j * strideRHS ) ];
 
 			if ( splus > sminu ) {
 				RHS[ offsetRHS + ( j * strideRHS ) ] = bp;
@@ -144,10 +140,7 @@ function dlatdf( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offset
 
 			// Compute the remaining r.h.s.
 			temp = -RHS[ offsetRHS + ( j * strideRHS ) ];
-			daxpy( N - j - 1, temp,
-				Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 ),
-				RHS, strideRHS, offsetRHS + ( ( j + 1 ) * strideRHS )
-			);
+			daxpy( N - j - 1, temp, Z, strideZ1, offsetZ + ( ( j + 1 ) * strideZ1 ) + ( j * strideZ2 ), RHS, strideRHS, offsetRHS + ( ( j + 1 ) * strideRHS ));
 		}
 
 		// Solve for U-part, look-ahead for RHS(N-1) = +-1.
@@ -168,8 +161,8 @@ function dlatdf( ijob, N, Z, strideZ1, strideZ2, offsetZ, RHS, strideRHS, offset
 				xp[ i ] = xp[ i ] - xp[ k ] * ( Z[ offsetZ + ( i * strideZ1 ) + ( k * strideZ2 ) ] * temp );
 				RHS[ offsetRHS + ( i * strideRHS ) ] = RHS[ offsetRHS + ( i * strideRHS ) ] - RHS[ offsetRHS + ( k * strideRHS ) ] * ( Z[ offsetZ + ( i * strideZ1 ) + ( k * strideZ2 ) ] * temp );
 			}
-			splus = splus + Math.abs( xp[ i ] );
-			sminu = sminu + Math.abs( RHS[ offsetRHS + ( i * strideRHS ) ] );
+			splus += Math.abs( xp[ i ] );
+			sminu += Math.abs( RHS[ offsetRHS + ( i * strideRHS ) ] );
 		}
 		if ( splus > sminu ) {
 			// Copy XP to RHS

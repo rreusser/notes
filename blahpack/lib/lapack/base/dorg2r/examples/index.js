@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dorg2r = require( '@stdlib/lapack/base/dorg2r' );

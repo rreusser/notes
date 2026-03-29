@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlaqps = require( '@stdlib/lapack/base/dlaqps' );

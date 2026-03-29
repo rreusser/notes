@@ -1,38 +1,56 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dlascl2 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlascl2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlascl2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
-		assert.ok(
-			Math.abs( actual[ i ] - expected[ i ] ) <= tol * Math.max( Math.abs( expected[ i ] ), 1.0 ),
-			msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ]
-		);
+		assert.ok(Math.abs( actual[ i ] - expected[ i ] ) <= tol * Math.max( Math.abs( expected[ i ] ), 1.0 ), // eslint-disable-line max-len
+			msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ]);
 	}
 }
 
@@ -101,20 +119,33 @@ test( 'dlascl2: LDX > M (leading dimension larger than rows)', function t() {
 	var tc = findCase( 'ldx_gt_m' );
 
 	// X is 4-by-3 in memory but we only scale rows 0..1
-	var x = new Float64Array( [
-		1, 2, 99, 99,
-		3, 4, 99, 99,
-		5, 6, 99, 99
-	] );
+	var x = new Float64Array([
+		1,
+		2,
+		99,
+		99,
+		3,
+		4,
+		99,
+		99,
+		5,
+		6,
+		99,
+		99
+	]);
 	var d = new Float64Array( [ 2, 3 ] );
 	dlascl2( 2, 3, d, 1, 0, x, 1, 4, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dlascl2: returns the output array X', function t() {
-	var x = new Float64Array( [ 1, 2, 3, 4 ] );
-	var d = new Float64Array( [ 2, 3 ] );
-	var out = dlascl2( 2, 2, d, 1, 0, x, 1, 2, 0 );
+	var out;
+	var x;
+	var d;
+
+	x = new Float64Array( [ 1, 2, 3, 4 ] );
+	d = new Float64Array( [ 2, 3 ] );
+	out = dlascl2( 2, 2, d, 1, 0, x, 1, 2, 0 );
 	assert.strictEqual( out, x );
 });
 
@@ -124,7 +155,7 @@ test( 'dlascl2: supports non-unit stride for D', function t() {
 	var d = new Float64Array( [ 2, 999, 3 ] );
 	dlascl2( 2, 2, d, 2, 0, x, 1, 2, 0 );
 
-	// row 0: 1*2=2, 3*2=6; row 1: 2*3=6, 4*3=12
+	// Row 0: 1*2=2, 3*2=6; row 1: 2*3=6, 4*3=12
 	assert.strictEqual( x[ 0 ], 2 );
 	assert.strictEqual( x[ 1 ], 6 );
 	assert.strictEqual( x[ 2 ], 6 );
@@ -137,7 +168,7 @@ test( 'dlascl2: supports offset for D', function t() {
 	var d = new Float64Array( [ 999, 2, 3 ] );
 	dlascl2( 2, 2, d, 1, 1, x, 1, 2, 0 );
 
-	// row 0: 1*2=2, 3*2=6; row 1: 2*3=6, 4*3=12
+	// Row 0: 1*2=2, 3*2=6; row 1: 2*3=6, 4*3=12
 	assert.strictEqual( x[ 0 ], 2 );
 	assert.strictEqual( x[ 1 ], 6 );
 	assert.strictEqual( x[ 2 ], 6 );

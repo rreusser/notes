@@ -352,8 +352,10 @@ function dlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 				if ( upper ) {
 					if ( j > 0 ) {
 						jlen = Math.min( kd, j );
+
 						// In upper banded storage, elements above diagonal in column j
-						// are at rows (KD+1-JLEN)..(KD) in Fortran = (kd-jlen)..(kd-1) in 0-based
+
+						// Are at rows (KD+1-JLEN)..(KD) in Fortran = (kd-jlen)..(kd-1) in 0-based
 						daxpy( jlen, -( x[ offsetX + (j * sx) ] * tscal ), AB, sa1, offsetAB + ((kd - jlen) * sa1) + (j * sa2), x, sx, offsetX + ((j - jlen) * sx) );
 						i = idamax( j, x, sx, offsetX );
 						xmax = Math.abs( x[ offsetX + (i * sx) ] );
@@ -362,7 +364,7 @@ function dlatbs( uplo, trans, diag, normin, N, kd, AB, strideAB1, strideAB2, off
 					jlen = Math.min( kd, N - j - 1 );
 					if ( jlen > 0 ) {
 						// In lower banded storage, elements below diagonal in column j
-						// are at row 2 in Fortran = row 1 in 0-based
+						// Are at row 2 in Fortran = row 1 in 0-based
 						daxpy( jlen, -( x[ offsetX + (j * sx) ] * tscal ), AB, sa1, offsetAB + (1 * sa1) + (j * sa2), x, sx, offsetX + ((j + 1) * sx) );
 					}
 					i = j + 1 + idamax( N - j - 1, x, sx, offsetX + ((j + 1) * sx) );

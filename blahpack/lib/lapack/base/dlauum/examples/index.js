@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlauum = require( '@stdlib/lapack/base/dlauum' );

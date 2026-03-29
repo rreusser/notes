@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dpbtrf = require( '@stdlib/lapack/base/dpbtrf' );

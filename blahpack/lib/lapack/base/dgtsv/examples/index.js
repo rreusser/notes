@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgtsv = require( '@stdlib/lapack/base/dgtsv' );

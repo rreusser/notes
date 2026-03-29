@@ -23,7 +23,7 @@
 // MAIN //
 
 /**
-* Computes an LU factorization of a real tridiagonal matrix A using
+* Computes an LU factorization of a real tridiagonal matrix A using.
 * elimination with partial pivoting and row interchanges.
 *
 * The factorization has the form A = L * U where L is a product of
@@ -58,10 +58,10 @@
 function dgttrf( N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV ) {
 	var fact;
 	var temp;
-	var idl;
-	var id;
-	var idu;
 	var idu2;
+	var idl;
+	var idu;
+	var id;
 	var ip;
 	var i;
 

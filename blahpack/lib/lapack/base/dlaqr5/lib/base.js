@@ -89,7 +89,7 @@ function idx2d( sA1, sA2, oA, i, j ) {
 // MAIN //
 
 /**
-* Performs a single small-bulge multi-shift QR sweep on an upper Hessenberg
+* Performs a single small-bulge multi-shift QR sweep on an upper Hessenberg.
 * matrix, chasing a chain of bulges from left to right. Called by dlaqr0.
 *
 * @private
@@ -136,10 +136,12 @@ function idx2d( sA1, sA2, oA, i, j ) {
 * @param {NonNegativeInteger} offsetWH - offset for WH
 */
 function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offsetSR, SI, strideSI, offsetSI, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, V, strideV1, strideV2, offsetV, U, strideU1, strideU2, offsetU, nv, WV, strideWV1, strideWV2, offsetWV, nh, WH, strideWH1, strideWH2, offsetWH ) { // eslint-disable-line max-len
+	var alphaArr = new Float64Array( 1 );
 	var smlnum;
 	var refsum;
 	var safmax;
 	var safmin;
+	var tauArr = new Float64Array( 1 );
 	var nbmps;
 	var ndcol;
 	var krcol;
@@ -158,6 +160,14 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 	var mtop;
 	var tst1;
 	var tst2;
+	var KTOP = ktop + 1;
+	var KBOT = kbot + 1;
+	var ILOZ = iloz + 1;
+	var IHIZ = ihiz + 1;
+	var sWV1 = strideWV1;
+	var sWV2 = strideWV2;
+	var sWH1 = strideWH1;
+	var sWH2 = strideWH2;
 	var h11;
 	var h12;
 	var h21;
@@ -166,6 +176,16 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 	var kdu;
 	var kms;
 	var m22;
+	var sH1 = strideH1;
+	var sH2 = strideH2;
+	var sZ1 = strideZ1;
+	var sZ2 = strideZ2;
+	var sV1 = strideV1;
+	var sV2 = strideV2;
+	var sU1 = strideU1;
+	var sU2 = strideU2;
+	var oWV = offsetWV;
+	var oWH = offsetWH;
 	var vt;
 	var ns;
 	var nu;
@@ -175,44 +195,14 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 	var t1;
 	var t2;
 	var t3;
+	var oH = offsetH;
+	var oZ = offsetZ;
+	var oV = offsetV;
+	var oU = offsetU;
 	var k;
 	var m;
 	var j;
 	var i;
-
-	// Use 1-based internal variables matching Fortran.
-	// API params ktop, kbot, iloz, ihiz are 0-based; convert to 1-based.
-	var KTOP = ktop + 1;
-	var KBOT = kbot + 1;
-	var ILOZ = iloz + 1;
-	var IHIZ = ihiz + 1;
-
-	// Shorthand for strides
-	var sH1 = strideH1;
-	var sH2 = strideH2;
-	var oH = offsetH;
-	var sZ1 = strideZ1;
-	var sZ2 = strideZ2;
-	var oZ = offsetZ;
-	var sV1 = strideV1;
-	var sV2 = strideV2;
-	var oV = offsetV;
-	var sU1 = strideU1;
-	var sU2 = strideU2;
-	var oU = offsetU;
-	var sWV1 = strideWV1;
-	var sWV2 = strideWV2;
-	var oWV = offsetWV;
-	var sWH1 = strideWH1;
-	var sWH2 = strideWH2;
-	var oWH = offsetWH;
-
-	// Scratch array for VT(3)
-	vt = new Float64Array( 3 );
-
-	// Scratch arrays for dlarfg: alpha (1 element) and tau (1 element)
-	var alphaArr = new Float64Array( 1 );
-	var tauArr = new Float64Array( 1 );
 
 	// ==== If there are no shifts, then there is nothing to do. ====
 	if ( nshfts < 2 ) {
@@ -225,8 +215,8 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 	}
 
 	// ==== Shuffle shifts into pairs of real shifts and pairs of complex
-	//      conjugate shifts, assuming complex conjugate shifts are already
-	//      adjacent to one another. ====
+	//      Conjugate shifts, assuming complex conjugate shifts are already
+	//      Adjacent to one another. ====
 	for ( i = 1; i <= nshfts - 2; i += 2 ) {
 		if ( SI[ offsetSI + ( i - 1 ) * strideSI ] !== -SI[ offsetSI + i * strideSI ] ) {
 			swap = SR[ offsetSR + ( i - 1 ) * strideSR ];
@@ -274,7 +264,6 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 	// ==== Create and chase chains of NBMPS bulges ====
 	// Fortran: DO 180 INCOL = KTOP - 2*NBMPS + 1, KBOT - 2, 2*NBMPS
 	for ( incol = KTOP - 2 * nbmps + 1; incol <= KBOT - 2; incol += 2 * nbmps ) {
-
 		// JTOP = Index from which updates from the right start.
 		if ( accum ) {
 			jtop = Math.max( KTOP, incol );
@@ -292,7 +281,6 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 		// ==== Near-the-diagonal bulge chase. ====
 		// Fortran: DO 145 KRCOL = INCOL, MIN( INCOL+2*NBMPS-1, KBOT-2 )
 		for ( krcol = incol; krcol <= Math.min( incol + 2 * nbmps - 1, KBOT - 2 ); krcol++ ) {
-
 			mtop = Math.max( 1, ( ( KTOP - krcol ) / 2 + 1 ) | 0 );
 			mbot = Math.min( nbmps, ( ( KBOT - krcol - 1 ) / 2 ) | 0 );
 			m22 = mbot + 1;
@@ -304,9 +292,7 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 
 				if ( k === KTOP - 1 ) {
 					// Generate initial reflector from shifts
-					dlaqr1( 2, H, sH1, sH2, idx2d( sH1, sH2, oH, k + 1, k + 1 ),
-						sr( 2 * m22 - 1 ), si( 2 * m22 - 1 ), sr( 2 * m22 ), si( 2 * m22 ),
-						V, sV1, idx2d( sV1, sV2, oV, 1, m22 ) );
+					dlaqr1( 2, H, sH1, sH2, idx2d( sH1, sH2, oH, k + 1, k + 1 ), sr( 2 * m22 - 1 ), si( 2 * m22 - 1 ), sr( 2 * m22 ), si( 2 * m22 ), V, sV1, idx2d( sV1, sV2, oV, 1, m22 ) );
 
 					alphaArr[ 0 ] = get2d( V, sV1, sV2, oV, 1, m22 );
 					dlarfg( 2, alphaArr, 0, V, sV1, idx2d( sV1, sV2, oV, 2, m22 ), tauArr, 0 );
@@ -351,22 +337,22 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 						tst1 = Math.abs( get2d( H, sH1, sH2, oH, k, k ) ) + Math.abs( get2d( H, sH1, sH2, oH, k + 1, k + 1 ) );
 						if ( tst1 === 0.0 ) {
 							if ( k >= KTOP + 1 ) {
-								tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k, k - 1 ) );
+								tst1 += Math.abs( get2d( H, sH1, sH2, oH, k, k - 1 ) );
 							}
 							if ( k >= KTOP + 2 ) {
-								tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k, k - 2 ) );
+								tst1 += Math.abs( get2d( H, sH1, sH2, oH, k, k - 2 ) );
 							}
 							if ( k >= KTOP + 3 ) {
-								tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k, k - 3 ) );
+								tst1 += Math.abs( get2d( H, sH1, sH2, oH, k, k - 3 ) );
 							}
 							if ( k <= KBOT - 2 ) {
-								tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k + 2, k + 1 ) );
+								tst1 += Math.abs( get2d( H, sH1, sH2, oH, k + 2, k + 1 ) );
 							}
 							if ( k <= KBOT - 3 ) {
-								tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k + 3, k + 1 ) );
+								tst1 += Math.abs( get2d( H, sH1, sH2, oH, k + 3, k + 1 ) );
 							}
 							if ( k <= KBOT - 4 ) {
-								tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k + 4, k + 1 ) );
+								tst1 += Math.abs( get2d( H, sH1, sH2, oH, k + 4, k + 1 ) );
 							}
 						}
 						if ( Math.abs( get2d( H, sH1, sH2, oH, k + 1, k ) ) <= Math.max( smlnum, ULP * tst1 ) ) {
@@ -412,9 +398,7 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 
 				if ( k === KTOP - 1 ) {
 					// Generate initial reflector from shifts
-					dlaqr1( 3, H, sH1, sH2, idx2d( sH1, sH2, oH, KTOP, KTOP ),
-						sr( 2 * m - 1 ), si( 2 * m - 1 ), sr( 2 * m ), si( 2 * m ),
-						V, sV1, idx2d( sV1, sV2, oV, 1, m ) );
+					dlaqr1( 3, H, sH1, sH2, idx2d( sH1, sH2, oH, KTOP, KTOP ), sr( 2 * m - 1 ), si( 2 * m - 1 ), sr( 2 * m ), si( 2 * m ), V, sV1, idx2d( sV1, sV2, oV, 1, m ) );
 
 					alphaArr[ 0 ] = get2d( V, sV1, sV2, oV, 1, m );
 					dlarfg( 3, alphaArr, 0, V, sV1, idx2d( sV1, sV2, oV, 2, m ), tauArr, 0 );
@@ -439,7 +423,8 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 					set2d( V, sV1, sV2, oV, 1, m, tauArr[ 0 ] );
 
 					// ==== A Bulge may collapse because of vigilant deflation
-					//      or destructive underflow. ====
+
+					//      Or destructive underflow. ====
 					if ( get2d( H, sH1, sH2, oH, k + 3, k ) !== 0.0 || get2d( H, sH1, sH2, oH, k + 3, k + 1 ) !== 0.0 || get2d( H, sH1, sH2, oH, k + 3, k + 2 ) === 0.0 ) {
 						// ==== Typical case: not collapsed (yet). ====
 						set2d( H, sH1, sH2, oH, k + 1, k, beta );
@@ -447,10 +432,8 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 						set2d( H, sH1, sH2, oH, k + 3, k, 0.0 );
 					} else {
 						// ==== Atypical case: collapsed. Attempt to reintroduce
-						//      ignoring H(K+1,K) and H(K+2,K). ====
-						dlaqr1( 3, H, sH1, sH2, idx2d( sH1, sH2, oH, k + 1, k + 1 ),
-							sr( 2 * m - 1 ), si( 2 * m - 1 ), sr( 2 * m ), si( 2 * m ),
-							vt, 1, 0 );
+						//      Ignoring H(K+1,K) and H(K+2,K). ====
+						dlaqr1( 3, H, sH1, sH2, idx2d( sH1, sH2, oH, k + 1, k + 1 ), sr( 2 * m - 1 ), si( 2 * m - 1 ), sr( 2 * m ), si( 2 * m ), vt, 1, 0 );
 
 						alphaArr[ 0 ] = vt[ 0 ];
 						dlarfg( 3, alphaArr, 0, vt, 1, 1, tauArr, 0 );
@@ -481,7 +464,7 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 				}
 
 				// ==== Apply reflection from the right and the first column of
-				//      update from the left. ====
+				//      Update from the left. ====
 				t1 = get2d( V, sV1, sV2, oV, 1, m );
 				t2 = t1 * get2d( V, sV1, sV2, oV, 2, m );
 				t3 = t1 * get2d( V, sV1, sV2, oV, 3, m );
@@ -506,22 +489,22 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 					tst1 = Math.abs( get2d( H, sH1, sH2, oH, k, k ) ) + Math.abs( get2d( H, sH1, sH2, oH, k + 1, k + 1 ) );
 					if ( tst1 === 0.0 ) {
 						if ( k >= KTOP + 1 ) {
-							tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k, k - 1 ) );
+							tst1 += Math.abs( get2d( H, sH1, sH2, oH, k, k - 1 ) );
 						}
 						if ( k >= KTOP + 2 ) {
-							tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k, k - 2 ) );
+							tst1 += Math.abs( get2d( H, sH1, sH2, oH, k, k - 2 ) );
 						}
 						if ( k >= KTOP + 3 ) {
-							tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k, k - 3 ) );
+							tst1 += Math.abs( get2d( H, sH1, sH2, oH, k, k - 3 ) );
 						}
 						if ( k <= KBOT - 2 ) {
-							tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k + 2, k + 1 ) );
+							tst1 += Math.abs( get2d( H, sH1, sH2, oH, k + 2, k + 1 ) );
 						}
 						if ( k <= KBOT - 3 ) {
-							tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k + 3, k + 1 ) );
+							tst1 += Math.abs( get2d( H, sH1, sH2, oH, k + 3, k + 1 ) );
 						}
 						if ( k <= KBOT - 4 ) {
-							tst1 = tst1 + Math.abs( get2d( H, sH1, sH2, oH, k + 4, k + 1 ) );
+							tst1 += Math.abs( get2d( H, sH1, sH2, oH, k + 4, k + 1 ) );
 						}
 					}
 					if ( Math.abs( get2d( H, sH1, sH2, oH, k + 1, k ) ) <= Math.max( smlnum, ULP * tst1 ) ) {
@@ -596,7 +579,6 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 					}
 				}
 			}
-
 		} // end DO 145 (krcol)
 
 		// ==== Use U (if accumulated) to update far-from-diagonal entries in H.
@@ -613,51 +595,35 @@ function dlaqr5( wantt, wantz, kacc22, N, ktop, kbot, nshfts, SR, strideSR, offs
 			nu = ( kdu - Math.max( 0, ndcol - KBOT ) ) - k1 + 1;
 
 			// ==== Horizontal Multiply ====
+
 			// Fortran: DO 150 JCOL = MIN( NDCOL, KBOT ) + 1, JBOT, NH
 			for ( jcol = Math.min( ndcol, KBOT ) + 1; jcol <= jbot; jcol += nh ) {
 				jlen = Math.min( nh, jbot - jcol + 1 );
+
 				// dgemm( 'C', 'N', nu, jlen, nu, 1.0, U(k1,k1), ..., H(incol+k1,jcol), ..., 0.0, WH, ... )
-				dgemm( 'transpose', 'no-transpose', nu, jlen, nu, 1.0,
-					U, sU1, sU2, idx2d( sU1, sU2, oU, k1, k1 ),
-					H, sH1, sH2, idx2d( sH1, sH2, oH, incol + k1, jcol ),
-					0.0,
-					WH, sWH1, sWH2, oWH );
+				dgemm( 'transpose', 'no-transpose', nu, jlen, nu, 1.0, U, sU1, sU2, idx2d( sU1, sU2, oU, k1, k1 ), H, sH1, sH2, idx2d( sH1, sH2, oH, incol + k1, jcol ), 0.0, WH, sWH1, sWH2, oWH );
+
 				// dlacpy( 'ALL', nu, jlen, WH, ..., H(incol+k1, jcol), ... )
-				dlacpy( 'ALL', nu, jlen,
-					WH, sWH1, sWH2, oWH,
-					H, sH1, sH2, idx2d( sH1, sH2, oH, incol + k1, jcol ) );
+				dlacpy( 'ALL', nu, jlen, WH, sWH1, sWH2, oWH, H, sH1, sH2, idx2d( sH1, sH2, oH, incol + k1, jcol ) );
 			}
 
 			// ==== Vertical multiply ====
 			// Fortran: DO 160 JROW = JTOP, MAX( KTOP, INCOL ) - 1, NV
 			for ( jrow = jtop; jrow <= Math.max( KTOP, incol ) - 1; jrow += nv ) {
 				jlen = Math.min( nv, Math.max( KTOP, incol ) - jrow );
-				dgemm( 'no-transpose', 'no-transpose', jlen, nu, nu, 1.0,
-					H, sH1, sH2, idx2d( sH1, sH2, oH, jrow, incol + k1 ),
-					U, sU1, sU2, idx2d( sU1, sU2, oU, k1, k1 ),
-					0.0,
-					WV, sWV1, sWV2, oWV );
-				dlacpy( 'ALL', jlen, nu,
-					WV, sWV1, sWV2, oWV,
-					H, sH1, sH2, idx2d( sH1, sH2, oH, jrow, incol + k1 ) );
+				dgemm( 'no-transpose', 'no-transpose', jlen, nu, nu, 1.0, H, sH1, sH2, idx2d( sH1, sH2, oH, jrow, incol + k1 ), U, sU1, sU2, idx2d( sU1, sU2, oU, k1, k1 ), 0.0, WV, sWV1, sWV2, oWV );
+				dlacpy( 'ALL', jlen, nu, WV, sWV1, sWV2, oWV, H, sH1, sH2, idx2d( sH1, sH2, oH, jrow, incol + k1 ) );
 			}
 
 			// ==== Z multiply (also vertical) ====
 			if ( wantz ) {
 				for ( jrow = ILOZ; jrow <= IHIZ; jrow += nv ) {
 					jlen = Math.min( nv, IHIZ - jrow + 1 );
-					dgemm( 'no-transpose', 'no-transpose', jlen, nu, nu, 1.0,
-						Z, sZ1, sZ2, idx2d( sZ1, sZ2, oZ, jrow, incol + k1 ),
-						U, sU1, sU2, idx2d( sU1, sU2, oU, k1, k1 ),
-						0.0,
-						WV, sWV1, sWV2, oWV );
-					dlacpy( 'ALL', jlen, nu,
-						WV, sWV1, sWV2, oWV,
-						Z, sZ1, sZ2, idx2d( sZ1, sZ2, oZ, jrow, incol + k1 ) );
+					dgemm( 'no-transpose', 'no-transpose', jlen, nu, nu, 1.0, Z, sZ1, sZ2, idx2d( sZ1, sZ2, oZ, jrow, incol + k1 ), U, sU1, sU2, idx2d( sU1, sU2, oU, k1, k1 ), 0.0, WV, sWV1, sWV2, oWV );
+					dlacpy( 'ALL', jlen, nu, WV, sWV1, sWV2, oWV, Z, sZ1, sZ2, idx2d( sZ1, sZ2, oZ, jrow, incol + k1 ) );
 				}
 			}
 		}
-
 	} // end DO 180 (incol)
 }
 

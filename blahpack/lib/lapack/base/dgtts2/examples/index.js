@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dgtts2 = require( '@stdlib/lapack/base/dgtts2' );

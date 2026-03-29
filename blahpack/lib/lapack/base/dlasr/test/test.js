@@ -1,58 +1,91 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dlasr = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlasr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlasr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
-		var relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
-		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		var relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
+		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 	}
 }
 
 /**
-* Returns a 4x4 matrix A = [1 5 9 13; 2 6 10 14; 3 7 11 15; 4 8 12 16]
+* Returns a 4x4 matrix A = [1 5 9 13; 2 6 10 14; 3 7 11 15; 4 8 12 16].
 * in column-major flat array.
 */
-function initMatrix() {
+function initMatrix( ) {
 	return new Float64Array([
-		1, 2, 3, 4,
-		5, 6, 7, 8,
-		9, 10, 11, 12,
-		13, 14, 15, 16
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10,
+		11,
+		12,
+		13,
+		14,
+		15,
+		16
 	]);
 }
 
 /**
 * Returns the c and s arrays used in all 12 combination tests.
 */
-function initCS() {
+function initCS( ) {
 	return {
-		c: new Float64Array([ 0.6, 0.8, 0.5 ]),
-		s: new Float64Array([ 0.8, 0.6, 0.866025403784439 ])
+		'c': new Float64Array([ 0.6, 0.8, 0.5 ]),
+		's': new Float64Array([ 0.8, 0.6, 0.866025403784439 ])
 	};
 }
 
@@ -71,20 +104,30 @@ function runCase( side, pivot, direct, M, N, caseName ) {
 // TESTS //
 
 test( 'dlasr: m_zero (quick return)', function t() {
-	var tc = findCase( 'm_zero' );
-	var A = initMatrix();
-	var expected = new Float64Array( A );
-	var cs = initCS();
-	dlasr( 'left', 'variable', 'forward', 0, 4, cs.c, 1, 0, cs.s, 1, 0, A, 1, 4, 0 );
+	var expected;
+	var tc;
+	var cs;
+	var A;
+
+	tc = findCase( 'm_zero' );
+	A = initMatrix();
+	expected = new Float64Array( A );
+	cs = initCS();
+	dlasr( 'left', 'variable', 'forward', 0, 4, cs.c, 1, 0, cs.s, 1, 0, A, 1, 4, 0 ); // eslint-disable-line max-len
 	assertArrayClose( A, expected, 1e-14, 'm_zero A' );
 });
 
 test( 'dlasr: n_zero (quick return)', function t() {
-	var tc = findCase( 'n_zero' );
-	var A = initMatrix();
-	var expected = new Float64Array( A );
-	var cs = initCS();
-	dlasr( 'left', 'variable', 'forward', 4, 0, cs.c, 1, 0, cs.s, 1, 0, A, 1, 4, 0 );
+	var expected;
+	var tc;
+	var cs;
+	var A;
+
+	tc = findCase( 'n_zero' );
+	A = initMatrix();
+	expected = new Float64Array( A );
+	cs = initCS();
+	dlasr( 'left', 'variable', 'forward', 4, 0, cs.c, 1, 0, cs.s, 1, 0, A, 1, 4, 0 ); // eslint-disable-line max-len
 	assertArrayClose( A, expected, 1e-14, 'n_zero A' );
 });
 
@@ -137,9 +180,13 @@ test( 'dlasr: SIDE=R, PIVOT=B, DIRECT=B', function t() {
 });
 
 test( 'dlasr: returns A', function t() {
-	var cs = initCS();
-	var A = initMatrix();
-	var result = dlasr( 'left', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A, 1, 4, 0 );
+	var result;
+	var cs;
+	var A;
+
+	cs = initCS();
+	A = initMatrix();
+	result = dlasr( 'left', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A, 1, 4, 0 ); // eslint-disable-line max-len
 	assert.equal( result, A );
 });
 
@@ -152,16 +199,16 @@ test( 'dlasr: lowercase parameters match uppercase', function t() {
 	cs = initCS();
 	A1 = initMatrix();
 	A2 = initMatrix();
-	dlasr( 'left', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 );
-	dlasr( 'left', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 );
+	dlasr( 'left', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 ); // eslint-disable-line max-len
+	dlasr( 'left', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 ); // eslint-disable-line max-len
 	assertArrayClose( A2, A1, 1e-14, 'l_v_f lowercase' );
 
 	// Test lowercase 'l', 'v', 'b'
 	cs = initCS();
 	A1 = initMatrix();
 	A2 = initMatrix();
-	dlasr( 'left', 'variable', 'backward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 );
-	dlasr( 'left', 'variable', 'backward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 );
+	dlasr( 'left', 'variable', 'backward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 ); // eslint-disable-line max-len
+	dlasr( 'left', 'variable', 'backward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 ); // eslint-disable-line max-len
 	assertArrayClose( A2, A1, 1e-14, 'l_v_b lowercase' );
 
 	// Test lowercase 'l', 't', 'f'
@@ -176,16 +223,16 @@ test( 'dlasr: lowercase parameters match uppercase', function t() {
 	cs = initCS();
 	A1 = initMatrix();
 	A2 = initMatrix();
-	dlasr( 'left', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 );
-	dlasr( 'left', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 );
+	dlasr( 'left', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 ); // eslint-disable-line max-len
+	dlasr( 'left', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 ); // eslint-disable-line max-len
 	assertArrayClose( A2, A1, 1e-14, 'l_b_f lowercase' );
 
 	// Test lowercase 'r', 'v', 'f'
 	cs = initCS();
 	A1 = initMatrix();
 	A2 = initMatrix();
-	dlasr( 'right', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 );
-	dlasr( 'right', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 );
+	dlasr( 'right', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 ); // eslint-disable-line max-len
+	dlasr( 'right', 'variable', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 ); // eslint-disable-line max-len
 	assertArrayClose( A2, A1, 1e-14, 'r_v_f lowercase' );
 
 	// Test lowercase 'r', 't', 'f'
@@ -200,66 +247,53 @@ test( 'dlasr: lowercase parameters match uppercase', function t() {
 	cs = initCS();
 	A1 = initMatrix();
 	A2 = initMatrix();
-	dlasr( 'right', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 );
-	dlasr( 'right', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 );
+	dlasr( 'right', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A1, 1, 4, 0 ); // eslint-disable-line max-len
+	dlasr( 'right', 'bottom', 'forward', 4, 4, cs.c, 1, 0, cs.s, 1, 0, A2, 1, 4, 0 ); // eslint-disable-line max-len
 	assertArrayClose( A2, A1, 1e-14, 'r_b_f lowercase' );
 });
 
 test( 'dlasr: identity rotation (c=1, s=0) skips computation', function t() {
-	var A;
 	var expected;
+	var A;
 	var c;
 	var s;
 
-	// When all c=1 and s=0, the matrix should not change
 	c = new Float64Array([ 1.0, 1.0, 1.0 ]);
 	s = new Float64Array([ 0.0, 0.0, 0.0 ]);
 	A = initMatrix();
 	expected = new Float64Array( A );
 	dlasr( 'left', 'variable', 'forward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'L_V_F identity' );
-
 	A = initMatrix();
 	dlasr( 'left', 'top', 'forward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'L_T_F identity' );
-
 	A = initMatrix();
 	dlasr( 'left', 'bottom', 'forward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'L_B_F identity' );
-
 	A = initMatrix();
 	dlasr( 'right', 'variable', 'forward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'R_V_F identity' );
-
 	A = initMatrix();
 	dlasr( 'right', 'top', 'forward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'R_T_F identity' );
-
 	A = initMatrix();
 	dlasr( 'right', 'bottom', 'forward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'R_B_F identity' );
-
-	// Also test backward direction
 	A = initMatrix();
 	dlasr( 'left', 'variable', 'backward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'L_V_B identity' );
-
 	A = initMatrix();
 	dlasr( 'left', 'top', 'backward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'L_T_B identity' );
-
 	A = initMatrix();
 	dlasr( 'left', 'bottom', 'backward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'L_B_B identity' );
-
 	A = initMatrix();
 	dlasr( 'right', 'variable', 'backward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'R_V_B identity' );
-
 	A = initMatrix();
 	dlasr( 'right', 'top', 'backward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'R_T_B identity' );
-
 	A = initMatrix();
 	dlasr( 'right', 'bottom', 'backward', 4, 4, c, 1, 0, s, 1, 0, A, 1, 4, 0 );
 	assertArrayClose( A, expected, 1e-14, 'R_B_B identity' );

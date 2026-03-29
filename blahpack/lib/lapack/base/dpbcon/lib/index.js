@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Estimates the reciprocal condition number of a positive definite banded matrix
+* Estimates the reciprocal condition number of a positive definite banded matrix.
 *
 * @module @stdlib/lapack/base/dpbcon
 *

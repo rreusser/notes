@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dposvx = require( '@stdlib/lapack/base/dposvx' );

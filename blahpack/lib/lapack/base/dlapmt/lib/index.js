@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Permute columns of a matrix
+* Permute columns of a matrix.
 *
 * @module @stdlib/lapack/base/dlapmt
 *

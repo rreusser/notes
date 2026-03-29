@@ -35,20 +35,20 @@ var lartgOut = new Float64Array( 3 );
 // MAIN //
 
 /**
-* Computes 2-by-2 orthogonal matrices U, V, and Q, such that if UPPER is true:
+* Computes 2-by-2 orthogonal matrices U, V, and Q, such that if UPPER is true:.
 *
-*   U^T * A * Q = U^T * ( A1 A2 ) * Q = ( x  0  )
+*   U^T _ A _ Q = U^T _ ( A1 A2 ) _ Q = ( x  0  )
 *                       ( 0  A3 )       ( x  x  )
 * and
-*   V^T * B * Q = V^T * ( B1 B2 ) * Q = ( x  0  )
+*   V^T _ B _ Q = V^T _ ( B1 B2 ) _ Q = ( x  0  )
 *                       ( 0  B3 )       ( x  x  )
 *
 * or if UPPER is false:
 *
-*   U^T * A * Q = U^T * ( A1 0  ) * Q = ( x  x  )
+*   U^T _ A _ Q = U^T _ ( A1 0  ) _ Q = ( x  x  )
 *                       ( A2 A3 )       ( 0  x  )
 * and
-*   V^T * B * Q = V^T * ( B1 0  ) * Q = ( x  x  )
+*   V^T _ B _ Q = V^T _ ( B1 0  ) _ Q = ( x  x  )
 *                       ( B2 B3 )       ( 0  x  )
 *
 * @private
@@ -115,7 +115,7 @@ function dlags2( upper, a1, a2, a3, b1, b2, b3 ) {
 
 		if ( Math.abs( csl ) >= Math.abs( snl ) || Math.abs( csr ) >= Math.abs( snr ) ) {
 			// Compute the (1,1) and (1,2) elements of U^T*A and V^T*B,
-			// and (1,2) element of |U|^T*|A| and |V|^T*|B|.
+			// And (1,2) element of |U|^T*|A| and |V|^T*|B|.
 			ua11r = csl * a1;
 			ua12 = ( csl * a2 ) + ( snl * a3 );
 
@@ -144,7 +144,7 @@ function dlags2( upper, a1, a2, a3, b1, b2, b3 ) {
 			snv = -snr;
 		} else {
 			// Compute the (2,1) and (2,2) elements of U^T*A and V^T*B,
-			// and (2,2) element of |U|^T*|A| and |V|^T*|B|.
+			// And (2,2) element of |U|^T*|A| and |V|^T*|B|.
 			ua21 = -snl * a1;
 			ua22 = ( -snl * a2 ) + ( csl * a3 );
 
@@ -189,7 +189,7 @@ function dlags2( upper, a1, a2, a3, b1, b2, b3 ) {
 
 		if ( Math.abs( csr ) >= Math.abs( snr ) || Math.abs( csl ) >= Math.abs( snl ) ) {
 			// Compute the (2,1) and (2,2) elements of U^T*A and V^T*B,
-			// and (2,1) element of |U|^T*|A| and |V|^T*|B|.
+			// And (2,1) element of |U|^T*|A| and |V|^T*|B|.
 			ua21 = ( -snr * a1 ) + ( csr * a2 );
 			ua22r = csr * a3;
 
@@ -218,7 +218,7 @@ function dlags2( upper, a1, a2, a3, b1, b2, b3 ) {
 			snv = -snl;
 		} else {
 			// Compute the (1,1) and (1,2) elements of U^T*A and V^T*B,
-			// and (1,1) element of |U|^T*|A| and |V|^T*|B|.
+			// And (1,1) element of |U|^T*|A| and |V|^T*|B|.
 			ua11 = ( csr * a1 ) + ( snr * a2 );
 			ua12 = snr * a3;
 

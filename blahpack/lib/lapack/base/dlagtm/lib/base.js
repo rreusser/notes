@@ -23,10 +23,10 @@
 // MAIN //
 
 /**
-* Performs one of the matrix-matrix operations
+* Performs one of the matrix-matrix operations.
 *
-*   B := alpha * A * X + beta * B    (trans = 'no-transpose')
-*   B := alpha * A^T * X + beta * B  (trans = 'transpose')
+*   B := alpha _ A _ X + beta _ B    (trans = 'no-transpose')
+_   B := alpha _ A^T _ X + beta _ B  (trans = 'transpose')
 *
 * where A is an N-by-N general tridiagonal matrix with sub-diagonal DL,
 * diagonal D, and super-diagonal DU; X is an N-by-NRHS matrix; and B is
@@ -100,8 +100,10 @@ function dlagtm( trans, N, nrhs, alpha, DL, strideDL, offsetDL, d, strideD, offs
 				} else {
 					// First row
 					B[ pb ] += d[ offsetD ] * X[ px ] + DU[ offsetDU ] * X[ px + strideX1 ];
+
 					// Last row
 					B[ pb + ( ( N - 1 ) * strideB1 ) ] += DL[ offsetDL + ( ( N - 2 ) * strideDL ) ] * X[ px + ( ( N - 2 ) * strideX1 ) ] + d[ offsetD + ( ( N - 1 ) * strideD ) ] * X[ px + ( ( N - 1 ) * strideX1 ) ];
+
 					// Middle rows
 					for ( i = 1; i < N - 1; i++ ) {
 						B[ pb + ( i * strideB1 ) ] += DL[ offsetDL + ( ( i - 1 ) * strideDL ) ] * X[ px + ( ( i - 1 ) * strideX1 ) ] + d[ offsetD + ( i * strideD ) ] * X[ px + ( i * strideX1 ) ] + DU[ offsetDU + ( i * strideDU ) ] * X[ px + ( ( i + 1 ) * strideX1 ) ];
@@ -118,8 +120,10 @@ function dlagtm( trans, N, nrhs, alpha, DL, strideDL, offsetDL, d, strideD, offs
 				} else {
 					// First row: A^T row 0 = d[0], dl[0] (from column 0 of A^T = row 0 of A)
 					B[ pb ] += d[ offsetD ] * X[ px ] + DL[ offsetDL ] * X[ px + strideX1 ];
+
 					// Last row
 					B[ pb + ( ( N - 1 ) * strideB1 ) ] += DU[ offsetDU + ( ( N - 2 ) * strideDU ) ] * X[ px + ( ( N - 2 ) * strideX1 ) ] + d[ offsetD + ( ( N - 1 ) * strideD ) ] * X[ px + ( ( N - 1 ) * strideX1 ) ];
+
 					// Middle rows
 					for ( i = 1; i < N - 1; i++ ) {
 						B[ pb + ( i * strideB1 ) ] += DU[ offsetDU + ( ( i - 1 ) * strideDU ) ] * X[ px + ( ( i - 1 ) * strideX1 ) ] + d[ offsetD + ( i * strideD ) ] * X[ px + ( i * strideX1 ) ] + DL[ offsetDL + ( i * strideDL ) ] * X[ px + ( ( i + 1 ) * strideX1 ) ];

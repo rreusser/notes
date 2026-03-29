@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dpbequ = require( '@stdlib/lapack/base/dpbequ' );

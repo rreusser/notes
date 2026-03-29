@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes the generalized singular value decomposition of a real matrix pair
+* Computes the generalized singular value decomposition of a real matrix pair.
 *
 * @module @stdlib/lapack/base/dggsvd3
 *

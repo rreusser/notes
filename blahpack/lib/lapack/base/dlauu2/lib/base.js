@@ -66,22 +66,14 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// A(i,i) = dot product of row i from diagonal onward:
 				// ddot( N-i, A(i,i), LDA, A(i,i), LDA )
 				// In row i, columns i..N-1 are accessed with stride sa2
-				A[ offsetA + (i * sa1) + (i * sa2) ] = ddot(
-					N - i,
-					A, sa2, offsetA + (i * sa1) + (i * sa2),
-					A, sa2, offsetA + (i * sa1) + (i * sa2)
-				);
+				A[ offsetA + (i * sa1) + (i * sa2) ] = ddot(N - i, A, sa2, offsetA + (i * sa1) + (i * sa2), A, sa2, offsetA + (i * sa1) + (i * sa2));
 
 				// Update rows 0..i-1 of column i:
 
 				// dgemv('no-transpose', i, N-i-1, 1.0, A(0,i+1), LDA, A(i,i+1), LDA, aii, A(0,i), 1)
-				dgemv(
-					'no-transpose', i, N - i - 1,
-					1.0,
-					A, sa1, sa2, offsetA + (( i + 1 ) * sa2),       // A(:, i+1)
+				dgemv('no-transpose', i, N - i - 1, 1.0, A, sa1, sa2, offsetA + (( i + 1 ) * sa2),       // A(:, i+1)
 					A, sa2, offsetA + (i * sa1) + (( i + 1 ) * sa2),  // A(i, i+1:) stride=sa2
-					aii,
-					A, sa1, offsetA + (i * sa2)                      // A(:, i) stride=sa1
+					aii, A, sa1, offsetA + (i * sa2)                      // A(:, i) stride=sa1
 				);
 			} else {
 				// Last column: just scale A(:,N-1) by aii
@@ -97,22 +89,14 @@ function dlauu2( uplo, N, A, strideA1, strideA2, offsetA ) {
 				// A(i,i) = dot product of column i from diagonal onward:
 				// ddot( N-i, A(i,i), 1, A(i,i), 1 )
 				// In column i, rows i..N-1 are accessed with stride sa1
-				A[ offsetA + (i * sa1) + (i * sa2) ] = ddot(
-					N - i,
-					A, sa1, offsetA + (i * sa1) + (i * sa2),
-					A, sa1, offsetA + (i * sa1) + (i * sa2)
-				);
+				A[ offsetA + (i * sa1) + (i * sa2) ] = ddot(N - i, A, sa1, offsetA + (i * sa1) + (i * sa2), A, sa1, offsetA + (i * sa1) + (i * sa2));
 
 				// Update columns 0..i-1 of row i:
 
 				// dgemv('transpose', N-i-1, i, 1.0, A(i+1,0), LDA, A(i+1,i), 1, aii, A(i,0), LDA)
-				dgemv(
-					'transpose', N - i - 1, i,
-					1.0,
-					A, sa1, sa2, offsetA + (( i + 1 ) * sa1),       // A(i+1, :)
+				dgemv('transpose', N - i - 1, i, 1.0, A, sa1, sa2, offsetA + (( i + 1 ) * sa1),       // A(i+1, :)
 					A, sa1, offsetA + (( i + 1 ) * sa1) + (i * sa2),  // A(i+1:, i) stride=sa1
-					aii,
-					A, sa2, offsetA + (i * sa1)                      // A(i, :) stride=sa2
+					aii, A, sa2, offsetA + (i * sa1)                      // A(i, :) stride=sa2
 				);
 			} else {
 				// Last row: just scale A(N-1,:) by aii

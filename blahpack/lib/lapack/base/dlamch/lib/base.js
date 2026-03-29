@@ -73,7 +73,6 @@ var TABLE = {
 	'o': RMAX
 };
 
-
 /**
 * Determines double-precision machine parameters.
 *

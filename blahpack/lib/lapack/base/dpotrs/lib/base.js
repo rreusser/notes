@@ -55,30 +55,18 @@ function dpotrs( uplo, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, str
 		// Solve A*X = B where A = U^T*U.
 
 		// Solve U^T * Y = B (forward substitution)
-		dtrsm( 'left', 'upper', 'transpose', 'non-unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'upper', 'transpose', 'non-unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Solve U * X = Y (back substitution)
-		dtrsm( 'left', 'upper', 'no-transpose', 'non-unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'upper', 'no-transpose', 'non-unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 	} else {
 		// Solve A*X = B where A = L*L^T.
 
 		// Solve L * Y = B (forward substitution)
-		dtrsm( 'left', 'lower', 'no-transpose', 'non-unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'lower', 'no-transpose', 'non-unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 
 		// Solve L^T * X = Y (back substitution)
-		dtrsm( 'left', 'lower', 'transpose', 'non-unit', N, nrhs, 1.0,
-			A, strideA1, strideA2, offsetA,
-			B, strideB1, strideB2, offsetB
-		);
+		dtrsm( 'left', 'lower', 'transpose', 'non-unit', N, nrhs, 1.0, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB);
 	}
 
 	return 0;

@@ -40,7 +40,7 @@ var SAFE2 = SAFE1 / EPS;
 // MAIN //
 
 /**
-* Improves the computed solution to a real symmetric positive definite
+* Improves the computed solution to a real symmetric positive definite.
 * tridiagonal system A*X = B, and provides error bounds and backward
 * error estimates for the solution.
 *
@@ -81,6 +81,9 @@ var SAFE2 = SAFE1 / EPS;
 function dptrfs( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, DF, strideDF, offsetDF, EF, strideEF, offsetEF, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	var lstres;
 	var count;
+	var idf;
+	var ief;
+	var iwr;
 	var bi;
 	var cx;
 	var dx;
@@ -89,15 +92,12 @@ function dptrfs( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, DF, strideDF
 	var jf;
 	var jb;
 	var jx;
+	var id;
+	var ie;
+	var iw;
 	var s;
 	var i;
 	var j;
-	var id;
-	var ie;
-	var idf;
-	var ief;
-	var iw;
-	var iwr;
 
 	// Quick return if possible:
 	if ( N === 0 || nrhs === 0 ) {
@@ -171,11 +171,12 @@ function dptrfs( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, DF, strideDF
 			BERR[ jb ] = s;
 
 			// Test stopping criterion:
+
 			// Continue if BERR > eps, BERR decreased by factor 2, and count <= ITMAX
 			if ( BERR[ jb ] > EPS && 2.0 * BERR[ jb ] <= lstres && count <= ITMAX ) {
 				// Solve with factored system to get correction:
-				// dpttrs expects column-major 2D for the RHS. We pass a single
-				// column of WORK (the residual part) with stride=strideWORK, column stride irrelevant for nrhs=1.
+				// Dpttrs expects column-major 2D for the RHS. We pass a single
+				// Column of WORK (the residual part) with stride=strideWORK, column stride irrelevant for nrhs=1.
 				dpttrs( N, 1, DF, strideDF, offsetDF, EF, strideEF, offsetEF, WORK, strideWORK, 1, offsetWORK + N * strideWORK );
 
 				// X(:,j) += correction
@@ -203,6 +204,7 @@ function dptrfs( N, nrhs, d, strideD, offsetD, e, strideE, offsetE, DF, strideDF
 		FERR[ jf ] = WORK[ offsetWORK + ix * strideWORK ];
 
 		// Estimate norm(inv(A)):
+
 		// Solve M(L) * x = e, where e = [1,1,...,1]^T
 		WORK[ offsetWORK ] = 1.0;
 		for ( i = 1; i < N; i++ ) {

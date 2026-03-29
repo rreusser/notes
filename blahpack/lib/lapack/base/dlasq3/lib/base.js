@@ -218,18 +218,15 @@ function dlasq3( i0, n0, z, stride, offset, pp, dmin, sigma, desig, qmax, nfail,
 				setZ( (4 * n0) - pp, Z( (4 * i0) - pp ) );
 			}
 			dmin2 = Math.min( dmin2, Z( (4 * n0) + pp - 1 ) );
-			setZ( (4 * n0) + pp - 1, Math.min( Z( (4 * n0) + pp - 1 ),
-				Z( (4 * i0) + pp - 1 ), Z( (4 * i0) + pp + 3 ) ) );
-			setZ( (4 * n0) - pp, Math.min( Z( (4 * n0) - pp ),
-				Z( (4 * i0) - pp ), Z( (4 * i0) - pp + 4 ) ) );
+			setZ( (4 * n0) + pp - 1, Math.min( Z( (4 * n0) + pp - 1 ), Z( (4 * i0) + pp - 1 ), Z( (4 * i0) + pp + 3 ) ) );
+			setZ( (4 * n0) - pp, Math.min( Z( (4 * n0) - pp ), Z( (4 * i0) - pp ), Z( (4 * i0) - pp + 4 ) ) );
 			qmax = Math.max( qmax, Z( (4 * i0) + pp - 3 ), Z( (4 * i0) + pp + 1 ) );
 			dmin = -ZERO;
 		}
 	}
 
 	// Choose a shift (dlasq4)
-	r = dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2,
-		dn, dn1, dn2, tau, ttype, g );
+	r = dlasq4( i0, n0, z, stride, offset, pp, n0in, dmin, dmin1, dmin2, dn, dn1, dn2, tau, ttype, g );
 	tau = r.tau;
 	ttype = r.ttype;
 	g = r.g;

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Copy all or part of a matrix A to another matrix B.
 *

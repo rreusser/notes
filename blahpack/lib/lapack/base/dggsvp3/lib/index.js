@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the preprocessing for the generalized SVD of real matrices A and B
+* Compute the preprocessing for the generalized SVD of real matrices A and B.
 *
 * @module @stdlib/lapack/base/dggsvp3
 *

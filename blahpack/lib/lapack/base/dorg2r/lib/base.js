@@ -95,23 +95,14 @@ function dorg2r( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			// Fortran 1-based: M-I+1 rows, N-I cols starting at (I, I+1)
 
 			// JS 0-based: M-i rows from row i, N-i-1 cols from col i+1
-			dlarf(
-				'left', M - i, N - i - 1,
-				A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
-				TAU[ offsetTAU + (i * strideTAU) ],
-				A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2),
-				WORK, strideWORK, offsetWORK
-			);
+			dlarf('left', M - i, N - i - 1, A, strideA1, offsetA + (i * strideA1) + (i * strideA2), TAU[ offsetTAU + (i * strideTAU) ], A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + 1 ) * strideA2), WORK, strideWORK, offsetWORK);
 		}
 
 		// If i < M-1 (Fortran: I < M), scale the sub-diagonal part of column i
 		if ( i < M - 1 ) {
 			// DSCAL(M-I, -TAU(I), A(I+1,I), 1)
 			// JS 0-based: M-i-1 elements starting at A(i+1, i)
-			dscal(
-				M - i - 1, -TAU[ offsetTAU + (i * strideTAU) ],
-				A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2)
-			);
+			dscal(M - i - 1, -TAU[ offsetTAU + (i * strideTAU) ], A, strideA1, offsetA + (( i + 1 ) * strideA1) + (i * strideA2));
 		}
 
 		// A(i,i) = 1 - TAU(i)

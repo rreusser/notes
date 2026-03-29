@@ -23,11 +23,11 @@
 // MAIN //
 
 /**
-* Computes row and column scalings intended to equilibrate a symmetric positive
+* Computes row and column scalings intended to equilibrate a symmetric positive.
 * definite matrix A and reduce its condition number.
 *
 * S(i) = 1 / sqrt(A(i,i)). The choice of S puts the condition number of
-* B = S*A*S within a factor N of the smallest possible condition number.
+* B = S_A_S within a factor N of the smallest possible condition number.
 *
 * Returns an object with:
 * - info: 0 if successful; i (1-based) if the i-th diagonal element is non-positive.
@@ -53,7 +53,11 @@ function dpoequ( N, A, strideA1, strideA2, offsetA, s, strideS, offsetS ) {
 
 	// Quick return if possible
 	if ( N === 0 ) {
-		return { 'info': 0, 'scond': 1.0, 'amax': 0.0 };
+		return {
+			'info': 0,
+			'scond': 1.0,
+			'amax': 0.0
+		};
 	}
 
 	// Extract the diagonal elements into S
@@ -76,7 +80,11 @@ function dpoequ( N, A, strideA1, strideA2, offsetA, s, strideS, offsetS ) {
 		// Find the first non-positive diagonal element and return
 		for ( i = 0; i < N; i++ ) {
 			if ( s[ offsetS + ( i * strideS ) ] <= 0.0 ) {
-				return { 'info': i + 1, 'scond': 0.0, 'amax': amax };
+				return {
+					'info': i + 1,
+					'scond': 0.0,
+					'amax': amax
+				};
 			}
 		}
 	}
@@ -88,7 +96,11 @@ function dpoequ( N, A, strideA1, strideA2, offsetA, s, strideS, offsetS ) {
 	}
 
 	// Compute SCOND = sqrt(min(diag)) / sqrt(max(diag))
-	return { 'info': 0, 'scond': Math.sqrt( smin ) / Math.sqrt( amax ), 'amax': amax };
+	return {
+		'info': 0,
+		'scond': Math.sqrt( smin ) / Math.sqrt( amax ),
+		'amax': amax
+	};
 }
 
 

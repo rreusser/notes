@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlarf = require( '@stdlib/lapack/base/dlarf' );

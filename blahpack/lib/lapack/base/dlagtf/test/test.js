@@ -1,11 +1,14 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlagtf = require( './../lib/base.js' );
@@ -13,22 +16,50 @@ var dlagtf = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlagtf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlagtf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -37,50 +68,83 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'dlagtf: basic 5x5', function t() {
-	var tc = findCase( 'basic_5x5' );
-	var a = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
-	var b = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var c = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
-	var d = new Float64Array( 3 );
-	var IN = new Int32Array( 5 );
+	var info;
+	var tc;
+	var IN;
+	var a;
+	var b;
+	var c;
+	var d;
 
-	var info = dlagtf( 5, a, 1, 0, 2.0, b, 1, 0, c, 1, 0, 0.0, d, 1, 0, IN, 1, 0 );
-
+	tc = findCase( 'basic_5x5' );
+	a = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
+	b = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
+	c = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
+	d = new Float64Array( 3 );
+	IN = new Int32Array( 5 );
+	info = dlagtf( 5, a, 1, 0, 2.0, b, 1, 0, c, 1, 0, 0.0, d, 1, 0, IN, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertArrayClose( a, tc.a, 1e-14, 'a' );
 	assertArrayClose( b, tc.b, 1e-14, 'b' );
 	assertArrayClose( c, tc.c, 1e-14, 'c' );
 	assertArrayClose( d, tc.d, 1e-14, 'd' );
-	assert.deepEqual( Array.from( IN ), tc.in, 'IN' );
+	assert.deepEqual( toArray( IN ), tc.in, 'IN' );
 });
 
 test( 'dlagtf: N=1', function t() {
-	var tc = findCase( 'n_equals_1' );
-	var a = new Float64Array( [ 5.0 ] );
-	var b = new Float64Array( 1 );
-	var c = new Float64Array( 1 );
-	var d = new Float64Array( 1 );
-	var IN = new Int32Array( 1 );
+	var info;
+	var tc;
+	var IN;
+	var a;
+	var b;
+	var c;
+	var d;
 
-	var info = dlagtf( 1, a, 1, 0, 3.0, b, 1, 0, c, 1, 0, 0.0, d, 1, 0, IN, 1, 0 );
-
+	tc = findCase( 'n_equals_1' );
+	a = new Float64Array( [ 5.0 ] );
+	b = new Float64Array( 1 );
+	c = new Float64Array( 1 );
+	d = new Float64Array( 1 );
+	IN = new Int32Array( 1 );
+	info = dlagtf( 1, a, 1, 0, 3.0, b, 1, 0, c, 1, 0, 0.0, d, 1, 0, IN, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( a[ 0 ], tc.a[ 0 ], 1e-14, 'a[0]' );
 	assert.equal( IN[ 0 ], tc.in[ 0 ], 'IN[0]' );
 });
 
 test( 'dlagtf: N=0', function t() {
-	var a = new Float64Array( 1 );
-	var b = new Float64Array( 1 );
-	var c = new Float64Array( 1 );
-	var d = new Float64Array( 1 );
-	var IN = new Int32Array( 1 );
+	var info;
+	var IN;
+	var a;
+	var b;
+	var c;
+	var d;
 
-	var info = dlagtf( 0, a, 1, 0, 0.0, b, 1, 0, c, 1, 0, 0.0, d, 1, 0, IN, 1, 0 );
-
+	a = new Float64Array( 1 );
+	b = new Float64Array( 1 );
+	c = new Float64Array( 1 );
+	d = new Float64Array( 1 );
+	IN = new Int32Array( 1 );
+	info = dlagtf( 0, a, 1, 0, 0.0, b, 1, 0, c, 1, 0, 0.0, d, 1, 0, IN, 1, 0 );
 	assert.equal( info, 0, 'info' );
 });

@@ -123,12 +123,7 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 
 	// Apply DORG2R to the trailing submatrix (unblocked part)
 	if ( kk < N ) {
-		dorg2r(
-			M - kk, N - kk, K - kk,
-			A, strideA1, strideA2, offsetA + (kk * strideA1) + (kk * strideA2),
-			TAU, strideTAU, offsetTAU + (kk * strideTAU),
-			WORK, strideWORK, offsetWORK
-		);
+		dorg2r(M - kk, N - kk, K - kk, A, strideA1, strideA2, offsetA + (kk * strideA1) + (kk * strideA2), TAU, strideTAU, offsetTAU + (kk * strideTAU), WORK, strideWORK, offsetWORK);
 	}
 
 	if ( kk > 0 ) {
@@ -148,12 +143,7 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 			if ( i + ib < N ) {
 				// Form the triangular factor T of the block reflector
 				// DLARFT('Forward', 'Columnwise', M-I+1, IB, A(I,I), LDA, TAU(I), WORK, LDWORK)
-				dlarft(
-					'forward', 'columnwise', M - i, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					TAU, strideTAU, offsetTAU + (i * strideTAU),
-					work, 1, ldwork, 0
-				);
+				dlarft('forward', 'columnwise', M - i, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), work, 1, ldwork, 0);
 
 				// Apply H to A(i:M-1, i+ib:N-1) from the left
 
@@ -162,24 +152,12 @@ function dorgqr( M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offset
 				//         M-I+1, N-I-IB+1, IB, A(I,I), LDA, WORK, LDWORK,
 
 				//         A(I,I+IB), LDA, WORK(IB+1), LDWORK)
-				dlarfb(
-					'left', 'no-transpose', 'forward', 'columnwise',
-					M - i, N - i - ib, ib,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-					work, 1, ldwork, 0,
-					A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + ib ) * strideA2),
-					work, 1, ldwork, ib
-				);
+				dlarfb('left', 'no-transpose', 'forward', 'columnwise', M - i, N - i - ib, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), work, 1, ldwork, 0, A, strideA1, strideA2, offsetA + (i * strideA1) + (( i + ib ) * strideA2), work, 1, ldwork, ib);
 			}
 
 			// Apply DORG2R to the current block panel
 			// DORG2R(M-I+1, IB, IB, A(I,I), LDA, TAU(I), WORK, IINFO)
-			dorg2r(
-				M - i, ib, ib,
-				A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-				TAU, strideTAU, offsetTAU + (i * strideTAU),
-				work, 1, 0
-			);
+			dorg2r(M - i, ib, ib, A, strideA1, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU, strideTAU, offsetTAU + (i * strideTAU), work, 1, 0);
 
 			// Zero out rows 0..i-1 of columns i..i+ib-1
 

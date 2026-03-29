@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Compute the norm of a general tridiagonal matrix
+* Compute the norm of a general tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/dlangt
 *

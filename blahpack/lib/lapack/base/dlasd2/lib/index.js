@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Merge two sets of singular values in bidiagonal SVD divide and conquer
+* Merge two sets of singular values in bidiagonal SVD divide and conquer.
 *
 * @module @stdlib/lapack/base/dlasd2
 *

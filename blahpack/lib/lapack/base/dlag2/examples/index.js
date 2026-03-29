@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlag2 = require( '@stdlib/lapack/base/dlag2' );

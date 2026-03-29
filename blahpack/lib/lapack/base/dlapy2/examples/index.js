@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlapy2 = require( '@stdlib/lapack/base/dlapy2' );

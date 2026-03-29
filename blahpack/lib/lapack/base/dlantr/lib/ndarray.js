@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -13,15 +12,14 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Returns the minimum of two values.
- *
- *
- * @param {number} a - first value
- * @param {number} b - second value
- * @throws {TypeError} Second argument must be a valid matrix triangle
- * @throws {TypeError} Third argument must be a valid diagonal type
- * @returns {number} minimum
- */
+* Returns the minimum of two values.
+*
+* @param {number} a - first value
+* @param {number} b - second value
+* @throws {TypeError} Second argument must be a valid matrix triangle
+* @throws {TypeError} Third argument must be a valid diagonal type
+* @returns {number} minimum
+*/
 function dlantr( norm, uplo, diag, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );

@@ -28,7 +28,7 @@ var dlarf = require( '../../dlarf/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrites the M-by-N matrix C with Q*C, Q^T*C, C*Q, or C*Q^T,
+* Overwrites the M-by-N matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
 * where Q is a real orthogonal matrix defined as the product of K
 * elementary reflectors Q = H(k) ... H(2) H(1) as returned by DGEQLF.
 *
@@ -117,14 +117,9 @@ function dorm2l( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		A[ idxA ] = 1.0;
 
 		// Apply H(i) — reflector is in column i of A, from row 0 to nq-k+i
+
 		// dlarf( side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK )
-		dlarf(
-			side, mi, ni,
-			A, strideA1, offsetA + (i * strideA2),
-			TAU[ offsetTAU + (i * strideTAU) ],
-			C, strideC1, strideC2, offsetC,
-			WORK, strideWORK, offsetWORK
-		);
+		dlarf(side, mi, ni, A, strideA1, offsetA + (i * strideA2), TAU[ offsetTAU + (i * strideTAU) ], C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK);
 
 		// Restore A(nq-k+i, i)
 		A[ idxA ] = aii;

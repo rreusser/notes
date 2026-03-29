@@ -1,35 +1,64 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaqr1 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlaqr1.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlaqr1.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -43,7 +72,9 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dlaqr1: 2x2 with real shifts', function t() {
 	var tc = findCase( '2x2_real_shifts' );
+
 	// H = [4 3; 2 1], column-major, LDH=3 (padded row)
+
 	// strideH1=1 (row), strideH2=3 (col)
 	var H = new Float64Array( [ 4.0, 2.0, 0.0, 3.0, 1.0, 0.0 ] );
 	var v = new Float64Array( 2 );
@@ -53,6 +84,7 @@ test( 'dlaqr1: 2x2 with real shifts', function t() {
 
 test( 'dlaqr1: 2x2 with complex conjugate shifts', function t() {
 	var tc = findCase( '2x2_complex_shifts' );
+
 	// H = [5 2; 3 4], column-major, LDH=3
 	var H = new Float64Array( [ 5.0, 3.0, 0.0, 2.0, 4.0, 0.0 ] );
 	var v = new Float64Array( 2 );
@@ -62,6 +94,7 @@ test( 'dlaqr1: 2x2 with complex conjugate shifts', function t() {
 
 test( 'dlaqr1: 3x3 with real shifts', function t() {
 	var tc = findCase( '3x3_real_shifts' );
+
 	// H = [6 2 1; 3 5 4; 1 2 3], column-major, LDH=3
 	var H = new Float64Array( [ 6.0, 3.0, 1.0, 2.0, 5.0, 2.0, 1.0, 4.0, 3.0 ] );
 	var v = new Float64Array( 3 );
@@ -71,6 +104,7 @@ test( 'dlaqr1: 3x3 with real shifts', function t() {
 
 test( 'dlaqr1: 3x3 with complex conjugate shifts', function t() {
 	var tc = findCase( '3x3_complex_shifts' );
+
 	// H = [6 2 1; 3 5 4; 1 2 3], column-major, LDH=3
 	var H = new Float64Array( [ 6.0, 3.0, 1.0, 2.0, 5.0, 2.0, 1.0, 4.0, 3.0 ] );
 	var v = new Float64Array( 3 );
@@ -108,6 +142,7 @@ test( 'dlaqr1: N=0 quick return', function t() {
 
 test( 'dlaqr1: 2x2 with large subdiagonal (scaling)', function t() {
 	var tc = findCase( '2x2_large_subdiag' );
+
 	// H = [1 1; 1e100 1], column-major, LDH=3
 	var H = new Float64Array( [ 1.0, 1e100, 0.0, 1.0, 1.0, 0.0 ] );
 	var v = new Float64Array( 2 );
@@ -127,12 +162,22 @@ test( 'dlaqr1: 2x2 with non-unit stride and offset for v', function t() {
 
 test( 'dlaqr1: 3x3 with offset for H', function t() {
 	var tc = findCase( '3x3_real_shifts' );
+
 	// H = [6 2 1; 3 5 4; 1 2 3], embedded at offset 1, LDH=4
-	var H = new Float64Array( [
-		0.0, 6.0, 3.0, 1.0,  // col 0 padded
-		0.0, 2.0, 5.0, 2.0,  // col 1 padded
-		0.0, 1.0, 4.0, 3.0   // col 2 padded
-	] );
+	var H = new Float64Array([
+		0.0,
+		6.0,
+		3.0,
+		1.0,  // col 0 padded
+		0.0,
+		2.0,
+		5.0,
+		2.0,  // col 1 padded
+		0.0,
+		1.0,
+		4.0,
+		3.0   // col 2 padded
+	]);
 	var v = new Float64Array( 3 );
 	dlaqr1( 3, H, 1, 4, 1, 1.0, 0.0, 2.0, 0.0, v, 1, 0 );
 	assertArrayClose( v, tc.v, 1e-14, 'v' );

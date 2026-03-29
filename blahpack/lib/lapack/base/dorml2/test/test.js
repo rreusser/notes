@@ -1,11 +1,14 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dorml2 = require( './../lib/base.js' );
 var dgelq2 = require( '../../dgelq2/lib/base.js' );
@@ -13,22 +16,50 @@ var dgelq2 = require( '../../dgelq2/lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dorml2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dorml2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -42,7 +73,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 */
 function setupA() {
 	var A = new Float64Array( 36 ); // 6x6
-	// Row 1: A(1,1..5) in Fortran => A[0], A[6], A[12], A[18], A[24] col-major with LDA=6
+	// Row 1: A(1,1..5) in Fortran => A[0], A[6], A[12], A[18], A[24] col-major with LDA=6 // eslint-disable-line max-len
 	A[ 0 ] = 1.0; A[ 6 ] = 2.0; A[ 12 ] = 0.5; A[ 18 ] = 1.0; A[ 24 ] = 3.0;
 	// Row 2: A(2,1..5) => A[1], A[7], A[13], A[19], A[25]
 	A[ 1 ] = 0.5; A[ 7 ] = 1.0; A[ 13 ] = 3.0; A[ 19 ] = 2.0; A[ 25 ] = 1.0;
@@ -56,11 +87,14 @@ function setupA() {
 * Returns { A, TAU }.
 */
 function computeLQ() {
-	var A = setupA();
-	var TAU = new Float64Array( 6 );
 	var WORK = new Float64Array( 200 );
+	var TAU = new Float64Array( 6 );
+	var A = setupA();
 	dgelq2( 3, 5, A, 1, 6, 0, TAU, 1, 0, WORK, 1, 0 );
-	return { A: A, TAU: TAU };
+	return {
+		'A': A,
+		'TAU': TAU
+	};
 }
 
 /**
@@ -96,104 +130,184 @@ function extractC( C, M, N, LDC, fixtureLen ) {
 // TESTS //
 
 test( 'dorml2: left_notrans_5x5', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'left_notrans_5x5' );
-	var lq = computeLQ();
-	var LDC = 6;
-	var C = identity5( LDC );
-	var info = dorml2( 'left', 'no-transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var LDC;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'left_notrans_5x5' );
+	lq = computeLQ();
+	LDC = 6;
+	C = identity5( LDC );
+	info = dorml2( 'left', 'no-transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
 
 test( 'dorml2: left_trans_5x5', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'left_trans_5x5' );
-	var lq = computeLQ();
-	var LDC = 6;
-	var C = identity5( LDC );
-	var info = dorml2( 'left', 'transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var LDC;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'left_trans_5x5' );
+	lq = computeLQ();
+	LDC = 6;
+	C = identity5( LDC );
+	info = dorml2( 'left', 'transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
 
 test( 'dorml2: right_notrans_5x5', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'right_notrans_5x5' );
-	var lq = computeLQ();
-	var LDC = 6;
-	var C = identity5( LDC );
-	var info = dorml2( 'right', 'no-transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var LDC;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'right_notrans_5x5' );
+	lq = computeLQ();
+	LDC = 6;
+	C = identity5( LDC );
+	info = dorml2( 'right', 'no-transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
 
 test( 'dorml2: right_trans_5x5', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'right_trans_5x5' );
-	var lq = computeLQ();
-	var LDC = 6;
-	var C = identity5( LDC );
-	var info = dorml2( 'right', 'transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var LDC;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'right_trans_5x5' );
+	lq = computeLQ();
+	LDC = 6;
+	C = identity5( LDC );
+	info = dorml2( 'right', 'transpose', 5, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
 
 test( 'dorml2: m_zero', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'm_zero' );
-	var lq = computeLQ();
-	var C = new Float64Array( 36 );
-	var info = dorml2( 'left', 'no-transpose', 0, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'm_zero' );
+	lq = computeLQ();
+	C = new Float64Array( 36 );
+	info = dorml2( 'left', 'no-transpose', 0, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 });
 
 test( 'dorml2: n_zero', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'n_zero' );
-	var lq = computeLQ();
-	var C = new Float64Array( 36 );
-	var info = dorml2( 'left', 'no-transpose', 5, 0, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'n_zero' );
+	lq = computeLQ();
+	C = new Float64Array( 36 );
+	info = dorml2( 'left', 'no-transpose', 5, 0, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 });
 
 test( 'dorml2: k_zero', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'k_zero' );
-	var lq = computeLQ();
-	var C = new Float64Array( 36 );
-	var info = dorml2( 'left', 'no-transpose', 5, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'k_zero' );
+	lq = computeLQ();
+	C = new Float64Array( 36 );
+	info = dorml2( 'left', 'no-transpose', 5, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 });
 
 test( 'dorml2: right_trans_rect', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'right_trans_rect' );
-	var lq = computeLQ();
-	var LDC = 6;
-	var C = new Float64Array( 36 );
-	// C is 3x5 matrix
-	C[ 0 ] = 1.0; C[ 1 ] = 3.0; C[ 2 ] = -1.0;
-	C[ 6 ] = 0.5; C[ 7 ] = 1.0; C[ 8 ] = 4.0;
-	C[ 12 ] = 2.0; C[ 13 ] = 0.5; C[ 14 ] = 1.0;
-	C[ 18 ] = 1.0; C[ 19 ] = 2.0; C[ 20 ] = 0.5;
-	C[ 24 ] = 0.5; C[ 25 ] = 1.0; C[ 26 ] = 2.0;
-	var info = dorml2( 'right', 'transpose', 3, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var LDC;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'right_trans_rect' );
+	lq = computeLQ();
+	LDC = 6;
+	C = new Float64Array( 36 );
+	C[ 0 ] = 1.0;
+	C[ 1 ] = 3.0;
+	C[ 2 ] = -1.0;
+	C[ 6 ] = 0.5;
+	C[ 7 ] = 1.0;
+	C[ 8 ] = 4.0;
+	C[ 12 ] = 2.0;
+	C[ 13 ] = 0.5;
+	C[ 14 ] = 1.0;
+	C[ 18 ] = 1.0;
+	C[ 19 ] = 2.0;
+	C[ 20 ] = 0.5;
+	C[ 24 ] = 0.5;
+	C[ 25 ] = 1.0;
+	C[ 26 ] = 2.0;
+	info = dorml2( 'right', 'transpose', 3, 5, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 3, 5, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });
 
 test( 'dorml2: left_notrans_rect', function t() {
-	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'left_notrans_rect' );
-	var lq = computeLQ();
-	var LDC = 6;
-	var C = new Float64Array( 36 );
-	// C is 5x3 matrix
-	C[ 0 ] = 1.0; C[ 1 ] = 3.0; C[ 2 ] = -1.0; C[ 3 ] = 2.0; C[ 4 ] = 0.5;
-	C[ 6 ] = 0.5; C[ 7 ] = 1.0; C[ 8 ] = 4.0; C[ 9 ] = -0.5; C[ 10 ] = 1.0;
-	C[ 12 ] = 2.0; C[ 13 ] = 0.5; C[ 14 ] = 1.0; C[ 15 ] = 3.0; C[ 16 ] = -1.0;
-	var info = dorml2( 'left', 'no-transpose', 5, 3, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
+	var WORK;
+	var info;
+	var LDC;
+	var tc;
+	var lq;
+	var C;
+
+	WORK = new Float64Array( 200 );
+	tc = findCase( 'left_notrans_rect' );
+	lq = computeLQ();
+	LDC = 6;
+	C = new Float64Array( 36 );
+	C[ 0 ] = 1.0;
+	C[ 1 ] = 3.0;
+	C[ 2 ] = -1.0;
+	C[ 3 ] = 2.0;
+	C[ 4 ] = 0.5;
+	C[ 6 ] = 0.5;
+	C[ 7 ] = 1.0;
+	C[ 8 ] = 4.0;
+	C[ 9 ] = -0.5;
+	C[ 10 ] = 1.0;
+	C[ 12 ] = 2.0;
+	C[ 13 ] = 0.5;
+	C[ 14 ] = 1.0;
+	C[ 15 ] = 3.0;
+	C[ 16 ] = -1.0;
+	info = dorml2( 'left', 'no-transpose', 5, 3, 3, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( extractC( C, 5, 3, LDC, tc.c.length ), tc.c, 1e-14, 'c' );
 });

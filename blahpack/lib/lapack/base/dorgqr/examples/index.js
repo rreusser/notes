@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dorgqr = require( '@stdlib/lapack/base/dorgqr' );

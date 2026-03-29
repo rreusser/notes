@@ -42,7 +42,7 @@ var SAFMIN = dlamch( 'Safe minimum' );
 // MAIN //
 
 /**
-* Improves the computed solution to a system of linear equations when
+* Improves the computed solution to a system of linear equations when.
 * the coefficient matrix is tridiagonal, and provides error bounds
 * and backward error estimates for the solution.
 *
@@ -161,15 +161,10 @@ function dgtrfs( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU
 
 			// WORK[N..2N-1] += -1 * A * X[:,j]
 			// Use dlagtm with a single-column view of X
-			dlagtm( trans, N, 1, -1.0,
-				DL, strideDL, offsetDL,
-				d, strideD, offsetD,
-				DU, strideDU, offsetDU,
-				X, strideX1, strideX2, offsetX + ( j * strideX2 ),
-				1.0,
-				WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
+			dlagtm( trans, N, 1, -1.0, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, X, strideX1, strideX2, offsetX + ( j * strideX2 ), 1.0, WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
 
 			// Compute componentwise relative backward error
+
 			// WORK[0..N-1] = |B[:,j]| + |A| * |X[:,j]| (row sums)
 			if ( notran ) {
 				px = offsetX + ( j * strideX2 );
@@ -212,13 +207,7 @@ function dgtrfs( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU
 			// Test whether the error is acceptable. If so, skip to forward error estimation.
 			if ( BERR[ offsetBERR + ( j * strideBERR ) ] > EPS && 2.0 * BERR[ offsetBERR + ( j * strideBERR ) ] <= lstres && count <= ITMAX ) {
 				// Update solution: solve A * dx = residual
-				dgttrs( trans, N, 1,
-					DLF, strideDLF, offsetDLF,
-					DF, strideDF, offsetDF,
-					DUF, strideDUF, offsetDUF,
-					DU2, strideDU2, offsetDU2,
-					IPIV, strideIPIV, offsetIPIV,
-					WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
+				dgttrs( trans, N, 1, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
 
 				// X[:,j] += correction
 				px = offsetX + ( j * strideX2 );
@@ -243,11 +232,7 @@ function dgtrfs( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU
 
 		KASE[ 0 ] = 0;
 		while ( true ) {
-			dlacn2( N,
-				WORK, strideWORK, offsetWORK + ( 2 * N * strideWORK ),
-				WORK, strideWORK, offsetWORK + ( N * strideWORK ),
-				IWORK, strideIWORK, offsetIWORK,
-				EST, KASE, ISAVE, 1, 0 );
+			dlacn2( N, WORK, strideWORK, offsetWORK + ( 2 * N * strideWORK ), WORK, strideWORK, offsetWORK + ( N * strideWORK ), IWORK, strideIWORK, offsetIWORK, EST, KASE, ISAVE, 1, 0 );
 
 			if ( KASE[ 0 ] === 0 ) {
 				break;
@@ -255,13 +240,7 @@ function dgtrfs( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU
 
 			if ( KASE[ 0 ] === 1 ) {
 				// Multiply by inv(A^T) or inv(A)
-				dgttrs( transt, N, 1,
-					DLF, strideDLF, offsetDLF,
-					DF, strideDF, offsetDF,
-					DUF, strideDUF, offsetDUF,
-					DU2, strideDU2, offsetDU2,
-					IPIV, strideIPIV, offsetIPIV,
-					WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
+				dgttrs( transt, N, 1, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
 				for ( i = 0; i < N; i++ ) {
 					pw = offsetWORK + ( ( N + i ) * strideWORK );
 					WORK[ pw ] = WORK[ offsetWORK + ( i * strideWORK ) ] * WORK[ pw ];
@@ -272,13 +251,7 @@ function dgtrfs( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU
 					pw = offsetWORK + ( ( N + i ) * strideWORK );
 					WORK[ pw ] = WORK[ offsetWORK + ( i * strideWORK ) ] * WORK[ pw ];
 				}
-				dgttrs( transn, N, 1,
-					DLF, strideDLF, offsetDLF,
-					DF, strideDF, offsetDF,
-					DUF, strideDUF, offsetDUF,
-					DU2, strideDU2, offsetDU2,
-					IPIV, strideIPIV, offsetIPIV,
-					WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
+				dgttrs( transn, N, 1, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, N * strideWORK, offsetWORK + ( N * strideWORK ) );
 			}
 		}
 

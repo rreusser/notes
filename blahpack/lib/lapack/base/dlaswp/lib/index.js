@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Perform a series of row interchanges on a matrix A using pivot indices stored in IPIV.
 *

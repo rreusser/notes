@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Improves solution to a symmetric positive definite system and provides error bounds
+* Improves solution to a symmetric positive definite system and provides error bounds.
 *
 * @module @stdlib/lapack/base/dporfs
 *

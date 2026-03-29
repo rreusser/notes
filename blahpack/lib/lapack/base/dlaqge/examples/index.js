@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlaqge = require( '@stdlib/lapack/base/dlaqge' );

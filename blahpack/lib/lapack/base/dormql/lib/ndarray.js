@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -13,35 +12,34 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
- * Overwrites the M-by-N real matrix C with Q*C, Q^T*C, C*Q, or C*Q^T,
- * where Q is a real orthogonal matrix defined as the product of K
- * elementary reflectors Q = H(k) ... H(2) H(1) as returned by DGEQLF.
- * Uses a blocked algorithm with block size NB=32.
- *
- *
- * @param {string} side - 'left' to apply Q from left, 'right' from right
- * @param {string} trans - 'no-transpose' for Q, 'transpose' for Q^T
- * @param {NonNegativeInteger} M - number of rows of C
- * @param {NonNegativeInteger} N - number of columns of C
- * @param {NonNegativeInteger} K - number of elementary reflectors
- * @param {Float64Array} A - reflector vectors from DGEQLF
- * @param {integer} strideA1 - stride of the first dimension of A
- * @param {integer} strideA2 - stride of the second dimension of A
- * @param {NonNegativeInteger} offsetA - starting index for A
- * @param {Float64Array} TAU - scalar factors of reflectors
- * @param {integer} strideTAU - stride for TAU
- * @param {NonNegativeInteger} offsetTAU - starting index for TAU
- * @param {Float64Array} C - input/output matrix
- * @param {integer} strideC1 - stride of the first dimension of C
- * @param {integer} strideC2 - stride of the second dimension of C
- * @param {NonNegativeInteger} offsetC - starting index for C
- * @param {Float64Array} WORK - workspace
- * @param {integer} strideWORK - stride for WORK
- * @param {NonNegativeInteger} offsetWORK - starting index for WORK
- * @throws {TypeError} First argument must be a valid operation side
- * @throws {TypeError} Second argument must be a valid transpose operation
- * @returns {integer} info - 0 if successful
- */
+* Overwrites the M-by-N real matrix C with Q_C, Q^T_C, C_Q, or C_Q^T,.
+* where Q is a real orthogonal matrix defined as the product of K
+* elementary reflectors Q = H(k) ... H(2) H(1) as returned by DGEQLF.
+* Uses a blocked algorithm with block size NB=32.
+*
+* @param {string} side - 'left' to apply Q from left, 'right' from right
+* @param {string} trans - 'no-transpose' for Q, 'transpose' for Q^T
+* @param {NonNegativeInteger} M - number of rows of C
+* @param {NonNegativeInteger} N - number of columns of C
+* @param {NonNegativeInteger} K - number of elementary reflectors
+* @param {Float64Array} A - reflector vectors from DGEQLF
+* @param {integer} strideA1 - stride of the first dimension of A
+* @param {integer} strideA2 - stride of the second dimension of A
+* @param {NonNegativeInteger} offsetA - starting index for A
+* @param {Float64Array} TAU - scalar factors of reflectors
+* @param {integer} strideTAU - stride for TAU
+* @param {NonNegativeInteger} offsetTAU - starting index for TAU
+* @param {Float64Array} C - input/output matrix
+* @param {integer} strideC1 - stride of the first dimension of C
+* @param {integer} strideC2 - stride of the second dimension of C
+* @param {NonNegativeInteger} offsetC - starting index for C
+* @param {Float64Array} WORK - workspace
+* @param {integer} strideWORK - stride for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @throws {TypeError} First argument must be a valid operation side
+* @throws {TypeError} Second argument must be a valid transpose operation
+* @returns {integer} info - 0 if successful
+*/
 function dormql( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, strideTAU, offsetTAU, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
 	if ( !isOperationSide( side ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );

@@ -35,16 +35,16 @@ var ONE = 1.0;
 var NTINY = 15;
 var NL = 49;
 
-// iparmq ISPEC=12: crossover point for small-to-large strategy
+// Iparmq ISPEC=12: crossover point for small-to-large strategy
 var NMIN = 75;
 
 
 // MAIN //
 
 /**
-* Computes the eigenvalues of a real upper Hessenberg matrix H, and
+* Computes the eigenvalues of a real upper Hessenberg matrix H, and.
 * optionally the matrices T and Z from the Schur decomposition
-* H = Z * T * Z**T, where T is an upper quasi-triangular matrix (the
+* H = Z _ T _ Z**T, where T is an upper quasi-triangular matrix (the
 * Schur form) and Z is the orthogonal matrix of Schur vectors.
 *
 * JOB = 'E': compute eigenvalues only.
@@ -96,9 +96,9 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 	var wantt;
 	var initz;
 	var wantz;
+	var WORKL;
 	var info;
 	var kbot;
-	var WORKL;
 	var HL;
 	var i;
 
@@ -146,7 +146,7 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 		info = dlahqr( wantt, wantz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ );
 
 		if ( info > 0 ) {
-			// dlahqr failed to converge. KBOT = INFO is the last converged index.
+			// Dlahqr failed to converge. KBOT = INFO is the last converged index.
 			// Try again with dlaqr0 on the unconverged block.
 			kbot = info;
 
@@ -156,7 +156,7 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 				info = dlaqr0( wantt, wantz, N, ilo, kbot, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, ilo, ihi, Z, strideZ1, strideZ2, offsetZ, WORKL, 1, 0, WORKL.length );
 			} else {
 				// Matrix is smaller than NL — embed in an NL-by-NL workspace
-				// to give dlaqr0 more room to work.
+				// To give dlaqr0 more room to work.
 				HL = new Float64Array( NL * NL );
 				WORKL = new Float64Array( NL );
 
@@ -164,6 +164,7 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 				dlacpy( 'all', N, N, H, strideH1, strideH2, offsetH, HL, 1, NL, 0 );
 
 				// Zero out HL(N+1, N) — the subdiagonal just below the copied block
+
 				// (Fortran: HL(N+1, N) = 0; 0-based: HL[N + (N-1)*NL] = 0)
 				HL[ N + ( ( N - 1 ) * NL ) ] = ZERO;
 
@@ -182,7 +183,7 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 	}
 
 	// Clean up the strictly lower triangular part of H (below subdiagonal)
-	// to ensure proper Schur form
+	// To ensure proper Schur form
 	if ( ( wantt || info !== 0 ) && N > 2 ) {
 		dlaset( 'lower', N - 2, N - 2, ZERO, ZERO, H, strideH1, strideH2, offsetH + ( 2 * strideH1 ) + ( 0 * strideH2 ) );
 	}

@@ -28,11 +28,11 @@ var dormqr = require( '../../dormqr/lib/base.js' );
 // MAIN //
 
 /**
-* Overwrites the general real M-by-N matrix C with
+* Overwrites the general real M-by-N matrix C with.
 *
 *   SIDE = 'left'      SIDE = 'right'
-*   TRANS = 'no-transpose':    Q * C            C * Q
-*   TRANS = 'transpose':       Q^T * C          C * Q^T
+*   TRANS = 'no-transpose':    Q _ C            C _ Q
+*   TRANS = 'transpose':       Q^T _ C          C _ Q^T
 *
 * where Q is a real orthogonal matrix of order nq, with nq = M if
 * SIDE = 'left' and nq = N if SIDE = 'right'. Q is defined as the product of
@@ -99,13 +99,7 @@ function dormhr( side, trans, M, N, ilo, ihi, A, strideA1, strideA2, offsetA, TA
 	// Call dormqr with the submatrix A(ILO+1:IHI, ILO:IHI-1) and TAU(ILO:IHI-1)
 	// In Fortran 1-based: A(ILO+1, ILO), TAU(ILO), C(I1, I2)
 	// In 0-based: A row ILO, col ILO-1; TAU index ILO-1; C row ic, col jc
-	return dormqr(
-		side, trans, mi, ni, nh,
-		A, strideA1, strideA2, offsetA + ( ilo * strideA1 ) + ( ( ilo - 1 ) * strideA2 ),
-		TAU, strideTAU, offsetTAU + ( ( ilo - 1 ) * strideTAU ),
-		C, strideC1, strideC2, offsetC + ( ic * strideC1 ) + ( jc * strideC2 ),
-		WORK, strideWORK, offsetWORK
-	);
+	return dormqr(side, trans, mi, ni, nh, A, strideA1, strideA2, offsetA + ( ilo * strideA1 ) + ( ( ilo - 1 ) * strideA2 ), TAU, strideTAU, offsetTAU + ( ( ilo - 1 ) * strideTAU ), C, strideC1, strideC2, offsetC + ( ic * strideC1 ) + ( jc * strideC2 ), WORK, strideWORK, offsetWORK);
 }
 
 

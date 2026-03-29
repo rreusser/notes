@@ -40,8 +40,8 @@ var EPS = dlamch( 'Epsilon' );
 // MAIN //
 
 /**
-* Uses the LU factorization to compute the solution to a real system of
-* linear equations A*X = B, A^T*X = B, or A^H*X = B, where A is a
+* Uses the LU factorization to compute the solution to a real system of.
+* linear equations A_X = B, A^T_X = B, or A^H*X = B, where A is a
 * tridiagonal matrix of order N and X and B are N-by-NRHS matrices.
 *
 * Error bounds on the solution and a condition estimate are also provided.
@@ -99,10 +99,10 @@ var EPS = dlamch( 'Epsilon' );
 * @returns {integer} info - 0 if successful, >0 if singular, N+1 if ill-conditioned
 */
 function dgtsvx( fact, trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) {
+	var normStr;
 	var nofact;
 	var notran;
 	var anorm;
-	var normStr;
 	var info;
 
 	info = 0;
@@ -135,44 +135,16 @@ function dgtsvx( fact, trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offse
 	anorm = dlangt( normStr, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU );
 
 	// Estimate condition number
-	dgtcon( normStr, N,
-		DLF, strideDLF, offsetDLF,
-		DF, strideDF, offsetDF,
-		DUF, strideDUF, offsetDUF,
-		DU2, strideDU2, offsetDU2,
-		IPIV, strideIPIV, offsetIPIV,
-		anorm, rcond,
-		WORK, strideWORK, offsetWORK,
-		IWORK, strideIWORK, offsetIWORK );
+	dgtcon( normStr, N, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK );
 
 	// Copy B to X
 	dlacpy( 'all', N, nrhs, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX );
 
 	// Solve the system
-	dgttrs( trans, N, nrhs,
-		DLF, strideDLF, offsetDLF,
-		DF, strideDF, offsetDF,
-		DUF, strideDUF, offsetDUF,
-		DU2, strideDU2, offsetDU2,
-		IPIV, strideIPIV, offsetIPIV,
-		X, strideX1, strideX2, offsetX );
+	dgttrs( trans, N, nrhs, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, X, strideX1, strideX2, offsetX );
 
 	// Iterative refinement
-	dgtrfs( trans, N, nrhs,
-		DL, strideDL, offsetDL,
-		d, strideD, offsetD,
-		DU, strideDU, offsetDU,
-		DLF, strideDLF, offsetDLF,
-		DF, strideDF, offsetDF,
-		DUF, strideDUF, offsetDUF,
-		DU2, strideDU2, offsetDU2,
-		IPIV, strideIPIV, offsetIPIV,
-		B, strideB1, strideB2, offsetB,
-		X, strideX1, strideX2, offsetX,
-		FERR, strideFERR, offsetFERR,
-		BERR, strideBERR, offsetBERR,
-		WORK, strideWORK, offsetWORK,
-		IWORK, strideIWORK, offsetIWORK );
+	dgtrfs( trans, N, nrhs, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU, DLF, strideDLF, offsetDLF, DF, strideDF, offsetDF, DUF, strideDUF, offsetDUF, DU2, strideDU2, offsetDU2, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK );
 
 	// Check if condition is too poor
 	if ( rcond[ 0 ] < EPS ) {

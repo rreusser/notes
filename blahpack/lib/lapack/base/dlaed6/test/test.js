@@ -2,6 +2,7 @@
 
 'use strict';
 
+
 // MODULES //
 
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
@@ -14,22 +15,49 @@ var dlaed6 = require( './../lib' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlaed6.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlaed6.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
+/**
+* RunTest.
+*
+* @private
+* @param {string} name - test case name
+* @param {*} kniter - kniter
+* @param {*} orgati - orgati
+*/
 function runTest( name, kniter, orgati ) {
 	var info;
 	var tau;
@@ -41,7 +69,7 @@ function runTest( name, kniter, orgati ) {
 	d = new Float64Array( tc.D );
 	z = new Float64Array( tc.Z );
 	tau = new Float64Array( 1 );
-	info = dlaed6.ndarray( kniter, orgati, tc.RHO, d, 1, 0, z, 1, 0, tc.FINIT, tau );
+	info = dlaed6.ndarray( kniter, orgati, tc.RHO, d, 1, 0, z, 1, 0, tc.FINIT, tau ); // eslint-disable-line max-len
 	assert.equal( info, tc.INFO, name + ': info mismatch' );
 	assertClose( tau[ 0 ], tc.TAU, 1e-12, name + ': tau' );
 }
@@ -53,7 +81,7 @@ test( 'dlaed6: main export is a function', function t() {
 	assert.strictEqual( typeof dlaed6, 'function' );
 });
 
-test( 'dlaed6: attached to the main export is an `ndarray` method', function t() {
+test( 'dlaed6: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
 	assert.strictEqual( typeof dlaed6.ndarray, 'function' );
 });
 

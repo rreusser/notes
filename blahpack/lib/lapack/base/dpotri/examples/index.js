@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dpotri = require( '@stdlib/lapack/base/dpotri' );

@@ -37,18 +37,35 @@ var SMLNUM = TWO * dlamch( 'safe-minimum' );
 var BIGNUM = ONE / SMLNUM;
 
 // Lookup tables from Fortran DATA statements
+
 // ZSWAP: whether to swap output rows after pivoting
 var ZSWAP = [ false, false, true, true ];
+
 // RSWAP: whether to swap RHS rows
 var RSWAP = [ false, true, false, true ];
+
 // IPIVOT(4,4) stored column-major (0-based indices)
+
 // Fortran 1-based: 1,2,3,4 / 2,1,4,3 / 3,4,1,2 / 4,3,2,1
+
 // JS 0-based:      0,1,2,3 / 1,0,3,2 / 2,3,0,1 / 3,2,1,0
 var IPIVOT = [
-	0, 1, 2, 3,
-	1, 0, 3, 2,
-	2, 3, 0, 1,
-	3, 2, 1, 0
+	0,
+	1,
+	2,
+	3,
+	1,
+	0,
+	3,
+	2,
+	2,
+	3,
+	0,
+	1,
+	3,
+	2,
+	1,
+	0
 ];
 
 // Scratch array for dladiv output
@@ -58,10 +75,10 @@ var DIVOUT = new Float64Array( 2 );
 // MAIN //
 
 /**
-* Solves a 1-by-1 or 2-by-2 linear system of the form:
+* Solves a 1-by-1 or 2-by-2 linear system of the form:.
 *
-*   (ca*A    - w*D) * X = scale * B  (if ltrans = false)
-*   (ca*A**T - w*D) * X = scale * B  (if ltrans = true)
+*   (ca_A    - w_D) _ X = scale _ B  (if ltrans = false)
+*   (ca_A__T - w_D) _ X = scale _ B  (if ltrans = true)
 *
 * where A is NA-by-NA (NA = 1 or 2), w = (wr, wi), D is an NA-by-NA
 * diagonal matrix, and scale is chosen (0 < scale <= 1) to prevent overflow.
@@ -225,7 +242,11 @@ function dlaln2( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d
 				X[ offsetX + strideX1 ] = temp * B[ offsetB + strideB1 ];
 				xnorm = temp * bnorm;
 				info = 1;
-				return { 'info': info, 'scale': scale, 'xnorm': xnorm };
+				return {
+					'info': info,
+					'scale': scale,
+					'xnorm': xnorm
+				};
 			}
 
 			// Gaussian elimination with complete pivoting
@@ -248,7 +269,7 @@ function dlaln2( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d
 				br1 = B[ offsetB ];
 				br2 = B[ offsetB + strideB1 ];
 			}
-			br2 = br2 - lr21 * br1;
+			br2 -= lr21 * br1;
 			bbnd = Math.max( Math.abs( br1 * ( ur22 * ur11r ) ), Math.abs( br2 ) );
 			if ( bbnd > ONE && Math.abs( ur22 ) < ONE ) {
 				if ( bbnd >= BIGNUM * Math.abs( ur22 ) ) {
@@ -298,10 +319,7 @@ function dlaln2( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d
 
 			// If all small, perturb and return
 			if ( cmax < smini ) {
-				bnorm = Math.max(
-					Math.abs( B[ offsetB ] ) + Math.abs( B[ offsetB + strideB2 ] ),
-					Math.abs( B[ offsetB + strideB1 ] ) + Math.abs( B[ offsetB + strideB1 + strideB2 ] )
-				);
+				bnorm = Math.max(Math.abs( B[ offsetB ] ) + Math.abs( B[ offsetB + strideB2 ] ), Math.abs( B[ offsetB + strideB1 ] ) + Math.abs( B[ offsetB + strideB1 + strideB2 ] ));
 				if ( smini < ONE && bnorm > ONE ) {
 					if ( bnorm > BIGNUM * smini ) {
 						scale = ONE / bnorm;
@@ -314,7 +332,11 @@ function dlaln2( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d
 				X[ offsetX + strideX1 + strideX2 ] = temp * B[ offsetB + strideB1 + strideB2 ];
 				xnorm = temp * bnorm;
 				info = 1;
-				return { 'info': info, 'scale': scale, 'xnorm': xnorm };
+				return {
+					'info': info,
+					'scale': scale,
+					'xnorm': xnorm
+				};
 			}
 
 			// Gaussian elimination with complete pivoting (complex)
@@ -376,10 +398,7 @@ function dlaln2( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d
 			}
 			br2 = br2 - lr21 * br1 + li21 * bi1;
 			bi2 = bi2 - li21 * br1 - lr21 * bi1;
-			bbnd = Math.max(
-				( Math.abs( br1 ) + Math.abs( bi1 ) ) * ( u22abs * ( Math.abs( ur11r ) + Math.abs( ui11r ) ) ),
-				Math.abs( br2 ) + Math.abs( bi2 )
-			);
+			bbnd = Math.max(( Math.abs( br1 ) + Math.abs( bi1 ) ) * ( u22abs * ( Math.abs( ur11r ) + Math.abs( ui11r ) ) ), Math.abs( br2 ) + Math.abs( bi2 ));
 			if ( bbnd > ONE && u22abs < ONE ) {
 				if ( bbnd >= BIGNUM * u22abs ) {
 					scale = ONE / bbnd;
@@ -423,7 +442,11 @@ function dlaln2( ltrans, na, nw, smin, ca, A, strideA1, strideA2, offsetA, d1, d
 		}
 	}
 
-	return { 'info': info, 'scale': scale, 'xnorm': xnorm };
+	return {
+		'info': info,
+		'scale': scale,
+		'xnorm': xnorm
+	};
 }
 
 

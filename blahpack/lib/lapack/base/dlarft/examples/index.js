@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlarft = require( '@stdlib/lapack/base/dlarft' );

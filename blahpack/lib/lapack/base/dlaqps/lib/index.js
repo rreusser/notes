@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes a step of QR factorization with column pivoting using Level 3 BLAS
+* Computes a step of QR factorization with column pivoting using Level 3 BLAS.
 *
 * @module @stdlib/lapack/base/dlaqps
 *

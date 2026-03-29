@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dhseqr = require( '@stdlib/lapack/base/dhseqr' );

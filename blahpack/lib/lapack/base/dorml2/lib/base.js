@@ -119,12 +119,7 @@ function dorml2( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Apply H(i): the reflector vector is row i of A starting at column i,
 
 		// So v = A(i, i:nq-1), stored with stride strideA2
-		dlarf( side, mi, ni,
-			A, strideA2, offsetA + (i * strideA1) + (i * strideA2),
-			TAU[ offsetTAU + (i * strideTAU) ],
-			C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2),
-			WORK, strideWORK, offsetWORK
-		);
+		dlarf( side, mi, ni, A, strideA2, offsetA + (i * strideA1) + (i * strideA2), TAU[ offsetTAU + (i * strideTAU) ], C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2), WORK, strideWORK, offsetWORK);
 
 		// Restore A(i,i)
 		A[ offsetA + (i * strideA1) + (i * strideA2) ] = aii;

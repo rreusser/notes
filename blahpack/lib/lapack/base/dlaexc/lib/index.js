@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix
+* Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix.
 *
 * @module @stdlib/lapack/base/dlaexc
 *

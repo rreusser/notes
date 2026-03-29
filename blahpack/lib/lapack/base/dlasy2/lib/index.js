@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves the real Sylvester matrix equation for 1-by-1 or 2-by-2 matrices
+* Solves the real Sylvester matrix equation for 1-by-1 or 2-by-2 matrices.
 *
 * @module @stdlib/lapack/base/dlasy2
 *

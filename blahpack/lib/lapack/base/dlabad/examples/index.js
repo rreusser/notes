@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlabad = require( '@stdlib/lapack/base/dlabad' );

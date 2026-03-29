@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dla_syrpvgrw = require( '@stdlib/lapack/base/dla_syrpvgrw' );

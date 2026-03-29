@@ -26,7 +26,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Takes the square root of the overflow and underflow thresholds if the
+* Takes the square root of the overflow and underflow thresholds if the.
 * exponent range is very large.
 *
 * @param {number} small - underflow threshold as computed by dlamch

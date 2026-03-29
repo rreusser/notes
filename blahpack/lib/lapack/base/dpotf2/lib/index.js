@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Compute the Cholesky factorization of a real symmetric positive definite matrix (unblocked algorithm).
 *

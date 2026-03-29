@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlaqr4 = require( '@stdlib/lapack/base/dlaqr4' );

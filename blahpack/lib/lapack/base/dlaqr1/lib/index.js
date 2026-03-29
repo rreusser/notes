@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Sets a scalar multiple of the first column of H - shift product
+* Sets a scalar multiple of the first column of H - shift product.
 *
 * @module @stdlib/lapack/base/dlaqr1
 *

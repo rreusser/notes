@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Multiply a general tridiagonal matrix by a rectangular matrix
+* Multiply a general tridiagonal matrix by a rectangular matrix.
 *
 * @module @stdlib/lapack/base/dlagtm
 *

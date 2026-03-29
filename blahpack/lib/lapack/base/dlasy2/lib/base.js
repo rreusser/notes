@@ -50,9 +50,9 @@ var BSWPIV = [ false, true, false, true ];
 // MAIN //
 
 /**
-* Solves for the N1-by-N2 matrix X in:
+* Solves for the N1-by-N2 matrix X in:.
 *
-*   op(TL)*X + ISGN*X*op(TR) = SCALE*B
+*   op(TL)_X + ISGN_X_op(TR) = SCALE_B
 *
 * where TL is N1-by-N1, TR is N2-by-N2, B is N1-by-N2, and 1 <= N1,N2 <= 2.
 *
@@ -83,9 +83,9 @@ var BSWPIV = [ false, true, false, true ];
 * @returns {integer} info (0 = success, 1 = TL and TR have too-close eigenvalues)
 */
 function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetTL, TR, strideTR1, strideTR2, offsetTR, B, strideB1, strideB2, offsetB, scale, X, strideX1, strideX2, offsetX, xnorm ) {
-	var info;
 	var bswap;
 	var xswap;
+	var info;
 	var smin;
 	var temp;
 	var ipiv;
@@ -93,6 +93,8 @@ function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetT
 	var jpsv;
 	var xmax;
 	var tau1;
+	var btmp;
+	var jpiv;
 	var bet;
 	var gam;
 	var sgn;
@@ -100,16 +102,14 @@ function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetT
 	var u12;
 	var u22;
 	var l21;
-	var btmp;
 	var tmp;
-	var x2;
 	var t16;
-	var jpiv;
+	var x2;
+	var ip;
+	var jp;
 	var k;
 	var i;
 	var j;
-	var ip;
-	var jp;
 
 	info = 0;
 
@@ -142,16 +142,7 @@ function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetT
 
 	// ---- Case k=2: N1=1, N2=2 ----
 	if ( k === 2 ) {
-		smin = Math.max(
-			EPS * Math.max(
-				Math.abs( TL[ offsetTL ] ),
-				Math.abs( TR[ offsetTR ] ),
-				Math.abs( TR[ offsetTR + strideTR2 ] ),
-				Math.abs( TR[ offsetTR + strideTR1 ] ),
-				Math.abs( TR[ offsetTR + strideTR1 + strideTR2 ] )
-			),
-			SMLNUM
-		);
+		smin = Math.max(EPS * Math.max(Math.abs( TL[ offsetTL ] ), Math.abs( TR[ offsetTR ] ), Math.abs( TR[ offsetTR + strideTR2 ] ), Math.abs( TR[ offsetTR + strideTR1 ] ), Math.abs( TR[ offsetTR + strideTR1 + strideTR2 ] )), SMLNUM);
 		tmp = new Float64Array( 4 );
 		tmp[ 0 ] = TL[ offsetTL ] + sgn * TR[ offsetTR ];
 		tmp[ 3 ] = TL[ offsetTL ] + sgn * TR[ offsetTR + strideTR1 + strideTR2 ];
@@ -165,22 +156,14 @@ function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetT
 		btmp = new Float64Array( 4 );
 		btmp[ 0 ] = B[ offsetB ];
 		btmp[ 1 ] = B[ offsetB + strideB2 ];
+
 		// Fall through to the 2x2 solve at label 40
 		return solve2x2( tmp, btmp, smin, n1, scale, X, strideX1, strideX2, offsetX, xnorm );
 	}
 
 	// ---- Case k=3: N1=2, N2=1 ----
 	if ( k === 3 ) {
-		smin = Math.max(
-			EPS * Math.max(
-				Math.abs( TR[ offsetTR ] ),
-				Math.abs( TL[ offsetTL ] ),
-				Math.abs( TL[ offsetTL + strideTL2 ] ),
-				Math.abs( TL[ offsetTL + strideTL1 ] ),
-				Math.abs( TL[ offsetTL + strideTL1 + strideTL2 ] )
-			),
-			SMLNUM
-		);
+		smin = Math.max(EPS * Math.max(Math.abs( TR[ offsetTR ] ), Math.abs( TL[ offsetTL ] ), Math.abs( TL[ offsetTL + strideTL2 ] ), Math.abs( TL[ offsetTL + strideTL1 ] ), Math.abs( TL[ offsetTL + strideTL1 + strideTL2 ] )), SMLNUM);
 		tmp = new Float64Array( 4 );
 		tmp[ 0 ] = TL[ offsetTL ] + sgn * TR[ offsetTR ];
 		tmp[ 3 ] = TL[ offsetTL + strideTL1 + strideTL2 ] + sgn * TR[ offsetTR ];
@@ -198,19 +181,8 @@ function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetT
 	}
 
 	// ---- Case k=4: N1=2, N2=2 ----
-	smin = Math.max(
-		Math.abs( TR[ offsetTR ] ),
-		Math.abs( TR[ offsetTR + strideTR2 ] ),
-		Math.abs( TR[ offsetTR + strideTR1 ] ),
-		Math.abs( TR[ offsetTR + strideTR1 + strideTR2 ] )
-	);
-	smin = Math.max(
-		smin,
-		Math.abs( TL[ offsetTL ] ),
-		Math.abs( TL[ offsetTL + strideTL2 ] ),
-		Math.abs( TL[ offsetTL + strideTL1 ] ),
-		Math.abs( TL[ offsetTL + strideTL1 + strideTL2 ] )
-	);
+	smin = Math.max(Math.abs( TR[ offsetTR ] ), Math.abs( TR[ offsetTR + strideTR2 ] ), Math.abs( TR[ offsetTR + strideTR1 ] ), Math.abs( TR[ offsetTR + strideTR1 + strideTR2 ] ));
+	smin = Math.max(smin, Math.abs( TL[ offsetTL ] ), Math.abs( TL[ offsetTL + strideTL2 ] ), Math.abs( TL[ offsetTL + strideTL1 ] ), Math.abs( TL[ offsetTL + strideTL1 + strideTL2 ] ));
 	smin = Math.max( EPS * smin, SMLNUM );
 
 	btmp = new Float64Array( 4 );
@@ -301,16 +273,11 @@ function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetT
 		( EIGHT * SMLNUM ) * Math.abs( btmp[ 1 ] ) > Math.abs( t16[ 1 + 4 ] ) ||
 		( EIGHT * SMLNUM ) * Math.abs( btmp[ 2 ] ) > Math.abs( t16[ 2 + 2 * 4 ] ) ||
 		( EIGHT * SMLNUM ) * Math.abs( btmp[ 3 ] ) > Math.abs( t16[ 3 + 3 * 4 ] ) ) {
-		scale[ 0 ] = ( ONE / EIGHT ) / Math.max(
-			Math.abs( btmp[ 0 ] ),
-			Math.abs( btmp[ 1 ] ),
-			Math.abs( btmp[ 2 ] ),
-			Math.abs( btmp[ 3 ] )
-		);
-		btmp[ 0 ] = btmp[ 0 ] * scale[ 0 ];
-		btmp[ 1 ] = btmp[ 1 ] * scale[ 0 ];
-		btmp[ 2 ] = btmp[ 2 ] * scale[ 0 ];
-		btmp[ 3 ] = btmp[ 3 ] * scale[ 0 ];
+		scale[ 0 ] = ( ONE / EIGHT ) / Math.max(Math.abs( btmp[ 0 ] ), Math.abs( btmp[ 1 ] ), Math.abs( btmp[ 2 ] ), Math.abs( btmp[ 3 ] ));
+		btmp[ 0 ] *= scale[ 0 ];
+		btmp[ 1 ] *= scale[ 0 ];
+		btmp[ 2 ] *= scale[ 0 ];
+		btmp[ 3 ] *= scale[ 0 ];
 	}
 
 	// Back substitution
@@ -339,10 +306,7 @@ function dlasy2( ltranl, ltranr, isgn, n1, n2, TL, strideTL1, strideTL2, offsetT
 	X[ offsetX + strideX1 ] = tmp[ 1 ];
 	X[ offsetX + strideX2 ] = tmp[ 2 ];
 	X[ offsetX + strideX1 + strideX2 ] = tmp[ 3 ];
-	xnorm[ 0 ] = Math.max(
-		Math.abs( tmp[ 0 ] ) + Math.abs( tmp[ 2 ] ),
-		Math.abs( tmp[ 1 ] ) + Math.abs( tmp[ 3 ] )
-	);
+	xnorm[ 0 ] = Math.max(Math.abs( tmp[ 0 ] ) + Math.abs( tmp[ 2 ] ), Math.abs( tmp[ 1 ] ) + Math.abs( tmp[ 3 ] ));
 	return info;
 }
 
@@ -386,14 +350,14 @@ function solve2x2( tmp, btmp, smin, n1, scale, X, strideX1, strideX2, offsetX, x
 		btmp[ 1 ] = btmp[ 0 ] - l21 * temp;
 		btmp[ 0 ] = temp;
 	} else {
-		btmp[ 1 ] = btmp[ 1 ] - l21 * btmp[ 0 ];
+		btmp[ 1 ] -= l21 * btmp[ 0 ];
 	}
 	scale[ 0 ] = ONE;
 	if ( ( TWO * SMLNUM ) * Math.abs( btmp[ 1 ] ) > Math.abs( u22 ) ||
 		( TWO * SMLNUM ) * Math.abs( btmp[ 0 ] ) > Math.abs( u11 ) ) {
 		scale[ 0 ] = HALF / Math.max( Math.abs( btmp[ 0 ] ), Math.abs( btmp[ 1 ] ) );
-		btmp[ 0 ] = btmp[ 0 ] * scale[ 0 ];
-		btmp[ 1 ] = btmp[ 1 ] * scale[ 0 ];
+		btmp[ 0 ] *= scale[ 0 ];
+		btmp[ 1 ] *= scale[ 0 ];
 	}
 	x2 = new Float64Array( 2 );
 	x2[ 1 ] = btmp[ 1 ] / u22;

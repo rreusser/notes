@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Solves a real tridiagonal system using LU factorization from dgttrf (unblocked)
+* Solves a real tridiagonal system using LU factorization from dgttrf (unblocked).
 *
 * @module @stdlib/lapack/base/dgtts2
 *

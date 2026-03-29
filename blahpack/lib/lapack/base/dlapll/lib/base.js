@@ -40,7 +40,7 @@ var svdOut = new Float64Array( 2 );
 // MAIN //
 
 /**
-* Measures the linear dependence of two vectors X and Y by computing the
+* Measures the linear dependence of two vectors X and Y by computing the.
 * QR factorization of the N-by-2 matrix (X Y) and returning the smallest
 * singular value of the resulting 2-by-2 upper triangular R factor.
 *

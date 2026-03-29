@@ -28,7 +28,7 @@ var max = Math.max;
 // MAIN //
 
 /**
-* Computes the number of eigenvalues of a symmetric tridiagonal matrix T
+* Computes the number of eigenvalues of a symmetric tridiagonal matrix T.
 * less than or equal to a given value, and performs bisection iteration.
 *
 * IJOB=1: Compute NAB for the initial intervals.
@@ -169,10 +169,7 @@ function dlaebz( ijob, nitmax, N, mmax, minp, nbmin, abstol, reltol, pivmin, d, 
 				klnew = kl;
 				for ( ji = kf; ji < kl; ji++ ) {
 					// Ensure N(w) is monotone
-					IWORK[ offsetIWORK + (ji * strideIWORK) ] = min(
-						NAB[ offsetNAB + (ji * strideNAB1) + strideNAB2 ],
-						max( NAB[ offsetNAB + (ji * strideNAB1) ], IWORK[ offsetIWORK + (ji * strideIWORK) ] )
-					);
+					IWORK[ offsetIWORK + (ji * strideIWORK) ] = min(NAB[ offsetNAB + (ji * strideNAB1) + strideNAB2 ], max( NAB[ offsetNAB + (ji * strideNAB1) ], IWORK[ offsetIWORK + (ji * strideIWORK) ] ));
 
 					if ( IWORK[ offsetIWORK + (ji * strideIWORK) ] === NAB[ offsetNAB + (ji * strideNAB1) + strideNAB2 ] ) {
 						// No eigenvalue in upper interval: use the lower interval
@@ -238,10 +235,7 @@ function dlaebz( ijob, nitmax, N, mmax, minp, nbmin, abstol, reltol, pivmin, d, 
 				if ( ijob <= 2 ) {
 					// IJOB=2: Choose all intervals containing eigenvalues
 					// Ensure N(w) is monotone
-					itmp1 = min(
-						NAB[ offsetNAB + (ji * strideNAB1) + strideNAB2 ],
-						max( NAB[ offsetNAB + (ji * strideNAB1) ], itmp1 )
-					);
+					itmp1 = min(NAB[ offsetNAB + (ji * strideNAB1) + strideNAB2 ], max( NAB[ offsetNAB + (ji * strideNAB1) ], itmp1 ));
 
 					if ( itmp1 === NAB[ offsetNAB + (ji * strideNAB1) + strideNAB2 ] ) {
 						// No eigenvalue in upper interval

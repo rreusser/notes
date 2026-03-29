@@ -1,35 +1,57 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
-var Float64Array = require( '@stdlib/array/float64' );
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dlar2v = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlar2v.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlar2v.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
-		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
-		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
+		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 	}
 }
 
@@ -45,8 +67,8 @@ test( 'dlar2v: basic (N=4, unit strides)', function t() {
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
 	var z = new Float64Array( [ 0.5, 1.0, 1.5, 2.0 ] );
-	var c = new Float64Array( [ 0.8660254037844387, 0.7071067811865476, 0.5, 0.0 ] );
-	var s = new Float64Array( [ 0.5, 0.7071067811865476, 0.8660254037844387, 1.0 ] );
+	var c = new Float64Array( [ 0.8660254037844387, 0.7071067811865476, 0.5, 0.0 ] ); // eslint-disable-line max-len
+	var s = new Float64Array( [ 0.5, 0.7071067811865476, 0.8660254037844387, 1.0 ] ); // eslint-disable-line max-len
 
 	dlar2v( 4, x, 1, 0, y, 1, 0, z, 1, 0, c, 1, 0, s, 1, 0 );
 
@@ -160,16 +182,27 @@ test( 'dlar2v: offset support', function t() {
 	assert.equal( z[ 0 ], 999.0, 'z[0] unchanged' );
 
 	// Verify the operation was applied to elements at offset 1 and 2
-	// by hand-computing the transformation for first element (i=0):
+
+	// By hand-computing the transformation for first element (i=0):
+
 	// xi=3, yi=4, zi=1, ci=0.6, si=0.8
+
 	// t1 = 0.8*1 = 0.8
+
 	// t2 = 0.6*1 = 0.6
+
 	// t3 = 0.6 - 0.8*3 = 0.6 - 2.4 = -1.8
+
 	// t4 = 0.6 + 0.8*4 = 0.6 + 3.2 = 3.8
+
 	// t5 = 0.6*3 + 0.8 = 1.8 + 0.8 = 2.6
+
 	// t6 = 0.6*4 - 0.8 = 2.4 - 0.8 = 1.6
+
 	// x[1] = 0.6*2.6 + 0.8*3.8 = 1.56 + 3.04 = 4.6
+
 	// y[1] = 0.6*1.6 - 0.8*(-1.8) = 0.96 + 1.44 = 2.4
+
 	// z[1] = 0.6*3.8 - 0.8*2.6 = 2.28 - 2.08 = 0.2
 	assert.ok( Math.abs( x[ 1 ] - 4.6 ) < 1e-14, 'x[1]' );
 	assert.ok( Math.abs( y[ 1 ] - 2.4 ) < 1e-14, 'y[1]' );

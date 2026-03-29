@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes the LDL^T factorization of a real symmetric positive definite tridiagonal matrix
+* Computes the LDL^T factorization of a real symmetric positive definite tridiagonal matrix.
 *
 * @module @stdlib/lapack/base/dpttrf
 *

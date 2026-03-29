@@ -102,7 +102,6 @@ function dlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 	return dlaqr23impl( null, wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, SR, strideSR, offsetSR, SI, strideSI, offsetSI, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork );
 }
 
-
 /**
 * Shared implementation for dlaqr2 and dlaqr3.
 *
@@ -112,14 +111,14 @@ function dlaqr2( wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH
 * @returns {Object} { ns, nd }
 */
 function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, strideH2, offsetH, iloz, ihiz, Z, strideZ1, strideZ2, offsetZ, SR, strideSR, offsetSR, SI, strideSI, offsetSI, V, strideV1, strideV2, offsetV, nh, T, strideT1, strideT2, offsetT, nv, WV, strideWV1, strideWV2, offsetWV, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len
+	var trxResult;
 	var lwkopt;
 	var smlnum;
 	var sorted;
+	var tauArr;
 	var kwtop;
 	var infqr;
 	var bulge;
-	var trxResult;
-	var tauArr;
 	var nmin;
 	var ilst;
 	var ifst;
@@ -127,10 +126,15 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 	var krow;
 	var kcol;
 	var ltop;
+	var lwk1;
+	var lwk2;
+	var lwk3;
 	var tau;
 	var foo;
 	var evi;
 	var evk;
+	var lv2;
+	var kln;
 	var jw;
 	var ns;
 	var nd;
@@ -138,11 +142,6 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 	var bb;
 	var cc;
 	var dd;
-	var lv2;
-	var kln;
-	var lwk1;
-	var lwk2;
-	var lwk3;
 	var s;
 	var i;
 	var j;
@@ -191,7 +190,10 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 	// ==== Quick return in case of workspace query ====
 	if ( lwork === -1 ) {
 		WORK[ offsetWORK ] = lwkopt;
-		return { 'ns': 0, 'nd': 0 };
+		return {
+			'ns': 0,
+			'nd': 0
+		};
 	}
 
 	// ==== Nothing to do for empty active block or empty deflation window ====
@@ -199,10 +201,16 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 	nd = 0;
 	WORK[ offsetWORK ] = ONE;
 	if ( ktop > kbot ) {
-		return { 'ns': ns, 'nd': nd };
+		return {
+			'ns': ns,
+			'nd': nd
+		};
 	}
 	if ( nw < 1 ) {
-		return { 'ns': ns, 'nd': nd };
+		return {
+			'ns': ns,
+			'nd': nd
+		};
 	}
 
 	// ==== Machine constants ====
@@ -231,7 +239,10 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 			}
 		}
 		WORK[ offsetWORK ] = ONE;
-		return { 'ns': ns, 'nd': nd };
+		return {
+			'ns': ns,
+			'nd': nd
+		};
 	}
 
 	// ==== Convert to spike-triangular form ====
@@ -282,7 +293,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 				foo = Math.abs( s );
 			}
 			if ( Math.abs( s * V[ vij( 1, ns ) ] ) <= Math.max( smlnum, ULP * foo ) ) {
-				ns = ns - 1;
+				ns -= 1;
 			} else {
 				ifst = ns;
 				trxResult = dtrexc( 'update', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK );
@@ -295,7 +306,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 				foo = Math.abs( s );
 			}
 			if ( Math.max( Math.abs( s * V[ vij( 1, ns ) ] ), Math.abs( s * V[ vij( 1, ns - 1 ) ] ) ) <= Math.max( smlnum, ULP * foo ) ) {
-				ns = ns - 2;
+				ns -= 2;
 			} else {
 				ifst = ns;
 				trxResult = dtrexc( 'update', jw, T, strideT1, strideT2, offsetT, V, strideV1, strideV2, offsetV, ifst, ilst, WORK, strideWORK, offsetWORK );
@@ -370,11 +381,11 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 		if ( i === infqr + 1 ) {
 			SR[ offsetSR + ( kwtop + i - 2 ) * strideSR ] = T[ tij( i, i ) ];
 			SI[ offsetSI + ( kwtop + i - 2 ) * strideSI ] = ZERO;
-			i = i - 1;
+			i -= 1;
 		} else if ( T[ tij( i, i - 1 ) ] === ZERO ) {
 			SR[ offsetSR + ( kwtop + i - 2 ) * strideSR ] = T[ tij( i, i ) ];
 			SI[ offsetSI + ( kwtop + i - 2 ) * strideSI ] = ZERO;
-			i = i - 1;
+			i -= 1;
 		} else {
 			aa = T[ tij( i - 1, i - 1 ) ];
 			cc = T[ tij( i, i - 1 ) ];
@@ -385,7 +396,7 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 			SI[ offsetSI + ( kwtop + i - 3 ) * strideSI ] = lv2.rt1i;
 			SR[ offsetSR + ( kwtop + i - 2 ) * strideSR ] = lv2.rt2r;
 			SI[ offsetSI + ( kwtop + i - 2 ) * strideSI ] = lv2.rt2i;
-			i = i - 2;
+			i -= 2;
 		}
 	}
 
@@ -452,11 +463,14 @@ function dlaqr23impl( dlaqr4fn, wantt, wantz, N, ktop, kbot, nw, H, strideH1, st
 
 	// ==== Return ====
 	nd = jw - ns;
-	ns = ns - infqr;
+	ns -= infqr;
 
 	WORK[ offsetWORK ] = lwkopt;
 
-	return { 'ns': ns, 'nd': nd };
+	return {
+		'ns': ns,
+		'nd': nd
+	};
 }
 
 

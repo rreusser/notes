@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes 2-by-2 orthogonal matrices U, V, Q for simultaneous upper/lower triangularization
+* Computes 2-by-2 orthogonal matrices U, V, Q for simultaneous upper/lower triangularization.
 *
 * @module @stdlib/lapack/base/dlags2
 *

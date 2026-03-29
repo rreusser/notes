@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlantr = require( '@stdlib/lapack/base/dlantr' );

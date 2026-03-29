@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlaruv = require( '@stdlib/lapack/base/dlaruv' );

@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Computes the Schur factorization of a 2x2 nonsymmetric matrix
+* Computes the Schur factorization of a 2x2 nonsymmetric matrix.
 *
 * @module @stdlib/lapack/base/dlanv2
 *

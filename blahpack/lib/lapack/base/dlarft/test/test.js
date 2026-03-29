@@ -1,24 +1,47 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
 'use strict';
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dlarft = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlarft.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlarft.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
-	var i, relErr;
+	var relErr;
+	var i;
 	for ( i = 0; i < expected.length; i++ ) {
-		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
+		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 ); // eslint-disable-line max-len
 		if ( relErr > tol ) {
-			throw new Error( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
+			throw new Error( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 		}
 	}
 }
@@ -27,194 +50,266 @@ function assertArrayClose( actual, expected, tol, msg ) {
 // In JS we use exact-size storage (LDT=K, strideT1=1, strideT2=K).
 
 test( 'dlarft: fwd col 5x3', function t() {
-	var tc = findCase( 'fwd_col_5x3' );
-	var V = new Float64Array( 6 * 3 );
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'fwd_col_5x3' );
+	V = new Float64Array( 6 * 3 );
 	V[ 0 + 0 * 6 ] = 1;
-	V[ 1 + 0 * 6 ] = 0.5; V[ 1 + 1 * 6 ] = 1;
-	V[ 2 + 0 * 6 ] = 0.25; V[ 2 + 1 * 6 ] = 0.5; V[ 2 + 2 * 6 ] = 1;
-	V[ 3 + 0 * 6 ] = 0.125; V[ 3 + 1 * 6 ] = 0.25; V[ 3 + 2 * 6 ] = 0.5;
-	V[ 4 + 0 * 6 ] = 0.0625; V[ 4 + 1 * 6 ] = 0.125; V[ 4 + 2 * 6 ] = 0.25;
-	var TAU = new Float64Array( [ 1.2, 1.5, 1.1 ] );
-	var T = new Float64Array( 3 * 3 );
+	V[ 1 + 0 * 6 ] = 0.5;
+	V[ 1 + 1 * 6 ] = 1;
+	V[ 2 + 0 * 6 ] = 0.25;
+	V[ 2 + 1 * 6 ] = 0.5;
+	V[ 2 + 2 * 6 ] = 1;
+	V[ 3 + 0 * 6 ] = 0.125;
+	V[ 3 + 1 * 6 ] = 0.25;
+	V[ 3 + 2 * 6 ] = 0.5;
+	V[ 4 + 0 * 6 ] = 0.0625;
+	V[ 4 + 1 * 6 ] = 0.125;
+	V[ 4 + 2 * 6 ] = 0.25;
+	TAU = new Float64Array( [ 1.2, 1.5, 1.1 ] );
+	T = new Float64Array( 3 * 3 );
 	dlarft( 'forward', 'columnwise', 5, 3, V, 1, 6, 0, TAU, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: fwd col 3x2', function t() {
-	var tc = findCase( 'fwd_col_3x2' );
-	var V = new Float64Array( 6 * 2 );
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'fwd_col_3x2' );
+	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 1;
-	V[ 1 + 0 * 6 ] = 2; V[ 1 + 1 * 6 ] = 1;
-	V[ 2 + 0 * 6 ] = 3; V[ 2 + 1 * 6 ] = 4;
-	var TAU = new Float64Array( [ 0.8, 1.2 ] );
-	// Use LDT=2 (K=2), so strideT1=1, strideT2=2
-	var T = new Float64Array( 2 * 2 );
+	V[ 1 + 0 * 6 ] = 2;
+	V[ 1 + 1 * 6 ] = 1;
+	V[ 2 + 0 * 6 ] = 3;
+	V[ 2 + 1 * 6 ] = 4;
+	TAU = new Float64Array( [ 0.8, 1.2 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'forward', 'columnwise', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: bwd col 5x2', function t() {
-	var tc = findCase( 'bwd_col_5x2' );
-	var V = new Float64Array( 6 * 2 );
-	V[ 0 + 0 * 6 ] = 0.5; V[ 0 + 1 * 6 ] = 0.25;
-	V[ 1 + 0 * 6 ] = 0.25; V[ 1 + 1 * 6 ] = 0.125;
-	V[ 2 + 0 * 6 ] = 0.125; V[ 2 + 1 * 6 ] = 0.0625;
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'bwd_col_5x2' );
+	V = new Float64Array( 6 * 2 );
+	V[ 0 + 0 * 6 ] = 0.5;
+	V[ 0 + 1 * 6 ] = 0.25;
+	V[ 1 + 0 * 6 ] = 0.25;
+	V[ 1 + 1 * 6 ] = 0.125;
+	V[ 2 + 0 * 6 ] = 0.125;
+	V[ 2 + 1 * 6 ] = 0.0625;
 	V[ 3 + 0 * 6 ] = 1.0;
 	V[ 4 + 1 * 6 ] = 1.0;
-	var TAU = new Float64Array( [ 1.5, 0.9 ] );
-	var T = new Float64Array( 2 * 2 );
+	TAU = new Float64Array( [ 1.5, 0.9 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'backward', 'columnwise', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: fwd col tau zero', function t() {
-	var tc = findCase( 'fwd_col_tau_zero' );
-	var V = new Float64Array( 6 * 2 );
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'fwd_col_tau_zero' );
+	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 1;
-	V[ 1 + 0 * 6 ] = 0.5; V[ 1 + 1 * 6 ] = 1;
-	V[ 2 + 0 * 6 ] = 0.25; V[ 2 + 1 * 6 ] = 0.5;
-	var TAU = new Float64Array( [ 1.2, 0.0 ] );
-	var T = new Float64Array( 2 * 2 );
+	V[ 1 + 0 * 6 ] = 0.5;
+	V[ 1 + 1 * 6 ] = 1;
+	V[ 2 + 0 * 6 ] = 0.25;
+	V[ 2 + 1 * 6 ] = 0.5;
+	TAU = new Float64Array( [ 1.2, 0.0 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'forward', 'columnwise', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: fwd row 5x3', function t() {
-	var tc = findCase( 'fwd_row_5x3' );
-	// V is K x N = 3 x 5 in Fortran, stored column-major with LDV=6
-	// In JS: strideV1=1, strideV2=6 (same layout)
-	var V = new Float64Array( 6 * 6 );
-	V[ 0 + 0 * 6 ] = 1; V[ 0 + 1 * 6 ] = 0.5; V[ 0 + 2 * 6 ] = 0.25; V[ 0 + 3 * 6 ] = 0.125; V[ 0 + 4 * 6 ] = 0.0625;
-	V[ 1 + 1 * 6 ] = 1; V[ 1 + 2 * 6 ] = 0.5; V[ 1 + 3 * 6 ] = 0.25; V[ 1 + 4 * 6 ] = 0.125;
-	V[ 2 + 2 * 6 ] = 1; V[ 2 + 3 * 6 ] = 0.5; V[ 2 + 4 * 6 ] = 0.25;
-	var TAU = new Float64Array( [ 1.2, 1.5, 1.1 ] );
-	var T = new Float64Array( 3 * 3 );
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'fwd_row_5x3' );
+	V = new Float64Array( 6 * 6 );
+	V[ 0 + 0 * 6 ] = 1;
+	V[ 0 + 1 * 6 ] = 0.5;
+	V[ 0 + 2 * 6 ] = 0.25;
+	V[ 0 + 3 * 6 ] = 0.125;
+	V[ 0 + 4 * 6 ] = 0.0625;
+	V[ 1 + 1 * 6 ] = 1;
+	V[ 1 + 2 * 6 ] = 0.5;
+	V[ 1 + 3 * 6 ] = 0.25;
+	V[ 1 + 4 * 6 ] = 0.125;
+	V[ 2 + 2 * 6 ] = 1;
+	V[ 2 + 3 * 6 ] = 0.5;
+	V[ 2 + 4 * 6 ] = 0.25;
+	TAU = new Float64Array( [ 1.2, 1.5, 1.1 ] );
+	T = new Float64Array( 3 * 3 );
 	dlarft( 'forward', 'rowwise', 5, 3, V, 1, 6, 0, TAU, 1, 0, T, 1, 3, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: fwd row 3x2', function t() {
-	var tc = findCase( 'fwd_row_3x2' );
-	// V is K x N = 2 x 3 in Fortran, stored column-major with LDV=6
-	var V = new Float64Array( 6 * 6 );
-	V[ 0 + 0 * 6 ] = 1; V[ 0 + 1 * 6 ] = 2; V[ 0 + 2 * 6 ] = 3;
-	V[ 1 + 1 * 6 ] = 1; V[ 1 + 2 * 6 ] = 4;
-	var TAU = new Float64Array( [ 0.8, 1.2 ] );
-	var T = new Float64Array( 2 * 2 );
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'fwd_row_3x2' );
+	V = new Float64Array( 6 * 6 );
+	V[ 0 + 0 * 6 ] = 1;
+	V[ 0 + 1 * 6 ] = 2;
+	V[ 0 + 2 * 6 ] = 3;
+	V[ 1 + 1 * 6 ] = 1;
+	V[ 1 + 2 * 6 ] = 4;
+	TAU = new Float64Array( [ 0.8, 1.2 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'forward', 'rowwise', 3, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: bwd row 5x2', function t() {
-	var tc = findCase( 'bwd_row_5x2' );
-	// V is K x N = 2 x 5 in Fortran, stored column-major with LDV=6
-	// Unit triangular at right (columns N-K..N-1 = 3..4)
-	var V = new Float64Array( 6 * 6 );
-	V[ 0 + 0 * 6 ] = 0.5; V[ 0 + 1 * 6 ] = 0.25; V[ 0 + 2 * 6 ] = 0.125; V[ 0 + 3 * 6 ] = 1.0; V[ 0 + 4 * 6 ] = 0.0;
-	V[ 1 + 0 * 6 ] = 0.25; V[ 1 + 1 * 6 ] = 0.125; V[ 1 + 2 * 6 ] = 0.0625; V[ 1 + 3 * 6 ] = 0.0; V[ 1 + 4 * 6 ] = 1.0;
-	var TAU = new Float64Array( [ 1.5, 0.9 ] );
-	var T = new Float64Array( 2 * 2 );
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'bwd_row_5x2' );
+	V = new Float64Array( 6 * 6 );
+	V[ 0 + 0 * 6 ] = 0.5;
+	V[ 0 + 1 * 6 ] = 0.25;
+	V[ 0 + 2 * 6 ] = 0.125;
+	V[ 0 + 3 * 6 ] = 1.0;
+	V[ 0 + 4 * 6 ] = 0.0;
+	V[ 1 + 0 * 6 ] = 0.25;
+	V[ 1 + 1 * 6 ] = 0.125;
+	V[ 1 + 2 * 6 ] = 0.0625;
+	V[ 1 + 3 * 6 ] = 0.0;
+	V[ 1 + 4 * 6 ] = 1.0;
+	TAU = new Float64Array( [ 1.5, 0.9 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'backward', 'rowwise', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: bwd col tau zero', function t() {
-	var tc = findCase( 'bwd_col_tau_zero' );
-	// Same V as bwd_col_5x2 but tau(1)=0
-	var V = new Float64Array( 6 * 2 );
-	V[ 0 + 0 * 6 ] = 0.5; V[ 0 + 1 * 6 ] = 0.25;
-	V[ 1 + 0 * 6 ] = 0.25; V[ 1 + 1 * 6 ] = 0.125;
-	V[ 2 + 0 * 6 ] = 0.125; V[ 2 + 1 * 6 ] = 0.0625;
+	var TAU;
+	var tc;
+	var V;
+	var T;
+
+	tc = findCase( 'bwd_col_tau_zero' );
+	V = new Float64Array( 6 * 2 );
+	V[ 0 + 0 * 6 ] = 0.5;
+	V[ 0 + 1 * 6 ] = 0.25;
+	V[ 1 + 0 * 6 ] = 0.25;
+	V[ 1 + 1 * 6 ] = 0.125;
+	V[ 2 + 0 * 6 ] = 0.125;
+	V[ 2 + 1 * 6 ] = 0.0625;
 	V[ 3 + 0 * 6 ] = 1.0;
 	V[ 4 + 1 * 6 ] = 1.0;
-	var TAU = new Float64Array( [ 0.0, 0.9 ] );
-	var T = new Float64Array( 2 * 2 );
+	TAU = new Float64Array( [ 0.0, 0.9 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'backward', 'columnwise', 5, 2, V, 1, 6, 0, TAU, 1, 0, T, 1, 2, 0 );
 	assertArrayClose( T, tc.T, 1e-14, 'T' );
 });
 
 test( 'dlarft: N=0 quick return', function t() {
+	var TAU = new Float64Array( [ 1.0 ] );
 	var T = new Float64Array( [ 99 ] );
 	var V = new Float64Array( 1 );
-	var TAU = new Float64Array( [ 1.0 ] );
 	dlarft( 'forward', 'columnwise', 0, 1, V, 1, 1, 0, TAU, 1, 0, T, 1, 1, 0 );
 	if ( T[ 0 ] !== 99 ) {
 		throw new Error( 'T changed on N=0' );
 	}
 });
 
-test( 'dlarft: fwd col with trailing zeros in V (exercises lastv assignment, lines 62-63)', function t() {
-	// 6x2 V matrix, col-wise, where column 0 has trailing zeros in rows 4,5
-	// This means the scan at lines 58-63 will find zeros and execute lastv=jj
-	var V = new Float64Array( 8 * 2 );
-	// Column 0: [1, 0.5, 0.25, 0.125, 0, 0, 0, 0] (trailing zeros at rows 4-7)
+test( 'dlarft: fwd col with trailing zeros in V (exercises lastv assignment, lines 62-63)', function t() { // eslint-disable-line max-len
+	var TAU;
+	var V;
+	var T;
+
+	V = new Float64Array( 8 * 2 );
 	V[ 0 + 0 * 8 ] = 1;
 	V[ 1 + 0 * 8 ] = 0.5;
 	V[ 2 + 0 * 8 ] = 0.25;
 	V[ 3 + 0 * 8 ] = 0.125;
 	V[ 4 + 0 * 8 ] = 0.0;
 	V[ 5 + 0 * 8 ] = 0.0;
-	// Column 1: [0, 1, 0.5, 0.25, 0.125, 0.0625, 0, 0]
 	V[ 1 + 1 * 8 ] = 1;
 	V[ 2 + 1 * 8 ] = 0.5;
 	V[ 3 + 1 * 8 ] = 0.25;
 	V[ 4 + 1 * 8 ] = 0.125;
 	V[ 5 + 1 * 8 ] = 0.0625;
-	var TAU = new Float64Array( [ 1.2, 1.5 ] );
-	var T = new Float64Array( 2 * 2 );
+	TAU = new Float64Array( [ 1.2, 1.5 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'forward', 'columnwise', 6, 2, V, 1, 8, 0, TAU, 1, 0, T, 1, 2, 0 );
-	// Verify T is populated (we just need the path to execute)
-	// T[0] should be TAU[0] = 1.2
 	if ( T[ 0 ] !== 1.2 ) {
 		throw new Error( 'T[0,0] should be TAU[0]=1.2, got ' + T[ 0 ] );
 	}
-	// T[1,1] should be TAU[1] = 1.5
 	if ( T[ 1 + 1 * 2 ] !== 1.5 ) {
 		throw new Error( 'T[1,1] should be TAU[1]=1.5, got ' + T[ 1 + 1 * 2 ] );
 	}
 });
 
-test( 'dlarft: fwd row with trailing zeros in V (exercises lastv assignment, lines 86-87)', function t() {
-	// Row-wise storage with trailing zeros. V is K x N = 2 x 6 in Fortran.
-	// V row 0: [1, 0.5, 0.25, 0.125, 0, 0] (trailing zeros in cols 4,5)
-	var V = new Float64Array( 8 * 8 );
-	V[ 0 + 0 * 8 ] = 1; V[ 0 + 1 * 8 ] = 0.5; V[ 0 + 2 * 8 ] = 0.25; V[ 0 + 3 * 8 ] = 0.125;
-	V[ 0 + 4 * 8 ] = 0.0; V[ 0 + 5 * 8 ] = 0.0;
-	V[ 1 + 1 * 8 ] = 1; V[ 1 + 2 * 8 ] = 0.5; V[ 1 + 3 * 8 ] = 0.25;
-	V[ 1 + 4 * 8 ] = 0.125; V[ 1 + 5 * 8 ] = 0.0625;
-	var TAU = new Float64Array( [ 1.2, 1.5 ] );
-	var T = new Float64Array( 2 * 2 );
+test( 'dlarft: fwd row with trailing zeros in V (exercises lastv assignment, lines 86-87)', function t() { // eslint-disable-line max-len
+	var TAU;
+	var V;
+	var T;
+
+	V = new Float64Array( 8 * 8 );
+	V[ 0 + 0 * 8 ] = 1;
+	V[ 0 + 1 * 8 ] = 0.5;
+	V[ 0 + 2 * 8 ] = 0.25;
+	V[ 0 + 3 * 8 ] = 0.125;
+	V[ 0 + 4 * 8 ] = 0.0;
+	V[ 0 + 5 * 8 ] = 0.0;
+	V[ 1 + 1 * 8 ] = 1;
+	V[ 1 + 2 * 8 ] = 0.5;
+	V[ 1 + 3 * 8 ] = 0.25;
+	V[ 1 + 4 * 8 ] = 0.125;
+	V[ 1 + 5 * 8 ] = 0.0625;
+	TAU = new Float64Array( [ 1.2, 1.5 ] );
+	T = new Float64Array( 2 * 2 );
 	dlarft( 'forward', 'rowwise', 6, 2, V, 1, 8, 0, TAU, 1, 0, T, 1, 2, 0 );
 	if ( T[ 0 ] !== 1.2 ) {
 		throw new Error( 'T[0,0] should be TAU[0]=1.2, got ' + T[ 0 ] );
 	}
 });
 
-test( 'dlarft: bwd col with leading zeros in V (exercises lastv assignment, lines 133-137)', function t() {
-	// Backward, column-wise, K=3, N=6. Unit diag at rows N-K..N-1 = 3,4,5
-	// The backward loop iterates i = K-1=2, then i=1, then i=0.
-	// At i=1 (where i < K-1 is true), jj loops from 0 to i-1=0, checking V[0, 1].
-	// If V[0, 1] = 0, lastv = jj+1 = 1 (line 136 executes).
-	var V = new Float64Array( 8 * 3 );
-	// Column 0:
+test( 'dlarft: bwd col with leading zeros in V (exercises lastv assignment, lines 133-137)', function t() { // eslint-disable-line max-len
+	var TAU;
+	var V;
+	var T;
+
+	V = new Float64Array( 8 * 3 );
 	V[ 0 + 0 * 8 ] = 0.5;
 	V[ 1 + 0 * 8 ] = 0.25;
 	V[ 2 + 0 * 8 ] = 0.125;
-	V[ 3 + 0 * 8 ] = 1.0; // unit diag at row N-K+0=3
-	// Column 1: LEADING ZERO at row 0
-	V[ 0 + 1 * 8 ] = 0.0; // This zero triggers lastv = jj+1 at line 136
+	V[ 3 + 0 * 8 ] = 1.0;
+	V[ 0 + 1 * 8 ] = 0.0;
 	V[ 1 + 1 * 8 ] = 0.3;
 	V[ 2 + 1 * 8 ] = 0.15;
-	V[ 4 + 1 * 8 ] = 1.0; // unit diag at row N-K+1=4
-	// Column 2:
+	V[ 4 + 1 * 8 ] = 1.0;
 	V[ 0 + 2 * 8 ] = 0.0;
 	V[ 1 + 2 * 8 ] = 0.0;
 	V[ 2 + 2 * 8 ] = 0.1;
-	V[ 5 + 2 * 8 ] = 1.0; // unit diag at row N-K+2=5
-	var TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
-	var T = new Float64Array( 3 * 3 );
+	V[ 5 + 2 * 8 ] = 1.0;
+	TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
+	T = new Float64Array( 3 * 3 );
 	dlarft( 'backward', 'columnwise', 6, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
-	// T diagonal should hold TAU values
 	if ( T[ 0 ] !== 1.5 ) {
 		throw new Error( 'T[0,0] should be 1.5, got ' + T[ 0 ] );
 	}
@@ -226,64 +321,85 @@ test( 'dlarft: bwd col with leading zeros in V (exercises lastv assignment, line
 	}
 });
 
-test( 'dlarft: bwd row with leading zeros in V (exercises lastv=jj+1, lines 155-159)', function t() {
-	// Backward, row-wise, K=3, N=7. Unit diag at columns N-K..N-1 = 4,5,6
-	// At i=1 (i < K-1), jj loops 0 to 0, checks V[1, 0]. If zero -> lastv=1.
-	var V = new Float64Array( 8 * 8 );
-	V[ 0 + 0 * 8 ] = 0.5; V[ 0 + 1 * 8 ] = 0.25; V[ 0 + 2 * 8 ] = 0.125; V[ 0 + 3 * 8 ] = 0.1;
+test( 'dlarft: bwd row with leading zeros in V (exercises lastv=jj+1, lines 155-159)', function t() { // eslint-disable-line max-len
+	var TAU;
+	var V;
+	var T;
+
+	V = new Float64Array( 8 * 8 );
+	V[ 0 + 0 * 8 ] = 0.5;
+	V[ 0 + 1 * 8 ] = 0.25;
+	V[ 0 + 2 * 8 ] = 0.125;
+	V[ 0 + 3 * 8 ] = 0.1;
 	V[ 0 + 4 * 8 ] = 1.0;
-	V[ 1 + 0 * 8 ] = 0.0; // zero triggers lastv = 1
-	V[ 1 + 1 * 8 ] = 0.3; V[ 1 + 2 * 8 ] = 0.15; V[ 1 + 3 * 8 ] = 0.1;
+	V[ 1 + 0 * 8 ] = 0.0;
+	V[ 1 + 1 * 8 ] = 0.3;
+	V[ 1 + 2 * 8 ] = 0.15;
+	V[ 1 + 3 * 8 ] = 0.1;
 	V[ 1 + 5 * 8 ] = 1.0;
-	V[ 2 + 0 * 8 ] = 0.0; V[ 2 + 1 * 8 ] = 0.0; V[ 2 + 2 * 8 ] = 0.1; V[ 2 + 3 * 8 ] = 0.05;
+	V[ 2 + 0 * 8 ] = 0.0;
+	V[ 2 + 1 * 8 ] = 0.0;
+	V[ 2 + 2 * 8 ] = 0.1;
+	V[ 2 + 3 * 8 ] = 0.05;
 	V[ 2 + 6 * 8 ] = 1.0;
-	var TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
-	var T = new Float64Array( 3 * 3 );
+	TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
+	T = new Float64Array( 3 * 3 );
 	dlarft( 'backward', 'rowwise', 7, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
 	if ( T[ 0 ] !== 1.5 ) {
 		throw new Error( 'T[0,0] should be 1.5, got ' + T[ 0 ] );
 	}
 });
 
-test( 'dlarft: bwd row, non-zero V triggers break (lines 156-157)', function t() {
-	// Backward, row-wise, K=3, N=7. At i=1, jj=0: V[1,0] is NON-ZERO -> break
-	var V = new Float64Array( 8 * 8 );
-	V[ 0 + 0 * 8 ] = 0.5; V[ 0 + 1 * 8 ] = 0.25; V[ 0 + 2 * 8 ] = 0.125; V[ 0 + 3 * 8 ] = 0.1;
+test( 'dlarft: bwd row, non-zero V triggers break (lines 156-157)', function t() { // eslint-disable-line max-len
+	var TAU;
+	var V;
+	var T;
+
+	V = new Float64Array( 8 * 8 );
+	V[ 0 + 0 * 8 ] = 0.5;
+	V[ 0 + 1 * 8 ] = 0.25;
+	V[ 0 + 2 * 8 ] = 0.125;
+	V[ 0 + 3 * 8 ] = 0.1;
 	V[ 0 + 4 * 8 ] = 1.0;
-	V[ 1 + 0 * 8 ] = 0.3; // non-zero -> break at line 156
-	V[ 1 + 1 * 8 ] = 0.3; V[ 1 + 2 * 8 ] = 0.15; V[ 1 + 3 * 8 ] = 0.1;
+	V[ 1 + 0 * 8 ] = 0.3;
+	V[ 1 + 1 * 8 ] = 0.3;
+	V[ 1 + 2 * 8 ] = 0.15;
+	V[ 1 + 3 * 8 ] = 0.1;
 	V[ 1 + 5 * 8 ] = 1.0;
-	V[ 2 + 0 * 8 ] = 0.0; V[ 2 + 1 * 8 ] = 0.0; V[ 2 + 2 * 8 ] = 0.1; V[ 2 + 3 * 8 ] = 0.05;
+	V[ 2 + 0 * 8 ] = 0.0;
+	V[ 2 + 1 * 8 ] = 0.0;
+	V[ 2 + 2 * 8 ] = 0.1;
+	V[ 2 + 3 * 8 ] = 0.05;
 	V[ 2 + 6 * 8 ] = 1.0;
-	var TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
-	var T = new Float64Array( 3 * 3 );
+	TAU = new Float64Array( [ 1.5, 0.8, 1.1 ] );
+	T = new Float64Array( 3 * 3 );
 	dlarft( 'backward', 'rowwise', 7, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
 	if ( T[ 0 ] !== 1.5 ) {
 		throw new Error( 'T[0,0] should be 1.5, got ' + T[ 0 ] );
 	}
 });
 
-test( 'dlarft: bwd col K=1 (exercises line 179: prevlastv set, i=0 else branch)', function t() {
-	// With K=1 in backward mode, i=0 is also i===K-1, so the i<K-1 branch is skipped.
-	// But with K=2, the second iteration (i=0) hits the i>0 check at line 178.
-	// We need i>0 to be false AND i<K-1 to be true for line 179.
-	// Actually line 179 is prevlastv = Math.min(prevlastv, lastv) when i>0 inside the i<K-1 block.
-	// So we need K>=3 to have i=1 where i>0 and i<K-1.
-	var V = new Float64Array( 8 * 3 );
-	// N=6, K=3: unit diag at rows 3,4,5
-	// Col 0: some values
-	V[ 0 + 0 * 8 ] = 0.5; V[ 1 + 0 * 8 ] = 0.25; V[ 2 + 0 * 8 ] = 0.125;
+test( 'dlarft: bwd col K=1 (exercises line 179: prevlastv set, i=0 else branch)', function t() { // eslint-disable-line max-len
+	var TAU;
+	var V;
+	var T;
+
+	V = new Float64Array( 8 * 3 );
+	V[ 0 + 0 * 8 ] = 0.5;
+	V[ 1 + 0 * 8 ] = 0.25;
+	V[ 2 + 0 * 8 ] = 0.125;
 	V[ 3 + 0 * 8 ] = 1.0;
-	// Col 1:
-	V[ 0 + 1 * 8 ] = 0.3; V[ 1 + 1 * 8 ] = 0.15; V[ 2 + 1 * 8 ] = 0.075;
+	V[ 0 + 1 * 8 ] = 0.3;
+	V[ 1 + 1 * 8 ] = 0.15;
+	V[ 2 + 1 * 8 ] = 0.075;
 	V[ 4 + 1 * 8 ] = 1.0;
-	// Col 2:
-	V[ 0 + 2 * 8 ] = 0.2; V[ 1 + 2 * 8 ] = 0.1; V[ 2 + 2 * 8 ] = 0.05;
+	V[ 0 + 2 * 8 ] = 0.2;
+	V[ 1 + 2 * 8 ] = 0.1;
+	V[ 2 + 2 * 8 ] = 0.05;
 	V[ 5 + 2 * 8 ] = 1.0;
-	var TAU = new Float64Array( [ 1.2, 0.8, 1.1 ] );
-	var T = new Float64Array( 3 * 3 );
+	TAU = new Float64Array( [ 1.2, 0.8, 1.1 ] );
+	T = new Float64Array( 3 * 3 );
 	dlarft( 'backward', 'columnwise', 6, 3, V, 1, 8, 0, TAU, 1, 0, T, 1, 3, 0 );
-	// T diagonal should hold TAU values
 	if ( T[ 0 ] !== 1.2 ) {
 		throw new Error( 'T[0,0] should be 1.2, got ' + T[ 0 ] );
 	}

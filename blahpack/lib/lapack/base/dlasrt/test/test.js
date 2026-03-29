@@ -1,14 +1,23 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dlasrt = require( './../lib' );
 
 
-// HELPERS //
+// FUNCTIONS //
 
+/**
+* AssertArrayEqual.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
 function assertArrayEqual( actual, expected, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -24,7 +33,7 @@ test( 'dlasrt: main export is a function', function t() {
 	assert.strictEqual( typeof dlasrt, 'function' );
 });
 
-test( 'dlasrt: attached to the main export is an `ndarray` method', function t() {
+test( 'dlasrt: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
 	assert.strictEqual( typeof dlasrt.ndarray, 'function' );
 });
 
@@ -82,7 +91,6 @@ test( 'dlasrt.ndarray handles N=0 (quick return)', function t() {
 	d = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	info = dlasrt.ndarray( 'increasing', 0, d, 1, 0 );
 	assert.equal( info, 0, 'returns 0 for N=0' );
-	// Array should be unchanged:
 	assertArrayEqual( d, [ 3.0, 1.0, 2.0 ], 'unchanged for N=0' );
 });
 
@@ -225,7 +233,7 @@ test( 'dlasrt.ndarray handles negative values', function t() {
 	assertArrayEqual( d, expected, 'negatives increasing' );
 });
 
-test( 'dlasrt.ndarray handles mixed positive and negative values', function t() {
+test( 'dlasrt.ndarray handles mixed positive and negative values', function t() { // eslint-disable-line max-len
 	var expected;
 	var d;
 
@@ -235,7 +243,7 @@ test( 'dlasrt.ndarray handles mixed positive and negative values', function t() 
 	assertArrayEqual( d, expected, 'mixed increasing' );
 });
 
-test( 'dlasrt.ndarray handles large array (triggers quicksort, N > 20)', function t() {
+test( 'dlasrt.ndarray handles large array (triggers quicksort, N > 20)', function t() { // eslint-disable-line max-len
 	var sorted;
 	var d;
 	var i;
@@ -341,6 +349,7 @@ test( 'dlasrt.ndarray only sorts first N elements', function t() {
 
 	d = new Float64Array( [ 5.0, 3.0, 1.0, 4.0, 2.0 ] );
 	dlasrt.ndarray( 'increasing', 3, d, 1, 0 );
+
 	// First 3 elements sorted, rest unchanged
 	assertArrayEqual( d, [ 1.0, 3.0, 5.0, 4.0, 2.0 ], 'partial sort N=3' );
 });
@@ -388,7 +397,7 @@ test( 'dlasrt.ndarray handles large array with many duplicates', function t() {
 	assert.ok( sorted, 'many duplicates sorted increasing' );
 });
 
-test( 'dlasrt.ndarray handles large array with many duplicates (decreasing)', function t() {
+test( 'dlasrt.ndarray handles large array with many duplicates (decreasing)', function t() { // eslint-disable-line max-len
 	var sorted;
 	var d;
 	var i;
@@ -415,7 +424,8 @@ test( 'dlasrt.ndarray handles exactly SELECT+1 (21) elements', function t() {
 	var d;
 	var i;
 
-	// 21 elements: triggers quicksort path (endd - start = 20 > SELECT=20 is false, so 21 elements = endd-start=20 which is exactly SELECT, meaning it still uses insertion sort)
+	// 21 elements: triggers quicksort path (endd - start = 20 > SELECT=20 is false, so 21 elements = endd-start=20 which is exactly SELECT, meaning it still uses insertion sort) // eslint-disable-line max-len
+
 	// Use 22 elements to trigger quicksort
 	d = new Float64Array( 22 );
 	for ( i = 0; i < 22; i++ ) {
@@ -436,7 +446,7 @@ test( 'dlasrt.ndarray handles exactly SELECT+1 (21) elements', function t() {
 	assert.equal( d[ 21 ], 22.0, 'last' );
 });
 
-test( 'dlasrt.ndarray handles exactly 21 elements (boundary for quicksort)', function t() {
+test( 'dlasrt.ndarray handles exactly 21 elements (boundary for quicksort)', function t() { // eslint-disable-line max-len
 	var sorted;
 	var d;
 	var i;

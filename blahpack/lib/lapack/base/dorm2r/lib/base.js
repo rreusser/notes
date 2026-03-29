@@ -118,13 +118,7 @@ function dorm2r( side, trans, M, N, K, A, strideA1, strideA2, offsetA, TAU, stri
 		// Apply H(i) to C(ic:ic+mi-1, jc:jc+ni-1) from the left or right
 
 		// Dlarf expects: side, M, N, v, strideV, offsetV, tau, C, strideC1, strideC2, offsetC, WORK, strideWORK, offsetWORK
-		dlarf(
-			side, mi, ni,
-			A, strideA1, offsetA + (i * strideA1) + (i * strideA2),
-			TAU[ offsetTAU + (i * strideTAU) ],
-			C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2),
-			WORK, strideWORK, offsetWORK
-		);
+		dlarf(side, mi, ni, A, strideA1, offsetA + (i * strideA1) + (i * strideA2), TAU[ offsetTAU + (i * strideTAU) ], C, strideC1, strideC2, offsetC + (ic * strideC1) + (jc * strideC2), WORK, strideWORK, offsetWORK);
 
 		// Restore A(i,i)
 		A[ idxA ] = aii;

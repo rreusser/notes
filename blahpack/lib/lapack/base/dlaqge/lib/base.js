@@ -35,7 +35,7 @@ var LARGE = 1.0 / SMALL;
 // MAIN //
 
 /**
-* Equilibrates a general M-by-N matrix A using the row and column scaling
+* Equilibrates a general M-by-N matrix A using the row and column scaling.
 * factors in the vectors R and C.
 *
 * Returns 'N' (no equilibration), 'R' (row only), 'C' (column only),
@@ -85,7 +85,7 @@ function dlaqge( M, N, A, strideA1, strideA2, offsetA, r, strideR, offsetR, c, s
 			}
 		}
 		return 'column';
-	} else if ( colcnd >= THRESH ) {
+	} if ( colcnd >= THRESH ) {
 		// Row scaling, no column scaling
 		for ( j = 0; j < N; j++ ) {
 			da = offsetA + ( j * strideA2 );

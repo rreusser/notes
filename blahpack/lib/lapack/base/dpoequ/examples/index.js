@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dpoequ = require( '@stdlib/lapack/base/dpoequ' );

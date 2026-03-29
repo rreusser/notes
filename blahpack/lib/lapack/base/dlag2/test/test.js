@@ -1,34 +1,54 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var FLOAT64_SMALLEST_NORMAL = require( '@stdlib/constants/float64/smallest-normal' );
 var dlag2 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlag2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dlag2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
 /**
@@ -56,14 +76,8 @@ test( 'dlag2 is a function', function t() {
 });
 
 test( 'dlag2: real_eigenvalues_identity_B', function t() {
+	var result = callDlag2([ 4.0, 2.0, 1.0, 3.0 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'real_eigenvalues_identity_B' );
-
-	// A = [4 1; 2 3], B = I (column-major)
-	var result = callDlag2(
-		[ 4.0, 2.0, 1.0, 3.0 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -72,14 +86,8 @@ test( 'dlag2: real_eigenvalues_identity_B', function t() {
 });
 
 test( 'dlag2: complex_eigenvalues', function t() {
+	var result = callDlag2([ 1.0, 2.0, -5.0, 1.0 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'complex_eigenvalues' );
-
-	// A = [1 -5; 2 1], B = I (column-major)
-	var result = callDlag2(
-		[ 1.0, 2.0, -5.0, 1.0 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -89,14 +97,8 @@ test( 'dlag2: complex_eigenvalues', function t() {
 });
 
 test( 'dlag2: diagonal', function t() {
+	var result = callDlag2([ 5.0, 0.0, 0.0, 3.0 ], [ 2.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'diagonal' );
-
-	// A = [5 0; 0 3], B = [2 0; 0 1] (column-major)
-	var result = callDlag2(
-		[ 5.0, 0.0, 0.0, 3.0 ],
-		[ 2.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -105,14 +107,8 @@ test( 'dlag2: diagonal', function t() {
 });
 
 test( 'dlag2: upper_tri_B', function t() {
+	var result = callDlag2([ 3.0, 1.0, 1.0, 2.0 ], [ 2.0, 0.0, 1.0, 3.0 ], SAFMIN);
 	var tc = findCase( 'upper_tri_B' );
-
-	// A = [3 1; 1 2], B = [2 1; 0 3] (column-major)
-	var result = callDlag2(
-		[ 3.0, 1.0, 1.0, 2.0 ],
-		[ 2.0, 0.0, 1.0, 3.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -121,14 +117,8 @@ test( 'dlag2: upper_tri_B', function t() {
 });
 
 test( 'dlag2: small_B_diagonal', function t() {
+	var result = callDlag2([ 1.0, 1.0, 1.0, 1.0 ], [ 1.0e-200, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'small_B_diagonal' );
-
-	// A = [1 1; 1 1], B = [1e-200 0; 0 1] (column-major)
-	var result = callDlag2(
-		[ 1.0, 1.0, 1.0, 1.0 ],
-		[ 1.0e-200, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -137,14 +127,8 @@ test( 'dlag2: small_B_diagonal', function t() {
 });
 
 test( 'dlag2: s1_leq_s2', function t() {
+	var result = callDlag2([ 0.1, 2.0, 3.0, 5.0 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 's1_leq_s2' );
-
-	// A = [0.1 3; 2 5], B = I (column-major)
-	var result = callDlag2(
-		[ 0.1, 2.0, 3.0, 5.0 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -153,14 +137,8 @@ test( 'dlag2: s1_leq_s2', function t() {
 });
 
 test( 'dlag2: s1_gt_s2', function t() {
+	var result = callDlag2([ 10.0, 1.0, 1.0, 0.5 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 's1_gt_s2' );
-
-	// A = [10 1; 1 0.5], B = I (column-major)
-	var result = callDlag2(
-		[ 10.0, 1.0, 1.0, 0.5 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -169,14 +147,8 @@ test( 'dlag2: s1_gt_s2', function t() {
 });
 
 test( 'dlag2: large_A', function t() {
+	var result = callDlag2([ 1.0e100, 2.0e100, 3.0e100, 4.0e100 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'large_A' );
-
-	// A = [1e100 3e100; 2e100 4e100], B = I (column-major)
-	var result = callDlag2(
-		[ 1.0e100, 2.0e100, 3.0e100, 4.0e100 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -185,14 +157,8 @@ test( 'dlag2: large_A', function t() {
 });
 
 test( 'dlag2: negative_eigenvalues', function t() {
+	var result = callDlag2([ -2.0, 1.0, 1.0, -3.0 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'negative_eigenvalues' );
-
-	// A = [-2 1; 1 -3], B = I (column-major)
-	var result = callDlag2(
-		[ -2.0, 1.0, 1.0, -3.0 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -201,14 +167,8 @@ test( 'dlag2: negative_eigenvalues', function t() {
 });
 
 test( 'dlag2: pp_gt_abi22', function t() {
+	var result = callDlag2([ 6.0, 0.1, 1.0, 2.0 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'pp_gt_abi22' );
-
-	// A = [6 1; 0.1 2], B = I (column-major)
-	var result = callDlag2(
-		[ 6.0, 0.1, 1.0, 2.0 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -217,14 +177,8 @@ test( 'dlag2: pp_gt_abi22', function t() {
 });
 
 test( 'dlag2: small_A', function t() {
+	var result = callDlag2([ 1.0e-200, 2.0e-200, 3.0e-200, 4.0e-200 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'small_A' );
-
-	// A = [1e-200 3e-200; 2e-200 4e-200], B = I (column-major)
-	var result = callDlag2(
-		[ 1.0e-200, 2.0e-200, 3.0e-200, 4.0e-200 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -233,14 +187,8 @@ test( 'dlag2: small_A', function t() {
 });
 
 test( 'dlag2: both_B_diag_small', function t() {
+	var result = callDlag2([ 1.0, 0.5, 0.5, 1.0 ], [ 1.0e-200, 0.0, 0.0, 1.0e-200 ], SAFMIN);
 	var tc = findCase( 'both_B_diag_small' );
-
-	// A = [1 0.5; 0.5 1], B = [1e-200 0; 0 1e-200] (column-major)
-	var result = callDlag2(
-		[ 1.0, 0.5, 0.5, 1.0 ],
-		[ 1.0e-200, 0.0, 0.0, 1.0e-200 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -249,14 +197,8 @@ test( 'dlag2: both_B_diag_small', function t() {
 });
 
 test( 'dlag2: B_offdiag', function t() {
+	var result = callDlag2([ 2.0, 0.0, 0.0, 3.0 ], [ 1.0, 0.0, 0.5, 1.0 ], SAFMIN);
 	var tc = findCase( 'B_offdiag' );
-
-	// A = [2 0; 0 3], B = [1 0.5; 0 1] (column-major)
-	var result = callDlag2(
-		[ 2.0, 0.0, 0.0, 3.0 ],
-		[ 1.0, 0.0, 0.5, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -265,14 +207,8 @@ test( 'dlag2: B_offdiag', function t() {
 });
 
 test( 'dlag2: large_eigenvalue_scaling', function t() {
+	var result = callDlag2([ 1.0e150, 0.0, 0.0, 2.0e150 ], [ 1.0e-10, 0.0, 0.0, 1.0e-10 ], SAFMIN);
 	var tc = findCase( 'large_eigenvalue_scaling' );
-
-	// A = [1e150 0; 0 2e150], B = [1e-10 0; 0 1e-10] (column-major)
-	var result = callDlag2(
-		[ 1.0e150, 0.0, 0.0, 2.0e150 ],
-		[ 1.0e-10, 0.0, 0.0, 1.0e-10 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -281,14 +217,8 @@ test( 'dlag2: large_eigenvalue_scaling', function t() {
 });
 
 test( 'dlag2: complex_nontrivial_B', function t() {
+	var result = callDlag2([ 1.0, 3.0, -2.0, 1.0 ], [ 2.0, 0.0, 1.0, 2.0 ], SAFMIN);
 	var tc = findCase( 'complex_nontrivial_B' );
-
-	// A = [1 -2; 3 1], B = [2 1; 0 2] (column-major)
-	var result = callDlag2(
-		[ 1.0, 3.0, -2.0, 1.0 ],
-		[ 2.0, 0.0, 1.0, 2.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -297,14 +227,8 @@ test( 'dlag2: complex_nontrivial_B', function t() {
 });
 
 test( 'dlag2: negative_B_diag', function t() {
+	var result = callDlag2([ 3.0, 1.0, 1.0, 2.0 ], [ -1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'negative_B_diag' );
-
-	// A = [3 1; 1 2], B = [-1 0; 0 1] (column-major)
-	var result = callDlag2(
-		[ 3.0, 1.0, 1.0, 2.0 ],
-		[ -1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -313,14 +237,8 @@ test( 'dlag2: negative_B_diag', function t() {
 });
 
 test( 'dlag2: b22_small', function t() {
+	var result = callDlag2([ 2.0, 1.0, 1.0, 3.0 ], [ 1.0, 0.0, 0.0, 1.0e-200 ], SAFMIN);
 	var tc = findCase( 'b22_small' );
-
-	// A = [2 1; 1 3], B = [1 0; 0 1e-200] (column-major)
-	var result = callDlag2(
-		[ 2.0, 1.0, 1.0, 3.0 ],
-		[ 1.0, 0.0, 0.0, 1.0e-200 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-10, 'wr1' );
@@ -329,14 +247,8 @@ test( 'dlag2: b22_small', function t() {
 });
 
 test( 'dlag2: large_pp', function t() {
+	var result = callDlag2([ 1.0, 0.0, 0.0, 1.0 ], [ 1.0e-155, 0.0, 0.0, 1.0e-155 ], SAFMIN);
 	var tc = findCase( 'large_pp' );
-
-	// A = I, B = [1e-155 0; 0 1e-155] (column-major)
-	var result = callDlag2(
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		[ 1.0e-155, 0.0, 0.0, 1.0e-155 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -345,14 +257,8 @@ test( 'dlag2: large_pp', function t() {
 });
 
 test( 'dlag2: tiny_pp_qq', function t() {
+	var result = callDlag2([ 1.0e-200, 1.0e-200, 1.0e-200, 1.0e-200 ], [ 1.0, 0.0, 1.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'tiny_pp_qq' );
-
-	// A = [1e-200 1e-200; 1e-200 1e-200], B = [1 1; 0 1] (column-major)
-	var result = callDlag2(
-		[ 1.0e-200, 1.0e-200, 1.0e-200, 1.0e-200 ],
-		[ 1.0, 0.0, 1.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -361,14 +267,8 @@ test( 'dlag2: tiny_pp_qq', function t() {
 });
 
 test( 'dlag2: identity', function t() {
+	var result = callDlag2([ 1.0, 0.0, 0.0, 1.0 ], [ 1.0, 0.0, 0.0, 1.0 ], SAFMIN);
 	var tc = findCase( 'identity' );
-
-	// A = I, B = I (column-major)
-	var result = callDlag2(
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		[ 1.0, 0.0, 0.0, 1.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -377,14 +277,8 @@ test( 'dlag2: identity', function t() {
 });
 
 test( 'dlag2: ascale_gt1_bsize_gt1', function t() {
+	var result = callDlag2([ 0.4, 0.0, 0.0, 0.3 ], [ 2.0, 0.0, 0.0, 3.0 ], SAFMIN);
 	var tc = findCase( 'ascale_gt1_bsize_gt1' );
-
-	// A = [0.4 0; 0 0.3], B = [2 0; 0 3] (column-major)
-	var result = callDlag2(
-		[ 0.4, 0.0, 0.0, 0.3 ],
-		[ 2.0, 0.0, 0.0, 3.0 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -393,14 +287,8 @@ test( 'dlag2: ascale_gt1_bsize_gt1', function t() {
 });
 
 test( 'dlag2: wsize_gt1_eigenvalue1', function t() {
+	var result = callDlag2([ 1.0, 0.0, 0.0, 0.5 ], [ 1.0e-100, 0.0, 0.0, 1.0e-100 ], SAFMIN);
 	var tc = findCase( 'wsize_gt1_eigenvalue1' );
-
-	// A = [1 0; 0 0.5], B = [1e-100 0; 0 1e-100] (column-major)
-	var result = callDlag2(
-		[ 1.0, 0.0, 0.0, 0.5 ],
-		[ 1.0e-100, 0.0, 0.0, 1.0e-100 ],
-		SAFMIN
-	);
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -409,18 +297,15 @@ test( 'dlag2: wsize_gt1_eigenvalue1', function t() {
 });
 
 test( 'dlag2: supports non-unit strides', function t() {
-	// Test with strideA1=2, strideA2=4 (padded layout)
-	// A = [4 1; 2 3] embedded in larger array
-	var A = new Float64Array( [ 4.0, -1.0, 2.0, -1.0, 1.0, -1.0, 3.0, -1.0 ] );
+	var result;
+	var tc;
+	var A;
+	var B;
 
-	// strideA1=2, strideA2=4, offsetA=0
-	// A[0] = 4, A[2] = 2, A[4] = 1, A[6] = 3
-	var B = new Float64Array( [ 1.0, -1.0, 0.0, -1.0, 0.0, -1.0, 1.0, -1.0 ] );
-
-	// Same strides for B
-	var result = dlag2( A, 2, 4, 0, B, 2, 4, 0, SAFMIN );
-
-	var tc = findCase( 'real_eigenvalues_identity_B' );
+	A = new Float64Array( [ 4.0, -1.0, 2.0, -1.0, 1.0, -1.0, 3.0, -1.0 ] );
+	B = new Float64Array( [ 1.0, -1.0, 0.0, -1.0, 0.0, -1.0, 1.0, -1.0 ] );
+	result = dlag2( A, 2, 4, 0, B, 2, 4, 0, SAFMIN );
+	tc = findCase( 'real_eigenvalues_identity_B' );
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );
@@ -429,16 +314,15 @@ test( 'dlag2: supports non-unit strides', function t() {
 });
 
 test( 'dlag2: supports offsets', function t() {
-	// A = [4 1; 2 3], but stored at offset 2
-	var A = new Float64Array( [ -1.0, -1.0, 4.0, 2.0, 1.0, 3.0 ] );
+	var result;
+	var tc;
+	var A;
+	var B;
 
-	// strideA1=1, strideA2=2, offsetA=2
-	var B = new Float64Array( [ -1.0, -1.0, 1.0, 0.0, 0.0, 1.0 ] );
-
-	// strideB1=1, strideB2=2, offsetB=2
-	var result = dlag2( A, 1, 2, 2, B, 1, 2, 2, SAFMIN );
-
-	var tc = findCase( 'real_eigenvalues_identity_B' );
+	A = new Float64Array( [ -1.0, -1.0, 4.0, 2.0, 1.0, 3.0 ] );
+	B = new Float64Array( [ -1.0, -1.0, 1.0, 0.0, 0.0, 1.0 ] );
+	result = dlag2( A, 1, 2, 2, B, 1, 2, 2, SAFMIN );
+	tc = findCase( 'real_eigenvalues_identity_B' );
 	assertClose( result.scale1, tc.scale1, 1e-14, 'scale1' );
 	assertClose( result.scale2, tc.scale2, 1e-14, 'scale2' );
 	assertClose( result.wr1, tc.wr1, 1e-14, 'wr1' );

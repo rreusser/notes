@@ -53,12 +53,12 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 on success
 */
 function dlarrj( N, d, strideD, E2, strideE2, ifirst, ilast, rtol, offset, w, strideW, WERR, strideWERR, WORK, strideWORK, IWORK, strideIWORK, pivmin, spdiam ) {
-	var oD = stride2offset( N, strideD );
-	var oE2 = stride2offset( N, strideE2 );
-	var oW = stride2offset( N, strideW );
+	var oIWORK = stride2offset( 2 * N, strideIWORK );
 	var oWERR = stride2offset( N, strideWERR );
 	var oWORK = stride2offset( 2 * N, strideWORK );
-	var oIWORK = stride2offset( 2 * N, strideIWORK );
+	var oE2 = stride2offset( N, strideE2 );
+	var oD = stride2offset( N, strideD );
+	var oW = stride2offset( N, strideW );
 	return base( N, d, strideD, oD, E2, strideE2, oE2, ifirst, ilast, rtol, offset, w, strideW, oW, WERR, strideWERR, oWERR, WORK, strideWORK, oWORK, IWORK, strideIWORK, oIWORK, pivmin, spdiam );
 }
 

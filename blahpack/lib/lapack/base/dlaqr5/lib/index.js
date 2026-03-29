@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Performs a single small-bulge multi-shift QR sweep
+* Performs a single small-bulge multi-shift QR sweep.
 *
 * @module @stdlib/lapack/base/dlaqr5
 *

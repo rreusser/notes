@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Iterative refinement for a general tridiagonal system
+* Iterative refinement for a general tridiagonal system.
 *
 * @module @stdlib/lapack/base/dgtrfs
 *

@@ -16,6 +16,8 @@
 * limitations under the License.
 */
 
+'use strict';
+
 /**
 * Test for NaN by comparing two arguments for inequality.
 *

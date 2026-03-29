@@ -37,7 +37,7 @@ var LARGE = 1.0 / SMALL;
 /**
 * Equilibrates a symmetric matrix A using the scaling factors in the vector S.
 *
-* This sets A(i,j) = S(i) * A(i,j) * S(j) when the matrix is poorly scaled.
+* This sets A(i,j) = S(i) _ A(i,j) _ S(j) when the matrix is poorly scaled.
 *
 * Returns the equilibration type:
 * - 'N' - no equilibration was needed

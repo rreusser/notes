@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlasyf = require( '@stdlib/lapack/base/dlasyf' );

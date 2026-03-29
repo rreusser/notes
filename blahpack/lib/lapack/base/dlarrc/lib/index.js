@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Count eigenvalues of a symmetric tridiagonal matrix in an interval
+* Count eigenvalues of a symmetric tridiagonal matrix in an interval.
 *
 * @module @stdlib/lapack/base/dlarrc
 *

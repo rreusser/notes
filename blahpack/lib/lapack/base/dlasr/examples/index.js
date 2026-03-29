@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 var dlasr = require( '@stdlib/lapack/base/dlasr' );

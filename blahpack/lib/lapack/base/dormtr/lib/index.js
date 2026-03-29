@@ -1,9 +1,8 @@
 
-
 'use strict';
 
 /**
-* Apply orthogonal matrix Q from dsytrd to a general matrix
+* Apply orthogonal matrix Q from dsytrd to a general matrix.
 *
 * @module @stdlib/lapack/base/dormtr
 *

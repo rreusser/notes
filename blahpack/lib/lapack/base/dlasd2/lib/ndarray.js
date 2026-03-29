@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 // MODULES //
@@ -10,7 +9,7 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Merge two sets of singular values in bidiagonal SVD divide and conquer
+* Merge two sets of singular values in bidiagonal SVD divide and conquer.
 *
 * @param {integer} nl - nl
 * @param {integer} nr - nr

@@ -1,35 +1,64 @@
-
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
 'use strict';
+
 
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dhseqr = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dhseqr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dhseqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
 
 
 // FUNCTIONS //
 
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
+	return fixture.find( function find( t ) { return t.name === name;
+	} );
 }
 
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -71,126 +100,224 @@ function matrixToArray( A, N ) {
 	return result;
 }
 
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
 
 // TESTS //
 
 test( 'dhseqr: eigenvalues_only_6x6', function t() {
-	var tc = findCase( 'eigenvalues_only_6x6' );
-	var N = 6;
-	var H = makeMatrix( N, [
-		[ 0, 0, 4.0 ], [ 0, 1, 3.0 ], [ 0, 2, 2.0 ], [ 0, 3, 1.0 ], [ 0, 4, 0.5 ], [ 0, 5, 0.1 ],
-		[ 1, 0, 1.0 ], [ 1, 1, 4.0 ], [ 1, 2, 3.0 ], [ 1, 3, 2.0 ], [ 1, 4, 1.0 ], [ 1, 5, 0.5 ],
-		[ 2, 1, 1.0 ], [ 2, 2, 4.0 ], [ 2, 3, 3.0 ], [ 2, 4, 2.0 ], [ 2, 5, 1.0 ],
-		[ 3, 2, 1.0 ], [ 3, 3, 4.0 ], [ 3, 4, 3.0 ], [ 3, 5, 2.0 ],
-		[ 4, 3, 1.0 ], [ 4, 4, 4.0 ], [ 4, 5, 3.0 ],
-		[ 5, 4, 1.0 ], [ 5, 5, 4.0 ]
+	var expectedWR;
+	var expectedWI;
+	var actualWR;
+	var actualWI;
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'eigenvalues_only_6x6' );
+	N = 6;
+	H = makeMatrix( N, [
+		[ 0, 0, 4.0 ],
+		[ 0, 1, 3.0 ],
+		[ 0, 2, 2.0 ],
+		[ 0, 3, 1.0 ],
+		[ 0, 4, 0.5 ],
+		[ 0, 5, 0.1 ], // eslint-disable-line max-len
+		[ 1, 0, 1.0 ],
+		[ 1, 1, 4.0 ],
+		[ 1, 2, 3.0 ],
+		[ 1, 3, 2.0 ],
+		[ 1, 4, 1.0 ],
+		[ 1, 5, 0.5 ], // eslint-disable-line max-len
+		[ 2, 1, 1.0 ],
+		[ 2, 2, 4.0 ],
+		[ 2, 3, 3.0 ],
+		[ 2, 4, 2.0 ],
+		[ 2, 5, 1.0 ],
+		[ 3, 2, 1.0 ],
+		[ 3, 3, 4.0 ],
+		[ 3, 4, 3.0 ],
+		[ 3, 5, 2.0 ],
+		[ 4, 3, 1.0 ],
+		[ 4, 4, 4.0 ],
+		[ 4, 5, 3.0 ],
+		[ 5, 4, 1.0 ],
+		[ 5, 5, 4.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-
-	var info = dhseqr( 'eigenvalues', 'none', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	info = dhseqr( 'eigenvalues', 'none', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-
-	// Sort eigenvalues for comparison since order may differ
-	var actualWR = Array.from( WR ).sort( function( a, b ) { return a - b; } );
-	var expectedWR = tc.wr.slice().sort( function( a, b ) { return a - b; } );
+	actualWR = toArray( WR ).sort( function ( a, b ) { return a - b; } );
+	expectedWR = tc.wr.slice().sort( function ( a, b ) { return a - b; } );
 	assertArrayClose( actualWR, expectedWR, 1e-12, 'wr' );
-
-	var actualWI = Array.from( WI ).sort( function( a, b ) { return a - b; } );
-	var expectedWI = tc.wi.slice().sort( function( a, b ) { return a - b; } );
+	actualWI = toArray( WI ).sort( function ( a, b ) { return a - b; } );
+	expectedWI = tc.wi.slice().sort( function ( a, b ) { return a - b; } );
 	assertArrayClose( actualWI, expectedWI, 1e-12, 'wi' );
 });
 
 test( 'dhseqr: schur_with_z_init_4x4', function t() {
-	var tc = findCase( 'schur_with_z_init_4x4' );
-	var N = 4;
-	var H = makeMatrix( N, [
-		[ 0, 0, 4.0 ], [ 0, 1, 3.0 ], [ 0, 2, 2.0 ], [ 0, 3, 1.0 ],
-		[ 1, 0, 1.0 ], [ 1, 1, 4.0 ], [ 1, 2, 3.0 ], [ 1, 3, 2.0 ],
-		[ 2, 1, 1.0 ], [ 2, 2, 4.0 ], [ 2, 3, 3.0 ],
-		[ 3, 2, 1.0 ], [ 3, 3, 4.0 ]
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'schur_with_z_init_4x4' );
+	N = 4;
+	H = makeMatrix( N, [
+		[ 0, 0, 4.0 ],
+		[ 0, 1, 3.0 ],
+		[ 0, 2, 2.0 ],
+		[ 0, 3, 1.0 ],
+		[ 1, 0, 1.0 ],
+		[ 1, 1, 4.0 ],
+		[ 1, 2, 3.0 ],
+		[ 1, 3, 2.0 ],
+		[ 2, 1, 1.0 ],
+		[ 2, 2, 4.0 ],
+		[ 2, 3, 3.0 ],
+		[ 3, 2, 1.0 ],
+		[ 3, 3, 4.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-
-	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
-	assertArrayClose( Array.from( WI ), tc.wi, 1e-12, 'wi' );
+	assertArrayClose( toArray( WR ), tc.wr, 1e-12, 'wr' );
+	assertArrayClose( toArray( WI ), tc.wi, 1e-12, 'wi' );
 	assertArrayClose( matrixToArray( H, N ), tc.h, 1e-12, 'h' );
 	assertArrayClose( matrixToArray( Z, N ), tc.z, 1e-12, 'z' );
 });
 
 test( 'dhseqr: schur_with_z_update_4x4', function t() {
-	var tc = findCase( 'schur_with_z_update_4x4' );
-	var N = 4;
-	var H = makeMatrix( N, [
-		[ 0, 0, 2.0 ], [ 0, 1, 1.0 ], [ 0, 2, 0.5 ], [ 0, 3, 0.1 ],
-		[ 1, 0, 3.0 ], [ 1, 1, 1.0 ], [ 1, 2, 2.0 ], [ 1, 3, 0.5 ],
-		[ 2, 1, 1.0 ], [ 2, 2, 3.0 ], [ 2, 3, 1.0 ],
-		[ 3, 2, 0.5 ], [ 3, 3, 4.0 ]
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'schur_with_z_update_4x4' );
+	N = 4;
+	H = makeMatrix( N, [
+		[ 0, 0, 2.0 ],
+		[ 0, 1, 1.0 ],
+		[ 0, 2, 0.5 ],
+		[ 0, 3, 0.1 ],
+		[ 1, 0, 3.0 ],
+		[ 1, 1, 1.0 ],
+		[ 1, 2, 2.0 ],
+		[ 1, 3, 0.5 ],
+		[ 2, 1, 1.0 ],
+		[ 2, 2, 3.0 ],
+		[ 2, 3, 1.0 ],
+		[ 3, 2, 0.5 ],
+		[ 3, 3, 4.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	// Initialize Z to identity (COMPZ='V' expects Z on input)
-	var Z = makeMatrix( N, [
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = makeMatrix( N, [
 		[ 0, 0, 1.0 ], [ 1, 1, 1.0 ], [ 2, 2, 1.0 ], [ 3, 3, 1.0 ]
 	]);
-
-	var info = dhseqr( 'schur', 'update', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	info = dhseqr( 'schur', 'update', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
-	assertArrayClose( Array.from( WI ), tc.wi, 1e-12, 'wi' );
+	assertArrayClose( toArray( WR ), tc.wr, 1e-12, 'wr' );
+	assertArrayClose( toArray( WI ), tc.wi, 1e-12, 'wi' );
 	assertArrayClose( matrixToArray( H, N ), tc.h, 1e-12, 'h' );
 	assertArrayClose( matrixToArray( Z, N ), tc.z, 1e-12, 'z' );
 });
 
 test( 'dhseqr: schur_no_z_4x4', function t() {
-	var tc = findCase( 'schur_no_z_4x4' );
-	var N = 4;
-	var H = makeMatrix( N, [
-		[ 0, 0, 4.0 ], [ 0, 1, 3.0 ], [ 0, 2, 2.0 ], [ 0, 3, 1.0 ],
-		[ 1, 0, 1.0 ], [ 1, 1, 4.0 ], [ 1, 2, 3.0 ], [ 1, 3, 2.0 ],
-		[ 2, 1, 1.0 ], [ 2, 2, 4.0 ], [ 2, 3, 3.0 ],
-		[ 3, 2, 1.0 ], [ 3, 3, 4.0 ]
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'schur_no_z_4x4' );
+	N = 4;
+	H = makeMatrix( N, [
+		[ 0, 0, 4.0 ],
+		[ 0, 1, 3.0 ],
+		[ 0, 2, 2.0 ],
+		[ 0, 3, 1.0 ],
+		[ 1, 0, 1.0 ],
+		[ 1, 1, 4.0 ],
+		[ 1, 2, 3.0 ],
+		[ 1, 3, 2.0 ],
+		[ 2, 1, 1.0 ],
+		[ 2, 2, 4.0 ],
+		[ 2, 3, 3.0 ],
+		[ 3, 2, 1.0 ],
+		[ 3, 3, 4.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-
-	var info = dhseqr( 'schur', 'none', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	info = dhseqr( 'schur', 'none', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
-	assertArrayClose( Array.from( WI ), tc.wi, 1e-12, 'wi' );
+	assertArrayClose( toArray( WR ), tc.wr, 1e-12, 'wr' );
+	assertArrayClose( toArray( WI ), tc.wi, 1e-12, 'wi' );
 	assertArrayClose( matrixToArray( H, N ), tc.h, 1e-12, 'h' );
 });
 
 test( 'dhseqr: n0', function t() {
-	var WR = new Float64Array( 1 );
-	var WI = new Float64Array( 1 );
-	var H = new Float64Array( 1 );
-	var Z = new Float64Array( 1 );
+	var info;
+	var WR;
+	var WI;
+	var H;
+	var Z;
 
-	var info = dhseqr( 'schur', 'initialize', 0, 1, 0, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 );
+	WR = new Float64Array( 1 );
+	WI = new Float64Array( 1 );
+	H = new Float64Array( 1 );
+	Z = new Float64Array( 1 );
+	info = dhseqr( 'schur', 'initialize', 0, 1, 0, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 });
 
 test( 'dhseqr: n1', function t() {
-	var tc = findCase( 'n1' );
-	var N = 1;
-	var H = new Float64Array( [ 7.0 ] );
-	var WR = new Float64Array( 1 );
-	var WI = new Float64Array( 1 );
-	var Z = new Float64Array( 1 );
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
 
-	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 );
-
+	tc = findCase( 'n1' );
+	N = 1;
+	H = new Float64Array( [ 7.0 ] );
+	WR = new Float64Array( 1 );
+	WI = new Float64Array( 1 );
+	Z = new Float64Array( 1 );
+	info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, 1, 0, WR, 1, 0, WI, 1, 0, Z, 1, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assertClose( WR[ 0 ], tc.wr1, 1e-14, 'wr1' );
 	assertClose( WI[ 0 ], tc.wi1, 1e-14, 'wi1' );
@@ -199,90 +326,159 @@ test( 'dhseqr: n1', function t() {
 });
 
 test( 'dhseqr: n2_complex', function t() {
-	var tc = findCase( 'n2_complex' );
-	var N = 2;
-	var H = makeMatrix( N, [
-		[ 0, 0, 0.0 ], [ 0, 1, -2.0 ],
-		[ 1, 0, 1.0 ], [ 1, 1, 0.0 ]
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'n2_complex' );
+	N = 2;
+	H = makeMatrix( N, [
+		[ 0, 0, 0.0 ],
+		[ 0, 1, -2.0 ],
+		[ 1, 0, 1.0 ],
+		[ 1, 1, 0.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-
-	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
-	assertArrayClose( Array.from( WI ), tc.wi, 1e-12, 'wi' );
+	assertArrayClose( toArray( WR ), tc.wr, 1e-12, 'wr' );
+	assertArrayClose( toArray( WI ), tc.wi, 1e-12, 'wi' );
 	assertArrayClose( matrixToArray( H, N ), tc.h, 1e-12, 'h' );
 	assertArrayClose( matrixToArray( Z, N ), tc.z, 1e-12, 'z' );
 });
 
 test( 'dhseqr: ilo_eq_ihi', function t() {
-	var tc = findCase( 'ilo_eq_ihi' );
-	var N = 4;
-	var H = makeMatrix( N, [
-		[ 0, 0, 5.0 ], [ 0, 1, 3.0 ], [ 0, 2, 2.0 ], [ 0, 3, 1.0 ],
-		[ 1, 1, 4.0 ], [ 1, 2, 3.0 ], [ 1, 3, 2.0 ],
-		[ 2, 2, 3.0 ], [ 2, 3, 1.0 ],
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'ilo_eq_ihi' );
+	N = 4;
+	H = makeMatrix( N, [
+		[ 0, 0, 5.0 ],
+		[ 0, 1, 3.0 ],
+		[ 0, 2, 2.0 ],
+		[ 0, 3, 1.0 ],
+		[ 1, 1, 4.0 ],
+		[ 1, 2, 3.0 ],
+		[ 1, 3, 2.0 ],
+		[ 2, 2, 3.0 ],
+		[ 2, 3, 1.0 ],
 		[ 3, 3, 7.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-
-	var info = dhseqr( 'schur', 'none', N, 2, 2, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	info = dhseqr( 'schur', 'none', N, 2, 2, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assertClose( WR[ 1 ], tc.wr2, 1e-14, 'wr2' );
 	assertClose( WI[ 1 ], tc.wi2, 1e-14, 'wi2' );
 });
 
 test( 'dhseqr: complex_pairs_6x6', function t() {
-	var tc = findCase( 'complex_pairs_6x6' );
-	var N = 6;
-	var H = makeMatrix( N, [
-		[ 0, 0, 1.0 ], [ 0, 1, -2.0 ], [ 0, 2, 1.0 ], [ 0, 3, 0.5 ], [ 0, 4, 0.1 ], [ 0, 5, 0.2 ],
-		[ 1, 0, 2.0 ], [ 1, 1, 1.0 ], [ 1, 2, -1.0 ], [ 1, 3, 0.3 ], [ 1, 4, 0.4 ], [ 1, 5, 0.1 ],
-		[ 2, 1, 1.5 ], [ 2, 2, 2.0 ], [ 2, 3, -1.0 ], [ 2, 4, 0.5 ], [ 2, 5, 0.3 ],
-		[ 3, 2, 1.0 ], [ 3, 3, 3.0 ], [ 3, 4, -2.0 ], [ 3, 5, 0.4 ],
-		[ 4, 3, 2.0 ], [ 4, 4, 1.0 ], [ 4, 5, -1.0 ],
-		[ 5, 4, 1.0 ], [ 5, 5, 2.0 ]
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'complex_pairs_6x6' );
+	N = 6;
+	H = makeMatrix( N, [
+		[ 0, 0, 1.0 ],
+		[ 0, 1, -2.0 ],
+		[ 0, 2, 1.0 ],
+		[ 0, 3, 0.5 ],
+		[ 0, 4, 0.1 ],
+		[ 0, 5, 0.2 ], // eslint-disable-line max-len
+		[ 1, 0, 2.0 ],
+		[ 1, 1, 1.0 ],
+		[ 1, 2, -1.0 ],
+		[ 1, 3, 0.3 ],
+		[ 1, 4, 0.4 ],
+		[ 1, 5, 0.1 ], // eslint-disable-line max-len
+		[ 2, 1, 1.5 ],
+		[ 2, 2, 2.0 ],
+		[ 2, 3, -1.0 ],
+		[ 2, 4, 0.5 ],
+		[ 2, 5, 0.3 ],
+		[ 3, 2, 1.0 ],
+		[ 3, 3, 3.0 ],
+		[ 3, 4, -2.0 ],
+		[ 3, 5, 0.4 ],
+		[ 4, 3, 2.0 ],
+		[ 4, 4, 1.0 ],
+		[ 4, 5, -1.0 ],
+		[ 5, 4, 1.0 ],
+		[ 5, 5, 2.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-
-	var info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	info = dhseqr( 'schur', 'initialize', N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
-	assertArrayClose( Array.from( WI ), tc.wi, 1e-12, 'wi' );
+	assertArrayClose( toArray( WR ), tc.wr, 1e-12, 'wr' );
+	assertArrayClose( toArray( WI ), tc.wi, 1e-12, 'wi' );
 	assertArrayClose( matrixToArray( H, N ), tc.h, 1e-12, 'h' );
 	assertArrayClose( matrixToArray( Z, N ), tc.z, 1e-12, 'z' );
 });
 
 test( 'dhseqr: partial_range_6x6', function t() {
-	var tc = findCase( 'partial_range_6x6' );
-	var N = 6;
-	var H = makeMatrix( N, [
-		[ 0, 0, 10.0 ], [ 0, 1, 1.0 ], [ 0, 2, 2.0 ],
-		[ 0, 3, 3.0 ], [ 0, 4, 4.0 ], [ 0, 5, 5.0 ],
-		[ 1, 1, 4.0 ], [ 1, 2, 3.0 ], [ 1, 3, 1.0 ], [ 1, 4, 0.5 ], [ 1, 5, 0.1 ],
-		[ 2, 1, 1.0 ], [ 2, 2, 3.0 ], [ 2, 3, 2.0 ], [ 2, 4, 1.0 ], [ 2, 5, 0.2 ],
-		[ 3, 2, 0.5 ], [ 3, 3, 2.0 ], [ 3, 4, 1.5 ], [ 3, 5, 0.3 ],
-		[ 4, 3, 0.25 ], [ 4, 4, 1.0 ], [ 4, 5, 0.4 ],
+	var info;
+	var tc;
+	var WR;
+	var WI;
+	var N;
+	var H;
+	var Z;
+
+	tc = findCase( 'partial_range_6x6' );
+	N = 6;
+	H = makeMatrix( N, [
+		[ 0, 0, 10.0 ],
+		[ 0, 1, 1.0 ],
+		[ 0, 2, 2.0 ],
+		[ 0, 3, 3.0 ],
+		[ 0, 4, 4.0 ],
+		[ 0, 5, 5.0 ],
+		[ 1, 1, 4.0 ],
+		[ 1, 2, 3.0 ],
+		[ 1, 3, 1.0 ],
+		[ 1, 4, 0.5 ],
+		[ 1, 5, 0.1 ],
+		[ 2, 1, 1.0 ],
+		[ 2, 2, 3.0 ],
+		[ 2, 3, 2.0 ],
+		[ 2, 4, 1.0 ],
+		[ 2, 5, 0.2 ],
+		[ 3, 2, 0.5 ],
+		[ 3, 3, 2.0 ],
+		[ 3, 4, 1.5 ],
+		[ 3, 5, 0.3 ],
+		[ 4, 3, 0.25 ],
+		[ 4, 4, 1.0 ],
+		[ 4, 5, 0.4 ],
 		[ 5, 5, 20.0 ]
 	]);
-	var WR = new Float64Array( N );
-	var WI = new Float64Array( N );
-	var Z = new Float64Array( N * N );
-
-	var info = dhseqr( 'schur', 'initialize', N, 2, 5, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 );
-
+	WR = new Float64Array( N );
+	WI = new Float64Array( N );
+	Z = new Float64Array( N * N );
+	info = dhseqr( 'schur', 'initialize', N, 2, 5, H, 1, N, 0, WR, 1, 0, WI, 1, 0, Z, 1, N, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
-	assertArrayClose( Array.from( WR ), tc.wr, 1e-12, 'wr' );
-	assertArrayClose( Array.from( WI ), tc.wi, 1e-12, 'wi' );
+	assertArrayClose( toArray( WR ), tc.wr, 1e-12, 'wr' );
+	assertArrayClose( toArray( WI ), tc.wi, 1e-12, 'wi' );
 	assertArrayClose( matrixToArray( H, N ), tc.h, 1e-12, 'h' );
 	assertArrayClose( matrixToArray( Z, N ), tc.z, 1e-12, 'z' );
 });
