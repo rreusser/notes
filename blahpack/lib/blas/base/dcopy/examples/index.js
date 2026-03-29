@@ -1,8 +1,12 @@
-
-
 'use strict';
 
-var dcopy = require( '@stdlib/blas/base/dcopy' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dcopy = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( dcopy );
+// Copy x into y:
+var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
+var y = new Float64Array( 5 );
+
+dcopy( 5, x, 1, 0, y, 1, 0 );
+console.log( y ); // eslint-disable-line no-console
+// => <Float64Array>[ 1, 2, 3, 4, 5 ]

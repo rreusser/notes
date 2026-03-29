@@ -1,8 +1,12 @@
-
-
 'use strict';
 
-var dspr2 = require( '@stdlib/blas/base/dspr2' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dspr2 = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( dspr2 );
+// Perform A = alpha*x*y' + alpha*y*x' + A:
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var y = new Float64Array( [ 3.0, 4.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 1.0 ] );
+
+dspr2( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, AP, 1, 0 );
+console.log( AP ); // eslint-disable-line no-console

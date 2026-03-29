@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dgemv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
@@ -111,32 +111,31 @@ test( 'dgemv: alpha=0 just scales y by beta', function t() {
 // ndarray validation tests
 
 test( 'dgemv: ndarray throws TypeError for invalid trans', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'invalid', 2, 2, 1.0, A, 1, 3, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 3 ), 1, 0 );
 	}, TypeError );
 });
 
 test( 'dgemv: ndarray throws RangeError for negative M', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'no-transpose', -1, 2, 1.0, A, 1, 3, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 3 ), 1, 0 );
 	}, RangeError );
 });
 
 test( 'dgemv: ndarray throws RangeError for negative N', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'no-transpose', 2, -1, 1.0, A, 1, 3, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 3 ), 1, 0 );
 	}, RangeError );
 });
 
 test( 'dgemv: ndarray throws RangeError for zero strideX', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'no-transpose', 2, 2, 1.0, A, 1, 3, 0, new Float64Array( 2 ), 0, 0, 0.0, new Float64Array( 3 ), 1, 0 );
 	}, RangeError );
 });
 
 test( 'dgemv: ndarray throws RangeError for zero strideY', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'no-transpose', 2, 2, 1.0, A, 1, 3, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 3 ), 0, 0 );
 	}, RangeError );
 });
-

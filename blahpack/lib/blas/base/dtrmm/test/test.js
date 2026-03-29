@@ -3,10 +3,10 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dtrmm = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
@@ -19,7 +19,8 @@ function findCase( name ) {
 }
 
 function assertArrayClose( actual, expected, tol, msg ) {
-	var i, relErr;
+	var relErr;
+	var i;
 	for ( i = 0; i < expected.length; i++ ) {
 		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
 		if ( relErr > tol ) {
@@ -48,13 +49,57 @@ function setupB3x2( b ) {
 }
 
 var cases = [
-	{ name: 'left_upper_n', s: 'left', u: 'upper', t: 'no-transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriUpper3, aLda: 3 },
-	{ name: 'left_lower_n', s: 'left', u: 'lower', t: 'no-transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriLower3, aLda: 3 },
-	{ name: 'left_upper_t', s: 'left', u: 'upper', t: 'transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriUpper3, aLda: 3 },
-	{ name: 'left_lower_t', s: 'left', u: 'lower', t: 'transpose', d: 'non-unit', m: 3, n: 2, al: 1, aFn: setupTriLower3, aLda: 3 },
+	{
+		'name': 'left_upper_n',
+		's': 'left',
+		'u': 'upper',
+		't': 'no-transpose',
+		'd': 'non-unit',
+		'm': 3,
+		'n': 2,
+		'al': 1,
+		'aFn': setupTriUpper3,
+		'aLda': 3
+	},
+	{
+		'name': 'left_lower_n',
+		's': 'left',
+		'u': 'lower',
+		't': 'no-transpose',
+		'd': 'non-unit',
+		'm': 3,
+		'n': 2,
+		'al': 1,
+		'aFn': setupTriLower3,
+		'aLda': 3
+	},
+	{
+		'name': 'left_upper_t',
+		's': 'left',
+		'u': 'upper',
+		't': 'transpose',
+		'd': 'non-unit',
+		'm': 3,
+		'n': 2,
+		'al': 1,
+		'aFn': setupTriUpper3,
+		'aLda': 3
+	},
+	{
+		'name': 'left_lower_t',
+		's': 'left',
+		'u': 'lower',
+		't': 'transpose',
+		'd': 'non-unit',
+		'm': 3,
+		'n': 2,
+		'al': 1,
+		'aFn': setupTriLower3,
+		'aLda': 3
+	}
 ];
 
-cases.forEach( function( c ) {
+cases.forEach( function ( c ) {
 	test( 'dtrmm: ' + c.name, function t() {
 		var tc = findCase( c.name );
 		var a = new Float64Array( 16 );

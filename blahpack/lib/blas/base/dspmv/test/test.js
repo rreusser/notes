@@ -5,9 +5,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dspmv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
@@ -163,11 +163,10 @@ test( 'dspmv: lower_negative_stride (uplo=L, N=3, incx=-2, incy=-2)', function t
 });
 
 test( 'dspmv: returns y', function t() {
+	var result = dspmv( 'upper', 1, 1.0, AP, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 	var AP = new Float64Array( [ 1 ] );
 	var x = new Float64Array( [ 1 ] );
 	var y = new Float64Array( [ 0 ] );
-
-	var result = dspmv( 'upper', 1, 1.0, AP, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 	assert.equal( result, y );
 });
 

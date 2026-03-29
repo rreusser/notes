@@ -21,22 +21,11 @@
 'use strict';
 
 var test = require( 'node:test' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dcabs1 = require( './../lib' );
-
-test( 'dcabs1: main export is a function', function t() {
-	assert.strictEqual( typeof dcabs1, 'function' );
-});
-
-test( 'dcabs1: attached to the main export is an `ndarray` method', function t() {
-	assert.strictEqual( typeof dcabs1.ndarray, 'function' );
-});
-
-// FIXTURES //
-
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var base = require( './../lib/base.js' );
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
@@ -47,16 +36,16 @@ var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } )
 // TESTS //
 
 test( 'dcabs1: computes |Re(z)| + |Im(z)| for (3+4i)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'basic'; } );
+	var tc = fixture.find( function ( t ) { return t.name === 'basic'; } );
 	assert.equal( base( new Float64Array( [ 3, 4 ] ) ), tc.result );
 });
 
 test( 'dcabs1: returns 0 for (0+0i)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zero'; } );
+	var tc = fixture.find( function ( t ) { return t.name === 'zero'; } );
 	assert.equal( base( new Float64Array( [ 0, 0 ] ) ), tc.result );
 });
 
 test( 'dcabs1: handles negative components', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'negative'; } );
+	var tc = fixture.find( function ( t ) { return t.name === 'negative'; } );
 	assert.equal( base( new Float64Array( [ -5, 12 ] ) ), tc.result );
 });

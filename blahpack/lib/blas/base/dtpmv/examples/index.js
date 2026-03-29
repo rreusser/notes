@@ -1,8 +1,11 @@
-
-
 'use strict';
 
-var dtpmv = require( '@stdlib/blas/base/dtpmv' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dtpmv = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( dtpmv );
+// Perform x = A*x for triangular packed A:
+var AP = new Float64Array( [ 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 1.0, 1.0 ] );
+
+dtpmv( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
+console.log( x ); // eslint-disable-line no-console

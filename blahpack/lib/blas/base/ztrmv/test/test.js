@@ -21,9 +21,9 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrmv = require( './../lib' );
@@ -60,110 +60,129 @@ test( 'ztrmv: attached to the main export is an `ndarray` method', function t() 
 });
 
 test( 'ztrmv: upper triangular, no transpose, non-unit diagonal (N=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_upper_no_trans'; } );
-	// A upper: A(0,0)=2+1i, A(0,1)=3+1i, A(1,1)=4+2i (col-major)
-	// With strideA1=1, strideA2=2 for 2x2:
-	// A flat (col-major): [2+1i, 0, 3+1i, 4+2i]
+	var result = base( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_upper_no_trans'; } );
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
-	var result = base( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: lower triangular, no transpose, non-unit diagonal (N=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_lower_no_trans'; } );
-	// A lower: A(0,0)=2+1i, A(1,0)=3+1i, A(1,1)=4+2i
+	var result = base( 'lower', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_lower_no_trans'; } );
 	var A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
-	var result = base( 'lower', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: upper triangular, unit diagonal (N=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_unit_diag'; } );
-	// Diagonal elements should be ignored (set to 99+99i)
+	var result = base( 'upper', 'no-transpose', 'unit', 2, A, 1, 2, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_unit_diag'; } );
 	var A = new Complex128Array( [ 99, 99, 0, 0, 3, 1, 99, 99 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
-	var result = base( 'upper', 'no-transpose', 'unit', 2, A, 1, 2, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: upper triangular, transpose (A^T), non-unit (N=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_upper_trans'; } );
+	var result = base( 'upper', 'transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_upper_trans'; } );
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
-	var result = base( 'upper', 'transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: upper triangular, conjugate transpose (A^H), non-unit (N=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_upper_conjtrans'; } );
+	var result = base( 'upper', 'conjugate-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_upper_conjtrans'; } );
 	var A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 1 ] );
-	var result = base( 'upper', 'conjugate-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: N=0 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_n_zero'; } );
+	var result = base( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_n_zero'; } );
 	var A = new Complex128Array( [ 1, 0 ] );
 	var x = new Complex128Array( [ 5, 5 ] );
-	var result = base( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: N=1, upper, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_n_one'; } );
+	var result = base( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_n_one'; } );
 	var A = new Complex128Array( [ 3, 2 ] );
 	var x = new Complex128Array( [ 2, 1 ] );
-	var result = base( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: non-unit stride (strideX=2), upper, no transpose (N=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_stride'; } );
-	var A = new Complex128Array( [ 2, 0, 0, 0, 1, 1, 3, 0 ] );
-	// x: elem0 at index 0 = (1,0), elem1 at index 2 = (0,1)
-	var x = new Complex128Array( [ 1, 0, 99, 99, 0, 1 ] );
 	var result = base( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 2, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_stride'; } );
+	var A = new Complex128Array( [ 2, 0, 0, 0, 1, 1, 3, 0 ] );
+	var x = new Complex128Array( [ 1, 0, 99, 99, 0, 1 ] );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: lower, conjugate transpose, non-unit (N=3)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_lower_conjtrans'; } );
-	// A lower 3x3 col-major:
-	// col0: A(0,0)=1+1i, A(1,0)=2+1i, A(2,0)=3+1i
-	// col1: A(0,1)=0,    A(1,1)=4+2i, A(2,1)=5+2i
-	// col2: A(0,2)=0,    A(1,2)=0,    A(2,2)=6+3i
-	var A = new Complex128Array( [
-		1, 1, 2, 1, 3, 1,
-		0, 0, 4, 2, 5, 2,
-		0, 0, 0, 0, 6, 3
-	] );
-	var x = new Complex128Array( [ 1, 0, 0, 1, 1, 1 ] );
 	var result = base( 'lower', 'conjugate-transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_lower_conjtrans'; } );
+	var A = new Complex128Array([
+		1,
+		1,
+		2,
+		1,
+		3,
+		1,
+		0,
+		0,
+		4,
+		2,
+		5,
+		2,
+		0,
+		0,
+		0,
+		0,
+		6,
+		3
+	]);
+	var x = new Complex128Array( [ 1, 0, 0, 1, 1, 1 ] );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
 
 test( 'ztrmv: lower, transpose (no conjugate), non-unit (N=3)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'ztrmv_lower_trans'; } );
-	// Same lower 3x3 matrix as above, but trans = 'transpose' (no conjugate)
-	var A = new Complex128Array( [
-		1, 1, 2, 1, 3, 1,
-		0, 0, 4, 2, 5, 2,
-		0, 0, 0, 0, 6, 3
-	] );
-	var x = new Complex128Array( [ 1, 0, 0, 1, 1, 1 ] );
 	var result = base( 'lower', 'transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'ztrmv_lower_trans'; } );
+	var A = new Complex128Array([
+		1,
+		1,
+		2,
+		1,
+		3,
+		1,
+		0,
+		0,
+		4,
+		2,
+		5,
+		2,
+		0,
+		0,
+		0,
+		0,
+		6,
+		3
+	]);
+	var x = new Complex128Array( [ 1, 0, 0, 1, 1, 1 ] );
 	assert.strictEqual( result, x );
 	assertArrayClose( Array.from( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
@@ -212,11 +231,10 @@ test( 'ndarray: throws RangeError for strideX=0', function t() {
 });
 
 test( 'ndarray: N=0 early return', function t() {
+	var out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
+	var xv = reinterpret( x, 0 );
 	var A = new Complex128Array( [ 1, 0 ] );
 	var x = new Complex128Array( [ 5, 5 ] );
-	var out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
-	assert.strictEqual( out, x );
-	var xv = reinterpret( x, 0 );
 	assert.strictEqual( xv[ 0 ], 5 );
 	assert.strictEqual( xv[ 1 ], 5 );
 });

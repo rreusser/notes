@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dswap = require( './../lib/base.js' );
 
 
@@ -29,10 +29,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
 	for ( i = 0; i < expected.length; i++ ) {
-		assert.ok(
-			Math.abs( actual[ i ] - expected[ i ] ) <= tol,
-			msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ]
-		);
+		assert.ok(Math.abs( actual[ i ] - expected[ i ] ) <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ]);
 	}
 }
 
@@ -54,8 +51,11 @@ test( 'dswap: basic swap (N=5, stride=1)', function t() {
 
 test( 'dswap: negative stride (N=3, strideX=2, strideY=-1)', function t() {
 	var tc = findCase( 'negative_stride' );
+
 	// Fortran: x = [1,0,2,0,3] stride=2, y = [4,5,6] stride=-1
+
 	// With negative stride in Fortran, y starts from the end
+
 	// JS base.js: offsetY should point to last element for negative stride
 	var x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
@@ -83,9 +83,9 @@ test( 'dswap: N=1', function t() {
 });
 
 test( 'dswap: returns y', function t() {
+	var result = dswap( 2, x, 1, 0, y, 1, 0 );
 	var x = new Float64Array( [ 1.0, 2.0 ] );
 	var y = new Float64Array( [ 3.0, 4.0 ] );
-	var result = dswap( 2, x, 1, 0, y, 1, 0 );
 	assert.strictEqual( result, y );
 });
 

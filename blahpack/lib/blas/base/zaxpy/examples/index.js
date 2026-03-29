@@ -1,8 +1,12 @@
-
-
 'use strict';
 
-var zaxpy = require( '@stdlib/blas/base/zaxpy' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zaxpy = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( zaxpy );
+// Perform y = alpha*x + y for complex vectors:
+var zx = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+var zy = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+
+zaxpy( 2, alpha, zx, 1, 0, zy, 1, 0 );
+console.log( zy ); // eslint-disable-line no-console

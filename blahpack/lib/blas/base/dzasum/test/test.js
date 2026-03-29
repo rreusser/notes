@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Complex128Array = require( '@stdlib/array/complex128' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
 var dzasum = require( './../lib/base.js' );
 
 
@@ -34,40 +34,34 @@ function assertClose( actual, expected, tol, msg ) {
 // TESTS //
 
 test( 'dzasum: basic', function t() {
-	var tc = findCase( 'basic' );
-
-	// zx = [(1+2i), (3-4i), (-5+6i)]
-	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
 	var result = dzasum( 3, zx, 1, 0 );
+	var tc = findCase( 'basic' );
+	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
 
 	// |1|+|2| + |3|+|-4| + |-5|+|6| = 3 + 7 + 11 = 21
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dzasum: n_zero', function t() {
+	var result = dzasum( 0, zx, 1, 0 );
 	var tc = findCase( 'n_zero' );
 	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
-	var result = dzasum( 0, zx, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dzasum: n_one', function t() {
-	var tc = findCase( 'n_one' );
-
-	// zx(1) = (3+4i)
-	var zx = new Complex128Array( [ 3.0, 4.0 ] );
 	var result = dzasum( 1, zx, 1, 0 );
+	var tc = findCase( 'n_one' );
+	var zx = new Complex128Array( [ 3.0, 4.0 ] );
 
 	// |3| + |4| = 7
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dzasum: stride2', function t() {
-	var tc = findCase( 'stride2' );
-
-	// zx = [(1+1i), (99+99i), (2+3i)], stride=2 picks elements 1 and 3
-	var zx = new Complex128Array( [ 1.0, 1.0, 99.0, 99.0, 2.0, 3.0 ] );
 	var result = dzasum( 2, zx, 2, 0 );
+	var tc = findCase( 'stride2' );
+	var zx = new Complex128Array( [ 1.0, 1.0, 99.0, 99.0, 2.0, 3.0 ] );
 
 	// (|1|+|1|) + (|2|+|3|) = 2 + 5 = 7
 	assertClose( result, tc.result, 1e-14, 'result' );

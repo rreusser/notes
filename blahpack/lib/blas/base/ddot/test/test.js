@@ -40,12 +40,13 @@ test( 'ddot: unrolled path (N>=5, unit stride)', function t() {
 	// N=7: remainder m=2, then one unrolled block of 5
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7 ] );
 	var y = new Float64Array( [ 1, 1, 1, 1, 1, 1, 1 ] );
-	// sum = 1+2+3+4+5+6+7 = 28
+
+	// Sum = 1+2+3+4+5+6+7 = 28
 	assert.strictEqual( ddot( 7, x, 1, 0, y, 1, 0 ), 28.0 );
 });
 
 test( 'ddot: unrolled path (N=5, exact multiple)', function t() {
-	// m = 5%5 = 0, so remainder loop doesn't execute
+	// M = 5%5 = 0, so remainder loop doesn't execute
 	var x = new Float64Array( [ 2, 2, 2, 2, 2 ] );
 	var y = new Float64Array( [ 3, 3, 3, 3, 3 ] );
 	assert.strictEqual( ddot( 5, x, 1, 0, y, 1, 0 ), 30.0 );
@@ -59,14 +60,14 @@ test( 'ddot: unrolled path (N=10, two blocks)', function t() {
 		x[ i ] = i + 1;
 		y[ i ] = 1;
 	}
-	// sum = 1+2+...+10 = 55
+	// Sum = 1+2+...+10 = 55
 	assert.strictEqual( ddot( 10, x, 1, 0, y, 1, 0 ), 55.0 );
 });
 
 test( 'ddot: non-unit stride (strideX=2)', function t() {
 	// x = [1, _, 3, _, 5], strideX=2 → values 1, 3, 5
 	// y = [2, 4, 6], strideY=1
-	// dot = 1*2 + 3*4 + 5*6 = 2 + 12 + 30 = 44
+	// Dot = 1*2 + 3*4 + 5*6 = 2 + 12 + 30 = 44
 	var x = new Float64Array( [ 1, 99, 3, 99, 5 ] );
 	var y = new Float64Array( [ 2, 4, 6 ] );
 	assert.strictEqual( ddot( 3, x, 2, 0, y, 1, 0 ), 44.0 );
@@ -75,7 +76,7 @@ test( 'ddot: non-unit stride (strideX=2)', function t() {
 test( 'ddot: negative stride', function t() {
 	// x = [3, 2, 1], strideX=-1, offsetX=2 → reads x[2],x[1],x[0] = 1,2,3
 	// y = [4, 5, 6], strideY=1
-	// dot = 1*4 + 2*5 + 3*6 = 32
+	// Dot = 1*4 + 2*5 + 3*6 = 32
 	var x = new Float64Array( [ 3, 2, 1 ] );
 	var y = new Float64Array( [ 4, 5, 6 ] );
 	assert.strictEqual( ddot( 3, x, -1, 2, y, 1, 0 ), 32.0 );

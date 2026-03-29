@@ -1,8 +1,11 @@
-
-
 'use strict';
 
-var ztpsv = require( '@stdlib/blas/base/ztpsv' );
+var Float64Array = require( '@stdlib/array/float64' );
+var ztpsv = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( ztpsv );
+// Solve A*x = b for complex triangular packed A:
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 5.0, 0.0, 11.0, 0.0 ] );
+
+ztpsv( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
+console.log( x ); // eslint-disable-line no-console

@@ -3,9 +3,9 @@
 'use strict';
 
 var test = require( 'node:test' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dger = require( './../lib/base.js' );
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
@@ -17,7 +17,8 @@ function findCase( name ) {
 }
 
 function assertArrayClose( actual, expected, tol, msg ) {
-	var i, relErr;
+	var relErr;
+	var i;
 	for ( i = 0; i < expected.length; i++ ) {
 		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1.0 );
 		if ( relErr > tol ) {
@@ -70,6 +71,7 @@ test( 'dger: M=0', function t() {
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5 ] );
 	dger( 0, 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 1, 0 );
+
 	// A should be unchanged
 	if ( A[ 0 ] !== 99.0 ) {
 		throw new Error( 'A changed when M=0' );

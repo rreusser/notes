@@ -12,8 +12,8 @@ test( 'dscal: main export is a function', function t() {
 });
 
 test( 'dscal: N=0 returns x unchanged', function t() {
-	var x = new Float64Array( [ 1, 2, 3 ] );
 	var out = dscal( 0, 2.0, x, 1, 0 );
+	var x = new Float64Array( [ 1, 2, 3 ] );
 	assert.strictEqual( out, x );
 	assert.deepStrictEqual( Array.from( x ), [ 1, 2, 3 ] );
 });
@@ -25,8 +25,8 @@ test( 'dscal: N<0 returns x unchanged', function t() {
 });
 
 test( 'dscal: basic scaling (N=3, da=2, unit stride)', function t() {
-	var x = new Float64Array( [ 1, 2, 3 ] );
 	var out = dscal( 3, 2.0, x, 1, 0 );
+	var x = new Float64Array( [ 1, 2, 3 ] );
 	assert.strictEqual( out, x, 'returns x' );
 	assert.deepStrictEqual( Array.from( x ), [ 2, 4, 6 ] );
 });
@@ -57,7 +57,7 @@ test( 'dscal: unrolled path (N=7, unit stride)', function t() {
 });
 
 test( 'dscal: unrolled path (N=5, exact multiple)', function t() {
-	// m = 5%5 = 0, remainder loop skipped
+	// M = 5%5 = 0, remainder loop skipped
 	var x = new Float64Array( [ 1, 2, 3, 4, 5 ] );
 	dscal( 5, 3.0, x, 1, 0 );
 	assert.deepStrictEqual( Array.from( x ), [ 3, 6, 9, 12, 15 ] );

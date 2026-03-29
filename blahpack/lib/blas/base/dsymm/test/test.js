@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dsymm = require( './../lib/base.js' );
 
 
@@ -43,15 +43,26 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dsymm: left_upper_basic', function t() {
 	var tc = findCase( 'left_upper_basic' );
+
 	// A is 3x3 symmetric (upper stored), col-major
 	var A = new Float64Array([
-		2.0, 0.0, 0.0, // col 1 (only A(1,1)=2 matters for upper)
-		1.0, 4.0, 0.0, // col 2 (A(1,2)=1, A(2,2)=4)
-		3.0, 2.0, 5.0  // col 3 (A(1,3)=3, A(2,3)=2, A(3,3)=5)
+		2.0,
+		0.0,
+		0.0, // col 1 (only A(1,1)=2 matters for upper)
+		1.0,
+		4.0,
+		0.0, // col 2 (A(1,2)=1, A(2,2)=4)
+		3.0,
+		2.0,
+		5.0  // col 3 (A(1,3)=3, A(2,3)=2, A(3,3)=5)
 	]);
 	var B = new Float64Array([
-		1.0, 2.0, 3.0, // col 1
-		4.0, 5.0, 6.0  // col 2
+		1.0,
+		2.0,
+		3.0, // col 1
+		4.0,
+		5.0,
+		6.0  // col 2
 	]);
 	var C = new Float64Array( 6 );
 
@@ -61,15 +72,26 @@ test( 'dsymm: left_upper_basic', function t() {
 
 test( 'dsymm: left_lower_basic', function t() {
 	var tc = findCase( 'left_lower_basic' );
+
 	// Same symmetric matrix, lower stored
 	var A = new Float64Array([
-		2.0, 1.0, 3.0, // col 1 (A(1,1)=2, A(2,1)=1, A(3,1)=3)
-		0.0, 4.0, 2.0, // col 2 (A(2,2)=4, A(3,2)=2)
-		0.0, 0.0, 5.0  // col 3 (A(3,3)=5)
+		2.0,
+		1.0,
+		3.0, // col 1 (A(1,1)=2, A(2,1)=1, A(3,1)=3)
+		0.0,
+		4.0,
+		2.0, // col 2 (A(2,2)=4, A(3,2)=2)
+		0.0,
+		0.0,
+		5.0  // col 3 (A(3,3)=5)
 	]);
 	var B = new Float64Array([
-		1.0, 2.0, 3.0,
-		4.0, 5.0, 6.0
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0
 	]);
 	var C = new Float64Array( 6 );
 
@@ -79,16 +101,26 @@ test( 'dsymm: left_lower_basic', function t() {
 
 test( 'dsymm: right_upper_basic', function t() {
 	var tc = findCase( 'right_upper_basic' );
+
 	// A is 3x3 symmetric (upper), B is 2x3, C is 2x3
 	var A = new Float64Array([
-		2.0, 0.0, 0.0,
-		1.0, 4.0, 0.0,
-		3.0, 2.0, 5.0
+		2.0,
+		0.0,
+		0.0,
+		1.0,
+		4.0,
+		0.0,
+		3.0,
+		2.0,
+		5.0
 	]);
 	var B = new Float64Array([
-		1.0, 2.0, // col 1
-		3.0, 4.0, // col 2
-		5.0, 6.0  // col 3
+		1.0,
+		2.0, // col 1
+		3.0,
+		4.0, // col 2
+		5.0,
+		6.0  // col 3
 	]);
 	var C = new Float64Array( 6 );
 
@@ -99,14 +131,23 @@ test( 'dsymm: right_upper_basic', function t() {
 test( 'dsymm: right_lower_basic', function t() {
 	var tc = findCase( 'right_lower_basic' );
 	var A = new Float64Array([
-		2.0, 1.0, 3.0,
-		0.0, 4.0, 2.0,
-		0.0, 0.0, 5.0
+		2.0,
+		1.0,
+		3.0,
+		0.0,
+		4.0,
+		2.0,
+		0.0,
+		0.0,
+		5.0
 	]);
 	var B = new Float64Array([
-		1.0, 2.0,
-		3.0, 4.0,
-		5.0, 6.0
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0
 	]);
 	var C = new Float64Array( 6 );
 
@@ -117,17 +158,31 @@ test( 'dsymm: right_lower_basic', function t() {
 test( 'dsymm: alpha_beta_scaling', function t() {
 	var tc = findCase( 'alpha_beta_scaling' );
 	var A = new Float64Array([
-		2.0, 0.0, 0.0,
-		1.0, 4.0, 0.0,
-		3.0, 2.0, 5.0
+		2.0,
+		0.0,
+		0.0,
+		1.0,
+		4.0,
+		0.0,
+		3.0,
+		2.0,
+		5.0
 	]);
 	var B = new Float64Array([
-		1.0, 2.0, 3.0,
-		4.0, 5.0, 6.0
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0
 	]);
 	var C = new Float64Array([
-		1.0, 1.0, 1.0,
-		1.0, 1.0, 1.0
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0
 	]);
 
 	dsymm( 'left', 'upper', 3, 2, 2.0, A, 1, 3, 0, B, 1, 3, 0, 3.0, C, 1, 3, 0 );
@@ -176,6 +231,7 @@ test( 'dsymm: scalar', function t() {
 
 test( 'dsymm: beta_zero', function t() {
 	var tc = findCase( 'beta_zero' );
+
 	// A = I (2x2), B = [2 4; 3 5]
 	var A = new Float64Array([ 1.0, 0.0, 0.0, 1.0 ]);
 	var B = new Float64Array([ 2.0, 3.0, 4.0, 5.0 ]);
@@ -198,17 +254,31 @@ test( 'dsymm: alpha_zero_beta_zero (zeros C)', function t() {
 test( 'dsymm: left_lower_nonzero_beta', function t() {
 	var tc = findCase( 'left_lower_nonzero_beta' );
 	var A = new Float64Array([
-		2.0, 1.0, 3.0,
-		0.0, 4.0, 2.0,
-		0.0, 0.0, 5.0
+		2.0,
+		1.0,
+		3.0,
+		0.0,
+		4.0,
+		2.0,
+		0.0,
+		0.0,
+		5.0
 	]);
 	var B = new Float64Array([
-		1.0, 2.0, 3.0,
-		4.0, 5.0, 6.0
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0
 	]);
 	var C = new Float64Array([
-		1.0, 1.0, 1.0,
-		1.0, 1.0, 1.0
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0
 	]);
 
 	dsymm( 'left', 'lower', 3, 2, 2.0, A, 1, 3, 0, B, 1, 3, 0, 0.5, C, 1, 3, 0 );
@@ -218,19 +288,31 @@ test( 'dsymm: left_lower_nonzero_beta', function t() {
 test( 'dsymm: right_upper_nonzero_beta', function t() {
 	var tc = findCase( 'right_upper_nonzero_beta' );
 	var A = new Float64Array([
-		2.0, 0.0, 0.0,
-		1.0, 4.0, 0.0,
-		3.0, 2.0, 5.0
+		2.0,
+		0.0,
+		0.0,
+		1.0,
+		4.0,
+		0.0,
+		3.0,
+		2.0,
+		5.0
 	]);
 	var B = new Float64Array([
-		1.0, 2.0,
-		3.0, 4.0,
-		5.0, 6.0
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0
 	]);
 	var C = new Float64Array([
-		1.0, 2.0,
-		3.0, 4.0,
-		5.0, 6.0
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0
 	]);
 
 	dsymm( 'right', 'upper', 2, 3, 1.0, A, 1, 3, 0, B, 1, 2, 0, 0.5, C, 1, 2, 0 );

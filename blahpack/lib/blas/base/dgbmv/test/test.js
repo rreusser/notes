@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dgbmv = require( './../lib/base.js' );
 
 
@@ -47,39 +47,40 @@ function assertArrayClose( actual, expected, tol, msg ) {
 //   [ 4  5  6  7  0 ]
 //   [ 0  8  9 10 11 ]
 //   [ 0  0 12 13 14 ]
-//
+
 // Band storage (column-major, 4 rows per column, diagonal at row KU=2):
-// col 0: row2=1, row3=4
-// col 1: row1=2, row2=5, row3=8
-// col 2: row0=3, row1=6, row2=9, row3=12
-// col 3: row0=7, row1=10, row2=13
-// col 4: row0=11, row1=14
+// Col 0: row2=1, row3=4
+// Col 1: row1=2, row2=5, row3=8
+// Col 2: row0=3, row1=6, row2=9, row3=12
+// Col 3: row0=7, row1=10, row2=13
+// Col 4: row0=11, row1=14
 
 function bandA() {
 	var a = new Float64Array( 20 );
 
 	// Column-major: a[ row + col*4 ]
-	// col 0
+
+	// Col 0
 	a[ 2 + 0 * 4 ] = 1.0;
 	a[ 3 + 0 * 4 ] = 4.0;
 
-	// col 1
+	// Col 1
 	a[ 1 + 1 * 4 ] = 2.0;
 	a[ 2 + 1 * 4 ] = 5.0;
 	a[ 3 + 1 * 4 ] = 8.0;
 
-	// col 2
+	// Col 2
 	a[ 0 + 2 * 4 ] = 3.0;
 	a[ 1 + 2 * 4 ] = 6.0;
 	a[ 2 + 2 * 4 ] = 9.0;
 	a[ 3 + 2 * 4 ] = 12.0;
 
-	// col 3
+	// Col 3
 	a[ 0 + 3 * 4 ] = 7.0;
 	a[ 1 + 3 * 4 ] = 10.0;
 	a[ 2 + 3 * 4 ] = 13.0;
 
-	// col 4
+	// Col 4
 	a[ 0 + 4 * 4 ] = 11.0;
 	a[ 1 + 4 * 4 ] = 14.0;
 

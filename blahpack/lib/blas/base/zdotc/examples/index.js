@@ -1,8 +1,11 @@
-
-
 'use strict';
 
-var zdotc = require( '@stdlib/blas/base/zdotc' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zdotc = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( zdotc );
+// Compute conjugate dot product of complex vectors:
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var y = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+
+var result = zdotc( 2, x, 1, 0, y, 1, 0 );
+console.log( result ); // eslint-disable-line no-console

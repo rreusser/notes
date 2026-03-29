@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dsyr2k = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
@@ -44,6 +44,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dsyr2k: upper_N', function t() {
 	var tc = findCase( 'upper_N' );
+
 	// A is 3x2 col-major, B is 3x2 col-major, C is 3x3
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
@@ -63,6 +64,7 @@ test( 'dsyr2k: lower_N', function t() {
 
 test( 'dsyr2k: upper_T', function t() {
 	var tc = findCase( 'upper_T' );
+
 	// A is 2x3 col-major (K=2, N=3), B is 2x3 col-major
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 0.5, 1.5, 2.5, 3.5, 4.5, 5.5 ] );
@@ -99,10 +101,10 @@ test( 'dsyr2k: beta_zero', function t() {
 });
 
 test( 'dsyr2k: n_zero', function t() {
+	var result = dsyr2k( 'upper', 'no-transpose', 0, 2, 1.0, A, 1, 1, 0, B, 1, 1, 0, 1.0, C, 1, 1, 0 );
 	var A = new Float64Array( 1 );
 	var B = new Float64Array( 1 );
 	var C = new Float64Array( 1 );
-	var result = dsyr2k( 'upper', 'no-transpose', 0, 2, 1.0, A, 1, 1, 0, B, 1, 1, 0, 1.0, C, 1, 1, 0 );
 	assert.ok( result === C );
 });
 

@@ -5,9 +5,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -45,16 +45,42 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'zsymm: left_upper_basic', function t() {
 	var tc = findCase( 'left_upper_basic' );
+
 	// A is 3x3 symmetric upper: A = [2+i 1+i 3-2i; * 4-i 2+i; * * 5+2i]
-	var A = new Complex128Array( [
-		2, 1, 0, 0, 0, 0,       // col 1: A(1,1)=2+i, A(2,1)=0, A(3,1)=0
-		1, 1, 4, -1, 0, 0,      // col 2: A(1,2)=1+i, A(2,2)=4-i, A(3,2)=0
-		3, -2, 2, 1, 5, 2       // col 3: A(1,3)=3-2i, A(2,3)=2+i, A(3,3)=5+2i
-	] );
-	var B = new Complex128Array( [
-		1, 0.5, 2, -1, 3, 1,    // col 1
-		4, 2, 5, 0, 6, -0.5     // col 2
-	] );
+	var A = new Complex128Array([
+		2,
+		1,
+		0,
+		0,
+		0,
+		0,       // col 1: A(1,1)=2+i, A(2,1)=0, A(3,1)=0
+		1,
+		1,
+		4,
+		-1,
+		0,
+		0,      // col 2: A(1,2)=1+i, A(2,2)=4-i, A(3,2)=0
+		3,
+		-2,
+		2,
+		1,
+		5,
+		2       // col 3: A(1,3)=3-2i, A(2,3)=2+i, A(3,3)=5+2i
+	]);
+	var B = new Complex128Array([
+		1,
+		0.5,
+		2,
+		-1,
+		3,
+		1,    // col 1
+		4,
+		2,
+		5,
+		0,
+		6,
+		-0.5     // col 2
+	]);
 	var C = new Complex128Array( 6 );
 
 	zsymm( 'left', 'upper', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 3, 0 );
@@ -63,16 +89,42 @@ test( 'zsymm: left_upper_basic', function t() {
 
 test( 'zsymm: left_lower_basic', function t() {
 	var tc = findCase( 'left_lower_basic' );
+
 	// A is 3x3 symmetric lower (same matrix, NO conjugation in off-diag)
-	var A = new Complex128Array( [
-		2, 1, 1, 1, 3, -2,      // col 1: A(1,1)=2+i, A(2,1)=1+i, A(3,1)=3-2i
-		0, 0, 4, -1, 2, 1,      // col 2: A(1,2)=0, A(2,2)=4-i, A(3,2)=2+i
-		0, 0, 0, 0, 5, 2        // col 3: A(1,3)=0, A(2,3)=0, A(3,3)=5+2i
-	] );
-	var B = new Complex128Array( [
-		1, 0.5, 2, -1, 3, 1,
-		4, 2, 5, 0, 6, -0.5
-	] );
+	var A = new Complex128Array([
+		2,
+		1,
+		1,
+		1,
+		3,
+		-2,      // col 1: A(1,1)=2+i, A(2,1)=1+i, A(3,1)=3-2i
+		0,
+		0,
+		4,
+		-1,
+		2,
+		1,      // col 2: A(1,2)=0, A(2,2)=4-i, A(3,2)=2+i
+		0,
+		0,
+		0,
+		0,
+		5,
+		2        // col 3: A(1,3)=0, A(2,3)=0, A(3,3)=5+2i
+	]);
+	var B = new Complex128Array([
+		1,
+		0.5,
+		2,
+		-1,
+		3,
+		1,
+		4,
+		2,
+		5,
+		0,
+		6,
+		-0.5
+	]);
 	var C = new Complex128Array( 6 );
 
 	zsymm( 'left', 'lower', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 3, 0 );
@@ -81,17 +133,42 @@ test( 'zsymm: left_lower_basic', function t() {
 
 test( 'zsymm: right_upper_basic', function t() {
 	var tc = findCase( 'right_upper_basic' );
-	var A = new Complex128Array( [
-		2, 1, 0, 0, 0, 0,
-		1, 1, 4, -1, 0, 0,
-		3, -2, 2, 1, 5, 2
-	] );
+	var A = new Complex128Array([
+		2,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		1,
+		4,
+		-1,
+		0,
+		0,
+		3,
+		-2,
+		2,
+		1,
+		5,
+		2
+	]);
+
 	// B is 2x3, LDB=2
-	var B = new Complex128Array( [
-		1, 0.5, 2, -1,
-		3, 1, 4, 2,
-		5, 0, 6, -0.5
-	] );
+	var B = new Complex128Array([
+		1,
+		0.5,
+		2,
+		-1,
+		3,
+		1,
+		4,
+		2,
+		5,
+		0,
+		6,
+		-0.5
+	]);
 	var C = new Complex128Array( 6 );
 
 	zsymm( 'right', 'upper', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
@@ -100,16 +177,40 @@ test( 'zsymm: right_upper_basic', function t() {
 
 test( 'zsymm: right_lower_basic', function t() {
 	var tc = findCase( 'right_lower_basic' );
-	var A = new Complex128Array( [
-		2, 1, 1, 1, 3, -2,
-		0, 0, 4, -1, 2, 1,
-		0, 0, 0, 0, 5, 2
-	] );
-	var B = new Complex128Array( [
-		1, 0.5, 2, -1,
-		3, 1, 4, 2,
-		5, 0, 6, -0.5
-	] );
+	var A = new Complex128Array([
+		2,
+		1,
+		1,
+		1,
+		3,
+		-2,
+		0,
+		0,
+		4,
+		-1,
+		2,
+		1,
+		0,
+		0,
+		0,
+		0,
+		5,
+		2
+	]);
+	var B = new Complex128Array([
+		1,
+		0.5,
+		2,
+		-1,
+		3,
+		1,
+		4,
+		2,
+		5,
+		0,
+		6,
+		-0.5
+	]);
 	var C = new Complex128Array( 6 );
 
 	zsymm( 'right', 'lower', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
@@ -118,19 +219,54 @@ test( 'zsymm: right_lower_basic', function t() {
 
 test( 'zsymm: complex_alpha_beta', function t() {
 	var tc = findCase( 'complex_alpha_beta' );
-	var A = new Complex128Array( [
-		2, 1, 0, 0, 0, 0,
-		1, 1, 4, -1, 0, 0,
-		3, -2, 2, 1, 5, 2
-	] );
-	var B = new Complex128Array( [
-		1, 0.5, 2, -1, 3, 1,
-		4, 2, 5, 0, 6, -0.5
-	] );
-	var C = new Complex128Array( [
-		1, 1, 2, -1, 0.5, 0.5,
-		1, 0, 0, 2, 3, -1
-	] );
+	var A = new Complex128Array([
+		2,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		1,
+		4,
+		-1,
+		0,
+		0,
+		3,
+		-2,
+		2,
+		1,
+		5,
+		2
+	]);
+	var B = new Complex128Array([
+		1,
+		0.5,
+		2,
+		-1,
+		3,
+		1,
+		4,
+		2,
+		5,
+		0,
+		6,
+		-0.5
+	]);
+	var C = new Complex128Array([
+		1,
+		1,
+		2,
+		-1,
+		0.5,
+		0.5,
+		1,
+		0,
+		0,
+		2,
+		3,
+		-1
+	]);
 
 	zsymm( 'left', 'upper', 3, 2, new Complex128( 2, 1 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0.5, -0.5 ), C, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
@@ -140,10 +276,16 @@ test( 'zsymm: alpha_zero', function t() {
 	var tc = findCase( 'alpha_zero' );
 	var A = new Complex128Array( 9 );
 	var B = new Complex128Array( 4 );
-	var C = new Complex128Array( [
-		1, 2, 3, 4,
-		5, 6, 7, 8
-	] );
+	var C = new Complex128Array([
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8
+	]);
 
 	zsymm( 'left', 'upper', 2, 2, new Complex128( 0, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 2, 0 ), C, 1, 2, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
@@ -154,6 +296,7 @@ test( 'zsymm: m_zero', function t() {
 	var C = new Complex128Array( [ 99, 0 ] );
 
 	zsymm( 'left', 'upper', 0, 2, new Complex128( 1, 0 ), new Complex128Array( 1 ), 1, 1, 0, new Complex128Array( 1 ), 1, 1, 0, new Complex128( 0, 0 ), C, 1, 1, 0 );
+
 	// Should not modify C
 	var v = reinterpret( C, 0 );
 	assertClose( v[ 0 ], tc.C[ 0 ], 1e-14, 'C[0]' );
@@ -172,6 +315,7 @@ test( 'zsymm: n_zero', function t() {
 
 test( 'zsymm: scalar', function t() {
 	var tc = findCase( 'scalar' );
+
 	// A(1,1) = 3+i (complex diagonal), B(1,1) = 5+2i, alpha = 2+i
 	var A = new Complex128Array( [ 3, 1 ] );
 	var B = new Complex128Array( [ 5, 2 ] );
@@ -183,19 +327,38 @@ test( 'zsymm: scalar', function t() {
 
 test( 'zsymm: beta_zero', function t() {
 	var tc = findCase( 'beta_zero' );
+
 	// A is 2x2 symmetric lower: A(1,1)=1+0.5i, A(2,1)=0, A(2,2)=1-0.5i
-	var A = new Complex128Array( [
-		1, 0.5, 0, 0,
-		0, 0, 1, -0.5
-	] );
-	var B = new Complex128Array( [
-		2, 1, 3, -1,
-		4, 0.5, 5, 2
-	] );
-	var C = new Complex128Array( [
-		999, 999, 999, 999,
-		999, 999, 999, 999
-	] );
+	var A = new Complex128Array([
+		1,
+		0.5,
+		0,
+		0,
+		0,
+		0,
+		1,
+		-0.5
+	]);
+	var B = new Complex128Array([
+		2,
+		1,
+		3,
+		-1,
+		4,
+		0.5,
+		5,
+		2
+	]);
+	var C = new Complex128Array([
+		999,
+		999,
+		999,
+		999,
+		999,
+		999,
+		999,
+		999
+	]);
 
 	zsymm( 'left', 'lower', 2, 2, new Complex128( 1, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
@@ -205,10 +368,16 @@ test( 'zsymm: alpha_zero_beta_zero (zeros C)', function t() {
 	var tc = findCase( 'alpha_zero_beta_zero' );
 	var A = new Complex128Array( 4 );
 	var B = new Complex128Array( 4 );
-	var C = new Complex128Array( [
-		99, 88, 77, 66,
-		55, 44, 33, 22
-	] );
+	var C = new Complex128Array([
+		99,
+		88,
+		77,
+		66,
+		55,
+		44,
+		33,
+		22
+	]);
 
 	zsymm( 'left', 'upper', 2, 2, new Complex128( 0, 0 ), A, 1, 2, 0, B, 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
@@ -216,19 +385,54 @@ test( 'zsymm: alpha_zero_beta_zero (zeros C)', function t() {
 
 test( 'zsymm: left_lower_nonzero_beta', function t() {
 	var tc = findCase( 'left_lower_nonzero_beta' );
-	var A = new Complex128Array( [
-		2, 1, 1, 1, 3, -2,
-		0, 0, 4, -1, 2, 1,
-		0, 0, 0, 0, 5, 2
-	] );
-	var B = new Complex128Array( [
-		1, 0.5, 2, -1, 3, 1,
-		4, 2, 5, 0, 6, -0.5
-	] );
-	var C = new Complex128Array( [
-		1, 1, 2, -1, 0.5, 0.5,
-		1, 0, 0, 2, 3, -1
-	] );
+	var A = new Complex128Array([
+		2,
+		1,
+		1,
+		1,
+		3,
+		-2,
+		0,
+		0,
+		4,
+		-1,
+		2,
+		1,
+		0,
+		0,
+		0,
+		0,
+		5,
+		2
+	]);
+	var B = new Complex128Array([
+		1,
+		0.5,
+		2,
+		-1,
+		3,
+		1,
+		4,
+		2,
+		5,
+		0,
+		6,
+		-0.5
+	]);
+	var C = new Complex128Array([
+		1,
+		1,
+		2,
+		-1,
+		0.5,
+		0.5,
+		1,
+		0,
+		0,
+		2,
+		3,
+		-1
+	]);
 
 	zsymm( 'left', 'lower', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 3, 0, new Complex128( 0.5, 0 ), C, 1, 3, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );
@@ -236,21 +440,54 @@ test( 'zsymm: left_lower_nonzero_beta', function t() {
 
 test( 'zsymm: right_upper_nonzero_beta', function t() {
 	var tc = findCase( 'right_upper_nonzero_beta' );
-	var A = new Complex128Array( [
-		2, 1, 0, 0, 0, 0,
-		1, 1, 4, -1, 0, 0,
-		3, -2, 2, 1, 5, 2
-	] );
-	var B = new Complex128Array( [
-		1, 0.5, 2, -1,
-		3, 1, 4, 2,
-		5, 0, 6, -0.5
-	] );
-	var C = new Complex128Array( [
-		1, 1, 2, -1,
-		0.5, 0.5, 1, 0,
-		0, 2, 3, -1
-	] );
+	var A = new Complex128Array([
+		2,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		1,
+		4,
+		-1,
+		0,
+		0,
+		3,
+		-2,
+		2,
+		1,
+		5,
+		2
+	]);
+	var B = new Complex128Array([
+		1,
+		0.5,
+		2,
+		-1,
+		3,
+		1,
+		4,
+		2,
+		5,
+		0,
+		6,
+		-0.5
+	]);
+	var C = new Complex128Array([
+		1,
+		1,
+		2,
+		-1,
+		0.5,
+		0.5,
+		1,
+		0,
+		0,
+		2,
+		3,
+		-1
+	]);
 
 	zsymm( 'right', 'upper', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, B, 1, 2, 0, new Complex128( 0.5, 0.5 ), C, 1, 2, 0 );
 	assertArrayClose( Array.from( reinterpret( C, 0 ) ), tc.C, 1e-14, 'C' );

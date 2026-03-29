@@ -1,8 +1,12 @@
-
-
 'use strict';
 
-var dger = require( '@stdlib/blas/base/dger' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dger = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( dger );
+// Perform A = alpha*x*y' + A:
+var x = new Float64Array( [ 1.0, 2.0 ] );
+var y = new Float64Array( [ 3.0, 4.0 ] );
+var A = new Float64Array( [ 0.0, 0.0, 0.0, 0.0 ] );
+
+dger( 2, 2, 1.0, x, 1, 0, y, 1, 0, A, 2, 1, 0 );
+console.log( A ); // eslint-disable-line no-console

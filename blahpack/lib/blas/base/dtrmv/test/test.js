@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dtrmv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
@@ -41,6 +41,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 // Upper triangular 3x3 (col-major): [2 3 4; 0 5 6; 0 0 7]
 var AU = new Float64Array( [ 2, 0, 0, 3, 5, 0, 4, 6, 7 ] );
+
 // Lower triangular 3x3 (col-major): [2 0 0; 3 5 0; 4 6 7]
 var AL = new Float64Array( [ 2, 3, 4, 0, 5, 6, 0, 0, 7 ] );
 
@@ -76,17 +77,16 @@ test( 'dtrmv: lower, transpose, non-unit diag', function t() {
 });
 
 test( 'dtrmv: upper, no-transpose, unit diag', function t() {
-	var tc = findCase( 'upper_n_unit' );
-	// Diagonal values set to 99 (should be ignored with unit diag)
 	var Aunit = new Float64Array( [ 99, 0, 0, 3, 99, 0, 4, 6, 99 ] );
+	var tc = findCase( 'upper_n_unit' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	dtrmv( 'upper', 'no-transpose', 'unit', 3, Aunit, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 });
 
 test( 'dtrmv: lower, transpose, unit diag', function t() {
-	var tc = findCase( 'lower_t_unit' );
 	var Aunit = new Float64Array( [ 99, 3, 4, 0, 99, 6, 0, 0, 99 ] );
+	var tc = findCase( 'lower_t_unit' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	dtrmv( 'lower', 'transpose', 'unit', 3, Aunit, 1, 3, 0, x, 1, 0 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -115,6 +115,7 @@ test( 'dtrmv: non-unit stride incx=2', function t() {
 test( 'dtrmv: negative stride incx=-1', function t() {
 	var tc = findCase( 'neg_stride' );
 	var x = new Float64Array( [ 1, 2, 3 ] );
+
 	// With negative stride, start from last element
 	dtrmv( 'lower', 'no-transpose', 'non-unit', 3, AL, 1, 3, 0, x, -1, 2 );
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
@@ -159,8 +160,8 @@ test( 'ndarray: throws RangeError for strideX=0', function t() {
 });
 
 test( 'ndarray: N=0 early return', function t() {
-	var x = new Float64Array( [ 99 ] );
 	var out = ndarray( 'upper', 'no-transpose', 'non-unit', 0, new Float64Array( 0 ), 1, 1, 0, x, 1, 0 );
+	var x = new Float64Array( [ 99 ] );
 	assert.equal( out, x );
 	assert.equal( x[ 0 ], 99 );
 });

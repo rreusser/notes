@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var drotm = require( './../lib/base.js' );
 
 
@@ -149,6 +149,7 @@ test( 'drotm: neg_stride', function t() {
 	dparam = new Float64Array( [ 0.0, 0.0, -0.5, 0.25, 0.0 ] );
 
 	// Fortran call: drotm(3, dx, -1, dy, 1, dparam)
+
 	// Negative stride for x means start from the end: offset = (N-1)*|stride| = 2
 	drotm( 3, dx, -1, 2, dy, 1, 0, dparam, 1, 0 );
 	assertArrayClose( Array.from( dx ), tc.dx, 1e-14, 'dx' );

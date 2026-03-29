@@ -56,9 +56,9 @@ test( 'drotg: |b| > |a| (a=3, b=4)', function t() {
 
 test( 'drotg: |b| > |a|', function t() {
 	// a=1, b=3: r = +sqrt(10) (sigma=sign(b)=+1), c=1/r, s=3/r, z=1/c
-	var r = Math.sqrt( 10.0 );
 	var ab = new Float64Array( [ 1.0, 3.0 ] );
 	var cs = new Float64Array( 2 );
+	var r = Math.sqrt( 10.0 );
 	drotg( ab, 1, 0, cs, 1, 0 );
 	approx( ab[ 0 ], r, 'r' );
 	approx( cs[ 0 ], 1.0 / r, 'c' );
@@ -68,9 +68,9 @@ test( 'drotg: |b| > |a|', function t() {
 
 test( 'drotg: negative a, |a| > |b|', function t() {
 	// a=-5, b=3: sigma=sign(a)=-1, r=-sqrt(34), c=-5/r=5/sqrt(34), s=3/r=-3/sqrt(34), z=s
-	var r = -Math.sqrt( 34.0 );
 	var ab = new Float64Array( [ -5.0, 3.0 ] );
 	var cs = new Float64Array( 2 );
+	var r = -Math.sqrt( 34.0 );
 	drotg( ab, 1, 0, cs, 1, 0 );
 	approx( ab[ 0 ], r, 'r' );
 	approx( cs[ 0 ], -5.0 / r, 'c' );
@@ -80,9 +80,9 @@ test( 'drotg: negative a, |a| > |b|', function t() {
 
 test( 'drotg: negative b, |b| >= |a|', function t() {
 	// a=2, b=-6: sigma=sign(b)=-1, r=-sqrt(40), c=2/r, s=-6/r, z=1/c
-	var r = -Math.sqrt( 40.0 );
 	var ab = new Float64Array( [ 2.0, -6.0 ] );
 	var cs = new Float64Array( 2 );
+	var r = -Math.sqrt( 40.0 );
 	drotg( ab, 1, 0, cs, 1, 0 );
 	approx( ab[ 0 ], r, 'r' );
 	approx( cs[ 0 ], 2.0 / r, 'c' );
@@ -113,9 +113,9 @@ test( 'drotg: both zero', function t() {
 
 test( 'drotg: equal a and b', function t() {
 	// a=5, b=5: |b|>=|a| (equal), sigma=sign(b)=+1, r=5*sqrt(2), c=s=1/sqrt(2), z=1/c=sqrt(2)
-	var r = 5.0 * Math.sqrt( 2.0 );
 	var ab = new Float64Array( [ 5.0, 5.0 ] );
 	var cs = new Float64Array( 2 );
+	var r = 5.0 * Math.sqrt( 2.0 );
 	drotg( ab, 1, 0, cs, 1, 0 );
 	approx( ab[ 0 ], r, 'r' );
 	approx( cs[ 0 ], 5.0 / r, 'c' );
@@ -161,8 +161,10 @@ test( 'drotg: verify rotation zeroes b', function t() {
 		ab = new Float64Array( [ a, b ] );
 		cs = new Float64Array( 2 );
 		drotg( ab, 1, 0, cs, 1, 0 );
+
 		// Second component of rotation should be zero: -s*a + c*b = 0
 		approx( ( -cs[ 1 ] * a ) + ( cs[ 0 ] * b ), 0.0, 'rotation zeroes b for case ' + i );
+
 		// First component should equal r: c*a + s*b = r
 		approx( ( cs[ 0 ] * a ) + ( cs[ 1 ] * b ), ab[ 0 ], 'rotation gives r for case ' + i );
 	}
@@ -177,6 +179,7 @@ test( 'drotg: stride and offset', function t() {
 	approx( ab[ 3 ], 1.0 / 0.6, 'z with offset' );
 	approx( cs[ 1 ], 0.6, 'c with offset' );
 	approx( cs[ 3 ], 0.8, 's with offset' );
+
 	// Untouched elements
 	assert.strictEqual( ab[ 0 ], 99.0 );
 	assert.strictEqual( ab[ 2 ], 99.0 );

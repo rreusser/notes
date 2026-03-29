@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dtpsv = require( './../lib/base.js' );
 
 
@@ -58,7 +58,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 test( 'dtpsv: upper_n_nonunit', function t() {
 	var tc = findCase( 'upper_n_nonunit' );
 
-	// b = A * [1, 2, 3, 4] = [40, 65, 67, 44]
+	// B = A * [1, 2, 3, 4] = [40, 65, 67, 44]
 	var AP = new Float64Array( [ 2, 3, 6, 4, 7, 9, 5, 8, 10, 11 ] );
 	var x = new Float64Array( [ 40, 65, 67, 44 ] );
 	dtpsv( 'upper', 'no-transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -68,7 +68,7 @@ test( 'dtpsv: upper_n_nonunit', function t() {
 test( 'dtpsv: lower_n_nonunit', function t() {
 	var tc = findCase( 'lower_n_nonunit' );
 
-	// b = A * [1, 2, 3, 4] = [2, 15, 45, 95]
+	// B = A * [1, 2, 3, 4] = [2, 15, 45, 95]
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
 	var x = new Float64Array( [ 2, 15, 45, 95 ] );
 	dtpsv( 'lower', 'no-transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -78,7 +78,7 @@ test( 'dtpsv: lower_n_nonunit', function t() {
 test( 'dtpsv: upper_t_nonunit', function t() {
 	var tc = findCase( 'upper_t_nonunit' );
 
-	// b = A^T * [1, 2, 3, 4] = [2, 15, 45, 95] (upper A)
+	// B = A^T * [1, 2, 3, 4] = [2, 15, 45, 95] (upper A)
 	var AP = new Float64Array( [ 2, 3, 6, 4, 7, 9, 5, 8, 10, 11 ] );
 	var x = new Float64Array( [ 2, 15, 45, 95 ] );
 	dtpsv( 'upper', 'transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -88,7 +88,7 @@ test( 'dtpsv: upper_t_nonunit', function t() {
 test( 'dtpsv: lower_t_nonunit', function t() {
 	var tc = findCase( 'lower_t_nonunit' );
 
-	// b = A^T * [1, 2, 3, 4] = [40, 65, 67, 44] (lower A)
+	// B = A^T * [1, 2, 3, 4] = [40, 65, 67, 44] (lower A)
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
 	var x = new Float64Array( [ 40, 65, 67, 44 ] );
 	dtpsv( 'lower', 'transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -99,7 +99,9 @@ test( 'dtpsv: upper_n_unit', function t() {
 	var tc = findCase( 'upper_n_unit' );
 
 	// Unit diag A = [1 3 4 5; 0 1 7 8; 0 0 1 10; 0 0 0 1]
-	// b = A * [1,2,3,4] = [39, 55, 43, 4]
+
+	// B = A * [1,2,3,4] = [39, 55, 43, 4]
+
 	// Diagonal positions have 99 (should be ignored)
 	var AP = new Float64Array( [ 99, 3, 99, 4, 7, 99, 5, 8, 10, 99 ] );
 	var x = new Float64Array( [ 39, 55, 43, 4 ] );
@@ -111,7 +113,8 @@ test( 'dtpsv: lower_n_unit', function t() {
 	var tc = findCase( 'lower_n_unit' );
 
 	// Unit diag A = [1 0 0 0; 3 1 0 0; 4 7 1 0; 5 8 10 1]
-	// b = A * [1,2,3,4] = [1, 5, 21, 55]
+
+	// B = A * [1,2,3,4] = [1, 5, 21, 55]
 	var AP = new Float64Array( [ 99, 3, 4, 5, 99, 7, 8, 99, 10, 99 ] );
 	var x = new Float64Array( [ 1, 5, 21, 55 ] );
 	dtpsv( 'lower', 'no-transpose', 'unit', 4, AP, 1, 0, x, 1, 0 );
@@ -122,7 +125,8 @@ test( 'dtpsv: upper_t_unit', function t() {
 	var tc = findCase( 'upper_t_unit' );
 
 	// Unit diag A = [1 3 4 5; 0 1 7 8; 0 0 1 10; 0 0 0 1]
-	// b = A^T * [1,2,3,4] = [1, 5, 21, 55]
+
+	// B = A^T * [1,2,3,4] = [1, 5, 21, 55]
 	var AP = new Float64Array( [ 99, 3, 99, 4, 7, 99, 5, 8, 10, 99 ] );
 	var x = new Float64Array( [ 1, 5, 21, 55 ] );
 	dtpsv( 'upper', 'transpose', 'unit', 4, AP, 1, 0, x, 1, 0 );
@@ -133,7 +137,8 @@ test( 'dtpsv: lower_t_unit', function t() {
 	var tc = findCase( 'lower_t_unit' );
 
 	// Unit diag A = [1 0 0 0; 3 1 0 0; 4 7 1 0; 5 8 10 1]
-	// b = A^T * [1,2,3,4] = [39, 55, 43, 4]
+
+	// B = A^T * [1,2,3,4] = [39, 55, 43, 4]
 	var AP = new Float64Array( [ 99, 3, 4, 5, 99, 7, 8, 99, 10, 99 ] );
 	var x = new Float64Array( [ 39, 55, 43, 4 ] );
 	dtpsv( 'lower', 'transpose', 'unit', 4, AP, 1, 0, x, 1, 0 );
@@ -181,7 +186,9 @@ test( 'dtpsv: neg_stride', function t() {
 	var tc = findCase( 'neg_stride' );
 
 	// Lower, no-trans, non-unit, stride=-1
+
 	// Fortran x = [95, 45, 15, 2] with INCX=-1
+
 	// In JS, negative stride means start from end: offsetX = (N-1)*|stride| = 3
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
 	var x = new Float64Array( [ 95, 45, 15, 2 ] );

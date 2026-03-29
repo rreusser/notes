@@ -1,8 +1,11 @@
-
-
 'use strict';
 
-var dsyrk = require( '@stdlib/blas/base/dsyrk' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dsyrk = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( dsyrk );
+// Perform C = alpha*A*A' + beta*C:
+var A = new Float64Array( [ 1.0, 2.0 ] );
+var C = new Float64Array( [ 0.0 ] );
+
+dsyrk( 'upper', 'no-transpose', 1, 2, 1.0, A, 2, 1, 0, 0.0, C, 1, 1, 0 );
+console.log( C ); // eslint-disable-line no-console

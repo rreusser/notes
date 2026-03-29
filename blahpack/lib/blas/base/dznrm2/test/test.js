@@ -3,9 +3,9 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var dznrm2 = require( './../lib/base.js' );
 
@@ -14,7 +14,7 @@ var lines = readFileSync( path.join( fixtureDir, 'dznrm2.jsonl' ), 'utf8' ).trim
 var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
 
 function findCase( name ) {
-	return fixture.find( function( t ) { return t.name === name; } );
+	return fixture.find( function ( t ) { return t.name === name; } );
 }
 
 function assertClose( actual, expected, tol, msg ) {
@@ -47,6 +47,7 @@ test( 'dznrm2: three elements', function t() {
 
 test( 'dznrm2: stride=2', function t() {
 	var tc = findCase( 'stride_2' );
+
 	// x(1) = (1,0), x(2) = (99,99), x(3) = (0,1) — stride 2 skips x(2)
 	var zx = new Complex128Array( [ 1, 0, 99, 99, 0, 1 ] );
 	assertClose( dznrm2( 2, zx, 2, 0 ), tc.result, 1e-14, 'stride_2' );
@@ -78,19 +79,31 @@ test( 'dznrm2: small and medium values (asml > 0, amed > 0, asml < amed)', funct
 
 test( 'dznrm2: small dominant with medium (asml > amed branch)', function t() {
 	var tc = findCase( 'small_dominant' );
+
 	// Many small complex values (just below TSML ~1.49e-154) plus one tiny medium value
+
 	// (just above TSML). After scaling, small contribution dominates medium.
-	var zx = new Complex128Array( [
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1e-154, 1e-154,  // small
-		1.5e-154, 0      // medium (just above TSML)
-	] );
+	var zx = new Complex128Array([
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1e-154,
+		1e-154,  // small
+		1.5e-154,
+		0      // medium (just above TSML)
+	]);
 	assertClose( dznrm2( 10, zx, 1, 0 ), tc.result, 1e-14, 'small_dominant' );
 });

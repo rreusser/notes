@@ -1,8 +1,13 @@
-
-
 'use strict';
 
-var zhpr2 = require( '@stdlib/blas/base/zhpr2' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zhpr2 = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( zhpr2 );
+// Perform Hermitian packed rank-2 update:
+var x = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var y = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
+var AP = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
+var alpha = new Float64Array( [ 1.0, 0.0 ] );
+
+zhpr2( 'upper', 2, alpha, x, 1, 0, y, 1, 0, AP, 1, 0 );
+console.log( AP ); // eslint-disable-line no-console

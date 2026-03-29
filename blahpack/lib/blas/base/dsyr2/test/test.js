@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
-var Float64Array = require( '@stdlib/array/float64' );
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dsyr2 = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
@@ -44,6 +44,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dsyr2: upper_basic', function t() {
 	var tc = findCase( 'upper_basic' );
+
 	// A = [1 2 3; 2 5 6; 3 6 9] (column-major), x = [1,2,3], y = [4,5,6]
 	var A = new Float64Array( [ 1, 2, 3, 2, 5, 6, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
@@ -63,6 +64,7 @@ test( 'dsyr2: lower_basic', function t() {
 
 test( 'dsyr2: upper_alpha', function t() {
 	var tc = findCase( 'upper_alpha' );
+
 	// Upper triangular only: A = [1 2 3; 0 5 6; 0 0 9]
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
@@ -73,6 +75,7 @@ test( 'dsyr2: upper_alpha', function t() {
 
 test( 'dsyr2: lower_alpha', function t() {
 	var tc = findCase( 'lower_alpha' );
+
 	// Lower triangular only: A = [1 0 0; 2 5 0; 3 6 9]
 	var A = new Float64Array( [ 1, 2, 3, 0, 5, 6, 0, 0, 9 ] );
 	var x = new Float64Array( [ 2, 3, 4 ] );
@@ -110,6 +113,7 @@ test( 'dsyr2: n_one', function t() {
 
 test( 'dsyr2: upper_stride', function t() {
 	var tc = findCase( 'upper_stride' );
+
 	// A upper tri: [1 2 3; 0 5 6; 0 0 9], incx=2, incy=2
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3 ] );
@@ -120,6 +124,7 @@ test( 'dsyr2: upper_stride', function t() {
 
 test( 'dsyr2: lower_stride', function t() {
 	var tc = findCase( 'lower_stride' );
+
 	// A lower tri: [1 0 0; 2 5 0; 3 6 9], incx=2, incy=3
 	var A = new Float64Array( [ 1, 2, 3, 0, 5, 6, 0, 0, 9 ] );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3 ] );
@@ -130,13 +135,26 @@ test( 'dsyr2: lower_stride', function t() {
 
 test( 'dsyr2: upper_4x4', function t() {
 	var tc = findCase( 'upper_4x4' );
+
 	// 4x4 upper: column-major
-	var A = new Float64Array( [
-		1, 0, 0, 0,
-		2, 5, 0, 0,
-		3, 6, 8, 0,
-		4, 7, 9, 10
-	] );
+	var A = new Float64Array([
+		1,
+		0,
+		0,
+		0,
+		2,
+		5,
+		0,
+		0,
+		3,
+		6,
+		8,
+		0,
+		4,
+		7,
+		9,
+		10
+	]);
 	var x = new Float64Array( [ 1, -1, 2, -2 ] );
 	var y = new Float64Array( [ 3, 0.5, -1, 1.5 ] );
 	dsyr2( 'upper', 4, 1.0, x, 1, 0, y, 1, 0, A, 1, 4, 0 );
@@ -145,13 +163,26 @@ test( 'dsyr2: upper_4x4', function t() {
 
 test( 'dsyr2: lower_4x4', function t() {
 	var tc = findCase( 'lower_4x4' );
+
 	// 4x4 lower: column-major
-	var A = new Float64Array( [
-		1, 2, 3, 4,
-		0, 5, 6, 7,
-		0, 0, 8, 9,
-		0, 0, 0, 10
-	] );
+	var A = new Float64Array([
+		1,
+		2,
+		3,
+		4,
+		0,
+		5,
+		6,
+		7,
+		0,
+		0,
+		8,
+		9,
+		0,
+		0,
+		0,
+		10
+	]);
 	var x = new Float64Array( [ 1, -1, 2, -2 ] );
 	var y = new Float64Array( [ 3, 0.5, -1, 1.5 ] );
 	dsyr2( 'lower', 4, 1.0, x, 1, 0, y, 1, 0, A, 1, 4, 0 );
@@ -160,6 +191,7 @@ test( 'dsyr2: lower_4x4', function t() {
 
 test( 'dsyr2: upper_zeros (skip when x[j]==0 && y[j]==0)', function t() {
 	var tc = findCase( 'upper_zeros' );
+
 	// x = [0, 2, 0], y = [0, 5, 0] — columns 0 and 2 should be skipped
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
 	var x = new Float64Array( [ 0, 2, 0 ] );
@@ -169,10 +201,10 @@ test( 'dsyr2: upper_zeros (skip when x[j]==0 && y[j]==0)', function t() {
 });
 
 test( 'dsyr2: returns A', function t() {
+	var result = dsyr2( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	var A = new Float64Array( [ 1, 0, 0, 1 ] );
 	var x = new Float64Array( [ 1, 2 ] );
 	var y = new Float64Array( [ 3, 4 ] );
-	var result = dsyr2( 'upper', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 0 );
 	assert.equal( result, A );
 });
 
@@ -182,6 +214,7 @@ test( 'dsyr2: offset support', function t() {
 	var x = new Float64Array( [ 999, 3 ] );
 	var y = new Float64Array( [ 999, 999, 2 ] );
 	dsyr2( 'upper', 1, 1.0, x, 1, 1, y, 1, 2, A, 1, 1, 0 );
+
 	// A[0] = 5 + 1*(3*2 + 2*3) = 5 + 12 = 17
 	assertClose( A[ 0 ], 17.0, 1e-14, 'A[0]' );
 });
@@ -192,8 +225,11 @@ test( 'dsyr2: offsetA support', function t() {
 	var x = new Float64Array( [ 1, 2 ] );
 	var y = new Float64Array( [ 3, 4 ] );
 	dsyr2( 'lower', 2, 1.0, x, 1, 0, y, 1, 0, A, 1, 2, 2 );
+
 	// A(0,0) += 1*3 + 3*1 = 6 → 1+6 = 7
+
 	// A(1,0) += 2*3 + 4*1 = 10 → 0+10 = 10
+
 	// A(1,1) += 2*4 + 4*2 = 16 → 1+16 = 17
 	assertClose( A[ 2 ], 7.0, 1e-14, 'A(0,0)' );
 	assertClose( A[ 3 ], 10.0, 1e-14, 'A(1,0)' );
@@ -203,25 +239,25 @@ test( 'dsyr2: offsetA support', function t() {
 // ndarray validation tests
 
 test( 'dsyr2: ndarray throws TypeError for invalid uplo', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'invalid', 2, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
 	}, TypeError );
 });
 
 test( 'dsyr2: ndarray throws RangeError for negative N', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'upper', -1, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
 	}, RangeError );
 });
 
 test( 'dsyr2: ndarray throws RangeError for zero strideX', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'upper', 2, 1.0, new Float64Array( 2 ), 0, 0, new Float64Array( 2 ), 1, 0, new Float64Array( 4 ), 1, 2, 0 );
 	}, RangeError );
 });
 
 test( 'dsyr2: ndarray throws RangeError for zero strideY', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'upper', 2, 1.0, new Float64Array( 2 ), 1, 0, new Float64Array( 2 ), 0, 0, new Float64Array( 4 ), 1, 2, 0 );
 	}, RangeError );
 });

@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dsbmv = require( './../lib/base.js' );
 
 
@@ -48,10 +48,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 //   [ 0  0  6  7 ]
 
 // Upper band storage (LDA=2): row 0 = superdiag, row 1 = diag
-// col 0: row1=1
-// col 1: row0=2, row1=3
-// col 2: row0=4, row1=5
-// col 3: row0=6, row1=7
+// Col 0: row1=1
+// Col 1: row0=2, row1=3
+// Col 2: row0=4, row1=5
+// Col 3: row0=6, row1=7
 function upperBandA() {
 	var a = new Float64Array( 8 );
 
@@ -71,10 +71,10 @@ function upperBandA() {
 }
 
 // Lower band storage (LDA=2): row 0 = diag, row 1 = subdiag
-// col 0: row0=1, row1=2
-// col 1: row0=3, row1=4
-// col 2: row0=5, row1=6
-// col 3: row0=7
+// Col 0: row0=1, row1=2
+// Col 1: row0=3, row1=4
+// Col 2: row0=5, row1=6
+// Col 3: row0=7
 function lowerBandA() {
 	var a = new Float64Array( 8 );
 

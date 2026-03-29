@@ -16,10 +16,10 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **ztgsy2** (2/3 done) — Solves the Sylvester matrix equation where the matrices are of order 1 or 2.
 - [ ] **zgesc2** (1/2 done) — Solves a system of linear equations using the LU factorization with complete pivoting computed by sgetc2.
 - [ ] **zgetc2** (1/2 done) — Computes the LU factorization with complete pivoting of the general n-by-n matrix.
-- [ ] **zla_gbrpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
-- [ ] **zla_gerpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U).
-- [ ] **zla_porpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric or Hermitian positive-definite matrix.
-- [ ] **zla_syrpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric indefinite matrix.
+- [x] **zla_gbrpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
+- [x] **zla_gerpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U).
+- [x] **zla_porpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric or Hermitian positive-definite matrix.
+- [x] **zla_syrpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric indefinite matrix.
 - [ ] **zlaev2** (1/2 done) — Computes the eigenvalues and eigenvectors of a 2-by-2 symmetric/Hermitian matrix.
 - [ ] **zlaqsy** (1/2 done) — Scales a symmetric/Hermitian matrix, using scaling factors computed by spoequ.
 - [ ] **zlatdf** (1/2 done) — Uses the LU factorization of the n-by-n matrix computed by sgetc2 and computes a contribution to the reciprocal Dif-esti
@@ -68,8 +68,8 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dsytri2, zhetri2, zsytri2** — Computes the inverse of a DOUBLE PRECISION symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D
 - [ ] **dsytri2x, zhetri2x, zsytri2x** — Computes the inverse of a real symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D*L**T comput
 - [ ] **dtfsm, ztfsm** — Solves a matrix equation (one operand is a triangular matrix in RFP format).
-- [ ] **zla_herpvgrw** — Computes the reciprocal pivot growth factor norm(A)/norm(U).
-- [ ] **zlaesy** — Computes the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.
+- [x] **zla_herpvgrw** — Computes the reciprocal pivot growth factor norm(A)/norm(U).
+- [x] **zlaesy** — Computes the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.
 - [ ] **zlaqhb** — Scales a Hermitian band matrix, using scaling factors computed by cpbequ.
 
 ## Divide-and-Conquer (eigen/SVD) (30 routines)
@@ -197,7 +197,7 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **zlarfx** (1/2 done) — Applies an elementary reflector to a general rectangular matrix, with loop unrolling when the reflector has order ≤ 10.
 - [ ] **zlargv** (1/2 done) — Generates a vector of plane rotations with real cosines and real sines.
 - [ ] **zlarnv** (1/2 done) — Returns a vector of random numbers from a uniform or normal distribution.
-- [ ] **zlarscl2** (1/2 done) — Performs reciprocal diagonal scaling on a matrix.
+- [x] **zlarscl2** (2/2 done) — Performs reciprocal diagonal scaling on a matrix.
 - [ ] **dlangb, dlanhs, dlansb, dlansf, dlansp, dlantb, dlantp, zlangb, zlangt, zlanhb, zlanhf, zlanhp, zlansb, zlansp, zlantb, zlantp** (10/26 done) — Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of general 
 - [ ] **dhsein, dlaein, zhsein, zlaein** (2/6 done) — Uses inverse iteration to find specified right and/or left eigenvectors of a real upper Hessenberg matrix H.
 - [ ] **dgelsd, dlalsd, zgelsd, zlalsd** — Computes the minimum-norm solution to a linear least squares problem for GE matrices
@@ -229,7 +229,7 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dlat2s** — Converts a double-precision triangular matrix to a single-precision triangular matrix.
 - [ ] **dlatsqr, zlatsqr** — Computes a blocked Tall-Skinny QR factorization of a real M-by-N matrix A for M >= N: A = Q * ( R ), ( 0 ) where: Q is a
 - [ ] **zlacrm** — Multiplies a complex matrix by a square real matrix.
-- [ ] **zlacrt** — Performs a linear transformation of a pair of complex vectors.
+- [x] **zlacrt** — Performs a linear transformation of a pair of complex vectors.
 - [ ] **zlag2c** — Converts a complex double precision matrix to a complex single precision matrix.
 - [ ] **zlahef_aa** — DLAHEF_AA factorizes a panel of a complex hermitian matrix A using the Aasen's algorithm.
 - [ ] **zlahef_rk** — Computes a partial factorization of a complex Hermitian indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pi

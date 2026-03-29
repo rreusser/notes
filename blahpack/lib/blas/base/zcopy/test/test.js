@@ -21,9 +21,9 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zcopy = require( './../lib' );
@@ -59,47 +59,47 @@ test( 'zcopy: attached to the main export is an `ndarray` method', function t() 
 });
 
 test( 'zcopy: basic copy (N=3, strideX=1, strideY=1)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zcopy_basic'; } );
+	var result = base( 3, zx, 1, 0, zy, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_basic'; } );
 	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	var zy = new Complex128Array( 3 );
-	var result = base( 3, zx, 1, 0, zy, 1, 0 );
 	assert.strictEqual( result, zy );
 	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
 	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy copied' );
 });
 
 test( 'zcopy: N=0 is a no-op', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zcopy_n_zero'; } );
+	var result = base( 0, zx, 1, 0, zy, 1, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_n_zero'; } );
 	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var zy = new Complex128Array( [ 99.0, 88.0, 77.0, 66.0 ] );
-	var result = base( 0, zx, 1, 0, zy, 1, 0 );
 	assert.strictEqual( result, zy );
 	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy unchanged' );
 });
 
 test( 'zcopy: non-unit stride (strideX=2, strideY=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zcopy_stride'; } );
-	var zx = new Complex128Array( [
-		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
-	] );
-	var zy = new Complex128Array( [
-		77.0, 77.0, 88.0, 88.0, 77.0, 77.0, 88.0, 88.0, 77.0, 77.0
-	] );
 	var result = base( 3, zx, 2, 0, zy, 2, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_stride'; } );
+	var zx = new Complex128Array([
+		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
+	]);
+	var zy = new Complex128Array([
+		77.0, 77.0, 88.0, 88.0, 77.0, 77.0, 88.0, 88.0, 77.0, 77.0
+	]);
 	assert.strictEqual( result, zy );
 	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
 	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy copied at stride' );
 });
 
 test( 'zcopy: mixed strides (strideX=1, strideY=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zcopy_mixed_stride'; } );
-	var zx = new Complex128Array( [
-		10.0, 20.0, 30.0, 40.0, 50.0, 60.0
-	] );
-	var zy = new Complex128Array( [
-		0.0, 0.0, 88.0, 88.0, 0.0, 0.0, 88.0, 88.0, 0.0, 0.0
-	] );
 	var result = base( 3, zx, 1, 0, zy, 2, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zcopy_mixed_stride'; } );
+	var zx = new Complex128Array([
+		10.0, 20.0, 30.0, 40.0, 50.0, 60.0
+	]);
+	var zy = new Complex128Array([
+		0.0, 0.0, 88.0, 88.0, 0.0, 0.0, 88.0, 88.0, 0.0, 0.0
+	]);
 	assert.strictEqual( result, zy );
 	assertArrayClose( Array.from( reinterpret( zx, 0 ) ), tc.zx, 'zx unchanged' );
 	assertArrayClose( Array.from( reinterpret( zy, 0 ) ), tc.zy, 'zy copied with mixed stride' );

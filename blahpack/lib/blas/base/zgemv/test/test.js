@@ -21,9 +21,9 @@
 'use strict';
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -60,103 +60,97 @@ test( 'zgemv: attached to the main export is an `ndarray` method', function t() 
 });
 
 test( 'zgemv: basic trans=N (M=2, N=2, alpha=(1,0), beta=(0,0))', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zgemv_basic'; } );
-	// A column-major 2x2: [(1,1), (2,2), (3,3), (4,4)]
-	// Interleaved: [1,1, 2,2, 3,3, 4,4]
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zgemv_basic'; } );
 	var A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	// Column-major: strideA1=1, strideA2=M=2
-	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_basic y' );
 });
 
 test( 'zgemv: conjugate transpose (trans=C, M=2, N=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zgemv_conj_trans'; } );
+	var result = base( 'conjugate-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zgemv_conj_trans'; } );
 	var A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var x = new Complex128Array( [ 1, 1, 1, 1 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var result = base( 'conjugate-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_conj_trans y' );
 });
 
 test( 'zgemv: alpha and beta scaling (trans=N)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zgemv_alpha_beta'; } );
-	// A = [(1,0), (0,1), (2,0), (0,2)] col-major 2x2
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var alpha = new Complex128( 2, 1 );
+	var beta = new Complex128( 1, 1 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zgemv_alpha_beta'; } );
 	var A = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
-	var alpha = new Complex128( 2, 1 );
-	var beta = new Complex128( 1, 1 );
-	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_alpha_beta y' );
 });
 
 test( 'zgemv: zero dimensions (M=0, N=0) — quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zgemv_zero_dim'; } );
+	var result = base( 'no-transpose', 0, 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zgemv_zero_dim'; } );
 	var A = new Complex128Array( 0 );
 	var x = new Complex128Array( 0 );
 	var y = new Complex128Array( [ 99, 88 ] );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var result = base( 'no-transpose', 0, 0, alpha, A, 1, 1, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_zero_dim y' );
 });
 
 test( 'zgemv: transpose (trans=T, no conjugate)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zgemv_trans'; } );
+	var result = base( 'transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zgemv_trans'; } );
 	var A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	var result = base( 'transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_trans y' );
 });
 
 test( 'zgemv: alpha=0, beta=1 quick return (y unchanged)', function t() {
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var alpha = new Complex128( 0, 0 );
+	var beta = new Complex128( 1, 0 );
 	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	var x = new Complex128Array( [ 1, 1, 2, 2 ] );
 	var y = new Complex128Array( [ 5, 6, 7, 8 ] );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 1, 0 );
-	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
 	assert.deepStrictEqual( Array.from( reinterpret( y, 0 ) ), [ 5, 6, 7, 8 ] );
 });
 
 test( 'zgemv: alpha=0, non-trivial beta (y := beta*y only)', function t() {
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
+	var alpha = new Complex128( 0, 0 );
+	var beta = new Complex128( 2, 0 );
 	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	var x = new Complex128Array( [ 1, 1, 2, 2 ] );
 	var y = new Complex128Array( [ 1, 0, 0, 1 ] );
-	var alpha = new Complex128( 0, 0 );
-	var beta = new Complex128( 2, 0 );
-	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	assert.strictEqual( result, y );
+
 	// y should be scaled by 2: [2, 0, 0, 2]
 	assert.deepStrictEqual( Array.from( reinterpret( y, 0 ) ), [ 2, 0, 0, 2 ] );
 });
 
 test( 'zgemv: non-unit stride (incx=2, incy=2, trans=N)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zgemv_stride'; } );
-	// A = [(1,0), (2,0), (3,0), (4,0)] col-major 2x2
-	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
-	// x: element 0=(1,1), gap=(99,99), element 1=(2,2)
-	var x = new Complex128Array( [ 1, 1, 99, 99, 2, 2 ] );
-	// y: element 0=(0,0), gap=(88,88), element 1=(0,0)
-	var y = new Complex128Array( [ 0, 0, 88, 88, 0, 0 ] );
+	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 2, 0, beta, y, 2, 0 );
 	var alpha = new Complex128( 1, 0 );
 	var beta = new Complex128( 0, 0 );
-	var result = base( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 2, 0, beta, y, 2, 0 );
+	var tc = fixture.find( function ( t ) { return t.name === 'zgemv_stride'; } );
+	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
+	var x = new Complex128Array( [ 1, 1, 99, 99, 2, 2 ] );
+	var y = new Complex128Array( [ 0, 0, 88, 88, 0, 0 ] );
 	assert.strictEqual( result, y );
 	assertArrayClose( Array.from( reinterpret( y, 0 ) ), tc.y, 'zgemv_stride y' );
 });
@@ -164,56 +158,56 @@ test( 'zgemv: non-unit stride (incx=2, incy=2, trans=N)', function t() {
 // ndarray validation tests
 
 test( 'zgemv: ndarray throws TypeError for invalid trans', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
 	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	assert.throws( function() {
+	assert.throws( function () {
 		zgemv.ndarray( 'invalid', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	}, TypeError );
 });
 
 test( 'zgemv: ndarray throws RangeError for negative M', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
 	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	assert.throws( function() {
+	assert.throws( function () {
 		zgemv.ndarray( 'no-transpose', -1, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	}, RangeError );
 });
 
 test( 'zgemv: ndarray throws RangeError for negative N', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
 	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	assert.throws( function() {
+	assert.throws( function () {
 		zgemv.ndarray( 'no-transpose', 2, -1, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 1, 0 );
 	}, RangeError );
 });
 
 test( 'zgemv: ndarray throws RangeError for zero strideX', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
 	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	assert.throws( function() {
+	assert.throws( function () {
 		zgemv.ndarray( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 0, 0, beta, y, 1, 0 );
 	}, RangeError );
 });
 
 test( 'zgemv: ndarray throws RangeError for zero strideY', function t() {
+	var alpha = new Complex128( 1, 0 );
+	var beta = new Complex128( 0, 0 );
 	var A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	var x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	var y = new Complex128Array( 2 );
-	var alpha = new Complex128( 1, 0 );
-	var beta = new Complex128( 0, 0 );
-	assert.throws( function() {
+	assert.throws( function () {
 		zgemv.ndarray( 'no-transpose', 2, 2, alpha, A, 1, 2, 0, x, 1, 0, beta, y, 0, 0 );
 	}, RangeError );
 });

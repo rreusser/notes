@@ -12,9 +12,9 @@ test( 'dcopy: main export is a function', function t() {
 });
 
 test( 'dcopy: N=0 returns y unchanged', function t() {
+	var out = dcopy( 0, x, 1, 0, y, 1, 0 );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 99, 99, 99 ] );
-	var out = dcopy( 0, x, 1, 0, y, 1, 0 );
 	assert.strictEqual( out, y );
 	assert.deepStrictEqual( Array.from( y ), [ 99, 99, 99 ] );
 });
@@ -27,9 +27,9 @@ test( 'dcopy: N<0 returns y unchanged', function t() {
 });
 
 test( 'dcopy: basic copy (N=3, unit stride)', function t() {
+	var out = dcopy( 3, x, 1, 0, y, 1, 0 );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( 3 );
-	var out = dcopy( 3, x, 1, 0, y, 1, 0 );
 	assert.strictEqual( out, y, 'returns y' );
 	assert.deepStrictEqual( Array.from( y ), [ 1, 2, 3 ] );
 });

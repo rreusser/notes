@@ -1,8 +1,11 @@
-
-
 'use strict';
 
-var dtpsv = require( '@stdlib/blas/base/dtpsv' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dtpsv = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( dtpsv );
+// Solve A*x = b for triangular packed A:
+var AP = new Float64Array( [ 2.0, 3.0, 4.0 ] );
+var x = new Float64Array( [ 5.0, 11.0 ] );
+
+dtpsv( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
+console.log( x ); // eslint-disable-line no-console

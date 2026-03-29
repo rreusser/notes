@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dgemm = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
 
@@ -46,6 +46,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dgemm: basic N,N 2x2', function t() {
 	var tc = findCase( 'basic_nn' );
+
 	// A = [1 3; 2 4] col-major, B = [5 7; 6 8] col-major
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
@@ -93,6 +94,7 @@ test( 'dgemm: beta=0 overwrites C', function t() {
 test( 'dgemm: M=0 quick return', function t() {
 	var C = new Float64Array( [ 99 ] );
 	dgemm( 'no-transpose', 'no-transpose', 0, 2, 2, 1.0, new Float64Array( 4 ), 1, 1, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, C, 1, 1, 0 );
+
 	// C should be unchanged
 	assert.strictEqual( C[ 0 ], 99 );
 });
@@ -108,6 +110,7 @@ test( 'dgemm: alpha and beta scaling', function t() {
 
 test( 'dgemm: non-square M=3, N=2, K=2', function t() {
 	var tc = findCase( 'nonsquare' );
+
 	// A is 3x2: [1,2,3,4,5,6], B is 2x2: identity [1,0,0,1]
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var B = new Float64Array( [ 1, 0, 0, 1 ] );
@@ -149,45 +152,57 @@ test( 'dgemm: beta=1 does not scale C', function t() {
 	var A = new Float64Array( [ 1, 0, 0, 1 ] ); // identity
 	var B = new Float64Array( [ 2, 0, 0, 2 ] );
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
+
 	// C = 1.0 * I * B + 1.0 * C = B + C
 	dgemm( 'no-transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 1.0, C, 1, 2, 0 );
 	assertArrayClose( C, [ 3, 1, 1, 3 ], 1e-14, 'beta_one' );
 });
 
 test( 'dgemm: T,N with beta!=0 (lines 130-131)', function t() {
-	// transa = 'transpose', transb = 'no-transpose', beta=2.0 -> exercises the else (beta!=0) branch in T,N path
+	// Transa = 'transpose', transb = 'no-transpose', beta=2.0 -> exercises the else (beta!=0) branch in T,N path
 	var A = new Float64Array( [ 1, 2, 3, 4 ] ); // 2x2 col-major
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
 	dgemm( 'transpose', 'no-transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 2.0, C, 1, 2, 0 );
+
 	// C = alpha * A^T * B + beta * C_old
+
 	// A^T*B: [17 23; 39 53]
+
 	// C = 1*[17 23; 39 53] + 2*[1 1; 1 1] = [19 25; 41 55]
 	assertArrayClose( C, [ 19, 41, 25, 55 ], 1e-14, 'tn_beta_nonzero' );
 });
 
 test( 'dgemm: N,T with beta!=0,!=1 (lines 146-151)', function t() {
-	// transa = 'no-transpose', transb = 'transpose', beta=0.5 -> exercises the else if (beta!==1.0) scaling in N,T path
+	// Transa = 'no-transpose', transb = 'transpose', beta=0.5 -> exercises the else if (beta!==1.0) scaling in N,T path
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 10, 10, 10, 10 ] );
 	dgemm( 'no-transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 0.5, C, 1, 2, 0 );
+
 	// A*B^T: [1*5+3*6, 2*5+4*6; 1*7+3*8, 2*7+4*8] = [23 34; 31 46]
+
 	// Wait, B in col-major is [5 7; 6 8], B^T = [5 6; 7 8]
+
 	// C = A*B^T + 0.5*C_old: A=[1 3;2 4], B^T=[5 6;7 8]
+
 	// AB^T: [1*5+3*7, 1*6+3*8; 2*5+4*7, 2*6+4*8] = [26 30; 38 44]
+
 	// C = [26+5, 38+5, 30+5, 44+5] = [31, 43, 35, 49]
 	assertArrayClose( C, [ 31, 43, 35, 49 ], 1e-14, 'nt_beta_half' );
 });
 
 test( 'dgemm: T,T with beta!=0 (lines 179-180)', function t() {
-	// transa = 'transpose', transb = 'transpose', beta=3.0 -> exercises the else (beta!=0) branch in T,T path
+	// Transa = 'transpose', transb = 'transpose', beta=3.0 -> exercises the else (beta!=0) branch in T,T path
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
 	dgemm( 'transpose', 'transpose', 2, 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0, 3.0, C, 1, 2, 0 );
+
 	// A^T = [1 2; 3 4], B^T = [5 6; 7 8]
+
 	// A^T*B^T: [1*5+2*7, 1*6+2*8; 3*5+4*7, 3*6+4*8] = [19 22; 43 50]
+
 	// C = [19+3, 43+3, 22+3, 50+3] = [22, 46, 25, 53]
 	assertArrayClose( C, [ 22, 46, 25, 53 ], 1e-14, 'tt_beta_nonzero' );
 });
@@ -195,31 +210,31 @@ test( 'dgemm: T,T with beta!=0 (lines 179-180)', function t() {
 // ndarray validation tests
 
 test( 'dgemm: ndarray throws TypeError for invalid transa', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarrayFn( 'invalid', 'no-transpose', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
 	}, TypeError );
 });
 
 test( 'dgemm: ndarray throws TypeError for invalid transb', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarrayFn( 'no-transpose', 'invalid', 2, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
 	}, TypeError );
 });
 
 test( 'dgemm: ndarray throws RangeError for negative M', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarrayFn( 'no-transpose', 'no-transpose', -1, 2, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
 	}, RangeError );
 });
 
 test( 'dgemm: ndarray throws RangeError for negative N', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarrayFn( 'no-transpose', 'no-transpose', 2, -1, 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
 	}, RangeError );
 });
 
 test( 'dgemm: ndarray throws RangeError for negative K', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarrayFn( 'no-transpose', 'no-transpose', 2, 2, -1, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 4 ), 1, 2, 0, 0.0, new Float64Array( 4 ), 1, 2, 0 );
 	}, RangeError );
 });

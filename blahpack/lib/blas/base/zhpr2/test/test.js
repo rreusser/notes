@@ -5,9 +5,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -224,21 +224,30 @@ test( 'zhpr2: lower triangle with zero elements in x and y', function t() {
 	rv = reinterpret( ap, 0 );
 
 	// Column 0 (j=0): x[0]=(1,0.5), y[0]=(0.5,1) both nonzero
+
 	// temp1 = alpha*conj(y[0]) = (1,0)*(0.5,-1) = (0.5,-1)
+
 	// temp2 = conj(alpha*x[0]) = conj((1,0)*(1,0.5)) = conj(1,0.5) = (1,-0.5)
+
 	// Diagonal (kk=0): real(AP[0]) + real(x[0]*temp1 + y[0]*temp2)
+
 	//   x[0]*temp1 = (1,0.5)*(0.5,-1) = (0.5+0.5, -1+0.25) = (1.0, -0.75)
+
 	//   y[0]*temp2 = (0.5,1)*(1,-0.5) = (0.5+0.5, -0.25+1) = (1.0, 0.75)
-	//   sum real = 1.0+1.0 = 2.0, diag = 2.0+2.0 = 4.0, imag = 0
+
+	//   Sum real = 1.0+1.0 = 2.0, diag = 2.0+2.0 = 4.0, imag = 0
 	assert.ok( Math.abs( rv[0] - 4.0 ) < 1e-14, 'ap[0,0] real' );
 	assert.ok( Math.abs( rv[1] - 0.0 ) < 1e-14, 'ap[0,0] imag' );
 
 	// Column 1 (j=1): x[1]=(0,0), y[1]=(0,0) => else branch, diagonal forced real
-	// kk for column 1 = kk_prev + (N-0) = 0 + 3*2 = 6 (double index)
+
+	// Kk for column 1 = kk_prev + (N-0) = 0 + 3*2 = 6 (double index)
+
 	// Diagonal at kk=6: just set imag to 0
 	assert.ok( Math.abs( rv[7] - 0.0 ) < 1e-14, 'ap[1,1] imag forced to 0' );
 
 	// Column 2 (j=2): x[2]=(3,1), y[2]=(2.5,0) both nonzero
+
 	// Diagonal should be updated and imag=0
 	assert.ok( Math.abs( rv[11] - 0.0 ) < 1e-14, 'ap[2,2] imag' );
 });

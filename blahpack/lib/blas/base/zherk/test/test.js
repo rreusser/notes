@@ -5,9 +5,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zherk = require( './../lib/base.js' );
@@ -45,6 +45,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'zherk: upper_N', function t() {
 	var tc = findCase( 'upper_N' );
+
 	// A is 3x2 complex, C is 3x3 complex
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
 	var C = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] );
@@ -62,6 +63,7 @@ test( 'zherk: lower_N', function t() {
 
 test( 'zherk: upper_C', function t() {
 	var tc = findCase( 'upper_C' );
+
 	// A is 2x3 complex
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
 	var C = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] );
@@ -158,9 +160,9 @@ test( 'zherk: lower_C_beta_zero', function t() {
 });
 
 test( 'zherk: n_zero quick return', function t() {
+	var result = zherk( 'upper', 'no-transpose', 0, 2, 1.0, A, 1, 1, 0, 1.0, C, 1, 1, 0 );
 	var A = new Complex128Array( 1 );
 	var C = new Complex128Array( 1 );
-	var result = zherk( 'upper', 'no-transpose', 0, 2, 1.0, A, 1, 1, 0, 1.0, C, 1, 1, 0 );
 	assert.ok( result === C );
 });
 

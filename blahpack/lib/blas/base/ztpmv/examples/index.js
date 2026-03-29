@@ -1,8 +1,11 @@
-
-
 'use strict';
 
-var ztpmv = require( '@stdlib/blas/base/ztpmv' );
+var Float64Array = require( '@stdlib/array/float64' );
+var ztpmv = require( './../lib/base.js' );
 
-// TODO: Add example usage
-console.log( ztpmv );
+// Perform x = A*x for complex triangular packed A:
+var AP = new Float64Array( [ 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
+var x = new Float64Array( [ 1.0, 0.0, 1.0, 0.0 ] );
+
+ztpmv( 'upper', 'no-transpose', 'non-unit', 2, AP, 1, 0, x, 1, 0 );
+console.log( x ); // eslint-disable-line no-console

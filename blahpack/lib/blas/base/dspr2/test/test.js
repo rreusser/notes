@@ -5,9 +5,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dspr2 = require( './../lib/base.js' );
 
@@ -162,10 +162,9 @@ test( 'dspr2: upper_zeros (skip branch when x[j]=0 and y[j]=0)', function t() {
 });
 
 test( 'dspr2: returns AP', function t() {
+	var result = dspr2( 'upper', 1, 1.0, x, 1, 0, y, 1, 0, AP, 1, 0 );
 	var AP = new Float64Array( [ 1 ] );
 	var x = new Float64Array( [ 1 ] );
 	var y = new Float64Array( [ 1 ] );
-
-	var result = dspr2( 'upper', 1, 1.0, x, 1, 0, y, 1, 0, AP, 1, 0 );
 	assert.equal( result, AP );
 });

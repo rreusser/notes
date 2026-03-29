@@ -20,10 +20,10 @@ function assertClose( actual, expected, tol, msg ) {
 }
 
 /**
-* Verify the Givens rotation properties:
+* Verify the Givens rotation properties:.
 *   1) c^2 + |s|^2 = 1
-*   2) c*a + s*b = r
-*   3) -conj(s)*a + c*b = 0
+*   2) c_a + s_b = r
+*   3) -conj(s)_a + c_b = 0
 *
 * @private
 * @param {Array} aOrig - [aRe, aIm] original input
@@ -35,22 +35,22 @@ function assertClose( actual, expected, tol, msg ) {
 * @param {string} label - test label
 */
 function verifyRotation( aOrig, bOrig, aOut, cVal, sVal, tol, label ) {
+	var scale;
+	var norm;
+	var zMag;
 	var aRe = aOrig[ 0 ];
 	var aIm = aOrig[ 1 ];
 	var bRe = bOrig[ 0 ];
 	var bIm = bOrig[ 1 ];
-	var Rv = reinterpret( aOut, 0 );
 	var rRe = Rv[ 0 ];
 	var rIm = Rv[ 1 ];
-	var cc = cVal[ 0 ];
-	var sv = reinterpret( sVal, 0 );
 	var sRe = sv[ 0 ];
 	var sIm = sv[ 1 ];
-	var scale;
-	var norm;
-	var zMag;
 	var zRe;
 	var zIm;
+	var Rv = reinterpret( aOut, 0 );
+	var cc = cVal[ 0 ];
+	var sv = reinterpret( sVal, 0 );
 
 	// Property 1: c^2 + |s|^2 = 1
 	norm = ( cc * cc ) + ( sRe * sRe ) + ( sIm * sIm );
@@ -74,12 +74,12 @@ function verifyRotation( aOrig, bOrig, aOut, cVal, sVal, tol, label ) {
 // TESTS //
 
 test( 'zrotg: g = 0 (identity rotation)', function t() {
-	var a = new Complex128Array( [ 3.0, 4.0 ] );
-	var b = new Complex128Array( [ 0.0, 0.0 ] );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
 	var Av = reinterpret( a, 0 );
 	var Sv = reinterpret( sv, 0 );
+	var a = new Complex128Array( [ 3.0, 4.0 ] );
+	var b = new Complex128Array( [ 0.0, 0.0 ] );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 1.0 );
@@ -92,10 +92,10 @@ test( 'zrotg: g = 0 (identity rotation)', function t() {
 test( 'zrotg: f = 0, g pure real', function t() {
 	var aOrig = [ 0.0, 0.0 ];
 	var bOrig = [ 5.0, 0.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 0.0 );
@@ -107,10 +107,10 @@ test( 'zrotg: f = 0, g pure real', function t() {
 test( 'zrotg: f = 0, g pure imaginary', function t() {
 	var aOrig = [ 0.0, 0.0 ];
 	var bOrig = [ 0.0, 7.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 0.0 );
@@ -121,10 +121,10 @@ test( 'zrotg: f = 0, g pure imaginary', function t() {
 test( 'zrotg: f = 0, g negative real', function t() {
 	var aOrig = [ 0.0, 0.0 ];
 	var bOrig = [ -3.0, 0.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 0.0 );
@@ -135,10 +135,10 @@ test( 'zrotg: f = 0, g negative real', function t() {
 test( 'zrotg: f = 0, g general complex', function t() {
 	var aOrig = [ 0.0, 0.0 ];
 	var bOrig = [ 3.0, 4.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 0.0 );
@@ -147,10 +147,10 @@ test( 'zrotg: f = 0, g general complex', function t() {
 });
 
 test( 'zrotg: both zero', function t() {
-	var a = new Complex128Array( [ 0.0, 0.0 ] );
-	var b = new Complex128Array( [ 0.0, 0.0 ] );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( [ 0.0, 0.0 ] );
+	var b = new Complex128Array( [ 0.0, 0.0 ] );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 1.0 );
@@ -161,10 +161,10 @@ test( 'zrotg: both zero', function t() {
 test( 'zrotg: general case, both nonzero', function t() {
 	var aOrig = [ 1.0, 2.0 ];
 	var bOrig = [ 3.0, 4.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.ok( cv[ 0 ] > 0.0, 'c > 0' );
@@ -174,10 +174,10 @@ test( 'zrotg: general case, both nonzero', function t() {
 test( 'zrotg: |f| > |g|', function t() {
 	var aOrig = [ 10.0, 5.0 ];
 	var bOrig = [ 1.0, -1.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	verifyRotation( aOrig, bOrig, a, cv, sv, 1e-14, '|f|>|g|' );
@@ -186,10 +186,10 @@ test( 'zrotg: |f| > |g|', function t() {
 test( 'zrotg: |f| < |g|', function t() {
 	var aOrig = [ 0.1, -0.2 ];
 	var bOrig = [ 5.0, 3.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	verifyRotation( aOrig, bOrig, a, cv, sv, 1e-14, '|f|<|g|' );
@@ -198,10 +198,10 @@ test( 'zrotg: |f| < |g|', function t() {
 test( 'zrotg: pure real inputs (matches drotg pattern)', function t() {
 	var aOrig = [ 3.0, 0.0 ];
 	var bOrig = [ 4.0, 0.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assertClose( cv[ 0 ], 3.0 / 5.0, 1e-14, 'c = a/r' );
@@ -214,24 +214,24 @@ test( 'zrotg: pure real inputs (matches drotg pattern)', function t() {
 test( 'zrotg: pure imaginary inputs', function t() {
 	var aOrig = [ 0.0, 3.0 ];
 	var bOrig = [ 0.0, 4.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	verifyRotation( aOrig, bOrig, a, cv, sv, 1e-14, 'pure imag' );
 });
 
 test( 'zrotg: large values (near overflow)', function t() {
-	var big = 1e150;
 	var aOrig = [ big, big ];
 	var bOrig = [ big, -big ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
+	var big = 1e150;
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
 	var Av;
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	Av = reinterpret( a, 0 );
@@ -242,13 +242,13 @@ test( 'zrotg: large values (near overflow)', function t() {
 });
 
 test( 'zrotg: small values (near underflow)', function t() {
-	var tiny = 1e-160;
 	var aOrig = [ tiny, tiny ];
 	var bOrig = [ tiny, -tiny ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
+	var tiny = 1e-160;
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.ok( isFinite( cv[ 0 ] ), 'c is finite' );
@@ -258,10 +258,10 @@ test( 'zrotg: small values (near underflow)', function t() {
 test( 'zrotg: f small, g large (separate scaling)', function t() {
 	var aOrig = [ 1e-160, 1e-160 ];
 	var bOrig = [ 1e100, 1e100 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.ok( isFinite( cv[ 0 ] ), 'c is finite' );
@@ -272,10 +272,10 @@ test( 'zrotg: f small, g large (separate scaling)', function t() {
 test( 'zrotg: f = 0, g small complex (scaled path)', function t() {
 	var aOrig = [ 0.0, 0.0 ];
 	var bOrig = [ 1e-200, 1e-200 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 0.0 );
@@ -286,10 +286,10 @@ test( 'zrotg: f = 0, g small complex (scaled path)', function t() {
 test( 'zrotg: f = 0, g large complex (scaled path)', function t() {
 	var aOrig = [ 0.0, 0.0 ];
 	var bOrig = [ 1e200, -1e200 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.strictEqual( cv[ 0 ], 0.0 );
@@ -300,10 +300,10 @@ test( 'zrotg: f = 0, g large complex (scaled path)', function t() {
 test( 'zrotg: g >> f (f2 < h2*safmin path)', function t() {
 	var aOrig = [ 1e-300, 1e-300 ];
 	var bOrig = [ 1.0, 1.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.ok( isFinite( cv[ 0 ] ), 'c is finite' );
@@ -314,12 +314,11 @@ test( 'zrotg: g >> f (f2 < h2*safmin path)', function t() {
 test( 'zrotg: with offsets', function t() {
 	var aOrig = [ 1.0, 2.0 ];
 	var bOrig = [ 3.0, 4.0 ];
-	// a at offset 1 (complex element 1), b at offset 2
-	var a = new Complex128Array( [ 99, 99, 1.0, 2.0 ] );
-	var b = new Complex128Array( [ 99, 99, 99, 99, 3.0, 4.0 ] );
 	var cv = new Float64Array( [ 99, 0.0 ] );
 	var sv = new Complex128Array( [ 99, 99, 0.0, 0.0 ] );
 	var Av;
+	var a = new Complex128Array( [ 99, 99, 1.0, 2.0 ] );
+	var b = new Complex128Array( [ 99, 99, 99, 99, 3.0, 4.0 ] );
 
 	zrotg( a, 1, b, 2, cv, 1, sv, 1 );
 
@@ -336,10 +335,10 @@ test( 'zrotg: unscaled f2 < h2*safmin (f tiny, g normal)', function t() {
 	// f2 ~ 1e-600, g2 ~ 2, h2 ~ 2, f2/h2 ~ 5e-601 < safmin ~ 2e-308
 	var aOrig = [ 1e-300, 1e-300 ];
 	var bOrig = [ 1.0, 1.0 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.ok( isFinite( cv[ 0 ] ), 'c is finite' );
@@ -348,15 +347,15 @@ test( 'zrotg: unscaled f2 < h2*safmin (f tiny, g normal)', function t() {
 
 test( 'zrotg: scaled path, f2 < h2*safmin, c < safmin', function t() {
 	// Both in scaled range, but f is much smaller than g even after scaling
-	// f ~ 1e-300, g ~ 1e-155 => scaled range (both < rtmin ~ 1e-154)
+	// F ~ 1e-300, g ~ 1e-155 => scaled range (both < rtmin ~ 1e-154)
 	// After scaling by u ~ g1 ~ 1e-155: gs ~ 1, fs ~ 1e-145
 	// f2 ~ 1e-290, g2 ~ 1, h2 ~ 1, f2/h2 < safmin
 	var aOrig = [ 1e-300, 0.5e-300 ];
 	var bOrig = [ 0.7e-155, 0.7e-155 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.ok( isFinite( cv[ 0 ] ), 'c is finite' );
@@ -371,13 +370,13 @@ test( 'zrotg: scaled path, h2 >= rtmax (s computed via r/h2)', function t() {
 	// h2 ~ 2 < rtmax*2, so we need really large scaled values
 	// Try: f and g just outside rtmax range
 	var rtmax = Math.sqrt( 4.494e307 / 4.0 );
-	var val = rtmax * 1.1;
 	var aOrig = [ val, val * 0.5 ];
 	var bOrig = [ val * 0.7, val * 0.3 ];
-	var a = new Complex128Array( aOrig );
-	var b = new Complex128Array( bOrig );
+	var val = rtmax * 1.1;
 	var cv = new Float64Array( 1 );
 	var sv = new Complex128Array( 1 );
+	var a = new Complex128Array( aOrig );
+	var b = new Complex128Array( bOrig );
 
 	zrotg( a, 0, b, 0, cv, 0, sv, 0 );
 	assert.ok( isFinite( cv[ 0 ] ), 'c is finite' );

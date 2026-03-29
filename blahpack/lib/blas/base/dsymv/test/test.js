@@ -5,9 +5,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsymv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
@@ -44,13 +44,27 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dsymv: upper_basic (uplo=U, N=4, alpha=1, beta=0, unit strides)', function t() {
 	var tc = findCase( 'upper_basic' );
+
 	// Symmetric matrix upper triangle stored in column-major:
+
 	// Full: [[1,2,3,4],[2,5,6,7],[3,6,8,9],[4,7,9,10]]
 	var A = new Float64Array([
-		1, 0, 0, 0,
-		2, 5, 0, 0,
-		3, 6, 8, 0,
-		4, 7, 9, 10
+		1,
+		0,
+		0,
+		0,
+		2,
+		5,
+		0,
+		0,
+		3,
+		6,
+		8,
+		0,
+		4,
+		7,
+		9,
+		10
 	]);
 	var x = new Float64Array([ 1, 2, 3, 4 ]);
 	var y = new Float64Array([ 0, 0, 0, 0 ]);
@@ -61,12 +75,25 @@ test( 'dsymv: upper_basic (uplo=U, N=4, alpha=1, beta=0, unit strides)', functio
 
 test( 'dsymv: lower_basic (uplo=L, N=4, alpha=1, beta=0, unit strides)', function t() {
 	var tc = findCase( 'lower_basic' );
+
 	// Lower triangle stored in column-major:
 	var A = new Float64Array([
-		1, 2, 3, 4,
-		0, 5, 6, 7,
-		0, 0, 8, 9,
-		0, 0, 0, 10
+		1,
+		2,
+		3,
+		4,
+		0,
+		5,
+		6,
+		7,
+		0,
+		0,
+		8,
+		9,
+		0,
+		0,
+		0,
+		10
 	]);
 	var x = new Float64Array([ 1, 2, 3, 4 ]);
 	var y = new Float64Array([ 0, 0, 0, 0 ]);
@@ -78,10 +105,22 @@ test( 'dsymv: lower_basic (uplo=L, N=4, alpha=1, beta=0, unit strides)', functio
 test( 'dsymv: alpha_beta (uplo=U, alpha=2, beta=0.5)', function t() {
 	var tc = findCase( 'alpha_beta' );
 	var A = new Float64Array([
-		1, 0, 0, 0,
-		2, 5, 0, 0,
-		3, 6, 8, 0,
-		4, 7, 9, 10
+		1,
+		0,
+		0,
+		0,
+		2,
+		5,
+		0,
+		0,
+		3,
+		6,
+		8,
+		0,
+		4,
+		7,
+		9,
+		10
 	]);
 	var x = new Float64Array([ 1, 2, 3, 4 ]);
 	var y = new Float64Array([ 10, 20, 30, 40 ]);
@@ -123,13 +162,22 @@ test( 'dsymv: alpha_zero (alpha=0, just scales y by beta)', function t() {
 
 test( 'dsymv: stride (uplo=U, N=3, incx=2, incy=2)', function t() {
 	var tc = findCase( 'stride' );
+
 	// Fortran upper triangle, LDA=3, N=3:
+
 	// diagonal: A(1,1)=1, A(2,2)=2, A(3,3)=3, off-diags all 0
+
 	// Column-major storage: [1,0,0, 0,2,0, 0,0,3]
 	var A = new Float64Array([
-		1, 0, 0,
-		0, 2, 0,
-		0, 0, 3
+		1,
+		0,
+		0,
+		0,
+		2,
+		0,
+		0,
+		0,
+		3
 	]);
 	var x = new Float64Array([ 1, 0, 2, 0, 3, 0 ]);
 	var y = new Float64Array([ 1, 0, 2, 0, 3, 0 ]);
@@ -140,14 +188,24 @@ test( 'dsymv: stride (uplo=U, N=3, incx=2, incy=2)', function t() {
 
 test( 'dsymv: lower_stride_alpha_beta (uplo=L, N=3, incx=2, incy=2, alpha=2, beta=0.5)', function t() {
 	var tc = findCase( 'lower_stride_alpha_beta' );
+
 	// Fortran lower triangle, LDA=3, N=3:
+
 	// A(1,1)=1, A(2,1)=2, A(3,1)=3, A(2,2)=0, A(3,2)=4, A(3,3)=0
+
 	// Symmetric: [[1,2,3],[2,0,4],[3,4,0]]
+
 	// Column-major storage: [1,2,3, 0,0,4, 0,0,0]
 	var A = new Float64Array([
-		1, 2, 3,
-		0, 0, 4,
-		0, 0, 0
+		1,
+		2,
+		3,
+		0,
+		0,
+		4,
+		0,
+		0,
+		0
 	]);
 	var x = new Float64Array([ 1, 0, 2, 0, 3, 0 ]);
 	var y = new Float64Array([ 10, 0, 20, 0, 30, 0 ]);
@@ -158,11 +216,18 @@ test( 'dsymv: lower_stride_alpha_beta (uplo=L, N=3, incx=2, incy=2, alpha=2, bet
 
 test( 'dsymv: negative_stride (uplo=U, N=3, incx=-1, incy=-1)', function t() {
 	var tc = findCase( 'negative_stride' );
+
 	// Upper triangle: [[1,2,3],[2,4,5],[3,5,6]]
 	var A = new Float64Array([
-		1, 0, 0,
-		2, 4, 0,
-		3, 5, 6
+		1,
+		0,
+		0,
+		2,
+		4,
+		0,
+		3,
+		5,
+		6
 	]);
 	var x = new Float64Array([ 1, 2, 3 ]);
 	var y = new Float64Array([ 0, 0, 0 ]);
@@ -173,11 +238,10 @@ test( 'dsymv: negative_stride (uplo=U, N=3, incx=-1, incy=-1)', function t() {
 });
 
 test( 'dsymv: returns y', function t() {
+	var result = dsymv( 'upper', 1, 1.0, A, 1, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 	var A = new Float64Array([ 1 ]);
 	var x = new Float64Array([ 1 ]);
 	var y = new Float64Array([ 0 ]);
-
-	var result = dsymv( 'upper', 1, 1.0, A, 1, 1, 0, x, 1, 0, 0.0, y, 1, 0 );
 	assert.equal( result, y );
 });
 
@@ -194,25 +258,25 @@ test( 'dsymv: alpha=0 and beta=1 quick return does not modify y', function t() {
 // ndarray validation tests
 
 test( 'dsymv: ndarray throws TypeError for invalid uplo', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'invalid', 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 2 ), 1, 0 );
 	}, TypeError );
 });
 
 test( 'dsymv: ndarray throws RangeError for negative N', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'upper', -1, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 2 ), 1, 0 );
 	}, RangeError );
 });
 
 test( 'dsymv: ndarray throws RangeError for zero strideX', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'upper', 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 0, 0, 0.0, new Float64Array( 2 ), 1, 0 );
 	}, RangeError );
 });
 
 test( 'dsymv: ndarray throws RangeError for zero strideY', function t() {
-	assert.throws( function() {
+	assert.throws( function () {
 		ndarray( 'upper', 2, 1.0, new Float64Array( 4 ), 1, 2, 0, new Float64Array( 2 ), 1, 0, 0.0, new Float64Array( 2 ), 0, 0 );
 	}, RangeError );
 });

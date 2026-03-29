@@ -5,9 +5,9 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dspr = require( './../lib/base.js' );
 
@@ -43,6 +43,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dspr: upper_basic (uplo=U, N=3, alpha=1, unit stride)', function t() {
 	var tc = findCase( 'upper_basic' );
+
 	// AP = upper triangle of identity: diag at positions 0,2,5
 	var AP = new Float64Array( [ 1, 0, 1, 0, 0, 1 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
@@ -53,6 +54,7 @@ test( 'dspr: upper_basic (uplo=U, N=3, alpha=1, unit stride)', function t() {
 
 test( 'dspr: lower_basic (uplo=L, N=3, alpha=1, unit stride)', function t() {
 	var tc = findCase( 'lower_basic' );
+
 	// AP = lower triangle of identity: diag at positions 0,3,5
 	var AP = new Float64Array( [ 1, 0, 0, 1, 0, 1 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
@@ -98,17 +100,16 @@ test( 'dspr: stride (uplo=U, N=3, incx=2)', function t() {
 });
 
 test( 'dspr: returns AP', function t() {
+	var result = dspr( 'upper', 1, 1.0, x, 1, 0, AP, 1, 0 );
 	var AP = new Float64Array( [ 1 ] );
 	var x = new Float64Array( [ 1 ] );
-
-	var result = dspr( 'upper', 1, 1.0, x, 1, 0, AP, 1, 0 );
 	assert.equal( result, AP );
 });
 
 test( 'dspr: x element zero skips update for that column', function t() {
 	// When x[j] === 0, that column should not be updated
-	var AP = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var expected = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
+	var AP = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var x = new Float64Array( [ 0, 0, 0 ] );
 
 	dspr( 'upper', 3, 1.0, x, 1, 0, AP, 1, 0 );

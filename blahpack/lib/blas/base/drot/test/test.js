@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var drot = require( './../lib/base.js' );
 
 
@@ -111,6 +111,7 @@ test( 'drot: negative stride (incx=-1)', function t() {
 	var y = new Float64Array( [ 10.0, 20.0, 30.0, 40.0 ] );
 
 	// Fortran with incx=-1 starts at index (-N+1)*incx+1 = (-4+1)*(-1)+1 = 4 (1-based) = 3 (0-based)
+
 	// In our base.js API, offset is explicit, so offset = 3 and stride = -1
 	drot( 4, x, -1, 3, y, 1, 0, 0.6, 0.8 );
 	assertArrayClose( x, tc.dx, 1e-14, 'dx' );
@@ -128,9 +129,9 @@ test( 'drot: negate (c=-1, s=0)', function t() {
 });
 
 test( 'drot: returns y', function t() {
+	var out = drot( 2, x, 1, 0, y, 1, 0, 1.0, 0.0 );
 	var x = new Float64Array( [ 1.0, 2.0 ] );
 	var y = new Float64Array( [ 3.0, 4.0 ] );
-	var out = drot( 2, x, 1, 0, y, 1, 0, 1.0, 0.0 );
 
 	assert.equal( out, y, 'returns y' );
 });

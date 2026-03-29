@@ -5,10 +5,10 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
 var readFileSync = require( 'fs' ).readFileSync;
 var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
 var dtrsm = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
@@ -46,6 +46,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 test( 'dtrsm: left, upper, no-trans, non-unit', function t() {
 	var tc = findCase( 'left_upper_n_n' );
+
 	// A = [2 3; 0 4] col-major: [2, 0, 3, 4]
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
 	var B = new Float64Array( [ 8, 4, 10, 12 ] );
@@ -55,6 +56,7 @@ test( 'dtrsm: left, upper, no-trans, non-unit', function t() {
 
 test( 'dtrsm: left, lower, no-trans, non-unit', function t() {
 	var tc = findCase( 'left_lower_n_n' );
+
 	// A = [3 0; 2 5] col-major: [3, 2, 0, 5]
 	var A = new Float64Array( [ 3, 2, 0, 5 ] );
 	var B = new Float64Array( [ 6, 14, 9, 25 ] );
@@ -72,6 +74,7 @@ test( 'dtrsm: right, upper, no-trans, non-unit', function t() {
 
 test( 'dtrsm: unit diagonal', function t() {
 	var tc = findCase( 'unit_diag' );
+
 	// A stored as [99, 0, 3, 99] but diag = 'unit' ignores diagonal
 	var A = new Float64Array( [ 99, 0, 3, 99 ] );
 	var B = new Float64Array( [ 7, 1, 10, 2 ] );
@@ -151,6 +154,7 @@ test( 'dtrsm: left, lower, no-trans with alpha=2', function t() {
 	// Covers the alpha !== 1.0 branch in Left, Lower, No-transpose
 	var A = new Float64Array( [ 3, 2, 0, 5 ] );
 	var B = new Float64Array( [ 6, 14, 9, 25 ] );
+
 	// We can verify by comparing: solve A*X = 2*B
 	dtrsm( 'left', 'lower', 'no-transpose', 'non-unit', 2, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0 );
 	// Row 1: 3*x11 = 2*6=12 => x11=4; 3*x12=2*9=18 => x12=6
@@ -164,6 +168,7 @@ test( 'dtrsm: right, upper, no-trans with alpha=2', function t() {
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
 	var B = new Float64Array( [ 4, 6, 11, 15 ] );
 	dtrsm( 'right', 'upper', 'no-transpose', 'non-unit', 2, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0 );
+
 	// Solve X*A = 2*B
 	assertClose( B[ 0 ], 4.0, 1e-14, 'B[0]' );
 	assertClose( B[ 1 ], 6.0, 1e-14, 'B[1]' );
@@ -174,6 +179,7 @@ test( 'dtrsm: right, lower, no-trans with alpha=2', function t() {
 	var A = new Float64Array( [ 3, 2, 0, 5 ] );
 	var B = new Float64Array( [ 3, 6, 10, 22 ] );
 	dtrsm( 'right', 'lower', 'no-transpose', 'non-unit', 2, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0 );
+
 	// Non-trivial result, just verify it's different from alpha=1
 	assert.ok( B[ 0 ] !== 3.0, 'B should be modified' );
 });
