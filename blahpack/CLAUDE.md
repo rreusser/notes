@@ -9,16 +9,19 @@ stdlib-js reference clone: `/Users/rreusser/gh/stdlib-js/stdlib/`
 
 ```
 bin/                           # Pipeline scripts
-  transform.py                 #   Composable code-mod pipeline
-  signature.py                 #   Fortran → stdlib-js signature generator
+  gate.js                      #   THE quality gate — all checks in one command
+  gate/                        #   Gate check modules (file-structure, scaffolding, etc.)
+  init_routine.py              #   Single command: scaffold + deps + test scaffold
   scaffold.py                  #   Module scaffold generator (stdlib-js structure)
+  signature.py                 #   Fortran → stdlib-js signature generator
   deps.py                      #   Dependency tree analyzer
+  transform.py                 #   Composable code-mod pipeline
   fortran_body.py              #   Strip Fortran to executable body only
   gen_test.py                  #   Generate JS test scaffold from fixtures
-  init_routine.py              #   Single command: scaffold + deps + test scaffold
-  audit.sh                     #   Convention audit (per-module or full codebase)
-  lint.sh                      #   ESLint wrapper
-  check-stub-tests.sh          #   Detect scaffold-only test stubs
+  lint.sh                      #   ESLint wrapper (batch + single)
+  lint-fix.sh                  #   Full fix pipeline (codemods + eslint + test verify)
+  codemod-tests.js             #   Test file mechanical fixes
+  codemod-index.js             #   Index.js mechanical fixes
 data/                          # Reference Fortran source
   BLAS-3.12.0/
   lapack-3.12.0/
@@ -36,6 +39,9 @@ docs/                          # Reference documentation
   ndarray-conformance.md       #   ndarray.js validation spec
   goto-patterns.md             #   Fortran GOTO → JS restructuring
   performance-patterns.md      #   Optimization patterns with code examples
+bench/                         # Performance benchmarks
+archive/bin/                   # Archived one-time migration scripts
+gate.config.json               # Per-module gate exceptions (with mandatory reasons)
 ```
 
 ## Commands
@@ -44,10 +50,13 @@ docs/                          # Reference documentation
 python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
-npm run check                   # MANDATORY: tests + conformance audit (the final gate)
+npm run check                   # MANDATORY: tests + gate (the final gate)
 npm test                        # Run JS tests only (not sufficient for completion)
-npm run audit                   # Conformance audit only
+node bin/gate.js <module-path>  # Quality gate for one module (all checks)
+node bin/gate.js --all --fast   # Fast gate on all modules (file checks only)
+node bin/gate.js --all          # Full gate on all modules (includes lint)
 npm run report                  # Generate progress.html with conformance checks
+bin/lint-fix.sh <module-path>   # Auto-fix (codemods + eslint + test verify)
 bin/lint.sh lib/<path>/base.js  # Lint a single file
 ```
 
@@ -61,7 +70,7 @@ Use these skills for translation and review workflows:
 
 - `/blahpack-review [module-path]` — Review a module (or full codebase)
   for convention violations, scaffolding remnants, and quality issues.
-  Runs `bin/audit.sh` and applies the full review checklist.
+  Runs `node bin/gate.js` and applies the full review checklist.
 
 - `/blahpack-scaffold <package> <routine>` — Generate module scaffold
 - `/blahpack-signature <routine>` — Generate stdlib-js call signature

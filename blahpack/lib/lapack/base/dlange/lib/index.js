@@ -19,7 +19,7 @@
 'use strict';
 
 /**
-* Compute the value of the one norm, Frobenius norm, infinity norm, or largest absolute value of a matrix.
+* Compute the value of the one norm, Frobenius norm, infinity norm, or largest absolute value of a real matrix.
 *
 * @module @stdlib/lapack/base/dlange
 *
@@ -28,18 +28,20 @@
 * var dlange = require( '@stdlib/lapack/base/dlange' );
 *
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
+* var WORK = new Float64Array( 2 );
 *
-* dlange( 'row-major', 'one-norm', 2, 2, A, 2, WORK, 1 );
+* var result = dlange( 'column-major', 'one-norm', 2, 2, A, 2, WORK, 1 );
+* // returns 7.0
 *
 * @example
 * var Float64Array = require( '@stdlib/array/float64' );
 * var dlange = require( '@stdlib/lapack/base/dlange' );
 *
 * var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
-* var WORK = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
+* var WORK = new Float64Array( 2 );
 *
-* dlange.ndarray( 'one-norm', 2, 2, A, 1, 2, 0, WORK, 1, 0 );
+* var result = dlange.ndarray( 'one-norm', 2, 2, A, 1, 2, 0, WORK, 1, 0 );
+* // returns 7.0
 */
 
 

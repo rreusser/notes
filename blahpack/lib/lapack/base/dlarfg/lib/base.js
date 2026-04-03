@@ -51,6 +51,7 @@ function dlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 	var rsafmn;
 	var safmin;
 	var xnorm;
+	var sign;
 	var beta;
 	var knt;
 	var j;
@@ -66,14 +67,14 @@ function dlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 		// H = I
 		tau[ offsetTau ] = 0.0;
 	} else {
-		// General case
-		// Fortran SIGN(A,B): |A| * sign(B)
-		beta = -( Math.sign( alpha[ offsetAlpha ] ) || 1.0 ) * dlapy2( alpha[ offsetAlpha ], xnorm );
+		// General case; Fortran SIGN(A,B): |A| * sign(B)
+		sign = Math.sign( alpha[ offsetAlpha ] ) || 1.0;
+		beta = -sign * dlapy2( alpha[ offsetAlpha ], xnorm );
 		safmin = dlamch( 'safe-minimum' ) / dlamch( 'epsilon' );
 		knt = 0;
 
 		if ( Math.abs( beta ) < safmin ) {
-			// XNORM, BETA may be inaccurate; scale X and recompute them
+			// XNORM, BETA may be inaccurate; scale X and recompute:
 			rsafmn = 1.0 / safmin;
 			do {
 				knt += 1;
@@ -82,13 +83,13 @@ function dlarfg( N, alpha, offsetAlpha, x, strideX, offsetX, tau, offsetTau ) {
 				alpha[ offsetAlpha ] *= rsafmn;
 			} while ( Math.abs( beta ) < safmin && knt < 20 );
 
-			// New BETA is at most 1, at least SAFMIN
+			// New BETA is at most 1, at least SAFMIN:
 			xnorm = dnrm2( N - 1, x, strideX, offsetX );
-			beta = -( Math.sign( alpha[ offsetAlpha ] ) || 1.0 ) * dlapy2( alpha[ offsetAlpha ], xnorm );
+			sign = Math.sign( alpha[ offsetAlpha ] ) || 1.0;
+			beta = -sign * dlapy2( alpha[ offsetAlpha ], xnorm );
 		}
-
 		tau[ offsetTau ] = ( beta - alpha[ offsetAlpha ] ) / beta;
-		dscal( N - 1, 1.0 / ( alpha[ offsetAlpha ] - beta ), x, strideX, offsetX );
+		dscal( N - 1, 1.0 / ( alpha[ offsetAlpha ] - beta ), x, strideX, offsetX ); // eslint-disable-line max-len
 
 		// If ALPHA is subnormal, it may lose relative accuracy
 		for ( j = 0; j < knt; j++ ) {

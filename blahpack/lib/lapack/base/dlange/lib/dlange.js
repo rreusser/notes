@@ -16,7 +16,7 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params */
+/* eslint-disable max-params */
 
 'use strict';
 
@@ -31,18 +31,18 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes the value of the one norm, Frobenius norm, infinity norm, or.
+* Computes the value of the one norm, Frobenius norm, infinity norm, or largest absolute value of a real matrix.
 *
-* @param {string} order - storage layout ('row-major' or 'column-major')
-* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} order - storage layout (`'row-major'` or `'column-major'`)
+* @param {string} norm - specifies the norm: `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
 * @param {NonNegativeInteger} M - number of rows
 * @param {NonNegativeInteger} N - number of columns
 * @param {Float64Array} A - input matrix
 * @param {PositiveInteger} LDA - leading dimension of `A`
-* @param {Float64Array} WORK - input array
-* @param {integer} strideWORK - `WORK` stride length
+* @param {Float64Array} WORK - workspace array
+* @param {integer} strideWORK - stride length for `WORK`
 * @throws {TypeError} first argument must be a valid order
-* @returns {*} result
+* @returns {number} norm value
 */
 function dlange( order, norm, M, N, A, LDA, WORK, strideWORK ) {
 	var sa1;
@@ -50,7 +50,7 @@ function dlange( order, norm, M, N, A, LDA, WORK, strideWORK ) {
 	var ow;
 
 	if ( !isLayout( order ) ) {
-		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) ); // eslint-disable-line max-len
 	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
@@ -59,7 +59,7 @@ function dlange( order, norm, M, N, A, LDA, WORK, strideWORK ) {
 		sa1 = LDA;
 		sa2 = 1;
 	}
-	ow = stride2offset( N, strideWORK );
+	ow = stride2offset( M, strideWORK );
 	return base( norm, M, N, A, sa1, sa2, 0, WORK, strideWORK, ow );
 }
 

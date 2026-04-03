@@ -1,3 +1,20 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
@@ -9,14 +26,16 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Returns |a| with the sign of b (Fortran SIGN intrinsic).
+* Computes the Schur factorization of a real 2-by-2 nonsymmetric matrix in standard form.
 *
-* @param {number} a - magnitude source
-* @param {number} b - sign source
-* @returns {number} |a| * sign(b)
+* @param {number} a - the (1,1) element of the matrix
+* @param {number} b - the (1,2) element of the matrix
+* @param {number} c - the (2,1) element of the matrix
+* @param {number} d - the (2,2) element of the matrix
+* @returns {Object} object with fields: `a`, `b`, `c`, `d` (Schur form), `rt1r`, `rt1i`, `rt2r`, `rt2i` (eigenvalues), `cs`, `sn` (rotation)
 */
-function dlanv2( a, b, c, d, rt1r, rt1i, rt2r, rt2i, cs, sn ) { // eslint-disable-line max-len, max-params
-	return base( a, b, c, d, rt1r, rt1i, rt2r, rt2i, cs, sn ); // eslint-disable-line max-len
+function dlanv2( a, b, c, d ) {
+	return base( a, b, c, d );
 }
 
 

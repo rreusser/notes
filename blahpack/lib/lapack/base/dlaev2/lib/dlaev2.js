@@ -16,8 +16,6 @@
 * limitations under the License.
 */
 
-/* eslint-disable max-len, max-params */
-
 'use strict';
 
 // MODULES //
@@ -28,7 +26,12 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* Computes the eigendecomposition of a 2-by-2 symmetric matrix:.
+* Computes the eigendecomposition of a 2-by-2 symmetric matrix.
+*
+* @param {number} a - (1,1) element of the 2-by-2 matrix
+* @param {number} b - (1,2) element (also (2,1)) of the 2-by-2 matrix
+* @param {number} c - (2,2) element of the 2-by-2 matrix
+* @returns {Object} object with `rt1`, `rt2`, `cs1`, and `sn1` properties
 */
 function dlaev2( a, b, c ) {
 	return base( a, b, c );

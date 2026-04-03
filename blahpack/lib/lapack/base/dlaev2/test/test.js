@@ -2,7 +2,6 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
@@ -15,7 +14,7 @@ var dlaev2 = require( './../lib/base.js' );
 // FIXTURES //
 
 var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaev2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var lines = readFileSync( path.join( fixtureDir, 'dlaev2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
 var fixture = lines.map( function parse( line ) {
 	return JSON.parse( line );
 } );
@@ -31,7 +30,8 @@ var fixture = lines.map( function parse( line ) {
 * @returns {*} result
 */
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
+	return fixture.find( function find( t ) {
+		return t.name === name;
 	} );
 }
 
@@ -39,8 +39,8 @@ function findCase( name ) {
 * Asserts that two numbers are approximately equal.
 *
 * @private
-* @param {*} actual - actual value
-* @param {*} expected - expected value
+* @param {number} actual - actual value
+* @param {number} expected - expected value
 * @param {number} tol - tolerance
 * @param {string} msg - assertion message
 */
@@ -49,8 +49,27 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
+/**
+* Checks all four outputs of dlaev2 against fixture values.
+*
+* @private
+* @param {Object} out - result from dlaev2
+* @param {Object} tc - test case from fixture
+* @param {number} tol - tolerance
+*/
+function checkResult( out, tc, tol ) {
+	assertClose( out.rt1, tc.rt1, tol, 'rt1' );
+	assertClose( out.rt2, tc.rt2, tol, 'rt2' );
+	assertClose( out.cs1, tc.cs1, tol, 'cs1' );
+	assertClose( out.sn1, tc.sn1, tol, 'sn1' );
+}
+
 
 // TESTS //
+
+test( 'dlaev2 is a function', function t() {
+	assert.strictEqual( typeof dlaev2, 'function' );
+} );
 
 test( 'dlaev2: identity matrix', function t() {
 	var out;
@@ -58,11 +77,8 @@ test( 'dlaev2: identity matrix', function t() {
 
 	tc = findCase( 'identity' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: diagonal matrix', function t() {
 	var out;
@@ -70,11 +86,8 @@ test( 'dlaev2: diagonal matrix', function t() {
 
 	tc = findCase( 'diagonal' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: off-diagonal only', function t() {
 	var out;
@@ -82,11 +95,8 @@ test( 'dlaev2: off-diagonal only', function t() {
 
 	tc = findCase( 'off_diagonal' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: general case', function t() {
 	var out;
@@ -94,11 +104,8 @@ test( 'dlaev2: general case', function t() {
 
 	tc = findCase( 'general' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: negative diagonal', function t() {
 	var out;
@@ -106,11 +113,8 @@ test( 'dlaev2: negative diagonal', function t() {
 
 	tc = findCase( 'negative_diagonal' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: sm = 0', function t() {
 	var out;
@@ -118,11 +122,8 @@ test( 'dlaev2: sm = 0', function t() {
 
 	tc = findCase( 'sm_zero' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: equal diagonal', function t() {
 	var out;
@@ -130,11 +131,8 @@ test( 'dlaev2: equal diagonal', function t() {
 
 	tc = findCase( 'equal_diagonal' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: negative off-diagonal', function t() {
 	var out;
@@ -142,11 +140,8 @@ test( 'dlaev2: negative off-diagonal', function t() {
 
 	tc = findCase( 'negative_offdiag' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: df < 0 (a < c)', function t() {
 	var out;
@@ -154,11 +149,8 @@ test( 'dlaev2: df < 0 (a < c)', function t() {
 
 	tc = findCase( 'df_negative' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
 
 test( 'dlaev2: b=0, a < c', function t() {
 	var out;
@@ -166,8 +158,71 @@ test( 'dlaev2: b=0, a < c', function t() {
 
 	tc = findCase( 'b_zero_a_lt_c' );
 	out = dlaev2( tc.a, tc.b, tc.c );
-	assertClose( out.rt1, tc.rt1, 1e-14, 'rt1' );
-	assertClose( out.rt2, tc.rt2, 1e-14, 'rt2' );
-	assertClose( out.cs1, tc.cs1, 1e-14, 'cs1' );
-	assertClose( out.sn1, tc.sn1, 1e-14, 'sn1' );
-});
+	checkResult( out, tc, 1e-14 );
+} );
+
+test( 'dlaev2: verifies diagonalization property', function t() {
+	var names;
+	var out;
+	var a11;
+	var a12;
+	var a21;
+	var a22;
+	var t11;
+	var t12;
+	var t21;
+	var t22;
+	var tc;
+	var i;
+
+	names = [ 'identity', 'diagonal', 'off_diagonal', 'general', 'negative_diagonal', 'sm_zero', 'equal_diagonal', 'negative_offdiag', 'df_negative', 'b_zero_a_lt_c' ]; // eslint-disable-line max-len
+	for ( i = 0; i < names.length; i += 1 ) {
+		tc = findCase( names[ i ] );
+		out = dlaev2( tc.a, tc.b, tc.c );
+
+		// Compute Q^T * A * Q where Q = [cs1 -sn1; sn1 cs1]:
+		t11 = (tc.a * out.cs1) + (tc.b * out.sn1);
+		t12 = (-tc.a * out.sn1) + (tc.b * out.cs1);
+		t21 = (tc.b * out.cs1) + (tc.c * out.sn1);
+		t22 = (-tc.b * out.sn1) + (tc.c * out.cs1);
+		a11 = (out.cs1 * t11) + (out.sn1 * t21);
+		a12 = (out.cs1 * t12) + (out.sn1 * t22);
+		a21 = (-out.sn1 * t11) + (out.cs1 * t21);
+		a22 = (-out.sn1 * t12) + (out.cs1 * t22);
+
+		assertClose( a11, out.rt1, 1e-12, names[ i ] + ': diag(1,1)=rt1' );
+		assertClose( a22, out.rt2, 1e-12, names[ i ] + ': diag(2,2)=rt2' );
+		assertClose( a12, 0.0, 1e-12, names[ i ] + ': off(1,2)=0' );
+		assertClose( a21, 0.0, 1e-12, names[ i ] + ': off(2,1)=0' );
+	}
+} );
+
+test( 'dlaev2: rt1 has larger absolute value than rt2', function t() {
+	var names;
+	var out;
+	var tc;
+	var i;
+
+	names = [ 'identity', 'diagonal', 'off_diagonal', 'general', 'negative_diagonal', 'sm_zero', 'equal_diagonal', 'negative_offdiag', 'df_negative', 'b_zero_a_lt_c' ]; // eslint-disable-line max-len
+	for ( i = 0; i < names.length; i += 1 ) {
+		tc = findCase( names[ i ] );
+		out = dlaev2( tc.a, tc.b, tc.c );
+		assert.ok( Math.abs( out.rt1 ) >= Math.abs( out.rt2 ), names[ i ] + ': |rt1| >= |rt2|' ); // eslint-disable-line max-len
+	}
+} );
+
+test( 'dlaev2: eigenvector is unit length', function t() {
+	var names;
+	var norm;
+	var out;
+	var tc;
+	var i;
+
+	names = [ 'identity', 'diagonal', 'off_diagonal', 'general', 'negative_diagonal', 'sm_zero', 'equal_diagonal', 'negative_offdiag', 'df_negative', 'b_zero_a_lt_c' ]; // eslint-disable-line max-len
+	for ( i = 0; i < names.length; i += 1 ) {
+		tc = findCase( names[ i ] );
+		out = dlaev2( tc.a, tc.b, tc.c );
+		norm = Math.sqrt( ( out.cs1 * out.cs1 ) + ( out.sn1 * out.sn1 ) );
+		assertClose( norm, 1.0, 1e-14, names[ i ] + ': eigenvector should be unit length' ); // eslint-disable-line max-len
+	}
+} );

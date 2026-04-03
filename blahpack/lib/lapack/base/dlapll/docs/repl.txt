@@ -1,41 +1,78 @@
 
-    dlapll.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, ssmin )
-        Measures linear dependence of two vectors via QR factorization and SVD
+    dlapll( N, x, strideX, y, strideY, ssmin )
+        Measures the linear dependence of two vectors X and Y by computing
+        the smallest singular value of the N-by-2 matrix A = ( X Y ).
 
         Parameters
         ----------
         N: NonNegativeInteger
-            number of columns.
+            Length of the vectors X and Y.
 
         x: Float64Array
-            input array.
+            First input vector (overwritten on exit).
 
         strideX: integer
-            stride length for `x`.
-
-        offsetX: NonNegativeInteger
-            starting index for `x`.
+            Stride length for `x`.
 
         y: Float64Array
-            output array.
+            Second input vector (overwritten on exit).
 
         strideY: integer
-            stride length for `y`.
+            Stride length for `y`.
 
-        offsetY: NonNegativeInteger
-            starting index for `y`.
-
-        ssmin: number
-            ssmin.
-
-        Returns
-        -------
-        out: None
-            TODO: describe return value.
+        ssmin: Float64Array
+            Output array of length 1. On exit, ssmin[0] contains the smallest
+            singular value.
 
         Examples
         --------
-        // TODO: Add REPL examples
+        > var x = new {{alias:@stdlib/array/float64}}( [ 1.0, 2.0, 3.0, 4.0 ] );
+        > var y = new {{alias:@stdlib/array/float64}}( [ 2.0, 4.0, 6.0, 8.0 ] );
+        > var ssmin = new {{alias:@stdlib/array/float64}}( 1 );
+        > dlapll( 4, x, 1, y, 1, ssmin )
+        > ssmin[ 0 ]
+        ~0.0
+
+
+    dlapll.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, ssmin )
+        Measures the linear dependence of two vectors using alternative
+        indexing semantics.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            Length of the vectors X and Y.
+
+        x: Float64Array
+            First input vector (overwritten on exit).
+
+        strideX: integer
+            Stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            Starting index for `x`.
+
+        y: Float64Array
+            Second input vector (overwritten on exit).
+
+        strideY: integer
+            Stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            Starting index for `y`.
+
+        ssmin: Float64Array
+            Output array of length 1. On exit, ssmin[0] contains the smallest
+            singular value.
+
+        Examples
+        --------
+        > var x = new {{alias:@stdlib/array/float64}}( [ 1.0, 2.0, 3.0 ] );
+        > var y = new {{alias:@stdlib/array/float64}}( [ 4.0, 5.0, 6.0 ] );
+        > var ssmin = new {{alias:@stdlib/array/float64}}( 1 );
+        > dlapll.ndarray( 3, x, 1, 0, y, 1, 0, ssmin )
+        > ssmin[ 0 ]
+        ~0.773
 
     See Also
     --------

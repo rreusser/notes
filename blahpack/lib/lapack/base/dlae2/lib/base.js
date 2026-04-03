@@ -39,6 +39,10 @@
 * @param {number} b - (1,2) element (also (2,1)) of the 2-by-2 matrix
 * @param {number} c - (2,2) element of the 2-by-2 matrix
 * @returns {Object} object with `rt1` and `rt2` eigenvalues
+*
+* @example
+* var out = dlae2( 1.0, 2.0, 1.0 );
+* // returns { 'rt1': 3.0, 'rt2': -1.0 }
 */
 function dlae2( a, b, c ) {
 	var acmn;

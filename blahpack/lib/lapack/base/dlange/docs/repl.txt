@@ -1,47 +1,95 @@
 
-    dlange.ndarray( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
-        Compute the value of the one norm, Frobenius norm, infinity norm, or largest absolute value of a matrix
+    dlange( order, norm, M, N, A, LDA, WORK, strideWORK )
+        Computes the value of the one norm, Frobenius norm, infinity norm, or
+        largest absolute value of a real matrix.
 
         Parameters
         ----------
+        order: string
+            Row-major or column-major storage layout.
+
         norm: string
-            specifies the operation type.
+            Specifies the norm: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
 
-        M: NonNegativeInteger
-            number of rows.
+        M: integer
+            Number of rows of A.
 
-        N: NonNegativeInteger
-            number of columns.
+        N: integer
+            Number of columns of A.
 
         A: Float64Array
-            input matrix.
+            Input matrix.
 
-        strideA1: integer
-            stride of the first dimension of `A`.
-
-        strideA2: integer
-            stride of the second dimension of `A`.
-
-        offsetA: NonNegativeInteger
-            starting index for `A`.
+        LDA: integer
+            Leading dimension of A.
 
         WORK: Float64Array
-            output array.
+            Workspace array (length >= M when norm is 'inf-norm').
 
         strideWORK: integer
-            stride length for `WORK`.
-
-        offsetWORK: NonNegativeInteger
-            starting index for `WORK`.
+            Stride length for WORK.
 
         Returns
         -------
         out: number
-            TODO: describe return value.
+            Norm value.
 
         Examples
         --------
-        // TODO: Add REPL examples
+        > var A = new {{alias:@stdlib/array/float64}}( [ 1.0, 2.0, 3.0, 4.0 ] );
+        > var W = new {{alias:@stdlib/array/float64}}( 2 );
+        > dlange( 'column-major', 'one-norm', 2, 2, A, 2, W, 1 )
+        7.0
+
+
+    dlange.ndarray( norm, M, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+        Computes the value of the one norm, Frobenius norm, infinity norm, or
+        largest absolute value of a real matrix using alternative indexing
+        semantics.
+
+        Parameters
+        ----------
+        norm: string
+            Specifies the norm: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
+
+        M: integer
+            Number of rows of A.
+
+        N: integer
+            Number of columns of A.
+
+        A: Float64Array
+            Input matrix.
+
+        strideA1: integer
+            Stride of the first dimension of A.
+
+        strideA2: integer
+            Stride of the second dimension of A.
+
+        offsetA: integer
+            Starting index for A.
+
+        WORK: Float64Array
+            Workspace array (length >= M when norm is 'inf-norm').
+
+        strideWORK: integer
+            Stride length for WORK.
+
+        offsetWORK: integer
+            Starting index for WORK.
+
+        Returns
+        -------
+        out: number
+            Norm value.
+
+        Examples
+        --------
+        > var A = new {{alias:@stdlib/array/float64}}( [ 1.0, 2.0, 3.0, 4.0 ] );
+        > var W = new {{alias:@stdlib/array/float64}}( 2 );
+        > dlange.ndarray( 'one-norm', 2, 2, A, 1, 2, 0, W, 1, 0 )
+        7.0
 
     See Also
     --------

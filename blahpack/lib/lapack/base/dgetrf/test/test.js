@@ -1,7 +1,6 @@
-/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test, max-lines */
 
 'use strict';
-
 
 // MODULES //
 
@@ -33,7 +32,8 @@ var fixture = lines.map( function parse( line ) {
 * @returns {*} result
 */
 function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
+	return fixture.find( function find( t ) {
+		return t.name === name;
 	} );
 }
 
@@ -70,6 +70,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 /**
 * Converts 1-based Fortran IPIV to 0-based JS IPIV for comparison.
+*
+* @private
+* @param {Array} arr - 1-based pivot indices
+* @returns {Array} 0-based pivot indices
 */
 function ipivTo0Based( arr ) {
 	var out = [];
@@ -81,8 +85,9 @@ function ipivTo0Based( arr ) {
 }
 
 /**
-* Verifies P_L_U = A_original for a factored M x N matrix.
+* Verifies P·L·U = A_original for a factored M x N matrix.
 *
+* @private
 * @param {Float64Array} Aorig - original matrix (col-major, M rows, N cols, LDA=M)
 * @param {Float64Array} ALU - factored matrix from dgetrf (col-major)
 * @param {Int32Array} IPIV - 0-based pivot indices from dgetrf
@@ -91,15 +96,19 @@ function ipivTo0Based( arr ) {
 * @param {number} tol - tolerance
 * @param {string} msg - error message prefix
 */
-function assertFactorizationCorrect( Aorig, ALU, IPIV, M, N, tol, msg ) {
+function assertPLU( Aorig, ALU, IPIV, M, N, tol, msg ) { // eslint-disable-line max-params
 	var result;
-	var minMN = Math.min( M, N );
+	var minMN;
 	var sum;
+	var Lik;
+	var Ukj;
 	var tmp;
 	var LU;
 	var i;
 	var j;
 	var k;
+
+	minMN = Math.min( M, N );
 
 	// Compute L*U (M x N)
 	LU = new Float64Array( M * N );
@@ -107,25 +116,23 @@ function assertFactorizationCorrect( Aorig, ALU, IPIV, M, N, tol, msg ) {
 		for ( i = 0; i < M; i++ ) {
 			sum = 0.0;
 			for ( k = 0; k < minMN; k++ ) {
-				// L(i,k): if i===k, 1.0; if i>k, ALU[i+k*M]; else 0
-				// U(k,j): if k<=j, ALU[k+j*M]; else 0
-				var Lik;
-				var Ukj;
+				// L(i,k): if i===k, 1.0; if i>k, ALU[i+(k*M)]; else 0
+				// U(k,j): if k<=j, ALU[k+(j*M)]; else 0
 				if ( i === k ) {
 					Lik = 1.0;
 				} else if ( i > k ) {
-					Lik = ALU[ i + k * M ];
+					Lik = ALU[ i + (k * M) ];
 				} else {
 					Lik = 0.0;
 				}
 				if ( k <= j ) {
-					Ukj = ALU[ k + j * M ];
+					Ukj = ALU[ k + (j * M) ];
 				} else {
 					Ukj = 0.0;
 				}
 				sum += Lik * Ukj;
 			}
-			LU[ i + j * M ] = sum;
+			LU[ i + (j * M) ] = sum;
 		}
 	}
 
@@ -134,15 +141,15 @@ function assertFactorizationCorrect( Aorig, ALU, IPIV, M, N, tol, msg ) {
 	for ( i = minMN - 1; i >= 0; i-- ) {
 		if ( IPIV[ i ] !== i ) {
 			for ( j = 0; j < N; j++ ) {
-				tmp = result[ i + j * M ];
-				result[ i + j * M ] = result[ IPIV[ i ] + j * M ];
-				result[ IPIV[ i ] + j * M ] = tmp;
+				tmp = result[ i + (j * M) ];
+				result[ i + (j * M) ] = result[ IPIV[ i ] + (j * M) ];
+				result[ IPIV[ i ] + (j * M) ] = tmp;
 			}
 		}
 	}
 
 	// Compare
-	for ( i = 0; i < M * N; i++ ) {
+	for ( i = 0; i < (M * N); i++ ) {
 		assertClose( result[ i ], Aorig[ i ], tol, msg + ' PLU[' + i + ']' );
 	}
 }
@@ -213,7 +220,7 @@ test( 'dgetrf: 5x4 tall matrix', function t() {
 	IPIV = new Int32Array( 4 );
 	info = dgetrf( 5, 4, A, 1, 5, 0, IPIV, 1, 0 );
 	assert.ok( info > 0, 'info > 0 for rank-deficient matrix' );
-	assertFactorizationCorrect( Aorig, A, IPIV, 5, 4, 1e-13, '5x4' );
+	assertPLU( Aorig, A, IPIV, 5, 4, 1e-13, '5x4' );
 });
 
 test( 'dgetrf: singular', function t() {
@@ -227,7 +234,7 @@ test( 'dgetrf: singular', function t() {
 	IPIV = new Int32Array( 3 );
 	info = dgetrf( 3, 3, A, 1, 3, 0, IPIV, 1, 0 );
 	assert.ok( info > 0, 'info > 0 for singular matrix' );
-	assertFactorizationCorrect( Aorig, A, IPIV, 3, 3, 1e-14, 'singular' );
+	assertPLU( Aorig, A, IPIV, 3, 3, 1e-14, 'singular' );
 });
 
 test( 'dgetrf: n_zero', function t() {
@@ -320,7 +327,7 @@ test( 'dgetrf: non-unit stride with offset', function t() {
 	subA = new Float64Array( [ A[ 3 ], A[ 4 ], A[ 5 ], A[ 6 ] ] );
 	subIPIV = new Int32Array( [ IPIV[ 1 ], IPIV[ 2 ] ] );
 	subOrig = new Float64Array( [ 4.0, 3.0, 6.0, 8.0 ] );
-	assertFactorizationCorrect( subOrig, subA, subIPIV, 2, 2, 1e-14, 'offset' );
+	assertPLU( subOrig, subA, subIPIV, 2, 2, 1e-14, 'offset' );
 });
 
 test( 'dgetrf: 70x70 blocked path (NB=64, min(M,N) > NB)', function t() {
@@ -338,18 +345,18 @@ test( 'dgetrf: 70x70 blocked path (NB=64, min(M,N) > NB)', function t() {
 	seed = 12345;
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < N; i++ ) {
-			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
-			Aorig[ i + j * N ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+			seed = ( (seed * 1103515245) + 12345 ) & 0x7fffffff;
+			Aorig[ i + (j * N) ] = (( seed / 0x7fffffff ) * 2.0) - 1.0;
 		}
 	}
 	for ( i = 0; i < N; i++ ) {
-		Aorig[ i + i * N ] += 100.0;
+		Aorig[ i + (i * N) ] += 100.0;
 	}
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( N );
 	info = dgetrf( N, N, A, 1, N, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, '70x70 info should be 0 for non-singular matrix' );
-	assertFactorizationCorrect( Aorig, A, IPIV, N, N, 1e-10, '70x70 blocked' );
+	assertPLU( Aorig, A, IPIV, N, N, 1e-10, '70x70 blocked' );
 });
 
 test( 'dgetrf: 80x70 tall blocked path', function t() {
@@ -371,18 +378,18 @@ test( 'dgetrf: 80x70 tall blocked path', function t() {
 	seed = 67890;
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
-			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
-			Aorig[ i + j * M ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+			seed = ( (seed * 1103515245) + 12345 ) & 0x7fffffff;
+			Aorig[ i + (j * M) ] = (( seed / 0x7fffffff ) * 2.0) - 1.0;
 		}
 	}
 	for ( i = 0; i < minMN; i++ ) {
-		Aorig[ i + i * M ] += 100.0;
+		Aorig[ i + (i * M) ] += 100.0;
 	}
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( minMN );
 	info = dgetrf( M, N, A, 1, M, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, '80x70 info should be 0' );
-	assertFactorizationCorrect( Aorig, A, IPIV, M, N, 1e-10, '80x70 blocked' );
+	assertPLU( Aorig, A, IPIV, M, N, 1e-10, '80x70 blocked' );
 });
 
 test( 'dgetrf: 70x80 wide blocked path', function t() {
@@ -404,18 +411,18 @@ test( 'dgetrf: 70x80 wide blocked path', function t() {
 	seed = 11111;
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < M; i++ ) {
-			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
-			Aorig[ i + j * M ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+			seed = ( (seed * 1103515245) + 12345 ) & 0x7fffffff;
+			Aorig[ i + (j * M) ] = (( seed / 0x7fffffff ) * 2.0) - 1.0;
 		}
 	}
 	for ( i = 0; i < minMN; i++ ) {
-		Aorig[ i + i * M ] += 100.0;
+		Aorig[ i + (i * M) ] += 100.0;
 	}
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( minMN );
 	info = dgetrf( M, N, A, 1, M, 0, IPIV, 1, 0 );
 	assert.equal( info, 0, '70x80 info should be 0' );
-	assertFactorizationCorrect( Aorig, A, IPIV, M, N, 1e-10, '70x80 blocked' );
+	assertPLU( Aorig, A, IPIV, M, N, 1e-10, '70x80 blocked' );
 });
 
 test( 'dgetrf: 70x70 singular matrix in blocked path (iinfo > 0 branch)', function t() { // eslint-disable-line max-len
@@ -433,19 +440,19 @@ test( 'dgetrf: 70x70 singular matrix in blocked path (iinfo > 0 branch)', functi
 	seed = 99999;
 	for ( j = 0; j < N; j++ ) {
 		for ( i = 0; i < N; i++ ) {
-			seed = ( seed * 1103515245 + 12345 ) & 0x7fffffff;
-			Aorig[ i + j * N ] = ( seed / 0x7fffffff ) * 2.0 - 1.0;
+			seed = ( (seed * 1103515245) + 12345 ) & 0x7fffffff;
+			Aorig[ i + (j * N) ] = (( seed / 0x7fffffff ) * 2.0) - 1.0;
 		}
 	}
 	for ( i = 0; i < N; i++ ) {
-		Aorig[ i + i * N ] += 100.0;
+		Aorig[ i + (i * N) ] += 100.0;
 	}
 	for ( j = 0; j < N; j++ ) {
-		Aorig[ 64 + j * N ] = Aorig[ 0 + j * N ];
+		Aorig[ 64 + (j * N) ] = Aorig[ 0 + (j * N) ];
 	}
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( N );
 	info = dgetrf( N, N, A, 1, N, 0, IPIV, 1, 0 );
 	assert.ok( info > 0, '70x70 singular: info > 0 (got ' + info + ')' );
-	assertFactorizationCorrect( Aorig, A, IPIV, N, N, 1e-8, '70x70 singular blocked' ); // eslint-disable-line max-len
+	assertPLU( Aorig, A, IPIV, N, N, 1e-8, '70x70 singular blocked' ); // eslint-disable-line max-len
 });

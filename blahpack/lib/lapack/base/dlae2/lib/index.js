@@ -19,19 +19,21 @@
 'use strict';
 
 /**
-* Compute eigenvalues of a 2-by-2 symmetric matrix.
+* Compute the eigenvalues of a 2-by-2 symmetric matrix.
 *
 * @module @stdlib/lapack/base/dlae2
 *
 * @example
 * var dlae2 = require( '@stdlib/lapack/base/dlae2' );
 *
-* dlae2( 1.0, 1.0, 1.0 );
+* var out = dlae2( 1.0, 2.0, 1.0 );
+* // returns { 'rt1': 3.0, 'rt2': -1.0 }
 *
 * @example
 * var dlae2 = require( '@stdlib/lapack/base/dlae2' );
 *
-* dlae2.ndarray( 1.0, 1.0, 1.0, 1.0, 1.0 );
+* var out = dlae2.ndarray( 1.0, 2.0, 1.0 );
+* // returns { 'rt1': 3.0, 'rt2': -1.0 }
 */
 
 

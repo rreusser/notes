@@ -59,6 +59,16 @@ var NB = 64; // Block size (hardcoded; Fortran uses ILAENV)
 * @param {integer} strideIPIV - stride for IPIV
 * @param {NonNegativeInteger} offsetIPIV - index offset for IPIV
 * @returns {integer} info - 0 if successful, k if U(k-1,k-1) is exactly zero
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var Int32Array = require( '@stdlib/array/int32' );
+*
+* var A = new Float64Array( [ 2.0, 4.0, 1.0, 3.0 ] );
+* var IPIV = new Int32Array( 2 );
+*
+* var info = dgetrf( 2, 2, A, 1, 2, 0, IPIV, 1, 0 );
+* // returns 0
 */
 function dgetrf( M, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV ) {
 	var iinfo;

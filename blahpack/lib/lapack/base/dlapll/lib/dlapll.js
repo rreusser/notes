@@ -1,3 +1,20 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 'use strict';
 
@@ -10,15 +27,17 @@ var base = require( './base.js' );
 // MAIN //
 
 /**
-* @license Apache-2.0
+* Measures the linear dependence of two vectors X and Y by computing the.
+* QR factorization of the N-by-2 matrix (X Y) and returning the smallest
+* singular value of the resulting 2-by-2 upper triangular R factor.
 *
-* @param {NonNegativeInteger} N - N
-* @param {Float64Array} x - x
-* @param {integer} strideX - strideX
-* @param {Float64Array} y - y
-* @param {integer} strideY - strideY
-* @param {Float64Array} ssmin - ssmin
-* @returns {*} result
+* @param {NonNegativeInteger} N - length of the vectors
+* @param {Float64Array} x - first vector (overwritten)
+* @param {integer} strideX - stride for x
+* @param {Float64Array} y - second vector (overwritten)
+* @param {integer} strideY - stride for y
+* @param {Float64Array} ssmin - output: `ssmin[0]` receives the smallest singular value
+* @returns {void}
 */
 function dlapll( N, x, strideX, y, strideY, ssmin ) {
 	var ox;

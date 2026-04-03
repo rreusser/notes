@@ -52,10 +52,11 @@ python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
 npm test                        # Run all JS tests
-npm run check                   # Tests + conformance audit (the final gate)
-bin/lint.sh lib/<pkg>/base/<routine>  # Lint a module (stdlib + conformance rules)
-bin/lint.sh --fix lib/<pkg>/base/<routine>  # Auto-fix what's possible
-bin/lint.sh                     # Lint all modules (batched, no OOM)
+node bin/gate.js lib/<pkg>/base/<routine>  # THE quality gate (all checks)
+node bin/gate.js --all --fast             # Fast gate on all modules
+npm run check                             # Tests + gate (the final gate)
+bin/lint-fix.sh lib/<pkg>/base/<routine>  # Auto-fix (codemods + eslint + verify)
+bin/lint.sh lib/<pkg>/base/<routine>      # Lint only
 ```
 
 ---
@@ -473,17 +474,20 @@ sessions to avoid repeating mistakes.
 ### Step 9: Verify full suite and conformance
 
 ```bash
-bin/lint.sh lib/<package>/base/<routine>   # Lint (includes conformance rules)
-npm run check                               # Tests + audit
+node bin/gate.js lib/<package>/base/<routine>    # THE quality gate — all checks
+npm test                                         # Tests
 ```
 
-Linting catches most conformance issues (scaffolding, string conventions,
-complex array usage). The audit adds cross-file checks (ndarray validation).
-A module is NOT complete until both pass with 0 errors.
+The gate checks everything in one command: file structure, scaffolding
+remnants, implementation completeness (ndarray validation, @private),
+string conventions, complex number conventions, test quality, lint,
+eslint-disable whitelist, and JSDoc.
+
+A module is **complete** only when the gate reports category `complete`.
+Do not declare a translation done until this passes.
 
 **This is the MANDATORY final gate.** Do not declare a translation complete
-until this passes. `npm test` alone is insufficient — it does not verify
-conformance (stub wrappers, string conventions, validation, etc.).
+until `node bin/gate.js` shows all checks passing.
 
 ---
 

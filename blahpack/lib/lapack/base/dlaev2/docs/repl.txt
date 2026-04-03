@@ -1,38 +1,32 @@
 
-    dlaev2.ndarray( a, b, c, rt1, rt2, cs1, sn1 )
-        Compute eigendecomposition of a 2-by-2 symmetric matrix
+    dlaev2( a, b, c )
+        Computes the eigendecomposition of a 2-by-2 symmetric matrix
+        [ a  b ; b  c ].
+
+        Returns an object with eigenvalues rt1 (larger absolute value) and
+        rt2 (smaller absolute value), and the unit eigenvector (cs1, sn1)
+        for rt1.
 
         Parameters
         ----------
         a: number
-            a.
+            The (1,1) element of the 2-by-2 matrix.
 
         b: number
-            b.
+            The (1,2) element of the 2-by-2 matrix.
 
         c: number
-            c.
-
-        rt1: number
-            rt1.
-
-        rt2: number
-            rt2.
-
-        cs1: number
-            cs1.
-
-        sn1: number
-            sn1.
+            The (2,2) element of the 2-by-2 matrix.
 
         Returns
         -------
-        out: None
-            TODO: describe return value.
+        out: Object
+            Object with properties rt1, rt2, cs1, and sn1.
 
         Examples
         --------
-        // TODO: Add REPL examples
+        > var out = dlaev2( 2.0, 1.0, 3.0 )
+        { rt1: ~3.618, rt2: ~1.382, cs1: ~-0.526, sn1: ~0.851 }
 
     See Also
     --------

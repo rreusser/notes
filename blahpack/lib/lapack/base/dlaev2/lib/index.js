@@ -19,19 +19,21 @@
 'use strict';
 
 /**
-* Compute eigendecomposition of a 2-by-2 symmetric matrix.
+* Compute the eigendecomposition of a 2-by-2 symmetric matrix.
 *
 * @module @stdlib/lapack/base/dlaev2
 *
 * @example
 * var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 *
-* dlaev2( 1.0, 1.0, 1.0 );
+* var out = dlaev2( 2.0, 1.0, 3.0 );
+* // returns { rt1: ~3.618, rt2: ~1.382, cs1: ~-0.526, sn1: ~0.851 }
 *
 * @example
 * var dlaev2 = require( '@stdlib/lapack/base/dlaev2' );
 *
-* dlaev2.ndarray( 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 );
+* var out = dlaev2.ndarray( 2.0, 1.0, 3.0 );
+* // returns { rt1: ~3.618, rt2: ~1.382, cs1: ~-0.526, sn1: ~0.851 }
 */
 
 
@@ -43,5 +45,3 @@ var main = require( './main.js' );
 // EXPORTS //
 
 module.exports = main;
-
-// exports: { "ndarray": "dlaev2.ndarray" }

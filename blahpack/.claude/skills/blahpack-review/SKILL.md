@@ -10,38 +10,26 @@ Review `$ARGUMENTS` for convention violations. Fix all errors found.
 
 ## Quick start
 
-Run ESLint first — it catches most conformance issues automatically:
+Run the quality gate — it checks everything (file structure, scaffolding,
+implementation, string conventions, complex number conventions, tests, lint,
+and JSDoc):
 ```bash
-bin/lint.sh $ARGUMENTS
+node bin/gate.js $ARGUMENTS
 ```
 
-This runs both stdlib ESLint rules and blahpack-specific conformance rules:
-- `no-todo-params` — TODO remnants in @param tags
-- `no-stub-wrappers` — "not yet implemented" in wrapper files
-- `jsdoc-backtick-params` — bare single-char Fortran flags in @param (fixable)
-- `no-dprefix-conjugate-transpose` — conjugate-transpose in d-prefix routines (fixable)
-- `no-scaffold-assertions` — scaffold assert.fail() in tests
-- `z-prefix-reinterpret` — complex array indexing without reinterpret()
-
-Auto-fix what's possible:
+Auto-fix lint issues:
 ```bash
-bin/lint.sh --fix $ARGUMENTS
+bin/lint-fix.sh $ARGUMENTS
 ```
 
-Then run the remaining audit checks (cross-file checks that ESLint can't do):
-```bash
-bash ${CLAUDE_SKILL_DIR}/audit.sh $ARGUMENTS
-```
+## Tools
 
-## Bundled scripts
-
-| Script | Purpose |
-|--------|---------|
+| Tool | Purpose |
+|------|---------|
+| `node bin/gate.js <module>` | **The quality gate** — all checks in one command |
 | `bin/lint.sh` | ESLint with stdlib + blahpack conformance rules |
-| `${CLAUDE_SKILL_DIR}/audit.sh` | Cross-file convention audit (ndarray validation, etc.) |
-| `${CLAUDE_SKILL_DIR}/check-stubs.sh` | Detect stub wrapper files (`'not yet implemented'`) |
-| `${CLAUDE_SKILL_DIR}/check-stub-tests.sh` | Detect scaffold-only test stubs |
-| `${CLAUDE_SKILL_DIR}/fix_wrapper_docs.py` | Propagate base.js @param to ndarray.js/wrapper files |
+| `bin/lint-fix.sh` | Full fix pipeline (codemods + eslint + test verify) |
+| `bin/fix_wrapper_docs.py` | Propagate base.js @param to ndarray.js/wrapper files |
 
 ---
 
