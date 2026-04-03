@@ -1,0 +1,13 @@
+disnan
+dlacn2
+dlaisnan
+dlansp
+dlassq
+dspcon
+dsptrf
+dsptrs
+ieeeck
+ilaenv
+iparam2stage
+iparmq
+la_xisnan

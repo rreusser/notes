@@ -1,0 +1,42 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+var Complex128Array = require( '@stdlib/array/complex128' );
+var Int32Array = require( '@stdlib/array/int32' ); // eslint-disable-line stdlib/require-globals
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zhptrf = require( '../../zhptrf/lib/base.js' );
+var zhptri = require( './../lib/base.js' );
+
+// 2x2 Hermitian positive definite matrix (upper packed): A = [ 4, 1+2i; 1-2i, 5 ]
+var AP = new Complex128Array( [ 4.0, 0.0, 1.0, 2.0, 5.0, 0.0 ] );
+var IPIV = new Int32Array( 2 );
+var WORK = new Complex128Array( 2 );
+var view;
+var info;
+
+// Factor
+zhptrf( 'upper', 2, AP, 1, 0, IPIV, 1, 0 );
+
+// Invert
+info = zhptri( 'upper', 2, AP, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
+console.log( 'info:', info ); // eslint-disable-line no-console
+
+view = reinterpret( AP, 0 );
+console.log( 'inv(A) packed:', view ); // eslint-disable-line no-console

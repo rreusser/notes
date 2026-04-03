@@ -1,0 +1,63 @@
+
+    zgesc2.ndarray( N, A, strideA1, strideA2, offsetA, RHS, strideRHS, offsetRHS, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV, scale )
+        Solves a system of linear equations using the LU factorization with complete pivoting computed by zgetc2.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        RHS: Float64Array
+            input array.
+
+        strideRHS: integer
+            stride length for `RHS`.
+
+        offsetRHS: NonNegativeInteger
+            starting index for `RHS`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        JPIV: Int32Array
+            output array.
+
+        strideJPIV: integer
+            stride length for `JPIV`.
+
+        offsetJPIV: NonNegativeInteger
+            starting index for `JPIV`.
+
+        scale: number
+            scale.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,57 @@
+
+    zlags2.ndarray( upper, a1, a2, a3, b1, b2, b3, csu, snu, csv, snv, csq, snq )
+        Computes 2-by-2 unitary matrices U, V, and Q for the generalized upper (lower) triangular form.
+
+        Parameters
+        ----------
+        upper: boolean
+            upper.
+
+        a1: number
+            a1.
+
+        a2: Complex128
+            a2.
+
+        a3: number
+            a3.
+
+        b1: number
+            b1.
+
+        b2: Complex128
+            b2.
+
+        b3: number
+            b3.
+
+        csu: number
+            csu.
+
+        snu: Complex128
+            snu.
+
+        csv: number
+            csv.
+
+        snv: Complex128
+            snv.
+
+        csq: number
+            csq.
+
+        snq: Complex128
+            snq.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

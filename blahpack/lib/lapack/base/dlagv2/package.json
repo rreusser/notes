@@ -1,0 +1,26 @@
+{
+  "name": "@stdlib/lapack/base/dlagv2",
+  "version": "0.0.0",
+  "description": "Computes the Generalized Schur factorization of a real 2-by-2 matrix pencil (A,B) where B is upper triangular.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "The Stdlib Authors",
+    "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+  },
+  "contributors": [
+    {
+      "name": "The Stdlib Authors",
+      "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+    }
+  ],
+  "main": "./lib/index.js",
+  "directories": {
+    "doc": "./docs",
+    "example": "./examples",
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "scripts": {
+    "test": "node --test test/test.js"
+  }
+}

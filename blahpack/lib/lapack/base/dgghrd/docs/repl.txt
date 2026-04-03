@@ -1,0 +1,81 @@
+
+    dgghrd.ndarray( compq, compz, N, ilo, ihi, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, Q, strideQ1, strideQ2, offsetQ, Z, strideZ1, strideZ2, offsetZ )
+        Reduces a pair of real matrices (A,B) to generalized upper Hessenberg form using orthogonal transformations.
+
+        Parameters
+        ----------
+        compq: string
+            specifies the operation type.
+
+        compz: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        ilo: integer
+            ilo.
+
+        ihi: integer
+            ihi.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        Q: Float64Array
+            input matrix.
+
+        strideQ1: integer
+            stride of the first dimension of `Q`.
+
+        strideQ2: integer
+            stride of the second dimension of `Q`.
+
+        offsetQ: NonNegativeInteger
+            starting index for `Q`.
+
+        Z: Float64Array
+            output matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

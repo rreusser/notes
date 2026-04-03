@@ -1,0 +1,81 @@
+
+    dlagv2.ndarray( A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, alphar, strideALPHAR, offsetALPHAR, alphai, strideALPHAI, offsetALPHAI, beta, strideBETA, offsetBETA, csl, snl, csr, snr )
+        Computes the Generalized Schur factorization of a real 2-by-2 matrix pencil (A,B) where B is upper triangular.
+
+        Parameters
+        ----------
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        alphar: Float64Array
+            input array.
+
+        strideALPHAR: integer
+            stride length for `alphar`.
+
+        offsetALPHAR: NonNegativeInteger
+            starting index for `alphar`.
+
+        alphai: Float64Array
+            input array.
+
+        strideALPHAI: integer
+            stride length for `alphai`.
+
+        offsetALPHAI: NonNegativeInteger
+            starting index for `alphai`.
+
+        beta: Float64Array
+            input array.
+
+        strideBETA: integer
+            stride length for `beta`.
+
+        offsetBETA: NonNegativeInteger
+            starting index for `beta`.
+
+        csl: number
+            csl.
+
+        snl: number
+            snl.
+
+        csr: number
+            csr.
+
+        snr: number
+            snr.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,39 @@
+
+    zlaev2.ndarray( a, b, c, rt1, rt2, cs1, sn1 )
+        Computes the eigenvalues and eigenvectors of a 2-by-2 Hermitian matrix.
+
+        Parameters
+        ----------
+        a: Complex128
+            a.
+
+        b: Complex128
+            b.
+
+        c: Complex128
+            c.
+
+        rt1: number
+            rt1.
+
+        rt2: number
+            rt2.
+
+        cs1: number
+            cs1.
+
+        sn1: Complex128
+            sn1.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

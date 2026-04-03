@@ -1,0 +1,14 @@
+disnan
+dlaisnan
+dlamch
+dlapy2
+dzsum1
+ieeeck
+ilaenv
+iparmq
+izmax1
+zhpcon
+zhptrf
+zhptrs
+zlacgv
+zlacn2

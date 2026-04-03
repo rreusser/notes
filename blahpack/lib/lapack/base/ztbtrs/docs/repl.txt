@@ -1,0 +1,60 @@
+
+    ztbtrs.ndarray( uplo, trans, diag, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, B, strideB1, strideB2, offsetB )
+        Solves a triangular system of equations with a triangular band matrix.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        kd: integer
+            kd.
+
+        nrhs: integer
+            nrhs.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

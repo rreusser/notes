@@ -1,0 +1,48 @@
+
+    dppsv.ndarray( uplo, N, nrhs, AP, strideAP, offsetAP, B, strideB1, strideB2, offsetB )
+        Computes the solution to a real system of linear equations A * X = B where A is symmetric positive definite in packed storage.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

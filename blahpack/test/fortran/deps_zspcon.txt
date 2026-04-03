@@ -1,0 +1,14 @@
+dcabs1
+dlamch
+dzsum1
+ieeeck
+ilaenv
+iparam2stage
+iparmq
+izamax
+izmax1
+zlacn2
+zspcon
+zspr
+zsptrf
+zsptrs

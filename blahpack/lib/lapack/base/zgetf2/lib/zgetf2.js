@@ -1,0 +1,69 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Computes an LU factorization of a general M-by-N complex matrix using.
+* partial pivoting with row interchanges (unblocked algorithm).
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {NonNegativeInteger} M - number of rows of matrix A
+* @param {NonNegativeInteger} N - number of columns of matrix A
+* @param {Complex128Array} A - input/output complex matrix
+* @param {PositiveInteger} LDA - leading dimension of `A`
+* @param {Int32Array} IPIV - pivot index output array, length min(M,N) (0-based)
+* @param {integer} strideIPIV - stride for `IPIV`
+* @throws {TypeError} first argument must be a valid order
+* @returns {integer} info - 0 if successful, k if U(k-1,k-1) is exactly zero (1-based singularity index)
+*/
+function zgetf2( order, M, N, A, LDA, IPIV, strideIPIV ) {
+	var sa1;
+	var sa2;
+	var oi;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( order === 'column-major' ) {
+		sa1 = 1;
+		sa2 = LDA;
+	} else {
+		sa1 = LDA;
+		sa2 = 1;
+	}
+	oi = stride2offset( Math.min( M, N ), strideIPIV );
+	return base( M, N, A, sa1, sa2, 0, IPIV, strideIPIV, oi );
+}
+
+
+// EXPORTS //
+
+module.exports = zgetf2;

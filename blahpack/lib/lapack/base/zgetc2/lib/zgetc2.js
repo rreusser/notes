@@ -1,0 +1,40 @@
+
+'use strict';
+
+// MODULES //
+
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Computes an LU factorization with complete pivoting of a general N-by-N complex matrix.
+*
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Complex128Array} A - N-by-N complex matrix (overwritten with L and U)
+* @param {PositiveInteger} LDA - leading dimension of A
+* @param {Int32Array} IPIV - row pivot indices (length N)
+* @param {integer} strideIPIV - stride for IPIV
+* @param {Int32Array} JPIV - column pivot indices (length N)
+* @param {integer} strideJPIV - stride for JPIV
+* @returns {integer} info - 0 if successful, >0 if U(info,info) is small
+*/
+function zgetc2( N, A, LDA, IPIV, strideIPIV, JPIV, strideJPIV ) { // eslint-disable-line max-len, max-params
+	var oipiv;
+	var ojpiv;
+	var sa1;
+	var sa2;
+
+	sa1 = 1;
+	sa2 = LDA;
+	oipiv = stride2offset( N, strideIPIV );
+	ojpiv = stride2offset( N, strideJPIV );
+	return base( N, A, sa1, sa2, 0, IPIV, strideIPIV, oipiv, JPIV, strideJPIV, ojpiv ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zgetc2;

@@ -1,0 +1,13 @@
+disnan
+dlaisnan
+dlamch
+ieeeck
+ilaenv
+iparmq
+zdscal
+zgemv
+zherk
+zlacgv
+zpstf2
+zpstrf
+zswap

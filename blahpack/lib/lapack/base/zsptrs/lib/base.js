@@ -1,0 +1,450 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params, max-depth, max-statements, max-lines-per-function */
+
+'use strict';
+
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var Complex128 = require( '@stdlib/complex/float64/ctor' );
+var zgemv = require( '../../../../blas/base/zgemv/lib/base.js' );
+var zgeru = require( '../../../../blas/base/zgeru/lib/base.js' );
+var zscal = require( '../../../../blas/base/zscal/lib/base.js' );
+var zswap = require( '../../../../blas/base/zswap/lib/base.js' );
+
+
+// VARIABLES //
+
+var CONE = new Complex128( 1.0, 0.0 );
+var NCONE = new Complex128( -1.0, 0.0 );
+
+/**
+* Real part of complex division result.
+*
+* @private
+* @type {number}
+*/
+var cdR = 0.0;
+
+/**
+* Imaginary part of complex division result.
+*
+* @private
+* @type {number}
+*/
+var cdI = 0.0;
+
+
+// FUNCTIONS //
+
+/**
+* Performs complex division, storing result in module-level `cdR` and `cdI`.
+*
+* @private
+* @param {number} ar - real part of numerator
+* @param {number} ai - imaginary part of numerator
+* @param {number} br - real part of denominator
+* @param {number} bi - imaginary part of denominator
+*/
+function cDiv( ar, ai, br, bi ) {
+	var r;
+	var d;
+	if ( Math.abs( bi ) <= Math.abs( br ) ) {
+		r = bi / br;
+		d = br + (bi * r);
+		cdR = ( ar + (ai * r) ) / d;
+		cdI = ( ai - (ar * r) ) / d;
+	} else {
+		r = br / bi;
+		d = bi + (br * r);
+		cdR = ( (ar * r) + ai ) / d;
+		cdI = ( (ai * r) - ar ) / d;
+	}
+}
+
+
+// MAIN //
+
+/**
+* Solves a system of linear equations `A * X = B` with a complex symmetric packed matrix.
+*
+* Uses the factorization `A = U * D * U**T` or `A = L * D * L**T` computed by `zsptrf`.
+*
+* IPIV uses 0-based convention:
+*   `IPIV[k] >= 0`: 1x1 pivot, row k was interchanged with row `IPIV[k]`
+*   `IPIV[k] < 0`: 2x2 pivot, `IPIV[k] = ~kp` (bitwise NOT of 0-based index)
+*
+* @private
+* @param {string} uplo - `'upper'` or `'lower'`, must match the factorization
+* @param {integer} N - order of the matrix
+* @param {integer} nrhs - number of right-hand sides
+* @param {Complex128Array} AP - factored matrix from zsptrf (packed storage)
+* @param {integer} strideAP - stride for AP (in complex elements)
+* @param {integer} offsetAP - offset into AP (in complex elements)
+* @param {Int32Array} IPIV - pivot indices from zsptrf (0-based)
+* @param {integer} strideIPIV - stride of IPIV
+* @param {integer} offsetIPIV - offset into IPIV
+* @param {Complex128Array} B - input/output right-hand side matrix
+* @param {integer} strideB1 - first stride of B (in complex elements)
+* @param {integer} strideB2 - second stride of B (in complex elements)
+* @param {integer} offsetB - offset into B (in complex elements)
+* @returns {integer} info value (0 = success)
+*/
+function zsptrs( uplo, N, nrhs, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) {
+	var denomR;
+	var denomI;
+	var akm1kR;
+	var akm1kI;
+	var akm1R;
+	var akm1I;
+	var bkm1R;
+	var bkm1I;
+	var sap;
+	var sb1;
+	var sb2;
+	var akR;
+	var akI;
+	var bkR;
+	var bkI;
+	var APv;
+	var Bv;
+	var kc;
+	var kp;
+	var tr;
+	var ti;
+	var p1;
+	var p2;
+	var k;
+	var j;
+
+	sap = strideAP * 2;
+	sb1 = strideB1 * 2;
+	sb2 = strideB2 * 2;
+	APv = reinterpret( AP, 0 );
+	Bv = reinterpret( B, 0 );
+
+	if ( N === 0 || nrhs === 0 ) {
+		return 0;
+	}
+
+	if ( uplo === 'upper' ) {
+		// Solve A*X = B where A = U*D*U**T (packed upper triangle).
+
+		// Phase 1: Solve U*D*X' = B, overwriting B with X'.
+		// Process from k = N-1 down to 0.
+		k = N - 1;
+		kc = ( N * ( N + 1 ) / 2 ) - N; // 0-based start of column N-1
+		while ( k >= 0 ) {
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				// 1x1 pivot block
+
+				// Interchange rows k and IPIV[k]
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k ) {
+					zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				// Multiply by inv(U(K)): B(0:k-1,:) -= AP(kc:kc+k-1) * B(k,:)
+				if ( k > 0 ) {
+					zgeru( k, nrhs, NCONE, AP, strideAP, offsetAP + (kc * strideAP), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB );
+				}
+
+				// Multiply by inv(D(K)): B(k,:) /= AP(kc+k)
+				// Symmetric: diagonal is fully complex, use zscal with 1/AP(kc+k)
+				p1 = (offsetAP * 2) + ((kc + k) * sap);
+				cDiv( 1.0, 0.0, APv[ p1 ], APv[ p1 + 1 ] );
+				zscal( nrhs, new Complex128( cdR, cdI ), B, strideB2, offsetB + (k * strideB1) );
+
+				kc -= k; // move to start of column k-1
+				k -= 1;
+			} else {
+				// 2x2 pivot block: columns k-1 and k
+
+				// Interchange rows k-1 and ~IPIV[k]
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k - 1 ) {
+					zswap( nrhs, B, strideB2, offsetB + (( k - 1 ) * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				// Multiply by inv(U(K)): update B(0:k-2,:)
+				if ( k > 1 ) {
+					// Column k
+					zgeru( k - 1, nrhs, NCONE, AP, strideAP, offsetAP + (kc * strideAP), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB );
+
+					// Column k-1
+					zgeru( k - 1, nrhs, NCONE, AP, strideAP, offsetAP + ((kc - k) * strideAP), B, strideB2, offsetB + (( k - 1 ) * strideB1), B, strideB1, strideB2, offsetB );
+				}
+
+				// Multiply by inv(D(K)): solve 2x2 system
+				// AKM1K = AP(kc+k-1) -- the off-diagonal element A(k-1,k)
+				p1 = (offsetAP * 2) + ((kc + k - 1) * sap);
+				akm1kR = APv[ p1 ];
+				akm1kI = APv[ p1 + 1 ];
+
+				// AKM1 = AP(kc-1) / AKM1K -- A(k-1,k-1) / A(k-1,k)
+
+				// Symmetric: no conjugation on AKM1K
+				p2 = (offsetAP * 2) + ((kc - 1) * sap);
+				cDiv( APv[ p2 ], APv[ p2 + 1 ], akm1kR, akm1kI );
+				akm1R = cdR;
+				akm1I = cdI;
+
+				// AK = AP(kc+k) / AKM1K -- A(k,k) / A(k-1,k)
+
+				// Symmetric: no conjugation on AKM1K
+				p2 = (offsetAP * 2) + ((kc + k) * sap);
+				cDiv( APv[ p2 ], APv[ p2 + 1 ], akm1kR, akm1kI );
+				akR = cdR;
+				akI = cdI;
+
+				// DENOM = AKM1 * AK - 1
+				denomR = (akm1R * akR) - (akm1I * akI) - 1.0;
+				denomI = (akm1R * akI) + (akm1I * akR);
+
+				for ( j = 0; j < nrhs; j++ ) {
+					// BKM1 = B(k-1,j) / AKM1K
+					p1 = (offsetB * 2) + (( k - 1 ) * sb1) + (j * sb2);
+					cDiv( Bv[ p1 ], Bv[ p1 + 1 ], akm1kR, akm1kI );
+					bkm1R = cdR;
+					bkm1I = cdI;
+
+					// BK = B(k,j) / AKM1K
+
+					// Symmetric: no conjugation on AKM1K
+					p2 = (offsetB * 2) + (k * sb1) + (j * sb2);
+					cDiv( Bv[ p2 ], Bv[ p2 + 1 ], akm1kR, akm1kI );
+					bkR = cdR;
+					bkI = cdI;
+
+					// B(k-1,j) = (AK*BKM1 - BK) / DENOM
+					tr = (akR * bkm1R) - (akI * bkm1I) - bkR;
+					ti = (akR * bkm1I) + (akI * bkm1R) - bkI;
+					cDiv( tr, ti, denomR, denomI );
+					Bv[ p1 ] = cdR;
+					Bv[ p1 + 1 ] = cdI;
+
+					// B(k,j) = (AKM1*BK - BKM1) / DENOM
+					tr = (akm1R * bkR) - (akm1I * bkI) - bkm1R;
+					ti = (akm1R * bkI) + (akm1I * bkR) - bkm1I;
+					cDiv( tr, ti, denomR, denomI );
+					Bv[ p2 ] = cdR;
+					Bv[ p2 + 1 ] = cdI;
+				}
+
+				// Move kc back past column k-1
+				kc = kc - k - ( k - 1 );
+				k -= 2;
+			}
+		}
+
+		// Phase 2: Solve U**T * X = X' (transpose, NOT conjugate-transpose).
+		// Process columns from 0 up to N-1.
+		k = 0;
+		kc = 0; // start of column 0
+		while ( k < N ) {
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				// 1x1 pivot block
+				if ( k > 0 ) {
+					// Symmetric: use transpose (not conjugate-transpose), no zlacgv
+					zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, AP, strideAP, offsetAP + (kc * strideAP), CONE, B, strideB2, offsetB + (k * strideB1) );
+				}
+
+				// Interchange rows k and IPIV[k]
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k ) {
+					zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				kc += k + 1; // advance to start of column k+1
+				k += 1;
+			} else {
+				// 2x2 pivot block
+				if ( k > 0 ) {
+					// Symmetric: use transpose, no zlacgv
+					zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, AP, strideAP, offsetAP + (kc * strideAP), CONE, B, strideB2, offsetB + (k * strideB1) );
+
+					zgemv( 'transpose', k, nrhs, NCONE, B, strideB1, strideB2, offsetB, AP, strideAP, offsetAP + ((kc + k + 1) * strideAP), CONE, B, strideB2, offsetB + (( k + 1 ) * strideB1) );
+				}
+
+				// Interchange rows k and ~IPIV[k]
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k ) {
+					zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				kc += (2 * k) + 3; // skip columns k and k+1
+				k += 2;
+			}
+		}
+	} else {
+		// Solve A*X = B where A = L*D*L**T (packed lower triangle).
+
+		// Phase 1: Solve L*D*X' = B, overwriting B with X'.
+		// Process from k = 0 up to N-1.
+		k = 0;
+		kc = 0; // start of column 0 in lower packed storage
+		while ( k < N ) {
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				// 1x1 pivot block
+
+				// Interchange rows k and IPIV[k]
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k ) {
+					zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				// Multiply by inv(L(K)): B(k+1:N-1,:) -= AP(kc+1:kc+N-k-1) * B(k,:)
+				if ( k < N - 1 ) {
+					zgeru( N - k - 1, nrhs, NCONE, AP, strideAP, offsetAP + ((kc + 1) * strideAP), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB + (( k + 1 ) * strideB1) );
+				}
+
+				// Multiply by inv(D(K)): B(k,:) /= AP(kc)
+				// Symmetric: diagonal is fully complex, use zscal with 1/AP(kc)
+				p1 = (offsetAP * 2) + (kc * sap);
+				cDiv( 1.0, 0.0, APv[ p1 ], APv[ p1 + 1 ] );
+				zscal( nrhs, new Complex128( cdR, cdI ), B, strideB2, offsetB + (k * strideB1) );
+
+				kc += N - k; // advance to start of next column
+				k += 1;
+			} else {
+				// 2x2 pivot block: columns k and k+1
+
+				// Interchange rows k+1 and ~IPIV[k]
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k + 1 ) {
+					zswap( nrhs, B, strideB2, offsetB + (( k + 1 ) * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				// Multiply by inv(L(K)): update B(k+2:N-1,:)
+				if ( k < N - 2 ) {
+					// Column k
+					zgeru( N - k - 2, nrhs, NCONE, AP, strideAP, offsetAP + ((kc + 2) * strideAP), B, strideB2, offsetB + (k * strideB1), B, strideB1, strideB2, offsetB + (( k + 2 ) * strideB1) );
+
+					// Column k+1
+					zgeru( N - k - 2, nrhs, NCONE, AP, strideAP, offsetAP + ((kc + N - k + 1) * strideAP), B, strideB2, offsetB + (( k + 1 ) * strideB1), B, strideB1, strideB2, offsetB + (( k + 2 ) * strideB1) );
+				}
+
+				// Multiply by inv(D(K)): solve 2x2 system
+				// AKM1K = AP(kc+1) -- the off-diagonal A(k+1,k)
+				p1 = (offsetAP * 2) + ((kc + 1) * sap);
+				akm1kR = APv[ p1 ];
+				akm1kI = APv[ p1 + 1 ];
+
+				// AKM1 = AP(kc) / AKM1K -- A(k,k) / A(k+1,k)
+
+				// Symmetric: no conjugation on AKM1K
+				p2 = (offsetAP * 2) + (kc * sap);
+				cDiv( APv[ p2 ], APv[ p2 + 1 ], akm1kR, akm1kI );
+				akm1R = cdR;
+				akm1I = cdI;
+
+				// AK = AP(kc+N-k) / AKM1K -- A(k+1,k+1) / A(k+1,k)
+
+				// Symmetric: no conjugation on AKM1K
+				p2 = (offsetAP * 2) + ((kc + N - k) * sap);
+				cDiv( APv[ p2 ], APv[ p2 + 1 ], akm1kR, akm1kI );
+				akR = cdR;
+				akI = cdI;
+
+				// DENOM = AKM1 * AK - 1
+				denomR = (akm1R * akR) - (akm1I * akI) - 1.0;
+				denomI = (akm1R * akI) + (akm1I * akR);
+
+				for ( j = 0; j < nrhs; j++ ) {
+					// BKM1 = B(k,j) / AKM1K
+					// Symmetric: no conjugation on AKM1K
+					p1 = (offsetB * 2) + (k * sb1) + (j * sb2);
+					cDiv( Bv[ p1 ], Bv[ p1 + 1 ], akm1kR, akm1kI );
+					bkm1R = cdR;
+					bkm1I = cdI;
+
+					// BK = B(k+1,j) / AKM1K
+					p2 = (offsetB * 2) + (( k + 1 ) * sb1) + (j * sb2);
+					cDiv( Bv[ p2 ], Bv[ p2 + 1 ], akm1kR, akm1kI );
+					bkR = cdR;
+					bkI = cdI;
+
+					// B(k,j) = (AK*BKM1 - BK) / DENOM
+					tr = (akR * bkm1R) - (akI * bkm1I) - bkR;
+					ti = (akR * bkm1I) + (akI * bkm1R) - bkI;
+					cDiv( tr, ti, denomR, denomI );
+					Bv[ p1 ] = cdR;
+					Bv[ p1 + 1 ] = cdI;
+
+					// B(k+1,j) = (AKM1*BK - BKM1) / DENOM
+					tr = (akm1R * bkR) - (akm1I * bkI) - bkm1R;
+					ti = (akm1R * bkI) + (akm1I * bkR) - bkm1I;
+					cDiv( tr, ti, denomR, denomI );
+					Bv[ p2 ] = cdR;
+					Bv[ p2 + 1 ] = cdI;
+				}
+
+				kc += (2 * N) - (2 * k) - 1; // skip columns k and k+1
+				k += 2;
+			}
+		}
+
+		// Phase 2: Solve L**T * X = X' (transpose, NOT conjugate-transpose).
+		// Process from k = N-1 down to 0.
+		k = N - 1;
+		kc = ( N * ( N + 1 ) / 2 ) - 1; // packed index of diagonal of column N-1
+		while ( k >= 0 ) {
+			if ( IPIV[ offsetIPIV + (k * strideIPIV) ] >= 0 ) {
+				// 1x1 pivot block
+				if ( k < N - 1 ) {
+					// Symmetric: use transpose (not conjugate-transpose), no zlacgv
+					zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + (( k + 1 ) * strideB1), AP, strideAP, offsetAP + ((kc + 1) * strideAP), CONE, B, strideB2, offsetB + (k * strideB1) );
+				}
+
+				// Interchange rows k and IPIV[k]
+				kp = IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k ) {
+					zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				kc -= ( N - k + 1 ); // move to diagonal of column k-1
+				k -= 1;
+			} else {
+				// 2x2 pivot block
+				if ( k < N - 1 ) {
+					// Symmetric: use transpose, no zlacgv
+					zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + (( k + 1 ) * strideB1), AP, strideAP, offsetAP + ((kc + 1) * strideAP), CONE, B, strideB2, offsetB + (k * strideB1) );
+
+					zgemv( 'transpose', N - k - 1, nrhs, NCONE, B, strideB1, strideB2, offsetB + (( k + 1 ) * strideB1), AP, strideAP, offsetAP + ((kc - N + k + 1) * strideAP), CONE, B, strideB2, offsetB + (( k - 1 ) * strideB1) );
+				}
+
+				// Interchange rows k and ~IPIV[k]
+				kp = ~IPIV[ offsetIPIV + (k * strideIPIV) ];
+				if ( kp !== k ) {
+					zswap( nrhs, B, strideB2, offsetB + (k * strideB1), B, strideB2, offsetB + (kp * strideB1) );
+				}
+
+				kc -= (2 * N) - (2 * k) + 3; // move back past two columns
+				k -= 2;
+			}
+		}
+	}
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = zsptrs;

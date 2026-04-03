@@ -1,0 +1,42 @@
+
+    zlapll.ndarray( N, x, strideX, offsetX, y, strideY, offsetY, ssmin )
+        Measures the linear dependence of two vectors.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        y: Float64Array
+            output array.
+
+        strideY: integer
+            stride length for `y`.
+
+        offsetY: NonNegativeInteger
+            starting index for `y`.
+
+        ssmin: number
+            ssmin.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

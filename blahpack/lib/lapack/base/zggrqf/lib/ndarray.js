@@ -1,0 +1,44 @@
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Computes a generalized RQ factorization of an M-by-N complex matrix A and a P-by-N complex matrix B.
+*
+* @param {NonNegativeInteger} M - number of rows
+* @param {integer} p - p
+* @param {NonNegativeInteger} N - number of columns
+* @param {Float64Array} A - input matrix
+* @param {integer} strideA1 - stride of the first dimension of `A`
+* @param {integer} strideA2 - stride of the second dimension of `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @param {Float64Array} TAUA - input array
+* @param {integer} strideTAUA - stride length for `TAUA`
+* @param {NonNegativeInteger} offsetTAUA - starting index for `TAUA`
+* @param {Float64Array} B - input matrix
+* @param {integer} strideB1 - stride of the first dimension of `B`
+* @param {integer} strideB2 - stride of the second dimension of `B`
+* @param {NonNegativeInteger} offsetB - starting index for `B`
+* @param {Float64Array} TAUB - input array
+* @param {integer} strideTAUB - stride length for `TAUB`
+* @param {NonNegativeInteger} offsetTAUB - starting index for `TAUB`
+* @param {Float64Array} WORK - output array
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {integer} lwork - lwork
+* @returns {integer} status code (0 = success)
+*/
+function zggrqf( M, p, N, A, strideA1, strideA2, offsetA, TAUA, strideTAUA, offsetTAUA, B, strideB1, strideB2, offsetB, TAUB, strideTAUB, offsetTAUB, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+	return base( M, p, N, A, strideA1, strideA2, offsetA, TAUA, strideTAUA, offsetTAUA, B, strideB1, strideB2, offsetB, TAUB, strideTAUB, offsetTAUB, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zggrqf;

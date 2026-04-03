@@ -1,0 +1,6 @@
+dspsv
+dsptrf
+dsptrs
+ieeeck
+ilaenv
+iparmq

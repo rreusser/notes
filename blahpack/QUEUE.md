@@ -3,27 +3,15 @@
 Prioritized remaining d\*/z\* LAPACK routines, ordered by tier then by
 completion progress. Items near the top of each tier are closest to done.
 
-**Implemented: 485 modules (134 algorithms complete) | Remaining: 611 routines (265 algorithms)**
+**Implemented: 541 modules (167 algorithms complete) | Remaining: 555 routines (232 algorithms)**
 
 > To update this file after implementing a routine, run `/blahpack-status`
 > or check the box manually. Regenerate with `node bin/gen-queue.js > QUEUE.md`.
 
-## Core Solvers & Factorizations (107 routines)
+## Core Solvers & Factorizations (89 routines)
 
+- [ ] **dpftrs, zpftrs** (28/30 done) — Solves a system of linear equations A * X = B or A**T * X = B with a general band matrix A using the LU factorization co
 - [ ] **ztgsyl** (3/4 done) — Solves the generalized Sylvester equation: A * R - L * B = scale * C (1) D * R - L * E = scale * F where R and L are unk
-- [ ] **dgetf2, dpstf2, zgetf2, zpstf2** (9/13 done) — Computes the LU factorization of a general band matrix using the unblocked version of the algorithm.
-- [ ] **dpteqr, zpteqr** (4/6 done) — Computes the eigenvalues of a Hessenberg matrix H and, optionally, the matrices T and Z from the Schur decomposition H =
-- [ ] **ztgsy2** (2/3 done) — Solves the Sylvester matrix equation where the matrices are of order 1 or 2.
-- [ ] **zgesc2** (1/2 done) — Solves a system of linear equations using the LU factorization with complete pivoting computed by sgetc2.
-- [ ] **zgetc2** (1/2 done) — Computes the LU factorization with complete pivoting of the general n-by-n matrix.
-- [x] **zla_gbrpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a general banded matrix.
-- [x] **zla_gerpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U).
-- [x] **zla_porpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric or Hermitian positive-definite matrix.
-- [x] **zla_syrpvgrw** (1/2 done) — Computes the reciprocal pivot growth factor norm(A)/norm(U) for a symmetric indefinite matrix.
-- [ ] **zlaev2** (1/2 done) — Computes the eigenvalues and eigenvectors of a 2-by-2 symmetric/Hermitian matrix.
-- [ ] **zlaqsy** (1/2 done) — Scales a symmetric/Hermitian matrix, using scaling factors computed by spoequ.
-- [ ] **zlatdf** (1/2 done) — Uses the LU factorization of the n-by-n matrix computed by sgetc2 and computes a contribution to the reciprocal Dif-esti
-- [ ] **ztgsja** (1/2 done) — Computes the generalized singular value decomposition (GSVD) of two real upper triangular (or trapezoidal) matrices A an
 - [ ] **dbdsvdx, dgesvdx, zgesvdx** — Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B, B = U * S * VT, w
 - [ ] **dgedmd, zgedmd** — Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices.
 - [ ] **dgedmdq, zgedmdq** — Computes the Dynamic Mode Decomposition (DMD) for a pair of data snapshot matrices.
@@ -43,7 +31,6 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dgesvdq, zgesvdq** — Computes the singular value decomposition (SVD) with a QR-Preconditioned QR SVD Method for GE matrices
 - [ ] **dgesvj, zgesvj** — Computes the singular value decomposition (SVD) of a real M-by-N matrix A, where M >= N.
 - [ ] **dgetsls, zgetsls** — Solves overdetermined or underdetermined real linear systems involving an M-by-N matrix A, using a tall skinny QR or sho
-- [ ] **dlagv2** — Computes the Generalized Schur factorization of a real 2-by-2 matrix pencil (A,B) where B is upper triangular.
 - [ ] **dlals0, zlals0** — Applies back multiplying factors in solving the least squares problem using divide and conquer SVD approach. Used by sge
 - [ ] **dlaqgb, zlaqgb** — Scales a general band matrix, using row and column scaling factors computed by sgbequ.
 - [ ] **dlaqp2rk, zlaqp2rk** — Computes truncated QR factorization with column pivoting of a real matrix block using Level 2 BLAS and overwrites a real
@@ -68,30 +55,24 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dsytri2, zhetri2, zsytri2** — Computes the inverse of a DOUBLE PRECISION symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D
 - [ ] **dsytri2x, zhetri2x, zsytri2x** — Computes the inverse of a real symmetric indefinite matrix A using the factorization A = U*D*U**T or A = L*D*L**T comput
 - [ ] **dtfsm, ztfsm** — Solves a matrix equation (one operand is a triangular matrix in RFP format).
-- [x] **zla_herpvgrw** — Computes the reciprocal pivot growth factor norm(A)/norm(U).
-- [x] **zlaesy** — Computes the eigenvalues and eigenvectors of a 2-by-2 complex symmetric matrix.
 - [ ] **zlaqhb** — Scales a Hermitian band matrix, using scaling factors computed by cpbequ.
 
-## Divide-and-Conquer (eigen/SVD) (30 routines)
+## Divide-and-Conquer (eigen/SVD) (26 routines)
 
 - [ ] **dbdsdc** — Computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B: B = U * S * VT, u
 - [ ] **dlaed0, zlaed0** — Used by DSTEDC. Computes all eigenvalues and corresponding eigenvectors of an unreduced symmetric tridiagonal matrix usi
 - [ ] **dlaed1** — Used by DSTEDC. Computes the updated eigensystem of a diagonal matrix after modification by a rank-one symmetric matrix.
-- [ ] **dlaed2** — Used by DSTEDC. Merges eigenvalues and deflates secular equation. Used when the original matrix is tridiagonal.
 - [ ] **dlaed3** — Used by DSTEDC. Finds the roots of the secular equation and updates the eigenvectors. Used when the original matrix is t
 - [ ] **dlaed4** — Used by DSTEDC. Finds a single root of the secular equation.
-- [ ] **dlaed6** — Used by DSTEDC. Computes one Newton step in solution of the secular equation.
 - [ ] **dlaed7, zlaed7** — Used by DSTEDC. Computes the updated eigensystem of a diagonal matrix after modification by a rank-one symmetric matrix.
 - [ ] **dlaed8, zlaed8** — Used by DSTEDC. Merges eigenvalues and deflates secular equation. Used when the original matrix is dense.
 - [ ] **dlaed9** — Used by DSTEDC. Finds the roots of the secular equation and updates the eigenvectors. Used when the original matrix is d
 - [ ] **dlaeda** — Used by DSTEDC. Computes the Z vector determining the rank-one modification of the diagonal matrix. Used when the origin
 - [ ] **dlasd0** — Computes the singular values of a real upper bidiagonal n-by-m matrix B with diagonal d and off-diagonal e. Used by sbds
 - [ ] **dlasd1** — Computes the SVD of an upper bidiagonal matrix B of the specified size. Used by sbdsdc.
-- [ ] **dlasd2** — Merges the two sets of singular values together into a single sorted set. Used by sbdsdc.
 - [ ] **dlasd3** — Finds all square roots of the roots of the secular equation, as defined by the values in D and Z, and then updates the s
 - [ ] **dlasd4** — Computes the square root of the i-th updated eigenvalue of a positive symmetric rank-one modification to a positive diag
 - [ ] **dlasd6** — Computes the SVD of an updated upper bidiagonal matrix obtained by merging two smaller ones by appending a row. Used by 
-- [ ] **dlasd7** — Merges the two sets of singular values together into a single sorted set. Then it tries to deflate the size of the probl
 - [ ] **dlasd8** — Finds the square roots of the roots of the secular equation, and stores, for each element in D, the distance to its two 
 - [ ] **dlasda** — Computes the singular value decomposition (SVD) of a real upper bidiagonal matrix with diagonal d and off-diagonal e. Us
 - [ ] **dlasdq** — Computes the SVD of a real bidiagonal matrix with diagonal d and off-diagonal e. Used by sbdsdc.
@@ -99,16 +80,11 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dstegr, zstegr** — Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T.
 - [ ] **dstemr, zstemr** — Computes selected eigenvalues and, optionally, eigenvectors of a real symmetric tridiagonal matrix T.
 
-## Generalized Eigenvalue Problems (49 routines)
+## Generalized Eigenvalue Problems (43 routines)
 
-- [ ] **dggbak** (3/4 done) — Forms the right or left eigenvectors of a real general matrix by backward transformation on the computed eigenvectors of
-- [ ] **dggbal** (3/4 done) — Balances a general real matrix A.
-- [ ] **dgghrd** (3/4 done) — Reduces a real general matrix A to upper Hessenberg form H by an orthogonal similarity transformation: Q**T * A * Q = H 
-- [ ] **zggqrf** (3/4 done) — Computes a QR factorization of a real M-by-N matrix A: A = Q * ( R ), ( 0 ) where: Q is a M-by-M orthogonal matrix; R is
 - [ ] **dtgexc, ztgexc** (3/5 done) — Swaps adjacent diagonal blocks of a real upper quasi-triangular matrix in Schur canonical form, by an orthogonal similar
 - [ ] **dggev, dsbev, dspev, zhbev, zhpev** (6/11 done) — Computes the eigenvalues and, optionally, the left and/or right eigenvectors for GE matrices
 - [ ] **dgges, zgges** (2/4 done) — Computes the eigenvalues, the Schur form, and, optionally, the matrix of Schur vectors for GE matrices
-- [ ] **dggrqf, zggrqf** (2/4 done) — Computes an RQ factorization of a real M-by-N matrix A: A = R * Q.
 - [ ] **dhgeqz** (1/2 done) — Computes the eigenvalues of a real matrix pair (H,T), where H is an upper Hessenberg matrix and T is upper triangular, u
 - [ ] **dtgsen, ztgsen** (2/4 done) — Reorders the generalized real Schur decomposition of a real matrix pair (A, B) (in terms of an orthonormal equivalence t
 - [ ] **zggsvd3** (1/2 done) — Computes the singular value decomposition (SVD) for OTHER matrices
@@ -123,12 +99,11 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dgglse, zgglse** — Solves overdetermined or underdetermined systems for OTHER matrices
 - [ ] **dtgex2, ztgex2** — Swaps adjacent diagonal blocks in an upper (quasi) triangular matrix pair by an orthogonal equivalence transformation.
 
-## Banded & Packed Storage (111 routines)
+## Banded & Packed Storage (91 routines)
 
-- [ ] **dppsv, dspsv, zhpsv, zppsv, zspsv** (15/20 done) — Computes the solution to system of linear equations A * X = B for GB matrices (simple driver)
-- [ ] **dpftrs, dpptrs, dsptrs, dtbtrs, dtptrs, zhptrs, zpftrs, zpptrs, zsptrs, ztbtrs, ztptrs** (19/30 done) — Solves a system of linear equations A * X = B or A**T * X = B with a general band matrix A using the LU factorization co
-- [ ] **dpftrf, dpptrf, dpstrf, dsptrf, zhptrf, zpftrf, zpptrf, zpstrf, zsptrf** (15/24 done) — Computes an LU factorization of a real m-by-n band matrix A using partial pivoting with row interchanges.
-- [ ] **dlacon, dppcon, dspcon, dtbcon, dtpcon, zhpcon, zlacon, zppcon, zspcon, ztbcon, ztpcon** (17/28 done) — Estimates the reciprocal of the condition number of a real general band matrix A, in either the 1-norm or the infinity-n
+- [ ] **dppsv, zppsv** (18/20 done) — Computes the solution to system of linear equations A * X = B for GB matrices (simple driver)
+- [ ] **dpftrf, dpstrf, zpftrf, zpptrf, zpstrf** (19/24 done) — Computes an LU factorization of a real m-by-n band matrix A using partial pivoting with row interchanges.
+- [ ] **dlacon, dppcon, dtbcon, dtpcon, zhpcon, zlacon, zppcon, ztbcon, ztpcon** (19/28 done) — Estimates the reciprocal of the condition number of a real general band matrix A, in either the 1-norm or the infinity-n
 - [ ] **dsbtrd, dsptrd, zhbtrd, zhptrd** (4/8 done) — Reduces the first nb rows and columns of a symmetric/Hermitian matrix A to real tridiagonal form by an orthogonal simila
 - [ ] **dgbrfs, dpbrfs, dpprfs, dsprfs, dtbrfs, dtprfs, zgbrfs, zgtrfs, zhprfs, zpbrfs, zpprfs, zsprfs, ztbrfs, ztprfs, ztrrfs** (11/26 done) — Improves the computed solution to a system of linear equations when the coefficient matrix is banded, and provides error
 - [ ] **dgbsvx, dpbsvx, dppsvx, dptsvx, dspsvx, zgbsvx, zgtsvx, zhpsvx, zpbsvx, zppsvx, zptsvx, zspsvx** (8/20 done) — Computes the solution to system of linear equations A * X = B for GB matrices
@@ -142,11 +117,10 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dsbgvd, dspgvd, dsygvd, zhbgvd, zhegvd, zhpgvd** — Computes all the eigenvalues, and optionally, the eigenvectors of a real generalized symmetric-definite banded eigenprob
 - [ ] **dsposv** — Computes the solution to system of linear equations A * X = B for PO matrices
 
-## Condition Numbers, Norms & Refinement (80 routines)
+## Condition Numbers, Norms & Refinement (79 routines)
 
 - [ ] **dgbequ, zgbequ** (8/10 done) — Computes row and column scalings intended to equilibrate an M-by-N band matrix A and reduce its condition number.
 - [ ] **dgbbrd, zgbbrd** (4/6 done) — Reduces a real general m-by-n band matrix A to upper bidiagonal form B by an orthogonal transformation: Q**T * A * P = B
-- [ ] **zrscl** (2/3 done) — Multiplies a vector by the reciprocal of a real scalar.
 - [ ] **dgemlq, zgemlq** (2/4 done) — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
 - [ ] **dgemqr, zgemqr** (2/4 done) — Overwrites the general real M-by-N matrix C with SIDE = 'L' SIDE = 'R' TRANS = 'N': Q * C C * Q TRANS = 'T': Q**T * C C 
 - [ ] **dopgtr, zupgtr** (2/4 done) — Generates a real orthogonal matrix Q which is defined as the product of n-1 elementary reflectors H(i) of order n, as re
@@ -190,14 +164,8 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **zla_syrcond_c** — Computes the infinity norm condition number of op(A)*inv(diag(c)) for symmetric indefinite matrices.
 - [ ] **zla_syrcond_x** — Computes the infinity norm condition number of op(A)*diag(x) for symmetric indefinite matrices.
 
-## Auxiliary Routines (86 routines)
+## Auxiliary Routines (79 routines)
 
-- [ ] **zlags2** (3/4 done) — Computes 2-by-2 orthogonal matrices U, V, and Q, and applies them to matrices A and B such that the rows of the transfor
-- [ ] **zlapll** (1/2 done) — Measures the linear dependence of two vectors.
-- [ ] **zlarfx** (1/2 done) — Applies an elementary reflector to a general rectangular matrix, with loop unrolling when the reflector has order ≤ 10.
-- [ ] **zlargv** (1/2 done) — Generates a vector of plane rotations with real cosines and real sines.
-- [ ] **zlarnv** (1/2 done) — Returns a vector of random numbers from a uniform or normal distribution.
-- [x] **zlarscl2** (2/2 done) — Performs reciprocal diagonal scaling on a matrix.
 - [ ] **dlangb, dlanhs, dlansb, dlansf, dlansp, dlantb, dlantp, zlangb, zlangt, zlanhb, zlanhf, zlanhp, zlansb, zlansp, zlantb, zlantp** (10/26 done) — Returns the value of the 1-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of general 
 - [ ] **dhsein, dlaein, zhsein, zlaein** (2/6 done) — Uses inverse iteration to find specified right and/or left eigenvectors of a real upper Hessenberg matrix H.
 - [ ] **dgelsd, dlalsd, zgelsd, zlalsd** — Computes the minimum-norm solution to a linear least squares problem for GE matrices
@@ -229,7 +197,6 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dlat2s** — Converts a double-precision triangular matrix to a single-precision triangular matrix.
 - [ ] **dlatsqr, zlatsqr** — Computes a blocked Tall-Skinny QR factorization of a real M-by-N matrix A for M >= N: A = Q * ( R ), ( 0 ) where: Q is a
 - [ ] **zlacrm** — Multiplies a complex matrix by a square real matrix.
-- [x] **zlacrt** — Performs a linear transformation of a pair of complex vectors.
 - [ ] **zlag2c** — Converts a complex double precision matrix to a complex single precision matrix.
 - [ ] **zlahef_aa** — DLAHEF_AA factorizes a panel of a complex hermitian matrix A using the Aasen's algorithm.
 - [ ] **zlahef_rk** — Computes a partial factorization of a complex Hermitian indefinite matrix using bounded Bunch-Kaufman (rook) diagonal pi
@@ -295,7 +262,3 @@ completion progress. Items near the top of each tier are closest to done.
 - [ ] **dsytrs_rook, zhetrs_rook, zsytrs_rook** — Solves a system of linear equations A*X = B with a real symmetric matrix A using the factorization A = U*D*U**T or A = L
 - [ ] **dtplqt2, ztplqt2** — Computes a LQ factorization of a real or complex "triangular-pentagonal" matrix, which is composed of a triangular block
 - [ ] **zcgesv** — Computes the solution to system of linear equations A * X = B for GE matrices (mixed precision with iterative refinement
-- [ ] **zcposv** — Computes the solution to system of linear equations A * X = B for PO matrices
-
----
-**Total remaining: 611 routines across 265 algorithms**

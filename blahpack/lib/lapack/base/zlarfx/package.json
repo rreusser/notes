@@ -1,0 +1,26 @@
+{
+  "name": "@stdlib/lapack/base/zlarfx",
+  "version": "0.0.0",
+  "description": "Applies an elementary reflector to a general rectangular matrix with loop unrolling when the reflector has order at most 10.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "The Stdlib Authors",
+    "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+  },
+  "contributors": [
+    {
+      "name": "The Stdlib Authors",
+      "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+    }
+  ],
+  "main": "./lib/index.js",
+  "directories": {
+    "doc": "./docs",
+    "example": "./examples",
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "scripts": {
+    "test": "node --test test/test.js"
+  }
+}

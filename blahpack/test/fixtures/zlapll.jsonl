@@ -1,0 +1,9 @@
+{"name":"parallel","ssmin": 4.38727775361814701E-015}
+{"name":"orthogonal","ssmin": 1.00000000000000000E+000}
+{"name":"general","ssmin": 5.13624567093150741E+000}
+{"name":"n_equals_1","ssmin": 0.00000000000000000E+000}
+{"name":"n_equals_2","ssmin": 1.74146711339470395E+000}
+{"name":"nearly_parallel","ssmin": 5.22221098477369827E-004}
+{"name":"imaginary","ssmin": 7.72869635673484767E-001}
+{"name":"identical","ssmin": 7.69185074553425527E-016}
+{"name":"large_n","ssmin": 1.82399490896906591E+000}

@@ -1,0 +1,26 @@
+{
+  "name": "@stdlib/lapack/base/zhptrs",
+  "version": "0.0.0",
+  "description": "Solves a system of linear equations with a complex Hermitian matrix in packed storage using the factorization computed by zhptrf.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "The Stdlib Authors",
+    "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+  },
+  "contributors": [
+    {
+      "name": "The Stdlib Authors",
+      "url": "https://github.com/stdlib-js/stdlib/graphs/contributors"
+    }
+  ],
+  "main": "./lib/index.js",
+  "directories": {
+    "doc": "./docs",
+    "example": "./examples",
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "scripts": {
+    "test": "node --test test/test.js"
+  }
+}

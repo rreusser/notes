@@ -1,0 +1,17 @@
+dladiv
+dlamch
+dlapy3
+dlartg
+dlas2
+dlasv2
+ieeeck
+ilaenv
+iparmq
+zladiv
+zlags2
+zlapll
+zlarfg
+zlartg
+zlaset
+zrot
+ztgsja

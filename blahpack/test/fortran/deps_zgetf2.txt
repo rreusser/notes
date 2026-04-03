@@ -1,0 +1,9 @@
+dladiv
+dlamch
+ieeeck
+ilaenv
+iparmq
+zdrscl
+zgetf2
+zladiv
+zrscl

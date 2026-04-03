@@ -1,0 +1,51 @@
+
+    zgetc2.ndarray( N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, JPIV, strideJPIV, offsetJPIV )
+        Computes the LU factorization with complete pivoting of the general n-by-n matrix.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        JPIV: Int32Array
+            output array.
+
+        strideJPIV: integer
+            stride length for `JPIV`.
+
+        offsetJPIV: NonNegativeInteger
+            starting index for `JPIV`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

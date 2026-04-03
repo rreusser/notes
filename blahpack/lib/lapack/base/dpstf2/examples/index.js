@@ -1,0 +1,42 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+var Float64Array = require( '@stdlib/array/float64' ); // eslint-disable-line stdlib/require-globals
+var Int32Array = require( '@stdlib/array/int32' ); // eslint-disable-line stdlib/require-globals
+var dpstf2 = require( './../lib' );
+
+// 3x3 positive semi-definite matrix A (column-major):
+
+// [4 2 1]
+
+// [2 5 3]
+
+// [1 3 6]
+var A = new Float64Array( [ 4.0, 2.0, 1.0, 2.0, 5.0, 3.0, 1.0, 3.0, 6.0 ] );
+var PIV = new Int32Array( 3 );
+var RANK = new Int32Array( 1 );
+var WORK = new Float64Array( 6 );
+
+var info = dpstf2( 'column-major', 'upper', 3, A, 3, PIV, RANK, -1.0, WORK );
+
+console.log( 'info:', info );
+console.log( 'A (factored):', A );
+console.log( 'PIV:', PIV );
+console.log( 'RANK:', RANK[ 0 ] );

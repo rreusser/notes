@@ -1,0 +1,233 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+
+// MODULES //
+
+var test = require( 'node:test' );
+var readFileSync = require( 'fs' ).readFileSync;
+var path = require( 'path' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dppsv = require( './../lib/base.js' );
+var ndarray = require( './../lib/ndarray.js' );
+
+
+// FIXTURES //
+
+var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
+var lines = readFileSync( path.join( fixtureDir, 'dppsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
+var fixture = lines.map( function parse( line ) {
+	return JSON.parse( line );
+} );
+
+
+// FUNCTIONS //
+
+/**
+* Returns a test case from the fixture data.
+*
+* @private
+* @param {string} name - test case name
+* @returns {*} result
+*/
+function findCase( name ) {
+	return fixture.find( function find( t ) {
+		return t.name === name;
+	} );
+}
+
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
+function assertClose( actual, expected, tol, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
+}
+
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {number} tol - tolerance
+* @param {string} msg - assertion message
+*/
+function assertArrayClose( actual, expected, tol, msg ) {
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
+	}
+}
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
+
+// TESTS //
+
+test( 'dppsv: 3x3_upper_1rhs', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( '3x3_upper_1rhs' );
+	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+	B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+	info = dppsv( 'upper', 3, 1, AP, 1, 0, B, 1, 3, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( toArray( B ), tc.b, 1e-14, 'b' );
+	assertArrayClose( toArray( AP ), tc.ap, 1e-14, 'ap' );
+});
+
+test( 'dppsv: 3x3_lower_1rhs', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( '3x3_lower_1rhs' );
+	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
+	B = new Float64Array( [ 7.0, 10.0, 10.0 ] );
+	info = dppsv( 'lower', 3, 1, AP, 1, 0, B, 1, 3, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( toArray( B ), tc.b, 1e-14, 'b' );
+	assertArrayClose( toArray( AP ), tc.ap, 1e-14, 'ap' );
+});
+
+test( 'dppsv: 3x3_lower_2rhs', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( '3x3_lower_2rhs' );
+	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
+	B = new Float64Array( [ 7.0, 10.0, 10.0, 18.0, 31.0, 35.0 ] );
+	info = dppsv( 'lower', 3, 2, AP, 1, 0, B, 1, 3, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( toArray( B ), tc.b, 1e-14, 'b' );
+});
+
+test( 'dppsv: not_posdef_upper (info > 0)', function t() {
+	var info;
+	var AP;
+	var B;
+
+	AP = new Float64Array( [ 1.0, 2.0, 1.0, 3.0, 4.0, 1.0 ] );
+	B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
+	info = dppsv( 'upper', 3, 1, AP, 1, 0, B, 1, 3, 0 );
+	assert.ok( info > 0, 'info > 0 for not positive definite matrix' );
+	assert.equal( info, 2, 'info = 2' );
+});
+
+test( 'dppsv: n_zero', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( 'n_zero' );
+	AP = new Float64Array( 1 );
+	B = new Float64Array( 1 );
+	info = dppsv( 'lower', 0, 1, AP, 1, 0, B, 1, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+});
+
+test( 'dppsv: nrhs_zero', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( 'nrhs_zero' );
+	AP = new Float64Array( [ 5.0 ] );
+	B = new Float64Array( 1 );
+	info = dppsv( 'lower', 1, 0, AP, 1, 0, B, 1, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+});
+
+test( 'dppsv: n_one_lower', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( 'n_one_lower' );
+	AP = new Float64Array( [ 4.0 ] );
+	B = new Float64Array( [ 8.0 ] );
+	info = dppsv( 'lower', 1, 1, AP, 1, 0, B, 1, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( toArray( B ), tc.b, 1e-14, 'b' );
+});
+
+test( 'dppsv: n_one_upper', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( 'n_one_upper' );
+	AP = new Float64Array( [ 9.0 ] );
+	B = new Float64Array( [ 27.0 ] );
+	info = dppsv( 'upper', 1, 1, AP, 1, 0, B, 1, 1, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( toArray( B ), tc.b, 1e-14, 'b' );
+});
+
+test( 'dppsv: 3x3_upper_2rhs', function t() {
+	var info;
+	var tc;
+	var AP;
+	var B;
+
+	tc = findCase( '3x3_upper_2rhs' );
+	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+	B = new Float64Array( [ 7.0, 10.0, 10.0, 18.0, 31.0, 35.0 ] );
+	info = dppsv( 'upper', 3, 2, AP, 1, 0, B, 1, 3, 0 );
+	assert.equal( info, tc.info, 'info' );
+	assertArrayClose( toArray( B ), tc.b, 1e-14, 'b' );
+});
+
+// ndarray validation tests
+
+test( 'dppsv: ndarray throws TypeError for invalid uplo', function t() {
+	assert.throws( function throws() {
+		ndarray( 'invalid', 3, 1, new Float64Array( 6 ), 1, 0, new Float64Array( 3 ), 1, 3, 0 ); // eslint-disable-line max-len
+	}, TypeError );
+});
+
+test( 'dppsv: ndarray throws RangeError for negative N', function t() {
+	assert.throws( function throws() {
+		ndarray( 'upper', -1, 1, new Float64Array( 6 ), 1, 0, new Float64Array( 3 ), 1, 3, 0 ); // eslint-disable-line max-len
+	}, RangeError );
+});
+
+test( 'dppsv: ndarray throws RangeError for negative NRHS', function t() {
+	assert.throws( function throws() {
+		ndarray( 'upper', 3, -1, new Float64Array( 6 ), 1, 0, new Float64Array( 3 ), 1, 3, 0 ); // eslint-disable-line max-len
+	}, RangeError );
+});

@@ -1,0 +1,32 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+var Float64Array = require( '@stdlib/array/float64' ); // eslint-disable-line stdlib/require-globals
+var dggbak = require( './../lib' );
+
+// Scale right eigenvectors of a 3x2 matrix:
+var LSCALE = new Float64Array( [ 1.0, 1.0, 1.0 ] );
+var RSCALE = new Float64Array( [ 2.0, 3.0, 0.5 ] );
+var V = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+
+var info = dggbak( 'column-major', 'scale', 'right', 3, 1, 3, LSCALE, 1, RSCALE, 1, 2, V, 3 );
+
+console.log( 'info:', info ); // eslint-disable-line no-console
+console.log( 'V:', V ); // eslint-disable-line no-console

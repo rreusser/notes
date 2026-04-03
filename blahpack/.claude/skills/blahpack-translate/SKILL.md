@@ -51,13 +51,47 @@ unused/                        # Deprecated experiments and old files
 python                          # Use venv python (NOT python3)
 gfortran                       # GNU Fortran compiler (Homebrew)
 node                            # Node.js v24+ (node:test built-in)
-npm test                        # Run all JS tests
 node bin/gate.js lib/<pkg>/base/<routine>  # THE quality gate (all checks)
-node bin/gate.js --all --fast             # Fast gate on all modules
-npm run check                             # Tests + gate (the final gate)
 bin/lint-fix.sh lib/<pkg>/base/<routine>  # Auto-fix (codemods + eslint + verify)
 bin/lint.sh lib/<pkg>/base/<routine>      # Lint only
+# DO NOT run `npm test` or `npm run check` — only run the module's own tests
 ```
+
+---
+
+## Context Efficiency (CRITICAL)
+
+Every byte you read or every command you run dumps output into your context
+window. Wasted context means degraded performance and lost capacity for the
+actual translation work. Follow these rules strictly:
+
+**Reading files:**
+- Do NOT read entire reference files when you only need a section. Use
+  `offset` and `limit` parameters on the Read tool.
+- When reading a counterpart module for patterns, read only `base.js` first.
+  Only read other files (ndarray.js, test.js) if you specifically need them.
+- Do NOT read docs you already know. If the agent prompt already covers the
+  conventions, skip reading `docs/complex-numbers.md` etc.
+
+**Running commands:**
+- **NEVER** run `npm test` (full suite) during translation. Only run the
+  module's own test file: `node --test lib/<pkg>/base/<routine>/test/test.js`
+- **NEVER** run `npm run check` — that's for the coordinator, not for you.
+- Pipe verbose commands through `tail`:
+  ```bash
+  node --test lib/<pkg>/base/<routine>/test/test.js 2>&1 | tail -20
+  node --test --experimental-test-coverage lib/<pkg>/base/<routine>/test/test.js 2>&1 | tail -30
+  bin/lint-fix.sh lib/<pkg>/base/<routine> 2>&1 | tail -20
+  ```
+- For the gate, output is already compact — run it directly:
+  ```bash
+  node bin/gate.js lib/<pkg>/base/<routine>
+  ```
+- When a command fails, read only the relevant error lines, not the full output.
+
+**Writing code:**
+- Do not dump entire generated files into your response. Write them with the
+  Write/Edit tools and verify via tests.
 
 ---
 
@@ -266,7 +300,7 @@ Fill in the test stubs generated in Step 3 with actual input values
 matching the Fortran test. Run:
 
 ```bash
-node --test lib/<package>/base/<routine>/test/test.js
+node --test lib/<package>/base/<routine>/test/test.js 2>&1 | tail -20
 ```
 
 **Testing pitfalls (from experience):**
@@ -310,7 +344,7 @@ scaffold `assert.fail('TODO:...')` remnants automatically during linting.
 ### Step 6: Verify test coverage
 
 ```bash
-node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.js
+node --test --experimental-test-coverage lib/<package>/base/<routine>/test/test.js 2>&1 | tail -30
 ```
 
 Target: **≥90% line coverage, ≥85% branch coverage** on `base.js`.
@@ -350,8 +384,8 @@ If coverage is low, add targeted test cases:
 ### Step 7: Lint the module
 
 ```bash
-bin/lint-fix.sh lib/<package>/base/<routine>     # codemods + eslint --fix + test verify
-bin/lint.sh lib/<package>/base/<routine>          # check remaining errors
+bin/lint-fix.sh lib/<package>/base/<routine> 2>&1 | tail -20
+bin/lint.sh lib/<package>/base/<routine> 2>&1 | tail -20
 ```
 
 `bin/lint-fix.sh` runs the full pipeline: test codemods (var hoisting, Array.from
@@ -471,11 +505,10 @@ TODO goes in `base.js` at the relevant line, not in LEARNINGS.md.
 Keep it concise — bullet points, not prose. This file is read by future
 sessions to avoid repeating mistakes.
 
-### Step 9: Verify full suite and conformance
+### Step 9: Verify conformance
 
 ```bash
 node bin/gate.js lib/<package>/base/<routine>    # THE quality gate — all checks
-npm test                                         # Tests
 ```
 
 The gate checks everything in one command: file structure, scaffolding
@@ -488,6 +521,9 @@ Do not declare a translation done until this passes.
 
 **This is the MANDATORY final gate.** Do not declare a translation complete
 until `node bin/gate.js` shows all checks passing.
+
+**Do NOT run `npm test` or `npm run check`** — the gate already runs the
+module's tests. The full suite is the coordinator's responsibility, not yours.
 
 ---
 

@@ -1,0 +1,42 @@
+
+    zhptrf.ndarray( uplo, N, AP, strideAP, offsetAP, IPIV, strideIPIV, offsetIPIV )
+        Computes the Bunch-Kaufman factorization of a complex Hermitian matrix in packed storage.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        IPIV: Int32Array
+            output array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+
