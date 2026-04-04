@@ -5,38 +5,28 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhbev = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhbev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var jobz_v_uplo_u_kd2_n5 = require( './fixtures/jobz_v_uplo_u_kd2_n5.json' );
+var jobz_v_uplo_l_kd2_n5 = require( './fixtures/jobz_v_uplo_l_kd2_n5.json' );
+var jobz_n_uplo_u_kd2_n5 = require( './fixtures/jobz_n_uplo_u_kd2_n5.json' );
+var jobz_n_uplo_l_kd2_n5 = require( './fixtures/jobz_n_uplo_l_kd2_n5.json' );
+var jobz_v_uplo_u_kd1_n4 = require( './fixtures/jobz_v_uplo_u_kd1_n4.json' );
+var jobz_v_uplo_l_kd1_n4 = require( './fixtures/jobz_v_uplo_l_kd1_n4.json' );
+var jobz_n_uplo_u_kd1_n4 = require( './fixtures/jobz_n_uplo_u_kd1_n4.json' );
+var n1_jobz_v_lower = require( './fixtures/n1_jobz_v_lower.json' );
+var n1_jobz_v_upper_kd2 = require( './fixtures/n1_jobz_v_upper_kd2.json' );
+var n1_jobz_n = require( './fixtures/n1_jobz_n.json' );
+var diagonal_jobz_v = require( './fixtures/diagonal_jobz_v.json' );
+var diagonal_jobz_n = require( './fixtures/diagonal_jobz_n.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -69,7 +59,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zhbev: jobz_v_uplo_u_kd2_n5', function t() {
@@ -83,7 +72,7 @@ test( 'zhbev: jobz_v_uplo_u_kd2_n5', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_u_kd2_n5' );
+	tc = jobz_v_uplo_u_kd2_n5;
 	AB = new Complex128Array( 3 * 5 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 4 ] = 4.0;
@@ -127,7 +116,7 @@ test( 'zhbev: jobz_v_uplo_l_kd2_n5', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_l_kd2_n5' );
+	tc = jobz_v_uplo_l_kd2_n5;
 	AB = new Complex128Array( 3 * 5 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 0 ] = 4.0;
@@ -175,7 +164,7 @@ test( 'zhbev: jobz_n_uplo_u_kd2_n5', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_u_kd2_n5' );
+	tc = jobz_n_uplo_u_kd2_n5;
 	AB = new Complex128Array( 3 * 5 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 4 ] = 4.0;
@@ -216,7 +205,7 @@ test( 'zhbev: jobz_n_uplo_l_kd2_n5', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_l_kd2_n5' );
+	tc = jobz_n_uplo_l_kd2_n5;
 	AB = new Complex128Array( 3 * 5 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 0 ] = 4.0;
@@ -258,7 +247,7 @@ test( 'zhbev: jobz_v_uplo_u_kd1_n4', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_u_kd1_n4' );
+	tc = jobz_v_uplo_u_kd1_n4;
 	AB = new Complex128Array( 2 * 4 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 2 ] = 4.0;
@@ -293,7 +282,7 @@ test( 'zhbev: jobz_v_uplo_l_kd1_n4', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_l_kd1_n4' );
+	tc = jobz_v_uplo_l_kd1_n4;
 	AB = new Complex128Array( 2 * 4 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 0 ] = 4.0;
@@ -327,7 +316,7 @@ test( 'zhbev: jobz_n_uplo_u_kd1_n4', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_u_kd1_n4' );
+	tc = jobz_n_uplo_u_kd1_n4;
 	AB = new Complex128Array( 2 * 4 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 2 ] = 4.0;
@@ -360,7 +349,7 @@ test( 'zhbev: n1_jobz_v_lower', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'n1_jobz_v_lower' );
+	tc = n1_jobz_v_lower;
 	AB = new Complex128Array( 1 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 0 ] = 3.5;
@@ -387,7 +376,7 @@ test( 'zhbev: n1_jobz_v_upper_kd2', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'n1_jobz_v_upper_kd2' );
+	tc = n1_jobz_v_upper_kd2;
 	AB = new Complex128Array( 3 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 4 ] = 7.25;
@@ -413,7 +402,7 @@ test( 'zhbev: n1_jobz_n', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'n1_jobz_n' );
+	tc = n1_jobz_n;
 	AB = new Complex128Array( 1 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 0 ] = 9.0;
@@ -454,7 +443,7 @@ test( 'zhbev: diagonal_jobz_v', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'diagonal_jobz_v' );
+	tc = diagonal_jobz_v;
 	AB = new Complex128Array( 4 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 0 ] = 3.0;
@@ -482,7 +471,7 @@ test( 'zhbev: diagonal_jobz_n', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'diagonal_jobz_n' );
+	tc = diagonal_jobz_n;
 	AB = new Complex128Array( 4 );
 	ABv = reinterpret( AB, 0 );
 	ABv[ 0 ] = 3.0;

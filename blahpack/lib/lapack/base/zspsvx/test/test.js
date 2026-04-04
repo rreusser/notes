@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -16,29 +13,20 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zsptrf = require( '../../zsptrf/lib/base.js' );
 var zspsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zspsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_upper = require( './fixtures/fact_n_upper.json' );
+var fact_n_lower = require( './fixtures/fact_n_lower.json' );
+var fact_f_upper = require( './fixtures/fact_f_upper.json' );
+var fact_f_lower = require( './fixtures/fact_f_lower.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var singular = require( './fixtures/singular.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var multi_rhs_lower = require( './fixtures/multi_rhs_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -123,7 +111,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zspsvx: fact_n_upper', function t() {
@@ -135,7 +122,7 @@ test( 'zspsvx: fact_n_upper', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_n_upper' );
+	tc = fact_n_upper;
 
 	// Upper packed: A(1,1), A(1,2), A(2,2), A(1,3), A(2,3), A(3,3)
 	AP = new Complex128Array( [ 4, 1, 2, -1, 5, 0.5, 1, 2, 3, -1, 6, 1 ] );
@@ -161,7 +148,7 @@ test( 'zspsvx: fact_n_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_n_lower' );
+	tc = fact_n_lower;
 
 	// Lower packed: A(1,1), A(2,1), A(3,1), A(2,2), A(3,2), A(3,3)
 	AP = new Complex128Array( [ 4, 1, 2, -1, 1, 2, 5, 0.5, 3, -1, 6, 1 ] );
@@ -187,7 +174,7 @@ test( 'zspsvx: fact_f_upper', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_f_upper' );
+	tc = fact_f_upper;
 	AP = new Complex128Array( [ 4, 1, 2, -1, 5, 0.5, 1, 2, 3, -1, 6, 1 ] );
 	AFP = new Complex128Array( [ 4, 1, 2, -1, 5, 0.5, 1, 2, 3, -1, 6, 1 ] );
 	IPIV = new Int32Array( 3 );
@@ -211,7 +198,7 @@ test( 'zspsvx: fact_f_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_f_lower' );
+	tc = fact_f_lower;
 	AP = new Complex128Array( [ 4, 1, 2, -1, 1, 2, 5, 0.5, 3, -1, 6, 1 ] );
 	AFP = new Complex128Array( [ 4, 1, 2, -1, 1, 2, 5, 0.5, 3, -1, 6, 1 ] );
 	IPIV = new Int32Array( 3 );
@@ -234,7 +221,7 @@ test( 'zspsvx: n_zero', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Complex128Array( 1 );
 	AFP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -252,7 +239,7 @@ test( 'zspsvx: n_one_upper', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Complex128Array( [ 4, 1 ] );
 	AFP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -275,7 +262,7 @@ test( 'zspsvx: n_one_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	AP = new Complex128Array( [ 5, 2 ] );
 	AFP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -297,7 +284,7 @@ test( 'zspsvx: singular', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	AP = new Complex128Array( [ 1, 0, 1, 0, 1, 0 ] );
 	AFP = new Complex128Array( 3 );
 	IPIV = new Int32Array( 2 );
@@ -316,7 +303,7 @@ test( 'zspsvx: multi_rhs', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	AP = new Complex128Array( [ 4, 1, 2, -1, 5, 0.5, 1, 2, 3, -1, 6, 1 ] );
 	AFP = new Complex128Array( 6 );
 	IPIV = new Int32Array( 3 );
@@ -344,7 +331,7 @@ test( 'zspsvx: multi_rhs_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'multi_rhs_lower' );
+	tc = multi_rhs_lower;
 	AP = new Complex128Array( [ 4, 1, 2, -1, 1, 2, 5, 0.5, 3, -1, 6, 1 ] );
 	AFP = new Complex128Array( 6 );
 	IPIV = new Int32Array( 3 );

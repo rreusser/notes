@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhpr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var scalar = require( './fixtures/scalar.json' );
+var upper_stride_2 = require( './fixtures/upper_stride_2.json' );
+var zero_element = require( './fixtures/zero_element.json' );
+var lower_stride_2 = require( './fixtures/lower_stride_2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +70,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhpr is a function', function t() {
@@ -98,7 +83,7 @@ test( 'zhpr: upper_basic (uplo=U, N=3, alpha=2, unit stride)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'upper_basic' );
+	tc = upper_basic;
 	AP = new Complex128Array([
 		2.0,
 		0.0,
@@ -127,7 +112,7 @@ test( 'zhpr: lower_basic (uplo=L, N=3, alpha=2, unit stride)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'lower_basic' );
+	tc = lower_basic;
 	AP = new Complex128Array([
 		2.0,
 		0.0,
@@ -156,7 +141,7 @@ test( 'zhpr: alpha_zero (alpha=0, no-op)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'alpha_zero' );
+	tc = alpha_zero;
 	AP = new Complex128Array([
 		2.0,
 		0.0,
@@ -185,7 +170,7 @@ test( 'zhpr: n_zero (N=0 quick return)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Complex128Array( [ 99.0, 0.0 ] );
 	x = new Complex128Array( [ 1.0, 0.5 ] );
 	result = zhpr( 'upper', 0, 1.0, x, 1, 0, AP, 1, 0 );
@@ -201,7 +186,7 @@ test( 'zhpr: scalar (N=1, alpha=1.5)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'scalar' );
+	tc = scalar;
 	AP = new Complex128Array( [ 3.0, 0.0 ] );
 	x = new Complex128Array( [ 2.0, 1.0 ] );
 	result = zhpr( 'upper', 1, 1.5, x, 1, 0, AP, 1, 0 );
@@ -217,7 +202,7 @@ test( 'zhpr: upper_stride_2 (uplo=U, N=3, strideX=2)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'upper_stride_2' );
+	tc = upper_stride_2;
 	AP = new Complex128Array([
 		2.0,
 		0.0,
@@ -259,7 +244,7 @@ test( 'zhpr: zero_element (x[1]=0, exercises skip branch)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'zero_element' );
+	tc = zero_element;
 	AP = new Complex128Array([
 		2.0,
 		0.0,
@@ -288,7 +273,7 @@ test( 'zhpr: lower_stride_2 (uplo=L, N=3, strideX=2)', function t() {
 	var AP;
 	var x;
 
-	tc = findCase( 'lower_stride_2' );
+	tc = lower_stride_2;
 	AP = new Complex128Array([
 		2.0,
 		0.0,

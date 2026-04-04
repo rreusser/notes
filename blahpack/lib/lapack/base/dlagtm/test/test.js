@@ -2,39 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlagtm = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlagtm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var notrans_alpha1_beta0 = require( './fixtures/notrans_alpha1_beta0.json' );
+var trans_alpha1_beta0 = require( './fixtures/trans_alpha1_beta0.json' );
+var notrans_alpham1_beta0 = require( './fixtures/notrans_alpham1_beta0.json' );
+var trans_alpham1_beta0 = require( './fixtures/trans_alpham1_beta0.json' );
+var notrans_alpha1_beta1 = require( './fixtures/notrans_alpha1_beta1.json' );
+var notrans_alpha1_betam1 = require( './fixtures/notrans_alpha1_betam1.json' );
+var notrans_multi_rhs = require( './fixtures/notrans_multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_one_trans = require( './fixtures/n_one_trans.json' );
+var trans_multi_rhs = require( './fixtures/trans_multi_rhs.json' );
+var trans_alpham1_betam1_multi_rhs = require( './fixtures/trans_alpham1_betam1_multi_rhs.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,11 +74,10 @@ function getBCol( B, N, j ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlagtm: notrans_alpha1_beta0', function t() {
-	var tc = findCase( 'notrans_alpha1_beta0' );
+	var tc = notrans_alpha1_beta0;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -100,7 +88,7 @@ test( 'dlagtm: notrans_alpha1_beta0', function t() {
 });
 
 test( 'dlagtm: trans_alpha1_beta0', function t() {
-	var tc = findCase( 'trans_alpha1_beta0' );
+	var tc = trans_alpha1_beta0;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -111,7 +99,7 @@ test( 'dlagtm: trans_alpha1_beta0', function t() {
 });
 
 test( 'dlagtm: notrans_alpham1_beta0', function t() {
-	var tc = findCase( 'notrans_alpham1_beta0' );
+	var tc = notrans_alpham1_beta0;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -122,7 +110,7 @@ test( 'dlagtm: notrans_alpham1_beta0', function t() {
 });
 
 test( 'dlagtm: trans_alpham1_beta0', function t() {
-	var tc = findCase( 'trans_alpham1_beta0' );
+	var tc = trans_alpham1_beta0;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -133,7 +121,7 @@ test( 'dlagtm: trans_alpham1_beta0', function t() {
 });
 
 test( 'dlagtm: notrans_alpha1_beta1', function t() {
-	var tc = findCase( 'notrans_alpha1_beta1' );
+	var tc = notrans_alpha1_beta1;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -144,7 +132,7 @@ test( 'dlagtm: notrans_alpha1_beta1', function t() {
 });
 
 test( 'dlagtm: notrans_alpha1_betam1', function t() {
-	var tc = findCase( 'notrans_alpha1_betam1' );
+	var tc = notrans_alpha1_betam1;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -155,7 +143,7 @@ test( 'dlagtm: notrans_alpha1_betam1', function t() {
 });
 
 test( 'dlagtm: notrans_multi_rhs', function t() {
-	var tc = findCase( 'notrans_multi_rhs' );
+	var tc = notrans_multi_rhs;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -167,7 +155,7 @@ test( 'dlagtm: notrans_multi_rhs', function t() {
 });
 
 test( 'dlagtm: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var dl = new Float64Array( 0 );
 	var du = new Float64Array( 0 );
 	var d = new Float64Array( [ 5.0 ] );
@@ -178,7 +166,7 @@ test( 'dlagtm: n_one', function t() {
 });
 
 test( 'dlagtm: n_one_trans', function t() {
-	var tc = findCase( 'n_one_trans' );
+	var tc = n_one_trans;
 	var dl = new Float64Array( 0 );
 	var du = new Float64Array( 0 );
 	var d = new Float64Array( [ 5.0 ] );
@@ -200,7 +188,7 @@ test( 'dlagtm: n_zero (quick return)', function t() {
 });
 
 test( 'dlagtm: trans_multi_rhs', function t() {
-	var tc = findCase( 'trans_multi_rhs' );
+	var tc = trans_multi_rhs;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -212,7 +200,7 @@ test( 'dlagtm: trans_multi_rhs', function t() {
 });
 
 test( 'dlagtm: trans_alpham1_betam1_multi_rhs', function t() {
-	var tc = findCase( 'trans_alpham1_betam1_multi_rhs' );
+	var tc = trans_alpham1_betam1_multi_rhs;
 	var dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	var du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
 	var d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );

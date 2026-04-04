@@ -4,26 +4,28 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrtrs = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrtrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_trans = require( './fixtures/upper_trans.json' );
+var upper_conj_trans = require( './fixtures/upper_conj_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var singular = require( './fixtures/singular.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var lower_trans = require( './fixtures/lower_trans.json' );
+var lower_conj_trans = require( './fixtures/lower_conj_trans.json' );
+var singular_first = require( './fixtures/singular_first.json' );
+var singular_last = require( './fixtures/singular_last.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,11 +40,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'ztrtrs: upper triangular, no transpose', function t() {
-	var tc = findCase( 'upper_no_trans' );
+	var tc = upper_no_trans;
 	var A = new Complex128Array([
 		2, 1,  0, 0,  0, 0,
 		1, 2,  4, 1,  0, 0,
@@ -58,7 +59,7 @@ test( 'ztrtrs: upper triangular, no transpose', function t() {
 });
 
 test( 'ztrtrs: lower triangular, no transpose', function t() {
-	var tc = findCase( 'lower_no_trans' );
+	var tc = lower_no_trans;
 	var A = new Complex128Array([
 		2, 1,  1, 2,  3, 0,
 		0, 0,  4, 1,  5, 2,
@@ -74,7 +75,7 @@ test( 'ztrtrs: lower triangular, no transpose', function t() {
 });
 
 test( 'ztrtrs: upper triangular, transpose', function t() {
-	var tc = findCase( 'upper_trans' );
+	var tc = upper_trans;
 	var A = new Complex128Array([
 		2, 1,  0, 0,  0, 0,
 		1, 2,  4, 1,  0, 0,
@@ -90,7 +91,7 @@ test( 'ztrtrs: upper triangular, transpose', function t() {
 });
 
 test( 'ztrtrs: upper triangular, conjugate transpose', function t() {
-	var tc = findCase( 'upper_conj_trans' );
+	var tc = upper_conj_trans;
 	var A = new Complex128Array([
 		2, 1,  0, 0,  0, 0,
 		1, 2,  4, 1,  0, 0,
@@ -106,7 +107,7 @@ test( 'ztrtrs: upper triangular, conjugate transpose', function t() {
 });
 
 test( 'ztrtrs: upper triangular, unit diagonal', function t() {
-	var tc = findCase( 'upper_unit_diag' );
+	var tc = upper_unit_diag;
 	var A = new Complex128Array([
 		99, 99,  0, 0,  0, 0,
 		2, 1,  99, 99,  0, 0,
@@ -122,7 +123,7 @@ test( 'ztrtrs: upper triangular, unit diagonal', function t() {
 });
 
 test( 'ztrtrs: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
 	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
@@ -130,7 +131,7 @@ test( 'ztrtrs: N=0 quick return', function t() {
 });
 
 test( 'ztrtrs: singular diagonal (element 2)', function t() {
-	var tc = findCase( 'singular' );
+	var tc = singular;
 	var A = new Complex128Array([
 		2, 1,  0, 0,  0, 0,
 		1, 2,  0, 0,  0, 0,
@@ -144,7 +145,7 @@ test( 'ztrtrs: singular diagonal (element 2)', function t() {
 });
 
 test( 'ztrtrs: multiple right-hand sides (NRHS=2)', function t() {
-	var tc = findCase( 'multi_rhs' );
+	var tc = multi_rhs;
 	var A = new Complex128Array([
 		2, 1,  0, 0,  0, 0,
 		1, 2,  4, 1,  0, 0,
@@ -161,7 +162,7 @@ test( 'ztrtrs: multiple right-hand sides (NRHS=2)', function t() {
 });
 
 test( 'ztrtrs: lower triangular, transpose', function t() {
-	var tc = findCase( 'lower_trans' );
+	var tc = lower_trans;
 	var A = new Complex128Array([
 		2, 1,  1, 2,  3, 0,
 		0, 0,  4, 1,  5, 2,
@@ -177,7 +178,7 @@ test( 'ztrtrs: lower triangular, transpose', function t() {
 });
 
 test( 'ztrtrs: lower triangular, conjugate transpose', function t() {
-	var tc = findCase( 'lower_conj_trans' );
+	var tc = lower_conj_trans;
 	var A = new Complex128Array([
 		2, 1,  1, 2,  3, 0,
 		0, 0,  4, 1,  5, 2,
@@ -193,7 +194,7 @@ test( 'ztrtrs: lower triangular, conjugate transpose', function t() {
 });
 
 test( 'ztrtrs: singular at first diagonal element', function t() {
-	var tc = findCase( 'singular_first' );
+	var tc = singular_first;
 	var A = new Complex128Array([
 		0, 0,  0, 0,  0, 0,
 		1, 0,  2, 0,  0, 0,
@@ -207,7 +208,7 @@ test( 'ztrtrs: singular at first diagonal element', function t() {
 });
 
 test( 'ztrtrs: singular at last diagonal element', function t() {
-	var tc = findCase( 'singular_last' );
+	var tc = singular_last;
 	var A = new Complex128Array([
 		2, 0,  0, 0,  0, 0,
 		1, 0,  3, 0,  0, 0,
@@ -221,13 +222,12 @@ test( 'ztrtrs: singular at last diagonal element', function t() {
 });
 
 test( 'ztrtrs: NRHS=0 (no right-hand sides)', function t() {
-	var tc = findCase( 'nrhs_zero' );
+	var tc = nrhs_zero;
 	var A = new Complex128Array([ 2, 1 ]);
 	var B = new Complex128Array( 1 );
 	var info = ztrtrs( 'upper', 'no-transpose', 'non-unit', 1, 0, A, 1, 1, 0, B, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
-
 
 // NDARRAY VALIDATION TESTS //
 

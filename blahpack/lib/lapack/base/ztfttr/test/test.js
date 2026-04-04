@@ -6,25 +6,25 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztfttr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztfttr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n0 = require( './fixtures/n0.json' );
+var n1_n = require( './fixtures/n1_n.json' );
+var n1_c = require( './fixtures/n1_c.json' );
+var n5_n_l = require( './fixtures/n5_n_l.json' );
+var n5_n_u = require( './fixtures/n5_n_u.json' );
+var n5_c_l = require( './fixtures/n5_c_l.json' );
+var n5_c_u = require( './fixtures/n5_c_u.json' );
+var n6_n_l = require( './fixtures/n6_n_l.json' );
+var n6_n_u = require( './fixtures/n6_n_u.json' );
+var n6_c_l = require( './fixtures/n6_c_l.json' );
+var n6_c_u = require( './fixtures/n6_c_u.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
@@ -36,7 +36,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'ztfttr is a function', function t() {
@@ -44,7 +43,7 @@ test( 'ztfttr is a function', function t() {
 });
 
 test( 'ztfttr: N=0 quick return', function t() {
-	var tc = findCase( 'n0' );
+	var tc = n0;
 	var ARF = new Complex128Array( 1 );
 	var A = new Complex128Array( 1 );
 	var info = ztfttr( 'no-transpose', 'lower', 0, ARF, 1, 0, A, 1, 1, 0, 1 );
@@ -52,7 +51,7 @@ test( 'ztfttr: N=0 quick return', function t() {
 });
 
 test( 'ztfttr: N=1 normal (no conjugation)', function t() {
-	var tc = findCase( 'n1_N' );
+	var tc = n1_n;
 	var ARF = new Complex128Array( [ 42.0, 7.0 ] );
 	var A = new Complex128Array( 1 );
 	var Av;
@@ -63,7 +62,7 @@ test( 'ztfttr: N=1 normal (no conjugation)', function t() {
 });
 
 test( 'ztfttr: N=1 conjugate-transpose', function t() {
-	var tc = findCase( 'n1_C' );
+	var tc = n1_c;
 	var ARF = new Complex128Array( [ 42.0, 7.0 ] );
 	var A = new Complex128Array( 1 );
 	var Av;
@@ -74,7 +73,7 @@ test( 'ztfttr: N=1 conjugate-transpose', function t() {
 });
 
 test( 'ztfttr: N=5, TRANSR=no-transpose, UPLO=lower (odd, normal, lower)', function t() {
-	var tc = findCase( 'n5_N_L' );
+	var tc = n5_n_l;
 	var N = tc.n;
 	var NT = N * ( N + 1 ) / 2;
 	var ARF = new Complex128Array( tc.ARF );
@@ -87,7 +86,7 @@ test( 'ztfttr: N=5, TRANSR=no-transpose, UPLO=lower (odd, normal, lower)', funct
 });
 
 test( 'ztfttr: N=5, TRANSR=no-transpose, UPLO=upper (odd, normal, upper)', function t() {
-	var tc = findCase( 'n5_N_U' );
+	var tc = n5_n_u;
 	var N = tc.n;
 	var ARF = new Complex128Array( tc.ARF );
 	var A = new Complex128Array( N * N );
@@ -99,7 +98,7 @@ test( 'ztfttr: N=5, TRANSR=no-transpose, UPLO=upper (odd, normal, upper)', funct
 });
 
 test( 'ztfttr: N=5, TRANSR=conjugate-transpose, UPLO=lower (odd, conj-trans, lower)', function t() {
-	var tc = findCase( 'n5_C_L' );
+	var tc = n5_c_l;
 	var N = tc.n;
 	var ARF = new Complex128Array( tc.ARF );
 	var A = new Complex128Array( N * N );
@@ -111,7 +110,7 @@ test( 'ztfttr: N=5, TRANSR=conjugate-transpose, UPLO=lower (odd, conj-trans, low
 });
 
 test( 'ztfttr: N=5, TRANSR=conjugate-transpose, UPLO=upper (odd, conj-trans, upper)', function t() {
-	var tc = findCase( 'n5_C_U' );
+	var tc = n5_c_u;
 	var N = tc.n;
 	var ARF = new Complex128Array( tc.ARF );
 	var A = new Complex128Array( N * N );
@@ -123,7 +122,7 @@ test( 'ztfttr: N=5, TRANSR=conjugate-transpose, UPLO=upper (odd, conj-trans, upp
 });
 
 test( 'ztfttr: N=6, TRANSR=no-transpose, UPLO=lower (even, normal, lower)', function t() {
-	var tc = findCase( 'n6_N_L' );
+	var tc = n6_n_l;
 	var N = tc.n;
 	var ARF = new Complex128Array( tc.ARF );
 	var A = new Complex128Array( N * N );
@@ -135,7 +134,7 @@ test( 'ztfttr: N=6, TRANSR=no-transpose, UPLO=lower (even, normal, lower)', func
 });
 
 test( 'ztfttr: N=6, TRANSR=no-transpose, UPLO=upper (even, normal, upper)', function t() {
-	var tc = findCase( 'n6_N_U' );
+	var tc = n6_n_u;
 	var N = tc.n;
 	var ARF = new Complex128Array( tc.ARF );
 	var A = new Complex128Array( N * N );
@@ -147,7 +146,7 @@ test( 'ztfttr: N=6, TRANSR=no-transpose, UPLO=upper (even, normal, upper)', func
 });
 
 test( 'ztfttr: N=6, TRANSR=conjugate-transpose, UPLO=lower (even, conj-trans, lower)', function t() {
-	var tc = findCase( 'n6_C_L' );
+	var tc = n6_c_l;
 	var N = tc.n;
 	var ARF = new Complex128Array( tc.ARF );
 	var A = new Complex128Array( N * N );
@@ -159,7 +158,7 @@ test( 'ztfttr: N=6, TRANSR=conjugate-transpose, UPLO=lower (even, conj-trans, lo
 });
 
 test( 'ztfttr: N=6, TRANSR=conjugate-transpose, UPLO=upper (even, conj-trans, upper)', function t() {
-	var tc = findCase( 'n6_C_U' );
+	var tc = n6_c_u;
 	var N = tc.n;
 	var ARF = new Complex128Array( tc.ARF );
 	var A = new Complex128Array( N * N );

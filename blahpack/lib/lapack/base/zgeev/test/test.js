@@ -2,41 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zgeev = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgeev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1_eigvals_only = require( './fixtures/n1_eigvals_only.json' );
+var n1_right = require( './fixtures/n1_right.json' );
+var n2_diagonal_right = require( './fixtures/n2_diagonal_right.json' );
+var n2_general_both = require( './fixtures/n2_general_both.json' );
+var n3_right = require( './fixtures/n3_right.json' );
+var n4_diagdom_both = require( './fixtures/n4_diagdom_both.json' );
+var n2_left_only = require( './fixtures/n2_left_only.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Verify eigenvalues match fixture (order may differ, so sort both).
@@ -145,7 +130,6 @@ function callZgeev( jobvl, jobvr, N, A_data ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zgeev: N=0 quick return', function t() {
@@ -155,14 +139,14 @@ test( 'zgeev: N=0 quick return', function t() {
 
 test( 'zgeev: N=1 eigenvalues only', function t() {
 	var result = callZgeev( 'no-vectors', 'no-vectors', 1, [ 3.0, 2.0 ] );
-	var tc = findCase( 'n1_eigvals_only' );
+	var tc = n1_eigvals_only;
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
 });
 
 test( 'zgeev: N=1 with right eigenvector', function t() {
 	var result = callZgeev( 'no-vectors', 'compute-vectors', 1, [ 5.0, -1.0 ] );
-	var tc = findCase( 'n1_right' );
+	var tc = n1_right;
 	assert.equal( result.info, 0 );
 	assertEigenvaluesClose( result.w, tc.w, 1e-14, 'eigenvalues' );
 
@@ -176,7 +160,7 @@ test( 'zgeev: N=2 diagonal, right eigenvectors', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'n2_diagonal_right' );
+	tc = n2_diagonal_right;
 	A_data = [ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0 ];
 	result = callZgeev( 'no-vectors', 'compute-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
@@ -189,7 +173,7 @@ test( 'zgeev: N=2 general, both eigenvectors', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'n2_general_both' );
+	tc = n2_general_both;
 	A_data = [ 1.0, 2.0, 0.0, 1.0, 3.0, 0.0, 4.0, -1.0 ];
 	result = callZgeev( 'compute-vectors', 'compute-vectors', 2, A_data );
 	assert.equal( result.info, 0 );
@@ -202,7 +186,7 @@ test( 'zgeev: N=3 right eigenvectors', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'n3_right' );
+	tc = n3_right;
 	A_data = [
 		1.0,
 		0.0,
@@ -234,7 +218,7 @@ test( 'zgeev: N=4 diagonally dominant, both eigenvectors', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'n4_diagdom_both' );
+	tc = n4_diagdom_both;
 	A_data = [
 		10.0,
 		0.0,
@@ -280,7 +264,7 @@ test( 'zgeev: N=2 left eigenvectors only', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'n2_left_only' );
+	tc = n2_left_only;
 	A_data = [ 2.0, 0.0, 0.0, 0.0, 1.0, 1.0, 3.0, 0.0 ];
 	result = callZgeev( 'compute-vectors', 'no-vectors', 2, A_data );
 	assert.equal( result.info, 0 );

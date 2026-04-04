@@ -6,24 +6,24 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zgelq2 = require( '../../zgelq2/lib/base.js' );
 var zunglq = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunglq.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var zunglq_identity_k0 = require( './fixtures/zunglq_identity_k0.json' );
+var zunglq_3x3_k2 = require( './fixtures/zunglq_3x3_k2.json' );
+var zunglq_3x4_k3 = require( './fixtures/zunglq_3x4_k3.json' );
+var zunglq_m0 = require( './fixtures/zunglq_m0.json' );
+var zunglq_1x1_k1 = require( './fixtures/zunglq_1x1_k1.json' );
+var zunglq_from_lq_4x4_input = require( './fixtures/zunglq_from_lq_4x4_input.json' );
+var zunglq_from_lq_4x4 = require( './fixtures/zunglq_from_lq_4x4.json' );
+var zunglq_blocked_40x40_input = require( './fixtures/zunglq_blocked_40x40_input.json' );
+var zunglq_blocked_40x40 = require( './fixtures/zunglq_blocked_40x40.json' );
+var zunglq_5x8_k5_input = require( './fixtures/zunglq_5x8_k5_input.json' );
+var zunglq_5x8_k5 = require( './fixtures/zunglq_5x8_k5.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,11 +38,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zunglq: identity (K=0)', function t() {
-	var tc = findCase( 'zunglq_identity_k0' );
+	var tc = zunglq_identity_k0;
 	var M = tc.M;
 	var N = tc.N;
 	var A = new Complex128Array( M * N );
@@ -56,7 +55,7 @@ test( 'zunglq: identity (K=0)', function t() {
 });
 
 test( 'zunglq: 3x3, K=2', function t() {
-	var tc = findCase( 'zunglq_3x3_k2' );
+	var tc = zunglq_3x3_k2;
 	// LQ reflectors stored in rows
 	var A = new Complex128Array( [
 		1.0, 0.0,  0.0, 0.0,  0.0, 0.0,
@@ -73,7 +72,7 @@ test( 'zunglq: 3x3, K=2', function t() {
 });
 
 test( 'zunglq: 3x4, K=3 (rectangular)', function t() {
-	var tc = findCase( 'zunglq_3x4_k3' );
+	var tc = zunglq_3x4_k3;
 	var A = new Complex128Array( [
 		1.0, 0.0,   0.0, 0.0,   0.0, 0.0,
 		0.3, 0.1,   1.0, 0.0,   0.0, 0.0,
@@ -90,7 +89,7 @@ test( 'zunglq: 3x4, K=3 (rectangular)', function t() {
 });
 
 test( 'zunglq: M=0 quick return', function t() {
-	var tc = findCase( 'zunglq_m0' );
+	var tc = zunglq_m0;
 	var A = new Complex128Array( 9 );
 	var TAU = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
@@ -101,7 +100,7 @@ test( 'zunglq: M=0 quick return', function t() {
 });
 
 test( 'zunglq: 1x1, K=1', function t() {
-	var tc = findCase( 'zunglq_1x1_k1' );
+	var tc = zunglq_1x1_k1;
 	var A = new Complex128Array( [ 1.0, 0.0 ] );
 	var TAU = new Complex128Array( [ 0.5, 0.5 ] );
 	var WORK = new Complex128Array( 32 );
@@ -113,8 +112,8 @@ test( 'zunglq: 1x1, K=1', function t() {
 });
 
 test( 'zunglq: from LQ factorization 4x4', function t() {
-	var input = findCase( 'zunglq_from_lq_4x4_input' );
-	var expected = findCase( 'zunglq_from_lq_4x4' );
+	var input = zunglq_from_lq_4x4_input;
+	var expected = zunglq_from_lq_4x4;
 	var M = input.M;
 	var N = input.N;
 	var K = input.K;
@@ -129,8 +128,8 @@ test( 'zunglq: from LQ factorization 4x4', function t() {
 });
 
 test( 'zunglq: blocked 40x40 (K>NB triggers blocking)', function t() {
-	var input = findCase( 'zunglq_blocked_40x40_input' );
-	var expected = findCase( 'zunglq_blocked_40x40' );
+	var input = zunglq_blocked_40x40_input;
+	var expected = zunglq_blocked_40x40;
 	var M = input.M;
 	var N = input.N;
 	var K = input.K;
@@ -145,8 +144,8 @@ test( 'zunglq: blocked 40x40 (K>NB triggers blocking)', function t() {
 });
 
 test( 'zunglq: 5x8, K=5 (rectangular from LQ)', function t() {
-	var input = findCase( 'zunglq_5x8_k5_input' );
-	var expected = findCase( 'zunglq_5x8_k5' );
+	var input = zunglq_5x8_k5_input;
+	var expected = zunglq_5x8_k5;
 	var M = input.M;
 	var N = input.N;
 	var K = input.K;

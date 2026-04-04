@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgemm = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgemm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_nn = require( './fixtures/basic_nn.json' );
+var tn = require( './fixtures/tn.json' );
+var nt = require( './fixtures/nt.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var beta_zero = require( './fixtures/beta_zero.json' );
+var alpha_beta = require( './fixtures/alpha_beta.json' );
+var nonsquare = require( './fixtures/nonsquare.json' );
+var tt = require( './fixtures/tt.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,13 +54,12 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 // All matrices stored column-major: strideA1=1, strideA2=LDA (number of rows)
 
 test( 'dgemm: basic N,N 2x2', function t() {
-	var tc = findCase( 'basic_nn' );
+	var tc = basic_nn;
 
 	// A = [1 3; 2 4] col-major, B = [5 7; 6 8] col-major
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
@@ -85,7 +70,7 @@ test( 'dgemm: basic N,N 2x2', function t() {
 });
 
 test( 'dgemm: T,N transpose A', function t() {
-	var tc = findCase( 'tn' );
+	var tc = tn;
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( 4 );
@@ -94,7 +79,7 @@ test( 'dgemm: T,N transpose A', function t() {
 });
 
 test( 'dgemm: N,T transpose B', function t() {
-	var tc = findCase( 'nt' );
+	var tc = nt;
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 7, 6, 8 ] );
 	var C = new Float64Array( 4 );
@@ -103,7 +88,7 @@ test( 'dgemm: N,T transpose B', function t() {
 });
 
 test( 'dgemm: alpha=0 just scales C by beta', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 7, 6, 8 ] );
 	var C = new Float64Array( [ 1, 2, 3, 4 ] );
@@ -112,7 +97,7 @@ test( 'dgemm: alpha=0 just scales C by beta', function t() {
 });
 
 test( 'dgemm: beta=0 overwrites C', function t() {
-	var tc = findCase( 'beta_zero' );
+	var tc = beta_zero;
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 999, 999, 999, 999 ] );
@@ -129,7 +114,7 @@ test( 'dgemm: M=0 quick return', function t() {
 });
 
 test( 'dgemm: alpha and beta scaling', function t() {
-	var tc = findCase( 'alpha_beta' );
+	var tc = alpha_beta;
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( [ 1, 1, 1, 1 ] );
@@ -138,7 +123,7 @@ test( 'dgemm: alpha and beta scaling', function t() {
 });
 
 test( 'dgemm: non-square M=3, N=2, K=2', function t() {
-	var tc = findCase( 'nonsquare' );
+	var tc = nonsquare;
 
 	// A is 3x2: [1,2,3,4,5,6], B is 2x2: identity [1,0,0,1]
 	var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
@@ -149,7 +134,7 @@ test( 'dgemm: non-square M=3, N=2, K=2', function t() {
 });
 
 test( 'dgemm: T,T both transposed', function t() {
-	var tc = findCase( 'tt' );
+	var tc = tt;
 	var A = new Float64Array( [ 1, 2, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	var C = new Float64Array( 4 );

@@ -6,23 +6,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dlaqr0 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlaqr0.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var n_eq_2 = require( './fixtures/n_eq_2.json' );
+var hess_6x6 = require( './fixtures/hess_6x6.json' );
+var hess_6x6_eigonly = require( './fixtures/hess_6x6_eigonly.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var hess_15x15 = require( './fixtures/hess_15x15.json' );
+var hess_16x16 = require( './fixtures/hess_16x16.json' );
+var hess_20x20 = require( './fixtures/hess_20x20.json' );
+var partial_block = require( './fixtures/partial_block.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -94,7 +92,6 @@ function extractEigs( WR, WI, N, offset ) {
 	return { wr: wr, wi: wi };
 }
 
-
 // TESTS //
 
 test( 'dlaqr0: n_eq_0', function t() {
@@ -110,7 +107,7 @@ test( 'dlaqr0: n_eq_0', function t() {
 });
 
 test( 'dlaqr0: n_eq_1', function t() {
-	var tc = findCase( 'n_eq_1' );
+	var tc = n_eq_1;
 	var WORK = new Float64Array( 10 );
 	var WR = new Float64Array( 1 );
 	var WI = new Float64Array( 1 );
@@ -126,7 +123,7 @@ test( 'dlaqr0: n_eq_1', function t() {
 });
 
 test( 'dlaqr0: n_eq_2', function t() {
-	var tc = findCase( 'n_eq_2' );
+	var tc = n_eq_2;
 	var N = 2;
 	var WORK = new Float64Array( 20 );
 	var WR = new Float64Array( N );
@@ -143,7 +140,7 @@ test( 'dlaqr0: n_eq_2', function t() {
 });
 
 test( 'dlaqr0: hess_6x6', function t() {
-	var tc = findCase( 'hess_6x6' );
+	var tc = hess_6x6;
 	var N = 6;
 	var WORK = new Float64Array( 10 * N );
 	var WR = new Float64Array( N );
@@ -172,7 +169,7 @@ test( 'dlaqr0: hess_6x6', function t() {
 });
 
 test( 'dlaqr0: hess_6x6_eigonly', function t() {
-	var tc = findCase( 'hess_6x6_eigonly' );
+	var tc = hess_6x6_eigonly;
 	var N = 6;
 	var WORK = new Float64Array( 10 * N );
 	var WR = new Float64Array( N );
@@ -199,7 +196,7 @@ test( 'dlaqr0: hess_6x6_eigonly', function t() {
 });
 
 test( 'dlaqr0: ilo_eq_ihi', function t() {
-	var tc = findCase( 'ilo_eq_ihi' );
+	var tc = ilo_eq_ihi;
 	var N = 4;
 	var WORK = new Float64Array( 10 * N );
 	var WR = new Float64Array( N );
@@ -225,7 +222,7 @@ test( 'dlaqr0: ilo_eq_ihi', function t() {
 });
 
 test( 'dlaqr0: hess_15x15', function t() {
-	var tc = findCase( 'hess_15x15' );
+	var tc = hess_15x15;
 	var N = 15;
 	var WORK = new Float64Array( 10 * N );
 	var WR = new Float64Array( N );
@@ -257,7 +254,7 @@ test( 'dlaqr0: hess_15x15', function t() {
 });
 
 test( 'dlaqr0: hess_16x16', function t() {
-	var tc = findCase( 'hess_16x16' );
+	var tc = hess_16x16;
 	var N = 16;
 	var WORK = new Float64Array( 10 * N );
 	var WR = new Float64Array( N );
@@ -289,7 +286,7 @@ test( 'dlaqr0: hess_16x16', function t() {
 });
 
 test( 'dlaqr0: hess_20x20', function t() {
-	var tc = findCase( 'hess_20x20' );
+	var tc = hess_20x20;
 	var N = 20;
 	var WORK = new Float64Array( 10 * N );
 	var WR = new Float64Array( N );
@@ -427,7 +424,7 @@ test( 'dlaqr0: hess_40x40 with complex eigenvalues (property-based)', function t
 });
 
 test( 'dlaqr0: partial_block', function t() {
-	var tc = findCase( 'partial_block' );
+	var tc = partial_block;
 	var N = 10;
 	var WORK = new Float64Array( 10 * N );
 	var WR = new Float64Array( N );

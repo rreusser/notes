@@ -23,38 +23,29 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhbtrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhbtrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_kd2_n5_none = require( './fixtures/upper_kd2_n5_none.json' );
+var lower_kd2_n5_none = require( './fixtures/lower_kd2_n5_none.json' );
+var upper_kd1_n4_none = require( './fixtures/upper_kd1_n4_none.json' );
+var lower_kd1_n4_none = require( './fixtures/lower_kd1_n4_none.json' );
+var upper_kd2_n5_init = require( './fixtures/upper_kd2_n5_init.json' );
+var lower_kd2_n5_init = require( './fixtures/lower_kd2_n5_init.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper_init = require( './fixtures/n_one_upper_init.json' );
+var kd0_upper_none = require( './fixtures/kd0_upper_none.json' );
+var upper_kd3_n6_init = require( './fixtures/upper_kd3_n6_init.json' );
+var lower_kd3_n6_init = require( './fixtures/lower_kd3_n6_init.json' );
+var upper_kd1_n4_init = require( './fixtures/upper_kd1_n4_init.json' );
+var lower_kd1_n4_init = require( './fixtures/lower_kd1_n4_init.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -103,7 +94,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhbtrd: upper_kd2_n5_none', function t() {
@@ -115,7 +105,7 @@ test( 'zhbtrd: upper_kd2_n5_none', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd2_n5_none' );
+	tc = upper_kd2_n5_none;
 	AB = new Complex128Array( 15 );
 	d = new Float64Array( 5 );
 	e = new Float64Array( 4 );
@@ -148,7 +138,7 @@ test( 'zhbtrd: lower_kd2_n5_none', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd2_n5_none' );
+	tc = lower_kd2_n5_none;
 	AB = new Complex128Array( 15 );
 	d = new Float64Array( 5 );
 	e = new Float64Array( 4 );
@@ -181,7 +171,7 @@ test( 'zhbtrd: upper_kd1_n4_none', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd1_n4_none' );
+	tc = upper_kd1_n4_none;
 	AB = new Complex128Array( 8 );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );
@@ -209,7 +199,7 @@ test( 'zhbtrd: lower_kd1_n4_none', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd1_n4_none' );
+	tc = lower_kd1_n4_none;
 	AB = new Complex128Array( 8 );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );
@@ -238,7 +228,7 @@ test( 'zhbtrd: upper_kd2_n5_init', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd2_n5_init' );
+	tc = upper_kd2_n5_init;
 	AB = new Complex128Array( 15 );
 	d = new Float64Array( 5 );
 	e = new Float64Array( 4 );
@@ -274,7 +264,7 @@ test( 'zhbtrd: lower_kd2_n5_init', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd2_n5_init' );
+	tc = lower_kd2_n5_init;
 	AB = new Complex128Array( 15 );
 	d = new Float64Array( 5 );
 	e = new Float64Array( 4 );
@@ -309,7 +299,7 @@ test( 'zhbtrd: n_zero', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Complex128Array( 1 );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
@@ -329,7 +319,7 @@ test( 'zhbtrd: n_one_upper_init', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'n_one_upper_init' );
+	tc = n_one_upper_init;
 	AB = new Complex128Array( 1 );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
@@ -352,7 +342,7 @@ test( 'zhbtrd: kd0_upper_none', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'kd0_upper_none' );
+	tc = kd0_upper_none;
 	AB = new Complex128Array( 3 );
 	d = new Float64Array( 3 );
 	e = new Float64Array( 2 );
@@ -377,7 +367,7 @@ test( 'zhbtrd: upper_kd3_n6_init', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd3_n6_init' );
+	tc = upper_kd3_n6_init;
 	AB = new Complex128Array( 24 );
 	d = new Float64Array( 6 );
 	e = new Float64Array( 5 );
@@ -419,7 +409,7 @@ test( 'zhbtrd: lower_kd3_n6_init', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd3_n6_init' );
+	tc = lower_kd3_n6_init;
 	AB = new Complex128Array( 24 );
 	d = new Float64Array( 6 );
 	e = new Float64Array( 5 );
@@ -461,7 +451,7 @@ test( 'zhbtrd: upper_kd1_n4_init', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd1_n4_init' );
+	tc = upper_kd1_n4_init;
 	AB = new Complex128Array( 8 );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );
@@ -492,7 +482,7 @@ test( 'zhbtrd: lower_kd1_n4_init', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd1_n4_init' );
+	tc = lower_kd1_n4_init;
 	AB = new Complex128Array( 8 );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );

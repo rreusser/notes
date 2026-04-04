@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dla_gbrpvgrw = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dla_gbrpvgrw.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var no_growth = require( './fixtures/no_growth.json' );
+var ncols_zero = require( './fixtures/ncols_zero.json' );
+var single_element_growth = require( './fixtures/single_element_growth.json' );
+var growth_factor = require( './fixtures/growth_factor.json' );
+var zero_umax = require( './fixtures/zero_umax.json' );
+var tridiagonal = require( './fixtures/tridiagonal.json' );
+var ncols_less_than_n = require( './fixtures/ncols_less_than_n.json' );
+var wider_band = require( './fixtures/wider_band.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -50,7 +36,6 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
-
 // TESTS //
 
 test( 'dla_gbrpvgrw is a function', function t() {
@@ -63,7 +48,7 @@ test( 'dla_gbrpvgrw: no_growth', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'no_growth' );
+	tc = no_growth;
 	AB = new Float64Array( [ 5.0, 3.0, 7.0 ] );
 	AFB = new Float64Array( [ 5.0, 3.0, 7.0 ] );
 	result = dla_gbrpvgrw( 3, 0, 0, 3, AB, 1, 1, 0, AFB, 1, 1, 0 );
@@ -76,7 +61,7 @@ test( 'dla_gbrpvgrw: ncols_zero', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'ncols_zero' );
+	tc = ncols_zero;
 	AB = new Float64Array( [ 5.0, 3.0, 7.0 ] );
 	AFB = new Float64Array( [ 5.0, 3.0, 7.0 ] );
 	result = dla_gbrpvgrw( 3, 0, 0, 0, AB, 1, 1, 0, AFB, 1, 1, 0 );
@@ -89,7 +74,7 @@ test( 'dla_gbrpvgrw: single_element_growth', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'single_element_growth' );
+	tc = single_element_growth;
 	AB = new Float64Array( [ 3.0 ] );
 	AFB = new Float64Array( [ 6.0 ] );
 	result = dla_gbrpvgrw( 1, 0, 0, 1, AB, 1, 1, 0, AFB, 1, 1, 0 );
@@ -102,7 +87,7 @@ test( 'dla_gbrpvgrw: growth_factor', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'growth_factor' );
+	tc = growth_factor;
 	AB = new Float64Array( [ 2.0, 3.0, 1.0 ] );
 	AFB = new Float64Array( [ 4.0, 3.0, 5.0 ] );
 	result = dla_gbrpvgrw( 3, 0, 0, 3, AB, 1, 1, 0, AFB, 1, 1, 0 );
@@ -115,7 +100,7 @@ test( 'dla_gbrpvgrw: zero_umax', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'zero_umax' );
+	tc = zero_umax;
 	AB = new Float64Array( [ 5.0, 3.0, 4.0 ] );
 	AFB = new Float64Array( [ 5.0, 0.0, 8.0 ] );
 	result = dla_gbrpvgrw( 3, 0, 0, 3, AB, 1, 1, 0, AFB, 1, 1, 0 );
@@ -128,7 +113,7 @@ test( 'dla_gbrpvgrw: tridiagonal', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'tridiagonal' );
+	tc = tridiagonal;
 	AB = new Float64Array([
 		// Col 0: rows [0,1,2]
 		0.0,
@@ -185,7 +170,7 @@ test( 'dla_gbrpvgrw: ncols_less_than_n', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'ncols_less_than_n' );
+	tc = ncols_less_than_n;
 	AB = new Float64Array( [ 3.0, 4.0, 1.0, 2.0 ] );
 	AFB = new Float64Array( [ 6.0, 4.0, 100.0, 100.0 ] );
 	result = dla_gbrpvgrw( 4, 0, 0, 2, AB, 1, 1, 0, AFB, 1, 1, 0 );
@@ -198,7 +183,7 @@ test( 'dla_gbrpvgrw: wider_band', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'wider_band' );
+	tc = wider_band;
 	AB = new Float64Array([
 		// Col 0: i=1(row2), i=2(row3), i=3(row4)
 		0.0,

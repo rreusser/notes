@@ -2,40 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgbtf2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgbtf2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var tridiag_4x4 = require( './fixtures/tridiag_4x4.json' );
+var pentadiag_5x5 = require( './fixtures/pentadiag_5x5.json' );
+var kl1_ku2_3x3 = require( './fixtures/kl1_ku2_3x3.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var singular = require( './fixtures/singular.json' );
+var tall_5x3 = require( './fixtures/tall_5x3.json' );
+var pivot_2x2 = require( './fixtures/pivot_2x2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +69,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgbtf2: N=0 quick return', function t() {
@@ -116,7 +100,7 @@ test( 'dgbtf2: tridiag_4x4', function t() {
 	var AB;
 	var i;
 
-	tc = findCase( 'tridiag_4x4' );
+	tc = tridiag_4x4;
 	AB = new Float64Array([
 		0.0,
 		0.0,
@@ -151,7 +135,7 @@ test( 'dgbtf2: pentadiag_5x5', function t() {
 	var AB;
 	var i;
 
-	tc = findCase( 'pentadiag_5x5' );
+	tc = pentadiag_5x5;
 	AB = new Float64Array( 7 * 5 );
 	AB[ 4 ] = 6.0;
 	AB[ 5 ] = -2.0;
@@ -188,7 +172,7 @@ test( 'dgbtf2: kl1_ku2_3x3', function t() {
 	var AB;
 	var i;
 
-	tc = findCase( 'kl1_ku2_3x3' );
+	tc = kl1_ku2_3x3;
 	AB = new Float64Array( 5 * 3 );
 	AB[ 3 ] = 5.0;
 	AB[ 4 ] = 2.0;
@@ -213,7 +197,7 @@ test( 'dgbtf2: one_by_one', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	AB = new Float64Array( [ 7.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = dgbtf2( 1, 1, 0, 0, AB, 1, 1, 0, IPIV, 1, 0 );
@@ -228,7 +212,7 @@ test( 'dgbtf2: singular', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	AB = new Float64Array([
 		0.0,
 		0.0,
@@ -247,7 +231,7 @@ test( 'dgbtf2: tall_5x3', function t() {
 	var AB;
 	var i;
 
-	tc = findCase( 'tall_5x3' );
+	tc = tall_5x3;
 	AB = new Float64Array( 4 * 3 );
 	AB[ 2 ] = 4.0;
 	AB[ 3 ] = -1.0;
@@ -273,7 +257,7 @@ test( 'dgbtf2: pivot_2x2', function t() {
 	var AB;
 	var i;
 
-	tc = findCase( 'pivot_2x2' );
+	tc = pivot_2x2;
 	AB = new Float64Array( 4 * 2 );
 	AB[ 2 ] = 1.0;
 	AB[ 3 ] = 3.0;

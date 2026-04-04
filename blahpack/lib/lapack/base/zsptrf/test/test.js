@@ -5,38 +5,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zsptrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zsptrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3_upper = require( './fixtures/3x3_upper.json' );
+var _3x3_lower = require( './fixtures/3x3_lower.json' );
+var _4x4_indef_upper = require( './fixtures/4x4_indef_upper.json' );
+var _4x4_indef_lower = require( './fixtures/4x4_indef_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
+var singular = require( './fixtures/singular.json' );
+var _4x4_tridiag_lower = require( './fixtures/4x4_tridiag_lower.json' );
+var _4x4_tridiag_upper = require( './fixtures/4x4_tridiag_upper.json' );
+var n_one_singular = require( './fixtures/n_one_singular.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -107,7 +94,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zsptrf is a function', function t() {
@@ -121,7 +107,7 @@ test( 'zsptrf: 3x3_upper', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '3x3_upper' );
+	tc = _3x3_upper;
 	AP = new Complex128Array([
 		4.0,
 		1.0,
@@ -151,7 +137,7 @@ test( 'zsptrf: 3x3_lower', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '3x3_lower' );
+	tc = _3x3_lower;
 	AP = new Complex128Array([
 		4.0,
 		1.0,
@@ -181,7 +167,7 @@ test( 'zsptrf: 4x4_indef_upper', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_indef_upper' );
+	tc = _4x4_indef_upper;
 	AP = new Complex128Array([
 		0.0,
 		0.0,
@@ -219,7 +205,7 @@ test( 'zsptrf: 4x4_indef_lower', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_indef_lower' );
+	tc = _4x4_indef_lower;
 	AP = new Complex128Array([
 		0.0,
 		0.0,
@@ -268,7 +254,7 @@ test( 'zsptrf: n_one', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AP = new Complex128Array( [ 5.0, 2.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = zsptrf( 'lower', 1, AP, 1, 0, IPIV, 1, 0 );
@@ -285,7 +271,7 @@ test( 'zsptrf: singular', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	AP = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
 	IPIV = new Int32Array( 2 );
 	info = zsptrf( 'lower', 2, AP, 1, 0, IPIV, 1, 0 );
@@ -302,7 +288,7 @@ test( 'zsptrf: 4x4_tridiag_lower', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_tridiag_lower' );
+	tc = _4x4_tridiag_lower;
 	AP = new Complex128Array([
 		2.0,
 		1.0,
@@ -340,7 +326,7 @@ test( 'zsptrf: 4x4_tridiag_upper', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_tridiag_upper' );
+	tc = _4x4_tridiag_upper;
 	AP = new Complex128Array([
 		2.0,
 		1.0,
@@ -378,7 +364,7 @@ test( 'zsptrf: n_one_singular', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n_one_singular' );
+	tc = n_one_singular;
 	AP = new Complex128Array( [ 0.0, 0.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = zsptrf( 'upper', 1, AP, 1, 0, IPIV, 1, 0 );

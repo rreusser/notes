@@ -2,8 +2,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -11,13 +9,12 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgbtrf = require( './../../zgbtrf/lib/base.js' );
 var zgbcon = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgbcon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var tridiag_1norm = require( './fixtures/tridiag_1norm.json' );
+var tridiag_inorm = require( './fixtures/tridiag_inorm.json' );
+var kl2_ku1_1norm = require( './fixtures/kl2_ku1_1norm.json' );
+var n_one = require( './fixtures/n_one.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -52,7 +49,7 @@ test( 'zgbcon: tridiag 1-norm (KL=1, KU=1, N=4)', function t() {
 	var ab;
 	var n;
 
-	tc = findCase( 'tridiag_1norm' );
+	tc = tridiag_1norm;
 	n = 4;
 	ldab = 6; // We used LDAB=6 in Fortran test
 
@@ -78,7 +75,7 @@ test( 'zgbcon: tridiag 1-norm (KL=1, KU=1, N=4)', function t() {
 });
 
 test( 'zgbcon: tridiag infinity-norm (KL=1, KU=1, N=4)', function t() {
-	var tc = findCase( 'tridiag_Inorm' );
+	var tc = tridiag_inorm;
 	var n = 4;
 	var ldab = 6;
 	var ab = complexBandedMatrix( ldab, n, [
@@ -100,7 +97,7 @@ test( 'zgbcon: tridiag infinity-norm (KL=1, KU=1, N=4)', function t() {
 });
 
 test( 'zgbcon: KL=2, KU=1, N=4', function t() {
-	var tc = findCase( 'kl2_ku1_1norm' );
+	var tc = kl2_ku1_1norm;
 	var n = 4;
 	var ldab = 6;
 	var ab = complexBandedMatrix( ldab, n, [
@@ -133,7 +130,7 @@ test( 'zgbcon: N=0 (rcond=1)', function t() {
 });
 
 test( 'zgbcon: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var ab = new Complex128Array( 6 );
 	var abv = reinterpret( ab, 0 );
 	abv[ 0 ] = 3.0;

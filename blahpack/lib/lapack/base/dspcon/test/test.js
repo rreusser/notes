@@ -5,38 +5,24 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsptrf = require( '../../dsptrf/lib/base.js' );
 var dspcon = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dspcon.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_well_cond = require( './fixtures/upper_well_cond.json' );
+var lower_well_cond = require( './fixtures/lower_well_cond.json' );
+var identity_upper = require( './fixtures/identity_upper.json' );
+var identity_lower = require( './fixtures/identity_lower.json' );
+var ill_cond_upper = require( './fixtures/ill_cond_upper.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var _4x4_upper = require( './fixtures/4x4_upper.json' );
+var _4x4_lower = require( './fixtures/4x4_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -78,7 +64,6 @@ function computeRcond( uplo, N, apArr, anorm ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dspcon: main export is a function', function t() {
@@ -89,7 +74,7 @@ test( 'dspcon: well-conditioned 3x3 (upper, packed)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'upper_well_cond' );
+	tc = upper_well_cond;
 	result = computeRcond( 'upper', 3, [ 4, 1, 3, 1, 1, 2 ], tc.anorm );
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -99,7 +84,7 @@ test( 'dspcon: well-conditioned 3x3 (lower, packed)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'lower_well_cond' );
+	tc = lower_well_cond;
 	result = computeRcond( 'lower', 3, [ 4, 1, 1, 3, 1, 2 ], tc.anorm );
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -109,7 +94,7 @@ test( 'dspcon: identity 3x3 (upper, packed, rcond=1)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'identity_upper' );
+	tc = identity_upper;
 	result = computeRcond( 'upper', 3, [ 1, 0, 1, 0, 0, 1 ], tc.anorm );
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -119,7 +104,7 @@ test( 'dspcon: identity 3x3 (lower, packed, rcond=1)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'identity_lower' );
+	tc = identity_lower;
 	result = computeRcond( 'lower', 3, [ 1, 0, 0, 1, 0, 1 ], tc.anorm );
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -129,7 +114,7 @@ test( 'dspcon: ill-conditioned 3x3 (upper, packed)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'ill_cond_upper' );
+	tc = ill_cond_upper;
 	result = computeRcond( 'upper', 3, [ 1, 0, 1, 0, 0, 1e-15 ], tc.anorm );
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -165,7 +150,7 @@ test( 'dspcon: N=1 (upper, packed)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	result = computeRcond( 'upper', 1, [ 5.0 ], tc.anorm );
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -175,7 +160,7 @@ test( 'dspcon: 4x4 (upper, packed)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( '4x4_upper' );
+	tc = _4x4_upper;
 	result = computeRcond( 'upper', 4, [ 10, 1, 8, 2, 1, 6, 0, 1, 1, 5 ], tc.anorm ); // eslint-disable-line max-len
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );
@@ -185,7 +170,7 @@ test( 'dspcon: 4x4 (lower, packed)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( '4x4_lower' );
+	tc = _4x4_lower;
 	result = computeRcond( 'lower', 4, [ 10, 1, 2, 0, 8, 1, 1, 6, 1, 5 ], tc.anorm ); // eslint-disable-line max-len
 	assert.strictEqual( result.info, 0 );
 	assertClose( result.rcond, tc.rcond, 1e-10, 'rcond' );

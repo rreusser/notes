@@ -4,25 +4,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrti2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrti2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_nonunit = require( './fixtures/upper_nonunit.json' );
+var lower_nonunit = require( './fixtures/lower_nonunit.json' );
+var upper_unit = require( './fixtures/upper_unit.json' );
+var lower_unit = require( './fixtures/lower_unit.json' );
+var n1 = require( './fixtures/n1.json' );
+var upper_nonunit_4 = require( './fixtures/upper_nonunit_4.json' );
+var lower_nonunit_4 = require( './fixtures/lower_nonunit_4.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,11 +33,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'ztrti2: upper, non-unit, 3x3', function t() {
-	var tc = findCase( 'upper_nonunit' );
+	var tc = upper_nonunit;
 	// A = [[2+1i, 1+0.5i, 3+1i], [0, 4+2i, 5+1i], [0, 0, 6+3i]] col-major interleaved
 	var A = new Complex128Array( [
 		2, 1, 0, 0, 0, 0,
@@ -55,7 +50,7 @@ test( 'ztrti2: upper, non-unit, 3x3', function t() {
 });
 
 test( 'ztrti2: lower, non-unit, 3x3', function t() {
-	var tc = findCase( 'lower_nonunit' );
+	var tc = lower_nonunit;
 	// A = [[2+1i, 0, 0], [1+0.5i, 4+2i, 0], [3+1i, 5+1i, 6+3i]] col-major interleaved
 	var A = new Complex128Array( [
 		2, 1, 1, 0.5, 3, 1,
@@ -69,7 +64,7 @@ test( 'ztrti2: lower, non-unit, 3x3', function t() {
 });
 
 test( 'ztrti2: upper, unit diagonal, 3x3', function t() {
-	var tc = findCase( 'upper_unit' );
+	var tc = upper_unit;
 	var A = new Complex128Array( [
 		99, 99, 0, 0, 0, 0,
 		1, 0.5, 99, 99, 0, 0,
@@ -82,7 +77,7 @@ test( 'ztrti2: upper, unit diagonal, 3x3', function t() {
 });
 
 test( 'ztrti2: lower, unit diagonal, 3x3', function t() {
-	var tc = findCase( 'lower_unit' );
+	var tc = lower_unit;
 	var A = new Complex128Array( [
 		99, 99, 1, 0.5, 3, 1,
 		0, 0, 99, 99, 5, 1,
@@ -95,7 +90,7 @@ test( 'ztrti2: lower, unit diagonal, 3x3', function t() {
 });
 
 test( 'ztrti2: N=1', function t() {
-	var tc = findCase( 'n1' );
+	var tc = n1;
 	// A = 3+4i, inverse should be (3-4i)/25 = 0.12-0.16i
 	var A = new Complex128Array( [ 3, 4 ] );
 	var info = ztrti2( 'upper', 'non-unit', 1, A, 1, 1, 0 );
@@ -111,7 +106,7 @@ test( 'ztrti2: N=0', function t() {
 });
 
 test( 'ztrti2: upper, non-unit, 4x4', function t() {
-	var tc = findCase( 'upper_nonunit_4' );
+	var tc = upper_nonunit_4;
 	var A = new Complex128Array( [
 		1, 1, 0, 0, 0, 0, 0, 0,
 		2, 0, 5, 1, 0, 0, 0, 0,
@@ -125,7 +120,7 @@ test( 'ztrti2: upper, non-unit, 4x4', function t() {
 });
 
 test( 'ztrti2: lower, non-unit, 4x4', function t() {
-	var tc = findCase( 'lower_nonunit_4' );
+	var tc = lower_nonunit_4;
 	var A = new Complex128Array( [
 		1, 1, 2, 0, 3, 1, 4, 2,
 		0, 0, 5, 1, 6, 0, 7, 3,

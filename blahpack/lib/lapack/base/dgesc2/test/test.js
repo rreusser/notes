@@ -2,41 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgetc2 = require( '../../dgetc2/lib/base.js' );
 var dgesc2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgesc2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_2x2 = require( './fixtures/basic_2x2.json' );
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var basic_4x4 = require( './fixtures/basic_4x4.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +67,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgesc2: basic_2x2', function t() {
@@ -98,7 +79,7 @@ test( 'dgesc2: basic_2x2', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'basic_2x2' );
+	tc = basic_2x2;
 	N = 2;
 	LDA = 4;
 	A = new Float64Array( LDA * N );
@@ -128,7 +109,7 @@ test( 'dgesc2: basic_3x3', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	N = 3;
 	LDA = 4;
 	A = new Float64Array( LDA * N );
@@ -164,7 +145,7 @@ test( 'dgesc2: basic_4x4', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'basic_4x4' );
+	tc = basic_4x4;
 	N = 4;
 	LDA = 4;
 	A = new Float64Array( LDA * N );
@@ -208,7 +189,7 @@ test( 'dgesc2: n_equals_1', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'n_equals_1' );
+	tc = n_equals_1;
 	N = 1;
 	LDA = 4;
 	A = new Float64Array( LDA * 1 );

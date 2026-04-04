@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -14,30 +12,16 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgetc2 = require( './../../zgetc2/lib/base.js' );
 var zlatdf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlatdf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var ijob2_2x2 = require( './fixtures/ijob2_2x2.json' );
+var ijob5_2x2 = require( './fixtures/ijob5_2x2.json' );
+var ijob2_3x3 = require( './fixtures/ijob2_3x3.json' );
+var ijob5_3x3 = require( './fixtures/ijob5_3x3.json' );
+var ijob2_4x4 = require( './fixtures/ijob2_4x4.json' );
+var ijob5_4x4 = require( './fixtures/ijob5_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +67,6 @@ function toComplex( arr ) {
 	return new Complex128Array( arr );
 }
 
-
 // TESTS //
 
 test( 'zlatdf is a function', function t() {
@@ -99,7 +82,7 @@ test( 'zlatdf: IJOB=2, 2x2 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob2_2x2' );
+	tc = ijob2_2x2;
 	Z = toComplex([
 		4.0,
 		1.0,
@@ -130,7 +113,7 @@ test( 'zlatdf: IJOB=5, 2x2 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob5_2x2' );
+	tc = ijob5_2x2;
 	Z = toComplex([
 		4.0,
 		1.0,
@@ -161,7 +144,7 @@ test( 'zlatdf: IJOB=2, 3x3 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob2_3x3' );
+	tc = ijob2_3x3;
 	Z = toComplex([
 		5.0,
 		1.0,
@@ -202,7 +185,7 @@ test( 'zlatdf: IJOB=5, 3x3 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob5_3x3' );
+	tc = ijob5_3x3;
 	Z = toComplex([
 		5.0,
 		1.0,
@@ -243,7 +226,7 @@ test( 'zlatdf: IJOB=2, 4x4 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob2_4x4' );
+	tc = ijob2_4x4;
 	Z = toComplex([
 		5.0,
 		1.0,
@@ -317,7 +300,7 @@ test( 'zlatdf: IJOB=5, 4x4 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob5_4x4' );
+	tc = ijob5_4x4;
 	Z = toComplex([
 		5.0,
 		1.0,

@@ -6,7 +6,6 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -14,30 +13,22 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhpgvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpgvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var itype1_v_a_u = require( './fixtures/itype1_v_a_u.json' );
+var itype1_v_a_l = require( './fixtures/itype1_v_a_l.json' );
+var itype1_n_a_l = require( './fixtures/itype1_n_a_l.json' );
+var itype1_v_v_u = require( './fixtures/itype1_v_v_u.json' );
+var itype1_v_i_l = require( './fixtures/itype1_v_i_l.json' );
+var itype2_v_a_u = require( './fixtures/itype2_v_a_u.json' );
+var itype3_v_a_l = require( './fixtures/itype3_v_a_l.json' );
+var itype3_v_i_u = require( './fixtures/itype3_v_i_u.json' );
+var itype1_n_v_u = require( './fixtures/itype1_n_v_u.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var itype2_v_i_l = require( './fixtures/itype2_v_i_l.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -211,14 +202,13 @@ function makeBPLower3( ) {
 	return new Complex128Array( [ 4, 0, 1, 1, 0, 0, 5, 0, 0, -1, 3, 0 ] );
 }
 
-
 // TESTS //
 
 test( 'zhpgvx: itype1, V, A, U (all eigenvalues + vectors, upper)', function t() { // eslint-disable-line max-len
 	var tc;
 	var r;
 
-	tc = findCase( 'itype1_V_A_U' );
+	tc = itype1_v_a_u;
 	r = runZhpgvx( 1, 'compute-vectors', 'all', 'upper', 3, makeAPUpper3(), makeBPUpper3(), 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -230,7 +220,7 @@ test( 'zhpgvx: itype1, V, A, L (all eigenvalues + vectors, lower)', function t()
 	var tc;
 	var r;
 
-	tc = findCase( 'itype1_V_A_L' );
+	tc = itype1_v_a_l;
 	r = runZhpgvx( 1, 'compute-vectors', 'all', 'lower', 3, makeAPLower3(), makeBPLower3(), 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -242,7 +232,7 @@ test( 'zhpgvx: itype1, N, A, L (eigenvalues only)', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype1_N_A_L' );
+	tc = itype1_n_a_l;
 	r = runZhpgvx( 1, 'no-vectors', 'all', 'lower', 3, makeAPLower3(), makeBPLower3(), 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -253,7 +243,7 @@ test( 'zhpgvx: itype1, V, V, U (value range)', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype1_V_V_U' );
+	tc = itype1_v_v_u;
 	r = runZhpgvx( 1, 'compute-vectors', 'value', 'upper', 3, makeAPUpper3(), makeBPUpper3(), 0.5, 1.5, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -265,7 +255,7 @@ test( 'zhpgvx: itype1, V, I, L (index range)', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype1_V_I_L' );
+	tc = itype1_v_i_l;
 	r = runZhpgvx( 1, 'compute-vectors', 'index', 'lower', 3, makeAPLower3(), makeBPLower3(), 0, 0, 1, 2, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -277,7 +267,7 @@ test( 'zhpgvx: itype2, V, A, U', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype2_V_A_U' );
+	tc = itype2_v_a_u;
 	r = runZhpgvx( 2, 'compute-vectors', 'all', 'upper', 3, makeAPUpper3(), makeBPUpper3(), 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -289,7 +279,7 @@ test( 'zhpgvx: itype3, V, A, L', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype3_V_A_L' );
+	tc = itype3_v_a_l;
 	r = runZhpgvx( 3, 'compute-vectors', 'all', 'lower', 3, makeAPLower3(), makeBPLower3(), 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -301,7 +291,7 @@ test( 'zhpgvx: itype3, V, I, U (index range)', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype3_V_I_U' );
+	tc = itype3_v_i_u;
 	r = runZhpgvx( 3, 'compute-vectors', 'index', 'upper', 3, makeAPUpper3(), makeBPUpper3(), 0, 0, 2, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -313,7 +303,7 @@ test( 'zhpgvx: itype1, N, V, U (eigenvalues only, value range)', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype1_N_V_U' );
+	tc = itype1_n_v_u;
 	r = runZhpgvx( 1, 'no-vectors', 'value', 'upper', 3, makeAPUpper3(), makeBPUpper3(), 0.5, 1.5, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -352,7 +342,7 @@ test( 'zhpgvx: N=1', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	r = runZhpgvx( 1, 'compute-vectors', 'all', 'upper', 1, new Complex128Array( [ 6.0, 0.0 ] ), new Complex128Array( [ 2.0, 0.0 ] ), 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -364,7 +354,7 @@ test( 'zhpgvx: non-positive definite B', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	r = runZhpgvx( 1, 'compute-vectors', 'all', 'lower', 2, new Complex128Array( [ 1, 0, 0, 0, 1, 0 ] ), new Complex128Array( [ -1, 0, 0, 0, 1, 0 ] ), 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 });
@@ -373,7 +363,7 @@ test( 'zhpgvx: itype2, V, I, L (index range)', function t() {
 	var tc;
 	var r;
 
-	tc = findCase( 'itype2_V_I_L' );
+	tc = itype2_v_i_l;
 	r = runZhpgvx( 2, 'compute-vectors', 'index', 'lower', 3, makeAPLower3(), makeBPLower3(), 0, 0, 2, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );

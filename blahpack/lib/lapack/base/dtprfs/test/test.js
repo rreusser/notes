@@ -6,23 +6,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dtprfs = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dtprfs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_trans = require( './fixtures/lower_trans.json' );
+var upper_unit_no_trans = require( './fixtures/upper_unit_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var lower_unit_trans = require( './fixtures/lower_unit_trans.json' );
+var upper_trans = require( './fixtures/upper_trans.json' );
+var upper_unit_trans = require( './fixtures/upper_unit_trans.json' );
+var lower_unit_no_trans = require( './fixtures/lower_unit_no_trans.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 /**
 * Creates workspace arrays for dtprfs.
@@ -69,11 +69,10 @@ function callDtprfs( uplo, trans, diag, N, nrhs, AP, B, X ) {
 	return { info: info, ferr: FERR, berr: BERR };
 }
 
-
 // TESTS //
 
 test( 'dtprfs: upper_no_trans', function t() {
-	var tc = findCase( 'upper_no_trans' );
+	var tc = upper_no_trans;
 	// A = [2 1 3; 0 4 5; 0 0 6] packed upper = [2, 1, 4, 3, 5, 6]
 	var AP = new Float64Array([ 2, 1, 4, 3, 5, 6 ]);
 	var B = new Float64Array([ 13, 23, 18 ]);
@@ -85,7 +84,7 @@ test( 'dtprfs: upper_no_trans', function t() {
 });
 
 test( 'dtprfs: lower_trans', function t() {
-	var tc = findCase( 'lower_trans' );
+	var tc = lower_trans;
 	// L = [2 0 0; 1 4 0; 3 5 6] packed lower = [2, 1, 3, 4, 5, 6]
 	var AP = new Float64Array([ 2, 1, 3, 4, 5, 6 ]);
 	var B = new Float64Array([ 13, 23, 18 ]);
@@ -97,7 +96,7 @@ test( 'dtprfs: lower_trans', function t() {
 });
 
 test( 'dtprfs: upper_unit_no_trans', function t() {
-	var tc = findCase( 'upper_unit_no_trans' );
+	var tc = upper_unit_no_trans;
 	// A = [1 2 3; 0 1 4; 0 0 1] packed upper = [1, 2, 1, 3, 4, 1]
 	var AP = new Float64Array([ 1, 2, 1, 3, 4, 1 ]);
 	var B = new Float64Array([ 14, 14, 3 ]);
@@ -109,7 +108,7 @@ test( 'dtprfs: upper_unit_no_trans', function t() {
 });
 
 test( 'dtprfs: lower_no_trans', function t() {
-	var tc = findCase( 'lower_no_trans' );
+	var tc = lower_no_trans;
 	// L = [3 0 0; 2 5 0; 1 4 7] packed lower = [3, 2, 1, 5, 4, 7]
 	var AP = new Float64Array([ 3, 2, 1, 5, 4, 7 ]);
 	var B = new Float64Array([ 3, 12, 30 ]);
@@ -121,7 +120,7 @@ test( 'dtprfs: lower_no_trans', function t() {
 });
 
 test( 'dtprfs: multi_rhs', function t() {
-	var tc = findCase( 'multi_rhs' );
+	var tc = multi_rhs;
 	// A = [2 1 3; 0 4 5; 0 0 6] packed upper = [2, 1, 4, 3, 5, 6]
 	var AP = new Float64Array([ 2, 1, 4, 3, 5, 6 ]);
 	// B is 3x2 col-major: [13,23,18, 31,50,36]
@@ -136,7 +135,7 @@ test( 'dtprfs: multi_rhs', function t() {
 });
 
 test( 'dtprfs: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var AP = new Float64Array( 1 );
 	var B = new Float64Array( 1 );
 	var X = new Float64Array( 1 );
@@ -160,7 +159,7 @@ test( 'dtprfs: n_zero', function t() {
 });
 
 test( 'dtprfs: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var AP = new Float64Array([ 5.0 ]);
 	var B = new Float64Array([ 15.0 ]);
 	var X = new Float64Array( tc.x );
@@ -171,7 +170,7 @@ test( 'dtprfs: n_one', function t() {
 });
 
 test( 'dtprfs: lower_unit_trans', function t() {
-	var tc = findCase( 'lower_unit_trans' );
+	var tc = lower_unit_trans;
 	// L = [1 0 0; 2 1 0; 3 5 1] packed lower = [1, 2, 3, 1, 5, 1]
 	var AP = new Float64Array([ 1, 2, 3, 1, 5, 1 ]);
 	var B = new Float64Array([ 14, 17, 3 ]);
@@ -183,7 +182,7 @@ test( 'dtprfs: lower_unit_trans', function t() {
 });
 
 test( 'dtprfs: upper_trans', function t() {
-	var tc = findCase( 'upper_trans' );
+	var tc = upper_trans;
 	// A = [2 1 3; 0 4 5; 0 0 6] packed upper = [2, 1, 4, 3, 5, 6]
 	var AP = new Float64Array([ 2, 1, 4, 3, 5, 6 ]);
 	var B = new Float64Array([ 2, 9, 31 ]);
@@ -195,7 +194,7 @@ test( 'dtprfs: upper_trans', function t() {
 });
 
 test( 'dtprfs: upper_unit_trans', function t() {
-	var tc = findCase( 'upper_unit_trans' );
+	var tc = upper_unit_trans;
 	// A = [1 2 3; 0 1 4; 0 0 1] packed upper = [1, 2, 1, 3, 4, 1]
 	var AP = new Float64Array([ 1, 2, 1, 3, 4, 1 ]);
 	var B = new Float64Array([ 1, 4, 14 ]);
@@ -207,7 +206,7 @@ test( 'dtprfs: upper_unit_trans', function t() {
 });
 
 test( 'dtprfs: lower_unit_no_trans', function t() {
-	var tc = findCase( 'lower_unit_no_trans' );
+	var tc = lower_unit_no_trans;
 	// L = [1 0 0; 2 1 0; 3 5 1] packed lower = [1, 2, 3, 1, 5, 1]
 	var AP = new Float64Array([ 1, 2, 3, 1, 5, 1 ]);
 	var B = new Float64Array([ 1, 4, 16 ]);

@@ -2,39 +2,22 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaqr3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqr3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _6x6_hessenberg_nw_3 = require( './fixtures/6x6_hessenberg_nw_3.json' );
+var _4x4_hessenberg_nw_2 = require( './fixtures/4x4_hessenberg_nw_2.json' );
+var _4x4_hessenberg_nw_1 = require( './fixtures/4x4_hessenberg_nw_1.json' );
+var empty_active_block = require( './fixtures/empty_active_block.json' );
+var empty_deflation_window = require( './fixtures/empty_deflation_window.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -126,7 +109,6 @@ function runDlaqr3( wantt, wantz, N, ktop, kbot, nw, Hin, iloz, ihiz ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dlaqr3: 6x6 hessenberg NW=3', function t() {
@@ -137,7 +119,7 @@ test( 'dlaqr3: 6x6 hessenberg NW=3', function t() {
 	var tc;
 	var N;
 
-	tc = findCase( '6x6 hessenberg NW=3' );
+	tc = _6x6_hessenberg_nw_3;
 	N = 6;
 	MAXN = 10;
 	Hin = extractMatrix( tc.H, N, MAXN );
@@ -156,7 +138,7 @@ test( 'dlaqr3: 4x4 hessenberg NW=2', function t() {
 	var tc;
 	var N;
 
-	tc = findCase( '4x4 hessenberg NW=2' );
+	tc = _4x4_hessenberg_nw_2;
 	N = 4;
 	MAXN = 10;
 	Hin = extractMatrix( tc.H, N, MAXN );
@@ -174,7 +156,7 @@ test( 'dlaqr3: 4x4 hessenberg NW=1', function t() {
 	var H0;
 	var N;
 
-	tc = findCase( '4x4 hessenberg NW=1' );
+	tc = _4x4_hessenberg_nw_1;
 	N = 4;
 	MAXN = 10;
 	H0 = new Float64Array( N * N );
@@ -211,7 +193,7 @@ test( 'dlaqr3: empty active block (ktop > kbot)', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'empty active block' );
+	tc = empty_active_block;
 	N = 4;
 	H = new Float64Array( N * N );
 	Z = new Float64Array( N * N );
@@ -239,7 +221,7 @@ test( 'dlaqr3: empty deflation window (nw < 1)', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'empty deflation window' );
+	tc = empty_deflation_window;
 	N = 4;
 	H = new Float64Array( N * N );
 	Z = new Float64Array( N * N );

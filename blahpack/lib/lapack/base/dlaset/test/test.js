@@ -2,39 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaset = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaset.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var full_4x4 = require( './fixtures/full_4x4.json' );
+var full_5x3 = require( './fixtures/full_5x3.json' );
+var full_3x5 = require( './fixtures/full_3x5.json' );
+var upper_5x3 = require( './fixtures/upper_5x3.json' );
+var lower_3x5 = require( './fixtures/lower_3x5.json' );
+var full_4x1 = require( './fixtures/full_4x1.json' );
+var upper_3x5 = require( './fixtures/upper_3x5.json' );
+var lower_5x3 = require( './fixtures/lower_5x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Create a Float64Array of length n filled with value v.
@@ -63,7 +51,6 @@ function extractMatrix( A, M, N, sa1, sa2, offset ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlaset: upper_4x4', function t() {
@@ -71,7 +58,7 @@ test( 'dlaset: upper_4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	A = filled( 16, -1.0 );
 	dlaset( 'upper', 4, 4, 2.0, 5.0, A, 1, 4, 0 );
 	result = extractMatrix( A, 4, 4, 1, 4, 0 );
@@ -83,7 +70,7 @@ test( 'dlaset: lower_4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	A = filled( 16, -1.0 );
 	dlaset( 'lower', 4, 4, 3.0, 7.0, A, 1, 4, 0 );
 	result = extractMatrix( A, 4, 4, 1, 4, 0 );
@@ -95,7 +82,7 @@ test( 'dlaset: full_4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'full_4x4' );
+	tc = full_4x4;
 	A = filled( 16, -1.0 );
 	dlaset( 'full', 4, 4, 1.0, 9.0, A, 1, 4, 0 );
 	result = extractMatrix( A, 4, 4, 1, 4, 0 );
@@ -107,7 +94,7 @@ test( 'dlaset: full_5x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'full_5x3' );
+	tc = full_5x3;
 	A = filled( 15, -1.0 );
 	dlaset( 'full', 5, 3, 4.0, 8.0, A, 1, 5, 0 );
 	result = extractMatrix( A, 5, 3, 1, 5, 0 );
@@ -119,7 +106,7 @@ test( 'dlaset: full_3x5', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	A = filled( 15, -1.0 );
 	dlaset( 'full', 3, 5, 6.0, 2.0, A, 1, 3, 0 );
 	result = extractMatrix( A, 3, 5, 1, 3, 0 );
@@ -131,7 +118,7 @@ test( 'dlaset: upper_5x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_5x3' );
+	tc = upper_5x3;
 	A = filled( 15, -1.0 );
 	dlaset( 'upper', 5, 3, 2.0, 5.0, A, 1, 5, 0 );
 	result = extractMatrix( A, 5, 3, 1, 5, 0 );
@@ -143,7 +130,7 @@ test( 'dlaset: lower_3x5', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_3x5' );
+	tc = lower_3x5;
 	A = filled( 15, -1.0 );
 	dlaset( 'lower', 3, 5, 3.0, 7.0, A, 1, 3, 0 );
 	result = extractMatrix( A, 3, 5, 1, 3, 0 );
@@ -187,7 +174,7 @@ test( 'dlaset: full_4x1', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'full_4x1' );
+	tc = full_4x1;
 	A = filled( 4, -1.0 );
 	dlaset( 'full', 4, 1, 3.0, 7.0, A, 1, 4, 0 );
 	result = extractMatrix( A, 4, 1, 1, 4, 0 );
@@ -199,7 +186,7 @@ test( 'dlaset: upper_3x5', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_3x5' );
+	tc = upper_3x5;
 	A = filled( 15, -1.0 );
 	dlaset( 'upper', 3, 5, 2.0, 5.0, A, 1, 3, 0 );
 	result = extractMatrix( A, 3, 5, 1, 3, 0 );
@@ -211,7 +198,7 @@ test( 'dlaset: lower_5x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_5x3' );
+	tc = lower_5x3;
 	A = filled( 15, -1.0 );
 	dlaset( 'lower', 5, 3, 3.0, 7.0, A, 1, 5, 0 );
 	result = extractMatrix( A, 5, 3, 1, 5, 0 );

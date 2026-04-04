@@ -3,28 +3,17 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dger = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dger.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var basic = require( './fixtures/basic.json' );
+var alpha_two = require( './fixtures/alpha_two.json' );
+var add_existing = require( './fixtures/add_existing.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var stride_x = require( './fixtures/stride_x.json' );
+var neg_stride_y = require( './fixtures/neg_stride_y.json' );
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -48,7 +37,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 
 // For col-major LDA=3, M=3, N=2: strideA1=1, strideA2=3
 test( 'dger: basic 3x2', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var A = new Float64Array( 6 );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5 ] );
@@ -57,7 +46,7 @@ test( 'dger: basic 3x2', function t() {
 });
 
 test( 'dger: alpha=2', function t() {
-	var tc = findCase( 'alpha_two' );
+	var tc = alpha_two;
 	var A = new Float64Array( 6 );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5 ] );
@@ -71,7 +60,7 @@ test( 'dger: add to existing', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'add_existing' );
+	tc = add_existing;
 	A = new Float64Array( 6 );
 	A[ 0 ] = 10.0;
 	A[ 4 ] = 20.0;
@@ -87,7 +76,7 @@ test( 'dger: alpha=0', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'alpha_zero' );
+	tc = alpha_zero;
 	A = new Float64Array( 6 );
 	A[ 0 ] = 99.0;
 	x = new Float64Array( [ 1, 2, 3 ] );
@@ -109,7 +98,7 @@ test( 'dger: M=0', function t() {
 });
 
 test( 'dger: stride_x=2', function t() {
-	var tc = findCase( 'stride_x' );
+	var tc = stride_x;
 	var A = new Float64Array( 6 );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3 ] );
 	var y = new Float64Array( [ 4, 5 ] );
@@ -118,7 +107,7 @@ test( 'dger: stride_x=2', function t() {
 });
 
 test( 'dger: negative stride y', function t() {
-	var tc = findCase( 'neg_stride_y' );
+	var tc = neg_stride_y;
 	var A = new Float64Array( 6 );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5 ] );

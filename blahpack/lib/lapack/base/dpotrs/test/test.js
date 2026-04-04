@@ -2,41 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpotrf = require( './../../dpotrf/lib/base.js' );
 var dpotrs = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpotrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var lower_single_rhs = require( './fixtures/lower_single_rhs.json' );
+var upper_single_rhs = require( './fixtures/upper_single_rhs.json' );
+var lower_multi_rhs = require( './fixtures/lower_multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var upper_multi_rhs_3 = require( './fixtures/upper_multi_rhs_3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +70,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dpotrs: lower_single_rhs', function t() {
@@ -94,7 +78,7 @@ test( 'dpotrs: lower_single_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'lower_single_rhs' );
+	tc = lower_single_rhs;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	dpotrf( 'lower', 3, A, 1, 3, 0 );
@@ -109,7 +93,7 @@ test( 'dpotrs: upper_single_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'upper_single_rhs' );
+	tc = upper_single_rhs;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	dpotrf( 'upper', 3, A, 1, 3, 0 );
@@ -124,7 +108,7 @@ test( 'dpotrs: lower_multi_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'lower_multi_rhs' );
+	tc = lower_multi_rhs;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	B = new Float64Array( [ 1, 0, 0, 0, 1, 0 ] );
 	dpotrf( 'lower', 3, A, 1, 3, 0 );
@@ -139,7 +123,7 @@ test( 'dpotrs: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( 1 );
 	info = dpotrs( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
@@ -152,7 +136,7 @@ test( 'dpotrs: nrhs_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Float64Array( 9 );
 	B = new Float64Array( 3 );
 	info = dpotrs( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
@@ -165,7 +149,7 @@ test( 'dpotrs: one_by_one', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	A = new Float64Array( [ 2 ] );
 	B = new Float64Array( [ 6 ] );
 	info = dpotrs( 'lower', 1, 1, A, 1, 1, 0, B, 1, 1, 0 );
@@ -179,7 +163,7 @@ test( 'dpotrs: upper_multi_rhs_3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'upper_multi_rhs_3' );
+	tc = upper_multi_rhs_3;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	B = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
 	dpotrf( 'upper', 3, A, 1, 3, 0 );

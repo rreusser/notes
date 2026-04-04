@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -14,29 +12,17 @@ var dpptrf = require( '../../dpptrf/lib/base.js' );
 var dpptrs = require( '../../dpptrs/lib/base.js' );
 var dpprfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpprfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_upper_3x3 = require( './fixtures/basic_upper_3x3.json' );
+var basic_lower_3x3 = require( './fixtures/basic_lower_3x3.json' );
+var multi_rhs_3x3 = require( './fixtures/multi_rhs_3x3.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var illcond_5x5 = require( './fixtures/illcond_5x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two values are approximately equal.
@@ -85,7 +71,6 @@ function copyArray( src, dst ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpprfs is a function', function t() {
@@ -104,7 +89,7 @@ test( 'dpprfs: basic_upper_3x3', function t() {
 	var X;
 	var B;
 
-	tc = findCase( 'basic_upper_3x3' );
+	tc = basic_upper_3x3;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	copyArray( AP, AFP );
@@ -138,7 +123,7 @@ test( 'dpprfs: basic_lower_3x3', function t() {
 	var X;
 	var B;
 
-	tc = findCase( 'basic_lower_3x3' );
+	tc = basic_lower_3x3;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	copyArray( AP, AFP );
@@ -173,7 +158,7 @@ test( 'dpprfs: multi_rhs_3x3', function t() {
 	var X;
 	var B;
 
-	tc = findCase( 'multi_rhs_3x3' );
+	tc = multi_rhs_3x3;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	copyArray( AP, AFP );
@@ -208,7 +193,7 @@ test( 'dpprfs: n_zero', function t() {
 	var X;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Float64Array( 1 );
 	AFP = new Float64Array( 1 );
 	B = new Float64Array( 1 );
@@ -235,7 +220,7 @@ test( 'dpprfs: nrhs_zero', function t() {
 	var X;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	copyArray( AP, AFP );
@@ -261,7 +246,7 @@ test( 'dpprfs: n_one', function t() {
 	var X;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AP = new Float64Array( [ 4.0 ] );
 	AFP = new Float64Array( 1 );
 	copyArray( AP, AFP );
@@ -295,7 +280,7 @@ test( 'dpprfs: illcond_5x5', function t() {
 	var X;
 	var B;
 
-	tc = findCase( 'illcond_5x5' );
+	tc = illcond_5x5;
 	AP = new Float64Array([
 		100.0,
 		10.0,

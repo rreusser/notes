@@ -2,45 +2,31 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgeqp3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgeqp3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var rect_4x3 = require( './fixtures/rect_4x3.json' );
+var rect_3x4 = require( './fixtures/rect_3x4.json' );
+var square_4x4 = require( './fixtures/square_4x4.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var fixed_col1 = require( './fixtures/fixed_col1.json' );
+var fixed_col3_swap = require( './fixtures/fixed_col3_swap.json' );
+var fixed_two_cols = require( './fixtures/fixed_two_cols.json' );
+var wide_8x36 = require( './fixtures/wide_8x36.json' );
+var large_140x130_blocked = require( './fixtures/large_140x130_blocked.json' );
 
 // VARIABLES //
 
 var LDA = 8; // Matches Fortran MAXMN
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -121,7 +107,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgeqp3: 4x3 matrix (tall)', function t() {
@@ -131,7 +116,7 @@ test( 'dgeqp3: 4x3 matrix (tall)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'rect_4x3' );
+	tc = rect_4x3;
 	A = makeMatrix( [1, 2, 0, 1, 0, 1, 3, 2, 3, 0, 1, 2], 4, 3 );
 	JPVT = new Int32Array( 3 );
 	TAU = new Float64Array( 3 );
@@ -149,7 +134,7 @@ test( 'dgeqp3: 3x4 matrix (wide)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'rect_3x4' );
+	tc = rect_3x4;
 	A = makeMatrix( [1, 0, 2, 3, 1, 0, 0, 2, 1, 1, 0, 3], 3, 4 );
 	JPVT = new Int32Array( 4 );
 	TAU = new Float64Array( 3 );
@@ -167,7 +152,7 @@ test( 'dgeqp3: square 4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'square_4x4' );
+	tc = square_4x4;
 	A = makeMatrix( [2, 1, 0, 1, 0, 3, 1, 2, 1, 0, 4, 1, 3, 2, 1, 5], 4, 4 );
 	JPVT = new Int32Array( 4 );
 	TAU = new Float64Array( 4 );
@@ -211,7 +196,7 @@ test( 'dgeqp3: 1x1 matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	A = new Float64Array( LDA );
 	A[ 0 ] = 5.0;
 	JPVT = new Int32Array( 1 );
@@ -230,7 +215,7 @@ test( 'dgeqp3: fixed column 1', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'fixed_col1' );
+	tc = fixed_col1;
 	A = makeMatrix( [1, 0, 0, 0, 3, 4, 0, 1, 2], 3, 3 );
 	JPVT = new Int32Array( [1, 0, 0] );
 	TAU = new Float64Array( 3 );
@@ -248,7 +233,7 @@ test( 'dgeqp3: fixed column 3 (swap to front)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'fixed_col3_swap' );
+	tc = fixed_col3_swap;
 	A = makeMatrix( [1, 2, 0, 1, 3, 0, 2, 1, 0, 1, 3, 2], 4, 3 );
 	JPVT = new Int32Array( [0, 0, 1] );
 	TAU = new Float64Array( 3 );
@@ -266,7 +251,7 @@ test( 'dgeqp3: fix columns 1 and 3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'fixed_two_cols' );
+	tc = fixed_two_cols;
 	A = makeMatrix( [1, 2, 0, 1, 3, 0, 2, 1, 0, 1, 3, 2], 4, 3 );
 	JPVT = new Int32Array( [1, 0, 1] );
 	TAU = new Float64Array( 3 );
@@ -290,7 +275,7 @@ test( 'dgeqp3: wide 8x36 (unblocked, sminmn < NB)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'wide_8x36' );
+	tc = wide_8x36;
 	BIGMN = 40;
 	M = 8;
 	N = 36;
@@ -328,7 +313,7 @@ test( 'dgeqp3: large 140x130 (triggers blocked dlaqps path)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'large_140x130_blocked' );
+	tc = large_140x130_blocked;
 	BIGMN = 140;
 	M = 140;
 	N = 130;

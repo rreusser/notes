@@ -2,42 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhptrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhptrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var zhptrd_4x4_upper = require( './fixtures/zhptrd_4x4_upper.json' );
+var zhptrd_4x4_lower = require( './fixtures/zhptrd_4x4_lower.json' );
+var zhptrd_1x1 = require( './fixtures/zhptrd_1x1.json' );
+var zhptrd_0x0 = require( './fixtures/zhptrd_0x0.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -94,7 +76,6 @@ function toArray( arr, start, end ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhptrd: upper, 4x4', function t() {
@@ -107,7 +88,7 @@ test( 'zhptrd: upper, 4x4', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'zhptrd_4x4_upper' );
+	tc = zhptrd_4x4_upper;
 	AP = new Complex128Array([
 		4,
 		0,
@@ -153,7 +134,7 @@ test( 'zhptrd: lower, 4x4', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'zhptrd_4x4_lower' );
+	tc = zhptrd_4x4_lower;
 	AP = new Complex128Array([
 		4,
 		0,
@@ -197,7 +178,7 @@ test( 'zhptrd: N=1', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'zhptrd_1x1' );
+	tc = zhptrd_1x1;
 	AP = new Complex128Array( [ 5, 0 ] );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 0 );
@@ -215,7 +196,7 @@ test( 'zhptrd: N=0', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'zhptrd_0x0' );
+	tc = zhptrd_0x0;
 	AP = new Complex128Array( 0 );
 	d = new Float64Array( 0 );
 	e = new Float64Array( 0 );

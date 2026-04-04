@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -14,30 +12,22 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhbgvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhbgvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) { // eslint-disable-line max-len
-	return JSON.parse( line );
-});
-
+var v_a_u_n5_ka2_kb1 = require( './fixtures/v_a_u_n5_ka2_kb1.json' );
+var n_a_u_n5_ka2_kb1 = require( './fixtures/n_a_u_n5_ka2_kb1.json' );
+var v_a_l_n5_ka2_kb1 = require( './fixtures/v_a_l_n5_ka2_kb1.json' );
+var v_v_u_n5_ka2_kb1 = require( './fixtures/v_v_u_n5_ka2_kb1.json' );
+var v_i_u_n5_ka2_kb1 = require( './fixtures/v_i_u_n5_ka2_kb1.json' );
+var n_v_l_n5_ka2_kb1 = require( './fixtures/n_v_l_n5_ka2_kb1.json' );
+var n_i_l_n5_ka2_kb1 = require( './fixtures/n_i_l_n5_ka2_kb1.json' );
+var n1_v_a = require( './fixtures/n1_v_a.json' );
+var diag_n3 = require( './fixtures/diag_n3.json' );
+var v_i_u_n5_fast = require( './fixtures/v_i_u_n5_fast.json' );
+var n_i_u_n5_fast = require( './fixtures/n_i_u_n5_fast.json' );
+var v_i_u_n5_single = require( './fixtures/v_i_u_n5_single.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {(Object|void)} test case or undefined
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -266,7 +256,6 @@ function runZhbgvx( jobz, range, uplo, N, ka, kb, AB, BB, vl, vu, il, iu, abstol
 	};
 }
 
-
 // TESTS //
 
 test( 'zhbgvx is a function', function t() {
@@ -279,7 +268,7 @@ test( 'zhbgvx: V, A, U, N=5, KA=2, KB=1 (all eigenvalues + vectors)', function t
 	var BB;
 	var r;
 
-	tc = findCase( 'V_A_U_n5_ka2_kb1' );
+	tc = v_a_u_n5_ka2_kb1;
 	AB = bandAUpper5();
 	BB = bandBUpper5();
 	r = runZhbgvx( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -295,7 +284,7 @@ test( 'zhbgvx: N, A, U, N=5, KA=2, KB=1 (all eigenvalues, no vectors)', function
 	var BB;
 	var r;
 
-	tc = findCase( 'N_A_U_n5_ka2_kb1' );
+	tc = n_a_u_n5_ka2_kb1;
 	AB = bandAUpper5();
 	BB = bandBUpper5();
 	r = runZhbgvx( 'no-vectors', 'all', 'upper', 5, 2, 1, AB, BB, 0, 0, 0, 0, 0 );
@@ -310,7 +299,7 @@ test( 'zhbgvx: V, A, L, N=5, KA=2, KB=1 (lower, all eigenvalues + vectors)', fun
 	var BB;
 	var r;
 
-	tc = findCase( 'V_A_L_n5_ka2_kb1' );
+	tc = v_a_l_n5_ka2_kb1;
 	AB = bandALower5();
 	BB = bandBLower5();
 	r = runZhbgvx( 'compute-vectors', 'all', 'lower', 5, 2, 1, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -326,7 +315,7 @@ test( 'zhbgvx: V, V, U, N=5, KA=2, KB=1 (value range [1.0, 2.5])', function t() 
 	var BB;
 	var r;
 
-	tc = findCase( 'V_V_U_n5_ka2_kb1' );
+	tc = v_v_u_n5_ka2_kb1;
 	AB = bandAUpper5();
 	BB = bandBUpper5();
 	r = runZhbgvx( 'compute-vectors', 'value', 'upper', 5, 2, 1, AB, BB, 1.0, 2.5, 0, 0, 0 ); // eslint-disable-line max-len
@@ -342,7 +331,7 @@ test( 'zhbgvx: V, I, U, N=5, KA=2, KB=1 (index range 2..4)', function t() {
 	var BB;
 	var r;
 
-	tc = findCase( 'V_I_U_n5_ka2_kb1' );
+	tc = v_i_u_n5_ka2_kb1;
 	AB = bandAUpper5();
 	BB = bandBUpper5();
 	r = runZhbgvx( 'compute-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 2, 4, 0 ); // eslint-disable-line max-len
@@ -358,7 +347,7 @@ test( 'zhbgvx: N, V, L, N=5, KA=2, KB=1 (value range, lower, no vectors)', funct
 	var BB;
 	var r;
 
-	tc = findCase( 'N_V_L_n5_ka2_kb1' );
+	tc = n_v_l_n5_ka2_kb1;
 	AB = bandALower5();
 	BB = bandBLower5();
 	r = runZhbgvx( 'no-vectors', 'value', 'lower', 5, 2, 1, AB, BB, 1.0, 2.5, 0, 0, 0 ); // eslint-disable-line max-len
@@ -373,7 +362,7 @@ test( 'zhbgvx: N, I, L, N=5, KA=2, KB=1 (single eigenvalue, index 3)', function 
 	var BB;
 	var r;
 
-	tc = findCase( 'N_I_L_n5_ka2_kb1' );
+	tc = n_i_l_n5_ka2_kb1;
 	AB = bandALower5();
 	BB = bandBLower5();
 	r = runZhbgvx( 'no-vectors', 'index', 'lower', 5, 2, 1, AB, BB, 0, 0, 3, 3, 0 ); // eslint-disable-line max-len
@@ -400,7 +389,7 @@ test( 'zhbgvx: N=1, V, A (trivial)', function t() {
 	var BB;
 	var r;
 
-	tc = findCase( 'n1_V_A' );
+	tc = n1_v_a;
 	AB = new Complex128Array( [ 3.0, 0.0 ] );
 	BB = new Complex128Array( [ 2.0, 0.0 ] );
 	r = runZhbgvx( 'compute-vectors', 'all', 'upper', 1, 0, 0, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -416,7 +405,7 @@ test( 'zhbgvx: KA=KB=0, N=3 (diagonal matrices)', function t() {
 	var BB;
 	var r;
 
-	tc = findCase( 'diag_n3' );
+	tc = diag_n3;
 	AB = new Complex128Array( [ 5, 0, 6, 0, 7, 0 ] );
 	BB = new Complex128Array( [ 2, 0, 3, 0, 4, 0 ] );
 	r = runZhbgvx( 'no-vectors', 'all', 'upper', 3, 0, 0, AB, BB, 0, 0, 0, 0, 0 );
@@ -431,7 +420,7 @@ test( 'zhbgvx: V, I, U, N=5, fast path (IL=1, IU=N)', function t() {
 	var BB;
 	var r;
 
-	tc = findCase( 'V_I_U_n5_fast' );
+	tc = v_i_u_n5_fast;
 	AB = bandAUpper5();
 	BB = bandBUpper5();
 	r = runZhbgvx( 'compute-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 1, 5, 0 ); // eslint-disable-line max-len
@@ -447,7 +436,7 @@ test( 'zhbgvx: N, I, U, N=5, fast path (IL=1, IU=N, no vectors)', function t() {
 	var BB;
 	var r;
 
-	tc = findCase( 'N_I_U_n5_fast' );
+	tc = n_i_u_n5_fast;
 	AB = bandAUpper5();
 	BB = bandBUpper5();
 	r = runZhbgvx( 'no-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 1, 5, 0 ); // eslint-disable-line max-len
@@ -462,7 +451,7 @@ test( 'zhbgvx: V, I, U, N=5, single eigenvalue (IL=IU=1)', function t() {
 	var BB;
 	var r;
 
-	tc = findCase( 'V_I_U_n5_single' );
+	tc = v_i_u_n5_single;
 	AB = bandAUpper5();
 	BB = bandBUpper5();
 	r = runZhbgvx( 'compute-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 1, 1, 0 ); // eslint-disable-line max-len

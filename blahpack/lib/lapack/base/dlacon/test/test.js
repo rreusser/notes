@@ -5,37 +5,20 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlacon = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlacon.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var identity_3x3 = require( './fixtures/identity_3x3.json' );
+var upper_tri_4x4 = require( './fixtures/upper_tri_4x4.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var diag_5x5 = require( './fixtures/diag_5x5.json' );
+var dense_3x3 = require( './fixtures/dense_3x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -120,7 +103,6 @@ function estimateNorm( n, A ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dlacon: main export is a function', function t() {
@@ -133,7 +115,7 @@ test( 'dlacon: 3x3 identity matrix (1-norm = 1)', function t() {
 	var n;
 	var A;
 
-	tc = findCase( 'identity_3x3' );
+	tc = identity_3x3;
 	n = 3;
 	A = new Float64Array([
 		1,
@@ -157,7 +139,7 @@ test( 'dlacon: 4x4 upper triangular', function t() {
 	var n;
 	var A;
 
-	tc = findCase( 'upper_tri_4x4' );
+	tc = upper_tri_4x4;
 	n = 4;
 	A = new Float64Array([
 		1,
@@ -188,7 +170,7 @@ test( 'dlacon: 1x1 matrix', function t() {
 	var n;
 	var A;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	n = 1;
 	A = new Float64Array( [ 7 ] );
 	result = estimateNorm( n, A );
@@ -202,7 +184,7 @@ test( 'dlacon: 5x5 diagonal matrix (1-norm = max|diag| = 5)', function t() {
 	var n;
 	var A;
 
-	tc = findCase( 'diag_5x5' );
+	tc = diag_5x5;
 	n = 5;
 	A = new Float64Array( n * n );
 	A[ (0 * n) + 0 ] = 2.0;
@@ -221,7 +203,7 @@ test( 'dlacon: 3x3 dense matrix (1-norm = 18)', function t() {
 	var n;
 	var A;
 
-	tc = findCase( 'dense_3x3' );
+	tc = dense_3x3;
 	n = 3;
 	A = new Float64Array([
 		1,

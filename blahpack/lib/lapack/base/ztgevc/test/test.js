@@ -6,23 +6,18 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var ztgevc = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztgevc.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var right_all = require( './fixtures/right_all.json' );
+var left_all = require( './fixtures/left_all.json' );
+var both_all = require( './fixtures/both_all.json' );
+var right_selected = require( './fixtures/right_selected.json' );
+var right_backtransform = require( './fixtures/right_backtransform.json' );
+var both_2x2 = require( './fixtures/both_2x2.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -91,11 +86,10 @@ function setup2x2() {
 	return { S: S, P: P, LDS: LDS };
 }
 
-
 // TESTS //
 
 test( 'ztgevc: right eigenvectors, all (SIDE=R, HOWMNY=A)', function t() {
-	var tc = findCase( 'right_all' );
+	var tc = right_all;
 	var sp = setup3x3();
 	var VL = new Complex128Array( sp.LDS * 4 );
 	var VR = new Complex128Array( sp.LDS * 4 );
@@ -110,7 +104,7 @@ test( 'ztgevc: right eigenvectors, all (SIDE=R, HOWMNY=A)', function t() {
 });
 
 test( 'ztgevc: left eigenvectors, all (SIDE=L, HOWMNY=A)', function t() {
-	var tc = findCase( 'left_all' );
+	var tc = left_all;
 	var sp = setup3x3();
 	var VL = new Complex128Array( sp.LDS * 4 );
 	var VR = new Complex128Array( sp.LDS * 4 );
@@ -125,7 +119,7 @@ test( 'ztgevc: left eigenvectors, all (SIDE=L, HOWMNY=A)', function t() {
 });
 
 test( 'ztgevc: both eigenvectors, all (SIDE=B, HOWMNY=A)', function t() {
-	var tc = findCase( 'both_all' );
+	var tc = both_all;
 	var sp = setup3x3();
 	var VL = new Complex128Array( sp.LDS * 4 );
 	var VR = new Complex128Array( sp.LDS * 4 );
@@ -141,7 +135,7 @@ test( 'ztgevc: both eigenvectors, all (SIDE=B, HOWMNY=A)', function t() {
 });
 
 test( 'ztgevc: selected right eigenvectors (HOWMNY=S)', function t() {
-	var tc = findCase( 'right_selected' );
+	var tc = right_selected;
 	var sp = setup3x3();
 	var VL = new Complex128Array( sp.LDS * 4 );
 	var VR = new Complex128Array( sp.LDS * 4 );
@@ -156,7 +150,7 @@ test( 'ztgevc: selected right eigenvectors (HOWMNY=S)', function t() {
 });
 
 test( 'ztgevc: right backtransform (HOWMNY=B)', function t() {
-	var tc = findCase( 'right_backtransform' );
+	var tc = right_backtransform;
 	var sp = setup3x3();
 	var VL = new Complex128Array( sp.LDS * 4 );
 	var VR = new Complex128Array( sp.LDS * 4 );
@@ -191,7 +185,7 @@ test( 'ztgevc: N=0 quick return', function t() {
 });
 
 test( 'ztgevc: 2x2 system, both', function t() {
-	var tc = findCase( 'both_2x2' );
+	var tc = both_2x2;
 	var sp = setup2x2();
 	var VL = new Complex128Array( sp.LDS * 4 );
 	var VR = new Complex128Array( sp.LDS * 4 );

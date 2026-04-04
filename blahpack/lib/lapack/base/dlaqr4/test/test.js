@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaqr4 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqr4.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _6x6_wantt_wantz = require( './fixtures/6x6_wantt_wantz.json' );
+var _6x6_wantt_no_wantz = require( './fixtures/6x6_wantt_no_wantz.json' );
+var _6x6_no_wantt_no_wantz = require( './fixtures/6x6_no_wantt_no_wantz.json' );
+var _15x15_wantt_wantz = require( './fixtures/15x15_wantt_wantz.json' );
+var n_0 = require( './fixtures/n_0.json' );
+var n_1 = require( './fixtures/n_1.json' );
+var _6x6_partial_ilo_2_ihi_5 = require( './fixtures/6x6_partial_ilo_2_ihi_5.json' );
+var _20x20_wantt_wantz = require( './fixtures/20x20_wantt_wantz.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -193,7 +179,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlaqr4: 6x6 wantt=true wantz=true', function t() {
@@ -206,7 +191,7 @@ test( 'dlaqr4: 6x6 wantt=true wantz=true', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6 wantt wantz' );
+	tc = _6x6_wantt_wantz;
 	N = 6;
 	H = buildHessenberg6x6();
 	Z = identityMatrix( N );
@@ -231,7 +216,7 @@ test( 'dlaqr4: 6x6 wantt=true wantz=false', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6 wantt no wantz' );
+	tc = _6x6_wantt_no_wantz;
 	N = 6;
 	H = buildHessenberg6x6();
 	Z = new Float64Array( N * N );
@@ -255,7 +240,7 @@ test( 'dlaqr4: 6x6 wantt=false wantz=false (eigenvalues only)', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6 no wantt no wantz' );
+	tc = _6x6_no_wantt_no_wantz;
 	N = 6;
 	H = buildHessenberg6x6();
 	Z = new Float64Array( N * N );
@@ -280,7 +265,7 @@ test( 'dlaqr4: 15x15 wantt=true wantz=true (multishift path)', function t() {
 	var j;
 	var Z;
 
-	tc = findCase( '15x15 wantt wantz' );
+	tc = _15x15_wantt_wantz;
 	N = 15;
 	H = new Float64Array( N * N );
 	for ( i = 0; i < N; i++ ) {
@@ -313,7 +298,7 @@ test( 'dlaqr4: N=0 quick return', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'N=0' );
+	tc = n_0;
 	H = new Float64Array( 1 );
 	Z = new Float64Array( 1 );
 	WR = new Float64Array( 1 );
@@ -340,7 +325,7 @@ test( 'dlaqr4: N=1 trivial', function t() {
 	WI = new Float64Array( 1 );
 	WORK = new Float64Array( 10 );
 	info = dlaqr4( true, true, N, 1, N, H, 1, N, 0, WR, 1, 0, WI, 1, 0, 1, N, Z, 1, N, 0, WORK, 1, 0, 10 ); // eslint-disable-line max-len
-	tc = findCase( 'N=1' );
+	tc = n_1;
 	assert.strictEqual( info, tc.info, 'info' );
 	assertClose( WR[ 0 ], tc.WR1, 1e-14, 'WR[0]' );
 	assertClose( WI[ 0 ], tc.WI1, 1e-14, 'WI[0]' );
@@ -356,7 +341,7 @@ test( 'dlaqr4: 6x6 partial range ilo=2 ihi=5', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6 partial ilo=2 ihi=5' );
+	tc = _6x6_partial_ilo_2_ihi_5;
 	N = 6;
 	H = new Float64Array( N * N );
 	H[ 0 + 0*N ] = 10.0;
@@ -407,7 +392,7 @@ test( 'dlaqr4: 20x20 wantt=true wantz=true (multishift, N > NTINY)', function t(
 	var j;
 	var Z;
 
-	tc = findCase( '20x20 wantt wantz' );
+	tc = _20x20_wantt_wantz;
 	N = 20;
 	H = new Float64Array( N * N );
 	for ( i = 0; i < N; i++ ) {

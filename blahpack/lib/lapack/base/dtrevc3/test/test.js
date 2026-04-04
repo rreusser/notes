@@ -2,39 +2,31 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrevc3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrevc3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var right_all_4x4 = require( './fixtures/right_all_4x4.json' );
+var left_all_4x4 = require( './fixtures/left_all_4x4.json' );
+var both_all_4x4 = require( './fixtures/both_all_4x4.json' );
+var right_selected_4x4 = require( './fixtures/right_selected_4x4.json' );
+var right_backtransform_4x4 = require( './fixtures/right_backtransform_4x4.json' );
+var right_all_real_4x4 = require( './fixtures/right_all_real_4x4.json' );
+var right_n_1 = require( './fixtures/right_n_1.json' );
+var left_selected_complex_4x4 = require( './fixtures/left_selected_complex_4x4.json' );
+var left_backtransform_4x4 = require( './fixtures/left_backtransform_4x4.json' );
+var right_all_6x6_mixed = require( './fixtures/right_all_6x6_mixed.json' );
+var left_all_6x6_mixed = require( './fixtures/left_all_6x6_mixed.json' );
+var both_backtransform_6x6 = require( './fixtures/both_backtransform_6x6.json' );
+var right_selected_real_6x6 = require( './fixtures/right_selected_real_6x6.json' );
+var left_selected_complex_first_6x6 = require( './fixtures/left_selected_complex_first_6x6.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -148,7 +140,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dtrevc3: right eigenvectors, all, 4x4', function t() {
@@ -162,7 +153,7 @@ test( 'dtrevc3: right eigenvectors, all, 4x4', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'right all 4x4' );
+	tc = right_all_4x4;
 	N = 4;
 	T = buildT4();
 	VL = new Float64Array( N * N );
@@ -186,7 +177,7 @@ test( 'dtrevc3: left eigenvectors, all, 4x4', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'left all 4x4' );
+	tc = left_all_4x4;
 	N = 4;
 	T = buildT4();
 	VL = new Float64Array( N * N );
@@ -210,7 +201,7 @@ test( 'dtrevc3: both eigenvectors, all, 4x4', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'both all 4x4' );
+	tc = both_all_4x4;
 	N = 4;
 	T = buildT4();
 	VL = new Float64Array( N * N );
@@ -236,7 +227,7 @@ test( 'dtrevc3: right eigenvectors, selected, 4x4', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'right selected 4x4' );
+	tc = right_selected_4x4;
 	N = 4;
 	T = buildT4();
 	VL = new Float64Array( N * N );
@@ -266,7 +257,7 @@ test( 'dtrevc3: right backtransform, 4x4', function t() {
 	var i;
 	var M;
 
-	tc = findCase( 'right backtransform 4x4' );
+	tc = right_backtransform_4x4;
 	N = 4;
 	T = buildT4();
 	VL = new Float64Array( N * N );
@@ -293,7 +284,7 @@ test( 'dtrevc3: right all real eigenvalues, 4x4', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'right all real 4x4' );
+	tc = right_all_real_4x4;
 	N = 4;
 	T = new Float64Array( N * N );
 	T[ 0 + 0*N ] = 5.0;
@@ -335,7 +326,7 @@ test( 'dtrevc3: right N=1', function t() {
 	WORK = new Float64Array( 3 );
 	M = 0;
 	info = dtrevc3( 'right', 'all', SELECT, 1, 0, N, T, 1, N, 0, VL, 1, N, 0, VR, 1, N, 0, 1, M, WORK, 1, 0, 3 ); // eslint-disable-line max-len
-	tc = findCase( 'right N=1' );
+	tc = right_n_1;
 	assert.strictEqual( info, tc.info, 'info' );
 	assertArrayClose( toArray( VR ), tc.VR, 1e-12, 'VR' );
 });
@@ -352,7 +343,7 @@ test( 'dtrevc3: left selected complex 4x4', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'left selected complex 4x4' );
+	tc = left_selected_complex_4x4;
 	N = 4;
 	T = buildT4();
 	VR = new Float64Array( N * N );
@@ -382,7 +373,7 @@ test( 'dtrevc3: left backtransform, 4x4', function t() {
 	var i;
 	var M;
 
-	tc = findCase( 'left backtransform 4x4' );
+	tc = left_backtransform_4x4;
 	N = 4;
 	T = buildT4();
 	VL = new Float64Array( N * N );
@@ -409,7 +400,7 @@ test( 'dtrevc3: right all 6x6 mixed', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'right all 6x6 mixed' );
+	tc = right_all_6x6_mixed;
 	N = 6;
 	T = buildT6();
 	VL = new Float64Array( N * N );
@@ -433,7 +424,7 @@ test( 'dtrevc3: left all 6x6 mixed', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'left all 6x6 mixed' );
+	tc = left_all_6x6_mixed;
 	N = 6;
 	T = buildT6();
 	VL = new Float64Array( N * N );
@@ -458,7 +449,7 @@ test( 'dtrevc3: both backtransform 6x6', function t() {
 	var i;
 	var M;
 
-	tc = findCase( 'both backtransform 6x6' );
+	tc = both_backtransform_6x6;
 	N = 6;
 	T = buildT6();
 	VL = new Float64Array( N * N );
@@ -488,7 +479,7 @@ test( 'dtrevc3: right selected real 6x6', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'right selected real 6x6' );
+	tc = right_selected_real_6x6;
 	N = 6;
 	T = buildT6();
 	VL = new Float64Array( N * N );
@@ -516,7 +507,7 @@ test( 'dtrevc3: left selected complex first 6x6', function t() {
 	var T;
 	var M;
 
-	tc = findCase( 'left selected complex first 6x6' );
+	tc = left_selected_complex_first_6x6;
 	N = 6;
 	T = buildT6();
 	VR = new Float64Array( N * N );

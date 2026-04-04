@@ -4,23 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dsytd2 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsytd2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var upper_5x5 = require( './fixtures/upper_5x5.json' );
+var lower_5x5 = require( './fixtures/lower_5x5.json' );
+var upper_2x2 = require( './fixtures/upper_2x2.json' );
+var lower_2x2 = require( './fixtures/lower_2x2.json' );
+var upper_diagonal = require( './fixtures/upper_diagonal.json' );
+var lower_diagonal = require( './fixtures/lower_diagonal.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -59,11 +59,10 @@ function run( uplo, N, Aflat ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dsytd2: upper_4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var r = run( 'upper', 4, [
 		4, 1, 2, 1,
 		1, 5, 1, 2,
@@ -78,7 +77,7 @@ test( 'dsytd2: upper_4x4', function t() {
 });
 
 test( 'dsytd2: lower_4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var r = run( 'lower', 4, [
 		4, 1, 2, 1,
 		1, 5, 1, 2,
@@ -93,7 +92,7 @@ test( 'dsytd2: lower_4x4', function t() {
 });
 
 test( 'dsytd2: n_one_upper', function t() {
-	var tc = findCase( 'n_one_upper' );
+	var tc = n_one_upper;
 	var A = new Float64Array( [ 3.0 ] );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
@@ -105,7 +104,7 @@ test( 'dsytd2: n_one_upper', function t() {
 });
 
 test( 'dsytd2: n_one_lower', function t() {
-	var tc = findCase( 'n_one_lower' );
+	var tc = n_one_lower;
 	var A = new Float64Array( [ 3.0 ] );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
@@ -117,7 +116,7 @@ test( 'dsytd2: n_one_lower', function t() {
 });
 
 test( 'dsytd2: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Float64Array( 0 );
 	var d = new Float64Array( 0 );
 	var e = new Float64Array( 0 );
@@ -127,7 +126,7 @@ test( 'dsytd2: n_zero', function t() {
 });
 
 test( 'dsytd2: upper_5x5', function t() {
-	var tc = findCase( 'upper_5x5' );
+	var tc = upper_5x5;
 	var r = run( 'upper', 5, [
 		10, 3, 1, 0.5, 0.2,
 		3, 8, 2, 1, 0.5,
@@ -143,7 +142,7 @@ test( 'dsytd2: upper_5x5', function t() {
 });
 
 test( 'dsytd2: lower_5x5', function t() {
-	var tc = findCase( 'lower_5x5' );
+	var tc = lower_5x5;
 	var r = run( 'lower', 5, [
 		10, 3, 1, 0.5, 0.2,
 		3, 8, 2, 1, 0.5,
@@ -159,7 +158,7 @@ test( 'dsytd2: lower_5x5', function t() {
 });
 
 test( 'dsytd2: upper_2x2', function t() {
-	var tc = findCase( 'upper_2x2' );
+	var tc = upper_2x2;
 	var r = run( 'upper', 2, [
 		4, 3,
 		3, 5
@@ -172,7 +171,7 @@ test( 'dsytd2: upper_2x2', function t() {
 });
 
 test( 'dsytd2: lower_2x2', function t() {
-	var tc = findCase( 'lower_2x2' );
+	var tc = lower_2x2;
 	var r = run( 'lower', 2, [
 		4, 3,
 		3, 5
@@ -185,7 +184,7 @@ test( 'dsytd2: lower_2x2', function t() {
 });
 
 test( 'dsytd2: upper_diagonal', function t() {
-	var tc = findCase( 'upper_diagonal' );
+	var tc = upper_diagonal;
 	var r = run( 'upper', 3, [
 		2, 0, 0,
 		0, 5, 0,
@@ -198,7 +197,7 @@ test( 'dsytd2: upper_diagonal', function t() {
 });
 
 test( 'dsytd2: lower_diagonal', function t() {
-	var tc = findCase( 'lower_diagonal' );
+	var tc = lower_diagonal;
 	var r = run( 'lower', 3, [
 		2, 0, 0,
 		0, 5, 0,

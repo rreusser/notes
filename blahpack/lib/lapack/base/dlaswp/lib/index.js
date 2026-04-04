@@ -42,11 +42,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dlaswp;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dlaswp = main;
+} else {
+	dlaswp = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dlaswp;
 
 // exports: { "ndarray": "dlaswp.ndarray" }

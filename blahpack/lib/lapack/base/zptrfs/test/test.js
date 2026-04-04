@@ -4,26 +4,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var zptrfs = require( './../lib/base.js' );
 var zpttrf = require( '../../zpttrf/lib/base.js' );
 var zpttrs = require( '../../zpttrs/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zptrfs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_n5_nrhs1 = require( './fixtures/upper_n5_nrhs1.json' );
+var lower_n5_nrhs1 = require( './fixtures/lower_n5_nrhs1.json' );
+var upper_n4_nrhs2 = require( './fixtures/upper_n4_nrhs2.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -130,11 +123,10 @@ function hermTridiagMatvecLower( d, eInterleaved, xInterleaved, n ) {
 	return b;
 }
 
-
 // TESTS //
 
 test( 'zptrfs: upper_n5_nrhs1', function t() {
-	var tc = findCase( 'upper_n5_nrhs1' );
+	var tc = upper_n5_nrhs1;
 	var n = 5;
 	var nrhs = 1;
 
@@ -177,7 +169,7 @@ test( 'zptrfs: upper_n5_nrhs1', function t() {
 });
 
 test( 'zptrfs: lower_n5_nrhs1', function t() {
-	var tc = findCase( 'lower_n5_nrhs1' );
+	var tc = lower_n5_nrhs1;
 	var n = 5;
 	var nrhs = 1;
 
@@ -222,7 +214,7 @@ test( 'zptrfs: lower_n5_nrhs1', function t() {
 });
 
 test( 'zptrfs: upper_n4_nrhs2', function t() {
-	var tc = findCase( 'upper_n4_nrhs2' );
+	var tc = upper_n4_nrhs2;
 	var n = 4;
 	var nrhs = 2;
 
@@ -276,7 +268,7 @@ test( 'zptrfs: upper_n4_nrhs2', function t() {
 });
 
 test( 'zptrfs: n_eq_1', function t() {
-	var tc = findCase( 'n_eq_1' );
+	var tc = n_eq_1;
 	var n = 1;
 	var nrhs = 1;
 

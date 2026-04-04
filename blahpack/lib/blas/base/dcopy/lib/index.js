@@ -45,11 +45,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dcopy;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dcopy = main;
+} else {
+	dcopy = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dcopy;
 
 // exports: { "ndarray": "dcopy.ndarray" }

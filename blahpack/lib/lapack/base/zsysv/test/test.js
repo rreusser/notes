@@ -10,23 +10,17 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zsysv = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zsysv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n1 = require( './fixtures/n1.json' );
+var pivot_2x2_lower = require( './fixtures/pivot_2x2_lower.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -66,7 +60,6 @@ function ipivTo0Based( ipiv ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zsysv: upper_4x4 - solves complex symmetric system with upper storage', function t() {
@@ -78,7 +71,7 @@ test( 'zsysv: upper_4x4 - solves complex symmetric system with upper storage', f
 	var A;
 	var B;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	expectedIPIV = ipivTo0Based( tc.ipiv );
 
 	// A (symmetric, upper triangle, column-major, LDA=4):
@@ -113,7 +106,7 @@ test( 'zsysv: lower_4x4 - solves complex symmetric system with lower storage', f
 	var A;
 	var B;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	expectedIPIV = ipivTo0Based( tc.ipiv );
 
 	// A (symmetric, lower triangle, column-major, LDA=4):
@@ -143,7 +136,7 @@ test( 'zsysv: multi_rhs - multiple right-hand sides', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	expectedIPIV = ipivTo0Based( tc.ipiv );
 
 	// A = [(2,1) (1,0); (1,0) (3,-1)], upper, LDA=2
@@ -198,7 +191,7 @@ test( 'zsysv: n1 - N=1 edge case', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	expectedIPIV = ipivTo0Based( tc.ipiv );
 
 	// A = [(3,1)], b = [(9,3)] => x = (9,3)/(3,1) = (3,0)
@@ -223,7 +216,7 @@ test( 'zsysv: pivot_2x2_lower - matrix triggering 2x2 pivots (lower)', function 
 	var A;
 	var B;
 
-	tc = findCase( 'pivot_2x2_lower' );
+	tc = pivot_2x2_lower;
 	expectedIPIV = ipivTo0Based( tc.ipiv );
 
 	// Lower triangle, column-major, LDA=4:

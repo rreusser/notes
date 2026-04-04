@@ -2,41 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dnrm2 = require( '../../../../blas/base/dnrm2/lib/base.js' );
 var dlaqps = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqps.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_4x3_nb2 = require( './fixtures/basic_4x3_nb2.json' );
+var rect_6x4_nb3 = require( './fixtures/rect_6x4_nb3.json' );
+var nb_1 = require( './fixtures/nb_1.json' );
+var offset_1 = require( './fixtures/offset_1.json' );
+var collinear_norm_recomp = require( './fixtures/collinear_norm_recomp.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -113,7 +96,6 @@ function computeNorms( A, LDA, M, N, startRow ) {
 	return norms;
 }
 
-
 // TESTS //
 
 test( 'dlaqps: basic_4x3_nb2', function t() {
@@ -132,7 +114,7 @@ test( 'dlaqps: basic_4x3_nb2', function t() {
 
 	MAXN = 8;
 	MAXM = 8;
-	tc = findCase( 'basic_4x3_nb2' );
+	tc = basic_4x3_nb2;
 	A = makeMatrix( MAXM, 4, 3, [
 		[ 1, 2, 0, 1 ],
 		[ 0, 1, 3, 2 ],
@@ -178,7 +160,7 @@ test( 'dlaqps: rect_6x4_nb3', function t() {
 
 	MAXN = 8;
 	MAXM = 8;
-	tc = findCase( 'rect_6x4_nb3' );
+	tc = rect_6x4_nb3;
 	A = makeMatrix( MAXM, 6, 4, [
 		[ 2, 1, 0, 3, 1, 0 ],
 		[ 1, 0, 2, 1, 0, 3 ],
@@ -217,7 +199,7 @@ test( 'dlaqps: nb_1', function t() {
 
 	MAXN = 8;
 	MAXM = 8;
-	tc = findCase( 'nb_1' );
+	tc = nb_1;
 	A = makeMatrix( MAXM, 3, 3, [
 		[ 1, 2, 3 ],
 		[ 4, 5, 6 ],
@@ -255,7 +237,7 @@ test( 'dlaqps: offset_1', function t() {
 
 	MAXN = 8;
 	MAXM = 8;
-	tc = findCase( 'offset_1' );
+	tc = offset_1;
 	A = makeMatrix( MAXM, 4, 2, [
 		[ 5, 0, 0, 0 ],
 		[ 1, 2, 1, 3 ]
@@ -292,7 +274,7 @@ test( 'dlaqps: collinear_norm_recomp', function t() {
 
 	MAXN = 8;
 	MAXM = 8;
-	tc = findCase( 'collinear_norm_recomp' );
+	tc = collinear_norm_recomp;
 	A = makeMatrix( MAXM, 6, 3, [
 		[ 1, 2, 3, 4, 5, 6 ],
 		[ 1, 2, 3, 4, 5, 6 + 1e-10 ],

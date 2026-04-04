@@ -4,25 +4,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var ztrcon = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrcon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_nonunit_1norm = require( './fixtures/upper_nonunit_1norm.json' );
+var upper_nonunit_inorm = require( './fixtures/upper_nonunit_inorm.json' );
+var lower_nonunit_1norm = require( './fixtures/lower_nonunit_1norm.json' );
+var upper_unit_1norm = require( './fixtures/upper_unit_1norm.json' );
+var identity = require( './fixtures/identity.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var _4x4_lower_inorm = require( './fixtures/4x4_lower_inorm.json' );
+var lower_unit_inorm = require( './fixtures/lower_unit_inorm.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -39,7 +36,6 @@ function computeRcond( normStr, uploStr, diagStr, N, Aflat ) {
 	return { rcond: rcond[ 0 ], info: info };
 }
 
-
 // TESTS //
 
 test( 'ztrcon: main export is a function', function t() {
@@ -47,7 +43,7 @@ test( 'ztrcon: main export is a function', function t() {
 });
 
 test( 'ztrcon: upper triangular, non-unit, 1-norm', function t() {
-	var tc = findCase( 'upper_nonunit_1norm' );
+	var tc = upper_nonunit_1norm;
 	// A = [[4+i, 1+i, 0.5], [0, 3, 1-i], [0, 0, 2+i]]
 	var result = computeRcond( 'one-norm', 'upper', 'non-unit', 3, [
 		4, 1,  0, 0,  0, 0,
@@ -59,7 +55,7 @@ test( 'ztrcon: upper triangular, non-unit, 1-norm', function t() {
 });
 
 test( 'ztrcon: upper triangular, non-unit, inf-norm', function t() {
-	var tc = findCase( 'upper_nonunit_Inorm' );
+	var tc = upper_nonunit_inorm;
 	var result = computeRcond( 'inf-norm', 'upper', 'non-unit', 3, [
 		4, 1,  0, 0,  0, 0,
 		1, 1,  3, 0,  0, 0,
@@ -70,7 +66,7 @@ test( 'ztrcon: upper triangular, non-unit, inf-norm', function t() {
 });
 
 test( 'ztrcon: lower triangular, non-unit, 1-norm', function t() {
-	var tc = findCase( 'lower_nonunit_1norm' );
+	var tc = lower_nonunit_1norm;
 	// A = [[3+i, 0, 0], [1, 4-i, 0], [0.5+i, 1-i, 2]]
 	var result = computeRcond( 'one-norm', 'lower', 'non-unit', 3, [
 		3, 1,    1, 0,     0.5, 1,
@@ -82,7 +78,7 @@ test( 'ztrcon: lower triangular, non-unit, 1-norm', function t() {
 });
 
 test( 'ztrcon: upper triangular, unit diagonal, 1-norm', function t() {
-	var tc = findCase( 'upper_unit_1norm' );
+	var tc = upper_unit_1norm;
 	// A = [[1, 1+i, 0.5], [0, 1, 1-i], [0, 0, 1]] (unit diag)
 	var result = computeRcond( 'one-norm', 'upper', 'unit', 3, [
 		1, 0,  0, 0,  0, 0,
@@ -94,7 +90,7 @@ test( 'ztrcon: upper triangular, unit diagonal, 1-norm', function t() {
 });
 
 test( 'ztrcon: identity (rcond=1)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var result = computeRcond( 'one-norm', 'upper', 'non-unit', 3, [
 		1, 0,  0, 0,  0, 0,
 		0, 0,  1, 0,  0, 0,
@@ -105,7 +101,7 @@ test( 'ztrcon: identity (rcond=1)', function t() {
 });
 
 test( 'ztrcon: N=0 (rcond=1)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var work = new Complex128Array( 1 );
 	var rwork = new Float64Array( 1 );
@@ -116,7 +112,7 @@ test( 'ztrcon: N=0 (rcond=1)', function t() {
 });
 
 test( 'ztrcon: 4x4 lower, inf-norm', function t() {
-	var tc = findCase( '4x4_lower_Inorm' );
+	var tc = _4x4_lower_inorm;
 	// A = [[5+i, 0, 0, 0], [1, 4-i, 0, 0], [0, 1+i, 3, 0], [0, 0, 1, 2+i]]
 	var result = computeRcond( 'inf-norm', 'lower', 'non-unit', 4, [
 		5, 1,    1, 0,    0, 0,    0, 0,
@@ -129,7 +125,7 @@ test( 'ztrcon: 4x4 lower, inf-norm', function t() {
 });
 
 test( 'ztrcon: lower, unit diagonal, inf-norm', function t() {
-	var tc = findCase( 'lower_unit_Inorm' );
+	var tc = lower_unit_inorm;
 	// A = [[1, 0, 0], [0.5+0.5i, 1, 0], [0, 0.5-0.5i, 1]]
 	var result = computeRcond( 'inf-norm', 'lower', 'unit', 3, [
 		1, 0,       0.5, 0.5,    0, 0,

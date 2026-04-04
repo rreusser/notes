@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -15,29 +12,18 @@ var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhpr2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpr2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var complex_alpha = require( './fixtures/complex_alpha.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var scalar = require( './fixtures/scalar.json' );
+var stride_2 = require( './fixtures/stride_2.json' );
+var zero_elements = require( './fixtures/zero_elements.json' );
+var lower_stride_2 = require( './fixtures/lower_stride_2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -58,7 +44,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zhpr2 is a function', function t() {
@@ -73,7 +58,7 @@ test( 'zhpr2: upper triangle, N=3, alpha=(1,0)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'upper_basic' );
+	tc = upper_basic;
 	ap = new Complex128Array( [ 2.0, 0.0, 1.0, 1.0, 4.0, 0.0, 3.0, -2.0, 2.0, 1.0, 5.0, 0.0 ] ); // eslint-disable-line max-len
 	x = new Complex128Array( [ 1.0, 0.5, 2.0, -1.0, 3.0, 1.0 ] );
 	y = new Complex128Array( [ 0.5, 1.0, 1.5, -0.5, 2.5, 0.0 ] );
@@ -91,7 +76,7 @@ test( 'zhpr2: lower triangle, N=3, alpha=(1,0)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'lower_basic' );
+	tc = lower_basic;
 	ap = new Complex128Array( [ 2.0, 0.0, 1.0, -1.0, 3.0, 2.0, 4.0, 0.0, 2.0, -1.0, 5.0, 0.0 ] ); // eslint-disable-line max-len
 	x = new Complex128Array( [ 1.0, 0.5, 2.0, -1.0, 3.0, 1.0 ] );
 	y = new Complex128Array( [ 0.5, 1.0, 1.5, -0.5, 2.5, 0.0 ] );
@@ -109,7 +94,7 @@ test( 'zhpr2: complex alpha=(2,1)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'complex_alpha' );
+	tc = complex_alpha;
 	ap = new Complex128Array( [ 2.0, 0.0, 1.0, 1.0, 4.0, 0.0, 3.0, -2.0, 2.0, 1.0, 5.0, 0.0 ] ); // eslint-disable-line max-len
 	x = new Complex128Array( [ 1.0, 0.5, 2.0, -1.0, 3.0, 1.0 ] );
 	y = new Complex128Array( [ 0.5, 1.0, 1.5, -0.5, 2.5, 0.0 ] );
@@ -145,7 +130,7 @@ test( 'zhpr2: N=0 quick return', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ap = new Complex128Array( [ 99.0, 0.0 ] );
 	x = new Complex128Array( [ 1.0, 0.5 ] );
 	y = new Complex128Array( [ 0.5, 1.0 ] );
@@ -163,7 +148,7 @@ test( 'zhpr2: N=1 scalar case', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'scalar' );
+	tc = scalar;
 	ap = new Complex128Array( [ 3.0, 0.0 ] );
 	x = new Complex128Array( [ 2.0, 1.0 ] );
 	y = new Complex128Array( [ 1.0, -0.5 ] );
@@ -181,7 +166,7 @@ test( 'zhpr2: non-unit stride (incx=2, incy=2)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'stride_2' );
+	tc = stride_2;
 	ap = new Complex128Array( [ 2.0, 0.0, 1.0, 1.0, 4.0, 0.0, 3.0, -2.0, 2.0, 1.0, 5.0, 0.0 ] ); // eslint-disable-line max-len
 	x = new Complex128Array( [ 1.0, 0.5, 0.0, 0.0, 2.0, -1.0, 0.0, 0.0, 3.0, 1.0 ] ); // eslint-disable-line max-len
 	y = new Complex128Array( [ 0.5, 1.0, 0.0, 0.0, 1.5, -0.5, 0.0, 0.0, 2.5, 0.0 ] ); // eslint-disable-line max-len
@@ -199,7 +184,7 @@ test( 'zhpr2: zero elements in x and y', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'zero_elements' );
+	tc = zero_elements;
 	ap = new Complex128Array( [ 2.0, 0.0, 1.0, 1.0, 4.0, 0.0, 3.0, -2.0, 2.0, 1.0, 5.0, 0.0 ] ); // eslint-disable-line max-len
 	x = new Complex128Array( [ 1.0, 0.5, 0.0, 0.0, 3.0, 1.0 ] );
 	y = new Complex128Array( [ 0.5, 1.0, 0.0, 0.0, 2.5, 0.0 ] );
@@ -236,7 +221,7 @@ test( 'zhpr2: lower triangle with non-unit stride', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'lower_stride_2' );
+	tc = lower_stride_2;
 	ap = new Complex128Array( [ 2.0, 0.0, 1.0, -1.0, 3.0, 2.0, 4.0, 0.0, 2.0, -1.0, 5.0, 0.0 ] ); // eslint-disable-line max-len
 	x = new Complex128Array( [ 1.0, 0.5, 0.0, 0.0, 2.0, -1.0, 0.0, 0.0, 3.0, 1.0 ] ); // eslint-disable-line max-len
 	y = new Complex128Array( [ 0.5, 1.0, 0.0, 0.0, 1.5, -0.5, 0.0, 0.0, 2.5, 0.0 ] ); // eslint-disable-line max-len

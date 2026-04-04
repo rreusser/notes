@@ -23,20 +23,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var dlanv2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlanv2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var c_zero = require( './fixtures/c_zero.json' );
+var b_zero = require( './fixtures/b_zero.json' );
+var a_eq_d_diff_sign = require( './fixtures/a_eq_d_diff_sign.json' );
+var real_eigenvalues = require( './fixtures/real_eigenvalues.json' );
+var complex_eigenvalues = require( './fixtures/complex_eigenvalues.json' );
+var zero_matrix = require( './fixtures/zero_matrix.json' );
+var identity = require( './fixtures/identity.json' );
+var diagonal = require( './fixtures/diagonal.json' );
+var real_negative = require( './fixtures/real_negative.json' );
+var complex_equal_diag = require( './fixtures/complex_equal_diag.json' );
+var near_equal = require( './fixtures/near_equal.json' );
+var large_values = require( './fixtures/large_values.json' );
+var same_sign_bc = require( './fixtures/same_sign_bc.json' );
+var tiny_bc = require( './fixtures/tiny_bc.json' );
 
 // VARIABLES //
 
@@ -58,21 +63,7 @@ var inputs = {
 	'tiny_bc': [ 2.0, 1.0e-16, 1.0e-16, 2.0 ]
 };
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -109,7 +100,6 @@ function checkResult( result, tc, tol ) {
 	assertClose( result.sn, tc.sn, tol, 'sn' );
 }
 
-
 // TESTS //
 
 test( 'dlanv2 is a function', function t() {
@@ -122,7 +112,7 @@ test( 'dlanv2: c_zero (C=0, already Schur form)', function t() {
 	var tc;
 
 	inp = inputs[ 'c_zero' ];
-	tc = findCase( 'c_zero' );
+	tc = c_zero;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -133,7 +123,7 @@ test( 'dlanv2: b_zero (B=0, swap rows and columns)', function t() {
 	var tc;
 
 	inp = inputs[ 'b_zero' ];
-	tc = findCase( 'b_zero' );
+	tc = b_zero;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 
@@ -149,7 +139,7 @@ test( 'dlanv2: a_eq_d_diff_sign (A=D, sign(B)!=sign(C))', function t() {
 	var tc;
 
 	inp = inputs[ 'a_eq_d_diff_sign' ];
-	tc = findCase( 'a_eq_d_diff_sign' );
+	tc = a_eq_d_diff_sign;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -160,7 +150,7 @@ test( 'dlanv2: real_eigenvalues (Z >= MULTPL*EPS)', function t() {
 	var tc;
 
 	inp = inputs[ 'real_eigenvalues' ];
-	tc = findCase( 'real_eigenvalues' );
+	tc = real_eigenvalues;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 
@@ -176,7 +166,7 @@ test( 'dlanv2: complex_eigenvalues', function t() {
 	var tc;
 
 	inp = inputs[ 'complex_eigenvalues' ];
-	tc = findCase( 'complex_eigenvalues' );
+	tc = complex_eigenvalues;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 
@@ -192,7 +182,7 @@ test( 'dlanv2: zero_matrix', function t() {
 	var tc;
 
 	inp = inputs[ 'zero_matrix' ];
-	tc = findCase( 'zero_matrix' );
+	tc = zero_matrix;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 
@@ -208,7 +198,7 @@ test( 'dlanv2: identity', function t() {
 	var tc;
 
 	inp = inputs[ 'identity' ];
-	tc = findCase( 'identity' );
+	tc = identity;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -219,7 +209,7 @@ test( 'dlanv2: diagonal', function t() {
 	var tc;
 
 	inp = inputs[ 'diagonal' ];
-	tc = findCase( 'diagonal' );
+	tc = diagonal;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -230,7 +220,7 @@ test( 'dlanv2: real_negative', function t() {
 	var tc;
 
 	inp = inputs[ 'real_negative' ];
-	tc = findCase( 'real_negative' );
+	tc = real_negative;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -241,7 +231,7 @@ test( 'dlanv2: complex_equal_diag', function t() {
 	var tc;
 
 	inp = inputs[ 'complex_equal_diag' ];
-	tc = findCase( 'complex_equal_diag' );
+	tc = complex_equal_diag;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -252,7 +242,7 @@ test( 'dlanv2: near_equal (small Z, complex path)', function t() {
 	var tc;
 
 	inp = inputs[ 'near_equal' ];
-	tc = findCase( 'near_equal' );
+	tc = near_equal;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -263,7 +253,7 @@ test( 'dlanv2: large_values', function t() {
 	var tc;
 
 	inp = inputs[ 'large_values' ];
-	tc = findCase( 'large_values' );
+	tc = large_values;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -274,7 +264,7 @@ test( 'dlanv2: same_sign_bc (sign(B)==sign(C), real reduction)', function t() {
 	var tc;
 
 	inp = inputs[ 'same_sign_bc' ];
-	tc = findCase( 'same_sign_bc' );
+	tc = same_sign_bc;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });
@@ -285,7 +275,7 @@ test( 'dlanv2: tiny_bc (near-zero B,C)', function t() {
 	var tc;
 
 	inp = inputs[ 'tiny_bc' ];
-	tc = findCase( 'tiny_bc' );
+	tc = tiny_bc;
 	result = dlanv2( inp[0], inp[1], inp[2], inp[3] );
 	checkResult( result, tc, 1e-14 );
 });

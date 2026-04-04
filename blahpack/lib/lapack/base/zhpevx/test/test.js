@@ -7,7 +7,6 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -15,30 +14,23 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhpevx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpevx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var zhpevx_4x4_v_a_l = require( './fixtures/zhpevx_4x4_v_a_l.json' );
+var zhpevx_4x4_v_a_u = require( './fixtures/zhpevx_4x4_v_a_u.json' );
+var zhpevx_4x4_n_a_l = require( './fixtures/zhpevx_4x4_n_a_l.json' );
+var zhpevx_4x4_v_v_l = require( './fixtures/zhpevx_4x4_v_v_l.json' );
+var zhpevx_4x4_v_i_l = require( './fixtures/zhpevx_4x4_v_i_l.json' );
+var zhpevx_4x4_n_v_u = require( './fixtures/zhpevx_4x4_n_v_u.json' );
+var zhpevx_1x1_v_a = require( './fixtures/zhpevx_1x1_v_a.json' );
+var zhpevx_0x0 = require( './fixtures/zhpevx_0x0.json' );
+var zhpevx_1x1_v_v_excluded = require( './fixtures/zhpevx_1x1_v_v_excluded.json' );
+var zhpevx_1x1_v_v_included = require( './fixtures/zhpevx_1x1_v_v_included.json' );
+var zhpevx_1x1_n_i = require( './fixtures/zhpevx_1x1_n_i.json' );
+var zhpevx_4x4_n_i_u_fast = require( './fixtures/zhpevx_4x4_n_i_u_fast.json' );
+var zhpevx_4x4_v_i_u_fast = require( './fixtures/zhpevx_4x4_v_i_u_fast.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -334,7 +326,6 @@ function unpackUpperHermitian( AP, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhpevx: V, A, L, 4x4', function t() {
@@ -343,7 +334,7 @@ test( 'zhpevx: V, A, L, 4x4', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_V_A_L' );
+	tc = zhpevx_4x4_v_a_l;
 	AP = packedLower4();
 	Afull = unpackLowerHermitian( packedLower4(), 4 );
 	r = runZhpevx( 'compute-vectors', 'all', 'lower', 4, AP, 0, 0, 0, 0, 0 );
@@ -359,7 +350,7 @@ test( 'zhpevx: V, A, U, 4x4', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_V_A_U' );
+	tc = zhpevx_4x4_v_a_u;
 	AP = packedUpper4();
 	Afull = unpackUpperHermitian( packedUpper4(), 4 );
 	r = runZhpevx( 'compute-vectors', 'all', 'upper', 4, AP, 0, 0, 0, 0, 0 );
@@ -374,7 +365,7 @@ test( 'zhpevx: N, A, L, 4x4', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_N_A_L' );
+	tc = zhpevx_4x4_n_a_l;
 	AP = packedLower4();
 	r = runZhpevx( 'no-vectors', 'all', 'lower', 4, AP, 0, 0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -387,7 +378,7 @@ test( 'zhpevx: V, V, L, 4x4 (value range, none found)', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_V_V_L' );
+	tc = zhpevx_4x4_v_v_l;
 	AP = packedLower4();
 	r = runZhpevx( 'compute-vectors', 'value', 'lower', 4, AP, 2.5, 5.5, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -400,7 +391,7 @@ test( 'zhpevx: V, I, L, 4x4 (index range)', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_V_I_L' );
+	tc = zhpevx_4x4_v_i_l;
 	AP = packedLower4();
 	Afull = unpackLowerHermitian( packedLower4(), 4 );
 	r = runZhpevx( 'compute-vectors', 'index', 'lower', 4, AP, 0, 0, 2, 3, 0 );
@@ -415,7 +406,7 @@ test( 'zhpevx: N, V, U, 4x4 (value range)', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_N_V_U' );
+	tc = zhpevx_4x4_n_v_u;
 	AP = packedUpper4();
 	r = runZhpevx( 'no-vectors', 'value', 'upper', 4, AP, 0.0, 4.0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -429,7 +420,7 @@ test( 'zhpevx: 1x1, V, A', function t() {
 	var zv;
 	var r;
 
-	tc = findCase( 'zhpevx_1x1_V_A' );
+	tc = zhpevx_1x1_v_a;
 	AP = new Complex128Array( [ 7.5, 0 ] );
 	r = runZhpevx( 'compute-vectors', 'all', 'lower', 1, AP, 0, 0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -444,7 +435,7 @@ test( 'zhpevx: 0x0', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_0x0' );
+	tc = zhpevx_0x0;
 	AP = new Complex128Array( 0 );
 	r = runZhpevx( 'compute-vectors', 'all', 'lower', 0, AP, 0, 0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -456,7 +447,7 @@ test( 'zhpevx: 1x1, V, V (excluded)', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_1x1_V_V_excluded' );
+	tc = zhpevx_1x1_v_v_excluded;
 	AP = new Complex128Array( [ 7.5, 0 ] );
 	r = runZhpevx( 'compute-vectors', 'value', 'lower', 1, AP, 0.0, 5.0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -469,7 +460,7 @@ test( 'zhpevx: 1x1, V, V (included)', function t() {
 	var zv;
 	var r;
 
-	tc = findCase( 'zhpevx_1x1_V_V_included' );
+	tc = zhpevx_1x1_v_v_included;
 	AP = new Complex128Array( [ 7.5, 0 ] );
 	r = runZhpevx( 'compute-vectors', 'value', 'lower', 1, AP, 5.0, 10.0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
@@ -484,7 +475,7 @@ test( 'zhpevx: 1x1, N, I', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_1x1_N_I' );
+	tc = zhpevx_1x1_n_i;
 	AP = new Complex128Array( [ 3, 0 ] );
 	r = runZhpevx( 'no-vectors', 'index', 'upper', 1, AP, 0, 0, 1, 1, 0 );
 	assert.equal( r.info, tc.info );
@@ -497,7 +488,7 @@ test( 'zhpevx: N, I, U, 4x4, fast path', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_N_I_U_fast' );
+	tc = zhpevx_4x4_n_i_u_fast;
 	AP = packedUpper4();
 	r = runZhpevx( 'no-vectors', 'index', 'upper', 4, AP, 0, 0, 1, 4, 0 );
 	assert.equal( r.info, tc.info );
@@ -511,7 +502,7 @@ test( 'zhpevx: V, I, U, 4x4, fast path with vectors', function t() {
 	var AP;
 	var r;
 
-	tc = findCase( 'zhpevx_4x4_V_I_U_fast' );
+	tc = zhpevx_4x4_v_i_u_fast;
 	AP = packedUpper4();
 	Afull = unpackUpperHermitian( packedUpper4(), 4 );
 	r = runZhpevx( 'compute-vectors', 'index', 'upper', 4, AP, 0, 0, 1, 4, 0 );

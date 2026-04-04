@@ -4,8 +4,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -13,19 +11,18 @@ var zgecon = require( './../lib/base.js' );
 var zgetrf = require( '../../zgetrf/lib/base.js' );
 var zlange = require( '../../zlange/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgecon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var well_cond_1norm = require( './fixtures/well_cond_1norm.json' );
+var well_cond_inorm = require( './fixtures/well_cond_inorm.json' );
+var identity = require( './fixtures/identity.json' );
+var ill_cond = require( './fixtures/ill_cond.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var anorm_zero = require( './fixtures/anorm_zero.json' );
+var _4x4_1norm = require( './fixtures/4x4_1norm.json' );
+var _4x4_inorm = require( './fixtures/4x4_inorm.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -45,7 +42,6 @@ function computeRcond( normStr, N, Aflat ) {
 	return { rcond: rcond[ 0 ], anorm: anorm, info: info };
 }
 
-
 // TESTS //
 
 test( 'zgecon: main export is a function', function t() {
@@ -53,7 +49,7 @@ test( 'zgecon: main export is a function', function t() {
 });
 
 test( 'zgecon: well-conditioned 3x3 hermitian (1-norm)', function t() {
-	var tc = findCase( 'well_cond_1norm' );
+	var tc = well_cond_1norm;
 	// A = [[4, 1+i, 0], [1-i, 3, 1], [0, 1, 2]]
 	var result = computeRcond( 'one-norm', 3, [
 		4, 0,   1, -1,  0, 0,
@@ -66,7 +62,7 @@ test( 'zgecon: well-conditioned 3x3 hermitian (1-norm)', function t() {
 });
 
 test( 'zgecon: well-conditioned 3x3 (infinity-norm)', function t() {
-	var tc = findCase( 'well_cond_Inorm' );
+	var tc = well_cond_inorm;
 	var result = computeRcond( 'inf-norm', 3, [
 		4, 0,   1, -1,  0, 0,
 		1, 1,   3, 0,   1, 0,
@@ -78,7 +74,7 @@ test( 'zgecon: well-conditioned 3x3 (infinity-norm)', function t() {
 });
 
 test( 'zgecon: 3x3 identity (rcond=1)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var result = computeRcond( 'one-norm', 3, [
 		1, 0,  0, 0,  0, 0,
 		0, 0,  1, 0,  0, 0,
@@ -90,7 +86,7 @@ test( 'zgecon: 3x3 identity (rcond=1)', function t() {
 });
 
 test( 'zgecon: 3x3 ill-conditioned', function t() {
-	var tc = findCase( 'ill_cond' );
+	var tc = ill_cond;
 	var result = computeRcond( 'one-norm', 3, [
 		1, 0,  0, 0,  0, 0,
 		0, 0,  1, 0,  0, 0,
@@ -102,7 +98,7 @@ test( 'zgecon: 3x3 ill-conditioned', function t() {
 });
 
 test( 'zgecon: N=0 (rcond=1)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var work = new Complex128Array( 1 );
 	var rwork = new Float64Array( 1 );
@@ -113,7 +109,7 @@ test( 'zgecon: N=0 (rcond=1)', function t() {
 });
 
 test( 'zgecon: anorm=0 (rcond=0)', function t() {
-	var tc = findCase( 'anorm_zero' );
+	var tc = anorm_zero;
 	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] );
 	var work = new Complex128Array( 6 );
 	var rwork = new Float64Array( 6 );
@@ -126,7 +122,7 @@ test( 'zgecon: anorm=0 (rcond=0)', function t() {
 });
 
 test( 'zgecon: 4x4 complex matrix (1-norm)', function t() {
-	var tc = findCase( '4x4_1norm' );
+	var tc = _4x4_1norm;
 	var result = computeRcond( 'one-norm', 4, [
 		5, 1,   1, 0,   0, 0,   0, 0,
 		1, 0,   4, -1,  1, 1,   0, 0,
@@ -139,7 +135,7 @@ test( 'zgecon: 4x4 complex matrix (1-norm)', function t() {
 });
 
 test( 'zgecon: 4x4 complex matrix (inf-norm)', function t() {
-	var tc = findCase( '4x4_Inorm' );
+	var tc = _4x4_inorm;
 	var result = computeRcond( 'inf-norm', 4, [
 		5, 1,   1, 0,   0, 0,   0, 0,
 		1, 0,   4, -1,  1, 1,   0, 0,

@@ -12,11 +12,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zhpr2;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zhpr2 = main;
+} else {
+	zhpr2 = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zhpr2;
 
 // exports: { "ndarray": "zhpr2.ndarray" }

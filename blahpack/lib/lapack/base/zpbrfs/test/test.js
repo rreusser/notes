@@ -23,38 +23,22 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbrfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpbrfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_kd1_3x3 = require( './fixtures/upper_kd1_3x3.json' );
+var lower_kd1_3x3 = require( './fixtures/lower_kd1_3x3.json' );
+var upper_kd2_3x3 = require( './fixtures/upper_kd2_3x3.json' );
+var upper_kd1_nrhs2 = require( './fixtures/upper_kd1_nrhs2.json' );
+var n_one = require( './fixtures/n_one.json' );
+var lower_kd2_3x3 = require( './fixtures/lower_kd2_3x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -136,14 +120,13 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zpbrfs: upper_kd1_3x3', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'upper_kd1_3x3' );
+	tc = upper_kd1_3x3;
 	result = runCase( tc, 'upper', 3, 1, 1, 2 );
 	assert.equal( result.info, tc.info );
 	assertArrayClose( result.x, tc.x, 1e-13, 'x' );
@@ -155,7 +138,7 @@ test( 'zpbrfs: lower_kd1_3x3', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'lower_kd1_3x3' );
+	tc = lower_kd1_3x3;
 	result = runCase( tc, 'lower', 3, 1, 1, 2 );
 	assert.equal( result.info, tc.info );
 	assertArrayClose( result.x, tc.x, 1e-13, 'x' );
@@ -167,7 +150,7 @@ test( 'zpbrfs: upper_kd2_3x3', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'upper_kd2_3x3' );
+	tc = upper_kd2_3x3;
 	result = runCase( tc, 'upper', 3, 2, 1, 3 );
 	assert.equal( result.info, tc.info );
 	assertArrayClose( result.x, tc.x, 1e-13, 'x' );
@@ -179,7 +162,7 @@ test( 'zpbrfs: upper_kd1_nrhs2', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'upper_kd1_nrhs2' );
+	tc = upper_kd1_nrhs2;
 	result = runCase( tc, 'upper', 3, 1, 2, 2 );
 	assert.equal( result.info, tc.info );
 	assertArrayClose( result.x, tc.x, 1e-13, 'x' );
@@ -225,7 +208,7 @@ test( 'zpbrfs: n_one', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	RWORK = new Float64Array( 1 );
 	WORK = new Complex128Array( 2 );
 	FERR = new Float64Array( 1 );
@@ -246,7 +229,7 @@ test( 'zpbrfs: lower_kd2_3x3', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'lower_kd2_3x3' );
+	tc = lower_kd2_3x3;
 	result = runCase( tc, 'lower', 3, 2, 1, 3 );
 	assert.equal( result.info, tc.info );
 	assertArrayClose( result.x, tc.x, 1e-13, 'x' );

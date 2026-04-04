@@ -2,39 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpbequ = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpbequ.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var non_positive_upper = require( './fixtures/non_positive_upper.json' );
+var zero_diag_lower = require( './fixtures/zero_diag_lower.json' );
+var identity_upper = require( './fixtures/identity_upper.json' );
+var diagonal_varied_lower = require( './fixtures/diagonal_varied_lower.json' );
+var non_positive_first = require( './fixtures/non_positive_first.json' );
+var non_positive_last = require( './fixtures/non_positive_last.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +71,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dpbequ is a function', function t() {
@@ -96,7 +83,7 @@ test( 'dpbequ: upper_basic', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'upper_basic' );
+	tc = upper_basic;
 	AB = new Float64Array([
 		0.0,
 		0.0,
@@ -125,7 +112,7 @@ test( 'dpbequ: lower_basic', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'lower_basic' );
+	tc = lower_basic;
 	AB = new Float64Array([
 		4.0,
 		1.0,
@@ -154,7 +141,7 @@ test( 'dpbequ: n_zero', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Float64Array( 1 );
 	s = new Float64Array( 1 );
 	result = dpbequ( 'upper', 0, 0, AB, 1, 1, 0, s, 1, 0 );
@@ -169,7 +156,7 @@ test( 'dpbequ: n_one', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AB = new Float64Array([ 49.0 ]);
 	s = new Float64Array( 1 );
 	result = dpbequ( 'upper', 1, 0, AB, 1, 1, 0, s, 1, 0 );
@@ -185,7 +172,7 @@ test( 'dpbequ: non_positive_upper', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'non_positive_upper' );
+	tc = non_positive_upper;
 	AB = new Float64Array([
 		0.0,
 		4.0,    // col 1
@@ -205,7 +192,7 @@ test( 'dpbequ: zero_diag_lower', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'zero_diag_lower' );
+	tc = zero_diag_lower;
 	AB = new Float64Array([
 		4.0,
 		1.0,   // col 1
@@ -225,7 +212,7 @@ test( 'dpbequ: identity_upper', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'identity_upper' );
+	tc = identity_upper;
 	AB = new Float64Array([
 		0.0,
 		1.0,   // col 1
@@ -248,7 +235,7 @@ test( 'dpbequ: diagonal_varied_lower', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'diagonal_varied_lower' );
+	tc = diagonal_varied_lower;
 	AB = new Float64Array([ 100.0, 1.0, 0.25 ]);
 	s = new Float64Array( 3 );
 	result = dpbequ( 'lower', 3, 0, AB, 1, 1, 0, s, 1, 0 );
@@ -264,7 +251,7 @@ test( 'dpbequ: non_positive_first', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'non_positive_first' );
+	tc = non_positive_first;
 	AB = new Float64Array([ -2.0, 4.0, 9.0 ]);
 	s = new Float64Array( 3 );
 	result = dpbequ( 'lower', 3, 0, AB, 1, 1, 0, s, 1, 0 );
@@ -277,7 +264,7 @@ test( 'dpbequ: non_positive_last', function t() {
 	var AB;
 	var s;
 
-	tc = findCase( 'non_positive_last' );
+	tc = non_positive_last;
 	AB = new Float64Array([ 4.0, 9.0, -3.0 ]);
 	s = new Float64Array( 3 );
 	result = dpbequ( 'upper', 3, 0, AB, 1, 1, 0, s, 1, 0 );

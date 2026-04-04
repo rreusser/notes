@@ -5,7 +5,6 @@
 // MODULES //
 
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -13,30 +12,16 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zggqrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zggqrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len, node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var m_gt_n = require( './fixtures/m_gt_n.json' );
+var m_lt_n = require( './fixtures/m_lt_n.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var tall_skinny = require( './fixtures/tall_skinny.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a named test case in the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are close within a relative tolerance.
@@ -155,7 +140,6 @@ function callZggqrf( N, M, P, aFlat, bFlat ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zggqrf is a function', function t() {
@@ -168,7 +152,7 @@ test( 'zggqrf: basic_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 
 	// Row-major re/im pairs: each row is [re0,im0, re1,im1, ...]
 	A = colMajorComplex( 3, 3, [
@@ -225,7 +209,7 @@ test( 'zggqrf: m_gt_n', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_gt_n' );
+	tc = m_gt_n;
 	A = colMajorComplex( 3, 4, [
 		2,
 		1,
@@ -286,7 +270,7 @@ test( 'zggqrf: m_lt_n', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_lt_n' );
+	tc = m_lt_n;
 	A = colMajorComplex( 4, 3, [
 		2,
 		1,
@@ -364,7 +348,7 @@ test( 'zggqrf: n_zero (quick return)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	WORK = new Complex128Array( 64 );
 	TAUA = new Complex128Array( 0 );
 	TAUB = new Complex128Array( 0 );
@@ -380,7 +364,7 @@ test( 'zggqrf: n_one', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = [
 		5,
 		2
@@ -403,7 +387,7 @@ test( 'zggqrf: tall_skinny', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'tall_skinny' );
+	tc = tall_skinny;
 	A = colMajorComplex( 5, 2, [
 		1,
 		0.5,

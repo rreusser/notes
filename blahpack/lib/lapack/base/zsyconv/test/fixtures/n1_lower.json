@@ -1,0 +1,20 @@
+{
+  "name": "n1_lower",
+  "info_trf": 0,
+  "ipiv": [
+    1
+  ],
+  "a_factored": [
+    3,
+    -2
+  ],
+  "info_conv": 0,
+  "a_converted": [
+    3,
+    -2
+  ],
+  "e": [
+    0,
+    0
+  ]
+}

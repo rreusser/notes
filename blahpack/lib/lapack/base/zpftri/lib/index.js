@@ -19,11 +19,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zpftri;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zpftri = main;
+} else {
+	zpftri = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zpftri;
 
 // exports: { "ndarray": "zpftri.ndarray" }

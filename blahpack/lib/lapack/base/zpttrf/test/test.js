@@ -4,26 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpttrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpttrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_5x5 = require( './fixtures/basic_5x5.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var not_posdef_first = require( './fixtures/not_posdef_first.json' );
+var not_posdef_mid = require( './fixtures/not_posdef_mid.json' );
+var unrolled_8x8 = require( './fixtures/unrolled_8x8.json' );
+var n_two = require( './fixtures/n_two.json' );
+var pure_imag = require( './fixtures/pure_imag.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,12 +35,11 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpttrf: basic_5x5', function t() {
 	var info;
-	var tc = findCase( 'basic_5x5' );
+	var tc = basic_5x5;
 	var d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0, 4.0 ] );
 	var e = new Complex128Array( [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 ] );
 	var ev = reinterpret( e, 0 );
@@ -57,7 +53,7 @@ test( 'zpttrf: basic_5x5', function t() {
 
 test( 'zpttrf: n_one', function t() {
 	var info;
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var d = new Float64Array( [ 3.0 ] );
 	var e = new Complex128Array( 0 );
 
@@ -69,7 +65,7 @@ test( 'zpttrf: n_one', function t() {
 
 test( 'zpttrf: n_zero', function t() {
 	var info;
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var d = new Float64Array( 0 );
 	var e = new Complex128Array( 0 );
 
@@ -80,7 +76,7 @@ test( 'zpttrf: n_zero', function t() {
 
 test( 'zpttrf: not_posdef_first', function t() {
 	var info;
-	var tc = findCase( 'not_posdef_first' );
+	var tc = not_posdef_first;
 	var d = new Float64Array( [ -1.0, 4.0, 4.0 ] );
 	var e = new Complex128Array( [ 1.0, 0.0, 1.0, 0.0 ] );
 	var ev = reinterpret( e, 0 );
@@ -94,7 +90,7 @@ test( 'zpttrf: not_posdef_first', function t() {
 
 test( 'zpttrf: not_posdef_mid', function t() {
 	var info;
-	var tc = findCase( 'not_posdef_mid' );
+	var tc = not_posdef_mid;
 	var d = new Float64Array( [ 1.0, 1.0, 4.0 ] );
 	var e = new Complex128Array( [ 2.0, 0.0, 1.0, 0.0 ] );
 	var ev = reinterpret( e, 0 );
@@ -108,7 +104,7 @@ test( 'zpttrf: not_posdef_mid', function t() {
 
 test( 'zpttrf: unrolled_8x8', function t() {
 	var info;
-	var tc = findCase( 'unrolled_8x8' );
+	var tc = unrolled_8x8;
 	var d = new Float64Array( [ 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 ] );
 	var e = new Complex128Array( [
 		1.0, 0.5,
@@ -130,7 +126,7 @@ test( 'zpttrf: unrolled_8x8', function t() {
 
 test( 'zpttrf: n_two', function t() {
 	var info;
-	var tc = findCase( 'n_two' );
+	var tc = n_two;
 	var d = new Float64Array( [ 4.0, 4.0 ] );
 	var e = new Complex128Array( [ 1.0, 1.0 ] );
 	var ev = reinterpret( e, 0 );
@@ -216,7 +212,7 @@ test( 'zpttrf: fail at final d[N] check (N=5)', function t() {
 
 test( 'zpttrf: pure_imag', function t() {
 	var info;
-	var tc = findCase( 'pure_imag' );
+	var tc = pure_imag;
 	var d = new Float64Array( [ 4.0, 4.0, 4.0 ] );
 	var e = new Complex128Array( [ 0.0, 1.0, 0.0, 1.0 ] );
 	var ev = reinterpret( e, 0 );

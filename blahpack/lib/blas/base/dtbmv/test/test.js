@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtbmv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtbmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_notrans_nonunit = require( './fixtures/upper_notrans_nonunit.json' );
+var upper_trans_nonunit = require( './fixtures/upper_trans_nonunit.json' );
+var upper_notrans_unit = require( './fixtures/upper_notrans_unit.json' );
+var lower_notrans_nonunit = require( './fixtures/lower_notrans_nonunit.json' );
+var lower_trans_nonunit = require( './fixtures/lower_trans_nonunit.json' );
+var stride = require( './fixtures/stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +51,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 // Upper triangular band matrix (K=1, LDA=2):
@@ -85,7 +68,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 // Band storage (column-major, LDA=2): [2,3, 4,5, 6,7, 8,0]
 
 test( 'dtbmv: upper_notrans_nonunit', function t() {
-	var tc = findCase( 'upper_notrans_nonunit' );
+	var tc = upper_notrans_nonunit;
 	var A = new Float64Array( [ 0, 2, 3, 4, 5, 6, 7, 8 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtbmv( 'upper', 'no-transpose', 'non-unit', 4, 1, A, 1, 2, 0, x, 1, 0 );
@@ -93,7 +76,7 @@ test( 'dtbmv: upper_notrans_nonunit', function t() {
 });
 
 test( 'dtbmv: upper_trans_nonunit', function t() {
-	var tc = findCase( 'upper_trans_nonunit' );
+	var tc = upper_trans_nonunit;
 	var A = new Float64Array( [ 0, 2, 3, 4, 5, 6, 7, 8 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtbmv( 'upper', 'transpose', 'non-unit', 4, 1, A, 1, 2, 0, x, 1, 0 );
@@ -101,7 +84,7 @@ test( 'dtbmv: upper_trans_nonunit', function t() {
 });
 
 test( 'dtbmv: upper_notrans_unit', function t() {
-	var tc = findCase( 'upper_notrans_unit' );
+	var tc = upper_notrans_unit;
 	var A = new Float64Array( [ 0, 2, 3, 4, 5, 6, 7, 8 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtbmv( 'upper', 'no-transpose', 'unit', 4, 1, A, 1, 2, 0, x, 1, 0 );
@@ -109,7 +92,7 @@ test( 'dtbmv: upper_notrans_unit', function t() {
 });
 
 test( 'dtbmv: lower_notrans_nonunit', function t() {
-	var tc = findCase( 'lower_notrans_nonunit' );
+	var tc = lower_notrans_nonunit;
 	var A = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 0 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtbmv( 'lower', 'no-transpose', 'non-unit', 4, 1, A, 1, 2, 0, x, 1, 0 );
@@ -117,7 +100,7 @@ test( 'dtbmv: lower_notrans_nonunit', function t() {
 });
 
 test( 'dtbmv: lower_trans_nonunit', function t() {
-	var tc = findCase( 'lower_trans_nonunit' );
+	var tc = lower_trans_nonunit;
 	var A = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 0 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtbmv( 'lower', 'transpose', 'non-unit', 4, 1, A, 1, 2, 0, x, 1, 0 );
@@ -132,7 +115,7 @@ test( 'dtbmv: n_zero', function t() {
 });
 
 test( 'dtbmv: stride', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var A = new Float64Array( [ 0, 2, 3, 4, 5, 6, 7, 8 ] );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	dtbmv( 'upper', 'no-transpose', 'non-unit', 4, 1, A, 1, 2, 0, x, 2, 0 );

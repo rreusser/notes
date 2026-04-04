@@ -5,36 +5,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlagv2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlagv2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len, node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var already_upper = require( './fixtures/already_upper.json' );
+var b11_zero = require( './fixtures/b11_zero.json' );
+var b22_zero = require( './fixtures/b22_zero.json' );
+var real_eigenvalues = require( './fixtures/real_eigenvalues.json' );
+var complex_eigenvalues = require( './fixtures/complex_eigenvalues.json' );
+var identity_b = require( './fixtures/identity_b.json' );
+var distinct_real = require( './fixtures/distinct_real.json' );
+var negative_complex = require( './fixtures/negative_complex.json' );
+var large_values = require( './fixtures/large_values.json' );
+var diagonal_a = require( './fixtures/diagonal_a.json' );
+var real_rr_le_qq = require( './fixtures/real_rr_le_qq.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name in the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case object
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a typed array to a plain array.
@@ -84,7 +73,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlagv2 is a function', function t() {
@@ -103,7 +91,7 @@ test( 'dlagv2: already_upper', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'already_upper' );
+	tc = already_upper;
 	A = new Float64Array( [ 4.0, 0.0, 2.0, 3.0 ] );
 	B = new Float64Array( [ 1.0, 0.0, 0.5, 2.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -130,7 +118,7 @@ test( 'dlagv2: b11_zero', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'b11_zero' );
+	tc = b11_zero;
 	A = new Float64Array( [ 3.0, 4.0, 1.0, 2.0 ] );
 	B = new Float64Array( [ 0.0, 0.0, 1.0, 3.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -157,7 +145,7 @@ test( 'dlagv2: b22_zero', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'b22_zero' );
+	tc = b22_zero;
 	A = new Float64Array( [ 2.0, 3.0, 1.0, 5.0 ] );
 	B = new Float64Array( [ 4.0, 0.0, 2.0, 0.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -184,7 +172,7 @@ test( 'dlagv2: real_eigenvalues', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'real_eigenvalues' );
+	tc = real_eigenvalues;
 	A = new Float64Array( [ 4.0, 2.0, 1.0, 3.0 ] );
 	B = new Float64Array( [ 2.0, 0.0, 1.0, 1.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -211,7 +199,7 @@ test( 'dlagv2: complex_eigenvalues', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'complex_eigenvalues' );
+	tc = complex_eigenvalues;
 	A = new Float64Array( [ 1.0, 3.0, -5.0, 1.0 ] );
 	B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -238,7 +226,7 @@ test( 'dlagv2: identity_b', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'identity_b' );
+	tc = identity_b;
 	A = new Float64Array( [ 5.0, 1.0, 2.0, 4.0 ] );
 	B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -265,7 +253,7 @@ test( 'dlagv2: distinct_real', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'distinct_real' );
+	tc = distinct_real;
 	A = new Float64Array( [ 6.0, 2.0, 3.0, 7.0 ] );
 	B = new Float64Array( [ 3.0, 0.0, 1.0, 2.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -292,7 +280,7 @@ test( 'dlagv2: negative_complex', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'negative_complex' );
+	tc = negative_complex;
 	A = new Float64Array( [ -2.0, 5.0, -4.0, -2.0 ] );
 	B = new Float64Array( [ 2.0, 0.0, 1.0, 3.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -319,7 +307,7 @@ test( 'dlagv2: large_values', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'large_values' );
+	tc = large_values;
 	A = new Float64Array( [ 1.0e10, 3.0e9, 5.0e9, 2.0e10 ] );
 	B = new Float64Array( [ 1.0e10, 0.0, 4.0e9, 8.0e9 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -346,7 +334,7 @@ test( 'dlagv2: diagonal_a', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'diagonal_a' );
+	tc = diagonal_a;
 	A = new Float64Array( [ 3.0, 0.0, 0.0, 7.0 ] );
 	B = new Float64Array( [ 2.0, 0.0, 1.0, 5.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len
@@ -373,7 +361,7 @@ test( 'dlagv2: real_rr_le_qq', function t() {
 	alphar = new Float64Array( 2 );
 	alphai = new Float64Array( 2 );
 	beta = new Float64Array( 2 );
-	tc = findCase( 'real_rr_le_qq' );
+	tc = real_rr_le_qq;
 	A = new Float64Array( [ 1.0, 10.0, 1.0, 2.0 ] );
 	B = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
 	result = dlagv2( A, 1, 2, 0, B, 1, 2, 0, alphar, 1, 0, alphai, 1, 0, beta, 1, 0 ); // eslint-disable-line max-len

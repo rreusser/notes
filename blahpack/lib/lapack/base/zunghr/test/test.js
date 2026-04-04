@@ -6,26 +6,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgehrd = require( '../../zgehrd/lib/base.js' );
 var zunghr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunghr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var _5x5_full = require( './fixtures/5x5_full.json' );
+var _5x5_partial = require( './fixtures/5x5_partial.json' );
+var n_one = require( './fixtures/n_one.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var _4x4_full = require( './fixtures/4x4_full.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -85,11 +79,10 @@ function runZunghr( N, ilo, ihi, AinputFlat ) {
 	return { Av: Av, info: info };
 }
 
-
 // TESTS //
 
 test( 'zunghr: 5x5_full (ILO=1, IHI=5)', function t() {
-	var tc = findCase( '5x5_full' );
+	var tc = _5x5_full;
 	// Column-major 5x5 complex matrix (interleaved re/im)
 	// Same input as Fortran test
 	var Ainput = [
@@ -106,7 +99,7 @@ test( 'zunghr: 5x5_full (ILO=1, IHI=5)', function t() {
 });
 
 test( 'zunghr: 5x5_partial (ILO=2, IHI=4)', function t() {
-	var tc = findCase( '5x5_partial' );
+	var tc = _5x5_partial;
 	var Ainput = [
 		2, 1,   1, 0.5,   3, -1,  1, 0,     4, 1,
 		1, -0.5, 4, 0,    1, 1,   2, -0.5,   1, 0,
@@ -129,7 +122,7 @@ test( 'zunghr: n_zero (N=0)', function t() {
 });
 
 test( 'zunghr: n_one (N=1)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var Ainput = [ 99.0, -3.0 ];
 	var result = runZunghr( 1, 1, 1, Ainput );
 	var Q = extractColMajor( result.Av, 2, 2, 0, 1 );
@@ -138,7 +131,7 @@ test( 'zunghr: n_one (N=1)', function t() {
 });
 
 test( 'zunghr: ilo_eq_ihi (ILO=IHI=2, N=4)', function t() {
-	var tc = findCase( 'ilo_eq_ihi' );
+	var tc = ilo_eq_ihi;
 	// Upper triangular-ish complex matrix, column-major
 	var Ainput = [
 		1, 0,   0, 0,   0, 0,   0, 0,    // col 1
@@ -153,7 +146,7 @@ test( 'zunghr: ilo_eq_ihi (ILO=IHI=2, N=4)', function t() {
 });
 
 test( 'zunghr: 4x4_full (ILO=1, IHI=4)', function t() {
-	var tc = findCase( '4x4_full' );
+	var tc = _4x4_full;
 	var Ainput = [
 		1, 0.5,    5, -0.5,  9, 1,     13, -1,   // col 1
 		2, -1,     6, 1,     10, 0,    14, 2,     // col 2

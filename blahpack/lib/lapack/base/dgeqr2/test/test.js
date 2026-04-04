@@ -3,29 +3,17 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgeqr2 = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgeqr2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var _3x2 = require( './fixtures/3x2.json' );
+var _2x2 = require( './fixtures/2x2.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var _4x3 = require( './fixtures/4x3.json' );
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -75,7 +63,7 @@ test( 'dgeqr2: 3x2', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x2' );
+	tc = _3x2;
 	A = new Float64Array( 3 * 2 );
 	A[ 0 ] = 1;
 	A[ 1 ] = 3;
@@ -98,7 +86,7 @@ test( 'dgeqr2: 2x2', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '2x2' );
+	tc = _2x2;
 	A = new Float64Array( 2 * 2 );
 	A[ 0 ] = 4;
 	A[ 1 ] = 3;
@@ -119,7 +107,7 @@ test( 'dgeqr2: N=0', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 2 );
 	TAU = new Float64Array( 2 );
 	WORK = new Float64Array( 2 );
@@ -134,7 +122,7 @@ test( 'dgeqr2: M=0', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( 2 );
 	TAU = new Float64Array( 2 );
 	WORK = new Float64Array( 2 );
@@ -149,7 +137,7 @@ test( 'dgeqr2: 4x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '4x3' );
+	tc = _4x3;
 	A = new Float64Array( 4 * 3 );
 	A[ 0 ] = 2;
 	A[ 1 ] = 1;

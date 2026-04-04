@@ -2,40 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dtrsen = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrsen.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var all_selected_2x2 = require( './fixtures/all_selected_2x2.json' );
+var none_selected = require( './fixtures/none_selected.json' );
+var e_compute_s = require( './fixtures/e_compute_s.json' );
+var v_compute_sep = require( './fixtures/v_compute_sep.json' );
+var b_compute_both = require( './fixtures/b_compute_both.json' );
+var n_0 = require( './fixtures/n_0.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -98,7 +82,6 @@ function toArray( arr ) {
 	}
 	return out;
 }
-
 
 // TESTS //
 
@@ -163,7 +146,7 @@ test( 'dtrsen: all selected 2x2', function t() {
 	var M;
 	var s;
 
-	tc = findCase( 'all selected 2x2' );
+	tc = all_selected_2x2;
 	N = 2;
 	T = fromFortranColMajor([
 		1.0,
@@ -216,7 +199,7 @@ test( 'dtrsen: none selected', function t() {
 	var M;
 	var s;
 
-	tc = findCase( 'none selected' );
+	tc = none_selected;
 	N = 2;
 	T = new Float64Array([ 1.0, 0.0, 2.0, 3.0 ]);
 	Q = new Float64Array([ 1.0, 0.0, 0.0, 1.0 ]);
@@ -248,7 +231,7 @@ test( 'dtrsen: E compute S', function t() {
 	var M;
 	var s;
 
-	tc = findCase( 'E compute S' );
+	tc = e_compute_s;
 	N = 3;
 	T = fromFortranColMajor([
 		1.0,
@@ -301,7 +284,7 @@ test( 'dtrsen: V compute SEP', function t() {
 	var M;
 	var s;
 
-	tc = findCase( 'V compute SEP' );
+	tc = v_compute_sep;
 	N = 3;
 	T = fromFortranColMajor([
 		1.0,
@@ -354,7 +337,7 @@ test( 'dtrsen: B compute both', function t() {
 	var M;
 	var s;
 
-	tc = findCase( 'B compute both' );
+	tc = b_compute_both;
 	N = 3;
 	T = fromFortranColMajor([
 		1.0,
@@ -407,7 +390,7 @@ test( 'dtrsen: N=0', function t() {
 	var M;
 	var s;
 
-	tc = findCase( 'N=0' );
+	tc = n_0;
 	T = new Float64Array( 0 );
 	Q = new Float64Array( 0 );
 	SELECT = new Uint8Array( 0 );

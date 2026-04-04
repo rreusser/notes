@@ -4,8 +4,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -13,19 +11,16 @@ var zgemm = require( '../../../../blas/base/zgemm/lib/base.js' );
 var zpotrf = require( '../../zpotrf/lib/base.js' );
 var zpotri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpotri.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -121,11 +116,10 @@ function verifyInverse( uplo, N, aData, ainvData, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpotri: upper 3x3', function t() {
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	// Full Hermitian matrix A = [10 3-i 1+2i; 3+i 8 2-i; 1-2i 2+i 6]
 	// Column-major layout:
 	var A = new Complex128Array( [
@@ -149,7 +143,7 @@ test( 'zpotri: upper 3x3', function t() {
 });
 
 test( 'zpotri: lower 3x3', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	var A = new Complex128Array( [
 		10, 0,   3, 1,     1, -2,
 		3, -1,   8, 0,     2, 1,
@@ -170,7 +164,7 @@ test( 'zpotri: lower 3x3', function t() {
 });
 
 test( 'zpotri: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	// A = [9]; chol = [3]; inv = [1/9]
 	var A = new Complex128Array( [ 9, 0 ] );
 	var info = zpotrf( 'upper', 1, A, 1, 1, 0 );
@@ -182,14 +176,14 @@ test( 'zpotri: N=1', function t() {
 });
 
 test( 'zpotri: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var info = zpotri( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
 });
 
 test( 'zpotri: upper 4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	// HPD matrix [14 4-2i 2+i 1-3i; 4+2i 12 3-i 2+2i; 2-i 3+i 10 1-i; 1+3i 2-2i 1+i 9]
 	var A = new Complex128Array( [
 		14, 0,    4, 2,     2, -1,    1, 3,
@@ -207,7 +201,7 @@ test( 'zpotri: upper 4x4', function t() {
 });
 
 test( 'zpotri: lower 4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var A = new Complex128Array( [
 		14, 0,    4, 2,     2, -1,    1, 3,
 		4, -2,   12, 0,     3, 1,     2, -2,

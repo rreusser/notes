@@ -5,27 +5,30 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhegvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhegvx.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var itype1_v_all_upper = require( './fixtures/itype1_v_all_upper.json' );
+var itype1_v_all_lower = require( './fixtures/itype1_v_all_lower.json' );
+var itype1_n_all_upper = require( './fixtures/itype1_n_all_upper.json' );
+var itype1_v_value_upper = require( './fixtures/itype1_v_value_upper.json' );
+var itype1_v_index_upper = require( './fixtures/itype1_v_index_upper.json' );
+var itype2_v_all_upper = require( './fixtures/itype2_v_all_upper.json' );
+var itype3_v_all_lower = require( './fixtures/itype3_v_all_lower.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var itype2_v_index_lower = require( './fixtures/itype2_v_index_lower.json' );
+var itype3_v_value_upper = require( './fixtures/itype3_v_value_upper.json' );
+var itype1_n_value_lower = require( './fixtures/itype1_n_value_lower.json' );
+var itype1_v_index_single = require( './fixtures/itype1_v_index_single.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -183,11 +186,10 @@ function callZhegvx( itype, jobz, range, uplo, N, A, B, vl, vu, il, iu, abstol, 
 	return { info: info, out: out };
 }
 
-
 // TESTS //
 
 test( 'zhegvx: itype1_v_all_upper (ITYPE=1, vectors, all eigenvalues, upper)', function t() {
-	var tc = findCase( 'itype1_v_all_upper' );
+	var tc = itype1_v_all_upper;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 1, 'compute-vectors', 'all', 'upper', 3, makeAUpper(), makeBUpper(), 0.0, 0.0, 0, 0, 0.0, ws );
 
@@ -198,7 +200,7 @@ test( 'zhegvx: itype1_v_all_upper (ITYPE=1, vectors, all eigenvalues, upper)', f
 });
 
 test( 'zhegvx: itype1_v_all_lower (ITYPE=1, vectors, all eigenvalues, lower)', function t() {
-	var tc = findCase( 'itype1_v_all_lower' );
+	var tc = itype1_v_all_lower;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 1, 'compute-vectors', 'all', 'lower', 3, makeALower(), makeBLower(), 0.0, 0.0, 0, 0, 0.0, ws );
 
@@ -209,7 +211,7 @@ test( 'zhegvx: itype1_v_all_lower (ITYPE=1, vectors, all eigenvalues, lower)', f
 });
 
 test( 'zhegvx: itype1_n_all_upper (ITYPE=1, no vectors, all eigenvalues, upper)', function t() {
-	var tc = findCase( 'itype1_n_all_upper' );
+	var tc = itype1_n_all_upper;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 1, 'no-vectors', 'all', 'upper', 3, makeAUpper(), makeBUpper(), 0.0, 0.0, 0, 0, 0.0, ws );
 
@@ -219,7 +221,7 @@ test( 'zhegvx: itype1_n_all_upper (ITYPE=1, no vectors, all eigenvalues, upper)'
 });
 
 test( 'zhegvx: itype1_v_value_upper (ITYPE=1, vectors, value range, upper)', function t() {
-	var tc = findCase( 'itype1_v_value_upper' );
+	var tc = itype1_v_value_upper;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 1, 'compute-vectors', 'value', 'upper', 3, makeAUpper(), makeBUpper(), 0.5, 2.0, 0, 0, 0.0, ws );
 
@@ -230,7 +232,7 @@ test( 'zhegvx: itype1_v_value_upper (ITYPE=1, vectors, value range, upper)', fun
 });
 
 test( 'zhegvx: itype1_v_index_upper (ITYPE=1, vectors, index range 2-3, upper)', function t() {
-	var tc = findCase( 'itype1_v_index_upper' );
+	var tc = itype1_v_index_upper;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 1, 'compute-vectors', 'index', 'upper', 3, makeAUpper(), makeBUpper(), 0.0, 0.0, 2, 3, 0.0, ws );
 
@@ -241,7 +243,7 @@ test( 'zhegvx: itype1_v_index_upper (ITYPE=1, vectors, index range 2-3, upper)',
 });
 
 test( 'zhegvx: itype2_v_all_upper (ITYPE=2, vectors, all eigenvalues, upper)', function t() {
-	var tc = findCase( 'itype2_v_all_upper' );
+	var tc = itype2_v_all_upper;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 2, 'compute-vectors', 'all', 'upper', 3, makeAUpper(), makeBUpper(), 0.0, 0.0, 0, 0, 0.0, ws );
 
@@ -252,7 +254,7 @@ test( 'zhegvx: itype2_v_all_upper (ITYPE=2, vectors, all eigenvalues, upper)', f
 });
 
 test( 'zhegvx: itype3_v_all_lower (ITYPE=3, vectors, all eigenvalues, lower)', function t() {
-	var tc = findCase( 'itype3_v_all_lower' );
+	var tc = itype3_v_all_lower;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 3, 'compute-vectors', 'all', 'lower', 3, makeALower(), makeBLower(), 0.0, 0.0, 0, 0, 0.0, ws );
 
@@ -263,7 +265,7 @@ test( 'zhegvx: itype3_v_all_lower (ITYPE=3, vectors, all eigenvalues, lower)', f
 });
 
 test( 'zhegvx: n_zero (N=0 quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var ws = makeWorkspace();
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
@@ -274,7 +276,7 @@ test( 'zhegvx: n_zero (N=0 quick return)', function t() {
 });
 
 test( 'zhegvx: n_one (N=1)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var ws = makeWorkspace();
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
@@ -291,7 +293,7 @@ test( 'zhegvx: n_one (N=1)', function t() {
 });
 
 test( 'zhegvx: not_posdef (non-positive definite B)', function t() {
-	var tc = findCase( 'not_posdef' );
+	var tc = not_posdef;
 	var ws = makeWorkspace();
 	var A = new Complex128Array( 4 );
 	var B = new Complex128Array( 4 );
@@ -307,7 +309,7 @@ test( 'zhegvx: not_posdef (non-positive definite B)', function t() {
 });
 
 test( 'zhegvx: itype2_v_index_lower (ITYPE=2, vectors, index range, lower)', function t() {
-	var tc = findCase( 'itype2_v_index_lower' );
+	var tc = itype2_v_index_lower;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 2, 'compute-vectors', 'index', 'lower', 3, makeALower(), makeBLower(), 0.0, 0.0, 1, 1, 0.0, ws );
 
@@ -318,7 +320,7 @@ test( 'zhegvx: itype2_v_index_lower (ITYPE=2, vectors, index range, lower)', fun
 });
 
 test( 'zhegvx: itype3_v_value_upper (ITYPE=3, vectors, value range, upper)', function t() {
-	var tc = findCase( 'itype3_v_value_upper' );
+	var tc = itype3_v_value_upper;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 3, 'compute-vectors', 'value', 'upper', 3, makeAUpper(), makeBUpper(), 1.0, 100.0, 0, 0, 0.0, ws );
 
@@ -329,7 +331,7 @@ test( 'zhegvx: itype3_v_value_upper (ITYPE=3, vectors, value range, upper)', fun
 });
 
 test( 'zhegvx: itype1_n_value_lower (ITYPE=1, no vectors, value range, lower)', function t() {
-	var tc = findCase( 'itype1_n_value_lower' );
+	var tc = itype1_n_value_lower;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 1, 'no-vectors', 'value', 'lower', 3, makeALower(), makeBLower(), 0.5, 2.0, 0, 0, 0.0, ws );
 
@@ -339,7 +341,7 @@ test( 'zhegvx: itype1_n_value_lower (ITYPE=1, no vectors, value range, lower)', 
 });
 
 test( 'zhegvx: itype1_v_index_single (ITYPE=1, vectors, single index IL=IU=2)', function t() {
-	var tc = findCase( 'itype1_v_index_single' );
+	var tc = itype1_v_index_single;
 	var ws = makeWorkspace();
 	var r = callZhegvx( 1, 'compute-vectors', 'index', 'upper', 3, makeAUpper(), makeBUpper(), 0.0, 0.0, 2, 2, 0.0, ws );
 

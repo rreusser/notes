@@ -2,41 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var real = require( '@stdlib/complex/float64/real' );
 var imag = require( '@stdlib/complex/float64/imag' );
 var zdotu = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zdotu.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var non_unit_stride = require( './fixtures/non_unit_stride.json' );
+var negative_stride = require( './fixtures/negative_stride.json' );
+var both_negative = require( './fixtures/both_negative.json' );
+var purely_real = require( './fixtures/purely_real.json' );
+var purely_imaginary = require( './fixtures/purely_imaginary.json' );
+var larger_n = require( './fixtures/larger_n.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -52,7 +39,6 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
-
 // TESTS //
 
 test( 'zdotu: main export is a function', function t() {
@@ -65,7 +51,7 @@ test( 'zdotu: basic (N=3, unit stride)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'basic' );
+	tc = basic;
 	x = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
 	y = new Complex128Array( [ 7, 8, 9, 10, 11, 12 ] );
 	result = zdotu( 3, x, 1, 0, y, 1, 0 );
@@ -79,7 +65,7 @@ test( 'zdotu: N=0 returns (0,0)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	x = new Complex128Array( [ 1, 2, 3, 4 ] );
 	y = new Complex128Array( [ 5, 6, 7, 8 ] );
 	result = zdotu( 0, x, 1, 0, y, 1, 0 );
@@ -93,7 +79,7 @@ test( 'zdotu: N=1', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	x = new Complex128Array( [ 3, 4 ] );
 	y = new Complex128Array( [ 1, 2 ] );
 	result = zdotu( 1, x, 1, 0, y, 1, 0 );
@@ -107,7 +93,7 @@ test( 'zdotu: non-unit stride (incx=2, incy=1)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'non_unit_stride' );
+	tc = non_unit_stride;
 	x = new Complex128Array( [ 1, 2, 99, 99, 3, 4, 99, 99, 5, 6 ] );
 	y = new Complex128Array( [ 7, 8, 9, 10, 11, 12 ] );
 	result = zdotu( 3, x, 2, 0, y, 1, 0 );
@@ -121,7 +107,7 @@ test( 'zdotu: negative stride (incx=-1)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'negative_stride' );
+	tc = negative_stride;
 	x = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
 	y = new Complex128Array( [ 7, 8, 9, 10, 11, 12 ] );
 	result = zdotu( 3, x, -1, 2, y, 1, 0 );
@@ -135,7 +121,7 @@ test( 'zdotu: both negative strides', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'both_negative' );
+	tc = both_negative;
 	x = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
 	y = new Complex128Array( [ 7, 8, 9, 10, 11, 12 ] );
 	result = zdotu( 3, x, -1, 2, y, -1, 2 );
@@ -149,7 +135,7 @@ test( 'zdotu: purely real vectors', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'purely_real' );
+	tc = purely_real;
 	x = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
 	y = new Complex128Array( [ 4, 0, 5, 0, 6, 0 ] );
 	result = zdotu( 3, x, 1, 0, y, 1, 0 );
@@ -163,7 +149,7 @@ test( 'zdotu: purely imaginary vectors', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'purely_imaginary' );
+	tc = purely_imaginary;
 	x = new Complex128Array( [ 0, 1, 0, 2, 0, 3 ] );
 	y = new Complex128Array( [ 0, 4, 0, 5, 0, 6 ] );
 	result = zdotu( 3, x, 1, 0, y, 1, 0 );
@@ -177,7 +163,7 @@ test( 'zdotu: larger N (N=6)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'larger_n' );
+	tc = larger_n;
 	x = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 ] );
 	y = new Complex128Array( [ 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 ] );
 	result = zdotu( 6, x, 1, 0, y, 1, 0 );

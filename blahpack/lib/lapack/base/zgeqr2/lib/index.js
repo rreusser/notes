@@ -47,11 +47,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zgeqr2;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zgeqr2 = main;
+} else {
+	zgeqr2 = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zgeqr2;
 
 // exports: { "ndarray": "zgeqr2.ndarray" }

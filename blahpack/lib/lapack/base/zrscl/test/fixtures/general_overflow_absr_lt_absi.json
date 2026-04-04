@@ -1,0 +1,9 @@
+{
+  "name": "general_overflow_absr_lt_absi",
+  "x": [
+    2e-200,
+    -1e-200,
+    4e-200,
+    -3e-200
+  ]
+}

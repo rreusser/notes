@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgehd2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgehd2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _4x4_full = require( './fixtures/4x4_full.json' );
+var _5x5_full = require( './fixtures/5x5_full.json' );
+var _4x4_partial_ilo2_ihi3 = require( './fixtures/4x4_partial_ilo2_ihi3.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_two = require( './fixtures/n_two.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +67,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgehd2: main export is a function', function t() {
@@ -98,7 +81,7 @@ test( 'dgehd2: 4x4 full range (ILO=1, IHI=4)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( '4x4_full' );
+	tc = _4x4_full;
 	N = 4;
 	A = new Float64Array([
 		1,
@@ -134,7 +117,7 @@ test( 'dgehd2: 5x5 full range', function t() {
 	var N;
 	var A;
 
-	tc = findCase( '5x5_full' );
+	tc = _5x5_full;
 	N = 5;
 	A = new Float64Array([
 		2,
@@ -179,7 +162,7 @@ test( 'dgehd2: 4x4 partial range (ILO=2, IHI=3)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( '4x4_partial_ilo2_ihi3' );
+	tc = _4x4_partial_ilo2_ihi3;
 	N = 4;
 	A = new Float64Array([
 		1,
@@ -214,7 +197,7 @@ test( 'dgehd2: N=1 (quick return)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Float64Array( [ 42.0 ] );
 	TAU = new Float64Array( 0 );
 	WORK = new Float64Array( 1 );
@@ -230,7 +213,7 @@ test( 'dgehd2: N=2', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_two' );
+	tc = n_two;
 	A = new Float64Array( [ 3, 4, 1, 2 ] );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 2 );
@@ -248,7 +231,7 @@ test( 'dgehd2: ILO=IHI (nothing to reduce)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'ilo_eq_ihi' );
+	tc = ilo_eq_ihi;
 	N = 4;
 	A = new Float64Array([
 		1,

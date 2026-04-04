@@ -4,25 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgtsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgtsvx.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var fact_n_trans_n = require( './fixtures/fact_n_trans_n.json' );
+var fact_f_trans_n = require( './fixtures/fact_f_trans_n.json' );
+var fact_n_trans_t = require( './fixtures/fact_n_trans_t.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var singular = require( './fixtures/singular.json' );
+var pivot_5x5 = require( './fixtures/pivot_5x5.json' );
+var fact_n_trans_c = require( './fixtures/fact_n_trans_c.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -41,11 +39,10 @@ function toF64( arr ) {
 	return new Float64Array( arr );
 }
 
-
 // TESTS //
 
 test( 'dgtsvx: fact_n_trans_n', function t() {
-	var tc = findCase( 'fact_n_trans_n' );
+	var tc = fact_n_trans_n;
 	var N = 4;
 	var dl = toF64( [ 3.0, 1.0, 2.0 ] );
 	var d = toF64( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -79,7 +76,7 @@ test( 'dgtsvx: fact_n_trans_n', function t() {
 });
 
 test( 'dgtsvx: fact_f_trans_n (already factored)', function t() {
-	var tc = findCase( 'fact_f_trans_n' );
+	var tc = fact_f_trans_n;
 	var N = 4;
 	var dl = toF64( [ 3.0, 1.0, 2.0 ] );
 	var d = toF64( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -118,7 +115,7 @@ test( 'dgtsvx: fact_f_trans_n (already factored)', function t() {
 });
 
 test( 'dgtsvx: fact_n_trans_t', function t() {
-	var tc = findCase( 'fact_n_trans_t' );
+	var tc = fact_n_trans_t;
 	var N = 4;
 	var dl = toF64( [ 3.0, 1.0, 2.0 ] );
 	var d = toF64( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -152,7 +149,7 @@ test( 'dgtsvx: fact_n_trans_t', function t() {
 });
 
 test( 'dgtsvx: multi_rhs', function t() {
-	var tc = findCase( 'multi_rhs' );
+	var tc = multi_rhs;
 	var N = 4;
 	var nrhs = 2;
 	var dl = toF64( [ 3.0, 1.0, 2.0 ] );
@@ -188,7 +185,7 @@ test( 'dgtsvx: multi_rhs', function t() {
 });
 
 test( 'dgtsvx: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var d = toF64( [ 5.0 ] );
 	var dl = new Float64Array( 0 );
 	var du = new Float64Array( 0 );
@@ -221,7 +218,7 @@ test( 'dgtsvx: n_one', function t() {
 });
 
 test( 'dgtsvx: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var dl = new Float64Array( 0 );
 	var d = new Float64Array( 0 );
 	var du = new Float64Array( 0 );
@@ -252,7 +249,7 @@ test( 'dgtsvx: n_zero', function t() {
 });
 
 test( 'dgtsvx: singular', function t() {
-	var tc = findCase( 'singular' );
+	var tc = singular;
 	var N = 3;
 	var dl = toF64( [ 0.0, 0.0 ] );
 	var d = toF64( [ 0.0, 2.0, 3.0 ] );
@@ -285,7 +282,7 @@ test( 'dgtsvx: singular', function t() {
 });
 
 test( 'dgtsvx: pivot_5x5', function t() {
-	var tc = findCase( 'pivot_5x5' );
+	var tc = pivot_5x5;
 	var N = 5;
 	var dl = toF64( [ 5.0, 7.0, 9.0, 2.0 ] );
 	var d = toF64( [ 1.0, 3.0, 2.0, 1.0, 8.0 ] );
@@ -319,7 +316,7 @@ test( 'dgtsvx: pivot_5x5', function t() {
 });
 
 test( 'dgtsvx: fact_n_trans_c (conjugate-transpose)', function t() {
-	var tc = findCase( 'fact_n_trans_c' );
+	var tc = fact_n_trans_c;
 	var N = 4;
 	var dl = toF64( [ 3.0, 1.0, 2.0 ] );
 	var d = toF64( [ 2.0, 4.0, 5.0, 6.0 ] );

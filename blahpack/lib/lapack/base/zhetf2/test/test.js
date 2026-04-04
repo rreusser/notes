@@ -4,26 +4,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zhetf2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhetf2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var n1 = require( './fixtures/n1.json' );
+var singular_upper = require( './fixtures/singular_upper.json' );
+var lower_6x6 = require( './fixtures/lower_6x6.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -85,7 +79,6 @@ function makeMatrix( data ) {
 	return new Complex128Array( data );
 }
 
-
 // TESTS //
 
 test( 'zhetf2: upper_4x4 (1x1 pivots only)', function t() {
@@ -97,7 +90,7 @@ test( 'zhetf2: upper_4x4 (1x1 pivots only)', function t() {
 	var A;
 	var n;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	n = 4;
 
 	// Column-major upper Hermitian 4x4 in N x N storage (no LDA padding)
@@ -134,7 +127,7 @@ test( 'zhetf2: lower_4x4 (1x1 pivots, lower triangle)', function t() {
 	var A;
 	var n;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	n = 4;
 
 	// Lower Hermitian 4x4:
@@ -180,7 +173,7 @@ test( 'zhetf2: n1 (single element)', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 
 	A = new Complex128Array([ 3.0, 0.0 ]);
 	IPIV = new Int32Array( 1 );
@@ -202,7 +195,7 @@ test( 'zhetf2: singular_upper (zero diagonal)', function t() {
 	var A;
 	var n;
 
-	tc = findCase( 'singular_upper' );
+	tc = singular_upper;
 	n = 3;
 
 	// Upper 3x3 with zero diagonal element at (0,0):
@@ -237,7 +230,7 @@ test( 'zhetf2: lower_6x6 (2x2 pivots)', function t() {
 	var A;
 	var n;
 
-	tc = findCase( 'lower_6x6' );
+	tc = lower_6x6;
 	n = 6;
 
 	// Lower Hermitian 6x6 with small diagonals to force 2x2 pivoting

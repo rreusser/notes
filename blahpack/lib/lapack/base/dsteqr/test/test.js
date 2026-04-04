@@ -2,39 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsteqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsteqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var compz_i_4x4 = require( './fixtures/compz_i_4x4.json' );
+var compz_v_4x4 = require( './fixtures/compz_v_4x4.json' );
+var compz_n_4x4 = require( './fixtures/compz_n_4x4.json' );
+var n1_compz_i = require( './fixtures/n1_compz_i.json' );
+var n2_compz_i = require( './fixtures/n2_compz_i.json' );
+var n0 = require( './fixtures/n0.json' );
+var diagonal_compz_i = require( './fixtures/diagonal_compz_i.json' );
+var n6_compz_i = require( './fixtures/n6_compz_i.json' );
+var compz_v_permuted = require( './fixtures/compz_v_permuted.json' );
+var n2_compz_n = require( './fixtures/n2_compz_n.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -142,7 +130,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dsteqr: COMPZ=I, 4x4 tridiagonal matrix', function t() {
@@ -156,7 +143,7 @@ test( 'dsteqr: COMPZ=I, 4x4 tridiagonal matrix', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'compz_I_4x4' );
+	tc = compz_i_4x4;
 	origD = [ 2.0, 2.0, 2.0, 2.0 ];
 	origE = [ 1.0, 1.0, 1.0 ];
 	N = 4;
@@ -183,7 +170,7 @@ test( 'dsteqr: COMPZ=V, 4x4 with identity Z', function t() {
 	var Z;
 	var i;
 
-	tc = findCase( 'compz_V_4x4' );
+	tc = compz_v_4x4;
 	origD = [ 2.0, 2.0, 2.0, 2.0 ];
 	origE = [ 1.0, 1.0, 1.0 ];
 	N = 4;
@@ -210,7 +197,7 @@ test( 'dsteqr: COMPZ=N, eigenvalues only', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'compz_N_4x4' );
+	tc = compz_n_4x4;
 	N = 4;
 	d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
@@ -230,7 +217,7 @@ test( 'dsteqr: N=1, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n1_compz_I' );
+	tc = n1_compz_i;
 	N = 1;
 	d = new Float64Array( [ 5.0 ] );
 	e = new Float64Array( 0 );
@@ -253,7 +240,7 @@ test( 'dsteqr: N=2, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n2_compz_I' );
+	tc = n2_compz_i;
 	origD = [ 3.0, 1.0 ];
 	origE = [ 2.0 ];
 	N = 2;
@@ -270,7 +257,7 @@ test( 'dsteqr: N=2, COMPZ=I', function t() {
 
 test( 'dsteqr: N=0 edge case', function t() {
 	var info;
-	var tc = findCase( 'n0' );
+	var tc = n0;
 
 	info = dsteqr( 'initialize', 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
@@ -287,7 +274,7 @@ test( 'dsteqr: already-diagonal matrix, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'diagonal_compz_I' );
+	tc = diagonal_compz_i;
 	origD = [ 4.0, 1.0, 3.0, 2.0 ];
 	origE = [ 0.0, 0.0, 0.0 ];
 	N = 4;
@@ -313,7 +300,7 @@ test( 'dsteqr: 6x6 matrix, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n6_compz_I' );
+	tc = n6_compz_i;
 	origD = [ 4.0, 3.0, 2.0, 1.0, 5.0, 6.0 ];
 	origE = [ 1.0, 0.5, 0.25, 0.125, 2.0 ];
 	N = 6;
@@ -339,7 +326,7 @@ test( 'dsteqr: COMPZ=V, 4x4 with permuted Z', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'compz_V_permuted' );
+	tc = compz_v_permuted;
 	origD = [ 2.0, 2.0, 2.0, 2.0 ];
 	origE = [ 1.0, 1.0, 1.0 ];
 	N = 4;
@@ -366,7 +353,7 @@ test( 'dsteqr: N=2, COMPZ=N', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n2_compz_N' );
+	tc = n2_compz_n;
 	N = 2;
 	d = new Float64Array( [ 3.0, 1.0 ] );
 	e = new Float64Array( [ 2.0 ] );

@@ -2,41 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsytrf = require( '../../dsytrf/lib/base.js' );
 var dsytrs2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsytrs2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _4x4_lower_1rhs = require( './fixtures/4x4_lower_1rhs.json' );
+var _4x4_upper_1rhs = require( './fixtures/4x4_upper_1rhs.json' );
+var _4x4_indef_lower_1rhs = require( './fixtures/4x4_indef_lower_1rhs.json' );
+var _4x4_indef_upper_1rhs = require( './fixtures/4x4_indef_upper_1rhs.json' );
+var _3x3_lower_2rhs = require( './fixtures/3x3_lower_2rhs.json' );
+var _3x3_upper_2rhs = require( './fixtures/3x3_upper_2rhs.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var _5x5_lower_solve = require( './fixtures/5x5_lower_solve.json' );
+var _5x5_upper_solve = require( './fixtures/5x5_upper_solve.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -69,7 +57,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dsytrs2: 4x4_lower_1rhs', function t() {
@@ -80,7 +67,7 @@ test( 'dsytrs2: 4x4_lower_1rhs', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '4x4_lower_1rhs' );
+	tc = _4x4_lower_1rhs;
 	A = new Float64Array([
 		4,
 		2,
@@ -116,7 +103,7 @@ test( 'dsytrs2: 4x4_upper_1rhs', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '4x4_upper_1rhs' );
+	tc = _4x4_upper_1rhs;
 	A = new Float64Array( 16 );
 	A[ 0 ] = 4;
 	A[ 4 ] = 2;
@@ -145,7 +132,7 @@ test( 'dsytrs2: 4x4_indef_lower_1rhs', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '4x4_indef_lower_1rhs' );
+	tc = _4x4_indef_lower_1rhs;
 	A = new Float64Array([
 		0,
 		1,
@@ -181,7 +168,7 @@ test( 'dsytrs2: 4x4_indef_upper_1rhs', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '4x4_indef_upper_1rhs' );
+	tc = _4x4_indef_upper_1rhs;
 	A = new Float64Array( 16 );
 	A[ 0 ] = 0;
 	A[ 4 ] = 1;
@@ -210,7 +197,7 @@ test( 'dsytrs2: 3x3_lower_2rhs', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '3x3_lower_2rhs' );
+	tc = _3x3_lower_2rhs;
 	A = new Float64Array([
 		4,
 		2,
@@ -246,7 +233,7 @@ test( 'dsytrs2: 3x3_upper_2rhs', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '3x3_upper_2rhs' );
+	tc = _3x3_upper_2rhs;
 	A = new Float64Array( 9 );
 	A[ 0 ] = 4;
 	A[ 3 ] = 2;
@@ -308,7 +295,7 @@ test( 'dsytrs2: n_one_lower', function t() {
 	var A;
 	var b;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	A = new Float64Array([ 4 ]);
 	b = new Float64Array([ 8 ]);
 	ipiv = new Int32Array( 1 );
@@ -327,7 +314,7 @@ test( 'dsytrs2: n_one_upper', function t() {
 	var A;
 	var b;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	A = new Float64Array([ 4 ]);
 	b = new Float64Array([ 8 ]);
 	ipiv = new Int32Array( 1 );
@@ -346,7 +333,7 @@ test( 'dsytrs2: 5x5_lower_solve', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '5x5_lower_solve' );
+	tc = _5x5_lower_solve;
 	A = new Float64Array( 25 );
 	A[ 0 ] = 1;
 	A[ 1 ] = -2;
@@ -390,7 +377,7 @@ test( 'dsytrs2: 5x5_upper_solve', function t() {
 	var A;
 	var b;
 
-	tc = findCase( '5x5_upper_solve' );
+	tc = _5x5_upper_solve;
 	A = new Float64Array( 25 );
 	A[ 0 ] = 1;
 	A[ 5 ] = -2;

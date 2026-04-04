@@ -4,25 +4,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlacpy = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlacpy.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var full_copy_3x3 = require( './fixtures/full_copy_3x3.json' );
+var upper_copy_3x3 = require( './fixtures/upper_copy_3x3.json' );
+var lower_copy_3x3 = require( './fixtures/lower_copy_3x3.json' );
+var full_copy_2x4 = require( './fixtures/full_copy_2x4.json' );
+var upper_copy_4x2 = require( './fixtures/upper_copy_4x2.json' );
+var lower_copy_4x2 = require( './fixtures/lower_copy_4x2.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
@@ -57,11 +52,10 @@ function buildInput( fixtureArr, M, N, LDA ) {
 	return c128( out );
 }
 
-
 // TESTS //
 
 test( 'zlacpy: full copy 3x3', function t() {
-	var tc = findCase( 'full_copy_3x3' );
+	var tc = full_copy_3x3;
 	var LDA = 5;
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
@@ -72,7 +66,7 @@ test( 'zlacpy: full copy 3x3', function t() {
 });
 
 test( 'zlacpy: upper copy 3x3', function t() {
-	var tc = findCase( 'upper_copy_3x3' );
+	var tc = upper_copy_3x3;
 	var LDA = 5;
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
@@ -83,7 +77,7 @@ test( 'zlacpy: upper copy 3x3', function t() {
 });
 
 test( 'zlacpy: lower copy 3x3', function t() {
-	var tc = findCase( 'lower_copy_3x3' );
+	var tc = lower_copy_3x3;
 	var LDA = 5;
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
@@ -110,7 +104,7 @@ test( 'zlacpy: N=0 returns B unchanged', function t() {
 });
 
 test( 'zlacpy: full copy 2x4 (non-square)', function t() {
-	var tc = findCase( 'full_copy_2x4' );
+	var tc = full_copy_2x4;
 	var LDA = 5;
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
@@ -121,7 +115,7 @@ test( 'zlacpy: full copy 2x4 (non-square)', function t() {
 });
 
 test( 'zlacpy: upper copy 4x2 (non-square, M > N)', function t() {
-	var tc = findCase( 'upper_copy_4x2' );
+	var tc = upper_copy_4x2;
 	var LDA = 5;
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );
@@ -132,7 +126,7 @@ test( 'zlacpy: upper copy 4x2 (non-square, M > N)', function t() {
 });
 
 test( 'zlacpy: lower copy 4x2 (non-square, M > N)', function t() {
-	var tc = findCase( 'lower_copy_4x2' );
+	var tc = lower_copy_4x2;
 	var LDA = 5;
 	var A = buildInput( tc.A, tc.M, tc.N, LDA );
 	var B = new Complex128Array( LDA * tc.N );

@@ -2,40 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dtgsy2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtgsy2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var notrans_2x2_diag = require( './fixtures/notrans_2x2_diag.json' );
+var notrans_3x2_quasi = require( './fixtures/notrans_3x2_quasi.json' );
+var trans_2x2 = require( './fixtures/trans_2x2.json' );
+var notrans_2x3_bblock = require( './fixtures/notrans_2x3_bblock.json' );
+var trans_3x2_quasi = require( './fixtures/trans_3x2_quasi.json' );
+var trans_2x3_bblock = require( './fixtures/trans_2x3_bblock.json' );
+var trans_3x3_both_quasi = require( './fixtures/trans_3x3_both_quasi.json' );
+var notrans_2x1 = require( './fixtures/notrans_2x1.json' );
+var notrans_1x2 = require( './fixtures/notrans_1x2.json' );
+var notrans_3x3_both_quasi = require( './fixtures/notrans_3x3_both_quasi.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -108,7 +96,6 @@ function extractMatrix( A, LDA, M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dtgsy2: notrans_2x2_diag', function t() {
@@ -128,7 +115,7 @@ test( 'dtgsy2: notrans_2x2_diag', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'notrans_2x2_diag' );
+	tc = notrans_2x2_diag;
 	M = 2;
 	N = 2;
 	A = packMatrix([ 0, 0, 1.0, 0, 1, 0.5, 1, 1, 2.0 ], M, M);
@@ -166,7 +153,7 @@ test( 'dtgsy2: notrans_3x2_quasi', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'notrans_3x2_quasi' );
+	tc = notrans_3x2_quasi;
 	M = 3;
 	N = 2;
 	A = packMatrix([ 0, 0, 1.0, 0, 1, 0.5, 0, 2, 0.3, 1, 0, -0.5, 1, 1, 1.0, 1, 2, 0.2, 2, 2, 3.0 ], M, M); // eslint-disable-line max-len
@@ -204,7 +191,7 @@ test( 'dtgsy2: trans_2x2', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'trans_2x2' );
+	tc = trans_2x2;
 	M = 2;
 	N = 2;
 	A = packMatrix([ 0, 0, 1.0, 0, 1, 0.5, 1, 1, 2.0 ], M, M);
@@ -242,7 +229,7 @@ test( 'dtgsy2: notrans_2x3_bblock', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'notrans_2x3_bblock' );
+	tc = notrans_2x3_bblock;
 	M = 2;
 	N = 3;
 	A = packMatrix([ 0, 0, 2.0, 0, 1, 0.3, 1, 1, 4.0 ], M, M);
@@ -280,7 +267,7 @@ test( 'dtgsy2: trans_3x2_quasi', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'trans_3x2_quasi' );
+	tc = trans_3x2_quasi;
 	M = 3;
 	N = 2;
 	A = packMatrix([ 0, 0, 1.0, 0, 1, 0.5, 0, 2, 0.3, 1, 0, -0.5, 1, 1, 1.0, 1, 2, 0.2, 2, 2, 3.0 ], M, M); // eslint-disable-line max-len
@@ -318,7 +305,7 @@ test( 'dtgsy2: trans_2x3_bblock', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'trans_2x3_bblock' );
+	tc = trans_2x3_bblock;
 	M = 2;
 	N = 3;
 	A = packMatrix([ 0, 0, 2.0, 0, 1, 0.3, 1, 1, 4.0 ], M, M);
@@ -356,7 +343,7 @@ test( 'dtgsy2: trans_3x3_both_quasi', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'trans_3x3_both_quasi' );
+	tc = trans_3x3_both_quasi;
 	M = 3;
 	N = 3;
 	A = packMatrix([ 0, 0, 1.0, 0, 1, 0.4, 0, 2, 0.1, 1, 0, -0.4, 1, 1, 1.0, 1, 2, 0.2, 2, 2, 5.0 ], M, M); // eslint-disable-line max-len
@@ -394,7 +381,7 @@ test( 'dtgsy2: notrans_2x1', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'notrans_2x1' );
+	tc = notrans_2x1;
 	M = 2;
 	N = 1;
 	A = packMatrix([ 0, 0, 3.0, 0, 1, 0.5, 1, 1, 7.0 ], M, M);
@@ -432,7 +419,7 @@ test( 'dtgsy2: notrans_1x2', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'notrans_1x2' );
+	tc = notrans_1x2;
 	M = 1;
 	N = 2;
 	A = packMatrix([ 0, 0, 3.0 ], M, M);
@@ -650,7 +637,7 @@ test( 'dtgsy2: notrans_3x3_both_quasi', function t() {
 	var E;
 	var F;
 
-	tc = findCase( 'notrans_3x3_both_quasi' );
+	tc = notrans_3x3_both_quasi;
 	M = 3;
 	N = 3;
 	A = packMatrix([ 0, 0, 1.0, 0, 1, 0.4, 0, 2, 0.1, 1, 0, -0.4, 1, 1, 1.0, 1, 2, 0.2, 2, 2, 5.0 ], M, M); // eslint-disable-line max-len

@@ -2,41 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zgebal = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgebal.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1 = require( './fixtures/n1.json' );
+var job_n = require( './fixtures/job_n.json' );
+var job_p = require( './fixtures/job_p.json' );
+var job_s = require( './fixtures/job_s.json' );
+var job_b = require( './fixtures/job_b.json' );
+var diagonal = require( './fixtures/diagonal.json' );
+var perm_and_scale = require( './fixtures/perm_and_scale.json' );
+var col_isolation = require( './fixtures/col_isolation.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -123,7 +109,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgebal: n0 - N=0 quick return', function t() {
@@ -146,7 +131,7 @@ test( 'zgebal: n1 - N=1', function t() {
 	var av;
 	var A;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	A = new Complex128Array( 1 );
 	av = reinterpret( A, 0 );
 	av[ 0 ] = 5.0;
@@ -166,7 +151,7 @@ test( 'zgebal: job_n - JOB=N no balancing', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'job_n' );
+	tc = job_n;
 	A = buildComplexMatrix( 3, 3, [
 		[ 1.0, 0.5, 4.0, 2.0, 7.0, 0.0 ],
 		[ 2.0, 1.0, 5.0, 0.0, 8.0, 3.0 ],
@@ -186,7 +171,7 @@ test( 'zgebal: job_p - JOB=P permute only', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'job_p' );
+	tc = job_p;
 	A = buildComplexMatrix( 4, 4, [
 		[ 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 2.0, 1.0, 5.0, 2.0, 8.0, 1.0, 0.0, 0.0 ],
@@ -211,7 +196,7 @@ test( 'zgebal: job_s - JOB=S scale only', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'job_s' );
+	tc = job_s;
 	A = buildComplexMatrix( 3, 3, [
 		[ 1.0, 0.5, 1000.0, 500.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 1.0, 0.5, 1000.0, 200.0 ],
@@ -234,7 +219,7 @@ test( 'zgebal: job_b - JOB=B both permute and scale', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'job_b' );
+	tc = job_b;
 	A = buildComplexMatrix( 4, 4, [
 		[ 1.0, 0.0, 100.0, 50.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 2.0, 1.0, 0.01, 0.005, 0.0, 0.0 ],
@@ -259,7 +244,7 @@ test( 'zgebal: diagonal - already balanced matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'diagonal' );
+	tc = diagonal;
 	A = buildComplexMatrix( 3, 3, [
 		[ 2.0, 1.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 3.0, 2.0, 0.0, 0.0 ],
@@ -279,7 +264,7 @@ test( 'zgebal: perm_and_scale - 5x5 with permutations on both ends', function t(
 	var tc;
 	var A;
 
-	tc = findCase( 'perm_and_scale' );
+	tc = perm_and_scale;
 	A = buildComplexMatrix( 5, 5, [
 		[ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 0.0, 0.0, 2.0, 1.0, 0.001, 0.0005, 0.0, 0.0, 0.0, 0.0 ],
@@ -306,7 +291,7 @@ test( 'zgebal: col_isolation - JOB=P with column isolation', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'col_isolation' );
+	tc = col_isolation;
 	A = buildComplexMatrix( 4, 4, [
 		[ 7.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 		[ 1.0, 0.5, 4.0, 2.0, 6.0, 1.0, 0.0, 0.0 ],

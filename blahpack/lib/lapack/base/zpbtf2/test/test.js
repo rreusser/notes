@@ -6,25 +6,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbtf2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpbtf2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_3x3_kd1 = require( './fixtures/upper_3x3_kd1.json' );
+var lower_3x3_kd1 = require( './fixtures/lower_3x3_kd1.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_4x4_kd2 = require( './fixtures/upper_4x4_kd2.json' );
+var lower_4x4_kd2 = require( './fixtures/lower_4x4_kd2.json' );
+var not_hpd = require( './fixtures/not_hpd.json' );
+var not_hpd_lower = require( './fixtures/not_hpd_lower.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -39,11 +35,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpbtf2: upper_3x3_kd1 (UPLO=U, N=3, KD=1)', function t() {
-	var tc = findCase( 'upper_3x3_kd1' );
+	var tc = upper_3x3_kd1;
 	// Band storage (upper, LDAB=2): 2 rows x 3 cols
 	// Col 1: AB(1,1)=*, AB(2,1)=4
 	// Col 2: AB(1,2)=(1+i), AB(2,2)=5
@@ -59,7 +54,7 @@ test( 'zpbtf2: upper_3x3_kd1 (UPLO=U, N=3, KD=1)', function t() {
 });
 
 test( 'zpbtf2: lower_3x3_kd1 (UPLO=L, N=3, KD=1)', function t() {
-	var tc = findCase( 'lower_3x3_kd1' );
+	var tc = lower_3x3_kd1;
 	// Band storage (lower, LDAB=2): 2 rows x 3 cols
 	// Col 1: AB(1,1)=4, AB(2,1)=(1-i)
 	// Col 2: AB(1,2)=5, AB(2,2)=(2+i)
@@ -81,7 +76,7 @@ test( 'zpbtf2: n_zero (N=0 quick return)', function t() {
 });
 
 test( 'zpbtf2: n_one (N=1)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var AB = new Complex128Array( [ 9, 0 ] );
 	var info = zpbtf2( 'upper', 1, 0, AB, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -89,7 +84,7 @@ test( 'zpbtf2: n_one (N=1)', function t() {
 });
 
 test( 'zpbtf2: upper_4x4_kd2 (UPLO=U, N=4, KD=2)', function t() {
-	var tc = findCase( 'upper_4x4_kd2' );
+	var tc = upper_4x4_kd2;
 	// Band storage (upper, LDAB=3): 3 rows x 4 cols
 	var AB = new Complex128Array( [
 		0, 0, 0, 0, 10, 0,
@@ -103,7 +98,7 @@ test( 'zpbtf2: upper_4x4_kd2 (UPLO=U, N=4, KD=2)', function t() {
 });
 
 test( 'zpbtf2: lower_4x4_kd2 (UPLO=L, N=4, KD=2)', function t() {
-	var tc = findCase( 'lower_4x4_kd2' );
+	var tc = lower_4x4_kd2;
 	// Band storage (lower, LDAB=3): 3 rows x 4 cols
 	var AB = new Complex128Array( [
 		10, 0, 1, -1, 0.5, 1,
@@ -117,7 +112,7 @@ test( 'zpbtf2: lower_4x4_kd2 (UPLO=L, N=4, KD=2)', function t() {
 });
 
 test( 'zpbtf2: not_hpd (upper, not positive definite)', function t() {
-	var tc = findCase( 'not_hpd' );
+	var tc = not_hpd;
 	var AB = new Complex128Array( [
 		0, 0, 1, 0,
 		2, 1, 1, 0
@@ -127,7 +122,7 @@ test( 'zpbtf2: not_hpd (upper, not positive definite)', function t() {
 });
 
 test( 'zpbtf2: not_hpd_lower (lower, not positive definite)', function t() {
-	var tc = findCase( 'not_hpd_lower' );
+	var tc = not_hpd_lower;
 	var AB = new Complex128Array( [
 		1, 0, 2, -1,
 		1, 0, 0, 0

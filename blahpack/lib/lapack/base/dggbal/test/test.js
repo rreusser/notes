@@ -6,35 +6,27 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dggbal = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dggbal.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var job_n = require( './fixtures/job_n.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var job_p = require( './fixtures/job_p.json' );
+var job_s = require( './fixtures/job_s.json' );
+var job_b = require( './fixtures/job_b.json' );
+var job_p_isolated = require( './fixtures/job_p_isolated.json' );
+var job_b_5x5 = require( './fixtures/job_b_5x5.json' );
+var job_p_diagonal = require( './fixtures/job_p_diagonal.json' );
+var job_s_trivial = require( './fixtures/job_s_trivial.json' );
+var job_b_2x2 = require( './fixtures/job_b_2x2.json' );
+var job_p_5x5 = require( './fixtures/job_p_5x5.json' );
+var job_b_dense = require( './fixtures/job_b_dense.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -127,7 +119,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dggbal is a function', function t() {
@@ -144,7 +135,7 @@ test( 'dggbal: JOB=none, 4x4 - sets ilo=1, ihi=N, scales=1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_n' );
+	tc = job_n;
 	n = 4;
 	A = buildMatrix( n, [
 		[ 1, 5, 0, 0 ],
@@ -178,7 +169,7 @@ test( 'dggbal: N=0 - quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 2 );
 	B = new Float64Array( 2 );
 	lscale = new Float64Array( 1 );
@@ -200,7 +191,7 @@ test( 'dggbal: N=1 - quick return with scales=1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	n = 1;
 	A = new Float64Array( [ 5.0 ] );
 	B = new Float64Array( [ 1.0 ] );
@@ -225,7 +216,7 @@ test( 'dggbal: JOB=permute, 4x4 - permute only', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p' );
+	tc = job_p;
 	n = 4;
 	A = buildMatrix( n, [
 		[ 1, 0, 0, 0 ],
@@ -262,7 +253,7 @@ test( 'dggbal: JOB=scale, 3x3 - scale only', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_s' );
+	tc = job_s;
 	n = 3;
 	A = buildMatrix( n, [
 		[ 1e3, 1, 1e-3 ],
@@ -297,7 +288,7 @@ test( 'dggbal: JOB=both, 4x4 - both permute and scale', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b' );
+	tc = job_b;
 	n = 4;
 	A = buildMatrix( n, [
 		[ 1, 4, 0.1, 0.01 ],
@@ -334,7 +325,7 @@ test( 'dggbal: JOB=permute, 3x3 - isolated eigenvalue', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p_isolated' );
+	tc = job_p_isolated;
 	n = 3;
 	A = buildMatrix( n, [
 		[ 1, 3, 0 ],
@@ -369,7 +360,7 @@ test( 'dggbal: JOB=both, 5x5 - scaling iteration', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b_5x5' );
+	tc = job_b_5x5;
 	n = 5;
 	A = buildMatrix( n, [
 		[ 1e2, 1, 1e-2, 0, 0 ],
@@ -408,7 +399,7 @@ test( 'dggbal: JOB=permute, 3x3 diagonal - everything isolated', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p_diagonal' );
+	tc = job_p_diagonal;
 	n = 3;
 	A = buildMatrix( n, [
 		[ 1, 0, 0 ],
@@ -441,7 +432,7 @@ test( 'dggbal: JOB=scale, 2x2 diagonal - trivial scaling', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_s_trivial' );
+	tc = job_s_trivial;
 	n = 2;
 	A = buildMatrix( n, [
 		[ 1, 0 ],
@@ -472,7 +463,7 @@ test( 'dggbal: JOB=both, 2x2 dense', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b_2x2' );
+	tc = job_b_2x2;
 	n = 2;
 	A = buildMatrix( n, [
 		[ 1, 4 ],
@@ -505,7 +496,7 @@ test( 'dggbal: JOB=permute, 5x5 with two isolated rows/cols', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p_5x5' );
+	tc = job_p_5x5;
 	n = 5;
 	A = buildMatrix( n, [
 		[ 1, 0, 0, 0, 0 ],
@@ -544,7 +535,7 @@ test( 'dggbal: JOB=both, 3x3 fully dense', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b_dense' );
+	tc = job_b_dense;
 	n = 3;
 	A = buildMatrix( n, [
 		[ 1, 6, 12 ],

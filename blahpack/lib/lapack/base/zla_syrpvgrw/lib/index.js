@@ -12,11 +12,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zla_syrpvgrw;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zla_syrpvgrw = main;
+} else {
+	zla_syrpvgrw = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zla_syrpvgrw;
 
 // exports: { "ndarray": "zla_syrpvgrw.ndarray" }

@@ -23,36 +23,28 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlange = require( './../lib/base.js' );
 
-
 // VARIABLES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlange.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var dlange_max = require( './fixtures/dlange_max.json' );
+var dlange_one = require( './fixtures/dlange_one.json' );
+var dlange_inf = require( './fixtures/dlange_inf.json' );
+var dlange_frob = require( './fixtures/dlange_frob.json' );
+var dlange_1x1_max = require( './fixtures/dlange_1x1_max.json' );
+var dlange_1x1_one = require( './fixtures/dlange_1x1_one.json' );
+var dlange_1x1_inf = require( './fixtures/dlange_1x1_inf.json' );
+var dlange_1x1_frob = require( './fixtures/dlange_1x1_frob.json' );
+var dlange_4x5_max = require( './fixtures/dlange_4x5_max.json' );
+var dlange_4x5_one = require( './fixtures/dlange_4x5_one.json' );
+var dlange_4x5_inf = require( './fixtures/dlange_4x5_inf.json' );
+var dlange_4x5_frob = require( './fixtures/dlange_4x5_frob.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -93,7 +85,6 @@ function colMajor( rows ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlange is a function', function t() {
@@ -119,7 +110,7 @@ test( 'dlange: max norm on 3x4 matrix', function t() {
 	]);
 	work = new Float64Array( 10 );
 	result = dlange( 'max', 3, 4, A, 1, 3, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_max' ).result, 1e-14, 'max norm' );
+	assertClose( result, dlange_max.result, 1e-14, 'max norm' );
 });
 
 test( 'dlange: one norm on 3x4 matrix', function t() {
@@ -134,7 +125,7 @@ test( 'dlange: one norm on 3x4 matrix', function t() {
 	]);
 	work = new Float64Array( 10 );
 	result = dlange( 'one-norm', 3, 4, A, 1, 3, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_one' ).result, 1e-14, 'one norm' );
+	assertClose( result, dlange_one.result, 1e-14, 'one norm' );
 });
 
 test( 'dlange: infinity norm on 3x4 matrix', function t() {
@@ -149,7 +140,7 @@ test( 'dlange: infinity norm on 3x4 matrix', function t() {
 	]);
 	work = new Float64Array( 10 );
 	result = dlange( 'inf-norm', 3, 4, A, 1, 3, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_inf' ).result, 1e-14, 'inf norm' );
+	assertClose( result, dlange_inf.result, 1e-14, 'inf norm' );
 });
 
 test( 'dlange: Frobenius norm on 3x4 matrix', function t() {
@@ -164,7 +155,7 @@ test( 'dlange: Frobenius norm on 3x4 matrix', function t() {
 	]);
 	work = new Float64Array( 10 );
 	result = dlange( 'frobenius', 3, 4, A, 1, 3, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_frob' ).result, 1e-14, 'frobenius' );
+	assertClose( result, dlange_frob.result, 1e-14, 'frobenius' );
 });
 
 test( 'dlange: M=0 quick return', function t() {
@@ -198,16 +189,16 @@ test( 'dlange: 1x1 matrix, all norms', function t() {
 	work = new Float64Array( 10 );
 
 	result = dlange( 'max', 1, 1, A, 1, 1, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_1x1_max' ).result, 1e-14, 'max' );
+	assertClose( result, dlange_1x1_max.result, 1e-14, 'max' );
 
 	result = dlange( 'one-norm', 1, 1, A, 1, 1, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_1x1_one' ).result, 1e-14, 'one' );
+	assertClose( result, dlange_1x1_one.result, 1e-14, 'one' );
 
 	result = dlange( 'inf-norm', 1, 1, A, 1, 1, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_1x1_inf' ).result, 1e-14, 'inf' );
+	assertClose( result, dlange_1x1_inf.result, 1e-14, 'inf' );
 
 	result = dlange( 'frobenius', 1, 1, A, 1, 1, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_1x1_frob' ).result, 1e-14, 'frob' );
+	assertClose( result, dlange_1x1_frob.result, 1e-14, 'frob' );
 });
 
 test( 'dlange: 4x5 matrix, all norms', function t() {
@@ -224,16 +215,16 @@ test( 'dlange: 4x5 matrix, all norms', function t() {
 	work = new Float64Array( 10 );
 
 	result = dlange( 'max', 4, 5, A, 1, 4, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_4x5_max' ).result, 1e-14, 'max' );
+	assertClose( result, dlange_4x5_max.result, 1e-14, 'max' );
 
 	result = dlange( 'one-norm', 4, 5, A, 1, 4, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_4x5_one' ).result, 1e-14, 'one' );
+	assertClose( result, dlange_4x5_one.result, 1e-14, 'one' );
 
 	result = dlange( 'inf-norm', 4, 5, A, 1, 4, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_4x5_inf' ).result, 1e-14, 'inf' );
+	assertClose( result, dlange_4x5_inf.result, 1e-14, 'inf' );
 
 	result = dlange( 'frobenius', 4, 5, A, 1, 4, 0, work, 1, 0 );
-	assertClose( result, findCase( 'dlange_4x5_frob' ).result, 1e-14, 'frob' );
+	assertClose( result, dlange_4x5_frob.result, 1e-14, 'frob' );
 });
 
 test( 'dlange: all norms produce expected results', function t() {

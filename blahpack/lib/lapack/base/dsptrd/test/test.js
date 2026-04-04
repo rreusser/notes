@@ -5,36 +5,22 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsptrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsptrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var upper_diagonal = require( './fixtures/upper_diagonal.json' );
+var lower_diagonal = require( './fixtures/lower_diagonal.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +53,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dsptrd: upper_4x4', function t() {
@@ -78,7 +63,7 @@ test( 'dsptrd: upper_4x4', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	AP = new Float64Array( [ 4, 1, 5, 2, 1, 6, 1, 2, 1, 7 ] );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );
@@ -99,7 +84,7 @@ test( 'dsptrd: lower_4x4', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	AP = new Float64Array( [ 4, 1, 2, 1, 5, 1, 2, 6, 1, 7 ] );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );
@@ -120,7 +105,7 @@ test( 'dsptrd: upper_3x3', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	AP = new Float64Array( [ 2, 3, 5, 1, 4, 8 ] );
 	d = new Float64Array( 3 );
 	e = new Float64Array( 2 );
@@ -141,7 +126,7 @@ test( 'dsptrd: lower_3x3', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	AP = new Float64Array( [ 2, 3, 1, 5, 4, 8 ] );
 	d = new Float64Array( 3 );
 	e = new Float64Array( 2 );
@@ -162,7 +147,7 @@ test( 'dsptrd: n_one_upper', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Float64Array( [ 3 ] );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 0 );
@@ -181,7 +166,7 @@ test( 'dsptrd: n_one_lower', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	AP = new Float64Array( [ 3 ] );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 0 );
@@ -215,7 +200,7 @@ test( 'dsptrd: upper_diagonal', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'upper_diagonal' );
+	tc = upper_diagonal;
 	AP = new Float64Array( [ 2, 0, 5, 0, 0, 8 ] );
 	d = new Float64Array( 3 );
 	e = new Float64Array( 2 );
@@ -235,7 +220,7 @@ test( 'dsptrd: lower_diagonal', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'lower_diagonal' );
+	tc = lower_diagonal;
 	AP = new Float64Array( [ 2, 0, 0, 5, 0, 8 ] );
 	d = new Float64Array( 3 );
 	e = new Float64Array( 2 );

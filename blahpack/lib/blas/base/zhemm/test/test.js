@@ -2,41 +2,32 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhemm = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhemm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var left_upper_basic = require( './fixtures/left_upper_basic.json' );
+var left_lower_basic = require( './fixtures/left_lower_basic.json' );
+var right_upper_basic = require( './fixtures/right_upper_basic.json' );
+var right_lower_basic = require( './fixtures/right_lower_basic.json' );
+var complex_alpha_beta = require( './fixtures/complex_alpha_beta.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var scalar = require( './fixtures/scalar.json' );
+var beta_zero = require( './fixtures/beta_zero.json' );
+var alpha_zero_beta_zero = require( './fixtures/alpha_zero_beta_zero.json' );
+var left_lower_nonzero_beta = require( './fixtures/left_lower_nonzero_beta.json' );
+var right_upper_nonzero_beta = require( './fixtures/right_upper_nonzero_beta.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,11 +76,10 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhemm: left_upper_basic', function t() {
-	var tc = findCase( 'left_upper_basic' );
+	var tc = left_upper_basic;
 
 	// A is 3x3 Hermitian upper, LDA=3
 
@@ -135,7 +125,7 @@ test( 'zhemm: left_upper_basic', function t() {
 });
 
 test( 'zhemm: left_lower_basic', function t() {
-	var tc = findCase( 'left_lower_basic' );
+	var tc = left_lower_basic;
 
 	// A is 3x3 Hermitian lower
 	var A = new Complex128Array([
@@ -179,7 +169,7 @@ test( 'zhemm: left_lower_basic', function t() {
 });
 
 test( 'zhemm: right_upper_basic', function t() {
-	var tc = findCase( 'right_upper_basic' );
+	var tc = right_upper_basic;
 	var A = new Complex128Array([
 		2,
 		0,
@@ -223,7 +213,7 @@ test( 'zhemm: right_upper_basic', function t() {
 });
 
 test( 'zhemm: right_lower_basic', function t() {
-	var tc = findCase( 'right_lower_basic' );
+	var tc = right_lower_basic;
 	var A = new Complex128Array([
 		2,
 		0,
@@ -265,7 +255,7 @@ test( 'zhemm: right_lower_basic', function t() {
 });
 
 test( 'zhemm: complex_alpha_beta', function t() {
-	var tc = findCase( 'complex_alpha_beta' );
+	var tc = complex_alpha_beta;
 	var A = new Complex128Array([
 		2,
 		0,
@@ -320,7 +310,7 @@ test( 'zhemm: complex_alpha_beta', function t() {
 });
 
 test( 'zhemm: alpha_zero', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = new Complex128Array( 9 );
 	var B = new Complex128Array( 4 );
 	var C = new Complex128Array([
@@ -343,7 +333,7 @@ test( 'zhemm: m_zero', function t() {
 	var C;
 	var v;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	C = new Complex128Array( [ 99, 0 ] );
 	zhemm( 'left', 'upper', 0, 2, new Complex128( 1, 0 ), new Complex128Array( 1 ), 1, 1, 0, new Complex128Array( 1 ), 1, 1, 0, new Complex128( 0, 0 ), C, 1, 1, 0 ); // eslint-disable-line max-len
 	v = reinterpret( C, 0 );
@@ -356,7 +346,7 @@ test( 'zhemm: n_zero', function t() {
 	var C;
 	var v;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	C = new Complex128Array( [ 99, 0 ] );
 	zhemm( 'left', 'upper', 2, 0, new Complex128( 1, 0 ), new Complex128Array( 4 ), 1, 2, 0, new Complex128Array( 4 ), 1, 2, 0, new Complex128( 0, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
 	v = reinterpret( C, 0 );
@@ -365,7 +355,7 @@ test( 'zhemm: n_zero', function t() {
 });
 
 test( 'zhemm: scalar', function t() {
-	var tc = findCase( 'scalar' );
+	var tc = scalar;
 	var A = new Complex128Array( [ 3, 0 ] );
 	var B = new Complex128Array( [ 5, 2 ] );
 	var C = new Complex128Array( 1 );
@@ -375,7 +365,7 @@ test( 'zhemm: scalar', function t() {
 });
 
 test( 'zhemm: beta_zero', function t() {
-	var tc = findCase( 'beta_zero' );
+	var tc = beta_zero;
 	var A = new Complex128Array([
 		1,
 		0,
@@ -412,7 +402,7 @@ test( 'zhemm: beta_zero', function t() {
 });
 
 test( 'zhemm: alpha_zero_beta_zero (zeros C)', function t() {
-	var tc = findCase( 'alpha_zero_beta_zero' );
+	var tc = alpha_zero_beta_zero;
 	var A = new Complex128Array( 4 );
 	var B = new Complex128Array( 4 );
 	var C = new Complex128Array([
@@ -431,7 +421,7 @@ test( 'zhemm: alpha_zero_beta_zero (zeros C)', function t() {
 });
 
 test( 'zhemm: left_lower_nonzero_beta', function t() {
-	var tc = findCase( 'left_lower_nonzero_beta' );
+	var tc = left_lower_nonzero_beta;
 	var A = new Complex128Array([
 		2,
 		0,
@@ -486,7 +476,7 @@ test( 'zhemm: left_lower_nonzero_beta', function t() {
 });
 
 test( 'zhemm: right_upper_nonzero_beta', function t() {
-	var tc = findCase( 'right_upper_nonzero_beta' );
+	var tc = right_upper_nonzero_beta;
 	var A = new Complex128Array([
 		2,
 		0,

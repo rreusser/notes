@@ -4,27 +4,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var real = require( '@stdlib/complex/float64/real' );
 var zgees = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgees.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n1 = require( './fixtures/n1.json' );
+var n3_nosort = require( './fixtures/n3_nosort.json' );
+var n3_sort = require( './fixtures/n3_sort.json' );
+var n4_noschur = require( './fixtures/n4_noschur.json' );
+var n4_schur = require( './fixtures/n4_schur.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -79,7 +73,6 @@ function callZgees( jobvs, sort, selectFn, N, Adata ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zgees: n0', function t() {
@@ -89,7 +82,7 @@ test( 'zgees: n0', function t() {
 });
 
 test( 'zgees: n1', function t() {
-	var tc = findCase( 'n1' );
+	var tc = n1;
 	// A = (3+2i)
 	var result = callZgees( 'compute-vectors', 'no-sort', selectNone, 1, [ 3.0, 2.0 ] );
 	assert.equal( result.info, 0, 'info' );
@@ -99,7 +92,7 @@ test( 'zgees: n1', function t() {
 });
 
 test( 'zgees: n3_nosort', function t() {
-	var tc = findCase( 'n3_nosort' );
+	var tc = n3_nosort;
 	// Upper triangular 3x3 matrix, column-major interleaved:
 	// A = [ (1,0) (2,1) (3,-1)
 	//       (0,1) (4,0) (5,2)
@@ -120,7 +113,7 @@ test( 'zgees: n3_nosort', function t() {
 });
 
 test( 'zgees: n3_sort (select real>3)', function t() {
-	var tc = findCase( 'n3_sort' );
+	var tc = n3_sort;
 	var Adata = [
 		1, 0,  0, 1,  0, 0,
 		2, 1,  4, 0,  0, -1,
@@ -135,7 +128,7 @@ test( 'zgees: n3_sort (select real>3)', function t() {
 });
 
 test( 'zgees: n4_noschur (JOBVS=N)', function t() {
-	var tc = findCase( 'n4_noschur' );
+	var tc = n4_noschur;
 	var Adata = [
 		2, 1,   1, -0.5, 0, 0,    0, 0,    // col 0
 		1, 0.5, 3, 0,    1, -1,   0, 0,    // col 1
@@ -152,7 +145,7 @@ test( 'zgees: n4_noschur (JOBVS=N)', function t() {
 });
 
 test( 'zgees: n4_schur (JOBVS=V)', function t() {
-	var tc = findCase( 'n4_schur' );
+	var tc = n4_schur;
 	var Adata = [
 		2, 1,   1, -0.5, 0, 0,    0, 0,
 		1, 0.5, 3, 0,    1, -1,   0, 0,

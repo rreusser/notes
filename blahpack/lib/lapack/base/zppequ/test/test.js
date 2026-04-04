@@ -4,25 +4,24 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
-var path = require( 'path' );
 var zppequ = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zppequ.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var non_positive_upper = require( './fixtures/non_positive_upper.json' );
+var zero_diag_lower = require( './fixtures/zero_diag_lower.json' );
+var identity_upper = require( './fixtures/identity_upper.json' );
+var diagonal_varied_lower = require( './fixtures/diagonal_varied_lower.json' );
+var non_positive_first = require( './fixtures/non_positive_first.json' );
+var non_positive_last = require( './fixtures/non_positive_last.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,7 +36,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zppequ is a function', function t() {
@@ -46,7 +44,7 @@ test( 'zppequ is a function', function t() {
 
 test( 'zppequ: upper_basic', function t() {
 	var result;
-	var tc = findCase( 'upper_basic' );
+	var tc = upper_basic;
 
 	// Upper packed: col 1 = [4], col 2 = [1+2i, 9], col 3 = [0.5+i, 2-i, 16], col 4 = [0.3+0.1i, 1.5-0.5i, 3+0.2i, 25]
 	var ap = new Complex128Array( [ 4.0, 0.0, 1.0, 2.0, 9.0, 0.0, 0.5, 1.0, 2.0, -1.0, 16.0, 0.0, 0.3, 0.1, 1.5, -0.5, 3.0, 0.2, 25.0, 0.0 ] );
@@ -61,7 +59,7 @@ test( 'zppequ: upper_basic', function t() {
 
 test( 'zppequ: lower_basic', function t() {
 	var result;
-	var tc = findCase( 'lower_basic' );
+	var tc = lower_basic;
 
 	// Lower packed: col 1 = [4, 1-2i, 0.5-i, 0.3-0.1i], col 2 = [9, 2+i, 1.5+0.5i], col 3 = [16, 3-0.2i], col 4 = [25]
 	var ap = new Complex128Array( [ 4.0, 0.0, 1.0, -2.0, 0.5, -1.0, 0.3, -0.1, 9.0, 0.0, 2.0, 1.0, 1.5, 0.5, 16.0, 0.0, 3.0, -0.2, 25.0, 0.0 ] );
@@ -76,7 +74,7 @@ test( 'zppequ: lower_basic', function t() {
 
 test( 'zppequ: n_zero', function t() {
 	var result;
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var ap = new Complex128Array( 1 );
 	var s = new Float64Array( 1 );
 
@@ -88,7 +86,7 @@ test( 'zppequ: n_zero', function t() {
 
 test( 'zppequ: n_one', function t() {
 	var result;
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var ap = new Complex128Array( [ 49.0, 0.0 ] );
 	var s = new Float64Array( 1 );
 
@@ -101,7 +99,7 @@ test( 'zppequ: n_one', function t() {
 
 test( 'zppequ: non_positive_upper', function t() {
 	var result;
-	var tc = findCase( 'non_positive_upper' );
+	var tc = non_positive_upper;
 
 	// Upper packed N=3: diag at positions 0, 2, 5
 	// Diagonal real parts: 4.0, -1.0, 9.0
@@ -114,7 +112,7 @@ test( 'zppequ: non_positive_upper', function t() {
 
 test( 'zppequ: zero_diag_lower', function t() {
 	var result;
-	var tc = findCase( 'zero_diag_lower' );
+	var tc = zero_diag_lower;
 
 	// Lower packed N=3: diag at positions 0, 3, 5
 	// Diagonal real parts: 4.0, 0.0, 9.0
@@ -127,7 +125,7 @@ test( 'zppequ: zero_diag_lower', function t() {
 
 test( 'zppequ: identity_upper', function t() {
 	var result;
-	var tc = findCase( 'identity_upper' );
+	var tc = identity_upper;
 
 	// Upper packed identity N=3: diag at 0, 2, 5, all (1.0, 0.0)
 	var ap = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
@@ -142,7 +140,7 @@ test( 'zppequ: identity_upper', function t() {
 
 test( 'zppequ: diagonal_varied_lower', function t() {
 	var result;
-	var tc = findCase( 'diagonal_varied_lower' );
+	var tc = diagonal_varied_lower;
 
 	// Lower packed N=3: diag at 0, 3, 5
 	// Diagonal real parts: 100.0, 1.0, 0.25
@@ -158,7 +156,7 @@ test( 'zppequ: diagonal_varied_lower', function t() {
 
 test( 'zppequ: non_positive_first', function t() {
 	var result;
-	var tc = findCase( 'non_positive_first' );
+	var tc = non_positive_first;
 
 	// Lower packed N=3: diag at 0, 3, 5
 	// Diagonal real parts: -2.0, 4.0, 9.0
@@ -171,7 +169,7 @@ test( 'zppequ: non_positive_first', function t() {
 
 test( 'zppequ: non_positive_last', function t() {
 	var result;
-	var tc = findCase( 'non_positive_last' );
+	var tc = non_positive_last;
 
 	// Upper packed N=3: diag at 0, 2, 5
 	// Diagonal real parts: 4.0, 9.0, -3.0

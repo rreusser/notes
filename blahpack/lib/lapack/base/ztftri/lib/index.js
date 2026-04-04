@@ -17,11 +17,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var ztftri;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	ztftri = main;
+} else {
+	ztftri = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = ztftri;
 
 // exports: { "ndarray": "ztftri.ndarray" }

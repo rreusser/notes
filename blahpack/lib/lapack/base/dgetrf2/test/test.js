@@ -2,40 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgetrf2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgetrf2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3 = require( './fixtures/3x3.json' );
+var _4x3 = require( './fixtures/4x3.json' );
+var _3x4 = require( './fixtures/3x4.json' );
+var singular = require( './fixtures/singular.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var col_vector = require( './fixtures/col_vector.json' );
+var row_vector = require( './fixtures/row_vector.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -80,7 +65,6 @@ function ipivTo0Based( ipiv1 ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgetrf2: 3x3 non-singular matrix', function t() {
@@ -90,7 +74,7 @@ test( 'dgetrf2: 3x3 non-singular matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	a = new Float64Array( [ 2, 4, 8, 1, 3, 7, 1, 3, 9 ] );
 	ipiv = new Int32Array( 3 );
 	info = dgetrf2( 3, 3, a, 1, 3, 0, ipiv, 1, 0 );
@@ -106,7 +90,7 @@ test( 'dgetrf2: 4x3 tall matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '4x3' );
+	tc = _4x3;
 	a = new Float64Array( [ 2, 0, 1, 0, 1, 3, 0, 1, 0, 1, 4, 2 ] );
 	ipiv = new Int32Array( 3 );
 	info = dgetrf2( 4, 3, a, 1, 4, 0, ipiv, 1, 0 );
@@ -121,7 +105,7 @@ test( 'dgetrf2: 3x4 wide matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '3x4' );
+	tc = _3x4;
 	a = new Float64Array( [ 1, 4, 7, 2, 5, 8, 3, 6, 9, 10, 11, 12 ] );
 	ipiv = new Int32Array( 3 );
 	info = dgetrf2( 3, 4, a, 1, 3, 0, ipiv, 1, 0 );
@@ -136,7 +120,7 @@ test( 'dgetrf2: singular matrix (info > 0)', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	a = new Float64Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1 ] );
 	ipiv = new Int32Array( 3 );
 	info = dgetrf2( 3, 3, a, 1, 3, 0, ipiv, 1, 0 );
@@ -173,7 +157,7 @@ test( 'dgetrf2: 1x1 non-singular', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	a = new Float64Array( [ 5 ] );
 	ipiv = new Int32Array( 1 );
 	info = dgetrf2( 1, 1, a, 1, 1, 0, ipiv, 1, 0 );
@@ -201,7 +185,7 @@ test( 'dgetrf2: Nx1 column vector', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'col_vector' );
+	tc = col_vector;
 	a = new Float64Array( [ 1, 5, 3 ] );
 	ipiv = new Int32Array( 1 );
 	info = dgetrf2( 3, 1, a, 1, 3, 0, ipiv, 1, 0 );
@@ -216,7 +200,7 @@ test( 'dgetrf2: 1xN row vector', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'row_vector' );
+	tc = row_vector;
 	a = new Float64Array( [ 2, 3, 7 ] );
 	ipiv = new Int32Array( 1 );
 	info = dgetrf2( 1, 3, a, 1, 1, 0, ipiv, 1, 0 );

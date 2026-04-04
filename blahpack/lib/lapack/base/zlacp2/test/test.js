@@ -4,26 +4,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlacp2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlacp2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var full_3x3 = require( './fixtures/full_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var full_2x4 = require( './fixtures/full_2x4.json' );
+var upper_4x2 = require( './fixtures/upper_4x2.json' );
+var lower_2x4 = require( './fixtures/lower_2x4.json' );
+var full_1x1 = require( './fixtures/full_1x1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
@@ -67,7 +63,6 @@ function extractComplex( B, M, N, LDB ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlacp2 is a function', function t() {
@@ -76,7 +71,7 @@ test( 'zlacp2 is a function', function t() {
 
 test( 'zlacp2: full copy 3x3', function t() {
 	var result;
-	var tc = findCase( 'full_3x3' );
+	var tc = full_3x3;
 	var LDA = 3;
 	var LDB = 3;
 	var A = buildRealInput( tc.A, tc.M, tc.N, LDA );
@@ -90,7 +85,7 @@ test( 'zlacp2: full copy 3x3', function t() {
 
 test( 'zlacp2: upper copy 3x3', function t() {
 	var result;
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	var LDA = 3;
 	var LDB = 3;
 	var A = buildRealInput( tc.A, tc.M, tc.N, LDA );
@@ -104,7 +99,7 @@ test( 'zlacp2: upper copy 3x3', function t() {
 
 test( 'zlacp2: lower copy 3x3', function t() {
 	var result;
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	var LDA = 3;
 	var LDB = 3;
 	var A = buildRealInput( tc.A, tc.M, tc.N, LDA );
@@ -118,7 +113,7 @@ test( 'zlacp2: lower copy 3x3', function t() {
 
 test( 'zlacp2: full copy 2x4 (rectangular, M < N)', function t() {
 	var result;
-	var tc = findCase( 'full_2x4' );
+	var tc = full_2x4;
 	var LDA = 2;
 	var LDB = 2;
 	var A = buildRealInput( tc.A, tc.M, tc.N, LDA );
@@ -132,7 +127,7 @@ test( 'zlacp2: full copy 2x4 (rectangular, M < N)', function t() {
 
 test( 'zlacp2: upper copy 4x2 (rectangular, M > N)', function t() {
 	var result;
-	var tc = findCase( 'upper_4x2' );
+	var tc = upper_4x2;
 	var LDA = 4;
 	var LDB = 4;
 	var A = buildRealInput( tc.A, tc.M, tc.N, LDA );
@@ -146,7 +141,7 @@ test( 'zlacp2: upper copy 4x2 (rectangular, M > N)', function t() {
 
 test( 'zlacp2: lower copy 2x4 (rectangular, M < N)', function t() {
 	var result;
-	var tc = findCase( 'lower_2x4' );
+	var tc = lower_2x4;
 	var LDA = 2;
 	var LDB = 2;
 	var A = buildRealInput( tc.A, tc.M, tc.N, LDA );
@@ -187,7 +182,7 @@ test( 'zlacp2: edge case N=0 (no-op)', function t() {
 });
 
 test( 'zlacp2: full copy 1x1', function t() {
-	var tc = findCase( 'full_1x1' );
+	var tc = full_1x1;
 	var B = new Complex128Array( 1 );
 	var A = new Float64Array( [ tc.A11 ] );
 	var Bv;

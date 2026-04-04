@@ -2,40 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsygs2 = require( './../lib/base.js' );
 var dpotrf = require( '../../dpotrf/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsygs2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var itype1_upper = require( './fixtures/itype1_upper.json' );
+var itype1_lower = require( './fixtures/itype1_lower.json' );
+var itype2_upper = require( './fixtures/itype2_upper.json' );
+var itype2_lower = require( './fixtures/itype2_lower.json' );
+var itype3_upper = require( './fixtures/itype3_upper.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -171,7 +156,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dsygs2: itype1_upper', function t() {
@@ -180,7 +164,7 @@ test( 'dsygs2: itype1_upper', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'itype1_upper' );
+	tc = itype1_upper;
 	A = makeAUpper();
 	B = makeBUpper();
 	info = dsygs2( 1, 'upper', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -194,7 +178,7 @@ test( 'dsygs2: itype1_lower', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'itype1_lower' );
+	tc = itype1_lower;
 	A = makeALower();
 	B = makeBLower();
 	info = dsygs2( 1, 'lower', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -208,7 +192,7 @@ test( 'dsygs2: itype2_upper', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'itype2_upper' );
+	tc = itype2_upper;
 	A = makeAUpper();
 	B = makeBUpper();
 	info = dsygs2( 2, 'upper', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -222,7 +206,7 @@ test( 'dsygs2: itype2_lower', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'itype2_lower' );
+	tc = itype2_lower;
 	A = makeALower();
 	B = makeBLower();
 	info = dsygs2( 2, 'lower', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -236,7 +220,7 @@ test( 'dsygs2: itype3_upper', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'itype3_upper' );
+	tc = itype3_upper;
 	A = makeAUpper();
 	B = makeBUpper();
 	info = dsygs2( 3, 'upper', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -250,7 +234,7 @@ test( 'dsygs2: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( 1 );
 	info = dsygs2( 1, 'upper', 0, A, 1, 1, 0, B, 1, 1, 0 );
@@ -263,7 +247,7 @@ test( 'dsygs2: n_one', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Float64Array([ 9.0 ]);
 	B = new Float64Array([ 3.0 ]);
 	info = dsygs2( 1, 'upper', 1, A, 1, 1, 0, B, 1, 1, 0 );

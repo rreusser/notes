@@ -5,38 +5,30 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dpptrf = require( '../../dpptrf/lib/base.js' );
 var dppsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dppsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_upper = require( './fixtures/fact_n_upper.json' );
+var fact_n_lower = require( './fixtures/fact_n_lower.json' );
+var fact_f_upper = require( './fixtures/fact_f_upper.json' );
+var fact_f_lower = require( './fixtures/fact_f_lower.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var fact_e_upper = require( './fixtures/fact_e_upper.json' );
+var fact_e_lower = require( './fixtures/fact_e_lower.json' );
+var fact_f_equed_y_upper = require( './fixtures/fact_f_equed_y_upper.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var multi_rhs_lower = require( './fixtures/multi_rhs_lower.json' );
+var fact_e_multi_rhs = require( './fixtures/fact_e_multi_rhs.json' );
+var not_pos_def = require( './fixtures/not_pos_def.json' );
+var n4_upper = require( './fixtures/n4_upper.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -124,7 +116,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dppsvx: fact_n_upper', function t() {
@@ -135,7 +126,7 @@ test( 'dppsvx: fact_n_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_n_upper' );
+	tc = fact_n_upper;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	S = new Float64Array( 3 );
@@ -158,7 +149,7 @@ test( 'dppsvx: fact_n_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_n_lower' );
+	tc = fact_n_lower;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	S = new Float64Array( 3 );
@@ -181,7 +172,7 @@ test( 'dppsvx: fact_f_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_f_upper' );
+	tc = fact_f_upper;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( AP );
 	S = new Float64Array( 3 );
@@ -203,7 +194,7 @@ test( 'dppsvx: fact_f_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_f_lower' );
+	tc = fact_f_lower;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( AP );
 	S = new Float64Array( 3 );
@@ -225,7 +216,7 @@ test( 'dppsvx: n_zero', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Float64Array( 1 );
 	AFP = new Float64Array( 1 );
 	S = new Float64Array( 1 );
@@ -242,7 +233,7 @@ test( 'dppsvx: n_one_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Float64Array( [ 4.0 ] );
 	AFP = new Float64Array( 1 );
 	S = new Float64Array( 1 );
@@ -263,7 +254,7 @@ test( 'dppsvx: fact_e_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_e_upper' );
+	tc = fact_e_upper;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	S = new Float64Array( 3 );
@@ -287,7 +278,7 @@ test( 'dppsvx: fact_e_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_e_lower' );
+	tc = fact_e_lower;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	S = new Float64Array( 3 );
@@ -311,7 +302,7 @@ test( 'dppsvx: fact_f_equed_y_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_f_equed_y_upper' );
+	tc = fact_f_equed_y_upper;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	S = new Float64Array( [ 0.5, 1.0 / Math.sqrt( 5.0 ), 1.0 / Math.sqrt( 6.0 ) ] ); // eslint-disable-line max-len
 	AFP = new Float64Array( 6 );
@@ -339,7 +330,7 @@ test( 'dppsvx: multi_rhs', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	S = new Float64Array( 3 );
@@ -360,7 +351,7 @@ test( 'dppsvx: multi_rhs_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'multi_rhs_lower' );
+	tc = multi_rhs_lower;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	S = new Float64Array( 3 );
@@ -381,7 +372,7 @@ test( 'dppsvx: fact_e_multi_rhs', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_e_multi_rhs' );
+	tc = fact_e_multi_rhs;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	S = new Float64Array( 3 );
@@ -404,7 +395,7 @@ test( 'dppsvx: not_pos_def', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'not_pos_def' );
+	tc = not_pos_def;
 	AP = new Float64Array( [ 1.0, 2.0, 1.0 ] );
 	AFP = new Float64Array( 3 );
 	S = new Float64Array( 2 );
@@ -422,7 +413,7 @@ test( 'dppsvx: n4_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'n4_upper' );
+	tc = n4_upper;
 	AP = new Float64Array( [ 10.0, 2.0, 12.0, 1.0, 3.0, 15.0, 0.0, 1.0, 4.0, 20.0 ] ); // eslint-disable-line max-len
 	AFP = new Float64Array( 10 );
 	S = new Float64Array( 4 );

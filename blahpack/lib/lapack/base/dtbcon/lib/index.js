@@ -22,11 +22,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dtbcon;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dtbcon = main;
+} else {
+	dtbcon = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dtbcon;
 
 // exports: { "ndarray": "dtbcon.ndarray" }

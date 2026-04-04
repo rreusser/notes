@@ -2,40 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dtgsja = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtgsja.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var k0_l2 = require( './fixtures/k0_l2.json' );
+var k2_l1 = require( './fixtures/k2_l1.json' );
+var no_uvq = require( './fixtures/no_uvq.json' );
+var m_k_l_negative = require( './fixtures/m_k_l_negative.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -70,7 +53,6 @@ function assertArrayClose( actual, offset, stride, expected, n, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dtgsja: basic 3x3 with K=1, L=2', function t() {
@@ -91,7 +73,7 @@ test( 'dtgsja: basic 3x3 with K=1, L=2', function t() {
 	var V;
 	var Q;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	M = 3;
 	P = 2;
 	N = 3;
@@ -146,7 +128,7 @@ test( 'dtgsja: K=0, L=2', function t() {
 	var V;
 	var Q;
 
-	tc = findCase( 'k0_l2' );
+	tc = k0_l2;
 	M = 2;
 	P = 2;
 	N = 2;
@@ -193,7 +175,7 @@ test( 'dtgsja: K=2, L=1', function t() {
 	var V;
 	var Q;
 
-	tc = findCase( 'k2_l1' );
+	tc = k2_l1;
 	M = 4;
 	P = 2;
 	N = 4;
@@ -236,7 +218,7 @@ test( 'dtgsja: no U/V/Q', function t() {
 	var V;
 	var Q;
 
-	tc = findCase( 'no_uvq' );
+	tc = no_uvq;
 	M = 2;
 	P = 2;
 	N = 2;
@@ -283,7 +265,7 @@ test( 'dtgsja: M-K-L < 0 case', function t() {
 	var V;
 	var Q;
 
-	tc = findCase( 'm_k_l_negative' );
+	tc = m_k_l_negative;
 	M = 2;
 	P = 3;
 	N = 4;

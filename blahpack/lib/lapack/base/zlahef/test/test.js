@@ -4,26 +4,16 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zlahef = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlahef.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var lower_6x6_nb3 = require( './fixtures/lower_6x6_nb3.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -51,7 +41,6 @@ function extractSubmatrix( data, n, lda ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlahef: lower_6x6_nb3 (2x2 pivot in lower, fixture)', function t() {
@@ -65,7 +54,7 @@ test( 'zlahef: lower_6x6_nb3 (2x2 pivot in lower, fixture)', function t() {
 	var n;
 	var nb;
 
-	tc = findCase( 'lower_6x6_nb3' );
+	tc = lower_6x6_nb3;
 	n = 6;
 	nb = 3;
 

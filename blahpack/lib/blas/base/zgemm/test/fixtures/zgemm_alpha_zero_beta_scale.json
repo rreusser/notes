@@ -1,0 +1,13 @@
+{
+  "name": "zgemm_alpha_zero_beta_scale",
+  "c": [
+    3,
+    4,
+    4,
+    7,
+    5,
+    10,
+    6,
+    13
+  ]
+}

@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -14,30 +12,23 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbtrf = require( '../../zpbtrf/lib/base.js' );
 var zpbsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpbsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_upper = require( './fixtures/fact_n_upper.json' );
+var fact_n_lower = require( './fixtures/fact_n_lower.json' );
+var fact_f_upper = require( './fixtures/fact_f_upper.json' );
+var fact_f_lower = require( './fixtures/fact_f_lower.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var fact_e_upper = require( './fixtures/fact_e_upper.json' );
+var fact_e_lower = require( './fixtures/fact_e_lower.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var multi_rhs_lower = require( './fixtures/multi_rhs_lower.json' );
+var not_pos_def = require( './fixtures/not_pos_def.json' );
+var fact_e_multi_rhs = require( './fixtures/fact_e_multi_rhs.json' );
+var n4_upper_kd2 = require( './fixtures/n4_upper_kd2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -140,7 +131,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zpbsvx: fact_n_upper', function t() {
@@ -151,7 +141,7 @@ test( 'zpbsvx: fact_n_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_n_upper' );
+	tc = fact_n_upper;
 
 	// Upper band KD=1: (*, 4), (-1+0.5i, 4), (-1+0.5i, 4)
 	AB = new Complex128Array( [ 0, 0, 4, 0, -1, 0.5, 4, 0, -1, 0.5, 4, 0 ] ); // eslint-disable-line max-len
@@ -176,7 +166,7 @@ test( 'zpbsvx: fact_n_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_n_lower' );
+	tc = fact_n_lower;
 
 	// Lower band KD=1: (4, -1-0.5i), (4, -1-0.5i), (4, 0)
 	AB = new Complex128Array( [ 4, 0, -1, -0.5, 4, 0, -1, -0.5, 4, 0, 0, 0 ] ); // eslint-disable-line max-len
@@ -201,7 +191,7 @@ test( 'zpbsvx: fact_f_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_f_upper' );
+	tc = fact_f_upper;
 	AB = new Complex128Array( [ 0, 0, 4, 0, -1, 0.5, 4, 0, -1, 0.5, 4, 0 ] ); // eslint-disable-line max-len
 	AFB = new Complex128Array( AB );
 	S = new Float64Array( 3 );
@@ -223,7 +213,7 @@ test( 'zpbsvx: fact_f_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_f_lower' );
+	tc = fact_f_lower;
 	AB = new Complex128Array( [ 4, 0, -1, -0.5, 4, 0, -1, -0.5, 4, 0, 0, 0 ] ); // eslint-disable-line max-len
 	AFB = new Complex128Array( AB );
 	S = new Float64Array( 3 );
@@ -245,7 +235,7 @@ test( 'zpbsvx: n_zero', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Complex128Array( 1 );
 	AFB = new Complex128Array( 1 );
 	S = new Float64Array( 1 );
@@ -262,7 +252,7 @@ test( 'zpbsvx: n_one_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AB = new Complex128Array( [ 4, 0 ] );
 	AFB = new Complex128Array( 1 );
 	S = new Float64Array( 1 );
@@ -283,7 +273,7 @@ test( 'zpbsvx: fact_e_upper', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_e_upper' );
+	tc = fact_e_upper;
 	AB = new Complex128Array( [ 0, 0, 4, 0, -1, 0.5, 4, 0, -1, 0.5, 4, 0 ] ); // eslint-disable-line max-len
 	AFB = new Complex128Array( 6 );
 	S = new Float64Array( 3 );
@@ -307,7 +297,7 @@ test( 'zpbsvx: fact_e_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_e_lower' );
+	tc = fact_e_lower;
 	AB = new Complex128Array( [ 4, 0, -1, -0.5, 4, 0, -1, -0.5, 4, 0, 0, 0 ] ); // eslint-disable-line max-len
 	AFB = new Complex128Array( 6 );
 	S = new Float64Array( 3 );
@@ -331,7 +321,7 @@ test( 'zpbsvx: multi_rhs', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	AB = new Complex128Array( [ 0, 0, 4, 0, -1, 0.5, 4, 0, -1, 0.5, 4, 0 ] ); // eslint-disable-line max-len
 	AFB = new Complex128Array( 6 );
 	S = new Float64Array( 3 );
@@ -352,7 +342,7 @@ test( 'zpbsvx: multi_rhs_lower', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'multi_rhs_lower' );
+	tc = multi_rhs_lower;
 	AB = new Complex128Array( [ 4, 0, -1, -0.5, 4, 0, -1, -0.5, 4, 0, 0, 0 ] ); // eslint-disable-line max-len
 	AFB = new Complex128Array( 6 );
 	S = new Float64Array( 3 );
@@ -373,7 +363,7 @@ test( 'zpbsvx: not_pos_def', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'not_pos_def' );
+	tc = not_pos_def;
 
 	// Upper band KD=1: (*, 1), (2+i, 1)
 	AB = new Complex128Array( [ 0, 0, 1, 0, 2, 1, 1, 0 ] );
@@ -393,7 +383,7 @@ test( 'zpbsvx: fact_e_multi_rhs', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'fact_e_multi_rhs' );
+	tc = fact_e_multi_rhs;
 	AB = new Complex128Array( [ 0, 0, 4, 0, -1, 0.5, 4, 0, -1, 0.5, 4, 0 ] ); // eslint-disable-line max-len
 	AFB = new Complex128Array( 6 );
 	S = new Float64Array( 3 );
@@ -416,7 +406,7 @@ test( 'zpbsvx: n4_upper_kd2', function t() {
 	var S;
 	var B;
 
-	tc = findCase( 'n4_upper_kd2' );
+	tc = n4_upper_kd2;
 
 	// Upper band KD=2, N=4, LDAB=3: 3*4=12 complex elements
 	AB = new Complex128Array( [ 0, 0, 0, 0, 6, 0, 0, 0, -0.5, -0.5, 6, 0, 0.25, 0, -0.5, -0.5, 6, 0, 0.25, 0, -0.5, -0.5, 6, 0 ] ); // eslint-disable-line max-len

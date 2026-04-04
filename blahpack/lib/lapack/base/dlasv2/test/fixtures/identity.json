@@ -1,0 +1,9 @@
+{
+  "name": "identity",
+  "ssmin": 1,
+  "ssmax": 1,
+  "snr": 0,
+  "csr": 1,
+  "snl": 0,
+  "csl": 1
+}

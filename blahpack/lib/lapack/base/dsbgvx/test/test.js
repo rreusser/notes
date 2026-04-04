@@ -4,38 +4,28 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsbgvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsbgvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) { // eslint-disable-line max-len
-	return JSON.parse( line );
-});
-
+var v_a_u_n5_ka2_kb1 = require( './fixtures/v_a_u_n5_ka2_kb1.json' );
+var n_a_u_n5_ka2_kb1 = require( './fixtures/n_a_u_n5_ka2_kb1.json' );
+var v_a_l_n5_ka2_kb1 = require( './fixtures/v_a_l_n5_ka2_kb1.json' );
+var v_v_u_n5_ka2_kb1 = require( './fixtures/v_v_u_n5_ka2_kb1.json' );
+var v_i_u_n5_ka2_kb1 = require( './fixtures/v_i_u_n5_ka2_kb1.json' );
+var n_v_l_n5_ka2_kb1 = require( './fixtures/n_v_l_n5_ka2_kb1.json' );
+var n_i_l_n5_ka2_kb1 = require( './fixtures/n_i_l_n5_ka2_kb1.json' );
+var n1_v_a = require( './fixtures/n1_v_a.json' );
+var diag_n3 = require( './fixtures/diag_n3.json' );
+var v_i_u_n5_fast = require( './fixtures/v_i_u_n5_fast.json' );
+var n_i_u_n5_fast = require( './fixtures/n_i_u_n5_fast.json' );
+var v_i_u_n5_single = require( './fixtures/v_i_u_n5_single.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {(Object|void)} test case or undefined
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -165,7 +155,6 @@ function runDsbgvx( jobz, range, uplo, N, ka, kb, AB, BB, vl, vu, il, iu, abstol
 	};
 }
 
-
 // TESTS //
 
 test( 'dsbgvx is a function', function t() {
@@ -173,7 +162,7 @@ test( 'dsbgvx is a function', function t() {
 });
 
 test( 'dsbgvx: V, A, U, N=5, KA=2, KB=1 (all eigenvalues + vectors)', function t() {
-	var tc = findCase( 'V_A_U_n5_ka2_kb1' );
+	var tc = v_a_u_n5_ka2_kb1;
 	var AB = bandAUpper5();
 	var BB = bandBUpper5();
 	var r = runDsbgvx( 'compute-vectors', 'all', 'upper', 5, 2, 1, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -185,7 +174,7 @@ test( 'dsbgvx: V, A, U, N=5, KA=2, KB=1 (all eigenvalues + vectors)', function t
 });
 
 test( 'dsbgvx: N, A, U, N=5, KA=2, KB=1 (all eigenvalues, no vectors)', function t() {
-	var tc = findCase( 'N_A_U_n5_ka2_kb1' );
+	var tc = n_a_u_n5_ka2_kb1;
 	var AB = bandAUpper5();
 	var BB = bandBUpper5();
 	var r = runDsbgvx( 'no-vectors', 'all', 'upper', 5, 2, 1, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -196,7 +185,7 @@ test( 'dsbgvx: N, A, U, N=5, KA=2, KB=1 (all eigenvalues, no vectors)', function
 });
 
 test( 'dsbgvx: V, A, L, N=5, KA=2, KB=1 (lower, all eigenvalues + vectors)', function t() {
-	var tc = findCase( 'V_A_L_n5_ka2_kb1' );
+	var tc = v_a_l_n5_ka2_kb1;
 	var AB = bandALower5();
 	var BB = bandBLower5();
 	var r = runDsbgvx( 'compute-vectors', 'all', 'lower', 5, 2, 1, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -208,7 +197,7 @@ test( 'dsbgvx: V, A, L, N=5, KA=2, KB=1 (lower, all eigenvalues + vectors)', fun
 });
 
 test( 'dsbgvx: V, V, U, N=5, KA=2, KB=1 (value range [1.0, 2.5])', function t() {
-	var tc = findCase( 'V_V_U_n5_ka2_kb1' );
+	var tc = v_v_u_n5_ka2_kb1;
 	var AB = bandAUpper5();
 	var BB = bandBUpper5();
 	var r = runDsbgvx( 'compute-vectors', 'value', 'upper', 5, 2, 1, AB, BB, 1.0, 2.5, 0, 0, 0 ); // eslint-disable-line max-len
@@ -220,7 +209,7 @@ test( 'dsbgvx: V, V, U, N=5, KA=2, KB=1 (value range [1.0, 2.5])', function t() 
 });
 
 test( 'dsbgvx: V, I, U, N=5, KA=2, KB=1 (index range 2..4)', function t() {
-	var tc = findCase( 'V_I_U_n5_ka2_kb1' );
+	var tc = v_i_u_n5_ka2_kb1;
 	var AB = bandAUpper5();
 	var BB = bandBUpper5();
 	var r = runDsbgvx( 'compute-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 2, 4, 0 ); // eslint-disable-line max-len
@@ -232,7 +221,7 @@ test( 'dsbgvx: V, I, U, N=5, KA=2, KB=1 (index range 2..4)', function t() {
 });
 
 test( 'dsbgvx: N, V, L, N=5, KA=2, KB=1 (value range, lower, no vectors)', function t() {
-	var tc = findCase( 'N_V_L_n5_ka2_kb1' );
+	var tc = n_v_l_n5_ka2_kb1;
 	var AB = bandALower5();
 	var BB = bandBLower5();
 	var r = runDsbgvx( 'no-vectors', 'value', 'lower', 5, 2, 1, AB, BB, 1.0, 2.5, 0, 0, 0 ); // eslint-disable-line max-len
@@ -243,7 +232,7 @@ test( 'dsbgvx: N, V, L, N=5, KA=2, KB=1 (value range, lower, no vectors)', funct
 });
 
 test( 'dsbgvx: N, I, L, N=5, KA=2, KB=1 (single eigenvalue, index 3)', function t() {
-	var tc = findCase( 'N_I_L_n5_ka2_kb1' );
+	var tc = n_i_l_n5_ka2_kb1;
 	var AB = bandALower5();
 	var BB = bandBLower5();
 	var r = runDsbgvx( 'no-vectors', 'index', 'lower', 5, 2, 1, AB, BB, 0, 0, 3, 3, 0 ); // eslint-disable-line max-len
@@ -263,7 +252,7 @@ test( 'dsbgvx: N=0 (quick return)', function t() {
 });
 
 test( 'dsbgvx: N=1, V, A (trivial)', function t() {
-	var tc = findCase( 'n1_V_A' );
+	var tc = n1_v_a;
 	var AB = new Float64Array( [ 3.0 ] );
 	var BB = new Float64Array( [ 2.0 ] );
 	var r = runDsbgvx( 'compute-vectors', 'all', 'upper', 1, 0, 0, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -275,7 +264,7 @@ test( 'dsbgvx: N=1, V, A (trivial)', function t() {
 });
 
 test( 'dsbgvx: KA=KB=0, N=3 (diagonal matrices)', function t() {
-	var tc = findCase( 'diag_n3' );
+	var tc = diag_n3;
 	var AB = new Float64Array( [ 5, 6, 7 ] );
 	var BB = new Float64Array( [ 2, 3, 4 ] );
 	var r = runDsbgvx( 'no-vectors', 'all', 'upper', 3, 0, 0, AB, BB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
@@ -286,7 +275,7 @@ test( 'dsbgvx: KA=KB=0, N=3 (diagonal matrices)', function t() {
 });
 
 test( 'dsbgvx: V, I, U, N=5, fast path (IL=1, IU=N)', function t() {
-	var tc = findCase( 'V_I_U_n5_fast' );
+	var tc = v_i_u_n5_fast;
 	var AB = bandAUpper5();
 	var BB = bandBUpper5();
 	var r = runDsbgvx( 'compute-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 1, 5, 0 ); // eslint-disable-line max-len
@@ -298,7 +287,7 @@ test( 'dsbgvx: V, I, U, N=5, fast path (IL=1, IU=N)', function t() {
 });
 
 test( 'dsbgvx: N, I, U, N=5, fast path (IL=1, IU=N, no vectors)', function t() {
-	var tc = findCase( 'N_I_U_n5_fast' );
+	var tc = n_i_u_n5_fast;
 	var AB = bandAUpper5();
 	var BB = bandBUpper5();
 	var r = runDsbgvx( 'no-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 1, 5, 0 ); // eslint-disable-line max-len
@@ -309,7 +298,7 @@ test( 'dsbgvx: N, I, U, N=5, fast path (IL=1, IU=N, no vectors)', function t() {
 });
 
 test( 'dsbgvx: V, I, U, N=5, single eigenvalue (IL=IU=1)', function t() {
-	var tc = findCase( 'V_I_U_n5_single' );
+	var tc = v_i_u_n5_single;
 	var AB = bandAUpper5();
 	var BB = bandBUpper5();
 	var r = runDsbgvx( 'compute-vectors', 'index', 'upper', 5, 2, 1, AB, BB, 0, 0, 1, 1, 0 ); // eslint-disable-line max-len

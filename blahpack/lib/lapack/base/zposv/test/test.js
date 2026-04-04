@@ -6,25 +6,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zposv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zposv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var identity = require( './fixtures/identity.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -67,7 +63,6 @@ function zmatmat( A, x, N, nrhs ) {
 	return b;
 }
 
-
 // TESTS //
 
 test( 'zposv: lower_3x3', function t() {
@@ -80,7 +75,7 @@ test( 'zposv: lower_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 
 	// Hermitian positive definite 3x3 (col-major):
 	// A = [10  3-i  1+2i;  3+i  8  2-i;  1-2i  2+i  6]
@@ -115,7 +110,7 @@ test( 'zposv: upper_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 
 	// Same matrix, upper triangle
 	A = new Complex128Array( [
@@ -145,7 +140,7 @@ test( 'zposv: not_posdef', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 
 	// Not positive definite matrix
 	A = new Complex128Array( [
@@ -166,7 +161,7 @@ test( 'zposv: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 
 	A = new Complex128Array( 1 );
 	B = new Complex128Array( 1 );
@@ -183,7 +178,7 @@ test( 'zposv: identity', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 
 	// 3x3 identity matrix (col-major)
 	A = new Complex128Array( 9 );
@@ -211,7 +206,7 @@ test( 'zposv: multi_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 
 	// Same HPD matrix, 2 RHS columns
 	A = new Complex128Array( [
@@ -245,7 +240,7 @@ test( 'zposv: nrhs_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 
 	A = new Complex128Array( [ 4.0, 0.0 ] );
 	B = new Complex128Array( 1 );

@@ -5,36 +5,23 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgbequ = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgbequ.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var larger = require( './fixtures/larger.json' );
+var zero_row = require( './fixtures/zero_row.json' );
+var zero_col = require( './fixtures/zero_col.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var diagonal = require( './fixtures/diagonal.json' );
+var nonsquare = require( './fixtures/nonsquare.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +70,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgbequ: basic 3x3 tridiagonal band (KL=1, KU=1)', function t() {
@@ -96,7 +82,7 @@ test( 'dgbequ: basic 3x3 tridiagonal band (KL=1, KU=1)', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'basic' );
+	tc = basic;
 	kl = 1;
 	ku = 1;
 	ldab = kl + ku + 1;
@@ -132,7 +118,7 @@ test( 'dgbequ: larger 4x4 band (KL=2, KU=1)', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'larger' );
+	tc = larger;
 	kl = 2;
 	ku = 1;
 	ldab = kl + ku + 1;
@@ -175,7 +161,7 @@ test( 'dgbequ: zero row returns info=i', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'zero_row' );
+	tc = zero_row;
 	kl = 2;
 	ku = 1;
 	ldab = kl + ku + 1;
@@ -205,7 +191,7 @@ test( 'dgbequ: zero column returns info=M+j', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'zero_col' );
+	tc = zero_col;
 	kl = 1;
 	ku = 0;
 	ldab = kl + ku + 1;
@@ -228,7 +214,7 @@ test( 'dgbequ: quick return M=0', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	r = new Float64Array( 0 );
 	c = new Float64Array( 3 );
 	result = dgbequ( 0, 3, 0, 0, new Float64Array( 0 ), 1, 1, 0, r, 1, 0, c, 1, 0 ); // eslint-disable-line max-len
@@ -244,7 +230,7 @@ test( 'dgbequ: quick return N=0', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	r = new Float64Array( 3 );
 	c = new Float64Array( 0 );
 	result = dgbequ( 3, 0, 0, 0, new Float64Array( 0 ), 1, 1, 0, r, 1, 0, c, 1, 0 ); // eslint-disable-line max-len
@@ -261,7 +247,7 @@ test( 'dgbequ: diagonal only (KL=0, KU=0)', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'diagonal' );
+	tc = diagonal;
 	AB = new Float64Array([
 		3,    // A(1,1)
 		1,    // A(2,2)
@@ -288,7 +274,7 @@ test( 'dgbequ: non-square 2x4 band (KL=0, KU=1)', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'nonsquare' );
+	tc = nonsquare;
 	kl = 0;
 	ku = 1;
 	ldab = kl + ku + 1;
@@ -318,7 +304,7 @@ test( 'dgbequ: 1x1 matrix', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	AB = new Float64Array( [ 7 ] );
 	r = new Float64Array( 1 );
 	c = new Float64Array( 1 );

@@ -2,39 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var drotm = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'drotm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var flag_neg1 = require( './fixtures/flag_neg1.json' );
+var flag_zero = require( './fixtures/flag_zero.json' );
+var flag_one = require( './fixtures/flag_one.json' );
+var flag_neg2 = require( './fixtures/flag_neg2.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var stride2 = require( './fixtures/stride2.json' );
+var neg_stride = require( './fixtures/neg_stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +68,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'drotm: flag_neg1', function t() {
@@ -92,7 +76,7 @@ test( 'drotm: flag_neg1', function t() {
 	var dx;
 	var dy;
 
-	tc = findCase( 'flag_neg1' );
+	tc = flag_neg1;
 	dx = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	dy = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dparam = new Float64Array( [ -1.0, 2.0, -1.0, 3.0, 0.5 ] );
@@ -108,7 +92,7 @@ test( 'drotm: flag_zero', function t() {
 	var dx;
 	var dy;
 
-	tc = findCase( 'flag_zero' );
+	tc = flag_zero;
 	dx = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	dy = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dparam = new Float64Array( [ 0.0, 0.0, -0.5, 0.25, 0.0 ] );
@@ -124,7 +108,7 @@ test( 'drotm: flag_one', function t() {
 	var dx;
 	var dy;
 
-	tc = findCase( 'flag_one' );
+	tc = flag_one;
 	dx = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	dy = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dparam = new Float64Array( [ 1.0, 0.5, 0.0, 0.0, 2.0 ] );
@@ -140,7 +124,7 @@ test( 'drotm: flag_neg2', function t() {
 	var dx;
 	var dy;
 
-	tc = findCase( 'flag_neg2' );
+	tc = flag_neg2;
 	dx = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	dy = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dparam = new Float64Array( [ -2.0, 0.0, 0.0, 0.0, 0.0 ] );
@@ -156,7 +140,7 @@ test( 'drotm: n_zero', function t() {
 	var dx;
 	var dy;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	dx = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	dy = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dparam = new Float64Array( [ -1.0, 2.0, -1.0, 3.0, 0.5 ] );
@@ -172,7 +156,7 @@ test( 'drotm: stride2', function t() {
 	var dx;
 	var dy;
 
-	tc = findCase( 'stride2' );
+	tc = stride2;
 	dx = new Float64Array( [ 1.0, 0.0, 2.0, 0.0 ] );
 	dy = new Float64Array( [ 3.0, 0.0, 4.0, 0.0 ] );
 	dparam = new Float64Array( [ -1.0, 2.0, -1.0, 3.0, 0.5 ] );
@@ -188,7 +172,7 @@ test( 'drotm: neg_stride', function t() {
 	var dx;
 	var dy;
 
-	tc = findCase( 'neg_stride' );
+	tc = neg_stride;
 	dx = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	dy = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dparam = new Float64Array( [ 0.0, 0.0, -0.5, 0.25, 0.0 ] );

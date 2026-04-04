@@ -5,38 +5,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarnv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlarnv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var idist1_uniform_01 = require( './fixtures/idist1_uniform_01.json' );
+var idist2_uniform_m1_1 = require( './fixtures/idist2_uniform_m1_1.json' );
+var idist3_normal = require( './fixtures/idist3_normal.json' );
+var idist4_disc = require( './fixtures/idist4_disc.json' );
+var idist5_circle = require( './fixtures/idist5_circle.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var idist1_large_seed = require( './fixtures/idist1_large_seed.json' );
+var idist4_alt_seed = require( './fixtures/idist4_alt_seed.json' );
+var idist5_alt_seed = require( './fixtures/idist5_alt_seed.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +72,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlarnv: IDIST=1, uniform real/imag in (0,1)', function t() {
@@ -95,7 +81,7 @@ test( 'zlarnv: IDIST=1, uniform real/imag in (0,1)', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	tc = findCase( 'idist1_uniform_01' );
+	tc = idist1_uniform_01;
 	x = new Complex128Array( 5 );
 	zlarnv( 1, iseed, 1, 0, 5, x, 1, 0 );
 	xv = reinterpret( x, 0 );
@@ -110,7 +96,7 @@ test( 'zlarnv: IDIST=2, uniform real/imag in (-1,1)', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	tc = findCase( 'idist2_uniform_m1_1' );
+	tc = idist2_uniform_m1_1;
 	x = new Complex128Array( 5 );
 	zlarnv( 2, iseed, 1, 0, 5, x, 1, 0 );
 	xv = reinterpret( x, 0 );
@@ -125,7 +111,7 @@ test( 'zlarnv: IDIST=3, normal(0,1)', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	tc = findCase( 'idist3_normal' );
+	tc = idist3_normal;
 	x = new Complex128Array( 5 );
 	zlarnv( 3, iseed, 1, 0, 5, x, 1, 0 );
 	xv = reinterpret( x, 0 );
@@ -140,7 +126,7 @@ test( 'zlarnv: IDIST=4, uniform on unit disc', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	tc = findCase( 'idist4_disc' );
+	tc = idist4_disc;
 	x = new Complex128Array( 5 );
 	zlarnv( 4, iseed, 1, 0, 5, x, 1, 0 );
 	xv = reinterpret( x, 0 );
@@ -155,7 +141,7 @@ test( 'zlarnv: IDIST=5, uniform on unit circle', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	tc = findCase( 'idist5_circle' );
+	tc = idist5_circle;
 	x = new Complex128Array( 5 );
 	zlarnv( 5, iseed, 1, 0, 5, x, 1, 0 );
 	xv = reinterpret( x, 0 );
@@ -165,7 +151,7 @@ test( 'zlarnv: IDIST=5, uniform on unit circle', function t() {
 
 test( 'zlarnv: N=0 edge case', function t() {
 	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Complex128Array( 5 );
 
 	zlarnv( 1, iseed, 1, 0, 0, x, 1, 0 );
@@ -180,7 +166,7 @@ test( 'zlarnv: IDIST=1, larger N with different seed', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 42, 7, 13, 99 ] );
-	tc = findCase( 'idist1_large_seed' );
+	tc = idist1_large_seed;
 	x = new Complex128Array( 10 );
 	zlarnv( 1, iseed, 1, 0, 10, x, 1, 0 );
 	xv = reinterpret( x, 0 );
@@ -195,7 +181,7 @@ test( 'zlarnv: IDIST=4, alternate seed', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 42, 7, 13, 99 ] );
-	tc = findCase( 'idist4_alt_seed' );
+	tc = idist4_alt_seed;
 	x = new Complex128Array( 5 );
 	zlarnv( 4, iseed, 1, 0, 5, x, 1, 0 );
 	xv = reinterpret( x, 0 );
@@ -210,7 +196,7 @@ test( 'zlarnv: IDIST=5, alternate seed', function t() {
 	var x;
 
 	iseed = new Int32Array( [ 42, 7, 13, 99 ] );
-	tc = findCase( 'idist5_alt_seed' );
+	tc = idist5_alt_seed;
 	x = new Complex128Array( 5 );
 	zlarnv( 5, iseed, 1, 0, 5, x, 1, 0 );
 	xv = reinterpret( x, 0 );

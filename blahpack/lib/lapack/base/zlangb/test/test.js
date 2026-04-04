@@ -5,37 +5,29 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zlangb = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlangb.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var max_5x5 = require( './fixtures/max_5x5.json' );
+var one_5x5 = require( './fixtures/one_5x5.json' );
+var inf_5x5 = require( './fixtures/inf_5x5.json' );
+var frob_5x5 = require( './fixtures/frob_5x5.json' );
+var max_4x4_tridiag = require( './fixtures/max_4x4_tridiag.json' );
+var one_4x4_tridiag = require( './fixtures/one_4x4_tridiag.json' );
+var inf_4x4_tridiag = require( './fixtures/inf_4x4_tridiag.json' );
+var frob_4x4_tridiag = require( './fixtures/frob_4x4_tridiag.json' );
+var max_diag_only = require( './fixtures/max_diag_only.json' );
+var one_diag_only = require( './fixtures/one_diag_only.json' );
+var inf_diag_only = require( './fixtures/inf_diag_only.json' );
+var frob_diag_only = require( './fixtures/frob_diag_only.json' );
+var frob_1x1 = require( './fixtures/frob_1x1.json' );
+var one_1x1 = require( './fixtures/one_1x1.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -177,7 +169,6 @@ function make4x4AB( ) {
 	]);
 }
 
-
 // TESTS //
 
 // --- 5x5 general band, KL=1, KU=2 ---
@@ -188,7 +179,7 @@ test( 'zlangb: max_5x5', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_5x5' );
+	tc = max_5x5;
 	AB = make5x5AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'max', 5, 1, 2, AB, 1, 4, 0, WORK, 1, 0 );
@@ -201,7 +192,7 @@ test( 'zlangb: one_5x5', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_5x5' );
+	tc = one_5x5;
 	AB = make5x5AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'one-norm', 5, 1, 2, AB, 1, 4, 0, WORK, 1, 0 );
@@ -214,7 +205,7 @@ test( 'zlangb: inf_5x5', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_5x5' );
+	tc = inf_5x5;
 	AB = make5x5AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'inf-norm', 5, 1, 2, AB, 1, 4, 0, WORK, 1, 0 );
@@ -227,7 +218,7 @@ test( 'zlangb: frob_5x5', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_5x5' );
+	tc = frob_5x5;
 	AB = make5x5AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'frobenius', 5, 1, 2, AB, 1, 4, 0, WORK, 1, 0 );
@@ -242,7 +233,7 @@ test( 'zlangb: max_4x4_tridiag', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_4x4_tridiag' );
+	tc = max_4x4_tridiag;
 	AB = make4x4AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'max', 4, 1, 1, AB, 1, 3, 0, WORK, 1, 0 );
@@ -255,7 +246,7 @@ test( 'zlangb: one_4x4_tridiag', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_4x4_tridiag' );
+	tc = one_4x4_tridiag;
 	AB = make4x4AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'one-norm', 4, 1, 1, AB, 1, 3, 0, WORK, 1, 0 );
@@ -268,7 +259,7 @@ test( 'zlangb: inf_4x4_tridiag', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_4x4_tridiag' );
+	tc = inf_4x4_tridiag;
 	AB = make4x4AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'inf-norm', 4, 1, 1, AB, 1, 3, 0, WORK, 1, 0 );
@@ -281,7 +272,7 @@ test( 'zlangb: frob_4x4_tridiag', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_4x4_tridiag' );
+	tc = frob_4x4_tridiag;
 	AB = make4x4AB();
 	WORK = new Float64Array( 10 );
 	result = zlangb( 'frobenius', 4, 1, 1, AB, 1, 3, 0, WORK, 1, 0 );
@@ -307,7 +298,7 @@ test( 'zlangb: max_diag_only (KL=0, KU=0)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_diag_only' );
+	tc = max_diag_only;
 	AB = new Complex128Array([
 		3, 4, 1, 1, 2, 2
 	]);
@@ -322,7 +313,7 @@ test( 'zlangb: one_diag_only (KL=0, KU=0)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_diag_only' );
+	tc = one_diag_only;
 	AB = new Complex128Array([
 		3, 4, 1, 1, 2, 2
 	]);
@@ -337,7 +328,7 @@ test( 'zlangb: inf_diag_only (KL=0, KU=0)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_diag_only' );
+	tc = inf_diag_only;
 	AB = new Complex128Array([
 		3, 4, 1, 1, 2, 2
 	]);
@@ -352,7 +343,7 @@ test( 'zlangb: frob_diag_only (KL=0, KU=0)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_diag_only' );
+	tc = frob_diag_only;
 	AB = new Complex128Array([
 		3, 4, 1, 1, 2, 2
 	]);
@@ -367,7 +358,7 @@ test( 'zlangb: frob_1x1', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_1x1' );
+	tc = frob_1x1;
 	AB = new Complex128Array( [ 3, 4 ] );
 	WORK = new Float64Array( 1 );
 	result = zlangb( 'frobenius', 1, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );
@@ -380,7 +371,7 @@ test( 'zlangb: one_1x1', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_1x1' );
+	tc = one_1x1;
 	AB = new Complex128Array( [ 3, 4 ] );
 	WORK = new Float64Array( 1 );
 	result = zlangb( 'one-norm', 1, 0, 0, AB, 1, 1, 0, WORK, 1, 0 );

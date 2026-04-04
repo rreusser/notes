@@ -5,37 +5,24 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsytri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsytri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3_upper = require( './fixtures/3x3_upper.json' );
+var _3x3_lower = require( './fixtures/3x3_lower.json' );
+var _4x4_upper = require( './fixtures/4x4_upper.json' );
+var _4x4_lower = require( './fixtures/4x4_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
+var _4x4_indef_2x2_upper = require( './fixtures/4x4_indef_2x2_upper.json' );
+var _4x4_indef_2x2_lower = require( './fixtures/4x4_indef_2x2_lower.json' );
+var _3x3_indef_upper = require( './fixtures/3x3_indef_upper.json' );
+var _3x3_indef_lower = require( './fixtures/3x3_indef_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -119,7 +106,6 @@ function matToFlat( A, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dsytri: 3x3_upper', function t() {
@@ -131,7 +117,7 @@ test( 'dsytri: 3x3_upper', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '3x3_upper' );
+	tc = _3x3_upper;
 	N = 3;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -151,7 +137,7 @@ test( 'dsytri: 3x3_lower', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '3x3_lower' );
+	tc = _3x3_lower;
 	N = 3;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -171,7 +157,7 @@ test( 'dsytri: 4x4_upper', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '4x4_upper' );
+	tc = _4x4_upper;
 	N = 4;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -191,7 +177,7 @@ test( 'dsytri: 4x4_lower', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '4x4_lower' );
+	tc = _4x4_lower;
 	N = 4;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -224,7 +210,7 @@ test( 'dsytri: n_one', function t() {
 	var A;
 	var N;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	N = 1;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -244,7 +230,7 @@ test( 'dsytri: 4x4_indef_2x2_upper', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '4x4_indef_2x2_upper' );
+	tc = _4x4_indef_2x2_upper;
 	N = 4;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -264,7 +250,7 @@ test( 'dsytri: 4x4_indef_2x2_lower', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '4x4_indef_2x2_lower' );
+	tc = _4x4_indef_2x2_lower;
 	N = 4;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -284,7 +270,7 @@ test( 'dsytri: 3x3_indef_upper', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '3x3_indef_upper' );
+	tc = _3x3_indef_upper;
 	N = 3;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );
@@ -304,7 +290,7 @@ test( 'dsytri: 3x3_indef_lower', function t() {
 	var A;
 	var N;
 
-	tc = findCase( '3x3_indef_lower' );
+	tc = _3x3_indef_lower;
 	N = 3;
 	A = matFromFixture( tc.a_fact, N );
 	ipiv = convertIPIV( tc.ipiv.slice( 0, N ) );

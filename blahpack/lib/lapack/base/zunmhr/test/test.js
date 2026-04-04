@@ -6,26 +6,25 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zunmhr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunmhr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var hess_factors = require( './fixtures/hess_factors.json' );
+var left_notrans = require( './fixtures/left_notrans.json' );
+var left_conjtrans = require( './fixtures/left_conjtrans.json' );
+var right_notrans = require( './fixtures/right_notrans.json' );
+var right_conjtrans = require( './fixtures/right_conjtrans.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var right_conjtrans_rect = require( './fixtures/right_conjtrans_rect.json' );
+var hess_factors_partial = require( './fixtures/hess_factors_partial.json' );
+var left_notrans_partial = require( './fixtures/left_notrans_partial.json' );
+var right_conjtrans_partial = require( './fixtures/right_conjtrans_partial.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -81,16 +80,15 @@ function extractColMajor( arr, lda, m, n ) {
 	return out;
 }
 
-
 // TESTS //
 
 // Load Hessenberg factors from full reduction (ILO=1, IHI=5, 5x5 matrix, LDA=6)
-var hf = findCase( 'hess_factors' );
+var hf = hess_factors;
 // hf.a is interleaved re/im for the 6x5 column-major complex Hessenberg output (60 doubles = 30 complex, LDA=6)
 // hf.tau is interleaved re/im for 4 complex TAU elements (8 doubles)
 
 test( 'zunmhr: left, no-transpose (Q * I)', function t() {
-	var tc = findCase( 'left_notrans' );
+	var tc = left_notrans;
 	var A = new Complex128Array( new Float64Array( hf.a ) );
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	var C = eye( 5, 6 );
@@ -102,7 +100,7 @@ test( 'zunmhr: left, no-transpose (Q * I)', function t() {
 });
 
 test( 'zunmhr: left, conjugate-transpose (Q^H * I)', function t() {
-	var tc = findCase( 'left_conjtrans' );
+	var tc = left_conjtrans;
 	var A = new Complex128Array( new Float64Array( hf.a ) );
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	var C = eye( 5, 6 );
@@ -114,7 +112,7 @@ test( 'zunmhr: left, conjugate-transpose (Q^H * I)', function t() {
 });
 
 test( 'zunmhr: right, no-transpose (I * Q)', function t() {
-	var tc = findCase( 'right_notrans' );
+	var tc = right_notrans;
 	var A = new Complex128Array( new Float64Array( hf.a ) );
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	var C = eye( 5, 6 );
@@ -126,7 +124,7 @@ test( 'zunmhr: right, no-transpose (I * Q)', function t() {
 });
 
 test( 'zunmhr: right, conjugate-transpose (I * Q^H)', function t() {
-	var tc = findCase( 'right_conjtrans' );
+	var tc = right_conjtrans;
 	var A = new Complex128Array( new Float64Array( hf.a ) );
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	var C = eye( 5, 6 );
@@ -138,7 +136,7 @@ test( 'zunmhr: right, conjugate-transpose (I * Q^H)', function t() {
 });
 
 test( 'zunmhr: left, no-transpose, rectangular C (5x3)', function t() {
-	var tc = findCase( 'left_notrans_rect' );
+	var tc = left_notrans_rect;
 	var A = new Complex128Array( new Float64Array( hf.a ) );
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	// C is 5x3 stored in LDC=6 container
@@ -160,7 +158,7 @@ test( 'zunmhr: left, no-transpose, rectangular C (5x3)', function t() {
 });
 
 test( 'zunmhr: right, conjugate-transpose, rectangular C (3x5)', function t() {
-	var tc = findCase( 'right_conjtrans_rect' );
+	var tc = right_conjtrans_rect;
 	var A = new Complex128Array( new Float64Array( hf.a ) );
 	var TAU = new Complex128Array( new Float64Array( hf.tau ) );
 	// C is 3x5 stored in LDC=6 container
@@ -214,10 +212,10 @@ test( 'zunmhr: NH=0 quick return (ILO=IHI)', function t() {
 });
 
 // Load partial Hessenberg factors (ILO=2, IHI=4, 5x5 matrix, LDA=6)
-var hfp = findCase( 'hess_factors_partial' );
+var hfp = hess_factors_partial;
 
 test( 'zunmhr: left, no-transpose, partial (ILO=2, IHI=4)', function t() {
-	var tc = findCase( 'left_notrans_partial' );
+	var tc = left_notrans_partial;
 	var A = new Complex128Array( new Float64Array( hfp.a2 ) );
 	var TAU = new Complex128Array( new Float64Array( hfp.tau2 ) );
 	var C = eye( 5, 6 );
@@ -229,7 +227,7 @@ test( 'zunmhr: left, no-transpose, partial (ILO=2, IHI=4)', function t() {
 });
 
 test( 'zunmhr: right, conjugate-transpose, partial (ILO=2, IHI=4)', function t() {
-	var tc = findCase( 'right_conjtrans_partial' );
+	var tc = right_conjtrans_partial;
 	var A = new Complex128Array( new Float64Array( hfp.a2 ) );
 	var TAU = new Complex128Array( new Float64Array( hfp.tau2 ) );
 	var C = eye( 5, 6 );

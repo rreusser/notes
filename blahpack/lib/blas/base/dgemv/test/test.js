@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgemv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgemv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var transpose = require( './fixtures/transpose.json' );
+var alpha_beta = require( './fixtures/alpha_beta.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var stride = require( './fixtures/stride.json' );
+var transpose_alpha_beta = require( './fixtures/transpose_alpha_beta.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,14 +54,13 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 // A = [1 4; 2 5; 3 6] column-major (3x2): strideA1=1, strideA2=3
 var A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 
 test( 'dgemv: basic trans=N', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 1, 2 ] );
 	var y = new Float64Array( 3 );
 	dgemv( 'no-transpose', 3, 2, 1.0, A, 1, 3, 0, x, 1, 0, 0.0, y, 1, 0 );
@@ -83,7 +68,7 @@ test( 'dgemv: basic trans=N', function t() {
 });
 
 test( 'dgemv: transpose trans=T', function t() {
-	var tc = findCase( 'transpose' );
+	var tc = transpose;
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( 2 );
 	dgemv( 'transpose', 3, 2, 1.0, A, 1, 3, 0, x, 1, 0, 0.0, y, 1, 0 );
@@ -91,7 +76,7 @@ test( 'dgemv: transpose trans=T', function t() {
 });
 
 test( 'dgemv: alpha and beta scaling', function t() {
-	var tc = findCase( 'alpha_beta' );
+	var tc = alpha_beta;
 	var x = new Float64Array( [ 1, 2 ] );
 	var y = new Float64Array( [ 10, 20, 30 ] );
 	dgemv( 'no-transpose', 3, 2, 2.0, A, 1, 3, 0, x, 1, 0, 3.0, y, 1, 0 );
@@ -99,14 +84,14 @@ test( 'dgemv: alpha and beta scaling', function t() {
 });
 
 test( 'dgemv: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var y = new Float64Array( [ 99 ] );
 	dgemv( 'no-transpose', 3, 0, 1.0, A, 1, 3, 0, new Float64Array( 2 ), 1, 0, 0.0, y, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( y, tc.y, 1e-14, 'n_zero' );
 });
 
 test( 'dgemv: M=0 quick return', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var y = new Float64Array( [ 99 ] );
 	dgemv( 'no-transpose', 0, 2, 1.0, A, 1, 1, 0, new Float64Array( 2 ), 1, 0, 0.0, y, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( y, tc.y, 1e-14, 'm_zero' );
@@ -117,7 +102,7 @@ test( 'dgemv: non-unit strides incx=2, incy=2', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'stride' );
+	tc = stride;
 	x = new Float64Array( 20 );
 	x[ 0 ] = 1;
 	x[ 2 ] = 2;
@@ -130,7 +115,7 @@ test( 'dgemv: non-unit strides incx=2, incy=2', function t() {
 });
 
 test( 'dgemv: transpose with alpha and beta', function t() {
-	var tc = findCase( 'transpose_alpha_beta' );
+	var tc = transpose_alpha_beta;
 	var x = new Float64Array( [ 1, 1, 1 ] );
 	var y = new Float64Array( [ 5, 10 ] );
 	dgemv( 'transpose', 3, 2, 2.0, A, 1, 3, 0, x, 1, 0, 3.0, y, 1, 0 );
@@ -138,7 +123,7 @@ test( 'dgemv: transpose with alpha and beta', function t() {
 });
 
 test( 'dgemv: alpha=0 just scales y by beta', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var y = new Float64Array( [ 10, 20, 30 ] );
 	dgemv( 'no-transpose', 3, 2, 0.0, A, 1, 3, 0, new Float64Array( 2 ), 1, 0, 2.0, y, 1, 0 ); // eslint-disable-line max-len
 	assertArrayClose( y, tc.y, 1e-14, 'alpha_zero' );

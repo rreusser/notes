@@ -3,32 +3,21 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlatrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlatrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var upper_n_nonunit = require( './fixtures/upper_n_nonunit.json' );
+var lower_n_nonunit = require( './fixtures/lower_n_nonunit.json' );
+var upper_t_nonunit = require( './fixtures/upper_t_nonunit.json' );
+var lower_t_nonunit = require( './fixtures/lower_t_nonunit.json' );
+var upper_n_unit = require( './fixtures/upper_n_unit.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_n_normin_y = require( './fixtures/upper_n_normin_y.json' );
+var lower_t_unit = require( './fixtures/lower_t_unit.json' );
+var identity = require( './fixtures/identity.json' );
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -72,7 +61,7 @@ test( 'dlatrs: upper, no-transpose, non-unit diagonal, 3x3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_N_nonunit' );
+	tc = upper_n_nonunit;
 	A = new Float64Array( [ 2, 0, 0, 1, 3, 0, 1, 2, 4 ] );
 	x = new Float64Array( [ 1, 2, 3 ] );
 	scale = new Float64Array( 1 );
@@ -92,7 +81,7 @@ test( 'dlatrs: lower, no-transpose, non-unit diagonal, 3x3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_N_nonunit' );
+	tc = lower_n_nonunit;
 	A = new Float64Array( [ 2, 1, 1, 0, 3, 2, 0, 0, 4 ] );
 	x = new Float64Array( [ 1, 2, 3 ] );
 	scale = new Float64Array( 1 );
@@ -112,7 +101,7 @@ test( 'dlatrs: upper, transpose, non-unit diagonal, 3x3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_T_nonunit' );
+	tc = upper_t_nonunit;
 	A = new Float64Array( [ 2, 0, 0, 1, 3, 0, 1, 2, 4 ] );
 	x = new Float64Array( [ 1, 2, 3 ] );
 	scale = new Float64Array( 1 );
@@ -131,7 +120,7 @@ test( 'dlatrs: lower, transpose, non-unit diagonal, 3x3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_T_nonunit' );
+	tc = lower_t_nonunit;
 	A = new Float64Array( [ 2, 1, 1, 0, 3, 2, 0, 0, 4 ] );
 	x = new Float64Array( [ 1, 2, 3 ] );
 	scale = new Float64Array( 1 );
@@ -150,7 +139,7 @@ test( 'dlatrs: upper, no-transpose, unit diagonal, 3x3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_N_unit' );
+	tc = upper_n_unit;
 	A = new Float64Array( [ 99, 0, 0, 1, 99, 0, 1, 2, 99 ] );
 	x = new Float64Array( [ 1, 2, 3 ] );
 	scale = new Float64Array( 1 );
@@ -185,7 +174,7 @@ test( 'dlatrs: N=1', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Float64Array( [ 5 ] );
 	x = new Float64Array( [ 10 ] );
 	scale = new Float64Array( 1 );
@@ -204,7 +193,7 @@ test( 'dlatrs: upper, normin=Y (pre-computed norms), 4x4', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_N_normin_Y' );
+	tc = upper_n_normin_y;
 	A = new Float64Array( [ 3, 0, 0, 0, 1, 4, 0, 0, 2, 1, 2, 0, 1, 2, 1, 5 ] );
 	x = new Float64Array( [ 1, 1, 1, 1 ] );
 	scale = new Float64Array( 1 );
@@ -223,7 +212,7 @@ test( 'dlatrs: lower, transpose, unit diagonal, 3x3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_T_unit' );
+	tc = lower_t_unit;
 	A = new Float64Array( [ 99, 1, 2, 0, 99, 3, 0, 0, 99 ] );
 	x = new Float64Array( [ 6, 5, 4 ] );
 	scale = new Float64Array( 1 );
@@ -242,7 +231,7 @@ test( 'dlatrs: identity matrix', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	A = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
 	x = new Float64Array( [ 7, 8, 9 ] );
 	scale = new Float64Array( 1 );

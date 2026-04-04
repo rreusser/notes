@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dstev = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dstev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var eigenvalues_only_5x5 = require( './fixtures/eigenvalues_only_5x5.json' );
+var eigenvectors_5x5 = require( './fixtures/eigenvectors_5x5.json' );
+var eigenvectors_4x4 = require( './fixtures/eigenvectors_4x4.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var already_sorted = require( './fixtures/already_sorted.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +67,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dstev: eigenvalues_only_5x5 (JOBZ=N)', function t() {
@@ -95,7 +78,7 @@ test( 'dstev: eigenvalues_only_5x5 (JOBZ=N)', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'eigenvalues_only_5x5' );
+	tc = eigenvalues_only_5x5;
 	N = 5;
 	d = new Float64Array( [ 2, 2, 2, 2, 2 ] );
 	e = new Float64Array( [ -1, -1, -1, -1 ] );
@@ -116,7 +99,7 @@ test( 'dstev: eigenvectors_5x5 (JOBZ=V)', function t() {
 	var Z;
 	var i;
 
-	tc = findCase( 'eigenvectors_5x5' );
+	tc = eigenvectors_5x5;
 	N = 5;
 	d = new Float64Array( [ 2, 2, 2, 2, 2 ] );
 	e = new Float64Array( [ -1, -1, -1, -1 ] );
@@ -140,7 +123,7 @@ test( 'dstev: eigenvectors_4x4 (JOBZ=V)', function t() {
 	var Z;
 	var i;
 
-	tc = findCase( 'eigenvectors_4x4' );
+	tc = eigenvectors_4x4;
 	N = 4;
 	d = new Float64Array( [ 4, 1, 3, 2 ] );
 	e = new Float64Array( [ 1, 0.5, 1.5 ] );
@@ -162,7 +145,7 @@ test( 'dstev: n_zero', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	d = new Float64Array( 0 );
 	e = new Float64Array( 0 );
 	Z = new Float64Array( 1 );
@@ -179,7 +162,7 @@ test( 'dstev: n_one (JOBZ=V)', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	d = new Float64Array( [ 7.5 ] );
 	e = new Float64Array( 0 );
 	Z = new Float64Array( 1 );
@@ -199,7 +182,7 @@ test( 'dstev: already_sorted (JOBZ=N, diagonal matrix)', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'already_sorted' );
+	tc = already_sorted;
 	N = 4;
 	d = new Float64Array( [ 1, 2, 3, 4 ] );
 	e = new Float64Array( [ 0, 0, 0 ] );
@@ -312,7 +295,6 @@ test( 'dstev: eigenvalues only with scaling (JOBZ=N, small values)', function t(
 		assert.ok( d[ i ] <= d[ i + 1 ] + 1e-300, 'eigenvalues sorted' );
 	}
 });
-
 
 // FUNCTIONS //
 

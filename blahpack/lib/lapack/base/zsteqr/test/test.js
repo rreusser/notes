@@ -4,30 +4,29 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zsteqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zsteqr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var compz_i_4x4 = require( './fixtures/compz_i_4x4.json' );
+var compz_v_4x4 = require( './fixtures/compz_v_4x4.json' );
+var compz_n_4x4 = require( './fixtures/compz_n_4x4.json' );
+var n1_compz_i = require( './fixtures/n1_compz_i.json' );
+var n2_compz_i = require( './fixtures/n2_compz_i.json' );
+var n0 = require( './fixtures/n0.json' );
+var diagonal_compz_i = require( './fixtures/diagonal_compz_i.json' );
+var n6_compz_i = require( './fixtures/n6_compz_i.json' );
+var compz_v_permuted = require( './fixtures/compz_v_permuted.json' );
+var n2_compz_n = require( './fixtures/n2_compz_n.json' );
+var n2_compz_v_complex = require( './fixtures/n2_compz_v_complex.json' );
 
 // VARIABLES //
 
 var LDZ = 6; // Leading dimension used in Fortran test
 
-
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -138,11 +137,10 @@ function assertEigenvectors( zv, eigenvalues, diag, offdiag, N, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zsteqr: COMPZ=I, 4x4 tridiagonal', function t() {
-	var tc = findCase( 'compz_I_4x4' );
+	var tc = compz_i_4x4;
 	var diag = [ 2, 2, 2, 2 ];
 	var offdiag = [ 1, 1, 1 ];
 	var d = new Float64Array( diag );
@@ -159,7 +157,7 @@ test( 'zsteqr: COMPZ=I, 4x4 tridiagonal', function t() {
 });
 
 test( 'zsteqr: COMPZ=V, 4x4 with identity initial Z', function t() {
-	var tc = findCase( 'compz_V_4x4' );
+	var tc = compz_v_4x4;
 	var diag = [ 2, 2, 2, 2 ];
 	var offdiag = [ 1, 1, 1 ];
 	var d = new Float64Array( diag );
@@ -180,7 +178,7 @@ test( 'zsteqr: COMPZ=V, 4x4 with identity initial Z', function t() {
 });
 
 test( 'zsteqr: COMPZ=N, 4x4 eigenvalues only', function t() {
-	var tc = findCase( 'compz_N_4x4' );
+	var tc = compz_n_4x4;
 	var d = new Float64Array( [ 2, 2, 2, 2 ] );
 	var e = new Float64Array( [ 1, 1, 1 ] );
 	var Z = new Complex128Array( 1 );
@@ -192,7 +190,7 @@ test( 'zsteqr: COMPZ=N, 4x4 eigenvalues only', function t() {
 });
 
 test( 'zsteqr: N=1, COMPZ=I', function t() {
-	var tc = findCase( 'n1_compz_I' );
+	var tc = n1_compz_i;
 	var d = new Float64Array( [ 5 ] );
 	var e = new Float64Array( 0 );
 	var Z = new Complex128Array( 1 );
@@ -207,7 +205,7 @@ test( 'zsteqr: N=1, COMPZ=I', function t() {
 });
 
 test( 'zsteqr: N=2, COMPZ=I', function t() {
-	var tc = findCase( 'n2_compz_I' );
+	var tc = n2_compz_i;
 	var diag = [ 3, 1 ];
 	var offdiag = [ 2 ];
 	var d = new Float64Array( diag );
@@ -224,7 +222,7 @@ test( 'zsteqr: N=2, COMPZ=I', function t() {
 });
 
 test( 'zsteqr: N=0 edge case', function t() {
-	var tc = findCase( 'n0' );
+	var tc = n0;
 	var d = new Float64Array( 0 );
 	var e = new Float64Array( 0 );
 	var Z = new Complex128Array( 1 );
@@ -234,7 +232,7 @@ test( 'zsteqr: N=0 edge case', function t() {
 });
 
 test( 'zsteqr: already-diagonal matrix, COMPZ=I', function t() {
-	var tc = findCase( 'diagonal_compz_I' );
+	var tc = diagonal_compz_i;
 	var diag = [ 4, 1, 3, 2 ];
 	var offdiag = [ 0, 0, 0 ];
 	var d = new Float64Array( diag );
@@ -254,7 +252,7 @@ test( 'zsteqr: already-diagonal matrix, COMPZ=I', function t() {
 });
 
 test( 'zsteqr: 6x6 matrix, COMPZ=I', function t() {
-	var tc = findCase( 'n6_compz_I' );
+	var tc = n6_compz_i;
 	var diag = [ 4, 3, 2, 1, 5, 6 ];
 	var offdiag = [ 1, 0.5, 0.25, 0.125, 2 ];
 	var d = new Float64Array( diag );
@@ -271,7 +269,7 @@ test( 'zsteqr: 6x6 matrix, COMPZ=I', function t() {
 });
 
 test( 'zsteqr: COMPZ=V, 4x4 with permuted initial Z', function t() {
-	var tc = findCase( 'compz_V_permuted' );
+	var tc = compz_v_permuted;
 	var diag = [ 2, 2, 2, 2 ];
 	var offdiag = [ 1, 1, 1 ];
 	var d = new Float64Array( diag );
@@ -292,7 +290,7 @@ test( 'zsteqr: COMPZ=V, 4x4 with permuted initial Z', function t() {
 });
 
 test( 'zsteqr: N=2, COMPZ=N', function t() {
-	var tc = findCase( 'n2_compz_N' );
+	var tc = n2_compz_n;
 	var d = new Float64Array( [ 3, 1 ] );
 	var e = new Float64Array( [ 2 ] );
 	var Z = new Complex128Array( 1 );
@@ -304,7 +302,7 @@ test( 'zsteqr: N=2, COMPZ=N', function t() {
 });
 
 test( 'zsteqr: N=2, COMPZ=V with complex initial Z', function t() {
-	var tc = findCase( 'n2_compz_V_complex' );
+	var tc = n2_compz_v_complex;
 	var diag = [ 3, 1 ];
 	var offdiag = [ 2 ];
 	var d = new Float64Array( diag );

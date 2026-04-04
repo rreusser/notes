@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsyevr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsyevr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var v_a_l = require( './fixtures/v_a_l.json' );
+var v_a_u = require( './fixtures/v_a_u.json' );
+var n_a_l = require( './fixtures/n_a_l.json' );
+var v_v_l = require( './fixtures/v_v_l.json' );
+var v_i_l = require( './fixtures/v_i_l.json' );
+var n1 = require( './fixtures/n1.json' );
+var n_v_u = require( './fixtures/n_v_u.json' );
+var n_i_l = require( './fixtures/n_i_l.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -186,7 +172,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dsyevr: V_A_L - compute all eigenvectors, lower', function t() {
@@ -201,7 +186,7 @@ test( 'dsyevr: V_A_L - compute all eigenvectors, lower', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'V_A_L' );
+	tc = v_a_l;
 	N = tc.N;
 	A = symMatrix4Lower();
 	w = new Float64Array( N );
@@ -229,7 +214,7 @@ test( 'dsyevr: V_A_U - compute all eigenvectors, upper', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'V_A_U' );
+	tc = v_a_u;
 	N = tc.N;
 	A = symMatrix4Upper();
 	w = new Float64Array( N );
@@ -257,7 +242,7 @@ test( 'dsyevr: N_A_L - eigenvalues only, all, lower', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'N_A_L' );
+	tc = n_a_l;
 	N = tc.N;
 	A = symMatrix4Lower();
 	w = new Float64Array( N );
@@ -284,7 +269,7 @@ test( 'dsyevr: V_V_L - value range, lower, compute vectors', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'V_V_L' );
+	tc = v_v_l;
 	N = tc.N;
 	A = symMatrix4Lower();
 	w = new Float64Array( N );
@@ -312,7 +297,7 @@ test( 'dsyevr: V_I_L - index range, lower, compute vectors', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'V_I_L' );
+	tc = v_i_l;
 	N = tc.N;
 	A = symMatrix4Lower();
 	w = new Float64Array( N );
@@ -361,7 +346,7 @@ test( 'dsyevr: N1 - N=1', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'N1' );
+	tc = n1;
 	A = new Float64Array( [ 5.0 ] );
 	w = new Float64Array( 1 );
 	Z = new Float64Array( 1 );
@@ -388,7 +373,7 @@ test( 'dsyevr: N_V_U - eigenvalues only, value range, upper', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'N_V_U' );
+	tc = n_v_u;
 	N = tc.N;
 	A = symMatrix4Upper();
 	w = new Float64Array( N );
@@ -633,7 +618,7 @@ test( 'dsyevr: N_I_L - eigenvalues only, index range, lower', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'N_I_L' );
+	tc = n_i_l;
 	N = tc.N;
 	A = symMatrix4Lower();
 	w = new Float64Array( N );

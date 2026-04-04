@@ -6,24 +6,17 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zgebrd = require( '../../zgebrd/lib/base.js' );
 var zungbr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zungbr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var vect_q_m_ge_k = require( './fixtures/vect_q_m_ge_k.json' );
+var vect_p_k_lt_n = require( './fixtures/vect_p_k_lt_n.json' );
+var vect_q_m_lt_k = require( './fixtures/vect_q_m_lt_k.json' );
+var vect_p_k_ge_n = require( './fixtures/vect_p_k_ge_n.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -127,11 +120,10 @@ function setup3x4() {
 	return { A: A, TAUQ: TAUQ, TAUP: TAUP, LDA: LDA };
 }
 
-
 // TESTS //
 
 test( 'zungbr: VECT=Q, M >= K (4x3 bidiagonal)', function t() {
-	var tc = findCase( 'vect_q_m_ge_k' );
+	var tc = vect_q_m_ge_k;
 	var bd = setup4x3();
 	var WORK = new Complex128Array( 200 );
 	var info = zungbr('apply-Q', 4, 3, 3, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, WORK, 1, 0 );
@@ -140,7 +132,7 @@ test( 'zungbr: VECT=Q, M >= K (4x3 bidiagonal)', function t() {
 });
 
 test( 'zungbr: VECT=P, K < N (3x5 bidiagonal)', function t() {
-	var tc = findCase( 'vect_p_k_lt_n' );
+	var tc = vect_p_k_lt_n;
 	var bd = setup3x5();
 	var WORK = new Complex128Array( 200 );
 	var info = zungbr('apply-P', 3, 5, 3, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, WORK, 1, 0 );
@@ -149,7 +141,7 @@ test( 'zungbr: VECT=P, K < N (3x5 bidiagonal)', function t() {
 });
 
 test( 'zungbr: VECT=Q, M < K (3x4 bidiagonal, Q is 3x3)', function t() {
-	var tc = findCase( 'vect_q_m_lt_k' );
+	var tc = vect_q_m_lt_k;
 	var bd = setup3x4();
 	var WORK = new Complex128Array( 200 );
 	var info = zungbr('apply-Q', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUQ, 1, 0, WORK, 1, 0 );
@@ -158,7 +150,7 @@ test( 'zungbr: VECT=Q, M < K (3x4 bidiagonal, Q is 3x3)', function t() {
 });
 
 test( 'zungbr: VECT=P, K >= N (4x3 bidiagonal, P^H is 3x3)', function t() {
-	var tc = findCase( 'vect_p_k_ge_n' );
+	var tc = vect_p_k_ge_n;
 	var bd = setup4x3();
 	var WORK = new Complex128Array( 200 );
 	var info = zungbr('apply-P', 3, 3, 4, bd.A, 1, bd.LDA, 0, bd.TAUP, 1, 0, WORK, 1, 0 );

@@ -2,41 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsptrf = require( '../../dsptrf/lib/base.js' );
 var dspsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dspsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_upper = require( './fixtures/fact_n_upper.json' );
+var fact_n_lower = require( './fixtures/fact_n_lower.json' );
+var fact_f_upper = require( './fixtures/fact_f_upper.json' );
+var fact_f_lower = require( './fixtures/fact_f_lower.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var singular = require( './fixtures/singular.json' );
+var ill_conditioned = require( './fixtures/ill_conditioned.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var multi_rhs_lower = require( './fixtures/multi_rhs_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -121,7 +110,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dspsvx: fact_n_upper', function t() {
@@ -132,7 +120,7 @@ test( 'dspsvx: fact_n_upper', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_n_upper' );
+	tc = fact_n_upper;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	IPIV = new Int32Array( 3 );
@@ -154,7 +142,7 @@ test( 'dspsvx: fact_n_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_n_lower' );
+	tc = fact_n_lower;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	IPIV = new Int32Array( 3 );
@@ -176,7 +164,7 @@ test( 'dspsvx: fact_f_upper', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_f_upper' );
+	tc = fact_f_upper;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( AP );
 	IPIV = new Int32Array( 3 );
@@ -198,7 +186,7 @@ test( 'dspsvx: fact_f_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'fact_f_lower' );
+	tc = fact_f_lower;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( AP );
 	IPIV = new Int32Array( 3 );
@@ -220,7 +208,7 @@ test( 'dspsvx: n_zero', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Float64Array( 1 );
 	AFP = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -237,7 +225,7 @@ test( 'dspsvx: n_one_upper', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Float64Array( [ 4.0 ] );
 	AFP = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -258,7 +246,7 @@ test( 'dspsvx: n_one_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	AP = new Float64Array( [ 5.0 ] );
 	AFP = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -279,7 +267,7 @@ test( 'dspsvx: singular', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	AP = new Float64Array( [ 1.0, 2.0, 4.0 ] );
 	AFP = new Float64Array( 3 );
 	IPIV = new Int32Array( 2 );
@@ -297,7 +285,7 @@ test( 'dspsvx: ill_conditioned', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'ill_conditioned' );
+	tc = ill_conditioned;
 	AP = new Float64Array( [ 1.0, 0.5, 1.0/3.0, 1.0/3.0, 0.25, 0.2 ] );
 	AFP = new Float64Array( 6 );
 	IPIV = new Int32Array( 3 );
@@ -318,7 +306,7 @@ test( 'dspsvx: multi_rhs', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	AP = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	IPIV = new Int32Array( 3 );
@@ -339,7 +327,7 @@ test( 'dspsvx: multi_rhs_lower', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'multi_rhs_lower' );
+	tc = multi_rhs_lower;
 	AP = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
 	AFP = new Float64Array( 6 );
 	IPIV = new Int32Array( 3 );

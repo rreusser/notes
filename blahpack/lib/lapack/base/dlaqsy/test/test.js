@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaqsy = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqsy.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_equilibrate = require( './fixtures/upper_equilibrate.json' );
+var lower_equilibrate = require( './fixtures/lower_equilibrate.json' );
+var no_equilibrate = require( './fixtures/no_equilibrate.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var small_amax = require( './fixtures/small_amax.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +67,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlaqsy: upper_equilibrate', function t() {
@@ -92,7 +75,7 @@ test( 'dlaqsy: upper_equilibrate', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'upper_equilibrate' );
+	tc = upper_equilibrate;
 	A = new Float64Array([ 4.0, 0.0, 0.0, 1.0, 9.0, 0.0, 0.5, 2.0, 16.0 ]);
 	s = new Float64Array([ 0.5, 1.0/3.0, 0.25 ]);
 	equed = dlaqsy( 'upper', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
@@ -106,7 +89,7 @@ test( 'dlaqsy: lower_equilibrate', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'lower_equilibrate' );
+	tc = lower_equilibrate;
 	A = new Float64Array([ 4.0, 1.0, 0.5, 0.0, 9.0, 2.0, 0.0, 0.0, 16.0 ]);
 	s = new Float64Array([ 0.5, 1.0/3.0, 0.25 ]);
 	equed = dlaqsy( 'lower', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
@@ -120,7 +103,7 @@ test( 'dlaqsy: no_equilibrate', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'no_equilibrate' );
+	tc = no_equilibrate;
 	A = new Float64Array([ 4.0, 1.0, 0.5, 1.0, 9.0, 2.0, 0.5, 2.0, 16.0 ]);
 	s = new Float64Array([ 1.0, 1.0, 1.0 ]);
 	equed = dlaqsy( 'upper', 3, A, 1, 3, 0, s, 1, 0, 0.5, 16.0 );
@@ -134,7 +117,7 @@ test( 'dlaqsy: n_zero', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	s = new Float64Array( 1 );
 	equed = dlaqsy( 'upper', 0, A, 1, 1, 0, s, 1, 0, 1.0, 1.0 );
@@ -147,7 +130,7 @@ test( 'dlaqsy: n_one_upper', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	A = new Float64Array([ 100.0 ]);
 	s = new Float64Array([ 0.1 ]);
 	equed = dlaqsy( 'upper', 1, A, 1, 1, 0, s, 1, 0, 0.01, 100.0 );
@@ -161,7 +144,7 @@ test( 'dlaqsy: small_amax', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'small_amax' );
+	tc = small_amax;
 	A = new Float64Array([ 1e-300, 0.0, 0.0, 1e-300 ]);
 	s = new Float64Array([ 1e150, 1e150 ]);
 	equed = dlaqsy( 'upper', 2, A, 1, 2, 0, s, 1, 0, 1.0, 1e-300 );

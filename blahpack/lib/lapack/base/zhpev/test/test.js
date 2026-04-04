@@ -6,37 +6,26 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhpev = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var jobz_v_uplo_u_4x4 = require( './fixtures/jobz_v_uplo_u_4x4.json' );
+var jobz_v_uplo_l_4x4 = require( './fixtures/jobz_v_uplo_l_4x4.json' );
+var jobz_n_uplo_u_4x4 = require( './fixtures/jobz_n_uplo_u_4x4.json' );
+var jobz_n_uplo_l_4x4 = require( './fixtures/jobz_n_uplo_l_4x4.json' );
+var jobz_v_uplo_l_3x3 = require( './fixtures/jobz_v_uplo_l_3x3.json' );
+var jobz_v_uplo_u_3x3 = require( './fixtures/jobz_v_uplo_u_3x3.json' );
+var n1_jobz_v = require( './fixtures/n1_jobz_v.json' );
+var n1_jobz_n = require( './fixtures/n1_jobz_n.json' );
+var jobz_n_uplo_l_3x3 = require( './fixtures/jobz_n_uplo_l_3x3.json' );
+var diagonal_4x4 = require( './fixtures/diagonal_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -278,7 +267,6 @@ function diagonalLower4x4( ) {
 	]);
 }
 
-
 // TESTS //
 
 test( 'zhpev: JOBZ=V, UPLO=U, 4x4', function t() {
@@ -291,7 +279,7 @@ test( 'zhpev: JOBZ=V, UPLO=U, 4x4', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_u_4x4' );
+	tc = jobz_v_uplo_u_4x4;
 	AP = packedUpper4x4();
 	W = new Float64Array( 4 );
 	Z = new Complex128Array( 16 );
@@ -314,7 +302,7 @@ test( 'zhpev: JOBZ=V, UPLO=L, 4x4', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_l_4x4' );
+	tc = jobz_v_uplo_l_4x4;
 	AP = packedLower4x4();
 	W = new Float64Array( 4 );
 	Z = new Complex128Array( 16 );
@@ -336,7 +324,7 @@ test( 'zhpev: JOBZ=N, UPLO=U, 4x4', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_u_4x4' );
+	tc = jobz_n_uplo_u_4x4;
 	AP = packedUpper4x4();
 	W = new Float64Array( 4 );
 	Z = new Complex128Array( 1 );
@@ -356,7 +344,7 @@ test( 'zhpev: JOBZ=N, UPLO=L, 4x4', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_l_4x4' );
+	tc = jobz_n_uplo_l_4x4;
 	AP = packedLower4x4();
 	W = new Float64Array( 4 );
 	Z = new Complex128Array( 1 );
@@ -377,7 +365,7 @@ test( 'zhpev: JOBZ=V, UPLO=L, 3x3', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_l_3x3' );
+	tc = jobz_v_uplo_l_3x3;
 	AP = packedLower3x3();
 	W = new Float64Array( 3 );
 	Z = new Complex128Array( 9 );
@@ -400,7 +388,7 @@ test( 'zhpev: JOBZ=V, UPLO=U, 3x3', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_u_3x3' );
+	tc = jobz_v_uplo_u_3x3;
 	AP = packedUpper3x3();
 	W = new Float64Array( 3 );
 	Z = new Complex128Array( 9 );
@@ -423,7 +411,7 @@ test( 'zhpev: N=1, JOBZ=V', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'n1_jobz_v' );
+	tc = n1_jobz_v;
 	AP = new Complex128Array( [ 3.5, 0.0 ] );
 	W = new Float64Array( 1 );
 	Z = new Complex128Array( 1 );
@@ -446,7 +434,7 @@ test( 'zhpev: N=1, JOBZ=N', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'n1_jobz_n' );
+	tc = n1_jobz_n;
 	AP = new Complex128Array( [ 7.25, 0.0 ] );
 	W = new Float64Array( 1 );
 	Z = new Complex128Array( 1 );
@@ -483,7 +471,7 @@ test( 'zhpev: JOBZ=N, UPLO=L, 3x3', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_l_3x3' );
+	tc = jobz_n_uplo_l_3x3;
 	AP = packedLower3x3();
 	W = new Float64Array( 3 );
 	Z = new Complex128Array( 1 );
@@ -504,7 +492,7 @@ test( 'zhpev: diagonal 4x4, JOBZ=V, UPLO=L', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'diagonal_4x4' );
+	tc = diagonal_4x4;
 	AP = diagonalLower4x4();
 	W = new Float64Array( 4 );
 	Z = new Complex128Array( 16 );

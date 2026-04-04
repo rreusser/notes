@@ -19,11 +19,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zlanhb;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zlanhb = main;
+} else {
+	zlanhb = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zlanhb;
 
 // exports: { "ndarray": "zlanhb.ndarray" }

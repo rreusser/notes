@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgebal = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgebal.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1 = require( './fixtures/n1.json' );
+var job_n = require( './fixtures/job_n.json' );
+var job_p = require( './fixtures/job_p.json' );
+var job_s = require( './fixtures/job_s.json' );
+var job_b = require( './fixtures/job_b.json' );
+var diagonal = require( './fixtures/diagonal.json' );
+var perm_and_scale = require( './fixtures/perm_and_scale.json' );
+var col_isolation = require( './fixtures/col_isolation.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -119,7 +105,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgebal: n0 (N=0 quick return)', function t() {
@@ -141,7 +126,7 @@ test( 'dgebal: n1 (N=1)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	A = new Float64Array( [ 5.0 ] );
 	SCALE = new Float64Array( 1 );
 	result = dgebal( 'both', 1, A, 1, 1, 0, SCALE, 1, 0 );
@@ -158,7 +143,7 @@ test( 'dgebal: job_n (JOB=N, no balancing)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'job_n' );
+	tc = job_n;
 	N = 3;
 	A = buildMatrix( N, [
 		[ 1, 4, 7 ],
@@ -180,7 +165,7 @@ test( 'dgebal: job_p (JOB=P, permute only)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'job_p' );
+	tc = job_p;
 	N = 4;
 	A = buildMatrix( N, [
 		[ 1, 0, 0, 0 ],  // col 1
@@ -207,7 +192,7 @@ test( 'dgebal: job_s (JOB=S, scale only)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'job_s' );
+	tc = job_s;
 	N = 3;
 	A = buildMatrix( N, [
 		[ 1, 1000, 0 ],      // col 1
@@ -232,7 +217,7 @@ test( 'dgebal: job_b (JOB=B, both permute and scale)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'job_b' );
+	tc = job_b;
 	N = 4;
 	A = buildMatrix( N, [
 		[ 1, 100, 0, 0 ],       // col 1
@@ -259,7 +244,7 @@ test( 'dgebal: diagonal (already balanced diagonal matrix)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'diagonal' );
+	tc = diagonal;
 	N = 3;
 	A = buildMatrix( N, [
 		[ 2, 0, 0 ],
@@ -281,7 +266,7 @@ test( 'dgebal: perm_and_scale (5x5 with permutations on both ends)', function t(
 	var N;
 	var A;
 
-	tc = findCase( 'perm_and_scale' );
+	tc = perm_and_scale;
 	N = 5;
 	A = buildMatrix( N, [
 		[ 1, 0, 0, 0, 0 ],         // col 1
@@ -310,7 +295,7 @@ test( 'dgebal: col_isolation (JOB=P with column isolation)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'col_isolation' );
+	tc = col_isolation;
 	N = 4;
 	A = buildMatrix( N, [
 		[ 7, 0, 0, 0 ],  // col 1

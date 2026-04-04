@@ -1,0 +1,9 @@
+{
+  "name": "swap_very_large_g",
+  "ssmin": 5e-20,
+  "ssmax": 100000000000000000000,
+  "snr": 1,
+  "csr": 1e-20,
+  "snl": 5e-20,
+  "csl": 1
+}

@@ -4,38 +4,31 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsbevx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsbevx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) { // eslint-disable-line max-len
-	return JSON.parse( line );
-});
-
+var v_a_u_kd2_n5 = require( './fixtures/v_a_u_kd2_n5.json' );
+var v_a_l_kd2_n5 = require( './fixtures/v_a_l_kd2_n5.json' );
+var n_a_u_kd2_n5 = require( './fixtures/n_a_u_kd2_n5.json' );
+var v_v_u_kd2_n5 = require( './fixtures/v_v_u_kd2_n5.json' );
+var v_i_u_kd2_n5 = require( './fixtures/v_i_u_kd2_n5.json' );
+var n_v_l_kd2_n5 = require( './fixtures/n_v_l_kd2_n5.json' );
+var n_i_l_kd2_n5 = require( './fixtures/n_i_l_kd2_n5.json' );
+var n1_v_a_l = require( './fixtures/n1_v_a_l.json' );
+var n1_v_v_included = require( './fixtures/n1_v_v_included.json' );
+var v_i_l_kd1_n4_fast = require( './fixtures/v_i_l_kd1_n4_fast.json' );
+var v_v_l_kd1_n4 = require( './fixtures/v_v_l_kd1_n4.json' );
+var n_i_u_kd1_n4_fast = require( './fixtures/n_i_u_kd1_n4_fast.json' );
+var diagonal_v_a = require( './fixtures/diagonal_v_a.json' );
+var n1_v_i = require( './fixtures/n1_v_i.json' );
+var v_i_u_kd2_n5_single = require( './fixtures/v_i_u_kd2_n5_single.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {(Object|void)} test case or undefined
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -245,7 +238,6 @@ function verifyEigenpairs( Afull, N, w, Z, M, tol, msg ) { // eslint-disable-lin
 	}
 }
 
-
 // TESTS //
 
 test( 'dsbevx is a function', function t() {
@@ -256,7 +248,7 @@ test( 'dsbevx: V, A, U, KD=2, N=5', function t() {
 	var Afull;
 	var ABo = bandUpper5();
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'V_A_U_kd2_n5' );
+	var tc = v_a_u_kd2_n5;
 	var r;
 
 	Afull = bandToFull( 'upper', 5, 2, ABo );
@@ -271,7 +263,7 @@ test( 'dsbevx: V, A, L, KD=2, N=5', function t() {
 	var Afull;
 	var ABo = bandLower5();
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'V_A_L_kd2_n5' );
+	var tc = v_a_l_kd2_n5;
 	var r;
 
 	Afull = bandToFull( 'lower', 5, 2, ABo );
@@ -283,7 +275,7 @@ test( 'dsbevx: V, A, L, KD=2, N=5', function t() {
 });
 
 test( 'dsbevx: N, A, U, KD=2, N=5 (eigenvalues only)', function t() {
-	var tc = findCase( 'N_A_U_kd2_n5' );
+	var tc = n_a_u_kd2_n5;
 	var AB = bandUpper5();
 	var r = runDsbevx( 'no-vectors', 'all', 'upper', 5, 2, AB, 0, 0, 0, 0, 0 );
 
@@ -296,7 +288,7 @@ test( 'dsbevx: V, V, U, KD=2, N=5 (value range [3, 8])', function t() {
 	var Afull;
 	var ABo = bandUpper5();
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'V_V_U_kd2_n5' );
+	var tc = v_v_u_kd2_n5;
 	var r;
 
 	Afull = bandToFull( 'upper', 5, 2, ABo );
@@ -311,7 +303,7 @@ test( 'dsbevx: V, I, U, KD=2, N=5 (index range 2..4)', function t() {
 	var Afull;
 	var ABo = bandUpper5();
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'V_I_U_kd2_n5' );
+	var tc = v_i_u_kd2_n5;
 	var r;
 
 	Afull = bandToFull( 'upper', 5, 2, ABo );
@@ -323,7 +315,7 @@ test( 'dsbevx: V, I, U, KD=2, N=5 (index range 2..4)', function t() {
 });
 
 test( 'dsbevx: N, V, L, KD=2, N=5 (value range [1, 5])', function t() {
-	var tc = findCase( 'N_V_L_kd2_n5' );
+	var tc = n_v_l_kd2_n5;
 	var AB = bandLower5();
 	var r = runDsbevx( 'no-vectors', 'value', 'lower', 5, 2, AB, 1.0, 5.0, 0, 0, 0 ); // eslint-disable-line max-len
 
@@ -333,7 +325,7 @@ test( 'dsbevx: N, V, L, KD=2, N=5 (value range [1, 5])', function t() {
 });
 
 test( 'dsbevx: N, I, L, KD=2, N=5 (index 3 only)', function t() {
-	var tc = findCase( 'N_I_L_kd2_n5' );
+	var tc = n_i_l_kd2_n5;
 	var AB = bandLower5();
 	var r = runDsbevx( 'no-vectors', 'index', 'lower', 5, 2, AB, 0, 0, 3, 3, 0 );
 
@@ -343,7 +335,7 @@ test( 'dsbevx: N, I, L, KD=2, N=5 (index 3 only)', function t() {
 });
 
 test( 'dsbevx: N=1, V, A, L', function t() {
-	var tc = findCase( 'n1_V_A_L' );
+	var tc = n1_v_a_l;
 	var AB = new Float64Array( [ 3.5 ] );
 	var r = runDsbevx( 'compute-vectors', 'all', 'lower', 1, 0, AB, 0, 0, 0, 0, 0 ); // eslint-disable-line max-len
 
@@ -362,7 +354,7 @@ test( 'dsbevx: N=1, V, V, excluded', function t() {
 });
 
 test( 'dsbevx: N=1, V, V, included', function t() {
-	var tc = findCase( 'n1_V_V_included' );
+	var tc = n1_v_v_included;
 	var AB = new Float64Array( [ 3.5 ] );
 	var r = runDsbevx( 'compute-vectors', 'value', 'lower', 1, 0, AB, 3.0, 4.0, 0, 0, 0 ); // eslint-disable-line max-len
 
@@ -384,7 +376,7 @@ test( 'dsbevx: V, I, L, KD=1, N=4, fast path (IL=1, IU=N)', function t() {
 	var Afull;
 	var ABo = bandLower4Kd1();
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'V_I_L_kd1_n4_fast' );
+	var tc = v_i_l_kd1_n4_fast;
 	var r;
 
 	Afull = bandToFull( 'lower', 4, 1, ABo );
@@ -399,7 +391,7 @@ test( 'dsbevx: V, V, L, KD=1, N=4 (value range [4.5, 7.5])', function t() {
 	var Afull;
 	var ABo = bandLower4Kd1();
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'V_V_L_kd1_n4' );
+	var tc = v_v_l_kd1_n4;
 	var r;
 
 	Afull = bandToFull( 'lower', 4, 1, ABo );
@@ -411,7 +403,7 @@ test( 'dsbevx: V, V, L, KD=1, N=4 (value range [4.5, 7.5])', function t() {
 });
 
 test( 'dsbevx: N, I, U, KD=1, N=4, fast path (IL=1, IU=N)', function t() {
-	var tc = findCase( 'N_I_U_kd1_n4_fast' );
+	var tc = n_i_u_kd1_n4_fast;
 	var AB = bandUpper4Kd1();
 	var r = runDsbevx( 'no-vectors', 'index', 'upper', 4, 1, AB, 0, 0, 1, 4, 0 );
 
@@ -424,7 +416,7 @@ test( 'dsbevx: diagonal (KD=0), V, A', function t() {
 	var Afull;
 	var ABo = new Float64Array( [ 3, 1, 4, 2 ] );
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'diagonal_V_A' );
+	var tc = diagonal_v_a;
 	var r;
 
 	Afull = bandToFull( 'upper', 4, 0, ABo );
@@ -436,7 +428,7 @@ test( 'dsbevx: diagonal (KD=0), V, A', function t() {
 });
 
 test( 'dsbevx: N=1, V, I (IL=IU=1)', function t() {
-	var tc = findCase( 'n1_V_I' );
+	var tc = n1_v_i;
 	var AB = new Float64Array( [ 5 ] );
 	var r = runDsbevx( 'compute-vectors', 'index', 'upper', 1, 0, AB, 0, 0, 1, 1, 0 ); // eslint-disable-line max-len
 
@@ -450,7 +442,7 @@ test( 'dsbevx: V, I, U, KD=2, N=5, single eigenvalue (IL=IU=1)', function t() {
 	var Afull;
 	var ABo = bandUpper5();
 	var AB = new Float64Array( ABo );
-	var tc = findCase( 'V_I_U_kd2_n5_single' );
+	var tc = v_i_u_kd2_n5_single;
 	var r;
 
 	Afull = bandToFull( 'upper', 5, 2, ABo );

@@ -23,37 +23,34 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpftrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpftrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var lower_odd_normal = require( './fixtures/lower_odd_normal.json' );
+var upper_odd_normal = require( './fixtures/upper_odd_normal.json' );
+var lower_odd_conjtrans = require( './fixtures/lower_odd_conjtrans.json' );
+var upper_odd_conjtrans = require( './fixtures/upper_odd_conjtrans.json' );
+var lower_even_normal = require( './fixtures/lower_even_normal.json' );
+var upper_even_normal = require( './fixtures/upper_even_normal.json' );
+var lower_even_conjtrans = require( './fixtures/lower_even_conjtrans.json' );
+var upper_even_conjtrans = require( './fixtures/upper_even_conjtrans.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var lower_5_normal = require( './fixtures/lower_5_normal.json' );
+var upper_5_conjtrans = require( './fixtures/upper_5_conjtrans.json' );
+var notpd_odd_normal_upper = require( './fixtures/notpd_odd_normal_upper.json' );
+var notpd_odd_conjtrans_lower = require( './fixtures/notpd_odd_conjtrans_lower.json' );
+var notpd_odd_conjtrans_upper = require( './fixtures/notpd_odd_conjtrans_upper.json' );
+var notpd_even_normal_lower = require( './fixtures/notpd_even_normal_lower.json' );
+var notpd_even_normal_upper = require( './fixtures/notpd_even_normal_upper.json' );
+var notpd_even_conjtrans_lower = require( './fixtures/notpd_even_conjtrans_lower.json' );
+var notpd_even_conjtrans_upper = require( './fixtures/notpd_even_conjtrans_upper.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -97,7 +94,6 @@ function makeInput( tc ) {
 	return new Complex128Array( tc.input );
 }
 
-
 // TESTS //
 
 test( 'zpftrf: lower_odd_normal (N=3, TRANSR=no-transpose, UPLO=lower)', function t() { // eslint-disable-line max-len
@@ -106,7 +102,7 @@ test( 'zpftrf: lower_odd_normal (N=3, TRANSR=no-transpose, UPLO=lower)', functio
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_normal' );
+	tc = lower_odd_normal;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'lower', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -120,7 +116,7 @@ test( 'zpftrf: upper_odd_normal (N=3, TRANSR=no-transpose, UPLO=upper)', functio
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_normal' );
+	tc = upper_odd_normal;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'upper', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -134,7 +130,7 @@ test( 'zpftrf: lower_odd_conjtrans (N=3, TRANSR=conjugate-transpose, UPLO=lower)
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_conjtrans' );
+	tc = lower_odd_conjtrans;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'lower', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -148,7 +144,7 @@ test( 'zpftrf: upper_odd_conjtrans (N=3, TRANSR=conjugate-transpose, UPLO=upper)
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_conjtrans' );
+	tc = upper_odd_conjtrans;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'upper', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -162,7 +158,7 @@ test( 'zpftrf: lower_even_normal (N=4, TRANSR=no-transpose, UPLO=lower)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_normal' );
+	tc = lower_even_normal;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'lower', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -176,7 +172,7 @@ test( 'zpftrf: upper_even_normal (N=4, TRANSR=no-transpose, UPLO=upper)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_normal' );
+	tc = upper_even_normal;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'upper', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -190,7 +186,7 @@ test( 'zpftrf: lower_even_conjtrans (N=4, TRANSR=conjugate-transpose, UPLO=lower
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_conjtrans' );
+	tc = lower_even_conjtrans;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'lower', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -204,7 +200,7 @@ test( 'zpftrf: upper_even_conjtrans (N=4, TRANSR=conjugate-transpose, UPLO=upper
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_conjtrans' );
+	tc = upper_even_conjtrans;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'upper', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -227,7 +223,7 @@ test( 'zpftrf: n_one', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'lower', 1, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -240,7 +236,7 @@ test( 'zpftrf: not_posdef (INFO > 0)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'lower', 3, A, 1, 0 );
 	assert.equal( info, tc.info );
@@ -252,7 +248,7 @@ test( 'zpftrf: lower_5_normal (N=5, TRANSR=no-transpose, UPLO=lower)', function 
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_5_normal' );
+	tc = lower_5_normal;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'lower', 5, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -266,7 +262,7 @@ test( 'zpftrf: upper_5_conjtrans (N=5, TRANSR=conjugate-transpose, UPLO=upper)',
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_5_conjtrans' );
+	tc = upper_5_conjtrans;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'upper', 5, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -279,7 +275,7 @@ test( 'zpftrf: notpd_odd_normal_upper', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'notpd_odd_normal_upper' );
+	tc = notpd_odd_normal_upper;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'upper', 3, A, 1, 0 );
 	assert.equal( info, tc.info );
@@ -290,7 +286,7 @@ test( 'zpftrf: notpd_odd_conjtrans_lower', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'notpd_odd_conjtrans_lower' );
+	tc = notpd_odd_conjtrans_lower;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'lower', 3, A, 1, 0 );
 	assert.equal( info, tc.info );
@@ -301,7 +297,7 @@ test( 'zpftrf: notpd_odd_conjtrans_upper', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'notpd_odd_conjtrans_upper' );
+	tc = notpd_odd_conjtrans_upper;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'upper', 3, A, 1, 0 );
 	assert.equal( info, tc.info );
@@ -312,7 +308,7 @@ test( 'zpftrf: notpd_even_normal_lower', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'notpd_even_normal_lower' );
+	tc = notpd_even_normal_lower;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'lower', 4, A, 1, 0 );
 	assert.equal( info, tc.info );
@@ -323,7 +319,7 @@ test( 'zpftrf: notpd_even_normal_upper', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'notpd_even_normal_upper' );
+	tc = notpd_even_normal_upper;
 	A = makeInput( tc );
 	info = zpftrf( 'no-transpose', 'upper', 4, A, 1, 0 );
 	assert.equal( info, tc.info );
@@ -334,7 +330,7 @@ test( 'zpftrf: notpd_even_conjtrans_lower', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'notpd_even_conjtrans_lower' );
+	tc = notpd_even_conjtrans_lower;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'lower', 4, A, 1, 0 );
 	assert.equal( info, tc.info );
@@ -345,7 +341,7 @@ test( 'zpftrf: notpd_even_conjtrans_upper', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'notpd_even_conjtrans_upper' );
+	tc = notpd_even_conjtrans_upper;
 	A = makeInput( tc );
 	info = zpftrf( 'conjugate-transpose', 'upper', 4, A, 1, 0 );
 	assert.equal( info, tc.info );

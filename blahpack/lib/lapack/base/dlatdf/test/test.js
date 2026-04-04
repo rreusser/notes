@@ -2,41 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgetc2 = require( './../../dgetc2/lib/base.js' );
 var dlatdf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlatdf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var ijob1_2x2 = require( './fixtures/ijob1_2x2.json' );
+var ijob2_2x2 = require( './fixtures/ijob2_2x2.json' );
+var ijob1_3x3 = require( './fixtures/ijob1_3x3.json' );
+var ijob2_3x3 = require( './fixtures/ijob2_3x3.json' );
+var ijob1_4x4 = require( './fixtures/ijob1_4x4.json' );
+var ijob2_4x4 = require( './fixtures/ijob2_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -71,7 +55,6 @@ function assertArrayClose( actual, aOffset, aStride, expected, n, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlatdf: IJOB=1, 2x2 system', function t() {
@@ -82,7 +65,7 @@ test( 'dlatdf: IJOB=1, 2x2 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob1_2x2' );
+	tc = ijob1_2x2;
 	Z = new Float64Array( [ 4.0, 2.0, 3.0, 1.0 ] );
 	IPIV = new Int32Array( 2 );
 	JPIV = new Int32Array( 2 );
@@ -102,7 +85,7 @@ test( 'dlatdf: IJOB=2, 2x2 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob2_2x2' );
+	tc = ijob2_2x2;
 	Z = new Float64Array( [ 4.0, 2.0, 3.0, 1.0 ] );
 	IPIV = new Int32Array( 2 );
 	JPIV = new Int32Array( 2 );
@@ -122,7 +105,7 @@ test( 'dlatdf: IJOB=1, 3x3 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob1_3x3' );
+	tc = ijob1_3x3;
 	Z = new Float64Array([
 		5.0,
 		7.0,
@@ -152,7 +135,7 @@ test( 'dlatdf: IJOB=2, 3x3 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob2_3x3' );
+	tc = ijob2_3x3;
 	Z = new Float64Array([
 		5.0,
 		7.0,
@@ -182,7 +165,7 @@ test( 'dlatdf: IJOB=1, 4x4 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob1_4x4' );
+	tc = ijob1_4x4;
 	Z = new Float64Array([
 		5.0,
 		7.0,
@@ -219,7 +202,7 @@ test( 'dlatdf: IJOB=2, 4x4 system', function t() {
 	var tc;
 	var Z;
 
-	tc = findCase( 'ijob2_4x4' );
+	tc = ijob2_4x4;
 	Z = new Float64Array([
 		5.0,
 		7.0,

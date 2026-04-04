@@ -1,0 +1,9 @@
+{
+  "name": "very_large_g_ha_gt_1",
+  "ssmin": 2e-20,
+  "ssmax": 100000000000000000000,
+  "snr": 1,
+  "csr": 1e-20,
+  "snl": 2e-20,
+  "csl": 1
+}

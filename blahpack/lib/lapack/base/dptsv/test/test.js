@@ -2,39 +2,22 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dptsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dptsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5_single_rhs = require( './fixtures/basic_5x5_single_rhs.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +66,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dptsv: basic_5x5_single_rhs', function t() {
@@ -93,7 +75,7 @@ test( 'dptsv: basic_5x5_single_rhs', function t() {
 	var e;
 	var B;
 
-	tc = findCase( 'basic_5x5_single_rhs' );
+	tc = basic_5x5_single_rhs;
 	d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0, 4.0 ] );
 	e = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
 	B = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
@@ -111,7 +93,7 @@ test( 'dptsv: multi_rhs', function t() {
 	var e;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	d = new Float64Array( [ 3.0, 3.0, 3.0, 3.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 	B = new Float64Array([
@@ -139,7 +121,7 @@ test( 'dptsv: n_one', function t() {
 	var e;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	d = new Float64Array( [ 5.0 ] );
 	e = new Float64Array( 0 );
 	B = new Float64Array( [ 10.0 ] );
@@ -156,7 +138,7 @@ test( 'dptsv: n_zero (quick return)', function t() {
 	var e;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	d = new Float64Array( 0 );
 	e = new Float64Array( 0 );
 	B = new Float64Array( 0 );
@@ -171,7 +153,7 @@ test( 'dptsv: not_posdef (returns INFO > 0)', function t() {
 	var e;
 	var B;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	d = new Float64Array( [ -1.0, 4.0, 4.0 ] );
 	e = new Float64Array( [ 1.0, 1.0 ] );
 	B = new Float64Array( [ 1.0, 2.0, 3.0 ] );

@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -14,15 +12,20 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpptrf = require( '../../zpptrf/lib/base.js' );
 var zppsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zppsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_upper = require( './fixtures/fact_n_upper.json' );
+var fact_n_lower = require( './fixtures/fact_n_lower.json' );
+var fact_f_upper = require( './fixtures/fact_f_upper.json' );
+var fact_f_lower = require( './fixtures/fact_f_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var fact_e_upper = require( './fixtures/fact_e_upper.json' );
+var fact_e_lower = require( './fixtures/fact_e_lower.json' );
+var fact_f_equed_y_upper = require( './fixtures/fact_f_equed_y_upper.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var multi_rhs_lower = require( './fixtures/multi_rhs_lower.json' );
+var not_hpd = require( './fixtures/not_hpd.json' );
+var fact_e_multi_rhs = require( './fixtures/fact_e_multi_rhs.json' );
 
 // VARIABLES //
 
@@ -34,21 +37,7 @@ var AP_LOWER = [ 10, 0, 3, 1, 1, -2, 8, 0, 2, 1, 6, 0 ];
 var B_1RHS = [ 1, 1, 2, -1, 3, 0.5 ];
 var B_2RHS = [ 1, 1, 2, -1, 3, 0.5, 5, -2, -1, 3, 4, 1 ];
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a typed array to a plain array.
@@ -147,7 +136,6 @@ function runCase( fact, uplo, N, nrhs, apData, bData ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zppsvx is a function', function t() {
@@ -155,7 +143,7 @@ test( 'zppsvx is a function', function t() {
 });
 
 test( 'zppsvx: fact_n_upper', function t() {
-	var tc = findCase( 'fact_n_upper' );
+	var tc = fact_n_upper;
 	var r = runCase( 'not-factored', 'upper', 3, 1, AP_UPPER, B_1RHS );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );
@@ -165,7 +153,7 @@ test( 'zppsvx: fact_n_upper', function t() {
 });
 
 test( 'zppsvx: fact_n_lower', function t() {
-	var tc = findCase( 'fact_n_lower' );
+	var tc = fact_n_lower;
 	var r = runCase( 'not-factored', 'lower', 3, 1, AP_LOWER, B_1RHS );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );
@@ -189,7 +177,7 @@ test( 'zppsvx: fact_f_upper', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_f_upper' );
+	tc = fact_f_upper;
 	AP = c128( AP_UPPER );
 	AFP = new Complex128Array( AP.buffer.slice( 0 ) );
 	zpptrf( 'upper', 3, AFP, 1, 0 );
@@ -218,7 +206,7 @@ test( 'zppsvx: fact_f_lower', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_f_lower' );
+	tc = fact_f_lower;
 	AP = c128( AP_LOWER );
 	AFP = new Complex128Array( AP.buffer.slice( 0 ) );
 	zpptrf( 'lower', 3, AFP, 1, 0 );
@@ -251,7 +239,7 @@ test( 'zppsvx: n_zero', function t() {
 });
 
 test( 'zppsvx: n_one_upper', function t() {
-	var tc = findCase( 'n_one_upper' );
+	var tc = n_one_upper;
 	var r = runCase( 'not-factored', 'upper', 1, 1, [ 4, 0 ], [ 8, 4 ] );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );
@@ -259,7 +247,7 @@ test( 'zppsvx: n_one_upper', function t() {
 });
 
 test( 'zppsvx: fact_e_upper', function t() {
-	var tc = findCase( 'fact_e_upper' );
+	var tc = fact_e_upper;
 	var r = runCase( 'equilibrate', 'upper', 3, 1, AP_UPPER, B_1RHS );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );
@@ -269,7 +257,7 @@ test( 'zppsvx: fact_e_upper', function t() {
 });
 
 test( 'zppsvx: fact_e_lower', function t() {
-	var tc = findCase( 'fact_e_lower' );
+	var tc = fact_e_lower;
 	var r = runCase( 'equilibrate', 'lower', 3, 1, AP_LOWER, B_1RHS );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );
@@ -296,7 +284,7 @@ test( 'zppsvx: fact_f_equed_y_upper', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_f_equed_y_upper' );
+	tc = fact_f_equed_y_upper;
 
 	// s(i) = 1/sqrt(diag(i))
 	S = new Float64Array( [ 1.0 / Math.sqrt( 10.0 ), 1.0 / Math.sqrt( 8.0 ), 1.0 / Math.sqrt( 6.0 ) ] ); // eslint-disable-line max-len
@@ -339,7 +327,7 @@ test( 'zppsvx: fact_f_equed_y_upper', function t() {
 });
 
 test( 'zppsvx: multi_rhs', function t() {
-	var tc = findCase( 'multi_rhs' );
+	var tc = multi_rhs;
 	var r = runCase( 'not-factored', 'upper', 3, 2, AP_UPPER, B_2RHS );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );
@@ -347,7 +335,7 @@ test( 'zppsvx: multi_rhs', function t() {
 });
 
 test( 'zppsvx: multi_rhs_lower', function t() {
-	var tc = findCase( 'multi_rhs_lower' );
+	var tc = multi_rhs_lower;
 	var r = runCase( 'not-factored', 'lower', 3, 2, AP_LOWER, B_2RHS );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );
@@ -355,14 +343,14 @@ test( 'zppsvx: multi_rhs_lower', function t() {
 });
 
 test( 'zppsvx: not_hpd', function t() {
-	var tc = findCase( 'not_hpd' );
+	var tc = not_hpd;
 	var r = runCase( 'not-factored', 'upper', 2, 1, [ 1, 0, 2, 1, 1, 0 ], [ 1, 0, 2, 0 ] ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info, 'info' );
 	assert.equal( r.rcond, tc.rcond, 'rcond' );
 });
 
 test( 'zppsvx: fact_e_multi_rhs', function t() {
-	var tc = findCase( 'fact_e_multi_rhs' );
+	var tc = fact_e_multi_rhs;
 	var r = runCase( 'equilibrate', 'upper', 3, 2, AP_UPPER, B_2RHS );
 	assert.equal( r.info, tc.info, 'info' );
 	assertArrayClose( r.x, tc.x, 1e-12, 'x' );

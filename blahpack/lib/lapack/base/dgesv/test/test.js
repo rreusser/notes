@@ -2,40 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgesv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgesv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var solve_3x3 = require( './fixtures/solve_3x3.json' );
+var singular = require( './fixtures/singular.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var _4x4 = require( './fixtures/4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -102,7 +87,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgesv: solve_3x3', function t() {
@@ -115,7 +99,7 @@ test( 'dgesv: solve_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'solve_3x3' );
+	tc = solve_3x3;
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
@@ -135,7 +119,7 @@ test( 'dgesv: singular', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	A = new Float64Array( [ 1.0, 2.0, 3.0, 2.0, 4.0, 6.0, 3.0, 6.0, 9.0 ] );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( [ 1.0, 2.0, 3.0 ] );
@@ -150,7 +134,7 @@ test( 'dgesv: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( 1 );
@@ -165,7 +149,7 @@ test( 'dgesv: nrhs_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( 1 );
@@ -183,7 +167,7 @@ test( 'dgesv: multi_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	Aorig = new Float64Array( [ 1.0, 3.0, 2.0, 4.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 2 );
@@ -203,7 +187,7 @@ test( 'dgesv: 1x1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( [ 10.0 ] );
@@ -222,7 +206,7 @@ test( 'dgesv: 4x4', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '4x4' );
+	tc = _4x4;
 	Aorig = new Float64Array([
 		4.0,
 		1.0,

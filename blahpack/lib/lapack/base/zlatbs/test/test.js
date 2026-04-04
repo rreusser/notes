@@ -6,26 +6,24 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlatbs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlatbs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_notrans_nonunit_4x4 = require( './fixtures/upper_notrans_nonunit_4x4.json' );
+var lower_notrans_nonunit_4x4 = require( './fixtures/lower_notrans_nonunit_4x4.json' );
+var upper_conjtrans_nonunit_4x4 = require( './fixtures/upper_conjtrans_nonunit_4x4.json' );
+var upper_trans_nonunit_4x4 = require( './fixtures/upper_trans_nonunit_4x4.json' );
+var lower_notrans_unit_4x4 = require( './fixtures/lower_notrans_unit_4x4.json' );
+var n0 = require( './fixtures/n0.json' );
+var n1_upper = require( './fixtures/n1_upper.json' );
+var lower_conjtrans_nonunit_4x4 = require( './fixtures/lower_conjtrans_nonunit_4x4.json' );
+var singular_upper = require( './fixtures/singular_upper.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -40,11 +38,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zlatbs: upper_notrans_nonunit_4x4', function t() {
-	var tc = findCase( 'upper_notrans_nonunit_4x4' );
+	var tc = upper_notrans_nonunit_4x4;
 	var n = 4;
 	var kd = 2;
 	// Band storage: (kd+1) x n, column-major
@@ -76,7 +73,7 @@ test( 'zlatbs: upper_notrans_nonunit_4x4', function t() {
 });
 
 test( 'zlatbs: lower_notrans_nonunit_4x4', function t() {
-	var tc = findCase( 'lower_notrans_nonunit_4x4' );
+	var tc = lower_notrans_nonunit_4x4;
 	var n = 4;
 	var kd = 2;
 	var AB = new Complex128Array( (kd + 1) * n );
@@ -105,7 +102,7 @@ test( 'zlatbs: lower_notrans_nonunit_4x4', function t() {
 });
 
 test( 'zlatbs: upper_conjtrans_nonunit_4x4', function t() {
-	var tc = findCase( 'upper_conjtrans_nonunit_4x4' );
+	var tc = upper_conjtrans_nonunit_4x4;
 	var n = 4;
 	var kd = 2;
 	var AB = new Complex128Array( (kd + 1) * n );
@@ -133,7 +130,7 @@ test( 'zlatbs: upper_conjtrans_nonunit_4x4', function t() {
 });
 
 test( 'zlatbs: upper_trans_nonunit_4x4', function t() {
-	var tc = findCase( 'upper_trans_nonunit_4x4' );
+	var tc = upper_trans_nonunit_4x4;
 	var n = 4;
 	var kd = 2;
 	var AB = new Complex128Array( (kd + 1) * n );
@@ -161,7 +158,7 @@ test( 'zlatbs: upper_trans_nonunit_4x4', function t() {
 });
 
 test( 'zlatbs: lower_notrans_unit_4x4', function t() {
-	var tc = findCase( 'lower_notrans_unit_4x4' );
+	var tc = lower_notrans_unit_4x4;
 	var n = 4;
 	var kd = 2;
 	var AB = new Complex128Array( (kd + 1) * n );
@@ -190,7 +187,7 @@ test( 'zlatbs: lower_notrans_unit_4x4', function t() {
 });
 
 test( 'zlatbs: n0', function t() {
-	var tc = findCase( 'n0' );
+	var tc = n0;
 	var AB = new Complex128Array( 1 );
 	var x = new Complex128Array( 1 );
 	var scale = new Float64Array( 1 );
@@ -202,7 +199,7 @@ test( 'zlatbs: n0', function t() {
 });
 
 test( 'zlatbs: n1_upper', function t() {
-	var tc = findCase( 'n1_upper' );
+	var tc = n1_upper;
 	var n = 1;
 	var kd = 2;
 	var AB = new Complex128Array( 3 );
@@ -221,7 +218,7 @@ test( 'zlatbs: n1_upper', function t() {
 });
 
 test( 'zlatbs: lower_conjtrans_nonunit_4x4', function t() {
-	var tc = findCase( 'lower_conjtrans_nonunit_4x4' );
+	var tc = lower_conjtrans_nonunit_4x4;
 	var n = 4;
 	var kd = 2;
 	var AB = new Complex128Array( (kd + 1) * n );
@@ -249,7 +246,7 @@ test( 'zlatbs: lower_conjtrans_nonunit_4x4', function t() {
 });
 
 test( 'zlatbs: singular_upper', function t() {
-	var tc = findCase( 'singular_upper' );
+	var tc = singular_upper;
 	var n = 3;
 	var kd = 2;
 	var AB = new Complex128Array( (kd + 1) * n );

@@ -4,25 +4,30 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dstebz = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dstebz.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n0 = require( './fixtures/n0.json' );
+var n1_all = require( './fixtures/n1_all.json' );
+var n1_v_outside = require( './fixtures/n1_v_outside.json' );
+var n5_all_orderb = require( './fixtures/n5_all_orderb.json' );
+var n5_all_ordere = require( './fixtures/n5_all_ordere.json' );
+var n5_rangev = require( './fixtures/n5_rangev.json' );
+var n5_rangei = require( './fixtures/n5_rangei.json' );
+var n5_rangei_all = require( './fixtures/n5_rangei_all.json' );
+var n5_split_orderb = require( './fixtures/n5_split_orderb.json' );
+var n5_split_ordere = require( './fixtures/n5_split_ordere.json' );
+var diagonal = require( './fixtures/diagonal.json' );
+var split_rangev = require( './fixtures/split_rangev.json' );
+var split_rangei = require( './fixtures/split_rangei.json' );
+var wilkinson10 = require( './fixtures/wilkinson10.json' );
+var wilkinson10_rangei = require( './fixtures/wilkinson10_rangei.json' );
+var wilkinson10_rangev = require( './fixtures/wilkinson10_rangev.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -57,11 +62,10 @@ function callDstebz( range, order, N, vl, vu, il, iu, d, e ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dstebz: N=0 quick return', function t() {
-	var tc = findCase( 'n0' );
+	var tc = n0;
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 1 );
 	var result = callDstebz( 'all', 'block', 0, 0.0, 0.0, 1, 0, d, e );
@@ -70,7 +74,7 @@ test( 'dstebz: N=0 quick return', function t() {
 });
 
 test( 'dstebz: N=1, RANGE=A', function t() {
-	var tc = findCase( 'n1_all' );
+	var tc = n1_all;
 	var d = new Float64Array( [ 5.0 ] );
 	var e = new Float64Array( 1 );
 	var result = callDstebz( 'all', 'block', 1, 0.0, 0.0, 1, 1, d, e );
@@ -83,7 +87,7 @@ test( 'dstebz: N=1, RANGE=A', function t() {
 });
 
 test( 'dstebz: N=1, RANGE=V, eigenvalue outside interval', function t() {
-	var tc = findCase( 'n1_v_outside' );
+	var tc = n1_v_outside;
 	var d = new Float64Array( [ 5.0 ] );
 	var e = new Float64Array( 1 );
 	var result = callDstebz( 'value', 'block', 1, 0.0, 3.0, 1, 1, d, e );
@@ -92,7 +96,7 @@ test( 'dstebz: N=1, RANGE=V, eigenvalue outside interval', function t() {
 });
 
 test( 'dstebz: 5x5, RANGE=A, ORDER=B', function t() {
-	var tc = findCase( 'n5_all_orderB' );
+	var tc = n5_all_orderb;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'all', 'block', 5, 0.0, 0.0, 1, 5, d, e );
@@ -107,7 +111,7 @@ test( 'dstebz: 5x5, RANGE=A, ORDER=B', function t() {
 });
 
 test( 'dstebz: 5x5, RANGE=A, ORDER=E', function t() {
-	var tc = findCase( 'n5_all_orderE' );
+	var tc = n5_all_ordere;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'all', 'entire', 5, 0.0, 0.0, 1, 5, d, e );
@@ -119,7 +123,7 @@ test( 'dstebz: 5x5, RANGE=A, ORDER=E', function t() {
 });
 
 test( 'dstebz: 5x5, RANGE=V (0, 3]', function t() {
-	var tc = findCase( 'n5_rangeV' );
+	var tc = n5_rangev;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'value', 'entire', 5, 0.0, 3.0, 1, 5, d, e );
@@ -131,7 +135,7 @@ test( 'dstebz: 5x5, RANGE=V (0, 3]', function t() {
 });
 
 test( 'dstebz: 5x5, RANGE=I (eigenvalues 2-4)', function t() {
-	var tc = findCase( 'n5_rangeI' );
+	var tc = n5_rangei;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 2, 4, d, e );
@@ -143,7 +147,7 @@ test( 'dstebz: 5x5, RANGE=I (eigenvalues 2-4)', function t() {
 });
 
 test( 'dstebz: RANGE=I with IL=1,IU=N simplifies to A', function t() {
-	var tc = findCase( 'n5_rangeI_all' );
+	var tc = n5_rangei_all;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 1, 5, d, e );
@@ -155,7 +159,7 @@ test( 'dstebz: RANGE=I with IL=1,IU=N simplifies to A', function t() {
 });
 
 test( 'dstebz: split matrix (E(2)=0), ORDER=B', function t() {
-	var tc = findCase( 'n5_split_orderB' );
+	var tc = n5_split_orderb;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 0.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'all', 'block', 5, 0.0, 0.0, 1, 5, d, e );
@@ -170,7 +174,7 @@ test( 'dstebz: split matrix (E(2)=0), ORDER=B', function t() {
 });
 
 test( 'dstebz: split matrix, ORDER=E', function t() {
-	var tc = findCase( 'n5_split_orderE' );
+	var tc = n5_split_ordere;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 1.0, 0.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'all', 'entire', 5, 0.0, 0.0, 1, 5, d, e );
@@ -185,7 +189,7 @@ test( 'dstebz: split matrix, ORDER=E', function t() {
 });
 
 test( 'dstebz: diagonal matrix (all E=0)', function t() {
-	var tc = findCase( 'diagonal' );
+	var tc = diagonal;
 	var d = new Float64Array( [ 5.0, 1.0, 3.0, 2.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0, 0.0 ] );
 	var result = callDstebz( 'all', 'entire', 4, 0.0, 0.0, 1, 4, d, e );
@@ -200,7 +204,7 @@ test( 'dstebz: diagonal matrix (all E=0)', function t() {
 });
 
 test( 'dstebz: split matrix, RANGE=V', function t() {
-	var tc = findCase( 'split_rangeV' );
+	var tc = split_rangev;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'value', 'block', 5, -2.0, 3.5, 1, 5, d, e );
@@ -215,7 +219,7 @@ test( 'dstebz: split matrix, RANGE=V', function t() {
 });
 
 test( 'dstebz: split matrix, RANGE=I', function t() {
-	var tc = findCase( 'split_rangeI' );
+	var tc = split_rangei;
 	var d = new Float64Array( [ 2.0, -1.0, 3.0, 0.5, 4.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0, 1.0, 1.0 ] );
 	var result = callDstebz( 'index', 'entire', 5, 0.0, 0.0, 2, 4, d, e );
@@ -228,7 +232,7 @@ test( 'dstebz: split matrix, RANGE=I', function t() {
 });
 
 test( 'dstebz: Wilkinson 10x10, RANGE=A', function t() {
-	var tc = findCase( 'wilkinson10' );
+	var tc = wilkinson10;
 	var d = new Float64Array( [ 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ] );
 	var e = new Float64Array( [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] );
 	var result = callDstebz( 'all', 'entire', 10, 0.0, 0.0, 1, 10, d, e );
@@ -241,7 +245,7 @@ test( 'dstebz: Wilkinson 10x10, RANGE=A', function t() {
 });
 
 test( 'dstebz: Wilkinson 10x10, RANGE=I (eigenvalues 3-7)', function t() {
-	var tc = findCase( 'wilkinson10_rangeI' );
+	var tc = wilkinson10_rangei;
 	var d = new Float64Array( [ 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ] );
 	var e = new Float64Array( [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] );
 	var result = callDstebz( 'index', 'entire', 10, 0.0, 0.0, 3, 7, d, e );
@@ -253,7 +257,7 @@ test( 'dstebz: Wilkinson 10x10, RANGE=I (eigenvalues 3-7)', function t() {
 });
 
 test( 'dstebz: Wilkinson 10x10, RANGE=V (1, 4]', function t() {
-	var tc = findCase( 'wilkinson10_rangeV' );
+	var tc = wilkinson10_rangev;
 	var d = new Float64Array( [ 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ] );
 	var e = new Float64Array( [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] );
 	var result = callDstebz( 'value', 'entire', 10, 1.0, 4.0, 1, 10, d, e );

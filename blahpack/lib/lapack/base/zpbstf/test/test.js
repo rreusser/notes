@@ -5,37 +5,24 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbstf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpbstf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_tridiag_5 = require( './fixtures/upper_tridiag_5.json' );
+var lower_tridiag_5 = require( './fixtures/lower_tridiag_5.json' );
+var upper_penta_4 = require( './fixtures/upper_penta_4.json' );
+var lower_penta_4 = require( './fixtures/lower_penta_4.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_hpd_upper = require( './fixtures/not_hpd_upper.json' );
+var not_hpd_lower = require( './fixtures/not_hpd_lower.json' );
+var upper_7x7_kd2 = require( './fixtures/upper_7x7_kd2.json' );
+var lower_7x7_kd2 = require( './fixtures/lower_7x7_kd2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +71,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zpbstf: upper_tridiag_5 (UPLO=U, N=5, KD=1)', function t() {
@@ -92,7 +78,7 @@ test( 'zpbstf: upper_tridiag_5 (UPLO=U, N=5, KD=1)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_tridiag_5' );
+	tc = upper_tridiag_5;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -125,7 +111,7 @@ test( 'zpbstf: lower_tridiag_5 (UPLO=L, N=5, KD=1)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_tridiag_5' );
+	tc = lower_tridiag_5;
 	AB = new Complex128Array([
 		4,
 		0,
@@ -158,7 +144,7 @@ test( 'zpbstf: upper_penta_4 (UPLO=U, N=4, KD=2)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_penta_4' );
+	tc = upper_penta_4;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -195,7 +181,7 @@ test( 'zpbstf: lower_penta_4 (UPLO=L, N=4, KD=2)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_penta_4' );
+	tc = lower_penta_4;
 	AB = new Complex128Array([
 		10,
 		0,
@@ -232,7 +218,7 @@ test( 'zpbstf: n_one (N=1)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AB = new Complex128Array( [ 9, 0 ] );
 	info = zpbstf( 'upper', 1, 0, AB, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -253,7 +239,7 @@ test( 'zpbstf: not_hpd_upper (not positive definite, upper)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'not_hpd_upper' );
+	tc = not_hpd_upper;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -273,7 +259,7 @@ test( 'zpbstf: not_hpd_lower (not positive definite, lower)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'not_hpd_lower' );
+	tc = not_hpd_lower;
 	AB = new Complex128Array([
 		1,
 		0,
@@ -293,7 +279,7 @@ test( 'zpbstf: upper_7x7_kd2 (UPLO=U, N=7, KD=2)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_7x7_kd2' );
+	tc = upper_7x7_kd2;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -348,7 +334,7 @@ test( 'zpbstf: lower_7x7_kd2 (UPLO=L, N=7, KD=2)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_7x7_kd2' );
+	tc = lower_7x7_kd2;
 	AB = new Complex128Array([
 		10,
 		0,

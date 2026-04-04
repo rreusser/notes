@@ -23,36 +23,22 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlarfg = require( './../lib/base.js' );
 
-
 // VARIABLES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarfg.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var basic = require( './fixtures/basic.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var x_all_zero = require( './fixtures/x_all_zero.json' );
+var negative_alpha = require( './fixtures/negative_alpha.json' );
+var n_zero = require( './fixtures/n_zero.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -88,7 +74,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlarfg is a function', function t() {
@@ -98,7 +83,7 @@ test( 'dlarfg is a function', function t() {
 test( 'dlarfg: basic', function t() {
 	var alpha = new Float64Array( [ 3.0 ] );
 	var tau = new Float64Array( 1 );
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 4.0, 0.0, 0.0 ] );
 
 	dlarfg( 4, alpha, 0, x, 1, 0, tau, 0 );
@@ -111,7 +96,7 @@ test( 'dlarfg: basic', function t() {
 test( 'dlarfg: alpha=0', function t() {
 	var alpha = new Float64Array( [ 0.0 ] );
 	var tau = new Float64Array( 1 );
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var x = new Float64Array( [ 3.0, 4.0 ] );
 
 	dlarfg( 3, alpha, 0, x, 1, 0, tau, 0 );
@@ -124,7 +109,7 @@ test( 'dlarfg: alpha=0', function t() {
 test( 'dlarfg: n=1 (tau=0)', function t() {
 	var alpha = new Float64Array( [ 5.0 ] );
 	var tau = new Float64Array( 1 );
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Float64Array( 1 );
 
 	dlarfg( 1, alpha, 0, x, 1, 0, tau, 0 );
@@ -135,7 +120,7 @@ test( 'dlarfg: n=1 (tau=0)', function t() {
 test( 'dlarfg: x all zero (tau=0)', function t() {
 	var alpha = new Float64Array( [ 5.0 ] );
 	var tau = new Float64Array( 1 );
-	var tc = findCase( 'x_all_zero' );
+	var tc = x_all_zero;
 	var x = new Float64Array( [ 0.0, 0.0 ] );
 
 	dlarfg( 3, alpha, 0, x, 1, 0, tau, 0 );
@@ -146,7 +131,7 @@ test( 'dlarfg: x all zero (tau=0)', function t() {
 test( 'dlarfg: negative alpha', function t() {
 	var alpha = new Float64Array( [ -3.0 ] );
 	var tau = new Float64Array( 1 );
-	var tc = findCase( 'negative_alpha' );
+	var tc = negative_alpha;
 	var x = new Float64Array( [ 4.0 ] );
 
 	dlarfg( 2, alpha, 0, x, 1, 0, tau, 0 );
@@ -159,7 +144,7 @@ test( 'dlarfg: negative alpha', function t() {
 test( 'dlarfg: n=0 (tau=0)', function t() {
 	var alpha = new Float64Array( [ 5.0 ] );
 	var tau = new Float64Array( 1 );
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Float64Array( 1 );
 
 	dlarfg( 0, alpha, 0, x, 1, 0, tau, 0 );

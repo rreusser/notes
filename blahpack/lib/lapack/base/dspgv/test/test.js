@@ -5,36 +5,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dspgv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dspgv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var itype1_v_upper = require( './fixtures/itype1_v_upper.json' );
+var itype1_v_lower = require( './fixtures/itype1_v_lower.json' );
+var itype1_n_lower = require( './fixtures/itype1_n_lower.json' );
+var itype1_n_upper = require( './fixtures/itype1_n_upper.json' );
+var itype2_v_upper = require( './fixtures/itype2_v_upper.json' );
+var itype2_v_lower = require( './fixtures/itype2_v_lower.json' );
+var itype3_v_lower = require( './fixtures/itype3_v_lower.json' );
+var itype3_v_upper = require( './fixtures/itype3_v_upper.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -129,7 +118,6 @@ function makeBPLower() {
 	return new Float64Array([ 4.0, 2.0, 0.0, 5.0, 1.0, 3.0 ]);
 }
 
-
 // TESTS //
 
 test( 'dspgv: itype1_v_upper', function t() {
@@ -143,7 +131,7 @@ test( 'dspgv: itype1_v_upper', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype1_v_upper' );
+	tc = itype1_v_upper;
 	AP = makeAPUpper();
 	BP = makeBPUpper();
 	w = new Float64Array( 3 );
@@ -168,7 +156,7 @@ test( 'dspgv: itype1_v_lower', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype1_v_lower' );
+	tc = itype1_v_lower;
 	AP = makeAPLower();
 	BP = makeBPLower();
 	w = new Float64Array( 3 );
@@ -191,7 +179,7 @@ test( 'dspgv: itype1_n_lower (eigenvalues only)', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype1_n_lower' );
+	tc = itype1_n_lower;
 	AP = makeAPLower();
 	BP = makeBPLower();
 	w = new Float64Array( 3 );
@@ -211,7 +199,7 @@ test( 'dspgv: itype1_n_upper (eigenvalues only)', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype1_n_upper' );
+	tc = itype1_n_upper;
 	AP = makeAPUpper();
 	BP = makeBPUpper();
 	w = new Float64Array( 3 );
@@ -233,7 +221,7 @@ test( 'dspgv: itype2_v_upper', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype2_v_upper' );
+	tc = itype2_v_upper;
 	AP = makeAPUpper();
 	BP = makeBPUpper();
 	w = new Float64Array( 3 );
@@ -258,7 +246,7 @@ test( 'dspgv: itype2_v_lower', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype2_v_lower' );
+	tc = itype2_v_lower;
 	AP = makeAPLower();
 	BP = makeBPLower();
 	w = new Float64Array( 3 );
@@ -283,7 +271,7 @@ test( 'dspgv: itype3_v_lower', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype3_v_lower' );
+	tc = itype3_v_lower;
 	AP = makeAPLower();
 	BP = makeBPLower();
 	w = new Float64Array( 3 );
@@ -308,7 +296,7 @@ test( 'dspgv: itype3_v_upper', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'itype3_v_upper' );
+	tc = itype3_v_upper;
 	AP = makeAPUpper();
 	BP = makeBPUpper();
 	w = new Float64Array( 3 );
@@ -331,7 +319,7 @@ test( 'dspgv: n_zero', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Float64Array( 1 );
 	BP = new Float64Array( 1 );
 	w = new Float64Array( 1 );
@@ -350,7 +338,7 @@ test( 'dspgv: n_one', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AP = new Float64Array([ 6.0 ]);
 	BP = new Float64Array([ 2.0 ]);
 	w = new Float64Array( 1 );
@@ -371,7 +359,7 @@ test( 'dspgv: not_posdef', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	AP = new Float64Array([ 1.0, 0.0, 1.0 ]);
 	BP = new Float64Array([ -1.0, 0.0, 1.0 ]);
 	w = new Float64Array( 2 );

@@ -2,40 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlaed2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaed2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_n6 = require( './fixtures/basic_n6.json' );
+var n0 = require( './fixtures/n0.json' );
+var neg_rho = require( './fixtures/neg_rho.json' );
+var small_z = require( './fixtures/small_z.json' );
+var close_eigenvalues = require( './fixtures/close_eigenvalues.json' );
+var all_deflated = require( './fixtures/all_deflated.json' );
+var n2 = require( './fixtures/n2.json' );
+var n8_mixed = require( './fixtures/n8_mixed.json' );
 
 // FUNCTIONS //
-
-/**
-* Find a test case by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case fixture data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Assert that two numbers are close.
@@ -126,7 +113,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'main export is a function', function t() {
@@ -142,7 +128,7 @@ test( 'dlaed2: basic_n6 - no deflation', function t() {
 	var N;
 	var r;
 
-	tc = findCase( 'basic_n6' );
+	tc = basic_n6;
 	N = tc.N;
 	d = new Float64Array( [ 1.0, 3.0, 5.0, 2.0, 4.0, 6.0 ] );
 	Q = new Float64Array( N * N );
@@ -190,7 +176,7 @@ test( 'dlaed2: n0 - quick return for empty matrix', function t() {
 	Q = new Float64Array( 0 );
 	w = new Float64Array( 0 );
 	z = new Float64Array( 0 );
-	tc = findCase( 'n0' );
+	tc = n0;
 	result = dlaed2( 0, 0, d, 1, 0, Q, 1, 1, 0, INDXQ, 1, 0, 1.0, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, 1, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( result.info, tc.INFO, 'INFO' );
 	assert.equal( result.K, 0, 'K' );
@@ -205,7 +191,7 @@ test( 'dlaed2: neg_rho - negative rho negates second half of z', function t() {
 	var N;
 	var r;
 
-	tc = findCase( 'neg_rho' );
+	tc = neg_rho;
 	N = tc.N;
 	d = new Float64Array( [ 1.0, 4.0, 2.0, 5.0 ] );
 	Q = new Float64Array( N * N );
@@ -234,7 +220,7 @@ test( 'dlaed2: small_z - deflation via small z component', function t() {
 	var N;
 	var r;
 
-	tc = findCase( 'small_z' );
+	tc = small_z;
 	N = tc.N;
 	d = new Float64Array( [ 1.0, 3.0, 2.0, 5.0 ] );
 	Q = new Float64Array( N * N );
@@ -262,7 +248,7 @@ test( 'dlaed2: close_eigenvalues - deflation via close eigenvalues', function t(
 	var N;
 	var r;
 
-	tc = findCase( 'close_eigenvalues' );
+	tc = close_eigenvalues;
 	N = tc.N;
 	d = new Float64Array( [ 1.0, 3.0, 1.0 + 1.0e-16, 5.0 ] );
 	Q = new Float64Array( N * N );
@@ -290,7 +276,7 @@ test( 'dlaed2: all_deflated - all z components tiny', function t() {
 	var N;
 	var r;
 
-	tc = findCase( 'all_deflated' );
+	tc = all_deflated;
 	N = tc.N;
 	d = new Float64Array( [ 1.0, 3.0, 2.0, 5.0 ] );
 	Q = new Float64Array( N * N );
@@ -316,7 +302,7 @@ test( 'dlaed2: n2 - minimal case N=2, N1=1', function t() {
 	var z;
 	var r;
 
-	tc = findCase( 'n2' );
+	tc = n2;
 	d = new Float64Array( [ 3.0, 1.0 ] );
 	Q = new Float64Array( 4 );
 	Q[ 0 ] = 1.0;
@@ -342,7 +328,7 @@ test( 'dlaed2: n8_mixed - larger case with mixed deflation', function t() {
 	var r;
 	var i;
 
-	tc = findCase( 'n8_mixed' );
+	tc = n8_mixed;
 	N = tc.N;
 	d = new Float64Array( [ 1.0, 3.0, 5.5, 7.0, 2.0, 4.0, 5.5 + 1.0e-16, 9.0 ] );
 	Q = new Float64Array( N * N );

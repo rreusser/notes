@@ -1,0 +1,20 @@
+{
+  "name": "spltol_neg_with_splits",
+  "info": 0,
+  "nsplit": 3,
+  "isplit": [
+    1,
+    3,
+    4
+  ],
+  "e": [
+    0,
+    1,
+    0
+  ],
+  "e2": [
+    0,
+    1,
+    0
+  ]
+}

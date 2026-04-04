@@ -2,39 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlahqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlahqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var real_eigenvalues_4x4 = require( './fixtures/real_eigenvalues_4x4.json' );
+var complex_eigenvalues_4x4 = require( './fixtures/complex_eigenvalues_4x4.json' );
+var triangular_3x3 = require( './fixtures/triangular_3x3.json' );
+var eigenvalues_only_4x4 = require( './fixtures/eigenvalues_only_4x4.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var n0 = require( './fixtures/n0.json' );
+var _2x2_complex = require( './fixtures/2x2_complex.json' );
+var partial_range_6x6 = require( './fixtures/partial_range_6x6.json' );
+var mixed_eigenvalues_5x5 = require( './fixtures/mixed_eigenvalues_5x5.json' );
+var wantt_no_wantz_3x3 = require( './fixtures/wantt_no_wantz_3x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -99,7 +87,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlahqr: real_eigenvalues_4x4', function t() {
@@ -111,7 +98,7 @@ test( 'dlahqr: real_eigenvalues_4x4', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'real_eigenvalues_4x4' );
+	tc = real_eigenvalues_4x4;
 	N = 4;
 	H = new Float64Array([
 		4.0,
@@ -151,7 +138,7 @@ test( 'dlahqr: complex_eigenvalues_4x4', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'complex_eigenvalues_4x4' );
+	tc = complex_eigenvalues_4x4;
 	N = 4;
 	H = new Float64Array([
 		0.0,
@@ -191,7 +178,7 @@ test( 'dlahqr: triangular_3x3', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'triangular_3x3' );
+	tc = triangular_3x3;
 	N = 3;
 	H = new Float64Array([
 		1.0,
@@ -222,7 +209,7 @@ test( 'dlahqr: eigenvalues_only_4x4', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'eigenvalues_only_4x4' );
+	tc = eigenvalues_only_4x4;
 	N = 4;
 	H = new Float64Array([
 		4.0,
@@ -260,7 +247,7 @@ test( 'dlahqr: ilo_eq_ihi', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'ilo_eq_ihi' );
+	tc = ilo_eq_ihi;
 	N = 4;
 	H = new Float64Array([
 		5.0,
@@ -297,7 +284,7 @@ test( 'dlahqr: n0', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'n0' );
+	tc = n0;
 	H = new Float64Array( 1 );
 	Z = new Float64Array( 1 );
 	WR = new Float64Array( 1 );
@@ -315,7 +302,7 @@ test( 'dlahqr: 2x2_complex', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '2x2_complex' );
+	tc = _2x2_complex;
 	N = 2;
 	H = new Float64Array([
 		0.0,
@@ -343,7 +330,7 @@ test( 'dlahqr: partial_range_6x6', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'partial_range_6x6' );
+	tc = partial_range_6x6;
 	N = 6;
 	H = new Float64Array( N * N );
 	H[ 0 + 0 * N ] = 10.0;
@@ -390,7 +377,7 @@ test( 'dlahqr: mixed_eigenvalues_5x5', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'mixed_eigenvalues_5x5' );
+	tc = mixed_eigenvalues_5x5;
 	N = 5;
 	H = new Float64Array( N * N );
 	H[ 0 + 0 * N ] = 5.0;
@@ -432,7 +419,7 @@ test( 'dlahqr: wantt_no_wantz_3x3', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'wantt_no_wantz_3x3' );
+	tc = wantt_no_wantz_3x3;
 	N = 3;
 	H = new Float64Array([
 		2.0,

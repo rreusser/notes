@@ -6,20 +6,36 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlansb = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlansb.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_max = require( './fixtures/upper_max.json' );
+var upper_one = require( './fixtures/upper_one.json' );
+var upper_inf = require( './fixtures/upper_inf.json' );
+var upper_frob = require( './fixtures/upper_frob.json' );
+var lower_max = require( './fixtures/lower_max.json' );
+var lower_one = require( './fixtures/lower_one.json' );
+var lower_inf = require( './fixtures/lower_inf.json' );
+var lower_frob = require( './fixtures/lower_frob.json' );
+var edge_1x1_max = require( './fixtures/edge_1x1_max.json' );
+var edge_1x1_one = require( './fixtures/edge_1x1_one.json' );
+var edge_1x1_inf = require( './fixtures/edge_1x1_inf.json' );
+var edge_1x1_frob = require( './fixtures/edge_1x1_frob.json' );
+var diag_k0_upper_max = require( './fixtures/diag_k0_upper_max.json' );
+var diag_k0_upper_one = require( './fixtures/diag_k0_upper_one.json' );
+var diag_k0_upper_inf = require( './fixtures/diag_k0_upper_inf.json' );
+var diag_k0_upper_frob = require( './fixtures/diag_k0_upper_frob.json' );
+var upper_k1_max = require( './fixtures/upper_k1_max.json' );
+var upper_k1_one = require( './fixtures/upper_k1_one.json' );
+var upper_k1_inf = require( './fixtures/upper_k1_inf.json' );
+var upper_k1_frob = require( './fixtures/upper_k1_frob.json' );
+var lower_k1_max = require( './fixtures/lower_k1_max.json' );
+var lower_k1_one = require( './fixtures/lower_k1_one.json' );
+var lower_k1_inf = require( './fixtures/lower_k1_inf.json' );
+var lower_k1_frob = require( './fixtures/lower_k1_frob.json' );
 
 // VARIABLES //
 
@@ -119,21 +135,7 @@ var oneByOne = new Float64Array([ 5.0 ]);
 
 var work = new Float64Array( 10 );
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -149,54 +151,53 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
-
 // TESTS //
 
 test( 'dlansb: upper_max', function t() {
 	var result = dlansb( 'max', 'upper', 5, 2, upperAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_max' );
+	var tc = upper_max;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: upper_one', function t() {
 	var result = dlansb( 'one-norm', 'upper', 5, 2, upperAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_one' );
+	var tc = upper_one;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: upper_inf', function t() {
 	var result = dlansb( 'inf-norm', 'upper', 5, 2, upperAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_inf' );
+	var tc = upper_inf;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: upper_frob', function t() {
 	var result = dlansb( 'frobenius', 'upper', 5, 2, upperAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_frob' );
+	var tc = upper_frob;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_max', function t() {
 	var result = dlansb( 'max', 'lower', 5, 2, lowerAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_max' );
+	var tc = lower_max;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_one', function t() {
 	var result = dlansb( 'one-norm', 'lower', 5, 2, lowerAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_one' );
+	var tc = lower_one;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_inf', function t() {
 	var result = dlansb( 'inf-norm', 'lower', 5, 2, lowerAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_inf' );
+	var tc = lower_inf;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_frob', function t() {
 	var result = dlansb( 'frobenius', 'lower', 5, 2, lowerAB, 1, 3, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_frob' );
+	var tc = lower_frob;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -207,25 +208,25 @@ test( 'dlansb: edge_n0', function t() {
 
 test( 'dlansb: edge_1x1_max', function t() {
 	var result = dlansb( 'max', 'upper', 1, 0, oneByOne, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'edge_1x1_max' );
+	var tc = edge_1x1_max;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: edge_1x1_one', function t() {
 	var result = dlansb( 'one-norm', 'upper', 1, 0, oneByOne, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'edge_1x1_one' );
+	var tc = edge_1x1_one;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: edge_1x1_inf', function t() {
 	var result = dlansb( 'inf-norm', 'upper', 1, 0, oneByOne, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'edge_1x1_inf' );
+	var tc = edge_1x1_inf;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: edge_1x1_frob', function t() {
 	var result = dlansb( 'frobenius', 'upper', 1, 0, oneByOne, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'edge_1x1_frob' );
+	var tc = edge_1x1_frob;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
@@ -236,72 +237,72 @@ test( 'dlansb: returns 0 for unknown norm type', function t() {
 
 test( 'dlansb: diag_k0_upper_max', function t() {
 	var result = dlansb( 'max', 'upper', 4, 0, diagK0, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'diag_k0_upper_max' );
+	var tc = diag_k0_upper_max;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: diag_k0_upper_one', function t() {
 	var result = dlansb( 'one-norm', 'upper', 4, 0, diagK0, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'diag_k0_upper_one' );
+	var tc = diag_k0_upper_one;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: diag_k0_upper_inf', function t() {
 	var result = dlansb( 'inf-norm', 'upper', 4, 0, diagK0, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'diag_k0_upper_inf' );
+	var tc = diag_k0_upper_inf;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: diag_k0_upper_frob', function t() {
 	var result = dlansb( 'frobenius', 'upper', 4, 0, diagK0, 1, 1, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'diag_k0_upper_frob' );
+	var tc = diag_k0_upper_frob;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: upper_k1_max', function t() {
 	var result = dlansb( 'max', 'upper', 4, 1, upperK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_k1_max' );
+	var tc = upper_k1_max;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: upper_k1_one', function t() {
 	var result = dlansb( 'one-norm', 'upper', 4, 1, upperK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_k1_one' );
+	var tc = upper_k1_one;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: upper_k1_inf', function t() {
 	var result = dlansb( 'inf-norm', 'upper', 4, 1, upperK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_k1_inf' );
+	var tc = upper_k1_inf;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: upper_k1_frob', function t() {
 	var result = dlansb( 'frobenius', 'upper', 4, 1, upperK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'upper_k1_frob' );
+	var tc = upper_k1_frob;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_k1_max', function t() {
 	var result = dlansb( 'max', 'lower', 4, 1, lowerK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_k1_max' );
+	var tc = lower_k1_max;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_k1_one', function t() {
 	var result = dlansb( 'one-norm', 'lower', 4, 1, lowerK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_k1_one' );
+	var tc = lower_k1_one;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_k1_inf', function t() {
 	var result = dlansb( 'inf-norm', 'lower', 4, 1, lowerK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_k1_inf' );
+	var tc = lower_k1_inf;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });
 
 test( 'dlansb: lower_k1_frob', function t() {
 	var result = dlansb( 'frobenius', 'lower', 4, 1, lowerK1, 1, 2, 0, work, 1, 0 ); // eslint-disable-line max-len
-	var tc = findCase( 'lower_k1_frob' );
+	var tc = lower_k1_frob;
 	assertClose( result, tc.result, 1e-14, 'result' );
 });

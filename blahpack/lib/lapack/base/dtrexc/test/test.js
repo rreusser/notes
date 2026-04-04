@@ -2,39 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrexc = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrexc.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var swap_1x1_forward = require( './fixtures/swap_1x1_forward.json' );
+var swap_1x1_backward = require( './fixtures/swap_1x1_backward.json' );
+var swap_1x1_forward_compq_n = require( './fixtures/swap_1x1_forward_compq_n.json' );
+var forward_2x2_block = require( './fixtures/forward_2x2_block.json' );
+var backward_2x2_block = require( './fixtures/backward_2x2_block.json' );
+var forward_1x1_across_2x2 = require( './fixtures/forward_1x1_across_2x2.json' );
+var backward_1x1_across_2x2 = require( './fixtures/backward_1x1_across_2x2.json' );
+var ifst_adjusted_2x2 = require( './fixtures/ifst_adjusted_2x2.json' );
+var backward_1x1_compq_n = require( './fixtures/backward_1x1_compq_n.json' );
+var forward_2x2_across_2x2 = require( './fixtures/forward_2x2_across_2x2.json' );
+var backward_2x2_across_2x2 = require( './fixtures/backward_2x2_across_2x2.json' );
+var ilst_adjusted_fwd = require( './fixtures/ilst_adjusted_fwd.json' );
+var backward_2x2_compq_n = require( './fixtures/backward_2x2_compq_n.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -116,7 +107,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dtrexc: swap 1x1 forward', function t() {
@@ -127,7 +117,7 @@ test( 'dtrexc: swap 1x1 forward', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'swap 1x1 forward' );
+	tc = swap_1x1_forward;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -170,7 +160,7 @@ test( 'dtrexc: swap 1x1 backward', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'swap 1x1 backward' );
+	tc = swap_1x1_backward;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -200,7 +190,7 @@ test( 'dtrexc: swap 1x1 forward, COMPQ=N', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'swap 1x1 forward compq_N' );
+	tc = swap_1x1_forward_compq_n;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -230,7 +220,7 @@ test( 'dtrexc: forward 2x2 block', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'forward 2x2 block' );
+	tc = forward_2x2_block;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 3],
@@ -266,7 +256,7 @@ test( 'dtrexc: backward 2x2 block', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'backward 2x2 block' );
+	tc = backward_2x2_block;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 5],
@@ -302,7 +292,7 @@ test( 'dtrexc: forward 1x1 across 2x2', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'forward 1x1 across 2x2' );
+	tc = forward_1x1_across_2x2;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 5],
@@ -338,7 +328,7 @@ test( 'dtrexc: backward 1x1 across 2x2', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'backward 1x1 across 2x2' );
+	tc = backward_1x1_across_2x2;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 1],
@@ -396,7 +386,7 @@ test( 'dtrexc: IFST points to second row of 2x2 block', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'ifst_adjusted_2x2' );
+	tc = ifst_adjusted_2x2;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 3],
@@ -427,7 +417,7 @@ test( 'dtrexc: backward 1x1, COMPQ=N', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'backward 1x1 compq_N' );
+	tc = backward_1x1_compq_n;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -456,7 +446,7 @@ test( 'dtrexc: forward 2x2 across 2x2', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'forward 2x2 across 2x2' );
+	tc = forward_2x2_across_2x2;
 	N = 6;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -499,7 +489,7 @@ test( 'dtrexc: backward 2x2 across 2x2', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'backward 2x2 across 2x2' );
+	tc = backward_2x2_across_2x2;
 	N = 6;
 	T = buildSchurMatrix([
 		[0, 0, 2],
@@ -542,7 +532,7 @@ test( 'dtrexc: ilst adjusted forward', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'ilst_adjusted_fwd' );
+	tc = ilst_adjusted_fwd;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 5],
@@ -573,7 +563,7 @@ test( 'dtrexc: backward 2x2 block, COMPQ=N', function t() {
 	var Q;
 	var r;
 
-	tc = findCase( 'backward 2x2 compq_N' );
+	tc = backward_2x2_compq_n;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 5],

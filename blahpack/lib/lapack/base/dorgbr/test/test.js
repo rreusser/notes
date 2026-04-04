@@ -4,25 +4,24 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgebrd = require( '../../dgebrd/lib/base.js' );
 var dorgbr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dorgbr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var vect_q_m_gt_n = require( './fixtures/vect_q_m_gt_n.json' );
+var vect_p_m_gt_n = require( './fixtures/vect_p_m_gt_n.json' );
+var vect_q_m_lt_n = require( './fixtures/vect_q_m_lt_n.json' );
+var vect_p_m_lt_n = require( './fixtures/vect_p_m_lt_n.json' );
+var vect_q_square = require( './fixtures/vect_q_square.json' );
+var vect_p_square = require( './fixtures/vect_p_square.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var vect_q_5x4 = require( './fixtures/vect_q_5x4.json' );
+var vect_q_1x1 = require( './fixtures/vect_q_1x1.json' );
+var vect_p_1x1 = require( './fixtures/vect_p_1x1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -78,11 +77,10 @@ function extractMatrix( A, M, N, LDA ) {
 	return result;
 }
 
-
 // TESTS //
 
 test( 'dorgbr: VECT=Q, M > N (4x3 matrix, M >= K path)', function t() {
-	var tc = findCase( 'vect_q_m_gt_n' );
+	var tc = vect_q_m_gt_n;
 	var M = 4;
 	var N = 3;
 	var K = 3;
@@ -101,7 +99,7 @@ test( 'dorgbr: VECT=Q, M > N (4x3 matrix, M >= K path)', function t() {
 });
 
 test( 'dorgbr: VECT=P, M > N (4x3 matrix, K >= N shift path)', function t() {
-	var tc = findCase( 'vect_p_m_gt_n' );
+	var tc = vect_p_m_gt_n;
 	var M = 4;
 	var N = 3;
 	var A = new Float64Array([
@@ -120,7 +118,7 @@ test( 'dorgbr: VECT=P, M > N (4x3 matrix, K >= N shift path)', function t() {
 });
 
 test( 'dorgbr: VECT=Q, M < N (3x4 matrix, M < K shift path)', function t() {
-	var tc = findCase( 'vect_q_m_lt_n' );
+	var tc = vect_q_m_lt_n;
 	var M = 3;
 	var N = 4;
 	var A = new Float64Array([
@@ -140,7 +138,7 @@ test( 'dorgbr: VECT=Q, M < N (3x4 matrix, M < K shift path)', function t() {
 });
 
 test( 'dorgbr: VECT=P, M < N (3x4 matrix, K < N direct path)', function t() {
-	var tc = findCase( 'vect_p_m_lt_n' );
+	var tc = vect_p_m_lt_n;
 	var M = 3;
 	var N = 4;
 	var K = 3;
@@ -161,7 +159,7 @@ test( 'dorgbr: VECT=P, M < N (3x4 matrix, K < N direct path)', function t() {
 });
 
 test( 'dorgbr: VECT=Q, square (4x4 matrix)', function t() {
-	var tc = findCase( 'vect_q_square' );
+	var tc = vect_q_square;
 	var M = 4;
 	var N = 4;
 	var K = 4;
@@ -181,7 +179,7 @@ test( 'dorgbr: VECT=Q, square (4x4 matrix)', function t() {
 });
 
 test( 'dorgbr: VECT=P, square (4x4 matrix, K >= N shift path)', function t() {
-	var tc = findCase( 'vect_p_square' );
+	var tc = vect_p_square;
 	var M = 4;
 	var N = 4;
 	var A = new Float64Array([
@@ -201,7 +199,7 @@ test( 'dorgbr: VECT=P, square (4x4 matrix, K >= N shift path)', function t() {
 });
 
 test( 'dorgbr: M=0 quick return', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var A = new Float64Array( 1 );
 	var TAU = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
@@ -210,7 +208,7 @@ test( 'dorgbr: M=0 quick return', function t() {
 });
 
 test( 'dorgbr: VECT=Q, 5x4 matrix (M >= K path)', function t() {
-	var tc = findCase( 'vect_q_5x4' );
+	var tc = vect_q_5x4;
 	var M = 5;
 	var N = 4;
 	var K = 4;
@@ -230,7 +228,7 @@ test( 'dorgbr: VECT=Q, 5x4 matrix (M >= K path)', function t() {
 });
 
 test( 'dorgbr: VECT=Q, 1x1 matrix', function t() {
-	var tc = findCase( 'vect_q_1x1' );
+	var tc = vect_q_1x1;
 	var M = 1;
 	var N = 1;
 	var K = 1;
@@ -245,7 +243,7 @@ test( 'dorgbr: VECT=Q, 1x1 matrix', function t() {
 });
 
 test( 'dorgbr: VECT=P, 1x1 matrix', function t() {
-	var tc = findCase( 'vect_p_1x1' );
+	var tc = vect_p_1x1;
 	var M = 1;
 	var N = 1;
 	var K = 1;

@@ -2,40 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dposv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dposv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var identity = require( './fixtures/identity.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +69,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dposv: lower_3x3', function t() {
@@ -93,7 +77,7 @@ test( 'dposv: lower_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	info = dposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
@@ -107,7 +91,7 @@ test( 'dposv: upper_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	info = dposv( 'upper', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
@@ -121,7 +105,7 @@ test( 'dposv: not_posdef', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	A = new Float64Array( [ 1, 2, 3, 2, 1, 4, 3, 4, 1 ] );
 	B = new Float64Array( [ 1, 1, 1 ] );
 	info = dposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
@@ -134,7 +118,7 @@ test( 'dposv: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( 1 );
 	info = dposv( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
@@ -147,7 +131,7 @@ test( 'dposv: identity', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	A = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
 	B = new Float64Array( [ 3, 5, 7 ] );
 	info = dposv( 'lower', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
@@ -161,7 +145,7 @@ test( 'dposv: multi_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 9 ] );
 	B = new Float64Array( [ 1, 0, 0, 0, 1, 0 ] );
 	info = dposv( 'lower', 3, 2, A, 1, 3, 0, B, 1, 3, 0 );
@@ -175,7 +159,7 @@ test( 'dposv: nrhs_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Float64Array( 9 );
 	B = new Float64Array( 3 );
 	info = dposv( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );

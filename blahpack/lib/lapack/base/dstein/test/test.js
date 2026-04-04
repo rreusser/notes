@@ -2,40 +2,21 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dstein = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dstein.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5_all = require( './fixtures/basic_5x5_all.json' );
+var partial_2of5 = require( './fixtures/partial_2of5.json' );
+var two_blocks = require( './fixtures/two_blocks.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -129,7 +110,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dstein: basic 5x5, all eigenvectors', function t() {
@@ -149,7 +129,7 @@ test( 'dstein: basic 5x5, all eigenvectors', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'basic_5x5_all' );
+	tc = basic_5x5_all;
 	N = 5;
 	M = 5;
 	d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
@@ -198,7 +178,7 @@ test( 'dstein: partial 2 of 5 eigenvectors', function t() {
 	var w;
 	var Z;
 
-	tc = findCase( 'partial_2of5' );
+	tc = partial_2of5;
 	N = 5;
 	M = 2;
 	d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
@@ -288,7 +268,7 @@ test( 'dstein: two blocks', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'two_blocks' );
+	tc = two_blocks;
 	N = 5;
 	M = 5;
 	d = new Float64Array( [ 4.0, 4.0, 4.0, 3.0, 3.0 ] );

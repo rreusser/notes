@@ -6,24 +6,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dormr2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dormr2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var rq_factor = require( './fixtures/rq_factor.json' );
+var left_notrans = require( './fixtures/left_notrans.json' );
+var left_trans = require( './fixtures/left_trans.json' );
+var right_notrans = require( './fixtures/right_notrans.json' );
+var right_trans = require( './fixtures/right_trans.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var left_trans_rect = require( './fixtures/left_trans_rect.json' );
+var right_notrans_rect = require( './fixtures/right_notrans_rect.json' );
+var right_trans_rect = require( './fixtures/right_trans_rect.json' );
+var k_one = require( './fixtures/k_one.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -43,7 +42,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * A is K=3 rows by NQ=4 columns stored column-major with LDA=4.
 */
 function getRQFactors() {
-	var rq = findCase( 'rq_factor' );
+	var rq = rq_factor;
 	// rq.A is 12 elements: 3x4 column-major with LDA=4
 	// But Fortran printed 12 elements from a 4x4 array with only 3 rows used.
 	// Actually from the Fortran test: A(4,4) with 3x4 data, printed as 12 = 3*4 elements.
@@ -61,11 +60,10 @@ function getRQFactors() {
 	return { A: A, TAU: TAU };
 }
 
-
 // TESTS //
 
 test( 'dormr2: left_notrans (Q*I = Q)', function t() {
-	var tc = findCase( 'left_notrans' );
+	var tc = left_notrans;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -81,7 +79,7 @@ test( 'dormr2: left_notrans (Q*I = Q)', function t() {
 });
 
 test( 'dormr2: left_trans (Q^T*I)', function t() {
-	var tc = findCase( 'left_trans' );
+	var tc = left_trans;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -96,7 +94,7 @@ test( 'dormr2: left_trans (Q^T*I)', function t() {
 });
 
 test( 'dormr2: right_notrans (I*Q)', function t() {
-	var tc = findCase( 'right_notrans' );
+	var tc = right_notrans;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -111,7 +109,7 @@ test( 'dormr2: right_notrans (I*Q)', function t() {
 });
 
 test( 'dormr2: right_trans (I*Q^T)', function t() {
-	var tc = findCase( 'right_trans' );
+	var tc = right_trans;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -150,7 +148,7 @@ test( 'dormr2: k_zero', function t() {
 });
 
 test( 'dormr2: left_notrans_rect (Q*C, 4x2)', function t() {
-	var tc = findCase( 'left_notrans_rect' );
+	var tc = left_notrans_rect;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 3, -1, 2,
@@ -163,7 +161,7 @@ test( 'dormr2: left_notrans_rect (Q*C, 4x2)', function t() {
 });
 
 test( 'dormr2: left_trans_rect (Q^T*C, 4x2)', function t() {
-	var tc = findCase( 'left_trans_rect' );
+	var tc = left_trans_rect;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 3, -1, 2,
@@ -176,7 +174,7 @@ test( 'dormr2: left_trans_rect (Q^T*C, 4x2)', function t() {
 });
 
 test( 'dormr2: right_notrans_rect (C*Q, 2x4)', function t() {
-	var tc = findCase( 'right_notrans_rect' );
+	var tc = right_notrans_rect;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 0,
@@ -191,7 +189,7 @@ test( 'dormr2: right_notrans_rect (C*Q, 2x4)', function t() {
 });
 
 test( 'dormr2: right_trans_rect (C*Q^T, 2x4)', function t() {
-	var tc = findCase( 'right_trans_rect' );
+	var tc = right_trans_rect;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 0,
@@ -206,7 +204,7 @@ test( 'dormr2: right_trans_rect (C*Q^T, 2x4)', function t() {
 });
 
 test( 'dormr2: k_one (single reflector)', function t() {
-	var tc = findCase( 'k_one' );
+	var tc = k_one;
 	var rq = getRQFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,

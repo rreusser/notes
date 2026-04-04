@@ -6,26 +6,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpotf2 = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpotf2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_2x2 = require( './fixtures/upper_2x2.json' );
+var lower_2x2 = require( './fixtures/lower_2x2.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var not_hpd = require( './fixtures/not_hpd.json' );
+var not_hpd_lower = require( './fixtures/not_hpd_lower.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -40,11 +36,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpotf2: upper_2x2', function t() {
-	var tc = findCase( 'upper_2x2' );
+	var tc = upper_2x2;
 	// A = [4 (2+i); . 5] HPD upper stored, column-major, LDA=2
 	var A = new Complex128Array( [
 		4, 0, 0, 0,
@@ -56,7 +51,7 @@ test( 'zpotf2: upper_2x2', function t() {
 });
 
 test( 'zpotf2: lower_2x2', function t() {
-	var tc = findCase( 'lower_2x2' );
+	var tc = lower_2x2;
 	// A = [4 .; (2-i) 5] HPD lower stored, column-major, LDA=2
 	var A = new Complex128Array( [
 		4, 0, 2, -1,
@@ -74,7 +69,7 @@ test( 'zpotf2: n_zero (N=0 quick return)', function t() {
 });
 
 test( 'zpotf2: n_one (N=1)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Complex128Array( [ 9, 0 ] );
 	var info = zpotf2( 'upper', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -82,7 +77,7 @@ test( 'zpotf2: n_one (N=1)', function t() {
 });
 
 test( 'zpotf2: upper_3x3', function t() {
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	// A = [10 (2+i) (3-2i); . 8 (1+i); . . 6] upper stored, LDA=3
 	var A = new Complex128Array( [
 		10, 0, 0, 0, 0, 0,
@@ -95,7 +90,7 @@ test( 'zpotf2: upper_3x3', function t() {
 });
 
 test( 'zpotf2: lower_3x3', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	// Same HPD matrix, lower stored
 	var A = new Complex128Array( [
 		10, 0, 2, -1, 3, 2,
@@ -108,7 +103,7 @@ test( 'zpotf2: lower_3x3', function t() {
 });
 
 test( 'zpotf2: not_hpd (upper, not positive definite)', function t() {
-	var tc = findCase( 'not_hpd' );
+	var tc = not_hpd;
 	var A = new Complex128Array( [
 		1, 0, 0, 0,
 		2, 1, 1, 0
@@ -118,7 +113,7 @@ test( 'zpotf2: not_hpd (upper, not positive definite)', function t() {
 });
 
 test( 'zpotf2: not_hpd_lower (lower, not positive definite)', function t() {
-	var tc = findCase( 'not_hpd_lower' );
+	var tc = not_hpd_lower;
 	var A = new Complex128Array( [
 		1, 0, 2, -1,
 		0, 0, 1, 0

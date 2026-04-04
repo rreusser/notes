@@ -2,40 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgels = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgels.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var overdetermined_4x2 = require( './fixtures/overdetermined_4x2.json' );
+var underdetermined_2x4 = require( './fixtures/underdetermined_2x4.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
+var conjtrans_mge_n_minnorm = require( './fixtures/conjtrans_mge_n_minnorm.json' );
+var conjtrans_mlt_n_ls = require( './fixtures/conjtrans_mlt_n_ls.json' );
+var multi_rhs_overdetermined = require( './fixtures/multi_rhs_overdetermined.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var overdetermined_6x3 = require( './fixtures/overdetermined_6x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -94,7 +82,6 @@ function extractDoubles( C128, complexOffset, nDoubles ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgels: overdetermined_4x2, TRANS=N', function t() {
@@ -103,7 +90,7 @@ test( 'zgels: overdetermined_4x2, TRANS=N', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'overdetermined_4x2' );
+	tc = overdetermined_4x2;
 	A = c128( [ 1, 1, 2, 1, 3, 0, 1, 3, 1, 2, 2, 1, 3, 1, 1, 0 ] );
 	B = c128( [ 1, 1, 2, 0, 3, 1, 1, 0 ] );
 	info = zgels( 'no-transpose', 4, 2, 1, A, 1, 4, 0, B, 1, 4, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -117,7 +104,7 @@ test( 'zgels: underdetermined_2x4, TRANS=N', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'underdetermined_2x4' );
+	tc = underdetermined_2x4;
 	A = c128( [ 1, 1, 0, 0, 2, 0, 2, 1, 3, 1, 1, 0, 1, 0, 3, 1 ] );
 	B = c128( [ 10, 2, 5, 1, 0, 0, 0, 0 ] );
 	info = zgels( 'no-transpose', 2, 4, 1, A, 1, 2, 0, B, 1, 4, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -131,7 +118,7 @@ test( 'zgels: square_3x3, TRANS=N', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	A = c128( [ 5, 1, 0, 1, 0, 0, 0, 1, 5, 1, 0, 1, 0, 0, 0, 1, 5, 1 ] );
 	B = c128( [ 5, 2, 5, 3, 5, 2 ] );
 	info = zgels( 'no-transpose', 3, 3, 1, A, 1, 3, 0, B, 1, 3, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -145,7 +132,7 @@ test( 'zgels: conjtrans_mge_n_minnorm, TRANS=C, M>=N', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'conjtrans_mge_n_minnorm' );
+	tc = conjtrans_mge_n_minnorm;
 	A = c128( [ 2, 1, 1, 0, 1, 1, 0, 0, 1, 0, 2, 1, 1, 1, 1, 0 ] );
 	B = c128( [ 3, 1, 2, 0, 0, 0, 0, 0 ] );
 	info = zgels( 'conjugate-transpose', 4, 2, 1, A, 1, 4, 0, B, 1, 4, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -159,7 +146,7 @@ test( 'zgels: conjtrans_mlt_n_ls, TRANS=C, M<N', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'conjtrans_mlt_n_ls' );
+	tc = conjtrans_mlt_n_ls;
 	A = c128( [ 1, 1, 1, 0, 2, 0, 2, 1, 3, 0, 1, 1 ] );
 	B = c128( [ 1, 0, 2, 1, 3, 0 ] );
 	info = zgels( 'conjugate-transpose', 2, 3, 1, A, 1, 2, 0, B, 1, 3, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -173,7 +160,7 @@ test( 'zgels: multi_rhs_overdetermined, TRANS=N', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs_overdetermined' );
+	tc = multi_rhs_overdetermined;
 	A = c128( [ 2, 0, 0, 1, 1, 0, 1, 1, 1, 0, 2, 0, 1, 1, 0, 1 ] );
 	B = c128([
 		3,
@@ -205,7 +192,7 @@ test( 'zgels: n_zero quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = c128( [ 1, 0 ] );
 	B = c128( [ 1, 0, 0, 0, 0, 0 ] );
 	info = zgels( 'no-transpose', 3, 0, 1, A, 1, 3, 0, B, 1, 3, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -218,7 +205,7 @@ test( 'zgels: m_zero quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = c128( [ 0, 0 ] );
 	B = c128( [ 0, 0, 0, 0, 0, 0 ] );
 	info = zgels( 'no-transpose', 0, 3, 1, A, 1, 1, 0, B, 1, 3, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -231,7 +218,7 @@ test( 'zgels: nrhs_zero quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = c128( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = c128( [ 0, 0, 0, 0 ] );
 	info = zgels( 'no-transpose', 2, 2, 0, A, 1, 2, 0, B, 1, 2, 0, null, 1, 0, -1 ); // eslint-disable-line max-len
@@ -311,7 +298,7 @@ test( 'zgels: overdetermined_6x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'overdetermined_6x3' );
+	tc = overdetermined_6x3;
 	A = c128([
 		10,
 		1,

@@ -6,24 +6,17 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zgelq2 = require( '../../zgelq2/lib/base.js' );
 var zunml2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunml2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var left_notrans_5x5 = require( './fixtures/left_notrans_5x5.json' );
+var left_conjtrans_5x5 = require( './fixtures/left_conjtrans_5x5.json' );
+var right_notrans_5x5 = require( './fixtures/right_notrans_5x5.json' );
+var right_conjtrans_rect = require( './fixtures/right_conjtrans_rect.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -94,11 +87,10 @@ function extractRaw( C, count ) {
 	return result;
 }
 
-
 // TESTS //
 
 test( 'zunml2: left, no transpose (Q*I)', function t() {
-	var tc = findCase( 'left_notrans_5x5' );
+	var tc = left_notrans_5x5;
 	var lq = lq3x5();
 	var LDC = 6;
 	var C = eye5in6();
@@ -109,7 +101,7 @@ test( 'zunml2: left, no transpose (Q*I)', function t() {
 });
 
 test( 'zunml2: left, conjugate transpose (Q^H*I)', function t() {
-	var tc = findCase( 'left_conjtrans_5x5' );
+	var tc = left_conjtrans_5x5;
 	var lq = lq3x5();
 	var LDC = 6;
 	var C = eye5in6();
@@ -120,7 +112,7 @@ test( 'zunml2: left, conjugate transpose (Q^H*I)', function t() {
 });
 
 test( 'zunml2: right, no transpose (I*Q)', function t() {
-	var tc = findCase( 'right_notrans_5x5' );
+	var tc = right_notrans_5x5;
 	var lq = lq3x5();
 	var LDC = 6;
 	var C = eye5in6();
@@ -155,7 +147,7 @@ test( 'zunml2: K=0 quick return', function t() {
 });
 
 test( 'zunml2: right, conjugate transpose on rectangular C', function t() {
-	var tc = findCase( 'right_conjtrans_rect' );
+	var tc = right_conjtrans_rect;
 	var lq = lq3x5();
 	var LDC = 6;
 	var C = new Complex128Array( LDC * 6 );

@@ -4,27 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zpocon = require( './../lib/base.js' );
 var zpotrf = require( '../../zpotrf/lib/base.js' );
 var zlanhe = require( '../../zlanhe/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpocon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_1norm = require( './fixtures/upper_1norm.json' );
+var lower_1norm = require( './fixtures/lower_1norm.json' );
+var identity = require( './fixtures/identity.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var anorm_zero = require( './fixtures/anorm_zero.json' );
+var _4x4_upper = require( './fixtures/4x4_upper.json' );
+var _4x4_lower = require( './fixtures/4x4_lower.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -43,7 +39,6 @@ function computeRcond( uploStr, N, Aflat ) {
 	return { rcond: rcond[ 0 ], anorm: anorm, info: info };
 }
 
-
 // TESTS //
 
 test( 'zpocon: main export is a function', function t() {
@@ -51,7 +46,7 @@ test( 'zpocon: main export is a function', function t() {
 });
 
 test( 'zpocon: 3x3 HPD, upper, 1-norm', function t() {
-	var tc = findCase( 'upper_1norm' );
+	var tc = upper_1norm;
 	// A = [[4, 1+i, 0], [1-i, 3, 1], [0, 1, 2]]
 	var result = computeRcond( 'upper', 3, [
 		4, 0,   1, -1,  0, 0,
@@ -64,7 +59,7 @@ test( 'zpocon: 3x3 HPD, upper, 1-norm', function t() {
 });
 
 test( 'zpocon: 3x3 HPD, lower, 1-norm', function t() {
-	var tc = findCase( 'lower_1norm' );
+	var tc = lower_1norm;
 	var result = computeRcond( 'lower', 3, [
 		4, 0,   1, -1,  0, 0,
 		1, 1,   3, 0,   1, 0,
@@ -76,7 +71,7 @@ test( 'zpocon: 3x3 HPD, lower, 1-norm', function t() {
 });
 
 test( 'zpocon: identity (rcond=1)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var result = computeRcond( 'upper', 3, [
 		1, 0,  0, 0,  0, 0,
 		0, 0,  1, 0,  0, 0,
@@ -88,7 +83,7 @@ test( 'zpocon: identity (rcond=1)', function t() {
 });
 
 test( 'zpocon: N=0 (rcond=1)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var work = new Complex128Array( 1 );
 	var rwork = new Float64Array( 1 );
@@ -99,7 +94,7 @@ test( 'zpocon: N=0 (rcond=1)', function t() {
 });
 
 test( 'zpocon: anorm=0 (rcond=0)', function t() {
-	var tc = findCase( 'anorm_zero' );
+	var tc = anorm_zero;
 	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] );
 	var work = new Complex128Array( 6 );
 	var rwork = new Float64Array( 3 );
@@ -111,7 +106,7 @@ test( 'zpocon: anorm=0 (rcond=0)', function t() {
 });
 
 test( 'zpocon: 4x4 HPD, upper', function t() {
-	var tc = findCase( '4x4_upper' );
+	var tc = _4x4_upper;
 	// A = [[5, 1+i, 0, 0], [1-i, 4, 1+i, 0], [0, 1-i, 3, 1], [0, 0, 1, 2]]
 	var result = computeRcond( 'upper', 4, [
 		5, 0,    1, -1,   0, 0,    0, 0,
@@ -125,7 +120,7 @@ test( 'zpocon: 4x4 HPD, upper', function t() {
 });
 
 test( 'zpocon: 4x4 HPD, lower', function t() {
-	var tc = findCase( '4x4_lower' );
+	var tc = _4x4_lower;
 	var result = computeRcond( 'lower', 4, [
 		5, 0,    1, -1,   0, 0,    0, 0,
 		1, 1,    4, 0,    1, -1,   0, 0,

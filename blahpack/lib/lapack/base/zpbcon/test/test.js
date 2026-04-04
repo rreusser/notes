@@ -2,21 +2,18 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbtrf = require( './../../zpbtrf/lib/base.js' );
 var zpbcon = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpbcon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var upper_kd1 = require( './fixtures/upper_kd1.json' );
+var lower_kd1 = require( './fixtures/lower_kd1.json' );
+var upper_kd2 = require( './fixtures/upper_kd2.json' );
+var n_one = require( './fixtures/n_one.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,7 +34,7 @@ function complexBandedMatrix( ldab, n, entries ) {
 }
 
 test( 'zpbcon: upper, KD=1 (4x4 HPD)', function t() {
-	var tc = findCase( 'upper_kd1' );
+	var tc = upper_kd1;
 	var n = 4;
 	var kd = 1;
 	var ldab = 3;
@@ -65,7 +62,7 @@ test( 'zpbcon: upper, KD=1 (4x4 HPD)', function t() {
 });
 
 test( 'zpbcon: lower, KD=1 (4x4 HPD)', function t() {
-	var tc = findCase( 'lower_kd1' );
+	var tc = lower_kd1;
 	var n = 4;
 	var kd = 1;
 	var ldab = 3;
@@ -88,7 +85,7 @@ test( 'zpbcon: lower, KD=1 (4x4 HPD)', function t() {
 });
 
 test( 'zpbcon: upper, KD=2 (4x4 HPD)', function t() {
-	var tc = findCase( 'upper_kd2' );
+	var tc = upper_kd2;
 	var n = 4;
 	var kd = 2;
 	var ldab = 3;
@@ -120,7 +117,7 @@ test( 'zpbcon: N=0 (rcond=1)', function t() {
 });
 
 test( 'zpbcon: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var ab = new Complex128Array( 3 );
 	var abv = reinterpret( ab, 0 );
 	abv[ 0 ] = 4.0;

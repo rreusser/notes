@@ -2,21 +2,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgttrf = require( './../../zgttrf/lib/base.js' );
 var zgttrs = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgttrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var notrans_single_rhs = require( './fixtures/notrans_single_rhs.json' );
+var trans_single_rhs = require( './fixtures/trans_single_rhs.json' );
+var conjtrans_single_rhs = require( './fixtures/conjtrans_single_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var pivot_multi_rhs = require( './fixtures/pivot_multi_rhs.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -60,7 +58,7 @@ function solveTridiag( trans, n, nrhs, dlArr, dArr, duArr, bArr ) {
 }
 
 test( 'zgttrs: no-transpose, single RHS (5x5)', function t() {
-	var tc = findCase( 'notrans_single_rhs' );
+	var tc = notrans_single_rhs;
 	var result = solveTridiag( 'no-transpose', 5, 1,
 		[ -1, 0, -1, 0, -1, 0, -1, 0 ],
 		[ 2, 1, 2, 1, 2, 1, 2, 1, 2, 1 ],
@@ -71,7 +69,7 @@ test( 'zgttrs: no-transpose, single RHS (5x5)', function t() {
 });
 
 test( 'zgttrs: transpose, single RHS (5x5)', function t() {
-	var tc = findCase( 'trans_single_rhs' );
+	var tc = trans_single_rhs;
 	var result = solveTridiag( 'transpose', 5, 1,
 		[ -1, 0, -1, 0, -1, 0, -1, 0 ],
 		[ 2, 1, 2, 1, 2, 1, 2, 1, 2, 1 ],
@@ -82,7 +80,7 @@ test( 'zgttrs: transpose, single RHS (5x5)', function t() {
 });
 
 test( 'zgttrs: conjugate transpose, single RHS (5x5)', function t() {
-	var tc = findCase( 'conjtrans_single_rhs' );
+	var tc = conjtrans_single_rhs;
 	var result = solveTridiag( 'conjugate-transpose', 5, 1,
 		[ -1, 0, -1, 0, -1, 0, -1, 0 ],
 		[ 2, 1, 2, 1, 2, 1, 2, 1, 2, 1 ],
@@ -93,7 +91,7 @@ test( 'zgttrs: conjugate transpose, single RHS (5x5)', function t() {
 });
 
 test( 'zgttrs: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var result = solveTridiag( 'no-transpose', 1, 1, [], [ 5, 2 ], [], [ 10, 4 ] );
 	assertArrayClose( result, tc.B, 1e-14, 'B' );
 });
@@ -110,7 +108,7 @@ test( 'zgttrs: N=0, quick return', function t() {
 });
 
 test( 'zgttrs: pivoting forced, multiple RHS (5x5)', function t() {
-	var tc = findCase( 'pivot_multi_rhs' );
+	var tc = pivot_multi_rhs;
 	var result = solveTridiag( 'no-transpose', 5, 2,
 		[ 10, 1, 10, 1, 10, 1, 10, 1 ],
 		[ 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 ],

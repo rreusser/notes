@@ -6,37 +6,24 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhbgv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhbgv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_n5_ka2_kb1_noev = require( './fixtures/upper_n5_ka2_kb1_noev.json' );
+var upper_n5_ka2_kb1_ev = require( './fixtures/upper_n5_ka2_kb1_ev.json' );
+var lower_n5_ka2_kb1_noev = require( './fixtures/lower_n5_ka2_kb1_noev.json' );
+var lower_n5_ka2_kb1_ev = require( './fixtures/lower_n5_ka2_kb1_ev.json' );
+var diag_n3 = require( './fixtures/diag_n3.json' );
+var upper_n8_ka3_kb2_ev = require( './fixtures/upper_n8_ka3_kb2_ev.json' );
+var lower_n8_ka3_kb2_ev = require( './fixtures/lower_n8_ka3_kb2_ev.json' );
+var n1_trivial = require( './fixtures/n1_trivial.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -327,7 +314,6 @@ function lowerBandB_n8_kb2() {
 	return BB;
 }
 
-
 // TESTS //
 
 test( 'zhbgv: upper_n5_ka2_kb1_noev (eigenvalues only, upper)', function t() {
@@ -340,7 +326,7 @@ test( 'zhbgv: upper_n5_ka2_kb1_noev (eigenvalues only, upper)', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'upper_n5_ka2_kb1_noev' );
+	tc = upper_n5_ka2_kb1_noev;
 	AB = upperBandA_n5_ka2();
 	BB = upperBandB_n5_kb1();
 	W = new Float64Array( 5 );
@@ -363,7 +349,7 @@ test( 'zhbgv: upper_n5_ka2_kb1_ev (eigenvectors, upper)', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'upper_n5_ka2_kb1_ev' );
+	tc = upper_n5_ka2_kb1_ev;
 	AB = upperBandA_n5_ka2();
 	BB = upperBandB_n5_kb1();
 	W = new Float64Array( 5 );
@@ -387,7 +373,7 @@ test( 'zhbgv: lower_n5_ka2_kb1_noev (eigenvalues only, lower)', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'lower_n5_ka2_kb1_noev' );
+	tc = lower_n5_ka2_kb1_noev;
 	AB = lowerBandA_n5_ka2();
 	BB = lowerBandB_n5_kb1();
 	W = new Float64Array( 5 );
@@ -410,7 +396,7 @@ test( 'zhbgv: lower_n5_ka2_kb1_ev (eigenvectors, lower)', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'lower_n5_ka2_kb1_ev' );
+	tc = lower_n5_ka2_kb1_ev;
 	AB = lowerBandA_n5_ka2();
 	BB = lowerBandB_n5_kb1();
 	W = new Float64Array( 5 );
@@ -454,7 +440,7 @@ test( 'zhbgv: diag_n3 (diagonal matrices, KA=KB=0)', function t() {
 	var Z;
 	var v;
 
-	tc = findCase( 'diag_n3' );
+	tc = diag_n3;
 	AB = new Complex128Array( 3 );
 	BB = new Complex128Array( 3 );
 	W = new Float64Array( 3 );
@@ -491,7 +477,7 @@ test( 'zhbgv: upper_n8_ka3_kb2_ev (larger, eigenvectors, upper)', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'upper_n8_ka3_kb2_ev' );
+	tc = upper_n8_ka3_kb2_ev;
 	AB = upperBandA_n8_ka3();
 	BB = upperBandB_n8_kb2();
 	W = new Float64Array( 8 );
@@ -516,7 +502,7 @@ test( 'zhbgv: lower_n8_ka3_kb2_ev (larger, eigenvectors, lower)', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'lower_n8_ka3_kb2_ev' );
+	tc = lower_n8_ka3_kb2_ev;
 	AB = lowerBandA_n8_ka3();
 	BB = lowerBandB_n8_kb2();
 	W = new Float64Array( 8 );
@@ -542,7 +528,7 @@ test( 'zhbgv: n1_trivial (N=1, eigenvectors)', function t() {
 	var Z;
 	var v;
 
-	tc = findCase( 'n1_trivial' );
+	tc = n1_trivial;
 	AB = new Complex128Array( 1 );
 	BB = new Complex128Array( 1 );
 	W = new Float64Array( 1 );

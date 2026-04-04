@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrtrs = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_trans = require( './fixtures/upper_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var singular = require( './fixtures/singular.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var lower_trans = require( './fixtures/lower_trans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +70,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dtrtrs: upper_no_trans', function t() {
@@ -93,7 +78,7 @@ test( 'dtrtrs: upper_no_trans', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
@@ -107,7 +92,7 @@ test( 'dtrtrs: lower_no_trans', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	A = new Float64Array( [ 2, 1, 3, 0, 4, 5, 0, 0, 6 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	info = dtrtrs( 'lower', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
@@ -121,7 +106,7 @@ test( 'dtrtrs: upper_trans', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'upper_trans' );
+	tc = upper_trans;
 	A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	info = dtrtrs( 'upper', 'transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
@@ -135,7 +120,7 @@ test( 'dtrtrs: upper_unit_diag', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'upper_unit_diag' );
+	tc = upper_unit_diag;
 	A = new Float64Array( [ 1, 0, 0, 2, 1, 0, 3, 4, 1 ] );
 	B = new Float64Array( [ 10, 5, 1 ] );
 	info = dtrtrs( 'upper', 'no-transpose', 'unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 );
@@ -149,7 +134,7 @@ test( 'dtrtrs: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( 1 );
 	info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 0, 1, A, 1, 1, 0, B, 1, 1, 0 ); // eslint-disable-line max-len
@@ -162,7 +147,7 @@ test( 'dtrtrs: singular', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	A = new Float64Array( [ 2, 0, 0, 1, 0, 0, 3, 5, 6 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
@@ -175,7 +160,7 @@ test( 'dtrtrs: multi_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
 	B = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	info = dtrtrs( 'upper', 'no-transpose', 'non-unit', 3, 2, A, 1, 3, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
@@ -189,14 +174,13 @@ test( 'dtrtrs: lower_trans', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'lower_trans' );
+	tc = lower_trans;
 	A = new Float64Array( [ 2, 1, 3, 0, 4, 5, 0, 0, 6 ] );
 	B = new Float64Array( [ 1, 2, 3 ] );
 	info = dtrtrs( 'lower', 'transpose', 'non-unit', 3, 1, A, 1, 3, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
 	assertArrayClose( toArray( B ), tc.x, 1e-14, 'x' );
 });
-
 
 // NDARRAY VALIDATION TESTS //
 

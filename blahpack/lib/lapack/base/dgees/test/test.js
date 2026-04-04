@@ -6,23 +6,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dgees = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgees.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var nn_basic_3x3_tri = require( './fixtures/nn_basic_3x3_tri.json' );
+var vn_3x3_general = require( './fixtures/vn_3x3_general.json' );
+var vs_select_positive_real = require( './fixtures/vs_select_positive_real.json' );
+var n_0 = require( './fixtures/n_0.json' );
+var n_1 = require( './fixtures/n_1.json' );
+var n_2_complex_eigs = require( './fixtures/n_2_complex_eigs.json' );
+var vn_4x4_general = require( './fixtures/vn_4x4_general.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -72,11 +68,10 @@ function runDgees( jobvs, sort, select, N, Adata ) {
 	return { 'info': info, 'A': A, 'VS': VS, 'WR': WR, 'WI': WI, 'sdim': sdim[ 0 ] };
 }
 
-
 // TESTS //
 
 test( 'dgees: NN basic 3x3 tri', function t() {
-	var tc = findCase( 'NN basic 3x3 tri' );
+	var tc = nn_basic_3x3_tri;
 	var N = 3;
 	var A = fromFortranColMajor( [
 		2, 0, 0, 0,
@@ -93,7 +88,7 @@ test( 'dgees: NN basic 3x3 tri', function t() {
 });
 
 test( 'dgees: VN 3x3 general', function t() {
-	var tc = findCase( 'VN 3x3 general' );
+	var tc = vn_3x3_general;
 	var N = 3;
 	var A = fromFortranColMajor( [
 		1, 4, 7, 0,
@@ -112,7 +107,7 @@ test( 'dgees: VN 3x3 general', function t() {
 });
 
 test( 'dgees: VS select positive real', function t() {
-	var tc = findCase( 'VS select positive real' );
+	var tc = vs_select_positive_real;
 	var N = 3;
 	var A = fromFortranColMajor( [
 		0, -1, 0, 0,
@@ -128,7 +123,7 @@ test( 'dgees: VS select positive real', function t() {
 });
 
 test( 'dgees: N=0', function t() {
-	var tc = findCase( 'N=0' );
+	var tc = n_0;
 	var A = new Float64Array( 0 );
 	var VS = new Float64Array( 0 );
 	var WR = new Float64Array( 0 );
@@ -144,7 +139,7 @@ test( 'dgees: N=0', function t() {
 });
 
 test( 'dgees: N=1', function t() {
-	var tc = findCase( 'N=1' );
+	var tc = n_1;
 	var N = 1;
 	var A = new Float64Array([ 5.0 ]);
 	var res = runDgees( 'compute-vectors', 'no-sort', selectNone, N, A );
@@ -156,7 +151,7 @@ test( 'dgees: N=1', function t() {
 });
 
 test( 'dgees: N=2 complex eigs', function t() {
-	var tc = findCase( 'N=2 complex eigs' );
+	var tc = n_2_complex_eigs;
 	var N = 2;
 	var A = new Float64Array([
 		0.0, -1.0,
@@ -173,7 +168,7 @@ test( 'dgees: N=2 complex eigs', function t() {
 });
 
 test( 'dgees: VN 4x4 general', function t() {
-	var tc = findCase( 'VN 4x4 general' );
+	var tc = vn_4x4_general;
 	var N = 4;
 	var A = fromFortranColMajor( [
 		4, 0, 2, 0,

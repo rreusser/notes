@@ -2,40 +2,20 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlaruv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaruv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5 = require( './fixtures/basic_5.json' );
+var basic_10 = require( './fixtures/basic_10.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,12 +64,11 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlaruv: basic_5', function t() {
 	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = findCase( 'basic_5' );
+	var tc = basic_5;
 	var x = new Float64Array( 5 );
 
 	dlaruv( iseed, 1, 0, 5, x, 1, 0 );
@@ -100,7 +79,7 @@ test( 'dlaruv: basic_5', function t() {
 
 test( 'dlaruv: basic_10', function t() {
 	var iseed = new Int32Array( [ 123, 456, 789, 1011 ] );
-	var tc = findCase( 'basic_10' );
+	var tc = basic_10;
 	var x = new Float64Array( 10 );
 
 	dlaruv( iseed, 1, 0, 10, x, 1, 0 );

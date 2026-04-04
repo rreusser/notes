@@ -2,41 +2,33 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrsv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztrsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var ztrsv_upper_no_trans = require( './fixtures/ztrsv_upper_no_trans.json' );
+var ztrsv_lower_no_trans = require( './fixtures/ztrsv_lower_no_trans.json' );
+var ztrsv_unit_diag = require( './fixtures/ztrsv_unit_diag.json' );
+var ztrsv_upper_trans = require( './fixtures/ztrsv_upper_trans.json' );
+var ztrsv_upper_conjtrans = require( './fixtures/ztrsv_upper_conjtrans.json' );
+var ztrsv_n_zero = require( './fixtures/ztrsv_n_zero.json' );
+var ztrsv_n_one = require( './fixtures/ztrsv_n_one.json' );
+var ztrsv_stride = require( './fixtures/ztrsv_stride.json' );
+var ztrsv_lower_conjtrans = require( './fixtures/ztrsv_lower_conjtrans.json' );
+var ztrsv_lower_trans = require( './fixtures/ztrsv_lower_trans.json' );
+var ztrsv_neg_stride = require( './fixtures/ztrsv_neg_stride.json' );
+var ztrsv_lower_unit = require( './fixtures/ztrsv_lower_unit.json' );
+var ztrsv_upper_conjtrans_smith = require( './fixtures/ztrsv_upper_conjtrans_smith.json' );
+var ztrsv_lower_conjtrans_smith = require( './fixtures/ztrsv_lower_conjtrans_smith.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +77,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'ztrsv: upper, no transpose, non-unit diagonal, N=2', function t() {
@@ -95,7 +86,7 @@ test( 'ztrsv: upper, no transpose, non-unit diagonal, N=2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_upper_no_trans' );
+	tc = ztrsv_upper_no_trans;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 2;
@@ -117,7 +108,7 @@ test( 'ztrsv: lower, no transpose, non-unit diagonal, N=2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_lower_no_trans' );
+	tc = ztrsv_lower_no_trans;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 2;
@@ -139,7 +130,7 @@ test( 'ztrsv: upper, unit diagonal, N=2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_unit_diag' );
+	tc = ztrsv_unit_diag;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 99;
@@ -161,7 +152,7 @@ test( 'ztrsv: upper, transpose (no conj), non-unit, N=2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_upper_trans' );
+	tc = ztrsv_upper_trans;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 2;
@@ -183,7 +174,7 @@ test( 'ztrsv: upper, conjugate transpose, non-unit, N=2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_upper_conjtrans' );
+	tc = ztrsv_upper_conjtrans;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 2;
@@ -204,7 +195,7 @@ test( 'ztrsv: N=0 quick return', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_n_zero' );
+	tc = ztrsv_n_zero;
 	A = new Complex128Array( 4 * 4 );
 	x = new Complex128Array( [ 5, 5 ] );
 	ztrsv( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 4, 0, x, 1, 0 );
@@ -219,7 +210,7 @@ test( 'ztrsv: N=1, upper, non-unit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_n_one' );
+	tc = ztrsv_n_one;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 3;
@@ -237,7 +228,7 @@ test( 'ztrsv: non-unit stride incx=2, upper, no transpose, N=2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_stride' );
+	tc = ztrsv_stride;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 2;
@@ -259,7 +250,7 @@ test( 'ztrsv: lower, conj-trans, non-unit, N=3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_lower_conjtrans' );
+	tc = ztrsv_lower_conjtrans;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 1;
@@ -287,7 +278,7 @@ test( 'ztrsv: lower, transpose (no conj), non-unit, N=3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_lower_trans' );
+	tc = ztrsv_lower_trans;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 1;
@@ -315,7 +306,7 @@ test( 'ztrsv: negative stride incx=-1, lower, no transpose, N=2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_neg_stride' );
+	tc = ztrsv_neg_stride;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 2;
@@ -337,7 +328,7 @@ test( 'ztrsv: lower, unit diag, no transpose, N=3', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_lower_unit' );
+	tc = ztrsv_lower_unit;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 99;
@@ -365,7 +356,7 @@ test( 'ztrsv: upper, conj-trans, Smith else-branch (|imag|>|real| diagonal)', fu
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_upper_conjtrans_smith' );
+	tc = ztrsv_upper_conjtrans_smith;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 1;
@@ -387,7 +378,7 @@ test( 'ztrsv: lower, conj-trans, Smith else-branch (|imag|>|real| diagonal)', fu
 	var A;
 	var x;
 
-	tc = findCase( 'ztrsv_lower_conjtrans_smith' );
+	tc = ztrsv_lower_conjtrans_smith;
 	A = new Complex128Array( 4 * 4 );
 	Av = reinterpret( A, 0 );
 	Av[ 0 ] = 1;
@@ -401,7 +392,6 @@ test( 'ztrsv: lower, conj-trans, Smith else-branch (|imag|>|real| diagonal)', fu
 	xv = reinterpret( x, 0 );
 	assertArrayClose( toArray( xv ), tc.x, 1e-14, 'x' );
 });
-
 
 // NDARRAY VALIDATION TESTS //
 

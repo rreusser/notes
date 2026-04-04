@@ -4,25 +4,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlaebz = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlaebz.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var ijob1_all = require( './fixtures/ijob1_all.json' );
+var ijob1_two_intervals = require( './fixtures/ijob1_two_intervals.json' );
+var ijob12_full_cycle = require( './fixtures/ijob12_full_cycle.json' );
+var ijob3_search = require( './fixtures/ijob3_search.json' );
+var ijob1_n1 = require( './fixtures/ijob1_n1.json' );
+var ijob2_parallel = require( './fixtures/ijob2_parallel.json' );
+var ijob3_parallel = require( './fixtures/ijob3_parallel.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -57,11 +53,10 @@ function gershgorin( d, e, N ) {
 	return { gl: gl, gu: gu, tnorm: tnorm };
 }
 
-
 // TESTS //
 
 test( 'dlaebz: IJOB=1, single interval containing all eigenvalues', function t() {
-	var tc = findCase( 'ijob1_all' );
+	var tc = ijob1_all;
 	var AB = new Float64Array( MMAX * 2 );
 	var NAB = new Int32Array( MMAX * 2 );
 	var NVAL = new Int32Array( MMAX );
@@ -85,7 +80,7 @@ test( 'dlaebz: IJOB=1, single interval containing all eigenvalues', function t()
 });
 
 test( 'dlaebz: IJOB=1, two intervals', function t() {
-	var tc = findCase( 'ijob1_two_intervals' );
+	var tc = ijob1_two_intervals;
 	var AB = new Float64Array( MMAX * 2 );
 	var NAB = new Int32Array( MMAX * 2 );
 	var NVAL = new Int32Array( MMAX );
@@ -113,7 +108,7 @@ test( 'dlaebz: IJOB=1, two intervals', function t() {
 });
 
 test( 'dlaebz: IJOB=1 then IJOB=2, full bisection cycle', function t() {
-	var tc = findCase( 'ijob12_full_cycle' );
+	var tc = ijob12_full_cycle;
 	var AB = new Float64Array( MMAX * 2 );
 	var NAB = new Int32Array( MMAX * 2 );
 	var NVAL = new Int32Array( MMAX );
@@ -173,7 +168,7 @@ test( 'dlaebz: IJOB=1 then IJOB=2, full bisection cycle', function t() {
 });
 
 test( 'dlaebz: IJOB=3, binary search', function t() {
-	var tc = findCase( 'ijob3_search' );
+	var tc = ijob3_search;
 	var AB = new Float64Array( MMAX * 2 );
 	var NAB = new Int32Array( MMAX * 2 );
 	var NVAL = new Int32Array( MMAX );
@@ -237,7 +232,7 @@ test( 'dlaebz: invalid IJOB returns -1', function t() {
 });
 
 test( 'dlaebz: IJOB=1, N=1', function t() {
-	var tc = findCase( 'ijob1_n1' );
+	var tc = ijob1_n1;
 	var d = new Float64Array( [ 3.0 ] );
 	var e = new Float64Array( 1 );
 	var e2 = new Float64Array( 1 );
@@ -264,7 +259,7 @@ test( 'dlaebz: IJOB=1, N=1', function t() {
 });
 
 test( 'dlaebz: IJOB=2 with parallel path (nbmin>0)', function t() {
-	var tc = findCase( 'ijob2_parallel' );
+	var tc = ijob2_parallel;
 	var AB = new Float64Array( MMAX * 2 );
 	var NAB = new Int32Array( MMAX * 2 );
 	var NVAL = new Int32Array( MMAX );
@@ -314,7 +309,7 @@ test( 'dlaebz: IJOB=2 with parallel path (nbmin>0)', function t() {
 });
 
 test( 'dlaebz: IJOB=3 with parallel path (nbmin>0)', function t() {
-	var tc = findCase( 'ijob3_parallel' );
+	var tc = ijob3_parallel;
 	var AB = new Float64Array( MMAX * 2 );
 	var NAB = new Int32Array( MMAX * 2 );
 	var NVAL = new Int32Array( MMAX );

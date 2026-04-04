@@ -4,25 +4,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqp2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqp2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var rect_4x3 = require( './fixtures/rect_4x3.json' );
+var offset_1 = require( './fixtures/offset_1.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var collinear_norm_recomp = require( './fixtures/collinear_norm_recomp.json' );
+var square_collinear = require( './fixtures/square_collinear.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -61,11 +56,10 @@ function colNorms( M, N, startRow, A, LDA, offsetA ) {
 	return vn;
 }
 
-
 // TESTS //
 
 test( 'zlaqp2: basic 3x3 matrix', function t() {
-	var tc = findCase( 'basic_3x3' );
+	var tc = basic_3x3;
 	var LDA = 6;
 	var A = new Complex128Array( LDA * 6 );
 	var Av = reinterpret( A, 0 );
@@ -88,7 +82,7 @@ test( 'zlaqp2: basic 3x3 matrix', function t() {
 });
 
 test( 'zlaqp2: 4x3 matrix', function t() {
-	var tc = findCase( 'rect_4x3' );
+	var tc = rect_4x3;
 	var LDA = 6;
 	var A = new Complex128Array( LDA * 6 );
 	var Av = reinterpret( A, 0 );
@@ -111,7 +105,7 @@ test( 'zlaqp2: 4x3 matrix', function t() {
 });
 
 test( 'zlaqp2: with offset=1', function t() {
-	var tc = findCase( 'offset_1' );
+	var tc = offset_1;
 	var LDA = 6;
 	var A = new Complex128Array( LDA * 6 );
 	var Av = reinterpret( A, 0 );
@@ -134,7 +128,7 @@ test( 'zlaqp2: with offset=1', function t() {
 });
 
 test( 'zlaqp2: 1x1 matrix', function t() {
-	var tc = findCase( 'one_by_one' );
+	var tc = one_by_one;
 	var LDA = 6;
 	var A = new Complex128Array( LDA * 6 );
 	var Av = reinterpret( A, 0 );
@@ -154,7 +148,7 @@ test( 'zlaqp2: 1x1 matrix', function t() {
 });
 
 test( 'zlaqp2: collinear columns (norm recomputation)', function t() {
-	var tc = findCase( 'collinear_norm_recomp' );
+	var tc = collinear_norm_recomp;
 	var LDA = 6;
 	var A = new Complex128Array( LDA * 6 );
 	var Av = reinterpret( A, 0 );
@@ -178,7 +172,7 @@ test( 'zlaqp2: collinear columns (norm recomputation)', function t() {
 });
 
 test( 'zlaqp2: square collinear (offpi == M-1 norm zero path)', function t() {
-	var tc = findCase( 'square_collinear' );
+	var tc = square_collinear;
 	var LDA = 6;
 	var A = new Complex128Array( LDA * 6 );
 	var Av = reinterpret( A, 0 );

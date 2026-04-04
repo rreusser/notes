@@ -6,24 +6,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dggqrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dggqrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var m_gt_n = require( './fixtures/m_gt_n.json' );
+var m_lt_n = require( './fixtures/m_lt_n.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var tall_skinny = require( './fixtures/tall_skinny.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -91,11 +86,10 @@ function colMajor( N, M, rowMajorValues ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dggqrf: basic_3x3', function t() {
-	var tc = findCase( 'basic_3x3' );
+	var tc = basic_3x3;
 	var A = colMajor( 3, 3, [
 		2, 1, 3,
 		1, 4, 2,
@@ -115,7 +109,7 @@ test( 'dggqrf: basic_3x3', function t() {
 });
 
 test( 'dggqrf: m_gt_n', function t() {
-	var tc = findCase( 'm_gt_n' );
+	var tc = m_gt_n;
 	var A = colMajor( 3, 4, [
 		2, 1, 3, 1,
 		1, 4, 2, 3,
@@ -135,7 +129,7 @@ test( 'dggqrf: m_gt_n', function t() {
 });
 
 test( 'dggqrf: m_lt_n', function t() {
-	var tc = findCase( 'm_lt_n' );
+	var tc = m_lt_n;
 	var A = colMajor( 4, 3, [
 		2, 1, 3,
 		1, 4, 2,
@@ -157,7 +151,7 @@ test( 'dggqrf: m_lt_n', function t() {
 });
 
 test( 'dggqrf: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = [];
 	var B = [];
 	var WORK = new Float64Array( 64 );
@@ -168,7 +162,7 @@ test( 'dggqrf: n_zero', function t() {
 });
 
 test( 'dggqrf: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = [ 5.0 ];
 	var B = [ 3.0 ];
 	var res = callDggqrf( 1, 1, 1, A, B );
@@ -180,7 +174,7 @@ test( 'dggqrf: n_one', function t() {
 });
 
 test( 'dggqrf: tall_skinny', function t() {
-	var tc = findCase( 'tall_skinny' );
+	var tc = tall_skinny;
 	var A = colMajor( 5, 2, [
 		1, 2,
 		3, 1,

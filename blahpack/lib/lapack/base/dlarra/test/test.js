@@ -2,41 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlarra = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarra.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
-
-// FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
-
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var spltol_neg_no_split = require( './fixtures/spltol_neg_no_split.json' );
+var spltol_neg_with_splits = require( './fixtures/spltol_neg_with_splits.json' );
+var spltol_pos_no_split = require( './fixtures/spltol_pos_no_split.json' );
+var spltol_pos_with_splits = require( './fixtures/spltol_pos_with_splits.json' );
+var all_zero_offdiag = require( './fixtures/all_zero_offdiag.json' );
+var larger_6x6_neg_spltol = require( './fixtures/larger_6x6_neg_spltol.json' );
+var neg_diag_pos_spltol = require( './fixtures/neg_diag_pos_spltol.json' );
 
 // TESTS //
 
@@ -58,7 +42,7 @@ test( 'dlarra: n_zero (quick return)', function t() {
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
 	E2 = new Float64Array( 1 );
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	info = dlarra( 0, d, 1, 0, e, 1, 0, E2, 1, 0, 1.0, 1.0, nsplit, ISPLIT, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -78,7 +62,7 @@ test( 'dlarra: n_one (single element)', function t() {
 	d = new Float64Array( [ 5.0 ] );
 	e = new Float64Array( [ 0.0 ] );
 	E2 = new Float64Array( [ 0.0 ] );
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	info = dlarra( 1, d, 1, 0, e, 1, 0, E2, 1, 0, 1.0, 5.0, nsplit, ISPLIT, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -100,7 +84,7 @@ test( 'dlarra: spltol_neg_no_split (absolute threshold, no splits)', function t(
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0, 0.0 ] );
 	E2 = new Float64Array( [ 1.0, 1.0, 1.0, 0.0 ] );
-	tc = findCase( 'spltol_neg_no_split' );
+	tc = spltol_neg_no_split;
 	info = dlarra( 4, d, 1, 0, e, 1, 0, E2, 1, 0, -0.1, 5.0, nsplit, ISPLIT, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -130,7 +114,7 @@ test( 'dlarra: spltol_neg_with_splits (absolute threshold, splits at 1 and 3)', 
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	e = new Float64Array( [ 0.01, 1.0, 0.02, 0.0 ] );
 	E2 = new Float64Array( [ 0.0001, 1.0, 0.0004, 0.0 ] );
-	tc = findCase( 'spltol_neg_with_splits' );
+	tc = spltol_neg_with_splits;
 	info = dlarra( 4, d, 1, 0, e, 1, 0, E2, 1, 0, -0.1, 5.0, nsplit, ISPLIT, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -160,7 +144,7 @@ test( 'dlarra: spltol_pos_no_split (relative accuracy, no splits)', function t()
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	e = new Float64Array( [ 2.0, 1.5, 2.5, 0.0 ] );
 	E2 = new Float64Array( [ 4.0, 2.25, 6.25, 0.0 ] );
-	tc = findCase( 'spltol_pos_no_split' );
+	tc = spltol_pos_no_split;
 	info = dlarra( 4, d, 1, 0, e, 1, 0, E2, 1, 0, 0.01, 5.0, nsplit, ISPLIT, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -190,7 +174,7 @@ test( 'dlarra: spltol_pos_with_splits (relative accuracy, splits at 1 and 3)', f
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	e = new Float64Array( [ 0.001, 1.0, 0.001, 0.0 ] );
 	E2 = new Float64Array( [ 0.000001, 1.0, 0.000001, 0.0 ] );
-	tc = findCase( 'spltol_pos_with_splits' );
+	tc = spltol_pos_with_splits;
 	info = dlarra( 4, d, 1, 0, e, 1, 0, E2, 1, 0, 0.01, 5.0, nsplit, ISPLIT, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -220,7 +204,7 @@ test( 'dlarra: all_zero_offdiag (all off-diagonals zero, N splits)', function t(
 	d = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	e = new Float64Array( [ 0.0, 0.0, 0.0, 0.0, 0.0 ] );
 	E2 = new Float64Array( [ 0.0, 0.0, 0.0, 0.0, 0.0 ] );
-	tc = findCase( 'all_zero_offdiag' );
+	tc = all_zero_offdiag;
 	info = dlarra( 5, d, 1, 0, e, 1, 0, E2, 1, 0, -0.1, 5.0, nsplit, ISPLIT, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -244,7 +228,7 @@ test( 'dlarra: larger_6x6_neg_spltol (6x6 with mixed splits)', function t() {
 	d = new Float64Array( [ 10.0, 8.0, 6.0, 4.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 0.001, 5.0, 0.002, 3.0, 0.003, 0.0 ] );
 	E2 = new Float64Array( [ 0.000001, 25.0, 0.000004, 9.0, 0.000009, 0.0 ] );
-	tc = findCase( 'larger_6x6_neg_spltol' );
+	tc = larger_6x6_neg_spltol;
 	info = dlarra( 6, d, 1, 0, e, 1, 0, E2, 1, 0, -0.01, 10.0, nsplit, ISPLIT, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );
@@ -274,7 +258,7 @@ test( 'dlarra: neg_diag_pos_spltol (negative diagonal, positive spltol)', functi
 	d = new Float64Array( [ -4.0, -9.0, -1.0 ] );
 	e = new Float64Array( [ 0.01, 0.01, 0.0 ] );
 	E2 = new Float64Array( [ 0.0001, 0.0001, 0.0 ] );
-	tc = findCase( 'neg_diag_pos_spltol' );
+	tc = neg_diag_pos_spltol;
 	info = dlarra( 3, d, 1, 0, e, 1, 0, E2, 1, 0, 0.01, 9.0, nsplit, ISPLIT, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
 	assert.equal( nsplit[ 0 ], tc.nsplit, 'nsplit' );

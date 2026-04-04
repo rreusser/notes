@@ -1,0 +1,11 @@
+{
+  "name": "lower_well_cond",
+  "anorm": 6,
+  "rcond": 0.17708333333333334,
+  "info": 0,
+  "ipiv": [
+    1,
+    2,
+    3
+  ]
+}

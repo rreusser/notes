@@ -1,0 +1,17 @@
+{
+  "name": "n1_upper",
+  "info_trf": 0,
+  "ipiv": [
+    1
+  ],
+  "a_factored": [
+    5
+  ],
+  "info_conv": 0,
+  "a_converted": [
+    5
+  ],
+  "e": [
+    0
+  ]
+}

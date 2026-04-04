@@ -5,37 +5,24 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgbsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgbsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var nofact_notrans_tridiag = require( './fixtures/nofact_notrans_tridiag.json' );
+var nofact_trans_tridiag = require( './fixtures/nofact_trans_tridiag.json' );
+var equil_notrans_tridiag = require( './fixtures/equil_notrans_tridiag.json' );
+var factored_notrans_tridiag = require( './fixtures/factored_notrans_tridiag.json' );
+var nofact_notrans_2rhs = require( './fixtures/nofact_notrans_2rhs.json' );
+var nofact_notrans_pentadiag = require( './fixtures/nofact_notrans_pentadiag.json' );
+var equil_trans_asymmetric = require( './fixtures/equil_trans_asymmetric.json' );
+var singular_matrix = require( './fixtures/singular_matrix.json' );
+var pivot_asymmetric = require( './fixtures/pivot_asymmetric.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -126,7 +113,6 @@ function denseToGB( dense, N, kl, ku ) {
 	return AB;
 }
 
-
 // TESTS //
 
 test( 'dgbsvx: main export is a function', function t() {
@@ -149,7 +135,7 @@ test( 'dgbsvx: fact=not-factored, trans=no-transpose, 4x4 tridiag', function t()
 	var B;
 	var X;
 
-	tc = findCase( 'nofact_notrans_tridiag' );
+	tc = nofact_notrans_tridiag;
 	nrhs = 1;
 	nRows = 3;
 	AB = denseToGB( [ 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4 ], 4, 1, 1 ); // eslint-disable-line max-len
@@ -186,7 +172,7 @@ test( 'dgbsvx: fact=not-factored, trans=transpose, 4x4 symmetric tridiag', funct
 	var B;
 	var X;
 
-	tc = findCase( 'nofact_trans_tridiag' );
+	tc = nofact_trans_tridiag;
 	nrhs = 1;
 	nRows = 3;
 	AB = denseToGB( [ 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4 ], 4, 1, 1 ); // eslint-disable-line max-len
@@ -221,7 +207,7 @@ test( 'dgbsvx: fact=equilibrate, trans=no-transpose, 4x4 tridiag', function t() 
 	var B;
 	var X;
 
-	tc = findCase( 'equil_notrans_tridiag' );
+	tc = equil_notrans_tridiag;
 	nrhs = 1;
 	nRows = 3;
 	AB = denseToGB( [ 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4 ], 4, 1, 1 ); // eslint-disable-line max-len
@@ -258,7 +244,7 @@ test( 'dgbsvx: fact=factored, reuse LU factorization', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'factored_notrans_tridiag' );
+	tc = factored_notrans_tridiag;
 	nrhs = 1;
 	nRows = 3;
 	AB = denseToGB( [ 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4 ], 4, 1, 1 ); // eslint-disable-line max-len
@@ -300,7 +286,7 @@ test( 'dgbsvx: fact=not-factored, trans=no-transpose, 2 RHS', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'nofact_notrans_2rhs' );
+	tc = nofact_notrans_2rhs;
 	nrhs = 2;
 	nRows = 3;
 	AB = denseToGB( [ 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4, -1, 0, 0, -1, 4 ], 4, 1, 1 ); // eslint-disable-line max-len
@@ -336,7 +322,7 @@ test( 'dgbsvx: fact=not-factored, 5x5 pentadiagonal (KL=2, KU=2)', function t() 
 	var B;
 	var X;
 
-	tc = findCase( 'nofact_notrans_pentadiag' );
+	tc = nofact_notrans_pentadiag;
 	nrhs = 1;
 	nRows = 5;
 	dense = [
@@ -400,7 +386,7 @@ test( 'dgbsvx: fact=equilibrate, trans=transpose, asymmetric 4x4', function t() 
 	var B;
 	var X;
 
-	tc = findCase( 'equil_trans_asymmetric' );
+	tc = equil_trans_asymmetric;
 	nrhs = 1;
 	nRows = 3;
 	dense = [
@@ -453,7 +439,7 @@ test( 'dgbsvx: singular matrix returns info > 0', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'singular_matrix' );
+	tc = singular_matrix;
 	nrhs = 1;
 	nRows = 3;
 	AB = denseToGB( [ 2, 0, 0, 0, 0, 0, 0, 0, 3 ], 3, 1, 1 );
@@ -489,7 +475,7 @@ test( 'dgbsvx: pivoting with asymmetric matrix', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'pivot_asymmetric' );
+	tc = pivot_asymmetric;
 	nrhs = 1;
 	nRows = 3;
 	dense = [ 1, 4, 0, 3, 5, 1, 0, 2, 6 ];

@@ -7,23 +7,20 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlahqr = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlahqr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n_eq_0 = require( './fixtures/n_eq_0.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var _4x4_schur_with_z = require( './fixtures/4x4_schur_with_z.json' );
+var _4x4_schur_no_z = require( './fixtures/4x4_schur_no_z.json' );
+var _4x4_eig_only = require( './fixtures/4x4_eig_only.json' );
+var already_triangular = require( './fixtures/already_triangular.json' );
+var partial_active_block = require( './fixtures/partial_active_block.json' );
+var _6x6_full = require( './fixtures/6x6_full.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -139,7 +136,6 @@ function assertUpperTriangular( Hv, n, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zlahqr: main export is a function', function t() {
@@ -147,7 +143,7 @@ test( 'zlahqr: main export is a function', function t() {
 });
 
 test( 'zlahqr: n_eq_0', function t() {
-	var tc = findCase( 'n_eq_0' );
+	var tc = n_eq_0;
 	var H = new Complex128Array( 0 );
 	var Z = new Complex128Array( 0 );
 	var W = new Complex128Array( 0 );
@@ -162,7 +158,7 @@ test( 'zlahqr: n_eq_0', function t() {
 });
 
 test( 'zlahqr: n_eq_1', function t() {
-	var tc = findCase( 'n_eq_1' );
+	var tc = n_eq_1;
 	var n = 1;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -183,7 +179,7 @@ test( 'zlahqr: n_eq_1', function t() {
 });
 
 test( 'zlahqr: 4x4 Schur form with Z', function t() {
-	var tc = findCase( '4x4_schur_with_Z' );
+	var tc = _4x4_schur_with_z;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -224,7 +220,7 @@ test( 'zlahqr: 4x4 Schur form with Z', function t() {
 });
 
 test( 'zlahqr: 4x4 Schur form, no Z', function t() {
-	var tc = findCase( '4x4_schur_no_Z' );
+	var tc = _4x4_schur_no_z;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -256,7 +252,7 @@ test( 'zlahqr: 4x4 Schur form, no Z', function t() {
 });
 
 test( 'zlahqr: 4x4 eigenvalues only', function t() {
-	var tc = findCase( '4x4_eig_only' );
+	var tc = _4x4_eig_only;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -287,7 +283,7 @@ test( 'zlahqr: 4x4 eigenvalues only', function t() {
 });
 
 test( 'zlahqr: already triangular', function t() {
-	var tc = findCase( 'already_triangular' );
+	var tc = already_triangular;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -317,7 +313,7 @@ test( 'zlahqr: already triangular', function t() {
 });
 
 test( 'zlahqr: partial active block', function t() {
-	var tc = findCase( 'partial_active_block' );
+	var tc = partial_active_block;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -357,7 +353,7 @@ test( 'zlahqr: partial active block', function t() {
 });
 
 test( 'zlahqr: 6x6 full', function t() {
-	var tc = findCase( '6x6_full' );
+	var tc = _6x6_full;
 	var n = 6;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );

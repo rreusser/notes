@@ -2,39 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlanst = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlanst.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1_max = require( './fixtures/n1_max.json' );
+var n1_one = require( './fixtures/n1_one.json' );
+var n1_inf = require( './fixtures/n1_inf.json' );
+var n1_frob = require( './fixtures/n1_frob.json' );
+var n5_max = require( './fixtures/n5_max.json' );
+var n5_one = require( './fixtures/n5_one.json' );
+var n5_inf = require( './fixtures/n5_inf.json' );
+var n5_frob = require( './fixtures/n5_frob.json' );
+var n2_one = require( './fixtures/n2_one.json' );
+var n2_frob = require( './fixtures/n2_frob.json' );
+var n2_e_norm = require( './fixtures/n2_e_norm.json' );
+var n5_max_positive = require( './fixtures/n5_max_positive.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -49,7 +39,6 @@ function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
-
 
 // TESTS //
 
@@ -70,7 +59,7 @@ test( 'dlanst: N=1, max norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n1_max' );
+	tc = n1_max;
 	d = new Float64Array( [ tc.d1 ] );
 	e = new Float64Array( 0 );
 	result = dlanst( 'max', 1, d, 1, 0, e, 1, 0 );
@@ -83,7 +72,7 @@ test( 'dlanst: N=1, one-norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n1_one' );
+	tc = n1_one;
 	d = new Float64Array( [ tc.d1 ] );
 	e = new Float64Array( 0 );
 	result = dlanst( 'one-norm', 1, d, 1, 0, e, 1, 0 );
@@ -96,7 +85,7 @@ test( 'dlanst: N=1, infinity-norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n1_inf' );
+	tc = n1_inf;
 	d = new Float64Array( [ tc.d1 ] );
 	e = new Float64Array( 0 );
 	result = dlanst( 'inf-norm', 1, d, 1, 0, e, 1, 0 );
@@ -109,7 +98,7 @@ test( 'dlanst: N=1, Frobenius norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n1_frob' );
+	tc = n1_frob;
 	d = new Float64Array( [ tc.d1 ] );
 	e = new Float64Array( 0 );
 	result = dlanst( 'frobenius', 1, d, 1, 0, e, 1, 0 );
@@ -122,7 +111,7 @@ test( 'dlanst: N=5, max norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n5_max' );
+	tc = n5_max;
 	d = new Float64Array( tc.d );
 	e = new Float64Array( tc.e );
 	result = dlanst( 'max', 5, d, 1, 0, e, 1, 0 );
@@ -135,7 +124,7 @@ test( 'dlanst: N=5, one-norm (O)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n5_one' );
+	tc = n5_one;
 	d = new Float64Array( tc.d );
 	e = new Float64Array( tc.e );
 	result = dlanst( 'one-norm', 5, d, 1, 0, e, 1, 0 );
@@ -148,7 +137,7 @@ test( 'dlanst: N=5, infinity-norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n5_inf' );
+	tc = n5_inf;
 	d = new Float64Array( tc.d );
 	e = new Float64Array( tc.e );
 	result = dlanst( 'inf-norm', 5, d, 1, 0, e, 1, 0 );
@@ -161,7 +150,7 @@ test( 'dlanst: N=5, Frobenius norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n5_frob' );
+	tc = n5_frob;
 	d = new Float64Array( tc.d );
 	e = new Float64Array( tc.e );
 	result = dlanst( 'frobenius', 5, d, 1, 0, e, 1, 0 );
@@ -174,7 +163,7 @@ test( 'dlanst: N=2, one-norm (1)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n2_one' );
+	tc = n2_one;
 	d = new Float64Array( [ tc.d1, tc.d2 ] );
 	e = new Float64Array( [ tc.e1 ] );
 	result = dlanst( 'one-norm', 2, d, 1, 0, e, 1, 0 );
@@ -187,7 +176,7 @@ test( 'dlanst: N=2, Frobenius norm', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n2_frob' );
+	tc = n2_frob;
 	d = new Float64Array( [ tc.d1, tc.d2 ] );
 	e = new Float64Array( [ tc.e1 ] );
 	result = dlanst( 'frobenius', 2, d, 1, 0, e, 1, 0 );
@@ -200,7 +189,7 @@ test( 'dlanst: E norm type (same as F)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n2_e_norm' );
+	tc = n2_e_norm;
 	d = new Float64Array( [ tc.d1, tc.d2 ] );
 	e = new Float64Array( [ tc.e1 ] );
 	result = dlanst( 'frobenius', 2, d, 1, 0, e, 1, 0 );
@@ -213,7 +202,7 @@ test( 'dlanst: N=5, max norm, all positive', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n5_max_positive' );
+	tc = n5_max_positive;
 	d = new Float64Array( tc.d );
 	e = new Float64Array( tc.e );
 	result = dlanst( 'max', 5, d, 1, 0, e, 1, 0 );

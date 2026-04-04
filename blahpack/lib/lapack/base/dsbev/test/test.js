@@ -2,39 +2,33 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsbev = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsbev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var jobz_v_uplo_u_kd2_n5 = require( './fixtures/jobz_v_uplo_u_kd2_n5.json' );
+var jobz_v_uplo_l_kd2_n5 = require( './fixtures/jobz_v_uplo_l_kd2_n5.json' );
+var jobz_n_uplo_u_kd2_n5 = require( './fixtures/jobz_n_uplo_u_kd2_n5.json' );
+var jobz_n_uplo_l_kd2_n5 = require( './fixtures/jobz_n_uplo_l_kd2_n5.json' );
+var jobz_v_uplo_u_kd1_n4 = require( './fixtures/jobz_v_uplo_u_kd1_n4.json' );
+var jobz_v_uplo_l_kd1_n4 = require( './fixtures/jobz_v_uplo_l_kd1_n4.json' );
+var jobz_n_uplo_u_kd1_n4 = require( './fixtures/jobz_n_uplo_u_kd1_n4.json' );
+var jobz_v_uplo_u_kd3_n6 = require( './fixtures/jobz_v_uplo_u_kd3_n6.json' );
+var jobz_v_uplo_l_kd3_n6 = require( './fixtures/jobz_v_uplo_l_kd3_n6.json' );
+var n1_jobz_v_lower = require( './fixtures/n1_jobz_v_lower.json' );
+var n1_jobz_v_upper_kd2 = require( './fixtures/n1_jobz_v_upper_kd2.json' );
+var n1_jobz_n = require( './fixtures/n1_jobz_n.json' );
+var n0 = require( './fixtures/n0.json' );
+var diagonal_jobz_v = require( './fixtures/diagonal_jobz_v.json' );
+var diagonal_jobz_n = require( './fixtures/diagonal_jobz_n.json' );
+var jobz_n_uplo_l_kd3_n6 = require( './fixtures/jobz_n_uplo_l_kd3_n6.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -351,7 +345,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dsbev: JOBZ=V, UPLO=U, KD=2, N=5 — eigenvalues + eigenvectors', function t() { // eslint-disable-line max-len
@@ -363,7 +356,7 @@ test( 'dsbev: JOBZ=V, UPLO=U, KD=2, N=5 — eigenvalues + eigenvectors', functio
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_u_kd2_n5' );
+	tc = jobz_v_uplo_u_kd2_n5;
 	AB = upperBand_kd2_n5();
 	Afull = upperBandToFull( new Float64Array( AB ), 5, 2 );
 	W = new Float64Array( 5 );
@@ -385,7 +378,7 @@ test( 'dsbev: JOBZ=V, UPLO=L, KD=2, N=5 — eigenvalues + eigenvectors', functio
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_l_kd2_n5' );
+	tc = jobz_v_uplo_l_kd2_n5;
 	AB = lowerBand_kd2_n5();
 	Afull = lowerBandToFull( new Float64Array( AB ), 5, 2 );
 	W = new Float64Array( 5 );
@@ -406,7 +399,7 @@ test( 'dsbev: JOBZ=N, UPLO=U, KD=2, N=5 — eigenvalues only', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_u_kd2_n5' );
+	tc = jobz_n_uplo_u_kd2_n5;
 	AB = upperBand_kd2_n5();
 	W = new Float64Array( 5 );
 	Z = new Float64Array( 1 );
@@ -424,7 +417,7 @@ test( 'dsbev: JOBZ=N, UPLO=L, KD=2, N=5 — eigenvalues only', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_l_kd2_n5' );
+	tc = jobz_n_uplo_l_kd2_n5;
 	AB = lowerBand_kd2_n5();
 	W = new Float64Array( 5 );
 	Z = new Float64Array( 1 );
@@ -443,7 +436,7 @@ test( 'dsbev: JOBZ=V, UPLO=U, KD=1, N=4 — tridiagonal with eigenvectors', func
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_u_kd1_n4' );
+	tc = jobz_v_uplo_u_kd1_n4;
 	AB = upperBand_kd1_n4();
 	Afull = upperBandToFull( new Float64Array( AB ), 4, 1 );
 	W = new Float64Array( 4 );
@@ -465,7 +458,7 @@ test( 'dsbev: JOBZ=V, UPLO=L, KD=1, N=4 — tridiagonal with eigenvectors', func
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_l_kd1_n4' );
+	tc = jobz_v_uplo_l_kd1_n4;
 	AB = lowerBand_kd1_n4();
 	Afull = lowerBandToFull( new Float64Array( AB ), 4, 1 );
 	W = new Float64Array( 4 );
@@ -486,7 +479,7 @@ test( 'dsbev: JOBZ=N, UPLO=U, KD=1, N=4 — eigenvalues only', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_u_kd1_n4' );
+	tc = jobz_n_uplo_u_kd1_n4;
 	AB = upperBand_kd1_n4();
 	W = new Float64Array( 4 );
 	Z = new Float64Array( 1 );
@@ -505,7 +498,7 @@ test( 'dsbev: JOBZ=V, UPLO=U, KD=3, N=6 — wider bandwidth', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_u_kd3_n6' );
+	tc = jobz_v_uplo_u_kd3_n6;
 	AB = upperBand_kd3_n6();
 	Afull = upperBandToFull( new Float64Array( AB ), 6, 3 );
 	W = new Float64Array( 6 );
@@ -527,7 +520,7 @@ test( 'dsbev: JOBZ=V, UPLO=L, KD=3, N=6 — wider bandwidth', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_v_uplo_l_kd3_n6' );
+	tc = jobz_v_uplo_l_kd3_n6;
 	AB = lowerBand_kd3_n6();
 	Afull = lowerBandToFull( new Float64Array( AB ), 6, 3 );
 	W = new Float64Array( 6 );
@@ -548,7 +541,7 @@ test( 'dsbev: N=1, JOBZ=V, UPLO=L — single eigenvalue with eigenvector', funct
 	var W;
 	var Z;
 
-	tc = findCase( 'n1_jobz_v_lower' );
+	tc = n1_jobz_v_lower;
 	AB = new Float64Array( [ 3.5 ] );
 	W = new Float64Array( 1 );
 	Z = new Float64Array( 1 );
@@ -567,7 +560,7 @@ test( 'dsbev: N=1, JOBZ=V, UPLO=U, KD=2 — upper band single element', function
 	var W;
 	var Z;
 
-	tc = findCase( 'n1_jobz_v_upper_kd2' );
+	tc = n1_jobz_v_upper_kd2;
 	AB = new Float64Array( 3 );
 	AB[ 2 ] = 7.25;
 	W = new Float64Array( 1 );
@@ -587,7 +580,7 @@ test( 'dsbev: N=1, JOBZ=N — single eigenvalue only', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'n1_jobz_n' );
+	tc = n1_jobz_n;
 	AB = new Float64Array( [ 9.0 ] );
 	W = new Float64Array( 1 );
 	Z = new Float64Array( 1 );
@@ -605,7 +598,7 @@ test( 'dsbev: N=0 — quick return', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'n0' );
+	tc = n0;
 	AB = new Float64Array( 1 );
 	W = new Float64Array( 1 );
 	Z = new Float64Array( 1 );
@@ -622,7 +615,7 @@ test( 'dsbev: KD=0 (diagonal), JOBZ=V — sorted eigenvalues + eigenvectors', fu
 	var W;
 	var Z;
 
-	tc = findCase( 'diagonal_jobz_v' );
+	tc = diagonal_jobz_v;
 	AB = new Float64Array( [ 3.0, 1.0, 4.0, 2.0 ] );
 	W = new Float64Array( 4 );
 	Z = new Float64Array( 16 );
@@ -641,7 +634,7 @@ test( 'dsbev: KD=0 (diagonal), JOBZ=N — eigenvalues only', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'diagonal_jobz_n' );
+	tc = diagonal_jobz_n;
 	AB = new Float64Array( [ 3.0, 1.0, 4.0, 2.0 ] );
 	W = new Float64Array( 4 );
 	Z = new Float64Array( 1 );
@@ -659,7 +652,7 @@ test( 'dsbev: JOBZ=N, UPLO=L, KD=3, N=6 — eigenvalues only', function t() {
 	var W;
 	var Z;
 
-	tc = findCase( 'jobz_n_uplo_l_kd3_n6' );
+	tc = jobz_n_uplo_l_kd3_n6;
 	AB = lowerBand_kd3_n6();
 	W = new Float64Array( 6 );
 	Z = new Float64Array( 1 );

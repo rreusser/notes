@@ -2,21 +2,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dsycon = require( './../lib/base.js' );
 var dsytrf = require( '../../dsytrf/lib/base.js' );
 var dlansy = require( '../../dlansy/lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsycon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var upper_well_cond = require( './fixtures/upper_well_cond.json' );
+var lower_well_cond = require( './fixtures/lower_well_cond.json' );
+var identity_upper = require( './fixtures/identity_upper.json' );
+var identity_lower = require( './fixtures/identity_lower.json' );
+var ill_cond_upper = require( './fixtures/ill_cond_upper.json' );
+var _4x4_upper = require( './fixtures/4x4_upper.json' );
+var _4x4_lower = require( './fixtures/4x4_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,13 +36,12 @@ function computeRcond( uplo, N, Aflat ) {
 	return { rcond: rcond[ 0 ], anorm: anorm, info: info };
 }
 
-
 test( 'dsycon: main export is a function', function t() {
 	assert.strictEqual( typeof dsycon, 'function' );
 });
 
 test( 'dsycon: well-conditioned 3x3 (upper)', function t() {
-	var tc = findCase( 'upper_well_cond' );
+	var tc = upper_well_cond;
 	var result = computeRcond( 'upper', 3, [
 		4, 1, 1,
 		1, 3, 1,
@@ -55,7 +53,7 @@ test( 'dsycon: well-conditioned 3x3 (upper)', function t() {
 });
 
 test( 'dsycon: well-conditioned 3x3 (lower)', function t() {
-	var tc = findCase( 'lower_well_cond' );
+	var tc = lower_well_cond;
 	var result = computeRcond( 'lower', 3, [
 		4, 1, 1,
 		1, 3, 1,
@@ -67,7 +65,7 @@ test( 'dsycon: well-conditioned 3x3 (lower)', function t() {
 });
 
 test( 'dsycon: identity 3x3 (upper, rcond=1)', function t() {
-	var tc = findCase( 'identity_upper' );
+	var tc = identity_upper;
 	var result = computeRcond( 'upper', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -79,7 +77,7 @@ test( 'dsycon: identity 3x3 (upper, rcond=1)', function t() {
 });
 
 test( 'dsycon: identity 3x3 (lower, rcond=1)', function t() {
-	var tc = findCase( 'identity_lower' );
+	var tc = identity_lower;
 	var result = computeRcond( 'lower', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -91,7 +89,7 @@ test( 'dsycon: identity 3x3 (lower, rcond=1)', function t() {
 });
 
 test( 'dsycon: ill-conditioned 3x3 (upper)', function t() {
-	var tc = findCase( 'ill_cond_upper' );
+	var tc = ill_cond_upper;
 	var result = computeRcond( 'upper', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -124,7 +122,7 @@ test( 'dsycon: N=0 (rcond=1)', function t() {
 });
 
 test( 'dsycon: 4x4 (upper)', function t() {
-	var tc = findCase( '4x4_upper' );
+	var tc = _4x4_upper;
 	var result = computeRcond( 'upper', 4, [
 		10, 1, 2, 0,
 		1, 8, 1, 1,
@@ -137,7 +135,7 @@ test( 'dsycon: 4x4 (upper)', function t() {
 });
 
 test( 'dsycon: 4x4 (lower)', function t() {
-	var tc = findCase( '4x4_lower' );
+	var tc = _4x4_lower;
 	var result = computeRcond( 'lower', 4, [
 		10, 1, 2, 0,
 		1, 8, 1, 1,
@@ -150,7 +148,7 @@ test( 'dsycon: 4x4 (lower)', function t() {
 });
 
 test( 'dsycon: N=1 (upper)', function t() {
-	var tc = findCase( 'n_one_upper' );
+	var tc = n_one_upper;
 	var A = new Float64Array( [ 5.0 ] );
 	var ipiv = new Int32Array( 1 );
 	var work = new Float64Array( 2 );

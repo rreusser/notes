@@ -2,39 +2,22 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpttrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpttrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5_single_rhs = require( './fixtures/basic_5x5_single_rhs.json' );
+var multi_rhs_3 = require( './fixtures/multi_rhs_3.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var n_eq_0 = require( './fixtures/n_eq_0.json' );
+var nrhs_eq_0 = require( './fixtures/nrhs_eq_0.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +50,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpttrs: basic_5x5_single_rhs', function t() {
@@ -77,7 +59,7 @@ test( 'dpttrs: basic_5x5_single_rhs', function t() {
 	var e;
 	var b;
 
-	tc = findCase( 'basic_5x5_single_rhs' );
+	tc = basic_5x5_single_rhs;
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 3.0, 4.0 ] );
 	e = new Float64Array( [ 0.5, -0.5, 0.25, -0.25 ] );
 	b = new Float64Array( [ 8.0, 5.5, 7.25, 10.25, 17.9375 ] );
@@ -93,7 +75,7 @@ test( 'dpttrs: multi_rhs_3', function t() {
 	var e;
 	var b;
 
-	tc = findCase( 'multi_rhs_3' );
+	tc = multi_rhs_3;
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 3.0, 4.0 ] );
 	e = new Float64Array( [ 0.5, -0.5, 0.25, -0.25 ] );
 	b = new Float64Array([
@@ -125,7 +107,7 @@ test( 'dpttrs: n_eq_1', function t() {
 	var e;
 	var b;
 
-	tc = findCase( 'n_eq_1' );
+	tc = n_eq_1;
 	d = new Float64Array( [ 3.0 ] );
 	e = new Float64Array( [] );
 	b = new Float64Array( [ 9.0 ] );
@@ -141,7 +123,7 @@ test( 'dpttrs: n_eq_0', function t() {
 	var e;
 	var b;
 
-	tc = findCase( 'n_eq_0' );
+	tc = n_eq_0;
 	d = new Float64Array( [] );
 	e = new Float64Array( [] );
 	b = new Float64Array( [ 42.0 ] );
@@ -157,7 +139,7 @@ test( 'dpttrs: nrhs_eq_0', function t() {
 	var e;
 	var b;
 
-	tc = findCase( 'nrhs_eq_0' );
+	tc = nrhs_eq_0;
 	d = new Float64Array( [ 4.0, 3.0 ] );
 	e = new Float64Array( [ 0.5 ] );
 	b = new Float64Array( [ 42.0 ] );

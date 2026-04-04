@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpbtf2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpbtf2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_tridiag_5 = require( './fixtures/upper_tridiag_5.json' );
+var lower_tridiag_5 = require( './fixtures/lower_tridiag_5.json' );
+var upper_penta_4 = require( './fixtures/upper_penta_4.json' );
+var lower_penta_4 = require( './fixtures/lower_penta_4.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var upper_full_3 = require( './fixtures/upper_full_3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +53,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpbtf2: upper_tridiag_5', function t() {
@@ -75,7 +60,7 @@ test( 'dpbtf2: upper_tridiag_5', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'upper_tridiag_5' );
+	tc = upper_tridiag_5;
 	ab = new Float64Array([
 		0.0,
 		2.0,   // col 0
@@ -98,7 +83,7 @@ test( 'dpbtf2: lower_tridiag_5', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'lower_tridiag_5' );
+	tc = lower_tridiag_5;
 	ab = new Float64Array([
 		2.0,
 		-1.0,  // col 0
@@ -121,7 +106,7 @@ test( 'dpbtf2: upper_penta_4', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'upper_penta_4' );
+	tc = upper_penta_4;
 	ab = new Float64Array([
 		0.0,
 		0.0,
@@ -146,7 +131,7 @@ test( 'dpbtf2: lower_penta_4', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'lower_penta_4' );
+	tc = lower_penta_4;
 	ab = new Float64Array([
 		4.0,
 		-1.0,
@@ -171,7 +156,7 @@ test( 'dpbtf2: n_one', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ab = new Float64Array([ 9.0 ]);
 	info = dpbtf2( 'upper', 1, 0, ab, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -183,7 +168,7 @@ test( 'dpbtf2: n_zero', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ab = new Float64Array([ 99.0 ]);
 	info = dpbtf2( 'lower', 0, 0, ab, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -194,7 +179,7 @@ test( 'dpbtf2: not_posdef', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	ab = new Float64Array([
 		1.0,
 		2.0,   // col 0
@@ -211,7 +196,7 @@ test( 'dpbtf2: upper_full_3', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'upper_full_3' );
+	tc = upper_full_3;
 	ab = new Float64Array([
 		0.0,
 		0.0,

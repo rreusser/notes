@@ -2,39 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrtri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrtri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_nonunit_3 = require( './fixtures/upper_nonunit_3.json' );
+var lower_nonunit_3 = require( './fixtures/lower_nonunit_3.json' );
+var upper_nonunit_4 = require( './fixtures/upper_nonunit_4.json' );
+var lower_nonunit_4 = require( './fixtures/lower_nonunit_4.json' );
+var singular = require( './fixtures/singular.json' );
+var upper_unit = require( './fixtures/upper_unit.json' );
+var identity = require( './fixtures/identity.json' );
+var upper_5x5 = require( './fixtures/upper_5x5.json' );
+var lower_5x5 = require( './fixtures/lower_5x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +54,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dtrtri: upper, non-unit, 3x3', function t() {
@@ -75,7 +61,7 @@ test( 'dtrtri: upper, non-unit, 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_nonunit_3' );
+	tc = upper_nonunit_3;
 	A = new Float64Array( [ 2, 0, 0, 1, 4, 0, 3, 5, 6 ] );
 	info = dtrtri( 'upper', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -87,7 +73,7 @@ test( 'dtrtri: lower, non-unit, 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_nonunit_3' );
+	tc = lower_nonunit_3;
 	A = new Float64Array( [ 2, 1, 3, 0, 4, 5, 0, 0, 6 ] );
 	info = dtrtri( 'lower', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -99,7 +85,7 @@ test( 'dtrtri: upper, non-unit, 4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_nonunit_4' );
+	tc = upper_nonunit_4;
 	A = new Float64Array([
 		1,
 		0,
@@ -128,7 +114,7 @@ test( 'dtrtri: lower, non-unit, 4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_nonunit_4' );
+	tc = lower_nonunit_4;
 	A = new Float64Array([
 		1,
 		2,
@@ -162,7 +148,7 @@ test( 'dtrtri: singular (zero diagonal)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	A = new Float64Array( [ 2, 0, 0, 3, 0, 0, 0, 0, 6 ] );
 	info = dtrtri( 'upper', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -173,7 +159,7 @@ test( 'dtrtri: upper, unit diag, 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_unit' );
+	tc = upper_unit;
 	A = new Float64Array( [ 99, 0, 0, 1, 99, 0, 3, 5, 99 ] );
 	info = dtrtri( 'upper', 'unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -185,7 +171,7 @@ test( 'dtrtri: identity 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	A = new Float64Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ] );
 	info = dtrtri( 'upper', 'non-unit', 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -207,7 +193,7 @@ test( 'dtrtri: upper 5x5', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_5x5' );
+	tc = upper_5x5;
 	A = new Float64Array([
 		2,
 		0,
@@ -245,7 +231,7 @@ test( 'dtrtri: lower 5x5', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_5x5' );
+	tc = lower_5x5;
 	A = new Float64Array([
 		2,
 		1,

@@ -6,36 +6,31 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dtbcon = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtbcon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_nonunit_onenorm = require( './fixtures/upper_nonunit_onenorm.json' );
+var upper_nonunit_infnorm = require( './fixtures/upper_nonunit_infnorm.json' );
+var upper_unit_onenorm = require( './fixtures/upper_unit_onenorm.json' );
+var upper_unit_infnorm = require( './fixtures/upper_unit_infnorm.json' );
+var lower_nonunit_onenorm = require( './fixtures/lower_nonunit_onenorm.json' );
+var lower_nonunit_infnorm = require( './fixtures/lower_nonunit_infnorm.json' );
+var lower_unit_onenorm = require( './fixtures/lower_unit_onenorm.json' );
+var lower_unit_infnorm = require( './fixtures/lower_unit_infnorm.json' );
+var edge_n0 = require( './fixtures/edge_n0.json' );
+var edge_n1_kd0 = require( './fixtures/edge_n1_kd0.json' );
+var identity_onenorm = require( './fixtures/identity_onenorm.json' );
+var identity_infnorm = require( './fixtures/identity_infnorm.json' );
+var ill_conditioned_onenorm = require( './fixtures/ill_conditioned_onenorm.json' );
+var ill_conditioned_infnorm = require( './fixtures/ill_conditioned_infnorm.json' );
+var upper_nonunit_onenorm_kd3 = require( './fixtures/upper_nonunit_onenorm_kd3.json' );
+var upper_nonunit_infnorm_kd3 = require( './fixtures/upper_nonunit_infnorm_kd3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -98,7 +93,6 @@ function run( norm, uplo, diag, n, kd, AB, ldab ) {
 		'info': info
 	};
 }
-
 
 // VARIABLES //
 
@@ -169,61 +163,60 @@ var upperABkd3 = bandColMajor( 4, 5, [
 	[ 4, 6, 8, 5, 7 ]
 ]);
 
-
 // TESTS //
 
 test( 'dtbcon: upper, non-unit, one-norm', function t() {
 	var res = run( 'one-norm', 'upper', 'non-unit', 4, 2, upperAB, 3 );
-	var tc = findCase( 'upper_nonunit_onenorm' );
+	var tc = upper_nonunit_onenorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: upper, non-unit, inf-norm', function t() {
 	var res = run( 'inf-norm', 'upper', 'non-unit', 4, 2, upperAB, 3 );
-	var tc = findCase( 'upper_nonunit_infnorm' );
+	var tc = upper_nonunit_infnorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: upper, unit, one-norm', function t() {
 	var res = run( 'one-norm', 'upper', 'unit', 4, 2, upperAB, 3 );
-	var tc = findCase( 'upper_unit_onenorm' );
+	var tc = upper_unit_onenorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: upper, unit, inf-norm', function t() {
 	var res = run( 'inf-norm', 'upper', 'unit', 4, 2, upperAB, 3 );
-	var tc = findCase( 'upper_unit_infnorm' );
+	var tc = upper_unit_infnorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: lower, non-unit, one-norm', function t() {
 	var res = run( 'one-norm', 'lower', 'non-unit', 4, 2, lowerAB, 3 );
-	var tc = findCase( 'lower_nonunit_onenorm' );
+	var tc = lower_nonunit_onenorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: lower, non-unit, inf-norm', function t() {
 	var res = run( 'inf-norm', 'lower', 'non-unit', 4, 2, lowerAB, 3 );
-	var tc = findCase( 'lower_nonunit_infnorm' );
+	var tc = lower_nonunit_infnorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: lower, unit, one-norm', function t() {
 	var res = run( 'one-norm', 'lower', 'unit', 4, 2, lowerAB, 3 );
-	var tc = findCase( 'lower_unit_onenorm' );
+	var tc = lower_unit_onenorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: lower, unit, inf-norm', function t() {
 	var res = run( 'inf-norm', 'lower', 'unit', 4, 2, lowerAB, 3 );
-	var tc = findCase( 'lower_unit_infnorm' );
+	var tc = lower_unit_infnorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
@@ -235,56 +228,56 @@ test( 'dtbcon: edge case N=0', function t() {
 
 	AB = new Float64Array( 0 );
 	res = run( 'one-norm', 'upper', 'non-unit', 0, 0, AB, 1 );
-	tc = findCase( 'edge_n0' );
+	tc = edge_n0;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-14, 'rcond' );
 });
 
 test( 'dtbcon: edge case N=1, kd=0', function t() {
 	var res = run( 'one-norm', 'upper', 'non-unit', 1, 0, singleAB, 1 );
-	var tc = findCase( 'edge_n1_kd0' );
+	var tc = edge_n1_kd0;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-14, 'rcond' );
 });
 
 test( 'dtbcon: identity, one-norm', function t() {
 	var res = run( 'one-norm', 'upper', 'non-unit', 3, 1, identAB, 2 );
-	var tc = findCase( 'identity_onenorm' );
+	var tc = identity_onenorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-14, 'rcond' );
 });
 
 test( 'dtbcon: identity, inf-norm', function t() {
 	var res = run( 'inf-norm', 'upper', 'non-unit', 3, 1, identAB, 2 );
-	var tc = findCase( 'identity_infnorm' );
+	var tc = identity_infnorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-14, 'rcond' );
 });
 
 test( 'dtbcon: ill-conditioned, one-norm', function t() {
 	var res = run( 'one-norm', 'upper', 'non-unit', 3, 0, illAB, 1 );
-	var tc = findCase( 'ill_conditioned_onenorm' );
+	var tc = ill_conditioned_onenorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-10, 'rcond' );
 });
 
 test( 'dtbcon: ill-conditioned, inf-norm', function t() {
 	var res = run( 'inf-norm', 'upper', 'non-unit', 3, 0, illAB, 1 );
-	var tc = findCase( 'ill_conditioned_infnorm' );
+	var tc = ill_conditioned_infnorm;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-10, 'rcond' );
 });
 
 test( 'dtbcon: upper, non-unit, one-norm, kd=3', function t() {
 	var res = run( 'one-norm', 'upper', 'non-unit', 5, 3, upperABkd3, 4 );
-	var tc = findCase( 'upper_nonunit_onenorm_kd3' );
+	var tc = upper_nonunit_onenorm_kd3;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });
 
 test( 'dtbcon: upper, non-unit, inf-norm, kd=3', function t() {
 	var res = run( 'inf-norm', 'upper', 'non-unit', 5, 3, upperABkd3, 4 );
-	var tc = findCase( 'upper_nonunit_infnorm_kd3' );
+	var tc = upper_nonunit_infnorm_kd3;
 	assert.equal( res.info, tc.info, 'info' );
 	assertClose( res.rcond, tc.rcond, 1e-12, 'rcond' );
 });

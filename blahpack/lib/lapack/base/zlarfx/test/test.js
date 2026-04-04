@@ -5,38 +5,39 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlarfx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlarfx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var left_m_1_n_3 = require( './fixtures/left_m_1_n_3.json' );
+var left_m_2_n_3 = require( './fixtures/left_m_2_n_3.json' );
+var left_m_3_n_2 = require( './fixtures/left_m_3_n_2.json' );
+var left_m_4_n_2 = require( './fixtures/left_m_4_n_2.json' );
+var left_m_5_n_2 = require( './fixtures/left_m_5_n_2.json' );
+var left_m_6_n_2 = require( './fixtures/left_m_6_n_2.json' );
+var left_m_7_n_2 = require( './fixtures/left_m_7_n_2.json' );
+var left_m_8_n_2 = require( './fixtures/left_m_8_n_2.json' );
+var left_m_9_n_2 = require( './fixtures/left_m_9_n_2.json' );
+var left_m_10_n_2 = require( './fixtures/left_m_10_n_2.json' );
+var right_m_3_n_1 = require( './fixtures/right_m_3_n_1.json' );
+var right_m_3_n_2 = require( './fixtures/right_m_3_n_2.json' );
+var right_m_2_n_3 = require( './fixtures/right_m_2_n_3.json' );
+var right_m_2_n_4 = require( './fixtures/right_m_2_n_4.json' );
+var right_m_2_n_5 = require( './fixtures/right_m_2_n_5.json' );
+var right_m_2_n_6 = require( './fixtures/right_m_2_n_6.json' );
+var right_m_2_n_7 = require( './fixtures/right_m_2_n_7.json' );
+var right_m_2_n_8 = require( './fixtures/right_m_2_n_8.json' );
+var right_m_2_n_9 = require( './fixtures/right_m_2_n_9.json' );
+var right_m_2_n_10 = require( './fixtures/right_m_2_n_10.json' );
+var tau_0 = require( './fixtures/tau_0.json' );
+var left_m_12_n_3_general = require( './fixtures/left_m_12_n_3_general.json' );
+var right_m_3_n_12_general = require( './fixtures/right_m_3_n_12_general.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -109,7 +110,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlarfx is a function', function t() {
@@ -119,7 +119,7 @@ test( 'zlarfx is a function', function t() {
 test( 'zlarfx: left M=1 N=3', function t() {
 	var WORK = new Complex128Array( 10 );
 	var tau = new Complex128( 1.5, 0.3 );
-	var tc = findCase( 'left M=1 N=3' );
+	var tc = left_m_1_n_3;
 	var v = new Complex128Array( [ 1.0, 0.0 ] );
 	var C = buildMatrix( 1, 3, [
 		2.0, 1.0, 3.0, -1.0, 4.0, 0.5
@@ -131,7 +131,7 @@ test( 'zlarfx: left M=1 N=3', function t() {
 test( 'zlarfx: left M=2 N=3', function t() {
 	var WORK = new Complex128Array( 10 );
 	var tau = new Complex128( 1.6, -0.2 );
-	var tc = findCase( 'left M=2 N=3' );
+	var tc = left_m_2_n_3;
 	var v = new Complex128Array( [ 1.0, 0.0, 0.5, 0.3 ] );
 	var C = buildMatrix( 2, 3, [
 		1.0,
@@ -154,7 +154,7 @@ test( 'zlarfx: left M=2 N=3', function t() {
 test( 'zlarfx: left M=3 N=2', function t() {
 	var WORK = new Complex128Array( 10 );
 	var tau = new Complex128( 1.2, 0.4 );
-	var tc = findCase( 'left M=3 N=2' );
+	var tc = left_m_3_n_2;
 	var v = new Complex128Array( [ 1.0, 0.0, 0.3, -0.5, -0.4, 0.2 ] );
 	var C = buildMatrix( 3, 2, [
 		2.0,
@@ -194,7 +194,7 @@ test( 'zlarfx: left M=4 N=2', function t() {
 	vals = [];
 	M = 4;
 	N = 2;
-	tc = findCase( 'left M=4 N=2' );
+	tc = left_m_4_n_2;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -226,7 +226,7 @@ test( 'zlarfx: left M=5 N=2', function t() {
 	vals = [];
 	M = 5;
 	N = 2;
-	tc = findCase( 'left M=5 N=2' );
+	tc = left_m_5_n_2;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -258,7 +258,7 @@ test( 'zlarfx: left M=6 N=2', function t() {
 	vals = [];
 	M = 6;
 	N = 2;
-	tc = findCase( 'left M=6 N=2' );
+	tc = left_m_6_n_2;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -303,7 +303,7 @@ test( 'zlarfx: left M=7 N=2', function t() {
 	vals = [];
 	M = 7;
 	N = 2;
-	tc = findCase( 'left M=7 N=2' );
+	tc = left_m_7_n_2;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -350,7 +350,7 @@ test( 'zlarfx: left M=8 N=2', function t() {
 	vals = [];
 	M = 8;
 	N = 2;
-	tc = findCase( 'left M=8 N=2' );
+	tc = left_m_8_n_2;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -399,7 +399,7 @@ test( 'zlarfx: left M=9 N=2', function t() {
 	vals = [];
 	M = 9;
 	N = 2;
-	tc = findCase( 'left M=9 N=2' );
+	tc = left_m_9_n_2;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -430,7 +430,7 @@ test( 'zlarfx: left M=10 N=2', function t() {
 	vals = [];
 	M = 10;
 	N = 2;
-	tc = findCase( 'left M=10 N=2' );
+	tc = left_m_10_n_2;
 	for ( i = 1; i <= 10; i += 1 ) {
 		vvals.push( 0.1 * i );
 		vvals.push( -0.05 * i );
@@ -452,7 +452,7 @@ test( 'zlarfx: left M=10 N=2', function t() {
 test( 'zlarfx: right M=3 N=1', function t() {
 	var WORK = new Complex128Array( 10 );
 	var tau = new Complex128( 1.5, 0.3 );
-	var tc = findCase( 'right M=3 N=1' );
+	var tc = right_m_3_n_1;
 	var v = new Complex128Array( [ 1.0, 0.0 ] );
 	var C = buildMatrix( 3, 1, [
 		2.0, 1.0, 3.0, -1.0, 4.0, 0.5
@@ -464,7 +464,7 @@ test( 'zlarfx: right M=3 N=1', function t() {
 test( 'zlarfx: right M=3 N=2', function t() {
 	var WORK = new Complex128Array( 10 );
 	var tau = new Complex128( 1.6, 0.2 );
-	var tc = findCase( 'right M=3 N=2' );
+	var tc = right_m_3_n_2;
 	var v = new Complex128Array( [ 1.0, 0.0, 0.5, -0.3 ] );
 	var C = buildMatrix( 3, 2, [
 		1.0,
@@ -487,7 +487,7 @@ test( 'zlarfx: right M=3 N=2', function t() {
 test( 'zlarfx: right M=2 N=3', function t() {
 	var WORK = new Complex128Array( 10 );
 	var tau = new Complex128( 1.2, -0.4 );
-	var tc = findCase( 'right M=2 N=3' );
+	var tc = right_m_2_n_3;
 	var v = new Complex128Array( [ 1.0, 0.0, 0.3, 0.5, -0.4, -0.2 ] );
 	var C = buildMatrix( 2, 3, [
 		2.0,
@@ -527,7 +527,7 @@ test( 'zlarfx: right M=2 N=4', function t() {
 	vals = [];
 	M = 2;
 	N = 4;
-	tc = findCase( 'right M=2 N=4' );
+	tc = right_m_2_n_4;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -559,7 +559,7 @@ test( 'zlarfx: right M=2 N=5', function t() {
 	vals = [];
 	M = 2;
 	N = 5;
-	tc = findCase( 'right M=2 N=5' );
+	tc = right_m_2_n_5;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -591,7 +591,7 @@ test( 'zlarfx: right M=2 N=6', function t() {
 	vals = [];
 	M = 2;
 	N = 6;
-	tc = findCase( 'right M=2 N=6' );
+	tc = right_m_2_n_6;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -636,7 +636,7 @@ test( 'zlarfx: right M=2 N=7', function t() {
 	vals = [];
 	M = 2;
 	N = 7;
-	tc = findCase( 'right M=2 N=7' );
+	tc = right_m_2_n_7;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -683,7 +683,7 @@ test( 'zlarfx: right M=2 N=8', function t() {
 	vals = [];
 	M = 2;
 	N = 8;
-	tc = findCase( 'right M=2 N=8' );
+	tc = right_m_2_n_8;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -732,7 +732,7 @@ test( 'zlarfx: right M=2 N=9', function t() {
 	vals = [];
 	M = 2;
 	N = 9;
-	tc = findCase( 'right M=2 N=9' );
+	tc = right_m_2_n_9;
 	for ( j = 1; j <= N; j += 1 ) {
 		for ( i = 1; i <= M; i += 1 ) {
 			vals.push( i + ((j-1) * M) );
@@ -763,7 +763,7 @@ test( 'zlarfx: right M=2 N=10', function t() {
 	vals = [];
 	M = 2;
 	N = 10;
-	tc = findCase( 'right M=2 N=10' );
+	tc = right_m_2_n_10;
 	for ( i = 1; i <= 10; i += 1 ) {
 		vvals.push( 0.1 * i );
 		vvals.push( 0.05 * i );
@@ -806,7 +806,7 @@ test( 'zlarfx: tau=0 does nothing', function t() {
 		7.0,
 		1.0
 	]);
-	tc = findCase( 'tau=0' );
+	tc = tau_0;
 	zlarfx( 'left', 3, 2, v, 1, 0, tau, C, 1, 3, 0, WORK, 1, 0 );
 	assertArrayClose( getView( C ), tc.C, 1e-14, 'C' );
 } );
@@ -830,7 +830,7 @@ test( 'zlarfx: left M=12 N=3 general (calls zlarf)', function t() {
 	vals = [];
 	M = 12;
 	N = 3;
-	tc = findCase( 'left M=12 N=3 general' );
+	tc = left_m_12_n_3_general;
 	for ( i = 1; i <= M; i += 1 ) {
 		vvals.push( 0.1 * i );
 		vvals.push( -0.05 * i );
@@ -868,7 +868,7 @@ test( 'zlarfx: right M=3 N=12 general (calls zlarf)', function t() {
 	vals = [];
 	M = 3;
 	N = 12;
-	tc = findCase( 'right M=3 N=12 general' );
+	tc = right_m_3_n_12_general;
 	for ( i = 1; i <= N; i += 1 ) {
 		vvals.push( 0.1 * i );
 		vvals.push( 0.05 * i );

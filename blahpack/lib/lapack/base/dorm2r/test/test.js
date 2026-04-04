@@ -2,39 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dorm2r = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dorm2r.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var left_notrans = require( './fixtures/left_notrans.json' );
+var left_trans = require( './fixtures/left_trans.json' );
+var right_notrans = require( './fixtures/right_notrans.json' );
+var right_trans = require( './fixtures/right_trans.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var k_zero = require( './fixtures/k_zero.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var left_trans_rect = require( './fixtures/left_trans_rect.json' );
+var right_notrans_rect = require( './fixtures/right_notrans_rect.json' );
+var right_trans_rect = require( './fixtures/right_trans_rect.json' );
+var k_one = require( './fixtures/k_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -111,7 +101,6 @@ function getQRFactors() {
 	};
 }
 
-
 // TESTS //
 
 test( 'dorm2r: left_notrans (Q*I = Q)', function t() {
@@ -121,7 +110,7 @@ test( 'dorm2r: left_notrans (Q*I = Q)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_notrans' );
+	tc = left_notrans;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1,
@@ -154,7 +143,7 @@ test( 'dorm2r: left_trans (Q^T*I = Q^T)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_trans' );
+	tc = left_trans;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1,
@@ -187,7 +176,7 @@ test( 'dorm2r: right_notrans (I*Q = Q)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_notrans' );
+	tc = right_notrans;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1,
@@ -220,7 +209,7 @@ test( 'dorm2r: right_trans (I*Q^T = Q^T)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_trans' );
+	tc = right_trans;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1,
@@ -253,7 +242,7 @@ test( 'dorm2r: m_zero (quick return)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	qr = getQRFactors();
 	C = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -268,7 +257,7 @@ test( 'dorm2r: n_zero (quick return)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	qr = getQRFactors();
 	C = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -284,7 +273,7 @@ test( 'dorm2r: k_zero (quick return)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'k_zero' );
+	tc = k_zero;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1,
@@ -335,7 +324,7 @@ test( 'dorm2r: left_notrans_rect (Q * non-identity 4x2)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_notrans_rect' );
+	tc = left_notrans_rect;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1.0,
@@ -360,7 +349,7 @@ test( 'dorm2r: left_trans_rect (Q^T * non-identity 4x2)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_trans_rect' );
+	tc = left_trans_rect;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1.0,
@@ -385,7 +374,7 @@ test( 'dorm2r: right_notrans_rect (2x4 * Q)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_notrans_rect' );
+	tc = right_notrans_rect;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1.0,
@@ -410,7 +399,7 @@ test( 'dorm2r: right_trans_rect (2x4 * Q^T)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_trans_rect' );
+	tc = right_trans_rect;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1.0,
@@ -435,7 +424,7 @@ test( 'dorm2r: k_one (single reflector, left, notrans)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'k_one' );
+	tc = k_one;
 	qr = getQRFactors();
 	C = new Float64Array([
 		1,

@@ -5,37 +5,31 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpptrf = require( './../../dpptrf/lib/base.js' );
 var dspgst = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dspgst.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var itype1_upper_3 = require( './fixtures/itype1_upper_3.json' );
+var itype1_lower_3 = require( './fixtures/itype1_lower_3.json' );
+var itype2_upper_3 = require( './fixtures/itype2_upper_3.json' );
+var itype2_lower_3 = require( './fixtures/itype2_lower_3.json' );
+var itype3_upper_3 = require( './fixtures/itype3_upper_3.json' );
+var itype3_lower_3 = require( './fixtures/itype3_lower_3.json' );
+var itype1_upper_4 = require( './fixtures/itype1_upper_4.json' );
+var itype1_lower_4 = require( './fixtures/itype1_lower_4.json' );
+var itype2_upper_4 = require( './fixtures/itype2_upper_4.json' );
+var itype2_lower_4 = require( './fixtures/itype2_lower_4.json' );
+var itype3_upper_4 = require( './fixtures/itype3_upper_4.json' );
+var itype3_lower_4 = require( './fixtures/itype3_lower_4.json' );
+var n_one_itype1_upper = require( './fixtures/n_one_itype1_upper.json' );
+var n_one_itype1_lower = require( './fixtures/n_one_itype1_lower.json' );
+var n_one_itype2 = require( './fixtures/n_one_itype2.json' );
+var n_one_itype3 = require( './fixtures/n_one_itype3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -69,7 +63,6 @@ function cholesky( uplo, N, bp ) {
 	assert.equal( info, 0, 'Cholesky factorization should succeed' );
 }
 
-
 // TESTS //
 
 test( 'dspgst is a function', function t() {
@@ -84,7 +77,7 @@ test( 'dspgst: itype1_upper_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_upper_3' );
+	tc = itype1_upper_3;
 	bp = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 1.0, 3.0 ] );
 	cholesky( 'upper', 3, bp );
 	ap = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
@@ -99,7 +92,7 @@ test( 'dspgst: itype1_lower_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_lower_3' );
+	tc = itype1_lower_3;
 	bp = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 1.0, 3.0 ] );
 	cholesky( 'lower', 3, bp );
 	ap = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
@@ -114,7 +107,7 @@ test( 'dspgst: itype2_upper_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_upper_3' );
+	tc = itype2_upper_3;
 	bp = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 1.0, 3.0 ] );
 	cholesky( 'upper', 3, bp );
 	ap = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
@@ -129,7 +122,7 @@ test( 'dspgst: itype2_lower_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_lower_3' );
+	tc = itype2_lower_3;
 	bp = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 1.0, 3.0 ] );
 	cholesky( 'lower', 3, bp );
 	ap = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
@@ -144,7 +137,7 @@ test( 'dspgst: itype3_upper_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_upper_3' );
+	tc = itype3_upper_3;
 	bp = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 1.0, 3.0 ] );
 	cholesky( 'upper', 3, bp );
 	ap = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
@@ -159,7 +152,7 @@ test( 'dspgst: itype3_lower_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_lower_3' );
+	tc = itype3_lower_3;
 	bp = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 1.0, 3.0 ] );
 	cholesky( 'lower', 3, bp );
 	ap = new Float64Array( [ 4.0, 2.0, 1.0, 5.0, 3.0, 6.0 ] );
@@ -178,7 +171,7 @@ test( 'dspgst: itype1_upper_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_upper_4' );
+	tc = itype1_upper_4;
 	bp = new Float64Array( [ 9.0, 3.0, 5.0, 1.0, 2.0, 4.0, 0.0, 1.0, 1.0, 3.0 ] );
 	cholesky( 'upper', 4, bp );
 	ap = new Float64Array( [ 10.0, 4.0, 8.0, 2.0, 3.0, 7.0, 1.0, 2.0, 4.0, 6.0 ] );
@@ -193,7 +186,7 @@ test( 'dspgst: itype1_lower_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_lower_4' );
+	tc = itype1_lower_4;
 	bp = new Float64Array( [ 9.0, 3.0, 1.0, 0.0, 5.0, 2.0, 1.0, 4.0, 1.0, 3.0 ] );
 	cholesky( 'lower', 4, bp );
 	ap = new Float64Array( [ 10.0, 4.0, 2.0, 1.0, 8.0, 3.0, 2.0, 7.0, 4.0, 6.0 ] );
@@ -208,7 +201,7 @@ test( 'dspgst: itype2_upper_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_upper_4' );
+	tc = itype2_upper_4;
 	bp = new Float64Array( [ 9.0, 3.0, 5.0, 1.0, 2.0, 4.0, 0.0, 1.0, 1.0, 3.0 ] );
 	cholesky( 'upper', 4, bp );
 	ap = new Float64Array( [ 10.0, 4.0, 8.0, 2.0, 3.0, 7.0, 1.0, 2.0, 4.0, 6.0 ] );
@@ -223,7 +216,7 @@ test( 'dspgst: itype2_lower_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_lower_4' );
+	tc = itype2_lower_4;
 	bp = new Float64Array( [ 9.0, 3.0, 1.0, 0.0, 5.0, 2.0, 1.0, 4.0, 1.0, 3.0 ] );
 	cholesky( 'lower', 4, bp );
 	ap = new Float64Array( [ 10.0, 4.0, 2.0, 1.0, 8.0, 3.0, 2.0, 7.0, 4.0, 6.0 ] );
@@ -238,7 +231,7 @@ test( 'dspgst: itype3_upper_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_upper_4' );
+	tc = itype3_upper_4;
 	bp = new Float64Array( [ 9.0, 3.0, 5.0, 1.0, 2.0, 4.0, 0.0, 1.0, 1.0, 3.0 ] );
 	cholesky( 'upper', 4, bp );
 	ap = new Float64Array( [ 10.0, 4.0, 8.0, 2.0, 3.0, 7.0, 1.0, 2.0, 4.0, 6.0 ] );
@@ -253,7 +246,7 @@ test( 'dspgst: itype3_lower_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_lower_4' );
+	tc = itype3_lower_4;
 	bp = new Float64Array( [ 9.0, 3.0, 1.0, 0.0, 5.0, 2.0, 1.0, 4.0, 1.0, 3.0 ] );
 	cholesky( 'lower', 4, bp );
 	ap = new Float64Array( [ 10.0, 4.0, 2.0, 1.0, 8.0, 3.0, 2.0, 7.0, 4.0, 6.0 ] );
@@ -281,7 +274,7 @@ test( 'dspgst: n_one_itype1_upper', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype1_upper' );
+	tc = n_one_itype1_upper;
 	ap = new Float64Array( [ 9.0 ] );
 	bp = new Float64Array( [ 3.0 ] );
 	info = dspgst( 1, 'upper', 1, ap, 1, 0, bp, 1, 0 );
@@ -295,7 +288,7 @@ test( 'dspgst: n_one_itype1_lower', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype1_lower' );
+	tc = n_one_itype1_lower;
 	ap = new Float64Array( [ 16.0 ] );
 	bp = new Float64Array( [ 4.0 ] );
 	info = dspgst( 1, 'lower', 1, ap, 1, 0, bp, 1, 0 );
@@ -309,7 +302,7 @@ test( 'dspgst: n_one_itype2', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype2' );
+	tc = n_one_itype2;
 	ap = new Float64Array( [ 5.0 ] );
 	bp = new Float64Array( [ 2.0 ] );
 	info = dspgst( 2, 'upper', 1, ap, 1, 0, bp, 1, 0 );
@@ -323,7 +316,7 @@ test( 'dspgst: n_one_itype3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype3' );
+	tc = n_one_itype3;
 	ap = new Float64Array( [ 5.0 ] );
 	bp = new Float64Array( [ 2.0 ] );
 	info = dspgst( 3, 'lower', 1, ap, 1, 0, bp, 1, 0 );

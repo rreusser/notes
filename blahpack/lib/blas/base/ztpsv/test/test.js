@@ -2,41 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztpmv = require( './../../ztpmv/lib/base.js' );
 var ztpsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztpsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans_nonunit = require( './fixtures/upper_no_trans_nonunit.json' );
+var upper_trans_nonunit = require( './fixtures/upper_trans_nonunit.json' );
+var upper_conj_trans_nonunit = require( './fixtures/upper_conj_trans_nonunit.json' );
+var upper_no_trans_unit = require( './fixtures/upper_no_trans_unit.json' );
+var lower_no_trans_nonunit = require( './fixtures/lower_no_trans_nonunit.json' );
+var lower_trans_nonunit = require( './fixtures/lower_trans_nonunit.json' );
+var lower_conj_trans_nonunit = require( './fixtures/lower_conj_trans_nonunit.json' );
+var lower_no_trans_unit = require( './fixtures/lower_no_trans_unit.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var upper_stride_2 = require( './fixtures/upper_stride_2.json' );
+var scalar = require( './fixtures/scalar.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -150,7 +139,6 @@ function knownX( ) {
 	return new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -169,7 +157,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'ztpsv: base is a function', function t() {
@@ -182,7 +169,7 @@ test( 'ztpsv: upper, no-transpose, non-unit (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'upper_no_trans_nonunit' );
+	tc = upper_no_trans_nonunit;
 	ap = upperAP();
 	x = knownX();
 	ztpmv( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -192,7 +179,7 @@ test( 'ztpsv: upper, no-transpose, non-unit (N=4)', function t() {
 });
 
 test( 'ztpsv: upper, transpose, non-unit (N=4)', function t() {
-	var tc = findCase( 'upper_trans_nonunit' );
+	var tc = upper_trans_nonunit;
 	var ap = upperAP();
 	var x = knownX();
 	ztpmv( 'upper', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -201,7 +188,7 @@ test( 'ztpsv: upper, transpose, non-unit (N=4)', function t() {
 });
 
 test( 'ztpsv: upper, conjugate-transpose, non-unit (N=4)', function t() {
-	var tc = findCase( 'upper_conj_trans_nonunit' );
+	var tc = upper_conj_trans_nonunit;
 	var ap = upperAP();
 	var x = knownX();
 	ztpmv( 'upper', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -210,7 +197,7 @@ test( 'ztpsv: upper, conjugate-transpose, non-unit (N=4)', function t() {
 });
 
 test( 'ztpsv: upper, no-transpose, unit diagonal (N=4)', function t() {
-	var tc = findCase( 'upper_no_trans_unit' );
+	var tc = upper_no_trans_unit;
 	var ap = upperAP();
 	var x = knownX();
 	ztpmv( 'upper', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
@@ -219,7 +206,7 @@ test( 'ztpsv: upper, no-transpose, unit diagonal (N=4)', function t() {
 });
 
 test( 'ztpsv: lower, no-transpose, non-unit (N=4)', function t() {
-	var tc = findCase( 'lower_no_trans_nonunit' );
+	var tc = lower_no_trans_nonunit;
 	var ap = lowerAP();
 	var x = knownX();
 	ztpmv( 'lower', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -228,7 +215,7 @@ test( 'ztpsv: lower, no-transpose, non-unit (N=4)', function t() {
 });
 
 test( 'ztpsv: lower, transpose, non-unit (N=4)', function t() {
-	var tc = findCase( 'lower_trans_nonunit' );
+	var tc = lower_trans_nonunit;
 	var ap = lowerAP();
 	var x = knownX();
 	ztpmv( 'lower', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -237,7 +224,7 @@ test( 'ztpsv: lower, transpose, non-unit (N=4)', function t() {
 });
 
 test( 'ztpsv: lower, conjugate-transpose, non-unit (N=4)', function t() {
-	var tc = findCase( 'lower_conj_trans_nonunit' );
+	var tc = lower_conj_trans_nonunit;
 	var ap = lowerAP();
 	var x = knownX();
 	ztpmv( 'lower', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -246,7 +233,7 @@ test( 'ztpsv: lower, conjugate-transpose, non-unit (N=4)', function t() {
 });
 
 test( 'ztpsv: lower, no-transpose, unit diagonal (N=4)', function t() {
-	var tc = findCase( 'lower_no_trans_unit' );
+	var tc = lower_no_trans_unit;
 	var ap = lowerAP();
 	var x = knownX();
 	ztpmv( 'lower', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
@@ -260,7 +247,7 @@ test( 'ztpsv: N=0 quick return', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ap = upperAP();
 	x = new Complex128Array( [ 99, 0 ] );
 	result = ztpsv( 'upper', 'no-transpose', 'non-unit', 0, ap, 1, 0, x, 1, 0 );
@@ -269,7 +256,7 @@ test( 'ztpsv: N=0 quick return', function t() {
 });
 
 test( 'ztpsv: upper, no-transpose, non-unit, strideX=2 (N=4)', function t() {
-	var tc = findCase( 'upper_stride_2' );
+	var tc = upper_stride_2;
 	var ap = upperAP();
 
 	// x with stride 2: [(1,0), (0,0), (2,1), (0,0), (3,-1), (0,0), (4,0.5), (0,0)]
@@ -280,7 +267,7 @@ test( 'ztpsv: upper, no-transpose, non-unit, strideX=2 (N=4)', function t() {
 });
 
 test( 'ztpsv: N=1, scalar case', function t() {
-	var tc = findCase( 'scalar' );
+	var tc = scalar;
 	var ap = new Complex128Array( [ 5, 2 ] );
 	var x = new Complex128Array( [ 3, -1 ] );
 

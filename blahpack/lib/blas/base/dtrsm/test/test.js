@@ -2,40 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrsm = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrsm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var left_upper_n_n = require( './fixtures/left_upper_n_n.json' );
+var left_lower_n_n = require( './fixtures/left_lower_n_n.json' );
+var right_upper_n_n = require( './fixtures/right_upper_n_n.json' );
+var unit_diag = require( './fixtures/unit_diag.json' );
+var alpha_scale = require( './fixtures/alpha_scale.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var left_upper_t_n = require( './fixtures/left_upper_t_n.json' );
+var left_lower_t_n = require( './fixtures/left_lower_t_n.json' );
+var right_lower_n_n = require( './fixtures/right_lower_n_n.json' );
+var right_upper_t_n = require( './fixtures/right_upper_t_n.json' );
+var right_lower_t_n = require( './fixtures/right_lower_t_n.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,13 +57,12 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 // All matrices 2x2, stored column-major: strideX1=1, strideX2=2
 
 test( 'dtrsm: left, upper, no-trans, non-unit', function t() {
-	var tc = findCase( 'left_upper_n_n' );
+	var tc = left_upper_n_n;
 
 	// A = [2 3; 0 4] col-major: [2, 0, 3, 4]
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
@@ -84,7 +72,7 @@ test( 'dtrsm: left, upper, no-trans, non-unit', function t() {
 });
 
 test( 'dtrsm: left, lower, no-trans, non-unit', function t() {
-	var tc = findCase( 'left_lower_n_n' );
+	var tc = left_lower_n_n;
 
 	// A = [3 0; 2 5] col-major: [3, 2, 0, 5]
 	var A = new Float64Array( [ 3, 2, 0, 5 ] );
@@ -94,7 +82,7 @@ test( 'dtrsm: left, lower, no-trans, non-unit', function t() {
 });
 
 test( 'dtrsm: right, upper, no-trans, non-unit', function t() {
-	var tc = findCase( 'right_upper_n_n' );
+	var tc = right_upper_n_n;
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
 	var B = new Float64Array( [ 4, 6, 11, 15 ] );
 	dtrsm( 'right', 'upper', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
@@ -102,7 +90,7 @@ test( 'dtrsm: right, upper, no-trans, non-unit', function t() {
 });
 
 test( 'dtrsm: unit diagonal', function t() {
-	var tc = findCase( 'unit_diag' );
+	var tc = unit_diag;
 
 	// A stored as [99, 0, 3, 99] but diag = 'unit' ignores diagonal
 	var A = new Float64Array( [ 99, 0, 3, 99 ] );
@@ -112,7 +100,7 @@ test( 'dtrsm: unit diagonal', function t() {
 });
 
 test( 'dtrsm: alpha scaling', function t() {
-	var tc = findCase( 'alpha_scale' );
+	var tc = alpha_scale;
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
 	var B = new Float64Array( [ 8, 4, 10, 12 ] );
 	dtrsm( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 2.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
@@ -120,7 +108,7 @@ test( 'dtrsm: alpha scaling', function t() {
 });
 
 test( 'dtrsm: alpha=0 zeros B', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
 	var B = new Float64Array( [ 5, 6, 7, 8 ] );
 	dtrsm( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, 0.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
@@ -128,7 +116,7 @@ test( 'dtrsm: alpha=0 zeros B', function t() {
 });
 
 test( 'dtrsm: left, upper, transpose, non-unit', function t() {
-	var tc = findCase( 'left_upper_t_n' );
+	var tc = left_upper_t_n;
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
 	var B = new Float64Array( [ 4, 11, 2, 14 ] );
 	dtrsm( 'left', 'upper', 'transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
@@ -136,7 +124,7 @@ test( 'dtrsm: left, upper, transpose, non-unit', function t() {
 });
 
 test( 'dtrsm: left, lower, transpose, non-unit', function t() {
-	var tc = findCase( 'left_lower_t_n' );
+	var tc = left_lower_t_n;
 	var A = new Float64Array( [ 3, 2, 0, 5 ] );
 	var B = new Float64Array( [ 9, 10, 15, 19 ] );
 	dtrsm( 'left', 'lower', 'transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
@@ -144,7 +132,7 @@ test( 'dtrsm: left, lower, transpose, non-unit', function t() {
 });
 
 test( 'dtrsm: right, lower, no-trans, non-unit', function t() {
-	var tc = findCase( 'right_lower_n_n' );
+	var tc = right_lower_n_n;
 	var A = new Float64Array( [ 3, 2, 0, 5 ] );
 	var B = new Float64Array( [ 3, 6, 10, 22 ] );
 	dtrsm( 'right', 'lower', 'no-transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
@@ -152,7 +140,7 @@ test( 'dtrsm: right, lower, no-trans, non-unit', function t() {
 });
 
 test( 'dtrsm: right, upper, transpose, non-unit', function t() {
-	var tc = findCase( 'right_upper_t_n' );
+	var tc = right_upper_t_n;
 	var A = new Float64Array( [ 2, 0, 3, 4 ] );
 	var B = new Float64Array( [ 4, 6, 14, 22 ] );
 	dtrsm( 'right', 'upper', 'transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len
@@ -160,7 +148,7 @@ test( 'dtrsm: right, upper, transpose, non-unit', function t() {
 });
 
 test( 'dtrsm: right, lower, transpose, non-unit', function t() {
-	var tc = findCase( 'right_lower_t_n' );
+	var tc = right_lower_t_n;
 	var A = new Float64Array( [ 3, 2, 0, 5 ] );
 	var B = new Float64Array( [ 6, 9, 10, 25 ] );
 	dtrsm( 'right', 'lower', 'transpose', 'non-unit', 2, 2, 1.0, A, 1, 2, 0, B, 1, 2, 0 ); // eslint-disable-line max-len

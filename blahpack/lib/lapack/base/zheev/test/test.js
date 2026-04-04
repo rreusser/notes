@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zheev = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zheev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var zheev_4x4_v_l = require( './fixtures/zheev_4x4_v_l.json' );
+var zheev_4x4_v_u = require( './fixtures/zheev_4x4_v_u.json' );
+var zheev_4x4_n_l = require( './fixtures/zheev_4x4_n_l.json' );
+var zheev_3x3_v_l = require( './fixtures/zheev_3x3_v_l.json' );
+var zheev_3x3_v_u = require( './fixtures/zheev_3x3_v_u.json' );
+var zheev_1x1_v = require( './fixtures/zheev_1x1_v.json' );
+var zheev_2x2_diag = require( './fixtures/zheev_2x2_diag.json' );
+var zheev_3x3_n_u = require( './fixtures/zheev_3x3_n_u.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -424,7 +410,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zheev: 4x4 JOBZ=V UPLO=L', function t() {
@@ -433,7 +418,7 @@ test( 'zheev: 4x4 JOBZ=V UPLO=L', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_4x4_V_L' );
+	tc = zheev_4x4_v_l;
 	Afull = makeFull4x4();
 	W = new Float64Array( 4 );
 	result = callZheev( 'compute', 'lower', 4, make4x4Lower(), W );
@@ -449,7 +434,7 @@ test( 'zheev: 4x4 JOBZ=V UPLO=U', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_4x4_V_U' );
+	tc = zheev_4x4_v_u;
 	Afull = makeFull4x4();
 	W = new Float64Array( 4 );
 	result = callZheev( 'compute', 'upper', 4, make4x4Upper(), W );
@@ -464,7 +449,7 @@ test( 'zheev: 4x4 JOBZ=N UPLO=L (eigenvalues only)', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_4x4_N_L' );
+	tc = zheev_4x4_n_l;
 	W = new Float64Array( 4 );
 	result = callZheev( 'none', 'lower', 4, make4x4Lower(), W );
 	assert.equal( result.info, 0, 'info=0' );
@@ -477,7 +462,7 @@ test( 'zheev: 3x3 JOBZ=V UPLO=L', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_3x3_V_L' );
+	tc = zheev_3x3_v_l;
 	Afull = makeFull3x3();
 	W = new Float64Array( 3 );
 	result = callZheev( 'compute', 'lower', 3, make3x3Lower(), W );
@@ -493,7 +478,7 @@ test( 'zheev: 3x3 JOBZ=V UPLO=U', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_3x3_V_U' );
+	tc = zheev_3x3_v_u;
 	Afull = makeFull3x3();
 	W = new Float64Array( 3 );
 	result = callZheev( 'compute', 'upper', 3, make3x3Upper(), W );
@@ -509,7 +494,7 @@ test( 'zheev: N=1 JOBZ=V', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_1x1_V' );
+	tc = zheev_1x1_v;
 	W = new Float64Array( 1 );
 	Adata = new Float64Array([ 7.5, 0.0 ]);
 	result = callZheev( 'compute', 'lower', 1, Adata, W );
@@ -541,7 +526,7 @@ test( 'zheev: 2x2 diagonal JOBZ=V', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_2x2_diag' );
+	tc = zheev_2x2_diag;
 	W = new Float64Array( 2 );
 	Adata = new Float64Array([
 		3.0,
@@ -575,7 +560,7 @@ test( 'zheev: 3x3 JOBZ=N UPLO=U (eigenvalues only)', function t() {
 	var tc;
 	var W;
 
-	tc = findCase( 'zheev_3x3_N_U' );
+	tc = zheev_3x3_n_u;
 	W = new Float64Array( 3 );
 	result = callZheev( 'none', 'upper', 3, make3x3Upper(), W );
 	assert.equal( result.info, 0, 'info=0' );

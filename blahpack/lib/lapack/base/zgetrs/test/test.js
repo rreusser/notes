@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -17,29 +14,19 @@ var zgetrf2 = require( './../../zgetrf2/lib/base.js' );
 var zgetrs = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgetrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var solve_3x3 = require( './fixtures/solve_3x3.json' );
+var solve_3x3_trans = require( './fixtures/solve_3x3_trans.json' );
+var solve_3x3_conj = require( './fixtures/solve_3x3_conj.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var identity = require( './fixtures/identity.json' );
+var multi_rhs_conj = require( './fixtures/multi_rhs_conj.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -264,7 +251,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgetrs: solve_3x3 (no-transpose)', function t() {
@@ -276,7 +262,7 @@ test( 'zgetrs: solve_3x3 (no-transpose)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'solve_3x3' );
+	tc = solve_3x3;
 	Aorig = new Complex128Array([
 		2,
 		1,
@@ -317,7 +303,7 @@ test( 'zgetrs: solve_3x3_trans (transpose)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'solve_3x3_trans' );
+	tc = solve_3x3_trans;
 	Aorig = new Complex128Array([
 		2,
 		1,
@@ -358,7 +344,7 @@ test( 'zgetrs: solve_3x3_conj (conjugate transpose)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'solve_3x3_conj' );
+	tc = solve_3x3_conj;
 	Aorig = new Complex128Array([
 		2,
 		1,
@@ -400,7 +386,7 @@ test( 'zgetrs: multi_rhs (NRHS=2, no-transpose)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	Aorig = new Complex128Array([
 		2,
 		1,
@@ -440,7 +426,7 @@ test( 'zgetrs: n_zero (quick return)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
@@ -455,7 +441,7 @@ test( 'zgetrs: nrhs_zero (quick return)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Complex128Array( 9 );
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( 3 );
@@ -470,7 +456,7 @@ test( 'zgetrs: 1x1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Complex128Array( [ 5, 3 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( [ 10, 6 ] );
@@ -487,7 +473,7 @@ test( 'zgetrs: identity', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] ); // eslint-disable-line max-len
 	IPIV = new Int32Array( 3 );
 	B = new Complex128Array( [ 3, 1, 5, 2, 7, 3 ] );
@@ -507,7 +493,7 @@ test( 'zgetrs: multi_rhs_conj (NRHS=2, conjugate transpose)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs_conj' );
+	tc = multi_rhs_conj;
 	Aorig = new Complex128Array([
 		2,
 		1,

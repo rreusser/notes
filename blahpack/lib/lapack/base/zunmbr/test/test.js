@@ -6,24 +6,19 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zgebrd = require( '../../zgebrd/lib/base.js' );
 var zunmbr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunmbr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var q_left_notrans = require( './fixtures/q_left_notrans.json' );
+var q_left_conjtrans = require( './fixtures/q_left_conjtrans.json' );
+var p_right_notrans = require( './fixtures/p_right_notrans.json' );
+var p_right_conjtrans = require( './fixtures/p_right_conjtrans.json' );
+var q_right_notrans = require( './fixtures/q_right_notrans.json' );
+var p_left_conjtrans = require( './fixtures/p_left_conjtrans.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -102,11 +97,10 @@ function eye( n, ld ) {
 	return C;
 }
 
-
 // TESTS //
 
 test( 'zunmbr: Q, left, no transpose', function t() {
-	var tc = findCase( 'q_left_notrans' );
+	var tc = q_left_notrans;
 	var bd = setup4x3();
 	var LDC = 6;
 	var C = eye( 4, LDC );
@@ -117,7 +111,7 @@ test( 'zunmbr: Q, left, no transpose', function t() {
 });
 
 test( 'zunmbr: Q, left, conjugate transpose', function t() {
-	var tc = findCase( 'q_left_conjtrans' );
+	var tc = q_left_conjtrans;
 	var bd = setup4x3();
 	var LDC = 6;
 	var C = eye( 4, LDC );
@@ -128,7 +122,7 @@ test( 'zunmbr: Q, left, conjugate transpose', function t() {
 });
 
 test( 'zunmbr: P, right, no transpose', function t() {
-	var tc = findCase( 'p_right_notrans' );
+	var tc = p_right_notrans;
 	var bd = setup3x5();
 	var LDC = 6;
 	var C = eye( 5, LDC );
@@ -139,7 +133,7 @@ test( 'zunmbr: P, right, no transpose', function t() {
 });
 
 test( 'zunmbr: P, right, conjugate transpose', function t() {
-	var tc = findCase( 'p_right_conjtrans' );
+	var tc = p_right_conjtrans;
 	var bd = setup3x5();
 	var LDC = 6;
 	var C = eye( 5, LDC );
@@ -159,7 +153,7 @@ test( 'zunmbr: M=0 quick return', function t() {
 });
 
 test( 'zunmbr: Q, right, no transpose', function t() {
-	var tc = findCase( 'q_right_notrans' );
+	var tc = q_right_notrans;
 	var bd = setup4x3();
 	var LDC = 6;
 	var C = eye( 4, LDC );
@@ -170,7 +164,7 @@ test( 'zunmbr: Q, right, no transpose', function t() {
 });
 
 test( 'zunmbr: P, left, conjugate transpose', function t() {
-	var tc = findCase( 'p_left_conjtrans' );
+	var tc = p_left_conjtrans;
 	var bd = setup3x5();
 	var LDC = 6;
 	var C = eye( 5, LDC );

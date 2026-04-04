@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -14,30 +12,14 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgesc2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgesc2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len, node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_2x2 = require( './fixtures/basic_2x2.json' );
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var basic_4x4 = require( './fixtures/basic_4x4.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -86,7 +68,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgesc2: main export is a function', function t() {
@@ -103,7 +84,7 @@ test( 'zgesc2: basic_2x2', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'basic_2x2' );
+	tc = basic_2x2;
 	N = 2;
 	A = new Complex128Array( tc.A );
 	IPIV = new Int32Array( tc.ipiv.map( function sub1( v ) {
@@ -130,7 +111,7 @@ test( 'zgesc2: basic_3x3', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	N = 3;
 	A = new Complex128Array( tc.A );
 	IPIV = new Int32Array( tc.ipiv.map( function sub1( v ) {
@@ -157,7 +138,7 @@ test( 'zgesc2: basic_4x4', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'basic_4x4' );
+	tc = basic_4x4;
 	N = 4;
 	A = new Complex128Array( tc.A );
 	IPIV = new Int32Array( tc.ipiv.map( function sub1( v ) {
@@ -184,7 +165,7 @@ test( 'zgesc2: n_equals_1', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'n_equals_1' );
+	tc = n_equals_1;
 	N = 1;
 	A = new Complex128Array( [ 5.0, 2.0 ] );
 	IPIV = new Int32Array( [ 0 ] );

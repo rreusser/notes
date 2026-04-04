@@ -6,23 +6,25 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zhgeqz = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhgeqz.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n_eq_0 = require( './fixtures/n_eq_0.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var eig_only_3x3 = require( './fixtures/eig_only_3x3.json' );
+var schur_3x3 = require( './fixtures/schur_3x3.json' );
+var schur_4x4 = require( './fixtures/schur_4x4.json' );
+var ihi_lt_ilo = require( './fixtures/ihi_lt_ilo.json' );
+var partial_4x4 = require( './fixtures/partial_4x4.json' );
+var eig_only_4x4 = require( './fixtures/eig_only_4x4.json' );
+var schur_2x2 = require( './fixtures/schur_2x2.json' );
+var zero_t_diag_3x3 = require( './fixtures/zero_t_diag_3x3.json' );
+var zero_t_last_3x3 = require( './fixtures/zero_t_last_3x3.json' );
+var diagonal_3x3 = require( './fixtures/diagonal_3x3.json' );
+var accumulate_qz = require( './fixtures/accumulate_qz.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -75,11 +77,10 @@ function getCol( m, N, j ) {
 	return col;
 }
 
-
 // TESTS //
 
 test( 'zhgeqz: n_eq_0', function t() {
-	var tc = findCase( 'n_eq_0' );
+	var tc = n_eq_0;
 	var H = new Complex128Array( 0 );
 	var T = new Complex128Array( 0 );
 	var Q = new Complex128Array( 0 );
@@ -103,7 +104,7 @@ test( 'zhgeqz: n_eq_0', function t() {
 });
 
 test( 'zhgeqz: n_eq_1', function t() {
-	var tc = findCase( 'n_eq_1' );
+	var tc = n_eq_1;
 	var n = 1;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -137,7 +138,7 @@ test( 'zhgeqz: n_eq_1', function t() {
 });
 
 test( 'zhgeqz: eig_only_3x3', function t() {
-	var tc = findCase( 'eig_only_3x3' );
+	var tc = eig_only_3x3;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -180,7 +181,7 @@ test( 'zhgeqz: eig_only_3x3', function t() {
 });
 
 test( 'zhgeqz: schur_3x3', function t() {
-	var tc = findCase( 'schur_3x3' );
+	var tc = schur_3x3;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -235,7 +236,7 @@ test( 'zhgeqz: schur_3x3', function t() {
 });
 
 test( 'zhgeqz: schur_4x4', function t() {
-	var tc = findCase( 'schur_4x4' );
+	var tc = schur_4x4;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -303,7 +304,7 @@ test( 'zhgeqz: schur_4x4', function t() {
 });
 
 test( 'zhgeqz: ihi_lt_ilo', function t() {
-	var tc = findCase( 'ihi_lt_ilo' );
+	var tc = ihi_lt_ilo;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -337,7 +338,7 @@ test( 'zhgeqz: ihi_lt_ilo', function t() {
 });
 
 test( 'zhgeqz: partial_4x4', function t() {
-	var tc = findCase( 'partial_4x4' );
+	var tc = partial_4x4;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -403,7 +404,7 @@ test( 'zhgeqz: partial_4x4', function t() {
 });
 
 test( 'zhgeqz: eig_only_4x4', function t() {
-	var tc = findCase( 'eig_only_4x4' );
+	var tc = eig_only_4x4;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -455,7 +456,7 @@ test( 'zhgeqz: eig_only_4x4', function t() {
 });
 
 test( 'zhgeqz: schur_2x2', function t() {
-	var tc = findCase( 'schur_2x2' );
+	var tc = schur_2x2;
 	var n = 2;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -499,7 +500,7 @@ test( 'zhgeqz: schur_2x2', function t() {
 });
 
 test( 'zhgeqz: zero_t_diag_3x3', function t() {
-	var tc = findCase( 'zero_t_diag_3x3' );
+	var tc = zero_t_diag_3x3;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -542,7 +543,7 @@ test( 'zhgeqz: zero_t_diag_3x3', function t() {
 });
 
 test( 'zhgeqz: zero_t_last_3x3', function t() {
-	var tc = findCase( 'zero_t_last_3x3' );
+	var tc = zero_t_last_3x3;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -585,7 +586,7 @@ test( 'zhgeqz: zero_t_last_3x3', function t() {
 });
 
 test( 'zhgeqz: diagonal_3x3', function t() {
-	var tc = findCase( 'diagonal_3x3' );
+	var tc = diagonal_3x3;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );
@@ -626,7 +627,7 @@ test( 'zhgeqz: diagonal_3x3', function t() {
 });
 
 test( 'zhgeqz: accumulate_qz (COMPQ=V, COMPZ=V)', function t() {
-	var tc = findCase( 'accumulate_qz' );
+	var tc = accumulate_qz;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var Tm = makeMatrix( n );

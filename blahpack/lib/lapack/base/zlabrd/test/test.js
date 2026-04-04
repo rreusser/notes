@@ -6,25 +6,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlabrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlabrd.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var m_ge_n_5x4_nb2 = require( './fixtures/m_ge_n_5x4_nb2.json' );
+var m_lt_n_4x5_nb2 = require( './fixtures/m_lt_n_4x5_nb2.json' );
+var quick_return_m0 = require( './fixtures/quick_return_m0.json' );
+var nb1_3x3 = require( './fixtures/nb1_3x3.json' );
+var nb1_m_lt_n_2x3 = require( './fixtures/nb1_m_lt_n_2x3.json' );
+var m_lt_n_nb_eq_m_2x4 = require( './fixtures/m_lt_n_nb_eq_m_2x4.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -39,11 +34,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zlabrd: m_ge_n_5x4_nb2', function t() {
-	var tc = findCase( 'm_ge_n_5x4_nb2' );
+	var tc = m_ge_n_5x4_nb2;
 	var M = 5;
 	var N = 4;
 	var nb = 2;
@@ -76,7 +70,7 @@ test( 'zlabrd: m_ge_n_5x4_nb2', function t() {
 });
 
 test( 'zlabrd: m_lt_n_4x5_nb2', function t() {
-	var tc = findCase( 'm_lt_n_4x5_nb2' );
+	var tc = m_lt_n_4x5_nb2;
 	var M = 4;
 	var N = 5;
 	var nb = 2;
@@ -110,7 +104,7 @@ test( 'zlabrd: m_lt_n_4x5_nb2', function t() {
 });
 
 test( 'zlabrd: quick_return_m0', function t() {
-	var tc = findCase( 'quick_return_m0' );
+	var tc = quick_return_m0;
 	var d = new Float64Array( 2 );
 	var e = new Float64Array( 2 );
 	var TAUQ = new Complex128Array( 2 );
@@ -126,7 +120,7 @@ test( 'zlabrd: quick_return_m0', function t() {
 });
 
 test( 'zlabrd: nb1_3x3', function t() {
-	var tc = findCase( 'nb1_3x3' );
+	var tc = nb1_3x3;
 	var M = 3;
 	var N = 3;
 	var nb = 1;
@@ -158,7 +152,7 @@ test( 'zlabrd: nb1_3x3', function t() {
 });
 
 test( 'zlabrd: nb1_m_lt_n_2x3', function t() {
-	var tc = findCase( 'nb1_m_lt_n_2x3' );
+	var tc = nb1_m_lt_n_2x3;
 	var M = 2;
 	var N = 3;
 	var nb = 1;
@@ -190,7 +184,7 @@ test( 'zlabrd: nb1_m_lt_n_2x3', function t() {
 });
 
 test( 'zlabrd: m_lt_n_nb_eq_m_2x4', function t() {
-	var tc = findCase( 'm_lt_n_nb_eq_m_2x4' );
+	var tc = m_lt_n_nb_eq_m_2x4;
 	var M = 2;
 	var N = 4;
 	var nb = 2;

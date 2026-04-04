@@ -2,40 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsyr2 = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsyr2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var upper_alpha = require( './fixtures/upper_alpha.json' );
+var lower_alpha = require( './fixtures/lower_alpha.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_stride = require( './fixtures/upper_stride.json' );
+var lower_stride = require( './fixtures/lower_stride.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_zeros = require( './fixtures/upper_zeros.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,11 +58,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dsyr2: upper_basic', function t() {
-	var tc = findCase( 'upper_basic' );
+	var tc = upper_basic;
 
 	// A = [1 2 3; 2 5 6; 3 6 9] (column-major), x = [1,2,3], y = [4,5,6]
 	var A = new Float64Array( [ 1, 2, 3, 2, 5, 6, 3, 6, 9 ] );
@@ -83,7 +72,7 @@ test( 'dsyr2: upper_basic', function t() {
 });
 
 test( 'dsyr2: lower_basic', function t() {
-	var tc = findCase( 'lower_basic' );
+	var tc = lower_basic;
 	var A = new Float64Array( [ 1, 2, 3, 2, 5, 6, 3, 6, 9 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5, 6 ] );
@@ -92,7 +81,7 @@ test( 'dsyr2: lower_basic', function t() {
 });
 
 test( 'dsyr2: upper_alpha', function t() {
-	var tc = findCase( 'upper_alpha' );
+	var tc = upper_alpha;
 
 	// Upper triangular only: A = [1 2 3; 0 5 6; 0 0 9]
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
@@ -103,7 +92,7 @@ test( 'dsyr2: upper_alpha', function t() {
 });
 
 test( 'dsyr2: lower_alpha', function t() {
-	var tc = findCase( 'lower_alpha' );
+	var tc = lower_alpha;
 
 	// Lower triangular only: A = [1 0 0; 2 5 0; 3 6 9]
 	var A = new Float64Array( [ 1, 2, 3, 0, 5, 6, 0, 0, 9 ] );
@@ -114,7 +103,7 @@ test( 'dsyr2: lower_alpha', function t() {
 });
 
 test( 'dsyr2: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Float64Array( [ 99 ] );
 	var x = new Float64Array( [ 1 ] );
 	var y = new Float64Array( [ 1 ] );
@@ -123,7 +112,7 @@ test( 'dsyr2: n_zero', function t() {
 });
 
 test( 'dsyr2: alpha_zero', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = new Float64Array( [ 99, 0, 0, 0, 0, 0, 0, 0, 0 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 	var y = new Float64Array( [ 4, 5, 6 ] );
@@ -132,7 +121,7 @@ test( 'dsyr2: alpha_zero', function t() {
 });
 
 test( 'dsyr2: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Float64Array( [ 5 ] );
 	var x = new Float64Array( [ 3 ] );
 	var y = new Float64Array( [ 2 ] );
@@ -141,7 +130,7 @@ test( 'dsyr2: n_one', function t() {
 });
 
 test( 'dsyr2: upper_stride', function t() {
-	var tc = findCase( 'upper_stride' );
+	var tc = upper_stride;
 
 	// A upper tri: [1 2 3; 0 5 6; 0 0 9], incx=2, incy=2
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );
@@ -152,7 +141,7 @@ test( 'dsyr2: upper_stride', function t() {
 });
 
 test( 'dsyr2: lower_stride', function t() {
-	var tc = findCase( 'lower_stride' );
+	var tc = lower_stride;
 
 	// A lower tri: [1 0 0; 2 5 0; 3 6 9], incx=2, incy=3
 	var A = new Float64Array( [ 1, 2, 3, 0, 5, 6, 0, 0, 9 ] );
@@ -163,7 +152,7 @@ test( 'dsyr2: lower_stride', function t() {
 });
 
 test( 'dsyr2: upper_4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 
 	// 4x4 upper: column-major
 	var A = new Float64Array([
@@ -191,7 +180,7 @@ test( 'dsyr2: upper_4x4', function t() {
 });
 
 test( 'dsyr2: lower_4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 
 	// 4x4 lower: column-major
 	var A = new Float64Array([
@@ -219,7 +208,7 @@ test( 'dsyr2: lower_4x4', function t() {
 });
 
 test( 'dsyr2: upper_zeros (skip when x[j]==0 && y[j]==0)', function t() {
-	var tc = findCase( 'upper_zeros' );
+	var tc = upper_zeros;
 
 	// x = [0, 2, 0], y = [0, 5, 0] — columns 0 and 2 should be skipped
 	var A = new Float64Array( [ 1, 0, 0, 2, 5, 0, 3, 6, 9 ] );

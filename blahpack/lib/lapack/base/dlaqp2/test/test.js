@@ -2,40 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlaqp2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqp2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_4x3 = require( './fixtures/basic_4x3.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
+var n_one = require( './fixtures/n_one.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var offset_1 = require( './fixtures/offset_1.json' );
+var pivot_reorder = require( './fixtures/pivot_reorder.json' );
+var collinear_recomp = require( './fixtures/collinear_recomp.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -156,7 +141,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlaqp2: basic_4x3', function t() {
@@ -167,7 +151,7 @@ test( 'dlaqp2: basic_4x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'basic_4x3' );
+	tc = basic_4x3;
 	A = makeMatrix([
 		1,
 		2,
@@ -200,7 +184,7 @@ test( 'dlaqp2: square_3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	A = makeMatrix([
 		1,
 		0,
@@ -230,7 +214,7 @@ test( 'dlaqp2: n_one', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = makeMatrix([
 		3, 4, 0
 	], 3, 1, 3 );
@@ -253,7 +237,7 @@ test( 'dlaqp2: one_by_one', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 
 	A = new Float64Array( [ 7.0 ] );
 	JPVT = new Int32Array( [ 0 ] );
@@ -297,7 +281,7 @@ test( 'dlaqp2: offset_1', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'offset_1' );
+	tc = offset_1;
 	A = makeMatrix([
 		5,
 		0,
@@ -330,7 +314,7 @@ test( 'dlaqp2: pivot_reorder', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'pivot_reorder' );
+	tc = pivot_reorder;
 	A = makeMatrix([
 		0.1,
 		0.1,
@@ -360,7 +344,7 @@ test( 'dlaqp2: collinear_recomp', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'collinear_recomp' );
+	tc = collinear_recomp;
 	A = makeMatrix([
 		1,
 		2,

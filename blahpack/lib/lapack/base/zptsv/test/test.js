@@ -4,25 +4,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var zptsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zptsv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_5x5_single_rhs = require( './fixtures/basic_5x5_single_rhs.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,11 +31,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zptsv: basic_5x5_single_rhs', function t() {
-	var tc = findCase( 'basic_5x5_single_rhs' );
+	var tc = basic_5x5_single_rhs;
 	var d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0, 4.0 ] );
 	var e = new Complex128Array( [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 ] );
 	var B = new Complex128Array( [ 1.0, 0.0, 2.0, 1.0, 3.0, -1.0, 4.0, 2.0, 5.0, 0.0 ] );
@@ -55,7 +48,7 @@ test( 'zptsv: basic_5x5_single_rhs', function t() {
 });
 
 test( 'zptsv: multi_rhs', function t() {
-	var tc = findCase( 'multi_rhs' );
+	var tc = multi_rhs;
 	// 4x4 with 2 RHS, column-major: B is 4x2, LDB=4 => strideB1=1, strideB2=4
 	var d = new Float64Array( [ 3.0, 3.0, 3.0, 3.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.5, 0.5, -0.5, 0.5, 0.5 ] );
@@ -87,7 +80,7 @@ test( 'zptsv: multi_rhs', function t() {
 });
 
 test( 'zptsv: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var d = new Float64Array( [ 5.0 ] );
 	var e = new Complex128Array( 0 );
 	var B = new Complex128Array( [ 10.0, -5.0 ] );
@@ -100,7 +93,7 @@ test( 'zptsv: n_one', function t() {
 });
 
 test( 'zptsv: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var d = new Float64Array( 0 );
 	var e = new Complex128Array( 0 );
 	var B = new Complex128Array( 0 );
@@ -111,7 +104,7 @@ test( 'zptsv: n_zero', function t() {
 });
 
 test( 'zptsv: not_posdef', function t() {
-	var tc = findCase( 'not_posdef' );
+	var tc = not_posdef;
 	var d = new Float64Array( [ -1.0, 4.0, 4.0 ] );
 	var e = new Complex128Array( [ 1.0, 0.0, 1.0, 0.0 ] );
 	var B = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );

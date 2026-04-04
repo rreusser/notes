@@ -1,0 +1,9 @@
+{
+  "name": "upper_small_offdiag",
+  "csu": 1,
+  "snu": 6e-11,
+  "csv": 1,
+  "snv": 8.000000000000001e-11,
+  "csq": 1,
+  "snq": 2e-11
+}

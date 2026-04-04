@@ -1,0 +1,26 @@
+{
+  "name": "identity_lower",
+  "anorm": 1,
+  "info_trf": 0,
+  "AP_factored": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0
+  ],
+  "ipiv": [
+    1,
+    2,
+    3
+  ],
+  "rcond": 1,
+  "info": 0
+}

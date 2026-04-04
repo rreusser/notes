@@ -5,38 +5,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zhptrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhptrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3_upper_hpd = require( './fixtures/3x3_upper_hpd.json' );
+var _3x3_lower_hpd = require( './fixtures/3x3_lower_hpd.json' );
+var _4x4_indef_upper = require( './fixtures/4x4_indef_upper.json' );
+var _4x4_indef_lower = require( './fixtures/4x4_indef_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
+var singular = require( './fixtures/singular.json' );
+var _4x4_tridiag_lower = require( './fixtures/4x4_tridiag_lower.json' );
+var _4x4_tridiag_upper = require( './fixtures/4x4_tridiag_upper.json' );
+var n_one_singular = require( './fixtures/n_one_singular.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -106,7 +93,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhptrf: 3x3_upper_hpd', function t() {
@@ -116,7 +102,7 @@ test( 'zhptrf: 3x3_upper_hpd', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( '3x3_upper_hpd' );
+	tc = _3x3_upper_hpd;
 	ipiv = new Int32Array( 3 );
 	ap = new Complex128Array([
 		4, 0, 1, 2, 5, 0, 3, -1, 2, 1, 7, 0
@@ -135,7 +121,7 @@ test( 'zhptrf: 3x3_lower_hpd', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( '3x3_lower_hpd' );
+	tc = _3x3_lower_hpd;
 	ipiv = new Int32Array( 3 );
 	ap = new Complex128Array([
 		4, 0, 1, -2, 3, 1, 5, 0, 2, -1, 7, 0
@@ -154,7 +140,7 @@ test( 'zhptrf: 4x4_indef_upper', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( '4x4_indef_upper' );
+	tc = _4x4_indef_upper;
 	ipiv = new Int32Array( 4 );
 	ap = new Complex128Array([
 		0, 0, 1, 1, 0, 0, 2, -1, 4, 2, 0, 0, 3, 0.5, 5, -1, 6, 1, 0, 0
@@ -173,7 +159,7 @@ test( 'zhptrf: 4x4_indef_lower', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( '4x4_indef_lower' );
+	tc = _4x4_indef_lower;
 	ipiv = new Int32Array( 4 );
 	ap = new Complex128Array([
 		0, 0, 1, -1, 2, 1, 3, -0.5, 0, 0, 4, -2, 5, 1, 0, 0, 6, -1, 0, 0
@@ -203,7 +189,7 @@ test( 'zhptrf: n_one', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ipiv = new Int32Array( 1 );
 	ap = new Complex128Array([ 5, 0 ]);
 	av = reinterpret( ap, 0 );
@@ -220,7 +206,7 @@ test( 'zhptrf: singular', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	ipiv = new Int32Array( 2 );
 	ap = new Complex128Array([ 0, 0, 0, 0, 0, 0 ]);
 	av = reinterpret( ap, 0 );
@@ -237,7 +223,7 @@ test( 'zhptrf: 4x4_tridiag_lower', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( '4x4_tridiag_lower' );
+	tc = _4x4_tridiag_lower;
 	ipiv = new Int32Array( 4 );
 	ap = new Complex128Array([
 		2,
@@ -275,7 +261,7 @@ test( 'zhptrf: 4x4_tridiag_upper', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( '4x4_tridiag_upper' );
+	tc = _4x4_tridiag_upper;
 	ipiv = new Int32Array( 4 );
 	ap = new Complex128Array([
 		2, 0, -1, 1, 3, 0, 0, 0, -1, 2, 4, 0, 0, 0, 0, 0, -1, 1, 3, 0
@@ -294,7 +280,7 @@ test( 'zhptrf: n_one_singular', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'n_one_singular' );
+	tc = n_one_singular;
 	ipiv = new Int32Array( 1 );
 	ap = new Complex128Array([ 0, 0 ]);
 	av = reinterpret( ap, 0 );

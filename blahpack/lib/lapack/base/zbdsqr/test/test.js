@@ -2,41 +2,42 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zbdsqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zbdsqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_4x4_values_only = require( './fixtures/upper_4x4_values_only.json' );
+var upper_3x3_with_vt = require( './fixtures/upper_3x3_with_vt.json' );
+var upper_3x3_with_vt_and_u = require( './fixtures/upper_3x3_with_vt_and_u.json' );
+var lower_3x3_values_only = require( './fixtures/lower_3x3_values_only.json' );
+var lower_3x3_with_u = require( './fixtures/lower_3x3_with_u.json' );
+var n_1 = require( './fixtures/n_1.json' );
+var n_0 = require( './fixtures/n_0.json' );
+var upper_2x2_with_vectors = require( './fixtures/upper_2x2_with_vectors.json' );
+var n_1_neg_with_vt = require( './fixtures/n_1_neg_with_vt.json' );
+var upper_3x3_with_c = require( './fixtures/upper_3x3_with_c.json' );
+var upper_4x4_idir2 = require( './fixtures/upper_4x4_idir2.json' );
+var upper_3x3_zero_shift = require( './fixtures/upper_3x3_zero_shift.json' );
+var lower_3x3_with_c = require( './fixtures/lower_3x3_with_c.json' );
+var upper_3x3_idir2_with_vectors = require( './fixtures/upper_3x3_idir2_with_vectors.json' );
+var upper_3x3_negative_d = require( './fixtures/upper_3x3_negative_d.json' );
+var nearly_diagonal = require( './fixtures/nearly_diagonal.json' );
+var lower_3x3_with_vt_and_u = require( './fixtures/lower_3x3_with_vt_and_u.json' );
+var lower_3x3_all_vectors = require( './fixtures/lower_3x3_all_vectors.json' );
+var upper_3x3_zero_d = require( './fixtures/upper_3x3_zero_d.json' );
+var upper_3x3_zero_shift_all_vecs = require( './fixtures/upper_3x3_zero_shift_all_vecs.json' );
+var upper_4x4_idir2_all_vecs = require( './fixtures/upper_4x4_idir2_all_vecs.json' );
+var upper_4x4_idir1_zero_shift_all_vecs = require( './fixtures/upper_4x4_idir1_zero_shift_all_vecs.json' );
+var upper_3x3_near_zero_shift = require( './fixtures/upper_3x3_near_zero_shift.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -100,7 +101,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zbdsqr: upper_4x4_values_only', function t() {
@@ -114,7 +114,7 @@ test( 'zbdsqr: upper_4x4_values_only', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_4x4_values_only' );
+	tc = upper_4x4_values_only;
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 	vt = new Complex128Array( 0 );
@@ -136,7 +136,7 @@ test( 'zbdsqr: upper_3x3_with_vt', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_with_vt' );
+	tc = upper_3x3_with_vt;
 	d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 0.5, 0.5 ] );
 	vt = complexIdentity( 3 );
@@ -159,7 +159,7 @@ test( 'zbdsqr: upper_3x3_with_vt_and_u', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_with_vt_and_u' );
+	tc = upper_3x3_with_vt_and_u;
 	d = new Float64Array( [ 5.0, 3.0, 1.0 ] );
 	e = new Float64Array( [ 2.0, 1.0 ] );
 	vt = complexIdentity( 3 );
@@ -183,7 +183,7 @@ test( 'zbdsqr: lower_3x3_values_only', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'lower_3x3_values_only' );
+	tc = lower_3x3_values_only;
 	d = new Float64Array( [ 4.0, 3.0, 2.0 ] );
 	e = new Float64Array( [ 1.5, 0.5 ] );
 	vt = new Complex128Array( 0 );
@@ -205,7 +205,7 @@ test( 'zbdsqr: lower_3x3_with_u', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'lower_3x3_with_u' );
+	tc = lower_3x3_with_u;
 	d = new Float64Array( [ 4.0, 3.0, 2.0 ] );
 	e = new Float64Array( [ 1.5, 0.5 ] );
 	vt = new Complex128Array( 0 );
@@ -228,7 +228,7 @@ test( 'zbdsqr: n_1', function t() {
 	var c;
 
 	rwork = new Float64Array( 10 );
-	tc = findCase( 'n_1' );
+	tc = n_1;
 	d = new Float64Array( [ -5.0 ] );
 	e = new Float64Array( 0 );
 	vt = new Complex128Array( 0 );
@@ -250,7 +250,7 @@ test( 'zbdsqr: n_0', function t() {
 	var c;
 
 	rwork = new Float64Array( 10 );
-	tc = findCase( 'n_0' );
+	tc = n_0;
 	d = new Float64Array( 0 );
 	e = new Float64Array( 0 );
 	vt = new Complex128Array( 0 );
@@ -271,7 +271,7 @@ test( 'zbdsqr: upper_2x2_with_vectors', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_2x2_with_vectors' );
+	tc = upper_2x2_with_vectors;
 	d = new Float64Array( [ 3.0, 1.0 ] );
 	e = new Float64Array( [ 2.0 ] );
 	vt = complexIdentity( 2 );
@@ -295,7 +295,7 @@ test( 'zbdsqr: n_1_neg_with_vt', function t() {
 	var c;
 
 	rwork = new Float64Array( 10 );
-	tc = findCase( 'n_1_neg_with_vt' );
+	tc = n_1_neg_with_vt;
 	d = new Float64Array( [ -3.0 ] );
 	e = new Float64Array( 0 );
 	vt = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
@@ -318,7 +318,7 @@ test( 'zbdsqr: upper_3x3_with_c', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_with_c' );
+	tc = upper_3x3_with_c;
 	d = new Float64Array( [ 4.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 1.0, 0.5 ] );
 	vt = new Complex128Array( 0 );
@@ -354,7 +354,7 @@ test( 'zbdsqr: upper_4x4_idir2', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_4x4_idir2' );
+	tc = upper_4x4_idir2;
 	d = new Float64Array( [ 0.5, 1.0, 2.0, 4.0 ] );
 	e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
 	vt = new Complex128Array( 0 );
@@ -376,7 +376,7 @@ test( 'zbdsqr: upper_3x3_zero_shift', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_zero_shift' );
+	tc = upper_3x3_zero_shift;
 	d = new Float64Array( [ 1.0, 1e-15, 1.0 ] );
 	e = new Float64Array( [ 1.0, 1.0 ] );
 	vt = complexIdentity( 3 );
@@ -400,7 +400,7 @@ test( 'zbdsqr: lower_3x3_with_c', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'lower_3x3_with_c' );
+	tc = lower_3x3_with_c;
 	d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 0.5, 0.5 ] );
 	vt = new Complex128Array( 0 );
@@ -436,7 +436,7 @@ test( 'zbdsqr: upper_3x3_idir2_with_vectors', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_idir2_with_vectors' );
+	tc = upper_3x3_idir2_with_vectors;
 	d = new Float64Array( [ 0.1, 0.5, 3.0 ] );
 	e = new Float64Array( [ 0.2, 0.3 ] );
 	vt = complexIdentity( 3 );
@@ -460,7 +460,7 @@ test( 'zbdsqr: upper_3x3_negative_d', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_negative_d' );
+	tc = upper_3x3_negative_d;
 	d = new Float64Array( [ -3.0, 2.0, -1.0 ] );
 	e = new Float64Array( [ 0.5, 0.5 ] );
 	vt = complexIdentity( 3 );
@@ -483,7 +483,7 @@ test( 'zbdsqr: nearly_diagonal', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'nearly_diagonal' );
+	tc = nearly_diagonal;
 	d = new Float64Array( [ 5.0, 3.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 1e-16, 1e-16, 1e-16 ] );
 	vt = new Complex128Array( 0 );
@@ -505,7 +505,7 @@ test( 'zbdsqr: lower_3x3_with_vt_and_u', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'lower_3x3_with_vt_and_u' );
+	tc = lower_3x3_with_vt_and_u;
 	d = new Float64Array( [ 3.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 0.5, 0.5 ] );
 	vt = complexIdentity( 3 );
@@ -529,7 +529,7 @@ test( 'zbdsqr: lower_3x3_all_vectors (VT, U, and C)', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'lower_3x3_all_vectors' );
+	tc = lower_3x3_all_vectors;
 	d = new Float64Array( [ 4.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 1.0, 0.5 ] );
 	vt = complexIdentity( 3 );
@@ -567,7 +567,7 @@ test( 'zbdsqr: upper_3x3_zero_d (sminoa=0 path)', function t() {
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_zero_d' );
+	tc = upper_3x3_zero_d;
 	d = new Float64Array( [ 2.0, 0.0, 3.0 ] );
 	e = new Float64Array( [ 1.0, 1.0 ] );
 	vt = complexIdentity( 3 );
@@ -591,7 +591,7 @@ test( 'zbdsqr: upper_3x3_zero_shift_all_vecs (zero shift with NCC > 0)', functio
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_zero_shift_all_vecs' );
+	tc = upper_3x3_zero_shift_all_vecs;
 	d = new Float64Array( [ 1e-15, 1.0, 1.0 ] );
 	e = new Float64Array( [ 1.0, 1.0 ] );
 	vt = complexIdentity( 3 );
@@ -630,7 +630,7 @@ test( 'zbdsqr: upper_4x4_idir2_all_vecs (idir=2 with NCC > 0)', function t() {
 	var c;
 
 	rwork = new Float64Array( 80 );
-	tc = findCase( 'upper_4x4_idir2_all_vecs' );
+	tc = upper_4x4_idir2_all_vecs;
 	d = new Float64Array( [ 0.5, 1.0, 2.0, 4.0 ] );
 	e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
 	n = 4;
@@ -675,7 +675,7 @@ test( 'zbdsqr: upper_4x4_idir1_zero_shift_all_vecs (idir=1 zero shift + NCC)', f
 
 	rwork = new Float64Array( 80 );
 	n = 4;
-	tc = findCase( 'upper_4x4_idir1_zero_shift_all_vecs' );
+	tc = upper_4x4_idir1_zero_shift_all_vecs;
 	d = new Float64Array( [ 10.0, 1e-15, 5.0, 1.0 ] );
 	e = new Float64Array( [ 0.1, 0.1, 0.1 ] );
 	vt = complexIdentity( n );
@@ -717,7 +717,7 @@ test( 'zbdsqr: upper_3x3_near_zero_shift (shift negligible vs sll)', function t(
 	var c;
 
 	rwork = new Float64Array( 40 );
-	tc = findCase( 'upper_3x3_near_zero_shift' );
+	tc = upper_3x3_near_zero_shift;
 	d = new Float64Array( [ 1e8, 1.0, 1.0 ] );
 	e = new Float64Array( [ 0.5, 0.5 ] );
 	vt = complexIdentity( 3 );

@@ -4,25 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrtri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrtri.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_nonunit_3 = require( './fixtures/upper_nonunit_3.json' );
+var lower_nonunit_3 = require( './fixtures/lower_nonunit_3.json' );
+var upper_unit = require( './fixtures/upper_unit.json' );
+var upper_nonunit_4 = require( './fixtures/upper_nonunit_4.json' );
+var lower_nonunit_4 = require( './fixtures/lower_nonunit_4.json' );
+var singular = require( './fixtures/singular.json' );
+var identity = require( './fixtures/identity.json' );
+var upper_5x5 = require( './fixtures/upper_5x5.json' );
+var lower_5x5 = require( './fixtures/lower_5x5.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,11 +35,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'ztrtri: upper, non-unit, 3x3', function t() {
-	var tc = findCase( 'upper_nonunit_3' );
+	var tc = upper_nonunit_3;
 	var A = new Complex128Array( [
 		2, 1, 0, 0, 0, 0,
 		1, 0.5, 4, 2, 0, 0,
@@ -54,7 +51,7 @@ test( 'ztrtri: upper, non-unit, 3x3', function t() {
 });
 
 test( 'ztrtri: lower, non-unit, 3x3', function t() {
-	var tc = findCase( 'lower_nonunit_3' );
+	var tc = lower_nonunit_3;
 	var A = new Complex128Array( [
 		2, 1, 1, 0.5, 3, 1,
 		0, 0, 4, 2, 5, 1,
@@ -67,7 +64,7 @@ test( 'ztrtri: lower, non-unit, 3x3', function t() {
 });
 
 test( 'ztrtri: upper, unit diag, 3x3', function t() {
-	var tc = findCase( 'upper_unit' );
+	var tc = upper_unit;
 	var A = new Complex128Array( [
 		99, 99, 0, 0, 0, 0,
 		1, 0.5, 99, 99, 0, 0,
@@ -80,7 +77,7 @@ test( 'ztrtri: upper, unit diag, 3x3', function t() {
 });
 
 test( 'ztrtri: upper, non-unit, 4x4', function t() {
-	var tc = findCase( 'upper_nonunit_4' );
+	var tc = upper_nonunit_4;
 	var A = new Complex128Array( [
 		1, 1, 0, 0, 0, 0, 0, 0,
 		2, 0, 5, 1, 0, 0, 0, 0,
@@ -94,7 +91,7 @@ test( 'ztrtri: upper, non-unit, 4x4', function t() {
 });
 
 test( 'ztrtri: lower, non-unit, 4x4', function t() {
-	var tc = findCase( 'lower_nonunit_4' );
+	var tc = lower_nonunit_4;
 	var A = new Complex128Array( [
 		1, 1, 2, 0, 3, 1, 4, 2,
 		0, 0, 5, 1, 6, 0, 7, 3,
@@ -114,7 +111,7 @@ test( 'ztrtri: N=0', function t() {
 });
 
 test( 'ztrtri: singular (zero diagonal)', function t() {
-	var tc = findCase( 'singular' );
+	var tc = singular;
 	var A = new Complex128Array( [
 		2, 1, 0, 0, 0, 0,
 		3, 0, 0, 0, 0, 0,
@@ -125,7 +122,7 @@ test( 'ztrtri: singular (zero diagonal)', function t() {
 });
 
 test( 'ztrtri: identity 3x3', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var A = new Complex128Array( [
 		1, 0, 0, 0, 0, 0,
 		0, 0, 1, 0, 0, 0,
@@ -138,7 +135,7 @@ test( 'ztrtri: identity 3x3', function t() {
 });
 
 test( 'ztrtri: upper 5x5 (blocked path)', function t() {
-	var tc = findCase( 'upper_5x5' );
+	var tc = upper_5x5;
 	var A = new Complex128Array( [
 		2, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 		1, 0, 4, 2, 0, 0, 0, 0, 0, 0,
@@ -153,7 +150,7 @@ test( 'ztrtri: upper 5x5 (blocked path)', function t() {
 });
 
 test( 'ztrtri: lower 5x5 (blocked path)', function t() {
-	var tc = findCase( 'lower_5x5' );
+	var tc = lower_5x5;
 	var A = new Complex128Array( [
 		2, 1, 1, 0, 3, 1, 2, 0.5, 1, 1,
 		0, 0, 4, 2, 1, 0, 3, 1, 2, 0,

@@ -4,41 +4,33 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
 var test = require( 'node:test' );
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zrscl = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zrscl.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len, node/no-sync
-var fixture = lines.map( function parse( line ) {
-	// Handle non-standard JSON tokens (Infinity, -Infinity, NaN) from Fortran output: // eslint-disable-line max-len
-	var cleaned = line.replace( /\bInfinity\b/g, '1e999' ).replace( /\b-Infinity\b/g, '-1e999' ).replace( /\bNaN\b/g, 'null' ); // eslint-disable-line max-len
-	return JSON.parse( cleaned );
-} );
-
+var real_scalar = require( './fixtures/real_scalar.json' );
+var imag_scalar = require( './fixtures/imag_scalar.json' );
+var general_complex = require( './fixtures/general_complex.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride_2 = require( './fixtures/stride_2.json' );
+var imag_moderate = require( './fixtures/imag_moderate.json' );
+var imag_very_large = require( './fixtures/imag_very_large.json' );
+var general_large = require( './fixtures/general_large.json' );
+var identity = require( './fixtures/identity.json' );
+var div_by_i = require( './fixtures/div_by_i.json' );
+var div_by_neg_i = require( './fixtures/div_by_neg_i.json' );
+var neg_real_scalar = require( './fixtures/neg_real_scalar.json' );
+var general_safmax_not_ov = require( './fixtures/general_safmax_not_ov.json' );
+var general_overflow_absr_lt_absi = require( './fixtures/general_overflow_absr_lt_absi.json' );
+var general_overflow_absr_ge_absi = require( './fixtures/general_overflow_absr_ge_absi.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -88,7 +80,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zrscl: main export is a function', function t() {
@@ -96,56 +87,56 @@ test( 'zrscl: main export is a function', function t() {
 });
 
 test( 'zrscl: purely real scalar a=(2,0) delegates to zdrscl', function t() {
-	var tc = findCase( 'real_scalar' );
+	var tc = real_scalar;
 	var x = new Complex128Array( [ 2.0, 4.0, 6.0, 8.0, 10.0, 12.0 ] );
 	zrscl( 3, new Complex128( 2.0, 0.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: purely imaginary scalar a=(0,2)', function t() {
-	var tc = findCase( 'imag_scalar' );
+	var tc = imag_scalar;
 	var x = new Complex128Array( [ 2.0, 4.0, 6.0, 8.0, 10.0, 12.0 ] );
 	zrscl( 3, new Complex128( 0.0, 2.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: general complex scalar a=(3,4)', function t() {
-	var tc = findCase( 'general_complex' );
+	var tc = general_complex;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	zrscl( 3, new Complex128( 3.0, 4.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Complex128Array( [ 99.0, 88.0 ] );
 	zrscl( 0, new Complex128( 1.0, 1.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Complex128Array( [ 4.0, -6.0 ] );
 	zrscl( 1, new Complex128( 2.0, 1.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: non-unit stride (incx=2)', function t() {
-	var tc = findCase( 'stride_2' );
+	var tc = stride_2;
 	var x = new Complex128Array( [ 1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0 ] ); // eslint-disable-line max-len
 	zrscl( 2, new Complex128( 2.0, 3.0 ), x, 2, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: purely imaginary, moderate |AI| (normal path)', function t() {
-	var tc = findCase( 'imag_moderate' );
+	var tc = imag_moderate;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zrscl( 2, new Complex128( 0.0, 1.0e300 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-10, 'x' );
 });
 
 test( 'zrscl: purely imaginary, truly large |AI| > SAFMAX', function t() {
-	var tc = findCase( 'imag_very_large' );
+	var tc = imag_very_large;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zrscl( 2, new Complex128( 0.0, 1.0e308 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-10, 'x' );
@@ -178,56 +169,56 @@ test( 'zrscl: general complex, very small components', function t() {
 });
 
 test( 'zrscl: general complex, very large components', function t() {
-	var tc = findCase( 'general_large' );
+	var tc = general_large;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zrscl( 2, new Complex128( 1.0e300, 1.0e300 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-10, 'x' );
 });
 
 test( 'zrscl: identity scalar a=(1,0)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	zrscl( 3, new Complex128( 1.0, 0.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: divide by i gives x * (-i)', function t() {
-	var tc = findCase( 'div_by_i' );
+	var tc = div_by_i;
 	var x = new Complex128Array( [ 1.0, 0.0, 0.0, 1.0 ] );
 	zrscl( 2, new Complex128( 0.0, 1.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: divide by -i gives x * i', function t() {
-	var tc = findCase( 'div_by_neg_i' );
+	var tc = div_by_neg_i;
 	var x = new Complex128Array( [ 1.0, 0.0, 0.0, 1.0 ] );
 	zrscl( 2, new Complex128( 0.0, -1.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: negative real scalar a=(-3,0)', function t() {
-	var tc = findCase( 'neg_real_scalar' );
+	var tc = neg_real_scalar;
 	var x = new Complex128Array( [ 6.0, 9.0, -3.0, 12.0 ] );
 	zrscl( 2, new Complex128( -3.0, 0.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-14, 'x' );
 });
 
 test( 'zrscl: general complex, UR/UI > SAFMAX but <= OV (SAFMAX/UR scaling)', function t() { // eslint-disable-line max-len
-	var tc = findCase( 'general_safmax_not_ov' );
+	var tc = general_safmax_not_ov;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zrscl( 2, new Complex128( 3.0e307, 3.0e307 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-10, 'x' );
 });
 
 test( 'zrscl: general complex overflow, absr < absi (UR/UI overflow from large AI)', function t() { // eslint-disable-line max-len
-	var tc = findCase( 'general_overflow_absr_lt_absi' );
+	var tc = general_overflow_absr_lt_absi;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zrscl( 2, new Complex128( 1.0, 1.0e200 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-10, 'x' );
 });
 
 test( 'zrscl: general complex overflow, absr >= absi (UR/UI overflow from large AR)', function t() { // eslint-disable-line max-len
-	var tc = findCase( 'general_overflow_absr_ge_absi' );
+	var tc = general_overflow_absr_ge_absi;
 	var x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zrscl( 2, new Complex128( 1.0e200, 1.0 ), x, 1, 0 );
 	assertArrayClose( toArray( x ), tc.x, 1e-10, 'x' );

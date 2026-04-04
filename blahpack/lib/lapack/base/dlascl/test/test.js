@@ -2,39 +2,33 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlascl = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlascl.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var general_basic = require( './fixtures/general_basic.json' );
+var general_half = require( './fixtures/general_half.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var lower_tri = require( './fixtures/lower_tri.json' );
+var upper_tri = require( './fixtures/upper_tri.json' );
+var hessenberg = require( './fixtures/hessenberg.json' );
+var identity = require( './fixtures/identity.json' );
+var large_ratio = require( './fixtures/large_ratio.json' );
+var large_ratio_inv = require( './fixtures/large_ratio_inv.json' );
+var lower_band = require( './fixtures/lower_band.json' );
+var upper_band = require( './fixtures/upper_band.json' );
+var full_band = require( './fixtures/full_band.json' );
+var general_rect = require( './fixtures/general_rect.json' );
+var lower_rect = require( './fixtures/lower_rect.json' );
+var upper_rect = require( './fixtures/upper_rect.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -88,7 +82,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlascl: general_basic - scale 3x2 general matrix by 2', function t() {
@@ -96,7 +89,7 @@ test( 'dlascl: general_basic - scale 3x2 general matrix by 2', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'general_basic' );
+	tc = general_basic;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	info = dlascl( 'general', 0, 0, 1.0, 2.0, 3, 2, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -108,7 +101,7 @@ test( 'dlascl: general_half - scale by 0.5 (cfrom=2, cto=1)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'general_half' );
+	tc = general_half;
 	A = new Float64Array( [ 10, 20, 30, 40 ] );
 	info = dlascl( 'general', 0, 0, 2.0, 1.0, 2, 2, A, 1, 2, 0 );
 	assert.equal( info, tc.info );
@@ -120,7 +113,7 @@ test( 'dlascl: m_zero - M=0 quick return', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( [ 99.0 ] );
 	info = dlascl( 'general', 0, 0, 1.0, 2.0, 0, 2, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -132,7 +125,7 @@ test( 'dlascl: n_zero - N=0 quick return', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( [ 99.0 ] );
 	info = dlascl( 'general', 0, 0, 1.0, 2.0, 2, 0, A, 1, 2, 0 );
 	assert.equal( info, tc.info );
@@ -144,7 +137,7 @@ test( 'dlascl: lower_tri - lower triangular 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_tri' );
+	tc = lower_tri;
 	A = new Float64Array( [ 1, 2, 3, 0, 4, 5, 0, 0, 6 ] );
 	info = dlascl( 'lower', 0, 0, 1.0, 3.0, 3, 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -156,7 +149,7 @@ test( 'dlascl: upper_tri - upper triangular 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_tri' );
+	tc = upper_tri;
 	A = new Float64Array( [ 1, 0, 0, 2, 4, 0, 3, 5, 6 ] );
 	info = dlascl( 'upper', 0, 0, 1.0, 3.0, 3, 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -168,7 +161,7 @@ test( 'dlascl: hessenberg - upper Hessenberg 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'hessenberg' );
+	tc = hessenberg;
 	A = new Float64Array( [ 1, 2, 0, 3, 4, 5, 6, 7, 8 ] );
 	info = dlascl( 'upper-hessenberg', 0, 0, 1.0, 2.0, 3, 3, A, 1, 3, 0 );
 	assert.equal( info, tc.info );
@@ -180,7 +173,7 @@ test( 'dlascl: identity - cfrom=cto, MUL=1 quick return', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	A = new Float64Array( [ 1, 2, 3, 4 ] );
 	info = dlascl( 'general', 0, 0, 5.0, 5.0, 2, 2, A, 1, 2, 0 );
 	assert.equal( info, tc.info );
@@ -192,7 +185,7 @@ test( 'dlascl: large_ratio - cfrom=1e300, cto=1e-300 (iterative scaling down)', 
 	var tc;
 	var A;
 
-	tc = findCase( 'large_ratio' );
+	tc = large_ratio;
 	A = new Float64Array( [ 1.0, 2.0 ] );
 	info = dlascl( 'general', 0, 0, 1e300, 1e-300, 2, 1, A, 1, 2, 0 );
 	assert.equal( info, tc.info );
@@ -204,7 +197,7 @@ test( 'dlascl: large_ratio_inv - cfrom=1e-150, cto=1e150 (iterative scaling up)'
 	var tc;
 	var A;
 
-	tc = findCase( 'large_ratio_inv' );
+	tc = large_ratio_inv;
 	A = new Float64Array( [ 1e-150, 2e-150 ] );
 	info = dlascl( 'general', 0, 0, 1e-150, 1e150, 2, 1, A, 1, 2, 0 );
 	assert.equal( info, tc.info );
@@ -216,7 +209,7 @@ test( 'dlascl: lower_band - type B, kl=ku=1, 4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_band' );
+	tc = lower_band;
 	A = new Float64Array([
 		1,
 		4,   // col 0: diag, sub
@@ -237,7 +230,7 @@ test( 'dlascl: upper_band - type Q, kl=ku=1, 4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_band' );
+	tc = upper_band;
 	A = new Float64Array([
 		0,
 		4,   // col 0: unused super, diag
@@ -258,7 +251,7 @@ test( 'dlascl: full_band - type Z, kl=1, ku=1, 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'full_band' );
+	tc = full_band;
 	A = new Float64Array([
 		0,
 		3,
@@ -283,7 +276,7 @@ test( 'dlascl: general_rect - non-square 2x4 general matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'general_rect' );
+	tc = general_rect;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	info = dlascl( 'general', 0, 0, 1.0, 10.0, 2, 4, A, 1, 2, 0 );
 	assert.equal( info, tc.info );
@@ -295,7 +288,7 @@ test( 'dlascl: lower_rect - lower triangular 4x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_rect' );
+	tc = lower_rect;
 	A = new Float64Array([
 		1,
 		2,
@@ -320,7 +313,7 @@ test( 'dlascl: upper_rect - upper triangular 3x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_rect' );
+	tc = upper_rect;
 	A = new Float64Array([
 		1,
 		0,

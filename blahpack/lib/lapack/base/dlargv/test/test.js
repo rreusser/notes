@@ -2,39 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlargv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlargv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var n_one_f_gt_g = require( './fixtures/n_one_f_gt_g.json' );
+var n_one_f_lt_g = require( './fixtures/n_one_f_lt_g.json' );
+var all_g_zero = require( './fixtures/all_g_zero.json' );
+var all_f_zero = require( './fixtures/all_f_zero.json' );
+var stride = require( './fixtures/stride.json' );
+var negative = require( './fixtures/negative.json' );
+var equal_mag = require( './fixtures/equal_mag.json' );
+var large_values = require( './fixtures/large_values.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +54,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlargv is a function', function t() {
@@ -75,7 +61,7 @@ test( 'dlargv is a function', function t() {
 });
 
 test( 'dlargv: basic (mixed cases in one call)', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 3.0, 0.0, 5.0, 1.0 ] );
 	var y = new Float64Array( [ 0.0, 4.0, 3.0, 2.0 ] );
 	var c = new Float64Array( 4 );
@@ -96,7 +82,7 @@ test( 'dlargv: n=0 (no-op)', function t() {
 });
 
 test( 'dlargv: n=1, |f| > |g|', function t() {
-	var tc = findCase( 'n_one_f_gt_g' );
+	var tc = n_one_f_gt_g;
 	var x = new Float64Array( [ 4.0 ] );
 	var y = new Float64Array( [ 3.0 ] );
 	var c = new Float64Array( 1 );
@@ -107,7 +93,7 @@ test( 'dlargv: n=1, |f| > |g|', function t() {
 });
 
 test( 'dlargv: n=1, |f| < |g|', function t() {
-	var tc = findCase( 'n_one_f_lt_g' );
+	var tc = n_one_f_lt_g;
 	var x = new Float64Array( [ 3.0 ] );
 	var y = new Float64Array( [ 4.0 ] );
 	var c = new Float64Array( 1 );
@@ -118,7 +104,7 @@ test( 'dlargv: n=1, |f| < |g|', function t() {
 });
 
 test( 'dlargv: all g=0', function t() {
-	var tc = findCase( 'all_g_zero' );
+	var tc = all_g_zero;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var y = new Float64Array( [ 0.0, 0.0, 0.0 ] );
 	var c = new Float64Array( 3 );
@@ -129,7 +115,7 @@ test( 'dlargv: all g=0', function t() {
 });
 
 test( 'dlargv: all f=0', function t() {
-	var tc = findCase( 'all_f_zero' );
+	var tc = all_f_zero;
 	var x = new Float64Array( [ 0.0, 0.0, 0.0 ] );
 	var y = new Float64Array( [ 5.0, 6.0, 7.0 ] );
 	var c = new Float64Array( 3 );
@@ -140,7 +126,7 @@ test( 'dlargv: all f=0', function t() {
 });
 
 test( 'dlargv: non-unit strides', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var x = new Float64Array( [ 3.0, 0.0, 0.0, 0.0, 5.0, 0.0 ] );
 	var y = new Float64Array( [ 4.0, 0.0, 0.0, 7.0, 0.0, 0.0, 12.0, 0.0, 0.0 ] );
 	var c = new Float64Array( 6 );
@@ -151,7 +137,7 @@ test( 'dlargv: non-unit strides', function t() {
 });
 
 test( 'dlargv: negative values', function t() {
-	var tc = findCase( 'negative' );
+	var tc = negative;
 	var x = new Float64Array( [ -3.0, -5.0, 4.0 ] );
 	var y = new Float64Array( [ 4.0, -12.0, -3.0 ] );
 	var c = new Float64Array( 3 );
@@ -162,7 +148,7 @@ test( 'dlargv: negative values', function t() {
 });
 
 test( 'dlargv: equal magnitudes', function t() {
-	var tc = findCase( 'equal_mag' );
+	var tc = equal_mag;
 	var x = new Float64Array( [ 1.0, -1.0, 3.0 ] );
 	var y = new Float64Array( [ 1.0, 1.0, -3.0 ] );
 	var c = new Float64Array( 3 );
@@ -173,7 +159,7 @@ test( 'dlargv: equal magnitudes', function t() {
 });
 
 test( 'dlargv: large values', function t() {
-	var tc = findCase( 'large_values' );
+	var tc = large_values;
 	var x = new Float64Array( [ 1.0e200, 1.0e-200 ] );
 	var y = new Float64Array( [ 1.0e200, 1.0e-200 ] );
 	var c = new Float64Array( 2 );

@@ -1,0 +1,11 @@
+{
+  "name": "n_one_singular",
+  "ap": [
+    0,
+    0
+  ],
+  "ipiv": [
+    1
+  ],
+  "info": 1
+}

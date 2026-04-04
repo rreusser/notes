@@ -2,8 +2,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -11,13 +9,14 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgttrf = require( './../../zgttrf/lib/base.js' );
 var zgtcon = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgtcon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var tridiag_1norm = require( './fixtures/tridiag_1norm.json' );
+var tridiag_inorm = require( './fixtures/tridiag_inorm.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var anorm_zero = require( './fixtures/anorm_zero.json' );
+var complex_4x4_1norm = require( './fixtures/complex_4x4_1norm.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -52,7 +51,7 @@ function condTridiag( norm, n, dlArr, dArr, duArr, anorm ) {
 }
 
 test( 'zgtcon: tridiag 1-norm (5x5)', function t() {
-	var tc = findCase( 'tridiag_1norm' );
+	var tc = tridiag_1norm;
 	var rcond = condTridiag( 'one-norm', 5,
 		[ -1, 0, -1, 0, -1, 0, -1, 0 ],
 		[ 4, 1, 4, 1, 4, 1, 4, 1, 4, 1 ],
@@ -63,7 +62,7 @@ test( 'zgtcon: tridiag 1-norm (5x5)', function t() {
 });
 
 test( 'zgtcon: tridiag infinity-norm (5x5)', function t() {
-	var tc = findCase( 'tridiag_Inorm' );
+	var tc = tridiag_inorm;
 	var rcond = condTridiag( 'infinity-norm', 5,
 		[ -1, 0, -1, 0, -1, 0, -1, 0 ],
 		[ 4, 1, 4, 1, 4, 1, 4, 1, 4, 1 ],
@@ -74,7 +73,7 @@ test( 'zgtcon: tridiag infinity-norm (5x5)', function t() {
 });
 
 test( 'zgtcon: N=0 (rcond=1)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var WORK = new Complex128Array( 0 );
 	var rcond = new Float64Array( 1 );
 	var info = zgtcon( 'one-norm', 0, new Complex128Array(0), 1, 0, new Complex128Array(0), 1, 0,
@@ -85,13 +84,13 @@ test( 'zgtcon: N=0 (rcond=1)', function t() {
 });
 
 test( 'zgtcon: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var rcond = condTridiag( 'one-norm', 1, [], [ 3, 1 ], [], 4.0 );
 	assertClose( rcond, tc.rcond, 1e-10, 'rcond' );
 });
 
 test( 'zgtcon: anorm=0 (rcond=0)', function t() {
-	var tc = findCase( 'anorm_zero' );
+	var tc = anorm_zero;
 	var rcond = condTridiag( 'one-norm', 5,
 		[ -1, 0, -1, 0, -1, 0, -1, 0 ],
 		[ 4, 1, 4, 1, 4, 1, 4, 1, 4, 1 ],
@@ -102,7 +101,7 @@ test( 'zgtcon: anorm=0 (rcond=0)', function t() {
 });
 
 test( 'zgtcon: complex 4x4 1-norm', function t() {
-	var tc = findCase( 'complex_4x4_1norm' );
+	var tc = complex_4x4_1norm;
 	var rcond = condTridiag( 'one-norm', 4,
 		[ 2, 1, 1, 3, 0.5, 0.5 ],
 		[ 5, 2, 6, 1, 7, 3, 4, 2 ],

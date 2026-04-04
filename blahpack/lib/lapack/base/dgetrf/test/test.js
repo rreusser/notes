@@ -5,37 +5,20 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgetrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgetrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3 = require( './fixtures/3x3.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var _4x4 = require( './fixtures/4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -170,7 +153,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgetrf: 3x3', function t() {
@@ -179,7 +161,7 @@ test( 'dgetrf: 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	IPIV = new Int32Array( 3 );
 	info = dgetrf( 3, 3, A, 1, 3, 0, IPIV, 1, 0 );
@@ -243,7 +225,7 @@ test( 'dgetrf: n_zero', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 9 );
 	IPIV = new Int32Array( 3 );
 	info = dgetrf( 3, 0, A, 1, 3, 0, IPIV, 1, 0 );
@@ -256,7 +238,7 @@ test( 'dgetrf: m_zero', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
 	info = dgetrf( 0, 3, A, 1, 1, 0, IPIV, 1, 0 );
@@ -269,7 +251,7 @@ test( 'dgetrf: 1x1', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Float64Array( [ 7.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = dgetrf( 1, 1, A, 1, 1, 0, IPIV, 1, 0 );
@@ -284,7 +266,7 @@ test( 'dgetrf: 4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '4x4' );
+	tc = _4x4;
 	A = new Float64Array([
 		2.0,
 		1.0,

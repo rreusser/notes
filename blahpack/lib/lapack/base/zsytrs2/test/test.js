@@ -10,24 +10,23 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zsytrf = require( '../../zsytrf/lib/base.js' );
 var zsytrs2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zsytrs2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var _4x4_lower_1rhs = require( './fixtures/4x4_lower_1rhs.json' );
+var _4x4_upper_1rhs = require( './fixtures/4x4_upper_1rhs.json' );
+var _4x4_indef_lower_1rhs = require( './fixtures/4x4_indef_lower_1rhs.json' );
+var _4x4_indef_upper_1rhs = require( './fixtures/4x4_indef_upper_1rhs.json' );
+var _3x3_lower_2rhs = require( './fixtures/3x3_lower_2rhs.json' );
+var _3x3_upper_2rhs = require( './fixtures/3x3_upper_2rhs.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var _5x5_lower_solve = require( './fixtures/5x5_lower_solve.json' );
+var _5x5_upper_solve = require( './fixtures/5x5_upper_solve.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -49,7 +48,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'zsytrs2: 4x4_lower_1rhs', function t() {
@@ -61,7 +59,7 @@ test( 'zsytrs2: 4x4_lower_1rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '4x4_lower_1rhs' );
+	tc = _4x4_lower_1rhs;
 
 	// Lower triangular storage (column-major)
 	A = c128([
@@ -93,7 +91,7 @@ test( 'zsytrs2: 4x4_upper_1rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '4x4_upper_1rhs' );
+	tc = _4x4_upper_1rhs;
 
 	// Upper triangular storage (column-major)
 	A = c128([
@@ -125,7 +123,7 @@ test( 'zsytrs2: 4x4_indef_lower_1rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '4x4_indef_lower_1rhs' );
+	tc = _4x4_indef_lower_1rhs;
 
 	// Lower triangular: A(i,j) for j<=i
 	A = c128([
@@ -157,7 +155,7 @@ test( 'zsytrs2: 4x4_indef_upper_1rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '4x4_indef_upper_1rhs' );
+	tc = _4x4_indef_upper_1rhs;
 
 	// Upper triangular storage
 	A = c128([
@@ -189,7 +187,7 @@ test( 'zsytrs2: 3x3_lower_2rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '3x3_lower_2rhs' );
+	tc = _3x3_lower_2rhs;
 
 	A = c128([
 		4, 1, 2, 1, 1, 0,
@@ -220,7 +218,7 @@ test( 'zsytrs2: 3x3_upper_2rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '3x3_upper_2rhs' );
+	tc = _3x3_upper_2rhs;
 
 	A = c128([
 		4, 1, 0, 0, 0, 0,
@@ -283,7 +281,7 @@ test( 'zsytrs2: n_one_lower', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 
 	A = c128([ 4, 1 ]);
 	B = c128([ 8, 2 ]);
@@ -307,7 +305,7 @@ test( 'zsytrs2: n_one_upper', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 
 	A = c128([ 4, 1 ]);
 	B = c128([ 8, 2 ]);
@@ -331,7 +329,7 @@ test( 'zsytrs2: 5x5_lower_solve', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '5x5_lower_solve' );
+	tc = _5x5_lower_solve;
 
 	// 5x5 lower triangular storage (column-major)
 	A = c128([
@@ -364,7 +362,7 @@ test( 'zsytrs2: 5x5_upper_solve', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '5x5_upper_solve' );
+	tc = _5x5_upper_solve;
 
 	// 5x5 upper triangular storage (column-major)
 	A = c128([

@@ -47,11 +47,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dorgbr;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dorgbr = main;
+} else {
+	dorgbr = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dorgbr;
 
 // exports: { "ndarray": "dorgbr.ndarray" }

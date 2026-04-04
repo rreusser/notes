@@ -2,39 +2,53 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlasq4 = require( './../lib' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasq4.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var dmin_negative = require( './fixtures/dmin_negative.json' );
+var dmin_zero = require( './fixtures/dmin_zero.json' );
+var case2_ttype_neg2 = require( './fixtures/case2_ttype_neg2.json' );
+var case3_ttype_neg3 = require( './fixtures/case3_ttype_neg3.json' );
+var case4_dmin_eq_dn = require( './fixtures/case4_dmin_eq_dn.json' );
+var case4_dmin_eq_dn1 = require( './fixtures/case4_dmin_eq_dn1.json' );
+var case5_dmin_eq_dn2 = require( './fixtures/case5_dmin_eq_dn2.json' );
+var case6_no_info = require( './fixtures/case6_no_info.json' );
+var case6_ttype_neg6 = require( './fixtures/case6_ttype_neg6.json' );
+var case6_ttype_neg18 = require( './fixtures/case6_ttype_neg18.json' );
+var case7_one_deflated = require( './fixtures/case7_one_deflated.json' );
+var case9_dmin1_ne_dn1 = require( './fixtures/case9_dmin1_ne_dn1.json' );
+var case9_dmin1_eq_dn1 = require( './fixtures/case9_dmin1_eq_dn1.json' );
+var case10_two_deflated = require( './fixtures/case10_two_deflated.json' );
+var case11_two_deflated_fallback = require( './fixtures/case11_two_deflated_fallback.json' );
+var case12_many_deflated = require( './fixtures/case12_many_deflated.json' );
+var pp1_case2 = require( './fixtures/pp1_case2.json' );
+var case4_early_return = require( './fixtures/case4_early_return.json' );
+var case5_early_return = require( './fixtures/case5_early_return.json' );
+var case3_dn_gt_b1 = require( './fixtures/case3_dn_gt_b1.json' );
+var case7_b2_zero = require( './fixtures/case7_b2_zero.json' );
+var case8_gap2_negative = require( './fixtures/case8_gap2_negative.json' );
+var case10_b2_zero = require( './fixtures/case10_b2_zero.json' );
+var case2_gap2_neg = require( './fixtures/case2_gap2_neg.json' );
+var case5_short_array = require( './fixtures/case5_short_array.json' );
+var true_case2 = require( './fixtures/true_case2.json' );
+var case3_a2_gt_b1b2 = require( './fixtures/case3_a2_gt_b1b2.json' );
+var case4_dn1_branch = require( './fixtures/case4_dn1_branch.json' );
+var case4_rayleigh = require( './fixtures/case4_rayleigh.json' );
+var case7_gap2_positive = require( './fixtures/case7_gap2_positive.json' );
+var case10_gap2_positive = require( './fixtures/case10_gap2_positive.json' );
+var case5_rayleigh = require( './fixtures/case5_rayleigh.json' );
+var case4_loop_return = require( './fixtures/case4_loop_return.json' );
+var case5_loop_return = require( './fixtures/case5_loop_return.json' );
+var case10_loop_return = require( './fixtures/case10_loop_return.json' );
+var case10_gap2_neg = require( './fixtures/case10_gap2_neg.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Creates a Float64Array of given length filled with a value.
@@ -73,7 +87,6 @@ function checkResult( result, tc, tol ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlasq4: main export is a function', function t() {
@@ -89,7 +102,7 @@ test( 'dlasq4: dmin_negative (ttype=-1)', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'dmin_negative' );
+	tc = dmin_negative;
 	z = filled( 100, 1.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, -0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0, 0.0 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -100,7 +113,7 @@ test( 'dlasq4: dmin_zero (ttype=-1)', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'dmin_zero' );
+	tc = dmin_zero;
 	z = filled( 100, 1.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0, 0.0 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -111,7 +124,7 @@ test( 'dlasq4: case2_ttype_neg2 — Cases 2/3 with gap analysis', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case2_ttype_neg2' );
+	tc = case2_ttype_neg2;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 1.0;
@@ -126,7 +139,7 @@ test( 'dlasq4: case3_ttype_neg3 — Case 3, gap1 <= 0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case3_ttype_neg3' );
+	tc = case3_ttype_neg3;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 2.0;
 	z[ 14 ] = 2.0;
@@ -141,7 +154,7 @@ test( 'dlasq4: case4_dmin_eq_dn — Case 4 with dmin=dn', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case4_dmin_eq_dn' );
+	tc = case4_dmin_eq_dn;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 1.0;
@@ -160,7 +173,7 @@ test( 'dlasq4: case4_dmin_eq_dn1 — Case 4 with dmin=dn1', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case4_dmin_eq_dn1' );
+	tc = case4_dmin_eq_dn1;
 	z = filled( 100, 4.0 );
 	z[ 19 ] = 1.0;
 	z[ 17 ] = 1.5;
@@ -181,7 +194,7 @@ test( 'dlasq4: case5_dmin_eq_dn2 — Case 5', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case5_dmin_eq_dn2' );
+	tc = case5_dmin_eq_dn2;
 	z = filled( 100, 4.0 );
 	z[ 19 ] = 1.0;
 	z[ 17 ] = 1.0;
@@ -206,7 +219,7 @@ test( 'dlasq4: case6_no_info — Case 6, fresh g', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case6_no_info' );
+	tc = case6_no_info;
 	z = filled( 100, 4.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 1.0, 2.0, 3.0, 2.0, 3.0, 4.0, 0.0, 0, 0.0 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -217,7 +230,7 @@ test( 'dlasq4: case6_ttype_neg6 — Case 6, previous ttype=-6 updates g', functi
 	var tc;
 	var z;
 
-	tc = findCase( 'case6_ttype_neg6' );
+	tc = case6_ttype_neg6;
 	z = filled( 100, 4.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 1.0, 2.0, 3.0, 2.0, 3.0, 4.0, 0.0, -6, 0.5 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -228,7 +241,7 @@ test( 'dlasq4: case6_ttype_neg18 — Case 6, previous ttype=-18 resets g', funct
 	var tc;
 	var z;
 
-	tc = findCase( 'case6_ttype_neg18' );
+	tc = case6_ttype_neg18;
 	z = filled( 100, 4.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 5, 1.0, 2.0, 3.0, 2.0, 3.0, 4.0, 0.0, -18, 0.5 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -239,7 +252,7 @@ test( 'dlasq4: case7_one_deflated — Case 7 (n0in=n0+1)', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case7_one_deflated' );
+	tc = case7_one_deflated;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 2.0;
@@ -258,7 +271,7 @@ test( 'dlasq4: case9_dmin1_ne_dn1 — Case 9 (dmin1 != dn1)', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case9_dmin1_ne_dn1' );
+	tc = case9_dmin1_ne_dn1;
 	z = filled( 100, 4.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 6, 0.8, 0.9, 1.5, 1.0, 0.8, 1.5, 0.0, 0, 0.0 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -269,7 +282,7 @@ test( 'dlasq4: case9_dmin1_eq_dn1 — Case 9 (dmin1=dn1, s=half*dmin1)', functio
 	var tc;
 	var z;
 
-	tc = findCase( 'case9_dmin1_eq_dn1' );
+	tc = case9_dmin1_eq_dn1;
 	z = filled( 100, 4.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 6, 0.8, 0.8, 1.6, 1.0, 0.8, 1.5, 0.0, 0, 0.0 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -280,7 +293,7 @@ test( 'dlasq4: case10_two_deflated — Case 10 (n0in=n0+2)', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case10_two_deflated' );
+	tc = case10_two_deflated;
 	z = filled( 100, 4.0 );
 	z[ 14 ] = 0.3;
 	z[ 12 ] = 2.0;
@@ -298,7 +311,7 @@ test( 'dlasq4: case11_two_deflated_fallback — Case 11 (ttype=-11)', function t
 	var tc;
 	var z;
 
-	tc = findCase( 'case11_two_deflated_fallback' );
+	tc = case11_two_deflated_fallback;
 	z = filled( 100, 4.0 );
 	z[ 14 ] = 2.0;
 	z[ 12 ] = 4.0;
@@ -311,7 +324,7 @@ test( 'dlasq4: case12_many_deflated — Case 12 (n0in>n0+2)', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case12_many_deflated' );
+	tc = case12_many_deflated;
 	z = filled( 100, 4.0 );
 	result = dlasq4.ndarray( 1, 5, z, 1, 0, 0, 8, 0.5, 0.8, 0.5, 1.0, 0.8, 0.5, 0.0, 0, 0.0 ); // eslint-disable-line max-len
 	checkResult( result, tc, 1e-14 );
@@ -322,7 +335,7 @@ test( 'dlasq4: pp1_case2 — PP=1 (pong)', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'pp1_case2' );
+	tc = pp1_case2;
 	z = filled( 100, 4.0 );
 	z[ 17 ] = 1.0;
 	z[ 15 ] = 1.0;
@@ -337,7 +350,7 @@ test( 'dlasq4: case4_early_return — Z(NN-5) > Z(NN-7) triggers early return', 
 	var tc;
 	var z;
 
-	tc = findCase( 'case4_early_return' );
+	tc = case4_early_return;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 5.0;
@@ -352,7 +365,7 @@ test( 'dlasq4: case5_early_return — Z(NP-8) > B2', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case5_early_return' );
+	tc = case5_early_return;
 	z = filled( 100, 4.0 );
 	z[ 17 ] = 1.0;
 	z[ 13 ] = 0.5;
@@ -367,7 +380,7 @@ test( 'dlasq4: case3_dn_gt_b1 — Case 3 with dn > b1', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case3_dn_gt_b1' );
+	tc = case3_dn_gt_b1;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 0.01;
 	z[ 14 ] = 0.01;
@@ -382,7 +395,7 @@ test( 'dlasq4: case7_b2_zero — b2=0 early exit', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case7_b2_zero' );
+	tc = case7_b2_zero;
 	z = filled( 100, 4.0 );
 	z[ 14 ] = 0.0;
 	z[ 12 ] = 2.0;
@@ -395,7 +408,7 @@ test( 'dlasq4: case8_gap2_negative — ttype=-7/8 with gap2<=0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case8_gap2_negative' );
+	tc = case8_gap2_negative;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 1.0;
@@ -414,7 +427,7 @@ test( 'dlasq4: case10_b2_zero — Case 10 with b2=0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case10_b2_zero' );
+	tc = case10_b2_zero;
 	z = filled( 100, 4.0 );
 	z[ 14 ] = 0.0;
 	z[ 12 ] = 2.0;
@@ -429,7 +442,7 @@ test( 'dlasq4: case2_gap2_neg — Case 2 with gap2<=0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case2_gap2_neg' );
+	tc = case2_gap2_neg;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 1.0;
@@ -444,7 +457,7 @@ test( 'dlasq4: case5_short_array — Case 5 with n0-i0<=2', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case5_short_array' );
+	tc = case5_short_array;
 	z = filled( 100, 4.0 );
 	z[ 17 ] = 1.0;
 	z[ 13 ] = 0.5;
@@ -459,7 +472,7 @@ test( 'dlasq4: true_case2 — ttype=-2 with gap1>0 and gap1>b1', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'true_case2' );
+	tc = true_case2;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 0.01;
 	z[ 14 ] = 0.01;
@@ -474,7 +487,7 @@ test( 'dlasq4: case3_a2_gt_b1b2 — Case 3 with a2 > b1+b2', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case3_a2_gt_b1b2' );
+	tc = case3_a2_gt_b1b2;
 	z = filled( 100, 4.0 );
 	z[ 16 ] = 0.01;
 	z[ 14 ] = 0.01;
@@ -489,7 +502,7 @@ test( 'dlasq4: case4_dn1_branch — Case 4 via dn1 branch', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case4_dn1_branch' );
+	tc = case4_dn1_branch;
 	z = filled( 100, 2.0 );
 	z[ 17 ] = 3.0;
 	z[ 15 ] = 1.0;
@@ -511,7 +524,7 @@ test( 'dlasq4: case4_rayleigh — Case 4 with a2<CNST1 (Rayleigh bound)', functi
 	var tc;
 	var z;
 
-	tc = findCase( 'case4_rayleigh' );
+	tc = case4_rayleigh;
 	z = filled( 100, 10.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 0.1;
@@ -531,7 +544,7 @@ test( 'dlasq4: case7_gap2_positive — Case 7 with gap2>0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case7_gap2_positive' );
+	tc = case7_gap2_positive;
 	z = filled( 100, 4.0 );
 	z[ 14 ] = 0.5;
 	z[ 12 ] = 4.0;
@@ -549,7 +562,7 @@ test( 'dlasq4: case10_gap2_positive — Case 10 with gap2>0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case10_gap2_positive' );
+	tc = case10_gap2_positive;
 	z = filled( 100, 4.0 );
 	z[ 14 ] = 0.1;
 	z[ 12 ] = 4.0;
@@ -567,7 +580,7 @@ test( 'dlasq4: case5_rayleigh — Case 5 with a2<CNST1 (Rayleigh bound)', functi
 	var tc;
 	var z;
 
-	tc = findCase( 'case5_rayleigh' );
+	tc = case5_rayleigh;
 	z = filled( 100, 10.0 );
 	z[ 17 ] = 10.0;
 	z[ 13 ] = 10.0;
@@ -586,7 +599,7 @@ test( 'dlasq4: case4_loop_return — Case 4 loop Z(I4)>Z(I4-2) return', function
 	var tc;
 	var z;
 
-	tc = findCase( 'case4_loop_return' );
+	tc = case4_loop_return;
 	z = filled( 100, 2.0 );
 	z[ 16 ] = 1.0;
 	z[ 14 ] = 1.0;
@@ -604,7 +617,7 @@ test( 'dlasq4: case5_loop_return — Case 5 loop Z(I4)>Z(I4-2) return', function
 	var tc;
 	var z;
 
-	tc = findCase( 'case5_loop_return' );
+	tc = case5_loop_return;
 	z = filled( 100, 2.0 );
 	z[ 17 ] = 2.0;
 	z[ 13 ] = 2.0;
@@ -623,7 +636,7 @@ test( 'dlasq4: case10_loop_return — Case 10 loop return', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case10_loop_return' );
+	tc = case10_loop_return;
 	z = filled( 100, 2.0 );
 	z[ 14 ] = 0.1;
 	z[ 12 ] = 2.0;
@@ -638,7 +651,7 @@ test( 'dlasq4: case10_gap2_neg — Case 10 with gap2<=0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'case10_gap2_neg' );
+	tc = case10_gap2_neg;
 	z = filled( 100, 4.0 );
 	z[ 14 ] = 0.1;
 	z[ 12 ] = 4.0;

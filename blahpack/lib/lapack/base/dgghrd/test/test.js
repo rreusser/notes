@@ -24,35 +24,23 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgghrd = require( './../lib/base.js' );
 
-
 // VARIABLES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgghrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+// FIXTURES //
 
+var basic_4x4 = require( './fixtures/basic_4x4.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
+var no_qz_3x3 = require( './fixtures/no_qz_3x3.json' );
+var partial_5x5 = require( './fixtures/partial_5x5.json' );
+var accumulate_3x3 = require( './fixtures/accumulate_3x3.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var empty_range = require( './fixtures/empty_range.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a named test case in the fixture array.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -110,7 +98,6 @@ function extractMatrix( M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgghrd is a function', function t() {
@@ -126,7 +113,7 @@ test( 'dgghrd: basic_4x4 (COMPQ=initialize, COMPZ=initialize)', function t() {
 	var Z;
 	var n;
 
-	tc = findCase( 'basic_4x4' );
+	tc = basic_4x4;
 	n = 4;
 	A = new Float64Array([
 		2.0,
@@ -182,7 +169,7 @@ test( 'dgghrd: n_equals_1 (quick return)', function t() {
 	var Q;
 	var Z;
 
-	tc = findCase( 'n_equals_1' );
+	tc = n_equals_1;
 	A = new Float64Array([ 5.0 ]);
 	B = new Float64Array([ 2.0 ]);
 	Q = new Float64Array( 1 );
@@ -204,7 +191,7 @@ test( 'dgghrd: no_qz_3x3 (COMPQ=none, COMPZ=none)', function t() {
 	var Z;
 	var n;
 
-	tc = findCase( 'no_qz_3x3' );
+	tc = no_qz_3x3;
 	n = 3;
 	A = new Float64Array([
 		1.0,
@@ -247,7 +234,7 @@ test( 'dgghrd: partial_5x5 (ILO=2, IHI=4)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'partial_5x5' );
+	tc = partial_5x5;
 	n = 5;
 	A = new Float64Array( n * n );
 	for ( j = 0; j < n; j += 1 ) {
@@ -281,7 +268,7 @@ test( 'dgghrd: accumulate_3x3 (COMPQ=update, COMPZ=update)', function t() {
 	var n;
 	var i;
 
-	tc = findCase( 'accumulate_3x3' );
+	tc = accumulate_3x3;
 	n = 3;
 	A = new Float64Array([
 		2.0,
@@ -328,7 +315,7 @@ test( 'dgghrd: ilo_eq_ihi (ILO=IHI, no reduction needed)', function t() {
 	var Z;
 	var n;
 
-	tc = findCase( 'ilo_eq_ihi' );
+	tc = ilo_eq_ihi;
 	n = 3;
 	A = new Float64Array([
 		1.0,
@@ -371,7 +358,7 @@ test( 'dgghrd: empty_range (IHI=ILO-1, trivial quick return)', function t() {
 	var Z;
 	var n;
 
-	tc = findCase( 'empty_range' );
+	tc = empty_range;
 	n = 3;
 	A = new Float64Array([
 		1.0,

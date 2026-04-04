@@ -2,39 +2,22 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlatrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlatrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var uplo_u_6x6_nb3 = require( './fixtures/uplo_u_6x6_nb3.json' );
+var uplo_l_6x6_nb3 = require( './fixtures/uplo_l_6x6_nb3.json' );
+var nb0_quick_return = require( './fixtures/nb0_quick_return.json' );
+var uplo_u_4x4_nb2 = require( './fixtures/uplo_u_4x4_nb2.json' );
+var uplo_l_4x4_nb2 = require( './fixtures/uplo_l_4x4_nb2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +50,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlatrd: uplo_u_6x6_nb3', function t() {
@@ -79,7 +61,7 @@ test( 'dlatrd: uplo_u_6x6_nb3', function t() {
 	var E;
 	var W;
 
-	tc = findCase( 'uplo_u_6x6_nb3' );
+	tc = uplo_u_6x6_nb3;
 	N = 6;
 	nb = 3;
 	A = new Float64Array([
@@ -139,7 +121,7 @@ test( 'dlatrd: uplo_l_6x6_nb3', function t() {
 	var E;
 	var W;
 
-	tc = findCase( 'uplo_l_6x6_nb3' );
+	tc = uplo_l_6x6_nb3;
 	N = 6;
 	nb = 3;
 	A = new Float64Array([
@@ -191,7 +173,7 @@ test( 'dlatrd: uplo_l_6x6_nb3', function t() {
 });
 
 test( 'dlatrd: nb0_quick_return', function t() {
-	var tc = findCase( 'nb0_quick_return' );
+	var tc = nb0_quick_return;
 	var A = new Float64Array([
 		 2.0,
 		0.5,
@@ -213,7 +195,7 @@ test( 'dlatrd: uplo_u_4x4_nb2', function t() {
 	var E;
 	var W;
 
-	tc = findCase( 'uplo_u_4x4_nb2' );
+	tc = uplo_u_4x4_nb2;
 	N = 4;
 	nb = 2;
 	A = new Float64Array([
@@ -253,7 +235,7 @@ test( 'dlatrd: uplo_l_4x4_nb2', function t() {
 	var E;
 	var W;
 
-	tc = findCase( 'uplo_l_4x4_nb2' );
+	tc = uplo_l_4x4_nb2;
 	N = 4;
 	nb = 2;
 	A = new Float64Array([

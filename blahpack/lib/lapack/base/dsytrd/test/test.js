@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsytrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsytrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var upper_35x35 = require( './fixtures/upper_35x35.json' );
+var lower_35x35 = require( './fixtures/lower_35x35.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -120,7 +104,6 @@ function extractResults( N, d, e, TAU ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dsytrd: upper_4x4 (unblocked path)', function t() {
@@ -133,7 +116,7 @@ test( 'dsytrd: upper_4x4 (unblocked path)', function t() {
 	var e;
 	var A;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	TAU = new Float64Array( 3 );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );
@@ -157,7 +140,7 @@ test( 'dsytrd: lower_4x4 (unblocked path)', function t() {
 	var e;
 	var A;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	TAU = new Float64Array( 3 );
 	d = new Float64Array( 4 );
 	e = new Float64Array( 3 );
@@ -180,7 +163,7 @@ test( 'dsytrd: n_one_upper', function t() {
 	var e;
 	var A;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	TAU = new Float64Array( 1 );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
@@ -200,7 +183,7 @@ test( 'dsytrd: n_one_lower', function t() {
 	var e;
 	var A;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	TAU = new Float64Array( 1 );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
@@ -238,7 +221,7 @@ test( 'dsytrd: upper_35x35 (blocked path)', function t() {
 	var e;
 	var A;
 
-	tc = findCase( 'upper_35x35' );
+	tc = upper_35x35;
 	TAU = new Float64Array( 34 );
 	d = new Float64Array( 35 );
 	e = new Float64Array( 34 );
@@ -262,7 +245,7 @@ test( 'dsytrd: lower_35x35 (blocked path)', function t() {
 	var e;
 	var A;
 
-	tc = findCase( 'lower_35x35' );
+	tc = lower_35x35;
 	TAU = new Float64Array( 34 );
 	d = new Float64Array( 35 );
 	e = new Float64Array( 34 );

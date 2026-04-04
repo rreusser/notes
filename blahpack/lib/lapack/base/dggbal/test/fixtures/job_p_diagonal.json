@@ -1,0 +1,16 @@
+{
+  "name": "job_p_diagonal",
+  "info": 0,
+  "ilo": 1,
+  "ihi": 1,
+  "lscale": [
+    1,
+    2,
+    3
+  ],
+  "rscale": [
+    1,
+    2,
+    3
+  ]
+}

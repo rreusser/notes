@@ -9,24 +9,16 @@ var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var ztpttr = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztpttr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-
-// FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
-
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
 
 // TESTS //
 
@@ -44,7 +36,7 @@ test( 'ztpttr: lower_4x4', function t() {
 	var A;
 	var N;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	N = 4;
 	AP = new Complex128Array( tc.AP );
 	A = new Complex128Array( N * N );
@@ -68,7 +60,7 @@ test( 'ztpttr: upper_4x4', function t() {
 	var A;
 	var N;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	N = 4;
 	AP = new Complex128Array( tc.AP );
 	A = new Complex128Array( N * N );
@@ -101,7 +93,7 @@ test( 'ztpttr: n_one_lower', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	AP = new Complex128Array( [ 42.0, -3.5 ] );
 	A = new Complex128Array( 1 );
 
@@ -120,7 +112,7 @@ test( 'ztpttr: n_one_upper', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Complex128Array( [ 77.0, 1.25 ] );
 	A = new Complex128Array( 1 );
 
@@ -142,7 +134,7 @@ test( 'ztpttr: lower_3x3', function t() {
 	var A;
 	var N;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	N = 3;
 	AP = new Complex128Array( tc.AP );
 	A = new Complex128Array( N * N );
@@ -166,7 +158,7 @@ test( 'ztpttr: upper_3x3', function t() {
 	var A;
 	var N;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	N = 3;
 	AP = new Complex128Array( tc.AP );
 	A = new Complex128Array( N * N );

@@ -2,40 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgelq2 = require( '../../dgelq2/lib/base.js' );
 var dorgl2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dorgl2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x4_k3 = require( './fixtures/3x4_k3.json' );
+var _3x3_k3 = require( './fixtures/3x3_k3.json' );
+var _2x5_k1 = require( './fixtures/2x5_k1.json' );
+var k0_identity = require( './fixtures/k0_identity.json' );
+var m0_quick = require( './fixtures/m0_quick.json' );
+var _1x1_k1 = require( './fixtures/1x1_k1.json' );
+var _1x4_k1 = require( './fixtures/1x4_k1.json' );
+var _2x5_k2 = require( './fixtures/2x5_k2.json' );
+var _3x4_k2 = require( './fixtures/3x4_k2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,7 +55,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dorgl2: 3x4_k3 (M < N, full K=M from LQ)', function t() {
@@ -81,7 +67,7 @@ test( 'dorgl2: 3x4_k3 (M < N, full K=M from LQ)', function t() {
 	var K;
 	var A;
 
-	tc = findCase( '3x4_k3' );
+	tc = _3x4_k3;
 	M = 3;
 	N = 4;
 	K = 3;
@@ -117,7 +103,7 @@ test( 'dorgl2: 3x3_k3 (square, full K=M from LQ)', function t() {
 	var K;
 	var A;
 
-	tc = findCase( '3x3_k3' );
+	tc = _3x3_k3;
 	M = 3;
 	N = 3;
 	K = 3;
@@ -150,7 +136,7 @@ test( 'dorgl2: 2x5_k1 (K < M, partial generation)', function t() {
 	var K;
 	var A;
 
-	tc = findCase( '2x5_k1' );
+	tc = _2x5_k1;
 	M = 2;
 	N = 5;
 	K = 1;
@@ -184,7 +170,7 @@ test( 'dorgl2: k0_identity (K=0 produces identity)', function t() {
 	var K;
 	var A;
 
-	tc = findCase( 'k0_identity' );
+	tc = k0_identity;
 	M = 3;
 	N = 3;
 	K = 0;
@@ -213,7 +199,7 @@ test( 'dorgl2: m0_quick (M=0 quick return)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'm0_quick' );
+	tc = m0_quick;
 	A = new Float64Array( 1 );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -231,7 +217,7 @@ test( 'dorgl2: 1x1_k1', function t() {
 	var K;
 	var A;
 
-	tc = findCase( '1x1_k1' );
+	tc = _1x1_k1;
 	M = 1;
 	N = 1;
 	K = 1;
@@ -254,7 +240,7 @@ test( 'dorgl2: 1x4_k1 (single row)', function t() {
 	var K;
 	var A;
 
-	tc = findCase( '1x4_k1' );
+	tc = _1x4_k1;
 	M = 1;
 	N = 4;
 	K = 1;
@@ -277,7 +263,7 @@ test( 'dorgl2: 2x5_k2 (full K=M from LQ)', function t() {
 	var K;
 	var A;
 
-	tc = findCase( '2x5_k2' );
+	tc = _2x5_k2;
 	M = 2;
 	N = 5;
 	K = 2;
@@ -311,7 +297,7 @@ test( 'dorgl2: 3x4_k2 (K < M, partial generation)', function t() {
 	var K;
 	var A;
 
-	tc = findCase( '3x4_k2' );
+	tc = _3x4_k2;
 	M = 3;
 	N = 4;
 	K = 2;

@@ -6,26 +6,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhegv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhegv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var itype1_v_upper = require( './fixtures/itype1_v_upper.json' );
+var itype1_v_lower = require( './fixtures/itype1_v_lower.json' );
+var itype1_n_lower = require( './fixtures/itype1_n_lower.json' );
+var itype2_v_upper = require( './fixtures/itype2_v_upper.json' );
+var itype3_v_lower = require( './fixtures/itype3_v_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -79,39 +75,38 @@ function callZhegv( itype, jobz, uplo, N, aData, bData ) {
 	return { info: info, w: w, A: A };
 }
 
-
 // TESTS //
 
 test( 'zhegv: itype1_v_upper', function t() {
-	var tc = findCase( 'itype1_v_upper' );
+	var tc = itype1_v_upper;
 	var r = callZhegv( 1, 'compute', 'upper', 3, A_UPPER, B_UPPER );
 	assert.equal( r.info, tc.info );
 	assertArrayClose( Array.from( r.w ), tc.w, 1e-12, 'w' );
 });
 
 test( 'zhegv: itype1_v_lower', function t() {
-	var tc = findCase( 'itype1_v_lower' );
+	var tc = itype1_v_lower;
 	var r = callZhegv( 1, 'compute', 'lower', 3, A_LOWER, B_LOWER );
 	assert.equal( r.info, tc.info );
 	assertArrayClose( Array.from( r.w ), tc.w, 1e-12, 'w' );
 });
 
 test( 'zhegv: itype1_n_lower', function t() {
-	var tc = findCase( 'itype1_n_lower' );
+	var tc = itype1_n_lower;
 	var r = callZhegv( 1, 'none', 'lower', 3, A_LOWER, B_LOWER );
 	assert.equal( r.info, tc.info );
 	assertArrayClose( Array.from( r.w ), tc.w, 1e-12, 'w' );
 });
 
 test( 'zhegv: itype2_v_upper', function t() {
-	var tc = findCase( 'itype2_v_upper' );
+	var tc = itype2_v_upper;
 	var r = callZhegv( 2, 'compute', 'upper', 3, A_UPPER, B_UPPER );
 	assert.equal( r.info, tc.info );
 	assertArrayClose( Array.from( r.w ), tc.w, 1e-12, 'w' );
 });
 
 test( 'zhegv: itype3_v_lower', function t() {
-	var tc = findCase( 'itype3_v_lower' );
+	var tc = itype3_v_lower;
 	var r = callZhegv( 3, 'compute', 'lower', 3, A_LOWER, B_LOWER );
 	assert.equal( r.info, tc.info );
 	assertArrayClose( Array.from( r.w ), tc.w, 1e-12, 'w' );
@@ -128,7 +123,7 @@ test( 'zhegv: n_zero', function t() {
 });
 
 test( 'zhegv: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var r = callZhegv( 1, 'compute', 'upper', 1, [ 6, 0 ], [ 2, 0 ] );
 	assert.equal( r.info, tc.info );
 	assertArrayClose( Array.from( r.w ), tc.w, 1e-12, 'w' );
@@ -136,7 +131,7 @@ test( 'zhegv: n_one', function t() {
 });
 
 test( 'zhegv: not_posdef', function t() {
-	var tc = findCase( 'not_posdef' );
+	var tc = not_posdef;
 	var r = callZhegv( 1, 'compute', 'lower', 2, [ 1, 0, 0, 0, 0, 0, 1, 0 ], [ -1, 0, 0, 0, 0, 0, 1, 0 ] );
 	assert.equal( r.info, tc.info );
 });

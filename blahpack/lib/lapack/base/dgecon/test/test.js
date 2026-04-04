@@ -2,21 +2,18 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dgecon = require( './../lib/base.js' );
 var dgetrf = require( '../../dgetrf/lib/base.js' );
 var dlange = require( '../../dlange/lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgecon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var well_cond_1norm = require( './fixtures/well_cond_1norm.json' );
+var well_cond_inorm = require( './fixtures/well_cond_inorm.json' );
+var identity = require( './fixtures/identity.json' );
+var ill_cond = require( './fixtures/ill_cond.json' );
+var singular = require( './fixtures/singular.json' );
+var _4x4_1norm = require( './fixtures/4x4_1norm.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -36,13 +33,12 @@ function computeRcond( normStr, N, Aflat ) {
 	return { rcond: rcond[ 0 ], anorm: anorm, info: info };
 }
 
-
 test( 'dgecon: main export is a function', function t() {
 	assert.strictEqual( typeof dgecon, 'function' );
 });
 
 test( 'dgecon: well-conditioned 3x3 (1-norm)', function t() {
-	var tc = findCase( 'well_cond_1norm' );
+	var tc = well_cond_1norm;
 	var result = computeRcond( 'one-norm', 3, [
 		4, 1, 1,
 		1, 3, 1,
@@ -54,7 +50,7 @@ test( 'dgecon: well-conditioned 3x3 (1-norm)', function t() {
 });
 
 test( 'dgecon: well-conditioned 3x3 (infinity-norm)', function t() {
-	var tc = findCase( 'well_cond_Inorm' );
+	var tc = well_cond_inorm;
 	var result = computeRcond( 'inf-norm', 3, [
 		4, 1, 1,
 		1, 3, 1,
@@ -66,7 +62,7 @@ test( 'dgecon: well-conditioned 3x3 (infinity-norm)', function t() {
 });
 
 test( 'dgecon: 3x3 identity (rcond = 1)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var result = computeRcond( 'one-norm', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -78,7 +74,7 @@ test( 'dgecon: 3x3 identity (rcond = 1)', function t() {
 });
 
 test( 'dgecon: ill-conditioned 3x3 (rcond near 0)', function t() {
-	var tc = findCase( 'ill_cond' );
+	var tc = ill_cond;
 	var result = computeRcond( 'one-norm', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -89,7 +85,7 @@ test( 'dgecon: ill-conditioned 3x3 (rcond near 0)', function t() {
 });
 
 test( 'dgecon: singular 3x3 (rcond = 0)', function t() {
-	var tc = findCase( 'singular' );
+	var tc = singular;
 	var result = computeRcond( 'one-norm', 3, [
 		1, 2, 3,
 		2, 4, 6,
@@ -122,7 +118,7 @@ test( 'dgecon: anorm = 0 (rcond = 0)', function t() {
 });
 
 test( 'dgecon: 4x4 tridiagonal-like matrix (1-norm)', function t() {
-	var tc = findCase( '4x4_1norm' );
+	var tc = _4x4_1norm;
 	var result = computeRcond( 'one-norm', 4, [
 		5, 1, 0, 0,
 		1, 4, 1, 0,

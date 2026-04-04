@@ -2,39 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dhseqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dhseqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var eigenvalues_only_6x6 = require( './fixtures/eigenvalues_only_6x6.json' );
+var schur_with_z_init_4x4 = require( './fixtures/schur_with_z_init_4x4.json' );
+var schur_with_z_update_4x4 = require( './fixtures/schur_with_z_update_4x4.json' );
+var schur_no_z_4x4 = require( './fixtures/schur_no_z_4x4.json' );
+var n1 = require( './fixtures/n1.json' );
+var n2_complex = require( './fixtures/n2_complex.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var complex_pairs_6x6 = require( './fixtures/complex_pairs_6x6.json' );
+var partial_range_6x6 = require( './fixtures/partial_range_6x6.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -116,7 +103,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dhseqr: eigenvalues_only_6x6', function t() {
@@ -132,7 +118,7 @@ test( 'dhseqr: eigenvalues_only_6x6', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'eigenvalues_only_6x6' );
+	tc = eigenvalues_only_6x6;
 	N = 6;
 	H = makeMatrix( N, [
 		[ 0, 0, 4.0 ],
@@ -184,7 +170,7 @@ test( 'dhseqr: schur_with_z_init_4x4', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'schur_with_z_init_4x4' );
+	tc = schur_with_z_init_4x4;
 	N = 4;
 	H = makeMatrix( N, [
 		[ 0, 0, 4.0 ],
@@ -221,7 +207,7 @@ test( 'dhseqr: schur_with_z_update_4x4', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'schur_with_z_update_4x4' );
+	tc = schur_with_z_update_4x4;
 	N = 4;
 	H = makeMatrix( N, [
 		[ 0, 0, 2.0 ],
@@ -260,7 +246,7 @@ test( 'dhseqr: schur_no_z_4x4', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'schur_no_z_4x4' );
+	tc = schur_no_z_4x4;
 	N = 4;
 	H = makeMatrix( N, [
 		[ 0, 0, 4.0 ],
@@ -311,7 +297,7 @@ test( 'dhseqr: n1', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	N = 1;
 	H = new Float64Array( [ 7.0 ] );
 	WR = new Float64Array( 1 );
@@ -334,7 +320,7 @@ test( 'dhseqr: n2_complex', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'n2_complex' );
+	tc = n2_complex;
 	N = 2;
 	H = makeMatrix( N, [
 		[ 0, 0, 0.0 ],
@@ -362,7 +348,7 @@ test( 'dhseqr: ilo_eq_ihi', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'ilo_eq_ihi' );
+	tc = ilo_eq_ihi;
 	N = 4;
 	H = makeMatrix( N, [
 		[ 0, 0, 5.0 ],
@@ -394,7 +380,7 @@ test( 'dhseqr: complex_pairs_6x6', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'complex_pairs_6x6' );
+	tc = complex_pairs_6x6;
 	N = 6;
 	H = makeMatrix( N, [
 		[ 0, 0, 1.0 ],
@@ -444,7 +430,7 @@ test( 'dhseqr: partial_range_6x6', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'partial_range_6x6' );
+	tc = partial_range_6x6;
 	N = 6;
 	H = makeMatrix( N, [
 		[ 0, 0, 10.0 ],

@@ -1,0 +1,13 @@
+{
+  "name": "one_by_one",
+  "r": [
+    0.1
+  ],
+  "c": [
+    1
+  ],
+  "rowcnd": 1,
+  "colcnd": 1,
+  "amax": 10,
+  "info": 0
+}

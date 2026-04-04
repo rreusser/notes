@@ -1,0 +1,13 @@
+{
+  "name": "n_one_lower",
+  "anorm": 3,
+  "AP_factored": [
+    3,
+    0
+  ],
+  "ipiv": [
+    1
+  ],
+  "rcond": 1,
+  "info": 0
+}

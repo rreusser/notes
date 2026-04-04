@@ -5,37 +5,27 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zupmtr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zupmtr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var setup_upper = require( './fixtures/setup_upper.json' );
+var setup_lower = require( './fixtures/setup_lower.json' );
+var left_notrans_upper = require( './fixtures/left_notrans_upper.json' );
+var left_conjtrans_upper = require( './fixtures/left_conjtrans_upper.json' );
+var right_notrans_upper = require( './fixtures/right_notrans_upper.json' );
+var right_conjtrans_upper = require( './fixtures/right_conjtrans_upper.json' );
+var left_notrans_lower = require( './fixtures/left_notrans_lower.json' );
+var left_conjtrans_lower = require( './fixtures/left_conjtrans_lower.json' );
+var right_notrans_lower = require( './fixtures/right_notrans_lower.json' );
+var right_conjtrans_lower = require( './fixtures/right_conjtrans_lower.json' );
+var left_notrans_upper_rect = require( './fixtures/left_notrans_upper_rect.json' );
+var right_notrans_lower_rect = require( './fixtures/right_notrans_lower_rect.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -80,7 +70,7 @@ function toArray( arr ) {
 * @returns {Object} result with AP and TAU arrays
 */
 function setupUpper() {
-	var setup = findCase( 'setup_upper' );
+	var setup = setup_upper;
 	return {
 		'AP': new Complex128Array( setup.AP ),
 		'TAU': new Complex128Array( setup.TAU )
@@ -94,7 +84,7 @@ function setupUpper() {
 * @returns {Object} result with AP and TAU arrays
 */
 function setupLower() {
-	var setup = findCase( 'setup_lower' );
+	var setup = setup_lower;
 	return {
 		'AP': new Complex128Array( setup.AP ),
 		'TAU': new Complex128Array( setup.TAU )
@@ -146,7 +136,6 @@ function flattenColMajor( C, M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zupmtr: left_notrans_upper', function t() {
@@ -156,7 +145,7 @@ test( 'zupmtr: left_notrans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_notrans_upper' );
+	tc = left_notrans_upper;
 	r = setupUpper();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -172,7 +161,7 @@ test( 'zupmtr: left_conjtrans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_conjtrans_upper' );
+	tc = left_conjtrans_upper;
 	r = setupUpper();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -188,7 +177,7 @@ test( 'zupmtr: right_notrans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_notrans_upper' );
+	tc = right_notrans_upper;
 	r = setupUpper();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -204,7 +193,7 @@ test( 'zupmtr: right_conjtrans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_conjtrans_upper' );
+	tc = right_conjtrans_upper;
 	r = setupUpper();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -220,7 +209,7 @@ test( 'zupmtr: left_notrans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_notrans_lower' );
+	tc = left_notrans_lower;
 	r = setupLower();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -236,7 +225,7 @@ test( 'zupmtr: left_conjtrans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_conjtrans_lower' );
+	tc = left_conjtrans_lower;
 	r = setupLower();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -252,7 +241,7 @@ test( 'zupmtr: right_notrans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_notrans_lower' );
+	tc = right_notrans_lower;
 	r = setupLower();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -268,7 +257,7 @@ test( 'zupmtr: right_conjtrans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_conjtrans_lower' );
+	tc = right_conjtrans_lower;
 	r = setupLower();
 	C = identity4();
 	WORK = new Complex128Array( 4 );
@@ -303,7 +292,7 @@ test( 'zupmtr: left_notrans_upper_rect', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_notrans_upper_rect' );
+	tc = left_notrans_upper_rect;
 	r = setupUpper();
 	C = new Complex128Array( 8 );
 	cv = reinterpret( C, 0 );
@@ -337,7 +326,7 @@ test( 'zupmtr: right_notrans_lower_rect', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_notrans_lower_rect' );
+	tc = right_notrans_lower_rect;
 	r = setupLower();
 	C = new Complex128Array( 8 );
 	cv = reinterpret( C, 0 );

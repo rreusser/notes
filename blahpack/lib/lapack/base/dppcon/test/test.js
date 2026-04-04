@@ -4,25 +4,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dppcon = require( './../lib/base.js' );
 var dpptrf = require( '../../dpptrf/lib/base.js' );
 var dlansp = require( '../../dlansp/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dppcon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var identity_upper = require( './fixtures/identity_upper.json' );
+var identity_lower = require( './fixtures/identity_lower.json' );
+var well_cond_upper = require( './fixtures/well_cond_upper.json' );
+var well_cond_lower = require( './fixtures/well_cond_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
+var _4x4_upper = require( './fixtures/4x4_upper.json' );
+var _4x4_lower = require( './fixtures/4x4_lower.json' );
+var ill_cond = require( './fixtures/ill_cond.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -52,7 +49,6 @@ function computeRcond( uploStr, N, apFlat ) {
 	return { rcond: rcond[ 0 ], anorm: anorm, info: info };
 }
 
-
 // TESTS //
 
 test( 'dppcon: main export is a function', function t() {
@@ -63,7 +59,7 @@ test( 'dppcon: 3x3 identity, upper packed (rcond = 1)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'identity_upper' );
+	tc = identity_upper;
 	// Upper packed: A(1,1)=1, A(1,2)=0, A(2,2)=1, A(1,3)=0, A(2,3)=0, A(3,3)=1
 	result = computeRcond( 'upper', 3, [ 1, 0, 1, 0, 0, 1 ] );
 	assert.strictEqual( result.info, 0 );
@@ -75,7 +71,7 @@ test( 'dppcon: 3x3 identity, lower packed (rcond = 1)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'identity_lower' );
+	tc = identity_lower;
 	// Lower packed: A(1,1)=1, A(2,1)=0, A(3,1)=0, A(2,2)=1, A(3,2)=0, A(3,3)=1
 	result = computeRcond( 'lower', 3, [ 1, 0, 0, 1, 0, 1 ] );
 	assert.strictEqual( result.info, 0 );
@@ -87,7 +83,7 @@ test( 'dppcon: well-conditioned SPD 3x3, upper packed', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'well_cond_upper' );
+	tc = well_cond_upper;
 	// A = [[4, 1, 1], [1, 3, 1], [1, 1, 2]]
 	// Upper packed: 4, 1, 3, 1, 1, 2
 	result = computeRcond( 'upper', 3, [ 4, 1, 3, 1, 1, 2 ] );
@@ -100,7 +96,7 @@ test( 'dppcon: well-conditioned SPD 3x3, lower packed', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'well_cond_lower' );
+	tc = well_cond_lower;
 	// A = [[4, 1, 1], [1, 3, 1], [1, 1, 2]]
 	// Lower packed: 4, 1, 1, 3, 1, 2
 	result = computeRcond( 'lower', 3, [ 4, 1, 1, 3, 1, 2 ] );
@@ -146,7 +142,7 @@ test( 'dppcon: N=1 (rcond = 1 for scalar)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	// 1x1 matrix: AP = [5]
 	result = computeRcond( 'upper', 1, [ 5 ] );
 	assert.strictEqual( result.info, 0 );
@@ -158,7 +154,7 @@ test( 'dppcon: 4x4 SPD, upper packed', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( '4x4_upper' );
+	tc = _4x4_upper;
 	// A = [[10, 1, 2, 0], [1, 8, 1, 1], [2, 1, 6, 1], [0, 1, 1, 5]]
 	// Upper packed: 10, 1, 8, 2, 1, 6, 0, 1, 1, 5
 	result = computeRcond( 'upper', 4, [ 10, 1, 8, 2, 1, 6, 0, 1, 1, 5 ] );
@@ -171,7 +167,7 @@ test( 'dppcon: 4x4 SPD, lower packed', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( '4x4_lower' );
+	tc = _4x4_lower;
 	// Same matrix, lower packed: 10, 1, 2, 0, 8, 1, 1, 6, 1, 5
 	result = computeRcond( 'lower', 4, [ 10, 1, 2, 0, 8, 1, 1, 6, 1, 5 ] );
 	assert.strictEqual( result.info, 0 );
@@ -183,7 +179,7 @@ test( 'dppcon: ill-conditioned (rcond near 0)', function t() {
 	var result;
 	var tc;
 
-	tc = findCase( 'ill_cond' );
+	tc = ill_cond;
 	// A = diag(1, 1, 1e-15), upper packed: 1, 0, 1, 0, 0, 1e-15
 	result = computeRcond( 'upper', 3, [ 1, 0, 1, 0, 0, 1e-15 ] );
 	assert.strictEqual( result.info, 0 );

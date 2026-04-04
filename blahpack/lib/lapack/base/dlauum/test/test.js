@@ -2,39 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlauum = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlauum.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_4 = require( './fixtures/upper_4.json' );
+var lower_4 = require( './fixtures/lower_4.json' );
+var n1_upper = require( './fixtures/n1_upper.json' );
+var n1_lower = require( './fixtures/n1_lower.json' );
+var n0 = require( './fixtures/n0.json' );
+var upper_35 = require( './fixtures/upper_35.json' );
+var lower_35 = require( './fixtures/lower_35.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -106,7 +91,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlauum: upper 4x4 (U*U^T)', function t() {
@@ -115,7 +99,7 @@ test( 'dlauum: upper 4x4 (U*U^T)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'upper_4' );
+	tc = upper_4;
 	N = 4;
 	A = new Float64Array( N * N );
 	A[ 0 ] = 2.0;
@@ -139,7 +123,7 @@ test( 'dlauum: lower 4x4 (L^T*L)', function t() {
 	var N;
 	var A;
 
-	tc = findCase( 'lower_4' );
+	tc = lower_4;
 	N = 4;
 	A = new Float64Array( N * N );
 	A[ 0 ] = 2.0;
@@ -162,7 +146,7 @@ test( 'dlauum: N=1 upper', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n1_upper' );
+	tc = n1_upper;
 	A = new Float64Array( [ 3.0 ] );
 	info = dlauum( 'upper', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -174,7 +158,7 @@ test( 'dlauum: N=1 lower', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n1_lower' );
+	tc = n1_lower;
 	A = new Float64Array( [ 5.0 ] );
 	info = dlauum( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -186,7 +170,7 @@ test( 'dlauum: N=0 quick return', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n0' );
+	tc = n0;
 	A = new Float64Array( 1 );
 	info = dlauum( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -200,7 +184,7 @@ test( 'dlauum: upper 35x35 (blocked path)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'upper_35' );
+	tc = upper_35;
 	N = 35;
 	A = new Float64Array( N * N );
 	for ( j = 0; j < N; j++ ) {
@@ -225,7 +209,7 @@ test( 'dlauum: lower 35x35 (blocked path)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'lower_35' );
+	tc = lower_35;
 	N = 35;
 	A = new Float64Array( N * N );
 	for ( j = 0; j < N; j++ ) {

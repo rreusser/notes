@@ -6,23 +6,18 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var ztrsen = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrsen.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var job_n_compq_v_sel_1_3 = require( './fixtures/job_n_compq_v_sel_1_3.json' );
+var job_e_compq_v_sel_1_3 = require( './fixtures/job_e_compq_v_sel_1_3.json' );
+var job_v_compq_v_sel_1_3 = require( './fixtures/job_v_compq_v_sel_1_3.json' );
+var job_b_compq_v_sel_1_3 = require( './fixtures/job_b_compq_v_sel_1_3.json' );
+var job_n_compq_n_sel_2 = require( './fixtures/job_n_compq_n_sel_2.json' );
+var n_1 = require( './fixtures/n_1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -77,11 +72,10 @@ function identityComplex( N ) {
 	return { data: Q, view: Qv };
 }
 
-
 // TESTS //
 
 test( 'ztrsen: job=N compq=V select 1,3', function t() {
-	var tc = findCase( 'job=N compq=V sel 1,3' );
+	var tc = job_n_compq_v_sel_1_3;
 	var N = 4;
 	var tm = buildT4();
 	var qm = identityComplex( N );
@@ -104,7 +98,7 @@ test( 'ztrsen: job=N compq=V select 1,3', function t() {
 });
 
 test( 'ztrsen: job=E compq=V select 1,3', function t() {
-	var tc = findCase( 'job=E compq=V sel 1,3' );
+	var tc = job_e_compq_v_sel_1_3;
 	var N = 4;
 	var tm = buildT4();
 	var qm = identityComplex( N );
@@ -128,7 +122,7 @@ test( 'ztrsen: job=E compq=V select 1,3', function t() {
 });
 
 test( 'ztrsen: job=V compq=V select 1,3', function t() {
-	var tc = findCase( 'job=V compq=V sel 1,3' );
+	var tc = job_v_compq_v_sel_1_3;
 	var N = 4;
 	var tm = buildT4();
 	var qm = identityComplex( N );
@@ -152,7 +146,7 @@ test( 'ztrsen: job=V compq=V select 1,3', function t() {
 });
 
 test( 'ztrsen: job=B compq=V select 1,3', function t() {
-	var tc = findCase( 'job=B compq=V sel 1,3' );
+	var tc = job_b_compq_v_sel_1_3;
 	var N = 4;
 	var tm = buildT4();
 	var qm = identityComplex( N );
@@ -177,7 +171,7 @@ test( 'ztrsen: job=B compq=V select 1,3', function t() {
 });
 
 test( 'ztrsen: job=N compq=N select 2', function t() {
-	var tc = findCase( 'job=N compq=N sel 2' );
+	var tc = job_n_compq_n_sel_2;
 	var N = 4;
 	var tm = buildT4();
 	var qm = identityComplex( N );
@@ -199,7 +193,7 @@ test( 'ztrsen: job=N compq=N select 2', function t() {
 });
 
 test( 'ztrsen: N=1 quick return', function t() {
-	var tc = findCase( 'N=1' );
+	var tc = n_1;
 	var N = 1;
 	var T = new Complex128Array( 1 );
 	var Tv = reinterpret( T, 0 );

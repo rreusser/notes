@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -15,30 +13,17 @@ var dpbtrs = require( './../../dpbtrs/lib/base.js' );
 var dpbrfs = require( './../lib/base.js' );
 var dpbrfsMain = require( './../lib' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpbrfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_kd1_3x3 = require( './fixtures/upper_kd1_3x3.json' );
+var lower_kd1_3x3 = require( './fixtures/lower_kd1_3x3.json' );
+var upper_kd2_3x3 = require( './fixtures/upper_kd2_3x3.json' );
+var upper_kd1_nrhs2 = require( './fixtures/upper_kd1_nrhs2.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var lower_kd2_3x3 = require( './fixtures/lower_kd2_3x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -105,7 +90,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dpbrfs: main export is a function', function t() {
@@ -132,7 +116,7 @@ test( 'dpbrfs: upper_kd1_3x3', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'upper_kd1_3x3' );
+	tc = upper_kd1_3x3;
 	N = 3;
 	kd = 1;
 	nrhs = 1;
@@ -179,7 +163,7 @@ test( 'dpbrfs: lower_kd1_3x3', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'lower_kd1_3x3' );
+	tc = lower_kd1_3x3;
 	N = 3;
 	kd = 1;
 	nrhs = 1;
@@ -226,7 +210,7 @@ test( 'dpbrfs: upper_kd2_3x3', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'upper_kd2_3x3' );
+	tc = upper_kd2_3x3;
 	N = 3;
 	kd = 2;
 	nrhs = 1;
@@ -277,7 +261,7 @@ test( 'dpbrfs: upper_kd1_nrhs2', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'upper_kd1_nrhs2' );
+	tc = upper_kd1_nrhs2;
 	N = 3;
 	kd = 1;
 	nrhs = 2;
@@ -321,7 +305,7 @@ test( 'dpbrfs: n_zero', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	FERR = new Float64Array( [ -1.0 ] );
 	BERR = new Float64Array( [ -1.0 ] );
 	WORK = new Float64Array( 3 );
@@ -351,7 +335,7 @@ test( 'dpbrfs: n_one', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	N = 1;
 	kd = 0;
 	nrhs = 1;
@@ -390,7 +374,7 @@ test( 'dpbrfs: lower_kd2_3x3', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'lower_kd2_3x3' );
+	tc = lower_kd2_3x3;
 	N = 3;
 	kd = 2;
 	nrhs = 1;

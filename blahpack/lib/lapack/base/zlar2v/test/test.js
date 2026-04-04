@@ -6,26 +6,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var path = require( 'path' );
 var zlar2v = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlar2v.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic = require( './fixtures/basic.json' );
+var n_one = require( './fixtures/n_one.json' );
+var non_unit_stride = require( './fixtures/non_unit_stride.json' );
+var identity = require( './fixtures/identity.json' );
+var pure_imag_s = require( './fixtures/pure_imag_s.json' );
+var swap = require( './fixtures/swap.json' );
+var mixed_strides = require( './fixtures/mixed_strides.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -40,7 +36,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zlar2v is a function', function t() {
@@ -48,7 +43,7 @@ test( 'zlar2v is a function', function t() {
 });
 
 test( 'zlar2v: basic (N=4, unit strides, mixed complex S)', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
 	var y = new Complex128Array( [ 5.0, 0.0, 6.0, 0.0, 7.0, 0.0, 8.0, 0.0 ] );
 	var z = new Complex128Array( [ 0.5, 0.1, 1.0, -0.2, 1.5, 0.3, 2.0, -0.4 ] );
@@ -84,7 +79,7 @@ test( 'zlar2v: n_zero (quick return)', function t() {
 });
 
 test( 'zlar2v: n_one (single element)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Complex128Array( [ 3.0, 0.0 ] );
 	var y = new Complex128Array( [ 4.0, 0.0 ] );
 	var z = new Complex128Array( [ 1.0, 0.5 ] );
@@ -99,7 +94,7 @@ test( 'zlar2v: n_one (single element)', function t() {
 });
 
 test( 'zlar2v: non_unit_stride (INCX=2, INCC=2)', function t() {
-	var tc = findCase( 'non_unit_stride' );
+	var tc = non_unit_stride;
 	// N=3, INCX=2, INCC=2
 	// X at positions 0, 2, 4 (complex elements); Y same; Z same
 	var x = new Complex128Array( [ 1.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 3.0, 0.0 ] );
@@ -116,7 +111,7 @@ test( 'zlar2v: non_unit_stride (INCX=2, INCC=2)', function t() {
 });
 
 test( 'zlar2v: identity rotation (c=1, s=0)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var x = new Complex128Array( [ 10.0, 0.0, 20.0, 0.0, 30.0, 0.0 ] );
 	var y = new Complex128Array( [ 40.0, 0.0, 50.0, 0.0, 60.0, 0.0 ] );
 	var z = new Complex128Array( [ 5.0, 1.0, 10.0, -2.0, 15.0, 3.0 ] );
@@ -131,7 +126,7 @@ test( 'zlar2v: identity rotation (c=1, s=0)', function t() {
 });
 
 test( 'zlar2v: pure imaginary S (c=0.6, s=(0,0.8))', function t() {
-	var tc = findCase( 'pure_imag_s' );
+	var tc = pure_imag_s;
 	var x = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
 	var y = new Complex128Array( [ 3.0, 0.0, 4.0, 0.0 ] );
 	var z = new Complex128Array( [ 0.5, 0.3, 1.0, -0.5 ] );
@@ -146,7 +141,7 @@ test( 'zlar2v: pure imaginary S (c=0.6, s=(0,0.8))', function t() {
 });
 
 test( 'zlar2v: swap rotation (c=0, s=(1,0))', function t() {
-	var tc = findCase( 'swap' );
+	var tc = swap;
 	var x = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
 	var y = new Complex128Array( [ 3.0, 0.0, 4.0, 0.0 ] );
 	var z = new Complex128Array( [ 0.5, 0.7, 1.0, -0.3 ] );
@@ -161,7 +156,7 @@ test( 'zlar2v: swap rotation (c=0, s=(1,0))', function t() {
 });
 
 test( 'zlar2v: mixed strides (INCX=3, INCC=2)', function t() {
-	var tc = findCase( 'mixed_strides' );
+	var tc = mixed_strides;
 	// N=2, INCX=3, INCC=2
 	// Fortran X at positions 1,4 → complex elements 0,3
 	var x = new Complex128Array( [ 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.0 ] );

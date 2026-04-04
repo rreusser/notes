@@ -2,39 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsymm = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsymm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var left_upper_basic = require( './fixtures/left_upper_basic.json' );
+var left_lower_basic = require( './fixtures/left_lower_basic.json' );
+var right_upper_basic = require( './fixtures/right_upper_basic.json' );
+var right_lower_basic = require( './fixtures/right_lower_basic.json' );
+var alpha_beta_scaling = require( './fixtures/alpha_beta_scaling.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var scalar = require( './fixtures/scalar.json' );
+var beta_zero = require( './fixtures/beta_zero.json' );
+var alpha_zero_beta_zero = require( './fixtures/alpha_zero_beta_zero.json' );
+var left_lower_nonzero_beta = require( './fixtures/left_lower_nonzero_beta.json' );
+var right_upper_nonzero_beta = require( './fixtures/right_upper_nonzero_beta.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,11 +74,10 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dsymm: left_upper_basic', function t() {
-	var tc = findCase( 'left_upper_basic' );
+	var tc = left_upper_basic;
 
 	// A is 3x3 symmetric (upper stored), col-major
 	var A = new Float64Array([
@@ -116,7 +106,7 @@ test( 'dsymm: left_upper_basic', function t() {
 });
 
 test( 'dsymm: left_lower_basic', function t() {
-	var tc = findCase( 'left_lower_basic' );
+	var tc = left_lower_basic;
 
 	// Same symmetric matrix, lower stored
 	var A = new Float64Array([
@@ -145,7 +135,7 @@ test( 'dsymm: left_lower_basic', function t() {
 });
 
 test( 'dsymm: right_upper_basic', function t() {
-	var tc = findCase( 'right_upper_basic' );
+	var tc = right_upper_basic;
 
 	// A is 3x3 symmetric (upper), B is 2x3, C is 2x3
 	var A = new Float64Array([
@@ -174,7 +164,7 @@ test( 'dsymm: right_upper_basic', function t() {
 });
 
 test( 'dsymm: right_lower_basic', function t() {
-	var tc = findCase( 'right_lower_basic' );
+	var tc = right_lower_basic;
 	var A = new Float64Array([
 		2.0,
 		1.0,
@@ -201,7 +191,7 @@ test( 'dsymm: right_lower_basic', function t() {
 });
 
 test( 'dsymm: alpha_beta_scaling', function t() {
-	var tc = findCase( 'alpha_beta_scaling' );
+	var tc = alpha_beta_scaling;
 	var A = new Float64Array([
 		2.0,
 		0.0,
@@ -235,7 +225,7 @@ test( 'dsymm: alpha_beta_scaling', function t() {
 });
 
 test( 'dsymm: alpha_zero', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = new Float64Array( 9 );
 	var B = new Float64Array( 4 );
 	var C = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
@@ -245,7 +235,7 @@ test( 'dsymm: alpha_zero', function t() {
 });
 
 test( 'dsymm: m_zero', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var A = new Float64Array( 1 );
 	var B = new Float64Array( 1 );
 	var C = new Float64Array([ 99.0 ]);
@@ -255,7 +245,7 @@ test( 'dsymm: m_zero', function t() {
 });
 
 test( 'dsymm: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Float64Array( 4 );
 	var B = new Float64Array( 4 );
 	var C = new Float64Array([ 99.0 ]);
@@ -265,7 +255,7 @@ test( 'dsymm: n_zero', function t() {
 });
 
 test( 'dsymm: scalar', function t() {
-	var tc = findCase( 'scalar' );
+	var tc = scalar;
 	var A = new Float64Array([ 3.0 ]);
 	var B = new Float64Array([ 5.0 ]);
 	var C = new Float64Array( 1 );
@@ -275,7 +265,7 @@ test( 'dsymm: scalar', function t() {
 });
 
 test( 'dsymm: beta_zero', function t() {
-	var tc = findCase( 'beta_zero' );
+	var tc = beta_zero;
 
 	// A = I (2x2), B = [2 4; 3 5]
 	var A = new Float64Array([ 1.0, 0.0, 0.0, 1.0 ]);
@@ -287,7 +277,7 @@ test( 'dsymm: beta_zero', function t() {
 });
 
 test( 'dsymm: alpha_zero_beta_zero (zeros C)', function t() {
-	var tc = findCase( 'alpha_zero_beta_zero' );
+	var tc = alpha_zero_beta_zero;
 	var A = new Float64Array( 4 );
 	var B = new Float64Array( 4 );
 	var C = new Float64Array([ 99.0, 88.0, 77.0, 66.0 ]);
@@ -297,7 +287,7 @@ test( 'dsymm: alpha_zero_beta_zero (zeros C)', function t() {
 });
 
 test( 'dsymm: left_lower_nonzero_beta', function t() {
-	var tc = findCase( 'left_lower_nonzero_beta' );
+	var tc = left_lower_nonzero_beta;
 	var A = new Float64Array([
 		2.0,
 		1.0,
@@ -331,7 +321,7 @@ test( 'dsymm: left_lower_nonzero_beta', function t() {
 });
 
 test( 'dsymm: right_upper_nonzero_beta', function t() {
-	var tc = findCase( 'right_upper_nonzero_beta' );
+	var tc = right_upper_nonzero_beta;
 	var A = new Float64Array([
 		2.0,
 		0.0,

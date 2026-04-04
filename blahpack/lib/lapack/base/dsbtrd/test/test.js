@@ -20,39 +20,31 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsbtrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsbtrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_kd2_n5_none = require( './fixtures/upper_kd2_n5_none.json' );
+var lower_kd2_n5_none = require( './fixtures/lower_kd2_n5_none.json' );
+var upper_kd1_n4_none = require( './fixtures/upper_kd1_n4_none.json' );
+var lower_kd1_n4_none = require( './fixtures/lower_kd1_n4_none.json' );
+var upper_kd3_n6_init = require( './fixtures/upper_kd3_n6_init.json' );
+var lower_kd3_n6_init = require( './fixtures/lower_kd3_n6_init.json' );
+var upper_kd2_n4_update = require( './fixtures/upper_kd2_n4_update.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper_init = require( './fixtures/n_one_upper_init.json' );
+var n_one_lower_none = require( './fixtures/n_one_lower_none.json' );
+var kd0_upper_none = require( './fixtures/kd0_upper_none.json' );
+var lower_kd2_n4_init = require( './fixtures/lower_kd2_n4_init.json' );
+var upper_kd1_n4_init = require( './fixtures/upper_kd1_n4_init.json' );
+var lower_kd1_n4_init = require( './fixtures/lower_kd1_n4_init.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -96,7 +88,6 @@ function toFloat64( arr ) {
 	return new Float64Array( arr );
 }
 
-
 // TESTS //
 
 test( 'dsbtrd: upper_kd2_n5_none', function t() {
@@ -111,7 +102,7 @@ test( 'dsbtrd: upper_kd2_n5_none', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd2_n5_none' );
+	tc = upper_kd2_n5_none;
 	N = 5;
 	kd = 2;
 	LDAB = kd + 1;
@@ -153,7 +144,7 @@ test( 'dsbtrd: lower_kd2_n5_none', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd2_n5_none' );
+	tc = lower_kd2_n5_none;
 	N = 5;
 	kd = 2;
 	LDAB = kd + 1;
@@ -192,7 +183,7 @@ test( 'dsbtrd: upper_kd1_n4_none (tridiagonal, no reduction)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd1_n4_none' );
+	tc = upper_kd1_n4_none;
 	N = 4;
 	kd = 1;
 	LDAB = kd + 1;
@@ -226,7 +217,7 @@ test( 'dsbtrd: lower_kd1_n4_none (tridiagonal, no reduction)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd1_n4_none' );
+	tc = lower_kd1_n4_none;
 	N = 4;
 	kd = 1;
 	LDAB = kd + 1;
@@ -260,7 +251,7 @@ test( 'dsbtrd: upper_kd3_n6_init (VECT=initialize, with Q)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd3_n6_init' );
+	tc = upper_kd3_n6_init;
 	N = 6;
 	kd = 3;
 	LDAB = kd + 1;
@@ -306,7 +297,7 @@ test( 'dsbtrd: lower_kd3_n6_init (VECT=initialize, with Q)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd3_n6_init' );
+	tc = lower_kd3_n6_init;
 	N = 6;
 	kd = 3;
 	LDAB = kd + 1;
@@ -353,7 +344,7 @@ test( 'dsbtrd: upper_kd2_n4_update (VECT=update)', function t() {
 	var Q;
 	var i;
 
-	tc = findCase( 'upper_kd2_n4_update' );
+	tc = upper_kd2_n4_update;
 	N = 4;
 	kd = 2;
 	LDAB = kd + 1;
@@ -390,7 +381,7 @@ test( 'dsbtrd: n_zero (quick return)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Float64Array( 1 );
 	d = new Float64Array( 0 );
 	e = new Float64Array( 0 );
@@ -409,7 +400,7 @@ test( 'dsbtrd: n_one_upper_init (N=1, VECT=initialize)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'n_one_upper_init' );
+	tc = n_one_upper_init;
 	AB = new Float64Array( [ 7.0 ] );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 0 );
@@ -430,7 +421,7 @@ test( 'dsbtrd: n_one_lower_none (N=1, VECT=none)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'n_one_lower_none' );
+	tc = n_one_lower_none;
 	AB = new Float64Array( [ 7.0 ] );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 0 );
@@ -452,7 +443,7 @@ test( 'dsbtrd: kd0_upper_none (diagonal matrix, KD=0)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'kd0_upper_none' );
+	tc = kd0_upper_none;
 	N = 3;
 	LDAB = 1;
 	AB = new Float64Array( [ 2.0, 5.0, 8.0 ] );
@@ -478,7 +469,7 @@ test( 'dsbtrd: lower_kd2_n4_init (VECT=initialize, lower)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd2_n4_init' );
+	tc = lower_kd2_n4_init;
 	N = 4;
 	kd = 2;
 	LDAB = kd + 1;
@@ -515,7 +506,7 @@ test( 'dsbtrd: upper_kd1_n4_init (tridiagonal, VECT=initialize)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'upper_kd1_n4_init' );
+	tc = upper_kd1_n4_init;
 	N = 4;
 	kd = 1;
 	LDAB = kd + 1;
@@ -550,7 +541,7 @@ test( 'dsbtrd: lower_kd1_n4_init (tridiagonal, VECT=initialize)', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'lower_kd1_n4_init' );
+	tc = lower_kd1_n4_init;
 	N = 4;
 	kd = 1;
 	LDAB = kd + 1;

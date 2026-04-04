@@ -10,22 +10,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrevc3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrevc3.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var right_all_n1 = require( './fixtures/right_all_n1.json' );
+var right_all_3x3 = require( './fixtures/right_all_3x3.json' );
+var left_all_3x3 = require( './fixtures/left_all_3x3.json' );
+var both_all_3x3 = require( './fixtures/both_all_3x3.json' );
+var right_all_diag = require( './fixtures/right_all_diag.json' );
+var right_all_4x4 = require( './fixtures/right_all_4x4.json' );
+var right_backtransform_3x3 = require( './fixtures/right_backtransform_3x3.json' );
+var left_backtransform_3x3 = require( './fixtures/left_backtransform_3x3.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var diff = Math.abs( actual - expected );
@@ -42,7 +40,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // HELPERS //
 
 function makeMatrix( vals, N ) {
@@ -55,7 +52,6 @@ function makeMatrix( vals, N ) {
 	return buf;
 }
 
-
 // TESTS //
 
 test( 'ztrevc3 is a function', function t() {
@@ -63,7 +59,7 @@ test( 'ztrevc3 is a function', function t() {
 });
 
 test( 'ztrevc3: N=1 right eigenvectors', function t() {
-	var tc = findCase( 'right_all_n1' );
+	var tc = right_all_n1;
 	var T = makeMatrix( [ 5.0, -3.0 ], 1 );
 	var VR = new Complex128Array( 1 );
 	var VL = new Complex128Array( 1 );
@@ -79,7 +75,7 @@ test( 'ztrevc3: N=1 right eigenvectors', function t() {
 });
 
 test( 'ztrevc3: right eigenvectors, all, 3x3', function t() {
-	var tc = findCase( 'right_all_3x3' );
+	var tc = right_all_3x3;
 	var N = 3;
 	var T = makeMatrix( [
 		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
@@ -100,7 +96,7 @@ test( 'ztrevc3: right eigenvectors, all, 3x3', function t() {
 });
 
 test( 'ztrevc3: left eigenvectors, all, 3x3', function t() {
-	var tc = findCase( 'left_all_3x3' );
+	var tc = left_all_3x3;
 	var N = 3;
 	var T = makeMatrix( [
 		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
@@ -121,7 +117,7 @@ test( 'ztrevc3: left eigenvectors, all, 3x3', function t() {
 });
 
 test( 'ztrevc3: both eigenvectors, all, 3x3', function t() {
-	var tc = findCase( 'both_all_3x3' );
+	var tc = both_all_3x3;
 	var N = 3;
 	var T = makeMatrix( [
 		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
@@ -144,7 +140,7 @@ test( 'ztrevc3: both eigenvectors, all, 3x3', function t() {
 });
 
 test( 'ztrevc3: right eigenvectors, diagonal matrix', function t() {
-	var tc = findCase( 'right_all_diag' );
+	var tc = right_all_diag;
 	var N = 3;
 	var T = makeMatrix( [
 		2.0, 1.0,  0.0, 0.0,  0.0, 0.0,
@@ -170,7 +166,7 @@ test( 'ztrevc3: right eigenvectors, diagonal matrix', function t() {
 });
 
 test( 'ztrevc3: right eigenvectors, 4x4', function t() {
-	var tc = findCase( 'right_all_4x4' );
+	var tc = right_all_4x4;
 	var N = 4;
 	var T = makeMatrix( [
 		1.0, 0.0,   0.0, 0.0,   0.0, 0.0,   0.0, 0.0,
@@ -192,7 +188,7 @@ test( 'ztrevc3: right eigenvectors, 4x4', function t() {
 });
 
 test( 'ztrevc3: right backtransform with identity, 3x3', function t() {
-	var tc = findCase( 'right_backtransform_3x3' );
+	var tc = right_backtransform_3x3;
 	var N = 3;
 	var T = makeMatrix( [
 		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,
@@ -218,7 +214,7 @@ test( 'ztrevc3: right backtransform with identity, 3x3', function t() {
 });
 
 test( 'ztrevc3: left backtransform with identity, 3x3', function t() {
-	var tc = findCase( 'left_backtransform_3x3' );
+	var tc = left_backtransform_3x3;
 	var N = 3;
 	var T = makeMatrix( [
 		1.0, 1.0,  0.0, 0.0,  0.0, 0.0,

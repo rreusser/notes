@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlabrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlabrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var m_ge_n_6x5_nb3 = require( './fixtures/m_ge_n_6x5_nb3.json' );
+var m_lt_n_5x6_nb3 = require( './fixtures/m_lt_n_5x6_nb3.json' );
+var square_4x4_nb2 = require( './fixtures/square_4x4_nb2.json' );
+var nb0_quick_return = require( './fixtures/nb0_quick_return.json' );
+var nb1_3x3 = require( './fixtures/nb1_3x3.json' );
+var nb1_m_lt_n_2x3 = require( './fixtures/nb1_m_lt_n_2x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +67,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlabrd: m_ge_n_6x5_nb3 (upper bidiagonal)', function t() {
@@ -99,7 +82,7 @@ test( 'dlabrd: m_ge_n_6x5_nb3 (upper bidiagonal)', function t() {
 	var X;
 	var Y;
 
-	tc = findCase( 'm_ge_n_6x5_nb3' );
+	tc = m_ge_n_6x5_nb3;
 	M = 6;
 	N = 5;
 	nb = 3;
@@ -164,7 +147,7 @@ test( 'dlabrd: m_lt_n_5x6_nb3 (lower bidiagonal)', function t() {
 	var X;
 	var Y;
 
-	tc = findCase( 'm_lt_n_5x6_nb3' );
+	tc = m_lt_n_5x6_nb3;
 	M = 5;
 	N = 6;
 	nb = 3;
@@ -229,7 +212,7 @@ test( 'dlabrd: square_4x4_nb2 (M=N, upper bidiagonal)', function t() {
 	var X;
 	var Y;
 
-	tc = findCase( 'square_4x4_nb2' );
+	tc = square_4x4_nb2;
 	M = 4;
 	N = 4;
 	nb = 2;
@@ -270,7 +253,7 @@ test( 'dlabrd: square_4x4_nb2 (M=N, upper bidiagonal)', function t() {
 test( 'dlabrd: nb0_quick_return', function t() {
 	var TAUQ = new Float64Array( 2 );
 	var TAUP = new Float64Array( 2 );
-	var tc = findCase( 'nb0_quick_return' );
+	var tc = nb0_quick_return;
 	var A = new Float64Array([ 1.0, 2.0, 3.0, 4.0 ]);
 	var d = new Float64Array( 2 );
 	var e = new Float64Array( 2 );
@@ -295,7 +278,7 @@ test( 'dlabrd: nb1_3x3 (single step, M >= N)', function t() {
 	var X;
 	var Y;
 
-	tc = findCase( 'nb1_3x3' );
+	tc = nb1_3x3;
 	M = 3;
 	N = 3;
 	nb = 1;
@@ -339,7 +322,7 @@ test( 'dlabrd: nb1_m_lt_n_2x3 (single step, M < N)', function t() {
 	var X;
 	var Y;
 
-	tc = findCase( 'nb1_m_lt_n_2x3' );
+	tc = nb1_m_lt_n_2x3;
 	M = 2;
 	N = 3;
 	nb = 1;

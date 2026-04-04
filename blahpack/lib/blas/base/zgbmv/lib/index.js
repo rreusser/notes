@@ -12,11 +12,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zgbmv;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zgbmv = main;
+} else {
+	zgbmv = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zgbmv;
 
 // exports: { "ndarray": "zgbmv.ndarray" }

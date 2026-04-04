@@ -1,0 +1,9 @@
+{
+  "name": "gasmal_false_ha_gt_1",
+  "ssmin": 2e-18,
+  "ssmax": 100000000000000000000,
+  "snr": 1,
+  "csr": 2e-20,
+  "snl": 1e-18,
+  "csl": 1
+}

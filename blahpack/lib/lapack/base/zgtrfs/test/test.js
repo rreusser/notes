@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -16,30 +14,16 @@ var zgttrf = require( './../../zgttrf/lib/base.js' );
 var zgttrs = require( './../../zgttrs/lib/base.js' );
 var zgtrfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgtrfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_notrans = require( './fixtures/basic_notrans.json' );
+var basic_conjtrans = require( './fixtures/basic_conjtrans.json' );
+var multi_rhs_notrans = require( './fixtures/multi_rhs_notrans.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var pivot_5x5_notrans = require( './fixtures/pivot_5x5_notrans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -88,7 +72,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgtrfs: basic_notrans', function t() {
@@ -112,7 +95,7 @@ test( 'zgtrfs: basic_notrans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'basic_notrans' );
+	tc = basic_notrans;
 	n = 4;
 	nrhs = 1;
 	DL = new Complex128Array( [ 2, 1, 1, -1, 3, 0.5 ] );
@@ -160,7 +143,7 @@ test( 'zgtrfs: basic_conjtrans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'basic_conjtrans' );
+	tc = basic_conjtrans;
 	n = 4;
 	nrhs = 1;
 	DL = new Complex128Array( [ 2, 1, 1, -1, 3, 0.5 ] );
@@ -209,7 +192,7 @@ test( 'zgtrfs: multi_rhs_notrans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'multi_rhs_notrans' );
+	tc = multi_rhs_notrans;
 	n = 4;
 	nrhs = 2;
 	DL = new Complex128Array( [ 2, 1, 1, -1, 3, 0.5 ] );
@@ -274,7 +257,7 @@ test( 'zgtrfs: n_one', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	nrhs = 1;
 	d = new Complex128Array( [ 3, 2 ] );
 	DL = new Complex128Array( 1 );
@@ -316,7 +299,7 @@ test( 'zgtrfs: n_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	DL = new Complex128Array( 1 );
 	d = new Complex128Array( 1 );
 	DU = new Complex128Array( 1 );
@@ -356,7 +339,7 @@ test( 'zgtrfs: pivot_5x5_notrans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'pivot_5x5_notrans' );
+	tc = pivot_5x5_notrans;
 	n = 5;
 	nrhs = 1;
 	DL = new Complex128Array( [ 5, 1, 7, -2, 1, 3, 2, 0.5 ] );

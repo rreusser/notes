@@ -10,22 +10,28 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlatrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlatrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_n_nonunit = require( './fixtures/upper_n_nonunit.json' );
+var lower_n_nonunit = require( './fixtures/lower_n_nonunit.json' );
+var upper_t_nonunit = require( './fixtures/upper_t_nonunit.json' );
+var upper_c_nonunit = require( './fixtures/upper_c_nonunit.json' );
+var lower_t_nonunit = require( './fixtures/lower_t_nonunit.json' );
+var lower_c_nonunit = require( './fixtures/lower_c_nonunit.json' );
+var upper_n_unit = require( './fixtures/upper_n_unit.json' );
+var lower_n_unit = require( './fixtures/lower_n_unit.json' );
+var upper_n_normin_y = require( './fixtures/upper_n_normin_y.json' );
+var upper_c_unit = require( './fixtures/upper_c_unit.json' );
+var lower_c_unit = require( './fixtures/lower_c_unit.json' );
+var upper_n_4x4 = require( './fixtures/upper_n_4x4.json' );
+var lower_t_unit_norminy = require( './fixtures/lower_t_unit_norminy.json' );
+var upper_n_unit_careful = require( './fixtures/upper_n_unit_careful.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var diff = Math.abs( actual - expected );
@@ -40,7 +46,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
-
 
 // HELPERS //
 
@@ -79,7 +84,6 @@ function makeVector( vals ) {
 	return buf;
 }
 
-
 // TESTS //
 
 test( 'zlatrs is a function', function t() {
@@ -87,7 +91,7 @@ test( 'zlatrs is a function', function t() {
 });
 
 test( 'zlatrs: N=0 returns immediately', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var x = new Complex128Array( 1 );
 	var scale = new Float64Array( 1 );
@@ -100,7 +104,7 @@ test( 'zlatrs: N=0 returns immediately', function t() {
 });
 
 test( 'zlatrs: N=1 upper, no-transpose, non-unit', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = makeMatrix( [ 5.0, 2.0 ], 1 );
 	var x = makeVector( [ 10.0, -3.0 ] );
 	var xv = reinterpret( x, 0 );
@@ -115,7 +119,7 @@ test( 'zlatrs: N=1 upper, no-transpose, non-unit', function t() {
 });
 
 test( 'zlatrs: upper, no-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'upper_N_nonunit' );
+	var tc = upper_n_nonunit;
 	// A upper triangular 3x3 column-major in a 4x4 leading dim = 4
 	// In JS: strideA1=1, strideA2=N=3, leading dim matches N
 	var A = makeMatrix( [
@@ -137,7 +141,7 @@ test( 'zlatrs: upper, no-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatrs: lower, no-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'lower_N_nonunit' );
+	var tc = lower_n_nonunit;
 	var A = makeMatrix( [
 		2.0, 1.0,  1.0, 1.0,  0.5, 0.0,
 		0.0, 0.0,  3.0, 0.5,  1.0, -1.0,
@@ -157,7 +161,7 @@ test( 'zlatrs: lower, no-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatrs: upper, transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'upper_T_nonunit' );
+	var tc = upper_t_nonunit;
 	var A = makeMatrix( [
 		2.0, 1.0,  0.0, 0.0,  0.0, 0.0,
 		1.0, 1.0,  3.0, 0.5,  0.0, 0.0,
@@ -176,7 +180,7 @@ test( 'zlatrs: upper, transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatrs: upper, conjugate-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'upper_C_nonunit' );
+	var tc = upper_c_nonunit;
 	var A = makeMatrix( [
 		2.0, 1.0,  0.0, 0.0,  0.0, 0.0,
 		1.0, 1.0,  3.0, 0.5,  0.0, 0.0,
@@ -195,7 +199,7 @@ test( 'zlatrs: upper, conjugate-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatrs: lower, transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'lower_T_nonunit' );
+	var tc = lower_t_nonunit;
 	var A = makeMatrix( [
 		2.0, 1.0,  1.0, 1.0,  0.5, 0.0,
 		0.0, 0.0,  3.0, 0.5,  1.0, -1.0,
@@ -214,7 +218,7 @@ test( 'zlatrs: lower, transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatrs: lower, conjugate-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'lower_C_nonunit' );
+	var tc = lower_c_nonunit;
 	var A = makeMatrix( [
 		2.0, 1.0,  1.0, 1.0,  0.5, 0.0,
 		0.0, 0.0,  3.0, 0.5,  1.0, -1.0,
@@ -233,7 +237,7 @@ test( 'zlatrs: lower, conjugate-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatrs: upper, no-transpose, unit diagonal, 3x3', function t() {
-	var tc = findCase( 'upper_N_unit' );
+	var tc = upper_n_unit;
 	var A = makeMatrix( [
 		99.0, 99.0,  0.0, 0.0,   0.0, 0.0,
 		1.0, 1.0,    99.0, 99.0, 0.0, 0.0,
@@ -252,7 +256,7 @@ test( 'zlatrs: upper, no-transpose, unit diagonal, 3x3', function t() {
 });
 
 test( 'zlatrs: lower, no-transpose, unit diagonal, 3x3', function t() {
-	var tc = findCase( 'lower_N_unit' );
+	var tc = lower_n_unit;
 	var A = makeMatrix( [
 		99.0, 99.0, 1.0, 1.0,   0.5, 0.0,
 		0.0, 0.0,   99.0, 99.0, 1.0, -1.0,
@@ -271,7 +275,7 @@ test( 'zlatrs: lower, no-transpose, unit diagonal, 3x3', function t() {
 });
 
 test( 'zlatrs: upper, no-transpose, normin=Y, 3x3', function t() {
-	var tc = findCase( 'upper_N_normin_Y' );
+	var tc = upper_n_normin_y;
 	var A = makeMatrix( [
 		2.0, 1.0,  0.0, 0.0,  0.0, 0.0,
 		1.0, 1.0,  3.0, 0.5,  0.0, 0.0,
@@ -290,7 +294,7 @@ test( 'zlatrs: upper, no-transpose, normin=Y, 3x3', function t() {
 });
 
 test( 'zlatrs: upper, conjugate-transpose, unit diagonal, 3x3', function t() {
-	var tc = findCase( 'upper_C_unit' );
+	var tc = upper_c_unit;
 	var A = makeMatrix( [
 		99.0, 99.0,  0.0, 0.0,   0.0, 0.0,
 		1.0, 1.0,    99.0, 99.0, 0.0, 0.0,
@@ -309,7 +313,7 @@ test( 'zlatrs: upper, conjugate-transpose, unit diagonal, 3x3', function t() {
 });
 
 test( 'zlatrs: lower, conjugate-transpose, unit diagonal, 3x3', function t() {
-	var tc = findCase( 'lower_C_unit' );
+	var tc = lower_c_unit;
 	var A = makeMatrix( [
 		99.0, 99.0, 1.0, 1.0,   0.5, 0.0,
 		0.0, 0.0,   99.0, 99.0, 1.0, -1.0,
@@ -328,7 +332,7 @@ test( 'zlatrs: lower, conjugate-transpose, unit diagonal, 3x3', function t() {
 });
 
 test( 'zlatrs: upper, no-transpose, 4x4', function t() {
-	var tc = findCase( 'upper_N_4x4' );
+	var tc = upper_n_4x4;
 	// 4x4 upper triangular, column-major
 	var A = makeMatrix( [
 		3.0, 0.0,   0.0, 0.0,   0.0, 0.0,  0.0, 0.0,
@@ -349,7 +353,7 @@ test( 'zlatrs: upper, no-transpose, 4x4', function t() {
 });
 
 test( 'zlatrs: lower, transpose, unit, normin=Y, 3x3', function t() {
-	var tc = findCase( 'lower_T_unit_norminY' );
+	var tc = lower_t_unit_norminy;
 	var A = makeMatrix( [
 		99.0, 99.0, 1.0, 1.0,   0.5, 0.0,
 		0.0, 0.0,   99.0, 99.0, 1.0, -1.0,
@@ -435,7 +439,7 @@ test( 'zlatrs: upper, conjugate-transpose, careful solve', function t() {
 });
 
 test( 'zlatrs: upper, no-transpose, unit, careful solve (large off-diag)', function t() {
-	var tc = findCase( 'upper_N_unit_careful' );
+	var tc = upper_n_unit_careful;
 	var A = makeMatrix( [
 		99.0, 99.0,  0.0, 0.0,      0.0, 0.0,
 		1e+150, 1e+150, 99.0, 99.0, 0.0, 0.0,

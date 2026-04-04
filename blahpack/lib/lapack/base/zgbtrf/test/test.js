@@ -4,26 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Int32Array = require( '@stdlib/array/int32' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgbtrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgbtrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var tridiag_4x4 = require( './fixtures/tridiag_4x4.json' );
+var kl1_ku2_3x3 = require( './fixtures/kl1_ku2_3x3.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var singular = require( './fixtures/singular.json' );
+var pivot_2x2 = require( './fixtures/pivot_2x2.json' );
+var pentadiag_5x5 = require( './fixtures/pentadiag_5x5.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,7 +35,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zgbtrf: main export is a function', function t() {
@@ -46,7 +42,7 @@ test( 'zgbtrf: main export is a function', function t() {
 });
 
 test( 'zgbtrf: 4x4 tridiagonal (KL=1, KU=1)', function t() {
-	var tc = findCase( 'tridiag_4x4' );
+	var tc = tridiag_4x4;
 	var AB = new Complex128Array( 4 * 4 );
 	var ABv = reinterpret( AB, 0 );
 	// Same setup as zgbtf2 test
@@ -72,7 +68,7 @@ test( 'zgbtrf: 4x4 tridiagonal (KL=1, KU=1)', function t() {
 });
 
 test( 'zgbtrf: 3x3 with KL=1, KU=2', function t() {
-	var tc = findCase( 'kl1_ku2_3x3' );
+	var tc = kl1_ku2_3x3;
 	var AB = new Complex128Array( 5 * 3 );
 	var ABv = reinterpret( AB, 0 );
 	ABv[ (3 + 0 * 5) * 2 ] = 5; ABv[ (3 + 0 * 5) * 2 + 1 ] = 1;
@@ -95,7 +91,7 @@ test( 'zgbtrf: 3x3 with KL=1, KU=2', function t() {
 });
 
 test( 'zgbtrf: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var AB = new Complex128Array( 4 );
 	var IPIV = new Int32Array( 1 );
 	var info = zgbtrf( 3, 0, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
@@ -103,7 +99,7 @@ test( 'zgbtrf: N=0 quick return', function t() {
 });
 
 test( 'zgbtrf: M=0 quick return', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var AB = new Complex128Array( 4 );
 	var IPIV = new Int32Array( 1 );
 	var info = zgbtrf( 0, 3, 1, 1, AB, 1, 4, 0, IPIV, 1, 0 );
@@ -111,7 +107,7 @@ test( 'zgbtrf: M=0 quick return', function t() {
 });
 
 test( 'zgbtrf: 1x1 matrix', function t() {
-	var tc = findCase( 'one_by_one' );
+	var tc = one_by_one;
 	var AB = new Complex128Array( [ 7, 2 ] );
 	var IPIV = new Int32Array( 1 );
 	var info = zgbtrf( 1, 1, 0, 0, AB, 1, 1, 0, IPIV, 1, 0 );
@@ -121,7 +117,7 @@ test( 'zgbtrf: 1x1 matrix', function t() {
 });
 
 test( 'zgbtrf: singular matrix', function t() {
-	var tc = findCase( 'singular' );
+	var tc = singular;
 	var AB = new Complex128Array( 2 * 2 );
 	var ABv = reinterpret( AB, 0 );
 	ABv[ (0 + 1 * 2) * 2 ] = 1; ABv[ (0 + 1 * 2) * 2 + 1 ] = 1;
@@ -131,7 +127,7 @@ test( 'zgbtrf: singular matrix', function t() {
 });
 
 test( 'zgbtrf: pivoting 2x2', function t() {
-	var tc = findCase( 'pivot_2x2' );
+	var tc = pivot_2x2;
 	var AB = new Complex128Array( 4 * 2 );
 	var ABv = reinterpret( AB, 0 );
 	ABv[ (2 + 0 * 4) * 2 ] = 1; ABv[ (2 + 0 * 4) * 2 + 1 ] = 0;
@@ -150,7 +146,7 @@ test( 'zgbtrf: pivoting 2x2', function t() {
 });
 
 test( 'zgbtrf: 5x5 pentadiagonal (KL=2, KU=2)', function t() {
-	var tc = findCase( 'pentadiag_5x5' );
+	var tc = pentadiag_5x5;
 	// LDAB = 2*KL+KU+1 = 7, 5 columns
 	var LDAB = 7;
 	var kl = 2;

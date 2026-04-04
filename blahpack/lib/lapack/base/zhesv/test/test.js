@@ -4,26 +4,18 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zhesv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhesv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4_1rhs = require( './fixtures/upper_4x4_1rhs.json' );
+var lower_4x4_2rhs = require( './fixtures/lower_4x4_2rhs.json' );
+var n1 = require( './fixtures/n1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,7 +29,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
-
 
 // TESTS //
 
@@ -67,7 +58,7 @@ test( 'zhesv: upper_4x4_1rhs (fixture, lwork >= N uses zhetrs2)', function t() {
 	var B;
 	var n;
 
-	tc = findCase( 'upper_4x4_1rhs' );
+	tc = upper_4x4_1rhs;
 	n = 4;
 
 	// Upper Hermitian 4x4
@@ -100,7 +91,7 @@ test( 'zhesv: lower_4x4_2rhs (fixture)', function t() {
 	var n;
 	var nrhs;
 
-	tc = findCase( 'lower_4x4_2rhs' );
+	tc = lower_4x4_2rhs;
 	n = 4;
 	nrhs = 2;
 
@@ -143,7 +134,7 @@ test( 'zhesv: n1 (fixture)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 
 	A = new Complex128Array([ 3, 0 ]);
 	IPIV = new Int32Array( 1 );

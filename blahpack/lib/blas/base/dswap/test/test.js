@@ -2,39 +2,21 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dswap = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dswap.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var negative_stride = require( './fixtures/negative_stride.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -69,7 +51,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dswap: main export is a function', function t() {
@@ -77,7 +58,7 @@ test( 'dswap: main export is a function', function t() {
 });
 
 test( 'dswap: basic swap (N=5, stride=1)', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 6.0, 7.0, 8.0, 9.0, 10.0 ] );
 	dswap( 5, x, 1, 0, y, 1, 0 );
@@ -86,7 +67,7 @@ test( 'dswap: basic swap (N=5, stride=1)', function t() {
 });
 
 test( 'dswap: negative stride (N=3, strideX=2, strideY=-1)', function t() {
-	var tc = findCase( 'negative_stride' );
+	var tc = negative_stride;
 
 	// Fortran: x = [1,0,2,0,3] stride=2, y = [4,5,6] stride=-1
 
@@ -101,7 +82,7 @@ test( 'dswap: negative stride (N=3, strideX=2, strideY=-1)', function t() {
 });
 
 test( 'dswap: N=0 quick return (vectors unchanged)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	dswap( 0, x, 1, 0, y, 1, 0 );
@@ -110,7 +91,7 @@ test( 'dswap: N=0 quick return (vectors unchanged)', function t() {
 });
 
 test( 'dswap: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Float64Array( [ 42.0 ] );
 	var y = new Float64Array( [ 99.0 ] );
 	dswap( 1, x, 1, 0, y, 1, 0 );

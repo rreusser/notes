@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgbsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgbsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var tridiag_4x4_1rhs = require( './fixtures/tridiag_4x4_1rhs.json' );
+var tridiag_4x4_2rhs = require( './fixtures/tridiag_4x4_2rhs.json' );
+var pentadiag_5x5_1rhs = require( './fixtures/pentadiag_5x5_1rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var singular = require( './fixtures/singular.json' );
+var pivot_2x2 = require( './fixtures/pivot_2x2.json' );
+var pentadiag_5x5_3rhs = require( './fixtures/pentadiag_5x5_3rhs.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -101,7 +87,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgbsv: 4x4 tridiagonal, single RHS', function t() {
@@ -111,7 +96,7 @@ test( 'dgbsv: 4x4 tridiagonal, single RHS', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'tridiag_4x4_1rhs' );
+	tc = tridiag_4x4_1rhs;
 	AB = bandMatrix( 4, 4, [
 		// Col 0
 		[ 2, 0, 4.0 ],
@@ -145,7 +130,7 @@ test( 'dgbsv: 4x4 tridiagonal, 2 RHS', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'tridiag_4x4_2rhs' );
+	tc = tridiag_4x4_2rhs;
 	AB = bandMatrix( 4, 4, [
 		[ 2, 0, 4.0 ],
 		[ 3, 0, -1.0 ],
@@ -180,7 +165,7 @@ test( 'dgbsv: 5x5 pentadiagonal, single RHS', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'pentadiag_5x5_1rhs' );
+	tc = pentadiag_5x5_1rhs;
 	AB = bandMatrix( 7, 5, [
 		// Col 0: diag at row KL+KU=4, subdiags at row 5,6
 		[ 4, 0, 6.0 ],
@@ -225,7 +210,7 @@ test( 'dgbsv: N=0 quick return', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Float64Array( 4 );
 	B = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -241,7 +226,7 @@ test( 'dgbsv: NRHS=0 still factorizes AB', function t() {
 	var AB;
 	var i;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	AB = bandMatrix( 4, 4, [
 		[ 2, 0, 4.0 ],
 		[ 3, 0, -1.0 ],
@@ -276,7 +261,7 @@ test( 'dgbsv: singular matrix returns info > 0', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	AB = bandMatrix( 4, 2, [
 		[ 2, 0, 1.0 ]  // diag(0) = 1, diag(1) = 0 (default)
 	]);
@@ -293,7 +278,7 @@ test( 'dgbsv: pivoting 2x2', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'pivot_2x2' );
+	tc = pivot_2x2;
 	AB = bandMatrix( 4, 2, [
 		[ 2, 0, 1.0 ],
 		[ 3, 0, 3.0 ],  // col 0: diag=1, sub=3
@@ -314,7 +299,7 @@ test( 'dgbsv: 5x5 pentadiagonal, 3 RHS', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'pentadiag_5x5_3rhs' );
+	tc = pentadiag_5x5_3rhs;
 	AB = bandMatrix( 7, 5, [
 		[ 4, 0, 6.0 ],
 		[ 5, 0, -2.0 ],

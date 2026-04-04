@@ -3,28 +3,19 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlarft = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarft.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var fwd_col_5x3 = require( './fixtures/fwd_col_5x3.json' );
+var fwd_col_3x2 = require( './fixtures/fwd_col_3x2.json' );
+var bwd_col_5x2 = require( './fixtures/bwd_col_5x2.json' );
+var fwd_col_tau_zero = require( './fixtures/fwd_col_tau_zero.json' );
+var fwd_row_5x3 = require( './fixtures/fwd_row_5x3.json' );
+var fwd_row_3x2 = require( './fixtures/fwd_row_3x2.json' );
+var bwd_row_5x2 = require( './fixtures/bwd_row_5x2.json' );
+var bwd_col_tau_zero = require( './fixtures/bwd_col_tau_zero.json' );
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -55,7 +46,7 @@ test( 'dlarft: fwd col 5x3', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'fwd_col_5x3' );
+	tc = fwd_col_5x3;
 	V = new Float64Array( 6 * 3 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 1 + 0 * 6 ] = 0.5;
@@ -81,7 +72,7 @@ test( 'dlarft: fwd col 3x2', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'fwd_col_3x2' );
+	tc = fwd_col_3x2;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 1 + 0 * 6 ] = 2;
@@ -100,7 +91,7 @@ test( 'dlarft: bwd col 5x2', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'bwd_col_5x2' );
+	tc = bwd_col_5x2;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 0.5;
 	V[ 0 + 1 * 6 ] = 0.25;
@@ -122,7 +113,7 @@ test( 'dlarft: fwd col tau zero', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'fwd_col_tau_zero' );
+	tc = fwd_col_tau_zero;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 1 + 0 * 6 ] = 0.5;
@@ -141,7 +132,7 @@ test( 'dlarft: fwd row 5x3', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'fwd_row_5x3' );
+	tc = fwd_row_5x3;
 	V = new Float64Array( 6 * 6 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 0 + 1 * 6 ] = 0.5;
@@ -167,7 +158,7 @@ test( 'dlarft: fwd row 3x2', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'fwd_row_3x2' );
+	tc = fwd_row_3x2;
 	V = new Float64Array( 6 * 6 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 0 + 1 * 6 ] = 2;
@@ -186,7 +177,7 @@ test( 'dlarft: bwd row 5x2', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'bwd_row_5x2' );
+	tc = bwd_row_5x2;
 	V = new Float64Array( 6 * 6 );
 	V[ 0 + 0 * 6 ] = 0.5;
 	V[ 0 + 1 * 6 ] = 0.25;
@@ -210,7 +201,7 @@ test( 'dlarft: bwd col tau zero', function t() {
 	var V;
 	var T;
 
-	tc = findCase( 'bwd_col_tau_zero' );
+	tc = bwd_col_tau_zero;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 0.5;
 	V[ 0 + 1 * 6 ] = 0.25;

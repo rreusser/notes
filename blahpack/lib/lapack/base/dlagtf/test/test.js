@@ -2,40 +2,20 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlagtf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlagtf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5 = require( './fixtures/basic_5x5.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +64,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlagtf: basic 5x5', function t() {
@@ -96,7 +75,7 @@ test( 'dlagtf: basic 5x5', function t() {
 	var c;
 	var d;
 
-	tc = findCase( 'basic_5x5' );
+	tc = basic_5x5;
 	a = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
 	b = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	c = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
@@ -120,7 +99,7 @@ test( 'dlagtf: N=1', function t() {
 	var c;
 	var d;
 
-	tc = findCase( 'n_equals_1' );
+	tc = n_equals_1;
 	a = new Float64Array( [ 5.0 ] );
 	b = new Float64Array( 1 );
 	c = new Float64Array( 1 );

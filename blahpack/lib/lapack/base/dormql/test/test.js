@@ -4,24 +4,25 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dormql = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dormql.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var ql_factor = require( './fixtures/ql_factor.json' );
+var big_ql_factor = require( './fixtures/big_ql_factor.json' );
+var left_notrans = require( './fixtures/left_notrans.json' );
+var left_trans = require( './fixtures/left_trans.json' );
+var right_notrans = require( './fixtures/right_notrans.json' );
+var right_trans = require( './fixtures/right_trans.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var right_notrans_rect = require( './fixtures/right_notrans_rect.json' );
+var blocked_left_notrans = require( './fixtures/blocked_left_notrans.json' );
+var blocked_left_trans = require( './fixtures/blocked_left_trans.json' );
+var blocked_right_notrans = require( './fixtures/blocked_right_notrans.json' );
+var blocked_right_trans = require( './fixtures/blocked_right_trans.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -37,24 +38,23 @@ function assertArrayClose( actual, expected, tol, msg ) {
 }
 
 function getQLFactors() {
-	var ql = findCase( 'ql_factor' );
+	var ql = ql_factor;
 	var A = new Float64Array( ql.A );
 	var TAU = new Float64Array( ql.TAU );
 	return { A: A, TAU: TAU };
 }
 
 function getBigQLFactors() {
-	var ql = findCase( 'big_ql_factor' );
+	var ql = big_ql_factor;
 	var A = new Float64Array( ql.A );
 	var TAU = new Float64Array( ql.TAU );
 	return { A: A, TAU: TAU, N: 40 };
 }
 
-
 // TESTS //
 
 test( 'dormql: left_notrans (Q*I = Q)', function t() {
-	var tc = findCase( 'left_notrans' );
+	var tc = left_notrans;
 	var ql = getQLFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -69,7 +69,7 @@ test( 'dormql: left_notrans (Q*I = Q)', function t() {
 });
 
 test( 'dormql: left_trans (Q^T*I)', function t() {
-	var tc = findCase( 'left_trans' );
+	var tc = left_trans;
 	var ql = getQLFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -84,7 +84,7 @@ test( 'dormql: left_trans (Q^T*I)', function t() {
 });
 
 test( 'dormql: right_notrans (I*Q)', function t() {
-	var tc = findCase( 'right_notrans' );
+	var tc = right_notrans;
 	var ql = getQLFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -99,7 +99,7 @@ test( 'dormql: right_notrans (I*Q)', function t() {
 });
 
 test( 'dormql: right_trans (I*Q^T)', function t() {
-	var tc = findCase( 'right_trans' );
+	var tc = right_trans;
 	var ql = getQLFactors();
 	var C = new Float64Array([
 		1, 0, 0, 0,
@@ -138,7 +138,7 @@ test( 'dormql: k_zero', function t() {
 });
 
 test( 'dormql: left_notrans_rect (Q*C, 4x2)', function t() {
-	var tc = findCase( 'left_notrans_rect' );
+	var tc = left_notrans_rect;
 	var ql = getQLFactors();
 	var C = new Float64Array([
 		1, 3, -1, 2,
@@ -151,7 +151,7 @@ test( 'dormql: left_notrans_rect (Q*C, 4x2)', function t() {
 });
 
 test( 'dormql: right_notrans_rect (C*Q, 2x4)', function t() {
-	var tc = findCase( 'right_notrans_rect' );
+	var tc = right_notrans_rect;
 	var ql = getQLFactors();
 	var C = new Float64Array([
 		1, 0,
@@ -166,7 +166,7 @@ test( 'dormql: right_notrans_rect (C*Q, 2x4)', function t() {
 });
 
 test( 'dormql: blocked left notrans (K=40)', function t() {
-	var tc = findCase( 'blocked_left_notrans' );
+	var tc = blocked_left_notrans;
 	var f = getBigQLFactors();
 	var N = f.N;
 	var C = new Float64Array( N * N );
@@ -181,7 +181,7 @@ test( 'dormql: blocked left notrans (K=40)', function t() {
 });
 
 test( 'dormql: blocked left trans (K=40)', function t() {
-	var tc = findCase( 'blocked_left_trans' );
+	var tc = blocked_left_trans;
 	var f = getBigQLFactors();
 	var N = f.N;
 	var C = new Float64Array( N * N );
@@ -196,7 +196,7 @@ test( 'dormql: blocked left trans (K=40)', function t() {
 });
 
 test( 'dormql: blocked right notrans (K=40)', function t() {
-	var tc = findCase( 'blocked_right_notrans' );
+	var tc = blocked_right_notrans;
 	var f = getBigQLFactors();
 	var N = f.N;
 	var C = new Float64Array( N * N );
@@ -211,7 +211,7 @@ test( 'dormql: blocked right notrans (K=40)', function t() {
 });
 
 test( 'dormql: blocked right trans (K=40)', function t() {
-	var tc = findCase( 'blocked_right_trans' );
+	var tc = blocked_right_trans;
 	var f = getBigQLFactors();
 	var N = f.N;
 	var C = new Float64Array( N * N );

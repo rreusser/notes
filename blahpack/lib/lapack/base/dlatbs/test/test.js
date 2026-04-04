@@ -2,39 +2,35 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlatbs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlatbs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_n_nonunit = require( './fixtures/upper_n_nonunit.json' );
+var lower_n_nonunit = require( './fixtures/lower_n_nonunit.json' );
+var upper_t_nonunit = require( './fixtures/upper_t_nonunit.json' );
+var lower_t_nonunit = require( './fixtures/lower_t_nonunit.json' );
+var upper_n_unit = require( './fixtures/upper_n_unit.json' );
+var lower_n_unit = require( './fixtures/lower_n_unit.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var normin_y = require( './fixtures/normin_y.json' );
+var upper_kd1 = require( './fixtures/upper_kd1.json' );
+var upper_t_unit = require( './fixtures/upper_t_unit.json' );
+var lower_t_unit = require( './fixtures/lower_t_unit.json' );
+var lower_t_nonunit_normin_y = require( './fixtures/lower_t_nonunit_normin_y.json' );
+var upper_t_nonunit_normin_y = require( './fixtures/upper_t_nonunit_normin_y.json' );
+var lower_n_unit_normin_y = require( './fixtures/lower_n_unit_normin_y.json' );
+var lower_t_kd1 = require( './fixtures/lower_t_kd1.json' );
+var singular_upper = require( './fixtures/singular_upper.json' );
+var near_singular_upper = require( './fixtures/near_singular_upper.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -96,7 +92,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlatbs: upper_N_nonunit', function t() {
@@ -107,7 +102,7 @@ test( 'dlatbs: upper_N_nonunit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'upper_N_nonunit' );
+	tc = upper_n_nonunit;
 	ab = bandedMatrix( 3, 4, [
 		[2, 0, 4.0],
 		[1, 1, 2.0],
@@ -137,7 +132,7 @@ test( 'dlatbs: lower_N_nonunit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'lower_N_nonunit' );
+	tc = lower_n_nonunit;
 	ab = bandedMatrix( 3, 4, [
 		[0, 0, 4.0],
 		[1, 0, 2.0],
@@ -167,7 +162,7 @@ test( 'dlatbs: upper_T_nonunit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'upper_T_nonunit' );
+	tc = upper_t_nonunit;
 	ab = bandedMatrix( 3, 4, [
 		[2, 0, 4.0],
 		[1, 1, 2.0],
@@ -197,7 +192,7 @@ test( 'dlatbs: lower_T_nonunit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'lower_T_nonunit' );
+	tc = lower_t_nonunit;
 	ab = bandedMatrix( 3, 4, [
 		[0, 0, 4.0],
 		[1, 0, 2.0],
@@ -227,7 +222,7 @@ test( 'dlatbs: upper_N_unit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'upper_N_unit' );
+	tc = upper_n_unit;
 	ab = bandedMatrix( 3, 4, [
 		[2, 0, 99.0],
 		[1, 1, 2.0],
@@ -257,7 +252,7 @@ test( 'dlatbs: lower_N_unit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'lower_N_unit' );
+	tc = lower_n_unit;
 	ab = bandedMatrix( 3, 4, [
 		[0, 0, 99.0],
 		[1, 0, 2.0],
@@ -287,7 +282,7 @@ test( 'dlatbs: n_zero', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ab = new Float64Array( 1 );
 	x = new Float64Array( 1 );
 	scale = new Float64Array( 1 );
@@ -305,7 +300,7 @@ test( 'dlatbs: n_one', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ab = new Float64Array([ 5.0 ]);
 	x = new Float64Array([ 10.0 ]);
 	scale = new Float64Array( 1 );
@@ -324,7 +319,7 @@ test( 'dlatbs: normin_Y', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'normin_Y' );
+	tc = normin_y;
 	ab = bandedMatrix( 3, 4, [
 		[2, 0, 4.0],
 		[1, 1, 2.0],
@@ -354,7 +349,7 @@ test( 'dlatbs: upper_kd1', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'upper_kd1' );
+	tc = upper_kd1;
 	ab = bandedMatrix( 2, 4, [
 		[1, 0, 3.0],
 		[0, 1, 1.0],
@@ -382,7 +377,7 @@ test( 'dlatbs: upper_T_unit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'upper_T_unit' );
+	tc = upper_t_unit;
 	ab = bandedMatrix( 3, 4, [
 		[2, 0, 99.0],
 		[1, 1, 2.0],
@@ -412,7 +407,7 @@ test( 'dlatbs: lower_T_unit', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'lower_T_unit' );
+	tc = lower_t_unit;
 	ab = bandedMatrix( 3, 4, [
 		[0, 0, 99.0],
 		[1, 0, 2.0],
@@ -442,7 +437,7 @@ test( 'dlatbs: lower_T_nonunit_normin_Y', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'lower_T_nonunit_normin_Y' );
+	tc = lower_t_nonunit_normin_y;
 	ab = bandedMatrix( 3, 4, [
 		[0, 0, 4.0],
 		[1, 0, 2.0],
@@ -472,7 +467,7 @@ test( 'dlatbs: upper_T_nonunit_normin_Y', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'upper_T_nonunit_normin_Y' );
+	tc = upper_t_nonunit_normin_y;
 	ab = bandedMatrix( 3, 4, [
 		[2, 0, 4.0],
 		[1, 1, 2.0],
@@ -502,7 +497,7 @@ test( 'dlatbs: lower_N_unit_normin_Y', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'lower_N_unit_normin_Y' );
+	tc = lower_n_unit_normin_y;
 	ab = bandedMatrix( 3, 4, [
 		[0, 0, 99.0],
 		[1, 0, 2.0],
@@ -532,7 +527,7 @@ test( 'dlatbs: lower_T_kd1', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'lower_T_kd1' );
+	tc = lower_t_kd1;
 	ab = bandedMatrix( 2, 4, [
 		[0, 0, 3.0],
 		[1, 0, 1.0],
@@ -560,7 +555,7 @@ test( 'dlatbs: singular_upper (zero diagonal)', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'singular_upper' );
+	tc = singular_upper;
 	ab = bandedMatrix( 2, 3, [
 		[1, 0, 2.0],
 		[0, 1, 1.0],
@@ -586,7 +581,7 @@ test( 'dlatbs: near_singular_upper (very small diagonal)', function t() {
 	var ab;
 	var x;
 
-	tc = findCase( 'near_singular_upper' );
+	tc = near_singular_upper;
 	ab = bandedMatrix( 2, 3, [
 		[1, 0, 1.0],
 		[0, 1, 1.0],

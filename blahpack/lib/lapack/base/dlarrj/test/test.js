@@ -2,45 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlarrj = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarrj.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
-
+var diagonal_4x4 = require( './fixtures/diagonal_4x4.json' );
+var tridiag_3x3 = require( './fixtures/tridiag_3x3.json' );
+var n_one = require( './fixtures/n_one.json' );
+var subset_refinement = require( './fixtures/subset_refinement.json' );
+var with_offset = require( './fixtures/with_offset.json' );
+var already_converged = require( './fixtures/already_converged.json' );
+var tridiag_5x5 = require( './fixtures/tridiag_5x5.json' );
+var coarse_rtol = require( './fixtures/coarse_rtol.json' );
 // CONSTANTS //
 
 var PIVMIN = 2.2250738585072014e-308; // Number.MIN_VALUE (DLAMCH('S'))
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -89,7 +73,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlarrj is a function', function t() {
@@ -104,7 +87,7 @@ test( 'dlarrj: diagonal_4x4', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'diagonal_4x4' );
+	tc = diagonal_4x4;
 	w = new Float64Array( [ 1.1, 2.9, 5.2, 6.8 ] );
 	WERR = new Float64Array( [ 0.5, 0.5, 0.5, 0.5 ] );
 	WORK = new Float64Array( 16 );
@@ -123,7 +106,7 @@ test( 'dlarrj: tridiag_3x3', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'tridiag_3x3' );
+	tc = tridiag_3x3;
 	w = new Float64Array( [ 1.1, 2.1, 3.9 ] );
 	WERR = new Float64Array( [ 0.5, 0.5, 0.5 ] );
 	WORK = new Float64Array( 12 );
@@ -157,7 +140,7 @@ test( 'dlarrj: n_one', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	w = new Float64Array( [ 5.1 ] );
 	WERR = new Float64Array( [ 0.5 ] );
 	WORK = new Float64Array( 4 );
@@ -176,7 +159,7 @@ test( 'dlarrj: subset_refinement', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'subset_refinement' );
+	tc = subset_refinement;
 	w = new Float64Array( [ 0.0, 3.1, 4.9, 0.0 ] );
 	WERR = new Float64Array( [ 0.0, 0.5, 0.5, 0.0 ] );
 	WORK = new Float64Array( 16 );
@@ -195,7 +178,7 @@ test( 'dlarrj: with_offset', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'with_offset' );
+	tc = with_offset;
 	w = new Float64Array( [ 5.1, 6.9 ] );
 	WERR = new Float64Array( [ 0.5, 0.5 ] );
 	WORK = new Float64Array( 16 );
@@ -214,7 +197,7 @@ test( 'dlarrj: already_converged', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'already_converged' );
+	tc = already_converged;
 	w = new Float64Array( [ 1.0, 2.0, 4.0 ] );
 	WERR = new Float64Array( [ 1e-16, 1e-16, 1e-16 ] );
 	WORK = new Float64Array( 12 );
@@ -233,7 +216,7 @@ test( 'dlarrj: tridiag_5x5', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'tridiag_5x5' );
+	tc = tridiag_5x5;
 	w = new Float64Array( [ 1.0, 2.5, 4.0, 5.5, 7.0 ] );
 	WERR = new Float64Array( [ 1.0, 1.0, 1.0, 1.0, 1.0 ] );
 	WORK = new Float64Array( 20 );
@@ -307,7 +290,7 @@ test( 'dlarrj: coarse_rtol', function t() {
 	var tc;
 	var w;
 
-	tc = findCase( 'coarse_rtol' );
+	tc = coarse_rtol;
 	w = new Float64Array( [ 1.1, 2.1, 3.9 ] );
 	WERR = new Float64Array( [ 0.5, 0.5, 0.5 ] );
 	WORK = new Float64Array( 12 );

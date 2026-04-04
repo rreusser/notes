@@ -5,27 +5,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zheevr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zheevr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var v_a_l = require( './fixtures/v_a_l.json' );
+var v_a_u = require( './fixtures/v_a_u.json' );
+var n_a_l = require( './fixtures/n_a_l.json' );
+var v_v_l = require( './fixtures/v_v_l.json' );
+var v_i_l = require( './fixtures/v_i_l.json' );
+var n1 = require( './fixtures/n1.json' );
+var v_v_u = require( './fixtures/v_v_u.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -131,11 +127,10 @@ function runZheevr( jobz, range, uplo, N, A, vl, vu, il, iu, abstol ) {
 	return { info: info, M: out.M, w: w, Z: Z, ISUPPZ: ISUPPZ };
 }
 
-
 // TESTS //
 
 test( 'zheevr: JOBZ=V, RANGE=A, UPLO=L', function t() {
-	var tc = findCase( 'V_A_L' );
+	var tc = v_a_l;
 	var Aorig = hermMatrix4();
 	var A = new Complex128Array( reinterpret( Aorig, 0 ).slice() );
 	var r = runZheevr( 'compute-vectors', 'all', 'lower', 4, A, 0, 0, 0, 0, 0 );
@@ -147,7 +142,7 @@ test( 'zheevr: JOBZ=V, RANGE=A, UPLO=L', function t() {
 });
 
 test( 'zheevr: JOBZ=V, RANGE=A, UPLO=U', function t() {
-	var tc = findCase( 'V_A_U' );
+	var tc = v_a_u;
 	var Aorig = hermMatrix4();
 	var A = new Complex128Array( reinterpret( Aorig, 0 ).slice() );
 	var r = runZheevr( 'compute-vectors', 'all', 'upper', 4, A, 0, 0, 0, 0, 0 );
@@ -159,7 +154,7 @@ test( 'zheevr: JOBZ=V, RANGE=A, UPLO=U', function t() {
 });
 
 test( 'zheevr: JOBZ=N, RANGE=A, UPLO=L (eigenvalues only)', function t() {
-	var tc = findCase( 'N_A_L' );
+	var tc = n_a_l;
 	var A = hermMatrix4();
 	var r = runZheevr( 'no-vectors', 'all', 'lower', 4, A, 0, 0, 0, 0, 0 );
 
@@ -169,7 +164,7 @@ test( 'zheevr: JOBZ=N, RANGE=A, UPLO=L (eigenvalues only)', function t() {
 });
 
 test( 'zheevr: JOBZ=V, RANGE=V, UPLO=L (value range [7, 11])', function t() {
-	var tc = findCase( 'V_V_L' );
+	var tc = v_v_l;
 	var Aorig = hermMatrix4();
 	var A = new Complex128Array( reinterpret( Aorig, 0 ).slice() );
 	var r = runZheevr( 'compute-vectors', 'value', 'lower', 4, A, 7.0, 11.0, 0, 0, 0 );
@@ -181,7 +176,7 @@ test( 'zheevr: JOBZ=V, RANGE=V, UPLO=L (value range [7, 11])', function t() {
 });
 
 test( 'zheevr: JOBZ=V, RANGE=I, UPLO=L (index 2..3)', function t() {
-	var tc = findCase( 'V_I_L' );
+	var tc = v_i_l;
 	var Aorig = hermMatrix4();
 	var A = new Complex128Array( reinterpret( Aorig, 0 ).slice() );
 	var r = runZheevr( 'compute-vectors', 'index', 'lower', 4, A, 0, 0, 2, 3, 0 );
@@ -201,7 +196,7 @@ test( 'zheevr: N=0 quick return', function t() {
 });
 
 test( 'zheevr: N=1', function t() {
-	var tc = findCase( 'N1' );
+	var tc = n1;
 	var A = new Complex128Array( [ 5.0, 0.0 ] );
 	var r = runZheevr( 'compute-vectors', 'all', 'lower', 1, A, 0, 0, 0, 0, 0 );
 	var Zv = reinterpret( r.Z, 0 );
@@ -306,7 +301,7 @@ test( 'zheevr: JOBZ=N, RANGE=I, UPLO=L', function t() {
 });
 
 test( 'zheevr: JOBZ=V, RANGE=V, UPLO=U', function t() {
-	var tc = findCase( 'V_V_U' );
+	var tc = v_v_u;
 	var Aorig = hermMatrix4();
 	var A = new Complex128Array( reinterpret( Aorig, 0 ).slice() );
 	var r = runZheevr( 'compute-vectors', 'value', 'upper', 4, A, 7.0, 11.0, 0, 0, 0 );

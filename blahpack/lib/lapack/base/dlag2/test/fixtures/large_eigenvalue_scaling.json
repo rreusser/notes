@@ -1,0 +1,8 @@
+{
+  "name": "large_eigenvalue_scaling",
+  "scale1": 1e-160,
+  "scale2": 2e-160,
+  "wr1": 2,
+  "wr2": 2,
+  "wi": 0
+}

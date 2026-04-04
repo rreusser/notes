@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgebd2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgebd2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _4x3_upper = require( './fixtures/4x3_upper.json' );
+var _3x4_lower = require( './fixtures/3x4_lower.json' );
+var _3x3_square = require( './fixtures/3x3_square.json' );
+var _1x3 = require( './fixtures/1x3.json' );
+var _3x1 = require( './fixtures/3x1.json' );
+var _1x1 = require( './fixtures/1x1.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +67,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgebd2: 4x3 upper bidiagonal (M > N)', function t() {
@@ -96,7 +79,7 @@ test( 'dgebd2: 4x3 upper bidiagonal (M > N)', function t() {
 	var D;
 	var E;
 
-	tc = findCase( '4x3_upper' );
+	tc = _4x3_upper;
 	A = new Float64Array([
 		2.0,
 		1.0,
@@ -135,7 +118,7 @@ test( 'dgebd2: 3x4 lower bidiagonal (M < N)', function t() {
 	var D;
 	var E;
 
-	tc = findCase( '3x4_lower' );
+	tc = _3x4_lower;
 	A = new Float64Array([
 		2.0,
 		4.0,
@@ -174,7 +157,7 @@ test( 'dgebd2: 3x3 square matrix', function t() {
 	var D;
 	var E;
 
-	tc = findCase( '3x3_square' );
+	tc = _3x3_square;
 	A = new Float64Array([
 		5.0,
 		3.0,
@@ -209,7 +192,7 @@ test( 'dgebd2: 1x3 (M=1, M < N)', function t() {
 	var A;
 	var D;
 
-	tc = findCase( '1x3' );
+	tc = _1x3;
 	A = new Float64Array([
 		2.0, 3.0, 4.0
 	]);
@@ -234,7 +217,7 @@ test( 'dgebd2: 3x1 (N=1, M > N)', function t() {
 	var A;
 	var D;
 
-	tc = findCase( '3x1' );
+	tc = _3x1;
 	A = new Float64Array([
 		2.0, 3.0, 4.0
 	]);
@@ -269,7 +252,7 @@ test( 'dgebd2: 1x1 matrix', function t() {
 	var A;
 	var D;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Float64Array([ 7.0 ]);
 	D = new Float64Array( 1 );
 	TAUQ = new Float64Array( 1 );

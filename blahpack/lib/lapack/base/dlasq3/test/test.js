@@ -2,39 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlasq3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasq3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n0_lt_i0 = require( './fixtures/n0_lt_i0.json' );
+var n0_eq_i0 = require( './fixtures/n0_eq_i0.json' );
+var n0_eq_i0_plus_1 = require( './fixtures/n0_eq_i0_plus_1.json' );
+var basic_n4_pp0 = require( './fixtures/basic_n4_pp0.json' );
+var basic_n5_pp0 = require( './fixtures/basic_n5_pp0.json' );
+var pp2_reset = require( './fixtures/pp2_reset.json' );
+var dmin_negative_reversal = require( './fixtures/dmin_negative_reversal.json' );
+var non_ieee = require( './fixtures/non_ieee.json' );
+var deflation_last = require( './fixtures/deflation_last.json' );
+var n3_minimal = require( './fixtures/n3_minimal.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +55,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlasq3: main export is a function', function t() {
@@ -79,7 +66,7 @@ test( 'dlasq3: n0_lt_i0 — immediate return', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n0_lt_i0' );
+	tc = n0_lt_i0;
 	z = new Float64Array( [ 4.0, 1.0, 4.0, 1.0 ] );
 	result = dlasq3( 2, 1, z, 1, 0, 0, 0.5, 0.0, 0.0, 4.0, 0, 0, 0, true, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0 ); // eslint-disable-line max-len
 	assert.equal( result.n0, tc.n0 );
@@ -96,7 +83,7 @@ test( 'dlasq3: n0_eq_i0 — deflate single eigenvalue', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n0_eq_i0' );
+	tc = n0_eq_i0;
 	z = new Float64Array( [ 4.0, 1.0, 4.0, 1.0 ] );
 	result = dlasq3( 1, 1, z, 1, 0, 0, 0.5, 1.0, 0.0, 4.0, 0, 0, 0, true, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0 ); // eslint-disable-line max-len
 	assert.equal( result.n0, tc.n0 );
@@ -111,7 +98,7 @@ test( 'dlasq3: n0_eq_i0_plus_1 — 2-eigenvalue deflation', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n0_eq_i0_plus_1' );
+	tc = n0_eq_i0_plus_1;
 	z = new Float64Array([
 		4.0,
 		0.5,
@@ -135,7 +122,7 @@ test( 'dlasq3: basic_n4_pp0 — main dqds path', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'basic_n4_pp0' );
+	tc = basic_n4_pp0;
 	z = new Float64Array([
 		4.0,
 		1.0,
@@ -180,7 +167,7 @@ test( 'dlasq3: basic_n5_pp0 — larger problem', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'basic_n5_pp0' );
+	tc = basic_n5_pp0;
 	z = new Float64Array([
 		4.0,
 		1.0,
@@ -229,7 +216,7 @@ test( 'dlasq3: pp2_reset — pp=2 gets reset to 0', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'pp2_reset' );
+	tc = pp2_reset;
 	z = new Float64Array([
 		4.0,
 		1.0,
@@ -267,7 +254,7 @@ test( 'dlasq3: dmin_negative_reversal — reversal path', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'dmin_negative_reversal' );
+	tc = dmin_negative_reversal;
 	z = new Float64Array([
 		1.0,
 		0.5,
@@ -311,7 +298,7 @@ test( 'dlasq3: non_ieee — non-IEEE arithmetic path', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'non_ieee' );
+	tc = non_ieee;
 	z = new Float64Array([
 		4.0,
 		1.0,
@@ -349,7 +336,7 @@ test( 'dlasq3: deflation_last — deflation of last eigenvalue', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'deflation_last' );
+	tc = deflation_last;
 	z = new Float64Array([
 		4.0,
 		1.0,
@@ -391,7 +378,7 @@ test( 'dlasq3: n3_minimal — minimal 3-element problem', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n3_minimal' );
+	tc = n3_minimal;
 	z = new Float64Array([
 		4.0,
 		1.0,

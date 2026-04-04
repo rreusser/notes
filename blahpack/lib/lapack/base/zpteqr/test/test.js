@@ -5,38 +5,28 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpteqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpteqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var compz_n_4x4 = require( './fixtures/compz_n_4x4.json' );
+var compz_i_4x4 = require( './fixtures/compz_i_4x4.json' );
+var compz_v_4x4 = require( './fixtures/compz_v_4x4.json' );
+var n0 = require( './fixtures/n0.json' );
+var n1_compz_i = require( './fixtures/n1_compz_i.json' );
+var n1_compz_n = require( './fixtures/n1_compz_n.json' );
+var n2_compz_i = require( './fixtures/n2_compz_i.json' );
+var n6_compz_i = require( './fixtures/n6_compz_i.json' );
+var compz_v_permuted = require( './fixtures/compz_v_permuted.json' );
+var diagonal_compz_i = require( './fixtures/diagonal_compz_i.json' );
+var n2_compz_n = require( './fixtures/n2_compz_n.json' );
+var n3_varying_compz_i = require( './fixtures/n3_varying_compz_i.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -173,7 +163,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zpteqr: COMPZ=N, eigenvalues only, 4x4 SPD', function t() {
@@ -185,7 +174,7 @@ test( 'zpteqr: COMPZ=N, eigenvalues only, 4x4 SPD', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'compz_N_4x4' );
+	tc = compz_n_4x4;
 	N = 4;
 	d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
@@ -207,7 +196,7 @@ test( 'zpteqr: COMPZ=I, eigenvalues + eigenvectors, 4x4 SPD', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'compz_I_4x4' );
+	tc = compz_i_4x4;
 	origD = [ 4.0, 4.0, 4.0, 4.0 ];
 	origE = [ 1.0, 1.0, 1.0 ];
 	N = 4;
@@ -235,7 +224,7 @@ test( 'zpteqr: COMPZ=V, 4x4 SPD with identity Z', function t() {
 	var Z;
 	var i;
 
-	tc = findCase( 'compz_V_4x4' );
+	tc = compz_v_4x4;
 	origD = [ 4.0, 4.0, 4.0, 4.0 ];
 	origE = [ 1.0, 1.0, 1.0 ];
 	N = 4;
@@ -257,7 +246,7 @@ test( 'zpteqr: COMPZ=V, 4x4 SPD with identity Z', function t() {
 
 test( 'zpteqr: N=0 edge case', function t() {
 	var info;
-	var tc = findCase( 'n0' );
+	var tc = n0;
 
 	info = zpteqr( 'none', 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Complex128Array( 0 ), 1, 1, 0, new Float64Array( 0 ), 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info );
@@ -273,7 +262,7 @@ test( 'zpteqr: N=1, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n1_compz_I' );
+	tc = n1_compz_i;
 	N = 1;
 	d = new Float64Array( [ 5.0 ] );
 	e = new Float64Array( 0 );
@@ -295,7 +284,7 @@ test( 'zpteqr: N=1, COMPZ=N', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n1_compz_N' );
+	tc = n1_compz_n;
 	N = 1;
 	d = new Float64Array( [ 7.0 ] );
 	e = new Float64Array( 0 );
@@ -317,7 +306,7 @@ test( 'zpteqr: N=2, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n2_compz_I' );
+	tc = n2_compz_i;
 	origD = [ 3.0, 3.0 ];
 	origE = [ 0.5 ];
 	N = 2;
@@ -343,7 +332,7 @@ test( 'zpteqr: 6x6 SPD tridiagonal, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n6_compz_I' );
+	tc = n6_compz_i;
 	origD = [ 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 ];
 	origE = [ 1.0, 0.5, 0.25, 0.125, 2.0 ];
 	N = 6;
@@ -370,7 +359,7 @@ test( 'zpteqr: COMPZ=V, 4x4 SPD with permuted Z', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'compz_V_permuted' );
+	tc = compz_v_permuted;
 	origD = [ 4.0, 4.0, 4.0, 4.0 ];
 	origE = [ 1.0, 1.0, 1.0 ];
 	N = 4;
@@ -400,7 +389,7 @@ test( 'zpteqr: already-diagonal SPD matrix, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'diagonal_compz_I' );
+	tc = diagonal_compz_i;
 	origD = [ 4.0, 1.0, 3.0, 2.0 ];
 	origE = [ 0.0, 0.0, 0.0 ];
 	N = 4;
@@ -424,7 +413,7 @@ test( 'zpteqr: N=2, COMPZ=N', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n2_compz_N' );
+	tc = n2_compz_n;
 	N = 2;
 	d = new Float64Array( [ 3.0, 3.0 ] );
 	e = new Float64Array( [ 0.5 ] );
@@ -446,7 +435,7 @@ test( 'zpteqr: N=3, varying diagonal, COMPZ=I', function t() {
 	var e;
 	var Z;
 
-	tc = findCase( 'n3_varying_compz_I' );
+	tc = n3_varying_compz_i;
 	origD = [ 10.0, 8.0, 6.0 ];
 	origE = [ 2.0, 1.0 ];
 	N = 3;

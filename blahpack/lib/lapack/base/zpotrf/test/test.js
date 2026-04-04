@@ -4,27 +4,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpotrf = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 var zpotrf2 = require( './../../zpotrf2/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpotrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var n_zero = require( './fixtures/n_zero.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -94,11 +89,10 @@ function randomHPD( N ) {
 	return A;
 }
 
-
 // TESTS //
 
 test( 'zpotrf: lower_3x3', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	var A = new Complex128Array( [
 		10, 0, 3, 1, 1, -2,
 		3, -1, 8, 0, 2, 1,
@@ -110,7 +104,7 @@ test( 'zpotrf: lower_3x3', function t() {
 });
 
 test( 'zpotrf: upper_3x3', function t() {
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	var A = new Complex128Array( [
 		10, 0, 3, 1, 1, -2,
 		3, -1, 8, 0, 2, 1,
@@ -122,7 +116,7 @@ test( 'zpotrf: upper_3x3', function t() {
 });
 
 test( 'zpotrf: lower_4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var A = new Complex128Array( [
 		14, 0, 4, 2, 2, -1, 1, 3,
 		4, -2, 12, 0, 3, 1, 2, -2,
@@ -135,7 +129,7 @@ test( 'zpotrf: lower_4x4', function t() {
 });
 
 test( 'zpotrf: upper_4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var A = new Complex128Array( [
 		14, 0, 4, 2, 2, -1, 1, 3,
 		4, -2, 12, 0, 3, 1, 2, -2,
@@ -148,7 +142,7 @@ test( 'zpotrf: upper_4x4', function t() {
 });
 
 test( 'zpotrf: not_posdef', function t() {
-	var tc = findCase( 'not_posdef' );
+	var tc = not_posdef;
 	var A = new Complex128Array( [
 		1, 0, 2, 1, 3, 0,
 		2, -1, 1, 0, 4, 0,
@@ -159,7 +153,7 @@ test( 'zpotrf: not_posdef', function t() {
 });
 
 test( 'zpotrf: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var info = zpotrf( 'lower', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );

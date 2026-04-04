@@ -1,0 +1,9 @@
+{
+  "name": "not_spd_lower",
+  "ap": [
+    1,
+    2,
+    -3
+  ],
+  "info": 2
+}

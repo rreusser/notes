@@ -4,26 +4,17 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zlatrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlatrd.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_6x6_nb3 = require( './fixtures/upper_6x6_nb3.json' );
+var lower_6x6_nb3 = require( './fixtures/lower_6x6_nb3.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -59,11 +50,10 @@ function makeHerm6() {
 	]);
 }
 
-
 // TESTS //
 
 test( 'zlatrd: upper_6x6_nb3', function t() {
-	var tc = findCase( 'upper_6x6_nb3' );
+	var tc = upper_6x6_nb3;
 	var A = makeHerm6();
 	var e = new Float64Array( 5 );
 	var TAU = new Complex128Array( 5 );
@@ -81,7 +71,7 @@ test( 'zlatrd: upper_6x6_nb3', function t() {
 });
 
 test( 'zlatrd: lower_6x6_nb3', function t() {
-	var tc = findCase( 'lower_6x6_nb3' );
+	var tc = lower_6x6_nb3;
 	var A = makeHerm6();
 	var e = new Float64Array( 5 );
 	var TAU = new Complex128Array( 5 );

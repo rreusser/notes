@@ -2,39 +2,35 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlangt = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlangt.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var max_norm_4x4 = require( './fixtures/max_norm_4x4.json' );
+var one_norm_4x4 = require( './fixtures/one_norm_4x4.json' );
+var one_norm_o_4x4 = require( './fixtures/one_norm_o_4x4.json' );
+var inf_norm_4x4 = require( './fixtures/inf_norm_4x4.json' );
+var frob_norm_4x4 = require( './fixtures/frob_norm_4x4.json' );
+var frob_norm_e_4x4 = require( './fixtures/frob_norm_e_4x4.json' );
+var max_norm_n1 = require( './fixtures/max_norm_n1.json' );
+var one_norm_n1 = require( './fixtures/one_norm_n1.json' );
+var inf_norm_n1 = require( './fixtures/inf_norm_n1.json' );
+var frob_norm_n1 = require( './fixtures/frob_norm_n1.json' );
+var max_norm_5x5 = require( './fixtures/max_norm_5x5.json' );
+var one_norm_5x5 = require( './fixtures/one_norm_5x5.json' );
+var inf_norm_5x5 = require( './fixtures/inf_norm_5x5.json' );
+var frob_norm_5x5 = require( './fixtures/frob_norm_5x5.json' );
+var max_norm_n2 = require( './fixtures/max_norm_n2.json' );
+var one_norm_n2 = require( './fixtures/one_norm_n2.json' );
+var inf_norm_n2 = require( './fixtures/inf_norm_n2.json' );
+var frob_norm_n2 = require( './fixtures/frob_norm_n2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -50,7 +46,6 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
-
 // TESTS //
 
 test( 'dlangt: max_norm_4x4', function t() {
@@ -60,7 +55,7 @@ test( 'dlangt: max_norm_4x4', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'max_norm_4x4' );
+	tc = max_norm_4x4;
 	dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
 	du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
@@ -75,7 +70,7 @@ test( 'dlangt: one_norm_4x4', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'one_norm_4x4' );
+	tc = one_norm_4x4;
 	dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
 	du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
@@ -90,7 +85,7 @@ test( 'dlangt: one_norm_O alias same as one_norm', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'one_norm_O_4x4' );
+	tc = one_norm_o_4x4;
 	dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
 	du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
@@ -105,7 +100,7 @@ test( 'dlangt: inf_norm_4x4', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'inf_norm_4x4' );
+	tc = inf_norm_4x4;
 	dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
 	du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
@@ -120,7 +115,7 @@ test( 'dlangt: frob_norm_4x4', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'frob_norm_4x4' );
+	tc = frob_norm_4x4;
 	dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
 	du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
@@ -135,7 +130,7 @@ test( 'dlangt: frob_norm_E alias same as frobenius-norm', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'frob_norm_E_4x4' );
+	tc = frob_norm_e_4x4;
 	dl = new Float64Array( [ 3.0, 1.0, 2.0 ] );
 	d = new Float64Array( [ 2.0, 4.0, 5.0, 6.0 ] );
 	du = new Float64Array( [ -1.0, -2.0, -3.0 ] );
@@ -150,7 +145,7 @@ test( 'dlangt: max_norm_n1', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'max_norm_n1' );
+	tc = max_norm_n1;
 	dl = new Float64Array( 0 );
 	d = new Float64Array( [ -7.0 ] );
 	du = new Float64Array( 0 );
@@ -165,7 +160,7 @@ test( 'dlangt: one_norm_n1', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'one_norm_n1' );
+	tc = one_norm_n1;
 	dl = new Float64Array( 0 );
 	d = new Float64Array( [ -7.0 ] );
 	du = new Float64Array( 0 );
@@ -180,7 +175,7 @@ test( 'dlangt: inf_norm_n1', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'inf_norm_n1' );
+	tc = inf_norm_n1;
 	dl = new Float64Array( 0 );
 	d = new Float64Array( [ -7.0 ] );
 	du = new Float64Array( 0 );
@@ -195,7 +190,7 @@ test( 'dlangt: frob_norm_n1', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'frob_norm_n1' );
+	tc = frob_norm_n1;
 	dl = new Float64Array( 0 );
 	d = new Float64Array( [ -7.0 ] );
 	du = new Float64Array( 0 );
@@ -223,7 +218,7 @@ test( 'dlangt: max_norm_5x5', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'max_norm_5x5' );
+	tc = max_norm_5x5;
 	dl = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	d = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	du = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
@@ -238,7 +233,7 @@ test( 'dlangt: one_norm_5x5', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'one_norm_5x5' );
+	tc = one_norm_5x5;
 	dl = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	d = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	du = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
@@ -253,7 +248,7 @@ test( 'dlangt: inf_norm_5x5', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'inf_norm_5x5' );
+	tc = inf_norm_5x5;
 	dl = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	d = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	du = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
@@ -268,7 +263,7 @@ test( 'dlangt: frob_norm_5x5', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'frob_norm_5x5' );
+	tc = frob_norm_5x5;
 	dl = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	d = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	du = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
@@ -283,7 +278,7 @@ test( 'dlangt: max_norm_n2', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'max_norm_n2' );
+	tc = max_norm_n2;
 	dl = new Float64Array( [ 0.5 ] );
 	d = new Float64Array( [ 3.0, 4.0 ] );
 	du = new Float64Array( [ 1.5 ] );
@@ -298,7 +293,7 @@ test( 'dlangt: one_norm_n2', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'one_norm_n2' );
+	tc = one_norm_n2;
 	dl = new Float64Array( [ 0.5 ] );
 	d = new Float64Array( [ 3.0, 4.0 ] );
 	du = new Float64Array( [ 1.5 ] );
@@ -313,7 +308,7 @@ test( 'dlangt: inf_norm_n2', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'inf_norm_n2' );
+	tc = inf_norm_n2;
 	dl = new Float64Array( [ 0.5 ] );
 	d = new Float64Array( [ 3.0, 4.0 ] );
 	du = new Float64Array( [ 1.5 ] );
@@ -328,7 +323,7 @@ test( 'dlangt: frob_norm_n2', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'frob_norm_n2' );
+	tc = frob_norm_n2;
 	dl = new Float64Array( [ 0.5 ] );
 	d = new Float64Array( [ 3.0, 4.0 ] );
 	du = new Float64Array( [ 1.5 ] );

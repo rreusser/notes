@@ -2,41 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dpbtrf = require( './../../dpbtrf/lib/base.js' );
 var dpbcon = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpbcon.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_kd1 = require( './fixtures/upper_kd1.json' );
+var lower_kd1 = require( './fixtures/lower_kd1.json' );
+var upper_kd2 = require( './fixtures/upper_kd2.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var anorm_zero = require( './fixtures/anorm_zero.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -70,7 +54,6 @@ function bandedMatrix( ldab, n, entries ) {
 	return ab;
 }
 
-
 // TESTS //
 
 test( 'dpbcon: upper KD=1, N=4', function t() {
@@ -82,7 +65,7 @@ test( 'dpbcon: upper KD=1, N=4', function t() {
 	var ab;
 	var n;
 
-	tc = findCase( 'upper_kd1' );
+	tc = upper_kd1;
 	n = 4;
 	ab = bandedMatrix( 2, n, [
 		[1, 0, 4.0],
@@ -112,7 +95,7 @@ test( 'dpbcon: lower KD=1, N=4', function t() {
 	var ab;
 	var n;
 
-	tc = findCase( 'lower_kd1' );
+	tc = lower_kd1;
 	n = 4;
 	ab = bandedMatrix( 2, n, [
 		[0, 0, 4.0],
@@ -142,7 +125,7 @@ test( 'dpbcon: upper KD=2, N=4', function t() {
 	var ab;
 	var n;
 
-	tc = findCase( 'upper_kd2' );
+	tc = upper_kd2;
 	n = 4;
 	ab = bandedMatrix( 3, n, [
 		[2, 0, 10.0],
@@ -173,7 +156,7 @@ test( 'dpbcon: N=0', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ab = new Float64Array( 1 );
 	work = new Float64Array( 3 );
 	iwork = new Int32Array( 1 );
@@ -191,7 +174,7 @@ test( 'dpbcon: N=1', function t() {
 	var tc;
 	var ab;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ab = new Float64Array([ 4.0 ]);
 	work = new Float64Array( 3 );
 	iwork = new Int32Array( 1 );
@@ -212,7 +195,7 @@ test( 'dpbcon: anorm=0', function t() {
 	var ab;
 	var n;
 
-	tc = findCase( 'anorm_zero' );
+	tc = anorm_zero;
 	n = 4;
 	ab = bandedMatrix( 2, n, [
 		[1, 0, 4.0],

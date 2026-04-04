@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -15,29 +12,16 @@ var dgttrf = require( './../../dgttrf/lib/base.js' );
 var dgttrs = require( './../../dgttrs/lib/base.js' );
 var dgtrfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgtrfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_notrans = require( './fixtures/basic_notrans.json' );
+var basic_trans = require( './fixtures/basic_trans.json' );
+var multi_rhs_notrans = require( './fixtures/multi_rhs_notrans.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var pivot_5x5_notrans = require( './fixtures/pivot_5x5_notrans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -108,7 +92,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgtrfs: basic_notrans', function t() {
@@ -130,7 +113,7 @@ test( 'dgtrfs: basic_notrans', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'basic_notrans' );
+	tc = basic_notrans;
 	N = 4;
 	dl = toF64( [ 3.0, 1.0, 2.0 ] );
 	d = toF64( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -180,7 +163,7 @@ test( 'dgtrfs: basic_trans', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'basic_trans' );
+	tc = basic_trans;
 	N = 4;
 	dl = toF64( [ 3.0, 1.0, 2.0 ] );
 	d = toF64( [ 2.0, 4.0, 5.0, 6.0 ] );
@@ -223,7 +206,7 @@ test( 'dgtrfs: multi_rhs_notrans', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'multi_rhs_notrans' );
+	tc = multi_rhs_notrans;
 	N = 4;
 	nrhs = 2;
 	dl = toF64( [ 3.0, 1.0, 2.0 ] );
@@ -266,7 +249,7 @@ test( 'dgtrfs: n_one', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	dl = new Float64Array( 0 );
 	d = toF64( [ 5.0 ] );
 	du = new Float64Array( 0 );
@@ -304,7 +287,7 @@ test( 'dgtrfs: n_zero', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ferr = new Float64Array( 1 );
 	berr = new Float64Array( 1 );
 	work = new Float64Array( 1 );
@@ -342,7 +325,7 @@ test( 'dgtrfs: pivot_5x5_notrans', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'pivot_5x5_notrans' );
+	tc = pivot_5x5_notrans;
 	N = 5;
 	dl = toF64( [ 5.0, 7.0, 9.0, 2.0 ] );
 	d = toF64( [ 1.0, 3.0, 2.0, 1.0, 8.0 ] );

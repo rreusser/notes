@@ -6,26 +6,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqge = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqge.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var no_equil = require( './fixtures/no_equil.json' );
+var row_equil = require( './fixtures/row_equil.json' );
+var col_equil = require( './fixtures/col_equil.json' );
+var both_equil = require( './fixtures/both_equil.json' );
+var small_amax = require( './fixtures/small_amax.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -47,11 +41,10 @@ var A_DATA = [
 	0.5, 0.1, 1, 0.3, 2, 1
 ];
 
-
 // TESTS //
 
 test( 'zlaqge: no_equil', function t() {
-	var tc = findCase( 'no_equil' );
+	var tc = no_equil;
 	var A = new Complex128Array( A_DATA.slice() );
 	var r = new Float64Array( [ 1, 1, 1 ] );
 	var c = new Float64Array( [ 1, 1, 1 ] );
@@ -62,7 +55,7 @@ test( 'zlaqge: no_equil', function t() {
 });
 
 test( 'zlaqge: row_equil', function t() {
-	var tc = findCase( 'row_equil' );
+	var tc = row_equil;
 	var A = new Complex128Array( A_DATA.slice() );
 	var r = new Float64Array( [ 0.5, 2.0, 1.5 ] );
 	var c = new Float64Array( [ 1, 1, 1 ] );
@@ -73,7 +66,7 @@ test( 'zlaqge: row_equil', function t() {
 });
 
 test( 'zlaqge: col_equil', function t() {
-	var tc = findCase( 'col_equil' );
+	var tc = col_equil;
 	var A = new Complex128Array( A_DATA.slice() );
 	var r = new Float64Array( [ 1, 1, 1 ] );
 	var c = new Float64Array( [ 0.5, 2.0, 1.5 ] );
@@ -84,7 +77,7 @@ test( 'zlaqge: col_equil', function t() {
 });
 
 test( 'zlaqge: both_equil', function t() {
-	var tc = findCase( 'both_equil' );
+	var tc = both_equil;
 	var A = new Complex128Array( A_DATA.slice() );
 	var r = new Float64Array( [ 0.5, 2.0, 1.5 ] );
 	var c = new Float64Array( [ 0.5, 2.0, 1.5 ] );
@@ -111,7 +104,7 @@ test( 'zlaqge: n_zero', function t() {
 });
 
 test( 'zlaqge: small_amax triggers row equilibration path', function t() {
-	var tc = findCase( 'small_amax' );
+	var tc = small_amax;
 	var A = new Complex128Array( [
 		1e-200, 0, 1e-200, 0,
 		1e-200, 0, 1e-200, 0

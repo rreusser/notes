@@ -5,36 +5,22 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaqsp = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqsp.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_equilibrate = require( './fixtures/upper_equilibrate.json' );
+var lower_equilibrate = require( './fixtures/lower_equilibrate.json' );
+var no_equilibrate = require( './fixtures/no_equilibrate.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var small_amax = require( './fixtures/small_amax.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -97,7 +83,6 @@ function mapEqued( c ) {
 	return 'none';
 }
 
-
 // TESTS //
 
 test( 'dlaqsp: upper_equilibrate', function t() {
@@ -106,7 +91,7 @@ test( 'dlaqsp: upper_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'upper_equilibrate' );
+	tc = upper_equilibrate;
 	AP = new Float64Array( [ 4.0, 1.0, 9.0, 0.5, 2.0, 16.0 ] );
 	S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
 	equed = dlaqsp( 'upper', 3, AP, 1, 0, S, 1, 0, 0.05, 16.0 );
@@ -120,7 +105,7 @@ test( 'dlaqsp: lower_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'lower_equilibrate' );
+	tc = lower_equilibrate;
 	AP = new Float64Array( [ 4.0, 1.0, 0.5, 9.0, 2.0, 16.0 ] );
 	S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
 	equed = dlaqsp( 'lower', 3, AP, 1, 0, S, 1, 0, 0.05, 16.0 );
@@ -134,7 +119,7 @@ test( 'dlaqsp: no_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'no_equilibrate' );
+	tc = no_equilibrate;
 	AP = new Float64Array( [ 4.0, 1.0, 9.0, 0.5, 2.0, 16.0 ] );
 	S = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 	equed = dlaqsp( 'upper', 3, AP, 1, 0, S, 1, 0, 0.5, 16.0 );
@@ -148,7 +133,7 @@ test( 'dlaqsp: n_zero', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Float64Array( 1 );
 	S = new Float64Array( 1 );
 	equed = dlaqsp( 'upper', 0, AP, 1, 0, S, 1, 0, 1.0, 1.0 );
@@ -161,7 +146,7 @@ test( 'dlaqsp: n_one_upper', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Float64Array( [ 100.0 ] );
 	S = new Float64Array( [ 0.1 ] );
 	equed = dlaqsp( 'upper', 1, AP, 1, 0, S, 1, 0, 0.01, 100.0 );
@@ -175,7 +160,7 @@ test( 'dlaqsp: small_amax', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'small_amax' );
+	tc = small_amax;
 	AP = new Float64Array( [ 1e-300, 0.0, 1e-300 ] );
 	S = new Float64Array( [ 1e150, 1e150 ] );
 	equed = dlaqsp( 'upper', 2, AP, 1, 0, S, 1, 0, 1.0, 1e-300 );
@@ -189,7 +174,7 @@ test( 'dlaqsp: upper_4x4', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	AP = new Float64Array( [ 16.0, 4.0, 9.0, 2.0, 3.0, 25.0, 1.0, 6.0, 5.0, 36.0 ] ); // eslint-disable-line max-len
 	S = new Float64Array( [ 0.25, 0.5, 0.2, 1.0/3.0 ] );
 	equed = dlaqsp( 'upper', 4, AP, 1, 0, S, 1, 0, 0.01, 36.0 );
@@ -203,7 +188,7 @@ test( 'dlaqsp: lower_4x4', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	AP = new Float64Array( [ 16.0, 4.0, 2.0, 1.0, 9.0, 3.0, 6.0, 25.0, 5.0, 36.0 ] ); // eslint-disable-line max-len
 	S = new Float64Array( [ 0.25, 0.5, 0.2, 1.0/3.0 ] );
 	equed = dlaqsp( 'lower', 4, AP, 1, 0, S, 1, 0, 0.01, 36.0 );

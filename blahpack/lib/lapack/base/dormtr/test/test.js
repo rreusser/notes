@@ -2,40 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsytrd = require( '../../dsytrd/lib/base.js' );
 var dormtr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dormtr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var left_notrans_upper = require( './fixtures/left_notrans_upper.json' );
+var left_trans_upper = require( './fixtures/left_trans_upper.json' );
+var right_notrans_upper = require( './fixtures/right_notrans_upper.json' );
+var right_trans_upper = require( './fixtures/right_trans_upper.json' );
+var left_notrans_lower = require( './fixtures/left_notrans_lower.json' );
+var left_trans_lower = require( './fixtures/left_trans_lower.json' );
+var right_notrans_lower = require( './fixtures/right_notrans_lower.json' );
+var right_trans_lower = require( './fixtures/right_trans_lower.json' );
+var left_notrans_upper_rect = require( './fixtures/left_notrans_upper_rect.json' );
+var right_notrans_lower_rect = require( './fixtures/right_notrans_lower_rect.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -169,7 +157,6 @@ function flattenColMajor( C, M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dormtr: left_notrans_upper', function t() {
@@ -179,7 +166,7 @@ test( 'dormtr: left_notrans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_notrans_upper' );
+	tc = left_notrans_upper;
 	r = reduceUpper();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -195,7 +182,7 @@ test( 'dormtr: left_trans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_trans_upper' );
+	tc = left_trans_upper;
 	r = reduceUpper();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -211,7 +198,7 @@ test( 'dormtr: right_notrans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_notrans_upper' );
+	tc = right_notrans_upper;
 	r = reduceUpper();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -227,7 +214,7 @@ test( 'dormtr: right_trans_upper', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_trans_upper' );
+	tc = right_trans_upper;
 	r = reduceUpper();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -243,7 +230,7 @@ test( 'dormtr: left_notrans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_notrans_lower' );
+	tc = left_notrans_lower;
 	r = reduceLower();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -259,7 +246,7 @@ test( 'dormtr: left_trans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_trans_lower' );
+	tc = left_trans_lower;
 	r = reduceLower();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -275,7 +262,7 @@ test( 'dormtr: right_notrans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_notrans_lower' );
+	tc = right_notrans_lower;
 	r = reduceLower();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -291,7 +278,7 @@ test( 'dormtr: right_trans_lower', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_trans_lower' );
+	tc = right_trans_lower;
 	r = reduceLower();
 	C = identity4();
 	WORK = new Float64Array( 256 );
@@ -346,7 +333,7 @@ test( 'dormtr: left_notrans_upper_rect', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'left_notrans_upper_rect' );
+	tc = left_notrans_upper_rect;
 	r = reduceUpper();
 	C = new Float64Array([
 		1,
@@ -371,7 +358,7 @@ test( 'dormtr: right_notrans_lower_rect', function t() {
 	var r;
 	var C;
 
-	tc = findCase( 'right_notrans_lower_rect' );
+	tc = right_notrans_lower_rect;
 	r = reduceLower();
 	C = new Float64Array([
 		1,

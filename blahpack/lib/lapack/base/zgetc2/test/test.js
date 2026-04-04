@@ -6,22 +6,21 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Int32Array = require( '@stdlib/array/int32' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgetc2 = require( './../lib/base.js' );
 
-
 // VARIABLES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgetc2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var basic_2x2 = require( './fixtures/basic_2x2.json' );
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var basic_4x4 = require( './fixtures/basic_4x4.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
+var near_singular = require( './fixtures/near_singular.json' );
 
 // FUNCTIONS //
 
@@ -40,19 +39,6 @@ function toArray( arr ) {
 		out.push( arr[ i ] );
 	}
 	return out;
-}
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
 }
 
 /**
@@ -86,7 +72,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zgetc2 is a function', function t() {
@@ -102,7 +87,7 @@ test( 'zgetc2: basic 2x2', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'basic_2x2' );
+	tc = basic_2x2;
 	A = new Complex128Array( [ 1.0, 2.0, 5.0, 6.0, 3.0, 4.0, 7.0, 8.0 ] );
 	IPIV = new Int32Array( 2 );
 	JPIV = new Int32Array( 2 );
@@ -125,7 +110,7 @@ test( 'zgetc2: basic 3x3', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	A = new Complex128Array( [ 1.0, 0.5, 4.0, 2.0, 7.0, 1.0, 2.0, 1.0, 5.0, 0.0, 8.0, 3.0, 0.5, 3.0, 6.0, 1.5, 10.0, 2.0 ] ); // eslint-disable-line max-len
 	IPIV = new Int32Array( 3 );
 	JPIV = new Int32Array( 3 );
@@ -148,7 +133,7 @@ test( 'zgetc2: basic 4x4 with complete pivoting', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'basic_4x4' );
+	tc = basic_4x4;
 	A = new Complex128Array( [ 0.1, 0.2, 0.7, 0.8, 1.5, 1.6, 2.3, 2.4, 0.3, 0.4, 0.9, 1.0, 1.7, 1.8, 2.5, 2.6, 0.5, 0.6, 1.1, 1.2, 1.9, 2.0, 2.7, 2.8, 10.0, 1.0, 1.3, 1.4, 2.1, 2.2, 2.9, 3.0 ] ); // eslint-disable-line max-len
 	IPIV = new Int32Array( 4 );
 	JPIV = new Int32Array( 4 );
@@ -170,7 +155,7 @@ test( 'zgetc2: N=1', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'n_equals_1' );
+	tc = n_equals_1;
 	A = new Complex128Array( [ 5.0, 3.0 ] );
 	IPIV = new Int32Array( 1 );
 	JPIV = new Int32Array( 1 );
@@ -191,7 +176,7 @@ test( 'zgetc2: near-singular', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'near_singular' );
+	tc = near_singular;
 	A = new Complex128Array( [ 1e-200, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0 ] );
 	IPIV = new Int32Array( 2 );
 	JPIV = new Int32Array( 2 );

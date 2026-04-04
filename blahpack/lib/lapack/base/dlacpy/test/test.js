@@ -21,32 +21,19 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlacpy = require( './../lib' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlacpy.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var all_3x3 = require( './fixtures/all_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var all_2x3 = require( './fixtures/all_2x3.json' );
+var upper_4x3 = require( './fixtures/upper_4x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -66,11 +53,10 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlacpy.ndarray copies all of a 3x3 matrix', function t() {
-	var tc = findCase( 'all_3x3' );
+	var tc = all_3x3;
 	var a = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	var b = new Float64Array( 9 );
 	dlacpy.ndarray( 'all', 3, 3, a, 1, 3, 0, b, 1, 3, 0 );
@@ -78,7 +64,7 @@ test( 'dlacpy.ndarray copies all of a 3x3 matrix', function t() {
 });
 
 test( 'dlacpy.ndarray copies upper triangle of a 3x3 matrix', function t() {
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	var a = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	var b = new Float64Array( 9 );
 	dlacpy.ndarray( 'upper', 3, 3, a, 1, 3, 0, b, 1, 3, 0 );
@@ -86,7 +72,7 @@ test( 'dlacpy.ndarray copies upper triangle of a 3x3 matrix', function t() {
 });
 
 test( 'dlacpy.ndarray copies lower triangle of a 3x3 matrix', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	var a = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	var b = new Float64Array( 9 );
 	dlacpy.ndarray( 'lower', 3, 3, a, 1, 3, 0, b, 1, 3, 0 );
@@ -94,7 +80,7 @@ test( 'dlacpy.ndarray copies lower triangle of a 3x3 matrix', function t() {
 });
 
 test( 'dlacpy.ndarray copies all of a 2x3 rectangular matrix', function t() {
-	var tc = findCase( 'all_2x3' );
+	var tc = all_2x3;
 	var a = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	var b = new Float64Array( 9 );
 	dlacpy.ndarray( 'all', 2, 3, a, 1, 3, 0, b, 1, 3, 0 );
@@ -114,7 +100,7 @@ test( 'dlacpy.ndarray handles N=0', function t() {
 });
 
 test( 'dlacpy.ndarray copies upper triangle of a 4x3 matrix', function t() {
-	var tc = findCase( 'upper_4x3' );
+	var tc = upper_4x3;
 	var a = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
 	var b = new Float64Array( 12 );
 	dlacpy.ndarray( 'upper', 4, 3, a, 1, 4, 0, b, 1, 4, 0 );

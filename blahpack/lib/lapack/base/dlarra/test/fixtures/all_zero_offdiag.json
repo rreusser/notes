@@ -1,0 +1,12 @@
+{
+  "name": "all_zero_offdiag",
+  "info": 0,
+  "nsplit": 5,
+  "isplit": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

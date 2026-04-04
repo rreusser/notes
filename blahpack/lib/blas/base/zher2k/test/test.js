@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -15,29 +12,29 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zher2k = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zher2k.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_n = require( './fixtures/upper_n.json' );
+var lower_n = require( './fixtures/lower_n.json' );
+var upper_c = require( './fixtures/upper_c.json' );
+var lower_c = require( './fixtures/lower_c.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var alpha_zero_beta_zero = require( './fixtures/alpha_zero_beta_zero.json' );
+var alpha_zero_beta_zero_lower = require( './fixtures/alpha_zero_beta_zero_lower.json' );
+var alpha_zero_beta_scale_lower = require( './fixtures/alpha_zero_beta_scale_lower.json' );
+var beta_zero = require( './fixtures/beta_zero.json' );
+var upper_n_beta_half = require( './fixtures/upper_n_beta_half.json' );
+var lower_n_beta_zero = require( './fixtures/lower_n_beta_zero.json' );
+var lower_n_beta_half = require( './fixtures/lower_n_beta_half.json' );
+var upper_c_beta_zero = require( './fixtures/upper_c_beta_zero.json' );
+var lower_c_beta_zero = require( './fixtures/lower_c_beta_zero.json' );
+var k_zero_beta_scale = require( './fixtures/k_zero_beta_scale.json' );
+var k_zero_beta_one = require( './fixtures/k_zero_beta_one.json' );
+var upper_c_beta_half = require( './fixtures/upper_c_beta_half.json' );
+var lower_c_beta_half = require( './fixtures/lower_c_beta_half.json' );
+var upper_n_real_alpha = require( './fixtures/upper_n_real_alpha.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -156,12 +153,11 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zher2k: upper_N', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'upper_N' );
+	var tc = upper_n;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = makeC_identity();
@@ -171,7 +167,7 @@ test( 'zher2k: upper_N', function t() {
 
 test( 'zher2k: lower_N', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'lower_N' );
+	var tc = lower_n;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = makeC_identity();
@@ -181,7 +177,7 @@ test( 'zher2k: lower_N', function t() {
 
 test( 'zher2k: upper_C', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'upper_C' );
+	var tc = upper_c;
 	var A = makeA_C();
 	var B = makeB_C();
 	var C = makeC_identity();
@@ -191,7 +187,7 @@ test( 'zher2k: upper_C', function t() {
 
 test( 'zher2k: lower_C', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'lower_C' );
+	var tc = lower_c;
 	var A = makeA_C();
 	var B = makeB_C();
 	var C = makeC_identity();
@@ -201,7 +197,7 @@ test( 'zher2k: lower_C', function t() {
 
 test( 'zher2k: alpha_zero', function t() {
 	var alpha = new Complex128( 0.0, 0.0 );
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = new Complex128Array( [ 2, 0, 0, 0, 0, 0, 3, 1, 4, 0, 0, 0, 5, 2, 6, 3, 7, 0 ] );
@@ -211,7 +207,7 @@ test( 'zher2k: alpha_zero', function t() {
 
 test( 'zher2k: alpha_zero_beta_zero', function t() {
 	var alpha = new Complex128( 0.0, 0.0 );
-	var tc = findCase( 'alpha_zero_beta_zero' );
+	var tc = alpha_zero_beta_zero;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = new Complex128Array( [ 5, 0, 0, 0, 0, 0, 6, 1, 7, 0, 0, 0, 8, 2, 9, 3, 10, 0 ] );
@@ -221,7 +217,7 @@ test( 'zher2k: alpha_zero_beta_zero', function t() {
 
 test( 'zher2k: alpha_zero_beta_zero_lower', function t() {
 	var alpha = new Complex128( 0.0, 0.0 );
-	var tc = findCase( 'alpha_zero_beta_zero_lower' );
+	var tc = alpha_zero_beta_zero_lower;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = new Complex128Array( [ 5, 0, 6, 1, 7, 2, 0, 0, 8, 0, 9, 3, 0, 0, 0, 0, 10, 0 ] );
@@ -231,7 +227,7 @@ test( 'zher2k: alpha_zero_beta_zero_lower', function t() {
 
 test( 'zher2k: alpha_zero_beta_scale_lower', function t() {
 	var alpha = new Complex128( 0.0, 0.0 );
-	var tc = findCase( 'alpha_zero_beta_scale_lower' );
+	var tc = alpha_zero_beta_scale_lower;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = new Complex128Array( [ 2, 0, 3, 1, 5, 2, 0, 0, 4, 0, 6, 3, 0, 0, 0, 0, 7, 0 ] );
@@ -241,7 +237,7 @@ test( 'zher2k: alpha_zero_beta_scale_lower', function t() {
 
 test( 'zher2k: beta_zero', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'beta_zero' );
+	var tc = beta_zero;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = makeC_junk();
@@ -251,7 +247,7 @@ test( 'zher2k: beta_zero', function t() {
 
 test( 'zher2k: upper_N_beta_half', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'upper_N_beta_half' );
+	var tc = upper_n_beta_half;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = makeC_identity();
@@ -261,7 +257,7 @@ test( 'zher2k: upper_N_beta_half', function t() {
 
 test( 'zher2k: lower_N_beta_zero', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'lower_N_beta_zero' );
+	var tc = lower_n_beta_zero;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = makeC_junk();
@@ -271,7 +267,7 @@ test( 'zher2k: lower_N_beta_zero', function t() {
 
 test( 'zher2k: lower_N_beta_half', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'lower_N_beta_half' );
+	var tc = lower_n_beta_half;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = makeC_identity();
@@ -281,7 +277,7 @@ test( 'zher2k: lower_N_beta_half', function t() {
 
 test( 'zher2k: upper_C_beta_zero', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'upper_C_beta_zero' );
+	var tc = upper_c_beta_zero;
 	var A = makeA_C();
 	var B = makeB_C();
 	var C = makeC_junk();
@@ -291,7 +287,7 @@ test( 'zher2k: upper_C_beta_zero', function t() {
 
 test( 'zher2k: lower_C_beta_zero', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'lower_C_beta_zero' );
+	var tc = lower_c_beta_zero;
 	var A = makeA_C();
 	var B = makeB_C();
 	var C = makeC_junk();
@@ -316,7 +312,7 @@ test( 'zher2k: n_zero', function t() {
 
 test( 'zher2k: k_zero_beta_scale', function t() {
 	var alpha = new Complex128( 1.0, 0.0 );
-	var tc = findCase( 'k_zero_beta_scale' );
+	var tc = k_zero_beta_scale;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = new Complex128Array( [ 2, 0, 0, 0, 0, 0, 3, 1, 4, 0, 0, 0, 5, 2, 6, 3, 7, 0 ] );
@@ -332,7 +328,7 @@ test( 'zher2k: k_zero_beta_one', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'k_zero_beta_one' );
+	tc = k_zero_beta_one;
 	A = makeA_N();
 	B = makeB_N();
 	C = new Complex128Array( [ 2, 0, 0, 0, 0, 0, 3, 1, 4, 0, 0, 0, 5, 2, 6, 3, 7, 0 ] ); // eslint-disable-line max-len
@@ -343,7 +339,7 @@ test( 'zher2k: k_zero_beta_one', function t() {
 
 test( 'zher2k: upper_C_beta_half', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'upper_C_beta_half' );
+	var tc = upper_c_beta_half;
 	var A = makeA_C();
 	var B = makeB_C();
 	var C = makeC_identity();
@@ -353,7 +349,7 @@ test( 'zher2k: upper_C_beta_half', function t() {
 
 test( 'zher2k: lower_C_beta_half', function t() {
 	var alpha = new Complex128( 2.0, 1.0 );
-	var tc = findCase( 'lower_C_beta_half' );
+	var tc = lower_c_beta_half;
 	var A = makeA_C();
 	var B = makeB_C();
 	var C = makeC_identity();
@@ -363,7 +359,7 @@ test( 'zher2k: lower_C_beta_half', function t() {
 
 test( 'zher2k: upper_N_real_alpha', function t() {
 	var alpha = new Complex128( 1.0, 0.0 );
-	var tc = findCase( 'upper_N_real_alpha' );
+	var tc = upper_n_real_alpha;
 	var A = makeA_N();
 	var B = makeB_N();
 	var C = makeC_identity();

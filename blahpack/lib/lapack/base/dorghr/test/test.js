@@ -2,40 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgehrd = require( '../../dgehrd/lib/base.js' );
 var dorghr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dorghr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _5x5_full = require( './fixtures/5x5_full.json' );
+var _5x5_partial = require( './fixtures/5x5_partial.json' );
+var n_one = require( './fixtures/n_one.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var _4x4_full = require( './fixtures/4x4_full.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -110,7 +93,6 @@ function runDorghr( N, ilo, ihi, Ainput ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dorghr: 5x5_full (ILO=1, IHI=5)', function t() {
@@ -119,7 +101,7 @@ test( 'dorghr: 5x5_full (ILO=1, IHI=5)', function t() {
 	var tc;
 	var Q;
 
-	tc = findCase( '5x5_full' );
+	tc = _5x5_full;
 	Ainput = [
 		2,
 		1,
@@ -159,7 +141,7 @@ test( 'dorghr: 5x5_partial (ILO=2, IHI=4)', function t() {
 	var tc;
 	var Q;
 
-	tc = findCase( '5x5_partial' );
+	tc = _5x5_partial;
 	Ainput = [
 		2,
 		1,
@@ -212,7 +194,7 @@ test( 'dorghr: n_one (N=1)', function t() {
 	var tc;
 	var Q;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	Ainput = [ 99.0 ];
 	result = runDorghr( 1, 1, 1, Ainput );
 	Q = extractColMajor( result.A, 1, 1, 0, 1 );
@@ -226,7 +208,7 @@ test( 'dorghr: ilo_eq_ihi (ILO=IHI=2, N=4)', function t() {
 	var tc;
 	var Q;
 
-	tc = findCase( 'ilo_eq_ihi' );
+	tc = ilo_eq_ihi;
 	Ainput = [
 		1,
 		0,
@@ -257,7 +239,7 @@ test( 'dorghr: 4x4_full (ILO=1, IHI=4)', function t() {
 	var tc;
 	var Q;
 
-	tc = findCase( '4x4_full' );
+	tc = _4x4_full;
 	Ainput = [
 		1,
 		5,

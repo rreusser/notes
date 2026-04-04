@@ -2,40 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dorml2 = require( './../lib/base.js' );
 var dgelq2 = require( '../../dgelq2/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dorml2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var left_notrans_5x5 = require( './fixtures/left_notrans_5x5.json' );
+var left_trans_5x5 = require( './fixtures/left_trans_5x5.json' );
+var right_notrans_5x5 = require( './fixtures/right_notrans_5x5.json' );
+var right_trans_5x5 = require( './fixtures/right_trans_5x5.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var k_zero = require( './fixtures/k_zero.json' );
+var right_trans_rect = require( './fixtures/right_trans_rect.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -126,7 +113,6 @@ function extractC( C, M, N, LDC, fixtureLen ) {
 	return result;
 }
 
-
 // TESTS //
 
 test( 'dorml2: left_notrans_5x5', function t() {
@@ -138,7 +124,7 @@ test( 'dorml2: left_notrans_5x5', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'left_notrans_5x5' );
+	tc = left_notrans_5x5;
 	lq = computeLQ();
 	LDC = 6;
 	C = identity5( LDC );
@@ -156,7 +142,7 @@ test( 'dorml2: left_trans_5x5', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'left_trans_5x5' );
+	tc = left_trans_5x5;
 	lq = computeLQ();
 	LDC = 6;
 	C = identity5( LDC );
@@ -174,7 +160,7 @@ test( 'dorml2: right_notrans_5x5', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'right_notrans_5x5' );
+	tc = right_notrans_5x5;
 	lq = computeLQ();
 	LDC = 6;
 	C = identity5( LDC );
@@ -192,7 +178,7 @@ test( 'dorml2: right_trans_5x5', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'right_trans_5x5' );
+	tc = right_trans_5x5;
 	lq = computeLQ();
 	LDC = 6;
 	C = identity5( LDC );
@@ -209,7 +195,7 @@ test( 'dorml2: m_zero', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	lq = computeLQ();
 	C = new Float64Array( 36 );
 	info = dorml2( 'left', 'no-transpose', 0, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -224,7 +210,7 @@ test( 'dorml2: n_zero', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	lq = computeLQ();
 	C = new Float64Array( 36 );
 	info = dorml2( 'left', 'no-transpose', 5, 0, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -239,7 +225,7 @@ test( 'dorml2: k_zero', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'k_zero' );
+	tc = k_zero;
 	lq = computeLQ();
 	C = new Float64Array( 36 );
 	info = dorml2( 'left', 'no-transpose', 5, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -255,7 +241,7 @@ test( 'dorml2: right_trans_rect', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'right_trans_rect' );
+	tc = right_trans_rect;
 	lq = computeLQ();
 	LDC = 6;
 	C = new Float64Array( 36 );
@@ -288,7 +274,7 @@ test( 'dorml2: left_notrans_rect', function t() {
 	var C;
 
 	WORK = new Float64Array( 200 );
-	tc = findCase( 'left_notrans_rect' );
+	tc = left_notrans_rect;
 	lq = computeLQ();
 	LDC = 6;
 	C = new Float64Array( 36 );

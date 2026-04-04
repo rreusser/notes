@@ -6,25 +6,30 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlagtm = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlagtm.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var notrans_alpha1_beta0 = require( './fixtures/notrans_alpha1_beta0.json' );
+var trans_alpha1_beta0 = require( './fixtures/trans_alpha1_beta0.json' );
+var conjtrans_alpha1_beta0 = require( './fixtures/conjtrans_alpha1_beta0.json' );
+var notrans_alpham1_beta0 = require( './fixtures/notrans_alpham1_beta0.json' );
+var trans_alpham1_beta0 = require( './fixtures/trans_alpham1_beta0.json' );
+var conjtrans_alpham1_beta0 = require( './fixtures/conjtrans_alpham1_beta0.json' );
+var notrans_alpha1_beta1 = require( './fixtures/notrans_alpha1_beta1.json' );
+var notrans_alpha1_betam1 = require( './fixtures/notrans_alpha1_betam1.json' );
+var notrans_alpha0_beta0 = require( './fixtures/notrans_alpha0_beta0.json' );
+var notrans_alpha0_beta1 = require( './fixtures/notrans_alpha0_beta1.json' );
+var n1_notrans = require( './fixtures/n1_notrans.json' );
+var n1_trans = require( './fixtures/n1_trans.json' );
+var n1_conjtrans = require( './fixtures/n1_conjtrans.json' );
+var notrans_multi_rhs = require( './fixtures/notrans_multi_rhs.json' );
+var conjtrans_alpham1_betam1_multi_rhs = require( './fixtures/conjtrans_alpham1_betam1_multi_rhs.json' );
+var n1_alpham1_betam1 = require( './fixtures/n1_alpham1_betam1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -63,7 +68,6 @@ function xVec4() {
 	return new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 2 ] );
 }
 
-
 // TESTS //
 
 test( 'zlagtm is a function', function t() {
@@ -71,7 +75,7 @@ test( 'zlagtm is a function', function t() {
 });
 
 test( 'zlagtm: notrans_alpha1_beta0', function t() {
-	var tc = findCase( 'notrans_alpha1_beta0' );
+	var tc = notrans_alpha1_beta0;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( 4 );
@@ -83,7 +87,7 @@ test( 'zlagtm: notrans_alpha1_beta0', function t() {
 });
 
 test( 'zlagtm: trans_alpha1_beta0', function t() {
-	var tc = findCase( 'trans_alpha1_beta0' );
+	var tc = trans_alpha1_beta0;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( 4 );
@@ -95,7 +99,7 @@ test( 'zlagtm: trans_alpha1_beta0', function t() {
 });
 
 test( 'zlagtm: conjtrans_alpha1_beta0', function t() {
-	var tc = findCase( 'conjtrans_alpha1_beta0' );
+	var tc = conjtrans_alpha1_beta0;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( 4 );
@@ -107,7 +111,7 @@ test( 'zlagtm: conjtrans_alpha1_beta0', function t() {
 });
 
 test( 'zlagtm: notrans_alpham1_beta0', function t() {
-	var tc = findCase( 'notrans_alpham1_beta0' );
+	var tc = notrans_alpham1_beta0;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( 4 );
@@ -119,7 +123,7 @@ test( 'zlagtm: notrans_alpham1_beta0', function t() {
 });
 
 test( 'zlagtm: trans_alpham1_beta0', function t() {
-	var tc = findCase( 'trans_alpham1_beta0' );
+	var tc = trans_alpham1_beta0;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( 4 );
@@ -131,7 +135,7 @@ test( 'zlagtm: trans_alpham1_beta0', function t() {
 });
 
 test( 'zlagtm: conjtrans_alpham1_beta0', function t() {
-	var tc = findCase( 'conjtrans_alpham1_beta0' );
+	var tc = conjtrans_alpham1_beta0;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( 4 );
@@ -143,7 +147,7 @@ test( 'zlagtm: conjtrans_alpham1_beta0', function t() {
 });
 
 test( 'zlagtm: notrans_alpha1_beta1', function t() {
-	var tc = findCase( 'notrans_alpha1_beta1' );
+	var tc = notrans_alpha1_beta1;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( [ 10, 5, 20, -3, 30, 7, 40, -2 ] );
@@ -155,7 +159,7 @@ test( 'zlagtm: notrans_alpha1_beta1', function t() {
 });
 
 test( 'zlagtm: notrans_alpha1_betam1', function t() {
-	var tc = findCase( 'notrans_alpha1_betam1' );
+	var tc = notrans_alpha1_betam1;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( [ 10, 5, 20, -3, 30, 7, 40, -2 ] );
@@ -167,7 +171,7 @@ test( 'zlagtm: notrans_alpha1_betam1', function t() {
 });
 
 test( 'zlagtm: notrans_alpha0_beta0', function t() {
-	var tc = findCase( 'notrans_alpha0_beta0' );
+	var tc = notrans_alpha0_beta0;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( [ 10, 5, 20, -3, 30, 7, 40, -2 ] );
@@ -179,7 +183,7 @@ test( 'zlagtm: notrans_alpha0_beta0', function t() {
 });
 
 test( 'zlagtm: notrans_alpha0_beta1', function t() {
-	var tc = findCase( 'notrans_alpha0_beta1' );
+	var tc = notrans_alpha0_beta1;
 	var td = triDiag4();
 	var X = xVec4();
 	var B = new Complex128Array( [ 10, 5, 20, -3, 30, 7, 40, -2 ] );
@@ -191,7 +195,7 @@ test( 'zlagtm: notrans_alpha0_beta1', function t() {
 });
 
 test( 'zlagtm: n1_notrans', function t() {
-	var tc = findCase( 'n1_notrans' );
+	var tc = n1_notrans;
 	var DL = new Complex128Array( 0 );
 	var d = new Complex128Array( [ 5, -2 ] );
 	var DU = new Complex128Array( 0 );
@@ -205,7 +209,7 @@ test( 'zlagtm: n1_notrans', function t() {
 });
 
 test( 'zlagtm: n1_trans', function t() {
-	var tc = findCase( 'n1_trans' );
+	var tc = n1_trans;
 	var DL = new Complex128Array( 0 );
 	var d = new Complex128Array( [ 5, -2 ] );
 	var DU = new Complex128Array( 0 );
@@ -219,7 +223,7 @@ test( 'zlagtm: n1_trans', function t() {
 });
 
 test( 'zlagtm: n1_conjtrans', function t() {
-	var tc = findCase( 'n1_conjtrans' );
+	var tc = n1_conjtrans;
 	var DL = new Complex128Array( 0 );
 	var d = new Complex128Array( [ 5, -2 ] );
 	var DU = new Complex128Array( 0 );
@@ -244,7 +248,7 @@ test( 'zlagtm: n0_quickreturn', function t() {
 });
 
 test( 'zlagtm: notrans_multi_rhs', function t() {
-	var tc = findCase( 'notrans_multi_rhs' );
+	var tc = notrans_multi_rhs;
 	var td = triDiag4();
 	var Bv;
 
@@ -262,7 +266,7 @@ test( 'zlagtm: notrans_multi_rhs', function t() {
 });
 
 test( 'zlagtm: conjtrans_alpham1_betam1_multi_rhs', function t() {
-	var tc = findCase( 'conjtrans_alpham1_betam1_multi_rhs' );
+	var tc = conjtrans_alpham1_betam1_multi_rhs;
 	var td = triDiag4();
 	var Bv;
 
@@ -282,7 +286,7 @@ test( 'zlagtm: conjtrans_alpham1_betam1_multi_rhs', function t() {
 });
 
 test( 'zlagtm: n1_alpham1_betam1', function t() {
-	var tc = findCase( 'n1_alpham1_betam1' );
+	var tc = n1_alpham1_betam1;
 	var DL = new Complex128Array( 0 );
 	var d = new Complex128Array( [ 5, -2 ] );
 	var DU = new Complex128Array( 0 );

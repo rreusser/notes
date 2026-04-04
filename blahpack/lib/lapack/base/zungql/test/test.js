@@ -4,24 +4,15 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var zungql = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zungql.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var zungql_3x3 = require( './fixtures/zungql_3x3.json' );
+var zungql_4x3 = require( './fixtures/zungql_4x3.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
@@ -46,11 +37,10 @@ function extractNxN( data, M, N, LDA ) {
 	return result;
 }
 
-
 // TESTS //
 
 test( 'zungql: 3x3 full Q (M=N=K=3)', function t() {
-	var tc = findCase( 'zungql_3x3' );
+	var tc = zungql_3x3;
 	var Adata = new Float64Array([
 		0.5, 0.5,  1.0, 0.0,  0.0, 0.0,
 		0.0, 1.0,  0.5, -0.5,  0.0, 0.0,
@@ -68,7 +58,7 @@ test( 'zungql: 3x3 full Q (M=N=K=3)', function t() {
 });
 
 test( 'zungql: 4x3 rectangular (M=4, N=3, K=2)', function t() {
-	var tc = findCase( 'zungql_4x3' );
+	var tc = zungql_4x3;
 	var Adata = new Float64Array([
 		0.0, 0.0,  0.0, 0.0,  0.0, 0.0,  0.0, 0.0,
 		0.3, 0.4,  0.5, -0.1,  1.0, 0.0,  0.0, 0.0,

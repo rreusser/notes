@@ -2,39 +2,22 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsbmv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsbmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var alpha_beta = require( './fixtures/alpha_beta.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var stride = require( './fixtures/stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -66,7 +49,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
-
 
 // TESTS //
 
@@ -135,7 +117,7 @@ function lowerBandA() {
 }
 
 test( 'dsbmv: upper_basic', function t() {
-	var tc = findCase( 'upper_basic' );
+	var tc = upper_basic;
 	var a = upperBandA();
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( 4 );
@@ -145,7 +127,7 @@ test( 'dsbmv: upper_basic', function t() {
 });
 
 test( 'dsbmv: lower_basic', function t() {
-	var tc = findCase( 'lower_basic' );
+	var tc = lower_basic;
 	var a = lowerBandA();
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( 4 );
@@ -155,7 +137,7 @@ test( 'dsbmv: lower_basic', function t() {
 });
 
 test( 'dsbmv: alpha_beta', function t() {
-	var tc = findCase( 'alpha_beta' );
+	var tc = alpha_beta;
 	var a = upperBandA();
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( [ 10.0, 20.0, 30.0, 40.0 ] );
@@ -165,7 +147,7 @@ test( 'dsbmv: alpha_beta', function t() {
 });
 
 test( 'dsbmv: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var y = new Float64Array( [ 99.0 ] );
 	var a = new Float64Array( 2 );
 	var x = new Float64Array( 1 );
@@ -184,7 +166,7 @@ test( 'dsbmv: alpha_zero', function t() {
 });
 
 test( 'dsbmv: stride', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var a = upperBandA();
 	var x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0, 4.0, 0.0 ] );
 	var y = new Float64Array( 8 );

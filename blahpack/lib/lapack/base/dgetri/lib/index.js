@@ -49,11 +49,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dgetri;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dgetri = main;
+} else {
+	dgetri = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dgetri;
 
 // exports: { "ndarray": "dgetri.ndarray" }

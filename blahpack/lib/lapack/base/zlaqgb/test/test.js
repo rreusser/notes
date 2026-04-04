@@ -2,41 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqgb = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlaqgb.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var no_equil = require( './fixtures/no_equil.json' );
+var row_equil = require( './fixtures/row_equil.json' );
+var col_equil = require( './fixtures/col_equil.json' );
+var both_equil = require( './fixtures/both_equil.json' );
+var small_amax = require( './fixtures/small_amax.json' );
+var nonsquare_both = require( './fixtures/nonsquare_both.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -129,7 +113,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlaqgb: no_equil', function t() {
@@ -140,7 +123,7 @@ test( 'zlaqgb: no_equil', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'no_equil' );
+	tc = no_equil;
 	AB = new Complex128Array( AB_DATA.slice() );
 	r = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	c = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
@@ -158,7 +141,7 @@ test( 'zlaqgb: row_equil', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'row_equil' );
+	tc = row_equil;
 	AB = new Complex128Array( AB_DATA.slice() );
 	r = new Float64Array( [ 0.5, 2.0, 1.5, 0.25 ] );
 	c = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
@@ -176,7 +159,7 @@ test( 'zlaqgb: col_equil', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'col_equil' );
+	tc = col_equil;
 	AB = new Complex128Array( AB_DATA.slice() );
 	r = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	c = new Float64Array( [ 0.5, 2.0, 1.5, 0.25 ] );
@@ -194,7 +177,7 @@ test( 'zlaqgb: both_equil', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'both_equil' );
+	tc = both_equil;
 	AB = new Complex128Array( AB_DATA.slice() );
 	r = new Float64Array( [ 0.5, 2.0, 1.5, 0.25 ] );
 	c = new Float64Array( [ 0.5, 2.0, 1.5, 0.25 ] );
@@ -257,7 +240,7 @@ test( 'zlaqgb: small_amax triggers row equilibration path', function t() {
 		'C': 'column',
 		'B': 'both'
 	};
-	tc = findCase( 'small_amax' );
+	tc = small_amax;
 	assert.equal( equed, equedMap[ tc.equed ] || tc.equed );
 });
 
@@ -269,7 +252,7 @@ test( 'zlaqgb: nonsquare_both', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'nonsquare_both' );
+	tc = nonsquare_both;
 	AB = new Complex128Array([
 		// Col 1 (j=0)
 		0.0,

@@ -10,23 +10,32 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlatps = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlatps.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_n_nonunit = require( './fixtures/upper_n_nonunit.json' );
+var lower_n_nonunit = require( './fixtures/lower_n_nonunit.json' );
+var upper_c_nonunit = require( './fixtures/upper_c_nonunit.json' );
+var lower_c_nonunit = require( './fixtures/lower_c_nonunit.json' );
+var upper_n_unit = require( './fixtures/upper_n_unit.json' );
+var lower_n_unit = require( './fixtures/lower_n_unit.json' );
+var upper_n_normin_y = require( './fixtures/upper_n_normin_y.json' );
+var upper_c_unit = require( './fixtures/upper_c_unit.json' );
+var lower_c_unit = require( './fixtures/lower_c_unit.json' );
+var upper_n_4x4 = require( './fixtures/upper_n_4x4.json' );
+var lower_t_unit_norminy = require( './fixtures/lower_t_unit_norminy.json' );
+var upper_n_careful = require( './fixtures/upper_n_careful.json' );
+var lower_n_careful = require( './fixtures/lower_n_careful.json' );
+var upper_c_careful = require( './fixtures/upper_c_careful.json' );
+var lower_c_careful = require( './fixtures/lower_c_careful.json' );
+var lower_c_4x4 = require( './fixtures/lower_c_4x4.json' );
+var upper_n_unit_careful = require( './fixtures/upper_n_unit_careful.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var diff = Math.abs( actual - expected );
@@ -41,7 +50,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
-
 
 // HELPERS //
 
@@ -79,7 +87,6 @@ function makeVector( vals ) {
 	return buf;
 }
 
-
 // TESTS //
 
 test( 'zlatps is a function', function t() {
@@ -87,7 +94,7 @@ test( 'zlatps is a function', function t() {
 });
 
 test( 'zlatps: N=0 returns immediately', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var AP = new Complex128Array( 1 );
 	var x = new Complex128Array( 1 );
 	var scale = new Float64Array( 1 );
@@ -99,7 +106,7 @@ test( 'zlatps: N=0 returns immediately', function t() {
 });
 
 test( 'zlatps: N=1 upper, no-transpose, non-unit', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var AP = makePacked( [ 5.0, 2.0 ] );
 	var x = makeVector( [ 10.0, -3.0 ] );
 	var xv = reinterpret( x, 0 );
@@ -114,7 +121,7 @@ test( 'zlatps: N=1 upper, no-transpose, non-unit', function t() {
 });
 
 test( 'zlatps: upper, no-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'upper_N_nonunit' );
+	var tc = upper_n_nonunit;
 	var AP = makePacked( [
 		2.0, 1.0, 1.0, 1.0, 3.0, 0.5, 0.5, 0.0, 1.0, -1.0, 4.0, -1.0
 	]);
@@ -132,7 +139,7 @@ test( 'zlatps: upper, no-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatps: lower, no-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'lower_N_nonunit' );
+	var tc = lower_n_nonunit;
 	var AP = makePacked( [
 		2.0, 1.0, 1.0, 1.0, 0.5, 0.0, 3.0, 0.5, 1.0, -1.0, 4.0, -1.0
 	]);
@@ -150,7 +157,7 @@ test( 'zlatps: lower, no-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatps: upper, conjugate-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'upper_C_nonunit' );
+	var tc = upper_c_nonunit;
 	var AP = makePacked( [
 		2.0, 1.0, 1.0, 1.0, 3.0, 0.5, 0.5, 0.0, 1.0, -1.0, 4.0, -1.0
 	]);
@@ -167,7 +174,7 @@ test( 'zlatps: upper, conjugate-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatps: lower, conjugate-transpose, non-unit, 3x3', function t() {
-	var tc = findCase( 'lower_C_nonunit' );
+	var tc = lower_c_nonunit;
 	var AP = makePacked( [
 		2.0, 1.0, 1.0, 1.0, 0.5, 0.0, 3.0, 0.5, 1.0, -1.0, 4.0, -1.0
 	]);
@@ -184,7 +191,7 @@ test( 'zlatps: lower, conjugate-transpose, non-unit, 3x3', function t() {
 });
 
 test( 'zlatps: upper, no-transpose, unit, 3x3', function t() {
-	var tc = findCase( 'upper_N_unit' );
+	var tc = upper_n_unit;
 	var AP = makePacked( [
 		99.0, 99.0, 1.0, 1.0, 99.0, 99.0, 0.5, 0.0, 1.0, -1.0, 99.0, 99.0
 	]);
@@ -201,7 +208,7 @@ test( 'zlatps: upper, no-transpose, unit, 3x3', function t() {
 });
 
 test( 'zlatps: lower, no-transpose, unit, 3x3', function t() {
-	var tc = findCase( 'lower_N_unit' );
+	var tc = lower_n_unit;
 	var AP = makePacked( [
 		99.0, 99.0, 1.0, 1.0, 0.5, 0.0, 99.0, 99.0, 1.0, -1.0, 99.0, 99.0
 	]);
@@ -218,7 +225,7 @@ test( 'zlatps: lower, no-transpose, unit, 3x3', function t() {
 });
 
 test( 'zlatps: upper, no-transpose, non-unit, normin=yes', function t() {
-	var tc = findCase( 'upper_N_normin_Y' );
+	var tc = upper_n_normin_y;
 	var AP = makePacked( [
 		2.0, 1.0, 1.0, 1.0, 3.0, 0.5, 0.5, 0.0, 1.0, -1.0, 4.0, -1.0
 	]);
@@ -235,7 +242,7 @@ test( 'zlatps: upper, no-transpose, non-unit, normin=yes', function t() {
 });
 
 test( 'zlatps: upper, conjugate-transpose, unit', function t() {
-	var tc = findCase( 'upper_C_unit' );
+	var tc = upper_c_unit;
 	var AP = makePacked( [
 		99.0, 99.0, 1.0, 1.0, 99.0, 99.0, 0.5, 0.0, 1.0, -1.0, 99.0, 99.0
 	]);
@@ -252,7 +259,7 @@ test( 'zlatps: upper, conjugate-transpose, unit', function t() {
 });
 
 test( 'zlatps: lower, conjugate-transpose, unit', function t() {
-	var tc = findCase( 'lower_C_unit' );
+	var tc = lower_c_unit;
 	var AP = makePacked( [
 		99.0, 99.0, 1.0, 1.0, 0.5, 0.0, 99.0, 99.0, 1.0, -1.0, 99.0, 99.0
 	]);
@@ -269,7 +276,7 @@ test( 'zlatps: lower, conjugate-transpose, unit', function t() {
 });
 
 test( 'zlatps: upper, no-transpose, non-unit, 4x4', function t() {
-	var tc = findCase( 'upper_N_4x4' );
+	var tc = upper_n_4x4;
 	var AP = makePacked( [
 		3.0, 0.0, 1.0, 0.5, 4.0, 1.0, 0.0, 1.0, 1.0, 0.0,
 		2.0, -1.0, 0.5, 0.0, 0.0, 0.5, 1.0, 1.0, 5.0, 0.0
@@ -287,7 +294,7 @@ test( 'zlatps: upper, no-transpose, non-unit, 4x4', function t() {
 });
 
 test( 'zlatps: lower, transpose, unit, normin=yes', function t() {
-	var tc = findCase( 'lower_T_unit_norminY' );
+	var tc = lower_t_unit_norminy;
 	var AP = makePacked( [
 		99.0, 99.0, 1.0, 1.0, 0.5, 0.0, 99.0, 99.0, 1.0, -1.0, 99.0, 99.0
 	]);
@@ -304,7 +311,7 @@ test( 'zlatps: lower, transpose, unit, normin=yes', function t() {
 });
 
 test( 'zlatps: upper, no-transpose, non-unit, careful (tiny diagonal)', function t() {
-	var tc = findCase( 'upper_N_careful' );
+	var tc = upper_n_careful;
 	var AP = makePacked( [
 		1e-300, 0.0, 1.0, 1.0, 1e-300, 0.0, 0.5, 0.0, 1.0, -1.0, 1e-300, 0.0
 	]);
@@ -321,7 +328,7 @@ test( 'zlatps: upper, no-transpose, non-unit, careful (tiny diagonal)', function
 });
 
 test( 'zlatps: lower, no-transpose, non-unit, careful', function t() {
-	var tc = findCase( 'lower_N_careful' );
+	var tc = lower_n_careful;
 	var AP = makePacked( [
 		1e-300, 0.0, 1.0, 1.0, 0.5, 0.0, 1e-300, 0.0, 1.0, -1.0, 1e-300, 0.0
 	]);
@@ -338,7 +345,7 @@ test( 'zlatps: lower, no-transpose, non-unit, careful', function t() {
 });
 
 test( 'zlatps: upper, conjugate-transpose, non-unit, careful', function t() {
-	var tc = findCase( 'upper_C_careful' );
+	var tc = upper_c_careful;
 	var AP = makePacked( [
 		1e-300, 0.0, 1.0, 1.0, 1e-300, 0.0, 0.5, 0.0, 1.0, -1.0, 1e-300, 0.0
 	]);
@@ -355,7 +362,7 @@ test( 'zlatps: upper, conjugate-transpose, non-unit, careful', function t() {
 });
 
 test( 'zlatps: lower, conjugate-transpose, non-unit, careful', function t() {
-	var tc = findCase( 'lower_C_careful' );
+	var tc = lower_c_careful;
 	var AP = makePacked( [
 		1e-300, 0.0, 1.0, 1.0, 0.5, 0.0, 1e-300, 0.0, 1.0, -1.0, 1e-300, 0.0
 	]);
@@ -372,7 +379,7 @@ test( 'zlatps: lower, conjugate-transpose, non-unit, careful', function t() {
 });
 
 test( 'zlatps: lower, conjugate-transpose, non-unit, 4x4', function t() {
-	var tc = findCase( 'lower_C_4x4' );
+	var tc = lower_c_4x4;
 	var AP = makePacked( [
 		3.0, 0.0, 1.0, 0.5, 0.0, 1.0, 0.5, 0.0, 4.0, 1.0,
 		1.0, 0.0, 0.0, 0.5, 2.0, -1.0, 1.0, 1.0, 5.0, 0.0
@@ -390,7 +397,7 @@ test( 'zlatps: lower, conjugate-transpose, non-unit, 4x4', function t() {
 });
 
 test( 'zlatps: upper, no-transpose, unit, careful (large off-diag)', function t() {
-	var tc = findCase( 'upper_N_unit_careful' );
+	var tc = upper_n_unit_careful;
 	var AP = makePacked( [
 		99.0, 99.0, 1e150, 1e150, 99.0, 99.0, 1e150, 0.0, 1e150, -1e150, 99.0, 99.0
 	]);

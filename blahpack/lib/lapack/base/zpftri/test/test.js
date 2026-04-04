@@ -23,38 +23,29 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpftrf = require( '../../zpftrf/lib/base.js' );
 var zpftri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpftri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var lower_odd_normal = require( './fixtures/lower_odd_normal.json' );
+var upper_odd_normal = require( './fixtures/upper_odd_normal.json' );
+var lower_odd_conjtrans = require( './fixtures/lower_odd_conjtrans.json' );
+var upper_odd_conjtrans = require( './fixtures/upper_odd_conjtrans.json' );
+var lower_even_normal = require( './fixtures/lower_even_normal.json' );
+var upper_even_normal = require( './fixtures/upper_even_normal.json' );
+var lower_even_conjtrans = require( './fixtures/lower_even_conjtrans.json' );
+var upper_even_conjtrans = require( './fixtures/upper_even_conjtrans.json' );
+var n_one = require( './fixtures/n_one.json' );
+var lower_5_normal = require( './fixtures/lower_5_normal.json' );
+var upper_5_conjtrans = require( './fixtures/upper_5_conjtrans.json' );
+var upper_5_normal = require( './fixtures/upper_5_normal.json' );
+var lower_5_conjtrans = require( './fixtures/lower_5_conjtrans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -116,7 +107,6 @@ function factorAndInvert( transr, uplo, N, A ) {
 	return zpftri( transr, uplo, N, A, 1, 0 );
 }
 
-
 // TESTS //
 
 test( 'zpftri: lower_odd_normal (N=3, TRANSR=no-transpose, UPLO=lower)', function t() { // eslint-disable-line max-len
@@ -125,7 +115,7 @@ test( 'zpftri: lower_odd_normal (N=3, TRANSR=no-transpose, UPLO=lower)', functio
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_normal' );
+	tc = lower_odd_normal;
 	A = makeInput( tc );
 	info = factorAndInvert( 'no-transpose', 'lower', 3, A );
 	Av = reinterpret( A, 0 );
@@ -139,7 +129,7 @@ test( 'zpftri: upper_odd_normal (N=3, TRANSR=no-transpose, UPLO=upper)', functio
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_normal' );
+	tc = upper_odd_normal;
 	A = makeInput( tc );
 	info = factorAndInvert( 'no-transpose', 'upper', 3, A );
 	Av = reinterpret( A, 0 );
@@ -153,7 +143,7 @@ test( 'zpftri: lower_odd_conjtrans (N=3, TRANSR=conjugate-transpose, UPLO=lower)
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_conjtrans' );
+	tc = lower_odd_conjtrans;
 	A = makeInput( tc );
 	info = factorAndInvert( 'conjugate-transpose', 'lower', 3, A );
 	Av = reinterpret( A, 0 );
@@ -167,7 +157,7 @@ test( 'zpftri: upper_odd_conjtrans (N=3, TRANSR=conjugate-transpose, UPLO=upper)
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_conjtrans' );
+	tc = upper_odd_conjtrans;
 	A = makeInput( tc );
 	info = factorAndInvert( 'conjugate-transpose', 'upper', 3, A );
 	Av = reinterpret( A, 0 );
@@ -181,7 +171,7 @@ test( 'zpftri: lower_even_normal (N=4, TRANSR=no-transpose, UPLO=lower)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_normal' );
+	tc = lower_even_normal;
 	A = makeInput( tc );
 	info = factorAndInvert( 'no-transpose', 'lower', 4, A );
 	Av = reinterpret( A, 0 );
@@ -195,7 +185,7 @@ test( 'zpftri: upper_even_normal (N=4, TRANSR=no-transpose, UPLO=upper)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_normal' );
+	tc = upper_even_normal;
 	A = makeInput( tc );
 	info = factorAndInvert( 'no-transpose', 'upper', 4, A );
 	Av = reinterpret( A, 0 );
@@ -209,7 +199,7 @@ test( 'zpftri: lower_even_conjtrans (N=4, TRANSR=conjugate-transpose, UPLO=lower
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_conjtrans' );
+	tc = lower_even_conjtrans;
 	A = makeInput( tc );
 	info = factorAndInvert( 'conjugate-transpose', 'lower', 4, A );
 	Av = reinterpret( A, 0 );
@@ -223,7 +213,7 @@ test( 'zpftri: upper_even_conjtrans (N=4, TRANSR=conjugate-transpose, UPLO=upper
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_conjtrans' );
+	tc = upper_even_conjtrans;
 	A = makeInput( tc );
 	info = factorAndInvert( 'conjugate-transpose', 'upper', 4, A );
 	Av = reinterpret( A, 0 );
@@ -246,7 +236,7 @@ test( 'zpftri: n_one', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = makeInput( tc );
 	info = factorAndInvert( 'no-transpose', 'lower', 1, A );
 	Av = reinterpret( A, 0 );
@@ -260,7 +250,7 @@ test( 'zpftri: lower_5_normal (N=5, TRANSR=no-transpose, UPLO=lower)', function 
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_5_normal' );
+	tc = lower_5_normal;
 	A = makeInput( tc );
 	info = factorAndInvert( 'no-transpose', 'lower', 5, A );
 	Av = reinterpret( A, 0 );
@@ -274,7 +264,7 @@ test( 'zpftri: upper_5_conjtrans (N=5, TRANSR=conjugate-transpose, UPLO=upper)',
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_5_conjtrans' );
+	tc = upper_5_conjtrans;
 	A = makeInput( tc );
 	info = factorAndInvert( 'conjugate-transpose', 'upper', 5, A );
 	Av = reinterpret( A, 0 );
@@ -288,7 +278,7 @@ test( 'zpftri: upper_5_normal (N=5, TRANSR=no-transpose, UPLO=upper)', function 
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_5_normal' );
+	tc = upper_5_normal;
 	A = makeInput( tc );
 	info = factorAndInvert( 'no-transpose', 'upper', 5, A );
 	Av = reinterpret( A, 0 );
@@ -302,7 +292,7 @@ test( 'zpftri: lower_5_conjtrans (N=5, TRANSR=conjugate-transpose, UPLO=lower)',
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_5_conjtrans' );
+	tc = lower_5_conjtrans;
 	A = makeInput( tc );
 	info = factorAndInvert( 'conjugate-transpose', 'lower', 5, A );
 	Av = reinterpret( A, 0 );

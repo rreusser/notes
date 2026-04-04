@@ -1,0 +1,10 @@
+{
+  "name": "n1_lower_factored",
+  "a": [
+    9,
+    -2
+  ],
+  "ipiv": [
+    1
+  ]
+}

@@ -2,39 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaexc = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaexc.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1_1_n2_1_wantq_true = require( './fixtures/n1_1_n2_1_wantq_true.json' );
+var n1_1_n2_1_wantq_false = require( './fixtures/n1_1_n2_1_wantq_false.json' );
+var n1_1_n2_2_wantq_true = require( './fixtures/n1_1_n2_2_wantq_true.json' );
+var n1_1_n2_2_wantq_false = require( './fixtures/n1_1_n2_2_wantq_false.json' );
+var n1_2_n2_1_wantq_true = require( './fixtures/n1_2_n2_1_wantq_true.json' );
+var n1_2_n2_1_wantq_false = require( './fixtures/n1_2_n2_1_wantq_false.json' );
+var n1_2_n2_2_wantq_true = require( './fixtures/n1_2_n2_2_wantq_true.json' );
+var n1_2_n2_2_wantq_false = require( './fixtures/n1_2_n2_2_wantq_false.json' );
+var n1_1_n2_1_boundary = require( './fixtures/n1_1_n2_1_boundary.json' );
+var n1_1_n2_1_start = require( './fixtures/n1_1_n2_1_start.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -111,7 +99,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlaexc: N1=1, N2=1, WANTQ=true', function t() {
@@ -122,7 +109,7 @@ test( 'dlaexc: N1=1, N2=1, WANTQ=true', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_1_n2_1_wantq_true' );
+	tc = n1_1_n2_1_wantq_true;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -152,7 +139,7 @@ test( 'dlaexc: N1=1, N2=1, WANTQ=false', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_1_n2_1_wantq_false' );
+	tc = n1_1_n2_1_wantq_false;
 	N = 4;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -182,7 +169,7 @@ test( 'dlaexc: N1=1, N2=2, WANTQ=true', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_1_n2_2_wantq_true' );
+	tc = n1_1_n2_2_wantq_true;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 5],
@@ -218,7 +205,7 @@ test( 'dlaexc: N1=1, N2=2, WANTQ=false', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_1_n2_2_wantq_false' );
+	tc = n1_1_n2_2_wantq_false;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 5],
@@ -253,7 +240,7 @@ test( 'dlaexc: N1=2, N2=1, WANTQ=true', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_2_n2_1_wantq_true' );
+	tc = n1_2_n2_1_wantq_true;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 3],
@@ -289,7 +276,7 @@ test( 'dlaexc: N1=2, N2=1, WANTQ=false', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_2_n2_1_wantq_false' );
+	tc = n1_2_n2_1_wantq_false;
 	N = 5;
 	T = buildSchurMatrix([
 		[0, 0, 3],
@@ -324,7 +311,7 @@ test( 'dlaexc: N1=2, N2=2, WANTQ=true', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_2_n2_2_wantq_true' );
+	tc = n1_2_n2_2_wantq_true;
 	N = 6;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -367,7 +354,7 @@ test( 'dlaexc: N1=2, N2=2, WANTQ=false', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_2_n2_2_wantq_false' );
+	tc = n1_2_n2_2_wantq_false;
 	N = 6;
 	T = buildSchurMatrix([
 		[0, 0, 4],
@@ -427,7 +414,7 @@ test( 'dlaexc: N1=1, N2=1 boundary (end of matrix)', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_1_n2_1_boundary' );
+	tc = n1_1_n2_1_boundary;
 	N = 3;
 	T = buildSchurMatrix([
 		[0, 0, 5],
@@ -453,7 +440,7 @@ test( 'dlaexc: N1=1, N2=1 at start (j1=1)', function t() {
 	var T;
 	var Q;
 
-	tc = findCase( 'n1_1_n2_1_start' );
+	tc = n1_1_n2_1_start;
 	N = 3;
 	T = buildSchurMatrix([
 		[0, 0, 5],

@@ -12,11 +12,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dstevx;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dstevx = main;
+} else {
+	dstevx = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dstevx;
 
 // exports: { "ndarray": "dstevx.ndarray" }

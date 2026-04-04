@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dspr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dspr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var alpha2 = require( './fixtures/alpha2.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var stride = require( './fixtures/stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,11 +51,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dspr: upper_basic (uplo=U, N=3, alpha=1, unit stride)', function t() {
-	var tc = findCase( 'upper_basic' );
+	var tc = upper_basic;
 
 	// AP = upper triangle of identity: diag at positions 0,2,5
 	var AP = new Float64Array( [ 1, 0, 1, 0, 0, 1 ] );
@@ -82,7 +65,7 @@ test( 'dspr: upper_basic (uplo=U, N=3, alpha=1, unit stride)', function t() {
 });
 
 test( 'dspr: lower_basic (uplo=L, N=3, alpha=1, unit stride)', function t() {
-	var tc = findCase( 'lower_basic' );
+	var tc = lower_basic;
 
 	// AP = lower triangle of identity: diag at positions 0,3,5
 	var AP = new Float64Array( [ 1, 0, 0, 1, 0, 1 ] );
@@ -93,7 +76,7 @@ test( 'dspr: lower_basic (uplo=L, N=3, alpha=1, unit stride)', function t() {
 });
 
 test( 'dspr: alpha2 (uplo=U, N=3, alpha=2)', function t() {
-	var tc = findCase( 'alpha2' );
+	var tc = alpha2;
 	var AP = new Float64Array( [ 0, 0, 0, 0, 0, 0 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 
@@ -102,7 +85,7 @@ test( 'dspr: alpha2 (uplo=U, N=3, alpha=2)', function t() {
 });
 
 test( 'dspr: n_zero (quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var AP = new Float64Array( [ 99 ] );
 	var x = new Float64Array( [ 1 ] );
 
@@ -111,7 +94,7 @@ test( 'dspr: n_zero (quick return)', function t() {
 });
 
 test( 'dspr: alpha_zero (alpha=0, quick return)', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var AP = new Float64Array( [ 5, 0, 0, 0, 0, 0 ] );
 	var x = new Float64Array( [ 1, 2, 3 ] );
 
@@ -120,7 +103,7 @@ test( 'dspr: alpha_zero (alpha=0, quick return)', function t() {
 });
 
 test( 'dspr: stride (uplo=U, N=3, incx=2)', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var AP = new Float64Array( [ 0, 0, 0, 0, 0, 0 ] );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3, 0 ] );
 

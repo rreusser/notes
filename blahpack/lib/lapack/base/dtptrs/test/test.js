@@ -2,39 +2,31 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtptrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtptrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_trans = require( './fixtures/upper_trans.json' );
+var lower_trans = require( './fixtures/lower_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var lower_unit_diag = require( './fixtures/lower_unit_diag.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var singular_upper = require( './fixtures/singular_upper.json' );
+var singular_lower = require( './fixtures/singular_lower.json' );
+var singular_lower_last = require( './fixtures/singular_lower_last.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var upper_conj_trans = require( './fixtures/upper_conj_trans.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +59,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dtptrs is a function', function t() {
@@ -80,7 +71,7 @@ test( 'dtptrs: upper_no_trans', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	ap = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'upper', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -94,7 +85,7 @@ test( 'dtptrs: lower_no_trans', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	ap = new Float64Array( [ 2.0, 1.0, 3.0, 4.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'lower', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -108,7 +99,7 @@ test( 'dtptrs: upper_trans', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_trans' );
+	tc = upper_trans;
 	ap = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'upper', 'transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -122,7 +113,7 @@ test( 'dtptrs: lower_trans', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_trans' );
+	tc = lower_trans;
 	ap = new Float64Array( [ 2.0, 1.0, 3.0, 4.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'lower', 'transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -136,7 +127,7 @@ test( 'dtptrs: upper_unit_diag', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_unit_diag' );
+	tc = upper_unit_diag;
 	ap = new Float64Array( [ 1.0, 2.0, 1.0, 3.0, 4.0, 1.0 ] );
 	b = new Float64Array( [ 10.0, 5.0, 1.0 ] );
 	info = dtptrs( 'upper', 'no-transpose', 'unit', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -150,7 +141,7 @@ test( 'dtptrs: lower_unit_diag', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_unit_diag' );
+	tc = lower_unit_diag;
 	ap = new Float64Array( [ 1.0, 2.0, 3.0, 1.0, 4.0, 1.0 ] );
 	b = new Float64Array( [ 10.0, 5.0, 1.0 ] );
 	info = dtptrs( 'lower', 'no-transpose', 'unit', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -164,7 +155,7 @@ test( 'dtptrs: n_zero (quick return)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ap = new Float64Array( [ 1.0 ] );
 	b = new Float64Array( [ 99.0 ] );
 	info = dtptrs( 'upper', 'no-transpose', 'non-unit', 0, 1, ap, 1, 0, b, 1, 1, 0 ); // eslint-disable-line max-len
@@ -177,7 +168,7 @@ test( 'dtptrs: n_one', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ap = new Float64Array( [ 5.0 ] );
 	b = new Float64Array( [ 15.0 ] );
 	info = dtptrs( 'upper', 'no-transpose', 'non-unit', 1, 1, ap, 1, 0, b, 1, 1, 0 ); // eslint-disable-line max-len
@@ -191,7 +182,7 @@ test( 'dtptrs: singular_upper (info > 0)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'singular_upper' );
+	tc = singular_upper;
 	ap = new Float64Array( [ 2.0, 1.0, 0.0, 3.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'upper', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -204,7 +195,7 @@ test( 'dtptrs: singular_lower (info > 0)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'singular_lower' );
+	tc = singular_lower;
 	ap = new Float64Array( [ 0.0, 1.0, 3.0, 4.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'lower', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -217,7 +208,7 @@ test( 'dtptrs: singular_lower_last (info > 0)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'singular_lower_last' );
+	tc = singular_lower_last;
 	ap = new Float64Array( [ 2.0, 1.0, 3.0, 4.0, 5.0, 0.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'lower', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -230,7 +221,7 @@ test( 'dtptrs: multi_rhs', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	ap = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	info = dtptrs( 'upper', 'no-transpose', 'non-unit', 3, 2, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -244,7 +235,7 @@ test( 'dtptrs: upper_conj_trans (same as transpose for real)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_conj_trans' );
+	tc = upper_conj_trans;
 	ap = new Float64Array( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dtptrs( 'upper', 'transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -258,7 +249,7 @@ test( 'dtptrs: lower_4x4', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	ap = new Float64Array( [ 3.0, 1.0, 4.0, 2.0, 2.0, 1.0, 3.0, 5.0, 1.0, 4.0 ] );
 	b = new Float64Array( [ 10.0, 20.0, 30.0, 40.0 ] );
 	info = dtptrs( 'lower', 'no-transpose', 'non-unit', 4, 1, ap, 1, 0, b, 1, 4, 0 ); // eslint-disable-line max-len

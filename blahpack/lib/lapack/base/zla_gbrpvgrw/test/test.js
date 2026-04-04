@@ -4,32 +4,29 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zla_gbrpvgrw = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zla_gbrpvgrw.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var no_growth = require( './fixtures/no_growth.json' );
+var ncols_zero = require( './fixtures/ncols_zero.json' );
+var single_element_growth = require( './fixtures/single_element_growth.json' );
+var growth_factor = require( './fixtures/growth_factor.json' );
+var zero_umax = require( './fixtures/zero_umax.json' );
+var tridiagonal = require( './fixtures/tridiagonal.json' );
+var ncols_less_than_n = require( './fixtures/ncols_less_than_n.json' );
+var wider_band = require( './fixtures/wider_band.json' );
+var complex_values = require( './fixtures/complex_values.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
-
 
 // TESTS //
 
@@ -42,7 +39,7 @@ test( 'zla_gbrpvgrw: no_growth', function t() {
 	var AFB = new Complex128Array( new Float64Array([
 		5.0, 0.0, 3.0, 0.0, 7.0, 0.0
 	]) );
-	var tc = findCase( 'no_growth' );
+	var tc = no_growth;
 	var AB = new Complex128Array( new Float64Array([
 		5.0, 0.0, 3.0, 0.0, 7.0, 0.0
 	]) );
@@ -56,7 +53,7 @@ test( 'zla_gbrpvgrw: ncols_zero', function t() {
 	var AFB = new Complex128Array( new Float64Array([
 		5.0, 0.0, 3.0, 0.0, 7.0, 0.0
 	]) );
-	var tc = findCase( 'ncols_zero' );
+	var tc = ncols_zero;
 	var AB = new Complex128Array( new Float64Array([
 		5.0, 0.0, 3.0, 0.0, 7.0, 0.0
 	]) );
@@ -68,7 +65,7 @@ test( 'zla_gbrpvgrw: ncols_zero', function t() {
 test( 'zla_gbrpvgrw: single_element_growth', function t() {
 	var result;
 	var AFB = new Complex128Array( new Float64Array( [ 6.0, 2.0 ] ) );
-	var tc = findCase( 'single_element_growth' );
+	var tc = single_element_growth;
 	var AB = new Complex128Array( new Float64Array( [ 3.0, 4.0 ] ) );
 
 	result = zla_gbrpvgrw( 1, 0, 0, 1, AB, 1, 1, 0, AFB, 1, 1, 0 );
@@ -80,7 +77,7 @@ test( 'zla_gbrpvgrw: growth_factor', function t() {
 	var AFB = new Complex128Array( new Float64Array([
 		4.0, 2.0, 3.0, 0.0, 5.0, 3.0
 	]) );
-	var tc = findCase( 'growth_factor' );
+	var tc = growth_factor;
 	var AB = new Complex128Array( new Float64Array([
 		2.0, 1.0, 3.0, 0.0, 1.0, 1.0
 	]) );
@@ -94,7 +91,7 @@ test( 'zla_gbrpvgrw: zero_umax', function t() {
 	var AFB = new Complex128Array( new Float64Array([
 		5.0, 1.0, 0.0, 0.0, 8.0, 0.0
 	]) );
-	var tc = findCase( 'zero_umax' );
+	var tc = zero_umax;
 	var AB = new Complex128Array( new Float64Array([
 		5.0, 1.0, 3.0, 2.0, 4.0, 0.0
 	]) );
@@ -146,7 +143,7 @@ test( 'zla_gbrpvgrw: tridiagonal', function t() {
 		0.0,
 		0.0
 	]) );
-	var tc = findCase( 'tridiagonal' );
+	var tc = tridiagonal;
 	var AB = new Complex128Array( new Float64Array([
 		// Col 0: rows [0,1,2]
 		0.0,
@@ -190,7 +187,7 @@ test( 'zla_gbrpvgrw: ncols_less_than_n', function t() {
 	var AFB = new Complex128Array( new Float64Array([
 		6.0, 2.0, 4.0, 0.0, 100.0, 0.0, 100.0, 0.0
 	]) );
-	var tc = findCase( 'ncols_less_than_n' );
+	var tc = ncols_less_than_n;
 	var AB = new Complex128Array( new Float64Array([
 		3.0, 1.0, 4.0, 0.0, 1.0, 0.0, 2.0, 0.0
 	]) );
@@ -282,7 +279,7 @@ test( 'zla_gbrpvgrw: wider_band', function t() {
 		0.0,
 		0.0
 	]) );
-	var tc = findCase( 'wider_band' );
+	var tc = wider_band;
 	var AB = new Complex128Array( new Float64Array([
 		// Col 0
 		0.0,
@@ -382,7 +379,7 @@ test( 'zla_gbrpvgrw: complex_values', function t() {
 		0.0,
 		0.0
 	]) );
-	var tc = findCase( 'complex_values' );
+	var tc = complex_values;
 	var AB = new Complex128Array( new Float64Array([
 		// Col 0: rows [0,1,2]
 		0.0,

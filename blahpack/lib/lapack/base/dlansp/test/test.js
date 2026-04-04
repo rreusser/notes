@@ -5,36 +5,35 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlansp = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlansp.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var dlansp_3x3_max_u = require( './fixtures/dlansp_3x3_max_u.json' );
+var dlansp_3x3_one_u = require( './fixtures/dlansp_3x3_one_u.json' );
+var dlansp_3x3_inf_u = require( './fixtures/dlansp_3x3_inf_u.json' );
+var dlansp_3x3_frob_u = require( './fixtures/dlansp_3x3_frob_u.json' );
+var dlansp_3x3_max_l = require( './fixtures/dlansp_3x3_max_l.json' );
+var dlansp_3x3_one_l = require( './fixtures/dlansp_3x3_one_l.json' );
+var dlansp_3x3_inf_l = require( './fixtures/dlansp_3x3_inf_l.json' );
+var dlansp_3x3_frob_l = require( './fixtures/dlansp_3x3_frob_l.json' );
+var dlansp_4x4_max_u = require( './fixtures/dlansp_4x4_max_u.json' );
+var dlansp_4x4_one_u = require( './fixtures/dlansp_4x4_one_u.json' );
+var dlansp_4x4_inf_u = require( './fixtures/dlansp_4x4_inf_u.json' );
+var dlansp_4x4_frob_u = require( './fixtures/dlansp_4x4_frob_u.json' );
+var dlansp_4x4_max_l = require( './fixtures/dlansp_4x4_max_l.json' );
+var dlansp_4x4_one_l = require( './fixtures/dlansp_4x4_one_l.json' );
+var dlansp_4x4_inf_l = require( './fixtures/dlansp_4x4_inf_l.json' );
+var dlansp_4x4_frob_l = require( './fixtures/dlansp_4x4_frob_l.json' );
+var dlansp_n0 = require( './fixtures/dlansp_n0.json' );
+var dlansp_1x1_max = require( './fixtures/dlansp_1x1_max.json' );
+var dlansp_1x1_one = require( './fixtures/dlansp_1x1_one.json' );
+var dlansp_1x1_inf = require( './fixtures/dlansp_1x1_inf.json' );
+var dlansp_1x1_frob = require( './fixtures/dlansp_1x1_frob.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -49,7 +48,6 @@ function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
-
 
 // TESTS //
 
@@ -71,7 +69,7 @@ test( 'dlansp: dlansp_3x3_max_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_max_U' );
+	tc = dlansp_3x3_max_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'max', 'upper', 3, ap, 1, 0, work, 1, 0 );
@@ -85,7 +83,7 @@ test( 'dlansp: dlansp_3x3_one_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_one_U' );
+	tc = dlansp_3x3_one_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'one-norm', 'upper', 3, ap, 1, 0, work, 1, 0 );
@@ -98,7 +96,7 @@ test( 'dlansp: dlansp_3x3_inf_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_inf_U' );
+	tc = dlansp_3x3_inf_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'inf-norm', 'upper', 3, ap, 1, 0, work, 1, 0 );
@@ -111,7 +109,7 @@ test( 'dlansp: dlansp_3x3_frob_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_frob_U' );
+	tc = dlansp_3x3_frob_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'frobenius', 'upper', 3, ap, 1, 0, work, 1, 0 );
@@ -124,7 +122,7 @@ test( 'dlansp: dlansp_3x3_max_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_max_L' );
+	tc = dlansp_3x3_max_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 5.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'max', 'lower', 3, ap, 1, 0, work, 1, 0 );
@@ -137,7 +135,7 @@ test( 'dlansp: dlansp_3x3_one_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_one_L' );
+	tc = dlansp_3x3_one_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 5.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'one-norm', 'lower', 3, ap, 1, 0, work, 1, 0 );
@@ -150,7 +148,7 @@ test( 'dlansp: dlansp_3x3_inf_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_inf_L' );
+	tc = dlansp_3x3_inf_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 5.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'inf-norm', 'lower', 3, ap, 1, 0, work, 1, 0 );
@@ -163,7 +161,7 @@ test( 'dlansp: dlansp_3x3_frob_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_3x3_frob_L' );
+	tc = dlansp_3x3_frob_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 5.0, 2.0, 7.0 ] );
 	work = new Float64Array( 3 );
 	result = dlansp( 'frobenius', 'lower', 3, ap, 1, 0, work, 1, 0 );
@@ -190,7 +188,7 @@ test( 'dlansp: dlansp_4x4_max_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_max_U' );
+	tc = dlansp_4x4_max_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0, 4.0, -6.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'max', 'upper', 4, ap, 1, 0, work, 1, 0 );
@@ -203,7 +201,7 @@ test( 'dlansp: dlansp_4x4_one_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_one_U' );
+	tc = dlansp_4x4_one_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0, 4.0, -6.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'one-norm', 'upper', 4, ap, 1, 0, work, 1, 0 );
@@ -216,7 +214,7 @@ test( 'dlansp: dlansp_4x4_inf_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_inf_U' );
+	tc = dlansp_4x4_inf_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0, 4.0, -6.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'inf-norm', 'upper', 4, ap, 1, 0, work, 1, 0 );
@@ -229,7 +227,7 @@ test( 'dlansp: dlansp_4x4_frob_U', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_frob_U' );
+	tc = dlansp_4x4_frob_u;
 	ap = new Float64Array( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0, 4.0, -6.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'frobenius', 'upper', 4, ap, 1, 0, work, 1, 0 );
@@ -242,7 +240,7 @@ test( 'dlansp: dlansp_4x4_max_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_max_L' );
+	tc = dlansp_4x4_max_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 4.0, 5.0, 2.0, -6.0, 7.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'max', 'lower', 4, ap, 1, 0, work, 1, 0 );
@@ -255,7 +253,7 @@ test( 'dlansp: dlansp_4x4_one_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_one_L' );
+	tc = dlansp_4x4_one_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 4.0, 5.0, 2.0, -6.0, 7.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'one-norm', 'lower', 4, ap, 1, 0, work, 1, 0 );
@@ -268,7 +266,7 @@ test( 'dlansp: dlansp_4x4_inf_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_inf_L' );
+	tc = dlansp_4x4_inf_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 4.0, 5.0, 2.0, -6.0, 7.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'inf-norm', 'lower', 4, ap, 1, 0, work, 1, 0 );
@@ -281,7 +279,7 @@ test( 'dlansp: dlansp_4x4_frob_L', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_4x4_frob_L' );
+	tc = dlansp_4x4_frob_l;
 	ap = new Float64Array( [ 2.0, 3.0, -1.0, 4.0, 5.0, 2.0, -6.0, 7.0, 1.0, 8.0 ] ); // eslint-disable-line max-len
 	work = new Float64Array( 4 );
 	result = dlansp( 'frobenius', 'lower', 4, ap, 1, 0, work, 1, 0 );
@@ -295,7 +293,7 @@ test( 'dlansp: dlansp_n0', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_n0' );
+	tc = dlansp_n0;
 	ap = new Float64Array( 0 );
 	work = new Float64Array( 0 );
 	result = dlansp( 'max', 'upper', 0, ap, 1, 0, work, 1, 0 );
@@ -309,7 +307,7 @@ test( 'dlansp: dlansp_1x1_max', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_1x1_max' );
+	tc = dlansp_1x1_max;
 	ap = new Float64Array( [ -5.5 ] );
 	work = new Float64Array( 1 );
 	result = dlansp( 'max', 'upper', 1, ap, 1, 0, work, 1, 0 );
@@ -322,7 +320,7 @@ test( 'dlansp: dlansp_1x1_one', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_1x1_one' );
+	tc = dlansp_1x1_one;
 	ap = new Float64Array( [ -5.5 ] );
 	work = new Float64Array( 1 );
 	result = dlansp( 'one-norm', 'upper', 1, ap, 1, 0, work, 1, 0 );
@@ -335,7 +333,7 @@ test( 'dlansp: dlansp_1x1_inf', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_1x1_inf' );
+	tc = dlansp_1x1_inf;
 	ap = new Float64Array( [ -5.5 ] );
 	work = new Float64Array( 1 );
 	result = dlansp( 'inf-norm', 'upper', 1, ap, 1, 0, work, 1, 0 );
@@ -348,7 +346,7 @@ test( 'dlansp: dlansp_1x1_frob', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'dlansp_1x1_frob' );
+	tc = dlansp_1x1_frob;
 	ap = new Float64Array( [ -5.5 ] );
 	work = new Float64Array( 1 );
 	result = dlansp( 'frobenius', 'upper', 1, ap, 1, 0, work, 1, 0 );

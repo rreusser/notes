@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtpmv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtpmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_notrans_nonunit = require( './fixtures/upper_notrans_nonunit.json' );
+var upper_trans_nonunit = require( './fixtures/upper_trans_nonunit.json' );
+var upper_notrans_unit = require( './fixtures/upper_notrans_unit.json' );
+var lower_notrans_nonunit = require( './fixtures/lower_notrans_nonunit.json' );
+var lower_trans_nonunit = require( './fixtures/lower_trans_nonunit.json' );
+var stride = require( './fixtures/stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +51,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 // 4x4 upper triangular matrix:
@@ -85,7 +68,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 // Lower packed (column-major): 2, 3, 4, 7, 5, 6, 9, 8, 10, 11
 
 test( 'dtpmv: upper_notrans_nonunit', function t() {
-	var tc = findCase( 'upper_notrans_nonunit' );
+	var tc = upper_notrans_nonunit;
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtpmv( 'upper', 'no-transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -93,7 +76,7 @@ test( 'dtpmv: upper_notrans_nonunit', function t() {
 });
 
 test( 'dtpmv: upper_trans_nonunit', function t() {
-	var tc = findCase( 'upper_trans_nonunit' );
+	var tc = upper_trans_nonunit;
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtpmv( 'upper', 'transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -101,7 +84,7 @@ test( 'dtpmv: upper_trans_nonunit', function t() {
 });
 
 test( 'dtpmv: upper_notrans_unit', function t() {
-	var tc = findCase( 'upper_notrans_unit' );
+	var tc = upper_notrans_unit;
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtpmv( 'upper', 'no-transpose', 'unit', 4, AP, 1, 0, x, 1, 0 );
@@ -109,7 +92,7 @@ test( 'dtpmv: upper_notrans_unit', function t() {
 });
 
 test( 'dtpmv: lower_notrans_nonunit', function t() {
-	var tc = findCase( 'lower_notrans_nonunit' );
+	var tc = lower_notrans_nonunit;
 	var AP = new Float64Array( [ 2, 3, 4, 7, 5, 6, 9, 8, 10, 11 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtpmv( 'lower', 'no-transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -117,7 +100,7 @@ test( 'dtpmv: lower_notrans_nonunit', function t() {
 });
 
 test( 'dtpmv: lower_trans_nonunit', function t() {
-	var tc = findCase( 'lower_trans_nonunit' );
+	var tc = lower_trans_nonunit;
 	var AP = new Float64Array( [ 2, 3, 4, 7, 5, 6, 9, 8, 10, 11 ] );
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	dtpmv( 'lower', 'transpose', 'non-unit', 4, AP, 1, 0, x, 1, 0 );
@@ -132,7 +115,7 @@ test( 'dtpmv: n_zero', function t() {
 });
 
 test( 'dtpmv: stride', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
 	var x = new Float64Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	dtpmv( 'upper', 'no-transpose', 'non-unit', 4, AP, 1, 0, x, 2, 0 );

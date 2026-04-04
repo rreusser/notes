@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -14,30 +12,21 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztbtrs = require( './../../ztbtrs/lib/base.js' );
 var ztbrfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztbrfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_conj_trans = require( './fixtures/upper_conj_trans.json' );
+var lower_conj_trans = require( './fixtures/lower_conj_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var lower_unit_diag = require( './fixtures/lower_unit_diag.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var upper_kd2 = require( './fixtures/upper_kd2.json' );
+var lower_kd2_conj_trans = require( './fixtures/lower_kd2_conj_trans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -177,7 +166,6 @@ function getCol( Xv, ldb, N, j ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'ztbrfs: upper_no_trans (upper, no-transpose, non-unit, N=3, KD=1)', function t() { // eslint-disable-line max-len
@@ -188,7 +176,7 @@ test( 'ztbrfs: upper_no_trans (upper, no-transpose, non-unit, N=3, KD=1)', funct
 	var ldb;
 	var tc;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	ldab = 2;
 	ldb = 3;
 	ABdata = new Float64Array( 2 * ldab * 3 );
@@ -217,7 +205,7 @@ test( 'ztbrfs: lower_no_trans (lower, no-transpose, non-unit, N=3, KD=1)', funct
 	var ldb;
 	var tc;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	ldab = 2;
 	ldb = 3;
 	ABdata = new Float64Array( 2 * ldab * 3 );
@@ -246,7 +234,7 @@ test( 'ztbrfs: upper_conj_trans (upper, conjugate-transpose, non-unit, N=3, KD=1
 	var ldb;
 	var tc;
 
-	tc = findCase( 'upper_conj_trans' );
+	tc = upper_conj_trans;
 	ldab = 2;
 	ldb = 3;
 	ABdata = new Float64Array( 2 * ldab * 3 );
@@ -275,7 +263,7 @@ test( 'ztbrfs: lower_conj_trans (lower, conjugate-transpose, non-unit, N=3, KD=1
 	var ldb;
 	var tc;
 
-	tc = findCase( 'lower_conj_trans' );
+	tc = lower_conj_trans;
 	ldab = 2;
 	ldb = 3;
 	ABdata = new Float64Array( 2 * ldab * 3 );
@@ -304,7 +292,7 @@ test( 'ztbrfs: upper_unit_diag (upper, no-transpose, unit, N=3, KD=1)', function
 	var ldb;
 	var tc;
 
-	tc = findCase( 'upper_unit_diag' );
+	tc = upper_unit_diag;
 	ldab = 2;
 	ldb = 3;
 	ABdata = new Float64Array( 2 * ldab * 3 );
@@ -333,7 +321,7 @@ test( 'ztbrfs: lower_unit_diag (lower, no-transpose, unit, N=3, KD=1)', function
 	var ldb;
 	var tc;
 
-	tc = findCase( 'lower_unit_diag' );
+	tc = lower_unit_diag;
 	ldab = 2;
 	ldb = 3;
 	ABdata = new Float64Array( 2 * ldab * 3 );
@@ -365,7 +353,7 @@ test( 'ztbrfs: n_zero (N=0 quick return)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Complex128Array( 1 );
 	B = new Complex128Array( 1 );
 	X = new Complex128Array( 1 );
@@ -392,7 +380,7 @@ test( 'ztbrfs: nrhs_zero (NRHS=0 quick return)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	AB = new Complex128Array( 9 );
 	B = new Complex128Array( 3 );
 	X = new Complex128Array( 3 );
@@ -412,7 +400,7 @@ test( 'ztbrfs: multi_rhs (upper, no-transpose, non-unit, N=3, KD=1, NRHS=2)', fu
 	var ldb;
 	var tc;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	ldab = 2;
 	ldb = 3;
 	ABdata = new Float64Array( 2 * ldab * 3 );
@@ -445,7 +433,7 @@ test( 'ztbrfs: upper_kd2 (upper, no-transpose, non-unit, N=4, KD=2)', function t
 	var ldb;
 	var tc;
 
-	tc = findCase( 'upper_kd2' );
+	tc = upper_kd2;
 	ldab = 3;
 	ldb = 4;
 	ABdata = new Float64Array( 2 * ldab * 4 );
@@ -478,7 +466,7 @@ test( 'ztbrfs: lower_kd2_conj_trans (lower, conjugate-transpose, non-unit, N=4, 
 	var ldb;
 	var tc;
 
-	tc = findCase( 'lower_kd2_conj_trans' );
+	tc = lower_kd2_conj_trans;
 	ldab = 3;
 	ldb = 4;
 	ABdata = new Float64Array( 2 * ldab * 4 );

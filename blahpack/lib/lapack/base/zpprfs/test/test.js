@@ -5,37 +5,19 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zpprfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpprfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_upper_3x3 = require( './fixtures/basic_upper_3x3.json' );
+var basic_lower_3x3 = require( './fixtures/basic_lower_3x3.json' );
+var multi_rhs_3x3 = require( './fixtures/multi_rhs_3x3.json' );
+var n_one = require( './fixtures/n_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a Float64Array to an array.
@@ -86,7 +68,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'zpprfs is a function', function t() {
@@ -106,7 +87,7 @@ test( 'zpprfs: basic_upper_3x3', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'basic_upper_3x3' );
+	tc = basic_upper_3x3;
 	ap = c128( tc.AP );
 	afp = c128( tc.AFP );
 	b = c128( tc.B );
@@ -136,7 +117,7 @@ test( 'zpprfs: basic_lower_3x3', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'basic_lower_3x3' );
+	tc = basic_lower_3x3;
 	ap = c128( tc.AP );
 	afp = c128( tc.AFP );
 	b = c128( tc.B );
@@ -166,7 +147,7 @@ test( 'zpprfs: multi_rhs_3x3', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'multi_rhs_3x3' );
+	tc = multi_rhs_3x3;
 	ap = c128( tc.AP );
 	afp = c128( tc.AFP );
 	b = c128( tc.B );
@@ -244,7 +225,7 @@ test( 'zpprfs: n_one', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ap = c128( tc.AP );
 	afp = c128( tc.AFP );
 	b = c128( tc.B );

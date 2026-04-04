@@ -29,11 +29,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dpbsvx;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dpbsvx = main;
+} else {
+	dpbsvx = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dpbsvx;
 
 // exports: { "ndarray": "dpbsvx.ndarray" }

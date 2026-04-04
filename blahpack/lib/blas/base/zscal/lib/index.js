@@ -43,11 +43,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zscal;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zscal = main;
+} else {
+	zscal = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zscal;
 
 // exports: { "ndarray": "zscal.ndarray" }

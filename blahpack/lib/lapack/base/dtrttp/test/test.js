@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrttp = require( './../lib' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrttp.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var lower_3x3_lda4 = require( './fixtures/lower_3x3_lda4.json' );
+var upper_3x3_lda4 = require( './fixtures/upper_3x3_lda4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -55,7 +41,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dtrttp: main export is a function', function t() {
@@ -72,7 +57,7 @@ test( 'dtrttp.ndarray: lower triangular 3x3', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	AP = new Float64Array( 6 );
 	info = dtrttp.ndarray( 'lower', 3, A, 1, 3, 0, AP, 1, 0 );
@@ -86,7 +71,7 @@ test( 'dtrttp.ndarray: upper triangular 3x3', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	AP = new Float64Array( 6 );
 	info = dtrttp.ndarray( 'upper', 3, A, 1, 3, 0, AP, 1, 0 );
@@ -100,7 +85,7 @@ test( 'dtrttp.ndarray: lower triangular 4x4', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ] ); // eslint-disable-line max-len
 	AP = new Float64Array( 10 );
 	info = dtrttp.ndarray( 'lower', 4, A, 1, 4, 0, AP, 1, 0 );
@@ -114,7 +99,7 @@ test( 'dtrttp.ndarray: upper triangular 4x4', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ] ); // eslint-disable-line max-len
 	AP = new Float64Array( 10 );
 	info = dtrttp.ndarray( 'upper', 4, A, 1, 4, 0, AP, 1, 0 );
@@ -138,7 +123,7 @@ test( 'dtrttp.ndarray: N=1 lower', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	A = new Float64Array( [ 42.0 ] );
 	AP = new Float64Array( 1 );
 	info = dtrttp.ndarray( 'lower', 1, A, 1, 1, 0, AP, 1, 0 );
@@ -152,7 +137,7 @@ test( 'dtrttp.ndarray: N=1 upper', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	A = new Float64Array( [ 42.0 ] );
 	AP = new Float64Array( 1 );
 	info = dtrttp.ndarray( 'upper', 1, A, 1, 1, 0, AP, 1, 0 );
@@ -166,7 +151,7 @@ test( 'dtrttp.ndarray: lower 3x3 with LDA > N (LDA=4)', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'lower_3x3_lda4' );
+	tc = lower_3x3_lda4;
 	A = new Float64Array( [ 1, 2, 3, 99, 5, 6, 7, 99, 9, 10, 11, 99 ] );
 	AP = new Float64Array( 6 );
 	info = dtrttp.ndarray( 'lower', 3, A, 1, 4, 0, AP, 1, 0 );
@@ -180,7 +165,7 @@ test( 'dtrttp.ndarray: upper 3x3 with LDA > N (LDA=4)', function t() {
 	var AP;
 	var A;
 
-	tc = findCase( 'upper_3x3_lda4' );
+	tc = upper_3x3_lda4;
 	A = new Float64Array( [ 1, 2, 3, 99, 5, 6, 7, 99, 9, 10, 11, 99 ] );
 	AP = new Float64Array( 6 );
 	info = dtrttp.ndarray( 'upper', 3, A, 1, 4, 0, AP, 1, 0 );

@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -15,29 +12,17 @@ var dgetrf = require( '../../dgetrf/lib/base.js' );
 var dgetrs = require( '../../dgetrs/lib/base.js' );
 var dgerfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgerfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var transpose_3x3 = require( './fixtures/transpose_3x3.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var hilbert_3x3 = require( './fixtures/hilbert_3x3.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -131,7 +116,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgerfs: basic_3x3', function t() {
@@ -139,7 +123,7 @@ test( 'dgerfs: basic_3x3', function t() {
 	var sys;
 	var tc;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	sys = setupSystem( 'no-transpose', [
 		2,
 		4,
@@ -164,7 +148,7 @@ test( 'dgerfs: transpose_3x3', function t() {
 	var sys;
 	var tc;
 
-	tc = findCase( 'transpose_3x3' );
+	tc = transpose_3x3;
 	sys = setupSystem( 'transpose', [
 		2,
 		4,
@@ -189,7 +173,7 @@ test( 'dgerfs: multi_rhs', function t() {
 	var sys;
 	var tc;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	sys = setupSystem( 'no-transpose', [
 		2,
 		4,
@@ -221,7 +205,7 @@ test( 'dgerfs: n_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	AF = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -246,7 +230,7 @@ test( 'dgerfs: nrhs_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Float64Array( 9 );
 	AF = new Float64Array( 9 );
 	IPIV = new Int32Array( 3 );
@@ -263,7 +247,7 @@ test( 'dgerfs: hilbert_3x3', function t() {
 	var sys;
 	var tc;
 
-	tc = findCase( 'hilbert_3x3' );
+	tc = hilbert_3x3;
 	sys = setupSystem( 'no-transpose', [
 		1.0,
 		0.5,
@@ -287,7 +271,7 @@ test( 'dgerfs: one_by_one', function t() {
 	var sys;
 	var tc;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	sys = setupSystem( 'no-transpose', [ 5.0 ], [ 10.0 ], 1, 1 );
 	info = dgerfs( 'no-transpose', 1, 1, sys.A, 1, 1, 0, sys.AF, 1, 1, 0, sys.IPIV, 1, 0, sys.B, 1, 1, 0, sys.X, 1, 1, 0, sys.FERR, 1, 0, sys.BERR, 1, 0);
 	assert.equal( info, tc.info, 'info' );

@@ -2,41 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zgetrf2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgetrf2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3 = require( './fixtures/3x3.json' );
+var _4x3 = require( './fixtures/4x3.json' );
+var _3x4 = require( './fixtures/3x4.json' );
+var singular = require( './fixtures/singular.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var col_vector = require( './fixtures/col_vector.json' );
+var row_vector = require( './fixtures/row_vector.json' );
+var _4x4 = require( './fixtures/4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -97,7 +83,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgetrf2: 3x3 non-singular complex matrix', function t() {
@@ -108,7 +93,7 @@ test( 'zgetrf2: 3x3 non-singular complex matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	a = new Complex128Array([
 		2,
 		1,
@@ -145,7 +130,7 @@ test( 'zgetrf2: 4x3 tall matrix (M > N)', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '4x3' );
+	tc = _4x3;
 	a = new Complex128Array([
 		2,
 		1,
@@ -187,7 +172,7 @@ test( 'zgetrf2: 3x4 wide matrix (M < N)', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '3x4' );
+	tc = _3x4;
 	a = new Complex128Array([
 		1,
 		0.5,
@@ -229,7 +214,7 @@ test( 'zgetrf2: singular matrix (info > 0)', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	a = new Complex128Array([
 		1,
 		0,
@@ -287,7 +272,7 @@ test( 'zgetrf2: 1x1 non-singular', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	a = new Complex128Array( [ 5, 3 ] );
 	ipiv = new Int32Array( 1 );
 	info = zgetrf2( 1, 1, a, 1, 1, 0, ipiv, 1, 0 );
@@ -320,7 +305,7 @@ test( 'zgetrf2: Nx1 column vector', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'col_vector' );
+	tc = col_vector;
 	a = new Complex128Array( [ 1, 0.5, 5, 2, 3, 1 ] );
 	ipiv = new Int32Array( 1 );
 	info = zgetrf2( 3, 1, a, 1, 3, 0, ipiv, 1, 0 );
@@ -337,7 +322,7 @@ test( 'zgetrf2: 1xN row vector', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'row_vector' );
+	tc = row_vector;
 	a = new Complex128Array( [ 2, 1, 3, 0.5, 7, 2 ] );
 	ipiv = new Int32Array( 1 );
 	info = zgetrf2( 1, 3, a, 1, 1, 0, ipiv, 1, 0 );
@@ -354,7 +339,7 @@ test( 'zgetrf2: 4x4 well-conditioned complex matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( '4x4' );
+	tc = _4x4;
 	a = new Complex128Array([
 		10,
 		1,

@@ -4,25 +4,24 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
 var Float64Array = require( '@stdlib/array/float64' );
-var path = require( 'path' );
 var dlarrc = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlarrc.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-
-// FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
-
+var n_zero = require( './fixtures/n_zero.json' );
+var n1_t_inside = require( './fixtures/n1_t_inside.json' );
+var n1_t_outside = require( './fixtures/n1_t_outside.json' );
+var n5_t_all = require( './fixtures/n5_t_all.json' );
+var n5_t_narrow = require( './fixtures/n5_t_narrow.json' );
+var n1_l_inside = require( './fixtures/n1_l_inside.json' );
+var n5_l_all = require( './fixtures/n5_l_all.json' );
+var n5_l_narrow = require( './fixtures/n5_l_narrow.json' );
+var n3_t_boundary = require( './fixtures/n3_t_boundary.json' );
+var n4_t_negative = require( './fixtures/n4_t_negative.json' );
+var n4_l_negative = require( './fixtures/n4_l_negative.json' );
+var n2_t_both = require( './fixtures/n2_t_both.json' );
+var n2_l_both = require( './fixtures/n2_l_both.json' );
 
 // TESTS //
 
@@ -31,7 +30,7 @@ test( 'dlarrc is a function', function t() {
 });
 
 test( 'dlarrc: n_zero (quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var d = new Float64Array( [ 0.0 ] );
 	var e = new Float64Array( [ 0.0 ] );
 	var result = dlarrc( 'tridiagonal', 0, -1.0, 1.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -43,7 +42,7 @@ test( 'dlarrc: n_zero (quick return)', function t() {
 });
 
 test( 'dlarrc: n1_t_inside (single eigenvalue inside interval)', function t() {
-	var tc = findCase( 'n1_t_inside' );
+	var tc = n1_t_inside;
 	var d = new Float64Array( [ 2.0 ] );
 	var e = new Float64Array( [ 0.0 ] );
 	var result = dlarrc( 'tridiagonal', 1, 0.0, 3.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -55,7 +54,7 @@ test( 'dlarrc: n1_t_inside (single eigenvalue inside interval)', function t() {
 });
 
 test( 'dlarrc: n1_t_outside (single eigenvalue outside interval)', function t() {
-	var tc = findCase( 'n1_t_outside' );
+	var tc = n1_t_outside;
 	var d = new Float64Array( [ 2.0 ] );
 	var e = new Float64Array( [ 0.0 ] );
 	var result = dlarrc( 'tridiagonal', 1, 3.0, 5.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -67,7 +66,7 @@ test( 'dlarrc: n1_t_outside (single eigenvalue outside interval)', function t() 
 });
 
 test( 'dlarrc: n5_t_all (wide interval captures all eigenvalues)', function t() {
-	var tc = findCase( 'n5_t_all' );
+	var tc = n5_t_all;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0, 5.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var result = dlarrc( 'tridiagonal', 5, -10.0, 10.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -79,7 +78,7 @@ test( 'dlarrc: n5_t_all (wide interval captures all eigenvalues)', function t() 
 });
 
 test( 'dlarrc: n5_t_narrow (narrow interval captures subset)', function t() {
-	var tc = findCase( 'n5_t_narrow' );
+	var tc = n5_t_narrow;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0, 5.0 ] );
 	var e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	var result = dlarrc( 'tridiagonal', 5, 1.0, 4.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -91,7 +90,7 @@ test( 'dlarrc: n5_t_narrow (narrow interval captures subset)', function t() {
 });
 
 test( 'dlarrc: n1_l_inside (LDL^T, single eigenvalue inside)', function t() {
-	var tc = findCase( 'n1_l_inside' );
+	var tc = n1_l_inside;
 	var d = new Float64Array( [ 2.0 ] );
 	var e = new Float64Array( [ 0.0 ] );
 	var result = dlarrc( 'ldl', 1, 0.0, 3.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -103,7 +102,7 @@ test( 'dlarrc: n1_l_inside (LDL^T, single eigenvalue inside)', function t() {
 });
 
 test( 'dlarrc: n5_l_all (LDL^T, wide interval)', function t() {
-	var tc = findCase( 'n5_l_all' );
+	var tc = n5_l_all;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0, 5.0 ] );
 	var e = new Float64Array( [ 0.5, 0.5, 0.5, 0.5 ] );
 	var result = dlarrc( 'ldl', 5, -10.0, 10.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -115,7 +114,7 @@ test( 'dlarrc: n5_l_all (LDL^T, wide interval)', function t() {
 });
 
 test( 'dlarrc: n5_l_narrow (LDL^T, narrow interval)', function t() {
-	var tc = findCase( 'n5_l_narrow' );
+	var tc = n5_l_narrow;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0, 5.0 ] );
 	var e = new Float64Array( [ 0.5, 0.5, 0.5, 0.5 ] );
 	var result = dlarrc( 'ldl', 5, 1.0, 4.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -127,7 +126,7 @@ test( 'dlarrc: n5_l_narrow (LDL^T, narrow interval)', function t() {
 });
 
 test( 'dlarrc: n3_t_boundary (eigenvalue at interval boundary)', function t() {
-	var tc = findCase( 'n3_t_boundary' );
+	var tc = n3_t_boundary;
 	var d = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var e = new Float64Array( [ 0.0, 0.0 ] );
 	var result = dlarrc( 'tridiagonal', 3, 1.0, 3.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -139,7 +138,7 @@ test( 'dlarrc: n3_t_boundary (eigenvalue at interval boundary)', function t() {
 });
 
 test( 'dlarrc: n4_t_negative (negative eigenvalues, tridiagonal)', function t() {
-	var tc = findCase( 'n4_t_negative' );
+	var tc = n4_t_negative;
 	var d = new Float64Array( [ -5.0, -3.0, -7.0, -1.0 ] );
 	var e = new Float64Array( [ 0.5, 0.5, 0.5 ] );
 	var result = dlarrc( 'tridiagonal', 4, -8.0, -2.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -151,7 +150,7 @@ test( 'dlarrc: n4_t_negative (negative eigenvalues, tridiagonal)', function t() 
 });
 
 test( 'dlarrc: n4_l_negative (negative eigenvalues, LDL^T)', function t() {
-	var tc = findCase( 'n4_l_negative' );
+	var tc = n4_l_negative;
 	var d = new Float64Array( [ -5.0, -3.0, -7.0, -1.0 ] );
 	var e = new Float64Array( [ 0.5, 0.5, 0.5 ] );
 	var result = dlarrc( 'ldl', 4, -8.0, -2.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -163,7 +162,7 @@ test( 'dlarrc: n4_l_negative (negative eigenvalues, LDL^T)', function t() {
 });
 
 test( 'dlarrc: n2_t_both (two eigenvalues, tridiagonal)', function t() {
-	var tc = findCase( 'n2_t_both' );
+	var tc = n2_t_both;
 	var d = new Float64Array( [ 1.0, 4.0 ] );
 	var e = new Float64Array( [ 1.0 ] );
 	var result = dlarrc( 'tridiagonal', 2, 0.0, 5.0, d, 1, 0, e, 1, 0, 1e-16 );
@@ -175,7 +174,7 @@ test( 'dlarrc: n2_t_both (two eigenvalues, tridiagonal)', function t() {
 });
 
 test( 'dlarrc: n2_l_both (two eigenvalues, LDL^T)', function t() {
-	var tc = findCase( 'n2_l_both' );
+	var tc = n2_l_both;
 	var d = new Float64Array( [ 1.0, 4.0 ] );
 	var e = new Float64Array( [ 1.0 ] );
 	var result = dlarrc( 'ldl', 2, 0.0, 5.0, d, 1, 0, e, 1, 0, 1e-16 );

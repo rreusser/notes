@@ -6,26 +6,27 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zspmv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zspmv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var complex_alpha_beta = require( './fixtures/complex_alpha_beta.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var alpha_zero_beta_zero = require( './fixtures/alpha_zero_beta_zero.json' );
+var stride_2 = require( './fixtures/stride_2.json' );
+var scalar = require( './fixtures/scalar.json' );
+var lower_nonzero_beta = require( './fixtures/lower_nonzero_beta.json' );
+var negative_incx = require( './fixtures/negative_incx.json' );
+var beta_one = require( './fixtures/beta_one.json' );
+var lower_stride2_complex_beta = require( './fixtures/lower_stride2_complex_beta.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -57,7 +58,6 @@ function stdX() {
 	return new Complex128Array( [ 1, 0.5, 2, -1, 3, 1 ] );
 }
 
-
 // TESTS //
 
 test( 'zspmv is a function', function t() {
@@ -65,7 +65,7 @@ test( 'zspmv is a function', function t() {
 });
 
 test( 'zspmv: upper_basic', function t() {
-	var tc = findCase( 'upper_basic' );
+	var tc = upper_basic;
 	var ap = upperAP();
 	var x = stdX();
 	var y = new Complex128Array( 3 );
@@ -75,7 +75,7 @@ test( 'zspmv: upper_basic', function t() {
 });
 
 test( 'zspmv: lower_basic', function t() {
-	var tc = findCase( 'lower_basic' );
+	var tc = lower_basic;
 	var ap = lowerAP();
 	var x = stdX();
 	var y = new Complex128Array( 3 );
@@ -85,7 +85,7 @@ test( 'zspmv: lower_basic', function t() {
 });
 
 test( 'zspmv: complex_alpha_beta', function t() {
-	var tc = findCase( 'complex_alpha_beta' );
+	var tc = complex_alpha_beta;
 	var ap = upperAP();
 	var x = stdX();
 	var y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5 ] );
@@ -95,7 +95,7 @@ test( 'zspmv: complex_alpha_beta', function t() {
 });
 
 test( 'zspmv: alpha_zero', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var ap = upperAP();
 	var x = stdX();
 	var y = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
@@ -105,7 +105,7 @@ test( 'zspmv: alpha_zero', function t() {
 });
 
 test( 'zspmv: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var ap = upperAP();
 	var x = stdX();
 	var y = new Complex128Array( [ 99, 0 ] );
@@ -115,7 +115,7 @@ test( 'zspmv: n_zero', function t() {
 });
 
 test( 'zspmv: alpha_zero_beta_zero', function t() {
-	var tc = findCase( 'alpha_zero_beta_zero' );
+	var tc = alpha_zero_beta_zero;
 	var ap = upperAP();
 	var x = stdX();
 	var y = new Complex128Array( [ 99, 88, 77, 66, 55, 44 ] );
@@ -125,7 +125,7 @@ test( 'zspmv: alpha_zero_beta_zero', function t() {
 });
 
 test( 'zspmv: stride_2', function t() {
-	var tc = findCase( 'stride_2' );
+	var tc = stride_2;
 	var ap = upperAP();
 	var x = new Complex128Array( [ 1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0 ] );
 	var y = new Complex128Array( 6 );
@@ -135,7 +135,7 @@ test( 'zspmv: stride_2', function t() {
 });
 
 test( 'zspmv: scalar', function t() {
-	var tc = findCase( 'scalar' );
+	var tc = scalar;
 	var ap = new Complex128Array( [ 3, 2 ] );
 	var x = new Complex128Array( [ 5, 2 ] );
 	var y = new Complex128Array( 1 );
@@ -145,7 +145,7 @@ test( 'zspmv: scalar', function t() {
 });
 
 test( 'zspmv: lower_nonzero_beta', function t() {
-	var tc = findCase( 'lower_nonzero_beta' );
+	var tc = lower_nonzero_beta;
 	var ap = lowerAP();
 	var x = stdX();
 	var y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5 ] );
@@ -155,7 +155,7 @@ test( 'zspmv: lower_nonzero_beta', function t() {
 });
 
 test( 'zspmv: negative_incx', function t() {
-	var tc = findCase( 'negative_incx' );
+	var tc = negative_incx;
 	// Fortran: x(1)=3+i, x(2)=2-i, x(3)=1+0.5i, incx=-1
 	// With negative stride, start from end: elements are reversed
 	var ap = upperAP();
@@ -167,7 +167,7 @@ test( 'zspmv: negative_incx', function t() {
 });
 
 test( 'zspmv: beta_one', function t() {
-	var tc = findCase( 'beta_one' );
+	var tc = beta_one;
 	var ap = upperAP();
 	var x = stdX();
 	var y = new Complex128Array( [ 1, 2, 3, -1, 2, 1 ] );
@@ -177,7 +177,7 @@ test( 'zspmv: beta_one', function t() {
 });
 
 test( 'zspmv: lower_stride2_complex_beta', function t() {
-	var tc = findCase( 'lower_stride2_complex_beta' );
+	var tc = lower_stride2_complex_beta;
 	var ap = lowerAP();
 	var x = new Complex128Array( [ 1, 0.5, 0, 0, 2, -1, 0, 0, 3, 1, 0, 0 ] );
 	var y = new Complex128Array( [ 1, 1, 0, 0, 2, -1, 0, 0, 0.5, 0.5, 0, 0 ] );

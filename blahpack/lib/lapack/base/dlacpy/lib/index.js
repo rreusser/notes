@@ -41,11 +41,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dlacpy;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dlacpy = main;
+} else {
+	dlacpy = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dlacpy;
 
 // exports: { "ndarray": "dlacpy.ndarray" }

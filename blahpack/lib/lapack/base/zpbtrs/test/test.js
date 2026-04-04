@@ -6,26 +6,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbtrf = require( '../../zpbtrf/lib/base.js' );
 var zpbtrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpbtrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_single_rhs = require( './fixtures/upper_single_rhs.json' );
+var lower_single_rhs = require( './fixtures/lower_single_rhs.json' );
+var upper_two_rhs = require( './fixtures/upper_two_rhs.json' );
+var lower_two_rhs = require( './fixtures/lower_two_rhs.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -40,11 +33,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpbtrs: upper_single_rhs (UPLO=U, N=3, KD=1, NRHS=1)', function t() {
-	var tc = findCase( 'upper_single_rhs' );
+	var tc = upper_single_rhs;
 	// Factor the band matrix first
 	var AB = new Complex128Array( [
 		0, 0, 4, 0,
@@ -61,7 +53,7 @@ test( 'zpbtrs: upper_single_rhs (UPLO=U, N=3, KD=1, NRHS=1)', function t() {
 });
 
 test( 'zpbtrs: lower_single_rhs (UPLO=L, N=3, KD=1, NRHS=1)', function t() {
-	var tc = findCase( 'lower_single_rhs' );
+	var tc = lower_single_rhs;
 	var AB = new Complex128Array( [
 		4, 0, 1, -1,
 		5, 0, 2, 1,
@@ -90,7 +82,7 @@ test( 'zpbtrs: nrhs_zero (NRHS=0 quick return)', function t() {
 });
 
 test( 'zpbtrs: upper_two_rhs (UPLO=U, N=3, KD=1, NRHS=2)', function t() {
-	var tc = findCase( 'upper_two_rhs' );
+	var tc = upper_two_rhs;
 	var AB = new Complex128Array( [
 		0, 0, 4, 0,
 		1, 1, 5, 0,
@@ -110,7 +102,7 @@ test( 'zpbtrs: upper_two_rhs (UPLO=U, N=3, KD=1, NRHS=2)', function t() {
 });
 
 test( 'zpbtrs: lower_two_rhs (UPLO=L, N=3, KD=1, NRHS=2)', function t() {
-	var tc = findCase( 'lower_two_rhs' );
+	var tc = lower_two_rhs;
 	var AB = new Complex128Array( [
 		4, 0, 1, -1,
 		5, 0, 2, 1,

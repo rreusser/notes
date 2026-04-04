@@ -4,25 +4,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqps = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqps.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_4x3_nb2 = require( './fixtures/basic_4x3_nb2.json' );
+var rect_6x4_nb3 = require( './fixtures/rect_6x4_nb3.json' );
+var nb_1 = require( './fixtures/nb_1.json' );
+var collinear_norm_recomp = require( './fixtures/collinear_norm_recomp.json' );
+var offset_1 = require( './fixtures/offset_1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -60,11 +54,10 @@ function colNorms( M, N, startRow, A, LDA, offsetA ) {
 	return vn;
 }
 
-
 // TESTS //
 
 test( 'zlaqps: basic 4x3 NB=2', function t() {
-	var tc = findCase( 'basic_4x3_nb2' );
+	var tc = basic_4x3_nb2;
 	var LDA = 8;
 	var LDF = 8;
 	var M = 4;
@@ -95,7 +88,7 @@ test( 'zlaqps: basic 4x3 NB=2', function t() {
 });
 
 test( 'zlaqps: 6x4 NB=3', function t() {
-	var tc = findCase( 'rect_6x4_nb3' );
+	var tc = rect_6x4_nb3;
 	var LDA = 8;
 	var LDF = 8;
 	var M = 6;
@@ -125,7 +118,7 @@ test( 'zlaqps: 6x4 NB=3', function t() {
 });
 
 test( 'zlaqps: NB=1', function t() {
-	var tc = findCase( 'nb_1' );
+	var tc = nb_1;
 	var LDA = 8;
 	var LDF = 8;
 	var M = 3;
@@ -155,7 +148,7 @@ test( 'zlaqps: NB=1', function t() {
 });
 
 test( 'zlaqps: collinear columns (norm recomputation)', function t() {
-	var tc = findCase( 'collinear_norm_recomp' );
+	var tc = collinear_norm_recomp;
 	var LDA = 8;
 	var LDF = 8;
 	var M = 6;
@@ -183,7 +176,7 @@ test( 'zlaqps: collinear columns (norm recomputation)', function t() {
 });
 
 test( 'zlaqps: offset=1', function t() {
-	var tc = findCase( 'offset_1' );
+	var tc = offset_1;
 	var LDA = 8;
 	var LDF = 8;
 	var M = 4;

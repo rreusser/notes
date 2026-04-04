@@ -47,11 +47,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dggbak;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dggbak = main;
+} else {
+	dggbak = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dggbak;
 
 // exports: { "ndarray": "dggbak.ndarray" }

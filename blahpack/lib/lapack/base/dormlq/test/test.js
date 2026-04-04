@@ -4,25 +4,28 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dormlq = require( './../lib/base.js' );
 var dgelqf = require( '../../dgelqf/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dormlq.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var lq_factored = require( './fixtures/lq_factored.json' );
+var left_notrans_5x5 = require( './fixtures/left_notrans_5x5.json' );
+var left_trans_5x5 = require( './fixtures/left_trans_5x5.json' );
+var right_notrans_5x5 = require( './fixtures/right_notrans_5x5.json' );
+var right_trans_5x5 = require( './fixtures/right_trans_5x5.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var k_zero = require( './fixtures/k_zero.json' );
+var right_trans_rect = require( './fixtures/right_trans_rect.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var left_notrans_blocked = require( './fixtures/left_notrans_blocked.json' );
+var left_trans_blocked = require( './fixtures/left_trans_blocked.json' );
+var right_notrans_blocked = require( './fixtures/right_notrans_blocked.json' );
+var right_trans_blocked = require( './fixtures/right_trans_blocked.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -97,18 +100,17 @@ function extractC( C, M, N, LDC, fixtureLen ) {
 * This avoids mismatches due to blocking differences between JS and Fortran dgelqf.
 */
 function loadBigLQ( NBIG ) {
-	var tc = findCase( 'lq_factored' );
+	var tc = lq_factored;
 	var A = new Float64Array( tc.a );
 	var TAU = new Float64Array( tc.tau );
 	return { A: A, TAU: TAU };
 }
 
-
 // TESTS //
 
 test( 'dormlq: left_notrans_5x5', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'left_notrans_5x5' );
+	var tc = left_notrans_5x5;
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identityN( 5, LDC );
@@ -119,7 +121,7 @@ test( 'dormlq: left_notrans_5x5', function t() {
 
 test( 'dormlq: left_trans_5x5', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'left_trans_5x5' );
+	var tc = left_trans_5x5;
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identityN( 5, LDC );
@@ -130,7 +132,7 @@ test( 'dormlq: left_trans_5x5', function t() {
 
 test( 'dormlq: right_notrans_5x5', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'right_notrans_5x5' );
+	var tc = right_notrans_5x5;
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identityN( 5, LDC );
@@ -141,7 +143,7 @@ test( 'dormlq: right_notrans_5x5', function t() {
 
 test( 'dormlq: right_trans_5x5', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'right_trans_5x5' );
+	var tc = right_trans_5x5;
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = identityN( 5, LDC );
@@ -152,7 +154,7 @@ test( 'dormlq: right_trans_5x5', function t() {
 
 test( 'dormlq: m_zero', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var lq = computeLQ();
 	var C = new Float64Array( 36 );
 	var info = dormlq('left', 'no-transpose', 0, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
@@ -161,7 +163,7 @@ test( 'dormlq: m_zero', function t() {
 
 test( 'dormlq: n_zero', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var lq = computeLQ();
 	var C = new Float64Array( 36 );
 	var info = dormlq('left', 'no-transpose', 5, 0, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
@@ -170,7 +172,7 @@ test( 'dormlq: n_zero', function t() {
 
 test( 'dormlq: k_zero', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'k_zero' );
+	var tc = k_zero;
 	var lq = computeLQ();
 	var C = new Float64Array( 36 );
 	var info = dormlq('left', 'no-transpose', 5, 5, 0, lq.A, 1, 6, 0, lq.TAU, 1, 0, C, 1, 6, 0, WORK, 1, 0 );
@@ -179,7 +181,7 @@ test( 'dormlq: k_zero', function t() {
 
 test( 'dormlq: right_trans_rect', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'right_trans_rect' );
+	var tc = right_trans_rect;
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = new Float64Array( 36 );
@@ -196,7 +198,7 @@ test( 'dormlq: right_trans_rect', function t() {
 
 test( 'dormlq: left_notrans_rect', function t() {
 	var WORK = new Float64Array( 200 );
-	var tc = findCase( 'left_notrans_rect' );
+	var tc = left_notrans_rect;
 	var lq = computeLQ();
 	var LDC = 6;
 	var C = new Float64Array( 36 );
@@ -213,7 +215,7 @@ test( 'dormlq: left_notrans_blocked', function t() {
 	var NBIG = 50;
 	var KBIG = 35;
 	var WORK = new Float64Array( 10000 );
-	var tc = findCase( 'left_notrans_blocked' );
+	var tc = left_notrans_blocked;
 	var lq = loadBigLQ( NBIG );
 	var C = identityN( NBIG, NBIG );
 	var info = dormlq('left', 'no-transpose', NBIG, NBIG, KBIG, lq.A, 1, NBIG, 0, lq.TAU, 1, 0, C, 1, NBIG, 0, WORK, 1, 0 );
@@ -225,7 +227,7 @@ test( 'dormlq: left_trans_blocked', function t() {
 	var NBIG = 50;
 	var KBIG = 35;
 	var WORK = new Float64Array( 10000 );
-	var tc = findCase( 'left_trans_blocked' );
+	var tc = left_trans_blocked;
 	var lq = loadBigLQ( NBIG );
 	var C = identityN( NBIG, NBIG );
 	var info = dormlq('left', 'transpose', NBIG, NBIG, KBIG, lq.A, 1, NBIG, 0, lq.TAU, 1, 0, C, 1, NBIG, 0, WORK, 1, 0 );
@@ -237,7 +239,7 @@ test( 'dormlq: right_notrans_blocked', function t() {
 	var NBIG = 50;
 	var KBIG = 35;
 	var WORK = new Float64Array( 10000 );
-	var tc = findCase( 'right_notrans_blocked' );
+	var tc = right_notrans_blocked;
 	var lq = loadBigLQ( NBIG );
 	var C = identityN( NBIG, NBIG );
 	var info = dormlq('right', 'no-transpose', NBIG, NBIG, KBIG, lq.A, 1, NBIG, 0, lq.TAU, 1, 0, C, 1, NBIG, 0, WORK, 1, 0 );
@@ -249,7 +251,7 @@ test( 'dormlq: right_trans_blocked', function t() {
 	var NBIG = 50;
 	var KBIG = 35;
 	var WORK = new Float64Array( 10000 );
-	var tc = findCase( 'right_trans_blocked' );
+	var tc = right_trans_blocked;
 	var lq = loadBigLQ( NBIG );
 	var C = identityN( NBIG, NBIG );
 	var info = dormlq('right', 'transpose', NBIG, NBIG, KBIG, lq.A, 1, NBIG, 0, lq.TAU, 1, 0, C, 1, NBIG, 0, WORK, 1, 0 );

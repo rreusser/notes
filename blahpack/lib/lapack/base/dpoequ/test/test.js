@@ -2,39 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpoequ = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpoequ.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var diagonal_varied = require( './fixtures/diagonal_varied.json' );
+var non_positive_diag = require( './fixtures/non_positive_diag.json' );
+var zero_diag = require( './fixtures/zero_diag.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var identity = require( './fixtures/identity.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +68,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dpoequ: basic', function t() {
@@ -92,7 +76,7 @@ test( 'dpoequ: basic', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'basic' );
+	tc = basic;
 	A = new Float64Array([ 4.0, 1.0, 0.5, 1.0, 9.0, 1.0, 0.5, 1.0, 16.0 ]);
 	s = new Float64Array( 3 );
 	result = dpoequ( 3, A, 1, 3, 0, s, 1, 0 );
@@ -108,7 +92,7 @@ test( 'dpoequ: diagonal_varied', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'diagonal_varied' );
+	tc = diagonal_varied;
 	A = new Float64Array([ 100.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.25 ]);
 	s = new Float64Array( 3 );
 	result = dpoequ( 3, A, 1, 3, 0, s, 1, 0 );
@@ -124,7 +108,7 @@ test( 'dpoequ: non_positive_diag', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'non_positive_diag' );
+	tc = non_positive_diag;
 	A = new Float64Array([ 4.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 9.0 ]);
 	s = new Float64Array( 3 );
 	result = dpoequ( 3, A, 1, 3, 0, s, 1, 0 );
@@ -137,7 +121,7 @@ test( 'dpoequ: zero_diag', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'zero_diag' );
+	tc = zero_diag;
 	A = new Float64Array([ 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 9.0 ]);
 	s = new Float64Array( 3 );
 	result = dpoequ( 3, A, 1, 3, 0, s, 1, 0 );
@@ -150,7 +134,7 @@ test( 'dpoequ: n_zero', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	s = new Float64Array( 1 );
 	result = dpoequ( 0, A, 1, 1, 0, s, 1, 0 );
@@ -165,7 +149,7 @@ test( 'dpoequ: n_one', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Float64Array([ 25.0 ]);
 	s = new Float64Array( 1 );
 	result = dpoequ( 1, A, 1, 1, 0, s, 1, 0 );
@@ -181,7 +165,7 @@ test( 'dpoequ: identity', function t() {
 	var A;
 	var s;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	A = new Float64Array([ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ]);
 	s = new Float64Array( 3 );
 	result = dpoequ( 3, A, 1, 3, 0, s, 1, 0 );

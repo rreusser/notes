@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -15,29 +12,17 @@ var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zgesv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgesv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var solve_3x3 = require( './fixtures/solve_3x3.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var singular = require( './fixtures/singular.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var _4x4 = require( './fixtures/4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -123,7 +108,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgesv: solve_3x3', function t() {
@@ -138,7 +122,7 @@ test( 'zgesv: solve_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'solve_3x3' );
+	tc = solve_3x3;
 	A = new Complex128Array([
 		2.0,
 		1.0,
@@ -185,7 +169,7 @@ test( 'zgesv: multi_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	A = new Complex128Array([
 		3.0,
 		1.0,
@@ -224,7 +208,7 @@ test( 'zgesv: singular', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	A = new Complex128Array([
 		1.0,
 		0.0,
@@ -260,7 +244,7 @@ test( 'zgesv: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
@@ -275,7 +259,7 @@ test( 'zgesv: nrhs_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Complex128Array( [ 5.0, 1.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
@@ -291,7 +275,7 @@ test( 'zgesv: 1x1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Complex128Array( [ 5.0, 2.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( [ 10.0, 4.0 ] );
@@ -314,7 +298,7 @@ test( 'zgesv: 4x4', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '4x4' );
+	tc = _4x4;
 	A = new Complex128Array([
 		10.0,
 		1.0,

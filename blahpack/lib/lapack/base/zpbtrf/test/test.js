@@ -6,25 +6,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpbtrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpbtrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_3x3_kd1 = require( './fixtures/upper_3x3_kd1.json' );
+var lower_3x3_kd1 = require( './fixtures/lower_3x3_kd1.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_hpd = require( './fixtures/not_hpd.json' );
+var upper_blocked = require( './fixtures/upper_blocked.json' );
+var lower_blocked = require( './fixtures/lower_blocked.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -39,11 +34,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpbtrf: upper_3x3_kd1 (UPLO=U, N=3, KD=1, unblocked)', function t() {
-	var tc = findCase( 'upper_3x3_kd1' );
+	var tc = upper_3x3_kd1;
 	var AB = new Complex128Array( [
 		0, 0, 4, 0,
 		1, 1, 5, 0,
@@ -55,7 +49,7 @@ test( 'zpbtrf: upper_3x3_kd1 (UPLO=U, N=3, KD=1, unblocked)', function t() {
 });
 
 test( 'zpbtrf: lower_3x3_kd1 (UPLO=L, N=3, KD=1, unblocked)', function t() {
-	var tc = findCase( 'lower_3x3_kd1' );
+	var tc = lower_3x3_kd1;
 	var AB = new Complex128Array( [
 		4, 0, 1, -1,
 		5, 0, 2, 1,
@@ -73,7 +67,7 @@ test( 'zpbtrf: n_zero (N=0 quick return)', function t() {
 });
 
 test( 'zpbtrf: n_one (N=1)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var AB = new Complex128Array( [ 9, 0 ] );
 	var info = zpbtrf( 'upper', 1, 0, AB, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -81,7 +75,7 @@ test( 'zpbtrf: n_one (N=1)', function t() {
 });
 
 test( 'zpbtrf: not_hpd (not positive definite)', function t() {
-	var tc = findCase( 'not_hpd' );
+	var tc = not_hpd;
 	var AB = new Complex128Array( [
 		0, 0, 1, 0,
 		2, 1, 1, 0
@@ -91,7 +85,7 @@ test( 'zpbtrf: not_hpd (not positive definite)', function t() {
 });
 
 test( 'zpbtrf: upper_blocked (UPLO=U, N=100, KD=33, blocked path)', function t() {
-	var tc = findCase( 'upper_blocked' );
+	var tc = upper_blocked;
 	var N = 100;
 	var KD = 33;
 	var LDAB = KD + 1;
@@ -119,7 +113,7 @@ test( 'zpbtrf: upper_blocked (UPLO=U, N=100, KD=33, blocked path)', function t()
 });
 
 test( 'zpbtrf: lower_blocked (UPLO=L, N=100, KD=33, blocked path)', function t() {
-	var tc = findCase( 'lower_blocked' );
+	var tc = lower_blocked;
 	var N = 100;
 	var KD = 33;
 	var LDAB = KD + 1;

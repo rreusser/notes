@@ -9,23 +9,17 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlaqhe = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqhe.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_equil = require( './fixtures/upper_equil.json' );
+var lower_equil = require( './fixtures/lower_equil.json' );
+var no_equil = require( './fixtures/no_equil.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -48,11 +42,10 @@ function makeA3() {
 	return new Complex128Array( [ 4, 0, 1, -1, 0, 0, 1, 1, 9, 0, 1, 0, 0, 0, 1, 0, 16, 0 ] );
 }
 
-
 // TESTS //
 
 test( 'zlaqhe: upper_equil', function t() {
-	var tc = findCase( 'upper_equil' );
+	var tc = upper_equil;
 	var A = makeA3();
 	var s = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
 	var equed = zlaqhe( 'upper', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
@@ -61,7 +54,7 @@ test( 'zlaqhe: upper_equil', function t() {
 });
 
 test( 'zlaqhe: lower_equil', function t() {
-	var tc = findCase( 'lower_equil' );
+	var tc = lower_equil;
 	var A = makeA3();
 	var s = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
 	var equed = zlaqhe( 'lower', 3, A, 1, 3, 0, s, 1, 0, 0.05, 16.0 );
@@ -70,7 +63,7 @@ test( 'zlaqhe: lower_equil', function t() {
 });
 
 test( 'zlaqhe: no_equil', function t() {
-	var tc = findCase( 'no_equil' );
+	var tc = no_equil;
 	var A = makeA3();
 	var equed = zlaqhe( 'upper', 3, A, 1, 3, 0, new Float64Array( [ 1, 1, 1 ] ), 1, 0, 1.0, 16.0 );
 	assert.equal( equed, 'none', 'equed' );
@@ -79,14 +72,14 @@ test( 'zlaqhe: no_equil', function t() {
 });
 
 test( 'zlaqhe: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var equed = zlaqhe( 'upper', 0, A, 1, 1, 0, new Float64Array( 1 ), 1, 0, 1.0, 1.0 );
 	assert.equal( equed, 'none', 'equed' );
 });
 
 test( 'zlaqhe: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Complex128Array( [ 4, 0 ] );
 	var equed = zlaqhe( 'upper', 1, A, 1, 1, 0, new Float64Array( [ 0.5 ] ), 1, 0, 0.01, 4.0 );
 	assert.equal( equed, 'yes', 'equed' );

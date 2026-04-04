@@ -5,7 +5,6 @@
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -14,30 +13,17 @@ var zgbtrf = require( './../../zgbtrf/lib/base.js' );
 var zgbtrs = require( './../../zgbtrs/lib/base.js' );
 var zgbrfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgbrfs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var tridiag_notrans = require( './fixtures/tridiag_notrans.json' );
+var tridiag_conjtrans = require( './fixtures/tridiag_conjtrans.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var kl2_ku1 = require( './fixtures/kl2_ku1.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts two values are close.
@@ -151,7 +137,6 @@ function copyBandToFactored( kl, ku, n, abLdab, ab, afbLdab ) {
 	return afb;
 }
 
-
 // TESTS //
 
 test( 'zgbrfs: tridiag_notrans (KL=1, KU=1, N=4)', function t() {
@@ -170,7 +155,7 @@ test( 'zgbrfs: tridiag_notrans (KL=1, KU=1, N=4)', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'tridiag_notrans' );
+	tc = tridiag_notrans;
 	n = 4;
 
 	ab = complexBandedMatrix( 6, n, [
@@ -226,7 +211,7 @@ test( 'zgbrfs: tridiag_conjtrans (KL=1, KU=1, N=4)', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'tridiag_conjtrans' );
+	tc = tridiag_conjtrans;
 	n = 4;
 
 	ab = complexBandedMatrix( 6, n, [
@@ -283,7 +268,7 @@ test( 'zgbrfs: multi_rhs (KL=1, KU=1, N=4, NRHS=2)', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	n = 4;
 	nrhs = 2;
 
@@ -341,7 +326,7 @@ test( 'zgbrfs: n_zero', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ab = new Complex128Array( 1 );
 	afb = new Complex128Array( 1 );
 	ipiv = new Int32Array( 0 );
@@ -371,7 +356,7 @@ test( 'zgbrfs: nrhs_zero', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	ab = new Complex128Array( 1 );
 	afb = new Complex128Array( 1 );
 	ipiv = new Int32Array( 4 );
@@ -402,7 +387,7 @@ test( 'zgbrfs: kl2_ku1 (KL=2, KU=1, N=4)', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'kl2_ku1' );
+	tc = kl2_ku1;
 	n = 4;
 
 	ab = complexBandedMatrix( 6, n, [
@@ -459,7 +444,7 @@ test( 'zgbrfs: one_by_one (N=1, KL=0, KU=0)', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 
 	ab = new Complex128Array( 6 );
 	abv = reinterpret( ab, 0 );

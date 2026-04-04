@@ -4,23 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dsyev = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsyev.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var jobz_v_uplo_l_4x4 = require( './fixtures/jobz_v_uplo_l_4x4.json' );
+var jobz_v_uplo_u_4x4 = require( './fixtures/jobz_v_uplo_u_4x4.json' );
+var jobz_n_uplo_l_4x4 = require( './fixtures/jobz_n_uplo_l_4x4.json' );
+var jobz_n_uplo_u_4x4 = require( './fixtures/jobz_n_uplo_u_4x4.json' );
+var jobz_v_uplo_l_3x3 = require( './fixtures/jobz_v_uplo_l_3x3.json' );
+var jobz_v_uplo_u_3x3 = require( './fixtures/jobz_v_uplo_u_3x3.json' );
+var n1_jobz_v = require( './fixtures/n1_jobz_v.json' );
+var n1_jobz_n = require( './fixtures/n1_jobz_n.json' );
+var n0 = require( './fixtures/n0.json' );
+var diagonal_4x4 = require( './fixtures/diagonal_4x4.json' );
+var jobz_n_uplo_l_3x3 = require( './fixtures/jobz_n_uplo_l_3x3.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -127,11 +127,10 @@ function matrix3x3() {
 	]);
 }
 
-
 // TESTS //
 
 test( 'dsyev: JOBZ=V, UPLO=L, 4x4 SPD — eigenvalues + eigenvectors', function t() {
-	var tc = findCase( 'jobz_v_uplo_l_4x4' );
+	var tc = jobz_v_uplo_l_4x4;
 	var A_orig = matrix4x4();
 	var A = new Float64Array( A_orig );
 	var W = new Float64Array( 4 );
@@ -147,7 +146,7 @@ test( 'dsyev: JOBZ=V, UPLO=L, 4x4 SPD — eigenvalues + eigenvectors', function 
 });
 
 test( 'dsyev: JOBZ=V, UPLO=U, 4x4 SPD — eigenvalues + eigenvectors', function t() {
-	var tc = findCase( 'jobz_v_uplo_u_4x4' );
+	var tc = jobz_v_uplo_u_4x4;
 	var A_orig = matrix4x4();
 	var A = new Float64Array( A_orig );
 	var W = new Float64Array( 4 );
@@ -163,7 +162,7 @@ test( 'dsyev: JOBZ=V, UPLO=U, 4x4 SPD — eigenvalues + eigenvectors', function 
 });
 
 test( 'dsyev: JOBZ=N, UPLO=L, 4x4 — eigenvalues only', function t() {
-	var tc = findCase( 'jobz_n_uplo_l_4x4' );
+	var tc = jobz_n_uplo_l_4x4;
 	var A = matrix4x4();
 	var W = new Float64Array( 4 );
 	var WORK = new Float64Array( 200 );
@@ -176,7 +175,7 @@ test( 'dsyev: JOBZ=N, UPLO=L, 4x4 — eigenvalues only', function t() {
 });
 
 test( 'dsyev: JOBZ=N, UPLO=U, 4x4 — eigenvalues only', function t() {
-	var tc = findCase( 'jobz_n_uplo_u_4x4' );
+	var tc = jobz_n_uplo_u_4x4;
 	var A = matrix4x4();
 	var W = new Float64Array( 4 );
 	var WORK = new Float64Array( 200 );
@@ -189,7 +188,7 @@ test( 'dsyev: JOBZ=N, UPLO=U, 4x4 — eigenvalues only', function t() {
 });
 
 test( 'dsyev: JOBZ=V, UPLO=L, 3x3 — eigenvalues + eigenvectors', function t() {
-	var tc = findCase( 'jobz_v_uplo_l_3x3' );
+	var tc = jobz_v_uplo_l_3x3;
 	var A_orig = matrix3x3();
 	var A = new Float64Array( A_orig );
 	var W = new Float64Array( 3 );
@@ -205,7 +204,7 @@ test( 'dsyev: JOBZ=V, UPLO=L, 3x3 — eigenvalues + eigenvectors', function t() 
 });
 
 test( 'dsyev: JOBZ=V, UPLO=U, 3x3 — eigenvalues + eigenvectors', function t() {
-	var tc = findCase( 'jobz_v_uplo_u_3x3' );
+	var tc = jobz_v_uplo_u_3x3;
 	var A_orig = matrix3x3();
 	var A = new Float64Array( A_orig );
 	var W = new Float64Array( 3 );
@@ -221,7 +220,7 @@ test( 'dsyev: JOBZ=V, UPLO=U, 3x3 — eigenvalues + eigenvectors', function t() 
 });
 
 test( 'dsyev: N=1, JOBZ=V — single eigenvalue', function t() {
-	var tc = findCase( 'n1_jobz_v' );
+	var tc = n1_jobz_v;
 	var A = new Float64Array( [ 3.5 ] );
 	var W = new Float64Array( 1 );
 	var WORK = new Float64Array( 10 );
@@ -235,7 +234,7 @@ test( 'dsyev: N=1, JOBZ=V — single eigenvalue', function t() {
 });
 
 test( 'dsyev: N=1, JOBZ=N — single eigenvalue', function t() {
-	var tc = findCase( 'n1_jobz_n' );
+	var tc = n1_jobz_n;
 	var A = new Float64Array( [ 7.25 ] );
 	var W = new Float64Array( 1 );
 	var WORK = new Float64Array( 10 );
@@ -248,7 +247,7 @@ test( 'dsyev: N=1, JOBZ=N — single eigenvalue', function t() {
 });
 
 test( 'dsyev: N=0 — quick return', function t() {
-	var tc = findCase( 'n0' );
+	var tc = n0;
 	var A = new Float64Array( 1 );
 	var W = new Float64Array( 1 );
 	var WORK = new Float64Array( 1 );
@@ -260,7 +259,7 @@ test( 'dsyev: N=0 — quick return', function t() {
 });
 
 test( 'dsyev: JOBZ=V, UPLO=L, diagonal 4x4 — sorted eigenvalues', function t() {
-	var tc = findCase( 'diagonal_4x4' );
+	var tc = diagonal_4x4;
 	var A_orig = colMajor([
 		[ 3.0, 0.0, 0.0, 0.0 ],
 		[ 0.0, 1.0, 0.0, 0.0 ],
@@ -281,7 +280,7 @@ test( 'dsyev: JOBZ=V, UPLO=L, diagonal 4x4 — sorted eigenvalues', function t()
 });
 
 test( 'dsyev: JOBZ=N, UPLO=L, 3x3 — eigenvalues only', function t() {
-	var tc = findCase( 'jobz_n_uplo_l_3x3' );
+	var tc = jobz_n_uplo_l_3x3;
 	var A = matrix3x3();
 	var W = new Float64Array( 3 );
 	var WORK = new Float64Array( 200 );

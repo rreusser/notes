@@ -1,0 +1,6 @@
+{
+  "name": "singular_matrix",
+  "info": 2,
+  "rcond": 0,
+  "rpvgrw": 1
+}

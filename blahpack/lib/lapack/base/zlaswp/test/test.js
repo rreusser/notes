@@ -2,25 +2,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaswp = require( './../lib' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaswp.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_forward = require( './fixtures/basic_forward.json' );
+var no_swap = require( './fixtures/no_swap.json' );
+var reverse_pivots = require( './fixtures/reverse_pivots.json' );
+var incx_zero = require( './fixtures/incx_zero.json' );
+var two_swaps = require( './fixtures/two_swaps.json' );
+var block_tiled = require( './fixtures/block_tiled.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, msg ) {
 	var i;
@@ -29,7 +24,6 @@ function assertArrayClose( actual, expected, msg ) {
 		assert.equal( actual[i], expected[i], msg + '[' + i + ']' );
 	}
 }
-
 
 // TESTS //
 
@@ -45,7 +39,7 @@ test( 'zlaswp: attached to the main export is an `ndarray` method', function t()
 // Fortran uses 1-based, so we convert in the test inputs.
 
 test( 'zlaswp.ndarray performs forward row interchanges', function t() {
-	var tc = findCase( 'basic_forward' );
+	var tc = basic_forward;
 	// A = [(1+2i) (7+8i); (3+4i) (9+10i); (5+6i) (11+12i)] col-major (3x2)
 	// Fortran: ipiv=[3,2] k1=1 k2=2 => 0-based: ipiv=[2,1] k1=0 k2=1
 	var a = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
@@ -56,7 +50,7 @@ test( 'zlaswp.ndarray performs forward row interchanges', function t() {
 });
 
 test( 'zlaswp.ndarray is a no-op when ipiv(k) == k', function t() {
-	var tc = findCase( 'no_swap' );
+	var tc = no_swap;
 	var a = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
 	var ipiv = new Int32Array( [ 0, 1 ] );
 	zlaswp.ndarray( 2, a, 1, 3, 0, 0, 1, ipiv, 1, 0, 1 );
@@ -65,7 +59,7 @@ test( 'zlaswp.ndarray is a no-op when ipiv(k) == k', function t() {
 });
 
 test( 'zlaswp.ndarray performs reverse row interchanges (incx=-1)', function t() {
-	var tc = findCase( 'reverse_pivots' );
+	var tc = reverse_pivots;
 	// Same matrix, Fortran ipiv=[3,2] with incx=-1
 	// 0-based: ipiv=[2,1], k1=1 k2=0, incx=-1
 	var a = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
@@ -76,7 +70,7 @@ test( 'zlaswp.ndarray performs reverse row interchanges (incx=-1)', function t()
 });
 
 test( 'zlaswp.ndarray is a no-op when incx=0', function t() {
-	var tc = findCase( 'incx_zero' );
+	var tc = incx_zero;
 	var a = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
 	var ipiv = new Int32Array( [ 2 ] );
 	zlaswp.ndarray( 2, a, 1, 3, 0, 0, 1, ipiv, 1, 0, 0 );
@@ -85,7 +79,7 @@ test( 'zlaswp.ndarray is a no-op when incx=0', function t() {
 });
 
 test( 'zlaswp.ndarray applies sequential swaps', function t() {
-	var tc = findCase( 'two_swaps' );
+	var tc = two_swaps;
 	// 3x1 complex matrix: (10+1i), (20+2i), (30+3i)
 	// Fortran: ipiv=[2,3] k1=1 k2=2 => 0-based: ipiv=[1,2] k1=0 k2=1
 	var a = new Complex128Array( [ 10, 1, 20, 2, 30, 3 ] );
@@ -96,7 +90,7 @@ test( 'zlaswp.ndarray applies sequential swaps', function t() {
 });
 
 test( 'zlaswp.ndarray exercises block-tiled path (N=40 > 32 columns)', function t() {
-	var tc = findCase( 'block_tiled' );
+	var tc = block_tiled;
 	// 3x40 complex matrix, col-major: a(i) = cmplx(i, i+0.5) for i=1..120
 	var data = [];
 	var i;

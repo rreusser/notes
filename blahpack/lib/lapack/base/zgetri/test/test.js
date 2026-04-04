@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -16,29 +13,14 @@ var Int32Array = require( '@stdlib/array/int32' );
 var zgetrf = require( '../../zgetrf/lib/base.js' );
 var zgetri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgetri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3_inverse = require( './fixtures/3x3_inverse.json' );
+var _4x4_inverse = require( './fixtures/4x4_inverse.json' );
+var n1 = require( './fixtures/n1.json' );
+var _3x3_pivots_inverse = require( './fixtures/3x3_pivots_inverse.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -138,7 +120,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgetri: 3x3 inverse', function t() {
@@ -151,7 +132,7 @@ test( 'zgetri: 3x3 inverse', function t() {
 	var A;
 	var C;
 
-	tc = findCase( '3x3_inverse' );
+	tc = _3x3_inverse;
 	Aorig = new Complex128Array([
 		2,
 		1,
@@ -195,7 +176,7 @@ test( 'zgetri: 4x4 inverse', function t() {
 	var A;
 	var C;
 
-	tc = findCase( '4x4_inverse' );
+	tc = _4x4_inverse;
 	Aorig = new Complex128Array([
 		5,
 		1,
@@ -251,7 +232,7 @@ test( 'zgetri: N=1 edge case', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	A = new Complex128Array( [ 3, 4 ] );
 	IPIV = new Int32Array( 1 );
 	WORK = new Complex128Array( 4 );
@@ -286,7 +267,7 @@ test( 'zgetri: 3x3 different pivots', function t() {
 	var A;
 	var C;
 
-	tc = findCase( '3x3_pivots_inverse' );
+	tc = _3x3_pivots_inverse;
 	Aorig = new Complex128Array([
 		1,
 		0,

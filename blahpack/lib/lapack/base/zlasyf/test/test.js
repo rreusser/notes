@@ -4,27 +4,31 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Int32Array = require( '@stdlib/array/int32' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlasyf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
 var MAXN = 10; // must match Fortran test LDA
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlasyf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
 
+// FIXTURES //
+
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_3x3_nb2 = require( './fixtures/upper_3x3_nb2.json' );
+var upper_1x1 = require( './fixtures/upper_1x1.json' );
+var upper_2x2_pivot = require( './fixtures/upper_2x2_pivot.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_8x8_nb4 = require( './fixtures/upper_8x8_nb4.json' );
+var lower_8x8_nb4 = require( './fixtures/lower_8x8_nb4.json' );
+var upper_6x6_nb2 = require( './fixtures/upper_6x6_nb2.json' );
+var lower_6x6_nb2 = require( './fixtures/lower_6x6_nb2.json' );
+var upper_5x5_2x2pivot = require( './fixtures/upper_5x5_2x2pivot.json' );
+var lower_5x5_2x2pivot = require( './fixtures/lower_5x5_2x2pivot.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -95,7 +99,6 @@ function fillLower( Av, N, entries ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zlasyf: main export is a function', function t() {
@@ -103,7 +106,7 @@ test( 'zlasyf: main export is a function', function t() {
 });
 
 test( 'zlasyf: 4x4 upper, nb=4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var N = 4;
 	var nb = 4;
 	var A = new Complex128Array( N * N );
@@ -132,7 +135,7 @@ test( 'zlasyf: 4x4 upper, nb=4', function t() {
 });
 
 test( 'zlasyf: 4x4 lower, nb=4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var N = 4;
 	var nb = 4;
 	var A = new Complex128Array( N * N );
@@ -163,7 +166,7 @@ test( 'zlasyf: 4x4 lower, nb=4', function t() {
 });
 
 test( 'zlasyf: 3x3 upper, nb=2 (partial panel)', function t() {
-	var tc = findCase( 'upper_3x3_nb2' );
+	var tc = upper_3x3_nb2;
 	var N = 3;
 	var nb = 2;
 	var A = new Complex128Array( N * N );
@@ -191,7 +194,7 @@ test( 'zlasyf: 3x3 upper, nb=2 (partial panel)', function t() {
 });
 
 test( 'zlasyf: 1x1 upper', function t() {
-	var tc = findCase( 'upper_1x1' );
+	var tc = upper_1x1;
 	var expectedA;
 	var result;
 
@@ -207,7 +210,7 @@ test( 'zlasyf: 1x1 upper', function t() {
 });
 
 test( 'zlasyf: 2x2 upper with pivot', function t() {
-	var tc = findCase( 'upper_2x2_pivot' );
+	var tc = upper_2x2_pivot;
 	var N = 2;
 	var A = new Complex128Array( N * N );
 	var Av = reinterpret( A, 0 );
@@ -234,7 +237,7 @@ test( 'zlasyf: 2x2 upper with pivot', function t() {
 });
 
 test( 'zlasyf: 3x3 lower', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	var N = 3;
 	var nb = 3;
 	var A = new Complex128Array( N * N );
@@ -264,7 +267,7 @@ test( 'zlasyf: 3x3 lower', function t() {
 });
 
 test( 'zlasyf: 8x8 upper, nb=4 (blocked loop)', function t() {
-	var tc = findCase( 'upper_8x8_nb4' );
+	var tc = upper_8x8_nb4;
 	var N = 8;
 	var nb = 4;
 	var A = new Complex128Array( N * N );
@@ -299,7 +302,7 @@ test( 'zlasyf: 8x8 upper, nb=4 (blocked loop)', function t() {
 });
 
 test( 'zlasyf: 8x8 lower, nb=4 (blocked loop)', function t() {
-	var tc = findCase( 'lower_8x8_nb4' );
+	var tc = lower_8x8_nb4;
 	var N = 8;
 	var nb = 4;
 	var A = new Complex128Array( N * N );
@@ -334,7 +337,7 @@ test( 'zlasyf: 8x8 lower, nb=4 (blocked loop)', function t() {
 });
 
 test( 'zlasyf: 6x6 upper, nb=2', function t() {
-	var tc = findCase( 'upper_6x6_nb2' );
+	var tc = upper_6x6_nb2;
 	var N = 6;
 	var nb = 2;
 	var A = new Complex128Array( N * N );
@@ -367,7 +370,7 @@ test( 'zlasyf: 6x6 upper, nb=2', function t() {
 });
 
 test( 'zlasyf: 6x6 lower, nb=2', function t() {
-	var tc = findCase( 'lower_6x6_nb2' );
+	var tc = lower_6x6_nb2;
 	var N = 6;
 	var nb = 2;
 	var A = new Complex128Array( N * N );
@@ -400,7 +403,7 @@ test( 'zlasyf: 6x6 lower, nb=2', function t() {
 });
 
 test( 'zlasyf: 5x5 upper with 2x2 pivot', function t() {
-	var tc = findCase( 'upper_5x5_2x2pivot' );
+	var tc = upper_5x5_2x2pivot;
 	var N = 5;
 	var nb = 5;
 	var A = new Complex128Array( N * N );
@@ -432,7 +435,7 @@ test( 'zlasyf: 5x5 upper with 2x2 pivot', function t() {
 });
 
 test( 'zlasyf: 5x5 lower with 2x2 pivot', function t() {
-	var tc = findCase( 'lower_5x5_2x2pivot' );
+	var tc = lower_5x5_2x2pivot;
 	var N = 5;
 	var nb = 5;
 	var A = new Complex128Array( N * N );

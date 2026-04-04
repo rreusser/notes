@@ -2,39 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlasdt = require( './../lib' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasdt.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n15_msub6 = require( './fixtures/n15_msub6.json' );
+var n1_msub6 = require( './fixtures/n1_msub6.json' );
+var n2_msub6 = require( './fixtures/n2_msub6.json' );
+var n31_msub6 = require( './fixtures/n31_msub6.json' );
+var n63_msub12 = require( './fixtures/n63_msub12.json' );
+var n7_msub2 = require( './fixtures/n7_msub2.json' );
+var n100_msub25 = require( './fixtures/n100_msub25.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Helper to run dlasdt and compare against Fortran fixture.
@@ -87,7 +72,6 @@ function runTest( tc ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlasdt: main export is a function', function t() {
@@ -99,31 +83,31 @@ test( 'dlasdt: attached to the main export is an `ndarray` method', function t()
 });
 
 test( 'dlasdt: n15_msub6', function t() {
-	runTest( findCase( 'n15_msub6' ) );
+	runTest( n15_msub6 );
 });
 
 test( 'dlasdt: n1_msub6', function t() {
-	runTest( findCase( 'n1_msub6' ) );
+	runTest( n1_msub6 );
 });
 
 test( 'dlasdt: n2_msub6', function t() {
-	runTest( findCase( 'n2_msub6' ) );
+	runTest( n2_msub6 );
 });
 
 test( 'dlasdt: n31_msub6', function t() {
-	runTest( findCase( 'n31_msub6' ) );
+	runTest( n31_msub6 );
 });
 
 test( 'dlasdt: n63_msub12', function t() {
-	runTest( findCase( 'n63_msub12' ) );
+	runTest( n63_msub12 );
 });
 
 test( 'dlasdt: n7_msub2', function t() {
-	runTest( findCase( 'n7_msub2' ) );
+	runTest( n7_msub2 );
 });
 
 test( 'dlasdt: n100_msub25', function t() {
-	runTest( findCase( 'n100_msub25' ) );
+	runTest( n100_msub25 );
 });
 
 test( 'dlasdt: non-unit stride', function t() {

@@ -2,40 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dla_porpvgrw = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dla_porpvgrw.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var ncols_0 = require( './fixtures/ncols_0.json' );
+var ncols_1_upper = require( './fixtures/ncols_1_upper.json' );
+var ncols_1_lower = require( './fixtures/ncols_1_lower.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_zero_col = require( './fixtures/upper_zero_col.json' );
+var upper_rpvgrw_lt1 = require( './fixtures/upper_rpvgrw_lt1.json' );
+var lower_rpvgrw_lt1 = require( './fixtures/lower_rpvgrw_lt1.json' );
+var lower_zero_col = require( './fixtures/lower_zero_col.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -95,7 +84,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dla_porpvgrw is a function', function t() {
@@ -121,7 +109,7 @@ test( 'dla_porpvgrw: upper_3x3', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	ncols = 3;
 	lda = 4;
 	A = mat([
@@ -167,7 +155,7 @@ test( 'dla_porpvgrw: lower_3x3', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	ncols = 3;
 	lda = 4;
 	A = mat([
@@ -211,7 +199,7 @@ test( 'dla_porpvgrw: ncols_0', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'ncols_0' );
+	tc = ncols_0;
 	A = new Float64Array( 1 );
 	AF = new Float64Array( 1 );
 	WORK = new Float64Array( 0 );
@@ -226,7 +214,7 @@ test( 'dla_porpvgrw: ncols_1_upper', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'ncols_1_upper' );
+	tc = ncols_1_upper;
 	A = mat([ 9.0 ]);
 	AF = mat([ 3.0 ]);
 	WORK = new Float64Array( 2 );
@@ -242,7 +230,7 @@ test( 'dla_porpvgrw: ncols_1_lower', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'ncols_1_lower' );
+	tc = ncols_1_lower;
 	A = mat([ 9.0 ]);
 	AF = mat([ 3.0 ]);
 	WORK = new Float64Array( 2 );
@@ -261,7 +249,7 @@ test( 'dla_porpvgrw: upper_4x4', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	ncols = 4;
 	lda = 4;
 	A = mat([
@@ -312,7 +300,7 @@ test( 'dla_porpvgrw: lower_4x4', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	ncols = 4;
 	lda = 4;
 	A = mat([
@@ -362,7 +350,7 @@ test( 'dla_porpvgrw: upper_zero_col', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'upper_zero_col' );
+	tc = upper_zero_col;
 	ncols = 3;
 	lda = 4;
 	A = mat([
@@ -408,7 +396,7 @@ test( 'dla_porpvgrw: upper_rpvgrw_lt1', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'upper_rpvgrw_lt1' );
+	tc = upper_rpvgrw_lt1;
 	ncols = 3;
 	lda = 4;
 	A = mat([
@@ -454,7 +442,7 @@ test( 'dla_porpvgrw: lower_rpvgrw_lt1', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'lower_rpvgrw_lt1' );
+	tc = lower_rpvgrw_lt1;
 	ncols = 3;
 	lda = 4;
 	A = mat([
@@ -500,7 +488,7 @@ test( 'dla_porpvgrw: lower_zero_col', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'lower_zero_col' );
+	tc = lower_zero_col;
 	ncols = 3;
 	lda = 4;
 	A = mat([

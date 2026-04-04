@@ -2,41 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zher = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zher.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_stride = require( './fixtures/upper_stride.json' );
+var lower_stride = require( './fixtures/lower_stride.json' );
+var upper_alpha2 = require( './fixtures/upper_alpha2.json' );
+var upper_zeros = require( './fixtures/upper_zeros.json' );
+var lower_zeros = require( './fixtures/lower_zeros.json' );
+var negative_stride = require( './fixtures/negative_stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +74,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zher: upper_basic (UPLO=U, N=2, alpha=1)', function t() {
@@ -94,7 +82,7 @@ test( 'zher: upper_basic (UPLO=U, N=2, alpha=1)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_basic' );
+	tc = upper_basic;
 	A = new Complex128Array([
 		2,
 		0,
@@ -117,7 +105,7 @@ test( 'zher: lower_basic (UPLO=L, N=2, alpha=1)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_basic' );
+	tc = lower_basic;
 	A = new Complex128Array([
 		2,
 		0,
@@ -140,7 +128,7 @@ test( 'zher: n_zero (N=0 quick return)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( [ 99, 88 ] );
 	x = new Complex128Array( 0 );
 	result = zher( 'upper', 0, 1.0, x, 1, 0, A, 1, 1, 0 );
@@ -154,7 +142,7 @@ test( 'zher: alpha_zero (alpha=0 quick return)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'alpha_zero' );
+	tc = alpha_zero;
 	A = new Complex128Array( [ 99, 88 ] );
 	x = new Complex128Array( [ 1, 2 ] );
 	result = zher( 'upper', 1, 0.0, x, 1, 0, A, 1, 1, 0 );
@@ -168,7 +156,7 @@ test( 'zher: n_one (N=1)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Complex128Array( [ 5, 0 ] );
 	x = new Complex128Array( [ 2, 3 ] );
 	result = zher( 'upper', 1, 1.0, x, 1, 0, A, 1, 1, 0 );
@@ -181,7 +169,7 @@ test( 'zher: upper_stride (UPLO=U, N=3, incx=2, alpha=2)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_stride' );
+	tc = upper_stride;
 	A = new Complex128Array([
 		2,
 		0,
@@ -214,7 +202,7 @@ test( 'zher: lower_stride (UPLO=L, N=3, incx=2, alpha=2)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_stride' );
+	tc = lower_stride;
 	A = new Complex128Array([
 		2,
 		0,
@@ -247,7 +235,7 @@ test( 'zher: upper_alpha2 (UPLO=U, N=3, alpha=2)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_alpha2' );
+	tc = upper_alpha2;
 	A = new Complex128Array([
 		1,
 		0,
@@ -280,7 +268,7 @@ test( 'zher: upper_zeros (x has zeros, tests skip branch)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_zeros' );
+	tc = upper_zeros;
 	A = new Complex128Array([
 		1,
 		0.5,
@@ -303,7 +291,7 @@ test( 'zher: lower_zeros (x has zeros, tests skip branch)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_zeros' );
+	tc = lower_zeros;
 	A = new Complex128Array([
 		1,
 		0.5,
@@ -326,7 +314,7 @@ test( 'zher: negative_stride (UPLO=U, N=2, incx=-1)', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'negative_stride' );
+	tc = negative_stride;
 	A = new Complex128Array([
 		2,
 		0,

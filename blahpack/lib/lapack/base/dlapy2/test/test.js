@@ -3,28 +3,17 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var dlapy2 = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlapy2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var basic = require( './fixtures/basic.json' );
+var x_zero = require( './fixtures/x_zero.json' );
+var y_zero = require( './fixtures/y_zero.json' );
+var both_zero = require( './fixtures/both_zero.json' );
+var large = require( './fixtures/large.json' );
+var negative = require( './fixtures/negative.json' );
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -41,32 +30,32 @@ function assertClose( actual, expected, tol, msg ) {
 }
 
 test( 'dlapy2: basic 3,4 -> 5', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	assertClose( dlapy2( 3.0, 4.0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dlapy2: x=0', function t() {
-	var tc = findCase( 'x_zero' );
+	var tc = x_zero;
 	assertClose( dlapy2( 0.0, 5.0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dlapy2: y=0', function t() {
-	var tc = findCase( 'y_zero' );
+	var tc = y_zero;
 	assertClose( dlapy2( 7.0, 0.0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dlapy2: both zero', function t() {
-	var tc = findCase( 'both_zero' );
+	var tc = both_zero;
 	assert.strictEqual( dlapy2( 0.0, 0.0 ), tc.result );
 });
 
 test( 'dlapy2: large values', function t() {
-	var tc = findCase( 'large' );
+	var tc = large;
 	assertClose( dlapy2( 1e+154, 1e+154 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dlapy2: negative values', function t() {
-	var tc = findCase( 'negative' );
+	var tc = negative;
 	assertClose( dlapy2( -3.0, -4.0 ), tc.result, 1e-14, 'result' );
 });
 

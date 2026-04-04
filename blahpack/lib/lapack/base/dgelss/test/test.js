@@ -2,39 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgelss = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgelss.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var overdetermined_full_rank = require( './fixtures/overdetermined_full_rank.json' );
+var overdetermined_rank_deficient = require( './fixtures/overdetermined_rank_deficient.json' );
+var underdetermined = require( './fixtures/underdetermined.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
+var multiple_rhs = require( './fixtures/multiple_rhs.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var overdetermined_tall = require( './fixtures/overdetermined_tall.json' );
+var underdetermined_wide = require( './fixtures/underdetermined_wide.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -105,7 +92,6 @@ function assertResidualSmall( M, N, A, x, b, tol, msg ) {
 	assert.ok( rnorm <= tol * ( bnorm + 1.0 ), msg + ': residual ' + rnorm + ' too large (b norm: ' + bnorm + ')' );
 }
 
-
 // TESTS //
 
 test( 'dgelss: overdetermined full rank (4x2)', function t() {
@@ -118,7 +104,7 @@ test( 'dgelss: overdetermined full rank (4x2)', function t() {
 	var S;
 	var x;
 
-	tc = findCase( 'overdetermined_full_rank' );
+	tc = overdetermined_full_rank;
 	Aorig = new Float64Array( [ 1, 3, 5, 7, 2, 4, 6, 8 ] );
 	A = new Float64Array( Aorig );
 	B = new Float64Array( [ 1, 2, 3, 4 ] );
@@ -141,7 +127,7 @@ test( 'dgelss: overdetermined rank deficient (4x2)', function t() {
 	var S;
 	var x;
 
-	tc = findCase( 'overdetermined_rank_deficient' );
+	tc = overdetermined_rank_deficient;
 	A = new Float64Array( [ 1, 2, 3, 4, 2, 4, 6, 8 ] );
 	B = new Float64Array( [ 1, 2, 3, 4 ] );
 	S = new Float64Array( 2 );
@@ -164,7 +150,7 @@ test( 'dgelss: underdetermined (2x4)', function t() {
 	var S;
 	var x;
 
-	tc = findCase( 'underdetermined' );
+	tc = underdetermined;
 	A = new Float64Array( [ 1, 0, 0, 1, 0, 0, 0, 0 ] );
 	Aorig = new Float64Array( A );
 	B = new Float64Array( [ 1, 2, 0, 0 ] );
@@ -190,7 +176,7 @@ test( 'dgelss: square 3x3', function t() {
 	var S;
 	var x;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	Aorig = new Float64Array( [ 2, 1, 0, 1, 3, 1, 0, 1, 2 ] );
 	A = new Float64Array( Aorig );
 	B = new Float64Array( [ 1, 2, 3 ] );
@@ -218,7 +204,7 @@ test( 'dgelss: multiple RHS (3x3, 2 RHS)', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'multiple_rhs' );
+	tc = multiple_rhs;
 	Aorig = new Float64Array( [ 4, 1, 0, 1, 3, 1, 0, 1, 4 ] );
 	A = new Float64Array( Aorig );
 	B = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
@@ -244,7 +230,7 @@ test( 'dgelss: M=0 edge case', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( 3 );
 	S = new Float64Array( 1 );
@@ -262,7 +248,7 @@ test( 'dgelss: N=0 edge case', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( 3 );
 	S = new Float64Array( 1 );
@@ -282,7 +268,7 @@ test( 'dgelss: overdetermined tall (6x2, M >> N triggers QR path)', function t()
 	var S;
 	var x;
 
-	tc = findCase( 'overdetermined_tall' );
+	tc = overdetermined_tall;
 	Aorig = new Float64Array([
 		1,
 		0,
@@ -954,7 +940,7 @@ test( 'dgelss: underdetermined wide (2x6, N >> M triggers LQ path)', function t(
 	var S;
 	var x;
 
-	tc = findCase( 'underdetermined_wide' );
+	tc = underdetermined_wide;
 	Aorig = new Float64Array([
 		1,
 		0,  // col 1

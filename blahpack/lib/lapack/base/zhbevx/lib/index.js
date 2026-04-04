@@ -30,11 +30,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zhbevx;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zhbevx = main;
+} else {
+	zhbevx = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zhbevx;
 
 // exports: { "ndarray": "zhbevx.ndarray" }

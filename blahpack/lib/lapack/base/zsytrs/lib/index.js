@@ -43,11 +43,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zsytrs;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zsytrs = main;
+} else {
+	zsytrs = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zsytrs;
 
 // exports: { "ndarray": "zsytrs.ndarray" }

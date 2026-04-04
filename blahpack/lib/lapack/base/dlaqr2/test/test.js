@@ -4,23 +4,24 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dlaqr2 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlaqr2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var _6x6_hessenberg_nw_3 = require( './fixtures/6x6_hessenberg_nw_3.json' );
+var _4x4_hessenberg_nw_2 = require( './fixtures/4x4_hessenberg_nw_2.json' );
+var _4x4_nw_1_no_wantz = require( './fixtures/4x4_nw_1_no_wantz.json' );
+var edge_case_ktop___kbot = require( './fixtures/edge_case_ktop___kbot.json' );
+var _8x8_hessenberg_nw_4_partial = require( './fixtures/8x8_hessenberg_nw_4_partial.json' );
+var _6x6_with_deflation = require( './fixtures/6x6_with_deflation.json' );
+var _6x6_full_window = require( './fixtures/6x6_full_window.json' );
+var _10x10_nw_5 = require( './fixtures/10x10_nw_5.json' );
+var _10x10_nw_8_large_window = require( './fixtures/10x10_nw_8_large_window.json' );
+var _6x6_nw_4_no_wantt_no_wantz = require( './fixtures/6x6_nw_4_no_wantt_no_wantz.json' );
+var _8x8_nw_6_nearly_deflated = require( './fixtures/8x8_nw_6_nearly_deflated.json' );
+var _6x6_nw_2_complex_pair = require( './fixtures/6x6_nw_2_complex_pair.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -114,11 +115,10 @@ function runDlaqr2( N, KTOP, KBOT, NW, Hin, Zin, WANTT, WANTZ, ILOZ, IHIZ ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dlaqr2: 6x6 hessenberg NW=3', function t() {
-	var tc = findCase( '6x6 hessenberg NW=3' );
+	var tc = _6x6_hessenberg_nw_3;
 	var N = 6;
 	// Fixture H/Z are packed NxN (print_matrix packs them)
 	var Hin = new Float64Array( tc.H );
@@ -147,7 +147,7 @@ test( 'dlaqr2: 6x6 hessenberg NW=3', function t() {
 });
 
 test( 'dlaqr2: 4x4 hessenberg NW=2', function t() {
-	var tc = findCase( '4x4 hessenberg NW=2' );
+	var tc = _4x4_hessenberg_nw_2;
 	var N = 4;
 	var Hin = new Float64Array( tc.H );
 
@@ -170,7 +170,7 @@ test( 'dlaqr2: 4x4 hessenberg NW=2', function t() {
 });
 
 test( 'dlaqr2: 4x4 NW=1 no wantz', function t() {
-	var tc = findCase( '4x4 NW=1 no wantz' );
+	var tc = _4x4_nw_1_no_wantz;
 	var N = 4;
 	var Hin = new Float64Array( tc.H );
 
@@ -192,7 +192,7 @@ test( 'dlaqr2: 4x4 NW=1 no wantz', function t() {
 });
 
 test( 'dlaqr2: edge case ktop > kbot', function t() {
-	var tc = findCase( 'edge case ktop > kbot' );
+	var tc = edge_case_ktop___kbot;
 	var N = 4;
 	var H0 = new Float64Array( N * N );
 	var Z0 = new Float64Array( N * N );
@@ -204,7 +204,7 @@ test( 'dlaqr2: edge case ktop > kbot', function t() {
 });
 
 test( 'dlaqr2: 8x8 hessenberg NW=4 partial', function t() {
-	var tc = findCase( '8x8 hessenberg NW=4 partial' );
+	var tc = _8x8_hessenberg_nw_4_partial;
 	var N = 8;
 	var Hin = new Float64Array( tc.H );
 	var Zin = new Float64Array( tc.Z );
@@ -267,7 +267,7 @@ test( 'dlaqr2: workspace query', function t() {
 });
 
 test( 'dlaqr2: 6x6 with deflation', function t() {
-	var tc = findCase( '6x6 with deflation' );
+	var tc = _6x6_with_deflation;
 	var N = 6;
 	var Hin = new Float64Array( tc.H );
 	var Zin = new Float64Array( tc.Z );
@@ -295,7 +295,7 @@ test( 'dlaqr2: 6x6 with deflation', function t() {
 });
 
 test( 'dlaqr2: 6x6 full window', function t() {
-	var tc = findCase( '6x6 full window' );
+	var tc = _6x6_full_window;
 	var N = 6;
 
 	var H0 = new Float64Array( N * N );
@@ -321,7 +321,7 @@ test( 'dlaqr2: 6x6 full window', function t() {
 });
 
 test( 'dlaqr2: 10x10 NW=5', function t() {
-	var tc = findCase( '10x10 NW=5' );
+	var tc = _10x10_nw_5;
 	var N = 10;
 
 	var H0 = new Float64Array( N * N );
@@ -351,7 +351,7 @@ test( 'dlaqr2: 10x10 NW=5', function t() {
 });
 
 test( 'dlaqr2: 10x10 NW=8 large window', function t() {
-	var tc = findCase( '10x10 NW=8 large window' );
+	var tc = _10x10_nw_8_large_window;
 	var N = 10;
 
 	var H0 = new Float64Array( N * N );
@@ -381,7 +381,7 @@ test( 'dlaqr2: 10x10 NW=8 large window', function t() {
 });
 
 test( 'dlaqr2: 6x6 NW=4 no wantt no wantz', function t() {
-	var tc = findCase( '6x6 NW=4 no wantt no wantz' );
+	var tc = _6x6_nw_4_no_wantt_no_wantz;
 	var N = 6;
 
 	var H0 = new Float64Array( N * N );
@@ -404,7 +404,7 @@ test( 'dlaqr2: 6x6 NW=4 no wantt no wantz', function t() {
 });
 
 test( 'dlaqr2: 8x8 NW=6 nearly deflated', function t() {
-	var tc = findCase( '8x8 NW=6 nearly deflated' );
+	var tc = _8x8_nw_6_nearly_deflated;
 	var N = 8;
 
 	var H0 = new Float64Array( N * N );
@@ -436,7 +436,7 @@ test( 'dlaqr2: 8x8 NW=6 nearly deflated', function t() {
 });
 
 test( 'dlaqr2: 6x6 NW=2 complex pair', function t() {
-	var tc = findCase( '6x6 NW=2 complex pair' );
+	var tc = _6x6_nw_2_complex_pair;
 	var N = 6;
 
 	var H0 = new Float64Array( N * N );

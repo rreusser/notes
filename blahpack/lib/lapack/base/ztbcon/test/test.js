@@ -23,37 +23,27 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var ztbcon = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztbcon.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_nonunit_1norm_k2 = require( './fixtures/upper_nonunit_1norm_k2.json' );
+var upper_nonunit_inorm_k2 = require( './fixtures/upper_nonunit_inorm_k2.json' );
+var lower_nonunit_1norm_k2 = require( './fixtures/lower_nonunit_1norm_k2.json' );
+var lower_nonunit_inorm_k2 = require( './fixtures/lower_nonunit_inorm_k2.json' );
+var upper_unit_1norm_k1 = require( './fixtures/upper_unit_1norm_k1.json' );
+var lower_unit_inorm_k1 = require( './fixtures/lower_unit_inorm_k1.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var identity_k0 = require( './fixtures/identity_k0.json' );
+var upper_nonunit_k1_1norm = require( './fixtures/upper_nonunit_k1_1norm.json' );
+var upper_nonunit_k1_inorm = require( './fixtures/upper_nonunit_k1_inorm.json' );
+var lower_nonunit_k1_1norm = require( './fixtures/lower_nonunit_k1_1norm.json' );
+var lower_nonunit_k1_inorm = require( './fixtures/lower_nonunit_k1_inorm.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -69,7 +59,6 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
-
 // TESTS //
 
 test( 'ztbcon: upper_nonunit_1norm_k2', function t() {
@@ -80,7 +69,7 @@ test( 'ztbcon: upper_nonunit_1norm_k2', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_nonunit_1norm_k2' );
+	tc = upper_nonunit_1norm_k2;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 4 );
 	WORK = new Complex128Array( 8 );
@@ -123,7 +112,7 @@ test( 'ztbcon: upper_nonunit_Inorm_k2', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_nonunit_Inorm_k2' );
+	tc = upper_nonunit_inorm_k2;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 4 );
 	WORK = new Complex128Array( 8 );
@@ -166,7 +155,7 @@ test( 'ztbcon: lower_nonunit_1norm_k2', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_nonunit_1norm_k2' );
+	tc = lower_nonunit_1norm_k2;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 4 );
 	WORK = new Complex128Array( 8 );
@@ -209,7 +198,7 @@ test( 'ztbcon: lower_nonunit_Inorm_k2', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_nonunit_Inorm_k2' );
+	tc = lower_nonunit_inorm_k2;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 4 );
 	WORK = new Complex128Array( 8 );
@@ -252,7 +241,7 @@ test( 'ztbcon: upper_unit_1norm_k1', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_unit_1norm_k1' );
+	tc = upper_unit_1norm_k1;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 3 );
 	WORK = new Complex128Array( 6 );
@@ -283,7 +272,7 @@ test( 'ztbcon: lower_unit_Inorm_k1', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_unit_Inorm_k1' );
+	tc = lower_unit_inorm_k1;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 3 );
 	WORK = new Complex128Array( 6 );
@@ -314,7 +303,7 @@ test( 'ztbcon: n_zero', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 1 );
 	WORK = new Complex128Array( 1 );
@@ -332,7 +321,7 @@ test( 'ztbcon: identity_k0', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'identity_k0' );
+	tc = identity_k0;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 3 );
 	WORK = new Complex128Array( 6 );
@@ -357,7 +346,7 @@ test( 'ztbcon: upper_nonunit_k1_1norm', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_nonunit_k1_1norm' );
+	tc = upper_nonunit_k1_1norm;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 4 );
 	WORK = new Complex128Array( 8 );
@@ -392,7 +381,7 @@ test( 'ztbcon: upper_nonunit_k1_Inorm', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'upper_nonunit_k1_Inorm' );
+	tc = upper_nonunit_k1_inorm;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 4 );
 	WORK = new Complex128Array( 8 );
@@ -427,7 +416,7 @@ test( 'ztbcon: lower_nonunit_k1_1norm', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_nonunit_k1_1norm' );
+	tc = lower_nonunit_k1_1norm;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 5 );
 	WORK = new Complex128Array( 10 );
@@ -466,7 +455,7 @@ test( 'ztbcon: lower_nonunit_k1_Inorm', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'lower_nonunit_k1_Inorm' );
+	tc = lower_nonunit_k1_inorm;
 	RCOND = new Float64Array( 1 );
 	RWORK = new Float64Array( 5 );
 	WORK = new Complex128Array( 10 );

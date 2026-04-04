@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var drot = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'drot.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var identity = require( './fixtures/identity.json' );
+var swap = require( './fixtures/swap.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var neg_stride = require( './fixtures/neg_stride.json' );
+var negate = require( './fixtures/negate.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,11 +53,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'drot: basic rotation (c=cos(pi/4), s=sin(pi/4))', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 6.0, 7.0, 8.0, 9.0, 10.0 ] );
 	var c = Math.cos( Math.PI / 4.0 );
@@ -83,7 +68,7 @@ test( 'drot: basic rotation (c=cos(pi/4), s=sin(pi/4))', function t() {
 });
 
 test( 'drot: identity rotation (c=1, s=0)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 6.0, 7.0, 8.0, 9.0, 10.0 ] );
 
@@ -93,7 +78,7 @@ test( 'drot: identity rotation (c=1, s=0)', function t() {
 });
 
 test( 'drot: full swap rotation (c=0, s=1)', function t() {
-	var tc = findCase( 'swap' );
+	var tc = swap;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 6.0, 7.0, 8.0, 9.0, 10.0 ] );
 
@@ -103,7 +88,7 @@ test( 'drot: full swap rotation (c=0, s=1)', function t() {
 });
 
 test( 'drot: n=0 (no-op)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 6.0, 7.0, 8.0, 9.0, 10.0 ] );
 	var c = Math.cos( Math.PI / 4.0 );
@@ -115,7 +100,7 @@ test( 'drot: n=0 (no-op)', function t() {
 });
 
 test( 'drot: n=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Float64Array( [ 3.0 ] );
 	var y = new Float64Array( [ 4.0 ] );
 
@@ -125,7 +110,7 @@ test( 'drot: n=1', function t() {
 });
 
 test( 'drot: non-unit strides (incx=2, incy=3)', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 ] );
 	var y = new Float64Array( [ 10.0, 0.0, 0.0, 20.0, 0.0, 0.0, 30.0, 0.0, 0.0 ] );
 
@@ -135,7 +120,7 @@ test( 'drot: non-unit strides (incx=2, incy=3)', function t() {
 });
 
 test( 'drot: negative stride (incx=-1)', function t() {
-	var tc = findCase( 'neg_stride' );
+	var tc = neg_stride;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( [ 10.0, 20.0, 30.0, 40.0 ] );
 
@@ -148,7 +133,7 @@ test( 'drot: negative stride (incx=-1)', function t() {
 });
 
 test( 'drot: negate (c=-1, s=0)', function t() {
-	var tc = findCase( 'negate' );
+	var tc = negate;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 

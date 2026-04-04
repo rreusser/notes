@@ -4,27 +4,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zstein = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zstein.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_5x5_all = require( './fixtures/basic_5x5_all.json' );
+var partial_2of5 = require( './fixtures/partial_2of5.json' );
+var two_blocks = require( './fixtures/two_blocks.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -71,11 +63,10 @@ function checkOrthogonalityComplex( zv, N, M, tol ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zstein: basic 5x5, all eigenvectors', function t() {
-	var tc = findCase( 'basic_5x5_all' );
+	var tc = basic_5x5_all;
 	var N = 5;
 	var M = 5;
 	var d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
@@ -126,7 +117,7 @@ test( 'zstein: basic 5x5, all eigenvectors', function t() {
 });
 
 test( 'zstein: partial 2 of 5 eigenvectors', function t() {
-	var tc = findCase( 'partial_2of5' );
+	var tc = partial_2of5;
 	var N = 5;
 	var M = 2;
 	var d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
@@ -176,7 +167,7 @@ test( 'zstein: N=0', function t() {
 });
 
 test( 'zstein: two blocks', function t() {
-	var tc = findCase( 'two_blocks' );
+	var tc = two_blocks;
 	var N = 5;
 	var M = 5;
 	var d = new Float64Array( [ 4.0, 4.0, 4.0, 3.0, 3.0 ] );

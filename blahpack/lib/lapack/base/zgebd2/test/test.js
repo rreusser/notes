@@ -2,41 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zgebd2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgebd2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_4x3 = require( './fixtures/upper_4x3.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
+var lower_3x4 = require( './fixtures/lower_3x4.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var lower_2x3 = require( './fixtures/lower_2x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +70,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgebd2: upper_4x3 (M > N, upper bidiagonal)', function t() {
@@ -100,7 +84,7 @@ test( 'zgebd2: upper_4x3 (M > N, upper bidiagonal)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'upper_4x3' );
+	tc = upper_4x3;
 	M = 4;
 	N = 3;
 	A = new Complex128Array([
@@ -155,7 +139,7 @@ test( 'zgebd2: square_3x3 (M >= N, upper bidiagonal)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	M = 3;
 	N = 3;
 	A = new Complex128Array([
@@ -204,7 +188,7 @@ test( 'zgebd2: lower_3x4 (M < N, lower bidiagonal)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'lower_3x4' );
+	tc = lower_3x4;
 	M = 3;
 	N = 4;
 	A = new Complex128Array([
@@ -257,7 +241,7 @@ test( 'zgebd2: m_zero (quick return)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Complex128Array( 1 );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
@@ -278,7 +262,7 @@ test( 'zgebd2: n_zero (quick return)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 1 );
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
@@ -299,7 +283,7 @@ test( 'zgebd2: one_by_one', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	A = new Complex128Array([ 5, 3 ]);
 	d = new Float64Array( 1 );
 	e = new Float64Array( 1 );
@@ -326,7 +310,7 @@ test( 'zgebd2: lower_2x3 (M < N, lower bidiagonal, small)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'lower_2x3' );
+	tc = lower_2x3;
 	M = 2;
 	N = 3;
 	A = new Complex128Array([

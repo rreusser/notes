@@ -6,23 +6,19 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dgesvx = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgesvx.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var fact_n_trans_n = require( './fixtures/fact_n_trans_n.json' );
+var fact_n_trans_t = require( './fixtures/fact_n_trans_t.json' );
+var fact_e = require( './fixtures/fact_e.json' );
+var fact_f = require( './fixtures/fact_f.json' );
+var singular = require( './fixtures/singular.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var fact_e_trans_t = require( './fixtures/fact_e_trans_t.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -42,12 +38,11 @@ function testA() {
 	return new Float64Array( [ 4.0, 1.0, 1.0, 1.0, 3.0, 1.0, 1.0, 1.0, 2.0 ] );
 }
 
-
 // TESTS //
 
 test( 'dgesvx: FACT=N, TRANS=N, 3x3 well-conditioned, 1 RHS', function t() {
 	var result;
-	var tc = findCase( 'fact_N_trans_N' );
+	var tc = fact_n_trans_n;
 	var A = testA();
 	var AF = new Float64Array( 9 );
 	var IPIV = new Int32Array( 3 );
@@ -69,7 +64,7 @@ test( 'dgesvx: FACT=N, TRANS=N, 3x3 well-conditioned, 1 RHS', function t() {
 
 test( 'dgesvx: FACT=N, TRANS=T, 3x3 well-conditioned', function t() {
 	var result;
-	var tc = findCase( 'fact_N_trans_T' );
+	var tc = fact_n_trans_t;
 	var A = testA();
 	var AF = new Float64Array( 9 );
 	var IPIV = new Int32Array( 3 );
@@ -90,7 +85,7 @@ test( 'dgesvx: FACT=N, TRANS=T, 3x3 well-conditioned', function t() {
 
 test( 'dgesvx: FACT=E, equilibrate poorly-scaled matrix', function t() {
 	var result;
-	var tc = findCase( 'fact_E' );
+	var tc = fact_e;
 	var A = new Float64Array( [ 1e6, 1.0, 1.0, 1.0, 1e-3, 1.0, 1.0, 1.0, 1e3 ] );
 	var AF = new Float64Array( 9 );
 	var IPIV = new Int32Array( 3 );
@@ -110,7 +105,7 @@ test( 'dgesvx: FACT=E, equilibrate poorly-scaled matrix', function t() {
 
 test( 'dgesvx: FACT=F, pre-factored matrix', function t() {
 	var result;
-	var tc = findCase( 'fact_F' );
+	var tc = fact_f;
 
 	// First factor A via FACT='N'
 	var A = testA();
@@ -140,7 +135,7 @@ test( 'dgesvx: FACT=F, pre-factored matrix', function t() {
 
 test( 'dgesvx: singular matrix returns info > 0', function t() {
 	var result;
-	var tc = findCase( 'singular' );
+	var tc = singular;
 	// All rows identical → rank 1
 	var A = new Float64Array( [ 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0 ] );
 	var AF = new Float64Array( 9 );
@@ -166,7 +161,7 @@ test( 'dgesvx: N=0 quick return', function t() {
 
 test( 'dgesvx: multiple RHS (nrhs=2)', function t() {
 	var result;
-	var tc = findCase( 'multi_rhs' );
+	var tc = multi_rhs;
 	var A = testA();
 	var AF = new Float64Array( 9 );
 	var IPIV = new Int32Array( 3 );
@@ -187,7 +182,7 @@ test( 'dgesvx: multiple RHS (nrhs=2)', function t() {
 
 test( 'dgesvx: FACT=E, TRANS=T', function t() {
 	var result;
-	var tc = findCase( 'fact_E_trans_T' );
+	var tc = fact_e_trans_t;
 	var A = new Float64Array( [ 1e6, 1.0, 1.0, 1.0, 1e-3, 1.0, 1.0, 1.0, 1e3 ] );
 	var AF = new Float64Array( 9 );
 	var IPIV = new Int32Array( 3 );

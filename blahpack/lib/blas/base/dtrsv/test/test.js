@@ -2,40 +2,32 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrsv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_n_nonunit = require( './fixtures/upper_n_nonunit.json' );
+var lower_n_nonunit = require( './fixtures/lower_n_nonunit.json' );
+var upper_t_nonunit = require( './fixtures/upper_t_nonunit.json' );
+var lower_t_nonunit = require( './fixtures/lower_t_nonunit.json' );
+var upper_n_unit = require( './fixtures/upper_n_unit.json' );
+var lower_n_unit = require( './fixtures/lower_n_unit.json' );
+var upper_t_unit = require( './fixtures/upper_t_unit.json' );
+var lower_t_unit = require( './fixtures/lower_t_unit.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var neg_stride = require( './fixtures/neg_stride.json' );
+var upper_n_nonunit_4x4 = require( './fixtures/upper_n_nonunit_4x4.json' );
+var n_one_unit = require( './fixtures/n_one_unit.json' );
+var upper_n_zeros = require( './fixtures/upper_n_zeros.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -111,11 +103,10 @@ function lowerA3( ) {
 	]);
 }
 
-
 // TESTS //
 
 test( 'dtrsv: upper, no-transpose, non-unit diag (N=3)', function t() {
-	var tc = findCase( 'upper_n_nonunit' );
+	var tc = upper_n_nonunit;
 	var A = upperA3();
 
 	// B = A * [1,2,3] = [20, 28, 21]
@@ -125,7 +116,7 @@ test( 'dtrsv: upper, no-transpose, non-unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: lower, no-transpose, non-unit diag (N=3)', function t() {
-	var tc = findCase( 'lower_n_nonunit' );
+	var tc = lower_n_nonunit;
 	var A = lowerA3();
 
 	// B = A * [1,2,3] = [2, 13, 37]
@@ -135,7 +126,7 @@ test( 'dtrsv: lower, no-transpose, non-unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: upper, transpose, non-unit diag (N=3)', function t() {
-	var tc = findCase( 'upper_t_nonunit' );
+	var tc = upper_t_nonunit;
 	var A = upperA3();
 
 	// B = A^T * [1,2,3] = [2, 13, 37]
@@ -145,7 +136,7 @@ test( 'dtrsv: upper, transpose, non-unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: lower, transpose, non-unit diag (N=3)', function t() {
-	var tc = findCase( 'lower_t_nonunit' );
+	var tc = lower_t_nonunit;
 	var A = lowerA3();
 
 	// B = A^T * [1,2,3] = [20, 28, 21]
@@ -155,7 +146,7 @@ test( 'dtrsv: lower, transpose, non-unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: upper, no-transpose, unit diag (N=3)', function t() {
-	var tc = findCase( 'upper_n_unit' );
+	var tc = upper_n_unit;
 
 	// Unit diag: A = [1 3 4; 0 1 6; 0 0 1], diag values set to 99 (should be ignored) // eslint-disable-line max-len
 	var A = new Float64Array([
@@ -177,7 +168,7 @@ test( 'dtrsv: upper, no-transpose, unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: lower, no-transpose, unit diag (N=3)', function t() {
-	var tc = findCase( 'lower_n_unit' );
+	var tc = lower_n_unit;
 
 	// Unit diag: A = [1 0 0; 3 1 0; 4 6 1]
 	var A = new Float64Array([
@@ -199,7 +190,7 @@ test( 'dtrsv: lower, no-transpose, unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: upper, transpose, unit diag (N=3)', function t() {
-	var tc = findCase( 'upper_t_unit' );
+	var tc = upper_t_unit;
 
 	// Unit diag: A = [1 3 4; 0 1 6; 0 0 1]
 
@@ -223,7 +214,7 @@ test( 'dtrsv: upper, transpose, unit diag (N=3)', function t() {
 });
 
 test( 'dtrsv: lower, transpose, unit diag (N=3)', function t() {
-	var tc = findCase( 'lower_t_unit' );
+	var tc = lower_t_unit;
 
 	// Unit diag: A = [1 0 0; 3 1 0; 4 6 1]
 
@@ -259,7 +250,7 @@ test( 'dtrsv: N=0 quick return', function t() {
 });
 
 test( 'dtrsv: N=1, non-unit diag', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Float64Array([ 5.0 ]);
 	var x = new Float64Array([ 15.0 ]);
 	dtrsv( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
@@ -267,7 +258,7 @@ test( 'dtrsv: N=1, non-unit diag', function t() {
 });
 
 test( 'dtrsv: non-unit stride (incx=2)', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var A = upperA3();
 
 	// B at stride 2: positions 0,2,4 hold [20,28,21]
@@ -277,7 +268,7 @@ test( 'dtrsv: non-unit stride (incx=2)', function t() {
 });
 
 test( 'dtrsv: negative stride (incx=-1)', function t() {
-	var tc = findCase( 'neg_stride' );
+	var tc = neg_stride;
 	var A = lowerA3();
 
 	// With incx=-1, x stored in reverse: x[2]=b(1), x[1]=b(2), x[0]=b(3)
@@ -289,7 +280,7 @@ test( 'dtrsv: negative stride (incx=-1)', function t() {
 });
 
 test( 'dtrsv: upper, no-transpose, non-unit (4x4)', function t() {
-	var tc = findCase( 'upper_n_nonunit_4x4' );
+	var tc = upper_n_nonunit_4x4;
 
 	// A (upper, col-major 4x4):
 
@@ -326,7 +317,7 @@ test( 'dtrsv: upper, no-transpose, non-unit (4x4)', function t() {
 });
 
 test( 'dtrsv: N=1, unit diag', function t() {
-	var tc = findCase( 'n_one_unit' );
+	var tc = n_one_unit;
 	var A = new Float64Array([ 99.0 ]);
 	var x = new Float64Array([ 7.0 ]);
 	dtrsv( 'lower', 'transpose', 'unit', 1, A, 1, 1, 0, x, 1, 0 );
@@ -334,7 +325,7 @@ test( 'dtrsv: N=1, unit diag', function t() {
 });
 
 test( 'dtrsv: upper, no-transpose with zero RHS entries', function t() {
-	var tc = findCase( 'upper_n_zeros' );
+	var tc = upper_n_zeros;
 	var A = upperA3();
 
 	// B = [0, 0, 21]
@@ -380,7 +371,6 @@ test( 'dtrsv: with offsetX', function t() {
 	dtrsv( 'upper', 'no-transpose', 'non-unit', 3, A, 1, 3, 0, x, 1, 2 );
 	assertArrayClose( [ x[2], x[3], x[4] ], [ 1.0, 2.0, 3.0 ], 1e-14, 'x' );
 });
-
 
 // NDARRAY VALIDATION TESTS //
 

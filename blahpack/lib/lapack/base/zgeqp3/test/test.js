@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -15,34 +12,20 @@ var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zgeqp3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgeqp3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var rect_4x3 = require( './fixtures/rect_4x3.json' );
+var rect_3x4 = require( './fixtures/rect_3x4.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var fixed_col = require( './fixtures/fixed_col.json' );
 
 // VARIABLES //
 
 var LDA = 8; // Matches Fortran MAXMN
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -91,7 +74,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgeqp3: 4x3 matrix', function t() {
@@ -104,7 +86,7 @@ test( 'zgeqp3: 4x3 matrix', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'rect_4x3' );
+	tc = rect_4x3;
 	A = new Complex128Array( LDA * LDA );
 	Av = reinterpret( A, 0 );
 	Av[0]=1;
@@ -152,7 +134,7 @@ test( 'zgeqp3: 3x4 matrix', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'rect_3x4' );
+	tc = rect_3x4;
 	A = new Complex128Array( LDA * LDA );
 	Av = reinterpret( A, 0 );
 	Av[0]=1;
@@ -240,7 +222,7 @@ test( 'zgeqp3: N=0 quick return', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 10 );
 	JPVT = new Int32Array( 1 );
 	TAU = new Complex128Array( 1 );
@@ -259,7 +241,7 @@ test( 'zgeqp3: M=0 quick return', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Complex128Array( 10 );
 	JPVT = new Int32Array( 3 );
 	TAU = new Complex128Array( 1 );
@@ -279,7 +261,7 @@ test( 'zgeqp3: 1x1 matrix', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	A = new Complex128Array( LDA * LDA );
 	Av = reinterpret( A, 0 );
 	Av[0] = 3;
@@ -305,7 +287,7 @@ test( 'zgeqp3: fixed column', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'fixed_col' );
+	tc = fixed_col;
 	A = new Complex128Array( LDA * LDA );
 	Av = reinterpret( A, 0 );
 	Av[0]=1;

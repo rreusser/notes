@@ -7,23 +7,21 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zheevx = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zheevx.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var zheevx_4x4_v_a_l = require( './fixtures/zheevx_4x4_v_a_l.json' );
+var zheevx_4x4_v_a_u = require( './fixtures/zheevx_4x4_v_a_u.json' );
+var zheevx_4x4_n_a_l = require( './fixtures/zheevx_4x4_n_a_l.json' );
+var zheevx_4x4_v_v_l = require( './fixtures/zheevx_4x4_v_v_l.json' );
+var zheevx_4x4_v_i_l = require( './fixtures/zheevx_4x4_v_i_l.json' );
+var zheevx_4x4_n_v_u = require( './fixtures/zheevx_4x4_n_v_u.json' );
+var zheevx_1x1_v = require( './fixtures/zheevx_1x1_v.json' );
+var zheevx_3x3_diag_i = require( './fixtures/zheevx_3x3_diag_i.json' );
+var zheevx_3x3_v_v_u = require( './fixtures/zheevx_3x3_v_v_u.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -160,11 +158,10 @@ function runZheevx( jobz, range, uplo, N, Adata, vl, vu, il, iu, abstol ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zheevx: 4x4 compute-vectors, all, lower', function t() {
-	var tc = findCase( 'zheevx_4x4_V_A_L' );
+	var tc = zheevx_4x4_v_a_l;
 	var Adata = [
 		2.0, 0.0, 1.0, 1.0, 0.5, -0.5, 0.0, 0.0,
 		0.0, 0.0, 3.0, 0.0, 0.0, 2.0, 1.0, -1.0,
@@ -179,7 +176,7 @@ test( 'zheevx: 4x4 compute-vectors, all, lower', function t() {
 });
 
 test( 'zheevx: 4x4 compute-vectors, all, upper', function t() {
-	var tc = findCase( 'zheevx_4x4_V_A_U' );
+	var tc = zheevx_4x4_v_a_u;
 	var Adata = [
 		2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 		1.0, -1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -194,7 +191,7 @@ test( 'zheevx: 4x4 compute-vectors, all, upper', function t() {
 });
 
 test( 'zheevx: 4x4 no-vectors, all, lower', function t() {
-	var tc = findCase( 'zheevx_4x4_N_A_L' );
+	var tc = zheevx_4x4_n_a_l;
 	var Adata = [
 		2.0, 0.0, 1.0, 1.0, 0.5, -0.5, 0.0, 0.0,
 		0.0, 0.0, 3.0, 0.0, 0.0, 2.0, 1.0, -1.0,
@@ -208,7 +205,7 @@ test( 'zheevx: 4x4 no-vectors, all, lower', function t() {
 });
 
 test( 'zheevx: 4x4 compute-vectors, value range [1.5, 4.5], lower', function t() {
-	var tc = findCase( 'zheevx_4x4_V_V_L' );
+	var tc = zheevx_4x4_v_v_l;
 	var Adata = [
 		2.0, 0.0, 1.0, 1.0, 0.5, -0.5, 0.0, 0.0,
 		0.0, 0.0, 3.0, 0.0, 0.0, 2.0, 1.0, -1.0,
@@ -223,7 +220,7 @@ test( 'zheevx: 4x4 compute-vectors, value range [1.5, 4.5], lower', function t()
 });
 
 test( 'zheevx: 4x4 compute-vectors, index range [2,3], lower', function t() {
-	var tc = findCase( 'zheevx_4x4_V_I_L' );
+	var tc = zheevx_4x4_v_i_l;
 	var Adata = [
 		2.0, 0.0, 1.0, 1.0, 0.5, -0.5, 0.0, 0.0,
 		0.0, 0.0, 3.0, 0.0, 0.0, 2.0, 1.0, -1.0,
@@ -238,7 +235,7 @@ test( 'zheevx: 4x4 compute-vectors, index range [2,3], lower', function t() {
 });
 
 test( 'zheevx: 4x4 no-vectors, value range [0.0, 3.0], upper', function t() {
-	var tc = findCase( 'zheevx_4x4_N_V_U' );
+	var tc = zheevx_4x4_n_v_u;
 	var Adata = [
 		2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 		1.0, -1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -252,7 +249,7 @@ test( 'zheevx: 4x4 no-vectors, value range [0.0, 3.0], upper', function t() {
 });
 
 test( 'zheevx: N=1, compute-vectors', function t() {
-	var tc = findCase( 'zheevx_1x1_V' );
+	var tc = zheevx_1x1_v;
 	var Adata = [ 7.5, 0.0 ];
 	var result = runZheevx( 'compute-vectors', 'all', 'lower', 1, Adata, 0.0, 0.0, 0, 0, 0.0 );
 	var Zv;
@@ -271,7 +268,7 @@ test( 'zheevx: N=0', function t() {
 });
 
 test( 'zheevx: 3x3 diagonal, index range [1,1]', function t() {
-	var tc = findCase( 'zheevx_3x3_diag_I' );
+	var tc = zheevx_3x3_diag_i;
 	var Adata = [
 		5.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 		0.0, 0.0, 2.0, 0.0, 0.0, 0.0,
@@ -285,7 +282,7 @@ test( 'zheevx: 3x3 diagonal, index range [1,1]', function t() {
 });
 
 test( 'zheevx: 3x3 compute-vectors, value range [2.0, 7.0], upper', function t() {
-	var tc = findCase( 'zheevx_3x3_V_V_U' );
+	var tc = zheevx_3x3_v_v_u;
 	var Adata = [
 		4.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 		1.0, 2.0, 5.0, 0.0, 0.0, 0.0,

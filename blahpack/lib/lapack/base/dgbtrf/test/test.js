@@ -4,23 +4,17 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dgbtrf = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgbtrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var tridiag_4x4 = require( './fixtures/tridiag_4x4.json' );
+var pentadiag_5x5 = require( './fixtures/pentadiag_5x5.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var pivot_2x2 = require( './fixtures/pivot_2x2.json' );
+var kl1_ku2_3x3 = require( './fixtures/kl1_ku2_3x3.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -34,7 +28,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
-
 
 // TESTS //
 
@@ -53,7 +46,7 @@ test( 'dgbtrf: M=0 quick return', function t() {
 });
 
 test( 'dgbtrf: tridiag_4x4', function t() {
-	var tc = findCase( 'tridiag_4x4' );
+	var tc = tridiag_4x4;
 	var AB = new Float64Array( [
 		0.0, 0.0, 4.0, -1.0,
 		0.0, -1.0, 4.0, -1.0,
@@ -71,7 +64,7 @@ test( 'dgbtrf: tridiag_4x4', function t() {
 });
 
 test( 'dgbtrf: pentadiag_5x5', function t() {
-	var tc = findCase( 'pentadiag_5x5' );
+	var tc = pentadiag_5x5;
 	var AB = new Float64Array( 7 * 5 );
 	AB[ 4 ] = 6.0; AB[ 5 ] = -2.0; AB[ 6 ] = 1.0;
 	AB[ 7 + 3 ] = -2.0; AB[ 7 + 4 ] = 6.0; AB[ 7 + 5 ] = -2.0; AB[ 7 + 6 ] = 1.0;
@@ -89,7 +82,7 @@ test( 'dgbtrf: pentadiag_5x5', function t() {
 });
 
 test( 'dgbtrf: one_by_one', function t() {
-	var tc = findCase( 'one_by_one' );
+	var tc = one_by_one;
 	var AB = new Float64Array( [ 7.0 ] );
 	var IPIV = new Int32Array( 1 );
 	var info = dgbtrf( 1, 1, 0, 0, AB, 1, 1, 0, IPIV, 1, 0 );
@@ -99,7 +92,7 @@ test( 'dgbtrf: one_by_one', function t() {
 });
 
 test( 'dgbtrf: pivot_2x2', function t() {
-	var tc = findCase( 'pivot_2x2' );
+	var tc = pivot_2x2;
 	var AB = new Float64Array( 4 * 2 );
 	AB[ 2 ] = 1.0; AB[ 3 ] = 3.0;
 	AB[ 4 + 1 ] = 2.0; AB[ 4 + 2 ] = 4.0;
@@ -114,7 +107,7 @@ test( 'dgbtrf: pivot_2x2', function t() {
 });
 
 test( 'dgbtrf: kl1_ku2_3x3', function t() {
-	var tc = findCase( 'kl1_ku2_3x3' );
+	var tc = kl1_ku2_3x3;
 	var AB = new Float64Array( 5 * 3 );
 	AB[ 3 ] = 5.0; AB[ 4 ] = 2.0;
 	AB[ 5 + 2 ] = 3.0; AB[ 5 + 3 ] = 6.0; AB[ 5 + 4 ] = 1.0;

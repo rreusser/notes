@@ -2,21 +2,18 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dpocon = require( './../lib/base.js' );
 var dpotrf = require( '../../dpotrf/lib/base.js' );
 var dlansy = require( '../../dlansy/lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dpocon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var identity_upper = require( './fixtures/identity_upper.json' );
+var identity_lower = require( './fixtures/identity_lower.json' );
+var well_cond_upper = require( './fixtures/well_cond_upper.json' );
+var well_cond_lower = require( './fixtures/well_cond_lower.json' );
+var ill_cond = require( './fixtures/ill_cond.json' );
+var _4x4_upper = require( './fixtures/4x4_upper.json' );
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -35,13 +32,12 @@ function computeRcond( uploStr, N, Aflat ) {
 	return { rcond: rcond[ 0 ], anorm: anorm, info: info };
 }
 
-
 test( 'dpocon: main export is a function', function t() {
 	assert.strictEqual( typeof dpocon, 'function' );
 });
 
 test( 'dpocon: 3x3 identity, upper (rcond = 1)', function t() {
-	var tc = findCase( 'identity_upper' );
+	var tc = identity_upper;
 	var result = computeRcond( 'upper', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -53,7 +49,7 @@ test( 'dpocon: 3x3 identity, upper (rcond = 1)', function t() {
 });
 
 test( 'dpocon: 3x3 identity, lower (rcond = 1)', function t() {
-	var tc = findCase( 'identity_lower' );
+	var tc = identity_lower;
 	var result = computeRcond( 'lower', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -65,7 +61,7 @@ test( 'dpocon: 3x3 identity, lower (rcond = 1)', function t() {
 });
 
 test( 'dpocon: well-conditioned SPD 3x3, upper', function t() {
-	var tc = findCase( 'well_cond_upper' );
+	var tc = well_cond_upper;
 	var result = computeRcond( 'upper', 3, [
 		4, 2, 1,
 		2, 5, 2,
@@ -77,7 +73,7 @@ test( 'dpocon: well-conditioned SPD 3x3, upper', function t() {
 });
 
 test( 'dpocon: well-conditioned SPD 3x3, lower', function t() {
-	var tc = findCase( 'well_cond_lower' );
+	var tc = well_cond_lower;
 	var result = computeRcond( 'lower', 3, [
 		4, 2, 1,
 		2, 5, 2,
@@ -89,7 +85,7 @@ test( 'dpocon: well-conditioned SPD 3x3, lower', function t() {
 });
 
 test( 'dpocon: ill-conditioned SPD (rcond near 0)', function t() {
-	var tc = findCase( 'ill_cond' );
+	var tc = ill_cond;
 	var result = computeRcond( 'upper', 3, [
 		1, 0, 0,
 		0, 1, 0,
@@ -121,7 +117,7 @@ test( 'dpocon: anorm = 0 (rcond = 0)', function t() {
 });
 
 test( 'dpocon: 4x4 SPD matrix, upper', function t() {
-	var tc = findCase( '4x4_upper' );
+	var tc = _4x4_upper;
 	var result = computeRcond( 'upper', 4, [
 		10, 1, 0, 0,
 		1, 8, 1, 0,

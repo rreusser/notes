@@ -2,40 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dstevx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dstevx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var vectors_all_4x4 = require( './fixtures/vectors_all_4x4.json' );
+var novec_all_4x4 = require( './fixtures/novec_all_4x4.json' );
+var vectors_value_4x4 = require( './fixtures/vectors_value_4x4.json' );
+var vectors_index_4x4 = require( './fixtures/vectors_index_4x4.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_one_out_of_range = require( './fixtures/n_one_out_of_range.json' );
+var novec_index_4x4 = require( './fixtures/novec_index_4x4.json' );
+var vectors_all_6x6 = require( './fixtures/vectors_all_6x6.json' );
+var vectors_value_abstol = require( './fixtures/vectors_value_abstol.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -104,12 +92,11 @@ function callDstevx( jobz, range, N, dArr, eArr, vl, vu, il, iu, abstol ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dstevx: vectors_all_4x4', function t() {
 	var res = callDstevx( 'compute-vectors', 'all', 4, [ 2.0, 2.0, 2.0, 2.0 ], [ 1.0, 1.0, 1.0 ], 0.0, 0.0, 0, 0, 0.0);
-	var tc = findCase( 'vectors_all_4x4' );
+	var tc = vectors_all_4x4;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );
@@ -120,7 +107,7 @@ test( 'dstevx: vectors_all_4x4', function t() {
 
 test( 'dstevx: novec_all_4x4', function t() {
 	var res = callDstevx( 'no-vectors', 'all', 4, [ 2.0, 2.0, 2.0, 2.0 ], [ 1.0, 1.0, 1.0 ], 0.0, 0.0, 0, 0, 0.0);
-	var tc = findCase( 'novec_all_4x4' );
+	var tc = novec_all_4x4;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );
@@ -128,7 +115,7 @@ test( 'dstevx: novec_all_4x4', function t() {
 
 test( 'dstevx: vectors_value_4x4', function t() {
 	var res = callDstevx( 'compute-vectors', 'value', 4, [ 2.0, 2.0, 2.0, 2.0 ], [ 1.0, 1.0, 1.0 ], 1.5, 3.5, 0, 0, 0.0);
-	var tc = findCase( 'vectors_value_4x4' );
+	var tc = vectors_value_4x4;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );
@@ -136,7 +123,7 @@ test( 'dstevx: vectors_value_4x4', function t() {
 
 test( 'dstevx: vectors_index_4x4', function t() {
 	var res = callDstevx( 'compute-vectors', 'index', 4, [ 2.0, 2.0, 2.0, 2.0 ], [ 1.0, 1.0, 1.0 ], 0.0, 0.0, 2, 3, 0.0);
-	var tc = findCase( 'vectors_index_4x4' );
+	var tc = vectors_index_4x4;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );
@@ -144,14 +131,14 @@ test( 'dstevx: vectors_index_4x4', function t() {
 
 test( 'dstevx: n_zero', function t() {
 	var res = callDstevx( 'compute-vectors', 'all', 0, [], [], 0.0, 0.0, 0, 0, 0.0);
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 });
 
 test( 'dstevx: n_one', function t() {
 	var res = callDstevx( 'compute-vectors', 'all', 1, [ 3.5 ], [], 0.0, 0.0, 0, 0, 0.0);
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );
@@ -160,14 +147,14 @@ test( 'dstevx: n_one', function t() {
 
 test( 'dstevx: n_one_out_of_range', function t() {
 	var res = callDstevx( 'compute-vectors', 'value', 1, [ 3.5 ], [], 5.0, 10.0, 0, 0, 0.0);
-	var tc = findCase( 'n_one_out_of_range' );
+	var tc = n_one_out_of_range;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 });
 
 test( 'dstevx: novec_index_4x4', function t() {
 	var res = callDstevx( 'no-vectors', 'index', 4, [ 2.0, 2.0, 2.0, 2.0 ], [ 1.0, 1.0, 1.0 ], 0.0, 0.0, 1, 2, 0.0);
-	var tc = findCase( 'novec_index_4x4' );
+	var tc = novec_index_4x4;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );
@@ -175,7 +162,7 @@ test( 'dstevx: novec_index_4x4', function t() {
 
 test( 'dstevx: vectors_all_6x6', function t() {
 	var res = callDstevx( 'compute-vectors', 'all', 6, [ 1.0, 3.0, 2.0, 4.0, 1.5, 2.5 ], [ 0.5, 1.0, 0.3, 0.8, 0.6 ], 0.0, 0.0, 0, 0, 0.0);
-	var tc = findCase( 'vectors_all_6x6' );
+	var tc = vectors_all_6x6;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );
@@ -183,7 +170,7 @@ test( 'dstevx: vectors_all_6x6', function t() {
 
 test( 'dstevx: vectors_value_abstol', function t() {
 	var res = callDstevx( 'compute-vectors', 'value', 4, [ 2.0, 2.0, 2.0, 2.0 ], [ 1.0, 1.0, 1.0 ], 0.0, 5.0, 0, 0, 1.0e-12);
-	var tc = findCase( 'vectors_value_abstol' );
+	var tc = vectors_value_abstol;
 	assert.equal( res.info, tc.info, 'info' );
 	assert.equal( res.m, tc.m, 'm' );
 	assertArrayClose( res.w, tc.w, 1e-14, 'w' );

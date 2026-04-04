@@ -50,11 +50,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var zlapll;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	zlapll = main;
+} else {
+	zlapll = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = zlapll;
 
 // exports: { "ndarray": "zlapll.ndarray" }

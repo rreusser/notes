@@ -5,37 +5,29 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpptrf = require( '../../dpptrf/lib/base.js' );
 var dpptri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpptri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var upper_2x2 = require( './fixtures/upper_2x2.json' );
+var lower_2x2 = require( './fixtures/lower_2x2.json' );
+var identity_upper = require( './fixtures/identity_upper.json' );
+var identity_lower = require( './fixtures/identity_lower.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var singular_factor_upper = require( './fixtures/singular_factor_upper.json' );
+var singular_factor_lower = require( './fixtures/singular_factor_lower.json' );
+var upper_5x5 = require( './fixtures/upper_5x5.json' );
+var lower_5x5 = require( './fixtures/lower_5x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -55,7 +47,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
 	}
 }
-
 
 // TESTS //
 
@@ -78,7 +69,7 @@ test( 'dpptri: n_one_upper (N=1, uplo=upper)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	ap = new Float64Array( [ 4.0 ] );
 	dpptrf( 'upper', 1, ap, 1, 0 );
 	info = dpptri( 'upper', 1, ap, 1, 0 );
@@ -91,7 +82,7 @@ test( 'dpptri: n_one_lower (N=1, uplo=lower)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	ap = new Float64Array( [ 9.0 ] );
 	dpptrf( 'lower', 1, ap, 1, 0 );
 	info = dpptri( 'lower', 1, ap, 1, 0 );
@@ -104,7 +95,7 @@ test( 'dpptri: upper_2x2 (N=2, uplo=upper)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'upper_2x2' );
+	tc = upper_2x2;
 	ap = new Float64Array( [ 4.0, 2.0, 5.0 ] );
 	dpptrf( 'upper', 2, ap, 1, 0 );
 	info = dpptri( 'upper', 2, ap, 1, 0 );
@@ -117,7 +108,7 @@ test( 'dpptri: lower_2x2 (N=2, uplo=lower)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'lower_2x2' );
+	tc = lower_2x2;
 	ap = new Float64Array( [ 4.0, 2.0, 5.0 ] );
 	dpptrf( 'lower', 2, ap, 1, 0 );
 	info = dpptri( 'lower', 2, ap, 1, 0 );
@@ -130,7 +121,7 @@ test( 'dpptri: identity_upper (N=3, identity matrix, uplo=upper)', function t() 
 	var tc;
 	var ap;
 
-	tc = findCase( 'identity_upper' );
+	tc = identity_upper;
 	ap = new Float64Array( [ 1.0, 0.0, 1.0, 0.0, 0.0, 1.0 ] );
 	dpptrf( 'upper', 3, ap, 1, 0 );
 	info = dpptri( 'upper', 3, ap, 1, 0 );
@@ -143,7 +134,7 @@ test( 'dpptri: identity_lower (N=3, identity matrix, uplo=lower)', function t() 
 	var tc;
 	var ap;
 
-	tc = findCase( 'identity_lower' );
+	tc = identity_lower;
 	ap = new Float64Array( [ 1.0, 0.0, 0.0, 1.0, 0.0, 1.0 ] );
 	dpptrf( 'lower', 3, ap, 1, 0 );
 	info = dpptri( 'lower', 3, ap, 1, 0 );
@@ -156,7 +147,7 @@ test( 'dpptri: upper_3x3 (N=3, uplo=upper)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	ap = new Float64Array( [ 25.0, 5.0, 10.0, -5.0, 2.0, 6.0 ] );
 	dpptrf( 'upper', 3, ap, 1, 0 );
 	info = dpptri( 'upper', 3, ap, 1, 0 );
@@ -169,7 +160,7 @@ test( 'dpptri: lower_3x3 (N=3, uplo=lower)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	ap = new Float64Array( [ 25.0, 5.0, -5.0, 10.0, 2.0, 6.0 ] );
 	dpptrf( 'lower', 3, ap, 1, 0 );
 	info = dpptri( 'lower', 3, ap, 1, 0 );
@@ -182,7 +173,7 @@ test( 'dpptri: upper_4x4 (N=4, uplo=upper)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	ap = new Float64Array( [ 4.0, 2.0, 5.0, 1.0, 1.0, 5.0, 0.5, 0.5, 1.0, 5.0 ] );
 	dpptrf( 'upper', 4, ap, 1, 0 );
 	info = dpptri( 'upper', 4, ap, 1, 0 );
@@ -195,7 +186,7 @@ test( 'dpptri: lower_4x4 (N=4, uplo=lower)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	ap = new Float64Array( [ 4.0, 2.0, 1.0, 0.5, 5.0, 1.0, 0.5, 5.0, 1.0, 5.0 ] );
 	dpptrf( 'lower', 4, ap, 1, 0 );
 	info = dpptri( 'lower', 4, ap, 1, 0 );
@@ -208,7 +199,7 @@ test( 'dpptri: singular_factor_upper (info > 0)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'singular_factor_upper' );
+	tc = singular_factor_upper;
 	ap = new Float64Array( [ 1.0, 0.0, 0.0 ] );
 	info = dpptri( 'upper', 2, ap, 1, 0 );
 	assert.equal( info, tc.info );
@@ -219,7 +210,7 @@ test( 'dpptri: singular_factor_lower (info > 0)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'singular_factor_lower' );
+	tc = singular_factor_lower;
 	ap = new Float64Array( [ 0.0, 1.0, 2.0 ] );
 	info = dpptri( 'lower', 2, ap, 1, 0 );
 	assert.equal( info, tc.info );
@@ -230,7 +221,7 @@ test( 'dpptri: upper_5x5 (N=5, uplo=upper)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'upper_5x5' );
+	tc = upper_5x5;
 	ap = new Float64Array( [ 11.0, 1.0, 11.0, 1.0, 1.0, 11.0, 1.0, 1.0, 1.0, 11.0, 1.0, 1.0, 1.0, 1.0, 11.0 ] ); // eslint-disable-line max-len
 	dpptrf( 'upper', 5, ap, 1, 0 );
 	info = dpptri( 'upper', 5, ap, 1, 0 );
@@ -243,7 +234,7 @@ test( 'dpptri: lower_5x5 (N=5, uplo=lower)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'lower_5x5' );
+	tc = lower_5x5;
 	ap = new Float64Array( [ 11.0, 1.0, 1.0, 1.0, 1.0, 11.0, 1.0, 1.0, 1.0, 11.0, 1.0, 1.0, 11.0, 1.0, 11.0 ] ); // eslint-disable-line max-len
 	dpptrf( 'lower', 5, ap, 1, 0 );
 	info = dpptri( 'lower', 5, ap, 1, 0 );

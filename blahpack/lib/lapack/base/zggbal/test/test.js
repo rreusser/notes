@@ -2,41 +2,32 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zggbal = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zggbal.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var job_n = require( './fixtures/job_n.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var job_p = require( './fixtures/job_p.json' );
+var job_s = require( './fixtures/job_s.json' );
+var job_b = require( './fixtures/job_b.json' );
+var job_p_isolated = require( './fixtures/job_p_isolated.json' );
+var job_b_5x5 = require( './fixtures/job_b_5x5.json' );
+var job_p_diagonal = require( './fixtures/job_p_diagonal.json' );
+var job_s_trivial = require( './fixtures/job_s_trivial.json' );
+var job_b_2x2 = require( './fixtures/job_b_2x2.json' );
+var job_p_5x5 = require( './fixtures/job_p_5x5.json' );
+var job_b_dense = require( './fixtures/job_b_dense.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -111,7 +102,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zggbal: JOB=N, 4x4 — sets ilo=1, ihi=N, scales=1', function t() {
@@ -126,7 +116,7 @@ test( 'zggbal: JOB=N, 4x4 — sets ilo=1, ihi=N, scales=1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_n' );
+	tc = job_n;
 	n = 4;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -162,7 +152,7 @@ test( 'zggbal: N=0 — quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 2 );
 	B = new Complex128Array( 2 );
 	lscale = new Float64Array( 1 );
@@ -186,7 +176,7 @@ test( 'zggbal: N=1 — quick return with scales=1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	n = 1;
 	A = new Complex128Array( 1 );
 	B = new Complex128Array( 1 );
@@ -219,7 +209,7 @@ test( 'zggbal: JOB=P, 4x4 — permute only', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p' );
+	tc = job_p;
 	n = 4;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -262,7 +252,7 @@ test( 'zggbal: JOB=S, 3x3 — scale only', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_s' );
+	tc = job_s;
 	n = 3;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -311,7 +301,7 @@ test( 'zggbal: JOB=B, 4x4 — both permute and scale', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b' );
+	tc = job_b;
 	n = 4;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -374,7 +364,7 @@ test( 'zggbal: JOB=P, 3x3 — isolated eigenvalue', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p_isolated' );
+	tc = job_p_isolated;
 	n = 3;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -415,7 +405,7 @@ test( 'zggbal: JOB=B, 5x5 — pentadiagonal with scaling', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b_5x5' );
+	tc = job_b_5x5;
 	n = 5;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -470,7 +460,7 @@ test( 'zggbal: JOB=P, 3x3 diagonal — fully isolated', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p_diagonal' );
+	tc = job_p_diagonal;
 	n = 3;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -505,7 +495,7 @@ test( 'zggbal: JOB=S, 2x2 trivial — ilo=ihi quick return from scaling', functi
 	var A;
 	var B;
 
-	tc = findCase( 'job_s_trivial' );
+	tc = job_s_trivial;
 	n = 2;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -538,7 +528,7 @@ test( 'zggbal: JOB=B, 2x2 — complex dense', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b_2x2' );
+	tc = job_b_2x2;
 	n = 2;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -577,7 +567,7 @@ test( 'zggbal: JOB=P, 5x5 — two isolated eigenvalues', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_p_5x5' );
+	tc = job_p_5x5;
 	n = 5;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );
@@ -657,7 +647,7 @@ test( 'zggbal: JOB=B, 3x3 — fully dense complex', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'job_b_dense' );
+	tc = job_b_dense;
 	n = 3;
 	A = new Complex128Array( n * n );
 	B = new Complex128Array( n * n );

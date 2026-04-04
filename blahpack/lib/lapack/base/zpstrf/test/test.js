@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -15,30 +13,19 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpstrf = require( './../lib/base.js' );
 var zpstf2 = require( './../../zpstf2/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpstrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var rank_deficient_upper = require( './fixtures/rank_deficient_upper.json' );
+var rank_deficient_lower = require( './fixtures/rank_deficient_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
+var rank_deficient_4x4_upper = require( './fixtures/rank_deficient_4x4_upper.json' );
+var rank_deficient_4x4_lower = require( './fixtures/rank_deficient_4x4_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -169,11 +156,10 @@ function randomHPSD( N, rank ) {
 	return A;
 }
 
-
 // TESTS //
 
 test( 'zpstrf: upper_3x3', function t() {
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	var A = new Float64Array([
 		10.0,
 		0.0,
@@ -198,7 +184,7 @@ test( 'zpstrf: upper_3x3', function t() {
 });
 
 test( 'zpstrf: lower_3x3', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	var A = new Float64Array([
 		10.0,
 		0.0,
@@ -223,7 +209,7 @@ test( 'zpstrf: lower_3x3', function t() {
 });
 
 test( 'zpstrf: upper_4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var A = new Float64Array([
 		20.0,
 		0.0,
@@ -262,7 +248,7 @@ test( 'zpstrf: upper_4x4', function t() {
 });
 
 test( 'zpstrf: lower_4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var A = new Float64Array([
 		20.0,
 		0.0,
@@ -301,7 +287,7 @@ test( 'zpstrf: lower_4x4', function t() {
 });
 
 test( 'zpstrf: rank_deficient_upper', function t() {
-	var tc = findCase( 'rank_deficient_upper' );
+	var tc = rank_deficient_upper;
 	var A = new Float64Array([
 		1.0,
 		0.0,
@@ -326,7 +312,7 @@ test( 'zpstrf: rank_deficient_upper', function t() {
 });
 
 test( 'zpstrf: rank_deficient_lower', function t() {
-	var tc = findCase( 'rank_deficient_lower' );
+	var tc = rank_deficient_lower;
 	var A = new Float64Array([
 		1.0,
 		0.0,
@@ -362,13 +348,13 @@ test( 'zpstrf: n_zero', function t() {
 });
 
 test( 'zpstrf: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Float64Array([ 9.0, 0.0 ]);
 	runTestCase( 'upper', 1, A, tc );
 });
 
 test( 'zpstrf: rank_deficient_4x4_upper', function t() {
-	var tc = findCase( 'rank_deficient_4x4_upper' );
+	var tc = rank_deficient_4x4_upper;
 	var A = new Float64Array([
 		3.0,
 		0.0,
@@ -407,7 +393,7 @@ test( 'zpstrf: rank_deficient_4x4_upper', function t() {
 });
 
 test( 'zpstrf: rank_deficient_4x4_lower', function t() {
-	var tc = findCase( 'rank_deficient_4x4_lower' );
+	var tc = rank_deficient_4x4_lower;
 	var A = new Float64Array([
 		3.0,
 		0.0,

@@ -4,26 +4,24 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zptts2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zptts2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var lower_n4_nrhs1 = require( './fixtures/lower_n4_nrhs1.json' );
+var upper_n4_nrhs1 = require( './fixtures/upper_n4_nrhs1.json' );
+var lower_n4_nrhs3 = require( './fixtures/lower_n4_nrhs3.json' );
+var upper_n4_nrhs3 = require( './fixtures/upper_n4_nrhs3.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var n_eq_1_multi_rhs = require( './fixtures/n_eq_1_multi_rhs.json' );
+var n_eq_0 = require( './fixtures/n_eq_0.json' );
+var lower_n4_nrhs2 = require( './fixtures/lower_n4_nrhs2.json' );
+var upper_n4_nrhs2 = require( './fixtures/upper_n4_nrhs2.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,11 +36,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zptts2: lower_n4_nrhs1 (IUPLO=0, N=4, NRHS=1)', function t() {
-	var tc = findCase( 'lower_n4_nrhs1' );
+	var tc = lower_n4_nrhs1;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [ 2.0, 1.0, 3.0, -1.0, 1.0, 2.0, 4.0, 0.0 ] );
@@ -54,7 +51,7 @@ test( 'zptts2: lower_n4_nrhs1 (IUPLO=0, N=4, NRHS=1)', function t() {
 });
 
 test( 'zptts2: upper_n4_nrhs1 (IUPLO=1, N=4, NRHS=1)', function t() {
-	var tc = findCase( 'upper_n4_nrhs1' );
+	var tc = upper_n4_nrhs1;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [ 2.0, 1.0, 3.0, -1.0, 1.0, 2.0, 4.0, 0.0 ] );
@@ -66,7 +63,7 @@ test( 'zptts2: upper_n4_nrhs1 (IUPLO=1, N=4, NRHS=1)', function t() {
 });
 
 test( 'zptts2: lower_n4_nrhs3 (IUPLO=0, N=4, NRHS=3, exercises NRHS>2 path)', function t() {
-	var tc = findCase( 'lower_n4_nrhs3' );
+	var tc = lower_n4_nrhs3;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [
@@ -82,7 +79,7 @@ test( 'zptts2: lower_n4_nrhs3 (IUPLO=0, N=4, NRHS=3, exercises NRHS>2 path)', fu
 });
 
 test( 'zptts2: upper_n4_nrhs3 (IUPLO=1, N=4, NRHS=3, exercises NRHS>2 path)', function t() {
-	var tc = findCase( 'upper_n4_nrhs3' );
+	var tc = upper_n4_nrhs3;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [
@@ -98,7 +95,7 @@ test( 'zptts2: upper_n4_nrhs3 (IUPLO=1, N=4, NRHS=3, exercises NRHS>2 path)', fu
 });
 
 test( 'zptts2: n_eq_1 (N=1, NRHS=1)', function t() {
-	var tc = findCase( 'n_eq_1' );
+	var tc = n_eq_1;
 	var d = new Float64Array( [ 3.0 ] );
 	var e = new Complex128Array( 0 );
 	var B = new Complex128Array( [ 9.0, 6.0 ] );
@@ -110,7 +107,7 @@ test( 'zptts2: n_eq_1 (N=1, NRHS=1)', function t() {
 });
 
 test( 'zptts2: n_eq_1_multi_rhs (N=1, NRHS=2)', function t() {
-	var tc = findCase( 'n_eq_1_multi_rhs' );
+	var tc = n_eq_1_multi_rhs;
 	var d = new Float64Array( [ 4.0 ] );
 	var e = new Complex128Array( 0 );
 	var B = new Complex128Array( [ 8.0, 4.0, 12.0, -8.0 ] );
@@ -122,7 +119,7 @@ test( 'zptts2: n_eq_1_multi_rhs (N=1, NRHS=2)', function t() {
 });
 
 test( 'zptts2: n_eq_0 (N=0, quick return)', function t() {
-	var tc = findCase( 'n_eq_0' );
+	var tc = n_eq_0;
 	var d = new Float64Array( [ 4.0 ] );
 	var e = new Complex128Array( 0 );
 	var B = new Complex128Array( [ 42.0, 7.0 ] );
@@ -134,7 +131,7 @@ test( 'zptts2: n_eq_0 (N=0, quick return)', function t() {
 });
 
 test( 'zptts2: lower_n4_nrhs2 (IUPLO=0, N=4, NRHS=2)', function t() {
-	var tc = findCase( 'lower_n4_nrhs2' );
+	var tc = lower_n4_nrhs2;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [
@@ -149,7 +146,7 @@ test( 'zptts2: lower_n4_nrhs2 (IUPLO=0, N=4, NRHS=2)', function t() {
 });
 
 test( 'zptts2: upper_n4_nrhs2 (IUPLO=1, N=4, NRHS=2)', function t() {
-	var tc = findCase( 'upper_n4_nrhs2' );
+	var tc = upper_n4_nrhs2;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [

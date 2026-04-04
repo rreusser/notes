@@ -1,0 +1,18 @@
+{
+  "name": "neg_diag_pos_spltol",
+  "info": 0,
+  "nsplit": 3,
+  "isplit": [
+    1,
+    2,
+    3
+  ],
+  "e": [
+    0,
+    0
+  ],
+  "e2": [
+    0,
+    0
+  ]
+}

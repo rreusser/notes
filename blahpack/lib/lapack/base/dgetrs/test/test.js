@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -15,29 +12,17 @@ var dgetrf = require( './../../dgetrf/lib/base.js' );
 var dgetrs = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgetrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var solve_3x3 = require( './fixtures/solve_3x3.json' );
+var solve_3x3_trans = require( './fixtures/solve_3x3_trans.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var identity = require( './fixtures/identity.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -141,7 +126,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgetrs: solve_3x3', function t() {
@@ -153,7 +137,7 @@ test( 'dgetrs: solve_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'solve_3x3' );
+	tc = solve_3x3;
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
@@ -174,7 +158,7 @@ test( 'dgetrs: solve_3x3_trans', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'solve_3x3_trans' );
+	tc = solve_3x3_trans;
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
@@ -196,7 +180,7 @@ test( 'dgetrs: multi_rhs', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	Aorig = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	A = new Float64Array( Aorig );
 	IPIV = new Int32Array( 3 );
@@ -216,7 +200,7 @@ test( 'dgetrs: n_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( 1 );
@@ -231,7 +215,7 @@ test( 'dgetrs: nrhs_zero', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Float64Array( 9 );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( 3 );
@@ -246,7 +230,7 @@ test( 'dgetrs: 1x1', function t() {
 	var A;
 	var B;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	B = new Float64Array( [ 10.0 ] );
@@ -263,7 +247,7 @@ test( 'dgetrs: identity', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	A = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ] );
 	IPIV = new Int32Array( 3 );
 	B = new Float64Array( [ 3.0, 5.0, 7.0 ] );

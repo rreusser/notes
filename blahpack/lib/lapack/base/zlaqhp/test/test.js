@@ -5,38 +5,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqhp = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlaqhp.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_equilibrate = require( './fixtures/upper_equilibrate.json' );
+var lower_equilibrate = require( './fixtures/lower_equilibrate.json' );
+var no_equilibrate = require( './fixtures/no_equilibrate.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var diag_imag_upper = require( './fixtures/diag_imag_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -99,7 +86,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlaqhp: upper_equilibrate', function t() {
@@ -108,7 +94,7 @@ test( 'zlaqhp: upper_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'upper_equilibrate' );
+	tc = upper_equilibrate;
 	AP = new Complex128Array( [ 4, 0, 1, 2, 9, 0, 0.5, -1, 2, 0.5, 16, 0 ] );
 	S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
 	equed = zlaqhp( 'upper', 3, AP, 1, 0, S, 1, 0, 0.05, 16.0 );
@@ -122,7 +108,7 @@ test( 'zlaqhp: lower_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'lower_equilibrate' );
+	tc = lower_equilibrate;
 	AP = new Complex128Array( [ 4, 0, 1, -2, 0.5, 1, 9, 0, 2, -0.5, 16, 0 ] );
 	S = new Float64Array( [ 0.5, 1.0/3.0, 0.25 ] );
 	equed = zlaqhp( 'lower', 3, AP, 1, 0, S, 1, 0, 0.05, 16.0 );
@@ -136,7 +122,7 @@ test( 'zlaqhp: no_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'no_equilibrate' );
+	tc = no_equilibrate;
 	AP = new Complex128Array( [ 4, 0, 1, 1, 9, 0, 0.5, -1, 2, 0.5, 16, 0 ] );
 	S = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 	equed = zlaqhp( 'upper', 3, AP, 1, 0, S, 1, 0, 1.0, 16.0 );
@@ -150,7 +136,7 @@ test( 'zlaqhp: n_zero', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Complex128Array( 1 );
 	S = new Float64Array( 1 );
 	equed = zlaqhp( 'upper', 0, AP, 1, 0, S, 1, 0, 1.0, 1.0 );
@@ -163,7 +149,7 @@ test( 'zlaqhp: n_one_upper', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Complex128Array( [ 100, 0 ] );
 	S = new Float64Array( [ 0.1 ] );
 	equed = zlaqhp( 'upper', 1, AP, 1, 0, S, 1, 0, 0.01, 100.0 );
@@ -177,7 +163,7 @@ test( 'zlaqhp: upper_4x4', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	AP = new Complex128Array([
 		16,
 		0,
@@ -212,7 +198,7 @@ test( 'zlaqhp: lower_4x4', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	AP = new Complex128Array([
 		16,
 		0,
@@ -247,7 +233,7 @@ test( 'zlaqhp: diag_imag_upper (diagonal imaginary parts zeroed)', function t() 
 	var AP;
 	var S;
 
-	tc = findCase( 'diag_imag_upper' );
+	tc = diag_imag_upper;
 	AP = new Complex128Array( [ 4, 0.5, 1, 2, 9, 0.3 ] );
 	S = new Float64Array( [ 0.5, 0.25 ] );
 	equed = zlaqhp( 'upper', 2, AP, 1, 0, S, 1, 0, 0.05, 9.0 );
@@ -261,7 +247,7 @@ test( 'zlaqhp: n_one_lower', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	AP = new Complex128Array( [ 49, 0 ] );
 	S = new Float64Array( [ 0.2 ] );
 	equed = zlaqhp( 'lower', 1, AP, 1, 0, S, 1, 0, 0.01, 49.0 );

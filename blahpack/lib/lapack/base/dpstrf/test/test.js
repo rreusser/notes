@@ -5,37 +5,26 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dpstrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpstrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var rank_deficient_upper = require( './fixtures/rank_deficient_upper.json' );
+var rank_deficient_lower = require( './fixtures/rank_deficient_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
+var rank_deficient_4x4_upper = require( './fixtures/rank_deficient_4x4_upper.json' );
+var rank_deficient_4x4_lower = require( './fixtures/rank_deficient_4x4_lower.json' );
+var upper_large = require( './fixtures/upper_large.json' );
+var lower_large = require( './fixtures/lower_large.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -107,11 +96,10 @@ function runTestCase( uplo, N, Ain, tc, tolerance ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpstrf: upper_3x3', function t() {
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	var A = new Float64Array([
 		4.0,
 		2.0,
@@ -127,7 +115,7 @@ test( 'dpstrf: upper_3x3', function t() {
 });
 
 test( 'dpstrf: lower_3x3', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	var A = new Float64Array([
 		4.0,
 		2.0,
@@ -143,7 +131,7 @@ test( 'dpstrf: lower_3x3', function t() {
 });
 
 test( 'dpstrf: upper_4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var A = new Float64Array([
 		10.0,
 		3.0,
@@ -166,7 +154,7 @@ test( 'dpstrf: upper_4x4', function t() {
 });
 
 test( 'dpstrf: lower_4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var A = new Float64Array([
 		10.0,
 		3.0,
@@ -189,7 +177,7 @@ test( 'dpstrf: lower_4x4', function t() {
 });
 
 test( 'dpstrf: rank_deficient_upper', function t() {
-	var tc = findCase( 'rank_deficient_upper' );
+	var tc = rank_deficient_upper;
 	var A = new Float64Array([
 		1.0,
 		1.0,
@@ -205,7 +193,7 @@ test( 'dpstrf: rank_deficient_upper', function t() {
 });
 
 test( 'dpstrf: rank_deficient_lower', function t() {
-	var tc = findCase( 'rank_deficient_lower' );
+	var tc = rank_deficient_lower;
 	var A = new Float64Array([
 		1.0,
 		1.0,
@@ -236,13 +224,13 @@ test( 'dpstrf: n_zero', function t() {
 });
 
 test( 'dpstrf: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Float64Array([ 9.0 ]);
 	runTestCase( 'upper', 1, A, tc );
 });
 
 test( 'dpstrf: rank_deficient_4x4_upper', function t() {
-	var tc = findCase( 'rank_deficient_4x4_upper' );
+	var tc = rank_deficient_4x4_upper;
 	var A = new Float64Array([
 		2.0,
 		1.0,
@@ -265,7 +253,7 @@ test( 'dpstrf: rank_deficient_4x4_upper', function t() {
 });
 
 test( 'dpstrf: rank_deficient_4x4_lower', function t() {
-	var tc = findCase( 'rank_deficient_4x4_lower' );
+	var tc = rank_deficient_4x4_lower;
 	var A = new Float64Array([
 		2.0,
 		1.0,
@@ -294,7 +282,7 @@ test( 'dpstrf: upper_large (blocked path)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'upper_large' );
+	tc = upper_large;
 	N = 80;
 	A = new Float64Array( N * N );
 	for ( i = 0; i < N; i++ ) {
@@ -313,7 +301,7 @@ test( 'dpstrf: lower_large (blocked path)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'lower_large' );
+	tc = lower_large;
 	N = 80;
 	A = new Float64Array( N * N );
 	for ( i = 0; i < N; i++ ) {

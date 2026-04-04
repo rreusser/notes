@@ -1,0 +1,6 @@
+{
+  "name": "ill_cond_upper",
+  "anorm": 1,
+  "rcond": 1e-15,
+  "info": 0
+}

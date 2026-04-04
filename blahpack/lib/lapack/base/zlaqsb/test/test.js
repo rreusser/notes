@@ -6,42 +6,29 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqsb = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlaqsb.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len, node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_kd1 = require( './fixtures/upper_kd1.json' );
+var lower_kd1 = require( './fixtures/lower_kd1.json' );
+var no_equilibrate = require( './fixtures/no_equilibrate.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var upper_kd2 = require( './fixtures/upper_kd2.json' );
+var lower_kd2 = require( './fixtures/lower_kd2.json' );
+var small_amax = require( './fixtures/small_amax.json' );
+var large_amax = require( './fixtures/large_amax.json' );
 
 // VARIABLES //
 
 var LDAB = 5;
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -104,7 +91,6 @@ function mapEqued( c ) {
 	return 'none';
 }
 
-
 // TESTS //
 
 test( 'zlaqsb is a function', function t() {
@@ -119,7 +105,7 @@ test( 'zlaqsb: upper_kd1 - upper band matrix with KD=1, equilibration needed', f
 	var S;
 	var N;
 
-	tc = findCase( 'upper_kd1' );
+	tc = upper_kd1;
 	N = 4;
 	AB = new Complex128Array( LDAB * N );
 	Av = reinterpret( AB, 0 );
@@ -152,7 +138,7 @@ test( 'zlaqsb: lower_kd1 - lower band matrix with KD=1, equilibration needed', f
 	var S;
 	var N;
 
-	tc = findCase( 'lower_kd1' );
+	tc = lower_kd1;
 	N = 4;
 	AB = new Complex128Array( LDAB * N );
 	Av = reinterpret( AB, 0 );
@@ -185,7 +171,7 @@ test( 'zlaqsb: no_equilibrate - good scond, amax in range', function t() { // es
 	var S;
 	var N;
 
-	tc = findCase( 'no_equilibrate' );
+	tc = no_equilibrate;
 	N = 4;
 	AB = new Complex128Array( LDAB * N );
 	Av = reinterpret( AB, 0 );
@@ -213,7 +199,7 @@ test( 'zlaqsb: n_zero - quick return', function t() {
 	var AB;
 	var S;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Complex128Array( 1 );
 	S = new Float64Array( 1 );
 	equed = zlaqsb( 'upper', 0, 1, AB, 1, LDAB, 0, S, 1, 0, 0.5, 25.0 );
@@ -227,7 +213,7 @@ test( 'zlaqsb: n_one_upper - single element, equilibration needed', function t()
 	var Av;
 	var S;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AB = new Complex128Array( LDAB * 1 );
 	Av = reinterpret( AB, 0 );
 	Av[ 0 ] = 100.0;
@@ -245,7 +231,7 @@ test( 'zlaqsb: upper_kd2 - wider bandwidth KD=2, upper', function t() { // eslin
 	var S;
 	var N;
 
-	tc = findCase( 'upper_kd2' );
+	tc = upper_kd2;
 	N = 4;
 	AB = new Complex128Array( LDAB * N );
 	Av = reinterpret( AB, 0 );
@@ -284,7 +270,7 @@ test( 'zlaqsb: lower_kd2 - wider bandwidth KD=2, lower', function t() { // eslin
 	var S;
 	var N;
 
-	tc = findCase( 'lower_kd2' );
+	tc = lower_kd2;
 	N = 4;
 	AB = new Complex128Array( LDAB * N );
 	Av = reinterpret( AB, 0 );
@@ -323,7 +309,7 @@ test( 'zlaqsb: small_amax - amax very small triggers equilibration', function t(
 	var S;
 	var N;
 
-	tc = findCase( 'small_amax' );
+	tc = small_amax;
 	N = 2;
 	AB = new Complex128Array( LDAB * N );
 	Av = reinterpret( AB, 0 );
@@ -344,7 +330,7 @@ test( 'zlaqsb: large_amax - amax very large triggers equilibration', function t(
 	var S;
 	var N;
 
-	tc = findCase( 'large_amax' );
+	tc = large_amax;
 	N = 2;
 	AB = new Complex128Array( LDAB * N );
 	Av = reinterpret( AB, 0 );

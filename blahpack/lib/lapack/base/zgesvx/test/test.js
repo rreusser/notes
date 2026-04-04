@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -15,29 +12,17 @@ var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgesvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgesvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_trans_n = require( './fixtures/fact_n_trans_n.json' );
+var fact_n_trans_c = require( './fixtures/fact_n_trans_c.json' );
+var fact_e = require( './fixtures/fact_e.json' );
+var fact_f = require( './fixtures/fact_f.json' );
+var singular = require( './fixtures/singular.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var fact_e_trans_c = require( './fixtures/fact_e_trans_c.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -174,7 +159,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgesvx: fact_N_trans_N', function t() {
@@ -195,7 +179,7 @@ test( 'zgesvx: fact_N_trans_N', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_N_trans_N' );
+	tc = fact_n_trans_n;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array( A_DATA.slice() );
@@ -236,7 +220,7 @@ test( 'zgesvx: fact_N_trans_C', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_N_trans_C' );
+	tc = fact_n_trans_c;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array( A_DATA.slice() );
@@ -275,7 +259,7 @@ test( 'zgesvx: fact_E (equilibrate)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_E' );
+	tc = fact_e;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array([
@@ -333,7 +317,7 @@ test( 'zgesvx: fact_F (pre-factored)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_F' );
+	tc = fact_f;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array( A_DATA.slice() );
@@ -376,7 +360,7 @@ test( 'zgesvx: singular', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array([
@@ -465,7 +449,7 @@ test( 'zgesvx: multi_rhs', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	n = 3;
 	nrhs = 2;
 	A = new Complex128Array( A_DATA.slice() );
@@ -509,7 +493,7 @@ test( 'zgesvx: fact_E_trans_C', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'fact_E_trans_C' );
+	tc = fact_e_trans_c;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array([

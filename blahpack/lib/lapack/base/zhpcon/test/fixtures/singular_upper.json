@@ -1,0 +1,26 @@
+{
+  "name": "singular_upper",
+  "anorm": 3,
+  "info_trf": 2,
+  "AP_factored": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0
+  ],
+  "ipiv": [
+    1,
+    2,
+    3
+  ],
+  "rcond": 0,
+  "info": 0
+}

@@ -2,40 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dggsvp3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dggsvp3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_4x3_3x3_uvq = require( './fixtures/basic_4x3_3x3_uvq.json' );
+var basic_4x3_3x3_nnn = require( './fixtures/basic_4x3_3x3_nnn.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var p_zero = require( './fixtures/p_zero.json' );
+var rank_deficient_b = require( './fixtures/rank_deficient_b.json' );
+var wide_2x5_uvq = require( './fixtures/wide_2x5_uvq.json' );
+var diagonal_3x3 = require( './fixtures/diagonal_3x3.json' );
+var tall_b_3x5x3 = require( './fixtures/tall_b_3x5x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -115,7 +102,6 @@ function assertOrthogonal( Q, n, stride1, stride2, offset, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dggsvp3: basic_4x3_3x3_UVQ', function t() {
@@ -132,7 +118,7 @@ test( 'dggsvp3: basic_4x3_3x3_UVQ', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'basic_4x3_3x3_UVQ' );
+	tc = basic_4x3_3x3_uvq;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
 	B = new Float64Array( [ 10, 1, 1, 1, 10, 1, 1, 1, 10 ] );
 	U = new Float64Array( 16 );
@@ -168,7 +154,7 @@ test( 'dggsvp3: basic_4x3_3x3_NNN', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'basic_4x3_3x3_NNN' );
+	tc = basic_4x3_3x3_nnn;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] );
 	B = new Float64Array( [ 10, 1, 1, 1, 10, 1, 1, 1, 10 ] );
 	U = new Float64Array( 1 );
@@ -201,7 +187,7 @@ test( 'dggsvp3: m_zero', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( [ 5, 1, 1, 5 ] );
 	U = new Float64Array( 1 );
@@ -232,7 +218,7 @@ test( 'dggsvp3: n_zero', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	B = new Float64Array( 1 );
 	U = new Float64Array( 9 );
@@ -263,7 +249,7 @@ test( 'dggsvp3: p_zero', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'p_zero' );
+	tc = p_zero;
 	A = new Float64Array( [ 5, 1, 1, 5 ] );
 	B = new Float64Array( 1 );
 	U = new Float64Array( 4 );
@@ -294,7 +280,7 @@ test( 'dggsvp3: rank_deficient_B', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'rank_deficient_B' );
+	tc = rank_deficient_b;
 	A = new Float64Array( [ 2, 1, 0, 1, 3, 1, 0, 1, 4 ] );
 	B = new Float64Array( [ 5, 1, 0, 1, 5, 0, 1, 1, 0 ] );
 	U = new Float64Array( 9 );
@@ -330,7 +316,7 @@ test( 'dggsvp3: wide_2x5_UVQ', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'wide_2x5_UVQ' );
+	tc = wide_2x5_uvq;
 	A = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] );
 	B = new Float64Array( [ 10, 1, 1, 10, 2, 2, 3, 3, 1, 1 ] );
 	U = new Float64Array( 4 );
@@ -366,7 +352,7 @@ test( 'dggsvp3: diagonal_3x3', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'diagonal_3x3' );
+	tc = diagonal_3x3;
 	A = new Float64Array( [ 10, 0, 0, 0, 5, 0, 0, 0, 1 ] );
 	B = new Float64Array( [ 8, 0, 0, 0, 4, 0, 0, 0, 2 ] );
 	U = new Float64Array( 9 );
@@ -402,7 +388,7 @@ test( 'dggsvp3: tall_B_3x5x3', function t() {
 	var K;
 	var l;
 
-	tc = findCase( 'tall_B_3x5x3' );
+	tc = tall_b_3x5x3;
 	A = new Float64Array( [ 2, 1, 0.5, 0.5, 3, 1, 1, 0.5, 4 ] );
 	B = new Float64Array( [ 10, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 10, 1, 1 ] );
 	U = new Float64Array( 9 );

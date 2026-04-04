@@ -6,23 +6,17 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlaqr4 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqr4.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n_eq_0 = require( './fixtures/n_eq_0.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var _6x6_schur_with_z = require( './fixtures/6x6_schur_with_z.json' );
+var _6x6_eig_only = require( './fixtures/6x6_eig_only.json' );
+var _15x15_multishift = require( './fixtures/15x15_multishift.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -125,7 +119,6 @@ function buildHess6( Hm ) {
 	mset( Hm, n, 5, 5, 1.0, 1.0 );
 }
 
-
 // TESTS //
 
 test( 'zlaqr4: main export is a function', function t() {
@@ -133,7 +126,7 @@ test( 'zlaqr4: main export is a function', function t() {
 });
 
 test( 'zlaqr4: n_eq_0', function t() {
-	var tc = findCase( 'n_eq_0' );
+	var tc = n_eq_0;
 	var H = new Complex128Array( 0 );
 	var Z = new Complex128Array( 0 );
 	var W = new Complex128Array( 0 );
@@ -150,7 +143,7 @@ test( 'zlaqr4: n_eq_0', function t() {
 });
 
 test( 'zlaqr4: n_eq_1', function t() {
-	var tc = findCase( 'n_eq_1' );
+	var tc = n_eq_1;
 	var n = 1;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -172,7 +165,7 @@ test( 'zlaqr4: n_eq_1', function t() {
 });
 
 test( 'zlaqr4: 6x6 Schur form with Z (small, uses zlahqr)', function t() {
-	var tc = findCase( '6x6_schur_with_Z' );
+	var tc = _6x6_schur_with_z;
 	var n = 6;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -199,7 +192,7 @@ test( 'zlaqr4: 6x6 Schur form with Z (small, uses zlahqr)', function t() {
 });
 
 test( 'zlaqr4: 6x6 eigenvalues only', function t() {
-	var tc = findCase( '6x6_eig_only' );
+	var tc = _6x6_eig_only;
 	var n = 6;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -220,7 +213,7 @@ test( 'zlaqr4: 6x6 eigenvalues only', function t() {
 });
 
 test( 'zlaqr4: 15x15 multishift', function t() {
-	var tc = findCase( '15x15_multishift' );
+	var tc = _15x15_multishift;
 	var n = 15;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );

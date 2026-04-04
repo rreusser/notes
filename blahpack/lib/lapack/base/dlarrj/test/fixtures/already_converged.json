@@ -1,0 +1,14 @@
+{
+  "name": "already_converged",
+  "info": 0,
+  "w": [
+    1,
+    2,
+    4
+  ],
+  "werr": [
+    1e-16,
+    1e-16,
+    1e-16
+  ]
+}

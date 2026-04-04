@@ -1,0 +1,5 @@
+{
+  "name": "ill_conditioned_onenorm",
+  "rcond": 1e-24,
+  "info": 0
+}

@@ -2,40 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgelq2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgelq2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_2x3 = require( './fixtures/basic_2x3.json' );
+var basic_3x4 = require( './fixtures/basic_3x4.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var square_2x2 = require( './fixtures/square_2x2.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,7 +51,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zgelq2: basic 2x3 matrix', function t() {
@@ -78,7 +60,7 @@ test( 'zgelq2: basic 2x3 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'basic_2x3' );
+	tc = basic_2x3;
 	a = new Complex128Array([
 		1,
 		0,
@@ -108,7 +90,7 @@ test( 'zgelq2: basic 3x4 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'basic_3x4' );
+	tc = basic_3x4;
 	a = new Complex128Array([
 		1,
 		1,
@@ -176,7 +158,7 @@ test( 'zgelq2: 1x1 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	a = new Complex128Array( [ 5, 3 ] );
 	tau = new Complex128Array( 1 );
 	work = new Complex128Array( 2 );
@@ -193,7 +175,7 @@ test( 'zgelq2: square 2x2 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'square_2x2' );
+	tc = square_2x2;
 	a = new Complex128Array( [ 1, 1, 0, 1, 1, 0, 1, 1 ] );
 	tau = new Complex128Array( 2 );
 	work = new Complex128Array( 10 );
@@ -210,7 +192,7 @@ test( 'zgelq2: square 3x3 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	a = new Complex128Array([
 		2,
 		1,

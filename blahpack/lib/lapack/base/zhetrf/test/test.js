@@ -4,26 +4,18 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zhetrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhetrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var lower_6x6 = require( './fixtures/lower_6x6.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -64,7 +56,6 @@ function extractSubmatrix( data, n, lda ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhetrf: N=0 quick return', function t() {
@@ -88,7 +79,7 @@ test( 'zhetrf: upper_4x4 (fixture, falls through to zhetf2 since N < NB)', funct
 	var A;
 	var n;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	n = 4;
 
 	A = new Complex128Array([
@@ -119,7 +110,7 @@ test( 'zhetrf: lower_4x4 (fixture)', function t() {
 	var A;
 	var n;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	n = 4;
 
 	A = new Complex128Array([
@@ -150,7 +141,7 @@ test( 'zhetrf: lower_6x6 (fixture, with 2x2 pivots)', function t() {
 	var A;
 	var n;
 
-	tc = findCase( 'lower_6x6' );
+	tc = lower_6x6;
 	n = 6;
 
 	A = new Complex128Array([

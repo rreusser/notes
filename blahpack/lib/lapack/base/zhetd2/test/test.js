@@ -4,26 +4,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zhetd2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhetd2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var upper_diagonal = require( './fixtures/upper_diagonal.json' );
+var lower_diagonal = require( './fixtures/lower_diagonal.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -56,11 +51,10 @@ function makeHerm4() {
 	return A;
 }
 
-
 // TESTS //
 
 test( 'zhetd2: upper_4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var A = makeHerm4();
 	var d = new Float64Array( 4 );
 	var e = new Float64Array( 3 );
@@ -76,7 +70,7 @@ test( 'zhetd2: upper_4x4', function t() {
 });
 
 test( 'zhetd2: lower_4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var A = makeHerm4();
 	var d = new Float64Array( 4 );
 	var e = new Float64Array( 3 );
@@ -92,7 +86,7 @@ test( 'zhetd2: lower_4x4', function t() {
 });
 
 test( 'zhetd2: n_one_upper', function t() {
-	var tc = findCase( 'n_one_upper' );
+	var tc = n_one_upper;
 	var A = new Complex128Array( [ 3, 0 ] );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
@@ -103,7 +97,7 @@ test( 'zhetd2: n_one_upper', function t() {
 });
 
 test( 'zhetd2: n_one_lower', function t() {
-	var tc = findCase( 'n_one_lower' );
+	var tc = n_one_lower;
 	var A = new Complex128Array( [ 5, 0 ] );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
@@ -123,7 +117,7 @@ test( 'zhetd2: n_zero', function t() {
 });
 
 test( 'zhetd2: upper_diagonal (tau=0 path)', function t() {
-	var tc = findCase( 'upper_diagonal' );
+	var tc = upper_diagonal;
 	// 3x3 diagonal stored in 4x4 buffer (LDA=4 in Fortran, but we use N=3)
 	var A = new Complex128Array([
 		2, 0,   0, 0,   0, 0,
@@ -142,7 +136,7 @@ test( 'zhetd2: upper_diagonal (tau=0 path)', function t() {
 });
 
 test( 'zhetd2: lower_diagonal (tau=0 path)', function t() {
-	var tc = findCase( 'lower_diagonal' );
+	var tc = lower_diagonal;
 	var A = new Complex128Array([
 		2, 0,   0, 0,   0, 0,
 		0, 0,   5, 0,   0, 0,

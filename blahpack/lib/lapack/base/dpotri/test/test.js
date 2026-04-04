@@ -4,24 +4,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dpotri = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dpotri.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_3x3_chol = require( './fixtures/upper_3x3_chol.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3_chol = require( './fixtures/lower_3x3_chol.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -84,12 +81,11 @@ function assertIdentity( C, N, tol, label ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpotri: UPLO=U, 3x3 SPD matrix', function t() {
-	var tc_chol = findCase( 'upper_3x3_chol' );
-	var tc = findCase( 'upper_3x3' );
+	var tc_chol = upper_3x3_chol;
+	var tc = upper_3x3;
 	var A = new Float64Array( tc_chol.chol );
 	var origA;
 	var info;
@@ -119,8 +115,8 @@ test( 'dpotri: UPLO=U, 3x3 SPD matrix', function t() {
 });
 
 test( 'dpotri: UPLO=L, 3x3 SPD matrix', function t() {
-	var tc_chol = findCase( 'lower_3x3_chol' );
-	var tc = findCase( 'lower_3x3' );
+	var tc_chol = lower_3x3_chol;
+	var tc = lower_3x3;
 	var A = new Float64Array( tc_chol.chol );
 	var origA;
 	var info;
@@ -149,7 +145,7 @@ test( 'dpotri: UPLO=L, 3x3 SPD matrix', function t() {
 });
 
 test( 'dpotri: N=1 edge case', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	// A = [9], dpotrf gives [3], dpotri gives [1/9]
 	var A = new Float64Array( [ 3.0 ] );
 	var info;
@@ -161,7 +157,7 @@ test( 'dpotri: N=1 edge case', function t() {
 });
 
 test( 'dpotri: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Float64Array( [ 999.0 ] );
 	var info;
 
@@ -173,7 +169,7 @@ test( 'dpotri: N=0 quick return', function t() {
 
 test( 'dpotri: UPLO=U, 4x4 SPD matrix', function t() {
 	var dpotrf = require( '../../dpotrf/lib/base.js' );
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var origA;
 	var info;
 	var A;
@@ -213,7 +209,7 @@ test( 'dpotri: UPLO=U, 4x4 SPD matrix', function t() {
 
 test( 'dpotri: UPLO=L, 4x4 SPD matrix', function t() {
 	var dpotrf = require( '../../dpotrf/lib/base.js' );
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var origA;
 	var info;
 	var A;

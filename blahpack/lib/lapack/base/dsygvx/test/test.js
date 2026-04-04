@@ -5,25 +5,24 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsygvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsygvx.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var itype1_v_a_l = require( './fixtures/itype1_v_a_l.json' );
+var itype1_v_a_u = require( './fixtures/itype1_v_a_u.json' );
+var itype1_n_a_l = require( './fixtures/itype1_n_a_l.json' );
+var itype1_v_v_l = require( './fixtures/itype1_v_v_l.json' );
+var itype1_v_i_l = require( './fixtures/itype1_v_i_l.json' );
+var itype2_v_a_l = require( './fixtures/itype2_v_a_l.json' );
+var itype3_v_a_l = require( './fixtures/itype3_v_a_l.json' );
+var nonposdef_b = require( './fixtures/nonposdef_b.json' );
+var itype3_v_a_u = require( './fixtures/itype3_v_a_u.json' );
+var itype2_v_i_u = require( './fixtures/itype2_v_i_u.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -166,11 +165,10 @@ function runDsygvx( itype, jobz, range, uplo, N, A, B, vl, vu, il, iu, abstol ) 
 	return { info: info, M: out.M, w: w, Z: Z, IFAIL: IFAIL };
 }
 
-
 // TESTS //
 
 test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=A, UPLO=L', function t() {
-	var tc = findCase( 'itype1_V_A_L' );
+	var tc = itype1_v_a_l;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );
@@ -184,7 +182,7 @@ test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=A, UPLO=L', function t() {
 });
 
 test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=A, UPLO=U', function t() {
-	var tc = findCase( 'itype1_V_A_U' );
+	var tc = itype1_v_a_u;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );
@@ -198,7 +196,7 @@ test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=A, UPLO=U', function t() {
 });
 
 test( 'dsygvx: ITYPE=1, JOBZ=N, RANGE=A, UPLO=L', function t() {
-	var tc = findCase( 'itype1_N_A_L' );
+	var tc = itype1_n_a_l;
 	var A = symA();
 	var B = spdB();
 	var r = runDsygvx( 1, 'no-vectors', 'all', 'lower', 4, A, B, 0, 0, 0, 0, 0 );
@@ -209,7 +207,7 @@ test( 'dsygvx: ITYPE=1, JOBZ=N, RANGE=A, UPLO=L', function t() {
 });
 
 test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=V, UPLO=L (value range [1.5, 2.5])', function t() {
-	var tc = findCase( 'itype1_V_V_L' );
+	var tc = itype1_v_v_l;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );
@@ -223,7 +221,7 @@ test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=V, UPLO=L (value range [1.5, 2.5])', funct
 });
 
 test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=I, UPLO=L (index 2..3)', function t() {
-	var tc = findCase( 'itype1_V_I_L' );
+	var tc = itype1_v_i_l;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );
@@ -237,7 +235,7 @@ test( 'dsygvx: ITYPE=1, JOBZ=V, RANGE=I, UPLO=L (index 2..3)', function t() {
 });
 
 test( 'dsygvx: ITYPE=2, JOBZ=V, RANGE=A, UPLO=L', function t() {
-	var tc = findCase( 'itype2_V_A_L' );
+	var tc = itype2_v_a_l;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );
@@ -251,7 +249,7 @@ test( 'dsygvx: ITYPE=2, JOBZ=V, RANGE=A, UPLO=L', function t() {
 });
 
 test( 'dsygvx: ITYPE=3, JOBZ=V, RANGE=A, UPLO=L', function t() {
-	var tc = findCase( 'itype3_V_A_L' );
+	var tc = itype3_v_a_l;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );
@@ -274,7 +272,7 @@ test( 'dsygvx: N=0 quick return', function t() {
 });
 
 test( 'dsygvx: non-positive-definite B returns INFO > N', function t() {
-	var tc = findCase( 'nonposdef_B' );
+	var tc = nonposdef_b;
 	// 3x3 symmetric A
 	var A = new Float64Array([
 		2, 1, 0,
@@ -294,7 +292,7 @@ test( 'dsygvx: non-positive-definite B returns INFO > N', function t() {
 });
 
 test( 'dsygvx: ITYPE=3, JOBZ=V, RANGE=A, UPLO=U', function t() {
-	var tc = findCase( 'itype3_V_A_U' );
+	var tc = itype3_v_a_u;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );
@@ -308,7 +306,7 @@ test( 'dsygvx: ITYPE=3, JOBZ=V, RANGE=A, UPLO=U', function t() {
 });
 
 test( 'dsygvx: ITYPE=2, JOBZ=V, RANGE=I, UPLO=U (index 1..2)', function t() {
-	var tc = findCase( 'itype2_V_I_U' );
+	var tc = itype2_v_i_u;
 	var Aorig = symA();
 	var Borig = spdB();
 	var A = new Float64Array( Aorig );

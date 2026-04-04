@@ -23,37 +23,37 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztftri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztftri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var lower_odd_normal_nonunit = require( './fixtures/lower_odd_normal_nonunit.json' );
+var upper_odd_normal_nonunit = require( './fixtures/upper_odd_normal_nonunit.json' );
+var lower_odd_conjtrans_nonunit = require( './fixtures/lower_odd_conjtrans_nonunit.json' );
+var upper_odd_conjtrans_nonunit = require( './fixtures/upper_odd_conjtrans_nonunit.json' );
+var lower_even_normal_nonunit = require( './fixtures/lower_even_normal_nonunit.json' );
+var upper_even_normal_nonunit = require( './fixtures/upper_even_normal_nonunit.json' );
+var lower_even_conjtrans_nonunit = require( './fixtures/lower_even_conjtrans_nonunit.json' );
+var upper_even_conjtrans_nonunit = require( './fixtures/upper_even_conjtrans_nonunit.json' );
+var lower_odd_normal_unit = require( './fixtures/lower_odd_normal_unit.json' );
+var upper_odd_normal_unit = require( './fixtures/upper_odd_normal_unit.json' );
+var lower_even_normal_unit = require( './fixtures/lower_even_normal_unit.json' );
+var upper_even_normal_unit = require( './fixtures/upper_even_normal_unit.json' );
+var lower_odd_conjtrans_unit = require( './fixtures/lower_odd_conjtrans_unit.json' );
+var upper_odd_conjtrans_unit = require( './fixtures/upper_odd_conjtrans_unit.json' );
+var lower_even_conjtrans_unit = require( './fixtures/lower_even_conjtrans_unit.json' );
+var upper_even_conjtrans_unit = require( './fixtures/upper_even_conjtrans_unit.json' );
+var lower_5_normal_nonunit = require( './fixtures/lower_5_normal_nonunit.json' );
+var upper_5_conjtrans_nonunit = require( './fixtures/upper_5_conjtrans_nonunit.json' );
+var upper_5_normal_nonunit = require( './fixtures/upper_5_normal_nonunit.json' );
+var lower_5_conjtrans_nonunit = require( './fixtures/lower_5_conjtrans_nonunit.json' );
+var n_one = require( './fixtures/n_one.json' );
+var singular = require( './fixtures/singular.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -97,7 +97,6 @@ function makeInput( tc ) {
 	return new Complex128Array( tc.input );
 }
 
-
 // TESTS //
 
 test( 'ztftri: lower_odd_normal_nonunit (N=3, TRANSR=N, UPLO=L, DIAG=N)', function t() { // eslint-disable-line max-len
@@ -106,7 +105,7 @@ test( 'ztftri: lower_odd_normal_nonunit (N=3, TRANSR=N, UPLO=L, DIAG=N)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_normal_nonunit' );
+	tc = lower_odd_normal_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'lower', 'non-unit', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -120,7 +119,7 @@ test( 'ztftri: upper_odd_normal_nonunit (N=3, TRANSR=N, UPLO=U, DIAG=N)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_normal_nonunit' );
+	tc = upper_odd_normal_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'upper', 'non-unit', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -134,7 +133,7 @@ test( 'ztftri: lower_odd_conjtrans_nonunit (N=3, TRANSR=C, UPLO=L, DIAG=N)', fun
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_conjtrans_nonunit' );
+	tc = lower_odd_conjtrans_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'lower', 'non-unit', 3, A, 1, 0 ); // eslint-disable-line max-len
 	Av = reinterpret( A, 0 );
@@ -148,7 +147,7 @@ test( 'ztftri: upper_odd_conjtrans_nonunit (N=3, TRANSR=C, UPLO=U, DIAG=N)', fun
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_conjtrans_nonunit' );
+	tc = upper_odd_conjtrans_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'upper', 'non-unit', 3, A, 1, 0 ); // eslint-disable-line max-len
 	Av = reinterpret( A, 0 );
@@ -162,7 +161,7 @@ test( 'ztftri: lower_even_normal_nonunit (N=4, TRANSR=N, UPLO=L, DIAG=N)', funct
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_normal_nonunit' );
+	tc = lower_even_normal_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'lower', 'non-unit', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -176,7 +175,7 @@ test( 'ztftri: upper_even_normal_nonunit (N=4, TRANSR=N, UPLO=U, DIAG=N)', funct
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_normal_nonunit' );
+	tc = upper_even_normal_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'upper', 'non-unit', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -190,7 +189,7 @@ test( 'ztftri: lower_even_conjtrans_nonunit (N=4, TRANSR=C, UPLO=L, DIAG=N)', fu
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_conjtrans_nonunit' );
+	tc = lower_even_conjtrans_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'lower', 'non-unit', 4, A, 1, 0 ); // eslint-disable-line max-len
 	Av = reinterpret( A, 0 );
@@ -204,7 +203,7 @@ test( 'ztftri: upper_even_conjtrans_nonunit (N=4, TRANSR=C, UPLO=U, DIAG=N)', fu
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_conjtrans_nonunit' );
+	tc = upper_even_conjtrans_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'upper', 'non-unit', 4, A, 1, 0 ); // eslint-disable-line max-len
 	Av = reinterpret( A, 0 );
@@ -218,7 +217,7 @@ test( 'ztftri: lower_odd_normal_unit (N=3, TRANSR=N, UPLO=L, DIAG=U)', function 
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_normal_unit' );
+	tc = lower_odd_normal_unit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'lower', 'unit', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -232,7 +231,7 @@ test( 'ztftri: upper_odd_normal_unit (N=3, TRANSR=N, UPLO=U, DIAG=U)', function 
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_normal_unit' );
+	tc = upper_odd_normal_unit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'upper', 'unit', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -246,7 +245,7 @@ test( 'ztftri: lower_even_normal_unit (N=4, TRANSR=N, UPLO=L, DIAG=U)', function
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_normal_unit' );
+	tc = lower_even_normal_unit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'lower', 'unit', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -260,7 +259,7 @@ test( 'ztftri: upper_even_normal_unit (N=4, TRANSR=N, UPLO=U, DIAG=U)', function
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_normal_unit' );
+	tc = upper_even_normal_unit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'upper', 'unit', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -274,7 +273,7 @@ test( 'ztftri: lower_odd_conjtrans_unit (N=3, TRANSR=C, UPLO=L, DIAG=U)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_odd_conjtrans_unit' );
+	tc = lower_odd_conjtrans_unit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'lower', 'unit', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -288,7 +287,7 @@ test( 'ztftri: upper_odd_conjtrans_unit (N=3, TRANSR=C, UPLO=U, DIAG=U)', functi
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_odd_conjtrans_unit' );
+	tc = upper_odd_conjtrans_unit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'upper', 'unit', 3, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -302,7 +301,7 @@ test( 'ztftri: lower_even_conjtrans_unit (N=4, TRANSR=C, UPLO=L, DIAG=U)', funct
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_even_conjtrans_unit' );
+	tc = lower_even_conjtrans_unit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'lower', 'unit', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -316,7 +315,7 @@ test( 'ztftri: upper_even_conjtrans_unit (N=4, TRANSR=C, UPLO=U, DIAG=U)', funct
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_even_conjtrans_unit' );
+	tc = upper_even_conjtrans_unit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'upper', 'unit', 4, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -330,7 +329,7 @@ test( 'ztftri: lower_5_normal_nonunit (N=5, TRANSR=N, UPLO=L, DIAG=N)', function
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_5_normal_nonunit' );
+	tc = lower_5_normal_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'lower', 'non-unit', 5, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -344,7 +343,7 @@ test( 'ztftri: upper_5_conjtrans_nonunit (N=5, TRANSR=C, UPLO=U, DIAG=N)', funct
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_5_conjtrans_nonunit' );
+	tc = upper_5_conjtrans_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'upper', 'non-unit', 5, A, 1, 0 ); // eslint-disable-line max-len
 	Av = reinterpret( A, 0 );
@@ -358,7 +357,7 @@ test( 'ztftri: upper_5_normal_nonunit (N=5, TRANSR=N, UPLO=U, DIAG=N)', function
 	var Av;
 	var A;
 
-	tc = findCase( 'upper_5_normal_nonunit' );
+	tc = upper_5_normal_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'upper', 'non-unit', 5, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -372,7 +371,7 @@ test( 'ztftri: lower_5_conjtrans_nonunit (N=5, TRANSR=C, UPLO=L, DIAG=N)', funct
 	var Av;
 	var A;
 
-	tc = findCase( 'lower_5_conjtrans_nonunit' );
+	tc = lower_5_conjtrans_nonunit;
 	A = makeInput( tc );
 	info = ztftri( 'conjugate-transpose', 'lower', 'non-unit', 5, A, 1, 0 ); // eslint-disable-line max-len
 	Av = reinterpret( A, 0 );
@@ -395,7 +394,7 @@ test( 'ztftri: n_one', function t() {
 	var Av;
 	var A;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'lower', 'non-unit', 1, A, 1, 0 );
 	Av = reinterpret( A, 0 );
@@ -408,7 +407,7 @@ test( 'ztftri: singular (INFO > 0)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	A = makeInput( tc );
 	info = ztftri( 'no-transpose', 'lower', 'non-unit', 3, A, 1, 0 );
 	assert.equal( info, tc.info );

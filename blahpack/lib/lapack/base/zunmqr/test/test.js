@@ -6,24 +6,20 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zgeqr2 = require( '../../zgeqr2/lib/base.js' );
 var zunmqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunmqr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var left_notrans_4x4 = require( './fixtures/left_notrans_4x4.json' );
+var left_conjtrans_4x4 = require( './fixtures/left_conjtrans_4x4.json' );
+var right_notrans_4x4 = require( './fixtures/right_notrans_4x4.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var k_zero = require( './fixtures/k_zero.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -68,11 +64,10 @@ function eye4in6() {
 	return C;
 }
 
-
 // TESTS //
 
 test( 'zunmqr: left, no transpose (Q*I)', function t() {
-	var tc = findCase( 'left_notrans_4x4' );
+	var tc = left_notrans_4x4;
 	var qr = qr4x3();
 	var LDC = 6;
 	var C = eye4in6();
@@ -84,7 +79,7 @@ test( 'zunmqr: left, no transpose (Q*I)', function t() {
 });
 
 test( 'zunmqr: left, conjugate transpose (Q^H*I)', function t() {
-	var tc = findCase( 'left_conjtrans_4x4' );
+	var tc = left_conjtrans_4x4;
 	var qr = qr4x3();
 	var LDC = 6;
 	var C = eye4in6();
@@ -96,7 +91,7 @@ test( 'zunmqr: left, conjugate transpose (Q^H*I)', function t() {
 });
 
 test( 'zunmqr: right, no transpose (I*Q)', function t() {
-	var tc = findCase( 'right_notrans_4x4' );
+	var tc = right_notrans_4x4;
 	var qr = qr4x3();
 	var LDC = 6;
 	var C = eye4in6();
@@ -108,7 +103,7 @@ test( 'zunmqr: right, no transpose (I*Q)', function t() {
 });
 
 test( 'zunmqr: M=0 quick return', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var A = new Complex128Array( 5 );
 	var TAU = new Complex128Array( 2 );
 	var C = new Complex128Array( 5 );
@@ -118,7 +113,7 @@ test( 'zunmqr: M=0 quick return', function t() {
 });
 
 test( 'zunmqr: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 5 );
 	var TAU = new Complex128Array( 2 );
 	var C = new Complex128Array( 5 );
@@ -128,7 +123,7 @@ test( 'zunmqr: N=0 quick return', function t() {
 });
 
 test( 'zunmqr: K=0 quick return', function t() {
-	var tc = findCase( 'k_zero' );
+	var tc = k_zero;
 	var A = new Complex128Array( 5 );
 	var TAU = new Complex128Array( 2 );
 	var C = new Complex128Array( 5 );
@@ -138,7 +133,7 @@ test( 'zunmqr: K=0 quick return', function t() {
 });
 
 test( 'zunmqr: left, no transpose, rectangular C (4x2)', function t() {
-	var tc = findCase( 'left_notrans_rect' );
+	var tc = left_notrans_rect;
 	var qr = qr4x3();
 	var LDC = 6;
 	var C = new Complex128Array( LDC * 6 );
@@ -152,7 +147,6 @@ test( 'zunmqr: left, no transpose, rectangular C (4x2)', function t() {
 	assertClose( info, tc.info, 1e-14, 'info' );
 	assertArrayClose( Array.from( Cv.subarray( 0, tc.c.length ) ), tc.c, 1e-10, 'c' );
 });
-
 
 // BLOCKED PATH TESTS (K > NB=32) //
 

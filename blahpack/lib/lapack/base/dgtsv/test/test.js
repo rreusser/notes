@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgtsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgtsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5_single_rhs = require( './fixtures/basic_5x5_single_rhs.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var singular = require( './fixtures/singular.json' );
+var pivoting = require( './fixtures/pivoting.json' );
+var three_rhs = require( './fixtures/three_rhs.json' );
+var pivoting_multi_rhs = require( './fixtures/pivoting_multi_rhs.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -91,7 +77,6 @@ function getColumn( B, LDB, col, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgtsv: basic_5x5_single_rhs', function t() {
@@ -103,7 +88,7 @@ test( 'dgtsv: basic_5x5_single_rhs', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'basic_5x5_single_rhs' );
+	tc = basic_5x5_single_rhs;
 	N = 5;
 	dl = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
 	d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
@@ -128,7 +113,7 @@ test( 'dgtsv: multi_rhs', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	N = 4;
 	nrhs = 2;
 	LDB = N;
@@ -162,7 +147,7 @@ test( 'dgtsv: n_one', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	d = new Float64Array( [ 5.0 ] );
 	dl = new Float64Array( 0 );
 	du = new Float64Array( 0 );
@@ -181,7 +166,7 @@ test( 'dgtsv: n_zero', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	dl = new Float64Array( 0 );
 	d = new Float64Array( 0 );
 	du = new Float64Array( 0 );
@@ -198,7 +183,7 @@ test( 'dgtsv: singular', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	dl = new Float64Array( [ 0.0, 0.0 ] );
 	d = new Float64Array( [ 0.0, 2.0, 3.0 ] );
 	du = new Float64Array( [ 1.0, 1.0 ] );
@@ -216,7 +201,7 @@ test( 'dgtsv: pivoting', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'pivoting' );
+	tc = pivoting;
 	N = 4;
 	dl = new Float64Array( [ 5.0, 7.0, 9.0 ] );
 	d = new Float64Array( [ 1.0, 3.0, 2.0, 1.0 ] );
@@ -241,7 +226,7 @@ test( 'dgtsv: three_rhs', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'three_rhs' );
+	tc = three_rhs;
 	N = 3;
 	nrhs = 3;
 	LDB = N;
@@ -280,7 +265,7 @@ test( 'dgtsv: pivoting_multi_rhs', function t() {
 	var d;
 	var B;
 
-	tc = findCase( 'pivoting_multi_rhs' );
+	tc = pivoting_multi_rhs;
 	N = 4;
 	nrhs = 2;
 	LDB = N;

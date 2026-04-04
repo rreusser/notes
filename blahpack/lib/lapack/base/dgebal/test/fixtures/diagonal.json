@@ -1,0 +1,11 @@
+{
+  "name": "diagonal",
+  "info": 0,
+  "ilo": 1,
+  "ihi": 1,
+  "scale": [
+    1,
+    2,
+    3
+  ]
+}

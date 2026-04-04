@@ -6,23 +6,17 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlaqr5 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqr5.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var _6x6_2shifts = require( './fixtures/6x6_2shifts.json' );
+var _8x8_4shifts = require( './fixtures/8x8_4shifts.json' );
+var _10x10_6shifts = require( './fixtures/10x10_6shifts.json' );
+var _8x8_4shifts_no_z = require( './fixtures/8x8_4shifts_no_z.json' );
+var _6x6_partial_sweep = require( './fixtures/6x6_partial_sweep.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -57,7 +51,6 @@ function getFlat( m, N ) {
 	return Array.from( reinterpret( m.data, 0 ) );
 }
 
-
 // TESTS //
 
 test( 'zlaqr5: main export is a function', function t() {
@@ -65,7 +58,7 @@ test( 'zlaqr5: main export is a function', function t() {
 });
 
 test( 'zlaqr5: 6x6 with 2 shifts', function t() {
-	var tc = findCase( '6x6_2shifts' );
+	var tc = _6x6_2shifts;
 	var n = 6;
 	var nshfts = 2;
 	var Hm = makeMatrix( n );
@@ -138,7 +131,7 @@ test( 'zlaqr5: 6x6 with 2 shifts', function t() {
 });
 
 test( 'zlaqr5: 8x8 with 4 shifts', function t() {
-	var tc = findCase( '8x8_4shifts' );
+	var tc = _8x8_4shifts;
 	var n = 8;
 	var nshfts = 4;
 	var Hm = makeMatrix( n );
@@ -219,7 +212,7 @@ test( 'zlaqr5: 8x8 with 4 shifts', function t() {
 });
 
 test( 'zlaqr5: 10x10 with 6 shifts', function t() {
-	var tc = findCase( '10x10_6shifts' );
+	var tc = _10x10_6shifts;
 	var n = 10;
 	var nshfts = 6;
 	var Hm = makeMatrix( n );
@@ -279,7 +272,7 @@ test( 'zlaqr5: 10x10 with 6 shifts', function t() {
 });
 
 test( 'zlaqr5: 8x8 with 4 shifts, no Z (wantz=false)', function t() {
-	var tc = findCase( '8x8_4shifts_no_z' );
+	var tc = _8x8_4shifts_no_z;
 	var n = 8;
 	var nshfts = 4;
 	var Hm = makeMatrix( n );
@@ -414,7 +407,7 @@ test( 'zlaqr5: quick return for ktop >= kbot', function t() {
 });
 
 test( 'zlaqr5: 6x6 partial sweep (ktop=2, kbot=5)', function t() {
-	var tc = findCase( '6x6_partial_sweep' );
+	var tc = _6x6_partial_sweep;
 	var n = 6;
 	var nshfts = 2;
 	var Hm = makeMatrix( n );

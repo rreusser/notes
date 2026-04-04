@@ -2,40 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dggsvd3 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dggsvd3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_3x3_2x3 = require( './fixtures/basic_3x3_2x3.json' );
+var _2x3_3x3 = require( './fixtures/2x3_3x3.json' );
+var no_uvq = require( './fixtures/no_uvq.json' );
+var diag_4x4 = require( './fixtures/diag_4x4.json' );
+var workspace_query = require( './fixtures/workspace_query.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -70,7 +53,6 @@ function assertArrayClose( actual, offset, stride, expected, n, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dggsvd3: basic 3x3 A, 2x3 B', function t() {
@@ -91,7 +73,7 @@ test( 'dggsvd3: basic 3x3 A, 2x3 B', function t() {
 	var K;
 	var L;
 
-	tc = findCase( 'basic_3x3_2x3' );
+	tc = basic_3x3_2x3;
 	M = 3;
 	N = 3;
 	P = 2;
@@ -147,7 +129,7 @@ test( 'dggsvd3: 2x3 A, 3x3 B', function t() {
 	var K;
 	var L;
 
-	tc = findCase( '2x3_3x3' );
+	tc = _2x3_3x3;
 	M = 2;
 	N = 3;
 	P = 3;
@@ -203,7 +185,7 @@ test( 'dggsvd3: no U/V/Q', function t() {
 	var K;
 	var L;
 
-	tc = findCase( 'no_uvq' );
+	tc = no_uvq;
 	M = 3;
 	N = 3;
 	P = 2;
@@ -262,7 +244,7 @@ test( 'dggsvd3: diagonal 4x4 A, 3x4 B', function t() {
 	var L;
 	var i;
 
-	tc = findCase( 'diag_4x4' );
+	tc = diag_4x4;
 	M = 4;
 	N = 4;
 	P = 3;
@@ -321,7 +303,7 @@ test( 'dggsvd3: workspace query', function t() {
 	var K;
 	var L;
 
-	tc = findCase( 'workspace_query' );
+	tc = workspace_query;
 	M = 3;
 	N = 3;
 	P = 2;

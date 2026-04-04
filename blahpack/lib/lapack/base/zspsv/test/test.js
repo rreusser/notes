@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -15,29 +12,16 @@ var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zspsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zspsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3_upper = require( './fixtures/3x3_upper.json' );
+var _3x3_lower = require( './fixtures/3x3_lower.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var _4x4_lower = require( './fixtures/4x4_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -86,7 +70,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zspsv: 3x3 upper triangle', function t() {
@@ -97,7 +80,7 @@ test( 'zspsv: 3x3 upper triangle', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( '3x3_upper' );
+	tc = _3x3_upper;
 	AP = new Complex128Array([
 		4.0,
 		1.0,
@@ -135,7 +118,7 @@ test( 'zspsv: 3x3 lower triangle', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( '3x3_lower' );
+	tc = _3x3_lower;
 	AP = new Complex128Array([
 		4.0,
 		1.0,
@@ -173,7 +156,7 @@ test( 'zspsv: multiple right-hand sides', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	AP = new Complex128Array([
 		4.0,
 		1.0,
@@ -231,7 +214,7 @@ test( 'zspsv: N=0 quick return', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array( 1 );
@@ -247,7 +230,7 @@ test( 'zspsv: N=1', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AP = new Complex128Array([ 5.0, 2.0 ]);
 	IPIV = new Int32Array( 1 );
 	B = new Complex128Array([ 10.0, 4.0 ]);
@@ -266,7 +249,7 @@ test( 'zspsv: 4x4 lower indefinite', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( '4x4_lower' );
+	tc = _4x4_lower;
 	AP = new Complex128Array([
 		2.0,
 		1.0,

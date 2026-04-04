@@ -2,40 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgetc2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgetc2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_2x2 = require( './fixtures/basic_2x2.json' );
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var basic_4x4 = require( './fixtures/basic_4x4.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
+var near_singular = require( './fixtures/near_singular.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,7 +51,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dgetc2: basic 2x2', function t() {
@@ -79,7 +61,7 @@ test( 'dgetc2: basic 2x2', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'basic_2x2' );
+	tc = basic_2x2;
 	A = new Float64Array( [ 1.0, 3.0, 2.0, 4.0 ] );
 	IPIV = new Int32Array( 2 );
 	JPIV = new Int32Array( 2 );
@@ -100,7 +82,7 @@ test( 'dgetc2: basic 3x3', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	A = new Float64Array([
 		1.0,
 		4.0,
@@ -131,7 +113,7 @@ test( 'dgetc2: basic 4x4 with complete pivoting', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'basic_4x4' );
+	tc = basic_4x4;
 	A = new Float64Array([
 		0.1,
 		0.4,
@@ -168,7 +150,7 @@ test( 'dgetc2: N=1', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_equals_1' );
+	tc = n_equals_1;
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	JPIV = new Int32Array( 1 );
@@ -187,7 +169,7 @@ test( 'dgetc2: near-singular', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'near_singular' );
+	tc = near_singular;
 	A = new Float64Array( [ 1e-200, 1.0, 1.0, 1.0 ] );
 	IPIV = new Int32Array( 2 );
 	JPIV = new Int32Array( 2 );

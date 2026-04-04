@@ -10,27 +10,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zungtr = require( './../lib/base.js' );
 var zhetrd = require( '../../zhetrd/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zungtr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var zungtr_4x4_l = require( './fixtures/zungtr_4x4_l.json' );
+var zungtr_4x4_u = require( './fixtures/zungtr_4x4_u.json' );
+var zungtr_3x3_l = require( './fixtures/zungtr_3x3_l.json' );
+var zungtr_1x1 = require( './fixtures/zungtr_1x1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -151,11 +144,10 @@ function buildHerm3x3() {
 	]);
 }
 
-
 // TESTS //
 
 test( 'zungtr: 4x4 lower', function t() {
-	var tc = findCase( 'zungtr_4x4_L' );
+	var tc = zungtr_4x4_l;
 	var N = 4;
 	var AHerm = buildHerm4x4();
 	var result = zhetrdThenZungtr( 'lower', N, AHerm );
@@ -167,7 +159,7 @@ test( 'zungtr: 4x4 lower', function t() {
 });
 
 test( 'zungtr: 4x4 upper', function t() {
-	var tc = findCase( 'zungtr_4x4_U' );
+	var tc = zungtr_4x4_u;
 	var N = 4;
 	var AHerm = buildHerm4x4();
 	var result = zhetrdThenZungtr( 'upper', N, AHerm );
@@ -178,7 +170,7 @@ test( 'zungtr: 4x4 upper', function t() {
 });
 
 test( 'zungtr: 3x3 lower', function t() {
-	var tc = findCase( 'zungtr_3x3_L' );
+	var tc = zungtr_3x3_l;
 	var N = 3;
 	var LDA_FIXTURE = 4; // Fortran test uses LDA=NMAX=4
 	var AHerm = buildHerm3x3();
@@ -190,7 +182,7 @@ test( 'zungtr: 3x3 lower', function t() {
 });
 
 test( 'zungtr: 1x1', function t() {
-	var tc = findCase( 'zungtr_1x1' );
+	var tc = zungtr_1x1;
 	var N = 1;
 	var AHerm = new Float64Array([ 5, 0 ]);
 	var result = zhetrdThenZungtr( 'lower', N, AHerm );

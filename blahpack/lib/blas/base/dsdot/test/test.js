@@ -2,39 +2,22 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsdot = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsdot.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var neg_inc = require( './fixtures/neg_inc.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -50,7 +33,6 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
-
 // TESTS //
 
 test( 'dsdot: basic', function t() {
@@ -59,7 +41,7 @@ test( 'dsdot: basic', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'basic' );
+	tc = basic;
 	x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	y = new Float64Array( [ 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	result = dsdot( 5, x, 1, 0, y, 1, 0 );
@@ -72,7 +54,7 @@ test( 'dsdot: n_zero', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	y = new Float64Array( [ 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	result = dsdot( 0, x, 1, 0, y, 1, 0 );
@@ -85,7 +67,7 @@ test( 'dsdot: n_one', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	x = new Float64Array( [ 3.0 ] );
 	y = new Float64Array( [ 7.0 ] );
 	result = dsdot( 1, x, 1, 0, y, 1, 0 );
@@ -98,7 +80,7 @@ test( 'dsdot: stride', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'stride' );
+	tc = stride;
 	x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0 ] );
 	y = new Float64Array( [ 4.0, 0.0, 5.0, 0.0, 6.0 ] );
 	result = dsdot( 3, x, 2, 0, y, 2, 0 );
@@ -111,7 +93,7 @@ test( 'dsdot: neg_inc', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'neg_inc' );
+	tc = neg_inc;
 	x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 	result = dsdot( 3, x, -1, 2, y, 1, 0 );

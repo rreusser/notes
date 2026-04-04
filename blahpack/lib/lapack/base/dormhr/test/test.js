@@ -2,39 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dormhr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dormhr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var hess_factors = require( './fixtures/hess_factors.json' );
+var left_notrans = require( './fixtures/left_notrans.json' );
+var left_trans = require( './fixtures/left_trans.json' );
+var right_notrans = require( './fixtures/right_notrans.json' );
+var right_trans = require( './fixtures/right_trans.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var right_trans_rect = require( './fixtures/right_trans_rect.json' );
+var hess_factors_partial = require( './fixtures/hess_factors_partial.json' );
+var left_notrans_partial = require( './fixtures/left_notrans_partial.json' );
+var right_trans_partial = require( './fixtures/right_trans_partial.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -105,11 +93,10 @@ function extractColMajor( arr, lda, m, n ) {
 	return out;
 }
 
-
 // TESTS //
 
 // Load Hessenberg factors from full reduction (ILO=1, IHI=5, 5x5 matrix, LDA=6)
-var hf = findCase( 'hess_factors' );
+var hf = hess_factors;
 
 // hf.a is the full 6x5 column-major Hessenberg output (stored as 30 elements, LDA=6) // eslint-disable-line max-len
 
@@ -123,7 +110,7 @@ test( 'dormhr: left, no-transpose (Q * I)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'left_notrans' );
+	tc = left_notrans;
 	A = new Float64Array( hf.a );
 	TAU = new Float64Array( hf.tau );
 	C = eye( 5, 6 );
@@ -141,7 +128,7 @@ test( 'dormhr: left, transpose (Q^T * I)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'left_trans' );
+	tc = left_trans;
 	A = new Float64Array( hf.a );
 	TAU = new Float64Array( hf.tau );
 	C = eye( 5, 6 );
@@ -159,7 +146,7 @@ test( 'dormhr: right, no-transpose (I * Q)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'right_notrans' );
+	tc = right_notrans;
 	A = new Float64Array( hf.a );
 	TAU = new Float64Array( hf.tau );
 	C = eye( 5, 6 );
@@ -177,7 +164,7 @@ test( 'dormhr: right, transpose (I * Q^T)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'right_trans' );
+	tc = right_trans;
 	A = new Float64Array( hf.a );
 	TAU = new Float64Array( hf.tau );
 	C = eye( 5, 6 );
@@ -195,7 +182,7 @@ test( 'dormhr: left, no-transpose, rectangular C (5x3)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'left_notrans_rect' );
+	tc = left_notrans_rect;
 	A = new Float64Array( hf.a );
 	TAU = new Float64Array( hf.tau );
 	C = new Float64Array( 6 * 3 );
@@ -228,7 +215,7 @@ test( 'dormhr: right, transpose, rectangular C (3x5)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'right_trans_rect' );
+	tc = right_trans_rect;
 	A = new Float64Array( hf.a );
 	TAU = new Float64Array( hf.tau );
 	C = new Float64Array( 6 * 5 );
@@ -302,7 +289,7 @@ test( 'dormhr: NH=0 quick return (ILO=IHI)', function t() {
 });
 
 // Load partial Hessenberg factors (ILO=2, IHI=4, 5x5 matrix, LDA=6)
-var hfp = findCase( 'hess_factors_partial' );
+var hfp = hess_factors_partial;
 
 test( 'dormhr: left, no-transpose, partial (ILO=2, IHI=4)', function t() {
 	var WORK;
@@ -312,7 +299,7 @@ test( 'dormhr: left, no-transpose, partial (ILO=2, IHI=4)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'left_notrans_partial' );
+	tc = left_notrans_partial;
 	A = new Float64Array( hfp.a2 );
 	TAU = new Float64Array( hfp.tau2 );
 	C = eye( 5, 6 );
@@ -330,7 +317,7 @@ test( 'dormhr: right, transpose, partial (ILO=2, IHI=4)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'right_trans_partial' );
+	tc = right_trans_partial;
 	A = new Float64Array( hfp.a2 );
 	TAU = new Float64Array( hfp.tau2 );
 	C = eye( 5, 6 );

@@ -6,23 +6,20 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zhseqr = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhseqr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n_eq_0 = require( './fixtures/n_eq_0.json' );
+var n_eq_1_eig_n = require( './fixtures/n_eq_1_eig_n.json' );
+var n_eq_1_schur_i = require( './fixtures/n_eq_1_schur_i.json' );
+var _4x4_eig_n = require( './fixtures/4x4_eig_n.json' );
+var _4x4_schur_i = require( './fixtures/4x4_schur_i.json' );
+var _4x4_schur_v = require( './fixtures/4x4_schur_v.json' );
+var _6x6_schur_i = require( './fixtures/6x6_schur_i.json' );
+var _6x6_eig_n = require( './fixtures/6x6_eig_n.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -149,7 +146,6 @@ function buildHess6( Hm ) {
 	mset( Hm, n, 5, 5, 1.0, 1.0 );
 }
 
-
 // TESTS //
 
 test( 'zhseqr: main export is a function', function t() {
@@ -157,7 +153,7 @@ test( 'zhseqr: main export is a function', function t() {
 });
 
 test( 'zhseqr: n_eq_0', function t() {
-	var tc = findCase( 'n_eq_0' );
+	var tc = n_eq_0;
 	var H = new Complex128Array( 0 );
 	var Z = new Complex128Array( 0 );
 	var W = new Complex128Array( 0 );
@@ -173,7 +169,7 @@ test( 'zhseqr: n_eq_0', function t() {
 });
 
 test( 'zhseqr: N=1, JOB=E, COMPZ=N', function t() {
-	var tc = findCase( 'n_eq_1_eig_N' );
+	var tc = n_eq_1_eig_n;
 	var n = 1;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -193,7 +189,7 @@ test( 'zhseqr: N=1, JOB=E, COMPZ=N', function t() {
 });
 
 test( 'zhseqr: N=1, JOB=S, COMPZ=I', function t() {
-	var tc = findCase( 'n_eq_1_schur_I' );
+	var tc = n_eq_1_schur_i;
 	var n = 1;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -215,7 +211,7 @@ test( 'zhseqr: N=1, JOB=S, COMPZ=I', function t() {
 });
 
 test( 'zhseqr: 4x4, JOB=E, COMPZ=N', function t() {
-	var tc = findCase( '4x4_eig_N' );
+	var tc = _4x4_eig_n;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -235,7 +231,7 @@ test( 'zhseqr: 4x4, JOB=E, COMPZ=N', function t() {
 });
 
 test( 'zhseqr: 4x4, JOB=S, COMPZ=I', function t() {
-	var tc = findCase( '4x4_schur_I' );
+	var tc = _4x4_schur_i;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -256,7 +252,7 @@ test( 'zhseqr: 4x4, JOB=S, COMPZ=I', function t() {
 });
 
 test( 'zhseqr: 4x4, JOB=S, COMPZ=V', function t() {
-	var tc = findCase( '4x4_schur_V' );
+	var tc = _4x4_schur_v;
 	var n = 4;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -282,7 +278,7 @@ test( 'zhseqr: 4x4, JOB=S, COMPZ=V', function t() {
 });
 
 test( 'zhseqr: 6x6, JOB=S, COMPZ=I', function t() {
-	var tc = findCase( '6x6_schur_I' );
+	var tc = _6x6_schur_i;
 	var n = 6;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );
@@ -303,7 +299,7 @@ test( 'zhseqr: 6x6, JOB=S, COMPZ=I', function t() {
 });
 
 test( 'zhseqr: 6x6, JOB=E, COMPZ=N', function t() {
-	var tc = findCase( '6x6_eig_N' );
+	var tc = _6x6_eig_n;
 	var n = 6;
 	var Hm = makeMatrix( n );
 	var Zm = makeMatrix( n );

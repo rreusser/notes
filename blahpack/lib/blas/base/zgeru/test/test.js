@@ -2,41 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgeru = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgeru.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_2x3 = require( './fixtures/basic_2x3.json' );
+var alpha_2_neg1 = require( './fixtures/alpha_2_neg1.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var stride_2 = require( './fixtures/stride_2.json' );
+var neg_incy = require( './fixtures/neg_incy.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +71,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgeru: main export is a function', function t() {
@@ -93,7 +78,7 @@ test( 'zgeru: main export is a function', function t() {
 });
 
 test( 'zgeru: basic 2x3 rank-1 update', function t() {
-	var tc = findCase( 'basic_2x3' );
+	var tc = basic_2x3;
 
 	// A = 2x3 col-major, x = 2-elem, y = 3-elem, alpha = (1,0)
 	var A = new Complex128Array([
@@ -118,7 +103,7 @@ test( 'zgeru: basic 2x3 rank-1 update', function t() {
 });
 
 test( 'zgeru: alpha = (2, -1)', function t() {
-	var tc = findCase( 'alpha_2_neg1' );
+	var tc = alpha_2_neg1;
 
 	// A = 2x2 identity, x = [(1,2), (3,4)], y = [(2,1), (1,-1)]
 	var A = new Complex128Array([
@@ -139,7 +124,7 @@ test( 'zgeru: alpha = (2, -1)', function t() {
 });
 
 test( 'zgeru: alpha = 0 (no update)', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = new Complex128Array([
 		5,
 		6,
@@ -162,7 +147,7 @@ test( 'zgeru: alpha = 0 (no update)', function t() {
 });
 
 test( 'zgeru: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( [ 5, 6 ] );
 	var x = new Complex128Array( [ 1, 1, 2, 2 ] );
 	var y = new Complex128Array( [ 3, 3 ] );
@@ -172,7 +157,7 @@ test( 'zgeru: N=0 quick return', function t() {
 });
 
 test( 'zgeru: M=0 quick return', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var A = new Complex128Array( [ 5, 6 ] );
 	var x = new Complex128Array( [ 1, 1 ] );
 	var y = new Complex128Array( [ 3, 3, 4, 4 ] );
@@ -182,7 +167,7 @@ test( 'zgeru: M=0 quick return', function t() {
 });
 
 test( 'zgeru: non-unit strides (incx=2, incy=2)', function t() {
-	var tc = findCase( 'stride_2' );
+	var tc = stride_2;
 
 	// x stored: [(1,0), (99,99), (0,1)], stride 2 picks elements 0 and 2
 
@@ -205,7 +190,7 @@ test( 'zgeru: non-unit strides (incx=2, incy=2)', function t() {
 });
 
 test( 'zgeru: negative stride incy=-1', function t() {
-	var tc = findCase( 'neg_incy' );
+	var tc = neg_incy;
 
 	// x = [(1,1), (2,0)], y = [(3,0), (0,3)], incy=-1 reads y in reverse
 	var A = new Complex128Array([
@@ -229,7 +214,7 @@ test( 'zgeru: negative stride incy=-1', function t() {
 });
 
 test( 'zgeru: 1x1 matrix', function t() {
-	var tc = findCase( 'one_by_one' );
+	var tc = one_by_one;
 	var A = new Complex128Array( [ 1, 1 ] );
 	var x = new Complex128Array( [ 2, 3 ] );
 	var y = new Complex128Array( [ 4, 5 ] );

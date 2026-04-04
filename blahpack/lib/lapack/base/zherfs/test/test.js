@@ -6,8 +6,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -16,19 +14,15 @@ var zhetrf = require( './../../zhetrf/lib/base.js' );
 var zhetrs = require( './../../zhetrs/lib/base.js' );
 var zherfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zherfs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_4x4_2rhs = require( './fixtures/upper_4x4_2rhs.json' );
+var n0 = require( './fixtures/n0.json' );
+var n1 = require( './fixtures/n1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -86,11 +80,10 @@ function copyArray( src ) {
 	return dst;
 }
 
-
 // TESTS //
 
 test( 'zherfs: upper_4x4', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var n = 4;
 	var nrhs = 1;
 	var A = packHermitianUpper( n, [
@@ -119,7 +112,7 @@ test( 'zherfs: upper_4x4', function t() {
 });
 
 test( 'zherfs: lower_4x4', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var n = 4;
 	var nrhs = 1;
 	// Column-by-column, lower triangle: col 0 rows 0-3, col 1 rows 1-3, etc.
@@ -149,7 +142,7 @@ test( 'zherfs: lower_4x4', function t() {
 });
 
 test( 'zherfs: upper_4x4_2rhs', function t() {
-	var tc = findCase( 'upper_4x4_2rhs' );
+	var tc = upper_4x4_2rhs;
 	var n = 4;
 	var nrhs = 2;
 	var A = packHermitianUpper( n, [
@@ -188,7 +181,7 @@ test( 'zherfs: upper_4x4_2rhs', function t() {
 });
 
 test( 'zherfs: n0', function t() {
-	var tc = findCase( 'n0' );
+	var tc = n0;
 	var A = new Complex128Array( 1 );
 	var AF = new Complex128Array( 1 );
 	var IPIV = new Int32Array( 1 );
@@ -206,7 +199,7 @@ test( 'zherfs: n0', function t() {
 });
 
 test( 'zherfs: n1', function t() {
-	var tc = findCase( 'n1' );
+	var tc = n1;
 	var n = 1;
 	var A = new Complex128Array( [ 5.0, 0.0 ] );
 	var AF = new Complex128Array( [ 5.0, 0.0 ] );

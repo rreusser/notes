@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -15,29 +12,15 @@ var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgttrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgttrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_4 = require( './fixtures/basic_4.json' );
+var pivot_4 = require( './fixtures/pivot_4.json' );
+var n1 = require( './fixtures/n1.json' );
+var n2_nopivot = require( './fixtures/n2_nopivot.json' );
+var n2_pivot = require( './fixtures/n2_pivot.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -81,7 +64,6 @@ function toF64( cArr ) {
 	return Array.prototype.slice.call( reinterpret( cArr, 0 ) );
 }
 
-
 // TESTS //
 
 test( 'zgttrf: basic 4x4, no pivoting (diag dominant)', function t() {
@@ -94,7 +76,7 @@ test( 'zgttrf: basic 4x4, no pivoting (diag dominant)', function t() {
 	var D;
 	var i;
 
-	tc = findCase( 'basic_4' );
+	tc = basic_4;
 	DL = new Complex128Array( new Float64Array( [ 1.0, 0.0, 1.0, 0.5, 0.5, 0.0 ] ) ); // eslint-disable-line max-len
 	D = new Complex128Array( new Float64Array( [ 4.0, 1.0, 5.0, -1.0, 6.0, 0.0, 3.0, 2.0 ] ) ); // eslint-disable-line max-len
 	DU = new Complex128Array( new Float64Array( [ 2.0, 0.0, 1.0, -1.0, 0.5, 0.5 ] ) ); // eslint-disable-line max-len
@@ -121,7 +103,7 @@ test( 'zgttrf: 4x4 with pivoting (small diag, large subdiag)', function t() {
 	var D;
 	var i;
 
-	tc = findCase( 'pivot_4' );
+	tc = pivot_4;
 	DL = new Complex128Array( new Float64Array( [ 10.0, 5.0, 8.0, 0.0, 7.0, -3.0 ] ) ); // eslint-disable-line max-len
 	D = new Complex128Array( new Float64Array( [ 0.1, 0.0, 0.2, 0.1, 0.3, 0.0, 0.4, -0.1 ] ) ); // eslint-disable-line max-len
 	DU = new Complex128Array( new Float64Array( [ 1.0, 1.0, 2.0, 0.0, 3.0, -1.0 ] ) ); // eslint-disable-line max-len
@@ -147,7 +129,7 @@ test( 'zgttrf: N=1', function t() {
 	var DU;
 	var D;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	DL = new Complex128Array( 1 );
 	D = new Complex128Array( new Float64Array( [ 3.0, 2.0 ] ) );
 	DU = new Complex128Array( 1 );
@@ -169,7 +151,7 @@ test( 'zgttrf: N=2, no pivot', function t() {
 	var D;
 	var i;
 
-	tc = findCase( 'n2_nopivot' );
+	tc = n2_nopivot;
 	DL = new Complex128Array( new Float64Array( [ 3.0, 1.0 ] ) );
 	D = new Complex128Array( new Float64Array( [ 5.0, -1.0, 4.0, 2.0 ] ) );
 	DU = new Complex128Array( new Float64Array( [ 2.0, 0.0 ] ) );
@@ -195,7 +177,7 @@ test( 'zgttrf: N=2, with pivot', function t() {
 	var D;
 	var i;
 
-	tc = findCase( 'n2_pivot' );
+	tc = n2_pivot;
 	DL = new Complex128Array( new Float64Array( [ 10.0, 5.0 ] ) );
 	D = new Complex128Array( new Float64Array( [ 0.1, 0.0, 3.0, 0.0 ] ) );
 	DU = new Complex128Array( new Float64Array( [ 1.0, 0.0 ] ) );

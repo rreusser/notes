@@ -1,0 +1,8 @@
+{
+  "name": "wsize_gt1_eigenvalue1",
+  "scale1": 4e-100,
+  "scale2": 2e-100,
+  "wr1": 2,
+  "wr2": 2,
+  "wi": 0
+}

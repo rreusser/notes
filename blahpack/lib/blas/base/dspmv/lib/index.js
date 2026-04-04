@@ -38,11 +38,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dspmv;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dspmv = main;
+} else {
+	dspmv = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dspmv;
 
 // exports: { "ndarray": "dspmv.ndarray" }

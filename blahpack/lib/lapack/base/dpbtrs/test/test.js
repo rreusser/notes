@@ -2,40 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpbtrf = require( './../../dpbtrf/lib/base.js' );
 var dpbtrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpbtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_tridiag_nrhs1 = require( './fixtures/upper_tridiag_nrhs1.json' );
+var lower_tridiag_nrhs1 = require( './fixtures/lower_tridiag_nrhs1.json' );
+var upper_tridiag_nrhs2 = require( './fixtures/upper_tridiag_nrhs2.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_penta_nrhs1 = require( './fixtures/upper_penta_nrhs1.json' );
+var lower_penta_nrhs1 = require( './fixtures/lower_penta_nrhs1.json' );
+var lower_penta_nrhs3 = require( './fixtures/lower_penta_nrhs3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +71,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dpbtrs: main export is a function', function t() {
@@ -97,7 +83,7 @@ test( 'dpbtrs: upper tridiagonal N=5, NRHS=1', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'upper_tridiag_nrhs1' );
+	tc = upper_tridiag_nrhs1;
 	AB = new Float64Array([
 		0, 2, -1, 2, -1, 2, -1, 2, -1, 2
 	]);
@@ -114,7 +100,7 @@ test( 'dpbtrs: lower tridiagonal N=5, NRHS=1', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'lower_tridiag_nrhs1' );
+	tc = lower_tridiag_nrhs1;
 	AB = new Float64Array([
 		2, -1, 2, -1, 2, -1, 2, -1, 2, 0
 	]);
@@ -131,7 +117,7 @@ test( 'dpbtrs: upper tridiagonal N=5, NRHS=2', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'upper_tridiag_nrhs2' );
+	tc = upper_tridiag_nrhs2;
 	AB = new Float64Array([
 		0, 2, -1, 2, -1, 2, -1, 2, -1, 2
 	]);
@@ -159,7 +145,7 @@ test( 'dpbtrs: N=0 quick return', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Float64Array( 1 );
 	B = new Float64Array( 1 );
 	info = dpbtrs( 'upper', 0, 0, 1, AB, 1, 1, 0, B, 1, 1, 0 );
@@ -172,7 +158,7 @@ test( 'dpbtrs: NRHS=0 quick return', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	AB = new Float64Array( [ 2 ] );
 	B = new Float64Array( 1 );
 	info = dpbtrs( 'lower', 5, 1, 0, AB, 1, 2, 0, B, 1, 5, 0 );
@@ -185,7 +171,7 @@ test( 'dpbtrs: N=1', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AB = new Float64Array( [ 2 ] );
 	B = new Float64Array( [ 6 ] );
 	info = dpbtrs( 'upper', 1, 0, 1, AB, 1, 1, 0, B, 1, 1, 0 );
@@ -199,7 +185,7 @@ test( 'dpbtrs: upper pentadiagonal N=4, NRHS=1', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'upper_penta_nrhs1' );
+	tc = upper_penta_nrhs1;
 	AB = new Float64Array([
 		0,
 		0,
@@ -227,7 +213,7 @@ test( 'dpbtrs: lower pentadiagonal N=4, NRHS=1', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'lower_penta_nrhs1' );
+	tc = lower_penta_nrhs1;
 	AB = new Float64Array([
 		6,
 		-1,
@@ -255,7 +241,7 @@ test( 'dpbtrs: lower pentadiagonal N=4, NRHS=3', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'lower_penta_nrhs3' );
+	tc = lower_penta_nrhs3;
 	AB = new Float64Array([
 		6,
 		-1,

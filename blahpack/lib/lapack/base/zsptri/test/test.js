@@ -23,8 +23,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -32,30 +30,22 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zsptrf = require( '../../zsptrf/lib/base.js' );
 var zsptri = require( './../lib/base.js' );
 
-
 // VARIABLES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zsptri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+// FIXTURES //
 
+var n1_upper = require( './fixtures/n1_upper.json' );
+var n1_lower = require( './fixtures/n1_lower.json' );
+var _3x3_upper = require( './fixtures/3x3_upper.json' );
+var _3x3_lower = require( './fixtures/3x3_lower.json' );
+var _4x4_upper_indef = require( './fixtures/4x4_upper_indef.json' );
+var _4x4_lower_indef = require( './fixtures/4x4_lower_indef.json' );
+var singular_lower = require( './fixtures/singular_lower.json' );
+var _4x4_upper_swap = require( './fixtures/4x4_upper_swap.json' );
+var _4x4_lower_swap = require( './fixtures/4x4_lower_swap.json' );
+var singular_upper = require( './fixtures/singular_upper.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name in the fixtures.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two floating-point numbers are approximately equal.
@@ -105,7 +95,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zsptri is a function', function t() {
@@ -133,7 +122,7 @@ test( 'zsptri: n1_upper', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_upper' );
+	tc = n1_upper;
 	AP = new Complex128Array( [ 4.0, 2.0 ] );
 	IPIV = new Int32Array( 1 );
 	WORK = new Complex128Array( 1 );
@@ -152,7 +141,7 @@ test( 'zsptri: n1_lower', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_lower' );
+	tc = n1_lower;
 	AP = new Complex128Array( [ 3.0, -1.0 ] );
 	IPIV = new Int32Array( 1 );
 	WORK = new Complex128Array( 1 );
@@ -171,7 +160,7 @@ test( 'zsptri: 3x3_upper', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '3x3_upper' );
+	tc = _3x3_upper;
 	AP = new Complex128Array([
 		2.0,
 		1.0,
@@ -203,7 +192,7 @@ test( 'zsptri: 3x3_lower', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '3x3_lower' );
+	tc = _3x3_lower;
 	AP = new Complex128Array([
 		2.0,
 		1.0,
@@ -235,7 +224,7 @@ test( 'zsptri: 4x4_upper_indef (2x2 pivots)', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_upper_indef' );
+	tc = _4x4_upper_indef;
 	AP = new Complex128Array([
 		0.0,
 		0.0,
@@ -275,7 +264,7 @@ test( 'zsptri: 4x4_lower_indef (2x2 pivots)', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_lower_indef' );
+	tc = _4x4_lower_indef;
 	AP = new Complex128Array([
 		0.0,
 		0.0,
@@ -314,7 +303,7 @@ test( 'zsptri: singular_lower (INFO > 0)', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'singular_lower' );
+	tc = singular_lower;
 	AP = new Complex128Array([
 		1.0,
 		1.0,
@@ -338,7 +327,7 @@ test( 'zsptri: 4x4_upper_swap (pivot interchange)', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_upper_swap' );
+	tc = _4x4_upper_swap;
 	AP = new Complex128Array([
 		0.1,
 		0.1,
@@ -378,7 +367,7 @@ test( 'zsptri: 4x4_lower_swap (pivot interchange)', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_lower_swap' );
+	tc = _4x4_lower_swap;
 	AP = new Complex128Array([
 		0.1,
 		0.1,
@@ -417,7 +406,7 @@ test( 'zsptri: singular_upper (INFO > 0)', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'singular_upper' );
+	tc = singular_upper;
 	AP = new Complex128Array([
 		1.0,
 		1.0,

@@ -22,11 +22,25 @@
 
 // MODULES //
 
+var join = require( 'path' ).join;
+var tryRequire = require( '@stdlib/utils/try-require' );
+var isError = require( '@stdlib/assert/is-error' );
 var main = require( './main.js' );
+
+
+// MAIN //
+
+var dlagv2;
+var tmp = tryRequire( join( __dirname, './native.js' ) );
+if ( isError( tmp ) ) {
+	dlagv2 = main;
+} else {
+	dlagv2 = tmp;
+}
 
 
 // EXPORTS //
 
-module.exports = main;
+module.exports = dlagv2;
 
 // exports: { "ndarray": "dlagv2.ndarray" }

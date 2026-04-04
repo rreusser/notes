@@ -1,0 +1,19 @@
+{
+  "name": "nofact_notrans_tridiag",
+  "x": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "info": 0,
+  "rcond": 0.3666666666666667,
+  "rpvgrw": 1,
+  "ferr": [
+    1.6148698540002276e-15
+  ],
+  "berr": [
+    0
+  ],
+  "equed": "N"
+}

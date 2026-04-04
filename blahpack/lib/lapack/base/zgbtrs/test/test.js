@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -15,29 +12,18 @@ var Int32Array = require( '@stdlib/array/int32' );
 var zgbtrf = require( '../../zgbtrf/lib/base.js' );
 var zgbtrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgbtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var notrans_tridiag = require( './fixtures/notrans_tridiag.json' );
+var trans_tridiag = require( './fixtures/trans_tridiag.json' );
+var conjtrans_tridiag = require( './fixtures/conjtrans_tridiag.json' );
+var nrhs_2 = require( './fixtures/nrhs_2.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var pentadiag_5x5 = require( './fixtures/pentadiag_5x5.json' );
+var kl0_upper = require( './fixtures/kl0_upper.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -72,7 +58,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgbtrs: main export is a function', function t() {
@@ -88,7 +73,7 @@ test( 'zgbtrs: no-transpose, 4x4 tridiagonal (KL=1, KU=1)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'notrans_tridiag' );
+	tc = notrans_tridiag;
 	AB = new Complex128Array( 4 * 4 );
 	ABv = reinterpret( AB, 0 );
 	IPIV = new Int32Array( 4 );
@@ -138,7 +123,7 @@ test( 'zgbtrs: transpose, 4x4 tridiagonal', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'trans_tridiag' );
+	tc = trans_tridiag;
 	AB = new Complex128Array( 4 * 4 );
 	ABv = reinterpret( AB, 0 );
 	IPIV = new Int32Array( 4 );
@@ -188,7 +173,7 @@ test( 'zgbtrs: conjugate-transpose, 4x4 tridiagonal', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'conjtrans_tridiag' );
+	tc = conjtrans_tridiag;
 	AB = new Complex128Array( 4 * 4 );
 	ABv = reinterpret( AB, 0 );
 	IPIV = new Int32Array( 4 );
@@ -238,7 +223,7 @@ test( 'zgbtrs: multiple RHS (NRHS=2)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'nrhs_2' );
+	tc = nrhs_2;
 	AB = new Complex128Array( 4 * 4 );
 	ABv = reinterpret( AB, 0 );
 	IPIV = new Int32Array( 4 );
@@ -294,7 +279,7 @@ test( 'zgbtrs: N=0 quick return', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Complex128Array( 4 );
 	IPIV = new Int32Array( 4 );
 	B = new Complex128Array( 4 );
@@ -309,7 +294,7 @@ test( 'zgbtrs: NRHS=0 quick return', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	AB = new Complex128Array( 4 );
 	IPIV = new Int32Array( 4 );
 	B = new Complex128Array( 4 );
@@ -326,7 +311,7 @@ test( 'zgbtrs: 5x5 pentadiagonal (KL=2, KU=2)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'pentadiag_5x5' );
+	tc = pentadiag_5x5;
 	AB = new Complex128Array( 7 * 5 );
 	ABv = reinterpret( AB, 0 );
 	IPIV = new Int32Array( 5 );
@@ -396,7 +381,7 @@ test( 'zgbtrs: KL=0 upper triangular', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'kl0_upper' );
+	tc = kl0_upper;
 	AB = new Complex128Array( 2 * 2 );
 	ABv = reinterpret( AB, 0 );
 	IPIV = new Int32Array( 2 );

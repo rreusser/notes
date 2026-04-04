@@ -2,40 +2,21 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var izmax1 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'izmax1.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
-
-// FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
-
+var basic_3 = require( './fixtures/basic_3.json' );
+var max_first = require( './fixtures/max_first.json' );
+var max_last = require( './fixtures/max_last.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride2 = require( './fixtures/stride2.json' );
+var equal_magnitudes = require( './fixtures/equal_magnitudes.json' );
 
 // TESTS //
 
@@ -48,7 +29,7 @@ test( 'izmax1: basic 3-element vector', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'basic_3' );
+	tc = basic_3;
 	zx = new Complex128Array( [ 1, 0, 3, 4, 2, 0 ] );
 	result = izmax1( 3, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1, 'result (0-based)' );
@@ -59,7 +40,7 @@ test( 'izmax1: max at first element', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'max_first' );
+	tc = max_first;
 	zx = new Complex128Array( [ 5, 12, 3, 4, 1, 0 ] );
 	result = izmax1( 3, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1, 'result (0-based)' );
@@ -70,7 +51,7 @@ test( 'izmax1: max at last element', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'max_last' );
+	tc = max_last;
 	zx = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 0, 10 ] );
 	result = izmax1( 4, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1, 'result (0-based)' );
@@ -81,7 +62,7 @@ test( 'izmax1: N=1', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	zx = new Complex128Array( [ 7, 3 ] );
 	result = izmax1( 1, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1, 'result (0-based)' );
@@ -92,7 +73,7 @@ test( 'izmax1: stride=2', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'stride2' );
+	tc = stride2;
 	zx = new Complex128Array( [ 1, 0, 99, 99, 3, 4, 99, 99, 2, 0 ] );
 	result = izmax1( 3, zx, 2, 0 );
 	assert.strictEqual( result, tc.result - 1, 'result (0-based)' );
@@ -103,7 +84,7 @@ test( 'izmax1: all equal magnitudes returns first', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'equal_magnitudes' );
+	tc = equal_magnitudes;
 	zx = new Complex128Array( [ 3, 4, 0, 5, 5, 0 ] );
 	result = izmax1( 3, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1, 'result (0-based)' );

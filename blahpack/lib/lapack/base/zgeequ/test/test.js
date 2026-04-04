@@ -2,40 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zgeequ = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgeequ.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var zero_row = require( './fixtures/zero_row.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var poorly_scaled = require( './fixtures/poorly_scaled.json' );
+var rect_2x3 = require( './fixtures/rect_2x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +69,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgeequ: basic_3x3', function t() {
@@ -94,7 +78,7 @@ test( 'zgeequ: basic_3x3', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	A = new Complex128Array([
 		4,
 		1,
@@ -133,7 +117,7 @@ test( 'zgeequ: m_zero', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Complex128Array( 1 );
 	r = new Float64Array( 1 );
 	c = new Float64Array( 1 );
@@ -151,7 +135,7 @@ test( 'zgeequ: n_zero', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 1 );
 	r = new Float64Array( 1 );
 	c = new Float64Array( 1 );
@@ -169,7 +153,7 @@ test( 'zgeequ: zero_row', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'zero_row' );
+	tc = zero_row;
 	A = new Complex128Array([
 		4,
 		1,
@@ -204,7 +188,7 @@ test( 'zgeequ: 1x1', function t() {
 	var r;
 	var c;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Complex128Array( [ 5, 3 ] );
 	r = new Float64Array( 1 );
 	c = new Float64Array( 1 );
@@ -224,7 +208,7 @@ test( 'zgeequ: poorly_scaled', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'poorly_scaled' );
+	tc = poorly_scaled;
 	A = new Complex128Array([
 		1e6,
 		0,
@@ -263,7 +247,7 @@ test( 'zgeequ: rect_2x3', function t() {
 	var r;
 	var c;
 
-	tc = findCase( 'rect_2x3' );
+	tc = rect_2x3;
 	A = new Complex128Array([
 		2,
 		1,

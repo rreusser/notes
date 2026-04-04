@@ -2,39 +2,31 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtpsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtpsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_n_nonunit = require( './fixtures/upper_n_nonunit.json' );
+var lower_n_nonunit = require( './fixtures/lower_n_nonunit.json' );
+var upper_t_nonunit = require( './fixtures/upper_t_nonunit.json' );
+var lower_t_nonunit = require( './fixtures/lower_t_nonunit.json' );
+var upper_n_unit = require( './fixtures/upper_n_unit.json' );
+var lower_n_unit = require( './fixtures/lower_n_unit.json' );
+var upper_t_unit = require( './fixtures/upper_t_unit.json' );
+var lower_t_unit = require( './fixtures/lower_t_unit.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_one_unit = require( './fixtures/n_one_unit.json' );
+var stride_2 = require( './fixtures/stride_2.json' );
+var neg_stride = require( './fixtures/neg_stride.json' );
+var upper_n_zeros = require( './fixtures/upper_n_zeros.json' );
+var lower_t_stride_2 = require( './fixtures/lower_t_stride_2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +59,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 // Upper triangular 4x4 matrix A:
@@ -85,7 +76,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 // Lower packed (column-major): 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 
 test( 'dtpsv: upper_n_nonunit', function t() {
-	var tc = findCase( 'upper_n_nonunit' );
+	var tc = upper_n_nonunit;
 
 	// B = A * [1, 2, 3, 4] = [40, 65, 67, 44]
 	var AP = new Float64Array( [ 2, 3, 6, 4, 7, 9, 5, 8, 10, 11 ] );
@@ -95,7 +86,7 @@ test( 'dtpsv: upper_n_nonunit', function t() {
 });
 
 test( 'dtpsv: lower_n_nonunit', function t() {
-	var tc = findCase( 'lower_n_nonunit' );
+	var tc = lower_n_nonunit;
 
 	// B = A * [1, 2, 3, 4] = [2, 15, 45, 95]
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
@@ -105,7 +96,7 @@ test( 'dtpsv: lower_n_nonunit', function t() {
 });
 
 test( 'dtpsv: upper_t_nonunit', function t() {
-	var tc = findCase( 'upper_t_nonunit' );
+	var tc = upper_t_nonunit;
 
 	// B = A^T * [1, 2, 3, 4] = [2, 15, 45, 95] (upper A)
 	var AP = new Float64Array( [ 2, 3, 6, 4, 7, 9, 5, 8, 10, 11 ] );
@@ -115,7 +106,7 @@ test( 'dtpsv: upper_t_nonunit', function t() {
 });
 
 test( 'dtpsv: lower_t_nonunit', function t() {
-	var tc = findCase( 'lower_t_nonunit' );
+	var tc = lower_t_nonunit;
 
 	// B = A^T * [1, 2, 3, 4] = [40, 65, 67, 44] (lower A)
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );
@@ -125,7 +116,7 @@ test( 'dtpsv: lower_t_nonunit', function t() {
 });
 
 test( 'dtpsv: upper_n_unit', function t() {
-	var tc = findCase( 'upper_n_unit' );
+	var tc = upper_n_unit;
 
 	// Unit diag A = [1 3 4 5; 0 1 7 8; 0 0 1 10; 0 0 0 1]
 
@@ -139,7 +130,7 @@ test( 'dtpsv: upper_n_unit', function t() {
 });
 
 test( 'dtpsv: lower_n_unit', function t() {
-	var tc = findCase( 'lower_n_unit' );
+	var tc = lower_n_unit;
 
 	// Unit diag A = [1 0 0 0; 3 1 0 0; 4 7 1 0; 5 8 10 1]
 
@@ -151,7 +142,7 @@ test( 'dtpsv: lower_n_unit', function t() {
 });
 
 test( 'dtpsv: upper_t_unit', function t() {
-	var tc = findCase( 'upper_t_unit' );
+	var tc = upper_t_unit;
 
 	// Unit diag A = [1 3 4 5; 0 1 7 8; 0 0 1 10; 0 0 0 1]
 
@@ -163,7 +154,7 @@ test( 'dtpsv: upper_t_unit', function t() {
 });
 
 test( 'dtpsv: lower_t_unit', function t() {
-	var tc = findCase( 'lower_t_unit' );
+	var tc = lower_t_unit;
 
 	// Unit diag A = [1 0 0 0; 3 1 0 0; 4 7 1 0; 5 8 10 1]
 
@@ -182,7 +173,7 @@ test( 'dtpsv: n_zero', function t() {
 });
 
 test( 'dtpsv: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 
 	// N=1: AP=[5], x=[15] => x = 15/5 = 3
 	var AP = new Float64Array( [ 5 ] );
@@ -192,7 +183,7 @@ test( 'dtpsv: n_one', function t() {
 });
 
 test( 'dtpsv: n_one_unit', function t() {
-	var tc = findCase( 'n_one_unit' );
+	var tc = n_one_unit;
 
 	// N=1, unit diag: x unchanged = 7
 	var AP = new Float64Array( [ 99 ] );
@@ -202,7 +193,7 @@ test( 'dtpsv: n_one_unit', function t() {
 });
 
 test( 'dtpsv: stride_2', function t() {
-	var tc = findCase( 'stride_2' );
+	var tc = stride_2;
 
 	// Upper, no-trans, non-unit, stride=2
 	var AP = new Float64Array( [ 2, 3, 6, 4, 7, 9, 5, 8, 10, 11 ] );
@@ -212,7 +203,7 @@ test( 'dtpsv: stride_2', function t() {
 });
 
 test( 'dtpsv: neg_stride', function t() {
-	var tc = findCase( 'neg_stride' );
+	var tc = neg_stride;
 
 	// Lower, no-trans, non-unit, stride=-1
 
@@ -226,7 +217,7 @@ test( 'dtpsv: neg_stride', function t() {
 });
 
 test( 'dtpsv: upper_n_zeros', function t() {
-	var tc = findCase( 'upper_n_zeros' );
+	var tc = upper_n_zeros;
 
 	// Upper, no-trans, non-unit with zero RHS entries
 	var AP = new Float64Array( [ 2, 3, 6, 4, 7, 9, 5, 8, 10, 11 ] );
@@ -236,7 +227,7 @@ test( 'dtpsv: upper_n_zeros', function t() {
 });
 
 test( 'dtpsv: lower_t_stride_2', function t() {
-	var tc = findCase( 'lower_t_stride_2' );
+	var tc = lower_t_stride_2;
 
 	// Lower, transpose, non-unit, stride=2
 	var AP = new Float64Array( [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] );

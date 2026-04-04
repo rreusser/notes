@@ -1,0 +1,17 @@
+{
+  "name": "orgati_false_kniter2_alternate",
+  "D": [
+    0.5,
+    2,
+    8
+  ],
+  "Z": [
+    0.25,
+    0.5,
+    0.75
+  ],
+  "RHO": 1,
+  "FINIT": 1.84375,
+  "TAU": 0.25,
+  "INFO": 0
+}

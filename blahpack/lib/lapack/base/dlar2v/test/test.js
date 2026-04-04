@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlar2v = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlar2v.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var n_one = require( './fixtures/n_one.json' );
+var non_unit_stride = require( './fixtures/non_unit_stride.json' );
+var identity = require( './fixtures/identity.json' );
+var swap = require( './fixtures/swap.json' );
+var mixed_strides = require( './fixtures/mixed_strides.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -55,7 +39,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlar2v is a function', function t() {
@@ -63,7 +46,7 @@ test( 'dlar2v is a function', function t() {
 });
 
 test( 'dlar2v: basic (N=4, unit strides)', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( [ 5.0, 6.0, 7.0, 8.0 ] );
 	var z = new Float64Array( [ 0.5, 1.0, 1.5, 2.0 ] );
@@ -93,7 +76,7 @@ test( 'dlar2v: n_zero (quick return)', function t() {
 });
 
 test( 'dlar2v: n_one (single element)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Float64Array( [ 3.0 ] );
 	var y = new Float64Array( [ 4.0 ] );
 	var z = new Float64Array( [ 1.0 ] );
@@ -108,7 +91,7 @@ test( 'dlar2v: n_one (single element)', function t() {
 });
 
 test( 'dlar2v: non-unit strides (INCX=2, INCC=2)', function t() {
-	var tc = findCase( 'non_unit_stride' );
+	var tc = non_unit_stride;
 	var x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 0.0, 5.0, 0.0, 6.0 ] );
 	var z = new Float64Array( [ 0.5, 0.0, 1.0, 0.0, 1.5 ] );
@@ -123,7 +106,7 @@ test( 'dlar2v: non-unit strides (INCX=2, INCC=2)', function t() {
 });
 
 test( 'dlar2v: identity rotation (c=1, s=0)', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var x = new Float64Array( [ 10.0, 20.0, 30.0 ] );
 	var y = new Float64Array( [ 40.0, 50.0, 60.0 ] );
 	var z = new Float64Array( [ 5.0, 10.0, 15.0 ] );
@@ -138,7 +121,7 @@ test( 'dlar2v: identity rotation (c=1, s=0)', function t() {
 });
 
 test( 'dlar2v: swap rotation (c=0, s=1)', function t() {
-	var tc = findCase( 'swap' );
+	var tc = swap;
 	var x = new Float64Array( [ 1.0, 2.0 ] );
 	var y = new Float64Array( [ 3.0, 4.0 ] );
 	var z = new Float64Array( [ 0.5, 1.0 ] );
@@ -153,7 +136,7 @@ test( 'dlar2v: swap rotation (c=0, s=1)', function t() {
 });
 
 test( 'dlar2v: mixed strides (INCX=3, INCC=2)', function t() {
-	var tc = findCase( 'mixed_strides' );
+	var tc = mixed_strides;
 	var x = new Float64Array( [ 2.0, 0.0, 0.0, 4.0 ] );
 	var y = new Float64Array( [ 6.0, 0.0, 0.0, 8.0 ] );
 	var z = new Float64Array( [ 1.0, 0.0, 0.0, 2.0 ] );

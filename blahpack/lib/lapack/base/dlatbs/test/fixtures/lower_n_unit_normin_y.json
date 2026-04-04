@@ -1,0 +1,17 @@
+{
+  "name": "lower_N_unit_normin_Y",
+  "x": [
+    1,
+    0,
+    2,
+    -2
+  ],
+  "scale": 1,
+  "cnorm": [
+    3,
+    3,
+    3,
+    0
+  ],
+  "info": 0
+}

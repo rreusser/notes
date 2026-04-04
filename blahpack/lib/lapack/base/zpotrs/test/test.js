@@ -4,27 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpotrf = require( './../../zpotrf/lib/base.js' );
 var zpotrs = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpotrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var lower_single_rhs = require( './fixtures/lower_single_rhs.json' );
+var upper_single_rhs = require( './fixtures/upper_single_rhs.json' );
+var lower_multi_rhs = require( './fixtures/lower_multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var upper_multi_rhs_3 = require( './fixtures/upper_multi_rhs_3.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -39,11 +35,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpotrs: lower_single_rhs', function t() {
-	var tc = findCase( 'lower_single_rhs' );
+	var tc = lower_single_rhs;
 	// Hermitian positive definite 3x3: A = [10 3-i 1+2i; 3+i 8 2-i; 1-2i 2+i 6]
 	var A = new Complex128Array( [
 		10, 0, 3, 1, 1, -2,
@@ -58,7 +53,7 @@ test( 'zpotrs: lower_single_rhs', function t() {
 });
 
 test( 'zpotrs: upper_single_rhs', function t() {
-	var tc = findCase( 'upper_single_rhs' );
+	var tc = upper_single_rhs;
 	var A = new Complex128Array( [
 		10, 0, 3, 1, 1, -2,
 		3, -1, 8, 0, 2, 1,
@@ -72,7 +67,7 @@ test( 'zpotrs: upper_single_rhs', function t() {
 });
 
 test( 'zpotrs: lower_multi_rhs', function t() {
-	var tc = findCase( 'lower_multi_rhs' );
+	var tc = lower_multi_rhs;
 	var A = new Complex128Array( [
 		10, 0, 3, 1, 1, -2,
 		3, -1, 8, 0, 2, 1,
@@ -90,7 +85,7 @@ test( 'zpotrs: lower_multi_rhs', function t() {
 });
 
 test( 'zpotrs: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
 	var info = zpotrs( 'lower', 0, 1, A, 1, 1, 0, B, 1, 1, 0 );
@@ -98,7 +93,7 @@ test( 'zpotrs: n_zero', function t() {
 });
 
 test( 'zpotrs: nrhs_zero', function t() {
-	var tc = findCase( 'nrhs_zero' );
+	var tc = nrhs_zero;
 	var A = new Complex128Array( 9 );
 	var B = new Complex128Array( 3 );
 	var info = zpotrs( 'lower', 3, 0, A, 1, 3, 0, B, 1, 3, 0 );
@@ -106,7 +101,7 @@ test( 'zpotrs: nrhs_zero', function t() {
 });
 
 test( 'zpotrs: one_by_one', function t() {
-	var tc = findCase( 'one_by_one' );
+	var tc = one_by_one;
 	// L = (2,0), so A = L*L^H = (4,0). Pre-factored: L(1,1) = (2,0)
 	var A = new Complex128Array( [ 2, 0 ] );
 	var B = new Complex128Array( [ 6, 3 ] );
@@ -116,7 +111,7 @@ test( 'zpotrs: one_by_one', function t() {
 });
 
 test( 'zpotrs: upper_multi_rhs_3', function t() {
-	var tc = findCase( 'upper_multi_rhs_3' );
+	var tc = upper_multi_rhs_3;
 	var A = new Complex128Array( [
 		10, 0, 3, 1, 1, -2,
 		3, -1, 8, 0, 2, 1,

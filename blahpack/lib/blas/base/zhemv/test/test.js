@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -15,29 +12,20 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhemv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhemv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var alpha_zero_beta_one = require( './fixtures/alpha_zero_beta_one.json' );
+var alpha_zero_beta_scale = require( './fixtures/alpha_zero_beta_scale.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_stride = require( './fixtures/upper_stride.json' );
+var lower_stride = require( './fixtures/lower_stride.json' );
+var complex_alpha_beta = require( './fixtures/complex_alpha_beta.json' );
+var beta_zero = require( './fixtures/beta_zero.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -86,7 +74,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zhemv: upper_basic (UPLO=U, N=3, alpha=(1,0), beta=(0,0))', function t() { // eslint-disable-line max-len
@@ -98,7 +85,7 @@ test( 'zhemv: upper_basic (UPLO=U, N=3, alpha=(1,0), beta=(0,0))', function t() 
 	var x;
 	var y;
 
-	tc = findCase( 'upper_basic' );
+	tc = upper_basic;
 	A = new Complex128Array([
 		2,
 		0,
@@ -137,7 +124,7 @@ test( 'zhemv: lower_basic (UPLO=L, N=3, alpha=(1,0), beta=(0,0))', function t() 
 	var x;
 	var y;
 
-	tc = findCase( 'lower_basic' );
+	tc = lower_basic;
 	A = new Complex128Array([
 		2,
 		0,
@@ -176,7 +163,7 @@ test( 'zhemv: n_zero (N=0 quick return)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 0 );
 	x = new Complex128Array( 0 );
 	y = new Complex128Array( [ 99, 88 ] );
@@ -196,7 +183,7 @@ test( 'zhemv: alpha_zero_beta_one (alpha=0, beta=1 quick return)', function t() 
 	var x;
 	var y;
 
-	tc = findCase( 'alpha_zero_beta_one' );
+	tc = alpha_zero_beta_one;
 	A = new Complex128Array( 4 );
 	x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	y = new Complex128Array( [ 5, 6, 7, 8 ] );
@@ -216,7 +203,7 @@ test( 'zhemv: alpha_zero_beta_scale (alpha=0, beta=(2,1) — scale y only)', fun
 	var x;
 	var y;
 
-	tc = findCase( 'alpha_zero_beta_scale' );
+	tc = alpha_zero_beta_scale;
 	A = new Complex128Array( 4 );
 	x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	y = new Complex128Array( [ 1, 0, 0, 1 ] );
@@ -236,7 +223,7 @@ test( 'zhemv: n_one (N=1)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Complex128Array( [ 5, 0 ] );
 	x = new Complex128Array( [ 2, 3 ] );
 	y = new Complex128Array( [ 1, 1 ] );
@@ -256,7 +243,7 @@ test( 'zhemv: upper_stride (UPLO=U, incx=2, incy=2)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'upper_stride' );
+	tc = upper_stride;
 	A = new Complex128Array([
 		2,
 		0,
@@ -295,7 +282,7 @@ test( 'zhemv: lower_stride (UPLO=L, incx=2, incy=2)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'lower_stride' );
+	tc = lower_stride;
 	A = new Complex128Array([
 		2,
 		0,
@@ -334,7 +321,7 @@ test( 'zhemv: complex_alpha_beta (alpha=(2,1), beta=(1,-1))', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'complex_alpha_beta' );
+	tc = complex_alpha_beta;
 	A = new Complex128Array([
 		2,
 		0,
@@ -363,7 +350,7 @@ test( 'zhemv: beta_zero (beta=0 zeroes y first)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'beta_zero' );
+	tc = beta_zero;
 	A = new Complex128Array([
 		1,
 		0,

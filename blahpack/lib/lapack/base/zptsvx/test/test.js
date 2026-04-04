@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -15,29 +12,19 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpttrf = require( './../../zpttrf/lib/base.js' );
 var zptsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zptsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_4x4 = require( './fixtures/fact_n_4x4.json' );
+var fact_n_3x3 = require( './fixtures/fact_n_3x3.json' );
+var fact_f_4x4 = require( './fixtures/fact_f_4x4.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n5_nrhs1 = require( './fixtures/n5_nrhs1.json' );
+var n2_nrhs1 = require( './fixtures/n2_nrhs1.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -86,7 +73,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zptsvx: main export is a function', function t() {
@@ -109,7 +95,7 @@ test( 'zptsvx: fact_n_4x4 - factor and solve N=4, NRHS=1', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'fact_n_4x4' );
+	tc = fact_n_4x4;
 	d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
 	e = new Complex128Array( [ 1.0, 0.5, 0.5, -0.3, 0.2, 0.1 ] );
 	df = new Float64Array( 4 );
@@ -148,7 +134,7 @@ test( 'zptsvx: fact_n_3x3 - factor and solve N=3, NRHS=1', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'fact_n_3x3' );
+	tc = fact_n_3x3;
 	d = new Float64Array( [ 10.0, 10.0, 10.0 ] );
 	e = new Complex128Array( [ 1.0, 1.0, 1.0, -1.0 ] );
 	df = new Float64Array( 3 );
@@ -185,7 +171,7 @@ test( 'zptsvx: fact_f_4x4 - pre-factored, N=4, NRHS=1', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'fact_f_4x4' );
+	tc = fact_f_4x4;
 	d = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
 	e = new Complex128Array( [ 1.0, 0.5, 0.5, -0.3, 0.2, 0.1 ] );
 	df = new Float64Array( [ 4.0, 5.0, 6.0, 7.0 ] );
@@ -222,7 +208,7 @@ test( 'zptsvx: n_zero - quick return for N=0', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	d = new Float64Array( 0 );
 	e = new Complex128Array( 0 );
 	df = new Float64Array( 0 );
@@ -254,7 +240,7 @@ test( 'zptsvx: n_one - N=1 scalar case', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	d = new Float64Array( [ 4.0 ] );
 	e = new Complex128Array( 0 );
 	df = new Float64Array( 1 );
@@ -290,7 +276,7 @@ test( 'zptsvx: not_posdef - not positive definite returns info > 0', function t(
 	var b;
 	var x;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	d = new Float64Array( [ 4.0, -1.0, 6.0 ] );
 	e = new Complex128Array( [ 1.0, 0.0, 2.0, 0.0 ] );
 	df = new Float64Array( 3 );
@@ -323,7 +309,7 @@ test( 'zptsvx: multi_rhs - N=3, NRHS=2', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	d = new Float64Array( [ 10.0, 10.0, 10.0 ] );
 	e = new Complex128Array( [ 1.0, 1.0, 1.0, -1.0 ] );
 	df = new Float64Array( 3 );
@@ -373,7 +359,7 @@ test( 'zptsvx: n5_nrhs1 - larger system N=5, NRHS=1', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n5_nrhs1' );
+	tc = n5_nrhs1;
 	d = new Float64Array( [ 10.0, 20.0, 30.0, 20.0, 10.0 ] );
 	e = new Complex128Array( [ 1.0, 0.5, 2.0, -1.0, 1.5, 0.5, 0.5, -0.5 ] );
 	df = new Float64Array( 5 );
@@ -410,7 +396,7 @@ test( 'zptsvx: n2_nrhs1 - N=2 system', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n2_nrhs1' );
+	tc = n2_nrhs1;
 	d = new Float64Array( [ 4.0, 5.0 ] );
 	e = new Complex128Array( [ 1.0, 1.0 ] );
 	df = new Float64Array( 2 );

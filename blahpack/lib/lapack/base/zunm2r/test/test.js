@@ -6,24 +6,22 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zgeqr2 = require( '../../zgeqr2/lib/base.js' );
 var zunm2r = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunm2r.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var left_notrans = require( './fixtures/left_notrans.json' );
+var left_conjtrans = require( './fixtures/left_conjtrans.json' );
+var right_notrans = require( './fixtures/right_notrans.json' );
+var right_conjtrans = require( './fixtures/right_conjtrans.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var k_zero = require( './fixtures/k_zero.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var right_notrans_rect = require( './fixtures/right_notrans_rect.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -72,11 +70,10 @@ function eye3() {
 	return new Complex128Array( [ 1,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0, 1,0 ] );
 }
 
-
 // TESTS //
 
 test( 'zunm2r: left, no transpose (Q*I)', function t() {
-	var tc = findCase( 'left_notrans' );
+	var tc = left_notrans;
 	var qr = qr3x2();
 	var C = eye3();
 	var WORK = new Complex128Array( 20 );
@@ -86,7 +83,7 @@ test( 'zunm2r: left, no transpose (Q*I)', function t() {
 });
 
 test( 'zunm2r: left, conjugate transpose (Q^H*I)', function t() {
-	var tc = findCase( 'left_conjtrans' );
+	var tc = left_conjtrans;
 	var qr = qr3x2();
 	var C = eye3();
 	var WORK = new Complex128Array( 20 );
@@ -96,7 +93,7 @@ test( 'zunm2r: left, conjugate transpose (Q^H*I)', function t() {
 });
 
 test( 'zunm2r: right, no transpose (I*Q)', function t() {
-	var tc = findCase( 'right_notrans' );
+	var tc = right_notrans;
 	var qr = qr3x2();
 	var C = eye3();
 	var WORK = new Complex128Array( 20 );
@@ -106,7 +103,7 @@ test( 'zunm2r: right, no transpose (I*Q)', function t() {
 });
 
 test( 'zunm2r: right, conjugate transpose (I*Q^H)', function t() {
-	var tc = findCase( 'right_conjtrans' );
+	var tc = right_conjtrans;
 	var qr = qr3x2();
 	var C = eye3();
 	var WORK = new Complex128Array( 20 );
@@ -116,7 +113,7 @@ test( 'zunm2r: right, conjugate transpose (I*Q^H)', function t() {
 });
 
 test( 'zunm2r: M=0 quick return', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var WORK = new Complex128Array( 5 );
 	var A = new Complex128Array( 5 );
 	var TAU = new Complex128Array( 2 );
@@ -126,7 +123,7 @@ test( 'zunm2r: M=0 quick return', function t() {
 });
 
 test( 'zunm2r: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var WORK = new Complex128Array( 5 );
 	var A = new Complex128Array( 5 );
 	var TAU = new Complex128Array( 2 );
@@ -136,7 +133,7 @@ test( 'zunm2r: N=0 quick return', function t() {
 });
 
 test( 'zunm2r: K=0 quick return', function t() {
-	var tc = findCase( 'k_zero' );
+	var tc = k_zero;
 	var WORK = new Complex128Array( 5 );
 	var A = new Complex128Array( 10 );
 	var TAU = new Complex128Array( 2 );
@@ -146,7 +143,7 @@ test( 'zunm2r: K=0 quick return', function t() {
 });
 
 test( 'zunm2r: left, no transpose, rectangular C (3x2)', function t() {
-	var tc = findCase( 'left_notrans_rect' );
+	var tc = left_notrans_rect;
 	var qr = qr3x2in3x3();
 	// C = [1+1i 2-1i; 3+0i 0+2i; -1+1i 4+0i] col-major, LDC=3
 	var C = new Complex128Array( [ 1,1, 3,0, -1,1, 2,-1, 0,2, 4,0 ] );
@@ -157,7 +154,7 @@ test( 'zunm2r: left, no transpose, rectangular C (3x2)', function t() {
 });
 
 test( 'zunm2r: right, no transpose, rectangular C (2x3)', function t() {
-	var tc = findCase( 'right_notrans_rect' );
+	var tc = right_notrans_rect;
 	var qr = qr3x2in3x3();
 	// Fortran test: C(3,3) declared, LDC=2. The memory layout with LDC=2 reinterprets
 	// the column-major C(3,3) data. Effective 2x3 matrix as seen by zunm2r:

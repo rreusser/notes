@@ -20,40 +20,21 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgeqr2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgeqr2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_3x2 = require( './fixtures/basic_3x2.json' );
+var square_2x2 = require( './fixtures/square_2x2.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -86,7 +67,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zgeqr2: basic 3x2 matrix', function t() {
@@ -96,7 +76,7 @@ test( 'zgeqr2: basic 3x2 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'basic_3x2' );
+	tc = basic_3x2;
 	a = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1 ] );
 	tau = new Complex128Array( 2 );
 	work = new Complex128Array( 10 );
@@ -113,7 +93,7 @@ test( 'zgeqr2: square 2x2 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'square_2x2' );
+	tc = square_2x2;
 	a = new Complex128Array( [ 1, 1, 0, 1, 1, 0, 1, 1 ] );
 	tau = new Complex128Array( 2 );
 	work = new Complex128Array( 10 );
@@ -156,7 +136,7 @@ test( 'zgeqr2: 1x1 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	a = new Complex128Array( [ 5, 3 ] );
 	tau = new Complex128Array( 1 );
 	work = new Complex128Array( 2 );

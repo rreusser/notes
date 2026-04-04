@@ -2,41 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgbsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgbsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var tridiag_4x4_1rhs = require( './fixtures/tridiag_4x4_1rhs.json' );
+var tridiag_4x4_2rhs = require( './fixtures/tridiag_4x4_2rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var singular = require( './fixtures/singular.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var complex_rhs = require( './fixtures/complex_rhs.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -106,7 +90,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgbsv: 4x4 complex tridiagonal, single RHS', function t() {
@@ -118,7 +101,7 @@ test( 'zgbsv: 4x4 complex tridiagonal, single RHS', function t() {
 	var B;
 	var i;
 
-	tc = findCase( 'tridiag_4x4_1rhs' );
+	tc = tridiag_4x4_1rhs;
 	AB = bandMatrix( 4, 4, [
 		// Col 0
 		[ 2, 0, 4.0, 1.0 ],
@@ -157,7 +140,7 @@ test( 'zgbsv: 4x4 complex tridiagonal, 2 RHS', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'tridiag_4x4_2rhs' );
+	tc = tridiag_4x4_2rhs;
 	AB = bandMatrix( 4, 4, [
 		[ 2, 0, 4.0, 1.0 ],
 		[ 3, 0, -1.0, 0.0 ],
@@ -203,7 +186,7 @@ test( 'zgbsv: N=1 scalar system', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AB = new Complex128Array( [ 3.0, 2.0 ] );
 	B = new Complex128Array( [ 6.0, 4.0 ] );
 	IPIV = new Int32Array( 1 );
@@ -220,7 +203,7 @@ test( 'zgbsv: singular matrix returns info > 0', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	AB = bandMatrix( 4, 2, [
 		[ 2, 0, 1.0, 0.0 ]  // diag(0)=1, diag(1)=0 (default)
 	]);
@@ -237,7 +220,7 @@ test( 'zgbsv: N=0 quick return', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AB = new Complex128Array( 4 );
 	B = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -253,7 +236,7 @@ test( 'zgbsv: complex RHS with imaginary parts', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'complex_rhs' );
+	tc = complex_rhs;
 	AB = bandMatrix( 4, 4, [
 		[ 2, 0, 4.0, 1.0 ],
 		[ 3, 0, -1.0, 0.0 ],

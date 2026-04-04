@@ -6,26 +6,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpotrf = require( '../../zpotrf/lib/base.js' );
 var zhegs2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhegs2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var itype1_upper = require( './fixtures/itype1_upper.json' );
+var itype1_lower = require( './fixtures/itype1_lower.json' );
+var itype2_upper = require( './fixtures/itype2_upper.json' );
+var itype2_lower = require( './fixtures/itype2_lower.json' );
+var itype3_upper = require( './fixtures/itype3_upper.json' );
+var itype3_lower = require( './fixtures/itype3_lower.json' );
+var n_one = require( './fixtures/n_one.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -70,11 +66,10 @@ function makeB( uplo ) {
 	return B;
 }
 
-
 // TESTS //
 
 test( 'zhegs2: itype1_upper', function t() {
-	var tc = findCase( 'itype1_upper' );
+	var tc = itype1_upper;
 	var B = makeB( 'upper' );
 	var A = new Complex128Array( A_UPPER_DATA );
 	var info = zhegs2( 1, 'upper', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -83,7 +78,7 @@ test( 'zhegs2: itype1_upper', function t() {
 });
 
 test( 'zhegs2: itype1_lower', function t() {
-	var tc = findCase( 'itype1_lower' );
+	var tc = itype1_lower;
 	var B = makeB( 'lower' );
 	var A = new Complex128Array( A_LOWER_DATA );
 	var info = zhegs2( 1, 'lower', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -92,7 +87,7 @@ test( 'zhegs2: itype1_lower', function t() {
 });
 
 test( 'zhegs2: itype2_upper', function t() {
-	var tc = findCase( 'itype2_upper' );
+	var tc = itype2_upper;
 	var B = makeB( 'upper' );
 	var A = new Complex128Array( A_UPPER_DATA );
 	var info = zhegs2( 2, 'upper', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -101,7 +96,7 @@ test( 'zhegs2: itype2_upper', function t() {
 });
 
 test( 'zhegs2: itype2_lower', function t() {
-	var tc = findCase( 'itype2_lower' );
+	var tc = itype2_lower;
 	var B = makeB( 'lower' );
 	var A = new Complex128Array( A_LOWER_DATA );
 	var info = zhegs2( 2, 'lower', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -110,7 +105,7 @@ test( 'zhegs2: itype2_lower', function t() {
 });
 
 test( 'zhegs2: itype3_upper', function t() {
-	var tc = findCase( 'itype3_upper' );
+	var tc = itype3_upper;
 	var B = makeB( 'upper' );
 	var A = new Complex128Array( A_UPPER_DATA );
 	var info = zhegs2( 3, 'upper', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -119,7 +114,7 @@ test( 'zhegs2: itype3_upper', function t() {
 });
 
 test( 'zhegs2: itype3_lower', function t() {
-	var tc = findCase( 'itype3_lower' );
+	var tc = itype3_lower;
 	var B = makeB( 'lower' );
 	var A = new Complex128Array( A_LOWER_DATA );
 	var info = zhegs2( 3, 'lower', 3, A, 1, 3, 0, B, 1, 3, 0 );
@@ -135,7 +130,7 @@ test( 'zhegs2: n_zero', function t() {
 });
 
 test( 'zhegs2: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Complex128Array( [ 9, 0 ] );
 	var B = new Complex128Array( [ 3, 0 ] );
 	var info = zhegs2( 1, 'upper', 1, A, 1, 1, 0, B, 1, 1, 0 );

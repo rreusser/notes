@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -14,30 +12,22 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhbevx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhbevx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) { // eslint-disable-line max-len
-	return JSON.parse( line );
-});
-
+var v_a_u_kd2_n5 = require( './fixtures/v_a_u_kd2_n5.json' );
+var v_a_l_kd2_n5 = require( './fixtures/v_a_l_kd2_n5.json' );
+var n_a_u_kd2_n5 = require( './fixtures/n_a_u_kd2_n5.json' );
+var v_v_u_kd2_n5 = require( './fixtures/v_v_u_kd2_n5.json' );
+var v_i_u_kd2_n5 = require( './fixtures/v_i_u_kd2_n5.json' );
+var n_v_l_kd2_n5 = require( './fixtures/n_v_l_kd2_n5.json' );
+var n_i_l_kd2_n5 = require( './fixtures/n_i_l_kd2_n5.json' );
+var n1_v_a_l = require( './fixtures/n1_v_a_l.json' );
+var n1_v_v_included = require( './fixtures/n1_v_v_included.json' );
+var v_i_l_kd1_n4_fast = require( './fixtures/v_i_l_kd1_n4_fast.json' );
+var v_i_u_kd2_n5_single = require( './fixtures/v_i_u_kd2_n5_single.json' );
+var n1_v_i_u_kd2 = require( './fixtures/n1_v_i_u_kd2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {(Object|void)} test case or undefined
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -333,7 +323,6 @@ function verifyEigenpairs( uplo, N, kd, ABo, w, Z, M, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zhbevx is a function', function t() {
@@ -348,7 +337,7 @@ test( 'zhbevx: V, A, U, KD=2, N=5', function t() {
 
 	ABo = bandUpper5();
 	AB = new Complex128Array( reinterpret( ABo, 0 ).slice() );
-	tc = findCase( 'V_A_U_kd2_n5' );
+	tc = v_a_u_kd2_n5;
 	r = runZhbevx( 'compute-vectors', 'all', 'upper', 5, 2, AB, 0, 0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -364,7 +353,7 @@ test( 'zhbevx: V, A, L, KD=2, N=5', function t() {
 
 	ABo = bandLower5();
 	AB = new Complex128Array( reinterpret( ABo, 0 ).slice() );
-	tc = findCase( 'V_A_L_kd2_n5' );
+	tc = v_a_l_kd2_n5;
 	r = runZhbevx( 'compute-vectors', 'all', 'lower', 5, 2, AB, 0, 0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -377,7 +366,7 @@ test( 'zhbevx: N, A, U, KD=2, N=5 (eigenvalues only)', function t() {
 	var AB;
 	var r;
 
-	tc = findCase( 'N_A_U_kd2_n5' );
+	tc = n_a_u_kd2_n5;
 	AB = bandUpper5();
 	r = runZhbevx( 'no-vectors', 'all', 'upper', 5, 2, AB, 0, 0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -393,7 +382,7 @@ test( 'zhbevx: V, V, U, KD=2, N=5 (value range [3, 8])', function t() {
 
 	ABo = bandUpper5();
 	AB = new Complex128Array( reinterpret( ABo, 0 ).slice() );
-	tc = findCase( 'V_V_U_kd2_n5' );
+	tc = v_v_u_kd2_n5;
 	r = runZhbevx( 'compute-vectors', 'value', 'upper', 5, 2, AB, 3.0, 8.0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -409,7 +398,7 @@ test( 'zhbevx: V, I, U, KD=2, N=5 (index range 2..4)', function t() {
 
 	ABo = bandUpper5();
 	AB = new Complex128Array( reinterpret( ABo, 0 ).slice() );
-	tc = findCase( 'V_I_U_kd2_n5' );
+	tc = v_i_u_kd2_n5;
 	r = runZhbevx( 'compute-vectors', 'index', 'upper', 5, 2, AB, 0, 0, 2, 4, 0 );
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -422,7 +411,7 @@ test( 'zhbevx: N, V, L, KD=2, N=5 (value range [1, 5])', function t() {
 	var AB;
 	var r;
 
-	tc = findCase( 'N_V_L_kd2_n5' );
+	tc = n_v_l_kd2_n5;
 	AB = bandLower5();
 	r = runZhbevx( 'no-vectors', 'value', 'lower', 5, 2, AB, 1.0, 5.0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -435,7 +424,7 @@ test( 'zhbevx: N, I, L, KD=2, N=5 (index 3 only)', function t() {
 	var AB;
 	var r;
 
-	tc = findCase( 'N_I_L_kd2_n5' );
+	tc = n_i_l_kd2_n5;
 	AB = bandLower5();
 	r = runZhbevx( 'no-vectors', 'index', 'lower', 5, 2, AB, 0, 0, 3, 3, 0 );
 	assert.equal( r.info, tc.info );
@@ -449,7 +438,7 @@ test( 'zhbevx: N=1, V, A, L', function t() {
 	var Zv;
 	var r;
 
-	tc = findCase( 'n1_V_A_L' );
+	tc = n1_v_a_l;
 	AB = new Complex128Array( [ 3.5, 0 ] );
 	r = runZhbevx( 'compute-vectors', 'all', 'lower', 1, 0, AB, 0, 0, 0, 0, 0 );
 	assert.equal( r.info, tc.info );
@@ -476,7 +465,7 @@ test( 'zhbevx: N=1, V, V, included', function t() {
 	var Zv;
 	var r;
 
-	tc = findCase( 'n1_V_V_included' );
+	tc = n1_v_v_included;
 	AB = new Complex128Array( [ 3.5, 0 ] );
 	r = runZhbevx( 'compute-vectors', 'value', 'lower', 1, 0, AB, 3.0, 4.0, 0, 0, 0 ); // eslint-disable-line max-len
 	assert.equal( r.info, tc.info );
@@ -505,7 +494,7 @@ test( 'zhbevx: V, I, L, KD=1, N=4, fast path (IL=1, IU=N)', function t() {
 
 	ABo = bandLower4Kd1();
 	AB = new Complex128Array( reinterpret( ABo, 0 ).slice() );
-	tc = findCase( 'V_I_L_kd1_n4_fast' );
+	tc = v_i_l_kd1_n4_fast;
 	r = runZhbevx( 'compute-vectors', 'index', 'lower', 4, 1, AB, 0, 0, 1, 4, 0 );
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -521,7 +510,7 @@ test( 'zhbevx: V, I, U, KD=2, N=5, single eigenvalue (IL=IU=1)', function t() {
 
 	ABo = bandUpper5();
 	AB = new Complex128Array( reinterpret( ABo, 0 ).slice() );
-	tc = findCase( 'V_I_U_kd2_n5_single' );
+	tc = v_i_u_kd2_n5_single;
 	r = runZhbevx( 'compute-vectors', 'index', 'upper', 5, 2, AB, 0, 0, 1, 1, 0 );
 	assert.equal( r.info, tc.info );
 	assert.equal( r.M, tc.M );
@@ -535,7 +524,7 @@ test( 'zhbevx: N=1, V, I, U, KD=2 (IL=IU=1)', function t() {
 	var Zv;
 	var r;
 
-	tc = findCase( 'n1_V_I_U_kd2' );
+	tc = n1_v_i_u_kd2;
 	AB = new Complex128Array( [ 0, 0, 0, 0, 7.25, 0 ] );
 	r = runZhbevx( 'compute-vectors', 'index', 'upper', 1, 2, AB, 0, 0, 1, 1, 0 );
 	assert.equal( r.info, tc.info );

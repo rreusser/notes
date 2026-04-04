@@ -6,7 +6,6 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -14,30 +13,14 @@ var Float64Array = require( '@stdlib/array/float64' );
 var zhptrd = require( './../../zhptrd/lib/base.js' );
 var zupgtr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zupgtr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var zupgtr_4x4_upper = require( './fixtures/zupgtr_4x4_upper.json' );
+var zupgtr_4x4_lower = require( './fixtures/zupgtr_4x4_lower.json' );
+var zupgtr_1x1 = require( './fixtures/zupgtr_1x1.json' );
+var zupgtr_0x0 = require( './fixtures/zupgtr_0x0.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -94,7 +77,6 @@ function toArray( arr, start, end ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zupgtr: upper, 4x4', function t() {
@@ -108,7 +90,7 @@ test( 'zupgtr: upper, 4x4', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'zupgtr_4x4_upper' );
+	tc = zupgtr_4x4_upper;
 
 	// Upper packed Hermitian 4x4
 	AP = new Complex128Array( [
@@ -143,7 +125,7 @@ test( 'zupgtr: lower, 4x4', function t() {
 	var e;
 	var Q;
 
-	tc = findCase( 'zupgtr_4x4_lower' );
+	tc = zupgtr_4x4_lower;
 
 	// Lower packed Hermitian 4x4
 	AP = new Complex128Array( [
@@ -176,7 +158,7 @@ test( 'zupgtr: N=1', function t() {
 	var qv;
 	var Q;
 
-	tc = findCase( 'zupgtr_1x1' );
+	tc = zupgtr_1x1;
 
 	AP = new Complex128Array( [ 5, 0 ] );
 	TAU = new Complex128Array( 0 );
@@ -198,7 +180,7 @@ test( 'zupgtr: N=0', function t() {
 	var AP;
 	var Q;
 
-	tc = findCase( 'zupgtr_0x0' );
+	tc = zupgtr_0x0;
 
 	AP = new Complex128Array( 0 );
 	TAU = new Complex128Array( 0 );

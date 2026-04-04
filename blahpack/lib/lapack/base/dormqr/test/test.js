@@ -2,39 +2,34 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dormqr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dormqr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var qr_factors_small = require( './fixtures/qr_factors_small.json' );
+var qr_factors_large = require( './fixtures/qr_factors_large.json' );
+var left_notrans = require( './fixtures/left_notrans.json' );
+var left_trans = require( './fixtures/left_trans.json' );
+var right_notrans = require( './fixtures/right_notrans.json' );
+var right_trans = require( './fixtures/right_trans.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var k_zero = require( './fixtures/k_zero.json' );
+var left_notrans_rect = require( './fixtures/left_notrans_rect.json' );
+var left_trans_rect = require( './fixtures/left_trans_rect.json' );
+var right_notrans_rect = require( './fixtures/right_notrans_rect.json' );
+var right_trans_rect = require( './fixtures/right_trans_rect.json' );
+var left_notrans_blocked = require( './fixtures/left_notrans_blocked.json' );
+var left_trans_blocked = require( './fixtures/left_trans_blocked.json' );
+var right_notrans_blocked = require( './fixtures/right_notrans_blocked.json' );
+var right_trans_blocked = require( './fixtures/right_trans_blocked.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -72,7 +67,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * These were produced by Fortran's dgeqrf with LDA=6.
 */
 function qr4x3() {
-	var tc = findCase( 'qr_factors_small' );
+	var tc = qr_factors_small;
 	return {
 		'A': new Float64Array( tc.a ),
 		'TAU': new Float64Array( tc.tau )
@@ -84,7 +79,7 @@ function qr4x3() {
 * These were produced by Fortran's dgeqrf with LDA=40.
 */
 function qr40x35() {
-	var tc = findCase( 'qr_factors_large' );
+	var tc = qr_factors_large;
 	return {
 		'A': new Float64Array( tc.a ),
 		'TAU': new Float64Array( tc.tau )
@@ -119,7 +114,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dormqr: left_notrans (Q*I)', function t() {
@@ -129,7 +123,7 @@ test( 'dormqr: left_notrans (Q*I)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_notrans' );
+	tc = left_notrans;
 	qr = qr4x3();
 	C = eye( 4, 6 );
 	WORK = new Float64Array( 1000 );
@@ -145,7 +139,7 @@ test( 'dormqr: left_trans (Q^T*I)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_trans' );
+	tc = left_trans;
 	qr = qr4x3();
 	C = eye( 4, 6 );
 	WORK = new Float64Array( 1000 );
@@ -161,7 +155,7 @@ test( 'dormqr: right_notrans (I*Q)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_notrans' );
+	tc = right_notrans;
 	qr = qr4x3();
 	C = eye( 4, 6 );
 	WORK = new Float64Array( 1000 );
@@ -177,7 +171,7 @@ test( 'dormqr: right_trans (I*Q^T)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_trans' );
+	tc = right_trans;
 	qr = qr4x3();
 	C = eye( 4, 6 );
 	WORK = new Float64Array( 1000 );
@@ -193,7 +187,7 @@ test( 'dormqr: m_zero (quick return)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	qr = qr4x3();
 	C = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -208,7 +202,7 @@ test( 'dormqr: n_zero (quick return)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	qr = qr4x3();
 	C = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -224,7 +218,7 @@ test( 'dormqr: k_zero (quick return)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'k_zero' );
+	tc = k_zero;
 	qr = qr4x3();
 	C = eye( 4, 6 );
 	Cexpected = eye( 4, 6 );
@@ -242,7 +236,7 @@ test( 'dormqr: left_notrans_rect (Q * non-identity 4x2)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_notrans_rect' );
+	tc = left_notrans_rect;
 	qr = qr4x3();
 	C = new Float64Array( 6 * 6 );
 	C[ 0 ] = 1.0;
@@ -268,7 +262,7 @@ test( 'dormqr: left_trans_rect (Q^T * non-identity 4x2)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_trans_rect' );
+	tc = left_trans_rect;
 	qr = qr4x3();
 	C = new Float64Array( 6 * 6 );
 	C[ 0 ] = 1.0;
@@ -294,7 +288,7 @@ test( 'dormqr: right_notrans_rect (3x4 * Q)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_notrans_rect' );
+	tc = right_notrans_rect;
 	qr = qr4x3();
 	C = new Float64Array( 3 * 6 );
 	C[ 0 ] = 1.0;
@@ -324,7 +318,7 @@ test( 'dormqr: right_trans_rect (3x4 * Q^T)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_trans_rect' );
+	tc = right_trans_rect;
 	qr = qr4x3();
 	C = new Float64Array( 3 * 6 );
 	C[ 0 ] = 1.0;
@@ -353,7 +347,7 @@ test( 'dormqr: left_notrans_blocked (40x40, K=35)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_notrans_blocked' );
+	tc = left_notrans_blocked;
 	qr = qr40x35();
 	C = eye( 40, 40 );
 	WORK = new Float64Array( 10000 );
@@ -369,7 +363,7 @@ test( 'dormqr: left_trans_blocked (40x40, K=35)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'left_trans_blocked' );
+	tc = left_trans_blocked;
 	qr = qr40x35();
 	C = eye( 40, 40 );
 	WORK = new Float64Array( 10000 );
@@ -385,7 +379,7 @@ test( 'dormqr: right_notrans_blocked (40x40, K=35)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_notrans_blocked' );
+	tc = right_notrans_blocked;
 	qr = qr40x35();
 	C = eye( 40, 40 );
 	WORK = new Float64Array( 10000 );
@@ -401,7 +395,7 @@ test( 'dormqr: right_trans_blocked (40x40, K=35)', function t() {
 	var qr;
 	var C;
 
-	tc = findCase( 'right_trans_blocked' );
+	tc = right_trans_blocked;
 	qr = qr40x35();
 	C = eye( 40, 40 );
 	WORK = new Float64Array( 10000 );

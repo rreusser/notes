@@ -2,39 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaqr5 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqr5.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _6x6_2shifts_wantt_wantz = require( './fixtures/6x6_2shifts_wantt_wantz.json' );
+var _8x8_4shifts_kacc22_1 = require( './fixtures/8x8_4shifts_kacc22_1.json' );
+var _6x6_no_wantt_no_wantz = require( './fixtures/6x6_no_wantt_no_wantz.json' );
+var nshfts_0_noop = require( './fixtures/nshfts_0_noop.json' );
+var ktop_eq_kbot_noop = require( './fixtures/ktop_eq_kbot_noop.json' );
+var _6x6_4shifts_kacc22_2 = require( './fixtures/6x6_4shifts_kacc22_2.json' );
+var _6x6_partial_sweep = require( './fixtures/6x6_partial_sweep.json' );
+var _8x8_4shifts_kacc22_0 = require( './fixtures/8x8_4shifts_kacc22_0.json' );
+var _4x4_2shifts_kacc22_1 = require( './fixtures/4x4_2shifts_kacc22_1.json' );
+var _6x6_4shifts_bmp22 = require( './fixtures/6x6_4shifts_bmp22.json' );
+var _6x6_shuffle_shifts = require( './fixtures/6x6_shuffle_shifts.json' );
+var _8x8_5shifts_odd = require( './fixtures/8x8_5shifts_odd.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -160,7 +150,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlaqr5: 6x6_2shifts_wantt_wantz', function t() {
@@ -171,7 +160,7 @@ test( 'dlaqr5: 6x6_2shifts_wantt_wantz', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6_2shifts_wantt_wantz' );
+	tc = _6x6_2shifts_wantt_wantz;
 	N = 6;
 	H = colMajor( N, {
 		'1,1': 4.0,
@@ -219,7 +208,7 @@ test( 'dlaqr5: 8x8_4shifts_kacc22_1', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '8x8_4shifts_kacc22_1' );
+	tc = _8x8_4shifts_kacc22_1;
 	N = 8;
 	H = colMajor( N, {
 		'1,1': 10.0,
@@ -284,7 +273,7 @@ test( 'dlaqr5: 6x6_no_wantt_no_wantz', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6_no_wantt_no_wantz' );
+	tc = _6x6_no_wantt_no_wantz;
 	N = 6;
 	H = colMajor( N, {
 		'1,1': 4.0,
@@ -329,7 +318,7 @@ test( 'dlaqr5: nshfts_0_noop', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'nshfts_0_noop' );
+	tc = nshfts_0_noop;
 	N = 4;
 	H = colMajor( N, {
 		'1,1': 4.0,
@@ -361,7 +350,7 @@ test( 'dlaqr5: ktop_eq_kbot_noop', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( 'ktop_eq_kbot_noop' );
+	tc = ktop_eq_kbot_noop;
 	N = 4;
 	H = colMajor( N, {
 		'1,1': 4.0,
@@ -393,7 +382,7 @@ test( 'dlaqr5: 6x6_4shifts_kacc22_2', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6_4shifts_kacc22_2' );
+	tc = _6x6_4shifts_kacc22_2;
 	N = 6;
 	H = colMajor( N, {
 		'1,1': 6.0,
@@ -441,7 +430,7 @@ test( 'dlaqr5: 6x6_partial_sweep', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6_partial_sweep' );
+	tc = _6x6_partial_sweep;
 	N = 6;
 	H = colMajor( N, {
 		'1,1': 5.0,
@@ -487,7 +476,7 @@ test( 'dlaqr5: 8x8_4shifts_kacc22_0', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '8x8_4shifts_kacc22_0' );
+	tc = _8x8_4shifts_kacc22_0;
 	N = 8;
 	H = colMajor( N, {
 		'1,1': 10.0,
@@ -550,7 +539,7 @@ test( 'dlaqr5: 4x4_2shifts_kacc22_1', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '4x4_2shifts_kacc22_1' );
+	tc = _4x4_2shifts_kacc22_1;
 	N = 4;
 	H = colMajor( N, {
 		'1,1': 4.0,
@@ -583,7 +572,7 @@ test( 'dlaqr5: 6x6_4shifts_bmp22', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6_4shifts_bmp22' );
+	tc = _6x6_4shifts_bmp22;
 	N = 6;
 	H = colMajor( N, {
 		'1,1': 5.0,
@@ -629,7 +618,7 @@ test( 'dlaqr5: 6x6_shuffle_shifts', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '6x6_shuffle_shifts' );
+	tc = _6x6_shuffle_shifts;
 	N = 6;
 	H = colMajor( N, {
 		'1,1': 5.0,
@@ -677,7 +666,7 @@ test( 'dlaqr5: 8x8_5shifts_odd', function t() {
 	var H;
 	var Z;
 
-	tc = findCase( '8x8_5shifts_odd' );
+	tc = _8x8_5shifts_odd;
 	N = 8;
 	H = colMajor( N, {
 		'1,1': 10.0,

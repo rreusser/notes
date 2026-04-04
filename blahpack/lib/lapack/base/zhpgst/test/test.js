@@ -2,12 +2,10 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -15,15 +13,25 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpptrf = require( '../../zpptrf/lib/base.js' );
 var zhpgst = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpgst.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var itype1_upper_3 = require( './fixtures/itype1_upper_3.json' );
+var itype1_lower_3 = require( './fixtures/itype1_lower_3.json' );
+var itype2_upper_3 = require( './fixtures/itype2_upper_3.json' );
+var itype2_lower_3 = require( './fixtures/itype2_lower_3.json' );
+var itype3_upper_3 = require( './fixtures/itype3_upper_3.json' );
+var itype3_lower_3 = require( './fixtures/itype3_lower_3.json' );
+var itype1_upper_4 = require( './fixtures/itype1_upper_4.json' );
+var itype1_lower_4 = require( './fixtures/itype1_lower_4.json' );
+var itype2_upper_4 = require( './fixtures/itype2_upper_4.json' );
+var itype2_lower_4 = require( './fixtures/itype2_lower_4.json' );
+var itype3_upper_4 = require( './fixtures/itype3_upper_4.json' );
+var itype3_lower_4 = require( './fixtures/itype3_lower_4.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_itype1_upper = require( './fixtures/n_one_itype1_upper.json' );
+var n_one_itype1_lower = require( './fixtures/n_one_itype1_lower.json' );
+var n_one_itype2 = require( './fixtures/n_one_itype2.json' );
+var n_one_itype3 = require( './fixtures/n_one_itype3.json' );
 
 // VARIABLES //
 
@@ -39,21 +47,7 @@ var B4L = [ 20, 0, 3, -1, 1, 2, 4, -1, 15, 0, 2, -3, 1, 1, 12, 0, 3, -2, 10, 0 ]
 var A4U = [ 18, 0, 5, 2, 14, 0, 2, -1, 4, 3, 11, 0, 3, 1, 1, -2, 2, 1, 8, 0 ];
 var A4L = [ 18, 0, 5, -2, 2, 1, 3, -1, 14, 0, 4, -3, 1, 2, 11, 0, 2, -1, 8, 0 ];
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -92,7 +86,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'zhpgst is a function', function t() {
@@ -105,7 +98,7 @@ test( 'zhpgst: itype1_upper_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_upper_3' );
+	tc = itype1_upper_3;
 	bp = c128( B3U );
 	zpptrf( 'upper', 3, bp, 1, 0 );
 	ap = c128( A3U );
@@ -120,7 +113,7 @@ test( 'zhpgst: itype1_lower_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_lower_3' );
+	tc = itype1_lower_3;
 	bp = c128( B3L );
 	zpptrf( 'lower', 3, bp, 1, 0 );
 	ap = c128( A3L );
@@ -135,7 +128,7 @@ test( 'zhpgst: itype2_upper_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_upper_3' );
+	tc = itype2_upper_3;
 	bp = c128( B3U );
 	zpptrf( 'upper', 3, bp, 1, 0 );
 	ap = c128( A3U );
@@ -150,7 +143,7 @@ test( 'zhpgst: itype2_lower_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_lower_3' );
+	tc = itype2_lower_3;
 	bp = c128( B3L );
 	zpptrf( 'lower', 3, bp, 1, 0 );
 	ap = c128( A3L );
@@ -165,7 +158,7 @@ test( 'zhpgst: itype3_upper_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_upper_3' );
+	tc = itype3_upper_3;
 	bp = c128( B3U );
 	zpptrf( 'upper', 3, bp, 1, 0 );
 	ap = c128( A3U );
@@ -180,7 +173,7 @@ test( 'zhpgst: itype3_lower_3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_lower_3' );
+	tc = itype3_lower_3;
 	bp = c128( B3L );
 	zpptrf( 'lower', 3, bp, 1, 0 );
 	ap = c128( A3L );
@@ -195,7 +188,7 @@ test( 'zhpgst: itype1_upper_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_upper_4' );
+	tc = itype1_upper_4;
 	bp = c128( B4U );
 	zpptrf( 'upper', 4, bp, 1, 0 );
 	ap = c128( A4U );
@@ -210,7 +203,7 @@ test( 'zhpgst: itype1_lower_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype1_lower_4' );
+	tc = itype1_lower_4;
 	bp = c128( B4L );
 	zpptrf( 'lower', 4, bp, 1, 0 );
 	ap = c128( A4L );
@@ -225,7 +218,7 @@ test( 'zhpgst: itype2_upper_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_upper_4' );
+	tc = itype2_upper_4;
 	bp = c128( B4U );
 	zpptrf( 'upper', 4, bp, 1, 0 );
 	ap = c128( A4U );
@@ -240,7 +233,7 @@ test( 'zhpgst: itype2_lower_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype2_lower_4' );
+	tc = itype2_lower_4;
 	bp = c128( B4L );
 	zpptrf( 'lower', 4, bp, 1, 0 );
 	ap = c128( A4L );
@@ -255,7 +248,7 @@ test( 'zhpgst: itype3_upper_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_upper_4' );
+	tc = itype3_upper_4;
 	bp = c128( B4U );
 	zpptrf( 'upper', 4, bp, 1, 0 );
 	ap = c128( A4U );
@@ -270,7 +263,7 @@ test( 'zhpgst: itype3_lower_4', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'itype3_lower_4' );
+	tc = itype3_lower_4;
 	bp = c128( B4L );
 	zpptrf( 'lower', 4, bp, 1, 0 );
 	ap = c128( A4L );
@@ -285,7 +278,7 @@ test( 'zhpgst: n_zero (quick return)', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ap = c128( [ 0, 0 ] );
 	bp = c128( [ 0, 0 ] );
 	info = zhpgst( 1, 'upper', 0, ap, 1, 0, bp, 1, 0 );
@@ -298,7 +291,7 @@ test( 'zhpgst: n_one_itype1_upper', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype1_upper' );
+	tc = n_one_itype1_upper;
 	bp = c128( [ 9, 0 ] );
 	zpptrf( 'upper', 1, bp, 1, 0 );
 	ap = c128( [ 12, 0 ] );
@@ -313,7 +306,7 @@ test( 'zhpgst: n_one_itype1_lower', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype1_lower' );
+	tc = n_one_itype1_lower;
 	bp = c128( [ 16, 0 ] );
 	zpptrf( 'lower', 1, bp, 1, 0 );
 	ap = c128( [ 25, 0 ] );
@@ -328,7 +321,7 @@ test( 'zhpgst: n_one_itype2', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype2' );
+	tc = n_one_itype2;
 	bp = c128( [ 4, 0 ] );
 	zpptrf( 'upper', 1, bp, 1, 0 );
 	ap = c128( [ 5, 0 ] );
@@ -343,7 +336,7 @@ test( 'zhpgst: n_one_itype3', function t() {
 	var ap;
 	var bp;
 
-	tc = findCase( 'n_one_itype3' );
+	tc = n_one_itype3;
 	bp = c128( [ 4, 0 ] );
 	zpptrf( 'lower', 1, bp, 1, 0 );
 	ap = c128( [ 5, 0 ] );

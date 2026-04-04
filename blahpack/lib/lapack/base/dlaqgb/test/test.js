@@ -5,36 +5,20 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaqgb = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaqgb.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var no_equil = require( './fixtures/no_equil.json' );
+var row_equil = require( './fixtures/row_equil.json' );
+var col_equil = require( './fixtures/col_equil.json' );
+var both_equil = require( './fixtures/both_equil.json' );
+var amax_large = require( './fixtures/amax_large.json' );
+var amax_small = require( './fixtures/amax_small.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -114,7 +98,6 @@ function inputC( ) {
 	return new Float64Array( [ 0.6, 1.0, 0.7, 0.9, 0.4 ] );
 }
 
-
 // TESTS //
 
 test( 'dlaqgb: no equilibration (rowcnd >= thresh, colcnd >= thresh, amax in range)', function t() { // eslint-disable-line max-len
@@ -122,7 +105,7 @@ test( 'dlaqgb: no equilibration (rowcnd >= thresh, colcnd >= thresh, amax in ran
 	var tc;
 	var AB;
 
-	tc = findCase( 'no_equil' );
+	tc = no_equil;
 	AB = inputAB();
 	equed = dlaqgb( 4, 5, 1, 2, AB, 1, 4, 0, inputR(), 1, 0, inputC(), 1, 0, 0.5, 0.6, 4.0 ); // eslint-disable-line max-len
 	assert.equal( equed, 'none' );
@@ -134,7 +117,7 @@ test( 'dlaqgb: row equilibration only (rowcnd < thresh)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'row_equil' );
+	tc = row_equil;
 	AB = inputAB();
 	equed = dlaqgb( 4, 5, 1, 2, AB, 1, 4, 0, inputR(), 1, 0, inputC(), 1, 0, 0.01, 0.6, 4.0 ); // eslint-disable-line max-len
 	assert.equal( equed, 'row' );
@@ -146,7 +129,7 @@ test( 'dlaqgb: column equilibration only (colcnd < thresh)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'col_equil' );
+	tc = col_equil;
 	AB = inputAB();
 	equed = dlaqgb( 4, 5, 1, 2, AB, 1, 4, 0, inputR(), 1, 0, inputC(), 1, 0, 0.5, 0.01, 4.0 ); // eslint-disable-line max-len
 	assert.equal( equed, 'column' );
@@ -158,7 +141,7 @@ test( 'dlaqgb: both row and column equilibration', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'both_equil' );
+	tc = both_equil;
 	AB = inputAB();
 	equed = dlaqgb( 4, 5, 1, 2, AB, 1, 4, 0, inputR(), 1, 0, inputC(), 1, 0, 0.01, 0.01, 4.0 ); // eslint-disable-line max-len
 	assert.equal( equed, 'both' );
@@ -170,7 +153,7 @@ test( 'dlaqgb: row scaling triggered by amax > large', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'amax_large' );
+	tc = amax_large;
 	AB = inputAB();
 	equed = dlaqgb( 4, 5, 1, 2, AB, 1, 4, 0, inputR(), 1, 0, inputC(), 1, 0, 0.5, 0.6, 1.0e300 ); // eslint-disable-line max-len
 	assert.equal( equed, 'row' );
@@ -182,7 +165,7 @@ test( 'dlaqgb: row scaling triggered by amax < small', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'amax_small' );
+	tc = amax_small;
 	AB = inputAB();
 	equed = dlaqgb( 4, 5, 1, 2, AB, 1, 4, 0, inputR(), 1, 0, inputC(), 1, 0, 0.5, 0.6, 1.0e-320 ); // eslint-disable-line max-len
 	assert.equal( equed, 'row' );

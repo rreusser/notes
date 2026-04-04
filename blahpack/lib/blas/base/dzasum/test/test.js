@@ -2,39 +2,21 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var dzasum = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dzasum.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride2 = require( './fixtures/stride2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -50,7 +32,6 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
 
-
 // TESTS //
 
 test( 'dzasum: basic', function t() {
@@ -58,7 +39,7 @@ test( 'dzasum: basic', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'basic' );
+	tc = basic;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
 	result = dzasum( 3, zx, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
@@ -69,7 +50,7 @@ test( 'dzasum: n_zero', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, -4.0, -5.0, 6.0 ] );
 	result = dzasum( 0, zx, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
@@ -80,7 +61,7 @@ test( 'dzasum: n_one', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	zx = new Complex128Array( [ 3.0, 4.0 ] );
 	result = dzasum( 1, zx, 1, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );
@@ -91,7 +72,7 @@ test( 'dzasum: stride2', function t() {
 	var tc;
 	var zx;
 
-	tc = findCase( 'stride2' );
+	tc = stride2;
 	zx = new Complex128Array( [ 1.0, 1.0, 99.0, 99.0, 2.0, 3.0 ] );
 	result = dzasum( 2, zx, 2, 0 );
 	assertClose( result, tc.result, 1e-14, 'result' );

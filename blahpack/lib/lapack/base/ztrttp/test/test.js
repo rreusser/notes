@@ -6,25 +6,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrttp = require( './../lib' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrttp.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var lower_3x3_lda4 = require( './fixtures/lower_3x3_lda4.json' );
+var upper_3x3_lda4 = require( './fixtures/upper_3x3_lda4.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
@@ -35,7 +32,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[i] + ', got ' + actual[i] );
 	}
 }
-
 
 // TESTS //
 
@@ -49,7 +45,7 @@ test( 'ztrttp: attached to the main export is an `ndarray` method', function t()
 
 test( 'ztrttp.ndarray: lower triangular 3x3', function t() {
 	var info;
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower_3x3;
 	// A is 3x3 complex matrix, column-major, LDA=3
 	// Lower tri: A(1,1)=(1,0.1), A(2,1)=(2,0.2), A(3,1)=(3,0.3),
 	//            A(2,2)=(5,0.5), A(3,2)=(6,0.6),
@@ -68,7 +64,7 @@ test( 'ztrttp.ndarray: lower triangular 3x3', function t() {
 
 test( 'ztrttp.ndarray: upper triangular 3x3', function t() {
 	var info;
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper_3x3;
 	// Upper tri: A(1,1)=(1,-0.1), A(1,2)=(4,-0.4), A(2,2)=(5,-0.5),
 	//            A(1,3)=(7,-0.7), A(2,3)=(8,-0.8), A(3,3)=(9,-0.9)
 	var A = new Complex128Array( [
@@ -84,7 +80,7 @@ test( 'ztrttp.ndarray: upper triangular 3x3', function t() {
 
 test( 'ztrttp.ndarray: lower triangular 4x4', function t() {
 	var info;
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	// Lower 4x4: A(i,j) for i>=j, value = (i+(j-1)*4, (i+(j-1)*4)*0.01)
 	var A = new Complex128Array( [
 		1.0, 0.01, 2.0, 0.02, 3.0, 0.03, 4.0, 0.04,
@@ -100,7 +96,7 @@ test( 'ztrttp.ndarray: lower triangular 4x4', function t() {
 
 test( 'ztrttp.ndarray: upper triangular 4x4', function t() {
 	var info;
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	// Upper 4x4: A(i,j) for i<=j, value = (i+(j-1)*4, -(i+(j-1)*4)*0.1)
 	var A = new Complex128Array( [
 		1.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -127,7 +123,7 @@ test( 'ztrttp.ndarray: N=0 quick return', function t() {
 
 test( 'ztrttp.ndarray: N=1 lower', function t() {
 	var info;
-	var tc = findCase( 'n_one_lower' );
+	var tc = n_one_lower;
 	var A = new Complex128Array( [ 42.0, -3.5 ] );
 	var AP = new Complex128Array( 1 );
 	info = ztrttp.ndarray( 'lower', 1, A, 1, 1, 0, AP, 1, 0 );
@@ -137,7 +133,7 @@ test( 'ztrttp.ndarray: N=1 lower', function t() {
 
 test( 'ztrttp.ndarray: N=1 upper', function t() {
 	var info;
-	var tc = findCase( 'n_one_upper' );
+	var tc = n_one_upper;
 	var A = new Complex128Array( [ 77.0, 1.25 ] );
 	var AP = new Complex128Array( 1 );
 	info = ztrttp.ndarray( 'upper', 1, A, 1, 1, 0, AP, 1, 0 );
@@ -147,7 +143,7 @@ test( 'ztrttp.ndarray: N=1 upper', function t() {
 
 test( 'ztrttp.ndarray: lower 3x3 with LDA > N (LDA=4)', function t() {
 	var info;
-	var tc = findCase( 'lower_3x3_lda4' );
+	var tc = lower_3x3_lda4;
 	// Column-major with LDA=4: 4 complex elements per column, N=3
 	var A = new Complex128Array( [
 		1.0, 0.1, 2.0, 0.2, 3.0, 0.3, 0.0, 0.0,
@@ -162,7 +158,7 @@ test( 'ztrttp.ndarray: lower 3x3 with LDA > N (LDA=4)', function t() {
 
 test( 'ztrttp.ndarray: upper 3x3 with LDA > N (LDA=4)', function t() {
 	var info;
-	var tc = findCase( 'upper_3x3_lda4' );
+	var tc = upper_3x3_lda4;
 	var A = new Complex128Array( [
 		1.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 		4.0, -0.4, 5.0, -0.5, 0.0, 0.0, 0.0, 0.0,

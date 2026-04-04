@@ -1,0 +1,11 @@
+{
+  "name": "diagonal_varied_lower",
+  "s": [
+    0.1,
+    1,
+    2
+  ],
+  "scond": 0.05,
+  "amax": 100,
+  "info": 0
+}

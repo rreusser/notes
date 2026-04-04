@@ -1,0 +1,6 @@
+{
+  "name": "tridiag_1norm",
+  "anorm": 10,
+  "rcond": 0.2921161825726141,
+  "info": 0
+}

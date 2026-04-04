@@ -3,28 +3,27 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlarfb = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarfb.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var left_notrans_fwd_col = require( './fixtures/left_notrans_fwd_col.json' );
+var left_trans_fwd_col = require( './fixtures/left_trans_fwd_col.json' );
+var right_notrans_fwd_col = require( './fixtures/right_notrans_fwd_col.json' );
+var right_trans_fwd_col = require( './fixtures/right_trans_fwd_col.json' );
+var left_notrans_bwd_col = require( './fixtures/left_notrans_bwd_col.json' );
+var left_trans_bwd_col = require( './fixtures/left_trans_bwd_col.json' );
+var right_notrans_bwd_col = require( './fixtures/right_notrans_bwd_col.json' );
+var right_trans_bwd_col = require( './fixtures/right_trans_bwd_col.json' );
+var left_notrans_fwd_row = require( './fixtures/left_notrans_fwd_row.json' );
+var left_trans_fwd_row = require( './fixtures/left_trans_fwd_row.json' );
+var right_notrans_fwd_row = require( './fixtures/right_notrans_fwd_row.json' );
+var right_trans_fwd_row = require( './fixtures/right_trans_fwd_row.json' );
+var left_notrans_bwd_row = require( './fixtures/left_notrans_bwd_row.json' );
+var left_trans_bwd_row = require( './fixtures/left_trans_bwd_row.json' );
+var right_notrans_bwd_row = require( './fixtures/right_notrans_bwd_row.json' );
+var right_trans_bwd_row = require( './fixtures/right_trans_bwd_row.json' );
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -112,7 +111,7 @@ test( 'dlarfb: left notrans fwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_notrans_fwd_col' );
+	tc = left_notrans_fwd_col;
 	V = new Float64Array( 6 * 2 );
 	setupV4x2( V );
 	T = new Float64Array( 4 );
@@ -131,7 +130,7 @@ test( 'dlarfb: left trans fwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_trans_fwd_col' );
+	tc = left_trans_fwd_col;
 	V = new Float64Array( 6 * 2 );
 	setupV4x2( V );
 	T = new Float64Array( 4 );
@@ -150,7 +149,7 @@ test( 'dlarfb: right notrans fwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_notrans_fwd_col' );
+	tc = right_notrans_fwd_col;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 1 + 0 * 6 ] = 0.5;
@@ -173,7 +172,7 @@ test( 'dlarfb: right trans fwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_trans_fwd_col' );
+	tc = right_trans_fwd_col;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 1 + 0 * 6 ] = 0.5;
@@ -224,7 +223,7 @@ test( 'dlarfb: left notrans bwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_notrans_bwd_col' );
+	tc = left_notrans_bwd_col;
 	V = new Float64Array( 6 * 2 );
 	setupVBwd4x2( V );
 	T = new Float64Array( 4 );
@@ -243,7 +242,7 @@ test( 'dlarfb: left trans bwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_trans_bwd_col' );
+	tc = left_trans_bwd_col;
 	V = new Float64Array( 6 * 2 );
 	setupVBwd4x2( V );
 	T = new Float64Array( 4 );
@@ -262,7 +261,7 @@ test( 'dlarfb: right notrans bwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_notrans_bwd_col' );
+	tc = right_notrans_bwd_col;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 0.5;
 	V[ 0 + 1 * 6 ] = 0.25;
@@ -286,7 +285,7 @@ test( 'dlarfb: right trans bwd col', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_trans_bwd_col' );
+	tc = right_trans_bwd_col;
 	V = new Float64Array( 6 * 2 );
 	V[ 0 + 0 * 6 ] = 0.5;
 	V[ 0 + 1 * 6 ] = 0.25;
@@ -341,7 +340,7 @@ test( 'dlarfb: left notrans fwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_notrans_fwd_row' );
+	tc = left_notrans_fwd_row;
 	V = new Float64Array( 6 * 6 );
 	setupVRow2x4( V );
 	T = new Float64Array( 4 );
@@ -360,7 +359,7 @@ test( 'dlarfb: left trans fwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_trans_fwd_row' );
+	tc = left_trans_fwd_row;
 	V = new Float64Array( 6 * 6 );
 	setupVRow2x4( V );
 	T = new Float64Array( 4 );
@@ -379,7 +378,7 @@ test( 'dlarfb: right notrans fwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_notrans_fwd_row' );
+	tc = right_notrans_fwd_row;
 	V = new Float64Array( 6 * 6 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 0 + 1 * 6 ] = 0.5;
@@ -402,7 +401,7 @@ test( 'dlarfb: right trans fwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_trans_fwd_row' );
+	tc = right_trans_fwd_row;
 	V = new Float64Array( 6 * 6 );
 	V[ 0 + 0 * 6 ] = 1;
 	V[ 0 + 1 * 6 ] = 0.5;
@@ -440,7 +439,7 @@ test( 'dlarfb: left notrans bwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_notrans_bwd_row' );
+	tc = left_notrans_bwd_row;
 	V = new Float64Array( 6 * 6 );
 	setupVBwdRow2x4( V );
 	T = new Float64Array( 4 );
@@ -459,7 +458,7 @@ test( 'dlarfb: left trans bwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'left_trans_bwd_row' );
+	tc = left_trans_bwd_row;
 	V = new Float64Array( 6 * 6 );
 	setupVBwdRow2x4( V );
 	T = new Float64Array( 4 );
@@ -478,7 +477,7 @@ test( 'dlarfb: right notrans bwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_notrans_bwd_row' );
+	tc = right_notrans_bwd_row;
 	V = new Float64Array( 6 * 6 );
 	V[ 0 + 0 * 6 ] = 0.5;
 	V[ 0 + 1 * 6 ] = 1.0;
@@ -502,7 +501,7 @@ test( 'dlarfb: right trans bwd row', function t() {
 	var T;
 	var C;
 
-	tc = findCase( 'right_trans_bwd_row' );
+	tc = right_trans_bwd_row;
 	V = new Float64Array( 6 * 6 );
 	V[ 0 + 0 * 6 ] = 0.5;
 	V[ 0 + 1 * 6 ] = 1.0;

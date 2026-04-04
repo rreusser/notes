@@ -5,38 +5,24 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaqsp = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlaqsp.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_equilibrate = require( './fixtures/upper_equilibrate.json' );
+var lower_equilibrate = require( './fixtures/lower_equilibrate.json' );
+var no_equilibrate = require( './fixtures/no_equilibrate.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var small_amax = require( './fixtures/small_amax.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -99,7 +85,6 @@ function mapEqued( c ) {
 	return 'none';
 }
 
-
 // TESTS //
 
 test( 'zlaqsp: upper_equilibrate', function t() {
@@ -109,7 +94,7 @@ test( 'zlaqsp: upper_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'upper_equilibrate' );
+	tc = upper_equilibrate;
 	AP = new Complex128Array( [
 		4.0, 1.0,
 		1.0, 0.5, 9.0, 2.0,
@@ -129,7 +114,7 @@ test( 'zlaqsp: lower_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'lower_equilibrate' );
+	tc = lower_equilibrate;
 	AP = new Complex128Array( [
 		4.0, 1.0, 1.0, 0.5, 0.5, 0.25,
 		9.0, 2.0, 2.0, 1.0,
@@ -149,7 +134,7 @@ test( 'zlaqsp: no_equilibrate', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'no_equilibrate' );
+	tc = no_equilibrate;
 	AP = new Complex128Array( [
 		4.0, 1.0,
 		1.0, 0.5, 9.0, 2.0,
@@ -168,7 +153,7 @@ test( 'zlaqsp: n_zero', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Complex128Array( 1 );
 	S = new Float64Array( 1 );
 	equed = zlaqsp( 'upper', 0, AP, 1, 0, S, 1, 0, 1.0, 1.0 );
@@ -182,7 +167,7 @@ test( 'zlaqsp: n_one_upper', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = new Complex128Array( [ 100.0, 50.0 ] );
 	S = new Float64Array( [ 0.1 ] );
 	equed = zlaqsp( 'upper', 1, AP, 1, 0, S, 1, 0, 0.01, 100.0 );
@@ -198,7 +183,7 @@ test( 'zlaqsp: small_amax', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'small_amax' );
+	tc = small_amax;
 	AP = new Complex128Array( [
 		1e-300, 2e-300,
 		0.0, 0.0,
@@ -218,7 +203,7 @@ test( 'zlaqsp: upper_4x4', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	AP = new Complex128Array( [
 		16.0, 1.0,
 		4.0, 2.0, 9.0, 3.0,
@@ -239,7 +224,7 @@ test( 'zlaqsp: lower_4x4', function t() {
 	var AP;
 	var S;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	AP = new Complex128Array( [
 		16.0, 1.0, 4.0, 2.0, 2.0, 0.5, 1.0, 0.25,
 		9.0, 3.0, 3.0, 1.5, 6.0, 3.0,

@@ -8,25 +8,17 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlarscl2 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlarscl2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line.replace( /\bNaN\b/g, 'null' ) );
-} );
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var single_element = require( './fixtures/single_element.json' );
+var rect_2x3 = require( './fixtures/rect_2x3.json' );
+var rect_3x2 = require( './fixtures/rect_3x2.json' );
+var ldx_gt_m = require( './fixtures/ldx_gt_m.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
@@ -39,7 +31,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zlarscl2 is a function', function t() {
@@ -48,7 +39,7 @@ test( 'zlarscl2 is a function', function t() {
 
 test( 'zlarscl2: basic_3x3', function t() {
 	var view;
-	var tc = findCase( 'basic_3x3' );
+	var tc = basic_3x3;
 	var x = new Complex128Array( [
 		1, 2, 3, 4, 5, 6,
 		7, 8, 9, 10, 11, 12,
@@ -82,7 +73,7 @@ test( 'zlarscl2: n_zero (quick return)', function t() {
 
 test( 'zlarscl2: single_element', function t() {
 	var view;
-	var tc = findCase( 'single_element' );
+	var tc = single_element;
 	var x = new Complex128Array( [ 5, -3 ] );
 	var d = new Float64Array( [ 3 ] );
 	zlarscl2( 1, 1, d, 1, 0, x, 1, 1, 0 );
@@ -92,7 +83,7 @@ test( 'zlarscl2: single_element', function t() {
 
 test( 'zlarscl2: rect_2x3', function t() {
 	var view;
-	var tc = findCase( 'rect_2x3' );
+	var tc = rect_2x3;
 	var x = new Complex128Array( [
 		1, 0.5, 2, 1,
 		3, 1.5, 4, 2,
@@ -106,7 +97,7 @@ test( 'zlarscl2: rect_2x3', function t() {
 
 test( 'zlarscl2: rect_3x2', function t() {
 	var view;
-	var tc = findCase( 'rect_3x2' );
+	var tc = rect_3x2;
 	var x = new Complex128Array( [
 		1, -1, 2, -2, 3, -3,
 		4, -4, 5, -5, 6, -6
@@ -142,7 +133,7 @@ test( 'zlarscl2: negative and zero values in D', function t() {
 
 test( 'zlarscl2: LDX > M (leading dimension larger than rows)', function t() {
 	var view;
-	var tc = findCase( 'ldx_gt_m' );
+	var tc = ldx_gt_m;
 
 	// X is 4-by-3 in memory but we only scale rows 0..1
 	var x = new Complex128Array( [

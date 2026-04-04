@@ -3,29 +3,20 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dnrm2 = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dnrm2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride2 = require( './fixtures/stride2.json' );
+var large_values = require( './fixtures/large_values.json' );
+var small_values = require( './fixtures/small_values.json' );
+var five_elements = require( './fixtures/five_elements.json' );
+var all_zeros = require( './fixtures/all_zeros.json' );
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -42,49 +33,49 @@ function assertClose( actual, expected, tol, msg ) {
 }
 
 test( 'dnrm2: basic [3,4] -> 5', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 3.0, 4.0 ] );
 	assertClose( dnrm2( 2, x, 1, 0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dnrm2: n=0 -> 0', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Float64Array( [ 3.0, 4.0 ] );
 	assert.strictEqual( dnrm2( 0, x, 1, 0 ), tc.result );
 });
 
 test( 'dnrm2: n=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Float64Array( [ 7.0 ] );
 	assertClose( dnrm2( 1, x, 1, 0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dnrm2: stride=2', function t() {
-	var tc = findCase( 'stride2' );
+	var tc = stride2;
 	var x = new Float64Array( [ 3.0, 999.0, 4.0 ] );
 	assertClose( dnrm2( 2, x, 2, 0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dnrm2: large values', function t() {
-	var tc = findCase( 'large_values' );
+	var tc = large_values;
 	var x = new Float64Array( [ 1e+154, 1e+154 ] );
 	assertClose( dnrm2( 2, x, 1, 0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dnrm2: small values', function t() {
-	var tc = findCase( 'small_values' );
+	var tc = small_values;
 	var x = new Float64Array( [ 1e-160, 1e-160 ] );
 	assertClose( dnrm2( 2, x, 1, 0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dnrm2: five elements', function t() {
-	var tc = findCase( 'five_elements' );
+	var tc = five_elements;
 	var x = new Float64Array( [ 1, 2, 3, 4, 5 ] );
 	assertClose( dnrm2( 5, x, 1, 0 ), tc.result, 1e-14, 'result' );
 });
 
 test( 'dnrm2: all zeros', function t() {
-	var tc = findCase( 'all_zeros' );
+	var tc = all_zeros;
 	var x = new Float64Array( [ 0, 0, 0 ] );
 	assert.strictEqual( dnrm2( 3, x, 1, 0 ), tc.result );
 });

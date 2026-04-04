@@ -8,25 +8,19 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zpotrf = require( '../../zpotrf/lib/base.js' );
 var zpotrs = require( '../../zpotrs/lib/base.js' );
 var zporfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zporfs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic_upper_3x3 = require( './fixtures/basic_upper_3x3.json' );
+var basic_lower_3x3 = require( './fixtures/basic_lower_3x3.json' );
+var multi_rhs_3x3 = require( './fixtures/multi_rhs_3x3.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr;
@@ -94,11 +88,10 @@ function callZporfs( uplo, N, nrhs, sys ) {
 	);
 }
 
-
 // TESTS //
 
 test( 'zporfs: basic_upper_3x3', function t() {
-	var tc = findCase( 'basic_upper_3x3' );
+	var tc = basic_upper_3x3;
 	var aVals = [ 4, 0, 1, -1, 0, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0 ];
 	var bVals = [ 1, 0, 1, 0, 1, 0 ];
 	var sys = setupSystem( 'upper', aVals, bVals, 3, 1 );
@@ -110,7 +103,7 @@ test( 'zporfs: basic_upper_3x3', function t() {
 });
 
 test( 'zporfs: basic_lower_3x3', function t() {
-	var tc = findCase( 'basic_lower_3x3' );
+	var tc = basic_lower_3x3;
 	var aVals = [ 4, 0, 1, -1, 0, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0 ];
 	var bVals = [ 1, 0, 1, 0, 1, 0 ];
 	var sys = setupSystem( 'lower', aVals, bVals, 3, 1 );
@@ -122,7 +115,7 @@ test( 'zporfs: basic_lower_3x3', function t() {
 });
 
 test( 'zporfs: multi_rhs_3x3', function t() {
-	var tc = findCase( 'multi_rhs_3x3' );
+	var tc = multi_rhs_3x3;
 	var aVals = [ 4, 0, 1, -1, 0, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0 ];
 	var bVals = [ 1, 0, 2, 1, 3, 0, 4, 0, 5, -1, 6, 0 ];
 	var sys = setupSystem( 'upper', aVals, bVals, 3, 2 );
@@ -134,7 +127,7 @@ test( 'zporfs: multi_rhs_3x3', function t() {
 });
 
 test( 'zporfs: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var AF = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
@@ -150,7 +143,7 @@ test( 'zporfs: n_zero', function t() {
 });
 
 test( 'zporfs: nrhs_zero', function t() {
-	var tc = findCase( 'nrhs_zero' );
+	var tc = nrhs_zero;
 	var A = new Complex128Array( 9 );
 	var AF = new Complex128Array( 9 );
 	var B = new Complex128Array( 3 );

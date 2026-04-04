@@ -23,37 +23,26 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgetf2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgetf2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len, node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3 = require( './fixtures/3x3.json' );
+var _4x4 = require( './fixtures/4x4.json' );
+var _4x3 = require( './fixtures/4x3.json' );
+var _3x4 = require( './fixtures/3x4.json' );
+var singular = require( './fixtures/singular.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var _1x1_singular = require( './fixtures/1x1_singular.json' );
+var col_vector = require( './fixtures/col_vector.json' );
+var row_vector = require( './fixtures/row_vector.json' );
+var sfmin = require( './fixtures/sfmin.json' );
+var sfmin_path = require( './fixtures/sfmin_path.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name from the fixtures.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are close within a tolerance.
@@ -120,7 +109,6 @@ function ipiv0( ipiv ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgetf2 is a function', function t() {
@@ -134,7 +122,7 @@ test( 'dgetf2: 3x3 non-singular matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	A = new Float64Array( [ 2.0, 4.0, 8.0, 1.0, 3.0, 7.0, 1.0, 3.0, 9.0 ] );
 	IPIV = new Int32Array( 3 );
 	info = dgetf2( 3, 3, A, 1, 3, 0, IPIV, 1, 0 );
@@ -151,7 +139,7 @@ test( 'dgetf2: 4x4 matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '4x4' );
+	tc = _4x4;
 	A = new Float64Array([
 		2.0,
 		4.0,
@@ -185,7 +173,7 @@ test( 'dgetf2: 4x3 tall matrix (M > N)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '4x3' );
+	tc = _4x3;
 	A = new Float64Array([
 		2.0,
 		0.0,
@@ -215,7 +203,7 @@ test( 'dgetf2: 3x4 wide matrix (M < N)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x4' );
+	tc = _3x4;
 	A = new Float64Array([
 		1.0,
 		4.0,
@@ -245,7 +233,7 @@ test( 'dgetf2: singular matrix (INFO > 0)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	A = new Float64Array([
 		1.0,
 		0.0,
@@ -295,7 +283,7 @@ test( 'dgetf2: 1x1 matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Float64Array( [ 5.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = dgetf2( 1, 1, A, 1, 1, 0, IPIV, 1, 0 );
@@ -312,7 +300,7 @@ test( 'dgetf2: 1x1 singular (zero)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '1x1_singular' );
+	tc = _1x1_singular;
 	A = new Float64Array( [ 0.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = dgetf2( 1, 1, A, 1, 1, 0, IPIV, 1, 0 );
@@ -329,7 +317,7 @@ test( 'dgetf2: Nx1 column vector', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'col_vector' );
+	tc = col_vector;
 	A = new Float64Array( [ 1.0, 5.0, 3.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = dgetf2( 3, 1, A, 1, 3, 0, IPIV, 1, 0 );
@@ -346,7 +334,7 @@ test( 'dgetf2: 1xN row vector', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'row_vector' );
+	tc = row_vector;
 	A = new Float64Array( [ 2.0, 3.0, 7.0 ] );
 	IPIV = new Int32Array( 1 );
 	info = dgetf2( 1, 3, A, 1, 1, 0, IPIV, 1, 0 );
@@ -363,7 +351,7 @@ test( 'dgetf2: sfmin scaling path (large pivot after swap)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'sfmin' );
+	tc = sfmin;
 	A = new Float64Array([
 		1.0e-310,
 		2.0,
@@ -390,7 +378,7 @@ test( 'dgetf2: sfmin scaling path (all-tiny column, element-by-element division)
 	var tc;
 	var A;
 
-	tc = findCase( 'sfmin_path' );
+	tc = sfmin_path;
 	A = new Float64Array([
 		3.0e-310,
 		1.0e-310,

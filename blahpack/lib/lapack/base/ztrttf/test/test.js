@@ -4,25 +4,32 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrttf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrttf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n1_n = require( './fixtures/n1_n.json' );
+var n1_c = require( './fixtures/n1_c.json' );
+var n5_n_l = require( './fixtures/n5_n_l.json' );
+var n5_n_u = require( './fixtures/n5_n_u.json' );
+var n5_c_l = require( './fixtures/n5_c_l.json' );
+var n5_c_u = require( './fixtures/n5_c_u.json' );
+var n6_n_l = require( './fixtures/n6_n_l.json' );
+var n6_n_u = require( './fixtures/n6_n_u.json' );
+var n6_c_l = require( './fixtures/n6_c_l.json' );
+var n6_c_u = require( './fixtures/n6_c_u.json' );
+var n7_n_l = require( './fixtures/n7_n_l.json' );
+var n7_n_u = require( './fixtures/n7_n_u.json' );
+var n7_c_l = require( './fixtures/n7_c_l.json' );
+var n7_c_u = require( './fixtures/n7_c_u.json' );
+var n8_n_l = require( './fixtures/n8_n_l.json' );
+var n8_n_u = require( './fixtures/n8_n_u.json' );
+var n8_c_l = require( './fixtures/n8_c_l.json' );
+var n8_c_u = require( './fixtures/n8_c_u.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
@@ -35,7 +42,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] + ' (relErr=' + relErr + ')' );
 	}
 }
-
 
 // TESTS //
 
@@ -53,7 +59,7 @@ test( 'ztrttf: N=0 quick return', function t() {
 });
 
 test( 'ztrttf: N=1, TRANSR=no-transpose (copies element)', function t() {
-	var tc = findCase( 'n1_N' );
+	var tc = n1_n;
 	var ARF;
 	var arv;
 	var A;
@@ -66,7 +72,7 @@ test( 'ztrttf: N=1, TRANSR=no-transpose (copies element)', function t() {
 });
 
 test( 'ztrttf: N=1, TRANSR=conjugate-transpose (conjugates element)', function t() {
-	var tc = findCase( 'n1_C' );
+	var tc = n1_c;
 	var ARF;
 	var arv;
 	var A;
@@ -79,7 +85,7 @@ test( 'ztrttf: N=1, TRANSR=conjugate-transpose (conjugates element)', function t
 });
 
 test( 'ztrttf: N=5, TRANSR=N, UPLO=L (odd, normal, lower)', function t() {
-	var tc = findCase( 'n5_N_L' );
+	var tc = n5_n_l;
 	var info;
 	var ARF;
 	var arv;
@@ -96,7 +102,7 @@ test( 'ztrttf: N=5, TRANSR=N, UPLO=L (odd, normal, lower)', function t() {
 });
 
 test( 'ztrttf: N=5, TRANSR=N, UPLO=U (odd, normal, upper)', function t() {
-	var tc = findCase( 'n5_N_U' );
+	var tc = n5_n_u;
 	var info;
 	var ARF;
 	var arv;
@@ -113,7 +119,7 @@ test( 'ztrttf: N=5, TRANSR=N, UPLO=U (odd, normal, upper)', function t() {
 });
 
 test( 'ztrttf: N=5, TRANSR=C, UPLO=L (odd, conj-transpose, lower)', function t() {
-	var tc = findCase( 'n5_C_L' );
+	var tc = n5_c_l;
 	var info;
 	var ARF;
 	var arv;
@@ -130,7 +136,7 @@ test( 'ztrttf: N=5, TRANSR=C, UPLO=L (odd, conj-transpose, lower)', function t()
 });
 
 test( 'ztrttf: N=5, TRANSR=C, UPLO=U (odd, conj-transpose, upper)', function t() {
-	var tc = findCase( 'n5_C_U' );
+	var tc = n5_c_u;
 	var info;
 	var ARF;
 	var arv;
@@ -147,7 +153,7 @@ test( 'ztrttf: N=5, TRANSR=C, UPLO=U (odd, conj-transpose, upper)', function t()
 });
 
 test( 'ztrttf: N=6, TRANSR=N, UPLO=L (even, normal, lower)', function t() {
-	var tc = findCase( 'n6_N_L' );
+	var tc = n6_n_l;
 	var info;
 	var ARF;
 	var arv;
@@ -164,7 +170,7 @@ test( 'ztrttf: N=6, TRANSR=N, UPLO=L (even, normal, lower)', function t() {
 });
 
 test( 'ztrttf: N=6, TRANSR=N, UPLO=U (even, normal, upper)', function t() {
-	var tc = findCase( 'n6_N_U' );
+	var tc = n6_n_u;
 	var info;
 	var ARF;
 	var arv;
@@ -181,7 +187,7 @@ test( 'ztrttf: N=6, TRANSR=N, UPLO=U (even, normal, upper)', function t() {
 });
 
 test( 'ztrttf: N=6, TRANSR=C, UPLO=L (even, conj-transpose, lower)', function t() {
-	var tc = findCase( 'n6_C_L' );
+	var tc = n6_c_l;
 	var info;
 	var ARF;
 	var arv;
@@ -198,7 +204,7 @@ test( 'ztrttf: N=6, TRANSR=C, UPLO=L (even, conj-transpose, lower)', function t(
 });
 
 test( 'ztrttf: N=6, TRANSR=C, UPLO=U (even, conj-transpose, upper)', function t() {
-	var tc = findCase( 'n6_C_U' );
+	var tc = n6_c_u;
 	var info;
 	var ARF;
 	var arv;
@@ -215,7 +221,7 @@ test( 'ztrttf: N=6, TRANSR=C, UPLO=U (even, conj-transpose, upper)', function t(
 });
 
 test( 'ztrttf: N=7, TRANSR=N, UPLO=L (odd, normal, lower)', function t() {
-	var tc = findCase( 'n7_N_L' );
+	var tc = n7_n_l;
 	var info;
 	var ARF;
 	var arv;
@@ -232,7 +238,7 @@ test( 'ztrttf: N=7, TRANSR=N, UPLO=L (odd, normal, lower)', function t() {
 });
 
 test( 'ztrttf: N=7, TRANSR=N, UPLO=U (odd, normal, upper)', function t() {
-	var tc = findCase( 'n7_N_U' );
+	var tc = n7_n_u;
 	var info;
 	var ARF;
 	var arv;
@@ -249,7 +255,7 @@ test( 'ztrttf: N=7, TRANSR=N, UPLO=U (odd, normal, upper)', function t() {
 });
 
 test( 'ztrttf: N=7, TRANSR=C, UPLO=L (odd, conj-transpose, lower)', function t() {
-	var tc = findCase( 'n7_C_L' );
+	var tc = n7_c_l;
 	var info;
 	var ARF;
 	var arv;
@@ -266,7 +272,7 @@ test( 'ztrttf: N=7, TRANSR=C, UPLO=L (odd, conj-transpose, lower)', function t()
 });
 
 test( 'ztrttf: N=7, TRANSR=C, UPLO=U (odd, conj-transpose, upper)', function t() {
-	var tc = findCase( 'n7_C_U' );
+	var tc = n7_c_u;
 	var info;
 	var ARF;
 	var arv;
@@ -283,7 +289,7 @@ test( 'ztrttf: N=7, TRANSR=C, UPLO=U (odd, conj-transpose, upper)', function t()
 });
 
 test( 'ztrttf: N=8, TRANSR=N, UPLO=L (even, normal, lower)', function t() {
-	var tc = findCase( 'n8_N_L' );
+	var tc = n8_n_l;
 	var info;
 	var ARF;
 	var arv;
@@ -300,7 +306,7 @@ test( 'ztrttf: N=8, TRANSR=N, UPLO=L (even, normal, lower)', function t() {
 });
 
 test( 'ztrttf: N=8, TRANSR=N, UPLO=U (even, normal, upper)', function t() {
-	var tc = findCase( 'n8_N_U' );
+	var tc = n8_n_u;
 	var info;
 	var ARF;
 	var arv;
@@ -317,7 +323,7 @@ test( 'ztrttf: N=8, TRANSR=N, UPLO=U (even, normal, upper)', function t() {
 });
 
 test( 'ztrttf: N=8, TRANSR=C, UPLO=L (even, conj-transpose, lower)', function t() {
-	var tc = findCase( 'n8_C_L' );
+	var tc = n8_c_l;
 	var info;
 	var ARF;
 	var arv;
@@ -334,7 +340,7 @@ test( 'ztrttf: N=8, TRANSR=C, UPLO=L (even, conj-transpose, lower)', function t(
 });
 
 test( 'ztrttf: N=8, TRANSR=C, UPLO=U (even, conj-transpose, upper)', function t() {
-	var tc = findCase( 'n8_C_U' );
+	var tc = n8_c_u;
 	var info;
 	var ARF;
 	var arv;

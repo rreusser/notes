@@ -2,39 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlasq2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasq2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n0 = require( './fixtures/n0.json' );
+var n1 = require( './fixtures/n1.json' );
+var n2 = require( './fixtures/n2.json' );
+var n2_swap = require( './fixtures/n2_swap.json' );
+var n3_basic = require( './fixtures/n3_basic.json' );
+var n4_basic = require( './fixtures/n4_basic.json' );
+var n3_diagonal = require( './fixtures/n3_diagonal.json' );
+var n5_basic = require( './fixtures/n5_basic.json' );
+var n3_reversal = require( './fixtures/n3_reversal.json' );
+var n4_identity_like = require( './fixtures/n4_identity_like.json' );
+var n2_zero_offdiag = require( './fixtures/n2_zero_offdiag.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +74,6 @@ function createZ( size, vals ) {
 	return z;
 }
 
-
 // TESTS //
 
 test( 'dlasq2: n0 - quick return', function t() {
@@ -93,7 +81,7 @@ test( 'dlasq2: n0 - quick return', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n0' );
+	tc = n0;
 	z = createZ( 4 );
 	info = dlasq2( 0, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -104,7 +92,7 @@ test( 'dlasq2: n1 - single element', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	z = createZ( 100, [ 4.0 ] );
 	info = dlasq2( 1, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -116,7 +104,7 @@ test( 'dlasq2: n2 - basic 2-by-2', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n2' );
+	tc = n2;
 	z = createZ( 100, [ 4.0, 1.0, 3.0 ] );
 	info = dlasq2( 2, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -128,7 +116,7 @@ test( 'dlasq2: n2_swap - swap case', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n2_swap' );
+	tc = n2_swap;
 	z = createZ( 100, [ 2.0, 1.0, 5.0 ] );
 	info = dlasq2( 2, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -140,7 +128,7 @@ test( 'dlasq2: n3_basic', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n3_basic' );
+	tc = n3_basic;
 	z = createZ( 100, [ 4.0, 1.0, 3.0, 0.5, 2.0 ] );
 	info = dlasq2( 3, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -152,7 +140,7 @@ test( 'dlasq2: n4_basic', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n4_basic' );
+	tc = n4_basic;
 	z = createZ( 100, [ 4.0, 1.0, 3.0, 0.5, 5.0, 0.3, 2.0 ] );
 	info = dlasq2( 4, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -164,7 +152,7 @@ test( 'dlasq2: n3_diagonal - all off-diag zero', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n3_diagonal' );
+	tc = n3_diagonal;
 	z = createZ( 100, [ 4.0, 0.0, 3.0, 0.0, 2.0 ] );
 	info = dlasq2( 3, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -176,7 +164,7 @@ test( 'dlasq2: n5_basic', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n5_basic' );
+	tc = n5_basic;
 	z = createZ( 100, [ 9.0, 1.0, 8.0, 0.5, 7.0, 0.3, 6.0, 0.2, 5.0 ] );
 	info = dlasq2( 5, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -188,7 +176,7 @@ test( 'dlasq2: n3_reversal - triggers reversal', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n3_reversal' );
+	tc = n3_reversal;
 	z = createZ( 100, [ 1.0, 0.5, 2.0, 0.3, 10.0 ] );
 	info = dlasq2( 3, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -200,7 +188,7 @@ test( 'dlasq2: n4_identity_like', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n4_identity_like' );
+	tc = n4_identity_like;
 	z = createZ( 100, [ 1.0, 0.1, 1.0, 0.1, 1.0, 0.1, 1.0 ] );
 	info = dlasq2( 4, z, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -212,7 +200,7 @@ test( 'dlasq2: n2_zero_offdiag', function t() {
 	var tc;
 	var z;
 
-	tc = findCase( 'n2_zero_offdiag' );
+	tc = n2_zero_offdiag;
 	z = createZ( 100, [ 4.0, 0.0, 3.0 ] );
 	info = dlasq2( 2, z, 1, 0 );
 	assert.strictEqual( info, tc.info );

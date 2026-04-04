@@ -5,37 +5,36 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zlantb = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlantb.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var max_upper_nonunit = require( './fixtures/max_upper_nonunit.json' );
+var max_upper_unit = require( './fixtures/max_upper_unit.json' );
+var one_upper_nonunit = require( './fixtures/one_upper_nonunit.json' );
+var one_upper_unit = require( './fixtures/one_upper_unit.json' );
+var inf_upper_nonunit = require( './fixtures/inf_upper_nonunit.json' );
+var inf_upper_unit = require( './fixtures/inf_upper_unit.json' );
+var frob_upper_nonunit = require( './fixtures/frob_upper_nonunit.json' );
+var frob_upper_unit = require( './fixtures/frob_upper_unit.json' );
+var max_lower_nonunit = require( './fixtures/max_lower_nonunit.json' );
+var max_lower_unit = require( './fixtures/max_lower_unit.json' );
+var one_lower_nonunit = require( './fixtures/one_lower_nonunit.json' );
+var one_lower_unit = require( './fixtures/one_lower_unit.json' );
+var inf_lower_nonunit = require( './fixtures/inf_lower_nonunit.json' );
+var inf_lower_unit = require( './fixtures/inf_lower_unit.json' );
+var frob_lower_nonunit = require( './fixtures/frob_lower_nonunit.json' );
+var frob_lower_unit = require( './fixtures/frob_lower_unit.json' );
+var max_k0_nonunit = require( './fixtures/max_k0_nonunit.json' );
+var frob_k0_unit = require( './fixtures/frob_k0_unit.json' );
+var frob_1x1 = require( './fixtures/frob_1x1.json' );
+var one_k1_upper_nonunit = require( './fixtures/one_k1_upper_nonunit.json' );
+var inf_k1_lower_unit = require( './fixtures/inf_k1_lower_unit.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -135,7 +134,6 @@ function makeLowerAB( ) {
 	]);
 }
 
-
 // TESTS //
 
 // --- Upper triangular, K=2 ---
@@ -146,7 +144,7 @@ test( 'zlantb: max_upper_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_upper_nonunit' );
+	tc = max_upper_nonunit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'max', 'upper', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -159,7 +157,7 @@ test( 'zlantb: max_upper_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_upper_unit' );
+	tc = max_upper_unit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'max', 'upper', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -172,7 +170,7 @@ test( 'zlantb: one_upper_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_upper_nonunit' );
+	tc = one_upper_nonunit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'one-norm', 'upper', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -185,7 +183,7 @@ test( 'zlantb: one_upper_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_upper_unit' );
+	tc = one_upper_unit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'one-norm', 'upper', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -198,7 +196,7 @@ test( 'zlantb: inf_upper_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_upper_nonunit' );
+	tc = inf_upper_nonunit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'inf-norm', 'upper', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -211,7 +209,7 @@ test( 'zlantb: inf_upper_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_upper_unit' );
+	tc = inf_upper_unit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'inf-norm', 'upper', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -224,7 +222,7 @@ test( 'zlantb: frob_upper_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_upper_nonunit' );
+	tc = frob_upper_nonunit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'frobenius', 'upper', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -237,7 +235,7 @@ test( 'zlantb: frob_upper_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_upper_unit' );
+	tc = frob_upper_unit;
 	AB = makeUpperAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'frobenius', 'upper', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -252,7 +250,7 @@ test( 'zlantb: max_lower_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_lower_nonunit' );
+	tc = max_lower_nonunit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'max', 'lower', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -265,7 +263,7 @@ test( 'zlantb: max_lower_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_lower_unit' );
+	tc = max_lower_unit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'max', 'lower', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -278,7 +276,7 @@ test( 'zlantb: one_lower_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_lower_nonunit' );
+	tc = one_lower_nonunit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'one-norm', 'lower', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -291,7 +289,7 @@ test( 'zlantb: one_lower_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_lower_unit' );
+	tc = one_lower_unit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'one-norm', 'lower', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -304,7 +302,7 @@ test( 'zlantb: inf_lower_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_lower_nonunit' );
+	tc = inf_lower_nonunit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'inf-norm', 'lower', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -317,7 +315,7 @@ test( 'zlantb: inf_lower_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_lower_unit' );
+	tc = inf_lower_unit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'inf-norm', 'lower', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -330,7 +328,7 @@ test( 'zlantb: frob_lower_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_lower_nonunit' );
+	tc = frob_lower_nonunit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'frobenius', 'lower', 'non-unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -343,7 +341,7 @@ test( 'zlantb: frob_lower_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_lower_unit' );
+	tc = frob_lower_unit;
 	AB = makeLowerAB();
 	WORK = new Float64Array( 10 );
 	result = zlantb( 'frobenius', 'lower', 'unit', 4, 2, AB, 1, 3, 0, WORK, 1, 0 );
@@ -369,7 +367,7 @@ test( 'zlantb: max_k0_nonunit (diagonal only)', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'max_k0_nonunit' );
+	tc = max_k0_nonunit;
 	AB = new Complex128Array([
 		3, 4, 1, 1, 2, 2
 	]);
@@ -384,7 +382,7 @@ test( 'zlantb: frob_k0_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_k0_unit' );
+	tc = frob_k0_unit;
 	AB = new Complex128Array([
 		3, 4, 1, 1, 2, 2
 	]);
@@ -399,7 +397,7 @@ test( 'zlantb: frob_1x1', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'frob_1x1' );
+	tc = frob_1x1;
 	AB = new Complex128Array( [ 3, 4 ] );
 	WORK = new Float64Array( 1 );
 	result = zlantb( 'frobenius', 'upper', 'non-unit', 1, 0, AB, 1, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
@@ -412,7 +410,7 @@ test( 'zlantb: one_k1_upper_nonunit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'one_k1_upper_nonunit' );
+	tc = one_k1_upper_nonunit;
 	AB = new Complex128Array([
 		// Col 0: rows 0,1
 		0,
@@ -443,7 +441,7 @@ test( 'zlantb: inf_k1_lower_unit', function t() {
 	var tc;
 	var AB;
 
-	tc = findCase( 'inf_k1_lower_unit' );
+	tc = inf_k1_lower_unit;
 	AB = new Complex128Array([
 		// Col 0: rows 0,1
 		99,

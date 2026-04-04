@@ -2,41 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zsyrk = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zsyrk.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_trans = require( './fixtures/upper_trans.json' );
+var lower_trans = require( './fixtures/lower_trans.json' );
+var complex_alpha_beta = require( './fixtures/complex_alpha_beta.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var alpha_zero_beta_zero = require( './fixtures/alpha_zero_beta_zero.json' );
+var alpha_zero_beta_one = require( './fixtures/alpha_zero_beta_one.json' );
+var lower_nonzero_beta = require( './fixtures/lower_nonzero_beta.json' );
+var scalar = require( './fixtures/scalar.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +74,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zsyrk: main export is a function', function t() {
@@ -93,7 +81,7 @@ test( 'zsyrk: main export is a function', function t() {
 });
 
 test( 'zsyrk: upper_no_trans', function t() {
-	var tc = findCase( 'upper_no_trans' );
+	var tc = upper_no_trans;
 
 	// A is 3x2 complex (col-major: 3 rows, 2 cols), C is 3x3
 
@@ -105,7 +93,7 @@ test( 'zsyrk: upper_no_trans', function t() {
 });
 
 test( 'zsyrk: lower_no_trans', function t() {
-	var tc = findCase( 'lower_no_trans' );
+	var tc = lower_no_trans;
 	var A = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 2, 5, 0, 6, -0.5 ] );
 	var C = new Complex128Array( 9 );
 	zsyrk( 'lower', 'no-transpose', 3, 2, new Complex128( 1, 0 ), A, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 3, 0 ); // eslint-disable-line max-len
@@ -113,7 +101,7 @@ test( 'zsyrk: lower_no_trans', function t() {
 });
 
 test( 'zsyrk: upper_trans', function t() {
-	var tc = findCase( 'upper_trans' );
+	var tc = upper_trans;
 
 	// A is 3x2 col-major, trans='T', so C is 2x2: C := alpha*A^T*A + beta*C
 	var A = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 2, 5, 0, 6, -0.5 ] );
@@ -123,7 +111,7 @@ test( 'zsyrk: upper_trans', function t() {
 });
 
 test( 'zsyrk: lower_trans', function t() {
-	var tc = findCase( 'lower_trans' );
+	var tc = lower_trans;
 	var A = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 2, 5, 0, 6, -0.5 ] );
 	var C = new Complex128Array( 4 );
 	zsyrk( 'lower', 'transpose', 2, 3, new Complex128( 1, 0 ), A, 1, 3, 0, new Complex128( 0, 0 ), C, 1, 2, 0 ); // eslint-disable-line max-len
@@ -131,7 +119,7 @@ test( 'zsyrk: lower_trans', function t() {
 });
 
 test( 'zsyrk: complex_alpha_beta', function t() {
-	var tc = findCase( 'complex_alpha_beta' );
+	var tc = complex_alpha_beta;
 
 	// alpha=(2,1), beta=(0.5,-0.5), uplo='U', trans='N', N=3, K=2
 	var A = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 2, 5, 0, 6, -0.5 ] );
@@ -178,7 +166,7 @@ test( 'zsyrk: complex_alpha_beta', function t() {
 });
 
 test( 'zsyrk: alpha_zero (scale C by beta only)', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 
 	// alpha=0, beta=(2,0), uplo='U', trans='N', N=2, K=2
 
@@ -190,7 +178,7 @@ test( 'zsyrk: alpha_zero (scale C by beta only)', function t() {
 });
 
 test( 'zsyrk: n_zero (quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 2 );
 	var C = new Complex128Array( [ 99, 0 ] );
 	zsyrk( 'upper', 'no-transpose', 0, 2, new Complex128( 1, 0 ), A, 1, 1, 0, new Complex128( 0, 0 ), C, 1, 1, 0 ); // eslint-disable-line max-len
@@ -200,7 +188,7 @@ test( 'zsyrk: n_zero (quick return)', function t() {
 });
 
 test( 'zsyrk: alpha_zero_beta_zero (zero out upper)', function t() {
-	var tc = findCase( 'alpha_zero_beta_zero' );
+	var tc = alpha_zero_beta_zero;
 
 	// alpha=0, beta=0, uplo='U', N=2, K=2
 
@@ -212,7 +200,7 @@ test( 'zsyrk: alpha_zero_beta_zero (zero out upper)', function t() {
 });
 
 test( 'zsyrk: alpha_zero_beta_one (no-op, lower)', function t() {
-	var tc = findCase( 'alpha_zero_beta_one' );
+	var tc = alpha_zero_beta_one;
 
 	// alpha=0, beta=1, uplo='L', N=2, K=2
 	var A = new Complex128Array( 4 );
@@ -222,7 +210,7 @@ test( 'zsyrk: alpha_zero_beta_one (no-op, lower)', function t() {
 });
 
 test( 'zsyrk: lower_nonzero_beta', function t() {
-	var tc = findCase( 'lower_nonzero_beta' );
+	var tc = lower_nonzero_beta;
 
 	// alpha=1, beta=0.5, uplo='L', trans='N', N=3, K=2
 	var A = new Complex128Array( [ 1, 0.5, 2, -1, 3, 1, 4, 2, 5, 0, 6, -0.5 ] );
@@ -253,7 +241,7 @@ test( 'zsyrk: lower_nonzero_beta', function t() {
 });
 
 test( 'zsyrk: scalar (1x1 case)', function t() {
-	var tc = findCase( 'scalar' );
+	var tc = scalar;
 
 	// a(1)=(3,2), alpha=(2,1), beta=0, N=1, K=1
 	var A = new Complex128Array( [ 3, 2 ] );

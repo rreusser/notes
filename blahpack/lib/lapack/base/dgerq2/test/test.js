@@ -2,39 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgerq2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgerq2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x4 = require( './fixtures/3x4.json' );
+var _4x3 = require( './fixtures/4x3.json' );
+var _3x3 = require( './fixtures/3x3.json' );
+var _1x4 = require( './fixtures/1x4.json' );
+var _3x1 = require( './fixtures/3x1.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var _2x5 = require( './fixtures/2x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -105,7 +90,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgerq2: 3x4 (M < N)', function t() {
@@ -115,7 +99,7 @@ test( 'dgerq2: 3x4 (M < N)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x4' );
+	tc = _3x4;
 	A = new Float64Array( 6 * 4 );
 	A[ 0 * 6 + 0 ] = 2.0;
 	A[ 1 * 6 + 0 ] = 1.0;
@@ -144,7 +128,7 @@ test( 'dgerq2: 4x3 (M > N)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '4x3' );
+	tc = _4x3;
 	A = new Float64Array( 6 * 3 );
 	A[ 0 * 6 + 0 ] = 2.0;
 	A[ 1 * 6 + 0 ] = 1.0;
@@ -173,7 +157,7 @@ test( 'dgerq2: 3x3 (square)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	A = new Float64Array( 6 * 3 );
 	A[ 0 * 6 + 0 ] = 4.0;
 	A[ 1 * 6 + 0 ] = 1.0;
@@ -199,7 +183,7 @@ test( 'dgerq2: 1x4 (single row)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '1x4' );
+	tc = _1x4;
 	A = new Float64Array( 6 * 4 );
 	A[ 0 * 6 + 0 ] = 1.0;
 	A[ 1 * 6 + 0 ] = 2.0;
@@ -220,7 +204,7 @@ test( 'dgerq2: 3x1 (single column)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x1' );
+	tc = _3x1;
 	A = new Float64Array( 6 * 1 );
 	A[ 0 * 6 + 0 ] = 2.0;
 	A[ 0 * 6 + 1 ] = 3.0;
@@ -266,7 +250,7 @@ test( 'dgerq2: 1x1', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Float64Array( 6 );
 	A[ 0 ] = 7.0;
 	TAU = new Float64Array( 1 );
@@ -284,7 +268,7 @@ test( 'dgerq2: 2x5 (wide)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '2x5' );
+	tc = _2x5;
 	A = new Float64Array( 6 * 5 );
 	A[ 0 * 6 + 0 ] = 1.0;
 	A[ 1 * 6 + 0 ] = 2.0;

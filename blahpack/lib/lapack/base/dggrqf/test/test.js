@@ -22,37 +22,21 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dggrqf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dggrqf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var m_lt_n = require( './fixtures/m_lt_n.json' );
+var m_gt_n = require( './fixtures/m_gt_n.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var m_one = require( './fixtures/m_one.json' );
+var p_gt_n = require( './fixtures/p_gt_n.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -135,7 +119,6 @@ function callDggrqf( M, P, N, aFlat, bFlat ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dggrqf: main export is a function', function t() {
@@ -154,7 +137,7 @@ test( 'dggrqf: basic_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	A = colMajor( 3, 3, [ 2, 1, 3, 1, 4, 2, 3, 2, 5 ] );
 	B = colMajor( 3, 3, [ 1, 2, 1, 3, 1, 2, 2, 3, 1 ] );
 	res = callDggrqf( 3, 3, 3, A, B );
@@ -171,7 +154,7 @@ test( 'dggrqf: m_lt_n', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_lt_n' );
+	tc = m_lt_n;
 	A = colMajor( 2, 4, [ 2, 1, 3, 1, 1, 4, 2, 3 ] );
 	B = colMajor( 3, 4, [ 1, 2, 1, 3, 3, 1, 2, 1, 2, 3, 1, 2 ] );
 	res = callDggrqf( 2, 3, 4, A, B );
@@ -188,7 +171,7 @@ test( 'dggrqf: m_gt_n', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_gt_n' );
+	tc = m_gt_n;
 	A = colMajor( 4, 3, [ 2, 1, 3, 1, 4, 2, 3, 2, 5, 1, 3, 1 ] );
 	B = colMajor( 3, 3, [ 1, 2, 1, 3, 1, 2, 2, 3, 1 ] );
 	res = callDggrqf( 4, 3, 3, A, B );
@@ -206,7 +189,7 @@ test( 'dggrqf: m_zero', function t() {
 	var tc;
 	var B;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	TAUA = new Float64Array( 0 );
 	TAUB = new Float64Array( 0 );
 	B = new Float64Array( colMajor( 3, 3, [ 1, 2, 1, 3, 1, 2, 2, 3, 1 ] ) );
@@ -220,7 +203,7 @@ test( 'dggrqf: m_one', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_one' );
+	tc = m_one;
 	A = [ 5.0 ];
 	B = [ 3.0 ];
 	res = callDggrqf( 1, 1, 1, A, B );
@@ -237,7 +220,7 @@ test( 'dggrqf: p_gt_n', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'p_gt_n' );
+	tc = p_gt_n;
 	A = colMajor( 3, 3, [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	B = colMajor( 5, 3, [ 1, 0.5, 2, 0.5, 3, 1, 2, 1, 1, 1, 2, 0.5, 3, 1, 2 ] );
 	res = callDggrqf( 3, 5, 3, A, B );

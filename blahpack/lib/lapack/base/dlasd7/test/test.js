@@ -20,40 +20,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlasd7 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasd7.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_icompq1 = require( './fixtures/basic_icompq1.json' );
+var basic_icompq0 = require( './fixtures/basic_icompq0.json' );
+var sqre1_icompq1 = require( './fixtures/sqre1_icompq1.json' );
+var deflation = require( './fixtures/deflation.json' );
+var min_size = require( './fixtures/min_size.json' );
+var small_z_deflation = require( './fixtures/small_z_deflation.json' );
+var all_deflated = require( './fixtures/all_deflated.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -102,7 +87,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlasd7 is a function', function t() {
@@ -134,7 +118,7 @@ test( 'dlasd7: basic_icompq1 - basic merge with icompq=1', function t() {
 	var M;
 	var i;
 
-	tc = findCase( 'basic_icompq1' );
+	tc = basic_icompq1;
 	N = 7;
 	M = 7;
 	d = new Float64Array( [ 1.0, 3.0, 5.0, 0.0, 2.0, 4.0, 6.0 ] );
@@ -203,7 +187,7 @@ test( 'dlasd7: basic_icompq0 - singular values only (no vectors)', function t() 
 	var N;
 	var M;
 
-	tc = findCase( 'basic_icompq0' );
+	tc = basic_icompq0;
 	N = 7;
 	M = 7;
 	d = new Float64Array( [ 1.0, 3.0, 5.0, 0.0, 2.0, 4.0, 6.0 ] );
@@ -253,7 +237,7 @@ test( 'dlasd7: sqre1_icompq1 - rectangular lower block (sqre=1)', function t() {
 	var N;
 	var M;
 
-	tc = findCase( 'sqre1_icompq1' );
+	tc = sqre1_icompq1;
 	N = 5;
 	M = 6;
 	d = new Float64Array( [ 1.0, 4.0, 0.0, 2.0, 5.0, 0.0 ] );
@@ -312,7 +296,7 @@ test( 'dlasd7: deflation - duplicate singular values cause deflation', function 
 	var M;
 	var i;
 
-	tc = findCase( 'deflation' );
+	tc = deflation;
 	N = 7;
 	M = 7;
 	d = new Float64Array( [ 1.0, 2.0, 3.0, 0.0, 1.0, 2.0, 4.0 ] );
@@ -375,7 +359,7 @@ test( 'dlasd7: min_size - NL=1, NR=1 minimum size', function t() {
 	var N;
 	var M;
 
-	tc = findCase( 'min_size' );
+	tc = min_size;
 	N = 3;
 	M = 3;
 	d = new Float64Array( [ 3.0, 0.0, 7.0 ] );
@@ -424,7 +408,7 @@ test( 'dlasd7: small_z_deflation - small alpha causes z-deflation with sqre=1', 
 	var N;
 	var M;
 
-	tc = findCase( 'small_z_deflation' );
+	tc = small_z_deflation;
 	N = 5;
 	M = 6;
 	d = new Float64Array( [ 1.0, 3.0, 0.0, 2.0, 5.0, 0.0 ] );
@@ -475,7 +459,7 @@ test( 'dlasd7: all_deflated - complete deflation (all z values small)', function
 	var N;
 	var M;
 
-	tc = findCase( 'all_deflated' );
+	tc = all_deflated;
 	N = 5;
 	M = 5;
 	d = new Float64Array( [ 1.0, 3.0, 0.0, 2.0, 5.0 ] );

@@ -1,0 +1,23 @@
+{
+  "name": "left_m1_NL_T",
+  "M": 1,
+  "N": 2,
+  "side": "L",
+  "transr": "N",
+  "uplo": "L",
+  "trans": "T",
+  "diag": "N",
+  "alpha": 1,
+  "A": [
+    2
+  ],
+  "B_in": [
+    1,
+    2
+  ],
+  "ldb": 1,
+  "B_out": [
+    0.5,
+    1
+  ]
+}

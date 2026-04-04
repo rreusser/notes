@@ -2,41 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dptrfs = require( './../lib/base.js' );
 var dpttrf = require( '../../dpttrf/lib/base.js' );
 var dpttrs = require( '../../dpttrs/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dptrfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5 = require( './fixtures/basic_5x5.json' );
+var multi_rhs_2 = require( './fixtures/multi_rhs_2.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var perturbed = require( './fixtures/perturbed.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +67,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dptrfs: basic_5x5', function t() {
@@ -101,7 +82,7 @@ test( 'dptrfs: basic_5x5', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'basic_5x5' );
+	tc = basic_5x5;
 	d = new Float64Array( [ 4, 3, 2, 3, 4 ] );
 	e = new Float64Array( [ 2, -1.5, 0.5, -0.75 ] );
 	df = new Float64Array( d );
@@ -133,7 +114,7 @@ test( 'dptrfs: multi_rhs_2', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'multi_rhs_2' );
+	tc = multi_rhs_2;
 	d = new Float64Array( [ 4, 3, 2, 3, 4 ] );
 	e = new Float64Array( [ 2, -1.5, 0.5, -0.75 ] );
 	df = new Float64Array( d );
@@ -165,7 +146,7 @@ test( 'dptrfs: n_eq_1', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'n_eq_1' );
+	tc = n_eq_1;
 	d = new Float64Array( [ 5 ] );
 	e = new Float64Array( 0 );
 	df = new Float64Array( d );
@@ -249,7 +230,7 @@ test( 'dptrfs: perturbed', function t() {
 	var b;
 	var x;
 
-	tc = findCase( 'perturbed' );
+	tc = perturbed;
 	d = new Float64Array( [ 4, 3, 2, 3, 4 ] );
 	e = new Float64Array( [ 2, -1.5, 0.5, -0.75 ] );
 	df = new Float64Array( d );

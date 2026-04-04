@@ -2,39 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlasq1 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasq1.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1 = require( './fixtures/n1.json' );
+var n1_neg = require( './fixtures/n1_neg.json' );
+var n2 = require( './fixtures/n2.json' );
+var n2_neg = require( './fixtures/n2_neg.json' );
+var n3_basic = require( './fixtures/n3_basic.json' );
+var n4_basic = require( './fixtures/n4_basic.json' );
+var n3_diag = require( './fixtures/n3_diag.json' );
+var n5_basic = require( './fixtures/n5_basic.json' );
+var n2_diag = require( './fixtures/n2_diag.json' );
+var n3_neg_large_e = require( './fixtures/n3_neg_large_e.json' );
+var n4_identity_like = require( './fixtures/n4_identity_like.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -70,7 +59,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlasq1: n0 - quick return', function t() {
@@ -93,7 +81,7 @@ test( 'dlasq1: n1 - single positive diagonal', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	work = new Float64Array( 4 );
 	d = new Float64Array( [ 5.0 ] );
 	e = new Float64Array( 1 );
@@ -109,7 +97,7 @@ test( 'dlasq1: n1_neg - single negative diagonal (abs)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n1_neg' );
+	tc = n1_neg;
 	work = new Float64Array( 4 );
 	d = new Float64Array( [ -3.0 ] );
 	e = new Float64Array( 1 );
@@ -125,7 +113,7 @@ test( 'dlasq1: n2 - two elements', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n2' );
+	tc = n2;
 	work = new Float64Array( 8 );
 	d = new Float64Array( [ 4.0, 3.0 ] );
 	e = new Float64Array( [ 1.0 ] );
@@ -141,7 +129,7 @@ test( 'dlasq1: n2_neg - two negative diagonals', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n2_neg' );
+	tc = n2_neg;
 	work = new Float64Array( 8 );
 	d = new Float64Array( [ -4.0, -3.0 ] );
 	e = new Float64Array( [ 2.0 ] );
@@ -157,7 +145,7 @@ test( 'dlasq1: n3_basic', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n3_basic' );
+	tc = n3_basic;
 	work = new Float64Array( 100 );
 	d = new Float64Array( [ 4.0, 3.0, 2.0 ] );
 	e = new Float64Array( [ 1.0, 0.5 ] );
@@ -173,7 +161,7 @@ test( 'dlasq1: n4_basic', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n4_basic' );
+	tc = n4_basic;
 	work = new Float64Array( 100 );
 	d = new Float64Array( [ 5.0, 4.0, 3.0, 2.0 ] );
 	e = new Float64Array( [ 1.0, 0.5, 0.3 ] );
@@ -189,7 +177,7 @@ test( 'dlasq1: n3_diag - diagonal matrix (all e=0)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n3_diag' );
+	tc = n3_diag;
 	work = new Float64Array( 100 );
 	d = new Float64Array( [ 1.0, 5.0, 3.0 ] );
 	e = new Float64Array( [ 0.0, 0.0 ] );
@@ -205,7 +193,7 @@ test( 'dlasq1: n5_basic', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n5_basic' );
+	tc = n5_basic;
 	work = new Float64Array( 100 );
 	d = new Float64Array( [ 6.0, 5.0, 4.0, 3.0, 2.0 ] );
 	e = new Float64Array( [ 1.0, 0.8, 0.5, 0.3 ] );
@@ -221,7 +209,7 @@ test( 'dlasq1: n2_diag - diagonal N=2 (e=0)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n2_diag' );
+	tc = n2_diag;
 	work = new Float64Array( 100 );
 	d = new Float64Array( [ 3.0, 7.0 ] );
 	e = new Float64Array( [ 0.0 ] );
@@ -237,7 +225,7 @@ test( 'dlasq1: n3_neg_large_e', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n3_neg_large_e' );
+	tc = n3_neg_large_e;
 	work = new Float64Array( 100 );
 	d = new Float64Array( [ -3.0, -5.0, -2.0 ] );
 	e = new Float64Array( [ 4.0, 3.0 ] );
@@ -253,7 +241,7 @@ test( 'dlasq1: n4_identity_like', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n4_identity_like' );
+	tc = n4_identity_like;
 	work = new Float64Array( 100 );
 	d = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	e = new Float64Array( [ 0.01, 0.01, 0.01 ] );

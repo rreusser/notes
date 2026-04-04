@@ -2,40 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dstevr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dstevr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var v_a = require( './fixtures/v_a.json' );
+var n_a = require( './fixtures/n_a.json' );
+var v_v = require( './fixtures/v_v.json' );
+var v_i = require( './fixtures/v_i.json' );
+var n_v = require( './fixtures/n_v.json' );
+var n_i = require( './fixtures/n_i.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -146,7 +130,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dstevr: V_A - compute all eigenvectors', function t() {
@@ -162,7 +145,7 @@ test( 'dstevr: V_A - compute all eigenvectors', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'V_A' );
+	tc = v_a;
 	N = tc.N;
 	d = tridiagD();
 	e = tridiagE();
@@ -192,7 +175,7 @@ test( 'dstevr: N_A - eigenvalues only, all', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'N_A' );
+	tc = n_a;
 	N = tc.N;
 	d = tridiagD();
 	e = tridiagE();
@@ -221,7 +204,7 @@ test( 'dstevr: V_V - value range, compute vectors', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'V_V' );
+	tc = v_v;
 	N = tc.N;
 	d = tridiagD();
 	e = tridiagE();
@@ -251,7 +234,7 @@ test( 'dstevr: V_I - index range, compute vectors', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'V_I' );
+	tc = v_i;
 	N = tc.N;
 	d = tridiagD();
 	e = tridiagE();
@@ -331,7 +314,7 @@ test( 'dstevr: N_V - eigenvalues only, value range', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'N_V' );
+	tc = n_v;
 	N = tc.N;
 	d = tridiagD();
 	e = tridiagE();
@@ -493,7 +476,7 @@ test( 'dstevr: N_I - eigenvalues only, index range', function t() {
 	var Z;
 	var N;
 
-	tc = findCase( 'N_I' );
+	tc = n_i;
 	N = tc.N;
 	d = tridiagD();
 	e = tridiagE();

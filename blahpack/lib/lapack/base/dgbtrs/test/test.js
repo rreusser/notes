@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -15,29 +12,16 @@ var dgbtrf = require( '../../dgbtrf/lib/base.js' );
 var dgbtrs = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgbtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var tridiag_4x4_1rhs = require( './fixtures/tridiag_4x4_1rhs.json' );
+var tridiag_4x4_2rhs = require( './fixtures/tridiag_4x4_2rhs.json' );
+var tridiag_4x4_trans = require( './fixtures/tridiag_4x4_trans.json' );
+var pentadiag_5x5_1rhs = require( './fixtures/pentadiag_5x5_1rhs.json' );
+var pentadiag_5x5_trans = require( './fixtures/pentadiag_5x5_trans.json' );
+var pivot_2x2 = require( './fixtures/pivot_2x2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -109,7 +93,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgbtrs: N=0 quick return', function t() {
@@ -148,7 +131,7 @@ test( 'dgbtrs: tridiag_4x4_1rhs (verify A*x = b)', function t() {
 	var b;
 	var B;
 
-	tc = findCase( 'tridiag_4x4_1rhs' );
+	tc = tridiag_4x4_1rhs;
 	AB_orig = new Float64Array([
 		0.0,
 		0.0,
@@ -191,7 +174,7 @@ test( 'dgbtrs: tridiag_4x4_2rhs', function t() {
 	var x1;
 	var B;
 
-	tc = findCase( 'tridiag_4x4_2rhs' );
+	tc = tridiag_4x4_2rhs;
 	AB_orig = new Float64Array([
 		0.0,
 		0.0,
@@ -244,7 +227,7 @@ test( 'dgbtrs: tridiag_4x4_trans (verify A^T*x = b)', function t() {
 	var B;
 	var b;
 
-	tc = findCase( 'tridiag_4x4_trans' );
+	tc = tridiag_4x4_trans;
 	AB_orig = new Float64Array([
 		0.0,
 		0.0,
@@ -285,7 +268,7 @@ test( 'dgbtrs: pentadiag_5x5_1rhs (verify A*x = b)', function t() {
 	var b;
 	var B;
 
-	tc = findCase( 'pentadiag_5x5_1rhs' );
+	tc = pentadiag_5x5_1rhs;
 	AB_orig = new Float64Array( 7 * 5 );
 	AB_orig[ 4 ] = 6.0;
 	AB_orig[ 5 ] = -2.0;
@@ -327,7 +310,7 @@ test( 'dgbtrs: pentadiag_5x5_trans', function t() {
 	var b;
 	var B;
 
-	tc = findCase( 'pentadiag_5x5_trans' );
+	tc = pentadiag_5x5_trans;
 	AB_orig = new Float64Array( 7 * 5 );
 	AB_orig[ 4 ] = 6.0;
 	AB_orig[ 5 ] = -2.0;
@@ -367,7 +350,7 @@ test( 'dgbtrs: pivot_2x2 (verify A*x = b)', function t() {
 	var b;
 	var B;
 
-	tc = findCase( 'pivot_2x2' );
+	tc = pivot_2x2;
 	AB_orig = new Float64Array( 4 * 2 );
 	AB_orig[ 2 ] = 1.0;
 	AB_orig[ 3 ] = 3.0;

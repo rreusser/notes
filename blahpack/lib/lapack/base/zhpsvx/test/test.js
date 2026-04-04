@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -15,15 +13,18 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zhptrf = require( '../../zhptrf/lib/base.js' );
 var zhpsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
-
+var fact_n_upper = require( './fixtures/fact_n_upper.json' );
+var fact_n_lower = require( './fixtures/fact_n_lower.json' );
+var fact_f_upper = require( './fixtures/fact_f_upper.json' );
+var fact_f_lower = require( './fixtures/fact_f_lower.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var singular = require( './fixtures/singular.json' );
+var multi_rhs_upper = require( './fixtures/multi_rhs_upper.json' );
+var multi_rhs_lower = require( './fixtures/multi_rhs_lower.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
 
 // VARIABLES //
 
@@ -105,21 +106,7 @@ var AP_UPPER_4 = [
 // B for 4x4 pivot test (1 RHS)
 var bData4 = [ 1.0, 0.0, 0.0, 1.0, 2.0, -1.0, 1.0, 1.0 ];
 
-
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -222,7 +209,6 @@ function callZhpsvx( fact, uplo, N, nrhs, AP, AFP, IPIV, B ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zhpsvx: fact_n_upper', function t() {
@@ -234,7 +220,7 @@ test( 'zhpsvx: fact_n_upper', function t() {
 	var nn;
 	var B;
 
-	tc = findCase( 'fact_n_upper' );
+	tc = fact_n_upper;
 	nn = ( tc.n * ( tc.n + 1 ) ) / 2;
 	AP = buildComplex( tc.AP, nn );
 	AFP = new Complex128Array( nn );
@@ -258,7 +244,7 @@ test( 'zhpsvx: fact_n_lower', function t() {
 	var nn;
 	var B;
 
-	tc = findCase( 'fact_n_lower' );
+	tc = fact_n_lower;
 	nn = ( tc.n * ( tc.n + 1 ) ) / 2;
 	AP = buildComplex( tc.AP, nn );
 	AFP = new Complex128Array( nn );
@@ -285,7 +271,7 @@ test( 'zhpsvx: fact_f_upper', function t() {
 	var B;
 	var i;
 
-	tc = findCase( 'fact_f_upper' );
+	tc = fact_f_upper;
 	nn = ( tc.n * ( tc.n + 1 ) ) / 2;
 	AP = buildComplex( AP_UPPER_3, nn );
 	AFP = new Complex128Array( nn );
@@ -317,7 +303,7 @@ test( 'zhpsvx: fact_f_lower', function t() {
 	var B;
 	var j;
 
-	tc = findCase( 'fact_f_lower' );
+	tc = fact_f_lower;
 	nn = ( tc.n * ( tc.n + 1 ) ) / 2;
 	AP = buildComplex( AP_LOWER_3, nn );
 	AFP = new Complex128Array( nn );
@@ -345,7 +331,7 @@ test( 'zhpsvx: n_zero', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	AP = new Complex128Array( 1 );
 	AFP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -362,7 +348,7 @@ test( 'zhpsvx: n_one_upper', function t() {
 	var AP;
 	var B;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	AP = buildComplex( [ 4.0, 0.0 ], 1 );
 	AFP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -384,7 +370,7 @@ test( 'zhpsvx: singular', function t() {
 	var nn;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	nn = ( 3 * 4 ) / 2;
 	AP = buildComplex([
 		4.0,
@@ -417,7 +403,7 @@ test( 'zhpsvx: multi_rhs_upper', function t() {
 	var nn;
 	var B;
 
-	tc = findCase( 'multi_rhs_upper' );
+	tc = multi_rhs_upper;
 	nn = ( tc.n * ( tc.n + 1 ) ) / 2;
 	AP = buildComplex( AP_UPPER_3, nn );
 	AFP = new Complex128Array( nn );
@@ -441,7 +427,7 @@ test( 'zhpsvx: multi_rhs_lower', function t() {
 	var nn;
 	var B;
 
-	tc = findCase( 'multi_rhs_lower' );
+	tc = multi_rhs_lower;
 	nn = ( tc.n * ( tc.n + 1 ) ) / 2;
 	AP = buildComplex( AP_LOWER_3, nn );
 	AFP = new Complex128Array( nn );
@@ -465,7 +451,7 @@ test( 'zhpsvx: upper_4x4', function t() {
 	var nn;
 	var B;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	nn = ( tc.n * ( tc.n + 1 ) ) / 2;
 	AP = buildComplex( AP_UPPER_4, nn );
 	AFP = new Complex128Array( nn );

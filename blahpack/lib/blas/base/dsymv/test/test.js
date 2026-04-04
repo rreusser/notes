@@ -2,40 +2,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsymv = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsymv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var alpha_beta = require( './fixtures/alpha_beta.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var stride = require( './fixtures/stride.json' );
+var lower_stride_alpha_beta = require( './fixtures/lower_stride_alpha_beta.json' );
+var negative_stride = require( './fixtures/negative_stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -68,11 +55,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dsymv: upper_basic (uplo=U, N=4, alpha=1, beta=0, unit strides)', function t() { // eslint-disable-line max-len
-	var tc = findCase( 'upper_basic' );
+	var tc = upper_basic;
 
 	// Symmetric matrix upper triangle stored in column-major:
 
@@ -103,7 +89,7 @@ test( 'dsymv: upper_basic (uplo=U, N=4, alpha=1, beta=0, unit strides)', functio
 });
 
 test( 'dsymv: lower_basic (uplo=L, N=4, alpha=1, beta=0, unit strides)', function t() { // eslint-disable-line max-len
-	var tc = findCase( 'lower_basic' );
+	var tc = lower_basic;
 
 	// Lower triangle stored in column-major:
 	var A = new Float64Array([
@@ -132,7 +118,7 @@ test( 'dsymv: lower_basic (uplo=L, N=4, alpha=1, beta=0, unit strides)', functio
 });
 
 test( 'dsymv: alpha_beta (uplo=U, alpha=2, beta=0.5)', function t() {
-	var tc = findCase( 'alpha_beta' );
+	var tc = alpha_beta;
 	var A = new Float64Array([
 		1,
 		0,
@@ -159,7 +145,7 @@ test( 'dsymv: alpha_beta (uplo=U, alpha=2, beta=0.5)', function t() {
 });
 
 test( 'dsymv: n_zero (quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Float64Array([ 1 ]);
 	var x = new Float64Array([ 1 ]);
 	var y = new Float64Array([ 99 ]);
@@ -169,7 +155,7 @@ test( 'dsymv: n_zero (quick return)', function t() {
 });
 
 test( 'dsymv: n_one (N=1, alpha=2, beta=3)', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Float64Array([ 3 ]);
 	var x = new Float64Array([ 5 ]);
 	var y = new Float64Array([ 7 ]);
@@ -180,7 +166,7 @@ test( 'dsymv: n_one (N=1, alpha=2, beta=3)', function t() {
 });
 
 test( 'dsymv: alpha_zero (alpha=0, just scales y by beta)', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var A = new Float64Array([ 1, 0, 0, 0, 2, 5, 0, 0, 3, 6, 8, 0, 4, 7, 9, 10 ]);
 	var x = new Float64Array([ 1, 2, 3, 4 ]);
 	var y = new Float64Array([ 10, 20, 30, 40 ]);
@@ -190,7 +176,7 @@ test( 'dsymv: alpha_zero (alpha=0, just scales y by beta)', function t() {
 });
 
 test( 'dsymv: stride (uplo=U, N=3, incx=2, incy=2)', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 
 	// Fortran upper triangle, LDA=3, N=3:
 
@@ -216,7 +202,7 @@ test( 'dsymv: stride (uplo=U, N=3, incx=2, incy=2)', function t() {
 });
 
 test( 'dsymv: lower_stride_alpha_beta (uplo=L, N=3, incx=2, incy=2, alpha=2, beta=0.5)', function t() { // eslint-disable-line max-len
-	var tc = findCase( 'lower_stride_alpha_beta' );
+	var tc = lower_stride_alpha_beta;
 
 	// Fortran lower triangle, LDA=3, N=3:
 
@@ -244,7 +230,7 @@ test( 'dsymv: lower_stride_alpha_beta (uplo=L, N=3, incx=2, incy=2, alpha=2, bet
 });
 
 test( 'dsymv: negative_stride (uplo=U, N=3, incx=-1, incy=-1)', function t() {
-	var tc = findCase( 'negative_stride' );
+	var tc = negative_stride;
 
 	// Upper triangle: [[1,2,3],[2,4,5],[3,5,6]]
 	var A = new Float64Array([

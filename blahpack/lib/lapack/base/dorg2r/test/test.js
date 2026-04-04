@@ -2,40 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgeqr2 = require( '../../dgeqr2/lib/base.js' );
 var dorg2r = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dorg2r.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _4x3_k3 = require( './fixtures/4x3_k3.json' );
+var _3x3_k3 = require( './fixtures/3x3_k3.json' );
+var _4x2_k1 = require( './fixtures/4x2_k1.json' );
+var k_zero = require( './fixtures/k_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var _5x3_orthogonal = require( './fixtures/5x3_orthogonal.json' );
+var _6x4_k4 = require( './fixtures/6x4_k4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -133,7 +119,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dorg2r: 4x3_k3', function t() {
@@ -151,7 +136,7 @@ test( 'dorg2r: 4x3_k3', function t() {
 		3,
 		1
 	]);
-	var tc = findCase( '4x3_k3' );
+	var tc = _4x3_k3;
 	assert.equal( result.info, tc.INFO, 'INFO' );
 	assertArrayClose( toArray( result.Q ), tc.Q, 1e-14, 'Q' );
 });
@@ -168,7 +153,7 @@ test( 'dorg2r: 3x3_k3', function t() {
 		5,
 		3
 	]);
-	var tc = findCase( '3x3_k3' );
+	var tc = _3x3_k3;
 	assert.equal( result.info, tc.INFO, 'INFO' );
 	assertArrayClose( toArray( result.Q ), tc.Q, 1e-14, 'Q' );
 });
@@ -183,7 +168,7 @@ test( 'dorg2r: 4x2_k1 (K < N, partial reflectors)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( '4x2_k1' );
+	tc = _4x2_k1;
 	A = new Float64Array( 4 * 2 );
 	vals = [
 		1,
@@ -216,7 +201,7 @@ test( 'dorg2r: k_zero (identity)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'k_zero' );
+	tc = k_zero;
 	A = new Float64Array( 3 * 2 );
 	A[ 0 ] = 99;
 	A[ 3 ] = 88;
@@ -238,7 +223,7 @@ test( 'dorg2r: n_zero (quick return)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 3 );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -253,7 +238,7 @@ test( 'dorg2r: m_zero (quick return)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( 1 );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -272,7 +257,7 @@ test( 'dorg2r: 5x3_orthogonal (verify Q^T Q = I)', function t() {
 	var j;
 	var k;
 
-	tc = findCase( '5x3_orthogonal' );
+	tc = _5x3_orthogonal;
 	result = computeQ( 5, 3, 3, [
 		1,
 		2,
@@ -342,7 +327,7 @@ test( 'dorg2r: 6x4_k4', function t() {
 		1,
 		3
 	]);
-	var tc = findCase( '6x4_k4' );
+	var tc = _6x4_k4;
 	assert.equal( result.info, tc.INFO, 'INFO' );
 	assertArrayClose( toArray( result.Q ), tc.Q, 1e-14, 'Q' );
 });

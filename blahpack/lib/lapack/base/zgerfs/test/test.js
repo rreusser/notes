@@ -2,12 +2,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -17,29 +14,16 @@ var zgetrf = require( './../../zgetrf/lib/base.js' );
 var zgetrs = require( './../../zgetrs/lib/base.js' );
 var zgerfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgerfs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var trans_n = require( './fixtures/trans_n.json' );
+var trans_c = require( './fixtures/trans_c.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var trans_t = require( './fixtures/trans_t.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -159,7 +143,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgerfs: trans_N', function t() {
@@ -180,7 +163,7 @@ test( 'zgerfs: trans_N', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'trans_N' );
+	tc = trans_n;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array( A_DATA.slice() );
@@ -221,7 +204,7 @@ test( 'zgerfs: trans_C', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'trans_C' );
+	tc = trans_c;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array( A_DATA.slice() );
@@ -256,7 +239,7 @@ test( 'zgerfs: n_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 1 );
 	AF = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
@@ -283,7 +266,7 @@ test( 'zgerfs: nrhs_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Complex128Array( 9 );
 	AF = new Complex128Array( 9 );
 	IPIV = new Int32Array( 3 );
@@ -319,7 +302,7 @@ test( 'zgerfs: multi_rhs', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	n = 3;
 	nrhs = 2;
 	A = new Complex128Array( A_DATA.slice() );
@@ -367,7 +350,7 @@ test( 'zgerfs: trans_T', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'trans_T' );
+	tc = trans_t;
 	n = 3;
 	nrhs = 1;
 	A = new Complex128Array( A_DATA.slice() );

@@ -4,26 +4,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zhetrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhetrd.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_35x35 = require( './fixtures/upper_35x35.json' );
+var lower_35x35 = require( './fixtures/lower_35x35.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -78,11 +72,10 @@ function makeHerm35() {
 	return new Complex128Array( data );
 }
 
-
 // TESTS //
 
 test( 'zhetrd: upper_4x4 (unblocked path)', function t() {
-	var tc = findCase( 'upper_4x4' );
+	var tc = upper_4x4;
 	var A = makeHerm4();
 	var d = new Float64Array( 4 );
 	var e = new Float64Array( 3 );
@@ -99,7 +92,7 @@ test( 'zhetrd: upper_4x4 (unblocked path)', function t() {
 });
 
 test( 'zhetrd: lower_4x4 (unblocked path)', function t() {
-	var tc = findCase( 'lower_4x4' );
+	var tc = lower_4x4;
 	var A = makeHerm4();
 	var d = new Float64Array( 4 );
 	var e = new Float64Array( 3 );
@@ -116,7 +109,7 @@ test( 'zhetrd: lower_4x4 (unblocked path)', function t() {
 });
 
 test( 'zhetrd: N=1', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Complex128Array( [ 3, 0 ] );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 0 );
@@ -138,7 +131,7 @@ test( 'zhetrd: N=0', function t() {
 });
 
 test( 'zhetrd: upper_35x35 (blocked path)', function t() {
-	var tc = findCase( 'upper_35x35' );
+	var tc = upper_35x35;
 	var A = makeHerm35();
 	var d = new Float64Array( 35 );
 	var e = new Float64Array( 34 );
@@ -153,7 +146,7 @@ test( 'zhetrd: upper_35x35 (blocked path)', function t() {
 });
 
 test( 'zhetrd: lower_35x35 (blocked path)', function t() {
-	var tc = findCase( 'lower_35x35' );
+	var tc = lower_35x35;
 	var A = makeHerm35();
 	var d = new Float64Array( 35 );
 	var e = new Float64Array( 34 );

@@ -2,41 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlamrg = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlamrg.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
-
-// FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
-
+var fwd_fwd_3_3 = require( './fixtures/fwd_fwd_3_3.json' );
+var fwd_bwd_3_3 = require( './fixtures/fwd_bwd_3_3.json' );
+var bwd_fwd_3_2 = require( './fixtures/bwd_fwd_3_2.json' );
+var bwd_bwd_2_3 = require( './fixtures/bwd_bwd_2_3.json' );
+var n1_n1 = require( './fixtures/n1_n1.json' );
+var equal = require( './fixtures/equal.json' );
+var n4_n1 = require( './fixtures/n4_n1.json' );
 
 // TESTS //
 
@@ -46,7 +28,7 @@ test( 'dlamrg: both forward, 3+3', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'fwd_fwd_3_3' );
+	tc = fwd_fwd_3_3;
 	a = new Float64Array( [ 1.0, 3.0, 5.0, 2.0, 4.0, 6.0 ] );
 	idx = new Int32Array( 6 );
 	dlamrg( 3, 3, a, 1, 0, 1, 1, idx, 1, 0 );
@@ -61,7 +43,7 @@ test( 'dlamrg: first forward, second backward, 3+3', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'fwd_bwd_3_3' );
+	tc = fwd_bwd_3_3;
 	a = new Float64Array( [ 1.0, 3.0, 5.0, 6.0, 4.0, 2.0 ] );
 	idx = new Int32Array( 6 );
 	dlamrg( 3, 3, a, 1, 0, 1, -1, idx, 1, 0 );
@@ -76,7 +58,7 @@ test( 'dlamrg: first backward, second forward, 3+2', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'bwd_fwd_3_2' );
+	tc = bwd_fwd_3_2;
 	a = new Float64Array( [ 5.0, 3.0, 1.0, 2.0, 4.0 ] );
 	idx = new Int32Array( 5 );
 	dlamrg( 3, 2, a, 1, 0, -1, 1, idx, 1, 0 );
@@ -91,7 +73,7 @@ test( 'dlamrg: both backward, 2+3', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'bwd_bwd_2_3' );
+	tc = bwd_bwd_2_3;
 	a = new Float64Array( [ 4.0, 2.0, 6.0, 3.0, 1.0 ] );
 	idx = new Int32Array( 5 );
 	dlamrg( 2, 3, a, 1, 0, -1, -1, idx, 1, 0 );
@@ -106,7 +88,7 @@ test( 'dlamrg: n1=1, n1=1', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'n1_n1' );
+	tc = n1_n1;
 	a = new Float64Array( [ 3.0, 1.0 ] );
 	idx = new Int32Array( 2 );
 	dlamrg( 1, 1, a, 1, 0, 1, 1, idx, 1, 0 );
@@ -121,7 +103,7 @@ test( 'dlamrg: equal elements', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'equal' );
+	tc = equal;
 	a = new Float64Array( [ 2.0, 2.0, 2.0, 2.0 ] );
 	idx = new Int32Array( 4 );
 	dlamrg( 2, 2, a, 1, 0, 1, 1, idx, 1, 0 );
@@ -136,7 +118,7 @@ test( 'dlamrg: n1=4, n2=1', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'n4_n1' );
+	tc = n4_n1;
 	a = new Float64Array( [ 1.0, 3.0, 5.0, 7.0, 4.0 ] );
 	idx = new Int32Array( 5 );
 	dlamrg( 4, 1, a, 1, 0, 1, 1, idx, 1, 0 );

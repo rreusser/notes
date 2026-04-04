@@ -3,40 +3,27 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlasd2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasd2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_nl2_nr2_sqre0 = require( './fixtures/basic_nl2_nr2_sqre0.json' );
+var sqre1_nl2_nr2 = require( './fixtures/sqre1_nl2_nr2.json' );
+var nl3_nr3_sqre0 = require( './fixtures/nl3_nr3_sqre0.json' );
+var deflation_close_values = require( './fixtures/deflation_close_values.json' );
+var minimal_nl1_nr1 = require( './fixtures/minimal_nl1_nr1.json' );
+var sqre1_nl1_nr1 = require( './fixtures/sqre1_nl1_nr1.json' );
+var givens_deflation = require( './fixtures/givens_deflation.json' );
+var all_deflated = require( './fixtures/all_deflated.json' );
+var tiny_dsigma2 = require( './fixtures/tiny_dsigma2.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -189,7 +176,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlasd2 is a function', function t() {
@@ -197,32 +183,32 @@ test( 'dlasd2 is a function', function t() {
 });
 
 test( 'dlasd2: basic_nl2_nr2_sqre0', function t() {
-	var tc = findCase( 'basic_nl2_nr2_sqre0' );
+	var tc = basic_nl2_nr2_sqre0;
 	runCase( tc, 2, 2, 0, 0.5, 0.7, [ 1.0, 3.0, 0.0, 2.0, 4.0 ], [ 1, 2, 0, 1, 2 ]);
 });
 
 test( 'dlasd2: sqre1_nl2_nr2', function t() {
-	var tc = findCase( 'sqre1_nl2_nr2' );
+	var tc = sqre1_nl2_nr2;
 	runCase( tc, 2, 2, 1, 0.3, 0.4, [ 1.5, 3.5, 0.0, 2.5, 5.0 ], [ 1, 2, 0, 1, 2 ]);
 });
 
 test( 'dlasd2: nl3_nr3_sqre0', function t() {
-	var tc = findCase( 'nl3_nr3_sqre0' );
+	var tc = nl3_nr3_sqre0;
 	runCase( tc, 3, 3, 0, 0.6, 0.8, [ 0.5, 1.5, 2.5, 0.0, 1.0, 2.0, 3.0 ], [ 1, 2, 3, 0, 1, 2, 3 ]);
 });
 
 test( 'dlasd2: deflation_close_values', function t() {
-	var tc = findCase( 'deflation_close_values' );
+	var tc = deflation_close_values;
 	runCase( tc, 2, 2, 0, 0.5, 0.5, [ 1.0, 2.0, 0.0, 1.0, 3.0 ], [ 1, 2, 0, 1, 2 ]);
 });
 
 test( 'dlasd2: minimal_nl1_nr1', function t() {
-	var tc = findCase( 'minimal_nl1_nr1' );
+	var tc = minimal_nl1_nr1;
 	runCase( tc, 1, 1, 0, 0.8, 0.6, [ 2.0, 0.0, 4.0 ], [ 1, 0, 1 ]);
 });
 
 test( 'dlasd2: sqre1_nl1_nr1', function t() {
-	var tc = findCase( 'sqre1_nl1_nr1' );
+	var tc = sqre1_nl1_nr1;
 	runCase( tc, 1, 1, 1, 0.4, 0.9, [ 3.0, 0.0, 5.0 ], [ 1, 0, 1 ]);
 });
 
@@ -247,7 +233,7 @@ test( 'dlasd2: givens_deflation (close values with non-tiny Z)', function t() {
 	var m;
 	var i;
 
-	tc = findCase( 'givens_deflation' );
+	tc = givens_deflation;
 	n = 5;
 	m = 5;
 	tol = 1e-14;
@@ -297,11 +283,11 @@ test( 'dlasd2: givens_deflation (close values with non-tiny Z)', function t() {
 });
 
 test( 'dlasd2: all_deflated (tiny alpha/beta)', function t() {
-	var tc = findCase( 'all_deflated' );
+	var tc = all_deflated;
 	runCase( tc, 2, 1, 0, 1.0e-20, 1.0e-20, [ 1.0, 2.0, 0.0, 3.0 ], [ 1, 2, 0, 1 ]);
 });
 
 test( 'dlasd2: tiny_dsigma2 (DSIGMA(2) replacement)', function t() {
-	var tc = findCase( 'tiny_dsigma2' );
+	var tc = tiny_dsigma2;
 	runCase( tc, 2, 1, 0, 1.0, 1.0, [ 1.0e-20, 2.0, 0.0, 3.0 ], [ 1, 2, 0, 1 ]);
 });

@@ -6,27 +6,24 @@
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var ztrrfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrrfs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_conj_trans = require( './fixtures/lower_conj_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var lower_unit_conj_trans = require( './fixtures/lower_unit_conj_trans.json' );
+var upper_conj_trans = require( './fixtures/upper_conj_trans.json' );
+var upper_unit_conj_trans = require( './fixtures/upper_unit_conj_trans.json' );
+var lower_unit_no_trans = require( './fixtures/lower_unit_no_trans.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Creates workspace arrays for ztrrfs.
@@ -75,7 +72,6 @@ function callZtrrfs( uplo, trans, diag, N, nrhs, A, B, X ) {
 	return result;
 }
 
-
 // TESTS //
 
 test( 'ztrrfs: upper_no_trans', function t() {
@@ -85,7 +81,7 @@ test( 'ztrrfs: upper_no_trans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	A = new Complex128Array( [ 2, 1, 0, 0, 0, 0, 1, 2, 4, 1, 0, 0, 3, 1, 5, 2, 6, 1 ] );
 	B = new Complex128Array( [ 6, 4, 9, 3, 6, 1 ] );
 	X = new Complex128Array( tc.x );
@@ -102,7 +98,7 @@ test( 'ztrrfs: lower_conj_trans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_conj_trans' );
+	tc = lower_conj_trans;
 	A = new Complex128Array( [ 2, 1, 1, 2, 3, 1, 0, 0, 4, 1, 5, 2, 0, 0, 0, 0, 6, 1 ] );
 	B = new Complex128Array( [ 7, -7, 11, -9, 5, -7 ] );
 	X = new Complex128Array( tc.x );
@@ -119,7 +115,7 @@ test( 'ztrrfs: upper_unit_diag', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_unit_diag' );
+	tc = upper_unit_diag;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 2, 1, 1, 0, 0, 0, 3, 2, 4, 1, 1, 0 ] );
 	B = new Complex128Array( [ 14, 8, 14, 3, 3, 0 ] );
 	X = new Complex128Array( tc.x );
@@ -136,7 +132,7 @@ test( 'ztrrfs: lower_no_trans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	A = new Complex128Array( [ 3, 1, 2, 1, 1, 1, 0, 0, 5, 2, 4, 1, 0, 0, 0, 0, 7, 1 ] );
 	B = new Complex128Array( [ 3, 1, 7, 3, 12, 3 ] );
 	X = new Complex128Array( tc.x );
@@ -153,7 +149,7 @@ test( 'ztrrfs: multi_rhs', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	A = new Complex128Array( [ 2, 1, 0, 0, 0, 0, 1, 2, 4, 1, 0, 0, 3, 1, 5, 2, 6, 1 ] );
 	B = new Complex128Array( [ 6, 4, 9, 3, 6, 1, 7, 5, 15, -1, 7, -5 ] );
 	X = new Complex128Array( tc.x );
@@ -176,7 +172,7 @@ test( 'ztrrfs: n_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 1 );
 	B = new Complex128Array( 1 );
 	X = new Complex128Array( 1 );
@@ -201,7 +197,7 @@ test( 'ztrrfs: nrhs_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Complex128Array( 9 );
 	B = new Complex128Array( 9 );
 	X = new Complex128Array( 9 );
@@ -220,7 +216,7 @@ test( 'ztrrfs: lower_unit_conj_trans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_unit_conj_trans' );
+	tc = lower_unit_conj_trans;
 	A = new Complex128Array( [ 1, 0, 2, 1, 3, 2, 0, 0, 1, 0, 5, 1, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 6, -3, 6, -1, 1, 0 ] );
 	X = new Complex128Array( tc.x );
@@ -237,7 +233,7 @@ test( 'ztrrfs: upper_conj_trans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_conj_trans' );
+	tc = upper_conj_trans;
 	A = new Complex128Array( [ 2, 1, 0, 0, 0, 0, 1, 2, 4, 1, 0, 0, 3, 1, 5, 2, 6, 1 ] );
 	B = new Complex128Array( [ 2, -1, 5, -3, 14, -4 ] );
 	X = new Complex128Array( tc.x );
@@ -254,7 +250,7 @@ test( 'ztrrfs: upper_unit_conj_trans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_unit_conj_trans' );
+	tc = upper_unit_conj_trans;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 2, 1, 1, 0, 0, 0, 3, 2, 4, 1, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 3, -1, 8, -3 ] );
 	X = new Complex128Array( tc.x );
@@ -271,7 +267,7 @@ test( 'ztrrfs: lower_unit_no_trans', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_unit_no_trans' );
+	tc = lower_unit_no_trans;
 	A = new Complex128Array( [ 1, 0, 2, 1, 3, 2, 0, 0, 1, 0, 5, 1, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 3, 1, 9, 3 ] );
 	X = new Complex128Array( tc.x );

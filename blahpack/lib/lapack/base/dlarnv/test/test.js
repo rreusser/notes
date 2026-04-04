@@ -2,40 +2,21 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlarnv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarnv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var uniform_01 = require( './fixtures/uniform_01.json' );
+var uniform_m1_1 = require( './fixtures/uniform_m1_1.json' );
+var normal_01 = require( './fixtures/normal_01.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,12 +65,11 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlarnv: uniform (0,1)', function t() {
 	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = findCase( 'uniform_01' );
+	var tc = uniform_01;
 	var x = new Float64Array( 5 );
 
 	dlarnv( 1, iseed, 1, 0, 5, x, 1, 0 );
@@ -100,7 +80,7 @@ test( 'dlarnv: uniform (0,1)', function t() {
 
 test( 'dlarnv: uniform (-1,1)', function t() {
 	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = findCase( 'uniform_m1_1' );
+	var tc = uniform_m1_1;
 	var x = new Float64Array( 5 );
 
 	dlarnv( 2, iseed, 1, 0, 5, x, 1, 0 );
@@ -111,7 +91,7 @@ test( 'dlarnv: uniform (-1,1)', function t() {
 
 test( 'dlarnv: normal (0,1)', function t() {
 	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = findCase( 'normal_01' );
+	var tc = normal_01;
 	var x = new Float64Array( 5 );
 
 	dlarnv( 3, iseed, 1, 0, 5, x, 1, 0 );

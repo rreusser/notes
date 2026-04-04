@@ -2,41 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlagtf = require( '../../dlagtf/lib/base.js' );
 var dlagts = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlagts.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var solve_job_m1 = require( './fixtures/solve_job_m1.json' );
+var solve_job_m2 = require( './fixtures/solve_job_m2.json' );
+var solve_job_1 = require( './fixtures/solve_job_1.json' );
+var solve_job_2 = require( './fixtures/solve_job_2.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
+var solve_job_1_n2 = require( './fixtures/solve_job_1_n2.json' );
+var solve_job_2_n2 = require( './fixtures/solve_job_2_n2.json' );
+var solve_job_m2_n2 = require( './fixtures/solve_job_m2_n2.json' );
+var solve_job_m1_explicit_tol = require( './fixtures/solve_job_m1_explicit_tol.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -141,7 +128,6 @@ function setupFactorization1() {
 	};
 }
 
-
 // TESTS //
 
 test( 'dlagts: solve (T-lambda*I)x=y with perturbation (job=-1)', function t() {
@@ -150,7 +136,7 @@ test( 'dlagts: solve (T-lambda*I)x=y with perturbation (job=-1)', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_m1' );
+	tc = solve_job_m1;
 	f = setupFactorization5();
 	y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	info = dlagts( -1, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -164,7 +150,7 @@ test( 'dlagts: solve transpose with perturbation (job=-2)', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_m2' );
+	tc = solve_job_m2;
 	f = setupFactorization5();
 	y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	info = dlagts( -2, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -189,7 +175,7 @@ test( 'dlagts: solve without perturbation (job=1)', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_1' );
+	tc = solve_job_1;
 	f = setupFactorization5();
 	y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	info = dlagts( 1, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -203,7 +189,7 @@ test( 'dlagts: solve transpose without perturbation (job=2)', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_2' );
+	tc = solve_job_2;
 	f = setupFactorization5();
 	y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	info = dlagts( 2, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -217,7 +203,7 @@ test( 'dlagts: N=1', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'n_equals_1' );
+	tc = n_equals_1;
 	f = setupFactorization1();
 	y = new Float64Array( [ 7.0 ] );
 	info = dlagts( -1, 1, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -231,7 +217,7 @@ test( 'dlagts: job=1 N=2', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_1_n2' );
+	tc = solve_job_1_n2;
 	f = setupFactorization2();
 	y = new Float64Array( [ 1.0, 2.0 ] );
 	info = dlagts( 1, 2, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -245,7 +231,7 @@ test( 'dlagts: job=2 N=2', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_2_n2' );
+	tc = solve_job_2_n2;
 	f = setupFactorization2();
 	y = new Float64Array( [ 1.0, 2.0 ] );
 	info = dlagts( 2, 2, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -259,7 +245,7 @@ test( 'dlagts: job=-2 N=2', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_m2_n2' );
+	tc = solve_job_m2_n2;
 	f = setupFactorization2();
 	y = new Float64Array( [ 1.0, 2.0 ] );
 	info = dlagts( -2, 2, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 0.0 ); // eslint-disable-line max-len
@@ -273,7 +259,7 @@ test( 'dlagts: job=-1 with explicit tol', function t() {
 	var f;
 	var y;
 
-	tc = findCase( 'solve_job_m1_explicit_tol' );
+	tc = solve_job_m1_explicit_tol;
 	f = setupFactorization5();
 	y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	info = dlagts( -1, 5, f.a, 1, 0, f.b, 1, 0, f.c, 1, 0, f.d, 1, 0, f.IN, 1, 0, y, 1, 0, 1e-8 ); // eslint-disable-line max-len

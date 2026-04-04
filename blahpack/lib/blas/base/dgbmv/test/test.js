@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgbmv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgbmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var notrans = require( './fixtures/notrans.json' );
+var trans = require( './fixtures/trans.json' );
+var alpha_beta = require( './fixtures/alpha_beta.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var stride = require( './fixtures/stride.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -66,7 +50,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
 	}
 }
-
 
 // TESTS //
 
@@ -123,7 +106,7 @@ function bandA() {
 }
 
 test( 'dgbmv: notrans', function t() {
-	var tc = findCase( 'notrans' );
+	var tc = notrans;
 	var a = bandA();
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( 4 );
@@ -133,7 +116,7 @@ test( 'dgbmv: notrans', function t() {
 });
 
 test( 'dgbmv: trans', function t() {
-	var tc = findCase( 'trans' );
+	var tc = trans;
 	var a = bandA();
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( 5 );
@@ -143,7 +126,7 @@ test( 'dgbmv: trans', function t() {
 });
 
 test( 'dgbmv: alpha_beta', function t() {
-	var tc = findCase( 'alpha_beta' );
+	var tc = alpha_beta;
 	var a = bandA();
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 10.0, 20.0, 30.0, 40.0 ] );
@@ -153,7 +136,7 @@ test( 'dgbmv: alpha_beta', function t() {
 });
 
 test( 'dgbmv: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var y = new Float64Array( [ 99.0 ] );
 	var a = new Float64Array( 1 );
 	var x = new Float64Array( 1 );
@@ -163,7 +146,7 @@ test( 'dgbmv: n_zero', function t() {
 });
 
 test( 'dgbmv: alpha_zero', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var a = bandA();
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
@@ -173,7 +156,7 @@ test( 'dgbmv: alpha_zero', function t() {
 });
 
 test( 'dgbmv: stride', function t() {
-	var tc = findCase( 'stride' );
+	var tc = stride;
 	var a = bandA();
 	var x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0, 4.0, 0.0, 5.0, 0.0 ] ); // eslint-disable-line max-len
 	var y = new Float64Array( 8 );

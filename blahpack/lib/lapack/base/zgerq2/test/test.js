@@ -6,25 +6,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgerq2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgerq2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var _3x4 = require( './fixtures/3x4.json' );
+var _4x3 = require( './fixtures/4x3.json' );
+var _3x3 = require( './fixtures/3x3.json' );
+var _1x4 = require( './fixtures/1x4.json' );
+var _3x1 = require( './fixtures/3x1.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var _2x5 = require( './fixtures/2x5.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -69,11 +67,10 @@ function runZgerq2( M, N, aFlat ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zgerq2: 3x4 (M < N)', function t() {
-	var tc = findCase( '3x4' );
+	var tc = _3x4;
 	// Input: 3x4 complex matrix stored column-major with LDA=3
 	var aFlat = [
 		2, 1, 1, 0, 3, -1,
@@ -88,7 +85,7 @@ test( 'zgerq2: 3x4 (M < N)', function t() {
 });
 
 test( 'zgerq2: 4x3 (M > N)', function t() {
-	var tc = findCase( '4x3' );
+	var tc = _4x3;
 	// Input: 4x3 complex matrix stored column-major with LDA=4
 	var aFlat = [
 		2, 1, 1, -1, 3, 0, 1, 2,
@@ -102,7 +99,7 @@ test( 'zgerq2: 4x3 (M > N)', function t() {
 });
 
 test( 'zgerq2: 3x3 (square)', function t() {
-	var tc = findCase( '3x3' );
+	var tc = _3x3;
 	var aFlat = [
 		4, 1, 1, 0, 2, -1,
 		1, -1, 3, 2, 1, 0,
@@ -115,7 +112,7 @@ test( 'zgerq2: 3x3 (square)', function t() {
 });
 
 test( 'zgerq2: 1x4 (single row)', function t() {
-	var tc = findCase( '1x4' );
+	var tc = _1x4;
 	var aFlat = [
 		1, 2, 2, -1, 3, 0, 4, 1
 	];
@@ -126,7 +123,7 @@ test( 'zgerq2: 1x4 (single row)', function t() {
 });
 
 test( 'zgerq2: 3x1 (single column)', function t() {
-	var tc = findCase( '3x1' );
+	var tc = _3x1;
 	var aFlat = [
 		2, 1, 3, -1, 4, 0
 	];
@@ -137,7 +134,7 @@ test( 'zgerq2: 3x1 (single column)', function t() {
 });
 
 test( 'zgerq2: M=0 (quick return)', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var A = new Complex128Array( 1 );
 	var TAU = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
@@ -146,7 +143,7 @@ test( 'zgerq2: M=0 (quick return)', function t() {
 });
 
 test( 'zgerq2: N=0 (quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var TAU = new Complex128Array( 1 );
 	var WORK = new Complex128Array( 1 );
@@ -155,7 +152,7 @@ test( 'zgerq2: N=0 (quick return)', function t() {
 });
 
 test( 'zgerq2: 1x1', function t() {
-	var tc = findCase( '1x1' );
+	var tc = _1x1;
 	var aFlat = [ 5, 3 ];
 	var res = runZgerq2( 1, 1, aFlat );
 	assert.equal( res.info, tc.info );
@@ -164,7 +161,7 @@ test( 'zgerq2: 1x1', function t() {
 });
 
 test( 'zgerq2: 2x5 (wide)', function t() {
-	var tc = findCase( '2x5' );
+	var tc = _2x5;
 	// 2x5 column-major with LDA=2: columns stored sequentially
 	var aFlat = [
 		1, 0, 6, -1,

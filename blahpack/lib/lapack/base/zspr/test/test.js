@@ -4,26 +4,27 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zspr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zspr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var scalar = require( './fixtures/scalar.json' );
+var upper_stride_2 = require( './fixtures/upper_stride_2.json' );
+var zero_element = require( './fixtures/zero_element.json' );
+var lower_stride_2 = require( './fixtures/lower_stride_2.json' );
+var complex_alpha_upper = require( './fixtures/complex_alpha_upper.json' );
+var complex_alpha_lower = require( './fixtures/complex_alpha_lower.json' );
+var upper_neg_stride = require( './fixtures/upper_neg_stride.json' );
+var lower_zero_element = require( './fixtures/lower_zero_element.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,7 +39,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zspr is a function', function t() {
@@ -46,7 +46,7 @@ test( 'zspr is a function', function t() {
 });
 
 test( 'zspr: upper_basic (uplo=upper, N=3, alpha=(2,0), unit stride)', function t() {
-	var tc = findCase( 'upper_basic' );
+	var tc = upper_basic;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, 1.0, 4.0, -0.5,
 		3.0, -2.0, 2.0, 1.0, 5.0, 0.3
@@ -61,7 +61,7 @@ test( 'zspr: upper_basic (uplo=upper, N=3, alpha=(2,0), unit stride)', function 
 });
 
 test( 'zspr: lower_basic (uplo=lower, N=3, alpha=(2,0), unit stride)', function t() {
-	var tc = findCase( 'lower_basic' );
+	var tc = lower_basic;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, -1.0, 3.0, 2.0,
 		4.0, -0.5, 2.0, -1.0, 5.0, 0.3
@@ -76,7 +76,7 @@ test( 'zspr: lower_basic (uplo=lower, N=3, alpha=(2,0), unit stride)', function 
 });
 
 test( 'zspr: alpha_zero (alpha=(0,0), no-op)', function t() {
-	var tc = findCase( 'alpha_zero' );
+	var tc = alpha_zero;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, 1.0, 4.0, -0.5,
 		3.0, -2.0, 2.0, 1.0, 5.0, 0.3
@@ -91,7 +91,7 @@ test( 'zspr: alpha_zero (alpha=(0,0), no-op)', function t() {
 });
 
 test( 'zspr: n_zero (N=0 quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var AP = new Complex128Array( [ 99.0, 1.0 ] );
 	var x = new Complex128Array( [ 1.0, 0.5 ] );
 	var alpha = new Complex128( 1.0, 0.0 );
@@ -103,7 +103,7 @@ test( 'zspr: n_zero (N=0 quick return)', function t() {
 });
 
 test( 'zspr: scalar (N=1, alpha=(1.5, 0.5))', function t() {
-	var tc = findCase( 'scalar' );
+	var tc = scalar;
 	var AP = new Complex128Array( [ 3.0, 1.0 ] );
 	var x = new Complex128Array( [ 2.0, 1.0 ] );
 	var alpha = new Complex128( 1.5, 0.5 );
@@ -115,7 +115,7 @@ test( 'zspr: scalar (N=1, alpha=(1.5, 0.5))', function t() {
 });
 
 test( 'zspr: upper_stride_2 (uplo=upper, N=3, strideX=2)', function t() {
-	var tc = findCase( 'upper_stride_2' );
+	var tc = upper_stride_2;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, 1.0, 4.0, -0.5,
 		3.0, -2.0, 2.0, 1.0, 5.0, 0.3
@@ -136,7 +136,7 @@ test( 'zspr: upper_stride_2 (uplo=upper, N=3, strideX=2)', function t() {
 });
 
 test( 'zspr: zero_element (x[1]=0, exercises skip branch)', function t() {
-	var tc = findCase( 'zero_element' );
+	var tc = zero_element;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, 1.0, 4.0, -0.5,
 		3.0, -2.0, 2.0, 1.0, 5.0, 0.3
@@ -152,7 +152,7 @@ test( 'zspr: zero_element (x[1]=0, exercises skip branch)', function t() {
 });
 
 test( 'zspr: lower_stride_2 (uplo=lower, N=3, strideX=2)', function t() {
-	var tc = findCase( 'lower_stride_2' );
+	var tc = lower_stride_2;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, -1.0, 3.0, 2.0,
 		4.0, -0.5, 2.0, -1.0, 5.0, 0.3
@@ -171,7 +171,7 @@ test( 'zspr: lower_stride_2 (uplo=lower, N=3, strideX=2)', function t() {
 });
 
 test( 'zspr: complex_alpha_upper (alpha=(1,2), N=2, upper)', function t() {
-	var tc = findCase( 'complex_alpha_upper' );
+	var tc = complex_alpha_upper;
 	var AP = new Complex128Array( [
 		1.0, 0.0, 0.0, 0.0, 1.0, 0.0
 	] );
@@ -185,7 +185,7 @@ test( 'zspr: complex_alpha_upper (alpha=(1,2), N=2, upper)', function t() {
 });
 
 test( 'zspr: complex_alpha_lower (alpha=(1,2), N=2, lower)', function t() {
-	var tc = findCase( 'complex_alpha_lower' );
+	var tc = complex_alpha_lower;
 	var AP = new Complex128Array( [
 		1.0, 0.0, 0.0, 0.0, 1.0, 0.0
 	] );
@@ -199,7 +199,7 @@ test( 'zspr: complex_alpha_lower (alpha=(1,2), N=2, lower)', function t() {
 });
 
 test( 'zspr: upper_neg_stride (uplo=upper, N=3, strideX=-1)', function t() {
-	var tc = findCase( 'upper_neg_stride' );
+	var tc = upper_neg_stride;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, 1.0, 4.0, -0.5,
 		3.0, -2.0, 2.0, 1.0, 5.0, 0.3
@@ -214,7 +214,7 @@ test( 'zspr: upper_neg_stride (uplo=upper, N=3, strideX=-1)', function t() {
 });
 
 test( 'zspr: lower_zero_element (lower, x[0]=0)', function t() {
-	var tc = findCase( 'lower_zero_element' );
+	var tc = lower_zero_element;
 	var AP = new Complex128Array( [
 		2.0, 0.5, 1.0, -1.0, 3.0, 2.0,
 		4.0, -0.5, 2.0, -1.0, 5.0, 0.3

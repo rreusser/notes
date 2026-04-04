@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlarscl2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarscl2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var single_element = require( './fixtures/single_element.json' );
+var rect_2x3 = require( './fixtures/rect_2x3.json' );
+var rect_3x2 = require( './fixtures/rect_3x2.json' );
+var negative_d = require( './fixtures/negative_d.json' );
+var ldx_gt_m = require( './fixtures/ldx_gt_m.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -54,7 +38,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlarscl2 is a function', function t() {
@@ -62,7 +45,7 @@ test( 'dlarscl2 is a function', function t() {
 });
 
 test( 'dlarscl2: basic_3x3', function t() {
-	var tc = findCase( 'basic_3x3' );
+	var tc = basic_3x3;
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 	var d = new Float64Array( [ 2, 3, 4 ] );
 	dlarscl2( 3, 3, d, 1, 0, x, 1, 3, 0 );
@@ -84,7 +67,7 @@ test( 'dlarscl2: n_zero (quick return)', function t() {
 });
 
 test( 'dlarscl2: single_element', function t() {
-	var tc = findCase( 'single_element' );
+	var tc = single_element;
 	var x = new Float64Array( [ 5 ] );
 	var d = new Float64Array( [ 3 ] );
 	dlarscl2( 1, 1, d, 1, 0, x, 1, 1, 0 );
@@ -92,7 +75,7 @@ test( 'dlarscl2: single_element', function t() {
 });
 
 test( 'dlarscl2: rect_2x3', function t() {
-	var tc = findCase( 'rect_2x3' );
+	var tc = rect_2x3;
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var d = new Float64Array( [ 0.5, 2.0 ] );
 	dlarscl2( 2, 3, d, 1, 0, x, 1, 2, 0 );
@@ -100,7 +83,7 @@ test( 'dlarscl2: rect_2x3', function t() {
 });
 
 test( 'dlarscl2: rect_3x2', function t() {
-	var tc = findCase( 'rect_3x2' );
+	var tc = rect_3x2;
 	var x = new Float64Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var d = new Float64Array( [ 10, 20, 30 ] );
 	dlarscl2( 3, 2, d, 1, 0, x, 1, 3, 0 );
@@ -108,7 +91,7 @@ test( 'dlarscl2: rect_3x2', function t() {
 });
 
 test( 'dlarscl2: negative values in D', function t() {
-	var tc = findCase( 'negative_d' );
+	var tc = negative_d;
 	var x = new Float64Array( [ 1, 2, 3, 4 ] );
 	var d = new Float64Array( [ -1, 0.5 ] );
 	dlarscl2( 2, 2, d, 1, 0, x, 1, 2, 0 );
@@ -116,7 +99,7 @@ test( 'dlarscl2: negative values in D', function t() {
 });
 
 test( 'dlarscl2: LDX > M (leading dimension larger than rows)', function t() {
-	var tc = findCase( 'ldx_gt_m' );
+	var tc = ldx_gt_m;
 
 	// X is 4-by-3 in memory but we only scale rows 0..1
 	var x = new Float64Array([

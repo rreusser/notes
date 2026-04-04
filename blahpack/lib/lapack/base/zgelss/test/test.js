@@ -2,41 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgelss = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgelss.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var overdetermined_full_rank = require( './fixtures/overdetermined_full_rank.json' );
+var overdetermined_rank_deficient = require( './fixtures/overdetermined_rank_deficient.json' );
+var underdetermined = require( './fixtures/underdetermined.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
+var multiple_rhs = require( './fixtures/multiple_rhs.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var overdetermined_tall = require( './fixtures/overdetermined_tall.json' );
+var underdetermined_wide = require( './fixtures/underdetermined_wide.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +72,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgelss: main export is a function', function t() {
@@ -100,7 +86,7 @@ test( 'zgelss: overdetermined full rank (4x2), single RHS', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'overdetermined_full_rank' );
+	tc = overdetermined_full_rank;
 	A = new Complex128Array([
 		1,
 		1,
@@ -139,7 +125,7 @@ test( 'zgelss: overdetermined rank-deficient (4x2)', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'overdetermined_rank_deficient' );
+	tc = overdetermined_rank_deficient;
 	A = new Complex128Array([
 		1,
 		0,
@@ -179,7 +165,7 @@ test( 'zgelss: underdetermined (2x4), single RHS', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'underdetermined' );
+	tc = underdetermined;
 	A = new Complex128Array([
 		1,
 		0,
@@ -221,7 +207,7 @@ test( 'zgelss: square 3x3, single RHS', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	A = new Complex128Array([
 		4,
 		0,
@@ -262,7 +248,7 @@ test( 'zgelss: multiple RHS (3x3, 2 RHS)', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'multiple_rhs' );
+	tc = multiple_rhs;
 	A = new Complex128Array([
 		4,
 		0,
@@ -314,7 +300,7 @@ test( 'zgelss: M=0 edge case', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Complex128Array( 1 );
 	B = new Complex128Array( 3 );
 	S = new Float64Array( 1 );
@@ -332,7 +318,7 @@ test( 'zgelss: N=0 edge case', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Complex128Array( 3 );
 	B = new Complex128Array( 3 );
 	S = new Float64Array( 1 );
@@ -350,7 +336,7 @@ test( 'zgelss: overdetermined tall 6x2 (QR path)', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'overdetermined_tall' );
+	tc = overdetermined_tall;
 	A = new Complex128Array([
 		1,
 		0,
@@ -707,7 +693,7 @@ test( 'zgelss: underdetermined wide 2x6 (LQ path)', function t() {
 	var B;
 	var S;
 
-	tc = findCase( 'underdetermined_wide' );
+	tc = underdetermined_wide;
 	A = new Complex128Array([
 		1,
 		0,

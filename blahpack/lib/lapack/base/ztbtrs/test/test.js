@@ -23,37 +23,26 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztbtrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztbtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_conj_trans = require( './fixtures/upper_conj_trans.json' );
+var lower_conj_trans = require( './fixtures/lower_conj_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var lower_unit_diag = require( './fixtures/lower_unit_diag.json' );
+var singular_upper = require( './fixtures/singular_upper.json' );
+var singular_lower = require( './fixtures/singular_lower.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var upper_kd2_no_trans = require( './fixtures/upper_kd2_no_trans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -102,7 +91,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'ztbtrs is a function', function t() {
@@ -116,7 +104,7 @@ test( 'ztbtrs: upper_no_trans (upper, no-transpose, KD=1, N=3)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -145,7 +133,7 @@ test( 'ztbtrs: lower_no_trans (lower, no-transpose, KD=1, N=3)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	AB = new Complex128Array([
 		2,
 		1,
@@ -174,7 +162,7 @@ test( 'ztbtrs: upper_conj_trans (upper, conjugate-transpose, KD=1, N=3)', functi
 	var Bv;
 	var B;
 
-	tc = findCase( 'upper_conj_trans' );
+	tc = upper_conj_trans;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -203,7 +191,7 @@ test( 'ztbtrs: lower_conj_trans (lower, conjugate-transpose, KD=1, N=3)', functi
 	var Bv;
 	var B;
 
-	tc = findCase( 'lower_conj_trans' );
+	tc = lower_conj_trans;
 	AB = new Complex128Array([
 		2,
 		1,
@@ -232,7 +220,7 @@ test( 'ztbtrs: upper_unit_diag (unit diagonal, upper, KD=1, N=3)', function t() 
 	var Bv;
 	var B;
 
-	tc = findCase( 'upper_unit_diag' );
+	tc = upper_unit_diag;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -261,7 +249,7 @@ test( 'ztbtrs: lower_unit_diag (unit diagonal, lower, KD=1, N=3)', function t() 
 	var Bv;
 	var B;
 
-	tc = findCase( 'lower_unit_diag' );
+	tc = lower_unit_diag;
 	AB = new Complex128Array([
 		99,
 		99,
@@ -300,7 +288,7 @@ test( 'ztbtrs: singular_upper (zero diagonal, upper, info=2)', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'singular_upper' );
+	tc = singular_upper;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -326,7 +314,7 @@ test( 'ztbtrs: singular_lower (zero diagonal, lower, info=1)', function t() {
 	var AB;
 	var B;
 
-	tc = findCase( 'singular_lower' );
+	tc = singular_lower;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -353,7 +341,7 @@ test( 'ztbtrs: multi_rhs (NRHS=2, upper, KD=1, N=3)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	AB = new Complex128Array([
 		0,
 		0,
@@ -396,7 +384,7 @@ test( 'ztbtrs: n_one (N=1 edge case)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AB = new Complex128Array( [ 5, 2 ] );
 	B = new Complex128Array( [ 15, 6 ] );
 	info = ztbtrs( 'upper', 'no-transpose', 'non-unit', 1, 0, 1, AB, 1, 1, 0, B, 1, 1, 0 ); // eslint-disable-line max-len
@@ -412,7 +400,7 @@ test( 'ztbtrs: upper_kd2_no_trans (upper, KD=2, N=4)', function t() {
 	var Bv;
 	var B;
 
-	tc = findCase( 'upper_kd2_no_trans' );
+	tc = upper_kd2_no_trans;
 	AB = new Complex128Array([
 		0,
 		0,

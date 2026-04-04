@@ -5,7 +5,6 @@
 // MODULES //
 
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -13,30 +12,16 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zggrqf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zggrqf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len, node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
-
+var basic_3x3 = require( './fixtures/basic_3x3.json' );
+var m_lt_n = require( './fixtures/m_lt_n.json' );
+var m_gt_n = require( './fixtures/m_gt_n.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var m_one = require( './fixtures/m_one.json' );
+var wide_short = require( './fixtures/wide_short.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a named test case in the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are close within a relative tolerance.
@@ -155,7 +140,6 @@ function callZggrqf( M, P, N, aFlat, bFlat ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'zggrqf is a function', function t() {
@@ -168,7 +152,7 @@ test( 'zggrqf: basic_3x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'basic_3x3' );
+	tc = basic_3x3;
 	A = colMajorComplex( 3, 3, [
 		2,
 		1,
@@ -223,7 +207,7 @@ test( 'zggrqf: m_lt_n', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_lt_n' );
+	tc = m_lt_n;
 	A = colMajorComplex( 2, 4, [
 		2,
 		1,
@@ -282,7 +266,7 @@ test( 'zggrqf: m_gt_n', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_gt_n' );
+	tc = m_gt_n;
 	A = colMajorComplex( 4, 3, [
 		2,
 		1,
@@ -346,7 +330,7 @@ test( 'zggrqf: m_zero (quick return)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	WORK = new Complex128Array( 64 );
 	TAUA = new Complex128Array( 0 );
 	TAUB = new Complex128Array( 0 );
@@ -362,7 +346,7 @@ test( 'zggrqf: m_one', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_one' );
+	tc = m_one;
 	A = [
 		5, 2
 	];
@@ -383,7 +367,7 @@ test( 'zggrqf: wide_short', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'wide_short' );
+	tc = wide_short;
 	A = colMajorComplex( 2, 5, [
 		1,
 		0.5,

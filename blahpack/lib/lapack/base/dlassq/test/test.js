@@ -2,39 +2,36 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlassq = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlassq.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var dlassq_basic = require( './fixtures/dlassq_basic.json' );
+var dlassq_accumulate = require( './fixtures/dlassq_accumulate.json' );
+var dlassq_n_zero = require( './fixtures/dlassq_n_zero.json' );
+var dlassq_stride = require( './fixtures/dlassq_stride.json' );
+var dlassq_zeros = require( './fixtures/dlassq_zeros.json' );
+var dlassq_big = require( './fixtures/dlassq_big.json' );
+var dlassq_small = require( './fixtures/dlassq_small.json' );
+var dlassq_big_normal = require( './fixtures/dlassq_big_normal.json' );
+var dlassq_small_normal = require( './fixtures/dlassq_small_normal.json' );
+var dlassq_neg_stride = require( './fixtures/dlassq_neg_stride.json' );
+var dlassq_big_existing = require( './fixtures/dlassq_big_existing.json' );
+var dlassq_small_existing = require( './fixtures/dlassq_small_existing.json' );
+var dlassq_pure_small = require( './fixtures/dlassq_pure_small.json' );
+var dlassq_scale_zero = require( './fixtures/dlassq_scale_zero.json' );
+var dlassq_big_existing_scale_gt1 = require( './fixtures/dlassq_big_existing_scale_gt1.json' );
+var dlassq_small_existing_scale_lt1 = require( './fixtures/dlassq_small_existing_scale_lt1.json' );
+var dlassq_single = require( './fixtures/dlassq_single.json' );
+var dlassq_negative = require( './fixtures/dlassq_negative.json' );
+var dlassq_stride3 = require( './fixtures/dlassq_stride3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -55,7 +52,6 @@ function assertClose( actual, expected, tol, msg ) {
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual + ' (relErr=' + relErr + ')' ); // eslint-disable-line max-len
 }
 
-
 // TESTS //
 
 test( 'dlassq: basic - x=[3,4], scl=1, sumsq=0', function t() {
@@ -63,7 +59,7 @@ test( 'dlassq: basic - x=[3,4], scl=1, sumsq=0', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_basic' );
+	tc = dlassq_basic;
 	x = new Float64Array( [ 3.0, 4.0 ] );
 	result = dlassq( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -75,7 +71,7 @@ test( 'dlassq: accumulate - x=[1], scl=2, sumsq=3', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_accumulate' );
+	tc = dlassq_accumulate;
 	x = new Float64Array( [ 1.0 ] );
 	result = dlassq( 1, x, 1, 0, 2.0, 3.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -87,7 +83,7 @@ test( 'dlassq: N=0 quick return', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_n_zero' );
+	tc = dlassq_n_zero;
 	x = new Float64Array( [ 1.0 ] );
 	result = dlassq( 0, x, 1, 0, 2.0, 5.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -99,7 +95,7 @@ test( 'dlassq: stride=2 - x=[3,99,4], picks 3 and 4', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_stride' );
+	tc = dlassq_stride;
 	x = new Float64Array( [ 3.0, 99.0, 4.0 ] );
 	result = dlassq( 2, x, 2, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -111,7 +107,7 @@ test( 'dlassq: all zeros', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_zeros' );
+	tc = dlassq_zeros;
 	x = new Float64Array( [ 0.0, 0.0, 0.0, 0.0, 0.0 ] );
 	result = dlassq( 5, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -123,7 +119,7 @@ test( 'dlassq: very large values (abig accumulator)', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_big' );
+	tc = dlassq_big;
 	x = new Float64Array( [ 1e300, 2e300 ] );
 	result = dlassq( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -135,7 +131,7 @@ test( 'dlassq: very small values (asml accumulator)', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_small' );
+	tc = dlassq_small;
 	x = new Float64Array( [ 1e-300, 2e-300 ] );
 	result = dlassq( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -147,7 +143,7 @@ test( 'dlassq: mix of big and normal values (abig+amed)', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_big_normal' );
+	tc = dlassq_big_normal;
 	x = new Float64Array( [ 1e300, 1.0 ] );
 	result = dlassq( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -159,7 +155,7 @@ test( 'dlassq: mix of small and normal values (asml+amed)', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_small_normal' );
+	tc = dlassq_small_normal;
 	x = new Float64Array( [ 1e-300, 1.0 ] );
 	result = dlassq( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -171,7 +167,7 @@ test( 'dlassq: negative stride', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_neg_stride' );
+	tc = dlassq_neg_stride;
 	x = new Float64Array( [ 3.0, 4.0 ] );
 	result = dlassq( 2, x, -1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -183,7 +179,7 @@ test( 'dlassq: big existing sum + big values', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_big_existing' );
+	tc = dlassq_big_existing;
 	x = new Float64Array( [ 1e300 ] );
 	result = dlassq( 1, x, 1, 0, 1e200, 1.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -195,7 +191,7 @@ test( 'dlassq: small existing sum + small values', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_small_existing' );
+	tc = dlassq_small_existing;
 	x = new Float64Array( [ 1e-300 ] );
 	result = dlassq( 1, x, 1, 0, 1e-200, 1.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -207,7 +203,7 @@ test( 'dlassq: pure small values only (asml-only branch)', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_pure_small' );
+	tc = dlassq_pure_small;
 	x = new Float64Array( [ 1e-300, 2e-300 ] );
 	result = dlassq( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -219,7 +215,7 @@ test( 'dlassq: scale=0, sumsq=0 initial', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_scale_zero' );
+	tc = dlassq_scale_zero;
 	x = new Float64Array( [ 3.0, 4.0 ] );
 	result = dlassq( 2, x, 1, 0, 0.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -231,7 +227,7 @@ test( 'dlassq: big existing sum with scale > 1', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_big_existing_scale_gt1' );
+	tc = dlassq_big_existing_scale_gt1;
 	x = new Float64Array( [ 1e300 ] );
 	result = dlassq( 1, x, 1, 0, 2.0, 1e308 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -243,7 +239,7 @@ test( 'dlassq: small existing sum with scale < 1', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_small_existing_scale_lt1' );
+	tc = dlassq_small_existing_scale_lt1;
 	x = new Float64Array( [ 1e-300 ] );
 	result = dlassq( 1, x, 1, 0, 0.5, 1e-300 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -255,7 +251,7 @@ test( 'dlassq: single element', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_single' );
+	tc = dlassq_single;
 	x = new Float64Array( [ 7.0 ] );
 	result = dlassq( 1, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -267,7 +263,7 @@ test( 'dlassq: negative values (abs taken)', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_negative' );
+	tc = dlassq_negative;
 	x = new Float64Array( [ -3.0, -4.0 ] );
 	result = dlassq( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );
@@ -279,7 +275,7 @@ test( 'dlassq: stride=3', function t() {
 	var tc;
 	var x;
 
-	tc = findCase( 'dlassq_stride3' );
+	tc = dlassq_stride3;
 	x = new Float64Array( [ 2.0, 0.0, 0.0, 3.0, 0.0, 0.0, 6.0 ] );
 	result = dlassq( 3, x, 3, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 1e-14, 'scl' );

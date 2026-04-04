@@ -8,23 +8,20 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zposvx = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zposvx.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var fact_n_upper = require( './fixtures/fact_n_upper.json' );
+var fact_n_lower = require( './fixtures/fact_n_lower.json' );
+var fact_e = require( './fixtures/fact_e.json' );
+var fact_f = require( './fixtures/fact_f.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var fact_e_lower = require( './fixtures/fact_e_lower.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -60,11 +57,10 @@ function callZposvx( fact, uplo, N, nrhs, A, AF, equed, s, B, X, FERR, BERR ) {
 	);
 }
 
-
 // TESTS //
 
 test( 'zposvx: fact_N_upper', function t() {
-	var tc = findCase( 'fact_N_upper' );
+	var tc = fact_n_upper;
 	// A = [[4, 1+i, 0], [1-i, 3, 1], [0, 1, 2]]
 	var A = new Complex128Array( [ 4, 0, 1, -1, 0, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0 ] );
 	var AF = new Complex128Array( 9 );
@@ -83,7 +79,7 @@ test( 'zposvx: fact_N_upper', function t() {
 });
 
 test( 'zposvx: fact_N_lower', function t() {
-	var tc = findCase( 'fact_N_lower' );
+	var tc = fact_n_lower;
 	var A = new Complex128Array( [ 4, 0, 1, -1, 0, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0 ] );
 	var AF = new Complex128Array( 9 );
 	var s = new Float64Array( 3 );
@@ -99,7 +95,7 @@ test( 'zposvx: fact_N_lower', function t() {
 });
 
 test( 'zposvx: fact_E', function t() {
-	var tc = findCase( 'fact_E' );
+	var tc = fact_e;
 	// Poorly scaled HPD
 	var A = new Complex128Array( [
 		100, 0, 1, -1, 0.1, 0,
@@ -124,7 +120,7 @@ test( 'zposvx: fact_E', function t() {
 });
 
 test( 'zposvx: fact_F', function t() {
-	var tc = findCase( 'fact_F' );
+	var tc = fact_f;
 	// First solve with FACT='N' to get the factorization
 	var A = new Complex128Array( [ 4, 0, 1, -1, 0, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0 ] );
 	var AF = new Complex128Array( 9 );
@@ -145,7 +141,7 @@ test( 'zposvx: fact_F', function t() {
 });
 
 test( 'zposvx: not_posdef', function t() {
-	var tc = findCase( 'not_posdef' );
+	var tc = not_posdef;
 	var A = new Complex128Array( [
 		1, 0, 2, 0, 3, 0,
 		2, 0, -1, 0, 4, 0,
@@ -163,7 +159,7 @@ test( 'zposvx: not_posdef', function t() {
 });
 
 test( 'zposvx: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var AF = new Complex128Array( 1 );
 	var s = new Float64Array( 1 );
@@ -176,7 +172,7 @@ test( 'zposvx: n_zero', function t() {
 });
 
 test( 'zposvx: multi_rhs', function t() {
-	var tc = findCase( 'multi_rhs' );
+	var tc = multi_rhs;
 	var A = new Complex128Array( [ 4, 0, 1, -1, 0, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0 ] );
 	var AF = new Complex128Array( 9 );
 	var s = new Float64Array( 3 );
@@ -193,7 +189,7 @@ test( 'zposvx: multi_rhs', function t() {
 });
 
 test( 'zposvx: fact_E_lower', function t() {
-	var tc = findCase( 'fact_E_lower' );
+	var tc = fact_e_lower;
 	var A = new Complex128Array( [
 		100, 0, 1, -1, 0.1, 0,
 		1, 1, 1, 0, 0.05, -0.05,

@@ -20,39 +20,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtbtrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtbtrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_trans = require( './fixtures/upper_trans.json' );
+var lower_trans = require( './fixtures/lower_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var singular = require( './fixtures/singular.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var lower_singular = require( './fixtures/lower_singular.json' );
+var upper_conj_trans = require( './fixtures/upper_conj_trans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +74,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dtbtrs is a function', function t() {
@@ -98,7 +86,7 @@ test( 'dtbtrs: upper_no_trans (upper triangular, no transpose, KD=2, N=4)', func
 	var ab;
 	var b;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	ab = new Float64Array([
 		0,
 		0,
@@ -125,7 +113,7 @@ test( 'dtbtrs: lower_no_trans (lower triangular, no transpose, KD=2, N=4)', func
 	var ab;
 	var b;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	ab = new Float64Array([
 		3,
 		1,
@@ -152,7 +140,7 @@ test( 'dtbtrs: upper_trans (upper triangular, transpose, KD=2, N=4)', function t
 	var ab;
 	var b;
 
-	tc = findCase( 'upper_trans' );
+	tc = upper_trans;
 	ab = new Float64Array([
 		0,
 		0,
@@ -179,7 +167,7 @@ test( 'dtbtrs: lower_trans (lower triangular, transpose, KD=2, N=4)', function t
 	var ab;
 	var b;
 
-	tc = findCase( 'lower_trans' );
+	tc = lower_trans;
 	ab = new Float64Array([
 		3,
 		1,
@@ -206,7 +194,7 @@ test( 'dtbtrs: upper_unit_diag (unit diagonal, upper triangular, KD=1, N=4)', fu
 	var ab;
 	var b;
 
-	tc = findCase( 'upper_unit_diag' );
+	tc = upper_unit_diag;
 	ab = new Float64Array([
 		0,
 		1,   // col 1: *, a11(=1)
@@ -229,7 +217,7 @@ test( 'dtbtrs: n_zero (N=0 quick return)', function t() {
 	var ab;
 	var b;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ab = new Float64Array([ 1.0 ]);
 	b = new Float64Array([ 1.0 ]);
 	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 0, 0, 1, ab, 1, 1, 0, b, 1, 1, 0 ); // eslint-disable-line max-len
@@ -242,7 +230,7 @@ test( 'dtbtrs: singular (zero diagonal, upper, info=2)', function t() {
 	var ab;
 	var b;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	ab = new Float64Array([
 		0,
 		2,   // col 1: *, a11=2
@@ -262,7 +250,7 @@ test( 'dtbtrs: multi_rhs (NRHS=2, upper, KD=1, N=3)', function t() {
 	var ab;
 	var b;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	ab = new Float64Array([
 		0,
 		3,   // col 1: *, a11=3
@@ -283,7 +271,7 @@ test( 'dtbtrs: n_one (N=1 edge case)', function t() {
 	var ab;
 	var b;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ab = new Float64Array([ 5.0 ]);
 	b = new Float64Array([ 15.0 ]);
 	info = dtbtrs( 'upper', 'no-transpose', 'non-unit', 1, 0, 1, ab, 1, 1, 0, b, 1, 1, 0 ); // eslint-disable-line max-len
@@ -297,7 +285,7 @@ test( 'dtbtrs: lower_singular (lower, zero diagonal at row 1, info=1)', function
 	var ab;
 	var b;
 
-	tc = findCase( 'lower_singular' );
+	tc = lower_singular;
 	ab = new Float64Array([
 		0,
 		1,   // col 1: a11=0, a21=1
@@ -317,7 +305,7 @@ test( 'dtbtrs: upper_conj_trans (conjugate-transpose, same as transpose for real
 	var ab;
 	var b;
 
-	tc = findCase( 'upper_conj_trans' );
+	tc = upper_conj_trans;
 	ab = new Float64Array([
 		0,
 		0,

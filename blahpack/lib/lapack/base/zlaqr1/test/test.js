@@ -7,23 +7,18 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlaqr1 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqr1.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var _2x2_real_shifts = require( './fixtures/2x2_real_shifts.json' );
+var _2x2_complex_shifts = require( './fixtures/2x2_complex_shifts.json' );
+var _3x3_real_shifts = require( './fixtures/3x3_real_shifts.json' );
+var _3x3_complex_shifts = require( './fixtures/3x3_complex_shifts.json' );
+var _3x3_conjugate_shifts = require( './fixtures/3x3_conjugate_shifts.json' );
+var _2x2_identical_shifts = require( './fixtures/2x2_identical_shifts.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -60,7 +55,6 @@ function mset( m, N, i, j, re, im ) {
 	mv[ idx + 1 ] = im;
 }
 
-
 // TESTS //
 
 test( 'zlaqr1: main export is a function', function t() {
@@ -68,7 +62,7 @@ test( 'zlaqr1: main export is a function', function t() {
 });
 
 test( 'zlaqr1: 2x2 with real shifts', function t() {
-	var tc = findCase( '2x2_real_shifts' );
+	var tc = _2x2_real_shifts;
 	var n = 2;
 	var Hm = makeMatrix( n );
 	var v = new Complex128Array( n );
@@ -89,7 +83,7 @@ test( 'zlaqr1: 2x2 with real shifts', function t() {
 });
 
 test( 'zlaqr1: 2x2 with complex shifts', function t() {
-	var tc = findCase( '2x2_complex_shifts' );
+	var tc = _2x2_complex_shifts;
 	var n = 2;
 	var Hm = makeMatrix( n );
 	var v = new Complex128Array( n );
@@ -110,7 +104,7 @@ test( 'zlaqr1: 2x2 with complex shifts', function t() {
 });
 
 test( 'zlaqr1: 3x3 with real shifts', function t() {
-	var tc = findCase( '3x3_real_shifts' );
+	var tc = _3x3_real_shifts;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var v = new Complex128Array( n );
@@ -136,7 +130,7 @@ test( 'zlaqr1: 3x3 with real shifts', function t() {
 });
 
 test( 'zlaqr1: 3x3 with complex shifts', function t() {
-	var tc = findCase( '3x3_complex_shifts' );
+	var tc = _3x3_complex_shifts;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var v = new Complex128Array( n );
@@ -162,7 +156,7 @@ test( 'zlaqr1: 3x3 with complex shifts', function t() {
 });
 
 test( 'zlaqr1: 3x3 with conjugate pair shifts', function t() {
-	var tc = findCase( '3x3_conjugate_shifts' );
+	var tc = _3x3_conjugate_shifts;
 	var n = 3;
 	var Hm = makeMatrix( n );
 	var v = new Complex128Array( n );
@@ -188,7 +182,7 @@ test( 'zlaqr1: 3x3 with conjugate pair shifts', function t() {
 });
 
 test( 'zlaqr1: 2x2 with identical shifts', function t() {
-	var tc = findCase( '2x2_identical_shifts' );
+	var tc = _2x2_identical_shifts;
 	var n = 2;
 	var Hm = makeMatrix( n );
 	var v = new Complex128Array( n );

@@ -21,36 +21,26 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var base = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztpmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans_nonunit = require( './fixtures/upper_no_trans_nonunit.json' );
+var upper_trans_nonunit = require( './fixtures/upper_trans_nonunit.json' );
+var upper_conj_trans_nonunit = require( './fixtures/upper_conj_trans_nonunit.json' );
+var upper_no_trans_unit = require( './fixtures/upper_no_trans_unit.json' );
+var lower_no_trans_nonunit = require( './fixtures/lower_no_trans_nonunit.json' );
+var lower_trans_nonunit = require( './fixtures/lower_trans_nonunit.json' );
+var lower_conj_trans_nonunit = require( './fixtures/lower_conj_trans_nonunit.json' );
+var lower_no_trans_unit = require( './fixtures/lower_no_trans_unit.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var upper_stride_2 = require( './fixtures/upper_stride_2.json' );
+var scalar = require( './fixtures/scalar.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -123,7 +113,6 @@ function inputX( ) {
 	return new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -142,7 +131,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'ztpmv: base is a function', function t() {
@@ -155,7 +143,7 @@ test( 'ztpmv: upper, no-transpose, non-unit diagonal (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'upper_no_trans_nonunit' );
+	tc = upper_no_trans_nonunit;
 	ap = upperAP();
 	x = inputX();
 	result = base( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -169,7 +157,7 @@ test( 'ztpmv: upper, transpose, non-unit diagonal (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'upper_trans_nonunit' );
+	tc = upper_trans_nonunit;
 	ap = upperAP();
 	x = inputX();
 	result = base( 'upper', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -183,7 +171,7 @@ test( 'ztpmv: upper, conjugate-transpose, non-unit diagonal (N=4)', function t()
 	var ap;
 	var x;
 
-	tc = findCase( 'upper_conj_trans_nonunit' );
+	tc = upper_conj_trans_nonunit;
 	ap = upperAP();
 	x = inputX();
 	result = base( 'upper', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 ); // eslint-disable-line max-len
@@ -197,7 +185,7 @@ test( 'ztpmv: upper, no-transpose, unit diagonal (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'upper_no_trans_unit' );
+	tc = upper_no_trans_unit;
 	ap = upperAP();
 	x = inputX();
 	result = base( 'upper', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
@@ -211,7 +199,7 @@ test( 'ztpmv: lower, no-transpose, non-unit diagonal (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'lower_no_trans_nonunit' );
+	tc = lower_no_trans_nonunit;
 	ap = lowerAP();
 	x = inputX();
 	result = base( 'lower', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -225,7 +213,7 @@ test( 'ztpmv: lower, transpose, non-unit diagonal (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'lower_trans_nonunit' );
+	tc = lower_trans_nonunit;
 	ap = lowerAP();
 	x = inputX();
 	result = base( 'lower', 'transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 );
@@ -239,7 +227,7 @@ test( 'ztpmv: lower, conjugate-transpose, non-unit diagonal (N=4)', function t()
 	var ap;
 	var x;
 
-	tc = findCase( 'lower_conj_trans_nonunit' );
+	tc = lower_conj_trans_nonunit;
 	ap = lowerAP();
 	x = inputX();
 	result = base( 'lower', 'conjugate-transpose', 'non-unit', 4, ap, 1, 0, x, 1, 0 ); // eslint-disable-line max-len
@@ -253,7 +241,7 @@ test( 'ztpmv: lower, no-transpose, unit diagonal (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'lower_no_trans_unit' );
+	tc = lower_no_trans_unit;
 	ap = lowerAP();
 	x = inputX();
 	result = base( 'lower', 'no-transpose', 'unit', 4, ap, 1, 0, x, 1, 0 );
@@ -267,7 +255,7 @@ test( 'ztpmv: N=0 quick return', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	ap = upperAP();
 	x = new Complex128Array( [ 99, 0 ] );
 	result = base( 'upper', 'no-transpose', 'non-unit', 0, ap, 1, 0, x, 1, 0 );
@@ -281,7 +269,7 @@ test( 'ztpmv: upper, no-transpose, non-unit, strideX=2 (N=4)', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'upper_stride_2' );
+	tc = upper_stride_2;
 	ap = upperAP();
 	x = new Complex128Array( [ 1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0 ] ); // eslint-disable-line max-len
 	result = base( 'upper', 'no-transpose', 'non-unit', 4, ap, 1, 0, x, 2, 0 );
@@ -295,7 +283,7 @@ test( 'ztpmv: N=1, scalar case', function t() {
 	var ap;
 	var x;
 
-	tc = findCase( 'scalar' );
+	tc = scalar;
 	ap = new Complex128Array( [ 5, 2 ] );
 	x = new Complex128Array( [ 3, -1 ] );
 	result = base( 'upper', 'no-transpose', 'non-unit', 1, ap, 1, 0, x, 1, 0 );

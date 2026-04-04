@@ -4,26 +4,23 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlartv = require( './../lib' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlartv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var non_unit_stride = require( './fixtures/non_unit_stride.json' );
+var identity = require( './fixtures/identity.json' );
+var swap = require( './fixtures/swap.json' );
+var imag_s = require( './fixtures/imag_s.json' );
+var mixed_strides = require( './fixtures/mixed_strides.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,7 +35,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zlartv: main export is a function', function t() {
@@ -50,7 +46,7 @@ test( 'zlartv: attached to the main export is an `ndarray` method', function t()
 });
 
 test( 'zlartv: basic', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var y = new Complex128Array( [ 9, 10, 11, 12, 13, 14, 15, 16 ] );
 	var c = new Float64Array( [ 0.8, 0.6, 0.5, 0.0 ] );
@@ -63,7 +59,7 @@ test( 'zlartv: basic', function t() {
 });
 
 test( 'zlartv: n_zero', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Complex128Array( [ 1, 2 ] );
 	var y = new Complex128Array( [ 3, 4 ] );
 	var c = new Float64Array( [ 0.5 ] );
@@ -76,7 +72,7 @@ test( 'zlartv: n_zero', function t() {
 });
 
 test( 'zlartv: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Complex128Array( [ 3, 4 ] );
 	var y = new Complex128Array( [ 5, 6 ] );
 	var c = new Float64Array( [ 0.6 ] );
@@ -89,7 +85,7 @@ test( 'zlartv: n_one', function t() {
 });
 
 test( 'zlartv: non_unit_stride', function t() {
-	var tc = findCase( 'non_unit_stride' );
+	var tc = non_unit_stride;
 	var x = new Complex128Array( [ 1, 2, 0, 0, 3, 4, 0, 0, 5, 6 ] );
 	var y = new Complex128Array( [ 7, 8, 0, 0, 9, 10, 0, 0, 11, 12 ] );
 	var c = new Float64Array( [ 0.8, 0, 0.6, 0, 0.5 ] );
@@ -102,7 +98,7 @@ test( 'zlartv: non_unit_stride', function t() {
 });
 
 test( 'zlartv: identity', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var x = new Complex128Array( [ 10, 20, 30, 40, 50, 60 ] );
 	var y = new Complex128Array( [ 70, 80, 90, 100, 110, 120 ] );
 	var c = new Float64Array( [ 1, 1, 1 ] );
@@ -115,7 +111,7 @@ test( 'zlartv: identity', function t() {
 });
 
 test( 'zlartv: swap', function t() {
-	var tc = findCase( 'swap' );
+	var tc = swap;
 	var x = new Complex128Array( [ 1, 2, 3, 4 ] );
 	var y = new Complex128Array( [ 5, 6, 7, 8 ] );
 	var c = new Float64Array( [ 0, 0 ] );
@@ -128,7 +124,7 @@ test( 'zlartv: swap', function t() {
 });
 
 test( 'zlartv: imag_s', function t() {
-	var tc = findCase( 'imag_s' );
+	var tc = imag_s;
 	var x = new Complex128Array( [ 1, 0, 0, 1 ] );
 	var y = new Complex128Array( [ 0, 1, 1, 0 ] );
 	var c = new Float64Array( [ 0, 0 ] );
@@ -141,7 +137,7 @@ test( 'zlartv: imag_s', function t() {
 });
 
 test( 'zlartv: mixed_strides', function t() {
-	var tc = findCase( 'mixed_strides' );
+	var tc = mixed_strides;
 	var x = new Complex128Array( [ 2, 1, 4, 3 ] );
 	var y = new Complex128Array( [ 6, 5, 0, 0, 0, 0, 8, 7 ] );
 	var c = new Float64Array( [ 0.8, 0, 0.6 ] );

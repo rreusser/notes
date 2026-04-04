@@ -4,37 +4,27 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var trim = require( '@stdlib/string/trim' );
 var dtbrfs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = trim( readFileSync( path.join( fixtureDir, 'dtbrfs.jsonl' ), 'utf8' ) ).split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_trans = require( './fixtures/upper_trans.json' );
+var upper_unit_no_trans = require( './fixtures/upper_unit_no_trans.json' );
+var lower_unit_trans = require( './fixtures/lower_unit_trans.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var lower_no_trans_kd1 = require( './fixtures/lower_no_trans_kd1.json' );
+var lower_trans = require( './fixtures/lower_trans.json' );
+var lower_unit_no_trans = require( './fixtures/lower_unit_no_trans.json' );
+var upper_unit_trans = require( './fixtures/upper_unit_trans.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a fixture test case by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} fixture data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Calls dtbrfs with column-major band layout and returns FERR, BERR, info.
@@ -67,7 +57,6 @@ function callDtbrfs( uplo, trans, diag, N, kd, nrhs, AB, B, X ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dtbrfs: upper_no_trans (kd=2, N=4)', function t() {
@@ -77,7 +66,7 @@ test( 'dtbrfs: upper_no_trans (kd=2, N=4)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 
 	// A = [2 1 3 0; 0 4 5 2; 0 0 6 1; 0 0 0 3], kd=2, ldab=3, col-major
 	AB = new Float64Array( [ 0, 0, 2, 0, 1, 4, 3, 5, 6, 2, 1, 3 ] );
@@ -96,7 +85,7 @@ test( 'dtbrfs: lower_no_trans (kd=2, N=4)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 
 	// A = [3 0 0 0; 2 5 0 0; 1 4 7 0; 0 6 2 8], kd=2, ldab=3, col-major
 	AB = new Float64Array( [ 3, 2, 1, 5, 4, 6, 7, 2, 0, 8, 0, 0 ] );
@@ -115,7 +104,7 @@ test( 'dtbrfs: upper_trans (kd=1, N=4)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_trans' );
+	tc = upper_trans;
 
 	// A = [2 1 0 0; 0 4 5 0; 0 0 6 1; 0 0 0 3], kd=1, ldab=2, col-major
 	AB = new Float64Array( [ 0, 2, 1, 4, 5, 6, 1, 3 ] );
@@ -134,7 +123,7 @@ test( 'dtbrfs: upper_unit_no_trans (kd=1, N=3)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_unit_no_trans' );
+	tc = upper_unit_no_trans;
 	AB = new Float64Array( [ 0, 0, 2, 0, 4, 0 ] );
 	B = new Float64Array( [ 5, 14, 3 ] );
 	X = new Float64Array( tc.x );
@@ -151,7 +140,7 @@ test( 'dtbrfs: lower_unit_trans (kd=1, N=3)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_unit_trans' );
+	tc = lower_unit_trans;
 	AB = new Float64Array( [ 0, 2, 0, 5, 0, 0 ] );
 	B = new Float64Array( [ 5, 17, 3 ] );
 	X = new Float64Array( tc.x );
@@ -168,7 +157,7 @@ test( 'dtbrfs: multi_rhs (kd=2, N=4, nrhs=2)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	AB = new Float64Array( [ 0, 0, 2, 0, 1, 4, 3, 5, 6, 2, 1, 3 ] );
 	B = new Float64Array( [ 13, 31, 22, 12, 31, 64, 43, 21 ] );
 	X = new Float64Array( tc.x );
@@ -191,7 +180,7 @@ test( 'dtbrfs: n_zero', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	IWORK = new Int32Array( 1 );
 	BERR = new Float64Array( 1 );
 	FERR = new Float64Array( 1 );
@@ -212,7 +201,7 @@ test( 'dtbrfs: n_one (kd=0)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	AB = new Float64Array( [ 5.0 ] );
 	B = new Float64Array( [ 15.0 ] );
 	X = new Float64Array( tc.x );
@@ -229,7 +218,7 @@ test( 'dtbrfs: lower_no_trans_kd1 (kd=1, N=3)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_no_trans_kd1' );
+	tc = lower_no_trans_kd1;
 	AB = new Float64Array( [ 3, 2, 5, 4, 7, 0 ] );
 	B = new Float64Array( [ 3, 12, 29 ] );
 	X = new Float64Array( tc.x );
@@ -246,7 +235,7 @@ test( 'dtbrfs: lower_trans (kd=1, N=3)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_trans' );
+	tc = lower_trans;
 	AB = new Float64Array( [ 3, 2, 5, 4, 7, 0 ] );
 	B = new Float64Array( [ 7, 22, 21 ] );
 	X = new Float64Array( tc.x );
@@ -263,7 +252,7 @@ test( 'dtbrfs: lower_unit_no_trans (kd=1, N=3)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'lower_unit_no_trans' );
+	tc = lower_unit_no_trans;
 	AB = new Float64Array( [ 0, 2, 0, 5, 0, 0 ] );
 	B = new Float64Array( [ 1, 4, 13 ] );
 	X = new Float64Array( tc.x );
@@ -280,7 +269,7 @@ test( 'dtbrfs: upper_unit_trans (kd=1, N=3)', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'upper_unit_trans' );
+	tc = upper_unit_trans;
 	AB = new Float64Array( [ 0, 0, 2, 0, 4, 0 ] );
 	B = new Float64Array( [ 1, 4, 11 ] );
 	X = new Float64Array( tc.x );

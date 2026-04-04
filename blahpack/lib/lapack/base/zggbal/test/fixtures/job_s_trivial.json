@@ -1,0 +1,14 @@
+{
+  "name": "job_s_trivial",
+  "info": 0,
+  "ilo": 1,
+  "ihi": 2,
+  "lscale": [
+    1,
+    1
+  ],
+  "rscale": [
+    1,
+    1
+  ]
+}

@@ -5,23 +5,20 @@
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dgeequ = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgeequ.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic = require( './fixtures/basic.json' );
+var diagonal_varied = require( './fixtures/diagonal_varied.json' );
+var zero_row = require( './fixtures/zero_row.json' );
+var zero_col = require( './fixtures/zero_col.json' );
+var identity = require( './fixtures/identity.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var nonsquare = require( './fixtures/nonsquare.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -36,11 +33,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dgeequ: basic 3x3 well-conditioned matrix', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var A = new Float64Array( [ 4.0, 1.0, 0.5, 1.0, 3.0, 1.0, 0.5, 1.0, 2.0 ] );
 	var r = new Float64Array( 3 );
 	var c = new Float64Array( 3 );
@@ -54,7 +50,7 @@ test( 'dgeequ: basic 3x3 well-conditioned matrix', function t() {
 });
 
 test( 'dgeequ: diagonal matrix with varying scales', function t() {
-	var tc = findCase( 'diagonal_varied' );
+	var tc = diagonal_varied;
 	var A = new Float64Array( 9 );
 	A[ 0 ] = 100.0; A[ 4 ] = 1.0; A[ 8 ] = 0.01;
 	var r = new Float64Array( 3 );
@@ -69,7 +65,7 @@ test( 'dgeequ: diagonal matrix with varying scales', function t() {
 });
 
 test( 'dgeequ: matrix with zero row returns info=i', function t() {
-	var tc = findCase( 'zero_row' );
+	var tc = zero_row;
 	var A = new Float64Array( [ 1.0, 0.0, 1.0, 2.0, 0.0, 3.0, 4.0, 0.0, 5.0 ] );
 	var r = new Float64Array( 3 );
 	var c = new Float64Array( 3 );
@@ -78,7 +74,7 @@ test( 'dgeequ: matrix with zero row returns info=i', function t() {
 });
 
 test( 'dgeequ: matrix with zero column returns info=M+j', function t() {
-	var tc = findCase( 'zero_col' );
+	var tc = zero_col;
 	var A = new Float64Array( [ 1.0, 2.0, 3.0, 0.0, 0.0, 0.0, 4.0, 5.0, 6.0 ] );
 	var r = new Float64Array( 3 );
 	var c = new Float64Array( 3 );
@@ -88,7 +84,7 @@ test( 'dgeequ: matrix with zero column returns info=M+j', function t() {
 });
 
 test( 'dgeequ: identity matrix', function t() {
-	var tc = findCase( 'identity' );
+	var tc = identity;
 	var A = new Float64Array( 9 );
 	A[ 0 ] = 1.0; A[ 4 ] = 1.0; A[ 8 ] = 1.0;
 	var r = new Float64Array( 3 );
@@ -103,7 +99,7 @@ test( 'dgeequ: identity matrix', function t() {
 });
 
 test( 'dgeequ: quick return M=0', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var r = new Float64Array( 0 );
 	var c = new Float64Array( 3 );
 	var result = dgeequ( 0, 3, new Float64Array( 0 ), 1, 1, 0, r, 1, 0, c, 1, 0 );
@@ -114,7 +110,7 @@ test( 'dgeequ: quick return M=0', function t() {
 });
 
 test( 'dgeequ: quick return N=0', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var r = new Float64Array( 3 );
 	var c = new Float64Array( 0 );
 	var result = dgeequ( 3, 0, new Float64Array( 0 ), 1, 1, 0, r, 1, 0, c, 1, 0 );
@@ -125,7 +121,7 @@ test( 'dgeequ: quick return N=0', function t() {
 });
 
 test( 'dgeequ: non-square 2x4 matrix', function t() {
-	var tc = findCase( 'nonsquare' );
+	var tc = nonsquare;
 	var A = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 ] );
 	var r = new Float64Array( 2 );
 	var c = new Float64Array( 4 );
