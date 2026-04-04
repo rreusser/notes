@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpftrf = require( './../lib/base.js' );
@@ -14,27 +12,50 @@ var dpftrf = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpftrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var lowerOddNormal = require( './fixtures/lower_odd_normal.json' );
+var upperOddNormal = require( './fixtures/upper_odd_normal.json' );
+var lowerOddTrans = require( './fixtures/lower_odd_trans.json' );
+var upperOddTrans = require( './fixtures/upper_odd_trans.json' );
+var lowerEvenNormal = require( './fixtures/lower_even_normal.json' );
+var upperEvenNormal = require( './fixtures/upper_even_normal.json' );
+var lowerEvenTrans = require( './fixtures/lower_even_trans.json' );
+var upperEvenTrans = require( './fixtures/upper_even_trans.json' );
+var nOne = require( './fixtures/n_one.json' );
+var notPosdef = require( './fixtures/not_posdef.json' );
+var lower5Normal = require( './fixtures/lower_5_normal.json' );
+var upper5Trans = require( './fixtures/upper_5_trans.json' );
+var notpdOddNormalUpper = require( './fixtures/notpd_odd_normal_upper.json' );
+var notpdOddTransLower = require( './fixtures/notpd_odd_trans_lower.json' );
+var notpdOddTransUpper = require( './fixtures/notpd_odd_trans_upper.json' );
+var notpdEvenNormalLower = require( './fixtures/notpd_even_normal_lower.json' );
+var notpdEvenNormalUpper = require( './fixtures/notpd_even_normal_upper.json' );
+var notpdEvenTransLower = require( './fixtures/notpd_even_trans_lower.json' );
+var notpdEvenTransUpper = require( './fixtures/notpd_even_trans_upper.json' );
+
+var fixtures = {
+	'lower_odd_normal': lowerOddNormal,
+	'upper_odd_normal': upperOddNormal,
+	'lower_odd_trans': lowerOddTrans,
+	'upper_odd_trans': upperOddTrans,
+	'lower_even_normal': lowerEvenNormal,
+	'upper_even_normal': upperEvenNormal,
+	'lower_even_trans': lowerEvenTrans,
+	'upper_even_trans': upperEvenTrans,
+	'n_one': nOne,
+	'not_posdef': notPosdef,
+	'lower_5_normal': lower5Normal,
+	'upper_5_trans': upper5Trans,
+	'notpd_odd_normal_upper': notpdOddNormalUpper,
+	'notpd_odd_trans_lower': notpdOddTransLower,
+	'notpd_odd_trans_upper': notpdOddTransUpper,
+	'notpd_even_normal_lower': notpdEvenNormalLower,
+	'notpd_even_normal_upper': notpdEvenNormalUpper,
+	'notpd_even_trans_lower': notpdEvenTransLower,
+	'notpd_even_trans_upper': notpdEvenTransUpper
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +105,7 @@ function runTest( name, transr, uplo, N ) {
 	var a;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	a = new Float64Array( tc.input.length );
 	for ( i = 0; i < tc.input.length; i++ ) {
 		a[ i ] = tc.input[ i ];
@@ -118,7 +139,7 @@ function runNotPDTest( name, transr, uplo, N ) {
 	var a;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	a = new Float64Array( tc.input.length );
 	for ( i = 0; i < tc.input.length; i++ ) {
 		a[ i ] = tc.input[ i ];

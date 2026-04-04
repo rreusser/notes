@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -15,11 +13,51 @@ var zhfrk = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhfrk.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var oddNLN = require( './fixtures/odd_nln.json' );
+var oddNLC = require( './fixtures/odd_nlc.json' );
+var oddNUN = require( './fixtures/odd_nun.json' );
+var oddNUC = require( './fixtures/odd_nuc.json' );
+var oddCLN = require( './fixtures/odd_cln.json' );
+var oddCLC = require( './fixtures/odd_clc.json' );
+var oddCUN = require( './fixtures/odd_cun.json' );
+var oddCUC = require( './fixtures/odd_cuc.json' );
+var evenNLN = require( './fixtures/even_nln.json' );
+var evenNLC = require( './fixtures/even_nlc.json' );
+var evenNUN = require( './fixtures/even_nun.json' );
+var evenNUC = require( './fixtures/even_nuc.json' );
+var evenCLN = require( './fixtures/even_cln.json' );
+var evenCLC = require( './fixtures/even_clc.json' );
+var evenCUN = require( './fixtures/even_cun.json' );
+var evenCUC = require( './fixtures/even_cuc.json' );
+var n5NLN = require( './fixtures/n5_nln.json' );
+var n5CUC = require( './fixtures/n5_cuc.json' );
+var kZero = require( './fixtures/k_zero.json' );
+var alpha0Beta0 = require( './fixtures/alpha0_beta0.json' );
+var alpha0Beta1 = require( './fixtures/alpha0_beta1.json' );
+
+var fixtures = {
+	'odd_NLN': oddNLN,
+	'odd_NLC': oddNLC,
+	'odd_NUN': oddNUN,
+	'odd_NUC': oddNUC,
+	'odd_CLN': oddCLN,
+	'odd_CLC': oddCLC,
+	'odd_CUN': oddCUN,
+	'odd_CUC': oddCUC,
+	'even_NLN': evenNLN,
+	'even_NLC': evenNLC,
+	'even_NUN': evenNUN,
+	'even_NUC': evenNUC,
+	'even_CLN': evenCLN,
+	'even_CLC': evenCLC,
+	'even_CUN': evenCUN,
+	'even_CUC': evenCUC,
+	'n5_NLN': n5NLN,
+	'n5_CUC': n5CUC,
+	'k_zero': kZero,
+	'alpha0_beta0': alpha0Beta0,
+	'alpha0_beta1': alpha0Beta1
+};
 
 
 // VARIABLES //
@@ -39,19 +77,6 @@ var TRANS_MAP = {
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -99,7 +124,7 @@ function runComboTest( name ) {
 	var N;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.N;
 	K = tc.K;
 	alpha = tc.alpha;
@@ -232,7 +257,7 @@ test( 'zhfrk: K=0, beta=2 (scale only)', function t() {
 	var nt;
 	var i;
 
-	tc = findCase( 'k_zero' );
+	tc = fixtures[ 'k_zero' ];
 	nt = ( 3 * 4 ) / 2;
 	cArr = new Complex128Array( nt );
 	aArr = new Complex128Array( 1 );
@@ -255,7 +280,7 @@ test( 'zhfrk: alpha=0, beta=0 (zero out)', function t() {
 	var nt;
 	var i;
 
-	tc = findCase( 'alpha0_beta0' );
+	tc = fixtures[ 'alpha0_beta0' ];
 	nt = ( 3 * 4 ) / 2;
 	cArr = new Complex128Array( nt );
 	aArr = new Complex128Array( 3 * 2 );
@@ -278,7 +303,7 @@ test( 'zhfrk: alpha=0, beta=1 (quick return)', function t() {
 	var nt;
 	var i;
 
-	tc = findCase( 'alpha0_beta1' );
+	tc = fixtures[ 'alpha0_beta1' ];
 	nt = ( 3 * 4 ) / 2;
 	cArr = new Complex128Array( nt );
 	aArr = new Complex128Array( 3 * 2 );

@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var zlaev2 = require( './../lib/base.js' );
@@ -14,27 +12,32 @@ var zlaev2 = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlaev2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var realDiagonal = require( './fixtures/real_diagonal.json' );
+var realOffdiag = require( './fixtures/real_offdiag.json' );
+var imagB = require( './fixtures/imag_b.json' );
+var complexB = require( './fixtures/complex_b.json' );
+var identity = require( './fixtures/identity.json' );
+var negativeDiag = require( './fixtures/negative_diag.json' );
+var smZero = require( './fixtures/sm_zero.json' );
+var equalDiag = require( './fixtures/equal_diag.json' );
+var largeValues = require( './fixtures/large_values.json' );
+var dfNegative = require( './fixtures/df_negative.json' );
+
+var fixtures = {
+	'real_diagonal': realDiagonal,
+	'real_offdiag': realOffdiag,
+	'imag_b': imagB,
+	'complex_b': complexB,
+	'identity': identity,
+	'negative_diag': negativeDiag,
+	'sm_zero': smZero,
+	'equal_diag': equalDiag,
+	'large_values': largeValues,
+	'df_negative': dfNegative
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -77,7 +80,7 @@ test( 'zlaev2: real diagonal (b=0, a > c)', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'real_diagonal' );
+	tc = realDiagonal;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -86,7 +89,7 @@ test( 'zlaev2: real off-diagonal (b is real)', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'real_offdiag' );
+	tc = realOffdiag;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -95,7 +98,7 @@ test( 'zlaev2: pure imaginary b', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'imag_b' );
+	tc = imagB;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -104,7 +107,7 @@ test( 'zlaev2: complex b (general case)', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'complex_b' );
+	tc = complexB;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -113,7 +116,7 @@ test( 'zlaev2: identity matrix (a=c=1, b=0)', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -122,7 +125,7 @@ test( 'zlaev2: negative diagonal with complex b', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'negative_diag' );
+	tc = negativeDiag;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -131,7 +134,7 @@ test( 'zlaev2: sm = 0 path (a = -c)', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'sm_zero' );
+	tc = smZero;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -140,7 +143,7 @@ test( 'zlaev2: equal diagonal with complex b', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'equal_diag' );
+	tc = equalDiag;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -149,7 +152,7 @@ test( 'zlaev2: large values', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'large_values' );
+	tc = largeValues;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -158,7 +161,7 @@ test( 'zlaev2: df < 0 path (a < c)', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'df_negative' );
+	tc = dfNegative;
 	out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 	checkResult( out, tc, 1e-14 );
 } );
@@ -171,7 +174,7 @@ test( 'zlaev2: rt1 has larger absolute value than rt2', function t() {
 
 	names = [ 'real_diagonal', 'real_offdiag', 'imag_b', 'complex_b', 'identity', 'negative_diag', 'sm_zero', 'equal_diag', 'large_values', 'df_negative' ]; // eslint-disable-line max-len
 	for ( i = 0; i < names.length; i += 1 ) {
-		tc = findCase( names[ i ] );
+		tc = fixtures[ names[ i ] ];
 		out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 		assert.ok( Math.abs( out.rt1 ) >= Math.abs( out.rt2 ), names[ i ] + ': |rt1| >= |rt2|' ); // eslint-disable-line max-len
 	}
@@ -186,7 +189,7 @@ test( 'zlaev2: eigenvector is unit length (cs1^2 + |sn1|^2 = 1)', function t() {
 
 	names = [ 'real_diagonal', 'real_offdiag', 'imag_b', 'complex_b', 'identity', 'negative_diag', 'sm_zero', 'equal_diag', 'large_values', 'df_negative' ]; // eslint-disable-line max-len
 	for ( i = 0; i < names.length; i += 1 ) {
-		tc = findCase( names[ i ] );
+		tc = fixtures[ names[ i ] ];
 		out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 		norm = Math.sqrt( ( out.cs1 * out.cs1 ) + ( out.sn1r * out.sn1r ) + ( out.sn1i * out.sn1i ) ); // eslint-disable-line max-len
 		assertClose( norm, 1.0, 1e-14, names[ i ] + ': eigenvector should be unit length' ); // eslint-disable-line max-len
@@ -215,7 +218,7 @@ test( 'zlaev2: verifies Hermitian diagonalization property', function t() {
 
 	names = [ 'real_diagonal', 'real_offdiag', 'imag_b', 'complex_b', 'identity', 'negative_diag', 'sm_zero', 'equal_diag', 'large_values', 'df_negative' ]; // eslint-disable-line max-len
 	for ( i = 0; i < names.length; i += 1 ) {
-		tc = findCase( names[ i ] );
+		tc = fixtures[ names[ i ] ];
 		out = zlaev2( new Complex128( tc.ar, tc.ai ), new Complex128( tc.br, tc.bi ), new Complex128( tc.cr, tc.ci ) ); // eslint-disable-line max-len
 
 		// Q^H * H * Q = D where Q = [cs1, -conj(sn1); sn1, cs1]

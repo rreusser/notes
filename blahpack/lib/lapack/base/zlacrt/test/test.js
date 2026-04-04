@@ -18,8 +18,6 @@
 
 'use strict';
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -31,17 +29,17 @@ var base = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlacrt.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = {};
-(function loadFixtures() {
-	var i;
-	var d;
-	for ( i = 0; i < lines.length; i++ ) {
-		d = JSON.parse( lines[ i ] );
-		fixture[ d.name ] = d;
-	}
-})();
+var fixture = {
+	basic: require( './fixtures/basic.json' ),
+	n_zero: require( './fixtures/n_zero.json' ),
+	n_one: require( './fixtures/n_one.json' ),
+	identity: require( './fixtures/identity.json' ),
+	swap: require( './fixtures/swap.json' ),
+	stride: require( './fixtures/stride.json' ),
+	neg_stride: require( './fixtures/neg_stride.json' ),
+	imag_cs: require( './fixtures/imag_cs.json' ),
+	mixed_stride: require( './fixtures/mixed_stride.json' )
+};
 
 
 // FUNCTIONS //

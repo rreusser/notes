@@ -6,23 +6,18 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var ztrexc = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrexc.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var move_3_to_1_compq_v = require( './fixtures/move_3_to_1_compq_v.json' );
+var move_1_to_4_compq_v = require( './fixtures/move_1_to_4_compq_v.json' );
+var move_2_to_4_compq_n = require( './fixtures/move_2_to_4_compq_n.json' );
+var ifst_ilst_no_op = require( './fixtures/ifst_ilst_no-op.json' );
+var n_1 = require( './fixtures/n_1.json' );
+var move_4_to_2_compq_v = require( './fixtures/move_4_to_2_compq_v.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -75,11 +70,10 @@ var T4_VALS = [
 	[ 3, 3, 4.0, -0.5 ]
 ];
 
-
 // TESTS //
 
 test( 'ztrexc: move position 3 to 1, compq=V', function t() {
-	var tc = findCase( 'move 3 to 1 compq=V' );
+	var tc = move_3_to_1_compq_v;
 	var N = 4;
 	var tm = buildT4( T4_VALS );
 	var qm = identityComplex( N );
@@ -92,7 +86,7 @@ test( 'ztrexc: move position 3 to 1, compq=V', function t() {
 });
 
 test( 'ztrexc: move position 1 to 4, compq=V', function t() {
-	var tc = findCase( 'move 1 to 4 compq=V' );
+	var tc = move_1_to_4_compq_v;
 	var N = 4;
 	var tm = buildT4( T4_VALS );
 	var qm = identityComplex( N );
@@ -105,7 +99,7 @@ test( 'ztrexc: move position 1 to 4, compq=V', function t() {
 });
 
 test( 'ztrexc: move position 2 to 4, compq=N', function t() {
-	var tc = findCase( 'move 2 to 4 compq=N' );
+	var tc = move_2_to_4_compq_n;
 	var N = 4;
 	var tm = buildT4( T4_VALS );
 	var qm = identityComplex( N );
@@ -117,7 +111,7 @@ test( 'ztrexc: move position 2 to 4, compq=N', function t() {
 });
 
 test( 'ztrexc: ifst=ilst no-op', function t() {
-	var tc = findCase( 'ifst=ilst no-op' );
+	var tc = ifst_ilst_no_op;
 	var N = 4;
 	var T = new Complex128Array( N * N );
 	var Tv = reinterpret( T, 0 );
@@ -135,7 +129,7 @@ test( 'ztrexc: ifst=ilst no-op', function t() {
 });
 
 test( 'ztrexc: N=1 quick return', function t() {
-	var tc = findCase( 'N=1' );
+	var tc = n_1;
 	var T = new Complex128Array( 1 );
 	var Tv = reinterpret( T, 0 );
 	Tv[ 0 ] = 5.0; Tv[ 1 ] = 1.0;
@@ -149,7 +143,7 @@ test( 'ztrexc: N=1 quick return', function t() {
 });
 
 test( 'ztrexc: move position 4 to 2, compq=V', function t() {
-	var tc = findCase( 'move 4 to 2 compq=V' );
+	var tc = move_4_to_2_compq_v;
 	var N = 4;
 	var T = new Complex128Array( N * N );
 	var Tv = reinterpret( T, 0 );

@@ -24,8 +24,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -34,27 +32,24 @@ var zpftrs = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpftrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var fixtures = {
+	'n3_nrhs1_lower_normal': require( './fixtures/n3_nrhs1_lower_normal.json' ),
+	'n3_nrhs1_upper_normal': require( './fixtures/n3_nrhs1_upper_normal.json' ),
+	'n3_nrhs1_lower_conjtrans': require( './fixtures/n3_nrhs1_lower_conjtrans.json' ),
+	'n3_nrhs1_upper_conjtrans': require( './fixtures/n3_nrhs1_upper_conjtrans.json' ),
+	'n4_nrhs1_lower_normal': require( './fixtures/n4_nrhs1_lower_normal.json' ),
+	'n4_nrhs1_upper_normal': require( './fixtures/n4_nrhs1_upper_normal.json' ),
+	'n4_nrhs1_lower_conjtrans': require( './fixtures/n4_nrhs1_lower_conjtrans.json' ),
+	'n4_nrhs1_upper_conjtrans': require( './fixtures/n4_nrhs1_upper_conjtrans.json' ),
+	'n3_nrhs2_lower_normal': require( './fixtures/n3_nrhs2_lower_normal.json' ),
+	'n3_nrhs2_upper_conjtrans': require( './fixtures/n3_nrhs2_upper_conjtrans.json' ),
+	'n4_nrhs2_lower_normal': require( './fixtures/n4_nrhs2_lower_normal.json' ),
+	'n4_nrhs2_upper_conjtrans': require( './fixtures/n4_nrhs2_upper_conjtrans.json' ),
+	'n_one': require( './fixtures/n_one.json' )
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -104,7 +99,7 @@ function runTest( name, transr, uplo, N, nrhs ) {
 	var A;
 	var B;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	A = new Complex128Array( tc.a );
 	B = new Complex128Array( tc.b_in );
 	info = zpftrs( transr, uplo, N, nrhs, A, 1, 0, B, 1, N, 0 );
@@ -180,7 +175,7 @@ test( 'zpftrs: n_one (N=1, NRHS=1)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = fixtures[ 'n_one' ];
 	A = new Complex128Array( tc.a );
 	B = new Complex128Array( tc.b_in );
 	info = zpftrs( 'no-transpose', 'lower', 1, 1, A, 1, 0, B, 1, 1, 0 );

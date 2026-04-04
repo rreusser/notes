@@ -1,14 +1,14 @@
 'use strict';
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var fs = require( 'fs' );
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zsytrf = require( '../lib/base.js' );
-var lines = fs.readFileSync( path.resolve( __dirname, '../../../../../test/fixtures/zsytrf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixtures = {};
-for ( var i = 0; i < lines.length; i++ ) { var obj = JSON.parse( lines[ i ] ); fixtures[ obj.name ] = obj; }
+var fixtures = {
+	'upper_4x4': require( './fixtures/upper_4x4.json' ),
+	'lower_4x4': require( './fixtures/lower_4x4.json' ),
+	'lower_6x6': require( './fixtures/lower_6x6.json' )
+};
 function assertClose( actual, expected, tol ) { for ( var ii = 0; ii < expected.length; ii++ ) { if ( Math.abs( actual[ii] - expected[ii] ) > tol * ( 1.0 + Math.abs( expected[ii] ) ) ) { assert.fail( 'at ' + ii + ': ' + actual[ii] + ' vs ' + expected[ii] ); } } }
 function convertIPIV( f ) { var r = new Int32Array(f.length); for ( var ii = 0; ii < f.length; ii++ ) { r[ii] = f[ii] > 0 ? f[ii] - 1 : ~(-f[ii]-1); } return r; }
 function buildMatrix( n, LDA, vals ) { var A = new Complex128Array(LDA*n); var Av = reinterpret(A,0); for(var k=0;k<vals.length;k++){var v=vals[k];Av[2*v.i+2*LDA*v.j]=v.re;Av[2*v.i+2*LDA*v.j+1]=v.im;} return A; }

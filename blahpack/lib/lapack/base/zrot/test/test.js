@@ -2,16 +2,17 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zrot.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
+var zrot_basic = require( './fixtures/zrot_basic.json' );
+var zrot_n_zero = require( './fixtures/zrot_n_zero.json' );
+var zrot_identity = require( './fixtures/zrot_identity.json' );
+var zrot_complex_s = require( './fixtures/zrot_complex_s.json' );
+var zrot_stride = require( './fixtures/zrot_stride.json' );
 // HELPERS //
 
 function assertClose( actual, expected, msg ) {
@@ -38,7 +39,7 @@ test( 'zrot: main export is a function', function t() {
 });
 
 test( 'zrot: basic rotation c=1/sqrt(2), s=(1/sqrt(2),0)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zrot_basic'; } );
+	var tc = zrot_basic;
 	var c = 1.0 / Math.sqrt( 2.0 );
 	var s = new Float64Array( [ 1.0 / Math.sqrt( 2.0 ), 0.0 ] );
 	var cx = c128( new Float64Array( [ 1.0, 0.0, 0.0, 1.0, 1.0, 1.0 ] ) );
@@ -49,7 +50,7 @@ test( 'zrot: basic rotation c=1/sqrt(2), s=(1/sqrt(2),0)', function t() {
 });
 
 test( 'zrot: n=0 is a no-op', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zrot_n_zero'; } );
+	var tc = zrot_n_zero;
 	var c = 1.0 / Math.sqrt( 2.0 );
 	var s = new Float64Array( [ 1.0 / Math.sqrt( 2.0 ), 0.0 ] );
 	var cx = c128( new Float64Array( [ 1.0, 2.0 ] ) );
@@ -60,7 +61,7 @@ test( 'zrot: n=0 is a no-op', function t() {
 });
 
 test( 'zrot: identity rotation c=1, s=(0,0)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zrot_identity'; } );
+	var tc = zrot_identity;
 	var c = 1.0;
 	var s = new Float64Array( [ 0.0, 0.0 ] );
 	var cx = c128( new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] ) );
@@ -71,7 +72,7 @@ test( 'zrot: identity rotation c=1, s=(0,0)', function t() {
 });
 
 test( 'zrot: complex s, c=0.6, s=(0,0.8)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zrot_complex_s'; } );
+	var tc = zrot_complex_s;
 	var c = 0.6;
 	var s = new Float64Array( [ 0.0, 0.8 ] );
 	var cx = c128( new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] ) );
@@ -82,7 +83,7 @@ test( 'zrot: complex s, c=0.6, s=(0,0.8)', function t() {
 });
 
 test( 'zrot: non-unit stride (strideX=2, strideY=2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zrot_stride'; } );
+	var tc = zrot_stride;
 	var c = 0.0;
 	var s = new Float64Array( [ 1.0, 0.0 ] );
 	var cx = c128( new Float64Array( [ 1.0, 0.0, 99.0, 99.0, 2.0, 0.0 ] ) );

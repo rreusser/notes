@@ -6,8 +6,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlasr = require( './../lib/base.js' );
@@ -15,26 +13,40 @@ var dlasr = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var mZero = require( './fixtures/m_zero.json' );
+var nZero = require( './fixtures/n_zero.json' );
+var lVF = require( './fixtures/l_v_f.json' );
+var lVB = require( './fixtures/l_v_b.json' );
+var lTF = require( './fixtures/l_t_f.json' );
+var lTB = require( './fixtures/l_t_b.json' );
+var lBF = require( './fixtures/l_b_f.json' );
+var lBB = require( './fixtures/l_b_b.json' );
+var rVF = require( './fixtures/r_v_f.json' );
+var rVB = require( './fixtures/r_v_b.json' );
+var rTF = require( './fixtures/r_t_f.json' );
+var rTB = require( './fixtures/r_t_b.json' );
+var rBF = require( './fixtures/r_b_f.json' );
+var rBB = require( './fixtures/r_b_b.json' );
+
+var fixtures = {
+	'm_zero': mZero,
+	'n_zero': nZero,
+	'L_V_F': lVF,
+	'L_V_B': lVB,
+	'L_T_F': lTF,
+	'L_T_B': lTB,
+	'L_B_F': lBF,
+	'L_B_B': lBB,
+	'R_V_F': rVF,
+	'R_V_B': rVB,
+	'R_T_F': rTF,
+	'R_T_B': rTB,
+	'R_B_F': rBF,
+	'R_B_B': rBB
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -93,7 +105,7 @@ function initCS( ) {
 * Helper to run a single test case against fixture.
 */
 function runCase( side, pivot, direct, M, N, caseName ) {
-	var tc = findCase( caseName );
+	var tc = fixtures[ caseName ];
 	var cs = initCS();
 	var A = initMatrix();
 	dlasr( side, pivot, direct, M, N, cs.c, 1, 0, cs.s, 1, 0, A, 1, M, 0 );
@@ -109,7 +121,7 @@ test( 'dlasr: m_zero (quick return)', function t() {
 	var cs;
 	var A;
 
-	tc = findCase( 'm_zero' );
+	tc = mZero;
 	A = initMatrix();
 	expected = new Float64Array( A );
 	cs = initCS();
@@ -123,7 +135,7 @@ test( 'dlasr: n_zero (quick return)', function t() {
 	var cs;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = nZero;
 	A = initMatrix();
 	expected = new Float64Array( A );
 	cs = initCS();

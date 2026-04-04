@@ -4,16 +4,30 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlarfb = require( './../lib/base.js' );
 
-// Load fixture
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlarfb.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+
+// FIXTURES //
+
+var leftNotransFwdCol = require( './fixtures/zlarfb_left_notrans_fwd_col.json' );
+var leftConjtransFwdCol = require( './fixtures/zlarfb_left_conjtrans_fwd_col.json' );
+var rightNotransFwdCol = require( './fixtures/zlarfb_right_notrans_fwd_col.json' );
+var leftNotransBwdCol = require( './fixtures/zlarfb_left_notrans_bwd_col.json' );
+var rightNotransBwdCol = require( './fixtures/zlarfb_right_notrans_bwd_col.json' );
+var leftConjtransBwdCol = require( './fixtures/zlarfb_left_conjtrans_bwd_col.json' );
+var rightConjtransFwdCol = require( './fixtures/zlarfb_right_conjtrans_fwd_col.json' );
+var leftNotransFwdRow = require( './fixtures/zlarfb_left_notrans_fwd_row.json' );
+var rightNotransFwdRow = require( './fixtures/zlarfb_right_notrans_fwd_row.json' );
+var leftConjtransFwdRow = require( './fixtures/zlarfb_left_conjtrans_fwd_row.json' );
+var leftNotransBwdRow = require( './fixtures/zlarfb_left_notrans_bwd_row.json' );
+var leftConjtransBwdRow = require( './fixtures/zlarfb_left_conjtrans_bwd_row.json' );
+var rightNotransBwdRow = require( './fixtures/zlarfb_right_notrans_bwd_row.json' );
+var rightConjtransBwdRow = require( './fixtures/zlarfb_right_conjtrans_bwd_row.json' );
+var rightConjtransFwdRow = require( './fixtures/zlarfb_right_conjtrans_fwd_row.json' );
+var rightConjtransBwdColFixture = require( './fixtures/zlarfb_right_conjtrans_bwd_col.json' );
+
+
+// FUNCTIONS //
 
 function assertClose( actual, expected, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1e-30 );
@@ -62,7 +76,7 @@ function makeC() {
 }
 
 test( 'zlarfb: left, no-transpose, forward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_fwd_col'; });
+	var tc = leftNotransFwdCol;
 	var V = makeV();
 	var T = makeT();
 	var C = makeC();
@@ -79,7 +93,7 @@ test( 'zlarfb: left, no-transpose, forward, columnwise', function t() {
 });
 
 test( 'zlarfb: left, conjugate-transpose, forward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_conjtrans_fwd_col'; });
+	var tc = leftConjtransFwdCol;
 	var V = makeV();
 	var T = makeT();
 	var C = makeC();
@@ -94,7 +108,7 @@ test( 'zlarfb: left, conjugate-transpose, forward, columnwise', function t() {
 });
 
 test( 'zlarfb: right, no-transpose, forward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_notrans_fwd_col'; });
+	var tc = rightNotransFwdCol;
 	var V = makeV();
 	var T = makeT();
 	// C is 3x4 (M=3, N=4, LDC=3)
@@ -133,7 +147,7 @@ test( 'zlarfb: M=0 (quick return)', function t() {
 });
 
 test( 'zlarfb: left, no-transpose, backward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_bwd_col'; });
+	var tc = leftNotransBwdCol;
 	// V for backward: last K rows have unit upper triangular
 	var V = new Complex128Array( [
 		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
@@ -161,7 +175,7 @@ test( 'zlarfb: left, no-transpose, backward, columnwise', function t() {
 });
 
 test( 'zlarfb: right, no-transpose, backward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_notrans_bwd_col'; });
+	var tc = rightNotransBwdCol;
 	// V for backward: last K rows have unit upper triangular
 	var V = new Complex128Array( [
 		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
@@ -192,7 +206,7 @@ test( 'zlarfb: right, no-transpose, backward, columnwise', function t() {
 });
 
 test( 'zlarfb: left, conjugate-transpose, backward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_conjtrans_bwd_col'; });
+	var tc = leftConjtransBwdCol;
 	var V = new Complex128Array( [
 		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,
 		0.6, -0.4,  -0.2, 0.5,  0.4, -0.3,  1.0, 0.0
@@ -215,7 +229,7 @@ test( 'zlarfb: left, conjugate-transpose, backward, columnwise', function t() {
 });
 
 test( 'zlarfb: right, conjugate-transpose, forward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_fwd_col'; });
+	var tc = rightConjtransFwdCol;
 	var V = makeV();
 	var T = makeT();
 	// C is 3x4 (M=3, N=4, LDC=3)
@@ -236,7 +250,7 @@ test( 'zlarfb: right, conjugate-transpose, forward, columnwise', function t() {
 });
 
 test( 'zlarfb: left, no-transpose, forward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_fwd_row'; });
+	var tc = leftNotransFwdRow;
 	// V is 2x4 (K=2, M=4), unit upper triangular in V1
 	var V = new Complex128Array( [
 		1.0, 0.0,  0.0, 0.0,
@@ -245,7 +259,6 @@ test( 'zlarfb: left, no-transpose, forward, rowwise', function t() {
 		0.4, -0.3,  -0.2, 0.5
 	]);
 	// T computed by zlarft('forward','rowwise',4,2,V,2,tau,T,3)
-	var tcT = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_fwd_row'; });
 	// Use pre-computed T from the fixture (we need zlarft output)
 	// Actually, let's compute T ourselves using zlarft
 	var zlarft = require( '../../zlarft/lib/base.js' );
@@ -265,7 +278,7 @@ test( 'zlarfb: left, no-transpose, forward, rowwise', function t() {
 });
 
 test( 'zlarfb: right, no-transpose, forward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_notrans_fwd_row'; });
+	var tc = rightNotransFwdRow;
 	// V is 2x4 (K=2, N=4), unit upper triangular in V1
 	var V = new Complex128Array( [
 		1.0, 0.0,  0.0, 0.0,
@@ -296,7 +309,7 @@ test( 'zlarfb: right, no-transpose, forward, rowwise', function t() {
 });
 
 test( 'zlarfb: left, conjugate-transpose, forward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_conjtrans_fwd_row'; });
+	var tc = leftConjtransFwdRow;
 	// V is 2x4 (K=2, M=4), unit upper triangular in V1
 	var V = new Complex128Array( [
 		1.0, 0.0,  0.0, 0.0,
@@ -321,7 +334,7 @@ test( 'zlarfb: left, conjugate-transpose, forward, rowwise', function t() {
 });
 
 test( 'zlarfb: left, no-transpose, backward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_notrans_bwd_row'; });
+	var tc = leftNotransBwdRow;
 	// V is 2x4 (K=2, M=4), last K cols unit lower triangular for backward
 	var V = new Complex128Array( [
 		-0.5, 0.1,  0.6, -0.4,
@@ -346,7 +359,7 @@ test( 'zlarfb: left, no-transpose, backward, rowwise', function t() {
 });
 
 test( 'zlarfb: left, conjugate-transpose, backward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_left_conjtrans_bwd_row'; });
+	var tc = leftConjtransBwdRow;
 	// V is 2x4 (K=2, M=4), last K cols unit lower triangular for backward
 	var V = new Complex128Array( [
 		-0.5, 0.1,  0.6, -0.4,
@@ -371,7 +384,7 @@ test( 'zlarfb: left, conjugate-transpose, backward, rowwise', function t() {
 });
 
 test( 'zlarfb: right, no-transpose, backward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_notrans_bwd_row'; });
+	var tc = rightNotransBwdRow;
 	// V is 2x4 (K=2, N=4), last K cols unit lower triangular for backward
 	var V = new Complex128Array( [
 		-0.5, 0.1,  0.6, -0.4,
@@ -402,7 +415,7 @@ test( 'zlarfb: right, no-transpose, backward, rowwise', function t() {
 });
 
 test( 'zlarfb: right, conjugate-transpose, backward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_bwd_row'; });
+	var tc = rightConjtransBwdRow;
 	// V is 2x4 (K=2, N=4), last K cols unit lower triangular for backward
 	var V = new Complex128Array( [
 		-0.5, 0.1,  0.6, -0.4,
@@ -433,7 +446,7 @@ test( 'zlarfb: right, conjugate-transpose, backward, rowwise', function t() {
 });
 
 test( 'zlarfb: right, conjugate-transpose, forward, rowwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_fwd_row'; });
+	var tc = rightConjtransFwdRow;
 	// V is 2x4 (K=2, N=4), unit upper triangular in V1
 	var V = new Complex128Array( [
 		1.0, 0.0,  0.0, 0.0,
@@ -464,7 +477,7 @@ test( 'zlarfb: right, conjugate-transpose, forward, rowwise', function t() {
 });
 
 test( 'zlarfb: right, conjugate-transpose, backward, columnwise', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarfb_right_conjtrans_bwd_col'; });
+	var tc = rightConjtransBwdColFixture;
 	// V is 4x2 (N=4, K=2), last K rows unit upper triangular for backward
 	var V = new Complex128Array( [
 		0.3, 0.2,  -0.5, 0.1,  1.0, 0.0,  0.0, 0.0,

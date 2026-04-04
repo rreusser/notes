@@ -20,8 +20,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var zlassq = require( './../lib' );
 var base = require( './../lib/base.js' );
@@ -33,10 +31,24 @@ function c128( arr ) {
 	return new Complex128Array( arr );
 }
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlassq.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
+var zlassq_basic = require( './fixtures/zlassq_basic.json' );
+var zlassq_accumulate = require( './fixtures/zlassq_accumulate.json' );
+var zlassq_n_zero = require( './fixtures/zlassq_n_zero.json' );
+var zlassq_stride = require( './fixtures/zlassq_stride.json' );
+var zlassq_imag = require( './fixtures/zlassq_imag.json' );
+var zlassq_big = require( './fixtures/zlassq_big.json' );
+var zlassq_small = require( './fixtures/zlassq_small.json' );
+var zlassq_big_normal = require( './fixtures/zlassq_big_normal.json' );
+var zlassq_small_normal = require( './fixtures/zlassq_small_normal.json' );
+var zlassq_neg_stride = require( './fixtures/zlassq_neg_stride.json' );
+var zlassq_big_existing = require( './fixtures/zlassq_big_existing.json' );
+var zlassq_small_existing = require( './fixtures/zlassq_small_existing.json' );
+var zlassq_pure_small = require( './fixtures/zlassq_pure_small.json' );
+var zlassq_scale_zero = require( './fixtures/zlassq_scale_zero.json' );
+var zlassq_big_existing_scale_gt1 = require( './fixtures/zlassq_big_existing_scale_gt1.json' );
+var zlassq_small_existing_scale_lt1 = require( './fixtures/zlassq_small_existing_scale_lt1.json' );
 // HELPERS //
 
 function assertClose( actual, expected, msg ) {
@@ -55,7 +67,7 @@ test( 'zlassq: attached to the main export is an `ndarray` method', function t()
 });
 
 test( 'zlassq: basic accumulation from zero', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_basic'; } );
+	var tc = zlassq_basic;
 	// x = [(3,4), (1,2)] interleaved: [3,4,1,2]
 	var x = c128( new Float64Array( [ 3, 4, 1, 2 ] ) );
 	var result = base( 2, x, 1, 0, 1.0, 0.0 );
@@ -64,7 +76,7 @@ test( 'zlassq: basic accumulation from zero', function t() {
 });
 
 test( 'zlassq: accumulate onto existing sum', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_accumulate'; } );
+	var tc = zlassq_accumulate;
 	// x = [(1,0)]
 	var x = c128( new Float64Array( [ 1, 0 ] ) );
 	var result = base( 1, x, 1, 0, 2.0, 3.0 );
@@ -73,7 +85,7 @@ test( 'zlassq: accumulate onto existing sum', function t() {
 });
 
 test( 'zlassq: N=0 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_n_zero'; } );
+	var tc = zlassq_n_zero;
 	var x = c128( new Float64Array( [ 99, 99 ] ) );
 	var result = base( 0, x, 1, 0, 2.0, 5.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_n_zero scl' );
@@ -81,7 +93,7 @@ test( 'zlassq: N=0 quick return', function t() {
 });
 
 test( 'zlassq: stride=2', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_stride'; } );
+	var tc = zlassq_stride;
 	// x = [(3,0), (99,99), (4,0)] interleaved: [3,0, 99,99, 4,0]
 	// stride=2 means skip every other complex element
 	var x = c128( new Float64Array( [ 3, 0, 99, 99, 4, 0 ] ) );
@@ -91,7 +103,7 @@ test( 'zlassq: stride=2', function t() {
 });
 
 test( 'zlassq: purely imaginary', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_imag'; } );
+	var tc = zlassq_imag;
 	// x = [(0,5)]
 	var x = c128( new Float64Array( [ 0, 5 ] ) );
 	var result = base( 1, x, 1, 0, 1.0, 0.0 );
@@ -100,7 +112,7 @@ test( 'zlassq: purely imaginary', function t() {
 });
 
 test( 'zlassq: very large values (overflow path, abig)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_big'; } );
+	var tc = zlassq_big;
 	var x = c128( new Float64Array( [ 1e300, 1e300, 2e300, 0 ] ) );
 	var result = base( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_big scl' );
@@ -108,7 +120,7 @@ test( 'zlassq: very large values (overflow path, abig)', function t() {
 });
 
 test( 'zlassq: very small values (underflow path, asml)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_small'; } );
+	var tc = zlassq_small;
 	var x = c128( new Float64Array( [ 1e-300, 1e-300, 2e-300, 0 ] ) );
 	var result = base( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_small scl' );
@@ -116,7 +128,7 @@ test( 'zlassq: very small values (underflow path, asml)', function t() {
 });
 
 test( 'zlassq: big + normal values (abig + amed combination)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_big_normal'; } );
+	var tc = zlassq_big_normal;
 	var x = c128( new Float64Array( [ 1e300, 0, 1, 0 ] ) );
 	var result = base( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_big_normal scl' );
@@ -124,7 +136,7 @@ test( 'zlassq: big + normal values (abig + amed combination)', function t() {
 });
 
 test( 'zlassq: small + normal values (asml + amed combination)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_small_normal'; } );
+	var tc = zlassq_small_normal;
 	var x = c128( new Float64Array( [ 1e-300, 0, 1, 0 ] ) );
 	var result = base( 2, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_small_normal scl' );
@@ -132,7 +144,7 @@ test( 'zlassq: small + normal values (asml + amed combination)', function t() {
 });
 
 test( 'zlassq: negative stride', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_neg_stride'; } );
+	var tc = zlassq_neg_stride;
 	// With stride=-1, sx=-2, the code adjusts ix = offset - (N-1)*sx
 	// offset=0, N=2: ix = 0 - 1*(-2) = 2. Reads [2],[3] then [0],[1]
 	var x = c128( new Float64Array( [ 3, 0, 4, 0 ] ) );
@@ -142,7 +154,7 @@ test( 'zlassq: negative stride', function t() {
 });
 
 test( 'zlassq: big existing sum + big values', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_big_existing'; } );
+	var tc = zlassq_big_existing;
 	var x = c128( new Float64Array( [ 1e300, 0 ] ) );
 	var result = base( 1, x, 1, 0, 1e200, 1.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_big_existing scl' );
@@ -150,7 +162,7 @@ test( 'zlassq: big existing sum + big values', function t() {
 });
 
 test( 'zlassq: small existing sum + small values', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_small_existing'; } );
+	var tc = zlassq_small_existing;
 	var x = c128( new Float64Array( [ 1e-300, 0 ] ) );
 	var result = base( 1, x, 1, 0, 1e-200, 1.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_small_existing scl' );
@@ -158,7 +170,7 @@ test( 'zlassq: small existing sum + small values', function t() {
 });
 
 test( 'zlassq: pure small values only (asml only, no amed)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_pure_small'; } );
+	var tc = zlassq_pure_small;
 	var x = c128( new Float64Array( [ 1e-300, 2e-300 ] ) );
 	var result = base( 1, x, 1, 0, 1.0, 0.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_pure_small scl' );
@@ -166,7 +178,7 @@ test( 'zlassq: pure small values only (asml only, no amed)', function t() {
 });
 
 test( 'zlassq: scale=0 input', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_scale_zero'; } );
+	var tc = zlassq_scale_zero;
 	var x = c128( new Float64Array( [ 3, 4 ] ) );
 	var result = base( 1, x, 1, 0, 0.0, 0.0 );
 	assertClose( result.scl, tc.scl, 'zlassq_scale_zero scl' );
@@ -174,7 +186,7 @@ test( 'zlassq: scale=0 input', function t() {
 });
 
 test( 'zlassq: big existing sum with scale > 1', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_big_existing_scale_gt1'; } );
+	var tc = zlassq_big_existing_scale_gt1;
 	var x = c128( new Float64Array( [ 1e300, 0 ] ) );
 	var result = base( 1, x, 1, 0, 2.0, 1e308 );
 	assertClose( result.scl, tc.scl, 'zlassq_big_existing_scale_gt1 scl' );
@@ -182,7 +194,7 @@ test( 'zlassq: big existing sum with scale > 1', function t() {
 });
 
 test( 'zlassq: small existing sum with scale < 1', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlassq_small_existing_scale_lt1'; } );
+	var tc = zlassq_small_existing_scale_lt1;
 	var x = c128( new Float64Array( [ 1e-300, 0 ] ) );
 	var result = base( 1, x, 1, 0, 0.5, 1e-300 );
 	assertClose( result.scl, tc.scl, 'zlassq_small_existing_scale_lt1 scl' );

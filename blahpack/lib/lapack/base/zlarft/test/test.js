@@ -4,16 +4,15 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlarft = require( './../lib/base.js' );
 
-// Load fixture
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlarft.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+// Fixtures
+var zlarftFwdCol = require( './fixtures/zlarft_fwd_col.json' );
+var zlarftFwdCol5x3 = require( './fixtures/zlarft_fwd_col_5x3.json' );
+var zlarftTauZero = require( './fixtures/zlarft_tau_zero.json' );
+var zlarftBwdCol = require( './fixtures/zlarft_bwd_col.json' );
+var zlarftFwdRow = require( './fixtures/zlarft_fwd_row.json' );
+var zlarftBwdRow = require( './fixtures/zlarft_bwd_row.json' );
 
 function assertClose( actual, expected, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1e-30 );
@@ -29,7 +28,7 @@ function assertArrayClose( actual, expected, label ) {
 }
 
 test( 'zlarft: forward, columnwise, n=4, k=2', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_fwd_col'; });
+	var tc = zlarftFwdCol;
 	// V is 4x2 (LDV=4), col-major interleaved
 	var V = new Complex128Array( [
 		// col 1: V(0,0)=1, V(1,0)=0.3+0.2i, V(2,0)=-0.5+0.1i, V(3,0)=0.4-0.3i
@@ -51,7 +50,7 @@ test( 'zlarft: forward, columnwise, n=4, k=2', function t() {
 });
 
 test( 'zlarft: forward, columnwise, n=5, k=3', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_fwd_col_5x3'; });
+	var tc = zlarftFwdCol5x3;
 	// V is 5x3, LDV=5
 	var V = new Complex128Array( [
 		// col 1
@@ -70,7 +69,7 @@ test( 'zlarft: forward, columnwise, n=5, k=3', function t() {
 });
 
 test( 'zlarft: tau(0)=0 (first reflector is identity)', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_tau_zero'; });
+	var tc = zlarftTauZero;
 	var V = new Complex128Array( [
 		1.0, 0.0,  0.3, 0.2,  -0.5, 0.1,  0.4, -0.3,
 		0.0, 0.0,  1.0, 0.0,  0.6, -0.4,  -0.2, 0.5
@@ -83,7 +82,7 @@ test( 'zlarft: tau(0)=0 (first reflector is identity)', function t() {
 });
 
 test( 'zlarft: backward, columnwise, n=4, k=2', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_bwd_col'; });
+	var tc = zlarftBwdCol;
 	// V for backward: last K rows have unit upper triangular
 	var V = new Complex128Array( [
 		// col 1: V(0,0)=0.3+0.2i, V(1,0)=-0.5+0.1i, V(2,0)=1, V(3,0)=0
@@ -111,7 +110,7 @@ test( 'zlarft: N=0 quick return', function t() {
 });
 
 test( 'zlarft: forward, rowwise, n=4, k=2', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_fwd_row'; });
+	var tc = zlarftFwdRow;
 	// V is 2x4 (LDV=2), row-major reflectors (unit upper triangular in V1)
 	var V = new Complex128Array( [
 		1.0, 0.0,  0.0, 0.0,
@@ -127,7 +126,7 @@ test( 'zlarft: forward, rowwise, n=4, k=2', function t() {
 });
 
 test( 'zlarft: backward, rowwise, n=4, k=2', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarft_bwd_row'; });
+	var tc = zlarftBwdRow;
 	var V = new Complex128Array( [
 		0.3, 0.2,  0.6, -0.4,
 		-0.5, 0.1,  -0.2, 0.5,

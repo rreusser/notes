@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlansf = require( './../lib/base.js' );
@@ -14,27 +12,120 @@ var dlansf = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlansf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var even4_nl_frob = require( './fixtures/even4_nl_frob.json' );
+var even4_nl_inf = require( './fixtures/even4_nl_inf.json' );
+var even4_nl_max = require( './fixtures/even4_nl_max.json' );
+var even4_nl_one = require( './fixtures/even4_nl_one.json' );
+var even4_nu_frob = require( './fixtures/even4_nu_frob.json' );
+var even4_nu_inf = require( './fixtures/even4_nu_inf.json' );
+var even4_nu_max = require( './fixtures/even4_nu_max.json' );
+var even4_nu_one = require( './fixtures/even4_nu_one.json' );
+var even4_tl_frob = require( './fixtures/even4_tl_frob.json' );
+var even4_tl_inf = require( './fixtures/even4_tl_inf.json' );
+var even4_tl_max = require( './fixtures/even4_tl_max.json' );
+var even4_tl_one = require( './fixtures/even4_tl_one.json' );
+var even4_tu_frob = require( './fixtures/even4_tu_frob.json' );
+var even4_tu_inf = require( './fixtures/even4_tu_inf.json' );
+var even4_tu_max = require( './fixtures/even4_tu_max.json' );
+var even4_tu_one = require( './fixtures/even4_tu_one.json' );
+var n_one_frob = require( './fixtures/n_one_frob.json' );
+var n_one_max = require( './fixtures/n_one_max.json' );
+var n_one_one = require( './fixtures/n_one_one.json' );
+var n_zero_frob = require( './fixtures/n_zero_frob.json' );
+var n_zero_max = require( './fixtures/n_zero_max.json' );
+var n_zero_one = require( './fixtures/n_zero_one.json' );
+var odd5_nl_frob = require( './fixtures/odd5_nl_frob.json' );
+var odd5_nl_inf = require( './fixtures/odd5_nl_inf.json' );
+var odd5_nl_max = require( './fixtures/odd5_nl_max.json' );
+var odd5_nl_one = require( './fixtures/odd5_nl_one.json' );
+var odd5_nu_frob = require( './fixtures/odd5_nu_frob.json' );
+var odd5_nu_inf = require( './fixtures/odd5_nu_inf.json' );
+var odd5_nu_max = require( './fixtures/odd5_nu_max.json' );
+var odd5_nu_one = require( './fixtures/odd5_nu_one.json' );
+var odd5_tl_frob = require( './fixtures/odd5_tl_frob.json' );
+var odd5_tl_inf = require( './fixtures/odd5_tl_inf.json' );
+var odd5_tl_max = require( './fixtures/odd5_tl_max.json' );
+var odd5_tl_one = require( './fixtures/odd5_tl_one.json' );
+var odd5_tu_frob = require( './fixtures/odd5_tu_frob.json' );
+var odd5_tu_inf = require( './fixtures/odd5_tu_inf.json' );
+var odd5_tu_max = require( './fixtures/odd5_tu_max.json' );
+var odd5_tu_one = require( './fixtures/odd5_tu_one.json' );
+var odd7_nl_frob = require( './fixtures/odd7_nl_frob.json' );
+var odd7_nl_inf = require( './fixtures/odd7_nl_inf.json' );
+var odd7_nl_max = require( './fixtures/odd7_nl_max.json' );
+var odd7_nl_one = require( './fixtures/odd7_nl_one.json' );
+var odd7_nu_frob = require( './fixtures/odd7_nu_frob.json' );
+var odd7_nu_inf = require( './fixtures/odd7_nu_inf.json' );
+var odd7_nu_max = require( './fixtures/odd7_nu_max.json' );
+var odd7_nu_one = require( './fixtures/odd7_nu_one.json' );
+var odd7_tl_frob = require( './fixtures/odd7_tl_frob.json' );
+var odd7_tl_inf = require( './fixtures/odd7_tl_inf.json' );
+var odd7_tl_max = require( './fixtures/odd7_tl_max.json' );
+var odd7_tl_one = require( './fixtures/odd7_tl_one.json' );
+var odd7_tu_frob = require( './fixtures/odd7_tu_frob.json' );
+var odd7_tu_inf = require( './fixtures/odd7_tu_inf.json' );
+var odd7_tu_max = require( './fixtures/odd7_tu_max.json' );
+var odd7_tu_one = require( './fixtures/odd7_tu_one.json' );
+
+var fixtures = {
+	'even4_NL_frob': even4_nl_frob,
+	'even4_NL_inf': even4_nl_inf,
+	'even4_NL_max': even4_nl_max,
+	'even4_NL_one': even4_nl_one,
+	'even4_NU_frob': even4_nu_frob,
+	'even4_NU_inf': even4_nu_inf,
+	'even4_NU_max': even4_nu_max,
+	'even4_NU_one': even4_nu_one,
+	'even4_TL_frob': even4_tl_frob,
+	'even4_TL_inf': even4_tl_inf,
+	'even4_TL_max': even4_tl_max,
+	'even4_TL_one': even4_tl_one,
+	'even4_TU_frob': even4_tu_frob,
+	'even4_TU_inf': even4_tu_inf,
+	'even4_TU_max': even4_tu_max,
+	'even4_TU_one': even4_tu_one,
+	'n_one_frob': n_one_frob,
+	'n_one_max': n_one_max,
+	'n_one_one': n_one_one,
+	'n_zero_frob': n_zero_frob,
+	'n_zero_max': n_zero_max,
+	'n_zero_one': n_zero_one,
+	'odd5_NL_frob': odd5_nl_frob,
+	'odd5_NL_inf': odd5_nl_inf,
+	'odd5_NL_max': odd5_nl_max,
+	'odd5_NL_one': odd5_nl_one,
+	'odd5_NU_frob': odd5_nu_frob,
+	'odd5_NU_inf': odd5_nu_inf,
+	'odd5_NU_max': odd5_nu_max,
+	'odd5_NU_one': odd5_nu_one,
+	'odd5_TL_frob': odd5_tl_frob,
+	'odd5_TL_inf': odd5_tl_inf,
+	'odd5_TL_max': odd5_tl_max,
+	'odd5_TL_one': odd5_tl_one,
+	'odd5_TU_frob': odd5_tu_frob,
+	'odd5_TU_inf': odd5_tu_inf,
+	'odd5_TU_max': odd5_tu_max,
+	'odd5_TU_one': odd5_tu_one,
+	'odd7_NL_frob': odd7_nl_frob,
+	'odd7_NL_inf': odd7_nl_inf,
+	'odd7_NL_max': odd7_nl_max,
+	'odd7_NL_one': odd7_nl_one,
+	'odd7_NU_frob': odd7_nu_frob,
+	'odd7_NU_inf': odd7_nu_inf,
+	'odd7_NU_max': odd7_nu_max,
+	'odd7_NU_one': odd7_nu_one,
+	'odd7_TL_frob': odd7_tl_frob,
+	'odd7_TL_inf': odd7_tl_inf,
+	'odd7_TL_max': odd7_tl_max,
+	'odd7_TL_one': odd7_tl_one,
+	'odd7_TU_frob': odd7_tu_frob,
+	'odd7_TU_inf': odd7_tu_inf,
+	'odd7_TU_max': odd7_tu_max,
+	'odd7_TU_one': odd7_tu_one
+};
 
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -168,7 +259,7 @@ function runTest( name ) {
 		var N;
 		var A;
 
-		tc = findCase( name );
+		tc = fixtures[ name ];
 		N = parseN( name );
 		norm = parseNorm( name );
 		transr = parseTransr( name );

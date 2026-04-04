@@ -6,8 +6,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlasd5 = require( './../lib/base.js' );
@@ -15,26 +13,30 @@ var dlasd5 = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasd5.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var i1WPositive = require( './fixtures/i1_w_positive.json' );
+var i1WNonpositive = require( './fixtures/i1_w_nonpositive.json' );
+var i2BPositive = require( './fixtures/i2_b_positive.json' );
+var i2BNonpositive = require( './fixtures/i2_b_nonpositive.json' );
+var i1WNonposBNonpos = require( './fixtures/i1_w_nonpos_b_nonpos.json' );
+var d1ZeroI1 = require( './fixtures/d1_zero_i1.json' );
+var d1ZeroI2 = require( './fixtures/d1_zero_i2.json' );
+var largeRhoI1 = require( './fixtures/large_rho_i1.json' );
+var largeRhoI2 = require( './fixtures/large_rho_i2.json' );
+
+var fixtures = {
+	'i1_w_positive': i1WPositive,
+	'i1_w_nonpositive': i1WNonpositive,
+	'i2_b_positive': i2BPositive,
+	'i2_b_nonpositive': i2BNonpositive,
+	'i1_w_nonpos_b_nonpos': i1WNonposBNonpos,
+	'd1_zero_i1': d1ZeroI1,
+	'd1_zero_i2': d1ZeroI2,
+	'large_rho_i1': largeRhoI1,
+	'large_rho_i2': largeRhoI2
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -82,7 +84,7 @@ function runTest( name, i ) {
 	var d;
 	var z;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	d = new Float64Array( tc.D );
 	z = new Float64Array( tc.Z );
 	delta = new Float64Array( 2 );
@@ -147,7 +149,7 @@ test( 'dlasd5: supports non-unit strides', function t() {
 	var d;
 	var z;
 
-	tc = findCase( 'i1_w_positive' );
+	tc = i1WPositive;
 	d = new Float64Array( [ tc.D[ 0 ], 0.0, tc.D[ 1 ] ] );
 	z = new Float64Array( [ tc.Z[ 0 ], 0.0, tc.Z[ 1 ] ] );
 	delta = new Float64Array( 3 );
@@ -169,7 +171,7 @@ test( 'dlasd5: supports offset parameters', function t() {
 	var d;
 	var z;
 
-	tc = findCase( 'i2_b_positive' );
+	tc = i2BPositive;
 	d = new Float64Array( [ 0.0, tc.D[ 0 ], tc.D[ 1 ] ] );
 	z = new Float64Array( [ 0.0, tc.Z[ 0 ], tc.Z[ 1 ] ] );
 	delta = new Float64Array( 4 );

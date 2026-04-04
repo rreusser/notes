@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -17,27 +15,23 @@ var zspcon = require( '../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zspcon.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+var fixtures = {
+	'n_zero': require( './fixtures/n_zero.json' ),
+	'upper_well_cond': require( './fixtures/upper_well_cond.json' ),
+	'lower_well_cond': require( './fixtures/lower_well_cond.json' ),
+	'n_one_upper': require( './fixtures/n_one_upper.json' ),
+	'n_one_lower': require( './fixtures/n_one_lower.json' ),
+	'identity_upper': require( './fixtures/identity_upper.json' ),
+	'identity_lower': require( './fixtures/identity_lower.json' ),
+	'ill_cond_upper': require( './fixtures/ill_cond_upper.json' ),
+	'singular_upper': require( './fixtures/singular_upper.json' ),
+	'4x4_upper': require( './fixtures/4x4_upper.json' ),             // eslint-disable-line quote-props
+	'4x4_lower': require( './fixtures/4x4_lower.json' ),             // eslint-disable-line quote-props
+	'imag_diag_upper': require( './fixtures/imag_diag_upper.json' )
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -109,7 +103,7 @@ function runFixtureTest( name, uplo, N ) {
 	var nn;
 	var tc;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	nn = N * ( N + 1 ) / 2;
 
 	// Build factored AP (packed, nn complex elements)
@@ -139,7 +133,7 @@ test( 'zspcon: N=0 returns rcond=1', function t() {
 	var AP;
 	var tc;
 
-	tc = findCase( 'n_zero' );
+	tc = fixtures[ 'n_zero' ];
 	AP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
 	WORK = new Complex128Array( 1 );

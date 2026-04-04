@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -16,27 +14,18 @@ var zsptrs = require( '../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zsptrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+var fixtures = {
+	'upper_3x3_1rhs': require( './fixtures/upper_3x3_1rhs.json' ),
+	'lower_3x3_2rhs': require( './fixtures/lower_3x3_2rhs.json' ),
+	'n1': require( './fixtures/n1.json' ),
+	'upper_4x4_pivot': require( './fixtures/upper_4x4_pivot.json' ),
+	'lower_4x4_pivot': require( './fixtures/lower_4x4_pivot.json' ),
+	'upper_4x4_2x2pivot': require( './fixtures/upper_4x4_2x2pivot.json' ),
+	'lower_3x3_swap': require( './fixtures/lower_3x3_swap.json' )
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -144,7 +133,7 @@ function runFixtureTest( name, uplo ) {
 	var N;
 	var B;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.n;
 	nrhs = tc.nrhs;
 	nn = N * ( N + 1 ) / 2;

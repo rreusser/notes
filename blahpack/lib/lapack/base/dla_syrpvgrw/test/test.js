@@ -6,8 +6,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -16,26 +14,36 @@ var dla_syrpvgrw = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dla_syrpvgrw.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var upper_4x4_info0 = require( './fixtures/upper_4x4_info0.json' );
+var lower_4x4_info0 = require( './fixtures/lower_4x4_info0.json' );
+var upper_1x1 = require( './fixtures/upper_1x1.json' );
+var lower_1x1 = require( './fixtures/lower_1x1.json' );
+var upper_singular = require( './fixtures/upper_singular.json' );
+var lower_singular = require( './fixtures/lower_singular.json' );
+var upper_2x2_pivot = require( './fixtures/upper_2x2_pivot.json' );
+var lower_2x2_pivot = require( './fixtures/lower_2x2_pivot.json' );
+var upper_6x6_mixed = require( './fixtures/upper_6x6_mixed.json' );
+var lower_6x6_mixed = require( './fixtures/lower_6x6_mixed.json' );
+var lower_1x1_swap = require( './fixtures/lower_1x1_swap.json' );
+var lower_1x1_swap_5x5 = require( './fixtures/lower_1x1_swap_5x5.json' );
+
+var fixtures = {
+	'upper_4x4_info0': upper_4x4_info0,
+	'lower_4x4_info0': lower_4x4_info0,
+	'upper_1x1': upper_1x1,
+	'lower_1x1': lower_1x1,
+	'upper_singular': upper_singular,
+	'lower_singular': lower_singular,
+	'upper_2x2_pivot': upper_2x2_pivot,
+	'lower_2x2_pivot': lower_2x2_pivot,
+	'upper_6x6_mixed': upper_6x6_mixed,
+	'lower_6x6_mixed': lower_6x6_mixed,
+	'lower_1x1_swap': lower_1x1_swap,
+	'lower_1x1_swap_5x5': lower_1x1_swap_5x5
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Convert Fortran 1-based IPIV to JS 0-based IPIV.
@@ -75,7 +83,7 @@ function runCase( name, uplo ) {
 	var N;
 	var A;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.N;
 	A = new Float64Array( tc.A );
 	AF = new Float64Array( tc.AF );
@@ -109,7 +117,7 @@ test( 'dla_syrpvgrw: upper 1x1', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'upper_1x1' );
+	tc = upper_1x1;
 	A = new Float64Array( [ 7.0 ] );
 	AF = new Float64Array( [ 7.0 ] );
 	IPIV = new Int32Array( [ 0 ] );
@@ -126,7 +134,7 @@ test( 'dla_syrpvgrw: lower 1x1', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'lower_1x1' );
+	tc = lower_1x1;
 	A = new Float64Array( [ 3.0 ] );
 	AF = new Float64Array( [ 3.0 ] );
 	IPIV = new Int32Array( [ 0 ] );
@@ -222,7 +230,7 @@ test( 'dla_syrpvgrw: verifies WORK array contents (upper)', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'upper_4x4_info0' );
+	tc = upper_4x4_info0;
 	N = tc.N;
 	A = new Float64Array( tc.A );
 	AF = new Float64Array( tc.AF );
@@ -243,7 +251,7 @@ test( 'dla_syrpvgrw: verifies WORK array contents (lower)', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'lower_4x4_info0' );
+	tc = lower_4x4_info0;
 	N = tc.N;
 	A = new Float64Array( tc.A );
 	AF = new Float64Array( tc.AF );
@@ -264,7 +272,7 @@ test( 'dla_syrpvgrw: verifies WORK array contents (upper 2x2 pivot)', function t
 	var A;
 	var i;
 
-	tc = findCase( 'upper_2x2_pivot' );
+	tc = upper_2x2_pivot;
 	N = tc.N;
 	A = new Float64Array( tc.A );
 	AF = new Float64Array( tc.AF );
@@ -285,7 +293,7 @@ test( 'dla_syrpvgrw: verifies WORK array contents (lower 2x2 pivot)', function t
 	var A;
 	var i;
 
-	tc = findCase( 'lower_2x2_pivot' );
+	tc = lower_2x2_pivot;
 	N = tc.N;
 	A = new Float64Array( tc.A );
 	AF = new Float64Array( tc.AF );
@@ -314,7 +322,7 @@ test( 'dla_syrpvgrw: lower 1x1 swap WORK contents', function t() {
 	var A;
 	var i;
 
-	tc = findCase( 'lower_1x1_swap' );
+	tc = lower_1x1_swap;
 	N = tc.N;
 	A = new Float64Array( tc.A );
 	AF = new Float64Array( tc.AF );

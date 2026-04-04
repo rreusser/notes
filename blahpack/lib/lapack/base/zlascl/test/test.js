@@ -2,17 +2,25 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlascl = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlascl.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
+var zlascl_basic = require( './fixtures/zlascl_basic.json' );
+var zlascl_half = require( './fixtures/zlascl_half.json' );
+var zlascl_m_zero = require( './fixtures/zlascl_m_zero.json' );
+var zlascl_upper = require( './fixtures/zlascl_upper.json' );
+var zlascl_lower = require( './fixtures/zlascl_lower.json' );
+var zlascl_identity = require( './fixtures/zlascl_identity.json' );
+var zlascl_hessenberg = require( './fixtures/zlascl_hessenberg.json' );
+var zlascl_large_ratio = require( './fixtures/zlascl_large_ratio.json' );
+var zlascl_large_ratio_inv = require( './fixtures/zlascl_large_ratio_inv.json' );
+var zlascl_lower_band = require( './fixtures/zlascl_lower_band.json' );
+var zlascl_upper_band = require( './fixtures/zlascl_upper_band.json' );
+var zlascl_band = require( './fixtures/zlascl_band.json' );
 // HELPERS //
 
 function assertClose( actual, expected, msg ) {
@@ -58,7 +66,7 @@ test( 'zlascl: attached to the main export is an `ndarray` method', function t()
 });
 
 test( 'zlascl: basic scaling (multiply by 2)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_basic'; } );
+	var tc = zlascl_basic;
 	var A = c128( new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] ) );
 	var info = base( 'general', 0, 0, 1.0, 2.0, 2, 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
@@ -66,7 +74,7 @@ test( 'zlascl: basic scaling (multiply by 2)', function t() {
 });
 
 test( 'zlascl: scaling by 0.5 (cfrom=2, cto=1)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_half'; } );
+	var tc = zlascl_half;
 	var A = c128( new Float64Array( [ 2, 4, 6, 8, 10, 12, 14, 16 ] ) );
 	var info = base( 'general', 0, 0, 2.0, 1.0, 2, 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
@@ -74,7 +82,7 @@ test( 'zlascl: scaling by 0.5 (cfrom=2, cto=1)', function t() {
 });
 
 test( 'zlascl: M=0 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_m_zero'; } );
+	var tc = zlascl_m_zero;
 	var A = c128( new Float64Array( [ 99, 88 ] ) );
 	var info = base( 'general', 0, 0, 1.0, 2.0, 0, 2, A, 1, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -82,7 +90,7 @@ test( 'zlascl: M=0 quick return', function t() {
 });
 
 test( 'zlascl: upper triangular', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_upper'; } );
+	var tc = zlascl_upper;
 	var A = c128( new Float64Array( [
 		1, 0,  0, 0,  0, 0,
 		2, 0,  4, 0,  0, 0,
@@ -96,7 +104,7 @@ test( 'zlascl: upper triangular', function t() {
 });
 
 test( 'zlascl: lower triangular', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_lower'; } );
+	var tc = zlascl_lower;
 	var A = c128( new Float64Array( [
 		1, 0,  2, 0,  3, 0,
 		0, 0,  4, 0,  5, 0,
@@ -110,7 +118,7 @@ test( 'zlascl: lower triangular', function t() {
 });
 
 test( 'zlascl: identity (cfrom=cto)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_identity'; } );
+	var tc = zlascl_identity;
 	var A = c128( new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] ) );
 	var info = base( 'general', 0, 0, 5.0, 5.0, 2, 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
@@ -118,7 +126,7 @@ test( 'zlascl: identity (cfrom=cto)', function t() {
 });
 
 test( 'zlascl: upper Hessenberg', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_hessenberg'; } );
+	var tc = zlascl_hessenberg;
 	var A = c128( new Float64Array( [
 		1, 0,  2, 0,  0, 0,
 		3, 0,  4, 0,  5, 0,
@@ -132,7 +140,7 @@ test( 'zlascl: upper Hessenberg', function t() {
 });
 
 test( 'zlascl: large cfrom/cto ratio (iterative scaling, mul=smlnum)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_large_ratio'; } );
+	var tc = zlascl_large_ratio;
 	var A = c128( new Float64Array( [ 1, 1, 2, 3 ] ) );
 	var info = base( 'general', 0, 0, 1e300, 1e-300, 2, 1, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
@@ -140,7 +148,7 @@ test( 'zlascl: large cfrom/cto ratio (iterative scaling, mul=smlnum)', function 
 });
 
 test( 'zlascl: large cto/cfrom ratio (iterative scaling, mul=bignum)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_large_ratio_inv'; } );
+	var tc = zlascl_large_ratio_inv;
 	var A = c128( new Float64Array( [ 1e-150, 1e-150, 2e-150, 3e-150 ] ) );
 	var info = base( 'general', 0, 0, 1e-150, 1e150, 2, 1, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
@@ -148,7 +156,7 @@ test( 'zlascl: large cto/cfrom ratio (iterative scaling, mul=bignum)', function 
 });
 
 test( 'zlascl: lower band matrix (type B)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_lower_band'; } );
+	var tc = zlascl_lower_band;
 	var A = c128( new Float64Array( [
 		1, 0,  4, 0,
 		2, 0,  5, 0,
@@ -160,7 +168,7 @@ test( 'zlascl: lower band matrix (type B)', function t() {
 });
 
 test( 'zlascl: upper band matrix (type Q)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_upper_band'; } );
+	var tc = zlascl_upper_band;
 	var A = c128( new Float64Array( [
 		0, 0,  3, 0,
 		1, 0,  4, 0,
@@ -172,7 +180,7 @@ test( 'zlascl: upper band matrix (type Q)', function t() {
 });
 
 test( 'zlascl: full band matrix (type Z)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlascl_band'; } );
+	var tc = zlascl_band;
 	var A = c128( new Float64Array( [
 		0, 0,  3, 0,  6, 0,  9, 0,
 		1, 0,  4, 0,  7, 0,  10, 0,

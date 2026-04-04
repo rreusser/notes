@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsfrk = require( './../lib' );
@@ -15,27 +13,52 @@ var base = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsfrk.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var oddNLN = require( './fixtures/odd_nln.json' );
+var oddNLT = require( './fixtures/odd_nlt.json' );
+var oddNUN = require( './fixtures/odd_nun.json' );
+var oddNUT = require( './fixtures/odd_nut.json' );
+var oddTLN = require( './fixtures/odd_tln.json' );
+var oddTLT = require( './fixtures/odd_tlt.json' );
+var oddTUN = require( './fixtures/odd_tun.json' );
+var oddTUT = require( './fixtures/odd_tut.json' );
+var evenNLN = require( './fixtures/even_nln.json' );
+var evenNLT = require( './fixtures/even_nlt.json' );
+var evenNUN = require( './fixtures/even_nun.json' );
+var evenNUT = require( './fixtures/even_nut.json' );
+var evenTLN = require( './fixtures/even_tln.json' );
+var evenTLT = require( './fixtures/even_tlt.json' );
+var evenTUN = require( './fixtures/even_tun.json' );
+var evenTUT = require( './fixtures/even_tut.json' );
+var odd5NLN = require( './fixtures/odd5_nln.json' );
+var odd5TUT = require( './fixtures/odd5_tut.json' );
+var nZero = require( './fixtures/n_zero.json' );
+var alphaZeroBetaOne = require( './fixtures/alpha_zero_beta_one.json' );
+var alphaZeroBetaZero = require( './fixtures/alpha_zero_beta_zero.json' );
+var kZeroBetaOne = require( './fixtures/k_zero_beta_one.json' );
+
+var fixtures = {
+	'odd_NLN': oddNLN,
+	'odd_NLT': oddNLT,
+	'odd_NUN': oddNUN,
+	'odd_NUT': oddNUT,
+	'odd_TLN': oddTLN,
+	'odd_TLT': oddTLT,
+	'odd_TUN': oddTUN,
+	'odd_TUT': oddTUT,
+	'even_NLN': evenNLN,
+	'even_NLT': evenNLT,
+	'even_NUN': evenNUN,
+	'even_NUT': evenNUT,
+	'even_TLN': evenTLN,
+	'even_TLT': evenTLT,
+	'even_TUN': evenTUN,
+	'even_TUT': evenTUT,
+	'odd5_NLN': odd5NLN,
+	'odd5_TUT': odd5TUT
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -109,7 +132,7 @@ function runCase( name ) {
 	var N;
 	var K;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	params = decodeParams( name );
 	N = tc.n;
 	K = tc.k;
@@ -220,7 +243,7 @@ test( 'dsfrk: N=5, T, U, T', function t() {
 // Edge cases
 
 test( 'dsfrk: N=0 quick return', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = nZero;
 	var cC = new Float64Array( tc.c_in );
 	var cA = new Float64Array( [ 1.0 ] );
 
@@ -230,7 +253,7 @@ test( 'dsfrk: N=0 quick return', function t() {
 });
 
 test( 'dsfrk: alpha=0, beta=1 quick return', function t() {
-	var tc = findCase( 'alpha_zero_beta_one' );
+	var tc = alphaZeroBetaOne;
 	var cC = new Float64Array( tc.c_in );
 	var cA = new Float64Array( 6 );
 
@@ -240,7 +263,7 @@ test( 'dsfrk: alpha=0, beta=1 quick return', function t() {
 });
 
 test( 'dsfrk: alpha=0, beta=0 zeroes C', function t() {
-	var tc = findCase( 'alpha_zero_beta_zero' );
+	var tc = alphaZeroBetaZero;
 	var cC = new Float64Array( tc.c_in );
 	var cA = new Float64Array( 6 );
 
@@ -250,7 +273,7 @@ test( 'dsfrk: alpha=0, beta=0 zeroes C', function t() {
 });
 
 test( 'dsfrk: K=0, beta=1 quick return', function t() {
-	var tc = findCase( 'k_zero_beta_one' );
+	var tc = kZeroBetaOne;
 	var cC = new Float64Array( tc.c_in );
 	var cA = new Float64Array( 1 );
 

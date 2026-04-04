@@ -6,23 +6,23 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var ztrsyl = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrsyl.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var nn_basic_2x2 = require( './fixtures/nn_basic_2x2.json' );
+var nn_isgn__1 = require( './fixtures/nn_isgn_-1.json' );
+var cn_basic = require( './fixtures/cn_basic.json' );
+var nc_basic = require( './fixtures/nc_basic.json' );
+var cc_basic = require( './fixtures/cc_basic.json' );
+var m_0 = require( './fixtures/m_0.json' );
+var n_0 = require( './fixtures/n_0.json' );
+var m_1_n_1 = require( './fixtures/m_1_n_1.json' );
+var nn_3x3 = require( './fixtures/nn_3x3.json' );
+var cn_3x3 = require( './fixtures/cn_3x3.json' );
+var cc_isgn__1_3x3 = require( './fixtures/cc_isgn_-1_3x3.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -114,11 +114,10 @@ function build3x3() {
 	return { A: A, B: B, C: C, Cv: Cv, N: N };
 }
 
-
 // TESTS //
 
 test( 'ztrsyl: NN basic 2x2', function t() {
-	var tc = findCase( 'NN basic 2x2' );
+	var tc = nn_basic_2x2;
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
@@ -130,7 +129,7 @@ test( 'ztrsyl: NN basic 2x2', function t() {
 });
 
 test( 'ztrsyl: NN isgn=-1', function t() {
-	var tc = findCase( 'NN isgn=-1' );
+	var tc = nn_isgn__1;
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
@@ -142,7 +141,7 @@ test( 'ztrsyl: NN isgn=-1', function t() {
 });
 
 test( 'ztrsyl: CN basic (conjugate transpose A)', function t() {
-	var tc = findCase( 'CN basic' );
+	var tc = cn_basic;
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
@@ -154,7 +153,7 @@ test( 'ztrsyl: CN basic (conjugate transpose A)', function t() {
 });
 
 test( 'ztrsyl: NC basic (conjugate transpose B)', function t() {
-	var tc = findCase( 'NC basic' );
+	var tc = nc_basic;
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
@@ -166,7 +165,7 @@ test( 'ztrsyl: NC basic (conjugate transpose B)', function t() {
 });
 
 test( 'ztrsyl: CC basic (conjugate transpose both)', function t() {
-	var tc = findCase( 'CC basic' );
+	var tc = cc_basic;
 	var m = build2x2();
 	var scale = new Float64Array( 1 );
 
@@ -178,7 +177,7 @@ test( 'ztrsyl: CC basic (conjugate transpose both)', function t() {
 });
 
 test( 'ztrsyl: M=0 quick return', function t() {
-	var tc = findCase( 'M=0' );
+	var tc = m_0;
 	var A = new Complex128Array( 4 );
 	var B = new Complex128Array( 4 );
 	var C = new Complex128Array( 4 );
@@ -191,7 +190,7 @@ test( 'ztrsyl: M=0 quick return', function t() {
 });
 
 test( 'ztrsyl: N=0 quick return', function t() {
-	var tc = findCase( 'N=0' );
+	var tc = n_0;
 	var A = new Complex128Array( 4 );
 	var B = new Complex128Array( 4 );
 	var C = new Complex128Array( 4 );
@@ -204,7 +203,7 @@ test( 'ztrsyl: N=0 quick return', function t() {
 });
 
 test( 'ztrsyl: M=1 N=1', function t() {
-	var tc = findCase( 'M=1 N=1' );
+	var tc = m_1_n_1;
 	var A = new Complex128Array( 1 );
 	var B = new Complex128Array( 1 );
 	var C = new Complex128Array( 1 );
@@ -224,7 +223,7 @@ test( 'ztrsyl: M=1 N=1', function t() {
 });
 
 test( 'ztrsyl: NN 3x3', function t() {
-	var tc = findCase( 'NN 3x3' );
+	var tc = nn_3x3;
 	var m = build3x3();
 	var scale = new Float64Array( 1 );
 
@@ -236,7 +235,7 @@ test( 'ztrsyl: NN 3x3', function t() {
 });
 
 test( 'ztrsyl: CN 3x3', function t() {
-	var tc = findCase( 'CN 3x3' );
+	var tc = cn_3x3;
 	var m = build3x3();
 	var scale = new Float64Array( 1 );
 
@@ -248,7 +247,7 @@ test( 'ztrsyl: CN 3x3', function t() {
 });
 
 test( 'ztrsyl: CC isgn=-1 3x3', function t() {
-	var tc = findCase( 'CC isgn=-1 3x3' );
+	var tc = cc_isgn__1_3x3;
 	var m = build3x3();
 	var scale = new Float64Array( 1 );
 

@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtftri = require( './../lib/base.js' );
@@ -14,27 +12,54 @@ var dtftri = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtftri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var lowerOddNormalNonunit = require( './fixtures/lower_odd_normal_nonunit.json' );
+var upperOddNormalNonunit = require( './fixtures/upper_odd_normal_nonunit.json' );
+var lowerOddTransNonunit = require( './fixtures/lower_odd_trans_nonunit.json' );
+var upperOddTransNonunit = require( './fixtures/upper_odd_trans_nonunit.json' );
+var lowerEvenNormalNonunit = require( './fixtures/lower_even_normal_nonunit.json' );
+var upperEvenNormalNonunit = require( './fixtures/upper_even_normal_nonunit.json' );
+var lowerEvenTransNonunit = require( './fixtures/lower_even_trans_nonunit.json' );
+var upperEvenTransNonunit = require( './fixtures/upper_even_trans_nonunit.json' );
+var lowerOddNormalUnit = require( './fixtures/lower_odd_normal_unit.json' );
+var upperOddNormalUnit = require( './fixtures/upper_odd_normal_unit.json' );
+var lowerOddTransUnit = require( './fixtures/lower_odd_trans_unit.json' );
+var upperOddTransUnit = require( './fixtures/upper_odd_trans_unit.json' );
+var lowerEvenNormalUnit = require( './fixtures/lower_even_normal_unit.json' );
+var upperEvenNormalUnit = require( './fixtures/upper_even_normal_unit.json' );
+var lowerEvenTransUnit = require( './fixtures/lower_even_trans_unit.json' );
+var upperEvenTransUnit = require( './fixtures/upper_even_trans_unit.json' );
+var nOneNonunit = require( './fixtures/n_one_nonunit.json' );
+var nOneUnit = require( './fixtures/n_one_unit.json' );
+var lower5NormalNonunit = require( './fixtures/lower_5_normal_nonunit.json' );
+var upper5TransNonunit = require( './fixtures/upper_5_trans_nonunit.json' );
+var singular = require( './fixtures/singular.json' );
+
+var fixtures = {
+	'lower_odd_normal_nonunit': lowerOddNormalNonunit,
+	'upper_odd_normal_nonunit': upperOddNormalNonunit,
+	'lower_odd_trans_nonunit': lowerOddTransNonunit,
+	'upper_odd_trans_nonunit': upperOddTransNonunit,
+	'lower_even_normal_nonunit': lowerEvenNormalNonunit,
+	'upper_even_normal_nonunit': upperEvenNormalNonunit,
+	'lower_even_trans_nonunit': lowerEvenTransNonunit,
+	'upper_even_trans_nonunit': upperEvenTransNonunit,
+	'lower_odd_normal_unit': lowerOddNormalUnit,
+	'upper_odd_normal_unit': upperOddNormalUnit,
+	'lower_odd_trans_unit': lowerOddTransUnit,
+	'upper_odd_trans_unit': upperOddTransUnit,
+	'lower_even_normal_unit': lowerEvenNormalUnit,
+	'upper_even_normal_unit': upperEvenNormalUnit,
+	'lower_even_trans_unit': lowerEvenTransUnit,
+	'upper_even_trans_unit': upperEvenTransUnit,
+	'n_one_nonunit': nOneNonunit,
+	'n_one_unit': nOneUnit,
+	'lower_5_normal_nonunit': lower5NormalNonunit,
+	'upper_5_trans_nonunit': upper5TransNonunit,
+	'singular': singular
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +110,7 @@ function runTest( name, transr, uplo, diag, N ) {
 	var a;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	a = new Float64Array( tc.input.length );
 	for ( i = 0; i < tc.input.length; i++ ) {
 		a[ i ] = tc.input[ i ];
@@ -120,7 +145,7 @@ function runSingularTest( name, transr, uplo, diag, N ) {
 	var a;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	a = new Float64Array( tc.input.length );
 	for ( i = 0; i < tc.input.length; i++ ) {
 		a[ i ] = tc.input[ i ];
@@ -234,7 +259,7 @@ test( 'dtftri: ndarray offset and stride', function t() {
 	var a;
 	var i;
 
-	tc = findCase( 'lower_odd_normal_nonunit' );
+	tc = lowerOddNormalNonunit;
 	a = new Float64Array( tc.input.length + 2 );
 	a[ 0 ] = 999.0;
 	for ( i = 0; i < tc.input.length; i++ ) {

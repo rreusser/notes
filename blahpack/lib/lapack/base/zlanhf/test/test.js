@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -15,27 +13,136 @@ var zlanhf = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlanhf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+var zlanhf_2_cl_frob = require( './fixtures/zlanhf_2_cl_frob.json' );
+var zlanhf_2_cl_max = require( './fixtures/zlanhf_2_cl_max.json' );
+var zlanhf_2_cl_one = require( './fixtures/zlanhf_2_cl_one.json' );
+var zlanhf_2_cu_frob = require( './fixtures/zlanhf_2_cu_frob.json' );
+var zlanhf_2_cu_max = require( './fixtures/zlanhf_2_cu_max.json' );
+var zlanhf_2_cu_one = require( './fixtures/zlanhf_2_cu_one.json' );
+var zlanhf_2_nl_frob = require( './fixtures/zlanhf_2_nl_frob.json' );
+var zlanhf_2_nl_max = require( './fixtures/zlanhf_2_nl_max.json' );
+var zlanhf_2_nl_one = require( './fixtures/zlanhf_2_nl_one.json' );
+var zlanhf_2_nu_frob = require( './fixtures/zlanhf_2_nu_frob.json' );
+var zlanhf_2_nu_max = require( './fixtures/zlanhf_2_nu_max.json' );
+var zlanhf_2_nu_one = require( './fixtures/zlanhf_2_nu_one.json' );
+var zlanhf_3_cl_frob = require( './fixtures/zlanhf_3_cl_frob.json' );
+var zlanhf_3_cl_inf = require( './fixtures/zlanhf_3_cl_inf.json' );
+var zlanhf_3_cl_max = require( './fixtures/zlanhf_3_cl_max.json' );
+var zlanhf_3_cl_one = require( './fixtures/zlanhf_3_cl_one.json' );
+var zlanhf_3_cu_frob = require( './fixtures/zlanhf_3_cu_frob.json' );
+var zlanhf_3_cu_inf = require( './fixtures/zlanhf_3_cu_inf.json' );
+var zlanhf_3_cu_max = require( './fixtures/zlanhf_3_cu_max.json' );
+var zlanhf_3_cu_one = require( './fixtures/zlanhf_3_cu_one.json' );
+var zlanhf_3_nl_frob = require( './fixtures/zlanhf_3_nl_frob.json' );
+var zlanhf_3_nl_inf = require( './fixtures/zlanhf_3_nl_inf.json' );
+var zlanhf_3_nl_max = require( './fixtures/zlanhf_3_nl_max.json' );
+var zlanhf_3_nl_one = require( './fixtures/zlanhf_3_nl_one.json' );
+var zlanhf_3_nu_frob = require( './fixtures/zlanhf_3_nu_frob.json' );
+var zlanhf_3_nu_inf = require( './fixtures/zlanhf_3_nu_inf.json' );
+var zlanhf_3_nu_max = require( './fixtures/zlanhf_3_nu_max.json' );
+var zlanhf_3_nu_one = require( './fixtures/zlanhf_3_nu_one.json' );
+var zlanhf_4_cl_frob = require( './fixtures/zlanhf_4_cl_frob.json' );
+var zlanhf_4_cl_inf = require( './fixtures/zlanhf_4_cl_inf.json' );
+var zlanhf_4_cl_max = require( './fixtures/zlanhf_4_cl_max.json' );
+var zlanhf_4_cl_one = require( './fixtures/zlanhf_4_cl_one.json' );
+var zlanhf_4_cu_frob = require( './fixtures/zlanhf_4_cu_frob.json' );
+var zlanhf_4_cu_inf = require( './fixtures/zlanhf_4_cu_inf.json' );
+var zlanhf_4_cu_max = require( './fixtures/zlanhf_4_cu_max.json' );
+var zlanhf_4_cu_one = require( './fixtures/zlanhf_4_cu_one.json' );
+var zlanhf_4_nl_frob = require( './fixtures/zlanhf_4_nl_frob.json' );
+var zlanhf_4_nl_inf = require( './fixtures/zlanhf_4_nl_inf.json' );
+var zlanhf_4_nl_max = require( './fixtures/zlanhf_4_nl_max.json' );
+var zlanhf_4_nl_one = require( './fixtures/zlanhf_4_nl_one.json' );
+var zlanhf_4_nu_frob = require( './fixtures/zlanhf_4_nu_frob.json' );
+var zlanhf_4_nu_inf = require( './fixtures/zlanhf_4_nu_inf.json' );
+var zlanhf_4_nu_max = require( './fixtures/zlanhf_4_nu_max.json' );
+var zlanhf_4_nu_one = require( './fixtures/zlanhf_4_nu_one.json' );
+var zlanhf_5_cl_frob = require( './fixtures/zlanhf_5_cl_frob.json' );
+var zlanhf_5_cl_inf = require( './fixtures/zlanhf_5_cl_inf.json' );
+var zlanhf_5_cl_max = require( './fixtures/zlanhf_5_cl_max.json' );
+var zlanhf_5_cl_one = require( './fixtures/zlanhf_5_cl_one.json' );
+var zlanhf_5_cu_frob = require( './fixtures/zlanhf_5_cu_frob.json' );
+var zlanhf_5_cu_inf = require( './fixtures/zlanhf_5_cu_inf.json' );
+var zlanhf_5_cu_max = require( './fixtures/zlanhf_5_cu_max.json' );
+var zlanhf_5_cu_one = require( './fixtures/zlanhf_5_cu_one.json' );
+var zlanhf_5_nl_frob = require( './fixtures/zlanhf_5_nl_frob.json' );
+var zlanhf_5_nl_inf = require( './fixtures/zlanhf_5_nl_inf.json' );
+var zlanhf_5_nl_max = require( './fixtures/zlanhf_5_nl_max.json' );
+var zlanhf_5_nl_one = require( './fixtures/zlanhf_5_nl_one.json' );
+var zlanhf_5_nu_frob = require( './fixtures/zlanhf_5_nu_frob.json' );
+var zlanhf_5_nu_inf = require( './fixtures/zlanhf_5_nu_inf.json' );
+var zlanhf_5_nu_max = require( './fixtures/zlanhf_5_nu_max.json' );
+var zlanhf_5_nu_one = require( './fixtures/zlanhf_5_nu_one.json' );
+var zlanhf_n0 = require( './fixtures/zlanhf_n0.json' );
+var zlanhf_n1 = require( './fixtures/zlanhf_n1.json' );
+
+var fixtures = {
+	'zlanhf_2_CL_frob': zlanhf_2_cl_frob,
+	'zlanhf_2_CL_max': zlanhf_2_cl_max,
+	'zlanhf_2_CL_one': zlanhf_2_cl_one,
+	'zlanhf_2_CU_frob': zlanhf_2_cu_frob,
+	'zlanhf_2_CU_max': zlanhf_2_cu_max,
+	'zlanhf_2_CU_one': zlanhf_2_cu_one,
+	'zlanhf_2_NL_frob': zlanhf_2_nl_frob,
+	'zlanhf_2_NL_max': zlanhf_2_nl_max,
+	'zlanhf_2_NL_one': zlanhf_2_nl_one,
+	'zlanhf_2_NU_frob': zlanhf_2_nu_frob,
+	'zlanhf_2_NU_max': zlanhf_2_nu_max,
+	'zlanhf_2_NU_one': zlanhf_2_nu_one,
+	'zlanhf_3_CL_frob': zlanhf_3_cl_frob,
+	'zlanhf_3_CL_inf': zlanhf_3_cl_inf,
+	'zlanhf_3_CL_max': zlanhf_3_cl_max,
+	'zlanhf_3_CL_one': zlanhf_3_cl_one,
+	'zlanhf_3_CU_frob': zlanhf_3_cu_frob,
+	'zlanhf_3_CU_inf': zlanhf_3_cu_inf,
+	'zlanhf_3_CU_max': zlanhf_3_cu_max,
+	'zlanhf_3_CU_one': zlanhf_3_cu_one,
+	'zlanhf_3_NL_frob': zlanhf_3_nl_frob,
+	'zlanhf_3_NL_inf': zlanhf_3_nl_inf,
+	'zlanhf_3_NL_max': zlanhf_3_nl_max,
+	'zlanhf_3_NL_one': zlanhf_3_nl_one,
+	'zlanhf_3_NU_frob': zlanhf_3_nu_frob,
+	'zlanhf_3_NU_inf': zlanhf_3_nu_inf,
+	'zlanhf_3_NU_max': zlanhf_3_nu_max,
+	'zlanhf_3_NU_one': zlanhf_3_nu_one,
+	'zlanhf_4_CL_frob': zlanhf_4_cl_frob,
+	'zlanhf_4_CL_inf': zlanhf_4_cl_inf,
+	'zlanhf_4_CL_max': zlanhf_4_cl_max,
+	'zlanhf_4_CL_one': zlanhf_4_cl_one,
+	'zlanhf_4_CU_frob': zlanhf_4_cu_frob,
+	'zlanhf_4_CU_inf': zlanhf_4_cu_inf,
+	'zlanhf_4_CU_max': zlanhf_4_cu_max,
+	'zlanhf_4_CU_one': zlanhf_4_cu_one,
+	'zlanhf_4_NL_frob': zlanhf_4_nl_frob,
+	'zlanhf_4_NL_inf': zlanhf_4_nl_inf,
+	'zlanhf_4_NL_max': zlanhf_4_nl_max,
+	'zlanhf_4_NL_one': zlanhf_4_nl_one,
+	'zlanhf_4_NU_frob': zlanhf_4_nu_frob,
+	'zlanhf_4_NU_inf': zlanhf_4_nu_inf,
+	'zlanhf_4_NU_max': zlanhf_4_nu_max,
+	'zlanhf_4_NU_one': zlanhf_4_nu_one,
+	'zlanhf_5_CL_frob': zlanhf_5_cl_frob,
+	'zlanhf_5_CL_inf': zlanhf_5_cl_inf,
+	'zlanhf_5_CL_max': zlanhf_5_cl_max,
+	'zlanhf_5_CL_one': zlanhf_5_cl_one,
+	'zlanhf_5_CU_frob': zlanhf_5_cu_frob,
+	'zlanhf_5_CU_inf': zlanhf_5_cu_inf,
+	'zlanhf_5_CU_max': zlanhf_5_cu_max,
+	'zlanhf_5_CU_one': zlanhf_5_cu_one,
+	'zlanhf_5_NL_frob': zlanhf_5_nl_frob,
+	'zlanhf_5_NL_inf': zlanhf_5_nl_inf,
+	'zlanhf_5_NL_max': zlanhf_5_nl_max,
+	'zlanhf_5_NL_one': zlanhf_5_nl_one,
+	'zlanhf_5_NU_frob': zlanhf_5_nu_frob,
+	'zlanhf_5_NU_inf': zlanhf_5_nu_inf,
+	'zlanhf_5_NU_max': zlanhf_5_nu_max,
+	'zlanhf_5_NU_one': zlanhf_5_nu_one,
+	'zlanhf_n0': zlanhf_n0,
+	'zlanhf_n1': zlanhf_n1
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -71,8 +178,8 @@ function runCase( caseName, norm, transr, uplo, N, rfpCase ) {
 	var tc;
 	var A;
 
-	tc = findCase( caseName );
-	rfpTc = findCase( rfpCase || caseName );
+	tc = fixtures[ caseName ];
+	rfpTc = fixtures[ rfpCase || caseName ];
 	A = new Complex128Array( rfpTc.rfp );
 	work = new Float64Array( N );
 	result = zlanhf( norm, transr, uplo, N, A, 1, 0, work, 1, 0 );

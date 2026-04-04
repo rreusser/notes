@@ -6,8 +6,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtfttp = require( './../lib/base.js' );
@@ -15,26 +13,45 @@ var dtfttp = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtfttp.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var n1N = require( './fixtures/n1_n.json' );
+var n1T = require( './fixtures/n1_t.json' );
+var n5NL = require( './fixtures/n5_n_l.json' );
+var n5NU = require( './fixtures/n5_n_u.json' );
+var n5TL = require( './fixtures/n5_t_l.json' );
+var n5TU = require( './fixtures/n5_t_u.json' );
+var n6NL = require( './fixtures/n6_n_l.json' );
+var n6NU = require( './fixtures/n6_n_u.json' );
+var n6TL = require( './fixtures/n6_t_l.json' );
+var n6TU = require( './fixtures/n6_t_u.json' );
+var n7NL = require( './fixtures/n7_n_l.json' );
+var n7NU = require( './fixtures/n7_n_u.json' );
+var n7TL = require( './fixtures/n7_t_l.json' );
+var n7TU = require( './fixtures/n7_t_u.json' );
+var n8NL = require( './fixtures/n8_n_l.json' );
+var n8NU = require( './fixtures/n8_n_u.json' );
+var n8TL = require( './fixtures/n8_t_l.json' );
+var n8TU = require( './fixtures/n8_t_u.json' );
 
-
-// FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var fixtures = {
+	'n1_N': n1N,
+	'n1_T': n1T,
+	'n5_N_L': n5NL,
+	'n5_N_U': n5NU,
+	'n5_T_L': n5TL,
+	'n5_T_U': n5TU,
+	'n6_N_L': n6NL,
+	'n6_N_U': n6NU,
+	'n6_T_L': n6TL,
+	'n6_T_U': n6TU,
+	'n7_N_L': n7NL,
+	'n7_N_U': n7NU,
+	'n7_T_L': n7TL,
+	'n7_T_U': n7TU,
+	'n8_N_L': n8NL,
+	'n8_N_U': n8NU,
+	'n8_T_L': n8TL,
+	'n8_T_U': n8TU
+};
 
 /**
 * RunCase.
@@ -52,7 +69,7 @@ function runCase( name, transr, uplo ) {
 	var AP;
 	var N;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.n;
 	ARF = new Float64Array( tc.ARF );
 	AP = new Float64Array( tc.AP.length );
@@ -85,7 +102,7 @@ test( 'dtfttp: N=1, normal', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_N' );
+	tc = n1N;
 	ARF = new Float64Array( [ 42.0 ] );
 	AP = new Float64Array( 1 );
 	info = dtfttp( 'no-transpose', 'lower', 1, ARF, 1, 0, AP, 1, 0 );
@@ -99,7 +116,7 @@ test( 'dtfttp: N=1, transpose', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_T' );
+	tc = n1T;
 	ARF = new Float64Array( [ 99.0 ] );
 	AP = new Float64Array( 1 );
 	info = dtfttp( 'transpose', 'upper', 1, ARF, 1, 0, AP, 1, 0 );
@@ -185,7 +202,7 @@ test( 'dtfttp: N=5, no-transpose, lower, strideARF=2', function t() {
 	var N;
 	var i;
 
-	tc = findCase( 'n5_N_L' );
+	tc = n5NL;
 	expected = new Float64Array( tc.AP );
 	N = tc.n;
 	ARF = new Float64Array( tc.ARF.length * 2 );
@@ -206,7 +223,7 @@ test( 'dtfttp: N=5, no-transpose, lower, strideAP=2', function t() {
 	var N;
 	var i;
 
-	tc = findCase( 'n5_N_L' );
+	tc = n5NL;
 	ARF = new Float64Array( tc.ARF );
 	N = tc.n;
 	AP = new Float64Array( tc.AP.length * 2 );
@@ -226,7 +243,7 @@ test( 'dtfttp: N=6, transpose, upper, with offset', function t() {
 	var N;
 	var i;
 
-	tc = findCase( 'n6_T_U' );
+	tc = n6TU;
 	N = tc.n;
 	ARF = new Float64Array( tc.ARF.length + 3 );
 	for ( i = 0; i < tc.ARF.length; i += 1 ) {

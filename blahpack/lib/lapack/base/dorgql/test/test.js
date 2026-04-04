@@ -4,23 +4,53 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dorgql = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dorgql.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var out3x3K3 = require( './fixtures/3x3_k3.json' );
+var out40x35Blocked = require( './fixtures/40x35_blocked.json' );
+var out40x35K34 = require( './fixtures/40x35_k34.json' );
+var out4x2K2 = require( './fixtures/4x2_k2.json' );
+var out4x3K1 = require( './fixtures/4x3_k1.json' );
+var out4x3K3 = require( './fixtures/4x3_k3.json' );
+var out5x3Orthogonal = require( './fixtures/5x3_orthogonal.json' );
+var out6x4K4 = require( './fixtures/6x4_k4.json' );
+var outKZero = require( './fixtures/k_zero.json' );
+var inp3x3K3 = require( './fixtures/3x3_k3_input.json' );
+var inp40x35 = require( './fixtures/40x35_input.json' );
+var inp40x35K34 = require( './fixtures/40x35_k34_input.json' );
+var inp4x2K2 = require( './fixtures/4x2_k2_input.json' );
+var inp4x3K1 = require( './fixtures/4x3_k1_input.json' );
+var inp4x3K3 = require( './fixtures/4x3_k3_input.json' );
+var inp5x3K3 = require( './fixtures/5x3_k3_input.json' );
+var inp6x4K4 = require( './fixtures/6x4_k4_input.json' );
+var inpKZero = require( './fixtures/k_zero_input.json' );
+
+var fixtures = {
+	'3x3_k3': out3x3K3,
+	'40x35_blocked': out40x35Blocked,
+	'40x35_k34': out40x35K34,
+	'4x2_k2': out4x2K2,
+	'4x3_k1': out4x3K1,
+	'4x3_k3': out4x3K3,
+	'5x3_orthogonal': out5x3Orthogonal,
+	'6x4_k4': out6x4K4,
+	'k_zero': outKZero,
+	'3x3_k3_input': inp3x3K3,
+	'40x35_input': inp40x35,
+	'40x35_k34_input': inp40x35K34,
+	'4x2_k2_input': inp4x2K2,
+	'4x3_k1_input': inp4x3K1,
+	'4x3_k3_input': inp4x3K3,
+	'5x3_k3_input': inp5x3K3,
+	'6x4_k4_input': inp6x4K4,
+	'k_zero_input': inpKZero
+};
 
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -43,7 +73,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * @returns {Object} { info, Q (Float64Array, M*N flat col-major) }
 */
 function runCase( inputName ) {
-	var tc = findCase( inputName );
+	var tc = fixtures[ inputName ];
 	var M = tc.M;
 	var N = tc.N;
 	var K = tc.K;
@@ -79,28 +109,28 @@ function computeQtQ( Q, M, N ) {
 // TESTS //
 
 test( 'dorgql: 4x3, K=3 (M > N, full K)', function t() {
-	var expected = findCase( '4x3_k3' );
+	var expected = out4x3K3;
 	var result = runCase( '4x3_k3_input' );
 	assert.equal( result.info, expected.INFO );
 	assertArrayClose( result.Q, expected.Q, 1e-14, 'Q' );
 });
 
 test( 'dorgql: 3x3, K=3 (square)', function t() {
-	var expected = findCase( '3x3_k3' );
+	var expected = out3x3K3;
 	var result = runCase( '3x3_k3_input' );
 	assert.equal( result.info, expected.INFO );
 	assertArrayClose( result.Q, expected.Q, 1e-14, 'Q' );
 });
 
 test( 'dorgql: 4x2, K=2', function t() {
-	var expected = findCase( '4x2_k2' );
+	var expected = out4x2K2;
 	var result = runCase( '4x2_k2_input' );
 	assert.equal( result.info, expected.INFO );
 	assertArrayClose( result.Q, expected.Q, 1e-14, 'Q' );
 });
 
 test( 'dorgql: K=0 (identity-like columns)', function t() {
-	var expected = findCase( 'k_zero' );
+	var expected = outKZero;
 	var result = runCase( 'k_zero_input' );
 	assert.equal( result.info, expected.INFO );
 	assertArrayClose( result.Q, expected.Q, 1e-14, 'Q' );
@@ -123,7 +153,7 @@ test( 'dorgql: M=0, N=0 quick return', function t() {
 });
 
 test( 'dorgql: 5x3, K=3 orthogonality check', function t() {
-	var expected = findCase( '5x3_orthogonal' );
+	var expected = out5x3Orthogonal;
 	var result = runCase( '5x3_k3_input' );
 	var QtQ;
 	var i;
@@ -148,14 +178,14 @@ test( 'dorgql: 5x3, K=3 orthogonality check', function t() {
 });
 
 test( 'dorgql: 6x4, K=4', function t() {
-	var expected = findCase( '6x4_k4' );
+	var expected = out6x4K4;
 	var result = runCase( '6x4_k4_input' );
 	assert.equal( result.info, expected.INFO );
 	assertArrayClose( result.Q, expected.Q, 1e-14, 'Q' );
 });
 
 test( 'dorgql: 40x35, K=35 (blocked path)', function t() {
-	var expected = findCase( '40x35_blocked' );
+	var expected = out40x35Blocked;
 	var result = runCase( '40x35_input' );
 	var QtQ;
 	var M = 40;
@@ -180,7 +210,7 @@ test( 'dorgql: 40x35, K=35 (blocked path)', function t() {
 });
 
 test( 'dorgql: 40x35, K=34 (blocked path, N > K, exercises zero-fill)', function t() {
-	var expected = findCase( '40x35_k34' );
+	var expected = out40x35K34;
 	var result = runCase( '40x35_k34_input' );
 
 	assert.equal( result.info, expected.INFO );
@@ -188,7 +218,7 @@ test( 'dorgql: 40x35, K=34 (blocked path, N > K, exercises zero-fill)', function
 });
 
 test( 'dorgql: 4x3, K=1 (partial K)', function t() {
-	var expected = findCase( '4x3_k1' );
+	var expected = out4x3K1;
 	var result = runCase( '4x3_k1_input' );
 	assert.equal( result.info, expected.INFO );
 	assertArrayClose( result.Q, expected.Q, 1e-14, 'Q' );

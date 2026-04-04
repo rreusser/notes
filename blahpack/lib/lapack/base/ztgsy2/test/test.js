@@ -23,8 +23,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -34,27 +32,22 @@ var ztgsy2 = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztgsy2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var fixtures = {
+	'notrans_2x2_ijob0': require( './fixtures/notrans_2x2_ijob0.json' ),
+	'notrans_3x2_ijob0': require( './fixtures/notrans_3x2_ijob0.json' ),
+	'notrans_2x2_ijob2': require( './fixtures/notrans_2x2_ijob2.json' ),
+	'conjtrans_2x2': require( './fixtures/conjtrans_2x2.json' ),
+	'conjtrans_3x2': require( './fixtures/conjtrans_3x2.json' ),
+	'notrans_1x2': require( './fixtures/notrans_1x2.json' ),
+	'notrans_2x1': require( './fixtures/notrans_2x1.json' ),
+	'notrans_3x3_ijob0': require( './fixtures/notrans_3x3_ijob0.json' ),
+	'conjtrans_3x3': require( './fixtures/conjtrans_3x3.json' ),
+	'notrans_3x2_ijob2': require( './fixtures/notrans_3x2_ijob2.json' ),
+	'conjtrans_1x1': require( './fixtures/conjtrans_1x1.json' )
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -180,7 +173,7 @@ function runTest( name, trans, ijob, M, N, Adata, Bdata, Cdata, Ddata, Edata, Fd
 	var E;
 	var F;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	A = packMatrix( M, M, M, Adata );
 	B = packMatrix( N, N, N, Bdata );
 	C = packMatrix( M, N, M, Cdata );

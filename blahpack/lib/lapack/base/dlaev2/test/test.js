@@ -5,35 +5,38 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var dlaev2 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaev2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var identity = require( './fixtures/identity.json' );
+var diagonal = require( './fixtures/diagonal.json' );
+var off_diagonal = require( './fixtures/off_diagonal.json' );
+var general = require( './fixtures/general.json' );
+var negative_diagonal = require( './fixtures/negative_diagonal.json' );
+var sm_zero = require( './fixtures/sm_zero.json' );
+var equal_diagonal = require( './fixtures/equal_diagonal.json' );
+var negative_offdiag = require( './fixtures/negative_offdiag.json' );
+var df_negative = require( './fixtures/df_negative.json' );
+var b_zero_a_lt_c = require( './fixtures/b_zero_a_lt_c.json' );
+
+var fixtures = {
+	'identity': identity,
+	'diagonal': diagonal,
+	'off_diagonal': off_diagonal,
+	'general': general,
+	'negative_diagonal': negative_diagonal,
+	'sm_zero': sm_zero,
+	'equal_diagonal': equal_diagonal,
+	'negative_offdiag': negative_offdiag,
+	'df_negative': df_negative,
+	'b_zero_a_lt_c': b_zero_a_lt_c
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -75,7 +78,7 @@ test( 'dlaev2: identity matrix', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'identity' );
+	tc = identity;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -84,7 +87,7 @@ test( 'dlaev2: diagonal matrix', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'diagonal' );
+	tc = diagonal;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -93,7 +96,7 @@ test( 'dlaev2: off-diagonal only', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'off_diagonal' );
+	tc = off_diagonal;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -102,7 +105,7 @@ test( 'dlaev2: general case', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'general' );
+	tc = general;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -111,7 +114,7 @@ test( 'dlaev2: negative diagonal', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'negative_diagonal' );
+	tc = negative_diagonal;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -120,7 +123,7 @@ test( 'dlaev2: sm = 0', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'sm_zero' );
+	tc = sm_zero;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -129,7 +132,7 @@ test( 'dlaev2: equal diagonal', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'equal_diagonal' );
+	tc = equal_diagonal;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -138,7 +141,7 @@ test( 'dlaev2: negative off-diagonal', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'negative_offdiag' );
+	tc = negative_offdiag;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -147,7 +150,7 @@ test( 'dlaev2: df < 0 (a < c)', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'df_negative' );
+	tc = df_negative;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -156,7 +159,7 @@ test( 'dlaev2: b=0, a < c', function t() {
 	var out;
 	var tc;
 
-	tc = findCase( 'b_zero_a_lt_c' );
+	tc = b_zero_a_lt_c;
 	out = dlaev2( tc.a, tc.b, tc.c );
 	checkResult( out, tc, 1e-14 );
 } );
@@ -177,7 +180,7 @@ test( 'dlaev2: verifies diagonalization property', function t() {
 
 	names = [ 'identity', 'diagonal', 'off_diagonal', 'general', 'negative_diagonal', 'sm_zero', 'equal_diagonal', 'negative_offdiag', 'df_negative', 'b_zero_a_lt_c' ]; // eslint-disable-line max-len
 	for ( i = 0; i < names.length; i += 1 ) {
-		tc = findCase( names[ i ] );
+		tc = fixtures[ names[ i ] ];
 		out = dlaev2( tc.a, tc.b, tc.c );
 
 		// Compute Q^T * A * Q where Q = [cs1 -sn1; sn1 cs1]:
@@ -205,7 +208,7 @@ test( 'dlaev2: rt1 has larger absolute value than rt2', function t() {
 
 	names = [ 'identity', 'diagonal', 'off_diagonal', 'general', 'negative_diagonal', 'sm_zero', 'equal_diagonal', 'negative_offdiag', 'df_negative', 'b_zero_a_lt_c' ]; // eslint-disable-line max-len
 	for ( i = 0; i < names.length; i += 1 ) {
-		tc = findCase( names[ i ] );
+		tc = fixtures[ names[ i ] ];
 		out = dlaev2( tc.a, tc.b, tc.c );
 		assert.ok( Math.abs( out.rt1 ) >= Math.abs( out.rt2 ), names[ i ] + ': |rt1| >= |rt2|' ); // eslint-disable-line max-len
 	}
@@ -220,7 +223,7 @@ test( 'dlaev2: eigenvector is unit length', function t() {
 
 	names = [ 'identity', 'diagonal', 'off_diagonal', 'general', 'negative_diagonal', 'sm_zero', 'equal_diagonal', 'negative_offdiag', 'df_negative', 'b_zero_a_lt_c' ]; // eslint-disable-line max-len
 	for ( i = 0; i < names.length; i += 1 ) {
-		tc = findCase( names[ i ] );
+		tc = fixtures[ names[ i ] ];
 		out = dlaev2( tc.a, tc.b, tc.c );
 		norm = Math.sqrt( ( out.cs1 * out.cs1 ) + ( out.sn1 * out.sn1 ) );
 		assertClose( norm, 1.0, 1e-14, names[ i ] + ': eigenvector should be unit length' ); // eslint-disable-line max-len

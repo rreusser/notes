@@ -23,8 +23,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -34,11 +32,51 @@ var ztfsm = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztfsm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var fixtures = {
+	'left_modd_NLN': require( './fixtures/left_modd_nln.json' ),
+	'left_modd_NLC': require( './fixtures/left_modd_nlc.json' ),
+	'left_modd_NUN': require( './fixtures/left_modd_nun.json' ),
+	'left_modd_NUC': require( './fixtures/left_modd_nuc.json' ),
+	'left_modd_CLN': require( './fixtures/left_modd_cln.json' ),
+	'left_modd_CLC': require( './fixtures/left_modd_clc.json' ),
+	'left_modd_CUN': require( './fixtures/left_modd_cun.json' ),
+	'left_modd_CUC': require( './fixtures/left_modd_cuc.json' ),
+	'left_meven_NLN': require( './fixtures/left_meven_nln.json' ),
+	'left_meven_NLC': require( './fixtures/left_meven_nlc.json' ),
+	'left_meven_NUN': require( './fixtures/left_meven_nun.json' ),
+	'left_meven_NUC': require( './fixtures/left_meven_nuc.json' ),
+	'left_meven_CLN': require( './fixtures/left_meven_cln.json' ),
+	'left_meven_CLC': require( './fixtures/left_meven_clc.json' ),
+	'left_meven_CUN': require( './fixtures/left_meven_cun.json' ),
+	'left_meven_CUC': require( './fixtures/left_meven_cuc.json' ),
+	'right_nodd_NLN': require( './fixtures/right_nodd_nln.json' ),
+	'right_nodd_NLC': require( './fixtures/right_nodd_nlc.json' ),
+	'right_nodd_NUN': require( './fixtures/right_nodd_nun.json' ),
+	'right_nodd_NUC': require( './fixtures/right_nodd_nuc.json' ),
+	'right_nodd_CLN': require( './fixtures/right_nodd_cln.json' ),
+	'right_nodd_CLC': require( './fixtures/right_nodd_clc.json' ),
+	'right_nodd_CUN': require( './fixtures/right_nodd_cun.json' ),
+	'right_nodd_CUC': require( './fixtures/right_nodd_cuc.json' ),
+	'right_neven_NLN': require( './fixtures/right_neven_nln.json' ),
+	'right_neven_NLC': require( './fixtures/right_neven_nlc.json' ),
+	'right_neven_NUN': require( './fixtures/right_neven_nun.json' ),
+	'right_neven_NUC': require( './fixtures/right_neven_nuc.json' ),
+	'right_neven_CLN': require( './fixtures/right_neven_cln.json' ),
+	'right_neven_CLC': require( './fixtures/right_neven_clc.json' ),
+	'right_neven_CUN': require( './fixtures/right_neven_cun.json' ),
+	'right_neven_CUC': require( './fixtures/right_neven_cuc.json' ),
+	'left_modd_NLN_unit': require( './fixtures/left_modd_nln_unit.json' ),
+	'left_meven_NLN_unit': require( './fixtures/left_meven_nln_unit.json' ),
+	'right_nodd_NLN_unit': require( './fixtures/right_nodd_nln_unit.json' ),
+	'right_neven_NLN_unit': require( './fixtures/right_neven_nln_unit.json' ),
+	'm1_NLN': require( './fixtures/m1_nln.json' ),
+	'm1_NLC': require( './fixtures/m1_nlc.json' ),
+	'm1_CLN': require( './fixtures/m1_cln.json' ),
+	'm1_CLC': require( './fixtures/m1_clc.json' ),
+	'alpha_zero': require( './fixtures/alpha_zero.json' ),
+	'left_alpha': require( './fixtures/left_alpha.json' ),
+	'right_alpha': require( './fixtures/right_alpha.json' )
+};
 
 
 // VARIABLES //
@@ -48,19 +86,6 @@ var TOL = 1e-13;
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -113,7 +138,7 @@ function runCase( name, transr, side, uplo, trans, diag, M, N, alpha ) {
 	var A;
 	var B;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	A = new Complex128Array( tc.a );
 	B = new Complex128Array( tc.b_in );
 
@@ -306,7 +331,7 @@ test( 'ztfsm: alpha = 0 sets B to zero', function t() {
 	var B;
 
 	alpha = new Complex128( 0.0, 0.0 );
-	tc = findCase( 'alpha_zero' );
+	tc = fixtures.alpha_zero;
 	B = new Complex128Array( tc.b_in );
 	ztfsm( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 2, alpha, new Complex128Array( 6 ), 1, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
 	Bv = reinterpret( B, 0 );
@@ -347,7 +372,7 @@ test( 'ztfsm: left, non-trivial alpha', function t() {
 	var B;
 
 	alpha = new Complex128( 2.0, -1.0 );
-	tc = findCase( 'left_alpha' );
+	tc = fixtures.left_alpha;
 	A = new Complex128Array( tc.a );
 	B = new Complex128Array( tc.b_in );
 	ztfsm( 'no-transpose', 'left', 'lower', 'no-transpose', 'non-unit', 3, 2, alpha, A, 1, 0, B, 1, 3, 0 ); // eslint-disable-line max-len
@@ -363,7 +388,7 @@ test( 'ztfsm: right, non-trivial alpha', function t() {
 	var B;
 
 	alpha = new Complex128( 0.5, 1.0 );
-	tc = findCase( 'right_alpha' );
+	tc = fixtures.right_alpha;
 	A = new Complex128Array( tc.a );
 	B = new Complex128Array( tc.b_in );
 	ztfsm( 'no-transpose', 'right', 'lower', 'no-transpose', 'non-unit', 2, 3, alpha, A, 1, 0, B, 1, 2, 0 ); // eslint-disable-line max-len

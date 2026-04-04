@@ -20,16 +20,19 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zladiv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
+var zladiv_basic = require( './fixtures/zladiv_basic.json' );
+var zladiv_pure_imag_denom = require( './fixtures/zladiv_pure_imag_denom.json' );
+var zladiv_real_div = require( './fixtures/zladiv_real_div.json' );
+var zladiv_zero_numer = require( './fixtures/zladiv_zero_numer.json' );
+var zladiv_neg_denom = require( './fixtures/zladiv_neg_denom.json' );
+var zladiv_large = require( './fixtures/zladiv_large.json' );
+var zladiv_small = require( './fixtures/zladiv_small.json' );
 // HELPERS //
 
 function assertClose( actual, expected, msg ) {
@@ -52,7 +55,7 @@ test( 'zladiv: main export is a function', function t() {
 });
 
 test( 'zladiv: (4+2i)/(1+1i) = 3-1i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zladiv_basic'; } );
+	var tc = zladiv_basic;
 	var x = new Complex128Array( [ 4.0, 2.0 ] );
 	var y = new Complex128Array( [ 1.0, 1.0 ] );
 	var out = new Complex128Array( 1 );
@@ -63,7 +66,7 @@ test( 'zladiv: (4+2i)/(1+1i) = 3-1i', function t() {
 });
 
 test( 'zladiv: (1+0i)/(0+1i) = 0-1i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zladiv_pure_imag_denom'; } );
+	var tc = zladiv_pure_imag_denom;
 	var x = new Complex128Array( [ 1.0, 0.0 ] );
 	var y = new Complex128Array( [ 0.0, 1.0 ] );
 	var out = new Complex128Array( 1 );
@@ -74,7 +77,7 @@ test( 'zladiv: (1+0i)/(0+1i) = 0-1i', function t() {
 });
 
 test( 'zladiv: (1+0i)/(1+0i) = 1+0i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zladiv_real_div'; } );
+	var tc = zladiv_real_div;
 	var x = new Complex128Array( [ 1.0, 0.0 ] );
 	var y = new Complex128Array( [ 1.0, 0.0 ] );
 	var out = new Complex128Array( 1 );
@@ -85,7 +88,7 @@ test( 'zladiv: (1+0i)/(1+0i) = 1+0i', function t() {
 });
 
 test( 'zladiv: (0+0i)/(1+1i) = 0+0i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zladiv_zero_numer'; } );
+	var tc = zladiv_zero_numer;
 	var x = new Complex128Array( [ 0.0, 0.0 ] );
 	var y = new Complex128Array( [ 1.0, 1.0 ] );
 	var out = new Complex128Array( 1 );
@@ -96,7 +99,7 @@ test( 'zladiv: (0+0i)/(1+1i) = 0+0i', function t() {
 });
 
 test( 'zladiv: (3+4i)/(1-2i) = -1+2i', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zladiv_neg_denom'; } );
+	var tc = zladiv_neg_denom;
 	var x = new Complex128Array( [ 3.0, 4.0 ] );
 	var y = new Complex128Array( [ 1.0, -2.0 ] );
 	var out = new Complex128Array( 1 );
@@ -107,7 +110,7 @@ test( 'zladiv: (3+4i)/(1-2i) = -1+2i', function t() {
 });
 
 test( 'zladiv: large values', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zladiv_large'; } );
+	var tc = zladiv_large;
 	var x = new Complex128Array( [ 1.0e300, 1.0e300 ] );
 	var y = new Complex128Array( [ 1.0e300, 1.0e300 ] );
 	var out = new Complex128Array( 1 );
@@ -118,7 +121,7 @@ test( 'zladiv: large values', function t() {
 });
 
 test( 'zladiv: small values', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zladiv_small'; } );
+	var tc = zladiv_small;
 	var x = new Complex128Array( [ 1.0e-300, 1.0e-300 ] );
 	var y = new Complex128Array( [ 1.0e-300, 1.0e-300 ] );
 	var out = new Complex128Array( 1 );

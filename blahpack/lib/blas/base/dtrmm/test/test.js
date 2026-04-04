@@ -3,30 +3,28 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrmm = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrmm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var left_upper_n = require( './fixtures/left_upper_n.json' );
+var left_lower_n = require( './fixtures/left_lower_n.json' );
+var left_upper_t = require( './fixtures/left_upper_t.json' );
+var left_lower_t = require( './fixtures/left_lower_t.json' );
+var right_upper_n = require( './fixtures/right_upper_n.json' );
+var right_lower_n = require( './fixtures/right_lower_n.json' );
+var right_upper_t = require( './fixtures/right_upper_t.json' );
+var right_lower_t = require( './fixtures/right_lower_t.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var unit_diag = require( './fixtures/unit_diag.json' );
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var fixtures = {
+	'left_upper_n': left_upper_n,
+	'left_lower_n': left_lower_n,
+	'left_upper_t': left_upper_t,
+	'left_lower_t': left_lower_t
+};
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -138,7 +136,7 @@ var cases = [
 
 cases.forEach( function forEach( c ) {
 	test( 'dtrmm: ' + c.name, function t() {
-		var tc = findCase( c.name );
+		var tc = fixtures[ c.name ];
 		var a = new Float64Array( 16 );
 		var b = new Float64Array( 16 );
 		c.aFn( a );
@@ -153,7 +151,7 @@ test( 'dtrmm: right upper N', function t() {
 	var a;
 	var b;
 
-	tc = findCase( 'right_upper_n' );
+	tc = right_upper_n;
 	a = new Float64Array( 16 );
 	a[ 0 ] = 2;
 	a[ 2 ] = 3;
@@ -174,7 +172,7 @@ test( 'dtrmm: right lower N', function t() {
 	var a;
 	var b;
 
-	tc = findCase( 'right_lower_n' );
+	tc = right_lower_n;
 	a = new Float64Array( 16 );
 	a[ 0 ] = 2;
 	a[ 1 ] = 3;
@@ -195,7 +193,7 @@ test( 'dtrmm: right upper T', function t() {
 	var a;
 	var b;
 
-	tc = findCase( 'right_upper_t' );
+	tc = right_upper_t;
 	a = new Float64Array( 16 );
 	a[ 0 ] = 2;
 	a[ 2 ] = 3;
@@ -216,7 +214,7 @@ test( 'dtrmm: right lower T', function t() {
 	var a;
 	var b;
 
-	tc = findCase( 'right_lower_t' );
+	tc = right_lower_t;
 	a = new Float64Array( 16 );
 	a[ 0 ] = 2;
 	a[ 1 ] = 3;
@@ -237,7 +235,7 @@ test( 'dtrmm: alpha=0', function t() {
 	var a;
 	var b;
 
-	tc = findCase( 'alpha_zero' );
+	tc = alpha_zero;
 	a = new Float64Array( 16 );
 	setupTriUpper3( a );
 	b = new Float64Array( 16 );
@@ -260,7 +258,7 @@ test( 'dtrmm: unit diag', function t() {
 	var a;
 	var b;
 
-	tc = findCase( 'unit_diag' );
+	tc = unit_diag;
 	a = new Float64Array( 16 );
 	a[ 0 ] = 99;
 	a[ 3 ] = 3;

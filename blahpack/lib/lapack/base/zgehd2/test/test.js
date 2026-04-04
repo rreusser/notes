@@ -2,15 +2,25 @@
 'use strict';
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgehd2 = require( './../lib/base.js' );
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgehd2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-function findCase( name ) { return fixture.find( function find( t ) { return t.name === name; } ); }
+
+var full4x4 = require( './fixtures/4x4_full.json' );
+var full5x5 = require( './fixtures/5x5_full.json' );
+var partial4x4 = require( './fixtures/4x4_partial_ilo2_ihi3.json' );
+var nOne = require( './fixtures/n_one.json' );
+var nTwo = require( './fixtures/n_two.json' );
+var full6x6 = require( './fixtures/6x6_full.json' );
+
+var fixtures = {
+	'4x4_full': full4x4,
+	'5x5_full': full5x5,
+	'4x4_partial_ilo2_ihi3': partial4x4,
+	'n_one': nOne,
+	'n_two': nTwo,
+	'6x6_full': full6x6
+};
 function assertArrayClose( actual, expected, tol, msg ) {
 	var diff, i;
 	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
@@ -22,7 +32,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 function runTest( name, N, ilo, ihi, inputA ) {
-	var tc = findCase( name );
+	var tc = fixtures[ name ];
 	var A = new Complex128Array( N * N );
 	var av = reinterpret( A, 0 ); av.set( inputA );
 	var TAU = new Complex128Array( Math.max( 1, N - 1 ) );
@@ -41,7 +51,7 @@ test( 'zgehd2: 4x4_full', function () { runTest( '4x4_full', 4, 1, 4, new Float6
 test( 'zgehd2: 5x5_full', function () { runTest( '5x5_full', 5, 1, 5, new Float64Array([ 2,1, 1,0.5, 3,-1, 1,0, 4,1, 1,-0.5, 4,0, 1,1, 2,-0.5, 1,0, 3,0, 1,-1, 5,0.5, 1,0, 2,1, 1,1, 2,0, 1,-0.5, 6,1, 1,0.5, 4,-1, 1,0.5, 2,0, 1,-1, 7,0 ]) ); });
 test( 'zgehd2: 4x4_partial', function () { runTest( '4x4_partial_ilo2_ihi3', 4, 2, 3, new Float64Array([ 1,0, 0,0, 0,0, 0,0, 2,0, 5,1, 8,-0.5, 0,0, 3,0, 6,-1, 9,0, 0,0, 4,0, 7,0, 10,1, 11,0 ]) ); });
 test( 'zgehd2: n_one', function () {
-	var tc = findCase( 'n_one' ); var A = new Complex128Array( 1 ); var av = reinterpret( A, 0 );
+	var tc = nOne; var A = new Complex128Array( 1 ); var av = reinterpret( A, 0 );
 	av[ 0 ] = 42.0; av[ 1 ] = 3.0;
 	var TAU = new Complex128Array( 1 ); var WORK = new Complex128Array( 1 );
 	var info = zgehd2( 1, 1, 1, A, 1, 1, 0, TAU, 1, 0, WORK, 1, 0 );

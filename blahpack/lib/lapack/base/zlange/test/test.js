@@ -21,15 +21,18 @@
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlange = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlange.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
+var zlange_max = require( './fixtures/zlange_max.json' );
+var zlange_one = require( './fixtures/zlange_one.json' );
+var zlange_inf = require( './fixtures/zlange_inf.json' );
+var zlange_frob = require( './fixtures/zlange_frob.json' );
+var zlange_m_zero = require( './fixtures/zlange_m_zero.json' );
+var zlange_n_zero = require( './fixtures/zlange_n_zero.json' );
+var zlange_1x1 = require( './fixtures/zlange_1x1.json' );
 // HELPERS //
 
 function assertClose( actual, expected, msg ) {
@@ -48,7 +51,7 @@ test( 'zlange: attached to the main export is an `ndarray` method', function t()
 });
 
 test( 'zlange: max norm (M)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlange_max'; } );
+	var tc = zlange_max;
 	// A col-major 2x2: [(1+2i), (3+4i), (5+6i), (7+8i)]
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
@@ -57,7 +60,7 @@ test( 'zlange: max norm (M)', function t() {
 });
 
 test( 'zlange: one norm (1)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlange_one'; } );
+	var tc = zlange_one;
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
 	var result = base( 'one-norm', 2, 2, A, 1, 2, 0, work, 1, 0 );
@@ -65,7 +68,7 @@ test( 'zlange: one norm (1)', function t() {
 });
 
 test( 'zlange: infinity norm (I)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlange_inf'; } );
+	var tc = zlange_inf;
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
 	var result = base( 'inf-norm', 2, 2, A, 1, 2, 0, work, 1, 0 );
@@ -73,7 +76,7 @@ test( 'zlange: infinity norm (I)', function t() {
 });
 
 test( 'zlange: Frobenius norm (F)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlange_frob'; } );
+	var tc = zlange_frob;
 	var A = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var work = new Float64Array( 10 );
 	var result = base( 'frobenius', 2, 2, A, 1, 2, 0, work, 1, 0 );
@@ -81,7 +84,7 @@ test( 'zlange: Frobenius norm (F)', function t() {
 });
 
 test( 'zlange: M=0 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlange_m_zero'; } );
+	var tc = zlange_m_zero;
 	var A = new Complex128Array( 1 );
 	var work = new Float64Array( 1 );
 	var result = base( 'max', 0, 2, A, 1, 1, 0, work, 1, 0 );
@@ -89,7 +92,7 @@ test( 'zlange: M=0 quick return', function t() {
 });
 
 test( 'zlange: N=0 quick return', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlange_n_zero'; } );
+	var tc = zlange_n_zero;
 	var A = new Complex128Array( 1 );
 	var work = new Float64Array( 1 );
 	var result = base( 'max', 2, 0, A, 1, 1, 0, work, 1, 0 );
@@ -97,7 +100,7 @@ test( 'zlange: N=0 quick return', function t() {
 });
 
 test( 'zlange: 1x1 matrix Frobenius', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlange_1x1'; } );
+	var tc = zlange_1x1;
 	// A = [(3,4)]
 	var A = new Complex128Array( [ 3, 4 ] );
 	var work = new Float64Array( 1 );

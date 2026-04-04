@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -16,16 +14,28 @@ var zhbgst = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhbgst.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var lowerN5Ka2Kb1None = require( './fixtures/lower_n5_ka2_kb1_none.json' );
+var lowerN5Ka2Kb1Vect = require( './fixtures/lower_n5_ka2_kb1_vect.json' );
+var lowerN8Ka3Kb2Vect = require( './fixtures/lower_n8_ka3_kb2_vect.json' );
+var upperN3Ka0Kb0 = require( './fixtures/upper_n3_ka0_kb0.json' );
+var upperN4Ka1Kb1 = require( './fixtures/upper_n4_ka1_kb1.json' );
+var upperN5Ka2Kb1None = require( './fixtures/upper_n5_ka2_kb1_none.json' );
+var upperN5Ka2Kb1Vect = require( './fixtures/upper_n5_ka2_kb1_vect.json' );
+var upperN8Ka3Kb2Vect = require( './fixtures/upper_n8_ka3_kb2_vect.json' );
+
+var fixtures = {
+	'upper_n5_ka2_kb1_none': upperN5Ka2Kb1None,
+	'lower_n5_ka2_kb1_none': lowerN5Ka2Kb1None,
+	'upper_n5_ka2_kb1_vect': upperN5Ka2Kb1Vect,
+	'lower_n5_ka2_kb1_vect': lowerN5Ka2Kb1Vect,
+	'upper_n4_ka1_kb1': upperN4Ka1Kb1,
+	'upper_n3_ka0_kb0': upperN3Ka0Kb0,
+	'upper_n8_ka3_kb2_vect': upperN8Ka3Kb2Vect,
+	'lower_n8_ka3_kb2_vect': lowerN8Ka3Kb2Vect
+};
 
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -66,7 +76,7 @@ function runTest( name, vect, uplo, N, ka, kb, ldab, ldbb, ldx, tol ) {
 	var av;
 	var xv;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 
 	AB = new Complex128Array( tc.AB_in );
 	BB = new Complex128Array( tc.BB );

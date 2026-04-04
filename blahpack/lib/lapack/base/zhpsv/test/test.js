@@ -4,8 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -17,27 +15,24 @@ var zhpsv = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+var upper3x3_1rhs = require( './fixtures/upper_3x3_1rhs.json' );
+var lower3x3_2rhs = require( './fixtures/lower_3x3_2rhs.json' );
+var n1Fixture = require( './fixtures/n1.json' );
+var singularFixture = require( './fixtures/singular.json' );
+var upper4x4Pivot = require( './fixtures/upper_4x4_pivot.json' );
+var lower4x4Pivot = require( './fixtures/lower_4x4_pivot.json' );
+
+var fixtures = {
+	'upper_3x3_1rhs': upper3x3_1rhs,
+	'lower_3x3_2rhs': lower3x3_2rhs,
+	'n1': n1Fixture,
+	'singular': singularFixture,
+	'upper_4x4_pivot': upper4x4Pivot,
+	'lower_4x4_pivot': lower4x4Pivot
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -195,7 +190,7 @@ function runFixtureTest( name, uplo ) {
 	var N;
 	var B;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.n;
 	nrhs = tc.nrhs;
 	nn = ( N * ( N + 1 ) ) / 2;
@@ -276,7 +271,7 @@ test( 'zhpsv: singular matrix returns info > 0', function t() {
 	var N;
 	var B;
 
-	tc = findCase( 'singular' );
+	tc = fixtures[ 'singular' ];
 	N = tc.n;
 	nn = ( N * ( N + 1 ) ) / 2;
 	AP = buildComplex( tc.AP, nn );
@@ -296,7 +291,7 @@ test( 'zhpsv: upper 4x4 with 2x2 pivots', function t() {
 	var N;
 	var B;
 
-	tc = findCase( 'upper_4x4_pivot' );
+	tc = fixtures[ 'upper_4x4_pivot' ];
 	N = tc.n;
 	nn = ( N * ( N + 1 ) ) / 2;
 	AP = buildComplex( tc.AP, nn );

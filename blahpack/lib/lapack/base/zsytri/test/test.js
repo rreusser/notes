@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -16,27 +14,31 @@ var zsytri = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zsytri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var fixtures = {
+	'n1_upper': require( './fixtures/n1_upper.json' ),
+	'n1_upper_factored': require( './fixtures/n1_upper_factored.json' ),
+	'n1_lower': require( './fixtures/n1_lower.json' ),
+	'n1_lower_factored': require( './fixtures/n1_lower_factored.json' ),
+	'3x3_upper': require( './fixtures/3x3_upper.json' ),
+	'3x3_upper_factored': require( './fixtures/3x3_upper_factored.json' ),
+	'3x3_lower': require( './fixtures/3x3_lower.json' ),
+	'3x3_lower_factored': require( './fixtures/3x3_lower_factored.json' ),
+	'4x4_upper_indef': require( './fixtures/4x4_upper_indef.json' ),
+	'4x4_upper_indef_factored': require( './fixtures/4x4_upper_indef_factored.json' ),
+	'4x4_lower_indef': require( './fixtures/4x4_lower_indef.json' ),
+	'4x4_lower_indef_factored': require( './fixtures/4x4_lower_indef_factored.json' ),
+	'singular_lower': require( './fixtures/singular_lower.json' ),
+	'singular_lower_factored': require( './fixtures/singular_lower_factored.json' ),
+	'4x4_upper_swap': require( './fixtures/4x4_upper_swap.json' ),
+	'4x4_upper_swap_factored': require( './fixtures/4x4_upper_swap_factored.json' ),
+	'4x4_lower_swap': require( './fixtures/4x4_lower_swap.json' ),
+	'4x4_lower_swap_factored': require( './fixtures/4x4_lower_swap_factored.json' ),
+	'singular_upper': require( './fixtures/singular_upper.json' ),
+	'singular_upper_factored': require( './fixtures/singular_upper_factored.json' )
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Convert Fortran 1-based IPIV to 0-based with bitwise-NOT convention for 2x2 pivots.
@@ -106,8 +108,8 @@ function toArray( arr ) {
 * @param {string} uplo - 'upper' or 'lower'
 */
 function runTest( name, uplo ) {
-	var factored = findCase( name + '_factored' );
-	var expected = findCase( name );
+	var factored = fixtures[ name + '_factored' ];
+	var expected = fixtures[ name ];
 	var IPIV;
 	var WORK;
 	var info;

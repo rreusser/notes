@@ -4,8 +4,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -15,16 +13,36 @@ var zla_syrpvgrw = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zla_syrpvgrw.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var upper4x4Info0 = require( './fixtures/upper_4x4_info0.json' );
+var lower4x4Info0 = require( './fixtures/lower_4x4_info0.json' );
+var upper1x1 = require( './fixtures/upper_1x1.json' );
+var lower1x1 = require( './fixtures/lower_1x1.json' );
+var upperSingular = require( './fixtures/upper_singular.json' );
+var lowerSingular = require( './fixtures/lower_singular.json' );
+var upper2x2Pivot = require( './fixtures/upper_2x2_pivot.json' );
+var lower2x2Pivot = require( './fixtures/lower_2x2_pivot.json' );
+var upper6x6Mixed = require( './fixtures/upper_6x6_mixed.json' );
+var lower6x6Mixed = require( './fixtures/lower_6x6_mixed.json' );
+var lower1x1Swap = require( './fixtures/lower_1x1_swap.json' );
+var lower1x1Swap5x5 = require( './fixtures/lower_1x1_swap_5x5.json' );
+
+var fixtures = {
+	'upper_4x4_info0': upper4x4Info0,
+	'lower_4x4_info0': lower4x4Info0,
+	'upper_1x1': upper1x1,
+	'lower_1x1': lower1x1,
+	'upper_singular': upperSingular,
+	'lower_singular': lowerSingular,
+	'upper_2x2_pivot': upper2x2Pivot,
+	'lower_2x2_pivot': lower2x2Pivot,
+	'upper_6x6_mixed': upper6x6Mixed,
+	'lower_6x6_mixed': lower6x6Mixed,
+	'lower_1x1_swap': lower1x1Swap,
+	'lower_1x1_swap_5x5': lower1x1Swap5x5
+};
 
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 /**
 * Convert Fortran 1-based IPIV to JS 0-based IPIV.
@@ -64,7 +82,7 @@ function runCase( name, uplo ) {
 	var N;
 	var A;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.N;
 	A = new Complex128Array( tc.A );
 	AF = new Complex128Array( tc.AF );
@@ -92,7 +110,7 @@ function runCaseWithWORK( name, uplo ) {
 	var A;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.N;
 	A = new Complex128Array( tc.A );
 	AF = new Complex128Array( tc.AF );
@@ -131,7 +149,7 @@ test( 'zla_syrpvgrw: upper 1x1', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'upper_1x1' );
+	tc = upper1x1;
 	A = new Complex128Array( tc.A );
 	AF = new Complex128Array( tc.AF );
 	IPIV = new Int32Array( [ 0 ] );
@@ -149,7 +167,7 @@ test( 'zla_syrpvgrw: lower 1x1', function t() {
 	var AF;
 	var A;
 
-	tc = findCase( 'lower_1x1' );
+	tc = lower1x1;
 	A = new Complex128Array( tc.A );
 	AF = new Complex128Array( tc.AF );
 	IPIV = new Int32Array( [ 0 ] );

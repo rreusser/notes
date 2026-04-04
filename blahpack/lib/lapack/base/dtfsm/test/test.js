@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtfsm = require( './../lib/base.js' );
@@ -14,27 +12,106 @@ var dtfsm = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtfsm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var alphaZero = require( './fixtures/alpha_zero.json' );
+var leftOddNLN = require( './fixtures/left_odd_nl_n.json' );
+var leftOddNLT = require( './fixtures/left_odd_nl_t.json' );
+var leftOddNUN = require( './fixtures/left_odd_nu_n.json' );
+var leftOddNUT = require( './fixtures/left_odd_nu_t.json' );
+var leftOddTLN = require( './fixtures/left_odd_tl_n.json' );
+var leftOddTLT = require( './fixtures/left_odd_tl_t.json' );
+var leftOddTUN = require( './fixtures/left_odd_tu_n.json' );
+var leftOddTUT = require( './fixtures/left_odd_tu_t.json' );
+var leftOddNLNUnit = require( './fixtures/left_odd_nl_n_unit.json' );
+var leftOddAlpha = require( './fixtures/left_odd_alpha.json' );
+var leftEvenNLN = require( './fixtures/left_even_nl_n.json' );
+var leftEvenNLT = require( './fixtures/left_even_nl_t.json' );
+var leftEvenNUN = require( './fixtures/left_even_nu_n.json' );
+var leftEvenNUT = require( './fixtures/left_even_nu_t.json' );
+var leftEvenTLN = require( './fixtures/left_even_tl_n.json' );
+var leftEvenTLT = require( './fixtures/left_even_tl_t.json' );
+var leftEvenTUN = require( './fixtures/left_even_tu_n.json' );
+var leftEvenTUT = require( './fixtures/left_even_tu_t.json' );
+var leftEvenNLNUnit = require( './fixtures/left_even_nl_n_unit.json' );
+var leftM1NLN = require( './fixtures/left_m1_nl_n.json' );
+var leftM1NLT = require( './fixtures/left_m1_nl_t.json' );
+var leftM1TLN = require( './fixtures/left_m1_tl_n.json' );
+var leftM1TLT = require( './fixtures/left_m1_tl_t.json' );
+var left5NLN = require( './fixtures/left_5_nl_n.json' );
+var left5TUT = require( './fixtures/left_5_tu_t.json' );
+var left6NUN = require( './fixtures/left_6_nu_n.json' );
+var left6TLT = require( './fixtures/left_6_tl_t.json' );
+var rightOddNLN = require( './fixtures/right_odd_nl_n.json' );
+var rightOddNLT = require( './fixtures/right_odd_nl_t.json' );
+var rightOddNUN = require( './fixtures/right_odd_nu_n.json' );
+var rightOddNUT = require( './fixtures/right_odd_nu_t.json' );
+var rightOddTLN = require( './fixtures/right_odd_tl_n.json' );
+var rightOddTLT = require( './fixtures/right_odd_tl_t.json' );
+var rightOddTUN = require( './fixtures/right_odd_tu_n.json' );
+var rightOddTUT = require( './fixtures/right_odd_tu_t.json' );
+var rightOddNUTUnit = require( './fixtures/right_odd_nu_t_unit.json' );
+var rightEvenNLN = require( './fixtures/right_even_nl_n.json' );
+var rightEvenNLT = require( './fixtures/right_even_nl_t.json' );
+var rightEvenNUN = require( './fixtures/right_even_nu_n.json' );
+var rightEvenNUT = require( './fixtures/right_even_nu_t.json' );
+var rightEvenTLN = require( './fixtures/right_even_tl_n.json' );
+var rightEvenTLT = require( './fixtures/right_even_tl_t.json' );
+var rightEvenTUN = require( './fixtures/right_even_tu_n.json' );
+var rightEvenTUT = require( './fixtures/right_even_tu_t.json' );
+var rightEvenTLNUnit = require( './fixtures/right_even_tl_n_unit.json' );
+var rightEvenAlpha = require( './fixtures/right_even_alpha.json' );
+
+var fixtures = {
+	'left_odd_NL_N': leftOddNLN,
+	'left_odd_NL_T': leftOddNLT,
+	'left_odd_NU_N': leftOddNUN,
+	'left_odd_NU_T': leftOddNUT,
+	'left_odd_TL_N': leftOddTLN,
+	'left_odd_TL_T': leftOddTLT,
+	'left_odd_TU_N': leftOddTUN,
+	'left_odd_TU_T': leftOddTUT,
+	'left_odd_NL_N_unit': leftOddNLNUnit,
+	'left_odd_alpha': leftOddAlpha,
+	'left_even_NL_N': leftEvenNLN,
+	'left_even_NL_T': leftEvenNLT,
+	'left_even_NU_N': leftEvenNUN,
+	'left_even_NU_T': leftEvenNUT,
+	'left_even_TL_N': leftEvenTLN,
+	'left_even_TL_T': leftEvenTLT,
+	'left_even_TU_N': leftEvenTUN,
+	'left_even_TU_T': leftEvenTUT,
+	'left_even_NL_N_unit': leftEvenNLNUnit,
+	'left_m1_NL_N': leftM1NLN,
+	'left_m1_NL_T': leftM1NLT,
+	'left_m1_TL_N': leftM1TLN,
+	'left_m1_TL_T': leftM1TLT,
+	'left_5_NL_N': left5NLN,
+	'left_5_TU_T': left5TUT,
+	'left_6_NU_N': left6NUN,
+	'left_6_TL_T': left6TLT,
+	'right_odd_NL_N': rightOddNLN,
+	'right_odd_NL_T': rightOddNLT,
+	'right_odd_NU_N': rightOddNUN,
+	'right_odd_NU_T': rightOddNUT,
+	'right_odd_TL_N': rightOddTLN,
+	'right_odd_TL_T': rightOddTLT,
+	'right_odd_TU_N': rightOddTUN,
+	'right_odd_TU_T': rightOddTUT,
+	'right_odd_NU_T_unit': rightOddNUTUnit,
+	'right_even_NL_N': rightEvenNLN,
+	'right_even_NL_T': rightEvenNLT,
+	'right_even_NU_N': rightEvenNUN,
+	'right_even_NU_T': rightEvenNUT,
+	'right_even_TL_N': rightEvenTLN,
+	'right_even_TL_T': rightEvenTLT,
+	'right_even_TU_N': rightEvenTUN,
+	'right_even_TU_T': rightEvenTUT,
+	'right_even_TL_N_unit': rightEvenTLNUnit,
+	'right_even_alpha': rightEvenAlpha,
+	'alpha_zero': alphaZero
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -111,7 +188,7 @@ function runCase( name ) {
 	var B;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	transr = mapFlag( 'transr', tc.transr );
 	side = mapFlag( 'side', tc.side );
 	uplo = mapFlag( 'uplo', tc.uplo );
@@ -317,7 +394,7 @@ test( 'dtfsm: alpha=0 sets B to zero', function t() {
 	var N;
 	var i;
 
-	tc = findCase( 'alpha_zero' );
+	tc = alphaZero;
 	M = tc.M;
 	N = tc.N;
 	A = new Float64Array( 6 );

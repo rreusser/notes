@@ -22,11 +22,8 @@
 
 // MODULES //
 
-var fs = require( 'fs' );
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var trim = require( '@stdlib/string/base/trim' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
@@ -36,33 +33,13 @@ var zsprfs = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = trim( fs.readFileSync( path.join( fixtureDir, 'zsprfs.jsonl' ), 'utf8' ) ).split( '\n' ); // eslint-disable-line node/no-sync, no-restricted-syntax
-var fixture = [];
-var idx;
-for ( idx = 0; idx < lines.length; idx++ ) {
-	fixture.push( JSON.parse( lines[ idx ] ) );
-}
+var upper3x3 = require( './fixtures/upper_3x3.json' );
+var lower3x3 = require( './fixtures/lower_3x3.json' );
+var upper3x3_2rhs = require( './fixtures/upper_3x3_2rhs.json' );
+var n1 = require( './fixtures/n1.json' );
 
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	var i;
-	for ( i = 0; i < fixture.length; i++ ) {
-		if ( fixture[ i ].name === name ) {
-			return fixture[ i ];
-		}
-	}
-	return null;
-}
 
 /**
 * Asserts two numbers are close within relative tolerance.
@@ -160,17 +137,17 @@ test( 'main export is a function', function t() {
 });
 
 test( 'zsprfs: upper, 3x3, 1 RHS', function t() {
-	var tc = findCase( 'upper_3x3' );
+	var tc = upper3x3;
 	runTest( 'upper', tc, 3, 1 );
 });
 
 test( 'zsprfs: lower, 3x3, 1 RHS', function t() {
-	var tc = findCase( 'lower_3x3' );
+	var tc = lower3x3;
 	runTest( 'lower', tc, 3, 1 );
 });
 
 test( 'zsprfs: upper, 3x3, 2 RHS', function t() {
-	var tc = findCase( 'upper_3x3_2rhs' );
+	var tc = upper3x3_2rhs;
 	runTest( 'upper', tc, 3, 2 );
 });
 
@@ -204,6 +181,6 @@ test( 'zsprfs: N=0', function t() {
 });
 
 test( 'zsprfs: N=1', function t() {
-	var tc = findCase( 'n1' );
+	var tc = n1;
 	runTest( 'upper', tc, 1, 1 );
 });

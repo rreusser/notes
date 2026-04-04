@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var zlags2 = require( './../lib/base.js' );
@@ -14,27 +12,44 @@ var zlags2 = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlags2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+var upperBasic = require( './fixtures/upper_basic.json' );
+var lowerBasic = require( './fixtures/lower_basic.json' );
+var upperDiagonalB = require( './fixtures/upper_diagonal_b.json' );
+var lowerDiagonalB = require( './fixtures/lower_diagonal_b.json' );
+var upperImagOffdiag = require( './fixtures/upper_imag_offdiag.json' );
+var lowerNegative = require( './fixtures/lower_negative.json' );
+var upperIdentity = require( './fixtures/upper_identity.json' );
+var lowerLarge = require( './fixtures/lower_large.json' );
+var upperElseBranch = require( './fixtures/upper_else_branch.json' );
+var lowerElseBranch = require( './fixtures/lower_else_branch.json' );
+var upperZeroA = require( './fixtures/upper_zero_a.json' );
+var lowerZeroA = require( './fixtures/lower_zero_a.json' );
+var upperZeroB = require( './fixtures/upper_zero_b.json' );
+var lowerZeroB = require( './fixtures/lower_zero_b.json' );
+var upperElseVbDriven = require( './fixtures/upper_else_vb_driven.json' );
+var lowerElseVbDriven = require( './fixtures/lower_else_vb_driven.json' );
+
+var fixtures = {
+	'upper_basic': upperBasic,
+	'lower_basic': lowerBasic,
+	'upper_diagonal_b': upperDiagonalB,
+	'lower_diagonal_b': lowerDiagonalB,
+	'upper_imag_offdiag': upperImagOffdiag,
+	'lower_negative': lowerNegative,
+	'upper_identity': upperIdentity,
+	'lower_large': lowerLarge,
+	'upper_else_branch': upperElseBranch,
+	'lower_else_branch': lowerElseBranch,
+	'upper_zero_a': upperZeroA,
+	'lower_zero_a': lowerZeroA,
+	'upper_zero_b': upperZeroB,
+	'lower_zero_b': lowerZeroB,
+	'upper_else_vb_driven': upperElseVbDriven,
+	'lower_else_vb_driven': lowerElseVbDriven
+};
 
 
 // FUNCTIONS //
-
-/**
-* Finds a test case by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are close within a relative tolerance.
@@ -69,7 +84,7 @@ function runCase( name, upper, a1, a2r, a2i, a3, b1, b2r, b2i, b3 ) { // eslint-
 	var out;
 	var tc;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	out = zlags2( upper, a1, new Complex128( a2r, a2i ), a3, b1, new Complex128( b2r, b2i ), b3 ); // eslint-disable-line max-len
 	assertClose( out.csu, tc.csu, 1e-14, name + ' csu' );
 	assertClose( out.snuR, tc.snu[ 0 ], 1e-14, name + ' snuR' );

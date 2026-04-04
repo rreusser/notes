@@ -4,16 +4,19 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlarf = require( './../lib/base.js' );
 
-// Load fixture
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlarf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+
+// FIXTURES //
+
+var zlarfLeft3x2 = require( './fixtures/zlarf_left_3x2.json' );
+var zlarfRight2x3 = require( './fixtures/zlarf_right_2x3.json' );
+var zlarfTauZero = require( './fixtures/zlarf_tau_zero.json' );
+var zlarfNZero = require( './fixtures/zlarf_n_zero.json' );
+var zlarfLeft4x3 = require( './fixtures/zlarf_left_4x3.json' );
+
+
+// FUNCTIONS //
 
 function assertClose( actual, expected, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1e-30 );
@@ -29,7 +32,7 @@ function assertArrayClose( actual, expected, label ) {
 }
 
 test( 'zlarf: left side, 3x2 matrix', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarf_left_3x2'; });
+	var tc = zlarfLeft3x2;
 	// v = [1+0i, 0.5+0.5i, -0.3+0.2i]
 	var v = new Complex128Array( [ 1.0, 0.0, 0.5, 0.5, -0.3, 0.2 ] );
 	var tau = new Complex128Array( [ 1.5, 0.3 ] );
@@ -46,7 +49,7 @@ test( 'zlarf: left side, 3x2 matrix', function t() {
 });
 
 test( 'zlarf: right side, 2x3 matrix', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarf_right_2x3'; });
+	var tc = zlarfRight2x3;
 	var v = new Complex128Array( [ 1.0, 0.0, 0.5, 0.5, -0.3, 0.2 ] );
 	var tau = new Complex128Array( [ 1.5, 0.3 ] );
 	// C is 2x3 col-major
@@ -62,7 +65,7 @@ test( 'zlarf: right side, 2x3 matrix', function t() {
 });
 
 test( 'zlarf: tau=0 (identity)', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarf_tau_zero'; });
+	var tc = zlarfTauZero;
 	var v = new Complex128Array( [ 1.0, 0.0, 0.5, 0.5 ] );
 	var tau = new Complex128Array( [ 0.0, 0.0 ] );
 	var C = new Complex128Array( [
@@ -76,7 +79,7 @@ test( 'zlarf: tau=0 (identity)', function t() {
 });
 
 test( 'zlarf: n=0', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarf_n_zero'; });
+	var tc = zlarfNZero;
 	var v = new Complex128Array( [ 1.0, 0.0 ] );
 	var tau = new Complex128Array( [ 1.0, 0.0 ] );
 	var C = new Complex128Array( [ 1.0, 0.0 ] );
@@ -146,7 +149,7 @@ test( 'zlarf: negative strideV', function t() {
 });
 
 test( 'zlarf: left side, 4x3 matrix', function t() {
-	var tc = fixture.find( function f( t ) { return t.name === 'zlarf_left_4x3'; });
+	var tc = zlarfLeft4x3;
 	var v = new Complex128Array( [
 		1.0, 0.0,  0.2, 0.3,  -0.5, 0.1,  0.4, -0.6
 	]);

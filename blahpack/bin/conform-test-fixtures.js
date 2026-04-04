@@ -60,12 +60,13 @@ function findModules() {
 }
 
 function sanitizeName( name ) {
-	return name.replace( /[^a-zA-Z0-9_]/g, '_' ).toLowerCase();
+	return name.replace( /[^a-zA-Z0-9_-]/g, '_' ).toLowerCase();
 }
 
 function nameToVarName( name ) {
 	// Convert fixture name to a valid JS variable name
-	var sanitized = sanitizeName( name );
+	// Use sanitizeName but also replace hyphens (valid in filenames, not in JS vars)
+	var sanitized = sanitizeName( name ).replace( /-/g, '_' );
 	// Prefix with underscore if starts with digit
 	if ( /^[0-9]/.test( sanitized ) ) {
 		sanitized = '_' + sanitized;
@@ -104,9 +105,9 @@ function conformTestFixtures( modDir ) {
 	}
 
 	// Also check for inline fixture.find() pattern:
-	// fixture.find( function find( t ) { return t.name === 'name'; } )
+	// fixture.find( function find( t ) { ... } ) or fixture.find( function( t ) { ... } )
 	if ( fixtureNames.length === 0 ) {
-		var inlinePattern = /fixture\.find\(\s*function\s+find\(\s*t\s*\)\s*\{[^}]*t\.name\s*===\s*'([^']+)'/g;
+		var inlinePattern = /fixture\.find\(\s*function(?:\s+find)?\(\s*t\s*\)\s*\{[^}]*t\.name\s*===\s*'([^']+)'/g;
 		while ( ( match = inlinePattern.exec( content ) ) !== null ) {
 			var inlineName = match[ 1 ];
 			if ( !seen[ inlineName ] ) {
@@ -238,24 +239,36 @@ function conformTestFixtures( modDir ) {
 		var callPattern = new RegExp( "findCase\\(\\s*'" + escapedName + "'\\s*\\)", 'g' );
 		newContent = newContent.replace( callPattern, varName );
 
-		// Replace inline multiline fixture.find patterns using line-by-line approach
-		// Pattern: tc = fixture.find( function find( t ) {\n\t\treturn t.name === 'name';\n\t} );
+		// Replace inline fixture.find patterns (both single-line and multi-line)
 		var inlineLines = newContent.split( '\n' );
 		var outLines = [];
 		var li = 0;
 		while ( li < inlineLines.length ) {
 			var curLine = inlineLines[ li ];
-			if ( curLine.indexOf( 'fixture.find(' ) !== -1 && li + 2 < inlineLines.length ) {
-				var namePart = inlineLines[ li + 1 ];
-				var closePart = inlineLines[ li + 2 ];
-				var nameMatch = namePart.match( /t\.name\s*===\s*'([^']+)'/ );
-				if ( nameMatch && nameMatch[ 1 ] === fixtureNames[ i ] && /^\s*\}\s*\);?\s*$/.test( closePart ) ) {
-					// Replace the 3-line block with a single assignment
+			if ( curLine.indexOf( 'fixture.find(' ) !== -1 ) {
+				// Try single-line match first:
+				// tc = fixture.find( function( t ) { return t.name === 'name'; } );
+				var singleMatch = curLine.match( /t\.name\s*===\s*'([^']+)'/ );
+				if ( singleMatch && singleMatch[ 1 ] === fixtureNames[ i ] && curLine.indexOf( '}' ) !== -1 ) {
 					var assignMatch = curLine.match( /^(\s*)((?:var\s+)?\S+)\s*=\s*fixture\.find/ );
 					if ( assignMatch ) {
 						outLines.push( assignMatch[ 1 ] + assignMatch[ 2 ] + ' = ' + varName + ';' );
-						li += 3;
+						li += 1;
 						continue;
+					}
+				}
+				// Try multi-line match (3 lines):
+				if ( li + 2 < inlineLines.length ) {
+					var namePart = inlineLines[ li + 1 ];
+					var closePart = inlineLines[ li + 2 ];
+					var nameMatch = namePart.match( /t\.name\s*===\s*'([^']+)'/ );
+					if ( nameMatch && nameMatch[ 1 ] === fixtureNames[ i ] && /^\s*\}\s*\);?\s*$/.test( closePart ) ) {
+						var assignMatch2 = curLine.match( /^(\s*)((?:var\s+)?\S+)\s*=\s*fixture\.find/ );
+						if ( assignMatch2 ) {
+							outLines.push( assignMatch2[ 1 ] + assignMatch2[ 2 ] + ' = ' + varName + ';' );
+							li += 3;
+							continue;
+						}
 					}
 				}
 			}

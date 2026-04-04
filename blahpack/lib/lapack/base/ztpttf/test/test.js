@@ -1,5 +1,6 @@
 
 
+
 'use strict';
 
 // MODULES //
@@ -9,23 +10,34 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var ztpttf = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztpttf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtures = {
+	'n1_N_L': require( './fixtures/n1_n_l.json' ),
+	'n1_C_U': require( './fixtures/n1_c_u.json' ),
+	'n5_N_L': require( './fixtures/n5_n_l.json' ),
+	'n5_N_U': require( './fixtures/n5_n_u.json' ),
+	'n5_C_L': require( './fixtures/n5_c_l.json' ),
+	'n5_C_U': require( './fixtures/n5_c_u.json' ),
+	'n6_N_L': require( './fixtures/n6_n_l.json' ),
+	'n6_N_U': require( './fixtures/n6_n_u.json' ),
+	'n6_C_L': require( './fixtures/n6_c_l.json' ),
+	'n6_C_U': require( './fixtures/n6_c_u.json' ),
+	'n7_N_L': require( './fixtures/n7_n_l.json' ),
+	'n7_N_U': require( './fixtures/n7_n_u.json' ),
+	'n7_C_L': require( './fixtures/n7_c_l.json' ),
+	'n7_C_U': require( './fixtures/n7_c_u.json' ),
+	'n8_N_L': require( './fixtures/n8_n_l.json' ),
+	'n8_N_U': require( './fixtures/n8_n_u.json' ),
+	'n8_C_L': require( './fixtures/n8_c_l.json' ),
+	'n8_C_U': require( './fixtures/n8_c_u.json' )
+};
 
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 /**
 * Runs a standard ztpttf test case against a fixture.
@@ -46,7 +58,7 @@ function runTest( transr, uplo, N, caseName ) {
 	var AP;
 	var i;
 
-	tc = findCase( caseName );
+	tc = fixtures[ caseName ];
 	nt = ( N * ( N + 1 ) ) / 2;
 	AP = new Complex128Array( nt );
 	APv = reinterpret( AP, 0 );
@@ -83,7 +95,7 @@ test( 'ztpttf: N=0 quick return', function t() {
 });
 
 test( 'ztpttf: N=1, no-transpose, lower', function t() {
-	var tc = findCase( 'n1_N_L' );
+	var tc = fixtures.n1_N_L;
 	var ARFv;
 	var ARF;
 	var APv;
@@ -103,7 +115,7 @@ test( 'ztpttf: N=1, no-transpose, lower', function t() {
 });
 
 test( 'ztpttf: N=1, conjugate-transpose, upper', function t() {
-	var tc = findCase( 'n1_C_U' );
+	var tc = fixtures.n1_C_U;
 	var ARFv;
 	var ARF;
 	var APv;

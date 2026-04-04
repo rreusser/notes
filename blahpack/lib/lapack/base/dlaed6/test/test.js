@@ -5,8 +5,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -15,26 +13,44 @@ var dlaed6 = require( './../lib' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaed6.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var orgati_true_kniter1_finit_pos = require( './fixtures/orgati_true_kniter1_finit_pos.json' ); // eslint-disable-line max-len
+var orgati_false_kniter1_finit_neg = require( './fixtures/orgati_false_kniter1_finit_neg.json' ); // eslint-disable-line max-len
+var orgati_true_kniter2 = require( './fixtures/orgati_true_kniter2.json' );
+var orgati_false_kniter2 = require( './fixtures/orgati_false_kniter2.json' );
+var orgati_true_finit_neg = require( './fixtures/orgati_true_finit_neg.json' );
+var orgati_false_finit_pos = require( './fixtures/orgati_false_finit_pos.json' );
+var orgati_true_kniter2_finit_neg = require( './fixtures/orgati_true_kniter2_finit_neg.json' ); // eslint-disable-line max-len
+var small_values_scaling = require( './fixtures/small_values_scaling.json' );
+var orgati_false_kniter2_alternate = require( './fixtures/orgati_false_kniter2_alternate.json' ); // eslint-disable-line max-len
+var close_d_values = require( './fixtures/close_d_values.json' );
+var large_rho_kniter2 = require( './fixtures/large_rho_kniter2.json' );
+var neg_rho_orgati_false_kniter2 = require( './fixtures/neg_rho_orgati_false_kniter2.json' ); // eslint-disable-line max-len
+var very_small_scaling2 = require( './fixtures/very_small_scaling2.json' );
+var orgati_false_small_values = require( './fixtures/orgati_false_small_values.json' );
+var kniter2_orgati_large_rho = require( './fixtures/kniter2_orgati_large_rho.json' );
+var kniter2_orgati_false_neg_finit = require( './fixtures/kniter2_orgati_false_neg_finit.json' ); // eslint-disable-line max-len
+
+var fixtures = {
+	'orgati_true_kniter1_finit_pos': orgati_true_kniter1_finit_pos,
+	'orgati_false_kniter1_finit_neg': orgati_false_kniter1_finit_neg,
+	'orgati_true_kniter2': orgati_true_kniter2,
+	'orgati_false_kniter2': orgati_false_kniter2,
+	'orgati_true_finit_neg': orgati_true_finit_neg,
+	'orgati_false_finit_pos': orgati_false_finit_pos,
+	'orgati_true_kniter2_finit_neg': orgati_true_kniter2_finit_neg,
+	'small_values_scaling': small_values_scaling,
+	'orgati_false_kniter2_alternate': orgati_false_kniter2_alternate,
+	'close_d_values': close_d_values,
+	'large_rho_kniter2': large_rho_kniter2,
+	'neg_rho_orgati_false_kniter2': neg_rho_orgati_false_kniter2,
+	'very_small_scaling2': very_small_scaling2,
+	'orgati_false_small_values': orgati_false_small_values,
+	'kniter2_orgati_large_rho': kniter2_orgati_large_rho,
+	'kniter2_orgati_false_neg_finit': kniter2_orgati_false_neg_finit
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -65,7 +81,7 @@ function runTest( name, kniter, orgati ) {
 	var d;
 	var z;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	d = new Float64Array( tc.D );
 	z = new Float64Array( tc.Z );
 	tau = new Float64Array( 1 );
@@ -156,7 +172,7 @@ test( 'dlaed6: supports non-unit strides', function t() {
 	var d;
 	var z;
 
-	tc = findCase( 'orgati_true_kniter2' );
+	tc = orgati_true_kniter2;
 	d = new Float64Array( [ tc.D[0], 999.0, tc.D[1], 999.0, tc.D[2] ] );
 	z = new Float64Array( [ tc.Z[0], 888.0, tc.Z[1], 888.0, tc.Z[2] ] );
 	tau = new Float64Array( 1 );
@@ -172,7 +188,7 @@ test( 'dlaed6: supports offsets', function t() {
 	var d;
 	var z;
 
-	tc = findCase( 'orgati_false_kniter2' );
+	tc = orgati_false_kniter2;
 	d = new Float64Array( [ 999.0, 999.0, tc.D[0], tc.D[1], tc.D[2] ] );
 	z = new Float64Array( [ 888.0, 888.0, tc.Z[0], tc.Z[1], tc.Z[2] ] );
 	tau = new Float64Array( 1 );
@@ -188,7 +204,7 @@ test( 'dlaed6: BLAS-style API wrapper works', function t() {
 	var d;
 	var z;
 
-	tc = findCase( 'orgati_true_kniter2' );
+	tc = orgati_true_kniter2;
 	d = new Float64Array( tc.D );
 	z = new Float64Array( tc.Z );
 	tau = new Float64Array( 1 );

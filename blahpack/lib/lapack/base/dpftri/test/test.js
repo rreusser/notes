@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpftrf = require( '../../dpftrf/lib/base.js' );
@@ -15,27 +13,36 @@ var dpftri = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpftri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var lowerOddNormal = require( './fixtures/lower_odd_normal.json' );
+var upperOddNormal = require( './fixtures/upper_odd_normal.json' );
+var lowerOddTrans = require( './fixtures/lower_odd_trans.json' );
+var upperOddTrans = require( './fixtures/upper_odd_trans.json' );
+var lowerEvenNormal = require( './fixtures/lower_even_normal.json' );
+var upperEvenNormal = require( './fixtures/upper_even_normal.json' );
+var lowerEvenTrans = require( './fixtures/lower_even_trans.json' );
+var upperEvenTrans = require( './fixtures/upper_even_trans.json' );
+var nOne = require( './fixtures/n_one.json' );
+var singular = require( './fixtures/singular.json' );
+var lower5Normal = require( './fixtures/lower_5_normal.json' );
+var upper5Trans = require( './fixtures/upper_5_trans.json' );
+
+var fixtures = {
+	'lower_odd_normal': lowerOddNormal,
+	'upper_odd_normal': upperOddNormal,
+	'lower_odd_trans': lowerOddTrans,
+	'upper_odd_trans': upperOddTrans,
+	'lower_even_normal': lowerEvenNormal,
+	'upper_even_normal': upperEvenNormal,
+	'lower_even_trans': lowerEvenTrans,
+	'upper_even_trans': upperEvenTrans,
+	'n_one': nOne,
+	'singular': singular,
+	'lower_5_normal': lower5Normal,
+	'upper_5_trans': upper5Trans
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -102,7 +109,7 @@ function runTest( name, transr, uplo, N ) {
 	var a;
 	var i;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	a = new Float64Array( tc.input.length );
 	for ( i = 0; i < tc.input.length; i++ ) {
 		a[ i ] = tc.input[ i ];
@@ -174,7 +181,7 @@ test( 'dpftri: n_one', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'n_one' );
+	tc = nOne;
 	a = new Float64Array( [ 9.0 ] );
 	info = dpftrf( 'no-transpose', 'lower', 1, a, 1, 0 );
 	assert.equal( info, 0, 'dpftrf info for N=1' );
@@ -196,7 +203,7 @@ test( 'dpftri: singular (info > 0)', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	a = new Float64Array( [ 1.0, 0.5, 0.3, 0.0, 1.0, 0.2 ] );
 	info = dpftri( 'no-transpose', 'lower', 3, a, 1, 0 );
 	assert.equal( info, tc.info, 'info for singular case' );

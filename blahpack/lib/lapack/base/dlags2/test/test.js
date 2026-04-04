@@ -6,23 +6,33 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dlags2 = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dlags2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var upper_basic = require( './fixtures/upper_basic.json' );
+var lower_basic = require( './fixtures/lower_basic.json' );
+var upper_diagonal_b = require( './fixtures/upper_diagonal_b.json' );
+var lower_diagonal_b = require( './fixtures/lower_diagonal_b.json' );
+var upper_small_offdiag = require( './fixtures/upper_small_offdiag.json' );
+var lower_negative = require( './fixtures/lower_negative.json' );
+var upper_identity = require( './fixtures/upper_identity.json' );
+var lower_large = require( './fixtures/lower_large.json' );
+
+var fixtures = {
+	'upper_basic': upper_basic,
+	'lower_basic': lower_basic,
+	'upper_diagonal_b': upper_diagonal_b,
+	'lower_diagonal_b': lower_diagonal_b,
+	'upper_small_offdiag': upper_small_offdiag,
+	'lower_negative': lower_negative,
+	'upper_identity': upper_identity,
+	'lower_large': lower_large
+};
 
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -49,7 +59,7 @@ var cases = [
 
 cases.forEach( function each( c ) {
 	test( 'dlags2: ' + c[ 0 ], function t() {
-		var tc = findCase( c[ 0 ] );
+		var tc = fixtures[ c[ 0 ] ];
 		var out = dlags2( c[ 1 ], c[ 2 ], c[ 3 ], c[ 4 ], c[ 5 ], c[ 6 ], c[ 7 ] );
 		assertClose( out.csu, tc.csu, 1e-14, 'csu' );
 		assertClose( out.snu, tc.snu, 1e-14, 'snu' );

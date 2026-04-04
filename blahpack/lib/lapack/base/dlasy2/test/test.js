@@ -2,39 +2,31 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlasy2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlasy2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1_1_n2_1_basic = require( './fixtures/n1_1_n2_1_basic.json' );
+var n1_1_n2_2 = require( './fixtures/n1_1_n2_2.json' );
+var n1_2_n2_1 = require( './fixtures/n1_2_n2_1.json' );
+var n1_2_n2_2 = require( './fixtures/n1_2_n2_2.json' );
+var n1_1_n2_1_ltranl_t_ltranr_t_isgn__1 = require( './fixtures/n1_1_n2_1_ltranl_t_ltranr_t_isgn_-1.json' );
+var n1_1_n2_2_ltranr_t = require( './fixtures/n1_1_n2_2_ltranr_t.json' );
+var n1_2_n2_1_ltranl_t = require( './fixtures/n1_2_n2_1_ltranl_t.json' );
+var n1_2_n2_2_ltranl_t_ltranr_t = require( './fixtures/n1_2_n2_2_ltranl_t_ltranr_t.json' );
+var n1_2_n2_2_ltranl_t_isgn__1 = require( './fixtures/n1_2_n2_2_ltranl_t_isgn_-1.json' );
+var n1_2_n2_2_ltranr_t_isgn__1 = require( './fixtures/n1_2_n2_2_ltranr_t_isgn_-1.json' );
+var n1_1_n2_1_isgn__1 = require( './fixtures/n1_1_n2_1_isgn_-1.json' );
+var n1_1_n2_2_isgn__1 = require( './fixtures/n1_1_n2_2_isgn_-1.json' );
+var n1_2_n2_1_isgn__1 = require( './fixtures/n1_2_n2_1_isgn_-1.json' );
+var n1_1_n2_1_near_singular = require( './fixtures/n1_1_n2_1_near-singular.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -83,7 +75,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlasy2: n1=1 n2=1 basic', function t() {
@@ -96,7 +87,7 @@ test( 'dlasy2: n1=1 n2=1 basic', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=1 n2=1 basic' );
+	tc = n1_1_n2_1_basic;
 	TL = new Float64Array([ 3.0, 0, 0, 0 ]);
 	TR = new Float64Array([ 2.0, 0, 0, 0 ]);
 	B = new Float64Array([ 10.0, 0, 0, 0 ]);
@@ -120,7 +111,7 @@ test( 'dlasy2: n1=1 n2=2', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=1 n2=2' );
+	tc = n1_1_n2_2;
 	TL = new Float64Array([ 2.0, 0, 0, 0 ]);
 	TR = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
 	B = new Float64Array([ 3.0, 0, 4.0, 0 ]);
@@ -144,7 +135,7 @@ test( 'dlasy2: n1=2 n2=1', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=2 n2=1' );
+	tc = n1_2_n2_1;
 	TL = new Float64Array([ 2.0, -0.5, 0.5, 2.0 ]);
 	TR = new Float64Array([ 1.0, 0, 0, 0 ]);
 	B = new Float64Array([ 3.0, 4.0, 0, 0 ]);
@@ -168,7 +159,7 @@ test( 'dlasy2: n1=2 n2=2', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=2 n2=2' );
+	tc = n1_2_n2_2;
 	TL = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
 	TR = new Float64Array([ 2.0, -0.3, 0.3, 2.0 ]);
 	B = new Float64Array([ 1.0, 3.0, 2.0, 4.0 ]);
@@ -205,7 +196,7 @@ test( 'dlasy2: n1=1 n2=1 ltranl=T ltranr=T isgn=-1', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=1 n2=1 ltranl=T ltranr=T isgn=-1' );
+	tc = n1_1_n2_1_ltranl_t_ltranr_t_isgn__1;
 	TL = new Float64Array([ 3.0, 0, 0, 0 ]);
 	TR = new Float64Array([ 2.0, 0, 0, 0 ]);
 	B = new Float64Array([ 10.0, 0, 0, 0 ]);
@@ -229,7 +220,7 @@ test( 'dlasy2: n1=1 n2=2 ltranr=T', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=1 n2=2 ltranr=T' );
+	tc = n1_1_n2_2_ltranr_t;
 	TL = new Float64Array([ 2.0, 0, 0, 0 ]);
 	TR = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
 	B = new Float64Array([ 3.0, 0, 4.0, 0 ]);
@@ -253,7 +244,7 @@ test( 'dlasy2: n1=2 n2=1 ltranl=T', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=2 n2=1 ltranl=T' );
+	tc = n1_2_n2_1_ltranl_t;
 	TL = new Float64Array([ 2.0, -0.5, 0.5, 2.0 ]);
 	TR = new Float64Array([ 1.0, 0, 0, 0 ]);
 	B = new Float64Array([ 3.0, 4.0, 0, 0 ]);
@@ -277,7 +268,7 @@ test( 'dlasy2: n1=2 n2=2 ltranl=T ltranr=T', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=2 n2=2 ltranl=T ltranr=T' );
+	tc = n1_2_n2_2_ltranl_t_ltranr_t;
 	TL = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
 	TR = new Float64Array([ 2.0, -0.3, 0.3, 2.0 ]);
 	B = new Float64Array([ 1.0, 3.0, 2.0, 4.0 ]);
@@ -301,7 +292,7 @@ test( 'dlasy2: n1=2 n2=2 ltranl=T isgn=-1', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=2 n2=2 ltranl=T isgn=-1' );
+	tc = n1_2_n2_2_ltranl_t_isgn__1;
 	TL = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
 	TR = new Float64Array([ 2.0, -0.3, 0.3, 2.0 ]);
 	B = new Float64Array([ 5.0, 7.0, 6.0, 8.0 ]);
@@ -325,7 +316,7 @@ test( 'dlasy2: n1=2 n2=2 ltranr=T isgn=-1', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=2 n2=2 ltranr=T isgn=-1' );
+	tc = n1_2_n2_2_ltranr_t_isgn__1;
 	TL = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
 	TR = new Float64Array([ 2.0, -0.3, 0.3, 2.0 ]);
 	B = new Float64Array([ 5.0, 7.0, 6.0, 8.0 ]);
@@ -349,7 +340,7 @@ test( 'dlasy2: n1=1 n2=1 isgn=-1', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=1 n2=1 isgn=-1' );
+	tc = n1_1_n2_1_isgn__1;
 	TL = new Float64Array([ 3.0, 0, 0, 0 ]);
 	TR = new Float64Array([ 2.0, 0, 0, 0 ]);
 	B = new Float64Array([ 10.0, 0, 0, 0 ]);
@@ -373,7 +364,7 @@ test( 'dlasy2: n1=1 n2=2 isgn=-1', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=1 n2=2 isgn=-1' );
+	tc = n1_1_n2_2_isgn__1;
 	TL = new Float64Array([ 2.0, 0, 0, 0 ]);
 	TR = new Float64Array([ 1.0, -0.5, 0.5, 1.0 ]);
 	B = new Float64Array([ 3.0, 0, 4.0, 0 ]);
@@ -397,7 +388,7 @@ test( 'dlasy2: n1=2 n2=1 isgn=-1', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=2 n2=1 isgn=-1' );
+	tc = n1_2_n2_1_isgn__1;
 	TL = new Float64Array([ 2.0, -0.5, 0.5, 2.0 ]);
 	TR = new Float64Array([ 1.0, 0, 0, 0 ]);
 	B = new Float64Array([ 3.0, 4.0, 0, 0 ]);
@@ -421,7 +412,7 @@ test( 'dlasy2: n1=1 n2=1 near-singular', function t() {
 	var B;
 	var X;
 
-	tc = findCase( 'n1=1 n2=1 near-singular' );
+	tc = n1_1_n2_1_near_singular;
 	TL = new Float64Array([ 1.0e-300, 0, 0, 0 ]);
 	TR = new Float64Array([ -1.0e-300, 0, 0, 0 ]);
 	B = new Float64Array([ 1.0, 0, 0, 0 ]);

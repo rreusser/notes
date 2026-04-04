@@ -6,19 +6,27 @@ var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zhecon = require( '../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhecon.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var upper4x4 = require( './fixtures/upper_4x4.json' );
+var lower4x4 = require( './fixtures/lower_4x4.json' );
+var identityUpper = require( './fixtures/identity_upper.json' );
+var identityLower = require( './fixtures/identity_lower.json' );
+var n1Upper = require( './fixtures/n1_upper.json' );
+var lower6x6 = require( './fixtures/lower_6x6.json' );
+var upper6x6 = require( './fixtures/upper_6x6.json' );
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var fixtures = {
+	'upper_4x4': upper4x4,
+	'lower_4x4': lower4x4,
+	'identity_upper': identityUpper,
+	'identity_lower': identityLower,
+	'n1_upper': n1Upper,
+	'lower_6x6': lower6x6,
+	'upper_6x6': upper6x6
+};
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -64,7 +72,7 @@ function convertIPIV( ipivFortran, N ) {
 */
 function runFixtureTest( name, uplo ) {
 	var LDA = 6; // NMAX in Fortran test
-	var tc = findCase( name );
+	var tc = fixtures[ name ];
 	var N = tc.n;
 
 	// For N=1 test, the fixture data only has N rows (not NMAX)

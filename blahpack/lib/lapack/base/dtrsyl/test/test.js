@@ -2,39 +2,37 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtrsyl = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtrsyl.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var nn_basic_2x2 = require( './fixtures/nn_basic_2x2.json' );
+var nn_isgn__1 = require( './fixtures/nn_isgn_-1.json' );
+var tn_basic = require( './fixtures/tn_basic.json' );
+var tt_basic = require( './fixtures/tt_basic.json' );
+var nt_basic = require( './fixtures/nt_basic.json' );
+var m_0 = require( './fixtures/m_0.json' );
+var n_0 = require( './fixtures/n_0.json' );
+var nn_3x3_quasi_tri = require( './fixtures/nn_3x3_quasi-tri.json' );
+var m_1_n_1 = require( './fixtures/m_1_n_1.json' );
+var tn_3x3_quasi_tri = require( './fixtures/tn_3x3_quasi-tri.json' );
+var tt_3x3_quasi_tri = require( './fixtures/tt_3x3_quasi-tri.json' );
+var nt_3x3_quasi_tri = require( './fixtures/nt_3x3_quasi-tri.json' );
+var nn_4x4_quasi_tri_both = require( './fixtures/nn_4x4_quasi-tri_both.json' );
+var tn_4x4_quasi_tri_both = require( './fixtures/tn_4x4_quasi-tri_both.json' );
+var tt_4x4_quasi_tri_both = require( './fixtures/tt_4x4_quasi-tri_both.json' );
+var nt_4x4_quasi_tri_both = require( './fixtures/nt_4x4_quasi-tri_both.json' );
+var nn_4x4_quasi_tri_both_isgn__1 = require( './fixtures/nn_4x4_quasi-tri_both_isgn_-1.json' );
+var tn_4x4_quasi_tri_both_isgn__1 = require( './fixtures/tn_4x4_quasi-tri_both_isgn_-1.json' );
+var tt_4x4_quasi_tri_both_isgn__1 = require( './fixtures/tt_4x4_quasi-tri_both_isgn_-1.json' );
+var nt_4x4_quasi_tri_both_isgn__1 = require( './fixtures/nt_4x4_quasi-tri_both_isgn_-1.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -144,7 +142,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dtrsyl: NN basic 2x2', function t() {
@@ -156,7 +153,7 @@ test( 'dtrsyl: NN basic 2x2', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NN basic 2x2' );
+	tc = nn_basic_2x2;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -187,7 +184,7 @@ test( 'dtrsyl: NN isgn=-1', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NN isgn=-1' );
+	tc = nn_isgn__1;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -218,7 +215,7 @@ test( 'dtrsyl: TN basic', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TN basic' );
+	tc = tn_basic;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -249,7 +246,7 @@ test( 'dtrsyl: TT basic', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TT basic' );
+	tc = tt_basic;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -280,7 +277,7 @@ test( 'dtrsyl: NT basic', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NT basic' );
+	tc = nt_basic;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -310,7 +307,7 @@ test( 'dtrsyl: M=0', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'M=0' );
+	tc = m_0;
 	A = new Float64Array( 16 );
 	B = new Float64Array( 16 );
 	C = new Float64Array( 16 );
@@ -328,7 +325,7 @@ test( 'dtrsyl: N=0', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'N=0' );
+	tc = n_0;
 	A = new Float64Array( 16 );
 	B = new Float64Array( 16 );
 	C = new Float64Array( 16 );
@@ -347,7 +344,7 @@ test( 'dtrsyl: NN 3x3 quasi-tri', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NN 3x3 quasi-tri' );
+	tc = nn_3x3_quasi_tri;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -391,7 +388,7 @@ test( 'dtrsyl: M=1 N=1', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'M=1 N=1' );
+	tc = m_1_n_1;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 ] = 2.0;
@@ -415,7 +412,7 @@ test( 'dtrsyl: TN 3x3 quasi-tri', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TN 3x3 quasi-tri' );
+	tc = tn_3x3_quasi_tri;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -459,7 +456,7 @@ test( 'dtrsyl: TT 3x3 quasi-tri', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TT 3x3 quasi-tri' );
+	tc = tt_3x3_quasi_tri;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -503,7 +500,7 @@ test( 'dtrsyl: NT 3x3 quasi-tri', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NT 3x3 quasi-tri' );
+	tc = nt_3x3_quasi_tri;
 	LDA = 4;
 	A = new Float64Array( LDA * LDA );
 	A[ 0 + 0*LDA ] = 1.0;
@@ -549,7 +546,7 @@ test( 'dtrsyl: NN 4x4 quasi-tri both', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NN 4x4 quasi-tri both' );
+	tc = nn_4x4_quasi_tri_both;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );
@@ -570,7 +567,7 @@ test( 'dtrsyl: TN 4x4 quasi-tri both', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TN 4x4 quasi-tri both' );
+	tc = tn_4x4_quasi_tri_both;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );
@@ -591,7 +588,7 @@ test( 'dtrsyl: TT 4x4 quasi-tri both', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TT 4x4 quasi-tri both' );
+	tc = tt_4x4_quasi_tri_both;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );
@@ -612,7 +609,7 @@ test( 'dtrsyl: NT 4x4 quasi-tri both', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NT 4x4 quasi-tri both' );
+	tc = nt_4x4_quasi_tri_both;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );
@@ -633,7 +630,7 @@ test( 'dtrsyl: NN 4x4 quasi-tri both isgn=-1', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NN 4x4 quasi-tri both isgn=-1' );
+	tc = nn_4x4_quasi_tri_both_isgn__1;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );
@@ -654,7 +651,7 @@ test( 'dtrsyl: TN 4x4 quasi-tri both isgn=-1', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TN 4x4 quasi-tri both isgn=-1' );
+	tc = tn_4x4_quasi_tri_both_isgn__1;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );
@@ -675,7 +672,7 @@ test( 'dtrsyl: TT 4x4 quasi-tri both isgn=-1', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'TT 4x4 quasi-tri both isgn=-1' );
+	tc = tt_4x4_quasi_tri_both_isgn__1;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );
@@ -696,7 +693,7 @@ test( 'dtrsyl: NT 4x4 quasi-tri both isgn=-1', function t() {
 	var B;
 	var C;
 
-	tc = findCase( 'NT 4x4 quasi-tri both isgn=-1' );
+	tc = nt_4x4_quasi_tri_both_isgn__1;
 	LDA = 4;
 	A = buildA4( LDA );
 	B = buildB4( LDA );

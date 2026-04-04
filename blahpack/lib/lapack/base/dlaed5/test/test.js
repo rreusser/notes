@@ -6,8 +6,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlaed5 = require( './../lib' );
@@ -15,26 +13,34 @@ var dlaed5 = require( './../lib' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaed5.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var i1_w_positive = require( './fixtures/i1_w_positive.json' );
+var i1_w_neg_b_positive = require( './fixtures/i1_w_neg_b_positive.json' );
+var i1_w_neg_b_neg = require( './fixtures/i1_w_neg_b_neg.json' );
+var i2_b_positive = require( './fixtures/i2_b_positive.json' );
+var i2_b_neg = require( './fixtures/i2_b_neg.json' );
+var i1_rho3 = require( './fixtures/i1_rho3.json' );
+var i2_rho3 = require( './fixtures/i2_rho3.json' );
+var i1_small_rho = require( './fixtures/i1_small_rho.json' );
+var i2_small_rho = require( './fixtures/i2_small_rho.json' );
+var i1_large_rho = require( './fixtures/i1_large_rho.json' );
+var i2_large_rho = require( './fixtures/i2_large_rho.json' );
+
+var fixtures = {
+	'i1_w_positive': i1_w_positive,
+	'i1_w_neg_b_positive': i1_w_neg_b_positive,
+	'i1_w_neg_b_neg': i1_w_neg_b_neg,
+	'i2_b_positive': i2_b_positive,
+	'i2_b_neg': i2_b_neg,
+	'i1_rho3': i1_rho3,
+	'i2_rho3': i2_rho3,
+	'i1_small_rho': i1_small_rho,
+	'i2_small_rho': i2_small_rho,
+	'i1_large_rho': i1_large_rho,
+	'i2_large_rho': i2_large_rho
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -81,7 +87,7 @@ function runTest( name, idx ) {
 	var D;
 	var Z;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	D = new Float64Array( tc.D );
 	Z = new Float64Array( tc.Z );
 	DELTA = new Float64Array( 2 );
@@ -153,7 +159,7 @@ test( 'dlaed5: non-unit strides', function t() {
 	var D;
 	var Z;
 
-	tc = findCase( 'i1_w_positive' );
+	tc = i1_w_positive;
 	D = new Float64Array( [ tc.D[ 0 ], 0.0, tc.D[ 1 ], 0.0 ] );
 	Z = new Float64Array( [ tc.Z[ 0 ], 0.0, tc.Z[ 1 ], 0.0 ] );
 	DELTA = new Float64Array( 4 );
@@ -171,7 +177,7 @@ test( 'dlaed5: non-zero offsets', function t() {
 	var D;
 	var Z;
 
-	tc = findCase( 'i2_b_positive' );
+	tc = i2_b_positive;
 	D = new Float64Array( [ 0.0, 0.0, 0.0, tc.D[ 0 ], tc.D[ 1 ] ] );
 	Z = new Float64Array( [ 0.0, 0.0, 0.0, tc.Z[ 0 ], tc.Z[ 1 ] ] );
 	DELTA = new Float64Array( 5 );

@@ -4,19 +4,23 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zhetrs = require( '../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zhetrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var upper4x4_1rhs = require( './fixtures/upper_4x4_1rhs.json' );
+var lower4x4_2rhs = require( './fixtures/lower_4x4_2rhs.json' );
+var n1 = require( './fixtures/n1.json' );
+var lower6x6 = require( './fixtures/lower_6x6.json' );
+var upper6x6 = require( './fixtures/upper_6x6.json' );
 
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
+var fixtures = {
+	'upper_4x4_1rhs': upper4x4_1rhs,
+	'lower_4x4_2rhs': lower4x4_2rhs,
+	'n1': n1,
+	'lower_6x6': lower6x6,
+	'upper_6x6': upper6x6
+};
 
 function assertClose( a, e, tol, msg ) {
 	var i;
@@ -131,7 +135,7 @@ function zhemv( uplo, n, LDA, A, x, y ) {
 */
 function runFixtureTest( name, uplo ) {
 	var LDA = 6; // NMAX in Fortran test
-	var tc = findCase( name );
+	var tc = fixtures[ name ];
 	var N = tc.n;
 	var nrhs = tc.nrhs;
 
@@ -196,7 +200,7 @@ test( 'zhetrs: N=0', function t() {
 });
 
 test( 'zhetrs: N=1', function t() {
-	var tc = findCase( 'n1' );
+	var tc = fixtures[ 'n1' ];
 	var A = new Complex128Array( 1 );
 	var Av = reinterpret( A, 0 );
 	Av[ 0 ] = tc.A_factored[ 0 ];

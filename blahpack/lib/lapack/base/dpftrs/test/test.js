@@ -25,23 +25,43 @@
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dpftrs = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dpftrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var lowerOddNormal1rhs = require( './fixtures/lower_odd_normal_1rhs.json' );
+var upperOddNormal1rhs = require( './fixtures/upper_odd_normal_1rhs.json' );
+var lowerOddTrans1rhs = require( './fixtures/lower_odd_trans_1rhs.json' );
+var upperOddTrans1rhs = require( './fixtures/upper_odd_trans_1rhs.json' );
+var lowerEvenNormal1rhs = require( './fixtures/lower_even_normal_1rhs.json' );
+var upperEvenNormal1rhs = require( './fixtures/upper_even_normal_1rhs.json' );
+var lowerEvenTrans1rhs = require( './fixtures/lower_even_trans_1rhs.json' );
+var upperEvenTrans1rhs = require( './fixtures/upper_even_trans_1rhs.json' );
+var lowerOddNormal2rhs = require( './fixtures/lower_odd_normal_2rhs.json' );
+var upperEvenTrans3rhs = require( './fixtures/upper_even_trans_3rhs.json' );
+var lower5Normal1rhs = require( './fixtures/lower_5_normal_1rhs.json' );
+var upper5Trans2rhs = require( './fixtures/upper_5_trans_2rhs.json' );
+var nOne = require( './fixtures/n_one.json' );
+
+var fixtures = {
+	'lower_odd_normal_1rhs': lowerOddNormal1rhs,
+	'upper_odd_normal_1rhs': upperOddNormal1rhs,
+	'lower_odd_trans_1rhs': lowerOddTrans1rhs,
+	'upper_odd_trans_1rhs': upperOddTrans1rhs,
+	'lower_even_normal_1rhs': lowerEvenNormal1rhs,
+	'upper_even_normal_1rhs': upperEvenNormal1rhs,
+	'lower_even_trans_1rhs': lowerEvenTrans1rhs,
+	'upper_even_trans_1rhs': upperEvenTrans1rhs,
+	'lower_odd_normal_2rhs': lowerOddNormal2rhs,
+	'upper_even_trans_3rhs': upperEvenTrans3rhs,
+	'lower_5_normal_1rhs': lower5Normal1rhs,
+	'upper_5_trans_2rhs': upper5Trans2rhs,
+	'n_one': nOne
+};
 
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -67,7 +87,7 @@ function assertArrayClose( actual, expected, tol, msg ) {
 * @param {NonNegativeInteger} nrhs - number of right-hand sides
 */
 function runSolveTest( name, transr, uplo, N, nrhs ) {
-	var tc = findCase( name );
+	var tc = fixtures[ name ];
 	var A = new Float64Array( tc.a );
 	var B = new Float64Array( tc.b_in );
 	var info;
@@ -146,7 +166,7 @@ test( 'dpftrs: NRHS=0 returns 0 immediately', function t() {
 });
 
 test( 'dpftrs: N=1 case', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = nOne;
 	var A = new Float64Array( tc.a );
 	var B = new Float64Array( tc.b_in );
 	var info = dpftrs( 'no-transpose', 'lower', 1, 1, A, 1, 0, B, 1, 1, 0 );

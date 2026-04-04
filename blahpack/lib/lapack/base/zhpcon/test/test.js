@@ -5,8 +5,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
@@ -18,27 +16,36 @@ var zhpcon = require( '../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zhpcon.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
+var nZero = require( './fixtures/n_zero.json' );
+var upperWellCond = require( './fixtures/upper_well_cond.json' );
+var lowerWellCond = require( './fixtures/lower_well_cond.json' );
+var nOneUpper = require( './fixtures/n_one_upper.json' );
+var nOneLower = require( './fixtures/n_one_lower.json' );
+var identityUpper = require( './fixtures/identity_upper.json' );
+var identityLower = require( './fixtures/identity_lower.json' );
+var illCondUpper = require( './fixtures/ill_cond_upper.json' );
+var singularUpper = require( './fixtures/singular_upper.json' );
+var x4x4Upper = require( './fixtures/4x4_upper.json' );
+var x4x4Lower = require( './fixtures/4x4_lower.json' );
+var realDiagUpper = require( './fixtures/real_diag_upper.json' );
+
+var fixtures = {
+	'n_zero': nZero,
+	'upper_well_cond': upperWellCond,
+	'lower_well_cond': lowerWellCond,
+	'n_one_upper': nOneUpper,
+	'n_one_lower': nOneLower,
+	'identity_upper': identityUpper,
+	'identity_lower': identityLower,
+	'ill_cond_upper': illCondUpper,
+	'singular_upper': singularUpper,
+	'4x4_upper': x4x4Upper,
+	'4x4_lower': x4x4Lower,
+	'real_diag_upper': realDiagUpper
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	});
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -110,7 +117,7 @@ function runFixtureTest( name, uplo, N ) {
 	var nn;
 	var tc;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	nn = N * ( N + 1 ) / 2;
 
 	// Build factored AP (packed, nn complex elements)
@@ -140,7 +147,7 @@ test( 'zhpcon: N=0 returns rcond=1', function t() {
 	var AP;
 	var tc;
 
-	tc = findCase( 'n_zero' );
+	tc = fixtures[ 'n_zero' ];
 	AP = new Complex128Array( 1 );
 	IPIV = new Int32Array( 1 );
 	WORK = new Complex128Array( 1 );

@@ -2,18 +2,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlaset = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaset.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
+var zlaset_full = require( './fixtures/zlaset_full.json' );
+var zlaset_upper = require( './fixtures/zlaset_upper.json' );
+var zlaset_lower = require( './fixtures/zlaset_lower.json' );
+var zlaset_1x1 = require( './fixtures/zlaset_1x1.json' );
+var zlaset_0x0 = require( './fixtures/zlaset_0x0.json' );
+var zlaset_2x3 = require( './fixtures/zlaset_2x3.json' );
+var zlaset_3x2 = require( './fixtures/zlaset_3x2.json' );
+var zlaset_upper_identity = require( './fixtures/zlaset_upper_identity.json' );
 // HELPERS //
 
 function assertArrayClose( actual, expected, msg ) {
@@ -55,7 +59,7 @@ test( 'zlaset: attached to the main export is an `ndarray` method', function t()
 });
 
 test( 'zlaset: full 3x3 matrix', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_full'; } );
+	var tc = zlaset_full;
 	var LDA = 4;
 	var A = new Complex128Array( LDA * 3 );
 	var Av = reinterpret( A, 0 );
@@ -68,7 +72,7 @@ test( 'zlaset: full 3x3 matrix', function t() {
 });
 
 test( 'zlaset: upper triangular 3x3', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_upper'; } );
+	var tc = zlaset_upper;
 	var LDA = 4;
 	var A = new Complex128Array( LDA * 3 );
 	var Av = reinterpret( A, 0 );
@@ -81,7 +85,7 @@ test( 'zlaset: upper triangular 3x3', function t() {
 });
 
 test( 'zlaset: lower triangular 3x3', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_lower'; } );
+	var tc = zlaset_lower;
 	var LDA = 4;
 	var A = new Complex128Array( LDA * 3 );
 	var Av = reinterpret( A, 0 );
@@ -94,7 +98,7 @@ test( 'zlaset: lower triangular 3x3', function t() {
 });
 
 test( 'zlaset: 1x1 matrix (diagonal only)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_1x1'; } );
+	var tc = zlaset_1x1;
 	var LDA = 4;
 	var A = new Complex128Array( LDA );
 	var Av = reinterpret( A, 0 );
@@ -105,7 +109,7 @@ test( 'zlaset: 1x1 matrix (diagonal only)', function t() {
 });
 
 test( 'zlaset: 0x0 matrix (no-op)', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_0x0'; } );
+	var tc = zlaset_0x0;
 	var LDA = 4;
 	var A = new Complex128Array( LDA );
 	var Av = reinterpret( A, 0 );
@@ -118,7 +122,7 @@ test( 'zlaset: 0x0 matrix (no-op)', function t() {
 });
 
 test( 'zlaset: rectangular 2x3', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_2x3'; } );
+	var tc = zlaset_2x3;
 	var LDA = 4;
 	var A = new Complex128Array( LDA * 3 );
 	var Av = reinterpret( A, 0 );
@@ -131,7 +135,7 @@ test( 'zlaset: rectangular 2x3', function t() {
 });
 
 test( 'zlaset: rectangular 3x2', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_3x2'; } );
+	var tc = zlaset_3x2;
 	var LDA = 4;
 	var A = new Complex128Array( LDA * 2 );
 	var Av = reinterpret( A, 0 );
@@ -143,7 +147,7 @@ test( 'zlaset: rectangular 3x2', function t() {
 });
 
 test( 'zlaset: upper 4x4 identity', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'zlaset_upper_identity'; } );
+	var tc = zlaset_upper_identity;
 	var LDA = 4;
 	var A = new Complex128Array( LDA * 4 );
 	var Av = reinterpret( A, 0 );

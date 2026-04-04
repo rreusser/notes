@@ -20,18 +20,44 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztrsm = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztrsm.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+// FIXTURES //
 
+var left_upper_notrans_nonunit = require( './fixtures/left_upper_notrans_nonunit.json' );
+var left_upper_trans_nonunit = require( './fixtures/left_upper_trans_nonunit.json' );
+var left_upper_conjtrans_nonunit = require( './fixtures/left_upper_conjtrans_nonunit.json' );
+var left_lower_notrans_nonunit = require( './fixtures/left_lower_notrans_nonunit.json' );
+var left_lower_trans_nonunit = require( './fixtures/left_lower_trans_nonunit.json' );
+var left_lower_conjtrans_nonunit = require( './fixtures/left_lower_conjtrans_nonunit.json' );
+var right_upper_notrans_nonunit = require( './fixtures/right_upper_notrans_nonunit.json' );
+var right_upper_trans_nonunit = require( './fixtures/right_upper_trans_nonunit.json' );
+var right_upper_conjtrans_nonunit = require( './fixtures/right_upper_conjtrans_nonunit.json' );
+var right_lower_notrans_nonunit = require( './fixtures/right_lower_notrans_nonunit.json' );
+var right_lower_trans_nonunit = require( './fixtures/right_lower_trans_nonunit.json' );
+var right_lower_conjtrans_nonunit = require( './fixtures/right_lower_conjtrans_nonunit.json' );
+var left_upper_notrans_unit = require( './fixtures/left_upper_notrans_unit.json' );
+var left_upper_trans_unit = require( './fixtures/left_upper_trans_unit.json' );
+var left_upper_conjtrans_unit = require( './fixtures/left_upper_conjtrans_unit.json' );
+var left_lower_notrans_unit = require( './fixtures/left_lower_notrans_unit.json' );
+var left_lower_trans_unit = require( './fixtures/left_lower_trans_unit.json' );
+var left_lower_conjtrans_unit = require( './fixtures/left_lower_conjtrans_unit.json' );
+var right_upper_notrans_unit = require( './fixtures/right_upper_notrans_unit.json' );
+var right_upper_trans_unit = require( './fixtures/right_upper_trans_unit.json' );
+var right_upper_conjtrans_unit = require( './fixtures/right_upper_conjtrans_unit.json' );
+var right_lower_notrans_unit = require( './fixtures/right_lower_notrans_unit.json' );
+var right_lower_trans_unit = require( './fixtures/right_lower_trans_unit.json' );
+var right_lower_conjtrans_unit = require( './fixtures/right_lower_conjtrans_unit.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var complex_alpha = require( './fixtures/complex_alpha.json' );
+var complex_alpha_nonidentity = require( './fixtures/complex_alpha_nonidentity.json' );
+var _3x2_left_upper_notrans = require( './fixtures/3x2_left_upper_notrans.json' );
+var right_upper_conjtrans_alpha = require( './fixtures/right_upper_conjtrans_alpha.json' );
+var right_lower_trans_alpha = require( './fixtures/right_lower_trans_alpha.json' );
 // HELPERS //
 
 function assertClose( actual, expected, msg ) {
@@ -118,73 +144,73 @@ test( 'ztrsm: attached to the main export is an `ndarray` method', function t() 
 // ========================================================================
 
 test( 'ztrsm: left, upper, no-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_upper_notrans_nonunit'; } );
+	var tc = left_upper_notrans_nonunit;
 	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, upper, transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_upper_trans_nonunit'; } );
+	var tc = left_upper_trans_nonunit;
 	var result = base( 'left', 'upper', 'transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, upper, conj-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_upper_conjtrans_nonunit'; } );
+	var tc = left_upper_conjtrans_nonunit;
 	var result = base( 'left', 'upper', 'conjugate-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, lower, no-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_lower_notrans_nonunit'; } );
+	var tc = left_lower_notrans_nonunit;
 	var result = base( 'left', 'lower', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), lowerA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, lower, transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_lower_trans_nonunit'; } );
+	var tc = left_lower_trans_nonunit;
 	var result = base( 'left', 'lower', 'transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), lowerA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, lower, conj-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_lower_conjtrans_nonunit'; } );
+	var tc = left_lower_conjtrans_nonunit;
 	var result = base( 'left', 'lower', 'conjugate-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), lowerA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, upper, no-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_upper_notrans_nonunit'; } );
+	var tc = right_upper_notrans_nonunit;
 	var result = base( 'right', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, upper, transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_upper_trans_nonunit'; } );
+	var tc = right_upper_trans_nonunit;
 	var result = base( 'right', 'upper', 'transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, upper, conj-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_upper_conjtrans_nonunit'; } );
+	var tc = right_upper_conjtrans_nonunit;
 	var result = base( 'right', 'upper', 'conjugate-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, lower, no-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_lower_notrans_nonunit'; } );
+	var tc = right_lower_notrans_nonunit;
 	var result = base( 'right', 'lower', 'no-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), lowerA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, lower, transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_lower_trans_nonunit'; } );
+	var tc = right_lower_trans_nonunit;
 	var result = base( 'right', 'lower', 'transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), lowerA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, lower, conj-transpose, non-unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_lower_conjtrans_nonunit'; } );
+	var tc = right_lower_conjtrans_nonunit;
 	var result = base( 'right', 'lower', 'conjugate-transpose', 'non-unit', 2, 2, new Complex128( 1, 0 ), lowerA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -194,73 +220,73 @@ test( 'ztrsm: right, lower, conj-transpose, non-unit', function t() {
 // ========================================================================
 
 test( 'ztrsm: left, upper, no-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_upper_notrans_unit'; } );
+	var tc = left_upper_notrans_unit;
 	var result = base( 'left', 'upper', 'no-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), upperUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, upper, transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_upper_trans_unit'; } );
+	var tc = left_upper_trans_unit;
 	var result = base( 'left', 'upper', 'transpose', 'unit', 2, 2, new Complex128( 1, 0 ), upperUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, upper, conj-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_upper_conjtrans_unit'; } );
+	var tc = left_upper_conjtrans_unit;
 	var result = base( 'left', 'upper', 'conjugate-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), upperUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, lower, no-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_lower_notrans_unit'; } );
+	var tc = left_lower_notrans_unit;
 	var result = base( 'left', 'lower', 'no-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), lowerUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, lower, transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_lower_trans_unit'; } );
+	var tc = left_lower_trans_unit;
 	var result = base( 'left', 'lower', 'transpose', 'unit', 2, 2, new Complex128( 1, 0 ), lowerUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: left, lower, conj-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'left_lower_conjtrans_unit'; } );
+	var tc = left_lower_conjtrans_unit;
 	var result = base( 'left', 'lower', 'conjugate-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), lowerUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, upper, no-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_upper_notrans_unit'; } );
+	var tc = right_upper_notrans_unit;
 	var result = base( 'right', 'upper', 'no-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), upperUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, upper, transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_upper_trans_unit'; } );
+	var tc = right_upper_trans_unit;
 	var result = base( 'right', 'upper', 'transpose', 'unit', 2, 2, new Complex128( 1, 0 ), upperUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, upper, conj-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_upper_conjtrans_unit'; } );
+	var tc = right_upper_conjtrans_unit;
 	var result = base( 'right', 'upper', 'conjugate-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), upperUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, lower, no-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_lower_notrans_unit'; } );
+	var tc = right_lower_notrans_unit;
 	var result = base( 'right', 'lower', 'no-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), lowerUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, lower, transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_lower_trans_unit'; } );
+	var tc = right_lower_trans_unit;
 	var result = base( 'right', 'lower', 'transpose', 'unit', 2, 2, new Complex128( 1, 0 ), lowerUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, lower, conj-transpose, unit', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_lower_conjtrans_unit'; } );
+	var tc = right_lower_conjtrans_unit;
 	var result = base( 'right', 'lower', 'conjugate-transpose', 'unit', 2, 2, new Complex128( 1, 0 ), lowerUnitA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -270,13 +296,13 @@ test( 'ztrsm: right, lower, conj-transpose, unit', function t() {
 // ========================================================================
 
 test( 'ztrsm: alpha=0 zeros B', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'alpha_zero'; } );
+	var tc = alpha_zero;
 	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 0, 0 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: complex alpha=(0,1) with identity A', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'complex_alpha'; } );
+	var tc = complex_alpha;
 	var A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	var B = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
 	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 0, 1 ), A, 1, 2, 0, B, 1, 2, 0 );
@@ -284,7 +310,7 @@ test( 'ztrsm: complex alpha=(0,1) with identity A', function t() {
 });
 
 test( 'ztrsm: complex alpha=(2,-1) with non-identity A', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'complex_alpha_nonidentity'; } );
+	var tc = complex_alpha_nonidentity;
 	var result = base( 'left', 'upper', 'no-transpose', 'non-unit', 2, 2, new Complex128( 2, -1 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
@@ -308,7 +334,7 @@ test( 'ztrsm: N=0 quick return (B unchanged)', function t() {
 });
 
 test( 'ztrsm: 3x2 left, upper, no-transpose', function t() {
-	var tc = fixture.find( function( t ) { return t.name === '3x2_left_upper_notrans'; } );
+	var tc = _3x2_left_upper_notrans;
 	// A 3x3 upper: [(1,1), (2,0), (0,1); 0, (3,-1), (1,2); 0, 0, (2,0)] col-major
 	var A = new Complex128Array( [
 		1, 1, 0, 0, 0, 0,   // col 0
@@ -324,13 +350,13 @@ test( 'ztrsm: 3x2 left, upper, no-transpose', function t() {
 });
 
 test( 'ztrsm: right, upper, conj-transpose with complex alpha', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_upper_conjtrans_alpha'; } );
+	var tc = right_upper_conjtrans_alpha;
 	var result = base( 'right', 'upper', 'conjugate-transpose', 'non-unit', 2, 2, new Complex128( 2, -1 ), upperA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });
 
 test( 'ztrsm: right, lower, transpose with complex alpha', function t() {
-	var tc = fixture.find( function( t ) { return t.name === 'right_lower_trans_alpha'; } );
+	var tc = right_lower_trans_alpha;
 	var result = base( 'right', 'lower', 'transpose', 'non-unit', 2, 2, new Complex128( 2, -1 ), lowerA(), 1, 2, 0, stdB(), 1, 2, 0 );
 	assertArrayClose( extractCMatrix( result, 2, 2, 1, 2, 0 ), tc.b, 'b' );
 });

@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -16,27 +14,17 @@ var ndarray = require( './../lib/ndarray.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zppcon.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var fixtures = {
+	'upper_3x3': require( './fixtures/upper_3x3.json' ),
+	'lower_3x3': require( './fixtures/lower_3x3.json' ),
+	'identity': require( './fixtures/identity.json' ),
+	'4x4_upper': require( './fixtures/4x4_upper.json' ),
+	'4x4_lower': require( './fixtures/4x4_lower.json' ),
+	'n_one': require( './fixtures/n_one.json' )
+};
 
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -70,7 +58,7 @@ function runCase( uplo, N, caseName ) {
 	var tc;
 	var AP;
 
-	tc = findCase( caseName );
+	tc = fixtures[ caseName ];
 
 	AP = new Complex128Array( new Float64Array( tc.ap_r ).buffer );
 	WORK = new Complex128Array( 2 * N );
@@ -104,7 +92,7 @@ test( 'zppcon: identity matrix (rcond=1)', function t() {
 	rcond = new Float64Array( 1 );
 	WORK = new Complex128Array( 6 );
 	RWORK = new Float64Array( 3 );
-	tc = findCase( 'identity' );
+	tc = fixtures[ 'identity' ];
 	AP = new Complex128Array( [ 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	info = zppcon( 'upper', 3, AP, 1, 0, tc.anorm, rcond, WORK, 1, 0, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
@@ -162,7 +150,7 @@ test( 'zppcon: N=1 edge case', function t() {
 	rcond = new Float64Array( 1 );
 	WORK = new Complex128Array( 2 );
 	RWORK = new Float64Array( 1 );
-	tc = findCase( 'n_one' );
+	tc = fixtures[ 'n_one' ];
 	AP = new Complex128Array( [ Math.sqrt( 3.0 ), 0.0 ] );
 	info = zppcon( 'upper', 1, AP, 1, 0, tc.anorm, rcond, WORK, 1, 0, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, tc.info, 'info' );
@@ -192,7 +180,7 @@ test( 'ndarray: upper 3x3 HPD matrix', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'upper_3x3' );
+	tc = fixtures[ 'upper_3x3' ];
 	AP = new Complex128Array( new Float64Array( tc.ap_r ).buffer );
 	WORK = new Complex128Array( 6 );
 	RWORK = new Float64Array( 3 );
@@ -210,7 +198,7 @@ test( 'ndarray: lower 4x4 HPD matrix', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( '4x4_lower' );
+	tc = fixtures[ '4x4_lower' ];
 	AP = new Complex128Array( new Float64Array( tc.ap_r ).buffer );
 	WORK = new Complex128Array( 8 );
 	RWORK = new Float64Array( 4 );

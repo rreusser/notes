@@ -6,8 +6,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dorg2l = require( './../lib/base.js' );
@@ -15,46 +13,40 @@ var dorg2l = require( './../lib/base.js' );
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-
 // Expected outputs (Q matrices)
-var outputLines = readFileSync( path.join( fixtureDir, 'dorg2l.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var outputFixture = outputLines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var out4x3K3 = require( './fixtures/4x3_k3.json' );
+var out3x3K3 = require( './fixtures/3x3_k3.json' );
+var out4x2K1 = require( './fixtures/4x2_k1.json' );
+var outKZero = require( './fixtures/k_zero.json' );
+var out5x3Orthogonal = require( './fixtures/5x3_orthogonal.json' );
+var out6x4K4 = require( './fixtures/6x4_k4.json' );
 
 // QL factorization inputs (A and TAU after DGEQL2)
-var inputLines = readFileSync( path.join( fixtureDir, 'dorg2l_inputs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var inputFixture = inputLines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+var inp4x3Ql = require( './fixtures/4x3_ql.json' );
+var inp3x3Ql = require( './fixtures/3x3_ql.json' );
+var inp4x2Ql = require( './fixtures/4x2_ql.json' );
+var inp5x3Ql = require( './fixtures/5x3_ql.json' );
+var inp6x4Ql = require( './fixtures/6x4_ql.json' );
+
+var outputs = {
+	'4x3_k3': out4x3K3,
+	'3x3_k3': out3x3K3,
+	'4x2_k1': out4x2K1,
+	'k_zero': outKZero,
+	'5x3_orthogonal': out5x3Orthogonal,
+	'6x4_k4': out6x4K4
+};
+
+var inputs = {
+	'4x3_ql': inp4x3Ql,
+	'3x3_ql': inp3x3Ql,
+	'4x2_ql': inp4x2Ql,
+	'5x3_ql': inp5x3Ql,
+	'6x4_ql': inp6x4Ql
+};
 
 
 // FUNCTIONS //
-
-/**
-* FindOutput.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findOutput( name ) {
-	return outputFixture.find( function find( t ) { return t.name === name;
-	} );
-}
-
-/**
-* FindInput.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findInput( name ) {
-	return inputFixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -144,8 +136,8 @@ test( 'dorg2l: 4x3, K=3 (M > N, full K)', function t() {
 	var out;
 	var A;
 
-	expected = findOutput( '4x3_k3' );
-	inp = findInput( '4x3_ql' );
+	expected = outputs[ '4x3_k3' ];
+	inp = inputs[ '4x3_ql' ];
 	WORK = new Float64Array( 4 );
 	LDA = 6;
 	A = loadMatrix( inp.A, 4, 3, LDA );
@@ -164,8 +156,8 @@ test( 'dorg2l: 3x3, K=3 (square)', function t() {
 	var out;
 	var A;
 
-	expected = findOutput( '3x3_k3' );
-	inp = findInput( '3x3_ql' );
+	expected = outputs[ '3x3_k3' ];
+	inp = inputs[ '3x3_ql' ];
 	WORK = new Float64Array( 4 );
 	LDA = 6;
 	A = loadMatrix( inp.A, 3, 3, LDA );
@@ -184,8 +176,8 @@ test( 'dorg2l: 4x2, K=1 (K < N, partial reflectors)', function t() {
 	var out;
 	var A;
 
-	expected = findOutput( '4x2_k1' );
-	inp = findInput( '4x2_ql' );
+	expected = outputs[ '4x2_k1' ];
+	inp = inputs[ '4x2_ql' ];
 	WORK = new Float64Array( 4 );
 	LDA = 6;
 	A = loadMatrix( inp.A, 4, 2, LDA );
@@ -204,7 +196,7 @@ test( 'dorg2l: K=0 (identity columns)', function t() {
 	var out;
 	var A;
 
-	expected = findOutput( 'k_zero' );
+	expected = outputs[ 'k_zero' ];
 	WORK = new Float64Array( 4 );
 	TAU = new Float64Array( 1 );
 	LDA = 6;
@@ -263,8 +255,8 @@ test( 'dorg2l: 5x3, K=3 (verify orthogonality Q^T * Q = I)', function t() {
 	var M;
 	var N;
 
-	expected = findOutput( '5x3_orthogonal' );
-	inp = findInput( '5x3_ql' );
+	expected = outputs[ '5x3_orthogonal' ];
+	inp = inputs[ '5x3_ql' ];
 	WORK = new Float64Array( 4 );
 	LDA = 6;
 	M = 5;
@@ -296,8 +288,8 @@ test( 'dorg2l: 6x4, K=4 (larger matrix)', function t() {
 	var out;
 	var A;
 
-	expected = findOutput( '6x4_k4' );
-	inp = findInput( '6x4_ql' );
+	expected = outputs[ '6x4_k4' ];
+	inp = inputs[ '6x4_ql' ];
 	WORK = new Float64Array( 4 );
 	LDA = 6;
 	A = loadMatrix( inp.A, 6, 4, LDA );
@@ -319,8 +311,8 @@ test( 'dorg2l: non-unit strides', function t() {
 	var i;
 	var j;
 
-	inp = findInput( '3x3_ql' );
-	expected = findOutput( '3x3_k3' );
+	inp = inputs[ '3x3_ql' ];
+	expected = outputs[ '3x3_k3' ];
 	WORK = new Float64Array( 4 );
 	strideA1 = 2;
 	strideA2 = strideA1 * 3;
@@ -354,8 +346,8 @@ test( 'dorg2l: non-zero offset', function t() {
 	var i;
 	var j;
 
-	inp = findInput( '3x3_ql' );
-	expected = findOutput( '3x3_k3' );
+	inp = inputs[ '3x3_ql' ];
+	expected = outputs[ '3x3_k3' ];
 	WORK = new Float64Array( 4 );
 	LDA = 6;
 	off = 5;

@@ -1,15 +1,16 @@
 'use strict';
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var fs = require( 'fs' );
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zsyr = require( '../lib/base.js' );
-var lines = fs.readFileSync( path.resolve( __dirname, '../../../../../test/fixtures/zsyr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixtures = {};
-for ( var i = 0; i < lines.length; i++ ) { var obj = JSON.parse( lines[ i ] ); fixtures[ obj.name ] = obj; }
+var fixtures = {
+	'upper_alpha1': require( './fixtures/upper_alpha1.json' ),
+	'lower_alpha2m1': require( './fixtures/lower_alpha2m1.json' ),
+	'n1_upper': require( './fixtures/n1_upper.json' ),
+	'upper_4x4': require( './fixtures/upper_4x4.json' )
+};
 function assertClose( actual, expected, tol ) { for ( var ii = 0; ii < expected.length; ii++ ) { if ( Math.abs( actual[ii] - expected[ii] ) > tol * ( 1.0 + Math.abs( expected[ii] ) ) ) { assert.fail( 'at ' + ii + ': ' + actual[ii] + ' vs ' + expected[ii] ); } } }
 test( 'zsyr: upper alpha=1', function t() { var fix = fixtures.upper_alpha1; var n = fix.n; var LDA = 4; var A = new Complex128Array( LDA * n ); var Av = reinterpret( A, 0 ); Av[0]=1;Av[1]=0;Av[2*LDA]=2;Av[2*LDA+1]=1;Av[4*LDA]=3;Av[4*LDA+1]=-1;Av[2+2*LDA]=4;Av[3+2*LDA]=0;Av[2+4*LDA]=5;Av[3+4*LDA]=2;Av[4+4*LDA]=6;Av[5+4*LDA]=0; var x = new Complex128Array([1,1,2,-1,0,3]); zsyr('upper',n,new Complex128(1,0),x,1,0,A,1,LDA,0); assertClose(Array.from(Av).slice(0,2*LDA*n),fix.A,1e-14); });
 test( 'zsyr: lower alpha=(2,-1)', function t() { var fix = fixtures.lower_alpha2m1; var n = fix.n; var LDA = 4; var A = new Complex128Array( LDA * n ); var Av = reinterpret( A, 0 ); Av[0]=1;Av[1]=0;Av[2]=2;Av[3]=1;Av[2+2*LDA]=4;Av[3+2*LDA]=0;Av[4]=3;Av[5]=-1;Av[4+2*LDA]=5;Av[5+2*LDA]=2;Av[4+4*LDA]=6;Av[5+4*LDA]=0; var x = new Complex128Array([1,1,2,-1,0,3]); zsyr('lower',n,new Complex128(2,-1),x,1,0,A,1,LDA,0); assertClose(Array.from(Av).slice(0,2*LDA*n),fix.A,1e-14); });

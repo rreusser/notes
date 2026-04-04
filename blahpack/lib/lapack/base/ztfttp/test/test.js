@@ -1,5 +1,6 @@
 
 
+
 'use strict';
 
 // MODULES //
@@ -9,23 +10,34 @@ var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var ztfttp = require( './../lib/base.js' );
 
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'ztfttp.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
+var fixtures = {
+	'n1_N': require( './fixtures/n1_n.json' ),
+	'n1_C': require( './fixtures/n1_c.json' ),
+	'n5_N_L': require( './fixtures/n5_n_l.json' ),
+	'n5_N_U': require( './fixtures/n5_n_u.json' ),
+	'n5_C_L': require( './fixtures/n5_c_l.json' ),
+	'n5_C_U': require( './fixtures/n5_c_u.json' ),
+	'n6_N_L': require( './fixtures/n6_n_l.json' ),
+	'n6_N_U': require( './fixtures/n6_n_u.json' ),
+	'n6_C_L': require( './fixtures/n6_c_l.json' ),
+	'n6_C_U': require( './fixtures/n6_c_u.json' ),
+	'n7_N_L': require( './fixtures/n7_n_l.json' ),
+	'n7_N_U': require( './fixtures/n7_n_u.json' ),
+	'n7_C_L': require( './fixtures/n7_c_l.json' ),
+	'n7_C_U': require( './fixtures/n7_c_u.json' ),
+	'n8_N_L': require( './fixtures/n8_n_l.json' ),
+	'n8_N_U': require( './fixtures/n8_n_u.json' ),
+	'n8_C_L': require( './fixtures/n8_c_l.json' ),
+	'n8_C_U': require( './fixtures/n8_c_u.json' )
+};
 
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function runCase( name, transr, uplo ) {
 	var expected;
@@ -36,7 +48,7 @@ function runCase( name, transr, uplo ) {
 	var AP;
 	var N;
 
-	tc = findCase( name );
+	tc = fixtures[ name ];
 	N = tc.n;
 
 	// Create Complex128Arrays from interleaved re/im fixture data:
@@ -75,7 +87,7 @@ test( 'ztfttp: N=1, normal', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_N' );
+	tc = fixtures.n1_N;
 	ARF = new Complex128Array( new Float64Array( [ 42.0, 7.0 ] ) );
 	AP = new Complex128Array( 1 );
 	info = ztfttp( 'no-transpose', 'lower', 1, ARF, 1, 0, AP, 1, 0 );
@@ -94,7 +106,7 @@ test( 'ztfttp: N=1, conjugate-transpose', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_C' );
+	tc = fixtures.n1_C;
 	ARF = new Complex128Array( new Float64Array( [ 99.0, -3.0 ] ) );
 	AP = new Complex128Array( 1 );
 	info = ztfttp( 'conjugate-transpose', 'upper', 1, ARF, 1, 0, AP, 1, 0 );
@@ -185,7 +197,7 @@ test( 'ztfttp: N=5, no-transpose, lower, strideARF=2', function t() {
 	var N;
 	var i;
 
-	tc = findCase( 'n5_N_L' );
+	tc = fixtures.n5_N_L;
 	N = tc.n;
 	expected = new Float64Array( tc.AP );
 
@@ -214,7 +226,7 @@ test( 'ztfttp: N=5, no-transpose, lower, strideAP=2', function t() {
 	var N;
 	var i;
 
-	tc = findCase( 'n5_N_L' );
+	tc = fixtures.n5_N_L;
 	N = tc.n;
 	ARF = new Complex128Array( new Float64Array( tc.ARF ) );
 	AP = new Complex128Array( ( N * ( N + 1 ) / 2 ) * 2 );
@@ -242,7 +254,7 @@ test( 'ztfttp: N=6, conjugate-transpose, upper, with offset', function t() {
 	var N;
 	var i;
 
-	tc = findCase( 'n6_C_U' );
+	tc = fixtures.n6_C_U;
 	N = tc.n;
 	NT = ( N * ( N + 1 ) / 2 ) | 0;
 	expected = new Float64Array( tc.AP );
