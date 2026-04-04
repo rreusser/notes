@@ -1,0 +1,48 @@
+    zlansf.ndarray( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK )
+        Returns the norm of a complex symmetric matrix in RFP format.
+
+        Parameters
+        ----------
+        norm: string
+            Specifies the norm type: 'max', 'one-norm', 'inf-norm', or
+            'frobenius'.
+
+        transr: string
+            Specifies the RFP storage format: 'no-transpose' or
+            'conjugate-transpose'.
+
+        uplo: string
+            Specifies the triangle: 'upper' or 'lower'.
+
+        N: NonNegativeInteger
+            Order of the matrix.
+
+        A: Complex128Array
+            RFP array of length N*(N+1)/2.
+
+        strideA: integer
+            Stride length for `A` (in complex elements).
+
+        offsetA: NonNegativeInteger
+            Starting index for `A` (in complex elements).
+
+        WORK: Float64Array
+            Workspace array of length N.
+
+        strideWORK: integer
+            Stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            Starting index for `WORK`.
+
+        Returns
+        -------
+        out: number
+            The norm value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------

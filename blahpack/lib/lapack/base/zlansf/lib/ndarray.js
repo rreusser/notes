@@ -1,0 +1,46 @@
+
+'use strict';
+
+// MODULES //
+
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Returns the value of the one-norm, Frobenius norm, infinity-norm, or the.
+* largest absolute value of any element of a complex symmetric matrix stored
+* in Rectangular Full Packed (RFP) format.
+*
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} transr - specifies the storage format (`'no-transpose'` or `'conjugate-transpose'`)
+* @param {string} uplo - specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Complex128Array} A - RFP array of length N*(N+1)/2
+* @param {integer} strideA - stride for `A` (in complex elements)
+* @param {NonNegativeInteger} offsetA - starting index for `A` (in complex elements)
+* @param {Float64Array} WORK - workspace of length N (only for `'one-norm'`/`'inf-norm'` norms)
+* @param {integer} strideWORK - stride of WORK
+* @param {NonNegativeInteger} offsetWORK - starting index of WORK
+* @throws {TypeError} second argument must be a valid transpose operation
+* @throws {TypeError} third argument must be a valid matrix triangle
+* @returns {number} the norm value
+*/
+function zlansf( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isTransposeOperation( transr ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid transpose operation. Value: `%s`.', transr ) );
+	}
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	return base( norm, transr, uplo, N, A, strideA, offsetA, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zlansf;

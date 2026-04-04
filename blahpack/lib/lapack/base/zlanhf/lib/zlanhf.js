@@ -1,0 +1,50 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Returns the value of the one-norm, Frobenius norm, infinity-norm, or the.
+* largest absolute value of any element of a complex Hermitian matrix stored
+* in Rectangular Full Packed (RFP) format.
+*
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} transr - `'no-transpose'` or `'conjugate-transpose'`
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Complex128Array} A - RFP array of length `N*(N+1)/2`
+* @param {Float64Array} WORK - workspace array (length >= N for one/inf norms)
+* @returns {number} norm value
+*/
+function zlanhf( norm, transr, uplo, N, A, WORK ) {
+	return base( norm, transr, uplo, N, A, 1, 0, WORK, 1, 0 );
+}
+
+
+// EXPORTS //
+
+module.exports = zlanhf;

@@ -1,0 +1,89 @@
+
+'use strict';
+
+// MODULES //
+
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Improves the computed solution to a complex system A * X = B where A is.
+* tridiagonal and provides error bounds.
+*
+* @param {string} trans - 'no-transpose', 'transpose', or 'conjugate-transpose'
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} nrhs - number of right-hand side columns
+* @param {Complex128Array} DL - sub-diagonal of A (length N-1)
+* @param {integer} strideDL - stride for DL (complex elements)
+* @param {Complex128Array} d - diagonal of A (length N)
+* @param {integer} strideD - stride for d (complex elements)
+* @param {Complex128Array} DU - super-diagonal of A (length N-1)
+* @param {integer} strideDU - stride for DU (complex elements)
+* @param {Complex128Array} DLF - factored sub-diagonal from zgttrf
+* @param {integer} strideDLF - stride for DLF (complex elements)
+* @param {Complex128Array} DF - factored diagonal from zgttrf
+* @param {integer} strideDF - stride for DF (complex elements)
+* @param {Complex128Array} DUF - factored super-diagonal from zgttrf
+* @param {integer} strideDUF - stride for DUF (complex elements)
+* @param {Complex128Array} DU2 - second superdiagonal from zgttrf
+* @param {integer} strideDU2 - stride for DU2 (complex elements)
+* @param {Int32Array} IPIV - pivot indices from zgttrf (0-based)
+* @param {integer} strideIPIV - stride for IPIV
+* @param {Complex128Array} B - right-hand side matrix
+* @param {PositiveInteger} LDB - leading dimension of B (complex elements)
+* @param {Complex128Array} X - solution matrix, refined on output
+* @param {PositiveInteger} LDX - leading dimension of X (complex elements)
+* @param {Float64Array} FERR - output forward error bounds
+* @param {integer} strideFERR - stride for FERR
+* @param {Float64Array} BERR - output backward error bounds
+* @param {integer} strideBERR - stride for BERR
+* @param {Complex128Array} WORK - workspace
+* @param {integer} strideWORK - stride for WORK (complex elements)
+* @param {Float64Array} RWORK - real workspace
+* @param {integer} strideRWORK - stride for RWORK
+* @returns {integer} info - 0 if successful
+*/
+function zgtrfs( trans, N, nrhs, DL, strideDL, d, strideD, DU, strideDU, DLF, strideDLF, DF, strideDF, DUF, strideDUF, DU2, strideDU2, IPIV, strideIPIV, B, LDB, X, LDX, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, RWORK, strideRWORK ) { // eslint-disable-line max-len, max-params
+	var orwork;
+	var oberr;
+	var oferr;
+	var oipiv;
+	var owork;
+	var odlf;
+	var odu2;
+	var oduf;
+	var odf;
+	var odl;
+	var odu;
+	var sb1;
+	var sb2;
+	var sx1;
+	var sx2;
+	var od;
+
+	sb1 = 1;
+	sb2 = LDB;
+	sx1 = 1;
+	sx2 = LDX;
+	odl = stride2offset( N, strideDL );
+	od = stride2offset( N, strideD );
+	odu = stride2offset( N, strideDU );
+	odlf = stride2offset( N, strideDLF );
+	odf = stride2offset( N, strideDF );
+	oduf = stride2offset( N, strideDUF );
+	odu2 = stride2offset( N, strideDU2 );
+	oipiv = stride2offset( N, strideIPIV );
+	oferr = stride2offset( N, strideFERR );
+	oberr = stride2offset( N, strideBERR );
+	owork = stride2offset( N, strideWORK );
+	orwork = stride2offset( N, strideRWORK );
+	return base( trans, N, nrhs, DL, strideDL, odl, d, strideD, od, DU, strideDU, odu, DLF, strideDLF, odlf, DF, strideDF, odf, DUF, strideDUF, oduf, DU2, strideDU2, odu2, IPIV, strideIPIV, oipiv, B, sb1, sb2, 0, X, sx1, sx2, 0, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zgtrfs;

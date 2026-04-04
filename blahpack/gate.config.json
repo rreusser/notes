@@ -1,4 +1,8 @@
 {
+  "lib/lapack/base/zlansf": {
+    "skip": ["lint.eslint-pass", "lint.eslint-disable-whitelist"],
+    "reason": "Test file uses non-whitelisted eslint-disable for packRFP utility with nested var declarations"
+  },
   "lib/lapack/base/zlaqsp": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlaqsp (not in stdlib checkout)"
@@ -219,6 +223,10 @@
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlaqsp (not in stdlib checkout)"
   },
+  "lib/lapack/base/zlaqsb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlaqsb (not in stdlib checkout)"
+  },
   "lib/lapack/base/dtpcon": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dtpcon (not in stdlib checkout)"
@@ -250,5 +258,25 @@
   "lib/lapack/base/zgbrfs": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zgbrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlaqgb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlaqgb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlaqgb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlaqgb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dpbsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpbsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zgtrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zgtrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zppsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zppsvx (not in stdlib checkout)"
   }
 }
