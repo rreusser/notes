@@ -17,12 +17,13 @@ set -euo pipefail
 #   if you destroy the sandbox with `docker sandbox rm` or `--reset`.
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+BLAHPACK_DIR="$(dirname "$SCRIPT_DIR")"
+ROOT_DIR="$(dirname "$BLAHPACK_DIR")"
 IMAGE="blahpack-sandbox:latest"
 SANDBOX_NAME="blahpack"
 FULL_SANDBOX_NAME="$SANDBOX_NAME"
 
-cd "$ROOT_DIR"
+cd "$BLAHPACK_DIR"
 
 # Parse flags
 while [[ $# -gt 0 ]]; do
