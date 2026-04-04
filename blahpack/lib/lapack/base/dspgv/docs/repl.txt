@@ -1,0 +1,78 @@
+
+    dspgv.ndarray( itype, jobz, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK )
+        Computes all eigenvalues and optionally eigenvectors of a real symmetric-definite generalized eigenproblem in packed storage.
+
+        Parameters
+        ----------
+        itype: integer
+            itype.
+
+        jobz: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        BP: Float64Array
+            input array.
+
+        strideBP: integer
+            stride length for `BP`.
+
+        offsetBP: NonNegativeInteger
+            starting index for `BP`.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: NonNegativeInteger
+            starting index for `w`.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

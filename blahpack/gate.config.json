@@ -334,5 +334,9 @@
   "lib/lapack/base/zptsvx": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zptsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dspgv": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dspgv (not in stdlib checkout)"
   }
 }
