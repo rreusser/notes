@@ -4,7 +4,6 @@
 
 // MODULES //
 
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );

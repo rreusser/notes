@@ -21,8 +21,6 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );

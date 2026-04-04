@@ -5,7 +5,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
 var Complex128Array = require( '@stdlib/array/complex128' );
 var ztrrfs = require( './../lib/base.js' );
 

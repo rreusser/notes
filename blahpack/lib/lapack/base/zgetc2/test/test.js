@@ -5,7 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
 var assert = require( 'node:assert/strict' );
 var Int32Array = require( '@stdlib/array/int32' );
 var Complex128Array = require( '@stdlib/array/complex128' );

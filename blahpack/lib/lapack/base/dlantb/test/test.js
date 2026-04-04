@@ -5,7 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlantb = require( './../lib/base.js' );

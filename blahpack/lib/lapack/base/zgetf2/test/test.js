@@ -5,7 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );

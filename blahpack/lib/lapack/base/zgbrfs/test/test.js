@@ -4,7 +4,6 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
