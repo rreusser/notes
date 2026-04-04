@@ -1,0 +1,69 @@
+
+    zgbequ.ndarray( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC, rowcnd, colcnd, amax )
+        Computes row and column scalings to equilibrate a complex general band matrix.
+
+        Parameters
+        ----------
+        M: NonNegativeInteger
+            number of rows.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        kl: integer
+            kl.
+
+        ku: integer
+            ku.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        r: Float64Array
+            input array.
+
+        strideR: integer
+            stride length for `r`.
+
+        offsetR: NonNegativeInteger
+            starting index for `r`.
+
+        c: Float64Array
+            output array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: NonNegativeInteger
+            starting index for `c`.
+
+        rowcnd: number
+            rowcnd.
+
+        colcnd: number
+            colcnd.
+
+        amax: number
+            amax.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

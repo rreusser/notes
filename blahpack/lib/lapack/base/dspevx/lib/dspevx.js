@@ -1,0 +1,82 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Computes selected eigenvalues and, optionally, eigenvectors of a real.
+* symmetric matrix in packed storage.
+*
+* @param {string} order - storage layout ('row-major' or 'column-major')
+* @param {string} jobz - 'no-vectors' or 'compute-vectors'
+* @param {string} range - 'all', 'value', or 'index'
+* @param {string} uplo - 'upper' or 'lower'
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Float64Array} AP - packed symmetric matrix (length N*(N+1)/2)
+* @param {number} vl - lower bound of eigenvalue interval (RANGE='value')
+* @param {number} vu - upper bound of eigenvalue interval (RANGE='value')
+* @param {integer} il - index of smallest eigenvalue to compute (1-based, RANGE='index')
+* @param {integer} iu - index of largest eigenvalue to compute (1-based, RANGE='index')
+* @param {number} abstol - absolute tolerance for eigenvalues
+* @param {Object} out - output object; out.M will be set to number of eigenvalues found
+* @param {Float64Array} w - output array for eigenvalues (length N)
+* @param {Float64Array} Z - output eigenvector matrix (N x M)
+* @param {PositiveInteger} LDZ - leading dimension of Z
+* @param {Float64Array} WORK - workspace array (length >= 8*N)
+* @param {Int32Array} IWORK - integer workspace (length >= 5*N)
+* @param {Int32Array} IFAIL - output: indices of non-converged eigenvectors (length N)
+* @throws {TypeError} first argument must be a valid order
+* @throws {TypeError} fourth argument must be a valid matrix triangle
+* @returns {integer} info - 0 if successful
+*/
+function dspevx( order, jobz, range, uplo, N, AP, vl, vu, il, iu, abstol, out, w, Z, LDZ, WORK, IWORK, IFAIL ) {
+	var sz1;
+	var sz2;
+
+	if ( !isLayout( order ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( order === 'column-major' ) {
+		sz1 = 1;
+		sz2 = LDZ;
+	} else {
+		sz1 = LDZ;
+		sz2 = 1;
+	}
+	return base( jobz, range, uplo, N, AP, 1, 0, vl, vu, il, iu, abstol, out, w, 1, 0, Z, sz1, sz2, 0, WORK, 1, 0, IWORK, 1, 0, IFAIL, 1, 0 );
+}
+
+
+// EXPORTS //
+
+module.exports = dspevx;

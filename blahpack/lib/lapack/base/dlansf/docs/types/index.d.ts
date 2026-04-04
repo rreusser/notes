@@ -1,0 +1,31 @@
+
+
+// TypeScript declarations for @stdlib/lapack/base/dlansf
+
+/**
+* Interface describing the ndarray API.
+*/
+interface Routine {
+	/**
+	* Returns the norm of a real symmetric matrix in Rectangular Full Packed format.
+	*/
+	(
+		norm: string,
+		transr: string,
+		uplo: string,
+		N: number,
+		a: Float64Array,
+		strideA: number,
+		offsetA: number,
+		WORK: Float64Array,
+		strideWORK: number,
+		offsetWORK: number
+	): Float64Array;
+}
+
+/**
+* Returns the norm of a real symmetric matrix in Rectangular Full Packed format.
+*/
+declare var dlansf: Routine;
+
+export = dlansf;

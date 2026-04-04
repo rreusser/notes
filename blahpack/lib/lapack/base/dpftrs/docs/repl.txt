@@ -1,0 +1,51 @@
+
+    dpftrs.ndarray( transr, uplo, N, nrhs, a, strideA, offsetA, B, strideB1, strideB2, offsetB )
+        Solves a real system A * X = B where A is symmetric positive definite in Rectangular Full Packed format.
+
+        Parameters
+        ----------
+        transr: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        a: Float64Array
+            input array.
+
+        strideA: integer
+            stride length for `a`.
+
+        offsetA: NonNegativeInteger
+            starting index for `a`.
+
+        B: Float64Array
+            output matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

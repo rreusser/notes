@@ -527,10 +527,88 @@ module's tests. The full suite is the coordinator's responsibility, not yours.
 
 ---
 
-## Common Translation Pitfalls (from 380+ translated routines)
+## Common Translation Pitfalls (from 500+ translated routines)
 
 These are hard-won lessons extracted from LEARNINGS.md across all completed
 translations. Read before starting any new routine.
+
+### Fortran Test Compilation
+
+**`deps.py` misses transitive Fortran module dependencies.** Routines that
+transitively depend on `dlassq.f90` (via norm routines like dlansb, dlansp,
+dlantb, dlantp, zlassq, etc.) require `la_constants` and `la_xisnan` in
+their `deps_<routine>.txt` file. These are Fortran `.f90` modules, not
+subroutines, so `deps.py` cannot detect them. **Always add these two to
+the deps file when the routine (or any dependency) calls a norm or
+sum-of-squares function.** Similarly, routines using `zladiv` transitively
+need `dladiv` in the deps file.
+
+### Packed Storage Indexing
+
+Packed storage is the #1 source of translation bugs. Key formulas (0-based):
+
+| Operation | Upper | Lower |
+|-----------|-------|-------|
+| Diagonal of column j | `(j+1)*(j+2)/2 - 1` | `j*(2*N-j+1)/2` |
+| Column pointer advance | `jc += j + 1` | `jc += N - j` |
+| IP update (non-transpose) | `ip -= (j+1)` | `ip += (N-j)` |
+
+When operating on Complex128Array via reinterpret, multiply all packed
+indices by 2 for Float64 access. The helpers `iupp(i,j)` and `ilow(i,j,N)`
+should return Float64 offsets (×2) for complex routines but element offsets
+for real routines — getting this wrong is silent and produces plausible
+but incorrect results.
+
+### Band Storage Indexing
+
+Band storage maps `A(i,j)` to `AB(KU+1+i-j, j)` (Fortran 1-based) or
+`AB[offsetAB + (ku+i-j)*strideAB1 + j*strideAB2]` (JS 0-based). Key
+derived strides:
+- `INCA = KD1 * strideAB2` (not `KD1 * strideAB1`)
+- `INCX = strideAB2 - strideAB1` (diagonal-like traversal)
+
+### Expert Driver Patterns
+
+Expert drivers (dppsvx, dpbsvx, zgbsvx, etc.) share a common structure:
+1. Optionally compute equilibration (dppequ/dlaqsp or band equivalents)
+2. Copy matrix to factored storage
+3. Factor (dpptrf, dpbtrf, etc.)
+4. Compute norm for condition estimation
+5. Estimate condition (dppcon, dpbcon, etc.)
+6. Solve (dpptrs, dpbtrs, etc.)
+7. Iterative refinement with error bounds (dpprfs, dpbrfs, etc.)
+
+The `equed` parameter is an in/out string — pass as a single-element
+array (`['none']`) when it needs to be both read and written. The `fact`
+parameter maps: `'not-factored'`/`'factored'`/`'equilibrate'`.
+
+### RFP (Rectangular Full Packed) Routines
+
+RFP routines have 8 dispatch paths: 2 (odd/even N) × 2 (transr) × 2 (uplo).
+Each path maps sub-blocks of the 1D RFP array to 2D matrix operations
+(dtrsm, dsyrk, zherk, etc.) with different offsets and leading dimensions.
+The Fortran `A(offset)` with `LDA` maps to
+`A, sa, sa*LDA, offsetA + sa*offset` in ndarray convention.
+
+### Eigenvalue Driver Patterns
+
+Eigenvalue drivers (dspev, dsbev, zhbev, etc.) share:
+1. Compute matrix norm for scaling (dlansp, dlansb, zlanhb, etc.)
+2. Scale if near underflow/overflow (dlascl)
+3. Reduce to tridiagonal (dsptrd, dsbtrd, zhbtrd, etc.)
+4. For eigenvectors: generate Q (dopgtr) or use identity from reduction
+5. Compute eigenvalues: dsterf (values only) or dsteqr('update', ...)
+6. Unscale eigenvalues if scaling was applied
+
+Key string mappings: dsbtrd vect=`'initialize'` (builds Q from identity),
+dsteqr compz=`'update'` (Z already contains Q from reduction step).
+
+### zrot Sine Convention
+
+`zrot` expects its complex sine parameter `s` as a `Float64Array(2)`
+containing `[re, im]`, NOT a Complex128 or Complex128Array. When extracting
+sine values from a reinterpreted WORK array, copy to a scratch
+`Float64Array(2)` before passing to zrot.
 
 ### Fortran Idioms → JavaScript
 

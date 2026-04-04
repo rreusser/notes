@@ -1,0 +1,60 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+/**
+* Overwrites a general real M-by-N matrix C with Q*C, C*Q, Q^T*C, or C*Q^T,
+* where Q is a real orthogonal matrix from DSPTRD (packed storage).
+*
+* @module @stdlib/lapack/base/dopmtr
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var dopmtr = require( '@stdlib/lapack/base/dopmtr' );
+*
+* var AP = new Float64Array( [ 2.26, -0.09, 1.18, -0.58, 0.90, 5.56, -0.4, -0.2, 3.0, -1.0 ] );
+* var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
+* var C = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] );
+* var WORK = new Float64Array( 4 );
+*
+* dopmtr( 'left', 'upper', 'no-transpose', 4, 4, AP, TAU, C, 4, WORK );
+*
+* @example
+* var Float64Array = require( '@stdlib/array/float64' );
+* var dopmtr = require( '@stdlib/lapack/base/dopmtr' );
+*
+* var AP = new Float64Array( [ 2.26, -0.09, 1.18, -0.58, 0.90, 5.56, -0.4, -0.2, 3.0, -1.0 ] );
+* var TAU = new Float64Array( [ 0.0, 1.50, 1.67 ] );
+* var C = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] );
+* var WORK = new Float64Array( 4 );
+*
+* dopmtr.ndarray( 'left', 'upper', 'no-transpose', 4, 4, AP, 1, 0, TAU, 1, 0, C, 1, 4, 0, WORK, 1, 0 );
+*/
+
+
+// MODULES //
+
+var main = require( './main.js' );
+
+
+// EXPORTS //
+
+module.exports = main;
+
+// exports: { "ndarray": "dopmtr.ndarray" }

@@ -1,4 +1,8 @@
 {
+  "lib/lapack/base/zgbsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "JSDoc paragraph-content-indent errors in FACT/TRANS/EQUED description blocks (same pattern as zgesvx and other svx routines)"
+  },
   "lib/lapack/base/zlansf": {
     "skip": ["lint.eslint-pass", "lint.eslint-disable-whitelist"],
     "reason": "Test file uses non-whitelisted eslint-disable for packRFP utility with nested var declarations"
@@ -102,6 +106,10 @@
   "lib/lapack/base/dpftrf": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpftrf (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dpftrs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpftrs (not in stdlib checkout)"
   },
   "lib/lapack/base/dtftri": {
     "skip": ["lint.eslint-pass"],
@@ -227,6 +235,10 @@
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlaqsb (not in stdlib checkout)"
   },
+  "lib/lapack/base/zlaqhb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlaqhb (not in stdlib checkout)"
+  },
   "lib/lapack/base/dtpcon": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dtpcon (not in stdlib checkout)"
@@ -278,5 +290,49 @@
   "lib/lapack/base/zppsvx": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zppsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dopgtr": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dopgtr (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlansf": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlansf (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zgtsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zgtsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dpbstf": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpbstf (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zpftrs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zpftrs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlangb": {
+    "skip": ["lint.eslint-pass", "lint.eslint-disable-whitelist"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlangb (not in stdlib checkout); remark-based jsdoc rules false-positive on eslint-disable comment in test file"
+  },
+  "lib/lapack/base/zlanht": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlanht (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dsbev": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dsbev (not in stdlib checkout); jsdoc-no-paragraph-content-indent false-positive on license header"
+  },
+  "lib/lapack/base/zpbsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zpbsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zpbstf": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zpbstf (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zptsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zptsvx (not in stdlib checkout)"
   }
 }

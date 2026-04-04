@@ -1,0 +1,57 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a real symmetric matrix stored in Rectangular Full Packed (RFP) format.
+*
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} transr - specifies the storage format (`'no-transpose'` or `'transpose'`)
+* @param {string} uplo - specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} A - input array in RFP format
+* @param {Float64Array} WORK - workspace array, length >= N
+* @throws {TypeError} second argument must be a valid transpose operation
+* @throws {TypeError} third argument must be a valid matrix triangle
+* @returns {number} norm value
+*/
+function dlansf( norm, transr, uplo, N, A, WORK ) {
+	if ( !isTransposeOperation( transr ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid transpose operation. Value: `%s`.', transr ) );
+	}
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	return base( norm, transr, uplo, N, A, 1, 0, WORK, 1, 0 );
+}
+
+
+// EXPORTS //
+
+module.exports = dlansf;

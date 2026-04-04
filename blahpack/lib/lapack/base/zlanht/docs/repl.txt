@@ -1,0 +1,42 @@
+
+    zlanht.ndarray( norm, N, d, strideD, offsetD, e, strideE, offsetE )
+        Returns the norm of a complex Hermitian tridiagonal matrix.
+
+        Parameters
+        ----------
+        norm: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            output array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

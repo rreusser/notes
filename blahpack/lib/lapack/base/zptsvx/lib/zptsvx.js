@@ -1,0 +1,58 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Solves a complex Hermitian positive definite tridiagonal system A*X = B, and provides an estimate of the condition number and error bounds on the solution.
+*
+* @param {string} fact - `'not-factored'` or `'factored'`
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} nrhs - number of right-hand sides
+* @param {Float64Array} d - diagonal elements of A (length N, real)
+* @param {Complex128Array} e - off-diagonal elements of A (length N-1, complex)
+* @param {Float64Array} DF - factored diagonal (length N)
+* @param {Complex128Array} EF - factored off-diagonal (length N-1, complex)
+* @param {Complex128Array} B - right-hand side matrix (complex)
+* @param {PositiveInteger} LDB - leading dimension of B
+* @param {Complex128Array} X - solution matrix (complex, output)
+* @param {PositiveInteger} LDX - leading dimension of X
+* @param {Float64Array} rcond - single-element array for reciprocal condition number (output)
+* @param {Float64Array} FERR - forward error bounds (length NRHS, output)
+* @param {Float64Array} BERR - backward error bounds (length NRHS, output)
+* @param {Complex128Array} WORK - complex workspace array (length at least N)
+* @param {Float64Array} RWORK - real workspace array (length at least N)
+* @returns {integer} info - 0 if successful, k>0 if D(k)<=0, N+1 if rcond < machine epsilon
+*/
+function zptsvx( fact, N, nrhs, d, e, DF, EF, B, LDB, X, LDX, rcond, FERR, BERR, WORK, RWORK ) {
+	return base( fact, N, nrhs, d, 1, 0, e, 1, 0, DF, 1, 0, EF, 1, 0, B, 1, LDB, 0, X, 1, LDX, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, RWORK, 1, 0 ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zptsvx;

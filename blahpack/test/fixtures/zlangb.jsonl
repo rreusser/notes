@@ -1,0 +1,15 @@
+{"name":"max_5x5","result": 1.20415945787922958E+001}
+{"name":"one_5x5","result": 3.12676452060695951E+001}
+{"name":"inf_5x5","result": 2.96942064637689036E+001}
+{"name":"frob_5x5","result": 3.01662062579967127E+001}
+{"name":"max_4x4_tridiag","result": 1.27279220613578552E+001}
+{"name":"one_4x4_tridiag","result": 2.96984848098349978E+001}
+{"name":"inf_4x4_tridiag","result": 2.96984848098349943E+001}
+{"name":"frob_4x4_tridiag","result": 2.39165214862027966E+001}
+{"name":"n_zero","result": 0.00000000000000000E+000}
+{"name":"max_diag_only","result": 5.00000000000000000E+000}
+{"name":"one_diag_only","result": 5.00000000000000000E+000}
+{"name":"inf_diag_only","result": 5.00000000000000000E+000}
+{"name":"frob_diag_only","result": 5.91607978309961613E+000}
+{"name":"frob_1x1","result": 5.00000000000000000E+000}
+{"name":"one_1x1","result": 5.00000000000000000E+000}

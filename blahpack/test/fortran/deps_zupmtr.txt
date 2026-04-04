@@ -1,0 +1,14 @@
+ieeeck
+ilaenv
+ilazlc
+ilazlr
+iparmq
+zlarf
+zupmtr
+# ZHPTRD and its transitive deps (for test compilation only)
+zhptrd
+zlarfg
+dlamch
+dlapy3
+zladiv
+dladiv
