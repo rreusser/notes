@@ -1,0 +1,96 @@
+
+    zhbgv.ndarray( jobz, uplo, N, ka, kb, AB, strideAB1, strideAB2, offsetAB, BB, strideBB1, strideBB2, offsetBB, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK )
+        Computes all eigenvalues and optionally eigenvectors of a complex Hermitian-definite banded generalized eigenproblem.
+
+        Parameters
+        ----------
+        jobz: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        ka: integer
+            ka.
+
+        kb: integer
+            kb.
+
+        AB: Float64Array
+            input matrix.
+
+        strideAB1: integer
+            stride of the first dimension of `AB`.
+
+        strideAB2: integer
+            stride of the second dimension of `AB`.
+
+        offsetAB: NonNegativeInteger
+            starting index for `AB`.
+
+        BB: Float64Array
+            input matrix.
+
+        strideBB1: integer
+            stride of the first dimension of `BB`.
+
+        strideBB2: integer
+            stride of the second dimension of `BB`.
+
+        offsetBB: NonNegativeInteger
+            starting index for `BB`.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: NonNegativeInteger
+            starting index for `w`.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        RWORK: Float64Array
+            output array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: NonNegativeInteger
+            starting index for `RWORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

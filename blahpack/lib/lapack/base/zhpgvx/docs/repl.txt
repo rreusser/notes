@@ -1,0 +1,126 @@
+
+    zhpgvx.ndarray( itype, jobz, range, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL )
+        Computes selected eigenvalues and optionally eigenvectors of a complex Hermitian-definite generalized eigenproblem in packed storage.
+
+        Parameters
+        ----------
+        itype: integer
+            itype.
+
+        jobz: string
+            specifies the operation type.
+
+        range: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        BP: Float64Array
+            input array.
+
+        strideBP: integer
+            stride length for `BP`.
+
+        offsetBP: NonNegativeInteger
+            starting index for `BP`.
+
+        vl: number
+            vl.
+
+        vu: number
+            vu.
+
+        il: integer
+            il.
+
+        iu: integer
+            iu.
+
+        abstol: number
+            abstol.
+
+        M: NonNegativeInteger
+            number of rows.
+
+        w: Float64Array
+            input array.
+
+        strideW: integer
+            stride length for `w`.
+
+        offsetW: NonNegativeInteger
+            starting index for `w`.
+
+        Z: Float64Array
+            input matrix.
+
+        strideZ1: integer
+            stride of the first dimension of `Z`.
+
+        strideZ2: integer
+            stride of the second dimension of `Z`.
+
+        offsetZ: NonNegativeInteger
+            starting index for `Z`.
+
+        WORK: Float64Array
+            input array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        RWORK: Float64Array
+            input array.
+
+        strideRWORK: integer
+            stride length for `RWORK`.
+
+        offsetRWORK: NonNegativeInteger
+            starting index for `RWORK`.
+
+        IWORK: Int32Array
+            input array.
+
+        strideIWORK: integer
+            stride length for `IWORK`.
+
+        offsetIWORK: NonNegativeInteger
+            starting index for `IWORK`.
+
+        IFAIL: Int32Array
+            output array.
+
+        strideIFAIL: integer
+            stride length for `IFAIL`.
+
+        offsetIFAIL: NonNegativeInteger
+            starting index for `IFAIL`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

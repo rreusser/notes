@@ -1,0 +1,37 @@
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Computes row and column scalings to equilibrate a real general band matrix.
+*
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {NonNegativeInteger} kl - number of subdiagonals within the band
+* @param {NonNegativeInteger} ku - number of superdiagonals within the band
+* @param {Float64Array} AB - band matrix in LAPACK band storage
+* @param {integer} strideAB1 - stride of the first dimension of AB
+* @param {integer} strideAB2 - stride of the second dimension of AB
+* @param {NonNegativeInteger} offsetAB - index offset for AB
+* @param {Float64Array} r - output row scale factors, length M
+* @param {integer} strideR - stride for r
+* @param {NonNegativeInteger} offsetR - index offset for r
+* @param {Float64Array} c - output column scale factors, length N
+* @param {integer} strideC - stride for c
+* @param {NonNegativeInteger} offsetC - index offset for c
+* @returns {Object} result with info, rowcnd, colcnd, amax
+*/
+function dgbequ( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC ) { // eslint-disable-line max-len, max-params
+	return base( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = dgbequ;

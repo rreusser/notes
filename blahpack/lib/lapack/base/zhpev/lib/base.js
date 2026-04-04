@@ -1,0 +1,179 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 Ricky Reusser.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+var zlanhp = require( '../../zlanhp/lib/base.js' );
+var zhptrd = require( '../../zhptrd/lib/base.js' );
+var zupgtr = require( '../../zupgtr/lib/base.js' );
+var dsterf = require( '../../dsterf/lib/base.js' );
+var zsteqr = require( '../../zsteqr/lib/base.js' );
+var zdscal = require( '../../../../blas/base/zdscal/lib/base.js' );
+var dscal = require( '../../../../blas/base/dscal/lib/base.js' );
+
+
+// MAIN //
+
+/**
+* Computes all eigenvalues and, optionally, eigenvectors of a complex Hermitian matrix in packed storage.
+*
+* The eigenvalues are returned in ascending order. If eigenvectors are
+* requested (jobz = `'compute'`), the orthonormal eigenvectors are stored
+* column-wise in Z.
+*
+* ## Algorithm
+*
+* -   Scale the matrix if the norm is outside safe range.
+* -   Reduce to tridiagonal form via zhptrd.
+* -   If eigenvalues only: compute via dsterf.
+* -   If eigenvectors too: generate Q via zupgtr, then zsteqr.
+* -   Undo scaling on eigenvalues if needed.
+*
+* @private
+* @param {string} jobz - `'no-vectors'` (eigenvalues only) or `'compute-vectors'` (eigenvalues + eigenvectors)
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Complex128Array} AP - packed Hermitian matrix; on exit, overwritten by zhptrd
+* @param {integer} strideAP - stride length for `AP` (in complex elements)
+* @param {NonNegativeInteger} offsetAP - starting index for `AP` (in complex elements)
+* @param {Float64Array} w - output array for eigenvalues (length N), in ascending order
+* @param {integer} strideW - stride for `w`
+* @param {NonNegativeInteger} offsetW - starting index for `w`
+* @param {Complex128Array} Z - output eigenvector matrix (N x N); referenced only if jobz = `'compute-vectors'`
+* @param {integer} strideZ1 - stride of the first dimension of `Z` (in complex elements)
+* @param {integer} strideZ2 - stride of the second dimension of `Z` (in complex elements)
+* @param {NonNegativeInteger} offsetZ - starting index for `Z` (in complex elements)
+* @param {Complex128Array} WORK - workspace array (length >= max(1, 2*N-1), complex elements)
+* @param {integer} strideWORK - stride for `WORK` (in complex elements)
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK` (in complex elements)
+* @param {Float64Array} RWORK - workspace array (length >= max(1, 3*N-2))
+* @param {integer} strideRWORK - stride for `RWORK`
+* @param {NonNegativeInteger} offsetRWORK - starting index for `RWORK`
+* @returns {integer} info - 0 if successful, >0 if zsteqr/dsterf did not converge
+*/
+function zhpev( jobz, uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) {
+	var safmin;
+	var smlnum;
+	var bignum;
+	var iscale;
+	var indtau;
+	var indwrk;
+	var indrwk;
+	var wantz;
+	var sigma;
+	var anrm;
+	var rmin;
+	var rmax;
+	var info;
+	var imax;
+	var inde;
+	var apv;
+	var eps;
+
+	wantz = ( jobz === 'compute-vectors' );
+
+	// Quick return if possible
+	if ( N === 0 ) {
+		return 0;
+	}
+
+	if ( N === 1 ) {
+		apv = reinterpret( AP, 0 );
+		w[ offsetW ] = apv[ offsetAP * 2 ];
+		RWORK[ offsetRWORK ] = 1.0;
+		if ( wantz ) {
+			apv = reinterpret( Z, 0 );
+			apv[ offsetZ * 2 ] = 1.0;
+			apv[ ( offsetZ * 2 ) + 1 ] = 0.0;
+		}
+		return 0;
+	}
+
+	// Get machine constants
+	safmin = dlamch( 'safe-minimum' );
+	eps = dlamch( 'epsilon' );
+	smlnum = safmin / eps;
+	bignum = 1.0 / smlnum;
+	rmin = Math.sqrt( smlnum );
+	rmax = Math.sqrt( bignum );
+
+	// Scale matrix to allowable range, if necessary
+	anrm = zlanhp( 'max', uplo, N, AP, strideAP, offsetAP, RWORK, strideRWORK, offsetRWORK );
+	iscale = 0;
+	sigma = 1.0;
+	if ( anrm > 0.0 && anrm < rmin ) {
+		iscale = 1;
+		sigma = rmin / anrm;
+	} else if ( anrm > rmax ) {
+		iscale = 1;
+		sigma = rmax / anrm;
+	}
+	if ( iscale === 1 ) {
+		zdscal( ( N * ( N + 1 ) ) / 2, sigma, AP, strideAP, offsetAP );
+	}
+
+	// Partition workspace arrays:
+	// RWORK: E (off-diagonal, length N) at inde, scratch at indrwk
+	// WORK: TAU (length N, complex) at indtau, scratch at indwrk
+	inde = offsetRWORK;
+	indtau = offsetWORK;
+
+	// Reduce to tridiagonal form: Q^H * A * Q = T
+
+	// D (diagonal) goes into w, E (off-diagonal) into RWORK[inde], TAU into WORK[indtau]
+	zhptrd( uplo, N, AP, strideAP, offsetAP, w, strideW, offsetW, RWORK, strideRWORK, inde, WORK, strideWORK, indtau );
+
+	info = 0;
+	if ( wantz ) {
+		// Generate unitary matrix Q from zhptrd output
+		indwrk = indtau + ( N * strideWORK );
+		zupgtr( uplo, N, AP, strideAP, offsetAP, WORK, strideWORK, indtau, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, indwrk );
+
+		// Compute eigenvalues and eigenvectors of the tridiagonal matrix
+
+		// Zsteqr 'update' means Z already contains Q, update it in-place
+		indrwk = inde + ( N * strideRWORK );
+		info = zsteqr( 'update', N, w, strideW, offsetW, RWORK, strideRWORK, inde, Z, strideZ1, strideZ2, offsetZ, RWORK, strideRWORK, indrwk );
+	} else {
+		// Eigenvalues only
+		info = dsterf( N, w, strideW, offsetW, RWORK, strideRWORK, inde );
+	}
+
+	// If matrix was scaled, rescale eigenvalues
+	if ( iscale === 1 ) {
+		if ( info === 0 ) {
+			imax = N;
+		} else {
+			imax = info - 1;
+		}
+		dscal( imax, 1.0 / sigma, w, strideW, offsetW );
+	}
+
+	return info;
+}
+
+
+// EXPORTS //
+
+module.exports = zhpev;

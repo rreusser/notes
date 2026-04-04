@@ -1,0 +1,15 @@
+{"name":"max_norm","result": 8.00000000000000000E+000}
+{"name":"one_norm","result": 1.70000000000000000E+001}
+{"name":"one_norm_O","result": 1.70000000000000000E+001}
+{"name":"inf_norm","result": 1.50000000000000000E+001}
+{"name":"frob_norm","result": 1.42828568570857009E+001}
+{"name":"frob_norm_E","result": 1.42828568570857009E+001}
+{"name":"n_zero","result": 0.00000000000000000E+000}
+{"name":"one_by_one_max","result": 5.50000000000000000E+000}
+{"name":"one_by_one_one","result": 5.50000000000000000E+000}
+{"name":"one_by_one_inf","result": 5.50000000000000000E+000}
+{"name":"one_by_one_frob","result": 5.50000000000000000E+000}
+{"name":"big_max","result": 8.00000000000000000E+000}
+{"name":"big_one","result": 2.10000000000000000E+001}
+{"name":"big_inf","result": 1.40000000000000000E+001}
+{"name":"big_frob","result": 1.50332963783729081E+001}

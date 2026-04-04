@@ -1,0 +1,207 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var abs = Math.abs;
+var max = Math.max;
+var min = Math.min;
+var dlamch = require( '../../dlamch/lib/base.js' );
+
+
+// VARIABLES //
+
+var SMLNUM = dlamch( 'safe-minimum' );
+var BIGNUM = 1.0 / SMLNUM;
+
+
+// MAIN //
+
+/**
+* Computes row and column scalings intended to equilibrate an M-by-N real general band matrix A and reduce its condition number.
+*
+* R returns the row scale factors and C the column scale factors, chosen to try to make the largest element in each row and column of the matrix B with elements `B(i,j)=R(i)*A(i,j)*C(j)` have absolute value 1.
+*
+* @private
+* @param {NonNegativeInteger} M - number of rows of A
+* @param {NonNegativeInteger} N - number of columns of A
+* @param {NonNegativeInteger} kl - number of subdiagonals within the band
+* @param {NonNegativeInteger} ku - number of superdiagonals within the band
+* @param {Float64Array} AB - band matrix in LAPACK band storage (KL+KU+1 by N)
+* @param {integer} strideAB1 - stride of the first dimension of AB
+* @param {integer} strideAB2 - stride of the second dimension of AB
+* @param {NonNegativeInteger} offsetAB - index offset for AB
+* @param {Float64Array} r - output row scale factors, length M
+* @param {integer} strideR - stride for r
+* @param {NonNegativeInteger} offsetR - index offset for r
+* @param {Float64Array} c - output column scale factors, length N
+* @param {integer} strideC - stride for c
+* @param {NonNegativeInteger} offsetC - index offset for c
+* @returns {Object} result with info, rowcnd, colcnd, amax
+*/
+function dgbequ( M, N, kl, ku, AB, strideAB1, strideAB2, offsetAB, r, strideR, offsetR, c, strideC, offsetC ) {
+	var rowcnd;
+	var colcnd;
+	var rcmax;
+	var rcmin;
+	var amax;
+	var kd;
+	var ri;
+	var ci;
+	var av;
+	var lo;
+	var hi;
+	var i;
+	var j;
+
+	// Quick return if possible
+	if ( M === 0 || N === 0 ) {
+		return {
+			'info': 0,
+			'rowcnd': 1.0,
+			'colcnd': 1.0,
+			'amax': 0.0
+		};
+	}
+
+	// Compute row scale factors: initialize R to zero
+	for ( i = 0; i < M; i++ ) {
+		r[ offsetR + ( i * strideR ) ] = 0.0;
+	}
+
+	// Find the maximum element in each row
+	kd = ku;
+	for ( j = 0; j < N; j++ ) {
+		lo = max( j - ku, 0 );
+		hi = min( j + kl, M - 1 );
+		for ( i = lo; i <= hi; i++ ) {
+			ri = offsetR + ( i * strideR );
+			av = abs( AB[ offsetAB + ( ( kd + i - j ) * strideAB1 ) + ( j * strideAB2 ) ] );
+			if ( av > r[ ri ] ) {
+				r[ ri ] = av;
+			}
+		}
+	}
+
+	// Find max and min row scale factors
+	rcmin = BIGNUM;
+	rcmax = 0.0;
+	for ( i = 0; i < M; i++ ) {
+		ri = r[ offsetR + ( i * strideR ) ];
+		if ( ri > rcmax ) {
+			rcmax = ri;
+		}
+		if ( ri < rcmin ) {
+			rcmin = ri;
+		}
+	}
+	amax = rcmax;
+
+	if ( rcmin === 0.0 ) {
+		// Find the first zero scale factor and return an error code
+		for ( i = 0; i < M; i++ ) {
+			if ( r[ offsetR + ( i * strideR ) ] === 0.0 ) {
+				return {
+					'info': i + 1,
+					'rowcnd': 0.0,
+					'colcnd': 0.0,
+					'amax': amax
+				};
+			}
+		}
+	}
+
+	// Invert the row scale factors
+	for ( i = 0; i < M; i++ ) {
+		ri = offsetR + ( i * strideR );
+		r[ ri ] = 1.0 / min( max( r[ ri ], SMLNUM ), BIGNUM );
+	}
+
+	// Compute ROWCND = min(R) / max(R)
+	rowcnd = max( rcmin, SMLNUM ) / min( rcmax, BIGNUM );
+
+	// Compute column scale factors: initialize C to zero
+	for ( j = 0; j < N; j++ ) {
+		c[ offsetC + ( j * strideC ) ] = 0.0;
+	}
+
+	// Find the maximum element in each column (assuming row scaling applied)
+	for ( j = 0; j < N; j++ ) {
+		ci = offsetC + ( j * strideC );
+		lo = max( j - ku, 0 );
+		hi = min( j + kl, M - 1 );
+		for ( i = lo; i <= hi; i++ ) {
+			av = abs( AB[ offsetAB + ( ( kd + i - j ) * strideAB1 ) + ( j * strideAB2 ) ] ) * r[ offsetR + ( i * strideR ) ];
+			if ( av > c[ ci ] ) {
+				c[ ci ] = av;
+			}
+		}
+	}
+
+	// Find max and min column scale factors
+	rcmin = BIGNUM;
+	rcmax = 0.0;
+	for ( j = 0; j < N; j++ ) {
+		ci = c[ offsetC + ( j * strideC ) ];
+		if ( ci < rcmin ) {
+			rcmin = ci;
+		}
+		if ( ci > rcmax ) {
+			rcmax = ci;
+		}
+	}
+
+	if ( rcmin === 0.0 ) {
+		// Find the first zero column scale factor and return error
+		for ( j = 0; j < N; j++ ) {
+			if ( c[ offsetC + ( j * strideC ) ] === 0.0 ) {
+				return {
+					'info': M + j + 1,
+					'rowcnd': rowcnd,
+					'colcnd': 0.0,
+					'amax': amax
+				};
+			}
+		}
+	}
+
+	// Invert column scale factors
+	for ( j = 0; j < N; j++ ) {
+		ci = offsetC + ( j * strideC );
+		c[ ci ] = 1.0 / min( max( c[ ci ], SMLNUM ), BIGNUM );
+	}
+
+	// Compute COLCND = min(C) / max(C)
+	colcnd = max( rcmin, SMLNUM ) / min( rcmax, BIGNUM );
+
+	return {
+		'info': 0,
+		'rowcnd': rowcnd,
+		'colcnd': colcnd,
+		'amax': amax
+	};
+}
+
+
+// EXPORTS //
+
+module.exports = dgbequ;

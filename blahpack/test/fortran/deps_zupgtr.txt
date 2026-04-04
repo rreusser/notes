@@ -1,0 +1,15 @@
+dladiv
+dlamch
+dlapy3
+ieeeck
+ilaenv
+ilazlc
+ilazlr
+iparmq
+zhptrd
+zladiv
+zlarf
+zlarfg
+zung2l
+zung2r
+zupgtr

@@ -1,0 +1,90 @@
+
+    dlanhs( order, norm, N, A, LDA, WORK, strideWORK )
+        Returns the value of the one norm, Frobenius norm, infinity norm, or
+        the largest absolute value of a real upper Hessenberg matrix.
+
+        Parameters
+        ----------
+        order: string
+            Storage layout ('row-major' or 'column-major').
+
+        norm: string
+            Norm type: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
+
+        N: NonNegativeInteger
+            Order of the matrix.
+
+        A: Float64Array
+            Upper Hessenberg matrix.
+
+        LDA: PositiveInteger
+            Leading dimension of A.
+
+        WORK: Float64Array
+            Workspace array (length >= N for 'inf-norm').
+
+        strideWORK: integer
+            Stride length for WORK.
+
+        Returns
+        -------
+        out: number
+            Matrix norm value.
+
+        Examples
+        --------
+        > var A = new {{alias:@stdlib/array/float64}}( [ 1.0, 4.0, 0.0, 2.0, 5.0, 7.0, 3.0, 6.0, 8.0 ] );
+        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
+        > dlanhs( 'column-major', 'one-norm', 3, A, 3, WORK, 1 )
+        17.0
+
+
+    dlanhs.ndarray( norm, N, A, strideA1, strideA2, offsetA, WORK, strideWORK, offsetWORK )
+        Returns the value of the one norm, Frobenius norm, infinity norm, or
+        the largest absolute value of a real upper Hessenberg matrix using
+        alternative indexing semantics.
+
+        Parameters
+        ----------
+        norm: string
+            Norm type: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
+
+        N: NonNegativeInteger
+            Order of the matrix.
+
+        A: Float64Array
+            Upper Hessenberg matrix.
+
+        strideA1: integer
+            Stride of the first dimension of A.
+
+        strideA2: integer
+            Stride of the second dimension of A.
+
+        offsetA: NonNegativeInteger
+            Starting index for A.
+
+        WORK: Float64Array
+            Workspace array (length >= N for 'inf-norm').
+
+        strideWORK: integer
+            Stride length for WORK.
+
+        offsetWORK: NonNegativeInteger
+            Starting index for WORK.
+
+        Returns
+        -------
+        out: number
+            Matrix norm value.
+
+        Examples
+        --------
+        > var A = new {{alias:@stdlib/array/float64}}( [ 1.0, 4.0, 0.0, 2.0, 5.0, 7.0, 3.0, 6.0, 8.0 ] );
+        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
+        > dlanhs.ndarray( 'one-norm', 3, A, 1, 3, 0, WORK, 1, 0 )
+        17.0
+
+    See Also
+    --------
+

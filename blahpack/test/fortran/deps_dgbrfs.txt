@@ -1,0 +1,10 @@
+dgbrfs
+dgbtf2
+dgbtrf
+dgbtrs
+dlacn2
+dlamch
+dlaswp
+ieeeck
+ilaenv
+iparmq

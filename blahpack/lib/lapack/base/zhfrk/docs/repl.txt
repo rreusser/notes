@@ -1,0 +1,60 @@
+
+    zhfrk.ndarray( transr, uplo, trans, N, K, alpha, A, strideA1, strideA2, offsetA, beta, c, strideC, offsetC )
+        Performs a Hermitian rank-k operation for a matrix in Rectangular Full Packed format.
+
+        Parameters
+        ----------
+        transr: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        trans: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        K: NonNegativeInteger
+            number of superdiagonals.
+
+        alpha: number
+            scalar constant.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        beta: number
+            scalar constant.
+
+        c: Float64Array
+            output array.
+
+        strideC: integer
+            stride length for `c`.
+
+        offsetC: NonNegativeInteger
+            starting index for `c`.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

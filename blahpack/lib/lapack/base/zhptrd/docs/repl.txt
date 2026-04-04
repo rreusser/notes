@@ -1,0 +1,60 @@
+
+    zhptrd.ndarray( uplo, N, AP, strideAP, offsetAP, d, strideD, offsetD, e, strideE, offsetE, TAU, strideTAU, offsetTAU )
+        Reduces a complex Hermitian matrix stored in packed form to real symmetric tridiagonal form.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        TAU: Float64Array
+            output array.
+
+        strideTAU: integer
+            stride length for `TAU`.
+
+        offsetTAU: NonNegativeInteger
+            starting index for `TAU`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

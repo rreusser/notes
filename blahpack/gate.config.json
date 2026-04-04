@@ -338,5 +338,49 @@
   "lib/lapack/base/dspgv": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dspgv (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlangb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlangb (not in stdlib checkout); remark-based jsdoc rules false-positive on eslint-disable comment in test file"
+  },
+  "lib/lapack/base/dspgvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dspgvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dgbrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dgbrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhbevx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-no-paragraph-content-indent false-positive on eslint-disable comment in test file; jsdoc-doctest cannot resolve @stdlib/lapack/base/zhbevx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhpevx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-no-paragraph-content-indent false-positive on eslint-disable comment in test file; jsdoc-doctest cannot resolve @stdlib/lapack/base/zhpevx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhptrd": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhptrd (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zupgtr": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zupgtr (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlansb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlansb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlanhs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlanhs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhpgvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhpgvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dsfrk": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dsfrk (not in stdlib checkout)"
   }
 }
