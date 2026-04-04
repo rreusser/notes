@@ -5,7 +5,7 @@
 import Complex128Array from '@stdlib/array/complex128';
 import reinterpret from '@stdlib/strided/base/reinterpret-complex128';
 
-import { prz, cleanup, feval, barycentricRoots } from '../../prz.js';
+import { prz, cleanup, feval, barycentricRoots } from '../../examples/prz.js';
 import zgesvd from '../../lib/lapack/base/zgesvd/lib/ndarray.js';
 
 export { prz, cleanup, feval, barycentricRoots };
