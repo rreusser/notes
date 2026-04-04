@@ -1,0 +1,45 @@
+
+    zlacon.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, est, kase )
+        Estimates the 1-norm of a square complex matrix using reverse communication.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            number of columns.
+
+        v: Float64Array
+            input array.
+
+        strideV: integer
+            stride length for `v`.
+
+        offsetV: NonNegativeInteger
+            starting index for `v`.
+
+        x: Float64Array
+            input array.
+
+        strideX: integer
+            stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            starting index for `x`.
+
+        est: number
+            est.
+
+        kase: integer
+            kase.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,51 @@
+
+    dlaqsp.ndarray( uplo, N, AP, strideAP, offsetAP, s, strideS, offsetS, scond, amax, equed )
+        Equilibrates a real symmetric matrix in packed storage using scaling factors.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        s: Float64Array
+            output array.
+
+        strideS: integer
+            stride length for `s`.
+
+        offsetS: NonNegativeInteger
+            starting index for `s`.
+
+        scond: number
+            scond.
+
+        amax: number
+            amax.
+
+        equed: string
+            specifies the operation type.
+
+        Returns
+        -------
+        out: None
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

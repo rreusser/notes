@@ -1,0 +1,54 @@
+
+    dpstrf.ndarray( uplo, N, A, strideA1, strideA2, offsetA, piv, stridePIV, offsetPIV, rank, tol, work )
+        Computes the Cholesky factorization with complete pivoting of a real symmetric positive semi-definite matrix (blocked algorithm).
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        piv: Int32Array
+            input array.
+
+        stridePIV: integer
+            stride length for `piv`.
+
+        offsetPIV: NonNegativeInteger
+            starting index for `piv`.
+
+        rank: integer
+            rank.
+
+        tol: number
+            tol.
+
+        work: number
+            work.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,117 @@
+
+    dptsvx.ndarray( fact, N, nrhs, d, strideD, offsetD, e, strideE, offsetE, DF, strideDF, offsetDF, EF, strideEF, offsetEF, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK )
+        Solves a real system A * X = B where A is symmetric positive definite tridiagonal, with condition estimation and error bounds.
+
+        Parameters
+        ----------
+        fact: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        nrhs: integer
+            nrhs.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        e: Float64Array
+            input array.
+
+        strideE: integer
+            stride length for `e`.
+
+        offsetE: NonNegativeInteger
+            starting index for `e`.
+
+        DF: Float64Array
+            input array.
+
+        strideDF: integer
+            stride length for `DF`.
+
+        offsetDF: NonNegativeInteger
+            starting index for `DF`.
+
+        EF: Float64Array
+            input array.
+
+        strideEF: integer
+            stride length for `EF`.
+
+        offsetEF: NonNegativeInteger
+            starting index for `EF`.
+
+        B: Float64Array
+            input matrix.
+
+        strideB1: integer
+            stride of the first dimension of `B`.
+
+        strideB2: integer
+            stride of the second dimension of `B`.
+
+        offsetB: NonNegativeInteger
+            starting index for `B`.
+
+        X: Float64Array
+            input matrix.
+
+        strideX1: integer
+            stride of the first dimension of `X`.
+
+        strideX2: integer
+            stride of the second dimension of `X`.
+
+        offsetX: NonNegativeInteger
+            starting index for `X`.
+
+        rcond: number
+            rcond.
+
+        FERR: Float64Array
+            input array.
+
+        strideFERR: integer
+            stride length for `FERR`.
+
+        offsetFERR: NonNegativeInteger
+            starting index for `FERR`.
+
+        BERR: Float64Array
+            input array.
+
+        strideBERR: integer
+            stride length for `BERR`.
+
+        offsetBERR: NonNegativeInteger
+            starting index for `BERR`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

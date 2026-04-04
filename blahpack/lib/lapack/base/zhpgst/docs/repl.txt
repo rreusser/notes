@@ -1,0 +1,45 @@
+
+    zhpgst.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
+        Reduces a complex Hermitian-definite generalized eigenproblem to standard form using packed storage.
+
+        Parameters
+        ----------
+        itype: integer
+            itype.
+
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        strideAP: integer
+            stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            starting index for `AP`.
+
+        BP: Float64Array
+            output array.
+
+        strideBP: integer
+            stride length for `BP`.
+
+        offsetBP: NonNegativeInteger
+            starting index for `BP`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

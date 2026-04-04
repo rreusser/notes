@@ -1,0 +1,17 @@
+disnan
+dlacpy
+dlaisnan
+dlamch
+dlanst
+dlassq
+la_constants
+la_xisnan
+dptcon
+dptrfs
+dptsvx
+dpttrf
+dpttrs
+dptts2
+ieeeck
+ilaenv
+iparmq

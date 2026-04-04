@@ -1,0 +1,87 @@
+
+    dlansp( norm, uplo, N, AP, WORK )
+        Returns the value of the one-norm, Frobenius norm, infinity-norm, or
+        the largest absolute value of any element of a real symmetric matrix
+        supplied in packed storage.
+
+        Parameters
+        ----------
+        norm: string
+            Specifies the norm: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
+
+        uplo: string
+            Specifies whether the upper or lower triangle is stored: 'upper' or
+            'lower'.
+
+        N: NonNegativeInteger
+            Order of the matrix.
+
+        AP: Float64Array
+            Packed symmetric matrix, length >= N*(N+1)/2.
+
+        WORK: Float64Array
+            Workspace array, length >= N.
+
+        Returns
+        -------
+        out: number
+            Norm value.
+
+        Examples
+        --------
+        > var AP = new {{alias:@stdlib/array/float64}}( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
+        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
+        > dlansp( 'max', 'upper', 3, AP, WORK )
+        7.0
+
+
+    dlansp.ndarray( norm, uplo, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
+        Returns the value of the one-norm, Frobenius norm, infinity-norm, or
+        the largest absolute value of any element of a real symmetric matrix
+        supplied in packed storage using alternative indexing semantics.
+
+        Parameters
+        ----------
+        norm: string
+            Specifies the norm: 'max', 'one-norm', 'inf-norm', or 'frobenius'.
+
+        uplo: string
+            Specifies whether the upper or lower triangle is stored: 'upper' or
+            'lower'.
+
+        N: NonNegativeInteger
+            Order of the matrix.
+
+        AP: Float64Array
+            Packed symmetric matrix, length >= N*(N+1)/2.
+
+        strideAP: integer
+            Stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            Starting index for `AP`.
+
+        WORK: Float64Array
+            Workspace array, length >= N.
+
+        strideWORK: integer
+            Stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            Starting index for `WORK`.
+
+        Returns
+        -------
+        out: number
+            Norm value.
+
+        Examples
+        --------
+        > var AP = new {{alias:@stdlib/array/float64}}( [ 2.0, 3.0, 5.0, -1.0, 2.0, 7.0 ] );
+        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
+        > dlansp.ndarray( 'max', 'upper', 3, AP, 1, 0, WORK, 1, 0 )
+        7.0
+
+    See Also
+    --------
+

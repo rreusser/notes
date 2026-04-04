@@ -1,0 +1,51 @@
+
+    zlangt.ndarray( norm, N, DL, strideDL, offsetDL, d, strideD, offsetD, DU, strideDU, offsetDU )
+        Returns the norm of a complex tridiagonal matrix.
+
+        Parameters
+        ----------
+        norm: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        DL: Float64Array
+            input array.
+
+        strideDL: integer
+            stride length for `DL`.
+
+        offsetDL: NonNegativeInteger
+            starting index for `DL`.
+
+        d: Float64Array
+            input array.
+
+        strideD: integer
+            stride length for `d`.
+
+        offsetD: NonNegativeInteger
+            starting index for `d`.
+
+        DU: Float64Array
+            output array.
+
+        strideDU: integer
+            stride length for `DU`.
+
+        offsetDU: NonNegativeInteger
+            starting index for `DU`.
+
+        Returns
+        -------
+        out: number
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

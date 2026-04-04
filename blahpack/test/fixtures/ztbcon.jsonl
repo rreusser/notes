@@ -1,0 +1,12 @@
+{"name":"upper_nonunit_1norm_k2","rcond": 2.80106581492168549E-001,"info":0}
+{"name":"upper_nonunit_Inorm_k2","rcond": 2.81390749897847126E-001,"info":0}
+{"name":"lower_nonunit_1norm_k2","rcond": 2.28903917155658831E-001,"info":0}
+{"name":"lower_nonunit_Inorm_k2","rcond": 2.26879710660020467E-001,"info":0}
+{"name":"upper_unit_1norm_k1","rcond": 9.38363213560543252E-002,"info":0}
+{"name":"lower_unit_Inorm_k1","rcond": 2.65409196609864229E-001,"info":0}
+{"name":"n_zero","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"identity_k0","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"upper_nonunit_k1_1norm","rcond": 3.63474710016767510E-001,"info":0}
+{"name":"upper_nonunit_k1_Inorm","rcond": 3.85952821335334983E-001,"info":0}
+{"name":"lower_nonunit_k1_1norm","rcond": 3.56705504406859664E-001,"info":0}
+{"name":"lower_nonunit_k1_Inorm","rcond": 3.65487995263113596E-001,"info":0}

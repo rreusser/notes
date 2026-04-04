@@ -1,0 +1,42 @@
+
+    dtptri.ndarray( uplo, diag, N, AP, strideAP, offsetAP )
+        Computes the inverse of a real upper or lower triangular matrix in
+        packed storage.
+
+        Parameters
+        ----------
+        uplo: string
+            Specifies whether the matrix is upper or lower triangular
+            ('upper' or 'lower').
+
+        diag: string
+            Specifies whether the matrix is unit or non-unit triangular
+            ('unit' or 'non-unit').
+
+        N: NonNegativeInteger
+            Order of the matrix.
+
+        AP: Float64Array
+            Packed triangular matrix of dimension `N*(N+1)/2`.
+
+        strideAP: integer
+            Stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            Starting index for `AP`.
+
+        Returns
+        -------
+        info: integer
+            Status code. 0 indicates success; k > 0 indicates that A(k,k)
+            is exactly zero and the matrix is singular.
+
+        Examples
+        --------
+        > var AP = new {{alias:@stdlib/array/float64}}( [ 2.0, 1.0, 4.0, 3.0, 5.0, 6.0 ] );
+        > var info = dtptri.ndarray( 'upper', 'non-unit', 3, AP, 1, 0 )
+        0
+
+    See Also
+    --------
+

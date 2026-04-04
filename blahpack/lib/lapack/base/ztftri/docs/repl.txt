@@ -1,0 +1,39 @@
+
+    ztftri.ndarray( transr, uplo, diag, N, a, stride, offset )
+        Computes the inverse of a complex triangular matrix in Rectangular Full Packed format.
+
+        Parameters
+        ----------
+        transr: string
+            specifies the operation type.
+
+        uplo: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        a: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `a`.
+
+        offset: NonNegativeInteger
+            starting index for `a`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

@@ -1,0 +1,269 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params, max-statements */
+
+'use strict';
+
+// MODULES //
+
+var Float64Array = require( '@stdlib/array/float64' );
+var Int32Array = require( '@stdlib/array/int32' );
+var abs = Math.abs;
+var max = Math.max;
+var min = Math.min;
+var dcopy = require( './../../../../blas/base/dcopy/lib/base.js' );
+var dsbmv = require( './../../../../blas/base/dsbmv/lib/base.js' );
+var daxpy = require( './../../../../blas/base/daxpy/lib/base.js' );
+var dpbtrs = require( '../../dpbtrs/lib/base.js' );
+var dlacn2 = require( '../../dlacn2/lib/base.js' );
+var dlamch = require( '../../dlamch/lib/base.js' );
+
+
+// VARIABLES //
+
+var ITMAX = 5;
+var EPS = dlamch( 'epsilon' );
+var SAFMIN = dlamch( 'safe-minimum' );
+
+
+// MAIN //
+
+/**
+* Improves the computed solution to a system of linear equations `A * X = B` where `A` is symmetric positive definite band, and provides error bounds and backward error estimates.
+*
+* Uses the Cholesky factorization computed by dpbtrf. WORK (3*N) and IWORK (N)
+* are passed as workspace arrays.
+*
+* @private
+* @param {string} uplo - 'upper' if upper Cholesky factor stored, 'lower' if lower
+* @param {NonNegativeInteger} N - order of matrix A
+* @param {NonNegativeInteger} kd - number of superdiagonals (or subdiagonals) of A
+* @param {NonNegativeInteger} nrhs - number of right-hand side columns
+* @param {Float64Array} AB - original N-by-N symmetric band matrix in band storage
+* @param {integer} strideAB1 - stride of the first dimension of AB
+* @param {integer} strideAB2 - stride of the second dimension of AB
+* @param {NonNegativeInteger} offsetAB - index offset for AB
+* @param {Float64Array} AFB - Cholesky-factored band matrix (from dpbtrf)
+* @param {integer} strideAFB1 - stride of the first dimension of AFB
+* @param {integer} strideAFB2 - stride of the second dimension of AFB
+* @param {NonNegativeInteger} offsetAFB - index offset for AFB
+* @param {Float64Array} B - right-hand side matrix
+* @param {integer} strideB1 - stride of the first dimension of B
+* @param {integer} strideB2 - stride of the second dimension of B
+* @param {NonNegativeInteger} offsetB - index offset for B
+* @param {Float64Array} X - solution matrix (improved on exit)
+* @param {integer} strideX1 - stride of the first dimension of X
+* @param {integer} strideX2 - stride of the second dimension of X
+* @param {NonNegativeInteger} offsetX - index offset for X
+* @param {Float64Array} FERR - output forward error bounds (length nrhs)
+* @param {integer} strideFERR - stride for FERR
+* @param {NonNegativeInteger} offsetFERR - starting index for FERR
+* @param {Float64Array} BERR - output backward error bounds (length nrhs)
+* @param {integer} strideBERR - stride for BERR
+* @param {NonNegativeInteger} offsetBERR - starting index for BERR
+* @param {Float64Array} WORK - workspace array (length >= 3*N)
+* @param {integer} strideWORK - stride length for WORK
+* @param {NonNegativeInteger} offsetWORK - starting index for WORK
+* @param {Int32Array} IWORK - integer workspace array (length >= N)
+* @param {integer} strideIWORK - stride length for IWORK
+* @param {NonNegativeInteger} offsetIWORK - starting index for IWORK
+* @returns {integer} info - 0 if successful
+*/
+function dpbrfs( uplo, N, kd, nrhs, AB, strideAB1, strideAB2, offsetAB, AFB, strideAFB1, strideAFB2, offsetAFB, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) { // eslint-disable-line max-len, max-params
+	var lstres;
+	var upper;
+	var count;
+	var ISAVE;
+	var safe1;
+	var safe2;
+	var KASE;
+	var EST;
+	var xk;
+	var nz;
+	var w0;
+	var w1;
+	var w2;
+	var l;
+	var s;
+	var i;
+	var j;
+	var k;
+
+	// Quick return if possible
+	if ( N === 0 || nrhs === 0 ) {
+		for ( j = 0; j < nrhs; j++ ) {
+			FERR[ offsetFERR + ( j * strideFERR ) ] = 0.0;
+			BERR[ offsetBERR + ( j * strideBERR ) ] = 0.0;
+		}
+		return 0;
+	}
+
+	upper = ( uplo === 'upper' );
+
+	// NZ = maximum number of nonzero elements in each row of A, plus 1
+	nz = min( N + 1, ( 2 * kd ) + 2 );
+	safe1 = nz * SAFMIN;
+	safe2 = safe1 / EPS;
+
+	// Workspace segment offsets
+	w0 = offsetWORK;                          // WORK(0:N-1)
+	w1 = offsetWORK + ( N * strideWORK );     // WORK(N:2N-1)
+	w2 = offsetWORK + ( 2 * N * strideWORK ); // WORK(2N:3N-1)
+
+	KASE = new Int32Array( 1 );
+	EST = new Float64Array( 1 );
+	ISAVE = new Int32Array( 3 );
+
+	// Do for each right-hand side
+	for ( j = 0; j < nrhs; j++ ) {
+		count = 1;
+		lstres = 3.0;
+
+		// Loop until stopping criterion is satisfied
+		while ( true ) {
+			// Compute residual R = B - A * X
+			// Copy B(:,j) into WORK(N:2N-1)
+			dcopy( N, B, strideB1, offsetB + ( j * strideB2 ), WORK, strideWORK, w1 );
+
+			// WORK(N:2N-1) = B(:,j) - A * X(:,j)
+			dsbmv( uplo, N, kd, -1.0, AB, strideAB1, strideAB2, offsetAB, X, strideX1, offsetX + ( j * strideX2 ), 1.0, WORK, strideWORK, w1 );
+
+			// Compute componentwise relative backward error
+
+			// WORK(0:N-1) = abs(B(:,j))
+			for ( i = 0; i < N; i++ ) {
+				WORK[ w0 + ( i * strideWORK ) ] = abs( B[ offsetB + ( i * strideB1 ) + ( j * strideB2 ) ] );
+			}
+
+			// Compute abs(A)*abs(X) + abs(B), exploiting band symmetry
+			if ( upper ) {
+				for ( k = 0; k < N; k++ ) {
+					s = 0.0;
+					xk = abs( X[ offsetX + ( k * strideX1 ) + ( j * strideX2 ) ] );
+					l = kd - k; // L = KD + 1 - K (0-based: kd - k)
+
+					// Upper triangle: rows max(0, k-kd)..k-1
+					for ( i = max( 0, k - kd ); i < k; i++ ) {
+						WORK[ w0 + ( i * strideWORK ) ] += abs( AB[ offsetAB + ( ( l + i ) * strideAB1 ) + ( k * strideAB2 ) ] ) * xk;
+						s += abs( AB[ offsetAB + ( ( l + i ) * strideAB1 ) + ( k * strideAB2 ) ] ) * abs( X[ offsetX + ( i * strideX1 ) + ( j * strideX2 ) ] );
+					}
+					// Diagonal element (at band row kd)
+					WORK[ w0 + ( k * strideWORK ) ] += ( abs( AB[ offsetAB + ( kd * strideAB1 ) + ( k * strideAB2 ) ] ) * xk ) + s;
+				}
+			} else {
+				for ( k = 0; k < N; k++ ) {
+					s = 0.0;
+					xk = abs( X[ offsetX + ( k * strideX1 ) + ( j * strideX2 ) ] );
+
+					// Diagonal element (at band row 0)
+					WORK[ w0 + ( k * strideWORK ) ] += abs( AB[ offsetAB + ( k * strideAB2 ) ] ) * xk;
+					l = -k; // L = 1 - K (0-based: -k)
+
+					// Lower triangle: rows k+1..min(N-1, k+kd)
+					for ( i = k + 1; i < min( N, k + kd + 1 ); i++ ) {
+						WORK[ w0 + ( i * strideWORK ) ] += abs( AB[ offsetAB + ( ( l + i ) * strideAB1 ) + ( k * strideAB2 ) ] ) * xk;
+						s += abs( AB[ offsetAB + ( ( l + i ) * strideAB1 ) + ( k * strideAB2 ) ] ) * abs( X[ offsetX + ( i * strideX1 ) + ( j * strideX2 ) ] );
+					}
+					WORK[ w0 + ( k * strideWORK ) ] += s;
+				}
+			}
+
+			// Compute BERR(j)
+			s = 0.0;
+			for ( i = 0; i < N; i++ ) {
+				if ( WORK[ w0 + ( i * strideWORK ) ] > safe2 ) {
+					s = max( s, abs( WORK[ w1 + ( i * strideWORK ) ] ) / WORK[ w0 + ( i * strideWORK ) ] );
+				} else {
+					s = max( s, ( abs( WORK[ w1 + ( i * strideWORK ) ] ) + safe1 ) / ( WORK[ w0 + ( i * strideWORK ) ] + safe1 ) );
+				}
+			}
+			BERR[ offsetBERR + ( j * strideBERR ) ] = s;
+
+			// Test stopping criterion
+			if ( s > EPS && ( 2.0 * s ) <= lstres && count <= ITMAX ) {
+				// Solve A * dx = R using the Cholesky factorization
+				dpbtrs( uplo, N, kd, 1, AFB, strideAFB1, strideAFB2, offsetAFB, WORK, strideWORK, N * strideWORK, w1 );
+
+				// X(:,j) += dx
+				daxpy( N, 1.0, WORK, strideWORK, w1, X, strideX1, offsetX + ( j * strideX2 ) );
+
+				lstres = s;
+				count += 1;
+			} else {
+				break;
+			}
+		}
+
+		// Bound error from formula using DLACN2 to estimate the infinity-norm
+		// Of inv(A) * diag(W)
+
+		// Set up WORK(0:N-1) = abs(R) + NZ*EPS*(abs(A)*abs(X)+abs(B))
+		for ( i = 0; i < N; i++ ) {
+			if ( WORK[ w0 + ( i * strideWORK ) ] > safe2 ) {
+				WORK[ w0 + ( i * strideWORK ) ] = abs( WORK[ w1 + ( i * strideWORK ) ] ) + ( nz * EPS * WORK[ w0 + ( i * strideWORK ) ] );
+			} else {
+				WORK[ w0 + ( i * strideWORK ) ] = abs( WORK[ w1 + ( i * strideWORK ) ] ) + ( nz * EPS * WORK[ w0 + ( i * strideWORK ) ] ) + safe1;
+			}
+		}
+
+		KASE[ 0 ] = 0;
+
+		// dlacn2 reverse communication loop
+		while ( true ) {
+			EST[ 0 ] = FERR[ offsetFERR + ( j * strideFERR ) ];
+			dlacn2( N, WORK, strideWORK, w2, WORK, strideWORK, w1, IWORK, strideIWORK, offsetIWORK, EST, KASE, ISAVE, 1, 0 );
+			FERR[ offsetFERR + ( j * strideFERR ) ] = EST[ 0 ];
+
+			if ( KASE[ 0 ] === 0 ) {
+				break;
+			}
+
+			if ( KASE[ 0 ] === 1 ) {
+				// Multiply by diag(W)*inv(A^T)
+				// Since A is symmetric, A^T = A, so just solve A*z = x
+				dpbtrs( uplo, N, kd, 1, AFB, strideAFB1, strideAFB2, offsetAFB, WORK, strideWORK, N * strideWORK, w1 );
+				for ( i = 0; i < N; i++ ) {
+					WORK[ w1 + ( i * strideWORK ) ] = WORK[ w0 + ( i * strideWORK ) ] * WORK[ w1 + ( i * strideWORK ) ];
+				}
+			} else {
+				// Multiply by inv(A)*diag(W)
+				for ( i = 0; i < N; i++ ) {
+					WORK[ w1 + ( i * strideWORK ) ] = WORK[ w0 + ( i * strideWORK ) ] * WORK[ w1 + ( i * strideWORK ) ];
+				}
+				dpbtrs( uplo, N, kd, 1, AFB, strideAFB1, strideAFB2, offsetAFB, WORK, strideWORK, N * strideWORK, w1 );
+			}
+		}
+
+		// Normalize error
+		lstres = 0.0;
+		for ( i = 0; i < N; i++ ) {
+			lstres = max( lstres, abs( X[ offsetX + ( i * strideX1 ) + ( j * strideX2 ) ] ) );
+		}
+		if ( lstres !== 0.0 ) {
+			FERR[ offsetFERR + ( j * strideFERR ) ] = FERR[ offsetFERR + ( j * strideFERR ) ] / lstres;
+		}
+	}
+
+	return 0;
+}
+
+
+// EXPORTS //
+
+module.exports = dpbrfs;

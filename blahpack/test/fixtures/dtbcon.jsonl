@@ -1,0 +1,16 @@
+{"name":"upper_nonunit_onenorm","rcond": 2.73972602739726012E-001,"info":0}
+{"name":"upper_nonunit_infnorm","rcond": 4.00000000000000022E-001,"info":0}
+{"name":"upper_unit_onenorm","rcond": 2.00000000000000004E-002,"info":0}
+{"name":"upper_unit_infnorm","rcond": 3.12500000000000000E-002,"info":0}
+{"name":"lower_nonunit_onenorm","rcond": 2.89618856569709038E-001,"info":0}
+{"name":"lower_nonunit_infnorm","rcond": 3.12500000000000000E-001,"info":0}
+{"name":"lower_unit_onenorm","rcond": 6.25000000000000000E-002,"info":0}
+{"name":"lower_unit_infnorm","rcond": 2.77777777777777762E-002,"info":0}
+{"name":"edge_n0","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"edge_n1_kd0","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"identity_onenorm","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"identity_infnorm","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"ill_conditioned_onenorm","rcond": 9.99999999999999924E-025,"info":0}
+{"name":"ill_conditioned_infnorm","rcond": 9.99999999999999924E-025,"info":0}
+{"name":"upper_nonunit_onenorm_kd3","rcond": 2.83687943262411313E-001,"info":0}
+{"name":"upper_nonunit_infnorm_kd3","rcond": 2.06769230769230788E-001,"info":0}

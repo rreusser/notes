@@ -23,6 +23,7 @@ var ALLOWED_RULES = new Set([
 	'no-constant-condition', // while(true) for reverse-communication (dlacn2 etc.)
 	'no-mixed-operators',    // complex arithmetic expressions
 	'no-continue',           // Fortran loop continue translation
+	'no-lonely-if',          // Fortran nested IF-ELSE branching translation
 	'no-labels',             // Fortran GOTO translation
 	'no-extra-parens',       // clarity in arithmetic
 	'camelcase',             // Fortran-style variable names

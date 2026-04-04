@@ -1,0 +1,46 @@
+
+'use strict';
+
+// MODULES //
+
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Computes the inverse of a real triangular matrix in Rectangular Full Packed format.
+*
+* @param {string} transr - specifies the storage format (`'no-transpose'` or `'transpose'`)
+* @param {string} uplo - specifies whether the upper or lower triangle is stored (`'upper'` or `'lower'`)
+* @param {string} diag - specifies whether the matrix is unit triangular (`'unit'` or `'non-unit'`)
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} A - input/output array in RFP format
+* @param {integer} strideA - stride length for `A`
+* @param {NonNegativeInteger} offsetA - starting index for `A`
+* @throws {TypeError} First argument must be a valid transpose operation
+* @throws {TypeError} Second argument must be a valid matrix triangle
+* @throws {TypeError} Third argument must be a valid diagonal type
+* @returns {integer} status code (0 = success)
+*/
+function dtftri( transr, uplo, diag, N, A, strideA, offsetA ) { // eslint-disable-line max-params
+	if ( !isTransposeOperation( transr ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', transr ) );
+	}
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
+	return base( transr, uplo, diag, N, A, strideA, offsetA ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = dtftri;

@@ -1,0 +1,94 @@
+
+    zlantp( norm, uplo, diag, N, AP, WORK )
+        Returns the norm of a complex triangular matrix in packed storage.
+
+        Parameters
+        ----------
+        norm: string
+            Specifies which norm to compute: 'max', 'one-norm', 'inf-norm', or
+            'frobenius'.
+
+        uplo: string
+            Specifies whether the upper or lower triangle is stored: 'upper' or
+            'lower'.
+
+        diag: string
+            Specifies whether the matrix has a unit diagonal: 'unit' or
+            'non-unit'.
+
+        N: integer
+            Order of the matrix.
+
+        AP: Complex128Array
+            Packed triangular matrix.
+
+        WORK: Float64Array
+            Workspace array of length >= N.
+
+        Returns
+        -------
+        out: number
+            Norm value.
+
+        Examples
+        --------
+        > var AP = new {{alias:@stdlib/array/complex128}}( [ 1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 5.0, 6.0, 9.0, 1.0, 2.0, 3.0 ] );
+        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
+        > zlantp( 'max', 'upper', 'non-unit', 3, AP, WORK )
+        ~10.63
+
+
+    zlantp.ndarray( norm, uplo, diag, N, AP, strideAP, offsetAP, WORK, strideWORK, offsetWORK )
+        Returns the norm of a complex triangular matrix in packed storage
+        using alternative indexing semantics.
+
+        Parameters
+        ----------
+        norm: string
+            Specifies which norm to compute: 'max', 'one-norm', 'inf-norm', or
+            'frobenius'.
+
+        uplo: string
+            Specifies whether the upper or lower triangle is stored: 'upper' or
+            'lower'.
+
+        diag: string
+            Specifies whether the matrix has a unit diagonal: 'unit' or
+            'non-unit'.
+
+        N: integer
+            Order of the matrix.
+
+        AP: Complex128Array
+            Packed triangular matrix.
+
+        strideAP: integer
+            Stride length for AP (in complex elements).
+
+        offsetAP: integer
+            Starting index for AP (in complex elements).
+
+        WORK: Float64Array
+            Workspace array of length >= N.
+
+        strideWORK: integer
+            Stride length for WORK.
+
+        offsetWORK: integer
+            Starting index for WORK.
+
+        Returns
+        -------
+        out: number
+            Norm value.
+
+        Examples
+        --------
+        > var AP = new {{alias:@stdlib/array/complex128}}( [ 1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 5.0, 6.0, 9.0, 1.0, 2.0, 3.0 ] );
+        > var WORK = new {{alias:@stdlib/array/float64}}( 3 );
+        > zlantp.ndarray( 'max', 'upper', 'non-unit', 3, AP, 1, 0, WORK, 1, 0 )
+        ~10.63
+
+    See Also
+    --------
+

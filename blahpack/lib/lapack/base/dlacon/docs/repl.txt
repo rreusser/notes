@@ -1,0 +1,61 @@
+
+    dlacon.ndarray( N, v, strideV, offsetV, x, strideX, offsetX, ISGN, strideISGN, offsetISGN, EST, KASE )
+        Estimates the 1-norm of a square real matrix using reverse communication.
+
+        This is a reverse communication interface. Set KASE[0] = 0 on the
+        first call. On return, if KASE[0] = 1, compute x = A*x; if KASE[0] = 2,
+        compute x = A^T*x; if KASE[0] = 0, EST[0] holds the estimated norm.
+
+        Unlike dlacn2, this routine uses module-level persistent state instead
+        of an ISAVE array.
+
+        Parameters
+        ----------
+        N: NonNegativeInteger
+            Order of the matrix.
+
+        v: Float64Array
+            Workspace array of length N.
+
+        strideV: integer
+            Stride length for `v`.
+
+        offsetV: NonNegativeInteger
+            Starting index for `v`.
+
+        x: Float64Array
+            Input/output vector of length N.
+
+        strideX: integer
+            Stride length for `x`.
+
+        offsetX: NonNegativeInteger
+            Starting index for `x`.
+
+        ISGN: Int32Array
+            Sign array of length N.
+
+        strideISGN: integer
+            Stride length for `ISGN`.
+
+        offsetISGN: NonNegativeInteger
+            Starting index for `ISGN`.
+
+        EST: Float64Array
+            Single-element array. EST[0] is the estimated 1-norm on exit.
+
+        KASE: Int32Array
+            Single-element array. KASE[0] indicates the operation to perform.
+
+        Examples
+        --------
+        > var v = new {{alias:@stdlib/array/float64}}( 2 );
+        > var x = new {{alias:@stdlib/array/float64}}( 2 );
+        > var ISGN = new {{alias:@stdlib/array/int32}}( 2 );
+        > var EST = new {{alias:@stdlib/array/float64}}( 1 );
+        > var KASE = new {{alias:@stdlib/array/int32}}( 1 );
+        > dlacon.ndarray( 2, v, 1, 0, x, 1, 0, ISGN, 1, 0, EST, KASE )
+
+    See Also
+    --------
+

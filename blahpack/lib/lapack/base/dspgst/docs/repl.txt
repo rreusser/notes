@@ -1,0 +1,51 @@
+
+    dspgst.ndarray( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP )
+        Reduces a real symmetric-definite generalized eigenproblem to
+        standard form using packed storage.
+
+        Parameters
+        ----------
+        itype: integer
+            Problem type (1, 2, or 3).
+
+        uplo: string
+            Specifies whether upper or lower triangle is stored
+            ('upper' or 'lower').
+
+        N: NonNegativeInteger
+            Order of matrices A and B.
+
+        AP: Float64Array
+            Symmetric matrix A in packed storage.
+
+        strideAP: integer
+            Stride length for `AP`.
+
+        offsetAP: NonNegativeInteger
+            Starting index for `AP`.
+
+        BP: Float64Array
+            Triangular factor from Cholesky factorization of B in
+            packed storage.
+
+        strideBP: integer
+            Stride length for `BP`.
+
+        offsetBP: NonNegativeInteger
+            Starting index for `BP`.
+
+        Returns
+        -------
+        info: integer
+            Status code. 0 indicates success.
+
+        Examples
+        --------
+        > var AP = new {{alias:@stdlib/array/float64}}( [ 4.0, 2.0, 5.0, 1.0, 3.0, 6.0 ] );
+        > var BP = new {{alias:@stdlib/array/float64}}( [ 2.0, 0.0, 2.0, 0.0, 0.0, 1.5 ] );
+        > var info = dspgst.ndarray( 1, 'upper', 3, AP, 1, 0, BP, 1, 0 )
+        0
+
+    See Also
+    --------
+

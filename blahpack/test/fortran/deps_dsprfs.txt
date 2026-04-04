@@ -1,0 +1,11 @@
+daxpy
+dcopy
+dlacn2
+dlamch
+dspmv
+dsprfs
+dsptrf
+dsptrs
+ieeeck
+ilaenv
+iparmq

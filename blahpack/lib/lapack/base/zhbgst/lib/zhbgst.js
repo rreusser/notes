@@ -1,0 +1,36 @@
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Reduces a complex Hermitian-definite banded generalized eigenproblem to standard form.
+*
+* @param {string} vect - 'none' or 'update'
+* @param {string} uplo - 'upper' or 'lower'
+* @param {NonNegativeInteger} N - order of matrices A and B
+* @param {integer} ka - number of super/subdiagonals of A
+* @param {integer} kb - number of super/subdiagonals of B (ka >= kb >= 0)
+* @param {Complex128Array} AB - band matrix A in band storage
+* @param {PositiveInteger} LDAB - leading dimension of AB (>= ka+1)
+* @param {Complex128Array} BB - split Cholesky factor from ZPBSTF
+* @param {PositiveInteger} LDBB - leading dimension of BB (>= kb+1)
+* @param {Complex128Array} X - transformation matrix
+* @param {PositiveInteger} LDX - leading dimension of X
+* @param {Complex128Array} WORK - complex workspace of dimension N
+* @param {Float64Array} RWORK - real workspace of dimension N
+* @returns {integer} info - 0 if successful
+*/
+function zhbgst( vect, uplo, N, ka, kb, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK ) { // eslint-disable-line max-len, max-params
+	return base( vect, uplo, N, ka, kb, AB, 1, LDAB, 0, BB, 1, LDBB, 0, X, 1, LDX, 0, WORK, 1, 0, RWORK, 1, 0 ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zhbgst;

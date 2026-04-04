@@ -1,0 +1,41 @@
+
+'use strict';
+
+// MODULES //
+
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Estimates the reciprocal condition number of a complex triangular band matrix.
+*
+* @param {string} norm - norm type: 'one-norm' or 'inf-norm'
+* @param {string} uplo - 'upper' or 'lower'
+* @param {string} diag - 'unit' or 'non-unit'
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {NonNegativeInteger} kd - number of super/sub-diagonals
+* @param {Complex128Array} AB - triangular band matrix in band storage
+* @param {PositiveInteger} LDAB - leading dimension of `AB`
+* @param {Float64Array} RCOND - output array of length 1
+* @param {Complex128Array} WORK - workspace of length 2*N
+* @param {integer} strideWORK - stride for `WORK`
+* @param {Float64Array} RWORK - workspace of length N
+* @param {integer} strideRWORK - stride for `RWORK`
+* @returns {integer} info - 0 if successful
+*/
+function ztbcon( norm, uplo, diag, N, kd, AB, LDAB, RCOND, WORK, strideWORK, RWORK, strideRWORK ) { // eslint-disable-line max-params, max-len
+	var orwork;
+	var owork;
+
+	owork = stride2offset( 2 * N, strideWORK );
+	orwork = stride2offset( N, strideRWORK );
+	return base( norm, uplo, diag, N, kd, AB, 1, LDAB, 0, RCOND, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = ztbcon;

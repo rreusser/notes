@@ -1,4 +1,20 @@
 {
+  "lib/lapack/base/zlaqsp": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlaqsp (not in stdlib checkout)"
+  },
+  "lib/lapack/base/ztbcon": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/ztbcon (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dpftri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpftri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlatps": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlatps (not in stdlib checkout)"
+  },
   "lib/lapack/base/zhpcon": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhpcon (not in stdlib checkout)"
@@ -62,5 +78,177 @@
   "lib/lapack/base/dsptri": {
     "skip": ["lint.eslint-pass"],
     "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dsptrf (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhprfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhprfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dpprfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpprfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zsprfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zsprfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zpftrf": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zpftrf (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dpftrf": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpftrf (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dtftri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dtftri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dspgst": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dspgst (not in stdlib checkout)"
+  },
+  "lib/lapack/base/ztptri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/ztptri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhetri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhetri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zpptri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zpptri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dspsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dspsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhpsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhpsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dpbrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dpbrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dtprfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dtprfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zsytri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zsytri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/ztrrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/ztrrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/ztprfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/ztprfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zpbrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zpbrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dtbrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dtbrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/ztbrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/ztbrfs (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlacon": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "remark-based jsdoc rules (jsdoc-no-shortcut-reference-link, jsdoc-no-undefined-references) false-positive on eslint-disable comment in test file; identical pattern passes in other modules"
+  },
+  "lib/lapack/base/zspsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zspsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/ztftri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/ztftri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dptsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dptsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhpgst": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhpgst (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dsbtrd": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dsbtrd (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zhbtrd": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zhbtrd (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zpftri": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zpftri (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dppcon": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dppcon (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zppcon": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zppcon (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlantb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlantb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlansb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlansb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlantb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlantb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlaqsb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlaqsb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dlaqsp": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dlaqsp (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dtpcon": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dtpcon (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dtbcon": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dtbcon (not in stdlib checkout)"
+  },
+  "lib/lapack/base/ztpcon": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/ztpcon (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlaqhp": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlaqhp (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlanhb": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlanhb (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zlangt": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zlangt (not in stdlib checkout)"
+  },
+  "lib/lapack/base/dppsvx": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/dppsvx (not in stdlib checkout)"
+  },
+  "lib/lapack/base/zgbrfs": {
+    "skip": ["lint.eslint-pass"],
+    "reason": "jsdoc-doctest cannot resolve @stdlib/lapack/base/zgbrfs (not in stdlib checkout)"
   }
 }

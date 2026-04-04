@@ -1,0 +1,18 @@
+
+'use strict';
+
+// MODULES //
+
+var setReadOnly = require( '@stdlib/utils/define-nonenumerable-read-only-property' );
+var zppcon = require( './zppcon.js' );
+var ndarray = require( './ndarray.js' );
+
+
+// MAIN //
+
+setReadOnly( zppcon, 'ndarray', ndarray );
+
+
+// EXPORTS //
+
+module.exports = zppcon;

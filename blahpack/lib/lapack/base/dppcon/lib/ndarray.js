@@ -1,0 +1,61 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Estimates the reciprocal condition number of a real symmetric positive definite matrix in packed storage.
+*
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {Float64Array} AP - Cholesky factorization from dpptrf, length N*(N+1)/2
+* @param {integer} strideAP - stride length for `AP`
+* @param {NonNegativeInteger} offsetAP - starting index for `AP`
+* @param {number} anorm - the 1-norm (or infinity-norm) of the original matrix
+* @param {Float64Array} rcond - out: rcond[0] is the reciprocal condition number
+* @param {Float64Array} WORK - workspace array of length 3*N
+* @param {integer} strideWORK - stride length for `WORK`
+* @param {NonNegativeInteger} offsetWORK - starting index for `WORK`
+* @param {Int32Array} IWORK - workspace array of length N
+* @param {integer} strideIWORK - stride length for `IWORK`
+* @param {NonNegativeInteger} offsetIWORK - starting index for `IWORK`
+* @throws {TypeError} first argument must be a valid matrix triangle
+* @returns {integer} info - 0 if successful
+*/
+function dppcon( uplo, N, AP, strideAP, offsetAP, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	return base( uplo, N, AP, strideAP, offsetAP, anorm, rcond, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK );
+}
+
+
+// EXPORTS //
+
+module.exports = dppcon;

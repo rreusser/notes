@@ -1,0 +1,51 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Returns the value of the one-norm, Frobenius norm, infinity-norm, or the largest absolute value of any element of a real symmetric matrix supplied in packed storage.
+*
+* @param {string} norm - `'max'`, `'one-norm'`, `'inf-norm'`, or `'frobenius'`
+* @param {string} uplo - specifies whether the upper or lower triangular part is packed ('upper' or 'lower')
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} AP - packed symmetric matrix, length >= N*(N+1)/2
+* @param {Float64Array} WORK - workspace array, length >= N
+* @throws {TypeError} second argument must be a valid matrix triangle
+* @returns {number} norm value
+*/
+function dlansp( norm, uplo, N, AP, WORK ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	return base( norm, uplo, N, AP, 1, 0, WORK, 1, 0 );
+}
+
+
+// EXPORTS //
+
+module.exports = dlansp;

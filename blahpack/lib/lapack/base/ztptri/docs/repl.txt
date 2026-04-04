@@ -1,0 +1,36 @@
+
+    ztptri.ndarray( uplo, diag, N, AP, stride, offset )
+        Computes the inverse of a complex triangular matrix in packed storage.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        diag: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        AP: Float64Array
+            input array.
+
+        stride: integer
+            stride length for `AP`.
+
+        offset: NonNegativeInteger
+            starting index for `AP`.
+
+        Returns
+        -------
+        out: integer
+            TODO: describe return value.
+
+        Examples
+        --------
+        // TODO: Add REPL examples
+
+    See Also
+    --------
+

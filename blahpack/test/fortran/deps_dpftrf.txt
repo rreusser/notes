@@ -1,0 +1,9 @@
+disnan
+dlaisnan
+dpftrf
+dpotrf
+dpotrf2
+dtrttf
+ieeeck
+ilaenv
+iparmq

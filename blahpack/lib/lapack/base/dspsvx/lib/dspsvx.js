@@ -1,0 +1,75 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Solves a real symmetric indefinite system of linear equations A*X = B where A is stored in packed format, using the diagonal pivoting factorization, and provides condition estimation and error bounds.
+*
+* @param {string} fact - 'not-factored' or 'factored'
+* @param {string} uplo - 'upper' or 'lower'
+* @param {NonNegativeInteger} N - order of the matrix A
+* @param {NonNegativeInteger} nrhs - number of right-hand sides
+* @param {Float64Array} AP - packed symmetric matrix, length N*(N+1)/2
+* @param {Float64Array} AFP - factored packed matrix (output if FACT='not-factored')
+* @param {Int32Array} IPIV - pivot indices, length N
+* @param {integer} strideIPIV - stride for IPIV
+* @param {Float64Array} B - right-hand side matrix
+* @param {PositiveInteger} LDB - leading dimension of B
+* @param {Float64Array} X - solution matrix (output)
+* @param {PositiveInteger} LDX - leading dimension of X
+* @param {Float64Array} rcond - single-element array for reciprocal condition number
+* @param {Float64Array} FERR - forward error bounds (output)
+* @param {integer} strideFERR - stride for FERR
+* @param {Float64Array} BERR - backward error bounds (output)
+* @param {integer} strideBERR - stride for BERR
+* @param {Float64Array} WORK - workspace array
+* @param {integer} strideWORK - stride for WORK
+* @param {Int32Array} IWORK - integer workspace array
+* @param {integer} strideIWORK - stride for IWORK
+* @returns {integer} info
+*/
+function dspsvx( fact, uplo, N, nrhs, AP, AFP, IPIV, strideIPIV, B, LDB, X, LDX, rcond, FERR, strideFERR, BERR, strideBERR, WORK, strideWORK, IWORK, strideIWORK ) {
+	var oiwork;
+	var oberr;
+	var oferr;
+	var oipiv;
+	var owork;
+
+	oipiv = stride2offset( N, strideIPIV );
+	oferr = stride2offset( nrhs, strideFERR );
+	oberr = stride2offset( nrhs, strideBERR );
+	owork = stride2offset( Math.max( 1, 3 * N ), strideWORK );
+	oiwork = stride2offset( N, strideIWORK );
+	return base( fact, uplo, N, nrhs, AP, 1, 0, AFP, 1, 0, IPIV, strideIPIV, oipiv, B, 1, LDB, 0, X, 1, LDX, 0, rcond, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = dspsvx;

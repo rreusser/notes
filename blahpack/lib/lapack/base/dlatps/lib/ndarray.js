@@ -1,0 +1,73 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* eslint-disable max-len, max-params */
+
+'use strict';
+
+// MODULES //
+
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Solves a triangular system with scaling to prevent overflow, where the matrix is in packed storage.
+*
+* @param {string} uplo - `'upper'` or `'lower'`
+* @param {string} trans - `'no-transpose'` or `'transpose'`
+* @param {string} diag - `'unit'` or `'non-unit'`
+* @param {string} normin - `'yes'` if CNORM contains column norms on input, `'no'` to compute them
+* @param {NonNegativeInteger} N - order of the matrix
+* @param {Float64Array} AP - packed triangular matrix of length N*(N+1)/2
+* @param {integer} strideAP - stride length for `AP`
+* @param {NonNegativeInteger} offsetAP - starting index for `AP`
+* @param {Float64Array} x - in/out right-hand side vector of length N
+* @param {integer} strideX - stride length for `x`
+* @param {NonNegativeInteger} offsetX - starting index for `x`
+* @param {Float64Array} scale - out: scale[0] is the scale factor s
+* @param {Float64Array} CNORM - in/out column norm array of length N
+* @param {integer} strideCNORM - stride length for `CNORM`
+* @param {NonNegativeInteger} offsetCNORM - starting index for `CNORM`
+* @throws {TypeError} First argument must be a valid matrix triangle
+* @throws {TypeError} Second argument must be a valid transpose operation
+* @throws {TypeError} Third argument must be a valid diagonal type
+* @returns {integer} info - 0 if successful
+*/
+function dlatps( uplo, trans, diag, normin, N, AP, strideAP, offsetAP, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isTransposeOperation( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
+	return base( uplo, trans, diag, normin, N, AP, strideAP, offsetAP, x, strideX, offsetX, scale, CNORM, strideCNORM, offsetCNORM ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = dlatps;

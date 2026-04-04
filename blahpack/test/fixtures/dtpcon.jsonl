@@ -1,0 +1,14 @@
+{"name":"upper_nonunit_onenorm","rcond": 2.76497695852534586E-001,"info":0}
+{"name":"upper_nonunit_infnorm","rcond": 4.00000000000000022E-001,"info":0}
+{"name":"upper_unit_onenorm","rcond": 1.85185185185185175E-002,"info":0}
+{"name":"upper_unit_infnorm","rcond": 2.50000000000000014E-002,"info":0}
+{"name":"lower_nonunit_onenorm","rcond": 3.01409185803757806E-001,"info":0}
+{"name":"lower_nonunit_infnorm","rcond": 2.94117647058823484E-001,"info":0}
+{"name":"lower_unit_onenorm","rcond": 5.00000000000000028E-002,"info":0}
+{"name":"lower_unit_infnorm","rcond": 2.85714285714285705E-002,"info":0}
+{"name":"edge_n0","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"edge_n1","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"ill_conditioned_onenorm","rcond": 9.99999999999999924E-025,"info":0}
+{"name":"ill_conditioned_infnorm","rcond": 9.99999999999999924E-025,"info":0}
+{"name":"identity_onenorm","rcond": 1.00000000000000000E+000,"info":0}
+{"name":"identity_infnorm","rcond": 1.00000000000000000E+000,"info":0}

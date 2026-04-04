@@ -1,0 +1,5 @@
+{"name":"identity_3x3","est": 1.00000000000000000E+000,"iterations":4}
+{"name":"complex_1x1","est": 5.00000000000000000E+000,"iterations":1}
+{"name":"complex_diag_4x4","est": 5.00000000000000000E+000,"iterations":5}
+{"name":"dense_3x3","est": 5.84161925296377937E+000,"iterations":5}
+{"name":"upper_tri_5x5","est": 6.82842712474618985E+000,"iterations":5}

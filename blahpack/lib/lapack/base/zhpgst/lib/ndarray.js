@@ -1,0 +1,55 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var format = require( '@stdlib/string/format' );
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* Reduces a complex Hermitian-definite generalized eigenproblem to standard form using packed storage.
+*
+* @param {integer} itype - problem type (1, 2, or 3)
+* @param {string} uplo - specifies whether upper or lower triangle is stored ('upper' or 'lower')
+* @param {NonNegativeInteger} N - order of matrices A and B
+* @param {Complex128Array} AP - Hermitian matrix A in packed storage
+* @param {integer} strideAP - stride length for `AP` (in complex elements)
+* @param {NonNegativeInteger} offsetAP - starting index for `AP` (in complex elements)
+* @param {Complex128Array} BP - triangular factor from Cholesky factorization of B in packed storage
+* @param {integer} strideBP - stride length for `BP` (in complex elements)
+* @param {NonNegativeInteger} offsetBP - starting index for `BP` (in complex elements)
+* @throws {TypeError} Second argument must be a valid matrix triangle
+* @returns {integer} status code (0 = success)
+*/
+function zhpgst( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	return base( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP ); // eslint-disable-line max-len
+}
+
+
+// EXPORTS //
+
+module.exports = zhpgst;

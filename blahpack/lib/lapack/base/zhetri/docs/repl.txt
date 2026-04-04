@@ -1,0 +1,60 @@
+
+    zhetri.ndarray( uplo, N, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, WORK, strideWORK, offsetWORK )
+        Computes the inverse of a complex Hermitian matrix using the factorization computed by zhetrf.
+
+        Parameters
+        ----------
+        uplo: string
+            specifies the operation type.
+
+        N: NonNegativeInteger
+            number of columns.
+
+        A: Float64Array
+            input matrix.
+
+        strideA1: integer
+            stride of the first dimension of `A`.
+
+        strideA2: integer
+            stride of the second dimension of `A`.
+
+        offsetA: NonNegativeInteger
+            starting index for `A`.
+
+        IPIV: Int32Array
+            input array.
+
+        strideIPIV: integer
+            stride length for `IPIV`.
+
+        offsetIPIV: NonNegativeInteger
+            starting index for `IPIV`.
+
+        WORK: Float64Array
+            output array.
+
+        strideWORK: integer
+            stride length for `WORK`.
+
+        offsetWORK: NonNegativeInteger
+            starting index for `WORK`.
+
+        Returns
+        -------
+        out: integer
+            Status code. 0 indicates success; k > 0 indicates D(k,k) is zero
+            (1-based).
+
+        Examples
+        --------
+        > var A = new {{alias:@stdlib/array/complex128}}( [ 4.0, 0.0 ] );
+        > var IPIV = new {{alias:@stdlib/array/int32}}( [ 0 ] );
+        > var WORK = new {{alias:@stdlib/array/complex128}}( 1 );
+        > var info = {{alias}}.ndarray( 'upper', 1, A, 1, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
+        > info
+        0
+
+    See Also
+    --------
+

@@ -1,0 +1,25 @@
+
+'use strict';
+
+// MODULES //
+
+var base = require( './base.js' );
+
+
+// MAIN //
+
+/**
+* LAPACK-style API wrapper for zsprfs (placeholder).
+*
+* @param {number} re - re
+* @param {number} im - im
+* @returns {*} result
+*/
+function zsprfs( re, im ) {
+	return base( re, im );
+}
+
+
+// EXPORTS //
+
+module.exports = zsprfs;

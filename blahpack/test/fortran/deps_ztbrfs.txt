@@ -1,0 +1,13 @@
+dlamch
+dzsum1
+ieeeck
+ilaenv
+iparmq
+izmax1
+zaxpy
+zcopy
+zlacn2
+ztbmv
+ztbrfs
+ztbsv
+ztbtrs

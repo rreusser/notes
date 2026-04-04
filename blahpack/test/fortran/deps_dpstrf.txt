@@ -1,0 +1,12 @@
+dgemv
+disnan
+dlaisnan
+dlamch
+dpstf2
+dpstrf
+dscal
+dswap
+dsyrk
+ieeeck
+ilaenv
+iparmq

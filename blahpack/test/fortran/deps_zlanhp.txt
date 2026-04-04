@@ -1,0 +1,9 @@
+la_constants
+la_xisnan
+disnan
+dlaisnan
+ieeeck
+ilaenv
+iparmq
+zlanhp
+zlassq

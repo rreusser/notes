@@ -1,0 +1,3 @@
+zpptri
+zpptrf
+ztptri
