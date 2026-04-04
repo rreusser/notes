@@ -4,26 +4,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zpttrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zpttrs.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_n4_nrhs1 = require( './fixtures/upper_n4_nrhs1.json' );
+var lower_n4_nrhs1 = require( './fixtures/lower_n4_nrhs1.json' );
+var upper_n4_nrhs3 = require( './fixtures/upper_n4_nrhs3.json' );
+var lower_n4_nrhs3 = require( './fixtures/lower_n4_nrhs3.json' );
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var n_eq_0 = require( './fixtures/n_eq_0.json' );
+var nrhs_eq_0 = require( './fixtures/nrhs_eq_0.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -38,11 +34,10 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zpttrs: upper_n4_nrhs1 (UPLO=U, N=4, NRHS=1)', function t() {
-	var tc = findCase( 'upper_n4_nrhs1' );
+	var tc = upper_n4_nrhs1;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [ 2.0, 1.0, 3.0, -1.0, 1.0, 2.0, 4.0, 0.0 ] );
@@ -56,7 +51,7 @@ test( 'zpttrs: upper_n4_nrhs1 (UPLO=U, N=4, NRHS=1)', function t() {
 });
 
 test( 'zpttrs: lower_n4_nrhs1 (UPLO=L, N=4, NRHS=1)', function t() {
-	var tc = findCase( 'lower_n4_nrhs1' );
+	var tc = lower_n4_nrhs1;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [ 2.0, 1.0, 3.0, -1.0, 1.0, 2.0, 4.0, 0.0 ] );
@@ -70,7 +65,7 @@ test( 'zpttrs: lower_n4_nrhs1 (UPLO=L, N=4, NRHS=1)', function t() {
 });
 
 test( 'zpttrs: upper_n4_nrhs3 (UPLO=U, N=4, NRHS=3)', function t() {
-	var tc = findCase( 'upper_n4_nrhs3' );
+	var tc = upper_n4_nrhs3;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [
@@ -88,7 +83,7 @@ test( 'zpttrs: upper_n4_nrhs3 (UPLO=U, N=4, NRHS=3)', function t() {
 });
 
 test( 'zpttrs: lower_n4_nrhs3 (UPLO=L, N=4, NRHS=3)', function t() {
-	var tc = findCase( 'lower_n4_nrhs3' );
+	var tc = lower_n4_nrhs3;
 	var d = new Float64Array( [ 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [
@@ -106,7 +101,7 @@ test( 'zpttrs: lower_n4_nrhs3 (UPLO=L, N=4, NRHS=3)', function t() {
 });
 
 test( 'zpttrs: n_eq_1 (N=1, NRHS=1)', function t() {
-	var tc = findCase( 'n_eq_1' );
+	var tc = n_eq_1;
 	var d = new Float64Array( [ 3.0 ] );
 	var e = new Complex128Array( 0 );
 	var B = new Complex128Array( [ 9.0, 6.0 ] );
@@ -120,7 +115,7 @@ test( 'zpttrs: n_eq_1 (N=1, NRHS=1)', function t() {
 });
 
 test( 'zpttrs: n_eq_0 (N=0, quick return)', function t() {
-	var tc = findCase( 'n_eq_0' );
+	var tc = n_eq_0;
 	var d = new Float64Array( 0 );
 	var e = new Complex128Array( 0 );
 	var B = new Complex128Array( [ 42.0, 7.0 ] );
@@ -134,7 +129,7 @@ test( 'zpttrs: n_eq_0 (N=0, quick return)', function t() {
 });
 
 test( 'zpttrs: nrhs_eq_0 (NRHS=0, quick return)', function t() {
-	var tc = findCase( 'nrhs_eq_0' );
+	var tc = nrhs_eq_0;
 	var d = new Float64Array( [ 4.0, 3.0 ] );
 	var e = new Complex128Array( [ 0.5, 0.0 ] );
 	var B = new Complex128Array( [ 42.0, 7.0 ] );
@@ -149,7 +144,7 @@ test( 'zpttrs: nrhs_eq_0 (NRHS=0, quick return)', function t() {
 
 test( 'zpttrs: non-unit strides and offsets', function t() {
 	// Same as upper_n4_nrhs1 but with offset=1 on d and e
-	var tc = findCase( 'upper_n4_nrhs1' );
+	var tc = upper_n4_nrhs1;
 	var d = new Float64Array( [ 0.0, 4.0, 3.0, 2.0, 5.0 ] );
 	var e = new Complex128Array( [ 0.0, 0.0, 0.5, 0.1, -0.3, 0.2, 0.4, -0.1 ] );
 	var B = new Complex128Array( [ 2.0, 1.0, 3.0, -1.0, 1.0, 2.0, 4.0, 0.0 ] );

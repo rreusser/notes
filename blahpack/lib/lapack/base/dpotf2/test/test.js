@@ -21,37 +21,22 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpotf2 = require( './../lib' );
 var dpotf2base = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpotf2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var not_posdef = require( './fixtures/not_posdef.json' );
+var identity_4x4 = require( './fixtures/identity_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -75,7 +60,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpotf2: main export is a function', function t() {
@@ -91,7 +75,7 @@ test( 'dpotf2: lower triangular 3x3 positive definite', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
 	info = dpotf2base( 'lower', 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
@@ -103,7 +87,7 @@ test( 'dpotf2: upper triangular 3x3 positive definite', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
 	info = dpotf2base( 'upper', 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );
@@ -115,7 +99,7 @@ test( 'dpotf2: n=1 matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Float64Array( [ 9 ] );
 	info = dpotf2base( 'lower', 1, A, 1, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -127,7 +111,7 @@ test( 'dpotf2: n=0 quick return', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 0 );
 	info = dpotf2base( 'lower', 0, A, 1, 1, 0 );
 	assert.strictEqual( info, tc.info );
@@ -138,7 +122,7 @@ test( 'dpotf2: not positive definite returns info > 0', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'not_posdef' );
+	tc = not_posdef;
 	A = new Float64Array( [ 1, 2, 2, 1 ] );
 	info = dpotf2base( 'lower', 2, A, 1, 2, 0 );
 	assert.strictEqual( info, tc.info );
@@ -159,7 +143,7 @@ test( 'dpotf2: 4x4 identity matrix', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'identity_4x4' );
+	tc = identity_4x4;
 	A = new Float64Array([
 		1,
 		0,
@@ -188,7 +172,7 @@ test( 'dpotf2: lower with offsetA > 0', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	A = new Float64Array( [ 99, 99, 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
 	info = dpotf2base( 'lower', 3, A, 1, 3, 2 );
 	assert.strictEqual( info, tc.info );
@@ -200,7 +184,7 @@ test( 'dpotf2: upper with lowercase u', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	A = new Float64Array( [ 4, 2, 1, 2, 5, 3, 1, 3, 6 ] );
 	info = dpotf2base( 'upper', 3, A, 1, 3, 0 );
 	assert.strictEqual( info, tc.info );

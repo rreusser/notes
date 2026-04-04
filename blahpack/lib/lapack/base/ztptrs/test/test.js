@@ -5,37 +5,25 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var ztptrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztptrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_no_trans = require( './fixtures/upper_no_trans.json' );
+var lower_no_trans = require( './fixtures/lower_no_trans.json' );
+var upper_conj_trans = require( './fixtures/upper_conj_trans.json' );
+var lower_conj_trans = require( './fixtures/lower_conj_trans.json' );
+var upper_unit_diag = require( './fixtures/upper_unit_diag.json' );
+var lower_unit_diag = require( './fixtures/lower_unit_diag.json' );
+var n_one = require( './fixtures/n_one.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
+var upper_unit_conj_trans = require( './fixtures/upper_unit_conj_trans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a Float64Array to an array.
@@ -86,7 +74,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'ztptrs is a function', function t() {
@@ -100,7 +87,7 @@ test( 'ztptrs: upper, no-transpose, non-unit (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = ztptrs( 'upper', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -116,7 +103,7 @@ test( 'ztptrs: lower, no-transpose, non-unit (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 3.0, 0.0, 4.0, 1.0, 5.0, -1.0, 6.0, 2.0 ] );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = ztptrs( 'lower', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -132,7 +119,7 @@ test( 'ztptrs: upper, conjugate-transpose, non-unit (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_conj_trans' );
+	tc = upper_conj_trans;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = ztptrs( 'upper', 'conjugate-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -148,7 +135,7 @@ test( 'ztptrs: lower, conjugate-transpose, non-unit (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_conj_trans' );
+	tc = lower_conj_trans;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 3.0, 0.0, 4.0, 1.0, 5.0, -1.0, 6.0, 2.0 ] );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = ztptrs( 'lower', 'conjugate-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -164,7 +151,7 @@ test( 'ztptrs: upper, unit diagonal, no-transpose (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_unit_diag' );
+	tc = upper_unit_diag;
 	ap = c128( [ 1.0, 0.0, 2.0, 1.0, 1.0, 0.0, 3.0, -1.0, 4.0, 2.0, 1.0, 0.0 ] );
 	b = c128( [ 10.0, 5.0, 5.0, -2.0, 1.0, 1.0 ] );
 	info = ztptrs( 'upper', 'no-transpose', 'unit', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -180,7 +167,7 @@ test( 'ztptrs: lower, unit diagonal, no-transpose (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_unit_diag' );
+	tc = lower_unit_diag;
 	ap = c128( [ 1.0, 0.0, 2.0, 1.0, 3.0, -1.0, 1.0, 0.0, 4.0, 2.0, 1.0, 0.0 ] );
 	b = c128( [ 10.0, 5.0, 5.0, -2.0, 1.0, 1.0 ] );
 	info = ztptrs( 'lower', 'no-transpose', 'unit', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -207,7 +194,7 @@ test( 'ztptrs: N=1 edge case', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	ap = c128( [ 5.0, 2.0 ] );
 	b = c128( [ 15.0, 1.0 ] );
 	info = ztptrs( 'upper', 'no-transpose', 'non-unit', 1, 1, ap, 1, 0, b, 1, 1, 0 ); // eslint-disable-line max-len
@@ -256,7 +243,7 @@ test( 'ztptrs: multiple RHS (NRHS=2), upper, no-transpose', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5, 4.0, 0.0, 5.0, -2.0, 6.0, 1.0 ] );
 	info = ztptrs( 'upper', 'no-transpose', 'non-unit', 3, 2, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -272,7 +259,7 @@ test( 'ztptrs: lower, no-transpose, non-unit (4x4)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	ap = c128([
 		3.0,
 		1.0,
@@ -309,7 +296,7 @@ test( 'ztptrs: upper, unit diagonal, conjugate-transpose (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_unit_conj_trans' );
+	tc = upper_unit_conj_trans;
 	ap = c128( [ 1.0, 0.0, 2.0, 1.0, 1.0, 0.0, 3.0, -1.0, 4.0, 2.0, 1.0, 0.0 ] );
 	b = c128( [ 10.0, 5.0, 5.0, -2.0, 1.0, 1.0 ] );
 	info = ztptrs( 'upper', 'conjugate-transpose', 'unit', 3, 1, ap, 1, 0, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -325,7 +312,7 @@ test( 'ztptrs: works with non-zero AP offset', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_no_trans' );
+	tc = upper_no_trans;
 	ap = c128( [ 99.0, 99.0, 77.0, 77.0, 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] ); // eslint-disable-line max-len
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = ztptrs( 'upper', 'no-transpose', 'non-unit', 3, 1, ap, 1, 2, b, 1, 3, 0 ); // eslint-disable-line max-len
@@ -341,7 +328,7 @@ test( 'ztptrs: works with non-zero B offset', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_no_trans' );
+	tc = lower_no_trans;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 3.0, 0.0, 4.0, 1.0, 5.0, -1.0, 6.0, 2.0 ] );
 	b = c128( [ 99.0, 99.0, 77.0, 77.0, 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = ztptrs( 'lower', 'no-transpose', 'non-unit', 3, 1, ap, 1, 0, b, 1, 3, 2 ); // eslint-disable-line max-len

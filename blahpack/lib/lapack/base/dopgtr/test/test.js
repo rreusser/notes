@@ -11,37 +11,21 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dopgtr = require( './../lib/base.js' );
 var dsptrd = require( '../../dsptrd/lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dopgtr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var uplo_u_4x4 = require( './fixtures/uplo_u_4x4.json' );
+var uplo_l_4x4 = require( './fixtures/uplo_l_4x4.json' );
+var uplo_u_3x3 = require( './fixtures/uplo_u_3x3.json' );
+var uplo_l_3x3 = require( './fixtures/uplo_l_3x3.json' );
+var n1_uplo_u = require( './fixtures/n1_uplo_u.json' );
+var n1_uplo_l = require( './fixtures/n1_uplo_l.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -125,7 +109,6 @@ function toArray( arr, offset, len ) {
 	return result;
 }
 
-
 // TESTS //
 
 test( 'dopgtr: uplo_U_4x4', function t() {
@@ -134,7 +117,7 @@ test( 'dopgtr: uplo_U_4x4', function t() {
 	var AP;
 	var N;
 
-	tc = findCase( 'uplo_U_4x4' );
+	tc = uplo_u_4x4;
 	N = 4;
 	AP = new Float64Array([
 		4,
@@ -159,7 +142,7 @@ test( 'dopgtr: uplo_L_4x4', function t() {
 	var AP;
 	var N;
 
-	tc = findCase( 'uplo_L_4x4' );
+	tc = uplo_l_4x4;
 	N = 4;
 	AP = new Float64Array([
 		4,
@@ -184,7 +167,7 @@ test( 'dopgtr: uplo_U_3x3', function t() {
 	var AP;
 	var N;
 
-	tc = findCase( 'uplo_U_3x3' );
+	tc = uplo_u_3x3;
 	N = 3;
 	AP = new Float64Array([
 		2,
@@ -205,7 +188,7 @@ test( 'dopgtr: uplo_L_3x3', function t() {
 	var AP;
 	var N;
 
-	tc = findCase( 'uplo_L_3x3' );
+	tc = uplo_l_3x3;
 	N = 3;
 	AP = new Float64Array([
 		2,
@@ -225,7 +208,7 @@ test( 'dopgtr: N1_uplo_U', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'N1_uplo_U' );
+	tc = n1_uplo_u;
 	AP = new Float64Array([ 5.0 ]);
 	result = dsptrdThenDopgtr( 'upper', 1, AP );
 	assert.equal( result.info, 0, 'info' );
@@ -237,7 +220,7 @@ test( 'dopgtr: N1_uplo_L', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'N1_uplo_L' );
+	tc = n1_uplo_l;
 	AP = new Float64Array([ 5.0 ]);
 	result = dsptrdThenDopgtr( 'lower', 1, AP );
 	assert.equal( result.info, 0, 'info' );
@@ -362,7 +345,7 @@ test( 'dopgtr: direct call with pre-computed AP and TAU (uplo_U_4x4)', function 
 	var Q;
 	var N;
 
-	tc = findCase( 'uplo_U_4x4' );
+	tc = uplo_u_4x4;
 	N = tc.N;
 	AP = new Float64Array( tc.AP );
 	WORK = new Float64Array( N );
@@ -380,7 +363,7 @@ test( 'dopgtr: direct call with pre-computed AP and TAU (uplo_L_4x4)', function 
 	var Q;
 	var N;
 
-	tc = findCase( 'uplo_L_4x4' );
+	tc = uplo_l_4x4;
 	N = tc.N;
 	AP = new Float64Array( tc.AP );
 	WORK = new Float64Array( N );

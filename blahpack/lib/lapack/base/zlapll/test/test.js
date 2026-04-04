@@ -6,37 +6,25 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var zlapll = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlapll.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var parallel = require( './fixtures/parallel.json' );
+var orthogonal = require( './fixtures/orthogonal.json' );
+var general = require( './fixtures/general.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
+var n_equals_2 = require( './fixtures/n_equals_2.json' );
+var nearly_parallel = require( './fixtures/nearly_parallel.json' );
+var imaginary = require( './fixtures/imaginary.json' );
+var identical = require( './fixtures/identical.json' );
+var large_n = require( './fixtures/large_n.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -51,7 +39,6 @@ function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
-
 
 // TESTS //
 
@@ -69,7 +56,7 @@ test( 'base export is a function', function t() {
 
 test( 'base: parallel complex vectors (ssmin ~ 0)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'parallel' );
+	var tc = parallel;
 	var x = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var y = new Complex128Array( [ 2, 4, 6, 8, 10, 12, 14, 16 ] );
 
@@ -79,7 +66,7 @@ test( 'base: parallel complex vectors (ssmin ~ 0)', function t() {
 
 test( 'base: orthogonal complex vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'orthogonal' );
+	var tc = orthogonal;
 	var x = new Complex128Array( [ 1, 0, 0, 0, 0, 0 ] );
 	var y = new Complex128Array( [ 0, 0, 1, 0, 0, 0 ] );
 
@@ -89,7 +76,7 @@ test( 'base: orthogonal complex vectors', function t() {
 
 test( 'base: general complex vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'general' );
+	var tc = general;
 	var x = new Complex128Array( [ 1, 2, 3, -1, 0.5, 4 ] );
 	var y = new Complex128Array( [ 2, -3, -1, 5, 4, 0.5 ] );
 
@@ -99,7 +86,7 @@ test( 'base: general complex vectors', function t() {
 
 test( 'base: N=1 quick return (ssmin = 0)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'n_equals_1' );
+	var tc = n_equals_1;
 	var x = new Complex128Array( [ 5, 3 ] );
 	var y = new Complex128Array( [ 2, 7 ] );
 
@@ -118,7 +105,7 @@ test( 'base: N=0 quick return (ssmin = 0)', function t() {
 
 test( 'base: N=2', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'n_equals_2' );
+	var tc = n_equals_2;
 	var x = new Complex128Array( [ 3, 1, 4, -2 ] );
 	var y = new Complex128Array( [ 1, 0.5, 2, 3 ] );
 
@@ -128,7 +115,7 @@ test( 'base: N=2', function t() {
 
 test( 'base: nearly parallel complex vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'nearly_parallel' );
+	var tc = nearly_parallel;
 	var x = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 ] );
 	var y = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5.001 ] );
 
@@ -138,7 +125,7 @@ test( 'base: nearly parallel complex vectors', function t() {
 
 test( 'base: purely imaginary vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'imaginary' );
+	var tc = imaginary;
 	var x = new Complex128Array( [ 0, 1, 0, 2, 0, 3 ] );
 	var y = new Complex128Array( [ 0, 4, 0, 5, 0, 6 ] );
 
@@ -148,7 +135,7 @@ test( 'base: purely imaginary vectors', function t() {
 
 test( 'base: identical complex vectors (ssmin ~ 0)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'identical' );
+	var tc = identical;
 	var x = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	var y = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 
@@ -158,7 +145,7 @@ test( 'base: identical complex vectors (ssmin ~ 0)', function t() {
 
 test( 'base: large N with sin/cos', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'large_n' );
+	var tc = large_n;
 	var xd = [];
 	var yd = [];
 	var i;
@@ -216,7 +203,7 @@ test( 'base: negative values', function t() {
 
 test( 'ndarray: parallel complex vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'parallel' );
+	var tc = parallel;
 	var x = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var y = new Complex128Array( [ 2, 4, 6, 8, 10, 12, 14, 16 ] );
 
@@ -226,7 +213,7 @@ test( 'ndarray: parallel complex vectors', function t() {
 
 test( 'ndarray: general complex vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'general' );
+	var tc = general;
 	var x = new Complex128Array( [ 1, 2, 3, -1, 0.5, 4 ] );
 	var y = new Complex128Array( [ 2, -3, -1, 5, 4, 0.5 ] );
 
@@ -236,7 +223,7 @@ test( 'ndarray: general complex vectors', function t() {
 
 test( 'main: parallel complex vectors (BLAS-style API)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'parallel' );
+	var tc = parallel;
 	var x = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
 	var y = new Complex128Array( [ 2, 4, 6, 8, 10, 12, 14, 16 ] );
 
@@ -246,7 +233,7 @@ test( 'main: parallel complex vectors (BLAS-style API)', function t() {
 
 test( 'main: general complex vectors (BLAS-style API)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'general' );
+	var tc = general;
 	var x = new Complex128Array( [ 1, 2, 3, -1, 0.5, 4 ] );
 	var y = new Complex128Array( [ 2, -3, -1, 5, 4, 0.5 ] );
 

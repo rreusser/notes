@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dla_wwaddw = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dla_wwaddw.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var negative = require( './fixtures/negative.json' );
+var large_values = require( './fixtures/large_values.json' );
+var zeros = require( './fixtures/zeros.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +51,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dla_wwaddw is a function', function t() {
@@ -75,7 +58,7 @@ test( 'dla_wwaddw is a function', function t() {
 });
 
 test( 'dla_wwaddw: basic', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 0.1, 0.2, 0.3, 0.4, 0.5 ] );
 	var w = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
@@ -94,13 +77,13 @@ test( 'dla_wwaddw: n_zero', function t() {
 	y = new Float64Array( [ 0.1, 0.2, 0.3, 0.4, 0.5 ] );
 	w = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	dla_wwaddw( 0, x, 1, 0, y, 1, 0, w, 1, 0 );
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	assertArrayClose( x, tc.x, 1e-14, 'x' );
 	assertArrayClose( y, tc.y, 1e-14, 'y' );
 });
 
 test( 'dla_wwaddw: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Float64Array( [ 1.0 ] );
 	var y = new Float64Array( [ 0.1 ] );
 	var w = new Float64Array( [ 10.0 ] );
@@ -110,7 +93,7 @@ test( 'dla_wwaddw: n_one', function t() {
 });
 
 test( 'dla_wwaddw: negative', function t() {
-	var tc = findCase( 'negative' );
+	var tc = negative;
 	var x = new Float64Array( [ -1.0, -2.0, -3.0, -4.0 ] );
 	var y = new Float64Array( [ 0.01, -0.02, 0.03, -0.04 ] );
 	var w = new Float64Array( [ 0.5, -0.5, 1.5, -1.5 ] );
@@ -120,7 +103,7 @@ test( 'dla_wwaddw: negative', function t() {
 });
 
 test( 'dla_wwaddw: large_values', function t() {
-	var tc = findCase( 'large_values' );
+	var tc = large_values;
 	var x = new Float64Array( [ 1.0e15, 2.0e15, 3.0e15 ] );
 	var y = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var w = new Float64Array( [ 1.0, 2.0, 3.0 ] );
@@ -130,7 +113,7 @@ test( 'dla_wwaddw: large_values', function t() {
 });
 
 test( 'dla_wwaddw: zeros', function t() {
-	var tc = findCase( 'zeros' );
+	var tc = zeros;
 	var x = new Float64Array( [ 0.0, 0.0, 0.0 ] );
 	var y = new Float64Array( [ 0.0, 0.0, 0.0 ] );
 	var w = new Float64Array( [ 0.0, 0.0, 0.0 ] );
@@ -141,7 +124,7 @@ test( 'dla_wwaddw: zeros', function t() {
 
 test( 'dla_wwaddw: non-unit strides', function t() {
 	// Test with stride=2 and offset=1
-	var tcBasic = findCase( 'basic' );
+	var tcBasic = basic;
 	var x = new Float64Array( [ 999.0, 1.0, 999.0, 2.0, 999.0, 3.0 ] );
 	var y = new Float64Array( [ 999.0, 0.1, 999.0, 0.2, 999.0, 0.3 ] );
 	var w = new Float64Array( [ 999.0, 10.0, 999.0, 20.0, 999.0, 30.0 ] );
@@ -162,7 +145,7 @@ test( 'dla_wwaddw: non-unit strides', function t() {
 
 test( 'dla_wwaddw: negative strides', function t() {
 	// Test with negative stride
-	var tcBasic = findCase( 'basic' );
+	var tcBasic = basic;
 	var x = new Float64Array( [ 3.0, 2.0, 1.0 ] );
 	var y = new Float64Array( [ 0.3, 0.2, 0.1 ] );
 	var w = new Float64Array( [ 30.0, 20.0, 10.0 ] );

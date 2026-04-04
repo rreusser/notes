@@ -21,20 +21,21 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgghrd = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgghrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var basic_4x4 = require( './fixtures/basic_4x4.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
+var no_qz_3x3 = require( './fixtures/no_qz_3x3.json' );
+var partial_5x5 = require( './fixtures/partial_5x5.json' );
+var accumulate_3x3 = require( './fixtures/accumulate_3x3.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var empty_range = require( './fixtures/empty_range.json' );
 
 // FUNCTIONS //
 
@@ -98,7 +99,6 @@ function cset( M, LDA, i, j, re, im ) {
 	M[ idx + 1 ] = im;
 }
 
-
 // TESTS //
 
 test( 'zgghrd: main export is a function', function t() {
@@ -125,9 +125,7 @@ test( 'zgghrd: basic 4x4 with COMPQ=I, COMPZ=I', function t() {
 	var Q;
 	var Z;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'basic_4x4';
-	} );
+	tc = basic_4x4;
 	n = 4;
 	LDA = n;
 	A = new Complex128Array( LDA * n );
@@ -198,9 +196,7 @@ test( 'zgghrd: n=1 quick return', function t() {
 	var Q;
 	var Z;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_equals_1';
-	} );
+	tc = n_equals_1;
 	A = new Complex128Array( 1 );
 	B = new Complex128Array( 1 );
 	Q = new Complex128Array( 1 );
@@ -233,9 +229,7 @@ test( 'zgghrd: no Q/Z accumulation (COMPQ=N, COMPZ=N) 3x3', function t() {
 	var Q;
 	var Z;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'no_qz_3x3';
-	} );
+	tc = no_qz_3x3;
 	n = 3;
 	LDA = n;
 	A = new Complex128Array( LDA * n );
@@ -285,9 +279,7 @@ test( 'zgghrd: partial reduction ILO=2, IHI=4 on 5x5', function t() {
 	var i;
 	var j;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'partial_5x5';
-	} );
+	tc = partial_5x5;
 	n = 5;
 	LDA = n;
 	A = new Complex128Array( LDA * n );
@@ -347,9 +339,7 @@ test( 'zgghrd: accumulate into existing Q, Z (COMPQ=V, COMPZ=V) 3x3', function t
 	var Z;
 	var i;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'accumulate_3x3';
-	} );
+	tc = accumulate_3x3;
 	n = 3;
 	LDA = n;
 	A = new Complex128Array( LDA * n );
@@ -409,9 +399,7 @@ test( 'zgghrd: ILO=IHI (already reduced, near no-op)', function t() {
 	var Q;
 	var Z;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilo_eq_ihi';
-	} );
+	tc = ilo_eq_ihi;
 	n = 3;
 	LDA = n;
 	A = new Complex128Array( LDA * n );
@@ -511,9 +499,7 @@ test( 'zgghrd: COMPQ=N, COMPZ=I (Z only, no Q accumulation) 3x3', function t() {
 	var Q;
 	var Z;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'no_qz_3x3';
-	} );
+	tc = no_qz_3x3;
 	n = 3;
 	LDA = n;
 	A = new Complex128Array( LDA * n );
@@ -562,9 +548,7 @@ test( 'zgghrd: COMPQ=I, COMPZ=N (Q only, no Z accumulation) 3x3', function t() {
 	var Q;
 	var Z;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'no_qz_3x3';
-	} );
+	tc = no_qz_3x3;
 	n = 3;
 	LDA = n;
 	A = new Complex128Array( LDA * n );
@@ -614,9 +598,7 @@ test( 'zgghrd: empty range IHI=ILO-1', function t() {
 	var Q;
 	var Z;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'empty_range';
-	} );
+	tc = empty_range;
 	n = 3;
 	LDA = n;
 	A = new Complex128Array( LDA * n );

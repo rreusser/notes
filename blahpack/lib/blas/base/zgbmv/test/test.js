@@ -20,12 +20,9 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -33,29 +30,21 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgbmv = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgbmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var no_trans_basic = require( './fixtures/no_trans_basic.json' );
+var trans_basic = require( './fixtures/trans_basic.json' );
+var conj_trans_basic = require( './fixtures/conj_trans_basic.json' );
+var complex_alpha_beta = require( './fixtures/complex_alpha_beta.json' );
+var alpha_zero = require( './fixtures/alpha_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var alpha_zero_beta_zero = require( './fixtures/alpha_zero_beta_zero.json' );
+var incx_2 = require( './fixtures/incx_2.json' );
+var incy_2 = require( './fixtures/incy_2.json' );
+var rect_m_lt_n = require( './fixtures/rect_m_lt_n.json' );
+var beta_one = require( './fixtures/beta_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -152,7 +141,6 @@ function createBandMatrix44() {
 	return new Complex128Array( data );
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -170,7 +158,6 @@ function toArray( arr ) {
 	}
 	return out;
 }
-
 
 // TESTS //
 
@@ -191,7 +178,7 @@ test( 'zgbmv: no-transpose basic (M=4, N=4, KL=1, KU=2, alpha=(1,0), beta=(0,0))
 	var x;
 	var y;
 
-	tc = findCase( 'no_trans_basic' );
+	tc = no_trans_basic;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( 4 );
@@ -211,7 +198,7 @@ test( 'zgbmv: transpose basic (M=4, N=4, KL=1, KU=2)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'trans_basic' );
+	tc = trans_basic;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( 4 );
@@ -231,7 +218,7 @@ test( 'zgbmv: conjugate-transpose basic (M=4, N=4, KL=1, KU=2)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'conj_trans_basic' );
+	tc = conj_trans_basic;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( 4 );
@@ -251,7 +238,7 @@ test( 'zgbmv: complex alpha and beta (alpha=(2,1), beta=(0.5,-0.5))', function t
 	var x;
 	var y;
 
-	tc = findCase( 'complex_alpha_beta' );
+	tc = complex_alpha_beta;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( [ 1, 1, 2, -1, 0.5, 0.5, 3, 0 ] );
@@ -271,7 +258,7 @@ test( 'zgbmv: alpha=(0,0), beta=(2,0) — only scale y', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'alpha_zero' );
+	tc = alpha_zero;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
@@ -292,7 +279,7 @@ test( 'zgbmv: M=0 quick return', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( [ 99, 0, 77, 66 ] );
@@ -335,7 +322,7 @@ test( 'zgbmv: alpha=(0,0), beta=(0,0) — zero out y', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'alpha_zero_beta_zero' );
+	tc = alpha_zero_beta_zero;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( [ 99, 88, 77, 66, 55, 44, 33, 22 ] );
@@ -355,7 +342,7 @@ test( 'zgbmv: non-unit incx=2 (strideX=2)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'incx_2' );
+	tc = incx_2;
 	A = createBandMatrix44();
 	x = new Complex128Array([
 		1, 0, 0, 0, 2, 1, 0, 0, 3, -1, 0, 0, 4, 0.5, 0, 0
@@ -377,7 +364,7 @@ test( 'zgbmv: non-unit incy=2 (strideY=2)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'incy_2' );
+	tc = incy_2;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( 8 );
@@ -397,7 +384,7 @@ test( 'zgbmv: rectangular M<N (3x5 matrix, KL=1, KU=1, LDA=3)', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'rect_m_lt_n' );
+	tc = rect_m_lt_n;
 	A = new Complex128Array([
 		// Col 1: *, A(1,1)=(1,1), A(2,1)=(2,0)
 		0,
@@ -457,7 +444,7 @@ test( 'zgbmv: beta=(1,0) — add to existing y', function t() {
 	var x;
 	var y;
 
-	tc = findCase( 'beta_one' );
+	tc = beta_one;
 	A = createBandMatrix44();
 	x = new Complex128Array( [ 1, 0, 2, 1, 3, -1, 4, 0.5 ] );
 	y = new Complex128Array( [ 10, 5, 20, -10, 30, 15, 40, -20 ] );
@@ -504,7 +491,7 @@ test( 'zgbmv: conjugate-transpose with non-unit strides', function t() {
 	beta = new Complex128( 0, 0 );
 	result = base( 'conjugate-transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	tc = findCase( 'conj_trans_basic' );
+	tc = conj_trans_basic;
 	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'conj_trans_stride y' ); // eslint-disable-line max-len
 });
 
@@ -526,7 +513,7 @@ test( 'zgbmv: transpose with non-unit strides', function t() {
 	beta = new Complex128( 0, 0 );
 	result = base( 'transpose', 4, 4, 1, 2, alpha, A, 1, 4, 0, x, 2, 0, beta, y, 1, 0 ); // eslint-disable-line max-len
 	assert.strictEqual( result, y );
-	tc = findCase( 'trans_basic' );
+	tc = trans_basic;
 	assertArrayClose( toArray( reinterpret( y, 0 ) ), tc.y, 'trans_stride y' );
 });
 

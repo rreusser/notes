@@ -21,18 +21,18 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var disnan = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'disnan.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var disnan_nan = require( './fixtures/disnan_nan.json' );
+var disnan_zero = require( './fixtures/disnan_zero.json' );
+var disnan_one = require( './fixtures/disnan_one.json' );
+var disnan_inf = require( './fixtures/disnan_inf.json' );
+var disnan_neginf = require( './fixtures/disnan_neginf.json' );
+var disnan_large = require( './fixtures/disnan_large.json' );
 
 // TESTS //
 
@@ -46,48 +46,36 @@ test( 'disnan: attached to the main export is an `ndarray` method', function t()
 
 test( 'disnan: returns true for NaN', function t() {
 	var result = base( NaN );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'disnan_nan';
-	} );
+	var tc = disnan_nan;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'disnan: returns false for zero', function t() {
 	var result = base( 0.0 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'disnan_zero';
-	} );
+	var tc = disnan_zero;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'disnan: returns false for one', function t() {
 	var result = base( 1.0 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'disnan_one';
-	} );
+	var tc = disnan_one;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'disnan: returns false for Infinity', function t() {
 	var result = base( Infinity );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'disnan_inf';
-	} );
+	var tc = disnan_inf;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'disnan: returns false for -Infinity', function t() {
 	var result = base( -Infinity );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'disnan_neginf';
-	} );
+	var tc = disnan_neginf;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'disnan: returns false for large values', function t() {
 	var result = base( 1.0e300 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'disnan_large';
-	} );
+	var tc = disnan_large;
 	assert.strictEqual( result, tc.result === 1 );
 });

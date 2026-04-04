@@ -3,20 +3,22 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zggev = require( '../lib/base.js' );
 
 // Load fixture
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zggev.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-});
 
+// FIXTURES //
+
+var n_eq_1 = require( './fixtures/n_eq_1.json' );
+var right_evec_3x3 = require( './fixtures/right_evec_3x3.json' );
+var both_evec_3x3 = require( './fixtures/both_evec_3x3.json' );
+var eig_only_3x3 = require( './fixtures/eig_only_3x3.json' );
+var diagonal_2x2 = require( './fixtures/diagonal_2x2.json' );
+var n_eq_1_noevec = require( './fixtures/n_eq_1_noevec.json' );
+var left_evec_2x2 = require( './fixtures/left_evec_2x2.json' );
 /**
 * Assert that two floating-point numbers are close.
 */
@@ -79,9 +81,7 @@ test( 'zggev: N=1 with eigenvectors', function t() {
 	var A;
 	var B;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_eq_1';
-	});
+	tc = n_eq_1;
 	N = 1;
 	LDA = N;
 	A = new Complex128Array( LDA * N );
@@ -127,9 +127,7 @@ test( 'zggev: 3x3 right eigenvectors only', function t() {
 	var A;
 	var B;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'right_evec_3x3';
-	});
+	tc = right_evec_3x3;
 	N = 3;
 	LDA = N;
 	A = new Complex128Array( LDA * N );
@@ -208,9 +206,7 @@ test( 'zggev: 3x3 both eigenvectors', function t() {
 	var A;
 	var B;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'both_evec_3x3';
-	});
+	tc = both_evec_3x3;
 	N = 3;
 	LDA = N;
 	A = new Complex128Array( LDA * N );
@@ -291,9 +287,7 @@ test( 'zggev: 3x3 eigenvalues only', function t() {
 	var A;
 	var B;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'eig_only_3x3';
-	});
+	tc = eig_only_3x3;
 	N = 3;
 	LDA = N;
 	A = new Complex128Array( LDA * N );
@@ -368,9 +362,7 @@ test( 'zggev: 2x2 diagonal', function t() {
 	var A;
 	var B;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'diagonal_2x2';
-	});
+	tc = diagonal_2x2;
 	N = 2;
 	LDA = N;
 	A = new Complex128Array( LDA * N );
@@ -429,9 +421,7 @@ test( 'zggev: N=1 no eigenvectors', function t() {
 	var A;
 	var B;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_eq_1_noevec';
-	});
+	tc = n_eq_1_noevec;
 	N = 1;
 	LDA = N;
 	A = new Complex128Array( LDA * N );
@@ -473,9 +463,7 @@ test( 'zggev: 2x2 left eigenvectors only', function t() {
 	var A;
 	var B;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'left_evec_2x2';
-	});
+	tc = left_evec_2x2;
 	N = 2;
 	LDA = N;
 	A = new Complex128Array( LDA * N );

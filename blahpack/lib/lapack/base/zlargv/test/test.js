@@ -5,38 +5,32 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlargv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zlargv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var all_y_zero = require( './fixtures/all_y_zero.json' );
+var all_x_zero = require( './fixtures/all_x_zero.json' );
+var stride = require( './fixtures/stride.json' );
+var imag_only_x = require( './fixtures/imag_only_x.json' );
+var large_values = require( './fixtures/large_values.json' );
+var small_values = require( './fixtures/small_values.json' );
+var both_zero = require( './fixtures/both_zero.json' );
+var f_small_vs_g = require( './fixtures/f_small_vs_g.json' );
+var f_large_vs_g = require( './fixtures/f_large_vs_g.json' );
+var negative_y = require( './fixtures/negative_y.json' );
+var f_zero_g_complex = require( './fixtures/f_zero_g_complex.json' );
+var f_small_abs1_gt_one = require( './fixtures/f_small_abs1_gt_one.json' );
+var f_small_abs1_le_one = require( './fixtures/f_small_abs1_le_one.json' );
+var very_large = require( './fixtures/very_large.json' );
+var overflow_common_path = require( './fixtures/overflow_common_path.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -85,7 +79,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlargv is a function', function t() {
@@ -100,7 +93,7 @@ test( 'zlargv: basic (mixed cases in one call)', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'basic' );
+	tc = basic;
 	x = new Complex128Array( [ 3.0, 1.0, 0.0, 0.0, 1.0, 2.0, 0.0, 1.0 ] );
 	y = new Complex128Array( [ 0.0, 0.0, 4.0, 0.0, 3.0, 1.0, 2.0, -1.0 ] );
 	c = new Float64Array( 4 );
@@ -140,7 +133,7 @@ test( 'zlargv: all y=0 (cosines=1, sines=0)', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'all_y_zero' );
+	tc = all_y_zero;
 	x = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 0.0 ] );
 	y = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
 	c = new Float64Array( 3 );
@@ -160,7 +153,7 @@ test( 'zlargv: all x=0', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'all_x_zero' );
+	tc = all_x_zero;
 	x = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );
 	y = new Complex128Array( [ 5.0, 0.0, 3.0, 4.0, 0.0, 7.0 ] );
 	c = new Float64Array( 3 );
@@ -180,7 +173,7 @@ test( 'zlargv: non-unit strides', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'stride' );
+	tc = stride;
 	x = new Complex128Array( [ 3.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 2.0 ] ); // eslint-disable-line max-len
 	y = new Complex128Array( [ 4.0, 0.0, 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 3.0, 1.0 ] ); // eslint-disable-line max-len
 	c = new Float64Array( 6 );
@@ -200,7 +193,7 @@ test( 'zlargv: x with only imaginary parts', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'imag_only_x' );
+	tc = imag_only_x;
 	x = new Complex128Array( [ 0.0, 3.0, 0.0, 5.0 ] );
 	y = new Complex128Array( [ 4.0, 0.0, 12.0, 0.0 ] );
 	c = new Float64Array( 2 );
@@ -220,7 +213,7 @@ test( 'zlargv: large values (near overflow rescaling)', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'large_values' );
+	tc = large_values;
 	x = new Complex128Array( [ 1e150, 1e150, 1e-150, 1e-150 ] );
 	y = new Complex128Array( [ 1e150, 0.0, 1e-150, 0.0 ] );
 	c = new Float64Array( 2 );
@@ -240,7 +233,7 @@ test( 'zlargv: small values (near underflow rescaling)', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'small_values' );
+	tc = small_values;
 	x = new Complex128Array( [ 1e-300, 2e-300 ] );
 	y = new Complex128Array( [ 3e-300, 1e-300 ] );
 	c = new Float64Array( 1 );
@@ -260,7 +253,7 @@ test( 'zlargv: both zero', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'both_zero' );
+	tc = both_zero;
 	x = new Complex128Array( [ 0.0, 0.0 ] );
 	y = new Complex128Array( [ 0.0, 0.0 ] );
 	c = new Float64Array( 1 );
@@ -280,7 +273,7 @@ test( 'zlargv: |f| small relative to |g|', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'f_small_vs_g' );
+	tc = f_small_vs_g;
 	x = new Complex128Array( [ 1e-200, 1e-200 ] );
 	y = new Complex128Array( [ 1.0, 0.0 ] );
 	c = new Float64Array( 1 );
@@ -300,7 +293,7 @@ test( 'zlargv: |f| >> |g| (normal path)', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'f_large_vs_g' );
+	tc = f_large_vs_g;
 	x = new Complex128Array( [ 10.0, 5.0 ] );
 	y = new Complex128Array( [ 1.0, 0.0 ] );
 	c = new Float64Array( 1 );
@@ -320,7 +313,7 @@ test( 'zlargv: negative y', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'negative_y' );
+	tc = negative_y;
 	x = new Complex128Array( [ 2.0, 3.0 ] );
 	y = new Complex128Array( [ -4.0, 2.0 ] );
 	c = new Float64Array( 1 );
@@ -340,7 +333,7 @@ test( 'zlargv: f=0, g complex', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'f_zero_g_complex' );
+	tc = f_zero_g_complex;
 	x = new Complex128Array( [ 0.0, 0.0 ] );
 	y = new Complex128Array( [ 3.0, 4.0 ] );
 	c = new Float64Array( 1 );
@@ -360,7 +353,7 @@ test( 'zlargv: f small, ABS1(f) > 1', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'f_small_abs1_gt_one' );
+	tc = f_small_abs1_gt_one;
 	x = new Complex128Array( [ 2.0, 0.0 ] );
 	y = new Complex128Array( [ 1e200, 0.0 ] );
 	c = new Float64Array( 1 );
@@ -380,7 +373,7 @@ test( 'zlargv: f small, ABS1(f) <= 1', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'f_small_abs1_le_one' );
+	tc = f_small_abs1_le_one;
 	x = new Complex128Array( [ 0.5, 0.3 ] );
 	y = new Complex128Array( [ 1e200, 0.0 ] );
 	c = new Float64Array( 1 );
@@ -400,7 +393,7 @@ test( 'zlargv: very large values (overflow scaling)', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'very_large' );
+	tc = very_large;
 	x = new Complex128Array( [ 1e200, 1e200 ] );
 	y = new Complex128Array( [ 1e200, 1e200 ] );
 	c = new Float64Array( 1 );
@@ -420,7 +413,7 @@ test( 'zlargv: overflow scaling, common path (count > 0)', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'overflow_common_path' );
+	tc = overflow_common_path;
 	x = new Complex128Array( [ 1e250, 0.0 ] );
 	y = new Complex128Array( [ 1e200, 0.0 ] );
 	c = new Float64Array( 1 );
@@ -440,7 +433,7 @@ test( 'zlargv: offset support', function t() {
 	var y;
 	var c;
 
-	tc = findCase( 'basic' );
+	tc = basic;
 	x = new Complex128Array( [ 999.0, 999.0, 3.0, 1.0 ] );
 	y = new Complex128Array( [ 999.0, 999.0, 0.0, 0.0 ] );
 	c = new Float64Array( [ 999.0, 0.0 ] );

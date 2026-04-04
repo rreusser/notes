@@ -21,20 +21,19 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zswap = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zswap.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var mixed_stride = require( './fixtures/mixed_stride.json' );
 
 // FUNCTIONS //
 
@@ -67,7 +66,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -86,7 +84,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zswap: main export is a function', function t() {
@@ -103,9 +100,7 @@ test( 'zswap: basic swap (N=3, strideX=1, strideY=1)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'basic';
-	} );
+	tc = basic;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	zy = new Complex128Array( [ 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 ] );
 	result = base( 3, zx, 1, 0, zy, 1, 0 );
@@ -120,9 +115,7 @@ test( 'zswap: N=0 is a no-op', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_zero';
-	} );
+	tc = n_zero;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zy = new Complex128Array( [ 5.0, 6.0, 7.0, 8.0 ] );
 	result = base( 0, zx, 1, 0, zy, 1, 0 );
@@ -137,9 +130,7 @@ test( 'zswap: N=1', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_one';
-	} );
+	tc = n_one;
 	zx = new Complex128Array( [ 10.0, 20.0 ] );
 	zy = new Complex128Array( [ 30.0, 40.0 ] );
 	result = base( 1, zx, 1, 0, zy, 1, 0 );
@@ -154,9 +145,7 @@ test( 'zswap: non-unit strides (strideX=2, strideY=2)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'stride';
-	} );
+	tc = stride;
 	zx = new Complex128Array([
 		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
 	]);
@@ -175,9 +164,7 @@ test( 'zswap: mixed strides (strideX=1, strideY=2)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'mixed_stride';
-	} );
+	tc = mixed_stride;
 	zx = new Complex128Array([
 		1.0, 1.0, 2.0, 2.0, 3.0, 3.0
 	]);

@@ -21,18 +21,16 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var dlaisnan = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlaisnan.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var dlaisnan_nan = require( './fixtures/dlaisnan_nan.json' );
+var dlaisnan_zero = require( './fixtures/dlaisnan_zero.json' );
+var dlaisnan_one = require( './fixtures/dlaisnan_one.json' );
+var dlaisnan_inf = require( './fixtures/dlaisnan_inf.json' );
 
 // TESTS //
 
@@ -46,32 +44,24 @@ test( 'dlaisnan: attached to the main export is an `ndarray` method', function t
 
 test( 'dlaisnan: returns true for NaN != NaN', function t() {
 	var result = base( NaN, NaN );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlaisnan_nan';
-	} );
+	var tc = dlaisnan_nan;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'dlaisnan: returns false for 0 == 0', function t() {
 	var result = base( 0.0, 0.0 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlaisnan_zero';
-	} );
+	var tc = dlaisnan_zero;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'dlaisnan: returns false for 1 == 1', function t() {
 	var result = base( 1.0, 1.0 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlaisnan_one';
-	} );
+	var tc = dlaisnan_one;
 	assert.strictEqual( result, tc.result === 1 );
 });
 
 test( 'dlaisnan: returns false for Inf == Inf', function t() {
 	var result = base( Infinity, Infinity );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlaisnan_inf';
-	} );
+	var tc = dlaisnan_inf;
 	assert.strictEqual( result, tc.result === 1 );
 });

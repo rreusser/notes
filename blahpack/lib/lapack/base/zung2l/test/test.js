@@ -10,25 +10,17 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zung2l = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zung2l.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var zung2l_3x3 = require( './fixtures/zung2l_3x3.json' );
+var zung2l_4x3 = require( './fixtures/zung2l_4x3.json' );
+var zung2l_k0 = require( './fixtures/zung2l_k0.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -85,11 +77,10 @@ function extractComplexMatrix( A, LDA, M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zung2l: 3x3 full Q (M=N=K=3)', function t() {
-	var tc = findCase( 'zung2l_3x3' );
+	var tc = zung2l_3x3;
 	var WORK = new Complex128Array( 10 );
 	var LDA = 4;
 	var info;
@@ -134,7 +125,7 @@ test( 'zung2l: 3x3 full Q (M=N=K=3)', function t() {
 });
 
 test( 'zung2l: 4x3 rectangular (M=4, N=3, K=2)', function t() {
-	var tc = findCase( 'zung2l_4x3' );
+	var tc = zung2l_4x3;
 	var WORK = new Complex128Array( 10 );
 	var LDA = 4;
 	var info;
@@ -167,7 +158,7 @@ test( 'zung2l: 4x3 rectangular (M=4, N=3, K=2)', function t() {
 });
 
 test( 'zung2l: K=0 (identity)', function t() {
-	var tc = findCase( 'zung2l_K0' );
+	var tc = zung2l_k0;
 	var WORK = new Complex128Array( 10 );
 	var TAU = new Complex128Array( 1 );
 	var LDA = 4;
@@ -215,7 +206,7 @@ test( 'zung2l: M=0, N=0 quick return', function t() {
 });
 
 test( 'zung2l: 3x3 with non-unit LDA', function t() {
-	var tc = findCase( 'zung2l_3x3' );
+	var tc = zung2l_3x3;
 	var WORK = new Complex128Array( 10 );
 	var LDA = 5; // larger than M=3
 	var info;

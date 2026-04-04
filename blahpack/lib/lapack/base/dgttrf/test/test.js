@@ -2,40 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgttrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgttrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5 = require( './fixtures/basic_5x5.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_two = require( './fixtures/n_two.json' );
+var n_two_pivot = require( './fixtures/n_two_pivot.json' );
+var singular = require( './fixtures/singular.json' );
+var pivot_5x5 = require( './fixtures/pivot_5x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -84,7 +68,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgttrf: basic_5x5', function t() {
@@ -96,7 +79,7 @@ test( 'dgttrf: basic_5x5', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'basic_5x5' );
+	tc = basic_5x5;
 	dl = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
 	d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
 	du = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
@@ -120,7 +103,7 @@ test( 'dgttrf: n_one', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	dl = new Float64Array( 0 );
 	d = new Float64Array( [ 5.0 ] );
 	du = new Float64Array( 0 );
@@ -141,7 +124,7 @@ test( 'dgttrf: n_two', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'n_two' );
+	tc = n_two;
 	dl = new Float64Array( [ 3.0 ] );
 	d = new Float64Array( [ 4.0, 7.0 ] );
 	du = new Float64Array( [ 1.0 ] );
@@ -164,7 +147,7 @@ test( 'dgttrf: n_two_pivot', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'n_two_pivot' );
+	tc = n_two_pivot;
 	dl = new Float64Array( [ 5.0 ] );
 	d = new Float64Array( [ 2.0, 3.0 ] );
 	du = new Float64Array( [ 1.0 ] );
@@ -187,7 +170,7 @@ test( 'dgttrf: singular', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	dl = new Float64Array( [ 1.0, 1.0 ] );
 	d = new Float64Array( [ 0.0, 0.0, 1.0 ] );
 	du = new Float64Array( [ 0.0, 1.0 ] );
@@ -228,7 +211,7 @@ test( 'dgttrf: pivot_5x5', function t() {
 	var du;
 	var d;
 
-	tc = findCase( 'pivot_5x5' );
+	tc = pivot_5x5;
 	dl = new Float64Array( [ 10.0, 10.0, 10.0, 10.0 ] );
 	d = new Float64Array( [ 1.0, 1.0, 1.0, 1.0, 1.0 ] );
 	du = new Float64Array( [ 2.0, 2.0, 2.0, 2.0 ] );
@@ -274,7 +257,7 @@ test( 'dgttrf: supports stride and offset parameters', function t() {
 	du = new Float64Array( [ 0.0, 1.0, 0.0 ] );
 	du2 = new Float64Array( 1 );
 	ipiv = new Int32Array( [ 0, 0, 0, 0, 0 ] );
-	tc = findCase( 'n_two' );
+	tc = n_two;
 	info = dgttrf( 2, dl, 2, 1, d, 2, 1, du, 2, 1, du2, 1, 0, ipiv, 2, 1 );
 	assert.equal( info, tc.info, 'info' );
 	assertClose( dl[ 1 ], tc.dl[ 0 ], 1e-14, 'dl[0]' );

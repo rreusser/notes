@@ -3,29 +3,16 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgeqrf = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgeqrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var _3x3 = require( './fixtures/3x3.json' );
+var _4x3 = require( './fixtures/4x3.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var large_65x65 = require( './fixtures/large_65x65.json' );
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -75,7 +62,7 @@ test( 'dgeqrf: 3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	A = new Float64Array( 3 * 3 );
 	A[ 0 ] = 2;
 	A[ 1 ] = 1;
@@ -101,7 +88,7 @@ test( 'dgeqrf: 4x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '4x3' );
+	tc = _4x3;
 	A = new Float64Array( 4 * 3 );
 	A[ 0 ] = 2;
 	A[ 1 ] = 1;
@@ -130,7 +117,7 @@ test( 'dgeqrf: N=0', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 9 );
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 32 );
@@ -144,7 +131,7 @@ test( 'dgeqrf: 3x3 with WORK=null (internal allocation)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	A = new Float64Array( 3 * 3 );
 	A[ 0 ] = 2;
 	A[ 1 ] = 1;
@@ -169,7 +156,7 @@ test( 'dgeqrf: 3x3 with too-small WORK (internal reallocation)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	A = new Float64Array( 3 * 3 );
 	A[ 0 ] = 2;
 	A[ 1 ] = 1;
@@ -200,7 +187,7 @@ test( 'dgeqrf: large 65x65 (blocked path)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'large_65x65' );
+	tc = large_65x65;
 	M = 65;
 	N = 65;
 	LDA = 70;

@@ -5,37 +5,22 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zpptrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpptrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_single_rhs = require( './fixtures/upper_single_rhs.json' );
+var lower_single_rhs = require( './fixtures/lower_single_rhs.json' );
+var lower_multi_rhs = require( './fixtures/lower_multi_rhs.json' );
+var upper_multi_rhs_3 = require( './fixtures/upper_multi_rhs_3.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var upper_single_rhs_2 = require( './fixtures/upper_single_rhs_2.json' );
+var upper_one_by_one = require( './fixtures/upper_one_by_one.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a Float64Array to an array.
@@ -86,7 +71,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'zpptrs is a function', function t() {
@@ -100,7 +84,7 @@ test( 'zpptrs: upper, single RHS (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_single_rhs' );
+	tc = upper_single_rhs;
 	ap = c128( tc.AP );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = zpptrs( 'upper', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -116,7 +100,7 @@ test( 'zpptrs: lower, single RHS (3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_single_rhs' );
+	tc = lower_single_rhs;
 	ap = c128( tc.AP );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = zpptrs( 'lower', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -132,8 +116,8 @@ test( 'zpptrs: lower, multiple RHS (NRHS=2, 3x3)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_multi_rhs' );
-	ap = c128( findCase( 'lower_single_rhs' ).AP );
+	tc = lower_multi_rhs;
+	ap = c128( lower_single_rhs.AP );
 	b = c128([
 		1.0,
 		0.0,
@@ -161,8 +145,8 @@ test( 'zpptrs: upper, multiple RHS (NRHS=3, 3x3) - compute inverse', function t(
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_multi_rhs_3' );
-	ap = c128( findCase( 'upper_single_rhs' ).AP );
+	tc = upper_multi_rhs_3;
+	ap = c128( upper_single_rhs.AP );
 	b = c128([
 		1.0,
 		0.0,
@@ -206,7 +190,7 @@ test( 'zpptrs: NRHS=0 quick return', function t() {
 	var bv;
 	var b;
 
-	ap = c128( findCase( 'lower_single_rhs' ).AP );
+	ap = c128( lower_single_rhs.AP );
 	b = c128( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	info = zpptrs( 'lower', 3, 0, ap, 1, 0, b, 1, 3, 0 );
 	assert.equal( info, 0 );
@@ -226,7 +210,7 @@ test( 'zpptrs: 1x1 system (lower)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	ap = c128( [ 2.0, 0.0 ] );
 	b = c128( [ 6.0, 3.0 ] );
 	info = zpptrs( 'lower', 1, 1, ap, 1, 0, b, 1, 1, 0 );
@@ -242,8 +226,8 @@ test( 'zpptrs: upper, single RHS (3x3, different RHS)', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_single_rhs_2' );
-	ap = c128( findCase( 'upper_single_rhs' ).AP );
+	tc = upper_single_rhs_2;
+	ap = c128( upper_single_rhs.AP );
 	b = c128( [ 5.0, -2.0, -1.0, 3.0, 4.0, 1.0 ] );
 	info = zpptrs( 'upper', 3, 1, ap, 1, 0, b, 1, 3, 0 );
 	assert.equal( info, 0 );
@@ -258,7 +242,7 @@ test( 'zpptrs: upper, 1x1 system', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_one_by_one' );
+	tc = upper_one_by_one;
 	ap = c128( [ 3.0, 0.0 ] );
 	b = c128( [ 18.0, -9.0 ] );
 	info = zpptrs( 'upper', 1, 1, ap, 1, 0, b, 1, 1, 0 );
@@ -275,7 +259,7 @@ test( 'zpptrs: works with non-zero AP offset', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'upper_single_rhs' );
+	tc = upper_single_rhs;
 	apRaw = [ 99.0, 99.0, 77.0, 77.0 ].concat( toArray( new Float64Array( tc.AP ) ) ); // eslint-disable-line max-len
 	ap = c128( apRaw );
 	b = c128( [ 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
@@ -292,7 +276,7 @@ test( 'zpptrs: works with non-zero B offset', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'lower_single_rhs' );
+	tc = lower_single_rhs;
 	ap = c128( tc.AP );
 	b = c128( [ 99.0, 99.0, 77.0, 77.0, 1.0, 1.0, 2.0, -1.0, 3.0, 0.5 ] );
 	info = zpptrs( 'lower', 3, 1, ap, 1, 0, b, 1, 3, 2 );

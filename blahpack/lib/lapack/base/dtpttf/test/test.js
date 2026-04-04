@@ -2,39 +2,35 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dtpttf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dtpttf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n1_n_l = require( './fixtures/n1_n_l.json' );
+var n1_t_u = require( './fixtures/n1_t_u.json' );
+var n5_n_l = require( './fixtures/n5_n_l.json' );
+var n5_n_u = require( './fixtures/n5_n_u.json' );
+var n5_t_l = require( './fixtures/n5_t_l.json' );
+var n5_t_u = require( './fixtures/n5_t_u.json' );
+var n6_n_l = require( './fixtures/n6_n_l.json' );
+var n6_n_u = require( './fixtures/n6_n_u.json' );
+var n6_t_l = require( './fixtures/n6_t_l.json' );
+var n6_t_u = require( './fixtures/n6_t_u.json' );
+var n7_n_l = require( './fixtures/n7_n_l.json' );
+var n7_n_u = require( './fixtures/n7_n_u.json' );
+var n7_t_l = require( './fixtures/n7_t_l.json' );
+var n7_t_u = require( './fixtures/n7_t_u.json' );
+var n8_n_l = require( './fixtures/n8_n_l.json' );
+var n8_n_u = require( './fixtures/n8_n_u.json' );
+var n8_t_l = require( './fixtures/n8_t_l.json' );
+var n8_t_u = require( './fixtures/n8_t_u.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * RunTest.
@@ -65,7 +61,6 @@ function runTest( transr, uplo, N, tc ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dtpttf is a function', function t() {
@@ -89,7 +84,7 @@ test( 'dtpttf: N=1, no-transpose, lower', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_N_L' );
+	tc = n1_n_l;
 	AP = new Float64Array( [ 42.0 ] );
 	ARF = new Float64Array( 1 );
 	info = dtpttf( 'no-transpose', 'lower', 1, AP, 1, 0, ARF, 1, 0 );
@@ -103,7 +98,7 @@ test( 'dtpttf: N=1, transpose, upper', function t() {
 	var tc;
 	var AP;
 
-	tc = findCase( 'n1_T_U' );
+	tc = n1_t_u;
 	AP = new Float64Array( [ 99.0 ] );
 	ARF = new Float64Array( 1 );
 	info = dtpttf( 'transpose', 'upper', 1, AP, 1, 0, ARF, 1, 0 );
@@ -114,73 +109,73 @@ test( 'dtpttf: N=1, transpose, upper', function t() {
 // N=5 (odd) — all 4 combinations
 
 test( 'dtpttf: N=5, no-transpose, lower (odd, normal, lower)', function t() {
-	runTest( 'no-transpose', 'lower', 5, findCase( 'n5_N_L' ) );
+	runTest( 'no-transpose', 'lower', 5, n5_n_l );
 });
 
 test( 'dtpttf: N=5, no-transpose, upper (odd, normal, upper)', function t() {
-	runTest( 'no-transpose', 'upper', 5, findCase( 'n5_N_U' ) );
+	runTest( 'no-transpose', 'upper', 5, n5_n_u );
 });
 
 test( 'dtpttf: N=5, transpose, lower (odd, transpose, lower)', function t() {
-	runTest( 'transpose', 'lower', 5, findCase( 'n5_T_L' ) );
+	runTest( 'transpose', 'lower', 5, n5_t_l );
 });
 
 test( 'dtpttf: N=5, transpose, upper (odd, transpose, upper)', function t() {
-	runTest( 'transpose', 'upper', 5, findCase( 'n5_T_U' ) );
+	runTest( 'transpose', 'upper', 5, n5_t_u );
 });
 
 // N=6 (even) — all 4 combinations
 
 test( 'dtpttf: N=6, no-transpose, lower (even, normal, lower)', function t() {
-	runTest( 'no-transpose', 'lower', 6, findCase( 'n6_N_L' ) );
+	runTest( 'no-transpose', 'lower', 6, n6_n_l );
 });
 
 test( 'dtpttf: N=6, no-transpose, upper (even, normal, upper)', function t() {
-	runTest( 'no-transpose', 'upper', 6, findCase( 'n6_N_U' ) );
+	runTest( 'no-transpose', 'upper', 6, n6_n_u );
 });
 
 test( 'dtpttf: N=6, transpose, lower (even, transpose, lower)', function t() {
-	runTest( 'transpose', 'lower', 6, findCase( 'n6_T_L' ) );
+	runTest( 'transpose', 'lower', 6, n6_t_l );
 });
 
 test( 'dtpttf: N=6, transpose, upper (even, transpose, upper)', function t() {
-	runTest( 'transpose', 'upper', 6, findCase( 'n6_T_U' ) );
+	runTest( 'transpose', 'upper', 6, n6_t_u );
 });
 
 // N=7 (odd, larger) — all 4 combinations
 
 test( 'dtpttf: N=7, no-transpose, lower (odd, normal, lower)', function t() {
-	runTest( 'no-transpose', 'lower', 7, findCase( 'n7_N_L' ) );
+	runTest( 'no-transpose', 'lower', 7, n7_n_l );
 });
 
 test( 'dtpttf: N=7, no-transpose, upper (odd, normal, upper)', function t() {
-	runTest( 'no-transpose', 'upper', 7, findCase( 'n7_N_U' ) );
+	runTest( 'no-transpose', 'upper', 7, n7_n_u );
 });
 
 test( 'dtpttf: N=7, transpose, lower (odd, transpose, lower)', function t() {
-	runTest( 'transpose', 'lower', 7, findCase( 'n7_T_L' ) );
+	runTest( 'transpose', 'lower', 7, n7_t_l );
 });
 
 test( 'dtpttf: N=7, transpose, upper (odd, transpose, upper)', function t() {
-	runTest( 'transpose', 'upper', 7, findCase( 'n7_T_U' ) );
+	runTest( 'transpose', 'upper', 7, n7_t_u );
 });
 
 // N=8 (even, larger) — all 4 combinations
 
 test( 'dtpttf: N=8, no-transpose, lower (even, normal, lower)', function t() {
-	runTest( 'no-transpose', 'lower', 8, findCase( 'n8_N_L' ) );
+	runTest( 'no-transpose', 'lower', 8, n8_n_l );
 });
 
 test( 'dtpttf: N=8, no-transpose, upper (even, normal, upper)', function t() {
-	runTest( 'no-transpose', 'upper', 8, findCase( 'n8_N_U' ) );
+	runTest( 'no-transpose', 'upper', 8, n8_n_u );
 });
 
 test( 'dtpttf: N=8, transpose, lower (even, transpose, lower)', function t() {
-	runTest( 'transpose', 'lower', 8, findCase( 'n8_T_L' ) );
+	runTest( 'transpose', 'lower', 8, n8_t_l );
 });
 
 test( 'dtpttf: N=8, transpose, upper (even, transpose, upper)', function t() {
-	runTest( 'transpose', 'upper', 8, findCase( 'n8_T_U' ) );
+	runTest( 'transpose', 'upper', 8, n8_t_u );
 });
 
 // Test with non-unit stride and offset
@@ -194,7 +189,7 @@ test( 'dtpttf: N=5, no-transpose, lower with stride=2 and offset', function t() 
 	var nt;
 	var i;
 
-	tc = findCase( 'n5_N_L' );
+	tc = n5_n_l;
 	nt = 15;
 	AP = new Float64Array( 2 * nt );
 	for ( i = 0; i < nt; i++ ) {
@@ -218,7 +213,7 @@ test( 'dtpttf: N=6, transpose, upper with offset', function t() {
 	var nt;
 	var i;
 
-	tc = findCase( 'n6_T_U' );
+	tc = n6_t_u;
 	nt = 21;
 	AP = new Float64Array( nt + 3 );
 	for ( i = 0; i < nt; i++ ) {

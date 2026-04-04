@@ -3,28 +3,15 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlarf = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlarf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
+var left_3x3 = require( './fixtures/left_3x3.json' );
+var right_3x3 = require( './fixtures/right_3x3.json' );
+var tau_zero = require( './fixtures/tau_zero.json' );
+var left_2x3 = require( './fixtures/left_2x3.json' );
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -54,7 +41,7 @@ test( 'dlarf: left 3x3', function t() {
 	var C;
 	var v;
 
-	tc = findCase( 'left_3x3' );
+	tc = left_3x3;
 	C = new Float64Array( 9 );
 	C[ 0 ] = 1;
 	C[ 1 ] = 4;
@@ -77,7 +64,7 @@ test( 'dlarf: right 3x3', function t() {
 	var C;
 	var v;
 
-	tc = findCase( 'right_3x3' );
+	tc = right_3x3;
 	C = new Float64Array( 9 );
 	C[ 0 ] = 1;
 	C[ 1 ] = 4;
@@ -100,7 +87,7 @@ test( 'dlarf: tau=0 (identity)', function t() {
 	var C;
 	var v;
 
-	tc = findCase( 'tau_zero' );
+	tc = tau_zero;
 	C = new Float64Array( 4 );
 	C[ 0 ] = 1;
 	C[ 1 ] = 3;
@@ -118,7 +105,7 @@ test( 'dlarf: left 2x3', function t() {
 	var C;
 	var v;
 
-	tc = findCase( 'left_2x3' );
+	tc = left_2x3;
 	C = new Float64Array( 6 );
 	C[ 0 ] = 1;
 	C[ 1 ] = 4;
@@ -150,7 +137,7 @@ test( 'dlarf: left with negative strideV', function t() {
 	C[ 8 ] = 9;
 	v = new Float64Array( [ 0.25, 0.5, 1.0 ] );
 	WORK = new Float64Array( 3 );
-	tc = findCase( 'left_3x3' );
+	tc = left_3x3;
 	dlarf( 'left', 3, 3, v, -1, 2, 1.5, C, 1, 3, 0, WORK, 1, 0 );
 	assertArrayClose( C, tc.C, 1e-14, 'C' );
 });

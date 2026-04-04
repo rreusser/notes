@@ -2,39 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpttrf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpttrf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_5x5 = require( './fixtures/basic_5x5.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var not_posdef_first = require( './fixtures/not_posdef_first.json' );
+var not_posdef_mid = require( './fixtures/not_posdef_mid.json' );
+var unrolled_8x8 = require( './fixtures/unrolled_8x8.json' );
+var n_two = require( './fixtures/n_two.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +52,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpttrf: basic_5x5', function t() {
@@ -76,7 +60,7 @@ test( 'dpttrf: basic_5x5', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'basic_5x5' );
+	tc = basic_5x5;
 	d = new Float64Array( [ 4.0, 4.0, 4.0, 4.0, 4.0 ] );
 	e = new Float64Array( [ -1.0, -1.0, -1.0, -1.0 ] );
 	info = dpttrf( 5, d, 1, 0, e, 1, 0 );
@@ -91,7 +75,7 @@ test( 'dpttrf: n_one', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	d = new Float64Array( [ 3.0 ] );
 	e = new Float64Array( [] );
 	info = dpttrf( 1, d, 1, 0, e, 1, 0 );
@@ -105,7 +89,7 @@ test( 'dpttrf: n_zero', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	d = new Float64Array( [] );
 	e = new Float64Array( [] );
 	info = dpttrf( 0, d, 1, 0, e, 1, 0 );
@@ -118,7 +102,7 @@ test( 'dpttrf: not_posdef_first', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'not_posdef_first' );
+	tc = not_posdef_first;
 	d = new Float64Array( [ -1.0, 4.0, 4.0 ] );
 	e = new Float64Array( [ 1.0, 1.0 ] );
 	info = dpttrf( 3, d, 1, 0, e, 1, 0 );
@@ -133,7 +117,7 @@ test( 'dpttrf: not_posdef_mid', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'not_posdef_mid' );
+	tc = not_posdef_mid;
 	d = new Float64Array( [ 1.0, 1.0, 4.0 ] );
 	e = new Float64Array( [ 2.0, 1.0 ] );
 	info = dpttrf( 3, d, 1, 0, e, 1, 0 );
@@ -148,7 +132,7 @@ test( 'dpttrf: unrolled_8x8', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'unrolled_8x8' );
+	tc = unrolled_8x8;
 	d = new Float64Array( [ 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 ] );
 	info = dpttrf( 8, d, 1, 0, e, 1, 0 );
@@ -163,7 +147,7 @@ test( 'dpttrf: n_two', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n_two' );
+	tc = n_two;
 	d = new Float64Array( [ 4.0, 4.0 ] );
 	e = new Float64Array( [ 2.0 ] );
 	info = dpttrf( 2, d, 1, 0, e, 1, 0 );
@@ -179,7 +163,7 @@ test( 'dpttrf: non-unit stride', function t() {
 	var e;
 	var i;
 
-	tc = findCase( 'basic_5x5' );
+	tc = basic_5x5;
 	d = new Float64Array( [ 0.0, 4.0, 0.0, 4.0, 0.0, 4.0, 0.0, 4.0, 0.0, 4.0 ] );
 	e = new Float64Array( [ 0.0, -1.0, 0.0, -1.0, 0.0, -1.0, 0.0, -1.0 ] );
 	info = dpttrf( 5, d, 2, 1, e, 2, 1 );

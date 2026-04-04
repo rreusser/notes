@@ -4,23 +4,27 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dgesvd = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgesvd.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var m0_quick_return = require( './fixtures/m0_quick_return.json' );
+var _1x1_edge_case = require( './fixtures/1x1_edge_case.json' );
+var _4x3_full_svd = require( './fixtures/4x3_full_svd.json' );
+var _4x3_compact_svd = require( './fixtures/4x3_compact_svd.json' );
+var _4x3_overwrite_u = require( './fixtures/4x3_overwrite_u.json' );
+var _4x3_values_only = require( './fixtures/4x3_values_only.json' );
+var _3x4_full_svd = require( './fixtures/3x4_full_svd.json' );
+var _3x4_compact_svd = require( './fixtures/3x4_compact_svd.json' );
+var _3x3_full_svd = require( './fixtures/3x3_full_svd.json' );
+var _4x3_s_o = require( './fixtures/4x3_s_o.json' );
+var _4x3_a_s = require( './fixtures/4x3_a_s.json' );
+var _3x4_n_s = require( './fixtures/3x4_n_s.json' );
+var _3x4_s_n = require( './fixtures/3x4_s_n.json' );
+var _4x3_n_a = require( './fixtures/4x3_n_a.json' );
+var _3x4_a_n = require( './fixtures/3x4_a_n.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var err = Math.abs( actual - expected );
@@ -157,11 +161,10 @@ function copyArray( src ) {
 	return new Float64Array( src );
 }
 
-
 // TESTS //
 
 test( 'dgesvd: quick return for M=0', function t() {
-	var tc = findCase( 'm0_quick_return' );
+	var tc = m0_quick_return;
 	var A = new Float64Array( 1 );
 	var s = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
@@ -180,7 +183,7 @@ test( 'dgesvd: quick return for N=0', function t() {
 });
 
 test( 'dgesvd: 1x1 edge case', function t() {
-	var tc = findCase( '1x1_edge_case' );
+	var tc = _1x1_edge_case;
 	var A = new Float64Array([ 3.0 ]);
 	var s = new Float64Array( 1 );
 	var U = new Float64Array( 1 );
@@ -191,7 +194,7 @@ test( 'dgesvd: 1x1 edge case', function t() {
 });
 
 test( 'dgesvd: 4x3 full SVD (JOBU=A, JOBVT=A) — Path 9', function t() {
-	var tc = findCase( '4x3_full_svd' );
+	var tc = _4x3_full_svd;
 	var M = 4;
 	var N = 3;
 	var minmn = 3;
@@ -216,7 +219,7 @@ test( 'dgesvd: 4x3 full SVD (JOBU=A, JOBVT=A) — Path 9', function t() {
 });
 
 test( 'dgesvd: 4x3 compact SVD (JOBU=S, JOBVT=S) — Path 6', function t() {
-	var tc = findCase( '4x3_compact_svd' );
+	var tc = _4x3_compact_svd;
 	var M = 4;
 	var N = 3;
 	var minmn = 3;
@@ -237,7 +240,7 @@ test( 'dgesvd: 4x3 compact SVD (JOBU=S, JOBVT=S) — Path 6', function t() {
 });
 
 test( 'dgesvd: 4x3 JOBU=O, JOBVT=S — Path 3', function t() {
-	var tc = findCase( '4x3_overwrite_u' );
+	var tc = _4x3_overwrite_u;
 	var M = 4;
 	var N = 3;
 	var minmn = 3;
@@ -262,7 +265,7 @@ test( 'dgesvd: 4x3 JOBU=O, JOBVT=S — Path 3', function t() {
 });
 
 test( 'dgesvd: 4x3 JOBU=N, JOBVT=N — Path 1 (values only)', function t() {
-	var tc = findCase( '4x3_values_only' );
+	var tc = _4x3_values_only;
 	var M = 4;
 	var N = 3;
 	var minmn = 3;
@@ -278,7 +281,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=N — Path 1 (values only)', function t() {
 });
 
 test( 'dgesvd: 3x4 full SVD (JOBU=A, JOBVT=A) — Path 9t', function t() {
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	var M = 3;
 	var N = 4;
 	var minmn = 3;
@@ -298,7 +301,7 @@ test( 'dgesvd: 3x4 full SVD (JOBU=A, JOBVT=A) — Path 9t', function t() {
 });
 
 test( 'dgesvd: 3x4 compact SVD (JOBU=S, JOBVT=S) — Path 6t', function t() {
-	var tc = findCase( '3x4_compact_svd' );
+	var tc = _3x4_compact_svd;
 	var M = 3;
 	var N = 4;
 	var minmn = 3;
@@ -317,7 +320,7 @@ test( 'dgesvd: 3x4 compact SVD (JOBU=S, JOBVT=S) — Path 6t', function t() {
 });
 
 test( 'dgesvd: 3x3 full SVD (square) — Path 10', function t() {
-	var tc = findCase( '3x3_full_svd' );
+	var tc = _3x3_full_svd;
 	var M = 3;
 	var N = 3;
 	var minmn = 3;
@@ -337,7 +340,7 @@ test( 'dgesvd: 3x3 full SVD (square) — Path 10', function t() {
 });
 
 test( 'dgesvd: 4x3 JOBU=S, JOBVT=O — Path 5', function t() {
-	var tc = findCase( '4x3_s_o' );
+	var tc = _4x3_s_o;
 	var M = 4;
 	var N = 3;
 	var minmn = 3;
@@ -365,7 +368,7 @@ test( 'dgesvd: 4x3 JOBU=S, JOBVT=O — Path 5', function t() {
 });
 
 test( 'dgesvd: 4x3 JOBU=A, JOBVT=S — Path 9', function t() {
-	var tc = findCase( '4x3_a_s' );
+	var tc = _4x3_a_s;
 	var M = 4;
 	var N = 3;
 	var minmn = 3;
@@ -384,7 +387,7 @@ test( 'dgesvd: 4x3 JOBU=A, JOBVT=S — Path 9', function t() {
 });
 
 test( 'dgesvd: 3x4 JOBU=N, JOBVT=S — Path 4t', function t() {
-	var tc = findCase( '3x4_n_s' );
+	var tc = _3x4_n_s;
 	var M = 3;
 	var N = 4;
 	var minmn = 3;
@@ -400,7 +403,7 @@ test( 'dgesvd: 3x4 JOBU=N, JOBVT=S — Path 4t', function t() {
 });
 
 test( 'dgesvd: 3x4 JOBU=S, JOBVT=N — Path 1t (with U)', function t() {
-	var tc = findCase( '3x4_s_n' );
+	var tc = _3x4_s_n;
 	var M = 3;
 	var N = 4;
 	var minmn = 3;
@@ -417,7 +420,7 @@ test( 'dgesvd: 3x4 JOBU=S, JOBVT=N — Path 1t (with U)', function t() {
 });
 
 test( 'dgesvd: 4x3 JOBU=N, JOBVT=A — Path 1 (with VT)', function t() {
-	var tc = findCase( '4x3_n_a' );
+	var tc = _4x3_n_a;
 	var M = 4;
 	var N = 3;
 	var minmn = 3;
@@ -434,7 +437,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=A — Path 1 (with VT)', function t() {
 });
 
 test( 'dgesvd: 3x4 JOBU=A, JOBVT=N — Path 1t (with full U)', function t() {
-	var tc = findCase( '3x4_a_n' );
+	var tc = _3x4_a_n;
 	var M = 3;
 	var N = 4;
 	var minmn = 3;
@@ -464,7 +467,7 @@ test( 'dgesvd: 4x3 JOBU=O, JOBVT=N — Path 2', function t() {
 	assert.equal( info, 0 );
 
 	// Singular values should match the known values
-	var tc = findCase( '4x3_values_only' );
+	var tc = _4x3_values_only;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 
 	// U overwrites A — verify orthogonality of first minmn columns
@@ -489,7 +492,7 @@ test( 'dgesvd: 4x3 JOBU=A, JOBVT=O — Path 8', function t() {
 	var info = dgesvd( 'all-columns', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '4x3_values_only' );
+	var tc = _4x3_values_only;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 
 	// VT stored in first N rows of A
@@ -518,7 +521,7 @@ test( 'dgesvd: 4x3 JOBU=S, JOBVT=N — Path 4', function t() {
 	var info = dgesvd( 'economy', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '4x3_values_only' );
+	var tc = _4x3_values_only;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 	verifyOrthogonal( M, minmn, U, 1e-13, 'U orthogonality' );
 });
@@ -535,7 +538,7 @@ test( 'dgesvd: 4x3 JOBU=A, JOBVT=N — Path 7', function t() {
 	var info = dgesvd( 'all-columns', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '4x3_values_only' );
+	var tc = _4x3_values_only;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 	verifyOrthogonal( M, M, U, 1e-13, 'U orthogonality' );
 });
@@ -552,7 +555,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=S — Path 1 (N with S)', function t() {
 	var info = dgesvd( 'none', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '4x3_values_only' );
+	var tc = _4x3_values_only;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 });
 
@@ -568,7 +571,7 @@ test( 'dgesvd: 3x4 JOBU=N, JOBVT=N (values only) — Path 1t', function t() {
 	var info = dgesvd( 'none', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 });
 
@@ -585,7 +588,7 @@ test( 'dgesvd: 3x4 JOBU=N, JOBVT=A — Path 7t', function t() {
 	// re-use 3x4 full SVD test
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 });
 
@@ -602,7 +605,7 @@ test( 'dgesvd: 3x4 JOBU=O, JOBVT=S — Path 5t', function t() {
 	var info = dgesvd( 'overwrite', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 
 	// U overwrites A (M-by-M)
@@ -627,7 +630,7 @@ test( 'dgesvd: 3x4 JOBU=S, JOBVT=A — Path 9t', function t() {
 	var info = dgesvd( 'economy', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 	verifySVD( M, N, A_orig, U, minmn, s, VT, N, 1e-12, 'reconstruction' );
 });
@@ -645,7 +648,7 @@ test( 'dgesvd: 3x4 JOBU=A, JOBVT=S — Path 6t', function t() {
 	var info = dgesvd( 'all-columns', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 	verifySVD( M, N, A_orig, U, M, s, VT, minmn, 1e-12, 'reconstruction' );
 	verifyOrthogonal( M, M, U, 1e-13, 'U orthogonality' );
@@ -697,7 +700,7 @@ test( 'dgesvd: 3x4 JOBU=O, JOBVT=A — Path 8t', function t() {
 	var info = dgesvd( 'overwrite', 'all-rows', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, N, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 
 	// U overwrites A (M-by-M)
@@ -741,7 +744,7 @@ test( 'dgesvd: 3x4 JOBU=O, JOBVT=N — Path 1t (U overwrite, no VT)', function t
 	var info = dgesvd( 'overwrite', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 });
 
@@ -760,7 +763,7 @@ test( 'dgesvd: 4x3 JOBU=N, JOBVT=O — Path 1 (VT overwrite)', function t() {
 	var info = dgesvd( 'none', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '4x3_values_only' );
+	var tc = _4x3_values_only;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 });
 
@@ -777,7 +780,7 @@ test( 'dgesvd: 3x4 JOBU=S, JOBVT=O — Path 5t', function t() {
 	var info = dgesvd( 'economy', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 	verifyOrthogonal( M, minmn, U, 1e-13, 'U orthogonality' );
 });
@@ -795,7 +798,7 @@ test( 'dgesvd: 3x4 JOBU=A, JOBVT=O — Path 8t (with full U)', function t() {
 	var info = dgesvd( 'all-columns', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x4_full_svd' );
+	var tc = _3x4_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 	verifyOrthogonal( M, M, U, 1e-13, 'U orthogonality' );
 });
@@ -817,7 +820,7 @@ test( 'dgesvd: 3x3 JOBU=O, JOBVT=N — Path 10, wntuo', function t() {
 	var info = dgesvd( 'overwrite', 'none', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x3_full_svd' );
+	var tc = _3x3_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 
 	// U overwrites A
@@ -842,7 +845,7 @@ test( 'dgesvd: 3x3 JOBU=S, JOBVT=O — Path 10, wntvo', function t() {
 	var info = dgesvd( 'economy', 'overwrite', M, N, A, 1, M, 0, s, 1, 0, U, 1, M, 0, VT, 1, 1, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x3_full_svd' );
+	var tc = _3x3_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 
 	// VT stored in A (N-by-N)
@@ -867,7 +870,7 @@ test( 'dgesvd: 3x3 JOBU=O, JOBVT=S — Path 10, wntuo+wntvas', function t() {
 	var info = dgesvd( 'overwrite', 'economy', M, N, A, 1, M, 0, s, 1, 0, U, 1, 1, 0, VT, 1, minmn, 0 );
 	assert.equal( info, 0 );
 
-	var tc = findCase( '3x3_full_svd' );
+	var tc = _3x3_full_svd;
 	assertArrayClose( Array.from( s ), tc.s, 1e-13, 's' );
 
 	// U overwrites A

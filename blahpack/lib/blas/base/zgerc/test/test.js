@@ -21,8 +21,6 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -30,12 +28,15 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgerc = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgerc.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var zgerc_basic = require( './fixtures/zgerc_basic.json' );
+var zgerc_n_zero = require( './fixtures/zgerc_n_zero.json' );
+var zgerc_m_zero = require( './fixtures/zgerc_m_zero.json' );
+var zgerc_alpha_zero = require( './fixtures/zgerc_alpha_zero.json' );
+var zgerc_complex_alpha = require( './fixtures/zgerc_complex_alpha.json' );
+var zgerc_stride = require( './fixtures/zgerc_stride.json' );
+var zgerc_nonsquare = require( './fixtures/zgerc_nonsquare.json' );
 
 // FUNCTIONS //
 
@@ -89,7 +90,6 @@ function extractCMatrix( arr, M, N, sa1, sa2, offsetA ) {
 	return out;
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -107,7 +107,6 @@ function toArray( arr ) {
 	}
 	return out;
 }
-
 
 // TESTS //
 
@@ -127,9 +126,7 @@ test( 'zgerc: basic 2x2 rank-1 update', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgerc_basic';
-	} );
+	tc = zgerc_basic;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	x = new Complex128Array( [ 1, 0, 0, 1 ] );
 	y = new Complex128Array( [ 1, 1, 0, 2 ] );
@@ -147,9 +144,7 @@ test( 'zgerc: n=0 quick return', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgerc_n_zero';
-	} );
+	tc = zgerc_n_zero;
 	A = new Complex128Array( [ 1, 1, 2, 2 ] );
 	x = new Complex128Array( [ 5, 5 ] );
 	y = new Complex128Array( [ 6, 6 ] );
@@ -167,9 +162,7 @@ test( 'zgerc: m=0 quick return', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgerc_m_zero';
-	} );
+	tc = zgerc_m_zero;
 	A = new Complex128Array( [ 1, 1, 2, 2 ] );
 	x = new Complex128Array( [ 5, 5 ] );
 	y = new Complex128Array( [ 6, 6, 7, 7 ] );
@@ -187,9 +180,7 @@ test( 'zgerc: alpha=0 quick return', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgerc_alpha_zero';
-	} );
+	tc = zgerc_alpha_zero;
 	A = new Complex128Array( [ 7, 7, 8, 8, 9, 9, 10, 10 ] );
 	x = new Complex128Array( [ 5, 5, 6, 6 ] );
 	y = new Complex128Array( [ 7, 7, 8, 8 ] );
@@ -207,9 +198,7 @@ test( 'zgerc: complex alpha', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgerc_complex_alpha';
-	} );
+	tc = zgerc_complex_alpha;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	x = new Complex128Array( [ 1, 0, 0, 1 ] );
 	y = new Complex128Array( [ 1, 0, 0, 1 ] );
@@ -227,9 +216,7 @@ test( 'zgerc: non-unit strides (strideX=2, strideY=2)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgerc_stride';
-	} );
+	tc = zgerc_stride;
 	A = new Complex128Array( [ 0, 0, 0, 0, 0, 0, 0, 0 ] );
 	x = new Complex128Array( [ 1, 2, 99, 99, 3, 4 ] );
 	y = new Complex128Array( [ 5, 6, 99, 99, 7, 8 ] );
@@ -247,9 +234,7 @@ test( 'zgerc: 3x2 non-square', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgerc_nonsquare';
-	} );
+	tc = zgerc_nonsquare;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] );
 	x = new Complex128Array( [ 1, 0, 2, 0, 3, 0 ] );
 	y = new Complex128Array( [ 1, 1, 2, 0 ] );

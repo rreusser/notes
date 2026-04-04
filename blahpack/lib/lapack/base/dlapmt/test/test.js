@@ -8,40 +8,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dlapmt = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlapmt.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var forward_3x4 = require( './fixtures/forward_3x4.json' );
+var backward_3x4 = require( './fixtures/backward_3x4.json' );
+var identity_2x3 = require( './fixtures/identity_2x3.json' );
+var reverse_fwd_2x4 = require( './fixtures/reverse_fwd_2x4.json' );
+var reverse_bwd_2x4 = require( './fixtures/reverse_bwd_2x4.json' );
+var cyclic_fwd_2x5 = require( './fixtures/cyclic_fwd_2x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -138,7 +122,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dlapmt: forward permutation 3x4', function t() {
@@ -151,7 +134,7 @@ test( 'dlapmt: forward permutation 3x4', function t() {
 	var X;
 	var K;
 
-	tc = findCase( 'forward_3x4' );
+	tc = forward_3x4;
 	M = 3;
 	N = 4;
 	LDA = 4;
@@ -173,7 +156,7 @@ test( 'dlapmt: backward permutation 3x4', function t() {
 	var X;
 	var K;
 
-	tc = findCase( 'backward_3x4' );
+	tc = backward_3x4;
 	M = 3;
 	N = 4;
 	LDA = 4;
@@ -195,7 +178,7 @@ test( 'dlapmt: identity permutation 2x3', function t() {
 	var X;
 	var K;
 
-	tc = findCase( 'identity_2x3' );
+	tc = identity_2x3;
 	M = 2;
 	N = 3;
 	LDA = 4;
@@ -244,7 +227,7 @@ test( 'dlapmt: reverse permutation forward 2x4', function t() {
 	var X;
 	var K;
 
-	tc = findCase( 'reverse_fwd_2x4' );
+	tc = reverse_fwd_2x4;
 	M = 2;
 	N = 4;
 	LDA = 4;
@@ -266,7 +249,7 @@ test( 'dlapmt: reverse permutation backward 2x4', function t() {
 	var X;
 	var K;
 
-	tc = findCase( 'reverse_bwd_2x4' );
+	tc = reverse_bwd_2x4;
 	M = 2;
 	N = 4;
 	LDA = 4;
@@ -288,7 +271,7 @@ test( 'dlapmt: cyclic permutation forward 2x5', function t() {
 	var X;
 	var K;
 
-	tc = findCase( 'cyclic_fwd_2x5' );
+	tc = cyclic_fwd_2x5;
 	M = 2;
 	N = 5;
 	LDA = 4;
@@ -313,7 +296,7 @@ test( 'dlapmt: non-unit stride for X', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'forward_3x4' );
+	tc = forward_3x4;
 	M = 3;
 	N = 4;
 	strideX1 = 2;
@@ -349,7 +332,7 @@ test( 'dlapmt: non-zero offset', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'forward_3x4' );
+	tc = forward_3x4;
 	M = 3;
 	N = 4;
 	LDA = 4;

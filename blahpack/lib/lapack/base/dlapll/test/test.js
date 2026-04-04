@@ -6,36 +6,21 @@
 
 var test = require( 'node:test' );
 var readFileSync = require( 'fs' ).readFileSync; // eslint-disable-line node/no-sync
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlapll = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlapll.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var parallel = require( './fixtures/parallel.json' );
+var orthogonal = require( './fixtures/orthogonal.json' );
+var general = require( './fixtures/general.json' );
+var n_equals_1 = require( './fixtures/n_equals_1.json' );
+var n_equals_2 = require( './fixtures/n_equals_2.json' );
+var nearly_parallel = require( './fixtures/nearly_parallel.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -50,7 +35,6 @@ function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
 	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
 }
-
 
 // TESTS //
 
@@ -68,7 +52,7 @@ test( 'base export is a function', function t() {
 
 test( 'base: parallel vectors (ssmin ~ 0)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'parallel' );
+	var tc = parallel;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( [ 2.0, 4.0, 6.0, 8.0 ] );
 
@@ -78,7 +62,7 @@ test( 'base: parallel vectors (ssmin ~ 0)', function t() {
 
 test( 'base: orthogonal vectors (ssmin = 1)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'orthogonal' );
+	var tc = orthogonal;
 	var x = new Float64Array( [ 1.0, 0.0, 0.0 ] );
 	var y = new Float64Array( [ 0.0, 1.0, 0.0 ] );
 
@@ -88,7 +72,7 @@ test( 'base: orthogonal vectors (ssmin = 1)', function t() {
 
 test( 'base: general vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'general' );
+	var tc = general;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 
@@ -98,7 +82,7 @@ test( 'base: general vectors', function t() {
 
 test( 'base: N=1 quick return (ssmin = 0)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'n_equals_1' );
+	var tc = n_equals_1;
 	var x = new Float64Array( [ 5.0 ] );
 	var y = new Float64Array( [ 3.0 ] );
 
@@ -117,7 +101,7 @@ test( 'base: N=0 quick return (ssmin = 0)', function t() {
 
 test( 'base: N=2', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'n_equals_2' );
+	var tc = n_equals_2;
 	var x = new Float64Array( [ 3.0, 4.0 ] );
 	var y = new Float64Array( [ 1.0, 2.0 ] );
 
@@ -127,7 +111,7 @@ test( 'base: N=2', function t() {
 
 test( 'base: nearly parallel vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'nearly_parallel' );
+	var tc = nearly_parallel;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	var y = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.001 ] );
 
@@ -202,7 +186,7 @@ test( 'base: large vectors', function t() {
 
 test( 'ndarray: parallel vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'parallel' );
+	var tc = parallel;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( [ 2.0, 4.0, 6.0, 8.0 ] );
 
@@ -212,7 +196,7 @@ test( 'ndarray: parallel vectors', function t() {
 
 test( 'ndarray: general vectors', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'general' );
+	var tc = general;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 
@@ -222,7 +206,7 @@ test( 'ndarray: general vectors', function t() {
 
 test( 'main: parallel vectors (BLAS-style API)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'parallel' );
+	var tc = parallel;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	var y = new Float64Array( [ 2.0, 4.0, 6.0, 8.0 ] );
 
@@ -232,7 +216,7 @@ test( 'main: parallel vectors (BLAS-style API)', function t() {
 
 test( 'main: general vectors (BLAS-style API)', function t() {
 	var ssmin = new Float64Array( 1 );
-	var tc = findCase( 'general' );
+	var tc = general;
 	var x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	var y = new Float64Array( [ 4.0, 5.0, 6.0 ] );
 

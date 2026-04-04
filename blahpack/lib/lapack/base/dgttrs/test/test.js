@@ -2,41 +2,29 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dgttrf = require( './../../dgttrf/lib/base.js' );
 var dgttrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgttrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var notrans_single_rhs = require( './fixtures/notrans_single_rhs.json' );
+var trans_single_rhs = require( './fixtures/trans_single_rhs.json' );
+var notrans_multi_rhs = require( './fixtures/notrans_multi_rhs.json' );
+var trans_multi_rhs = require( './fixtures/trans_multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var pivot_notrans = require( './fixtures/pivot_notrans.json' );
+var pivot_trans = require( './fixtures/pivot_trans.json' );
+var n_two_notrans = require( './fixtures/n_two_notrans.json' );
+var n_two_trans = require( './fixtures/n_two_trans.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -92,7 +80,6 @@ function factorize( dlArr, dArr, duArr, n ) {
 	};
 }
 
-
 // TESTS //
 
 test( 'dgttrs: no-transpose, single RHS, 5x5 symmetric tridiagonal', function t() { // eslint-disable-line max-len
@@ -103,7 +90,7 @@ test( 'dgttrs: no-transpose, single RHS, 5x5 symmetric tridiagonal', function t(
 	var f;
 	var B;
 
-	tc = findCase( 'notrans_single_rhs' );
+	tc = notrans_single_rhs;
 	n = 5;
 	nrhs = 1;
 	f = factorize( [ -1, -1, -1, -1 ], [ 2, 2, 2, 2, 2 ], [ -1, -1, -1, -1 ], n );
@@ -122,7 +109,7 @@ test( 'dgttrs: transpose, single RHS, 5x5 symmetric tridiagonal', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'trans_single_rhs' );
+	tc = trans_single_rhs;
 	n = 5;
 	nrhs = 1;
 	f = factorize( [ -1, -1, -1, -1 ], [ 2, 2, 2, 2, 2 ], [ -1, -1, -1, -1 ], n );
@@ -141,7 +128,7 @@ test( 'dgttrs: no-transpose, multiple RHS (3 columns)', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'notrans_multi_rhs' );
+	tc = notrans_multi_rhs;
 	n = 5;
 	nrhs = 3;
 	f = factorize( [ -1, -1, -1, -1 ], [ 2, 2, 2, 2, 2 ], [ -1, -1, -1, -1 ], n );
@@ -176,7 +163,7 @@ test( 'dgttrs: transpose, multiple RHS (3 columns)', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'trans_multi_rhs' );
+	tc = trans_multi_rhs;
 	n = 5;
 	nrhs = 3;
 	f = factorize( [ -1, -1, -1, -1 ], [ 2, 2, 2, 2, 2 ], [ -1, -1, -1, -1 ], n );
@@ -211,7 +198,7 @@ test( 'dgttrs: N=1', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	n = 1;
 	nrhs = 1;
 	f = factorize( [], [ 5 ], [], n );
@@ -224,7 +211,7 @@ test( 'dgttrs: N=1', function t() {
 
 test( 'dgttrs: N=0 quick return', function t() {
 	var info;
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 
 	info = dgttrs( 'no-transpose', 0, 1, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 0, new Int32Array( 0 ), 1, 0, new Float64Array( 0 ), 1, 1, 0 ); // eslint-disable-line max-len
 
@@ -239,7 +226,7 @@ test( 'dgttrs: pivoting, no-transpose', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'pivot_notrans' );
+	tc = pivot_notrans;
 	n = 5;
 	nrhs = 1;
 	f = factorize( [ 10, 10, 10, 10 ], [ 1, 1, 1, 1, 1 ], [ 2, 2, 2, 2 ], n );
@@ -258,7 +245,7 @@ test( 'dgttrs: pivoting, transpose', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'pivot_trans' );
+	tc = pivot_trans;
 	n = 5;
 	nrhs = 1;
 	f = factorize( [ 10, 10, 10, 10 ], [ 1, 1, 1, 1, 1 ], [ 2, 2, 2, 2 ], n );
@@ -277,7 +264,7 @@ test( 'dgttrs: N=2, no-transpose', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'n_two_notrans' );
+	tc = n_two_notrans;
 	n = 2;
 	nrhs = 1;
 	f = factorize( [ 3 ], [ 4, 7 ], [ 1 ], n );
@@ -296,7 +283,7 @@ test( 'dgttrs: N=2, transpose', function t() {
 	var f;
 	var B;
 
-	tc = findCase( 'n_two_trans' );
+	tc = n_two_trans;
 	n = 2;
 	nrhs = 1;
 	f = factorize( [ 3 ], [ 4, 7 ], [ 1 ], n );
@@ -315,7 +302,7 @@ test( 'dgttrs: supports conjugate transpose (C) same as transpose', function t()
 	var f;
 	var B;
 
-	tc = findCase( 'trans_single_rhs' );
+	tc = trans_single_rhs;
 	n = 5;
 	nrhs = 1;
 	f = factorize( [ -1, -1, -1, -1 ], [ 2, 2, 2, 2, 2 ], [ -1, -1, -1, -1 ], n );

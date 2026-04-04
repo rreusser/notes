@@ -4,25 +4,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zlansy = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlansy.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var max_upper = require( './fixtures/max_upper.json' );
+var one_upper = require( './fixtures/one_upper.json' );
+var inf_upper = require( './fixtures/inf_upper.json' );
+var fro_upper = require( './fixtures/fro_upper.json' );
+var one_lower = require( './fixtures/one_lower.json' );
+var fro_lower = require( './fixtures/fro_lower.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -54,11 +49,10 @@ function makeLowerA() {
 	] ) );
 }
 
-
 // TESTS //
 
 test( 'zlansy: max norm, upper', function t() {
-	var tc = findCase( 'max_upper' );
+	var tc = max_upper;
 	var A = makeUpperA();
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'max', 'upper', 4, A, 1, 4, 0, WORK, 1, 0 );
@@ -66,7 +60,7 @@ test( 'zlansy: max norm, upper', function t() {
 });
 
 test( 'zlansy: one norm, upper', function t() {
-	var tc = findCase( 'one_upper' );
+	var tc = one_upper;
 	var A = makeUpperA();
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'one-norm', 'upper', 4, A, 1, 4, 0, WORK, 1, 0 );
@@ -74,7 +68,7 @@ test( 'zlansy: one norm, upper', function t() {
 });
 
 test( 'zlansy: inf norm, upper', function t() {
-	var tc = findCase( 'inf_upper' );
+	var tc = inf_upper;
 	var A = makeUpperA();
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'inf-norm', 'upper', 4, A, 1, 4, 0, WORK, 1, 0 );
@@ -82,7 +76,7 @@ test( 'zlansy: inf norm, upper', function t() {
 });
 
 test( 'zlansy: frobenius norm, upper', function t() {
-	var tc = findCase( 'fro_upper' );
+	var tc = fro_upper;
 	var A = makeUpperA();
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'frobenius', 'upper', 4, A, 1, 4, 0, WORK, 1, 0 );
@@ -90,7 +84,7 @@ test( 'zlansy: frobenius norm, upper', function t() {
 });
 
 test( 'zlansy: one norm, lower', function t() {
-	var tc = findCase( 'one_lower' );
+	var tc = one_lower;
 	var A = makeLowerA();
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'one-norm', 'lower', 4, A, 1, 4, 0, WORK, 1, 0 );
@@ -98,7 +92,7 @@ test( 'zlansy: one norm, lower', function t() {
 });
 
 test( 'zlansy: frobenius norm, lower', function t() {
-	var tc = findCase( 'fro_lower' );
+	var tc = fro_lower;
 	var A = makeLowerA();
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'frobenius', 'lower', 4, A, 1, 4, 0, WORK, 1, 0 );
@@ -110,7 +104,7 @@ test( 'zlansy: max norm, lower', function t() {
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'max', 'lower', 4, A, 1, 4, 0, WORK, 1, 0 );
 	// Same symmetric matrix, max norm should be same as upper
-	var tc = findCase( 'max_upper' );
+	var tc = max_upper;
 	assertClose( result, tc.val, 1e-14, 'val' );
 });
 
@@ -119,7 +113,7 @@ test( 'zlansy: inf norm, lower', function t() {
 	var WORK = new Float64Array( 4 );
 	var result = zlansy( 'inf-norm', 'lower', 4, A, 1, 4, 0, WORK, 1, 0 );
 	// For symmetric matrix, one-norm == inf-norm
-	var tc = findCase( 'one_lower' );
+	var tc = one_lower;
 	assertClose( result, tc.val, 1e-14, 'val' );
 });
 

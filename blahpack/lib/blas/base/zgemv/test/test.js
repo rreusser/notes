@@ -21,8 +21,6 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -30,12 +28,14 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemv = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgemv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var zgemv_basic = require( './fixtures/zgemv_basic.json' );
+var zgemv_conj_trans = require( './fixtures/zgemv_conj_trans.json' );
+var zgemv_alpha_beta = require( './fixtures/zgemv_alpha_beta.json' );
+var zgemv_zero_dim = require( './fixtures/zgemv_zero_dim.json' );
+var zgemv_trans = require( './fixtures/zgemv_trans.json' );
+var zgemv_stride = require( './fixtures/zgemv_stride.json' );
 
 // FUNCTIONS //
 
@@ -68,7 +68,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -86,7 +85,6 @@ function toArray( arr ) {
 	}
 	return out;
 }
-
 
 // TESTS //
 
@@ -107,9 +105,7 @@ test( 'zgemv: basic trans=N (M=2, N=2, alpha=(1,0), beta=(0,0))', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemv_basic';
-	} );
+	tc = zgemv_basic;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	y = new Complex128Array( 2 );
@@ -129,9 +125,7 @@ test( 'zgemv: conjugate transpose (trans=C, M=2, N=2)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemv_conj_trans';
-	} );
+	tc = zgemv_conj_trans;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	x = new Complex128Array( [ 1, 1, 1, 1 ] );
 	y = new Complex128Array( 2 );
@@ -151,9 +145,7 @@ test( 'zgemv: alpha and beta scaling (trans=N)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemv_alpha_beta';
-	} );
+	tc = zgemv_alpha_beta;
 	A = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
 	x = new Complex128Array( [ 1, 0, 1, 0 ] );
 	y = new Complex128Array( [ 1, 0, 0, 1 ] );
@@ -173,9 +165,7 @@ test( 'zgemv: zero dimensions (M=0, N=0) — quick return', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemv_zero_dim';
-	} );
+	tc = zgemv_zero_dim;
 	A = new Complex128Array( 0 );
 	x = new Complex128Array( 0 );
 	y = new Complex128Array( [ 99, 88 ] );
@@ -195,9 +185,7 @@ test( 'zgemv: transpose (trans=T, no conjugate)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemv_trans';
-	} );
+	tc = zgemv_trans;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	x = new Complex128Array( [ 1, 0, 0, 1 ] );
 	y = new Complex128Array( 2 );
@@ -253,9 +241,7 @@ test( 'zgemv: non-unit stride (incx=2, incy=2, trans=N)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemv_stride';
-	} );
+	tc = zgemv_stride;
 	A = new Complex128Array( [ 1, 0, 2, 0, 3, 0, 4, 0 ] );
 	x = new Complex128Array( [ 1, 1, 99, 99, 2, 2 ] );
 	y = new Complex128Array( [ 0, 0, 88, 88, 0, 0 ] );

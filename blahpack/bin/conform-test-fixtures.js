@@ -103,19 +103,46 @@ function conformTestFixtures( modDir ) {
 		}
 	}
 
+	// Also check for inline fixture.find() pattern:
+	// fixture.find( function find( t ) { return t.name === 'name'; } )
 	if ( fixtureNames.length === 0 ) {
-		// No findCase calls - might use a different pattern
-		console.error( modDir + ': WARNING - no findCase() calls found, skipping' );
+		var inlinePattern = /fixture\.find\(\s*function\s+find\(\s*t\s*\)\s*\{[^}]*t\.name\s*===\s*'([^']+)'/g;
+		while ( ( match = inlinePattern.exec( content ) ) !== null ) {
+			var inlineName = match[ 1 ];
+			if ( !seen[ inlineName ] ) {
+				fixtureNames.push( inlineName );
+				seen[ inlineName ] = true;
+			}
+		}
+	}
+
+	if ( fixtureNames.length === 0 ) {
+		// No findCase or inline fixture.find calls found
+		console.error( modDir + ': WARNING - no findCase() or fixture.find() calls found, skipping' );
 		return 0;
 	}
 
 	// Check for dynamic findCase calls (e.g., findCase( c.name ))
 	// These can't be replaced with static requires.
-	// Count total findCase() calls (excluding the function definition)
-	var allCalls = ( content.match( /[^n] findCase\(/g ) || [] ).length;
-	// If there are more calls than we found string-literal ones, some are dynamic
-	if ( allCalls > fixtureNames.length ) {
-		console.error( modDir + ': WARNING - has ' + ( allCalls - fixtureNames.length ) + ' dynamic findCase() calls, skipping' );
+	// Count findCase(...) calls where the argument is NOT a string literal.
+	// Exclude: the function definition, and findCase('literal') calls.
+	var dynamicCount = 0;
+	var allCallPattern = /findCase\(\s*([^)]+)\)/g;
+	var cm;
+	while ( ( cm = allCallPattern.exec( content ) ) !== null ) {
+		var arg = cm[ 1 ].trim();
+		// Skip: function definition (arg is 'name')
+		if ( arg === 'name' && content.substring( Math.max( 0, cm.index - 20 ), cm.index ).indexOf( 'function' ) !== -1 ) {
+			continue;
+		}
+		// Skip: string literal arguments
+		if ( /^'[^']*'$/.test( arg ) || /^"[^"]*"$/.test( arg ) ) {
+			continue;
+		}
+		dynamicCount += 1;
+	}
+	if ( dynamicCount > 0 ) {
+		console.error( modDir + ': WARNING - has ' + dynamicCount + ' dynamic findCase() calls, skipping' );
 		return 0;
 	}
 
@@ -202,13 +229,40 @@ function conformTestFixtures( modDir ) {
 		}
 	}
 
-	// 5. Replace findCase('name') calls with the variable name
+	// 5. Replace findCase('name') AND inline fixture.find() calls with the variable name
 	for ( i = 0; i < fixtureNames.length; i++ ) {
 		var varName = nameToVarName( fixtureNames[ i ] );
-		// Replace both: findCase( 'name' ) and findCase('name')
 		var escapedName = fixtureNames[ i ].replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
+
+		// Replace findCase( 'name' )
 		var callPattern = new RegExp( "findCase\\(\\s*'" + escapedName + "'\\s*\\)", 'g' );
 		newContent = newContent.replace( callPattern, varName );
+
+		// Replace inline multiline fixture.find patterns using line-by-line approach
+		// Pattern: tc = fixture.find( function find( t ) {\n\t\treturn t.name === 'name';\n\t} );
+		var inlineLines = newContent.split( '\n' );
+		var outLines = [];
+		var li = 0;
+		while ( li < inlineLines.length ) {
+			var curLine = inlineLines[ li ];
+			if ( curLine.indexOf( 'fixture.find(' ) !== -1 && li + 2 < inlineLines.length ) {
+				var namePart = inlineLines[ li + 1 ];
+				var closePart = inlineLines[ li + 2 ];
+				var nameMatch = namePart.match( /t\.name\s*===\s*'([^']+)'/ );
+				if ( nameMatch && nameMatch[ 1 ] === fixtureNames[ i ] && /^\s*\}\s*\);?\s*$/.test( closePart ) ) {
+					// Replace the 3-line block with a single assignment
+					var assignMatch = curLine.match( /^(\s*)((?:var\s+)?\S+)\s*=\s*fixture\.find/ );
+					if ( assignMatch ) {
+						outLines.push( assignMatch[ 1 ] + assignMatch[ 2 ] + ' = ' + varName + ';' );
+						li += 3;
+						continue;
+					}
+				}
+			}
+			outLines.push( curLine );
+			li += 1;
+		}
+		newContent = outLines.join( '\n' );
 	}
 
 	// 6. Clean up: remove unused `path` require if no longer referenced

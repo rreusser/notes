@@ -5,8 +5,6 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
@@ -14,30 +12,18 @@ var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgtsvx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgtsvx.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var fact_n_trans_n = require( './fixtures/fact_n_trans_n.json' );
+var fact_f_trans_n = require( './fixtures/fact_f_trans_n.json' );
+var fact_n_trans_t = require( './fixtures/fact_n_trans_t.json' );
+var fact_n_trans_c = require( './fixtures/fact_n_trans_c.json' );
+var multi_rhs = require( './fixtures/multi_rhs.json' );
+var n_one = require( './fixtures/n_one.json' );
+var singular = require( './fixtures/singular.json' );
+var pivot_5x5 = require( './fixtures/pivot_5x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -108,7 +94,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgtsvx: fact_n_trans_n', function t() {
@@ -131,7 +116,7 @@ test( 'zgtsvx: fact_n_trans_n', function t() {
 	var d;
 	var x;
 
-	tc = findCase( 'fact_n_trans_n' );
+	tc = fact_n_trans_n;
 	dl = c128( [ 3, 1, 1, 2, 2, -1 ] );
 	d = c128( [ 2, 0.5, 4, 1, 5, -0.5, 6, 2 ] );
 	du = c128( [ -1, 1, -2, 0.5, -3, -1 ] );
@@ -184,8 +169,8 @@ test( 'zgtsvx: fact_f_trans_n', function t() {
 	var d;
 	var x;
 
-	tc1 = findCase( 'fact_n_trans_n' );
-	tc = findCase( 'fact_f_trans_n' );
+	tc1 = fact_n_trans_n;
+	tc = fact_f_trans_n;
 	dl = c128( [ 3, 1, 1, 2, 2, -1 ] );
 	d = c128( [ 2, 0.5, 4, 1, 5, -0.5, 6, 2 ] );
 	du = c128( [ -1, 1, -2, 0.5, -3, -1 ] );
@@ -232,7 +217,7 @@ test( 'zgtsvx: fact_n_trans_t', function t() {
 	var d;
 	var x;
 
-	tc = findCase( 'fact_n_trans_t' );
+	tc = fact_n_trans_t;
 	dl = c128( [ 3, 1, 1, 2, 2, -1 ] );
 	d = c128( [ 2, 0.5, 4, 1, 5, -0.5, 6, 2 ] );
 	du = c128( [ -1, 1, -2, 0.5, -3, -1 ] );
@@ -277,7 +262,7 @@ test( 'zgtsvx: fact_n_trans_c', function t() {
 	var d;
 	var x;
 
-	tc = findCase( 'fact_n_trans_c' );
+	tc = fact_n_trans_c;
 	dl = c128( [ 3, 1, 1, 2, 2, -1 ] );
 	d = c128( [ 2, 0.5, 4, 1, 5, -0.5, 6, 2 ] );
 	du = c128( [ -1, 1, -2, 0.5, -3, -1 ] );
@@ -323,7 +308,7 @@ test( 'zgtsvx: multi_rhs', function t() {
 	var d;
 	var x;
 
-	tc = findCase( 'multi_rhs' );
+	tc = multi_rhs;
 	dl = c128( [ 3, 1, 1, 2, 2, -1 ] );
 	d = c128( [ 2, 0.5, 4, 1, 5, -0.5, 6, 2 ] );
 	du = c128( [ -1, 1, -2, 0.5, -3, -1 ] );
@@ -386,7 +371,7 @@ test( 'zgtsvx: n_one', function t() {
 	var d;
 	var x;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	dl = new Complex128Array( 1 );
 	d = c128( [ 5, 1 ] );
 	du = new Complex128Array( 1 );
@@ -467,7 +452,7 @@ test( 'zgtsvx: singular', function t() {
 	var d;
 	var x;
 
-	tc = findCase( 'singular' );
+	tc = singular;
 	dl = c128( [ 0, 0, 0, 0 ] );
 	d = c128( [ 0, 0, 2, 1, 3, 0 ] );
 	du = c128( [ 1, 0, 1, 0.5 ] );
@@ -509,7 +494,7 @@ test( 'zgtsvx: pivot_5x5', function t() {
 	var d;
 	var x;
 
-	tc = findCase( 'pivot_5x5' );
+	tc = pivot_5x5;
 	dl = c128( [ 5, 1, 7, -1, 9, 2, 2, 0.5 ] );
 	d = c128( [ 1, 0, 3, 1, 2, -1, 1, 0.5, 8, 0 ] );
 	du = c128( [ 2, -0.5, 4, 1, 6, 0, 3, -1 ] );

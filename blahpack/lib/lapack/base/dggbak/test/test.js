@@ -23,37 +23,32 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dggbak = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-
 // VARIABLES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dggbak.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var job_n = require( './fixtures/job_n.json' );
+var scale_right = require( './fixtures/scale_right.json' );
+var scale_left = require( './fixtures/scale_left.json' );
+var permute_right = require( './fixtures/permute_right.json' );
+var permute_left = require( './fixtures/permute_left.json' );
+var both_right = require( './fixtures/both_right.json' );
+var both_left = require( './fixtures/both_left.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var ilo_one_permute = require( './fixtures/ilo_one_permute.json' );
+var ihi_n_permute = require( './fixtures/ihi_n_permute.json' );
+var k_eq_i = require( './fixtures/k_eq_i.json' );
+var n_one = require( './fixtures/n_one.json' );
+var larger_both_right = require( './fixtures/larger_both_right.json' );
 
 // FUNCTIONS //
-
-/**
-* Finds a test case in the fixture data by name.
-*
-* @private
-* @param {string} name - test case name
-* @returns {Object} test case data
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -115,7 +110,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dggbak: main export is a function', function t() {
@@ -136,7 +130,7 @@ test( 'dggbak: JOB=none quick return (no transformation)', function t() {
 	var m;
 	var V;
 
-	tc = findCase( 'job_n' );
+	tc = job_n;
 	n = 3;
 	m = 2;
 	LDV = n;
@@ -164,7 +158,7 @@ test( 'dggbak: JOB=scale, SIDE=right (scale right eigenvectors by RSCALE)', func
 	var m;
 	var V;
 
-	tc = findCase( 'scale_right' );
+	tc = scale_right;
 	n = 3;
 	m = 2;
 	LDV = n;
@@ -192,7 +186,7 @@ test( 'dggbak: JOB=scale, SIDE=left (scale left eigenvectors by LSCALE)', functi
 	var m;
 	var V;
 
-	tc = findCase( 'scale_left' );
+	tc = scale_left;
 	n = 3;
 	m = 2;
 	LDV = n;
@@ -220,7 +214,7 @@ test( 'dggbak: JOB=permute, SIDE=right (permute right eigenvectors)', function t
 	var m;
 	var V;
 
-	tc = findCase( 'permute_right' );
+	tc = permute_right;
 	n = 4;
 	m = 2;
 	LDV = n;
@@ -250,7 +244,7 @@ test( 'dggbak: JOB=permute, SIDE=left (permute left eigenvectors)', function t()
 	var m;
 	var V;
 
-	tc = findCase( 'permute_left' );
+	tc = permute_left;
 	n = 4;
 	m = 2;
 	LDV = n;
@@ -280,7 +274,7 @@ test( 'dggbak: JOB=both, SIDE=right (both scale and permute, right)', function t
 	var m;
 	var V;
 
-	tc = findCase( 'both_right' );
+	tc = both_right;
 	n = 4;
 	m = 2;
 	LDV = n;
@@ -310,7 +304,7 @@ test( 'dggbak: JOB=both, SIDE=left (both scale and permute, left)', function t()
 	var m;
 	var V;
 
-	tc = findCase( 'both_left' );
+	tc = both_left;
 	n = 4;
 	m = 2;
 	LDV = n;
@@ -337,7 +331,7 @@ test( 'dggbak: N=0 quick return', function t() {
 	var tc;
 	var V;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	V = new Float64Array( 2 );
 	lscale = new Float64Array( 1 );
 	rscale = new Float64Array( 1 );
@@ -352,7 +346,7 @@ test( 'dggbak: M=0 quick return', function t() {
 	var tc;
 	var V;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	V = new Float64Array( 2 );
 	lscale = new Float64Array( 3 );
 	rscale = new Float64Array( 3 );
@@ -370,7 +364,7 @@ test( 'dggbak: ILO=IHI (skip scaling, permutation still applies)', function t() 
 	var m;
 	var V;
 
-	tc = findCase( 'ilo_eq_ihi' );
+	tc = ilo_eq_ihi;
 	n = 4;
 	m = 2;
 	LDV = n;
@@ -400,7 +394,7 @@ test( 'dggbak: ILO=1 (skip first permutation loop)', function t() {
 	var m;
 	var V;
 
-	tc = findCase( 'ilo_one_permute' );
+	tc = ilo_one_permute;
 	n = 3;
 	m = 2;
 	LDV = n;
@@ -428,7 +422,7 @@ test( 'dggbak: IHI=N (skip second permutation loop)', function t() {
 	var m;
 	var V;
 
-	tc = findCase( 'ihi_n_permute' );
+	tc = ihi_n_permute;
 	n = 3;
 	m = 2;
 	LDV = n;
@@ -456,7 +450,7 @@ test( 'dggbak: K=I (no-swap, continue case)', function t() {
 	var m;
 	var V;
 
-	tc = findCase( 'k_eq_i' );
+	tc = k_eq_i;
 	n = 3;
 	m = 2;
 	LDV = n;
@@ -511,7 +505,7 @@ test( 'dggbak: N=1 edge case', function t() {
 	var tc;
 	var V;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	V = new Float64Array( 1 );
 	lscale = new Float64Array( 1 );
 	rscale = new Float64Array( [ 1.0 ] );
@@ -531,7 +525,7 @@ test( 'dggbak: larger matrix, JOB=both, SIDE=right', function t() {
 	var m;
 	var V;
 
-	tc = findCase( 'larger_both_right' );
+	tc = larger_both_right;
 	n = 5;
 	m = 3;
 	LDV = n;
@@ -640,7 +634,7 @@ test( 'dggbak: BLAS-style wrapper with column-major layout', function t() {
 	var tc;
 	var V;
 
-	tc = findCase( 'scale_right' );
+	tc = scale_right;
 	V = new Float64Array( 6 );
 	lscale = new Float64Array( 3 );
 	rscale = new Float64Array( [ 2.0, 3.0, 0.5 ] );

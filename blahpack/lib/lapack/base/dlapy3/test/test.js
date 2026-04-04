@@ -21,18 +21,20 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var dlapy3 = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlapy3.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var dlapy3_3_4_0 = require( './fixtures/dlapy3_3_4_0.json' );
+var dlapy3_1_1_1 = require( './fixtures/dlapy3_1_1_1.json' );
+var dlapy3_0_0_0 = require( './fixtures/dlapy3_0_0_0.json' );
+var dlapy3_large = require( './fixtures/dlapy3_large.json' );
+var dlapy3_small = require( './fixtures/dlapy3_small.json' );
+var dlapy3_2_3_6 = require( './fixtures/dlapy3_2_3_6.json' );
+var dlapy3_neg = require( './fixtures/dlapy3_neg.json' );
+var dlapy3_single = require( './fixtures/dlapy3_single.json' );
 
 // FUNCTIONS //
 
@@ -49,7 +51,6 @@ function assertClose( actual, expected, msg ) {
 	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
 }
 
-
 // TESTS //
 
 test( 'dlapy3: main export is a function', function t() {
@@ -61,57 +62,41 @@ test( 'dlapy3: attached to the main export is an `ndarray` method', function t()
 });
 
 test( 'dlapy3: (3,4,0) -> 5', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_3_4_0';
-	} );
+	var tc = dlapy3_3_4_0;
 	assertClose( base( 3.0, 4.0, 0.0 ), tc.result, 'dlapy3(3,4,0)' );
 });
 
 test( 'dlapy3: (1,1,1) -> sqrt(3)', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_1_1_1';
-	} );
+	var tc = dlapy3_1_1_1;
 	assertClose( base( 1.0, 1.0, 1.0 ), tc.result, 'dlapy3(1,1,1)' );
 });
 
 test( 'dlapy3: (0,0,0) -> 0', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_0_0_0';
-	} );
+	var tc = dlapy3_0_0_0;
 	assert.strictEqual( base( 0.0, 0.0, 0.0 ), tc.result );
 });
 
 test( 'dlapy3: large values (overflow-safe)', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_large';
-	} );
+	var tc = dlapy3_large;
 	assertClose( base( 1.0e300, 1.0e300, 1.0e300 ), tc.result, 'dlapy3(large)' );
 });
 
 test( 'dlapy3: small values', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_small';
-	} );
+	var tc = dlapy3_small;
 	assertClose( base( 1.0e-300, 2.0e-300, 3.0e-300 ), tc.result, 'dlapy3(small)' ); // eslint-disable-line max-len
 });
 
 test( 'dlapy3: (2,3,6) -> 7', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_2_3_6';
-	} );
+	var tc = dlapy3_2_3_6;
 	assertClose( base( 2.0, 3.0, 6.0 ), tc.result, 'dlapy3(2,3,6)' );
 });
 
 test( 'dlapy3: negative values', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_neg';
-	} );
+	var tc = dlapy3_neg;
 	assertClose( base( -3.0, -4.0, 0.0 ), tc.result, 'dlapy3(neg)' );
 });
 
 test( 'dlapy3: single non-zero', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dlapy3_single';
-	} );
+	var tc = dlapy3_single;
 	assertClose( base( 5.0, 0.0, 0.0 ), tc.result, 'dlapy3(single)' );
 });

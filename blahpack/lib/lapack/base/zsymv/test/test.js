@@ -4,27 +4,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zsymv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zsymv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_a1_b0 = require( './fixtures/upper_a1_b0.json' );
+var lower_a2_b05 = require( './fixtures/lower_a2_b05.json' );
+var n0 = require( './fixtures/n0.json' );
+var a0_b1 = require( './fixtures/a0_b1.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -69,11 +62,10 @@ function makeX() {
 	] ) );
 }
 
-
 // TESTS //
 
 test( 'zsymv: upper, alpha=1, beta=0', function t() {
-	var tc = findCase( 'upper_a1_b0' );
+	var tc = upper_a1_b0;
 	var A = makeUpperA();
 	var x = makeX();
 	var y = new Complex128Array( 4 );
@@ -84,11 +76,11 @@ test( 'zsymv: upper, alpha=1, beta=0', function t() {
 });
 
 test( 'zsymv: lower, alpha=(2,1), beta=(0.5,0)', function t() {
-	var tc = findCase( 'lower_a2_b05' );
+	var tc = lower_a2_b05;
 	var A = makeLowerA();
 	var x = makeX();
 	// y starts with the result from the upper test
-	var tcPrev = findCase( 'upper_a1_b0' );
+	var tcPrev = upper_a1_b0;
 	var y = new Complex128Array( new Float64Array( tcPrev.y ) );
 	var alpha = new Complex128( 2.0, 1.0 );
 	var beta = new Complex128( 0.5, 0.0 );
@@ -97,7 +89,7 @@ test( 'zsymv: lower, alpha=(2,1), beta=(0.5,0)', function t() {
 });
 
 test( 'zsymv: N=0 quick return', function t() {
-	var tc = findCase( 'n0' );
+	var tc = n0;
 	var A = makeUpperA();
 	var x = makeX();
 	var y = new Complex128Array( new Float64Array( [ 99.0, 99.0 ] ) );
@@ -108,7 +100,7 @@ test( 'zsymv: N=0 quick return', function t() {
 });
 
 test( 'zsymv: alpha=0, beta=1 quick return', function t() {
-	var tc = findCase( 'a0_b1' );
+	var tc = a0_b1;
 	var A = makeUpperA();
 	var x = makeX();
 	var y = new Complex128Array( new Float64Array( [ 7.0, 3.0, 2.0, 5.0 ] ) );

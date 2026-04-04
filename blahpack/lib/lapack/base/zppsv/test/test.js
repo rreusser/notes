@@ -5,37 +5,21 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zppsv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zppsv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x3_upper_1rhs = require( './fixtures/3x3_upper_1rhs.json' );
+var _3x3_lower_1rhs = require( './fixtures/3x3_lower_1rhs.json' );
+var _3x3_lower_2rhs = require( './fixtures/3x3_lower_2rhs.json' );
+var n_one_lower = require( './fixtures/n_one_lower.json' );
+var n_one_upper = require( './fixtures/n_one_upper.json' );
+var _3x3_upper_2rhs = require( './fixtures/3x3_upper_2rhs.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a Float64Array to an array.
@@ -86,7 +70,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'zppsv is a function', function t() {
@@ -100,7 +83,7 @@ test( 'zppsv: 3x3 upper, 1 RHS', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( '3x3_upper_1rhs' );
+	tc = _3x3_upper_1rhs;
 	ap = c128([
 		10.0,
 		0.0,
@@ -130,7 +113,7 @@ test( 'zppsv: 3x3 lower, 1 RHS', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( '3x3_lower_1rhs' );
+	tc = _3x3_lower_1rhs;
 	ap = c128([
 		10.0,
 		0.0,
@@ -160,7 +143,7 @@ test( 'zppsv: 3x3 lower, 2 RHS', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( '3x3_lower_2rhs' );
+	tc = _3x3_lower_2rhs;
 	ap = c128([
 		10.0,
 		0.0,
@@ -242,7 +225,7 @@ test( 'zppsv: N=1 lower', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'n_one_lower' );
+	tc = n_one_lower;
 	ap = c128( [ 4.0, 0.0 ] );
 	b = c128( [ 8.0, 4.0 ] );
 	info = zppsv( 'lower', 1, 1, ap, 1, 0, b, 1, 1, 0 );
@@ -259,7 +242,7 @@ test( 'zppsv: N=1 upper', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( 'n_one_upper' );
+	tc = n_one_upper;
 	ap = c128( [ 9.0, 0.0 ] );
 	b = c128( [ 27.0, -9.0 ] );
 	info = zppsv( 'upper', 1, 1, ap, 1, 0, b, 1, 1, 0 );
@@ -276,7 +259,7 @@ test( 'zppsv: 3x3 upper, 2 RHS', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( '3x3_upper_2rhs' );
+	tc = _3x3_upper_2rhs;
 	ap = c128([
 		10.0,
 		0.0,
@@ -320,7 +303,7 @@ test( 'zppsv: works with non-zero AP offset', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( '3x3_upper_1rhs' );
+	tc = _3x3_upper_1rhs;
 	apRaw = [ 99.0, 99.0, 77.0, 77.0 ].concat([
 		10.0,
 		0.0,
@@ -350,7 +333,7 @@ test( 'zppsv: works with non-zero B offset', function t() {
 	var bv;
 	var b;
 
-	tc = findCase( '3x3_lower_1rhs' );
+	tc = _3x3_lower_1rhs;
 	ap = c128([
 		10.0,
 		0.0,

@@ -2,39 +2,38 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dormbr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dormbr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var gebrd_4x3 = require( './fixtures/gebrd_4x3.json' );
+var q_l_n_upper = require( './fixtures/q_l_n_upper.json' );
+var q_l_t_upper = require( './fixtures/q_l_t_upper.json' );
+var p_r_n_upper = require( './fixtures/p_r_n_upper.json' );
+var p_r_t_upper = require( './fixtures/p_r_t_upper.json' );
+var q_r_n_upper = require( './fixtures/q_r_n_upper.json' );
+var p_l_n_upper = require( './fixtures/p_l_n_upper.json' );
+var q_r_t_upper = require( './fixtures/q_r_t_upper.json' );
+var p_l_t_upper = require( './fixtures/p_l_t_upper.json' );
+var gebrd_3x4 = require( './fixtures/gebrd_3x4.json' );
+var q_l_n_lower = require( './fixtures/q_l_n_lower.json' );
+var q_l_t_lower = require( './fixtures/q_l_t_lower.json' );
+var p_r_n_lower = require( './fixtures/p_r_n_lower.json' );
+var p_r_t_lower = require( './fixtures/p_r_t_lower.json' );
+var p_l_n_lower = require( './fixtures/p_l_n_lower.json' );
+var p_l_t_lower = require( './fixtures/p_l_t_lower.json' );
+var q_r_n_lower = require( './fixtures/q_r_n_lower.json' );
+var q_r_t_lower = require( './fixtures/q_r_t_lower.json' );
+var q_l_n_nonident = require( './fixtures/q_l_n_nonident.json' );
+var p_r_n_lower_nonident = require( './fixtures/p_r_n_lower_nonident.json' );
+var k_zero = require( './fixtures/k_zero.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -83,7 +82,6 @@ function eye( M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 // ===== Upper bidiagonal (M=4, N=3): M > N, uses upper bidiagonal path =====
@@ -97,8 +95,8 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=N (upper bidiagonal, NQ>=K)', function t() 
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'Q_L_N_upper' );
+	gebrd = gebrd_4x3;
+	tc = q_l_n_upper;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 4, 4 );
@@ -117,8 +115,8 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=T (upper bidiagonal)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'Q_L_T_upper' );
+	gebrd = gebrd_4x3;
+	tc = q_l_t_upper;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 4, 4 );
@@ -137,8 +135,8 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=N (upper bidiagonal, NQ>=K)', function t() 
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'P_R_N_upper' );
+	gebrd = gebrd_4x3;
+	tc = p_r_n_upper;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 3, 3 );
@@ -157,8 +155,8 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=T (upper bidiagonal)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'P_R_T_upper' );
+	gebrd = gebrd_4x3;
+	tc = p_r_t_upper;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 3, 3 );
@@ -177,8 +175,8 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=N (upper bidiagonal)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'Q_R_N_upper' );
+	gebrd = gebrd_4x3;
+	tc = q_r_n_upper;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 4, 4 );
@@ -197,8 +195,8 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=N (upper bidiagonal)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'P_L_N_upper' );
+	gebrd = gebrd_4x3;
+	tc = p_l_n_upper;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 3, 3 );
@@ -217,8 +215,8 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=T (upper bidiagonal)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'Q_R_T_upper' );
+	gebrd = gebrd_4x3;
+	tc = q_r_t_upper;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 4, 4 );
@@ -237,8 +235,8 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=T (upper bidiagonal)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'P_L_T_upper' );
+	gebrd = gebrd_4x3;
+	tc = p_l_t_upper;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 3, 3 );
@@ -259,8 +257,8 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=N (lower bidiagonal, NQ<K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'Q_L_N_lower' );
+	gebrd = gebrd_3x4;
+	tc = q_l_n_lower;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 3, 3 );
@@ -279,8 +277,8 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=T (lower bidiagonal, NQ<K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'Q_L_T_lower' );
+	gebrd = gebrd_3x4;
+	tc = q_l_t_lower;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 3, 3 );
@@ -299,8 +297,8 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=N (lower bidiagonal, NQ>K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'P_R_N_lower' );
+	gebrd = gebrd_3x4;
+	tc = p_r_n_lower;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 4, 4 );
@@ -319,8 +317,8 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=T (lower bidiagonal, NQ>K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'P_R_T_lower' );
+	gebrd = gebrd_3x4;
+	tc = p_r_t_lower;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 4, 4 );
@@ -339,8 +337,8 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=N (lower bidiagonal, NQ>K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'P_L_N_lower' );
+	gebrd = gebrd_3x4;
+	tc = p_l_n_lower;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 4, 4 );
@@ -359,8 +357,8 @@ test( 'dormbr: VECT=P, SIDE=L, TRANS=T (lower bidiagonal, NQ>K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'P_L_T_lower' );
+	gebrd = gebrd_3x4;
+	tc = p_l_t_lower;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = eye( 4, 4 );
@@ -379,8 +377,8 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=N (lower bidiagonal, NQ<K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'Q_R_N_lower' );
+	gebrd = gebrd_3x4;
+	tc = q_r_n_lower;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 3, 3 );
@@ -399,8 +397,8 @@ test( 'dormbr: VECT=Q, SIDE=R, TRANS=T (lower bidiagonal, NQ<K)', function t() {
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'Q_R_T_lower' );
+	gebrd = gebrd_3x4;
+	tc = q_r_t_lower;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = eye( 3, 3 );
@@ -421,8 +419,8 @@ test( 'dormbr: VECT=Q, SIDE=L, TRANS=N, non-identity C (upper bidiagonal)', func
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_4x3' );
-	tc = findCase( 'Q_L_N_nonident' );
+	gebrd = gebrd_4x3;
+	tc = q_l_n_nonident;
 	A = new Float64Array( gebrd.A );
 	TAUQ = new Float64Array( gebrd.TAUQ );
 	C = new Float64Array( [ 1, 3, -1, 2, 2, 0, 4, -1 ] );
@@ -441,8 +439,8 @@ test( 'dormbr: VECT=P, SIDE=R, TRANS=N, non-identity C (lower bidiagonal)', func
 	var A;
 	var C;
 
-	gebrd = findCase( 'gebrd_3x4' );
-	tc = findCase( 'P_R_N_lower_nonident' );
+	gebrd = gebrd_3x4;
+	tc = p_r_n_lower_nonident;
 	A = new Float64Array( gebrd.A );
 	TAUP = new Float64Array( gebrd.TAUP );
 	C = new Float64Array( [ 1, 3, -1, 2, 0, 4, -1, 2, 1, 0, 1, -2 ] );
@@ -492,7 +490,7 @@ test( 'dormbr: K=0, VECT=Q (dormqr with K=0, C unchanged)', function t() {
 	var A;
 	var C;
 
-	tc = findCase( 'k_zero' );
+	tc = k_zero;
 	A = new Float64Array( 16 );
 	TAU = new Float64Array( 1 );
 	C = eye( 4, 4 );

@@ -2,48 +2,36 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlahr2 = require( './../lib/base.js' );
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlahr2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} ); }
-/**
-* Asserts that two arrays are element-wise approximately equal.
-*
-* @private
-* @param {*} actual - actual value
-* @param {*} expected - expected value
-* @param {number} tol - tolerance
-* @param {string} msg - assertion message
-*/
-function assertArrayClose( actual, expected, tol, msg ) {
-	var diff; var i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
-	for ( i = 0; i < expected.length; i++ ) {
-		diff = Math.abs( actual[ i ] - expected[ i ] );
-		if ( diff > tol && diff / Math.max( Math.abs( expected[ i ] ), 1.0 ) > tol ) {
-			assert.fail( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
-		}
-	}
-}
 
+// FIXTURES //
+
+var basic_6x6_k1_nb2 = require( './fixtures/basic_6x6_k1_nb2.json' );
+var _8x8_k1_nb3 = require( './fixtures/8x8_k1_nb3.json' );
+var _5x5_k1_nb1 = require( './fixtures/5x5_k1_nb1.json' );
+var n_one = require( './fixtures/n_one.json' );
+var _7x7_k2_nb2 = require( './fixtures/7x7_k2_nb2.json' );
 
 // FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function assertArrayClose( actual, expected, tol, msg ) {
+	var relErr;
+	var i;
+	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
+	for ( i = 0; i < expected.length; i += 1 ) {
+		relErr = Math.abs( actual[ i ] - expected[ i ] ) / Math.max( Math.abs( expected[ i ] ), 1e-14 ); // eslint-disable-line max-len
+		assert.ok( relErr <= tol, msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] ); // eslint-disable-line max-len
+	}
+}
 
 /**
 * Converts a typed array to a plain array.
@@ -78,7 +66,7 @@ test( 'dlahr2: basic 6x6, K=1, NB=2', function () {
 	var T;
 	var Y;
 
-	tc = findCase( 'basic_6x6_k1_nb2' );
+	tc = basic_6x6_k1_nb2;
 	N = 6;
 	K = 1;
 	NB = 2;
@@ -147,7 +135,7 @@ test( 'dlahr2: 8x8, K=1, NB=3', function () {
 	var T;
 	var Y;
 
-	tc = findCase( '8x8_k1_nb3' );
+	tc = _8x8_k1_nb3;
 	N = 8;
 	K = 1;
 	NB = 3;
@@ -206,7 +194,7 @@ test( 'dlahr2: 5x5, K=1, NB=1 (single column)', function () {
 	var T;
 	var Y;
 
-	tc = findCase( '5x5_k1_nb1' );
+	tc = _5x5_k1_nb1;
 	N = 5;
 	K = 1;
 	NB = 1;
@@ -252,7 +240,7 @@ test( 'dlahr2: 5x5, K=1, NB=1 (single column)', function () {
 
 test( 'dlahr2: N=1 (quick return)', function () {
 	var tau = new Float64Array([ 99.0 ]);
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Float64Array([ 5.0 ]);
 	var T = new Float64Array([ 99.0 ]);
 	var Y = new Float64Array([ 99.0 ]);
@@ -277,7 +265,7 @@ test( 'dlahr2: 7x7, K=2, NB=2 (non-unit K offset)', function () {
 	var T;
 	var Y;
 
-	tc = findCase( '7x7_k2_nb2' );
+	tc = _7x7_k2_nb2;
 	N = 7;
 	K = 2;
 	NB = 2;

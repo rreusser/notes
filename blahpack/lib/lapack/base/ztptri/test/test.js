@@ -5,37 +5,22 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var ztptri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztptri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_nonunit_3 = require( './fixtures/upper_nonunit_3.json' );
+var lower_nonunit_3 = require( './fixtures/lower_nonunit_3.json' );
+var upper_unit_3 = require( './fixtures/upper_unit_3.json' );
+var lower_unit_3 = require( './fixtures/lower_unit_3.json' );
+var n1 = require( './fixtures/n1.json' );
+var upper_nonunit_4 = require( './fixtures/upper_nonunit_4.json' );
+var lower_nonunit_4 = require( './fixtures/lower_nonunit_4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a Float64Array to an array.
@@ -86,7 +71,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'ztptri is a function', function t() {
@@ -99,7 +83,7 @@ test( 'ztptri: upper, non-unit (3x3)', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'upper_nonunit_3' );
+	tc = upper_nonunit_3;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] );
 	info = ztptri( 'upper', 'non-unit', 3, ap, 1, 0 );
 	assert.equal( info, 0 );
@@ -113,7 +97,7 @@ test( 'ztptri: lower, non-unit (3x3)', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'lower_nonunit_3' );
+	tc = lower_nonunit_3;
 	ap = c128( [ 2.0, 1.0, 1.0, 2.0, 3.0, 0.0, 4.0, 1.0, 5.0, -1.0, 6.0, 2.0 ] );
 	info = ztptri( 'lower', 'non-unit', 3, ap, 1, 0 );
 	assert.equal( info, 0 );
@@ -127,7 +111,7 @@ test( 'ztptri: upper, unit (3x3)', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'upper_unit_3' );
+	tc = upper_unit_3;
 	ap = c128( [ 99.0, 99.0, 1.0, 2.0, 99.0, 99.0, 3.0, 0.0, 5.0, -1.0, 99.0, 99.0 ] ); // eslint-disable-line max-len
 	info = ztptri( 'upper', 'unit', 3, ap, 1, 0 );
 	assert.equal( info, 0 );
@@ -141,7 +125,7 @@ test( 'ztptri: lower, unit (3x3)', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'lower_unit_3' );
+	tc = lower_unit_3;
 	ap = c128( [ 99.0, 99.0, 1.0, 2.0, 3.0, 0.0, 99.0, 99.0, 5.0, -1.0, 99.0, 99.0 ] ); // eslint-disable-line max-len
 	info = ztptri( 'lower', 'unit', 3, ap, 1, 0 );
 	assert.equal( info, 0 );
@@ -164,7 +148,7 @@ test( 'ztptri: N=1 edge case', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	ap = c128( [ 3.0, 4.0 ] );
 	info = ztptri( 'upper', 'non-unit', 1, ap, 1, 0 );
 	assert.equal( info, 0 );
@@ -178,7 +162,7 @@ test( 'ztptri: upper, non-unit (4x4)', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'upper_nonunit_4' );
+	tc = upper_nonunit_4;
 	ap = c128([
 		1.0,
 		1.0,
@@ -213,7 +197,7 @@ test( 'ztptri: lower, non-unit (4x4)', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'lower_nonunit_4' );
+	tc = lower_nonunit_4;
 	ap = c128([
 		1.0,
 		1.0,
@@ -266,7 +250,7 @@ test( 'ztptri: works with non-zero offset', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'upper_nonunit_3' );
+	tc = upper_nonunit_3;
 	ap = c128( [ 99.0, 99.0, 77.0, 77.0, 2.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 0.0, 5.0, -1.0, 6.0, 2.0 ] ); // eslint-disable-line max-len
 	info = ztptri( 'upper', 'non-unit', 3, ap, 1, 2 );
 	assert.equal( info, 0 );

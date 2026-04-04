@@ -2,40 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsyconv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsyconv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_convert = require( './fixtures/upper_convert.json' );
+var upper_revert = require( './fixtures/upper_revert.json' );
+var lower_convert = require( './fixtures/lower_convert.json' );
+var lower_revert = require( './fixtures/lower_revert.json' );
+var n1_upper = require( './fixtures/n1_upper.json' );
+var n1_lower = require( './fixtures/n1_lower.json' );
+var upper_2x2_convert = require( './fixtures/upper_2x2_convert.json' );
+var upper_2x2_revert = require( './fixtures/upper_2x2_revert.json' );
+var lower_2x2_convert = require( './fixtures/lower_2x2_convert.json' );
+var lower_2x2_revert = require( './fixtures/lower_2x2_revert.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -109,7 +97,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dsyconv: upper_convert (all 1x1 pivots)', function t() {
@@ -120,7 +107,7 @@ test( 'dsyconv: upper_convert (all 1x1 pivots)', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'upper_convert' );
+	tc = upper_convert;
 	N = 4;
 	A = new Float64Array( tc.a_factored );
 	IPIV = convertIPIV( tc.ipiv_trf );
@@ -140,8 +127,8 @@ test( 'dsyconv: upper_revert (all 1x1 pivots)', function t() {
 	var A;
 	var E;
 
-	tcConv = findCase( 'upper_convert' );
-	tcRev = findCase( 'upper_revert' );
+	tcConv = upper_convert;
+	tcRev = upper_revert;
 	N = 4;
 	A = new Float64Array( tcConv.a_converted );
 	IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -159,7 +146,7 @@ test( 'dsyconv: lower_convert (all 1x1 pivots)', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'lower_convert' );
+	tc = lower_convert;
 	N = 4;
 	A = new Float64Array( tc.a_factored );
 	IPIV = convertIPIV( tc.ipiv_trf );
@@ -179,8 +166,8 @@ test( 'dsyconv: lower_revert (all 1x1 pivots)', function t() {
 	var A;
 	var E;
 
-	tcConv = findCase( 'lower_convert' );
-	tcRev = findCase( 'lower_revert' );
+	tcConv = lower_convert;
+	tcRev = lower_revert;
 	N = 4;
 	A = new Float64Array( tcConv.a_converted );
 	IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -197,7 +184,7 @@ test( 'dsyconv: n1_upper', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'n1_upper' );
+	tc = n1_upper;
 	A = new Float64Array( tc.a_factored );
 	IPIV = convertIPIV( tc.ipiv );
 	E = new Float64Array( 1 );
@@ -214,7 +201,7 @@ test( 'dsyconv: n1_lower', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'n1_lower' );
+	tc = n1_lower;
 	A = new Float64Array( tc.a_factored );
 	IPIV = convertIPIV( tc.ipiv );
 	E = new Float64Array( 1 );
@@ -232,7 +219,7 @@ test( 'dsyconv: upper_2x2_convert (with 2x2 pivots)', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'upper_2x2_convert' );
+	tc = upper_2x2_convert;
 	N = 4;
 	A = new Float64Array( tc.a_factored );
 	IPIV = convertIPIV( tc.ipiv_trf );
@@ -252,8 +239,8 @@ test( 'dsyconv: upper_2x2_revert (with 2x2 pivots)', function t() {
 	var A;
 	var E;
 
-	tcConv = findCase( 'upper_2x2_convert' );
-	tcRev = findCase( 'upper_2x2_revert' );
+	tcConv = upper_2x2_convert;
+	tcRev = upper_2x2_revert;
 	N = 4;
 	A = new Float64Array( tcConv.a_converted );
 	IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -271,7 +258,7 @@ test( 'dsyconv: lower_2x2_convert (with 2x2 pivots)', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'lower_2x2_convert' );
+	tc = lower_2x2_convert;
 	N = 4;
 	A = new Float64Array( tc.a_factored );
 	IPIV = convertIPIV( tc.ipiv_trf );
@@ -291,8 +278,8 @@ test( 'dsyconv: lower_2x2_revert (with 2x2 pivots)', function t() {
 	var A;
 	var E;
 
-	tcConv = findCase( 'lower_2x2_convert' );
-	tcRev = findCase( 'lower_2x2_revert' );
+	tcConv = lower_2x2_convert;
+	tcRev = lower_2x2_revert;
 	N = 4;
 	A = new Float64Array( tcConv.a_converted );
 	IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -325,7 +312,7 @@ test( 'dsyconv: round-trip upper convert then revert restores A', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'upper_2x2_convert' );
+	tc = upper_2x2_convert;
 	N = 4;
 	Aorig = new Float64Array( tc.a_factored );
 	A = new Float64Array( tc.a_factored );
@@ -344,7 +331,7 @@ test( 'dsyconv: round-trip lower convert then revert restores A', function t() {
 	var A;
 	var E;
 
-	tc = findCase( 'lower_2x2_convert' );
+	tc = lower_2x2_convert;
 	N = 4;
 	Aorig = new Float64Array( tc.a_factored );
 	A = new Float64Array( tc.a_factored );

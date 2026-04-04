@@ -21,8 +21,6 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -30,12 +28,30 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgemm = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgemm.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var zgemm_basic_nn = require( './fixtures/zgemm_basic_nn.json' );
+var zgemm_conja = require( './fixtures/zgemm_conja.json' );
+var zgemm_alpha_beta = require( './fixtures/zgemm_alpha_beta.json' );
+var zgemm_m_zero = require( './fixtures/zgemm_m_zero.json' );
+var zgemm_transb = require( './fixtures/zgemm_transb.json' );
+var zgemm_conjb = require( './fixtures/zgemm_conjb.json' );
+var zgemm_transa_n = require( './fixtures/zgemm_transa_n.json' );
+var zgemm_alpha_zero_beta_zero = require( './fixtures/zgemm_alpha_zero_beta_zero.json' );
+var zgemm_alpha_zero_beta_scale = require( './fixtures/zgemm_alpha_zero_beta_scale.json' );
+var zgemm_conja_conjb = require( './fixtures/zgemm_conja_conjb.json' );
+var zgemm_transa_transb = require( './fixtures/zgemm_transa_transb.json' );
+var zgemm_transa_conjb = require( './fixtures/zgemm_transa_conjb.json' );
+var zgemm_conja_transb = require( './fixtures/zgemm_conja_transb.json' );
+var zgemm_k_zero = require( './fixtures/zgemm_k_zero.json' );
+var zgemm_nt_beta_scale = require( './fixtures/zgemm_nt_beta_scale.json' );
+var zgemm_cc_beta_nonzero = require( './fixtures/zgemm_cc_beta_nonzero.json' );
+var zgemm_nc_beta_scale = require( './fixtures/zgemm_nc_beta_scale.json' );
+var zgemm_tn_beta_nonzero = require( './fixtures/zgemm_tn_beta_nonzero.json' );
+var zgemm_cn_beta_nonzero = require( './fixtures/zgemm_cn_beta_nonzero.json' );
+var zgemm_ct_beta_nonzero = require( './fixtures/zgemm_ct_beta_nonzero.json' );
+var zgemm_tc_beta_nonzero = require( './fixtures/zgemm_tc_beta_nonzero.json' );
+var zgemm_tt_beta_nonzero = require( './fixtures/zgemm_tt_beta_nonzero.json' );
 
 // FUNCTIONS //
 
@@ -68,7 +84,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -86,7 +101,6 @@ function toArray( arr ) {
 	}
 	return out;
 }
-
 
 // TESTS //
 
@@ -107,9 +121,7 @@ test( 'zgemm: basic N,N (M=2, N=2, K=2)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_basic_nn';
-	} );
+	tc = zgemm_basic_nn;
 	A = new Complex128Array( [ 1, 1, 2, 0, 3, 0, 4, 1 ] );
 	B = new Complex128Array( [ 1, 0, 0, -1, 0, 1, 1, 0 ] );
 	C = new Complex128Array( 4 );
@@ -129,9 +141,7 @@ test( 'zgemm: conjugate transpose A (C=A^H*B)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_conjA';
-	} );
+	tc = zgemm_conja;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 1, 1, 2, 0 ] );
 	C = new Complex128Array( 4 );
@@ -151,9 +161,7 @@ test( 'zgemm: alpha and beta scaling', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_alpha_beta';
-	} );
+	tc = zgemm_alpha_beta;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 2, 1, 0, 0, 0, 0, 3, 2 ] );
 	C = new Complex128Array( [ 1, 1, 0, 0, 0, 0, 1, 1 ] );
@@ -173,9 +181,7 @@ test( 'zgemm: M=0 quick return', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_m_zero';
-	} );
+	tc = zgemm_m_zero;
 	A = new Complex128Array( 0 );
 	B = new Complex128Array( 0 );
 	C = new Complex128Array( [ 99, 88 ] );
@@ -195,9 +201,7 @@ test( 'zgemm: transpose B (C=A*B^T)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_transB';
-	} );
+	tc = zgemm_transb;
 	A = new Complex128Array( [ 1, 1, 2, 0, 0, 1, 1, -1 ] );
 	B = new Complex128Array( [ 1, 0, 0, 0, 0, 1, 1, 0 ] );
 	C = new Complex128Array( 4 );
@@ -217,9 +221,7 @@ test( 'zgemm: conjugate transpose B (C=A*B^H)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_conjB';
-	} );
+	tc = zgemm_conjb;
 	A = new Complex128Array( [ 1, 0, 0, 1, 2, 0, 0, 2 ] );
 	B = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	C = new Complex128Array( 4 );
@@ -239,9 +241,7 @@ test( 'zgemm: transpose A, no transpose B (C=A^T*B)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_transA_N';
-	} );
+	tc = zgemm_transa_n;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 1, 1, 2, 0 ] );
 	C = new Complex128Array( 4 );
@@ -261,9 +261,7 @@ test( 'zgemm: alpha=0, beta=0 (C should be zeroed)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_alpha_zero_beta_zero';
-	} );
+	tc = zgemm_alpha_zero_beta_zero;
 	A = new Complex128Array( [ 1, 1, 2, 0, 0, 0, 0, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 0, 0, 0, 0 ] );
 	C = new Complex128Array( [ 5, 3, 7, 2, 1, 1, 9, 4 ] );
@@ -283,9 +281,7 @@ test( 'zgemm: alpha=0, non-trivial beta (C := beta*C)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_alpha_zero_beta_scale';
-	} );
+	tc = zgemm_alpha_zero_beta_scale;
 	A = new Complex128Array( [ 1, 1, 0, 0, 0, 0, 0, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 0, 0 ] );
 	C = new Complex128Array( [ 2, 1, 3, 2, 4, 3, 5, 4 ] );
@@ -323,9 +319,7 @@ test( 'zgemm: conjugate A, conjugate B (C=A^H*B^H)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_conjA_conjB';
-	} );
+	tc = zgemm_conja_conjb;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	B = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	C = new Complex128Array( 4 );
@@ -345,9 +339,7 @@ test( 'zgemm: transpose A, transpose B (C=A^T*B^T)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_transA_transB';
-	} );
+	tc = zgemm_transa_transb;
 	A = new Complex128Array( [ 1, 1, 2, 0, 3, 1, 4, 2 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 2, 1, 1, -1 ] );
 	C = new Complex128Array( 4 );
@@ -367,9 +359,7 @@ test( 'zgemm: transpose A, conjugate B (C=A^T*B^H)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_transA_conjB';
-	} );
+	tc = zgemm_transa_conjb;
 	A = new Complex128Array( [ 1, 1, 2, 0, 3, 1, 4, 2 ] );
 	B = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	C = new Complex128Array( 4 );
@@ -389,9 +379,7 @@ test( 'zgemm: conjugate A, transpose B (C=A^H*B^T)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_conjA_transB';
-	} );
+	tc = zgemm_conja_transb;
 	A = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 2, 1, 1, -1 ] );
 	C = new Complex128Array( 4 );
@@ -411,9 +399,7 @@ test( 'zgemm: K=0 (C := beta*C)', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_k_zero';
-	} );
+	tc = zgemm_k_zero;
 	A = new Complex128Array( 0 );
 	B = new Complex128Array( 0 );
 	C = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
@@ -433,9 +419,7 @@ test( 'zgemm: N,T with non-trivial beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_NT_beta_scale';
-	} );
+	tc = zgemm_nt_beta_scale;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
@@ -455,9 +439,7 @@ test( 'zgemm: C,C with non-zero beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_CC_beta_nonzero';
-	} );
+	tc = zgemm_cc_beta_nonzero;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
@@ -477,9 +459,7 @@ test( 'zgemm: N,C with non-trivial beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_NC_beta_scale';
-	} );
+	tc = zgemm_nc_beta_scale;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	C = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
@@ -499,9 +479,7 @@ test( 'zgemm: T,N with non-zero beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_TN_beta_nonzero';
-	} );
+	tc = zgemm_tn_beta_nonzero;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 1, 1, 2, 0 ] );
 	C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
@@ -521,9 +499,7 @@ test( 'zgemm: C,N with non-zero beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_CN_beta_nonzero';
-	} );
+	tc = zgemm_cn_beta_nonzero;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 1, 1, 2, 0 ] );
 	C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
@@ -543,9 +519,7 @@ test( 'zgemm: C,T with non-zero beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_CT_beta_nonzero';
-	} );
+	tc = zgemm_ct_beta_nonzero;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 2, 1, 1, -1 ] );
 	C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
@@ -565,9 +539,7 @@ test( 'zgemm: T,C with non-zero beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_TC_beta_nonzero';
-	} );
+	tc = zgemm_tc_beta_nonzero;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
 	C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );
@@ -587,9 +559,7 @@ test( 'zgemm: T,T with non-zero beta', function t() {
 	var B;
 	var C;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zgemm_TT_beta_nonzero';
-	} );
+	tc = zgemm_tt_beta_nonzero;
 	A = new Complex128Array( [ 1, 0, 0, 0, 0, 0, 1, 0 ] );
 	B = new Complex128Array( [ 1, 0, 0, 1, 2, 1, 1, -1 ] );
 	C = new Complex128Array( [ 1, 1, 2, 2, 3, 3, 4, 4 ] );

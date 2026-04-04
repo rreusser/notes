@@ -21,19 +21,20 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var daxpy = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'daxpy.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var basic = require( './fixtures/basic.json' );
+var da_zero = require( './fixtures/da_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var neg_incx = require( './fixtures/neg_incx.json' );
+var unrolled = require( './fixtures/unrolled.json' );
 
 // FUNCTIONS //
 
@@ -66,7 +67,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -85,7 +85,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'daxpy: main export is a function', function t() {
@@ -102,9 +101,7 @@ test( 'daxpy: basic (N=5, alpha=2, incx=1, incy=1)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'basic';
-	} );
+	tc = basic;
 	x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	y = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	result = base( 5, 2.0, x, 1, 0, y, 1, 0 );
@@ -118,9 +115,7 @@ test( 'daxpy: alpha=0 is a no-op', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'da_zero';
-	} );
+	tc = da_zero;
 	x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	y = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	result = base( 5, 0.0, x, 1, 0, y, 1, 0 );
@@ -134,9 +129,7 @@ test( 'daxpy: N=0 is a no-op', function t() {
 	var y;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_zero';
-	} );
+	tc = n_zero;
 	y = new Float64Array( [ 10.0, 20.0, 30.0, 40.0, 50.0 ] );
 	x = new Float64Array( [ 1.0, 2.0, 3.0, 4.0, 5.0 ] );
 	result = base( 0, 2.0, x, 1, 0, y, 1, 0 );
@@ -150,9 +143,7 @@ test( 'daxpy: N=1', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_one';
-	} );
+	tc = n_one;
 	x = new Float64Array( [ 3.0 ] );
 	y = new Float64Array( [ 7.0 ] );
 	result = base( 1, 5.0, x, 1, 0, y, 1, 0 );
@@ -166,9 +157,7 @@ test( 'daxpy: non-unit strides (incx=2, incy=3)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'stride';
-	} );
+	tc = stride;
 	x = new Float64Array( [ 1.0, 0.0, 2.0, 0.0, 3.0 ] );
 	y = new Float64Array( [ 10.0, 0.0, 0.0, 20.0, 0.0, 0.0, 30.0, 0.0, 0.0 ] );
 	result = base( 3, 2.0, x, 2, 0, y, 3, 0 );
@@ -182,9 +171,7 @@ test( 'daxpy: negative incx', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'neg_incx';
-	} );
+	tc = neg_incx;
 	x = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	y = new Float64Array( [ 10.0, 20.0, 30.0 ] );
 	result = base( 3, 1.0, x, -1, 2, y, 1, 0 );
@@ -198,9 +185,7 @@ test( 'daxpy: unrolled loop (N=10, alpha=3, incx=1, incy=1)', function t() {
 	var x;
 	var y;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'unrolled';
-	} );
+	tc = unrolled;
 	x = new Float64Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] );
 	y = new Float64Array( [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] );
 	result = base( 10, 3.0, x, 1, 0, y, 1, 0 );

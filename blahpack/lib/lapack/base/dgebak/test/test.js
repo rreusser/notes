@@ -6,23 +6,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dgebak = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dgebak.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var job_b_side_r = require( './fixtures/job_b_side_r.json' );
+var job_b_side_l = require( './fixtures/job_b_side_l.json' );
+var job_s_side_r = require( './fixtures/job_s_side_r.json' );
+var job_p_side_r = require( './fixtures/job_p_side_r.json' );
+var ilo_eq_ihi = require( './fixtures/ilo_eq_ihi.json' );
+var job_s_side_l = require( './fixtures/job_s_side_l.json' );
+var job_p_side_l = require( './fixtures/job_p_side_l.json' );
+var nonidentity_v = require( './fixtures/nonidentity_v.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var i;
@@ -81,11 +78,10 @@ function extractV( arr, N, M, LDV ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgebak: JOB=B, SIDE=R — right eigenvectors with full back-transform', function t() {
-	var tc = findCase( 'job_B_side_R' );
+	var tc = job_b_side_r;
 	var N = 4;
 	var M = 4;
 	var LDV = 5;
@@ -115,8 +111,8 @@ test( 'dgebak: JOB=B, SIDE=R — right eigenvectors with full back-transform', f
 });
 
 test( 'dgebak: JOB=B, SIDE=L — left eigenvectors with full back-transform', function t() {
-	var tcR = findCase( 'job_B_side_R' ); // for scale/ilo/ihi
-	var tc = findCase( 'job_B_side_L' );
+	var tcR = job_b_side_r; // for scale/ilo/ihi
+	var tc = job_b_side_l;
 	var N = 4;
 	var M = 4;
 	var LDV = 5;
@@ -143,8 +139,8 @@ test( 'dgebak: JOB=B, SIDE=L — left eigenvectors with full back-transform', fu
 });
 
 test( 'dgebak: JOB=S, SIDE=R — scaling only', function t() {
-	var tcR = findCase( 'job_B_side_R' );
-	var tc = findCase( 'job_S_side_R' );
+	var tcR = job_b_side_r;
+	var tc = job_s_side_r;
 	var N = 4;
 	var M = 4;
 	var LDV = 5;
@@ -170,8 +166,8 @@ test( 'dgebak: JOB=S, SIDE=R — scaling only', function t() {
 });
 
 test( 'dgebak: JOB=P, SIDE=R — permutation only', function t() {
-	var tcR = findCase( 'job_B_side_R' );
-	var tc = findCase( 'job_P_side_R' );
+	var tcR = job_b_side_r;
+	var tc = job_p_side_r;
 	var N = 4;
 	var M = 4;
 	var LDV = 5;
@@ -241,7 +237,7 @@ test( 'dgebak: M=0 — quick return', function t() {
 });
 
 test( 'dgebak: ILO=IHI — skips scaling, does permutation only', function t() {
-	var tc = findCase( 'ilo_eq_ihi' );
+	var tc = ilo_eq_ihi;
 	var N = 3;
 	var M = 2;
 	var LDV = 5;
@@ -264,7 +260,7 @@ test( 'dgebak: ILO=IHI — skips scaling, does permutation only', function t() {
 });
 
 test( 'dgebak: JOB=S, SIDE=L — left eigenvectors, scaling only', function t() {
-	var tc = findCase( 'job_S_side_L' );
+	var tc = job_s_side_l;
 	var N = 4;
 	var M = 4;
 	var LDV = 5;
@@ -289,8 +285,8 @@ test( 'dgebak: JOB=S, SIDE=L — left eigenvectors, scaling only', function t() 
 });
 
 test( 'dgebak: JOB=P, SIDE=L — left eigenvectors, permutation only', function t() {
-	var tcR = findCase( 'job_B_side_R' );
-	var tc = findCase( 'job_P_side_L' );
+	var tcR = job_b_side_r;
+	var tc = job_p_side_l;
 	var N = 4;
 	var M = 4;
 	var LDV = 5;
@@ -316,7 +312,7 @@ test( 'dgebak: JOB=P, SIDE=L — left eigenvectors, permutation only', function 
 });
 
 test( 'dgebak: non-identity V with JOB=B, SIDE=R', function t() {
-	var tc = findCase( 'nonidentity_V' );
+	var tc = nonidentity_v;
 	var N = 4;
 	var M = 4;
 	var LDV = 5;
@@ -333,7 +329,7 @@ test( 'dgebak: non-identity V with JOB=B, SIDE=R', function t() {
 	var V = makeV( Vdata, N, M, LDV );
 
 	// Use same ILO/IHI from the first test (dgebal output on the same matrix)
-	var tcFirst = findCase( 'job_B_side_R' );
+	var tcFirst = job_b_side_r;
 	var info = dgebak( 'both', 'right', N, tcFirst.ilo, tcFirst.ihi, scale, 1, 0, M, V, 1, LDV, 0 );
 
 	assert.equal( info, 0 );

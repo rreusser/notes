@@ -2,27 +2,19 @@
 'use strict';
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlahr2 = require( './../lib/base.js' );
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlahr2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-function findCase( name ) { return fixture.find( function find( t ) { return t.name === name; } ); }
-function assertArrayClose( actual, expected, tol, msg ) {
-	var diff, i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
-	for ( i = 0; i < expected.length; i++ ) {
-		diff = Math.abs( actual[ i ] - expected[ i ] );
-		if ( diff > tol && diff / Math.max( Math.abs( expected[ i ] ), 1.0 ) > tol ) {
-			assert.fail( msg + '[' + i + ']: expected ' + expected[ i ] + ', got ' + actual[ i ] );
-		}
-	}
-}
+
+// FIXTURES //
+
+var basic_n6_k1_nb2 = require( './fixtures/basic_n6_k1_nb2.json' );
+var n5_k2_nb2 = require( './fixtures/n5_k2_nb2.json' );
+var n8_k1_nb3 = require( './fixtures/n8_k1_nb3.json' );
+var n_one = require( './fixtures/n_one.json' );
+
 test( 'zlahr2: n6_k1_nb2', function () {
-	var tc = findCase( 'basic_n6_k1_nb2' );
+	var tc = basic_n6_k1_nb2;
 	var A = new Complex128Array( 6 * 3 ); var av = reinterpret( A, 0 );
 	av.set([1,0, 5,-0.5, 9,1, 13,-1, 17,0.5, 21,0, 2,1, 6,0, 10,-1, 14,0.5, 18,0, 22,1, 3,-0.5, 7,1, 11,0, 15,0, 19,-1, 23,0.5]);
 	var tau = new Complex128Array( 2 ); var T = new Complex128Array( 4 ); var Y = new Complex128Array( 12 );
@@ -33,7 +25,7 @@ test( 'zlahr2: n6_k1_nb2', function () {
 	assertArrayClose( reinterpret(Y,0), new Float64Array( tc.Y ), 1e-13, 'Y' );
 });
 test( 'zlahr2: n5_k2_nb2', function () {
-	var tc = findCase( 'n5_k2_nb2' );
+	var tc = n5_k2_nb2;
 	var A = new Complex128Array( 5 * 3 ); var av = reinterpret( A, 0 );
 	av.set([1,0.5, 2,-1, 3,0, 4,1, 5,-0.5, 6,0, 7,1, 8,-1, 9,0.5, 10,0, 11,-0.5, 12,0, 13,1, 14,-1, 15,0.5]);
 	var tau = new Complex128Array( 2 ); var T = new Complex128Array( 4 ); var Y = new Complex128Array( 10 );
@@ -44,7 +36,7 @@ test( 'zlahr2: n5_k2_nb2', function () {
 	assertArrayClose( reinterpret(Y,0), new Float64Array( tc.Y ), 1e-13, 'Y' );
 });
 test( 'zlahr2: n8_k1_nb3', function () {
-	var tc = findCase( 'n8_k1_nb3' );
+	var tc = n8_k1_nb3;
 	var A = new Complex128Array( 8 * 4 ); var av = reinterpret( A, 0 );
 	av.set([1,0, 2,1, 3,-1, 4,0.5, 5,0, 6,-0.5, 7,1, 8,0, 9,0.5, 10,0, 11,1, 12,-1, 13,0, 14,0.5, 15,0, 16,-0.5, 17,-1, 18,0, 19,0.5, 20,0, 21,-0.5, 22,1, 23,0, 24,0.5, 25,0, 26,-1, 27,0.5, 28,0, 29,1, 30,0, 31,-0.5, 32,1]);
 	var tau = new Complex128Array( 3 ); var T = new Complex128Array( 9 ); var Y = new Complex128Array( 24 );
@@ -55,7 +47,7 @@ test( 'zlahr2: n8_k1_nb3', function () {
 	assertArrayClose( reinterpret(Y,0), new Float64Array( tc.Y ), 1e-13, 'Y' );
 });
 test( 'zlahr2: n_one', function () {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var A = new Complex128Array( 1 ); var av = reinterpret( A, 0 );
 	av[ 0 ] = 42.0; av[ 1 ] = 3.0;
 	var tau = new Complex128Array( 1 ); var T = new Complex128Array( 1 ); var Y = new Complex128Array( 1 );

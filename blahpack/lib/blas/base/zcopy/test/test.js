@@ -21,20 +21,18 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zcopy = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zcopy.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var zcopy_basic = require( './fixtures/zcopy_basic.json' );
+var zcopy_n_zero = require( './fixtures/zcopy_n_zero.json' );
+var zcopy_stride = require( './fixtures/zcopy_stride.json' );
+var zcopy_mixed_stride = require( './fixtures/zcopy_mixed_stride.json' );
 
 // FUNCTIONS //
 
@@ -67,7 +65,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -86,7 +83,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zcopy: main export is a function', function t() {
@@ -103,9 +99,7 @@ test( 'zcopy: basic copy (N=3, strideX=1, strideY=1)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zcopy_basic';
-	} );
+	tc = zcopy_basic;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	zy = new Complex128Array( 3 );
 	result = base( 3, zx, 1, 0, zy, 1, 0 );
@@ -120,9 +114,7 @@ test( 'zcopy: N=0 is a no-op', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zcopy_n_zero';
-	} );
+	tc = zcopy_n_zero;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zy = new Complex128Array( [ 99.0, 88.0, 77.0, 66.0 ] );
 	result = base( 0, zx, 1, 0, zy, 1, 0 );
@@ -136,9 +128,7 @@ test( 'zcopy: non-unit stride (strideX=2, strideY=2)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zcopy_stride';
-	} );
+	tc = zcopy_stride;
 	zx = new Complex128Array([
 		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
 	]);
@@ -157,9 +147,7 @@ test( 'zcopy: mixed strides (strideX=1, strideY=2)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zcopy_mixed_stride';
-	} );
+	tc = zcopy_mixed_stride;
 	zx = new Complex128Array([
 		10.0, 20.0, 30.0, 40.0, 50.0, 60.0
 	]);

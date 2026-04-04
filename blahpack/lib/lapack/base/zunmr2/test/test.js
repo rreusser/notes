@@ -4,26 +4,20 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zunmr2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunmr2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var left_notrans_3x2 = require( './fixtures/left_notrans_3x2.json' );
+var left_conjtrans_3x2 = require( './fixtures/left_conjtrans_3x2.json' );
+var right_notrans_2x3 = require( './fixtures/right_notrans_2x3.json' );
+var right_conjtrans_2x3 = require( './fixtures/right_conjtrans_2x3.json' );
+var single_reflector = require( './fixtures/single_reflector.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -71,11 +65,10 @@ function packColMajorC( rowData, M, N ) {
 	return rowToCol( rowData, M, N );
 }
 
-
 // TESTS //
 
 test( 'zunmr2: left, no-transpose, 3x2, K=2', function t() {
-	var tc = findCase( 'left_notrans_3x2' );
+	var tc = left_notrans_3x2;
 	var K = 2;
 	var M = 3;
 	var N = 2;
@@ -109,8 +102,8 @@ test( 'zunmr2: left, no-transpose, 3x2, K=2', function t() {
 });
 
 test( 'zunmr2: left, conjugate-transpose, 3x2, K=2', function t() {
-	var tc = findCase( 'left_conjtrans_3x2' );
-	var tcA = findCase( 'left_notrans_3x2' );
+	var tc = left_conjtrans_3x2;
+	var tcA = left_notrans_3x2;
 	var K = 2;
 	var M = 3;
 	var N = 2;
@@ -141,8 +134,8 @@ test( 'zunmr2: left, conjugate-transpose, 3x2, K=2', function t() {
 });
 
 test( 'zunmr2: right, no-transpose, 2x3, K=2', function t() {
-	var tc = findCase( 'right_notrans_2x3' );
-	var tcA = findCase( 'left_notrans_3x2' );
+	var tc = right_notrans_2x3;
+	var tcA = left_notrans_3x2;
 	var K = 2;
 	var M = 2;
 	var N = 3;
@@ -175,8 +168,8 @@ test( 'zunmr2: right, no-transpose, 2x3, K=2', function t() {
 });
 
 test( 'zunmr2: right, conjugate-transpose, 2x3, K=2', function t() {
-	var tc = findCase( 'right_conjtrans_2x3' );
-	var tcA = findCase( 'left_notrans_3x2' );
+	var tc = right_conjtrans_2x3;
+	var tcA = left_notrans_3x2;
 	var K = 2;
 	var M = 2;
 	var N = 3;
@@ -218,8 +211,8 @@ test( 'zunmr2: M=0 quick return', function t() {
 });
 
 test( 'zunmr2: single reflector, left, M=2, N=1, K=1', function t() {
-	var tc = findCase( 'single_reflector' );
-	var tcA = findCase( 'left_notrans_3x2' );
+	var tc = single_reflector;
+	var tcA = left_notrans_3x2;
 	// For single reflector, re-create: A is 1x2, from ZGERQF(1, 2, [2+i, 3-i])
 	// We need separate ZGERQF output for this case. But the fixture only has
 	// the first test's A/TAU. The single reflector test uses different input.

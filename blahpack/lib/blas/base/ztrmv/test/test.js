@@ -21,8 +21,6 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
@@ -30,12 +28,18 @@ var ztrmv = require( './../lib' );
 var base = require( './../lib/base.js' );
 var ndarray = require( './../lib/ndarray.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztrmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var ztrmv_upper_no_trans = require( './fixtures/ztrmv_upper_no_trans.json' );
+var ztrmv_lower_no_trans = require( './fixtures/ztrmv_lower_no_trans.json' );
+var ztrmv_unit_diag = require( './fixtures/ztrmv_unit_diag.json' );
+var ztrmv_upper_trans = require( './fixtures/ztrmv_upper_trans.json' );
+var ztrmv_upper_conjtrans = require( './fixtures/ztrmv_upper_conjtrans.json' );
+var ztrmv_n_zero = require( './fixtures/ztrmv_n_zero.json' );
+var ztrmv_n_one = require( './fixtures/ztrmv_n_one.json' );
+var ztrmv_stride = require( './fixtures/ztrmv_stride.json' );
+var ztrmv_lower_conjtrans = require( './fixtures/ztrmv_lower_conjtrans.json' );
+var ztrmv_lower_trans = require( './fixtures/ztrmv_lower_trans.json' );
 
 // FUNCTIONS //
 
@@ -68,7 +72,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -87,7 +90,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'ztrmv: main export is a function', function t() {
@@ -104,9 +106,7 @@ test( 'ztrmv: upper triangular, no transpose, non-unit diagonal (N=2)', function
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_upper_no_trans';
-	} );
+	tc = ztrmv_upper_no_trans;
 	A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	x = new Complex128Array( [ 1, 0, 1, 1 ] );
 	result = base( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
@@ -120,9 +120,7 @@ test( 'ztrmv: lower triangular, no transpose, non-unit diagonal (N=2)', function
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_lower_no_trans';
-	} );
+	tc = ztrmv_lower_no_trans;
 	A = new Complex128Array( [ 2, 1, 3, 1, 0, 0, 4, 2 ] );
 	x = new Complex128Array( [ 1, 0, 1, 1 ] );
 	result = base( 'lower', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
@@ -136,9 +134,7 @@ test( 'ztrmv: upper triangular, unit diagonal (N=2)', function t() {
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_unit_diag';
-	} );
+	tc = ztrmv_unit_diag;
 	A = new Complex128Array( [ 99, 99, 0, 0, 3, 1, 99, 99 ] );
 	x = new Complex128Array( [ 1, 0, 1, 1 ] );
 	result = base( 'upper', 'no-transpose', 'unit', 2, A, 1, 2, 0, x, 1, 0 );
@@ -152,9 +148,7 @@ test( 'ztrmv: upper triangular, transpose (A^T), non-unit (N=2)', function t() {
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_upper_trans';
-	} );
+	tc = ztrmv_upper_trans;
 	A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	x = new Complex128Array( [ 1, 0, 1, 1 ] );
 	result = base( 'upper', 'transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 );
@@ -168,9 +162,7 @@ test( 'ztrmv: upper triangular, conjugate transpose (A^H), non-unit (N=2)', func
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_upper_conjtrans';
-	} );
+	tc = ztrmv_upper_conjtrans;
 	A = new Complex128Array( [ 2, 1, 0, 0, 3, 1, 4, 2 ] );
 	x = new Complex128Array( [ 1, 0, 1, 1 ] );
 	result = base( 'upper', 'conjugate-transpose', 'non-unit', 2, A, 1, 2, 0, x, 1, 0 ); // eslint-disable-line max-len
@@ -184,9 +176,7 @@ test( 'ztrmv: N=0 quick return', function t() {
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_n_zero';
-	} );
+	tc = ztrmv_n_zero;
 	A = new Complex128Array( [ 1, 0 ] );
 	x = new Complex128Array( [ 5, 5 ] );
 	result = base( 'upper', 'no-transpose', 'non-unit', 0, A, 1, 1, 0, x, 1, 0 );
@@ -200,9 +190,7 @@ test( 'ztrmv: N=1, upper, non-unit', function t() {
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_n_one';
-	} );
+	tc = ztrmv_n_one;
 	A = new Complex128Array( [ 3, 2 ] );
 	x = new Complex128Array( [ 2, 1 ] );
 	result = base( 'upper', 'no-transpose', 'non-unit', 1, A, 1, 1, 0, x, 1, 0 );
@@ -216,9 +204,7 @@ test( 'ztrmv: non-unit stride (strideX=2), upper, no transpose (N=2)', function 
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_stride';
-	} );
+	tc = ztrmv_stride;
 	A = new Complex128Array( [ 2, 0, 0, 0, 1, 1, 3, 0 ] );
 	x = new Complex128Array( [ 1, 0, 99, 99, 0, 1 ] );
 	result = base( 'upper', 'no-transpose', 'non-unit', 2, A, 1, 2, 0, x, 2, 0 );
@@ -232,9 +218,7 @@ test( 'ztrmv: lower, conjugate transpose, non-unit (N=3)', function t() {
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_lower_conjtrans';
-	} );
+	tc = ztrmv_lower_conjtrans;
 	A = new Complex128Array([
 		1,
 		1,
@@ -267,9 +251,7 @@ test( 'ztrmv: lower, transpose (no conjugate), non-unit (N=3)', function t() {
 	var A;
 	var x;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ztrmv_lower_trans';
-	} );
+	tc = ztrmv_lower_trans;
 	A = new Complex128Array([
 		1,
 		1,
@@ -295,7 +277,6 @@ test( 'ztrmv: lower, transpose (no conjugate), non-unit (N=3)', function t() {
 	assert.strictEqual( result, x );
 	assertArrayClose( toArray( reinterpret( x, 0 ) ), tc.x, 'x' );
 });
-
 
 // NDARRAY VALIDATION TESTS //
 

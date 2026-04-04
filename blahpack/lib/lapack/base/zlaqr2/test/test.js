@@ -6,23 +6,15 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zlaqr2 = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlaqr2.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var _8x8_nw3 = require( './fixtures/8x8_nw3.json' );
+var _8x8_nw4 = require( './fixtures/8x8_nw4.json' );
+var _8x8_nw3_no_schur = require( './fixtures/8x8_nw3_no_schur.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -94,7 +86,6 @@ function buildHess8( Hm ) {
 	mset( Hm, n, 7, 7, 1.0, 1.0 );
 }
 
-
 // TESTS //
 
 test( 'zlaqr2: main export is a function', function t() {
@@ -102,7 +93,7 @@ test( 'zlaqr2: main export is a function', function t() {
 });
 
 test( 'zlaqr2: 8x8 with NW=3', function t() {
-	var tc = findCase( '8x8_nw3' );
+	var tc = _8x8_nw3;
 	var n = 8;
 	var nw = 3;
 	var Hm = makeMatrix( n );
@@ -143,7 +134,7 @@ test( 'zlaqr2: 8x8 with NW=3', function t() {
 });
 
 test( 'zlaqr2: 8x8 with NW=4', function t() {
-	var tc = findCase( '8x8_nw4' );
+	var tc = _8x8_nw4;
 	var n = 8;
 	var nw = 4;
 	var Hm = makeMatrix( n );
@@ -184,7 +175,7 @@ test( 'zlaqr2: 8x8 with NW=4', function t() {
 });
 
 test( 'zlaqr2: 8x8 NW=3, no Schur form', function t() {
-	var tc = findCase( '8x8_nw3_no_schur' );
+	var tc = _8x8_nw3_no_schur;
 	var n = 8;
 	var nw = 3;
 	var Hm = makeMatrix( n );
@@ -410,7 +401,7 @@ test( 'zlaqr2: 1x1 deflation window without deflation', function t() {
 });
 
 test( 'zlaqr2: 8x8 NW=6, large deflation window', function t() {
-	var tc = findCase( '8x8_nw3' );
+	var tc = _8x8_nw3;
 	var n = 8;
 	var nw = 6;
 	var Hm = makeMatrix( n );

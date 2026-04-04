@@ -2,39 +2,30 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dsterf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dsterf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var n_one = require( './fixtures/n_one.json' );
+var two_by_two = require( './fixtures/two_by_two.json' );
+var four_by_four = require( './fixtures/four_by_four.json' );
+var already_diagonal = require( './fixtures/already_diagonal.json' );
+var six_by_six_mixed = require( './fixtures/six_by_six_mixed.json' );
+var split_matrix = require( './fixtures/split_matrix.json' );
+var identity_tridiag = require( './fixtures/identity_tridiag.json' );
+var toeplitz = require( './fixtures/toeplitz.json' );
+var eight_by_eight = require( './fixtures/eight_by_eight.json' );
+var qr_path = require( './fixtures/qr_path.json' );
+var large_values = require( './fixtures/large_values.json' );
+var small_values = require( './fixtures/small_values.json' );
+var qr_four_by_four = require( './fixtures/qr_four_by_four.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +58,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dsterf: n_zero', function t() {
@@ -87,7 +77,7 @@ test( 'dsterf: n_one', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	d = new Float64Array( [ 5.0 ] );
 	e = new Float64Array( 0 );
 	info = dsterf( 1, d, 1, 0, e, 1, 0 );
@@ -101,7 +91,7 @@ test( 'dsterf: two_by_two', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'two_by_two' );
+	tc = two_by_two;
 	d = new Float64Array( [ 2.0, 3.0 ] );
 	e = new Float64Array( [ 1.0 ] );
 	info = dsterf( 2, d, 1, 0, e, 1, 0 );
@@ -115,7 +105,7 @@ test( 'dsterf: four_by_four', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'four_by_four' );
+	tc = four_by_four;
 	d = new Float64Array( [ 4.0, 3.0, 2.0, 1.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 	info = dsterf( 4, d, 1, 0, e, 1, 0 );
@@ -129,7 +119,7 @@ test( 'dsterf: already_diagonal', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'already_diagonal' );
+	tc = already_diagonal;
 	d = new Float64Array( [ 3.0, 1.0, 4.0, 2.0 ] );
 	e = new Float64Array( [ 0.0, 0.0, 0.0 ] );
 	info = dsterf( 4, d, 1, 0, e, 1, 0 );
@@ -143,7 +133,7 @@ test( 'dsterf: six_by_six_mixed', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'six_by_six_mixed' );
+	tc = six_by_six_mixed;
 	d = new Float64Array( [ -2.0, 1.0, -3.0, 4.0, -1.0, 2.0 ] );
 	e = new Float64Array( [ 1.0, 2.0, 1.0, 3.0, 1.0 ] );
 	info = dsterf( 6, d, 1, 0, e, 1, 0 );
@@ -157,7 +147,7 @@ test( 'dsterf: split_matrix', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'split_matrix' );
+	tc = split_matrix;
 	d = new Float64Array( [ 2.0, 3.0, 5.0, 7.0 ] );
 	e = new Float64Array( [ 1.0, 0.0, 2.0 ] );
 	info = dsterf( 4, d, 1, 0, e, 1, 0 );
@@ -171,7 +161,7 @@ test( 'dsterf: identity_tridiag', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'identity_tridiag' );
+	tc = identity_tridiag;
 	d = new Float64Array( [ 1.0, 1.0, 1.0 ] );
 	e = new Float64Array( [ 0.0, 0.0 ] );
 	info = dsterf( 3, d, 1, 0, e, 1, 0 );
@@ -185,7 +175,7 @@ test( 'dsterf: toeplitz', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'toeplitz' );
+	tc = toeplitz;
 	d = new Float64Array( [ 2.0, 2.0, 2.0, 2.0, 2.0 ] );
 	e = new Float64Array( [ 1.0, 1.0, 1.0, 1.0 ] );
 	info = dsterf( 5, d, 1, 0, e, 1, 0 );
@@ -199,7 +189,7 @@ test( 'dsterf: eight_by_eight', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'eight_by_eight' );
+	tc = eight_by_eight;
 	d = new Float64Array( [ 10.0, 1.0, 8.0, 3.0, 6.0, 5.0, 4.0, 7.0 ] );
 	e = new Float64Array( [ 2.0, 3.0, 1.0, 4.0, 2.0, 1.0, 3.0 ] );
 	info = dsterf( 8, d, 1, 0, e, 1, 0 );
@@ -213,7 +203,7 @@ test( 'dsterf: qr_path', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'qr_path' );
+	tc = qr_path;
 	d = new Float64Array( [ 0.1, 0.5, 10.0 ] );
 	e = new Float64Array( [ 1.0, 1.0 ] );
 	info = dsterf( 3, d, 1, 0, e, 1, 0 );
@@ -227,7 +217,7 @@ test( 'dsterf: large_values', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'large_values' );
+	tc = large_values;
 	d = new Float64Array( [ 1.0e154, 2.0e154, 3.0e154 ] );
 	e = new Float64Array( [ 0.5e154, 0.5e154 ] );
 	info = dsterf( 3, d, 1, 0, e, 1, 0 );
@@ -241,7 +231,7 @@ test( 'dsterf: small_values', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'small_values' );
+	tc = small_values;
 	d = new Float64Array( [ 1.0e-155, 2.0e-155, 3.0e-155 ] );
 	e = new Float64Array( [ 0.5e-155, 0.5e-155 ] );
 	info = dsterf( 3, d, 1, 0, e, 1, 0 );
@@ -255,7 +245,7 @@ test( 'dsterf: qr_four_by_four', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'qr_four_by_four' );
+	tc = qr_four_by_four;
 	d = new Float64Array( [ 1.0, 2.0, 3.0, 100.0 ] );
 	e = new Float64Array( [ 5.0, 5.0, 5.0 ] );
 	info = dsterf( 4, d, 1, 0, e, 1, 0 );
@@ -269,7 +259,7 @@ test( 'dsterf: strided input', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'two_by_two' );
+	tc = two_by_two;
 	d = new Float64Array( [ 0.0, 2.0, 0.0, 3.0 ] );
 	e = new Float64Array( [ 0.0, 1.0 ] );
 	info = dsterf( 2, d, 2, 1, e, 1, 1 );

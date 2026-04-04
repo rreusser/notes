@@ -4,26 +4,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zunmrq = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zunmrq.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var left_notrans_4x3 = require( './fixtures/left_notrans_4x3.json' );
+var left_conjtrans_4x3 = require( './fixtures/left_conjtrans_4x3.json' );
+var right_notrans_3x4 = require( './fixtures/right_notrans_3x4.json' );
+var right_conjtrans_3x4 = require( './fixtures/right_conjtrans_3x4.json' );
+var large_left_notrans = require( './fixtures/large_left_notrans.json' );
+var large_right_conjtrans = require( './fixtures/large_right_conjtrans.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -72,11 +67,10 @@ function extractC( C, M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zunmrq: left, no-transpose, 4x3, K=3', function t() {
-	var tc = findCase( 'left_notrans_4x3' );
+	var tc = left_notrans_4x3;
 	var K = 3;
 	var M = 4;
 	var N = 3;
@@ -98,8 +92,8 @@ test( 'zunmrq: left, no-transpose, 4x3, K=3', function t() {
 });
 
 test( 'zunmrq: left, conjugate-transpose, 4x3, K=3', function t() {
-	var tc = findCase( 'left_conjtrans_4x3' );
-	var tcA = findCase( 'left_notrans_4x3' );
+	var tc = left_conjtrans_4x3;
+	var tcA = left_notrans_4x3;
 	var K = 3;
 	var M = 4;
 	var N = 3;
@@ -121,8 +115,8 @@ test( 'zunmrq: left, conjugate-transpose, 4x3, K=3', function t() {
 });
 
 test( 'zunmrq: right, no-transpose, 3x4, K=3', function t() {
-	var tc = findCase( 'right_notrans_3x4' );
-	var tcA = findCase( 'left_notrans_4x3' );
+	var tc = right_notrans_3x4;
+	var tcA = left_notrans_4x3;
 	var K = 3;
 	var M = 3;
 	var N = 4;
@@ -145,8 +139,8 @@ test( 'zunmrq: right, no-transpose, 3x4, K=3', function t() {
 });
 
 test( 'zunmrq: right, conjugate-transpose, 3x4, K=3', function t() {
-	var tc = findCase( 'right_conjtrans_3x4' );
-	var tcA = findCase( 'left_notrans_4x3' );
+	var tc = right_conjtrans_3x4;
+	var tcA = left_notrans_4x3;
 	var K = 3;
 	var M = 3;
 	var N = 4;
@@ -178,7 +172,7 @@ test( 'zunmrq: quick return M=0, N=0, K=0', function t() {
 });
 
 test( 'zunmrq: large K=35, blocked path (left, no-transpose)', function t() {
-	var tc = findCase( 'large_left_notrans' );
+	var tc = large_left_notrans;
 	var K = tc.K;
 	var M = tc.M;
 	var N = tc.N;
@@ -211,7 +205,7 @@ test( 'zunmrq: large K=35, blocked path (left, no-transpose)', function t() {
 });
 
 test( 'zunmrq: large K=35, blocked path (right, conj-transpose)', function t() {
-	var tc = findCase( 'large_right_conjtrans' );
+	var tc = large_right_conjtrans;
 	var K = tc.K;
 	var M = tc.M;
 	var N = tc.N;

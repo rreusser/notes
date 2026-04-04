@@ -2,39 +2,31 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var drotmg = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'drotmg.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_q1_gt_q2 = require( './fixtures/basic_q1_gt_q2.json' );
+var q2_gt_q1 = require( './fixtures/q2_gt_q1.json' );
+var dd1_negative = require( './fixtures/dd1_negative.json' );
+var dy1_zero = require( './fixtures/dy1_zero.json' );
+var dd2_zero = require( './fixtures/dd2_zero.json' );
+var q2_negative = require( './fixtures/q2_negative.json' );
+var rescale_small = require( './fixtures/rescale_small.json' );
+var rescale_large = require( './fixtures/rescale_large.json' );
+var dd1_zero = require( './fixtures/dd1_zero.json' );
+var dx1_zero = require( './fixtures/dx1_zero.json' );
+var negative_dy1 = require( './fixtures/negative_dy1.json' );
+var equal_d = require( './fixtures/equal_d.json' );
+var rescale_dd2_small = require( './fixtures/rescale_dd2_small.json' );
+var rescale_dd2_large = require( './fixtures/rescale_dd2_large.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -72,7 +64,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'drotmg: basic case |q1| > |q2| (flag=0)', function t() {
@@ -81,7 +72,7 @@ test( 'drotmg: basic case |q1| > |q2| (flag=0)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'basic_q1_gt_q2' );
+	tc = basic_q1_gt_q2;
 	D = new Float64Array( [ 2.0, 1.0 ] );
 	x = new Float64Array( [ 3.0 ] );
 	dparam = new Float64Array( 5 );
@@ -100,7 +91,7 @@ test( 'drotmg: |q2| > |q1| (flag=1)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'q2_gt_q1' );
+	tc = q2_gt_q1;
 	D = new Float64Array( [ 1.0, 2.0 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -119,7 +110,7 @@ test( 'drotmg: dd1 < 0 (error case, zeros everything)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'dd1_negative' );
+	tc = dd1_negative;
 	D = new Float64Array( [ -1.0, 1.0 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -138,7 +129,7 @@ test( 'drotmg: dy1 = 0 (quick return, flag=-2)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'dy1_zero' );
+	tc = dy1_zero;
 	D = new Float64Array( [ 1.0, 1.0 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -157,7 +148,7 @@ test( 'drotmg: dd2 = 0 (p2 = 0, quick return, flag=-2)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'dd2_zero' );
+	tc = dd2_zero;
 	D = new Float64Array( [ 1.0, 0.0 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -176,7 +167,7 @@ test( 'drotmg: q2 < 0 (negative definite, zeros everything)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'q2_negative' );
+	tc = q2_negative;
 	D = new Float64Array( [ 1.0, -1.0 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -195,7 +186,7 @@ test( 'drotmg: rescaling (very small dd1)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'rescale_small' );
+	tc = rescale_small;
 	D = new Float64Array( [ 1.0e-10, 1.0 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -214,7 +205,7 @@ test( 'drotmg: rescaling (very large dd1)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'rescale_large' );
+	tc = rescale_large;
 	D = new Float64Array( [ 1.0e10, 1.0 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -233,7 +224,7 @@ test( 'drotmg: dd1 = 0 (degenerate, q1 = 0)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'dd1_zero' );
+	tc = dd1_zero;
 	D = new Float64Array( [ 0.0, 3.0 ] );
 	x = new Float64Array( [ 5.0 ] );
 	dparam = new Float64Array( 5 );
@@ -252,7 +243,7 @@ test( 'drotmg: dx1 = 0 (q1 = 0, swap)', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'dx1_zero' );
+	tc = dx1_zero;
 	D = new Float64Array( [ 2.0, 3.0 ] );
 	x = new Float64Array( [ 0.0 ] );
 	dparam = new Float64Array( 5 );
@@ -271,7 +262,7 @@ test( 'drotmg: negative dy1', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'negative_dy1' );
+	tc = negative_dy1;
 	D = new Float64Array( [ 2.0, 1.0 ] );
 	x = new Float64Array( [ 5.0 ] );
 	dparam = new Float64Array( 5 );
@@ -290,7 +281,7 @@ test( 'drotmg: equal d values', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'equal_d' );
+	tc = equal_d;
 	D = new Float64Array( [ 1.0, 1.0 ] );
 	x = new Float64Array( [ 3.0 ] );
 	dparam = new Float64Array( 5 );
@@ -309,7 +300,7 @@ test( 'drotmg: rescaling dd2 very small', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'rescale_dd2_small' );
+	tc = rescale_dd2_small;
 	D = new Float64Array( [ 1.0, 1.0e-10 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -328,7 +319,7 @@ test( 'drotmg: rescaling dd2 very large', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'rescale_dd2_large' );
+	tc = rescale_dd2_large;
 	D = new Float64Array( [ 1.0, 1.0e10 ] );
 	x = new Float64Array( [ 1.0 ] );
 	dparam = new Float64Array( 5 );
@@ -347,7 +338,7 @@ test( 'drotmg: supports non-unit strides for D', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'basic_q1_gt_q2' );
+	tc = basic_q1_gt_q2;
 
 	// dd1=2, dd2=1 at positions 0 and 2 with stride 2
 	D = new Float64Array( [ 2.0, 99.0, 1.0 ] );
@@ -367,7 +358,7 @@ test( 'drotmg: supports offsets for D and x1', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'basic_q1_gt_q2' );
+	tc = basic_q1_gt_q2;
 
 	// dd1=2 at index 1, dd2=1 at index 2 with stride 1
 	D = new Float64Array( [ 99.0, 2.0, 1.0 ] );
@@ -389,7 +380,7 @@ test( 'drotmg: supports non-unit stride for param', function t() {
 	var D;
 	var x;
 
-	tc = findCase( 'basic_q1_gt_q2' );
+	tc = basic_q1_gt_q2;
 	D = new Float64Array( [ 2.0, 1.0 ] );
 	x = new Float64Array( [ 3.0 ] );
 	dparam = new Float64Array( 9 ); // 5 elements with stride 2

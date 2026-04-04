@@ -21,18 +21,19 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dladiv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var dladiv_basic = require( './fixtures/dladiv_basic.json' );
+var dladiv_pure_imag_denom = require( './fixtures/dladiv_pure_imag_denom.json' );
+var dladiv_real_div = require( './fixtures/dladiv_real_div.json' );
+var dladiv_zero_numer = require( './fixtures/dladiv_zero_numer.json' );
+var dladiv_neg_denom = require( './fixtures/dladiv_neg_denom.json' );
+var dladiv_large = require( './fixtures/dladiv_large.json' );
+var dladiv_small = require( './fixtures/dladiv_small.json' );
 
 // FUNCTIONS //
 
@@ -49,7 +50,6 @@ function assertClose( actual, expected, msg ) {
 	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
 }
 
-
 // TESTS //
 
 test( 'dladiv: main export is a function', function t() {
@@ -58,9 +58,7 @@ test( 'dladiv: main export is a function', function t() {
 
 test( 'dladiv: (4+2i)/(1+1i) = 3-1i', function t() {
 	var out = new Float64Array( 2 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dladiv_basic';
-	} );
+	var tc = dladiv_basic;
 	base( 4.0, 2.0, 1.0, 1.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_basic p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_basic q' );
@@ -68,9 +66,7 @@ test( 'dladiv: (4+2i)/(1+1i) = 3-1i', function t() {
 
 test( 'dladiv: (1+0i)/(0+1i) = 0-1i', function t() {
 	var out = new Float64Array( 2 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dladiv_pure_imag_denom';
-	} );
+	var tc = dladiv_pure_imag_denom;
 	base( 1.0, 0.0, 0.0, 1.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_pure_imag_denom p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_pure_imag_denom q' );
@@ -78,9 +74,7 @@ test( 'dladiv: (1+0i)/(0+1i) = 0-1i', function t() {
 
 test( 'dladiv: (1+0i)/(1+0i) = 1+0i', function t() {
 	var out = new Float64Array( 2 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dladiv_real_div';
-	} );
+	var tc = dladiv_real_div;
 	base( 1.0, 0.0, 1.0, 0.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_real_div p' );
 	assert.strictEqual( out[ 1 ], tc.q, 'dladiv_real_div q' );
@@ -88,9 +82,7 @@ test( 'dladiv: (1+0i)/(1+0i) = 1+0i', function t() {
 
 test( 'dladiv: (0+0i)/(1+1i) = 0+0i', function t() {
 	var out = new Float64Array( 2 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dladiv_zero_numer';
-	} );
+	var tc = dladiv_zero_numer;
 	base( 0.0, 0.0, 1.0, 1.0, out );
 	assert.strictEqual( out[ 0 ], tc.p, 'dladiv_zero_numer p' );
 	assert.strictEqual( out[ 1 ], tc.q, 'dladiv_zero_numer q' );
@@ -98,9 +90,7 @@ test( 'dladiv: (0+0i)/(1+1i) = 0+0i', function t() {
 
 test( 'dladiv: (3+4i)/(1-2i) = -1+2i', function t() {
 	var out = new Float64Array( 2 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dladiv_neg_denom';
-	} );
+	var tc = dladiv_neg_denom;
 	base( 3.0, 4.0, 1.0, -2.0, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_neg_denom p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_neg_denom q' );
@@ -108,9 +98,7 @@ test( 'dladiv: (3+4i)/(1-2i) = -1+2i', function t() {
 
 test( 'dladiv: large values (overflow-safe)', function t() {
 	var out = new Float64Array( 2 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dladiv_large';
-	} );
+	var tc = dladiv_large;
 	base( 1.0e300, 1.0e300, 1.0e300, 1.0e300, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_large p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_large q' );
@@ -136,9 +124,7 @@ test( 'dladiv: near-overflow denominator (cd >= HALF*ov)', function t() {
 
 test( 'dladiv: small values', function t() {
 	var out = new Float64Array( 2 );
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'dladiv_small';
-	} );
+	var tc = dladiv_small;
 	base( 1.0e-300, 1.0e-300, 1.0e-300, 1.0e-300, out );
 	assertClose( out[ 0 ], tc.p, 'dladiv_small p' );
 	assertClose( out[ 1 ], tc.q, 'dladiv_small q' );

@@ -2,39 +2,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dpptrs = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dpptrs.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_single_rhs = require( './fixtures/upper_single_rhs.json' );
+var lower_single_rhs = require( './fixtures/lower_single_rhs.json' );
+var lower_multi_rhs = require( './fixtures/lower_multi_rhs.json' );
+var upper_multi_rhs_3 = require( './fixtures/upper_multi_rhs_3.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var lower_4x4 = require( './fixtures/lower_4x4.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two arrays are element-wise approximately equal.
@@ -55,7 +40,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dpptrs is a function', function t() {
@@ -68,7 +52,7 @@ test( 'dpptrs: upper, single RHS (3x3)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_single_rhs' );
+	tc = upper_single_rhs;
 	ap = new Float64Array( [ 2.0, 1.0, 2.0, 0.5, 1.25, 2.68095132369090194 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dpptrs( 'upper', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -82,7 +66,7 @@ test( 'dpptrs: lower, single RHS (3x3)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_single_rhs' );
+	tc = lower_single_rhs;
 	ap = new Float64Array( [ 2.0, 1.0, 0.5, 2.0, 1.25, 2.68095132369090194 ] );
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dpptrs( 'lower', 3, 1, ap, 1, 0, b, 1, 3, 0 );
@@ -96,7 +80,7 @@ test( 'dpptrs: lower, multiple RHS (NRHS=2, 3x3)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_multi_rhs' );
+	tc = lower_multi_rhs;
 	ap = new Float64Array( [ 2.0, 1.0, 0.5, 2.0, 1.25, 2.68095132369090194 ] );
 	b = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 ] );
 	info = dpptrs( 'lower', 3, 2, ap, 1, 0, b, 1, 3, 0 );
@@ -110,7 +94,7 @@ test( 'dpptrs: upper, multiple RHS (NRHS=3, 3x3) - compute inverse', function t(
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_multi_rhs_3' );
+	tc = upper_multi_rhs_3;
 	ap = new Float64Array( [ 2.0, 1.0, 2.0, 0.5, 1.25, 2.68095132369090194 ] );
 	b = new Float64Array( [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ] );
 	info = dpptrs( 'upper', 3, 3, ap, 1, 0, b, 1, 3, 0 );
@@ -149,7 +133,7 @@ test( 'dpptrs: 1x1 system', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	ap = new Float64Array( [ 2.0 ] );
 	b = new Float64Array( [ 6.0 ] );
 	info = dpptrs( 'lower', 1, 1, ap, 1, 0, b, 1, 1, 0 );
@@ -163,7 +147,7 @@ test( 'dpptrs: upper, 4x4 system', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	ap = new Float64Array([
 		3.16227766016837952,
 		0.632455532033675882,
@@ -188,7 +172,7 @@ test( 'dpptrs: lower, 4x4 system', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_4x4' );
+	tc = lower_4x4;
 	ap = new Float64Array([
 		3.16227766016837952,
 		0.632455532033675882,
@@ -213,7 +197,7 @@ test( 'dpptrs: works with non-zero AP offset', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'upper_single_rhs' );
+	tc = upper_single_rhs;
 	ap = new Float64Array( [ 99.0, 99.0, 99.0, 2.0, 1.0, 2.0, 0.5, 1.25, 2.68095132369090194 ] ); // eslint-disable-line max-len
 	b = new Float64Array( [ 1.0, 2.0, 3.0 ] );
 	info = dpptrs( 'upper', 3, 1, ap, 1, 3, b, 1, 3, 0 );
@@ -227,7 +211,7 @@ test( 'dpptrs: works with non-zero B offset', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_single_rhs' );
+	tc = lower_single_rhs;
 	ap = new Float64Array( [ 2.0, 1.0, 0.5, 2.0, 1.25, 2.68095132369090194 ] );
 	b = new Float64Array( [ 99.0, 99.0, 1.0, 2.0, 3.0 ] );
 	info = dpptrs( 'lower', 3, 1, ap, 1, 0, b, 1, 3, 2 );
@@ -244,7 +228,7 @@ test( 'dpptrs: works with non-unit B strides (row-major)', function t() {
 	var ap;
 	var b;
 
-	tc = findCase( 'lower_multi_rhs' );
+	tc = lower_multi_rhs;
 	ap = new Float64Array( [ 2.0, 1.0, 0.5, 2.0, 1.25, 2.68095132369090194 ] );
 	b = new Float64Array( [ 1.0, 0.0, 0.0, 1.0, 0.0, 0.0 ] );
 	info = dpptrs( 'lower', 3, 2, ap, 1, 0, b, 2, 1, 0 );

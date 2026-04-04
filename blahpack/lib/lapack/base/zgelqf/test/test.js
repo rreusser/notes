@@ -20,40 +20,24 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgelqf = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgelqf.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic_3x5 = require( './fixtures/basic_3x5.json' );
+var square_4x4 = require( './fixtures/square_4x4.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var wide_2x5 = require( './fixtures/wide_2x5.json' );
+var tall_4x3 = require( './fixtures/tall_4x3.json' );
+var large_35x50 = require( './fixtures/large_35x50.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -86,7 +70,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zgelqf: basic 3x5 matrix', function t() {
@@ -96,7 +79,7 @@ test( 'zgelqf: basic 3x5 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'basic_3x5' );
+	tc = basic_3x5;
 	a = new Complex128Array([
 		1,
 		2,
@@ -144,7 +127,7 @@ test( 'zgelqf: square 4x4 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'square_4x4' );
+	tc = square_4x4;
 	a = new Complex128Array([
 		1,
 		1,
@@ -220,7 +203,7 @@ test( 'zgelqf: 1x1 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	a = new Complex128Array( [ 5, 3 ] );
 	tau = new Complex128Array( 1 );
 	work = new Complex128Array( 10 );
@@ -237,7 +220,7 @@ test( 'zgelqf: wide 2x5 matrix', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'wide_2x5' );
+	tc = wide_2x5;
 	a = new Complex128Array([
 		1,
 		1,
@@ -275,7 +258,7 @@ test( 'zgelqf: tall 4x3 matrix (M > N)', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'tall_4x3' );
+	tc = tall_4x3;
 	a = new Complex128Array([
 		1,
 		2,
@@ -319,7 +302,7 @@ test( 'zgelqf: works with offset', function t() {
 	var av;
 	var a;
 
-	tc = findCase( 'square_4x4' );
+	tc = square_4x4;
 	pad = 2;
 	a = new Complex128Array( pad + 16 );
 	av = reinterpret( a, 0 );
@@ -371,7 +354,7 @@ test( 'zgelqf: null WORK triggers internal allocation', function t() {
 	var tc;
 	var a;
 
-	tc = findCase( 'basic_3x5' );
+	tc = basic_3x5;
 	a = new Complex128Array([
 		1,
 		2,
@@ -424,7 +407,7 @@ test( 'zgelqf: large 35x50 matrix (blocked path)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'large_35x50' );
+	tc = large_35x50;
 	M = 35;
 	N = 50;
 	a = new Complex128Array( M * N );

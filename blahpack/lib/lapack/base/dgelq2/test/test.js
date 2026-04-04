@@ -2,39 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgelq2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgelq2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var _3x4 = require( './fixtures/3x4.json' );
+var _4x3 = require( './fixtures/4x3.json' );
+var _3x3 = require( './fixtures/3x3.json' );
+var _1x4 = require( './fixtures/1x4.json' );
+var _3x1 = require( './fixtures/3x1.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var _1x1 = require( './fixtures/1x1.json' );
+var _2x5 = require( './fixtures/2x5.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -124,7 +111,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgelq2: 3x4 (M < N, well-conditioned)', function t() {
@@ -134,7 +120,7 @@ test( 'dgelq2: 3x4 (M < N, well-conditioned)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x4' );
+	tc = _3x4;
 	A = new Float64Array( 6 * 4 );
 	A[ 0 * 6 + 0 ] = 2.0;
 	A[ 1 * 6 + 0 ] = 1.0;
@@ -163,7 +149,7 @@ test( 'dgelq2: 4x3 (M > N)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '4x3' );
+	tc = _4x3;
 	A = new Float64Array( 6 * 3 );
 	A[ 0 * 6 + 0 ] = 2.0;
 	A[ 1 * 6 + 0 ] = 1.0;
@@ -192,7 +178,7 @@ test( 'dgelq2: 3x3 (square)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	A = new Float64Array( 6 * 3 );
 	A[ 0 * 6 + 0 ] = 4.0;
 	A[ 1 * 6 + 0 ] = 1.0;
@@ -218,7 +204,7 @@ test( 'dgelq2: 1x4 (single row)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '1x4' );
+	tc = _1x4;
 	A = new Float64Array( 6 * 4 );
 	A[ 0 * 6 + 0 ] = 1.0;
 	A[ 1 * 6 + 0 ] = 2.0;
@@ -239,7 +225,7 @@ test( 'dgelq2: 3x1 (single column)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '3x1' );
+	tc = _3x1;
 	A = new Float64Array( 6 * 1 );
 	A[ 0 * 6 + 0 ] = 2.0;
 	A[ 0 * 6 + 1 ] = 3.0;
@@ -259,7 +245,7 @@ test( 'dgelq2: M=0 (quick return)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( 1 );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -274,7 +260,7 @@ test( 'dgelq2: N=0 (quick return)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( 1 );
 	TAU = new Float64Array( 1 );
 	WORK = new Float64Array( 1 );
@@ -289,7 +275,7 @@ test( 'dgelq2: 1x1', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '1x1' );
+	tc = _1x1;
 	A = new Float64Array( 6 );
 	A[ 0 ] = 7.0;
 	TAU = new Float64Array( 1 );
@@ -307,7 +293,7 @@ test( 'dgelq2: 2x5 (wide)', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( '2x5' );
+	tc = _2x5;
 	A = new Float64Array( 6 * 5 );
 	A[ 0 * 6 + 0 ] = 1.0;
 	A[ 1 * 6 + 0 ] = 2.0;
@@ -348,7 +334,7 @@ test( 'dgelq2: compact layout (LDA=M, no padding)', function t() {
 	TAU = new Float64Array( 3 );
 	WORK = new Float64Array( 3 );
 	info = dgelq2( 3, 3, A, 1, 3, 0, TAU, 1, 0, WORK, 1, 0 );
-	tc = findCase( '3x3' );
+	tc = _3x3;
 	assert.equal( info, tc.INFO, 'INFO' );
 	assertArrayClose( toArray( A ), tc.A, 1e-14, 'A' );
 	assertArrayClose( toArray( TAU ), tc.TAU, 1e-14, 'TAU' );

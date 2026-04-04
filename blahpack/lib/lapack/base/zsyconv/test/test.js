@@ -4,26 +4,25 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
-var path = require( 'path' );
 var zsyconv = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zsyconv.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_convert = require( './fixtures/upper_convert.json' );
+var upper_revert = require( './fixtures/upper_revert.json' );
+var lower_convert = require( './fixtures/lower_convert.json' );
+var lower_revert = require( './fixtures/lower_revert.json' );
+var n1_upper = require( './fixtures/n1_upper.json' );
+var n1_lower = require( './fixtures/n1_lower.json' );
+var upper_2x2_convert = require( './fixtures/upper_2x2_convert.json' );
+var upper_2x2_revert = require( './fixtures/upper_2x2_revert.json' );
+var lower_2x2_convert = require( './fixtures/lower_2x2_convert.json' );
+var lower_2x2_revert = require( './fixtures/lower_2x2_revert.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -63,11 +62,10 @@ function convertIPIV( ipivFortran ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zsyconv: upper_convert (all 1x1 pivots)', function t() {
-	var tc = findCase( 'upper_convert' );
+	var tc = upper_convert;
 	var N = 4;
 	var A = new Complex128Array( tc.a_factored );
 	var IPIV = convertIPIV( tc.ipiv_trf );
@@ -85,8 +83,8 @@ test( 'zsyconv: upper_convert (all 1x1 pivots)', function t() {
 });
 
 test( 'zsyconv: upper_revert (all 1x1 pivots)', function t() {
-	var tcConv = findCase( 'upper_convert' );
-	var tcRev = findCase( 'upper_revert' );
+	var tcConv = upper_convert;
+	var tcRev = upper_revert;
 	var N = 4;
 	var A = new Complex128Array( tcConv.a_converted );
 	var IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -101,7 +99,7 @@ test( 'zsyconv: upper_revert (all 1x1 pivots)', function t() {
 });
 
 test( 'zsyconv: lower_convert (all 1x1 pivots)', function t() {
-	var tc = findCase( 'lower_convert' );
+	var tc = lower_convert;
 	var N = 4;
 	var A = new Complex128Array( tc.a_factored );
 	var IPIV = convertIPIV( tc.ipiv_trf );
@@ -119,8 +117,8 @@ test( 'zsyconv: lower_convert (all 1x1 pivots)', function t() {
 });
 
 test( 'zsyconv: lower_revert (all 1x1 pivots)', function t() {
-	var tcConv = findCase( 'lower_convert' );
-	var tcRev = findCase( 'lower_revert' );
+	var tcConv = lower_convert;
+	var tcRev = lower_revert;
 	var N = 4;
 	var A = new Complex128Array( tcConv.a_converted );
 	var IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -135,7 +133,7 @@ test( 'zsyconv: lower_revert (all 1x1 pivots)', function t() {
 });
 
 test( 'zsyconv: n1_upper', function t() {
-	var tc = findCase( 'n1_upper' );
+	var tc = n1_upper;
 	var A = new Complex128Array( tc.a_factored );
 	var IPIV = convertIPIV( tc.ipiv );
 	var E = new Complex128Array( 1 );
@@ -152,7 +150,7 @@ test( 'zsyconv: n1_upper', function t() {
 });
 
 test( 'zsyconv: n1_lower', function t() {
-	var tc = findCase( 'n1_lower' );
+	var tc = n1_lower;
 	var A = new Complex128Array( tc.a_factored );
 	var IPIV = convertIPIV( tc.ipiv );
 	var E = new Complex128Array( 1 );
@@ -169,7 +167,7 @@ test( 'zsyconv: n1_lower', function t() {
 });
 
 test( 'zsyconv: upper_2x2_convert (with 2x2 pivots)', function t() {
-	var tc = findCase( 'upper_2x2_convert' );
+	var tc = upper_2x2_convert;
 	var N = 4;
 	var A = new Complex128Array( tc.a_factored );
 	var IPIV = convertIPIV( tc.ipiv_trf );
@@ -187,8 +185,8 @@ test( 'zsyconv: upper_2x2_convert (with 2x2 pivots)', function t() {
 });
 
 test( 'zsyconv: upper_2x2_revert (with 2x2 pivots)', function t() {
-	var tcConv = findCase( 'upper_2x2_convert' );
-	var tcRev = findCase( 'upper_2x2_revert' );
+	var tcConv = upper_2x2_convert;
+	var tcRev = upper_2x2_revert;
 	var N = 4;
 	var A = new Complex128Array( tcConv.a_converted );
 	var IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -203,7 +201,7 @@ test( 'zsyconv: upper_2x2_revert (with 2x2 pivots)', function t() {
 });
 
 test( 'zsyconv: lower_2x2_convert (with 2x2 pivots)', function t() {
-	var tc = findCase( 'lower_2x2_convert' );
+	var tc = lower_2x2_convert;
 	var N = 4;
 	var A = new Complex128Array( tc.a_factored );
 	var IPIV = convertIPIV( tc.ipiv_trf );
@@ -221,8 +219,8 @@ test( 'zsyconv: lower_2x2_convert (with 2x2 pivots)', function t() {
 });
 
 test( 'zsyconv: lower_2x2_revert (with 2x2 pivots)', function t() {
-	var tcConv = findCase( 'lower_2x2_convert' );
-	var tcRev = findCase( 'lower_2x2_revert' );
+	var tcConv = lower_2x2_convert;
+	var tcRev = lower_2x2_revert;
 	var N = 4;
 	var A = new Complex128Array( tcConv.a_converted );
 	var IPIV = convertIPIV( tcConv.ipiv_trf );
@@ -250,7 +248,7 @@ test( 'zsyconv: N=0 returns immediately', function t() {
 });
 
 test( 'zsyconv: round-trip upper convert then revert restores A', function t() {
-	var tc = findCase( 'upper_2x2_convert' );
+	var tc = upper_2x2_convert;
 	var N = 4;
 	var Aorig = new Complex128Array( tc.a_factored );
 	var A = new Complex128Array( tc.a_factored );
@@ -267,7 +265,7 @@ test( 'zsyconv: round-trip upper convert then revert restores A', function t() {
 });
 
 test( 'zsyconv: round-trip lower convert then revert restores A', function t() {
-	var tc = findCase( 'lower_2x2_convert' );
+	var tc = lower_2x2_convert;
 	var N = 4;
 	var Aorig = new Complex128Array( tc.a_factored );
 	var A = new Complex128Array( tc.a_factored );

@@ -8,23 +8,19 @@ var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var zla_wwaddw = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zla_wwaddw.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var negative = require( './fixtures/negative.json' );
+var large_values = require( './fixtures/large_values.json' );
+var zeros = require( './fixtures/zeros.json' );
+var purely_imaginary = require( './fixtures/purely_imaginary.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -39,7 +35,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'zla_wwaddw is a function', function t() {
@@ -47,7 +42,7 @@ test( 'zla_wwaddw is a function', function t() {
 });
 
 test( 'zla_wwaddw: basic (n=5)', function t() {
-	var tc = findCase( 'basic' );
+	var tc = basic;
 	var x = new Complex128Array( [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] );
 	var y = new Complex128Array( [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 ] );
 	var w = new Complex128Array( [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] );
@@ -57,7 +52,7 @@ test( 'zla_wwaddw: basic (n=5)', function t() {
 });
 
 test( 'zla_wwaddw: n_zero (arrays unchanged)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var x = new Complex128Array( [ 1, 2, 3, 4 ] );
 	var y = new Complex128Array( [ 0.1, 0.2, 0.3, 0.4 ] );
 	var w = new Complex128Array( [ 10, 20, 30, 40 ] );
@@ -67,7 +62,7 @@ test( 'zla_wwaddw: n_zero (arrays unchanged)', function t() {
 });
 
 test( 'zla_wwaddw: n_one', function t() {
-	var tc = findCase( 'n_one' );
+	var tc = n_one;
 	var x = new Complex128Array( [ 1, 2 ] );
 	var y = new Complex128Array( [ 0.1, 0.2 ] );
 	var w = new Complex128Array( [ 10, 20 ] );
@@ -77,7 +72,7 @@ test( 'zla_wwaddw: n_one', function t() {
 });
 
 test( 'zla_wwaddw: negative values', function t() {
-	var tc = findCase( 'negative' );
+	var tc = negative;
 	var x = new Complex128Array( [ -1, -2, -3, -4, -5, -6, -7, -8 ] );
 	var y = new Complex128Array( [ 0.01, -0.02, 0.03, -0.04, 0.05, -0.06, 0.07, -0.08 ] );
 	var w = new Complex128Array( [ 0.5, -0.5, -0.5, 0.5, 1.5, -1.5, -1.5, 1.5 ] );
@@ -87,7 +82,7 @@ test( 'zla_wwaddw: negative values', function t() {
 });
 
 test( 'zla_wwaddw: large_values (precision)', function t() {
-	var tc = findCase( 'large_values' );
+	var tc = large_values;
 	var x = new Complex128Array( [ 1e15, 2e15, 3e15, 4e15, 5e15, 6e15 ] );
 	var y = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
 	var w = new Complex128Array( [ 1, 2, 3, 4, 5, 6 ] );
@@ -97,7 +92,7 @@ test( 'zla_wwaddw: large_values (precision)', function t() {
 });
 
 test( 'zla_wwaddw: zeros', function t() {
-	var tc = findCase( 'zeros' );
+	var tc = zeros;
 	var x = new Complex128Array( [ 0, 0, 0, 0, 0, 0 ] );
 	var y = new Complex128Array( [ 0, 0, 0, 0, 0, 0 ] );
 	var w = new Complex128Array( [ 0, 0, 0, 0, 0, 0 ] );
@@ -107,7 +102,7 @@ test( 'zla_wwaddw: zeros', function t() {
 });
 
 test( 'zla_wwaddw: purely_imaginary', function t() {
-	var tc = findCase( 'purely_imaginary' );
+	var tc = purely_imaginary;
 	var x = new Complex128Array( [ 0, 1, 0, 3, 0, 5 ] );
 	var y = new Complex128Array( [ 0, 0.1, 0, 0.3, 0, 0.5 ] );
 	var w = new Complex128Array( [ 0, 10, 0, 30, 0, 50 ] );
@@ -122,7 +117,7 @@ test( 'zla_wwaddw: non-unit strides', function t() {
 	var y = new Complex128Array( [ 999, 999, 0.1, 0.2, 999, 999, 0.3, 0.4, 999, 999, 0.5, 0.6 ] );
 	var w = new Complex128Array( [ 999, 999, 10, 20, 999, 999, 30, 40, 999, 999, 50, 60 ] );
 
-	var tcBasic = findCase( 'basic' );
+	var tcBasic = basic;
 	zla_wwaddw( 3, x, 2, 1, y, 2, 1, w, 2, 1 );
 
 	var xv = reinterpret( x, 0 );
@@ -156,7 +151,7 @@ test( 'zla_wwaddw: negative strides', function t() {
 	var y = new Complex128Array( [ 0.5, 0.6, 0.3, 0.4, 0.1, 0.2 ] );
 	var w = new Complex128Array( [ 50, 60, 30, 40, 10, 20 ] );
 
-	var tcBasic = findCase( 'basic' );
+	var tcBasic = basic;
 	zla_wwaddw( 3, x, -1, 2, y, -1, 2, w, -1, 2 );
 
 	var xv = reinterpret( x, 0 );

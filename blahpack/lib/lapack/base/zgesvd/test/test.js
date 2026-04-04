@@ -2,41 +2,26 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zgesvd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zgesvd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var full_1x1 = require( './fixtures/full_1x1.json' );
+var full_2x2 = require( './fixtures/full_2x2.json' );
+var full_3x3 = require( './fixtures/full_3x3.json' );
+var values_only_3x4 = require( './fixtures/values_only_3x4.json' );
+var economy_4x3 = require( './fixtures/economy_4x3.json' );
+var full_3x5 = require( './fixtures/full_3x5.json' );
+var economy_u_full_vt_5x3 = require( './fixtures/economy_u_full_vt_5x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -95,7 +80,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zgesvd: m_zero (quick return)', function t() {
@@ -146,7 +130,7 @@ test( 'zgesvd: full_1x1', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_1x1' );
+	tc = full_1x1;
 	RWORK = new Float64Array( 50 );
 	WORK = new Complex128Array( 100 );
 	s = new Float64Array( 1 );
@@ -168,7 +152,7 @@ test( 'zgesvd: full_2x2', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_2x2' );
+	tc = full_2x2;
 	RWORK = new Float64Array( 50 );
 	WORK = new Complex128Array( 500 );
 	s = new Float64Array( 2 );
@@ -199,7 +183,7 @@ test( 'zgesvd: full_3x3', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x3' );
+	tc = full_3x3;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 1000 );
 	s = new Float64Array( 3 );
@@ -240,7 +224,7 @@ test( 'zgesvd: values_only_3x4 (JOBU=N, JOBVT=N)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'values_only_3x4' );
+	tc = values_only_3x4;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 1000 );
 	s = new Float64Array( 3 );
@@ -287,7 +271,7 @@ test( 'zgesvd: economy_4x3 (JOBU=S, JOBVT=S)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'economy_4x3' );
+	tc = economy_4x3;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -334,7 +318,7 @@ test( 'zgesvd: full_3x5 (M < N, JOBU=A, JOBVT=A)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -387,7 +371,7 @@ test( 'zgesvd: economy_u_full_vt_5x3 (JOBU=S, JOBVT=A)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'economy_u_full_vt_5x3' );
+	tc = economy_u_full_vt_5x3;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -526,7 +510,7 @@ test( 'zgesvd: 3x4 values only, M < N', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'values_only_3x4' );
+	tc = values_only_3x4;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 1000 );
 	s = new Float64Array( 3 );
@@ -604,7 +588,7 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=N (M > N, values only)', function t() {
 		0.0,
 		1.0
 	]);
-	tc = findCase( 'economy_4x3' );
+	tc = economy_4x3;
 	info = zgesvd( 'none', 'none', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 1, 0, WORK, 1, 0, 1000, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( toArray( s ), tc.s, 1e-12, 's' );
@@ -651,7 +635,7 @@ test( 'zgesvd: 4x3 JOBU=A JOBVT=N (M > N, U only)', function t() {
 		0.0,
 		1.0
 	]);
-	tc = findCase( 'economy_4x3' );
+	tc = economy_4x3;
 	info = zgesvd( 'all-columns', 'none', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 4, 0, VT, 1, 1, 0, WORK, 1, 0, 2500, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( toArray( s ), tc.s, 1e-12, 's' );
@@ -698,7 +682,7 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=A (M > N, VT only)', function t() {
 		0.0,
 		1.0
 	]);
-	tc = findCase( 'economy_4x3' );
+	tc = economy_4x3;
 	info = zgesvd( 'none', 'all-rows', 4, 3, A, 1, 4, 0, s, 1, 0, U, 1, 1, 0, VT, 1, 3, 0, WORK, 1, 0, 2500, RWORK, 1, 0 ); // eslint-disable-line max-len
 	assert.equal( info, 0, 'info' );
 	assertSingularValuesClose( toArray( s ), tc.s, 1e-12, 's' );
@@ -714,7 +698,7 @@ test( 'zgesvd: 3x5 JOBU=N JOBVT=S (M < N, VT economy only)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -767,7 +751,7 @@ test( 'zgesvd: 3x5 JOBU=S JOBVT=N (M < N, U economy only)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -820,7 +804,7 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=N (M < N, full U only)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -873,7 +857,7 @@ test( 'zgesvd: 3x5 JOBU=N JOBVT=A (M < N, full VT only)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -1319,7 +1303,7 @@ test( 'zgesvd: 4x3 JOBU=N JOBVT=N (M >= N, values only, path 10)', function t() 
 	var U;
 	var A;
 
-	tc = findCase( 'economy_4x3' );
+	tc = economy_4x3;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 1000 );
 	s = new Float64Array( 3 );
@@ -1366,7 +1350,7 @@ test( 'zgesvd: 4x3 JOBU=O JOBVT=S (M >= N, overwrite A with U)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'economy_4x3' );
+	tc = economy_4x3;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -1413,7 +1397,7 @@ test( 'zgesvd: 4x3 JOBU=S JOBVT=O (M >= N, overwrite A with VT)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'economy_4x3' );
+	tc = economy_4x3;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -1460,7 +1444,7 @@ test( 'zgesvd: 3x5 JOBU=O JOBVT=S (M < N, overwrite A with U)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -1513,7 +1497,7 @@ test( 'zgesvd: 3x5 JOBU=S JOBVT=O (M < N, overwrite A with VT)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -1566,7 +1550,7 @@ test( 'zgesvd: 3x5 JOBU=S JOBVT=S (M < N, economy SVD)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -1619,7 +1603,7 @@ test( 'zgesvd: 3x5 JOBU=A JOBVT=S (M < N, full U, economy VT)', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_3x5' );
+	tc = full_3x5;
 	RWORK = new Float64Array( 100 );
 	WORK = new Complex128Array( 2500 );
 	s = new Float64Array( 3 );
@@ -1728,7 +1712,7 @@ test( 'zgesvd: insufficient lwork triggers internal allocation', function t() {
 	var U;
 	var A;
 
-	tc = findCase( 'full_2x2' );
+	tc = full_2x2;
 	RWORK = new Float64Array( 50 );
 	WORK = new Complex128Array( 1 );
 	s = new Float64Array( 2 );

@@ -2,40 +2,28 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgels = require( './../lib/base.js' );
 var ndarrayFn = require( './../lib/ndarray.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgels.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var overdetermined_4x2 = require( './fixtures/overdetermined_4x2.json' );
+var underdetermined_2x4 = require( './fixtures/underdetermined_2x4.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
+var transpose_mlt_n_ls = require( './fixtures/transpose_mlt_n_ls.json' );
+var transpose_mge_n_minnorm = require( './fixtures/transpose_mge_n_minnorm.json' );
+var multi_rhs_overdetermined = require( './fixtures/multi_rhs_overdetermined.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var nrhs_zero = require( './fixtures/nrhs_zero.json' );
+var overdetermined_6x3 = require( './fixtures/overdetermined_6x3.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -86,7 +74,6 @@ function extractCol( B, LDB, col, len ) {
 	return result;
 }
 
-
 // TESTS //
 
 test( 'dgels: overdetermined 4x2, TRANS=N (least squares)', function t() {
@@ -95,7 +82,7 @@ test( 'dgels: overdetermined 4x2, TRANS=N (least squares)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'overdetermined_4x2' );
+	tc = overdetermined_4x2;
 	A = new Float64Array([
 		1.0,
 		1.0,
@@ -120,7 +107,7 @@ test( 'dgels: underdetermined 2x4, TRANS=N (minimum norm)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'underdetermined_2x4' );
+	tc = underdetermined_2x4;
 	A = new Float64Array([
 		1.0,
 		5.0,
@@ -145,7 +132,7 @@ test( 'dgels: square 3x3, TRANS=N', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	A = new Float64Array([
 		5.0,
 		1.0,
@@ -171,7 +158,7 @@ test( 'dgels: TRANS=T, M < N (least squares of A^T * x = b)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'transpose_mlt_n_ls' );
+	tc = transpose_mlt_n_ls;
 	A = new Float64Array([
 		1.0,
 		5.0,
@@ -196,7 +183,7 @@ test( 'dgels: TRANS=T, M >= N (minimum norm of A^T * x = b)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'transpose_mge_n_minnorm' );
+	tc = transpose_mge_n_minnorm;
 	A = new Float64Array([
 		1.0,
 		1.0,
@@ -221,7 +208,7 @@ test( 'dgels: multiple RHS, overdetermined 4x2', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'multi_rhs_overdetermined' );
+	tc = multi_rhs_overdetermined;
 	A = new Float64Array([
 		2.0,
 		0.0,
@@ -254,7 +241,7 @@ test( 'dgels: N=0 quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array( [ 1.0 ] );
 	B = new Float64Array( [ 1.0, 0.0, 0.0 ] );
 	info = dgels( 'no-transpose', 3, 0, 1, A, 1, 3, 0, B, 1, 3, 0 );
@@ -270,7 +257,7 @@ test( 'dgels: M=0 quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'm_zero' );
+	tc = m_zero;
 	A = new Float64Array( [ 1.0 ] );
 	B = new Float64Array( [ 1.0, 0.0, 0.0 ] );
 	info = dgels( 'no-transpose', 0, 3, 1, A, 1, 1, 0, B, 1, 3, 0 );
@@ -286,7 +273,7 @@ test( 'dgels: NRHS=0 quick return', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'nrhs_zero' );
+	tc = nrhs_zero;
 	A = new Float64Array( [ 1.0, 0.0, 0.0, 1.0 ] );
 	B = new Float64Array( 1 );
 	info = dgels( 'no-transpose', 2, 2, 0, A, 1, 2, 0, B, 1, 2, 0 );
@@ -299,7 +286,7 @@ test( 'dgels: larger overdetermined 6x3', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'overdetermined_6x3' );
+	tc = overdetermined_6x3;
 	A = new Float64Array([
 		10.0,
 		1.0,
@@ -460,7 +447,7 @@ test( 'dgels: tiny A triggers upscaling (iascl=1)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'overdetermined_4x2' );
+	tc = overdetermined_4x2;
 	scale = 1e-300;
 	A = new Float64Array([
 		1.0 * scale,
@@ -487,7 +474,7 @@ test( 'dgels: huge A triggers downscaling (iascl=2)', function t() {
 	var A;
 	var B;
 
-	tc = findCase( 'overdetermined_4x2' );
+	tc = overdetermined_4x2;
 	scale = 1e300;
 	A = new Float64Array([
 		1.0 * scale,

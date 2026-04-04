@@ -21,20 +21,21 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zdscal = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zdscal.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var basic = require( './fixtures/basic.json' );
+var da_zero = require( './fixtures/da_zero.json' );
+var da_one = require( './fixtures/da_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var neg_da = require( './fixtures/neg_da.json' );
 
 // FUNCTIONS //
 
@@ -67,7 +68,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -86,7 +86,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zdscal: main export is a function', function t() {
@@ -102,9 +101,7 @@ test( 'zdscal: basic scale (N=3, da=2.0, strideX=1)', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'basic';
-	} );
+	tc = basic;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	result = base( 3, 2.0, zx, 1, 0 );
 	assert.strictEqual( result, zx );
@@ -116,9 +113,7 @@ test( 'zdscal: da=0 zeros out vector', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'da_zero';
-	} );
+	tc = da_zero;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	result = base( 3, 0.0, zx, 1, 0 );
 	assert.strictEqual( result, zx );
@@ -130,9 +125,7 @@ test( 'zdscal: da=1 is identity', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'da_one';
-	} );
+	tc = da_one;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	result = base( 3, 1.0, zx, 1, 0 );
 	assert.strictEqual( result, zx );
@@ -144,9 +137,7 @@ test( 'zdscal: N=0 is a no-op', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_zero';
-	} );
+	tc = n_zero;
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	result = base( 0, 5.0, zx, 1, 0 );
 	assert.strictEqual( result, zx );
@@ -158,9 +149,7 @@ test( 'zdscal: N=1', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_one';
-	} );
+	tc = n_one;
 	zx = new Complex128Array( [ 7.0, 3.0 ] );
 	result = base( 1, 3.0, zx, 1, 0 );
 	assert.strictEqual( result, zx );
@@ -172,9 +161,7 @@ test( 'zdscal: non-unit stride (strideX=2)', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'stride';
-	} );
+	tc = stride;
 	zx = new Complex128Array([
 		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
 	]);
@@ -188,9 +175,7 @@ test( 'zdscal: negative da', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'neg_da';
-	} );
+	tc = neg_da;
 	zx = new Complex128Array( [ 2.0, 3.0, 4.0, 5.0 ] );
 	result = base( 2, -2.0, zx, 1, 0 );
 	assert.strictEqual( result, zx );

@@ -2,39 +2,23 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dgebrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dgebrd.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_4x3 = require( './fixtures/upper_4x3.json' );
+var lower_3x4 = require( './fixtures/lower_3x4.json' );
+var square_3x3 = require( './fixtures/square_3x3.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var upper_35x33 = require( './fixtures/upper_35x33.json' );
+var lower_33x35 = require( './fixtures/lower_33x35.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -90,7 +74,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'dgebrd: 4x3 upper bidiagonal (M > N)', function t() {
@@ -105,7 +88,7 @@ test( 'dgebrd: 4x3 upper bidiagonal (M > N)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'upper_4x3' );
+	tc = upper_4x3;
 	M = 4;
 	N = 3;
 	A = colMajor([
@@ -148,7 +131,7 @@ test( 'dgebrd: 3x4 lower bidiagonal (M < N)', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'lower_3x4' );
+	tc = lower_3x4;
 	M = 3;
 	N = 4;
 	A = colMajor([
@@ -191,7 +174,7 @@ test( 'dgebrd: 3x3 square', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	M = 3;
 	N = 3;
 	A = colMajor([
@@ -229,7 +212,7 @@ test( 'dgebrd: 1x1 matrix', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'one_by_one' );
+	tc = one_by_one;
 	A = colMajor([ 7.0 ]);
 	d = new Float64Array( 1 );
 	e = new Float64Array( 0 );
@@ -297,7 +280,7 @@ test( 'dgebrd: 35x33 upper bidiagonal (blocked path, M > N)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'upper_35x33' );
+	tc = upper_35x33;
 	M = 35;
 	N = 33;
 	minmn = Math.min( M, N );
@@ -339,7 +322,7 @@ test( 'dgebrd: 33x35 lower bidiagonal (blocked path, M < N)', function t() {
 	var i;
 	var j;
 
-	tc = findCase( 'lower_33x35' );
+	tc = lower_33x35;
 	M = 33;
 	N = 35;
 	minmn = Math.min( M, N );
@@ -381,7 +364,7 @@ test( 'dgebrd: 35x33 with limited workspace (falls back to unblocked)', function
 	var i;
 	var j;
 
-	tc = findCase( 'upper_35x33' );
+	tc = upper_35x33;
 	M = 35;
 	N = 33;
 	minmn = Math.min( M, N );
@@ -424,7 +407,7 @@ test( 'dgebrd: 35x33 with partially limited workspace (reduced NB)', function t(
 	var i;
 	var j;
 
-	tc = findCase( 'upper_35x33' );
+	tc = upper_35x33;
 	M = 35;
 	N = 33;
 	minmn = Math.min( M, N );
@@ -463,7 +446,7 @@ test( 'dgebrd: null WORK causes internal allocation', function t() {
 	var d;
 	var e;
 
-	tc = findCase( 'square_3x3' );
+	tc = square_3x3;
 	M = 3;
 	N = 3;
 	A = colMajor([

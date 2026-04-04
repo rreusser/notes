@@ -10,26 +10,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var zlapmr = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlapmr.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var forward_4x3 = require( './fixtures/forward_4x3.json' );
+var backward_4x3 = require( './fixtures/backward_4x3.json' );
+var identity_3x2 = require( './fixtures/identity_3x2.json' );
+var reverse_fwd_4x2 = require( './fixtures/reverse_fwd_4x2.json' );
+var reverse_bwd_4x2 = require( './fixtures/reverse_bwd_4x2.json' );
+var cyclic_fwd_5x2 = require( './fixtures/cyclic_fwd_5x2.json' );
+var cyclic_bwd_5x2 = require( './fixtures/cyclic_bwd_5x2.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayClose( actual, expected, tol, msg ) {
 	var relErr;
@@ -83,7 +79,6 @@ function extractComplexMatrix( A, LDA, M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlapmr is a function', function t() {
@@ -91,7 +86,7 @@ test( 'zlapmr is a function', function t() {
 });
 
 test( 'zlapmr: forward permutation 4x3', function t() {
-	var tc = findCase( 'forward_4x3' );
+	var tc = forward_4x3;
 	var M = 4;
 	var N = 3;
 	var LDA = M;
@@ -118,7 +113,7 @@ test( 'zlapmr: forward permutation 4x3', function t() {
 });
 
 test( 'zlapmr: backward permutation 4x3', function t() {
-	var tc = findCase( 'backward_4x3' );
+	var tc = backward_4x3;
 	var M = 4;
 	var N = 3;
 	var LDA = M;
@@ -140,7 +135,7 @@ test( 'zlapmr: backward permutation 4x3', function t() {
 });
 
 test( 'zlapmr: identity permutation 3x2', function t() {
-	var tc = findCase( 'identity_3x2' );
+	var tc = identity_3x2;
 	var M = 3;
 	var N = 2;
 	var LDA = M;
@@ -185,7 +180,7 @@ test( 'zlapmr: M=0 quick return', function t() {
 });
 
 test( 'zlapmr: reverse permutation forward 4x2', function t() {
-	var tc = findCase( 'reverse_fwd_4x2' );
+	var tc = reverse_fwd_4x2;
 	var M = 4;
 	var N = 2;
 	var LDA = M;
@@ -206,7 +201,7 @@ test( 'zlapmr: reverse permutation forward 4x2', function t() {
 });
 
 test( 'zlapmr: reverse permutation backward 4x2', function t() {
-	var tc = findCase( 'reverse_bwd_4x2' );
+	var tc = reverse_bwd_4x2;
 	var M = 4;
 	var N = 2;
 	var LDA = M;
@@ -227,7 +222,7 @@ test( 'zlapmr: reverse permutation backward 4x2', function t() {
 });
 
 test( 'zlapmr: cyclic permutation forward 5x2', function t() {
-	var tc = findCase( 'cyclic_fwd_5x2' );
+	var tc = cyclic_fwd_5x2;
 	var M = 5;
 	var N = 2;
 	var LDA = M;
@@ -248,7 +243,7 @@ test( 'zlapmr: cyclic permutation forward 5x2', function t() {
 });
 
 test( 'zlapmr: cyclic permutation backward 5x2', function t() {
-	var tc = findCase( 'cyclic_bwd_5x2' );
+	var tc = cyclic_bwd_5x2;
 	var M = 5;
 	var N = 2;
 	var LDA = M;
@@ -269,7 +264,7 @@ test( 'zlapmr: cyclic permutation backward 5x2', function t() {
 });
 
 test( 'zlapmr: non-unit stride for X', function t() {
-	var tc = findCase( 'forward_4x3' );
+	var tc = forward_4x3;
 	var strideX2 = 8;
 	var strideX1 = 2;
 	var Xdata = [
@@ -309,7 +304,7 @@ test( 'zlapmr: non-unit stride for X', function t() {
 });
 
 test( 'zlapmr: non-zero offset', function t() {
-	var tc = findCase( 'forward_4x3' );
+	var tc = forward_4x3;
 	var Xdata = [
 		1, 2, 3, 4, 5, 6, 7, 8,
 		9, 10, 11, 12, 13, 14, 15, 16,
@@ -381,7 +376,7 @@ test( 'zlapmr: K is restored after backward permutation', function t() {
 });
 
 test( 'zlapmr: non-unit stride for K', function t() {
-	var tc = findCase( 'forward_4x3' );
+	var tc = forward_4x3;
 	var Xdata = [
 		1, 2, 3, 4, 5, 6, 7, 8,
 		9, 10, 11, 12, 13, 14, 15, 16,

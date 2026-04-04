@@ -21,8 +21,6 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -30,12 +28,16 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zaxpy = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zaxpy.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var zaxpy_basic = require( './fixtures/zaxpy_basic.json' );
+var zaxpy_alpha_zero = require( './fixtures/zaxpy_alpha_zero.json' );
+var zaxpy_alpha_one = require( './fixtures/zaxpy_alpha_one.json' );
+var zaxpy_n_zero = require( './fixtures/zaxpy_n_zero.json' );
+var zaxpy_n_one = require( './fixtures/zaxpy_n_one.json' );
+var zaxpy_stride = require( './fixtures/zaxpy_stride.json' );
+var zaxpy_neg_stride = require( './fixtures/zaxpy_neg_stride.json' );
+var zaxpy_imag_alpha = require( './fixtures/zaxpy_imag_alpha.json' );
 
 // FUNCTIONS //
 
@@ -68,7 +70,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -87,7 +88,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zaxpy: main export is a function', function t() {
@@ -105,9 +105,7 @@ test( 'zaxpy: basic (N=3, za=(2,3), strideX=1, strideY=1)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_basic';
-	} );
+	tc = zaxpy_basic;
 	za = new Complex128( 2.0, 3.0 );
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	zy = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0, 50.0, 60.0 ] );
@@ -124,9 +122,7 @@ test( 'zaxpy: alpha=0 is a no-op', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_alpha_zero';
-	} );
+	tc = zaxpy_alpha_zero;
 	za = new Complex128( 0.0, 0.0 );
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	zy = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0 ] );
@@ -136,9 +132,7 @@ test( 'zaxpy: alpha=0 is a no-op', function t() {
 });
 
 test( 'zaxpy: alpha=(1,0) adds x to y', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_alpha_one';
-	} );
+	var tc = zaxpy_alpha_one;
 	var za = new Complex128( 1.0, 0.0 );
 	var zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	var zy = new Complex128Array( [ 10.0, 20.0, 30.0, 40.0, 50.0, 60.0 ] );
@@ -153,9 +147,7 @@ test( 'zaxpy: N=0 is a no-op', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_n_zero';
-	} );
+	tc = zaxpy_n_zero;
 	za = new Complex128( 5.0, 6.0 );
 	zx = new Complex128Array( [ 1.0, 2.0 ] );
 	zy = new Complex128Array( [ 10.0, 20.0 ] );
@@ -165,9 +157,7 @@ test( 'zaxpy: N=0 is a no-op', function t() {
 });
 
 test( 'zaxpy: N=1', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_n_one';
-	} );
+	var tc = zaxpy_n_one;
 	var za = new Complex128( 1.0, 1.0 );
 	var zx = new Complex128Array( [ 2.0, 3.0 ] );
 	var zy = new Complex128Array( [ 4.0, 5.0 ] );
@@ -182,9 +172,7 @@ test( 'zaxpy: non-unit stride (strideX=2, strideY=2)', function t() {
 	var zx;
 	var zy;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_stride';
-	} );
+	tc = zaxpy_stride;
 	za = new Complex128( 2.0, 3.0 );
 	zx = new Complex128Array([
 		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
@@ -199,9 +187,7 @@ test( 'zaxpy: non-unit stride (strideX=2, strideY=2)', function t() {
 });
 
 test( 'zaxpy: negative stride (strideX=-1 reverses x)', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_neg_stride';
-	} );
+	var tc = zaxpy_neg_stride;
 
 	// Fortran with incx=-1, n=3: ix = (-3+1)*(-1)+1 = 3, reads x(3), x(2), x(1)
 
@@ -214,9 +200,7 @@ test( 'zaxpy: negative stride (strideX=-1 reverses x)', function t() {
 });
 
 test( 'zaxpy: purely imaginary alpha', function t() {
-	var tc = fixture.find( function find( t ) {
-		return t.name === 'zaxpy_imag_alpha';
-	} );
+	var tc = zaxpy_imag_alpha;
 	var za = new Complex128( 0.0, 2.0 );
 	var zx = new Complex128Array( [ 1.0, 0.0, 0.0, 1.0, 1.0, 1.0 ] );
 	var zy = new Complex128Array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] );

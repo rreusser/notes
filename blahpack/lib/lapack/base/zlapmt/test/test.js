@@ -10,26 +10,21 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Int32Array = require( '@stdlib/array/int32' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zlapmt = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zlapmt.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var forward_3x4 = require( './fixtures/forward_3x4.json' );
+var backward_3x4 = require( './fixtures/backward_3x4.json' );
+var identity_2x3 = require( './fixtures/identity_2x3.json' );
+var reverse_fwd_2x4 = require( './fixtures/reverse_fwd_2x4.json' );
+var reverse_bwd_2x4 = require( './fixtures/reverse_bwd_2x4.json' );
+var cyclic_fwd_2x5 = require( './fixtures/cyclic_fwd_2x5.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -87,7 +82,6 @@ function extractComplexMatrix( A, LDA, M, N ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zlapmt is a function', function t() {
@@ -95,7 +89,7 @@ test( 'zlapmt is a function', function t() {
 });
 
 test( 'zlapmt: forward permutation 3x4', function t() {
-	var tc = findCase( 'forward_3x4' );
+	var tc = forward_3x4;
 	var M = 3;
 	var N = 4;
 	var LDA = 4;
@@ -123,7 +117,7 @@ test( 'zlapmt: forward permutation 3x4', function t() {
 });
 
 test( 'zlapmt: backward permutation 3x4', function t() {
-	var tc = findCase( 'backward_3x4' );
+	var tc = backward_3x4;
 	var M = 3;
 	var N = 4;
 	var LDA = 4;
@@ -146,7 +140,7 @@ test( 'zlapmt: backward permutation 3x4', function t() {
 });
 
 test( 'zlapmt: identity permutation 2x3', function t() {
-	var tc = findCase( 'identity_2x3' );
+	var tc = identity_2x3;
 	var M = 2;
 	var N = 3;
 	var LDA = 4;
@@ -191,7 +185,7 @@ test( 'zlapmt: N=0 quick return', function t() {
 });
 
 test( 'zlapmt: reverse permutation forward 2x4', function t() {
-	var tc = findCase( 'reverse_fwd_2x4' );
+	var tc = reverse_fwd_2x4;
 	var M = 2;
 	var N = 4;
 	var LDA = 4;
@@ -214,7 +208,7 @@ test( 'zlapmt: reverse permutation forward 2x4', function t() {
 });
 
 test( 'zlapmt: reverse permutation backward 2x4', function t() {
-	var tc = findCase( 'reverse_bwd_2x4' );
+	var tc = reverse_bwd_2x4;
 	var M = 2;
 	var N = 4;
 	var LDA = 4;
@@ -237,7 +231,7 @@ test( 'zlapmt: reverse permutation backward 2x4', function t() {
 });
 
 test( 'zlapmt: cyclic permutation forward 2x5', function t() {
-	var tc = findCase( 'cyclic_fwd_2x5' );
+	var tc = cyclic_fwd_2x5;
 	var M = 2;
 	var N = 5;
 	var LDA = 4;
@@ -292,7 +286,7 @@ test( 'zlapmt: K is restored after backward permutation', function t() {
 });
 
 test( 'zlapmt: non-unit stride for X (strideX1=2)', function t() {
-	var tc = findCase( 'forward_3x4' );
+	var tc = forward_3x4;
 	var M = 3;
 	var N = 4;
 	var strideX1 = 2; // complex elements
@@ -333,7 +327,7 @@ test( 'zlapmt: non-unit stride for X (strideX1=2)', function t() {
 });
 
 test( 'zlapmt: non-zero offset', function t() {
-	var tc = findCase( 'forward_3x4' );
+	var tc = forward_3x4;
 	var M = 3;
 	var N = 4;
 	var LDA = 4;

@@ -3,20 +3,22 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var ilazlr = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ilazlr.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var ilazlr_diag = require( './fixtures/ilazlr_diag.json' );
+var ilazlr_row2 = require( './fixtures/ilazlr_row2.json' );
+var ilazlr_zeros = require( './fixtures/ilazlr_zeros.json' );
+var ilazlr_m_zero = require( './fixtures/ilazlr_m_zero.json' );
+var ilazlr_imag = require( './fixtures/ilazlr_imag.json' );
+var ilazlr_full = require( './fixtures/ilazlr_full.json' );
+var ilazlr_1x1 = require( './fixtures/ilazlr_1x1.json' );
+var ilazlr_1x1_zero = require( './fixtures/ilazlr_1x1_zero.json' );
 // Fortran returns 1-based; JS returns 0-based. Convert:
 /**
 * Expected.
@@ -41,7 +43,6 @@ function c128( arr ) {
 	return new Complex128Array( arr );
 }
 
-
 // TESTS //
 
 test( 'ilazlr: main export is a function', function t() {
@@ -57,9 +58,7 @@ test( 'ilazlr: diagonal 3x3 matrix -> last non-zero row = 2 (0-based)', function
 	var tc;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_diag';
-	} );
+	tc = ilazlr_diag;
 	buf = new Float64Array( 2 * 4 * 3 );
 	buf[ 0 * 2 + 0 * 8 ] = 1.0;
 	buf[ 1 * 2 + 1 * 8 ] = 2.0;
@@ -73,9 +72,7 @@ test( 'ilazlr: last row all zeros -> returns 1 (0-based row 2)', function t() {
 	var tc;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_row2';
-	} );
+	tc = ilazlr_row2;
 	buf = new Float64Array( 2 * 4 * 3 );
 	buf[ 0 * 2 + 0 * 8 ] = 1.0;
 	buf[ 1 * 2 + 1 * 8 ] = 2.0;
@@ -88,9 +85,7 @@ test( 'ilazlr: all zeros -> returns -1', function t() {
 	var tc;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_zeros';
-	} );
+	tc = ilazlr_zeros;
 	buf = new Float64Array( 2 * 4 * 3 );
 	A = c128( buf );
 	assert.strictEqual( base( 3, 3, A, 1, 4, 0 ), expected( tc ) );
@@ -101,9 +96,7 @@ test( 'ilazlr: M=0 -> returns -1', function t() {
 	var tc;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_m_zero';
-	} );
+	tc = ilazlr_m_zero;
 	buf = new Float64Array( 2 * 4 * 3 );
 	A = c128( buf );
 	assert.strictEqual( base( 0, 3, A, 1, 4, 0 ), expected( tc ) );
@@ -114,9 +107,7 @@ test( 'ilazlr: only imaginary part non-zero in last row', function t() {
 	var tc;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_imag';
-	} );
+	tc = ilazlr_imag;
 	buf = new Float64Array( 2 * 4 * 3 );
 	buf[ 2 * 2 + 1 * 8 + 1 ] = 5.0;
 	A = c128( buf );
@@ -132,9 +123,7 @@ test( 'ilazlr: full matrix -> returns M-1', function t() {
 	var k;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_full';
-	} );
+	tc = ilazlr_full;
 	buf = new Float64Array( 2 * 4 * 3 );
 	vals = [
 		[1, 1],
@@ -164,9 +153,7 @@ test( 'ilazlr: 1x1 non-zero -> returns 0', function t() {
 	var tc;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_1x1';
-	} );
+	tc = ilazlr_1x1;
 	buf = new Float64Array( 2 * 4 );
 	buf[ 0 ] = 1.0;
 	A = c128( buf );
@@ -178,9 +165,7 @@ test( 'ilazlr: 1x1 zero -> returns -1', function t() {
 	var tc;
 	var A;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'ilazlr_1x1_zero';
-	} );
+	tc = ilazlr_1x1_zero;
 	buf = new Float64Array( 2 * 4 );
 	A = c128( buf );
 	assert.strictEqual( base( 1, 1, A, 1, 4, 0 ), expected( tc ) );

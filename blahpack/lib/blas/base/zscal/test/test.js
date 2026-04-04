@@ -21,8 +21,6 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Complex128 = require( '@stdlib/complex/float64/ctor' );
@@ -30,12 +28,13 @@ var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zscal = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zscal.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
+// FIXTURES //
 
+var zscal_basic = require( './fixtures/zscal_basic.json' );
+var zscal_n_zero = require( './fixtures/zscal_n_zero.json' );
+var zscal_za_zero = require( './fixtures/zscal_za_zero.json' );
+var zscal_stride = require( './fixtures/zscal_stride.json' );
+var zscal_za_one = require( './fixtures/zscal_za_one.json' );
 
 // FUNCTIONS //
 
@@ -68,7 +67,6 @@ function assertArrayClose( actual, expected, msg ) {
 	}
 }
 
-
 // FUNCTIONS //
 
 /**
@@ -87,7 +85,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'zscal: main export is a function', function t() {
@@ -104,9 +101,7 @@ test( 'zscal: basic scale (N=3, za=(2,3), strideX=1)', function t() {
 	var za;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zscal_basic';
-	} );
+	tc = zscal_basic;
 	za = new Complex128( 2.0, 3.0 );
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	result = base( 3, za, zx, 1, 0 );
@@ -120,9 +115,7 @@ test( 'zscal: N=0 is a no-op', function t() {
 	var za;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zscal_n_zero';
-	} );
+	tc = zscal_n_zero;
 	za = new Complex128( 5.0, 6.0 );
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
 	result = base( 0, za, zx, 1, 0 );
@@ -136,9 +129,7 @@ test( 'zscal: za=(0,0) zeros out vector', function t() {
 	var za;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zscal_za_zero';
-	} );
+	tc = zscal_za_zero;
 	za = new Complex128( 0.0, 0.0 );
 	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
 	result = base( 3, za, zx, 1, 0 );
@@ -152,9 +143,7 @@ test( 'zscal: non-unit stride (strideX=2, za=(0,1))', function t() {
 	var za;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zscal_stride';
-	} );
+	tc = zscal_stride;
 	za = new Complex128( 0.0, 1.0 );
 	zx = new Complex128Array([
 		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
@@ -170,9 +159,7 @@ test( 'zscal: za=(1,0) is identity (no-op)', function t() {
 	var za;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'zscal_za_one';
-	} );
+	tc = zscal_za_one;
 	za = new Complex128( 1.0, 0.0 );
 	zx = new Complex128Array( [ 7.0, 8.0, 9.0, 10.0 ] );
 	result = base( 2, za, zx, 1, 0 );

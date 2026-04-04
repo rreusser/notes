@@ -1,43 +1,31 @@
 /* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
 
-
 'use strict';
-
 
 // MODULES //
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var ztbmv = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'ztbmv.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-		return JSON.parse( line );
-	} );
-
+var upper_no_trans_nonunit = require( './fixtures/upper_no_trans_nonunit.json' );
+var upper_trans_nonunit = require( './fixtures/upper_trans_nonunit.json' );
+var upper_conj_trans_nonunit = require( './fixtures/upper_conj_trans_nonunit.json' );
+var upper_no_trans_unit = require( './fixtures/upper_no_trans_unit.json' );
+var lower_no_trans_nonunit = require( './fixtures/lower_no_trans_nonunit.json' );
+var lower_trans_nonunit = require( './fixtures/lower_trans_nonunit.json' );
+var lower_conj_trans_nonunit = require( './fixtures/lower_conj_trans_nonunit.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var upper_stride_2 = require( './fixtures/upper_stride_2.json' );
+var scalar = require( './fixtures/scalar.json' );
+var lower_no_trans_unit = require( './fixtures/lower_no_trans_unit.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-		return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -141,7 +129,6 @@ function stdX(  ) {
 		return new Complex128Array( [ 1.0, 0.0, 2.0, 1.0, 3.0, -1.0, 4.0, 0.5 ] );
 	}
 
-
 /**
 * Converts a typed array to a plain array.
 *
@@ -158,7 +145,6 @@ function toArray( arr ) {
 	return out;
 }
 
-
 // TESTS //
 
 test( 'ztbmv is a function', function t() {
@@ -171,7 +157,7 @@ test( 'ztbmv: upper_no_trans_nonunit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_no_trans_nonunit' );
+	tc = upper_no_trans_nonunit;
 	A = upperBandA();
 	x = stdX();
 	ztbmv( 'upper', 'no-transpose', 'non-unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -185,7 +171,7 @@ test( 'ztbmv: upper_trans_nonunit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_trans_nonunit' );
+	tc = upper_trans_nonunit;
 	A = upperBandA();
 	x = stdX();
 	ztbmv( 'upper', 'transpose', 'non-unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -199,7 +185,7 @@ test( 'ztbmv: upper_conj_trans_nonunit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_conj_trans_nonunit' );
+	tc = upper_conj_trans_nonunit;
 	A = upperBandA();
 	x = stdX();
 	ztbmv( 'upper', 'conjugate-transpose', 'non-unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -213,7 +199,7 @@ test( 'ztbmv: upper_no_trans_unit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_no_trans_unit' );
+	tc = upper_no_trans_unit;
 	A = upperBandA();
 	x = stdX();
 	ztbmv( 'upper', 'no-transpose', 'unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -227,7 +213,7 @@ test( 'ztbmv: lower_no_trans_nonunit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_no_trans_nonunit' );
+	tc = lower_no_trans_nonunit;
 	A = lowerBandA();
 	x = stdX();
 	ztbmv( 'lower', 'no-transpose', 'non-unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -241,7 +227,7 @@ test( 'ztbmv: lower_trans_nonunit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_trans_nonunit' );
+	tc = lower_trans_nonunit;
 	A = lowerBandA();
 	x = stdX();
 	ztbmv( 'lower', 'transpose', 'non-unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -255,7 +241,7 @@ test( 'ztbmv: lower_conj_trans_nonunit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_conj_trans_nonunit' );
+	tc = lower_conj_trans_nonunit;
 	A = lowerBandA();
 	x = stdX();
 	ztbmv( 'lower', 'conjugate-transpose', 'non-unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -269,7 +255,7 @@ test( 'ztbmv: n_zero', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = lowerBandA();
 	x = new Complex128Array( [ 99.0, 0.0 ] );
 	ztbmv( 'upper', 'no-transpose', 'non-unit', 0, 2, A, 1, 3, 0, x, 1, 0 );
@@ -283,7 +269,7 @@ test( 'ztbmv: upper_stride_2', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_stride_2' );
+	tc = upper_stride_2;
 	A = upperBandA();
 	x = new Complex128Array( 8 );
 	xv = reinterpret( x, 0 );
@@ -307,7 +293,7 @@ test( 'ztbmv: scalar', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'scalar' );
+	tc = scalar;
 	A = new Complex128Array( 1 );
 	x = new Complex128Array( 1 );
 	av = reinterpret( A, 0 );
@@ -327,7 +313,7 @@ test( 'ztbmv: lower_no_trans_unit', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'lower_no_trans_unit' );
+	tc = lower_no_trans_unit;
 	A = lowerBandA();
 	x = stdX();
 	ztbmv( 'lower', 'no-transpose', 'unit', 4, 2, A, 1, 3, 0, x, 1, 0 );
@@ -440,7 +426,7 @@ test( 'ztbmv: with offsetX', function t() {
 	var A;
 	var x;
 
-	tc = findCase( 'upper_no_trans_nonunit' );
+	tc = upper_no_trans_nonunit;
 	A = upperBandA();
 	x = new Complex128Array( 6 );
 	xv = reinterpret( x, 0 );

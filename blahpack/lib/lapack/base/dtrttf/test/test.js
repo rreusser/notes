@@ -7,23 +7,20 @@
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var dtrttf = require( './../lib/base.js' );
-
 
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dtrttf.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var n5_n_l = require( './fixtures/n5_n_l.json' );
+var n5_t_l = require( './fixtures/n5_t_l.json' );
+var n5_n_u = require( './fixtures/n5_n_u.json' );
+var n5_t_u = require( './fixtures/n5_t_u.json' );
+var n6_n_l = require( './fixtures/n6_n_l.json' );
+var n6_t_l = require( './fixtures/n6_t_l.json' );
+var n6_n_u = require( './fixtures/n6_n_u.json' );
+var n6_t_u = require( './fixtures/n6_t_u.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertArrayEqual( actual, expected, msg ) {
 	var i;
@@ -44,7 +41,6 @@ function assertArrayEqual( actual, expected, msg ) {
 function matrixFromFlat( flat, N ) {
 	return new Float64Array( flat );
 }
-
 
 // TESTS //
 
@@ -76,7 +72,7 @@ test( 'dtrttf: N=1 quick return', function t() {
 });
 
 test( 'dtrttf: N=5, no-transpose, lower (odd, normal, lower)', function t() {
-	var tc = findCase( 'n5_N_L' );
+	var tc = n5_n_l;
 	var info;
 	var ARF;
 	var A;
@@ -91,7 +87,7 @@ test( 'dtrttf: N=5, no-transpose, lower (odd, normal, lower)', function t() {
 });
 
 test( 'dtrttf: N=5, transpose, lower (odd, transpose, lower)', function t() {
-	var tc = findCase( 'n5_T_L' );
+	var tc = n5_t_l;
 	var info;
 	var ARF;
 	var A;
@@ -106,7 +102,7 @@ test( 'dtrttf: N=5, transpose, lower (odd, transpose, lower)', function t() {
 });
 
 test( 'dtrttf: N=5, no-transpose, upper (odd, normal, upper)', function t() {
-	var tc = findCase( 'n5_N_U' );
+	var tc = n5_n_u;
 	var info;
 	var ARF;
 	var A;
@@ -121,7 +117,7 @@ test( 'dtrttf: N=5, no-transpose, upper (odd, normal, upper)', function t() {
 });
 
 test( 'dtrttf: N=5, transpose, upper (odd, transpose, upper)', function t() {
-	var tc = findCase( 'n5_T_U' );
+	var tc = n5_t_u;
 	var info;
 	var ARF;
 	var A;
@@ -136,7 +132,7 @@ test( 'dtrttf: N=5, transpose, upper (odd, transpose, upper)', function t() {
 });
 
 test( 'dtrttf: N=6, no-transpose, lower (even, normal, lower)', function t() {
-	var tc = findCase( 'n6_N_L' );
+	var tc = n6_n_l;
 	var info;
 	var ARF;
 	var A;
@@ -151,7 +147,7 @@ test( 'dtrttf: N=6, no-transpose, lower (even, normal, lower)', function t() {
 });
 
 test( 'dtrttf: N=6, transpose, lower (even, transpose, lower)', function t() {
-	var tc = findCase( 'n6_T_L' );
+	var tc = n6_t_l;
 	var info;
 	var ARF;
 	var A;
@@ -166,7 +162,7 @@ test( 'dtrttf: N=6, transpose, lower (even, transpose, lower)', function t() {
 });
 
 test( 'dtrttf: N=6, no-transpose, upper (even, normal, upper)', function t() {
-	var tc = findCase( 'n6_N_U' );
+	var tc = n6_n_u;
 	var info;
 	var ARF;
 	var A;
@@ -181,7 +177,7 @@ test( 'dtrttf: N=6, no-transpose, upper (even, normal, upper)', function t() {
 });
 
 test( 'dtrttf: N=6, transpose, upper (even, transpose, upper)', function t() {
-	var tc = findCase( 'n6_T_U' );
+	var tc = n6_t_u;
 	var info;
 	var ARF;
 	var A;
@@ -347,7 +343,7 @@ test( 'dtrttf: BLAS-style wrapper validates order', function t() {
 });
 
 test( 'dtrttf: BLAS-style wrapper (column-major)', function t() {
-	var tc = findCase( 'n5_N_L' );
+	var tc = n5_n_l;
 	var wrapper = require( './../lib/dtrttf.js' );
 	var info;
 	var ARF;
@@ -363,7 +359,7 @@ test( 'dtrttf: BLAS-style wrapper (column-major)', function t() {
 });
 
 test( 'dtrttf: offsetA support', function t() {
-	var tc = findCase( 'n5_N_L' );
+	var tc = n5_n_l;
 	var info;
 	var ARF;
 	var A;
@@ -380,7 +376,7 @@ test( 'dtrttf: offsetA support', function t() {
 });
 
 test( 'dtrttf: offsetARF support', function t() {
-	var tc = findCase( 'n5_N_L' );
+	var tc = n5_n_l;
 	var info;
 	var ARF;
 	var A;

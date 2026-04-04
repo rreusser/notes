@@ -5,25 +5,26 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Float64Array = require( '@stdlib/array/float64' );
 var Int32Array = require( '@stdlib/array/int32' );
 var dsyevx = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'dsyevx.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var dsyevx_4x4_v_a_l = require( './fixtures/dsyevx_4x4_v_a_l.json' );
+var dsyevx_4x4_v_a_u = require( './fixtures/dsyevx_4x4_v_a_u.json' );
+var dsyevx_4x4_n_a_l = require( './fixtures/dsyevx_4x4_n_a_l.json' );
+var dsyevx_4x4_v_v_l = require( './fixtures/dsyevx_4x4_v_v_l.json' );
+var dsyevx_4x4_v_i_l = require( './fixtures/dsyevx_4x4_v_i_l.json' );
+var dsyevx_4x4_n_v_u = require( './fixtures/dsyevx_4x4_n_v_u.json' );
+var dsyevx_1x1_v_a = require( './fixtures/dsyevx_1x1_v_a.json' );
+var dsyevx_1x1_v_v_excluded = require( './fixtures/dsyevx_1x1_v_v_excluded.json' );
+var dsyevx_1x1_v_v_included = require( './fixtures/dsyevx_1x1_v_v_included.json' );
+var dsyevx_1x1_n_i = require( './fixtures/dsyevx_1x1_n_i.json' );
+var dsyevx_4x4_n_i_u_fast = require( './fixtures/dsyevx_4x4_n_i_u_fast.json' );
+var dsyevx_4x4_v_i_u_fast = require( './fixtures/dsyevx_4x4_v_i_u_fast.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -109,11 +110,10 @@ function runDsyevx( jobz, range, uplo, N, A, vl, vu, il, iu, abstol ) {
 	return { info: info, M: out.M, w: w, Z: Z, IFAIL: IFAIL };
 }
 
-
 // TESTS //
 
 test( 'dsyevx: V, A, L, 4x4', function t() {
-	var tc = findCase( 'dsyevx_4x4_V_A_L' );
+	var tc = dsyevx_4x4_v_a_l;
 	var Aorig = symMatrix4();
 	var A = new Float64Array( Aorig );
 	var r = runDsyevx( 'compute-vectors', 'all', 'lower', 4, A, 0, 0, 0, 0, 0 );
@@ -125,7 +125,7 @@ test( 'dsyevx: V, A, L, 4x4', function t() {
 });
 
 test( 'dsyevx: V, A, U, 4x4', function t() {
-	var tc = findCase( 'dsyevx_4x4_V_A_U' );
+	var tc = dsyevx_4x4_v_a_u;
 	var Aorig = symMatrix4();
 	var A = new Float64Array( Aorig );
 	var r = runDsyevx( 'compute-vectors', 'all', 'upper', 4, A, 0, 0, 0, 0, 0 );
@@ -137,7 +137,7 @@ test( 'dsyevx: V, A, U, 4x4', function t() {
 });
 
 test( 'dsyevx: N, A, L, 4x4', function t() {
-	var tc = findCase( 'dsyevx_4x4_N_A_L' );
+	var tc = dsyevx_4x4_n_a_l;
 	var A = symMatrix4();
 	var r = runDsyevx( 'no-vectors', 'all', 'lower', 4, A, 0, 0, 0, 0, 0 );
 
@@ -147,7 +147,7 @@ test( 'dsyevx: N, A, L, 4x4', function t() {
 });
 
 test( 'dsyevx: V, V, L, 4x4 (value range [2.5, 5.5])', function t() {
-	var tc = findCase( 'dsyevx_4x4_V_V_L' );
+	var tc = dsyevx_4x4_v_v_l;
 	var Aorig = symMatrix4();
 	var A = new Float64Array( Aorig );
 	var r = runDsyevx( 'compute-vectors', 'value', 'lower', 4, A, 2.5, 5.5, 0, 0, 0 );
@@ -159,7 +159,7 @@ test( 'dsyevx: V, V, L, 4x4 (value range [2.5, 5.5])', function t() {
 });
 
 test( 'dsyevx: V, I, L, 4x4 (index range 2..3)', function t() {
-	var tc = findCase( 'dsyevx_4x4_V_I_L' );
+	var tc = dsyevx_4x4_v_i_l;
 	var Aorig = symMatrix4();
 	var A = new Float64Array( Aorig );
 	var r = runDsyevx( 'compute-vectors', 'index', 'lower', 4, A, 0, 0, 2, 3, 0 );
@@ -171,7 +171,7 @@ test( 'dsyevx: V, I, L, 4x4 (index range 2..3)', function t() {
 });
 
 test( 'dsyevx: N, V, U, 4x4 (value range [0, 4])', function t() {
-	var tc = findCase( 'dsyevx_4x4_N_V_U' );
+	var tc = dsyevx_4x4_n_v_u;
 	var A = symMatrix4();
 	var r = runDsyevx( 'no-vectors', 'value', 'upper', 4, A, 0, 4, 0, 0, 0 );
 
@@ -181,7 +181,7 @@ test( 'dsyevx: N, V, U, 4x4 (value range [0, 4])', function t() {
 });
 
 test( 'dsyevx: N=1, V, A', function t() {
-	var tc = findCase( 'dsyevx_1x1_V_A' );
+	var tc = dsyevx_1x1_v_a;
 	var A = new Float64Array([ 7.5 ]);
 	var r = runDsyevx( 'compute-vectors', 'all', 'lower', 1, A, 0, 0, 0, 0, 0 );
 
@@ -200,7 +200,7 @@ test( 'dsyevx: N=0', function t() {
 });
 
 test( 'dsyevx: N=1, V, V, excluded', function t() {
-	var tc = findCase( 'dsyevx_1x1_V_V_excluded' );
+	var tc = dsyevx_1x1_v_v_excluded;
 	var A = new Float64Array([ 7.5 ]);
 	var r = runDsyevx( 'compute-vectors', 'value', 'lower', 1, A, 0, 5, 0, 0, 0 );
 
@@ -209,7 +209,7 @@ test( 'dsyevx: N=1, V, V, excluded', function t() {
 });
 
 test( 'dsyevx: N=1, V, V, included', function t() {
-	var tc = findCase( 'dsyevx_1x1_V_V_included' );
+	var tc = dsyevx_1x1_v_v_included;
 	var A = new Float64Array([ 7.5 ]);
 	var r = runDsyevx( 'compute-vectors', 'value', 'lower', 1, A, 5, 10, 0, 0, 0 );
 
@@ -220,7 +220,7 @@ test( 'dsyevx: N=1, V, V, included', function t() {
 });
 
 test( 'dsyevx: N=1, N, I', function t() {
-	var tc = findCase( 'dsyevx_1x1_N_I' );
+	var tc = dsyevx_1x1_n_i;
 	var A = new Float64Array([ 3.0 ]);
 	var r = runDsyevx( 'no-vectors', 'index', 'upper', 1, A, 0, 0, 1, 1, 0 );
 
@@ -230,7 +230,7 @@ test( 'dsyevx: N=1, N, I', function t() {
 });
 
 test( 'dsyevx: N, I, U, fast path (il=1, iu=N)', function t() {
-	var tc = findCase( 'dsyevx_4x4_N_I_U_fast' );
+	var tc = dsyevx_4x4_n_i_u_fast;
 	var A = symMatrix4();
 	var r = runDsyevx( 'no-vectors', 'index', 'upper', 4, A, 0, 0, 1, 4, 0 );
 
@@ -253,7 +253,7 @@ test( 'dsyevx: V, A, L, 4x4 - scaled (tiny matrix)', function t() {
 	assert.equal( r.info, 0 );
 	assert.equal( r.M, 4 );
 	// Eigenvalues should be scale * original eigenvalues
-	var tc = findCase( 'dsyevx_4x4_V_A_L' );
+	var tc = dsyevx_4x4_v_a_l;
 	for ( i = 0; i < 4; i++ ) {
 		assertClose( r.w[ i ], tc.w[ i ] * scale, 1e-10, 'w[' + i + ']' );
 	}
@@ -272,7 +272,7 @@ test( 'dsyevx: V, A, U, 4x4 - scaled (large matrix)', function t() {
 
 	assert.equal( r.info, 0 );
 	assert.equal( r.M, 4 );
-	var tc = findCase( 'dsyevx_4x4_V_A_U' );
+	var tc = dsyevx_4x4_v_a_u;
 	for ( i = 0; i < 4; i++ ) {
 		assertClose( r.w[ i ], tc.w[ i ] * scale, 1e-10, 'w[' + i + ']' );
 	}
@@ -294,7 +294,7 @@ test( 'dsyevx: V, V, L, scaled (value range)', function t() {
 });
 
 test( 'dsyevx: V, I, U, fast path (il=1, iu=N)', function t() {
-	var tc = findCase( 'dsyevx_4x4_V_I_U_fast' );
+	var tc = dsyevx_4x4_v_i_u_fast;
 	var Aorig = symMatrix4();
 	var A = new Float64Array( Aorig );
 	var r = runDsyevx( 'compute-vectors', 'index', 'upper', 4, A, 0, 0, 1, 4, 0 );

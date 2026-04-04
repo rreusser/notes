@@ -6,25 +6,22 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
 var zgebrd = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' );
-var lines = readFileSync( path.join( fixtureDir, 'zgebrd.jsonl' ), 'utf8' ).trim().split( '\n' );
-var fixture = lines.map( function parse( line ) { return JSON.parse( line ); } );
-
+var upper_4x3 = require( './fixtures/upper_4x3.json' );
+var lower_3x4 = require( './fixtures/lower_3x4.json' );
+var square_6x6 = require( './fixtures/square_6x6.json' );
+var m_zero = require( './fixtures/m_zero.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var one_by_one = require( './fixtures/one_by_one.json' );
+var upper_35x33 = require( './fixtures/upper_35x33.json' );
+var lower_33x35 = require( './fixtures/lower_33x35.json' );
 
 // FUNCTIONS //
-
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name; } );
-}
 
 function assertClose( actual, expected, tol, msg ) {
 	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 );
@@ -73,11 +70,10 @@ function makeBigMatrix( M, N ) {
 	return A;
 }
 
-
 // TESTS //
 
 test( 'zgebrd: upper_4x3 (M > N, upper bidiagonal)', function t() {
-	var tc = findCase( 'upper_4x3' );
+	var tc = upper_4x3;
 	var info;
 
 	var A = new Complex128Array([
@@ -102,7 +98,7 @@ test( 'zgebrd: upper_4x3 (M > N, upper bidiagonal)', function t() {
 });
 
 test( 'zgebrd: lower_3x4 (M < N, lower bidiagonal)', function t() {
-	var tc = findCase( 'lower_3x4' );
+	var tc = lower_3x4;
 	var info;
 
 	var A = new Complex128Array([
@@ -128,7 +124,7 @@ test( 'zgebrd: lower_3x4 (M < N, lower bidiagonal)', function t() {
 });
 
 test( 'zgebrd: square_6x6', function t() {
-	var tc = findCase( 'square_6x6' );
+	var tc = square_6x6;
 	var info;
 
 	var A = new Complex128Array([
@@ -156,7 +152,7 @@ test( 'zgebrd: square_6x6', function t() {
 });
 
 test( 'zgebrd: m_zero (quick return)', function t() {
-	var tc = findCase( 'm_zero' );
+	var tc = m_zero;
 	var A = new Complex128Array( 1 );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 1 );
@@ -171,7 +167,7 @@ test( 'zgebrd: m_zero (quick return)', function t() {
 });
 
 test( 'zgebrd: n_zero (quick return)', function t() {
-	var tc = findCase( 'n_zero' );
+	var tc = n_zero;
 	var A = new Complex128Array( 1 );
 	var d = new Float64Array( 1 );
 	var e = new Float64Array( 1 );
@@ -186,7 +182,7 @@ test( 'zgebrd: n_zero (quick return)', function t() {
 });
 
 test( 'zgebrd: one_by_one', function t() {
-	var tc = findCase( 'one_by_one' );
+	var tc = one_by_one;
 	var info;
 
 	var A = new Complex128Array([ 5, 3 ]);
@@ -206,7 +202,7 @@ test( 'zgebrd: one_by_one', function t() {
 });
 
 test( 'zgebrd: upper_35x33 (blocked, M > N, small lwork)', function t() {
-	var tc = findCase( 'upper_35x33' );
+	var tc = upper_35x33;
 	var WORK;
 	var TAUQ;
 	var TAUP;
@@ -232,7 +228,7 @@ test( 'zgebrd: upper_35x33 (blocked, M > N, small lwork)', function t() {
 });
 
 test( 'zgebrd: upper_35x33 (blocked, M > N, tiny lwork)', function t() {
-	var tc = findCase( 'upper_35x33' );
+	var tc = upper_35x33;
 	var WORK;
 	var TAUQ;
 	var TAUP;
@@ -258,7 +254,7 @@ test( 'zgebrd: upper_35x33 (blocked, M > N, tiny lwork)', function t() {
 });
 
 test( 'zgebrd: upper_35x33 (blocked, M > N)', function t() {
-	var tc = findCase( 'upper_35x33' );
+	var tc = upper_35x33;
 	var WORK;
 	var TAUQ;
 	var TAUP;
@@ -284,7 +280,7 @@ test( 'zgebrd: upper_35x33 (blocked, M > N)', function t() {
 });
 
 test( 'zgebrd: lower_33x35 (blocked, M < N)', function t() {
-	var tc = findCase( 'lower_33x35' );
+	var tc = lower_33x35;
 	var WORK;
 	var TAUQ;
 	var TAUP;

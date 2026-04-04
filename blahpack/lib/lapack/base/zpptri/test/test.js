@@ -5,38 +5,23 @@
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var Float64Array = require( '@stdlib/array/float64' );
 var zpptrf = require( '../../zpptrf/lib/base.js' );
 var zpptri = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'zpptri.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync, max-len
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_3 = require( './fixtures/upper_3.json' );
+var lower_3 = require( './fixtures/lower_3.json' );
+var upper_4 = require( './fixtures/upper_4.json' );
+var lower_4 = require( './fixtures/lower_4.json' );
+var n1 = require( './fixtures/n1.json' );
+var singular_upper = require( './fixtures/singular_upper.json' );
+var singular_lower = require( './fixtures/singular_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) {
-		return t.name === name;
-	} );
-}
 
 /**
 * Converts a Float64Array to an array.
@@ -87,7 +72,6 @@ function c128( arr ) {
 	return new Complex128Array( new Float64Array( arr ) );
 }
 
-
 // TESTS //
 
 test( 'zpptri is a function', function t() {
@@ -100,7 +84,7 @@ test( 'zpptri: upper, 3x3 HPD matrix', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'upper_3' );
+	tc = upper_3;
 	ap = c128( [ 10.0, 0.0, 3.0, -1.0, 8.0, 0.0, 1.0, 2.0, 2.0, -1.0, 6.0, 0.0 ] );
 	info = zpptrf( 'upper', 3, ap, 1, 0 );
 	assert.equal( info, 0, 'zpptrf should succeed' );
@@ -116,7 +100,7 @@ test( 'zpptri: lower, 3x3 HPD matrix', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'lower_3' );
+	tc = lower_3;
 	ap = c128( [ 10.0, 0.0, 3.0, 1.0, 1.0, -2.0, 8.0, 0.0, 2.0, 1.0, 6.0, 0.0 ] );
 	info = zpptrf( 'lower', 3, ap, 1, 0 );
 	assert.equal( info, 0, 'zpptrf should succeed' );
@@ -132,7 +116,7 @@ test( 'zpptri: upper, 4x4 HPD matrix', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'upper_4' );
+	tc = upper_4;
 	ap = c128([
 		14.0,
 		0.0,
@@ -169,7 +153,7 @@ test( 'zpptri: lower, 4x4 HPD matrix', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'lower_4' );
+	tc = lower_4;
 	ap = c128([
 		14.0,
 		0.0,
@@ -215,7 +199,7 @@ test( 'zpptri: N=1', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'n1' );
+	tc = n1;
 	ap = c128( [ 9.0, 0.0 ] );
 	info = zpptrf( 'upper', 1, ap, 1, 0 );
 	assert.equal( info, 0, 'zpptrf should succeed' );
@@ -230,7 +214,7 @@ test( 'zpptri: singular upper (info=2)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'singular_upper' );
+	tc = singular_upper;
 	ap = c128( [ 3.0, 0.0, 1.0, 2.0, 0.0, 0.0, 4.0, 1.0, 2.0, -1.0, 5.0, 0.0 ] );
 	info = zpptri( 'upper', 3, ap, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -241,7 +225,7 @@ test( 'zpptri: singular lower (info=3)', function t() {
 	var tc;
 	var ap;
 
-	tc = findCase( 'singular_lower' );
+	tc = singular_lower;
 	ap = c128( [ 3.0, 0.0, 1.0, 2.0, 4.0, 1.0, 5.0, 0.0, 2.0, -1.0, 0.0, 0.0 ] );
 	info = zpptri( 'lower', 3, ap, 1, 0 );
 	assert.equal( info, tc.info, 'info' );
@@ -253,7 +237,7 @@ test( 'zpptri: works with non-zero offset', function t() {
 	var ap;
 	var av;
 
-	tc = findCase( 'upper_3' );
+	tc = upper_3;
 	ap = c128([
 		99.0,
 		99.0,

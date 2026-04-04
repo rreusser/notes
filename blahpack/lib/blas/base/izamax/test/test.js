@@ -21,22 +21,19 @@
 'use strict';
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Complex128Array = require( '@stdlib/array/complex128' );
 var izamax = require( './../lib' );
 var base = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'izamax.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var basic = require( './fixtures/basic.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var equal = require( './fixtures/equal.json' );
+var negative = require( './fixtures/negative.json' );
 
 // TESTS //
 
@@ -53,9 +50,7 @@ test( 'izamax: basic (n=4, strideX=1)', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'basic';
-	} );
+	tc = basic;
 	zx = new Complex128Array( [ 1, 2, 5, 1, 2, 3, 4, 0 ] );
 	result = base( 4, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1 );
@@ -66,9 +61,7 @@ test( 'izamax: n=0 returns -1', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_zero';
-	} );
+	tc = n_zero;
 	zx = new Complex128Array( [ 1, 2 ] );
 	result = base( 0, zx, 1, 0 );
 	assert.strictEqual( result, -1 );
@@ -80,9 +73,7 @@ test( 'izamax: n=1 returns 0', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'n_one';
-	} );
+	tc = n_one;
 	zx = new Complex128Array( [ 1, 2 ] );
 	result = base( 1, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1 );
@@ -93,9 +84,7 @@ test( 'izamax: non-unit stride (strideX=2)', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'stride';
-	} );
+	tc = stride;
 	zx = new Complex128Array([
 		1,
 		2,      // element 0
@@ -117,9 +106,7 @@ test( 'izamax: equal magnitudes returns first', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'equal';
-	} );
+	tc = equal;
 	zx = new Complex128Array( [ 3, 2, 1, 4, 5, 0 ] );
 	result = base( 3, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1 );
@@ -130,9 +117,7 @@ test( 'izamax: negative components', function t() {
 	var tc;
 	var zx;
 
-	tc = fixture.find( function find( t ) {
-		return t.name === 'negative';
-	} );
+	tc = negative;
 	zx = new Complex128Array( [ -3, -4, 1, 1, -2, 5 ] );
 	result = base( 3, zx, 1, 0 );
 	assert.strictEqual( result, tc.result - 1 );

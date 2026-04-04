@@ -2,39 +2,25 @@
 
 'use strict';
 
-
 // MODULES //
 
 var test = require( 'node:test' );
-var readFileSync = require( 'fs' ).readFileSync;
-var path = require( 'path' );
 var assert = require( 'node:assert/strict' );
 var Float64Array = require( '@stdlib/array/float64' );
 var dlauu2 = require( './../lib/base.js' );
 
-
 // FIXTURES //
 
-var fixtureDir = path.join( __dirname, '..', '..', '..', '..', '..', 'test', 'fixtures' ); // eslint-disable-line max-len
-var lines = readFileSync( path.join( fixtureDir, 'dlauu2.jsonl' ), 'utf8' ).trim().split( '\n' ); // eslint-disable-line node/no-sync
-var fixture = lines.map( function parse( line ) {
-	return JSON.parse( line );
-} );
-
+var upper_3x3 = require( './fixtures/upper_3x3.json' );
+var lower_3x3 = require( './fixtures/lower_3x3.json' );
+var n_one = require( './fixtures/n_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var lower_n_one = require( './fixtures/lower_n_one.json' );
+var upper_4x4 = require( './fixtures/upper_4x4.json' );
+var identity_upper = require( './fixtures/identity_upper.json' );
+var identity_lower = require( './fixtures/identity_lower.json' );
 
 // FUNCTIONS //
-
-/**
-* Returns a test case from the fixture data.
-*
-* @private
-* @param {string} name - test case name
-* @returns {*} result
-*/
-function findCase( name ) {
-	return fixture.find( function find( t ) { return t.name === name;
-	} );
-}
 
 /**
 * Asserts that two numbers are approximately equal.
@@ -67,7 +53,6 @@ function assertArrayClose( actual, expected, tol, msg ) {
 	}
 }
 
-
 // TESTS //
 
 test( 'dlauu2: upper_3x3', function t() {
@@ -75,7 +60,7 @@ test( 'dlauu2: upper_3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	A = new Float64Array([
 		2.0,
 		0.0,
@@ -97,7 +82,7 @@ test( 'dlauu2: lower_3x3', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_3x3' );
+	tc = lower_3x3;
 	A = new Float64Array([
 		2.0,
 		1.0,
@@ -119,7 +104,7 @@ test( 'dlauu2: n_one', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_one' );
+	tc = n_one;
 	A = new Float64Array([ 5.0 ]);
 	info = dlauu2( 'upper', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -131,7 +116,7 @@ test( 'dlauu2: n_zero', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'n_zero' );
+	tc = n_zero;
 	A = new Float64Array([ 99.0 ]);
 	info = dlauu2( 'upper', 0, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -143,7 +128,7 @@ test( 'dlauu2: lower_n_one', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'lower_n_one' );
+	tc = lower_n_one;
 	A = new Float64Array([ 3.0 ]);
 	info = dlauu2( 'lower', 1, A, 1, 1, 0 );
 	assert.equal( info, tc.info );
@@ -155,7 +140,7 @@ test( 'dlauu2: upper_4x4', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_4x4' );
+	tc = upper_4x4;
 	A = new Float64Array([
 		1.0,
 		0.0,
@@ -184,7 +169,7 @@ test( 'dlauu2: identity_upper', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'identity_upper' );
+	tc = identity_upper;
 	A = new Float64Array([
 		1.0,
 		0.0,
@@ -206,7 +191,7 @@ test( 'dlauu2: identity_lower', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'identity_lower' );
+	tc = identity_lower;
 	A = new Float64Array([
 		1.0,
 		0.0,
@@ -249,7 +234,7 @@ test( 'dlauu2: supports row-major via strides', function t() {
 	var tc;
 	var A;
 
-	tc = findCase( 'upper_3x3' );
+	tc = upper_3x3;
 	A = new Float64Array([
 		2.0,
 		1.0,
