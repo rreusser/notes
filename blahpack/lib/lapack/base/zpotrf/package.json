@@ -44,5 +44,21 @@
     "sunos",
     "win32",
     "windows"
+  ],
+  "keywords": [
+    "stdlib",
+    "stdmath",
+    "mathematics",
+    "math",
+    "lapack",
+    "zpotrf",
+    "linear",
+    "algebra",
+    "subroutines",
+    "array",
+    "ndarray",
+    "complex128",
+    "complex",
+    "complex128array"
   ]
 }

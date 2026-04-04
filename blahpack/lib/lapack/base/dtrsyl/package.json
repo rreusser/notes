@@ -46,5 +46,21 @@
     "sunos",
     "win32",
     "windows"
+  ],
+  "keywords": [
+    "stdlib",
+    "stdmath",
+    "mathematics",
+    "math",
+    "lapack",
+    "dtrsyl",
+    "linear",
+    "algebra",
+    "subroutines",
+    "array",
+    "ndarray",
+    "float64",
+    "double",
+    "float64array"
   ]
 }

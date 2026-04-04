@@ -46,5 +46,22 @@
     "sunos",
     "win32",
     "windows"
+  ],
+  "keywords": [
+    "stdlib",
+    "stdmath",
+    "mathematics",
+    "math",
+    "blas",
+    "level 1",
+    "zdscal",
+    "linear",
+    "algebra",
+    "subroutines",
+    "array",
+    "ndarray",
+    "complex128",
+    "complex",
+    "complex128array"
   ]
 }
