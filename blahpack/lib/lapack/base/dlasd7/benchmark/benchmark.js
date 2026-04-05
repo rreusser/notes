@@ -1,0 +1,117 @@
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+// MODULES //
+
+var bench = require( '@stdlib/bench' );
+var uniform = require( '@stdlib/random/array/uniform' );
+var isnan = require( '@stdlib/math/base/assert/is-nan' );
+var pow = require( '@stdlib/math/base/special/pow' );
+var format = require( '@stdlib/string/format' );
+var pkg = require( './../package.json' ).name;
+var dlasd7 = require( './../lib/dlasd7.js' );
+
+
+// VARIABLES //
+
+var options = {
+	'dtype': 'float64'
+};
+
+
+// FUNCTIONS //
+
+/**
+* Creates a benchmark function.
+*
+* @private
+* @param {PositiveInteger} len - array length
+* @returns {Function} benchmark function
+*/
+function createBenchmark( len ) {
+	var N = len;
+	var GIVCOL = uniform( N * N, -10.0, 10.0, options );
+	var GIVNUM = uniform( N * N, -10.0, 10.0, options );
+	var d = uniform( N, -10.0, 10.0, options );
+	var z = uniform( N, -10.0, 10.0, options );
+	var ZW = uniform( N, -10.0, 10.0, options );
+	var VF = uniform( N, -10.0, 10.0, options );
+	var VFW = uniform( N, -10.0, 10.0, options );
+	var VL = uniform( N, -10.0, 10.0, options );
+	var VLW = uniform( N, -10.0, 10.0, options );
+	var DSIGMA = uniform( N, -10.0, 10.0, options );
+	var IDX = uniform( N, -10.0, 10.0, options );
+	var IDXP = uniform( N, -10.0, 10.0, options );
+	var IDXQ = uniform( N, -10.0, 10.0, options );
+	var PERM = uniform( N, -10.0, 10.0, options );
+	return benchmark;
+
+	/**
+	* Benchmark function.
+	*
+	* @private
+	* @param {Benchmark} b - benchmark instance
+	*/
+	function benchmark( b ) {
+		var y;
+		var i;
+
+		b.tic();
+		for ( i = 0; i < b.iterations; i++ ) {
+			y = dlasd7( 1, 1, 1, 1, d, z, ZW, VF, VFW, VL, VLW, 1.0, 1.0, DSIGMA, IDX, IDXP, IDXQ, PERM, GIVCOL, N, GIVNUM, N );
+			if ( isnan( y ) ) {
+				b.fail( 'should not return NaN' );
+			}
+		}
+		b.toc();
+		if ( isnan( y ) ) {
+			b.fail( 'should not return NaN' );
+		}
+		b.pass( 'benchmark finished' );
+		b.end();
+	}
+}
+
+
+// MAIN //
+
+/**
+* Main execution sequence.
+*
+* @private
+*/
+function main() {
+	var len;
+	var min;
+	var max;
+	var f;
+	var i;
+
+	min = 1; // 10^min
+	max = 6; // 10^max
+
+	for ( i = min; i <= max; i++ ) {
+		len = pow( 10, i );
+		f = createBenchmark( len );
+		bench( format( '%s:len=%d', pkg, len ), f );
+	}
+}
+
+main();
