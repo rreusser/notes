@@ -13,10 +13,13 @@ var REQUIRED = [
 	'lib/base.js',
 	'lib/ndarray.js',
 	'test/test.js',
+	'test/test.ndarray.js',
 	'README.md',
 	'docs/types/index.d.ts',
+	'docs/types/test.ts',
 	'docs/repl.txt',
-	'examples/index.js'
+	'examples/index.js',
+	'benchmark/benchmark.ndarray.js'
 ];
 
 // The routine-specific wrapper file: lib/<routine>.js
@@ -44,7 +47,9 @@ function check( mod ) {
 	var i;
 
 	rf = routineFile( mod );
-	files = REQUIRED.concat([ rf, learningsFile( mod ) ]);
+	var testRoutineFile = 'test/test.' + mod.routine + '.js';
+	var benchmarkFile = 'benchmark/benchmark.js';
+	files = REQUIRED.concat([ rf, testRoutineFile, benchmarkFile, learningsFile( mod ) ]);
 
 	for ( i = 0; i < files.length; i++ ) {
 		fp = path.join( mod.dir, files[ i ] );
@@ -75,6 +80,7 @@ function check( mod ) {
 			if ( !pkg.name ) pkgMissing.push( 'name' );
 			if ( !pkg.description ) pkgMissing.push( 'description' );
 			if ( !pkg.license ) pkgMissing.push( 'license' );
+			if ( !pkg.keywords || !Array.isArray( pkg.keywords ) || pkg.keywords.length === 0 ) pkgMissing.push( 'keywords' );
 			if ( pkgMissing.length > 0 ) {
 				results.push( util.fail(
 					ID + '.package-fields',
