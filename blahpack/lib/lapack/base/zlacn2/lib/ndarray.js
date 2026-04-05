@@ -38,11 +38,11 @@ var base = require( './base.js' );
  * @param {integer} strideISAVE - stride for ISAVE
  * @param {NonNegativeInteger} offsetISAVE - starting index for ISAVE
  */
-function zlacn2( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE ) { // eslint-disable-line max-len, max-params
+function zlacn2( N, V, strideV, offsetV, X, strideX, offsetX, EST, KASE, ISAVE, strideISAVE, offsetISAVE ) { // eslint-disable-line max-len, max-params
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE ); // eslint-disable-line max-len
+	return base( N, V, strideV, offsetV, X, strideX, offsetX, EST, KASE, ISAVE, strideISAVE, offsetISAVE ); // eslint-disable-line max-len
 }
 
 

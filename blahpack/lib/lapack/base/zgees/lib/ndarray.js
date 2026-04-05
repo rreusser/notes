@@ -23,7 +23,7 @@ var base = require( './base.js' );
 *
 * @param {string} jobvs - `'none'` or `'compute-vectors'`
 * @param {string} sort - `'none'` or `'sort'`
-* @param {Function} select - function(w) returning boolean, where w is Complex128; used when sort=`'sort'`
+* @param {Function} select - function(W) returning boolean, where W is Complex128; used when sort=`'sort'`
 * @param {NonNegativeInteger} N - order of the matrix A
 * @param {Complex128Array} A - N-by-N matrix, overwritten with Schur form T on exit
 * @param {integer} strideA1 - stride of first dimension of A (complex elements)
@@ -49,7 +49,7 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetBWORK - starting index for BWORK
 * @returns {integer} info (0=success, >0 = failure)
 */
-function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ) { // eslint-disable-line max-len, max-params
+function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ) { // eslint-disable-line max-len, max-params
 	if ( jobvs !== 'no-vectors' && jobvs !== 'compute-vectors' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid jobvs value. Value: `%s`.', jobvs ) );
 	}
@@ -59,7 +59,7 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w,
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ); // eslint-disable-line max-len
+	return base( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, W, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ); // eslint-disable-line max-len
 }
 
 

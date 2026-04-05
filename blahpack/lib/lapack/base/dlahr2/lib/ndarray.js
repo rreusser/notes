@@ -52,20 +52,20 @@ var base = require( './base.js' );
 * @param {Float64Array} tau - input array
 * @param {integer} strideTAU - stride length for `tau`
 * @param {NonNegativeInteger} offsetTAU - starting index for `tau`
-* @param {Float64Array} t - input array
-* @param {integer} strideT - stride length for `t`
-* @param {NonNegativeInteger} offsetT - starting index for `t`
-* @param {integer} ldt - ldt
-* @param {Float64Array} y - input array
-* @param {integer} strideY - stride length for `y`
-* @param {NonNegativeInteger} offsetY - starting index for `y`
-* @param {integer} ldy - ldy
+* @param {Float64Array} T - input array
+* @param {integer} strideT - stride length for `T`
+* @param {NonNegativeInteger} offsetT - starting index for `T`
+* @param {integer} ldT - ldT
+* @param {Float64Array} Y - input array
+* @param {integer} strideY - stride length for `Y`
+* @param {NonNegativeInteger} offsetY - starting index for `Y`
+* @param {integer} ldY - ldY
 * @throws {RangeError} first argument must be a nonnegative integer
 * @throws {RangeError} second argument must be a nonnegative integer
 * @throws {RangeError} third argument must be a nonnegative integer
 * @returns {*} result
 */
-function dlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, t, strideT, offsetT, ldt, y, strideY, offsetY, ldy ) {
+function dlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT, offsetT, ldT, Y, strideY, offsetY, ldY ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
@@ -78,7 +78,7 @@ function dlahr2( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offse
 	if ( N === 0 ) {
 		return;
 	}
-	return base( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, t, strideT, offsetT, ldt, y, strideY, offsetY, ldy );
+	return base( N, K, nb, A, strideA1, strideA2, offsetA, tau, strideTAU, offsetTAU, T, strideT, offsetT, ldT, Y, strideY, offsetY, ldY );
 }
 
 

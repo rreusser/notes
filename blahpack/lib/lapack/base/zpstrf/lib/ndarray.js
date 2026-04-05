@@ -19,23 +19,23 @@ var base = require( './base.js' );
 * @param {integer} strideA1 - stride of the first dimension of `A`
 * @param {integer} strideA2 - stride of the second dimension of `A`
 * @param {NonNegativeInteger} offsetA - starting index for `A`
-* @param {Int32Array} piv - input array
-* @param {integer} stridePIV - stride length for `piv`
-* @param {NonNegativeInteger} offsetPIV - starting index for `piv`
-* @param {integer} rank - rank
+* @param {Int32Array} PIV - input array
+* @param {integer} stridePIV - stride length for `PIV`
+* @param {NonNegativeInteger} offsetPIV - starting index for `PIV`
+* @param {integer} RANK - RANK
 * @param {number} tol - tol
-* @param {number} work - work
+* @param {number} WORK - WORK
 * @throws {TypeError} First argument must be a valid matrix triangle
 * @returns {integer} status code (0 = success)
 */
-function zpstrf( uplo, N, A, strideA1, strideA2, offsetA, piv, stridePIV, offsetPIV, rank, tol, work ) { // eslint-disable-line max-len, max-params
+function zpstrf( uplo, N, A, strideA1, strideA2, offsetA, PIV, stridePIV, offsetPIV, RANK, tol, WORK ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
-	return base( uplo, N, A, strideA1, strideA2, offsetA, piv, stridePIV, offsetPIV, rank, tol, work ); // eslint-disable-line max-len
+	return base( uplo, N, A, strideA1, strideA2, offsetA, PIV, stridePIV, offsetPIV, RANK, tol, WORK ); // eslint-disable-line max-len
 }
 
 

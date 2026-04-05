@@ -46,7 +46,7 @@ var base = require( './base.js' );
  * @param {integer} lwork - workspace length (in complex elements)
  * @returns {integer} info (0 = success)
  */
-function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, w, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
+function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, W, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork ) { // eslint-disable-line max-len, max-params
 	if ( job !== 'none' && job !== 'eigenvalues' && job !== 'subspace' && job !== 'both' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid job value. Value: `%s`.', job ) );
 	}
@@ -59,7 +59,7 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Eighteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
 	}
-	return base( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, w, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
+	return base( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, W, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 
 

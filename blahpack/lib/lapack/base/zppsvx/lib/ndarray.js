@@ -24,9 +24,9 @@ var base = require( './base.js' );
 * @param {integer} strideAFP - stride for AFP (in complex elements)
 * @param {NonNegativeInteger} offsetAFP - starting index for AFP (in complex elements)
 * @param {Array} equed - single-element array for equilibration status ('none' or 'yes')
-* @param {Float64Array} s - scaling factors (length N)
-* @param {integer} strideS - stride for s
-* @param {NonNegativeInteger} offsetS - starting index for s
+* @param {Float64Array} S - scaling factors (length N)
+* @param {integer} strideS - stride for S
+* @param {NonNegativeInteger} offsetS - starting index for S
 * @param {Complex128Array} B - right-hand side matrix (column-major, N-by-NRHS, in complex elements)
 * @param {integer} strideB1 - stride of the first dimension of B (in complex elements)
 * @param {integer} strideB2 - stride of the second dimension of B (in complex elements)
@@ -51,9 +51,9 @@ var base = require( './base.js' );
 * @throws {TypeError} Second argument must be a valid matrix triangle
 * @returns {integer} info - 0 if successful, k>0 if factorization failed, N+1 if rcond < machine epsilon
 */
-function zppsvx( fact, uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, equed, s, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+function zppsvx( fact, uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, equed, S, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
 	if ( !isMatrixTriangle( uplo ) ) {
-		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%S`.', uplo ) );
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
@@ -61,7 +61,7 @@ function zppsvx( fact, uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, of
 	if ( nrhs < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
 	}
-	return base( fact, uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, equed, s, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
+	return base( fact, uplo, N, nrhs, AP, strideAP, offsetAP, AFP, strideAFP, offsetAFP, equed, S, strideS, offsetS, B, strideB1, strideB2, offsetB, X, strideX1, strideX2, offsetX, rcond, FERR, strideFERR, offsetFERR, BERR, strideBERR, offsetBERR, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
 }
 
 
