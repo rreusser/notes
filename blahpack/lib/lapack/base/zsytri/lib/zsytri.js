@@ -23,7 +23,7 @@ var base = require( './base.js' );
 * @returns {integer} status code (0 = success)
 */
 function zsytri( uplo, N, A, LDA, IPIV ) {
-	var WORK = new Complex128Array( N );
+	var WORK;
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
@@ -33,6 +33,7 @@ function zsytri( uplo, N, A, LDA, IPIV ) {
 	if ( LDA < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
 	}
+	WORK = new Complex128Array( N );
 	return base( uplo, N, A, 1, LDA, 0, IPIV, 1, 0, WORK, 1, 0 );
 }
 

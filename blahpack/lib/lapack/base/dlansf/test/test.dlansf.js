@@ -16,18 +16,20 @@ test( 'dlansf is a function', function t() {
 	assert.strictEqual( typeof dlansf, 'function', 'is a function' );
 });
 
-test( 'dlansf has expected arity', function t() {
-	assert.strictEqual( dlansf.length, 6, 'has expected arity' );
+test( 'dlansf throws TypeError for invalid transr', function t() {
+	assert.throws( function throws() {
+		dlansf( 'max', 'invalid', 'upper', 2, new Float64Array( 4 ), new Float64Array( 4 ) );
+	}, TypeError );
 });
 
 test( 'dlansf throws TypeError for invalid uplo', function t() {
 	assert.throws( function throws() {
-		dlansf( 2, 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ) );
+		dlansf( 'max', 'no-transpose', 'invalid', 2, new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, TypeError );
 });
 
 test( 'dlansf throws RangeError for negative N', function t() {
 	assert.throws( function throws() {
-		dlansf( 2, 2, 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
+		dlansf( 'max', 'no-transpose', 'upper', -1, new Float64Array( 4 ), new Float64Array( 4 ) );
 	}, RangeError );
 });

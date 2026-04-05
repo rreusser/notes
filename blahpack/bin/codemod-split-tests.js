@@ -17,6 +17,44 @@ var fs = require( 'fs' );
 var path = require( 'path' );
 var util = require( './gate/util.js' );
 
+var STRING_DEFAULTS = {
+	'order': '\'row-major\'',
+	'trans': '\'no-transpose\'',
+	'transa': '\'no-transpose\'',
+	'transb': '\'no-transpose\'',
+	'transr': '\'no-transpose\'',
+	'uplo': '\'upper\'',
+	'side': '\'left\'',
+	'diag': '\'non-unit\'',
+	'norm': '\'1\'',
+	'range': '\'all\'',
+	'job': '\'both\'',
+	'jobvs': '\'V\'',
+	'jobvl': '\'V\'',
+	'jobvr': '\'V\'',
+	'jobu': '\'A\'',
+	'jobvt': '\'A\'',
+	'jobz': '\'V\'',
+	'compq': '\'V\'',
+	'compz': '\'V\'',
+	'fact': '\'N\'',
+	'equed': '\'N\'',
+	'sort': '\'N\'',
+	'sense': '\'N\'',
+	'direct': '\'forward\'',
+	'storev': '\'columnwise\'',
+	'vect': '\'Q\'',
+	'howmny': '\'A\'',
+	'way': '\'1\'',
+	'normin': '\'N\'',
+	'cmach': '\'E\'',
+	'isgn': '1'
+};
+
+function defaultStringValue( name ) {
+	return STRING_DEFAULTS[ name.toLowerCase() ] || null;
+}
+
 var LICENSE = [
 	'/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */',
 	'',
@@ -101,7 +139,7 @@ function generateTestRoutine( routine, layoutParams ) {
 
 	// Add validation tests for string params
 	var stringParams = layoutParams.filter( function( p ) {
-		return /^(order|trans|transa|transb|uplo|side|diag)$/i.test( p );
+		return /^(order|trans|transa|transb|uplo|side|diag|norm|transr|range|job|jobvs|jobvl|jobvr|jobu|jobvt|jobz|compq|compz|fact|equed|sort|sense|direct|storev|vect|howmny|way|normin|cmach|isgn)$/i.test( p );
 	});
 
 	stringParams.forEach( function( p, idx ) {
@@ -114,20 +152,8 @@ function generateTestRoutine( routine, layoutParams ) {
 			if ( i === paramIdx ) {
 				return '\'invalid\'';
 			}
-			if ( /^(order)$/i.test( lp ) ) {
-				return '\'row-major\'';
-			}
-			if ( /^(trans|transa|transb)$/i.test( lp ) ) {
-				return '\'no-transpose\'';
-			}
-			if ( /^(uplo)$/i.test( lp ) ) {
-				return '\'upper\'';
-			}
-			if ( /^(side)$/i.test( lp ) ) {
-				return '\'left\'';
-			}
-			if ( /^(diag)$/i.test( lp ) ) {
-				return '\'non-unit\'';
+			if ( defaultStringValue( lp ) ) {
+				return defaultStringValue( lp );
 			}
 			if ( /^LD[A-Z]+$/.test( lp ) ) {
 				return '2';
@@ -164,20 +190,8 @@ function generateTestRoutine( routine, layoutParams ) {
 			if ( i === paramIdx ) {
 				return '-1';
 			}
-			if ( /^(order)$/i.test( lp ) ) {
-				return '\'row-major\'';
-			}
-			if ( /^(trans|transa|transb)$/i.test( lp ) ) {
-				return '\'no-transpose\'';
-			}
-			if ( /^(uplo)$/i.test( lp ) ) {
-				return '\'upper\'';
-			}
-			if ( /^(side)$/i.test( lp ) ) {
-				return '\'left\'';
-			}
-			if ( /^(diag)$/i.test( lp ) ) {
-				return '\'non-unit\'';
+			if ( defaultStringValue( lp ) ) {
+				return defaultStringValue( lp );
 			}
 			if ( /^LD[A-Z]+$/.test( lp ) ) {
 				return '2';

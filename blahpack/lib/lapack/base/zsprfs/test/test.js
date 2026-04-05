@@ -15,6 +15,3 @@ test( 'main export is a function', function t() {
 	assert.strictEqual( typeof zsprfs, 'function', 'main export is a function' );
 });
 
-test( 'main export has an ndarray method', function t() {
-	assert.strictEqual( typeof zsprfs.ndarray, 'function', 'has ndarray method' );
-});

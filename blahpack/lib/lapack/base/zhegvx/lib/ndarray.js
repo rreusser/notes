@@ -8,7 +8,6 @@ var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
-
 // MAIN //
 
 /**
@@ -74,13 +73,10 @@ function zhegvx( itype, jobz, range, uplo, N, A, strideA1, strideA2, offsetA, B,
 	}
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
-	}
-
-		throw new RangeError( format( 'invalid argument. Nineteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	throw new RangeError( format( 'invalid argument. Nineteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
 	}
 	return base( itype, jobz, range, uplo, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, vl, vu, il, iu, abstol, out, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL ); // eslint-disable-line max-len
 }
-
 
 // EXPORTS //
 
