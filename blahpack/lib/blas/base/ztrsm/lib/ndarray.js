@@ -106,6 +106,18 @@ function ztrsm( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, of
 	if ( M === 0 || N === 0 ) {
 		return B;
 	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Tenth argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
+	if ( strideB1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be non-zero. Value: `%d`.', strideB1 ) );
+	}
+	if ( strideB2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourteenth argument must be non-zero. Value: `%d`.', strideB2 ) );
+	}
 	return base( side, uplo, transa, diag, M, N, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB );
 }
 

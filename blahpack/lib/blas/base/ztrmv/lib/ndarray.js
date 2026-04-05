@@ -86,6 +86,12 @@ function ztrmv( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX
 	if ( N === 0 ) {
 		return x;
 	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
 	return base( uplo, trans, diag, N, A, strideA1, strideA2, offsetA, x, strideX, offsetX );
 }
 

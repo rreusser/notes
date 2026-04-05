@@ -71,6 +71,12 @@ function zher( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offse
 	if ( N === 0 || alpha === 0.0 ) {
 		return A;
 	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
 	return base( uplo, N, alpha, x, strideX, offsetX, A, strideA1, strideA2, offsetA );
 }
 

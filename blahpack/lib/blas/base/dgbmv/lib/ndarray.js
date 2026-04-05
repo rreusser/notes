@@ -51,6 +51,18 @@ function dgbmv( trans, M, N, kl, ku, alpha, A, strideA1, strideA2, offsetA, x, s
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
+	if ( strideX === 0 ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be non-zero. Value: `%d`.', strideX ) );
+	}
+	if ( strideY === 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixteenth argument must be non-zero. Value: `%d`.', strideY ) );
+	}
 	return base( trans, M, N, kl, ku, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY ); // eslint-disable-line max-len
 }
 

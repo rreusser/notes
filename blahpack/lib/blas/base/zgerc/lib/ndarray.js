@@ -62,6 +62,18 @@ function zgerc( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, stride
 	if ( M === 0 || N === 0 ) {
 		return A;
 	}
+	if ( strideX === 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be non-zero. Value: `%d`.', strideX ) );
+	}
+	if ( strideY === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be non-zero. Value: `%d`.', strideY ) );
+	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
 	return base( M, N, alpha, x, strideX, offsetX, y, strideY, offsetY, A, strideA1, strideA2, offsetA );
 }
 

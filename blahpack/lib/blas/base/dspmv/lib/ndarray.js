@@ -85,6 +85,9 @@ function dspmv( uplo, N, alpha, AP, strideAP, offsetAP, x, strideX, offsetX, bet
 	if ( N === 0 || ( alpha === 0.0 && beta === 1.0 ) ) {
 		return y;
 	}
+	if ( strideAP === 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be non-zero. Value: `%d`.', strideAP ) );
+	}
 	return base( uplo, N, alpha, AP, strideAP, offsetAP, x, strideX, offsetX, beta, y, strideY, offsetY );
 }
 

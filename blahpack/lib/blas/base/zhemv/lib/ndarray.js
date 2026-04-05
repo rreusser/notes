@@ -86,6 +86,12 @@ function zhemv( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offs
 	if ( N === 0 ) {
 		return y;
 	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
 	return base( uplo, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY );
 }
 

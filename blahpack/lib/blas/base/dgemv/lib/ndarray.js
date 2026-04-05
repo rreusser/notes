@@ -90,6 +90,12 @@ function dgemv( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, 
 	if ( M === 0 || N === 0 || ( alpha === 0.0 && beta === 1.0 ) ) {
 		return y;
 	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
 	return base( trans, M, N, alpha, A, strideA1, strideA2, offsetA, x, strideX, offsetX, beta, y, strideY, offsetY );
 }
 

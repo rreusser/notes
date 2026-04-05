@@ -99,6 +99,24 @@ function dgemm( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, 
 	if ( M === 0 || N === 0 ) {
 		return C;
 	}
+	if ( strideA1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be non-zero. Value: `%d`.', strideA1 ) );
+	}
+	if ( strideA2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be non-zero. Value: `%d`.', strideA2 ) );
+	}
+	if ( strideB1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be non-zero. Value: `%d`.', strideB1 ) );
+	}
+	if ( strideB2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be non-zero. Value: `%d`.', strideB2 ) );
+	}
+	if ( strideC1 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventeenth argument must be non-zero. Value: `%d`.', strideC1 ) );
+	}
+	if ( strideC2 === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighteenth argument must be non-zero. Value: `%d`.', strideC2 ) );
+	}
 	return base( transa, transb, M, N, K, alpha, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, beta, C, strideC1, strideC2, offsetC );
 }
 

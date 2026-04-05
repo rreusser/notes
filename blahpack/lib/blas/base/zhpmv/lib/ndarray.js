@@ -39,6 +39,15 @@ function zhpmv( uplo, N, alpha, AP, strideAP, offsetAP, x, strideX, offsetX, bet
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( strideAP === 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be non-zero. Value: `%d`.', strideAP ) );
+	}
+	if ( strideX === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be non-zero. Value: `%d`.', strideX ) );
+	}
+	if ( strideY === 0 ) {
+		throw new RangeError( format( 'invalid argument. Twelfth argument must be non-zero. Value: `%d`.', strideY ) );
+	}
 	return base( uplo, N, alpha, AP, strideAP, offsetAP, x, strideX, offsetX, beta, y, strideY, offsetY ); // eslint-disable-line max-len
 }
 

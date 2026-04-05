@@ -38,6 +38,15 @@ function zhpr2( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, AP, st
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( strideX === 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be non-zero. Value: `%d`.', strideX ) );
+	}
+	if ( strideY === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be non-zero. Value: `%d`.', strideY ) );
+	}
+	if ( strideAP === 0 ) {
+		throw new RangeError( format( 'invalid argument. Eleventh argument must be non-zero. Value: `%d`.', strideAP ) );
+	}
 	return base( uplo, N, alpha, x, strideX, offsetX, y, strideY, offsetY, AP, strideAP, offsetAP ); // eslint-disable-line max-len
 }
 
