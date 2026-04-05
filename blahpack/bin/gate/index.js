@@ -14,6 +14,7 @@ var checkComplex = require( './checks/complex.js' );
 var checkTests = require( './checks/tests.js' );
 var checkLint = require( './checks/lint.js' );
 var checkJSDoc = require( './checks/jsdoc.js' );
+var checkConventions = require( './checks/conventions.js' );
 
 var ALL_CHECKS = [
 	{ name: 'file-structure', fn: checkFileStructure },
@@ -23,6 +24,7 @@ var ALL_CHECKS = [
 	{ name: 'complex', fn: checkComplex },
 	{ name: 'tests', fn: checkTests },
 	{ name: 'jsdoc', fn: checkJSDoc },
+	{ name: 'conventions', fn: checkConventions },
 	{ name: 'lint', fn: checkLint }
 ];
 
