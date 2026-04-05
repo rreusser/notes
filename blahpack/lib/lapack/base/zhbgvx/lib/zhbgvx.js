@@ -23,6 +23,7 @@
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var max = require( '@stdlib/math/base/special/fast/max' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 

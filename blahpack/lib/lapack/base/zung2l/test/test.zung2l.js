@@ -1,0 +1,39 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zung2l = require( './../lib/zung2l.js' );
+
+
+// TESTS //
+
+test( 'zung2l is a function', function t() {
+	assert.strictEqual( typeof zung2l, 'function', 'is a function' );
+});
+
+test( 'zung2l has expected arity', function t() {
+	assert.strictEqual( zung2l.length, 9, 'has expected arity' );
+});
+
+test( 'zung2l throws RangeError for negative M', function t() {
+	assert.throws( function throws() {
+		zung2l( -1, new Float64Array( 4 ), new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+	}, RangeError );
+});
+
+test( 'zung2l throws RangeError for negative N', function t() {
+	assert.throws( function throws() {
+		zung2l( new Float64Array( 4 ), -1, new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+	}, RangeError );
+});
+
+test( 'zung2l throws RangeError for negative K', function t() {
+	assert.throws( function throws() {
+		zung2l( new Float64Array( 4 ), new Float64Array( 4 ), -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+	}, RangeError );
+});

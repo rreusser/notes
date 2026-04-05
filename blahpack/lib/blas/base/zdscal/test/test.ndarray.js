@@ -1,0 +1,183 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2025 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+'use strict';
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Complex128Array = require( '@stdlib/array/complex128' );
+var reinterpret = require( '@stdlib/strided/base/reinterpret-complex128' );
+var zdscal = require( './../lib' );
+var base = require( './../lib/base.js' );
+
+// FIXTURES //
+
+var basic = require( './fixtures/basic.json' );
+var da_zero = require( './fixtures/da_zero.json' );
+var da_one = require( './fixtures/da_one.json' );
+var n_zero = require( './fixtures/n_zero.json' );
+var n_one = require( './fixtures/n_one.json' );
+var stride = require( './fixtures/stride.json' );
+var neg_da = require( './fixtures/neg_da.json' );
+
+// FUNCTIONS //
+
+/**
+* Asserts that two numbers are approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
+function assertClose( actual, expected, msg ) {
+	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
+	assert.ok( relErr <= 1e-14, msg + ': expected ' + expected + ', got ' + actual ); // eslint-disable-line max-len
+}
+
+/**
+* Asserts that two arrays are element-wise approximately equal.
+*
+* @private
+* @param {*} actual - actual value
+* @param {*} expected - expected value
+* @param {string} msg - assertion message
+*/
+function assertArrayClose( actual, expected, msg ) {
+	var i;
+	assert.strictEqual( actual.length, expected.length, msg + ': length mismatch' ); // eslint-disable-line max-len
+	for ( i = 0; i < expected.length; i++ ) {
+		assertClose( actual[ i ], expected[ i ], msg + '[' + i + ']' );
+	}
+}
+
+// FUNCTIONS //
+
+/**
+* Converts a typed array to a plain array.
+*
+* @private
+* @param {TypedArray} arr - input array
+* @returns {Array} output array
+*/
+function toArray( arr ) {
+	var out = [];
+	var i;
+	for ( i = 0; i < arr.length; i++ ) {
+		out.push( arr[ i ] );
+	}
+	return out;
+}
+
+// TESTS //
+
+test( 'zdscal: main export is a function', function t() {
+	assert.strictEqual( typeof zdscal, 'function' );
+});
+
+test( 'zdscal: attached to the main export is an `ndarray` method', function t() { // eslint-disable-line max-len
+	assert.strictEqual( typeof zdscal.ndarray, 'function' );
+});
+
+test( 'zdscal: basic scale (N=3, da=2.0, strideX=1)', function t() {
+	var result;
+	var tc;
+	var zx;
+
+	tc = basic;
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+	result = base( 3, 2.0, zx, 1, 0 );
+	assert.strictEqual( result, zx );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'basic' );
+});
+
+test( 'zdscal: da=0 zeros out vector', function t() {
+	var result;
+	var tc;
+	var zx;
+
+	tc = da_zero;
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+	result = base( 3, 0.0, zx, 1, 0 );
+	assert.strictEqual( result, zx );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'da_zero' );
+});
+
+test( 'zdscal: da=1 is identity', function t() {
+	var result;
+	var tc;
+	var zx;
+
+	tc = da_one;
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 ] );
+	result = base( 3, 1.0, zx, 1, 0 );
+	assert.strictEqual( result, zx );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'da_one' );
+});
+
+test( 'zdscal: N=0 is a no-op', function t() {
+	var result;
+	var tc;
+	var zx;
+
+	tc = n_zero;
+	zx = new Complex128Array( [ 1.0, 2.0, 3.0, 4.0 ] );
+	result = base( 0, 5.0, zx, 1, 0 );
+	assert.strictEqual( result, zx );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'n_zero' );
+});
+
+test( 'zdscal: N=1', function t() {
+	var result;
+	var tc;
+	var zx;
+
+	tc = n_one;
+	zx = new Complex128Array( [ 7.0, 3.0 ] );
+	result = base( 1, 3.0, zx, 1, 0 );
+	assert.strictEqual( result, zx );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'n_one' );
+});
+
+test( 'zdscal: non-unit stride (strideX=2)', function t() {
+	var result;
+	var tc;
+	var zx;
+
+	tc = stride;
+	zx = new Complex128Array([
+		1.0, 2.0, 99.0, 99.0, 3.0, 4.0, 99.0, 99.0, 5.0, 6.0
+	]);
+	result = base( 3, 4.0, zx, 2, 0 );
+	assert.strictEqual( result, zx );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'stride' );
+});
+
+test( 'zdscal: negative da', function t() {
+	var result;
+	var tc;
+	var zx;
+
+	tc = neg_da;
+	zx = new Complex128Array( [ 2.0, 3.0, 4.0, 5.0 ] );
+	result = base( 2, -2.0, zx, 1, 0 );
+	assert.strictEqual( result, zx );
+	assertArrayClose( toArray( reinterpret( zx, 0 ) ), tc.zx, 'neg_da' );
+});

@@ -1,0 +1,39 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var dlansy = require( './../lib/dlansy.js' );
+
+
+// TESTS //
+
+test( 'dlansy is a function', function t() {
+	assert.strictEqual( typeof dlansy, 'function', 'is a function' );
+});
+
+test( 'dlansy has expected arity', function t() {
+	assert.strictEqual( dlansy.length, 8, 'has expected arity' );
+});
+
+test( 'dlansy throws TypeError for invalid order', function t() {
+	assert.throws( function throws() {
+		dlansy( 'invalid', 2, 'upper', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
+test( 'dlansy throws TypeError for invalid uplo', function t() {
+	assert.throws( function throws() {
+		dlansy( 'row-major', 2, 'invalid', new Float64Array( 4 ), new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+	}, TypeError );
+});
+
+test( 'dlansy throws RangeError for negative N', function t() {
+	assert.throws( function throws() {
+		dlansy( 'row-major', 2, 'upper', -1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1 );
+	}, RangeError );
+});

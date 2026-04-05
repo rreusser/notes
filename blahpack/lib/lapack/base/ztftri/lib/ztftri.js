@@ -5,6 +5,7 @@
 
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 

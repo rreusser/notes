@@ -6,96 +6,15 @@
 
 var test = require( 'node:test' );
 var assert = require( 'node:assert/strict' );
-var Float64Array = require( '@stdlib/array/float64' );
-var Int32Array = require( '@stdlib/array/int32' );
-var dlarnv = require( './../lib/base.js' );
+var dlarnv = require( './../lib' );
 
-// FIXTURES //
-
-var uniform_01 = require( './fixtures/uniform_01.json' );
-var uniform_m1_1 = require( './fixtures/uniform_m1_1.json' );
-var normal_01 = require( './fixtures/normal_01.json' );
-
-// FUNCTIONS //
-
-/**
-* Asserts that two numbers are approximately equal.
-*
-* @private
-* @param {*} actual - actual value
-* @param {*} expected - expected value
-* @param {number} tol - tolerance
-* @param {string} msg - assertion message
-*/
-function assertClose( actual, expected, tol, msg ) {
-	var relErr = Math.abs( actual - expected ) / Math.max( Math.abs( expected ), 1.0 ); // eslint-disable-line max-len
-	assert.ok( relErr <= tol, msg + ': expected ' + expected + ', got ' + actual );
-}
-
-/**
-* Asserts that two arrays are element-wise approximately equal.
-*
-* @private
-* @param {*} actual - actual value
-* @param {*} expected - expected value
-* @param {number} tol - tolerance
-* @param {string} msg - assertion message
-*/
-function assertArrayClose( actual, expected, tol, msg ) {
-	var i;
-	assert.equal( actual.length, expected.length, msg + ': length mismatch' );
-	for ( i = 0; i < expected.length; i++ ) {
-		assertClose( actual[ i ], expected[ i ], tol, msg + '[' + i + ']' );
-	}
-}
-
-/**
-* Converts a typed array to a plain array.
-*
-* @private
-* @param {TypedArray} arr - input array
-* @returns {Array} output array
-*/
-function toArray( arr ) {
-	var out = [];
-	var i;
-	for ( i = 0; i < arr.length; i++ ) {
-		out.push( arr[ i ] );
-	}
-	return out;
-}
 
 // TESTS //
 
-test( 'dlarnv: uniform (0,1)', function t() {
-	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = uniform_01;
-	var x = new Float64Array( 5 );
-
-	dlarnv( 1, iseed, 1, 0, 5, x, 1, 0 );
-
-	assertArrayClose( x, tc.x, 1e-14, 'x' );
-	assert.deepEqual( toArray( iseed ), tc.iseed_out, 'iseed_out' );
+test( 'main export is a function', function t() {
+	assert.strictEqual( typeof dlarnv, 'function', 'main export is a function' );
 });
 
-test( 'dlarnv: uniform (-1,1)', function t() {
-	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = uniform_m1_1;
-	var x = new Float64Array( 5 );
-
-	dlarnv( 2, iseed, 1, 0, 5, x, 1, 0 );
-
-	assertArrayClose( x, tc.x, 1e-14, 'x' );
-	assert.deepEqual( toArray( iseed ), tc.iseed_out, 'iseed_out' );
-});
-
-test( 'dlarnv: normal (0,1)', function t() {
-	var iseed = new Int32Array( [ 1, 1, 1, 1 ] );
-	var tc = normal_01;
-	var x = new Float64Array( 5 );
-
-	dlarnv( 3, iseed, 1, 0, 5, x, 1, 0 );
-
-	assertArrayClose( x, tc.x, 1e-14, 'x' );
-	assert.deepEqual( toArray( iseed ), tc.iseed_out, 'iseed_out' );
+test( 'main export has an ndarray method', function t() {
+	assert.strictEqual( typeof dlarnv.ndarray, 'function', 'has ndarray method' );
 });

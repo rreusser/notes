@@ -7,6 +7,7 @@ var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 

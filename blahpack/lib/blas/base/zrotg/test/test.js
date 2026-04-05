@@ -2,10 +2,19 @@
 
 'use strict';
 
-var Float64Array = require( '@stdlib/array/float64' );
-var zrotg = require( './../lib/base.js' );
+// MODULES //
 
-// Generate a complex Givens rotation:
-var out = new Float64Array( 8 );
-zrotg( 3.0, 0.0, 4.0, 0.0, out, 1, 0 );
-console.log( out ); // eslint-disable-line no-console
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var zrotg = require( './../lib' );
+
+
+// TESTS //
+
+test( 'main export is a function', function t() {
+	assert.strictEqual( typeof zrotg, 'function', 'main export is a function' );
+});
+
+test( 'main export has an ndarray method', function t() {
+	assert.strictEqual( typeof zrotg.ndarray, 'function', 'has ndarray method' );
+});

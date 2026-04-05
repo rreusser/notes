@@ -8,6 +8,7 @@ var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var max = require( '@stdlib/math/base/special/fast/max' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 

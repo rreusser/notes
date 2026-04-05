@@ -1,0 +1,33 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zstein = require( './../lib/zstein.js' );
+
+
+// TESTS //
+
+test( 'zstein is a function', function t() {
+	assert.strictEqual( typeof zstein, 'function', 'is a function' );
+});
+
+test( 'zstein has expected arity', function t() {
+	assert.strictEqual( zstein.length, 20, 'has expected arity' );
+});
+
+test( 'zstein throws RangeError for negative N', function t() {
+	assert.throws( function throws() {
+		zstein( -1, 2, 1, 2, 1, new Float64Array( 4 ), 2, 1, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+	}, RangeError );
+});
+
+test( 'zstein throws RangeError for negative M', function t() {
+	assert.throws( function throws() {
+		zstein( new Float64Array( 4 ), 2, 1, 2, 1, -1, 2, 1, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1, new Float64Array( 4 ), 2, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1, new Float64Array( 4 ), 1 );
+	}, RangeError );
+});

@@ -1,0 +1,27 @@
+/* eslint-disable no-restricted-syntax, stdlib/first-unit-test */
+
+'use strict';
+
+// MODULES //
+
+var test = require( 'node:test' );
+var assert = require( 'node:assert/strict' );
+var Float64Array = require( '@stdlib/array/float64' );
+var zlanht = require( './../lib/zlanht.js' );
+
+
+// TESTS //
+
+test( 'zlanht is a function', function t() {
+	assert.strictEqual( typeof zlanht, 'function', 'is a function' );
+});
+
+test( 'zlanht has expected arity', function t() {
+	assert.strictEqual( zlanht.length, 6, 'has expected arity' );
+});
+
+test( 'zlanht throws RangeError for negative N', function t() {
+	assert.throws( function throws() {
+		zlanht( 2, -1, 2, 1, 2, 1 );
+	}, RangeError );
+});
