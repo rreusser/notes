@@ -29,6 +29,12 @@ function dlarscl2( order, M, N, d, X, LDX ) {
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	if ( order === 'column-major' ) {
 		sx1 = 1;
 		sx2 = LDX;

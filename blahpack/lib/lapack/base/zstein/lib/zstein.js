@@ -5,6 +5,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -57,6 +58,12 @@ function zstein( N, d, strideD, e, strideE, M, w, strideW, IBLOCK, strideIBLOCK,
 	owork = stride2offset( N, strideWORK );
 	oiwork = stride2offset( N, strideIWORK );
 	oifail = stride2offset( N, strideIFAIL );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( N, d, strideD, od, e, strideE, oe, M, w, strideW, ow, IBLOCK, strideIBLOCK, oiblock, ISPLIT, strideISPLIT, oisplit, Z, sz1, sz2, 0, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork, IFAIL, strideIFAIL, oifail ); // eslint-disable-line max-len
 }
 

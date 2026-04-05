@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -22,6 +23,9 @@ var base = require( './base.js' );
 * @returns {Complex128Array} input array
 */
 function zdrscl( N, sa, x, stride, offset, incx ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, sa, x, stride, offset, incx );
 }
 

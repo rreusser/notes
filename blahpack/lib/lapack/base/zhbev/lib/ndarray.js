@@ -41,6 +41,9 @@ function zhbev( jobz, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, w, stride
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( jobz, uplo, N, kd, AB, strideAB1, strideAB2, offsetAB, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
 }
 

@@ -54,6 +54,9 @@ function dspev( order, jobz, uplo, N, AP, w, Z, LDZ, WORK ) {
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	if ( jobz !== 'none' && jobz !== 'compute' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid job type. Value: `%s`.', jobz ) );
 	}

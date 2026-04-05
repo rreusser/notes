@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -27,6 +28,12 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 if successful
 */
 function zhbgst( vect, uplo, N, ka, kb, AB, LDAB, BB, LDBB, X, LDX, WORK, RWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( vect, uplo, N, ka, kb, AB, 1, LDAB, 0, BB, 1, LDBB, 0, X, 1, LDX, 0, WORK, 1, 0, RWORK, 1, 0 ); // eslint-disable-line max-len
 }
 

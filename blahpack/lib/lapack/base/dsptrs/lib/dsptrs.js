@@ -46,6 +46,12 @@ function dsptrs( uplo, N, nrhs, AP, IPIV, B, LDB ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) ); // eslint-disable-line max-len
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( uplo, N, nrhs, AP, 1, 0, IPIV, 1, 0, B, 1, LDB, 0 );
 }
 

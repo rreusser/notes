@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -21,6 +22,9 @@ var base = require( './base.js' );
 * @returns {Object} object with `info`, `eigcnt`, `lcnt`, and `rcnt` properties
 */
 function dlarrc( jobt, N, vl, vu, D, E, pivmin ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( jobt, N, vl, vu, D, 1, 0, E, 1, 0, pivmin );
 }
 

@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -49,6 +50,9 @@ function dlacn2( N, v, strideV, x, strideX, ISGN, strideISGN, EST, KASE, ISAVE, 
 	var ox = stride2offset( N, strideX );
 	var oi = stride2offset( N, strideISGN );
 	var oi = stride2offset( N, strideISAVE );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, v, strideV, ov, x, strideX, ox, ISGN, strideISGN, oi, EST, KASE, ISAVE, strideISAVE, oi );
 }
 

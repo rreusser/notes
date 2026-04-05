@@ -48,6 +48,12 @@ function ztrsyl( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, st
 	if ( tranb !== 'no-transpose' && tranb !== 'transpose' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid tranb value. Value: `%s`.', tranb ) );
 	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( trana, tranb, isgn, M, N, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB, C, strideC1, strideC2, offsetC, scale ); // eslint-disable-line max-len
 }
 

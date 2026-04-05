@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -36,6 +37,9 @@ var base = require( './base.js' );
 * @returns {integer} info: 0 = success, >0 = overflow at element k
 */
 function dlagts( job, N, a, strideA, offsetA, b, strideB, offsetB, c, strideC, offsetC, d, strideD, offsetD, IN, strideIN, offsetIN, y, strideY, offsetY, tol ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( job, N, a, strideA, offsetA, b, strideB, offsetB, c, strideC, offsetC, d, strideD, offsetD, IN, strideIN, offsetIN, y, strideY, offsetY, tol ); // eslint-disable-line max-len
 }
 

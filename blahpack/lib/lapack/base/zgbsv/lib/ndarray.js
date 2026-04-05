@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -38,6 +39,12 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 if successful, >0 if U(i,i) is zero (1-based index)
 */
 function zgbsv( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( N, kl, ku, nrhs, AB, strideAB1, strideAB2, offsetAB, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 }
 

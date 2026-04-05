@@ -46,6 +46,9 @@ function zhpgst( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP 
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( itype, uplo, N, AP, strideAP, offsetAP, BP, strideBP, offsetBP ); // eslint-disable-line max-len
 }
 

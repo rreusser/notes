@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -28,6 +29,9 @@ var base = require( './base.js' );
 function dlarrc( jobt, N, vl, vu, D, strideD, offsetD, E, strideE, offsetE, pivmin ) { // eslint-disable-line max-len, max-params
 	if ( jobt !== 'tridiagonal' && jobt !== 'ldl' ) {
 		throw new TypeError( 'invalid argument. First argument must be one of the following: "tridiagonal", "ldl". Value: `' + jobt + '`.' );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
 	return base( jobt, N, vl, vu, D, strideD, offsetD, E, strideE, offsetE, pivmin );
 }

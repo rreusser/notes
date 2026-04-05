@@ -37,6 +37,9 @@ var base = require( './base.js' );
 * @returns {integer} info (0=success, 1=swap failed)
 */
 function dlaexc( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( wantq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, j1, n1, n2, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

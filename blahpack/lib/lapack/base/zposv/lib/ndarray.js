@@ -41,6 +41,12 @@ function zposv( uplo, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, stri
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( uplo, N, nrhs, A, strideA1, strideA2, offsetA, B, strideB1, strideB2, offsetB ); // eslint-disable-line max-len
 }
 

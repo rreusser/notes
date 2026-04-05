@@ -4,6 +4,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 
@@ -79,6 +81,15 @@ function dgtrfs( trans, N, nrhs, DL, strideDL, d, strideD, DU, strideDU, DLF, st
 	oberr = stride2offset( N, strideBERR );
 	owork = stride2offset( N, strideWORK );
 	oiwork = stride2offset( N, strideIWORK );
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( trans, N, nrhs, DL, strideDL, odl, d, strideD, od, DU, strideDU, odu, DLF, strideDLF, odlf, DF, strideDF, odf, DUF, strideDUF, oduf, DU2, strideDU2, odu2, IPIV, strideIPIV, oipiv, B, sb1, sb2, 0, X, sx1, sx2, 0, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }
 

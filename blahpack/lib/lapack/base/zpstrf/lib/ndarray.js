@@ -32,6 +32,9 @@ function zpstrf( uplo, N, A, strideA1, strideA2, offsetA, piv, stridePIV, offset
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, A, strideA1, strideA2, offsetA, piv, stridePIV, offsetPIV, rank, tol, work ); // eslint-disable-line max-len
 }
 

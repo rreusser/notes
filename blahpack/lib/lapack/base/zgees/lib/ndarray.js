@@ -56,6 +56,9 @@ function zgees( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w,
 	if ( sort !== 'none' && sort !== 'sort' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid sort value. Value: `%s`.', sort ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( jobvs, sort, select, N, A, strideA1, strideA2, offsetA, sdim, w, strideW, offsetW, VS, strideVS1, strideVS2, offsetVS, WORK, strideWORK, offsetWORK, lwork, RWORK, strideRWORK, offsetRWORK, BWORK, strideBWORK, offsetBWORK ); // eslint-disable-line max-len
 }
 

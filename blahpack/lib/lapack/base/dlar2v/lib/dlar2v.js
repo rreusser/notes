@@ -5,6 +5,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -26,6 +27,9 @@ var base = require( './base.js' );
 function dlar2v( N, x, y, z, strideXYZ, c, s, strideCS ) {
 	var oxyz = stride2offset( N, strideXYZ );
 	var ocs = stride2offset( N, strideCS );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	base( N, x, strideXYZ, oxyz, y, strideXYZ, oxyz, z, strideXYZ, oxyz, c, strideCS, ocs, s, strideCS, ocs );
 }
 

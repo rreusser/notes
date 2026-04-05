@@ -8,6 +8,7 @@ var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-opera
 var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 
@@ -58,6 +59,15 @@ function ztprfs( uplo, trans, diag, N, nrhs, AP, B, LDB, X, LDX, FERR, strideFER
 	oberr = stride2offset( nrhs, strideBERR );
 	owork = stride2offset( 2 * N, strideWORK );
 	orwork = stride2offset( N, strideRWORK );
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( uplo, trans, diag, N, nrhs, AP, 1, 0, B, 1, LDB, 0, X, 1, LDX, 0, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

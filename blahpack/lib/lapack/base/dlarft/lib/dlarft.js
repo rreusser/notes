@@ -57,6 +57,12 @@ function dlarft( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT ) {
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( K < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
 	if ( order === 'column-major' ) {
 		sv1 = 1;
 		sv2 = LDV;

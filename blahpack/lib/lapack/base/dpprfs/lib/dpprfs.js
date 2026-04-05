@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -29,6 +30,15 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 if successful
 */
 function dpprfs( uplo, N, nrhs, AP, AFP, B, LDB, X, LDX, FERR, BERR, WORK, IWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( uplo, N, nrhs, AP, 1, 0, AFP, 1, 0, B, 1, LDB, 0, X, 1, LDX, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 ); // eslint-disable-line max-len
 }
 

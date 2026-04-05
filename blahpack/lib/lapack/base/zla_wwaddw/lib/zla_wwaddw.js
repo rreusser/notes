@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -19,6 +20,9 @@ var base = require( './base.js' );
 * @returns {void}
 */
 function zla_wwaddw( N, x, y, w ) { // eslint-disable-line camelcase
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	base( N, x, 1, 0, y, 1, 0, w, 1, 0 );
 }
 

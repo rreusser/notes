@@ -4,6 +4,8 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -22,6 +24,9 @@ var base = require( './base.js' );
 * @returns {number} reciprocal pivot growth factor
 */
 function zla_porpvgrw( uplo, ncols, A, LDA, AF, LDAF, WORK ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
 	return base( uplo, ncols, A, 1, LDA, 0, AF, 1, LDAF, 0, WORK, 1, 0 );
 }
 

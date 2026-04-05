@@ -5,6 +5,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var base = require( './base.js' );
 
 
@@ -33,6 +35,15 @@ function dgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, M, V, LDV ) { // es
 	sv1 = 1;
 	sv2 = LDV;
 	oscale = stride2offset( N, strideSCALE );
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( job, side, N, ilo, ihi, SCALE, strideSCALE, oscale, M, V, sv1, sv2, 0 );
 }
 

@@ -2,6 +2,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -29,6 +30,9 @@ var base = require( './base.js' );
 * @returns {Object} result with `info`, `K`, and `rho`
 */
 function dlaed2( N, n1, d, Q, LDQ, INDXQ, rho, z, DLAMBDA, w, Q2, INDX, INDXC, INDXP, COLTYP ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, n1, d, 1, 0, Q, 1, LDQ, 0, INDXQ, 1, 0, rho, z, 1, 0, DLAMBDA, 1, 0, w, 1, 0, Q2, 1, 0, INDX, 1, 0, INDXC, 1, 0, INDXP, 1, 0, COLTYP, 1, 0 ); // eslint-disable-line max-len
 }
 

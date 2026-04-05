@@ -5,6 +5,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -30,6 +32,12 @@ function zlansy( norm, uplo, N, A, LDA, WORK, strideWORK ) { // eslint-disable-l
 	sa1 = 1;
 	sa2 = LDA;
 	owork = stride2offset( N, strideWORK );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, uplo, N, A, sa1, sa2, 0, WORK, strideWORK, owork );
 }
 

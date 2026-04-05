@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -66,6 +67,15 @@ function zhpsvx( fact, uplo, N, nrhs, AP, AFP, IPIV, strideIPIV, B, LDB, X, LDX,
 	oberr = stride2offset( nrhs, strideBERR );
 	owork = stride2offset( Math.max( 1, 2 * N ), strideWORK );
 	orwork = stride2offset( N, strideRWORK );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( fact, uplo, N, nrhs, AP, 1, 0, AFP, 1, 0, IPIV, strideIPIV, oipiv, B, 1, LDB, 0, X, 1, LDX, 0, rcond, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

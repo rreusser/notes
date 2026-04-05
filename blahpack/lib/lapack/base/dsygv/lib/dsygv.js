@@ -4,6 +4,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -41,6 +43,12 @@ function dsygv( itype, jobz, uplo, N, A, LDA, B, LDB, w, strideW, WORK, strideWO
 	sb2 = LDB;
 	ow = stride2offset( N, strideW );
 	owork = stride2offset( N, strideWORK );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( itype, jobz, uplo, N, A, sa1, sa2, 0, B, sb1, sb2, 0, w, strideW, ow, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }
 

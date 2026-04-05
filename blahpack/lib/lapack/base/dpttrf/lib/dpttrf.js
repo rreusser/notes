@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -25,6 +26,9 @@ function dpttrf( N, d, strideD, e, strideE ) {
 
 	od = stride2offset( N, strideD );
 	oe = stride2offset( N, strideE );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, d, strideD, od, e, strideE, oe );
 }
 

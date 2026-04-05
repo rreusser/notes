@@ -78,6 +78,9 @@ function dgetrs( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPI
 	if ( N === 0 || nrhs === 0 ) {
 		return 0;
 	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( trans, N, nrhs, A, strideA1, strideA2, offsetA, IPIV, strideIPIV, offsetIPIV, B, strideB1, strideB2, offsetB );
 }
 

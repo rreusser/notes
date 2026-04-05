@@ -2,6 +2,8 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 
@@ -32,6 +34,15 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 if successful, >0 from zgetc2
 */
 function ztgsy2( trans, ijob, M, N, A, LDA, B, LDB, C, LDC, D, LDD, E, LDE, F, LDF, scale, rdsum, rdscal ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( trans, ijob, M, N, A, 1, LDA, 0, B, 1, LDB, 0, C, 1, LDC, 0, D, 1, LDD, 0, E, 1, LDE, 0, F, 1, LDF, 0, scale, rdsum, rdscal ); // eslint-disable-line max-len
 }
 

@@ -4,6 +4,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 
@@ -37,6 +39,18 @@ function zgels( trans, M, N, nrhs, A, LDA, B, LDB, WORK, strideWORK, lwork ) { /
 	sb1 = 1;
 	sb2 = LDB;
 	owork = stride2offset( N, strideWORK );
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( trans, M, N, nrhs, A, sa1, sa2, 0, B, sb1, sb2, 0, WORK, strideWORK, owork, lwork );
 }
 

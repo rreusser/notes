@@ -23,6 +23,10 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var base = require( './base.js' );
 
 
@@ -47,6 +51,18 @@ var base = require( './base.js' );
 function dlatps( uplo, trans, diag, normin, N, AP, x, strideX, scale, CNORM, strideCNORM ) {
 	var ox = stride2offset( N, strideX );
 	var oc = stride2offset( N, strideCNORM );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, trans, diag, normin, N, AP, 1, 0, x, strideX, ox, scale, CNORM, strideCNORM, oc );
 }
 

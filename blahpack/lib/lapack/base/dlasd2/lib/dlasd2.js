@@ -71,6 +71,9 @@ function dlasd2( order, NL, NR, SQRE, K, D, Z, ALPHA, BETA, U, LDU, VT, LDVT, DS
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( K < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
 	if ( order === 'column-major' ) {
 		su1 = 1;
 		su2 = LDU;

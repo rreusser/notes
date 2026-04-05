@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -34,6 +35,9 @@ function dorghr( N, ilo, ihi, A, LDA, TAU, strideTAU, WORK, strideWORK, lwork ) 
 	sa2 = LDA;
 	otau = stride2offset( N, strideTAU );
 	owork = stride2offset( N, strideWORK );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, ilo, ihi, A, sa1, sa2, 0, TAU, strideTAU, otau, WORK, strideWORK, owork, lwork );
 }
 

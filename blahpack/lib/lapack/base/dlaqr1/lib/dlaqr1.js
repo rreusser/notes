@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -31,6 +32,9 @@ function dlaqr1( N, H, LDH, sr1, si1, sr2, si2, v, strideV ) { // eslint-disable
 	sh1 = 1;
 	sh2 = LDH;
 	ov = stride2offset( N, strideV );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, H, sh1, sh2, 0, sr1, si1, sr2, si2, v, strideV, ov );
 }
 

@@ -5,6 +5,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -29,6 +31,12 @@ function zhetrf( uplo, N, A, LDA, IPIV, strideIPIV ) {
 	sa1 = 1;
 	sa2 = LDA;
 	oipiv = stride2offset( N, strideIPIV );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, A, sa1, sa2, 0, IPIV, strideIPIV, oipiv );
 }
 

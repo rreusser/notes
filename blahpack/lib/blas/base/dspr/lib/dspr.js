@@ -4,6 +4,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -27,6 +29,12 @@ function dspr( uplo, N, alpha, x, strideX, AP, strideAP ) { // eslint-disable-li
 
 	ox = stride2offset( N, strideX );
 	oap = stride2offset( N, strideAP );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, alpha, x, strideX, ox, AP, strideAP, oap );
 }
 

@@ -4,6 +4,8 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var base = require( './base.js' );
 
 
@@ -48,6 +50,15 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, N, T, LDT, VL, LDVL, VR, L
 	svr2 = LDVR;
 	oselect = stride2offset( N, strideSELECT );
 	owork = stride2offset( N, strideWORK );
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( side, howmny, SELECT, strideSELECT, oselect, N, T, st1, st2, 0, VL, svl1, svl2, 0, VR, svr1, svr2, 0, mm, M, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }
 

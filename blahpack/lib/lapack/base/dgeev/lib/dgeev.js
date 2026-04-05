@@ -5,6 +5,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -46,6 +47,9 @@ function dgeev( jobvl, jobvr, N, A, LDA, WR, strideWR, WI, strideWI, VL, LDVL, V
 	svr2 = LDVR;
 	owr = stride2offset( N, strideWR );
 	owi = stride2offset( N, strideWI );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( jobvl, jobvr, N, A, sa1, sa2, 0, WR, strideWR, owr, WI, strideWI, owi, VL, svl1, svl2, 0, VR, svr1, svr2, 0 ); // eslint-disable-line max-len
 }
 

@@ -56,6 +56,12 @@ function dstevx( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, v
 	if ( range !== 'all' && range !== 'value' && range !== 'index' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid range value. Value: `%s`.', range ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( jobz, range, N, d, strideD, offsetD, e, strideE, offsetE, vl, vu, il, iu, abstol, M, w, strideW, offsetW, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK, IFAIL, strideIFAIL, offsetIFAIL ); // eslint-disable-line max-len
 }
 

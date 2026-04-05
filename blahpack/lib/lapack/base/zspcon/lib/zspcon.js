@@ -54,6 +54,9 @@ function zspcon( uplo, N, AP, IPIV, strideIPIV, anorm, rcond, WORK, strideWORK )
 	}
 	oipiv = stride2offset( N, strideIPIV );
 	owork = stride2offset( N, strideWORK );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, AP, 1, 0, IPIV, strideIPIV, oipiv, anorm, rcond, WORK, strideWORK, owork ); // eslint-disable-line max-len
 }
 

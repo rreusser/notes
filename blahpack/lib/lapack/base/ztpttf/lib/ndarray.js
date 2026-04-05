@@ -35,6 +35,9 @@ function ztpttf( transr, uplo, N, AP, strideAP, offsetAP, ARF, strideARF, offset
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( transr, uplo, N, AP, strideAP, offsetAP, ARF, strideARF, offsetARF ); // eslint-disable-line max-len
 }
 

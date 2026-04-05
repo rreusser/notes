@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -32,6 +33,12 @@ function zgerq2( M, N, A, LDA, TAU, strideTAU, WORK, strideWORK ) { // eslint-di
 	sa2 = LDA;
 	otau = stride2offset( N, strideTAU );
 	owork = stride2offset( N, strideWORK );
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( M, N, A, sa1, sa2, 0, TAU, strideTAU, otau, WORK, strideWORK, owork );
 }
 

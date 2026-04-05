@@ -20,6 +20,8 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 
@@ -51,6 +53,15 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 if successful
 */
 function dgbrfs( trans, N, kl, ku, nrhs, AB, LDAB, AFB, LDAFB, IPIV, B, LDB, X, LDX, FERR, BERR, WORK, IWORK ) { // eslint-disable-line max-len, max-params
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( trans, N, kl, ku, nrhs, AB, 1, LDAB, 0, AFB, 1, LDAFB, 0, IPIV, 1, 0, B, 1, LDB, 0, X, 1, LDX, 0, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0, IWORK, 1, 0 ); // eslint-disable-line max-len
 }
 

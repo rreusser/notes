@@ -50,6 +50,9 @@ function zlansf( norm, transr, uplo, N, A, WORK ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Third argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, transr, uplo, N, A, 1, 0, WORK, 1, 0 );
 }
 

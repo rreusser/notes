@@ -53,6 +53,12 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e
 	if ( order !== 'block' && order !== 'entire' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid order value. Value: `%s`.', order ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( range, order, N, vl, vu, il, iu, abstol, d, strideD, offsetD, e, strideE, offsetE, M, nsplit, w, strideW, offsetW, IBLOCK, strideIBLOCK, offsetIBLOCK, ISPLIT, strideISPLIT, offsetISPLIT, WORK, strideWORK, offsetWORK, IWORK, strideIWORK, offsetIWORK ); // eslint-disable-line max-len
 }
 

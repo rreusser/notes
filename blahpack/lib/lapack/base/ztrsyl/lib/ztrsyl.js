@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -40,6 +41,12 @@ function ztrsyl( trana, tranb, isgn, M, N, A, LDA, B, LDB, C, LDC, scale ) { // 
 	sb2 = LDB;
 	sc1 = 1;
 	sc2 = LDC;
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( trana, tranb, isgn, M, N, A, sa1, sa2, 0, B, sb1, sb2, 0, C, sc1, sc2, 0, scale );
 }
 

@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -56,6 +57,12 @@ function dtrsen( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, WR, stride
 	owi = stride2offset( N, strideWI );
 	owork = stride2offset( N, strideWORK );
 	oiwork = stride2offset( N, strideIWORK );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( job, compq, SELECT, strideSELECT, oselect, N, T, st1, st2, 0, Q, sq1, sq2, 0, WR, strideWR, owr, WI, strideWI, owi, M, s, sep, WORK, strideWORK, owork, lwork, IWORK, strideIWORK, oiwork, liwork ); // eslint-disable-line max-len
 }
 

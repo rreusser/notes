@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -52,6 +53,12 @@ function dlaqps( M, N, offset, nb, A, LDA, JPVT, strideJPVT, TAU, strideTAU, VN1
 	ovn1 = stride2offset( N, strideVN1 );
 	ovn2 = stride2offset( N, strideVN2 );
 	oauxv = stride2offset( N, strideAUXV );
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( M, N, offset, nb, A, sa1, sa2, 0, JPVT, strideJPVT, ojpvt, TAU, strideTAU, otau, VN1, strideVN1, ovn1, VN2, strideVN2, ovn2, AUXV, strideAUXV, oauxv, F, sf1, sf2, 0 ); // eslint-disable-line max-len
 }
 

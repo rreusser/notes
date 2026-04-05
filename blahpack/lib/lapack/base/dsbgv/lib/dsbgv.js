@@ -25,6 +25,7 @@
 var isLayout = require( '@stdlib/blas/base/assert/is-layout' );
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
 var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -64,6 +65,12 @@ function dsbgv( order, jobz, uplo, N, ka, kb, AB, LDAB, BB, LDBB, w, strideW, Z,
 
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
+	}
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
 	if ( order === 'column-major' ) {
 		sab1 = 1;

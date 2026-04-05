@@ -5,6 +5,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -24,6 +25,9 @@ var base = require( './base.js' );
 function zlanht( norm, N, d, strideD, e, strideE ) {
 	var od = stride2offset( N, strideD );
 	var oe = stride2offset( N, strideE );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, N, d, strideD, od, e, strideE, oe );
 }
 

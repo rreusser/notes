@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -26,6 +27,9 @@ function zlarnv( idist, iseed, strideISEED, N, x, stride ) {
 
 	oiseed = stride2offset( N, strideISEED );
 	ox = stride2offset( N, stride );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( idist, iseed, strideISEED, oiseed, N, x, stride, ox );
 }
 

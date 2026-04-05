@@ -51,6 +51,9 @@ function dgeev( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, o
 	if ( jobvr !== 'no-vectors' && jobvr !== 'compute-vectors' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid jobvr value. Value: `%s`.', jobvr ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( jobvl, jobvr, N, A, strideA1, strideA2, offsetA, WR, strideWR, offsetWR, WI, strideWI, offsetWI, VL, strideVL1, strideVL2, offsetVL, VR, strideVR1, strideVR2, offsetVR, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 

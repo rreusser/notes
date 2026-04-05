@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -27,6 +28,9 @@ function dpoequ( N, A, LDA, s, strideS ) {
 	sa1 = 1;
 	sa2 = LDA;
 	os = stride2offset( N, strideS );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, A, sa1, sa2, 0, s, strideS, os );
 }
 

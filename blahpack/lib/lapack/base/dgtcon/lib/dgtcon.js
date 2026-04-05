@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -48,6 +49,9 @@ function dgtcon( norm, N, DL, strideDL, d, strideD, DU, strideDU, DU2, strideDU2
 	oipiv = stride2offset( N, strideIPIV );
 	owork = stride2offset( N, strideWORK );
 	oiwork = stride2offset( N, strideIWORK );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, N, DL, strideDL, odl, d, strideD, od, DU, strideDU, odu, DU2, strideDU2, odu2, IPIV, strideIPIV, oipiv, anorm, rcond, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }
 

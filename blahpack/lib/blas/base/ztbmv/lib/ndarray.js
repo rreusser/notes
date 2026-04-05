@@ -52,6 +52,12 @@ function ztbmv( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, stri
 	if ( !isDiagonalType( diag ) ) {
 		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( K < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
 	return base( uplo, trans, diag, N, K, A, strideA1, strideA2, offsetA, x, strideX, offsetX ); // eslint-disable-line max-len
 }
 

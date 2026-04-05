@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -39,6 +40,9 @@ var base = require( './base.js' );
 */
 function dlasrt( id, N, d, stride ) {
 	var od = stride2offset( N, stride );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( id, N, d, stride, od );
 }
 

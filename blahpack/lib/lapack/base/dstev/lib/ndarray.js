@@ -43,6 +43,9 @@ function dstev( jobz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, 
 	if ( jobz !== 'no-vectors' && jobz !== 'compute-vectors' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid jobz value. Value: `%s`.', jobz ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( jobz, N, d, strideD, offsetD, e, strideE, offsetE, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

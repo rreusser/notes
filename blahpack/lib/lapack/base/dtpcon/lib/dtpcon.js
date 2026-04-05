@@ -50,6 +50,9 @@ function dtpcon( norm, uplo, diag, N, AP, rcond, WORK, IWORK ) {
 	if ( !isDiagonalType( diag ) ) {
 		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, uplo, diag, N, AP, 1, 0, rcond, WORK, 1, 0, IWORK, 1, 0 ); // eslint-disable-line max-len
 }
 

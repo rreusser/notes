@@ -66,6 +66,9 @@ function dhseqr( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, st
 	if ( compz !== 'none' && compz !== 'initialize' && compz !== 'update' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid compz value. Value: `%s`.', compz ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( job, compz, N, ilo, ihi, H, strideH1, strideH2, offsetH, WR, strideWR, offsetWR, WI, strideWI, offsetWI, Z, strideZ1, strideZ2, offsetZ, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 

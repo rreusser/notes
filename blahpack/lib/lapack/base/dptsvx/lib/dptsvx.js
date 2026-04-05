@@ -22,6 +22,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -48,6 +49,12 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 if successful, k>0 if D(k)<=0, N+1 if rcond < machine epsilon
 */
 function dptsvx( fact, N, nrhs, d, e, DF, EF, B, LDB, X, LDX, rcond, FERR, BERR, WORK ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( fact, N, nrhs, d, 1, 0, e, 1, 0, DF, 1, 0, EF, 1, 0, B, 1, LDB, 0, X, 1, LDX, 0, rcond, FERR, 1, 0, BERR, 1, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 }
 

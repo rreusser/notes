@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -66,6 +67,9 @@ function dlaebz( ijob, nitmax, N, mmax, minp, nbmin, abstol, reltol, pivmin, d, 
 	oc = stride2offset( N, strideC );
 	owork = stride2offset( N, strideWORK );
 	oiwork = stride2offset( N, strideIWORK );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( ijob, nitmax, N, mmax, minp, nbmin, abstol, reltol, pivmin, d, strideD, od, e, strideE, oe, E2, strideE2, oe2, NVAL, strideNVAL, onval, AB, sab1, sab2, 0, c, strideC, oc, mout, NAB, snab1, snab2, 0, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }
 

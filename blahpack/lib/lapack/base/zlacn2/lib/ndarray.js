@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -38,6 +39,9 @@ var base = require( './base.js' );
  * @param {NonNegativeInteger} offsetISAVE - starting index for ISAVE
  */
 function zlacn2( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, v, strideV, offsetV, x, strideX, offsetX, est, kase, isave, strideISAVE, offsetISAVE ); // eslint-disable-line max-len
 }
 

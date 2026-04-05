@@ -48,6 +48,9 @@ function dsptri( uplo, N, AP, IPIV ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) ); // eslint-disable-line max-len
 	}
 	WORK = new Float64Array( N );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, AP, 1, 0, IPIV, 1, 0, WORK, 1, 0 );
 }
 

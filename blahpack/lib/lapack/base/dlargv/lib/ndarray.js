@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -34,6 +35,9 @@ var base = require( './base.js' );
 * @returns {void}
 */
 function dlargv( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, x, strideX, offsetX, y, strideY, offsetY, c, strideC, offsetC ); // eslint-disable-line max-len
 }
 

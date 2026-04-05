@@ -4,6 +4,9 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var base = require( './base.js' );
 
 
@@ -32,6 +35,15 @@ function ztbcon( norm, uplo, diag, N, kd, AB, LDAB, RCOND, WORK, strideWORK, RWO
 
 	owork = stride2offset( 2 * N, strideWORK );
 	orwork = stride2offset( N, strideRWORK );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, uplo, diag, N, kd, AB, 1, LDAB, 0, RCOND, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

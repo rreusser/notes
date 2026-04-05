@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -24,6 +25,9 @@ var base = require( './base.js' );
 * @param {NonNegativeInteger} offsetX - offset for x
 */
 function dlaruv( iseed, strideISEED, offsetISEED, N, x, strideX, offsetX ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( iseed, strideISEED, offsetISEED, N, x, strideX, offsetX ); // eslint-disable-line max-len
 }
 

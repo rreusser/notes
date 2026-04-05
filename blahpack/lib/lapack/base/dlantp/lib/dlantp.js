@@ -48,6 +48,9 @@ function dlantp( norm, uplo, diag, N, AP, WORK ) {
 	if ( !isDiagonalType( diag ) ) {
 		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, uplo, diag, N, AP, 1, 0, WORK, 1, 0 );
 }
 

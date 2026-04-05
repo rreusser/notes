@@ -3,6 +3,10 @@
 
 // MODULES //
 
+var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var base = require( './base.js' );
 
 
@@ -24,6 +28,24 @@ var base = require( './base.js' );
 * @returns {Complex128Array} `B`
 */
 function ztfsm( transr, side, uplo, trans, diag, M, N, alpha, A, B ) {
+	if ( !isOperationSide( side ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid operation side. Value: `%s`.', side ) );
+	}
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Fifth argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( transr, side, uplo, trans, diag, M, N, alpha, A, 1, 0, B, 1, M, 0 ); // eslint-disable-line max-len
 }
 

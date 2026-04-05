@@ -53,6 +53,9 @@ function zlaswp( order, N, A, LDA, k1, k2, IPIV, strideIPIV, incx ) {
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

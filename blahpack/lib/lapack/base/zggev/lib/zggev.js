@@ -67,6 +67,9 @@ function zggev( order, jobvl, jobvr, N, A, LDA, B, LDB, ALPHA, strideALPHA, BETA
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

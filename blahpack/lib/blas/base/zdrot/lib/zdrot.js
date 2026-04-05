@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -43,6 +44,9 @@ var base = require( './base.js' );
 function zdrot( N, zx, strideX, zy, strideY, c, s ) {
 	var oz = stride2offset( N, strideX );
 	var oz = stride2offset( N, strideY );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, zx, strideX, oz, zy, strideY, oz, c, s );
 }
 

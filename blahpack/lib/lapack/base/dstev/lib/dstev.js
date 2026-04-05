@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -36,6 +37,9 @@ function dstev( jobz, N, d, strideD, e, strideE, Z, LDZ, WORK, strideWORK ) { //
 	od = stride2offset( N, strideD );
 	oe = stride2offset( N, strideE );
 	owork = stride2offset( N, strideWORK );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( jobz, N, d, strideD, od, e, strideE, oe, Z, sz1, sz2, 0, WORK, strideWORK, owork );
 }
 

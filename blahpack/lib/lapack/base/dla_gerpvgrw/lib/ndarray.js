@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -24,6 +25,9 @@ var base = require( './base.js' );
 * @returns {number} result
 */
 function dla_gerpvgrw( N, ncols, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, ncols, A, strideA1, strideA2, offsetA, AF, strideAF1, strideAF2, offsetAF ); // eslint-disable-line max-len
 }
 

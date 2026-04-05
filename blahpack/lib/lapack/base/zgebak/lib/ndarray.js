@@ -46,6 +46,12 @@ function zgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, 
 	if ( !isOperationSide( side ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid operation side. Value: `%s`.', side ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Ninth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( job, side, N, ilo, ihi, SCALE, strideSCALE, offsetSCALE, M, V, strideV1, strideV2, offsetV ); // eslint-disable-line max-len
 }
 

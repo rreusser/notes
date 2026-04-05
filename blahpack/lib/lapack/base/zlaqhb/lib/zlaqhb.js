@@ -50,6 +50,9 @@ function zlaqhb( uplo, N, KD, AB, LDAB, S, strideS, scond, amax ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
 	os = stride2offset( N, strideS );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, KD, AB, 1, LDAB, 0, S, strideS, os, scond, amax );
 }
 

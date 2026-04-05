@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -20,6 +21,12 @@ var base = require( './base.js' );
 * @returns {integer} status code (0 = success)
 */
 function ztpttf( transr, uplo, N, AP, ARF ) {
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( transr, uplo, N, AP, 1, 0, ARF, 1, 0 );
 }
 

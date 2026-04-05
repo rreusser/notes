@@ -4,6 +4,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -33,6 +34,9 @@ var base = require( './base.js' );
  * @returns {integer} info - 0 if successful
  */
 function zptcon( N, d, strideD, offsetD, e, strideE, offsetE, anorm, rcond, RWORK, strideRWORK, offsetRWORK ) { // eslint-disable-line max-len, max-params
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, d, strideD, offsetD, e, strideE, offsetE, anorm, rcond, RWORK, strideRWORK, offsetRWORK ); // eslint-disable-line max-len
 }
 

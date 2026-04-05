@@ -47,6 +47,9 @@ function zpbstf( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, kd, AB, strideAB1, strideAB2, offsetAB ); // eslint-disable-line max-len
 }
 

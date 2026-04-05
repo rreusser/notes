@@ -42,6 +42,9 @@ function zlanhp( norm, uplo, N, AP, WORK ) {
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, uplo, N, AP, 1, 0, WORK, 1, 0 );
 }
 

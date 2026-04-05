@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -39,6 +40,9 @@ function dlagtf( N, a, strideA, lambda, b, strideB, c, strideC, tol, d, strideD,
 	oc = stride2offset( N, strideC );
 	od = stride2offset( N, strideD );
 	oin = stride2offset( N, strideIN );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, a, strideA, oa, lambda, b, strideB, ob, c, strideC, oc, tol, d, strideD, od, IN, strideIN, oin ); // eslint-disable-line max-len
 }
 

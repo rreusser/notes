@@ -54,6 +54,12 @@ function dtfsm( transr, side, uplo, trans, diag, M, N, alpha, A, strideA, offset
 	if ( !isDiagonalType( diag ) ) {
 		throw new TypeError( format( 'invalid argument. Fifth argument must be a valid diagonal type. Value: `%s`.', diag ) );
 	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( transr, side, uplo, trans, diag, M, N, alpha, A, strideA, offsetA, B, strideB1, strideB2, offsetB );
 }
 

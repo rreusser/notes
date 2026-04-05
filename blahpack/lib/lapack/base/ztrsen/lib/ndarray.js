@@ -53,6 +53,12 @@ function ztrsen( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1,
 	if ( compq !== 'none' && compq !== 'initialize' && compq !== 'update' ) {
 		throw new TypeError( format( 'invalid argument. Second argument must be a valid compq value. Value: `%s`.', compq ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Eighteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( job, compq, SELECT, strideSELECT, offsetSELECT, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, w, strideW, offsetW, M, s, sep, WORK, strideWORK, offsetWORK, lwork ); // eslint-disable-line max-len
 }
 

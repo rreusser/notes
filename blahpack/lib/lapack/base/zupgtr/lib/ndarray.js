@@ -36,6 +36,9 @@ function zupgtr( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, 
 	if ( !isMatrixTriangle( uplo ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( uplo, N, AP, strideAP, offsetAP, TAU, strideTAU, offsetTAU, Q, strideQ1, strideQ2, offsetQ, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

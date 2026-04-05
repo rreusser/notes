@@ -36,6 +36,12 @@ function dlantb( norm, uplo, diag, N, K, AB, strideAB1, strideAB2, offsetAB, WOR
 	if ( !isDiagonalType( diag ) ) {
 		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( K < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
 	return base( norm, uplo, diag, N, K, AB, strideAB1, strideAB2, offsetAB, WORK, strideWORK, offsetWORK ); // eslint-disable-line max-len
 }
 

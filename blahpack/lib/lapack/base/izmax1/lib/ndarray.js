@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -23,6 +24,9 @@ var base = require( './base.js' );
 * @returns {integer} 0-based index of the element with maximum absolute value
 */
 function izmax1( N, x, stride, offset, incx ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, x, stride, offset, incx );
 }
 

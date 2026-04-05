@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -59,6 +60,9 @@ function dlarrj( N, d, strideD, E2, strideE2, ifirst, ilast, rtol, offset, w, st
 	var oE2 = stride2offset( N, strideE2 );
 	var oD = stride2offset( N, strideD );
 	var oW = stride2offset( N, strideW );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, d, strideD, oD, E2, strideE2, oE2, ifirst, ilast, rtol, offset, w, strideW, oW, WERR, strideWERR, oWERR, WORK, strideWORK, oWORK, IWORK, strideIWORK, oIWORK, pivmin, spdiam );
 }
 

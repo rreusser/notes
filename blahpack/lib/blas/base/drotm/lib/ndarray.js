@@ -54,6 +54,9 @@ var base = require( './base.js' );
 * @returns {Float64Array} `y`
 */
 function drotm( N, x, strideX, offsetX, y, strideY, offsetY, param, strideParam, offsetParam ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, x, strideX, offsetX, y, strideY, offsetY, param, strideParam, offsetParam );
 }
 

@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -50,6 +51,9 @@ function dlarra( N, d, strideD, e, strideE, E2, strideE2, spltol, tnrm, nsplit, 
 	var offsetE2 = stride2offset( N, strideE2 );
 	var offsetD = stride2offset( N, strideD );
 	var offsetE = stride2offset( N, strideE );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, d, strideD, offsetD, e, strideE, offsetE, E2, strideE2, offsetE2, spltol, tnrm, nsplit, ISPLIT, strideISPLIT, offsetISPLIT );
 }
 

@@ -3,6 +3,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -42,6 +43,15 @@ var base = require( './base.js' );
 * @returns {integer} info - 0 for success, 1 if not converged
 */
 function ztgsja( jobu, jobv, jobq, M, p, N, K, l, A, LDA, B, LDB, tola, tolb, ALPHA, BETA, U, LDU, V, LDV, Q, LDQ, WORK, ncycle ) { // eslint-disable-line max-len, max-params, no-unused-vars
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( K < 0 ) {
+		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', K ) );
+	}
 	return base( jobu, jobv, jobq, M, p, N, K, l, A, 1, LDA, 0, B, 1, LDB, 0, tola, tolb, ALPHA, 1, 0, BETA, 1, 0, U, 1, LDU, 0, V, 1, LDV, 0, Q, 1, LDQ, 0, WORK, 1, 0, ncycle ); // eslint-disable-line max-len
 }
 

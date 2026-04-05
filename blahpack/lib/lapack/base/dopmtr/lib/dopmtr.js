@@ -26,6 +26,7 @@ var isOperationSide = require( '@stdlib/blas/base/assert/is-operation-side' );
 var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var isTransposeOperation = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var format = require( '@stdlib/string/format' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
 var base = require( './base.js' );
 
 
@@ -59,6 +60,15 @@ function dopmtr( side, uplo, trans, M, N, AP, TAU, C, LDC, WORK ) {
 	}
 	if ( !isTransposeOperation( trans ) ) {
 		throw new TypeError( format( 'invalid argument. Third argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
 	return base( side, uplo, trans, M, N, AP, 1, 0, TAU, 1, 0, C, 1, LDC, 0, WORK, 1, 0 );
 }

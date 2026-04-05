@@ -4,6 +4,10 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
+var isMatrixTranspose = require( '@stdlib/blas/base/assert/is-transpose-operation' );
+var isDiagonalType = require( '@stdlib/blas/base/assert/is-diagonal-type' );
 var base = require( './base.js' );
 
 
@@ -44,6 +48,21 @@ function dtbrfs( uplo, trans, diag, N, kd, nrhs, AB, LDAB, B, LDB, X, LDX, FERR,
 	oberr = stride2offset( nrhs, strideBERR );
 	owork = stride2offset( 3 * N, strideWORK );
 	oiwork = stride2offset( N, strideIWORK );
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( !isMatrixTranspose( trans ) ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid transpose operation. Value: `%s`.', trans ) );
+	}
+	if ( !isDiagonalType( diag ) ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid diagonal type. Value: `%s`.', diag ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Sixth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( uplo, trans, diag, N, kd, nrhs, AB, 1, LDAB, 0, B, 1, LDB, 0, X, 1, LDX, 0, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }
 

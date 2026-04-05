@@ -55,6 +55,12 @@ function dgesv( order, N, nrhs, A, LDA, IPIV, strideIPIV, B, LDB ) {
 	if ( !isLayout( order ) ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid order. Value: `%s`.', order ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

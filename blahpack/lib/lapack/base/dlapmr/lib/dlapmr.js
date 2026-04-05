@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -28,6 +29,12 @@ function dlapmr( forwrd, M, N, X, LDX, k, strideK ) { // eslint-disable-line max
 	sx1 = 1;
 	sx2 = LDX;
 	ok = stride2offset( M, strideK );
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	base( forwrd, M, N, X, sx1, sx2, 0, k, strideK, ok );
 }
 

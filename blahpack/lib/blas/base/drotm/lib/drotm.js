@@ -42,6 +42,9 @@ var base = require( './base.js' );
 function drotm( N, x, strideX, y, strideY, param ) {
 	var ox = stride2offset( N, strideX );
 	var oy = stride2offset( N, strideY );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, x, strideX, ox, y, strideY, oy, param, 1, 0 );
 }
 

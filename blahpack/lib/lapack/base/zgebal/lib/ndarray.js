@@ -33,6 +33,9 @@ function zgebal( job, N, A, strideA1, strideA2, offsetA, ilo, ihi, SCALE, stride
 	if ( job !== 'none' && job !== 'permute' && job !== 'scale' && job !== 'both' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid job value. Value: `%s`.', job ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( job, N, A, strideA1, strideA2, offsetA, ilo, ihi, SCALE, strideSCALE, offsetSCALE ); // eslint-disable-line max-len
 }
 

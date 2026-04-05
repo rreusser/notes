@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -55,6 +56,12 @@ function dstevx( jobz, range, N, d, strideD, e, strideE, vl, vu, il, iu, abstol,
 	owork = stride2offset( N, strideWORK );
 	oiwork = stride2offset( N, strideIWORK );
 	oifail = stride2offset( N, strideIFAIL );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( M < 0 ) {
+		throw new RangeError( format( 'invalid argument. Thirteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
+	}
 	return base( jobz, range, N, d, strideD, od, e, strideE, oe, vl, vu, il, iu, abstol, M, w, strideW, ow, Z, sz1, sz2, 0, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork, IFAIL, strideIFAIL, oifail ); // eslint-disable-line max-len
 }
 

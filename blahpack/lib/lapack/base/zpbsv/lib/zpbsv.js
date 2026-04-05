@@ -4,6 +4,8 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
+var isMatrixTriangle = require( '@stdlib/blas/base/assert/is-matrix-triangle' );
 var base = require( './base.js' );
 
 
@@ -32,6 +34,15 @@ function zpbsv( uplo, N, kd, nrhs, AB, LDAB, B, LDB ) { // eslint-disable-line m
 	sab2 = LDAB;
 	sb1 = 1;
 	sb2 = LDB;
+	if ( !isMatrixTriangle( uplo ) ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid matrix triangle. Value: `%s`.', uplo ) );
+	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( uplo, N, kd, nrhs, AB, sab1, sab2, 0, B, sb1, sb2, 0 );
 }
 

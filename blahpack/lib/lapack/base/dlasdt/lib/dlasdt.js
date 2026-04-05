@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -47,6 +48,9 @@ function dlasdt( N, lvl, nd, INODE, strideINODE, NDIML, strideNDIML, NDIMR, stri
 	var oINODE = stride2offset( N, strideINODE );
 	var oNDIML = stride2offset( N, strideNDIML );
 	var oNDIMR = stride2offset( N, strideNDIMR );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, lvl, nd, INODE, strideINODE, oINODE, NDIML, strideNDIML, oNDIML, NDIMR, strideNDIMR, oNDIMR, msub );
 }
 

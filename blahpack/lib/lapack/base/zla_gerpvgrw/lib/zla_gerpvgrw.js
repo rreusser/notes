@@ -20,6 +20,7 @@
 
 // MODULES //
 
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -37,6 +38,9 @@ var base = require( './base.js' );
 * @returns {number} reciprocal pivot growth factor
 */
 function zla_gerpvgrw( N, ncols, A, LDA, AF, LDAF ) {
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, ncols, A, 1, LDA, 0, AF, 1, LDAF, 0 );
 }
 

@@ -23,6 +23,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -40,6 +41,9 @@ var base = require( './base.js' );
 */
 function dlassq( N, x, stride, scale, sumsq ) {
 	var ox = stride2offset( N, stride );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, x, stride, ox, scale, sumsq );
 }
 

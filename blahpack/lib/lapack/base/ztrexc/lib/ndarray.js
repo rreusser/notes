@@ -42,6 +42,9 @@ function ztrexc( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2
 	if ( compq !== 'none' && compq !== 'initialize' && compq !== 'update' ) {
 		throw new TypeError( format( 'invalid argument. First argument must be a valid compq value. Value: `%s`.', compq ) );
 	}
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( compq, N, T, strideT1, strideT2, offsetT, Q, strideQ1, strideQ2, offsetQ, ifst, ilst ); // eslint-disable-line max-len
 }
 

@@ -21,6 +21,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -45,6 +46,9 @@ function zlapll( N, x, strideX, y, strideY, ssmin ) {
 
 	ox = stride2offset( N, strideX );
 	oy = stride2offset( N, strideY );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( N, x, strideX, ox, y, strideY, oy, ssmin );
 }
 

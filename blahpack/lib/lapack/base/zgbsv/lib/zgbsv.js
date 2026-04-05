@@ -4,6 +4,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -36,6 +37,12 @@ function zgbsv( N, kl, ku, nrhs, AB, LDAB, IPIV, strideIPIV, B, LDB ) { // eslin
 	sb1 = 1;
 	sb2 = LDB;
 	oipiv = stride2offset( N, strideIPIV );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. First argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
+	if ( nrhs < 0 ) {
+		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', nrhs ) );
+	}
 	return base( N, kl, ku, nrhs, AB, sab1, sab2, 0, IPIV, strideIPIV, oipiv, B, sb1, sb2, 0 );
 }
 

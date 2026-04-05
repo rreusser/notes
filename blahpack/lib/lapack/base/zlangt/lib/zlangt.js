@@ -3,6 +3,7 @@
 // MODULES //
 
 var stride2offset = require( '@stdlib/strided/base/stride2offset' );
+var format = require( '@stdlib/string/format' );
 var base = require( './base.js' );
 
 
@@ -29,6 +30,9 @@ function zlangt( norm, N, DL, strideDL, d, strideD, DU, strideDU ) { // eslint-d
 	odl = stride2offset( N, strideDL );
 	od = stride2offset( N, strideD );
 	odu = stride2offset( N, strideDU );
+	if ( N < 0 ) {
+		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
+	}
 	return base( norm, N, DL, strideDL, odl, d, strideD, od, DU, strideDU, odu ); // eslint-disable-line max-len
 }
 
