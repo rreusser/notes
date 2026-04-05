@@ -1621,22 +1621,22 @@ def gen_learnings_md(routine):
     is_complex = routine.startswith(('z', 'c'))
     complex_section = (
         '## Complex number handling\n\n'
-        '- [ ] (subtleties in complex arithmetic, what was inlined vs library calls)\n'
-    ) if is_complex else (
-        '## Complex number handling\n\n'
-        f'- N/A: {routine} is a real-valued routine.\n'
-    )
+        '(Note any subtleties in complex arithmetic — what was inlined vs.\n'
+        'library calls, conjugation gotchas, real/imag extraction patterns.)\n'
+    ) if is_complex else ''
     return (
         f'# {routine}: Translation Learnings\n\n'
-        'TODO: Fill in after implementing base.js. This file is MANDATORY.\n\n'
+        'Document anything surprising or non-obvious that came up during\n'
+        'translation. Only write sections where you have something to say —\n'
+        'leave out sections that would just say "N/A". The goal is to capture\n'
+        'hard-won knowledge that helps future translations.\n\n'
         '## Translation pitfalls\n\n'
-        '- [ ] (describe any index off-by-ones, stride confusion, etc.)\n\n'
+        '(Index off-by-ones, Fortran loop bound surprises, non-obvious\n'
+        'packed storage conventions, string flag values that differ from\n'
+        'the standard table, etc.)\n\n'
         '## Dependency interface surprises\n\n'
-        '- [ ] (note unexpected calling conventions of deps)\n\n'
-        '## Automation opportunities\n\n'
-        '- [ ] (mechanical steps that should be automated)\n\n'
-        '## Coverage gaps\n\n'
-        '- [ ] (code paths that were hard to test and why)\n\n'
+        '(Unexpected calling conventions, parameter ordering, stride\n'
+        'semantics, or return value conventions in dependencies.)\n\n'
         + complex_section
     )
 
