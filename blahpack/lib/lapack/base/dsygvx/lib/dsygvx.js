@@ -80,6 +80,9 @@ function dsygvx( itype, jobz, range, uplo, N, A, LDA, B, LDB, vl, vu, il, iu, ab
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Nineteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( jobz !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
 	return base( itype, jobz, range, uplo, N, A, sa1, sa2, 0, B, sb1, sb2, 0, vl, vu, il, iu, abstol, out, w, strideW, ow, Z, sz1, sz2, 0, WORK, strideWORK, owork, lwork, IWORK, strideIWORK, oiwork, IFAIL, strideIFAIL, oifail ); // eslint-disable-line max-len
 }
 

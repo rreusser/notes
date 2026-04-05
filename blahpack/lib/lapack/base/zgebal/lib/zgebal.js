@@ -36,6 +36,9 @@ function zgebal( job, N, A, LDA, SCALE, strideSCALE ) {
 	if ( LDA < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
 	}
+	if ( job !== 'none' && job !== 'permute' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `job` value. Value: `%s`.', job ) );
+	}
 	return base( job, N, A, sa1, sa2, 0, SCALE, strideSCALE, oscale );
 }
 

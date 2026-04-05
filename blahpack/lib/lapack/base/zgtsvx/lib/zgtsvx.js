@@ -119,6 +119,9 @@ function zgtsvx( fact, trans, N, nrhs, DL, strideDL, d, strideD, DU, strideDU, D
 	if ( LDX < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Twenty-fourth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
+	if ( fact !== 'not-factored' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `fact` value. Value: `%s`.', fact ) );
+	}
 	return base( fact, trans, N, nrhs, DL, strideDL, odl, d, strideD, od, DU, strideDU, odu, DLF, strideDLF, odlf, DF, strideDF, odf, DUF, strideDUF, oduf, DU2, strideDU2, odu2, IPIV, strideIPIV, oipiv, B, 1, LDB, 0, X, 1, LDX, 0, rcond, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

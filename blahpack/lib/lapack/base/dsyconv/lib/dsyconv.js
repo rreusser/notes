@@ -45,6 +45,9 @@ function dsyconv( uplo, way, N, A, LDA, IPIV, strideIPIV, E, strideE ) { // esli
 	if ( LDA < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
 	}
+	if ( way !== 'convert' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `way` value. Value: `%s`.', way ) );
+	}
 	return base( uplo, way, N, A, sa1, sa2, 0, IPIV, strideIPIV, oipiv, E, strideE, oe );
 }
 

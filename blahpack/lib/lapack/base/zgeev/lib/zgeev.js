@@ -64,6 +64,12 @@ function zgeev( jobvl, jobvr, N, A, LDA, w, strideW, VL, LDVL, VR, LDVR, WORK, s
 	if ( LDVR < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDVR ) );
 	}
+	if ( jobvl !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `jobvl` value. Value: `%s`.', jobvl ) );
+	}
+	if ( jobvr !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobvr` value. Value: `%s`.', jobvr ) );
+	}
 	return base( jobvl, jobvr, N, A, sa1, sa2, 0, w, strideW, ow, VL, svl1, svl2, 0, VR, svr1, svr2, 0, WORK, strideWORK, owork, lwork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

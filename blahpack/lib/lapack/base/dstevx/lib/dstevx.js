@@ -66,6 +66,12 @@ function dstevx( jobz, range, N, d, strideD, e, strideE, vl, vu, il, iu, abstol,
 	if ( LDZ < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Seventeenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDZ ) );
 	}
+	if ( jobz !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
+	if ( range !== 'all' && range !== 'value' && range !== 'index' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `range` value. Value: `%s`.', range ) );
+	}
 	return base( jobz, range, N, d, strideD, od, e, strideE, oe, vl, vu, il, iu, abstol, M, w, strideW, ow, Z, sz1, sz2, 0, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork, IFAIL, strideIFAIL, oifail ); // eslint-disable-line max-len
 }
 

@@ -75,6 +75,9 @@ function dggbak( order, job, side, N, ilo, ihi, LSCALE, strideLSCALE, RSCALE, st
 	if ( order === 'column-major' && LDV < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDV ) );
 	}
+	if ( job !== 'none' && job !== 'scale' && job !== 'both' && job !== 'permute' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `job` value. Value: `%s`.', job ) );
+	}
 	if ( order === 'column-major' ) {
 		sv1 = 1;
 		sv2 = LDV;

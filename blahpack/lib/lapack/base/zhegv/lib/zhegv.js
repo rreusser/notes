@@ -61,6 +61,9 @@ function zhegv( itype, jobz, uplo, N, A, LDA, B, LDB, w, strideW, WORK, strideWO
 	if ( LDB < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
 	}
+	if ( jobz !== 'compute' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
 	return base( itype, jobz, uplo, N, A, sa1, sa2, 0, B, sb1, sb2, 0, w, strideW, ow, WORK, strideWORK, owork, lwork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

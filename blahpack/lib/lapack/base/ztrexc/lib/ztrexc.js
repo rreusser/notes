@@ -43,6 +43,9 @@ function ztrexc( compq, N, T, LDT, Q, LDQ, ifst, ilst ) { // eslint-disable-line
 	if ( LDQ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Sixth argument must be greater than or equal to max(1,N). Value: `%d`.', LDQ ) );
 	}
+	if ( compq !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `compq` value. Value: `%s`.', compq ) );
+	}
 	return base( compq, N, T, st1, st2, 0, Q, sq1, sq2, 0, ifst, ilst );
 }
 

@@ -26,6 +26,9 @@ function dpftri( transr, uplo, N, A ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( transr !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `transr` value. Value: `%s`.', transr ) );
+	}
 	return base( transr, uplo, N, A, 1, 0 );
 }
 

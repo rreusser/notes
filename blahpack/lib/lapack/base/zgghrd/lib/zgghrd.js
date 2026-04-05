@@ -78,6 +78,12 @@ function zgghrd( order, compq, compz, N, ilo, ihi, A, LDA, B, LDB, Q, LDQ, Z, LD
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Fourteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( compq !== 'none' && compq !== 'update' && compq !== 'initialize' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `compq` value. Value: `%s`.', compq ) );
+	}
+	if ( compz !== 'none' && compz !== 'update' && compz !== 'initialize' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `compz` value. Value: `%s`.', compz ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

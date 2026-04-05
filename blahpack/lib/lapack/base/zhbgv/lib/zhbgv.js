@@ -85,6 +85,9 @@ function zhbgv( order, jobz, uplo, N, ka, kb, AB, LDAB, BB, LDBB, w, strideW, Z,
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Fourteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( jobz !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
 	if ( order === 'column-major' ) {
 		sab1 = 1;
 		sab2 = LDAB;

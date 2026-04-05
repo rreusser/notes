@@ -43,6 +43,9 @@ function dlasrt( id, N, d, stride ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( id !== 'decreasing' && id !== 'increasing' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `id` value. Value: `%s`.', id ) );
+	}
 	return base( id, N, d, stride, od );
 }
 

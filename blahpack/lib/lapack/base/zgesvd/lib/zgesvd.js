@@ -93,6 +93,12 @@ function zgesvd( order, jobu, jobvt, M, N, A, LDA, s, strideS, U, LDU, VT, LDVT,
 	if ( order === 'column-major' && LDA < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
 	}
+	if ( jobu !== 'all-columns' && jobu !== 'economy' && jobu !== 'overwrite' && jobu !== 'none' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobu` value. Value: `%s`.', jobu ) );
+	}
+	if ( jobvt !== 'all-rows' && jobvt !== 'economy' && jobvt !== 'overwrite' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `jobvt` value. Value: `%s`.', jobvt ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

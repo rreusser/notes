@@ -69,6 +69,9 @@ function dtrevc3( side, howmny, SELECT, strideSELECT, N, T, LDT, VL, LDVL, VR, L
 	if ( LDVR < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDVR ) );
 	}
+	if ( howmny !== 'all' && howmny !== 'backtransform' && howmny !== 'selected' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `howmny` value. Value: `%s`.', howmny ) );
+	}
 	return base( side, howmny, SELECT, strideSELECT, oselect, N, T, st1, st2, 0, VL, svl1, svl2, 0, VR, svr1, svr2, 0, mm, M, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }
 

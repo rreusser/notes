@@ -71,6 +71,9 @@ function zggbal( order, job, N, A, LDA, B, LDB, LSCALE, strideLSCALE, RSCALE, st
 	if ( LDB < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDB ) );
 	}
+	if ( job !== 'none' && job !== 'scale' && job !== 'permute' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `job` value. Value: `%s`.', job ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

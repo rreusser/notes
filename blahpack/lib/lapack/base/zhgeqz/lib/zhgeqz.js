@@ -93,6 +93,15 @@ function zhgeqz( order, job, compq, compz, N, ilo, ihi, H, LDH, T, LDT, ALPHA, s
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Nineteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( job !== 'schur' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `job` value. Value: `%s`.', job ) );
+	}
+	if ( compq !== 'update' && compq !== 'initialize' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `compq` value. Value: `%s`.', compq ) );
+	}
+	if ( compz !== 'update' && compz !== 'initialize' ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid `compz` value. Value: `%s`.', compz ) );
+	}
 	if ( order === 'column-major' ) {
 		sh1 = 1;
 		sh2 = LDH;

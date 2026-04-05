@@ -70,6 +70,12 @@ function zlarft( order, direct, storev, N, K, V, LDV, TAU, strideTAU, T, LDT ) {
 	if ( LDT < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDT ) );
 	}
+	if ( direct !== 'forward' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `direct` value. Value: `%s`.', direct ) );
+	}
+	if ( storev !== 'columnwise' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `storev` value. Value: `%s`.', storev ) );
+	}
 	if ( order === 'column-major' ) {
 		sv1 = 1;
 		sv2 = LDV;

@@ -47,6 +47,9 @@ function ztfsm( transr, side, uplo, trans, diag, M, N, alpha, A, B ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( transr !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `transr` value. Value: `%s`.', transr ) );
+	}
 	return base( transr, side, uplo, trans, diag, M, N, alpha, A, 1, 0, B, 1, M, 0 ); // eslint-disable-line max-len
 }
 

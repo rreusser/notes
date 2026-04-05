@@ -57,6 +57,9 @@ function dlatbs( uplo, trans, diag, normin, N, kd, AB, LDAB, x, strideX, scale, 
 	if ( LDAB < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDAB ) );
 	}
+	if ( normin !== 'no' ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid `normin` value. Value: `%s`.', normin ) );
+	}
 	return base( uplo, trans, diag, normin, N, kd, AB, sab1, sab2, 0, x, strideX, ox, scale, CNORM, strideCNORM, ocnorm ); // eslint-disable-line max-len
 }
 

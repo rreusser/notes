@@ -52,6 +52,9 @@ function zlanhf( norm, transr, uplo, N, A, WORK ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fourth argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( transr !== 'conjugate-transpose' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `transr` value. Value: `%s`.', transr ) );
+	}
 	return base( norm, transr, uplo, N, A, 1, 0, WORK, 1, 0 );
 }
 

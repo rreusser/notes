@@ -57,6 +57,12 @@ function ztrsyl( trana, tranb, isgn, M, N, A, LDA, B, LDB, C, LDC, scale ) { // 
 	if ( LDC < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDC ) );
 	}
+	if ( trana !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `trana` value. Value: `%s`.', trana ) );
+	}
+	if ( tranb !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `tranb` value. Value: `%s`.', tranb ) );
+	}
 	return base( trana, tranb, isgn, M, N, A, sa1, sa2, 0, B, sb1, sb2, 0, C, sc1, sc2, 0, scale );
 }
 

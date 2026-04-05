@@ -70,6 +70,9 @@ function dsbtrd( order, vect, uplo, N, kd, AB, LDAB, d, e, Q, LDQ, WORK ) {
 	if ( LDQ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDQ ) );
 	}
+	if ( vect !== 'initialize' && vect !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `vect` value. Value: `%s`.', vect ) );
+	}
 	if ( order === 'column-major' ) {
 		sab1 = 1;
 		sab2 = LDAB;

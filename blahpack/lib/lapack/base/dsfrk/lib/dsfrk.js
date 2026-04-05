@@ -42,6 +42,9 @@ function dsfrk( transr, uplo, trans, N, K, alpha, A, LDA, beta, C ) {
 	if ( LDA < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
 	}
+	if ( transr !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `transr` value. Value: `%s`.', transr ) );
+	}
 	return base( transr, uplo, trans, N, K, alpha, A, 1, LDA, 0, beta, C, 1, 0 ); // eslint-disable-line max-len
 }
 

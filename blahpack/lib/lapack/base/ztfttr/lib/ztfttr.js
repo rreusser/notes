@@ -42,6 +42,9 @@ function ztfttr( order, transr, uplo, N, ARF, A, LDA ) {
 	if ( LDA < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Seventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
 	}
+	if ( transr !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `transr` value. Value: `%s`.', transr ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

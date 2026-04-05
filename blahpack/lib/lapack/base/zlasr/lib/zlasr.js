@@ -74,6 +74,12 @@ function zlasr( order, side, pivot, direct, M, N, c, strideC, s, strideS, A, LDA
 	if ( order === 'column-major' && LDA < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,M). Value: `%d`.', LDA ) );
 	}
+	if ( pivot !== 'variable' && pivot !== 'top' && pivot !== 'bottom' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `pivot` value. Value: `%s`.', pivot ) );
+	}
+	if ( direct !== 'forward' ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid `direct` value. Value: `%s`.', direct ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

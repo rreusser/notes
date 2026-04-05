@@ -99,6 +99,12 @@ function zgbsvx( fact, trans, N, kl, ku, nrhs, AB, LDAB, AFB, LDAFB, IPIV, strid
 	if ( LDX < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Twenty-first argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
+	if ( fact !== 'not-factored' && fact !== 'equilibrate' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `fact` value. Value: `%s`.', fact ) );
+	}
+	if ( equed !== 'row' && equed !== 'both' && equed !== 'column' ) {
+		throw new TypeError( format( 'invalid argument. Thirteenth argument must be a valid `equed` value. Value: `%s`.', equed ) );
+	}
 	return base( fact, trans, N, kl, ku, nrhs, AB, sab1, sab2, 0, AFB, safb1, safb2, 0, IPIV, strideIPIV, oipiv, equed, r, strideR, or, c, strideC, oc, B, sb1, sb2, 0, X, sx1, sx2, 0, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

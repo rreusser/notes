@@ -41,6 +41,9 @@ function zlatps( uplo, trans, diag, normin, N, AP, x, scale, CNORM ) { // eslint
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Fifth argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( normin !== 'no' ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid `normin` value. Value: `%s`.', normin ) );
+	}
 	return base( uplo, trans, diag, normin, N, AP, 1, 0, x, 1, 0, scale, CNORM, 1, 0 );
 }
 

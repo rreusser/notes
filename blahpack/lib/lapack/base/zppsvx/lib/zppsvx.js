@@ -85,6 +85,9 @@ function zppsvx( fact, uplo, N, nrhs, AP, AFP, equed, S, strideS, B, LDB, X, LDX
 	if ( LDX < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
+	if ( fact !== 'not-factored' && fact !== 'equilibrate' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `fact` value. Value: `%s`.', fact ) );
+	}
 	return base( fact, uplo, N, nrhs, AP, 1, 0, AFP, 1, 0, equed, S, strideS, os, B, 1, LDB, 0, X, 1, LDX, 0, rcond, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, RWORK, strideRWORK, orwork ); // eslint-disable-line max-len
 }
 

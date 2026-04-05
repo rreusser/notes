@@ -52,6 +52,12 @@ function dhseqr( job, compz, N, ilo, ihi, H, LDH, WR, strideWR, WI, strideWI, Z,
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Thirteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( job !== 'schur' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `job` value. Value: `%s`.', job ) );
+	}
+	if ( compz !== 'initialize' && compz !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `compz` value. Value: `%s`.', compz ) );
+	}
 	return base( job, compz, N, ilo, ihi, H, sh1, sh2, 0, WR, strideWR, owr, WI, strideWI, owi, Z, sz1, sz2, 0 ); // eslint-disable-line max-len
 }
 

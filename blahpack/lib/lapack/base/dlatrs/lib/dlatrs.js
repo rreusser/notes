@@ -76,6 +76,9 @@ function dlatrs( order, uplo, trans, diag, normin, N, A, LDA, x, strideX, scale,
 	if ( LDA < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eighth argument must be greater than or equal to max(1,N). Value: `%d`.', LDA ) );
 	}
+	if ( normin !== 'no' ) {
+		throw new TypeError( format( 'invalid argument. Fifth argument must be a valid `normin` value. Value: `%s`.', normin ) );
+	}
 	if ( order === 'column-major' ) {
 		sa1 = 1;
 		sa2 = LDA;

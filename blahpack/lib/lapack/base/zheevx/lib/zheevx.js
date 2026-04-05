@@ -75,6 +75,12 @@ function zheevx( jobz, range, uplo, N, A, LDA, vl, vu, il, iu, abstol, out, w, s
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Sixteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( jobz !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
+	if ( range !== 'all' && range !== 'value' && range !== 'index' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `range` value. Value: `%s`.', range ) );
+	}
 	return base( jobz, range, uplo, N, A, sa1, sa2, 0, vl, vu, il, iu, abstol, out, w, strideW, ow, Z, sz1, sz2, 0, WORK, strideWORK, owork, lwork, RWORK, strideRWORK, orwork, IWORK, strideIWORK, oiwork, IFAIL, strideIFAIL, oifail ); // eslint-disable-line max-len
 }
 

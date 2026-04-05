@@ -52,6 +52,9 @@ function dtfsm( transr, side, uplo, trans, diag, M, N, alpha, A, B, LDB ) { // e
 	if ( LDB < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,M). Value: `%d`.', LDB ) );
 	}
+	if ( transr !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `transr` value. Value: `%s`.', transr ) );
+	}
 	base( transr, side, uplo, trans, diag, M, N, alpha, A, 1, 0, B, 1, LDB, 0 );
 }
 

@@ -48,6 +48,9 @@ function zgebak( job, side, N, ilo, ihi, SCALE, strideSCALE, M, V, LDV ) { // es
 	if ( LDV < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDV ) );
 	}
+	if ( job !== 'none' && job !== 'scale' && job !== 'both' && job !== 'permute' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `job` value. Value: `%s`.', job ) );
+	}
 	return base( job, side, N, ilo, ihi, SCALE, strideSCALE, oscale, M, V, sv1, sv2, 0 );
 }
 

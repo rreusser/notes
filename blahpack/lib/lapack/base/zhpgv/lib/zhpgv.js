@@ -66,6 +66,9 @@ function zhpgv( order, itype, jobz, uplo, N, AP, BP, w, Z, LDZ, WORK, RWORK ) {
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( jobz !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
 	if ( order === 'column-major' ) {
 		sz1 = 1;
 		sz2 = LDZ;

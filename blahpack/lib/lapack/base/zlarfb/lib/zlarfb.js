@@ -106,6 +106,12 @@ function zlarfb( order, side, trans, direct, storev, M, N, K, V, LDV, T, LDT, C,
 	if ( order === 'column-major' && LDV < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Tenth argument must be greater than or equal to max(1,M). Value: `%d`.', LDV ) );
 	}
+	if ( direct !== 'forward' ) {
+		throw new TypeError( format( 'invalid argument. Fourth argument must be a valid `direct` value. Value: `%s`.', direct ) );
+	}
+	if ( storev !== 'columnwise' ) {
+		throw new TypeError( format( 'invalid argument. Fifth argument must be a valid `storev` value. Value: `%s`.', storev ) );
+	}
 	if ( order === 'column-major' ) {
 		sv1 = 1;
 		sv2 = LDV;

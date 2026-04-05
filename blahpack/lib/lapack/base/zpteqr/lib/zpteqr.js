@@ -65,6 +65,9 @@ function zpteqr( order, compz, N, d, strideD, e, strideE, Z, LDZ, WORK, strideWO
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( compz !== 'none' && compz !== 'update' && compz !== 'initialize' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `compz` value. Value: `%s`.', compz ) );
+	}
 	if ( order === 'column-major' ) {
 		sz1 = 1;
 		sz2 = LDZ;

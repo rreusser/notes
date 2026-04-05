@@ -74,6 +74,12 @@ function zhpevx( order, jobz, range, uplo, N, AP, vl, vu, il, iu, abstol, out, w
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Fifteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( jobz !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
+	if ( range !== 'all' && range !== 'value' && range !== 'index' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `range` value. Value: `%s`.', range ) );
+	}
 	if ( order === 'column-major' ) {
 		sz1 = 1;
 		sz2 = LDZ;

@@ -25,6 +25,9 @@ function dlarrc( jobt, N, vl, vu, D, E, pivmin ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Second argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( jobt !== 'tridiagonal' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `jobt` value. Value: `%s`.', jobt ) );
+	}
 	return base( jobt, N, vl, vu, D, 1, 0, E, 1, 0, pivmin );
 }
 

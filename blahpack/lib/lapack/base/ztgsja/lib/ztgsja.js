@@ -68,6 +68,15 @@ function ztgsja( jobu, jobv, jobq, M, p, N, K, l, A, LDA, B, LDB, tola, tolb, AL
 	if ( LDQ < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Twenty-second argument must be greater than or equal to max(1,M). Value: `%d`.', LDQ ) );
 	}
+	if ( jobu !== 'initialize' && jobu !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `jobu` value. Value: `%s`.', jobu ) );
+	}
+	if ( jobv !== 'initialize' && jobv !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobv` value. Value: `%s`.', jobv ) );
+	}
+	if ( jobq !== 'initialize' && jobq !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `jobq` value. Value: `%s`.', jobq ) );
+	}
 	return base( jobu, jobv, jobq, M, p, N, K, l, A, 1, LDA, 0, B, 1, LDB, 0, tola, tolb, ALPHA, 1, 0, BETA, 1, 0, U, 1, LDU, 0, V, 1, LDV, 0, Q, 1, LDQ, 0, WORK, 1, 0, ncycle ); // eslint-disable-line max-len
 }
 

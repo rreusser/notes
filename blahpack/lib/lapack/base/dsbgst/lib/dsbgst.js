@@ -44,6 +44,9 @@ function dsbgst( vect, uplo, N, ka, kb, AB, LDAB, BB, LDBB, X, LDX, WORK ) { // 
 	if ( LDX < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
+	if ( vect !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `vect` value. Value: `%s`.', vect ) );
+	}
 	return base( vect, uplo, N, ka, kb, AB, 1, LDAB, 0, BB, 1, LDBB, 0, X, 1, LDX, 0, WORK, 1, 0 ); // eslint-disable-line max-len
 }
 

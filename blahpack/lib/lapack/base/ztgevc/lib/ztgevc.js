@@ -106,6 +106,9 @@ function ztgevc( order, side, howmny, SELECT, strideSELECT, offsetSELECT, N, S, 
 	if ( order === 'column-major' && LDS < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,M). Value: `%d`.', LDS ) );
 	}
+	if ( howmny !== 'backtransform' && howmny !== 'all' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `howmny` value. Value: `%s`.', howmny ) );
+	}
 	if ( order === 'column-major' ) {
 		ss1 = 1;
 		ss2 = LDS;

@@ -61,6 +61,9 @@ function dstebz( range, order, N, vl, vu, il, iu, abstol, d, strideD, e, strideE
 	if ( M < 0 ) {
 		throw new RangeError( format( 'invalid argument. Thirteenth argument must be a nonnegative integer. Value: `%d`.', M ) );
 	}
+	if ( range !== 'all' && range !== 'value' && range !== 'index' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `range` value. Value: `%s`.', range ) );
+	}
 	return base( range, order, N, vl, vu, il, iu, abstol, d, strideD, od, e, strideE, oe, M, nsplit, w, strideW, ow, IBLOCK, strideIBLOCK, oiblock, ISPLIT, strideISPLIT, oisplit, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }
 

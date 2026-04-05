@@ -84,6 +84,9 @@ function dspsvx( fact, uplo, N, nrhs, AP, AFP, IPIV, strideIPIV, B, LDB, X, LDX,
 	if ( LDX < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Twelfth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
+	if ( fact !== 'not-factored' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `fact` value. Value: `%s`.', fact ) );
+	}
 	return base( fact, uplo, N, nrhs, AP, 1, 0, AFP, 1, 0, IPIV, strideIPIV, oipiv, B, 1, LDB, 0, X, 1, LDX, 0, rcond, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }
 

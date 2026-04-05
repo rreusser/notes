@@ -89,6 +89,12 @@ function dposvx( fact, uplo, N, nrhs, A, LDA, AF, LDAF, equed, s, strideS, B, LD
 	if ( LDX < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Fifteenth argument must be greater than or equal to max(1,N). Value: `%d`.', LDX ) );
 	}
+	if ( fact !== 'not-factored' && fact !== 'equilibrate' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `fact` value. Value: `%s`.', fact ) );
+	}
+	if ( equed !== 'yes' ) {
+		throw new TypeError( format( 'invalid argument. Ninth argument must be a valid `equed` value. Value: `%s`.', equed ) );
+	}
 	return base( fact, uplo, N, nrhs, A, sa1, sa2, 0, AF, saf1, saf2, 0, equed, s, strideS, os, B, sb1, sb2, 0, X, sx1, sx2, 0, FERR, strideFERR, oferr, BERR, strideBERR, oberr, WORK, strideWORK, owork, IWORK, strideIWORK, oiwork ); // eslint-disable-line max-len
 }
 

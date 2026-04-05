@@ -27,6 +27,9 @@ function dtpttf( transr, uplo, N, AP, ARF ) {
 	if ( N < 0 ) {
 		throw new RangeError( format( 'invalid argument. Third argument must be a nonnegative integer. Value: `%d`.', N ) );
 	}
+	if ( transr !== 'no-transpose' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `transr` value. Value: `%s`.', transr ) );
+	}
 	return base( transr, uplo, N, AP, 1, 0, ARF, 1, 0 );
 }
 

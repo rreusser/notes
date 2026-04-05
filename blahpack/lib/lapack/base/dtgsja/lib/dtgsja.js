@@ -95,6 +95,15 @@ function dtgsja( jobu, jobv, jobq, M, p, N, K, l, A, LDA, B, LDB, tola, tolb, AL
 	if ( LDQ < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Twenty-fourth argument must be greater than or equal to max(1,M). Value: `%d`.', LDQ ) );
 	}
+	if ( jobu !== 'initialize' && jobu !== 'compute-U' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `jobu` value. Value: `%s`.', jobu ) );
+	}
+	if ( jobv !== 'initialize' && jobv !== 'compute-V' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobv` value. Value: `%s`.', jobv ) );
+	}
+	if ( jobq !== 'initialize' && jobq !== 'compute-Q' ) {
+		throw new TypeError( format( 'invalid argument. Third argument must be a valid `jobq` value. Value: `%s`.', jobq ) );
+	}
 	return base( jobu, jobv, jobq, M, p, N, K, l, A, sa1, sa2, 0, B, sb1, sb2, 0, tola, tolb, ALPHA, strideALPHA, oalpha, BETA, strideBETA, obeta, U, su1, su2, 0, V, sv1, sv2, 0, Q, sq1, sq2, 0, WORK, strideWORK, owork, ncycle ); // eslint-disable-line max-len
 }
 

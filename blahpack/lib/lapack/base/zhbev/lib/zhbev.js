@@ -77,6 +77,9 @@ function zhbev( order, jobz, uplo, N, kd, AB, LDAB, w, strideW, Z, LDZ, WORK, st
 	if ( LDZ < max( 1, N ) ) {
 		throw new RangeError( format( 'invalid argument. Eleventh argument must be greater than or equal to max(1,N). Value: `%d`.', LDZ ) );
 	}
+	if ( jobz !== 'compute-vectors' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `jobz` value. Value: `%s`.', jobz ) );
+	}
 	if ( order === 'column-major' ) {
 		sab1 = 1;
 		sab2 = LDAB;

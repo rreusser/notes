@@ -62,6 +62,12 @@ function ztrsen( job, compq, SELECT, strideSELECT, N, T, LDT, Q, LDQ, W, strideW
 	if ( LDQ < max( 1, M ) ) {
 		throw new RangeError( format( 'invalid argument. Ninth argument must be greater than or equal to max(1,M). Value: `%d`.', LDQ ) );
 	}
+	if ( job !== 'both' && job !== 'eigenvalues' && job !== 'subspace' ) {
+		throw new TypeError( format( 'invalid argument. First argument must be a valid `job` value. Value: `%s`.', job ) );
+	}
+	if ( compq !== 'update' ) {
+		throw new TypeError( format( 'invalid argument. Second argument must be a valid `compq` value. Value: `%s`.', compq ) );
+	}
 	return base( job, compq, SELECT, strideSELECT, oselect, N, T, st1, st2, 0, Q, sq1, sq2, 0, W, strideW, ow, M, s, sep, WORK, strideWORK, owork, lwork ); // eslint-disable-line max-len
 }
 
