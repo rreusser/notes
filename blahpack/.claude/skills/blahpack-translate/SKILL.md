@@ -873,9 +873,11 @@ found and fixed this bug class **over 20 times** across the codebase.
 | `'N'` | `'none'` | COMPZ/JOB |
 | `'I'` | `'initialize'` | COMPZ |
 | `'V'` | `'update'` | COMPZ |
-| `'E'` | `'eigenvalues'` | JOB (hseqr) |
+| `'E'` | `'eigenvalues'` | JOB (hseqr/ddisna) |
 | `'S'` | `'schur'` | JOB (hseqr) |
-| `'N'` | `'none'`/`'permute'`/`'scale'`/`'both'` | JOB (gebal) |
+| `'L'` | `'left-vectors'` | JOB (ddisna) |
+| `'R'` | `'right-vectors'` | JOB (ddisna) |
+| `'N'`/`'P'`/`'S'`/`'B'` | `'none'`/`'permute'`/`'scale'`/`'both'` | JOB (gebal) |
 | `'N'` | `'not-factored'` | FACT |
 | `'E'` | `'equilibrate'` | FACT |
 | `'F'` | `'factored'` | FACT |
@@ -907,8 +909,12 @@ bin/lint.sh lib/<pkg>/base/<routine>
 If this produces ANY output, you have unconverted Fortran strings. Fix them
 before proceeding. This grep MUST return empty for every new module.
 
-For `job`-style parameters with many values (`'N'`, `'P'`, `'S'`, `'B'`),
-single chars are acceptable since there are no long-form equivalents.
+For `job`-style parameters with many values, **always invent descriptive
+long-form equivalents** — single chars are NEVER acceptable. Examples:
+`'N'` → `'none'`, `'P'` → `'permute'`, `'S'` → `'schur'`, `'B'` → `'both'`,
+`'E'` → `'eigenvalues'`, `'L'` → `'left-vectors'`, `'R'` → `'right-vectors'`.
+If a mapping isn't in the table above, create one that is self-documenting.
+Check existing modules for established conventions before inventing new ones.
 
 ### Complex Number Support
 
